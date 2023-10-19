@@ -1,54 +1,41 @@
-Return-Path: <linux-hyperv+bounces-559-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-560-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDC937CFEC2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 17:55:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCA77CFF45
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 18:18:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 095E11C20A54
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 15:55:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D6C91C20835
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 16:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 896C1315BC;
-	Thu, 19 Oct 2023 15:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC4D321B5;
+	Thu, 19 Oct 2023 16:18:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZmbpEZ4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V0DayayE"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE52C30FB0
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 15:55:33 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C58212A;
-	Thu, 19 Oct 2023 08:55:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697730932; x=1729266932;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=P+poiCSIxAGsfdwHwCW+jxjICQUU/M1l3j+2mESJsTg=;
-  b=lZmbpEZ45vsuyC/4QZqoJYZzXzFTQmYUItfQP5Y4NqQZqgVGInBR3Xx4
-   qTcJqCwdPxwxZWZyisjUwTQ1UZ/DtF4bQkTllihWwOazBSLzfxVSMHDOs
-   abLhXeRmultll2YzgPSXGq/0I7PjFcdow6dLIQ9EuAP759ly7IE0XbPUm
-   dvEKCg9Hfg9Vcl2lvIZG2r6vBrJuRxRXV1CZCKjOUAUpcRl6oPqHQS2rp
-   kwP6PzHsEFAIPQxwnFLhe+s/NRAM4a51OBM0k5cCDRuXw2aghFXawSDef
-   NQ1kuANyxLSL5gtKOckrl/Z56pG1G/8pGghQ7pdoJHaY7xtByBh4dG6/H
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="452764355"
-X-IronPort-AV: E=Sophos;i="6.03,237,1694761200"; 
-   d="scan'208";a="452764355"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2023 08:54:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="880719936"
-X-IronPort-AV: E=Sophos;i="6.03,237,1694761200"; 
-   d="scan'208";a="880719936"
-Received: from nsuwanda-mobl.amr.corp.intel.com (HELO [10.212.222.219]) ([10.212.222.219])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2023 08:54:25 -0700
-Message-ID: <00ff2f75-e780-4e2d-bcc9-f441f5ef879c@intel.com>
-Date: Thu, 19 Oct 2023 08:54:23 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0AED314
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 16:18:20 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C29FF114
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 09:18:19 -0700 (PDT)
+Received: from [10.0.0.178] (c-76-135-56-23.hsd1.wa.comcast.net [76.135.56.23])
+	by linux.microsoft.com (Postfix) with ESMTPSA id ECDDC20B74C0;
+	Thu, 19 Oct 2023 09:18:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ECDDC20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1697732299;
+	bh=iWNnJ4ipSrAKi9jrgJAtNwiYBggkVi3kjOWcjgUO2FM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=V0DayayEKwKlespH/Q3Uwo1WsAtrPXW6jGSOkceVWJeA1uInVUrtM9fNb+ChmwCfk
+	 qLP+HUp2kaghSe9p+w2yhqxSL1HBi4BPwlRpb2t6UO9+mFv91un3dyLIU2YUMMJ4Aw
+	 fMXC5BJOCzu5dJZCFerajE0JCplIIrHX0xkJyp68=
+Message-ID: <d6e7e256-8267-4202-80e4-5412419bc882@linux.microsoft.com>
+Date: Thu, 19 Oct 2023 09:18:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,86 +43,46 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm: Print the encryption features correctly when a
- paravisor is present
+Subject: Re: Incorrect definition of hv_enable_vp_vtl in hyperv-tlfs.h
 Content-Language: en-US
-To: Dexuan Cui <decui@microsoft.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- hpa@zytor.com, luto@kernel.org, peterz@infradead.org,
- stefan.bader@canonical.com, tim.gardner@canonical.com,
- roxana.nicolescu@canonical.com, cascardo@canonical.com,
- mikelley@microsoft.com, jgross@suse.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, kirill.shutemov@linux.intel.com,
- sashal@kernel.org, matija.glavinic-pecotic.ext@nokia.com,
- linux-hyperv@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20231019062030.3206-1-decui@microsoft.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20231019062030.3206-1-decui@microsoft.com>
-Content-Type: text/plain; charset=UTF-8
+To: Alex Ionescu <aionescu@gmail.com>, linux-hyperv@vger.kernel.org
+References: <CAJ-90N+sS6tuzMtRLOSan7WMZZ2g1H-iFc1F1ne631d2kgoi_g@mail.gmail.com>
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <CAJ-90N+sS6tuzMtRLOSan7WMZZ2g1H-iFc1F1ne631d2kgoi_g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -450,6 +450,16 @@ static bool hv_is_private_mmio(u64 addr)
->  	return false;
->  }
->  
-> +static void hv_print_mem_enc_feature_info(void)
-> +{
-> +	enum hv_isolation_type type = hv_get_isolation_type();
-> +
-> +	if (type == HV_ISOLATION_TYPE_SNP)
-> +		pr_info("Memory Encryption Features active: AMD SEV\n");
-> +	else if (type == HV_ISOLATION_TYPE_TDX)
-> +		pr_info("Memory Encryption Features active: Intel TDX\n");
-> +}
+On 10/16/2023 4:49 AM, Alex Ionescu wrote:
+> Hi,
+> 
+> In arch/x86/include/asm/hyperv-tlfs.h, the following definition at
+> line 786 (in Linus' tree), I believe to be incorrect.
+> 
+> struct hv_enable_vp_vtl {
+>      u64                partition_id;
+>      u32                vp_index;
+>      union hv_input_vtl        target_vtl; <==== Here
+> 
+> For this hypercall, the TLFS and MSDN documentation states this field
+> is HV_VTL (u8) and not HV_INPUT_VTL (the bit-field used for targeting
+> hypercalls to specific target VTLs, which is not the case here).
+> 
+> I realize this is essentially a no-op in code at the moment, but for
+> correctness should be addressed? I'm happy to make a patch, but wanted
+> to make sure this isn't a mistake in TLFS/MSDN to begin with
+> (although, my copy of GDK headers would corroborate it's indeed HV_VTL
+> as well).
+> 
+> Best regards,
+> Alex Ionescu
 
-If we draw this to its logical conclusion, every paravisor will need a
-pr_info() for every hardware CoCo implementation.  That M*N pr_info()s.
-That seems nuts.
+Hi Alex,
+
+I checked the code to make sure - seems like the TLFS doc is correct. It
+should indeed be HV_VTL (u8).
+
+Feel free to submit a patch.
+
+Thanks
+Nuno
 
