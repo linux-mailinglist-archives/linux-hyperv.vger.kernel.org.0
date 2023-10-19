@@ -1,285 +1,256 @@
-Return-Path: <linux-hyperv+bounces-555-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-556-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B5067CF00B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 08:21:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A29097CF79F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 13:55:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E2691C20826
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 06:21:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0819FB21176
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 11:55:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6B4611A;
-	Thu, 19 Oct 2023 06:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECA6F1DFD2;
+	Thu, 19 Oct 2023 11:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hMyh9KIs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gOudsoRw"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92072186C
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 06:21:44 +0000 (UTC)
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021023.outbound.protection.outlook.com [52.101.62.23])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0400BE;
-	Wed, 18 Oct 2023 23:21:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nQRxoSVuoImzcCwcMByn/+lNnMYKmDFNImBotiCN4PNpYrXtjRmYrxG0pIW1qQt9e+rONjjWxbpWYfcqCcV//bUYzmxTjFBlefn2lmbsHyNYs+ysBJ/2A14su9UGeWYjaItQbdfDNBwyG1hcSbaAKzClEgfpl3rVgjVNSVoNMKz6752Gz2p6455nWEBa8udXP2Y/ifX3ajxBtcZZMQ36edLDt9wqWy6DU+GYff1TwC+CjBtH1zRiFGxU42PwuisBLxCLwlqfCqPq6qSjLVOyqL1BAiuEyWDyw9j0VJdsSeDU3Y9EVaoSa6iTfehzoFQz7oJsl7+sqWxGWDg/s1lUTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FpzY42v5Gx1+WSR8S0vCPRCDKHw2V2lwiJ+WjgqhPnw=;
- b=iRSVH3LR8oQPTLUeStCX15QTNcstCoOC5fAQhNwEoN2d8CjWjpPPCdQIAS47975kNOPPMFd8C15nJjj7N7kf79RhtQA35YJMMnLOj9dEasZKQ0n+nb6PFD5443kds1+9B8BABOuDKU9j4y7/u9XNu529CkTi6j9551Lj3/Fbs6Hja/OF3aY9kq/Z7w+j4kab8OFHhdDPQNXdiJnVWz+QNji9kp+GFh/D12rSqH55R6kDqmXKJSeUPq15gJ1xy2ZupGKas4KrVWMGMJQF3DbMPL7S4eeMQYKGkXQkXvCprrrW1+vpv9QnEzI89OOC3P+25FFlCg5k9UTcPCmKhSMzzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FpzY42v5Gx1+WSR8S0vCPRCDKHw2V2lwiJ+WjgqhPnw=;
- b=hMyh9KIs3mGi7Sd5fVKnYACob08HfWZifbt9UY8QFBDs/XoGvH+fcCjwwGwyiITjP/2WQroPkH5+bxjW8XHEIRFCoIZNqXgRkzf4xmvWg8dDxCDHhA/zXJ3QVj9jGd6C6hMWLpsW2T1yAxFVDGJ9oQE9TuAQdZ8Asy5A50fTO6g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from SA3PR21MB3915.namprd21.prod.outlook.com (2603:10b6:806:300::22)
- by PH7PR21MB3118.namprd21.prod.outlook.com (2603:10b6:510:1d2::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.4; Thu, 19 Oct
- 2023 06:21:39 +0000
-Received: from SA3PR21MB3915.namprd21.prod.outlook.com
- ([fe80::f02:b965:d44e:40d]) by SA3PR21MB3915.namprd21.prod.outlook.com
- ([fe80::f02:b965:d44e:40d%6]) with mapi id 15.20.6933.003; Thu, 19 Oct 2023
- 06:21:39 +0000
-From: Dexuan Cui <decui@microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	stefan.bader@canonical.com,
-	tim.gardner@canonical.com,
-	roxana.nicolescu@canonical.com,
-	cascardo@canonical.com,
-	mikelley@microsoft.com,
-	jgross@suse.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	kirill.shutemov@linux.intel.com,
-	sashal@kernel.org,
-	matija.glavinic-pecotic.ext@nokia.com,
-	linux-hyperv@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] x86/mm: Print the encryption features correctly when a paravisor is present
-Date: Wed, 18 Oct 2023 23:20:30 -0700
-Message-Id: <20231019062030.3206-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0099.namprd03.prod.outlook.com
- (2603:10b6:303:b7::14) To SA3PR21MB3915.namprd21.prod.outlook.com
- (2603:10b6:806:300::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A2C1DFCA
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 11:55:40 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E20139
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 04:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697716537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JG4lTBZAdQNjQdsOUJfgsaU+O9WpyXKgw/EAl16ov/Y=;
+	b=gOudsoRwwVFKdJpvQ+05OK4tNUuOPajXCuhfdvcrX/PTywGA74oQWp+7nhcnufefKnO1FM
+	RxFKuTNXaL3KYa4pGH/maZOY9ThlsfcohQHKHpM2r5qieh3WV3UGu78gR6vGNP1WewQ0Ut
+	AlJeM9wqSkJWze/7YqduHLv9P67aBSk=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-240-rOxPNZ5xM0WxWgSbqTAeqw-1; Thu, 19 Oct 2023 07:55:35 -0400
+X-MC-Unique: rOxPNZ5xM0WxWgSbqTAeqw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9b97f1b493dso574355866b.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 04:55:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697716534; x=1698321334;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JG4lTBZAdQNjQdsOUJfgsaU+O9WpyXKgw/EAl16ov/Y=;
+        b=CI1qWoZ7bD68WapMXQ94PIsZEOls+FZUbO8UF7DvfqQYjYRS3Cwl8JK4tELYkkLhJU
+         4p6bTY6Vhqzxds9rG3pU8rtYaSXGwckjED5LxSOkakz73fbMICzANRZWfMe+qSbML4To
+         kFR4fjBSMZ4CzCAFPfJD/ec3NTabsnBXpovlEHwZug4rzreCDbhTviwAnuQgpu2K4Kyl
+         HnNmHwIRctUgj5RuKjonIQDaPrhV8qDHAofZcNJz/1iEBeryDogSSNrmK/xZB7ZKvXpx
+         zAop4SyyG23TbT8KviXPRHf+40Af9dDivsL2ThYIGxEqiPkwG5QsBD4zZ54hJuSAkUT3
+         nagg==
+X-Gm-Message-State: AOJu0Yxvt8EzX5uu0AdyMFDyF5V1rkkeAnGPiyC7ZbXmWVpOsMYt+lnx
+	g8juN6OI23fuUo/q58oHmmf8XRovuH4ZP1aaI0V0aUGWHcclSDOsFrhVeUt0iYbuCX8Q7hD1S79
+	xQccQF5/xRaO4ZbR+MAYzk1y+
+X-Received: by 2002:a17:907:7f0f:b0:9c4:d19:4a6a with SMTP id qf15-20020a1709077f0f00b009c40d194a6amr1860669ejc.53.1697716534553;
+        Thu, 19 Oct 2023 04:55:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG9mIPgfvn9ZU7nuvj7xbGgy8xMbs+UZxNrZmJKG1kLP0WAJ1c7LQRgVQvXQZF9O5leQxJekQ==
+X-Received: by 2002:a17:907:7f0f:b0:9c4:d19:4a6a with SMTP id qf15-20020a1709077f0f00b009c40d194a6amr1860648ejc.53.1697716534168;
+        Thu, 19 Oct 2023 04:55:34 -0700 (PDT)
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id hb6-20020a170906b88600b009b8dbdd5203sm3372788ejb.107.2023.10.19.04.55.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Oct 2023 04:55:33 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Dongli Zhang <dongli.zhang@oracle.com>, x86@kernel.org,
+ virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+ pv-drivers@vmware.com, xen-devel@lists.xenproject.org,
+ linux-hyperv@vger.kernel.org
+Cc: jgross@suse.com, akaher@vmware.com, amakhalov@vmware.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, pbonzini@redhat.com,
+ wanpengli@tencent.com, peterz@infradead.org, seanjc@google.com,
+ dwmw2@infradead.org, joe.jin@oracle.com, boris.ostrovsky@oracle.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/1] x86/paravirt: introduce param to disable pv
+ sched_clock
+In-Reply-To: <20231018221123.136403-1-dongli.zhang@oracle.com>
+References: <20231018221123.136403-1-dongli.zhang@oracle.com>
+Date: Thu, 19 Oct 2023 13:55:32 +0200
+Message-ID: <87ttqm6d3f.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR21MB3915:EE_|PH7PR21MB3118:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09bfb691-0717-4ec6-22ec-08dbd06ba73b
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
- XoDJSNrIzBEFcDv9m8MoseEmr0xL067uj/l3pvLZWUfeniHUSQp2kxYtc60Yc5Uo/9AWP40WN/q19UJ9gFt1KOF8Z+TcBFjN/OaCbOfiOSQsD/7X9pt7LoxzhP1RY0qGqESjOHoI8ZbzJHq6Kt5DvZDfiqWYcsFHVtxwf4H/QeyLQJCbCG/7zZ4C7Gtm0O5/r9YVyE4IGpvoD87dkq/6b4zzNt3Q0Avttrzw8cPAyD1zFV3aUZ47894PmwbHCvppWKapFRg9uoO1CvrGufQREpRmWY9FBgQMXFU/lEGRrnAlNyc28359wTowUGade4Zd8Mt1EDg8+VKkhFgYLolLSpZOANHDVTHppIGCZ0qVHHFdA8Iq19l4cYL5IlKRBjN4NAmdtwFAMjjLriiAqO1zB4SsuXuzdM6Ed+GGtWT0RtS3JWhl7vV9CcbeMucw/VBnHl3UVc4BMvxPAQVSAaBtfkDCMs7vYob9nMQDYCfWXSEKZ0xVHREvp0ToiUHYGBcVn07IZxn3hMu2jYfFgiORqPfclFnAmEDp7DoAJBLvhFUocAZt0+7NOH6gD5quUcuu9ec6wIjSf40wu7Ik5YzRrZLdhy+l/Sk4UaAyP5HQ4Z1+uFhmmsDX9UMITQywkETMnZBhyTaTIxFr5xtLdjEHmw==
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3915.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(39860400002)(396003)(136003)(346002)(230922051799003)(64100799003)(451199024)(186009)(1800799009)(1700900044)(7416002)(6506007)(52116002)(2906002)(6666004)(10290500003)(6486002)(478600001)(4326008)(8676002)(5660300002)(8936002)(66556008)(316002)(66946007)(66476007)(41300700001)(36756003)(83380400001)(82950400001)(82960400001)(921005)(107886003)(2616005)(6512007)(86362001)(38100700002)(1076003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?B9+DS0QLttk3OjBKgWMlO8gTh66WcYePKRq/H2lrslMRWI04zq4339IhbJsO?=
- =?us-ascii?Q?Y12jmf86hTPXpC/GinCh/3l+UshOlfWgxWiN/OM7CneCfIivNlbYv7M2qXXC?=
- =?us-ascii?Q?XuPXzjMN1rbiSp0mP58ofETRkNNeUzvyowaqGpQpRQM5XJa156R3DOTGGoAt?=
- =?us-ascii?Q?6pMzQ9QsdXJ2x0DwZw9wPKMTWDrFTl3LVTge+VtFISXF9OvSIdTJObdrNDqT?=
- =?us-ascii?Q?Va927bvjjZrt/91e2eJLLLWcbrH7N+P54qSW/Qo8S3EVVDkyavHj9FKtnrzS?=
- =?us-ascii?Q?xGmTFt7Dhp0xaUAKiddi8KIWoMiULKxOHoWnmGK93dEYFJAF95DbMrWIL8rP?=
- =?us-ascii?Q?unvppeKpW/Bm5NCaE26Xy3Hv9GZ5Ttsg/PoVWnQXVuFs8V4H9QOup8dhwKev?=
- =?us-ascii?Q?R0HfXcmChB3PknxRiEnTgl5ld44CSib/VqBCO2UXR7TXmw0Eiiq30YxygeIa?=
- =?us-ascii?Q?PZI1ukIxfKiYQUHGj0e5iX5R7nicJMqvP/zDsLCa8jzOChHkfPOs/8pfYpMc?=
- =?us-ascii?Q?MGTxgY9TzZI2tFac2xu7V5uaP/n24zLnFufxPs+ZxofmeM00pNVafx1/pw0E?=
- =?us-ascii?Q?YwqOoa2yFd7IxmjqiEsfM4XwJh/ROd5Q7i8y4t4G7+Ys6OX1BZmVCCaoX61X?=
- =?us-ascii?Q?ua9IQ0GDWvVZF6ssxePhqB2UE3wOzNh0QT62aOmdS5bdrxxN05Guycx2bX6s?=
- =?us-ascii?Q?PVFuRIUob6b//mXStY1YYCjY96DBSrjRg943olTVTpP/XOGI8eyfXMKKV5x6?=
- =?us-ascii?Q?juqjFqphTGxGz7iyDVzy4hUZ75WbpAfAQaYOwdcSLJmrPznrEBLGGOoyFJuh?=
- =?us-ascii?Q?AA/bnGHaoVOR4wt1pho/PhKPJ0pSRqRJZI2Zi1I4dL5LGXfnJDT+VO2pGX7l?=
- =?us-ascii?Q?lD7BAMUsWI2bCOs0WXCMyOxIOJbpLpQjw5RH/aJ8vtQjrYl6foQv0JZBbW3O?=
- =?us-ascii?Q?NLDzL+Z+b6tAdwCB2ynVBPmHkpn7OC2bRdvVfaCpFw2KGN9O7LFvQDe8/2zr?=
- =?us-ascii?Q?IT6hYleFP2QUv/JfjVzYpM6eoyo5nIzoqVZEKZwVKIz3c1sDMscxnkQY8Uw2?=
- =?us-ascii?Q?ktfhv61V3trByfyrRfQWNjKlzxbgfjuJIzY+UsNHGYpEWCO6qf+N2d3DS//a?=
- =?us-ascii?Q?4FDbwAEf4sE33SOsCmjPuwRaftxrynyrP3IQhq+89VtGvYqe5Y+djXtZ4FuK?=
- =?us-ascii?Q?7yntp223jw1WTHXogWgzYRkaIYoz/oHN+mgIMpCh+6x/Kvc/u7ZtWDLXQJcv?=
- =?us-ascii?Q?dMmvkuqypXlgYL5H8NPvNVXym2NmKut8thh9/HkmTcecyJHLAzfGnflbT0nv?=
- =?us-ascii?Q?Rue3+CbB9H0Lj0HPdwafsQId9lhvdqexMkuYdluZVVBOHIXW0wnSO1SwA9gp?=
- =?us-ascii?Q?4zOvZah9vzXJFLikCg4Ln9CVttwyEmceeMdKG4pMM4aNxZfFBhUlCObmtntX?=
- =?us-ascii?Q?oevXHsroa2XIqm8sITteuv6gux9jGlzunRxBaYHDXd40cYEmcZyGa6WCk1MD?=
- =?us-ascii?Q?5dqeF41FttWwfHst78UgHXGeutdSMvVQZ8JcMqaUhcD9MichnDlnykunM0Ux?=
- =?us-ascii?Q?8vyax/l7KjscxiKgmRl67ex103m9jJHHnhkkXEDdQu9ZJmipD5RJbn4TT2VB?=
- =?us-ascii?Q?JOBmTuUo3MjsoDFkLv8zB8KR1wOIJ9d/5rpJZ+7tH6k6?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09bfb691-0717-4ec6-22ec-08dbd06ba73b
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3915.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2023 06:21:39.3851
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lPjYe38Wh8AhxCrjwA7VOUo5AWYf6J8qkH6ymGpYZO/yF4dN6u63kkfK+3Ij7TUQE1Lo5bhMohHq5ezZLFj5Ug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3118
+Content-Type: text/plain
 
-Hyper-V provides two modes for running a TDX/SNP VM:
+Dongli Zhang <dongli.zhang@oracle.com> writes:
 
-1) In TD Partitioning mode (TDX) or vTOM mode (SNP) with a paravisor;
-2) In "fully enlightened" mode with the normal TDX shared bit or SNP C-bit
-   control over page encryption, and no paravisor.
+> As mentioned in the linux kernel development document, "sched_clock() is
+> used for scheduling and timestamping". While there is a default native
+> implementation, many paravirtualizations have their own implementations.
+>
+> About KVM, it uses kvm_sched_clock_read() and there is no way to only
+> disable KVM's sched_clock. The "no-kvmclock" may disable all
+> paravirtualized kvmclock features.
+>
+>  94 static inline void kvm_sched_clock_init(bool stable)
+>  95 {
+>  96         if (!stable)
+>  97                 clear_sched_clock_stable();
+>  98         kvm_sched_clock_offset = kvm_clock_read();
+>  99         paravirt_set_sched_clock(kvm_sched_clock_read);
+> 100
+> 101         pr_info("kvm-clock: using sched offset of %llu cycles",
+> 102                 kvm_sched_clock_offset);
+> 103
+> 104         BUILD_BUG_ON(sizeof(kvm_sched_clock_offset) >
+> 105                 sizeof(((struct pvclock_vcpu_time_info *)NULL)->system_time));
+> 106 }
+>
+> There is known issue that kvmclock may drift during vCPU hotplug [1].
+> Although a temporary fix is available [2], we may need a way to disable pv
+> sched_clock. Nowadays, the TSC is more stable and has less performance
+> overhead than kvmclock.
+>
+> This is to propose to introduce a global param to disable pv sched_clock
+> for all paravirtualizations.
+>
+> Please suggest and comment if other options are better:
+>
+> 1. Global param (this RFC patch).
+>
+> 2. The kvmclock specific param (e.g., "no-vmw-sched-clock" in vmware).
+>
+> Indeed I like the 2nd method.
+>
+> 3. Enforce native sched_clock only when TSC is invariant (hyper-v method).
+>
+> 4. Remove and cleanup pv sched_clock, and always use pv_sched_clock() for
+> all (suggested by Peter Zijlstra in [3]). Some paravirtualizations may
+> want to keep the pv sched_clock.
 
-In the first mode (i.e. paravisor mode), the native TDX/SNP CPUID
-capability is hidden from the VM, but cc_platform_has(CC_ATTR_MEM_ENCRYPT)
-and cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) are true; as a result,
-mem_encrypt_init() incorrectly prints the below message when an Intel TDX
-VM with a paravisor runs on Hyper-V:
-"Memory Encryption Features active: AMD SEV".
+Normally, it should be up to the hypervisor to tell the guest which
+clock to use, i.e. if TSC is reliable or not. Let me put my question
+this way: if TSC on the particular host is good for everything, why
+does the hypervisor advertises 'kvmclock' to its guests? If for some
+'historical reasons' we can't revoke features we can always introduce a
+new PV feature bit saying that TSC is preferred.
 
-Introduce x86_platform.print_mem_enc_feature_info and allow hv_vtom_init()
-to override the function pointer so that the correct message is printed.
+1) Global param doesn't sound like a good idea to me: chances are that
+people will be setting it on their guest images to workaround problems
+on one hypervisor (or, rather, on one public cloud which is too lazy to
+fix their hypervisor) while simultaneously creating problems on another.
 
-BTW, when a VBS (Virtualization-based Security) VM running on Hyper-V
-(the physical CPU can be an AMD CPU or an Intel CPU), the VM's memory is
-not encrypted, but mem_encrypt_init() also prints the same incorrect
-message. The introduction of x86_platform.print_mem_enc_feature_info can
-also fix the issue.
+2) KVM specific parameter can work, but as KVM's sched_clock is the same
+as kvmclock, I'm not convinced it actually makes sense to separate the
+two. Like if sched_clock is known to be bad but TSC is good, why do we
+need to use PV clock at all? Having a parameter for debugging purposes
+may be OK though...
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
+3) This is Hyper-V specific, you can see that it uses a dedicated PV bit
+(HV_ACCESS_TSC_INVARIANT) and not the architectural
+CPUID.80000007H:EDX[8]. I'm not sure we can blindly trust the later on
+all hypervisors.
 
-Some open questions:
+4) Personally, I'm not sure that relying on 'TSC is crap' detection is
+100% reliable. I can imagine cases when we can't detect that fact that
+while synchronized across CPUs and not going backwards, it is, for
+example, ticking with an unstable frequency and PV sched clock is
+supposed to give the right correction (all of them are rdtsc() based
+anyways, aren't they?).
 
-1. Should we refactor the existing print_memory_encrypt_feature_info()
-into a TDX-specific function and an SEV-specific function?  The
-function pointer in x86_platform_ops would be initialized to a no-op
-function, and then early_tdx_init(), sme_enable() and hv_vtom_init()
-would fill it in accordingly.
+>
+> To introduce a param may be easier to backport to old kernel version.
+>
+> References:
+> [1] https://lore.kernel.org/all/20230926230649.67852-1-dongli.zhang@oracle.com/
+> [2] https://lore.kernel.org/all/20231018195638.1898375-1-seanjc@google.com/
+> [3] https://lore.kernel.org/all/20231002211651.GA3774@noisy.programming.kicks-ass.net/
+>
+> Thank you very much for the suggestion!
+>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>  arch/x86/include/asm/paravirt.h |  2 +-
+>  arch/x86/kernel/kvmclock.c      | 12 +++++++-----
+>  arch/x86/kernel/paravirt.c      | 18 +++++++++++++++++-
+>  3 files changed, 25 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+> index 6c8ff12140ae..f36edf608b6b 100644
+> --- a/arch/x86/include/asm/paravirt.h
+> +++ b/arch/x86/include/asm/paravirt.h
+> @@ -24,7 +24,7 @@ u64 dummy_sched_clock(void);
+>  DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
+>  DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
+>  
+> -void paravirt_set_sched_clock(u64 (*func)(void));
+> +int paravirt_set_sched_clock(u64 (*func)(void));
+>  
+>  static __always_inline u64 paravirt_sched_clock(void)
+>  {
+> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> index fb8f52149be9..0b8bf5677d44 100644
+> --- a/arch/x86/kernel/kvmclock.c
+> +++ b/arch/x86/kernel/kvmclock.c
+> @@ -93,13 +93,15 @@ static noinstr u64 kvm_sched_clock_read(void)
+>  
+>  static inline void kvm_sched_clock_init(bool stable)
+>  {
+> -	if (!stable)
+> -		clear_sched_clock_stable();
+>  	kvm_sched_clock_offset = kvm_clock_read();
+> -	paravirt_set_sched_clock(kvm_sched_clock_read);
+>  
+> -	pr_info("kvm-clock: using sched offset of %llu cycles",
+> -		kvm_sched_clock_offset);
+> +	if (!paravirt_set_sched_clock(kvm_sched_clock_read)) {
+> +		if (!stable)
+> +			clear_sched_clock_stable();
+> +
+> +		pr_info("kvm-clock: using sched offset of %llu cycles",
+> +			kvm_sched_clock_offset);
+> +	}
+>  
+>  	BUILD_BUG_ON(sizeof(kvm_sched_clock_offset) >
+>  		sizeof(((struct pvclock_vcpu_time_info *)NULL)->system_time));
+> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+> index 97f1436c1a20..2cfef94317b0 100644
+> --- a/arch/x86/kernel/paravirt.c
+> +++ b/arch/x86/kernel/paravirt.c
+> @@ -118,9 +118,25 @@ static u64 native_steal_clock(int cpu)
+>  DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
+>  DEFINE_STATIC_CALL(pv_sched_clock, native_sched_clock);
+>  
+> -void paravirt_set_sched_clock(u64 (*func)(void))
+> +static bool no_pv_sched_clock;
+> +
+> +static int __init parse_no_pv_sched_clock(char *arg)
+> +{
+> +	no_pv_sched_clock = true;
+> +	return 0;
+> +}
+> +early_param("no_pv_sched_clock", parse_no_pv_sched_clock);
+> +
+> +int paravirt_set_sched_clock(u64 (*func)(void))
+>  {
+> +	if (no_pv_sched_clock) {
+> +		pr_info("sched_clock: not configurable\n");
+> +		return -EPERM;
+> +	}
+> +
+>  	static_call_update(pv_sched_clock, func);
+> +
+> +	return 0;
+>  }
+>  
+>  /* These are in entry.S */
 
-2. Should we rename "print_mem_enc_feature_info()" to
-"print_coco_feature_info()"?  CC_ATTR_GUEST_STATE_ENCRYPT (and
-CC_ATTR_GUEST_SEV_SNP?) may not look like *memory* encryption to me?
-
- arch/x86/hyperv/ivm.c              | 11 +++++++++++
- arch/x86/include/asm/mem_encrypt.h |  1 +
- arch/x86/include/asm/x86_init.h    |  2 ++
- arch/x86/kernel/x86_init.c         |  1 +
- arch/x86/mm/mem_encrypt.c          |  4 ++--
- 5 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index e68051eba25a..fdc2fab0415e 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -450,6 +450,16 @@ static bool hv_is_private_mmio(u64 addr)
- 	return false;
- }
- 
-+static void hv_print_mem_enc_feature_info(void)
-+{
-+	enum hv_isolation_type type = hv_get_isolation_type();
-+
-+	if (type == HV_ISOLATION_TYPE_SNP)
-+		pr_info("Memory Encryption Features active: AMD SEV\n");
-+	else if (type == HV_ISOLATION_TYPE_TDX)
-+		pr_info("Memory Encryption Features active: Intel TDX\n");
-+}
-+
- void __init hv_vtom_init(void)
- {
- 	enum hv_isolation_type type = hv_get_isolation_type();
-@@ -479,6 +489,7 @@ void __init hv_vtom_init(void)
- 	cc_set_mask(ms_hyperv.shared_gpa_boundary);
- 	physical_mask &= ms_hyperv.shared_gpa_boundary - 1;
- 
-+	x86_platform.print_mem_enc_feature_info = hv_print_mem_enc_feature_info;
- 	x86_platform.hyper.is_private_mmio = hv_is_private_mmio;
- 	x86_platform.guest.enc_cache_flush_required = hv_vtom_cache_flush_required;
- 	x86_platform.guest.enc_tlb_flush_required = hv_vtom_tlb_flush_required;
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 7f97a8a97e24..6e8050a9138e 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -19,6 +19,7 @@
- 
- #ifdef CONFIG_X86_MEM_ENCRYPT
- void __init mem_encrypt_init(void);
-+void print_mem_encrypt_feature_info(void);
- #else
- static inline void mem_encrypt_init(void) { }
- #endif
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index 14b0562c1d8b..7798174d4b8d 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -291,6 +291,7 @@ struct x86_hyper_runtime {
-  * 				semantics.
-  * @realmode_reserve:		reserve memory for realmode trampoline
-  * @realmode_init:		initialize realmode trampoline
-+ * @print_mem_enc_feature_info:	print the supported memory encryption features
-  * @hyper:			x86 hypervisor specific runtime callbacks
-  */
- struct x86_platform_ops {
-@@ -309,6 +310,7 @@ struct x86_platform_ops {
- 	void (*set_legacy_features)(void);
- 	void (*realmode_reserve)(void);
- 	void (*realmode_init)(void);
-+	void (*print_mem_enc_feature_info)(void);
- 	struct x86_hyper_runtime hyper;
- 	struct x86_guest guest;
- };
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 6117662ae4e6..ccb53db1b51e 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -149,6 +149,7 @@ struct x86_platform_ops x86_platform __ro_after_init = {
- 	.restore_sched_clock_state	= tsc_restore_sched_clock_state,
- 	.realmode_reserve		= reserve_real_mode,
- 	.realmode_init			= init_real_mode,
-+	.print_mem_enc_feature_info	= print_mem_encrypt_feature_info,
- 	.hyper.pin_vcpu			= x86_op_int_noop,
- 	.hyper.is_private_mmio		= is_private_mmio_noop,
- 
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 9f27e14e185f..8d37048bc1df 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -39,7 +39,7 @@ bool force_dma_unencrypted(struct device *dev)
- 	return false;
- }
- 
--static void print_mem_encrypt_feature_info(void)
-+void print_mem_encrypt_feature_info(void)
- {
- 	pr_info("Memory Encryption Features active:");
- 
-@@ -84,5 +84,5 @@ void __init mem_encrypt_init(void)
- 	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
- 	swiotlb_update_mem_attributes();
- 
--	print_mem_encrypt_feature_info();
-+	x86_platform.print_mem_enc_feature_info();
- }
 -- 
-2.25.1
+Vitaly
 
 
