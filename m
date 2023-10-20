@@ -1,564 +1,194 @@
-Return-Path: <linux-hyperv+bounces-562-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-563-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCBAB7D054E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Oct 2023 01:12:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55EB97D080E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Oct 2023 08:02:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 930D32822AF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 23:12:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2627F1C20A63
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Oct 2023 06:02:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EF64446F;
-	Thu, 19 Oct 2023 23:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E0C49468;
+	Fri, 20 Oct 2023 06:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3h9sBocv";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="o5tcbcgy"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EHxpUXYI"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F6319440
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 23:12:29 +0000 (UTC)
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F93106;
-	Thu, 19 Oct 2023 16:12:27 -0700 (PDT)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39JKuM29011378;
-	Thu, 19 Oct 2023 23:11:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=YyLWm7+ksttNZT9eGXTE7n93fg0u9xw05R9EmbVYJqc=;
- b=3h9sBocv2OQ/MOlD35cX0vbMTcfL4dDvHgD+pDqlyNDQJ4RJOlOQ2MPm9q4UTUBZF5x3
- +sODgZVluAV2EwibIQ1U78hPO+wHmBhFFU2Qlw+egd2hDeB9U8P/aVEQKzaevo8xmHvU
- fMeG2IqzZcgCJv7K+lPU58YfD/1ZKJxKQ3rq+IdthMNQa+uFYjcsbjscwa4G2TqF7Hb5
- ivxoRSSV0x/IMY8UrUeTKxc5KLHK939Ras3Axx64PDUA0Bc1bZZd5sdAX5yId7eSP1t2
- lPAOY01PFRE7m0X5bwlVTZ/j7i/4pkqILgb+m6IF8OmQ7qa7qtoQzmBlttaupMi2bZrM sw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3tubw805fk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Oct 2023 23:11:20 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 39JKrjPw038476;
-	Thu, 19 Oct 2023 23:11:19 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3tubw442cx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Oct 2023 23:11:19 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ED163C3
+	for <linux-hyperv@vger.kernel.org>; Fri, 20 Oct 2023 06:01:59 +0000 (UTC)
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020014.outbound.protection.outlook.com [52.101.61.14])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B618CA;
+	Thu, 19 Oct 2023 23:01:57 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dx8XvH/CtWgQ7cYSpRY9SMMR/OPgMgFP/Up0uCtZb4IWP2DiGZPmR7MoVgqVsf2GPjQM+Sc0+rUBSnigBDMTQ6cE2896P/YLMNv+gL41ayZHKdfj2V+seqYf7FVE8AahHUNPzfhXUQrpapfxMxVHtiQhY4mAlvACizWxPFJIGmTTyfEtEVn8rzJMxcjfn6zy+3ug0R9yvFlc+U1gI0TOwtvD5a8erYXQweRkNc1iJEmqsuBrhtgKGsakj3mIO68iGg/kwjTjzvRs2C/lx3WHHr6CgeFrinWBP1qLLI6mgoSR6+jBLfyyp9F0ubnjhWiGS7u94YlzYcVc6zOfJWFgVA==
+ b=KCfyRAFpc/2E1dJ8KFPbtkCpZoBXoDL2eox0bsggoodRw4nYxXZsC9cxpGXZwqeJEaRudz/xIytQPWwVgWwezwPb7y7hjA8hyojs7pKP7m5qzXFRYjQNPLlxWMJ63H4FLA7YYsHRVdmvFQBmFyemMG11A1LgEJsyIiDU1z4hoetNT9WuEUjHymkrR4RSK6oAnMjVNaVSOTo9WzfT/n3RpXtfZ4tJcO2V/7v0QTAq87iOSKxY3teKeJjOCxR3f2B6qBPCfJg77qEPOCBeYOk0SzuYEkRl5/9smQmKhTpdPqRf0kSMJXliTZ0m8hQAJW1pXAfGULvBPA6L1ua/JH2tgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YyLWm7+ksttNZT9eGXTE7n93fg0u9xw05R9EmbVYJqc=;
- b=dJ4yVotII5jeJAqph8aaWZsCXUERoGLOizpxcuIHolBovuXMtSdfQEKJX1veWQQ4uj3h3GRENncAqWw7Shv32d5vp21TeYOpMZ1XzPYOGu1PbjBcL0TZt77KObbgf7QdprszTAlDco6aYlvGJV0Zg+8cOYclD/OsZ/QgAtB2HluANDd87XxTH1exygdZk/H/hyYTj3RYy55jgVks2ZSL9wmSxX6mdfqahIjksB6L49EHXBIWrMx+yCR2pcgmHsM8B8sugIrQ3KsiD1Qe+8R/otPNrH/3IbbjJZEcmFboY7AW46EChl48lSHv1rTkFn4s9BQPSg4wX/e1YE8b9pbBrA==
+ bh=B9yjlLixfWaaoauU5HPd5IZwiBozlKJaDN6DGwp2qSs=;
+ b=bzQ33THx8RhGsoexeKB89kVgUlfMzdPKbuq9nij5W1wUgBFoIrelg0niuu+/k47zNqhc5Wmhanm9YfRoCnkruZSz0jg925aEUW3mCXnVvb90Q7lissnLHZSoYPfhJwP6bytOrQMK8YZp73TKltgd9ZYSNcZSSTS9NLUC/JyoLkEXtSZHfH4tifSOYV/m1A6v9TWieDv+7iNtJvn8LP0oyc6VJGq2Fxn0e8fmdqYnNL0W+9sOI2K8SNzbnZaTM7gjNvsY2QkvHVbpSXK45XUAXCqibnrfg22ljI96j0Ky+Lk84KN3tRl2xQxty69LHd/LixAi2jc3qaUXzqhVqdk7Pw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YyLWm7+ksttNZT9eGXTE7n93fg0u9xw05R9EmbVYJqc=;
- b=o5tcbcgybRJFflfL1HW7bbK7SFEQ5xAJdCQgUod94kVjOVS9Zr23gUPDSgKn/HHamIahfExnBTR8TPcGtB0dS3hmasSX0C2enWMhGCR4khLa4ExpKJRC689Ab2E2eV/L9JK6yGPj5ZmEz/lPs4z3+SXBDpH5cSA1h2v86lDAwus=
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
- by PH7PR10MB6227.namprd10.prod.outlook.com (2603:10b6:510:1f0::12) with
+ bh=B9yjlLixfWaaoauU5HPd5IZwiBozlKJaDN6DGwp2qSs=;
+ b=EHxpUXYIMXsCyRzxLWNLxWl2jguNxTHU2bLuMynK+abMUhvGr2Nh0vf3vZgBNn0A37S7rxlG1IsQ0Q5g0grPlJu3I4ruKAILw2FCC54B+t62Mpf6PAmiiovFzAiSg8+dxikodglagEe96g/H17IMwcY5OQ2XrRiViyil9IXtp1A=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by MN0PR21MB3170.namprd21.prod.outlook.com (2603:10b6:208:37a::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.21; Thu, 19 Oct
- 2023 23:11:16 +0000
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::8e27:f49:9cc3:b5af]) by BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::8e27:f49:9cc3:b5af%7]) with mapi id 15.20.6907.022; Thu, 19 Oct 2023
- 23:11:16 +0000
-Message-ID: <06e0a926-d6ad-8266-6571-583292365eea@oracle.com>
-Date: Thu, 19 Oct 2023 16:11:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH RFC 1/1] x86/paravirt: introduce param to disable pv
- sched_clock
-To: Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, dwmw2@infradead.org
-Cc: x86@kernel.org, virtualization@lists.linux-foundation.org,
-        kvm@vger.kernel.org, pv-drivers@vmware.com,
-        xen-devel@lists.xenproject.org, linux-hyperv@vger.kernel.org,
-        jgross@suse.com, akaher@vmware.com, amakhalov@vmware.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, pbonzini@redhat.com,
-        wanpengli@tencent.com, peterz@infradead.org, joe.jin@oracle.com,
-        boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org
-References: <20231018221123.136403-1-dongli.zhang@oracle.com>
- <87ttqm6d3f.fsf@redhat.com> <ZTFOCqMCuSiH8VEt@google.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.3; Fri, 20 Oct
+ 2023 06:01:54 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::8fee:5174:b3ad:4f5f]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::8fee:5174:b3ad:4f5f%2]) with mapi id 15.20.6933.002; Fri, 20 Oct 2023
+ 06:01:54 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Dave Hansen <dave.hansen@intel.com>, KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org"
+	<luto@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
+	"stefan.bader@canonical.com" <stefan.bader@canonical.com>, Tim Gardner
+	<tim.gardner@canonical.com>, "roxana.nicolescu@canonical.com"
+	<roxana.nicolescu@canonical.com>, "cascardo@canonical.com"
+	<cascardo@canonical.com>, "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+	"jgross@suse.com" <jgross@suse.com>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"sashal@kernel.org" <sashal@kernel.org>,
+	"matija.glavinic-pecotic.ext@nokia.com"
+	<matija.glavinic-pecotic.ext@nokia.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] x86/mm: Print the encryption features correctly when a
+ paravisor is present
+Thread-Topic: [PATCH] x86/mm: Print the encryption features correctly when a
+ paravisor is present
+Thread-Index: AQHaAqS1lPLVbi3WBEyYYZzhrGm+7LBSE1aQ
+Date: Fri, 20 Oct 2023 06:01:53 +0000
+Message-ID:
+ <SA1PR21MB13352433C4D72AE19F1FF56EBFDBA@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20231019062030.3206-1-decui@microsoft.com>
+ <00ff2f75-e780-4e2d-bcc9-f441f5ef879c@intel.com>
+In-Reply-To: <00ff2f75-e780-4e2d-bcc9-f441f5ef879c@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-From: Dongli Zhang <dongli.zhang@oracle.com>
-In-Reply-To: <ZTFOCqMCuSiH8VEt@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0155.namprd04.prod.outlook.com
- (2603:10b6:806:125::10) To BYAPR10MB2663.namprd10.prod.outlook.com
- (2603:10b6:a02:a9::20)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=910a4a3c-1f0a-4153-95bd-cf8981953d72;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-10-20T04:17:17Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MN0PR21MB3170:EE_
+x-ms-office365-filtering-correlation-id: 7814b80b-9ef0-4256-0eda-08dbd1320f60
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ d6G/y9fkW602ki9XJ0KtcmOmgCAAZ+w1+m8YAzEEFzJGUhSikM6D5To+hZk/saPst61/TaAOQKm9EhrumM8JTy/YST0wesVlXpXGMhBaFOA+DCwhilFBUrCxS8FBQ16XfbX8SFnLFEzoMm4obhl0nmTNHH56WXOzrkYx2uYZi8QQ4Aamj1vyA4QLzCMLxy0WTPfPQyEBb4FdXrollV/uMlMvzuWxJmpxFAhLT3jahAK0EgJ6K25Si1foLb8dril8ncY0PxgJWAARxVdiuLDipdTo/ByIJGagDLpsTa41yDmsIlu5S2kPLl6G+HF4Cig/LdVKqRNkHN6NhRfVR+yerPjKauhzgWeAudHBZdmMKyKf+d7iLdS/PQUufjup4DF73PMn4iBNGMzMBaCRWqiD/tnBHM1NgY5d3UrXYDnS89lNUq1PTosF1w3JIxPP8nu1rU9h4uPh9VWsFzkJhrQjZRbUq2WKKnhrBYigs7Pv1XuBBH9Lm9WBqdVLaRdD2vMKt2oiX5uCn8+LerVkx1e5SzR11hzQnAPZxhEOi6lm9dCvWq2xjfYecAmXeIWr/Br1IUD5cO/vEwAYs3gVZVmfpL6wMFYX+zVPQYRwz6FQDLbdgww80HdpB9TTPEUflzKIiSrGHiyKq/ttcgnMhXeFoiYQUOeqFGy3QExIR+m5cFZKWJ+KT8eakOGzlFUxaweT
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(396003)(366004)(376002)(136003)(230922051799003)(186009)(451199024)(1800799009)(64100799003)(478600001)(38070700009)(82960400001)(10290500003)(71200400001)(53546011)(6506007)(7696005)(82950400001)(122000001)(9686003)(66476007)(64756008)(66556008)(110136005)(66446008)(921008)(76116006)(316002)(66946007)(38100700002)(52536014)(4326008)(55016003)(41300700001)(2906002)(7416002)(8990500004)(5660300002)(33656002)(8676002)(8936002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?QkVxeDgwSW9POGI4WStMc0JQYlFEVnM1bVk5WlNlKzJXOW9EMysvL3p2eVZ5?=
+ =?utf-8?B?MnNZclBtRkdxajh3SDc1aTE3aGxCR1lWOFY1K2MxYnNuNmladW4yRldmV3dY?=
+ =?utf-8?B?VlFqRkVCNW5zeDhiV0ZHRitPN3dUZncrbTdva3IwQUFGNXdneGNwTXNGLzF1?=
+ =?utf-8?B?TjBJRE1WZkY0UTJTVDRnVzNMclNNSzJQc1k3SmVialRvTTZ1MFFqWGc0cGI4?=
+ =?utf-8?B?MVhOc3lPNVRwZE5DL2l4aFV4RkJsUEtOeWFFVTZueC9Hc2Q4T1lWSlVoL2VB?=
+ =?utf-8?B?aWI0VXFwcTNGNm5FOXk3ekswR3ZSM3RtK1YvQm5yZlBVVnQ1RFRYdGVnTkIw?=
+ =?utf-8?B?U1g3NHlhUGJUU3B5MnpqVUZZcGdRc1pPeXk3cngwbFo4OGh2OTR4YTY5UDhH?=
+ =?utf-8?B?VW4yb2N4VkNPQk5ac0lJWWF2YnRRQWtTQkJQOXFmS1lLUEE3ay9zc2k4WVFR?=
+ =?utf-8?B?V21qVUhVNkI3T29LTk9ob3hVSEc5bVZac1gvTHZPWXZ0bUcxQXBaUjJPM2Q5?=
+ =?utf-8?B?b1huYkpMRDU1MlJoeVNHMmxvak4vcENBL01rbFJwaFBSRlFhcGsvOXZLUDla?=
+ =?utf-8?B?WW1yM0phRFlrMS9pM1NMR2FkSTdnMzIrZ3VyditJMmlrZllVajd0UksxaFg4?=
+ =?utf-8?B?VGc2RXNVVEVLNElVRk1GVzEyTktKUURtd1pBV2VwYi9maUF2MjJpUDJsSDhB?=
+ =?utf-8?B?MFhqQ2g2ZGhPOTVQQkFJQ3lmY0Y4OVdJZDB1Mm5wM0lsMkJwaVB1eHdmcjVx?=
+ =?utf-8?B?aTdBR3gyL2xsdGNGVlAweTZ2QitrMVVjamtLbVFxVTFJU0I3RURkOVF3UGNT?=
+ =?utf-8?B?ZmdFbkxhRHlKNDRGdFUvTklWV2t3bXV0dFZ6aGRld1pTb3ZuNzVXbm5LVnJ3?=
+ =?utf-8?B?Z0pOWTNFdndvTlRWWDI5ZlNwYUI5MjVxWnV2LzZ0Z2xpOUFBQTRFOEZrTWhK?=
+ =?utf-8?B?MFg2ZkZiV2R1eXdCZ2dTdlBvZCtoS0k0ZmpOY3VUalFLOFE4QzkrMEdzd1Ix?=
+ =?utf-8?B?ZFdiWm5BTlhrZG95RFNnZnV5end5VkE4UlJPZUREL1E4SzkvSk1JdWdaQ1d5?=
+ =?utf-8?B?cmJSUzZCZ1diUzVUY3haOURVeEltQkRQQThUSHc5aXlpSHdtMDNxS2ZLZ0RX?=
+ =?utf-8?B?VlVoU3Q2WTgvaTFIYnpkeG9XdThYOUFLL2Q5TThIVlV0T1hPL0JjYkFxT0V0?=
+ =?utf-8?B?dDVTVkpGdVlhT3ZMRTdmVUMrL0V6VEFhaElqcW1qckJKaWFzcUEvbElXcTN0?=
+ =?utf-8?B?TkNoOTdEdjVzSUxOZTdPanphc2w3MVR4NVVHZlhOSDk4Slg5ZWsydnV0S2tw?=
+ =?utf-8?B?cDlXdXVWODk5a2dxekVwUWcxQnFqR094NUwxcENVMlRwYUdubndIVUw5MFpW?=
+ =?utf-8?B?d0Nxc1I2U3RtRHh0ekUzRjcxMHBna2dJYjBnelQxMjllQjFjK0NjbTk0MHR6?=
+ =?utf-8?B?Qmh6eTB6UnhYR2k3OXR1Um1tbnJTcHhGN3hFaytWVDBDY3V5L0Zqem9mTEgv?=
+ =?utf-8?B?eTJ1bGx6a0w3bHFWMkl3TXk3QkhiRnBFbVNtK3gzakZKaURhNC82NmZoTWgw?=
+ =?utf-8?B?VjArWTVBMHpZMjJjcjhxOVFUZHVnT3l6L1Y3alo4ZnA4ZHk1SzFvVnFHWkth?=
+ =?utf-8?B?bWEvanpIeXdpQ2xsK3JOMldnb1BvT3FVRUc3Y3NpUDRuWTJLL0hzcDZ0cmhx?=
+ =?utf-8?B?M1o3MlRBclVrUVZoVEFldlBHbVYvMEFpU1lmRUdScUMxRGpsUm40eDdSS0Rp?=
+ =?utf-8?B?VTErRjNOcC80ZU1zdlBkWHk0cWkwbHo3bWlSeDkvSGd3RW8vbkNWaU5GMFVt?=
+ =?utf-8?B?MGYvRmdEWTZIUTM5THJydU9aZktEa3NnYm9CQncyeklXb0c5RURoNWlTU1l3?=
+ =?utf-8?B?Zkd5ZWEwYWNpcHY5b1hoWVk2a0JtdXpPVnU3d05RS3NLaE5pUmpmeFVWUlZI?=
+ =?utf-8?B?eGszU2dXbE9iSEc0dUxpRi9PYkNuWTMrb1RtWDNZRXk4Rno3UG5nSXdVdC9z?=
+ =?utf-8?B?MHdKbUlpODcvSC9vOE5IMEtnQ0VDeExzWXIxQUtLY0VRTGlYM1B5OHFKOWsx?=
+ =?utf-8?B?clFkYXd0ZHF0NmZQRjRvTWRIK21BSXVCZ0tNdGJQeGdKOWJGQWxUV3crT25T?=
+ =?utf-8?B?Z2VqQWt0ZEZoV2R3eDM0Q3hYbXU4cWhZK1V0dHdKTUpKbndwOStTbGQ1ODVM?=
+ =?utf-8?Q?zFczjgAMedZV5ZpqO34/GmclOWXWYJ2o74x9ZTkpEoXh?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB2663:EE_|PH7PR10MB6227:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09ef3f3d-7b06-458f-f09b-08dbd0f8b262
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	sRoPlkI9sDJ+B+diJdJvw8SbWdofSMvL3N0DeJOacHd4KCxNChGLjG8eAQpCLgLuBMavFUfY86MzyTtuOtL1Gcqpn3Gg2wWeHER1aI8gDCcNkjtqIOKP0zBWGtyss9ocoghRmXfOvpT9rr6H8271MQCRh0pwwIM0TwiDTGRbVkJs+/0ekAUgQmYCFOFh6FfqmPWraUtNd4O3B9kPIhh7FRBbMaoz3+sZj+BEDxC97nn35NfOK3Wary56LSqbVFi2+SFl5Oi3u70uRDpI4MtatWiBjGZLH4dTU7GauP4AP5pJG+y2njAImV7YZcF1m+yEKhHrN0zcrVZlUpF+uhMOAvhcmZqb6IEPNkeHFQx+g3ye2EL9vNS5m+RZtJN/D1ULMuc7n9dSwSwygbKqeJGY97+61q7KlPVtS9PyeOyZigervhYaDTyFi+xxgyNfJ30/yuTOJAbCXkOfOqCo9myB9fj+U1RY/7MguT5SQKpNrO81DaAfgjVG8/UCYn1NDdvXH6/DssXXbTlWK5msaDoKx1B1BTXlu82I+NnF2jCuCQ7ZIgEp3q+fJqvGv8Y98Q63bjBQOY1OG6Sag3M4Y1guJmV3QBN/Z3TGm4e9zh8+OfubgxjdMPVi3r0m70GOE+AJ7YtrJPJJ2iRB/fQE1ZyyKQLRahZPai2ydm56u32j1KC7rKZfxspTiLthY2baQHpc
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(39860400002)(346002)(136003)(366004)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(53546011)(6512007)(26005)(83380400001)(6506007)(31686004)(2616005)(6666004)(966005)(8676002)(6486002)(4326008)(316002)(41300700001)(5660300002)(31696002)(30864003)(38100700002)(36756003)(8936002)(2906002)(86362001)(44832011)(478600001)(110136005)(7416002)(66476007)(66556008)(66946007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?MFAxNGN4NEc1SlRuUXdUNkdKVWpnbnhwNTl5VnI3emcvQk5kaVliazVuTTFs?=
- =?utf-8?B?SWUzb05zSGVJZmRjRXFPN1Rpc25lNGJsZFVUdFQ5OE55aTRjNC9TT08rOWQ4?=
- =?utf-8?B?R25pZk9QT2NUby93ck5RTS8rbTVBWEIra1V4SUdaVXV2UVloZmpFSThkbTIv?=
- =?utf-8?B?K3MrUW9CRVNPUTRhaTg1RmdqTHRJOHUwOThyeHhCSHlBOFBnb1lMZnNwWjZH?=
- =?utf-8?B?bXR5UmJSM3c2cUx5blFMUVFXcUE0QkVWY3ZrZU9zSFRjRXpMeUc3eFl3Z3dZ?=
- =?utf-8?B?WEh3UjByakhFZDB0MU5rNHRodWo4YTNsMFZ2aUhwUlhFL0lUNVN2QzYySXA1?=
- =?utf-8?B?Y0JUVG1lNytrUUVTYlZ5N0t0QkQrOW5HZENtOVdsczN2ODNzM3NPeEJDdit4?=
- =?utf-8?B?UVRiNTIzRmJMYzR6RHRPSmYyb2FVWktwY3ZnWmpMOEx5NXFOQkF6TVdPMExH?=
- =?utf-8?B?aHQ1bGQ0bGlMMVhtb2t1SCtrdFQra3dHcGhhU3BEK1VjZ3JBNHpteXBCbHBx?=
- =?utf-8?B?Q1FmZXE2b1o1M0J0WXFYZFVkZ2ZMTW9SMTFwL0srUUJRaDhWQTRMUkx0WThX?=
- =?utf-8?B?V0FCQXEzeTdKcXQ3WTJIVGdORUQzSktPcVVGK1FIQU1udGx5WnRDM2ZvSEV4?=
- =?utf-8?B?T1E5bVhYNlpzSVhnU3VNK3J6cFQyaWxiVHgvWTROU1hiempCVWhybE1FQ0dj?=
- =?utf-8?B?NGJCOHpmREh6c2V1cHJyaGhnZDM4Tk9HVkk2Q2ZpVDQ4b01Hb3NjRTh5VGd2?=
- =?utf-8?B?QzNCQTdnSVZiSndXOFRKVFlHWHIrYUxsVXN5M0dtVzF6c0Z5MnZTZlE3SzMr?=
- =?utf-8?B?QXlrbnMyTzFMUnE0OUZWNlJRTlVaYmUrSjF0a3NqNWRFY3ZaS2NsRDhHMlZy?=
- =?utf-8?B?MEpwcTdoMmZ4cm5GZ3JZRmtHSXpSK1B3VmRIa0JtRlFRd0NkbkJ5bnIvbzRa?=
- =?utf-8?B?YjJQZmpJTGVvT2kveUpGd2psU2lOVzVRc1hlZS9TdXliN2sya2Uzd1cvM0pa?=
- =?utf-8?B?c0luaUtTYmhUZDY1OVM3KzhVNmo1K2IyZ1RiMmRiQThkWGgzVmtUS05EdEZi?=
- =?utf-8?B?UnpoUGxTckZYSnN1QlpoeWRSdFY2Sk9UaHBXbGhhTkRvNGFacG5SM0FhYzNr?=
- =?utf-8?B?Tng1N2lneWtEVU5VWFJLSjcrbHR0dEUzNU1OMTJRQTBkN2lnRGFwdWhKV1ZY?=
- =?utf-8?B?N1ZSVE1NZEdIY1ZNR3UxTkkrZlVkUnU0elRnaGMvZ0ZwNGg2SjloeGVkVHNC?=
- =?utf-8?B?a3NvWFNrY1pmUHE5bVcwVzkrcGNXa3d4UThKc0pQNytQZXU3UHFSMktiZGNY?=
- =?utf-8?B?UWE4clZyOUY1YmZFQkRmK0dpTFNlZU5JWXdaZDgxUUsxZFN2Y2JPbFNMUTNn?=
- =?utf-8?B?ek9KbU5IR3J6RDV6T2xaT285WjRCVUx1QU5LdGRBZElyTmxNQS9GbGRqWFZ1?=
- =?utf-8?B?eFM0eDVLZ2cydXpLZWdIQW9QclZIYzRpSlRZTTUvcmdXV2gwQWZUZGtMRyts?=
- =?utf-8?B?Ny96UnY3TCtLaXVvQXRXcElSWFJpMXNqYU1xVVh1Qlo4NHpnRlNXUU9tZWFk?=
- =?utf-8?B?SFRhT0VGandvOXRqSjFKeUdZaEo0SmZLb2p1enBobGVObk5lVlJJZzZTNlhw?=
- =?utf-8?B?TFBDb2NPVmRkTUVhSXFvZHBoZVB1QUNoMUZaY2ZaYmhlRzBzUEV3Y2dnSFNr?=
- =?utf-8?B?UkFEQk5nRFRzdEg3SEd3cFNOZWQ1VkZvUG9USWVsVkYydHpRU2duMHhwRUtM?=
- =?utf-8?B?bzVreDJaUjZGTnZRR0tiMFpmMmxCdVR4eHhPTXJwUjBMakRMNWN0bDhUMTFF?=
- =?utf-8?B?eitqM0VVT1lnRHhDN3lEejJvUEJkQ0M3NjZuRjRKN0xkUW5uaXhMYWF6S1dX?=
- =?utf-8?B?Zmw3RHBVV0p6dmtVWGFnTGQxOFBnZG4vK256bGgxbTlwMCsxSGZYZnNyNTdO?=
- =?utf-8?B?VE5zSlo2dVRuMkhSQXUyNUxQcUkrWU5oSnQvdlRpYjZ2NTA2SXM1ZW0rOFhu?=
- =?utf-8?B?RXVvbUg1MWpwck1mTHVmT0JiaWtnbTR0S2J6bjBVa0hHTG5icjM4VzJaNWpG?=
- =?utf-8?B?Tm1Rc1dNVEplRmM3b2t4eWIyVEhlcUYvVUdjZWNSb2wxMFdyZ1hscHEybDFH?=
- =?utf-8?Q?epjmqEDlhuVwzVejutfr+Ml6T?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?utf-8?B?OFVBWVJDeVk5WTYrWjRaMVZxY1FaN0hDajNlWjVWSC8vOXZGV0hqWm5iSHdW?=
- =?utf-8?B?RzdUckd0a3pOWEk5ZU5qdUR3WXZkc0xDZmFOUXVkUFNyVGhNM2xBclZQS1Mv?=
- =?utf-8?B?QmY5TnQram1OdGZVbk41cEhaaHlmNmdxWER6UFVpeHgzQ0dlZlFBY2hhWGdE?=
- =?utf-8?B?WVI1cHhYcHZKSmtLZDl3NTNjZGI0NVQ4cFJGQlJTbm03QjNQZnEwaCtPdWhp?=
- =?utf-8?B?ZzdOcS9KVFFqcWlobUlyYnJlN1ozWHZKc1FDbkNsdnR4aUcxVmRNNFZPajdh?=
- =?utf-8?B?ejRQUExqY2R2VEVvUjdnRnZrc1hDNnRaVWxFRkNRbVcreGJTbEpHRm5Ea01E?=
- =?utf-8?B?N0JiWWsrMmZ1RmxMT1QrUWtiZnZQT2R6Z0NLb0doVEpveUZkOUJIYml3eWxY?=
- =?utf-8?B?aWxmQlVBQ0ZXbms3Vm9iRHhGczRvMXBhREJaelowTzlZcVpCWEZFdmo1ajZY?=
- =?utf-8?B?OXFSSDBYNTIvV01BbWxQUWNzK3cvVDc5dzRPRFgxeGJnTFUzeEdmK0NScStz?=
- =?utf-8?B?WU1ETG1iakJoMXZOaG5ZZlRVaDBsQXk3ckFlVTUyMWlwbExJQXF6NWlrS1lR?=
- =?utf-8?B?bmZZc0JNZDczTnJrNzNnd1VsMDBJeE5udERkUUFBK3l1akEzZ0lWNytQSm9T?=
- =?utf-8?B?WDUwZm0wRnpRMHl4ZVVPVFVsdEpiQUFBeHU1WndyTDZTNUlucEh6NzIwa1dm?=
- =?utf-8?B?bDNpQ2Ntdk5jeDJHWW1jZjNxS0VmNnNhMFU3MytRQjJxd0hrQytqejJ1MWxF?=
- =?utf-8?B?c2FQek04YmJIUFRWelVHUitwM3JzbHpkMGZDdVRLSUZpUnMvTFVtb1NOZzdF?=
- =?utf-8?B?YmVDc05oUnZvSXkrTGR1ZXJhR0hjYXduYWI0WEdDOHlvTm1TZjJNZ3NOeDRV?=
- =?utf-8?B?bTRJZEdUdnNlQ3ZDQkIrZnpRTnZQZU1iSFMvKzJ2NmFmR2plMEc5WXpDZUxG?=
- =?utf-8?B?VVB1RVRBZUQvYm9RakNqYllUYVFyVnhlbTRrR00zbHdIaUFvWGNhSkpDbW9H?=
- =?utf-8?B?YUs4WlpnRUUvWmNxV2JZVUNtVzkwVEZIY2VQMGMxVmppU05kRER5QTBROVpq?=
- =?utf-8?B?bHZMUlZKcVNjMU9ZSFpxSDdiemROUVYyb2hHOVhwR1QyVzlyMnpJZUNkTm12?=
- =?utf-8?B?dEFuS3hKd1UwNkNpbjVScmd6NEFHUTNPZHIzOXRqOGF4bktCMzczdy82eVFH?=
- =?utf-8?B?U3NHVTZ2emxOS2ZLZ1ZMMGF2M2V3MWhVN01QZWUzVWVIZWRIa295dVNWL1E4?=
- =?utf-8?B?NENSWXhoNFp3d1dCWmVOOHc4byswVjM5b01PcStaa2dkaTJrUy84amRNUnBy?=
- =?utf-8?B?OW95alpnSEZrNGhLMml0SEFoUEtoN1NKWk5QM3JyS1A4TllCNVBxQVpicERO?=
- =?utf-8?B?ZTRzQTNNUEJTem84UWNKc3F1THN1N2k5cHRnWWNqQUlyUlRYUmI3L3VCY0VP?=
- =?utf-8?B?dEtGTnErRHJ1Wk1ZMWx3VnExdXc3emI3dENlUWxRME5mZjNOS1dnS09rNlhh?=
- =?utf-8?B?eGhESUkvS1JocDNmemxIVWhsTlVXbjE4T3RCV0dBTmNEZnVuR1NacEZUbmVC?=
- =?utf-8?B?NnVPRzVNYjN3ODliM1FPRFBDYTZMYzFQTEloeXVXRXJwSWt4N0pnVEZRNyti?=
- =?utf-8?Q?UWfUQsxJRX9QwbkAifkZUHFjKs1MiZVqyv8DqNHKmiCA=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09ef3f3d-7b06-458f-f09b-08dbd0f8b262
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2023 23:11:16.7882
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7814b80b-9ef0-4256-0eda-08dbd1320f60
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2023 06:01:53.9463
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rf4mqG4yu5PMPgABze0N2o/rbEu73PeUhrxQ7Tf7K3FVofd0EDWpgYjXGCMLBO7Kulnp6/MKBbvfMX23drSNDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6227
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-19_21,2023-10-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310170001 definitions=main-2310190196
-X-Proofpoint-GUID: hjhkdoqT-Mz3-hmy0gVYF3kfu7GxJ53W
-X-Proofpoint-ORIG-GUID: hjhkdoqT-Mz3-hmy0gVYF3kfu7GxJ53W
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KRQJZtqQFcsMIT6ABrj5agzob+RPI4eoY5u2jBhcpPn4U23vrvG0UYix4DgJ+43P0VTLmraH/FYS4uDLu91FaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3170
 
-Hi Vitaly, Sean and David,
-
-On 10/19/23 08:40, Sean Christopherson wrote:
-> On Thu, Oct 19, 2023, Vitaly Kuznetsov wrote:
->> Dongli Zhang <dongli.zhang@oracle.com> writes:
->>
->>> As mentioned in the linux kernel development document, "sched_clock() is
->>> used for scheduling and timestamping". While there is a default native
->>> implementation, many paravirtualizations have their own implementations.
->>>
->>> About KVM, it uses kvm_sched_clock_read() and there is no way to only
->>> disable KVM's sched_clock. The "no-kvmclock" may disable all
->>> paravirtualized kvmclock features.
-> 
-> ...
-> 
->>> Please suggest and comment if other options are better:
->>>
->>> 1. Global param (this RFC patch).
->>>
->>> 2. The kvmclock specific param (e.g., "no-vmw-sched-clock" in vmware).
->>>
->>> Indeed I like the 2nd method.
->>>
->>> 3. Enforce native sched_clock only when TSC is invariant (hyper-v method).
->>>
->>> 4. Remove and cleanup pv sched_clock, and always use pv_sched_clock() for
->>> all (suggested by Peter Zijlstra in [3]). Some paravirtualizations may
->>> want to keep the pv sched_clock.
->>
->> Normally, it should be up to the hypervisor to tell the guest which
->> clock to use, i.e. if TSC is reliable or not. Let me put my question
->> this way: if TSC on the particular host is good for everything, why
->> does the hypervisor advertises 'kvmclock' to its guests?
-> 
-> I suspect there are two reasons.
-> 
->   1. As is likely the case in our fleet, no one revisited the set of advertised
->      PV features when defining the VM shapes for a new generation of hardware, or
->      whoever did the reviews wasn't aware that advertising kvmclock is actually
->      suboptimal.  All the PV clock stuff in KVM is quite labyrinthian, so it's
->      not hard to imagine it getting overlooked.
-> 
->   2. Legacy VMs.  If VMs have been running with a PV clock for years, forcing
->      them to switch to a new clocksource is high-risk, low-reward.
-> 
->> If for some 'historical reasons' we can't revoke features we can always
->> introduce a new PV feature bit saying that TSC is preferred.
->>
->> 1) Global param doesn't sound like a good idea to me: chances are that
->> people will be setting it on their guest images to workaround problems
->> on one hypervisor (or, rather, on one public cloud which is too lazy to
->> fix their hypervisor) while simultaneously creating problems on another.
->>
->> 2) KVM specific parameter can work, but as KVM's sched_clock is the same
->> as kvmclock, I'm not convinced it actually makes sense to separate the
->> two. Like if sched_clock is known to be bad but TSC is good, why do we
->> need to use PV clock at all? Having a parameter for debugging purposes
->> may be OK though...
->>
->> 3) This is Hyper-V specific, you can see that it uses a dedicated PV bit
->> (HV_ACCESS_TSC_INVARIANT) and not the architectural
->> CPUID.80000007H:EDX[8]. I'm not sure we can blindly trust the later on
->> all hypervisors.
->>
->> 4) Personally, I'm not sure that relying on 'TSC is crap' detection is
->> 100% reliable. I can imagine cases when we can't detect that fact that
->> while synchronized across CPUs and not going backwards, it is, for
->> example, ticking with an unstable frequency and PV sched clock is
->> supposed to give the right correction (all of them are rdtsc() based
->> anyways, aren't they?).
-> 
-> Yeah, practically speaking, the only thing adding a knob to turn off using PV
-> clocks for sched_clock will accomplish is creating an even bigger matrix of
-> combinations that can cause problems, e.g. where guests end up using kvmclock
-> timekeeping but not scheduling.
-> 
-> The explanation above and the links below fail to capture _the_ key point:
-> Linux-as-a-guest already prioritizes the TSC over paravirt clocks as the clocksource
-> when the TSC is constant and nonstop (first spliced blob below).
-> 
-> What I suggested is that if the TSC is chosen over a PV clock as the clocksource,
-> then we have the kernel also override the sched_clock selection (second spliced
-> blob below).
-> 
-> That doesn't require the guest admin to opt-in, and doesn't create even more
-> combinations to support.  It also provides for a smoother transition for when
-> customers inevitably end up creating VMs on hosts that don't advertise kvmclock
-> (or any PV clock).
-
-I would prefer to always leave the option to allow the guest admin to change the
-decision, especially for diagnostic/workaround reason (although the kvmclock is
-always buggy when tsc is buggy).
-
-
-As a summary of discussion:
-
-1. Vitaly Kuznetsov prefers global param, e.g., for the easy deployment of the
-same guest image on different hypervisors.
-
-2. Sean Christopherson prefers an automatic change of sched_clock when
-clocksource is or not TSC.
-
-
-However, the clocksource and TSC are different concepts.
-
-1. The clocksource is an arch global concept. That is, all archs (e.g., x86,
-arm, mips) share the same implementation to register/select clocksource. In
-additon, something like HPET does not have sched_clock.
-
-2. Some architecture has its own sched_clock implementation. E.g., x86 has its
-own sched_clock implementation in arch/x86/kernel/tsc.c.
-
-309 notrace u64 sched_clock(void)
-310 {
-311         u64 now;
-312         preempt_disable_notrace();
-313         now = sched_clock_noinstr();
-314         preempt_enable_notrace();
-315         return now;
-316 }
-
-3. When !CONFIG_PARAVIRT, it is native_sched_clock().
-
-4. When CONFIG_PARAVIRT, it is sched_clock_noinstr()->paravirt_sched_clock()
-referring to paravirt specific implementation (native/kvm/xen/vmware/hyperv).
-
-That is, the pv sched_clock is a concept under x86 when CONFIG_PARAVIRT==true.
-
-
-Although the implementation is possible, I just do not like the idea to change
-some arch global code, to accommodate some requirement as a leaf of the tree.
-
-
-How about to keep the change at x86 as in below? It won't work unless I change
-'tsc_clocksource_reliable' to an early_param.
-
----
- arch/x86/include/asm/paravirt.h |  2 +-
- arch/x86/kernel/kvmclock.c      | 12 +++++++-----
- arch/x86/kernel/paravirt.c      | 16 +++++++++++++++-
- 3 files changed, 23 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 6c8ff12..118b793 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -24,7 +24,7 @@
- DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
- DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
-
--void paravirt_set_sched_clock(u64 (*func)(void));
-+bool paravirt_set_sched_clock(u64 (*func)(void));
-
- static __always_inline u64 paravirt_sched_clock(void)
- {
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index fb8f5214..0b8bf56 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -93,13 +93,15 @@ static noinstr u64 kvm_sched_clock_read(void)
-
- static inline void kvm_sched_clock_init(bool stable)
- {
--	if (!stable)
--		clear_sched_clock_stable();
- 	kvm_sched_clock_offset = kvm_clock_read();
--	paravirt_set_sched_clock(kvm_sched_clock_read);
-
--	pr_info("kvm-clock: using sched offset of %llu cycles",
--		kvm_sched_clock_offset);
-+	if (!paravirt_set_sched_clock(kvm_sched_clock_read)) {
-+		if (!stable)
-+			clear_sched_clock_stable();
-+
-+		pr_info("kvm-clock: using sched offset of %llu cycles",
-+			kvm_sched_clock_offset);
-+	}
-
- 	BUILD_BUG_ON(sizeof(kvm_sched_clock_offset) >
- 		sizeof(((struct pvclock_vcpu_time_info *)NULL)->system_time));
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 97f1436..f8ad521 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -118,9 +118,23 @@ static u64 native_steal_clock(int cpu)
- DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
- DEFINE_STATIC_CALL(pv_sched_clock, native_sched_clock);
-
--void paravirt_set_sched_clock(u64 (*func)(void))
-+bool paravirt_set_sched_clock(u64 (*func)(void))
- {
-+	if (tsc_clocksource_reliable)
-+		goto refuse;
-+
-+	if (boot_cpu_has(X86_FEATURE_CONSTANT_TSC) &&
-+	    boot_cpu_has(X86_FEATURE_NONSTOP_TSC) &&
-+	    !check_tsc_unstable())
-+		goto refuse;
-+
- 	static_call_update(pv_sched_clock, func);
-+
-+	return 0;
-+
-+refuse:
-+	pr_info("sched_clock: use native when TSC is reliable");
-+	return -EPERM;
- }
-
- /* These are in entry.S */
-
-
-
-Indeed my favorite is to keep within kvmclock.
-(This won't work until I turn 'tsc_clocksource_reliable' into early_param).
-
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index fb8f5214..f16655d 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -286,6 +286,7 @@ static int kvmclock_setup_percpu(unsigned int cpu)
-
- void __init kvmclock_init(void)
- {
-+       bool prefer_tsc;
-        u8 flags;
-
-        if (!kvm_para_available() || !kvmclock)
-@@ -313,19 +314,8 @@ void __init kvmclock_init(void)
-        if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE_STABLE_BIT))
-                pvclock_set_flags(PVCLOCK_TSC_STABLE_BIT);
-
--       flags = pvclock_read_flags(&hv_clock_boot[0].pvti);
--       kvm_sched_clock_init(flags & PVCLOCK_TSC_STABLE_BIT);
--
--       x86_platform.calibrate_tsc = kvm_get_tsc_khz;
--       x86_platform.calibrate_cpu = kvm_get_tsc_khz;
--       x86_platform.get_wallclock = kvm_get_wallclock;
--       x86_platform.set_wallclock = kvm_set_wallclock;
--#ifdef CONFIG_X86_LOCAL_APIC
--       x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
--#endif
--       x86_platform.save_sched_clock_state = kvm_save_sched_clock_state;
--       x86_platform.restore_sched_clock_state = kvm_restore_sched_clock_state;
--       kvm_get_preset_lpj();
-+       if (tsc_clocksource_reliable)
-+               prefer_tsc = true;
-
-        /*
-         * X86_FEATURE_NONSTOP_TSC is TSC runs at constant rate
-@@ -334,10 +324,31 @@ void __init kvmclock_init(void)
-         * Invariant TSC exposed by host means kvmclock is not necessary:
-         * can use TSC as clocksource.
-         *
-+        * The TSC is used also when tsc_clocksource_reliable is configured
-+        * in kernel command line on purpose.
-         */
-        if (boot_cpu_has(X86_FEATURE_CONSTANT_TSC) &&
-            boot_cpu_has(X86_FEATURE_NONSTOP_TSC) &&
-            !check_tsc_unstable())
-+               prefer_tsc = true;
-+
-+       if (!prefer_tsc) {
-+               flags = pvclock_read_flags(&hv_clock_boot[0].pvti);
-+               kvm_sched_clock_init(flags & PVCLOCK_TSC_STABLE_BIT);
-+       }
-+
-+       x86_platform.calibrate_tsc = kvm_get_tsc_khz;
-+       x86_platform.calibrate_cpu = kvm_get_tsc_khz;
-+       x86_platform.get_wallclock = kvm_get_wallclock;
-+       x86_platform.set_wallclock = kvm_set_wallclock;
-+#ifdef CONFIG_X86_LOCAL_APIC
-+       x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
-+#endif
-+       x86_platform.save_sched_clock_state = kvm_save_sched_clock_state;
-+       x86_platform.restore_sched_clock_state = kvm_restore_sched_clock_state;
-+       kvm_get_preset_lpj();
-+
-+       if (prefer_tsc)
-                kvm_clock.rating = 299;
-
-        clocksource_register_hz(&kvm_clock, NSEC_PER_SEC);
-
-
-Thank you very much!
-
-Dongli Zhang
-
-> 
->>> To introduce a param may be easier to backport to old kernel version.
->>>
->>> References:
->>> [1] https://urldefense.com/v3/__https://lore.kernel.org/all/20230926230649.67852-1-dongli.zhang@oracle.com/__;!!ACWV5N9M2RV99hQ!Omk8Q6d8PW-UcKNdCRAeA8qSb698y3Eier2hro5vporwTCHqHSmYYk8fCinciVOHUG40CK4GQpHsjNlDiQ$ 
->>> [2] https://urldefense.com/v3/__https://lore.kernel.org/all/20231018195638.1898375-1-seanjc@google.com/__;!!ACWV5N9M2RV99hQ!Omk8Q6d8PW-UcKNdCRAeA8qSb698y3Eier2hro5vporwTCHqHSmYYk8fCinciVOHUG40CK4GQpHh5avzQg$ 
->>> [3] https://urldefense.com/v3/__https://lore.kernel.org/all/20231002211651.GA3774@noisy.programming.kicks-ass.net/__;!!ACWV5N9M2RV99hQ!Omk8Q6d8PW-UcKNdCRAeA8qSb698y3Eier2hro5vporwTCHqHSmYYk8fCinciVOHUG40CK4GQpH74It6kQ$ 
-> 
-> On Mon, Oct 2, 2023 at 11:18 AM Sean Christopherson <seanjc@google.com> wrote:
->>> Do we need to update the documentation to always suggest TSC when it is
->>> constant, as I believe many users still prefer pv clock than tsc?
->>>
->>> Thanks to tsc ratio scaling, the live migration will not impact tsc.
->>>
->>> >From the source code, the rating of kvm-clock is still higher than tsc.
->>>
->>> BTW., how about to decrease the rating if guest detects constant tsc?
->>>
->>> 166 struct clocksource kvm_clock = {
->>> 167         .name   = "kvm-clock",
->>> 168         .read   = kvm_clock_get_cycles,
->>> 169         .rating = 400,
->>> 170         .mask   = CLOCKSOURCE_MASK(64),
->>> 171         .flags  = CLOCK_SOURCE_IS_CONTINUOUS,
->>> 172         .enable = kvm_cs_enable,
->>> 173 };
->>>
->>> 1196 static struct clocksource clocksource_tsc = {
->>> 1197         .name                   = "tsc",
->>> 1198         .rating                 = 300,
->>> 1199         .read                   = read_tsc,
->>
->> That's already done in kvmclock_init().
->>
->>         if (boot_cpu_has(X86_FEATURE_CONSTANT_TSC) &&
->>             boot_cpu_has(X86_FEATURE_NONSTOP_TSC) &&
->>             !check_tsc_unstable())
->>                 kvm_clock.rating = 299;
->>
->> See also: https://urldefense.com/v3/__https://lore.kernel.org/all/ZOjF2DMBgW*2FzVvL3@google.com__;JQ!!ACWV5N9M2RV99hQ!Omk8Q6d8PW-UcKNdCRAeA8qSb698y3Eier2hro5vporwTCHqHSmYYk8fCinciVOHUG40CK4GQpFjD9PZNg$ 
->>
->>> 2. The sched_clock.
->>>
->>> The scheduling is impacted if there is big drift.
->>
->> ...
->>
->>> Unfortunately, the "no-kvmclock" kernel parameter disables all pv clock
->>> operations (not only sched_clock), e.g., after line 300.
->>
->> ...
->>
->>> Should I introduce a new param to disable no-kvm-sched-clock only, or to
->>> introduce a new param to allow the selection of sched_clock?
->>
->> I don't think we want a KVM-specific knob, because every flavor of paravirt guest
->> would need to do the same thing.  And unless there's a good reason to use a
->> paravirt clock, this really shouldn't be something the guest admin needs to opt
->> into using.
-> 
-> 
-> On Mon, Oct 2, 2023 at 2:06 PM Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Mon, Oct 02, 2023 at 11:18:50AM -0700, Sean Christopherson wrote:
->>> Assuming the desirable thing to do is to use native_sched_clock() in this
->>> scenario, do we need a separate rating system, or can we simply tie the
->>> sched clock selection to the clocksource selection, e.g. override the
->>> paravirt stuff if the TSC clock has higher priority and is chosen?
->>
->> Yeah, I see no point of another rating system. Just force the thing back
->> to native (or don't set it to that other thing).
+PiBGcm9tOiBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50ZWwuY29tPg0KPiBTZW50OiBUaHVy
+c2RheSwgT2N0b2JlciAxOSwgMjAyMyA4OjU0IEFNDQo+IFRvOiBEZXh1YW4gQ3VpIDxkZWN1aUBt
+aWNyb3NvZnQuY29tPjsgS1kgU3Jpbml2YXNhbg0KPiBbLi4uXQ0KPiA+IC0tLSBhL2FyY2gveDg2
+L2h5cGVydi9pdm0uYw0KPiA+ICsrKyBiL2FyY2gveDg2L2h5cGVydi9pdm0uYw0KPiA+IEBAIC00
+NTAsNiArNDUwLDE2IEBAIHN0YXRpYyBib29sIGh2X2lzX3ByaXZhdGVfbW1pbyh1NjQgYWRkcikN
+Cj4gPiAgCXJldHVybiBmYWxzZTsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyB2b2lkIGh2X3By
+aW50X21lbV9lbmNfZmVhdHVyZV9pbmZvKHZvaWQpDQo+ID4gK3sNCj4gPiArCWVudW0gaHZfaXNv
+bGF0aW9uX3R5cGUgdHlwZSA9IGh2X2dldF9pc29sYXRpb25fdHlwZSgpOw0KPiA+ICsNCj4gPiAr
+CWlmICh0eXBlID09IEhWX0lTT0xBVElPTl9UWVBFX1NOUCkNCj4gPiArCQlwcl9pbmZvKCJNZW1v
+cnkgRW5jcnlwdGlvbiBGZWF0dXJlcyBhY3RpdmU6IEFNRA0KPiBTRVZcbiIpOw0KPiA+ICsJZWxz
+ZSBpZiAodHlwZSA9PSBIVl9JU09MQVRJT05fVFlQRV9URFgpDQo+ID4gKwkJcHJfaW5mbygiTWVt
+b3J5IEVuY3J5cHRpb24gRmVhdHVyZXMgYWN0aXZlOiBJbnRlbA0KPiA+IFREWFxuIik7DQo+ID4g
+K30NCj4gDQo+IElmIHdlIGRyYXcgdGhpcyB0byBpdHMgbG9naWNhbCBjb25jbHVzaW9uLCBldmVy
+eSBwYXJhdmlzb3Igd2lsbCBuZWVkIGENCj4gcHJfaW5mbygpIGZvciBldmVyeSBoYXJkd2FyZSBD
+b0NvIGltcGxlbWVudGF0aW9uLiAgVGhhdCBNKk4gcHJfaW5mbygpcy4NCj4gVGhhdCBzZWVtcyBu
+dXRzLg0KDQpUaGlzIHBhdGNoIG9ubHkgbW9kaWZpZXMgeDg2IHJlbGF0ZWQgZmlsZXMuIEkgdGhp
+bmsgaXQncyB1bmxpa2VseSB0byBzZWUNCmEgdGhpcmQgaGFyZHdhcmUgQ29jbyBpbXBsZW1lbnRh
+dGlvbiBmb3IgeDg2IGluIHRoZSBmb3Jlc2VlYWJsZSBmZWF0dXJlICg/KQ0KV2hlbiB3ZSBoYXZl
+IGEgdGhpcmQgaW1wbGVtZW50YXRpb24sIEkgc3VwcG9zZSBtb3JlIGNvZGUsIGUuZy4sIHRoZSBl
+eGlzdGluZw0KcHJpbnRfbWVtX2VuY3J5cHRfZmVhdHVyZV9pbmZvKCksICB3aWxsIGhhdmUgdG8g
+YmUgY2hhbmdlZCBhcyB3ZWxsLg0KDQpDdXJyZW50bHkgaXQgbG9va3MgbGlrZSB0aGVyZSBpcyBv
+bmx5IDEgcGFyYXZpc29yIGltcGxlbWVudGF0aW9uLiANCkkgdGhpbmsgd2UnbGwga25vdyBpZiBz
+b21lIGNvZGUgY2FuIGJlIHNoYXJlZCBvbmx5IHdoZW4gYSBzZWNvbmQgcGFyYXZpc29yDQppbXBs
+ZW1lbnRhdGlvbiBhcHBlYXJzLg0KDQpJIGNhbiB1c2UgdGhlIGJlbG93IHZlcnNpb24gaWYgeW91
+IHRoaW5rIGl0J3MgYmV0dGVyOg0KDQpzdGF0aWMgY29uc3QgY2hhciAqaHZfbWVtX2VuY19mZWF0
+dXJlc1tdID0gew0KICAgICAgICBbIEhWX0lTT0xBVElPTl9UWVBFX1NOUCBdID0gIkFNRCBTRVYi
+LA0KICAgICAgICBbIEhWX0lTT0xBVElPTl9UWVBFX1REWCBdID0gIkludGVsIFREWCIsDQp9Ow0K
+DQpzdGF0aWMgdm9pZCBodl9wcmludF9tZW1fZW5jX2ZlYXR1cmVfaW5mbyh2b2lkKQ0Kew0KICAg
+ICAgICBlbnVtIGh2X2lzb2xhdGlvbl90eXBlIHR5cGUgPSBodl9nZXRfaXNvbGF0aW9uX3R5cGUo
+KTsNCg0KICAgICAgICBpZiAodHlwZSA8IEhWX0lTT0xBVElPTl9UWVBFX1NOUCB8fCB0eXBlID4g
+SFZfSVNPTEFUSU9OX1RZUEVfVERYKQ0KICAgICAgICAgICAgICAgIHJldHVybjsNCg0KICAgICAg
+ICBwcl9pbmZvKCJNZW1vcnkgRW5jcnlwdGlvbiBGZWF0dXJlcyBhY3RpdmU6OiAlc1xuIiwNCiAg
+ICAgICAgICAgICAgICBodl9tZW1fZW5jX2ZlYXR1cmVzW3R5cGVdKTsNCn0NCg0KVGhhbmtzLA0K
+RGV4dWFuDQo=
 
