@@ -1,182 +1,230 @@
-Return-Path: <linux-hyperv+bounces-606-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-607-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2FCD7D8A0C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Oct 2023 23:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67DA57D8A31
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Oct 2023 23:23:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F4621C20CB2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Oct 2023 21:07:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C0011C20E9B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Oct 2023 21:23:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10B83D38E;
-	Thu, 26 Oct 2023 21:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBEB03D972;
+	Thu, 26 Oct 2023 21:23:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="X100ac6q"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="R2l85sxx"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406684426;
-	Thu, 26 Oct 2023 21:07:26 +0000 (UTC)
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020002.outbound.protection.outlook.com [52.101.56.2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A06D93;
-	Thu, 26 Oct 2023 14:07:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A1E4426;
+	Thu, 26 Oct 2023 21:23:30 +0000 (UTC)
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021007.outbound.protection.outlook.com [52.101.56.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 419B31B1;
+	Thu, 26 Oct 2023 14:23:29 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ddNk+nr3U4yH87aAL/eoEVzuukcOX5whkyGJWFm7NaQrHTKYvmKyybyKWV8Eob7Zg5dFlT/wxvrx4QdeyXoGo9TZlXmlUeaLcB09UQdecFmaSNkzFiS7LH1YpzIhr3m743/E97AwQUujHW7l03b/ScolGKiSm0pB18UtP/2oUflcKKuX1SZuENW0rB5B8HXo5Ro/Spd4tS1nqiCBxatcX+89cru1K1wI6TvhvwH7vrJ6KMWqb83MeOg4o6wKT1AXCqE9XINX0JBbdsSprlyP0TsUXdwOucdb/veOP2gXZq9b+7/kNqR44AQofzovljyZNje2nA1iWaKp6Yt+vJ9riQ==
+ b=XFBsTZF4C64DUehKcCYEEq38dL43G0UUokeIJUJzJ0eM1CvP2AajKO61YFzANuNiCobNQPyKwoUGMeDQ58wEV955B2pv8Fw4royKyBF1VJ1O1ZqvZUaxMmQdNWN9CgzCZUl/BPZOxXiuurIdIIbA+GzSayEq+s0vR1JSyFDMwDuQk7Jqzv7k5K38Is2Nd+QF7gNQhrYvzusicAIPsB2qZTQraE88cYtKrwDsBQEu7/ZFCD0yqHK/JfrNmwik7EF4dBAIH7azV2d6aH3/Q0qJZsnDqh2qjy6XjKv8G3M+6kIhxKXpJThaW2EdNWJzhUm0zOinNL6Qurg7l3ixF0p1mw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JPs8eP6IieOQhnqR6klzGP5pDCVR/FSn6BN6LKQyDDE=;
- b=nij0ovTqzjO+UVXpU/2dNggo4ooo8FHRqXw1Q1gScnShUEU7wi+W8CsKejsySY9rZwehHKUkmR+rU4xE6E0XK222RHIxDQvBflHCsIHUtUolDdg1wjKv2WKaZmEd0OD2b+PrsKvxzf8qouZdQroNCdBmXhkZGV++CBG3R5FyCqalvz+PUm3n2EIPZmPUaNlZRw59DlAArtZ9cS8BpauDtx6ZyWH5kME6OulYzpiQTsoXB7R6W+ssOSBDvKSiduPnPGFeKKQjrPrFECkA/WarB3Z/miGdW/xeLG444vXX2Fz0RseV5gXLKJndC4TewY5wGEc4bT9U6zkg396xi+eoDw==
+ bh=ScO9MHjqFx9KLg4rtvI3RJfJbEafGC9U9HwhniT/Uro=;
+ b=oKJoqu+m6R+duPSZAEEfn3PoQyIvHZNdsggRw66/brXDrVwuHuWjDVgpC+v7z+a8HQJEsrtluDfE8+1L8b5GDUzl7MvwBzs5BEYqnSrfy/oieh/LA4XdoDLJXWOjdeIacM+orDhRunz4LzgpKBiXRv7gQ1jsPf7/lHKBegklbOEhNkMktQIcVW82VtjBqWHYu8xHbrAv/yRAD+m7kItn4wAcqHiM6v515vyVAR/fLW3nYClqnB2oqlfX/Gb0E1nSNUU/dkNwEufZv95+W0cE4mnUjwvmby2Roq57Z1kJbC790+rZwlI8z3urI5lb/TQ3wwovcv3OZlqEUANaZnWqnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JPs8eP6IieOQhnqR6klzGP5pDCVR/FSn6BN6LKQyDDE=;
- b=X100ac6qJaUkvRT2hgsAPCo+MtmNdhsRjELLiJCYMzcZjXBN/DVd65+fRfR1fjxFWBIBaZ7PwY8Y3KxW/k56Ys5O6sfjVHAr6toXOV6UcdC9S9Y3t1X/mJ2tm6srNpVVXc7cfc8E/jfDahq0FeSAyyurf6Ey2+QI+uPbdf6QsX0=
-Received: from MN0PR21MB3264.namprd21.prod.outlook.com (2603:10b6:208:37c::19)
- by BL1PR21MB3306.namprd21.prod.outlook.com (2603:10b6:208:39b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.6; Thu, 26 Oct
- 2023 21:07:22 +0000
-Received: from MN0PR21MB3264.namprd21.prod.outlook.com
- ([fe80::9f51:f462:e8d2:d242]) by MN0PR21MB3264.namprd21.prod.outlook.com
- ([fe80::9f51:f462:e8d2:d242%5]) with mapi id 15.20.6954.005; Thu, 26 Oct 2023
- 21:07:22 +0000
-From: Long Li <longli@microsoft.com>
-To: Stephen Hemminger <stephen@networkplumber.org>, "longli@linuxonhyperv.com"
-	<longli@linuxonhyperv.com>
-CC: KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [PATCH] hv_netvsc: Mark VF as slave before exposing it to
- user-mode
-Thread-Topic: [PATCH] hv_netvsc: Mark VF as slave before exposing it to
- user-mode
-Thread-Index: AQHaB5W4U0Kx/aurvkOjV7lIJbHFdbBcSWCAgABHzdA=
-Date: Thu, 26 Oct 2023 21:07:22 +0000
-Message-ID:
- <MN0PR21MB32641FE761E83A68CC627FFCCEDDA@MN0PR21MB3264.namprd21.prod.outlook.com>
-References: <1698274250-653-1-git-send-email-longli@linuxonhyperv.com>
- <20231026094841.39f01d26@hermes.local>
-In-Reply-To: <20231026094841.39f01d26@hermes.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a803e39c-7cff-470d-8f4d-d1e0f795ac24;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-10-26T21:05:39Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=ScO9MHjqFx9KLg4rtvI3RJfJbEafGC9U9HwhniT/Uro=;
+ b=R2l85sxx83pvGUOB+Mm8TqZgnNvfhUKxeBCcGlVHndlDYJdGv9i2TMgafmctnLf9tOc2qaizNwMTJFa6xVaOMXIcNY+NFar8RCctE8+tDHXsEUjySjOsSG27hIE0KzCZX90z1hkmCH+LtlthPaKaOMZ4ULsER6weZHreDAKMFrQ=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR21MB3264:EE_|BL1PR21MB3306:EE_
-x-ms-office365-filtering-correlation-id: 599e9ca4-451e-4766-eae7-08dbd6678c27
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- HACY+LjmapsxBbR9uGNyCCXmmfnM70wzKhxWCH8hIuI/eW3qTvZbLEDyW8WvdSl7nWgHLoVcKY6UiASF8xpTU73zWl6Fasw0v5hjBFilwf19jKsONzXROI3qrGTG+sKnG+qud9yNXKwIrV6cL28r0uNQ2+pfRu2RtVitMmkFt7hlg9HUZud8zi8dOozNpgowC8t+sALZmAD3SfkW/zT8yFaTFMEDzN/f2uHPHscw/Ce00ERclEQWrJi8t1Vbt40Ibh8cOW518CYbDULPo5mCdPU0HSD8AaS2VRxMGaPPIahFZ9YZZqqSLyI9j75Mid/gmz1mNW7oYuFnNWIISFZ6805uc+p2xOlmIzOHWEVMH5qRnz7gsGL+HLd7e379Diec7Hey+t71Dbe051ZSO9bd5mN9IQCUbCqEPrnSwLpMSICvNPPC7RR+kU0H+Tn+IcajJc37osjj3UW977eQGKUOKwfvS8dBnqlS/viLsQil58HLh6pOKaiWGj+S39SWz0Kakishrke7EIg6aIR3cNn9uTFZWGV+He5fJ6zN0P2QPQQdaeka6743pr5bzmf9wJdRzyAqs6shI79mWXMc5ioD88wvsv9kofMxpsodyX74iow0+ckEgRtl1SqGZtjmxEuc2+WMOiiRIGJH4jCmmwi6lbp1os2Hj3If2LlNa7QPmKY=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3264.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(136003)(366004)(396003)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(66556008)(8990500004)(66946007)(83380400001)(316002)(10290500003)(54906003)(38100700002)(76116006)(64756008)(66446008)(110136005)(7696005)(9686003)(82950400001)(26005)(6506007)(66476007)(71200400001)(7416002)(41300700001)(2906002)(8936002)(86362001)(122000001)(4326008)(82960400001)(8676002)(5660300002)(33656002)(478600001)(52536014)(38070700009)(55016003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0nnY3Cyh1YOJIV2FpYGEVBjzr55fxlNhOTJAL+aZ+t+P5mAHlSfsncNJ9xYM?=
- =?us-ascii?Q?cbzZ8dEVoXyHSn7g0VAIlmGnNK8aAzpoV7cxCiQapKQx3pUTX+7cFf7/SvFf?=
- =?us-ascii?Q?B8/H6q4HJsQyv9YvtKwpqsIW17mnZ3AjJiLrd9AgKT+Zk5G3ei6ZosAZdJ0a?=
- =?us-ascii?Q?u63vYGgE7GUW3NBjjA/oNZqn3C4Ygcs7KDNny7P40qOU7p9aKGHFkx2vw1QI?=
- =?us-ascii?Q?M4r1tHGtX0Z+fzjuniHHpjdJQtI3VWGExKYX3F0clrFRrTcb+4z+H8/gEttn?=
- =?us-ascii?Q?OmrHBxpWPCO2dCKL7UmnP+z/2QlksRzGQaG3WI+cPyiSLEtWbNNGB5sL9/4W?=
- =?us-ascii?Q?QCY8qevqXG6jUYPoFquDJ6t4IKLL64yEjSRkc9T8H2VIrA1+iYcYr760eESD?=
- =?us-ascii?Q?ZnffyZkOMPPkcoM6K8RzVHLmMgvkMSx5PBC6cUkOFvUZVXz+DUXuc/zKWaI8?=
- =?us-ascii?Q?F1Eaf7aisbFHZyV0QaMC8uuAobDLnFrFunEZSzJKnZiMG3TIpltaQuI6X/fL?=
- =?us-ascii?Q?fvCJ3FX2LQQ6vH1hX/Lao3B57B0DE2E2HuFP/USBJ5NqxwKyNW/z7Idif2yk?=
- =?us-ascii?Q?Vvu7aY136OByIBofE9fPsEZCT1fqEpQooLINW7hPAl58R6PMFAT38lxKf9xw?=
- =?us-ascii?Q?AhdTN8XQpz78JV5N5IuwQHIdejdlRppV4do068DskUBOEFkg9DLRsGacJGJx?=
- =?us-ascii?Q?9dbilT+r0JKb0fqb7rvdU0eK+XMgTfy6QLcpXp0wsb495s6XeChDlsLUULxS?=
- =?us-ascii?Q?lq13HkwRudkuOPpow/LglnB8IVYiJkg6VZERRJMiQ60Fp6ROZJT099P/Bhsj?=
- =?us-ascii?Q?xZC1jxhyd9IzbvVleENzxvPcyHEiUOK79D63VvK0iBP50BODIx8iiyxoly4C?=
- =?us-ascii?Q?NvkuF+kz0KipsEpI/rcqgAp/7enDoc+Cl7C3h6fITDKcoKMOPnk1uSL04JMc?=
- =?us-ascii?Q?pNraQzuHEGmqyqu7aUmzQ1gkQkn+7yYWLwgQmrnp6LGXJVw/EmCopulwiZol?=
- =?us-ascii?Q?phEaQEV7rzSTCPBbefuVxENu6zgtTmU7ZvA7a5NFiiiZ/9gaviz5Ziwnwdxn?=
- =?us-ascii?Q?Fv2RBmbGDP3qlM8YcYFEpO41ISZdj2t246l2to1xzMFu5gGiB63tdFOCJnDk?=
- =?us-ascii?Q?J8vaQlzhlpcFuYacw91JqJRrF5qbxEj9Nagn/i2EjHSiBQ8wqGQlTqZMaiXa?=
- =?us-ascii?Q?eOoQuq3193d+nzUTrGH3IBBYl3fdBXWuibQHK258NuM1h3aRUPaZFRPYmErw?=
- =?us-ascii?Q?c5IiW5prWZ7pjPVOoaYS9dkPBeWvvmAiVqejgqi7ZlQ4lJjm0GWSnEhzctcQ?=
- =?us-ascii?Q?d7BVnn/AREzlmGYhUbs3KI6dyzAQ97XOETdpDvW6iF5HllEU3bUxlVOI8ELg?=
- =?us-ascii?Q?8T/ifJrQtzUg1iAPJKfFcRLi7lhVKVHs0HQH98s544/FFbGF9m+mTA9fDrmC?=
- =?us-ascii?Q?IyNlP35it5xzAwgR8TiKQDSu59zupDuDma0WxVnkwu0761XrvjJj3op6kp94?=
- =?us-ascii?Q?YmsCWVJnN2XdyCBeVfQ9UunH0dCnzat+R6VpsIPoWMf9QF6yq3daEGg0hxTV?=
- =?us-ascii?Q?0uTfGYqLhrNcc24Ep6fzvZbcXOcSZ4wGRzjGm3B3?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
+ by CY5PR21MB3711.namprd21.prod.outlook.com (2603:10b6:930:2f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.9; Thu, 26 Oct
+ 2023 21:23:26 +0000
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::c099:1450:81d3:61dd]) by BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::c099:1450:81d3:61dd%4]) with mapi id 15.20.6954.008; Thu, 26 Oct 2023
+ 21:23:26 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH net,v2] hv_netvsc: fix race of netvsc and VF register_netdevice
+Date: Thu, 26 Oct 2023 14:22:34 -0700
+Message-Id: <1698355354-12869-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0161.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::16) To BY5PR21MB1443.namprd21.prod.outlook.com
+ (2603:10b6:a03:21f::18)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|CY5PR21MB3711:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b76fab6-bfb3-446f-f7d2-08dbd669ca72
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	uaAgxGsRluUNdB4dywq5SLON3jO4Dx8q9M68/zQXbMpHs53jBxMECMbkBX5Us0NWQR4/zhlyc35hDsWeGXTwUvt29hK7yzGiNloh7NOnZ7McvAkC8Kn/Okeh7D85cQXVBFHIMrOcFraDUQ0SiLHazj2UXgUub3aOBBO8S0A3Kf0fGniOwWI+d9Mzv7IEHzcYvBHHgRei6flYVecBEvZ6xUDshHcKSImLAWvgmmBjfpkEhgdWjciIy04dd7jhCvk6uNi9oyTK4e83K/BKV13Drmvq58X8pmlz/a3+lR1boPim9oOKPEFgSyk2ZV6XYf/zbSNZUKmJHFHYGtJw/xxKW/gi4/PRQWgxRwgWtK/lrykdmYS7n/HCYmXluy92LuXAmqTL2YWwxKZJjpv2IVHWja3jYnBqpc872yXsVAJfnRm0nMwX0NW3djCZUcG/NS1UKtPt0oADAorhsMMPYIn/yHfr2YvrRJDUL00+9WdWHMX/g4svpY+jSK0xeVCbjCXgeFPcIQjVgbz1iP6T+oBMe2k4+uuhBTaoFMheZ+3wfhZhgP+qM7yNQQq4ekYCJD+vCxlhZK5my+AE2eJNlAdTjg+w9DBfpr4tonXcdSkKZSqScPBiQllugEt3SCay0pM3ZPmCm7XBNqoPnvI0et9ciBMp+rrbl0fKQq+dSxxKEBA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(396003)(39860400002)(346002)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(478600001)(6666004)(7846003)(6506007)(6512007)(2906002)(316002)(6486002)(38100700002)(5660300002)(10290500003)(82950400001)(82960400001)(52116002)(41300700001)(26005)(66899024)(66476007)(66556008)(66946007)(36756003)(83380400001)(2616005)(8676002)(38350700005)(4326008)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Rsy03WKDh8FBUZDSoJg1MyyleRKf0A5rwL+u7QBPPzOV3Ad6SlBPTVKc1s6Q?=
+ =?us-ascii?Q?7Ew27jDxs/6VaIEMyLiIm3nhgQ/5zpYvh1LZQuEfsuk38Hf0/UKf4wTvIMN7?=
+ =?us-ascii?Q?50vCCxALrO7WnTsZnfllOhV6xlHjjFDRaSEcUtVvTllF4e+HbLPe82zbwVl3?=
+ =?us-ascii?Q?Q/OsO/U+yTuAx3yGAcZpsXYvfEvHGyMjHG9/GwiRFomE/lAtGgST2VqhQmNJ?=
+ =?us-ascii?Q?WNx2tkiMOzw+yhn+Hk2AtY3NnbcGfOdq/2md91peRRY6d2hUDG0aCEbFlpCF?=
+ =?us-ascii?Q?HdAh+Jeoto6A0yPzRtNSK2ieyo8V1uCOspOLBGCapZtXYolavgGIbg0o0S5M?=
+ =?us-ascii?Q?GHZNT4/HCW152gmJEttxdgCBYNTHu+Of1f4BfnflRPnmo8evgEDY4o+/MoAu?=
+ =?us-ascii?Q?oaIE7+m4smsZu8JmfLrQoxHeAwarn3q4Hi1mt6zN50njuDdAZhn88hlwNXxY?=
+ =?us-ascii?Q?U2o3fb2NcVDTjBf/6yUMCgtX23/A25TDE7BsfbQmdATbJz5mNA7ffXBWkC4/?=
+ =?us-ascii?Q?hfpdE7kGKp/L2OGO6pc9/v88nYqX+aW+8cNtfXbCbU+2MSl3+Tr2YvF1cVPa?=
+ =?us-ascii?Q?RO+wFi4sGIM7OnVJZWRmGosmxMESoDfvnpyCqatbsPx0CUQXDElofZyReIU6?=
+ =?us-ascii?Q?Evv2rnPf+Qa17Qa+UtHb3pQJkLR9yccAsrahd2FY4fvtf0ffK+wM07KZQv00?=
+ =?us-ascii?Q?4rxmPKgSwMJEO/Au22jtNzPlaIcPsRI1LdFHP7scOtuFCAwRT39sSZYE3Kwn?=
+ =?us-ascii?Q?emRwSuHgbuA33hKjntw2jl2HZrtZ6Huwwtr2B7gZ3E5IMoQrt+ludp76ubuP?=
+ =?us-ascii?Q?zKiZYPSv+WZb5SrpKI7gC/y2+jBdiZuoTaWv+X+1Yu/2c8ukOvTO85dz4Xg5?=
+ =?us-ascii?Q?gvtfscTPgB0N2O9CqZmLYxlmL6U6YVUSLGXh65OFZLumslBw+cxFl8S/QxDE?=
+ =?us-ascii?Q?hN73aZmxMjABI0gPs0jeVr/fO5jRIDb4b+ZU/UB+h5mkcnme3+WGKXq6Qykc?=
+ =?us-ascii?Q?7KEgfGT0I7zFOVvlbFscefNQDDsHjtHiPXUfsdM6RX7jFeopZBekDPbrfb5j?=
+ =?us-ascii?Q?CI8ynlxtSDEK8bhQBwdbPnT6/djz+2wsQbcjN7uuSfpNXNdlnljYmh2kYWLS?=
+ =?us-ascii?Q?M5Pyw+ubfWlGpI5Qt/kHpd68INlnbtN2q5jnjTLKJpgG1Bklkfr58uDnNmAr?=
+ =?us-ascii?Q?Tfwnj2A25nTR9BT5FkrbFvbgYGd+hChG7MpnlIWLSjK/N4mk1L0I/hY36tlx?=
+ =?us-ascii?Q?U0x0ptlG6niJS1aRMzeDknK89sBgHvmcaYV1+9Kp4bqgCHUTCDzjxtHFhw5p?=
+ =?us-ascii?Q?OmRVkKRc5cSAd0q0BdKWF1SOg91HB+xkuL1CuR4MC68Rf9LeC7aw6Eu0/5F+?=
+ =?us-ascii?Q?u47STrrQ+xdiY7d7f5n5yq9PlaCfoRYPeRwGV+5oy3WvEJgO5e9AVgVRGMnS?=
+ =?us-ascii?Q?poZRZTMEkh8ZXBRR2zOHS2nwGL72Wwkd5xtf0rK4/YYhpzdIyW27stvtb4CG?=
+ =?us-ascii?Q?fJCy5r/mmFryFnjduOYEu86mdjwqIZxbQkDOeX1e3amJRfrUz9M6JRj9uy0Y?=
+ =?us-ascii?Q?F5N8Agk+T7ujYb6k7XXiFN/EHwJwaCaQgtjPEfQb?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b76fab6-bfb3-446f-f7d2-08dbd669ca72
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3264.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 599e9ca4-451e-4766-eae7-08dbd6678c27
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2023 21:07:22.1711
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2023 21:23:26.3377
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OrQT2virXgk9Py4XH8gVVUSgbYk+wbUQiAs9p7KoapFlBnjzumFUD79hwz5nXTggkU3lV9acRzRrhZfbr7IV6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3306
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wzKEIOiGlK6aa2sA2LWR3gAyXbiIFXMR8Wm+Mw6EMC69xh8TN9sQy1b9kG441P6YGID4mMcw5tWikFsJLboRPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR21MB3711
 
-> Subject: Re: [PATCH] hv_netvsc: Mark VF as slave before exposing it to us=
-er-mode
->=20
-> On Wed, 25 Oct 2023 15:50:50 -0700
-> longli@linuxonhyperv.com wrote:
->=20
-> > @@ -2347,6 +2342,12 @@ static int netvsc_register_vf(struct net_device
-> *vf_netdev)
-> >  	if (!ndev)
-> >  		return NOTIFY_DONE;
-> >
-> > +	if (event =3D=3D NETDEV_POST_INIT) {
-> > +		/* set slave flag before open to prevent IPv6 addrconf */
-> > +		vf_netdev->flags |=3D IFF_SLAVE;
-> > +		return NOTIFY_DONE;
-> > +	}
-> > +
-> >  	net_device_ctx =3D netdev_priv(ndev);
-> >  	netvsc_dev =3D rtnl_dereference(net_device_ctx->nvdev);
-> >  	if (!netvsc_dev || rtnl_dereference(net_device_ctx->vf_netdev))
-> > @@ -2753,8 +2754,9 @@ static int netvsc_netdev_event(struct notifier_bl=
-ock
-> *this,
-> >  		return NOTIFY_DONE;
-> >
-> >  	switch (event) {
-> > +	case NETDEV_POST_INIT:
-> >  	case NETDEV_REGISTER:
-> > -		return netvsc_register_vf(event_dev);
-> > +		return netvsc_register_vf(event_dev, event);
->=20
-> Although correct, this is an awkward way to write this.
-> There are two events which call register_vf() but the post init one short=
- circuits
-> and doesn't really register the VF.
->=20
-> The code is clearer if flag is set in switch statement.
->=20
+The rtnl lock also needs to be held before rndis_filter_device_add()
+which advertises nvsp_2_vsc_capability / sriov bit, and triggers
+VF NIC offering and registering. If VF NIC finished register_netdev()
+earlier it may cause name based config failure.
 
-I will add a dedicated function to handle NETDEV_POST_INIT.
+To fix this issue, move the call to rtnl_lock() before
+rndis_filter_device_add(), so VF will be registered later than netvsc
+/ synthetic NIC, and gets a name numbered (ethX) after netvsc.
 
-Thanks,
-Long
+And, move register_netdevice_notifier() earlier, so the call back
+function is set before probing.
+
+Cc: stable@vger.kernel.org
+Fixes: e04e7a7bbd4b ("hv_netvsc: Fix a deadlock by getting rtnl lock earlier in netvsc_probe()")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+
+---
+v2:
+  Fix rtnl_unlock() in error handling as found by Wojciech Drewek.
+---
+ drivers/net/hyperv/netvsc_drv.c | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 3ba3c8fb28a5..1d1491da303b 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2531,15 +2531,6 @@ static int netvsc_probe(struct hv_device *dev,
+ 		goto devinfo_failed;
+ 	}
+ 
+-	nvdev = rndis_filter_device_add(dev, device_info);
+-	if (IS_ERR(nvdev)) {
+-		ret = PTR_ERR(nvdev);
+-		netdev_err(net, "unable to add netvsc device (ret %d)\n", ret);
+-		goto rndis_failed;
+-	}
+-
+-	eth_hw_addr_set(net, device_info->mac_adr);
+-
+ 	/* We must get rtnl lock before scheduling nvdev->subchan_work,
+ 	 * otherwise netvsc_subchan_work() can get rtnl lock first and wait
+ 	 * all subchannels to show up, but that may not happen because
+@@ -2547,9 +2538,23 @@ static int netvsc_probe(struct hv_device *dev,
+ 	 * -> ... -> device_add() -> ... -> __device_attach() can't get
+ 	 * the device lock, so all the subchannels can't be processed --
+ 	 * finally netvsc_subchan_work() hangs forever.
++	 *
++	 * The rtnl lock also needs to be held before rndis_filter_device_add()
++	 * which advertises nvsp_2_vsc_capability / sriov bit, and triggers
++	 * VF NIC offering and registering. If VF NIC finished register_netdev()
++	 * earlier it may cause name based config failure.
+ 	 */
+ 	rtnl_lock();
+ 
++	nvdev = rndis_filter_device_add(dev, device_info);
++	if (IS_ERR(nvdev)) {
++		ret = PTR_ERR(nvdev);
++		netdev_err(net, "unable to add netvsc device (ret %d)\n", ret);
++		goto rndis_failed;
++	}
++
++	eth_hw_addr_set(net, device_info->mac_adr);
++
+ 	if (nvdev->num_chn > 1)
+ 		schedule_work(&nvdev->subchan_work);
+ 
+@@ -2586,9 +2591,9 @@ static int netvsc_probe(struct hv_device *dev,
+ 	return 0;
+ 
+ register_failed:
+-	rtnl_unlock();
+ 	rndis_filter_device_remove(dev, nvdev);
+ rndis_failed:
++	rtnl_unlock();
+ 	netvsc_devinfo_put(device_info);
+ devinfo_failed:
+ 	free_percpu(net_device_ctx->vf_stats);
+@@ -2788,11 +2793,14 @@ static int __init netvsc_drv_init(void)
+ 	}
+ 	netvsc_ring_bytes = ring_size * PAGE_SIZE;
+ 
++	register_netdevice_notifier(&netvsc_netdev_notifier);
++
+ 	ret = vmbus_driver_register(&netvsc_drv);
+-	if (ret)
++	if (ret) {
++		unregister_netdevice_notifier(&netvsc_netdev_notifier);
+ 		return ret;
++	}
+ 
+-	register_netdevice_notifier(&netvsc_netdev_notifier);
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
 
