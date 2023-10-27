@@ -1,40 +1,40 @@
-Return-Path: <linux-hyperv+bounces-639-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-640-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F8857DA420
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Oct 2023 01:41:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 068507DA428
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Oct 2023 01:44:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CCF61C21149
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Oct 2023 23:41:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEBF91F23AF9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Oct 2023 23:44:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A839B4120D;
-	Fri, 27 Oct 2023 23:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DAC141217;
+	Fri, 27 Oct 2023 23:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZWWyy5xd"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="r3RDh8iD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27052347D3;
-	Fri, 27 Oct 2023 23:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5B641206;
+	Fri, 27 Oct 2023 23:44:04 +0000 (UTC)
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0589A1A6;
-	Fri, 27 Oct 2023 16:41:28 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDBB1B1;
+	Fri, 27 Oct 2023 16:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=09k1FMNrHa5VTgFlKbdaRb+SPhW1H9zw7ovrSs4UjdY=; b=ZWWyy5xd7cYU1YZ3Y63aEvxcCe
-	XQojUHYnvygF02KsdPuzUdj1VFkZLk423VqEViU6D6EUA8zRI1RlDd9z9zEMQlcl3eakNA+l8SUu/
-	KY2ZYQOI4FngifBT+l6rvBDcfWaH1qI4+eb0e3aX0Q5nFF4Q55qVR0t8cxpOmlH7ruCg=;
+	bh=nON0cFSztiE7XcY8cFP+C7pm31K+bA5yGWUP5QJ9lns=; b=r3RDh8iDMr/m9xE7BTG70h/G40
+	/0aDL9NP5016KyWfQbW3QCU45vcREym2fT3cY9k9P+t2ZoutQYyqPvPiWlKZSWoKLFvRL+dJrH27X
+	nGxyvU9tY146Xp5aUDuzQVvN+Eeo2IZuvxWZ681zhAkGOwBUZCtXSaUlL381DnomFDiA=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1qwWRA-000Nnw-Px; Sat, 28 Oct 2023 01:40:20 +0200
-Date: Sat, 28 Oct 2023 01:40:20 +0200
+	id 1qwWTx-000NpJ-BL; Sat, 28 Oct 2023 01:43:13 +0200
+Date: Sat, 28 Oct 2023 01:43:13 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Justin Stitt <justinstitt@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -95,11 +95,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next v3 3/3] net: Convert some ethtool_sprintf() to
- ethtool_puts()
-Message-ID: <8f0e55ea-1c24-4d6b-9398-0cbc2bb58907@lunn.ch>
+Subject: Re: [PATCH net-next v3 1/3] ethtool: Implement ethtool_puts()
+Message-ID: <8ca4ba13-1bcf-4c7b-91b6-8c77fbe55b30@lunn.ch>
 References: <20231027-ethtool_puts_impl-v3-0-3466ac679304@google.com>
- <20231027-ethtool_puts_impl-v3-3-3466ac679304@google.com>
+ <20231027-ethtool_puts_impl-v3-1-3466ac679304@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -108,23 +107,16 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231027-ethtool_puts_impl-v3-3-3466ac679304@google.com>
+In-Reply-To: <20231027-ethtool_puts_impl-v3-1-3466ac679304@google.com>
 
-On Fri, Oct 27, 2023 at 10:05:35PM +0000, Justin Stitt wrote:
-> This patch converts some basic cases of ethtool_sprintf() to
-> ethtool_puts().
-> 
-> The conversions are used in cases where ethtool_sprintf() was being used
-> with just two arguments:
-> |       ethtool_sprintf(&data, buffer[i].name);
-> or when it's used with format string: "%s"
-> |       ethtool_sprintf(&data, "%s", buffer[i].name);
-> which both now become:
-> |       ethtool_puts(&data, buffer[i].name);
-> 
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> +/**
+> + * ethtool_puts - Write string to ethtool string data
+> + * @data: Pointer to start of string to update
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Isn't it actually a pointer to a pointer to the start of string to
+update?
 
-    Andrew
+> +extern void ethtool_puts(u8 **data, const char *str);
+
+	Andrew
 
