@@ -1,77 +1,76 @@
-Return-Path: <linux-hyperv+bounces-634-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-635-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91AAA7DA317
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Oct 2023 00:05:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3B327DA315
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Oct 2023 00:05:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E224EB2152C
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D69D71C211C5
 	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Oct 2023 22:05:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EFDA405DD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC30E405E0;
 	Fri, 27 Oct 2023 22:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDl9gxkM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="niMtvX57"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F723FB02
-	for <linux-hyperv@vger.kernel.org>; Fri, 27 Oct 2023 22:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCF4405C4
+	for <linux-hyperv@vger.kernel.org>; Fri, 27 Oct 2023 22:05:40 +0000 (UTC)
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87E11B6
-	for <linux-hyperv@vger.kernel.org>; Fri, 27 Oct 2023 15:05:36 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5af592fed43so15873207b3.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 27 Oct 2023 15:05:36 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3851BB
+	for <linux-hyperv@vger.kernel.org>; Fri, 27 Oct 2023 15:05:38 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7b9e83b70so24403947b3.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 27 Oct 2023 15:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698444336; x=1699049136; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Dv2Z7o3QSlnoiZIAJzWPTX30Lbv8sYbyZygvDJ17kQQ=;
-        b=EDl9gxkMlqeO0JLkWzUrzLta4iv4EsX6DA+tQ3yjltexNLB5LG+Y8EtIwSkEFU7MS8
-         V73mGjGV0wcJRQ1Wr2oGuZy2Q2QKono9OrVSm5E9x/UAON5fGytV+mivZJe8ovKkS/jO
-         4fE17/aT4YY+Xfe7UWcSD2yjsZmJ8fzWjyj36zL6D8zDwtGPkpOrFXoGbSDAJTKPlYmf
-         MYp0pcikbN+YewmqODJLUmOBwFhx3oPbmuvFJRjZAro4T4sB31jg0E3s296+F0t6BUjz
-         F8HeTQNXF0qnnoT4G9ZLlLR7VdXxZE3xyrgZ71m49+CMHvXwzk0BAx8Iycx3igy9/Gco
-         SirA==
+        d=google.com; s=20230601; t=1698444337; x=1699049137; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LDqGU1lZbnWOljJhjK5QPctoYCimsNeknFpCayVMkH0=;
+        b=niMtvX57gyjujwstvucVtKV+qWGIXv/RZiYNVMkg1eAOo7s8ZFnWEyOTgXXoGOatYx
+         9GtL5f7NQ9cdOCmuPdEIxDJYblIPqVXOG6E7oYGWFtnXZwbmO++dHPWxmHdfFFa5/Wji
+         Wi+OTchtUmiRLD1sz5wzTIXauABXTZ4HKNMLgiz7plWbwWDTNh6gd8NsScPaGb750RtS
+         lS9EdlWeeiFOVGFMpM0DWYO03sj6RnL1xwmFBRFt5Ox6RTdSsfIgQ9RjeKYcxGe41oeG
+         /tKWQOychJOEqmrI/nF9PHFdBZOv+KQB4rkBRDr/O3eaUZalDvgg3Mx3usAogPIOreHJ
+         E5tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698444336; x=1699049136;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Dv2Z7o3QSlnoiZIAJzWPTX30Lbv8sYbyZygvDJ17kQQ=;
-        b=S9iivL2pOlm8Ub6gact+O9e1IjVmAeoQXGVBZ2oxHe9sDXRsJoWu7jtEtFUOpY/xjh
-         nWx7/bUVgTDGISH5K/Gci5gkIY+N12eo/xolLtFhOTn+XLNTv7RTySrDzg+LkteDyle+
-         WIrA7vPuxQZg6tk3oTI1aqcf3G6G8AtiwkU5MDiw4h8XfOa5nRG8/Uy8YrKp4YBxstjv
-         tub6aLdxXv8dY/rTJcl2bKg2DRcdWUYnzsaascqfZ8mk6D3wJTwsQItyv1rKCC36+UR5
-         4lRXqCEbSZ1vo8ePd+z1qM8kY28zxRA/vvwRbljN48Ym1h6X7dTG7AdlF1N0JWCobmAO
-         w1+w==
-X-Gm-Message-State: AOJu0YyC49cGTUfIwstdH9UFKNtp+fc0cI9lKAZGz+dfEGg0No4YZg7X
-	7yD432ZqWzb+VT8KnHyzCEef6/ShXkb48B/Tuw==
-X-Google-Smtp-Source: AGHT+IGeOuhH4Qv7Tv+/RmZAun5ezMVb+qGUOXub4qqns87IuLiZmpAchyTZJzuzKeSwHNPwFLLJF23wvIsws1o0Gg==
+        d=1e100.net; s=20230601; t=1698444337; x=1699049137;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LDqGU1lZbnWOljJhjK5QPctoYCimsNeknFpCayVMkH0=;
+        b=qaRT6aJG5qSraUuuzBQS8h6Qto+eqV8ymTbp+9TYnwMGD637aBLXRPtJTVWGsXdG/1
+         v5k3+sbna8uWBmI60KZbazXOfunKKAkbJQurHJ3cq75mcw4c9yuv//HB6+u14ODn/4on
+         vx9+EqGh++JmRwQon2t71W8G8MGd/riWBcXL0TAzUf10IgQG2zHvOWAArstin/uEZNKJ
+         96djv21I+s75kmQQ+U0QPSPDOTzzRVy0Cfp2ynXGQxg2QBfJjiiaJzEMzjVCpkGl/Ykp
+         pB62e75A3oMzSP3Y+vD/fB/CXuQwEhlBC5dR0/HHf9S4ERp45m9SRNAPYjQgTJu8fjOU
+         abAw==
+X-Gm-Message-State: AOJu0YzkM8n1YKEr3fK5GJI0YVfZD+RGW4cAggtAKZw/Mc18Vd2LeNyO
+	0k6GOV+AhzOlgu7SEDnDYLBEA4AFsylM0g9CCw==
+X-Google-Smtp-Source: AGHT+IFN1c9i2r/wiCSD+X1LWX0h6lZjdnfsn+e69/pEBxll1JXsLesAjuKUQaQpc97rldVXqAyKuuT7TJBMZPGrZw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a0d:eb0d:0:b0:5a7:db29:40e3 with SMTP
- id u13-20020a0deb0d000000b005a7db2940e3mr84362ywe.7.1698444336009; Fri, 27
- Oct 2023 15:05:36 -0700 (PDT)
-Date: Fri, 27 Oct 2023 22:05:32 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:690c:84f:b0:5a8:207a:143a with
+ SMTP id bz15-20020a05690c084f00b005a8207a143amr169382ywb.0.1698444337337;
+ Fri, 27 Oct 2023 15:05:37 -0700 (PDT)
+Date: Fri, 27 Oct 2023 22:05:33 +0000
+In-Reply-To: <20231027-ethtool_puts_impl-v3-0-3466ac679304@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACw0PGUC/33N3QrCIBwF8FcJrzP8aLN11XtEDKf/bcKmQ00WY
- ++eeFUQXR4O53c2FMAbCOh62JCHZIJxNgd+PCA1SjsANjpnxAjjlLAKQxyjc1O7PGNozbxMWNK
- zaPq+UwIIyrvFQ2/WYt6RhYgtrBE9cjOaEJ1/lbNES//HTRQTXMuKy4Zr3gl2G5wbJjgpNxcus U+i/kWwTBBdC9VpTSp++SL2fX8DVESAuAABAAA=
+References: <20231027-ethtool_puts_impl-v3-0-3466ac679304@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698444334; l=4680;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698444334; l=1790;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=px7MMfAPCHs9L+k8HsFUFoi5x+cbpRDX4XcJD0qS6R8=; b=NAhjtgJJ6+Y49IBRLk6KB5tBlLL/NGqEIsylUEZ99sS6MgNGq/HE45sD9d4q3WquHfXSAT6bI
- pquVxl/nMnlD+d2nF4oUgCHRsmyN5haWAPvfGRi5IAtydxknzRS7y6c
+ bh=C2aJLhld7+He/NhanUu+TBSh3mm30JdYcWWvhqdYpEE=; b=AfZV04Dc5Hq5NuvZos0GZLUC7hu4efQeSkMnA+v2WXw4qwaSx8UWMdEANSs/8b+Z8OxORp/XA
+ 9gfZVq7L8M7B0xzZJ8a2FS7J1UTFxSmVPXAm+Z47MMNan57YnyOAbE3
 X-Mailer: b4 0.12.3
-Message-ID: <20231027-ethtool_puts_impl-v3-0-3466ac679304@google.com>
-Subject: [PATCH net-next v3 0/3] ethtool: Add ethtool_puts()
+Message-ID: <20231027-ethtool_puts_impl-v3-1-3466ac679304@google.com>
+Subject: [PATCH net-next v3 1/3] ethtool: Implement ethtool_puts()
 From: Justin Stitt <justinstitt@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shay Agroskin <shayagr@amazon.com>, 
@@ -110,118 +109,61 @@ Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
 	bpf@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Use strscpy() to implement ethtool_puts().
 
-This series aims to implement ethtool_puts() and send out a wave 1 of
-conversions from ethtool_sprintf(). There's also a checkpatch patch
-included to check for the cases listed below.
-
-This was sparked from recent discussion here [1]
-
-The conversions are used in cases where ethtool_sprintf() was being used
-with just two arguments:
-|       ethtool_sprintf(&data, buffer[i].name);
-or when it's used with format string: "%s"
-|       ethtool_sprintf(&data, "%s", buffer[i].name);
-which both now become:
-|       ethtool_puts(&data, buffer[i].name);
-
-The first case commonly triggers a -Wformat-security warning with Clang
-due to potential problems with format flags present in the strings [3].
-
-The second is just a bit weird with a plain-ol' "%s".
-
-v2 (and newer) of this patch is targeted at linux-next so that we can
-catch some of the patches I sent [2] using this "%s" pattern and replace
-them before they hit mainline.
-
-Changes found with Cocci [4] and grep [5].
-
-[1]: https://lore.kernel.org/all/202310141935.B326C9E@keescook/
-[2]: https://lore.kernel.org/all/?q=dfb%3Aethtool_sprintf+AND+f%3Ajustinstitt
-[3]: https://lore.kernel.org/all/202310101528.9496539BE@keescook/
-[4]: (script authored by Kees w/ modifications from Joe)
-@replace_2_args@
-expression BUF;
-expression VAR;
-@@
-
--       ethtool_sprintf(BUF, VAR)
-+       ethtool_puts(BUF, VAR)
-
-@replace_3_args@
-expression BUF;
-expression VAR;
-@@
-
--       ethtool_sprintf(BUF, "%s", VAR)
-+       ethtool_puts(BUF, VAR)
-
--       ethtool_sprintf(&BUF, "%s", VAR)
-+       ethtool_puts(&BUF, VAR)
-
-[5]: $ rg "ethtool_sprintf\(\s*[^,)]+\s*,\s*[^,)]+\s*\)"
+Functionally the same as ethtool_sprintf() when it's used with two
+arguments or with just "%s" format specifier.
 
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Changes in v3:
-- fix force_speed_maps merge conflict + formatting (thanks Vladimir)
-- rebase onto net-next (thanks Andrew, Vladimir)
-- change subject (thanks Vladimir)
-- fix checkpatch formatting + implementation (thanks Joe)
-- Link to v2: https://lore.kernel.org/r/20231026-ethtool_puts_impl-v2-0-0d67cbdd0538@google.com
+ include/linux/ethtool.h | 13 +++++++++++++
+ net/ethtool/ioctl.c     |  7 +++++++
+ 2 files changed, 20 insertions(+)
 
-Changes in v2:
-- wrap lines better in replacement (thanks Joe, Kees)
-- add --fix to checkpatch (thanks Joe)
-- clean up checkpatch formatting (thanks Joe, et al.)
-- rebase against next
-- Link to v1: https://lore.kernel.org/r/20231025-ethtool_puts_impl-v1-0-6a53a93d3b72@google.com
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 226a36ed5aa1..e340ed822cc2 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -1053,6 +1053,19 @@ static inline int ethtool_mm_frag_size_min_to_add(u32 val_min, u32 *val_add,
+  */
+ extern __printf(2, 3) void ethtool_sprintf(u8 **data, const char *fmt, ...);
+ 
++/**
++ * ethtool_puts - Write string to ethtool string data
++ * @data: Pointer to start of string to update
++ * @str: String to write
++ *
++ * Write string to data. Update data to point at start of next
++ * string.
++ *
++ * Prefer this function to ethtool_sprintf() when given only
++ * two arguments or if @fmt is just "%s".
++ */
++extern void ethtool_puts(u8 **data, const char *str);
++
+ /* Link mode to forced speed capabilities maps */
+ struct ethtool_forced_speed_map {
+ 	u32		speed;
+diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+index 0b0ce4f81c01..abdf05edf804 100644
+--- a/net/ethtool/ioctl.c
++++ b/net/ethtool/ioctl.c
+@@ -1991,6 +1991,13 @@ __printf(2, 3) void ethtool_sprintf(u8 **data, const char *fmt, ...)
+ }
+ EXPORT_SYMBOL(ethtool_sprintf);
+ 
++void ethtool_puts(u8 **data, const char *str)
++{
++	strscpy(*data, str, ETH_GSTRING_LEN);
++	*data += ETH_GSTRING_LEN;
++}
++EXPORT_SYMBOL(ethtool_puts);
++
+ static int ethtool_phys_id(struct net_device *dev, void __user *useraddr)
+ {
+ 	struct ethtool_value id;
 
----
-Justin Stitt (3):
-      ethtool: Implement ethtool_puts()
-      checkpatch: add ethtool_sprintf rules
-      net: Convert some ethtool_sprintf() to ethtool_puts()
-
- drivers/net/dsa/lantiq_gswip.c                     |  2 +-
- drivers/net/dsa/mt7530.c                           |  2 +-
- drivers/net/dsa/qca/qca8k-common.c                 |  2 +-
- drivers/net/dsa/realtek/rtl8365mb.c                |  2 +-
- drivers/net/dsa/realtek/rtl8366-core.c             |  2 +-
- drivers/net/dsa/vitesse-vsc73xx-core.c             |  8 +--
- drivers/net/ethernet/amazon/ena/ena_ethtool.c      |  4 +-
- drivers/net/ethernet/brocade/bna/bnad_ethtool.c    |  2 +-
- drivers/net/ethernet/freescale/fec_main.c          |  4 +-
- .../net/ethernet/fungible/funeth/funeth_ethtool.c  |  8 +--
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_gmac.c |  2 +-
- .../net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c    |  2 +-
- drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   | 65 +++++++++++-----------
- drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |  6 +-
- drivers/net/ethernet/intel/iavf/iavf_ethtool.c     |  3 +-
- drivers/net/ethernet/intel/ice/ice_ethtool.c       |  9 +--
- drivers/net/ethernet/intel/idpf/idpf_ethtool.c     |  2 +-
- drivers/net/ethernet/intel/igb/igb_ethtool.c       |  6 +-
- drivers/net/ethernet/intel/igc/igc_ethtool.c       |  6 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c   |  5 +-
- .../net/ethernet/microchip/sparx5/sparx5_ethtool.c |  2 +-
- .../net/ethernet/netronome/nfp/nfp_net_ethtool.c   | 44 +++++++--------
- drivers/net/ethernet/pensando/ionic/ionic_stats.c  |  4 +-
- drivers/net/ethernet/wangxun/libwx/wx_ethtool.c    |  2 +-
- drivers/net/hyperv/netvsc_drv.c                    |  4 +-
- drivers/net/phy/nxp-tja11xx.c                      |  2 +-
- drivers/net/phy/smsc.c                             |  2 +-
- drivers/net/vmxnet3/vmxnet3_ethtool.c              | 10 ++--
- include/linux/ethtool.h                            | 13 +++++
- net/ethtool/ioctl.c                                |  7 +++
- scripts/checkpatch.pl                              | 19 +++++++
- 31 files changed, 139 insertions(+), 112 deletions(-)
----
-base-commit: 3a04927f8d4b7a4f008f04af41e31173002eb1ea
-change-id: 20231025-ethtool_puts_impl-a1479ffbc7e0
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+-- 
+2.42.0.820.g83a721a137-goog
 
 
