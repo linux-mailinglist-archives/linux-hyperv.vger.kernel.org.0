@@ -1,156 +1,122 @@
-Return-Path: <linux-hyperv+bounces-621-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-622-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3913C7D8BC3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Oct 2023 00:39:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCCCE7D8C86
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Oct 2023 02:25:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 689A31C20299
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Oct 2023 22:39:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20061B211F9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Oct 2023 00:25:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E27C12A;
-	Thu, 26 Oct 2023 22:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3F5A19C;
+	Fri, 27 Oct 2023 00:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IffGrwP5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0694E8BFD;
-	Thu, 26 Oct 2023 22:39:12 +0000 (UTC)
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1E7CC;
-	Thu, 26 Oct 2023 15:39:11 -0700 (PDT)
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id EC899120CA5;
-	Thu, 26 Oct 2023 22:39:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf03.hostedemail.com (Postfix) with ESMTPA id 229B46000C;
-	Thu, 26 Oct 2023 22:38:40 +0000 (UTC)
-Message-ID: <8521c712250bcffce5c71e8d2b2574de786d4572.camel@perches.com>
-Subject: Re: [PATCH next v2 2/3] checkpatch: add ethtool_sprintf rules
-From: Joe Perches <joe@perches.com>
-To: Justin Stitt <justinstitt@google.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shay Agroskin
- <shayagr@amazon.com>, Arthur Kiyanovski <akiyano@amazon.com>, David Arinzon
- <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>, Saeed Bishara
- <saeedb@amazon.com>, Rasesh Mody <rmody@marvell.com>, Sudarsana Kalluru
- <skalluru@marvell.com>, GR-Linux-NIC-Dev@marvell.com, Dimitris Michailidis
- <dmichail@fungible.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil
- Mehta <salil.mehta@huawei.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>,  Tony Nguyen <anthony.l.nguyen@intel.com>,
- Louis Peens <louis.peens@corigine.com>, Shannon Nelson
- <shannon.nelson@amd.com>, Brett Creeley <brett.creeley@amd.com>, 
- drivers@pensando.io, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Ronak Doshi <doshir@vmware.com>, VMware PV-Drivers
- Reviewers <pv-drivers@vmware.com>, Andy Whitcroft <apw@canonical.com>,
- Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn
- <lukas.bulwahn@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Andrew Lunn
- <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,  Vladimir Oltean
- <olteanv@gmail.com>, =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?=
- <arinc.unal@arinc9.com>, Daniel Golle <daniel@makrotopia.org>, Landen Chao
- <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, Sean Wang
- <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Linus
- Walleij <linus.walleij@linaro.org>, Alvin =?UTF-8?Q?=C5=A0ipraga?=
- <alsi@bang-olufsen.dk>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
- <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, NXP Linux Team
- <linux-imx@nxp.com>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
- Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>,  UNGLinuxDriver@microchip.com, Jiawen Wu
- <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, Heiner
- Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nick Desaulniers
- <ndesaulniers@google.com>, Nathan Chancellor <nathan@kernel.org>, Kees Cook
- <keescook@chromium.org>, intel-wired-lan@lists.osuosl.org, 
- oss-drivers@corigine.com, linux-hyperv@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- bpf@vger.kernel.org
-Date: Thu, 26 Oct 2023 15:38:39 -0700
-In-Reply-To: <20231026-ethtool_puts_impl-v2-2-0d67cbdd0538@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289EF179;
+	Fri, 27 Oct 2023 00:25:49 +0000 (UTC)
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6308129;
+	Thu, 26 Oct 2023 17:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=jIyiqB62ftZdGgQlboBjKJDIEuAQba9l17H9K2s+tSw=; b=IffGrwP5oG4aEAFxxaf2PqzcQZ
+	ORjncm0hfUgItjHBd8VcirWOJpA2PvES3CqmknoYTaP/DYJke8dcpVx28cgfsAwqKQWDLMtZzCdee
+	2nCT6DyH2m4LWzZXYAhZLUYXehzsR1HI7TBLO8F6DD27oJPkQxCzvGn4/yG2cMQWjL/A=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1qwAeU-000ILa-L7; Fri, 27 Oct 2023 02:24:38 +0200
+Date: Fri, 27 Oct 2023 02:24:38 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Justin Stitt <justinstitt@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shay Agroskin <shayagr@amazon.com>,
+	Arthur Kiyanovski <akiyano@amazon.com>,
+	David Arinzon <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>,
+	Saeed Bishara <saeedb@amazon.com>, Rasesh Mody <rmody@marvell.com>,
+	Sudarsana Kalluru <skalluru@marvell.com>,
+	GR-Linux-NIC-Dev@marvell.com,
+	Dimitris Michailidis <dmichail@fungible.com>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Louis Peens <louis.peens@corigine.com>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Ronak Doshi <doshir@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Hauke Mehrtens <hauke@hauke-m.de>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com, Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Kees Cook <keescook@chromium.org>, intel-wired-lan@lists.osuosl.org,
+	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH next v2 0/3] ethtool: Add ethtool_puts()
+Message-ID: <eda2f651-93f7-46c5-be7e-e8295903cc1e@lunn.ch>
 References: <20231026-ethtool_puts_impl-v2-0-0d67cbdd0538@google.com>
-	 <20231026-ethtool_puts_impl-v2-2-0d67cbdd0538@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 229B46000C
-X-Stat-Signature: mtojnbfkhmj945izba58at9t64m9az5b
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/UB5xXHbX1I6Iwr1/WX9S8fJXYcv2DOVQ=
-X-HE-Tag: 1698359919-976100
-X-HE-Meta: U2FsdGVkX1/Amx6RsPXMmp/lJzH0XSfOupRJb1kmsjddDIYEwUvtXmlXvcoG0HQxgfJeu/bgjCSmBW9XNko/mFTeWhpzlQGj+sHcroC4+SQucDoul9/mW561AqHS3bN32ZhIbH4y4PO56Z7gmbgk+jEv1lNmijdnNQn2GDoTkX/tD06ZkKPHkXJTWWOiblBjoSzVelzS2tuc0jq7rbU2KN7wKu2c9SCdLcBX7eDcPHw0DYjtwdWRO7eI8BixY9+TH41p+q5lsfSnzBidMm8GWcRCTJkLQdvf6jjmqEDt8BcNB67WbPmIoEo21hk8mGqMRn8qjdO5KQuIvo+QRzi9TNWL/Qwj5lvUYAvGAivJpjz++odpOBd6Ml2HgJTXQ35CUCCg8zvynD3R6R7WDpQwYoliPG09jddatznky2vFjJO9MiTzTC/t5iwPcMcldvPAUeGRgklQ6A1GlziHr19N0w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231026-ethtool_puts_impl-v2-0-0d67cbdd0538@google.com>
 
-On Thu, 2023-10-26 at 21:56 +0000, Justin Stitt wrote:
-> Add some warnings for using ethtool_sprintf() where a simple
-> ethtool_puts() would suffice.
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -7011,6 +7011,25 @@ sub process {
->  			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see:=
- https://github.com/KSPP/linux/issues/90\n" . $herecurr);
->  		}
-> =20
-> +# ethtool_sprintf uses that should likely be ethtool_puts
-> +		if ($line =3D~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/=
-) {
-> +			if(WARN("ETHTOOL_SPRINTF",
-> +			   "Prefer ethtool_puts over ethtool_sprintf with only two arguments\=
-n" . $herecurr) &&
-> +         $fix) {
-> +         $fixed[$fixlinenr] =3D~ s/ethtool_sprintf\s*\(/ethtool_puts\(/;
-> +       }
-> +		}
-> +
-> +		# use $rawline because $line loses %s via sanitization and thus we can=
-'t match against it.
-> +		if ($rawline =3D~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*\"\%s\"\s*,=
-\s*$FuncArg\s*\)/) {
-> +			if(WARN("ETHTOOL_SPRINTF",
-> +			   "Prefer ethtool_puts over ethtool_sprintf with standalone \"%s\" s=
-pecifier\n" . $herecurr) &&
-> +         $fix) {
-> +         $fixed[$fixlinenr] =3D~ s/ethtool_sprintf\s*\(\s*(.*?),.*?,(.*?=
-)\)/ethtool_puts\($1,$2)/;
+> Changes in v2:
+> - wrap lines better in replacement (thanks Joe, Kees)
+> - add --fix to checkpatch (thanks Joe)
+> - clean up checkpatch formatting (thanks Joe, et al.)
+> - rebase against next
 
-Thanks, but:
+Please could you explain the rebase against next? As Vladimir pointed
+out, all the patches are to drivers/net, so anything in flight should
+be in net-next, merged by the netdev Maintainers.
 
-This fix wouldn't work if the first argument was itself a function
-with multiple arguments.
-
-And this is whitespace formatted incorrectly.
-
-It:
-
-o needs a space after if
-o needs a space after the comma in the fix
-o needs to use the appropriate amount and tabs for indentation
-o needs alignment to open parentheses
-o the backslashes are not required in the fix block
-
-Do you want me to push what I wrote in the link below?
-https://lore.kernel.org/lkml/7eec92d9e72d28e7b5202f41b02a383eb28ddd26.camel=
-@perches.com/
-
-> +       }
-> +		}
-> +
-> +
->  # typecasts on min/max could be min_t/max_t
->  		if ($perl_version_ok &&
->  		    defined $stat &&
->=20
-
+    Andrew
 
