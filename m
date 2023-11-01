@@ -1,135 +1,108 @@
-Return-Path: <linux-hyperv+bounces-651-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-652-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89E447DC29F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Oct 2023 23:50:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DEEC7DE45A
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Nov 2023 17:02:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD0C31C209C5
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Oct 2023 22:50:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03AAE1F2146E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Nov 2023 16:02:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AE156AB1;
-	Mon, 30 Oct 2023 22:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 111987480;
+	Wed,  1 Nov 2023 16:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuetohCp"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Yj+KLdDW"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587C64C84
-	for <linux-hyperv@vger.kernel.org>; Mon, 30 Oct 2023 22:50:27 +0000 (UTC)
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99548E;
-	Mon, 30 Oct 2023 15:50:25 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1cc55bcd51eso2345545ad.0;
-        Mon, 30 Oct 2023 15:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698706225; x=1699311025; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ol71Wy23MLqAWlJq8ZIGhp6OorJwOj5RE9vie1iTxBI=;
-        b=JuetohCpSC/VS6nclBxAf7zvP+xioCQH4kw/XmEZEfe/orDYLVI1ELSmwUDS6M+yxk
-         hiXd9RraKr7+U3BCF8+aT4tpka+88nINtUOq5q2q2zFXu0/vTCDO7cOByHY8y1YrQuWz
-         P7g92BhDd8OEZsH1pUnLdmAK/Bv77S/WWOWKek2xW2glh+SUKZ9foMrsxegKlVLH065s
-         2Ma96EBhjbhaRVp5GnxLlKYZzp3cL/vdULQZa5mEkvbPBsrsvKlbGUrxdSfzqUQLYKiV
-         lB1x7FBRUcZZOyjH1LIXJcFnUUGVZUIjAtX6znBBZ4NgNB7oqp+rdFmfLpx0KnXp6s34
-         p+3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698706225; x=1699311025;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ol71Wy23MLqAWlJq8ZIGhp6OorJwOj5RE9vie1iTxBI=;
-        b=RVGHvTO8k51KZES3pg0M9fNgh5bczkOeWuJa7ncz9J7LunL2fVtpA6Q7+YuhTLHyfR
-         PAbQqa2razDdQ9mANaFbC9Osf4XqQFEomQkQrAklXo6JEdtscaF6T8d3GiNGN0Nu+u+8
-         C6Io+8Bi2rDFkf5CyufsF3T4o2TVezzrDKl5kDZymjw1JzS6DZcalaeAqjh8VCYDi7Q6
-         OejcaieCqvR3aBuf1uSzk2joh3GadCZp0kv180rbMh9sfLCQ+CCNsY6ijm2y8ZiVA+B3
-         +ycGe3jc5cD3drDe+g19K0bx6s2JQmOLTJHhtwNECll6QGlH/0oSxecG8Nm0Jah7+ieb
-         GRqQ==
-X-Gm-Message-State: AOJu0YxayFr+SY7ZBrBcW4IYlWRxXERLYdcPcWzkN28oXaE+9X1lSQHs
-	rxdOSXoIsrj14ev988RPmdfnwmUGVA5Cb+tM
-X-Google-Smtp-Source: AGHT+IFOrFgKAQD3TszBSjrQcXQS15Tf/X3a/FzJ2mdzcpcahVuvRrcDI3fFHhxMc0r+2KGuykC+4w==
-X-Received: by 2002:a17:902:e906:b0:1c0:bf60:ba82 with SMTP id k6-20020a170902e90600b001c0bf60ba82mr12045288pld.5.1698706224955;
-        Mon, 30 Oct 2023 15:50:24 -0700 (PDT)
-Received: from abhinav.. ([103.75.161.210])
-        by smtp.gmail.com with ESMTPSA id y6-20020a170902ed4600b001c898328289sm34350plb.158.2023.10.30.15.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 15:50:24 -0700 (PDT)
-From: Abhinav Singh <singhabhinav9051571833@gmail.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: hpa@zytor.com,
-	x86@kernel.org,
-	dave.hansen@linux.intel.com,
-	bp@alien8.de,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	decui@microsoft.com,
-	wei.liu@kernel.org,
-	haiyangz@microsoft.com,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633A2442E
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Nov 2023 16:02:20 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id F0EB4E4;
+	Wed,  1 Nov 2023 09:02:18 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1159)
+	id 6738C20B74C0; Wed,  1 Nov 2023 09:02:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6738C20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1698854538;
+	bh=JjKagOQc7XVCsOzjX5mQZCyIjlKEf/+UGuI8XDR24n4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Yj+KLdDWCXSntyvw2Ee6orRF9hr+VRDlMQZ0OP7j+7KKotau1/PdptyJC7tbAC0MA
+	 T9ZzO0RudXLO3xp7WDdEZPcm7CXEFHNzDzi0YWOig14lgfEgoK0FBK91M7ed/LS1OM
+	 VdWEZh1X7+XnzywI3maf4YfsadR90ULFkZIIVd/8=
+From: Nischala Yelchuri <niyelchu@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
 	kys@microsoft.com,
-	niyelchu@linux.microsoft.com,
-	Abhinav Singh <singhabhinav9051571833@gmail.com>
-Subject: [PATCH v2] x86/hyperv : Fixing removal of __iomem address space warning
-Date: Tue, 31 Oct 2023 04:20:03 +0530
-Message-Id: <20231030225003.374717-1-singhabhinav9051571833@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	drawat.floss@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org,
+	deller@gmx.de
+Cc: mhklinux@outlook.com,
+	mhkelley@outlook.com,
+	singhabhinav9051571833@gmail.com,
+	niyelchu@microsoft.com
+Subject: [PATCH] Replace ioremap_cache() with memremap()
+Date: Wed,  1 Nov 2023 09:01:48 -0700
+Message-Id: <1698854508-23036-1-git-send-email-niyelchu@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This patch fixes two sparse warnings
+Current Hyper-V code for CoCo VMs uses ioremap_cache() to map normal memory as decrypted.
+ioremap_cache() is ideally used to map I/O device memory when it has the characteristics
+of normal memory. It should not be used to map normal memory as the returned pointer
+has the __iomem attribute.
 
-1. sparse complaining about the removal of __iomem address
-space when casting the return value of this ioremap_cache(...)
-from `void __ioremap*` to `void*`.
-Fixed this by replacing the ioremap_cache(...)
-by memremap(...) and using MEMREMAP_DEC and MEMREMAP_WB flag for making
-sure the memory is always decrypted and it will support full write back
-cache.
+Fix current code by replacing ioremap_cache() with memremap().
 
-2. sparse complaining `expected void volatile [noderef] __iomem *addr`
-when calling iounmap with a non __iomem pointer.
-Fixed this by replacing iounmap(...) with memumap(...).
+No functional change intended.
 
-Signed-off-by: Abhinav Singh <singhabhinav9051571833@gmail.com>
+Signed-off-by: Nischala Yelchuri <niyelchu@linux.microsoft.com>
 ---
-
-v1:
-https://lore.kernel.org/all/19cec6f0-e176-4bcc-95a0-9d6eb0261ed1@gmail.com/T/
-
-v1 to v2:
-1. Fixed the comment which was earlier describing ioremap_cache(...).
-2. Replaced iounmap(...) with memremap(...) inside function hv_cpu_die(...).
-
- arch/x86/hyperv/hv_init.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/hyperv/hv_init.c               |  6 +++---
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c |  2 +-
+ drivers/hv/hv.c                         | 13 +++++++------
+ drivers/video/fbdev/hyperv_fb.c         |  6 +++---
+ 4 files changed, 14 insertions(+), 13 deletions(-)
 
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 21556ad87f4b..2a14928b8a36 100644
+index 21556ad87..fae43c040 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
-@@ -68,9 +68,11 @@ static int hyperv_init_ghcb(void)
+@@ -68,9 +68,9 @@ static int hyperv_init_ghcb(void)
  	 */
  	rdmsrl(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
-
+ 
 -	/* Mask out vTOM bit. ioremap_cache() maps decrypted */
-+	/* Mask out vTOM bit.
-+	MEMREMAP_WB full write back cache
-+	MEMREMAP_DEC maps decrypted memory */
++	/* Mask out vTOM bit. memremap() maps decrypted with MEMREMAP_DEC */
  	ghcb_gpa &= ~ms_hyperv.shared_gpa_boundary;
 -	ghcb_va = (void *)ioremap_cache(ghcb_gpa, HV_HYP_PAGE_SIZE);
 +	ghcb_va = memremap(ghcb_gpa, HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP_DEC);
  	if (!ghcb_va)
  		return -ENOMEM;
-
-@@ -238,7 +240,7 @@ static int hv_cpu_die(unsigned int cpu)
+ 
+@@ -238,7 +238,7 @@ static int hv_cpu_die(unsigned int cpu)
  	if (hv_ghcb_pg) {
  		ghcb_va = (void **)this_cpu_ptr(hv_ghcb_pg);
  		if (*ghcb_va)
@@ -137,8 +110,103 @@ index 21556ad87f4b..2a14928b8a36 100644
 +			memunmap(*ghcb_va);
  		*ghcb_va = NULL;
  	}
-
---
-2.39.2
+ 
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+index d511d17c5..d6fec9bd3 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+@@ -92,7 +92,7 @@ static int hyperv_setup_vram(struct hyperv_drm_device *hv,
+ 	 * connect to display properly for ARM64 Linux VM, as the host also maps
+ 	 * the VRAM cacheable.
+ 	 */
+-	hv->vram = ioremap_cache(hv->mem->start, hv->fb_size);
++	hv->vram = memremap(hv->mem->start, hv->fb_size, MEMREMAP_WB | MEMREMAP_DEC);
+ 	if (!hv->vram) {
+ 		drm_err(dev, "Failed to map vram\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 51e5018ac..399bfa392 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -274,11 +274,12 @@ void hv_synic_enable_regs(unsigned int cpu)
+ 	simp.simp_enabled = 1;
+ 
+ 	if (ms_hyperv.paravisor_present || hv_root_partition) {
+-		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
++		/* Mask out vTOM bit. memremap() maps decrypted with MEMREMAP_DEC */
+ 		u64 base = (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
+ 				~ms_hyperv.shared_gpa_boundary;
+ 		hv_cpu->synic_message_page
+-			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
++			= memremap(base,
++				   HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP_DEC);
+ 		if (!hv_cpu->synic_message_page)
+ 			pr_err("Fail to map synic message page.\n");
+ 	} else {
+@@ -293,11 +294,11 @@ void hv_synic_enable_regs(unsigned int cpu)
+ 	siefp.siefp_enabled = 1;
+ 
+ 	if (ms_hyperv.paravisor_present || hv_root_partition) {
+-		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
++		/* Mask out vTOM bit. memremap() maps decrypted with MEMREMAP_DEC */
+ 		u64 base = (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
+ 				~ms_hyperv.shared_gpa_boundary;
+ 		hv_cpu->synic_event_page
+-			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
++			= memremap(base, HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP_DEC);
+ 		if (!hv_cpu->synic_event_page)
+ 			pr_err("Fail to map synic event page.\n");
+ 	} else {
+@@ -376,7 +377,7 @@ void hv_synic_disable_regs(unsigned int cpu)
+ 	 */
+ 	simp.simp_enabled = 0;
+ 	if (ms_hyperv.paravisor_present || hv_root_partition) {
+-		iounmap(hv_cpu->synic_message_page);
++		memunmap(hv_cpu->synic_message_page);
+ 		hv_cpu->synic_message_page = NULL;
+ 	} else {
+ 		simp.base_simp_gpa = 0;
+@@ -388,7 +389,7 @@ void hv_synic_disable_regs(unsigned int cpu)
+ 	siefp.siefp_enabled = 0;
+ 
+ 	if (ms_hyperv.paravisor_present || hv_root_partition) {
+-		iounmap(hv_cpu->synic_event_page);
++		memunmap(hv_cpu->synic_event_page);
+ 		hv_cpu->synic_event_page = NULL;
+ 	} else {
+ 		siefp.base_siefp_gpa = 0;
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index bf59daf86..cd9ec1f6c 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -1034,7 +1034,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
+ 	 * VM Connect to display properly for ARM64 Linux VM, as the host also
+ 	 * maps the VRAM cacheable.
+ 	 */
+-	fb_virt = ioremap_cache(par->mem->start, screen_fb_size);
++	fb_virt = memremap(par->mem->start, screen_fb_size, MEMREMAP_WB | MEMREMAP_DEC);
+ 	if (!fb_virt)
+ 		goto err2;
+ 
+@@ -1068,7 +1068,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
+ 	return 0;
+ 
+ err3:
+-	iounmap(fb_virt);
++	memunmap(fb_virt);
+ err2:
+ 	vmbus_free_mmio(par->mem->start, screen_fb_size);
+ 	par->mem = NULL;
+@@ -1086,7 +1086,7 @@ static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
+ 
+ 	if (par->need_docopy) {
+ 		vfree(par->dio_vp);
+-		iounmap(info->screen_base);
++		memunmap(info->screen_base);
+ 		vmbus_free_mmio(par->mem->start, screen_fb_size);
+ 	} else {
+ 		hvfb_release_phymem(hdev, info->fix.smem_start,
+-- 
+2.34.1
 
 
