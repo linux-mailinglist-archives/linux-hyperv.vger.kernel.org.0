@@ -1,61 +1,53 @@
-Return-Path: <linux-hyperv+bounces-663-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-664-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20D8F7DFAD8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 20:23:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E38D77DFB20
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 20:57:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76EFE1F21D22
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 19:23:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 859A0281CDF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 19:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49AA321367;
-	Thu,  2 Nov 2023 19:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6233D219E8;
+	Thu,  2 Nov 2023 19:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wd8/C0ao"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ibpfBYhI"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E134E2135D;
-	Thu,  2 Nov 2023 19:23:45 +0000 (UTC)
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20CD5136;
-	Thu,  2 Nov 2023 12:23:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=GukiPnfP3Xe/TCueOvIoJT0OZefLfRkX+nqu8Htn41o=; b=wd8/C0aoENJPmgNQ8TeNa+MmYG
-	pSMEdo/P+Z0QSaJHP/bMvwGnGVMqcS+OeNG69bQepqX5ysUypXD7SovHC+GJ00PLmtmZelmOy8nvk
-	ZrRLMS9Z28fHf/QTaSOvJYdLMPCd3HKNqv4eUAQUIlKNjautWB33QlLRWR98IIqUX0hnEPRi7T5q9
-	XnARcEGsrnG7AFikIYM4Y5CIR/aSgienYfitnY2PEKtu6LduA6Cix18Ne6qNA+8A0Azxiw7VJfZ/F
-	wTk5UuGHldo8zXv5MoY9qnspZYB9g/mvvPxGYezIUdPAZAAdTtrIZkfnL8Vqw1dEVbB5F1xvdQA46
-	ZtJdbomw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38784)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1qydGj-0004u7-19;
-	Thu, 02 Nov 2023 19:22:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1qydGY-0007YK-66; Thu, 02 Nov 2023 19:22:06 +0000
-Date: Thu, 2 Nov 2023 19:22:06 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Justin Stitt <justinstitt@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3FE21366;
+	Thu,  2 Nov 2023 19:56:57 +0000 (UTC)
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59EE19A;
+	Thu,  2 Nov 2023 12:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=AW0JKODqEk596T2QEg4UZ2eLMTRAd63PvmKSuulbUwQ=; b=ibpfBYhILmLn39D7AlH28340n3
+	XLifNeoA3ngYepC9tqOP+n25UgJ1gaMVEaLMugYVPXmyavS2HYTe/AHVSWTa01L5LFC1qPjw1Htk/
+	2KXsfghHYH4qrb5QS8256r06TCsUgebHwiX4EfUC7HcUBDNGaBmBPJBfX0AHR3/ikaTQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1qydn8-000mGi-5t; Thu, 02 Nov 2023 20:55:46 +0100
+Date: Thu, 2 Nov 2023 20:55:46 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Kiyanovski, Arthur" <akiyano@amazon.com>
+Cc: Justin Stitt <justinstitt@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shay Agroskin <shayagr@amazon.com>,
-	Arthur Kiyanovski <akiyano@amazon.com>,
-	David Arinzon <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>,
-	Saeed Bishara <saeedb@amazon.com>, Rasesh Mody <rmody@marvell.com>,
+	"Agroskin, Shay" <shayagr@amazon.com>,
+	"Arinzon, David" <darinzon@amazon.com>,
+	"Dagan, Noam" <ndagan@amazon.com>,
+	"Bshara, Saeed" <saeedb@amazon.com>,
+	Rasesh Mody <rmody@marvell.com>,
 	Sudarsana Kalluru <skalluru@marvell.com>,
-	GR-Linux-NIC-Dev@marvell.com,
+	"GR-Linux-NIC-Dev@marvell.com" <GR-Linux-NIC-Dev@marvell.com>,
 	Dimitris Michailidis <dmichail@fungible.com>,
 	Yisen Zhuang <yisen.zhuang@huawei.com>,
 	Salil Mehta <salil.mehta@huawei.com>,
@@ -63,7 +55,8 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Louis Peens <louis.peens@corigine.com>,
 	Shannon Nelson <shannon.nelson@amd.com>,
-	Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io,
+	Brett Creeley <brett.creeley@amd.com>,
+	"drivers@pensando.io" <drivers@pensando.io>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
@@ -72,7 +65,7 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
 	Dwaipayan Ray <dwaipayanray1@gmail.com>,
 	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Hauke Mehrtens <hauke@hauke-m.de>, Andrew Lunn <andrew@lunn.ch>,
+	Hauke Mehrtens <hauke@hauke-m.de>,
 	Florian Fainelli <f.fainelli@gmail.com>,
 	Vladimir Oltean <olteanv@gmail.com>,
 	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
@@ -90,24 +83,32 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Lars Povlsen <lars.povlsen@microchip.com>,
 	Steen Hegelund <Steen.Hegelund@microchip.com>,
 	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com, Jiawen Wu <jiawenwu@trustnetic.com>,
+	"UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
 	Mengyuan Lou <mengyuanlou@net-swift.com>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Jesper Dangaard Brouer <hawk@kernel.org>,
 	John Fastabend <john.fastabend@gmail.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Kees Cook <keescook@chromium.org>, intel-wired-lan@lists.osuosl.org,
-	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next v4 1/3] ethtool: Implement ethtool_puts()
-Message-ID: <ZUP23ic6adijQ8U9@shell.armlinux.org.uk>
+	Kees Cook <keescook@chromium.org>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"oss-drivers@corigine.com" <oss-drivers@corigine.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next v4 3/3] net: Convert some ethtool_sprintf() to
+ ethtool_puts()
+Message-ID: <0df2daf8-9707-4859-b4c2-5c3c2ef2f8cd@lunn.ch>
 References: <20231102-ethtool_puts_impl-v4-0-14e1e9278496@google.com>
- <20231102-ethtool_puts_impl-v4-1-14e1e9278496@google.com>
+ <20231102-ethtool_puts_impl-v4-3-14e1e9278496@google.com>
+ <75bf36b5eef9487794c11a45cb25f155@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -116,32 +117,29 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231102-ethtool_puts_impl-v4-1-14e1e9278496@google.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <75bf36b5eef9487794c11a45cb25f155@amazon.com>
 
-On Thu, Nov 02, 2023 at 06:55:42PM +0000, Justin Stitt wrote:
-> +/**
-> + * ethtool_puts - Write string to ethtool string data
-> + * @data: Pointer to a pointer to the start of string to update
-> + * @str: String to write
-> + *
-> + * Write string to *data. Update *data to point at start of
-> + * next string.
+> > + vmxnet3_rq_driver_stats[i].desc);
+> >         }
+> > 
+> >         for (i = 0; i < ARRAY_SIZE(vmxnet3_global_stats); i++)
+> > -               ethtool_sprintf(&buf, vmxnet3_global_stats[i].desc);
+> > +               ethtool_puts(&buf, vmxnet3_global_stats[i].desc);
+> >  }
+> > 
+> >  netdev_features_t vmxnet3_fix_features(struct net_device *netdev,
+> > 
+> > --
+> > 2.42.0.869.gea05f2083d-goog
+> 
+> Thanks for submitting this.
+> For ENA driver
+> 
+> Acked-by: Arthur Kiyanovski <akiyano@amazon.com> 
 
-A minor nit...
+Hi Arthur
 
-Sorry to jump in a bit late in this, but... concerning the use of "puts"
-the userspace stdio version adds a trailing newline. Thus, to avoid any
-confusion, I think the kerneldoc for this should explicitly state that
-this does not add a newline.
+Please trim emails when replying.
 
- * Write string to *data without a trailing newline. Update *data to
- * point at the start of the next string.
-
-This shouldn't be an issue, but it makes the behaviour of it plainly
-obvious to the reader.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+       Andrew
 
