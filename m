@@ -1,84 +1,86 @@
-Return-Path: <linux-hyperv+bounces-656-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-657-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8183A7DF25C
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 13:27:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F9917DF25B
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 13:27:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19E19B20E45
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 12:27:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0C44281B11
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 12:27:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E9A18E01;
-	Thu,  2 Nov 2023 12:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7148618E06;
+	Thu,  2 Nov 2023 12:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="VcWBK2XV"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BPZck9bN"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF05B18E1A
-	for <linux-hyperv@vger.kernel.org>; Thu,  2 Nov 2023 12:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E9318E27
+	for <linux-hyperv@vger.kernel.org>; Thu,  2 Nov 2023 12:27:48 +0000 (UTC)
 Received: from esa6.hc3370-68.iphmx.com (esa6.hc3370-68.iphmx.com [216.71.155.175])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E64128;
-	Thu,  2 Nov 2023 05:27:42 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F628DE;
+	Thu,  2 Nov 2023 05:27:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=citrix.com; s=securemail; t=1698928063;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=oTEJNTw+CTtmPiz/F/xqvE9BcwMN5UZXmBpn9qQJTOg=;
-  b=VcWBK2XVNV0MCfjhmfAPDYIOe+qcx0sbq57WdYHvSpF6k0ixUUYPf4Fd
-   qQRy/8nl4F8EGXDuePy7ANR6upJyu99mQLmf0UXfr5YauEGJKU6LnCIax
-   /Lvz8v8VwVz0pClIM3QMkXRJifZ98UZzm8p47uB5ZFUAU/ta4g3IMM9Nn
-   M=;
+  bh=Qt98FOOlwQXNEe7TmHLKYpigU0UohpmukrdSKsAE3SY=;
+  b=BPZck9bN89YigFykclQ+LGZnqSwJ7qUGJUlCiWrOO+zrdnBdmEmuQ3Re
+   LW+tl499fUA83FmxVGHHhQZ+gGVlXJre/E7dYd87m4vcTgQSVIQNZiG4y
+   Uzf1x0wTXujV75Za1RvabWjRh6OA8McGWl18vIebMnPEcQ6yny6MRJm13
+   A=;
 X-CSE-ConnectionGUID: pNIzOpSTTbaXx/hvRfdv1w==
-X-CSE-MsgGUID: mov3QMmaRyiW6eu7Auk/bw==
+X-CSE-MsgGUID: TcvbfrE4S9OsAZL3//oPsQ==
 Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
 X-SBRS: 4.0
-X-MesageID: 126596387
+X-MesageID: 126596384
 X-Ironport-Server: esa6.hc3370-68.iphmx.com
 X-Remote-IP: 162.221.159.70
 X-Policy: $RELAYED
 X-ThreatScanner-Verdict: Negative
-IronPort-Data: A9a23:IFospKCQ+WgIuBVW/07lw5YqxClBgxIJ4kV8jS/XYbTApD10hD1Tz
- 2UcDz/VP/yLYWr1cohwa42//UoP75WHn4VqQQY4rX1jcSlH+JHPbTi7wuUcHAvJd5GeExg3h
- yk6QoOdRCzhZiaE/n9BCpC48D8kk/nOH+KgYAL9EngZbRd+Tys8gg5Ulec8g4p56fC0GArIs
- t7pyyHlEAbNNwVcbCRMsMpvlDs15K6p4WpA5ARiDRx2lAS2e0c9Xcp3yZ6ZdxMUcqEMdsamS
- uDKyq2O/2+x13/B3fv8z94X2mVTKlLjFVDmZkh+AsBOsTAbzsAG6Y4pNeJ0VKtio27hc+ada
- jl6ncfYpQ8BZsUgkQmGOvVSO3kW0aZuoNcrLZUj2CA6IoKvn3bEmp1T4E8K0YIw4sBWE0ZWz
- sAkIjk9fleDmdi4zKziVbw57igjBJGD0II3v3hhyXfSDOo8QICFSKLPjTNa9G5u3IYUR6+YP
- pdIL2U3BPjDS0Qn1lM/IZQyhuq3wFL4dCVVsgm9rqsr+WnDigd21dABNfKMIILXFJsOzhnwS
- mTu+mPnWSg/MdWl2Du6rH+x2cbSnmTxR9dHfFG/3qEz2wDCroAJMzUVSnO/oP+kmgi1XNc3A
- 1YT8CoGrqUo8kGvCN7nUHWQpGaFswQVX9tLEsU55RuLx66S5ByWbkAERz9QYdoppuczRDcw0
- USOkc+vDjtq2JWWWGm187aftzSpPiYJa2QFYEcsQQYO/tjLpYA4lBXUSdh/VqWyi7XdAi393
- T3MsyE+g50TlcNN3KK+lXjEkjah4J3EXwMvzgXPUySu6QYRTIKkYo2081md9vdeJYCYRVmpv
- GAJ3cOZ6YgmF4yWj2qERukABqqu4d6FKDCaillqd7Ej6i+x+njlcJpW+y1WJF9kdM0DfFfBc
- B+NkQBc/pleOD2td6AfS5q1AtgkyrLlUNj/V+7ZdJ9eMsZZagCK5mdtaFSW0mSrl1Ij+Yk7O
- JGGYYO0BncyF6tq1ny1Sv0b3LttwToxrUvXRJbm31GnwKKTfmC9V7gIKh2NY/o/4afCpx/am
- /5VL+ODzxRSVr24biS/2YIaM11MLXE9Hp3wg8hWcPOTZAtgBGwlTfTWxNsJe5Rst7ZEiuDSu
- Hq6XydwzVv5inrvMwiGanl/LrjoWP5Xp3I2OSMlNE2A1H8kboKiqqwYcvMfYbYj5MRnzPhpU
- +MCfcSQRPhCIhzL5TQUd4XVrYpsbh2niAuCeS2/b1AXdphsViTI/NH+dwfi/SVICTC43eM6o
- ru9xkbYTIAFSgBKEsnbcrSswkm3sHxbn/h9N2PXL9gVfETx2ItnMSr8irkwOc5kFPnY7mLEj
- UDMW05e/LSc5dBtmDXUuUyah5+PMvlZBnFmI2PS3abxNTfg8Ga9mJAVBY5kYgvhuHPIFLSKP
- LsEn6GtbqFawD6moKImTew3k/hWC8/H4u8ClFo5Rh0nenzyUus4SkRqy/WjoUGkKlVxkgysU
- 0bHwcFAOLOGI6sJ+3ZKf1J6N4xvORwO8wQ+DMjZw22gv0ebBJLdDS1v0+Ck0USx1oddPoI/2
- vsGs8UL8QG5gRdCGo/Y33AEqT/ScCJQCvVPWnQm7GjD01RD972/ScWBUXGeDG+nML2gzXXG0
- hfL3fGf1tywN2LJcmYpFGil4Nexca8m4UgQpHdbfgThpzYwrqNvtPGn2WhtH1s9I9Qu+74bB
- 1WHwGUsdfzUp2421JIdN41ucikYbCCkFoXK4wNhvAXko4OADwQh8EVV1T6xwX0k
-IronPort-HdrOrdr: A9a23:mvDfKaDez8/EmdTlHekB55DYdb4zR+YMi2TDGXoRdfUzSL3/qy
- nOpoV96faQslwssR4b9OxoVJPtfZqYz+8X3WH+VY3SIDUO+1HYUb2L1OPZskLd8lTFh5BgPM
- VbE5SWeeeAaWSS1vyKmTVQeuxIqLK6GeKT9IXjJhFWIj2CAJsQijuRZDz0LqRefng2ObMJUL
- Sd++tarH6adXwMaMPTPAh+Y8Hz4/PKibP7alo8CxQm8QmDii7A0s+ALzGomjkfThJSyvMY/W
- LEigz04bjmm/y30RPHzQbonudrseqk5NtfJdCGzvIYLTjhkW+TFfxccrCPpi00p+mz6FAsir
- D30mcdA/g=
-X-Talos-CUID: 9a23:oB45um9KxWZ1/MXqPMqVv1YyO9ICakbh8H3ZE1//CXhTRrGLEEDFrQ==
-X-Talos-MUID: 9a23:xxZ64Aa7/su0CuBTsjjy3whHMc5S8qWRVk0QzrwbuI6OKnkl
+IronPort-Data: A9a23:9S6LjKqzPLvuwfp7fBSi8xMKZDheBmJ/YxIvgKrLsJaIsI4StFCzt
+ garIBnVbK3YNmTzL412b4+/9U8F6pPTy99gTgZp/CthF3tG85uZCYyVIHmrMnLJJKUvbq7FA
+ +Y2MYCccZ9uHhcwgj/3b9ANeFEljfngqoLUUbOCYmYpA1Y8FE/NsDo788YhmIlknNOlNA2Ev
+ NL2sqX3NUSsnjV5KQr40YrawP9UlKq04GhwUmAWP6gR5waHzyNNUPrzGInqR5fGatgMdgKFb
+ 76rIIGRpgvx4xorA9W5pbf3GmVirmn6ZFXmZtJ+AsBOszAazsAA+v9T2Mk0MC+7vw6hjdFpo
+ OihgLTrIesf0g8gr8xGO/VQO3kW0aSrY9YrK1Dn2SCY5xWun3cBX5yCpaz5VGEV0r8fPI1Ay
+ RAXACgrTwKkn9mK/LiyevkrhtoZIsX1ZZxK7xmMzRmBZRonaZXKQqGM7t5ExjYgwMtJGJ4yZ
+ eJAN2ApNk6ZJUQSaxFIUPrSn8/x7pX7WxRepEiYuuwc5G/LwRYq+LPsLMDUapqBQsA9ckOw/
+ ziYojWnWUFGXDCZ4QaO7HiinMKTpnLcQ6sgMOb/sflSm2TGkwT/DzVJDADm8JFVkHWWWM13L
+ 00S5zpopq83nGSxSdP9dx61uniJulgbQdU4O+ki6QyXw67V+AexBWUeSDNFLts8u6ceRTUrx
+ 1aPkMHBAD1kqrqOTnyBsLyTqFuaOjkOBWoDbjUDVgwL/5/op4Rbph7CRctiOKu0hcfyAjb+3
+ 3aBqy1Wr64PgNAGkbqy/VTvgyqh4JPOS2Yd5RTTUySg4xJ0fqalf4Hu4l/ehd5MLYOYUkOA+
+ mMFhcGY7esOJZGVmWqGR+BlNKu0/O3DOTvQjER0GJ8J9yygvXWkeOh44ixlOEZvdMsefyT1S
+ E/LtEVa45o7FGv6M4d0bpi3BsBsyrLvffz9UvnIYN1UZ919bg6Z8TsrdR7O937inVJqkqwlP
+ 5qfN8G2Ah4yDaVh0SrzX+wc+aEkyzp4xm7JQ53/iRO93tK2YH+TVKdAMEqWY/onxL2LrR+T8
+ NtFMcaOjRJFX4XWaDH/+IoSIFZaa3Q2bbj6otJaMO6KJBFrHkklCvnM0fUgfZBom+JekeKg1
+ nGlU2dK2Ub4nzvMLgDiQnVibrzodYxyoXIyIWonOlPA83IjbIKg5a4EX5QwerYj+apoyvscZ
+ +UKf9WoBvVJVyjd/DIcfd/xoeRKeAqrjBiSFyujbiI2c5NpS0rO4NCMVgLp+DgmDyy5r8Iyr
+ rSskATBTvIrQwVkEdaTa/+1yV61lWYSlfg0XEbSJNRXPkL2/+BCNCHwyPs2PukPJA/Fyz/c0
+ ByZaSr0vsGU/dVzqoOQw/nZ/sH2S4OSA3a2AUHDy5ekEjHhwlapyL9QF+aWRz7RSjrrrfDKi
+ fpu8x3sDBEWtA8U4tosQug3kP5WC8jH/eEAklo+dJnfRxH7Uuk+fyPuMdxn7/UVntdkVR2Kt
+ lVjEzWwEZ6OIsrhWGUJPgsjYf/rORo8wWKKsq1dzKkX/kZKEFu7vaZ6ZULkZNR1ducdDW/c6
+ b5JVDQqwwK+kAE2Fd2NkzpZ8W+BRlRZDfR35s9BXtG12lN7or2nXXA7InaoiKxjlv0VbxJ0S
+ tNqrPGqa0tgKrrqLCNoSCmlMRt1jpUSohFapGI/y6CysoOd3JcfhUQBmQnbuywJln2rJcovY
+ Dk0X6C0TI3SlwpVaD9rBjD1QVkYWk3DpCQcCTIhzQXkcqVhbUSVREVVBApH1BlxH750FtSDw
+ Iyl9Q==
+IronPort-HdrOrdr: A9a23:aWN29a+FdqhaJVFNY0Nuk+B1I+orL9Y04lQ7vn2ZhyY1TiX+rb
+ HJoB17726StN91YhsdcL+7VZVoLUmxyXcx2/hzAV9NNDOWxFdAb7sSkLcL+lXbalLDH5dmpN
+ ldmspFaOEYfGIK6foSuzPIaurIqePvmMuVbKXlvhVQpGdRBJ2IhD0JbzpzfHcZeOBuP+tJKL
+ OsouRGuhu9cjAtYsygAH5tZZm4m/T70LznfD8bDFod5AOPlDOl76OSKWni4j4uFx1O3JY/+i
+ z/nwb4/6WutOz+4hLQzGPI9f1t6ajc4+oGKsyQq9Qfbg/hjQulf+1aKsW/lT04uvyu7142kN
+ /KuX4bTrRO108=
+X-Talos-CUID: 9a23:uxNYUmNbRDlVHe5DQA9G5mkMIfwZeHTt3DDQPXW2BXgwV+jA
+X-Talos-MUID: =?us-ascii?q?9a23=3Aa9s5vg7jLNLcXFC0q5hRT2xLxoxU6LqkBlogza5?=
+ =?us-ascii?q?XnNKtBwgrfHCatC+OF9o=3D?=
 X-IronPort-AV: E=Sophos;i="6.03,271,1694750400"; 
-   d="scan'208";a="126596387"
+   d="scan'208";a="126596384"
 From: Andrew Cooper <andrew.cooper3@citrix.com>
-Date: Thu, 2 Nov 2023 12:26:20 +0000
-Subject: [PATCH 2/3] x86/apic: Drop enum apic_delivery_modes
+Date: Thu, 2 Nov 2023 12:26:21 +0000
+Subject: [PATCH 3/3] x86/apic: Drop struct local_apic
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -87,7 +89,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20231102-x86-apic-v1-2-bf049a2a0ed6@citrix.com>
+Message-ID: <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com>
 References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
 In-Reply-To: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -106,48 +108,296 @@ CC: <linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
 	<andrew.cooper3@citrix.com>
 X-Mailer: b4 0.12.4
 
-The type is not used any more.
+This type predates recorded history in tglx/history.git, making it older
+than Feb 5th 2002.
 
-Replace the constants with plain defines so they can live outside of an
-__ASSEMBLY__ block, allowing for more cleanup in subsequent changes.
+This structure is literally old enough to drink in most juristictions in
+the world, and has not been used once in that time.
+
+Lay it to rest in /dev/null.
 
 Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
 ---
- arch/x86/include/asm/apicdef.h | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+There is perhaps something to be said for the longevity of the comment.
+"Not terribly well tested" certainly hasn't bitrotted in all this time.
+---
+ arch/x86/include/asm/apicdef.h | 260 -----------------------------------------
+ 1 file changed, 260 deletions(-)
 
 diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
-index 4b125e5b3187..ddcbf00db19d 100644
+index ddcbf00db19d..094106b6a538 100644
 --- a/arch/x86/include/asm/apicdef.h
 +++ b/arch/x86/include/asm/apicdef.h
-@@ -20,6 +20,13 @@
-  */
- #define IO_APIC_SLOT_SIZE		1024
+@@ -172,270 +172,10 @@
+ #define APIC_CPUID(apicid)	((apicid) & XAPIC_DEST_CPUS_MASK)
+ #define NUM_APIC_CLUSTERS	((BAD_APICID + 1) >> XAPIC_DEST_CPUS_SHIFT)
  
-+#define APIC_DELIVERY_MODE_FIXED	0
-+#define APIC_DELIVERY_MODE_LOWESTPRIO	1
-+#define APIC_DELIVERY_MODE_SMI		2
-+#define APIC_DELIVERY_MODE_NMI		4
-+#define APIC_DELIVERY_MODE_INIT		5
-+#define APIC_DELIVERY_MODE_EXTINT	7
-+
- #define	APIC_ID		0x20
- 
- #define	APIC_LVR	0x30
-@@ -430,14 +437,5 @@ struct local_apic {
+-#ifndef __ASSEMBLY__
+-/*
+- * the local APIC register structure, memory mapped. Not terribly well
+- * tested, but we might eventually use this one in the future - the
+- * problem why we cannot use it right now is the P5 APIC, it has an
+- * errata which cannot take 8-bit reads and writes, only 32-bit ones ...
+- */
+-#define u32 unsigned int
+-
+-struct local_apic {
+-
+-/*000*/	struct { u32 __reserved[4]; } __reserved_01;
+-
+-/*010*/	struct { u32 __reserved[4]; } __reserved_02;
+-
+-/*020*/	struct { /* APIC ID Register */
+-		u32   __reserved_1	: 24,
+-			phys_apic_id	:  4,
+-			__reserved_2	:  4;
+-		u32 __reserved[3];
+-	} id;
+-
+-/*030*/	const
+-	struct { /* APIC Version Register */
+-		u32   version		:  8,
+-			__reserved_1	:  8,
+-			max_lvt		:  8,
+-			__reserved_2	:  8;
+-		u32 __reserved[3];
+-	} version;
+-
+-/*040*/	struct { u32 __reserved[4]; } __reserved_03;
+-
+-/*050*/	struct { u32 __reserved[4]; } __reserved_04;
+-
+-/*060*/	struct { u32 __reserved[4]; } __reserved_05;
+-
+-/*070*/	struct { u32 __reserved[4]; } __reserved_06;
+-
+-/*080*/	struct { /* Task Priority Register */
+-		u32   priority	:  8,
+-			__reserved_1	: 24;
+-		u32 __reserved_2[3];
+-	} tpr;
+-
+-/*090*/	const
+-	struct { /* Arbitration Priority Register */
+-		u32   priority	:  8,
+-			__reserved_1	: 24;
+-		u32 __reserved_2[3];
+-	} apr;
+-
+-/*0A0*/	const
+-	struct { /* Processor Priority Register */
+-		u32   priority	:  8,
+-			__reserved_1	: 24;
+-		u32 __reserved_2[3];
+-	} ppr;
+-
+-/*0B0*/	struct { /* End Of Interrupt Register */
+-		u32   eoi;
+-		u32 __reserved[3];
+-	} eoi;
+-
+-/*0C0*/	struct { u32 __reserved[4]; } __reserved_07;
+-
+-/*0D0*/	struct { /* Logical Destination Register */
+-		u32   __reserved_1	: 24,
+-			logical_dest	:  8;
+-		u32 __reserved_2[3];
+-	} ldr;
+-
+-/*0E0*/	struct { /* Destination Format Register */
+-		u32   __reserved_1	: 28,
+-			model		:  4;
+-		u32 __reserved_2[3];
+-	} dfr;
+-
+-/*0F0*/	struct { /* Spurious Interrupt Vector Register */
+-		u32	spurious_vector	:  8,
+-			apic_enabled	:  1,
+-			focus_cpu	:  1,
+-			__reserved_2	: 22;
+-		u32 __reserved_3[3];
+-	} svr;
+-
+-/*100*/	struct { /* In Service Register */
+-/*170*/		u32 bitfield;
+-		u32 __reserved[3];
+-	} isr [8];
+-
+-/*180*/	struct { /* Trigger Mode Register */
+-/*1F0*/		u32 bitfield;
+-		u32 __reserved[3];
+-	} tmr [8];
+-
+-/*200*/	struct { /* Interrupt Request Register */
+-/*270*/		u32 bitfield;
+-		u32 __reserved[3];
+-	} irr [8];
+-
+-/*280*/	union { /* Error Status Register */
+-		struct {
+-			u32   send_cs_error			:  1,
+-				receive_cs_error		:  1,
+-				send_accept_error		:  1,
+-				receive_accept_error		:  1,
+-				__reserved_1			:  1,
+-				send_illegal_vector		:  1,
+-				receive_illegal_vector		:  1,
+-				illegal_register_address	:  1,
+-				__reserved_2			: 24;
+-			u32 __reserved_3[3];
+-		} error_bits;
+-		struct {
+-			u32 errors;
+-			u32 __reserved_3[3];
+-		} all_errors;
+-	} esr;
+-
+-/*290*/	struct { u32 __reserved[4]; } __reserved_08;
+-
+-/*2A0*/	struct { u32 __reserved[4]; } __reserved_09;
+-
+-/*2B0*/	struct { u32 __reserved[4]; } __reserved_10;
+-
+-/*2C0*/	struct { u32 __reserved[4]; } __reserved_11;
+-
+-/*2D0*/	struct { u32 __reserved[4]; } __reserved_12;
+-
+-/*2E0*/	struct { u32 __reserved[4]; } __reserved_13;
+-
+-/*2F0*/	struct { u32 __reserved[4]; } __reserved_14;
+-
+-/*300*/	struct { /* Interrupt Command Register 1 */
+-		u32   vector			:  8,
+-			delivery_mode		:  3,
+-			destination_mode	:  1,
+-			delivery_status		:  1,
+-			__reserved_1		:  1,
+-			level			:  1,
+-			trigger			:  1,
+-			__reserved_2		:  2,
+-			shorthand		:  2,
+-			__reserved_3		:  12;
+-		u32 __reserved_4[3];
+-	} icr1;
+-
+-/*310*/	struct { /* Interrupt Command Register 2 */
+-		union {
+-			u32   __reserved_1	: 24,
+-				phys_dest	:  4,
+-				__reserved_2	:  4;
+-			u32   __reserved_3	: 24,
+-				logical_dest	:  8;
+-		} dest;
+-		u32 __reserved_4[3];
+-	} icr2;
+-
+-/*320*/	struct { /* LVT - Timer */
+-		u32   vector		:  8,
+-			__reserved_1	:  4,
+-			delivery_status	:  1,
+-			__reserved_2	:  3,
+-			mask		:  1,
+-			timer_mode	:  1,
+-			__reserved_3	: 14;
+-		u32 __reserved_4[3];
+-	} lvt_timer;
+-
+-/*330*/	struct { /* LVT - Thermal Sensor */
+-		u32  vector		:  8,
+-			delivery_mode	:  3,
+-			__reserved_1	:  1,
+-			delivery_status	:  1,
+-			__reserved_2	:  3,
+-			mask		:  1,
+-			__reserved_3	: 15;
+-		u32 __reserved_4[3];
+-	} lvt_thermal;
+-
+-/*340*/	struct { /* LVT - Performance Counter */
+-		u32   vector		:  8,
+-			delivery_mode	:  3,
+-			__reserved_1	:  1,
+-			delivery_status	:  1,
+-			__reserved_2	:  3,
+-			mask		:  1,
+-			__reserved_3	: 15;
+-		u32 __reserved_4[3];
+-	} lvt_pc;
+-
+-/*350*/	struct { /* LVT - LINT0 */
+-		u32   vector		:  8,
+-			delivery_mode	:  3,
+-			__reserved_1	:  1,
+-			delivery_status	:  1,
+-			polarity	:  1,
+-			remote_irr	:  1,
+-			trigger		:  1,
+-			mask		:  1,
+-			__reserved_2	: 15;
+-		u32 __reserved_3[3];
+-	} lvt_lint0;
+-
+-/*360*/	struct { /* LVT - LINT1 */
+-		u32   vector		:  8,
+-			delivery_mode	:  3,
+-			__reserved_1	:  1,
+-			delivery_status	:  1,
+-			polarity	:  1,
+-			remote_irr	:  1,
+-			trigger		:  1,
+-			mask		:  1,
+-			__reserved_2	: 15;
+-		u32 __reserved_3[3];
+-	} lvt_lint1;
+-
+-/*370*/	struct { /* LVT - Error */
+-		u32   vector		:  8,
+-			__reserved_1	:  4,
+-			delivery_status	:  1,
+-			__reserved_2	:  3,
+-			mask		:  1,
+-			__reserved_3	: 15;
+-		u32 __reserved_4[3];
+-	} lvt_error;
+-
+-/*380*/	struct { /* Timer Initial Count Register */
+-		u32   initial_count;
+-		u32 __reserved_2[3];
+-	} timer_icr;
+-
+-/*390*/	const
+-	struct { /* Timer Current Count Register */
+-		u32   curr_count;
+-		u32 __reserved_2[3];
+-	} timer_ccr;
+-
+-/*3A0*/	struct { u32 __reserved[4]; } __reserved_16;
+-
+-/*3B0*/	struct { u32 __reserved[4]; } __reserved_17;
+-
+-/*3C0*/	struct { u32 __reserved[4]; } __reserved_18;
+-
+-/*3D0*/	struct { u32 __reserved[4]; } __reserved_19;
+-
+-/*3E0*/	struct { /* Timer Divide Configuration Register */
+-		u32   divisor		:  4,
+-			__reserved_1	: 28;
+-		u32 __reserved_2[3];
+-	} timer_dcr;
+-
+-/*3F0*/	struct { u32 __reserved[4]; } __reserved_20;
+-
+-} __attribute__ ((packed));
+-
+-#undef u32
+-
+ #ifdef CONFIG_X86_32
+  #define BAD_APICID 0xFFu
+ #else
   #define BAD_APICID 0xFFFFu
  #endif
  
--enum apic_delivery_modes {
--	APIC_DELIVERY_MODE_FIXED	= 0,
--	APIC_DELIVERY_MODE_LOWESTPRIO   = 1,
--	APIC_DELIVERY_MODE_SMI		= 2,
--	APIC_DELIVERY_MODE_NMI		= 4,
--	APIC_DELIVERY_MODE_INIT		= 5,
--	APIC_DELIVERY_MODE_EXTINT	= 7,
--};
--
- #endif /* !__ASSEMBLY__ */
+-#endif /* !__ASSEMBLY__ */
  #endif /* _ASM_X86_APICDEF_H */
 
 -- 
