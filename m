@@ -1,406 +1,229 @@
-Return-Path: <linux-hyperv+bounces-657-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-661-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F9917DF25B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 13:27:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E6487DFA70
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 19:56:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0C44281B11
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 12:27:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFE69281DA0
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Nov 2023 18:56:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7148618E06;
-	Thu,  2 Nov 2023 12:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A3A921377;
+	Thu,  2 Nov 2023 18:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BPZck9bN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xR8b+XNw"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E9318E27
-	for <linux-hyperv@vger.kernel.org>; Thu,  2 Nov 2023 12:27:48 +0000 (UTC)
-Received: from esa6.hc3370-68.iphmx.com (esa6.hc3370-68.iphmx.com [216.71.155.175])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F628DE;
-	Thu,  2 Nov 2023 05:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1698928063;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=Qt98FOOlwQXNEe7TmHLKYpigU0UohpmukrdSKsAE3SY=;
-  b=BPZck9bN89YigFykclQ+LGZnqSwJ7qUGJUlCiWrOO+zrdnBdmEmuQ3Re
-   LW+tl499fUA83FmxVGHHhQZ+gGVlXJre/E7dYd87m4vcTgQSVIQNZiG4y
-   Uzf1x0wTXujV75Za1RvabWjRh6OA8McGWl18vIebMnPEcQ6yny6MRJm13
-   A=;
-X-CSE-ConnectionGUID: pNIzOpSTTbaXx/hvRfdv1w==
-X-CSE-MsgGUID: TcvbfrE4S9OsAZL3//oPsQ==
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-X-SBRS: 4.0
-X-MesageID: 126596384
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.159.70
-X-Policy: $RELAYED
-X-ThreatScanner-Verdict: Negative
-IronPort-Data: A9a23:9S6LjKqzPLvuwfp7fBSi8xMKZDheBmJ/YxIvgKrLsJaIsI4StFCzt
- garIBnVbK3YNmTzL412b4+/9U8F6pPTy99gTgZp/CthF3tG85uZCYyVIHmrMnLJJKUvbq7FA
- +Y2MYCccZ9uHhcwgj/3b9ANeFEljfngqoLUUbOCYmYpA1Y8FE/NsDo788YhmIlknNOlNA2Ev
- NL2sqX3NUSsnjV5KQr40YrawP9UlKq04GhwUmAWP6gR5waHzyNNUPrzGInqR5fGatgMdgKFb
- 76rIIGRpgvx4xorA9W5pbf3GmVirmn6ZFXmZtJ+AsBOszAazsAA+v9T2Mk0MC+7vw6hjdFpo
- OihgLTrIesf0g8gr8xGO/VQO3kW0aSrY9YrK1Dn2SCY5xWun3cBX5yCpaz5VGEV0r8fPI1Ay
- RAXACgrTwKkn9mK/LiyevkrhtoZIsX1ZZxK7xmMzRmBZRonaZXKQqGM7t5ExjYgwMtJGJ4yZ
- eJAN2ApNk6ZJUQSaxFIUPrSn8/x7pX7WxRepEiYuuwc5G/LwRYq+LPsLMDUapqBQsA9ckOw/
- ziYojWnWUFGXDCZ4QaO7HiinMKTpnLcQ6sgMOb/sflSm2TGkwT/DzVJDADm8JFVkHWWWM13L
- 00S5zpopq83nGSxSdP9dx61uniJulgbQdU4O+ki6QyXw67V+AexBWUeSDNFLts8u6ceRTUrx
- 1aPkMHBAD1kqrqOTnyBsLyTqFuaOjkOBWoDbjUDVgwL/5/op4Rbph7CRctiOKu0hcfyAjb+3
- 3aBqy1Wr64PgNAGkbqy/VTvgyqh4JPOS2Yd5RTTUySg4xJ0fqalf4Hu4l/ehd5MLYOYUkOA+
- mMFhcGY7esOJZGVmWqGR+BlNKu0/O3DOTvQjER0GJ8J9yygvXWkeOh44ixlOEZvdMsefyT1S
- E/LtEVa45o7FGv6M4d0bpi3BsBsyrLvffz9UvnIYN1UZ919bg6Z8TsrdR7O937inVJqkqwlP
- 5qfN8G2Ah4yDaVh0SrzX+wc+aEkyzp4xm7JQ53/iRO93tK2YH+TVKdAMEqWY/onxL2LrR+T8
- NtFMcaOjRJFX4XWaDH/+IoSIFZaa3Q2bbj6otJaMO6KJBFrHkklCvnM0fUgfZBom+JekeKg1
- nGlU2dK2Ub4nzvMLgDiQnVibrzodYxyoXIyIWonOlPA83IjbIKg5a4EX5QwerYj+apoyvscZ
- +UKf9WoBvVJVyjd/DIcfd/xoeRKeAqrjBiSFyujbiI2c5NpS0rO4NCMVgLp+DgmDyy5r8Iyr
- rSskATBTvIrQwVkEdaTa/+1yV61lWYSlfg0XEbSJNRXPkL2/+BCNCHwyPs2PukPJA/Fyz/c0
- ByZaSr0vsGU/dVzqoOQw/nZ/sH2S4OSA3a2AUHDy5ekEjHhwlapyL9QF+aWRz7RSjrrrfDKi
- fpu8x3sDBEWtA8U4tosQug3kP5WC8jH/eEAklo+dJnfRxH7Uuk+fyPuMdxn7/UVntdkVR2Kt
- lVjEzWwEZ6OIsrhWGUJPgsjYf/rORo8wWKKsq1dzKkX/kZKEFu7vaZ6ZULkZNR1ducdDW/c6
- b5JVDQqwwK+kAE2Fd2NkzpZ8W+BRlRZDfR35s9BXtG12lN7or2nXXA7InaoiKxjlv0VbxJ0S
- tNqrPGqa0tgKrrqLCNoSCmlMRt1jpUSohFapGI/y6CysoOd3JcfhUQBmQnbuywJln2rJcovY
- Dk0X6C0TI3SlwpVaD9rBjD1QVkYWk3DpCQcCTIhzQXkcqVhbUSVREVVBApH1BlxH750FtSDw
- Iyl9Q==
-IronPort-HdrOrdr: A9a23:aWN29a+FdqhaJVFNY0Nuk+B1I+orL9Y04lQ7vn2ZhyY1TiX+rb
- HJoB17726StN91YhsdcL+7VZVoLUmxyXcx2/hzAV9NNDOWxFdAb7sSkLcL+lXbalLDH5dmpN
- ldmspFaOEYfGIK6foSuzPIaurIqePvmMuVbKXlvhVQpGdRBJ2IhD0JbzpzfHcZeOBuP+tJKL
- OsouRGuhu9cjAtYsygAH5tZZm4m/T70LznfD8bDFod5AOPlDOl76OSKWni4j4uFx1O3JY/+i
- z/nwb4/6WutOz+4hLQzGPI9f1t6ajc4+oGKsyQq9Qfbg/hjQulf+1aKsW/lT04uvyu7142kN
- /KuX4bTrRO108=
-X-Talos-CUID: 9a23:uxNYUmNbRDlVHe5DQA9G5mkMIfwZeHTt3DDQPXW2BXgwV+jA
-X-Talos-MUID: =?us-ascii?q?9a23=3Aa9s5vg7jLNLcXFC0q5hRT2xLxoxU6LqkBlogza5?=
- =?us-ascii?q?XnNKtBwgrfHCatC+OF9o=3D?=
-X-IronPort-AV: E=Sophos;i="6.03,271,1694750400"; 
-   d="scan'208";a="126596384"
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Date: Thu, 2 Nov 2023 12:26:21 +0000
-Subject: [PATCH 3/3] x86/apic: Drop struct local_apic
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED4C208D3
+	for <linux-hyperv@vger.kernel.org>; Thu,  2 Nov 2023 18:55:57 +0000 (UTC)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF81A181
+	for <linux-hyperv@vger.kernel.org>; Thu,  2 Nov 2023 11:55:49 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5acac8b6575so19021257b3.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 02 Nov 2023 11:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698951349; x=1699556149; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GwZROZlK9UfWkKR+Oep5UTLdUA8cSVn3j1Qp9AwudVw=;
+        b=xR8b+XNwCjZzW7ewFmpbefe+kFVHnWi7cUTdQ+q/Z/mdgeN+ge8WTJOtZC06ksc0IN
+         6GRKp0tp6pde2Y1xyAGKAViGYZ1UC5Ftb4IJeZ74dYrfelnYVRfY631b0F3YWLZuDCI2
+         Tt4yzTzHHIjRznepVEEczPavOnsx/vS2h1CXeTvWr9IhUvhFerwYyN4arohfKe1dHm/F
+         M7Oxjskfv6SKRV4QQN5NQwPB+KvG7MDS/rvPHfwoNE2CvcYo9u4neBiJM7Eio2AkZfjE
+         96v9miCvJvqgiPI8bFL5uvPrQnBzn4gcJuQ1r3DeT9lUZElvtepbqHMQ8B0Xvn+sNFcI
+         K/JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698951349; x=1699556149;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GwZROZlK9UfWkKR+Oep5UTLdUA8cSVn3j1Qp9AwudVw=;
+        b=TZNP66o2/koeI9W8QKB0W4fjoY+uk3f09U6iak+00Gpkj6WfjSHBE52DtNzFgJTx5D
+         OaL1fiSY9bMjT851G0qqEc7mHXu7KaoympOKsvctZxSJQifd8Yo673naMgxBX8MbcfOm
+         lHuTSUspaGSweJV2wH7yF1Guza9PbBkvQD0SkEigBWSs6P5WcGLXA/3ODfvtKWSqJX5g
+         peXt4arJcSPO6qQuv5THR5/IkDXZPycArPDtGjW4FnKrM5lp2UtDzwEmLERw5xrtmIpk
+         Yg676CFonIuFtEqCbKoLUZL0UpOhNCrF4HlYQOf1FhIcSU88oB8dHhWfQoE7003MI9BS
+         Ltqg==
+X-Gm-Message-State: AOJu0YxX3kPeLfM5IGbFiG0pFErpaJfOmekduSHOyUgAlLUNAHhbxvTr
+	SHGxFCLmzLThco9QC49JTKcX4YJRx9gSbiCLzg==
+X-Google-Smtp-Source: AGHT+IHU+DjdhGyfLwL6+kKjSdSmxJWkpryViec8cwwDoWtQDNOiyfbquBqPfJ/wOCFKMWI8x2MjGy7G4ggPBzP5Kg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:45:b0:d9b:59c3:6eef with SMTP
+ id m5-20020a056902004500b00d9b59c36eefmr8657ybh.0.1698951348803; Thu, 02 Nov
+ 2023 11:55:48 -0700 (PDT)
+Date: Thu, 02 Nov 2023 18:55:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAK3wQ2UC/33NQQqDMBQE0KuUrJsS8zWpXfUepUhMvhpQIyYVi
+ 3j3BleWSpfDMG8W4nG06MnttJARJ+ut62NIzyeiG9XXSK2JmXDGIWE8oxia4FxbDK/gC9sNLVV
+ JKvOqKrVERuJuGLGy82Y+SI+B9jgH8oxNY31w43s7m5Kt/+NOCWVUqAxUDgZKye+1c3WLF+26j Zv4nhBHBI8EM0Lq0hiWwfWHgD0hjwiIBKRCKC1kDiz9ItZ1/QDJe1zHQwEAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698951347; l=4723;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=jFTdO8kx/UlazPhR0MRqYdFyWA/L3tuMaQQIucen34M=; b=v2F1dfbbHaeo64cGZOjBP3/iolmGrFIsPfCBQHud2JK2GSSDr5CUsMsWVAeI/q16gcG+J6OW+
+ QYzrftVSbVSBn7OqwukQ4KtKDMdJQi+bVfKV5GmEwqA8bEfbAtqp47F
+X-Mailer: b4 0.12.3
+Message-ID: <20231102-ethtool_puts_impl-v4-0-14e1e9278496@google.com>
+Subject: [PATCH net-next v4 0/3] ethtool: Add ethtool_puts()
+From: Justin Stitt <justinstitt@google.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shay Agroskin <shayagr@amazon.com>, 
+	Arthur Kiyanovski <akiyano@amazon.com>, David Arinzon <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>, 
+	Saeed Bishara <saeedb@amazon.com>, Rasesh Mody <rmody@marvell.com>, 
+	Sudarsana Kalluru <skalluru@marvell.com>, GR-Linux-NIC-Dev@marvell.com, 
+	Dimitris Michailidis <dmichail@fungible.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, 
+	Salil Mehta <salil.mehta@huawei.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>, 
+	Tony Nguyen <anthony.l.nguyen@intel.com>, Louis Peens <louis.peens@corigine.com>, 
+	Shannon Nelson <shannon.nelson@amd.com>, Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ronak Doshi <doshir@vmware.com>, 
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Hauke Mehrtens <hauke@hauke-m.de>, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"=?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?=" <arinc.unal@arinc9.com>, Daniel Golle <daniel@makrotopia.org>, 
+	Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, 
+	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	"=?utf-8?q?Alvin_=C5=A0ipraga?=" <alsi@bang-olufsen.dk>, Wei Fang <wei.fang@nxp.com>, 
+	Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Lars Povlsen <lars.povlsen@microchip.com>, 
+	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
+	UNGLinuxDriver@microchip.com, Jiawen Wu <jiawenwu@trustnetic.com>, 
+	Mengyuan Lou <mengyuanlou@net-swift.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, intel-wired-lan@lists.osuosl.org, 
+	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	bpf@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com>
-References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
-In-Reply-To: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl
-	<steve.wahl@hpe.com>, Justin Ernst <justin.ernst@hpe.com>, Kyle Meyer
-	<kyle.meyer@hpe.com>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, "Russ
- Anderson" <russ.anderson@hpe.com>, Darren Hart <dvhart@infradead.org>, "Andy
- Shevchenko" <andy@infradead.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, "Dexuan
- Cui" <decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-CC: <linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>, Andrew Cooper
-	<andrew.cooper3@citrix.com>
-X-Mailer: b4 0.12.4
 
-This type predates recorded history in tglx/history.git, making it older
-than Feb 5th 2002.
+Hi,
 
-This structure is literally old enough to drink in most juristictions in
-the world, and has not been used once in that time.
+This series aims to implement ethtool_puts() and send out a wave 1 of
+conversions from ethtool_sprintf(). There's also a checkpatch patch
+included to check for the cases listed below.
 
-Lay it to rest in /dev/null.
+This was sparked from recent discussion here [1]
 
-Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+The conversions are used in cases where ethtool_sprintf() was being used
+with just two arguments:
+|       ethtool_sprintf(&data, buffer[i].name);
+or when it's used with format string: "%s"
+|       ethtool_sprintf(&data, "%s", buffer[i].name);
+which both now become:
+|       ethtool_puts(&data, buffer[i].name);
+
+The first case commonly triggers a -Wformat-security warning with Clang
+due to potential problems with format flags present in the strings [3].
+
+The second is just a bit weird with a plain-ol' "%s".
+
+Changes found with Cocci [4] and grep [5].
+
+[1]: https://lore.kernel.org/all/202310141935.B326C9E@keescook/
+[2]: https://lore.kernel.org/all/?q=dfb%3Aethtool_sprintf+AND+f%3Ajustinstitt
+[3]: https://lore.kernel.org/all/202310101528.9496539BE@keescook/
+[4]: (script authored by Kees w/ modifications from Joe)
+@replace_2_args@
+expression BUF;
+expression VAR;
+@@
+
+-       ethtool_sprintf(BUF, VAR)
++       ethtool_puts(BUF, VAR)
+
+@replace_3_args@
+expression BUF;
+expression VAR;
+@@
+
+-       ethtool_sprintf(BUF, "%s", VAR)
++       ethtool_puts(BUF, VAR)
+
+-       ethtool_sprintf(&BUF, "%s", VAR)
++       ethtool_puts(&BUF, VAR)
+
+[5]: $ rg "ethtool_sprintf\(\s*[^,)]+\s*,\s*[^,)]+\s*\)"
+
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-There is perhaps something to be said for the longevity of the comment.
-"Not terribly well tested" certainly hasn't bitrotted in all this time.
+Changes in v4:
+- update documentation to match:
+  https://lore.kernel.org/all/20231028192511.100001-1-andrew@lunn.ch/
+
+- Link to v3: https://lore.kernel.org/r/20231027-ethtool_puts_impl-v3-0-3466ac679304@google.com
+
+Changes in v3:
+- fix force_speed_maps merge conflict + formatting (thanks Vladimir)
+- rebase onto net-next (thanks Andrew, Vladimir)
+- change subject (thanks Vladimir)
+- fix checkpatch formatting + implementation (thanks Joe)
+- Link to v2: https://lore.kernel.org/r/20231026-ethtool_puts_impl-v2-0-0d67cbdd0538@google.com
+
+Changes in v2:
+- wrap lines better in replacement (thanks Joe, Kees)
+- add --fix to checkpatch (thanks Joe)
+- clean up checkpatch formatting (thanks Joe, et al.)
+- rebase against next
+- Link to v1: https://lore.kernel.org/r/20231025-ethtool_puts_impl-v1-0-6a53a93d3b72@google.com
+
 ---
- arch/x86/include/asm/apicdef.h | 260 -----------------------------------------
- 1 file changed, 260 deletions(-)
+Justin Stitt (3):
+      ethtool: Implement ethtool_puts()
+      checkpatch: add ethtool_sprintf rules
+      net: Convert some ethtool_sprintf() to ethtool_puts()
 
-diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
-index ddcbf00db19d..094106b6a538 100644
---- a/arch/x86/include/asm/apicdef.h
-+++ b/arch/x86/include/asm/apicdef.h
-@@ -172,270 +172,10 @@
- #define APIC_CPUID(apicid)	((apicid) & XAPIC_DEST_CPUS_MASK)
- #define NUM_APIC_CLUSTERS	((BAD_APICID + 1) >> XAPIC_DEST_CPUS_SHIFT)
- 
--#ifndef __ASSEMBLY__
--/*
-- * the local APIC register structure, memory mapped. Not terribly well
-- * tested, but we might eventually use this one in the future - the
-- * problem why we cannot use it right now is the P5 APIC, it has an
-- * errata which cannot take 8-bit reads and writes, only 32-bit ones ...
-- */
--#define u32 unsigned int
--
--struct local_apic {
--
--/*000*/	struct { u32 __reserved[4]; } __reserved_01;
--
--/*010*/	struct { u32 __reserved[4]; } __reserved_02;
--
--/*020*/	struct { /* APIC ID Register */
--		u32   __reserved_1	: 24,
--			phys_apic_id	:  4,
--			__reserved_2	:  4;
--		u32 __reserved[3];
--	} id;
--
--/*030*/	const
--	struct { /* APIC Version Register */
--		u32   version		:  8,
--			__reserved_1	:  8,
--			max_lvt		:  8,
--			__reserved_2	:  8;
--		u32 __reserved[3];
--	} version;
--
--/*040*/	struct { u32 __reserved[4]; } __reserved_03;
--
--/*050*/	struct { u32 __reserved[4]; } __reserved_04;
--
--/*060*/	struct { u32 __reserved[4]; } __reserved_05;
--
--/*070*/	struct { u32 __reserved[4]; } __reserved_06;
--
--/*080*/	struct { /* Task Priority Register */
--		u32   priority	:  8,
--			__reserved_1	: 24;
--		u32 __reserved_2[3];
--	} tpr;
--
--/*090*/	const
--	struct { /* Arbitration Priority Register */
--		u32   priority	:  8,
--			__reserved_1	: 24;
--		u32 __reserved_2[3];
--	} apr;
--
--/*0A0*/	const
--	struct { /* Processor Priority Register */
--		u32   priority	:  8,
--			__reserved_1	: 24;
--		u32 __reserved_2[3];
--	} ppr;
--
--/*0B0*/	struct { /* End Of Interrupt Register */
--		u32   eoi;
--		u32 __reserved[3];
--	} eoi;
--
--/*0C0*/	struct { u32 __reserved[4]; } __reserved_07;
--
--/*0D0*/	struct { /* Logical Destination Register */
--		u32   __reserved_1	: 24,
--			logical_dest	:  8;
--		u32 __reserved_2[3];
--	} ldr;
--
--/*0E0*/	struct { /* Destination Format Register */
--		u32   __reserved_1	: 28,
--			model		:  4;
--		u32 __reserved_2[3];
--	} dfr;
--
--/*0F0*/	struct { /* Spurious Interrupt Vector Register */
--		u32	spurious_vector	:  8,
--			apic_enabled	:  1,
--			focus_cpu	:  1,
--			__reserved_2	: 22;
--		u32 __reserved_3[3];
--	} svr;
--
--/*100*/	struct { /* In Service Register */
--/*170*/		u32 bitfield;
--		u32 __reserved[3];
--	} isr [8];
--
--/*180*/	struct { /* Trigger Mode Register */
--/*1F0*/		u32 bitfield;
--		u32 __reserved[3];
--	} tmr [8];
--
--/*200*/	struct { /* Interrupt Request Register */
--/*270*/		u32 bitfield;
--		u32 __reserved[3];
--	} irr [8];
--
--/*280*/	union { /* Error Status Register */
--		struct {
--			u32   send_cs_error			:  1,
--				receive_cs_error		:  1,
--				send_accept_error		:  1,
--				receive_accept_error		:  1,
--				__reserved_1			:  1,
--				send_illegal_vector		:  1,
--				receive_illegal_vector		:  1,
--				illegal_register_address	:  1,
--				__reserved_2			: 24;
--			u32 __reserved_3[3];
--		} error_bits;
--		struct {
--			u32 errors;
--			u32 __reserved_3[3];
--		} all_errors;
--	} esr;
--
--/*290*/	struct { u32 __reserved[4]; } __reserved_08;
--
--/*2A0*/	struct { u32 __reserved[4]; } __reserved_09;
--
--/*2B0*/	struct { u32 __reserved[4]; } __reserved_10;
--
--/*2C0*/	struct { u32 __reserved[4]; } __reserved_11;
--
--/*2D0*/	struct { u32 __reserved[4]; } __reserved_12;
--
--/*2E0*/	struct { u32 __reserved[4]; } __reserved_13;
--
--/*2F0*/	struct { u32 __reserved[4]; } __reserved_14;
--
--/*300*/	struct { /* Interrupt Command Register 1 */
--		u32   vector			:  8,
--			delivery_mode		:  3,
--			destination_mode	:  1,
--			delivery_status		:  1,
--			__reserved_1		:  1,
--			level			:  1,
--			trigger			:  1,
--			__reserved_2		:  2,
--			shorthand		:  2,
--			__reserved_3		:  12;
--		u32 __reserved_4[3];
--	} icr1;
--
--/*310*/	struct { /* Interrupt Command Register 2 */
--		union {
--			u32   __reserved_1	: 24,
--				phys_dest	:  4,
--				__reserved_2	:  4;
--			u32   __reserved_3	: 24,
--				logical_dest	:  8;
--		} dest;
--		u32 __reserved_4[3];
--	} icr2;
--
--/*320*/	struct { /* LVT - Timer */
--		u32   vector		:  8,
--			__reserved_1	:  4,
--			delivery_status	:  1,
--			__reserved_2	:  3,
--			mask		:  1,
--			timer_mode	:  1,
--			__reserved_3	: 14;
--		u32 __reserved_4[3];
--	} lvt_timer;
--
--/*330*/	struct { /* LVT - Thermal Sensor */
--		u32  vector		:  8,
--			delivery_mode	:  3,
--			__reserved_1	:  1,
--			delivery_status	:  1,
--			__reserved_2	:  3,
--			mask		:  1,
--			__reserved_3	: 15;
--		u32 __reserved_4[3];
--	} lvt_thermal;
--
--/*340*/	struct { /* LVT - Performance Counter */
--		u32   vector		:  8,
--			delivery_mode	:  3,
--			__reserved_1	:  1,
--			delivery_status	:  1,
--			__reserved_2	:  3,
--			mask		:  1,
--			__reserved_3	: 15;
--		u32 __reserved_4[3];
--	} lvt_pc;
--
--/*350*/	struct { /* LVT - LINT0 */
--		u32   vector		:  8,
--			delivery_mode	:  3,
--			__reserved_1	:  1,
--			delivery_status	:  1,
--			polarity	:  1,
--			remote_irr	:  1,
--			trigger		:  1,
--			mask		:  1,
--			__reserved_2	: 15;
--		u32 __reserved_3[3];
--	} lvt_lint0;
--
--/*360*/	struct { /* LVT - LINT1 */
--		u32   vector		:  8,
--			delivery_mode	:  3,
--			__reserved_1	:  1,
--			delivery_status	:  1,
--			polarity	:  1,
--			remote_irr	:  1,
--			trigger		:  1,
--			mask		:  1,
--			__reserved_2	: 15;
--		u32 __reserved_3[3];
--	} lvt_lint1;
--
--/*370*/	struct { /* LVT - Error */
--		u32   vector		:  8,
--			__reserved_1	:  4,
--			delivery_status	:  1,
--			__reserved_2	:  3,
--			mask		:  1,
--			__reserved_3	: 15;
--		u32 __reserved_4[3];
--	} lvt_error;
--
--/*380*/	struct { /* Timer Initial Count Register */
--		u32   initial_count;
--		u32 __reserved_2[3];
--	} timer_icr;
--
--/*390*/	const
--	struct { /* Timer Current Count Register */
--		u32   curr_count;
--		u32 __reserved_2[3];
--	} timer_ccr;
--
--/*3A0*/	struct { u32 __reserved[4]; } __reserved_16;
--
--/*3B0*/	struct { u32 __reserved[4]; } __reserved_17;
--
--/*3C0*/	struct { u32 __reserved[4]; } __reserved_18;
--
--/*3D0*/	struct { u32 __reserved[4]; } __reserved_19;
--
--/*3E0*/	struct { /* Timer Divide Configuration Register */
--		u32   divisor		:  4,
--			__reserved_1	: 28;
--		u32 __reserved_2[3];
--	} timer_dcr;
--
--/*3F0*/	struct { u32 __reserved[4]; } __reserved_20;
--
--} __attribute__ ((packed));
--
--#undef u32
--
- #ifdef CONFIG_X86_32
-  #define BAD_APICID 0xFFu
- #else
-  #define BAD_APICID 0xFFFFu
- #endif
- 
--#endif /* !__ASSEMBLY__ */
- #endif /* _ASM_X86_APICDEF_H */
+ drivers/net/dsa/lantiq_gswip.c                     |  2 +-
+ drivers/net/dsa/mt7530.c                           |  2 +-
+ drivers/net/dsa/qca/qca8k-common.c                 |  2 +-
+ drivers/net/dsa/realtek/rtl8365mb.c                |  2 +-
+ drivers/net/dsa/realtek/rtl8366-core.c             |  2 +-
+ drivers/net/dsa/vitesse-vsc73xx-core.c             |  8 +--
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c      |  4 +-
+ drivers/net/ethernet/brocade/bna/bnad_ethtool.c    |  2 +-
+ drivers/net/ethernet/freescale/fec_main.c          |  4 +-
+ .../net/ethernet/fungible/funeth/funeth_ethtool.c  |  8 +--
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_gmac.c |  2 +-
+ .../net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c    |  2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   | 65 +++++++++++-----------
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |  6 +-
+ drivers/net/ethernet/intel/iavf/iavf_ethtool.c     |  3 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.c       |  9 +--
+ drivers/net/ethernet/intel/idpf/idpf_ethtool.c     |  2 +-
+ drivers/net/ethernet/intel/igb/igb_ethtool.c       |  6 +-
+ drivers/net/ethernet/intel/igc/igc_ethtool.c       |  6 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c   |  5 +-
+ .../net/ethernet/microchip/sparx5/sparx5_ethtool.c |  2 +-
+ .../net/ethernet/netronome/nfp/nfp_net_ethtool.c   | 44 +++++++--------
+ drivers/net/ethernet/pensando/ionic/ionic_stats.c  |  4 +-
+ drivers/net/ethernet/wangxun/libwx/wx_ethtool.c    |  2 +-
+ drivers/net/hyperv/netvsc_drv.c                    |  4 +-
+ drivers/net/phy/nxp-tja11xx.c                      |  2 +-
+ drivers/net/phy/smsc.c                             |  2 +-
+ drivers/net/vmxnet3/vmxnet3_ethtool.c              | 10 ++--
+ include/linux/ethtool.h                            | 13 +++++
+ net/ethtool/ioctl.c                                |  7 +++
+ scripts/checkpatch.pl                              | 19 +++++++
+ 31 files changed, 139 insertions(+), 112 deletions(-)
+---
+base-commit: 3a04927f8d4b7a4f008f04af41e31173002eb1ea
+change-id: 20231025-ethtool_puts_impl-a1479ffbc7e0
 
--- 
-2.30.2
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
 
