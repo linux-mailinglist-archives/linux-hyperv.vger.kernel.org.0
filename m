@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-680-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-665-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DF9C7E06EB
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 17:45:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FCB07E06B2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 17:45:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B807F281ED1
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 16:45:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A0DC1C210BA
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 16:45:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7621E208A7;
-	Fri,  3 Nov 2023 16:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D6C1CAAA;
+	Fri,  3 Nov 2023 16:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PWEkU7cB"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fgFyWL8y"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00CE1DFC0;
-	Fri,  3 Nov 2023 16:45:26 +0000 (UTC)
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2088.outbound.protection.outlook.com [40.107.237.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD04D49;
-	Fri,  3 Nov 2023 09:45:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E951BDE3;
+	Fri,  3 Nov 2023 16:45:10 +0000 (UTC)
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2065.outbound.protection.outlook.com [40.107.102.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B29FFB;
+	Fri,  3 Nov 2023 09:45:06 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SulgikAxGxFWdHASWjrcdFM+KDM/5YCK+WhxmGXhv07rQdnjwnIDkZNXstLlDrIl8QCm/i0srIKTVCPWMWEyxlw+LZhDRl06F5z69fToiCTMSXRqaGB8nXfQqBXwXFPWLmtrxPfDzVpdDK0ldwGyId/uL2QwaUAauAiexrlrCZechBLMsQ0QSmy1GzBH4ngoiEj4cxWoGtyzmvnJmh9mU66EQYJ9d5wg24pw1h9u+hwyC+75RZRZouVU68r019NKVYTTks+5hOlRjhZNZkUHByaIoTbVg1DJYIk5yBO0q24JIUvWL+xzkcn1ssWzVxM8V4imRoSQClg9s46muFQcMA==
+ b=FVhdUo+X2FOY4JuB0/pPr+RnbDrEodMCH5QyfzY5NngA2YJXLBMx53Et7VcUGEcAzzsWFM0AWB2lXipYY7zL5+EO4VesaeepJOBeyYgdeMapIDoW987qOHrNjbSHpu8nPWgKnRTk3xC2SB4L6p9fxVTRUguS2A0fqq/tVJoinNva7l61GwT0HiWv3XBHtTCsS1vXAOSh3h07smWBWnqfGj1j6+jUV3ltn/7jqf4NTU32N83i66u4WdEMj8SrMnFw5xf7QHnesdqOLIvMxZT4z1VMGCJMOsGSdIpN+QWsFTopuPVl1DnFMCFGhSazJrAiGkLCO2H34MMTZwtvdGuRMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LdsjErMszebnmFtTb6/WTM+XmGNFE0IR3PzOJuy1VLM=;
- b=kM9zIaX9NOMqi1N9woTN7hVDJ/Xi/DXcJlWbmSreq4eX3mbKaoOhxuBCFwlA9e7aVs4VHZ7Tkqxe1It9gslLtaNzrI5wbs/8rVPur1Jh2K7OtZTOtvgDlXM30ianttlWtreOw4syZGXefnEiwzbaggg0ZhGAUSmP+zQzVMF3SfIhKAp6l1YwOo0O4MFi3yj0LrSNbGCCvrBXcbSFge6FdIj90xqWY+eIO8DM9HBeGsua0tGE56ZkaW/xwR6wjjxs18QmG7alCzc58ZEroO/wsiCQ0lNtPZwZ6rdMkOvklDxauE1tzzXtU+Nmgsaa/shT+RWxk3uqUdRzw1BtTsG+qQ==
+ bh=TnoHHRW9wGxYObBfp5jd7EnMs8P21nURFY58S4rMak0=;
+ b=ca+YpUMoFGwmuSQLnpZBZWTy+JOkfEKOEVFngkR/yUo7hWLNu9//6HugxRq4ZWPJBsvNGmOdDvakptciRQOHKI7QdzFdH/sfJ9CQiL8Zz6QzipAH/7R7TCzbj8d/qb8iHbWA58bSy8YfuDTJtPt2S7YeYofw+FEWxvnNoqRW03K2/2jgTuVASLS3mnOM68z307MAKBQ3SyQXgXF7zKZ82ndNSgwdPY9UqEeqLUtcUn7zZRcRIrxx56hfdOPfncVt3IFWtMjl+d06bLIsULjTXVkbm5GLdYUU81rULtqiX2FnU4Yc5B9tX8iOy9g8w9+6y26N64CtPtB42PMKxtj5eg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LdsjErMszebnmFtTb6/WTM+XmGNFE0IR3PzOJuy1VLM=;
- b=PWEkU7cBfCPLNRnK1t8TIeVVszN78B+1/T2c8D2S8TMSqYm/xDqeSvCuUImJ+GxGD/Ru08XM3LTkwtrh16+fjXNZ3uSJb+eoCeGJd6c+s6KXiCALJ8zLJhEQ8Qgoz0BzIKO7JbqI6mTcxJl28uyoJruZLT27o7Ba2aOcTsEDsS98DggVKzdDZWphA3K8eFl93iLqZHg3WBBM9w5+SX9cY2f7ZJP+YXYfk8PN7OBDclGaJOyIOVUakhEau604I32TrPUyec1ZqqXu1GkyCufkToIsoK9ofC+3cQDRW2HXNxRA6VHVhXwQLQx4XwZlJIL+Q9zyJ0jUASmQsIawWiqM5Q==
+ bh=TnoHHRW9wGxYObBfp5jd7EnMs8P21nURFY58S4rMak0=;
+ b=fgFyWL8y2hhCPeRB3QREn7Uuh58Tup5xgeQRI1TAYRqqv27pTe6tsY9S0SQc6yUa9BaQx/XIqo1k/RqOXF/+AkiFVPZSVYIfhdiDmnAsXFx81d2o5yCRGZ0a6eBPF8TqDMWkjqXR2m5GKehRjHva6egvNif895ewxMZ6rSmeSQfsj7TE67zwPQbQwJpD09DbSQNXLviiCBZOyBkzQYCuZ+O8TQXBG9Sf3FLGLauPLm7JLs5qbxF3RcIC+lmPk9MDwu0ZT6HhksJLU25EywFBSKDUL633ZfBYTLUkaZNI3Rm/tw2w8VkA7P4ibnDKT0koO6zlJrj0B+YCKVpj2JMqEA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by CH3PR12MB9282.namprd12.prod.outlook.com (2603:10b6:610:1cb::8) with
+ by PH0PR12MB7886.namprd12.prod.outlook.com (2603:10b6:510:26e::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.21; Fri, 3 Nov
- 2023 16:45:11 +0000
+ 2023 16:45:04 +0000
 Received: from LV2PR12MB5869.namprd12.prod.outlook.com
  ([fe80::b53a:1092:9be2:cfb9]) by LV2PR12MB5869.namprd12.prod.outlook.com
  ([fe80::b53a:1092:9be2:cfb9%4]) with mapi id 15.20.6933.027; Fri, 3 Nov 2023
- 16:45:11 +0000
+ 16:45:03 +0000
 From: Jason Gunthorpe <jgg@nvidia.com>
 To: acpica-devel@lists.linuxfoundation.org,
 	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
@@ -97,15 +97,15 @@ To: acpica-devel@lists.linuxfoundation.org,
 	Wei Liu <wei.liu@kernel.org>,
 	Will Deacon <will@kernel.org>
 Cc: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: [PATCH RFC 03/17] of: Use -ENODEV consistently in of_iommu_configure()
-Date: Fri,  3 Nov 2023 13:44:48 -0300
-Message-ID: <3-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+Subject: [PATCH RFC 04/17] acpi: Do not return struct iommu_ops from acpi_iommu_configure_id()
+Date: Fri,  3 Nov 2023 13:44:49 -0300
+Message-ID: <4-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
 In-Reply-To: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
 References:
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0182.namprd13.prod.outlook.com
- (2603:10b6:208:2be::7) To LV2PR12MB5869.namprd12.prod.outlook.com
+X-ClientProxiedBy: BL1PR13CA0187.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::12) To LV2PR12MB5869.namprd12.prod.outlook.com
  (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -114,140 +114,133 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|CH3PR12MB9282:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc9eba72-d890-4244-da24-08dbdc8c3bc0
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH0PR12MB7886:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1627afca-1b54-4898-fd7d-08dbdc8c3a5f
 X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	3RYW1+fdG3jYxbYkDdXxmUXuFqfWVocaDWUAtB6tD2CEPwd4nfm0gPNvw7UVtN2sD+66LygKu6K0XfEVOhtpY1YdLCh2w/1I/48hyEw4uEXSCa49VSRKuA5nzcNXw8N/UExOiz634di7tx46JscgTT5yRQseEbaMWd6RMB+VO6F0WgCgPKcA7VnZQlHpahCPwzsbOLZmbW0bwQYE3z9/MXm5JUQ3WvrUuObdJTSbF0kd1svDTqeey+noRzojXEjaS2P9dN2hvLI7kVkaIAY7C5IVrDR5r+tLljrTBKhBKgJhXSJPQctybyPQ0MZQJ910a+s2s/WuzH2ijRnQwvIcLtFSs0YlzqX64CMEK3ySLbwjsy42lv4wjZfK/FKiNH+wegWTOjGIGm24L6uOyRjBNw2HH8nygJtPhDQ9FLrmkuocdWesQ8p0zSwE11QGWKCdA+Uu0fCJcJx/TA4PgTw594lqqpJ+K2v4iEK48JrtykAlxNx6Ea6ALMrc4B+/ykMk1ZdSLsfPEDvzyi0X1PyZeq+Te6eCbROd5GqkJHSY5z5/QRZXkYlMh+ulQ7Pr0zmZPn+leCRokv32COX/JlTS8+sSp5Q3aP5F7KVLxx0w1ec9gNufJgvAhWn8KP1xIEP3
+	e8QoeXLZ+gfP4uFtmX3rpPUEYK4aMVIdFjtnwwv0LWasitsNVPChD1F9rU/qPrILSEBI/JTl0bv2y1Ku/SEFHMeYFVcPDN0VA57mc7mu2IXzyNJ9IjFMi6hz6K5vSqgsQI63k/uxDgv5oV4thGFeoE9vWdEJOdvOzBLnG9nqdPW02mrBkVnlrYsnrwkDf7Qn1NTeFC4t+pufkZn6DAKMvxs7OBbKk+qPvbX9cgTbGt2CooJarL9xFVUCdS+DKjx48iwEAtH32MFE/MCUBmQMh5yP88yVMgVRksdBLG+IRvKr6PA9E5Kon25B+5AgNwWxyVHLg5ZJaNU+cBKNfXqYKbzrLsl64ZpbA/O1Cv7cI+p+i6w05nDql+O2pAG/Tv2NLEFMQ6zusfiVWzxKF7zpjpSTMg3aFGxAJxoc8SqE2z6DZDmX/TuVeqknPF8vdaPiHp5/Q2AN5v1c7bQSvZ0KoUWtD2cIY7FSvpIyLrpkezAIsJe/b8T0qTkCrbL9Xl9ssF8UQXO753GZJfbQu3qZ7L+jgVOGVgDqbSJL1DghBrZHuK1jOGXuS9GbOp93P+rfAyFwXF09zqWh3SzQ0KfP3CHFQNeoWCOumMxnn7ky+Ltoodco4JUJZh7bdEQPR/Ey
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(366004)(39860400002)(136003)(376002)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(38100700002)(2616005)(36756003)(26005)(921008)(8676002)(4326008)(316002)(86362001)(6486002)(478600001)(41300700001)(66556008)(66476007)(66946007)(110136005)(6512007)(6506007)(8936002)(5660300002)(6666004)(7406005)(2906002)(7416002)(83380400001)(4216001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(396003)(366004)(376002)(136003)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(6486002)(66946007)(8936002)(66556008)(8676002)(316002)(4326008)(2906002)(7416002)(7406005)(110136005)(66476007)(5660300002)(6666004)(478600001)(6512007)(2616005)(41300700001)(26005)(6506007)(83380400001)(921008)(38100700002)(86362001)(36756003)(4216001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XKZSSwajEKH+IWShhl71mjIvz5r5QO5EBJDeJi2fKVEAG49Fkw/CH6qg1PaT?=
- =?us-ascii?Q?6GyCWcKcEhSS2FM3RymDnG+JlPH1w6jZrEmojKs0sxVd0SLboyRgyYokAwiJ?=
- =?us-ascii?Q?guU7SbeM6n011r4R8o/wzKNpRirYocXBzaqEGRwEjSG0fGJLYsJPtPO3N27c?=
- =?us-ascii?Q?ygEhBtBf/Sx/gLoDDB1Z1V6Up2B+TDpV8i+p1IvCB2KZIHn9/ZK/i7SSkSZ5?=
- =?us-ascii?Q?bhBibUTEJrLh/0Ow4GEReVj9EFDghDvb4JAfhQ+mvSqJVR10izACiXhz+X+s?=
- =?us-ascii?Q?zUoOWE3C7ohdiRlQYhl13VXss2VVB8CB0QlSmvDK+AzfNmka53CRRnJi0dWH?=
- =?us-ascii?Q?MMljI+3mYdnOkdmp401V8yWhYX7MAJOijDCS/kBrrDDh/yDgY6IscSBy0e7k?=
- =?us-ascii?Q?o5Dgd7/HfSwnqC4WWbxUpvvv7AhTESpcssKGxdwulTmvaSYYzODSAjrT3B64?=
- =?us-ascii?Q?ANx8+rPji1llkDO6k6rnY3qpNxPJl8utb+S1xwO8bGwto9autER4KEyr7URD?=
- =?us-ascii?Q?NFjZqzmEmiysmIOW4hqcbtki5nZGnO614X6ErLTt5YY17oS7j0BG4l3ghVvr?=
- =?us-ascii?Q?IfZcdqhKqkloQ1Az2oJLcxExKKqKwqqLiiHgDqyi/sb3QDkonYyXT1aLRmz8?=
- =?us-ascii?Q?Ixjvsla7Gj4s1W279yLTdzPYZ8aJh6izVZUn5AZRRbJ1FXpuZBXC34fZGGop?=
- =?us-ascii?Q?FqnR53WVqzuRuNknQ/pui3s6aQwSruqUYUI3/otC1YAAUiHnqTSUAljt0gFD?=
- =?us-ascii?Q?8H/gYUjjZFgjc/C8brZ1ZeP5p4vS+Kq9ZVNpanIlCNCnpGTSMTwVRxI9AwD6?=
- =?us-ascii?Q?YqtXm9sFCWnXL8uEFY+TUikS5erGW6Nw/Rlg0hwXMP3I/0Ailai6dTaiHZTA?=
- =?us-ascii?Q?ljd0hEb7YfNm/P9wtzGWkSaEiVxJ5oObr4RiWyQ6fGvsrfH26fLnXomx33mO?=
- =?us-ascii?Q?JTVWzf4Yu7q5E4O62SaqM7UdyY2y18fFNfNEQX1psWp4uF9CeA/1UICq6Fxn?=
- =?us-ascii?Q?ugm9C3XM0gyXlD0UHBxel01VWcdKoEOdwxToKKwWgiE2e11gOJYLW5+mIPMe?=
- =?us-ascii?Q?2fspibMSq9P1HXxXsQyzTozxkppOVwibZwxIcyGcKT99dYsgNG2xfgpsflYv?=
- =?us-ascii?Q?NO+GLTLzDVPBogQZCqtYfS9hJkZYZro8KZTUjXbqakdZyam9u/uYjDclkS1l?=
- =?us-ascii?Q?YYw2LPTAR325x8A65hScoPcLZ6YsEwcOAUmfr11Le1GkEhRxhYxSEAOaLcmr?=
- =?us-ascii?Q?bYYLsqNIVZ/PSHFfNeGULtmoIRGUzgSzUFPKa8LXBxKChytSKA0ucAPdSS9+?=
- =?us-ascii?Q?q88CORwrtoLzA6X2bse8FnypB/L3tSE1/5DctpwHd6kwV+MWYuN0wQS4HaMY?=
- =?us-ascii?Q?jmHEU1oGUOiheHXOmXjIxHm9lIzM84wilMWL4SxkvzZ3/V3FsRKUChMTrdKU?=
- =?us-ascii?Q?5CarofSIUvyZYpGnJE65N7Eqw4V4HV/xC8iUnRJNQmFXqCOUsqVwLE8fRbqy?=
- =?us-ascii?Q?vc27OGNJCoaC5uaaumMHKtJXfHT3Yqml8J64PWztHL16qPtzVbFXdDheiLpy?=
- =?us-ascii?Q?gMkDCYOLn2xnIuUS5t6kOHbTlpMsCXEePnpVXuXX?=
+	=?us-ascii?Q?c4NbtvSKUiJgXewWvYQXS49KGtlWWqE19IrJwNq2h1/ubx5Nb6JqxpT4zitD?=
+ =?us-ascii?Q?UQhqfgK0Mks20f6BmOdUIkBIu9y+S5y/VyUdgzpbTtT6XGjT6982S3kXt3CL?=
+ =?us-ascii?Q?gYxsurEM8bKOEkRth6TBcWqyOX06uIM8ixvyA1DEzHSzKX35/ITqPpqFw7kB?=
+ =?us-ascii?Q?wUHmXC4y/isyCAjWgTcLxnlL0YlY4CPRUvVq4diL9cR1Zv9ufyYHsonY6g5u?=
+ =?us-ascii?Q?1vdYSl72Di8F10cBY9VCl3r4dqreoIhSw+fB3SgD1/8/IckbLtWQdbqL7frX?=
+ =?us-ascii?Q?+NoZ+V03g0/vIhzntFvXXGOcc473e3YvofLPTw8Urt8FygI5QkjSVtcS3yI6?=
+ =?us-ascii?Q?BjXbAp1n3MFY3kEQ8Y3t8bb40OQoj9ZwaEWWHXvQau45HaWNs9HvkmKA3S+v?=
+ =?us-ascii?Q?Loxw7kEk91Y4oT6nEA1Bpf71kBZj+2OgZZpVPJWLq3sMYnNZBkREqvsVG42r?=
+ =?us-ascii?Q?jj4uK0opw+SxGh79x0ULbTORWqweQygzIquD7C7sX3tGeY5S9kjn1IrxKQV9?=
+ =?us-ascii?Q?NMsSHMqIh/Bu4kRmj8NaWh0d/N9qLNn4fbCZCeTv5ntKpLliAX3xDa5nZcgF?=
+ =?us-ascii?Q?IzqLgIyHUTDo2LfTLYVbWZC58owLuE4dCw4EOvnsf//F6gJqqz82uhWTKFBC?=
+ =?us-ascii?Q?hxF+TOLo+SZbuIe+oPVvHzFswLBtdOK07XS9ZQ4ZNLuTB7uzD/WcrHc7NIet?=
+ =?us-ascii?Q?NxAaPRTffXek0E6TRXzlC5NEFieUvTPnB27s4DdwfGZU1Ju09Bl+/xcpo6Cl?=
+ =?us-ascii?Q?AYJ5K+XDma07d7rtPHQu0dEd+7j1bTCDt/dHIIkXpEs1iwgIBXbvhIrNY+mO?=
+ =?us-ascii?Q?djUVM1/dDVjWkCazY4OVk3H8Ll0EH9y0q31F7xh9zauAkL7WE1ZvZiyVGboi?=
+ =?us-ascii?Q?YF6D/1Ksb0vRRtaMmcfEh2EA5h9DQnc0YsUvdPLR34E6hM16sz+g+ruXLN3S?=
+ =?us-ascii?Q?/cRhSdqQuRTHv7Xh27tFJgvW3+xuEeTbscPz80JIdMf4mPxjsWDuL+4GFJv2?=
+ =?us-ascii?Q?La+FSjleK/THAHJ7KT9iZSgKL8GFz7ipOodgv7MMxp9vq+nRrC0Qu6U5ZPMs?=
+ =?us-ascii?Q?Hc12O6oG3IvTHc1cntZMkIIpWaBUDhRd0LbANv44I9UppD5TCbrPASTvbbOB?=
+ =?us-ascii?Q?0qW7Iq/YAbreoh5BfEwRldWW1RDpmQuD44HKa6yxz1R3UUgo1mck18m0+dOf?=
+ =?us-ascii?Q?fYWmq/SjZ5/SJiL/u8LTpAjaMvV/opyASuVSqHe+Xqjr4Ycnm+7m7P/aqG4V?=
+ =?us-ascii?Q?yDT2TDKTM3lLFyigI8r3G9EInd/7+K0EHvrwLv1C18aq0UsXkrj78YhlUQ9z?=
+ =?us-ascii?Q?Appp9+qnp1EY78NZ7siNgfLCOL0flhStbRGjNLf78/rhI5jM2ZU+dVAQnqJs?=
+ =?us-ascii?Q?PoY/UWWhg706NsT87h/G0ODZrH+1yw+OpCX/bkSLj2JJpBjscEiP/5P8JBkm?=
+ =?us-ascii?Q?7oimomhU4WGtCXP/DCuG65Q1lnABgaIoDRxXTx2ba6AINPfHDGwewBnvvBYk?=
+ =?us-ascii?Q?td/z71X+Nc2+uUTxNyOMLaz/iY/YqLdCmiz3Yzh7w/RyFPbYDVZXkfTDcNK7?=
+ =?us-ascii?Q?sq3Knk3lSukf97Fkwms=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc9eba72-d890-4244-da24-08dbdc8c3bc0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1627afca-1b54-4898-fd7d-08dbdc8c3a5f
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 16:45:06.1205
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 16:45:03.7907
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d2FfL3N3BqymAYjHr+UAS4KUeMm1aMHFjx04VGo3x8hkAzO3iIC4QOQ51TqKrv8q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9282
+X-MS-Exchange-CrossTenant-UserPrincipalName: oat6TdcMlK87Pn45YNa4lzlJQZrxRi5y3G9EyZQgkWg2oJ8Vzvos60W26a9ynCo/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7886
 
-Instead of returning 1 and trying to handle positive error codes just
-stick to the convention of returning -ENODEV. Remove references to ops
-from of_iommu_configure(), a NULL ops will already generate an error code.
-
-There is no reason to check dev->bus, if err=0 at this point then the
-called configure functions thought there was an iommu and we should try to
-probe it. Remove it.
+Nothing needs this pointer. Return a normal error code with the usual
+IOMMU semantic that ENODEV means 'there is no IOMMU driver'.
 
 Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 ---
- drivers/iommu/of_iommu.c | 42 +++++++++++++---------------------------
- 1 file changed, 13 insertions(+), 29 deletions(-)
+ drivers/acpi/scan.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index e2fa29c16dd758..4f77495a2543ea 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -17,7 +17,7 @@
- #include <linux/slab.h>
- #include <linux/fsl/mc.h>
- 
--#define NO_IOMMU	1
-+#define NO_IOMMU	-ENODEV
- 
- static int of_iommu_xlate(struct device *dev,
- 			  struct of_phandle_args *iommu_spec)
-@@ -117,9 +117,8 @@ static int of_iommu_configure_device(struct device_node *master_np,
- int of_iommu_configure(struct device *dev, struct device_node *master_np,
- 		       const u32 *id)
- {
--	const struct iommu_ops *ops = NULL;
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	int err = NO_IOMMU;
-+	int err;
- 
- 	if (!master_np)
- 		return -ENODEV;
-@@ -150,34 +149,19 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
- 		err = of_iommu_configure_device(master_np, dev, id);
- 	}
- 
--	/*
--	 * Two success conditions can be represented by non-negative err here:
--	 * >0 : there is no IOMMU, or one was unavailable for non-fatal reasons
--	 *  0 : we found an IOMMU, and dev->fwspec is initialised appropriately
--	 * <0 : any actual error
--	 */
--	if (!err) {
--		/* The fwspec pointer changed, read it again */
--		fwspec = dev_iommu_fwspec_get(dev);
--		ops    = fwspec->ops;
--	}
--	/*
--	 * If we have reason to believe the IOMMU driver missed the initial
--	 * probe for dev, replay it to get things in order.
--	 */
--	if (!err && dev->bus)
--		err = iommu_probe_device(dev);
-+	if (err == -ENODEV || err == -EPROBE_DEFER)
-+		return err;
-+	if (err)
-+		goto err_log;
- 
--	/* Ignore all other errors apart from EPROBE_DEFER */
--	if (err < 0) {
--		if (err == -EPROBE_DEFER)
--			return err;
--		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
--		return -ENODEV;
--	}
--	if (!ops)
--		return -ENODEV;
-+	err = iommu_probe_device(dev);
-+	if (err)
-+		goto err_log;
- 	return 0;
-+
-+err_log:
-+	dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
-+	return err;
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index a6891ad0ceee2c..fbabde001a23a2 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1562,8 +1562,7 @@ static inline const struct iommu_ops *acpi_iommu_fwspec_ops(struct device *dev)
+ 	return fwspec ? fwspec->ops : NULL;
  }
  
- static enum iommu_resv_type __maybe_unused
+-static const struct iommu_ops *acpi_iommu_configure_id(struct device *dev,
+-						       const u32 *id_in)
++static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+ {
+ 	int err;
+ 	const struct iommu_ops *ops;
+@@ -1574,7 +1573,7 @@ static const struct iommu_ops *acpi_iommu_configure_id(struct device *dev,
+ 	 */
+ 	ops = acpi_iommu_fwspec_ops(dev);
+ 	if (ops)
+-		return ops;
++		return 0;
+ 
+ 	err = iort_iommu_configure_id(dev, id_in);
+ 	if (err && err != -EPROBE_DEFER)
+@@ -1589,12 +1588,14 @@ static const struct iommu_ops *acpi_iommu_configure_id(struct device *dev,
+ 
+ 	/* Ignore all other errors apart from EPROBE_DEFER */
+ 	if (err == -EPROBE_DEFER) {
+-		return ERR_PTR(err);
++		return err;
+ 	} else if (err) {
+ 		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
+-		return NULL;
++		return -ENODEV;
+ 	}
+-	return acpi_iommu_fwspec_ops(dev);
++	if (!acpi_iommu_fwspec_ops(dev))
++		return -ENODEV;
++	return 0;
+ }
+ 
+ #else /* !CONFIG_IOMMU_API */
+@@ -1623,7 +1624,7 @@ static const struct iommu_ops *acpi_iommu_configure_id(struct device *dev,
+ int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+ 			  const u32 *input_id)
+ {
+-	const struct iommu_ops *iommu;
++	int ret;
+ 
+ 	if (attr == DEV_DMA_NOT_SUPPORTED) {
+ 		set_dma_ops(dev, &dma_dummy_ops);
+@@ -1632,10 +1633,15 @@ int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+ 
+ 	acpi_arch_dma_setup(dev);
+ 
+-	iommu = acpi_iommu_configure_id(dev, input_id);
+-	if (PTR_ERR(iommu) == -EPROBE_DEFER)
++	ret = acpi_iommu_configure_id(dev, input_id);
++	if (ret == -EPROBE_DEFER)
+ 		return -EPROBE_DEFER;
+ 
++	/*
++	 * Historically this routine doesn't fail driver probing due to errors
++	 * in acpi_iommu_configure()
++	 */
++
+ 	arch_setup_dma_ops(dev, 0, U64_MAX, attr == DEV_DMA_COHERENT);
+ 
+ 	return 0;
 -- 
 2.42.0
 
