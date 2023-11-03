@@ -1,79 +1,99 @@
-Return-Path: <linux-hyperv+bounces-687-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-688-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45AD27E0A09
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 21:17:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D87977E0AC4
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 22:42:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F232C281F62
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 20:17:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32109B21482
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Nov 2023 21:42:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223E023753;
-	Fri,  3 Nov 2023 20:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 575A621351;
+	Fri,  3 Nov 2023 21:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="mEea6OpQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlAxRz3a"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203792110F
-	for <linux-hyperv@vger.kernel.org>; Fri,  3 Nov 2023 20:17:16 +0000 (UTC)
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B38D53;
-	Fri,  3 Nov 2023 13:17:14 -0700 (PDT)
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A3InJ4f001508;
-	Fri, 3 Nov 2023 20:16:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=D51GjDb7/ozAJNlUYKNTwI4ApLuMChHWlUEbM3CJ6no=;
- b=mEea6OpQ4GyhnF36+uGnR03Vx1ICKSCu6OxzE4yX+cbJ6lZDumNQVs6DbbTD0A9eauyy
- g6s7jyvesL+yGSqFNIBsyeUJbdgqwdLPEY8MwMl8hF7MOl9/csH654p4dyiL76pXjgB8
- vC+8zIVu1RbFbKK/ZBcfPojc9qgCiE/GS9pPEMGxRezsZQy60BECCIGxJ1gJu0bgdYK9
- PbqRsZNXlnd+ZBL8vX6IhuGbHX8Lx5+2U9T+v9uxqxyBZrvHl9Cjr6P297DOTnBfeqxS
- mJWs0TSX/DU4HShDVVjcAhARK9Uz3ucTScaxKKlyDeCErEBC8hqCaKVSoDmw2eNLmLIi Sw== 
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3u4twf02jx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Nov 2023 20:16:51 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 7C11E13197;
-	Fri,  3 Nov 2023 20:16:43 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id CD82A80045D;
-	Fri,  3 Nov 2023 20:16:39 +0000 (UTC)
-Date: Fri, 3 Nov 2023 15:16:38 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>, Kyle Meyer <kyle.meyer@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] x86/apic: Drop struct local_apic
-Message-ID: <ZUVVJkpGg4hoF/Hs@swahl-home.5wahls.com>
-References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
- <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0C223773
+	for <linux-hyperv@vger.kernel.org>; Fri,  3 Nov 2023 21:42:08 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7FBD61
+	for <linux-hyperv@vger.kernel.org>; Fri,  3 Nov 2023 14:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1699047724;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3kZEfbVDRZWYaeV8fUpM6RCBCDL9qHVSAnBx2A/2LQY=;
+	b=GlAxRz3aA+yVdEASoN2hD33r68ZRvuxuESxMOesRN6j5FWPEYQuruVvDcnvdI7RWusR7fa
+	Gr36qrC5V1O55zoEAhl+RkMsd5F8mokubsqddJdO2xOK1nOytnCFqOy9cBEU9XpiL1XEa/
+	kmQx0Y8bhdTfK9LJXR0QK/vVaH2NBr4=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-0wl7_dcPNGKCdKBzFfVzdg-1; Fri, 03 Nov 2023 17:42:03 -0400
+X-MC-Unique: 0wl7_dcPNGKCdKBzFfVzdg-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3b3447c72c4so3648424b6e.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 03 Nov 2023 14:42:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699047723; x=1699652523;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3kZEfbVDRZWYaeV8fUpM6RCBCDL9qHVSAnBx2A/2LQY=;
+        b=rnIp44yT/iAP8xjzhkET7GYQye3Dywi/IV1V2l7WpP9VwN498og+YkXFCANfUXPKCj
+         UUJKXHK7cqBEM8M+PoPBS5cfmNi+CqW34JGFizENruM/qfP/iM9ElWrr79gJR89y7JdR
+         xVcfGcVZaAFUOupS/eGR6zo+cXvIhO+qrAmjxehsnZYqRcdCvuwRU97mkOAP6d1U8oIE
+         gnHJHA9RHt1JvBXxBariy9WoyohAoaSJtSHrZNRO6+mEDoobj96FHOMv546wkqATlbhc
+         Cq5kp1bLEHveJZufQQ6IlAMOGsxRQIqT7iN16fChcP93z1qPuIjylyohrU+XTe1kTcYD
+         KIYg==
+X-Gm-Message-State: AOJu0YxnmXE5UR6pk/zR7/y5YlzqJ8br8c6dMT+DTE941CVkkPq3qXVJ
+	yFqiVERl2cL6HsdU4alENy2FcWs74pwa1+jHEhZGYYwlUL2zSBBizgs+zh48X4wHVJe5mA+9JvZ
+	+E8IFJjxyq0dLHthIiG7iOmMf
+X-Received: by 2002:a05:6808:19:b0:3ae:501e:a645 with SMTP id u25-20020a056808001900b003ae501ea645mr23275054oic.50.1699047722994;
+        Fri, 03 Nov 2023 14:42:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHI8CbIeTp1KbCoYxz0JbEv5CEOEPYpkRMvorwNXwSkDHUSj0XHfQL9HeaymHNNOyFjtaX5TA==
+X-Received: by 2002:a05:6808:19:b0:3ae:501e:a645 with SMTP id u25-20020a056808001900b003ae501ea645mr23275015oic.50.1699047722718;
+        Fri, 03 Nov 2023 14:42:02 -0700 (PDT)
+Received: from localhost (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
+        by smtp.gmail.com with ESMTPSA id w19-20020aa78593000000b006b4ac8885b4sm1917578pfn.14.2023.11.03.14.42.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Nov 2023 14:42:02 -0700 (PDT)
+Date: Fri, 3 Nov 2023 14:42:01 -0700
+From: Jerry Snitselaar <jsnitsel@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: acpica-devel@lists.linuxfoundation.org, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev, 
+	Lu Baolu <baolu.lu@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org, 
+	David Woodhouse <dwmw2@infradead.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Hanjun Guo <guohanjun@huawei.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Joerg Roedel <joro@8bytes.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-snps-arc@lists.infradead.org, linux-tegra@vger.kernel.org, 
+	Russell King <linux@armlinux.org.uk>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Hector Martin <marcan@marcan.st>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Robert Moore <robert.moore@intel.com>, 
+	Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
+	Sven Peter <sven@svenpeter.dev>, Thierry Reding <thierry.reding@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Krishna Reddy <vdumpa@nvidia.com>, 
+	Vineet Gupta <vgupta@kernel.org>, virtualization@lists.linux-foundation.org, 
+	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
+	Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Subject: Re: [PATCH RFC 02/17] of: Do not return struct iommu_ops from
+ of_iommu_configure()
+Message-ID: <ld3rrnpix5x5kirfjlk6oafhoikkge4fgvcljhmiljuqge5266@asdcw5cfp53e>
+References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+ <2-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -82,322 +102,172 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com>
-X-Proofpoint-ORIG-GUID: kxI0VjgnmO0WDNPr5wrLa66Msn4A28Gw
-X-Proofpoint-GUID: kxI0VjgnmO0WDNPr5wrLa66Msn4A28Gw
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-03_19,2023-11-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1015 adultscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310240000
- definitions=main-2311030170
+In-Reply-To: <2-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
 
-On Thu, Nov 02, 2023 at 12:26:21PM +0000, Andrew Cooper wrote:
-> This type predates recorded history in tglx/history.git, making it older
-> than Feb 5th 2002.
+On Fri, Nov 03, 2023 at 01:44:47PM -0300, Jason Gunthorpe wrote:
+> Nothing needs this pointer. Return a normal error code with the usual
+> IOMMU semantic that ENODEV means 'there is no IOMMU driver'.
 > 
-> This structure is literally old enough to drink in most juristictions in
-> the world, and has not been used once in that time.
-> 
-> Lay it to rest in /dev/null.
-> 
-> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
-> There is perhaps something to be said for the longevity of the comment.
-> "Not terribly well tested" certainly hasn't bitrotted in all this time.
-
-   :-)  !!!
-
-Reveiewed-by: Steve Wahl <steve.wahl@hpe.com>
-
-
-> ---
->  arch/x86/include/asm/apicdef.h | 260 -----------------------------------------
->  1 file changed, 260 deletions(-)
+>  drivers/iommu/of_iommu.c | 29 ++++++++++++++++++-----------
+>  drivers/of/device.c      | 22 +++++++++++++++-------
+>  include/linux/of_iommu.h | 13 ++++++-------
+>  3 files changed, 39 insertions(+), 25 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
-> index ddcbf00db19d..094106b6a538 100644
-> --- a/arch/x86/include/asm/apicdef.h
-> +++ b/arch/x86/include/asm/apicdef.h
-> @@ -172,270 +172,10 @@
->  #define APIC_CPUID(apicid)	((apicid) & XAPIC_DEST_CPUS_MASK)
->  #define NUM_APIC_CLUSTERS	((BAD_APICID + 1) >> XAPIC_DEST_CPUS_SHIFT)
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 157b286e36bf3a..e2fa29c16dd758 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -107,20 +107,26 @@ static int of_iommu_configure_device(struct device_node *master_np,
+>  		      of_iommu_configure_dev(master_np, dev);
+>  }
 >  
-> -#ifndef __ASSEMBLY__
-> -/*
-> - * the local APIC register structure, memory mapped. Not terribly well
-> - * tested, but we might eventually use this one in the future - the
-> - * problem why we cannot use it right now is the P5 APIC, it has an
-> - * errata which cannot take 8-bit reads and writes, only 32-bit ones ...
-> - */
-> -#define u32 unsigned int
+> -const struct iommu_ops *of_iommu_configure(struct device *dev,
+> -					   struct device_node *master_np,
+> -					   const u32 *id)
+> +/*
+> + * Returns:
+> + *  0 on success, an iommu was configured
+> + *  -ENODEV if the device does not have any IOMMU
+> + *  -EPROBEDEFER if probing should be tried again
+> + *  -errno fatal errors
+
+It looks to me like it will only return 0, -ENODEV, or -EPROBEDEFER
+with other -errno getting boiled down to -ENODEV.
+
+> + */
+> +int of_iommu_configure(struct device *dev, struct device_node *master_np,
+> +		       const u32 *id)
+>  {
+>  	const struct iommu_ops *ops = NULL;
+>  	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+>  	int err = NO_IOMMU;
+>  
+>  	if (!master_np)
+> -		return NULL;
+> +		return -ENODEV;
+>  
+>  	if (fwspec) {
+>  		if (fwspec->ops)
+> -			return fwspec->ops;
+> +			return 0;
+>  
+>  		/* In the deferred case, start again from scratch */
+>  		iommu_fwspec_free(dev);
+> @@ -163,14 +169,15 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  		err = iommu_probe_device(dev);
+>  
+>  	/* Ignore all other errors apart from EPROBE_DEFER */
+> -	if (err == -EPROBE_DEFER) {
+> -		ops = ERR_PTR(err);
+> -	} else if (err < 0) {
+> +	if (err < 0) {
+> +		if (err == -EPROBE_DEFER)
+> +			return err;
+>  		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
+
+minor thing, but should this use %pe and ERR_PTR(err) like is done
+in of_dma_configure_id?
+
+> -		ops = NULL;
+> +		return -ENODEV;
+>  	}
 > -
-> -struct local_apic {
-> -
-> -/*000*/	struct { u32 __reserved[4]; } __reserved_01;
-> -
-> -/*010*/	struct { u32 __reserved[4]; } __reserved_02;
-> -
-> -/*020*/	struct { /* APIC ID Register */
-> -		u32   __reserved_1	: 24,
-> -			phys_apic_id	:  4,
-> -			__reserved_2	:  4;
-> -		u32 __reserved[3];
-> -	} id;
-> -
-> -/*030*/	const
-> -	struct { /* APIC Version Register */
-> -		u32   version		:  8,
-> -			__reserved_1	:  8,
-> -			max_lvt		:  8,
-> -			__reserved_2	:  8;
-> -		u32 __reserved[3];
-> -	} version;
-> -
-> -/*040*/	struct { u32 __reserved[4]; } __reserved_03;
-> -
-> -/*050*/	struct { u32 __reserved[4]; } __reserved_04;
-> -
-> -/*060*/	struct { u32 __reserved[4]; } __reserved_05;
-> -
-> -/*070*/	struct { u32 __reserved[4]; } __reserved_06;
-> -
-> -/*080*/	struct { /* Task Priority Register */
-> -		u32   priority	:  8,
-> -			__reserved_1	: 24;
-> -		u32 __reserved_2[3];
-> -	} tpr;
-> -
-> -/*090*/	const
-> -	struct { /* Arbitration Priority Register */
-> -		u32   priority	:  8,
-> -			__reserved_1	: 24;
-> -		u32 __reserved_2[3];
-> -	} apr;
-> -
-> -/*0A0*/	const
-> -	struct { /* Processor Priority Register */
-> -		u32   priority	:  8,
-> -			__reserved_1	: 24;
-> -		u32 __reserved_2[3];
-> -	} ppr;
-> -
-> -/*0B0*/	struct { /* End Of Interrupt Register */
-> -		u32   eoi;
-> -		u32 __reserved[3];
-> -	} eoi;
-> -
-> -/*0C0*/	struct { u32 __reserved[4]; } __reserved_07;
-> -
-> -/*0D0*/	struct { /* Logical Destination Register */
-> -		u32   __reserved_1	: 24,
-> -			logical_dest	:  8;
-> -		u32 __reserved_2[3];
-> -	} ldr;
-> -
-> -/*0E0*/	struct { /* Destination Format Register */
-> -		u32   __reserved_1	: 28,
-> -			model		:  4;
-> -		u32 __reserved_2[3];
-> -	} dfr;
-> -
-> -/*0F0*/	struct { /* Spurious Interrupt Vector Register */
-> -		u32	spurious_vector	:  8,
-> -			apic_enabled	:  1,
-> -			focus_cpu	:  1,
-> -			__reserved_2	: 22;
-> -		u32 __reserved_3[3];
-> -	} svr;
-> -
-> -/*100*/	struct { /* In Service Register */
-> -/*170*/		u32 bitfield;
-> -		u32 __reserved[3];
-> -	} isr [8];
-> -
-> -/*180*/	struct { /* Trigger Mode Register */
-> -/*1F0*/		u32 bitfield;
-> -		u32 __reserved[3];
-> -	} tmr [8];
-> -
-> -/*200*/	struct { /* Interrupt Request Register */
-> -/*270*/		u32 bitfield;
-> -		u32 __reserved[3];
-> -	} irr [8];
-> -
-> -/*280*/	union { /* Error Status Register */
-> -		struct {
-> -			u32   send_cs_error			:  1,
-> -				receive_cs_error		:  1,
-> -				send_accept_error		:  1,
-> -				receive_accept_error		:  1,
-> -				__reserved_1			:  1,
-> -				send_illegal_vector		:  1,
-> -				receive_illegal_vector		:  1,
-> -				illegal_register_address	:  1,
-> -				__reserved_2			: 24;
-> -			u32 __reserved_3[3];
-> -		} error_bits;
-> -		struct {
-> -			u32 errors;
-> -			u32 __reserved_3[3];
-> -		} all_errors;
-> -	} esr;
-> -
-> -/*290*/	struct { u32 __reserved[4]; } __reserved_08;
-> -
-> -/*2A0*/	struct { u32 __reserved[4]; } __reserved_09;
-> -
-> -/*2B0*/	struct { u32 __reserved[4]; } __reserved_10;
-> -
-> -/*2C0*/	struct { u32 __reserved[4]; } __reserved_11;
-> -
-> -/*2D0*/	struct { u32 __reserved[4]; } __reserved_12;
-> -
-> -/*2E0*/	struct { u32 __reserved[4]; } __reserved_13;
-> -
-> -/*2F0*/	struct { u32 __reserved[4]; } __reserved_14;
-> -
-> -/*300*/	struct { /* Interrupt Command Register 1 */
-> -		u32   vector			:  8,
-> -			delivery_mode		:  3,
-> -			destination_mode	:  1,
-> -			delivery_status		:  1,
-> -			__reserved_1		:  1,
-> -			level			:  1,
-> -			trigger			:  1,
-> -			__reserved_2		:  2,
-> -			shorthand		:  2,
-> -			__reserved_3		:  12;
-> -		u32 __reserved_4[3];
-> -	} icr1;
-> -
-> -/*310*/	struct { /* Interrupt Command Register 2 */
-> -		union {
-> -			u32   __reserved_1	: 24,
-> -				phys_dest	:  4,
-> -				__reserved_2	:  4;
-> -			u32   __reserved_3	: 24,
-> -				logical_dest	:  8;
-> -		} dest;
-> -		u32 __reserved_4[3];
-> -	} icr2;
-> -
-> -/*320*/	struct { /* LVT - Timer */
-> -		u32   vector		:  8,
-> -			__reserved_1	:  4,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			timer_mode	:  1,
-> -			__reserved_3	: 14;
-> -		u32 __reserved_4[3];
-> -	} lvt_timer;
-> -
-> -/*330*/	struct { /* LVT - Thermal Sensor */
-> -		u32  vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			__reserved_3	: 15;
-> -		u32 __reserved_4[3];
-> -	} lvt_thermal;
-> -
-> -/*340*/	struct { /* LVT - Performance Counter */
-> -		u32   vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			__reserved_3	: 15;
-> -		u32 __reserved_4[3];
-> -	} lvt_pc;
-> -
-> -/*350*/	struct { /* LVT - LINT0 */
-> -		u32   vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			polarity	:  1,
-> -			remote_irr	:  1,
-> -			trigger		:  1,
-> -			mask		:  1,
-> -			__reserved_2	: 15;
-> -		u32 __reserved_3[3];
-> -	} lvt_lint0;
-> -
-> -/*360*/	struct { /* LVT - LINT1 */
-> -		u32   vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			polarity	:  1,
-> -			remote_irr	:  1,
-> -			trigger		:  1,
-> -			mask		:  1,
-> -			__reserved_2	: 15;
-> -		u32 __reserved_3[3];
-> -	} lvt_lint1;
-> -
-> -/*370*/	struct { /* LVT - Error */
-> -		u32   vector		:  8,
-> -			__reserved_1	:  4,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			__reserved_3	: 15;
-> -		u32 __reserved_4[3];
-> -	} lvt_error;
-> -
-> -/*380*/	struct { /* Timer Initial Count Register */
-> -		u32   initial_count;
-> -		u32 __reserved_2[3];
-> -	} timer_icr;
-> -
-> -/*390*/	const
-> -	struct { /* Timer Current Count Register */
-> -		u32   curr_count;
-> -		u32 __reserved_2[3];
-> -	} timer_ccr;
-> -
-> -/*3A0*/	struct { u32 __reserved[4]; } __reserved_16;
-> -
-> -/*3B0*/	struct { u32 __reserved[4]; } __reserved_17;
-> -
-> -/*3C0*/	struct { u32 __reserved[4]; } __reserved_18;
-> -
-> -/*3D0*/	struct { u32 __reserved[4]; } __reserved_19;
-> -
-> -/*3E0*/	struct { /* Timer Divide Configuration Register */
-> -		u32   divisor		:  4,
-> -			__reserved_1	: 28;
-> -		u32 __reserved_2[3];
-> -	} timer_dcr;
-> -
-> -/*3F0*/	struct { u32 __reserved[4]; } __reserved_20;
-> -
-> -} __attribute__ ((packed));
-> -
-> -#undef u32
-> -
->  #ifdef CONFIG_X86_32
->   #define BAD_APICID 0xFFu
+> -	return ops;
+> +	if (!ops)
+> +		return -ENODEV;
+> +	return 0;
+>  }
+>  
+>  static enum iommu_resv_type __maybe_unused
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 65c71be71a8d45..873d933e8e6d1d 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -93,12 +93,12 @@ of_dma_set_restricted_buffer(struct device *dev, struct device_node *np)
+>  int of_dma_configure_id(struct device *dev, struct device_node *np,
+>  			bool force_dma, const u32 *id)
+>  {
+> -	const struct iommu_ops *iommu;
+>  	const struct bus_dma_region *map = NULL;
+>  	struct device_node *bus_np;
+>  	u64 dma_start = 0;
+>  	u64 mask, end, size = 0;
+>  	bool coherent;
+> +	int iommu_ret;
+>  	int ret;
+>  
+>  	if (np == dev->of_node)
+> @@ -181,21 +181,29 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
+>  	dev_dbg(dev, "device is%sdma coherent\n",
+>  		coherent ? " " : " not ");
+>  
+> -	iommu = of_iommu_configure(dev, np, id);
+> -	if (PTR_ERR(iommu) == -EPROBE_DEFER) {
+> +	iommu_ret = of_iommu_configure(dev, np, id);
+> +	if (iommu_ret == -EPROBE_DEFER) {
+>  		/* Don't touch range map if it wasn't set from a valid dma-ranges */
+>  		if (!ret)
+>  			dev->dma_range_map = NULL;
+>  		kfree(map);
+>  		return -EPROBE_DEFER;
+> -	}
+> +	} else if (iommu_ret == -ENODEV) {
+> +		dev_dbg(dev, "device is not behind an iommu\n");
+> +	} else if (iommu_ret) {
+> +		dev_err(dev, "iommu configuration for device failed with %pe\n",
+> +			ERR_PTR(iommu_ret));
+>  
+> -	dev_dbg(dev, "device is%sbehind an iommu\n",
+> -		iommu ? " " : " not ");
+> +		/*
+> +		 * Historically this routine doesn't fail driver probing
+> +		 * due to errors in of_iommu_configure()
+> +		 */
+> +	} else
+> +		dev_dbg(dev, "device is behind an iommu\n");
+>  
+>  	arch_setup_dma_ops(dev, dma_start, size, coherent);
+>  
+> -	if (!iommu)
+> +	if (iommu_ret)
+>  		of_dma_set_restricted_buffer(dev, np);
+>  
+>  	return 0;
+> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+> index 9a5e6b410dd2fb..e61cbbe12dac6f 100644
+> --- a/include/linux/of_iommu.h
+> +++ b/include/linux/of_iommu.h
+> @@ -8,20 +8,19 @@ struct iommu_ops;
+>  
+>  #ifdef CONFIG_OF_IOMMU
+>  
+> -extern const struct iommu_ops *of_iommu_configure(struct device *dev,
+> -					struct device_node *master_np,
+> -					const u32 *id);
+> +extern int of_iommu_configure(struct device *dev, struct device_node *master_np,
+> +			      const u32 *id);
+>  
+>  extern void of_iommu_get_resv_regions(struct device *dev,
+>  				      struct list_head *list);
+>  
 >  #else
->   #define BAD_APICID 0xFFFFu
->  #endif
 >  
-> -#endif /* !__ASSEMBLY__ */
->  #endif /* _ASM_X86_APICDEF_H */
-> 
+> -static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+> -					 struct device_node *master_np,
+> -					 const u32 *id)
+> +static inline int of_iommu_configure(struct device *dev,
+> +				     struct device_node *master_np,
+> +				     const u32 *id)
+>  {
+> -	return NULL;
+> +	return -ENODEV;
+>  }
+>  
+>  static inline void of_iommu_get_resv_regions(struct device *dev,
 > -- 
-> 2.30.2
+> 2.42.0
 > 
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
 
