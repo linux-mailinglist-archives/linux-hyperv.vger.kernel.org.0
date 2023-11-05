@@ -1,226 +1,309 @@
-Return-Path: <linux-hyperv+bounces-697-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-698-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B9E7E13A8
-	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Nov 2023 14:31:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56B137E1411
+	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Nov 2023 16:15:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0ADD1C208FF
-	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Nov 2023 13:31:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18C68B20C12
+	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Nov 2023 15:15:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A8C4C2D0;
-	Sun,  5 Nov 2023 13:31:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FEBCDF68;
+	Sun,  5 Nov 2023 15:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PptQ9B95"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="bY8gZPhu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA6DBE7D;
-	Sun,  5 Nov 2023 13:31:11 +0000 (UTC)
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F2697;
-	Sun,  5 Nov 2023 05:31:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0FFC8E3
+	for <linux-hyperv@vger.kernel.org>; Sun,  5 Nov 2023 15:15:50 +0000 (UTC)
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2046.outbound.protection.outlook.com [40.92.42.46])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0435CD9;
+	Sun,  5 Nov 2023 07:15:49 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZTfmiT+HR9ArAIjFypMl1lIvulPShkcW96J1lrZyEZj3v4GfIAydoQNYBxu2HaKAQspYwYAPBgOOW+B/kH9Wvp7iOGJoakR2g6DZT7AY6Am2lToONw2Fy4zxB6KvQ9rJebw8QecTp7Vs5p50TtSEdZhaf6VQvkGvjagH5L4OV0xRBSxl+Q3yWl/GKtSbMzl1AxsfrhLMT9mZS8d46cHlbkj6B6iLprr/a+htXUOE36mQaCJymC/zsRpCKCgd0dNsMZQZgD+Ll7RqhC7BuMmPWUYlPSn9fyZXUyjkpM+lAq4H28JtoOHwWseE562g2IfTP5lWsJtAt0CTrjh6yZBSWA==
+ b=Xd+Eqjc2wq7XM4WtJex308nNgxSPmiNP5DW9DdXze+YrB3eQJ2FP3P/PFXfLJsfIfsmyf//J7T200TeCbMmwEui5pbb6NmGWkVVEwCkMsmXxz6X+kTSs4UCH1gsM52I+9p+xGx5sv6QapsRtFi+extrQZW0WAiWdUW8uhDkAV3fM7cRERxxpAngUPcZvWikrP0N0huZ3VGdCN6NPNtZxj9GEaykUCU8DJoi9KeNHN2CS+66xifFioH62BkFEldve9nSYJoaPQLV3rqcNoHU0MymrRg+X7yydo8sQCAkWD6J+P6U3S3Zeb2lFUFaPFM8k59+1AP8PGS6/A7QcNz5IaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dp+FnsJJrOjK849PCE5uLLgfJITErwrqeRz1niyYBCU=;
- b=Zv6S2LXE0RafqT6ECAxqTkyrerbt+Thfy8kwv9GjeA1wFdQjnH5qwfxcNLrLvhvYQdXW/JRMkxdD94PP7hIXibBuaiEo52wkhD/YFOf0EXpsHdE4+eHtgW7uR3oeO/N9b3TapSglyLtq/FY2fcVMM74ZX1GW8j5SzM0azrcgwiVYm1zQ1f2n9NJeRTl7JD4KGgqmrgQvaCcLzH0dvV6kjF0xQC/SFemMnva5XBQrYJl7fMQWzWbvemAJkn0gwpa2HgrJ8uxJgq5vILGHP+XAKQg8gQeFOSfGICAK9MwKll2Ymv+UnyUL09eBR1Wuma2VyySZPtbVtAw7equdk3h3NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=VorxeaR0tPcsEj0IC7UDkAeMGJMwekz+Pv1hYawm2l0=;
+ b=RPVlvRbct/jzqdKTA6GMbamwxzaOITuleYfcRt21D/G8VU7oJMbClAX0R4PIn5P1KGeS9o3abadcgq54YtWZkX+0rExwn8jeH/+QSpB01xfzDr+zZnkq2IsISDMVNp788Cq7b2WAEgGK4ccTUXZCwpKRv7WzBH+TcSBxWO3a1TGO0am3oL7FBMJHLSCS5BFl0HWrA8n7ApnPYs50Tot31WWuEcW2G0I6OPSwxUHMDADg1s+IbpT0iYq/BW7oDVXKtnFnfhBzERPj7UNaE6adeLTHbla+1ONSkCaDs9WF/FSbLQ/tdbryCJKHoEY/HLN1biuVptZ0YP+wRaQB4yNJOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dp+FnsJJrOjK849PCE5uLLgfJITErwrqeRz1niyYBCU=;
- b=PptQ9B9581LU72Kq5yGuiCuZnmIYSWfp4IiWvhUS2XloGTzWol227+Q+eVjlThy4PzSstkgayp52pGlzW+pvQnrWNNBiB0kbYmhs8Xo6QWYJ5Mxt6OzmIz3KMwrimqEh9q3XvpfEgkpI7mCtKOwUFh3hZWsVvPaPsjLpO5TLCgDGPoYIHpMxn2W1ehyJEHOTJYmLwu6GXtu5r90hOT8o8NoXa7KX+A4u/RCuFBFYYGOs4VYyxHO+jGzdIFwyfSOID/5JFYNOoKSfXjhIsRTegwSjy7n4Y15676I++Z12ATm8/pYpn20Qu9zevbNTC4Uq+1DP+I/MDsdm6CJaE1DymQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by DM4PR12MB7718.namprd12.prod.outlook.com (2603:10b6:8:102::14) with
+ bh=VorxeaR0tPcsEj0IC7UDkAeMGJMwekz+Pv1hYawm2l0=;
+ b=bY8gZPhuEV3O7Y91j6zOdyQfJR1p7nNF5ZtanPSbqkHS9+jj9q8elot26Znxs3LtPlXG+t/FO13Xz0jvxVKnpXgE/pm9R2Y3096wUwE7sTjgDjPx6XJ7ElGjyqCB7V/AHteoZZ253bssW0q4YRwndc3Og9lBox2/DyDp7qpgq3bfbfqhW8abfln3uglJsdl0r7MhTuFCkX2Q/WJhAm4BpRG+aBCSP8o88LmDj6S0+cMfTuA9jEA+sM930O5cnWQ4GDnwykPW6djxV/plND750jZmSYcAxI/yvMr/oMRFYLCyveJncIjvyeavvM6US5hEvAb2U1b9ckXN01e7CthxtQ==
+Received: from BY3PR18MB4692.namprd18.prod.outlook.com (2603:10b6:a03:3c7::12)
+ by PH7PR18MB5666.namprd18.prod.outlook.com (2603:10b6:510:2e7::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.25; Sun, 5 Nov
- 2023 13:31:03 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::b53a:1092:9be2:cfb9]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::b53a:1092:9be2:cfb9%5]) with mapi id 15.20.6954.027; Sun, 5 Nov 2023
- 13:31:03 +0000
-Date: Sun, 5 Nov 2023 09:31:02 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: acpica-devel@lists.linuxfoundation.org,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Hector Martin <marcan@marcan.st>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>,
-	virtualization@lists.linux-foundation.org,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
-	Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH RFC 02/17] of: Do not return struct iommu_ops from
- of_iommu_configure()
-Message-ID: <20231105133102.GC258408@nvidia.com>
-References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
- <2-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
- <ld3rrnpix5x5kirfjlk6oafhoikkge4fgvcljhmiljuqge5266@asdcw5cfp53e>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ld3rrnpix5x5kirfjlk6oafhoikkge4fgvcljhmiljuqge5266@asdcw5cfp53e>
-X-ClientProxiedBy: BLAP220CA0021.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:32c::26) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.27; Sun, 5 Nov
+ 2023 15:15:46 +0000
+Received: from BY3PR18MB4692.namprd18.prod.outlook.com
+ ([fe80::4fa4:77da:f114:612a]) by BY3PR18MB4692.namprd18.prod.outlook.com
+ ([fe80::4fa4:77da:f114:612a%6]) with mapi id 15.20.6954.027; Sun, 5 Nov 2023
+ 15:15:45 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nischala Yelchuri <niyelchu@linux.microsoft.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "deller@gmx.de" <deller@gmx.de>
+CC: "mhkelley@outlook.com" <mhkelley@outlook.com>,
+	"singhabhinav9051571833@gmail.com" <singhabhinav9051571833@gmail.com>,
+	"niyelchu@microsoft.com" <niyelchu@microsoft.com>
+Subject: RE: [PATCH] Replace ioremap_cache() with memremap()
+Thread-Topic: [PATCH] Replace ioremap_cache() with memremap()
+Thread-Index: AQHaDNzUez9nfYQyzk+2c7gpvJ79lbBr0PJg
+Date: Sun, 5 Nov 2023 15:15:45 +0000
+Message-ID:
+ <BY3PR18MB469219E1401B9E1A997EA51BD4ABA@BY3PR18MB4692.namprd18.prod.outlook.com>
+References: <1698854508-23036-1-git-send-email-niyelchu@linux.microsoft.com>
+In-Reply-To: <1698854508-23036-1-git-send-email-niyelchu@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [K0H8C53o/bui+UHEXvpEJQHbJR9dIQAM]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY3PR18MB4692:EE_|PH7PR18MB5666:EE_
+x-ms-office365-filtering-correlation-id: 57a6393c-7f18-49d2-4c1c-08dbde1215bc
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ md/6IQYiwYcVGJm39PuQyVapNLYKd0v0Y07yZrfvKaGD0XYlDh+V9uMww1YD0rv03mKADTlX0SOm4RSJjYTWxL03gat0B3Bf8NzUE+g9vjQcrM4NzX0VLO/idL5I672Z6SS6un8VJWNHh9X6TLTHZVD7usjnRtaG0xdo5uqZDruiJ3Dg9uaVHaIHDSmYjXEiC6KEf3tGQGSFjAJ69LILIXJ0m9xEZsi3AHDLi/ln3QrMp1kwvcqBp7fR+w1SpVsjSIebRKDyRxFSSpkq+87X1D2a4bULVHRTKXQuqOYGeT9TMtrCo1a1VDMrFmUQuorkX+ubkrdN6ucmcq9IXvce379nI48kUCxcLRGt1yFPY/O7Fk0a2GMC7t0cNxK0lidimtKWmdwFSpp1usnQyJd9+G0YQa2Ff5oswp+0YIHfRAhRqFPSrQRQtDUODd9bOMx1QMT/s/p59GIF+Fi3vzDq2h37SWrSVhv1WmS/gQwtNo73Jw42+Rei4I30F00TVoWi04nPAkPo61XbmiOVDNBtrZWFE2mujQAj/l3GKRdmXV2FP7vGR1HsqWMDIOe2hFtQ
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?H+Qy2hNpOhV2F3RZHPNGmKOU5qJaECY07hBMiMBxJc/ycS/AtZbGqsWddYl8?=
+ =?us-ascii?Q?lbpjvw7I6nxnsdNMQE+l8upnQn5Z2peg6XLcZ51pIufWngFOKHC8bIFehW0D?=
+ =?us-ascii?Q?Klrph6ve4SNdadcFOqL6u+o9gehgjJ0H/dl4SkfRch4UCGuDtp55QZF65DG6?=
+ =?us-ascii?Q?dRCxfA2cWpmee4zA8Nc+nZw3432kgUGt5eJZSeltMkFqy5a/0lzrlHAVUGbh?=
+ =?us-ascii?Q?gfomJlNcl0xMcBQrHJ6PbZioSwddye/Iz/a0RiaBKgmFj7Vq2jk3icY/2SV9?=
+ =?us-ascii?Q?H9I4lM7Zb9qRE/e7kCtONRezH6dauYdVdzGD07rS+2NR9Q7c8gH/cXFmUtJA?=
+ =?us-ascii?Q?gpdGBcYu8n3wUqqpR85fdhLoNkaZtVKcdZ3jzt1QW2d5H8NROE8GbO+10ip9?=
+ =?us-ascii?Q?yPgtSWj1ggZf4kqnPUCeITEtKEBKWsAo9IluRAMLc45nAuf0CiY8CGZVY9aE?=
+ =?us-ascii?Q?RXL2t29zq1HID8ALi0V5mUk9MkRj4T/zTCK8WUM2p9XLEweYja+NH59Jt9tZ?=
+ =?us-ascii?Q?kBBgKCP6lwF+CE5wj9MF5oSTeKKBfbK42dbrbOFEn46JINL5gSWOuMgI1c4+?=
+ =?us-ascii?Q?eEn6D4xI4nCIlkwT/Vld6JLEfajy6AvBquZijYAvGx394pM/fWiZW9gMqQI4?=
+ =?us-ascii?Q?fqt+pjUFZgWXCSMWQlJWfA2BEDxnROydsodNxXNr2Q1S+05jPHIVb6kOupB3?=
+ =?us-ascii?Q?VJO9Y8LPKa+/fp6TmAphng37yqekogp8uegp66J+1wD8ZFJRQEcg66PMXt1g?=
+ =?us-ascii?Q?LisUPt0zs2fB3qqnlR9bYutQEN+Oq4rvHK3Moo9A96X0amdNAly4RXkLuKPN?=
+ =?us-ascii?Q?hJ+qrBV2nn4bSuOAdL+vTOCfMTpq50vwa3NZDrN9ANZGl29UXfndjOH9r2WV?=
+ =?us-ascii?Q?peGjGl9uC7HmE1gV48BmP+EWhj+HJcNmzZ+gmOSgUf/Wg2xhCBN0pEIMG6Lh?=
+ =?us-ascii?Q?LWmBeuTfpI8H0z4LwSzsdY6huwwwbQD9g19b5eIzfCEPDwsPk+m0rdN7T8zc?=
+ =?us-ascii?Q?0We0PwAfWGfszIfvBETkv30lqX1ztHBMjUxZyOlXjHPewAH31jE0jgWhVgUu?=
+ =?us-ascii?Q?Th6g9ieIc51nXbkF+jDw2B1uT/JAtVgJLgQ4GjE96lUo4yw2C3D+YPLioAzy?=
+ =?us-ascii?Q?F2xkJdqi9w/Ap/xGXXqaTRVrU+muULSa8cEevqbi+cVHDj7269WZhPRmXMCa?=
+ =?us-ascii?Q?Jnl33wpit8QdWkSwnphLukE1qdFUeE0rYdsojg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DM4PR12MB7718:EE_
-X-MS-Office365-Filtering-Correlation-Id: c05f7684-66f1-478f-d69d-08dbde037505
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	OuEPQROz0Z3a9JlVjP6o0aQyZJ0UTthOCFlATFyT68iZzrSYqcog7QtwRt/L6LMEbkwWYYJ/mVM0m13JiE8wNpLfv+Zl2WbCmkMHl5P7KnhwhMFC0tACGQ58TlNl77OMPIKyGK7m9pt+zLNz/v+BOVHoKPBCu9FB7rVxIXV5PT8+39UptIfpjm0nKQdRt7NHYsaA87RtU4vAtbG/s4EzBGtwNKu0j/k6qdtY5QNB34xS4bXvaJZwMJMOwZX0HwrvG/TmXGTTwipdtdgyas7lSWj6/sSR/Qi5oImsBX0XvJ0NcDnpoik6OMXJHcHuu5+RrYK9pzaRbfdIScZLuGzpT8T8I1JKSWoagu/jxbjbhSQCHs8WczZl4rutW5CJkdm+FNyCg7Pyu/ZOLJZ81/D77wq22R87827rN/WJiTsXBYyylUkdoTOjvdjxufOs62thHwkbiurp4MDhiiDzj8WmVPIF5Vaynl6n3uGuSzFTgWjbzLVvu837ThENl7qUSpfnNYgnBoGcRGx5IdSM7bFdQdN/WXMXoQDySJhJJsAk52OkI5qQyUY5xmBWvn9Nb/EAodN6BUqlW1aPbLcyEHhAnwJznWNdRtGTSbjxY9V1gynzHTa/QaMLIwoh1pLhonGA
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(39850400004)(376002)(366004)(346002)(230922051799003)(451199024)(64100799003)(1800799009)(186009)(1076003)(2616005)(6512007)(26005)(33656002)(86362001)(36756003)(38100700002)(8676002)(83380400001)(2906002)(7416002)(5660300002)(7406005)(6506007)(478600001)(54906003)(8936002)(66556008)(66476007)(4326008)(66946007)(316002)(6916009)(41300700001)(6486002)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yRGUuR7FEKAKJTl9s8LcF1luO6RqbhDiYDlzfm1EbGwXVV7TsAAay1tNlWCu?=
- =?us-ascii?Q?t3iXm5kEkvi56YK0DHBJlELvCp1xWxSgweOO/ysKjt0hV10A7EeM2B4jJVo/?=
- =?us-ascii?Q?CBHoL9BEbSVQuEchTOpPwNuZ0Q6Clr0Q7M+EIhML6bVI3u1vsKkaljDUj8+q?=
- =?us-ascii?Q?9sHO801y0rxJL5EQqryjMydmmhy73Flw9QI7udcZUIfZ8CpJdbL8rgeFQazh?=
- =?us-ascii?Q?10VZAM62Qoo9UZRysyPxuv4TYygL92fCEnTZn3rmnWRw5ak0VO3XgIO8QitY?=
- =?us-ascii?Q?L8fCh45D4PfZIMYSeACU46kIJjX/yJklpK7fnWMgKCWBIcvHTcINyVl7ESL2?=
- =?us-ascii?Q?AioNkQLn3QRCtAQaHPlZWoU9Tb+hRlSGxeFhzlJH04lh9ih6UH+0n4cFWdk5?=
- =?us-ascii?Q?WiAZOVk8xXa4372EURn3GuexEXPaYYCqO6ZsNvXjMcVuHMFkIBg0zjtdXtJB?=
- =?us-ascii?Q?7rFtbSb+s24q8zblq9OndnIPi/HzcbeTmP+C0WdKcMVgWZQ4jrVKD3kKikYw?=
- =?us-ascii?Q?WlLY1h1JSxejZNJOzz6KPzldHbXI0Oy1A8hDWs67MEF/9ZbVZ0KSho391N/n?=
- =?us-ascii?Q?Vsi9cScutRi0tcMe98fODsWvJomiWm1LxMMH9W2iZtANJ/GEqRd3IeY6wLSm?=
- =?us-ascii?Q?oO83+Fpv0sG6sNNTJe3/MJRsNF+3yxOlL9MrbtBAx3ZTx5P2N8R5SaYWgR75?=
- =?us-ascii?Q?B7p7JrhpSTRNJQ6dxxNjw8MZ2Pg8HgpLaFfuppb30mW4B8qEn2Lx8K9Ty6Rw?=
- =?us-ascii?Q?mQJU8+vKLG2dtj1LPsdMUQfG/uVole6BMeYmsjMyEQ1ZlhFLKy0MnMRYTuSa?=
- =?us-ascii?Q?aEmKxXzp6o9rioBAxURFNKnQCtYGJbFs8THF/RQq9RCGTzwr58FArTgqfLHD?=
- =?us-ascii?Q?sY5mlBlRAjFEyE9a+qnj/aWb1g4YM1V3w5mP6xnXTAEDn3AX3ZI+4f7Vfvu3?=
- =?us-ascii?Q?XqVUJXofDEZ7L9I/g3jm9zJN6R/16BcTZZwCfUVLvQKEEB3g04hour6FKHGG?=
- =?us-ascii?Q?kCKEW+ZksTOOeWkepVFGvRXKzOybOrpF7XYA8ClWKxwTLMQOqyV4uaKTXXCX?=
- =?us-ascii?Q?PAICe4CGTeY6qaQAdQN+ckYyZpir6BfM6+b4EoA58ZXf+qpvA9UIbc4iMSIC?=
- =?us-ascii?Q?rqjuP1M5SsFsGGKJgKm/yRH4dmh7OoGcOPyQ5B7JPhMFaa6KyDq2pMuPSIhy?=
- =?us-ascii?Q?vMFhijkzHvXMtCVQ8Iuxmk9ll8lolFJSzGW7zL5KdDuI5PbpvloPKZyG3A5/?=
- =?us-ascii?Q?2KiGcUpD9Cc8CzkarmpAS/v0AF0hjoxsRKbpkq5Papym8I32GPkdA/owShDv?=
- =?us-ascii?Q?WQhK2wXjar5J0GRlaRcHdhBZHEbYYNZYjvNPrs8tSMDfB4d73scCmK+XV3wl?=
- =?us-ascii?Q?dJK2IeCztNRFiVza4SltivXjvfRuZqYE8+U9X/cfNKo2PcyoY6NRnuOTZX3I?=
- =?us-ascii?Q?crA0fOjW5fsJqgkjP1uMDH48lT7VFX2YXBx71IlwQ79sY2/ABMwRJR9RMTPL?=
- =?us-ascii?Q?+5Jr43z5LM3pDTBe9d1w+1sz7NPGFzxInficMFk0+QxbNu6JVYSqOQuvap9L?=
- =?us-ascii?Q?0przfFmMZUQS90o0UlE=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c05f7684-66f1-478f-d69d-08dbde037505
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2023 13:31:03.4305
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4692.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57a6393c-7f18-49d2-4c1c-08dbde1215bc
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2023 15:15:45.8443
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GLDiGsJmvsw7vJM2HaJimMYV6Os66Hx1Zf7Y4P2RRv79HQgOwMFkhOwoyDzysOF7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7718
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR18MB5666
 
-On Fri, Nov 03, 2023 at 02:42:01PM -0700, Jerry Snitselaar wrote:
-> On Fri, Nov 03, 2023 at 01:44:47PM -0300, Jason Gunthorpe wrote:
-> > Nothing needs this pointer. Return a normal error code with the usual
-> > IOMMU semantic that ENODEV means 'there is no IOMMU driver'.
-> > 
-> > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > ---
-> >  drivers/iommu/of_iommu.c | 29 ++++++++++++++++++-----------
-> >  drivers/of/device.c      | 22 +++++++++++++++-------
-> >  include/linux/of_iommu.h | 13 ++++++-------
-> >  3 files changed, 39 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> > index 157b286e36bf3a..e2fa29c16dd758 100644
-> > --- a/drivers/iommu/of_iommu.c
-> > +++ b/drivers/iommu/of_iommu.c
-> > @@ -107,20 +107,26 @@ static int of_iommu_configure_device(struct device_node *master_np,
-> >  		      of_iommu_configure_dev(master_np, dev);
-> >  }
-> >  
-> > -const struct iommu_ops *of_iommu_configure(struct device *dev,
-> > -					   struct device_node *master_np,
-> > -					   const u32 *id)
-> > +/*
-> > + * Returns:
-> > + *  0 on success, an iommu was configured
-> > + *  -ENODEV if the device does not have any IOMMU
-> > + *  -EPROBEDEFER if probing should be tried again
-> > + *  -errno fatal errors
-> 
-> It looks to me like it will only return 0, -ENODEV, or -EPROBEDEFER
-> with other -errno getting boiled down to -ENODEV.
+From: Nischala Yelchuri <niyelchu@linux.microsoft.com> Sent: Wednesday, Nov=
+ember 1, 2023 9:02 AM
+>
 
-Yeah, that next patch sorts it out, it is sort of a typo here:
+It's customary for the patch "Subject:" line to have a prefix indicating th=
+e
+area of the code being modified.  This patch touches on multiple Hyper-V
+drivers, so there's not a clear choice for prefix.  I would suggest using
+"Drivers: hv:" as is commonly used for Hyper-V code, though other
+reviewers might have a different suggestion.
 
-@@ -173,7 +173,7 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
-                if (err == -EPROBE_DEFER)
-                        return err;
-                dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
--               return -ENODEV;
-+               return err;
-        }
-        if (!ops)
-                return -ENODEV;
+ > Current Hyper-V code for CoCo VMs uses ioremap_cache() to map normal
+> memory as decrypted.
+> ioremap_cache() is ideally used to map I/O device memory when it has the =
+characteristics
+> of normal memory. It should not be used to map normal memory as the retur=
+ned pointer
+> has the __iomem attribute.
+>=20
+> Fix current code by replacing ioremap_cache() with memremap().
+>=20
+> No functional change intended.
+>=20
+> Signed-off-by: Nischala Yelchuri <niyelchu@linux.microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c               |  6 +++---
+>  drivers/gpu/drm/hyperv/hyperv_drm_drv.c |  2 +-
+>  drivers/hv/hv.c                         | 13 +++++++------
+>  drivers/video/fbdev/hyperv_fb.c         |  6 +++---
+>  4 files changed, 14 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 21556ad87..fae43c040 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -68,9 +68,9 @@ static int hyperv_init_ghcb(void)
+>  	 */
+>  	rdmsrl(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
+>=20
+> -	/* Mask out vTOM bit. ioremap_cache() maps decrypted */
+> +	/* Mask out vTOM bit. memremap() maps decrypted with MEMREMAP_DEC */
+>  	ghcb_gpa &=3D ~ms_hyperv.shared_gpa_boundary;
+> -	ghcb_va =3D (void *)ioremap_cache(ghcb_gpa, HV_HYP_PAGE_SIZE);
+> +	ghcb_va =3D memremap(ghcb_gpa, HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP=
+_DEC);
+>  	if (!ghcb_va)
+>  		return -ENOMEM;
+>=20
+> @@ -238,7 +238,7 @@ static int hv_cpu_die(unsigned int cpu)
+>  	if (hv_ghcb_pg) {
+>  		ghcb_va =3D (void **)this_cpu_ptr(hv_ghcb_pg);
+>  		if (*ghcb_va)
+> -			iounmap(*ghcb_va);
+> +			memunmap(*ghcb_va);
+>  		*ghcb_va =3D NULL;
+>  	}
+>=20
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> index d511d17c5..d6fec9bd3 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> @@ -92,7 +92,7 @@ static int hyperv_setup_vram(struct hyperv_drm_device
+> *hv,
+>  	 * connect to display properly for ARM64 Linux VM, as the host also map=
+s
+>  	 * the VRAM cacheable.
+>  	 */
+> -	hv->vram =3D ioremap_cache(hv->mem->start, hv->fb_size);
+> +	hv->vram =3D memremap(hv->mem->start, hv->fb_size, MEMREMAP_WB | MEMREM=
+AP_DEC);
 
-> > @@ -163,14 +169,15 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
-> >  		err = iommu_probe_device(dev);
-> >  
-> >  	/* Ignore all other errors apart from EPROBE_DEFER */
-> > -	if (err == -EPROBE_DEFER) {
-> > -		ops = ERR_PTR(err);
-> > -	} else if (err < 0) {
-> > +	if (err < 0) {
-> > +		if (err == -EPROBE_DEFER)
-> > +			return err;
-> >  		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
-> 
-> minor thing, but should this use %pe and ERR_PTR(err) like is done
-> in of_dma_configure_id?
+This change has some additional implications that must be
+accounted for.  The hv->vram field is declared as void __iomem *
+in hyperv_drm.h.   The __iomem attribute should be dropped.
+Then the use of IOSYS_MAP_INIT_VADDR_IOMEM() in
+hyperv_blit_to_vram_rect() should be changed to
+IOSYS_MAP_INIT_VADDR().  This has the desirable effect of=20
+allowing normal memcpy() functions to be used instead of
+the _toio()/_fromio() variants.
 
-Sure
+>  	if (!hv->vram) {
+>  		drm_err(dev, "Failed to map vram\n");
+>  		ret =3D -ENOMEM;
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index 51e5018ac..399bfa392 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -274,11 +274,12 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  	simp.simp_enabled =3D 1;
+>=20
+>  	if (ms_hyperv.paravisor_present || hv_root_partition) {
+> -		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
+> +		/* Mask out vTOM bit. memremap() maps decrypted with MEMREMAP_DEC */
+>  		u64 base =3D (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
+>  				~ms_hyperv.shared_gpa_boundary;
+>  		hv_cpu->synic_message_page
+> -			=3D (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
+> +			=3D memremap(base,
+> +				   HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP_DEC);
+>  		if (!hv_cpu->synic_message_page)
+>  			pr_err("Fail to map synic message page.\n");
+>  	} else {
+> @@ -293,11 +294,11 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  	siefp.siefp_enabled =3D 1;
+>=20
+>  	if (ms_hyperv.paravisor_present || hv_root_partition) {
+> -		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
+> +		/* Mask out vTOM bit. memremap() maps decrypted with MEMREMAP_DEC */
+>  		u64 base =3D (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
+>  				~ms_hyperv.shared_gpa_boundary;
+>  		hv_cpu->synic_event_page
+> -			=3D (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
+> +			=3D memremap(base, HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP_DEC);
+>  		if (!hv_cpu->synic_event_page)
+>  			pr_err("Fail to map synic event page.\n");
+>  	} else {
+> @@ -376,7 +377,7 @@ void hv_synic_disable_regs(unsigned int cpu)
+>  	 */
+>  	simp.simp_enabled =3D 0;
+>  	if (ms_hyperv.paravisor_present || hv_root_partition) {
+> -		iounmap(hv_cpu->synic_message_page);
+> +		memunmap(hv_cpu->synic_message_page);
+>  		hv_cpu->synic_message_page =3D NULL;
+>  	} else {
+>  		simp.base_simp_gpa =3D 0;
+> @@ -388,7 +389,7 @@ void hv_synic_disable_regs(unsigned int cpu)
+>  	siefp.siefp_enabled =3D 0;
+>=20
+>  	if (ms_hyperv.paravisor_present || hv_root_partition) {
+> -		iounmap(hv_cpu->synic_event_page);
+> +		memunmap(hv_cpu->synic_event_page);
+>  		hv_cpu->synic_event_page =3D NULL;
+>  	} else {
+>  		siefp.base_siefp_gpa =3D 0;
+> diff --git a/drivers/video/fbdev/hyperv_fb.c
+> b/drivers/video/fbdev/hyperv_fb.c
+> index bf59daf86..cd9ec1f6c 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -1034,7 +1034,7 @@ static int hvfb_getmem(struct hv_device *hdev, stru=
+ct fb_info *info)
+>  	 * VM Connect to display properly for ARM64 Linux VM, as the host also
+>  	 * maps the VRAM cacheable.
+>  	 */
+> -	fb_virt =3D ioremap_cache(par->mem->start, screen_fb_size);
+> +	fb_virt =3D memremap(par->mem->start, screen_fb_size, MEMREMAP_WB | MEM=
+REMAP_DEC);
 
-Thanks,
-Jason
+There's a similar situation here:  the local variable fb_virt is
+declared as void __iomem *.  The __iomem attribute should
+be dropped.
+
+>  	if (!fb_virt)
+>  		goto err2;
+>=20
+> @@ -1068,7 +1068,7 @@ static int hvfb_getmem(struct hv_device *hdev, stru=
+ct fb_info *info)
+>  	return 0;
+>=20
+>  err3:
+> -	iounmap(fb_virt);
+> +	memunmap(fb_virt);
+>  err2:
+>  	vmbus_free_mmio(par->mem->start, screen_fb_size);
+>  	par->mem =3D NULL;
+> @@ -1086,7 +1086,7 @@ static void hvfb_putmem(struct hv_device *hdev, str=
+uct fb_info *info)
+>=20
+>  	if (par->need_docopy) {
+>  		vfree(par->dio_vp);
+> -		iounmap(info->screen_base);
+> +		memunmap(info->screen_base);
+>  		vmbus_free_mmio(par->mem->start, screen_fb_size);
+>  	} else {
+>  		hvfb_release_phymem(hdev, info->fix.smem_start,
+> --
+> 2.34.1
 
