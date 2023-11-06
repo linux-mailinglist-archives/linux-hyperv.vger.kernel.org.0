@@ -1,73 +1,76 @@
-Return-Path: <linux-hyperv+bounces-703-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-704-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD5737E1AFD
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Nov 2023 08:17:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D2457E2061
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Nov 2023 12:52:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6CED1C20AF2
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Nov 2023 07:17:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD3F01C209D4
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Nov 2023 11:52:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65EBC2EE;
-	Mon,  6 Nov 2023 07:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE8C51A5A4;
+	Mon,  6 Nov 2023 11:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UW42S7Pv"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACF1BE6D;
-	Mon,  6 Nov 2023 07:17:41 +0000 (UTC)
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD66CC;
-	Sun,  5 Nov 2023 23:17:39 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 4BBAD6732D; Mon,  6 Nov 2023 08:17:33 +0100 (CET)
-Date: Mon, 6 Nov 2023 08:17:33 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: acpica-devel@lists.linuxfoundation.org,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Hector Martin <marcan@marcan.st>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>,
-	virtualization@lists.linux-foundation.org,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
-	Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH RFC 01/17] iommu: Remove struct iommu_ops *iommu from
- arch_setup_dma_ops()
-Message-ID: <20231106071733.GA17258@lst.de>
-References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com> <1-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319661A598
+	for <linux-hyperv@vger.kernel.org>; Mon,  6 Nov 2023 11:52:07 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9986DB;
+	Mon,  6 Nov 2023 03:52:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699271525; x=1730807525;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2GNjbmEJtZrouroHCNxWmbCT6s2EU3n4xNfku+20/b0=;
+  b=UW42S7Pv+4mnp97vTSMqBcHIwj2ZxfKR8Nrb7gCOWN/KkYU2gnqcvaLV
+   GYWn6fIF73GZhGaXiKnJdKb8wAE8RjkvY2lFMebfWAkoevl2anHt2Vqu+
+   whSv9BNyVfpLgJTwvbRqdeHWy31rBxt7B+67GFkQtBjXCwTpAFuTS1Uim
+   xaUrznyKM6sm3KstHd5Auc4sQgNxqIZOPVAWmdQwkzpvqmA5OF3ykMY/5
+   5OsYV8QECD1DPklZi7aZvcn5cixaqNA0Jl80suY/lK+Jqbk4nljLAFqCW
+   BDiGzFXviazKJrZlCnn/XMu0RdvEtNXMYk6PaYwM4MdzvkKFLzfpscsye
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10885"; a="475494043"
+X-IronPort-AV: E=Sophos;i="6.03,281,1694761200"; 
+   d="scan'208";a="475494043"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 03:52:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10885"; a="852981472"
+X-IronPort-AV: E=Sophos;i="6.03,281,1694761200"; 
+   d="scan'208";a="852981472"
+Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Nov 2023 03:51:59 -0800
+Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qzy97-0006NJ-1u;
+	Mon, 06 Nov 2023 11:51:57 +0000
+Date: Mon, 6 Nov 2023 19:51:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, patches@lists.linux.dev,
+	mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+	gregkh@linuxfoundation.org, haiyangz@microsoft.com,
+	decui@microsoft.com, apais@linux.microsoft.com,
+	Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
+	mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+	jinankjain@linux.microsoft.com, vkuznets@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+	catalin.marinas@arm.com
+Subject: Re: [PATCH v4 15/15] Drivers: hv: Add modules to expose /dev/mshv to
+ VMMs running on Hyper-V
+Message-ID: <202311061950.zy9qRyzo-lkp@intel.com>
+References: <1696010501-24584-16-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,17 +79,49 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1696010501-24584-16-git-send-email-nunodasneves@linux.microsoft.com>
 
-On Fri, Nov 03, 2023 at 01:44:46PM -0300, Jason Gunthorpe wrote:
-> This is not being used to pass ops, it is just a way to tell if an
-> iommu driver was probed. These days this can be detected directly via
-> device_iommu_mapped(). Call device_iommu_mapped() in the two places that
-> need to check it and remove the iommu parameter everywhere.
+Hi Nuno,
 
-Yes, that's much better than exposing the iommu ops to a place that
-should not care about them:
+kernel test robot noticed the following build errors:
 
-Acked-by: Christoph Hellwig <hch@lst.de>
+[auto build test ERROR on arnd-asm-generic/master]
+[also build test ERROR on tip/x86/core arm64/for-next/core linus/master v6.6 next-20231106]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-Das-Neves/hyperv-tlfs-Change-shared-HV_REGISTER_-defines-to-HV_MSR_/20230930-041305
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git master
+patch link:    https://lore.kernel.org/r/1696010501-24584-16-git-send-email-nunodasneves%40linux.microsoft.com
+patch subject: [PATCH v4 15/15] Drivers: hv: Add modules to expose /dev/mshv to VMMs running on Hyper-V
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231106/202311061950.zy9qRyzo-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231106/202311061950.zy9qRyzo-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311061950.zy9qRyzo-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/hv/mshv_vtl_main.c:25:10: fatal error: ../../../kernel/fpu/legacy.h: No such file or directory
+      25 | #include "../../../kernel/fpu/legacy.h"
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+
+vim +25 drivers/hv/mshv_vtl_main.c
+
+    24	
+  > 25	#include "../../../kernel/fpu/legacy.h"
+    26	#include "mshv.h"
+    27	#include "mshv_vtl.h"
+    28	#include "hyperv_vmbus.h"
+    29	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
