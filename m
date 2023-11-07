@@ -1,147 +1,206 @@
-Return-Path: <linux-hyperv+bounces-709-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-710-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B0717E2C94
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Nov 2023 20:03:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1756E7E3440
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Nov 2023 04:41:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45A39280F00
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Nov 2023 19:03:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11D771C203C0
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Nov 2023 03:41:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B469628E26;
-	Mon,  6 Nov 2023 19:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 166AB23DB;
+	Tue,  7 Nov 2023 03:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDf40gvE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpNNiBwt"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2128E17
-	for <linux-hyperv@vger.kernel.org>; Mon,  6 Nov 2023 19:03:13 +0000 (UTC)
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAE3D8
-	for <linux-hyperv@vger.kernel.org>; Mon,  6 Nov 2023 11:03:11 -0800 (PST)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-5849fc56c62so2892053eaf.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 06 Nov 2023 11:03:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699297391; x=1699902191; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lWUAt9szfs1KF4AGkcAD2A8AgTAn63pRzhXfFkTXelE=;
-        b=PDf40gvERrOgfwDkTd4VwvyB1pKS/hh4A+RO6qC5AZMe0Urhmzf4J3XcoLrN1L5UT7
-         sy0UEiFI/B0sfsJqATvlcAPgRsJj2RgHFonqFJbiXrrSxaX/ILeAwewPZ3hAWwgOuH53
-         LkYLkn0PH1a/984xlwyHg5JFoT7f2LmCjYSni+4WOaBxR64df+2ixpHe1Hcdf2dDlsaJ
-         OHCyc/ABSABJS5ZQNZ9VwsWU4uhIKl8UEWgWlKR3OeTFTXnnaDA5FEfsmLSn5HrHxa5Y
-         sDU8GvFFMhxNZgGl9f/v+8I62rMheGfNA/ONIghrgPR4YGZvUWCZVRVHmV2dWq0Ri6eA
-         jHMQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44779A20
+	for <linux-hyperv@vger.kernel.org>; Tue,  7 Nov 2023 03:41:08 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC546D47
+	for <linux-hyperv@vger.kernel.org>; Mon,  6 Nov 2023 19:41:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1699328466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l/objqiOqc8rOZeftx45k4hz0QbDrfEnyUw5mk2OXW0=;
+	b=KpNNiBwtbRiZEVCIWNM9YZNFatvqlIvOJr6OjwDkPVTA89yslP7arIihcLQaw7kGujgMta
+	MImLlxjrjqBmSosqJcZXT4agyoM7v9Gi+Hn/srPkZmmcBF8xTR3+sOEFftXYi+OuyNHI2c
+	wt8VYxhQtQV1ydZD/iardPzghgzO5LM=
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
+ [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-605-4Y43NXyAMYmMVOiEQmT_TQ-1; Mon, 06 Nov 2023 22:40:49 -0500
+X-MC-Unique: 4Y43NXyAMYmMVOiEQmT_TQ-1
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3b2e7ae47d1so7884491b6e.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 06 Nov 2023 19:40:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699297391; x=1699902191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1699328449; x=1699933249;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lWUAt9szfs1KF4AGkcAD2A8AgTAn63pRzhXfFkTXelE=;
-        b=KpcSThlfCoACfvGGLnTjZIcGvsbwaPv3U5C3JEzzgkamGwg8CSy5qF3ctRMReqGFSn
-         bDc3WWL63mFvwQvCd+ed+wUotEk3LQOJzv6r+omWixmZfv5wX92bH03JFQQwGPw2fIb2
-         4AMs3l0MvPX3tQGmTArI0MwzGhKiTe2YGiNaP6ZtCNTAv2X3/4ejMpJARZxkhKklCl3c
-         u7M1jbhrmBm02i8iYnC8jihCvKiQ8AhZ96etAp8ZCjuk9QAZe7kj6+4BAvBl5VmJm2nN
-         N9rswzzcUm1kEtzIjNUkyUua6tx/3iQ2R4xxKpei3GSeNdRs6/LuzQ2dkVJhOUOLNB5j
-         MbwA==
-X-Gm-Message-State: AOJu0Yw/1tQanJVavoOzBHvV0Ggn3xz0B/0qgGBvugEQzk9eC9kiphf2
-	ueE2lnMKznJeyF2cUyfKX5U=
-X-Google-Smtp-Source: AGHT+IHu+ArIDyrP7UOJMs+IX6B6QH6XksZbNkcAjGxrCsqtNvpNK3YmD8tkQMWQM6W1l1C2vVt2Ug==
-X-Received: by 2002:a05:6358:c3a1:b0:168:f48f:4414 with SMTP id fl33-20020a056358c3a100b00168f48f4414mr28377157rwb.25.1699297391117;
-        Mon, 06 Nov 2023 11:03:11 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id x3-20020a0ce783000000b0065afcf19e23sm3637602qvn.62.2023.11.06.11.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 11:03:10 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailauth.nyi.internal (Postfix) with ESMTP id 4EF3127C005B;
-	Mon,  6 Nov 2023 14:03:10 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 06 Nov 2023 14:03:10 -0500
-X-ME-Sender: <xms:bThJZa2WpJ0T790GDsKe58palsUc8ol-KRWVkdP8B4Y4s8_NpCH-gg>
-    <xme:bThJZdGx5TO7_MpNyftF-VW7WvChCSlTKL3Ks2fvZ-OdNjV8nG97DrK8JLgadBbPT
-    Mozjw2UyBNgYbJ29Q>
-X-ME-Received: <xmr:bThJZS7UmpgRQCus5oT7MRSrrCsSQIAcuX_CmfJcFNtoTR39FdjnQBXWV0M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddugedguddukecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
-    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:bThJZb0X2df4wfpWEgzgHfz6mzAssAD19iMH1YtaSuhNWhIgAgtZ_w>
-    <xmx:bThJZdGtQvfmghv7M_FNGbUv_Sd9SVyT6ytN_uVL09D0kxEUFR436Q>
-    <xmx:bThJZU9kICu66Lgx9IDiC64iIEU8gStoA_ghxsZVGXoiR9nQ5fc-2g>
-    <xmx:bjhJZWOMxjbYaRLHIorEfe5laxP8n_iWrFjKULCvETbylyeS5vblzQ>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 6 Nov 2023 14:03:09 -0500 (EST)
-Date: Mon, 6 Nov 2023 11:01:50 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Peter Martincic <pmartincic@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-	Boqun Feng <Boqun.Feng@microsoft.com>,
-	Wei Liu <liuwe@microsoft.com>
-Subject: Re: [EXTERNAL] Re: [PATCH] hv_utils: Allow implicit
- ICTIMESYNCFLAG_SYNC
-Message-ID: <ZUk4HveGJyao3h5f@boqun-archlinux>
-References: <CY5PR21MB366066CE916AEB5289153F09D5DCA@CY5PR21MB3660.namprd21.prod.outlook.com>
- <ZUhByoXhvb3ZowPH@liuwe-devbox-debian-v2>
- <CY5PR21MB3660C276E3A8A20167B7644AD5AAA@CY5PR21MB3660.namprd21.prod.outlook.com>
+        bh=l/objqiOqc8rOZeftx45k4hz0QbDrfEnyUw5mk2OXW0=;
+        b=NCi5q1cbh1vEIZpOmZNc9pk7QZwVk71Pr8fs5K3lgTTk0EhNsxSw7kZJEzC8bIKo3/
+         GEQCwzSUwb1P8tZjwj5ckrFzGCPbpNtJergJIv6Ty3/eOgdVQdhP+BKUCbmHP6heRHZy
+         U7HxozzGrwMLilWkkHwRD97JtB2r/LswQ1ugt+YD63j4w6od1iDnQnvDS17x+QNwijRL
+         /K83TgnYP5fKohDN7jWNoe95YVSpBe11bgsM+E+HYAuulJRJYpfbVEKa0pgi0yaO+fmZ
+         meFkc8iKkM9ojE2b8KPuy7ELlEZWt28oRN/HcDFNZXzoCdY+w0xtrYIco/JVUZVa59v4
+         4c0Q==
+X-Gm-Message-State: AOJu0YzAK/hpbDxHnrcQtf1fewEUNWaXzSjRcay5RaOsaBi8PuaY9q9Q
+	GrVGTb3mEcdYgzgvoZYZapRxAHEay0MUNUbdRosNHXk2Ldypd+oM9qq+kcEOunTWHfWyjoLCxB2
+	a2JikmMp47haDfZij05y8C742
+X-Received: by 2002:a05:6808:14c4:b0:3b5:663c:9b91 with SMTP id f4-20020a05680814c400b003b5663c9b91mr25811110oiw.12.1699328449189;
+        Mon, 06 Nov 2023 19:40:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFMGTYxK/HZxGKY3L0S3GbNNZ/EC6n9a4m3WUGhPB5VEAdGD9voUf1lVcBOeJk2sYQMF/7lsg==
+X-Received: by 2002:a05:6808:14c4:b0:3b5:663c:9b91 with SMTP id f4-20020a05680814c400b003b5663c9b91mr25811099oiw.12.1699328448914;
+        Mon, 06 Nov 2023 19:40:48 -0800 (PST)
+Received: from smtpclient.apple ([115.96.144.207])
+        by smtp.gmail.com with ESMTPSA id h15-20020aa786cf000000b006c06779e593sm6480721pfo.16.2023.11.06.19.40.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Nov 2023 19:40:48 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY5PR21MB3660C276E3A8A20167B7644AD5AAA@CY5PR21MB3660.namprd21.prod.outlook.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.4\))
+Subject: Re: [PATCH] hv/hv_kvp_daemon: Some small fixes for handling NM
+ keyfiles
+From: Ani Sinha <anisinha@redhat.com>
+In-Reply-To: <E44432C5-17B2-47FC-B382-384659B21DCF@redhat.com>
+Date: Tue, 7 Nov 2023 09:10:43 +0530
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5D793B43-B5DB-4BA2-9F1E-B01D5E2487D2@redhat.com>
+References: <20231016133122.2419537-1-anisinha@redhat.com>
+ <20231023053746.GA11148@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <E44432C5-17B2-47FC-B382-384659B21DCF@redhat.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.4)
 
-On Mon, Nov 06, 2023 at 06:18:48PM +0000, Peter Martincic wrote:
-> Sorry for the formatting/recipient/procedure mistakes. I've an updated commit message based on feedback from Michael. I'll wait to hear back from you and Boqun before I post V2/updates.
-> 
-> Thanks again,
-> Peter
-> 
-> -----Original Message-----
-> From: Wei Liu <wei.liu@kernel.org> 
-> Sent: Sunday, November 5, 2023 5:31 PM
-> To: Peter Martincic <pmartincic@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; Michael Kelley (LINUX) <mikelley@microsoft.com>; Boqun Feng <Boqun.Feng@microsoft.com>; Wei Liu <liuwe@microsoft.com>; Wei Liu <wei.liu@kernel.org>
-> Subject: [EXTERNAL] Re: [PATCH] hv_utils: Allow implicit ICTIMESYNCFLAG_SYNC
-> 
-> On Fri, Oct 27, 2023 at 08:42:33PM +0000, Peter Martincic wrote:
-> > From 529fcea5d296c22b1dc6c23d55bd6417794b3cda Mon Sep 17 00:00:00 2001
-> > From: Peter Martincic <pmartincic@microsoft.com>
-> > Date: Mon, 16 Oct 2023 16:41:10 -0700
-> > Subject: [PATCH] hv_utils: Allow implicit ICTIMESYNCFLAG_SYNC
-> > 
-> > Windows hosts can omit the _SYNC flag to due a bug on resume from 
-> > modern suspend. If the guest is sufficiently behind, treat a _SAMPLE 
-> > the same as if _SYNC was received.
-> > 
-> > This is hidden behind param hv_utils.timesync_implicit.
-> > 
-> > Signed-off-by: Peter Martincic <pmartincic@microsoft.com>
-> 
-> Boqun, what do you think about this patch?
-> 
 
-The patch looks good to me. Peter, feel free to send the V2 and I will
-give my Acked-by.
 
-Regards,
-Boqun
+> On 30-Oct-2023, at 10:45 AM, Ani Sinha <anisinha@redhat.com> wrote:
+>=20
+>=20
+>=20
+>> On 23-Oct-2023, at 11:07 AM, Shradha Gupta =
+<shradhagupta@linux.microsoft.com> wrote:
+>>=20
+>> On Mon, Oct 16, 2023 at 07:01:22PM +0530, Ani Sinha wrote:
+>>> Some small fixes:
+>>> - lets make sure we are not adding ipv4 addresses in ipv6 section in
+>>>  keyfile and vice versa.
+>>> - ADDR_FAMILY_IPV6 is a bit in addr_family. Test that bit instead of
+>>>  checking the whole value of addr_family.
+>>> - Some trivial fixes in hv_set_ifconfig.sh.
+>>>=20
+>>> These fixes are proposed after doing some internal testing at Red =
+Hat.
+>>>=20
+>>> CC: Shradha Gupta <shradhagupta@linux.microsoft.com>
+>>> CC: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>> Fixes: 42999c904612 ("hv/hv_kvp_daemon:Support for keyfile based =
+connection profile")
+>>> Signed-off-by: Ani Sinha <anisinha@redhat.com>
+>>> ---
+>>> tools/hv/hv_kvp_daemon.c    | 20 ++++++++++++--------
+>>> tools/hv/hv_set_ifconfig.sh |  4 ++--
+>>> 2 files changed, 14 insertions(+), 10 deletions(-)
+>>>=20
+>>> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+>>> index 264eeb9c46a9..318e2dad27e0 100644
+>>> --- a/tools/hv/hv_kvp_daemon.c
+>>> +++ b/tools/hv/hv_kvp_daemon.c
+>>> @@ -1421,7 +1421,7 @@ static int kvp_set_ip_info(char *if_name, =
+struct hv_kvp_ipaddr_value *new_val)
+>>> 	if (error)
+>>> 		goto setval_error;
+>>>=20
+>>> -	if (new_val->addr_family =3D=3D ADDR_FAMILY_IPV6) {
+>>> +	if (new_val->addr_family & ADDR_FAMILY_IPV6) {
+>>> 		error =3D fprintf(nmfile, "\n[ipv6]\n");
+>>> 		if (error < 0)
+>>> 			goto setval_error;
+>>> @@ -1455,14 +1455,18 @@ static int kvp_set_ip_info(char *if_name, =
+struct hv_kvp_ipaddr_value *new_val)
+>>> 	if (error < 0)
+>>> 		goto setval_error;
+>>>=20
+>>> -	error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
+*)new_val->gate_way);
+>>> -	if (error < 0)
+>>> -		goto setval_error;
+>>> -
+>>> -	error =3D fprintf(nmfile, "dns=3D%s\n", (char =
+*)new_val->dns_addr);
+>>> -	if (error < 0)
+>>> -		goto setval_error;
+>>> +	/* we do not want ipv4 addresses in ipv6 section and vice versa =
+*/
+>>> +	if (is_ipv6 !=3D is_ipv4((char *)new_val->gate_way)) {
+>>> +		error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
+*)new_val->gate_way);
+>>> +		if (error < 0)
+>>> +			goto setval_error;
+>>> +	}
+>>>=20
+>>> +	if (is_ipv6 !=3D is_ipv4((char *)new_val->dns_addr)) {
+>>> +		error =3D fprintf(nmfile, "dns=3D%s\n", (char =
+*)new_val->dns_addr);
+>>> +		if (error < 0)
+>>> +			goto setval_error;
+>>> +	}
+>>> 	fclose(nmfile);
+>>> 	fclose(ifcfg_file);
+>>>=20
+>>> diff --git a/tools/hv/hv_set_ifconfig.sh =
+b/tools/hv/hv_set_ifconfig.sh
+>>> index ae5a7a8249a2..440a91b35823 100755
+>>> --- a/tools/hv/hv_set_ifconfig.sh
+>>> +++ b/tools/hv/hv_set_ifconfig.sh
+>>> @@ -53,7 +53,7 @@
+>>> #                       or "manual" if no boot-time protocol should =
+be used)
+>>> #
+>>> # address1=3Dipaddr1/plen
+>>> -# address=3Dipaddr2/plen
+>>> +# address2=3Dipaddr2/plen
+>>> #
+>>> # gateway=3Dgateway1;gateway2
+>>> #
+>>> @@ -61,7 +61,7 @@
+>>> #
+>>> # [ipv6]
+>>> # address1=3Dipaddr1/plen
+>>> -# address2=3Dipaddr1/plen
+>>> +# address2=3Dipaddr2/plen
+>>> #
+>>> # gateway=3Dgateway1;gateway2
+>>> #
+>>> --=20
+>>> 2.39.2
+>> Reviewed-by: Shradha Gupta <Shradhagupta@linux.microsoft.com>
+>=20
+> Ping. Can anyone please queue this?
+>>=20
+
+Ping again =E2=80=A6 Please pick this up.
+
+>=20
 
 
