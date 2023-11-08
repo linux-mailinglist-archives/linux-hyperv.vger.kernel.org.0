@@ -1,119 +1,104 @@
-Return-Path: <linux-hyperv+bounces-767-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-768-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F21D57E595C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 15:42:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 022DD7E5994
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 15:58:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 825CEB209DE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 14:42:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72106B20CD7
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 14:58:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A93223D3;
-	Wed,  8 Nov 2023 14:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8DE62FE38;
+	Wed,  8 Nov 2023 14:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SCmW0XVj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxaxzQlz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ADB815;
-	Wed,  8 Nov 2023 14:42:06 +0000 (UTC)
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF20E172E;
-	Wed,  8 Nov 2023 06:42:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1699454526; x=1730990526;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   cc:subject:from:to:references:in-reply-to;
-  bh=m5j5x7nNAFVyRYtdkX1gMrUVJ3IBvqYpFYgMswAfYXw=;
-  b=SCmW0XVjef4+FFJ7VSHSAXoQZINhQwriry2rzIDhgxiv9wJFPbV4PRnL
-   V0BwBluHWYkfkkjnJNyJ2L6gg7mOmp8fqlw7MiXmh62OkSHgOVd5Mar6J
-   zml/+KgWVeyrFSAqsiuLrhZqMr6gS4tsWRGNgQY8QXIDQzgBYQMQy9uFL
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.03,286,1694736000"; 
-   d="scan'208";a="593847629"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-9fe6ad2f.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 14:42:03 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1a-m6i4x-9fe6ad2f.us-east-1.amazon.com (Postfix) with ESMTPS id 0A99C8049A;
-	Wed,  8 Nov 2023 14:42:00 +0000 (UTC)
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:56026]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.22.222:2525] with esmtp (Farcaster)
- id e7c875e3-d454-4710-a698-3611a062b2a8; Wed, 8 Nov 2023 14:41:59 +0000 (UTC)
-X-Farcaster-Flow-ID: e7c875e3-d454-4710-a698-3611a062b2a8
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.39; Wed, 8 Nov 2023 14:41:59 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 8 Nov
- 2023 14:41:55 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA642FE36
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 14:58:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72196C433C8;
+	Wed,  8 Nov 2023 14:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699455509;
+	bh=n/5YMcECTbkGb6OIl60kw0HV/aeCmVYYSLfcJLtQke0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BxaxzQlzzgzah4q3Rh46fm22Wea2D6PMhRF+M/Z6V7P9WdTCxzDZLAh1/afga9Pf3
+	 mbVZkmuG7VjCjasBW+5ZpOjJ+KcRXp5kDm4Z4a5TY04isCKUXs5vcnNmo7xmQi1HD9
+	 r+OYjsa7WqOPqoQkQ6H1M/JuVQyCInIN/F3NBX1/xZqHtnCrrO5Syq2Otr1+dDNPTf
+	 P5XRwtNiT9egVLCUCdShArCvTZy555+hvNn+KgGgdXpAa8/fA0AbBpl9QE7UxjQI8b
+	 J2diMU8BzAaoIYNgH9gGgVM1XTWM9s4YoGpKBMDsoAAHR1KUojHLGXwtOSudivEzQ4
+	 EyOh/wEQ655Ag==
+From: Arnd Bergmann <arnd@kernel.org>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: kernel test robot <lkp@intel.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Michael Kelley <mikelley@microsoft.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dawei Li <set_pte_at@outlook.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fbdev: hyperv_fb: fix uninitialized local variable use
+Date: Wed,  8 Nov 2023 15:58:13 +0100
+Message-Id: <20231108145822.3955219-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Wed, 8 Nov 2023 14:41:51 +0000
-Message-ID: <CWTICGO95L4K.2DL1G1DZ9EW3H@amazon.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
-	<anelkz@amazon.com>, <dwmw@amazon.co.uk>, <jgowans@amazon.com>,
-	<kys@microsoft.com>, <haiyangz@microsoft.com>, <decui@microsoft.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [RFC 0/33] KVM: x86: hyperv: Introduce VSM support
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Alexander Graf <graf@amazon.com>, <kvm@vger.kernel.org>
-X-Mailer: aerc 0.15.2-182-g389d89a9362e-dirty
-References: <20231108111806.92604-1-nsaenz@amazon.com>
- <a8da9071-68ee-42e6-810a-eac95aff317d@amazon.com>
-In-Reply-To: <a8da9071-68ee-42e6-810a-eac95aff317d@amazon.com>
-X-Originating-IP: [10.13.235.138]
-X-ClientProxiedBy: EX19D037UWC001.ant.amazon.com (10.13.139.197) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+Content-Transfer-Encoding: 8bit
 
-On Wed Nov 8, 2023 at 11:40 AM UTC, Alexander Graf wrote:
-> Hey Nicolas,
+From: Arnd Bergmann <arnd@arndb.de>
 
-[...]
+When CONFIG_SYSFB is disabled, the hyperv_fb driver can now run into
+undefined behavior on a gen2 VM, as indicated by this smatch warning:
 
-> > The series is accompanied by two repositories:
-> >   - A PoC QEMU implementation of VSM [3].
-> >   - VSM kvm-unit-tests [4].
-> >
-> > Note that this isn't a full VSM implementation. For now it only support=
-s
-> > 2 VTLs, and only runs on uniprocessor guests. It is capable of booting
-> > Windows Sever 2016/2019, but is unstable during runtime.
->
-> How much of these limitations are inherent in the current set of=20
-> patches? What is missing to go beyond 2 VTLs and into SMP land? Anything=
-=20
-> that will require API changes?
+drivers/video/fbdev/hyperv_fb.c:1077 hvfb_getmem() error: uninitialized symbol 'base'.
+drivers/video/fbdev/hyperv_fb.c:1077 hvfb_getmem() error: uninitialized symbol 'size'.
 
-The main KVM concepts introduced by this series are ready to deal with
-any number of VTLs (APIC ID groups, VTL KVM device).
+Since there is no way to know the actual framebuffer in this configuration,
+just return an allocation failure here, which should avoid the build
+warning and the undefined behavior.
 
-KVM_HV_GET_VSM_STATE should provide a copy of 'vsm_code_page_offsets'
-per-VTL, since the hypercall page is partition wide but per-VTL.
-Attaching that information as a VTL KVM device attribute fits that
-requirement nicely. I'd prefer going that way especially if the VTL KVM
-device has a decent reception. Also, the secure memory intecepts and
-HVCALL_TRANSLATE_VIRTUAL_ADDRESS take some VTL related shortcuts, but
-those are going away. Otherwise, I don't see any necessary in-kernel
-changes.
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202311070802.YCpvehaz-lkp@intel.com/
+Fixes: a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/video/fbdev/hyperv_fb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-When virtualizing Windows with VSM I've never seen usages that go beyond
-VTL1. So enabling VTL > 1 will be mostly a kvm-unit-tests effort. As for
-SMP, it just a matter of work. Notably HvStartVirtualProcessor and
-HvGetVpIndexFromApicId need to be implemented, and making sure the QEMU
-VTL scheduling code holds up.
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index bf59daf862fc..a80939fe2ee6 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -1013,6 +1013,8 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
+ 	} else if (IS_ENABLED(CONFIG_SYSFB)) {
+ 		base = screen_info.lfb_base;
+ 		size = screen_info.lfb_size;
++	} else {
++		goto err1;
+ 	}
+ 
+ 	/*
+-- 
+2.39.2
 
-Nicolas
 
