@@ -1,113 +1,106 @@
-Return-Path: <linux-hyperv+bounces-774-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-775-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 638FC7E5AFC
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:18:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75F9F7E5B99
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:43:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B34DCB20D48
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:18:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7FDD1C2088E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:43:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2329E30FAF;
-	Wed,  8 Nov 2023 16:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 985A71944D;
+	Wed,  8 Nov 2023 16:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="weZvbPdw"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EE930D15;
-	Wed,  8 Nov 2023 16:18:26 +0000 (UTC)
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D491C6;
-	Wed,  8 Nov 2023 08:18:26 -0800 (PST)
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6ce2988d62eso4356094a34.1;
-        Wed, 08 Nov 2023 08:18:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586C61944B
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 16:43:12 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BDA1FE9
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 08:43:11 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a541b720aso8421264276.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 08:43:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1699461791; x=1700066591; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4E/b9HBc1xBMsLHpP255Zqp8aT/FkdqVSdO5buB1hG4=;
+        b=weZvbPdw0xyq0UAvqqRPDVjh5FFMN2laAPi3dmbN2YezAPDJn/Pv7YZwA++UGMa6q+
+         EiOsZKBOxCZ8TIYr/K/Fi2qMg5pbdEYLN2xdATbjS9FaVnifBzoFc11s0913svrOeIY2
+         5WxRtchHPSrhM00N02QmCo2E7pdRhRQdkrC95Fb/CZicT3zrrvKdvAyazKF0LtuWOeCn
+         nc5MQY4QgmC2TRuaSTAwfuSEochcLt/r1xYOrGFWXLsyUHqdSGS9bHNhaIe5in8DGN0h
+         4cRgeNXVWfnXRLO/2Iclp83p3SGtF0fAlqAsp6itmuxgWCii+0Z7PMFMtUoGguxnhuuy
+         966g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699460305; x=1700065105;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EYkPle1MdHD/QkRy5uvWyvoGAuw8CDQwR9sXIE03ZSs=;
-        b=RXSHLh4HOWMqLZ30N3K2lKpvfRr+r9Dc9nEX5qYWKkTPP1ZhcHSnJ4v7Tk0jURZw/K
-         etiiJS4W7OnOlQVTIBigw6cBqCUfxowcZA37FoKiE7WOYT7o8agexWy7o4G7K/42+ymz
-         H7h3fVPmiOjkbcC1IhxzvS+VxT1YNHq2gUf+J/VtF5WBIgKQxQ9XP0T5/VYLrUgndIYd
-         D3HAPGewyU6bik4QBPm+DnUei/z14QxZjCS6n6si1IYhdpujeedUIWSIm3GF53CgT+Ik
-         1DJFYP934ZcwXbI63+j+VSbpiMfLvUH/xzfuHuvlVoxYQsTX6UoFkaQXAo53PF8A9kPf
-         NUnA==
-X-Gm-Message-State: AOJu0Yx/nvYbhj/aivR+H9DT5qIRQBh9Hd995oS/5wJwbeW8+sd3fGcm
-	y6ipqceb08xhCMxtKmMWlA==
-X-Google-Smtp-Source: AGHT+IHdx3/gHf0uiMEsZF6g8NbonKAcCJCMoAU+4cEwM7tQNoaEke7MS1G/3+EpNqOeJUuZFsInWw==
-X-Received: by 2002:a05:6830:4394:b0:6d5:4daf:9894 with SMTP id s20-20020a056830439400b006d54daf9894mr2008363otv.7.1699460305289;
-        Wed, 08 Nov 2023 08:18:25 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id ew20-20020a0568303d9400b006b89dafb721sm1939661otb.78.2023.11.08.08.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Nov 2023 08:18:24 -0800 (PST)
-Received: (nullmailer pid 2333673 invoked by uid 1000);
-	Wed, 08 Nov 2023 16:18:22 -0000
-Date: Wed, 8 Nov 2023 10:18:22 -0600
-From: Rob Herring <robh@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: acpica-devel@lists.linuxfoundation.org, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev, 
-	Lu Baolu <baolu.lu@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org, 
-	David Woodhouse <dwmw2@infradead.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Hanjun Guo <guohanjun@huawei.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Joerg Roedel <joro@8bytes.org>, "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>, 
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org, 
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Hector Martin <marcan@marcan.st>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, 
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Sven Peter <sven@svenpeter.dev>, 
-	Thierry Reding <thierry.reding@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>, 
-	virtualization@lists.linux-foundation.org, Wei Liu <wei.liu@kernel.org>, 
-	Will Deacon <will@kernel.org>, Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH RFC 01/17] iommu: Remove struct iommu_ops *iommu from
- arch_setup_dma_ops()
-Message-ID: <20231108161822.GC2254211-robh@kernel.org>
-References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
- <1-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+        d=1e100.net; s=20230601; t=1699461791; x=1700066591;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4E/b9HBc1xBMsLHpP255Zqp8aT/FkdqVSdO5buB1hG4=;
+        b=vmQR9h64qqDZnzYtqYCUJ1VQc2jkffJO7EkSRRJgo7Rx58b+O74D4rJN1cp9oqPqZE
+         MadVYjoeWvqbCYYocg83hjE+sRn61QFtOmNnMieK/dw27ddES98sPbqTp0WuhV3149sA
+         wV3hu5TLukyvjD7ns87wNr55yDWrJivfTg3iuEuJ+GX6k8nc0LvpVWINqsnA+VWpwMua
+         lucR7vOMqrJPd/3YsN7qnzga4PPuUfTbSaeQvAGZaS8uo/XrFL4UCy8pKoJCJW2oiIPy
+         PVU/Ww83M4ngx6XDg8OWy5fHrRwASf5+9ZMzUF+poe0OCj4DYWLC3uZa1QHSkgwtJYOP
+         Do8A==
+X-Gm-Message-State: AOJu0YwrE/Hyy5aNKm/HBgKeoYgtY0jBMYTXejy4mCV10K1CQbsbzuEk
+	q57Dg/gqjzj1fBcOlgiqj6mjnJG+YpU=
+X-Google-Smtp-Source: AGHT+IHUR9RD0SVwOOmAqAjm9rgqqd/alRUffuaUxofCzdpXVbic9A9T6fssT2FkYnEvva7bggL135WgKdA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:3247:0:b0:d9a:ca58:b32c with SMTP id
+ y68-20020a253247000000b00d9aca58b32cmr43372yby.1.1699461790981; Wed, 08 Nov
+ 2023 08:43:10 -0800 (PST)
+Date: Wed, 8 Nov 2023 08:43:09 -0800
+In-Reply-To: <075453e1-830e-43bc-8888-7e5e4888223f@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+Mime-Version: 1.0
+References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-26-nsaenz@amazon.com>
+ <075453e1-830e-43bc-8888-7e5e4888223f@amazon.com>
+Message-ID: <ZUu6nSk0jqpYpxoM@google.com>
+Subject: Re: [RFC 25/33] KVM: Introduce a set of new memory attributes
+From: Sean Christopherson <seanjc@google.com>
+To: Alexander Graf <graf@amazon.com>
+Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
+	anelkz@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, corbert@lwn.net, 
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+	x86@kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Nov 03, 2023 at 01:44:46PM -0300, Jason Gunthorpe wrote:
-> This is not being used to pass ops, it is just a way to tell if an
-> iommu driver was probed. These days this can be detected directly via
-> device_iommu_mapped(). Call device_iommu_mapped() in the two places that
-> need to check it and remove the iommu parameter everywhere.
+On Wed, Nov 08, 2023, Alexander Graf wrote:
 > 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  arch/arc/mm/dma.c               |  2 +-
->  arch/arm/mm/dma-mapping-nommu.c |  2 +-
->  arch/arm/mm/dma-mapping.c       | 10 +++++-----
->  arch/arm64/mm/dma-mapping.c     |  4 ++--
->  arch/mips/mm/dma-noncoherent.c  |  2 +-
->  arch/riscv/mm/dma-noncoherent.c |  2 +-
->  drivers/acpi/scan.c             |  3 +--
->  drivers/hv/hv_common.c          |  2 +-
->  drivers/of/device.c             |  2 +-
+> On 08.11.23 12:17, Nicolas Saenz Julienne wrote:
+> > Introduce the following memory attributes:
+> >   - KVM_MEMORY_ATTRIBUTE_READ
+> >   - KVM_MEMORY_ATTRIBUTE_WRITE
+> >   - KVM_MEMORY_ATTRIBUTE_EXECUTE
+> >   - KVM_MEMORY_ATTRIBUTE_NO_ACCESS
+> > 
+> > Note that NO_ACCESS is necessary in order to make a distinction between
+> > the lack of attributes for a gfn, which defaults to the memory
+> > protections of the backing memory, versus explicitly prohibiting any
+> > access to that gfn.
+> 
+> 
+> If we negate the attributes (no read, no write, no execute), we can keep 0
+> == default and 0b111 becomes "no access".
 
-Acked-by: Rob Herring <robh@kernel.org>
+Yes, I suggested this in the initial discussion[*].  I think it makes sense to
+have the uAPI flags have positive polarity, i.e. as above, but internally we can
+invert things so that the default 000b gives full RWX protections.  Or we could
+make the push for a range-based xarray implementation so that storing 111b for
+all gfns is super cheap.
 
->  include/linux/dma-map-ops.h     |  4 ++--
->  10 files changed, 16 insertions(+), 17 deletions(-)
+Regardless of how KVM stores the information internally, there's no need for a
+NO_ACCESS flag in the uAPI.
+
+[*] https://lore.kernel.org/all/ZGfUqBLaO+cI9ypv@google.com
 
