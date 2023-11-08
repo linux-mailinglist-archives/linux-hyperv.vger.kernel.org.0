@@ -1,183 +1,91 @@
-Return-Path: <linux-hyperv+bounces-769-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-770-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76D837E5A45
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:39:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90AF57E5AD4
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:11:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3011F2813DF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 15:39:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 470662815C4
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:11:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37583034C;
-	Wed,  8 Nov 2023 15:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DA2830D0C;
+	Wed,  8 Nov 2023 16:11:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="MVoryq9a"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z38J8OwT"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9A230347
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 15:39:16 +0000 (UTC)
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B8D6138;
-	Wed,  8 Nov 2023 07:39:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1699457920; x=1700062720; i=deller@gmx.de;
-	bh=RQou+busEXK1el5zagRtSD2v4f/DHN4LUnOWxuImoNc=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=MVoryq9aaD0lgknM+UykwFhr5H8QWMEsO8Ivs+H0RX38+Yoq2lpvcwUXRqsP4ssp
-	 9MyqRQGuza8yUUkXHpWXCtYrXg22Hu15Qq9iWRXemfFi4zVLnC+KBn7ZMtNBXXR5l
-	 x9pf8UpCCfscsNVfFfa3z69nbq2HrtBg/cjPdZBWEFY0LdPAOxv+rrj8b4cveEjqI
-	 6rGj0uUD3ALOkGv5F9goOa9RP4CyGYtqom0+nUnSHconA2EYThZYAXWBvh4vRX1te
-	 agHhUOmuhj+02AoOOFDTeJ6z4j8hBt18x/ShQ7AOeIg7JFS5y0kHd9hQN/T4+r5jR
-	 RWQ+QOf51XI4dy7DtA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.158.7]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M59C8-1r1r6K0dUa-0017cZ; Wed, 08
- Nov 2023 16:38:40 +0100
-Message-ID: <a320ae82-24ce-4c0d-bae3-b14e43c1f512@gmx.de>
-Date: Wed, 8 Nov 2023 16:38:34 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C512F3067D
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 16:11:05 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41EC11FDD
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 08:11:05 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-da03390793fso8042202276.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 08:11:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1699459864; x=1700064664; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SCyKbBYBcpAJ2v4LwtdWLPucCqpggSO4tuF11LbpeUo=;
+        b=Z38J8OwTOMzg0ZKkMEdHyv/RLPGlEISvgB2MZxpkcqKIVJ57SAWDNtLcnc6lpO2LFY
+         rhFGFVjHqk2YojbL83tOAT7vSypb3F9pCi0O8cgCArtCwQjz48vcdqd8P+LWtMY0z8Gq
+         tvII1XfL0uCq1JjvGeuXx3nRHD4TzZBmkvkB4v1YKeXH+l+Zs6a6hbzqhr9GVdbh9Loz
+         ZZAkIEag3smj3s/F5WuSHnX8CvZ+nRSVpRTJ2I12w/mp/fPpaOjHzBaB56ZjAmdzIPd+
+         3zW469u2DJ+wQk8CeRN0grCRH7l7w4e0t0JQWVzxHdF0rX70kqjbmUi90+nHKosnakKR
+         vF5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699459864; x=1700064664;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SCyKbBYBcpAJ2v4LwtdWLPucCqpggSO4tuF11LbpeUo=;
+        b=uufc7qF39Qy2kb95xJmSkdi783slr0KhlYgcxPna5OLtQFFZlZA3b6aXrQuXcZfVod
+         ht7MR1aFfd2oDjDoFJu+pdD1SOPq1MTCjY8srfPKw87EugVJHUs84Kp2qgG4AX2Uyz5J
+         /WBeOoXKoIiWHNPny73CAFERt8FbS+VHNYf3VTOtanFGLohxmy+Jqc/0ZEHCnEBQdi2h
+         HkJQ13A2fQ3/2eoiMt6rTAXEfovBZNc8+eJ/Z2B204d+CBVVV6OgPgurfHnhe0cMZvhO
+         SY/JZDdUqeZeMwtDswbRVipmX4i50zFB0zve4zUNmDOtYrH40ceHHFXjP4j7Kbe8OJSl
+         hhug==
+X-Gm-Message-State: AOJu0YzEOxx58Ze6Xkxeps6dTDC4YI3BkYHVLTVvWzZwPMILONjIPTZN
+	4tMrrKHblFptK2udu2nVvx+v6eTltqE=
+X-Google-Smtp-Source: AGHT+IElPBL0TUz47UKKevcrQ52vnzXf3uBAKsqEBbIPFRFkQe5teIswfhYivY589qMtJ1q1v1W1c+yk5QU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:24c:b0:da3:ba0f:c84f with SMTP id
+ k12-20020a056902024c00b00da3ba0fc84fmr40900ybs.4.1699459864456; Wed, 08 Nov
+ 2023 08:11:04 -0800 (PST)
+Date: Wed, 8 Nov 2023 08:11:02 -0800
+In-Reply-To: <20231108111806.92604-2-nsaenz@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fbdev: hyperv_fb: fix uninitialized local variable use
-Content-Language: en-US
-To: Arnd Bergmann <arnd@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Javier Martinez Canillas <javierm@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: kernel test robot <lkp@intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Michael Kelley <mikelley@microsoft.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dawei Li <set_pte_at@outlook.com>, linux-hyperv@vger.kernel.org,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20231108145822.3955219-1-arnd@kernel.org>
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20231108145822.3955219-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FZdTMf13wFxPAhxWZWg2c1R3JIZiLXzi/PpA4Y686kMa4OeoiGp
- x6GgrfU4s0EUvilEfSxrx4rA7HQ8K2+0QusK1x0dx3F+fm3PUWMiVRNNlX/ynD4svy7cwYb
- yftFBOfAyxH9/5V5gJ/2mULmAaO/J57ltXHmoB8AmvWOAWu8n1wfw2Q+AZlu9JTvcP8LY8T
- 262qXyYAdhsFVuANvXxsg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:hE/kDwUmU60=;TSD0lDDHyPmTJmerdbCVP0c9oNq
- 6s+JIPQ12n+ya4EhCeunURrxv4I63E656WsUxI7rfjk8ARQp+yhm94wvcOT/p6PFqqMkU0PM0
- DgmboqYbkD80qovpuVrg90hNBK3T+AzRPw1A9HS/x2NhyA4y75Rfk+hIqU1OFw9cA5AqsZ+H1
- lCuN34bxMFVpj+PAaGFHPBgQPlbXM5SpLmPiu/5nrjIBKSnpZBsEecNKqdaC/jd7ONzLOcLoP
- yXE6EoMq7KnnRDrEhUrg+dRXwDbb372t+SdhCbi2n//gMs6+DzPdj7YfCfd0phTO15EJoweiZ
- BlBgnLNrV/gpSP+tyxqpFrDdAVan1v1g4P5sRHWmEgkVyLPouz2nAArjZqPffs1l081/34TGq
- aQUR0GU7HYzHxzM+GblqI55RlGlyd72a/+wBzy7MGocW2Lv23Z8PSRmsLACncV7UymPiyCpXk
- hYM1oTJkcO9sk4u9Z4zdmBEdB7ULZ4pWYW2SfocwqV1gKgX9DnJBt53G3jXSzEFVMYPnEYcTa
- W0Tr2ur5C1OYdA8izMCxUWCKevB9xJ8MXerz0FwQHIU+lJUL1zuOCmJs+rpjFj0/0S/n/UtbF
- qN3xctWBFI0U7atNq8XaW3owvweBiHje3LLudMg9dDNaAYxM8of+SJSihRyEVhB3w55B61m3i
- mas4m21VMuowLihJnaraz0lJZvh+A8fdEi/z9z7xNbd9iI2QuJObRoJPouhZkqp6iEOBfP4zC
- LJwHwAGXX9pfMUSHew9WF5zRx5Pl1SQlXvTduA0Uf3VuDqXjmPQpXLvR65PJaD2xdbqn1fI/S
- jrJfhqiptQoW3I1aMmOjiqdBDZvHGLdOfj/hxKD+OmD9zHYJuiQ7NXax2t2niWLdEXl2hT7vf
- tmWfTARiAuxGpyZ4RsCI/InRvA+vQBHAFTyjdk2gPj1/JOXSCn5Ss7EMpB71+Qv9lZZUpTaj6
- tM8Ia6NUFaedoGUX3e4H+TJSrpI=
+Mime-Version: 1.0
+References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-2-nsaenz@amazon.com>
+Message-ID: <ZUuzFshjO7NO5k3b@google.com>
+Subject: Re: [RFC 01/33] KVM: x86: Decouple lapic.h from hyperv.h
+From: Sean Christopherson <seanjc@google.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
+	anelkz@amazon.com, graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, 
+	corbert@lwn.net, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com, x86@kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 11/8/23 15:58, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> When CONFIG_SYSFB is disabled, the hyperv_fb driver can now run into
-> undefined behavior on a gen2 VM, as indicated by this smatch warning:
->
-> drivers/video/fbdev/hyperv_fb.c:1077 hvfb_getmem() error: uninitialized =
-symbol 'base'.
-> drivers/video/fbdev/hyperv_fb.c:1077 hvfb_getmem() error: uninitialized =
-symbol 'size'.
->
-> Since there is no way to know the actual framebuffer in this configurati=
-on,
-> just return an allocation failure here, which should avoid the build
-> warning and the undefined behavior.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/r/202311070802.YCpvehaz-lkp@intel.com/
-> Fixes: a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-applied.
-
-Thanks!
-Helge
-
-
+On Wed, Nov 08, 2023, Nicolas Saenz Julienne wrote:
+> lapic.h has no dependencies with hyperv.h, so don't include it there.
+> 
+> Additionally, cpuid.c implicitly relied on hyperv.h's inclusion through
+> lapic.h, so include it explicitly there.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 > ---
->   drivers/video/fbdev/hyperv_fb.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyper=
-v_fb.c
-> index bf59daf862fc..a80939fe2ee6 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -1013,6 +1013,8 @@ static int hvfb_getmem(struct hv_device *hdev, str=
-uct fb_info *info)
->   	} else if (IS_ENABLED(CONFIG_SYSFB)) {
->   		base =3D screen_info.lfb_base;
->   		size =3D screen_info.lfb_size;
-> +	} else {
-> +		goto err1;
->   	}
->
->   	/*
 
+FWIW, feel free to post patches like this without the full context, I'm more than
+happy to take patches that resolve header inclusion issues even if the issue(s)
+only become visible with additional changes.
+
+I'll earmark this one for 6.8.
 
