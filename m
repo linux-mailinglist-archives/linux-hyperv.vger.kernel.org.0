@@ -1,109 +1,97 @@
-Return-Path: <linux-hyperv+bounces-779-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-780-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC12E7E5C0A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 18:12:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 316C17E5C4A
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 18:20:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5519AB20CCB
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:12:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4758B20F22
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:20:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 474B030359;
-	Wed,  8 Nov 2023 17:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3F7F31A98;
+	Wed,  8 Nov 2023 17:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eA7azvDO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRvVLLMt"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2B530342;
-	Wed,  8 Nov 2023 17:11:54 +0000 (UTC)
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8E51FFB;
-	Wed,  8 Nov 2023 09:11:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AA3315AB
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 17:20:40 +0000 (UTC)
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5521FFF
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 09:20:40 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5b59662ff67so8119567b3.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 09:20:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1699463514; x=1730999514;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6cb/isVwYpy7SG+g9mvglOgKJl2fHKbFOFR6QXMe2MM=;
-  b=eA7azvDO7xqJ3yYVMfc/7IjPcxPXBnIICWCyRqpGY84L+5eHd9NxP4Yd
-   llp+lwQrTOJkLTnR4xtOSZY/qxhchsU4G/K8CkJSBlL/8uhz3Y3lRKLEY
-   Yijb6lLklgdMy2fNvt+IzCQQP9Qk676VGAVjYR4Xgl8ewxyzik578mPJs
-   E=;
-X-IronPort-AV: E=Sophos;i="6.03,286,1694736000"; 
-   d="scan'208";a="42072586"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-b5bd57cf.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 17:11:46 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1a-m6i4x-b5bd57cf.us-east-1.amazon.com (Postfix) with ESMTPS id BEBB248DB1;
-	Wed,  8 Nov 2023 17:11:42 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:15788]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.1.121:2525] with esmtp (Farcaster)
- id e2b71a98-94b7-4b71-82ed-2cb1b7312c2f; Wed, 8 Nov 2023 17:11:41 +0000 (UTC)
-X-Farcaster-Flow-ID: e2b71a98-94b7-4b71-82ed-2cb1b7312c2f
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.39; Wed, 8 Nov 2023 17:11:40 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 8 Nov
- 2023 17:11:36 +0000
-Message-ID: <4eb50ee5-fd5e-4dc1-bee1-629da687bdb5@amazon.com>
-Date: Wed, 8 Nov 2023 18:11:34 +0100
+        d=google.com; s=20230601; t=1699464039; x=1700068839; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uBbKC3JkdJ0oQ9YroQVJM/5WimY0jXaEi0yPTCtmdW4=;
+        b=KRvVLLMtR/ldoVMkhZYwEz3RWr0mpd3q5HfMo6E1eymtRVrr5IAbiIZ8LsF395Qram
+         8U7JFDCycq8uKe7RzwefkyuCukw8fzhErpmZOdil+naNZKM6sWGRZ4WpaNQnXMtqSikb
+         3ty2xBNBcEriOWRl9OxHVD6pPajuEE5knKH6S57r17BoprX44Gl/rSR3TRYqZeFJ62Il
+         bVm9palqUFrSLRAzw1ZLo8ogkmXmYd8/NIfuwIu3ROmq/vKmqEfI+u1Fnrk/hLMeJP6e
+         bXpibw2MNE18Tn2o7decAmTzFWU4qYSlMGPyDZIplL2U4Ray5FKt58c/+Iawd+2d/tL5
+         FsMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699464039; x=1700068839;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uBbKC3JkdJ0oQ9YroQVJM/5WimY0jXaEi0yPTCtmdW4=;
+        b=SUWu+R0KYsN/rAghW0/FoEW5mLSOomOgGMmRgm/85+15j9pxfT2DVttrI4Jbwxjy+W
+         Q4Oc1UGZ150xdcU/KQXs6UdXN/bYWyidJIfzhrXBl0n0kjk1CYWbfleljpC0/DU8sXH0
+         vV83rD5Xn/992Q6ZR/rr3oEdN/PT0hu950rWc1gkd7tA9L8aA9WRfUz7qfJ3ZpP5rP5s
+         SwGK2QFawk/cqd3mpsYL2QWWjq1IV0nvau+FP4xHKGgi6qCsjQ6obqxsbvfI3kWuYN4U
+         BqJn0NIb3bsk02z82sqfxIXFZ+x6YHuEKXhq+ePfkEmIQrghiYexg6F8CwFM7Xt+Gbkj
+         La3w==
+X-Gm-Message-State: AOJu0Yy2bBy1VGqfgBJ9xjkx6VYHYC6GXbC1G/ZlZt9A23KRpVCC7Jn/
+	eJCmIlbqlwLPLG8GIc1Um7CSZKyMCbk=
+X-Google-Smtp-Source: AGHT+IGphpWQHHEDy2ukCPCGjyPMd0Bw17ZH9MJZhu3SATwjM2+XVm/rjVukAqXpoj9DXdfpGc+wU3Ua940=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:4047:b0:59b:b0b1:d75a with SMTP id
+ ga7-20020a05690c404700b0059bb0b1d75amr122541ywb.4.1699464039546; Wed, 08 Nov
+ 2023 09:20:39 -0800 (PST)
+Date: Wed, 8 Nov 2023 09:20:37 -0800
+In-Reply-To: <20231108111806.92604-30-nsaenz@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Mime-Version: 1.0
+References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-30-nsaenz@amazon.com>
+Message-ID: <ZUvDZUbUR4s_9VNG@google.com>
 Subject: Re: [RFC 29/33] KVM: VMX: Save instruction length on EPT violation
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-CC: Nicolas Saenz Julienne <nsaenz@amazon.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<pbonzini@redhat.com>, <vkuznets@redhat.com>, <anelkz@amazon.com>,
-	<dwmw@amazon.co.uk>, <jgowans@amazon.com>, <corbert@lwn.net>,
-	<kys@microsoft.com>, <haiyangz@microsoft.com>, <decui@microsoft.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>
-References: <20231108111806.92604-1-nsaenz@amazon.com>
- <20231108111806.92604-30-nsaenz@amazon.com>
- <2573d04d-feff-4119-a79c-dbf9b85e62fd@amazon.com>
- <ZUu0FzbW5tr2Werz@google.com>
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <ZUu0FzbW5tr2Werz@google.com>
-X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D038UWB002.ant.amazon.com (10.13.139.185) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+From: Sean Christopherson <seanjc@google.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
+	anelkz@amazon.com, graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, 
+	corbert@lwn.net, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com, x86@kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Ck9uIDA4LjExLjIzIDE3OjE1LCBTZWFuIENocmlzdG9waGVyc29uIHdyb3RlOgo+Cj4gT24gV2Vk
-LCBOb3YgMDgsIDIwMjMsIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+PiBPbiAwOC4xMS4yMyAxMjox
-OCwgTmljb2xhcyBTYWVueiBKdWxpZW5uZSB3cm90ZToKPj4+IFNhdmUgdGhlIGxlbmd0aCBvZiB0
-aGUgaW5zdHJ1Y3Rpb24gdGhhdCB0cmlnZ2VyZWQgYW4gRVBUIHZpb2xhdGlvbiBpbgo+Pj4gc3Ry
-dWN0IGt2bV92Y3B1X2FyY2guIFRoaXMgd2lsbCBiZSB1c2VkIHRvIHBvcHVsYXRlIEh5cGVyLVYg
-VlNNIG1lbW9yeQo+Pj4gaW50ZXJjZXB0IG1lc3NhZ2VzLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6
-IE5pY29sYXMgU2FlbnogSnVsaWVubmUgPG5zYWVuekBhbWF6b24uY29tPgo+Pgo+PiBJbiB2MSwg
-cGxlYXNlIGRvIHRoaXMgZm9yIFNWTSBhcyB3ZWxsIDopCj4gV2h5PyAgS1ZNIGNhY2hlcyB2YWx1
-ZXMgb24gVk1YIGJlY2F1c2UgVk1SRUFEIGlzIG1lYXN1cmFibGUgc2xvd2VyIHRoYW4gbWVtb3J5
-Cj4gYWNjZXNzZXMsIGVzcGVjaWFsbHkgd2hlbiBydW5uaW5nIG5lc3RlZC4gIFNWTSBoYXMgbm8g
-c3VjaCBwcm9ibGVtcy4gIEkgd291bGRuJ3QKPiBiZSBzdXJwcmlzZWQgaWYgYWRkaW5nIGEgImNh
-Y2hlIiBpcyBhY3R1YWxseSBsZXNzIHBlcmZvcm1hbnQgZHVlIHRvIGluY3JlYXNlZAo+IHByZXNz
-dXJlIGFuZCBtaXNzZXMgb24gdGhlIGhhcmR3YXJlIGNhY2hlLgoKCk15IHVuZGVyc3RhbmRpbmcg
-d2FzIHRoYXQgdGhpcyBwYXRjaCB3YXNuJ3QgYWJvdXQgY2FjaGluZyBpdCwgaXQgd2FzIAphYm91
-dCBzdG9yaW5nIGl0IHNvbWV3aGVyZSBnZW5lcmljYWxseSBzbyB3ZSBjYW4gdXNlIGl0IGZvciB0
-aGUgZmF1bHQgCmluamVjdGlvbiBjb2RlIHBhdGggaW4gdGhlIGZvbGxvd2luZyBwYXRjaC4gQW5k
-IGlmIHdlIGRvbid0IHNldCB0aGlzIAp2YXJpYWJsZSBmb3IgU1ZNLCBpdCBqdXN0IG1lYW5zIENy
-ZWRlbnRpYWwgR3VhcmQgZmF1bHQgaW5qZWN0aW9uIHdvdWxkIApiZSBicm9rZW4gdGhlcmUuCgoK
-QWxleAoKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0
-ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdl
-ciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1
-cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5
-CgoK
+On Wed, Nov 08, 2023, Nicolas Saenz Julienne wrote:
+> Save the length of the instruction that triggered an EPT violation in
+> struct kvm_vcpu_arch. This will be used to populate Hyper-V VSM memory
+> intercept messages.
 
+This is silly and unnecessarily obfuscates *why* (as my response regarding SVM
+shows), i.e. that this is "needed" becuase the value is consumed by a *different*
+vCPU, not because of performance concerns.
+
+It's also broken, AFAICT nothing prevents the intercepted vCPU from hitting a
+different EPT violation before the target vCPU consumes exit_instruction_len.
+
+Holy cow.  All of deliver_gpa_intercept() is wildly unsafe.  Aside from race
+conditions, which in and of themselves are a non-starter, nothing guarantees that
+the intercepted vCPU actually cached all of the information that is held in its VMCS.
+
+The sane way to do this is to snapshot *all* information on the intercepted vCPU,
+and then hand that off as a payload to the target vCPU.  That is, assuming the
+cross-vCPU stuff is actually necessary.  At a glance, I don't see anything that
+explains *why*.
 
