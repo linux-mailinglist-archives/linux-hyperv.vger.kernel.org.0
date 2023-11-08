@@ -1,123 +1,132 @@
-Return-Path: <linux-hyperv+bounces-786-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-787-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 191C87E5D45
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 19:33:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B63F7E5D4F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 19:35:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A9A51C20BCA
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 18:33:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C83FD281390
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 18:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7093F36B0E;
-	Wed,  8 Nov 2023 18:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B4E30341;
+	Wed,  8 Nov 2023 18:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uFaeB68V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ag/sekfg"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D236B18
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 18:33:14 +0000 (UTC)
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E4C2107
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 10:33:14 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5af592fed43so85682367b3.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 10:33:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBEE3032C
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 18:35:04 +0000 (UTC)
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BFFC210A
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 10:35:03 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40790b0a224so53676255e9.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 10:35:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699468393; x=1700073193; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=50ipMfBLEUA7xDJ0NQzorJYtn8bk8XRkn5YPeYvT/r0=;
-        b=uFaeB68VTHrGLbgfLw3MxRn1VfxX8HS5w6+ut3fXoq/g75D7YJRACneD44JdFfngkV
-         mvUxjBwP2uuwjEMwKcnmT7q730uXmqiC7j4WpeNZFwI7nP84ei59J7QfxeT0srfBG1HA
-         5TtxaSyoudUXmRc+6pDkIgjPYOirCSryyw2mTLwHQ+rBSNe/6medhZwG8+6xXk+k3JBW
-         u9OBVMN1Zf0tR7S99r3a1Jxl2RoTQW7011X5R4kf8kD/UiWwcpschgeIo3AA6RYEzt0L
-         /M2oc3sRO3PUX9ynqIKlOCHrACijBZQvF3dW3cVWvIRdeQ+cYqmnIEpS2HYI2a86WnHd
-         cRRQ==
+        d=linaro.org; s=google; t=1699468502; x=1700073302; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n9ZiV2Esj98CTfgH59OBDcgahkXqDMdEC5lhTkmlSa0=;
+        b=Ag/sekfgYdN+QO2qNzC+r6BzqCMo9dzcsxvOu4xJN0ribyHewu9zogJx6FWNSomfI9
+         4Sjlt/qA4mplNZMnvot6/g+6cmnze23j+AP62wX8o67Qahuu0IX9K7PX266zjkQY/wRe
+         hNpOh576uhk6o2F1atbxeeQelw6dBU2ObOSQ9yQGCGBdBys3mjvoiuXA1WEspYXM7dqL
+         8or59NUpDHRURUG6WDvo92ajLicd3w5fF4NJHO6NtHIf4rNDQeB2t6EQLDVDKgiNAp4S
+         f8GgfhkHm4K6E2W6wIdOxZzpJIJC9NgohDiD7zD6auJ87yEubapy07YfOPudCdJ85XuR
+         nD9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699468393; x=1700073193;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=50ipMfBLEUA7xDJ0NQzorJYtn8bk8XRkn5YPeYvT/r0=;
-        b=vz107lDN+meoI2FEzsNHIYiu92nJN513Uz0/Av4Kb9mjkyIYll4fXymGwXsE2IfIw1
-         DyZTrcrf0pKUf54aRcyYgu/z70/S2Omvm7y5YPdiuCh+n5RoPAsojRFiZzDTpgpuci4H
-         8mbOnMJHxzI2o6ae1IQDBl8y/06eu6ExCMFHwMJFIkbHFwjpP6tMEH3vswphUnRA1mGA
-         UX3iug10RFmkvwckX50ELxBntBpZmWUn5YGvARmIPlZa07hx3zvkVq4kcLCR6YSIcHwo
-         YUVU7h4yMgOhKYIZ1H0Nn9SrcvPG71zv3dKKHLNO+RUjccqW+5YXbkr5Eohk+jMCybkY
-         2/9A==
-X-Gm-Message-State: AOJu0YyV1O2GnuXytDhHNKBC+mZwW58IvQmxWO2dcwFgJ8tvfseAKoP8
-	nO7yhVE9V7Av8HgQ+FuZ+/z92gFDEQQ=
-X-Google-Smtp-Source: AGHT+IFHQg/YDcEIocO0Ni0JZ0CPuBXAmwWA3839QbB/g3j7+q1xZZYyE3IrNG+D7YVTAx/aop/3By26fig=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:701:b0:d9a:6007:223a with SMTP id
- k1-20020a056902070100b00d9a6007223amr60840ybt.8.1699468393385; Wed, 08 Nov
- 2023 10:33:13 -0800 (PST)
-Date: Wed, 8 Nov 2023 10:33:11 -0800
-In-Reply-To: <ZUu9lwJHasi2vKGg@google.com>
+        d=1e100.net; s=20230601; t=1699468502; x=1700073302;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n9ZiV2Esj98CTfgH59OBDcgahkXqDMdEC5lhTkmlSa0=;
+        b=HLMf3Nu3ndwo9FdyiOfz0o0cqxc1wM8OyYVwO98+PNR3Urvqwthg+rvPDQwufcu8eb
+         VvYCMmSG3CmmeS02x8Ijdqkt7DcXEQcT/07ORW6WXO3fn+35/N+BW/QGMrfqjYZqSO6T
+         RKhFsMYJQgwOXpYwQ+paRroHipAyTyj1jTOs8B+vm8grvcLs8/+UOAJDcYh/YVoHUTxF
+         9dAmAwajflMsxqk1UCAgv+Sm52l0viqkxg07ms7N2V6fF8A6tVSWLmQt3joooWYHaEqM
+         J5eSXNCckbdz2jHlFJDFS7J7KpvVrWBJBtn0uIV2C/T2+mt06T8daOVUN7TDRkIDWkPK
+         B30Q==
+X-Gm-Message-State: AOJu0Ywg1bbrKbwx06GFi0uYrBu0CJNJqX+gzj6NqVGBuX1qlu8m4SdN
+	taW2dYWQsXC4OrkRUtFjTwAKBg==
+X-Google-Smtp-Source: AGHT+IEerzRoblFu8LqWqAyQVzl32Dow78v7sZDoe2sPpmQgBWRRfSrEcftCpyNmsXV1yimnvtHQ6A==
+X-Received: by 2002:a05:600c:190e:b0:405:1c19:b747 with SMTP id j14-20020a05600c190e00b004051c19b747mr2262734wmq.15.1699468501866;
+        Wed, 08 Nov 2023 10:35:01 -0800 (PST)
+Received: from salami.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id g4-20020a05600c310400b004068e09a70bsm20156528wmo.31.2023.11.08.10.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Nov 2023 10:35:00 -0800 (PST)
+Message-ID: <d6664edcccd81edc5caa54e8da43b5c571a3ea76.camel@linaro.org>
+Subject: Re: [PATCH RFC 00/17] Solve iommu probe races around iommu_fwspec
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Zhenhua Huang <quic_zhenhuah@quicinc.com>, 
+ acpica-devel@lists.linuxfoundation.org, Alyssa Rosenzweig
+ <alyssa@rosenzweig.io>,  Albert Ou <aou@eecs.berkeley.edu>,
+ asahi@lists.linux.dev, Lu Baolu <baolu.lu@linux.intel.com>,  Catalin
+ Marinas <catalin.marinas@arm.com>, Dexuan Cui <decui@microsoft.com>,
+ devicetree@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Frank
+ Rowand <frowand.list@gmail.com>, Hanjun Guo <guohanjun@huawei.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Christoph Hellwig <hch@lst.de>,
+ iommu@lists.linux.dev, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, "K.
+ Y. Srinivasan" <kys@microsoft.com>,  Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org, 
+ linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Hector Martin <marcan@marcan.st>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Robert Moore
+ <robert.moore@intel.com>, Rob Herring <robh+dt@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Suravee
+ Suthikulpanit <suravee.suthikulpanit@amd.com>, Sven Peter
+ <sven@svenpeter.dev>, Thierry Reding <thierry.reding@gmail.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>,  Krishna Reddy
+ <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>, 
+ virtualization@lists.linux-foundation.org, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>
+Date: Wed, 08 Nov 2023 18:34:58 +0000
+In-Reply-To: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1-1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231108111806.92604-1-nsaenz@amazon.com> <ZUu9lwJHasi2vKGg@google.com>
-Message-ID: <ZUvUZytj1AabvvrB@google.com>
-Subject: Re: [RFC 0/33] KVM: x86: hyperv: Introduce VSM support
-From: Sean Christopherson <seanjc@google.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
-	anelkz@amazon.com, graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, 
-	corbert@lwn.net, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com, x86@kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 
-On Wed, Nov 08, 2023, Sean Christopherson wrote:
-> On Wed, Nov 08, 2023, Nicolas Saenz Julienne wrote:
-> > This RFC series introduces the necessary infrastructure to emulate VSM
-> > enabled guests. It is a snapshot of the progress we made so far, and its
-> > main goal is to gather design feedback.
-> 
-> Heh, then please provide an overview of the design, and ideally context and/or
-> justification for various design decisions.  It doesn't need to be a proper design
-> doc, and you can certainly point at other documentation for explaining VSM/VTLs,
-> but a few paragraphs and/or verbose bullet points would go a long way.
-> 
-> The documentation in patch 33 provides an explanation of VSM itself, and a little
-> insight into how userspace can utilize the KVM implementation.  But the documentation
-> provides no explanation of the mechanics that KVM *developers* care about, e.g.
-> the use of memory attributes, how memory attributes are enforced, whether or not
-> an in-kernel local APIC is required, etc.
-> 
-> Nor does the documentation explain *why*, e.g. why store a separate set of memory
-> attributes per VTL "device", which by the by is broken and unnecessary.
+Hi Jason,
 
-After speed reading the series..  An overview of the design, why you made certain
-choices, and the tradeoffs between various options is definitely needed.
+On Fri, 2023-11-03 at 13:44 -0300, Jason Gunthorpe wrote:
+> This is a more complete solution that the first attempt here:
+> https://lore.kernel.org/r/1698825902-10685-1-git-send-email-quic_zhenhuah=
+@quicinc.com
+>=20
+> I haven't been able to test this on any HW that touches these paths, so i=
+f
+> some people with HW can help get it in shape it can become non-RFC.
 
-A few questions off the top of my head:
+Thank you for this series.
 
- - What is the split between userspace and KVM?  How did you arrive at that split?
+Please note that we're also observing this issue on 6.1.
+I think this series is a good candidate for a back port (slightly complicat=
+ed by
+the fact that various refactors have happened since).
 
- - How much *needs* to be in KVM?  I.e. how much can be pushed to userspace while
-   maintaininly good performance?
-   
- - Why not make VTLs a first-party concept in KVM?  E.g. rather than bury info
-   in a VTL device and APIC ID groups, why not modify "struct kvm" to support
-   replicating state that needs to be tracked per-VTL?  Because of how memory
-   attributes affect hugepages, duplicating *memslots* might actually be easier
-   than teaching memslots to be VTL-aware.
+For me, it's working fine so far on master, and I've also done my own back =
+port
+to 6.1 and am currently testing both. An official back port once finalised
+could be useful, though :-)
 
- - Is "struct kvm_vcpu" the best representation of an execution context (if I'm
-   getting the terminology right)?  E.g. if 90% of the state is guaranteed to be
-   identical for a given vCPU across execution contexts, then modeling that with
-   separate kvm_vcpu structures is very inefficient.  I highly doubt it's 90%,
-   but it might be quite high depending on how much the TFLS restricts the state
-   of the vCPU, e.g. if it's 64-bit only.
 
-The more info you can provide before LPC, the better, e.g. so that we can spend
-time discussing options instead of you getting peppered with questions about the
-requirements and whatnot.
+Cheers,
+Andre'
+
 
