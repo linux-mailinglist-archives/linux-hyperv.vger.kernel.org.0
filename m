@@ -1,94 +1,104 @@
-Return-Path: <linux-hyperv+bounces-772-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-773-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 872CF7E5AEE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:15:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 819DF7E5AF5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:17:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B85C31C20C35
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:15:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C1CF281544
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:17:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A216C30FB3;
-	Wed,  8 Nov 2023 16:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jmM381Qo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90A2A30FAF;
+	Wed,  8 Nov 2023 16:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2324F30D0C
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 16:15:22 +0000 (UTC)
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0EC1FE9
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 08:15:21 -0800 (PST)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1cc5ef7e815so49798395ad.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 08:15:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699460121; x=1700064921; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkv2aSpFw25Sjc2pDxCz5exBlHcYk4gTYVmkV2GOyQs=;
-        b=jmM381QoHM6/g0FB4YGETIBR5O3J1Dych7X+lotMdYThzDNuBSm38Bvy2TsfZPUuBz
-         LzlpsoZeXenCsP0R9cO1z5mCRUWbfMliqX3Z3O7dCfsTunpZ30Cgf3LrGqt/mpzbZSbW
-         O46em/jCPUWIkZdsHEfghHGMlEzU+D2q9+JXzOIJcLoFDjOuitCNXbMB6+FW+S0LNsxc
-         F5WUZwqo/HTJJeTLt/A3/SNIOAkpsY83aURbgEu8jX3rhG1CNmCXmqlv5kG2IL5HBNiD
-         v9M9nQ6x4wQbc3Uuw3RJHsDPVCYkYFT/ksNlNSKDpcP6VV1dYHtf7ofUP8DUxJg0LVXp
-         aDpQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CF230F97;
+	Wed,  8 Nov 2023 16:17:07 +0000 (UTC)
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D0D1733;
+	Wed,  8 Nov 2023 08:17:07 -0800 (PST)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-586f1db1a83so3843744eaf.2;
+        Wed, 08 Nov 2023 08:17:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699460121; x=1700064921;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkv2aSpFw25Sjc2pDxCz5exBlHcYk4gTYVmkV2GOyQs=;
-        b=f3HOGr6iNVyTnYDHaOYeH/I/S34Ls3kdbCfnUiNg5b2Z7oQttxebySz9WbW750c6cU
-         Dr87FJdnzYNxl0qif1Rprxd07Xg4e2RgCuFFFs4F3AL5FpQqnjmq7mgPHTXSxForZw2Q
-         xpeU8sICFnFHVFciRnuH6qT/eVqNE/y2q/tCPfHtcKpLKH7+dJ88XPuJk5w+lA73oCY+
-         01qffoCUSiwy7jxBSbAX4eDke7hK54Dn7LBldPYFyyHa9EQQH52lbaoW94RGnw2mSZay
-         Voo5S8DsKLDb/V6o1QopScUeoQgxIlmxzO0MfwQWM2oy0hB4qMhD8VOh5UxUPaCVHP+N
-         El2A==
-X-Gm-Message-State: AOJu0Ywn8DFzCdtR4Y3YQvOlHZssndvXxHnoHP6DdgqSBxMnFThTRdH7
-	kbxTK0R6b3w0cKwP4ofiacgiV1/qcio=
-X-Google-Smtp-Source: AGHT+IFTaQxuB68rES3N/Ouf34zgkF8c8VJFXOJJTqeB2NI7Tbr2np/f2yCXpxs97M+wYFrZ4r8BXQsnFFA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:1386:b0:1cc:5674:9177 with SMTP id
- jx6-20020a170903138600b001cc56749177mr37933plb.11.1699460120994; Wed, 08 Nov
- 2023 08:15:20 -0800 (PST)
-Date: Wed, 8 Nov 2023 08:15:19 -0800
-In-Reply-To: <2573d04d-feff-4119-a79c-dbf9b85e62fd@amazon.com>
+        d=1e100.net; s=20230601; t=1699460226; x=1700065026;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BhueBKTq066e4mLfKHRgK40ZdUHgCtrKWznR5J+LNwA=;
+        b=ijubwwIxqgtyr2EjE88cpot+z+gEjSHr5mQW62uGJm4DU6hnnDU9uzPciPdhERCAwE
+         3ji0RK/XwPOvTtI86jwWoPGhSiqhxWfqWCyddB2eNDrYoxl68FWT2uajoNYBy8QL30Y8
+         hF5ub9foYDVSOH3v0my2P/pH5hgkcPMmEa49aqLNLqt+6iXscd5D6XQ4DNn/le+R2CqP
+         iUOSFzQXm2GxwnBkne0XSYL1hJJ1Er65jtu6581cE3zS8CYglKbX71uBturZvJkdrp2q
+         QO03y/P/GTT8wTxQcnmE8LMNJPoQo66wj+RzNHaXxfpmSr8OlpN2cWgHd17Nbcr6pCfL
+         kH4A==
+X-Gm-Message-State: AOJu0YytxFme+0A+U1gNMRLLuGIAUPQrOXirhDwmryojFUJzBMN10ghZ
+	+IO/AoCpqNVQAtD8eYXERg==
+X-Google-Smtp-Source: AGHT+IFe/wqQx7jqSarQLsP5AynmlF1OwPY0v3LIXJSKefg7OTaZGlvutVeUSHDrZS8dzbY2HrAlbA==
+X-Received: by 2002:a4a:c208:0:b0:581:ff36:702b with SMTP id z8-20020a4ac208000000b00581ff36702bmr2227049oop.8.1699460225482;
+        Wed, 08 Nov 2023 08:17:05 -0800 (PST)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id b24-20020a9d6b98000000b006bf0f95f702sm1914773otq.64.2023.11.08.08.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Nov 2023 08:17:04 -0800 (PST)
+Received: (nullmailer pid 2331961 invoked by uid 1000);
+	Wed, 08 Nov 2023 16:17:02 -0000
+Date: Wed, 8 Nov 2023 10:17:02 -0600
+From: Rob Herring <robh@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: acpica-devel@lists.linuxfoundation.org, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev, 
+	Lu Baolu <baolu.lu@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org, 
+	David Woodhouse <dwmw2@infradead.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Hanjun Guo <guohanjun@huawei.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Joerg Roedel <joro@8bytes.org>, "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>, 
+	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Hector Martin <marcan@marcan.st>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Robert Moore <robert.moore@intel.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Sven Peter <sven@svenpeter.dev>, 
+	Thierry Reding <thierry.reding@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>, 
+	virtualization@lists.linux-foundation.org, Wei Liu <wei.liu@kernel.org>, 
+	Will Deacon <will@kernel.org>, Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Subject: Re: [PATCH RFC 02/17] of: Do not return struct iommu_ops from
+ of_iommu_configure()
+Message-ID: <20231108161702.GB2254211-robh@kernel.org>
+References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+ <2-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-30-nsaenz@amazon.com>
- <2573d04d-feff-4119-a79c-dbf9b85e62fd@amazon.com>
-Message-ID: <ZUu0FzbW5tr2Werz@google.com>
-Subject: Re: [RFC 29/33] KVM: VMX: Save instruction length on EPT violation
-From: Sean Christopherson <seanjc@google.com>
-To: Alexander Graf <graf@amazon.com>
-Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
-	anelkz@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, corbert@lwn.net, 
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-	x86@kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
 
-On Wed, Nov 08, 2023, Alexander Graf wrote:
+On Fri, Nov 03, 2023 at 01:44:47PM -0300, Jason Gunthorpe wrote:
+> Nothing needs this pointer. Return a normal error code with the usual
+> IOMMU semantic that ENODEV means 'there is no IOMMU driver'.
 > 
-> On 08.11.23 12:18, Nicolas Saenz Julienne wrote:
-> > Save the length of the instruction that triggered an EPT violation in
-> > struct kvm_vcpu_arch. This will be used to populate Hyper-V VSM memory
-> > intercept messages.
-> > 
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
-> 
-> 
-> In v1, please do this for SVM as well :)
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  drivers/iommu/of_iommu.c | 29 ++++++++++++++++++-----------
+>  drivers/of/device.c      | 22 +++++++++++++++-------
 
-Why?  KVM caches values on VMX because VMREAD is measurable slower than memory
-accesses, especially when running nested.  SVM has no such problems.  I wouldn't
-be surprised if adding a "cache" is actually less performant due to increased
-pressure and misses on the hardware cache.
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  include/linux/of_iommu.h | 13 ++++++-------
+>  3 files changed, 39 insertions(+), 25 deletions(-)
 
