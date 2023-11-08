@@ -1,108 +1,94 @@
-Return-Path: <linux-hyperv+bounces-771-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-772-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC2007E5AD7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:11:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 872CF7E5AEE
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 17:15:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08EB01C20943
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:11:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B85C31C20C35
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 16:15:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5981330CF1;
-	Wed,  8 Nov 2023 16:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A216C30FB3;
+	Wed,  8 Nov 2023 16:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jmM381Qo"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0F830CE4;
-	Wed,  8 Nov 2023 16:11:42 +0000 (UTC)
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F18519A5;
-	Wed,  8 Nov 2023 08:11:42 -0800 (PST)
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3b6a837a2e1so1343991b6e.0;
-        Wed, 08 Nov 2023 08:11:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2324F30D0C
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 16:15:22 +0000 (UTC)
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0EC1FE9
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 08:15:21 -0800 (PST)
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1cc5ef7e815so49798395ad.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 08:15:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1699460121; x=1700064921; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hkv2aSpFw25Sjc2pDxCz5exBlHcYk4gTYVmkV2GOyQs=;
+        b=jmM381QoHM6/g0FB4YGETIBR5O3J1Dych7X+lotMdYThzDNuBSm38Bvy2TsfZPUuBz
+         LzlpsoZeXenCsP0R9cO1z5mCRUWbfMliqX3Z3O7dCfsTunpZ30Cgf3LrGqt/mpzbZSbW
+         O46em/jCPUWIkZdsHEfghHGMlEzU+D2q9+JXzOIJcLoFDjOuitCNXbMB6+FW+S0LNsxc
+         F5WUZwqo/HTJJeTLt/A3/SNIOAkpsY83aURbgEu8jX3rhG1CNmCXmqlv5kG2IL5HBNiD
+         v9M9nQ6x4wQbc3Uuw3RJHsDPVCYkYFT/ksNlNSKDpcP6VV1dYHtf7ofUP8DUxJg0LVXp
+         aDpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699459901; x=1700064701;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=egO/3A8usR47pYsFMHy7at49a3WUUkqONQqbQuU8j7Y=;
-        b=uQod2uDabayaXs6n7pwKDCysCHgfTd9wESlvdVVu/fkWxQyzZ9A7WLlQiagmCnXVy/
-         MNk/dfTd9iTDPTgBL00944LlP6QON7nPmmuq6LNrkUX7/e4U9gzyWnp1z3GAR2zMWrmT
-         zI52HfydorbUqrEvI2Zgor+S7ZfCLWBUWUY0Ksgfq4m88rsSgp6NtcbyASZOpWQrHTx8
-         XWvZUvMZgA7Oul39qQeb+WAVbH8PdIBbD458O6GhsqXkAqrOnAmj02lMwbJnSREPqkH4
-         Fp61PR25gxnM72SeSV4M7hSutG/7if41F9ZPNLUfw8egVvxrZK6hiXb7mHCoKprIVKQz
-         /bOw==
-X-Gm-Message-State: AOJu0YzG5Ll5iELF/d99pw9llmLPrWJhhm49rzpE2822eRK/aVpabPXv
-	lumrtbvPV7jeErhKVyjQjA==
-X-Google-Smtp-Source: AGHT+IFG1ydbraxTf3qUlkUHE402Zq2u5RjAY4fdhcYCPQiBAZE+mNt+Ni+JkQlZMBRuNIEkL2d3Ow==
-X-Received: by 2002:a05:6808:15a8:b0:3a9:cfb5:4641 with SMTP id t40-20020a05680815a800b003a9cfb54641mr3241896oiw.48.1699459901513;
-        Wed, 08 Nov 2023 08:11:41 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id bg42-20020a05680817aa00b003afc33bf048sm1959000oib.2.2023.11.08.08.11.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Nov 2023 08:11:40 -0800 (PST)
-Received: (nullmailer pid 2284755 invoked by uid 1000);
-	Wed, 08 Nov 2023 16:11:38 -0000
-Date: Wed, 8 Nov 2023 10:11:38 -0600
-From: Rob Herring <robh@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: acpica-devel@lists.linuxfoundation.org, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev, 
-	Lu Baolu <baolu.lu@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org, 
-	David Woodhouse <dwmw2@infradead.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Hanjun Guo <guohanjun@huawei.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Joerg Roedel <joro@8bytes.org>, "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>, 
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org, 
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Hector Martin <marcan@marcan.st>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, 
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Sven Peter <sven@svenpeter.dev>, 
-	Thierry Reding <thierry.reding@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>, 
-	virtualization@lists.linux-foundation.org, Wei Liu <wei.liu@kernel.org>, 
-	Will Deacon <will@kernel.org>, Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH RFC 03/17] of: Use -ENODEV consistently in
- of_iommu_configure()
-Message-ID: <20231108161138.GA2254211-robh@kernel.org>
-References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
- <3-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+        d=1e100.net; s=20230601; t=1699460121; x=1700064921;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hkv2aSpFw25Sjc2pDxCz5exBlHcYk4gTYVmkV2GOyQs=;
+        b=f3HOGr6iNVyTnYDHaOYeH/I/S34Ls3kdbCfnUiNg5b2Z7oQttxebySz9WbW750c6cU
+         Dr87FJdnzYNxl0qif1Rprxd07Xg4e2RgCuFFFs4F3AL5FpQqnjmq7mgPHTXSxForZw2Q
+         xpeU8sICFnFHVFciRnuH6qT/eVqNE/y2q/tCPfHtcKpLKH7+dJ88XPuJk5w+lA73oCY+
+         01qffoCUSiwy7jxBSbAX4eDke7hK54Dn7LBldPYFyyHa9EQQH52lbaoW94RGnw2mSZay
+         Voo5S8DsKLDb/V6o1QopScUeoQgxIlmxzO0MfwQWM2oy0hB4qMhD8VOh5UxUPaCVHP+N
+         El2A==
+X-Gm-Message-State: AOJu0Ywn8DFzCdtR4Y3YQvOlHZssndvXxHnoHP6DdgqSBxMnFThTRdH7
+	kbxTK0R6b3w0cKwP4ofiacgiV1/qcio=
+X-Google-Smtp-Source: AGHT+IFTaQxuB68rES3N/Ouf34zgkF8c8VJFXOJJTqeB2NI7Tbr2np/f2yCXpxs97M+wYFrZ4r8BXQsnFFA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:1386:b0:1cc:5674:9177 with SMTP id
+ jx6-20020a170903138600b001cc56749177mr37933plb.11.1699460120994; Wed, 08 Nov
+ 2023 08:15:20 -0800 (PST)
+Date: Wed, 8 Nov 2023 08:15:19 -0800
+In-Reply-To: <2573d04d-feff-4119-a79c-dbf9b85e62fd@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
+Mime-Version: 1.0
+References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-30-nsaenz@amazon.com>
+ <2573d04d-feff-4119-a79c-dbf9b85e62fd@amazon.com>
+Message-ID: <ZUu0FzbW5tr2Werz@google.com>
+Subject: Re: [RFC 29/33] KVM: VMX: Save instruction length on EPT violation
+From: Sean Christopherson <seanjc@google.com>
+To: Alexander Graf <graf@amazon.com>
+Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
+	anelkz@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, corbert@lwn.net, 
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+	x86@kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Nov 03, 2023 at 01:44:48PM -0300, Jason Gunthorpe wrote:
-> Instead of returning 1 and trying to handle positive error codes just
-> stick to the convention of returning -ENODEV. Remove references to ops
-> from of_iommu_configure(), a NULL ops will already generate an error code.
-
-nit: "iommu: of: ..." or "iommu/of: " for the subject. "of: ..." is 
-generally drivers/of/.
-
+On Wed, Nov 08, 2023, Alexander Graf wrote:
 > 
-> There is no reason to check dev->bus, if err=0 at this point then the
-> called configure functions thought there was an iommu and we should try to
-> probe it. Remove it.
+> On 08.11.23 12:18, Nicolas Saenz Julienne wrote:
+> > Save the length of the instruction that triggered an EPT violation in
+> > struct kvm_vcpu_arch. This will be used to populate Hyper-V VSM memory
+> > intercept messages.
+> > 
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 > 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  drivers/iommu/of_iommu.c | 42 +++++++++++++---------------------------
->  1 file changed, 13 insertions(+), 29 deletions(-)
+> 
+> In v1, please do this for SVM as well :)
+
+Why?  KVM caches values on VMX because VMREAD is measurable slower than memory
+accesses, especially when running nested.  SVM has no such problems.  I wouldn't
+be surprised if adding a "cache" is actually less performant due to increased
+pressure and misses on the hardware cache.
 
