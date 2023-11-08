@@ -1,235 +1,113 @@
-Return-Path: <linux-hyperv+bounces-749-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-750-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D94697E5569
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 12:25:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 252877E55B1
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 12:40:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51AB71F20610
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 11:25:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A26E0B20E36
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 11:40:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E26515E8F;
-	Wed,  8 Nov 2023 11:25:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F0A16402;
+	Wed,  8 Nov 2023 11:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lpv9ixHt"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fwF4aqSp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF73101D2;
-	Wed,  8 Nov 2023 11:25:29 +0000 (UTC)
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0251FE6;
-	Wed,  8 Nov 2023 03:25:28 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7A315EB2;
+	Wed,  8 Nov 2023 11:40:11 +0000 (UTC)
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615921988;
+	Wed,  8 Nov 2023 03:40:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1699442729; x=1730978729;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pKFAR2whklJOfx0aE2YbJs1djQGs6K3PfD1UPNSSZz8=;
-  b=lpv9ixHtv3vsCQrayxp3rZEZ1aMCCZtv2Ex0GTnkf7QGEq+jVR0RVBHD
-   Gt5PPp2pBc9vsTotBUFYExN9lLZt7EbH78gjtCU8pSc4kLzPE+s5b7wHC
-   +yAhecJ/HG2TTnxJrYXeP0ba+SYcm9xiM7Fv0/64ut0+/NK36E43X2T4F
-   Q=;
+  t=1699443611; x=1730979611;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0Jgcv6m+dF2aXJkYUEQ0LNm7BqJp5LjYq5iFq0Bblbs=;
+  b=fwF4aqSpl+cS0BFVkskMh0GRemTUK/H1egaYQbN9Dh1FZi/vzAcgsqHx
+   FP3YZfVaORPFVI25KGibIpBduQ+7ysFNsUIEnqjave+W88658drRY79gv
+   wtpMnDenKt5vDrSGeX0ABmue1FG+RrxcPceXMavxFJin4gvB/ZWQRfDur
+   4=;
 X-IronPort-AV: E=Sophos;i="6.03,286,1694736000"; 
-   d="scan'208";a="375132593"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-f253a3a3.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 11:25:28 +0000
+   d="scan'208";a="42023927"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-5eae960a.us-west-2.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 11:40:09 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2b-m6i4x-f253a3a3.us-west-2.amazon.com (Postfix) with ESMTPS id BAE6980718;
-	Wed,  8 Nov 2023 11:25:27 +0000 (UTC)
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:32548]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.45.210:2525] with esmtp (Farcaster)
- id 5bc3b812-def8-49f3-9115-267bad567819; Wed, 8 Nov 2023 11:25:26 +0000 (UTC)
-X-Farcaster-Flow-ID: 5bc3b812-def8-49f3-9115-267bad567819
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
+	by email-inbound-relay-pdx-2c-m6i4x-5eae960a.us-west-2.amazon.com (Postfix) with ESMTPS id 2273140D96;
+	Wed,  8 Nov 2023 11:40:09 +0000 (UTC)
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:13613]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.33.241:2525] with esmtp (Farcaster)
+ id 4d944fab-ae9e-4c2a-a996-73171ba7a68a; Wed, 8 Nov 2023 11:40:08 +0000 (UTC)
+X-Farcaster-Flow-ID: 4d944fab-ae9e-4c2a-a996-73171ba7a68a
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.39; Wed, 8 Nov 2023 11:25:26 +0000
-Received: from dev-dsk-nsaenz-1b-189b39ae.eu-west-1.amazon.com (10.13.235.138)
- by EX19D004EUC001.ant.amazon.com (10.252.51.190) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.39; Wed, 8 Nov 2023 11:25:21 +0000
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
-	<anelkz@amazon.com>, <graf@amazon.com>, <dwmw@amazon.co.uk>,
-	<jgowans@amazon.com>, <corbert@lwn.net>, <kys@microsoft.com>,
-	<haiyangz@microsoft.com>, <decui@microsoft.com>, <x86@kernel.org>,
-	<linux-doc@vger.kernel.org>, Nicolas Saenz Julienne <nsaenz@amazon.com>
-Subject: [RFC 33/33] Documentation: KVM: Introduce "Emulating Hyper-V VSM with KVM"
-Date: Wed, 8 Nov 2023 11:18:06 +0000
-Message-ID: <20231108111806.92604-34-nsaenz@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231108111806.92604-1-nsaenz@amazon.com>
-References: <20231108111806.92604-1-nsaenz@amazon.com>
+ 15.2.1118.39; Wed, 8 Nov 2023 11:40:08 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 8 Nov
+ 2023 11:40:05 +0000
+Message-ID: <a8da9071-68ee-42e6-810a-eac95aff317d@amazon.com>
+Date: Wed, 8 Nov 2023 12:40:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="y"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.13.235.138]
-X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/33] KVM: x86: hyperv: Introduce VSM support
+Content-Language: en-US
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>, <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<anelkz@amazon.com>, <dwmw@amazon.co.uk>, <jgowans@amazon.com>,
+	<corbert@lwn.net>, <kys@microsoft.com>, <haiyangz@microsoft.com>,
+	<decui@microsoft.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>
+References: <20231108111806.92604-1-nsaenz@amazon.com>
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <20231108111806.92604-1-nsaenz@amazon.com>
+X-Originating-IP: [10.253.83.51]
+X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-Introduce "Emulating Hyper-V VSM with KVM", which describes the KVM APIs
-made available to a VMM that wants to emulate Hyper-V's VSM.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
----
- .../virt/kvm/x86/emulating-hyperv-vsm.rst     | 136 ++++++++++++++++++
- 1 file changed, 136 insertions(+)
- create mode 100644 Documentation/virt/kvm/x86/emulating-hyperv-vsm.rst
-
-diff --git a/Documentation/virt/kvm/x86/emulating-hyperv-vsm.rst b/Documentation/virt/kvm/x86/emulating-hyperv-vsm.rst
-new file mode 100644
-index 000000000000..8f76bf09c530
---- /dev/null
-+++ b/Documentation/virt/kvm/x86/emulating-hyperv-vsm.rst
-@@ -0,0 +1,136 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============================
-+Emulating Hyper-V VSM with KVM
-+==============================
-+
-+Hyper-V's Virtual Secure Mode (VSM) is a virtualisation security feature
-+that leverages the hypervisor to create secure execution environments
-+within a guest. VSM is documented as part of Microsoft's Hypervisor Top
-+Level Functional Specification[1].
-+
-+Emulating Hyper-V's Virtual Secure Mode with KVM requires coordination
-+between KVM and the VMM. Most of the VSM state and configuration is left
-+to be handled by user-space, but some has made its way into KVM. This
-+document describes the mechanisms through which a VMM can implement VSM
-+support.
-+
-+Virtual Trust Levels
-+--------------------
-+
-+The main concept VSM introduces are Virtual Trust Levels or VTLs. Each
-+VTL is a CPU mode, with its own private CPU architectural state,
-+interrupt subsystem (limited to a local APIC), and memory access
-+permissions. VTLs are hierarchical, where VTL0 corresponds to normal
-+guest execution and VTL > 0 to privileged execution contexts. In
-+practice, when virtualising Windows on top of KVM, we only see VTL0 and
-+VTL1. Although the spec allows going all the way to VTL15. VTLs are
-+orthogonal to ring levels, so each VTL is capable of runnig its own
-+operating system and user-space[2].
-+
-+  ┌──────────────────────────────┐ ┌──────────────────────────────┐
-+  │ Normal Mode (VTL0)           │ │ Secure Mode (VTL1)           │
-+  │ ┌──────────────────────────┐ │ │ ┌──────────────────────────┐ │
-+  │ │   User-mode Processes    │ │ │ │Secure User-mode Processes│ │
-+  │ └──────────────────────────┘ │ │ └──────────────────────────┘ │
-+  │ ┌──────────────────────────┐ │ │ ┌──────────────────────────┐ │
-+  │ │         Kernel           │ │ │ │      Secure Kernel       │ │
-+  │ └──────────────────────────┘ │ │ └──────────────────────────┘ │
-+  └──────────────────────────────┘ └──────────────────────────────┘
-+  ┌───────────────────────────────────────────────────────────────┐
-+  │                         Hypervisor/KVM                        │
-+  └───────────────────────────────────────────────────────────────┘
-+  ┌───────────────────────────────────────────────────────────────┐
-+  │                           Hardware                            │
-+  └───────────────────────────────────────────────────────────────┘
-+
-+VTLs break the core assumption that a vCPU has a single architectural
-+state, lAPIC state, SynIC state, etc. As such, each VTL is modeled as a
-+distinct KVM vCPU, with the restriction that only one is allowed to run
-+at any moment in time. Having multiple KVM vCPUs tracking a single guest
-+CPU complicates vCPU numbering. VMs that enable VSM are expected to use
-+CAP_APIC_ID_GROUPS to segregate vCPUs (and their lAPICs) into different
-+groups. For example, a 4 CPU VSM VM will setup the APIC ID groups feature
-+so only the first two bits of the APIC ID are exposed to the guest. The
-+remaining bits represent the vCPU's VTL. The 'sibling' vCPU to VTL0's
-+vCPU2 at VTL3 will have an APIC ID of 0xE. Using this approach a VMM and
-+KVM are capable of querying a vCPU's VTL, or finding the vCPU associated
-+to a specific VTL.
-+
-+KVM's lAPIC implementation is aware of groups, and takes note of the
-+source vCPU's group when delivering IPIs. As such, it shouldn't be
-+possible to target a different VTL through the APIC. Interrupts are
-+delivered to the vCPU's lAPIC subsystem regardless of the VTL's runstate,
-+this also includes timers. Ultimately, any interrupt incoming from an
-+outside source (IOAPIC/MSIs) is routed to VTL0.
-+
-+Moving Between VTLs
-+-------------------
-+
-+All VSM configuration and VTL handling hypercalls are passed through to
-+user-space. Notably the two primitives that allow switching between VTLs.
-+All shared state synchronization and KVM vCPU scheduling is left to the
-+VMM to manage. For example, upon receiving a VTL call, the VMM stops the
-+vCPU that issued the hypercall, and schedules the vCPU corresponding to
-+the next privileged VTL. When that privileged vCPU is done executing, it
-+issues a VTL return hypercall, so the opposite operation happens. All
-+this is transparent to KVM, which limits itself to running vCPUs.
-+
-+An interrupt directed at a privileged VTL always has precedence over the
-+execution of lower VTLs. To honor this, the VMM can monitor events
-+targeted at privileged vCPUs with poll(), and should trigger an
-+asynchronous VTL switch whenever events become available. Additionally,
-+the target VTL's vCPU VP assist overlay page is used to notify the target
-+VTL with the reason for the switch. The VMM can keep track of the VP
-+assist page by installing an MSR filter for HV_X64_MSR_VP_ASSIST_PAGE.
-+
-+Hyper-V VP registers
-+--------------------
-+
-+VP register hypercalls are passed through to user-space. All requests can
-+be fulfilled either by using already existing KVM state ioctls, or are
-+related to VSM's configuration, which is already handled by the VMM. Note
-+that HV_REGISTER_VSM_CODE_PAGE_OFFSETS is the only VSM specific VP
-+register the kernel controls, as such it is made available through the
-+KVM_HV_GET_VSM_STATE ioctl.
-+
-+Per-VTL Memory Protections
-+--------------------------
-+
-+A privileged VTL can change the memory access restrictions of lower VTLs.
-+It does so to hide secrets from them, or to control what they are allowed
-+to execute. The list of memory protections allowed is[3]:
-+ - No access
-+ - Read-only, no execute
-+ - Read-only, execute
-+ - Read/write, no execute
-+ - Read/write, execute
-+
-+VTL memory protection hypercalls are passed through to user-space, but
-+KVM provides an interface that allows changing memory protections on a
-+per-VTL basis. This is made possible by the KVM VTL device. VMMs can
-+create one per VTL and it exposes a ioctl, KVM_SET_MEMORY_ATTRIBUTES,
-+that controls the memory protections applied to that VTL. The KVM TDP MMU
-+is VTL aware and page faults are resolved taking into account the
-+corresponding VTL device's memory attributes.
-+
-+When a memory access violates VTL memory protections, KVM issues a secure
-+memory intercept, which is passed as a SynIC message into the next
-+privileged VTL. This happens transparently for the VMM. Additionally, KVM
-+exits with a user-space memory fault. This allows the VMM to stop the
-+vCPU while the secure intercept is handled by the privileged VTL. In the
-+good case, the instruction that triggered the fault is emulated and
-+control is returned to the lower VTL, in the bad case, Windows crashes
-+gracefully.
-+
-+Hyper-V's TLFS also states that DMA should follow VTL0's memory access
-+restrictions. This is out of scope for this document, as IOMMU mappings
-+are not handled by KVM.
-+
-+[1] https://raw.githubusercontent.com/Microsoft/Virtualization-Documentation/master/tlfs/Hypervisor%20Top%20Level%20Functional%20Specification%20v6.0b.pdf
-+
-+[2] Conceptually this design is similar to arm's TrustZone: The
-+hypervisor plays the role of EL3. Windows (VTL0) runs in Non-Secure
-+(EL0/EL1) and the secure kernel (VTL1) in Secure World (EL1s/EL0s).
-+
-+[3] TLFS 15.9.3
--- 
-2.40.1
+SGV5IE5pY29sYXMsCgpPbiAwOC4xMS4yMyAxMjoxNywgTmljb2xhcyBTYWVueiBKdWxpZW5uZSB3
+cm90ZToKPiBIeXBlci1WJ3MgVmlydHVhbCBTZWN1cmUgTW9kZSAoVlNNKSBpcyBhIHZpcnR1YWxp
+c2F0aW9uIHNlY3VyaXR5IGZlYXR1cmUKPiB0aGF0IGxldmVyYWdlcyB0aGUgaHlwZXJ2aXNvciB0
+byBjcmVhdGUgc2VjdXJlIGV4ZWN1dGlvbiBlbnZpcm9ubWVudHMKPiB3aXRoaW4gYSBndWVzdC4g
+VlNNIGlzIGRvY3VtZW50ZWQgYXMgcGFydCBvZiBNaWNyb3NvZnQncyBIeXBlcnZpc29yIFRvcAo+
+IExldmVsIEZ1bmN0aW9uYWwgU3BlY2lmaWNhdGlvbiBbMV0uIFNlY3VyaXR5IGZlYXR1cmVzIHRo
+YXQgYnVpbGQgdXBvbgo+IFZTTSwgbGlrZSBXaW5kb3dzIENyZWRlbnRpYWwgR3VhcmQsIGFyZSBl
+bmFibGVkIGJ5IGRlZmF1bHQgb24gV2luZG93cyAxMSwKPiBhbmQgYXJlIGJlY29taW5nIGEgcHJl
+cmVxdWlzaXRlIGluIHNvbWUgaW5kdXN0cmllcy4KPgo+IFRoaXMgUkZDIHNlcmllcyBpbnRyb2R1
+Y2VzIHRoZSBuZWNlc3NhcnkgaW5mcmFzdHJ1Y3R1cmUgdG8gZW11bGF0ZSBWU00KPiBlbmFibGVk
+IGd1ZXN0cy4gSXQgaXMgYSBzbmFwc2hvdCBvZiB0aGUgcHJvZ3Jlc3Mgd2UgbWFkZSBzbyBmYXIs
+IGFuZCBpdHMKPiBtYWluIGdvYWwgaXMgdG8gZ2F0aGVyIGRlc2lnbiBmZWVkYmFjay4gU3BlY2lm
+aWNhbGx5IG9uIHRoZSBLVk0gQVBJcyB3ZQo+IGludHJvZHVjZS4gRm9yIGEgaGlnaCBsZXZlbCBk
+ZXNpZ24gb3ZlcnZpZXcsIHNlZSB0aGUgZG9jdW1lbnRhdGlvbiBpbgo+IHBhdGNoIDMzLgo+Cj4g
+QWRkaXRpb25hbGx5LCB0aGlzIHRvcGljIHdpbGwgYmUgZGlzY3Vzc2VkIGFzIHBhcnQgb2YgdGhl
+IEtWTQo+IE1pY3JvLWNvbmZlcmVuY2UsIGluIHRoaXMgeWVhcidzIExpbnV4IFBsdW1iZXJzIENv
+bmZlcmVuY2UgWzJdLgoKCkF3ZXNvbWUsIGxvb2tpbmcgZm9yd2FyZCB0byB0aGUgc2Vzc2lvbiEg
+OikKCgo+IFRoZSBzZXJpZXMgaXMgYWNjb21wYW5pZWQgYnkgdHdvIHJlcG9zaXRvcmllczoKPiAg
+IC0gQSBQb0MgUUVNVSBpbXBsZW1lbnRhdGlvbiBvZiBWU00gWzNdLgo+ICAgLSBWU00ga3ZtLXVu
+aXQtdGVzdHMgWzRdLgo+Cj4gTm90ZSB0aGF0IHRoaXMgaXNuJ3QgYSBmdWxsIFZTTSBpbXBsZW1l
+bnRhdGlvbi4gRm9yIG5vdyBpdCBvbmx5IHN1cHBvcnRzCj4gMiBWVExzLCBhbmQgb25seSBydW5z
+IG9uIHVuaXByb2Nlc3NvciBndWVzdHMuIEl0IGlzIGNhcGFibGUgb2YgYm9vdGluZwo+IFdpbmRv
+d3MgU2V2ZXIgMjAxNi8yMDE5LCBidXQgaXMgdW5zdGFibGUgZHVyaW5nIHJ1bnRpbWUuCgoKSG93
+IG11Y2ggb2YgdGhlc2UgbGltaXRhdGlvbnMgYXJlIGluaGVyZW50IGluIHRoZSBjdXJyZW50IHNl
+dCBvZiAKcGF0Y2hlcz8gV2hhdCBpcyBtaXNzaW5nIHRvIGdvIGJleW9uZCAyIFZUTHMgYW5kIGlu
+dG8gU01QIGxhbmQ/IEFueXRoaW5nIAp0aGF0IHdpbGwgcmVxdWlyZSBBUEkgY2hhbmdlcz8KCgpB
+bGV4CgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3Ry
+LiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2Vy
+LCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVy
+ZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkK
+Cgo=
 
 
