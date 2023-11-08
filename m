@@ -1,124 +1,138 @@
-Return-Path: <linux-hyperv+bounces-715-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-716-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCB3A7E51CE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 09:18:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 65DCF7E54D5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 12:18:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1744C1C20CCC
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 08:18:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97F9A1C20902
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 11:18:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37EC9DDAE;
-	Wed,  8 Nov 2023 08:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F3415E89;
+	Wed,  8 Nov 2023 11:18:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aM5ggnqu"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KFXFH01+"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A0CD531;
-	Wed,  8 Nov 2023 08:18:46 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CDEBD40;
-	Wed,  8 Nov 2023 00:18:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699431526; x=1730967526;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=o4b+vqtKY9OOVsB1rEVpRTkAptYNaJoA44xLfvE+DI0=;
-  b=aM5ggnquRc4JfgBaSl4uxeHgeNly12r4MhEqiy0Sr6loV1tZ9mWmA0bi
-   XwwY6PePnnxvz8lp1wzVhVGS2o/ovsOqVdztnRGKoB8fs/Sis1bh2EPXv
-   DV6fICVz6BJwYK/mWl40m82OZFclqC0nAujgRBnkKI+YJ9VB8rMG0mJgN
-   nCgPQQrV8FplNTCvnxu71u2WdscYq/NdngkSA5y95REyjvZUmRJDn0VAO
-   BLxCRK9oQPMCO53mPmIsoeenrOUJPX1j8hFRfa3fX7Y0TqmiCyrt+VZOA
-   +h8NESp350gggYUuEZliFOFKrLOU1yRS+CYjCghTbyQvu2TEySefRp9xk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="420823085"
-X-IronPort-AV: E=Sophos;i="6.03,285,1694761200"; 
-   d="scan'208";a="420823085"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 00:18:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="828883803"
-X-IronPort-AV: E=Sophos;i="6.03,285,1694761200"; 
-   d="scan'208";a="828883803"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.254.215.63]) ([10.254.215.63])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 00:18:32 -0800
-Message-ID: <f7e69801-e651-471d-9768-43ddf1702f91@linux.intel.com>
-Date: Wed, 8 Nov 2023 16:18:30 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6570415487;
+	Wed,  8 Nov 2023 11:18:31 +0000 (UTC)
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C83101;
+	Wed,  8 Nov 2023 03:18:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1699442311; x=1730978311;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YhNiCY6Yx16hIA8ic6bDnU8CklxIVvoOxjYhmVU762I=;
+  b=KFXFH01+WyKZVuGXSf+Ano1t5HqH4ywbQheqAJa6homt8uBTBLEo7NpO
+   mG65UaJQHbEmtZp6YhIXHpCCp/+Exe8ozrAhXA+i4sQ+O66EPO1Hsr+DZ
+   ftf8HaracbQVHh+VARBIggQLgn81310Sh/zYUHrSX+7HOACPx8iVcyWjr
+   o=;
+X-IronPort-AV: E=Sophos;i="6.03,286,1694736000"; 
+   d="scan'208";a="683505176"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-f05d30a1.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 11:18:25 +0000
+Received: from smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1d-m6i4x-f05d30a1.us-east-1.amazon.com (Postfix) with ESMTPS id 74C1080D5F;
+	Wed,  8 Nov 2023 11:18:21 +0000 (UTC)
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:31015]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.43.105:2525] with esmtp (Farcaster)
+ id b8d2a861-c97a-4ec8-b470-7641a9da532f; Wed, 8 Nov 2023 11:18:20 +0000 (UTC)
+X-Farcaster-Flow-ID: b8d2a861-c97a-4ec8-b470-7641a9da532f
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Wed, 8 Nov 2023 11:18:20 +0000
+Received: from dev-dsk-nsaenz-1b-189b39ae.eu-west-1.amazon.com (10.13.235.138)
+ by EX19D004EUC001.ant.amazon.com (10.252.51.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Wed, 8 Nov 2023 11:18:15 +0000
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<anelkz@amazon.com>, <graf@amazon.com>, <dwmw@amazon.co.uk>,
+	<jgowans@amazon.com>, <corbert@lwn.net>, <kys@microsoft.com>,
+	<haiyangz@microsoft.com>, <decui@microsoft.com>, <x86@kernel.org>,
+	<linux-doc@vger.kernel.org>
+Subject: [RFC 0/33] KVM: x86: hyperv: Introduce VSM support
+Date: Wed, 8 Nov 2023 11:17:33 +0000
+Message-ID: <20231108111806.92604-1-nsaenz@amazon.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH RFC 17/17] iommu: Mark dev_iommu_priv_set() with a lockdep
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>, acpica-devel@lists.linuxfoundation.org,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Albert Ou <aou@eecs.berkeley.edu>,
- asahi@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>,
- Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
- David Woodhouse <dwmw2@infradead.org>, Frank Rowand
- <frowand.list@gmail.com>, Hanjun Guo <guohanjun@huawei.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Christoph Hellwig <hch@lst.de>,
- iommu@lists.linux.dev, Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
- linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
- linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Hector Martin
- <marcan@marcan.st>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Robert Moore <robert.moore@intel.com>, Rob Herring <robh+dt@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Sven Peter <sven@svenpeter.dev>, Thierry Reding <thierry.reding@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>,
- virtualization@lists.linux-foundation.org, Wei Liu <wei.liu@kernel.org>,
- Will Deacon <will@kernel.org>
-References: <17-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <17-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.13.235.138]
+X-ClientProxiedBy: EX19D037UWC004.ant.amazon.com (10.13.139.254) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On 2023/11/4 0:45, Jason Gunthorpe wrote:
-> A perfect driver would only call dev_iommu_priv_set() from its probe
-> callback. We've made it functionally correct to call it from the of_xlate
-> by adding a lock around that call.
-> 
-> lockdep assert that iommu_probe_device_lock is held to discourage misuse.
-> 
-> Exclude PPC kernels with CONFIG_FSL_PAMU turned on because FSL_PAMU uses a
-> global static for its priv and abuses priv for its domain.
-> 
-> Remove the pointless stores of NULL, all these are on paths where the core
-> code will free dev->iommu after the op returns.
-> 
-> Signed-off-by: Jason Gunthorpe<jgg@nvidia.com>
-> ---
->   drivers/iommu/amd/iommu.c                   | 2 --
->   drivers/iommu/apple-dart.c                  | 1 -
->   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 1 -
->   drivers/iommu/arm/arm-smmu/arm-smmu.c       | 1 -
->   drivers/iommu/intel/iommu.c                 | 2 --
->   drivers/iommu/iommu.c                       | 9 +++++++++
->   drivers/iommu/omap-iommu.c                  | 1 -
->   include/linux/iommu.h                       | 5 +----
->   8 files changed, 10 insertions(+), 12 deletions(-)
+Hyper-V's Virtual Secure Mode (VSM) is a virtualisation security feature
+that leverages the hypervisor to create secure execution environments
+within a guest. VSM is documented as part of Microsoft's Hypervisor Top
+Level Functional Specification [1]. Security features that build upon
+VSM, like Windows Credential Guard, are enabled by default on Windows 11,
+and are becoming a prerequisite in some industries.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+This RFC series introduces the necessary infrastructure to emulate VSM
+enabled guests. It is a snapshot of the progress we made so far, and its
+main goal is to gather design feedback. Specifically on the KVM APIs we
+introduce. For a high level design overview, see the documentation in
+patch 33.
 
-Best regards,
-baolu
+Additionally, this topic will be discussed as part of the KVM
+Micro-conference, in this year's Linux Plumbers Conference [2].
+
+The series is accompanied by two repositories:
+ - A PoC QEMU implementation of VSM [3].
+ - VSM kvm-unit-tests [4].
+
+Note that this isn't a full VSM implementation. For now it only supports
+2 VTLs, and only runs on uniprocessor guests. It is capable of booting
+Windows Sever 2016/2019, but is unstable during runtime.
+
+The series is based on the v6.6 kernel release, and depends on the
+introduction of KVM memory attributes, which is being worked on
+independently in "KVM: guest_memfd() and per-page attributes" [5]. A full
+Linux tree is also made available [6].
+
+Series rundown:
+ - Patch 2 introduces the concept of APIC ID groups.
+ - Patches 3-12 introduce the VSM capability and basic VTL awareness into
+   Hyper-V emulation.
+ - Patch 13 introduces vCPU polling support.
+ - Patches 14-31 use KVM's memory attributes to implement VTL memory
+   protections. Introduces the VTL KMV device and secure memory
+   intercepts.
+ - Patch 32 is a temporary implementation of
+   HVCALL_TRANSLATE_VIRTUAL_ADDRESS necessary to boot Windows 2019.
+ - Patch 33 introduces documentation.
+
+Our intention is to integrate feedback gathered in the RFC and LPC while
+we finish the VSM implementation. In the future, we will split the series
+into distinct feature patch sets and upstream these independently.
+
+Thanks,
+Nicolas
+
+[1] https://raw.githubusercontent.com/Microsoft/Virtualization-Documentation/master/tlfs/Hypervisor%20Top%20Level%20Functional%20Specification%20v6.0b.pdf
+[2] https://lpc.events/event/17/sessions/166/#20231114
+[3] https://github.com/vianpl/qemu/tree/vsm-rfc-v1
+[4] https://github.com/vianpl/kvm-unit-tests/tree/vsm-rfc-v1
+[5] https://lore.kernel.org/lkml/20231105163040.14904-1-pbonzini@redhat.com/.
+[6] Full tree: https://github.com/vianpl/linux/tree/vsm-rfc-v1. 
+    There are also two small dependencies with
+    https://marc.info/?l=kvm&m=167887543028109&w=2 and
+    https://lkml.org/lkml/2023/10/17/972
+
+
 
