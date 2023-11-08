@@ -1,91 +1,203 @@
-Return-Path: <linux-hyperv+bounces-785-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-788-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C7A47E5D12
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 19:20:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BB3C7E5D98
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 20:00:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2F391F21E32
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 18:20:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6A511F21915
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Nov 2023 19:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BE9536B0A;
-	Wed,  8 Nov 2023 18:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B6A36AFB;
+	Wed,  8 Nov 2023 19:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uidFvFLQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iacNhMBM"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FBB36AE5
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 18:19:56 +0000 (UTC)
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B425C1FF5
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Nov 2023 10:19:55 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-53eeb28e8e5so663a12.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 08 Nov 2023 10:19:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699467594; x=1700072394; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lPzDJOHXaMQ7hDr4fQaud0AOapaYXuR24Rsqmx39kT4=;
-        b=uidFvFLQKH6OQ+EuPzqiej4boBUNsl2clO/meRsB93hUfbpqTXkLPf3FjPx3FoWbpQ
-         HylpPoRgBKzhjL9TF1QKNpD3q8cYuahE/2S/7OLexwPuGuMks1mJEZlcOiAaeqfpXTKc
-         JEljQO4zn3svcbWtV/y4GjmW6i7fiorUUyS4eYqVHbeGjBeCDxDquxoYIMjCxlmnp6ol
-         jXMq1asrezkCwEfMIDUWRdpf3v5iiQkyHlueDWN3f65NnD84DUHi1guTYV4IhHpvOhQ2
-         J9IqyBdUOZC5iZbs5MH+7UTLgGe9g0AfIiaCbUEijU+oajsCAWjuQvuso3Z4rvXaS/CZ
-         4PUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699467594; x=1700072394;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lPzDJOHXaMQ7hDr4fQaud0AOapaYXuR24Rsqmx39kT4=;
-        b=UWWFLG+OCyEJbIvESIyGXrpsOQWMwcV9cwk62IHvn4xYOpGYeHkKwgMVIRJ/m2KqH4
-         thly/6PkMgXpdZeIj3whcZIX4sWTEcjqb/0FN4MzDy8UgybxkFdv+S6w0Uum+R1hYsCt
-         weZ9GWcunZm+7DAeuqJOfkgGSG+kQyGwLq3+J9C5N/pfsVuqEfw4kVXSM3ECj4R8xzGd
-         Noxk232UeY/q2JkEO1T6UzcA2Ny006s0vYoMPVm5LsucQna+t/OQqAcjHT8gdmvnAGIl
-         jA5KoG8A63dxSMwqkEwRyQxXltoYHPv1KZbXUTyV/PCbfj2phh7Y/9s4clkX87jf1Tcl
-         TQBg==
-X-Gm-Message-State: AOJu0Yy0Oo0XIK/PSHDQELGQZUhMttVMJd0Tj9x8U4Y924mfLAUdjK3X
-	1Kk/5JzX2Efuia6x0t84ExwyQwo8RRtQ2pGfCBYfIQ==
-X-Google-Smtp-Source: AGHT+IHSTdnHpU+tkokUoN2IxJr6aTuVShMIUkzmKD2yI2R4C/2lgCPoCvm1H+r3Y/W0c7msPJZNhRs4cza7jp5Alq8=
-X-Received: by 2002:aa7:d34a:0:b0:543:fb17:1a8 with SMTP id
- m10-20020aa7d34a000000b00543fb1701a8mr11251edr.3.1699467594084; Wed, 08 Nov
- 2023 10:19:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BA432C88;
+	Wed,  8 Nov 2023 19:00:18 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158B1210A;
+	Wed,  8 Nov 2023 11:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699470019; x=1731006019;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CGCl93jPHfMwJ3CMMd312/g/vAJzCAfUxs25Pz0yXYY=;
+  b=iacNhMBM1AZFukoBREiqp8uoFR3SlcyNYVtxRDS4CJKa9jYYHalJqSE5
+   GmXzQvf0RH2KxBctzzJ1DCxbPx95gTfQkeJQjTjpUBVdFk3VHjDGhlrGU
+   FmJojx3CK1iYj1WjX9MfZADGZa+bFpNpownBc4jgaqb5DWkq/7DTaAbDe
+   CZpDm8gH+imhAb5jfd8VXTRXSbSRV2BEpnqilE7+bsC2A1CszHzZTYJgU
+   CoWtpIPzow+nY0pTpg/+yba+dCKEmgmjCKZQKJ1web45dTCZjr/lJiHLL
+   7llCaK/5ugeEyeG/NtFjCwxC07i1SIdVanYBx7MsbeE100/Z8LiccDHil
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="8486198"
+X-IronPort-AV: E=Sophos;i="6.03,287,1694761200"; 
+   d="scan'208";a="8486198"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2023 11:00:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,287,1694761200"; 
+   d="scan'208";a="10892400"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by orviesa001.jf.intel.com with ESMTP; 08 Nov 2023 11:00:14 -0800
+From: Xin Li <xin3.li@intel.com>
+To: kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: seanjc@google.com,
+	pbonzini@redhat.com,
+	corbet@lwn.net,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	vkuznets@redhat.com,
+	peterz@infradead.org,
+	ravi.v.shankar@intel.com
+Subject: [PATCH v1 00/23] Enable FRED with KVM VMX
+Date: Wed,  8 Nov 2023 10:29:40 -0800
+Message-ID: <20231108183003.5981-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-30-nsaenz@amazon.com>
- <ZUvDZUbUR4s_9VNG@google.com> <c867cd1f-9060-4db9-8a00-4b513f32c2b7@amazon.com>
-In-Reply-To: <c867cd1f-9060-4db9-8a00-4b513f32c2b7@amazon.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Wed, 8 Nov 2023 10:19:39 -0800
-Message-ID: <CALMp9eTmAR_yMMxujiMDQ6_VpUF3ghoKAdy_SYvu-QOAThntZA@mail.gmail.com>
-Subject: Re: [RFC 29/33] KVM: VMX: Save instruction length on EPT violation
-To: Alexander Graf <graf@amazon.com>
-Cc: Sean Christopherson <seanjc@google.com>, Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	pbonzini@redhat.com, vkuznets@redhat.com, anelkz@amazon.com, 
-	dwmw@amazon.co.uk, jgowans@amazon.com, corbert@lwn.net, kys@microsoft.com, 
-	haiyangz@microsoft.com, decui@microsoft.com, x86@kernel.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 8, 2023 at 9:27=E2=80=AFAM Alexander Graf <graf@amazon.com> wro=
-te:
+This patch set enables the Intel flexible return and event delivery
+(FRED) architecture with KVM VMX to allow guests to utilize FRED.
 
-> My point with the comment on this patch was "Don't break AMD (or ancient
-> VMX without instruction length decoding [Does that exist? I know SVM has
-> old CPUs that don't do it]) please".
+The FRED architecture defines simple new transitions that change
+privilege level (ring transitions). The FRED architecture was
+designed with the following goals:
 
-VM-exit instruction length is not defined for all VM-exit reasons (EPT
-misconfiguration is one that is notably absent), but the field has
-been there since Prescott.
+1) Improve overall performance and response time by replacing event
+   delivery through the interrupt descriptor table (IDT event
+   delivery) and event return by the IRET instruction with lower
+   latency transitions.
+
+2) Improve software robustness by ensuring that event delivery
+   establishes the full supervisor context and that event return
+   establishes the full user context.
+
+The new transitions defined by the FRED architecture are FRED event
+delivery and, for returning from events, two FRED return instructions.
+FRED event delivery can effect a transition from ring 3 to ring 0, but
+it is used also to deliver events incident to ring 0. One FRED
+instruction (ERETU) effects a return from ring 0 to ring 3, while the
+other (ERETS) returns while remaining in ring 0. Collectively, FRED
+event delivery and the FRED return instructions are FRED transitions.
+
+Intel VMX architecture is extended to run FRED guests, and the changes
+are majorly:
+
+1) New VMCS fields for FRED context management, which includes two new
+event data VMCS fields, eight new guest FRED context VMCS fields and
+eight new host FRED context VMCS fields.
+
+2) VMX nested-Exception support for proper virtualization of stack
+levels introduced with FRED architecture.
+
+Search for the latest FRED spec in most search engines with this search pattern:
+
+  site:intel.com FRED (flexible return and event delivery) specification
+
+We want to send out the FRED VMX patch set for review while the FRED
+native patch set v12 is being reviewed @
+https://lkml.kernel.org/kvm/20231003062458.23552-1-xin3.li@intel.com/.
+For easier review, I have set up a base tree with the latest FRED native
+patch set on top of tip tree in the 'fred_v12' branch of repo
+    https://github.com/xinli-intel/linux-fred-public.git.
+
+Patch 1-2 are cleanups to VMX basic and misc MSRs, which were sent
+out earlier as a preparation for FRED changes:
+https://lore.kernel.org/kvm/20231030233940.438233-1-xin@zytor.com/.
+
+Patch 3-14 add FRED support to VMX.
+Patch 15-18 add FRED support to nested VMX.
+Patch 19 exposes FRED to KVM guests to complete the enabling.
+Patch 20-23 adds FRED selftests.
+
+
+Shan Kang (1):
+  KVM: selftests: Add fred exception tests
+
+Xin Li (22):
+  KVM: VMX: Cleanup VMX basic information defines and usages
+  KVM: VMX: Cleanup VMX misc information defines and usages
+  KVM: VMX: Add support for the secondary VM exit controls
+  KVM: x86: Mark CR4.FRED as not reserved
+  KVM: VMX: Initialize FRED VM entry/exit controls in vmcs_config
+  KVM: VMX: Defer enabling FRED MSRs save/load until after set CPUID
+  KVM: VMX: Disable intercepting FRED MSRs
+  KVM: VMX: Initialize VMCS FRED fields
+  KVM: VMX: Switch FRED RSP0 between host and guest
+  KVM: VMX: Add support for FRED context save/restore
+  KVM: x86: Add kvm_is_fred_enabled()
+  KVM: VMX: Handle FRED event data
+  KVM: VMX: Handle VMX nested exception for FRED
+  KVM: VMX: Dump FRED context in dump_vmcs()
+  KVM: nVMX: Add support for the secondary VM exit controls
+  KVM: nVMX: Add FRED VMCS fields
+  KVM: nVMX: Add support for VMX FRED controls
+  KVM: nVMX: Add VMCS FRED states checking
+  KVM: x86: Allow FRED/LKGS/WRMSRNS to be exposed to guests
+  KVM: selftests: Add FRED VMCS fields to evmcs
+  KVM: selftests: Run debug_regs test with FRED enabled
+  KVM: selftests: Add a new VM guest mode to run user level code
+
+ Documentation/virt/kvm/x86/nested-vmx.rst     |  19 +
+ arch/x86/include/asm/hyperv-tlfs.h            |  19 +
+ arch/x86/include/asm/kvm_host.h               |   9 +-
+ arch/x86/include/asm/msr-index.h              |  15 +-
+ arch/x86/include/asm/vmx.h                    |  57 ++-
+ arch/x86/kvm/cpuid.c                          |   4 +-
+ arch/x86/kvm/kvm_cache_regs.h                 |  10 +
+ arch/x86/kvm/svm/svm.c                        |   4 +-
+ arch/x86/kvm/vmx/capabilities.h               |  20 +-
+ arch/x86/kvm/vmx/hyperv.c                     |  61 ++-
+ arch/x86/kvm/vmx/nested.c                     | 315 ++++++++++++--
+ arch/x86/kvm/vmx/nested.h                     |   2 +-
+ arch/x86/kvm/vmx/vmcs.h                       |   1 +
+ arch/x86/kvm/vmx/vmcs12.c                     |  19 +
+ arch/x86/kvm/vmx/vmcs12.h                     |  38 ++
+ arch/x86/kvm/vmx/vmcs_shadow_fields.h         |   6 +-
+ arch/x86/kvm/vmx/vmx.c                        | 404 ++++++++++++++++--
+ arch/x86/kvm/vmx/vmx.h                        |  14 +-
+ arch/x86/kvm/x86.c                            |  55 ++-
+ arch/x86/kvm/x86.h                            |   5 +-
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/include/kvm_util_base.h     |   1 +
+ .../selftests/kvm/include/x86_64/evmcs.h      | 146 +++++++
+ .../selftests/kvm/include/x86_64/processor.h  |  33 ++
+ .../selftests/kvm/include/x86_64/vmx.h        |  20 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   5 +-
+ .../selftests/kvm/lib/x86_64/processor.c      |  15 +-
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  |   4 +-
+ .../testing/selftests/kvm/x86_64/debug_regs.c |  50 ++-
+ .../testing/selftests/kvm/x86_64/fred_test.c  | 262 ++++++++++++
+ 30 files changed, 1464 insertions(+), 150 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/fred_test.c
+
+
+base-commit: d49b86c24e836941c85c4906e9519fca9426a6e0
+-- 
+2.42.0
+
 
