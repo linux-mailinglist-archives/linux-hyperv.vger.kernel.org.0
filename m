@@ -1,54 +1,41 @@
-Return-Path: <linux-hyperv+bounces-824-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-825-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F4E37E6EA0
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 17:25:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D44E7E6EF3
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 17:35:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FF76B20A56
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 16:25:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAECC280FE9
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 16:35:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3C410A3B;
-	Thu,  9 Nov 2023 16:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 815BA22335;
+	Thu,  9 Nov 2023 16:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HSHcba5+"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P5g32T/i"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5F81DFD0
-	for <linux-hyperv@vger.kernel.org>; Thu,  9 Nov 2023 16:25:21 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BC6327D;
-	Thu,  9 Nov 2023 08:25:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699547120; x=1731083120;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=esw2qA2+1GB07Te/peGco+thBojxOIAyXxM1fpms2N8=;
-  b=HSHcba5+Mxqjt8VMCkRsBidv/RN1zdseH7wk9RAJa07Eo0UunjHyN6e9
-   sPhsdZkJySAH1yBux96eav6OT1Zr6HsDtGKV1ykp3T8yiEqvU1H2XP1Wn
-   ij4gyFw8WK57kPmWz4DDIFd2yxWIwQrDHz4gzK8KDt6QH5PkjdCvQnAhz
-   nWCcHWm8vYFA9UqMSaArcMZKyrknfSlOwdRgCikQM2nHdTZ0uEXghk62G
-   FWOUFal6h7nfq0dQqUZcMzr6TrQjXrhnAZVuujTeBrGKUi+HvZ8sPOAlc
-   HaeIH/HlIPej0/Gmi4VhgjwLJq9qtVovAuCfjOLBaCA0/ruDII562R+rX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="393927031"
-X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
-   d="scan'208";a="393927031"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 08:25:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="798354490"
-X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
-   d="scan'208";a="798354490"
-Received: from tiwariv-mobl.amr.corp.intel.com (HELO [10.212.165.194]) ([10.212.165.194])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 08:25:05 -0800
-Message-ID: <16ea75a9-8c94-4665-ae04-32d08aa4ebb2@intel.com>
-Date: Thu, 9 Nov 2023 08:25:04 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CDC2231C
+	for <linux-hyperv@vger.kernel.org>; Thu,  9 Nov 2023 16:35:46 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E9D0435AC;
+	Thu,  9 Nov 2023 08:35:44 -0800 (PST)
+Received: from [192.168.2.39] (77-166-152-30.fixed.kpn.net [77.166.152.30])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CFE6220B74C0;
+	Thu,  9 Nov 2023 08:35:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CFE6220B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1699547744;
+	bh=Xb4zVDtxtGdwPAnhyMCxbu916b6ZbtJVbUTOWrLT7jo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=P5g32T/iCUi+XzdE2yIB7+Vk+y1jkYXsQZYnJOFUhNKHROzXMtOx3p0JqrFmtn6mQ
+	 JfDkvj2ken97iBJ+MYvWg//v0Pz6tJec3nkjhMcL2NGjcEkHKys7LtbYpJUVnG8uCD
+	 qoGG9PQzDqf1fZte+HO/oSu9w2O9G32v1HQEjhMU=
+Message-ID: <58abbc79-64d4-41f9-9fd2-1de7826fbbf6@linux.microsoft.com>
+Date: Thu, 9 Nov 2023 17:35:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -59,7 +46,7 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] x86/mm: Check cc_vendor when printing memory encryption
  info
 Content-Language: en-US
-To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
+To: Dave Hansen <dave.hansen@intel.com>,
  Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
  <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -71,63 +58,29 @@ Cc: linux-hyperv@vger.kernel.org, stefan.bader@canonical.com,
  cascardo@canonical.com, kys@microsoft.com, haiyangz@microsoft.com,
  wei.liu@kernel.org, kirill.shutemov@linux.intel.com, sashal@kernel.org
 References: <1699546489-4606-1-git-send-email-jpiotrowski@linux.microsoft.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <1699546489-4606-1-git-send-email-jpiotrowski@linux.microsoft.com>
+ <16ea75a9-8c94-4665-ae04-32d08aa4ebb2@intel.com>
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+In-Reply-To: <16ea75a9-8c94-4665-ae04-32d08aa4ebb2@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/9/23 08:14, Jeremi Piotrowski wrote:
-...
->  	pr_info("Memory Encryption Features active:");
->  
-> -	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
-> +	if (cc_vendor == CC_VENDOR_INTEL) {
->  		pr_cont(" Intel TDX\n");
->  		return;
->  	}
+On 09/11/2023 17:25, Dave Hansen wrote:
+> On 11/9/23 08:14, Jeremi Piotrowski wrote:
+> ...
+>>  	pr_info("Memory Encryption Features active:");
+>>  
+>> -	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+>> +	if (cc_vendor == CC_VENDOR_INTEL) {
+>>  		pr_cont(" Intel TDX\n");
+>>  		return;
+>>  	}
+> 
+> Why aren't these guests setting X86_FEATURE_TDX_GUEST?
 
-Why aren't these guests setting X86_FEATURE_TDX_GUEST?
+They could if we can confirm that the code gated behind
+cpu_feature_enabled(X86_FEATURE_TDX_GUEST) is correct when running with TD partitioning.
+
+It still makes sense to have these prints based on the cc_xxx abstractions.
+
+Jeremi
 
