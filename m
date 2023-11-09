@@ -1,86 +1,90 @@
-Return-Path: <linux-hyperv+bounces-818-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-819-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56FCE7E65B7
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 09:53:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 776737E666E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 10:16:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 120F42811DA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 08:53:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D4A6280F0F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 09:16:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2080B10948;
-	Thu,  9 Nov 2023 08:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFF5F1118E;
+	Thu,  9 Nov 2023 09:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kd/iKV8q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="neNNRJtf"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB87107A3;
-	Thu,  9 Nov 2023 08:53:40 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FBA1991;
-	Thu,  9 Nov 2023 00:53:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7AE11199;
+	Thu,  9 Nov 2023 09:16:01 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA64225BB;
+	Thu,  9 Nov 2023 01:16:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699520020; x=1731056020;
+  t=1699521361; x=1731057361;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=l/hTwtdMUcsDJEO9k9mkp6MnK2Y0+xPsNC5BcCNoEUI=;
-  b=Kd/iKV8qa2Ak8b2V5LD7WU6pnPV0P67GoTrxgGaAOSZcMaCHcYclYDtN
-   GmLN5PEXAV95IY+aqoumdaoJPStKGZteLjiG9e1M1RpzFaf/P+wjMt2Vm
-   V/ZLX+xxHzWiKoWaLqVeeSp3VcZjGg7brJagi9hKCsy2Z+zm/wjEHUIF9
-   F8EZCZBxUk99Y5MBGfqxm5UbtXFNAOm8Z/7lV89wWiuYzzdnU9YVR8l1+
-   I/4mgQ72AWnnMPchz41cymFyfKIe5wATmUch54Y+fe/NFBTOys+J/XSwO
-   nP17IvdNOAbg77d90wUtQwXC7yYLt0LYnkBngXPfWgy4vxtz9EVHgAGaV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="369278527"
+  bh=52mkSp8/KsbAWxxR8V5BCMtyZjMQqvmRusCjuWuNF54=;
+  b=neNNRJtfmrrFp1LZLY5aWvDPZPq47m5Vg6O/UCBpels+oAgOOdf0MfbT
+   D/C15/yMdk8QU6/X7eyXo6B9O00DZkJwlJDdGJR+62tYoyfuQweuvoKpf
+   lVREMs6I0NaWfvv81wvOxEf5zCNHvYRTPgcLrqlwsfA0tUT9MnmacRyzF
+   sfaCxuFI792q8YBswj3b7/NYavTvDSvQdvZYKGybBC4liU6svv2Y46ypl
+   n93umNwF7NhzlANhI6gGqXsK7YJbohfkKC4jVilJ6dvN4+gQvxSwN/b2x
+   s3lvVfWantU/iE6T9lXOI0ZmJNew5mzUMkSW84EWzai/9S0MmkVTTS+zM
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="456442326"
 X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
-   d="scan'208";a="369278527"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 00:53:40 -0800
+   d="scan'208";a="456442326"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 01:16:00 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="766929860"
+X-IronPort-AV: E=McAfee;i="6600,9927,10888"; a="792478465"
 X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
-   d="scan'208";a="766929860"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Nov 2023 00:53:39 -0800
+   d="scan'208";a="792478465"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Nov 2023 01:15:59 -0800
 Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Thu, 9 Nov 2023 00:53:38 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ 15.1.2507.34; Thu, 9 Nov 2023 01:15:58 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
  fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Thu, 9 Nov 2023 00:53:38 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.34; Thu, 9 Nov 2023 01:15:58 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Thu, 9 Nov 2023 01:15:57 -0800
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Thu, 9 Nov 2023 00:53:38 -0800
+ 15.1.2507.34; Thu, 9 Nov 2023 01:15:57 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gY2t8KAShQI/7hLrFLoc8WXMWiPQMrfzVCoh8Ou4kq2BKS9Y6HCCaHZ5kIAsa+SQgFQG6FL/TRHRCsitznkUyi9DvCDgs8RsO00MPxqln9pGb2xgniEq47MkXz5HwPdEgKYbOzf29hi1Oins+fz024iMxy+fnor7pyS2W6feMhCQImkJD4G/YQxWADg3je5bKRNOw6qvX6n6FVDg1bJrh2FPZMVLqtQiTqdQinNE0kxZcgHqWlB0iovXVHHizy595vmWb3WA4G5ToFyseymqkfuJeVN0pob3C6oOft5uBlBiuIKW0toGu72HxV6QZ7H/Mz2sf/r67/VhMuKnJM3mtA==
+ b=e0gIBvfsg5FOv8zGBfX1XiysGqMDQ7XpaYwxOgA26PaEXx5qREiPqXj3P5c8yOoEWHVOcY4QyWoGQBAC2oE/5ipSd/7+B/oHxwXS/0muZbIc5zJ6bx8PK0l6EN8To1JsP4LSo3XbCPqH8wvl6TUZc1RetEx1nUPyjybbGelD1//USaCLfKoSxk5AhKFZhVCG0cjXM9FBe2vjxW2/AqJb68Fw2bpPzHK/aYnnn4i/yDslfrdwZcsCY7lCuO7D/v2z6LJgG5xV7xrft3P7CbPpnGHkyEvlMpoKVLAr6Es7LW/kZJOQ0myjx62UAyS20tOu2FJW8aRysDjzD8Pu3lSLFw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UVBx/k+1nxLGRDVRZ5wR7vFBS1WXAmzmCgyE10wnAhw=;
- b=Nr1LtNSl4lNo23oOoB9IVEkqWciQZc0tk67VxekSEcryVXRYJ2OLn9TA0Bqkr+5cxKrXh6dloT5y6lYXQgiq85PM7+EHoHmH/X/8uUK6y+rCL2a28bvQfobSE+eHTk94OUzZR58b2vaAr99FCHPoYRzWgGc7OoGN6YPpa1lxZ4CMQB/7BT6TiEvT3CwGWxEFQ3VM8nfTMRCW4eqSC+0vZbbnF3FDYKGEgxldECtmQMyvrdnOTzox6orNtWLrk3u+SWipA+ANJTVsK8cIvCtaCT6JCajKrALWCySQekrU+ZeoqEBpT8aMQSOCIR/6kSZhRDbd3C2XvF7vXM2eVppQKg==
+ bh=svItkbB1Lyn1TePmofbb5o1tCnrUxnLykHRNJpJWtrw=;
+ b=GWFtoV5N8pM1UF3fxAwLAg1Yo4sLf0QFoMMFiqNB+/VgCu7QpLvbqVvIeTGZIyfW1P0FDSPoa5lXx4kcaxhdrozWdcv7n9L1ubmguzj5rM/Zl1nNhQwkV4BUFqdiMoU5lR/uhTMDyVCDiArius6o994CG0L453/22rBsht7LrKE6h7j9DGT27jnNieGSEc2VXPDx8KlmCGakNYMOz5xEYOyJqjH61iMRI3Qrp113vUABOL9Aung3G+qEoD5jQ5W5+qf+rJ4f3Cv4yPHw2nmKL9hRiRbxFTh9mMcFnwlY0SEsqYkHGWnTSO/hhvcx2njFkcxPbaL+pLFTZUHZT9qfgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by DM4PR11MB5440.namprd11.prod.outlook.com (2603:10b6:5:39c::7) with
+ by IA1PR11MB7365.namprd11.prod.outlook.com (2603:10b6:208:423::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.28; Thu, 9 Nov
- 2023 08:53:35 +0000
+ 2023 09:15:55 +0000
 Received: from CH3PR11MB8660.namprd11.prod.outlook.com
  ([fe80::66ec:5c08:f169:6038]) by CH3PR11MB8660.namprd11.prod.outlook.com
  ([fe80::66ec:5c08:f169:6038%3]) with mapi id 15.20.6977.018; Thu, 9 Nov 2023
- 08:53:35 +0000
-Date: Thu, 9 Nov 2023 16:53:21 +0800
+ 09:15:55 +0000
+Date: Thu, 9 Nov 2023 17:15:42 +0800
 From: Chao Gao <chao.gao@intel.com>
 To: Xin Li <xin3.li@intel.com>
 CC: <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
@@ -91,16 +95,16 @@ CC: <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
 	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
 	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
 	<vkuznets@redhat.com>, <peterz@infradead.org>, <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v1 05/23] KVM: VMX: Initialize FRED VM entry/exit
- controls in vmcs_config
-Message-ID: <ZUyeATu4Fd2xI0+h@chao-email>
+Subject: Re: [PATCH v1 06/23] KVM: VMX: Defer enabling FRED MSRs save/load
+ until after set CPUID
+Message-ID: <ZUyjPtaxOgDQQUwA@chao-email>
 References: <20231108183003.5981-1-xin3.li@intel.com>
- <20231108183003.5981-6-xin3.li@intel.com>
+ <20231108183003.5981-7-xin3.li@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20231108183003.5981-6-xin3.li@intel.com>
-X-ClientProxiedBy: SI2PR02CA0053.apcprd02.prod.outlook.com
- (2603:1096:4:196::16) To CH3PR11MB8660.namprd11.prod.outlook.com
+In-Reply-To: <20231108183003.5981-7-xin3.li@intel.com>
+X-ClientProxiedBy: SI2PR06CA0008.apcprd06.prod.outlook.com
+ (2603:1096:4:186::23) To CH3PR11MB8660.namprd11.prod.outlook.com
  (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -109,129 +113,147 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|DM4PR11MB5440:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d98b655-2de3-4738-d747-08dbe1015b41
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|IA1PR11MB7365:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef44fc04-3e8b-4d31-399e-08dbe10479c1
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5pTJmuFtc4j4MeDtxp+yEQJxHg1Cd121SyqC2USYlmXDeeZTTM4MiHxjYR8XA7AHdNJHGRLT0JeGLX258kchs/I4CaImA+Hs9/XvFp4UrQAn/2lPRgW1jUOTYpy2bGFtj0SylLPuh4eEseqssCrdKkZOZZzj67XJc86TepPK06U4szzsW7zqiNPBmwUK2tZgqqtwGkGy/JttYL5NtH9BDwGVdmA4CJeHdxqbuy/y2ib2dOidycHnlGQ2O7jGeiJ7NtbsKT1M8TLWyGDi+9eldTfMrrgLkNo0UzyJXov+8bzK4Yj1TkyPSKAvFqnKijxwX9kwlOENJ2yRvEFVUXwQRSrfN/TVgtSv9TKzmyQu7KwNy+SydQRbfXzlRbf23n3NM8HWAPeixNoiH2S/idjz6whW55g3JdzcrA6TEl40TtC6o5Otoe4yhpNkhyRVObrW7QxrOLszjfs0iQGIkUXbNdssv/KwFf7TnXtIPMNEO5yKhVKV+yfJZqhWGFtyAL+7kSxyyHnDVtI3moDYGA25gPhN5sue0dPY614DV35+sQWh2VFskXCc7QtTnn0hT2ZvI/0QAqdCMeqiGsORBZAhyTQ5eQoH9+zB99Gz/E+s0WTOU5iW+Gia36dfpTumjrcSPvhli/t8SXoGW3+RWoUxng==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(346002)(136003)(39860400002)(366004)(376002)(396003)(230273577357003)(230173577357003)(230922051799003)(1800799009)(186009)(451199024)(64100799003)(33716001)(316002)(66476007)(66946007)(8936002)(8676002)(4326008)(83380400001)(6862004)(6666004)(6636002)(26005)(66556008)(5660300002)(41300700001)(9686003)(478600001)(44832011)(6486002)(6506007)(7416002)(6512007)(2906002)(82960400001)(86362001)(38100700002)(67856001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: RtOUZcN1/M55GxfXeb9odsGOG0jZ6mo9qBqYGhtx/j3psa7CniWOlCKI5E1VINmB6LztojFZtzf4hT6PPNeN+vAfZZfLivpMCzdg4HGHMVCtRYOqdGLMHNPRqQNlKs/nd8EgHED/BK2yT0l6CmushX0949RfsIv437VvE6YgITDQKV+GFj8KxbHIQVNBSx7L9ctEV04jrjimGWI+HqeCaZ0pcJo1UIYv3y532GhIGUmvW7d1JnkpwC0UVOK3Kqt/6FWpCezbLoLB2BRRzf1CKfTVptQS27R2dI/UH36ZEO1wkA8EXoMXtv4C9vRfhy0USkVrdwmCGIPaQh6+Shru88Uzu/a9lz4s59Pp9Vi+4Atjs4Dx04kUFf/nf4DF1bBa447SrOQJB9u+3v2JzcNX0rUT+fis9iEsrjTdCMObwSeKZJoeLOZR9bYFf3jUOG7GIvZV67vaMwteXwZfGpdhkLsVTkAY/dBnwzA1alXXUsl+d5bRnTVAvyagae0yCpRupn8OKoremsVGx9t32gluJQwoXXbRLbvPZo6vCgiGh/s=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(136003)(346002)(366004)(376002)(396003)(230922051799003)(1800799009)(186009)(451199024)(64100799003)(5660300002)(8936002)(44832011)(6512007)(9686003)(316002)(82960400001)(966005)(6486002)(478600001)(26005)(66556008)(66476007)(6506007)(66946007)(6636002)(6666004)(33716001)(6862004)(8676002)(4326008)(2906002)(38100700002)(83380400001)(7416002)(41300700001)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6R3MUrDXtKENuXOYn/ZaJ4WUa/NeoeD38oxFQ+4y0ZGFLGRUHdhcuH6H2E/F?=
- =?us-ascii?Q?QTF3PW10in5Be/RdhoF6a0u9mdpp/Agk6O9mO3W34PKfmgfBGLA4W/YyhZ3W?=
- =?us-ascii?Q?bLdoEClMcfdS6ZL49kvUL0pQrePq5nn1ZsUxGg8Dt8k0IbyeaW5nxKpfY3DZ?=
- =?us-ascii?Q?aT6rkSMmIi/l+JMDCMbhaXHLg08XZE+o7TyZUXgO87l8lXlWzOhG9Lylwtmo?=
- =?us-ascii?Q?o5o/HA6v7YtFQUJN/coDpDPBj5xv0F4xdpt38uwlWr8SmNR/MoS6UYLr48rh?=
- =?us-ascii?Q?eSDwUru3BFjqLmmsU3OKfwRkWXXvNCnqhTyr7ICIBT702sRV1hOXAynL7Jth?=
- =?us-ascii?Q?f8OAr5+npLK5TexI40vrAXpkmj42+ZO57MTy4j9ySvuATdSeTJEuwKBi6IqT?=
- =?us-ascii?Q?UVF1Dy50BGgoUN5azVNO68l8S/H+YPCZ4soJUoINrpugxT7hO3CvPJKRQg5A?=
- =?us-ascii?Q?kYWmRfQt9U39IiVxQtScyIo33TLr5s4rqNg8NN7QxuujhbRsf+zkfUKMBLj9?=
- =?us-ascii?Q?cyzuwc9VvxOHJr+UnyfJ8aByP4qpfzXOF20NshVAk0Q4ZvzFoIKycyoVxvav?=
- =?us-ascii?Q?h8mo06fm7d3FrUZWO/Gh3d+RpmzoFMBz7ace3VxZmZgB/xh8ura9EhL7Hp4V?=
- =?us-ascii?Q?joQMDRj6DXFScg70lLx/+0xSxYdMioZoaN4+9Bw0Sl+qgolAP6iKKWh8Zjm7?=
- =?us-ascii?Q?fWIeyT3sJMYZCv0YHHlbHCazr8KVMt8QIue0viaAwM9Pa4S+lRbDYbGxD2da?=
- =?us-ascii?Q?l7FXc0UMvsUb7GfvFyqMufiZicLrEVDbqzN+yNHP4URpj11DvLhKl6aoNCU1?=
- =?us-ascii?Q?PUz4Swvf1bqjRsB+w66bRWQH59SPkqEDDDWkDbAn/8eVBO4YXWsreD6u1RCG?=
- =?us-ascii?Q?zFrHLZHJKxqa4aTMT4HezSfE1NzkrucBf1u5i/dpeJOjutYWJ8lthIhSLAH1?=
- =?us-ascii?Q?S9lt7D+6MzKt78qmOVcR6kEfEbWx5EMWm7mStBGybhQrqfi96dIv9gRPjM8C?=
- =?us-ascii?Q?WGsnC5DbOxyR3pS2naVqLn+Jj2hgKmJUBuAnnshINyHjGnPLx6sHZ+6j8XrC?=
- =?us-ascii?Q?TS8A7sTRfe+vjpYpa7vrMwRxvzSErvHw/0kfoNu2+fb63WAVEPFRJN823dS/?=
- =?us-ascii?Q?uC1sun46Pnw777yK0YlwgAci3hCtX4GEDqK5mzGd+8c579aPHDjmp4m9b0Ye?=
- =?us-ascii?Q?5tFpViv/ogdCWYiVlHzV3Y31BucEnav7E9s+udXKiW1cZGKSnVhvp93NdZXj?=
- =?us-ascii?Q?GBymORIbEJBkLm5OGJaTGLX3l171VeMmP1bF4rH2jBQF/BB9gDZMmHdGlk6A?=
- =?us-ascii?Q?6nAwO0zh+Pmc8V1Sbm78odcwXymsOPBaF4Zt2MWVfaFA0Axzi6R2eC5br2Le?=
- =?us-ascii?Q?sY+4azzyjoosUbLDn+E0LhYJ+gT9hhGL8EmFuGWwVPnquVxuNkSSz0a9nP+y?=
- =?us-ascii?Q?xA8x7AVs6nvgGqTflPNAeJAB/vDKcdrzJPq8KnJrILVvzifAXUGjalJSk0R9?=
- =?us-ascii?Q?gSPXSmr6Vr9wuJJ9iVcptS2xJgirn9g99YDKbYpVb9ai4dXIDbURR8g3udOi?=
- =?us-ascii?Q?0rRb5vzq2zZi1IUbdpPBd2ccEI+/HWSfETnvjFpI?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d98b655-2de3-4738-d747-08dbe1015b41
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vmLCo2G29P2gY50/Q4K6OTsCFt4VY2Gu0LOsYT7utUnKXtBOxNp+BEsW536S?=
+ =?us-ascii?Q?1gdIVb0s1Kmdh4M4GWMsfA0FyBUrJ6A8VvhLEzh/lNU+wEUy5e8Da0hFOqZl?=
+ =?us-ascii?Q?bllgtdNtQCwD7CIvpCWamzFy7J02POULuIEVu+YRvuZReUtE0PXA3AgmwX0T?=
+ =?us-ascii?Q?ObtHTKc4i2ySF33rJdwDYUd1TFolihd1Qa4YSH0cqU4N0o1STA3nphkHKV3p?=
+ =?us-ascii?Q?btWFwDlcmkh8mBAJdM0b5U0P71XhXw3v8NiwJN895hmITtqfCGWZzb8OOwBv?=
+ =?us-ascii?Q?tOxBQyC5cUqPTg2ayLqdsilFNd9NbIaV0zyoH1kVc0t4IsfDysq55FzalHYr?=
+ =?us-ascii?Q?VoxZfC4AAD4sw8mVOhcnIrOMm8nT1L6ZWeszgv/vyr5LJAFaYkSETnmu/h3+?=
+ =?us-ascii?Q?V9hIcRt/BKQqeRfl+ErKPSWedes3Qe5WvvtfMZ7Su39rrFWuvTnPvIUYAC+6?=
+ =?us-ascii?Q?TmsNbfJUT+SOEP+rqthrlOcL7NOv+WV/XGyC8J09GXpbiv/DtoPHgrQDWL4j?=
+ =?us-ascii?Q?bEmx4kJfzVrg6dOGgXtRK+XpLH0Y1geZ2ukWgEsBDZAyCgItvryvuIYshRLo?=
+ =?us-ascii?Q?pN8SXhtXheJdmoHJaXLskJJc7HBx8Qcvyl5+BIGsJ4XpCc90QOZYhxzjOOv4?=
+ =?us-ascii?Q?oGfBqewdwr3tXxGVq1P1NWjiD5y57u2Zqew3YuuHDpkgOydifWttxniWrMJw?=
+ =?us-ascii?Q?H9WrZ0WjaF9frvbsnVPoOLkOBAoAaVO42uNqm2/6UWaONKHSaywo+ts3okfa?=
+ =?us-ascii?Q?4XM51bemHCiupNXRcSC6ylCToq9P3fP5ombeYl6cCOZgxyAlmllrRuUBxxm/?=
+ =?us-ascii?Q?j4KRy9cPmXD/ZR/p/QujFeZ+1/Qo2EQPB07rGf5I4bOmLtSquskPpEua5XYM?=
+ =?us-ascii?Q?aeoqcpF8DpJNkX0RNWPQEZRNc7NZLtz6DjjU33TLVxrju7KzmxnCr2/tX883?=
+ =?us-ascii?Q?J08sZsxs0G2kCSpEEycqlzBWIwk+1pfTn6YjI00zxZ5zX9BYnAZH1GDQ5DsU?=
+ =?us-ascii?Q?udU6oIQgHbLMPIEhJBzj9ACKbLZjgJYitZTpCzovMmnYScc4OXfPNNhctAo/?=
+ =?us-ascii?Q?NH+YLjkLUnqlTolUa5RIUHzgDubaxFeRlpAImI/QBH8/tf0CAFlyZPCpazXa?=
+ =?us-ascii?Q?WrKn/87977b05JU7ZEoi6QaragJ5M9gRrOd1amEHCm/P+8eqgDuH8wDmQdat?=
+ =?us-ascii?Q?08dqHLsxwWyJPf/Onh2qNcAFwA/paRd9OmSuBlFgtxl3uJtHVZY96wo7+z4X?=
+ =?us-ascii?Q?WprBohKtMwz89P673GiXbuZE1OtgnhLMVeeFzlX1cqEGjPlijacEIhFzcY0c?=
+ =?us-ascii?Q?FjeTb12zhqraSpfeINmo/PK7HwuVlgs+XMdwKnh218DISWsfkwd/pmDU2S7z?=
+ =?us-ascii?Q?vChYDsu3/tQuWU/zwZwUY4evvrMZLqhtpAqg/TQjz4128/TmeOvXgnENqRek?=
+ =?us-ascii?Q?PhI5YF7hGJlfS/JXKlZoXu3V+XbUG4F5MxlqgiF2Lz8uWO2kxfAoVkNBmmNN?=
+ =?us-ascii?Q?/p/HQCcKW2p27sjTELREeBKCTLzvTfNdNTFdy6QbrrNpt1puvsXezhdg8orh?=
+ =?us-ascii?Q?NSqx1cxHupB7dAnHLEJPo1JJMRzBoT0f7R2dOKad?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef44fc04-3e8b-4d31-399e-08dbe10479c1
 X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2023 08:53:34.6669
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2023 09:15:54.5168
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ETKhw0rYyEKHC6r9YI4vh+U6R+1jHhPu9A2RsYf36kHBtET1BKn+NjObWN7/OTvmxRZkEyQEI4e1rVqzOdgDmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5440
+X-MS-Exchange-CrossTenant-UserPrincipalName: 59wTPq+LmacbB1HdYeeTaE8oGXqf2Pm7bCBWRO6n2pROEYZtfCTRNFxvLp0Y4UOPIzXCmTQAXqJykYGpSVffSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7365
 X-OriginatorOrg: intel.com
 
-On Wed, Nov 08, 2023 at 10:29:45AM -0800, Xin Li wrote:
->Setup the global vmcs_config for FRED:
->1) Add VM_ENTRY_LOAD_IA32_FRED to KVM_OPTIONAL_VMX_VM_ENTRY_CONTROLS to
->   have a FRED CPU load guest FRED MSRs from VMCS upon VM entry.
->2) Add SECONDARY_VM_EXIT_SAVE_IA32_FRED to
->   KVM_OPTIONAL_VMX_SECONDARY_VM_EXIT_CONTROLS to have a FRED CPU save
->   guest FRED MSRs to VMCS during VM exit.
->3) add SECONDARY_VM_EXIT_LOAD_IA32_FRED to
->   KVM_OPTIONAL_VMX_SECONDARY_VM_EXIT_CONTROLS to have a FRED CPU load
->   host FRED MSRs from VMCS during VM exit.
+On Wed, Nov 08, 2023 at 10:29:46AM -0800, Xin Li wrote:
+>Clear FRED VM entry/exit controls when initializing a vCPU, and set
+>these controls only if FRED is enumerated after set CPUID.
 >
->Also add sanity checks to make sure FRED VM entry/exit controls can be
->set on a FRED CPU.
+>FRED VM entry/exit controls need to be set to establish context
+>sufficient to support FRED event delivery immediately after VM entry
+>and exit.  However it is not required to save/load FRED MSRs for
+>a non-FRED guest, which aren't supposed to access FRED MSRs.
+>
+>A non-FRED guest should get #GP upon accessing FRED MSRs, otherwise
+>it corrupts host FRED MSRs.
 >
 >Tested-by: Shan Kang <shan.kang@intel.com>
 >Signed-off-by: Xin Li <xin3.li@intel.com>
 >---
-> arch/x86/include/asm/vmx.h |  3 +++
-> arch/x86/kvm/vmx/vmx.c     | 19 ++++++++++++++++++-
-> arch/x86/kvm/vmx/vmx.h     |  7 +++++--
-> 3 files changed, 26 insertions(+), 3 deletions(-)
+> arch/x86/kvm/vmx/vmx.c | 34 +++++++++++++++++++++++++++++++++-
+> 1 file changed, 33 insertions(+), 1 deletion(-)
 >
->diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
->index 4d4177ec802c..41796a733bc9 100644
->--- a/arch/x86/include/asm/vmx.h
->+++ b/arch/x86/include/asm/vmx.h
->@@ -106,6 +106,8 @@
-> #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
-> #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-> #define VM_EXIT_ACTIVATE_SECONDARY_CONTROLS	0x80000000
->+#define SECONDARY_VM_EXIT_SAVE_IA32_FRED	0x00000001
->+#define SECONDARY_VM_EXIT_LOAD_IA32_FRED	0x00000002
-> 
-> #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
-> 
->@@ -119,6 +121,7 @@
-> #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
-> #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
-> #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
->+#define VM_ENTRY_LOAD_IA32_FRED			0x00800000
-> 
-> #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
-> 
 >diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->index df769207cbe0..9186f41974ab 100644
+>index 9186f41974ab..5d4786812664 100644
 >--- a/arch/x86/kvm/vmx/vmx.c
 >+++ b/arch/x86/kvm/vmx/vmx.c
->@@ -2694,10 +2694,27 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
-> 		_vmexit_control &= ~x_ctrl;
-> 	}
+>@@ -4423,6 +4423,9 @@ static u32 vmx_vmentry_ctrl(void)
+> 	if (cpu_has_perf_global_ctrl_bug())
+> 		vmentry_ctrl &= ~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
 > 
->-	if (_vmexit_control & VM_EXIT_ACTIVATE_SECONDARY_CONTROLS)
->+	if (_vmexit_control & VM_EXIT_ACTIVATE_SECONDARY_CONTROLS) {
-> 		_secondary_vmexit_control =
-> 			adjust_vmx_controls64(KVM_OPTIONAL_VMX_SECONDARY_VM_EXIT_CONTROLS,
-> 					      MSR_IA32_VMX_EXIT_CTLS2);
->+		if (cpu_feature_enabled(X86_FEATURE_FRED) &&
->+		    !(_secondary_vmexit_control & SECONDARY_VM_EXIT_SAVE_IA32_FRED &&
->+		      _secondary_vmexit_control & SECONDARY_VM_EXIT_LOAD_IA32_FRED)) {
->+			pr_warn_once("FRED enabled but no VMX VM-Exit {SAVE,LOAD}_IA32_FRED controls: %llx\n",
->+				     _secondary_vmexit_control);
-
-if there is no VM_EXIT_ACTIVATE_SECONDARY_CONTROLS, shouldn't we also emit this
-warning?
-
->+			if (error_on_inconsistent_vmcs_config)
->+				return -EIO;
->+		}
->+	}
+>+	/* Whether to load guest FRED MSRs is deferred until after set CPUID */
+>+	vmentry_ctrl &= ~VM_ENTRY_LOAD_IA32_FRED;
 >+
->+	if (cpu_feature_enabled(X86_FEATURE_FRED) &&
->+	    !(_vmentry_control & VM_ENTRY_LOAD_IA32_FRED)) {
->+		pr_warn_once("FRED enabled but no VMX VM-Entry LOAD_IA32_FRED control: %x\n",
->+			     _vmentry_control);
+> 	return vmentry_ctrl;
+> }
+> 
+>@@ -4458,7 +4461,13 @@ static u32 vmx_vmexit_ctrl(void)
+> 
+> static u64 vmx_secondary_vmexit_ctrl(void)
+> {
+>-	return vmcs_config.secondary_vmexit_ctrl;
+>+	u64 secondary_vmexit_ctrl = vmcs_config.secondary_vmexit_ctrl;
+>+
+>+	/* Whether to save/load FRED MSRs is deferred until after set CPUID */
+>+	secondary_vmexit_ctrl &= ~(SECONDARY_VM_EXIT_SAVE_IA32_FRED |
+>+				   SECONDARY_VM_EXIT_LOAD_IA32_FRED);
+>+
+>+	return secondary_vmexit_ctrl;
+> }
+> 
+> static void vmx_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
+>@@ -7785,10 +7794,33 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
+> 		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
+> }
+> 
+>+static void vmx_vcpu_config_fred_after_set_cpuid(struct kvm_vcpu *vcpu)
+>+{
+>+	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>+
+>+	if (!cpu_feature_enabled(X86_FEATURE_FRED) ||
+>+	    !guest_cpuid_has(vcpu, X86_FEATURE_FRED))
+>+		return;
+>+
+>+	/* Enable loading guest FRED MSRs from VMCS */
+>+	vm_entry_controls_setbit(vmx, VM_ENTRY_LOAD_IA32_FRED);
+>+
+>+	/*
+>+	 * Enable saving guest FRED MSRs into VMCS and loading host FRED MSRs
+>+	 * from VMCS.
+>+	 */
+>+	vm_exit_controls_setbit(vmx, VM_EXIT_ACTIVATE_SECONDARY_CONTROLS);
+>+	secondary_vm_exit_controls_setbit(vmx,
+>+					  SECONDARY_VM_EXIT_SAVE_IA32_FRED |
+>+					  SECONDARY_VM_EXIT_LOAD_IA32_FRED);
 
-Can we just hide FRED from guests like what KVM does for other features which
-have similar dependencies? see vmx_set_cpu_caps().
+all above vmcs controls need to be cleared if guest doesn't enumerate FRED, see
+
+https://lore.kernel.org/all/ZJYzPn7ipYfO0fLZ@google.com/
+
+Clearing VM_EXIT_ACTIVATE_SECONDARY_CONTROLS may be problematic when
+new bits are added to secondary vmcs controls. Why not keep
+VM_EXIT_ACTIVATE_SECONDARY_CONTROLS always on if it is supported? or you see
+any perf impact?
+
+>+}
+>+
+> static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+> {
+> 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> 
+>+	vmx_vcpu_config_fred_after_set_cpuid(vcpu);
+>+
+> 	/*
+> 	 * XSAVES is effectively enabled if and only if XSAVE is also exposed
+> 	 * to the guest.  XSAVES depends on CR4.OSXSAVE, and CR4.OSXSAVE can be
+>-- 
+>2.42.0
+>
+>
 
