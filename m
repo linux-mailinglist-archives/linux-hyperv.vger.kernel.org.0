@@ -1,68 +1,117 @@
-Return-Path: <linux-hyperv+bounces-816-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-817-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 131957E622B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 03:26:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DE437E651A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 09:21:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C157D281107
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 02:26:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28126281243
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 08:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC7510FD;
-	Thu,  9 Nov 2023 02:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC25810944;
+	Thu,  9 Nov 2023 08:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUr3DwBI"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s3Ig6YtH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3B253A0;
-	Thu,  9 Nov 2023 02:26:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864A7C433C7;
-	Thu,  9 Nov 2023 02:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699496780;
-	bh=bvkrLtnAeHE0QC2OdmfX8Hg2tktQ7eKe6WDZsBHFo1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DUr3DwBIu27FhAKrid+Jirzy8lFaAV0ao2SEx4/SFo6q40YtjpLlneu/slcP93h0F
-	 kyXqzDD0cUFDJUG769F23SX5dH6/dYZVF3lKMdEvE+p5zW0yyugCc0H0d3IdAsoLn4
-	 iFTD9mdC9sHQwo39naD8w0oqdguPdY+TGnGc5VCwCKoZ4o9djS8ZXxvB8r3sbCCL5M
-	 KuhDPO/wZcC9N5bc6CPsN9aRjWfsUOFx4VIJLc0dvyToz1Bla6ayDV8o+G0G62iIhX
-	 c1F2YnqyhdnTGMtGdEz4dn7Bkw6wuHup1xZMVLyMaGpR/e6dZ4hzQZOTcbPs5RYDr2
-	 m7xb2/QMUYmlQ==
-Date: Wed, 8 Nov 2023 18:26:18 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, kys@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, edumazet@google.com,
- pabeni@redhat.com, davem@davemloft.net, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH net,v3, 2/2] hv_netvsc: Fix race of
- register_netdevice_notifier and VF register
-Message-ID: <20231108182618.09ef4dfe@kernel.org>
-In-Reply-To: <1699391132-30317-3-git-send-email-haiyangz@microsoft.com>
-References: <1699391132-30317-1-git-send-email-haiyangz@microsoft.com>
-	<1699391132-30317-3-git-send-email-haiyangz@microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AF9107B4;
+	Thu,  9 Nov 2023 08:21:32 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 731971FFD;
+	Thu,  9 Nov 2023 00:21:31 -0800 (PST)
+Received: from [192.168.2.39] (77-166-152-30.fixed.kpn.net [77.166.152.30])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1532B20B74C0;
+	Thu,  9 Nov 2023 00:21:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1532B20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1699518090;
+	bh=536QhSnmvjUjksMTxK3AqvYT0q2acvm2TvmKO/JNg/I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=s3Ig6YtH2xeo+PTvKPvXKtQtZ2RQaBN+nhHcTkkMBEF08uYQNcijM+O1oP8zwvlKx
+	 +7rZ0GMkVO3jxS9g5x+tgVFu6wkSLrcxyjBUAYQbUYWoLDxxncUfqjGrnDLVMwx2Cd
+	 4w8XcMlnjAp5L2kkRGbMJY5FZre9PlTj3fcMPI7c=
+Message-ID: <02faa42b-7b10-40b4-8442-5f95a2934f5f@linux.microsoft.com>
+Date: Thu, 9 Nov 2023 09:21:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 15/23] KVM: nVMX: Add support for the secondary VM exit
+ controls
+Content-Language: en-US
+To: Xin Li <xin3.li@intel.com>, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc: seanjc@google.com, pbonzini@redhat.com, corbet@lwn.net,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ vkuznets@redhat.com, peterz@infradead.org, ravi.v.shankar@intel.com
+References: <20231108183003.5981-1-xin3.li@intel.com>
+ <20231108183003.5981-16-xin3.li@intel.com>
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+In-Reply-To: <20231108183003.5981-16-xin3.li@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue,  7 Nov 2023 13:05:32 -0800 Haiyang Zhang wrote:
-> If VF NIC is registered earlier, NETDEV_REGISTER event is replayed,
-> but NETDEV_POST_INIT is not.
+On 08/11/2023 19:29, Xin Li wrote:
+> Enable the secondary VM exit controls to prepare for nested FRED.
+> 
+> Tested-by: Shan Kang <shan.kang@intel.com>
+> Signed-off-by: Xin Li <xin3.li@intel.com>
+> ---
+>  Documentation/virt/kvm/x86/nested-vmx.rst |  1 +
+>  arch/x86/include/asm/hyperv-tlfs.h        |  1 +
+>  arch/x86/kvm/vmx/capabilities.h           |  1 +
+>  arch/x86/kvm/vmx/hyperv.c                 | 18 +++++++++++++++++-
+>  arch/x86/kvm/vmx/nested.c                 | 18 +++++++++++++++++-
+>  arch/x86/kvm/vmx/vmcs12.c                 |  1 +
+>  arch/x86/kvm/vmx/vmcs12.h                 |  2 ++
+>  arch/x86/kvm/x86.h                        |  2 +-
+>  8 files changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/x86/nested-vmx.rst b/Documentation/virt/kvm/x86/nested-vmx.rst
+> index ac2095d41f02..e64ef231f310 100644
+> --- a/Documentation/virt/kvm/x86/nested-vmx.rst
+> +++ b/Documentation/virt/kvm/x86/nested-vmx.rst
+> @@ -217,6 +217,7 @@ struct shadow_vmcs is ever changed.
+>  		u16 host_fs_selector;
+>  		u16 host_gs_selector;
+>  		u16 host_tr_selector;
+> +		u64 secondary_vm_exit_controls;
+>  	};
+>  
+>  
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 2ff26f53cd62..299554708e37 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -616,6 +616,7 @@ struct hv_enlightened_vmcs {
+>  	u64 host_ssp;
+>  	u64 host_ia32_int_ssp_table_addr;
+>  	u64 padding64_6;
+> +	u64 secondary_vm_exit_controls;
+>  } __packed;
+> >  #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_NONE			0
 
-But Long Li sent the patch which starts to use POST_INIT against 
-the net-next tree. If we apply this to net and Long Li's patch to
-net-next one release will have half of the fixes.
+Hi Xin Li,
 
-I think that you should add Long Li's patch to this series. That'd
-limit the confusion and git preserves authorship of the changes, so
-neither of you will loose the credit.
+The comment at the top of hyperv-tlfs.h says:
+"This file contains definitions from Hyper-V Hypervisor Top-Level Functional Specification (TLFS)"
+
+These struct definitions are shared with the hypervisor, so you can't just add fields to it.
+Same comment for patch 16.
+
+Would FRED work in nested virtualization if the L0 hypervisor does not support it (or doesn't know
+about it)?
+
+Thanks,
+Jeremi
 
