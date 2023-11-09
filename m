@@ -1,152 +1,217 @@
-Return-Path: <linux-hyperv+bounces-827-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-828-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B62EC7E71A5
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 19:41:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7BD77E754E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Nov 2023 00:50:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67C13280E29
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 18:41:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A30BB28184A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Nov 2023 23:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D23374DB;
-	Thu,  9 Nov 2023 18:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 500CE38FB1;
+	Thu,  9 Nov 2023 23:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nk+jJtf+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHvnPBCQ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B12D374DF
-	for <linux-hyperv@vger.kernel.org>; Thu,  9 Nov 2023 18:41:39 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B22E83C0B;
-	Thu,  9 Nov 2023 10:41:38 -0800 (PST)
-Received: from [192.168.2.39] (77-166-152-30.fixed.kpn.net [77.166.152.30])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A143020B74C0;
-	Thu,  9 Nov 2023 10:41:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A143020B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1699555298;
-	bh=p5ZTL0k+lm0q4Pe3ZEkX70IGxjuY2ziLhRZZaLSqBIQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nk+jJtf+duWluSudoHgGe9dpvKa26WRVKFIpQ8giPC5o4nAuw6KlP6adPC1SOM5HV
-	 Ari+O9JHPL+iR38mIeAufUrqefxMXg9B7OeQBoR4FjdPXCdusDvO+LZMFUs92Mbm4Y
-	 ME+7641Y4DMGfM9Ps7E3tFkGnkF+TZSfsHXdpqEA=
-Message-ID: <df95817a-4859-443a-9ac2-b09f102aff30@linux.microsoft.com>
-Date: Thu, 9 Nov 2023 19:41:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540920B07;
+	Thu,  9 Nov 2023 23:50:52 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97D13868;
+	Thu,  9 Nov 2023 15:50:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699573851; x=1731109851;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=vRiO16edNZkgPzULuOQ/IUBTwsOBdUZa0yBNmPFTM/s=;
+  b=AHvnPBCQxvsUGQu/mI86LxhIoUTMXaxlnj+vCI61dK7meJFo2PEx9Gbs
+   BZDgyHJfOo4rTibMXqCVtlKB7lvay7Yf3aOsBNS8V6LQrMfKMV4r442h0
+   tnPCQ4XZXgYQOWLrwb5e6VpBAJN1oPdE4Qv991c4EikDYN6Xn+yEas3DQ
+   StDMMED8zbliBUifb1A0aBGm1wuT47Bo6FfvzsxsRtmS1y/n52TI3P/Be
+   iFCwbld+TTjhkkJkFdtQuE4gT36mVEUMWeHaKRW7xNlb9Juy1dwn16bhp
+   OCq1jocGbhFIRjkAAaKtdiHDdBUGM8HPtA1cLecmLoQoizn9yKQYZh+cq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="375137973"
+X-IronPort-AV: E=Sophos;i="6.03,290,1694761200"; 
+   d="scan'208";a="375137973"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 15:50:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="937013280"
+X-IronPort-AV: E=Sophos;i="6.03,290,1694761200"; 
+   d="scan'208";a="937013280"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Nov 2023 15:50:50 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Thu, 9 Nov 2023 15:50:50 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Thu, 9 Nov 2023 15:50:50 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Thu, 9 Nov 2023 15:50:50 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Thu, 9 Nov 2023 15:50:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TRk2xY8Id/Hd1LZISO+XVI3JM91XmGylm54g2K5muQ6Eu/o2L6FlRay/BbDXl2GTlWd7lJMBpVTgxcOEeyh+Qr4/E03z4b9pbmMBytQpU660oYVxVlaEZtFA1CN4ksrMq6HeUNE+s5VBND1QW+YsH4EzternyfToX4fjMjTUckEc9ARIvMOHxSbJOYhcQ8/WC3ZMPY56glIachLlgs7wCM2Af0+cR8oaDLMXcaSG+I0dZTS6sremcwkB+RrX8oYDmHxVXV0vobcyiFknbkZJvxZIqobmeRJUTWVFJisez5pZBAFz/AlfJeoCAM+Qzpqjcu8EcFIlQtGe5ibHWIVTQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HsmRsGEOB0ofWifvbx9SbeXYhmkrLGcTIbMgegTwUCM=;
+ b=GegR1BOF+1YQibQYXsrQuypUSxih/fvKBn5BfO86jsTzB40BIjVrp6qZi8Zr5FDOVit+JrUC9PwtRsJJrW15TJMcb2YfsSLvg4OJ0EZiHQlU1Uaff2tmgLfehutAiOFoPzRUc6GRVKhjOicIcNVGNVLMNPNkDnc859mwbq2yF91BfcvGxCSYjB5ps9HChYWquAz9bI+QxmUBe/rKoK0Eh6OPPztNdEVBYxhn4TRseGKKYuY+HozwPLRtfa2nNej5qQJPVj565pXma4H6ytwg1mVARr4cSBVWqMaDq16QFiOEC7rJA3xZSMxOgHb70gi6KQZ01uyzfeRbXRzVK02FjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
+ by MW4PR11MB7056.namprd11.prod.outlook.com (2603:10b6:303:21a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.28; Thu, 9 Nov
+ 2023 23:50:37 +0000
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::3d98:6afd:a4b2:49e3]) by SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::3d98:6afd:a4b2:49e3%6]) with mapi id 15.20.6954.028; Thu, 9 Nov 2023
+ 23:50:37 +0000
+From: "Li, Xin3" <xin3.li@intel.com>
+To: "Gao, Chao" <chao.gao@intel.com>
+CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "Christopherson,, Sean"
+	<seanjc@google.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "Cui, Dexuan" <decui@microsoft.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "vkuznets@redhat.com"
+	<vkuznets@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: RE: [PATCH v1 06/23] KVM: VMX: Defer enabling FRED MSRs save/load
+ until after set CPUID
+Thread-Topic: [PATCH v1 06/23] KVM: VMX: Defer enabling FRED MSRs save/load
+ until after set CPUID
+Thread-Index: AQHaEnYK31xdVTOu4kKzxsXb22qo7rBxtbMAgADxRyA=
+Date: Thu, 9 Nov 2023 23:50:37 +0000
+Message-ID: <SA1PR11MB67347A31E38D604FDF2BD606A8AFA@SA1PR11MB6734.namprd11.prod.outlook.com>
+References: <20231108183003.5981-1-xin3.li@intel.com>
+ <20231108183003.5981-7-xin3.li@intel.com> <ZUyjPtaxOgDQQUwA@chao-email>
+In-Reply-To: <ZUyjPtaxOgDQQUwA@chao-email>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|MW4PR11MB7056:EE_
+x-ms-office365-filtering-correlation-id: 62a8b1ca-2883-42e1-37a4-08dbe17eac51
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hRoT+4q+CdYe3skxZmKFFatTNU8ocIK+CXcIoh0+YUkP24g5/Ccpp7fClYnduv6dPm+vpSeQJCLpdbbjuILZ/j2RNJaqAz3vHJc7ijQqNPVfc1KL87rtO7sa9hqKuQLBzgDSHCrSV7izjMR0p1bjOvDW9mWn7mg4+VudjaOD0dNstV7L0un1oono9thxrdM1LZbYQ7fqMDR2SSH19KVFrbUzP63wNXghSW8Thzf4QAihgsJNkNAkW+YC9NA+uCzaQ5fx5GffCNQsVWI1GdCDfQUHMOeR4jZuee8/ml+0Apx7LPjXS/0cQu+8wFSxPawfrr4WNWXtD1NMWAGXftR4pRTuHEtUK1F3A6V3P/zt31PD3mvOXmC5OQIbOfVzoCSRBIVDkFoOTATWnAHTMBu/uUV2SG+slS8owxnctmZBEaJs6oJ4s9Mo1TqQKyzBFTBfZ3y5+WzVcI8Uc28wMUvRSV4id3A373SQvC++zBRE+P7zE/vPVjcDf4Leq8Gi4Q76se+Vy3Vcj0eLTKj8Bfx/SiroyuLb4Xj431aI7gGMDhXR/tXkdmgazxZz2PKGSnXXrpztqVbvq4fdKnSooQI6/MyBQSCP91/Qi7lgbualsMI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(366004)(136003)(39860400002)(376002)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(4326008)(8936002)(9686003)(64756008)(122000001)(52536014)(82960400001)(316002)(478600001)(26005)(966005)(66476007)(66556008)(66446008)(6636002)(66946007)(54906003)(6506007)(7696005)(71200400001)(38070700009)(5660300002)(8676002)(76116006)(55016003)(2906002)(83380400001)(38100700002)(6862004)(41300700001)(33656002)(7416002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?bRhrnBH8UNe8mS0h/D4sNVpa8Ty4dYYpk82unXQvVxDYP7Wf38jQAXbuoeXj?=
+ =?us-ascii?Q?NHWuAhsl8jIuAzz5g64RHy1MCPvW164TiZweU+rD+qrmbMtyI4ozGpH3G9QQ?=
+ =?us-ascii?Q?q9dFiwY60+CW51uT2IMDBTE5TjdRDkhVMcs6s0BZ4ymHKwM4vi3DdUe2pFX3?=
+ =?us-ascii?Q?tff48OnayUMTnTwFMSHMTh29uJsLRvwda4yrusPTuMEkKTof03yAWvtxN4Qu?=
+ =?us-ascii?Q?gbqA5U8oKofJxxInqbbChFI56VCa8m18ACcBm2lHhnKLWqOdgLhbOQ/aylD9?=
+ =?us-ascii?Q?T8tJz27C7vqKvupJNFA7Up1REv7Mh+jKYTyaqwfHCsQmlZ1+Ip16qw4fHzSl?=
+ =?us-ascii?Q?SyGcDNeVvBWV24SRAp2wYJo7JvEVMJrU7MjYM2QNzZRKI08JCW8quFCG7/Sy?=
+ =?us-ascii?Q?hHnPs8RVM4es1pfJswRHNJsjXDQcRc2msxmJxWYHn0AQf8w8r6u+VN6tmGti?=
+ =?us-ascii?Q?orM+k+ZWKIJBN5dqnWqhdt96F6NpqC1FV82QQhLg9F4h+OiAmsHZW/056eHJ?=
+ =?us-ascii?Q?zv1/0WNhE3UGWggumqjOOW7/2dgqyRXiZiIqBS+x7kUn/NVguJDme5kRemRJ?=
+ =?us-ascii?Q?pf/2J4uqJfx+ruuTva1Twn/NItjoaa7dkZHX4g7FL1NncJMLpicozs10mDLD?=
+ =?us-ascii?Q?0dheiDKlsd+URP0/Ng3phVZxNGaXZATjkG0DVwePT1ms9YljJ2HkttLBrBnP?=
+ =?us-ascii?Q?NkaJUDt8zeR6i4PE24Lu0Osm8ADl+VRfsIGffRd8FoNhAnRu0sIpAW64+wfa?=
+ =?us-ascii?Q?dx8gc6wWWMJ1p2E/uKbaveIYCzVi6QE2dmfegNZRULdRCm/TZ17aoAbyXIjF?=
+ =?us-ascii?Q?O0uWKQVtkG6fOBLVoG8W/IMlM1lmdNPVeeIEFMahuwmU70u06vlGUNU2GfjB?=
+ =?us-ascii?Q?/k0R/wc8GpArxq48apx3o5pZEVAQQEEQTIkErRhz+F0WyvJaReqMaB85ShR4?=
+ =?us-ascii?Q?MQ6gD43kBOSspdNhxaV6cpiA93dTHxnJ4uJ9dJc9uUnl4KSmj2yarg11F9kX?=
+ =?us-ascii?Q?vk4NKXscUMO+Psl49TG2lV5smantkh08eZA8/18NFO/VeH0FA0Yj0DJD1TC9?=
+ =?us-ascii?Q?dG/9/Hn2S0vafCWxbYBe3Ug4lkWrAXqHY5hLFqI7EDOax2VdHKt973Jrs4Ht?=
+ =?us-ascii?Q?YDj7qt/feiyKUf8Ef729nzihCzLxEJV7gtX4uEuV1hm1XbasVIJ1LM0F1J39?=
+ =?us-ascii?Q?JD1hkRCEjxkk/Nqm/ydcGjiaImK7el6NBWFe7YeWVcWaqMiWjQn/ub/cZSys?=
+ =?us-ascii?Q?DGb0YwkFqqA7k2OoRH9nj6M1oI59S6mrF8Pv9bT2WBjICStEKm3CgJwLtL8O?=
+ =?us-ascii?Q?xPJ5szgAQrEnVuwFmPw4W1YCVzrjO3UH1hAzpxVnfq3OYP2yWfGp/vLErQQ0?=
+ =?us-ascii?Q?cPae7C2OJaBIbtZYyvAoXY4G/p4AREkScxpvK4NbcjG2ECRwy8j0GcAeqVLy?=
+ =?us-ascii?Q?vCYqEDQqw/hQxt5YnAYxStFb33Wz3+Nr6cVXtTQZrN6ObwoHwM5fi6RsL5bu?=
+ =?us-ascii?Q?uWlo9kjLcWcnSFt8Dy+L83cNOUisO1UnwOfP0prLHWLK61++wiAHBaMgskot?=
+ =?us-ascii?Q?WxIdKCl5Jg26RaKxEI4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm: Check cc_vendor when printing memory encryption
- info
-To: Dave Hansen <dave.hansen@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- Michael Kelley <mhklinux@outlook.com>, Dexuan Cui <decui@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, stefan.bader@canonical.com,
- tim.gardner@canonical.com, roxana.nicolescu@canonical.com,
- cascardo@canonical.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, kirill.shutemov@linux.intel.com, sashal@kernel.org
-References: <1699546489-4606-1-git-send-email-jpiotrowski@linux.microsoft.com>
- <16ea75a9-8c94-4665-ae04-32d08aa4ebb2@intel.com>
- <58abbc79-64d4-41f9-9fd2-1de7826fbbf6@linux.microsoft.com>
- <ee9de366-6027-495a-98d9-b8b0cd866bf2@intel.com>
-Content-Language: en-US
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-In-Reply-To: <ee9de366-6027-495a-98d9-b8b0cd866bf2@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62a8b1ca-2883-42e1-37a4-08dbe17eac51
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2023 23:50:37.5903
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JTNXHg7RtycSq4dq2y+fWW6h9M9nsCgk9myfgYYjP7f4ikcJkEWmQu+VkdPepyUfUxmSXIMoy3b3uaARtmy1ig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7056
+X-OriginatorOrg: intel.com
 
-On 09/11/2023 17:50, Dave Hansen wrote:
-> On 11/9/23 08:35, Jeremi Piotrowski wrote:
->> On 09/11/2023 17:25, Dave Hansen wrote:
->>> On 11/9/23 08:14, Jeremi Piotrowski wrote:
->>> ...
->>>>  	pr_info("Memory Encryption Features active:");
->>>>  
->>>> -	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
->>>> +	if (cc_vendor == CC_VENDOR_INTEL) {
->>>>  		pr_cont(" Intel TDX\n");
->>>>  		return;
->>>>  	}
->>>
->>> Why aren't these guests setting X86_FEATURE_TDX_GUEST?
->>
->> They could if we can confirm that the code gated behind
->> cpu_feature_enabled(X86_FEATURE_TDX_GUEST) is correct when running with TD partitioning.
-> 
-> Let me elaborate a bit on my question.
-> 
-> X86_FEATURE_TDX_GUEST is set based on some specific gunk that shows up
-> in CPUID in TDX guests.  I *believe* it's in one of the CPUID leaves
-> that the VMM has no control over.> 
+> >+static void vmx_vcpu_config_fred_after_set_cpuid(struct kvm_vcpu *vcpu)
+> >+{
+> >+	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> >+
+> >+	if (!cpu_feature_enabled(X86_FEATURE_FRED) ||
+> >+	    !guest_cpuid_has(vcpu, X86_FEATURE_FRED))
+> >+		return;
+> >+
+> >+	/* Enable loading guest FRED MSRs from VMCS */
+> >+	vm_entry_controls_setbit(vmx, VM_ENTRY_LOAD_IA32_FRED);
+> >+
+> >+	/*
+> >+	 * Enable saving guest FRED MSRs into VMCS and loading host FRED MSRs
+> >+	 * from VMCS.
+> >+	 */
+> >+	vm_exit_controls_setbit(vmx,
+> VM_EXIT_ACTIVATE_SECONDARY_CONTROLS);
+> >+	secondary_vm_exit_controls_setbit(vmx,
+> >+					  SECONDARY_VM_EXIT_SAVE_IA32_FRED
+> |
+> >+
+> SECONDARY_VM_EXIT_LOAD_IA32_FRED);
+>=20
+> all above vmcs controls need to be cleared if guest doesn't enumerate FRE=
+D, see
+>=20
+> https://lore.kernel.org/all/ZJYzPn7ipYfO0fLZ@google.com/
 
-Right - you're talking about TDX_CPUID_LEAF_ID 0x21.
+Good point, the user space could set cpuid multiple times...
+=20
+> Clearing VM_EXIT_ACTIVATE_SECONDARY_CONTROLS may be problematic when
+> new bits are added to secondary vmcs controls. Why not keep
+> VM_EXIT_ACTIVATE_SECONDARY_CONTROLS always on if it is supported? or you
+> see any perf impact?
 
-> So, first, what in practice is keeping tdx_early_init() from running on
-> these "TD partitioning" systems?  Because it's either not running, or
-> I'm misreading the code horribly.
-> 
+I think it from the other way, why keeps hw loading it on every vmentry
+even if it's not used by a guest?
 
-You're right, it is not running in this case. Not super familiar with TD partitioning,
-but as I understand it in TD partitioning Linux runs as a kind of L2 TD guest with the
-paravisor acting as the L1 TD VM(M). tdx_early_init() changes kernel behavior with the
-assumption that it can talk directly to the TD module or change page visibility in a
-certain way, instead of talking to a paravisor. So that CPUID is hidden to prevent this.
-Otherwise tdx_early_init() would need to be modified to check "am I running with TD
-partitioning and if so - switch to other implementations".
+Different CPUs may implement it in different ways, which we can't assume.
 
->> It still makes sense to have these prints based on the cc_xxx abstractions.
-> 
-> I'm not sure I'm following.
-> 
-> For instance, let's say that someone came up with a nutty reason to do
-> MKTME in Linux.  We'd need a host-side contraption that sets
-> CC_ATTR_MEM_ENCRYPT and so forth.  It would also, obviously, set
-> cc_vendor=CC_VENDOR_INTEL just like host-side SME sets
-> cc_vendor=CC_VENDOR_AMD.
-> 
-> Then we'd have to go back and disentangle all the places where we
-> assumed CC_VENDOR_INTEL==TDX.
+Other features needing it should set it separately, say with a refcount.
 
-We're not baking that generalization into any other place, but when printing
-coco features here it made sense to me to make the shortcut. I can also post
-a v2 that is more accurate:
-
-    if (cc_vendor == CC_VENDOR_INTEL) {
-            pr_cont(" Intel");
-            if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
-                    pr_cont(" TDX\n");
-            return;
-    }
-
-Dexuan and Michael would like to see callbacks added that allow kernel code
-to more accurately report coco features when a paravisor is involved.
-
-> 
-> That, combined with this patch's apparent disregard for why
-> X86_FEATURE_TDX_GUEST isn't getting set makes me think that the big
-> picture was not considered here and this patch represents the quickest
-> hack to get the right spew out to dmesg that is desired.
-
-It's not disregard, the way the kernel behaves in this case is correct except
-for the error in reporting CPU vendor. Users care about seeing the correct
-information in dmesg.
-
-Setting X86_FEATURE_TDX_GUEST might be interesting for a different reason:
-so that we also see TDX in /proc/cpuinfo. But then we would want to consider
-whether we should add a feature for SNP_GUEST, or else every platform reports
-things differently. The cc_platform stuff in the kernel was introduced to avoid
-this kind of differentiation.
-
-Jeremi
 
