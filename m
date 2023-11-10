@@ -1,214 +1,155 @@
-Return-Path: <linux-hyperv+bounces-833-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-834-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6C817E7910
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Nov 2023 07:16:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AC317E7C0C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Nov 2023 13:06:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11694B20F10
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Nov 2023 06:16:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42C0D1C2093F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Nov 2023 12:06:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85502538C;
-	Fri, 10 Nov 2023 06:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3D2182C2;
+	Fri, 10 Nov 2023 12:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEqiQQIb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vdkefv52"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA6E5259
-	for <linux-hyperv@vger.kernel.org>; Fri, 10 Nov 2023 06:16:19 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DEFB5B81
-	for <linux-hyperv@vger.kernel.org>; Thu,  9 Nov 2023 22:16:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699596977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XggjIHp4vdoSOrTXOSQXEDRrxSR1328KQ7zU7pww/Uc=;
-	b=TEqiQQIbqT0oNLAPMPxqRiCUX3mKO+/sY4xMMXqpcL3qq8Z93LD+oUw7PvXqIpXaPK1oso
-	zE7vgndMZFcomwu6wSLeZwxc73amnwTr4mx0VZh7pIzAopac0gTldmI081o/iO2SLxpomQ
-	ee4aCRYTo0iwYYqDeROgulH8JNZOxfE=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-463-Sg_4Qu9SNBKFXXPRehR3lQ-1; Thu, 09 Nov 2023 23:02:19 -0500
-X-MC-Unique: Sg_4Qu9SNBKFXXPRehR3lQ-1
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6c4d0b51c7fso586274b3a.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 09 Nov 2023 20:02:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699588939; x=1700193739;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XggjIHp4vdoSOrTXOSQXEDRrxSR1328KQ7zU7pww/Uc=;
-        b=aPtiuBp8tvC6uM1TTzogd0wjJ5wjHJO5vZlup9usO5LJXabic/NqGwDzWq5gtdELmF
-         jltgBunf47cs/P2pxQS7HTF+usRR6H+uvieT+GMwlg9G8hBw9s0Pj5/axrThEDSgLFJC
-         /jtrKpdJHXqLs0Sw6OOOoIJX62El0zLI7HUwdGkAO90IAKsDWAax9CuOTm460heHdyWv
-         MuhtkLbGQ9VBVbbUjKYwuYqNZnH4G81GCpuXJE7mDNq7T4Jeidgxc2DC0GsdM3+YXoxz
-         nDW3asLKQ5mWtB2b8yWEjJ6ArO58RmushFDOX0oHjPBeaSBz2owoBhF1yW45kmOpI8GF
-         AObg==
-X-Gm-Message-State: AOJu0Ywm8ThwTIsrmaFJO5GXRU+vlOnx6ul9rSyL0De/aDV7gpJQyH2G
-	evw2flgCbC/L7aYOXL/Ad1cevt6iHAL9x02vQDTgA8wtxDJbwpcoueEpoQYRaiW2o9Nv9Gr9ngv
-	klNpkXuNdb32XCEJIkkYJT9n/
-X-Received: by 2002:a05:6a21:71c7:b0:181:b044:44a4 with SMTP id ay7-20020a056a2171c700b00181b04444a4mr6547129pzc.56.1699588938840;
-        Thu, 09 Nov 2023 20:02:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG+9lERQsAFmLd+Z6c2P3EzeChWGcKBVzTv5EsRL3ZyDe51TjlFWi1UE0nFOte7cklYcpUXkQ==
-X-Received: by 2002:a05:6a21:71c7:b0:181:b044:44a4 with SMTP id ay7-20020a056a2171c700b00181b04444a4mr6547102pzc.56.1699588938394;
-        Thu, 09 Nov 2023 20:02:18 -0800 (PST)
-Received: from smtpclient.apple ([116.72.128.216])
-        by smtp.gmail.com with ESMTPSA id l5-20020a17090aaa8500b0028031e87660sm573907pjq.16.2023.11.09.20.02.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Nov 2023 20:02:18 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA3317980
+	for <linux-hyperv@vger.kernel.org>; Fri, 10 Nov 2023 12:06:11 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A773289C;
+	Fri, 10 Nov 2023 04:06:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699617970; x=1731153970;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H4jWVByc4wLVM37wWeWXhVD/EeBwVYgk2+75za4Oepk=;
+  b=Vdkefv52mc/Q/PDtw5C2ustxHKgM0Wv5nKn5C5mdGLoR6Jud5mlOmoyK
+   NZJIejI7ygoKQNWQg1S9J77yaE1QCTyHy686jp8SxZTqguij6gQ5K3Deb
+   l/FTFsZeoitqvoxKVX1LIE1RR68hNIrv2BhqkZnxB3NegFXAAH+d6GnqT
+   WjzMaEEcNkp/hHvfsNsMlX4UaRiKOHOfcyhLHiZuMOgtU2Z951aBYRrBZ
+   /C3yRMXmCwrjYOv80VBhhTD/dlaGLFifvVzAahWCpNzgcGbOuh42w5pqv
+   QDCb9ef5Og3OVrlO8lPgr8NVXi/PNncHyp14zXUQua41vTSN255gx+zMs
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="3160825"
+X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
+   d="scan'208";a="3160825"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 04:06:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="829637766"
+X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
+   d="scan'208";a="829637766"
+Received: from amazouz-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.43.76])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 04:06:04 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id B3BC3103614; Fri, 10 Nov 2023 15:06:01 +0300 (+03)
+Date: Fri, 10 Nov 2023 15:06:01 +0300
+From: kirill.shutemov@linux.intel.com
+To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>,
+	Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+	stefan.bader@canonical.com, tim.gardner@canonical.com,
+	roxana.nicolescu@canonical.com, cascardo@canonical.com,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	sashal@kernel.org
+Subject: Re: [PATCH] x86/mm: Check cc_vendor when printing memory encryption
+ info
+Message-ID: <20231110120601.3mbemh6djdazyzgb@box.shutemov.name>
+References: <1699546489-4606-1-git-send-email-jpiotrowski@linux.microsoft.com>
+ <16ea75a9-8c94-4665-ae04-32d08aa4ebb2@intel.com>
+ <58abbc79-64d4-41f9-9fd2-1de7826fbbf6@linux.microsoft.com>
+ <ee9de366-6027-495a-98d9-b8b0cd866bf2@intel.com>
+ <df95817a-4859-443a-9ac2-b09f102aff30@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: Re: [PATCH] hv/hv_kvp_daemon: Some small fixes for handling NM
- keyfiles
-From: Ani Sinha <anisinha@redhat.com>
-In-Reply-To: <5D793B43-B5DB-4BA2-9F1E-B01D5E2487D2@redhat.com>
-Date: Fri, 10 Nov 2023 09:32:03 +0530
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1D09E6F5-9120-40D4-A365-AF04E9AA5587@redhat.com>
-References: <20231016133122.2419537-1-anisinha@redhat.com>
- <20231023053746.GA11148@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <E44432C5-17B2-47FC-B382-384659B21DCF@redhat.com>
- <5D793B43-B5DB-4BA2-9F1E-B01D5E2487D2@redhat.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df95817a-4859-443a-9ac2-b09f102aff30@linux.microsoft.com>
 
+On Thu, Nov 09, 2023 at 07:41:33PM +0100, Jeremi Piotrowski wrote:
+> It's not disregard, the way the kernel behaves in this case is correct except
+> for the error in reporting CPU vendor. Users care about seeing the correct
+> information in dmesg.
 
+I think it is wrong place to advertise CoCo features. It better fits into
+Intel/AMD-specific code that knows better what it is running on. Inferring
+it from generic code has been proved problematic as you showed.
 
-> On 07-Nov-2023, at 9:10=E2=80=AFAM, Ani Sinha <anisinha@redhat.com> =
-wrote:
->=20
->=20
->=20
->> On 30-Oct-2023, at 10:45 AM, Ani Sinha <anisinha@redhat.com> wrote:
->>=20
->>=20
->>=20
->>> On 23-Oct-2023, at 11:07 AM, Shradha Gupta =
-<shradhagupta@linux.microsoft.com> wrote:
->>>=20
->>> On Mon, Oct 16, 2023 at 07:01:22PM +0530, Ani Sinha wrote:
->>>> Some small fixes:
->>>> - lets make sure we are not adding ipv4 addresses in ipv6 section =
-in
->>>> keyfile and vice versa.
->>>> - ADDR_FAMILY_IPV6 is a bit in addr_family. Test that bit instead =
-of
->>>> checking the whole value of addr_family.
->>>> - Some trivial fixes in hv_set_ifconfig.sh.
->>>>=20
->>>> These fixes are proposed after doing some internal testing at Red =
-Hat.
->>>>=20
->>>> CC: Shradha Gupta <shradhagupta@linux.microsoft.com>
->>>> CC: Saurabh Sengar <ssengar@linux.microsoft.com>
->>>> Fixes: 42999c904612 ("hv/hv_kvp_daemon:Support for keyfile based =
-connection profile")
->>>> Signed-off-by: Ani Sinha <anisinha@redhat.com>
->>>> ---
->>>> tools/hv/hv_kvp_daemon.c    | 20 ++++++++++++--------
->>>> tools/hv/hv_set_ifconfig.sh |  4 ++--
->>>> 2 files changed, 14 insertions(+), 10 deletions(-)
->>>>=20
->>>> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
->>>> index 264eeb9c46a9..318e2dad27e0 100644
->>>> --- a/tools/hv/hv_kvp_daemon.c
->>>> +++ b/tools/hv/hv_kvp_daemon.c
->>>> @@ -1421,7 +1421,7 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
->>>> if (error)
->>>> goto setval_error;
->>>>=20
->>>> - if (new_val->addr_family =3D=3D ADDR_FAMILY_IPV6) {
->>>> + if (new_val->addr_family & ADDR_FAMILY_IPV6) {
->>>> error =3D fprintf(nmfile, "\n[ipv6]\n");
->>>> if (error < 0)
->>>> goto setval_error;
->>>> @@ -1455,14 +1455,18 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
->>>> if (error < 0)
->>>> goto setval_error;
->>>>=20
->>>> - error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
-*)new_val->gate_way);
->>>> - if (error < 0)
->>>> - goto setval_error;
->>>> -
->>>> - error =3D fprintf(nmfile, "dns=3D%s\n", (char =
-*)new_val->dns_addr);
->>>> - if (error < 0)
->>>> - goto setval_error;
->>>> + /* we do not want ipv4 addresses in ipv6 section and vice versa =
-*/
->>>> + if (is_ipv6 !=3D is_ipv4((char *)new_val->gate_way)) {
->>>> + error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
-*)new_val->gate_way);
->>>> + if (error < 0)
->>>> + goto setval_error;
->>>> + }
->>>>=20
->>>> + if (is_ipv6 !=3D is_ipv4((char *)new_val->dns_addr)) {
->>>> + error =3D fprintf(nmfile, "dns=3D%s\n", (char =
-*)new_val->dns_addr);
->>>> + if (error < 0)
->>>> + goto setval_error;
->>>> + }
->>>> fclose(nmfile);
->>>> fclose(ifcfg_file);
->>>>=20
->>>> diff --git a/tools/hv/hv_set_ifconfig.sh =
-b/tools/hv/hv_set_ifconfig.sh
->>>> index ae5a7a8249a2..440a91b35823 100755
->>>> --- a/tools/hv/hv_set_ifconfig.sh
->>>> +++ b/tools/hv/hv_set_ifconfig.sh
->>>> @@ -53,7 +53,7 @@
->>>> #                       or "manual" if no boot-time protocol should =
-be used)
->>>> #
->>>> # address1=3Dipaddr1/plen
->>>> -# address=3Dipaddr2/plen
->>>> +# address2=3Dipaddr2/plen
->>>> #
->>>> # gateway=3Dgateway1;gateway2
->>>> #
->>>> @@ -61,7 +61,7 @@
->>>> #
->>>> # [ipv6]
->>>> # address1=3Dipaddr1/plen
->>>> -# address2=3Dipaddr1/plen
->>>> +# address2=3Dipaddr2/plen
->>>> #
->>>> # gateway=3Dgateway1;gateway2
->>>> #
->>>> --=20
->>>> 2.39.2
->>> Reviewed-by: Shradha Gupta <Shradhagupta@linux.microsoft.com>
->>=20
->> Ping. Can anyone please queue this?
->>>=20
->=20
-> Ping again =E2=80=A6 Please pick this up.
+Maybe just remove incorrect info and that's it?
 
-Ping =E2=80=A6
-
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index c290c55b632b..f573a97c0524 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -40,42 +40,6 @@ bool force_dma_unencrypted(struct device *dev)
+ 	return false;
+ }
+ 
+-static void print_mem_encrypt_feature_info(void)
+-{
+-	pr_info("Memory Encryption Features active:");
+-
+-	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+-		pr_cont(" Intel TDX\n");
+-		return;
+-	}
+-
+-	pr_cont(" AMD");
+-
+-	/* Secure Memory Encryption */
+-	if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT)) {
+-		/*
+-		 * SME is mutually exclusive with any of the SEV
+-		 * features below.
+-		 */
+-		pr_cont(" SME\n");
+-		return;
+-	}
+-
+-	/* Secure Encrypted Virtualization */
+-	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+-		pr_cont(" SEV");
+-
+-	/* Encrypted Register State */
+-	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+-		pr_cont(" SEV-ES");
+-
+-	/* Secure Nested Paging */
+-	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+-		pr_cont(" SEV-SNP");
+-
+-	pr_cont("\n");
+-}
+-
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void)
+ {
+@@ -85,7 +49,7 @@ void __init mem_encrypt_init(void)
+ 	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
+ 	swiotlb_update_mem_attributes();
+ 
+-	print_mem_encrypt_feature_info();
++	pr_info("Memory Encryption is active\n");
+ }
+ 
+ void __init mem_encrypt_setup_arch(void)
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
