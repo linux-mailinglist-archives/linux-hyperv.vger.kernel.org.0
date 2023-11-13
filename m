@@ -1,114 +1,110 @@
-Return-Path: <linux-hyperv+bounces-895-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-896-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CDBE7EA203
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 18:37:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33D4F7EA2D4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 19:30:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 696C8B209AC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 17:37:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E9061C2091E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 18:30:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CECE224DE;
-	Mon, 13 Nov 2023 17:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FD322F1C;
+	Mon, 13 Nov 2023 18:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yDdz7RU+"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="URdSOo5a"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C54224D3;
-	Mon, 13 Nov 2023 17:37:10 +0000 (UTC)
-Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED2810F4;
-	Mon, 13 Nov 2023 09:37:09 -0800 (PST)
-Received: from [127.0.0.1] ([12.191.197.195])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 3ADHaD5Q2879261
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 13 Nov 2023 09:36:14 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 3ADHaD5Q2879261
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2023111101; t=1699896975;
-	bh=SCbNEaKysaDENzp7ym8rKe0t6E54PmQIYjGt+gUaVHA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=yDdz7RU+C8v9nYIEBzCAWgRm3F1WpeF12wJgCrA6ccgmNshH+SnO2sPhDYH9PySHL
-	 YyqF7gWVqnOyr+dQAlGtnI9JasuK7AwYlLy1Tt2yJ1F5ZtYRCDnhW+aPvp3RGHfPVB
-	 ysKh2MIXuyuYvp9nlGkCXC0QcYduFhDiMoxcqjQi9RkcMYie4H2Kw3TzoAxlI6tvXV
-	 rrRKQ+lxLK4B2iaxhdShSn2TR4kmpimd9HhJX0jQ6J/xPqAgC0pG4q/9GwQchMAeUS
-	 VQv4HAjGvUZ+w8UYh6+zktz0G+ELn42zjvoiL9UHu2Nr46sqxDE142BCoNIRfAyLDl
-	 nQ9dbCgQdGOGA==
-Date: Mon, 13 Nov 2023 12:36:04 -0500
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Borislav Petkov <bp@alien8.de>, Xin Li <xin3.li@intel.com>
-CC: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, luto@kernel.org, pbonzini@redhat.com,
-        seanjc@google.com, peterz@infradead.org, jgross@suse.com,
-        ravi.v.shankar@intel.com, mhiramat@kernel.org,
-        andrew.cooper3@citrix.com, jiangshanlai@gmail.com,
-        nik.borisov@suse.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v12_19/37=5D_x86/fred=3A_Update?= =?US-ASCII?Q?_MSR=5FIA32=5FFRED=5FRSP0_during_task_switch?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20231113093742.GAZVHuZk9CGTRIfAWb@fat_crate.local>
-References: <20231003062458.23552-1-xin3.li@intel.com> <20231003062458.23552-20-xin3.li@intel.com> <20231113093742.GAZVHuZk9CGTRIfAWb@fat_crate.local>
-Message-ID: <3BFEBDE8-6F90-43A5-AE34-07B0ED0CAAAE@zytor.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1B822F0D;
+	Mon, 13 Nov 2023 18:30:23 +0000 (UTC)
+Received: from mail.alien8.de (mail.alien8.de [IPv6:2a01:4f9:3051:3f93::2])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB8B172C;
+	Mon, 13 Nov 2023 10:30:19 -0800 (PST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 849C740E0191;
+	Mon, 13 Nov 2023 18:30:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id vIR0tkFfDk7P; Mon, 13 Nov 2023 18:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1699900215; bh=QGUJ2C4j4YRZSL/U1xa+aaW+qjnM9Ayip2GHUoCQbrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=URdSOo5atytuczMmbDY6wONUqVHGwPzBY+Ft6r7t2wqWxYpmjhb8q5WUpOi/bXSA5
+	 fJ5TW/gAX2J5Fg3Yrixa37rJaTWaX2xG2GP2Srly/D51K8bIlKWqgqEj1TFiEGKM6B
+	 MDKQ3/YghE54YThudVhfA3Jm4PDiKtKqksPmrK+PeJ8FVtgBtNckL3zManei+Pyi1f
+	 e3dsFQBcbGTQsF2fhzV/KYCdRhzBSc/UfuYV9q6kZFEK9XxiacsmrtEVwSIQQ6sge8
+	 1cjKTmrp4l91XDbS3OkHDBCSMZSAaB8rhMsfg0Zkr8yFHr+jualMdcmrmSLxbxpAMZ
+	 gXkKKAduMrUEw3/crCu69g1FUTrLbM+aBp8q5qMu+mb+WVawknTYPZ2PrJzaSLOMzW
+	 eI2IleRus14qCFdmSYWN32apAmJBpfkEFdkSEeb44MzcNJ8qVuttPQIBmxH0O9j/17
+	 qx2UYOK2bVXxXs8ovE3SvECy+JZz2HeNXN3hh5lL7l0qOQ8EiRVCoXpUT7220lntyq
+	 4YAZ2HblHaiSC/1DRV/ic58WOM/BHcuaqykTtiPq+Y5r8Y/7iW+yg7Fd6v/9I/X0jl
+	 rL9BIJh+KcXziVjf09XFcoI+uWyBh9S5dBkFNlCLgPKN003pXaJ13c3sMBO5iB4cmR
+	 hDLQpgt7qlF5RnhXKZicYwPs=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B6D7140E0171;
+	Mon, 13 Nov 2023 18:29:52 +0000 (UTC)
+Date: Mon, 13 Nov 2023 19:29:47 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Xin Li <xin3.li@intel.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	luto@kernel.org, pbonzini@redhat.com, seanjc@google.com,
+	peterz@infradead.org, jgross@suse.com, ravi.v.shankar@intel.com,
+	mhiramat@kernel.org, andrew.cooper3@citrix.com,
+	jiangshanlai@gmail.com, nik.borisov@suse.com
+Subject: Re: [PATCH v12 19/37] x86/fred: Update MSR_IA32_FRED_RSP0 during
+ task switch
+Message-ID: <20231113182947.GEZVJrGyMS4KzQafIK@fat_crate.local>
+References: <20231003062458.23552-1-xin3.li@intel.com>
+ <20231003062458.23552-20-xin3.li@intel.com>
+ <20231113093742.GAZVHuZk9CGTRIfAWb@fat_crate.local>
+ <3BFEBDE8-6F90-43A5-AE34-07B0ED0CAAAE@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3BFEBDE8-6F90-43A5-AE34-07B0ED0CAAAE@zytor.com>
 
-On November 13, 2023 4:37:42 AM EST, Borislav Petkov <bp@alien8=2Ede> wrote=
-:
->On Mon, Oct 02, 2023 at 11:24:40PM -0700, Xin Li wrote:
->> From: "H=2E Peter Anvin (Intel)" <hpa@zytor=2Ecom>
->>=20
->> MSR_IA32_FRED_RSP0 is used during ring 3 event delivery, and needs to
->> be updated to point to the top of next task stack during task switch=2E
->>=20
->> Signed-off-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
->> Tested-by: Shan Kang <shan=2Ekang@intel=2Ecom>
->> Signed-off-by: Xin Li <xin3=2Eli@intel=2Ecom>
->> ---
->>  arch/x86/include/asm/switch_to=2Eh | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/arch/x86/include/asm/switch_to=2Eh b/arch/x86/include/asm/=
-switch_to=2Eh
->> index f42dbf17f52b=2E=2Ec3bd0c0758c9 100644
->> --- a/arch/x86/include/asm/switch_to=2Eh
->> +++ b/arch/x86/include/asm/switch_to=2Eh
->> @@ -70,9 +70,13 @@ static inline void update_task_stack(struct task_str=
-uct *task)
->>  #ifdef CONFIG_X86_32
->>  	this_cpu_write(cpu_tss_rw=2Ex86_tss=2Esp1, task->thread=2Esp0);
->>  #else
->> -	/* Xen PV enters the kernel on the thread stack=2E */
->> -	if (cpu_feature_enabled(X86_FEATURE_XENPV))
->> +	if (cpu_feature_enabled(X86_FEATURE_FRED)) {
->> +		/* WRMSRNS is a baseline feature for FRED=2E */
->> +		wrmsrns(MSR_IA32_FRED_RSP0, (unsigned long)task_stack_page(task) + T=
-HREAD_SIZE);
->
->If this non-serializing write happens now and, AFAICT, the CR3 write
->during the task switch has already happened in switch_mm* earlier, what
->is the serialization point that's going to make sure that write is
->committed before the new task starts executing?
->
->Thx=2E
->
+On Mon, Nov 13, 2023 at 12:36:04PM -0500, H. Peter Anvin wrote:
+> A resource cannot be consumed after the value has been written; this
+> is the only necessary level of serialization, equivalent to, say, RAX.
 
-A resource cannot be consumed after the value has been written; this is th=
-e only necessary level of serialization, equivalent to, say, RAX=2E
+Lemme see if I understand this correctly using this context as an
+example: after this MSR_IA32_FRED_RSP0 write, any FRED events determined
+to be delivered to level 0 will use this new task stack ptr?
 
-A serializing instruction stops the entire pipeline until everything has r=
-etired and any stores have become globally visible=2E
+And since the new task is not running yet and the old one isn't running
+either, we're fine here. So the "serialization point" I was talking
+about above is bollocks.
+
+Close? :)
+
+> A serializing instruction stops the entire pipeline until everything
+> has retired and any stores have become globally visible.
+
+Right, we don't need that here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
