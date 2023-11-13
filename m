@@ -1,420 +1,160 @@
-Return-Path: <linux-hyperv+bounces-865-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-883-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E366D7E9499
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 03:25:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39BC87E9538
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 03:47:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97CC2280BEC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 02:25:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0DE21F21152
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 02:47:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E518474;
-	Mon, 13 Nov 2023 02:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D7679D8;
+	Mon, 13 Nov 2023 02:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="HbDL//+3"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cbZupJpj"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CC8846F
-	for <linux-hyperv@vger.kernel.org>; Mon, 13 Nov 2023 02:25:14 +0000 (UTC)
-X-Greylist: delayed 61 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 12 Nov 2023 18:25:06 PST
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747D630EB
-	for <linux-hyperv@vger.kernel.org>; Sun, 12 Nov 2023 18:25:05 -0800 (PST)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4STCv440z4zMq2H7;
-	Mon, 13 Nov 2023 02:25:04 +0000 (UTC)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4STCv31cKszMppt7;
-	Mon, 13 Nov 2023 03:25:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1699842304;
-	bh=qU7rpwZb8Bl+xuVDwtq6MKJ75S7Uo4UAc0PUDjw5xlk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HbDL//+3ATCwPmW6FeNdrIH7tZIwaMnw+QS1qdZf+B2mnT/MKQm4aP+mx66UUcjaD
-	 hsK1zTShrWzEU7FyzuuXAFeXbZ2X6WXdUpzO09fScu+mFKm7CXVRlh5HLUvFpTFOab
-	 J5+cWZjh90MaulzQheCaiQUYvIq2/sNhJR0yOd08=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alexander Graf <graf@amazon.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Forrest Yuan Yu <yuanyu@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	John Andersen <john.s.andersen@intel.com>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marian Rotariu <marian.c.rotariu@gmail.com>,
-	=?UTF-8?q?Mihai=20Don=C8=9Bu?= <mdontu@bitdefender.com>,
-	=?UTF-8?q?Nicu=C8=99or=20C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	=?UTF-8?q?=C8=98tefan=20=C8=98icleru?= <ssicleru@bitdefender.com>,
-	dev@lists.cloudhypervisor.org,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	qemu-devel@nongnu.org,
-	virtualization@lists.linux-foundation.org,
-	x86@kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: [RFC PATCH v2 19/19] virt: Add Heki KUnit tests
-Date: Sun, 12 Nov 2023 21:23:26 -0500
-Message-ID: <20231113022326.24388-20-mic@digikod.net>
-In-Reply-To: <20231113022326.24388-1-mic@digikod.net>
-References: <20231113022326.24388-1-mic@digikod.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0BD8466;
+	Mon, 13 Nov 2023 02:47:50 +0000 (UTC)
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021006.outbound.protection.outlook.com [52.101.56.6])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF526115;
+	Sun, 12 Nov 2023 18:47:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ldl+LfuUbg/RnUURojUoLGT9CS10AC2y1xEdbKmOOhUQZ0j7ipEdkLO/7Cem5nf1RSUIA36dc8VRN2oAYpH9mR5MKoBQgyC6Z6kJ0pV0iCgCQnO7mUp8jiWkjWlEsOjHwtUQrAr3rRHPxnNbJsffa/JBsgcfLJsJ/oZbkK6NjYXWCPjJZsdZ4l93XP/REjvz/pOteAtGWPe8whuOdEKtL1gNFCnzx8hkjDY9lqPb4KXAxFs0OyPn6+Vg7TWrvfhQddsRqD2J1migIUMwZ+CGZoPcflLtgk1gQEV2naNhmEMhnzXbnCsMCy4/G/zeM4gya0Nwy6ucEb0Evdek7+P9XQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dY4rgrXwtRFEQwspEhnZN45CtxwPlbbU85bSf6vRooo=;
+ b=K8pvHhv9Z4TwtGNUuuEjNkOf5ob0lyjTNaYleU6DRKZT57DZgsM8JaCbI6IC+N+K38ck5J98p0gDLNVIeWrR0SrPIrF2jkJUjqMiJ940JiHreNzYlWhQ4za1eWEOW3Pq/LoGu+DbLXogewm7/DoozkSentXRj9YyZZ/w7lTwxKiKhcG3w2Obj7xrjC8srjiuhmadzTcKwzBddAkHnW/3jjXAqEQ4IUCFEHiI4sR8Zor18uwty1Kv0s7dHi7nLDID0xzjakGqUphbT78/z5OZJAti9ycGYRcLd2EvBCQ7SPKkcIp5Q2aDQNLP0dTASBfxYvsyCd6lvDGQ+QpWLhpzdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dY4rgrXwtRFEQwspEhnZN45CtxwPlbbU85bSf6vRooo=;
+ b=cbZupJpjzJ+AyBT9IkVY8GYKE6w8jZDJFOtovEoCggSRlRow+YlpRYXfXBrDLSFpp+gc878D/J5WTDX1hDFcIyrpjp8dZkuqVVRa0OuNjspAOdcPXuE5/Kptq58KC2LSb/BqDa1WHLoTChzHShLIHCx80ZgtZvrsm6iEZb8B12c=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by IA1PR21MB3691.namprd21.prod.outlook.com (2603:10b6:208:3e0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.3; Mon, 13 Nov
+ 2023 02:47:46 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::c1de:d3e5:8e05:1e4a]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::c1de:d3e5:8e05:1e4a%2]) with mapi id 15.20.7025.003; Mon, 13 Nov 2023
+ 02:47:45 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>
+CC: KY Srinivasan <kys@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"davem@davemloft.net" <davem@davemloft.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: [PATCH net,v4, 1/3] hv_netvsc: fix race of netvsc and VF
+ register_netdevice
+Thread-Topic: [PATCH net,v4, 1/3] hv_netvsc: fix race of netvsc and VF
+ register_netdevice
+Thread-Index: AQHaE+O1KhHXoobg4UuwUafU9fMaCbB3j4jQ
+Date: Mon, 13 Nov 2023 02:47:44 +0000
+Message-ID:
+ <SA1PR21MB13356883A590CFC37A0AFDE7BFB3A@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <1699627140-28003-1-git-send-email-haiyangz@microsoft.com>
+ <1699627140-28003-2-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1699627140-28003-2-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2fc07345-5ae1-45d7-8005-c478f8c8090e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-11-13T02:46:51Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|IA1PR21MB3691:EE_
+x-ms-office365-filtering-correlation-id: 4f543085-e4bc-420c-17a5-08dbe3f2ea00
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ mvR5EM9a2nmnE9ZSiIVr/K8c2c/hjnqXUow/pcRSGvamstCSpTl5IfZkpU1ZlR47UNJaqBJ0Hi2v8BV2Sq2/Hc5m4E22ckwsyGMv5YBsw9Q5XWSaquRej02kyQWR4KUUGbLxeZjXWSsoQ35QtqWBvTqgUL0oOXzGe1r71gd6cL7kD9rCV1n6FfZ/DISF7P9ucIZHhMx9thRIL5Zs6am2sLRafKe0i8RdFUEyhrneaWqztLao0u/u4huHyWrrt6GwBMIN5FlrXBgxQexzjLNmCjrI5/OzMbJhaR3ZS2UJ8WMOc1rVWvoNAsWROa1ZX1Wjp8YAxJPzKvzSyInQYksDk5+jFlZoN9KuSXJNhY1B+TolLjBnrs+YLNIB1uIdbBzLQqLjUao6DOV85J1kb+Q6IZx1K6CdMmygwZ84XchMdPf7kh5635vSPq3x/L9J6QsybDCAjy1MG45VV8rOGmQc/qeL5Fg3czjp0j7AieSLDTMBtBSxlV7zmADe5VQfeBQBStPuYQre/0WQqYIV3n7ojHNf6Xkm7yW5DAMBUgMGlAwf7Lg2+qkpq4pUy9EVOKgzYZJzNiZnzuwY3j0pI/TK8KY0iW+TfeNAPNFrn227ECRCi0DNYU3sAbT9CSuTDDZ+hzw1YVcnApdV/C0gHD1QzBJHWyLesMuze+vK+ibMZGw=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(366004)(136003)(39860400002)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(66899024)(54906003)(64756008)(316002)(66476007)(110136005)(66446008)(76116006)(66946007)(66556008)(8936002)(8676002)(4326008)(52536014)(10290500003)(478600001)(71200400001)(8990500004)(33656002)(41300700001)(5660300002)(86362001)(4744005)(2906002)(38100700002)(122000001)(7696005)(6506007)(9686003)(83380400001)(82950400001)(82960400001)(38070700009)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?TZNUwPhX8M+Jekv1mS6W4gIZPpnUMbgTcfAdnVTQB8bGns2vzcvXeKt5CO7+?=
+ =?us-ascii?Q?YsCzsZnzzEb+9CAuVH4pyRYLvijYnI8bgEX7zOWCttVGqIlcDD02vNg/NbtI?=
+ =?us-ascii?Q?hD6mP+zi7HnvvYDLLPeP38xYvb21wtPP8XoyArJHDdY8s1JkkYKxYmPpA0yv?=
+ =?us-ascii?Q?WRLMWZ3jhuIGbQzsxjBQDIL/ELcxjJfm2gG/5S8XDwFYp4CLNzTrw620nG3r?=
+ =?us-ascii?Q?APrkLgkxdoFyppIwN2I4AR1eYpuGrPVV1oNC1ok66UPVShFYRwZ3U55sjp/T?=
+ =?us-ascii?Q?beAABm638ax8AbClxhGg0sh7woNXz1uy5/cSywUnUaam/ly6TKvD9ilnPdZU?=
+ =?us-ascii?Q?jlLMLbjah/C8NNbRwWvYROLKoBDjQHIT2qEF+dpDrXUSLi79dqgNRvD9PvlV?=
+ =?us-ascii?Q?GCIC1o6yysQr5shSeZ5ybE4/C72ZopGGbs7jD0/hVjDqbUYRHPo6K+hoNZyZ?=
+ =?us-ascii?Q?e0388cAxDaTyJVOBsj573+bZ/IW1O+CHyj7QXEdJqTmHN4+qS91/yvanyZA4?=
+ =?us-ascii?Q?0SphK4O6UiNbb/zzzBQEKILLPLZQ5j7CYJao0tKLcVXEoOu/Dqr53VYDhdlJ?=
+ =?us-ascii?Q?QvpqWSvVat9bjvpYWsRALkq4v/h5IZ7wxTIYNrdMknXGUS8wUaVp3sL6LhFK?=
+ =?us-ascii?Q?NJNgsgRVu6N6a+CnuonSKY9DncHrBssIe/FCoerHD5MG5G9szEQeMiFvm+Fm?=
+ =?us-ascii?Q?lbZIjannUebjUdJKEkaBwUQKjR4OwLo/cMJmy/S2IswcBrdKKwjNjTjfkGvB?=
+ =?us-ascii?Q?assO7tDsKP7tGqMF07jXFAErSWj2VIvuvrcoX1C5pSw+rUuWfEBL7vclAcwU?=
+ =?us-ascii?Q?UaAhXKa2F/+/7gdWY7ZC2DgzaNiTO5WnavFICo3rSi7zDqEyqqBS0bY8fJZe?=
+ =?us-ascii?Q?vr3uP3zMlJi9xRfurcRy1h9UWdXgiQwNbgZmWyZW66nKLwLZzTHQGXbfOAwQ?=
+ =?us-ascii?Q?9BCJwBu83xH2YzgGp3iAQ8R9nU6eJGzgidfQ5vv4pFIsgE6PC1Ct7ZzMIgO9?=
+ =?us-ascii?Q?YftgIV5YXkxsrH1Nr8cTj42VGrpR+23Zc6tL+STyWbqj1pq1y7HoBN6tCxNb?=
+ =?us-ascii?Q?kjrgr4x7m8oAv3WF7GS60p88Nkbim2Tjs6JFFCtwjlgMK9EzSIbOThy4N6gG?=
+ =?us-ascii?Q?malHAPBS7ykBh70DC3gmSTv1hPMUQ4OBFLqsgk74a1OAJ4Ythr1shfEbaQQA?=
+ =?us-ascii?Q?4B5DFuTNqN/ZZyV81in2QsQmsNQw9zcjyy47tLwWthQphu0Z8AWaqIN3WczW?=
+ =?us-ascii?Q?2Uw5VWhzn5Zm/5m7zKb4i94zKJWXQS9mvaqd3MqXaqRtYpI1xfpsjWRRJKBq?=
+ =?us-ascii?Q?tyKl7jEQUKf9jriw217JhiPpwwL0Hc9BkU9e8Osq7CxgM9/nYEn1knvuQMbY?=
+ =?us-ascii?Q?5IJSGQ+iH12IIwS+6ZIS1iAqudrS6DXd882fuI1aq2gqEnqQcei/vHQ4Z3Xu?=
+ =?us-ascii?Q?Pvg8ZZag5YbkBdZJzJNXD6h8W+51nrQQ+g3/gJAsJG2RKEbywsJffsPWa2uP?=
+ =?us-ascii?Q?yhj9w0yVOExjsKbYQJ9hrBibaFNDkz83l9lZ1WWNLDtpn/ei3UR8C7GZjw?=
+ =?us-ascii?Q?=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f543085-e4bc-420c-17a5-08dbe3f2ea00
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2023 02:47:45.0416
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B0ORlN9qTiswKowjJ2Vr+EheR65YAM8d1lowdCMK/I4gYfjtAqjwcyG6u3FG/MZoj7JlTU7gImEnyYnKr+FXrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3691
 
-This adds a new CONFIG_HEKI_TEST option to run tests at boot. Because we
-use some symbols not exported to modules (e.g., kernel_set_to_readonly)
-this could not work as modules.
+> From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang Zhang
+> Sent: Friday, November 10, 2023 9:39 AM
+> [...]
+>=20
+> The rtnl lock also needs to be held before rndis_filter_device_add()
+> which advertises nvsp_2_vsc_capability / sriov bit, and triggers
+> VF NIC offering and registering. If VF NIC finished register_netdev()
+> earlier it may cause name based config failure.
+>=20
+> To fix this issue, move the call to rtnl_lock() before
+> rndis_filter_device_add(), so VF will be registered later than netvsc
+> / synthetic NIC, and gets a name numbered (ethX) after netvsc.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: e04e7a7bbd4b ("hv_netvsc: Fix a deadlock by getting rtnl lock earl=
+ier in
+> netvsc_probe()")
+> Reported-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
 
-To run these tests, we need to boot the kernel with the heki_test=N boot
-argument with N selecting a specific test:
-1. heki_test_cr_disable_smep: Check CR pinning and try to disable SMEP.
-2. heki_test_write_to_const: Check .rodata (const) protection.
-3. heki_test_write_to_ro_after_init: Check __ro_after_init protection.
-4. heki_test_exec: Check non-executable kernel memory.
-
-This way to select tests should not be required when the kernel will
-properly handle the triggered synthetic page faults.  For now, these
-page faults make the kernel loop.
-
-All these tests temporarily disable the related kernel self-protections
-and should then failed if Heki doesn't protect the kernel.  They are
-verbose to make it easier to understand what is going on.
-
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
-
-Changes since v1:
-* Move all tests to virt/heki/tests.c
----
- include/linux/heki.h |   1 +
- virt/heki/Kconfig    |  12 +++
- virt/heki/Makefile   |   1 +
- virt/heki/main.c     |   6 +-
- virt/heki/tests.c    | 207 +++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 226 insertions(+), 1 deletion(-)
- create mode 100644 virt/heki/tests.c
-
-diff --git a/include/linux/heki.h b/include/linux/heki.h
-index 306bcec7ae92..9e2cf0051ab0 100644
---- a/include/linux/heki.h
-+++ b/include/linux/heki.h
-@@ -149,6 +149,7 @@ void heki_protect(unsigned long va, unsigned long end);
- void heki_add_pa(struct heki_args *args, phys_addr_t pa,
- 		 unsigned long permissions);
- void heki_apply_permissions(struct heki_args *args);
-+void heki_run_test(void);
- 
- /* Arch-specific functions. */
- void heki_arch_early_init(void);
-diff --git a/virt/heki/Kconfig b/virt/heki/Kconfig
-index 9bde84cd759e..fa814a921bb0 100644
---- a/virt/heki/Kconfig
-+++ b/virt/heki/Kconfig
-@@ -28,3 +28,15 @@ config HYPERVISOR_SUPPORTS_HEKI
- 	  A hypervisor should select this when it can successfully build
- 	  and run with CONFIG_HEKI. That is, it should provide all of the
- 	  hypervisor support required for the Heki feature.
-+
-+config HEKI_TEST
-+	bool "Tests for Heki" if !KUNIT_ALL_TESTS
-+	depends on HEKI && KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Run Heki tests at runtime according to the heki_test=N boot
-+	  parameter, with N identifying the test to run (between 1 and 4).
-+
-+	  Before launching the init process, the system might not respond
-+	  because of unhandled kernel page fault.  This will be fixed in a
-+	  next patch series.
-diff --git a/virt/heki/Makefile b/virt/heki/Makefile
-index 564f92faa9d8..a66cd0ba140b 100644
---- a/virt/heki/Makefile
-+++ b/virt/heki/Makefile
-@@ -3,3 +3,4 @@
- obj-y += main.o
- obj-y += walk.o
- obj-y += counters.o
-+obj-y += tests.o
-diff --git a/virt/heki/main.c b/virt/heki/main.c
-index 5629334112e7..ce9984231996 100644
---- a/virt/heki/main.c
-+++ b/virt/heki/main.c
-@@ -51,8 +51,10 @@ void heki_late_init(void)
- {
- 	struct heki_hypervisor *hypervisor = heki.hypervisor;
- 
--	if (!heki.counters)
-+	if (!heki.counters) {
-+		heki_run_test();
- 		return;
-+	}
- 
- 	/* Locks control registers so a compromised guest cannot change them. */
- 	if (WARN_ON(hypervisor->lock_crs()))
-@@ -61,6 +63,8 @@ void heki_late_init(void)
- 	pr_warn("Control registers locked\n");
- 
- 	heki_arch_late_init();
-+
-+	heki_run_test();
- }
- 
- /*
-diff --git a/virt/heki/tests.c b/virt/heki/tests.c
-new file mode 100644
-index 000000000000..6e6542b257f1
---- /dev/null
-+++ b/virt/heki/tests.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Hypervisor Enforced Kernel Integrity (Heki) - Common code
-+ *
-+ * Copyright © 2023 Microsoft Corporation
-+ */
-+
-+#include <linux/kvm_host.h>
-+#include <kunit/test.h>
-+#include <linux/cache.h>
-+#include <linux/heki.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+#include <linux/printk.h>
-+#include <linux/set_memory.h>
-+#include <linux/types.h>
-+#include <linux/vmalloc.h>
-+
-+#include "common.h"
-+
-+#ifdef CONFIG_HEKI_TEST
-+
-+/* Heki test data */
-+
-+/* Takes two pages to not change permission of other read-only pages. */
-+const char heki_test_const_buf[PAGE_SIZE * 2] = {};
-+char heki_test_ro_after_init_buf[PAGE_SIZE * 2] __ro_after_init = {};
-+
-+long heki_test_exec_data(long);
-+void _test_exec_data_end(void);
-+
-+/* Used to test ROP execution against the .rodata section. */
-+/* clang-format off */
-+asm(
-+".pushsection .rodata;" // NOT .text section
-+".global heki_test_exec_data;"
-+".type heki_test_exec_data, @function;"
-+"heki_test_exec_data:"
-+ASM_ENDBR
-+"movq %rdi, %rax;"
-+"inc %rax;"
-+ASM_RET
-+".size heki_test_exec_data, .-heki_test_exec_data;"
-+"_test_exec_data_end:"
-+".popsection");
-+/* clang-format on */
-+
-+static void heki_test_cr_disable_smep(struct kunit *test)
-+{
-+	unsigned long cr4;
-+
-+	/* SMEP should be initially enabled. */
-+	KUNIT_ASSERT_TRUE(test, __read_cr4() & X86_CR4_SMEP);
-+
-+	kunit_warn(test,
-+		   "Starting control register pinning tests with SMEP check\n");
-+
-+	/*
-+	 * Trying to disable SMEP, bypassing kernel self-protection by not
-+	 * using cr4_clear_bits(X86_CR4_SMEP).
-+	 */
-+	cr4 = __read_cr4() & ~X86_CR4_SMEP;
-+	asm volatile("mov %0,%%cr4" : "+r"(cr4) : : "memory");
-+
-+	/* SMEP should still be enabled. */
-+	KUNIT_ASSERT_TRUE(test, __read_cr4() & X86_CR4_SMEP);
-+}
-+
-+static inline void print_addr(struct kunit *test, const char *const buf_name,
-+			      void *const buf)
-+{
-+	const pte_t pte = *virt_to_kpte((unsigned long)buf);
-+	const phys_addr_t paddr = slow_virt_to_phys(buf);
-+	bool present = pte_flags(pte) & (_PAGE_PRESENT);
-+	bool accessible = pte_accessible(&init_mm, pte);
-+
-+	kunit_warn(
-+		test,
-+		"%s vaddr:%llx paddr:%llx exec:%d write:%d present:%d accessible:%d\n",
-+		buf_name, (unsigned long long)buf, paddr, !!pte_exec(pte),
-+		!!pte_write(pte), present, accessible);
-+}
-+
-+extern int kernel_set_to_readonly;
-+
-+static void heki_test_write_to_rodata(struct kunit *test,
-+				      const char *const buf_name,
-+				      char *const ro_buf)
-+{
-+	print_addr(test, buf_name, (void *)ro_buf);
-+	KUNIT_EXPECT_EQ(test, 0, *ro_buf);
-+
-+	kunit_warn(
-+		test,
-+		"Bypassing kernel self-protection: mark memory as writable\n");
-+	kernel_set_to_readonly = 0;
-+	/*
-+	 * Removes execute permission that might be set by bugdoor-exec,
-+	 * because change_page_attr_clear() is not use by set_memory_rw().
-+	 * This is required since commit 652c5bf380ad ("x86/mm: Refuse W^X
-+	 * violations").
-+	 */
-+	KUNIT_ASSERT_FALSE(test, set_memory_nx((unsigned long)PTR_ALIGN_DOWN(
-+						       ro_buf, PAGE_SIZE),
-+					       1));
-+	KUNIT_ASSERT_FALSE(test, set_memory_rw((unsigned long)PTR_ALIGN_DOWN(
-+						       ro_buf, PAGE_SIZE),
-+					       1));
-+	kernel_set_to_readonly = 1;
-+
-+	kunit_warn(test, "Trying memory write\n");
-+	*ro_buf = 0x11;
-+	KUNIT_EXPECT_EQ(test, 0, *ro_buf);
-+	kunit_warn(test, "New content: 0x%02x\n", *ro_buf);
-+}
-+
-+static void heki_test_write_to_const(struct kunit *test)
-+{
-+	heki_test_write_to_rodata(test, "const_buf",
-+				  (void *)heki_test_const_buf);
-+}
-+
-+static void heki_test_write_to_ro_after_init(struct kunit *test)
-+{
-+	heki_test_write_to_rodata(test, "ro_after_init_buf",
-+				  (void *)heki_test_ro_after_init_buf);
-+}
-+
-+typedef long test_exec_t(long);
-+
-+static void heki_test_exec(struct kunit *test)
-+{
-+	const size_t exec_size = 7;
-+	unsigned long nx_page_start = (unsigned long)PTR_ALIGN_DOWN(
-+		(const void *const)heki_test_exec_data, PAGE_SIZE);
-+	unsigned long nx_page_end = (unsigned long)PTR_ALIGN(
-+		(const void *const)heki_test_exec_data + exec_size, PAGE_SIZE);
-+	test_exec_t *exec = (test_exec_t *)heki_test_exec_data;
-+	long ret;
-+
-+	/* Starting non-executable memory tests. */
-+	print_addr(test, "test_exec_data", heki_test_exec_data);
-+
-+	kunit_warn(
-+		test,
-+		"Bypassing kernel-self protection: mark memory as executable\n");
-+	kernel_set_to_readonly = 0;
-+	KUNIT_ASSERT_FALSE(test,
-+			   set_memory_rox(nx_page_start,
-+					  PFN_UP(nx_page_end - nx_page_start)));
-+	kernel_set_to_readonly = 1;
-+
-+	kunit_warn(
-+		test,
-+		"Trying to execute data (ROP) in (initially) non-executable memory\n");
-+	ret = exec(3);
-+
-+	/* This should not be reached because of the uncaught page fault. */
-+	KUNIT_EXPECT_EQ(test, 3, ret);
-+	kunit_warn(test, "Result of execution: 3 + 1 = %ld\n", ret);
-+}
-+
-+const struct kunit_case heki_test_cases[] = {
-+	KUNIT_CASE(heki_test_cr_disable_smep),
-+	KUNIT_CASE(heki_test_write_to_const),
-+	KUNIT_CASE(heki_test_write_to_ro_after_init),
-+	KUNIT_CASE(heki_test_exec),
-+	{}
-+};
-+
-+static unsigned long heki_test __ro_after_init;
-+
-+static int __init parse_heki_test_config(char *str)
-+{
-+	if (kstrtoul(str, 10, &heki_test) ||
-+	    heki_test > (ARRAY_SIZE(heki_test_cases) - 1))
-+		pr_warn("Invalid option string for heki_test: '%s'\n", str);
-+	return 1;
-+}
-+
-+__setup("heki_test=", parse_heki_test_config);
-+
-+void heki_run_test(void)
-+{
-+	struct kunit_case heki_test_case[2] = {};
-+	struct kunit_suite heki_test_suite = {
-+		.name = "heki",
-+		.test_cases = heki_test_case,
-+	};
-+	struct kunit_suite *const test_suite = &heki_test_suite;
-+
-+	if (!kunit_enabled() || heki_test == 0 ||
-+	    heki_test >= ARRAY_SIZE(heki_test_cases))
-+		return;
-+
-+	pr_warn("Running test #%lu\n", heki_test);
-+	heki_test_case[0] = heki_test_cases[heki_test - 1];
-+	__kunit_test_suites_init(&test_suite, 1);
-+}
-+
-+#else /* CONFIG_HEKI_TEST */
-+
-+void heki_run_test(void)
-+{
-+}
-+
-+#endif /* CONFIG_HEKI_TEST */
--- 
-2.42.1
-
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
