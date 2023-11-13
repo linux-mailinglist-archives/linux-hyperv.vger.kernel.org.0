@@ -1,40 +1,40 @@
-Return-Path: <linux-hyperv+bounces-866-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-873-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F82E7E94D3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 03:32:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC7217E94E9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 03:33:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BBE91C208DC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 02:31:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6723D280F0B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Nov 2023 02:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603D9C13E;
-	Mon, 13 Nov 2023 02:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB551A59E;
+	Mon, 13 Nov 2023 02:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="y2lDmzRk"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="vrln9/b4"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153578BE8
-	for <linux-hyperv@vger.kernel.org>; Mon, 13 Nov 2023 02:31:55 +0000 (UTC)
-Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [IPv6:2001:1600:3:17::42ab])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B290115
-	for <linux-hyperv@vger.kernel.org>; Sun, 12 Nov 2023 18:31:52 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0340818628
+	for <linux-hyperv@vger.kernel.org>; Mon, 13 Nov 2023 02:32:32 +0000 (UTC)
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [IPv6:2001:1600:4:17::190a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA381BC0
+	for <linux-hyperv@vger.kernel.org>; Sun, 12 Nov 2023 18:32:29 -0800 (PST)
 Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4STCtF0JdCzMpxDc;
-	Mon, 13 Nov 2023 02:24:21 +0000 (UTC)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4STCtC4TrjzMpnPd;
-	Mon, 13 Nov 2023 03:24:19 +0100 (CET)
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4STCtJ0ZdVzMpvZk;
+	Mon, 13 Nov 2023 02:24:24 +0000 (UTC)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4STCtG6J2GzMpnPd;
+	Mon, 13 Nov 2023 03:24:22 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1699842260;
-	bh=3ZLY/nS0lwLKi/L6VqWKqVBloAFCSA+eB24SBhCzIXI=;
+	s=20191114; t=1699842263;
+	bh=oVoPkAWjPfqZGemyyPZ53MkaSuuZZCG0BkbPtJbgAiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=y2lDmzRkLKrzf6YPi3D4QKjQPJhPLdTzsvCbaLH8n86bmNl5EAyUw5Vphk2fc4rJw
-	 TLfnFGEyP2jqJAbn8DJnwo1XABN8RimqjRgV1bCMpAPRjX8PzxhdSJt9kDm6zHLvGd
-	 /ggMXvnRZc6CA01WJiWQxAi6rqcHrhmU955Fp2TY=
+	b=vrln9/b46q/IyvbLiM7gr/pjSy6nNAlaXyCcWrkwCHL76184CKYv4PInqVYTmM3XU
+	 usQOOb2erA5xMR73/PzeYEi/AVI+wGVine2Q4AcSnr9lSM8X4meSz+MPB7uM5eZm7x
+	 SS5OjADjVFHRajKr3cVBhD/5XC7T3gtprqTK5mks=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
@@ -75,9 +75,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	virtualization@lists.linux-foundation.org,
 	x86@kernel.org,
 	xen-devel@lists.xenproject.org
-Subject: [RFC PATCH v2 07/19] KVM: x86: Make memory attribute helpers more generic
-Date: Sun, 12 Nov 2023 21:23:14 -0500
-Message-ID: <20231113022326.24388-8-mic@digikod.net>
+Subject: [RFC PATCH v2 08/19] KVM: x86: Extend kvm_vm_set_mem_attributes() with a mask
+Date: Sun, 12 Nov 2023 21:23:15 -0500
+Message-ID: <20231113022326.24388-9-mic@digikod.net>
 In-Reply-To: <20231113022326.24388-1-mic@digikod.net>
 References: <20231113022326.24388-1-mic@digikod.net>
 Precedence: bulk
@@ -90,25 +90,10 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-To make it useful for other use cases such as Heki, remove the private
-memory optimizations.
+Enable to only update a subset of attributes.
 
-I guess we could try to infer the applied attributes to get back these
-optimizations when it makes sense, but let's keep this simple for now.
-
-Main changes:
-
-- Replace slots_lock with slots_arch_lock to make it callable from a KVM
-  hypercall.
-
-- Move this mutex lock into kvm_vm_ioctl_set_mem_attributes() to make it
-  easier to use with other locks.
-
-- Export kvm_vm_set_mem_attributes().
-
-- Remove the kvm_arch_pre_set_memory_attributes() and
-  kvm_arch_post_set_memory_attributes() KVM_MEMORY_ATTRIBUTE_PRIVATE
-  optimizations.
+This is needed to be able to use the XArray for different use cases and
+make sure they don't interfere (see a following commit).
 
 Cc: Chao Peng <chao.p.peng@linux.intel.com>
 Cc: Kees Cook <keescook@chromium.org>
@@ -121,131 +106,124 @@ Signed-off-by: Mickaël Salaün <mic@digikod.net>
 Changes since v1:
 * New patch
 ---
- arch/x86/kvm/mmu/mmu.c   | 23 -----------------------
- include/linux/kvm_host.h |  2 ++
- virt/kvm/kvm_main.c      | 19 ++++++++++---------
- 3 files changed, 12 insertions(+), 32 deletions(-)
+ arch/x86/kvm/mmu/mmu.c   |  2 +-
+ include/linux/kvm_host.h |  2 +-
+ virt/kvm/kvm_main.c      | 27 +++++++++++++++++++--------
+ 3 files changed, 21 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 7e053973125c..4d378d308762 100644
+index 4d378d308762..d7010e09440d 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7251,20 +7251,6 @@ void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
- bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 					struct kvm_gfn_range *range)
- {
--	/*
--	 * Zap SPTEs even if the slot can't be mapped PRIVATE.  KVM x86 only
--	 * supports KVM_MEMORY_ATTRIBUTE_PRIVATE, and so it *seems* like KVM
--	 * can simply ignore such slots.  But if userspace is making memory
--	 * PRIVATE, then KVM must prevent the guest from accessing the memory
--	 * as shared.  And if userspace is making memory SHARED and this point
--	 * is reached, then at least one page within the range was previously
--	 * PRIVATE, i.e. the slot's possible hugepage ranges are changing.
--	 * Zapping SPTEs in this case ensures KVM will reassess whether or not
--	 * a hugepage can be used for affected ranges.
--	 */
--	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
--		return false;
--
- 	return kvm_unmap_gfn_range(kvm, range);
- }
+@@ -7283,7 +7283,7 @@ static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
  
-@@ -7313,15 +7299,6 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
- 	lockdep_assert_held_write(&kvm->mmu_lock);
- 	lockdep_assert_held(&kvm->slots_lock);
- 
--	/*
--	 * Calculate which ranges can be mapped with hugepages even if the slot
--	 * can't map memory PRIVATE.  KVM mustn't create a SHARED hugepage over
--	 * a range that has PRIVATE GFNs, and conversely converting a range to
--	 * SHARED may now allow hugepages.
--	 */
--	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
--		return false;
--
- 	/*
- 	 * The sequence matters here: upper levels consume the result of lower
- 	 * level's scanning.
+ 	for (gfn = start; gfn < end; gfn += KVM_PAGES_PER_HPAGE(level - 1)) {
+ 		if (hugepage_test_mixed(slot, gfn, level - 1) ||
+-		    attrs != kvm_get_memory_attributes(kvm, gfn))
++		    !(attrs & kvm_get_memory_attributes(kvm, gfn)))
+ 			return false;
+ 	}
+ 	return true;
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index ec32af17add8..85b8648fd892 100644
+index 85b8648fd892..de68390ab0f2 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -2396,6 +2396,8 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 					struct kvm_gfn_range *range);
+@@ -2397,7 +2397,7 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
  bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
  					 struct kvm_gfn_range *range);
-+int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
-+			      unsigned long attributes);
+ int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+-			      unsigned long attributes);
++			      unsigned long attributes, unsigned long mask);
  
  static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
  {
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 23633984142f..0096ccfbb609 100644
+index 0096ccfbb609..e2c178db17d5 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2552,7 +2552,7 @@ static bool kvm_pre_set_memory_attributes(struct kvm *kvm,
- }
+@@ -2436,7 +2436,7 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+ /*
+  * Returns true if _all_ gfns in the range [@start, @end) have attributes
+- * matching @attrs.
++ * matching the @attrs bitmask.
+  */
+ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 				     unsigned long attrs)
+@@ -2459,7 +2459,8 @@ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 			entry = xas_next(&xas);
+ 		} while (xas_retry(&xas, entry));
+ 
+-		if (xas.xa_index != index || xa_to_value(entry) != attrs) {
++		if (xas.xa_index != index ||
++		    (xa_to_value(entry) & attrs) != attrs) {
+ 			has_attrs = false;
+ 			break;
+ 		}
+@@ -2553,7 +2554,7 @@ static bool kvm_pre_set_memory_attributes(struct kvm *kvm,
  
  /* Set @attributes for the gfn range [@start, @end). */
--static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
-+int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 				     unsigned long attributes)
+ int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+-				     unsigned long attributes)
++			      unsigned long attributes, unsigned long mask)
  {
  	struct kvm_mmu_notifier_range pre_set_range = {
-@@ -2577,11 +2577,11 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 		.start = start,
+@@ -2572,11 +2573,8 @@ int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 		.may_block = true,
+ 	};
+ 	unsigned long i;
+-	void *entry;
+ 	int r = 0;
  
- 	entry = attributes ? xa_mk_value(attributes) : NULL;
- 
--	mutex_lock(&kvm->slots_lock);
-+	lockdep_assert_held(&kvm->slots_arch_lock);
+-	entry = attributes ? xa_mk_value(attributes) : NULL;
+-
+ 	lockdep_assert_held(&kvm->slots_arch_lock);
  
  	/* Nothing to do if the entire range as the desired attributes. */
- 	if (kvm_range_has_memory_attributes(kvm, start, end, attributes))
--		goto out_unlock;
-+		return r;
- 
- 	/*
- 	 * Reserve memory ahead of time to avoid having to deal with failures
-@@ -2590,7 +2590,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 	for (i = start; i < end; i++) {
- 		r = xa_reserve(&kvm->mem_attr_array, i, GFP_KERNEL_ACCOUNT);
- 		if (r)
--			goto out_unlock;
-+			return r;
- 	}
- 
+@@ -2596,6 +2594,16 @@ int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
  	kvm_handle_gfn_range(kvm, &pre_set_range);
-@@ -2602,15 +2602,13 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 	}
  
- 	kvm_handle_gfn_range(kvm, &post_set_range);
--
--out_unlock:
--	mutex_unlock(&kvm->slots_lock);
--
- 	return r;
- }
+ 	for (i = start; i < end; i++) {
++		unsigned long value = 0;
++		void *entry;
 +
- static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
++		entry = xa_load(&kvm->mem_attr_array, i);
++		if (xa_is_value(entry))
++			value = xa_to_value(entry) & ~mask;
++
++		value |= attributes & mask;
++		entry = value ? xa_mk_value(value) : NULL;
++
+ 		r = xa_err(xa_store(&kvm->mem_attr_array, i, entry,
+ 				    GFP_KERNEL_ACCOUNT));
+ 		KVM_BUG_ON(r, kvm);
+@@ -2609,12 +2617,14 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
  					   struct kvm_memory_attributes *attrs)
  {
-+	int r;
+ 	int r;
++	unsigned long attrs_mask;
  	gfn_t start, end;
  
  	/* flags is currently not used. */
-@@ -2633,7 +2631,10 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
- 	 */
+ 	if (attrs->flags)
+ 		return -EINVAL;
+-	if (attrs->attributes & ~kvm_supported_mem_attributes(kvm))
++	attrs_mask = kvm_supported_mem_attributes(kvm);
++	if (attrs->attributes & ~attrs_mask)
+ 		return -EINVAL;
+ 	if (attrs->size == 0 || attrs->address + attrs->size < attrs->address)
+ 		return -EINVAL;
+@@ -2632,7 +2642,8 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
  	BUILD_BUG_ON(sizeof(attrs->attributes) != sizeof(unsigned long));
  
--	return kvm_vm_set_mem_attributes(kvm, start, end, attrs->attributes);
-+	mutex_lock(&kvm->slots_arch_lock);
-+	r = kvm_vm_set_mem_attributes(kvm, start, end, attrs->attributes);
-+	mutex_unlock(&kvm->slots_arch_lock);
-+	return r;
+ 	mutex_lock(&kvm->slots_arch_lock);
+-	r = kvm_vm_set_mem_attributes(kvm, start, end, attrs->attributes);
++	r = kvm_vm_set_mem_attributes(kvm, start, end, attrs->attributes,
++				      attrs_mask);
+ 	mutex_unlock(&kvm->slots_arch_lock);
+ 	return r;
  }
- #endif /* CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES */
- 
 -- 
 2.42.1
 
