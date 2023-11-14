@@ -1,147 +1,144 @@
-Return-Path: <linux-hyperv+bounces-918-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-919-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A65E7EA9E0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Nov 2023 05:58:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 952387EA9EA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Nov 2023 06:02:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFF921C20A00
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Nov 2023 04:58:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BABE1F23FA7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Nov 2023 05:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B14BA56;
-	Tue, 14 Nov 2023 04:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD36BE58;
+	Tue, 14 Nov 2023 05:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P4U9JNsZ"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YyPAvs8E"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C60BA31;
-	Tue, 14 Nov 2023 04:58:13 +0000 (UTC)
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC8F123;
-	Mon, 13 Nov 2023 20:58:12 -0800 (PST)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AE4dQxp015496;
-	Tue, 14 Nov 2023 04:57:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=Ut+LP/oQgS6AHmq27TArlkMKu8wbNEjr6zcLsTELHGU=;
- b=P4U9JNsZ9twinkAM6crKSroq7yTQNIGWmkH2jnosKDAz9K5IrD0KC+OFma4jfeDqxQq+
- Jios5YHkR/P1oDpeARKJM2+nQJAHIoy/AU39G733GUA7X/t+IfSA/Um81F8A6iCtQL26
- XG4dtUswJSuAwmlGjkGcZuNFHb330V24H5OqAeBwm6fW/02agttPnGwa8mYMhC8YNPDL
- TSKl5hj7Y9fOX8//4nAwpHHKR4ae/Pebp5Zv8rijSDAyEzEk9K9W2+AIslRM+tKCuR55
- lfIA8BS+uF4K4AD8r57Ipm+m83CMrPvY4hiFvL9PLI1Y49qIQrtqpSe+/TUS76UcnzFQ vA== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ubuswrmww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Nov 2023 04:57:04 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3AE4v2nN010730
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Nov 2023 04:57:02 GMT
-Received: from [10.239.132.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Mon, 13 Nov
- 2023 20:56:53 -0800
-Message-ID: <ee647939-3f47-4b82-b1e4-a0c9414a1e8e@quicinc.com>
-Date: Tue, 14 Nov 2023 12:56:43 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AD3BE52;
+	Tue, 14 Nov 2023 05:02:37 +0000 (UTC)
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F74123;
+	Mon, 13 Nov 2023 21:02:36 -0800 (PST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8EEE540E0191;
+	Tue, 14 Nov 2023 05:02:33 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id OLoj8MhEtgvD; Tue, 14 Nov 2023 05:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1699938151; bh=dUNHth64wAi+DfNN2LL+fvN9ITMNu8XyaBkF7nxLEPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YyPAvs8EM1vwD3w0yM6uPenFZuJ20wSRyZ9hjuiQyOL8O2giIr8S5BXx9anHdygDG
+	 CFaXI6vczp2qx7Oiicr6bHk4Bhk0EKoec4EBYGgRx8/PgK0HOdeGlgHCrS/LyKfLOn
+	 +Rek8cAJbX7v56BxizHvEb6+v0Rr4aoK2eIz0ZQuQ+BYQNjHN9Irbhg/4P6ylIrTIK
+	 L96EjujMwTv03F5ZwqQWljZuNIR8jz8EsCCUq4yQ98y/6ReCeOJAMA3AGIhfcYY8Va
+	 TxptPFnV9Jn/V88TPz4opLGkUqaBEfGXX0ntniZgugahJgApJ+lhbu07+xYq5fEE9q
+	 aZIeHwwJSbzpWBStJMEhFon4R35ReXDbGOktsEphMNxdUmTuIHoseUct3QYUNjqBns
+	 ke/rvL+1u7nChtWL+hpQRCLVY6hYb3wJJ6DIgaU4s6EW5CaHdwvhjpVSMkVy5lY2Lr
+	 UIm8VoXWV/zEDUtPgERX9tQUEiU3sj7Qwu4s2iECuHd+S2HxfX6t295O+Bpdsqbrna
+	 WZ18C6yTZZH9FVRZ58Dv2OKmEMb51UQ3XVnwCCrHe7XtSEwRvuraOUR4QywbPCMBrL
+	 HY7DOKuH0Oy4OYsYDpkkfOVc5aA95lX/saZyWxsbWxzGa8Twt59w6yupWMfewKfsLL
+	 BQ5N9OijKGco3KNW5DAtAtqc=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 15CEE40E0032;
+	Tue, 14 Nov 2023 05:02:09 +0000 (UTC)
+Date: Tue, 14 Nov 2023 06:02:01 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Li, Xin3" <xin3.li@intel.com>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"Lutomirski, Andy" <luto@kernel.org>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"Christopherson,, Sean" <seanjc@google.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"Gross, Jurgen" <jgross@suse.com>,
+	"Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+	"jiangshanlai@gmail.com" <jiangshanlai@gmail.com>,
+	"nik.borisov@suse.com" <nik.borisov@suse.com>
+Subject: Re: [PATCH v12 01/37] x86/cpufeatures: Add the cpu feature bit for
+ WRMSRNS
+Message-ID: <20231114050201.GAZVL/Sd/yLIdON9la@fat_crate.local>
+References: <20231003062458.23552-1-xin3.li@intel.com>
+ <20231003062458.23552-2-xin3.li@intel.com>
+ <20231108123647.GBZUuA31zntox0W0gu@fat_crate.local>
+ <SA1PR11MB673495967E44583FC36B5E39A8B2A@SA1PR11MB6734.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 00/17] Solve iommu probe races around iommu_fwspec
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>, <acpica-devel@lists.linuxfoundation.org>,
-        Alyssa Rosenzweig
-	<alyssa@rosenzweig.io>,
-        Albert Ou <aou@eecs.berkeley.edu>, <asahi@lists.linux.dev>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Dexuan Cui <decui@microsoft.com>, <devicetree@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Frank
- Rowand <frowand.list@gmail.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Haiyang
- Zhang <haiyangz@microsoft.com>,
-        Christoph Hellwig <hch@lst.de>, <iommu@lists.linux.dev>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
-        "K.
- Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>,
-        <linux-snps-arc@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        Marek Szyprowski
-	<m.szyprowski@samsung.com>,
-        Hector Martin <marcan@marcan.st>, Palmer Dabbelt
-	<palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Rafael J.
- Wysocki" <rafael@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Rob
- Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Sudeep
- Holla <sudeep.holla@arm.com>,
-        Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>,
-        Sven Peter <sven@svenpeter.dev>,
-        Thierry
- Reding <thierry.reding@gmail.com>,
-        Thomas Bogendoerfer
-	<tsbogend@alpha.franken.de>,
-        Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta
-	<vgupta@kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        Wei Liu
-	<wei.liu@kernel.org>, Will Deacon <will@kernel.org>
-References: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
-From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-In-Reply-To: <0-v1-5f734af130a3+34f-iommu_fwspec_jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: W9mLspwTBqhYvV5ajR8gt_t_BuX4RknD
-X-Proofpoint-ORIG-GUID: W9mLspwTBqhYvV5ajR8gt_t_BuX4RknD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-14_03,2023-11-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 clxscore=1011 mlxlogscore=917
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311140037
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SA1PR11MB673495967E44583FC36B5E39A8B2A@SA1PR11MB6734.namprd11.prod.outlook.com>
 
-Thanks Jason.
+On Tue, Nov 14, 2023 at 12:43:38AM +0000, Li, Xin3 wrote:
+> No.  tglx asked for it:
+> https://lkml.kernel.org/kvm/87y1h81ht4.ffs@tglx/
 
-On 2023/11/4 0:44, Jason Gunthorpe wrote:
-> This is a more complete solution that the first attempt here:
-> https://lore.kernel.org/r/1698825902-10685-1-git-send-email-quic_zhenhuah@quicinc.com
+Aha
+
+"According to the CPU folks FRED systems are guaranteed to have WRMSRNS -
+I asked for that :). It's just not yet documented."
+
+so I'm going to expect that to appear in the next FRED spec revision...
+
+> Because we are doing 
+> 		wrmsrns(MSR_IA32_FRED_RSP0, ...)
+> here, and X86_FEATURE_WRMSRNS doesn't guarantee MSR_IA32_FRED_RSP0 exists.
 > 
-> I haven't been able to test this on any HW that touches these paths, so if
-> some people with HW can help get it in shape it can become non-RFC.
+> Or I missed something?
 
-Thank you for addressing it quickly with a thorough way. I have 
-backported it to Android common kernel 6.1 and tested basic sanity well.
-I will share these to OEMs and see if they can reproduce further, thanks.
+Well, according to what I'm hearing and reading so far:
 
-Thanks,
-Zhenhua
+FRED means WRMSRNS
+FRED means MSR_IA32_FRED_RSP0
+
+and if you had to be precise, the code should do:
+
+	if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+		if (cpu_feature_enabled(X86_FEATURE_WRMSRNS))
+			wrmsrns(MSR_IA32_FRED_RSP0, (unsigned long)task_stack_page(task) + THREAD_SIZE);
+		else
+			wrmsr(MSR_IA32_FRED_RSP0, (unsigned long)task_stack_page(task) + THREAD_SIZE);
+	}
+
+but apparently FRED implies WRMSRNS - not documented anywhere currently
+- so you can save yourself one check.
+
+But your version checks FRED if it can do WRMSRNS while there's
+a separate WRMSRNS flag and that made me wonder...
+
+> Another patch set should replace WRMSR with WRMSRNS, with SERIALIZE added
+> when needed.
+
+I sense someone wants to optimize MSR writes ... :-)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
