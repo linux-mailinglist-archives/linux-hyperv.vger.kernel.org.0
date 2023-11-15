@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-946-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-948-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E256B7EC480
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Nov 2023 15:06:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71C4B7EC487
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Nov 2023 15:06:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 111401C20975
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Nov 2023 14:06:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25AC5280E50
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Nov 2023 14:06:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73BEA28DD5;
-	Wed, 15 Nov 2023 14:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB9C2D03C;
+	Wed, 15 Nov 2023 14:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Vcm7pksB"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SYU2zHm+"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20147286B2;
-	Wed, 15 Nov 2023 14:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABC428DA2;
+	Wed, 15 Nov 2023 14:06:24 +0000 (UTC)
 Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2043.outbound.protection.outlook.com [40.107.244.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35CDAC;
-	Wed, 15 Nov 2023 06:06:20 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FC5B3;
+	Wed, 15 Nov 2023 06:06:23 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CdmHegBcy0EzF4/7tz0ElUWuZvWvVxbNxXODoqughxs1lSBXLk4mSRq5UGl/b5Zc+U6QIE6XGJIbwXXDJJheIVz3zW5N6AvuADc0qyRGCDrx0lNYha9KP/g/woiNO/hcrVnDwPSJ112r/3iN4yNuY8/ZJWONb/XdADdMgs5i4CyW6xvk6M4m4kwxGCUXRBBoqWO8fyLfKw/io6hpp2LItpXKqxOhPx/sy95q6hnQ6LaIm/XxMkNNYNeDWhi/eyE6/jLJqR7MmvrdbVFmnDMseCnpOh4NmTpcmqf8iPYLAF0bulNIw9VLLJH+WR2lyc1NPZShcgvNEvu1G3qLUZgemw==
+ b=WaclseXdBu9D1kZoJ4Zn3CwkEUNLqAmPOM0Ci8yirAlsXQRiqV6urhOkfmfvIXEzh3kschyRuhRR+3zitm/2WZh4Xxj/edzIb918NBOUG/BDhqewKrmel2H2WM8NSZXF+h+oaxJEp6DqiW7nJ4477C2RasHeqWiIFG3CxxIm/iXvtI6NSIPgH5MZDmIk0vzzQWDOFmagoBfMmmW4TUjtnyRbEip8aawlXebRBZQw6qzLfzydFZqF6V1BgUS+DQFqerpCk5GO36vVwJQZdNAoKfqj4uJxdnvNVeQVGqu6e0KP6g31O7lW8jZywWk9c4ej96pguIUdgQrL/x8BvwgHIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9ttRQdDT1iUTyxqOUZ4d5fqMjqgasJxTCJ5kIwrGzsM=;
- b=fe5l1UeLe41+A2KceTAeEKtuDMSVKCtbcutXwJhT7bUjWurn/FJ7MFu08G+ggQg2AtWWMrlw5W1U2BT8OrMI9az7fbpIkw9FmDv7lQwwZ2HdNOLAluTJekxu3vuw/MPPTUWaQfSj9ShCF0Aajp8BWmFHjWyYAmjJES8iXlkmkFrDAYR3NgpLHgzxPqcdGSU3vOpos/2qMF2gq/+87mw6XqmK8jxhLctos00c8kSPol1KP3csyJ+lz4xy/2cHKBSsd0lHawJkllpsosFy48noPbsw6U19hBtttZhIl+MNGb2ZZDamo+orbR2RpVKfqXHgZMzjPzQkEBEgIjAWkasmkw==
+ bh=sVcTGanyYH/mgsCuvskF+0lpN3xmjBkWiXK8uEKpRhk=;
+ b=kF4n45FyBfewRcPhSxRDR3QtJ3XzQWoVY+YsUiadCoZBrPcnG9AwgU7CN86gxRqwIvHbCvYSy5HwHGujeZfRTt6aYx95cOmjf/gBawDT1aWToBTiG1hqz5aDp9lJSdj3HLHya3OPysx9f/qcnytZnW+HoniHzpixcs50op0/DPdLACzyZXD6C4sI3uli2/BESNP0K0p+xEycT+SejQe+LFBWwfKRNuCFHGm9/dnswCHZNToG9zp5HbyHbuVza43zBLCs9WDZyWin6P+ylPv1a0k95zTNebGnI3qkNXNZCxV3ljZCjKGY8Lxjj9tY+OOFrCy9fVRBvG5vkOCII2yKfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9ttRQdDT1iUTyxqOUZ4d5fqMjqgasJxTCJ5kIwrGzsM=;
- b=Vcm7pksBiSVh3xCEjWOXj2fGlP4FrEIAZto7e/Uu99uP7L4wjFdDiIZpLn4uVYPsHzwnSvo6IyoHr33+Rem3j15dXZl95jFbH/iq7WTzkO6n+/Iu7kitJHGpDObgqK0vMQTE+Gd5F+ERVI3jU7mEMG+JKXkvTmfZ32ydLkx3SUrA07d37ELAG7/1YiVap/DCMIj+m1bJREyydpWO3H7IC0Hk+1duboXTAI9MEQDfjQ7f1eMY1QxhHBe/JzJyJw7jFfLc/2KOMcjBF2VAFlkrZWKJx6hDINMqjyMhMbRo4jLb95/wu9deRPhxUwtp1ourTZoirW1ydUKf6BecY1qc7w==
+ bh=sVcTGanyYH/mgsCuvskF+0lpN3xmjBkWiXK8uEKpRhk=;
+ b=SYU2zHm+rLCm5DEkNHML0T3gZZg63E4oC4a/5hlnd17X0um3cpsno/Mz0592ZvMXzE0C2jY6T3tL9dHTFcwxIxuOyaZzbpzNuhS90f4FFZirb8e8nWztVjiSGF0ao4F9e+8ItwDCRLWLhf9SnLg56o/9nuNEbE6gWd2ClwLEEjkWZ45cIFwOiZ63E/uREDcPvlPo4SBRXDl4dqaLuru7wTc8d3nxhLSsT/0Uy0+2+52Klke7fe7ApNCK8Cz/Y3otUwqn1B0+47uT75jSGJNc3VuXCm8KUgnyik6gDjjkNQCLiOj+mbw7Yu93kUwBdkeJ7uYuXPmRG161itTojgzkUg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
@@ -103,15 +103,15 @@ Cc: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
 	Zhenhua Huang <quic_zhenhuah@quicinc.com>,
 	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
 	Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 14/17] iommu: Remove pointless iommu_fwspec_free()
-Date: Wed, 15 Nov 2023 10:06:05 -0400
-Message-ID: <14-v2-36a0088ecaa7+22c6e-iommu_fwspec_jgg@nvidia.com>
+Subject: [PATCH v2 15/17] iommu: Add ops->of_xlate_fwspec()
+Date: Wed, 15 Nov 2023 10:06:06 -0400
+Message-ID: <15-v2-36a0088ecaa7+22c6e-iommu_fwspec_jgg@nvidia.com>
 In-Reply-To: <0-v2-36a0088ecaa7+22c6e-iommu_fwspec_jgg@nvidia.com>
 References:
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: MN2PR15CA0024.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::37) To LV2PR12MB5869.namprd12.prod.outlook.com
+X-ClientProxiedBy: MN2PR11CA0027.namprd11.prod.outlook.com
+ (2603:10b6:208:23b::32) To LV2PR12MB5869.namprd12.prod.outlook.com
  (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -121,139 +121,197 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SJ0PR12MB7007:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78ae980c-9d84-4f0b-3376-08dbe5e404cd
+X-MS-Office365-Filtering-Correlation-Id: b1c2f9f8-00a0-479c-f556-08dbe5e4050f
 X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qNmDKqSnJLF7/mzcfUL3cdjdbWYGFSmiWcRhg3H/850VdC+MxC6XzeTI6wKOtue2Eow7mvswV5oxNoz3Q30rQQzir+DPkZT3qmQoncSburTIML1ArD/d01682Gernsf1rrK8Xoe1Ypk1X4o6WLFR7Tlr1/VJLxbg+pUo9YR3CeJh5wNCrvGYrIKbbWBd5ZQAIjs4QX0l2HuQr3Exp+1SkMO/PPJG/rXvaomlA5LFmLRvwTb64bzFTUF9i2kVaigOtAr4OXexg9DPCLqPEMFvfujBI3YTqQXjvjeoNhLCKqKxMkLxrZ7Lxb/o2zAgmA9v6bnTguhrDUztVr/ejYBSmuFtEov/ggJquauI6E3fvnAM2J8xzNCCAycOVmlrPXY+K1cA52UvkLLcLMCW8k4CMdBF55a5xETLgWRevIHXeBZv1yvP/uMxLssDQeS+Spg+DE00kQ8vDzxOjsAefV9u2Ca9DY08jPGuSCJ2OoeYmyHCeqz/Rx/2CAcfOw2sDF3ytsiumWA88sXkNlorIBAL6qijOqj3kftAUUB+ImMvVWAxa8EREqI1dNMllHpDdEMDrdsLwrcTQBfPG5SEGOeWiKaNF8hh1+29tlpqHy5X2hA=
+	AuVXENTqbrGQCV1jo64LTEDBXP9j3MJFPxnDJU47drDW6sE73fS6p88avtxNclsClzrlyHs/V0nhmBbuLyyTDpiRrorZFwVBLVgnDQfmVeOLvXihhUBfAyergBUgSHpOXYhRTL6GYhBHgpSY1WnX68S8Xr8aFDiZJleHw16pa35JGNtmztODZwda8a551/ZifZTyDRFJG94Lf2a/lqLX29F2QzAjRRVnehVXAwZFqjIM3VzSajOvy6CKzMPrQd0qgD4CSbcvKU7KHZXfZ/PmCsQAO3DXBGVh9msO7trFhWhvO2QS8MMvqJOFWrXkbO4GGe7S7d7U9vi44xbj0PmfmwvNBqIHWYfu4p7ovQFZlL6GgXRxCkJVZ0GbXmtWdSbbMND3zqQW9cAcBeBuZLBGK5WVjB3gaGJG5JqSrb/HT+mCXl43UoDcr99mu7LUUcfk9jQUk14uZsMYrTDWRpGVT4bH0JKaZK+a1tL2hZoLsFftm2J9rpPQbXDn5DjW7UZ44ITqgnd52/RFeQbk3dzovrDfEfqAwIB2Yxbb5TALHaOVnhQ6BRAYiNCkOnoZDbnPy+ZmbDHo4TiFXD6nCwmsGowxG8ePTiREYL4AnouCEUU=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(366004)(39860400002)(396003)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(7406005)(6666004)(6506007)(2616005)(6512007)(83380400001)(7416002)(41300700001)(8676002)(5660300002)(4326008)(7366002)(8936002)(478600001)(2906002)(6486002)(66476007)(54906003)(110136005)(66946007)(66556008)(316002)(86362001)(36756003)(38100700002)(26005)(921008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?enoFHoBcZzDseAw7me972qrcOM9YkN59Ur/T55dFTwh1YTESvUUzW882tL9+?=
- =?us-ascii?Q?3T/UwkDCLFOMHLaZYvtd54nFvHV+e/ac2pHK02bQN9Y/RQTXyDxBMr8oHrWi?=
- =?us-ascii?Q?m/5xZtmvrjsW/x07ESAp4Kgx9k1MpOozsprEmhasiFSNuO6yfcypkEpWszoO?=
- =?us-ascii?Q?qzpO6Kf/OvWOp4FqxzfrMHMjx3ES7gp8Z3u/zhUMaBsd1m60YbQUEkiV62wZ?=
- =?us-ascii?Q?GpdQZefW8dvCWUY7+/i7cpVyidT2VCi9oglNbvo3N/0o/Dger1FawsL00YV1?=
- =?us-ascii?Q?nhJh+q0NjKuT6sx8SutQVy/rEBUZn2vHGgRA5pTdIvVR8dYgIMJwzJa2cwxd?=
- =?us-ascii?Q?8F+mfhUZzmUAZHtEduL2F2Jk5DOxhbMoRfsrXk1smFtm272aKf5RWYx6xDto?=
- =?us-ascii?Q?cf0zlxtNvugvu67GW31Lms88zMxUke4gy2CKim1OydAa+c9U2qSvcHaOBfPJ?=
- =?us-ascii?Q?e94og064QuHtD5tk5E7VbIPbnyI/wnV3bNGGXSrFlZkKCjkmlqjknXYKJP0F?=
- =?us-ascii?Q?fm3aowNufDEJOwc5+L5dMGNKEQb8/y29aur0H1KoMPS0gSH9XM58u4L/5GuC?=
- =?us-ascii?Q?ebpjvU4Q5uwrWanFeu/s335kZ2S0y3J7n6szyIUABR338f5V7jWzO3qydX6c?=
- =?us-ascii?Q?IMPnm4G3Zhr9rkwVu+AFiwBWFD7JAj5OdEs1LOXaxSQAd8AO5OFdJpgSWtnR?=
- =?us-ascii?Q?r6FuswyNH/LmC51/NW+iv0gIQ4FYElDKirTWmDoGR+TpjVz4X6S3+zOdOc9q?=
- =?us-ascii?Q?d22W3qzH6zEE/js46WuuMykapplofUAKtzDOEk6w20Jfn15lJWF3ijMOjCdC?=
- =?us-ascii?Q?bH9JPR/v9y5oCSCTyAzJ2YEzs70iX/732DVrYua6w3UldVfB3aYRHPxAUh7M?=
- =?us-ascii?Q?oE/+R+EIz51sKxUC7uMVa3iHfYByS7Ualp3RKEpGG/0hsG6wmrtIN7wSHw1z?=
- =?us-ascii?Q?NETwn6IQv2TQ+mUrwYfYjVlO+Y187jnIQq9iV+kENZVOAMn9s1Sarxytk+Ok?=
- =?us-ascii?Q?vmXBKYi2QJaZcIjjbfOJpMHCclZ8rTZSwBSabM2OHMyZXKe7BuqlSCJV4L4I?=
- =?us-ascii?Q?BnLLzovDboLPj1SqFHktj64fJyI86/DzjF2nEGJIUWJ6v7C+/+shB8SHoWym?=
- =?us-ascii?Q?KWDO17q8mnqeD7z7dhsQM3+pE4YfW3+QpfPsecYdxvCULRN636zMAMLAIraZ?=
- =?us-ascii?Q?rntGnXXOfwi0GiBWyvd00BFXbSTQ80SO2tohu/+mfKzNMCgflwIiygjYWaeG?=
- =?us-ascii?Q?zHQQVnfvi410JFYWoC3LxPpB5F0SiFEER03H7xYnWULqzfCtBnGkNPPxIxv5?=
- =?us-ascii?Q?JmTrw6oaS1Xyztz7BdY6Bv5zUCW2XiMcEJ6P78t8F6+ZN67PKlwATkAQTtuL?=
- =?us-ascii?Q?gcPT6Gd2nZLig5im3hbmwX4EhsPg2uJv2v8MCsmHVZpE5yTite+Hvsx9CcpP?=
- =?us-ascii?Q?mC5Pdfq5/nmJRIQwPTvnL3zRccRR+8lA0TsUaDZELMR+gNfvb5FR+K0itQg3?=
- =?us-ascii?Q?dk9LiRwc6UAoIzTqqlJFsCgJPe/XzxJxuL43P7VoQhlY98AylstkS05PLqw9?=
- =?us-ascii?Q?UlPnKd7/3wvfCorEoVM=3D?=
+	=?us-ascii?Q?6+ZxTZH4tMQT+XeOCjsnZ4kqX9jC/ju2Pxg1G6R1k60K9MyC0cD6w9CVS8mR?=
+ =?us-ascii?Q?JoeHM5QYrgZCC9FLxip9JnFSvNlmpVwOVVcPUsDd5D/Dh694Nbay6gtSfKFJ?=
+ =?us-ascii?Q?NLHrwB+X4dQuZQmP135EWFSdashAjZa7RBnU4vH/+z0peWKGgaZMo0zkb5s+?=
+ =?us-ascii?Q?vSzF9VI/0Rcic3pxHXq4UqMfcNVOpGTo/2e2mhlJ0t0GAI+IlidxH0CMnG2P?=
+ =?us-ascii?Q?x2Er+k9eTIU2wPs1UTjbnzbYW/1paeBas1puvYsoYsxDMhYUmzQNnvefao2Y?=
+ =?us-ascii?Q?LAEFrSBQP1XpRp0Z3nByaKlZZutV21sFFbBLbigAzU1daBUE0KDdqQFbbnUr?=
+ =?us-ascii?Q?T9VY/8XdgW4+62EXFa6rXrW5yjB71Pxi7MpJ3eRn7LA2mmABWYyDbZtF9sVQ?=
+ =?us-ascii?Q?PVuQReLBLpXxh6P2gmT102Ejk6vd4YH2b5fsU36vLXRZaivUSHQqNSFseqRV?=
+ =?us-ascii?Q?BiBi1GdC13MEJw2V7QK0A9MslV1pRnVVENpzWDtvDMJmvjxtxJ0YUtjEvV6N?=
+ =?us-ascii?Q?/mh3Bumlbfky3eplgQ/xTzulZ9RwYW+NqPJNoWw35YnUOEScALP0cTw437YR?=
+ =?us-ascii?Q?tJO/F7rE/j0dXS73EeGwqM/UBJs5VGmgOd9Ez+7J9ivabEVHRV5l6JsrbtGY?=
+ =?us-ascii?Q?X+GGPWwkTFArpTrcanRidtz1calvJsx2IjcTpmbPRV8MJOBl0SPYzUvR+3t/?=
+ =?us-ascii?Q?QrwrHHIL9OGG5nm0geFsVw2dY4LKAj4raQOJOzIEaCxYxp9cioR54nBDoTJY?=
+ =?us-ascii?Q?c65i0C8KHUV3lmJ0/Q1Ah8E5p39X2qBgEHnqdxPBALYtOFuQ0kbgy9YOQxjN?=
+ =?us-ascii?Q?+/tXYY8bnmflvO/6nYGOnRppcl4WydKJf9F7QftvQWtf89URNbljzDauBmeN?=
+ =?us-ascii?Q?ZpGnbsnq8OurZNFD+brBFiwivHK5REzxfzNVDkyONV01xE9b4OW2LLSyKpc4?=
+ =?us-ascii?Q?tDbTKjkcI979+dBRX5UU+twkKu/kXe3gpa+3sKpkhpAkwJjNDpXAHvxWzEhF?=
+ =?us-ascii?Q?1rpxy/usfuc43wBjWQePCGQDHzRUi5OkBg8Hr2+/m2pWUP+d1rLhTaSqx6XE?=
+ =?us-ascii?Q?EnWP96GR8jQgd0HVLo9ikXpBC6KFdSphnjKC7VyEVB2n0P9MWYJmvWKn7AkI?=
+ =?us-ascii?Q?DmKD1+r7umCJ2QqzBeqy0X7DIKJgNW126yxAWcLjqRrFFIFo3h16bm68mamg?=
+ =?us-ascii?Q?C6LmRNlMudCsEOQQ9A6WNAvyBphaFIfmGr0byf/6362nCWgSWJOAOz57tfE/?=
+ =?us-ascii?Q?f5bFx/WG62tfY4K7EXRD54GvRsWt5UdzX2RjcsnipJ99hSjKJBHRqaoJAZGd?=
+ =?us-ascii?Q?Rrap56vMGQNzrVCRnUG0j4pj7uhhxkbekOkCx5OY5rtz5ORA5UY2YZsPzx1R?=
+ =?us-ascii?Q?b+uiKxvBYExF5M9/uqIXKGzu+Q2YrOCPPxhYrNUDX7oMDmhKIRfJxFWOtVEv?=
+ =?us-ascii?Q?OTHRrx0A3iFHdgD4Uup4tZ4NusyWgt1HnZfdRAyTGglHYXYSERoFzY81iaju?=
+ =?us-ascii?Q?HflFbzyxra2cs5Ej5Blmoeu2rTsi0RODnmjyF76eGs6EnL4ggWVju0RYNbgI?=
+ =?us-ascii?Q?Xe+OPVNdKwv29uoturg=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78ae980c-9d84-4f0b-3376-08dbe5e404cd
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1c2f9f8-00a0-479c-f556-08dbe5e4050f
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2023 14:06:10.1336
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2023 14:06:10.5041
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 86fgSq9JBJCJJvzy4+WJNLBtVDmNvNFopwEByebpkwvow0MF4maohj/deHLFiEWf
+X-MS-Exchange-CrossTenant-UserPrincipalName: pUipwaw1jn/9ZE0o6HKl6sPblNHjYOGgLuv/Ik/MnFR9uCME0ffxG9PcqJGV1z1j
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7007
 
-These days the core code will free the fwspec if probe fails, no reason
-for any driver to call this on a probe failure path.
+The new callback takes in the fwspec instead of retrieving it from the
+dev->iommu. Provide iommu_fwspec_append_ids() to work directly on the
+fwspec.
+
+Convert SMMU, SMMUv3, and virtio to use iommu_fwspec_append_ids() and the
+new entry point.
+
+This avoids having to touch dev->iommu at all, and doesn't require the
+iommu_probe_device_lock.
 
 Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 ---
- drivers/iommu/arm/arm-smmu/arm-smmu.c | 14 +++++---------
- drivers/iommu/tegra-smmu.c            |  1 -
- 2 files changed, 5 insertions(+), 10 deletions(-)
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 8 +++++---
+ drivers/iommu/arm/arm-smmu/arm-smmu.c       | 8 +++++---
+ drivers/iommu/iommu.c                       | 3 +++
+ drivers/iommu/virtio-iommu.c                | 8 +++++---
+ include/linux/iommu.h                       | 3 +++
+ 5 files changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index d6d1a2a55cc069..854efcb1b84ddf 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -1348,6 +1348,8 @@ static struct iommu_device *arm_smmu_probe_device(struct device *dev)
- 
- 	if (using_legacy_binding) {
- 		ret = arm_smmu_register_legacy_master(dev, &smmu);
-+		if (ret)
-+			return ERR_PTR(ret);
- 
- 		/*
- 		 * If dev->iommu_fwspec is initally NULL, arm_smmu_register_legacy_master()
-@@ -1355,15 +1357,12 @@ static struct iommu_device *arm_smmu_probe_device(struct device *dev)
- 		 * later use.
- 		 */
- 		fwspec = dev_iommu_fwspec_get(dev);
--		if (ret)
--			goto out_free;
- 	} else if (fwspec && fwspec->ops == &arm_smmu_ops) {
- 		smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
- 	} else {
- 		return ERR_PTR(-ENODEV);
- 	}
- 
--	ret = -EINVAL;
- 	for (i = 0; i < fwspec->num_ids; i++) {
- 		u16 sid = FIELD_GET(ARM_SMMU_SMR_ID, fwspec->ids[i]);
- 		u16 mask = FIELD_GET(ARM_SMMU_SMR_MASK, fwspec->ids[i]);
-@@ -1371,20 +1370,19 @@ static struct iommu_device *arm_smmu_probe_device(struct device *dev)
- 		if (sid & ~smmu->streamid_mask) {
- 			dev_err(dev, "stream ID 0x%x out of range for SMMU (0x%x)\n",
- 				sid, smmu->streamid_mask);
--			goto out_free;
-+			return ERR_PTR(-EINVAL);
- 		}
- 		if (mask & ~smmu->smr_mask_mask) {
- 			dev_err(dev, "SMR mask 0x%x out of range for SMMU (0x%x)\n",
- 				mask, smmu->smr_mask_mask);
--			goto out_free;
-+			return ERR_PTR(-EINVAL);
- 		}
- 	}
- 
--	ret = -ENOMEM;
- 	cfg = kzalloc(offsetof(struct arm_smmu_master_cfg, smendx[i]),
- 		      GFP_KERNEL);
- 	if (!cfg)
--		goto out_free;
-+		return ERR_PTR(-ENOMEM);
- 
- 	cfg->smmu = smmu;
- 	dev_iommu_priv_set(dev, cfg);
-@@ -1408,8 +1406,6 @@ static struct iommu_device *arm_smmu_probe_device(struct device *dev)
- 
- out_cfg_free:
- 	kfree(cfg);
--out_free:
--	iommu_fwspec_free(dev);
- 	return ERR_PTR(ret);
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 7445454c2af244..b1309f04ebc0d9 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -2748,9 +2748,11 @@ static int arm_smmu_enable_nesting(struct iommu_domain *domain)
+ 	return ret;
  }
  
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 310871728ab4b6..e3101aa2f35689 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -844,7 +844,6 @@ static int tegra_smmu_configure(struct tegra_smmu *smmu, struct device *dev,
- 	err = ops->of_xlate(dev, args);
- 	if (err < 0) {
- 		dev_err(dev, "failed to parse SW group ID: %d\n", err);
--		iommu_fwspec_free(dev);
- 		return err;
- 	}
+-static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
++static int arm_smmu_of_xlate_fwspec(struct iommu_fwspec *fwspec,
++				    struct device *dev,
++				    struct of_phandle_args *args)
+ {
+-	return iommu_fwspec_add_ids(dev, args->args, 1);
++	return iommu_fwspec_append_ids(fwspec, args->args, 1);
+ }
+ 
+ static void arm_smmu_get_resv_regions(struct device *dev,
+@@ -2858,7 +2860,7 @@ static struct iommu_ops arm_smmu_ops = {
+ 	.probe_device		= arm_smmu_probe_device,
+ 	.release_device		= arm_smmu_release_device,
+ 	.device_group		= arm_smmu_device_group,
+-	.of_xlate		= arm_smmu_of_xlate,
++	.of_xlate_fwspec	= arm_smmu_of_xlate_fwspec,
+ 	.get_resv_regions	= arm_smmu_get_resv_regions,
+ 	.remove_dev_pasid	= arm_smmu_remove_dev_pasid,
+ 	.dev_enable_feat	= arm_smmu_dev_enable_feature,
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index 854efcb1b84ddf..8c4a60d8e5d522 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -1510,7 +1510,9 @@ static int arm_smmu_set_pgtable_quirks(struct iommu_domain *domain,
+ 	return ret;
+ }
+ 
+-static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
++static int arm_smmu_of_xlate_fwspec(struct iommu_fwspec *fwspec,
++				    struct device *dev,
++				    struct of_phandle_args *args)
+ {
+ 	u32 mask, fwid = 0;
+ 
+@@ -1522,7 +1524,7 @@ static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
+ 	else if (!of_property_read_u32(args->np, "stream-match-mask", &mask))
+ 		fwid |= FIELD_PREP(ARM_SMMU_SMR_MASK, mask);
+ 
+-	return iommu_fwspec_add_ids(dev, &fwid, 1);
++	return iommu_fwspec_append_ids(fwspec, &fwid, 1);
+ }
+ 
+ static void arm_smmu_get_resv_regions(struct device *dev,
+@@ -1562,7 +1564,7 @@ static struct iommu_ops arm_smmu_ops = {
+ 	.release_device		= arm_smmu_release_device,
+ 	.probe_finalize		= arm_smmu_probe_finalize,
+ 	.device_group		= arm_smmu_device_group,
+-	.of_xlate		= arm_smmu_of_xlate,
++	.of_xlate_fwspec	= arm_smmu_of_xlate_fwspec,
+ 	.get_resv_regions	= arm_smmu_get_resv_regions,
+ 	.def_domain_type	= arm_smmu_def_domain_type,
+ 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 8fc3d0ff881260..de6dcb244bff4a 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2983,6 +2983,9 @@ int iommu_fwspec_of_xlate(struct iommu_fwspec *fwspec, struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
++	if (fwspec->ops->of_xlate_fwspec)
++		return fwspec->ops->of_xlate_fwspec(fwspec, dev, iommu_spec);
++
+ 	if (!fwspec->ops->of_xlate)
+ 		return -ENODEV;
+ 
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index 379ebe03efb6d4..2283f1d1155981 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -1027,9 +1027,11 @@ static struct iommu_group *viommu_device_group(struct device *dev)
+ 		return generic_device_group(dev);
+ }
+ 
+-static int viommu_of_xlate(struct device *dev, struct of_phandle_args *args)
++static int viommu_of_xlate_fwspec(struct iommu_fwspec *fwspec,
++				  struct device *dev,
++				  struct of_phandle_args *args)
+ {
+-	return iommu_fwspec_add_ids(dev, args->args, 1);
++	return iommu_fwspec_append_ids(fwspec, args->args, 1);
+ }
+ 
+ static bool viommu_capable(struct device *dev, enum iommu_cap cap)
+@@ -1050,7 +1052,7 @@ static struct iommu_ops viommu_ops = {
+ 	.release_device		= viommu_release_device,
+ 	.device_group		= viommu_device_group,
+ 	.get_resv_regions	= viommu_get_resv_regions,
+-	.of_xlate		= viommu_of_xlate,
++	.of_xlate_fwspec	= viommu_of_xlate_fwspec,
+ 	.owner			= THIS_MODULE,
+ 	.default_domain_ops = &(const struct iommu_domain_ops) {
+ 		.attach_dev		= viommu_attach_dev,
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 352070c3ab3126..3495db0c3e4631 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -43,6 +43,7 @@ struct notifier_block;
+ struct iommu_sva;
+ struct iommu_fault_event;
+ struct iommu_dma_cookie;
++struct iommu_fwspec;
+ 
+ /* iommu fault flags */
+ #define IOMMU_FAULT_READ	0x0
+@@ -395,6 +396,8 @@ struct iommu_ops {
+ 	/* Request/Free a list of reserved regions for a device */
+ 	void (*get_resv_regions)(struct device *dev, struct list_head *list);
+ 
++	int (*of_xlate_fwspec)(struct iommu_fwspec *fwspec, struct device *dev,
++			       struct of_phandle_args *args);
+ 	int (*of_xlate)(struct device *dev, struct of_phandle_args *args);
+ 	bool (*is_attach_deferred)(struct device *dev);
  
 -- 
 2.42.0
