@@ -1,131 +1,75 @@
-Return-Path: <linux-hyperv+bounces-979-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-980-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 838BA7F0110
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Nov 2023 17:23:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5160D7F0156
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Nov 2023 18:38:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BB311F22D49
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Nov 2023 16:23:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 814661C2040B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Nov 2023 17:38:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279B1199A0;
-	Sat, 18 Nov 2023 16:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC2F12E40;
+	Sat, 18 Nov 2023 17:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dByqGueY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F46C5;
-	Sat, 18 Nov 2023 08:23:32 -0800 (PST)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1cf52e5e07eso2356725ad.0;
-        Sat, 18 Nov 2023 08:23:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700324612; x=1700929412;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2erzZFOyxOrSdjM/KpGdx3oacnKwVcss5FA960Pxu5w=;
-        b=fYqqCdMKOD5hcFS+Pcb3HrknnLjiaxbOO5e4YVeP4FvvFzmD68K0T/fVY5rqvkB/z1
-         8K0Ez2Sap8pkqkVUaJhQkP4xz1r4DGnwtXtmM5hVyUI02rapghbUrXG3HdWrVXk3VQNg
-         vN9dcZycZJACeTuGiw9LY/RN74GwRadhRZGRX+feZunbiVY06owKpBy0NDpqh1cvH3sX
-         +dybOGVGL++XVvQ4LS3GPJMBHWbN/Bqi0GjqSZ22idjdggvGVqIsFQPt5k93I2HbTqJR
-         u7lLYaTbIohcO9sSRcALX6J7CTIYxnWZ/QI5zVmJU99Kji/Q4/EHzh3yijGQVY9oiQev
-         WYPQ==
-X-Gm-Message-State: AOJu0YxqrpdyoiEsZK64HSkNuYVjWMly5Z6GlC6YjejWvfM9OnqKsy+l
-	Ca/aK/JyHgxk/FKsDuHdxBY=
-X-Google-Smtp-Source: AGHT+IFxNCOe1hV/UN7ql6AF5ylF4cLl3KjxD1pwBtnSiRvXE7Ae8L1R6+CdLXdA7EoHYLiLeUL3Gw==
-X-Received: by 2002:a17:902:6844:b0:1cf:5197:25ac with SMTP id f4-20020a170902684400b001cf519725acmr2006009pln.12.1700324611982;
-        Sat, 18 Nov 2023 08:23:31 -0800 (PST)
-Received: from ?IPV6:2601:647:4d7e:54f3:667:4981:ffa1:7be1? ([2601:647:4d7e:54f3:667:4981:ffa1:7be1])
-        by smtp.gmail.com with ESMTPSA id u18-20020a170902e81200b001ce64bdfa19sm2051042plg.45.2023.11.18.08.23.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Nov 2023 08:23:31 -0800 (PST)
-Message-ID: <91a32cd2-903a-43df-8067-510c6c431ec7@acm.org>
-Date: Sat, 18 Nov 2023 08:23:20 -0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A00179A2;
+	Sat, 18 Nov 2023 17:38:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C23C433C7;
+	Sat, 18 Nov 2023 17:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700329131;
+	bh=losrmXlk+odVwrmRe07GJMSdH6r8vdY76JOEkrAnT8w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dByqGueYLz6b8vlOUGniQt46dHd66x1kFnRLjJoHw1Hsw7ap5Hv0cLdxFq2R12Pt9
+	 0v7hy1j2j7i5h3ntlKizusHrv8ilYQyGMH547b5A7PBANk1xTOtFDL+SFPjAWHkkpi
+	 hzW/90cbNGqQMOO8zfnR1jjFhklycNUr3v0E/WD+majI3yk4fwhdTk3Ak6fZl3yv/R
+	 fUz03ZUmfzLnot7uFZmXs1e+4JeMfjzJ059NIBzIGi1rUYm28QWJBmDPdu3DucQxnz
+	 qXGmyxbYnDamT/VZzFGsyCupkhj6eL/Oncyv+CVaUvB1ga36HmLi8frpE19ZsTdErw
+	 dYjKI4+y3XU+w==
+Date: Sat, 18 Nov 2023 09:38:49 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Long Li <longli@microsoft.com>, "longli@linuxonhyperv.com"
+ <longli@linuxonhyperv.com>, KY Srinivasan <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v4] hv_netvsc: Mark VF as slave before exposing
+ it to user-mode
+Message-ID: <20231118093849.14e36043@kernel.org>
+In-Reply-To: <20231115081406.1bd9a4ed@hermes.local>
+References: <1699484212-24079-1-git-send-email-longli@linuxonhyperv.com>
+	<20231108181318.5360af18@kernel.org>
+	<PH7PR21MB3263EBCF9600EEBD6D962B6ECEAEA@PH7PR21MB3263.namprd21.prod.outlook.com>
+	<20231110120513.45ed505c@kernel.org>
+	<20231115081406.1bd9a4ed@hermes.local>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/34] lib/find: add atomic find_bit() primitives
-Content-Language: en-US
-To: Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, "H. Peter Anvin" <hpa@zytor.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
- Akinobu Mita <akinobu.mita@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Andersson <andersson@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Chaitanya Kulkarni <kch@nvidia.com>, Christian Brauner <brauner@kernel.org>,
- Damien Le Moal <damien.lemoal@opensource.wdc.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, David Disseldorp <ddiss@suse.de>,
- Edward Cree <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>,
- Fenghua Yu <fenghua.yu@intel.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Gregory Greenman <gregory.greenman@intel.com>,
- Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>,
- Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
- Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>,
- Kalle Valo <kvalo@kernel.org>, Karsten Graul <kgraul@linux.ibm.com>,
- Karsten Keil <isdn@linux-pingi.de>, Kees Cook <keescook@chromium.org>,
- Leon Romanovsky <leon@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Martin Habets <habetsm.xilinx@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
- Nicholas Piggin <npiggin@gmail.com>, Oliver Neukum <oneukum@suse.com>,
- Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ping-Ke Shih <pkshih@realtek.com>,
- Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
- Sean Christopherson <seanjc@google.com>,
- Shuai Xue <xueshuai@linux.alibaba.com>, Stanislaw Gruszka <stf_xl@wp.pl>,
- Steven Rostedt <rostedt@goodmis.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Wenjia Zhang <wenjia@linux.ibm.com>,
- Will Deacon <will@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>,
- GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org,
- ath10k@lists.infradead.org, dmaengine@vger.kernel.org,
- iommu@lists.linux.dev, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-net-drivers@amd.com, linux-pci@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, mpi3mr-linuxdrv.pdl@broadcom.com,
- netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Cc: Jan Kara <jack@suse.cz>, Mirsad Todorovac
- <mirsad.todorovac@alu.unizg.hr>, Matthew Wilcox <willy@infradead.org>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
- Alexey Klimov <klimov.linux@gmail.com>
-References: <20231118155105.25678-1-yury.norov@gmail.com>
- <20231118155105.25678-2-yury.norov@gmail.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20231118155105.25678-2-yury.norov@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 11/18/23 07:50, Yury Norov wrote:
-> Add helpers around test_and_{set,clear}_bit() that allow to search for
-> clear or set bits and flip them atomically.
+On Wed, 15 Nov 2023 08:14:06 -0800 Stephen Hemminger wrote:
+> Jakub is right that in an ideal world, this could all be managed by
+> userspace. But the management of network devices in Linux is a
+> dumpster fire! Every distro invents there own solution, last time
+> I counted there were six different tools claiming to be the
+> "one network device manager to rule them all". And that doesn't
+> include all the custom scripts and vendor appliances.
 
-Has it been considered to add kunit tests for the new functions?
-
-Thanks,
-
-Bart.
-
+To be clear, I thought Long Li was saying that the goal is work around
+cases where VF is probed before netvsc. That seems like something that
+can be prevented by the hypervisor.
 
