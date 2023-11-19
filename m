@@ -1,151 +1,263 @@
-Return-Path: <linux-hyperv+bounces-982-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-983-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 347D17F023C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Nov 2023 20:06:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BC027F04C0
+	for <lists+linux-hyperv@lfdr.de>; Sun, 19 Nov 2023 09:16:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B11ECB20A34
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Nov 2023 19:06:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 158241F21FD2
+	for <lists+linux-hyperv@lfdr.de>; Sun, 19 Nov 2023 08:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6288C1A71C;
-	Sat, 18 Nov 2023 19:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E84D1C2E;
+	Sun, 19 Nov 2023 08:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="fnmZORRU"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27744182;
-	Sat, 18 Nov 2023 11:06:30 -0800 (PST)
-Received: from [192.168.1.103] (31.173.87.19) by msexch01.omp.ru (10.188.4.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sat, 18 Nov
- 2023 22:06:15 +0300
-Subject: Re: [PATCH 00/34] biops: add atomig find_bit() operations
-To: Bart Van Assche <bvanassche@acm.org>, Yury Norov <yury.norov@gmail.com>,
-	<linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "H.
- Peter Anvin" <hpa@zytor.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>, "Md. Haris Iqbal"
-	<haris.iqbal@ionos.com>, Akinobu Mita <akinobu.mita@gmail.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Bjorn Andersson <andersson@kernel.org>, Borislav
- Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>, Christian Brauner
-	<brauner@kernel.org>, Damien Le Moal <damien.lemoal@opensource.wdc.com>, Dave
- Hansen <dave.hansen@linux.intel.com>, David Disseldorp <ddiss@suse.de>,
-	Edward Cree <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>,
-	Fenghua Yu <fenghua.yu@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Greenman
-	<gregory.greenman@intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Hans de
- Goede <hdegoede@redhat.com>, Hugh Dickins <hughd@google.com>, Ingo Molnar
-	<mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela
-	<perex@perex.cz>, Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe
-	<axboe@kernel.dk>, Jiri Pirko <jiri@resnulli.us>, Jiri Slaby
-	<jirislaby@kernel.org>, Kalle Valo <kvalo@kernel.org>, Karsten Graul
-	<kgraul@linux.ibm.com>, Karsten Keil <isdn@linux-pingi.de>, Kees Cook
-	<keescook@chromium.org>, Leon Romanovsky <leon@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Martin Habets <habetsm.xilinx@gmail.com>, Mauro
- Carvalho Chehab <mchehab@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Nicholas Piggin <npiggin@gmail.com>, Oliver
- Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ping-Ke Shih
-	<pkshih@realtek.com>, Rich Felker <dalias@libc.org>, Rob Herring
-	<robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sathya Prakash
- Veerichetty <sathya.prakash@broadcom.com>, Sean Christopherson
-	<seanjc@google.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Stanislaw
- Gruszka <stf_xl@wp.pl>, Steven Rostedt <rostedt@goodmis.org>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
-	<tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, Vitaly
- Kuznetsov <vkuznets@redhat.com>, Wenjia Zhang <wenjia@linux.ibm.com>, Will
- Deacon <will@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>,
-	<GR-QLogic-Storage-Upstream@marvell.com>, <alsa-devel@alsa-project.org>,
-	<ath10k@lists.infradead.org>, <dmaengine@vger.kernel.org>,
-	<iommu@lists.linux.dev>, <kvm@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-block@vger.kernel.org>, <linux-bluetooth@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-m68k@lists.linux-m68k.org>,
-	<linux-media@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-	<linux-net-drivers@amd.com>, <linux-pci@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<linux-scsi@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<linux-sh@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <mpi3mr-linuxdrv.pdl@broadcom.com>,
-	<netdev@vger.kernel.org>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
-CC: Jan Kara <jack@suse.cz>, Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Matthew Wilcox <willy@infradead.org>, Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Maxim Kuvyrkov
-	<maxim.kuvyrkov@linaro.org>, Alexey Klimov <klimov.linux@gmail.com>
-References: <20231118155105.25678-1-yury.norov@gmail.com>
- <792fc3d8-6834-48f8-9737-f1531459d245@acm.org>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <cb01a8af-d62b-27b4-f6fc-d1f3fbf676ee@omp.ru>
-Date: Sat, 18 Nov 2023 22:06:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+X-Greylist: delayed 345 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 19 Nov 2023 00:16:36 PST
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F01312D;
+	Sun, 19 Nov 2023 00:16:35 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id DD580447DB;
+	Sun, 19 Nov 2023 08:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1700381447; bh=GM+if5fLHpvJrFY5qSih6je/CvwvPPLKRrXfiPD5JZ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=fnmZORRU99JAVouDyTggPcE3iI5afMoj+u2Q93VQ586jKo2M/q9GZEdwubNM4sfTG
+	 O/GNq8IBB2FxoNxqr+83D6QLnNoyRUshU83ipS6MAOREVA4UCBzzO13RzDdjxIUQMP
+	 eudSVW93AZc92wzpKNKzYiJbsCHq3HNLwf37Q4rYng+gvpQzwQv6Hir4FQs3pVEOHW
+	 PWvxNrEeCr6uJqj6WxIZxJOcGOrqTmHPOFdam47KxGPA3SBUOixBt51uEWtRaaJNpU
+	 +oztbcTSFkScA/2bBEJM1o2bzkZzy2rOmG6UsRBkmN8P7aMUR0GoioW59JerR3gTgu
+	 E9BI6sjTeb8xw==
+Message-ID: <20a7ef6d-a8ca-4bd8-ad7e-11856db617a2@marcan.st>
+Date: Sun, 19 Nov 2023 17:10:30 +0900
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <792fc3d8-6834-48f8-9737-f1531459d245@acm.org>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/17] iommu: Add iommu_fwspec_alloc/dealloc()
 Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>, acpica-devel@lists.linux.dev,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Albert Ou <aou@eecs.berkeley.edu>,
+ asahi@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>,
+ Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
+ David Woodhouse <dwmw2@infradead.org>, Frank Rowand
+ <frowand.list@gmail.com>, Hanjun Guo <guohanjun@huawei.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, iommu@lists.linux.dev,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
+ linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, patches@lists.linux.dev,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Robert Moore <robert.moore@intel.com>, Rob Herring <robh+dt@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ Sven Peter <sven@svenpeter.dev>, Thierry Reding <thierry.reding@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>,
+ virtualization@lists.linux.dev, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>
+Cc: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Christoph Hellwig <hch@lst.de>,
+ Jerry Snitselaar <jsnitsel@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+ Zhenhua Huang <quic_zhenhuah@quicinc.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Rob Herring <robh@kernel.org>
+References: <6-v2-36a0088ecaa7+22c6e-iommu_fwspec_jgg@nvidia.com>
+From: Hector Martin <marcan@marcan.st>
+In-Reply-To: <6-v2-36a0088ecaa7+22c6e-iommu_fwspec_jgg@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [31.173.87.19]
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 11/18/2023 18:50:09
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 181454 [Nov 18 2023]
-X-KSE-AntiSpam-Info: Version: 6.0.0.2
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_arrow_text}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.87.19 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.87.19 in (user) dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.87.19
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 11/18/2023 18:54:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 11/18/2023 3:15:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On 11/18/23 7:18 PM, Bart Van Assche wrote:
-[...]
->> Add helpers around test_and_{set,clear}_bit() that allow to search for
->> clear or set bits and flip them atomically.
+On 2023/11/15 23:05, Jason Gunthorpe wrote:
+> Allow fwspec to exist independently from the dev->iommu by providing
+> functions to allow allocating and freeing the raw struct iommu_fwspec.
 > 
-> There is a typo in the subject: shouldn't "atomig" be changed
-> into "atomic"?
-
-   And "biops" to "bitops"? :-)
-
-> Thanks,
+> Reflow the existing paths to call the new alloc/dealloc functions.
 > 
-> Bart.
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  drivers/iommu/iommu.c | 82 ++++++++++++++++++++++++++++++++-----------
+>  include/linux/iommu.h | 11 +++++-
+>  2 files changed, 72 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 18a82a20934d53..86bbb9e75c7e03 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -361,10 +361,8 @@ static void dev_iommu_free(struct device *dev)
+>  	struct dev_iommu *param = dev->iommu;
+>  
+>  	dev->iommu = NULL;
+> -	if (param->fwspec) {
+> -		fwnode_handle_put(param->fwspec->iommu_fwnode);
+> -		kfree(param->fwspec);
+> -	}
+> +	if (param->fwspec)
+> +		iommu_fwspec_dealloc(param->fwspec);
+>  	kfree(param);
+>  }
+>  
+> @@ -2920,10 +2918,61 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+>  	return ops;
+>  }
+>  
+> +static int iommu_fwspec_assign_iommu(struct iommu_fwspec *fwspec,
+> +				     struct device *dev,
+> +				     struct fwnode_handle *iommu_fwnode)
+> +{
+> +	const struct iommu_ops *ops;
+> +
+> +	if (fwspec->iommu_fwnode) {
+> +		/*
+> +		 * fwspec->iommu_fwnode is the first iommu's fwnode. In the rare
+> +		 * case of multiple iommus for one device they must point to the
+> +		 * same driver, checked via same ops.
+> +		 */
+> +		ops = iommu_ops_from_fwnode(iommu_fwnode);
 
-MBR, Sergey
+This carries over a related bug from the original code: If a device has
+two IOMMUs and the first one probes but the second one defers, ops will
+be NULL here and the check will fail with EINVAL.
+
+Adding a check for that case here fixes it:
+
+		if (!ops)
+			return driver_deferred_probe_check_state(dev);
+
+With that, for the whole series:
+
+Tested-by: Hector Martin <marcan@marcan.st>
+
+I can't specifically test for the probe races the series intends to fix
+though, since that bug we only hit extremely rarely. I'm just testing
+that nothing breaks.
+
+> +		if (fwspec->ops != ops)
+> +			return -EINVAL;
+> +		return 0;
+> +	}
+> +
+> +	if (!fwspec->ops) {
+> +		ops = iommu_ops_from_fwnode(iommu_fwnode);
+> +		if (!ops)
+> +			return driver_deferred_probe_check_state(dev);
+> +		fwspec->ops = ops;
+> +	}
+> +
+> +	of_node_get(to_of_node(iommu_fwnode));
+> +	fwspec->iommu_fwnode = iommu_fwnode;
+> +	return 0;
+> +}
+> +
+> +struct iommu_fwspec *iommu_fwspec_alloc(void)
+> +{
+> +	struct iommu_fwspec *fwspec;
+> +
+> +	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
+> +	if (!fwspec)
+> +		return ERR_PTR(-ENOMEM);
+> +	return fwspec;
+> +}
+> +
+> +void iommu_fwspec_dealloc(struct iommu_fwspec *fwspec)
+> +{
+> +	if (!fwspec)
+> +		return;
+> +
+> +	if (fwspec->iommu_fwnode)
+> +		fwnode_handle_put(fwspec->iommu_fwnode);
+> +	kfree(fwspec);
+> +}
+> +
+>  int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+>  		      const struct iommu_ops *ops)
+>  {
+>  	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> +	int ret;
+>  
+>  	if (fwspec)
+>  		return ops == fwspec->ops ? 0 : -EINVAL;
+> @@ -2931,29 +2980,22 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+>  	if (!dev_iommu_get(dev))
+>  		return -ENOMEM;
+>  
+> -	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
+> -	if (!fwspec)
+> -		return -ENOMEM;
+> +	fwspec = iommu_fwspec_alloc();
+> +	if (IS_ERR(fwspec))
+> +		return PTR_ERR(fwspec);
+>  
+> -	of_node_get(to_of_node(iommu_fwnode));
+> -	fwspec->iommu_fwnode = iommu_fwnode;
+>  	fwspec->ops = ops;
+> +	ret = iommu_fwspec_assign_iommu(fwspec, dev, iommu_fwnode);
+> +	if (ret) {
+> +		iommu_fwspec_dealloc(fwspec);
+> +		return ret;
+> +	}
+> +
+>  	dev_iommu_fwspec_set(dev, fwspec);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_fwspec_init);
+>  
+> -void iommu_fwspec_free(struct device *dev)
+> -{
+> -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> -
+> -	if (fwspec) {
+> -		fwnode_handle_put(fwspec->iommu_fwnode);
+> -		kfree(fwspec);
+> -		dev_iommu_fwspec_set(dev, NULL);
+> -	}
+> -}
+> -EXPORT_SYMBOL_GPL(iommu_fwspec_free);
+>  
+>  int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
+>  {
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index e98a4ca8f536b7..c7c68cb59aa4dc 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -813,9 +813,18 @@ struct iommu_sva {
+>  	struct iommu_domain		*domain;
+>  };
+>  
+> +struct iommu_fwspec *iommu_fwspec_alloc(void);
+> +void iommu_fwspec_dealloc(struct iommu_fwspec *fwspec);
+> +
+>  int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+>  		      const struct iommu_ops *ops);
+> -void iommu_fwspec_free(struct device *dev);
+> +static inline void iommu_fwspec_free(struct device *dev)
+> +{
+> +	if (!dev->iommu)
+> +		return;
+> +	iommu_fwspec_dealloc(dev->iommu->fwspec);
+> +	dev->iommu->fwspec = NULL;
+> +}
+>  int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
+>  const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+>  
+
+- Hector
 
