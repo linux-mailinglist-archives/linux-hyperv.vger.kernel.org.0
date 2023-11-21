@@ -1,58 +1,58 @@
-Return-Path: <linux-hyperv+bounces-1009-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1011-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06B357F3822
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 22:20:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2E9E7F3824
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 22:20:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A37B1C20D90
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 21:20:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFD471C20E11
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 21:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC92584C3;
-	Tue, 21 Nov 2023 21:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33381584D1;
+	Tue, 21 Nov 2023 21:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNFF3+So"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9Amo8b7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6081D45;
-	Tue, 21 Nov 2023 13:20:35 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1ce5e76912aso38592095ad.2;
-        Tue, 21 Nov 2023 13:20:35 -0800 (PST)
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6BF1AA;
+	Tue, 21 Nov 2023 13:20:37 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cf6a67e290so15795685ad.1;
+        Tue, 21 Nov 2023 13:20:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700601635; x=1701206435; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700601636; x=1701206436; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=huLzv0PM0TYdV6aZ2lF/u0VoqugwXORYCB79pbYxdec=;
-        b=mNFF3+SokYSSzvKY/avlzJ6uiXmE1rOhKUfVMA0fSHjyGvztuzBmuldSN3xrQg2kvf
-         VM4Oc5RFmRWkos+kIIKNjMrQpe9cypAZeZ3R4rnIJw29uf3kFhP/EKAtCd223RPSKj02
-         1oYDWGu4h2GJEq8dilXv9NF2ayUpWA2iTL0TN6foU4jlZDub8BszN5CjjmvxRGO6Y9Gx
-         Y2t/X9mQwbHTXCckNAOafy6LkBNY9JfTe1yg2jfAB0nczEZZguWUJfzkcRLLxdnQ/xKr
-         jD6SzKOoCZFGmc0O1GeCLeNHinOroNMIcZ5eDx1QYf6xjq3YBd4SkuBvFDytA0CBBC/9
-         QlNw==
+        bh=WDCKZynU08jauQ6ld+7iiO8G5I0+Mgx4PpyHnd5gkcg=;
+        b=b9Amo8b7XxRrje7EUu9nqxEMj5X/MN99pjuobtb5My8i4YpxIfBimz7rMorbQniKtG
+         9CyDxgo/E0h6mF6YtFz0BAy8uCysyM79R+VrgisZowvmo8vbZVnfRdNJNyt7e9zsOBBn
+         2U9dNBeq6lHtzMgT+BSYs9lQjdq2dUx616zxAWISM6Np6v4YI+stMSZ3ovUqiBB91eAr
+         zOpfopn0Ier4F8dHEH13GHLGcZ2hwbYM1x5iqrkoStaDkcW64JT4nwZ/LWiAO7AhpL9u
+         ihkrSDoU7Q0wNIiT6VzH4y4ykbW5EszQ3Ge19KLD1WTmuNLzPjmeTRNOqStPCtn4bVhN
+         +tKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700601635; x=1701206435;
+        d=1e100.net; s=20230601; t=1700601636; x=1701206436;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=huLzv0PM0TYdV6aZ2lF/u0VoqugwXORYCB79pbYxdec=;
-        b=WPcQsQnMqJzRXlLARyFj9qhGHUR0QhuN34AANOioCSGbE9veRBha4l4yPZeE4lFGLx
-         jEsgDP623BL6MZQUXZWn7RGUUrCMsutkmNtS3ywmWetRqnp8W3mLr3SbV5qkx+K5t6Mf
-         IhjK9EVQ/6U1iX2loYoOhyZQNzlaq2yQLIBmQY5N1TjlBSNQ6ESQoqwV6Z3huc9nbfR0
-         41YCXc6HzW6OC/5dKZU4UJkLMRdfAfYfGxKDgZH48GDbprbmKJzUBqVFG80+SNN5ipQ9
-         geoNN9UTe1Brw/p7c2JB0FIADbyjJIF35Cf42V2nRwAJeyqYDemBU/7YeBgZfgN4Nujt
-         CSRA==
-X-Gm-Message-State: AOJu0YyPuDDZ4eA3A5piYosr5PgGeNgTHSzAiE3qA+GXOaKTy7LRh/Dp
-	nDoRcO9F8O3R+ltVdlffJBc=
-X-Google-Smtp-Source: AGHT+IGu3jcvDWzMmd2brW4AbNgRjSnITFzU3bEr293ek/NBxeKno17B5zHl10Y2Oi8nNIq+gnZz2g==
-X-Received: by 2002:a17:902:b687:b0:1cf:6d46:9f2f with SMTP id c7-20020a170902b68700b001cf6d469f2fmr351299pls.48.1700601635304;
-        Tue, 21 Nov 2023 13:20:35 -0800 (PST)
+        bh=WDCKZynU08jauQ6ld+7iiO8G5I0+Mgx4PpyHnd5gkcg=;
+        b=FDh7lGUD0uGtXXDx5zbOcIyDd4dwZHdfSI1r6XHP8iSbN40aSQSFmC3QX3OpVJPamD
+         MnjmPWdORvuNSpkYuTr6V9gKQnTgycKQb+8d0ZKUNzFOY2zn8jVrg5HnvFmQuWzcFspU
+         JnOml40trUUEwEiQVcn60G6s4hC+sN9E4frAZm4AGDdLWy4qRqpjU1YPruKuI68ocNBk
+         LX0g8Lr8Xye2nMCKi3H31s+eBCdqtOZhXkZpENrLDiFgn+HtORo3+bVGpHxFj8hAV2QM
+         nfJQZd9IHp3UcxsRBp9rFcjY1Y8m7aiwScjpNaRCqBmciYgBeT/oPsGANiB70iAfma5c
+         tgtQ==
+X-Gm-Message-State: AOJu0YxRAVmI7ZaISQO4PZHOrJA9jbiJycnbe3i56BQN7qbLzJxEYnyf
+	Bb6HcVX6ruBKang+M4YZjYc=
+X-Google-Smtp-Source: AGHT+IHGih5jJrhH0e5Fitw1xqGZ2tbx4HII00I2SufuwbFYeK8kmL25D5zlL+pZpN85Iq/vTDPqHw==
+X-Received: by 2002:a17:902:ec84:b0:1c9:faef:5765 with SMTP id x4-20020a170902ec8400b001c9faef5765mr603101plg.5.1700601636565;
+        Tue, 21 Nov 2023 13:20:36 -0800 (PST)
 Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
-        by smtp.gmail.com with ESMTPSA id j2-20020a170902758200b001bf52834696sm8281924pll.207.2023.11.21.13.20.34
+        by smtp.gmail.com with ESMTPSA id j2-20020a170902758200b001bf52834696sm8281924pll.207.2023.11.21.13.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 13:20:35 -0800 (PST)
+        Tue, 21 Nov 2023 13:20:36 -0800 (PST)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: tglx@linutronix.de,
@@ -82,9 +82,9 @@ To: tglx@linutronix.de,
 	linux-coco@lists.linux.dev,
 	linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH v2 2/8] x86/mm: Don't do a TLB flush if changing a PTE that isn't marked present
-Date: Tue, 21 Nov 2023 13:20:10 -0800
-Message-Id: <20231121212016.1154303-3-mhklinux@outlook.com>
+Subject: [PATCH v2 3/8] x86/mm: Remove "static" from vmap_pages_range()
+Date: Tue, 21 Nov 2023 13:20:11 -0800
+Message-Id: <20231121212016.1154303-4-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231121212016.1154303-1-mhklinux@outlook.com>
 References: <20231121212016.1154303-1-mhklinux@outlook.com>
@@ -99,36 +99,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-The core function __change_page_attr() currently sets up a TLB flush if
-a PTE is changed. But if the old value of the PTE doesn't include the
-PRESENT flag, the PTE won't be in the TLB, so a flush isn't needed.
+The mm subsystem currently provides no mechanism to map memory pages
+to a specified virtual address range.  A virtual address range can be
+allocated using get_vm_area(), but the only function available for
+mapping memory pages to a caller-specified address in that range is
+ioremap_page_range(), which is inappropriate for system memory.
 
-Avoid an unnecessary TLB flush by conditioning the flush on the old
-PTE value including PRESENT.  This change improves the performance of
-functions like set_memory_p() by avoiding the flush if the memory range
-was previously all not present.
+Fix this by allowing vmap_pages_range() to be used by callers outside
+of vmalloc.c.
 
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
- arch/x86/mm/pat/set_memory.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/vmalloc.h | 2 ++
+ mm/vmalloc.c            | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 8e19796e7ce5..d7ef8d312a47 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -1636,7 +1636,10 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
- 		 */
- 		if (pte_val(old_pte) != pte_val(new_pte)) {
- 			set_pte_atomic(kpte, new_pte);
--			cpa->flags |= CPA_FLUSHTLB;
-+
-+			/* If old_pte isn't present, it's not in the TLB */
-+			if (pte_present(old_pte))
-+				cpa->flags |= CPA_FLUSHTLB;
- 		}
- 		cpa->numpages = 1;
- 		return 0;
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index c720be70c8dd..ee12f5226a45 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -233,6 +233,8 @@ static inline bool is_vm_area_hugepages(const void *addr)
+ 
+ #ifdef CONFIG_MMU
+ void vunmap_range(unsigned long addr, unsigned long end);
++int vmap_pages_range(unsigned long addr, unsigned long end, pgprot_t prot,
++			struct page **pages, unsigned int page_shift);
+ static inline void set_vm_flush_reset_perms(void *addr)
+ {
+ 	struct vm_struct *vm = find_vm_area(addr);
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index d12a17fc0c17..b2a72bd317c6 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -625,7 +625,7 @@ int vmap_pages_range_noflush(unsigned long addr, unsigned long end,
+  * RETURNS:
+  * 0 on success, -errno on failure.
+  */
+-static int vmap_pages_range(unsigned long addr, unsigned long end,
++int vmap_pages_range(unsigned long addr, unsigned long end,
+ 		pgprot_t prot, struct page **pages, unsigned int page_shift)
+ {
+ 	int err;
 -- 
 2.25.1
 
