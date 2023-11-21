@@ -1,118 +1,120 @@
-Return-Path: <linux-hyperv+bounces-995-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-996-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34C357F1D4B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Nov 2023 20:29:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1291C7F2218
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 01:23:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7C4C282375
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Nov 2023 19:29:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A79D2B219D5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 00:23:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED6853456E;
-	Mon, 20 Nov 2023 19:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87223EA1;
+	Tue, 21 Nov 2023 00:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="W1Qcwm1C"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EpJH6Dwi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020003.outbound.protection.outlook.com [52.101.56.3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2981BB;
-	Mon, 20 Nov 2023 11:29:01 -0800 (PST)
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2127.outbound.protection.outlook.com [40.107.223.127])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA8FB9;
+	Mon, 20 Nov 2023 16:23:46 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TY0kVeuvbvPqjZJl0aWrgYcI8VZ8YeJJgPUrc+1pJR/qT8qshh2k3PFv0j9JMn/o1QHBWd8Ji9XAzRDBOU5GJvYxMlJL5NjMsDWm0BC9j76g3yxR4+EeUaT4Y6pDXqRmpT5/fQnOpgmxoS+m08DT7grK/qVC1sEn/i+TToETPcJ+RRI0k68xjX4xAHeAu45tu+b000aw7UvBO543uA2sA7DiVQhMhhPoxpOAJh2IdXxSFYd8ESoHmOranu1lTtIOjQjgfoju++s58XDkAZufNRkhy+H98v9XyrcAywwv/vMFXR0/c3A5tLzDBEFUIgquPaR+PaPSvv8fRLAB8Z8p7g==
+ b=SH9INZaP34l3blKEsyxhVzIR0eTUW92J/Fw2yH8JENqaFgZIZPS+GIWxm61YJq6keOrGaOJCGv4Lwp0PCbRmhzUkp4s8jUHMwUOZnoqp8Rp84X12MKOshjhVUrt5+XKlFBlA20dreRcXETDgVGia6238prQSduRKl0VPb/ZbznCVZfwoUiWBG19XnDLgSkDsjdAKaxDC0kE8yFHyyBXtDifqI6UokJPs2G4JXkr3m16gMAG9TT1Kdw0Nsvfa8+dxwcp+pJ5uDI0IiHMSvCfA7Z/c8Sad+lgYTzTsMBYArJji5WA0bnnWFDs2Qci+cBIv3wFzHCCYSJFIMH8TWcfwUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v/W1J0RwVLdhjh7g+exSUQ7fiYwaYbqAyLxlIu4Ts7o=;
- b=MKgwEdeb7OAn+UTK/b8CzrvRMoE9yBGZV9szK+KErB7gPzWjmA0OJRYLGosUkd2S/JRPoK35A2zA71RpOZuhBziuHafsCLcc9l1ZjsgwYxW/IRn/5a6D662QeQy2tNuo4Pdza0UVTk0oVYrFBmUyRL7dT6wcGK/zhVeUo8DT9RKQ5yno1I15/fdhfdwGmXUa8nDsrsh3xNQ098oR39Uhj5l+/KT7vwk5pyVhCX+j7u2i+JVDvOLnubq4zo69zhBA1r7D48G0DfyIJWQgACQXMIXrzYXUyJzcluUCtw0lS/egh+qi+Jm3xODNe+8Uv16pvp4lj945gca2bCDRoahnLw==
+ bh=98X5uKpe/5lFiSb+gz9fkb1SSkVYPOrzm7E5PkhNXBA=;
+ b=Nxzo13YWJsWkEeJ9FqhrLAaxTcMsu6lXVjaAsWkAEvgIItbSiS9qZWkbRYnVQa38RYf18/BrS8m/Hz2xdQ6xqvs+ZCnhYlcOvFk1r3CWhbFSk/ccta7zMnTFM3cgDdQRR3YASjunieLxuqPkGOXWh8qNoP10oH8iHS0cONNqeKN++Y4BbYeYjw75NDYQeH3SNQ+8b6JO5DwliOOLioWlKLSBQ6ZtdBsECxQd4rgtSVUsgU0OVV/l3BF1uaXTAciVs3TSlzLoGMPhKbiD2Yi1Nhq1G+9aAqr8Vmi1v7Qv7AahJMezFrJ95PgznufRrdYG8K7WoN5XR63XcoyYC1GVjA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v/W1J0RwVLdhjh7g+exSUQ7fiYwaYbqAyLxlIu4Ts7o=;
- b=W1Qcwm1CQ+WGQuHCakBWxYAmVHPHbiEKM9WSlG7l8SR2QadNb+WKmDPGxKvLEzRLxEzm+qP/3uRC9cExnQ8Np9si+J2XeMBuRmxd/qc/bBxUcHXetbSKhdFR0Vivz2ydYadi4YZwy6dt/wMdruBZ6auePO/QzoXQI9faAfeqrhQ=
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by SN3PEPF00013E00.namprd21.prod.outlook.com (2603:10b6:82c:400:0:4:0:16)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.2; Mon, 20 Nov
- 2023 19:28:59 +0000
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::c1de:d3e5:8e05:1e4a]) by SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::c1de:d3e5:8e05:1e4a%2]) with mapi id 15.20.7046.009; Mon, 20 Nov 2023
- 19:28:59 +0000
-From: Dexuan Cui <decui@microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>, "linux-hyperv@vger.kernel.org"
+ bh=98X5uKpe/5lFiSb+gz9fkb1SSkVYPOrzm7E5PkhNXBA=;
+ b=EpJH6Dwi1j6dghmaU2YYaxbQkB6Hf8UHTa5tbQy6q/ejY59QAvWFowp4zXv8YCy+aWzhwItMRjDZhkuWaVcDY2RlXtCiMVlRNDM3YnbLAqa/byOGt6leQBbm77Jbf3PceKAWVdVF3LFnVBeSzFgKBjhQtiJtWc72LcAqwMfTaZU=
+Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
+ by SA1PR21MB1319.namprd21.prod.outlook.com (2603:10b6:806:1f2::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.9; Tue, 21 Nov
+ 2023 00:23:42 +0000
+Received: from PH7PR21MB3263.namprd21.prod.outlook.com
+ ([fe80::3c1:f565:8d:2954]) by PH7PR21MB3263.namprd21.prod.outlook.com
+ ([fe80::3c1:f565:8d:2954%7]) with mapi id 15.20.7046.004; Tue, 21 Nov 2023
+ 00:23:41 +0000
+From: Long Li <longli@microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>, stephen <stephen@networkplumber.org>
+CC: "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>, KY Srinivasan
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>, "linux-hyperv@vger.kernel.org"
 	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>
-CC: KY Srinivasan <kys@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	stephen <stephen@networkplumber.org>, "davem@davemloft.net"
-	<davem@davemloft.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Long Li <longli@microsoft.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH net,v5, 3/3] hv_netvsc: Mark VF as slave before exposing
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next v4] hv_netvsc: Mark VF as slave before exposing
  it to user-mode
-Thread-Topic: [PATCH net,v5, 3/3] hv_netvsc: Mark VF as slave before exposing
+Thread-Topic: [PATCH net-next v4] hv_netvsc: Mark VF as slave before exposing
  it to user-mode
-Thread-Index: AQHaGwTlL5e+wt6IJ0GCvjHxzi6t5LCDmTaA
-Date: Mon, 20 Nov 2023 19:28:59 +0000
+Thread-Index:
+ AQHaEpbleF6H2i0O6EK5idFzE7vPXbBxP20AgAAPDICAAq7HgIAHmxUAgATOqoCAA5TaEA==
+Date: Tue, 21 Nov 2023 00:23:40 +0000
 Message-ID:
- <SA1PR21MB13356156EF05094FE9F9B02FBFB4A@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <1700411023-14317-1-git-send-email-haiyangz@microsoft.com>
- <1700411023-14317-4-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1700411023-14317-4-git-send-email-haiyangz@microsoft.com>
+ <PH7PR21MB326308608D52C45BFE16B05BCEBBA@PH7PR21MB3263.namprd21.prod.outlook.com>
+References: <1699484212-24079-1-git-send-email-longli@linuxonhyperv.com>
+	<20231108181318.5360af18@kernel.org>
+	<PH7PR21MB3263EBCF9600EEBD6D962B6ECEAEA@PH7PR21MB3263.namprd21.prod.outlook.com>
+	<20231110120513.45ed505c@kernel.org>	<20231115081406.1bd9a4ed@hermes.local>
+ <20231118093849.14e36043@kernel.org>
+In-Reply-To: <20231118093849.14e36043@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cd8d42f2-1b18-45a6-b153-e0894e1e1d85;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-11-20T19:27:39Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b93cf709-6b7e-4dcd-8991-3483ff0f134b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-11-21T00:20:21Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|SN3PEPF00013E00:EE_
-x-ms-office365-filtering-correlation-id: e1b9f599-45f6-49c1-0a2f-08dbe9fef1d4
+x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|SA1PR21MB1319:EE_
+x-ms-office365-filtering-correlation-id: c5ae9f75-e709-4096-6667-08dbea281cf2
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- wtYQESJUsDtHLymgtlKRhPXkxtYE5rV/KF1N7ayz2JNQXVZYPL3ISq81iNJGQfNTra8a/67ZxuAXSO1Up8IQyDuqLg8xjO/zNQAu/hocRh57vgxpTQzBN3nuNVRHC/IBjPFoxEOk/KQ5YCNlfFpNmXB9GvR2Errc065ontVQhUObMTjhtDNA2ZHlkma6qMh+4Fw1mcym2pBYjP11EFfNATSyVtdcJYRcUCWkh7JZKLMAQjHcU6L7kkn+6ww6M8ER39veMQ3NMlpidM3mEFHO1ZfdufpM36IosAu+AB5UShaQSE5VCzBkGuFwkIgz+b2nDMRuJSkmRHjmapuHMClwR4izq/qjYxoWIpVAmuoHeTd40D+HyMp5fWaUKW1AdZOkJyEQ7leF/G2ipEU+SWkXBghkGjIOocQUdFvdrWGgG+KjfWASzM3CltgoKTTsasZx9IekOTQfKmsSW7BGVCjU6QUS7kCXUpd2oIsAnww+cOOIJtScf3dVJr6qY3OBn+0YFJ7adhCnmmJSvlEbwyWUq1tiK/LPH+mPiCWSnnmrKNZA1YHoFAy3yS5rL9Vu3hjXP2d0zCF3opnydTm542tcPoIcufevwuYcyYYFs/9dnFthD+ivMrJROBj6gYR8/msgT3a99m1bpL1zO70sD1emzA==
+ ZRaCtTsiZ4drzHQ6+pfRMSlLJ94IaiVmzQM6smF/c0dBFlRkXqkTPVL1W/90ttBByknjdmpEdRlS/TZf41eZ01x/aIO1t2NIZoblVwRqclOFxCEPssuLM+dG4Gy+PXiTIy6lffNDf24yXvDCAsa/9c+V2q71AEcyTDXLr5NGCVXBD1L0wCd0rBOw7o6V0HuJbDRVlcQbirND8KrkIE4DQjjxv4J++CcPu4IN/vftO3UnJjXYE+vqoq7vk64AZ30eZJUopTf3Ti4023pYZjtOwqqeJVr6a8/tPhRtH+uJSBDW+n9ClDbYQIi5uKMu/vLs8nc6O7VJT+2m0dxINdriKAeADdmKVN/WBYviHyFQGzQtxHdBS/wOXivqPIf6B4nSSDeWXtw7fD9TT2j9kLux6aK7LTsDN6E7BRLaZkELdpbVHSg0AtVpMNZwYeabLWGa1hQT2s14L85G/guOd9mAAxBNykMe41T9Z9UHVFdb0g3BtWyebQ4R1rK1gXmzLTn/GnscLRz1n19bij04ae5TD/OycYRqRpbcXJa2zoUKpPczVMRbhO/ngTOmCnjc6zRO4h8wZWxQ7x+bSYcCu5DU78vpoSGb5jQjIUiQlv1JIwYLR5D3o5lXHPRag/a56cGaHHSLXDQ03WW5E+14ukcpXaTT2Ewtm7v5k2KBLgZwXX4=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(366004)(396003)(346002)(376002)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(55016003)(122000001)(82960400001)(52536014)(8990500004)(82950400001)(6506007)(9686003)(7696005)(33656002)(41300700001)(38100700002)(2906002)(478600001)(54906003)(66476007)(86362001)(71200400001)(110136005)(316002)(76116006)(66556008)(66946007)(66446008)(4744005)(8936002)(5660300002)(4326008)(8676002)(64756008)(10290500003)(7416002)(38070700009);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(366004)(396003)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(122000001)(66899024)(38070700009)(26005)(82960400001)(82950400001)(52536014)(110136005)(86362001)(64756008)(5660300002)(76116006)(66476007)(66556008)(66946007)(66446008)(316002)(8676002)(4326008)(8936002)(7416002)(54906003)(6506007)(7696005)(41300700001)(8990500004)(9686003)(71200400001)(478600001)(10290500003)(33656002)(2906002)(55016003)(38100700002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?XXsTvn3XTby7T1EmIjQ0H3qOZCctb26dI4AnLPLLQZ0nuldKnEqiek704/K6?=
- =?us-ascii?Q?NXgxvx+CRNgpB2qPSq/QzVFqVBi7XoTYiyyytHCgegghcxYlfaLJNMpAzcW4?=
- =?us-ascii?Q?8OUP1NgqZv4LE+RJwfaDdxbp+8erljssfb7ccyuxCqL3RXoGsr6OmNgG1xx4?=
- =?us-ascii?Q?3fiGBoZg4SEpY+HtTdiZh9tfnQyIt+s8kDbAfnfZuxzk2tZMHyObWokGhNUs?=
- =?us-ascii?Q?3pGwLNtpexhwfYvXmpgmHVkuEHDJRIbk86RyyOogKrO5wE90i+FpCW/BII/L?=
- =?us-ascii?Q?sAbKayE4JX+7Tn+Ou0rQAtfTZ1BhRkSGA1XuA7gCW+JMBGKPPVNL+/WBBSX4?=
- =?us-ascii?Q?F7QZKSiVBcVH8LojgGSOJBbivksmlA62g2VVs8vn8sexmAXI/eMMjd4oSSB6?=
- =?us-ascii?Q?z8LhVlHEi3Lkg7Q8ZH0+h5vYKXf1/LGEq6fBo7LuzenQ8PlEl2855+1QkrQb?=
- =?us-ascii?Q?lCjKtnu4iXHLFHqOAOb6mZ2HZ4DIf/zerNFODu25YEohkP7s7xcBBatJVDiU?=
- =?us-ascii?Q?XOBq05bYwYto9PeSRI2+rDRzVgM1iQm11W7mHnigdZd8iHWAtymIcIT2tqks?=
- =?us-ascii?Q?Jf2vGeZChmO9L9HbRUKNOe+tHuEWTR4R41qyTgY6nzdsx/zzWflMNz5iKo69?=
- =?us-ascii?Q?9JvS3n8UW4ibg86Fu7NbqvOr+0uzMzFvRm+NOsk6CLcuf9rZtopezMH0VyNP?=
- =?us-ascii?Q?PyTxrUskrVwq6CoHyBzJw+lD9cmwA2BMPBs0uuL1V6WFl3QMUM191OMxJD2+?=
- =?us-ascii?Q?+gfMwKZO5XNDN4IUOr3SMbcOUguYSeFHviEmLtlXTvtv0m7vqdhpKwqcqcfj?=
- =?us-ascii?Q?igCSGmdIlTTuCqxeKSFkl/IMw2u9lYvcRPnhy+7nuhtzjE49as8PnwGk4hDI?=
- =?us-ascii?Q?Zgiku1ge33fFgldwVrNTSq3B6Qen5vzTDUL6LM+NclCkbvHNkL27nIfTUyX4?=
- =?us-ascii?Q?pVMmRCufLDIndkp/VjPCWxfvXv6fTAMEGkG8Iu3wiZHsEJFpQATWSAvJxjIS?=
- =?us-ascii?Q?xEimFXsIebZoRJEII2nmPHyYRrYhENezBT9ysPq02h/wgxzj7LvVireJhrCj?=
- =?us-ascii?Q?tBdsub0vYJOJMikNxTATyaYC9QVN0jqu2P1qnKVAXmuZJzCTMEp5vgSa6RNi?=
- =?us-ascii?Q?K2Oge17CezjxjfGXRZuQg2Ld4YvWfW+gbBG5yvK72QE+YQHqqg14VlrfPtZf?=
- =?us-ascii?Q?KQKoEoS8QVxAlnc2HuL3Lv6MN3bGf6UmbgoErEWIo4tWcpvvVG/Ms31EZLMY?=
- =?us-ascii?Q?OZGx9sQzPI+p8GJQsafVSyUgZUcD+Dj8SDmN/o6wGBJ6tC189dUw1tzhhoFp?=
- =?us-ascii?Q?zM8kE302n2xCRoRvxwVmOlOSv0JhwmYBAvKtRJ5gYOZmLJ1zfF2g1Arrp71z?=
- =?us-ascii?Q?/W5eho2IO0kYer45zg3w3OL2NsKs0gPZUMU2vTeV19ihOdFvBMdlBIXbcRr9?=
- =?us-ascii?Q?/49ZIc58eBaooAJBaggYYO+CGzSujAtsq0ryGzeT1ctKvqUPJD5ZHetpszKr?=
- =?us-ascii?Q?FehgkFiaJgY1keM+YMUcaYtk/RAjHPv0gvU9F7hbyEM+lzOAkfyHqxwb6BN0?=
- =?us-ascii?Q?RhWXWa+VARUKyq1MmbkQk+0wacflba/nRc/d5Bioqp31KVRTujhsuCCzyi8M?=
- =?us-ascii?Q?Xzejcl9PxHOEWNMPb/K9sxk=3D?=
+ =?us-ascii?Q?UO83f/ovzyk+eX0SOiSsGzzVkFCmQseAh4tmrMRe/xbcc+B6IwU49Is+iaky?=
+ =?us-ascii?Q?P+rOw5KsDmk0qHzV0pjFbXW/h9c3o4rzeHsxeg+nCjSbFpN/RLrjf+CKTbgw?=
+ =?us-ascii?Q?gHZlrYKrTUR4kCfW6g58Ts2e6Uvp3HvWZmE2zQQTzw8haxb7AzMdKQ6MG7RY?=
+ =?us-ascii?Q?IPCtFGl72w22L0D3sRQ4J/isvvgoUVEfSUpm/1HP4LKHsGV5/06IDmNRpSe+?=
+ =?us-ascii?Q?alLJZXWe3cJabUdTG+gPmt8Yp29ewb6Z+Z7EZ1cUcdtPYznl2PdHt1XmnWAV?=
+ =?us-ascii?Q?9MeH+KqA+kPnpc3KgMUheSAbf8PNREx5b5XVDL1z/PvkV5GVOOL064Jm/0vv?=
+ =?us-ascii?Q?zwCVJZB38bI/Vy2QR2XxES39oxLi3gBU+ikhiDTWmGpHgdQWc/47aodM9+0u?=
+ =?us-ascii?Q?1gnSan9l5u3qDznrVAxl0vTv6ZnLm/Mx+ZAHpDLcDZvnxcjBsvtZVQuEzf64?=
+ =?us-ascii?Q?i7Rn/XEefmlSVKiT9praCiPAgX52GjTurFt5xjaNhk+jAPmdt+g9v2A9Dsag?=
+ =?us-ascii?Q?uECD7RFq2mGXjTUMTgaqe/ce98c+SrJOYU1o0wkaq44XHBhL5/2kiai/lWIw?=
+ =?us-ascii?Q?Ifaw7BQSKuh7I626xM/5BT3Cq7V5zN9Afq/2XsBJgcT3mUJPJNNyI9J+Us6b?=
+ =?us-ascii?Q?/2JexVRo/DY3BS9/mscaqkihZrppZT2FOb0xF5lwQzF4JviLcMM8kz3491pV?=
+ =?us-ascii?Q?k8u3nGDSNzViTmRw4UX2mlRX6KCYilasNVTgOih9uBLJI8k5Bo0jnuTlH+yp?=
+ =?us-ascii?Q?6puPxaXRoq7FazlHWvbb0OwhpoKOB83BZGe+QDpYVY46YX+w1yCtbke+d7jh?=
+ =?us-ascii?Q?bb1rhalLwuxRxPyVioQL2eAtaBbayhK1oOKJ+gHkfvIgxSwjGX/ODcqr+K3B?=
+ =?us-ascii?Q?ZReQtokfPXMdJqkVrNP0gzMuZ5AD1FO/RtynpZZwh7r7e8K6smUuDNPURbH1?=
+ =?us-ascii?Q?/okKtZp8RVX3PKHWusX4nr+vFw/tniWs0emmeyb/B/etg1q7brad8+kUDDnR?=
+ =?us-ascii?Q?dD077CC5Gs7+rCEl4T0s/eBJO1x98a8AiOIJhGSVk4V6JWBG6D3lNU0SCjFw?=
+ =?us-ascii?Q?JHsS8ZY3ktAxM9I2kv/awaniaVuvpSI4RpGFGuT6f4hQ1kBKb4+5+lNNJcJr?=
+ =?us-ascii?Q?gysTHnK5zkkI177bn7DX4Qt4pelELgPLg2yrKHOV2Xx4h93Z82UOfx00BT+S?=
+ =?us-ascii?Q?tkPvBXUgHZE4jhevQSfLKp3unhwp7WUMfL5CyfXv9FFTnN0I6A0dAhi8dvu5?=
+ =?us-ascii?Q?40hjm/RpB8w80SqeeLCVYPhZDvqK7HUmMrCX083+56Oxa9BD/xB8pWB8Y+e0?=
+ =?us-ascii?Q?KtRvx8W+oJSRHPTEK22CvT9D5rG2mPIiAZfORYZorIVBoYPJj2yLqXxm/pRr?=
+ =?us-ascii?Q?mT75CXpLN/hLFgRbcL6001sRb9zcyUREuzWkcAuDRLDkR3zWpInwquPrulK5?=
+ =?us-ascii?Q?5o64wIk0rAO+I6CzHvF39V6FdVEu+3Y512TN5XH8QqX+NBz/LD8T0q54IpBF?=
+ =?us-ascii?Q?OGA4L8Myb4ER5GH8MhoGpA7Q6tpuat+YeMmnZwHk3q19uZqgCoO+Ji59QDjJ?=
+ =?us-ascii?Q?n3uk5a3hZZ2EYhJPpmcAZKu+NQlyvJSonWJZzEJx?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -123,44 +125,53 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1b9f599-45f6-49c1-0a2f-08dbe9fef1d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2023 19:28:59.0945
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5ae9f75-e709-4096-6667-08dbea281cf2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2023 00:23:40.7695
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZCmheX798N5yqUQQC8UmnBcS2qTBbmf+mZ8DL/icf79TecGOpsrW4dUJ8IyJfiJ5gLxhh6BiR/3vZP2AK46XVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN3PEPF00013E00
+X-MS-Exchange-CrossTenant-userprincipalname: DQRINEvGybcvaamLvLiACFRPdgXvYscfMcT99d/4fO4ZMGdNzINpnn0+JDRXSum+PAai/0cqeWwim7WZJ8f+tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB1319
 
-> From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang
-> Zhang
-> [...]
-> From: Long Li <longli@microsoft.com>
+> On Wed, 15 Nov 2023 08:14:06 -0800 Stephen Hemminger wrote:
+> > Jakub is right that in an ideal world, this could all be managed by
+> > userspace. But the management of network devices in Linux is a
+> > dumpster fire! Every distro invents there own solution, last time I
+> > counted there were six different tools claiming to be the "one network
+> > device manager to rule them all". And that doesn't include all the
+> > custom scripts and vendor appliances.
 >=20
-> When a VF is being exposed form the kernel, it should be marked as
-> "slave"
-> before exposing to the user-mode. The VF is not usable without netvsc
-> running as master. The user-mode should never see a VF without the
-> "slave"
-> flag.
->=20
-> This commit moves the code of setting the slave flag to the time before
-> VF is exposed to user-mode.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
-> Signed-off-by: Long Li <longli@microsoft.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
-> v5:
-> Change function name netvsc_prepare_slave() to
-> netvsc_prepare_bonding().
-> v4:
-> Add comments in get_netvsc_byslot() explaining the need to check
-> dev_addr
-> v2:
-> Use a new function to handle NETDEV_POST_INIT.
+> To be clear, I thought Long Li was saying that the goal is work around ca=
+ses where
+> VF is probed before netvsc. That seems like something that can be prevent=
+ed by
+> the hypervisor.
 
-Acked-by: Dexuan Cui <decui@microsoft.com>
+Hi Jakub,
+
+I think you misunderstood my response, here is the response again.
+
+(quote)
+
+The current workflow in the kernel looks like this:
+1. VF net device is created and expose to user-mode 2. VF is bonded to NETV=
+SC (if NETVSC exists on the system)
+
+With the current kernel behavior, the user-mode can possibly see the VF aft=
+er 1, and before 2 when VF is bonded. When this happens, the user-mode does=
+n't know if the VF will be bonded in the future (it may never happen on sys=
+tems without NETVSC). In this case, it doesn't know if it should configure =
+the VF or not.
+
+(end quote)
+
+The problem is not that VF could be probed before netvsc. The problem is th=
+at it's possible that VF is probed, exposed to user-mode earlier than netvs=
+c has a chance to bond it.
+
+Thanks,
+
+Long
 
