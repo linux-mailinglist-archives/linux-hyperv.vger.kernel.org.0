@@ -1,236 +1,182 @@
-Return-Path: <linux-hyperv+bounces-1003-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1004-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE1647F3324
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 17:06:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 007A97F3502
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 18:37:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CA311C21CC3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 16:06:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABEB0282614
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Nov 2023 17:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E23B559174;
-	Tue, 21 Nov 2023 16:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0530C5B204;
+	Tue, 21 Nov 2023 17:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aJ2WddP9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 296D9CB;
-	Tue, 21 Nov 2023 08:06:25 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4B07FEC;
-	Tue, 21 Nov 2023 08:07:11 -0800 (PST)
-Received: from [10.1.32.63] (010265703453.arm.com [10.1.32.63])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BD693F6C4;
-	Tue, 21 Nov 2023 08:06:17 -0800 (PST)
-Message-ID: <e926d2d8-8209-4c0f-a0cb-dcea4edf839e@arm.com>
-Date: Tue, 21 Nov 2023 16:06:15 +0000
+Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021007.outbound.protection.outlook.com [52.101.61.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA7AF4;
+	Tue, 21 Nov 2023 09:37:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mOZuMKJ6zhYJNLK4NV30tRfD9se1cAH32EYRzgLdtjNriXduOlylm1pRx3eJ7Lx9j5hZJ0d6QzjyYPnIu2JnXnWgnZdhZQnJdFYI4FW14q68lQcSgzqI/JV5FKM1eosOUflgZprIPuz8XRmuYctm/8pp8iv/Urhp5Pcjw/s8C5Ik92I4vxAhKrzKCaWffYjyh5/sgjCUishvwvhVFINlrJkwkvXFR3jzkS4ebaDiucQFNOcIOgcSsnkzyi6bY974oywu3MLJhxE+1VV7agwuIdrTgOwlfFgmAdju0j5i+mCDQFmlQUVzH5LU8cA0wUO/2OjvJDLJsYGNKYEcIVrtlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SDxGDSkABDtFNCvCyalGFN37vFCi6rYC/NoTPcpLf0s=;
+ b=FyFiyY9yIvJHFwfFEWLTI9hcyyUKLyATRgIAuo94qZaC+c7XUOsX0mcYrEQQA7uFoZX11NMauhTcvMtUx7aHlFkAGz9k6rJCFLp+T13MwXVsOYir1fskP1DgRJfBuDUwqeibTCa30i2iqIbywVqtuHCibrTG9dmAebe42kPcWmLArOfkHajjmaiVb+Om18gKmpWGcLMRnw67dg7hiKxDAIAwa+0SVPtxlLozRxPOGv2ZgL4P4U/HAAmDuRN1OpH94fclflYOWIPIK4oLG0YFcm3XWiisR451GGRN6PhWruTn6YxnqIZCsJbT7K/o6vJQ/9fZRNyBr6qC1kAaiOQT0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SDxGDSkABDtFNCvCyalGFN37vFCi6rYC/NoTPcpLf0s=;
+ b=aJ2WddP9xzuy3oDtN4s4u/ZIawn6ydMEALhLKjJBWhOr6L8idtCg9D7okGD4ROuNoPRJIe63kHUipGhZorBUb+WB79sjnroLDCztNMILR4FRqzUtVCk65HwGZSWhglA2vVLXi52AwUasaT+vTbVTjM9MzmeS6OLSB3Kf5GdZSj0=
+Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
+ by DS7PR21MB3452.namprd21.prod.outlook.com (2603:10b6:8:93::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.10; Tue, 21 Nov
+ 2023 17:37:12 +0000
+Received: from PH7PR21MB3116.namprd21.prod.outlook.com
+ ([fe80::31b:6110:928d:142f]) by PH7PR21MB3116.namprd21.prod.outlook.com
+ ([fe80::31b:6110:928d:142f%3]) with mapi id 15.20.7046.009; Tue, 21 Nov 2023
+ 17:37:12 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, Long Li
+	<longli@microsoft.com>, "sharmaajay@microsoft.com"
+	<sharmaajay@microsoft.com>, "leon@kernel.org" <leon@kernel.org>,
+	"cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>
+CC: Souradeep Chakrabarti <schakrabarti@microsoft.com>, Paul Rosswurm
+	<paulros@microsoft.com>
+Subject: RE: [PATCH V2 net-next] net: mana: Assigning IRQ affinity on HT cores
+Thread-Topic: [PATCH V2 net-next] net: mana: Assigning IRQ affinity on HT
+ cores
+Thread-Index: AQHaHIJJ65cwMLSQwUeLvFL6eERdgLCFAMfw
+Date: Tue, 21 Nov 2023 17:37:11 +0000
+Message-ID:
+ <PH7PR21MB3116043F0A93BD5AD23C6C91CABBA@PH7PR21MB3116.namprd21.prod.outlook.com>
+References:
+ <1700574877-6037-1-git-send-email-schakrabarti@linux.microsoft.com>
+In-Reply-To:
+ <1700574877-6037-1-git-send-email-schakrabarti@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1dcdd3b6-59dd-4223-888c-d8cc864ebd65;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-11-21T17:05:16Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|DS7PR21MB3452:EE_
+x-ms-office365-filtering-correlation-id: 51f2c3a4-2514-42ca-c621-08dbeab87e2b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ EudmCOQDh6RMbvKclpqyWmkSHwIaTxnXS6glhmuuM344d+lEdhfFvYOZUKpW+PihktksU5dLjOEwCHE6tqz6SFY5WGzY7RID/PHI9o1acIg9R4o7Crz15aZelSOmOVIgL5TCHkxjMCLnW84MC8AVOTmhP4zYX6sWvTQWGA8gUgmqbkD4GqUMpm/NvDqJZ+UbMwKcbKmXhL8JR6sQg4VUGG9zoYCVJEWInfbivP5EUr/nuwud0ewaSoqNAdXHvXETKWuRtcvxXkKI4rfL0XBeS5/vp/P4XoBbIc78b6RBnhYRb01V5sTQGZ38FZHbSQf9mWmeMrKzG50w42nK1unelc+MhVRO9j0X4sIWOjgauNExXxybc0n0jbJLrdH759zJjegYsp7bQy8ndxtpvifXAvCdx4ajeV6tD8sjwYYv5XrzDQbjqLoqQZHpMx8/L/Z6WhC/Y4eMU/Q53bOkNv74Spr+Ws9y6Vl7TZQUVQdQtEID73ZdCscYteX2YOGuNO8BlRWRn7yoq7ccA67+uHb5kuRlysG0eulICGfrbnGeU1Knyer/Y4dNU1HDHm1/+YNNoIRQB4lAOj12j2rJOHlrgTeAvaeqYSguRypxmZsDnDiT0wXJMtDBpaAFONalY07MOXeGtFnn9Kgwzvsv5oYPFX7qb0n2XR9HVpuri7e3IqhkHlxAtj1XXm/GTL2+19yk
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(376002)(39860400002)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(83380400001)(9686003)(107886003)(26005)(41300700001)(52536014)(8936002)(4326008)(8676002)(38100700002)(7416002)(2906002)(10290500003)(5660300002)(478600001)(54906003)(6506007)(7696005)(66946007)(71200400001)(8990500004)(110136005)(316002)(64756008)(66446008)(66476007)(66556008)(76116006)(33656002)(921008)(122000001)(86362001)(82950400001)(82960400001)(38070700009)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?KkaASjGdX3BOrKcDGwA3jgdKZ9YouoqyWOfKEyRsiFYqEAwtR/clUwQ56TCg?=
+ =?us-ascii?Q?boPloNi8pgBN/sL7xLTlqWXl/bfPkQCcqdmFiK4KEgGSm5rMxmDCWZ1UUcWc?=
+ =?us-ascii?Q?j0LozWBuGDaYofKREFWUI3d7OBJbJ1HzpveDDiVkAbwQhk9fdPSvgkfnOYyr?=
+ =?us-ascii?Q?9TZd8kq3GWc5RUCCFh990d5Zc51qFNkhnBdm2YtavQL9Vj20ZBllkq7k7qfC?=
+ =?us-ascii?Q?Fnz38sFQhPAxhKa+LrRCUaBF+hkBPNr0KO8VafoOvNj8k7vj5n+BYt3h309L?=
+ =?us-ascii?Q?mUPLQYtvI/oDrYwyCCvDsA+EtbR1lOdiXLeQE9ZUDA5f/VLaAh9BPZ9RTyO9?=
+ =?us-ascii?Q?cKrZd5irdzyle9Y9xpvDQuick+27l6kLuTZ/iwe5AarM/8N36CbgYFlaoIsS?=
+ =?us-ascii?Q?fsgugehMCEab5w5VAz3Z1wwPsfa1FUJZC2/Ile9dVIvoTxLh1/O8jxZ+CYNm?=
+ =?us-ascii?Q?j7X93KkBMeYZpdvzYmbJH/jC13Xmw1ZL4KrQxyNBJ7oO0M4qQb2PuSQ7Xios?=
+ =?us-ascii?Q?AhVwDzXBB0kxjSAjhiHZ7cYUDoBcx03T2Lwrh87zv9PSFJZIKp196l1z3O+e?=
+ =?us-ascii?Q?6FLtDx3w0CmW45ViaY3rcPVAR4OefoDvHdGmlaVILchETgtmA3cwUpbSUQym?=
+ =?us-ascii?Q?ae/UaT1c9FuCN1yhvtRqrtgq7CrauTpl1LnpjOs34cGKsIh/b7/DR++vstQq?=
+ =?us-ascii?Q?FkUK9MrSga31+qW7qH0jaNu189QrP9MWJAcWZioy4UW6emNm4GGBkUQvVgBS?=
+ =?us-ascii?Q?X2Yq9exxq8mbJS0M6AT+N5jp7zIGhd4GniMqUEkaLgb4YRxhfXgub/CQ9ES8?=
+ =?us-ascii?Q?2OiZYGRge7+03CSm8wUG47yho/DicW3kgGyUm9hmfjEiocgnt1tUX9+kC7fG?=
+ =?us-ascii?Q?ZQHiIwSCFIJewmhgF44yO/Y6bK0VBRmTnR715JFIWUKh1vKftJMq0tS/ujKB?=
+ =?us-ascii?Q?mSFmgWE+mRh09iM+5p3fmkr/IEIhfgt7C6cXkYUh0JW6+Cv4OrMt/iuabarA?=
+ =?us-ascii?Q?ZCtvJWinXdEaf1k7QyluNjgLO9wYicGxl8zdOxSdT7YO5FLwNo01m0RicI0u?=
+ =?us-ascii?Q?JsQca1mgqsZQIDH1otGLlrbAoV4xcsTpDmBNNPt77z3QU4tcHE/qU5c/DD9F?=
+ =?us-ascii?Q?7HS/FqiUsy9RaahcnEU7c//tNWEMwQiXBRkBaQk8ihv5/z2jIKVuzfLcQ3HA?=
+ =?us-ascii?Q?rJCoYM/VcBvOtrBxfLaDB1BuyuvdW34YksjYbx5qU5js3UV/yaIsHv1ZLJe9?=
+ =?us-ascii?Q?hEPpNDGBbqOSazkARNmYIvmqxChJ/7ME2iZkSRY6pL3E02wqskz13KkincD6?=
+ =?us-ascii?Q?r8VVre3Q8V+LYJEKYt0SiY64+pjYWt3fZMHAckzMgucUPI9m1+AZSP235ddE?=
+ =?us-ascii?Q?z8W0w0wNFio1MbHu0CxfaCyOda+5Vz8ZR1hcQmfILs5sDOaY2LPXicAiuXO8?=
+ =?us-ascii?Q?tF1vN68kp/DyTzh2QOmwnatpw/M1HDw3Kxlmhff5CWRln5sAVIvlKBp+aC0M?=
+ =?us-ascii?Q?dCP5R1kJPbw+Y29ouC/s0Qylvd08FiU6Jn7xs1TGBPGoQAfEjDmbbcZFzAeo?=
+ =?us-ascii?Q?Y4qLQ7uXGrrRLea8wOB9CaOmEF76xK1SbAcoEY6w?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/17] Solve iommu probe races around iommu_fwspec
-Content-Language: en-GB
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: acpica-devel@lists.linux.dev, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Dexuan Cui <decui@microsoft.com>,
- devicetree@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
- Frank Rowand <frowand.list@gmail.com>, Hanjun Guo <guohanjun@huawei.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, iommu@lists.linux.dev,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
- linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
- linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Hector Martin
- <marcan@marcan.st>, Palmer Dabbelt <palmer@dabbelt.com>,
- patches@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Robert Moore <robert.moore@intel.com>, Rob Herring <robh+dt@kernel.org>,
- Sudeep Holla <sudeep.holla@arm.com>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Sven Peter <sven@svenpeter.dev>, Thierry Reding <thierry.reding@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Krishna Reddy <vdumpa@nvidia.com>, Vineet Gupta <vgupta@kernel.org>,
- virtualization@lists.linux.dev, Wei Liu <wei.liu@kernel.org>,
- Will Deacon <will@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Draszik?=
- <andre.draszik@linaro.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Christoph Hellwig <hch@lst.de>, Jerry Snitselaar <jsnitsel@redhat.com>,
- Moritz Fischer <mdf@kernel.org>, Zhenhua Huang <quic_zhenhuah@quicinc.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Rob Herring <robh@kernel.org>
-References: <0-v2-36a0088ecaa7+22c6e-iommu_fwspec_jgg@nvidia.com>
- <1316b55e-8074-4b2f-99df-585df2f3dd06@arm.com> <ZVTlYqnnHQUKG6T8@nvidia.com>
- <6442d24b-6352-46e9-89e0-72d4a493f77c@arm.com> <ZVWXvqQbZrwyEgrL@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <ZVWXvqQbZrwyEgrL@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51f2c3a4-2514-42ca-c621-08dbeab87e2b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2023 17:37:11.4595
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: syfyOadwk5lb133qPOt4W6t3KMWCJHu+Gsj703iyhcenf+J5IluPTvdXWwK5PWwG2jMH877mPcQfEK34n6Cw8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3452
 
-On 2023-11-16 4:17 am, Jason Gunthorpe wrote:
-> On Wed, Nov 15, 2023 at 08:23:54PM +0000, Robin Murphy wrote:
->> On 2023-11-15 3:36 pm, Jason Gunthorpe wrote:
->>> On Wed, Nov 15, 2023 at 03:22:09PM +0000, Robin Murphy wrote:
->>>> On 2023-11-15 2:05 pm, Jason Gunthorpe wrote:
->>>>> [Several people have tested this now, so it is something that should sit in
->>>>> linux-next for a while]
->>>>
->>>> What's the aim here? This is obviously far, far too much for a
->>>> stable fix,
->>>
->>> To fix the locking bug and ugly abuse of dev->iommu?
->>
->> Fixing the locking can be achieved by fixing the locking, as I have now
->> demonstrated.
-> 
-> Obviously. I rejected that right away because of how incredibly
-> wrongly layered and hacky it is to do something like that.
 
-What, and dressing up the fundamental layering violation by baking it 
-even further into the API flow, while still not actually fixing it or 
-any of its *other* symptoms, is somehow better?
 
-Ultimately, this series is still basically doing the same thing my patch 
-does - extending the scope of the existing iommu_probe_device_lock hack 
-to cover fwspec creation. A hack is a hack, so frankly I'd rather it be 
-simple and obvious and look like one, and being easy to remove again is 
-an obvious bonus too.
+> -----Original Message-----
+> From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+> Sent: Tuesday, November 21, 2023 8:55 AM
 
->>> I haven't seen patches or an outline on what you have in mind though?
->>>
->>> In my view I would like to get rid of of_xlate(), at a minimum. It is
->>> a micro-optimization I don't think we need. I see a pretty
->>> straightforward path to get there from here.
->>
->> Micro-optimisation!? OK, I think I have to say it. Please stop trying to
->> rewrite code you don't understand.
-> 
-> I understand it fine. The list of (fwnode_handle, of_phandle_args)
-> tuples doesn't change between when of_xlate is callled and when probe
-> is called. Probe can have the same list. As best I can tell the extra
-> ops avoids maybe some memory allocation, maybe an extra iteration.
-> 
-> What it does do is screw up alot of the drivers that seem to want to
-> allocate the per-device data in of_xlate and make it convoluted and
-> memory leaking buggy on error paths.
-> 
-> So, I would move toward having the driver's probe invoke a helper like:
-> 
->     iommu_of_xlate(dev, fwspec, &per_fwnode_function, &args);
-> 
-> Which generates the same list of (fwnode_handle, of_phandle_args) that
-> was passed to of_xlate today, but is ordered sensibly within the
-> sequence of probe for what many drivers seem to want to do.
 
-Grep for of_xlate. It is a standard and well-understood callback pattern 
-for a subsystem to parse a common DT binding and pass a driver-specific 
-specifier to a driver to interpret. Or maybe you just have a peculiar 
-definition of what you think "micro-optimisation" means? :/
+> +	/* for each interrupt find the cpu of a particular
+> +	 * sibling set and if it belongs to the specific numa
+> +	 * then assign irq to it and clear the cpu bit from
+> +	 * the corresponding avail_cpus.
+> +	 * Increase the cpu_count for that node.
+> +	 * Once all cpus for a numa node is assigned, then
+> +	 * move to different numa node and continue the same.
+> +	 */
+> +	for (i =3D irq_start; i < nvec; ) {
+> +
+> +		/* check if the numa node has cpu or not
+> +		 * to avoid infinite loop.
+> +		 */
+> +		if (cpumask_empty(cpumask_of_node(numa_node))) {
+> +			numa_node++;
 
-> So, it is not so much that that the idea of of_xlate goes away, but
-> the specific op->of_xlate does, it gets shifted into a helper that
-> invokes the same function in a more logical spot.
+Since it starts at start_numa_node, we should consider roll over at the=20
+num_online_nodes() like the code below:
+				if (numa_node =3D=3D num_online_nodes())
+					numa_node =3D 0;
 
-I'm curious how you imagine an IOMMU driver's ->probe function could be 
-called *before* parsing the firmware to work out what, if any, IOMMU, 
-and thus driver, a device is associated with. Unless you think we should 
-have the horrible perf model of passing the device to *every* registered 
-->probe callback in turn until someone claims it. And then every driver 
-has to have identical boilerplate to go off and parse the generic 
-"iommus" binding... which is the whole damn reason for *not* going down 
-that route and instead using an of_xlate mechanism in the first place.
+It should also check empty for the next one.
+And set node_count =3D 0; after the loop.
 
-> The per-device data can be allocated at the top of probe and passed
-> through args to fix the lifetime bugs.
-> 
-> It is pretty simple to do.
+> +			if (++node_count =3D=3D num_online_nodes()) {
+> +				err =3D -EAGAIN;
+Consider return -ENODEV, because we are not asking for retry.
 
-I believe the kids these days would say "Say you don't understand the 
-code without saying you don't understand the code."
+> +				goto free_irq;
+> +			}
+> +		}
 
->> Most of this series constitutes a giant sweeping redesign of a whole bunch
->> of internal machinery to permit it to be used concurrently, where that
->> concurrency should still not exist in the first place because the thing that
->> allows it to happen also causes other problems like groups being broken.
->> Once the real problem is fixed there will be no need for any of this, and at
->> worst some of it will then actually get in the way.
-> 
-> Not quite. This decouples two unrelated things into seperate
-> concerns. It is not so much about the concurrency but removing the
-> abuse of dev->iommu by code that has no need to touch it at all.
-
-Sorry, the "abuse" of storing IOMMU-API-specific data in the place we 
-intentionally created to consolidate all the IOMMU-API-specific data 
-into? Yes, there is an issue with the circumstances in which this data 
-is sometimes accessed, but as I'm starting to tire of repeating, that 
-issue fundamentally dates back to 2017, and the implications were 
-unfortunately overlooked when dev->iommu was later introduced and fwspec 
-moved into it (since the non-DT probing paths still worked as originally 
-designed). Pretending that dev->iommu is the issue here is missing the 
-point.
-
-> Decoupling makes moving code around easier since the relationships are
-> easier to reason about.
-
-Again with the odd definitions of "easier". You know what I think is 
-easy? Having a thing be in the obvious place where it should be (but 
-used in the way that was intended). What I would consider objectively 
-less easy is having a thing sometimes be there but sometimes be 
-somewhere else with loads more API machinery to juggle between the two. 
-Especially when once again, that machinery is itself prone to new bugs.
-
-Once again you've got hung up on one particular detail of one symptom of 
-the *real* issue, so although I can see and follow your chain of 
-reasoning, the fact that it starts from the wrong place makes it not 
-particularly useful in the bigger picture.
-
-> You can still allocated a fwnode, populate it, and do the rest of the
-> flow under a probe function just fine.
->   
->> I feel like I've explained it many times already, but what needs to happen
->> is for the firmware parsing and of_xlate stage to be initiated by
->> __iommu_probe_device() itself.
-> 
-> Yes, OK I see. I don't see a problem, I think this still a good
-> improvement even in that world it is undesirable to use dev->iommu as
-> a temporary, even if the locking can work.
-> 
->> ever allowed to get it landed...) which gets to the state of
->> expecting to
-> 
-> Repost it? Rc1 is out and you need to add one hunk to the new user
-> domain creation in iommufd.
-
-Well yeah, I'm trying to get that rebase finished (hence why I'm finding 
-broken IOMMUFD selftests), but as always I'm also busy with a lot of 
-other non-upstream things, and every time I have managed to do it so far 
-this year it's ended up being blocked by conflicting changes, so I 
-reserve my optimism...
-
->> start from a fwspec. Then it's a case of shuffling around what's currently
->> in the bus_type dma_configure methods such that point is where the fwspec is
->> created as well, and the driver-probe-time work is almost removed except for
->> still deferring if a device is waiting for its IOMMU instance (since that
->> instance turning up and registering will retrigger the rest itself). And
->> there at last, a trivial lifecycle and access pattern for dev->iommu (with
->> the overlapping bits of iommu_fwspec finally able to be squashed as well),
->> and finally an end to 8 long and unfortunate years of calling things in the
->> wrong order in ways they were never supposed to be.
-> 
-> Having just gone through this all in detail I don't think it is as
-> entirely straightforward as this, the open coded callers to
-> of_dma_configure() are not going to be so nice to unravel.
-
-I've only had this turning over in the back of my mind for about the 
-last 4 years now, so I think I have a good understanding of what to 
-expect, thanks.
-
-Robin.
+Thanks,
+- Haiyang
 
