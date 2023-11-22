@@ -1,81 +1,184 @@
-Return-Path: <linux-hyperv+bounces-1023-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1024-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 804A37F4DA0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 17:59:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FACE7F4DAE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 18:01:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2053EB20B29
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 16:59:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 406321C20839
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 17:01:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB3859B63;
-	Wed, 22 Nov 2023 16:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6083D3A5;
+	Wed, 22 Nov 2023 17:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Nze2GiZ4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KCTatUdl"
 X-Original-To: linux-hyperv@vger.kernel.org
-X-Greylist: delayed 408 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Nov 2023 08:59:34 PST
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [IPv6:2001:41d0:203:375::b3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9828191
-	for <linux-hyperv@vger.kernel.org>; Wed, 22 Nov 2023 08:59:34 -0800 (PST)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC0B3A4;
+	Wed, 22 Nov 2023 09:01:32 -0800 (PST)
+Received: from localhost.localdomain (77-166-152-30.fixed.kpn.net [77.166.152.30])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EFB6A20B74C0;
+	Wed, 22 Nov 2023 09:01:27 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EFB6A20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1700672492;
+	bh=SyJPVx2JrmsCqhSu/Lg/Nm3EngUrOFky3GEOUF76eKQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KCTatUdliXlguFtxNBDUPDpF5OjuHuE4Yes3AcmnnhK9OcZuGnCuYmz2cFENbRZfX
+	 4EAzk9gj68teUCXZxphaBMILXskzmpHtZvt5zGMEo5RIcVRq0RapsPdpezoS4OXMMh
+	 gO4eh1mn0IkXvTK4hSSqGg5CueRvF1tVYCJaM2eo=
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Michael Kelley <mhkelley58@gmail.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	x86@kernel.org,
+	Dexuan Cui <decui@microsoft.com>
+Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	stefan.bader@canonical.com,
+	tim.gardner@canonical.com,
+	roxana.nicolescu@canonical.com,
+	cascardo@canonical.com,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early TDX init
+Date: Wed, 22 Nov 2023 18:01:04 +0100
+Message-Id: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1700671964;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jr/Y7V7f6fGAsxzikGQR3EngaKckAlq67YJMnyebHus=;
-	b=Nze2GiZ4tmmrzUZaJsqvtJVxRE69XlAUDczYpRLhSH6ybA2eO57YKiZpx1NKD8pqhIENqX
-	6fI57aVUoJVbAqWbEJaCdJvgZvTXr9lgZZrjOxamjO/yvH8OjhR6GAsjrn/DWd1Qh6cP81
-	68HeyEFdDHjhWdoPC0uLITdLzF1IvyA=
-Date: Wed, 22 Nov 2023 16:52:43 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Konstantin Ryabitsev" <konstantin.ryabitsev@linux.dev>
-Message-ID: <ddeefd4d0323df0948565fea2ffb55793fdcc8dc@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH] x86/hyperv: Use atomic_try_cmpxchg() to micro-optimize
- hv_nmi_unknown()
-To: "Wei Liu" <wei.liu@kernel.org>, "Uros Bizjak" <ubizjak@gmail.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- tools@linux.kernel.org
-In-Reply-To: <ZV163ePuUQyyeKUj@liuwe-devbox-debian-v2>
-References: <ZV163ePuUQyyeKUj@liuwe-devbox-debian-v2>
- <20231114170038.381634-1-ubizjak@gmail.com>
- <SN6PR02MB41570168279C428D385ADCB0D4B1A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <CAFULd4Z3DZh0SoEyNHfz3=DM2CkDGtNP_f1gVx64NJkzmWp-Pw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-November 21, 2023 at 10:51 PM, "Wei Liu" <wei.liu@kernel.org> wrote:
-> Uros, just so you know, DKIM verification failed when I used b4 to appl=
-y
-> this patch. You may want to check your email setup.
+Check for additional CPUID bits to identify TDX guests running with Trust
+Domain (TD) partitioning enabled. TD partitioning is like nested virtualization
+inside the Trust Domain so there is a L1 TD VM(M) and there can be L2 TD VM(s).
 
-This is not actually Uros's fault. Recently, Gmail started adding a force=
-d expiration field to their DKIM signatures, via the x=3D field:
+In this arrangement we are not guaranteed that the TDX_CPUID_LEAF_ID is visible
+to Linux running as an L2 TD VM. This is because a majority of TDX facilities
+are controlled by the L1 VMM and the L2 TDX guest needs to use TD partitioning
+aware mechanisms for what's left. So currently such guests do not have
+X86_FEATURE_TDX_GUEST set.
 
-    DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/relaxed;
-        d=3Dgmail.com; s=3D20230601; t=3D1699981249; x=3D1700586049; darn=
-=3Dvger.kernel.org;
-                                               ^^^^^^^^^^^^^
+We want the kernel to have X86_FEATURE_TDX_GUEST set for all TDX guests so we
+need to check these additional CPUID bits, but we skip further initialization
+in the function as we aren't guaranteed access to TDX module calls.
 
-This gives the signature an enforced validity of only 7 days. Since the o=
-riginal message was sent on November 14 and you're retrieving it on Novem=
-ber 21, this causes the DKIM check to fail.
+Cc: <stable@vger.kernel.org> # v6.5+
+Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+---
+ arch/x86/coco/tdx/tdx.c    | 29 ++++++++++++++++++++++++++---
+ arch/x86/include/asm/tdx.h |  3 +++
+ 2 files changed, 29 insertions(+), 3 deletions(-)
 
-I need to figure out how to make b4 ignore the x=3D field, because it's n=
-ot relevant for our purposes, but the library we're using for DKIM doesn'=
-t currently have any mechanism to do so. I will open an RFE with them in =
-the hopes that we can get this implemented.
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 1d6b863c42b0..c7bbbaaf654d 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -8,6 +8,7 @@
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <asm/coco.h>
++#include <asm/hyperv-tlfs.h>
+ #include <asm/tdx.h>
+ #include <asm/vmx.h>
+ #include <asm/insn.h>
+@@ -37,6 +38,8 @@
+ 
+ #define TDREPORT_SUBTYPE_0	0
+ 
++bool tdx_partitioning_active;
++
+ /* Called from __tdx_hypercall() for unrecoverable failure */
+ noinstr void __tdx_hypercall_failed(void)
+ {
+@@ -757,19 +760,38 @@ static bool tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
+ 	return true;
+ }
+ 
++
++static bool early_is_hv_tdx_partitioning(void)
++{
++	u32 eax, ebx, ecx, edx;
++	cpuid(HYPERV_CPUID_ISOLATION_CONFIG, &eax, &ebx, &ecx, &edx);
++	return eax & HV_PARAVISOR_PRESENT &&
++	       (ebx & HV_ISOLATION_TYPE) == HV_ISOLATION_TYPE_TDX;
++}
++
+ void __init tdx_early_init(void)
+ {
+ 	u64 cc_mask;
+ 	u32 eax, sig[3];
+ 
+ 	cpuid_count(TDX_CPUID_LEAF_ID, 0, &eax, &sig[0], &sig[2],  &sig[1]);
+-
+-	if (memcmp(TDX_IDENT, sig, sizeof(sig)))
+-		return;
++	if (memcmp(TDX_IDENT, sig, sizeof(sig))) {
++		tdx_partitioning_active = early_is_hv_tdx_partitioning();
++		if (!tdx_partitioning_active)
++			return;
++	}
+ 
+ 	setup_force_cpu_cap(X86_FEATURE_TDX_GUEST);
+ 
+ 	cc_vendor = CC_VENDOR_INTEL;
++
++	/*
++	 * Need to defer cc_mask and page visibility callback initializations
++	 * to a TD-partitioning aware implementation.
++	 */
++	if (tdx_partitioning_active)
++		goto exit;
++
+ 	tdx_parse_tdinfo(&cc_mask);
+ 	cc_set_mask(cc_mask);
+ 
+@@ -820,5 +842,6 @@ void __init tdx_early_init(void)
+ 	 */
+ 	x86_cpuinit.parallel_bringup = false;
+ 
++exit:
+ 	pr_info("Guest detected\n");
+ }
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index 603e6d1e9d4a..fe22f8675859 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -52,6 +52,7 @@ bool tdx_early_handle_ve(struct pt_regs *regs);
+ 
+ int tdx_mcall_get_report0(u8 *reportdata, u8 *tdreport);
+ 
++extern bool tdx_partitioning_active;
+ #else
+ 
+ static inline void tdx_early_init(void) { };
+@@ -71,6 +72,8 @@ static inline long tdx_kvm_hypercall(unsigned int nr, unsigned long p1,
+ {
+ 	return -ENODEV;
+ }
++
++#define tdx_partitioning_active false
+ #endif /* CONFIG_INTEL_TDX_GUEST && CONFIG_KVM_GUEST */
+ #endif /* !__ASSEMBLY__ */
+ #endif /* _ASM_X86_TDX_H */
+-- 
+2.39.2
 
-Regards,
--K
 
