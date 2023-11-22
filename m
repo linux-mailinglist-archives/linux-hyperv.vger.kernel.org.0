@@ -1,34 +1,34 @@
-Return-Path: <linux-hyperv+bounces-1025-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1026-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0B787F4DB0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 18:01:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A44A7F4DB3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 18:01:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49BB22811AA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 17:01:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 794EB1C20956
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Nov 2023 17:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B4774EB20;
-	Wed, 22 Nov 2023 17:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A78184C616;
+	Wed, 22 Nov 2023 17:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JgSb7prC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cQ5qDyv2"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3988D9F;
-	Wed, 22 Nov 2023 09:01:39 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9ABB29F;
+	Wed, 22 Nov 2023 09:01:46 -0800 (PST)
 Received: from localhost.localdomain (77-166-152-30.fixed.kpn.net [77.166.152.30])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C19D120B74C1;
-	Wed, 22 Nov 2023 09:01:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C19D120B74C1
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3567820B74C2;
+	Wed, 22 Nov 2023 09:01:42 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3567820B74C2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1700672498;
-	bh=BKqGTv7UstB2deyF2KOlDMhyNWpRdGHnOL9MuTocPpU=;
+	s=default; t=1700672506;
+	bh=9wgjWP/62NvaWRr+CGCSQIegQce2mbkL4aNWuVLLmPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JgSb7prCdabwpGgVQnbh4ee5XA8kqbASGpQJSDfED6R3bv7a6g5yCsOUIKJR7i7Em
-	 MpEhnCOYWXXxGAoLna1v4W0M97P/5nzYpql5x91XrtfyZR74+92IIBuIOF5jBW3ZqM
-	 f07lkA5njUbY2NHdKhdbMyC70l7jrKYd2wZGVr88=
+	b=cQ5qDyv2Rah3MoXsEFMlU8EIn49kbZ5NPUGql50qiS7Za5mSWv8lv9Vss99FM6i+h
+	 BvCUBCqrAoBSX8/lWTVA/wcDN6HGodpQUlCgVH79GAT+bnyrcQhs4ZjDiLXbodRKlb
+	 FItHxXC4nnexkyPpElSU/phmqHSIgFxyBu6LjFRg=
 From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 To: linux-kernel@vger.kernel.org,
 	Borislav Petkov <bp@alien8.de>,
@@ -54,9 +54,9 @@ Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
 	wei.liu@kernel.org,
 	sashal@kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v1 2/3] x86/coco: Disable TDX module calls when TD partitioning is active
-Date: Wed, 22 Nov 2023 18:01:05 +0100
-Message-Id: <20231122170106.270266-2-jpiotrowski@linux.microsoft.com>
+Subject: [PATCH v1 3/3] x86/tdx: Provide stub tdx_accept_memory() for non-TDX configs
+Date: Wed, 22 Nov 2023 18:01:06 +0100
+Message-Id: <20231122170106.270266-3-jpiotrowski@linux.microsoft.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
 References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
@@ -68,88 +68,40 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce CC_ATTR_TDX_MODULE_CALLS to allow code to check whether TDX module
-calls are available. When TD partitioning is enabled, a L1 TD VMM handles most
-TDX facilities and the kernel running as an L2 TD VM does not have access to
-TDX module calls. The kernel still has access to TDVMCALL(0) which is forwarded
-to the VMM for processing, which is the L1 TD VM in this case.
+When CONFIG_INTEL_TDX_GUEST is not defined but CONFIG_UNACCEPTED_MEMORY=y is,
+the kernel fails to link with an undefined reference to tdx_accept_memory from
+arch_accept_memory. Provide a stub for tdx_accept_memory to fix the build for
+that configuration.
+
+CONFIG_UNACCEPTED_MEMORY is also selected by CONFIG_AMD_MEM_ENCRYPT, and there
+are stubs for snp_accept_memory for when it is not defined. Previously this did
+not result in an error when CONFIG_INTEL_TDX_GUEST was not defined because the
+branch that references tdx_accept_memory() was being discarded due to
+DISABLE_TDX_GUEST being set.
 
 Cc: <stable@vger.kernel.org> # v6.5+
+Fixes: 75d090fd167a ("x86/tdx: Add unaccepted memory support")
 Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 ---
- arch/x86/coco/core.c                     | 3 +++
- arch/x86/include/asm/unaccepted_memory.h | 2 +-
- drivers/virt/coco/tdx-guest/tdx-guest.c  | 3 +++
- include/linux/cc_platform.h              | 8 ++++++++
- 4 files changed, 15 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/shared/tdx.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
-index eeec9986570e..2c1116da4d54 100644
---- a/arch/x86/coco/core.c
-+++ b/arch/x86/coco/core.c
-@@ -12,6 +12,7 @@
+diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
+index 7513b3bb69b7..58cdbaac3d5b 100644
+--- a/arch/x86/include/asm/shared/tdx.h
++++ b/arch/x86/include/asm/shared/tdx.h
+@@ -91,7 +91,11 @@ struct tdx_module_output {
+ u64 __tdx_module_call(u64 fn, u64 rcx, u64 rdx, u64 r8, u64 r9,
+ 		      struct tdx_module_output *out);
  
- #include <asm/coco.h>
- #include <asm/processor.h>
-+#include <asm/tdx.h>
++#ifdef CONFIG_INTEL_TDX_GUEST
+ bool tdx_accept_memory(phys_addr_t start, phys_addr_t end);
++#else
++static inline bool tdx_accept_memory(phys_addr_t start, phys_addr_t end) { return false; }
++#endif
  
- enum cc_vendor cc_vendor __ro_after_init = CC_VENDOR_NONE;
- static u64 cc_mask __ro_after_init;
-@@ -24,6 +25,8 @@ static bool noinstr intel_cc_platform_has(enum cc_attr attr)
- 	case CC_ATTR_GUEST_MEM_ENCRYPT:
- 	case CC_ATTR_MEM_ENCRYPT:
- 		return true;
-+	case CC_ATTR_TDX_MODULE_CALLS:
-+		return !tdx_partitioning_active;
- 	default:
- 		return false;
- 	}
-diff --git a/arch/x86/include/asm/unaccepted_memory.h b/arch/x86/include/asm/unaccepted_memory.h
-index f5937e9866ac..b666062555ac 100644
---- a/arch/x86/include/asm/unaccepted_memory.h
-+++ b/arch/x86/include/asm/unaccepted_memory.h
-@@ -8,7 +8,7 @@
- static inline void arch_accept_memory(phys_addr_t start, phys_addr_t end)
- {
- 	/* Platform-specific memory-acceptance call goes here */
--	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
-+	if (cc_platform_has(CC_ATTR_TDX_MODULE_CALLS)) {
- 		if (!tdx_accept_memory(start, end))
- 			panic("TDX: Failed to accept memory\n");
- 	} else if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
-diff --git a/drivers/virt/coco/tdx-guest/tdx-guest.c b/drivers/virt/coco/tdx-guest/tdx-guest.c
-index 5e44a0fa69bd..2f995df8c795 100644
---- a/drivers/virt/coco/tdx-guest/tdx-guest.c
-+++ b/drivers/virt/coco/tdx-guest/tdx-guest.c
-@@ -87,6 +87,9 @@ static int __init tdx_guest_init(void)
- 	if (!x86_match_cpu(tdx_guest_ids))
- 		return -ENODEV;
- 
-+	if (!cc_platform_has(CC_ATTR_TDX_MODULE_CALLS))
-+		return -ENODEV;
-+
- 	return misc_register(&tdx_misc_dev);
- }
- module_init(tdx_guest_init);
-diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
-index cb0d6cd1c12f..d3c57e86773d 100644
---- a/include/linux/cc_platform.h
-+++ b/include/linux/cc_platform.h
-@@ -90,6 +90,14 @@ enum cc_attr {
- 	 * Examples include TDX Guest.
- 	 */
- 	CC_ATTR_HOTPLUG_DISABLED,
-+
-+	/**
-+	 * @CC_ATTR_TDX_MODULE_CALLS: TDX module calls are available.
-+	 *
-+	 * The platform supports issuing calls directly to the TDX module.
-+	 * This is not a given when TD partitioning is active.
-+	 */
-+	CC_ATTR_TDX_MODULE_CALLS,
- };
- 
- #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
+ /*
+  * The TDG.VP.VMCALL-Instruction-execution sub-functions are defined
 -- 
 2.39.2
 
