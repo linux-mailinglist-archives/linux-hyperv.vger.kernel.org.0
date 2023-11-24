@@ -1,36 +1,36 @@
-Return-Path: <linux-hyperv+bounces-1044-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1045-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88C867F717F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Nov 2023 11:31:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 836287F719D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Nov 2023 11:38:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45C43281CEC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Nov 2023 10:31:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1038F1F20F06
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Nov 2023 10:38:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78050199A1;
-	Fri, 24 Nov 2023 10:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742646AD6;
+	Fri, 24 Nov 2023 10:38:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qNTjTTAk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kTS8OY3u"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A6201BD;
-	Fri, 24 Nov 2023 02:31:50 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 118C418E;
+	Fri, 24 Nov 2023 02:38:42 -0800 (PST)
 Received: from [192.168.1.150] (181-28-144-85.ftth.glasoperator.nl [85.144.28.181])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E259D20B74C0;
-	Fri, 24 Nov 2023 02:31:45 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E259D20B74C0
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9DF0520B74C0;
+	Fri, 24 Nov 2023 02:38:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9DF0520B74C0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1700821909;
-	bh=QLms25rgq8qSrzk159jr51gU0QpzCDKfknjLMjUaAxY=;
+	s=default; t=1700822321;
+	bh=bWMJQ3ZfpBF9dhvt4SiaJCZj02iWQIJde8FaEdTvYls=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qNTjTTAkNJr4duxdUknZaGEH905MX99vycftZ8lZ4SLR/E4P5cmh1WKWIrwTDIxaV
-	 q1UZguzEpWq0o9ZANF1yATZK5eQCwXcHeS77JrCLlMxah+2dwQZincDgF3aigs9jQO
-	 cwuTi/EyXVfJsp5mB/SZeCe1O++3k0GO7HqO1P7I=
-Message-ID: <9f550947-9d13-479c-90c4-2e3f7674afee@linux.microsoft.com>
-Date: Fri, 24 Nov 2023 11:31:44 +0100
+	b=kTS8OY3umiZsbjaLXzS+TYMWNjoZTWuEhgX5VxebyxpORdIQBzAGdvNBibm9zcg0L
+	 Tu9gO03a5Wx0myK3wV7HWYmjwF1KKSt4bRrfAEnS2qTdtwncyYSccWJxTbx9m2ASa+
+	 n4V9wvYlV3gxxA+CwSWmzQt6JzLUSW3tN2tzy234=
+Message-ID: <837fb5e9-4a35-4e49-8ec6-1fcfd5a0da30@linux.microsoft.com>
+Date: Fri, 24 Nov 2023 11:38:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -38,8 +38,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early
- TDX init
+Subject: Re: [PATCH v1 2/3] x86/coco: Disable TDX module calls when TD
+ partitioning is active
 Content-Language: en-US
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Cc: linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
@@ -54,48 +54,30 @@ Cc: linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
  haiyangz@microsoft.com, wei.liu@kernel.org, sashal@kernel.org,
  stable@vger.kernel.org
 References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
- <20231123135846.pakk44rqbbi7njmb@box.shutemov.name>
+ <20231122170106.270266-2-jpiotrowski@linux.microsoft.com>
+ <20231123141318.rmskhl3scc2a6muw@box.shutemov.name>
 From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-In-Reply-To: <20231123135846.pakk44rqbbi7njmb@box.shutemov.name>
+In-Reply-To: <20231123141318.rmskhl3scc2a6muw@box.shutemov.name>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/11/2023 14:58, Kirill A. Shutemov wrote:
-> On Wed, Nov 22, 2023 at 06:01:04PM +0100, Jeremi Piotrowski wrote:
->> Check for additional CPUID bits to identify TDX guests running with Trust
->> Domain (TD) partitioning enabled. TD partitioning is like nested virtualization
->> inside the Trust Domain so there is a L1 TD VM(M) and there can be L2 TD VM(s).
->>
->> In this arrangement we are not guaranteed that the TDX_CPUID_LEAF_ID is visible
->> to Linux running as an L2 TD VM. This is because a majority of TDX facilities
->> are controlled by the L1 VMM and the L2 TDX guest needs to use TD partitioning
->> aware mechanisms for what's left. So currently such guests do not have
->> X86_FEATURE_TDX_GUEST set.
->>
->> We want the kernel to have X86_FEATURE_TDX_GUEST set for all TDX guests so we
->> need to check these additional CPUID bits, but we skip further initialization
->> in the function as we aren't guaranteed access to TDX module calls.
-> 
-> I don't follow. The idea of partitioning is that L2 OS can be
-> unenlightened and have no idea if it runs indide of TD. But this patch
-> tries to enumerate TDX anyway.
-> 
-> Why?
+On 23/11/2023 15:13, Kirill A. Shutemov wrote:
+> On Wed, Nov 22, 2023 at 06:01:05PM +0100, Jeremi Piotrowski wrote:
+>> Introduce CC_ATTR_TDX_MODULE_CALLS to allow code to check whether TDX module
+>> calls are available. When TD partitioning is enabled, a L1 TD VMM handles most
+>> TDX facilities and the kernel running as an L2 TD VM does not have access to
+>> TDX module calls. The kernel still has access to TDVMCALL(0) which is forwarded
+>> to the VMM for processing, which is the L1 TD VM in this case.
 > 
 
-That's not the only idea of partitioning. Partitioning provides different privilege
-levels within the TD, and unenlightened L2 OS can be made to work but are inefficient.
-In our case Linux always runs enlightened (both with and without TD partitioning), and
-uses TDX functionality where applicable (TDX vmcalls, PTE encryption bit).
+Correction: it turns out TDVMCALL(0) is handled by L0 VMM.
 
-There have been long discussions on LKML about how CoCo features should be supported,
-I've followed most of them and I believe we've converged on: the kernel is fully
-aware what kind of guest it is (SNP/TDX) and uses CC_ATTR_XXX to check for specific
-SNP/TDX features.
+> Sounds like a problem introduced by patch 1/3 :/
+> 
 
-Right now the guest with TD partitioning is missing out on X86_FEATURE_TDX_GUEST.
-That's why this patch tries to enumerate TDX.
+What problem are you referring to? This patch is making the kernel aware of which
+subfeatures of TDX are available to it.
 
-I have posted an alternate version of this patch for discussion here:
-https://lore.kernel.org/lkml/0799b692-4b26-4e00-9cec-fdc4c929ea58@linux.microsoft.com/
+This patch is needed once you make the kernel aware of X86_FEATURE_TDX_GUEST, which
+is applicable because we're dealing with a TDX guest.
 
