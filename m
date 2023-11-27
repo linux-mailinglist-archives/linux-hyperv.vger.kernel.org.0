@@ -1,90 +1,120 @@
-Return-Path: <linux-hyperv+bounces-1058-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1059-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E35F97F9F6B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 13:20:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE90D7FA331
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 15:42:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 215BA1C209D7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 12:20:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8969128184C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 14:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2561CF96;
-	Mon, 27 Nov 2023 12:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C651F1DDF1;
+	Mon, 27 Nov 2023 14:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYVnsgfu"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QdWclXVP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233D51DFC1;
-	Mon, 27 Nov 2023 12:20:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93D7AC433C9;
-	Mon, 27 Nov 2023 12:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701087625;
-	bh=2xL/uJq6qI8TQ3qq2PiEINw1Ueax4X6ay/YZyvpjaWI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=tYVnsgfuHt1Z2m4uLjWHgJmiqHaFj0WJ6yLBScYenEScmFpLZxk7nGC8pct1Cn4om
-	 f8+6yCkpwuv3nyo0Pz5Okc03wFiZbSH5Nbo8DcQvtiJfW1Gmu3QsnH25pQ9m+EOyh+
-	 oIxhBcyisB41B8n3phJyKyfy+HtjEwbjgSBSsaXa7EErWQrITQsnCUuPZOHJx2sS+d
-	 T9+V3pDxMWIYVKRFkIDItYG8rbszq47W0FwpSNlHEjQrGbH+KuynX/OZGIyeVmilTS
-	 OQUAlPwK+cSgQF5iAKoX9i8kePY01KCG/Eu+EBIBXj4vxw6W6hQ6VLkl2rPsA+kufB
-	 V6HD1jVgXIJfw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 786E7E1F66D;
-	Mon, 27 Nov 2023 12:20:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+X-Greylist: delayed 567 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Nov 2023 06:42:31 PST
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE314E1
+	for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 06:42:31 -0800 (PST)
+Message-ID: <966f54dd-f083-4a7d-a15a-3a203a21d4ba@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1701095582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vObv6RyITFVrMf1y8I26NGtkSDIHE/K42LLMcUo0st8=;
+	b=QdWclXVPugaZ40tkeAmvvLE9DSxL36FaskilcyU5HHprK9FlE8RYXt0eg+0fiQRSH8W4a0
+	vCOooQL+lm2ZKJ61RvlWEO59YZfS2LeOl5aCfwqHTM/ng8ujztV9mOaB+1Ip6aHIr3owHZ
+	ZFMSMjenjWb8w7TV0NCnZKNu4K08Chw=
+Date: Mon, 27 Nov 2023 22:32:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ
+ affinity on HT cores
+To: Souradeep Chakrabarti <schakrabarti@microsoft.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, "davem@davemloft.net"
+ <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+ "pabeni@redhat.com" <pabeni@redhat.com>, Long Li <longli@microsoft.com>,
+ "sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
+ "leon@kernel.org" <leon@kernel.org>,
+ "cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ Paul Rosswurm <paulros@microsoft.com>
+References: <1700574877-6037-1-git-send-email-schakrabarti@linux.microsoft.com>
+ <20231121154841.7fc019c8@kernel.org>
+ <PUZP153MB0788476CD22D5AA2ECDC11ABCCBDA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <PUZP153MB0788476CD22D5AA2ECDC11ABCCBDA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net :mana :Add remaining GDMA stats for MANA to ethtool
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170108762548.32093.15380933168923149331.git-patchwork-notify@kernel.org>
-Date: Mon, 27 Nov 2023 12:20:25 +0000
-References: <1700830950-803-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1700830950-803-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, sharmaajay@microsoft.com,
- leon@kernel.org, tglx@linutronix.de, bigeasy@linutronix.de,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com, mikelley@microsoft.com,
- shradhagupta@microsoft.com
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Fri, 24 Nov 2023 05:02:30 -0800 you wrote:
-> Extend performance counter stats in 'ethtool -S <interface>'
-> for MANA VF to include all GDMA stat counter.
+在 2023/11/27 17:36, Souradeep Chakrabarti 写道:
 > 
-> Tested-on: Ubuntu22
-> Testcases:
-> 1. LISA testcase:
-> PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
-> 2. LISA testcase:
-> PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
 > 
-> [...]
+>> -----Original Message-----
+>> From: Jakub Kicinski <kuba@kernel.org>
+>> Sent: Wednesday, November 22, 2023 5:19 AM
+>> To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+>> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+>> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+>> <decui@microsoft.com>; davem@davemloft.net; edumazet@google.com;
+>> pabeni@redhat.com; Long Li <longli@microsoft.com>;
+>> sharmaajay@microsoft.com; leon@kernel.org; cai.huoqing@linux.dev;
+>> ssengar@linux.microsoft.com; vkuznets@redhat.com; tglx@linutronix.de; linux-
+>> hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linux-rdma@vger.kernel.org; Souradeep Chakrabarti
+>> <schakrabarti@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>
+>> Subject: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ affinity on
+>> HT cores
+>>
+>> On Tue, 21 Nov 2023 05:54:37 -0800 Souradeep Chakrabarti wrote:
+>>> Existing MANA design assigns IRQ to every CPUs, including sibling
+>>> hyper-threads in a core. This causes multiple IRQs to work on same CPU
+>>> and may reduce the network performance with RSS.
+>>>
+>>> Improve the performance by adhering the configuration for RSS, which
+>>> assigns IRQ on HT cores.
+>>
+>> Drivers should not have to carry 120 LoC for something as basic as spreading IRQs.
+>> Please take a look at include/linux/topology.h and if there's nothing that fits your
+>> needs there - add it. That way other drivers can reuse it.
+> Because of the current design idea, it is easier to keep things inside
+> the mana driver code here. As the idea of IRQ distribution here is :
+> 1)Loop through interrupts to assign CPU
+> 2)Find non sibling online CPU from local NUMA and assign the IRQs
+> on them.
+> 3)If number of IRQs is more than number of non-sibling CPU in that
+> NUMA node, then assign on sibling CPU of that node.
+> 4)Keep doing it till all the online CPUs are used or no more IRQs.
+> 5)If all CPUs in that node are used, goto next NUMA node with CPU.
+> Keep doing 2 and 3.
 
-Here is the summary with links:
-  - net :mana :Add remaining GDMA stats for MANA to ethtool
-    https://git.kernel.org/netdev/net-next/c/e1df5202e879
+https://static.lwn.net/images/pdf/LDD3/ch10.pdf
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Zhu Yanjun
 
+> 6) If all CPUs in all NUMA nodes are used, but still there are IRQs
+> then wrap over from first local NUMA node and continue
+> doing 2, 3 4 till all IRQs are assigned.
 
 
