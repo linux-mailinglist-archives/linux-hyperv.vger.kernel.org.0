@@ -1,129 +1,74 @@
-Return-Path: <linux-hyperv+bounces-1062-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1063-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5738B7FA777
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 18:05:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 532AE7FA896
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 19:06:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 101D72817CF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 17:05:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E811CB20F20
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 18:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3DBC36AE7;
-	Mon, 27 Nov 2023 17:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFAD13BB46;
+	Mon, 27 Nov 2023 18:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rJ8cBOmh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTllf2c1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 933F52706;
-	Mon, 27 Nov 2023 09:05:26 -0800 (PST)
-Received: from [192.168.4.26] (unknown [47.186.13.91])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D60A120B74C0;
-	Mon, 27 Nov 2023 09:05:23 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D60A120B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1701104726;
-	bh=hQp9k1xmzkhJv53kIi+fGz0Bm7C0uUgSE5lwBZUzRAE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rJ8cBOmhMjU1LJ0/8Jcu8Zs0D7K0IoJJgYpooleweR4JPTx8RVu3i076OKuSc40H8
-	 vQyhttx9sRNbXZhKrbp4uy9amwle/wkhxSgx+XSVVJGrDjkKV6ziAkv22z1oJr2gBV
-	 BrN8A1ek3f3VLgDmEE47gJhsasnKPJeYvbYTTmRg=
-Message-ID: <b1dc0963-ab99-4a79-af19-ef5ed981fa60@linux.microsoft.com>
-Date: Mon, 27 Nov 2023 11:05:23 -0600
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A4931A69;
+	Mon, 27 Nov 2023 18:06:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951BCC433C9;
+	Mon, 27 Nov 2023 18:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701108401;
+	bh=SXk9TLrwLgA89r0jB1vEwVRH5/KUIw8Zo/Yl4z5i8aA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WTllf2c1P+/VCxnAZyt0dJ2ZWye5KhMZHmjnEfgbaJzDY6/gy3B0Wht68/UXA9Wpd
+	 Whn4CgI1lV1q1c2XJTsQW3hRIkfkhwFZB7a5s0PFPNEtNdfbopZenbA3oGS6cfZU9S
+	 /F4Mro6jJe5ltMEUuRo7VkIhis3M4oGsJ71lWsOkejDi2HX65plhJDKSm6IFiNCYEE
+	 xMscVCvaYXsxCCfF9s5Bqu5HvEwCKa2YkMVmoQEEHfymuoVeXf6iSXNhtx/hubpbZz
+	 dOszSU4xj4q2V6CQpWjy+aUN1RHyKdg1YCaCa3UB7qxY9WoacNhzH+9muL9bk7C62q
+	 uttN3Qv44zL/Q==
+Date: Mon, 27 Nov 2023 10:06:39 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Souradeep Chakrabarti <schakrabarti@microsoft.com>
+Cc: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, KY Srinivasan
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, Long Li <longli@microsoft.com>,
+ "sharmaajay@microsoft.com" <sharmaajay@microsoft.com>, "leon@kernel.org"
+ <leon@kernel.org>, "cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+ <linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ
+ affinity on HT cores
+Message-ID: <20231127100639.5f2f3d3e@kernel.org>
+In-Reply-To: <PUZP153MB0788476CD22D5AA2ECDC11ABCCBDA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
+References: <1700574877-6037-1-git-send-email-schakrabarti@linux.microsoft.com>
+	<20231121154841.7fc019c8@kernel.org>
+	<PUZP153MB0788476CD22D5AA2ECDC11ABCCBDA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 18/19] heki: x86: Protect guest kernel memory using
- the KVM hypervisor
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8?=
- =?UTF-8?Q?n?= <mic@digikod.net>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>,
- Alexander Graf <graf@amazon.com>, Chao Peng <chao.p.peng@linux.intel.com>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
- James Morris <jamorris@linux.microsoft.com>,
- John Andersen <john.s.andersen@intel.com>,
- Marian Rotariu <marian.c.rotariu@gmail.com>,
- =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
- =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
- Thara Gopinath <tgopinath@microsoft.com>,
- Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
- Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>,
- Zahra Tarkhani <ztarkhani@microsoft.com>,
- =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
- dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
- x86@kernel.org, xen-devel@lists.xenproject.org
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-19-mic@digikod.net>
- <20231113085403.GC16138@noisy.programming.kicks-ass.net>
-From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-In-Reply-To: <20231113085403.GC16138@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Apologies for the late reply. I was on vacation. Please see my response below:
+On Mon, 27 Nov 2023 09:36:38 +0000 Souradeep Chakrabarti wrote:
+> easier to keep things inside the mana driver code here
 
-On 11/13/23 02:54, Peter Zijlstra wrote:
-> On Sun, Nov 12, 2023 at 09:23:25PM -0500, Mickaël Salaün wrote:
->> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
->>
->> Implement a hypervisor function, kvm_protect_memory() that calls the
->> KVM_HC_PROTECT_MEMORY hypercall to request the KVM hypervisor to
->> set specified permissions on a list of guest pages.
->>
->> Using the protect_memory() function, set proper EPT permissions for all
->> guest pages.
->>
->> Use the MEM_ATTR_IMMUTABLE property to protect the kernel static
->> sections and the boot-time read-only sections. This enables to make sure
->> a compromised guest will not be able to change its main physical memory
->> page permissions. However, this also disable any feature that may change
->> the kernel's text section (e.g., ftrace, Kprobes), but they can still be
->> used on kernel modules.
->>
->> Module loading/unloading, and eBPF JIT is allowed without restrictions
->> for now, but we'll need a way to authenticate these code changes to
->> really improve the guests' security. We plan to use module signatures,
->> but there is no solution yet to authenticate eBPF programs.
->>
->> Being able to use ftrace and Kprobes in a secure way is a challenge not
->> solved yet. We're looking for ideas to make this work.
->>
->> Likewise, the JUMP_LABEL feature cannot work because the kernel's text
->> section is read-only.
-> 
-> What is the actual problem? As is the kernel text map is already RO and
-> never changed.
-
-For the JUMP_LABEL optimization, the text needs to be patched at some point.
-That patching requires a writable mapping of the text page at the time of
-patching.
-
-In this Heki feature, we currently lock down the kernel text at the end of
-kernel boot just before kicking off the init process. The lockdown is
-implemented by setting the permissions of a text page to R_X in the extended
-page table and not allowing write permissions in the EPT after that. So, jump label
-patching during kernel boot is not a problem. But doing it after kernel
-boot is a problem.
-
-The lockdown is just for the current Heki implementation. In the future, we plan
-to have a way of authenticating guest requests to change permissions on a text page.
-Once that is in place, permissions on text pages can be changed on the fly to
-support features that depend on text patching - FTrace, KProbes, etc.
-
-Madhavan
+Easier for who? Upstream we care about consistency and maintainability
+across all drivers.
 
