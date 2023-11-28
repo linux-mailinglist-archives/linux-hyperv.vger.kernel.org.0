@@ -1,37 +1,37 @@
-Return-Path: <linux-hyperv+bounces-1114-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1115-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB777FC6B2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 22:06:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD887FC707
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 22:08:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74145281830
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 21:06:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2834A287001
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 21:08:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0035744370;
-	Tue, 28 Nov 2023 21:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B171044379;
+	Tue, 28 Nov 2023 21:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+orgIKu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbeoIXci"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EA244366;
-	Tue, 28 Nov 2023 21:06:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B08B5C433C8;
-	Tue, 28 Nov 2023 21:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE1644373;
+	Tue, 28 Nov 2023 21:07:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CBBC433CB;
+	Tue, 28 Nov 2023 21:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701205580;
-	bh=KvPIR5/RgJS18Y9VyiocKdiV2Sj+qnkbBx9d3kX0Ja4=;
+	s=k20201202; t=1701205674;
+	bh=7aLWsiYj+wrTxoJNtgOv5YjBax8wb5yCrnUuIVcTkhA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=n+orgIKubMeVDKBTG693l8yMKXzWfgj7sLwYltDan58tZAz/5HAY752808RVuCvh0
-	 j0lzgHF1XUiHP/VVrxHdNrGzv+ujE2WRq6+xNyl2XeLUnWiP7D+5FkinvvHKCreyub
-	 d4kn6lo2dSIW0tCC+DP0XT6B2hamaKngynLefUdA8zL3xxJ1bcC0KF+FgKiyQIWPkA
-	 Jgh2wRVmyoX2MJQxg8ZEWvVGqTNB4mpLEm7F1vYoB4ljK+Q6VhteLnnWqQetE4H0rR
-	 f9cBGBfoPadHxPdSmew0CDp2MhET9lS5bw4/Mw8Oaf5deoE4gazFIRJmwDSA1ByFM0
-	 rj2x84QvjATXA==
+	b=LbeoIXciVymTFkLOO3rfwenTfwgCvTzcXtKHQi0xLof4+NtqTCAON5VVl8wxpu+Zn
+	 bWw9MN9mcFmpZgMYrVDE/LlX1n7QKg7NWVM1h2h1u3yuRvYmLWH24S7k+477z+s5DN
+	 LYjtxGT0Xlm82G4DbVOnB/Cxg4+fvHlrOSfq3s7qtmpAINzQiFpC1KY5/SHyr2qP3W
+	 223hsNtxZPycu/gGpxU/8n3mc8lzR344LnI1KGty9yJIDigFbePcf3GCB9VxXmKK1B
+	 gCoL4FH9HYpMDH7ZQBJ57y2SFsyHWt51/pDc9ETN737kwhokwizpSYc408Gu0xBoDS
+	 QVA/tvXg//4Ew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 01/40] x86/hyperv: Fix the detection of E820_TYPE_PRAM in a Gen2 VM
-Date: Tue, 28 Nov 2023 16:05:07 -0500
-Message-ID: <20231128210615.875085-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 01/25] x86/hyperv: Fix the detection of E820_TYPE_PRAM in a Gen2 VM
+Date: Tue, 28 Nov 2023 16:07:17 -0500
+Message-ID: <20231128210750.875945-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.3
+X-stable-base: Linux 6.1.64
 Content-Transfer-Encoding: 8bit
 
 From: Saurabh Sengar <ssengar@linux.microsoft.com>
@@ -99,10 +99,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 21 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 21556ad87f4ba..8f3a4d16bb791 100644
+index 189ae92de4d06..c18e5c764643b 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
-@@ -15,6 +15,7 @@
+@@ -13,6 +13,7 @@
  #include <linux/io.h>
  #include <asm/apic.h>
  #include <asm/desc.h>
@@ -110,7 +110,7 @@ index 21556ad87f4ba..8f3a4d16bb791 100644
  #include <asm/sev.h>
  #include <asm/ibt.h>
  #include <asm/hypervisor.h>
-@@ -286,15 +287,31 @@ static int hv_cpu_die(unsigned int cpu)
+@@ -267,15 +268,31 @@ static int hv_cpu_die(unsigned int cpu)
  
  static int __init hv_pci_init(void)
  {
