@@ -1,132 +1,146 @@
-Return-Path: <linux-hyperv+bounces-1104-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1105-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 479647FBF3D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 17:34:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D4E907FC02A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 18:19:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01499282934
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 16:34:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B2EE282B1B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 17:19:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B695E0A1;
-	Tue, 28 Nov 2023 16:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47A345B5BE;
+	Tue, 28 Nov 2023 17:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NaNNIfLg"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="6XE+gwUS"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2FB10E6
-	for <linux-hyperv@vger.kernel.org>; Tue, 28 Nov 2023 08:33:54 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db3ef4c7094so6788686276.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 28 Nov 2023 08:33:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701189233; x=1701794033; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vo/95/Uj9Fg4uJeKo+eJAx6dpBh0gdcUuvBHqXATckU=;
-        b=NaNNIfLgB93VcUkI9OpjV5L9tEcnng14sJr3vjy0Q0Z1j8TSQS7jFTvfS6Qk+vhNH9
-         IftTXZYyVs24Tm/f9sEZeWtq2MdPFTNlZmHeWvfzjQlkGq3zyUztRufC+Ae/f+HK/9pQ
-         tDW25YoSaXzX0dUundpAGiO7c2s2UjOdiP4rOK/CgTFEGg+KKcLpiI68c7v4QjYTmKO9
-         xIgCqxej0Yv4rg2ceCMe2b9DP+/uBcijwB+Car0nsTvaFB+R9MgJNOUSOnXbjqq17z7/
-         srTEWRmqK+1/pxlBb/oJMm5/e3L8+PxUJXDG4if1Mqx3mm8CRfClJqrzku7EmUWx9PIi
-         xjdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701189233; x=1701794033;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vo/95/Uj9Fg4uJeKo+eJAx6dpBh0gdcUuvBHqXATckU=;
-        b=CpbSE92qucj4LfVHdqMtd5cAe//8WhrgaKiJJdxOQUHeYTyKhNEuzPZZDaAvqJgBEZ
-         d02uoD1yjQvD5ehQTjd+RyITu42tu43+n1577u6yCv/nio8/lsw3FnHuBrGKiURE7Lzs
-         YO35QvjPiXcmMbjUzab7jWBJNiaj5pA/ygVyT7ivYy3PVFSbUviEYqUAY4ahmlgsCPiv
-         /aivRUxOwrtUVaxTMUPVScb8D/QtyrVb6JYjH+1L7XmWDgjB/UWDjaj+rh8rd/dU+m2B
-         rQNqqzDQBpgnQbqXKgWNGRKJpPBNcFABTASU9P4VRAWiltpDEzZprEpnRkYDihHfBL8o
-         4FvQ==
-X-Gm-Message-State: AOJu0YxX6m9cO2QDfiuOlldWJkAFZn8bkX9Knjvs8N/Cif+HSlOFeol+
-	5svu6P0nbT0W7bVtP8sHFfjeQQPTR0o=
-X-Google-Smtp-Source: AGHT+IEo0YpirGMFLOQPu1+JPSR0DG5FDk303PQza9eOuDyOragnS042ndzE8Pd0ow1j/PtRzL0iHYgXDSU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:d081:0:b0:d9a:fd29:4fe6 with SMTP id
- h123-20020a25d081000000b00d9afd294fe6mr562511ybg.3.1701189233386; Tue, 28 Nov
- 2023 08:33:53 -0800 (PST)
-Date: Tue, 28 Nov 2023 08:33:51 -0800
-In-Reply-To: <f4495d1f697cf9a7ddfb786eaeeac90f554fc6db.camel@redhat.com>
+Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8F410CB;
+	Tue, 28 Nov 2023 09:19:17 -0800 (PST)
+Received: from [127.0.0.1] ([98.35.210.218])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 3ASHIMck585558
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 28 Nov 2023 09:18:23 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 3ASHIMck585558
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2023111101; t=1701191904;
+	bh=f6l68iGv5eAcjwGj55E8OL6CF5X9iU8J74t2PrTG5YA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=6XE+gwUSIscmXlxZmR/obyqPnRdyFc9SgOdDhOLZ5zIn1Qj3I3XIlJN7R91edhLqJ
+	 3ATaGYKTRv7hC69ocMawcn/GiY4V77tWz594FEnWHS1T/g+UF3/dc6k9z0gaybTIHl
+	 sdQV9dZqS9FscMeWhYHdMnochTHoBUVyrWGiTY2zNzeuYMHsP9gBs5xV7h8+eLlOz8
+	 5O5NkXqRyj9mjLrHrEoT9mG7b2dvs/x/bc4pP1UavUy6IAgToEPxAtQdtXqZvS6W9m
+	 YOJM6Xe1gTSAM8HoXUXn+o/WwGXl2uufOA2uqrbGW6boguYBo3j4/dND+m2saj1FAf
+	 JdMK7bWrvWlow==
+Date: Tue, 28 Nov 2023 09:18:21 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Borislav Petkov <bp@alien8.de>, Xin Li <xin3.li@intel.com>
+CC: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, luto@kernel.org, pbonzini@redhat.com,
+        seanjc@google.com, peterz@infradead.org, jgross@suse.com,
+        ravi.v.shankar@intel.com, mhiramat@kernel.org,
+        andrew.cooper3@citrix.com, jiangshanlai@gmail.com,
+        nik.borisov@suse.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v12_16/37=5D_x86/ptrace=3A_Add_FRED_ad?= =?US-ASCII?Q?ditional_information_to_the_pt=5Fregs_structure?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20231128085122.GPZWWqCrPYnzB8BqFB@fat_crate.local>
+References: <20231003062458.23552-1-xin3.li@intel.com> <20231003062458.23552-17-xin3.li@intel.com> <20231128085122.GPZWWqCrPYnzB8BqFB@fat_crate.local>
+Message-ID: <E5913DD8-7C41-4658-9E42-63C01E2209B2@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-6-nsaenz@amazon.com>
- <f4495d1f697cf9a7ddfb786eaeeac90f554fc6db.camel@redhat.com>
-Message-ID: <ZWYWb3OQG3CaS7-f@google.com>
-Subject: Re: [RFC 05/33] KVM: x86: hyper-v: Introduce VTL call/return
- prologues in hypercall page
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
-	anelkz@amazon.com, graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, 
-	corbert@lwn.net, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com, x86@kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 28, 2023, Maxim Levitsky wrote:
-> On Wed, 2023-11-08 at 11:17 +0000, Nicolas Saenz Julienne wrote:
-> > diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> > index 78d053042667..d4b1b53ea63d 100644
-> > --- a/arch/x86/kvm/hyperv.c
-> > +++ b/arch/x86/kvm/hyperv.c
-> > @@ -259,7 +259,8 @@ static void synic_exit(struct kvm_vcpu_hv_synic *synic, u32 msr)
-> >  static int patch_hypercall_page(struct kvm_vcpu *vcpu, u64 data)
-> >  {
-> >  	struct kvm *kvm = vcpu->kvm;
-> > -	u8 instructions[9];
-> > +	struct kvm_hv *hv = to_kvm_hv(kvm);
-> > +	u8 instructions[0x30];
-> >  	int i = 0;
-> >  	u64 addr;
-> >  
-> > @@ -285,6 +286,81 @@ static int patch_hypercall_page(struct kvm_vcpu *vcpu, u64 data)
-> >  	/* ret */
-> >  	((unsigned char *)instructions)[i++] = 0xc3;
-> >  
-> > +	/* VTL call/return entries */
-> > +	if (!kvm_xen_hypercall_enabled(kvm) && kvm_hv_vsm_enabled(kvm)) {
-> > +#ifdef CONFIG_X86_64
-> > +		if (is_64_bit_mode(vcpu)) {
-> > +			/*
-> > +			 * VTL call 64-bit entry prologue:
-> > +			 * 	mov %rcx, %rax
-> > +			 * 	mov $0x11, %ecx
-> > +			 * 	jmp 0:
-> 
-> This isn't really 'jmp 0' as I first wondered but actually backward jump 32
-> bytes back (if I did the calculation correctly).  This is very dangerous
-> because code that was before can change and in fact I don't think that this
-> offset is even correct now, and on top of that it depends on support for xen
-> hypercalls as well.
-> 
-> This can be fixed by calculating the offset in runtime, however I am
-> thinking:
-> 
-> 
-> Since userspace will have to be aware of the offsets in this page, and since
-> pretty much everything else is done in userspace, it might make sense to
-> create the hypercall page in the userspace.
-> 
-> In fact, the fact that KVM currently overwrites the guest page, is a
-> violation of the HV spec.
-> 
-> It's more correct regardless of VTL to do userspace vm exit and let the
-> userspace put a memslot ("overlay") over the address, and put whatever
-> userspace wants there, including the above code.
-> 
-> Then we won't need the new ioctl as well.
-> 
-> To support this I think that we can add a userspace msr filter on the
-> HV_X64_MSR_HYPERCALL, although I am not 100% sure if a userspace msr filter
-> overrides the in-kernel msr handling.
+On November 28, 2023 12:51:22 AM PST, Borislav Petkov <bp@alien8=2Ede> wrot=
+e:
+>On Mon, Oct 02, 2023 at 11:24:37PM -0700, Xin Li wrote:
+>> FRED defines additional information in the upper 48 bits of cs/ss
+>> fields=2E Therefore add the information definitions into the pt_regs
+>> structure=2E
+>>=20
+>> Specially introduce a new structure fred_ss to denote the FRED flags
+>> above SS selector, which avoids FRED_SSX_ macros and makes the code
+>> simpler and easier to read=2E
+>>=20
+>> Signed-off-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+>
+>You and hpa need to go through all the patches and figure out who's the
+>author that's going to land in git=2E
+>
+>Because this and others have hpa's SOB first, suggesting he's the
+>author=2E However, the mail doesn't start with
+>
+>From: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+>
+>and then git will make *you* the author=2E
+>
+>> Tested-by: Shan Kang <shan=2Ekang@intel=2Ecom>
+>> Signed-off-by: Thomas Gleixner <tglx@linutronix=2Ede>
+>> Signed-off-by: Xin Li <xin3=2Eli@intel=2Ecom>
+>
+>=2E=2E=2E
+>
+>>  	union {
+>> -		u64	ssx;	// The full 64-bit data slot containing SS
+>> -		u16	ss;	// SS selector
+>> +		/* SS selector */
+>> +		u16		ss;
+>> +		/* The extended 64-bit data slot containing SS */
+>> +		u64		ssx;
+>> +		/* The FRED SS extension */
+>> +		struct fred_ss	fred_ss;
+>
+>Aha, sanity about the right comments has come to your mind in this next
+>patch=2E :-P
+>
+>Just do them right in the previous one=2E
+>
+>>  	/*
+>> -	 * Top of stack on IDT systems=2E
+>> +	 * Top of stack on IDT systems, while FRED systems have extra fields
+>> +	 * defined above for storing exception related information, e=2Eg=2E =
+CR2 or
+>> +	 * DR6=2E
+>
+>Btw, I really appreciate the good commenting - thanks for that!
+>
 
-Yep, userspace MSR filters override in-kernel handling.
+For Xin, mainly:
+
+Standard practice is:
+
+1=2E For a patch with relatively small modifications, or where the changes=
+ are mainly in comments or the patch message:
+
+Keep the authorship, but put a description of what you have changed in bra=
+ckets with your username at the bottom of the description, immediately befo=
+re Signed-off-by:
+
+[ xin: changed foo, bar, baz ]
+
+
+2=2E For a patch with major rewrites:
+
+Take authorship on the From: line, but have an Originally-by: tag (rather =
+than a Signed-off-by: by the original author):
+
+Originally-by: Someone Else <someone@elsewhere=2Edom>
+
+
+3=2E For a patch which is fully or nearly fully your own work (a total rew=
+rite, or based on a concept idea rather than actual code), credit the origi=
+nal in the patch comment:
+
+Based on an idea by Someone Else <someone@elsewhere=2Edom> (optional link =
+to lore=2Ekernel=2Eorg)=2E
 
