@@ -1,67 +1,66 @@
-Return-Path: <linux-hyperv+bounces-1076-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1077-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA42C7FB265
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 08:15:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B13C7FB26F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 08:16:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61209281D2C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 07:15:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C5C91C20A90
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 07:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0794125D3;
-	Tue, 28 Nov 2023 07:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E6C134AD;
+	Tue, 28 Nov 2023 07:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhmFDNpk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GigAEPWA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFFE2D41
-	for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:15:04 -0800 (PST)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA194138
+	for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:16:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701155704;
+	s=mimecast20190719; t=1701155780;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oIjdl3fBpy+pRgJdQZh+6AD6ZC1o3LqUiZRk3i0+Pa8=;
-	b=QhmFDNpkgEbvCwpdtJB8eRJObprETWdO/oo0wtrL35ljHd/p1D3V3k8z2lhEr3tcFcwb4m
-	/uJCGvYRSypLHhdD1j/oZ85W9o3AH9l0zLa19pDda0SKsmj5PPxXTEdvP3HQhc0G/EA+9s
-	SsjsNs+JGYV9W3GwjFfw2P5UVfZxcvY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=+wPQpfAGbhR2fcRE9CwV+QhwuDv286D2znD8D3G529g=;
+	b=GigAEPWASIA53JSEy41wfcPBDqJw74MCpl9e/0dKpjJPbyNsgQdxxWZ9ksdueNPdz873Lr
+	dzrvjD+Jk5Md3zfHkEhTXXFf6avswxYeYTpJkDzEV44MrlF9YHolEcPoF1QSzbzLdaN216
+	UTc8o5IWZM5jY4CZRaw9O74OkGJ7nIs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-84-PzV9QU-AMgWv6wIqaqSazQ-1; Tue, 28 Nov 2023 02:15:02 -0500
-X-MC-Unique: PzV9QU-AMgWv6wIqaqSazQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-332e06036b5so3807500f8f.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:15:02 -0800 (PST)
+ us-mta-437-pdtTnh5UPLeMWvIBRYATCw-1; Tue, 28 Nov 2023 02:16:17 -0500
+X-MC-Unique: pdtTnh5UPLeMWvIBRYATCw-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40b2be01a2dso29695315e9.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:16:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701155701; x=1701760501;
+        d=1e100.net; s=20230601; t=1701155776; x=1701760576;
         h=content-transfer-encoding:mime-version:user-agent:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oIjdl3fBpy+pRgJdQZh+6AD6ZC1o3LqUiZRk3i0+Pa8=;
-        b=crgNQGUU0QjQYdf4VUJ617PmFR72CDpjCKCoog9JCE0okXtMqxn8+BYEkiV+c1Mp7k
-         4JP4g8u9CPgLC6MC+Qz+GHuQUAyWB2pAfjSEB030BUI4yvQTQwsa9wZCziOAdbbSgks0
-         ttchP3JFNfU5eh6/B2tkWhNTk0Tsb9SUTm4VkMve4C7mNFurAPGzjds7KRjj33VXUXym
-         ge3uvRwI/bs4lcQaPE8e8ZXFAbCSaP7GxU7WSn6AzV0pSZZwVqLiF4CK4AMzdCmCa4wt
-         saKsFDJkdb4lMtsmlznXxkaJbY8fspeSLF0kyyqvttHOGH/bF1gDsbNAojczkwcvzL7f
-         CaKQ==
-X-Gm-Message-State: AOJu0Yxd+ecgivgoTb17yYjbqxLx+0OWzw4YUcv3N5Vv/aQIB6cTJIDZ
-	B778QxW73uQE4hhEGbJhjEio9UHFHuHRzYhrW/Z1e//EcJXATWeUo8Gqr8oFcS23U681agqaqWd
-	YSI56aDudTsH+/f+46w73Axv9
-X-Received: by 2002:adf:e692:0:b0:332:c3bf:600e with SMTP id r18-20020adfe692000000b00332c3bf600emr9680305wrm.18.1701155701312;
-        Mon, 27 Nov 2023 23:15:01 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEoLLZhOPGZQ2GYNhYzCXI+p+ecrix8FYQehMBzvTC9gRSDCBtPwIXCuYoXkKX15OSjTOoD9g==
-X-Received: by 2002:adf:e692:0:b0:332:c3bf:600e with SMTP id r18-20020adfe692000000b00332c3bf600emr9680278wrm.18.1701155700918;
-        Mon, 27 Nov 2023 23:15:00 -0800 (PST)
+        bh=+wPQpfAGbhR2fcRE9CwV+QhwuDv286D2znD8D3G529g=;
+        b=jfjBIfZNHwN/j0+gt2c4HYOV2GpmRiZFpXJnE5dm3foy/vNKP/mjFWh3kmv/aiTkJ+
+         CXR2oVzKKcV0OXksQSgeajWjxSzcw4wgJVqF1OE0zqFCwG46xmZVe22SFr1CPAUlBz5M
+         cRdZ+UcFgfUhl5SVIljljWQM3TltF0nUj9s0tlDf7kJGMIiWEK36K0GlqT2cQQgQw6n8
+         2ugXXz7gGr1fIUn2XGI+DVJZvTD0omSA84HInBneodMtcdwpa1mvsf2URtAKb+PchBQ6
+         71gvpK+dhgecVDKWTaStqWuy3SoAHda1VkZ0TF9ayQkz8ooPF464yUKn4eXLwQ6yIFUt
+         Mepg==
+X-Gm-Message-State: AOJu0YzC0tjtF1/9TJKakF4hFfUbmS+Gz/Ne2yYowXZ1gx2Z9nXASUPI
+	OOmtc/IJ+O0lEN/is9cOSiwR3NN5GlpIOdWiVfg6C3eoEMbAkSD4kbqtvBwSO+GVREubPCGJYBx
+	Cysnf+ETyuLnJ/pecA7y8p8dV
+X-Received: by 2002:a05:600c:4ecb:b0:40b:4b29:aa1c with SMTP id g11-20020a05600c4ecb00b0040b4b29aa1cmr1045327wmq.30.1701155776320;
+        Mon, 27 Nov 2023 23:16:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHWP9ONc9tOktke0kByXQi1XOIYmIVsWXsJAFkQI6HA50Moog1GCqH/U1U/uYGzT3LG1oIEyA==
+X-Received: by 2002:a05:600c:4ecb:b0:40b:4b29:aa1c with SMTP id g11-20020a05600c4ecb00b0040b4b29aa1cmr1045311wmq.30.1701155775947;
+        Mon, 27 Nov 2023 23:16:15 -0800 (PST)
 Received: from starship ([77.137.131.4])
-        by smtp.gmail.com with ESMTPSA id d4-20020a05600c3ac400b0040b3e79bad3sm10993732wms.40.2023.11.27.23.14.59
+        by smtp.gmail.com with ESMTPSA id m8-20020a05600c4f4800b0040b347d90d0sm16983794wmq.12.2023.11.27.23.16.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 23:15:00 -0800 (PST)
-Message-ID: <9249b4b84f7b84da2ea21fbbbabf35f22e5d9f2f.camel@redhat.com>
-Subject: Re: [RFC 06/33] KVM: x86: hyper-v: Introduce VTL awareness to
- Hyper-V's PV-IPIs
+        Mon, 27 Nov 2023 23:16:15 -0800 (PST)
+Message-ID: <fcd7567a1b45c6779882f696fe2fdac8c6702b3b.camel@redhat.com>
+Subject: Re: [RFC 07/33] KVM: x86: hyper-v: Introduce KVM_CAP_HYPERV_VSM
 From: Maxim Levitsky <mlevitsk@redhat.com>
 To: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
@@ -69,10 +68,10 @@ Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
  anelkz@amazon.com,  graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com,
  corbert@lwn.net,  kys@microsoft.com, haiyangz@microsoft.com,
  decui@microsoft.com, x86@kernel.org,  linux-doc@vger.kernel.org
-Date: Tue, 28 Nov 2023 09:14:58 +0200
-In-Reply-To: <20231108111806.92604-7-nsaenz@amazon.com>
+Date: Tue, 28 Nov 2023 09:16:13 +0200
+In-Reply-To: <20231108111806.92604-8-nsaenz@amazon.com>
 References: <20231108111806.92604-1-nsaenz@amazon.com>
-	 <20231108111806.92604-7-nsaenz@amazon.com>
+	 <20231108111806.92604-8-nsaenz@amazon.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
@@ -84,200 +83,89 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
 On Wed, 2023-11-08 at 11:17 +0000, Nicolas Saenz Julienne wrote:
-> HVCALL_SEND_IPI and HVCALL_SEND_IPI_EX allow targeting specific a
-> specific VTL. Honour the requests.
+> Introduce a new capability to enable Hyper-V Virtual Secure Mode (VSM)
+> emulation support.
 > 
 > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 > ---
->  arch/x86/kvm/hyperv.c             | 24 +++++++++++++++++-------
->  arch/x86/kvm/trace.h              | 20 ++++++++++++--------
->  include/asm-generic/hyperv-tlfs.h |  6 ++++--
->  3 files changed, 33 insertions(+), 17 deletions(-)
+>  arch/x86/include/asm/kvm_host.h | 2 ++
+>  arch/x86/kvm/hyperv.h           | 5 +++++
+>  arch/x86/kvm/x86.c              | 5 +++++
+>  include/uapi/linux/kvm.h        | 1 +
+>  4 files changed, 13 insertions(+)
 > 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index d4b1b53ea63d..2cf430f6ddd8 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -2230,7 +2230,7 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  }
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 00cd21b09f8c..7712e31b7537 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1118,6 +1118,8 @@ struct kvm_hv {
 >  
->  static void kvm_hv_send_ipi_to_many(struct kvm *kvm, u32 vector,
-> -				    u64 *sparse_banks, u64 valid_bank_mask)
-> +				    u64 *sparse_banks, u64 valid_bank_mask, int vtl)
->  {
->  	struct kvm_lapic_irq irq = {
->  		.delivery_mode = APIC_DM_FIXED,
-> @@ -2245,6 +2245,9 @@ static void kvm_hv_send_ipi_to_many(struct kvm *kvm, u32 vector,
->  					    valid_bank_mask, sparse_banks))
->  			continue;
+>  	struct hv_partition_assist_pg *hv_pa_pg;
+>  	struct kvm_hv_syndbg hv_syndbg;
+> +
+> +	bool hv_enable_vsm;
+>  };
 >  
-> +		if (kvm_hv_get_active_vtl(vcpu) != vtl)
-> +			continue;
+>  struct msr_bitmap_range {
+> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+> index f83b8db72b11..2bfed69ba0db 100644
+> --- a/arch/x86/kvm/hyperv.h
+> +++ b/arch/x86/kvm/hyperv.h
+> @@ -238,4 +238,9 @@ static inline int kvm_hv_verify_vp_assist(struct kvm_vcpu *vcpu)
+>  
+>  int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu);
+>  
+> +static inline bool kvm_hv_vsm_enabled(struct kvm *kvm)
+> +{
+> +       return kvm->arch.hyperv.hv_enable_vsm;
+> +}
+> +
+>  #endif
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 4cd3f00475c1..b0512e433032 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4485,6 +4485,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_HYPERV_CPUID:
+>  	case KVM_CAP_HYPERV_ENFORCE_CPUID:
+>  	case KVM_CAP_SYS_HYPERV_CPUID:
+> +	case KVM_CAP_HYPERV_VSM:
+>  	case KVM_CAP_PCI_SEGMENT:
+>  	case KVM_CAP_DEBUGREGS:
+>  	case KVM_CAP_X86_ROBUST_SINGLESTEP:
+> @@ -6519,6 +6520,10 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+>  		}
+>  		mutex_unlock(&kvm->lock);
+>  		break;
+> +	case KVM_CAP_HYPERV_VSM:
+> +		kvm->arch.hyperv.hv_enable_vsm = true;
+> +		r = 0;
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		break;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 5ce06a1eee2b..168b6ac6ebe5 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1226,6 +1226,7 @@ struct kvm_ppc_resize_hpt {
+>  #define KVM_CAP_GUEST_MEMFD 233
+>  #define KVM_CAP_VM_TYPES 234
+>  #define KVM_CAP_APIC_ID_GROUPS 235
+> +#define KVM_CAP_HYPERV_VSM 237
+>  
+>  #ifdef KVM_CAP_IRQ_ROUTING
+>  
 
-Do I understand correctly that this is a temporary limitation?
-In other words, can a vCPU running in VTL1 send an IPI to a vCPU running VTL0,
-forcing the target vCPU to do async switch to VTL1?
-I think that this is possible.
+Do we actually need this? Can we detect if the userspace wants VSM using
+guest CPUID?
 
-
-If we go with my suggestion to use apic namespaces and/or with multiple VMs per VTLs,
-then I imagine it like that:
-
-In-kernel hyperv IPI emulation works as it does currently as long as the IPI's VTL matches the VTL
-which is assigned to the vCPU, and if it doesn't, it should result in a userspace VM exit.
-
-I do think that we will need KVM to know a vCPU VTL anyway, however we might get away
-(or have to if we go with multiple VMs approach) with having explicit mapping between
-all KVM's vCPUs which emulate a single VM's vCPU.
+Of course if we need to add a new ioctl or something it will have to be
+done together with a new capability, and since we will need at least to
+know a vCPU's VTL, we will probably need this capability.
 
 Best regards,
 	Maxim Levitsky
-
-
-> +
->  		/* We fail only when APIC is disabled */
->  		kvm_apic_set_irq(vcpu, &irq, NULL);
->  	}
-> @@ -2257,13 +2260,19 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  	struct kvm *kvm = vcpu->kvm;
->  	struct hv_send_ipi_ex send_ipi_ex;
->  	struct hv_send_ipi send_ipi;
-> +	union hv_input_vtl *in_vtl;
->  	u64 valid_bank_mask;
->  	u32 vector;
->  	bool all_cpus;
-> +	u8 vtl;
-> +
-> +	/* VTL is at the same offset on both IPI types */
-> +	in_vtl = &send_ipi.in_vtl;
-> +	vtl = in_vtl->use_target_vtl ? in_vtl->target_vtl : kvm_hv_get_active_vtl(vcpu);
->  
->  	if (hc->code == HVCALL_SEND_IPI) {
->  		if (!hc->fast) {
-> -			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &send_ipi,
-> +			if (unlikely(kvm_vcpu_read_guest(vcpu, hc->ingpa, &send_ipi,
->  						    sizeof(send_ipi))))
->  				return HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			sparse_banks[0] = send_ipi.cpu_mask;
-> @@ -2278,10 +2287,10 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  		all_cpus = false;
->  		valid_bank_mask = BIT_ULL(0);
->  
-> -		trace_kvm_hv_send_ipi(vector, sparse_banks[0]);
-> +		trace_kvm_hv_send_ipi(vector, sparse_banks[0], vtl);
->  	} else {
->  		if (!hc->fast) {
-> -			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &send_ipi_ex,
-> +			if (unlikely(kvm_vcpu_read_guest(vcpu, hc->ingpa, &send_ipi_ex,
->  						    sizeof(send_ipi_ex))))
->  				return HV_STATUS_INVALID_HYPERCALL_INPUT;
->  		} else {
-> @@ -2292,7 +2301,8 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  
->  		trace_kvm_hv_send_ipi_ex(send_ipi_ex.vector,
->  					 send_ipi_ex.vp_set.format,
-> -					 send_ipi_ex.vp_set.valid_bank_mask);
-> +					 send_ipi_ex.vp_set.valid_bank_mask,
-> +					 vtl);
->  
->  		vector = send_ipi_ex.vector;
->  		valid_bank_mask = send_ipi_ex.vp_set.valid_bank_mask;
-> @@ -2322,9 +2332,9 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  		return HV_STATUS_INVALID_HYPERCALL_INPUT;
->  
->  	if (all_cpus)
-> -		kvm_hv_send_ipi_to_many(kvm, vector, NULL, 0);
-> +		kvm_hv_send_ipi_to_many(kvm, vector, NULL, 0, vtl);
->  	else
-> -		kvm_hv_send_ipi_to_many(kvm, vector, sparse_banks, valid_bank_mask);
-> +		kvm_hv_send_ipi_to_many(kvm, vector, sparse_banks, valid_bank_mask, vtl);
->  
->  ret_success:
->  	return HV_STATUS_SUCCESS;
-> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-> index 83843379813e..ab8839c47bc7 100644
-> --- a/arch/x86/kvm/trace.h
-> +++ b/arch/x86/kvm/trace.h
-> @@ -1606,42 +1606,46 @@ TRACE_EVENT(kvm_hv_flush_tlb_ex,
->   * Tracepoints for kvm_hv_send_ipi.
->   */
->  TRACE_EVENT(kvm_hv_send_ipi,
-> -	TP_PROTO(u32 vector, u64 processor_mask),
-> -	TP_ARGS(vector, processor_mask),
-> +	TP_PROTO(u32 vector, u64 processor_mask, u8 vtl),
-> +	TP_ARGS(vector, processor_mask, vtl),
->  
->  	TP_STRUCT__entry(
->  		__field(u32, vector)
->  		__field(u64, processor_mask)
-> +		__field(u8, vtl)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->vector = vector;
->  		__entry->processor_mask = processor_mask;
-> +		__entry->vtl = vtl;
->  	),
->  
-> -	TP_printk("vector %x processor_mask 0x%llx",
-> -		  __entry->vector, __entry->processor_mask)
-> +	TP_printk("vector %x processor_mask 0x%llx vtl %d",
-> +		  __entry->vector, __entry->processor_mask, __entry->vtl)
->  );
->  
->  TRACE_EVENT(kvm_hv_send_ipi_ex,
-> -	TP_PROTO(u32 vector, u64 format, u64 valid_bank_mask),
-> -	TP_ARGS(vector, format, valid_bank_mask),
-> +	TP_PROTO(u32 vector, u64 format, u64 valid_bank_mask, u8 vtl),
-> +	TP_ARGS(vector, format, valid_bank_mask, vtl),
->  
->  	TP_STRUCT__entry(
->  		__field(u32, vector)
->  		__field(u64, format)
->  		__field(u64, valid_bank_mask)
-> +		__field(u8, vtl)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->vector = vector;
->  		__entry->format = format;
->  		__entry->valid_bank_mask = valid_bank_mask;
-> +		__entry->vtl = vtl;
->  	),
->  
-> -	TP_printk("vector %x format %llx valid_bank_mask 0x%llx",
-> +	TP_printk("vector %x format %llx valid_bank_mask 0x%llx vtl %d",
->  		  __entry->vector, __entry->format,
-> -		  __entry->valid_bank_mask)
-> +		  __entry->valid_bank_mask, __entry->vtl)
->  );
->  
->  TRACE_EVENT(kvm_pv_tlb_flush,
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index 0e7643c1ef01..40d7dc793c03 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -424,14 +424,16 @@ struct hv_vpset {
->  /* HvCallSendSyntheticClusterIpi hypercall */
->  struct hv_send_ipi {
->  	u32 vector;
-> -	u32 reserved;
-> +	union hv_input_vtl in_vtl;
-> +	u8 reserved[3];
->  	u64 cpu_mask;
->  } __packed;
->  
->  /* HvCallSendSyntheticClusterIpiEx hypercall */
->  struct hv_send_ipi_ex {
->  	u32 vector;
-> -	u32 reserved;
-> +	union hv_input_vtl in_vtl;
-> +	u8 reserved[3];
->  	struct hv_vpset vp_set;
->  } __packed;
->  
-
-
 
 
 
