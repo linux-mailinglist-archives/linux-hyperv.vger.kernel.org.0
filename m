@@ -1,227 +1,450 @@
-Return-Path: <linux-hyperv+bounces-1071-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1072-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8540D7FAD5F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 23:21:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 530767FB22F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 07:56:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39F72281605
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Nov 2023 22:21:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75EA41C2095E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 06:56:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50D8448CCE;
-	Mon, 27 Nov 2023 22:21:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFAF1DDCC;
+	Tue, 28 Nov 2023 06:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jKDhSwsA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iqi/N3Cj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB943860;
-	Mon, 27 Nov 2023 14:21:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701123681; x=1732659681;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=PvFFZMUMWpS1cUbEOizQIapxmpPioPkKtXRMahC5Tns=;
-  b=jKDhSwsAISG7bQC+qQDpqNRJwQjA8Uv8gH1AfxyMXwMjps6DJTanVp83
-   AalvODLE9Szsc4ZZ0COeCHyTYQvyplA2ojddQ5jevXxhIkpaUQ3V2/pRw
-   Csyl94tjcCGouFkjPgH4HfNQJMOgpNW6w0m8/d3i76SJwG9w2Mx47ZPFZ
-   IxHtHMedb5iMq2aiN+XrSwT6m5ri+JYfhLKAnEPCu0ASxbmtGvvMKC0I1
-   BTz0FGEVllti3RNQ0ZiVtn6qCZMV2Y8ympAwJfndDoKFSTFcClwJuYMU/
-   e1TSItQEeSOulJACKwxixob3EwDXTVjNE8vraJi+TTuWktnkjg46nQUta
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="423951310"
-X-IronPort-AV: E=Sophos;i="6.04,232,1695711600"; 
-   d="scan'208";a="423951310"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 14:21:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="797372632"
-X-IronPort-AV: E=Sophos;i="6.04,232,1695711600"; 
-   d="scan'208";a="797372632"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Nov 2023 14:21:20 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 27 Nov 2023 14:21:20 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 27 Nov 2023 14:21:19 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Mon, 27 Nov 2023 14:21:19 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Mon, 27 Nov 2023 14:21:17 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RYIjEi3/Ekcre16kMXqdxeWRA8MRT4qYkG3vNb4BjZkqJehC6zGOjGajc3MFDGLcqaA4sUdEmIup2TRa34oUkaaANkm5hCdWq+EC7g544wKAX26gjhcpADQtHmVSQkBB1qRg+ymWCutEDbtsSYZs+YggC4tZb5Kq2oZU+o+/dFPkcuFGg4fwSHNWWqN9w7Ybq23o4F5fUOF6KAOYgU/5me6XE9dE9U7716kTIJD9KhqS0nIAedrbxZsIcG+zAn+wAmRpx9elaA+Gobh3aqvNdY2hOXsD64g/n8DTwCKFSnf0Ksp6csdScJ1MqmlX5SZKxVWQXXJssODDbva9Y7dc3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PvFFZMUMWpS1cUbEOizQIapxmpPioPkKtXRMahC5Tns=;
- b=fxv7Fd8Gzo81iQghhmTybQTI7kAjIiyOpBgQ2n1rkHP4UFjgqxTF52n0Z84ru0/aYYPJuM/pCv6Y6TRIq9VGdxLEBc9T39em7A6hXFt+WJsO0I7dgtRkDPv7D7YaQn7WefooXBr2QeMFv+NQjgWKZmc+nNacO5+qixHCHvyHmbO1XAyjFvXa26ZhnaBZ/3Nfru9L82I81knb2T/xUFmfcSiiZ9vVKD/yelhzO+V3eMIgfrKAMNm9i8BntG8SqHpDZ5g2uKAY0CBzrDvTDLSG6Z73hmw+rNgYNcIl8J4xABZTbbuAb8Jq8yhSW/BM5G+lSLgObEucoEA7SW9l5S+YVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by IA0PR11MB7401.namprd11.prod.outlook.com (2603:10b6:208:433::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.27; Mon, 27 Nov
- 2023 22:21:08 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::5260:13db:a6e:35e9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::5260:13db:a6e:35e9%6]) with mapi id 15.20.7025.022; Mon, 27 Nov 2023
- 22:21:08 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"ardb@kernel.org" <ardb@kernel.org>, "hch@infradead.org" <hch@infradead.org>,
-	"Lutomirski, Andy" <luto@kernel.org>, "mhklinux@outlook.com"
-	<mhklinux@outlook.com>, "linux-coco@lists.linux.dev"
-	<linux-coco@lists.linux.dev>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "thomas.lendacky@amd.com"
-	<thomas.lendacky@amd.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"mingo@redhat.com" <mingo@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>,
-	"Cui, Dexuan" <decui@microsoft.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"urezki@gmail.com" <urezki@gmail.com>, "hpa@zytor.com" <hpa@zytor.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "bp@alien8.de" <bp@alien8.de>, "Rodel, Jorg"
-	<jroedel@suse.de>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "lstoakes@gmail.com"
-	<lstoakes@gmail.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v2 2/8] x86/mm: Don't do a TLB flush if changing a PTE
- that isn't marked present
-Thread-Topic: [PATCH v2 2/8] x86/mm: Don't do a TLB flush if changing a PTE
- that isn't marked present
-Thread-Index: AQHaHMCWNBbWuenhyU67ZYpiAy4Q97COxoUA
-Date: Mon, 27 Nov 2023 22:21:07 +0000
-Message-ID: <4a64d05c80c9c490d291af881a86c3d853160060.camel@intel.com>
-References: <20231121212016.1154303-1-mhklinux@outlook.com>
-	 <20231121212016.1154303-3-mhklinux@outlook.com>
-In-Reply-To: <20231121212016.1154303-3-mhklinux@outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|IA0PR11MB7401:EE_
-x-ms-office365-filtering-correlation-id: 7e0ff278-0d3a-4ffe-4334-08dbef97274f
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jjHB0EwiA1jCNqQqAvblrwv7+6NjY27bHvDBdGfG5XIndEvjl0JCXuTf7F11aHTFtOqijP5/lSyyqPFrZl+oxU79O+Z/iPwfbzadWexN5OLD/Bpe18/8EV6aRKUCop0ZG7yFSQYWkq97A39vuwsaJBy6SGH5TI6lLde5vT2DhRoe7FzbiL8l97UwyXde7Nv1qpHtM6WVE8o4zUK0dWfVUrkPehvb/dTBwKH940+idazgNbfGYMCmVtDYsYIk3QdZJFkA/C6+J5GAt1QdHJ+N2Me/kG5eeUqRtLTBQsPv5w2kIOdocEX2pCbaErsfj0YyqwE+tiZASm8fCH7/Z+fQTa1IooUrflcv3jo94pn2u3OSs01KkZ8DS0UcNzXrIu4CpM1tHkjsZsh8SBCHeYVXyvdxdXr+urqOwrCQoeC95JcaSaWD9m/GvBO5qx5lBvlD0HM8l2udbSnU0P63AU9skBCaG/XjutY6hp6IBCtc1dOBB6zRbO5bq4rmh97jplzhnknQFoh5ES2UxHSTWNu9cvD3H02wUyg6zIlcNXraDrm9bifaZBw8ZXLe9J9UdTSKq19sRx6uUuvfvUqkBH0H0OcTpgwdCCUzHqfCFa+yK3nhJ3IgkeWQPVvuYlFLIeH1vfA0BN038q4HSHyABGVIdAwk144ZKSn4iGDc0cqOtm4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(346002)(376002)(136003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(26005)(2616005)(478600001)(71200400001)(6512007)(6506007)(122000001)(38100700002)(38070700009)(82960400001)(921008)(86362001)(36756003)(2906002)(7416002)(4001150100001)(41300700001)(5660300002)(110136005)(76116006)(316002)(6486002)(91956017)(66946007)(66556008)(66476007)(66446008)(64756008)(8676002)(8936002)(309714004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Qlk1YnI4NTllUmVvQzgxOVZ5dFROVGs3ZHFKWmZsZHVHQ3V3Wm4yY3ozUlI0?=
- =?utf-8?B?MFludkdKczdYcXFqc0VyZGgwRkRKU280NTV6a3VPQWhWY1hrOUZzS1Bjb2lN?=
- =?utf-8?B?MlEwbXB1UXIxQWVFdjFZT1dRTUgrMlV2cm1abFU3bnplNnhEVkl3bVAvaXRK?=
- =?utf-8?B?YWdNbThWRThGSW8remFBZDVabUJjUDhMOFQ1eElFbWtPQTlFejVleHk1aC8w?=
- =?utf-8?B?bEtSbnVLMFppYjlIU1ltVlI5Z0NlLzFRd3gwalFicG9JL1p6b3g4cUxuNndh?=
- =?utf-8?B?UVhEazduU1hXb0F3cjV1MzNrSTkwVTBXWlh0Tkl6K2hwRXlsbkZpSXpOTUVV?=
- =?utf-8?B?MThrT0ttNTBRQUhJa2Focm9CbWVUekZETHdoL1BERlQycFZlNmk1TEVkV2lt?=
- =?utf-8?B?c0s2MkFDV2I4NUxJNnFmcjdpYXZ6WFJueVFJSmJpaW13SWxucmhJNDBRN0Iw?=
- =?utf-8?B?RzNFN3dwL05TbHdoRDdSWmpBN2dLUXpaei9ucVJrUWk0RHkyZTFscWdZakZt?=
- =?utf-8?B?dWRzeEFOczFGRzJKY1BWNC9yeTR3SW1XNzd6b0hCdllpNTFQY0RlMVF2TWs1?=
- =?utf-8?B?N2kxbHpzcm5TRXVxdndOZWl6V0lncTZDbXVub2tXVXJuZERXRGZwaDZEbnE3?=
- =?utf-8?B?V3RxdS9PeTZiRTJrckZNTzRqcXVJN2FLYlJtTUJQWkl1ZklIeDBUWjRDRzV3?=
- =?utf-8?B?WFBGejJuRFBqOVVIaWhBaERkR3pYQ0MwRXF5Y2U2TUpaWlNEMkphU3RYMHZY?=
- =?utf-8?B?Q0Z6MFg2YmVOOWtDUzhiVWgyNXNhSmo5MFkzK2NwRHVnQUJnbmFxZnE0M1M5?=
- =?utf-8?B?YWRCei9GUXAvbFE3allLTTl1b0RNTE5UZGxUQ1NCc29INHczMm8xR2ZmZTRm?=
- =?utf-8?B?MXBuN0U2RTRRU0ZCOUdLeVIvVnZzcDRkM3A3ZGdZQ1hhMHNaZUtRZ1ZiZE53?=
- =?utf-8?B?ZzhXNkg5WUtYTkcrRzgyRitUMlBJbVdGaWRaRjZaZHJMSFJaWXpuZVd3TUJN?=
- =?utf-8?B?Q0RrSWdEcGs4aStMcUFJQzhvOHpjVkpqN1RkUGk5MGN6YXNyVEt1d29TMGZ6?=
- =?utf-8?B?REIwRVpScVdETXZsWXRITENyNFM5andocW5yVHd5cmVjS0xqVkYwWXdFUFpE?=
- =?utf-8?B?NVU0d2laSG9PWFBLYlNUUDZSMnBoTGdyemNpU3JKdG5lQ0Z1SGdLM1FZUHo2?=
- =?utf-8?B?aUF3djFuUUFqdWYzYXB5MDhGdm8zU1JPQ0J2eUZUcGhaeXB6NkxHcmZ0azcr?=
- =?utf-8?B?cGUwRzU2SU95SzgyRUhTWUhOMm5OcjZOSU1nUmhjdk9EZFVBNUQ4S3hVVGVz?=
- =?utf-8?B?dW1wY0ZMNU5RMEZwR1k1cnVmdU1MRmNrcHc5ejMxOE9tQVFNZ0xRQStKNUJh?=
- =?utf-8?B?TnN1YitIeW1jWHpzbTVUaHd3QnNxakJiaUQ0R3U4OXNRWkVuSFpCa2Zzb0Rw?=
- =?utf-8?B?QUZHcEVBR3hLMGswY3N1anRkVm5Nbnlra0dQWk94b3VGMUhjYVI4NnBXNXZp?=
- =?utf-8?B?RVB3bnNYaVhuRFJnaTNhMElFMnExNEszMEwwZ0JudW1KZ2VQNHNCY1IvLzdo?=
- =?utf-8?B?OUFqVTNhWmhrUzZRTTk3UnpPcTA2bzYycTlCN3ppSjZnZ0RtNkh0aE4zVDJr?=
- =?utf-8?B?b3RLWk5XR0Y2YmRnMjA0U3hLY1hFdEYzRnpNQWFWOWRFQm9XVWh3MTBrSnVN?=
- =?utf-8?B?TVpSQVRPQnJ6WkFnTkU4d2Q3N2wxYXBSQnlBbFNpbnltWmVrdzk1Yld5TGxn?=
- =?utf-8?B?RkNYL1A2WmtPQjU3Z2JvRmw3ajdJeWRLenBXaTRMbnpnOGRqUkFlSTRIaGhh?=
- =?utf-8?B?MlU0aGJhYmtDVnkrTmg5QkN6endUYndlMzU4MkFMaTFRTzdSZGRjNlFBL2d4?=
- =?utf-8?B?MCt6RmdyMkR3SEJxQmxVZVlaUEVUcTIzdW1iZWZsYzB4Nnp4RWh1NEE4dlJJ?=
- =?utf-8?B?OEFpeVI0ZEdBeFVhUWhQbDhoNjI1SWozbTNYUGZGRldNMFpacG12RG5icmpZ?=
- =?utf-8?B?TlpnZGdrNC9nbGQ5WGc4YzZ5YVMxcmpDYmtEenVQSDI0UWh3N0lHa0U4NkdG?=
- =?utf-8?B?SzI5emdEMytwWCtvV2dxSEpxdzNKU1I5ZytYRU5wMjlETmFJTDhwQ0NqVEhu?=
- =?utf-8?B?eFJPd2dPeGU4RzNpODQvWUhhTnByaXpaaGk1RVhtaFVHRStsNXlya0JiUmdr?=
- =?utf-8?B?V0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9A3297CDD6C2BD4396116C00EBDAF786@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9964EA
+	for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 22:56:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701154573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ch3OE1ozu2gGY8h80hPSM9UE3L6wgjuXbkMspcLV54s=;
+	b=Iqi/N3CjIZd31ZtGlu+4Jyb793TBIb3mlpFdCX6bg48mlj9w0ceRQHxKSZq5sMbyDSvJ1j
+	IxD3kUtHYlRzyTfIa0hf9DbPU+k2fKEPHT6eBJyf59Z+vd8XARRpAinHJV1Tw3BrRphJ9Y
+	kJc7oceNgtvUfWpTfEvrCpCU9/w4coM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-6K5FIGEFP4mWNIKi8dOcZQ-1; Tue, 28 Nov 2023 01:56:11 -0500
+X-MC-Unique: 6K5FIGEFP4mWNIKi8dOcZQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-333030e0708so1194727f8f.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 22:56:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701154570; x=1701759370;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ch3OE1ozu2gGY8h80hPSM9UE3L6wgjuXbkMspcLV54s=;
+        b=pZ5Lp0fiiSXAWJ/KLyGJtmMMpoJh6gRLVECXhb0JoGDr8t96jStOin1vMGYVxYa4Ok
+         vRrbny0m/EZbYSj6aO7/1+Z3Cv2csvCWgs/eRlDXIo9p2GMrAqCxOmZolATYfqmKNAjU
+         ldcOZPVSN2ZMzM6jzXBvE20n9CSbBGDJrS3wfCcgg0RW9RS76DVFwLzzx6UBXArqpr4j
+         65P3dnIKgyBaOsmeWcNkiV4+LpjjfsOejcsJhGG6SwMV8BDO7cCndAzv7VXW4o/GAYL+
+         Nz8C6VEeW7zBvHOULPNNsco5a+4pRju8zIOPg10pZq6S/Kpald8Vi4Ns/E3Gmo2csgdG
+         YpPw==
+X-Gm-Message-State: AOJu0Yz6MgoE+wp6/kujy5RqDbW0jvtlHXKRkaGAZfhipE3ODEJw0+0r
+	kAfe7K4Jc+5+GMs2T69jaN+GCxYjPwnBSVIieBgFoLMdsU23Vs2MrxiBzEHkVss9Jm5nm3tNI9g
+	lo8S411Di5RFMocxVCIXJCWw8
+X-Received: by 2002:a05:6000:183:b0:332:d060:c7e2 with SMTP id p3-20020a056000018300b00332d060c7e2mr9775739wrx.3.1701154570249;
+        Mon, 27 Nov 2023 22:56:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFdJHZLsBu/zyS6DfoQUfP78E9xsHwlMtJuzM/aA154AvvOhwjjUdU6mZr/DsTKEzgLoV/Slw==
+X-Received: by 2002:a05:6000:183:b0:332:d060:c7e2 with SMTP id p3-20020a056000018300b00332d060c7e2mr9775719wrx.3.1701154569865;
+        Mon, 27 Nov 2023 22:56:09 -0800 (PST)
+Received: from starship ([77.137.131.4])
+        by smtp.gmail.com with ESMTPSA id o10-20020adfcf0a000000b00332cda91c85sm13950140wrj.12.2023.11.27.22.56.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Nov 2023 22:56:09 -0800 (PST)
+Message-ID: <98eee37ed7f4b7b9c16bccbe41737e47a116d1f1.camel@redhat.com>
+Subject: Re: [RFC 02/33] KVM: x86: Introduce KVM_CAP_APIC_ID_GROUPS
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ pbonzini@redhat.com, seanjc@google.com, vkuznets@redhat.com,
+ anelkz@amazon.com,  graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com,
+ corbert@lwn.net,  kys@microsoft.com, haiyangz@microsoft.com,
+ decui@microsoft.com, x86@kernel.org,  linux-doc@vger.kernel.org, Anel
+ Orazgaliyeva <anelkz@amazon.de>
+Date: Tue, 28 Nov 2023 08:56:07 +0200
+In-Reply-To: <20231108111806.92604-3-nsaenz@amazon.com>
+References: <20231108111806.92604-1-nsaenz@amazon.com>
+	 <20231108111806.92604-3-nsaenz@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e0ff278-0d3a-4ffe-4334-08dbef97274f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2023 22:21:07.9914
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rx4cnIO5j2y9K6EAiiqDKaNqXDI94WvuySkGnFTqbJbKXjQvxo1GHzS+vszEIqOBq0DeQAQnfu1X4i9tilYms3NB0TQGX8tUARR1NRSXyOM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7401
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7bit
 
-T24gVHVlLCAyMDIzLTExLTIxIGF0IDEzOjIwIC0wODAwLCBtaGtlbGxleTU4QGdtYWlsLmNvbSB3
-cm90ZToKPiAtLS0gYS9hcmNoL3g4Ni9tbS9wYXQvc2V0X21lbW9yeS5jCj4gKysrIGIvYXJjaC94
-ODYvbW0vcGF0L3NldF9tZW1vcnkuYwo+IEBAIC0xNjM2LDcgKzE2MzYsMTAgQEAgc3RhdGljIGlu
-dCBfX2NoYW5nZV9wYWdlX2F0dHIoc3RydWN0IGNwYV9kYXRhCj4gKmNwYSwgaW50IHByaW1hcnkp
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKi8KPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoGlmIChwdGVfdmFsKG9sZF9wdGUpICE9IHB0ZV92YWwobmV3X3B0ZSkp
-IHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzZXRf
-cHRlX2F0b21pYyhrcHRlLCBuZXdfcHRlKTsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoGNwYS0+ZmxhZ3MgfD0gQ1BBX0ZMVVNIVExCOwo+ICsKPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qIElmIG9sZF9wdGUg
-aXNuJ3QgcHJlc2VudCwgaXQncyBub3QgaW4gdGhlCj4gVExCICovCj4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocHRlX3ByZXNlbnQob2xkX3B0ZSkp
-Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgY3BhLT5mbGFncyB8PSBDUEFfRkxVU0hUTEI7Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB9Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjcGEtPm51
-bXBhZ2VzID0gMTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+
-IAoKTWFrZXMgc2Vuc2UgdG8gbWUuIFRoZSBQTUQgY2FzZSBjYW4gYmUgaGFuZGxlZCBzaW1pbGFy
-bHkgaW4KX19zaG91bGRfc3BsaXRfbGFyZ2VfcGFnZSgpLgoKSSBhbHNvIHRoaW5rIGl0IHNob3Vs
-ZCBiZSBtb3JlIHJvYnVzdCBpbiByZWdhcmRzIHRvIHRoZSBjYWNoZSBmbHVzaGluZwpjaGFuZ2Vz
-LgoKSWYgY2FsbGVycyBkaWQ6CnNldF9tZW1vcnlfbnAoKQpzZXRfbWVtb3J5X3VjKCkKc2V0X21l
-bW9yeV9wKCkKClRoZW4gdGhlIGNhY2hlIGZsdXNoIHdvdWxkIGJlIG1pc3NlZC4gSSBkb24ndCB0
-aGluayBhbnlvbmUgaXMsIGJ1dCB3ZQpzaG91bGRuJ3QgaW50cm9kdWNlIGhpZGRlbiB0aGluZ3Mg
-bGlrZSB0aGF0LiBNYXliZSBmaXggaXQgbGlrZSB0aGlzOgoKZGlmZiAtLWdpdCBhL2FyY2gveDg2
-L21tL3BhdC9zZXRfbWVtb3J5LmMKYi9hcmNoL3g4Ni9tbS9wYXQvc2V0X21lbW9yeS5jCmluZGV4
-IGY1MTllNWNhNTQzYi4uMjhmZjUzYTQ0NDdhIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9tbS9wYXQv
-c2V0X21lbW9yeS5jCisrKyBiL2FyY2gveDg2L21tL3BhdC9zZXRfbWVtb3J5LmMKQEAgLTE4NTYs
-MTEgKzE4NTYsNiBAQCBzdGF0aWMgaW50IGNoYW5nZV9wYWdlX2F0dHJfc2V0X2Nscih1bnNpZ25l
-ZApsb25nICphZGRyLCBpbnQgbnVtcGFnZXMsCiAKICAgICAgICByZXQgPSBfX2NoYW5nZV9wYWdl
-X2F0dHJfc2V0X2NscigmY3BhLCAxKTsKIAotICAgICAgIC8qCi0gICAgICAgICogQ2hlY2sgd2hl
-dGhlciB3ZSByZWFsbHkgY2hhbmdlZCBzb21ldGhpbmc6Ci0gICAgICAgICovCi0gICAgICAgaWYg
-KCEoY3BhLmZsYWdzICYgQ1BBX0ZMVVNIVExCKSkKLSAgICAgICAgICAgICAgIGdvdG8gb3V0Owog
-CiAgICAgICAgLyoKICAgICAgICAgKiBObyBuZWVkIHRvIGZsdXNoLCB3aGVuIHdlIGRpZCBub3Qg
-c2V0IGFueSBvZiB0aGUgY2FjaGluZwpAQCAtMTg2OCw2ICsxODYzLDEyIEBAIHN0YXRpYyBpbnQg
-Y2hhbmdlX3BhZ2VfYXR0cl9zZXRfY2xyKHVuc2lnbmVkCmxvbmcgKmFkZHIsIGludCBudW1wYWdl
-cywKICAgICAgICAgKi8KICAgICAgICBjYWNoZSA9ICEhcGdwcm90MmNhY2hlbW9kZShtYXNrX3Nl
-dCk7CiAKKyAgICAgICAvKgorICAgICAgICAqIENoZWNrIHdoZXRoZXIgd2UgcmVhbGx5IGNoYW5n
-ZWQgc29tZXRoaW5nOgorICAgICAgICAqLworICAgICAgIGlmICghKGNwYS5mbGFncyAmIENQQV9G
-TFVTSFRMQikgJiYgIWNhY2hlKQorICAgICAgICAgICAgICAgZ290byBvdXQ7CisKICAgICAgICAv
-KgogICAgICAgICAqIE9uIGVycm9yOyBmbHVzaCBldmVyeXRoaW5nIHRvIGJlIHN1cmUuCiAgICAg
-ICAgICovCgpIbW0sIG1pZ2h0IHdhbnQgdG8gbWFpbnRhaW4gdGhlICJPbiBlcnJvcjsgZmx1c2gg
-ZXZlcnl0aGluZyB0byBiZSBzdXJlIgpsb2dpYyBpbiB0aGUgTlAtPlAgY2FzZSBhcyB3ZWxsLgo=
+On Wed, 2023-11-08 at 11:17 +0000, Nicolas Saenz Julienne wrote:
+> From: Anel Orazgaliyeva <anelkz@amazon.de>
+> 
+> Introduce KVM_CAP_APIC_ID_GROUPS, this capability segments the VM's APIC
+> ids into two. The lower bits, the physical APIC id, represent the part
+> that's exposed to the guest. The higher bits, which are private to KVM,
+> groups APICs together. APICs in different groups are isolated from each
+> other, and IPIs can only be directed at APICs that share the same group
+> as its source. Furthermore, groups are only relevant to IPIs, anything
+> incoming from outside the local APIC complex: from the IOAPIC, MSIs, or
+> PV-IPIs is targeted at the default APIC group, group 0.
+> 
+> When routing IPIs with physical destinations, KVM will OR the source's
+> vCPU APIC group with the ICR's destination ID and use that to resolve
+> the target lAPIC. The APIC physical map is also made group aware in
+> order to speed up this process. For the sake of simplicity, the logical
+> map is not built while KVM_CAP_APIC_ID_GROUPS is in use and we defer IPI
+> routing to the slower per-vCPU scan method.
+> 
+> This capability serves as a building block to implement virtualisation
+> based security features like Hyper-V's Virtual Secure Mode (VSM). VSM
+> introduces a para-virtualised switch that allows for guest CPUs to jump
+> into a different execution context, this switches into a different CPU
+> state, lAPIC state, and memory protections. We model this in KVM by
+> using distinct kvm_vcpus for each context. Moreover, execution contexts
+> are hierarchical and its APICs are meant to remain functional even when
+> the context isn't 'scheduled in'. For example, we have to keep track of
+> timers' expirations, and interrupt execution of lesser priority contexts
+> when relevant. Hence the need to alias physical APIC ids, while keeping
+> the ability to target specific execution contexts.
+
+
+A few general remarks on this patch (assuming that we don't go with
+the approach of a VM per VTL, in which case this patch is not needed)
+
+-> This feature has to be done in the kernel because vCPUs sharing same VTL,
+   will have same APIC ID.
+   (In addition to that, APIC state is private to a VTL so each VTL
+   can even change its apic id).
+
+   Because of this KVM has to have at least some awareness of this.
+
+-> APICv/AVIC should be supported with VTL eventually: 
+   This is thankfully possible by having separate physid/pid tables per VTL,
+   and will mostly just work but needs KVM awareness.
+
+-> I am somewhat against reserving bits in apic id, because that will limit
+   the number of apic id bits available to userspace. Currently this is not
+   a problem but it might be in the future if for some reason the userspace
+   will want an apic id with high bits set.
+
+   But still things change, and with this being part of KVM's ABI, it might backfire.
+   A better idea IMHO is just to have 'APIC namespaces', which like say PID namespaces,
+   such as each namespace is isolated IPI wise on its own, and let each vCPU belong to
+   a one namespace.
+
+   In fact Intel's PRM has a brief mention of a 'hierarchical cluster' mode in which
+   roughly describes this situation in which there are multiple not interconnected APIC buses, 
+   and communication between them needs a 'cluster manager device'
+
+   However I don't think that we need an explicit pairs of vCPUs and VTL awareness in the kernel
+   all of this I think can be done in userspace.
+
+   TL;DR: Lets have APIC namespace. a vCPU can belong to a single namespace, and all vCPUs
+   in a namespace send IPIs to each other and know nothing about vCPUs from other namespace.
+   
+   A vCPU sending IPI to a different VTL thankfully can only do this using a hypercall,
+   and thus can be handled in the userspace.
+
+
+Overall though IMHO the approach of a VM per VTL is better unless some show stoppers show up.
+If we go with a VM per VTL, we gain APIC namespaces for free, together with AVIC support and
+such.
+
+Best regards,
+	Maxim Levitsky
+
+
+> 
+> Signed-off-by: Anel Orazgaliyeva <anelkz@amazon.de>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  3 ++
+>  arch/x86/include/uapi/asm/kvm.h |  5 +++
+>  arch/x86/kvm/lapic.c            | 59 ++++++++++++++++++++++++++++-----
+>  arch/x86/kvm/lapic.h            | 33 ++++++++++++++++++
+>  arch/x86/kvm/x86.c              | 15 +++++++++
+>  include/uapi/linux/kvm.h        |  2 ++
+>  6 files changed, 108 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index dff10051e9b6..a2f224f95404 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1298,6 +1298,9 @@ struct kvm_arch {
+>  	struct rw_semaphore apicv_update_lock;
+>  	unsigned long apicv_inhibit_reasons;
+>  
+> +	u32 apic_id_group_mask;
+> +	u8 apic_id_group_shift;
+> +
+>  	gpa_t wall_clock;
+>  
+>  	bool mwait_in_guest;
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index a448d0964fc0..f73d137784d7 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -565,4 +565,9 @@ struct kvm_pmu_event_filter {
+>  #define KVM_X86_DEFAULT_VM	0
+>  #define KVM_X86_SW_PROTECTED_VM	1
+>  
+> +/* for KVM_SET_APIC_ID_GROUPS */
+> +struct kvm_apic_id_groups {
+> +	__u8 n_bits; /* nr of bits used to represent group in the APIC ID */
+> +};
+> +
+>  #endif /* _ASM_X86_KVM_H */
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 3e977dbbf993..f55d216cb2a0 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -141,7 +141,7 @@ static inline int apic_enabled(struct kvm_lapic *apic)
+>  
+>  static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
+>  {
+> -	return apic->vcpu->vcpu_id;
+> +	return kvm_apic_id(apic->vcpu);
+>  }
+>  
+>  static bool kvm_can_post_timer_interrupt(struct kvm_vcpu *vcpu)
+> @@ -219,8 +219,8 @@ static int kvm_recalculate_phys_map(struct kvm_apic_map *new,
+>  				    bool *xapic_id_mismatch)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+> -	u32 x2apic_id = kvm_x2apic_id(apic);
+> -	u32 xapic_id = kvm_xapic_id(apic);
+> +	u32 x2apic_id = kvm_apic_id_and_group(vcpu);
+> +	u32 xapic_id = kvm_apic_id_and_group(vcpu);
+>  	u32 physical_id;
+>  
+>  	/*
+> @@ -299,6 +299,13 @@ static void kvm_recalculate_logical_map(struct kvm_apic_map *new,
+>  	u16 mask;
+>  	u32 ldr;
+>  
+> +	/*
+> +	 * Using maps for logical destinations when KVM_CAP_APIC_ID_GRUPS is in
+> +	 * use isn't supported.
+> +	 */
+> +	if (kvm_apic_group(vcpu))
+> +		new->logical_mode = KVM_APIC_MODE_MAP_DISABLED;
+> +
+>  	if (new->logical_mode == KVM_APIC_MODE_MAP_DISABLED)
+>  		return;
+>  
+> @@ -370,6 +377,25 @@ enum {
+>  	DIRTY
+>  };
+>  
+> +int kvm_vm_ioctl_set_apic_id_groups(struct kvm *kvm,
+> +				    struct kvm_apic_id_groups *groups)
+> +{
+> +	u8 n_bits = groups->n_bits;
+> +
+> +	if (n_bits > 32)
+> +		return -EINVAL;
+> +
+> +	kvm->arch.apic_id_group_mask = n_bits ? GENMASK(31, 32 - n_bits): 0;
+> +	/*
+> +	 * Bitshifts >= than the width of the type are UD, so set the
+> +	 * apic group shift to 0 when n_bits == 0. The group mask above will
+> +	 * clear the APIC ID, so group querying functions will return the
+> +	 * correct value.
+> +	 */
+> +	kvm->arch.apic_id_group_shift = n_bits ? 32 - n_bits : 0;
+> +	return 0;
+> +}
+> +
+>  void kvm_recalculate_apic_map(struct kvm *kvm)
+>  {
+>  	struct kvm_apic_map *new, *old = NULL;
+> @@ -414,7 +440,7 @@ void kvm_recalculate_apic_map(struct kvm *kvm)
+>  
+>  	kvm_for_each_vcpu(i, vcpu, kvm)
+>  		if (kvm_apic_present(vcpu))
+> -			max_id = max(max_id, kvm_x2apic_id(vcpu->arch.apic));
+> +			max_id = max(max_id, kvm_apic_id_and_group(vcpu));
+>  
+>  	new = kvzalloc(sizeof(struct kvm_apic_map) +
+>  	                   sizeof(struct kvm_lapic *) * ((u64)max_id + 1),
+> @@ -525,7 +551,7 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
+>  {
+>  	u32 ldr = kvm_apic_calc_x2apic_ldr(id);
+>  
+> -	WARN_ON_ONCE(id != apic->vcpu->vcpu_id);
+> +	WARN_ON_ONCE(id != kvm_apic_id(apic->vcpu));
+>  
+>  	kvm_lapic_set_reg(apic, APIC_ID, id);
+>  	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
+> @@ -1067,6 +1093,17 @@ bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, struct kvm_lapic *source,
+>  	struct kvm_lapic *target = vcpu->arch.apic;
+>  	u32 mda = kvm_apic_mda(vcpu, dest, source, target);
+>  
+> +	/*
+> +	 * Make sure vCPUs belong to the same APIC group, it's not possible
+> +	 * to send interrupts across groups.
+> +	 *
+> +	 * Non-IPIs and PV-IPIs can only be injected into the default APIC
+> +	 * group (group 0).
+> +	 */
+> +	if ((source && !kvm_match_apic_group(source->vcpu, vcpu)) ||
+> +	    kvm_apic_group(vcpu))
+> +		return false;
+> +
+>  	ASSERT(target);
+>  	switch (shorthand) {
+>  	case APIC_DEST_NOSHORT:
+> @@ -1518,6 +1555,10 @@ void kvm_apic_send_ipi(struct kvm_lapic *apic, u32 icr_low, u32 icr_high)
+>  	else
+>  		irq.dest_id = GET_XAPIC_DEST_FIELD(icr_high);
+>  
+> +	if (irq.dest_mode == APIC_DEST_PHYSICAL)
+> +		kvm_apic_id_set_group(apic->vcpu->kvm,
+> +				      kvm_apic_group(apic->vcpu), &irq.dest_id);
+> +
+>  	trace_kvm_apic_ipi(icr_low, irq.dest_id);
+>  
+>  	kvm_irq_delivery_to_apic(apic->vcpu->kvm, apic, &irq, NULL);
+> @@ -2541,7 +2582,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
+>  	/* update jump label if enable bit changes */
+>  	if ((old_value ^ value) & MSR_IA32_APICBASE_ENABLE) {
+>  		if (value & MSR_IA32_APICBASE_ENABLE) {
+> -			kvm_apic_set_xapic_id(apic, vcpu->vcpu_id);
+> +			kvm_apic_set_xapic_id(apic, kvm_apic_id(vcpu));
+>  			static_branch_slow_dec_deferred(&apic_hw_disabled);
+>  			/* Check if there are APF page ready requests pending */
+>  			kvm_make_request(KVM_REQ_APF_READY, vcpu);
+> @@ -2553,9 +2594,9 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
+>  
+>  	if ((old_value ^ value) & X2APIC_ENABLE) {
+>  		if (value & X2APIC_ENABLE)
+> -			kvm_apic_set_x2apic_id(apic, vcpu->vcpu_id);
+> +			kvm_apic_set_x2apic_id(apic, kvm_apic_id(vcpu));
+>  		else if (value & MSR_IA32_APICBASE_ENABLE)
+> -			kvm_apic_set_xapic_id(apic, vcpu->vcpu_id);
+> +			kvm_apic_set_xapic_id(apic, kvm_apic_id(vcpu));
+>  	}
+>  
+>  	if ((old_value ^ value) & (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE)) {
+> @@ -2685,7 +2726,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  
+>  	/* The xAPIC ID is set at RESET even if the APIC was already enabled. */
+>  	if (!init_event)
+> -		kvm_apic_set_xapic_id(apic, vcpu->vcpu_id);
+> +		kvm_apic_set_xapic_id(apic, kvm_apic_id(vcpu));
+>  	kvm_apic_set_version(apic->vcpu);
+>  
+>  	for (i = 0; i < apic->nr_lvt_entries; i++)
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index e1021517cf04..542bd208e52b 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -97,6 +97,8 @@ void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
+>  void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
+>  void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
+>  u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
+> +int kvm_vm_ioctl_set_apic_id_groups(struct kvm *kvm,
+> +				    struct kvm_apic_id_groups *groups);
+>  void kvm_recalculate_apic_map(struct kvm *kvm);
+>  void kvm_apic_set_version(struct kvm_vcpu *vcpu);
+>  void kvm_apic_after_set_mcg_cap(struct kvm_vcpu *vcpu);
+> @@ -277,4 +279,35 @@ static inline u8 kvm_xapic_id(struct kvm_lapic *apic)
+>  	return kvm_lapic_get_reg(apic, APIC_ID) >> 24;
+>  }
+>  
+> +static inline u32 kvm_apic_id(struct kvm_vcpu *vcpu)
+> +{
+> +	return vcpu->vcpu_id & ~vcpu->kvm->arch.apic_id_group_mask;
+> +}
+> +
+> +static inline u32 kvm_apic_id_and_group(struct kvm_vcpu *vcpu)
+> +{
+> +	return vcpu->vcpu_id;
+> +}
+> +
+> +static inline u32 kvm_apic_group(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +
+> +	return (vcpu->vcpu_id & kvm->arch.apic_id_group_mask) >>
+> +	       kvm->arch.apic_id_group_shift;
+> +}
+> +
+> +static inline void kvm_apic_id_set_group(struct kvm *kvm, u32 group,
+> +					 u32 *apic_id)
+> +{
+> +	*apic_id |= ((group << kvm->arch.apic_id_group_shift) &
+> +		     kvm->arch.apic_id_group_mask);
+> +}
+> +
+> +static inline bool kvm_match_apic_group(struct kvm_vcpu *src,
+> +					struct kvm_vcpu *dst)
+> +{
+> +	return kvm_apic_group(src) == kvm_apic_group(dst);
+> +}
+> +
+>  #endif
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index e3eb608b6692..4cd3f00475c1 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4526,6 +4526,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_VM_DISABLE_NX_HUGE_PAGES:
+>  	case KVM_CAP_IRQFD_RESAMPLE:
+>  	case KVM_CAP_MEMORY_FAULT_INFO:
+> +	case KVM_CAP_APIC_ID_GROUPS:
+>  		r = 1;
+>  		break;
+>  	case KVM_CAP_EXIT_HYPERCALL:
+> @@ -7112,6 +7113,20 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>  		r = kvm_vm_ioctl_set_msr_filter(kvm, &filter);
+>  		break;
+>  	}
+> +	case KVM_SET_APIC_ID_GROUPS: {
+> +		struct kvm_apic_id_groups groups;
+> +
+> +		r = -EINVAL;
+> +		if (kvm->created_vcpus)
+> +			goto out;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&groups, argp, sizeof(groups)))
+> +			goto out;
+> +
+> +		r = kvm_vm_ioctl_set_apic_id_groups(kvm, &groups);
+> +		break;
+> +	}
+>  	default:
+>  		r = -ENOTTY;
+>  	}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 5b5820d19e71..d7a01766bf21 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1219,6 +1219,7 @@ struct kvm_ppc_resize_hpt {
+>  #define KVM_CAP_MEMORY_ATTRIBUTES 232
+>  #define KVM_CAP_GUEST_MEMFD 233
+>  #define KVM_CAP_VM_TYPES 234
+> +#define KVM_CAP_APIC_ID_GROUPS 235
+>  
+>  #ifdef KVM_CAP_IRQ_ROUTING
+>  
+> @@ -2307,4 +2308,5 @@ struct kvm_create_guest_memfd {
+>  
+>  #define KVM_GUEST_MEMFD_ALLOW_HUGEPAGE		(1ULL << 0)
+>  
+> +#define KVM_SET_APIC_ID_GROUPS _IOW(KVMIO, 0xd7, struct kvm_apic_id_groups)
+>  #endif /* __LINUX_KVM_H */
+
+
+
+
 
