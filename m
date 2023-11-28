@@ -1,67 +1,67 @@
-Return-Path: <linux-hyperv+bounces-1092-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1093-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9FAC7FB312
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 08:46:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD5307FB340
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 08:53:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3EA37B20DE6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 07:46:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9546A281ED6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 07:53:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F8A14001;
-	Tue, 28 Nov 2023 07:46:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0005156C2;
+	Tue, 28 Nov 2023 07:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UiIGG7Gr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPfT+/II"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B32D41
-	for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:46:13 -0800 (PST)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C14D64
+	for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:53:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701157572;
+	s=mimecast20190719; t=1701157993;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wb25FdrboGaZvJETW0bMwe9DFjRK33J4XlIEQW2L1fM=;
-	b=UiIGG7GrpgxorCGtlqZ6UMl/K2gEJ3HXxFFlRqJE0jxxJUh36GPK0tb72LPhmGfKQkMjnc
-	nLCWsO1tKdY0TGWJYwug3PXboSRy6XwwsVh4RqvFeO3wU+EOpU8vHRtbZvHYn3r53ITmXZ
-	d+1ONn2Yz2Kup4+NoUmqStjqeHLIIoU=
+	bh=jjvXCqaDg/PDFR1CIU19n539Mqy9U46sCLk0Pho1wkM=;
+	b=TPfT+/II64ViUH2Bx8u7nNqBcdy9UPQLqjsYDeBW8m1Z8Rt1QNmuEQhECb3WNfLPdtvQWP
+	93NO2kOz1jtQNlBrqOqBwVj41sAq/DE8Et0ij/uqE+xkPGP2VdSKrezzDU03ngsOzefyww
+	snlbVO4Pqe45y7BMpt8Gql0CwRd3qdA=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-397-brzYQb-XN-maWnvcSLFUaQ-1; Tue, 28 Nov 2023 02:46:11 -0500
-X-MC-Unique: brzYQb-XN-maWnvcSLFUaQ-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40b2977d7c5so30142965e9.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:46:11 -0800 (PST)
+ us-mta-270-XhhMdxiqPkaNWJikh1w2tw-1; Tue, 28 Nov 2023 02:53:11 -0500
+X-MC-Unique: XhhMdxiqPkaNWJikh1w2tw-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40b29868c6eso30171135e9.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Nov 2023 23:53:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701157570; x=1701762370;
+        d=1e100.net; s=20230601; t=1701157990; x=1701762790;
         h=content-transfer-encoding:mime-version:user-agent:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wb25FdrboGaZvJETW0bMwe9DFjRK33J4XlIEQW2L1fM=;
-        b=iIVlZi1OZv+sQmv2y11FyC7wpTQ8MojvmY6+QDV5GRuvcWirUiaN7JMKwMVE23d8z3
-         wCv0X4QMwC4hJeK3PSQL+0ZiEQwBGpHVTvdDIRpMMvfFDNV2/sI2TJ5UZ23alb3XFuG4
-         c1SxZyprSUFsjOsbTCDxRHic8b0s0ozv/QwI54KEI9f62NTGElWdKCSgzqhGQ6/J4IC6
-         Ir3XWPL7mLn80akbe7z0S71JUGgNR+FqKX1ZbmoU88RBkDC3QbMLkFbJ5Mc71H4dBizl
-         LJ7REiuPC+BDLmWXjyA6xvsrKvw5/YgTEjH/ENwrNcKjODElSbF1/V1aBTaAPfny2IB+
-         lIuA==
-X-Gm-Message-State: AOJu0Yw7E+QgVtvOhXYlb8oSBoT3rSWWHM7FotTBnGacdgrCDs7Fq7/o
-	osDa7+5BxBkFHKmmfQbBe+au71zCjBXQs7CpvtMUOAQdO+EwBF9R+qFFplamJWn2Lb9xo43KEWQ
-	IkZcx/y3QiC6FClrs9zn7V1E0
-X-Received: by 2002:a05:600c:3b87:b0:401:b2c7:34a8 with SMTP id n7-20020a05600c3b8700b00401b2c734a8mr10311403wms.7.1701157570384;
-        Mon, 27 Nov 2023 23:46:10 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFM7X409mjq5z4s/W9dIlio0yKzGMUB5yp4pNmEB/Qs5xVM/kuQuPrmslzwru1Fpb2W+QylOQ==
-X-Received: by 2002:a05:600c:3b87:b0:401:b2c7:34a8 with SMTP id n7-20020a05600c3b8700b00401b2c734a8mr10311382wms.7.1701157570040;
-        Mon, 27 Nov 2023 23:46:10 -0800 (PST)
+        bh=jjvXCqaDg/PDFR1CIU19n539Mqy9U46sCLk0Pho1wkM=;
+        b=ttqThX31aaAnxYddqYHN+aHdBs2sZk3TFgbM5uyds2X3bgdShTo/aWDG6wNr2MqFhP
+         MoPpa9lcM9Xa2t0Slq6b5pt5lPoKJrhWv+NWDOgn9usmdcXibB60l27fChD0tcH9JH5M
+         IatjezbklMqBqqMBF2c9MD/wnDlwfa9z9I4IRGQlbrSJgrOHisZCxJGFVMd5IE0qHkKf
+         3oRs+4PtiB7HCkMtMlA+zcYniaOoZAXCR/aAcvr7v9ZwZdyTF1bdd+ELo1TdU1MoHJcB
+         91oOud4dLGrMskkXUcn+argZsAe9JYA3LFpZBi6MZ8xaymBdUhLlLWCnxOThm+1LfSUL
+         IukA==
+X-Gm-Message-State: AOJu0YxJXaNhM6mtfcgxaoOdj70YiyQMiVRQf7Kl/ad+t2VGbjvxtYEZ
+	lU0Nh+i+pCIHM2aVabvbwkYsUt1xsvUa8Vocb8Sr/9yXnF4ykQqeFD7ufyhF7J7Vg96O9H9jg7n
+	KWNW9GjXR9ZQT3kPwOafIo6sR
+X-Received: by 2002:a05:600c:4312:b0:40a:5b3c:403 with SMTP id p18-20020a05600c431200b0040a5b3c0403mr9591482wme.14.1701157990537;
+        Mon, 27 Nov 2023 23:53:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFkKv1KOQdshB9/dvB9axHpdpJTKux/xN+DaSsnqos22H4Ya2ymZa3yFlYzeR7EMvJI63X0EA==
+X-Received: by 2002:a05:600c:4312:b0:40a:5b3c:403 with SMTP id p18-20020a05600c431200b0040a5b3c0403mr9591465wme.14.1701157990169;
+        Mon, 27 Nov 2023 23:53:10 -0800 (PST)
 Received: from starship ([77.137.131.4])
-        by smtp.gmail.com with ESMTPSA id az15-20020a05600c600f00b0040b2b9bf321sm17200797wmb.9.2023.11.27.23.46.08
+        by smtp.gmail.com with ESMTPSA id c37-20020a05600c4a2500b003fee6e170f9sm16206179wmp.45.2023.11.27.23.53.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 23:46:09 -0800 (PST)
-Message-ID: <c55ae0a19330d3e1d4aaa92f33193d9861bd12bb.camel@redhat.com>
-Subject: Re: [RFC 27/33] KVM: x86/mmu/hyper-v: Validate memory faults
- against per-VTL memprots
+        Mon, 27 Nov 2023 23:53:09 -0800 (PST)
+Message-ID: <4eda2ec5444cc151279d5b571a158a60a5406e1f.camel@redhat.com>
+Subject: Re: [RFC 28/33] x86/hyper-v: Introduce memory intercept message
+ structure
 From: Maxim Levitsky <mlevitsk@redhat.com>
 To: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
@@ -69,10 +69,10 @@ Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
  anelkz@amazon.com,  graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com,
  corbert@lwn.net,  kys@microsoft.com, haiyangz@microsoft.com,
  decui@microsoft.com, x86@kernel.org,  linux-doc@vger.kernel.org
-Date: Tue, 28 Nov 2023 09:46:07 +0200
-In-Reply-To: <20231108111806.92604-28-nsaenz@amazon.com>
+Date: Tue, 28 Nov 2023 09:53:07 +0200
+In-Reply-To: <20231108111806.92604-29-nsaenz@amazon.com>
 References: <20231108111806.92604-1-nsaenz@amazon.com>
-	 <20231108111806.92604-28-nsaenz@amazon.com>
+	 <20231108111806.92604-29-nsaenz@amazon.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
@@ -84,161 +84,163 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
 On Wed, 2023-11-08 at 11:18 +0000, Nicolas Saenz Julienne wrote:
-> Introduce a new step in __kvm_faultin_pfn() that'll validate the
-> fault against the vCPU's VTL protections and generate a user space exit
-> when invalid.
-> 
-> Note that kvm_hv_faultin_pfn() has to be run after resolving the fault
-> against the memslots, since that operation steps over
-> 'fault->map_writable'.
-> 
-> Non VSM users shouldn't see any behaviour change.
+> Introduce struct hv_memory_intercept_message, which is used when issuing
+> memory intercepts to a Hyper-V VSM guest.
 > 
 > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 > ---
->  arch/x86/kvm/hyperv.c  | 66 ++++++++++++++++++++++++++++++++++++++++++
->  arch/x86/kvm/hyperv.h  |  1 +
->  arch/x86/kvm/mmu/mmu.c |  9 +++++-
->  3 files changed, 75 insertions(+), 1 deletion(-)
+>  arch/x86/include/asm/hyperv-tlfs.h | 76 ++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 > 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index bcace0258af1..eb6a4848e306 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -42,6 +42,8 @@
->  #include "irq.h"
->  #include "fpu.h"
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index af594aa65307..d3d74fde6da1 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -799,6 +799,82 @@ struct hv_get_vp_from_apic_id_in {
+>  	u32 apic_ids[];
+>  } __packed;
 >  
-> +#include "mmu/mmu_internal.h"
 > +
->  #define KVM_HV_MAX_SPARSE_VCPU_SET_BITS DIV_ROUND_UP(KVM_MAX_VCPUS, HV_VCPUS_PER_SPARSE_BANK)
->  
->  /*
-> @@ -3032,6 +3034,55 @@ struct kvm_hv_vtl_dev {
->  	struct xarray mem_attrs;
->  };
->  
-> +static struct xarray *kvm_hv_vsm_get_memprots(struct kvm_vcpu *vcpu);
+> +/* struct hv_intercept_header::access_type_mask */
+> +#define HV_INTERCEPT_ACCESS_MASK_NONE    0
+> +#define HV_INTERCEPT_ACCESS_MASK_READ    1
+> +#define HV_INTERCEPT_ACCESS_MASK_WRITE   2
+> +#define HV_INTERCEPT_ACCESS_MASK_EXECUTE 4
 > +
-> +bool kvm_hv_vsm_access_valid(struct kvm_page_fault *fault, unsigned long attrs)
-> +{
-> +	if (attrs == KVM_MEMORY_ATTRIBUTE_NO_ACCESS)
-> +		return false;
+> +/* struct hv_intercept_exception::cache_type */
+> +#define HV_X64_CACHE_TYPE_UNCACHED       0
+> +#define HV_X64_CACHE_TYPE_WRITECOMBINING 1
+> +#define HV_X64_CACHE_TYPE_WRITETHROUGH   4
+> +#define HV_X64_CACHE_TYPE_WRITEPROTECTED 5
+> +#define HV_X64_CACHE_TYPE_WRITEBACK      6
 > +
-> +	/* We should never get here without read permissions, force a fault. */
-> +	if (WARN_ON_ONCE(!(attrs & KVM_MEMORY_ATTRIBUTE_READ)))
-> +		return false;
-> +
-> +	if (fault->write && !(attrs & KVM_MEMORY_ATTRIBUTE_WRITE))
-> +		return false;
-> +
-> +	if (fault->exec && !(attrs & KVM_MEMORY_ATTRIBUTE_EXECUTE))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static unsigned long kvm_hv_vsm_get_memory_attributes(struct kvm_vcpu *vcpu,
-> +						      gfn_t gfn)
-> +{
-> +	struct xarray *prots = kvm_hv_vsm_get_memprots(vcpu);
-> +
-> +	if (!prots)
-> +		return 0;
-> +
-> +	return xa_to_value(xa_load(prots, gfn));
-> +}
-> +
-> +int kvm_hv_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> +{
-> +	unsigned long attrs;
-> +
-> +	attrs = kvm_hv_vsm_get_memory_attributes(vcpu, fault->gfn);
-> +	if (!attrs)
-> +		return RET_PF_CONTINUE;
-> +
-> +	if (kvm_hv_vsm_access_valid(fault, attrs)) {
-> +		fault->map_executable =
-> +			!!(attrs & KVM_MEMORY_ATTRIBUTE_EXECUTE);
-> +		fault->map_writable = !!(attrs & KVM_MEMORY_ATTRIBUTE_WRITE);
-> +		return RET_PF_CONTINUE;
-> +	}
-> +
-> +	return -EFAULT;
-> +}
-> +
->  static int kvm_hv_vtl_get_attr(struct kvm_device *dev,
->  			       struct kvm_device_attr *attr)
->  {
-> @@ -3120,6 +3171,21 @@ static struct kvm_device_ops kvm_hv_vtl_ops = {
->  	.get_attr = kvm_hv_vtl_get_attr,
->  };
->  
-> +static struct xarray *kvm_hv_vsm_get_memprots(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_hv_vtl_dev *vtl_dev;
-> +	struct kvm_device *tmp;
-> +
-> +	list_for_each_entry(tmp, &vcpu->kvm->devices, vm_node)
-> +		if (tmp->ops == &kvm_hv_vtl_ops) {
-> +			vtl_dev = tmp->private;
-> +			if (vtl_dev->vtl == kvm_hv_get_active_vtl(vcpu))
-> +				return &vtl_dev->mem_attrs;
-> +		}
-> +
-> +	return NULL;
-> +}
-> +
->  static int kvm_hv_vtl_create(struct kvm_device *dev, u32 type)
->  {
->  	struct kvm_hv_vtl_dev *vtl_dev;
-> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-> index 3cc664e144d8..ae781b4d4669 100644
-> --- a/arch/x86/kvm/hyperv.h
-> +++ b/arch/x86/kvm/hyperv.h
-> @@ -271,5 +271,6 @@ static inline void kvm_mmu_role_set_hv_bits(struct kvm_vcpu *vcpu,
->  
->  int kvm_hv_vtl_dev_register(void);
->  void kvm_hv_vtl_dev_unregister(void);
-> +int kvm_hv_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
->  
->  #endif
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index a76028aa8fb3..ba454c7277dc 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4374,7 +4374,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
->  					  fault->write, &fault->map_writable,
->  					  &fault->hva);
->  	if (!async)
-> -		return RET_PF_CONTINUE; /* *pfn has correct page already */
-> +		goto pf_continue; /* *pfn has correct page already */
->  
->  	if (!fault->prefetch && kvm_can_do_async_pf(vcpu)) {
->  		trace_kvm_try_async_get_page(fault->addr, fault->gfn);
-> @@ -4395,6 +4395,13 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
->  	fault->pfn = __gfn_to_pfn_memslot(slot, fault->gfn, false, true, NULL,
->  					  fault->write, &fault->map_writable,
->  					  &fault->hva);
-> +pf_continue:
-> +	if (kvm_hv_vsm_enabled(vcpu->kvm)) {
-> +		if (kvm_hv_faultin_pfn(vcpu, fault)) {
-> +			kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-> +			return -EFAULT;
-> +		}
-> +	}
->  	return RET_PF_CONTINUE;
->  }
->  
+> +/* Intecept message header */
+> +struct hv_intercept_header {
+> +	__u32 vp_index;
+> +	__u8 instruction_length;
+> +#define HV_INTERCEPT_ACCESS_READ    0
+> +#define HV_INTERCEPT_ACCESS_WRITE   1
+> +#define HV_INTERCEPT_ACCESS_EXECUTE 2
+> +	__u8 access_type_mask;
+> +	union {
+> +		__u16 as_u16;
+> +		struct {
+> +			__u16 cpl:2;
+> +			__u16 cr0_pe:1;
+> +			__u16 cr0_am:1;
+> +			__u16 efer_lma:1;
+> +			__u16 debug_active:1;
+> +			__u16 interruption_pending:1;
+> +			__u16 reserved:9;
+> +		};
+> +	} exec_state;
+> +	struct hv_x64_segment_register cs;
+> +	__u64 rip;
+> +	__u64 rflags;
+> +} __packed;
 
-If we don't go with Sean's suggestion of having a VM per VTL,
-then this feature should be VSM agnostic IMHO, because it might be useful for other security features that might
-want to change the guest memory protection based on some 'level' like VSM.
 
-Even SMM to some extent fits this description although in theory I think that SMM can have "different" memory mapped to the same GPA.
+Although the struct/field names in the TLFS spec are terrible for obvious reasons,
+we should still try to stick to them as much as possible to make one's life
+less miserable when trying to find them in the spec.
+
+It is also a good idea to mention from which part of the spec these fields
+come (hint, it's not from VSM part).
+
+Copying here the structs that I found in the spec:
+
+typedef struct
+{
+	HV_VP_INDEX VpIndex;
+	UINT8 InstructionLength;
+	HV_INTERCEPT_ACCESS_TYPE_MASK InterceptAccessType;
+	HV_X64_VP_EXECUTION_STATE ExecutionState;
+	HV_X64_SEGMENT_REGISTER CsSegment;
+	UINT64 Rip;
+	UINT64 Rflags;
+} HV_X64_INTERCEPT_MESSAGE_HEADER;
+
+
+typedef struct
+{
+	UINT16 Cpl:2;
+	UINT16 Cr0Pe:1;
+	UINT16 Cr0Am:1;
+	UINT16 EferLma:1;
+	UINT16 DebugActive:1;
+	UINT16 InterruptionPending:1;
+	UINT16 Reserved:4;
+	UINT16 Reserved:5;
+} HV_X64_VP_EXECUTION_STATE;
+
+
+For example 'access_type_mask' should be called intercept_access_type,
+and so on.
+
+
+
+> +
+> +union hv_x64_memory_access_info {
+> +	__u8 as_u8;
+> +	struct {
+> +		__u8 gva_valid:1;
+> +		__u8 _reserved:7;
+> +	};
+> +};
+
+typedef struct
+{
+	UINT8 GvaValid:1;
+	UINT8 Reserved:7;
+
+} HV_X64_MEMORY_ACCESS_INFO;
+
+> +
+> +struct hv_memory_intercept_message {
+> +	struct hv_intercept_header header;
+> +	__u32 cache_type;
+> +	__u8 instruction_byte_count;
+
+If I understand correctly this is the size of the following
+'instruction_bytes' field?
+
+
+> +	union hv_x64_memory_access_info memory_access_info;
+> +	__u16 _reserved;
+> +	__u64 gva;
+> +	__u64 gpa;
+> +	__u8 instruction_bytes[16];
+> +	struct hv_x64_segment_register ds;
+> +	struct hv_x64_segment_register ss;
+> +	__u64 rax;
+> +	__u64 rcx;
+> +	__u64 rdx;
+> +	__u64 rbx;
+> +	__u64 rsp;
+> +	__u64 rbp;
+> +	__u64 rsi;
+> +	__u64 rdi;
+> +	__u64 r8;
+> +	__u64 r9;
+> +	__u64 r10;
+> +	__u64 r11;
+> +	__u64 r12;
+> +	__u64 r13;
+> +	__u64 r14;
+> +	__u64 r15;
+> +} __packed;
+
+I can't seem to find this struct at all in the spec. If it was reverse-engineered,
+then we must document everything that we know to help future readers of this code.
+
 
 Best regards,
 	Maxim Levitsky
+
+> +
+>  #include <asm-generic/hyperv-tlfs.h>
+>  
+>  #endif
 
 
 
