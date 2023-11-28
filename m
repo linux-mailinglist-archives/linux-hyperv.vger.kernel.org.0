@@ -1,132 +1,139 @@
-Return-Path: <linux-hyperv+bounces-1097-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1098-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5356D7FB4DC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 09:52:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E52B77FB653
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 10:53:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3655B21563
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 08:52:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F04E282722
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Nov 2023 09:53:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE71F2E3E3;
-	Tue, 28 Nov 2023 08:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD1794B5C3;
+	Tue, 28 Nov 2023 09:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q08NRJnA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrLWDHI5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D78AA7;
-	Tue, 28 Nov 2023 00:51:55 -0800 (PST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1AEFA40E0195;
-	Tue, 28 Nov 2023 08:51:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ChluQ_0bI5c3; Tue, 28 Nov 2023 08:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1701161510; bh=b8kwNDDb/tymHpQVlkI8A91DHBnyujPGQHRX1wsU7tw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q08NRJnAt21ZSfXI9PipunbDM7nORGQfk8q2MESUfrbhwdKcDNj/lvfrYaXQO6WrR
-	 Uu/ou1jioWe9ismICRfRUVg3d+FQm/wPx6FZWqYIkuOj00lA7FTXRPgomSFC12JB9p
-	 jx/Z+egKyrd9s+V6EUpP+PM29kiHtGxAEP6D+mj4x/WjUbMc5t6epBadUQmbQ6T59d
-	 OHk9CXHFlXeMht5fKmdxwhaqaJsJcYjQcCwAG14XuoCwOAs3qO/8qwx/JlqJ47/JYv
-	 +APDpeBEVPM7yMnVxkTaHX1cKKlYOzNJVz9G0G08aIT//tOtvT3TSq6/suZGzKM0iW
-	 3xkbwEKeMxRkIQ1+WXUKcxmhbpGn8ST23QukmzUcDnTznWywJX4RBZBJ8xABUD/x/q
-	 LpqrCLx8GqTQcvX46p79XCA7vm/VHTiyKe0iNeXxQqdC6Df8FkqJr0G6fi36OCuyGb
-	 m5Jnl1QGqjQufT6g7fBC7LdpVg2DsriyG5b8QRGrNW+ZxiZWZHnDQ/wPnEwrzPEhcD
-	 M/86WHzJqxUVJPuatkx67BNxXkgs8VEkb78/GQIFTZBVSPRw+rz5eNeMgEWAoMpQX2
-	 q2gDBvCHdO54qtQ99xUVX3BvzTocJHZahfSUqyeY3gOuejIEZg/bj1NCSFqFY7mArL
-	 sGFHikREKV+Z0TDiEnXHYFYs=
-Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2C26740E0031;
-	Tue, 28 Nov 2023 08:51:28 +0000 (UTC)
-Date: Tue, 28 Nov 2023 09:51:22 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Xin Li <xin3.li@intel.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org, pbonzini@redhat.com,
-	seanjc@google.com, peterz@infradead.org, jgross@suse.com,
-	ravi.v.shankar@intel.com, mhiramat@kernel.org,
-	andrew.cooper3@citrix.com, jiangshanlai@gmail.com,
-	nik.borisov@suse.com
-Subject: Re: [PATCH v12 16/37] x86/ptrace: Add FRED additional information to
- the pt_regs structure
-Message-ID: <20231128085122.GPZWWqCrPYnzB8BqFB@fat_crate.local>
-References: <20231003062458.23552-1-xin3.li@intel.com>
- <20231003062458.23552-17-xin3.li@intel.com>
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BF4DA;
+	Tue, 28 Nov 2023 01:53:07 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c88b7e69dfso63588591fa.0;
+        Tue, 28 Nov 2023 01:53:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701165186; x=1701769986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8fnuFAM44FHAY/l2SxhpvzrWnwI14D3DgP24AAWT9I4=;
+        b=MrLWDHI5BIxiO3gGNzKi3sXMcBhJpBddr0YEyqfNwFixYWVdKKIBIZdIA3GnA7siQ2
+         jqNWlD/nb1chFR5bOeZqLAzu2gLd+z6OggYrIb10QvLqa4B/fETmooLVpjB2nAZjmd7h
+         U9ESZqLNzd5smjWzGyFHpUVlrDHbg7TmVxEdWR0p9NXXEQl9U6+htJt56Kvp4v8K3IDK
+         /r3z/3NRMln+XvZHcDKbjH36+rqfqy4vohOI8A4hXTKu3ktXvNPm84BB21yixUtDwfQT
+         UmZZYbN85Dm669alWrDNC+AdWJHSeb50FFbgKcyHrOlcGYBc2ylU18ZFdZmQpRLVShBg
+         lM+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701165186; x=1701769986;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8fnuFAM44FHAY/l2SxhpvzrWnwI14D3DgP24AAWT9I4=;
+        b=sA5f5kpbu0CkiDObPZGNpcdOexS9+tKFNK+fq3a5/BIYDGxk3RI/oaYFXMH6Zt58D3
+         y5yGlinucHQ8Garp1eOhT4wTgHvf2SqjpjUyciguRIla7NVFaPR6cCKHxORNIPoDzyIp
+         rC8TvklwNZ7uzbV7SdLaQsb44BS1dNW195MRIVJE8G6uyYs7pFRkfimmsqbJ+d5HyaY0
+         EcBTaGEXaAbL0ooQ3sXyuDMKz6A3i+muz5dPJiuCNSwI/MANzcUFZDMYnOsuM9orI9hB
+         U6poaqbBKuM5O3HVK2xxfxB7FTFLnSjMheWOwCZOYpd3WZNtJmAbgXbQ+jl9DW2el/BM
+         8WgQ==
+X-Gm-Message-State: AOJu0YwDLTi7UhsNv7Lg7MvrZG0XrvWfY+Cg7kspYT7Hd/EUjlVE7pyC
+	jDBrvMBajlL7JcneO+8XfqI=
+X-Google-Smtp-Source: AGHT+IHjPhheeQIjuEYzvtN0rYQsl7JEiqKv3b5VJmvijk95YzymIXyVAjVdPxK6e+Z/7WGEZAL1KA==
+X-Received: by 2002:a2e:9bc7:0:b0:2c7:610:2dd1 with SMTP id w7-20020a2e9bc7000000b002c706102dd1mr8630005ljj.47.1701165185572;
+        Tue, 28 Nov 2023 01:53:05 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id h8-20020a05600c314800b0040b3937833dsm14695341wmo.3.2023.11.28.01.53.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 01:53:05 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: mana: Fix spelling mistake "enforecement" -> "enforcement"
+Date: Tue, 28 Nov 2023 09:53:04 +0000
+Message-Id: <20231128095304.515492-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231003062458.23552-17-xin3.li@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 02, 2023 at 11:24:37PM -0700, Xin Li wrote:
-> FRED defines additional information in the upper 48 bits of cs/ss
-> fields. Therefore add the information definitions into the pt_regs
-> structure.
-> 
-> Specially introduce a new structure fred_ss to denote the FRED flags
-> above SS selector, which avoids FRED_SSX_ macros and makes the code
-> simpler and easier to read.
-> 
-> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+There is a spelling mistake in struct field hc_tx_err_sqpdid_enforecement.
+Fix it.
 
-You and hpa need to go through all the patches and figure out who's the
-author that's going to land in git.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c      | 2 +-
+ drivers/net/ethernet/microsoft/mana/mana_ethtool.c | 4 ++--
+ include/net/mana/mana.h                            | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Because this and others have hpa's SOB first, suggesting he's the
-author. However, the mail doesn't start with
-
-From: H. Peter Anvin (Intel) <hpa@zytor.com>
-
-and then git will make *you* the author.
-
-> Tested-by: Shan Kang <shan.kang@intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Xin Li <xin3.li@intel.com>
-
-...
-
->  	union {
-> -		u64	ssx;	// The full 64-bit data slot containing SS
-> -		u16	ss;	// SS selector
-> +		/* SS selector */
-> +		u16		ss;
-> +		/* The extended 64-bit data slot containing SS */
-> +		u64		ssx;
-> +		/* The FRED SS extension */
-> +		struct fred_ss	fred_ss;
-
-Aha, sanity about the right comments has come to your mind in this next
-patch. :-P
-
-Just do them right in the previous one.
-
->  	/*
-> -	 * Top of stack on IDT systems.
-> +	 * Top of stack on IDT systems, while FRED systems have extra fields
-> +	 * defined above for storing exception related information, e.g. CR2 or
-> +	 * DR6.
-
-Btw, I really appreciate the good commenting - thanks for that!
-
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 6b857188b9da..bc65cc83b662 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2445,7 +2445,7 @@ void mana_query_gf_stats(struct mana_port_context *apc)
+ 	apc->eth_stats.hc_tx_err_eth_type_enforcement =
+ 					     resp.tx_err_ethtype_enforcement;
+ 	apc->eth_stats.hc_tx_err_sa_enforcement = resp.tx_err_SA_enforcement;
+-	apc->eth_stats.hc_tx_err_sqpdid_enforecement =
++	apc->eth_stats.hc_tx_err_sqpdid_enforcement =
+ 					     resp.tx_err_SQPDID_enforcement;
+ 	apc->eth_stats.hc_tx_err_cqpdid_enforcement =
+ 					     resp.tx_err_CQPDID_enforcement;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 7077d647d99a..777e65b8223d 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -43,8 +43,8 @@ static const struct {
+ 	 offsetof(struct mana_ethtool_stats, hc_tx_err_eth_type_enforcement)},
+ 	{"hc_tx_err_sa_enforcement", offsetof(struct mana_ethtool_stats,
+ 					      hc_tx_err_sa_enforcement)},
+-	{"hc_tx_err_sqpdid_enforecement",
+-	 offsetof(struct mana_ethtool_stats, hc_tx_err_sqpdid_enforecement)},
++	{"hc_tx_err_sqpdid_enforcement",
++	 offsetof(struct mana_ethtool_stats, hc_tx_err_sqpdid_enforcement)},
+ 	{"hc_tx_err_cqpdid_enforcement",
+ 	 offsetof(struct mana_ethtool_stats, hc_tx_err_cqpdid_enforcement)},
+ 	{"hc_tx_err_mtu_violation", offsetof(struct mana_ethtool_stats,
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 5567f5bc8eb6..76147feb0d10 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -368,7 +368,7 @@ struct mana_ethtool_stats {
+ 	u64 hc_tx_err_vlan_enforcement;
+ 	u64 hc_tx_err_eth_type_enforcement;
+ 	u64 hc_tx_err_sa_enforcement;
+-	u64 hc_tx_err_sqpdid_enforecement;
++	u64 hc_tx_err_sqpdid_enforcement;
+ 	u64 hc_tx_err_cqpdid_enforcement;
+ 	u64 hc_tx_err_mtu_violation;
+ 	u64 hc_tx_err_inval_oob;
 -- 
-Regards/Gruss,
-    Boris.
+2.39.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
