@@ -1,200 +1,147 @@
-Return-Path: <linux-hyperv+bounces-1145-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1146-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E8DA7FE04E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Nov 2023 20:26:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B83F47FE073
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Nov 2023 20:47:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB68CB2109A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Nov 2023 19:26:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2B1B1C20A2F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Nov 2023 19:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948595E0C8;
-	Wed, 29 Nov 2023 19:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757495EE69;
+	Wed, 29 Nov 2023 19:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mW10LyMf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m2zcYwwK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9C31A8;
-	Wed, 29 Nov 2023 11:26:09 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IPngBYLIfJOMmj1JEZ9anFgmA8XfohgsJFsG9dJqkZGvFTfuQG8EJmBl1SBGNWaZf7ou96bDgjBO0VAxv/yti8tAKhTYttg0MAs0qiABC3h+945H7mPIppb3kc/nFO+TiIiWV7vOQhovTfwY4/xmGlmRV9H3c/kz5aTyEEsQE8S89R1LqR/MoO6R3abWkeZF4/re3a1QW4Wr8D44onbG6wNKcQwf+Lg+wmj/74LDm3Z2f2c+VD770+oXCcMurQilJ3qINEoinTRSR63070ipKQvW30KcjjMZQ1w1ARjm2Yd9zISQzNlgXKvQ3xY70ZrZLYTiWezKY2SXhV0cgfdS+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DCEOJM6r+XvWrMfoFRBxwenF80/v0lWdRUy5zPbPphs=;
- b=kctR6ppXdGWj3Fz3qAUPnouXa5iU0I7D4K1D+OmjLxw9EYps2JG/8lLQNrPcrpaPmoz2et8+9R9tk0fo834AuiFDBmb9aPLuLICn48vaJQ6CpwK1syZ0VzwTchp94Aq3otK6AMeEIbYcR/0UtDkD6vk6I3FXwJwFINgZem8sigGhH9FT22lctRNsp/NtekowI/Y8Dd/0TrKw+igdcXZPX/GPexUA84RkNVnLLPKZu/IqHqjIn2L8X+xdwc7LX6Y4R8Qwkfsrt2Y6mFF3n664g/h185A/EOFsmlcM1OdAj2O9LfrUkta3EwL5PJSMNwnR12+iI5cWpkeAbN7YG0NfTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DCEOJM6r+XvWrMfoFRBxwenF80/v0lWdRUy5zPbPphs=;
- b=mW10LyMfl3p9lAsXkCq2SYhk2rVDJehSMnpez8LXC9bedFRN62t/DL4CwmbtzOtgd5Z1JeVMxCklzaAK0hG3xuq97IffNmbNBwrI7uqeov9+tANzing9981WsSElUW2JhE9MByKzMwYXQVcdL6YbFDPHb/+tGq29Eeg74MmrujZrt+kO+eyMpLP7rXJNwaV2L2Q+WYPSiEFsLQk2lOWDkqNock1zVbbVrC6qaubnv/zXnxhpMTV6fVOrqvPvRJ7s1kJ02J+OBiLKRiYuM51UXhVnar758yZKKsWaMqwRj0QF6Xd8hjaP+sE1jn98H9wspCVdvQR9X3lDU11bvumB/w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by PH7PR12MB9104.namprd12.prod.outlook.com (2603:10b6:510:2f3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Wed, 29 Nov
- 2023 19:26:05 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7046.015; Wed, 29 Nov 2023
- 19:26:04 +0000
-Date: Wed, 29 Nov 2023 15:26:03 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@gmail.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Danilo Krummrich <dakr@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, iommu@lists.linux.dev,
-	Jon Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
-	Karol Herbst <kherbst@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Lyude Paul <lyude@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	nouveau@lists.freedesktop.org, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Vineet Gupta <vgupta@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Christoph Hellwig <hch@lst.de>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Hector Martin <marcan@marcan.st>, Moritz Fischer <mdf@kernel.org>,
-	patches@lists.linux.dev,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 08/10] iommu/tegra: Use tegra_dev_iommu_get_stream_id()
- in the remaining places
-Message-ID: <20231129192603.GA1387263@nvidia.com>
-References: <0-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <8-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <ZWdlcboM4Xzs38NI@orome.fritz.box>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWdlcboM4Xzs38NI@orome.fritz.box>
-X-ClientProxiedBy: SN4PR0501CA0109.namprd05.prod.outlook.com
- (2603:10b6:803:42::26) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38715E6;
+	Wed, 29 Nov 2023 11:47:11 -0800 (PST)
+Received: from [192.168.4.26] (unknown [47.186.13.91])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 170A820B74C0;
+	Wed, 29 Nov 2023 11:47:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 170A820B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1701287230;
+	bh=/AE04joHGbexNg6/1EM+o2YovtZhSbAJbfvFr6KppsI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m2zcYwwKjEICCbmm6pNwRqAhVUCXZ16/8j+Rm7KklfOt+2Ayb4zeushfGcTbZxznq
+	 3hN7N2zKM0A0/gQ44k2UL+nPl6XrqJsEKFGafJpDqPaapCdFHry5gFf1f4pq+6pJ/l
+	 apo4cqq0Sd+X0a18QxRWb+mfxOTM3r6ttMVsuAlE=
+Message-ID: <e430efa3-6a7a-44c8-a1d2-9943c76f748e@linux.microsoft.com>
+Date: Wed, 29 Nov 2023 13:47:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH7PR12MB9104:EE_
-X-MS-Office365-Filtering-Correlation-Id: 450f25c9-f8bb-4b4a-a3ba-08dbf1110760
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kml3tOxUKByyMYMKjHOmjxnAf+/gOuuwq5Z346QBScvllEoCYi2SYycwqjD2bmo0JfkPMJQp0KwS1mXxODEEeE+4wfeN31GaS5snt1awWRwKkDr+Ojfe4bCO57Letm7VS/tjgsdVf/o/IyUXjyRbIZseQ4HhJI8kGUztKHRHM1pgMpS5IgGQHPgDrLtIUWbrIS9UkH2e5FqT5PlxYusnWemOq1/+xVkChTPXv42Ys73Z0FhxhrFeavoi8REqOdUy7RUjDV1I2upml+CVUvQY4u8NvPgLGLnCQz3BxkjZ5Kg5dgAqybJnj/3Gzt9XQGDyasioHbVrRO1d6Bldw9kt03HGn67V9X8vnlmV6ro1Ne1/RIg2YkLPFgwtFYI+Ef0+Oq/USRugNIGBdMnV7oFivMPxWj3SFP3jpVgiT7h2tadcvtFZcvhXjqH36SBVaq9CXQL+BdG6HLMVK6iiUMozAwbDSBamzxOrWUjHlw4rvb3MGOSMUGiu1uSU3dZu10ipIfdlHjPn7pZHNjvRRlJuBOefF/kES29pkJacH0rvdB5Z4o782H4a2M4gtShHReeZmN97EY332t+jHKi7X5Cne951OOk8Z0O/LtrB39OX2Jm9Etb5aRI69wwy+8MKXIB7
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(376002)(39860400002)(136003)(396003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(5660300002)(2906002)(8936002)(8676002)(4326008)(7366002)(7406005)(7416002)(41300700001)(202311291699002)(316002)(6916009)(66556008)(54906003)(66946007)(66476007)(86362001)(1076003)(2616005)(478600001)(36756003)(6512007)(83380400001)(6506007)(26005)(33656002)(38100700002)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oCUIZHsjahC5JloA1Q9ynCPrhqjiYrctnOM4OsExXwdty32uQd4TAh9d8F1V?=
- =?us-ascii?Q?CnZ3MHk8Ka68Ab2ppqe6OpYn3QM8JrGeCHNVUwFG0DFWUKBt6SsB+pmAmnIJ?=
- =?us-ascii?Q?VXCfetQ+8htCUkORGSv8JS/3KA0ucMxEvGWZcIKkRxU7ClDvWROsJyD9G5ea?=
- =?us-ascii?Q?o/DYUWDOy5kBXbhaYus1SUnddEGbBRIuCIZ/qmdk26Eik/Zch4IgnGBT8r5R?=
- =?us-ascii?Q?/MGIrKJIxqwOHfZUqAGBqQy0+hIDO5vFxnrJkKihLp1JwpvtO3Hu4Xg8Kwu2?=
- =?us-ascii?Q?6VmujoM+b2yYBFWj0hhtg8RwvgjB3QQyBCU61KBP21vqjkra7dPjuMwptHHW?=
- =?us-ascii?Q?HJgFXSkIcxnYhp+6Yu24pVF6RGDga3ml33FUsJfS4mIYMeMcer0tQelMZzaL?=
- =?us-ascii?Q?AUhJ8JV6qGwmnar5fcO9rI0u4uWX9ZVprj0bkL8iBCsL/xiS9uJnafqYB2zz?=
- =?us-ascii?Q?PyHLy1wFBm78YJX17a8hW/eeK/uZNYHzd1XD83Vk9sTXpF/oOaoljSIng2Ry?=
- =?us-ascii?Q?+IIi7ecbf8BnbaDGvXZQ6WfwmFaTPTt5aD8R3IOFyGc7LRzjCt5GLfKh6wNm?=
- =?us-ascii?Q?cMy9E5uZGQyWQBS7554aXo/dj1tEzE6qKxPzFXXRTQe3ceblMtUg3hX7AjYZ?=
- =?us-ascii?Q?32a2jwFn5KXXT4bmGLH5bX3/6NQOHiTldFj9b9c6ZQMwEL2Sc7EU3LPDb7U2?=
- =?us-ascii?Q?3DdxrJURGBH6+1EAUIf4aqWoLuKtd1kiEwOMRJ5DUN8W1aXN1Gmis9+vMaPy?=
- =?us-ascii?Q?nABttKX2HvwGge6Ta8w50UnIrzliwgu+S0pqB5lSOhyqf/TBKIbNmnqHSu1g?=
- =?us-ascii?Q?rRwfDDiWWD47RCicAS+sCPpEYHnleFYSiKxLx4Enbdz/NBhYJAdis13y9ew+?=
- =?us-ascii?Q?k/ro9RD8Ysv7mPlPHOCycryxvTI1kiUT3p0HAx/6K62HRTMGo1lthkKBQPhm?=
- =?us-ascii?Q?6LqgQpe9rAfUcl/lrBbpy7ZVUsDB+hZLdIv8zggxqC2V4bpe5QGrCVYnx28d?=
- =?us-ascii?Q?Ws3Kyno1FyDFMj8Zwgxm7wLzFo+Yri6rAWZMaFNd9MijrVukteC+wccjcy01?=
- =?us-ascii?Q?b0TmfMQggIrdxy55TSKk/QTSxVnLyDYrVfbx2Uda4Owimt1jumQTtDVXG2VU?=
- =?us-ascii?Q?0/5IrTqWBwamHeivEhsnWP3fj3QSr7FgXPYI+noogSkJywAjMFERxVysfGGS?=
- =?us-ascii?Q?qkXNVjKusL4SWVupTBJ93yliRZI4udDlOKaUxjo6J9OLiikK4ZN+zmwr+AKg?=
- =?us-ascii?Q?KwZgtlYksl2t3vFANZOoteXa73tRWg8dLllYynTM+gbTk2AQ/CU9FfQO0fdu?=
- =?us-ascii?Q?5nzhR/AOMWTQDZ5nCb2AW3nOdYEfsQqxT7UpWYficRNFuBlSPph+D1uKofQz?=
- =?us-ascii?Q?fV/ri0yaF5JW6zRW8f3lwhxIUMPETXqdIzkQrLerc6Kx+VIWhgvTPvfE9y8S?=
- =?us-ascii?Q?9ijlsQbNA8yIIb83i8oaAIqw3eRcXgrEg+5sqdO60oQlEZuswbRvp+I19HnL?=
- =?us-ascii?Q?pX3jWV3cdka5CY3hDanO6OKkdSfXA34xTK3Qoikz8iZexWAfmLE0y10A9ZxH?=
- =?us-ascii?Q?XG7UrQloRR3pYXiswA4XTq0QHnCGkPKgR9BW2wQq?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 450f25c9-f8bb-4b4a-a3ba-08dbf1110760
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2023 19:26:04.4798
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j40MoGI9vgBO6YGWnhciTVERoQiP4Byhom55WAYSOj9yHuosD3BYYu5jJ/YbEew9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9104
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 18/19] heki: x86: Protect guest kernel memory using
+ the KVM hypervisor
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ Kees Cook <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Wanpeng Li <wanpengli@tencent.com>, Alexander Graf <graf@amazon.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ John Andersen <john.s.andersen@intel.com>,
+ Marian Rotariu <marian.c.rotariu@gmail.com>,
+ =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+ =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>,
+ Zahra Tarkhani <ztarkhani@microsoft.com>,
+ =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+ dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+ x86@kernel.org, xen-devel@lists.xenproject.org
+References: <20231113022326.24388-1-mic@digikod.net>
+ <20231113022326.24388-19-mic@digikod.net>
+ <20231113085403.GC16138@noisy.programming.kicks-ass.net>
+ <b1dc0963-ab99-4a79-af19-ef5ed981fa60@linux.microsoft.com>
+ <20231127200308.GY3818@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <20231127200308.GY3818@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 29, 2023 at 05:23:13PM +0100, Thierry Reding wrote:
-> > diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
-> > index 533f85a4b2bdb7..3e4fbe94dd666e 100644
-> > --- a/drivers/memory/tegra/tegra186.c
-> > +++ b/drivers/memory/tegra/tegra186.c
-> > @@ -111,21 +111,21 @@ static void tegra186_mc_client_sid_override(struct tegra_mc *mc,
-> >  static int tegra186_mc_probe_device(struct tegra_mc *mc, struct device *dev)
-> >  {
-> >  #if IS_ENABLED(CONFIG_IOMMU_API)
-> > -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-> >  	struct of_phandle_args args;
-> >  	unsigned int i, index = 0;
-> > +	u32 sid;
-> >  
-> > +	WARN_ON(!tegra_dev_iommu_get_stream_id(dev, &sid));
+
+
+On 11/27/23 14:03, Peter Zijlstra wrote:
+> On Mon, Nov 27, 2023 at 11:05:23AM -0600, Madhavan T. Venkataraman wrote:
+>> Apologies for the late reply. I was on vacation. Please see my response below:
+>>
+>> On 11/13/23 02:54, Peter Zijlstra wrote:
+>>> On Sun, Nov 12, 2023 at 09:23:25PM -0500, Mickaël Salaün wrote:
+>>>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>>>
+>>>> Implement a hypervisor function, kvm_protect_memory() that calls the
+>>>> KVM_HC_PROTECT_MEMORY hypercall to request the KVM hypervisor to
+>>>> set specified permissions on a list of guest pages.
+>>>>
+>>>> Using the protect_memory() function, set proper EPT permissions for all
+>>>> guest pages.
+>>>>
+>>>> Use the MEM_ATTR_IMMUTABLE property to protect the kernel static
+>>>> sections and the boot-time read-only sections. This enables to make sure
+>>>> a compromised guest will not be able to change its main physical memory
+>>>> page permissions. However, this also disable any feature that may change
+>>>> the kernel's text section (e.g., ftrace, Kprobes), but they can still be
+>>>> used on kernel modules.
+>>>>
+>>>> Module loading/unloading, and eBPF JIT is allowed without restrictions
+>>>> for now, but we'll need a way to authenticate these code changes to
+>>>> really improve the guests' security. We plan to use module signatures,
+>>>> but there is no solution yet to authenticate eBPF programs.
+>>>>
+>>>> Being able to use ftrace and Kprobes in a secure way is a challenge not
+>>>> solved yet. We're looking for ideas to make this work.
+>>>>
+>>>> Likewise, the JUMP_LABEL feature cannot work because the kernel's text
+>>>> section is read-only.
+>>>
+>>> What is the actual problem? As is the kernel text map is already RO and
+>>> never changed.
+>>
+>> For the JUMP_LABEL optimization, the text needs to be patched at some point.
+>> That patching requires a writable mapping of the text page at the time of
+>> patching.
+>>
+>> In this Heki feature, we currently lock down the kernel text at the end of
+>> kernel boot just before kicking off the init process. The lockdown is
+>> implemented by setting the permissions of a text page to R_X in the extended
+>> page table and not allowing write permissions in the EPT after that. So, jump label
+>> patching during kernel boot is not a problem. But doing it after kernel
+>> boot is a problem.
 > 
-> I know the code previously didn't check for any errors, but we may want
-> to do so now. If tegra_dev_iommu_get_stream_id() ever fails we may end
-> up writing some undefined value into the override register.
+> But you see, that's exactly what the kernel already does with the normal
+> permissions. They get set to RX after init and are never changed.
+> 
+> See the previous patch, we establish a read-write alias and write there.
+> 
+> You seem to lack basic understanding of how the kernel works in this
+> regard, which makes me very nervous about you touching any of this.
+> 
+> I must also say I really dislike your extra/random permssion calls all
+> over the place. They don't really get us anything afaict. Why can't you
+> plumb into the existing set_memory_*() family?
 
-My assumption was it never fails otherwise this probably already
-doesn't work?
+I have responded to your comments on your other email. Please read my
+response there.
 
-> I'm also unsure if WARN_ON() is appropriate here. I vaguely recall that
-> ->probe_device() was called for all devices on the bus and not all of
-> them may have been associated with the IOMMU. Not all of them may in
-> fact access memory in the first place.
+Thanks.
 
-So you are thinkin that of_parse_phandle_with_args() is a NOP
-sometimes so it will tolerate the failure?
-
-Seems like the best thing to do is just continue to ignore it then?
-
-> Perhaps I'm misremembering and the IOMMU core now takes care of only
-> calling this when fwspec is indeed valid?
-
-Can't advise, I have no idea what tegra_mc_ops is for :)
-
-Jason
-
+Madhavan
 
