@@ -1,81 +1,63 @@
-Return-Path: <linux-hyperv+bounces-1160-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1161-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A95B37FEE05
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 12:34:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EDEE7FEE8A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 13:05:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 255B0B20E1B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 11:34:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE972281D3B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 12:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6C33C695;
-	Thu, 30 Nov 2023 11:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B03945949;
+	Thu, 30 Nov 2023 12:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvYIC9LL"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Bpt7p/4H"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C4B10E3;
-	Thu, 30 Nov 2023 03:34:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LyNe9cq/euZtRPSb3aioeZtMybHFVA3zxzbs+Z/bjGA=; b=kvYIC9LL0g1DtJPaX0R6PB3Hzs
-	WJoc77vbRw4by7nd4F36TBnJ3T4MI9wdD7aXSPOehJlXlC/pWK+8n2z0lyxmIeom49Fq14fiWDLPi
-	aeXJavXkXYJ5TXk3JFMiuM5yCmh3Z1fNGfwOqorYOzov6OJHhvEfGC6J2W+k21Mb2d45DW/SJjG55
-	hXNSu7aJ+ccY2N3V7hGH5qNtY48YsH1Ay2pRTRGIIC7nAr6OzIV4MUebHtOW2bJ8WohvfYFEEkA36
-	B5JdK+v24H1zWokWmH+erLMEiMEIgHVmGKZCY7RaZV+99vWq5oBYrsMdSM9TFbIUPH+2WK6BZszLl
-	ZhGhcUHQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r8fIC-00EON3-R9; Thu, 30 Nov 2023 11:33:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EE982300293; Thu, 30 Nov 2023 12:33:15 +0100 (CET)
-Date: Thu, 30 Nov 2023 12:33:15 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Alexander Graf <graf@amazon.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Forrest Yuan Yu <yuanyu@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	John Andersen <john.s.andersen@intel.com>,
-	Marian Rotariu <marian.c.rotariu@gmail.com>,
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
- during text patching
-Message-ID: <20231130113315.GE20191@noisy.programming.kicks-ass.net>
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-18-mic@digikod.net>
- <20231113081929.GA16138@noisy.programming.kicks-ass.net>
- <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
- <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
- <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB16BD46;
+	Thu, 30 Nov 2023 04:05:12 -0800 (PST)
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+	id 1AF5C20B74C0; Thu, 30 Nov 2023 04:05:12 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1AF5C20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1701345912;
+	bh=/rVuqlYYpLzwGHq/EK9NytP0xWQESkkc0TlDS3zxqY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bpt7p/4HhHDo6dYClHRLdHCut/FjhKTk6mGeZB+9C5QBTqhDefLDJZszOOxWnf74K
+	 khFcWy3czqcJIXDdbr6llkD8Ic6HzwBpTBpnCLFwf3UXFQ2bOstrSz+QR8JwTmoGnO
+	 jGgGYdAqsWiKEO2EKytfiLc+FYSb9ihaSt+rwXXc=
+Date: Thu, 30 Nov 2023 04:05:12 -0800
+From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Souradeep Chakrabarti <schakrabarti@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
+	"leon@kernel.org" <leon@kernel.org>,
+	"cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ
+ affinity on HT cores
+Message-ID: <20231130120512.GA15408@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1700574877-6037-1-git-send-email-schakrabarti@linux.microsoft.com>
+ <20231121154841.7fc019c8@kernel.org>
+ <PUZP153MB0788476CD22D5AA2ECDC11ABCCBDA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
+ <ZWfwcYPLVo+4V8Ps@yury-ThinkPad>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -84,61 +66,144 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
+In-Reply-To: <ZWfwcYPLVo+4V8Ps@yury-ThinkPad>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Nov 29, 2023 at 03:07:15PM -0600, Madhavan T. Venkataraman wrote:
-
-> Kernel Lockdown
-> ---------------
+On Wed, Nov 29, 2023 at 06:16:17PM -0800, Yury Norov wrote:
+> On Mon, Nov 27, 2023 at 09:36:38AM +0000, Souradeep Chakrabarti wrote:
+> > 
+> > 
+> > >-----Original Message-----
+> > >From: Jakub Kicinski <kuba@kernel.org>
+> > >Sent: Wednesday, November 22, 2023 5:19 AM
+> > >To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+> > >Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > ><haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+> > ><decui@microsoft.com>; davem@davemloft.net; edumazet@google.com;
+> > >pabeni@redhat.com; Long Li <longli@microsoft.com>;
+> > >sharmaajay@microsoft.com; leon@kernel.org; cai.huoqing@linux.dev;
+> > >ssengar@linux.microsoft.com; vkuznets@redhat.com; tglx@linutronix.de; linux-
+> > >hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >linux-rdma@vger.kernel.org; Souradeep Chakrabarti
+> > ><schakrabarti@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>
+> > >Subject: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ affinity on
+> > >HT cores
+> > >
+> > >On Tue, 21 Nov 2023 05:54:37 -0800 Souradeep Chakrabarti wrote:
+> > >> Existing MANA design assigns IRQ to every CPUs, including sibling
+> > >> hyper-threads in a core. This causes multiple IRQs to work on same CPU
+> > >> and may reduce the network performance with RSS.
+> > >>
+> > >> Improve the performance by adhering the configuration for RSS, which
+> > >> assigns IRQ on HT cores.
+> > >
+> > >Drivers should not have to carry 120 LoC for something as basic as spreading IRQs.
+> > >Please take a look at include/linux/topology.h and if there's nothing that fits your
+> > >needs there - add it. That way other drivers can reuse it.
+> > Because of the current design idea, it is easier to keep things inside
+> > the mana driver code here. As the idea of IRQ distribution here is :
+> > 1)Loop through interrupts to assign CPU
+> > 2)Find non sibling online CPU from local NUMA and assign the IRQs
+> > on them.
+> > 3)If number of IRQs is more than number of non-sibling CPU in that
+> > NUMA node, then assign on sibling CPU of that node.
+> > 4)Keep doing it till all the online CPUs are used or no more IRQs.
+> > 5)If all CPUs in that node are used, goto next NUMA node with CPU.
+> > Keep doing 2 and 3.
+> > 6) If all CPUs in all NUMA nodes are used, but still there are IRQs
+> > then wrap over from first local NUMA node and continue
+> > doing 2, 3 4 till all IRQs are assigned.
 > 
-> But, we must provide at least some security in V2. Otherwise, it is useless.
+> Hi Souradeep,
 > 
-> So, we have implemented what we call a kernel lockdown. At the end of kernel
-> boot, Heki establishes permissions in the extended page table as mentioned
-> before. Also, it adds an immutable attribute for kernel text and kernel RO data.
-> Beyond that point, guest requests that attempt to modify permissions on any of
-> the immutable pages will be denied.
+> (Thanks Jakub for sharing this thread with me)
 > 
-> This means that features like FTrace and KProbes will not work on kernel text
-> in V2. This is a temporary limitation. Once authentication is in place, the
-> limitation will go away.
-
-So either you're saying your patch 17 / text_poke is broken (so why
-include it ?!?) or your statement above is incorrect. Pick one.
-
-
-> __text_poke()
-> 	This function is called by various features to patch text.
-> 	This calls heki_text_poke_start() and heki_text_poke_end().
+> If I understand your intention right, you can leverage the existing
+> cpumask_local_spread().
 > 
-> 	heki_text_poke_start() is called to add write permissions to the
-> 	extended page table so that text can be patched. heki_text_poke_end()
-> 	is called to revert write permissions in the extended page table.
-
-This, if text_poke works, then static_call / jump_label / ftrace and
-everything else should work, they all rely on this.
-
-
-> Peter mentioned the following:
+> But I think I've got something better for you. The below series adds
+> a for_each_numa_cpu() iterator, which may help you doing most of the
+> job without messing with nodes internals.
 > 
-> "if you want to mirror the native PTEs why don't you hook into the
-> paravirt page-table muck and get all that for free?"
+> https://lore.kernel.org/netdev/ZD3l6FBnUh9vTIGc@yury-ThinkPad/T/
+>
+Thanks Yur and Jakub. I was trying to find this patch, but unable to find it on that thread.
+Also in net-next I am unable to find it. Can you please tell, if it has been committed?
+If not can you please point me out the correct patch for this macro. It will be
+really helpful.
+> By using it, the pseudocode implementing your algorithm may look
+> like this:
 > 
-> We did consider using a shadow page table kind of approach so that guest page table
-> modifications can be intercepted and reflected in the page table entry. We did not
-> do this for two reasons:
+>         unsigned int cpu, hop;
+>         unsigned int irq = 0;
 > 
-> - there are bits in the page table entry that are not permission bits. We would like
->   the guest kernel to be able to modify them directly.
+> again:
+>         cpu = get_cpu();
+>         node = cpu_to_node(cpu);
+>         cpumask_copy(cpus, cpu_online_mask);
+> 
+>         for_each_numa_cpu(cpu, hop, node, cpus) {
+>                 /* All siblings are the same for IRQ spreading purpose */
+>                 irq_set_affinity_and_hint(irq, topology_sibling_cpumask());
+> 
+>                 /* One IRQ per sibling group */
+>                 cpumask_andnot(cpus, cpus, topology_sibling_cpumask());
+> 
+>                 if (++irq == num_irqs)
+>                         break;
+>         }
+> 
+>         if (irq < num_irqs)
+>                 goto again;
+> 
+> (Completely not tested, just an idea.)
+>
+I have done similar kind of change for our driver, but constraint here is that total number of IRQs
+can be equal to the total number of online CPUs, in some setup. It is either equal
+to the number of online CPUs or maximum 64 IRQs if online CPUs are more than that.
+So my proposed change is following:
 
-This statement makes no sense.
++static int irq_setup(int *irqs, int nvec, int start_numa_node)
++{
++       cpumask_var_t node_cpumask;
++       int i, cpu, err = 0;
++       unsigned int  next_node;
++       cpumask_t visited_cpus;
++       unsigned int start_node = start_numa_node;
++       i = 0;
++       if (!alloc_cpumask_var(&node_cpumask, GFP_KERNEL)) {
++               err = -ENOMEM;
++               goto free_mask;
++       }
++       cpumask_andnot(&visited_cpus, &visited_cpus, &visited_cpus);
++       start_node = 1;
++       for_each_next_node_with_cpus(start_node, next_node) {
++               cpumask_copy(node_cpumask, cpumask_of_node(next_node));
++               for_each_cpu(cpu, node_cpumask) {
++                       cpumask_andnot(node_cpumask, node_cpumask,
++                                      topology_sibling_cpumask(cpu));
++                       irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
++                       if(++i == nvec)
++                               goto free_mask;
++                       cpumask_set_cpu(cpu, &visited_cpus);
++                       if (cpumask_empty(node_cpumask) && cpumask_weight(&visited_cpus) <
++                           nr_cpus_node(next_node)) {
++                               cpumask_copy(node_cpumask, cpumask_of_node(next_node));
++                               cpumask_andnot(node_cpumask, node_cpumask, &visited_cpus);
++                               cpu = cpumask_first(node_cpumask);
++                       }
++               }
++               if (next_online_node(next_node) == MAX_NUMNODES)
++                       next_node = first_online_node;
++       }
++free_mask:
++       free_cpumask_var(node_cpumask);
++       return err;
++} 
 
-> - we cannot tell a genuine request from an attack.
-
-Why not? How is an explicit call different from an explicit call in a
-paravirt hook?
-
-From a maintenance pov we already hate paravirt with a passion, but it
-is ever so much better than sprinkling yet another pile of crap
-(heki_*) around.
+I can definitely use the for_each_numa_cpu() instead of my proposed for_each_next_node_with_cpus()
+macro here and that will make it cleaner.
+Thanks for the suggestion.
+> Thanks,
+> Yury
 
