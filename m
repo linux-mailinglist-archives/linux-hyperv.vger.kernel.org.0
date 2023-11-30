@@ -1,209 +1,216 @@
-Return-Path: <linux-hyperv+bounces-1161-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1162-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EDEE7FEE8A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 13:05:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 142D97FEED5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 13:21:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE972281D3B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 12:05:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13ABE1C20B1E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 12:21:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B03945949;
-	Thu, 30 Nov 2023 12:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0631546525;
+	Thu, 30 Nov 2023 12:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Bpt7p/4H"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AiT86x1s"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB16BD46;
-	Thu, 30 Nov 2023 04:05:12 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 1AF5C20B74C0; Thu, 30 Nov 2023 04:05:12 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1AF5C20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1701345912;
-	bh=/rVuqlYYpLzwGHq/EK9NytP0xWQESkkc0TlDS3zxqY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bpt7p/4HhHDo6dYClHRLdHCut/FjhKTk6mGeZB+9C5QBTqhDefLDJZszOOxWnf74K
-	 khFcWy3czqcJIXDdbr6llkD8Ic6HzwBpTBpnCLFwf3UXFQ2bOstrSz+QR8JwTmoGnO
-	 jGgGYdAqsWiKEO2EKytfiLc+FYSb9ihaSt+rwXXc=
-Date: Thu, 30 Nov 2023 04:05:12 -0800
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Souradeep Chakrabarti <schakrabarti@microsoft.com>,
-	Jakub Kicinski <kuba@kernel.org>, KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2078.outbound.protection.outlook.com [40.107.102.78])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7554110D1;
+	Thu, 30 Nov 2023 04:21:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SbrYtRd/m7aeL7wxtVSgoWxcla1sgjQ3evd/MJvNCzpiBdA4Ipvu84YG0TW189c5MjZnX27ErQR7j3/eh0UrzfeuvSeJlwfeeyADJt2WNAGbro08aDH/GNszDzFMHf4DNC0xH9vdB8RuMnrXxhni8iJZt+MZWEaXIHxBr5joU+HNx/d8/0A7X+Efjps48cVyYU3z5H529YEtKtrIZIQ+lZF37r94KGkoPrQxIhuQVgob06HuMLuSAglSXuSK382hZHtmh0LHMzkYAwbZTwZNFBTKo7wHeYGdNpLDx+axmNpR/K+80bX4ixvuRpPYcOXjHR4WzkK1wUe1p2CEw3tT0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LJixQ+w47ibikbkMDvSQCF2sK7jVRhZawzlwIjz7Jh8=;
+ b=FVYrwI3BqFs6O8JvmQaavPBE2kfDcLYc6T70rQH64s8L0vKSIsyjMjIb60f1hpAJcXm0gYREzNG2NEhQDDrw/GXSFXcea7LKzVJvwPJ7bD75zwXZaQKOo/8ZRs0zouEZiNoCs64MeLQMyqVt0fj2Q5GcBaQKFTlZKdJvhdXsAV8Y4JxpoMcRpXOHfHuhlt6dJ6pOVW+5QT/UdVRztShK78USMwNmzeloEDE1O0vtvaRXIKkx/lfEjSDe1ggTt3CRXbFAVxF8iCLWL7U/mvtqeA7FFrM7A65wzqzz9IGePT6EVrqAdoK+sS5Tcwgm6nOa0e0+VaEQUKBUvXkw4bRt2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LJixQ+w47ibikbkMDvSQCF2sK7jVRhZawzlwIjz7Jh8=;
+ b=AiT86x1sH4H83A1T+sAtqjfSfze+2wc9rFhL6g6CKdJFbZxaG8ljv3u3rj8RKBVeDtqma7DE+IT6Fw+6Cq1v1TDFOG0EPJkWNVqgIynm8o5m182yR5oRsi7APEcy3XhwQmTI5UktxK1YM18HhwBJp1Xvbg28WUcqcLRsKrcfCSCas1aRxGmKtyHRL+zH9THeMhUt5rSv5VfjgU08zEEQz3sX7P7l1VudS/t7p2X7amc+eEKo1gnBwpUFghy3kDMLjPHfvb/4n1eqen0Eiaz+tdR7V1MVYtkSEJUyerzwnJQ5MIW0lmnNJTy4dq314xGvXAjLSk8K8qFSPqdDGLHtsg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by SN7PR12MB6839.namprd12.prod.outlook.com (2603:10b6:806:265::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.23; Thu, 30 Nov
+ 2023 12:21:37 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7046.015; Thu, 30 Nov 2023
+ 12:21:37 +0000
+Date: Thu, 30 Nov 2023 08:21:35 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jerry Snitselaar <jsnitsel@redhat.com>,
+	dri-devel@lists.freedesktop.org, patches@lists.linux.dev,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Hanjun Guo <guohanjun@huawei.com>, linux-riscv@lists.infradead.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Wei Liu <wei.liu@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
 	Dexuan Cui <decui@microsoft.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
-	"leon@kernel.org" <leon@kernel.org>,
-	"cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	Paul Rosswurm <paulros@microsoft.com>
-Subject: Re: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ
- affinity on HT cores
-Message-ID: <20231130120512.GA15408@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1700574877-6037-1-git-send-email-schakrabarti@linux.microsoft.com>
- <20231121154841.7fc019c8@kernel.org>
- <PUZP153MB0788476CD22D5AA2ECDC11ABCCBDA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
- <ZWfwcYPLVo+4V8Ps@yury-ThinkPad>
+	Russell King <linux@armlinux.org.uk>,
+	Jon Hunter <jonathanh@nvidia.com>, linux-acpi@vger.kernel.org,
+	iommu@lists.linux.dev, Danilo Krummrich <dakr@redhat.com>,
+	nouveau@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
+	Len Brown <lenb@kernel.org>, devicetree@vger.kernel.org,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Will Deacon <will@kernel.org>, Sven Peter <sven@svenpeter.dev>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Vineet Gupta <vgupta@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Vinod Koul <vkoul@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Hector Martin <marcan@marcan.st>, linux-mips@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, asahi@lists.linux.dev,
+	Sudeep Holla <sudeep.holla@arm.com>, dmaengine@vger.kernel.org,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH 10/10] ACPI: IORT: Allow COMPILE_TEST of IORT
+Message-ID: <20231130122135.GG1389974@nvidia.com>
+References: <0-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
+ <10-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
+ <ZWc0qPWzNWPkL8vt@lpieralisi>
+ <20231129191240.GZ436702@nvidia.com>
+ <ZWhuGl1l5V5b+w4P@lpieralisi>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZWhuGl1l5V5b+w4P@lpieralisi>
+X-ClientProxiedBy: SN7PR04CA0044.namprd04.prod.outlook.com
+ (2603:10b6:806:120::19) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWfwcYPLVo+4V8Ps@yury-ThinkPad>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SN7PR12MB6839:EE_
+X-MS-Office365-Filtering-Correlation-Id: c56a3fcf-77c8-480d-4e3a-08dbf19ee5ee
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	39FFJvs4blwieyKepVr5RR0vYatdHBvCBb9hFrGowdz0BtQ0tVmCh3QDzaU54xor4zGD/pG3D5aQB3M9uOCicc4qbN2RUTajGFko2au/K19O3GcVhgW9R5FD4BAuF0jRNbir+o5GRQ+ZkB073U+MdMAan8BHs14AJjN4fUU3Da/34Jn4CaYyncmyGOxKyFu4Z6vwDGmhO5HsoP4UZfSC8Rt9FYXvh/NbzOcRw7eCODzcJbYzEYumoJ0RJswjWRAgQTrNBILXLSnVCSzTAbnJwMVYuJH1gdzPoHNaw6hlj6aSqPRyTf4/K8ATMyetMq3srP19UEZS7vLLYJ3UCyW8RY2LphTvuA3RjS3FCDzGYzire27e4vaoCFyAE+Fb71YwDpDE3gaeOux2G4k71O4C9/01y5TGhjDQ2LVG1FHY6fM6cg0JLQSlbB/3uDKIk90wv0XOOJOqhgYxXSZ3ua4jbsrVYi7kspkV/N0ai4AeZTXfc34MFcVeYZeefScV+v0IiPD9kGrtRfWmZOWpfanv7EhVzrZIQjMs3gKQOvJTL4sSVHdy4awo1KXRh+m3DimbxQ4nBlsCLvs2bs0wteRNCOnxwI8RPKaKKCdV5XDhy9Ymxjb0pyhQyaYnw1f6pa0C
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(136003)(346002)(39860400002)(396003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(26005)(1076003)(2616005)(66476007)(66946007)(54906003)(66556008)(7406005)(7366002)(316002)(6916009)(7416002)(2906002)(8676002)(4326008)(8936002)(86362001)(5660300002)(41300700001)(6506007)(6512007)(36756003)(33656002)(478600001)(6486002)(202311291699003)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7Q7CRmLAOPiTqvKa4MushueP6OP8H9hIZQ6Te0DL2gWMKU/iv6R82N5TRtvk?=
+ =?us-ascii?Q?SvnkdJ4yaOqIrtrsCOZL/c/tk9ffutF/khz0rtIuTu19sTZVkyHocI7uFRyb?=
+ =?us-ascii?Q?g91G7Gbx3QSi5ip0eIs8pz7GIp0yAsjXqpTGQI+Ns5SqnLDPSNPtb8Hz4tiL?=
+ =?us-ascii?Q?+oR+1VRcZb6S+j+gXxyeRHwGUyPtxpSrlfSwVfRb5Z9pAhuWmRRk/hokCgyQ?=
+ =?us-ascii?Q?SnPhvdu7hFXD9LI4p6bdYYLgQa4TIKe6RyLh3JflHX24/oGEtcAlCELdaDlH?=
+ =?us-ascii?Q?7usCpFs/wbHteN6xLSUCokxDJ0IYOiVpXO1APUE+uwAHHMDgIkhL7pa5/58F?=
+ =?us-ascii?Q?IoV9HZFlQVSZrIyhqwF1/BfBBMjJqJ+ZaYo8kWBuxyt4A61RL4lo6AHkKUz/?=
+ =?us-ascii?Q?WATqc988SA13uf8+JL1eh2Yg4g3HlqUXZyshb+x6nYxDEh2MkYau7JJ8YwP/?=
+ =?us-ascii?Q?9mxVVODNoM0umEJWXT0KN6a1mPCRPlp7AWzbYU8YzLVunPMyYInZ3Re3VIXU?=
+ =?us-ascii?Q?knglSLO6mG4K5gVMYxujP3prkuRBzk7IZOFbBTfob4ypYF8Imtbxhza7jgUs?=
+ =?us-ascii?Q?N7arU1R2GuluqVmK2g1QGzGCkRCF+zpm2E8H7s/GKrvI0qlKimlEqd5TM5mC?=
+ =?us-ascii?Q?b3YutF8/PRG0Otip9tn1O79Z2j6Q17hxUmMgU4+UP4khMHwPKfxOhIltdgRS?=
+ =?us-ascii?Q?0uq/TyvfY/NsaZoVKvR31r9JTDbS6KwL87eIKfJ5A6pSb0+9E+lWT5E+Jekh?=
+ =?us-ascii?Q?k0DVzfvseOTBtwnscMzZnz2iSVDAmRfK9lK/BWyYq/T60M62YnxX4khhOazm?=
+ =?us-ascii?Q?1UBoavCZX2OKHzPDc3BmQPNcTsCmg7eL0n51J8MPLL9hZJ/ijF5EISHqsSB2?=
+ =?us-ascii?Q?WwwUnCNNsM18EL+S6Nrg8LWbTCKzVYeGqG58R1Beh0TXT1ZrrZcOW/tzOuI5?=
+ =?us-ascii?Q?xl65s89OdshmQ2Z+26vu03QJRbWWiSpZp7NBBiEQRO6nnFdsNrnPRQx1isn4?=
+ =?us-ascii?Q?h/cyVO7k2oJ34gxD1dJ7HDeZvRULCwmcNuAAP0629F7yw+vGOnhsVL7wL8p3?=
+ =?us-ascii?Q?RrUIYS4ITjjF6SYKdKXpqswOwY3stNsz3Aaw0nuxznHMHRYRY3Rc8sGlUnxk?=
+ =?us-ascii?Q?HJAC7RFdIKTWOdURMx2KhMXsb+0r3fE85TQ9TtbzTS0DoyIgxg0IcCKcuGiU?=
+ =?us-ascii?Q?Z9K3ShSiXVqXrckwtBMDteA+v2/+4+jBDaR4TJY5vfDPn2ZiyV4m0nGoqzuS?=
+ =?us-ascii?Q?fTY6cPUK39xNePVTBG9+wQR82ac9m86kcn18hex8XB5yN1HctG1mFkv9vcnQ?=
+ =?us-ascii?Q?hF+oV8S7AcsGjjUF8rE6vCulz8Ns0v1gGUEbOVpDotqn9nM/u77L5rKbqZic?=
+ =?us-ascii?Q?e9/GW7NiAM3M64unOzbRAsaydlqqzg6pZnLAiEJz+miFRaBEh+G03zb/JF8J?=
+ =?us-ascii?Q?s35/S8NfrhoyrgjAobq/CKyMIqp5e5mquTexI5teWFjP66fQSbETceSq2hal?=
+ =?us-ascii?Q?6gHQTIYilnNCustLzHFAJhF+Ri2bNcHmjfPOcFcmLhGdQvIZwCdLkVosY8TK?=
+ =?us-ascii?Q?VsgDO12aG5oWGjMoOPTmcuvxZNCjeOS7R9o4RSRS?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c56a3fcf-77c8-480d-4e3a-08dbf19ee5ee
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 12:21:36.8906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Tr94XYyL/1BPueDwYPWzJnAyAKGBEQmBCWZ46SEOUfaMp2CKrqq1JyDvvSPchVYF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6839
 
-On Wed, Nov 29, 2023 at 06:16:17PM -0800, Yury Norov wrote:
-> On Mon, Nov 27, 2023 at 09:36:38AM +0000, Souradeep Chakrabarti wrote:
+On Thu, Nov 30, 2023 at 12:12:26PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, Nov 29, 2023 at 03:12:40PM -0400, Jason Gunthorpe wrote:
+> > On Wed, Nov 29, 2023 at 01:55:04PM +0100, Lorenzo Pieralisi wrote:
 > > 
+> > > I don't think it should be done this way. Is the goal compile testing
+> > > IORT code ? 
 > > 
-> > >-----Original Message-----
-> > >From: Jakub Kicinski <kuba@kernel.org>
-> > >Sent: Wednesday, November 22, 2023 5:19 AM
-> > >To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> > >Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > ><haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
-> > ><decui@microsoft.com>; davem@davemloft.net; edumazet@google.com;
-> > >pabeni@redhat.com; Long Li <longli@microsoft.com>;
-> > >sharmaajay@microsoft.com; leon@kernel.org; cai.huoqing@linux.dev;
-> > >ssengar@linux.microsoft.com; vkuznets@redhat.com; tglx@linutronix.de; linux-
-> > >hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > >linux-rdma@vger.kernel.org; Souradeep Chakrabarti
-> > ><schakrabarti@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>
-> > >Subject: [EXTERNAL] Re: [PATCH V2 net-next] net: mana: Assigning IRQ affinity on
-> > >HT cores
-> > >
-> > >On Tue, 21 Nov 2023 05:54:37 -0800 Souradeep Chakrabarti wrote:
-> > >> Existing MANA design assigns IRQ to every CPUs, including sibling
-> > >> hyper-threads in a core. This causes multiple IRQs to work on same CPU
-> > >> and may reduce the network performance with RSS.
-> > >>
-> > >> Improve the performance by adhering the configuration for RSS, which
-> > >> assigns IRQ on HT cores.
-> > >
-> > >Drivers should not have to carry 120 LoC for something as basic as spreading IRQs.
-> > >Please take a look at include/linux/topology.h and if there's nothing that fits your
-> > >needs there - add it. That way other drivers can reuse it.
-> > Because of the current design idea, it is easier to keep things inside
-> > the mana driver code here. As the idea of IRQ distribution here is :
-> > 1)Loop through interrupts to assign CPU
-> > 2)Find non sibling online CPU from local NUMA and assign the IRQs
-> > on them.
-> > 3)If number of IRQs is more than number of non-sibling CPU in that
-> > NUMA node, then assign on sibling CPU of that node.
-> > 4)Keep doing it till all the online CPUs are used or no more IRQs.
-> > 5)If all CPUs in that node are used, goto next NUMA node with CPU.
-> > Keep doing 2 and 3.
-> > 6) If all CPUs in all NUMA nodes are used, but still there are IRQs
-> > then wrap over from first local NUMA node and continue
-> > doing 2, 3 4 till all IRQs are assigned.
+> > Yes
+> > 
+> > > If so, why are we forcing it through the SMMU (only because
+> > > it can be compile tested while eg SMMUv3 driver can't ?) menu entry ?
+> > 
+> > Because something needs to select it, and SMMU is one of the places
+> > that are implicitly using it.
+> > 
+> > It isn't (and shouldn't be) a user selectable kconfig. Currently the
+> > only thing that selects it is the ARM64 master kconfig.
 > 
-> Hi Souradeep,
-> 
-> (Thanks Jakub for sharing this thread with me)
-> 
-> If I understand your intention right, you can leverage the existing
-> cpumask_local_spread().
-> 
-> But I think I've got something better for you. The below series adds
-> a for_each_numa_cpu() iterator, which may help you doing most of the
-> job without messing with nodes internals.
-> 
-> https://lore.kernel.org/netdev/ZD3l6FBnUh9vTIGc@yury-ThinkPad/T/
->
-Thanks Yur and Jakub. I was trying to find this patch, but unable to find it on that thread.
-Also in net-next I am unable to find it. Can you please tell, if it has been committed?
-If not can you please point me out the correct patch for this macro. It will be
-really helpful.
-> By using it, the pseudocode implementing your algorithm may look
-> like this:
-> 
->         unsigned int cpu, hop;
->         unsigned int irq = 0;
-> 
-> again:
->         cpu = get_cpu();
->         node = cpu_to_node(cpu);
->         cpumask_copy(cpus, cpu_online_mask);
-> 
->         for_each_numa_cpu(cpu, hop, node, cpus) {
->                 /* All siblings are the same for IRQ spreading purpose */
->                 irq_set_affinity_and_hint(irq, topology_sibling_cpumask());
-> 
->                 /* One IRQ per sibling group */
->                 cpumask_andnot(cpus, cpus, topology_sibling_cpumask());
-> 
->                 if (++irq == num_irqs)
->                         break;
->         }
-> 
->         if (irq < num_irqs)
->                 goto again;
-> 
-> (Completely not tested, just an idea.)
->
-I have done similar kind of change for our driver, but constraint here is that total number of IRQs
-can be equal to the total number of online CPUs, in some setup. It is either equal
-to the number of online CPUs or maximum 64 IRQs if online CPUs are more than that.
-So my proposed change is following:
+> I never said it should be a user selectable kconfig. I said that
+> I don't like using the SMMU entry (only) to select it just because
+> that entry allows COMPILE_TEST.
 
-+static int irq_setup(int *irqs, int nvec, int start_numa_node)
-+{
-+       cpumask_var_t node_cpumask;
-+       int i, cpu, err = 0;
-+       unsigned int  next_node;
-+       cpumask_t visited_cpus;
-+       unsigned int start_node = start_numa_node;
-+       i = 0;
-+       if (!alloc_cpumask_var(&node_cpumask, GFP_KERNEL)) {
-+               err = -ENOMEM;
-+               goto free_mask;
-+       }
-+       cpumask_andnot(&visited_cpus, &visited_cpus, &visited_cpus);
-+       start_node = 1;
-+       for_each_next_node_with_cpus(start_node, next_node) {
-+               cpumask_copy(node_cpumask, cpumask_of_node(next_node));
-+               for_each_cpu(cpu, node_cpumask) {
-+                       cpumask_andnot(node_cpumask, node_cpumask,
-+                                      topology_sibling_cpumask(cpu));
-+                       irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
-+                       if(++i == nvec)
-+                               goto free_mask;
-+                       cpumask_set_cpu(cpu, &visited_cpus);
-+                       if (cpumask_empty(node_cpumask) && cpumask_weight(&visited_cpus) <
-+                           nr_cpus_node(next_node)) {
-+                               cpumask_copy(node_cpumask, cpumask_of_node(next_node));
-+                               cpumask_andnot(node_cpumask, node_cpumask, &visited_cpus);
-+                               cpu = cpumask_first(node_cpumask);
-+                       }
-+               }
-+               if (next_online_node(next_node) == MAX_NUMNODES)
-+                       next_node = first_online_node;
-+       }
-+free_mask:
-+       free_cpumask_var(node_cpumask);
-+       return err;
-+} 
+So you would like each of the drivers that use it to select it?
 
-I can definitely use the for_each_numa_cpu() instead of my proposed for_each_next_node_with_cpus()
-macro here and that will make it cleaner.
-Thanks for the suggestion.
-> Thanks,
-> Yury
+> > SMMUv3 doesn't COMPILE_TEST so it picks up the dependency transitivity
+> > through ARM64. I'm not sure why IORT was put as a global ARM64 kconfig
+> > dependency and not put in the places that directly need it.
+> 
+> Because IORT is used by few ARM64 system IPs (that are enabled by
+> default, eg GIC), it makes sense to have a generic ARM64 select (if ACPI).
+
+IMHO that is not a good way to use kconfig, it is obfuscating and
+doesn't support things like COMPILE_TEST.
+
+> > > Maybe we can move IORT code into drivers/acpi and add a silent config
+> > > option there with a dependency on ARM64 || COMPILE_TEST.
+> > 
+> > That seems pretty weird to me, this is the right way to approach it,
+> > IMHO. Making an entire directory condition is pretty incompatible with
+> > COMPILE_TEST as a philosophy.
+> 
+> That's not what I was suggesting. I was suggesting to move iort.c (or
+> some portions of it) into drivers/acpi if we care enough to compile test
+> it on arches !ARM64.
+> 
+> It is also weird to have a file in drivers/acpi/arm64 that you want
+> to compile test on other arches IMO (and I don't think it is very useful
+> to compile test it either).
+
+Why? Just because the directory is named "arm64" doesn't mean it
+should be excluded from COMPILE_TEST. arch/arm64 yes, but not random
+directories in the driver tree.
+
+Stuff under drivers/ should strive to get 100% COMPILE_TEST coverage
+as much as practical. This makes everyone else's life easier.
+
+Jason
 
