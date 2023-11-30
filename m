@@ -1,84 +1,81 @@
-Return-Path: <linux-hyperv+bounces-1159-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1160-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3DD7FED90
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 12:12:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A95B37FEE05
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 12:34:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9348AB20F63
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 11:12:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 255B0B20E1B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Nov 2023 11:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33C4C3C095;
-	Thu, 30 Nov 2023 11:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6C33C695;
+	Thu, 30 Nov 2023 11:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hS29cAae"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvYIC9LL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8B118E01;
-	Thu, 30 Nov 2023 11:12:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC73C433C7;
-	Thu, 30 Nov 2023 11:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701342762;
-	bh=GGfXE9jnMr/28RJ1AbOcy/7HFYYF7xL3m95Mfm15Tps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hS29cAaeUtXdeK+kiZWZ8qW3M4rlyGHM7IrFWTDxn8Nt0aXiAvnbAmRc/aoZ3Gp0j
-	 V7SRDf/8hQJMNOEslGbmVEQwuQ3v/n0aab4QU6apKhqRzbBW1fGVCc4o5+lNiYt0iI
-	 /7/amZz6HtQ5TNJ7z/1iEkJX2GzxXQ/d0Y8W3VVN2EeZqpbt6InWklo12ZeEHk9H/Z
-	 dLnoiGTasJF7l2Ws/GUmhIMMkZ/lsrZ8w7RC7r6TB1mn3zon1xzXFqjFmv6WUa2sKK
-	 u5jJfB5MNcKrcJC5o7DP2m9wYEaZRsNjXWMH0W1KpYnQMkdMULlFup8a//0ud2c0XX
-	 Dh6gxHxqd0DdA==
-Date: Thu, 30 Nov 2023 12:12:26 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-hyperv@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	dri-devel@lists.freedesktop.org, patches@lists.linux.dev,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Hanjun Guo <guohanjun@huawei.com>, linux-riscv@lists.infradead.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Wei Liu <wei.liu@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jon Hunter <jonathanh@nvidia.com>, linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev, Danilo Krummrich <dakr@redhat.com>,
-	nouveau@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
-	Len Brown <lenb@kernel.org>, devicetree@vger.kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Will Deacon <will@kernel.org>, Sven Peter <sven@svenpeter.dev>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Vineet Gupta <vgupta@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Hector Martin <marcan@marcan.st>, linux-mips@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, asahi@lists.linux.dev,
-	Sudeep Holla <sudeep.holla@arm.com>, dmaengine@vger.kernel.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 10/10] ACPI: IORT: Allow COMPILE_TEST of IORT
-Message-ID: <ZWhuGl1l5V5b+w4P@lpieralisi>
-References: <0-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <10-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <ZWc0qPWzNWPkL8vt@lpieralisi>
- <20231129191240.GZ436702@nvidia.com>
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C4B10E3;
+	Thu, 30 Nov 2023 03:34:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LyNe9cq/euZtRPSb3aioeZtMybHFVA3zxzbs+Z/bjGA=; b=kvYIC9LL0g1DtJPaX0R6PB3Hzs
+	WJoc77vbRw4by7nd4F36TBnJ3T4MI9wdD7aXSPOehJlXlC/pWK+8n2z0lyxmIeom49Fq14fiWDLPi
+	aeXJavXkXYJ5TXk3JFMiuM5yCmh3Z1fNGfwOqorYOzov6OJHhvEfGC6J2W+k21Mb2d45DW/SJjG55
+	hXNSu7aJ+ccY2N3V7hGH5qNtY48YsH1Ay2pRTRGIIC7nAr6OzIV4MUebHtOW2bJ8WohvfYFEEkA36
+	B5JdK+v24H1zWokWmH+erLMEiMEIgHVmGKZCY7RaZV+99vWq5oBYrsMdSM9TFbIUPH+2WK6BZszLl
+	ZhGhcUHQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1r8fIC-00EON3-R9; Thu, 30 Nov 2023 11:33:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EE982300293; Thu, 30 Nov 2023 12:33:15 +0100 (CET)
+Date: Thu, 30 Nov 2023 12:33:15 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Alexander Graf <graf@amazon.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Forrest Yuan Yu <yuanyu@google.com>,
+	James Gowans <jgowans@amazon.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	John Andersen <john.s.andersen@intel.com>,
+	Marian Rotariu <marian.c.rotariu@gmail.com>,
+	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
+	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>,
+	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+	x86@kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
+ during text patching
+Message-ID: <20231130113315.GE20191@noisy.programming.kicks-ass.net>
+References: <20231113022326.24388-1-mic@digikod.net>
+ <20231113022326.24388-18-mic@digikod.net>
+ <20231113081929.GA16138@noisy.programming.kicks-ass.net>
+ <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
+ <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
+ <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -87,78 +84,61 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231129191240.GZ436702@nvidia.com>
+In-Reply-To: <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
 
-On Wed, Nov 29, 2023 at 03:12:40PM -0400, Jason Gunthorpe wrote:
-> On Wed, Nov 29, 2023 at 01:55:04PM +0100, Lorenzo Pieralisi wrote:
+On Wed, Nov 29, 2023 at 03:07:15PM -0600, Madhavan T. Venkataraman wrote:
+
+> Kernel Lockdown
+> ---------------
 > 
-> > I don't think it should be done this way. Is the goal compile testing
-> > IORT code ? 
+> But, we must provide at least some security in V2. Otherwise, it is useless.
 > 
-> Yes
+> So, we have implemented what we call a kernel lockdown. At the end of kernel
+> boot, Heki establishes permissions in the extended page table as mentioned
+> before. Also, it adds an immutable attribute for kernel text and kernel RO data.
+> Beyond that point, guest requests that attempt to modify permissions on any of
+> the immutable pages will be denied.
 > 
-> > If so, why are we forcing it through the SMMU (only because
-> > it can be compile tested while eg SMMUv3 driver can't ?) menu entry ?
+> This means that features like FTrace and KProbes will not work on kernel text
+> in V2. This is a temporary limitation. Once authentication is in place, the
+> limitation will go away.
+
+So either you're saying your patch 17 / text_poke is broken (so why
+include it ?!?) or your statement above is incorrect. Pick one.
+
+
+> __text_poke()
+> 	This function is called by various features to patch text.
+> 	This calls heki_text_poke_start() and heki_text_poke_end().
 > 
-> Because something needs to select it, and SMMU is one of the places
-> that are implicitly using it.
+> 	heki_text_poke_start() is called to add write permissions to the
+> 	extended page table so that text can be patched. heki_text_poke_end()
+> 	is called to revert write permissions in the extended page table.
+
+This, if text_poke works, then static_call / jump_label / ftrace and
+everything else should work, they all rely on this.
+
+
+> Peter mentioned the following:
 > 
-> It isn't (and shouldn't be) a user selectable kconfig. Currently the
-> only thing that selects it is the ARM64 master kconfig.
-
-I never said it should be a user selectable kconfig. I said that
-I don't like using the SMMU entry (only) to select it just because
-that entry allows COMPILE_TEST.
-
-> > This looks a bit artificial (and it is unclear from the Kconfig
-> > file why only that driver selects IORT, it looks like eg the SMMUv3
-> > does not have the same dependency - there is also the SMMUv3 perf
-> > driver to consider).
+> "if you want to mirror the native PTEs why don't you hook into the
+> paravirt page-table muck and get all that for free?"
 > 
-> SMMUv3 doesn't COMPILE_TEST so it picks up the dependency transitivity
-> through ARM64. I'm not sure why IORT was put as a global ARM64 kconfig
-> dependency and not put in the places that directly need it.
-
-Because IORT is used by few ARM64 system IPs (that are enabled by
-default, eg GIC), it makes sense to have a generic ARM64 select (if ACPI).
-
-> "perf driver" ? There is a bunch of GIC stuff that uses this too but I
-> don't know if it compile tests.
-
-"SMMUv3 perf driver" drivers/perf/arm_smmuv3_pmu.c
-
-> > Maybe we can move IORT code into drivers/acpi and add a silent config
-> > option there with a dependency on ARM64 || COMPILE_TEST.
+> We did consider using a shadow page table kind of approach so that guest page table
+> modifications can be intercepted and reflected in the page table entry. We did not
+> do this for two reasons:
 > 
-> That seems pretty weird to me, this is the right way to approach it,
-> IMHO. Making an entire directory condition is pretty incompatible with
-> COMPILE_TEST as a philosophy.
+> - there are bits in the page table entry that are not permission bits. We would like
+>   the guest kernel to be able to modify them directly.
 
-That's not what I was suggesting. I was suggesting to move iort.c (or
-some portions of it) into drivers/acpi if we care enough to compile test
-it on arches !ARM64.
+This statement makes no sense.
 
-It is also weird to have a file in drivers/acpi/arm64 that you want
-to compile test on other arches IMO (and I don't think it is very useful
-to compile test it either).
+> - we cannot tell a genuine request from an attack.
 
-> > Don't know but at least it is clearer. As for the benefits of compile
-> > testing IORT code - yes the previous patch is a warning to fix but
-> > I am not so sure about the actual benefits.
-> 
-> IMHO COMPILE_TEST is an inherently good thing. It makes development
-> easier for everyone because you have a less fractured code base to
-> work with.
+Why not? How is an explicit call different from an explicit call in a
+paravirt hook?
 
-I am talking about IORT code, not COMPILE_TEST as a whole.
-
-I am not sure what "less fractured" means in this context.
-
-Anyway - it is not a big deal either way but I don't like selecting
-ACPI_IORT only on kconfig entries that allow COMPILE_TEST to implicitly
-compile test it so *if* we want to do it we will have to do it
-differently.
-
-Thanks,
-Lorenzo
+From a maintenance pov we already hate paravirt with a passion, but it
+is ever so much better than sprinkling yet another pile of crap
+(heki_*) around.
 
