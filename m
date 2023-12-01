@@ -1,86 +1,116 @@
-Return-Path: <linux-hyperv+bounces-1174-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1175-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B217801028
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Dec 2023 17:32:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7273E80108D
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Dec 2023 17:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 117E8B2147E
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Dec 2023 16:32:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12E38B20D55
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Dec 2023 16:51:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F5CF4D59B;
-	Fri,  1 Dec 2023 16:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D4ED4AF78;
+	Fri,  1 Dec 2023 16:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sb81ttRM"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YGd1sdhU"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE1A10DE
-	for <linux-hyperv@vger.kernel.org>; Fri,  1 Dec 2023 08:32:22 -0800 (PST)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-5c62c98f682so724048a12.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 01 Dec 2023 08:32:22 -0800 (PST)
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D4DCF;
+	Fri,  1 Dec 2023 08:50:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701448342; x=1702053142; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/K7HE0EB9COwZnWNHAn0RCBpw/EJerDEKjS1XCTH01o=;
-        b=sb81ttRMy+4zDNQ3pBlsxtaovroVp6bOprAEQjGOKZqjl1VlY+AH9qes2XuFym/dfG
-         6CuzeVxgDSh9s0x9SwuRY13U5jo+e2pb6iECKRbtETREHex7+URnpkgizRdvBlz1HXTW
-         76EyyQiNlpCB4mzeGDYPdrwL5DaneL/LhpWQpBczUPRDmyQYZnrX0syjuG/4EQ01t97R
-         SHPpnoajTXJ6aBkl5urglMFAJ/1iIU0lNpMN6zmXGl8X4HZUCkhXPPnT8hMRI4NbKcYl
-         JtcD83MLhirCDMETTLLZJEN7n5PAUn/i8+b4fZp2csdMq4EL0J4/GdFNWwm6osa5slxq
-         p/zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701448342; x=1702053142;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/K7HE0EB9COwZnWNHAn0RCBpw/EJerDEKjS1XCTH01o=;
-        b=BVUwWg9yqNdiOdNC/Qx7bc8SK2foY1TfecaMMD+GLQXM9e/zSPzYd7j2jOGJ8d1wNX
-         nTWBC/TaZVuqEMNWrmQR+G7ohg1Lx3Jsv5+q+LFTXefmqSbAIevanRYNzeoAK2wX/NAf
-         06QPRSk3k9aR8wjLVIvT/4QfCdcAySG/M2jF8WI7B0gQm8eSWYeHdQ63gkW3EabYB9O7
-         2nj9nURGqX58Ms6ktmrXYHX3o7v4z3EPC3vcfKz+crmbmkhJCrFHtIeuSAaeTDWDR4v4
-         A2IUHiY7dj5EOt3M6lXE9L0Fj4tLjd9kA85GV5bRZVI8CERii5uAArgCco4LbYbzmuBo
-         Q/og==
-X-Gm-Message-State: AOJu0Yx6SK0iMTqCZqKlkhWhSKHuPge7WQADUQXgXwOoIWZaPaUiegCL
-	jy9LaQ2b8Eb3tHCipBg2jkg2MOoYyz8=
-X-Google-Smtp-Source: AGHT+IH1lYPeVLhg1fK/372dKtjjpuPIbf/djPz/KyZw6BQ3OgmjhAtwIR2bi7SaI0dtlhyObZ26zc2sufk=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:211f:0:b0:5bd:bbb4:5275 with SMTP id
- h31-20020a63211f000000b005bdbbb45275mr3949230pgh.10.1701448342043; Fri, 01
- Dec 2023 08:32:22 -0800 (PST)
-Date: Fri, 1 Dec 2023 08:32:20 -0800
-In-Reply-To: <CXD4TVV5QWUK.3SH495QSBTTUF@amazon.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1701449456; x=1732985456;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   cc:from:to:references:in-reply-to:subject;
+  bh=jzcYp1+G+LJEnQ/Nf3Fzjvbwr6w5g4s4GfO6LThiCsM=;
+  b=YGd1sdhUJvsAsu+ui9H2wz6mzVWzUx+6XYufrcCwuMNs4l9CyHhCZ1+2
+   g4FIpKbc2GULZYhOhaq6mYNjODdsJdO6FFeIWuadHyDHATzQFghR+GOWa
+   CNCv4TH9Q5ZhS5RAPbVuZqRvzgQPbpj6lonoivQSEMN1DNbOMT0/3bo2H
+   k=;
+X-IronPort-AV: E=Sophos;i="6.04,242,1695686400"; 
+   d="scan'208";a="688377607"
+Subject: Re: [RFC 05/33] KVM: x86: hyper-v: Introduce VTL call/return prologues in
+ hypercall page
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-f7c754c9.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 16:50:50 +0000
+Received: from smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan3.pdx.amazon.com [10.39.38.70])
+	by email-inbound-relay-pdx-2c-m6i4x-f7c754c9.us-west-2.amazon.com (Postfix) with ESMTPS id D414C40DA8;
+	Fri,  1 Dec 2023 16:50:47 +0000 (UTC)
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:43089]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.14.81:2525] with esmtp (Farcaster)
+ id 82517984-b528-4c7f-9edc-388069a39df6; Fri, 1 Dec 2023 16:50:46 +0000 (UTC)
+X-Farcaster-Flow-ID: 82517984-b528-4c7f-9edc-388069a39df6
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 1 Dec 2023 16:50:41 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 1 Dec
+ 2023 16:50:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-6-nsaenz@amazon.com>
- <f4495d1f697cf9a7ddfb786eaeeac90f554fc6db.camel@redhat.com> <CXD4TVV5QWUK.3SH495QSBTTUF@amazon.com>
-Message-ID: <ZWoKlJUKJGGhRRgM@google.com>
-Subject: Re: [RFC 05/33] KVM: x86: hyper-v: Introduce VTL call/return
- prologues in hypercall page
-From: Sean Christopherson <seanjc@google.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
-	anelkz@amazon.com, graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, 
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-	x86@kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Fri, 1 Dec 2023 16:50:33 +0000
+Message-ID: <CXD5HJ5LQMTE.11XP9UB9IL8LY@amazon.com>
+CC: Maxim Levitsky <mlevitsk@redhat.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<pbonzini@redhat.com>, <vkuznets@redhat.com>, <anelkz@amazon.com>,
+	<graf@amazon.com>, <dwmw@amazon.co.uk>, <jgowans@amazon.com>,
+	<kys@microsoft.com>, <haiyangz@microsoft.com>, <decui@microsoft.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: Sean Christopherson <seanjc@google.com>
+X-Mailer: aerc 0.15.2-182-g389d89a9362e-dirty
+References: <20231108111806.92604-1-nsaenz@amazon.com>
+ <20231108111806.92604-6-nsaenz@amazon.com>
+ <f4495d1f697cf9a7ddfb786eaeeac90f554fc6db.camel@redhat.com>
+ <CXD4TVV5QWUK.3SH495QSBTTUF@amazon.com> <ZWoKlJUKJGGhRRgM@google.com>
+In-Reply-To: <ZWoKlJUKJGGhRRgM@google.com>
+X-ClientProxiedBy: EX19D032UWB004.ant.amazon.com (10.13.139.136) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > To support this I think that we can add a userspace msr filter on the HV_X64_MSR_HYPERCALL,
-> > although I am not 100% sure if a userspace msr filter overrides the in-kernel msr handling.
-> 
-> I thought about it at the time. It's not that simple though, we should
-> still let KVM set the hypercall bytecode, and other quirks like the Xen
-> one.
+On Fri Dec 1, 2023 at 4:32 PM UTC, Sean Christopherson wrote:
+> On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
+> > > To support this I think that we can add a userspace msr filter on the=
+ HV_X64_MSR_HYPERCALL,
+> > > although I am not 100% sure if a userspace msr filter overrides the i=
+n-kernel msr handling.
+> >
+> > I thought about it at the time. It's not that simple though, we should
+> > still let KVM set the hypercall bytecode, and other quirks like the Xen
+> > one.
+>
+> Yeah, that Xen quirk is quite the killer.
+>
+> Can you provide pseudo-assembly for what the final page is supposed to lo=
+ok like?
+> I'm struggling mightily to understand what this is actually trying to do.
 
-Yeah, that Xen quirk is quite the killer.
+I'll make it as simple as possible (diregard 32bit support and that xen
+exists):
 
-Can you provide pseudo-assembly for what the final page is supposed to look like?
-I'm struggling mightily to understand what this is actually trying to do.
+vmcall	     <-  Offset 0, regular Hyper-V hypercalls enter here
+ret
+mov rax,rcx  <-  VTL call hypercall enters here
+mov rcx,0x11
+vmcall
+ret
+mov rax,rcx  <-  VTL return hypercall enters here
+mov rcx,0x12
+vmcall
+ret
+
+rcx needs to be saved as it contains a "VTL call control input to the
+hypervisor" (TLFS 15.6.1). I don't remember seeing it being used in
+practice. Then, KVM expects the hypercall code in rcx, hence the
+0x11/0x12 mov.
+
+Nicolas
 
