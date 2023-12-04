@@ -1,206 +1,260 @@
-Return-Path: <linux-hyperv+bounces-1189-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1190-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3281803524
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 14:39:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9B198037B1
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 15:56:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5A3F1C2095C
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 13:39:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 496541F21209
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 14:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE3625116;
-	Mon,  4 Dec 2023 13:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F01A328DD7;
+	Mon,  4 Dec 2023 14:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hy/8Psmf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wpaj7DMM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0BF9191;
-	Mon,  4 Dec 2023 05:39:09 -0800 (PST)
-Received: from [100.66.64.18] (unknown [108.143.43.187])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 246E020B74C1;
-	Mon,  4 Dec 2023 05:39:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 246E020B74C1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1701697148;
-	bh=BtY3bVxPtr2XdgE2ZvKoiT1mqgpjS0iGQgzugKiTo+A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hy/8PsmfTgS7df7xb+x9yGMaoEJdmcwSkjs0qSk4z8IGyhirMOK7pvLeWIx9kAeOA
-	 oH52/3UsyfwuFtBdEP/mYS8f65zzZxyUm6kE2TIPyHtdRgRlur5d0PJVff+1AfFnjC
-	 dUkGUg41jrA0GKxcGRmUSz9LShxyjqXmVJaaNSlU=
-Message-ID: <8747ed90-72b8-49bf-8df7-5c5f06056fe2@linux.microsoft.com>
-Date: Mon, 4 Dec 2023 14:39:03 +0100
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA23BA1;
+	Mon,  4 Dec 2023 06:56:29 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5d6b9143782so28028837b3.0;
+        Mon, 04 Dec 2023 06:56:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701701789; x=1702306589; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Utp+O7GRH/D7eVJWmR5yRRgItcVJjKaGlGf4GPfFyM8=;
+        b=Wpaj7DMM/lv40OJeJqZ9AcJAZBeNI+HYz10khwH+8E9YGFrioYjcNRclQvtjnTg2jh
+         nFmUvzslpnzuQhPY3vm9z7PxbUIsPZ091yzdl2aRuIBQv+5DHNboB2S40/3roKx30bup
+         Efp2LNPe7ozj7uWtkYAdmVe4DsSEQmKg3wOGHiJeinJoTeojnoC+V5VqE/vsJv3MCkn2
+         ZM9ZLg9VZOYeMyfueTibA2eeUurfQxbjHs50D+UnNibDP7IkuXbWL7XNTVa6wrHwO+sZ
+         QWi0/qzqoXoe2QIQCdvAQEuyxPCf/UChKPKTL4DpToFWWG/EXjq7ywcp0GhSGSsOE8af
+         II/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701701789; x=1702306589;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Utp+O7GRH/D7eVJWmR5yRRgItcVJjKaGlGf4GPfFyM8=;
+        b=smeM8qA9XVYlU7fbdifkVPqIxqfiFnNk25rS2DctMTDJZ3S7PAF+t7tUhglu+yaASZ
+         Wp+rqcF87l4d6ZxxNiewfrFk5CMYL2CvhB/o7f7NKkLE4BxnSI8tg5/aEdg0Ji93XkHN
+         F87QUIY2xplpURyNRuCcoS8n1isHx9I+VYt22O46b+j4OqUlpmXwg//kIiXTUxvKaP19
+         UIHTHVKwjXq5ipyhvIHUTolW2a/3WrVLZOVBYs6TuCGPkcfqqUyZtLZwevvAcZdaYc6F
+         HTZOt+e29vXR2jbtNbXSdqFmGlNQeInQL5zJwvzQBqLRNysLkiOHxPT09TQgRoGh9tF7
+         O/qQ==
+X-Gm-Message-State: AOJu0Yx+4YdAfBk1aX0WigIzvrt4BTGPYN7K3hvb/ezty4PyUsM5RehB
+	zEF7ApizlNq8x9myJdbMD0E=
+X-Google-Smtp-Source: AGHT+IF+bQywTgvuHQE83tWnJVM0Plx7zMuSqkbDT1L6Wa0s0IjIzrNA3VhWCDFOGkjjPW8UPNyqvw==
+X-Received: by 2002:a81:ae4a:0:b0:5d7:1940:7d62 with SMTP id g10-20020a81ae4a000000b005d719407d62mr2854310ywk.57.1701701788662;
+        Mon, 04 Dec 2023 06:56:28 -0800 (PST)
+Received: from localhost ([2601:344:8301:57f0:3c76:612b:b76f:61a6])
+        by smtp.gmail.com with ESMTPSA id b1-20020a0dd901000000b005d855644914sm1001428ywe.58.2023.12.04.06.56.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Dec 2023 06:56:28 -0800 (PST)
+Date: Mon, 4 Dec 2023 06:56:27 -0800
+From: Yury Norov <yury.norov@gmail.com>
+To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+	leon@kernel.org, cai.huoqing@linux.dev, ssengar@linux.microsoft.com,
+	vkuznets@redhat.com, tglx@linutronix.de,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	sch^Crabarti@microsoft.com, paulros@microsoft.com
+Subject: Re: [PATCH V4 net-next] net: mana: Assigning IRQ affinity on HT cores
+Message-ID: <ZW3om2dfA4U0lhVY@yury-ThinkPad>
+References: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early
- TDX init
-Content-Language: en-US
-To: "Reshetova, Elena" <elena.reshetova@intel.com>,
- Borislav Petkov <bp@alien8.de>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "stefan.bader@canonical.com" <stefan.bader@canonical.com>,
- "tim.gardner@canonical.com" <tim.gardner@canonical.com>,
- "roxana.nicolescu@canonical.com" <roxana.nicolescu@canonical.com>,
- "cascardo@canonical.com" <cascardo@canonical.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "sashal@kernel.org" <sashal@kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ingo Molnar <mingo@redhat.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Michael Kelley <mhkelley58@gmail.com>, Nikolay Borisov
- <nik.borisov@suse.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky
- <thomas.lendacky@amd.com>, "x86@kernel.org" <x86@kernel.org>,
- "Cui, Dexuan" <decui@microsoft.com>
-References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
- <0799b692-4b26-4e00-9cec-fdc4c929ea58@linux.microsoft.com>
- <20231129164049.GVZWdpkVlc8nUvl/jx@fat_crate.local>
- <DM8PR11MB575085570AF48AF4690986EDE782A@DM8PR11MB5750.namprd11.prod.outlook.com>
- <20231130075559.GAZWhAD5ScHoxbbTxL@fat_crate.local>
- <DM8PR11MB575049E0C9F36001F0F374CEE782A@DM8PR11MB5750.namprd11.prod.outlook.com>
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-In-Reply-To: <DM8PR11MB575049E0C9F36001F0F374CEE782A@DM8PR11MB5750.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
 
-On 30/11/2023 09:31, Reshetova, Elena wrote:
+On Mon, Dec 04, 2023 at 12:50:41AM -0800, Souradeep Chakrabarti wrote:
+> Existing MANA design assigns IRQ to every CPU, including sibling
+> hyper-threads. This may cause multiple IRQs to be active simultaneously
+> in the same core and may reduce the network performance with RSS.
 > 
->> On Thu, Nov 30, 2023 at 07:08:00AM +0000, Reshetova, Elena wrote:
->>> ...
->>> 3. Normal TDX 1.0 guest that is unaware that it runs in partitioned
->>>    environment
->>> 4. and so on
->>
->> There's a reason I call it a virt zoo.
->>
->>> I don’t know if AMD architecture would support all this spectrum of
->>> the guests through.
->>
->> I hear threats...
+> Improve the performance by assigning IRQ to non sibling CPUs in local
+> NUMA node.
 > 
-> No threats whatsoever, I just truly don’t know details of SEV architecture
-> on this and how it envisioned to operate under this nesting scenario.
-> I raised this point to see if we can build the common understanding 
-> on this. My personal understanding (please correct me) was that SEV
-> would also allow different types of L2 guests, so I think we should be
-> aligning on this.
-I don't think SNP allows the level of freedom you describe. But regardless
-of the possibilities, I can't think of users of this technology actually
-being interested in running all of these options. Would love to hear someone
-speak up.
+> Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+> ---
+> V3 -> V4:
+> * Used for_each_numa_hop_mask() macro and simplified the code.
+> Thanks to Yury Norov for the suggestion.
 
-I think of VMPLs provided by SNP and the TD-partitioning L1/L2 scheme as
-the equivalent of ARM's trustzone/EL3 concept. It lets you separate high
-privilege operations into a hardware isolated context. In this case it's
-within the same confidential computing boundary. That's our use case.
- 
+We've got a special tag for this:
+
+Suggested-by: Yury Norov <yury.norov@gmali.com>
+
+> * Added code to assign hwc irq separately in mana_gd_setup_irqs.
 > 
->>
->>> Instead we should have a flexible way for the L2 guest to discover
->>> the virt environment it runs in (as modelled by L1 VMM) and the
->>> baseline should not to assume it is a TDX or SEV guest, but assume
->>> this is some special virt guest (or legacy guest, whatever approach
->>> is cleaner) and expose additional interfaces to it.
->>
->> You can do flexible all you want but all that guest zoo is using the
->> kernel. The same code base which boots on gazillion incarnations of real
->> hardware. And we have trouble keeping that code base clean already.
+> V2 -> V3:
+> * Created a helper function to get the next NUMA with CPU.
+> * Added some error checks for unsuccessful memory allocation.
+> * Fixed some comments on the code.
 > 
-> Fully agree, I wasn’t objecting this. What I was objecting is to make
-> explicit assumptions on what the L2 guest under TDX partitioning is. 
+> V1 -> V2:
+> * Simplified the code by removing filter_mask_list and using avail_cpus.
+> * Addressed infinite loop issue when there are numa nodes with no CPUs.
+> * Addressed uses of local numa node instead of 0 to start.
+> * Removed uses of BUG_ON.
+> * Placed cpus_read_lock in parent function to avoid num_online_cpus
+>   to get changed before function finishes the affinity assignment.
+> ---
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 70 +++++++++++++++++--
+>  1 file changed, 63 insertions(+), 7 deletions(-)
 > 
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 6367de0c2c2e..2194a53cce10 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -1243,15 +1243,57 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+>  	r->size = 0;
+>  }
+>  
+> +static int irq_setup(int *irqs, int nvec, int start_numa_node)
+> +{
+> +	int i = 0, cpu, err = 0;
+> +	const struct cpumask *node_cpumask;
+> +	unsigned int  next_node = start_numa_node;
+> +	cpumask_var_t visited_cpus, node_cpumask_temp;
+> +
+> +	if (!zalloc_cpumask_var(&visited_cpus, GFP_KERNEL)) {
+> +		err = ENOMEM;
+> +		return err;
+> +	}
+> +	if (!zalloc_cpumask_var(&node_cpumask_temp, GFP_KERNEL)) {
+> +		err = -ENOMEM;
+> +		return err;
+> +	}
 
-That's fair, my intention was to have this simple logic (if td-partitioning,
-then this and this is given) until a different user of TD-partitioning comes
-along and then we figure out which parts generalize.
+Can you add a bit more of vertical spacing?
 
->>
->> Now, all those weird guests come along, they're more or less
->> "compatible" but not fully. So they have to do an exception here,
->> disable some feature there which they don't want/support/cannot/bla. Or
->> they use a paravisor which does *some* of the work for them so that
->> needs to be accomodated too.
->>
->> And so they start sprinkling around all those "differences" around the
->> kernel. And turn it into an unmaintainable mess. We've been here before
->> - last time it was called "if (XEN)"... and we're already getting there
->> again only with two L1 encrypted guests technologies. I'm currently
->> working on trimming down some of the SEV mess we've already added...
->>
->> So - and I've said this a bunch of times already - whatever guest type
->> it is, its interaction with the main kernel better be properly designed
->> and abstracted away so that it doesn't turn into a mess.
-> 
-> Yes, agree, so what are our options and overall strategy on this? 
-> We can try to push as much as possible complexity into L1 VMM in this
-> scenario to keep the guest kernel almost free from these sprinkling differences.
-> Afterall the L1 VMM can emulate whatever it wants for the guest.
-> We can also see if there is a true need to add another virtualization
-> abstraction here, i.e. "nested encrypted guest". But to justify this one
-> we need to have usecases/scenarios where L1 VMM actually cannot run
-> L2 guest (legacy or TDX enabled) as it is. 
-> @Jeremi Piotrowski do you have such usecase/scenarios you can describe?
-> > Any other options we should be considering as overall strategy? 
+> +	rcu_read_lock();
+> +	for_each_numa_hop_mask(node_cpumask, next_node) {
+> +		cpumask_copy(node_cpumask_temp, node_cpumask);
+> +		for_each_cpu(cpu, node_cpumask_temp) {
+> +			cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
+> +				       topology_sibling_cpumask(cpu));
+> +			irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
+> +			if (++i == nvec)
+> +				goto free_mask;
+> +			cpumask_set_cpu(cpu, visited_cpus);
+> +			if (cpumask_empty(node_cpumask_temp)) {
+> +				cpumask_copy(node_cpumask_temp, node_cpumask);
+> +				cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
+> +					       visited_cpus);
+> +				cpu = 0;
+> +			}
 
-Just taking a step back: we're big SNP and TDX users. The only kind of guest
-that meets our users needs on both SNP and TDX and that we support across
-our server fleet is closest to what you listed as 2:
-"guest with a CoCo security module (paravisor) and targeted CoCo enlightenments".
+It feels like you can calculate number of sibling groups in a hop in
+advance, so that you'll know how many IRQs you want to assign per each
+hop, and avoid resetting the node_cpumask_temp and spinning in inner
+loop for more than once...
 
-We're aligned on the need to push complexity out of the kernel which is exactly
-what has happened (also across vendors): the guest is mostly unconcerned by the
-differences between TDX and SNP (except notification hypercall in the I/O path),
-does not need all the changes in the early boot code that TDX/SNP have forced,
-switches page visibility with the same hypercall for both etc.
+Can you print your topology, and describe how you want to spread IRQs
+on it, and how your existing code does spread them?
 
-I'm not aware of use cases for fully legacy guests, and my guess is they would suffer
-from excessive overhead.
+Please add performance results in the commit message.
 
-I am also not aware of use cases for "pretending to be an TDX 1.0 guest". Doing that
-removes opportunities to share kernel code with normal guests and SNP guests on hyperv.
-I'd also like to point out something that Michael wrote here[1] regarding paravisor
-interfaces:
-"But it seems like any kind of (forwarding) scheme needs to be a well-defined contract
-that would work for both TDX and SEV-SNP."
+I feel like this may be a useful code for other kernel folks, and if
+so, we'd invest in it for more and make it a generic API, similar to
+cpumaks_local_spread()...
 
-[1]: https://lore.kernel.org/lkml/SN6PR02MB415717E09C249A31F2A4E229D4BCA@SN6PR02MB4157.namprd02.prod.outlook.com/
+> +		}
+> +	}
+> +free_mask:
+> +	rcu_read_unlock();
+> +	free_cpumask_var(visited_cpus);
+> +	free_cpumask_var(node_cpumask_temp);
+> +	return err;
+> +}
+> +
+>  static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  {
+> -	unsigned int max_queues_per_port = num_online_cpus();
+>  	struct gdma_context *gc = pci_get_drvdata(pdev);
+> +	unsigned int max_queues_per_port;
+>  	struct gdma_irq_context *gic;
+>  	unsigned int max_irqs, cpu;
+> -	int nvec, irq;
+> +	int nvec, *irqs, irq;
+>  	int err, i = 0, j;
+>  
+> +	cpus_read_lock();
+> +	max_queues_per_port = num_online_cpus();
+>  	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
+>  		max_queues_per_port = MANA_MAX_NUM_QUEUES;
+>  
+> @@ -1261,6 +1303,11 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
+>  	if (nvec < 0)
+>  		return nvec;
+> +	irqs = kmalloc_array(max_queues_per_port, sizeof(int), GFP_KERNEL);
+> +	if (!irqs) {
+> +		err = -ENOMEM;
+> +		goto free_irq_vector;
+> +	}
+>  
+>  	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
+>  				   GFP_KERNEL);
+> @@ -1287,21 +1334,28 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  			goto free_irq;
+>  		}
+>  
+> -		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+> +		if (!i) {
+> +			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+> +			cpu = cpumask_local_spread(i, gc->numa_node);
 
-Another thing to note: in SNP you *need* to interact with VMPL0 (~L1 VMM) when
-running at other VMPLs (eg. pvalidate and rmpadjust only possible at VMPL0) so
-the kernel needs to cooperate with VMPL0 to operate. On skimming the TD-part
-spec I'm not sure how "supporting fast-path I/O" would be possible with supporting
-a "TDX 1.0 guest" with no TD-part awareness (if you need to trap all TDVMCALL then
-that's not OK).
+If i == 0, you can simplify it because you just need the 1st CPU from
+a given node.
 
-Now back to the topic at hand: I think what's needed is to stop treating
-X86_FEATURE_TDX_GUEST as an all-or-nothing thing. Split out the individual
-enlightenment into separate CC attributes, allow them to be selected without
-requiring you to buy the whole zoo. I don't think we need a "nested encrypted guest"
-abstraction.
-
-Jeremi
-
-> 
-> Best Regards,
-> Elena.
-> 
->>
->> Thx.
->>
->> --
->> Regards/Gruss,
->>     Boris.
->>
->> https://people.kernel.org/tglx/notes-about-netiquette
-
+> +			irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+> +		} else {
+> +			irqs[i - 1] = irq;
+> +			err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
+> +		}
+>  		if (err)
+>  			goto free_irq;
+> -
+> -		cpu = cpumask_local_spread(i, gc->numa_node);
+> -		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+>  	}
+>  
+> +	err = irq_setup(irqs, max_queues_per_port, gc->numa_node);
+> +	if (err)
+> +		goto free_irq;
+>  	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
+>  	if (err)
+>  		goto free_irq;
+>  
+>  	gc->max_num_msix = nvec;
+>  	gc->num_msix_usable = nvec;
+> -
+> +	cpus_read_unlock();
+>  	return 0;
+>  
+>  free_irq:
+> @@ -1314,8 +1368,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  	}
+>  
+>  	kfree(gc->irq_contexts);
+> +	kfree(irqs);
+>  	gc->irq_contexts = NULL;
+>  free_irq_vector:
+> +	cpus_read_unlock();
+>  	pci_free_irq_vectors(pdev);
+>  	return err;
+>  }
+> -- 
+> 2.34.1
 
