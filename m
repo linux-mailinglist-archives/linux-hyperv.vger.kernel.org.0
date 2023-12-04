@@ -1,142 +1,123 @@
-Return-Path: <linux-hyperv+bounces-1194-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1195-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A21FB803E15
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 20:07:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BCAA803E2B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 20:14:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF5D1C20A86
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 19:07:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1AEA8B209DC
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 19:14:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1AE31594;
-	Mon,  4 Dec 2023 19:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8342030F9D;
+	Mon,  4 Dec 2023 19:14:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hc1WA4TB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cgoZfdq9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78497D5;
-	Mon,  4 Dec 2023 11:07:48 -0800 (PST)
-Received: from [192.168.178.49] (dynamic-adsl-84-220-28-122.clienti.tiscali.it [84.220.28.122])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0451C20B74C0;
-	Mon,  4 Dec 2023 11:07:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0451C20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1701716867;
-	bh=DhialEwGNDg3mrw6IMaHyyz1UwnTPP9nz7f6+UkxtYo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hc1WA4TBrCB1KkvAbyYjJyBppPtRTRbsfBKpT419aWpy2ztkcPxAb/s6f2G+exsrM
-	 Rra8BHMT2mlyE8abLbGIfD6tyWJEGywaPkcO1Wd2sC6gI6QxTOQq6/xq0vRw9wuGCe
-	 cqn9Wyx22UN4A4vtLznpkQS6Qe4uCaEiPin01ypA=
-Message-ID: <9ab71fee-be9f-4afc-8098-ad9d6b667d46@linux.microsoft.com>
-Date: Mon, 4 Dec 2023 20:07:38 +0100
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD0B2F864;
+	Mon,  4 Dec 2023 19:14:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8608FC433C9;
+	Mon,  4 Dec 2023 19:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701717269;
+	bh=kfWReJzoKyST0mYqrsmPO5P8wLRuTmZubW3mAnPQP1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cgoZfdq9gW9Pr9xKC3b01h9h3v8ELo9+WYL+fDpUCEbba0Kz1rfxZrAVrfOiZ5ruo
+	 YYDDg+vGo/pozOJAZgQK+y7PQcUAxfjLp6o0Ooy6UQWcHYTSXGnDvlAmy/gGlqd5KB
+	 b240NbfpFBWcCsgduQYsKm1O4Dtc0KWopgQSlnpsbNvjKfcpCNbqOnvKX17fn73iuM
+	 GyuyUC9MRhbkFtHIt5uMPCk+mnhGG8PoLRI0F+Z2WcSpw3wtlgyziIknClpvQkUn21
+	 KheiX6gnBS2zjZ/rNqJwvtF8Mfp/WUhOkqSZIAqDOi1apTQrjxAyT85f3u8xQOv3Zu
+	 yD8PBrrw69Wqg==
+Date: Mon, 4 Dec 2023 13:14:27 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+	Alexey Klimov <klimov.linux@gmail.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v2 14/35] PCI: hv: switch hv_get_dom_num() to use atomic
+ find_bit()
+Message-ID: <20231204191427.GA623236@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early
- TDX init
-Content-Language: en-US
-To: "Reshetova, Elena" <elena.reshetova@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Michael Kelley <mhkelley58@gmail.com>, Nikolay Borisov
- <nik.borisov@suse.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky
- <thomas.lendacky@amd.com>, "x86@kernel.org" <x86@kernel.org>,
- "Cui, Dexuan" <decui@microsoft.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "stefan.bader@canonical.com" <stefan.bader@canonical.com>,
- "tim.gardner@canonical.com" <tim.gardner@canonical.com>,
- "roxana.nicolescu@canonical.com" <roxana.nicolescu@canonical.com>,
- "cascardo@canonical.com" <cascardo@canonical.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "sashal@kernel.org" <sashal@kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
- <DM8PR11MB575090573031AD9888D4738AE786A@DM8PR11MB5750.namprd11.prod.outlook.com>
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-In-Reply-To: <DM8PR11MB575090573031AD9888D4738AE786A@DM8PR11MB5750.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231203193307.542794-13-yury.norov@gmail.com>
 
-On 04/12/2023 10:17, Reshetova, Elena wrote:
->> Check for additional CPUID bits to identify TDX guests running with Trust
->> Domain (TD) partitioning enabled. TD partitioning is like nested virtualization
->> inside the Trust Domain so there is a L1 TD VM(M) and there can be L2 TD VM(s).
->>
->> In this arrangement we are not guaranteed that the TDX_CPUID_LEAF_ID is
->> visible
->> to Linux running as an L2 TD VM. This is because a majority of TDX facilities
->> are controlled by the L1 VMM and the L2 TDX guest needs to use TD partitioning
->> aware mechanisms for what's left. So currently such guests do not have
->> X86_FEATURE_TDX_GUEST set.
+On Sun, Dec 03, 2023 at 11:32:46AM -0800, Yury Norov wrote:
+> The function traverses bitmap with for_each_clear_bit() just to allocate
+> a bit atomically. We can do it better with a dedicated find_and_set_bit().
+
+No objection from me, but please tweak the subject line to match
+previous hv history, i.e., capitalize the first word after the prefix:
+
+  PCI: hv: Use atomic find_and_set_bit()
+
+I think there's value in using similar phrasing across the whole
+series.  Some subjects say "optimize xyz()", some say "rework xyz()",
+some "rework xyz()", etc.  I think it's more informative to include
+the "atomic" and "find_bit()" ideas in the subject than the specific
+functions that *use* it.
+
+I also like how some of the other commit logs clearly say what the
+patch does, e.g., "Simplify by using dedicated find_and_set_bit()", as
+opposed to just "We can do it better ..." which technically doesn't
+say what the patch does.
+
+Very nice simplification in all these users, thanks for doing it!
+
+I assume you'll merge these all together since they depend on [01/35],
+so:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> Back to this concrete patch. Why cannot L1 VMM emulate the correct value of
-> the TDX_CPUID_LEAF_ID to L2 VM? It can do this per TDX partitioning arch.
-> How do you handle this and other CPUID calls call currently in L1? Per spec,
-> all CPUIDs calls from L2 will cause L2 --> L1 exit, so what do you do in L1?
-The disclaimer here is that I don't have access to the paravisor (L1) code. But
-to the best of my knowledge the L1 handles CPUID calls by calling into the TDX
-module, or synthesizing a response itself. TDX_CPUID_LEAF_ID is not provided to
-the L2 guest in order to discriminate a guest that is solely responsible for every
-TDX mechanism (running at L1) from one running at L2 that has to cooperate with L1.
-More below.
-
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 30c7dfeccb16..033b1fb7f4eb 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3605,12 +3605,9 @@ static u16 hv_get_dom_num(u16 dom)
+>  	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
+>  		return dom;
+>  
+> -	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
+> -		if (test_and_set_bit(i, hvpci_dom_map) == 0)
+> -			return i;
+> -	}
+> +	i = find_and_set_bit(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
+>  
+> -	return HVPCI_DOM_INVALID;
+> +	return i < HVPCI_DOM_MAP_SIZE ? i : HVPCI_DOM_INVALID;
+>  }
+>  
+>  /**
+> -- 
+> 2.40.1
 > 
-> Given that you do that simple emulation, you already end up with TDX guest
-> code being activated. Next you can check what features you wont be able to
-> provide in L1 and create simple emulation calls for the TDG calls that must be
-> supported and cannot return error. The biggest TDG call (TDVMCALL) is already
-> direct call into L0 VMM, so this part doesn’t require L1 VMM support. 
-
-I don't see anything in the TD-partitioning spec that gives the TDX guest a way
-to detect if it's running at L2 or L1, or check whether TDVMCALLs go to L0/L1.
-So in any case this requires an extra cpuid call to establish the environment.
-Given that, exposing TDX_CPUID_LEAF_ID to the guest doesn't help.
-
-I'll give some examples of where the idea of emulating a TDX environment
-without attempting L1-L2 cooperation breaks down.
-
-hlt: if the guest issues a hlt TDVMCALL it goes to L0, but if it issues a classic hlt
-it traps to L1. The hlt should definitely go to L1 so that L1 has a chance to do
-housekeeping.
-
-map gpa: say the guest uses MAP_GPA TDVMCALL. This goes to L0, not L1 which is the actual
-entity that needs to have a say in performing the conversion. L1 can't act on the request
-if L0 would forward it because of the CoCo threat model. So L1 and L2 get out of sync.
-The only safe approach is for L2 to use a different mechanism to trap to L1 explicitly.
-
-Having a paravisor is required to support a TPM and having TDVMCALLs go to L0 is
-required to make performance viable for real workloads.
-
-> 
-> Until we really see what breaks with this approach, I don’t think it is worth to
-> take in the complexity to support different L1 hypervisors view on partitioning.
-> 
-
-I'm not asking to support different L1 hypervisors view on partitioning, I want to
-clean up the code (by fixing assumptions that no longer hold) for the model that I'm
-describing that: the kernel already supports, has an implementation that works and
-has actual users. This is also a model that Intel intentionally created the TD-partitioning
-spec to support.
-
-So lets work together to make X86_FEATURE_TDX_GUEST match reality.
-
-Best regards,
-Jeremi
-
-> Best Regards,
-> Elena.
-> 
-> 
-
 
