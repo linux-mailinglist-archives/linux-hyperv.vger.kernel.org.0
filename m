@@ -1,260 +1,142 @@
-Return-Path: <linux-hyperv+bounces-1190-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1191-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9B198037B1
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 15:56:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3976980385E
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 16:10:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 496541F21209
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 14:56:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9D97280CC8
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Dec 2023 15:10:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F01A328DD7;
-	Mon,  4 Dec 2023 14:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3F328E07;
+	Mon,  4 Dec 2023 15:10:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wpaj7DMM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TyHK4Wi7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA23BA1;
-	Mon,  4 Dec 2023 06:56:29 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5d6b9143782so28028837b3.0;
-        Mon, 04 Dec 2023 06:56:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701701789; x=1702306589; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Utp+O7GRH/D7eVJWmR5yRRgItcVJjKaGlGf4GPfFyM8=;
-        b=Wpaj7DMM/lv40OJeJqZ9AcJAZBeNI+HYz10khwH+8E9YGFrioYjcNRclQvtjnTg2jh
-         nFmUvzslpnzuQhPY3vm9z7PxbUIsPZ091yzdl2aRuIBQv+5DHNboB2S40/3roKx30bup
-         Efp2LNPe7ozj7uWtkYAdmVe4DsSEQmKg3wOGHiJeinJoTeojnoC+V5VqE/vsJv3MCkn2
-         ZM9ZLg9VZOYeMyfueTibA2eeUurfQxbjHs50D+UnNibDP7IkuXbWL7XNTVa6wrHwO+sZ
-         QWi0/qzqoXoe2QIQCdvAQEuyxPCf/UChKPKTL4DpToFWWG/EXjq7ywcp0GhSGSsOE8af
-         II/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701701789; x=1702306589;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Utp+O7GRH/D7eVJWmR5yRRgItcVJjKaGlGf4GPfFyM8=;
-        b=smeM8qA9XVYlU7fbdifkVPqIxqfiFnNk25rS2DctMTDJZ3S7PAF+t7tUhglu+yaASZ
-         Wp+rqcF87l4d6ZxxNiewfrFk5CMYL2CvhB/o7f7NKkLE4BxnSI8tg5/aEdg0Ji93XkHN
-         F87QUIY2xplpURyNRuCcoS8n1isHx9I+VYt22O46b+j4OqUlpmXwg//kIiXTUxvKaP19
-         UIHTHVKwjXq5ipyhvIHUTolW2a/3WrVLZOVBYs6TuCGPkcfqqUyZtLZwevvAcZdaYc6F
-         HTZOt+e29vXR2jbtNbXSdqFmGlNQeInQL5zJwvzQBqLRNysLkiOHxPT09TQgRoGh9tF7
-         O/qQ==
-X-Gm-Message-State: AOJu0Yx+4YdAfBk1aX0WigIzvrt4BTGPYN7K3hvb/ezty4PyUsM5RehB
-	zEF7ApizlNq8x9myJdbMD0E=
-X-Google-Smtp-Source: AGHT+IF+bQywTgvuHQE83tWnJVM0Plx7zMuSqkbDT1L6Wa0s0IjIzrNA3VhWCDFOGkjjPW8UPNyqvw==
-X-Received: by 2002:a81:ae4a:0:b0:5d7:1940:7d62 with SMTP id g10-20020a81ae4a000000b005d719407d62mr2854310ywk.57.1701701788662;
-        Mon, 04 Dec 2023 06:56:28 -0800 (PST)
-Received: from localhost ([2601:344:8301:57f0:3c76:612b:b76f:61a6])
-        by smtp.gmail.com with ESMTPSA id b1-20020a0dd901000000b005d855644914sm1001428ywe.58.2023.12.04.06.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 06:56:28 -0800 (PST)
-Date: Mon, 4 Dec 2023 06:56:27 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
-	leon@kernel.org, cai.huoqing@linux.dev, ssengar@linux.microsoft.com,
-	vkuznets@redhat.com, tglx@linutronix.de,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	sch^Crabarti@microsoft.com, paulros@microsoft.com
-Subject: Re: [PATCH V4 net-next] net: mana: Assigning IRQ affinity on HT cores
-Message-ID: <ZW3om2dfA4U0lhVY@yury-ThinkPad>
-References: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06CF9182;
+	Mon,  4 Dec 2023 07:10:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701702632; x=1733238632;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ojRPLeznA9orO9+HTWEqBOAZJ6/SMqYsMbhB/SOu7tQ=;
+  b=TyHK4Wi7miyG6DSdanaPurcqUYMCqgZbAaj/vYNolgR1JfOl7s5ykchK
+   vvvNJMlI1fKIHmXm8NEy6faFPi/HSbIg5a2jmcbvxi7U3WxO07/T/kvC5
+   FWn/1CLIN+Uxmo2pVja8v2rhD18kLqaTjZ1SsJSFAZgqumcdrg41NMvNR
+   EoNtQT+FOn9L2SSpixr4kSytSUJLyoacM9QRZJENBZ6GB+Ra3EQeBMhoE
+   YPSP0Eo05cVL9RQvxu5u2mJbTEvhuDWWouKdKAEXhdW7/omsDRSYjJEJz
+   /knFurl5yg+3pivAqIS7FY3QoQvy0S6KSWX1F4CLKG6OHfhSRbyQ+dX+r
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="597529"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="597529"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 07:10:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="841083597"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="841083597"
+Received: from gauravs1-mobl.amr.corp.intel.com (HELO [10.209.53.199]) ([10.209.53.199])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 07:10:29 -0800
+Message-ID: <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
+Date: Mon, 4 Dec 2023 07:10:29 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/10] x86/hyperv: Use TDX GHCI to access some MSRs in
+ a TDX VM with the paravisor
+Content-Language: en-US
+To: Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com, arnd@arndb.de,
+ bp@alien8.de, brijesh.singh@amd.com, dan.j.williams@intel.com,
+ dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
+ jane.chu@oracle.com, kirill.shutemov@linux.intel.com, kys@microsoft.com,
+ linux-hyperv@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+ peterz@infradead.org, rostedt@goodmis.org,
+ sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
+ tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
+ Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ Tianyu.Lan@microsoft.com, rick.p.edgecombe@intel.com, andavis@redhat.com,
+ mheslin@redhat.com, vkuznets@redhat.com, xiaoyao.li@intel.com
+References: <20230824080712.30327-1-decui@microsoft.com>
+ <20230824080712.30327-9-decui@microsoft.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20230824080712.30327-9-decui@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 04, 2023 at 12:50:41AM -0800, Souradeep Chakrabarti wrote:
-> Existing MANA design assigns IRQ to every CPU, including sibling
-> hyper-threads. This may cause multiple IRQs to be active simultaneously
-> in the same core and may reduce the network performance with RSS.
-> 
-> Improve the performance by assigning IRQ to non sibling CPUs in local
-> NUMA node.
-> 
-> Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> ---
-> V3 -> V4:
-> * Used for_each_numa_hop_mask() macro and simplified the code.
-> Thanks to Yury Norov for the suggestion.
-
-We've got a special tag for this:
-
-Suggested-by: Yury Norov <yury.norov@gmali.com>
-
-> * Added code to assign hwc irq separately in mana_gd_setup_irqs.
-> 
-> V2 -> V3:
-> * Created a helper function to get the next NUMA with CPU.
-> * Added some error checks for unsuccessful memory allocation.
-> * Fixed some comments on the code.
-> 
-> V1 -> V2:
-> * Simplified the code by removing filter_mask_list and using avail_cpus.
-> * Addressed infinite loop issue when there are numa nodes with no CPUs.
-> * Addressed uses of local numa node instead of 0 to start.
-> * Removed uses of BUG_ON.
-> * Placed cpus_read_lock in parent function to avoid num_online_cpus
->   to get changed before function finishes the affinity assignment.
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 70 +++++++++++++++++--
->  1 file changed, 63 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 6367de0c2c2e..2194a53cce10 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -1243,15 +1243,57 @@ void mana_gd_free_res_map(struct gdma_resource *r)
->  	r->size = 0;
->  }
->  
-> +static int irq_setup(int *irqs, int nvec, int start_numa_node)
+On 8/24/23 01:07, Dexuan Cui wrote:
+> +#ifdef CONFIG_INTEL_TDX_GUEST
+> +static void hv_tdx_msr_write(u64 msr, u64 val)
 > +{
-> +	int i = 0, cpu, err = 0;
-> +	const struct cpumask *node_cpumask;
-> +	unsigned int  next_node = start_numa_node;
-> +	cpumask_var_t visited_cpus, node_cpumask_temp;
+> +	struct tdx_hypercall_args args = {
+> +		.r10 = TDX_HYPERCALL_STANDARD,
+> +		.r11 = EXIT_REASON_MSR_WRITE,
+> +		.r12 = msr,
+> +		.r13 = val,
+> +	};
 > +
-> +	if (!zalloc_cpumask_var(&visited_cpus, GFP_KERNEL)) {
-> +		err = ENOMEM;
-> +		return err;
-> +	}
-> +	if (!zalloc_cpumask_var(&node_cpumask_temp, GFP_KERNEL)) {
-> +		err = -ENOMEM;
-> +		return err;
-> +	}
-
-Can you add a bit more of vertical spacing?
-
-> +	rcu_read_lock();
-> +	for_each_numa_hop_mask(node_cpumask, next_node) {
-> +		cpumask_copy(node_cpumask_temp, node_cpumask);
-> +		for_each_cpu(cpu, node_cpumask_temp) {
-> +			cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
-> +				       topology_sibling_cpumask(cpu));
-> +			irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
-> +			if (++i == nvec)
-> +				goto free_mask;
-> +			cpumask_set_cpu(cpu, visited_cpus);
-> +			if (cpumask_empty(node_cpumask_temp)) {
-> +				cpumask_copy(node_cpumask_temp, node_cpumask);
-> +				cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
-> +					       visited_cpus);
-> +				cpu = 0;
-> +			}
-
-It feels like you can calculate number of sibling groups in a hop in
-advance, so that you'll know how many IRQs you want to assign per each
-hop, and avoid resetting the node_cpumask_temp and spinning in inner
-loop for more than once...
-
-Can you print your topology, and describe how you want to spread IRQs
-on it, and how your existing code does spread them?
-
-Please add performance results in the commit message.
-
-I feel like this may be a useful code for other kernel folks, and if
-so, we'd invest in it for more and make it a generic API, similar to
-cpumaks_local_spread()...
-
-> +		}
-> +	}
-> +free_mask:
-> +	rcu_read_unlock();
-> +	free_cpumask_var(visited_cpus);
-> +	free_cpumask_var(node_cpumask_temp);
-> +	return err;
+> +	u64 ret = __tdx_hypercall(&args);
+> +
+> +	WARN_ONCE(ret, "Failed to emulate MSR write: %lld\n", ret);
 > +}
-> +
->  static int mana_gd_setup_irqs(struct pci_dev *pdev)
->  {
-> -	unsigned int max_queues_per_port = num_online_cpus();
->  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> +	unsigned int max_queues_per_port;
->  	struct gdma_irq_context *gic;
->  	unsigned int max_irqs, cpu;
-> -	int nvec, irq;
-> +	int nvec, *irqs, irq;
->  	int err, i = 0, j;
->  
-> +	cpus_read_lock();
-> +	max_queues_per_port = num_online_cpus();
->  	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
->  		max_queues_per_port = MANA_MAX_NUM_QUEUES;
->  
-> @@ -1261,6 +1303,11 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
->  	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
->  	if (nvec < 0)
->  		return nvec;
-> +	irqs = kmalloc_array(max_queues_per_port, sizeof(int), GFP_KERNEL);
-> +	if (!irqs) {
-> +		err = -ENOMEM;
-> +		goto free_irq_vector;
-> +	}
->  
->  	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
->  				   GFP_KERNEL);
-> @@ -1287,21 +1334,28 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
->  			goto free_irq;
->  		}
->  
-> -		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-> +		if (!i) {
-> +			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-> +			cpu = cpumask_local_spread(i, gc->numa_node);
 
-If i == 0, you can simplify it because you just need the 1st CPU from
-a given node.
+First of all, I'd really appreciate if you could seek out explicit acks
+for this kind of stuff before merging it.  This surprised me.
 
-> +			irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-> +		} else {
-> +			irqs[i - 1] = irq;
-> +			err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
-> +		}
->  		if (err)
->  			goto free_irq;
-> -
-> -		cpu = cpumask_local_spread(i, gc->numa_node);
-> -		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
->  	}
->  
-> +	err = irq_setup(irqs, max_queues_per_port, gc->numa_node);
-> +	if (err)
-> +		goto free_irq;
->  	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
->  	if (err)
->  		goto free_irq;
->  
->  	gc->max_num_msix = nvec;
->  	gc->num_msix_usable = nvec;
-> -
-> +	cpus_read_unlock();
->  	return 0;
->  
->  free_irq:
-> @@ -1314,8 +1368,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
->  	}
->  
->  	kfree(gc->irq_contexts);
-> +	kfree(irqs);
->  	gc->irq_contexts = NULL;
->  free_irq_vector:
-> +	cpus_read_unlock();
->  	pci_free_irq_vectors(pdev);
->  	return err;
->  }
-> -- 
-> 2.34.1
+Can you please merge these generic things back into the main TDX code?
+There's nothing Hyper-V specific about any of this code.  Basically, you
+can make a hv_tdx_whatever() variant, but make _that_ in the generic TDX
+code and then export only _that_.
 
