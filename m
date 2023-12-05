@@ -1,205 +1,261 @@
-Return-Path: <linux-hyperv+bounces-1238-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1239-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DB118052AE
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 12:25:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFFE8805407
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 13:25:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEFB61F214BB
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 11:25:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A51961F21369
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 12:25:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D4269792;
-	Tue,  5 Dec 2023 11:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB05D5B5A1;
+	Tue,  5 Dec 2023 12:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BvEB5F1O"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ss4SiFkd"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10968D6C;
-	Tue,  5 Dec 2023 03:21:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701775299; x=1733311299;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GKdJrpjNAAfGimUxYAq3wTN/xrTwaQ33LU4i4+qObUE=;
-  b=BvEB5F1O9zz/PB3qkbHuh3wEJHsdc2UpviBLDpT323YSPOXR1EYDna2T
-   jZsH02cy7fhUmhCL9mj0Q0q340w0HSUIBW/MXeqWhxg7E1dAUxNAcGA04
-   IR8uZPWh1QeKEi1sNE73whKwZ5crYmCEu7aVvvjrQNGQCHGoRcQwtJZXC
-   SLcVgOMtXq5LYkqSphDXPwvNbiDDLrkXkF++Jlml5OPmO1Jc2lw6Hj/XK
-   y5iIkmmUs7B+JSUnbuCcBwEg2J7jpdECIbKYRsEpA2lp4o0Ufm9tPzJMs
-   DDoxUl0aDJVm+RuEldgtpXiNsfL0gOnEEbQNA45EPi7yG5Q/zQDb58WNX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="942743"
-X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="942743"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 03:21:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="1018193022"
-X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="1018193022"
-Received: from unknown (HELO fred..) ([172.25.112.68])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Dec 2023 03:21:26 -0800
-From: Xin Li <xin3.li@intel.com>
-To: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org
-Cc: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	luto@kernel.org,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	peterz@infradead.org,
-	jgross@suse.com,
-	ravi.v.shankar@intel.com,
-	mhiramat@kernel.org,
-	andrew.cooper3@citrix.com,
-	jiangshanlai@gmail.com,
-	nik.borisov@suse.com,
-	shan.kang@intel.com
-Subject: [PATCH v13 35/35] x86/fred: Invoke FRED initialization code to enable FRED
-Date: Tue,  5 Dec 2023 02:50:24 -0800
-Message-ID: <20231205105030.8698-36-xin3.li@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231205105030.8698-1-xin3.li@intel.com>
-References: <20231205105030.8698-1-xin3.li@intel.com>
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 605BBC9
+	for <linux-hyperv@vger.kernel.org>; Tue,  5 Dec 2023 04:25:28 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-40a4848c6e1so59741705e9.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 05 Dec 2023 04:25:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1701779127; x=1702383927; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QNCLk+56fWI2chNhpjUr6+slGM9CjcICEgag2GdvCoc=;
+        b=ss4SiFkdwZY/2AZvfoVCmfCCATG7HPwTjCRg8Om2IoMjSg8oK7Uq1usj1oquxVbxK7
+         fSq3eg3Tv2GqVhMnJua29rIOEx8Ed4N1oc47narYzn6CFXObcQxMOeiMVhRF1gZ+KeEn
+         pOzUIv/1l2cRiAy3BUm8qk+L0R8DNnv20l6q8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701779127; x=1702383927;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QNCLk+56fWI2chNhpjUr6+slGM9CjcICEgag2GdvCoc=;
+        b=Bths1kzx2Xavq+yxHa2wY4g5/uf5JA2re6M5Y7fBW08+vKHL8N5ujxlphmeCHlKung
+         SFQkVeXMDmXECDU/kxMVWi3UWYpC8F9hGnz0WKK07N90JQiv7rylbrLKxtlbSINN30Dl
+         qBH1+8ZLON/MTy8UPMtuHE/uz+BZy0P6bqjisiXT4TdR42/mKmbzC9sq1kEx2Hdeqo9p
+         q1aQ3Gd3Wro0hRfGcezXg6WWXuUwnbOrq8vY+i7gvDzJbBvHCHe4hbCYgaq47rQyrapT
+         nC0Vg8TCI0kDKvlGGGcSlfwi72EnDyFAKZziN1O/AM4KIFvtC6fQns2969w7APyeDTBm
+         JVYw==
+X-Gm-Message-State: AOJu0YxYeRdVIWDW/uNv5Mq3mcnKxqOa8CTbMmsYYaPxBoKqn4k0OsPF
+	zYCLzda1/u0BLonHsFgb10AFhg==
+X-Google-Smtp-Source: AGHT+IFxBxp6EQ7qVgNSuhOPqdIy0eT6mG75SBCSajakYFILb/bhoaJag+l06/bE/PKNsb6QbMajOg==
+X-Received: by 2002:a05:600c:600b:b0:40b:4e4e:2b22 with SMTP id az11-20020a05600c600b00b0040b4e4e2b22mr365566wmb.38.1701779126718;
+        Tue, 05 Dec 2023 04:25:26 -0800 (PST)
+Received: from [10.80.67.30] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
+        by smtp.gmail.com with ESMTPSA id hg10-20020a05600c538a00b0040b398f0585sm18773310wmb.9.2023.12.05.04.25.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Dec 2023 04:25:26 -0800 (PST)
+Message-ID: <f260ddf9-be67-48e0-8121-6f58d46f7978@citrix.com>
+Date: Tue, 5 Dec 2023 12:25:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 26/35] x86/fred: FRED entry/exit and dispatch code
+Content-Language: en-GB
+To: Xin Li <xin3.li@intel.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, luto@kernel.org,
+ pbonzini@redhat.com, seanjc@google.com, peterz@infradead.org,
+ jgross@suse.com, ravi.v.shankar@intel.com, mhiramat@kernel.org,
+ jiangshanlai@gmail.com, nik.borisov@suse.com, shan.kang@intel.com
+References: <20231205105030.8698-1-xin3.li@intel.com>
+ <20231205105030.8698-27-xin3.li@intel.com>
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20231205105030.8698-27-xin3.li@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
+On 05/12/2023 10:50 am, Xin Li wrote:
+> diff --git a/arch/x86/entry/entry_fred.c b/arch/x86/entry/entry_fred.c
+> new file mode 100644
+> index 000000000000..215883e90f94
+> --- /dev/null
+> +++ b/arch/x86/entry/entry_fred.c
+> @@ -0,0 +1,230 @@
+> ...
+> +static noinstr void fred_intx(struct pt_regs *regs)
+> +{
+> +	switch (regs->fred_ss.vector) {
+> +	/* INT0 */
 
-Let cpu_init_exception_handling() call cpu_init_fred_exceptions() to
-initialize FRED. However if FRED is unavailable or disabled, it falls
-back to set up TSS IST and initialize IDT.
+INTO (for overflow), not INT-zero.  However...
 
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Tested-by: Shan Kang <shan.kang@intel.com>
-Co-developed-by: Xin Li <xin3.li@intel.com>
-Signed-off-by: Xin Li <xin3.li@intel.com>
----
+> +	case X86_TRAP_OF:
+> +		exc_overflow(regs);
+> +		return;
+> +
+> +	/* INT3 */
+> +	case X86_TRAP_BP:
+> +		exc_int3(regs);
+> +		return;
 
-Changes since v10:
-* No need to invalidate SYSCALL and SYSENTER MSRs (Thomas Gleixner).
+... neither OF nor BP will ever enter fred_intx() because they're type
+SWEXC not SWINT.
 
-Changes since v8:
-* Move this patch after all required changes are in place (Thomas
-  Gleixner).
----
- arch/x86/kernel/cpu/common.c | 22 +++++++++++++++++-----
- arch/x86/kernel/irqinit.c    |  7 ++++++-
- arch/x86/kernel/traps.c      |  5 ++++-
- 3 files changed, 27 insertions(+), 7 deletions(-)
+SWINT is strictly the INT $imm8 instruction.
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 9a075792e275..91d2f6018c48 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -61,6 +61,7 @@
- #include <asm/microcode.h>
- #include <asm/intel-family.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/fred.h>
- #include <asm/uv/uv.h>
- #include <asm/ia32.h>
- #include <asm/set_memory.h>
-@@ -2117,7 +2118,15 @@ void syscall_init(void)
- 	/* The default user and kernel segments */
- 	wrmsr(MSR_STAR, 0, (__USER32_CS << 16) | __KERNEL_CS);
- 
--	idt_syscall_init();
-+	/*
-+	 * Except the IA32_STAR MSR, there is NO need to setup SYSCALL and
-+	 * SYSENTER MSRs for FRED, because FRED uses the ring 3 FRED
-+	 * entrypoint for SYSCALL and SYSENTER, and ERETU is the only legit
-+	 * instruction to return to ring 3 (both sysexit and sysret cause
-+	 * #UD when FRED is enabled).
-+	 */
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
-+		idt_syscall_init();
- }
- 
- #else	/* CONFIG_X86_64 */
-@@ -2223,8 +2232,9 @@ void cpu_init_exception_handling(void)
- 	/* paranoid_entry() gets the CPU number from the GDT */
- 	setup_getcpu(cpu);
- 
--	/* IST vectors need TSS to be set up. */
--	tss_setup_ist(tss);
-+	/* For IDT mode, IST vectors need to be set in TSS. */
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
-+		tss_setup_ist(tss);
- 	tss_setup_io_bitmap(tss);
- 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
- 
-@@ -2233,8 +2243,10 @@ void cpu_init_exception_handling(void)
- 	/* GHCB needs to be setup to handle #VC. */
- 	setup_ghcb();
- 
--	/* Finally load the IDT */
--	load_current_idt();
-+	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+		cpu_init_fred_exceptions();
-+	else
-+		load_current_idt();
- }
- 
- /*
-diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-index c683666876f1..f79c5edc0b89 100644
---- a/arch/x86/kernel/irqinit.c
-+++ b/arch/x86/kernel/irqinit.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/i8259.h>
- #include <asm/traps.h>
-+#include <asm/fred.h>
- #include <asm/prom.h>
- 
- /*
-@@ -96,7 +97,11 @@ void __init native_init_IRQ(void)
- 	/* Execute any quirks before the call gates are initialised: */
- 	x86_init.irqs.pre_vector_init();
- 
--	idt_setup_apic_and_irq_gates();
-+	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+		fred_complete_exception_setup();
-+	else
-+		idt_setup_apic_and_irq_gates();
-+
- 	lapic_assign_system_vectors();
- 
- 	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 848c85208a57..0ee78a30e14a 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -1411,7 +1411,10 @@ void __init trap_init(void)
- 
- 	/* Initialize TSS before setting up traps so ISTs work */
- 	cpu_init_exception_handling();
-+
- 	/* Setup traps as cpu_init() might #GP */
--	idt_setup_traps();
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
-+		idt_setup_traps();
-+
- 	cpu_init();
- }
--- 
-2.43.0
+> ...
+> +static noinstr void fred_extint(struct pt_regs *regs)
+> +{
+> +	unsigned int vector = regs->fred_ss.vector;
+> +
+> +	if (WARN_ON_ONCE(vector < FIRST_EXTERNAL_VECTOR))
+> +		return;
+> +
+> +	if (likely(vector >= FIRST_SYSTEM_VECTOR)) {
+> +		irqentry_state_t state = irqentry_enter(regs);
+> +
+> +		instrumentation_begin();
+> +		sysvec_table[vector - FIRST_SYSTEM_VECTOR](regs);
 
+array_index_mask_nospec()
+
+This is easy for an attacker to abuse, to install non-function-pointer
+targets into the indirect predictor.
+
+> +		instrumentation_end();
+> +		irqentry_exit(regs, state);
+> +	} else {
+> +		common_interrupt(regs, vector);
+> +	}
+> +}
+> +
+> +static noinstr void fred_exception(struct pt_regs *regs, unsigned long error_code)
+> +{
+> +	/* Optimize for #PF. That's the only exception which matters performance wise */
+> +	if (likely(regs->fred_ss.vector == X86_TRAP_PF)) {
+> +		exc_page_fault(regs, error_code);
+> +		return;
+> +	}
+> +
+> +	switch (regs->fred_ss.vector) {
+> +	case X86_TRAP_DE: return exc_divide_error(regs);
+> +	case X86_TRAP_DB: return fred_exc_debug(regs);
+> +	case X86_TRAP_BP: return exc_int3(regs);
+> +	case X86_TRAP_OF: return exc_overflow(regs);
+
+Depending on what you want to do with BP/OF vs fred_intx(), this may
+need adjusting.
+
+If you are cross-checking type and vector, then these should be rejected
+for not being of type HWEXC.
+
+> +	case X86_TRAP_BR: return exc_bounds(regs);
+> +	case X86_TRAP_UD: return exc_invalid_op(regs);
+> +	case X86_TRAP_NM: return exc_device_not_available(regs);
+> +	case X86_TRAP_DF: return exc_double_fault(regs, error_code);
+> +	case X86_TRAP_TS: return exc_invalid_tss(regs, error_code);
+> +	case X86_TRAP_NP: return exc_segment_not_present(regs, error_code);
+> +	case X86_TRAP_SS: return exc_stack_segment(regs, error_code);
+> +	case X86_TRAP_GP: return exc_general_protection(regs, error_code);
+> +	case X86_TRAP_MF: return exc_coprocessor_error(regs);
+> +	case X86_TRAP_AC: return exc_alignment_check(regs, error_code);
+> +	case X86_TRAP_XF: return exc_simd_coprocessor_error(regs);
+> +
+> +#ifdef CONFIG_X86_MCE
+> +	case X86_TRAP_MC: return fred_exc_machine_check(regs);
+> +#endif
+> +#ifdef CONFIG_INTEL_TDX_GUEST
+> +	case X86_TRAP_VE: return exc_virtualization_exception(regs);
+> +#endif
+> +#ifdef CONFIG_X86_KERNEL_IBT
+
+CONFIG_X86_CET
+
+Userspace can use CET even if the kernel isn't compiled with IBT, so
+this exception needs handling.
+
+> +	case X86_TRAP_CP: return exc_control_protection(regs, error_code);
+> +#endif
+> +	default: return fred_bad_type(regs, error_code);
+> +	}
+> +}
+> +
+> +__visible noinstr void fred_entry_from_user(struct pt_regs *regs)
+> +{
+> +	unsigned long error_code = regs->orig_ax;
+> +
+> +	/* Invalidate orig_ax so that syscall_get_nr() works correctly */
+> +	regs->orig_ax = -1;
+> +
+> +	switch (regs->fred_ss.type) {
+> +	case EVENT_TYPE_EXTINT:
+> +		return fred_extint(regs);
+> +	case EVENT_TYPE_NMI:
+> +		return fred_exc_nmi(regs);
+> +	case EVENT_TYPE_SWINT:
+> +		return fred_intx(regs);
+> +	case EVENT_TYPE_HWEXC:
+> +	case EVENT_TYPE_SWEXC:
+> +	case EVENT_TYPE_PRIV_SWEXC:
+> +		return fred_exception(regs, error_code);
+
+PRIV_SWEXC should have it's own function and not fall into fred_exception().
+
+It is strictly only the ICEBP (INT1) instruction at the moment, so
+should fall into bad_type() for any vector other than X86_TRAP_DB.
+
+> +	case EVENT_TYPE_OTHER:
+> +		return fred_other(regs);
+> +	default:
+> +		return fred_bad_type(regs, error_code);
+> +	}
+> +}
+
+~Andrew
 
