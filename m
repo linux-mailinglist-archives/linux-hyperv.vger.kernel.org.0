@@ -1,304 +1,373 @@
-Return-Path: <linux-hyperv+bounces-1202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1203-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B16A80516D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 12:01:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41F288051F1
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 12:21:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 314B328142C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 11:01:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B25541F213D8
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Dec 2023 11:21:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA584C63F;
-	Tue,  5 Dec 2023 11:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74CBC5788F;
+	Tue,  5 Dec 2023 11:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OxTUsQE/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcEj5h9N"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7359F11F;
-	Tue,  5 Dec 2023 03:01:39 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id D05B820B74C0; Tue,  5 Dec 2023 03:01:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D05B820B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1701774098;
-	bh=GsHAagPrkVzK5MMXoA+rCitnNZnBfvTsUscahErxJ+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OxTUsQE/l55VpHHuoETMIIiTQ9P3eXzRuFvbMIpJMFnvPXyRQZALjqshXPtlSwsrf
-	 lmqw9kPm3C0+TGRLbAGMVJayOcG2eoSKJEM76jK8iTE7jm8/9v7gUbKtI2XwHskYUL
-	 1voMo98zUfGMlmXN0U0M4y+KUx0j/TZt61LZVG4k=
-Date: Tue, 5 Dec 2023 03:01:38 -0800
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
-	leon@kernel.org, cai.huoqing@linux.dev, ssengar@linux.microsoft.com,
-	vkuznets@redhat.com, tglx@linutronix.de,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	sch^Crabarti@microsoft.com, paulros@microsoft.com
-Subject: Re: [PATCH V4 net-next] net: mana: Assigning IRQ affinity on HT cores
-Message-ID: <20231205110138.GA31232@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
- <ZW3om2dfA4U0lhVY@yury-ThinkPad>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8259E;
+	Tue,  5 Dec 2023 03:21:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701775279; x=1733311279;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CTJMCsqO4pq6z+5Iad0prB2mBV/JKDBtPQe8pvTOcU8=;
+  b=TcEj5h9NPBHuM5SPQyJEsvMvrlG7ZA04bWectTWECyEOcwZRGHJAyJYm
+   WhUTopJuiVcPunHESEj5KlNADnl9E/KAP78tMiKs4Z+KRkgivsxQVMwfl
+   /VzxErDO/Yy8ODvfvqzu+jvPAHmDoVv8uXcyV/qLQ4u3HkHl7UxhBBrC8
+   lbPofMJUMf8njoYxzW1OfMtx1oXzMu+dnKv/8BvKz6VJ84J2eY8d2o41d
+   qIxhha63h+oKrPVB5wAjhwjH/ZroNpjUawnSP1impdvFHN75+tQLlydIJ
+   zTFxpdvwVc95Rd6kpxCF96vLtAARuydfSEZqLONVbo3WN6nQd1Rk2EPg1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="942307"
+X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
+   d="scan'208";a="942307"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 03:21:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="1018192891"
+X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
+   d="scan'208";a="1018192891"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Dec 2023 03:21:15 -0800
+From: Xin Li <xin3.li@intel.com>
+To: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	luto@kernel.org,
+	pbonzini@redhat.com,
+	seanjc@google.com,
+	peterz@infradead.org,
+	jgross@suse.com,
+	ravi.v.shankar@intel.com,
+	mhiramat@kernel.org,
+	andrew.cooper3@citrix.com,
+	jiangshanlai@gmail.com,
+	nik.borisov@suse.com,
+	shan.kang@intel.com
+Subject: [PATCH v13 00/35] x86: enable FRED for x86-64
+Date: Tue,  5 Dec 2023 02:49:49 -0800
+Message-ID: <20231205105030.8698-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZW3om2dfA4U0lhVY@yury-ThinkPad>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 04, 2023 at 06:56:27AM -0800, Yury Norov wrote:
-> On Mon, Dec 04, 2023 at 12:50:41AM -0800, Souradeep Chakrabarti wrote:
-> > Existing MANA design assigns IRQ to every CPU, including sibling
-> > hyper-threads. This may cause multiple IRQs to be active simultaneously
-> > in the same core and may reduce the network performance with RSS.
-> > 
-> > Improve the performance by assigning IRQ to non sibling CPUs in local
-> > NUMA node.
-> > 
-> > Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> > ---
-> > V3 -> V4:
-> > * Used for_each_numa_hop_mask() macro and simplified the code.
-> > Thanks to Yury Norov for the suggestion.
-> 
-> We've got a special tag for this:
-> 
-> Suggested-by: Yury Norov <yury.norov@gmali.com>
-> 
-> > * Added code to assign hwc irq separately in mana_gd_setup_irqs.
-> > 
-> > V2 -> V3:
-> > * Created a helper function to get the next NUMA with CPU.
-> > * Added some error checks for unsuccessful memory allocation.
-> > * Fixed some comments on the code.
-> > 
-> > V1 -> V2:
-> > * Simplified the code by removing filter_mask_list and using avail_cpus.
-> > * Addressed infinite loop issue when there are numa nodes with no CPUs.
-> > * Addressed uses of local numa node instead of 0 to start.
-> > * Removed uses of BUG_ON.
-> > * Placed cpus_read_lock in parent function to avoid num_online_cpus
-> >   to get changed before function finishes the affinity assignment.
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 70 +++++++++++++++++--
-> >  1 file changed, 63 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index 6367de0c2c2e..2194a53cce10 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > @@ -1243,15 +1243,57 @@ void mana_gd_free_res_map(struct gdma_resource *r)
-> >  	r->size = 0;
-> >  }
-> >  
-> > +static int irq_setup(int *irqs, int nvec, int start_numa_node)
-> > +{
-> > +	int i = 0, cpu, err = 0;
-> > +	const struct cpumask *node_cpumask;
-> > +	unsigned int  next_node = start_numa_node;
-> > +	cpumask_var_t visited_cpus, node_cpumask_temp;
-> > +
-> > +	if (!zalloc_cpumask_var(&visited_cpus, GFP_KERNEL)) {
-> > +		err = ENOMEM;
-> > +		return err;
-> > +	}
-> > +	if (!zalloc_cpumask_var(&node_cpumask_temp, GFP_KERNEL)) {
-> > +		err = -ENOMEM;
-> > +		return err;
-> > +	}
-> 
-> Can you add a bit more of vertical spacing?
-> 
-> > +	rcu_read_lock();
-> > +	for_each_numa_hop_mask(node_cpumask, next_node) {
-> > +		cpumask_copy(node_cpumask_temp, node_cpumask);
-> > +		for_each_cpu(cpu, node_cpumask_temp) {
-> > +			cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
-> > +				       topology_sibling_cpumask(cpu));
-> > +			irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
-> > +			if (++i == nvec)
-> > +				goto free_mask;
-> > +			cpumask_set_cpu(cpu, visited_cpus);
-> > +			if (cpumask_empty(node_cpumask_temp)) {
-> > +				cpumask_copy(node_cpumask_temp, node_cpumask);
-> > +				cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
-> > +					       visited_cpus);
-> > +				cpu = 0;
-> > +			}
-> 
-> It feels like you can calculate number of sibling groups in a hop in
-> advance, so that you'll know how many IRQs you want to assign per each
-> hop, and avoid resetting the node_cpumask_temp and spinning in inner
-> loop for more than once...
-> 
-> Can you print your topology, and describe how you want to spread IRQs
-> on it, and how your existing code does spread them?
->
-The topology of one system is
-> numactl -H
-available: 2 nodes (0-1)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64
-65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
-node 0 size: 459521 MB
-node 0 free: 456316 MB
-node 1 cpus: 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118
-119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
-144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168
-169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
-node 1 size: 459617 MB
-node 1 free: 456864 MB
-node distances:
-node   0   1
-  0:  10  21
-  1:  21  10
-and I want to spread the IRQs in numa0 node first with 
-CPU0 - IRQ0
-CPU2 - IRQ1
-CPU4 - IRQ2
-CPU6 - IRQ3
----
----
----
-CPU94 - IRQ47
-then
-CPU1 - IRQ48
-CPU3 - IRQ49
-CPU32 - IRQ64
+This patch set enables the Intel flexible return and event delivery
+(FRED) architecture for x86-64.
 
-In a topology where NUMA0 has 20 cores and NUMA1 has 20 cores, with total 80 CPUS, there I want
-CPU0 - IRQ0
-CPU2 - IRQ1
-CPU4 - IRQ2
----
----
----
-CPU38 - IRQ19
-Then
-CPU1 - IRQ20
-CPU3 - IRQ21
----
----
-CPU39 - IRQ39
-Node1
-CPU40 - IRQ40
-CPU42 - IRQ41
-CPU44 - IRQ42
----
-CPU78 - IRQ58
-CPU41 - IRQ59
-CPU43 - IRQ60
----
----
-CPU49 - IRQ64
- 
+The FRED architecture defines simple new transitions that change
+privilege level (ring transitions). The FRED architecture was
+designed with the following goals:
 
-Exisitng code : 
-https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/microsoft/mana/gdma_main.c#L1246
+1) Improve overall performance and response time by replacing event
+   delivery through the interrupt descriptor table (IDT event
+   delivery) and event return by the IRET instruction with lower
+   latency transitions.
 
-This uses cpumask_local_spread, so in a system where node has 64 cores, it spreads all 64+1 IRQs on
-33 cores, rather than spreading it only on HT cores.
+2) Improve software robustness by ensuring that event delivery
+   establishes the full supervisor context and that event return
+   establishes the full user context.
 
-> Please add performance results in the commit message.
-> 
-> I feel like this may be a useful code for other kernel folks, and if
-> so, we'd invest in it for more and make it a generic API, similar to
-> cpumaks_local_spread()...
-> 
-> > +		}
-> > +	}
-> > +free_mask:
-> > +	rcu_read_unlock();
-> > +	free_cpumask_var(visited_cpus);
-> > +	free_cpumask_var(node_cpumask_temp);
-> > +	return err;
-> > +}
-> > +
-> >  static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> >  {
-> > -	unsigned int max_queues_per_port = num_online_cpus();
-> >  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > +	unsigned int max_queues_per_port;
-> >  	struct gdma_irq_context *gic;
-> >  	unsigned int max_irqs, cpu;
-> > -	int nvec, irq;
-> > +	int nvec, *irqs, irq;
-> >  	int err, i = 0, j;
-> >  
-> > +	cpus_read_lock();
-> > +	max_queues_per_port = num_online_cpus();
-> >  	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> >  		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-> >  
-> > @@ -1261,6 +1303,11 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> >  	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
-> >  	if (nvec < 0)
-> >  		return nvec;
-> > +	irqs = kmalloc_array(max_queues_per_port, sizeof(int), GFP_KERNEL);
-> > +	if (!irqs) {
-> > +		err = -ENOMEM;
-> > +		goto free_irq_vector;
-> > +	}
-> >  
-> >  	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
-> >  				   GFP_KERNEL);
-> > @@ -1287,21 +1334,28 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> >  			goto free_irq;
-> >  		}
-> >  
-> > -		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-> > +		if (!i) {
-> > +			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-> > +			cpu = cpumask_local_spread(i, gc->numa_node);
-> 
-> If i == 0, you can simplify it because you just need the 1st CPU from
-> a given node.
-> 
-> > +			irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-> > +		} else {
-> > +			irqs[i - 1] = irq;
-> > +			err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
-> > +		}
-> >  		if (err)
-> >  			goto free_irq;
-> > -
-> > -		cpu = cpumask_local_spread(i, gc->numa_node);
-> > -		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-> >  	}
-> >  
-> > +	err = irq_setup(irqs, max_queues_per_port, gc->numa_node);
-> > +	if (err)
-> > +		goto free_irq;
-> >  	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
-> >  	if (err)
-> >  		goto free_irq;
-> >  
-> >  	gc->max_num_msix = nvec;
-> >  	gc->num_msix_usable = nvec;
-> > -
-> > +	cpus_read_unlock();
-> >  	return 0;
-> >  
-> >  free_irq:
-> > @@ -1314,8 +1368,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> >  	}
-> >  
-> >  	kfree(gc->irq_contexts);
-> > +	kfree(irqs);
-> >  	gc->irq_contexts = NULL;
-> >  free_irq_vector:
-> > +	cpus_read_unlock();
-> >  	pci_free_irq_vectors(pdev);
-> >  	return err;
-> >  }
-> > -- 
-> > 2.34.1
+The new transitions defined by the FRED architecture are FRED event
+delivery and, for returning from events, two FRED return instructions.
+FRED event delivery can effect a transition from ring 3 to ring 0, but
+it is used also to deliver events incident to ring 0. One FRED
+instruction (ERETU) effects a return from ring 0 to ring 3, while the
+other (ERETS) returns while remaining in ring 0. Collectively, FRED
+event delivery and the FRED return instructions are FRED transitions.
+
+Search for the latest FRED spec in most search engines with this search pattern:
+
+  site:intel.com FRED (flexible return and event delivery) specification
+
+As of now there is no publicly avaiable CPU supporting FRED, thus the Intel
+Simics® Simulator is used as software development and testing vehicles. And
+it can be downloaded from:
+  https://www.intel.com/content/www/us/en/developer/articles/tool/simics-simulator.html
+
+To enable FRED, the Simics package 8112 QSP-CPU needs to be installed with
+CPU model configured as:
+	$cpu_comp_class = "x86-experimental-fred"
+
+
+Changes since v12:
+* Merge the 3 WRMSRNS patches into one (Borislav Petkov).
+* s/cpu/CPU/g (Borislav Petkov).
+* Shorten the WRMSRNS description (Borislav Petkov).
+* Put comments ontop, not on the side (Borislav Petkov).
+* Use the ASCII char ' (char number 0x27), instead of its unicode char
+  (Borislav Petkov).
+* No "we" in a commit message, use passive voice (Borislav Petkov).
+* Fix confusing Signed-off-by chains (Borislav Petkov).
+
+Changes since v11:
+* Add a new structure fred_cs to denote the FRED flags above CS
+  selector as what is done for SS (H. Peter Anvin).
+
+Changes since v10:
+* No need to invalidate SYSCALL and SYSENTER MSRs (Thomas Gleixner).
+* Better explain the reason why no need to check current stack level
+  (Paolo Bonzini).
+* Replace "IS_ENABLED(CONFIG_IA32_EMULATION)" with the new ia32_enabled()
+  API (Nikolay Borisov).
+* FRED feature is defined in cpuid word 12, not 13 (Nikolay Borisov).
+* Reword a sentence in the new FRED documentation to improve readability
+  (Nikolay Borisov).
+* A few comment fixes and improvements to event type definitions
+  (Andrew Cooper).
+
+Changes since v9:
+* Set unused sysvec table entries to fred_handle_spurious_interrupt()
+  in fred_complete_exception_setup() (Thomas Gleixner).
+* Shove the whole thing into arch/x86/entry/entry_64_fred.S for invoking
+  external_interrupt() and fred_exc_nmi() (Sean Christopherson).
+* Correct and improve a few comments (Sean Christopherson).
+* Merge the two IRQ/NMI asm entries into one as it's fine to invoke
+  noinstr code from regular code (Thomas Gleixner).
+* Setup the long mode and NMI flags in the augmented SS field of FRED
+  stack frame in C instead of asm (Thomas Gleixner).
+* Don't use jump tables, indirect jumps are expensive (Thomas Gleixner).
+* Except #NMI/#DB/#MCE, FRED really can share the exception handlers
+  with IDT (Thomas Gleixner).
+* Avoid the sysvec_* idt_entry muck, do it at a central place, reuse code
+  instead of blindly copying it, which breaks the performance optimized
+  sysvec entries like reschedule_ipi (Thomas Gleixner).
+* Add asm_ prefix to FRED asm entry points (Thomas Gleixner).
+* Disable #DB to avoid endless recursion and stack overflow when a
+  watchpoint/breakpoint is set in the code path which is executed by
+  #DB handler (Thomas Gleixner).
+* Introduce a new structure fred_ss to denote the FRED flags above SS
+  selector, which avoids FRED_SSX_ macros and makes the code simpler
+  and easier to read (Thomas Gleixner).
+* Use type u64 to define FRED bit fields instead of type unsigned int
+  (Thomas Gleixner).
+* Avoid a type cast by defining X86_CR4_FRED as 0 on 32-bit (Thomas
+  Gleixner).
+* Add the WRMSRNS instruction support (Thomas Gleixner).
+
+Changes since v8:
+* Move the FRED initialization patch after all required changes are in
+  place (Thomas Gleixner).
+* Don't do syscall early out in fred_entry_from_user() before there are
+  proper performance numbers and justifications (Thomas Gleixner).
+* Add the control exception handler to the FRED exception handler table
+  (Thomas Gleixner).
+* Introduce a macro sysvec_install() to derive the asm handler name from
+  a C handler, which simplifies the code and avoids an ugly typecast
+  (Thomas Gleixner).
+* Remove junk code that assumes no local APIC on x86_64 (Thomas Gleixner).
+* Put IDTENTRY changes in a separate patch (Thomas Gleixner).
+* Use high-order 48 bits above the lowest 16 bit SS only when FRED is
+  enabled (Thomas Gleixner).
+* Explain why writing directly to the IA32_KERNEL_GS_BASE MSR is
+  doing the right thing (Thomas Gleixner).
+* Reword some patch descriptions (Thomas Gleixner).
+* Add a new macro VMX_DO_FRED_EVENT_IRQOFF for FRED instead of
+  refactoring VMX_DO_EVENT_IRQOFF (Sean Christopherson).
+* Do NOT use a trampoline, just LEA+PUSH the return RIP, PUSH the error
+  code, and jump to the FRED kernel entry point for NMI or call
+  external_interrupt() for IRQs (Sean Christopherson).
+* Call external_interrupt() only when FRED is enabled, and convert the
+  non-FRED handling to external_interrupt() after FRED lands (Sean
+  Christopherson).
+* Use __packed instead of __attribute__((__packed__)) (Borislav Petkov).
+* Put all comments above the members, like the rest of the file does
+  (Borislav Petkov).
+* Reflect the FRED spec 5.0 change that ERETS and ERETU add 8 to %rsp
+  before popping the return context from the stack.
+* Reflect stack frame definition changes from FRED spec 3.0 to 5.0.
+* Add ENDBR to the FRED_ENTER asm macro after kernel IBT is added to
+  FRED base line in FRED spec 5.0.
+* Add a document which briefly introduces FRED features.
+* Remove 2 patches, "allow FRED systems to use interrupt vectors
+  0x10-0x1f" and "allow dynamic stack frame size", from this patch set,
+  as they are "optimizations" only.
+* Send 2 patches, "header file for event types" and "do not modify the
+  DPL bits for a null selector", as pre-FRED patches.
+
+Changes since v7:
+* Always call external_interrupt() for VMX IRQ handling on x86_64, thus avoid
+  re-entering the noinstr code.
+* Create a FRED stack frame when FRED is compiled-in but not enabled, which
+  uses some extra stack space but simplifies the code.
+* Add a log message when FRED is enabled.
+
+Changes since v6:
+* Add a comment to explain why it is safe to write to a previous FRED stack
+  frame. (Lai Jiangshan).
+* Export fred_entrypoint_kernel(), required when kvm-intel built as a module.
+* Reserve a REDZONE for CALL emulation and Align RSP to a 64-byte boundary
+  before pushing a new FRED stack frame.
+* Replace pt_regs csx flags prefix FRED_CSL_ with FRED_CSX_.
+
+Changes since v5:
+* Initialize system_interrupt_handlers with dispatch_table_spurious_interrupt()
+  instead of NULL to get rid of a branch (Peter Zijlstra).
+* Disallow #DB inside #MCE for robustness sake (Peter Zijlstra).
+* Add a comment for FRED stack level settings (Lai Jiangshan).
+* Move the NMI bit from an invalid stack frame, which caused ERETU to fault,
+  to the fault handler's stack frame, thus to unblock NMI ASAP if NMI is blocked
+  (Lai Jiangshan).
+* Refactor VMX_DO_EVENT_IRQOFF to handle IRQ/NMI in IRQ/NMI induced VM exits
+  when FRED is enabled (Sean Christopherson).
+
+Changes since v4:
+* Do NOT use the term "injection", which in the KVM context means to
+  reinject an event into the guest (Sean Christopherson).
+* Add the explanation of why to execute "int $2" to invoke the NMI handler
+  in NMI caused VM exits (Sean Christopherson).
+* Use cs/ss instead of csx/ssx when initializing the pt_regs structure
+  for calling external_interrupt(), otherwise it breaks i386 build.
+
+Changes since v3:
+* Call external_interrupt() to handle IRQ in IRQ caused VM exits.
+* Execute "int $2" to handle NMI in NMI caused VM exits.
+* Rename csl/ssl of the pt_regs structure to csx/ssx (x for extended)
+  (Andrew Cooper).
+
+Changes since v2:
+* Improve comments for changes in arch/x86/include/asm/idtentry.h.
+
+Changes since v1:
+* call irqentry_nmi_{enter,exit}() in both IDT and FRED debug fault kernel
+  handler (Peter Zijlstra).
+* Initialize a FRED exception handler to fred_bad_event() instead of NULL
+  if no FRED handler defined for an exception vector (Peter Zijlstra).
+* Push calling irqentry_{enter,exit}() and instrumentation_{begin,end}()
+  down into individual FRED exception handlers, instead of in the dispatch
+  framework (Peter Zijlstra).
+
+
+H. Peter Anvin (Intel) (20):
+  x86/fred: Add Kconfig option for FRED (CONFIG_X86_FRED)
+  x86/cpufeatures: Add the CPU feature bit for FRED
+  x86/fred: Disable FRED support if CONFIG_X86_FRED is disabled
+  x86/opcode: Add ERET[US] instructions to the x86 opcode map
+  x86/objtool: Teach objtool about ERET[US]
+  x86/cpu: Add X86_CR4_FRED macro
+  x86/cpu: Add MSR numbers for FRED configuration
+  x86/fred: Add a new header file for FRED definitions
+  x86/fred: Reserve space for the FRED stack frame
+  x86/fred: Update MSR_IA32_FRED_RSP0 during task switch
+  x86/fred: Disallow the swapgs instruction when FRED is enabled
+  x86/fred: No ESPFIX needed when FRED is enabled
+  x86/fred: Allow single-step trap and NMI when starting a new task
+  x86/fred: Make exc_page_fault() work for FRED
+  x86/fred: Add a debug fault entry stub for FRED
+  x86/fred: Add a NMI entry stub for FRED
+  x86/fred: FRED entry/exit and dispatch code
+  x86/fred: Let ret_from_fork_asm() jmp to asm_fred_exit_user when FRED
+    is enabled
+  x86/fred: Add FRED initialization functions
+  x86/fred: Invoke FRED initialization code to enable FRED
+
+Peter Zijlstra (Intel) (1):
+  x86/entry/calling: Allow PUSH_AND_CLEAR_REGS being used beyond actual
+    entry code
+
+Xin Li (14):
+  x86/cpufeatures,opcode,msr: Add the WRMSRNS instruction support
+  x86/entry: Remove idtentry_sysvec from entry_{32,64}.S
+  x86/trapnr: Add event type macros to <asm/trapnr.h>
+  Documentation/x86/64: Add a documentation for FRED
+  x86/fred: Disable FRED by default in its early stage
+  x86/ptrace: Cleanup the definition of the pt_regs structure
+  x86/ptrace: Add FRED additional information to the pt_regs structure
+  x86/idtentry: Incorporate definitions/declarations of the FRED entries
+  x86/fred: Add a machine check entry stub for FRED
+  x86/traps: Add sysvec_install() to install a system interrupt handler
+  x86/fred: Fixup fault on ERETU by jumping to fred_entrypoint_user
+  x86/entry: Add fred_entry_from_kvm() for VMX to handle IRQ/NMI
+  KVM: VMX: Call fred_entry_from_kvm() for IRQ/NMI handling
+  x86/syscall: Split IDT syscall setup code into idt_syscall_init()
+
+ .../admin-guide/kernel-parameters.txt         |   3 +
+ Documentation/arch/x86/x86_64/fred.rst        |  96 ++++++
+ Documentation/arch/x86/x86_64/index.rst       |   1 +
+ arch/x86/Kconfig                              |   9 +
+ arch/x86/entry/Makefile                       |   5 +-
+ arch/x86/entry/calling.h                      |  15 +-
+ arch/x86/entry/entry_32.S                     |   4 -
+ arch/x86/entry/entry_64.S                     |  14 +-
+ arch/x86/entry/entry_64_fred.S                | 133 +++++++++
+ arch/x86/entry/entry_fred.c                   | 279 ++++++++++++++++++
+ arch/x86/entry/vsyscall/vsyscall_64.c         |   2 +-
+ arch/x86/include/asm/asm-prototypes.h         |   1 +
+ arch/x86/include/asm/cpufeatures.h            |   2 +
+ arch/x86/include/asm/desc.h                   |   2 -
+ arch/x86/include/asm/disabled-features.h      |   8 +-
+ arch/x86/include/asm/extable_fixup_types.h    |   4 +-
+ arch/x86/include/asm/fred.h                   |  97 ++++++
+ arch/x86/include/asm/idtentry.h               |  88 +++++-
+ arch/x86/include/asm/msr-index.h              |  13 +-
+ arch/x86/include/asm/msr.h                    |  18 ++
+ arch/x86/include/asm/ptrace.h                 | 104 ++++++-
+ arch/x86/include/asm/switch_to.h              |   8 +-
+ arch/x86/include/asm/thread_info.h            |  12 +-
+ arch/x86/include/asm/trapnr.h                 |  12 +
+ arch/x86/include/asm/vmx.h                    |  17 +-
+ arch/x86/include/uapi/asm/processor-flags.h   |   7 +
+ arch/x86/kernel/Makefile                      |   1 +
+ arch/x86/kernel/cpu/acrn.c                    |   4 +-
+ arch/x86/kernel/cpu/common.c                  |  41 ++-
+ arch/x86/kernel/cpu/cpuid-deps.c              |   2 +
+ arch/x86/kernel/cpu/mce/core.c                |  26 ++
+ arch/x86/kernel/cpu/mshyperv.c                |  15 +-
+ arch/x86/kernel/espfix_64.c                   |   8 +
+ arch/x86/kernel/fred.c                        |  59 ++++
+ arch/x86/kernel/idt.c                         |   4 +-
+ arch/x86/kernel/irqinit.c                     |   7 +-
+ arch/x86/kernel/kvm.c                         |   2 +-
+ arch/x86/kernel/nmi.c                         |  28 ++
+ arch/x86/kernel/process_64.c                  |  67 ++++-
+ arch/x86/kernel/traps.c                       |  48 ++-
+ arch/x86/kvm/vmx/vmx.c                        |  12 +-
+ arch/x86/lib/x86-opcode-map.txt               |   4 +-
+ arch/x86/mm/extable.c                         |  79 +++++
+ arch/x86/mm/fault.c                           |   5 +-
+ drivers/xen/events/events_base.c              |   2 +-
+ tools/arch/x86/include/asm/cpufeatures.h      |   2 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ tools/arch/x86/include/asm/msr-index.h        |  13 +-
+ tools/arch/x86/lib/x86-opcode-map.txt         |   4 +-
+ tools/objtool/arch/x86/decode.c               |  19 +-
+ 50 files changed, 1300 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/arch/x86/x86_64/fred.rst
+ create mode 100644 arch/x86/entry/entry_64_fred.S
+ create mode 100644 arch/x86/entry/entry_fred.c
+ create mode 100644 arch/x86/include/asm/fred.h
+ create mode 100644 arch/x86/kernel/fred.c
+
+
+base-commit: 5d868f6ec314aaee65ec5d12c03f18d79e632043
+-- 
+2.43.0
+
 
