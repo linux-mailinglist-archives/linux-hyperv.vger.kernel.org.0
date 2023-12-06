@@ -1,170 +1,228 @@
-Return-Path: <linux-hyperv+bounces-1260-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1261-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9900807911
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 20:59:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE775807BAF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 23:54:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29B86B20F5D
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 19:59:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8416A1F2199C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 22:54:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A00648CFA;
-	Wed,  6 Dec 2023 19:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AABB70997;
+	Wed,  6 Dec 2023 22:54:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBGqcGZb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XRt3udaP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92E2FA;
-	Wed,  6 Dec 2023 11:59:07 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-50bfd3a5b54so201162e87.3;
-        Wed, 06 Dec 2023 11:59:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701892746; x=1702497546; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y3MVaLAQQ+8IH1t0woX8XXUKr5UkxZE7+TDCaXdlmH8=;
-        b=ZBGqcGZbHIZxjuU4F9cm4eNEBrFykJjAapqrwOKzzNW3/SZzK78F3/5VsVzei1P6RU
-         wcq9a/CqqWtBJLzIl4tD3h7gUDoGqQx+VOIKjO4y3H3M5uZ5jqjheiunP0KTHHiaHacT
-         wnNzLKggUj7zv5cMuwlf6SEPRyFhQvB5evDMepCz0G/jaHTgnJXz04fgGm9GyqIEIH0F
-         ZVikEn1iiAjtmnM1YP5+yz2D9PKtNe3hINBerHh3kHrdSGqF/215Khp7nmB5TNSZvCJs
-         HrzKbtcW18HanV36jcwXBT3wq/iW9+2JxzlY+z9oxDdA7b1b/xFs+4YGTs7Zq2XqWguv
-         pQPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701892746; x=1702497546;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y3MVaLAQQ+8IH1t0woX8XXUKr5UkxZE7+TDCaXdlmH8=;
-        b=aL+moYpFZXU34LDhzvy7akMYTyIL+iXMbpIYXL6dKDYmD5NQkU0dm9MG9APt43Pv9B
-         eS8osdLGzhGvddOn/jJPUOTyv50T4bs902wu9kA9CTquTiHsuipqsaflf2aoCnymfgCj
-         ku4Ef4RtOrQkLjdolmi/k28mewMKHF9UmahbZKh52MUguZhfZtCuDlEmYBDo/xC/QET7
-         SeAHMFkdN5W1wKPMntnKhyivyTLuwcbOH9YN2weQlYGuLpC5IcwEr4AYxmGzChjvQVIX
-         fX4+AWd3aG67/VI6WYTmhfK5TUd8GudziXSrqJ5JwYzXHRUGlbc7F+5M2SVKIwIBKLTu
-         eW5w==
-X-Gm-Message-State: AOJu0Yy3uqLolAE1eZnF7dYtKb+TeUMgZIPLYEAoTKsrA1ug7eQIIXqc
-	ILeT3H5B/K/jBXf35HXJPWZDqNQRfWQfcseggw==
-X-Google-Smtp-Source: AGHT+IGSVyhk5VpdTSmdKP6ivPsMkGJooS9Dbr4Wp/iKBXDLx1h1VzpZYwbgyo3XsO8rZ2GE63oX9rjlDQtd+FQguRU=
-X-Received: by 2002:a05:6512:158e:b0:50c:6b:f180 with SMTP id
- bp14-20020a056512158e00b0050c006bf180mr812498lfb.56.1701892745640; Wed, 06
- Dec 2023 11:59:05 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E2C18D;
+	Wed,  6 Dec 2023 14:54:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701903265; x=1733439265;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JX/oMvpTI/2qT6JJCaAT7HVae/ammdoaCW90BVpkcJI=;
+  b=XRt3udaPTt6Ew68tPdULZIpYzcWK6KjhPhg0uY9GTwyb+HiqE1XLKhdZ
+   v1VutHAfD3yHXhE4vxIGvG/fGPT77/+vlXYpIeNJqJ1xGYP694fsEnOg3
+   QQNKDGi8g+86wA6A7HcDngDW1i1I0Gh/A7lFDLUjkUuDEs7PyQmc3GIZF
+   oGarW7RPt0kigptDlvrwZiuHi/Qr4XebhfRRQznJrso0F5L1fBvhSorW5
+   5pXjX9QDolKcFmo+gjn7p/IU2chCLNHHYEifiui9CCShRJykiP9c1DYLa
+   +R6xEcMqVEqMtMaMBNLMLcT7TtbV/VYUYl9K8+9YadOtJDuY62SFyDCO4
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="458464949"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="458464949"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 14:54:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="862255152"
+X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
+   d="scan'208";a="862255152"
+Received: from eborisov-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.46.36])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 14:54:17 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 1455110A3F5; Thu,  7 Dec 2023 01:54:15 +0300 (+03)
+Date: Thu, 7 Dec 2023 01:54:15 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	Michael Kelley <mhkelley58@gmail.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Cui, Dexuan" <decui@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"stefan.bader@canonical.com" <stefan.bader@canonical.com>,
+	"tim.gardner@canonical.com" <tim.gardner@canonical.com>,
+	"roxana.nicolescu@canonical.com" <roxana.nicolescu@canonical.com>,
+	"cascardo@canonical.com" <cascardo@canonical.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"sashal@kernel.org" <sashal@kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early
+ TDX init
+Message-ID: <20231206225415.zxfm2ndpwsmthc6e@box.shutemov.name>
+References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
+ <DM8PR11MB575090573031AD9888D4738AE786A@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <9ab71fee-be9f-4afc-8098-ad9d6b667d46@linux.microsoft.com>
+ <20231205105407.vp2rejqb5avoj7mx@box.shutemov.name>
+ <0c4e33f0-6207-448d-a692-e81391089bea@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231205105030.8698-1-xin3.li@intel.com> <20231205105030.8698-27-xin3.li@intel.com>
- <f260ddf9-be67-48e0-8121-6f58d46f7978@citrix.com> <SA1PR11MB67343544B0CEB6C82002790DA884A@SA1PR11MB6734.namprd11.prod.outlook.com>
- <4e41b658-f49e-424c-8a86-08c8ab8e384d@citrix.com> <SA1PR11MB673472A25E72022F68882869A884A@SA1PR11MB6734.namprd11.prod.outlook.com>
-In-Reply-To: <SA1PR11MB673472A25E72022F68882869A884A@SA1PR11MB6734.namprd11.prod.outlook.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Wed, 6 Dec 2023 14:58:54 -0500
-Message-ID: <CAMzpN2h8yAk8Q0XwWWhBO3LcnwkNH57JOzTqamoNRXs-E3GJnw@mail.gmail.com>
-Subject: Re: [PATCH v13 26/35] x86/fred: FRED entry/exit and dispatch code
-To: "Li, Xin3" <xin3.li@intel.com>
-Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "Lutomirski, Andy" <luto@kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "Gross, Jurgen" <jgross@suse.com>, 
-	"Shankar, Ravi V" <ravi.v.shankar@intel.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>, 
-	"jiangshanlai@gmail.com" <jiangshanlai@gmail.com>, "nik.borisov@suse.com" <nik.borisov@suse.com>, 
-	"Kang, Shan" <shan.kang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0c4e33f0-6207-448d-a692-e81391089bea@linux.microsoft.com>
 
-On Wed, Dec 6, 2023 at 2:19=E2=80=AFPM Li, Xin3 <xin3.li@intel.com> wrote:
->
-> > >>> + case X86_TRAP_OF:
-> > >>> +         exc_overflow(regs);
-> > >>> +         return;
-> > >>> +
-> > >>> + /* INT3 */
-> > >>> + case X86_TRAP_BP:
-> > >>> +         exc_int3(regs);
-> > >>> +         return;
-> > >> ... neither OF nor BP will ever enter fred_intx() because they're
-> > >> type SWEXC not SWINT.
-> > > Per FRED spec 5.0, section 7.3 Software Interrupts and Related Instru=
-ctions:
-> > > INT n (opcode CD followed by an immediate byte): There are 256 such
-> > > software interrupt instructions, one for each value n of the immediat=
-e
-> > > byte (0=E2=80=93255).
-> > >
-> > > And appendix B Event Stack Levels:
-> > > If the event is an execution of INT n (opcode CD n for 8-bit value n)=
-,
-> > > the event stack level is 0. The event type is 4 (software interrupt)
-> > > and the vector is n.
-> > >
-> > > So int $0x4 and int $0x3 (use asm(".byte 0xCD, 0x03")) get here.
-> > >
-> > > But into (0xCE) and int3 (0xCC) do use event type SWEXC.
-> > >
-> > > BTW, into is NOT allowed in 64-bit mode but "int $0x4" is allowed.
-> >
-> > There is certainly fun to be had with CD 03 and CD 04 byte patterns, bu=
-t if you
-> > meant to mean those here, then the comments are wrong.
-> >
-> > Vectors 3 and 4 are installed with DPL3 because that is necessary to ma=
-ke CC and
-> > CE function in userspace.  It also suggests that the SWINT vs SWEXC dis=
-tinction
-> > was retrofitted to architecture after the 286, because exceptions don't=
- check DPL
-> > and ICEBP delivers #DB from userspace even when Vector 1 has a DPL of 0=
-.
-> >
-> > While CC is for most cases indistinguishable from CD 03, CE behaves ent=
-irely
-> > differently to CD 04.  CD 04 doesn't #UD in 64bit mode, and will trigge=
-r
-> > exc_overflow() irrespective of the state of EFLAGS.OF.
-> >
-> >
-> > The SDM goes out of it's way to say not to use the CD 03 byte pattern (=
-and it
-> > does take effort to emit this byte pattern - e.g. GAS will silently tra=
-nslate "int $3"
-> > to "int3"), and there's no plausible way software is using CD 04 in pla=
-ce of CE.
-> >
-> > So why do we care about containing to make mistakes of the IDT era work=
- in a
-> > FRED world?
->
-> First, I agree with you because it makes things simple and neat.
->
-> However, the latest SDM and FRED spec 5.0 both doesn't disallow it, so it
-> becomes an OS implementation choice.
->
-> >
-> > Is there anything (other than perhaps the selftests) which would even n=
-otice?
->
-> I'm just conservative :)
->
-> If a user app can do it with IDT, we should still allow it when FRED is
-> enabled.  But if all key stakeholders don't care whatever gets broken
-> due to the change and agree to change it.
+On Wed, Dec 06, 2023 at 06:49:11PM +0100, Jeremi Piotrowski wrote:
+> On 05/12/2023 11:54, Kirill A. Shutemov wrote:
+> > On Mon, Dec 04, 2023 at 08:07:38PM +0100, Jeremi Piotrowski wrote:
+> >> On 04/12/2023 10:17, Reshetova, Elena wrote:
+> >>>> Check for additional CPUID bits to identify TDX guests running with Trust
+> >>>> Domain (TD) partitioning enabled. TD partitioning is like nested virtualization
+> >>>> inside the Trust Domain so there is a L1 TD VM(M) and there can be L2 TD VM(s).
+> >>>>
+> >>>> In this arrangement we are not guaranteed that the TDX_CPUID_LEAF_ID is
+> >>>> visible
+> >>>> to Linux running as an L2 TD VM. This is because a majority of TDX facilities
+> >>>> are controlled by the L1 VMM and the L2 TDX guest needs to use TD partitioning
+> >>>> aware mechanisms for what's left. So currently such guests do not have
+> >>>> X86_FEATURE_TDX_GUEST set.
+> >>>
+> >>> Back to this concrete patch. Why cannot L1 VMM emulate the correct value of
+> >>> the TDX_CPUID_LEAF_ID to L2 VM? It can do this per TDX partitioning arch.
+> >>> How do you handle this and other CPUID calls call currently in L1? Per spec,
+> >>> all CPUIDs calls from L2 will cause L2 --> L1 exit, so what do you do in L1?
+> >> The disclaimer here is that I don't have access to the paravisor (L1) code. But
+> >> to the best of my knowledge the L1 handles CPUID calls by calling into the TDX
+> >> module, or synthesizing a response itself. TDX_CPUID_LEAF_ID is not provided to
+> >> the L2 guest in order to discriminate a guest that is solely responsible for every
+> >> TDX mechanism (running at L1) from one running at L2 that has to cooperate with L1.
+> >> More below.
+> >>
+> >>>
+> >>> Given that you do that simple emulation, you already end up with TDX guest
+> >>> code being activated. Next you can check what features you wont be able to
+> >>> provide in L1 and create simple emulation calls for the TDG calls that must be
+> >>> supported and cannot return error. The biggest TDG call (TDVMCALL) is already
+> >>> direct call into L0 VMM, so this part doesn’t require L1 VMM support. 
+> >>
+> >> I don't see anything in the TD-partitioning spec that gives the TDX guest a way
+> >> to detect if it's running at L2 or L1, or check whether TDVMCALLs go to L0/L1.
+> >> So in any case this requires an extra cpuid call to establish the environment.
+> >> Given that, exposing TDX_CPUID_LEAF_ID to the guest doesn't help.
+> >>
+> >> I'll give some examples of where the idea of emulating a TDX environment
+> >> without attempting L1-L2 cooperation breaks down.
+> >>
+> >> hlt: if the guest issues a hlt TDVMCALL it goes to L0, but if it issues a classic hlt
+> >> it traps to L1. The hlt should definitely go to L1 so that L1 has a chance to do
+> >> housekeeping.
+> > 
+> > Why would L2 issue HLT TDVMCALL? It only happens in response to #VE, but
+> > if partitioning enabled #VEs are routed to L1 anyway.
+> 
+> What about tdx_safe_halt? When X86_FEATURE_TDX_GUEST is defined I see
+> "using TDX aware idle routing" in dmesg.
 
-One case to consider is Windows software running under Wine.
-Anti-tampering code has been known to do some non-standard things,
-like using ICEBP or using SYSCALL directly instead of through system
-DLLs.  Keeping the status quo should be preferred, especially if
-Microsoft does the same.
+Yeah. I forgot about this one. My bad. :/
 
+I think it makes a case for more fine-grained control on where TDVMCALL
+routed: to L1 or to L0. I think TDX module can do that.
 
-Brian Gerst
+BTW, what kind of housekeeping do you do in L1 for HLT case?
+
+> >> map gpa: say the guest uses MAP_GPA TDVMCALL. This goes to L0, not L1 which is the actual
+> >> entity that needs to have a say in performing the conversion. L1 can't act on the request
+> >> if L0 would forward it because of the CoCo threat model. So L1 and L2 get out of sync.
+> >> The only safe approach is for L2 to use a different mechanism to trap to L1 explicitly.
+> > 
+> > Hm? L1 is always in loop on share<->private conversion. I don't know why
+> > you need MAP_GPA for that.
+> > 
+> > You can't rely on MAP_GPA anyway. It is optional (unfortunately). Conversion
+> > doesn't require MAP_GPA call.
+> > 
+> 
+> I'm sorry, I don't quite follow. I'm reading tdx_enc_status_changed():
+> - TDVMCALL_MAP_GPA is issued for all transitions
+> - TDX_ACCEPT_PAGE is issued for shared->private transitions
+
+I am talking about TDX architecture. It doesn't require MAP_GPA call.
+Just setting shared bit and touching the page will do the conversion.
+MAP_GPA is "being nice" on the guest behalf.
+
+Linux do MAP_GPA all the time. Or tries to. I had bug where I converted
+page by mistake this way. It was pain to debug.
+
+My point is that if you *must* catch all conversions in L1, MAP_GPA is not
+reliable way.
+
+> This doesn't work in partitioning when TDVMCALLs go to L0: TDVMCALL_MAP_GPA bypasses
+> L1 and TDX_ACCEPT_PAGE is L1 responsibility.
+> 
+> If you want to see how this is currently supported take a look at arch/x86/hyperv/ivm.c.
+> All memory starts as private and there is a hypercall to notify the paravisor for both
+> TDX (when partitioning) and SNP (when VMPL). This guarantees that all page conversions
+> go through L1.
+
+But L1 guest control anyway during page conversion and it has to manage
+aliases with TDG.MEM.PAGE.ATTR.RD/WR. Why do you need MAP_GPA for that?
+
+> >> Having a paravisor is required to support a TPM and having TDVMCALLs go to L0 is
+> >> required to make performance viable for real workloads.
+> >>
+> >>>
+> >>> Until we really see what breaks with this approach, I don’t think it is worth to
+> >>> take in the complexity to support different L1 hypervisors view on partitioning.
+> >>>
+> >>
+> >> I'm not asking to support different L1 hypervisors view on partitioning, I want to
+> >> clean up the code (by fixing assumptions that no longer hold) for the model that I'm
+> >> describing that: the kernel already supports, has an implementation that works and
+> >> has actual users. This is also a model that Intel intentionally created the TD-partitioning
+> >> spec to support.
+> >>
+> >> So lets work together to make X86_FEATURE_TDX_GUEST match reality.
+> > 
+> > I think the right direction is to make TDX architecture good enough
+> > without that. If we need more hooks in TDX module that give required
+> > control to L1, let's do that. (I don't see it so far)
+> > 
+> 
+> I'm not the right person to propose changes to the TDX module, I barely know anything about
+> TDX. The team that develops the paravisor collaborates with Intel on it and was also consulted
+> in TD-partitioning design.
+
+One possible change I mentioned above: make TDVMCALL exit to L1 for some
+TDVMCALL leafs (or something along the line).
+
+I would like to keep it transparent for enlightened TDX Linux guest. It
+should not care if it runs as L1 or as L2 in your environment.
+
+> I'm also not sure what kind of changes you envision. Everything is supported by the
+> kernel already and the paravisor ABI is meant to stay vendor independent.
+> 
+> What I'm trying to accomplish is better integration with the non-partitioning side of TDX
+> so that users don't see "Memory Encryption Features active: AMD SEV" when running on Intel
+> TDX with a paravisor.
+
+This part is cosmetics and doesn't make much difference.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
