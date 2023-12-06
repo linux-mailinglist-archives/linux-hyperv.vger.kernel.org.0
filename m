@@ -1,215 +1,227 @@
-Return-Path: <linux-hyperv+bounces-1250-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1251-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A26218069C7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 09:37:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF41A8071E1
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 15:11:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D112B20D96
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 08:37:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A2B9B20E1E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 14:11:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB54E1078F;
-	Wed,  6 Dec 2023 08:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B96FF3DB84;
+	Wed,  6 Dec 2023 14:11:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SrWybxzU"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="nUkGuZlf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD1BD3;
-	Wed,  6 Dec 2023 00:37:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701851864; x=1733387864;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=LhkdOkCJj052LvhzCGAo/50vV/3GT8Dk17wptkGStSQ=;
-  b=SrWybxzU/fNNo4+/W8jfAtaxgzLyfD7XWb9g9Oz8iBxtdLv+U5CSt/2f
-   4179wz4p5PbD3FwIGzzfgVaIFTfJovtExMLOpUwtqbNX7upTK7E3hGJB/
-   MOOwK89WE3AkOo30HVYd78F10doN0ne1kKG1pa8DF0aZpWKXt4fTXMWYJ
-   tn35VbFNs6zp89s6wQ9D3XzZY7JinHkBjDdM9lqt195kFJMMO18qZ7c9b
-   /jJwXsoXXLlQ9kqexGIEMJFk6UClQRkQzibpIu2y79O3IO7uC4+WoI1ft
-   5lAzaVez139uX7MYUUyhSb3DfZCF84JMVgv79wuEIFAVLBLkvIDv84yz1
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="374207727"
-X-IronPort-AV: E=Sophos;i="6.04,254,1695711600"; 
-   d="scan'208";a="374207727"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 00:37:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="837243941"
-X-IronPort-AV: E=Sophos;i="6.04,254,1695711600"; 
-   d="scan'208";a="837243941"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Dec 2023 00:37:43 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Dec 2023 00:37:43 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Dec 2023 00:37:42 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Dec 2023 00:37:42 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 6 Dec 2023 00:37:42 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VMt1jaE0PSsKjh/lW9mjs7IXbMe3gnEmX83cvaJTxO6dot6rERys6bpfZVL6RE2lH6Elsfax4PEY+fsWfzGxSPmIt2MtId1HEiUJTa01JxhpsSiCxz0+TokL0EU3p0JV0574z2iweMaT4UfuYD/BU3ROsXgGCD4gnsIaPT5STWTLyftrrAHUWX3AL63SOw4Ka9e3rHp5Nf5lXrbjfG6wCZaBqSOdBxoGp9SkMPS7CMKYD07lRQwnBSwkMl4EA+NX+fva9SJAUGTE6J6zTC2DMzMnlqGeCfEQD04I1rnMwAW93fwioUgfe8svivLUn0zRp1Ane60kLJiG9LAQhwHGmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LeKtL401MT+h7lonnZqVcY5dmrvPG7ci+cX3NWotrHI=;
- b=K6ZtYzsMjhXYSG6d276HgILN3JcTBmZMcOXoQB9vIkjXFrMjZR2QcbyzWeEixDUAcd5XcgTScfvgYJCoorH+df6yuAAcGsOkzgolf8tG0lyOuxPxT2CiI9rgyp2ZGTv9h9QE/xL/sKk3mthCPbTmyxpcyW0ip7UK6fabIAJbJmbNiU6GgMWl8HEYiicDESv6M2aOpUPul9aFrfh94IQseyySD6yuYhsSaI0hbypOiKXz+hHo0ZXVfGz6k4zygxDEo9/w+JiHYljZU74omT9ddQm97QU5/JDtvkNbwQvphK+eVnbPAFrNBoKs2jPq8oW711rcr7IfzR2l66PNazfn+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
- by DM4PR11MB5325.namprd11.prod.outlook.com (2603:10b6:5:390::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Wed, 6 Dec
- 2023 08:37:39 +0000
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::3d98:6afd:a4b2:49e3]) by SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::3d98:6afd:a4b2:49e3%7]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
- 08:37:39 +0000
-From: "Li, Xin3" <xin3.li@intel.com>
-To: "Li, Xin3" <xin3.li@intel.com>, "Gao, Chao" <chao.gao@intel.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
-	<corbet@lwn.net>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "Cui, Dexuan" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "vkuznets@redhat.com"
-	<vkuznets@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH v1 13/23] KVM: VMX: Handle VMX nested exception for FRED
-Thread-Topic: [PATCH v1 13/23] KVM: VMX: Handle VMX nested exception for FRED
-Thread-Index: AQHaEnYXOQlvFLhpWkG4lt/jksLCm7B5dqYAgAFC3tCAIVOmcA==
-Date: Wed, 6 Dec 2023 08:37:39 +0000
-Message-ID: <SA1PR11MB6734EFF17E15C68AAD12A227A884A@SA1PR11MB6734.namprd11.prod.outlook.com>
-References: <20231108183003.5981-1-xin3.li@intel.com>
- <20231108183003.5981-14-xin3.li@intel.com> <ZVMkVmBPVfaMjDTL@chao-email>
- <SA1PR11MB67348D3637C2BC6B107C5CCAA8B1A@SA1PR11MB6734.namprd11.prod.outlook.com>
-In-Reply-To: <SA1PR11MB67348D3637C2BC6B107C5CCAA8B1A@SA1PR11MB6734.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|DM4PR11MB5325:EE_
-x-ms-office365-filtering-correlation-id: 01ec035d-a8da-4362-1848-08dbf6369b2a
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: thCCOwkwq/6Vrm0c3Th0rWb2HzysjVumgf9+KXM4fUoNMPb/Di7vwPg/N2OGkzGIgzU9tMxNN47BcQ+XbZs3r2UD5uV1oZVkr17+tOoRsPDV5bI6ZRPvxkjKAcgrY3tKJsFcvJNike4+cMhyiIZ+HrMPibHa+30zKj6jVeKQ2o5piNq8RtxU5iZiyEkMZvjDuICx73g8y83QIe2v0BowzOlv4rbCvKy6oH8Glp12ToSOHdmXGH7b2IqQuY0IMEmaHoy+9k3aCgi/tW89vniIC+5nrjgS4W+X0zLMxQklsCqSxdFVIC3HXrMa7Qutqvy85tKKsroiHCZK3IOeqwy39G/E8Bo47zvqf3mhDjIFPTrG3LBJBNA8tjtwjfBnAnmwhn1zIiCiq4FIQgMAI1ljKcBianq1nSeLWDVy+Xesb5dCwUifTl8Ess0emi4g/Oz8Fdb349znLzF6CoBGIXjXfeSjR6Sm6SZqT1ihwZS8qHM9GI7R1xzVxPXOsBG2+T7A3bqW/dIdwno1SKlHgGZki7RPcghRCZCD/uiX/l2aKV1afMvqtMJAlC8zP5ZT7EpEN9jHYXpieS3REb72Pw1xRTRuEUynUr9bPAQbvvP429zcsRtgQtOhwhzhJ6pmyI4O
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(39860400002)(376002)(396003)(366004)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(7416002)(2906002)(33656002)(316002)(110136005)(54906003)(64756008)(66556008)(6636002)(66446008)(66476007)(38070700009)(66946007)(76116006)(4326008)(8676002)(55016003)(86362001)(52536014)(8936002)(41300700001)(5660300002)(122000001)(38100700002)(82960400001)(83380400001)(478600001)(26005)(71200400001)(7696005)(9686003)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?NDhCgrtp88cAbSyKq4s2HQv+kVtp189HnRkmrqhtId7GfUoBM3Osil4kh1gK?=
- =?us-ascii?Q?4PjbaAyhkoM3GQtNU+hXtVYwKNsXE6wlToKhEx/zQdiZ+ww8yaHWeg+Q0CI3?=
- =?us-ascii?Q?l4oSciq938zZahxzAAp4ybMATv6fY4u8p5YjjrV4n2IUcBwtIrPWn2E6Ue31?=
- =?us-ascii?Q?mOBhotE5W/kzMXpJXebtcP1YcIXysHSjSF6Zc7KM0dRUOJ0IuZ5hnLNFOHk5?=
- =?us-ascii?Q?BgJJjHn3Y+mhEYiX4osipxvC5uIyAKGlIq5dF9ytUVlexjOddL6HtOtmNMgW?=
- =?us-ascii?Q?wfT3nN8mWTiaCo5I+JcPB0/jeCYkf+Z2uC2u3CfX16b2a4k927S5aSs3unCG?=
- =?us-ascii?Q?Vkb3Lokt4g46Y4jeqx9u9GEEAeO9wkWag6rBVMTj89sUJBUl8CVWf425bOOG?=
- =?us-ascii?Q?lpkNpClqxmGD1sAVWZm8T12CU873ZqFXzUySlVyFmMIPB5qkoi6t8UigtKze?=
- =?us-ascii?Q?bvk41uf451XvpUzvu7w5qKcK57JKaC7RhOqgt1Ow4BAJvFN/uJhCxgEf6KP/?=
- =?us-ascii?Q?G4c1cerr1suSlOUNiZlinlEuw/3RIY2YSBc9QMJSWvrmGrkNaOOCXVRKjt9S?=
- =?us-ascii?Q?zywKnjfdV96/4X8QKGJk9dNVL6jFzL1VnbFs1xuQ1pp1K+prTwp0ZTjG2mZk?=
- =?us-ascii?Q?xlCwZ+GOogt1kzgcUehsZFA4WWT4EWLvouIk8nL3geB9WGkboWgD/ZgOPwM4?=
- =?us-ascii?Q?Wvh2cTsT7hDUdM+Ar/BxVsnhkmd1EB5cMiGf+mpFcBskjoAMdB5CpLQ5K0qX?=
- =?us-ascii?Q?lL05h6jrlf7GLe2GJlH2913bsw08II49gUjl53AwFsrhY14VFhNjW21tinzD?=
- =?us-ascii?Q?FqWW6sCMb7m3DHIvAG+CaOHK3UHEP92Q8ElRnrYOEDNp/UifD65GTzW4pk16?=
- =?us-ascii?Q?tAlped/A8qVtCd6sAM52OcshDSjm9sQKKVcWpxdPvWmlB9zuesWQxhvy5bsv?=
- =?us-ascii?Q?Nhf2kzcHqgxQmI77hXZVHsBIYuA6ugSMrZyZhq54cFBEsl9Oz9N9Yev2pbC+?=
- =?us-ascii?Q?tOltEJVpqUymMgTGIqcdkLqRC+QQCXluwCcQBQgNRgHLqE5najnUSfg/lg+F?=
- =?us-ascii?Q?a0QFKymMuslnMKBC4371tXvrWGyEXzvsVGuoc+95OmFl1eBnFFT1bPQX+nhY?=
- =?us-ascii?Q?Tg/5efY3T86qtQR/IhRpxKlETGOXx64g18j7qFmeth9Aloenw44/zzz2idvG?=
- =?us-ascii?Q?5Edz8O70AaMk+yWry328E8qBD1oCQPucC1qFRBXyDAWDWSMxYgvqpd/6qlEE?=
- =?us-ascii?Q?sNQuE8xFfkxP312OyPt3tZekfZSSTnm+nTUFhLKtofFTEYnwya+xSIq64X59?=
- =?us-ascii?Q?iPq8ijuHSXwPgmqlrHozAEvOVZezD6tnoD+qOV6NTuot0eVmeIAZIfgxAW7P?=
- =?us-ascii?Q?Chg5fxmUrYFGNyVKEbqXu9KeaiEvF3LJlQ2wcY1F5Gyay7ALngnsFZv2Jm4T?=
- =?us-ascii?Q?PDLJrsAqB72CVPE7npNNBHRP3MQymdcZNI8RFSpeVDGAGmF9ihCCee5s6SeQ?=
- =?us-ascii?Q?oEgma0wcnKkvUxvN/F3mVki6ZUOmQPmZE0oo4XfxNI4GpTAHSFdu2QfPHoWH?=
- =?us-ascii?Q?IdD6/anydC6mRdr0KXI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD23FD4B
+	for <linux-hyperv@vger.kernel.org>; Wed,  6 Dec 2023 06:11:48 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40b5155e154so75856485e9.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 06 Dec 2023 06:11:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1701871907; x=1702476707; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/J/0AouVBy2ul+ViGYcNfPUia+BakLB5GkfP7lR2gNQ=;
+        b=nUkGuZlf+Y1Z1F1+OQ5AT+w14Y+6oJ1lKcdwS3+glw+64GuP8tRqvZPLzC/730I3Ci
+         3o9QLMMOW1dtCa9bnhvoq6aSLxp6G8FbBPl6NXoGCW6SxXZf8Fe3VnSDpL4iWz2JnYpR
+         RvaHwjHcEJ4lkoobY6DkqPKKq7sQu3yi6ivSI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701871907; x=1702476707;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/J/0AouVBy2ul+ViGYcNfPUia+BakLB5GkfP7lR2gNQ=;
+        b=mpk2Gr4hzmJKQjEZ8JQUKYFsYBCwrACfRFvdOTwwDdTABCFdC7ronTvPKtyed5iM+9
+         /NbIW4GYq5/w9TQkjfU9gHO7mTmhoJmgGsQWM9bbMYfqjJfR/a+7VB/RZqGumvgkg9hb
+         fsqIsWH/6wN1Sgv+8ENgtsVpoBUiRDxTOBIvVNIjdCSVGBrzaji7IcSd2kYRZshjBhEX
+         m107iit9uH15YTnflpqADEbDd/zPTFyVXO9MEivD7ounXbslc1I0oUaU5d0bMyFpmsrs
+         LBAzZSD7UWZj6+O9RBDxXDo3I9AgFPw49iNdfo7CKS/EFBChj7Pm1I+LnYMBriyRaBv3
+         08uw==
+X-Gm-Message-State: AOJu0YyjiSt99Cx7ugySn95wJSGn+yb8L8/Ni6obW6ANDqd+NIaNRUIe
+	yoznjFKj4wb4gPh0D+cUkpnTiA==
+X-Google-Smtp-Source: AGHT+IFNMx+Klo1CEPaJ26/dBlw3sjXlNL46V08+iyKrIoZzyUVgJsGVXWSyD7pSk5JuLC7WZwHGiw==
+X-Received: by 2002:a05:600c:5253:b0:40b:5e4a:4081 with SMTP id fc19-20020a05600c525300b0040b5e4a4081mr623446wmb.161.1701871907211;
+        Wed, 06 Dec 2023 06:11:47 -0800 (PST)
+Received: from [10.80.67.30] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
+        by smtp.gmail.com with ESMTPSA id c1-20020adfa301000000b003333a216682sm11793864wrb.97.2023.12.06.06.11.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Dec 2023 06:11:46 -0800 (PST)
+Message-ID: <4e41b658-f49e-424c-8a86-08c8ab8e384d@citrix.com>
+Date: Wed, 6 Dec 2023 14:11:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01ec035d-a8da-4362-1848-08dbf6369b2a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2023 08:37:39.4392
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xlJ2T55eEp+fbdxDc7gLoI2T3LARUmoLKskOqBjFbwA1JVPPCl1DaS98YwbEpEwd9Zo9aqir6ufnmB0HGrd3jQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5325
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 26/35] x86/fred: FRED entry/exit and dispatch code
+Content-Language: en-GB
+To: "Li, Xin3" <xin3.li@intel.com>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "Lutomirski, Andy" <luto@kernel.org>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "Gross, Jurgen" <jgross@suse.com>, "Shankar, Ravi V"
+ <ravi.v.shankar@intel.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "jiangshanlai@gmail.com" <jiangshanlai@gmail.com>,
+ "nik.borisov@suse.com" <nik.borisov@suse.com>,
+ "Kang, Shan" <shan.kang@intel.com>
+References: <20231205105030.8698-1-xin3.li@intel.com>
+ <20231205105030.8698-27-xin3.li@intel.com>
+ <f260ddf9-be67-48e0-8121-6f58d46f7978@citrix.com>
+ <SA1PR11MB67343544B0CEB6C82002790DA884A@SA1PR11MB6734.namprd11.prod.outlook.com>
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <SA1PR11MB67343544B0CEB6C82002790DA884A@SA1PR11MB6734.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> Subject: RE: [PATCH v1 13/23] KVM: VMX: Handle VMX nested exception for F=
-RED
->=20
-> > >+		if (idt_vectoring_info &
-> VECTORING_INFO_DELIVER_CODE_MASK)
-> > >+			kvm_requeue_exception_e(vcpu, vector,
-> > vmcs_read32(error_code_field),
-> > >+						idt_vectoring_info &
-> > INTR_INFO_NESTED_EXCEPTION_MASK);
-> > >+		else
-> > >+			kvm_requeue_exception(vcpu, vector,
-> > >+					      idt_vectoring_info &
-> > INTR_INFO_NESTED_EXCEPTION_MASK);
-> >
-> > Exiting-event identification can also have bit 13 set, indicating a
-> > nested exception encountered and caused VM-exit. when reinjecting the
-> > exception to guests, kvm needs to set the "nested" bit, right? I
-> > suspect some changes to e.g., handle_exception_nmi() are needed.
->=20
-> The current patch relies on kvm_multiple_exception() to do that.  But TBH=
-, I'm
-> not sure it can recognize all nested cases.  I probably should revisit it=
-.
+On 06/12/2023 7:45 am, Li, Xin3 wrote:
+>>> +	case X86_TRAP_OF:
+>>> +		exc_overflow(regs);
+>>> +		return;
+>>> +
+>>> +	/* INT3 */
+>>> +	case X86_TRAP_BP:
+>>> +		exc_int3(regs);
+>>> +		return;
+>> ... neither OF nor BP will ever enter fred_intx() because they're type SWEXC not
+>> SWINT.
+> Per FRED spec 5.0, section 7.3 Software Interrupts and Related Instructions:
+> INT n (opcode CD followed by an immediate byte): There are 256 such
+> software interrupt instructions, one for each value n of the immediate
+> byte (0–255).
+>
+> And appendix B Event Stack Levels:
+> If the event is an execution of INT n (opcode CD n for 8-bit value n),
+> the event stack level is 0. The event type is 4 (software interrupt)
+> and the vector is n.
+>
+> So int $0x4 and int $0x3 (use asm(".byte 0xCD, 0x03")) get here.
+>
+> But into (0xCE) and int3 (0xCC) do use event type SWEXC. 
+>
+> BTW, into is NOT allowed in 64-bit mode but "int $0x4" is allowed.
 
-So the conclusion is that kvm_multiple_exception() is smart enough, and
-a VMM doesn't have to check bit 13 of the Exiting-event identification.
+There is certainly fun to be had with CD 03 and CD 04 byte patterns, but
+if you meant to mean those here, then the comments are wrong.
 
-In FRED spec 5.0, section 9.2 - New VMX Feature: VMX Nested-Exception
-Support, there is a statement at the end of Exiting-event identification:
+Vectors 3 and 4 are installed with DPL3 because that is necessary to
+make CC and CE function in userspace.  It also suggests that the SWINT
+vs SWEXC distinction was retrofitted to architecture after the 286,
+because exceptions don't check DPL and ICEBP delivers #DB from userspace
+even when Vector 1 has a DPL of 0.
 
-(The value of this bit is always identical to that of the valid bit of
-the original-event identification field.)
+While CC is for most cases indistinguishable from CD 03, CE behaves
+entirely differently to CD 04.  CD 04 doesn't #UD in 64bit mode, and
+will trigger exc_overflow() irrespective of the state of EFLAGS.OF.
 
-It means that even w/o VMX Nested-Exception support, a VMM already knows
-if an exception is a nested exception encountered during delivery of
-another event in an exception caused VM exit (exit reason 0).  This is
-done in KVM through reading IDT_VECTORING_INFO_FIELD and calling
-vmx_complete_interrupts() immediately after VM exits.
 
-vmx_complete_interrupts() simply queues the original exception if there is
-one, and later the nested exception causing the VM exit could be cancelled
-if it is a shadow page fault.  However if the shadow page fault is caused
-by a guest page fault, KVM injects it as a nested exception to have guest
-fix its page table.
+The SDM goes out of it's way to say not to use the CD 03 byte pattern
+(and it does take effort to emit this byte pattern - e.g. GAS will
+silently translate "int $3" to "int3"), and there's no plausible way
+software is using CD 04 in place of CE.
 
-I will add comments about this background in the next iteration.
+So why do we care about containing to make mistakes of the IDT era work
+in a FRED world?
+
+Is there anything (other than perhaps the selftests) which would even
+notice?
+
+>>> +		instrumentation_end();
+>>> +		irqentry_exit(regs, state);
+>>> +	} else {
+>>> +		common_interrupt(regs, vector);
+>>> +	}
+>>> +}
+>>> +
+>>> +static noinstr void fred_exception(struct pt_regs *regs, unsigned
+>>> +long error_code) {
+>>> +	/* Optimize for #PF. That's the only exception which matters performance
+>> wise */
+>>> +	if (likely(regs->fred_ss.vector == X86_TRAP_PF)) {
+>>> +		exc_page_fault(regs, error_code);
+>>> +		return;
+>>> +	}
+>>> +
+>>> +	switch (regs->fred_ss.vector) {
+>>> +	case X86_TRAP_DE: return exc_divide_error(regs);
+>>> +	case X86_TRAP_DB: return fred_exc_debug(regs);
+>>> +	case X86_TRAP_BP: return exc_int3(regs);
+>>> +	case X86_TRAP_OF: return exc_overflow(regs);
+>> Depending on what you want to do with BP/OF vs fred_intx(), this may need
+>> adjusting.
+>>
+>> If you are cross-checking type and vector, then these should be rejected for not
+>> being of type HWEXC.
+> You're right, the event type needs to be SWEXC for into and int3.
+>
+> However, would it be overkilling?  Assuming hardware and VMM are sane.
+
+You either care about cross checking, or not.  Right now, this patch is
+a mix of the two approaches.
+
+In my opinion, cross-checking is the better approach, because it means
+that violations of the assumptions get noticed more quickly, and
+hopefully by whomever is working on the new feature which alters the
+assumptions.
+
+~Andrew
 
