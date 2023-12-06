@@ -1,228 +1,231 @@
-Return-Path: <linux-hyperv+bounces-1261-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1262-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE775807BAF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 23:54:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93C74807C25
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 00:16:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8416A1F2199C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 22:54:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E52E4B210B2
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 23:16:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AABB70997;
-	Wed,  6 Dec 2023 22:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF5A2EB00;
+	Wed,  6 Dec 2023 23:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XRt3udaP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fYE42oA1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E2C18D;
-	Wed,  6 Dec 2023 14:54:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701903265; x=1733439265;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JX/oMvpTI/2qT6JJCaAT7HVae/ammdoaCW90BVpkcJI=;
-  b=XRt3udaPTt6Ew68tPdULZIpYzcWK6KjhPhg0uY9GTwyb+HiqE1XLKhdZ
-   v1VutHAfD3yHXhE4vxIGvG/fGPT77/+vlXYpIeNJqJ1xGYP694fsEnOg3
-   QQNKDGi8g+86wA6A7HcDngDW1i1I0Gh/A7lFDLUjkUuDEs7PyQmc3GIZF
-   oGarW7RPt0kigptDlvrwZiuHi/Qr4XebhfRRQznJrso0F5L1fBvhSorW5
-   5pXjX9QDolKcFmo+gjn7p/IU2chCLNHHYEifiui9CCShRJykiP9c1DYLa
-   +R6xEcMqVEqMtMaMBNLMLcT7TtbV/VYUYl9K8+9YadOtJDuY62SFyDCO4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="458464949"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="458464949"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 14:54:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="862255152"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="862255152"
-Received: from eborisov-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.46.36])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 14:54:17 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 1455110A3F5; Thu,  7 Dec 2023 01:54:15 +0300 (+03)
-Date: Thu, 7 Dec 2023 01:54:15 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Michael Kelley <mhkelley58@gmail.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Cui, Dexuan" <decui@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"stefan.bader@canonical.com" <stefan.bader@canonical.com>,
-	"tim.gardner@canonical.com" <tim.gardner@canonical.com>,
-	"roxana.nicolescu@canonical.com" <roxana.nicolescu@canonical.com>,
-	"cascardo@canonical.com" <cascardo@canonical.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"sashal@kernel.org" <sashal@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early
- TDX init
-Message-ID: <20231206225415.zxfm2ndpwsmthc6e@box.shutemov.name>
-References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
- <DM8PR11MB575090573031AD9888D4738AE786A@DM8PR11MB5750.namprd11.prod.outlook.com>
- <9ab71fee-be9f-4afc-8098-ad9d6b667d46@linux.microsoft.com>
- <20231205105407.vp2rejqb5avoj7mx@box.shutemov.name>
- <0c4e33f0-6207-448d-a692-e81391089bea@linux.microsoft.com>
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 480E7D66
+	for <linux-hyperv@vger.kernel.org>; Wed,  6 Dec 2023 15:16:15 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-daf702bde7eso389429276.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 06 Dec 2023 15:16:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701904574; x=1702509374; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2PrTW3nyo92scL20Ekap9nlWMoYhz1YGjtYVc4UbsDk=;
+        b=fYE42oA1pM3AYIcMWTjgGkPMO91nGCNxI7n1JSqnjqvTvEUL9cX7e2Ujyf+ZxCfGI8
+         OipWW2jWRWBY79X9lsQy1YQoSJjj/jKw3A7I3pbPKI+RyTjD7fX0XGc4kgvDbf9+0LM+
+         4mv7FtSlCMb2oXd7bYaWTtAfIX4Q7O0CNO7kg4VSxbS7kL0QeCO9JaiY7VYmYXxE3cYV
+         3A94e1VewMQT+Gs+Y0odSRMnFr6840mMNtMz8Dv+PUheAbI/yVBVAncYUwP1Eb8j7mZL
+         NoLGzLmRD7s6/9UtXZ2a2OY1/lwgaqwqj4j3/3p4ZHchLvhc+LoKgWKULnoXai2lx3DW
+         tIzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701904574; x=1702509374;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2PrTW3nyo92scL20Ekap9nlWMoYhz1YGjtYVc4UbsDk=;
+        b=Dqt4sR0k1202AICO6sxA43ko+JzwRkbdp/fFhD7Nw/Vf2BXpcpuKkHRZXrb/FzOq4A
+         eOlaYeM7+sgo49Dte8KZ1cX1K/1SDuX5enEKnlvBQKaP+P3isriDKUqB/vOjz1hhrjLb
+         HDKEWrPWzVqOL1H2Zsw3loTaiWUxjpGE3GTbDZc+PQ2Aa6ptuMzb8dPSFwDPs0JWfCEe
+         u6D1Vylkio6zO5tschLRcqn0uKkMU2QnL8QrZw0uOAecarMza/Ir4wAoQpomJmQRrSXH
+         Hx5AisBbzhW5chc05dswe5OzKREf/bsWmmbL/+hQR8GDugDfH2rQ35iaS8IwzMwSI0sx
+         UEbg==
+X-Gm-Message-State: AOJu0YxA52gaY0ySk5ITSBa3ai438a+58t5jYf8o3H6p7SrTteUmMhlm
+	tJCLVhN6in2zPoyc07vW3hQ/VTOIqIiJB3xlIg==
+X-Google-Smtp-Source: AGHT+IF8Oo3DT9loeb9aEty1FTzi+++EbnOCGNjlZWHZ7P/6knrHCLDtwnFQ4WffwShG/pP4xjX6s5KGOGOlpxebFA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:8707:0:b0:dbc:1c42:f29a with SMTP
+ id a7-20020a258707000000b00dbc1c42f29amr22315ybl.9.1701904574326; Wed, 06 Dec
+ 2023 15:16:14 -0800 (PST)
+Date: Wed, 06 Dec 2023 23:16:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0c4e33f0-6207-448d-a692-e81391089bea@linux.microsoft.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIALkAcWUC/33NwYrDIBgE4FcpntdF/Y3WPe17LKUY/ZMIaQzRD
+ S0h717JpVka9jgM881CEk4BE/k6LWTCOaQQhxKqjxNxnR1apMGXTAQTwJmoKOYux9hfx9+cruE
+ 29tRyqU3T1E4jI2U3TtiE+2b+kAEzHfCeyaU0XUg5To/tbOZb/487c8qoshVYAx5qLb7bGNseP
+ 128bdws9oQ6IkQhmFfa1d6zCs5vBOwJfURAIUAqZZ3SBph8I+SLKMYRIQvBJXI0Qp+lUX+IdV2 fMJRVs4YBAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701904573; l=4962;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=hX2m37gMZ5rAPKE+4kIVNycVYHBLG9ddRIJkMzUA6RI=; b=RvWHJ4xB9uVWwwcYYhFFHSc6UhVUTEXYdWVlyy9npIwevwaSWmJxWI3522jpPRhH+RhKEPd8/
+ mDoZWqOJHC1DGpRyOIT3ZrhP/AxPdcb5WKstGVNQh+tjqNS2vR9a4uF
+X-Mailer: b4 0.12.3
+Message-ID: <20231206-ethtool_puts_impl-v5-0-5a2528e17bf8@google.com>
+Subject: [PATCH net-next v5 0/3] ethtool: Add ethtool_puts()
+From: justinstitt@google.com
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shay Agroskin <shayagr@amazon.com>, 
+	Arthur Kiyanovski <akiyano@amazon.com>, David Arinzon <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>, 
+	Saeed Bishara <saeedb@amazon.com>, Rasesh Mody <rmody@marvell.com>, 
+	Sudarsana Kalluru <skalluru@marvell.com>, GR-Linux-NIC-Dev@marvell.com, 
+	Dimitris Michailidis <dmichail@fungible.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, 
+	Salil Mehta <salil.mehta@huawei.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>, 
+	Tony Nguyen <anthony.l.nguyen@intel.com>, Louis Peens <louis.peens@corigine.com>, 
+	Shannon Nelson <shannon.nelson@amd.com>, Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ronak Doshi <doshir@vmware.com>, 
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Hauke Mehrtens <hauke@hauke-m.de>, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"=?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?=" <arinc.unal@arinc9.com>, Daniel Golle <daniel@makrotopia.org>, 
+	Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, 
+	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	"=?utf-8?q?Alvin_=C5=A0ipraga?=" <alsi@bang-olufsen.dk>, Wei Fang <wei.fang@nxp.com>, 
+	Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Lars Povlsen <lars.povlsen@microchip.com>, 
+	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
+	UNGLinuxDriver@microchip.com, Jiawen Wu <jiawenwu@trustnetic.com>, 
+	Mengyuan Lou <mengyuanlou@net-swift.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, intel-wired-lan@lists.osuosl.org, 
+	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	bpf@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Dec 06, 2023 at 06:49:11PM +0100, Jeremi Piotrowski wrote:
-> On 05/12/2023 11:54, Kirill A. Shutemov wrote:
-> > On Mon, Dec 04, 2023 at 08:07:38PM +0100, Jeremi Piotrowski wrote:
-> >> On 04/12/2023 10:17, Reshetova, Elena wrote:
-> >>>> Check for additional CPUID bits to identify TDX guests running with Trust
-> >>>> Domain (TD) partitioning enabled. TD partitioning is like nested virtualization
-> >>>> inside the Trust Domain so there is a L1 TD VM(M) and there can be L2 TD VM(s).
-> >>>>
-> >>>> In this arrangement we are not guaranteed that the TDX_CPUID_LEAF_ID is
-> >>>> visible
-> >>>> to Linux running as an L2 TD VM. This is because a majority of TDX facilities
-> >>>> are controlled by the L1 VMM and the L2 TDX guest needs to use TD partitioning
-> >>>> aware mechanisms for what's left. So currently such guests do not have
-> >>>> X86_FEATURE_TDX_GUEST set.
-> >>>
-> >>> Back to this concrete patch. Why cannot L1 VMM emulate the correct value of
-> >>> the TDX_CPUID_LEAF_ID to L2 VM? It can do this per TDX partitioning arch.
-> >>> How do you handle this and other CPUID calls call currently in L1? Per spec,
-> >>> all CPUIDs calls from L2 will cause L2 --> L1 exit, so what do you do in L1?
-> >> The disclaimer here is that I don't have access to the paravisor (L1) code. But
-> >> to the best of my knowledge the L1 handles CPUID calls by calling into the TDX
-> >> module, or synthesizing a response itself. TDX_CPUID_LEAF_ID is not provided to
-> >> the L2 guest in order to discriminate a guest that is solely responsible for every
-> >> TDX mechanism (running at L1) from one running at L2 that has to cooperate with L1.
-> >> More below.
-> >>
-> >>>
-> >>> Given that you do that simple emulation, you already end up with TDX guest
-> >>> code being activated. Next you can check what features you wont be able to
-> >>> provide in L1 and create simple emulation calls for the TDG calls that must be
-> >>> supported and cannot return error. The biggest TDG call (TDVMCALL) is already
-> >>> direct call into L0 VMM, so this part doesn’t require L1 VMM support. 
-> >>
-> >> I don't see anything in the TD-partitioning spec that gives the TDX guest a way
-> >> to detect if it's running at L2 or L1, or check whether TDVMCALLs go to L0/L1.
-> >> So in any case this requires an extra cpuid call to establish the environment.
-> >> Given that, exposing TDX_CPUID_LEAF_ID to the guest doesn't help.
-> >>
-> >> I'll give some examples of where the idea of emulating a TDX environment
-> >> without attempting L1-L2 cooperation breaks down.
-> >>
-> >> hlt: if the guest issues a hlt TDVMCALL it goes to L0, but if it issues a classic hlt
-> >> it traps to L1. The hlt should definitely go to L1 so that L1 has a chance to do
-> >> housekeeping.
-> > 
-> > Why would L2 issue HLT TDVMCALL? It only happens in response to #VE, but
-> > if partitioning enabled #VEs are routed to L1 anyway.
-> 
-> What about tdx_safe_halt? When X86_FEATURE_TDX_GUEST is defined I see
-> "using TDX aware idle routing" in dmesg.
+Hi,
 
-Yeah. I forgot about this one. My bad. :/
+This series aims to implement ethtool_puts() and send out a wave 1 of
+conversions from ethtool_sprintf(). There's also a checkpatch patch
+included to check for the cases listed below.
 
-I think it makes a case for more fine-grained control on where TDVMCALL
-routed: to L1 or to L0. I think TDX module can do that.
+This was sparked from recent discussion here [1]
 
-BTW, what kind of housekeeping do you do in L1 for HLT case?
+The conversions are used in cases where ethtool_sprintf() was being used
+with just two arguments:
+|       ethtool_sprintf(&data, buffer[i].name);
+or when it's used with format string: "%s"
+|       ethtool_sprintf(&data, "%s", buffer[i].name);
+which both now become:
+|       ethtool_puts(&data, buffer[i].name);
 
-> >> map gpa: say the guest uses MAP_GPA TDVMCALL. This goes to L0, not L1 which is the actual
-> >> entity that needs to have a say in performing the conversion. L1 can't act on the request
-> >> if L0 would forward it because of the CoCo threat model. So L1 and L2 get out of sync.
-> >> The only safe approach is for L2 to use a different mechanism to trap to L1 explicitly.
-> > 
-> > Hm? L1 is always in loop on share<->private conversion. I don't know why
-> > you need MAP_GPA for that.
-> > 
-> > You can't rely on MAP_GPA anyway. It is optional (unfortunately). Conversion
-> > doesn't require MAP_GPA call.
-> > 
-> 
-> I'm sorry, I don't quite follow. I'm reading tdx_enc_status_changed():
-> - TDVMCALL_MAP_GPA is issued for all transitions
-> - TDX_ACCEPT_PAGE is issued for shared->private transitions
+The first case commonly triggers a -Wformat-security warning with Clang
+due to potential problems with format flags present in the strings [3].
 
-I am talking about TDX architecture. It doesn't require MAP_GPA call.
-Just setting shared bit and touching the page will do the conversion.
-MAP_GPA is "being nice" on the guest behalf.
+The second is just a bit weird with a plain-ol' "%s".
 
-Linux do MAP_GPA all the time. Or tries to. I had bug where I converted
-page by mistake this way. It was pain to debug.
+Changes found with Cocci [4] and grep [5].
 
-My point is that if you *must* catch all conversions in L1, MAP_GPA is not
-reliable way.
+[1]: https://lore.kernel.org/all/202310141935.B326C9E@keescook/
+[2]: https://lore.kernel.org/all/?q=dfb%3Aethtool_sprintf+AND+f%3Ajustinstitt
+[3]: https://lore.kernel.org/all/202310101528.9496539BE@keescook/
+[4]: (script authored by Kees w/ modifications from Joe)
+@replace_2_args@
+expression BUF;
+expression VAR;
+@@
 
-> This doesn't work in partitioning when TDVMCALLs go to L0: TDVMCALL_MAP_GPA bypasses
-> L1 and TDX_ACCEPT_PAGE is L1 responsibility.
-> 
-> If you want to see how this is currently supported take a look at arch/x86/hyperv/ivm.c.
-> All memory starts as private and there is a hypercall to notify the paravisor for both
-> TDX (when partitioning) and SNP (when VMPL). This guarantees that all page conversions
-> go through L1.
+-       ethtool_sprintf(BUF, VAR)
++       ethtool_puts(BUF, VAR)
 
-But L1 guest control anyway during page conversion and it has to manage
-aliases with TDG.MEM.PAGE.ATTR.RD/WR. Why do you need MAP_GPA for that?
+@replace_3_args@
+expression BUF;
+expression VAR;
+@@
 
-> >> Having a paravisor is required to support a TPM and having TDVMCALLs go to L0 is
-> >> required to make performance viable for real workloads.
-> >>
-> >>>
-> >>> Until we really see what breaks with this approach, I don’t think it is worth to
-> >>> take in the complexity to support different L1 hypervisors view on partitioning.
-> >>>
-> >>
-> >> I'm not asking to support different L1 hypervisors view on partitioning, I want to
-> >> clean up the code (by fixing assumptions that no longer hold) for the model that I'm
-> >> describing that: the kernel already supports, has an implementation that works and
-> >> has actual users. This is also a model that Intel intentionally created the TD-partitioning
-> >> spec to support.
-> >>
-> >> So lets work together to make X86_FEATURE_TDX_GUEST match reality.
-> > 
-> > I think the right direction is to make TDX architecture good enough
-> > without that. If we need more hooks in TDX module that give required
-> > control to L1, let's do that. (I don't see it so far)
-> > 
-> 
-> I'm not the right person to propose changes to the TDX module, I barely know anything about
-> TDX. The team that develops the paravisor collaborates with Intel on it and was also consulted
-> in TD-partitioning design.
+-       ethtool_sprintf(BUF, "%s", VAR)
++       ethtool_puts(BUF, VAR)
 
-One possible change I mentioned above: make TDVMCALL exit to L1 for some
-TDVMCALL leafs (or something along the line).
+-       ethtool_sprintf(&BUF, "%s", VAR)
++       ethtool_puts(&BUF, VAR)
 
-I would like to keep it transparent for enlightened TDX Linux guest. It
-should not care if it runs as L1 or as L2 in your environment.
+[5]: $ rg "ethtool_sprintf\(\s*[^,)]+\s*,\s*[^,)]+\s*\)"
 
-> I'm also not sure what kind of changes you envision. Everything is supported by the
-> kernel already and the paravisor ABI is meant to stay vendor independent.
-> 
-> What I'm trying to accomplish is better integration with the non-partitioning side of TDX
-> so that users don't see "Memory Encryption Features active: AMD SEV" when running on Intel
-> TDX with a paravisor.
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v5:
+- updated documentation to include info about the lack of a trailing newline
+  (Thanks Russell)
+- rebased onto mainline
+- Link to v4: https://lore.kernel.org/r/20231102-ethtool_puts_impl-v4-0-14e1e9278496@google.com
 
-This part is cosmetics and doesn't make much difference.
+Changes in v4:
+- update documentation to match:
+  https://lore.kernel.org/all/20231028192511.100001-1-andrew@lunn.ch/
 
+- Link to v3: https://lore.kernel.org/r/20231027-ethtool_puts_impl-v3-0-3466ac679304@google.com
+
+Changes in v3:
+- fix force_speed_maps merge conflict + formatting (thanks Vladimir)
+- rebase onto net-next (thanks Andrew, Vladimir)
+- change subject (thanks Vladimir)
+- fix checkpatch formatting + implementation (thanks Joe)
+- Link to v2: https://lore.kernel.org/r/20231026-ethtool_puts_impl-v2-0-0d67cbdd0538@google.com
+
+Changes in v2:
+- wrap lines better in replacement (thanks Joe, Kees)
+- add --fix to checkpatch (thanks Joe)
+- clean up checkpatch formatting (thanks Joe, et al.)
+- rebase against next
+- Link to v1: https://lore.kernel.org/r/20231025-ethtool_puts_impl-v1-0-6a53a93d3b72@google.com
+
+---
+Justin Stitt (3):
+      ethtool: Implement ethtool_puts()
+      checkpatch: add ethtool_sprintf rules
+      net: Convert some ethtool_sprintf() to ethtool_puts()
+
+ drivers/net/dsa/lantiq_gswip.c                     |  2 +-
+ drivers/net/dsa/mt7530.c                           |  2 +-
+ drivers/net/dsa/qca/qca8k-common.c                 |  2 +-
+ drivers/net/dsa/realtek/rtl8365mb.c                |  2 +-
+ drivers/net/dsa/realtek/rtl8366-core.c             |  2 +-
+ drivers/net/dsa/vitesse-vsc73xx-core.c             |  8 +--
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c      |  4 +-
+ drivers/net/ethernet/brocade/bna/bnad_ethtool.c    |  2 +-
+ drivers/net/ethernet/freescale/fec_main.c          |  4 +-
+ .../net/ethernet/fungible/funeth/funeth_ethtool.c  |  8 +--
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_gmac.c |  2 +-
+ .../net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c    |  2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   | 65 +++++++++++-----------
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |  6 +-
+ drivers/net/ethernet/intel/iavf/iavf_ethtool.c     |  3 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.c       |  9 +--
+ drivers/net/ethernet/intel/idpf/idpf_ethtool.c     |  2 +-
+ drivers/net/ethernet/intel/igb/igb_ethtool.c       |  6 +-
+ drivers/net/ethernet/intel/igc/igc_ethtool.c       |  6 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c   |  5 +-
+ .../net/ethernet/microchip/sparx5/sparx5_ethtool.c |  2 +-
+ .../net/ethernet/netronome/nfp/nfp_net_ethtool.c   | 44 +++++++--------
+ drivers/net/ethernet/pensando/ionic/ionic_stats.c  |  4 +-
+ drivers/net/ethernet/wangxun/libwx/wx_ethtool.c    |  2 +-
+ drivers/net/hyperv/netvsc_drv.c                    |  4 +-
+ drivers/net/phy/nxp-tja11xx.c                      |  2 +-
+ drivers/net/phy/smsc.c                             |  2 +-
+ drivers/net/vmxnet3/vmxnet3_ethtool.c              | 10 ++--
+ include/linux/ethtool.h                            | 13 +++++
+ net/ethtool/ioctl.c                                |  7 +++
+ scripts/checkpatch.pl                              | 19 +++++++
+ 31 files changed, 139 insertions(+), 112 deletions(-)
+---
+base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
+change-id: 20231025-ethtool_puts_impl-a1479ffbc7e0
+
+Best regards,
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Justin Stitt <justinstitt@google.com>
+
 
