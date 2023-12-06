@@ -1,212 +1,247 @@
-Return-Path: <linux-hyperv+bounces-1247-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1248-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD59680632C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 01:07:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A365C806680
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 06:25:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E1C1B210C0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 00:07:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7DFC1C21131
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 05:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69108360;
-	Wed,  6 Dec 2023 00:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42697FC11;
+	Wed,  6 Dec 2023 05:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xR8t6mUk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGidZ4iR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFB31A4
-	for <linux-hyperv@vger.kernel.org>; Tue,  5 Dec 2023 16:07:17 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5d340a9cf07so95618357b3.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 05 Dec 2023 16:07:17 -0800 (PST)
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F7618F;
+	Tue,  5 Dec 2023 21:25:16 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-6ce6dd83945so1359304b3a.3;
+        Tue, 05 Dec 2023 21:25:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701821237; x=1702426037; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B09jNl/6ew1fQLf1zTOLuFX5OzlF3p6K7osCTShEz6M=;
-        b=xR8t6mUk4YlLTCwB3wzAVW+pbILw5/x9O7C9Ot8cC5Eacn2DbevSTZUw1/uk8+IUH3
-         ffDD6LfXxy26tQN5nZ4m39/EejSIRlbTV4iqOHFSpdCOfyzh739uRUElkDNCbyoZuwMv
-         AHB0kMv9w7K++aVN+nE15SYKf7zPrbiahaCSr0uRgHu8ePf3J22npjoBHA4mTmvilEdj
-         iwZdtCjfY0NkJV7Tlyggt7tWKF3O0IUUgHh3WP7o3GyRpwTrhQa3VYU3Cx51Wpwfx4Il
-         pdiv6B2MkJUK+vU10QGQM+bRZ4/HzOK+a/BXGCDcvrocDdU0hhW2R5Qpw3CajRXprFqM
-         P+Ng==
+        d=gmail.com; s=20230601; t=1701840315; x=1702445115; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6huBbZbAII0X6eZV6S+b7knvK6KuHJo8Bh0bkLgUxxE=;
+        b=QGidZ4iRu5/YncLQwNVlWgTHz7jez7T2YHYyySJDAUl1LybKELv67VrH6KN+e8TxRh
+         /s5VSFFVvQRiwkXNmKLJi/wEnIBiOGQwnngb6oYZMoG6eQc0QbJ/T0Ec0db6vzr1k+Dx
+         srQWLLbmQFs5EhWEp5zC/IaHKoTJiY8bXU5IS602EgbG9LYXq+G5ffcY+0jnsGCyRyAk
+         7+ZWoAymYRZSRJgPK/kil/e23SdlpEsI7jueZ//dM4yB7IHleHRJ+/PQQLHSiUNJ84tI
+         tOtIp+BHegPALNw4/RtwVHj2rBou199ZGUBCDO3mLTFwdzB+80PTnm4Fc0QdTZHYALAf
+         NEJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701821237; x=1702426037;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=B09jNl/6ew1fQLf1zTOLuFX5OzlF3p6K7osCTShEz6M=;
-        b=uCIiJqw1wtfw2eXDVxtOm1PHs/w6lZ8H5VZIDosJDowIlumB7kZYYgIn8KI94tnQJh
-         YJZ+MQYkCmC7WhL/IJexYjMswmUEKVMuXLxofyiC1umYu7NptX1Gef6jN2CwoZ/lv+Vg
-         2Xxeu5tk+Jqawl1+MibetKjCotOwqUo9LbPKrQJQsbXUhep7l4G7NaiVW9EJfwtdjldL
-         CKiSeaIOdWQ8Kuoa0RTEy6s5wH99aRLvW7UqlbRR3IjnIRENeCCju7a5NIvzrkOmD2Qp
-         CZhjqagH7aPWaLOkf8V7RSeD0icN/6+2EyMGiB3vZfP/5MJqIwlk+aP96CCLFK1nmfup
-         mppw==
-X-Gm-Message-State: AOJu0YxaXX8nrqkX88koydye0u8koCt+3O6HftKPTqk9iUr8MzKGk6q9
-	HN4oBV0gSUL9VcX1XnbWm1dJHHGz+WE=
-X-Google-Smtp-Source: AGHT+IGlfl1pdAmtDrLxND8bxut+yVt9lXSa4fXaozYVUGEQmSGwKI62StziH/FVo2cPUM7O/ofYJDYTrcI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:2f0b:b0:5d4:3013:25d4 with SMTP id
- ev11-20020a05690c2f0b00b005d4301325d4mr282162ywb.5.1701821237087; Tue, 05 Dec
- 2023 16:07:17 -0800 (PST)
-Date: Tue, 5 Dec 2023 16:07:15 -0800
-In-Reply-To: <fc09fec34a89ba7655f344a31174d078a8248182.camel@redhat.com>
+        d=1e100.net; s=20230601; t=1701840315; x=1702445115;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6huBbZbAII0X6eZV6S+b7knvK6KuHJo8Bh0bkLgUxxE=;
+        b=J2b0FKDZyCK+e5YG3hPYVqsm96iXFc1DuCjGft3nU29htWngmgXURBAKy6LSskvXsc
+         OlwaUaL+5EN/6u7FgAONCyt94/N94DvXh3D4HeMkqLpjiugMkbh9I8T/h8ecFBGT6oo+
+         bBF7PUATUXLdMVYFO7IvwjBNP0iu5NE6arIG4eYzZ8D+aFktqrYfj6JhEcs9DQMBWBDf
+         kbBFrkua9jujvMMFVH6lL8lpzV+nmnybr/z6ilzjRywIN/dJlnLy2pCqZ+YCTKLfpKDl
+         b87csaO4/TXV8CcKaJT3HFSgWjWds5g9kbrD67w6oNhQhjh5fZK0GbncA1Te8IJg3p16
+         SAoQ==
+X-Gm-Message-State: AOJu0YyH7TAIz+i+HfbrAQNnJb8M6GbmVheSEHS7vLvZsf7l4/8SFM7S
+	B7EPEUC20m7UnlvO5u56YqE=
+X-Google-Smtp-Source: AGHT+IFMxfqg8FxPkhbWeYw87iiXO3hRoVhFhH1xtCbWG3FZaVDEj9UfTpo1oYq4IqfLZ3ft2t7YHQ==
+X-Received: by 2002:a05:6a00:98e:b0:6ce:6420:e174 with SMTP id u14-20020a056a00098e00b006ce6420e174mr407397pfg.36.1701840315262;
+        Tue, 05 Dec 2023 21:25:15 -0800 (PST)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id ka32-20020a056a0093a000b006ce455a7faasm5350125pfb.150.2023.12.05.21.25.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Dec 2023 21:25:14 -0800 (PST)
+Date: Tue, 5 Dec 2023 21:22:59 -0800
+From: Yury Norov <yury.norov@gmail.com>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Akinobu Mita <akinobu.mita@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Disseldorp <ddiss@suse.de>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>, Karsten Graul <kgraul@linux.ibm.com>,
+	Karsten Keil <isdn@linux-pingi.de>,
+	Kees Cook <keescook@chromium.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Martin Habets <habetsm.xilinx@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>,
+	Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Stanislaw Gruszka <stf_xl@wp.pl>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org,
+	ath10k@lists.infradead.org, dmaengine@vger.kernel.org,
+	iommu@lists.linux.dev, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-net-drivers@amd.com, linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mpi3mr-linuxdrv.pdl@broadcom.com,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+	Alexey Klimov <klimov.linux@gmail.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH v2 00/35] bitops: add atomic find_bit() operations
+Message-ID: <ZXAFM2VZugdhM3oE@yury-ThinkPad>
+References: <20231203192422.539300-1-yury.norov@gmail.com>
+ <20231204185101.ddmkvsr2xxsmoh2u@quack3>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231108111806.92604-1-nsaenz@amazon.com> <20231108111806.92604-6-nsaenz@amazon.com>
- <f4495d1f697cf9a7ddfb786eaeeac90f554fc6db.camel@redhat.com>
- <CXD4TVV5QWUK.3SH495QSBTTUF@amazon.com> <ZWoKlJUKJGGhRRgM@google.com>
- <CXD5HJ5LQMTE.11XP9UB9IL8LY@amazon.com> <ZWocI-2ajwudA-S5@google.com>
- <CXD7AW5T9R7G.2REFR2IRSVRVZ@amazon.com> <ZW94T8Fx2eJpwKQS@google.com> <fc09fec34a89ba7655f344a31174d078a8248182.camel@redhat.com>
-Message-ID: <ZW-7Mwev4Ilf541L@google.com>
-Subject: Re: [RFC 05/33] KVM: x86: hyper-v: Introduce VTL call/return
- prologues in hypercall page
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com, 
-	anelkz@amazon.com, graf@amazon.com, dwmw@amazon.co.uk, jgowans@amazon.com, 
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-	x86@kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231204185101.ddmkvsr2xxsmoh2u@quack3>
 
-On Tue, Dec 05, 2023, Maxim Levitsky wrote:
-> On Tue, 2023-12-05 at 11:21 -0800, Sean Christopherson wrote:
-> > On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > > On Fri Dec 1, 2023 at 5:47 PM UTC, Sean Christopherson wrote:
-> > > > On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > > > > On Fri Dec 1, 2023 at 4:32 PM UTC, Sean Christopherson wrote:
-> > > > > > On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > > > > > > > To support this I think that we can add a userspace msr fil=
-ter on the HV_X64_MSR_HYPERCALL,
-> > > > > > > > although I am not 100% sure if a userspace msr filter overr=
-ides the in-kernel msr handling.
-> > > > > > >=20
-> > > > > > > I thought about it at the time. It's not that simple though, =
-we should
-> > > > > > > still let KVM set the hypercall bytecode, and other quirks li=
-ke the Xen
-> > > > > > > one.
-> > > > > >=20
-> > > > > > Yeah, that Xen quirk is quite the killer.
-> > > > > >=20
-> > > > > > Can you provide pseudo-assembly for what the final page is supp=
-osed to look like?
-> > > > > > I'm struggling mightily to understand what this is actually try=
-ing to do.
-> > > > >=20
-> > > > > I'll make it as simple as possible (diregard 32bit support and th=
-at xen
-> > > > > exists):
-> > > > >=20
-> > > > > vmcall             <-  Offset 0, regular Hyper-V hypercalls enter=
- here
-> > > > > ret
-> > > > > mov rax,rcx  <-  VTL call hypercall enters here
-> > > >=20
-> > > > I'm missing who/what defines "here" though.  What generates the CAL=
-L that points
-> > > > at this exact offset?  If the exact offset is dictated in the TLFS,=
- then aren't
-> > > > we screwed with the whole Xen quirk, which inserts 5 bytes before t=
-hat first VMCALL?
-> > >=20
-> > > Yes, sorry, I should've included some more context.
-> > >=20
-> > > Here's a rundown (from memory) of how the first VTL call happens:
-> > >  - CPU0 start running at VTL0.
-> > >  - Hyper-V enables VTL1 on the partition.
-> > >  - Hyper-V enabled VTL1 on CPU0, but doesn't yet switch to it. It pas=
-ses
-> > >    the initial VTL1 CPU state alongside the enablement hypercall
-> > >    arguments.
-> > >  - Hyper-V sets the Hypercall page overlay address through
-> > >    HV_X64_MSR_HYPERCALL. KVM fills it.
-> > >  - Hyper-V gets the VTL-call and VTL-return offset into the hypercall
-> > >    page using the VP Register HvRegisterVsmCodePageOffsets (VP regist=
-er
-> > >    handling is in user-space).
-> >=20
-> > Ah, so the guest sets the offsets by "writing" HvRegisterVsmCodePageOff=
-sets via
-> > a HvSetVpRegisters() hypercall.
->=20
-> No, you didn't understand this correctly.=20
->=20
-> The guest writes the HV_X64_MSR_HYPERCALL, and in the response hyperv fil=
-ls
+On Mon, Dec 04, 2023 at 07:51:01PM +0100, Jan Kara wrote:
+> Hello Yury!
+> 
+> On Sun 03-12-23 11:23:47, Yury Norov wrote:
+> > Add helpers around test_and_{set,clear}_bit() that allow to search for
+> > clear or set bits and flip them atomically.
+> > 
+> > The target patterns may look like this:
+> > 
+> > 	for (idx = 0; idx < nbits; idx++)
+> > 		if (test_and_clear_bit(idx, bitmap))
+> > 			do_something(idx);
+> > 
+> > Or like this:
+> > 
+> > 	do {
+> > 		bit = find_first_bit(bitmap, nbits);
+> > 		if (bit >= nbits)
+> > 			return nbits;
+> > 	} while (!test_and_clear_bit(bit, bitmap));
+> > 	return bit;
+> > 
+> > In both cases, the opencoded loop may be converted to a single function
+> > or iterator call. Correspondingly:
+> > 
+> > 	for_each_test_and_clear_bit(idx, bitmap, nbits)
+> > 		do_something(idx);
+> > 
+> > Or:
+> > 	return find_and_clear_bit(bitmap, nbits);
+> 
+> These are fine cleanups but they actually don't address the case that has
+> triggered all these changes - namely the xarray use of find_next_bit() in
+> xas_find_chunk().
+> 
+> ...
+> > This series is a result of discussion [1]. All find_bit() functions imply
+> > exclusive access to the bitmaps. However, KCSAN reports quite a number
+> > of warnings related to find_bit() API. Some of them are not pointing
+> > to real bugs because in many situations people intentionally allow
+> > concurrent bitmap operations.
+> > 
+> > If so, find_bit() can be annotated such that KCSAN will ignore it:
+> > 
+> >         bit = data_race(find_first_bit(bitmap, nbits));
+> 
+> No, this is not a correct thing to do. If concurrent bitmap changes can
+> happen, find_first_bit() as it is currently implemented isn't ever a safe
+> choice because it can call __ffs(0) which is dangerous as you properly note
+> above. I proposed adding READ_ONCE() into find_first_bit() / find_next_bit()
+> implementation to fix this issue but you disliked that. So other option we
+> have is adding find_first_bit() and find_next_bit() variants that take
+> volatile 'addr' and we have to use these in code like xas_find_chunk()
+> which cannot be converted to your new helpers.
 
-When people say "Hyper-V", do y'all mean "root partition"?  If so, can we j=
-ust
-say "root partition"?  Part of my confusion is that I don't instinctively k=
-now
-whether things like "Hyper-V enables VTL1 on the partition" are talking abo=
-ut the
-root partition (or I guess parent partition?) or the hypervisor.  Functiona=
-lly it
-probably doesn't matter, it's just hard to reconcile things with the TLFS, =
-which
-is written largely to describe the hypervisor's behavior.
+Here is some examples when concurrent operations with plain find_bit()
+are acceptable:
 
-> the hypercall page, including the VSM thunks.
->
-> Then the guest can _read_ the offsets, hyperv chose there by issuing anot=
-her hypercall.=20
+ - two threads running find_*_bit(): safe wrt ffs(0) and returns correct
+   value, because underlying bitmap is unchanged;
+ - find_next_bit() in parallel with set or clear_bit(), when modifying
+   a bit prior to the start bit to search: safe and correct;
+ - find_first_bit() in parallel with set_bit(): safe, but may return wrong
+   bit number;
+ - find_first_zero_bit() in parallel with clear_bit(): same as above.
 
-Hrm, now I'm really confused.  Ah, the TLFS contradicts itself.  The blurb =
-for
-AccessVpRegisters says:
+In last 2 cases find_bit() may not return a correct bit number, but
+it may be OK if caller requires any (not exactly first) set or clear
+bit, correspondingly.
 
-  The partition can invoke the hypercalls HvSetVpRegisters and HvGetVpRegis=
-ters.
+In such cases, KCSAN may be safely silenced.
+ 
+> > This series addresses the other important case where people really need
+> > atomic find ops. As the following patches show, the resulting code
+> > looks safer and more verbose comparing to opencoded loops followed by
+> > atomic bit flips.
+> > 
+> > In [1] Mirsad reported 2% slowdown in a single-thread search test when
+> > switching find_bit() function to treat bitmaps as volatile arrays. On
+> > the other hand, kernel robot in the same thread reported +3.7% to the
+> > performance of will-it-scale.per_thread_ops test.
+> 
+> It was actually me who reported the regression here [2] but whatever :)
+> 
+> [2] https://lore.kernel.org/all/20231011150252.32737-1-jack@suse.cz
 
-And HvSetVpRegisters confirms that requirement:
+My apologize.
 
-  The caller must either be the parent of the partition specified by Partit=
-ionId,
-  or the partition specified must be =E2=80=9Cself=E2=80=9D and the partiti=
-on must have the
-  AccessVpRegisters privilege
-
-But it's absent from HvGetVpRegisters:
-
-  The caller must be the parent of the partition specified by PartitionId o=
-r the
-  partition specifying its own partition ID.
-
-> In the current implementation, the offsets that the kernel choose are fir=
-st
-> exposed to the userspace via new ioctl, and then the userspace exposes th=
-ese
-> offsets to the guest via that 'another hypercall' (reading a pseudo parti=
-tion
-> register 'HvRegisterVsmCodePageOffsets')
->=20
-> I personally don't know for sure anymore if the userspace or kernel based
-> hypercall page is better here, it's ugly regardless :(
-
-Hrm.  Requiring userspace to intercept the WRMSR will be a mess because the=
-n KVM
-will have zero knowledge of the hypercall page, e.g. userspace would be for=
-ced to
-intercept HV_X64_MSR_GUEST_OS_ID as well.  That's not the end of the world,=
- but
-it's not exactly ideal either.
-
-What if we exit to userspace with a new kvm_hyperv_exit reason that require=
-s
-completion?  I.e. punt to userspace if VSM is enabled, but still record the=
- data
-in KVM?  Ugh, but even that's a mess because kvm_hv_set_msr_pw() is deep in=
- the
-WRMSR emulation call stack and can't easily signal that an exit to userspac=
-e is
-needed.  Blech.
+> > Assuming that our compilers are sane and generate better code against
+> > properly annotated data, the above discrepancy doesn't look weird. When
+> > running on non-volatile bitmaps, plain find_bit() outperforms atomic
+> > find_and_bit(), and vice-versa.
+> > 
+> > So, all users of find_bit() API, where heavy concurrency is expected,
+> > are encouraged to switch to atomic find_and_bit() as appropriate.
+> 
+> Well, all users where any concurrency can happen should switch. Otherwise
+> they are prone to the (admittedly mostly theoretical) data race issue.
+> 
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
