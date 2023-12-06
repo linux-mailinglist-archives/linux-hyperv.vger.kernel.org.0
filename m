@@ -1,223 +1,153 @@
-Return-Path: <linux-hyperv+bounces-1252-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1253-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FB0E8074C7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 17:20:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C840807537
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 17:37:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1B661C20C16
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 16:20:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E547B20EE5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Dec 2023 16:37:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A0E45C07;
-	Wed,  6 Dec 2023 16:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7796C47778;
+	Wed,  6 Dec 2023 16:37:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALgca7pN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s6K+9Yl8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E1CD4F
-	for <linux-hyperv@vger.kernel.org>; Wed,  6 Dec 2023 08:19:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701879596;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u/Q8rdpQLGJDQtjt7EUY5rfj9IQLbZ3N/w3XKiq7Zp8=;
-	b=ALgca7pN+wOkpvbFjIdFa0V4OWK+2+k6A0lU0Emy4koH/DP/Q7eH0ogSTSJJ91o2l6R6FQ
-	t8XIvVhZfiDCjb5TgRW3Z5FhsB299BaOfMokLtiADFxAnlTXrg1Z+GNQVX9pJBEAWtzbh0
-	TTEaDPI9z4LQd8idMLbsoSgpM9//0Sk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-16-jOt4RZozPhSLvEXwXzzrWw-1; Wed, 06 Dec 2023 11:19:55 -0500
-X-MC-Unique: jOt4RZozPhSLvEXwXzzrWw-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3335df64539so806637f8f.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 06 Dec 2023 08:19:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701879594; x=1702484394;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u/Q8rdpQLGJDQtjt7EUY5rfj9IQLbZ3N/w3XKiq7Zp8=;
-        b=l32b83qPTQk1uUwJeLE8WxhYN7O0+yd07r1A6d0UXqf4nSKVsPj4vXFxZV6OQLucTv
-         qO7CDgZMpZ1IgvdOfSlzsQTgLxUxLi6G9avqQjB7nbmRnutKE9qAN1Z8Q3Ajtl3SFBQd
-         6NI9QIs+4M/5iAhwOU7x3KTeSklr3jMtkOu0JS2Y3nhE0J14Iq2R8rRUKGjXCjyW81or
-         dmOi4yIZ9MkH3dYcmc2EO/0tBxbk/YCKxC2/TENo8LJZVAXe1yNMm9t2AJCrXaTfQ2VE
-         04++LN2EcYpZubQu/OtmuHDcmh7o+tQo9+DXcCYOJKtbHGQ5oNTOkZQHwgwGKA5Y0klN
-         yk0Q==
-X-Gm-Message-State: AOJu0YwOPi8jCJ6VUO4OIXeWmoth+rJCLgS7ccfeAH6kZ2STlzg7XKYa
-	5nm5zj0/0gY3mCPIQfY9SKs0+Nq0x72f0c6QXbRTaMubc6IGFLXH9ckJ7FozNdrQPlPhLTfg2jL
-	jBXjevD/QIBFg/jgxijBJsFnX
-X-Received: by 2002:a05:600c:1e18:b0:40c:2101:dab2 with SMTP id ay24-20020a05600c1e1800b0040c2101dab2mr485142wmb.185.1701879594003;
-        Wed, 06 Dec 2023 08:19:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH4xLDaJ0nX52wZDtegFdbDV/Vhk4LlL67t4ugX51B9lLHdkt4Pwtf1OhZN87CJx1NsN5/KNQ==
-X-Received: by 2002:a05:600c:1e18:b0:40c:2101:dab2 with SMTP id ay24-20020a05600c1e1800b0040c2101dab2mr485124wmb.185.1701879593670;
-        Wed, 06 Dec 2023 08:19:53 -0800 (PST)
-Received: from starship ([89.237.98.20])
-        by smtp.gmail.com with ESMTPSA id o15-20020a5d408f000000b00333381c6e12sm59389wrp.40.2023.12.06.08.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 08:19:53 -0800 (PST)
-Message-ID: <afb23eab62a9a0f3dce360579e9aeefa5a3f1548.camel@redhat.com>
-Subject: Re: [RFC 05/33] KVM: x86: hyper-v: Introduce VTL call/return
- prologues in hypercall page
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, kvm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- pbonzini@redhat.com,  vkuznets@redhat.com, anelkz@amazon.com,
- graf@amazon.com, dwmw@amazon.co.uk,  jgowans@amazon.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com,  x86@kernel.org,
- linux-doc@vger.kernel.org
-Date: Wed, 06 Dec 2023 18:19:51 +0200
-In-Reply-To: <ZW-7Mwev4Ilf541L@google.com>
-References: <20231108111806.92604-1-nsaenz@amazon.com>
-	 <20231108111806.92604-6-nsaenz@amazon.com>
-	 <f4495d1f697cf9a7ddfb786eaeeac90f554fc6db.camel@redhat.com>
-	 <CXD4TVV5QWUK.3SH495QSBTTUF@amazon.com> <ZWoKlJUKJGGhRRgM@google.com>
-	 <CXD5HJ5LQMTE.11XP9UB9IL8LY@amazon.com> <ZWocI-2ajwudA-S5@google.com>
-	 <CXD7AW5T9R7G.2REFR2IRSVRVZ@amazon.com> <ZW94T8Fx2eJpwKQS@google.com>
-	 <fc09fec34a89ba7655f344a31174d078a8248182.camel@redhat.com>
-	 <ZW-7Mwev4Ilf541L@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C175D5A;
+	Wed,  6 Dec 2023 08:37:37 -0800 (PST)
+Received: from [192.168.4.26] (unknown [47.186.13.91])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8823E20B74C0;
+	Wed,  6 Dec 2023 08:37:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8823E20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1701880656;
+	bh=1wQFnh2bPx3Ra+HT0vuTvJh3mkp2WmHQjZ5XzPfzvKU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=s6K+9Yl89Z3KgwoiYSQZ2dvP0uHj6IpQUthOWrczE2xRQB83yQa/TT5PF6Hy3U1sa
+	 8E05mbqFUb33ePDO+wVm37jwLQyxQau0SjCjOt7vH/QkttsTN3Z9GdmbJ5scmpsxun
+	 Ibo6TwIr6zVmB49da7xmGxwKzie0382EULwJL3Ko=
+Message-ID: <624a310b-c0d2-406c-a4a7-d851b3cc68f5@linux.microsoft.com>
+Date: Wed, 6 Dec 2023 10:37:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-On Tue, 2023-12-05 at 16:07 -0800, Sean Christopherson wrote:
-> On Tue, Dec 05, 2023, Maxim Levitsky wrote:
-> > On Tue, 2023-12-05 at 11:21 -0800, Sean Christopherson wrote:
-> > > On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > > > On Fri Dec 1, 2023 at 5:47 PM UTC, Sean Christopherson wrote:
-> > > > > On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > > > > > On Fri Dec 1, 2023 at 4:32 PM UTC, Sean Christopherson wrote:
-> > > > > > > On Fri, Dec 01, 2023, Nicolas Saenz Julienne wrote:
-> > > > > > > > > To support this I think that we can add a userspace msr filter on the HV_X64_MSR_HYPERCALL,
-> > > > > > > > > although I am not 100% sure if a userspace msr filter overrides the in-kernel msr handling.
-> > > > > > > > 
-> > > > > > > > I thought about it at the time. It's not that simple though, we should
-> > > > > > > > still let KVM set the hypercall bytecode, and other quirks like the Xen
-> > > > > > > > one.
-> > > > > > > 
-> > > > > > > Yeah, that Xen quirk is quite the killer.
-> > > > > > > 
-> > > > > > > Can you provide pseudo-assembly for what the final page is supposed to look like?
-> > > > > > > I'm struggling mightily to understand what this is actually trying to do.
-> > > > > > 
-> > > > > > I'll make it as simple as possible (diregard 32bit support and that xen
-> > > > > > exists):
-> > > > > > 
-> > > > > > vmcall             <-  Offset 0, regular Hyper-V hypercalls enter here
-> > > > > > ret
-> > > > > > mov rax,rcx  <-  VTL call hypercall enters here
-> > > > > 
-> > > > > I'm missing who/what defines "here" though.  What generates the CALL that points
-> > > > > at this exact offset?  If the exact offset is dictated in the TLFS, then aren't
-> > > > > we screwed with the whole Xen quirk, which inserts 5 bytes before that first VMCALL?
-> > > > 
-> > > > Yes, sorry, I should've included some more context.
-> > > > 
-> > > > Here's a rundown (from memory) of how the first VTL call happens:
-> > > >  - CPU0 start running at VTL0.
-> > > >  - Hyper-V enables VTL1 on the partition.
-> > > >  - Hyper-V enabled VTL1 on CPU0, but doesn't yet switch to it. It passes
-> > > >    the initial VTL1 CPU state alongside the enablement hypercall
-> > > >    arguments.
-> > > >  - Hyper-V sets the Hypercall page overlay address through
-> > > >    HV_X64_MSR_HYPERCALL. KVM fills it.
-> > > >  - Hyper-V gets the VTL-call and VTL-return offset into the hypercall
-> > > >    page using the VP Register HvRegisterVsmCodePageOffsets (VP register
-> > > >    handling is in user-space).
-> > > 
-> > > Ah, so the guest sets the offsets by "writing" HvRegisterVsmCodePageOffsets via
-> > > a HvSetVpRegisters() hypercall.
-> > 
-> > No, you didn't understand this correctly. 
-> > 
-> > The guest writes the HV_X64_MSR_HYPERCALL, and in the response hyperv fills
-> 
-> When people say "Hyper-V", do y'all mean "root partition"?  
-> If so, can we just
-> say "root partition"?  Part of my confusion is that I don't instinctively know
-> whether things like "Hyper-V enables VTL1 on the partition" are talking about the
-> root partition (or I guess parent partition?) or the hypervisor.  Functionally it
-> probably doesn't matter, it's just hard to reconcile things with the TLFS, which
-> is written largely to describe the hypervisor's behavior.
-> 
-> > the hypercall page, including the VSM thunks.
-> > 
-> > Then the guest can _read_ the offsets, hyperv chose there by issuing another hypercall. 
-> 
-> Hrm, now I'm really confused.  Ah, the TLFS contradicts itself.  The blurb for
-> AccessVpRegisters says:
-> 
->   The partition can invoke the hypercalls HvSetVpRegisters and HvGetVpRegisters.
-> 
-> And HvSetVpRegisters confirms that requirement:
-> 
->   The caller must either be the parent of the partition specified by PartitionId,
->   or the partition specified must be “self” and the partition must have the
->   AccessVpRegisters privilege
-> 
-> But it's absent from HvGetVpRegisters:
-> 
->   The caller must be the parent of the partition specified by PartitionId or the
->   partition specifying its own partition ID.
-
-Yes, it is indeed very strange, that a partition would do a hypercall to read its own
-registers - but then the 'register' is also not really a register but more of a 'hack', and I guess
-they allowed it in this particular case. That is why I wrote the 'another hypercall'
-thing, because it is very strange that they (ab)used the HvGetVpRegisters for that.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
+ during text patching
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ Kees Cook <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Wanpeng Li <wanpengli@tencent.com>, Alexander Graf <graf@amazon.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ John Andersen <john.s.andersen@intel.com>,
+ Marian Rotariu <marian.c.rotariu@gmail.com>,
+ =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+ =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>,
+ Zahra Tarkhani <ztarkhani@microsoft.com>,
+ =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+ dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+ x86@kernel.org, xen-devel@lists.xenproject.org
+References: <20231113022326.24388-1-mic@digikod.net>
+ <20231113022326.24388-18-mic@digikod.net>
+ <20231113081929.GA16138@noisy.programming.kicks-ass.net>
+ <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
+ <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
+ <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
+ <20231130113315.GE20191@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <20231130113315.GE20191@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-But regardless of the above, guests (root partition or any other partition) do the
-VTL calls, and in order to do a VTL call, that guest has to know the hypercall page offsets,
-and for that the guest has to do the HvGetVpRegisters hypercall first.
 
+On 11/30/23 05:33, Peter Zijlstra wrote:
+> On Wed, Nov 29, 2023 at 03:07:15PM -0600, Madhavan T. Venkataraman wrote:
 > 
-> > In the current implementation, the offsets that the kernel choose are first
-> > exposed to the userspace via new ioctl, and then the userspace exposes these
-> > offsets to the guest via that 'another hypercall' (reading a pseudo partition
-> > register 'HvRegisterVsmCodePageOffsets')
-> > 
-> > I personally don't know for sure anymore if the userspace or kernel based
-> > hypercall page is better here, it's ugly regardless :(
+>> Kernel Lockdown
+>> ---------------
+>>
+>> But, we must provide at least some security in V2. Otherwise, it is useless.
+>>
+>> So, we have implemented what we call a kernel lockdown. At the end of kernel
+>> boot, Heki establishes permissions in the extended page table as mentioned
+>> before. Also, it adds an immutable attribute for kernel text and kernel RO data.
+>> Beyond that point, guest requests that attempt to modify permissions on any of
+>> the immutable pages will be denied.
+>>
+>> This means that features like FTrace and KProbes will not work on kernel text
+>> in V2. This is a temporary limitation. Once authentication is in place, the
+>> limitation will go away.
 > 
-> Hrm.  Requiring userspace to intercept the WRMSR will be a mess because then KVM
-> will have zero knowledge of the hypercall page, e.g. userspace would be forced to
-> intercept HV_X64_MSR_GUEST_OS_ID as well.
->   That's not the end of the world, but
-> it's not exactly ideal either.
-> 
-> What if we exit to userspace with a new kvm_hyperv_exit reason that requires
-> completion? 
-
-BTW the other option is to do the whole thing in kernel - the offset bug in the hypercall page
-can be easily solved with a variable, and then the kernel can also intercept the HvGetVpRegisters
-hypercall and return these offsets for HvRegisterVsmCodePageOffsets, and for all
-other VP registers it can still exit to userspace - that way we also avoid adding a new ioctl,
-and have the whole thing in one place.
-
-All of the above can even be done unconditionally (or be conditionally tied to a Kconfig option),
-because it doesn't add much overhead and neither should break backward compatibility - I don't think
-hyperv guests rely on hypervisor not touching the hypercall page beyond the few bytes that KVM
-does write currently.
-
-Best regards,
-	Maxim Levitsky
-
-
->  I.e. punt to userspace if VSM is enabled, but still record the data
-> in KVM?  Ugh, but even that's a mess because kvm_hv_set_msr_pw() is deep in the
-> WRMSR emulation call stack and can't easily signal that an exit to userspace is
-> needed.  Blech.
+> So either you're saying your patch 17 / text_poke is broken (so why
+> include it ?!?) or your statement above is incorrect. Pick one.
 > 
 
+It has been included so that people can be aware of the changes.
 
+I will remove the text_poke() changes from the patchset and send it later when
+I have some authentication in place. It will make sense then.
+
+> 
+>> __text_poke()
+>> 	This function is called by various features to patch text.
+>> 	This calls heki_text_poke_start() and heki_text_poke_end().
+>>
+>> 	heki_text_poke_start() is called to add write permissions to the
+>> 	extended page table so that text can be patched. heki_text_poke_end()
+>> 	is called to revert write permissions in the extended page table.
+> 
+> This, if text_poke works, then static_call / jump_label / ftrace and
+> everything else should work, they all rely on this.
+> 
+> 
+>> Peter mentioned the following:
+>>
+>> "if you want to mirror the native PTEs why don't you hook into the
+>> paravirt page-table muck and get all that for free?"
+>>
+>> We did consider using a shadow page table kind of approach so that guest page table
+>> modifications can be intercepted and reflected in the page table entry. We did not
+>> do this for two reasons:
+>>
+>> - there are bits in the page table entry that are not permission bits. We would like
+>>   the guest kernel to be able to modify them directly.
+> 
+> This statement makes no sense.
+> 
+>> - we cannot tell a genuine request from an attack.
+> 
+> Why not? How is an explicit call different from an explicit call in a
+> paravirt hook?
+> 
+>>From a maintenance pov we already hate paravirt with a passion, but it
+> is ever so much better than sprinkling yet another pile of crap
+> (heki_*) around.
+
+I only said that the idea was considered.
+
+We can resume the discussion on this topic when I send the text_poke() changes in a later
+version of the Heki patchset.
+
+Madhavan
 
