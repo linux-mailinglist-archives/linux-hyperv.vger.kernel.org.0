@@ -1,35 +1,35 @@
-Return-Path: <linux-hyperv+bounces-1275-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1276-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A814808BCC
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 16:28:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD6EA808BD5
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 16:30:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF4CE1C20A14
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 15:28:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8089A1F21020
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 15:30:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D0A44C8A;
-	Thu,  7 Dec 2023 15:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB9844C8E;
+	Thu,  7 Dec 2023 15:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="snOb9ecv"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oxOzptF/"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8177C10CA;
-	Thu,  7 Dec 2023 07:28:35 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE20410C2;
+	Thu,  7 Dec 2023 07:29:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=oSO91Zjek++1IKXEdE5RYlis15XBD+gc14pgxk+BMSU=; b=snOb9ecvdpUafV+1Kv8SNC57GJ
-	x7/AZCiAkpE/XzFrf7+piCHYMPszK6iqkhe3XvlRx2yU5gcjm088FMML13QyMxSmUZgSzqvUmcNsI
-	KZITbZYDmXgsQqEqy+L60UfhISdR1Cn92aavH1IjrN8ZR7hRCibS76yLWVKjjZLLvurs=;
+	bh=n+I5o5uNs0ujmnJFMTa99RBBYyMjrKgdxQALljW8hDk=; b=oxOzptF/B2tvkGKr5hOfx+sAp+
+	DtwJIPV2JMNZPaTf2fo/lACU/XGm6oxPZuecFhhAEjNINbbw8pnrHLrQ21uIFiJud38o+uozFe0NE
+	An8zs0GvRftOjjR1SDmTn9W8+bD8o9yCGe/jmpTBcEsLBJefvDLa9fu639enHNxBnA8g=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1rBGHc-002KGh-Uo; Thu, 07 Dec 2023 16:27:24 +0100
-Date: Thu, 7 Dec 2023 16:27:24 +0100
+	id 1rBGJ5-002KI3-R5; Thu, 07 Dec 2023 16:28:55 +0100
+Date: Thu, 7 Dec 2023 16:28:55 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: justinstitt@google.com
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -90,10 +90,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next v5 1/3] ethtool: Implement ethtool_puts()
-Message-ID: <6a0340d5-20e0-40ab-822e-d9fc1ce360d9@lunn.ch>
+Subject: Re: [PATCH net-next v5 3/3] net: Convert some ethtool_sprintf() to
+ ethtool_puts()
+Message-ID: <43063267-191c-47b2-a824-ba93feb89834@lunn.ch>
 References: <20231206-ethtool_puts_impl-v5-0-5a2528e17bf8@google.com>
- <20231206-ethtool_puts_impl-v5-1-5a2528e17bf8@google.com>
+ <20231206-ethtool_puts_impl-v5-3-5a2528e17bf8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -102,13 +103,19 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231206-ethtool_puts_impl-v5-1-5a2528e17bf8@google.com>
+In-Reply-To: <20231206-ethtool_puts_impl-v5-3-5a2528e17bf8@google.com>
 
-On Wed, Dec 06, 2023 at 11:16:10PM +0000, justinstitt@google.com wrote:
-> Use strscpy() to implement ethtool_puts().
+On Wed, Dec 06, 2023 at 11:16:12PM +0000, justinstitt@google.com wrote:
+> This patch converts some basic cases of ethtool_sprintf() to
+> ethtool_puts().
 > 
-> Functionally the same as ethtool_sprintf() when it's used with two
-> arguments or with just "%s" format specifier.
+> The conversions are used in cases where ethtool_sprintf() was being used
+> with just two arguments:
+> |       ethtool_sprintf(&data, buffer[i].name);
+> or when it's used with format string: "%s"
+> |       ethtool_sprintf(&data, "%s", buffer[i].name);
+> which both now become:
+> |       ethtool_puts(&data, buffer[i].name);
 > 
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
