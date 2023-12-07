@@ -1,139 +1,50 @@
-Return-Path: <linux-hyperv+bounces-1270-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1271-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C98F8083DE
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 10:10:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4806808452
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 10:22:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6AF9282E06
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 09:10:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 35989B21C69
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Dec 2023 09:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0944F32C61;
-	Thu,  7 Dec 2023 09:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E833F33CD9;
+	Thu,  7 Dec 2023 09:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tg8NdadU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eNkRt1wW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PN0UhXPk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC901987;
-	Thu,  7 Dec 2023 01:10:26 -0800 (PST)
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5B8831F897;
-	Thu,  7 Dec 2023 09:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1701940224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jXiKfid97FD5zi8RqmP75wazePMuM2Vj4JZ4H26JF/w=;
-	b=tg8NdadUlk4VfBBiX/KnTc8KWn4/+I2eqU3OCsMmSGO5fGxGo+xFF7FC1+cL85+pnkxgh6
-	+2Q+t+yvWpRrlmhVvY0iaqUjhOk6aDapKv8aWDgxXaeYBRQUq2bq9mHOv8yIv2mkt3uJBW
-	DjcnaOKBqBG38BR6qn1JnsOv3SGRVLU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1701940224;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jXiKfid97FD5zi8RqmP75wazePMuM2Vj4JZ4H26JF/w=;
-	b=eNkRt1wWHc2B/3UiJ7gBmgVmSJJtzZTtEviOYNX31SorNi0ot/Q0TzM7nhemVkTB8kzvHE
-	aOrpBsXvOqOVy6BQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 34B3813907;
-	Thu,  7 Dec 2023 09:10:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id w3HWDACMcWWqPwAAn2gu4w
-	(envelope-from <jack@suse.cz>); Thu, 07 Dec 2023 09:10:24 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 7AF80A07C7; Thu,  7 Dec 2023 10:10:23 +0100 (CET)
-Date: Thu, 7 Dec 2023 10:10:23 +0100
-From: Jan Kara <jack@suse.cz>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3627F2114;
+	Thu,  7 Dec 2023 01:22:10 -0800 (PST)
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+	id 31E0E20B74C0; Thu,  7 Dec 2023 01:22:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 31E0E20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1701940929;
+	bh=4uHX88aun/PPuF/sUNPOuDrWsfmV1wMV1IjTk3tvv+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PN0UhXPkwUrWg8ZoABpfJ6USVncJkcRFgnpTNYqwCle8x6fcnR/siLINPXpGCdEjN
+	 h/+Cp7RHF1MEoSBYM4GeIX1iV/9q6tYGkKdCUZGl6XXsRcWtNljbFmDH1SgPNeGVfL
+	 kuzYjH0vMrqhTAKLB+NduIKNR6MD0/jPzzbgliqs=
+Date: Thu, 7 Dec 2023 01:22:09 -0800
+From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
 To: Yury Norov <yury.norov@gmail.com>
-Cc: Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-	Akinobu Mita <akinobu.mita@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Disseldorp <ddiss@suse.de>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>,
-	Kalle Valo <kvalo@kernel.org>, Karsten Graul <kgraul@linux.ibm.com>,
-	Karsten Keil <isdn@linux-pingi.de>,
-	Kees Cook <keescook@chromium.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Martin Habets <habetsm.xilinx@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>,
-	Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org,
-	ath10k@lists.infradead.org, dmaengine@vger.kernel.org,
-	iommu@lists.linux.dev, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-net-drivers@amd.com, linux-pci@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-	Alexey Klimov <klimov.linux@gmail.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: Re: [PATCH v2 00/35] bitops: add atomic find_bit() operations
-Message-ID: <20231207091023.kioii5mgmnphrvl4@quack3>
-References: <20231203192422.539300-1-yury.norov@gmail.com>
- <20231204185101.ddmkvsr2xxsmoh2u@quack3>
- <ZXAFM2VZugdhM3oE@yury-ThinkPad>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+	leon@kernel.org, cai.huoqing@linux.dev, ssengar@linux.microsoft.com,
+	vkuznets@redhat.com, tglx@linutronix.de,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	sch^Crabarti@microsoft.com, paulros@microsoft.com
+Subject: Re: [PATCH V4 net-next] net: mana: Assigning IRQ affinity on HT cores
+Message-ID: <20231207092209.GA22375@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
+ <ZW3om2dfA4U0lhVY@yury-ThinkPad>
+ <20231205110138.GA31232@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <ZW+plvYrNvdcSFCB@yury-ThinkPad>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -142,81 +53,215 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXAFM2VZugdhM3oE@yury-ThinkPad>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: 2.70
-X-Spamd-Result: default: False [2.70 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_GT_50(0.00)[100];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FORGED_RECIPIENTS(2.00)[m:yury.norov@gmail.com,m:davem@davemloft.net,m:jejb@linux.ibm.com,m:haris.iqbal@ionos.com,m:akinobu.mita@gmail.com,m:akpm@linux-foundation.org,m:andersson@kernel.org,m:bp@alien8.de,m:brauner@kernel.org,m:dave.hansen@linux.intel.com,m:ecree.xilinx@gmail.com,m:edumazet@google.com,m:fenghua.yu@intel.com,m:geert@linux-m68k.org,m:gregory.greenman@intel.com,m:hughd@google.com,m:kuba@kernel.org,m:axboe@kernel.dk,m:jirislaby@kernel.org,m:kvalo@kernel.org,m:kgraul@linux.ibm.com,m:isdn@linux-pingi.de,m:keescook@chromium.org,m:leon@kernel.org,m:mark.rutland@arm.com,m:habetsm.xilinx@gmail.com,m:mchehab@kernel.org,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:peterz@infradead.org,m:dalias@libc.org,m:robh@kernel.org,m:robin.murphy@arm.com,m:seanjc@google.com,m:xueshuai@linux.alibaba.com,m:rostedt@goodmis.org,m:tsbogend@alpha.franken.de,m:tglx@linutronix.de,m:wenjia@linux.ibm.com,m:will@kernel.org,m:alsa-devel@alsa-project.org,m:linux-net-drivers@amd.com,m:mpi3mr-linuxdrv.pdl
- @broadcom.com,m:x86@kernel.org,m:mirsad.todorovac@alu.unizg.hr,m:willy@infradead.org,m:andriy.shevchenko@linux.intel.com,m:maxim.kuvyrkov@linaro.org,m:klimov.linux@gmail.com,m:bvanassche@acm.org,s:s.shtylyov@omp.ru];
-	 BAYES_HAM(-0.00)[40.06%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[wp.pl,xs4all.nl];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[suse.cz,vger.kernel.org,davemloft.net,zytor.com,linux.ibm.com,microsoft.com,ionos.com,gmail.com,linux-foundation.org,kernel.org,alien8.de,nvidia.com,opensource.wdc.com,linux.intel.com,suse.de,google.com,intel.com,linux-m68k.org,linuxfoundation.org,xs4all.nl,redhat.com,perex.cz,ziepe.ca,kernel.dk,resnulli.us,linux-pingi.de,chromium.org,arm.com,ellerman.id.au,monstr.eu,suse.com,infradead.org,realtek.com,libc.org,linux.alibaba.com,wp.pl,goodmis.org,alpha.franken.de,linutronix.de,users.sourceforge.jp,marvell.com,alsa-project.org,lists.infradead.org,lists.linux.dev,lists.linux-m68k.org,amd.com,lists.ozlabs.org,broadcom.com,alu.unizg.hr,rasmusvillemoes.dk,linaro.org,acm.org,omp.ru];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
+In-Reply-To: <ZW+plvYrNvdcSFCB@yury-ThinkPad>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue 05-12-23 21:22:59, Yury Norov wrote:
-> On Mon, Dec 04, 2023 at 07:51:01PM +0100, Jan Kara wrote:
-> > > This series is a result of discussion [1]. All find_bit() functions imply
-> > > exclusive access to the bitmaps. However, KCSAN reports quite a number
-> > > of warnings related to find_bit() API. Some of them are not pointing
-> > > to real bugs because in many situations people intentionally allow
-> > > concurrent bitmap operations.
+On Tue, Dec 05, 2023 at 02:52:06PM -0800, Yury Norov wrote:
+> On Tue, Dec 05, 2023 at 03:01:38AM -0800, Souradeep Chakrabarti wrote:
+> > > > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > > index 6367de0c2c2e..2194a53cce10 100644
+> > > > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > > @@ -1243,15 +1243,57 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+> > > >  	r->size = 0;
+> > > >  }
+> > > >  
+> > > > +static int irq_setup(int *irqs, int nvec, int start_numa_node)
+> > > > +{
+> > > > +	int i = 0, cpu, err = 0;
+> > > > +	const struct cpumask *node_cpumask;
+> > > > +	unsigned int  next_node = start_numa_node;
+> > > > +	cpumask_var_t visited_cpus, node_cpumask_temp;
+> > > > +
+> > > > +	if (!zalloc_cpumask_var(&visited_cpus, GFP_KERNEL)) {
+> > > > +		err = ENOMEM;
+> > > > +		return err;
+> > > > +	}
+> > > > +	if (!zalloc_cpumask_var(&node_cpumask_temp, GFP_KERNEL)) {
+> > > > +		err = -ENOMEM;
+> > > > +		return err;
+> > > > +	}
 > > > 
-> > > If so, find_bit() can be annotated such that KCSAN will ignore it:
+> > > Can you add a bit more of vertical spacing?
 > > > 
-> > >         bit = data_race(find_first_bit(bitmap, nbits));
+> > > > +	rcu_read_lock();
+> > > > +	for_each_numa_hop_mask(node_cpumask, next_node) {
+> > > > +		cpumask_copy(node_cpumask_temp, node_cpumask);
+> > > > +		for_each_cpu(cpu, node_cpumask_temp) {
+> > > > +			cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
+> > > > +				       topology_sibling_cpumask(cpu));
+> > > > +			irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
+> > > > +			if (++i == nvec)
+> > > > +				goto free_mask;
+> > > > +			cpumask_set_cpu(cpu, visited_cpus);
+> > > > +			if (cpumask_empty(node_cpumask_temp)) {
+> > > > +				cpumask_copy(node_cpumask_temp, node_cpumask);
+> > > > +				cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
+> > > > +					       visited_cpus);
+> > > > +				cpu = 0;
+> > > > +			}
+> > > 
+> > > It feels like you can calculate number of sibling groups in a hop in
+> > > advance, so that you'll know how many IRQs you want to assign per each
+> > > hop, and avoid resetting the node_cpumask_temp and spinning in inner
+> > > loop for more than once...
+> > > 
+> > > Can you print your topology, and describe how you want to spread IRQs
+> > > on it, and how your existing code does spread them?
+> > >
+> > The topology of one system is
+> > > numactl -H
+> > available: 2 nodes (0-1)
+> > node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+> > 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64
+> > 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+> > node 0 size: 459521 MB
+> > node 0 free: 456316 MB
+> > node 1 cpus: 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118
+> > 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+> > 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168
+> > 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+> > node 1 size: 459617 MB
+> > node 1 free: 456864 MB
+> > node distances:
+> > node   0   1
+> >   0:  10  21
+> >   1:  21  10
+> > and I want to spread the IRQs in numa0 node first with 
+> > CPU0 - IRQ0
+> > CPU2 - IRQ1
+> > CPU4 - IRQ2
+> > CPU6 - IRQ3
+> > ---
+> > ---
+> > ---
+> > CPU94 - IRQ47
+> > then
+> > CPU1 - IRQ48
+> > CPU3 - IRQ49
+> > CPU32 - IRQ64
 > > 
-> > No, this is not a correct thing to do. If concurrent bitmap changes can
-> > happen, find_first_bit() as it is currently implemented isn't ever a safe
-> > choice because it can call __ffs(0) which is dangerous as you properly note
-> > above. I proposed adding READ_ONCE() into find_first_bit() / find_next_bit()
-> > implementation to fix this issue but you disliked that. So other option we
-> > have is adding find_first_bit() and find_next_bit() variants that take
-> > volatile 'addr' and we have to use these in code like xas_find_chunk()
-> > which cannot be converted to your new helpers.
+> > In a topology where NUMA0 has 20 cores and NUMA1 has 20 cores, with total 80 CPUS, there I want
+> > CPU0 - IRQ0
+> > CPU2 - IRQ1
+> > CPU4 - IRQ2
+> > ---
+> > ---
+> > ---
+> > CPU38 - IRQ19
+> > Then
+> > CPU1 - IRQ20
+> > CPU3 - IRQ21
+> > ---
+> > ---
+> > CPU39 - IRQ39
+> > Node1
+> > CPU40 - IRQ40
+> > CPU42 - IRQ41
+> > CPU44 - IRQ42
+> > ---
+> > CPU78 - IRQ58
+> > CPU41 - IRQ59
+> > CPU43 - IRQ60
+> > ---
+> > ---
+> > CPU49 - IRQ64
+> >  
+> > 
+> > Exisitng code : 
+> > https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/microsoft/mana/gdma_main.c#L1246
+> > 
+> > This uses cpumask_local_spread, so in a system where node has 64 cores, it spreads all 64+1 IRQs on
+> > 33 cores, rather than spreading it only on HT cores.
 > 
-> Here is some examples when concurrent operations with plain find_bit()
-> are acceptable:
+> So from what you said, it looks like you're trying to implement the
+> following heuristics:
 > 
->  - two threads running find_*_bit(): safe wrt ffs(0) and returns correct
->    value, because underlying bitmap is unchanged;
->  - find_next_bit() in parallel with set or clear_bit(), when modifying
->    a bit prior to the start bit to search: safe and correct;
->  - find_first_bit() in parallel with set_bit(): safe, but may return wrong
->    bit number;
->  - find_first_zero_bit() in parallel with clear_bit(): same as above.
+> 1. No more than one IRQ per CPU, if possible;
+> 2. NUMA locality is the second priority;
+> 3. Sibling dislocality is the last priority;
 > 
-> In last 2 cases find_bit() may not return a correct bit number, but
-> it may be OK if caller requires any (not exactly first) set or clear
-> bit, correspondingly.
+> Can you confirm that?
 > 
-> In such cases, KCSAN may be safely silenced.
-
-True - but these are special cases. In particular the case in xas_find_chunk()
-is not any of these special cases. It is using find_next_bit() which is can
-be racing with clear_bit(). So what are your plans for such usecase?
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+The idea is pretty similar, only change is that if there are enough cpu
+cores in the NUMA node, then no more than one IRQ per core, if possible.
+So the behaviour will be :
+1. no more than one IRQ per core, if possible.
+2. No more than one IRQ per CPU, if possible
+3. NUMA locality is the second priority;
+4. Sibling dislocality is the last priority;
+> If the above correct, your code is quite close to what you want except
+> that for every new hop (outer loop) you have to clear CPUs belonging to
+> previous hop, which is in you case the same as visited_cpus mask.
+> 
+> But I think you can do it even better if just account the number of
+> assigned IRQs. That way you can get rid of the most of housekeeping
+> code.
+> 
+> const struct cpumask *next, *prev = cpu_none_mask;
+> 
+> for_each_numa_hop_mask(next, node) {
+>         cpumask_and_not(curr, next, prev);
+> 
+>         for (w = cpumask_weight(curr), cnt = 0; cnt < w; cnt++)
+>                 cpumask_copy(cpus, curr);
+>                 for_each_cpu(cpu, cpus) {
+>                         if (i++ == nvec)
+>                                 goto done;
+> 
+>                         cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
+>                         irq_set_affinity_and_hint(irqs[i], topology_sibling_cpumask(cpu)); // [*]
+>                 }
+>         }
+>         prev = next;
+> }
+> 
+> [*] I already mentioned that in v3, and also asking here: if you're saying
+> that wrt IRQs distribution, all CPUs belonging to the same sibling group
+> are the same, why don't you assign all the group to the IRQ. It gives the
+> system flexibility to balance workload better.
+> 
+> Let's consider this topology:
+> 
+> Node            0               1
+> Core        0       1       2       3
+> CPU       0   1   2   3   4   5   6   7
+> 
+> The code above should create the following mapping for the IRQs:
+> IRQ     Nodes   Cores   CPUs
+> 0       1       0       0-1
+> 1       1       1       2-3
+> 2       1       0       0-1
+> 3       1       1       2-3
+> 4       2       2       4-5
+> 5       2       3       6-7
+> 6       2       2       4-5
+> 7       2       3       6-7
+> 
+Thanks for the suggestion, but as mentioned by me above, that if enough
+cores are available in a numa noed, then will assign one IRQ per core, rather
+than each CPU. That is the reason we are moving away from using cpumask_local_spread().
+As it assign in every cpu in the numa, irrespective of if there are enough cores
+to accomodate the IRQs. That is why I am first trying to assign one irq per core
+till all the cores in the NUMA node are used.
+> This is pretty close to what I proposed in v3, except that it flips
+> priorities of NUMA locality vs sibling dislocality. My original
+> suggestion is simpler in implementation and aligns with my natural
+> feeling of 'fair' IRQ distribution.
+> 
+> Can you make sure that your heuristics are the best wrt performance?
+> 
+Yes, I had done multiple perf analysis using ntttcp and we got approximately
+12-15 percent improvement.
+> Regarding the rest of the discussion, I think that for_each_numa_hop_mask() 
+> together with some basic cpumaks operations results quite a readable
+> and maintainable code, and we don't need any more generic API to
+> support this type of distribution tasks.
+>
+I will share the V5 patch soon, which does fix the mask issue from V4 and
+also tries to assign IRQ0 to separate CPU if enough CPUs are available. 
+> What do you think guys?
+> 
+> Thanks,
+> Yury
 
