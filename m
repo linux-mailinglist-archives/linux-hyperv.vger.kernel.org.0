@@ -1,129 +1,126 @@
-Return-Path: <linux-hyperv+bounces-1301-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1302-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10B7180AC19
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 19:34:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8837E80AC4C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 19:41:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE2651F2121D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 18:34:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5641281A40
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 18:41:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E83A39866;
-	Fri,  8 Dec 2023 18:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D8533C068;
+	Fri,  8 Dec 2023 18:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="luSeH7df"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YFYB3Wmw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D81A3;
-	Fri,  8 Dec 2023 10:34:22 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-db539ab8e02so2729376276.0;
-        Fri, 08 Dec 2023 10:34:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702060461; x=1702665261; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ejXhmdckIcdGK+pLdIJWhvkjFAhDWBpYsBAzxp0p6Sk=;
-        b=luSeH7dfYpc+aRNooJ4mZKwo+hBFMPZnrwEXVyyWBZ6JU3xkDwYct7YIOgy5TqYseF
-         vU+iAFSRSlJe0lZa+aiX+mgTkSc1N5aRAatG+8LX0PoeSmIOEqHNUG3GrghB/S2Mwy5y
-         mX5AsF2TvmCLwqnPTrfgQ6OK7XDLNCw29gp52ChONPbJEYxYj00aEDB+SE5RidQJRcj3
-         IwGYtbjLL6YD6oOCUOJwd4D9oxihiBssjLXtwN19asJsSB49WcztZgLx1Qrd+Jo33miz
-         x6qhlrrP5xLyPgXYcqCaD0mryKDnJb93C49f/TsZluLCbpBqEwczC6vidoRQEujXT7B/
-         cGfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702060461; x=1702665261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ejXhmdckIcdGK+pLdIJWhvkjFAhDWBpYsBAzxp0p6Sk=;
-        b=QPP4C8QEJ2U7uOreGmB39YNDxE7xv0uVskPrGM2flm117ifqK8cTxLi76TygKz5sv3
-         krAwNXhS7eIcuewxpQw2o+JzHlQFbrM/q8ROV46/Y1kCFajzr/DIjj6favNmB0ivXpja
-         Dvy+a8bdnQsFSAaMk/qc8alBPCu/MJuGyNfcg9EJecp+gg4mCStGT8/+qwGb5ERd3ndr
-         H1TMCaCpzBQwlDJLSlOLykGQIyAPF0XTpcpi7/1TDwnh/PdQhBp6B0zHE+OaLdU9pT5H
-         +QPRAQG4M5ishSEbnFhDGmrd7+bMlKpgcBnBhqJ3mJKGhWObcaUXz6Qi7nTsmoOj9bTw
-         4qEA==
-X-Gm-Message-State: AOJu0Yy4DKFXrT4aQM2CNnzZZj6O09oU0e8E+E1Fne+uoFvnn+cakXHl
-	ubIMMcOrAD9qQKTDh6xdk2E=
-X-Google-Smtp-Source: AGHT+IEo4kabG9Kr8bM11ACqdXlyVWy2Ht8cWzY6VZk7DZnzbZ273qR/eHeRAbXyGbTiJm9T0P8ioQ==
-X-Received: by 2002:a25:c3:0:b0:db7:dacf:ed98 with SMTP id 186-20020a2500c3000000b00db7dacfed98mr361626yba.121.1702060461588;
-        Fri, 08 Dec 2023 10:34:21 -0800 (PST)
-Received: from localhost ([2601:344:8301:57f0:cd3e:7dc3:93ad:7de2])
-        by smtp.gmail.com with ESMTPSA id i20-20020a25bc14000000b00d995a8b956csm767232ybh.51.2023.12.08.10.34.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 10:34:21 -0800 (PST)
-Date: Fri, 8 Dec 2023 10:34:20 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-	Alexey Klimov <klimov.linux@gmail.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v2 14/35] PCI: hv: switch hv_get_dom_num() to use atomic
- find_bit()
-Message-ID: <ZXNhrHWLu6LydQvp@yury-ThinkPad>
-References: <20231203193307.542794-13-yury.norov@gmail.com>
- <20231204191427.GA623236@bhelgaas>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69EDF11F;
+	Fri,  8 Dec 2023 10:41:35 -0800 (PST)
+Received: from [192.168.4.26] (unknown [47.186.13.91])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B588020B74C0;
+	Fri,  8 Dec 2023 10:41:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B588020B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1702060894;
+	bh=AnIC6fr2QG8zWjE8bckg2NFATj2evZRXlwuerxjzhrk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YFYB3WmwcuV32c52iaz4igd8ovlIWvHBEPQVmbIZEw3i94LbeUVkav4NsxSNfPmIk
+	 iUXKkjZRomhyqjplJTf78F4BLpGH4vEdrl44twJ+PBdhRrhrueH+3FqPyjppZtB4ge
+	 /VJ2zHgNQUxArYnpRJ/nZXtyaTbYEsmb8Xq9ZQ7A=
+Message-ID: <eb41ec87-8e46-4880-9d94-d86849ddadd2@linux.microsoft.com>
+Date: Fri, 8 Dec 2023 12:41:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231204191427.GA623236@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
+ during text patching
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ Kees Cook <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Wanpeng Li <wanpengli@tencent.com>, Alexander Graf <graf@amazon.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ John Andersen <john.s.andersen@intel.com>,
+ Marian Rotariu <marian.c.rotariu@gmail.com>,
+ =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+ =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>,
+ Zahra Tarkhani <ztarkhani@microsoft.com>,
+ =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+ dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+ x86@kernel.org, xen-devel@lists.xenproject.org
+References: <20231113022326.24388-1-mic@digikod.net>
+ <20231113022326.24388-18-mic@digikod.net>
+ <20231113081929.GA16138@noisy.programming.kicks-ass.net>
+ <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
+ <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
+ <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
+ <20231130113315.GE20191@noisy.programming.kicks-ass.net>
+ <624a310b-c0d2-406c-a4a7-d851b3cc68f5@linux.microsoft.com>
+ <20231206185134.GA9899@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <20231206185134.GA9899@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 04, 2023 at 01:14:27PM -0600, Bjorn Helgaas wrote:
-> On Sun, Dec 03, 2023 at 11:32:46AM -0800, Yury Norov wrote:
-> > The function traverses bitmap with for_each_clear_bit() just to allocate
-> > a bit atomically. We can do it better with a dedicated find_and_set_bit().
-> 
-> No objection from me, but please tweak the subject line to match
-> previous hv history, i.e., capitalize the first word after the prefix:
-> 
->   PCI: hv: Use atomic find_and_set_bit()
-> 
-> I think there's value in using similar phrasing across the whole
-> series.  Some subjects say "optimize xyz()", some say "rework xyz()",
-> some "rework xyz()", etc.  I think it's more informative to include
-> the "atomic" and "find_bit()" ideas in the subject than the specific
-> functions that *use* it.
-> 
-> I also like how some of the other commit logs clearly say what the
-> patch does, e.g., "Simplify by using dedicated find_and_set_bit()", as
-> opposed to just "We can do it better ..." which technically doesn't
-> say what the patch does.
-> 
-> Very nice simplification in all these users, thanks for doing it!
-> 
-> I assume you'll merge these all together since they depend on [01/35],
-> so:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Thank you Bjorn!
 
-Now as many people asked to move their subsystems patch together with
-#1, I think, if no objections, it's simpler to pull all the series in
-bitmap-for-next.
+On 12/6/23 12:51, Peter Zijlstra wrote:
+> On Wed, Dec 06, 2023 at 10:37:33AM -0600, Madhavan T. Venkataraman wrote:
+>>
+>>
+>> On 11/30/23 05:33, Peter Zijlstra wrote:
+>>> On Wed, Nov 29, 2023 at 03:07:15PM -0600, Madhavan T. Venkataraman wrote:
+>>>
+>>>> Kernel Lockdown
+>>>> ---------------
+>>>>
+>>>> But, we must provide at least some security in V2. Otherwise, it is useless.
+>>>>
+>>>> So, we have implemented what we call a kernel lockdown. At the end of kernel
+>>>> boot, Heki establishes permissions in the extended page table as mentioned
+>>>> before. Also, it adds an immutable attribute for kernel text and kernel RO data.
+>>>> Beyond that point, guest requests that attempt to modify permissions on any of
+>>>> the immutable pages will be denied.
+>>>>
+>>>> This means that features like FTrace and KProbes will not work on kernel text
+>>>> in V2. This is a temporary limitation. Once authentication is in place, the
+>>>> limitation will go away.
+>>>
+>>> So either you're saying your patch 17 / text_poke is broken (so why
+>>> include it ?!?) or your statement above is incorrect. Pick one.
+>>>
+>>
+>> It has been included so that people can be aware of the changes.
+>>
+>> I will remove the text_poke() changes from the patchset and send it later when
+>> I have some authentication in place. It will make sense then.
+> 
+> If you know its broken then fucking say so in the Changelog instead of
+> wasting everybody's time.. OMG.
 
-I'm going to align commit messages wording, as you suggested, address
-some other comments, and will send v3 this weekend.
+It is not broken. It addresses one part of the problem. The other part is WIP.
 
-Thanks,
-Yury
+I am preparing a detailed response to your comments. I ask you to be patient until then. In fact, I would appreciate your input/suggestions on some problems we are trying to solve in this context. I will mention them in my response.
+
+Madhavan
+
 
