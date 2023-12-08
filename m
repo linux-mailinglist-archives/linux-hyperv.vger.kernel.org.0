@@ -1,252 +1,213 @@
-Return-Path: <linux-hyperv+bounces-1291-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1292-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 026B1809C26
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 07:05:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78518809C72
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 07:34:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 334D11C20974
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 06:05:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9C3C2820F2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 06:34:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B067460;
-	Fri,  8 Dec 2023 06:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B96A5662;
+	Fri,  8 Dec 2023 06:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HYgJWurX"
+	dkim=pass (1024-bit key) header.d=corigine.onmicrosoft.com header.i=@corigine.onmicrosoft.com header.b="UAIWCdMR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6DD71720;
-	Thu,  7 Dec 2023 22:05:39 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 3433420B74C0; Thu,  7 Dec 2023 22:05:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3433420B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1702015539;
-	bh=7Lj8rKh+wOzCHoSYdcOz0CkBbfIdTFOALmKdop036KU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HYgJWurXoYetYgiR4cHME4T8Yw5jxBAx5MDtwqSfCX3yOb80pgFvfOp1oJT4bMLI/
-	 ac4QMRxYRmXVyb0oakaMce/Dt7pS+X9GRs87pvR6PMQGCGY4RA0ipoVhQ2YM9hjrI6
-	 VkiZ3/8AgR2ZBppPiYZsCrWjdGo6XuCh6jWPXm3E=
-Date: Thu, 7 Dec 2023 22:05:39 -0800
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
-	leon@kernel.org, cai.huoqing@linux.dev, ssengar@linux.microsoft.com,
-	vkuznets@redhat.com, tglx@linutronix.de,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	sch^Crabarti@microsoft.com, paulros@microsoft.com
-Subject: Re: [PATCH V4 net-next] net: mana: Assigning IRQ affinity on HT cores
-Message-ID: <20231208060539.GA5744@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1701679841-9359-1-git-send-email-schakrabarti@linux.microsoft.com>
- <ZW3om2dfA4U0lhVY@yury-ThinkPad>
- <20231205110138.GA31232@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <ZW+plvYrNvdcSFCB@yury-ThinkPad>
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2131.outbound.protection.outlook.com [40.107.244.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89E81722;
+	Thu,  7 Dec 2023 22:33:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kNyjEfwrfVzzWyMiGHbwnZEch1Wgg426EZ7zXG8W7ZytWT45XcTNtO2X6YFGD8BD2CEia0pVuGv1Tis/ScLKGvmVSSxMqq/AUxD3GjOTygvLGBDoPZ32KEGapHoW1DDIghdvcyaVZVC/s8wLjJHnwH2wKu3FruX+MK9mcXIJU/a0xOxhLDy3KNtMKpaIxv2kW+ERU/syTebgYofEjKK6iAiyeZe0Ilgogdk6C33caW053ZxCVIqjyDNzjJ0MX2rO1hUfurxzIi3e4N/ohTAI8D1At+u4kdLFrYX97T9sBYf0fcSfhsve5vrgxFCsIh8G57E2oLAqffD+Jf59syjSNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2BpRnQ9Poa/RzGqVi78BfpPiBjbMH29PWk0HOiuGvyk=;
+ b=SKKhcMrx8hknqtt1YFS9Wp2frGd59esjRcXKILVcL/dRWZ95T2WlDnShFFD+KVE888tjAXKNlFan/iUjp3QtnFtVrngUdYd0ljJqbCvwcX4+n1TDeMkf7NddquSFxqezFLNTXRXBIl3VgIa+fpQd9mnTPKOSF5406WHwPWzBjKpJI+YeCTWwUQDu8Hd+UpCYfJUf90htu05KkbNZq2SayDV9KEVw1Kg/SqfhSZxnvOjr9zClQAF9JcEpa7g05iaSQAG2IsS+xuTR5gseHQWwWUOyA1y2CprctFTGjPLgWCz6RdlTS9c0w4pgiR5oWSN5WdVWZOJOHmEQNgTXt9zXYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2BpRnQ9Poa/RzGqVi78BfpPiBjbMH29PWk0HOiuGvyk=;
+ b=UAIWCdMRf58z52FiqIoauBLeM6b8CPclEG8ypMl0YrKToeVQdAGQti7gb6kBH5xU4J4OBSbqoSJaDZS2BWjuJFszYoE7UHZ8UTqi2Le8EgzBngYOQq4II5dn34vUCrsOjHvRhAxSiwvwBqv1KPsgxcsW4UBgNF5I6kpR19q9QE8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from BL0PR13MB4403.namprd13.prod.outlook.com (2603:10b6:208:1c4::8)
+ by CH2PR13MB4441.namprd13.prod.outlook.com (2603:10b6:610:63::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.27; Fri, 8 Dec
+ 2023 06:33:51 +0000
+Received: from BL0PR13MB4403.namprd13.prod.outlook.com
+ ([fe80::d3c0:fa39:cb9e:a536]) by BL0PR13MB4403.namprd13.prod.outlook.com
+ ([fe80::d3c0:fa39:cb9e:a536%7]) with mapi id 15.20.7068.027; Fri, 8 Dec 2023
+ 06:33:51 +0000
+Date: Fri, 8 Dec 2023 08:33:22 +0200
+From: Louis Peens <louis.peens@corigine.com>
+To: justinstitt@google.com
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shay Agroskin <shayagr@amazon.com>,
+	Arthur Kiyanovski <akiyano@amazon.com>,
+	David Arinzon <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>,
+	Saeed Bishara <saeedb@amazon.com>, Rasesh Mody <rmody@marvell.com>,
+	Sudarsana Kalluru <skalluru@marvell.com>,
+	GR-Linux-NIC-Dev@marvell.com,
+	Dimitris Michailidis <dmichail@fungible.com>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Ronak Doshi <doshir@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Hauke Mehrtens <hauke@hauke-m.de>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com, Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Kees Cook <keescook@chromium.org>, intel-wired-lan@lists.osuosl.org,
+	oss-drivers@corigine.com, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net-next v5 3/3] net: Convert some ethtool_sprintf() to
+ ethtool_puts()
+Message-ID: <ZXK4sgtuvJQswZLS@LouisNoVo>
+References: <20231206-ethtool_puts_impl-v5-0-5a2528e17bf8@google.com>
+ <20231206-ethtool_puts_impl-v5-3-5a2528e17bf8@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231206-ethtool_puts_impl-v5-3-5a2528e17bf8@google.com>
+X-ClientProxiedBy: JNXP275CA0006.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:19::18)
+ To BL0PR13MB4403.namprd13.prod.outlook.com (2603:10b6:208:1c4::8)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZW+plvYrNvdcSFCB@yury-ThinkPad>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR13MB4403:EE_|CH2PR13MB4441:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3856e89-e3a1-4b75-93f5-08dbf7b7a43b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	yIFntbk6hUTgtpQrUXivOS4RpMua6e5qJRyINcjhdI8UmoFDQoy3EsFnKbiQXy/0x2B+GyNhPRLPmS+uLnld/qpJB0tty0qHYA2BuamxIgPORzXlGxGb8QmFajNTq9oRYFcvv4voBIqgGubBILDPjPdYWYgOcOGLVmV8y+SV8X6NcbQb7fxjjP0VqH+QhmWmIqO74rKjlkCEo2VwPTwn2e1eN/PzxU0OX0yXNd3IXxq5nCzEdKp9RSiem8hvVZ3/08dB0H8HbNKpBrac7Dv+YEzVlMCqDfOZxA/12svqpIvwYWe1qCV14AuqRzd3qhxLVclFJfLjKD14zkmvQGp+xXnV2+xPDFBCVUovQVHN2jPtBPIz4yYhlRouo9+yAO5YyHnCQeVFftu5C44i3iK46L8Ign7MzpQzW8oGdED4Xb9VU/S2Sks0vVRyS1zwj3//2PH0wPjyOmq8QpQUjSlKrJYqEYc4b9TIBMTmj1D5EabB44lLGzyb+PbX62/gt9Y/1OxTG9V1qD3daQMYzRNVKmjYYtniMds4rU1G6BPwsSyVp03WWQsCUL+zYv0p0Iqg7LyekByvPgEgCg5uYTFGuBDxscRRu/pSC/YOjvAv1CM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR13MB4403.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39830400003)(136003)(396003)(376002)(346002)(366004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(7406005)(7366002)(5660300002)(2906002)(7416002)(33716001)(41300700001)(38100700002)(54906003)(66476007)(66946007)(66556008)(86362001)(478600001)(26005)(9686003)(6666004)(6506007)(6512007)(44832011)(8936002)(6486002)(316002)(8676002)(4326008)(6916009);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?pXSkISbapldWkEeeOByjOSen4muvzaGMpXGK6LHhGjpOia8WKOdmxo7T/DoP?=
+ =?us-ascii?Q?jPC9dUDjOq/M8Gvj8n5okhY7M3RCzWsTmo/N40O7hpwJPemV+uCM/NlsYKqa?=
+ =?us-ascii?Q?Aqz4a93S7BI/Qe+AHtKQtFXAHpjcGFJ3jAuYmQaCkgV/aK5uo48FHj4rURfo?=
+ =?us-ascii?Q?Thka1J14/AIXNuWs0spcnOf1xg1KtH2zLLm/K93+q77q654KfRQ/C/vGeu3h?=
+ =?us-ascii?Q?6azzHjAyTN+EWonpuvT6BOQ2uUQWfcRbSNJ5/wnjFfRXskt4qsIErlWxkMT0?=
+ =?us-ascii?Q?ML/II9vl6OdyrFglO9mmY3ibFGVV0SYdzcwBXpsami1tAxR6XzhH+ka+qg+x?=
+ =?us-ascii?Q?AEbOY98BG5kmCVFaYyxl4CzJavtGmxrglqrNhb3KcorufYrWe7xblKg2cHod?=
+ =?us-ascii?Q?+RWdjjdy9nRVGlAanwVjSYo0mKx+9ZUUcf5+PKwJk6fjnzOjWQiHZ4FTXJls?=
+ =?us-ascii?Q?GDhzErXU8BOm2ih8F1uxoLCWh9078LCml6UZQEacbICmxQzZIlLN0BtkDtyo?=
+ =?us-ascii?Q?aBCe/U7DaC+WDAf0LBlmXEeRQHk+Jvxm47h4fp0AFX2dlRZZvhlGknlHQJm0?=
+ =?us-ascii?Q?xHgVjwqEQeCHioGgxS3q58gH1/HjFaA3+qvnS58sEzAL/Sxgi04i3YcdHT/s?=
+ =?us-ascii?Q?CQpEtvAIrbe1dyaA+dPwfbHF+wqLAkaFeszAbb73Yj0WQ0nvJCs5rLFnd1Cz?=
+ =?us-ascii?Q?iTwuZAn66uTeq9sGpF1kk5lxQPXaA1LHYpkXY/bHEISPrJL4ACFTgtyAX2AA?=
+ =?us-ascii?Q?BA5Hu/n7yy07Xfp9FaFjinsrFerTenET/uWG7ogPgM/3CWPTUsn+Y9MjY4Bd?=
+ =?us-ascii?Q?Bampa2FGf3uU8xf33iVOsP3dh57qzmdNMeDzA9LJXjQDak4F47j4sDk8stVo?=
+ =?us-ascii?Q?vFtaGJCn8QLKjeLUFJNj/cNWNWJ0EGClE0hL9f0oMwwxCnvaqU9TMa3SrvOW?=
+ =?us-ascii?Q?7bIYJr4o9/nwweQkZb6fCx+Cxz9hbYUG9wL+XRGOfc/LP03LHkApCT9bu3bU?=
+ =?us-ascii?Q?a6YrOptNPMptX12sZSdPi2LfnnNERag+9qAUi+L+trl1EPNPbOf1uAHgZFaq?=
+ =?us-ascii?Q?DKfh5HMAT5Jy0KrY4621r/mWuq1rJ1llB2KW2qRC4Ps3me/6nVUyp+bxj1DO?=
+ =?us-ascii?Q?jLFPzx0UjrP3BIB1zbsMSBWDE6B/NzP7PR98n5K4ah2Y8bGP+CWOMy/JweDl?=
+ =?us-ascii?Q?B9aTbYxjyMW6luAost2YVeT3d01yac9OzuFkdO0hynnKZBnr2/Z8qCB09WKD?=
+ =?us-ascii?Q?h1upqrKydvKnXCCS8JKkTG+PFSaa2pxFg5HcGY6z5ISgsePLZzAGfGXt+x7Z?=
+ =?us-ascii?Q?KlwMHo4q2+Zr7ow+7HmpzpLsED9jF2p4eg5FrFG6NL5WdlL88wqOmUfJq1HM?=
+ =?us-ascii?Q?c2AVUo0EGUIyaPra5zWjRtbsaHNnG0s7TqF+MNZa+FH4Svsk36Z6oSJJ+mlq?=
+ =?us-ascii?Q?pivnYAE0qnbNj7mlLWtppdBIM5ab7zsxnB5Grq9N9YdYjAvStuH/yYM9fVu2?=
+ =?us-ascii?Q?5OLVt+wGAZd13O3aNqqW8x8E9ekRRhyTzSiEvBgr9lmBM6a8sjeykI8/WcVh?=
+ =?us-ascii?Q?LgakatkK5SNeXYaF2TgZmZKlFu/bULqRPP1tx2QJyd4UFcORzlbgugGHm/6Y?=
+ =?us-ascii?Q?Jw=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3856e89-e3a1-4b75-93f5-08dbf7b7a43b
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR13MB4403.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 06:33:51.3116
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gg7+wXqMBe7GS4Wloe1D/ZTGQRYAftgP4ikH7cbV9RnOrwk1VhOgZX7tnbgX8S8W61pRsbEnkedQ3DP2zSGcqwibuTuaDONejFCfNtkJm5U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB4441
 
-On Tue, Dec 05, 2023 at 02:52:06PM -0800, Yury Norov wrote:
-> On Tue, Dec 05, 2023 at 03:01:38AM -0800, Souradeep Chakrabarti wrote:
-> > > > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > > > index 6367de0c2c2e..2194a53cce10 100644
-> > > > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > > > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > > > @@ -1243,15 +1243,57 @@ void mana_gd_free_res_map(struct gdma_resource *r)
-> > > >  	r->size = 0;
-> > > >  }
-> > > >  
-> > > > +static int irq_setup(int *irqs, int nvec, int start_numa_node)
-> > > > +{
-> > > > +	int i = 0, cpu, err = 0;
-> > > > +	const struct cpumask *node_cpumask;
-> > > > +	unsigned int  next_node = start_numa_node;
-> > > > +	cpumask_var_t visited_cpus, node_cpumask_temp;
-> > > > +
-> > > > +	if (!zalloc_cpumask_var(&visited_cpus, GFP_KERNEL)) {
-> > > > +		err = ENOMEM;
-> > > > +		return err;
-> > > > +	}
-> > > > +	if (!zalloc_cpumask_var(&node_cpumask_temp, GFP_KERNEL)) {
-> > > > +		err = -ENOMEM;
-> > > > +		return err;
-> > > > +	}
-> > > 
-> > > Can you add a bit more of vertical spacing?
-> > > 
-> > > > +	rcu_read_lock();
-> > > > +	for_each_numa_hop_mask(node_cpumask, next_node) {
-> > > > +		cpumask_copy(node_cpumask_temp, node_cpumask);
-> > > > +		for_each_cpu(cpu, node_cpumask_temp) {
-> > > > +			cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
-> > > > +				       topology_sibling_cpumask(cpu));
-> > > > +			irq_set_affinity_and_hint(irqs[i], cpumask_of(cpu));
-> > > > +			if (++i == nvec)
-> > > > +				goto free_mask;
-> > > > +			cpumask_set_cpu(cpu, visited_cpus);
-> > > > +			if (cpumask_empty(node_cpumask_temp)) {
-> > > > +				cpumask_copy(node_cpumask_temp, node_cpumask);
-> > > > +				cpumask_andnot(node_cpumask_temp, node_cpumask_temp,
-> > > > +					       visited_cpus);
-> > > > +				cpu = 0;
-> > > > +			}
-> > > 
-> > > It feels like you can calculate number of sibling groups in a hop in
-> > > advance, so that you'll know how many IRQs you want to assign per each
-> > > hop, and avoid resetting the node_cpumask_temp and spinning in inner
-> > > loop for more than once...
-> > > 
-> > > Can you print your topology, and describe how you want to spread IRQs
-> > > on it, and how your existing code does spread them?
-> > >
-> > The topology of one system is
-> > > numactl -H
-> > available: 2 nodes (0-1)
-> > node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-> > 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64
-> > 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
-> > node 0 size: 459521 MB
-> > node 0 free: 456316 MB
-> > node 1 cpus: 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118
-> > 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
-> > 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168
-> > 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
-> > node 1 size: 459617 MB
-> > node 1 free: 456864 MB
-> > node distances:
-> > node   0   1
-> >   0:  10  21
-> >   1:  21  10
-> > and I want to spread the IRQs in numa0 node first with 
-> > CPU0 - IRQ0
-> > CPU2 - IRQ1
-> > CPU4 - IRQ2
-> > CPU6 - IRQ3
-> > ---
-> > ---
-> > ---
-> > CPU94 - IRQ47
-> > then
-> > CPU1 - IRQ48
-> > CPU3 - IRQ49
-> > CPU32 - IRQ64
-> > 
-> > In a topology where NUMA0 has 20 cores and NUMA1 has 20 cores, with total 80 CPUS, there I want
-> > CPU0 - IRQ0
-> > CPU2 - IRQ1
-> > CPU4 - IRQ2
-> > ---
-> > ---
-> > ---
-> > CPU38 - IRQ19
-> > Then
-> > CPU1 - IRQ20
-> > CPU3 - IRQ21
-> > ---
-> > ---
-> > CPU39 - IRQ39
-> > Node1
-> > CPU40 - IRQ40
-> > CPU42 - IRQ41
-> > CPU44 - IRQ42
-> > ---
-> > CPU78 - IRQ58
-> > CPU41 - IRQ59
-> > CPU43 - IRQ60
-> > ---
-> > ---
-> > CPU49 - IRQ64
-> >  
-> > 
-> > Exisitng code : 
-> > https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/microsoft/mana/gdma_main.c#L1246
-> > 
-> > This uses cpumask_local_spread, so in a system where node has 64 cores, it spreads all 64+1 IRQs on
-> > 33 cores, rather than spreading it only on HT cores.
+On Wed, Dec 06, 2023 at 11:16:12PM +0000, justinstitt@google.com wrote:
+> This patch converts some basic cases of ethtool_sprintf() to
+> ethtool_puts().
 > 
-> So from what you said, it looks like you're trying to implement the
-> following heuristics:
+> The conversions are used in cases where ethtool_sprintf() was being used
+> with just two arguments:
+> |       ethtool_sprintf(&data, buffer[i].name);
+> or when it's used with format string: "%s"
+> |       ethtool_sprintf(&data, "%s", buffer[i].name);
+> which both now become:
+> |       ethtool_puts(&data, buffer[i].name);
 > 
-> 1. No more than one IRQ per CPU, if possible;
-> 2. NUMA locality is the second priority;
-> 3. Sibling dislocality is the last priority;
-> 
-> Can you confirm that?
-> 
-> If the above correct, your code is quite close to what you want except
-> that for every new hop (outer loop) you have to clear CPUs belonging to
-> previous hop, which is in you case the same as visited_cpus mask.
-> 
-> But I think you can do it even better if just account the number of
-> assigned IRQs. That way you can get rid of the most of housekeeping
-> code.
-> 
-> const struct cpumask *next, *prev = cpu_none_mask;
-> 
-> for_each_numa_hop_mask(next, node) {
->         cpumask_and_not(curr, next, prev);
-> 
->         for (w = cpumask_weight(curr), cnt = 0; cnt < w; cnt++)
->                 cpumask_copy(cpus, curr);
->                 for_each_cpu(cpu, cpus) {
->                         if (i++ == nvec)
->                                 goto done;
-> 
->                         cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
->                         irq_set_affinity_and_hint(irqs[i], topology_sibling_cpumask(cpu)); // [*]
->                 }
->         }
->         prev = next;
-> }
-I am experimenting with the proposal here, and based on the result will
-update the V5 patch.
-> 
-> [*] I already mentioned that in v3, and also asking here: if you're saying
-> that wrt IRQs distribution, all CPUs belonging to the same sibling group
-> are the same, why don't you assign all the group to the IRQ. It gives the
-> system flexibility to balance workload better.
-> 
-> Let's consider this topology:
-> 
-> Node            0               1
-> Core        0       1       2       3
-> CPU       0   1   2   3   4   5   6   7
-> 
-> The code above should create the following mapping for the IRQs:
-> IRQ     Nodes   Cores   CPUs
-> 0       1       0       0-1
-> 1       1       1       2-3
-> 2       1       0       0-1
-> 3       1       1       2-3
-> 4       2       2       4-5
-> 5       2       3       6-7
-> 6       2       2       4-5
-> 7       2       3       6-7
-> 
-> This is pretty close to what I proposed in v3, except that it flips
-> priorities of NUMA locality vs sibling dislocality. My original
-> suggestion is simpler in implementation and aligns with my natural
-> feeling of 'fair' IRQ distribution.
-> 
-> Can you make sure that your heuristics are the best wrt performance?
-> 
-> Regarding the rest of the discussion, I think that for_each_numa_hop_mask() 
-> together with some basic cpumaks operations results quite a readable
-> and maintainable code, and we don't need any more generic API to
-> support this type of distribution tasks.
-> 
-> What do you think guys?
-> 
-> Thanks,
-> Yury
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+>  drivers/net/dsa/lantiq_gswip.c                     |  2 +-
+>  drivers/net/dsa/mt7530.c                           |  2 +-
+>  drivers/net/dsa/qca/qca8k-common.c                 |  2 +-
+>  drivers/net/dsa/realtek/rtl8365mb.c                |  2 +-
+>  drivers/net/dsa/realtek/rtl8366-core.c             |  2 +-
+>  drivers/net/dsa/vitesse-vsc73xx-core.c             |  8 +--
+>  drivers/net/ethernet/amazon/ena/ena_ethtool.c      |  4 +-
+>  drivers/net/ethernet/brocade/bna/bnad_ethtool.c    |  2 +-
+>  drivers/net/ethernet/freescale/fec_main.c          |  4 +-
+>  .../net/ethernet/fungible/funeth/funeth_ethtool.c  |  8 +--
+>  drivers/net/ethernet/hisilicon/hns/hns_dsaf_gmac.c |  2 +-
+>  .../net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c    |  2 +-
+>  drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   | 65 +++++++++++-----------
+>  drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |  6 +-
+>  drivers/net/ethernet/intel/iavf/iavf_ethtool.c     |  3 +-
+>  drivers/net/ethernet/intel/ice/ice_ethtool.c       |  9 +--
+>  drivers/net/ethernet/intel/idpf/idpf_ethtool.c     |  2 +-
+>  drivers/net/ethernet/intel/igb/igb_ethtool.c       |  6 +-
+>  drivers/net/ethernet/intel/igc/igc_ethtool.c       |  6 +-
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c   |  5 +-
+>  .../net/ethernet/microchip/sparx5/sparx5_ethtool.c |  2 +-
+>  .../net/ethernet/netronome/nfp/nfp_net_ethtool.c   | 44 +++++++--------
+Still happy with the nfp parts, thanks:
+Reviewed-by: Louis Peens <louis.peens@corigine.com>
 
