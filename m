@@ -1,140 +1,263 @@
-Return-Path: <linux-hyperv+bounces-1299-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1300-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1A9880A3B3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 13:45:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 120E680A50F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 15:03:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59DC928181A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 12:45:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC2BB28170A
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Dec 2023 14:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0887913ADC;
-	Fri,  8 Dec 2023 12:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84211DDCB;
+	Fri,  8 Dec 2023 14:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BUVmKnGD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOm59JhL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4B1D11C;
-	Fri,  8 Dec 2023 04:45:09 -0800 (PST)
-Received: from [192.168.178.49] (dynamic-adsl-84-220-28-122.clienti.tiscali.it [84.220.28.122])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6D4F120B74C0;
-	Fri,  8 Dec 2023 04:45:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6D4F120B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1702039509;
-	bh=zL4AbNjbmi2aO3fv6OGRUpOmIiBiCf30fFHaYwt5Raw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BUVmKnGDTA53reQHcFIoKapthWuSsj+Fmj6JeteJHUjBCYTQnSIwz7B6+waD6/wP9
-	 LGE6tu/GYfp6DCQzyVDgeWn0q3Gluu/kFJVlcB2qjuyCbBzZmqP0Lbdblyx+6U/ra1
-	 o/QBLXcaByDmFUW2O9ZFuXtSmLmoR7hlTN0mpJ98=
-Message-ID: <b99c0f94-da56-4963-984d-ae177b0b7b0b@linux.microsoft.com>
-Date: Fri, 8 Dec 2023 13:45:01 +0100
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A48F9;
+	Fri,  8 Dec 2023 06:03:41 -0800 (PST)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-5d7346442d4so20489317b3.2;
+        Fri, 08 Dec 2023 06:03:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702044220; x=1702649020; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vq1VOSqoVjxWvcT4zuInZBLiz41JyrThxjwY/ZgTFVU=;
+        b=fOm59JhL+2qGq1LVM/oE7xTxCeolcamuek9FFvbLaWLe4NVCqnHOaiVQhKQzAbVsoO
+         8IOmOPOlq7Q0yht44wUKi4kNMwRPC4DLYD2C08HJLcUUQobnJAyyGtSHxMpOxS1sEPez
+         JvF0VliM4q4O0OtjjEOdCIHczQnwk+yJXMLRQqox/fX005f5MujtxgNX8ehpSzD69pm3
+         3OrsaUzHggAftxtzzQOwUXB25F0DMBVfmICKfwkN+uqqDfdOXg3W8pR77Yz0Ul2owgNp
+         as4i3JA9fNIo7Z8lhE/91GSA3k1PqeP5deuzdKeVAcQdnihO1tO4swsWNS8MqHtY0II2
+         m/zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702044220; x=1702649020;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vq1VOSqoVjxWvcT4zuInZBLiz41JyrThxjwY/ZgTFVU=;
+        b=vghIf+iSQPkZp/iD9ZbzF5dwrkjw/2Xg8igEnM78VBLrp+CKqzfD7ns4d4o/+Aahit
+         MMgOekHIMHE1Tif1hCFULeNozUXWjrRNHYxFqsrtiyHM6SJpt92rfr5FlEAYwh1H7gyJ
+         uBH1IO8KljYaFAlmF1d/qDQZpEWfev0tTupINxK02U8WfqTrRCuxA3ec5kcAlrFYD0Pr
+         1u3u05D/cVnvvoKPPZjQewRDh2dQoeyAzLLv4WlAvNIDT0GsANjZR6YEuS9xsmpoapSs
+         IMIMyuJRbuK2us3SmpqQ61klGSSu3L4xuymKypTFscHWheTuj4DVnMkyl7FhwY3fxMl8
+         FWjg==
+X-Gm-Message-State: AOJu0YyFUbZPMjRajwIs3MI0JBOQOIA5+lbDzuHdXEzyXH5hh/wt22vG
+	+FpqJmaP5Iz1brAYyTOh4xw=
+X-Google-Smtp-Source: AGHT+IFZPGq/PPeI2SQ4w5pXqgaG1TPzCcDB20LoxYTWV05p7WatZaKHyKzuZMA8VTYLe7M1JHSKGw==
+X-Received: by 2002:a81:4990:0:b0:5d7:1941:3579 with SMTP id w138-20020a814990000000b005d719413579mr3614832ywa.96.1702044220488;
+        Fri, 08 Dec 2023 06:03:40 -0800 (PST)
+Received: from localhost ([2601:344:8301:57f0:cd3e:7dc3:93ad:7de2])
+        by smtp.gmail.com with ESMTPSA id o130-20020a0dcc88000000b005d392d15725sm676865ywd.94.2023.12.08.06.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 06:03:40 -0800 (PST)
+Date: Fri, 8 Dec 2023 06:03:39 -0800
+From: Yury Norov <yury.norov@gmail.com>
+To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+	leon@kernel.org, cai.huoqing@linux.dev, ssengar@linux.microsoft.com,
+	vkuznets@redhat.com, tglx@linutronix.de,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	schakrabarti@microsoft.com, paulros@microsoft.com
+Subject: Re: [PATCH V5 net-next] net: mana: Assigning IRQ affinity on HT cores
+Message-ID: <ZXMiOwK3sOJNXHxd@yury-ThinkPad>
+References: <1702029754-6520-1-git-send-email-schakrabarti@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] x86/tdx: Check for TDX partitioning during early
- TDX init
-Content-Language: en-US
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "cascardo@canonical.com" <cascardo@canonical.com>,
- "Huang, Kai" <kai.huang@intel.com>, "Cui, Dexuan" <decui@microsoft.com>,
- "mhkelley58@gmail.com" <mhkelley58@gmail.com>,
- "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
- "tim.gardner@canonical.com" <tim.gardner@canonical.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "roxana.nicolescu@canonical.com" <roxana.nicolescu@canonical.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "stefan.bader@canonical.com" <stefan.bader@canonical.com>,
- "nik.borisov@suse.com" <nik.borisov@suse.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "sashal@kernel.org" <sashal@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>
-References: <20231122170106.270266-1-jpiotrowski@linux.microsoft.com>
- <20231123135846.pakk44rqbbi7njmb@box.shutemov.name>
- <9f550947-9d13-479c-90c4-2e3f7674afee@linux.microsoft.com>
- <20231124104337.gjfyasjmo5pp666l@box.shutemov.name>
- <58c82110-45b2-4e23-9a82-90e1f3fa43c2@linux.microsoft.com>
- <20231124133358.sdhomfs25seki3lg@box.shutemov.name>
- <6f27610f-afc4-4356-b297-13253bb0a232@linux.microsoft.com>
- <ffcc8c550d5ba6122b201d8170b42ee581826d47.camel@intel.com>
- <02e079e8-cc72-49d8-9191-8a753526eb18@linux.microsoft.com>
- <7b725783f1f9102c176737667bfec12f75099961.camel@intel.com>
- <fa86fbd1-998b-456b-971f-a5a94daeca28@linux.microsoft.com>
- <DM8PR11MB57503924C64E1C79FB585496E78BA@DM8PR11MB5750.namprd11.prod.outlook.com>
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-In-Reply-To: <DM8PR11MB57503924C64E1C79FB585496E78BA@DM8PR11MB5750.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1702029754-6520-1-git-send-email-schakrabarti@linux.microsoft.com>
 
-On 07/12/2023 18:36, Reshetova, Elena wrote:
->>>> The TDVMCALLs are related to the I/O path (networking/block io) into the L2
->> guest, and
->>>> so they intentionally go straight to L0 and are never injected to L1. L1 is not
->>>> involved in that path at all.
->>>>
->>>> Using something different than TDVMCALLs here would lead to additional
->> traps to L1 and
->>>> just add latency/complexity.
->>>
->>> Looks by default you assume we should use TDX partitioning as "paravisor L1" +
->>> "L0 device I/O emulation".
->>>
->>
->> I don't actually want to impose this model on anyone, but this is the one that
->> could use some refactoring. I intend to rework these patches to not use a single
->> "td_partitioning_active" for decisions.
->>
->>> I think we are lacking background of this usage model and how it works.  For
->>> instance, typically L2 is created by L1, and L1 is responsible for L2's device
->>> I/O emulation.  I don't quite understand how could L0 emulate L2's device I/O?
->>>
->>> Can you provide more information?
->>
->> Let's differentiate between fast and slow I/O. The whole point of the paravisor in
->> L1 is to provide device emulation for slow I/O: TPM, RTC, NVRAM, IO-APIC, serial
->> ports.
+On Fri, Dec 08, 2023 at 02:02:34AM -0800, Souradeep Chakrabarti wrote:
+> Existing MANA design assigns IRQ to every CPU, including sibling
+> hyper-threads. This may cause multiple IRQs to be active simultaneously
+> in the same core and may reduce the network performance with RSS.
+
+Can you add an IRQ distribution diagram to compare before/after
+behavior, similarly to what I did in the other email?
+
+> Improve the performance by assigning IRQ to non sibling CPUs in local
+> NUMA node. The performance improvement we are getting using ntttcp with
+> following patch is around 15 percent with existing design and approximately
+> 11 percent, when trying to assign one IRQ in each core across NUMA nodes,
+> if enough cores are present.
+
+How did you measure it? In the other email you said you used perf, can
+you show your procedure in details?
+
+> Suggested-by: Yury Norov <yury.norov@gmali.com>
+> Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+> ---
+
+[...]
+
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 92 +++++++++++++++++--
+>  1 file changed, 83 insertions(+), 9 deletions(-)
 > 
-> Out of my curiosity and not really related to this discussion, but could you please
-> elaborate on RTC part here? Do you actually host secure time in L1 to be provided
-> to the L2? 
-> 
-> Best Regards,
-> Elena.
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 6367de0c2c2e..18e8908c5d29 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -1243,15 +1243,56 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+>  	r->size = 0;
+>  }
+>  
+> +static int irq_setup(int *irqs, int nvec, int start_numa_node)
+> +{
+> +	int w, cnt, cpu, err = 0, i = 0;
+> +	int next_node = start_numa_node;
 
-Hi Elena,
+What for this?
 
-I think this RTC is more for compatibility and to give the guest a way to initialize
-the system clock. This could potentially be a secure time source in the future but it
-isn't right now. This is what the guest sees right now (might need some more
-enlightenment):
+> +	const struct cpumask *next, *prev = cpu_none_mask;
+> +	cpumask_var_t curr, cpus;
+> +
+> +	if (!zalloc_cpumask_var(&curr, GFP_KERNEL)) {
+> +		err = -ENOMEM;
+> +		return err;
+> +	}
+> +	if (!zalloc_cpumask_var(&cpus, GFP_KERNEL)) {
 
-# dmesg | grep -E -i 'clock|rtc|tsc'
-[    0.000000] clocksource: hyperv_clocksource_tsc_page: mask: 0xffffffffffffffff max_cycles: 0x24e6a1710, max_idle_ns: 440795202120 ns
-[    0.000001] tsc: Marking TSC unstable due to running on Hyper-V
-[    0.003621] tsc: Detected 2100.000 MHz processor
-[    0.411943] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
-[    0.887459] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
-[    0.895842] PM: RTC time: 16:31:58, date: 2023-12-07
-[    1.043431] PTP clock support registered
-[    1.096563] clocksource: Switched to clocksource hyperv_clocksource_tsc_page
-[    1.384341] rtc_cmos 00:02: registered as rtc0
-[    1.387469] rtc_cmos 00:02: setting system clock to 2023-12-07T16:31:58 UTC (1701966718)
-[    1.392529] rtc_cmos 00:02: alarms up to one day, 114 bytes nvram
-[    1.484243] sched_clock: Marking stable (1449873200, 33603000)->(3264982600, -1781506400)
+                free(curr);
 
-Jeremi
+> +		err = -ENOMEM;
+> +		return err;
+> +	}
+> +
+> +	rcu_read_lock();
+> +	for_each_numa_hop_mask(next, next_node) {
+> +		cpumask_andnot(curr, next, prev);
+> +		for (w = cpumask_weight(curr), cnt = 0; cnt < w; ) {
+> +			cpumask_copy(cpus, curr);
+> +			for_each_cpu(cpu, cpus) {
+> +				irq_set_affinity_and_hint(irqs[i], topology_sibling_cpumask(cpu));
+> +				if (++i == nvec)
+> +					goto done;
+
+Think what if you're passed with irq_setup(NULL, 0, 0).
+That's why I suggested to place this check at the beginning.
+
+
+> +				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
+> +				++cnt;
+> +			}
+> +		}
+> +		prev = next;
+> +	}
+> +done:
+> +	rcu_read_unlock();
+> +	free_cpumask_var(curr);
+> +	free_cpumask_var(cpus);
+> +	return err;
+> +}
+> +
+>  static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  {
+> -	unsigned int max_queues_per_port = num_online_cpus();
+>  	struct gdma_context *gc = pci_get_drvdata(pdev);
+> +	unsigned int max_queues_per_port;
+>  	struct gdma_irq_context *gic;
+>  	unsigned int max_irqs, cpu;
+> -	int nvec, irq;
+> +	int start_irq_index = 1;
+> +	int nvec, *irqs, irq;
+>  	int err, i = 0, j;
+>  
+> +	cpus_read_lock();
+> +	max_queues_per_port = num_online_cpus();
+>  	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
+>  		max_queues_per_port = MANA_MAX_NUM_QUEUES;
+>  
+> @@ -1261,6 +1302,14 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
+>  	if (nvec < 0)
+>  		return nvec;
+> +	if (nvec <= num_online_cpus())
+> +		start_irq_index = 0;
+> +
+> +	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
+> +	if (!irqs) {
+> +		err = -ENOMEM;
+> +		goto free_irq_vector;
+> +	}
+>  
+>  	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
+>  				   GFP_KERNEL);
+> @@ -1287,21 +1336,44 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  			goto free_irq;
+>  		}
+>  
+> -		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+> -		if (err)
+> -			goto free_irq;
+> -
+> -		cpu = cpumask_local_spread(i, gc->numa_node);
+> -		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+> +		if (!i) {
+> +			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+> +			if (err)
+> +				goto free_irq;
+> +
+> +			/* If number of IRQ is one extra than number of online CPUs,
+> +			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
+> +			 * same CPU.
+> +			 * Else we will use different CPUs for IRQ0 and IRQ1.
+> +			 * Also we are using cpumask_local_spread instead of
+> +			 * cpumask_first for the node, because the node can be
+> +			 * mem only.
+> +			 */
+> +			if (start_irq_index) {
+> +				cpu = cpumask_local_spread(i, gc->numa_node);
+
+I already mentioned that: if i == 0, you don't need to spread, just
+pick 1st cpu from node.
+
+> +				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+> +			} else {
+> +				irqs[start_irq_index] = irq;
+> +			}
+> +		} else {
+> +			irqs[i - start_irq_index] = irq;
+> +			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
+> +					  gic->name, gic);
+> +			if (err)
+> +				goto free_irq;
+> +		}
+>  	}
+>  
+> +	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
+> +	if (err)
+> +		goto free_irq;
+>  	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
+>  	if (err)
+>  		goto free_irq;
+>  
+>  	gc->max_num_msix = nvec;
+>  	gc->num_msix_usable = nvec;
+> -
+> +	cpus_read_unlock();
+>  	return 0;
+>  
+>  free_irq:
+> @@ -1314,8 +1386,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  	}
+>  
+>  	kfree(gc->irq_contexts);
+> +	kfree(irqs);
+>  	gc->irq_contexts = NULL;
+>  free_irq_vector:
+> +	cpus_read_unlock();
+>  	pci_free_irq_vectors(pdev);
+>  	return err;
+>  }
+> -- 
+> 2.34.1
 
