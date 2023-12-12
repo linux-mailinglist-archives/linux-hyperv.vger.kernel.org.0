@@ -1,117 +1,115 @@
-Return-Path: <linux-hyperv+bounces-1316-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1317-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1B7280E247
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Dec 2023 03:50:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B821380E256
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Dec 2023 03:52:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2F541C21263
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Dec 2023 02:50:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BA0A2831D3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Dec 2023 02:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 956364427;
-	Tue, 12 Dec 2023 02:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B3A646B5;
+	Tue, 12 Dec 2023 02:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YV31SK3W"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BUi5cO8a"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from MW2PR02CU001.outbound.protection.outlook.com (mail-westus2azon11022023.outbound.protection.outlook.com [52.101.48.23])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB633B0;
-	Mon, 11 Dec 2023 18:50:21 -0800 (PST)
+Received: from MW2PR02CU002.outbound.protection.outlook.com (mail-westus2azon11023024.outbound.protection.outlook.com [52.101.49.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E29BC;
+	Mon, 11 Dec 2023 18:51:54 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N1w5x/glCgFuU3G4H3fI+RO0/u2bnTflfKZnwZ4gy2fm3MvdvXkQOXVNEc458kcnW49dGX/p3Y8tdF77URHPrY3gjOSPeVezb61Klcg1UCbv59XnPMMPSD5vYDe8R8OzvdRWc1h1Jclbme+P4I+HFwxfgew3eOAVqzpb9dD+sr2pmq0JTauiVExG6CGy2j6fdNOyjm0I+5GRE+M2wGJhQ/TnbEsP4BODA/f8ovy0tDFuyPIqE1wuDcJLOv8UZJDnnBmZp5xJaZhuFgUjGlzWbC/oZmW0Zz4BrrBAbmnPjUmr2fTKixe9qzepjCfK04VHZ8SOpztDxgyM2GqHI7l/Gg==
+ b=G+BaWTcmtkE+rsBEKMNUUeESplLvOUVhsKZCDXpgHw5mM0i/9JztC7cAVsn7zd+dzca6ArDVHNdKcn7du4u3iTmOzRTK9pd/4TBEfwnkz8lUyAI4H9mBQx7Qjlyn2DCetN5zzmQImOxTofwBeJ3C3C/I9R0xV5eQtB4SGPlPmiJqepprREw/DYtTGM9uId+sXLdlxHavFNE/FRKyWbn4JvTDgktb3+ccBLBei+IveqXxBkehPJr6yAnvhQrIVqRVWKPG9fwZT1K0Xq8tdTddMRzNeAqdnKm04qgb7GlZuwXbUtMj5s8VxxvftLO9QMSXcnsmobXvSjG81Sg0H2x9Yg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E/6z0dUJP6BReJvjn7W6br8Y7jkZctaLSUdS6rJQ6U4=;
- b=ODvLULexVB88nIm60xjJrh3Xmrjx7swf3OMeQh0TU95PVKEMoAA3pmXV7R+904INZ+StaTzX1IK4V2Ja99SE2HPAJVLaXkza0RcZ3/bbrRlfW0K0qRqfZ/Dqw7GvsBvMcM8EOsjCi11hPnztF76+p/zLKZ9LBPU1bXTC0yIs9kcyEHqXUeTg0jBVAIdl3ZfzuG8kN3mKE1p4Oh1RDfDxsgN9mXq95VtqE4lvtHjJvFCfQBsPFqwl54m0Ci0s39kw0+2fGe7lush1gcFdsH52Yj8mmNR8HM4+Pf/vjYUrYMgI7BfYqtKtj+7K4QBfUFkfVj3dXQBENQ1v2vyPdouMxQ==
+ bh=vAESQqfJjCCsMW+egipmd/FsawbANen4roQpbbqUUdQ=;
+ b=n/k46yRXcQl9I/x9xVUZaJGsVXPbgLnBlJJNwToW1L9PHpqG5eZQYonotOzr0QqEeGkaxpxcpOimT3DiUwYUOiB4d05GwQd1khlyNqIvojTqyoyLBKwNUlSb9FSI1oh91v2UIeR1pdAw/JNfMj6zroBJuK6JeKtjvfSwG8Os7L1oV5IfhqUiY/bpACIdE/+mtKY+cXorNttXCkvWYhLdmbBm1LI+LzPQ70zxKdVW0sINM+Mgh6/0MSBEA1LMlmQJ0R2I6nYTRO5DGUcTTI/JazL0oCordPCeQ+zYWEoWSaVPytCZ9WWdxImy9UAYJbXArhLN8MHwl/WePaAcPD0b2w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/6z0dUJP6BReJvjn7W6br8Y7jkZctaLSUdS6rJQ6U4=;
- b=YV31SK3WM3m7kYm9MFMBKAuxk/fRL6ULOeLhw2YzdKpWFdLJCbQGcR6OzNOCddY7VbvJfDY2aHgml7RPemesrDRmfMZpYEaWTw+fm+wMNyEiBPcd4V7nGFU8NLDC7/NSS/04U0g6J2B9ATMlBI+9i+N2DxvY/sapzO0zcxDh73I=
+ bh=vAESQqfJjCCsMW+egipmd/FsawbANen4roQpbbqUUdQ=;
+ b=BUi5cO8aGZiGW4YPa3H3PBS6YY556ErlbumWiupgDssApD/IfXBLFrKXHqF4g11cvyh50MbBHwdXQvJjuInzJvENb9uS3jr7qzRISUmX4EJeKbtge52Xk+t+xw1Ej8HnkJipXDSiVREc4VnOcXTV+L+LFwGVbuLKcZVsK8bCwL8=
 Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
- by SN3PEPF00013D7A.namprd21.prod.outlook.com (2603:10b6:82c:400:0:4:0:10)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.3; Tue, 12 Dec
- 2023 02:50:17 +0000
+ by SJ0PR21MB1917.namprd21.prod.outlook.com (2603:10b6:a03:292::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.3; Tue, 12 Dec
+ 2023 02:51:51 +0000
 Received: from PH7PR21MB3263.namprd21.prod.outlook.com
  ([fe80::3c1:f565:8d:2954]) by PH7PR21MB3263.namprd21.prod.outlook.com
  ([fe80::3c1:f565:8d:2954%7]) with mapi id 15.20.7113.001; Tue, 12 Dec 2023
- 02:50:17 +0000
+ 02:51:50 +0000
 From: Long Li <longli@microsoft.com>
-To: Simon Horman <horms@kernel.org>, "longli@linuxonhyperv.com"
-	<longli@linuxonhyperv.com>
-CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Ajay
- Sharma <sharmaajay@microsoft.com>, Dexuan Cui <decui@microsoft.com>, KY
- Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
- Liu <wei.liu@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v2 3/3] RDMA/mana_ib: Add CQ interrupt support for RAW QP
-Thread-Topic: [Patch v2 3/3] RDMA/mana_ib: Add CQ interrupt support for RAW QP
-Thread-Index: AQHaJwYcW9RdlsZ8pkm66KZmXy298bChPbQAgAO89JA=
-Date: Tue, 12 Dec 2023 02:50:17 +0000
+To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
+	<kotaranov@microsoft.com>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"kuba@kernel.org" <kuba@kernel.org>, "leon@kernel.org" <leon@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, "edumazet@google.com"
+	<edumazet@google.com>, "cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "davem@davemloft.net"
+	<davem@davemloft.net>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: RE: [PATCH] net: mana: add msix index sharing between EQs
+Thread-Topic: [PATCH] net: mana: add msix index sharing between EQs
+Thread-Index: AQHaKdMCOrqcIf7dokSaSgd+6ugcILCk+ExQ
+Date: Tue, 12 Dec 2023 02:51:50 +0000
 Message-ID:
- <PH7PR21MB32630ABF9D63B726FC64A78DCE8EA@PH7PR21MB3263.namprd21.prod.outlook.com>
-References: <1701730979-1148-1-git-send-email-longli@linuxonhyperv.com>
- <1701730979-1148-4-git-send-email-longli@linuxonhyperv.com>
- <20231209173352.GC5817@kernel.org>
-In-Reply-To: <20231209173352.GC5817@kernel.org>
+ <PH7PR21MB326385C45F555E92BD9170FDCE8EA@PH7PR21MB3263.namprd21.prod.outlook.com>
+References: <1702038905-29520-1-git-send-email-kotaranov@linux.microsoft.com>
+In-Reply-To: <1702038905-29520-1-git-send-email-kotaranov@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2b61052a-032c-4795-b71e-ccb313dd3a28;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-12-12T02:38:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=88f687c9-fa55-4e7f-96be-c953f0270b34;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-12-12T02:50:32Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|SN3PEPF00013D7A:EE_
-x-ms-office365-filtering-correlation-id: 3094112d-ed17-40c6-3ec8-08dbfabd12fd
+x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|SJ0PR21MB1917:EE_
+x-ms-office365-filtering-correlation-id: 2ddfd894-7deb-4246-5628-08dbfabd4a3c
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- HhLVK9PXvS5FQPKBPPGO7NwTaUSt5mLdXaXqZlulHavwygtJb/mvQRvGb6zfK9VsNJPw02GSzLMZgPw1Eht5lNTAds4h4SdMVIDy1Vf6hMbG534vfHj5xpE7GgGnuByLCPE4s1Gig4wNa9wPM/YRtd64masnVMAv6n9UfSi+4ZL2klwyt5yeJs1nLz7dHFkY9LRiDbsQK+K64zcqDaHRWDOt/H+acm8TlO5lTV9FGqnxAD6pPS5D5zxtktU3L+12/s/XCD8seffR89Y18PfvcIcywl0rRlfm6W6oS4rHLF5Hlf1gCY+/ocigyuNJZ4cSGFjowGFXfQBbo3RTTp/CdEUpbG3B95OBNdBEyX9iKfA44bu+bf3sRmDjFycXM8iwVQRK+9eMLF5XzeZ49sNJu6Ul3mmtqnR7B0j04YM970wMQefifDumVJWsVdAiD51DGFjqq3H/r0oAEoCbCjzYL3RvIDDdQHMbFhdaTQI/5m9qZkTmd5f0ai++6Fr30HtJBerSHQEKzyYcEhTo3P9AECoCHZjtLG8Dfig7eXqUTX4htgZh3SJ1Tshjn3KtiGDgtiM/eQsihUQxsJx+e1qhdC0D8CKEGx732NJ1qW5jAKBj8nkyJMuy5icZWcV0v2IkSwPBXCaH8BXqiqM+WOVteSTDU38gsgR3CHJl+ks88Ao=
+ /Gb4pn9FqJ9GiJyJcmBDtJfd1kEFuGeNGWo+4PhbbZvg84sl02SneSMNdsoBbYbzYcFgfOiUsA4xNTIjVosfvJGil3WzRL7AidZ3YOXGsy0gsHQCJbn2t4LbYhSDqkLDezqYv3pNL2S6ysSiOMiXyDwTrd+ULbvjlRz2qup5rR4UQMExczUIOJb2qwEoimGs2kA6viRHp8HIeA/wAPpVVOp8yUmLTYhYhs2HTg6ZVsBMdPIhe7W67p7xC6AJjABc36WjRV/n+pb8cjdq1FHJe5SMmQSWCFN5prDNbMLi6G8RnAO8dLZDTVHw1egtD6Ap2GaT5gYF5p5blMZrqp2nJt3QYIfXM42HBWaBy/vY/m2BXNYGQ8ag/Uxs6bqGEbPaU8zKFfoZkhwBdCFL4FDlct/C4VXplqxA2b3Du8CQ83RGKoMeLMsEoLy5zkdK3oMZpmJHJRn4o1gZ4wsaH9Gdh97TdsYfW04dq+lKg1rVOvQgdUqvhQB3ZGV1bjmMf2P4EZsmc/S96e24N9Cmm5ZrDBUS5H2rpqbFReA7dwotXQX8FSpRQmsW2COjAVlJHj7qcrl/qRdgyM3P5mW82NBPTVZHTWpzImBOwhsZl/AdWqhE6MukteCpfUymsoaARFQ3tZRtpBUP6DcPF4Ta7Ye5KApMXNnFwnnpylF7E7AU+UTabLjBO7AQmDwghgx2Dqqw
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(39860400002)(396003)(376002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(8990500004)(7416002)(2906002)(52536014)(86362001)(41300700001)(33656002)(5660300002)(38070700009)(122000001)(82950400001)(6506007)(9686003)(7696005)(55016003)(478600001)(10290500003)(82960400001)(71200400001)(38100700002)(26005)(66556008)(66446008)(64756008)(316002)(66946007)(110136005)(8676002)(54906003)(76116006)(4326008)(8936002)(66476007);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(136003)(376002)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(83380400001)(33656002)(41300700001)(38100700002)(122000001)(71200400001)(7416002)(82950400001)(10290500003)(2906002)(82960400001)(6506007)(478600001)(9686003)(5660300002)(38070700009)(7696005)(55016003)(26005)(110136005)(4326008)(86362001)(8676002)(8936002)(66556008)(66476007)(8990500004)(52536014)(64756008)(54906003)(76116006)(316002)(66446008)(921008)(66946007);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?49jwWsPwqygHerhc094DpKPdYtJ5hPofULtm9fLyz6qUZPQlcCfkSJC70gtQ?=
- =?us-ascii?Q?nt3pCJ394zdfs9kPiY73K6TKXKJDOTqlJEM2oze74PVhTPgRih3p2Ra/aqvv?=
- =?us-ascii?Q?caWv02tjCJ3yYP4CxpyLfaRurvJib9bilRN/d9qyXWkdFOXm8hKu1ct0Pa/r?=
- =?us-ascii?Q?uOrZ/Zl6G0c+Jl54WwbT48tMrr+t7pn+ZasJ9MOa0qnKDaN5SC2Qigxlysqi?=
- =?us-ascii?Q?5c4/duM6CBaymPajby5q/36PMpwS9eDxplcDfAPMDbaZsurbzXLtm+EoqpAQ?=
- =?us-ascii?Q?7olFMbzlyENwddnKoSj9WvLLGCeOI6ndzZfy5qx0pKjiIMrQ4BEg888se0/e?=
- =?us-ascii?Q?Mv/YbxQp5YUM0gDdW4BoYjy0M8BJk257Kn2KNc2nPzVkJ7SHwLRt4oBS7AXV?=
- =?us-ascii?Q?utL7mwTiqV3v+DBxp+occAClW662tOCq2uBJnelArj4UQWf7b6cPoZp/vsXV?=
- =?us-ascii?Q?zaIWDTYjpSe9d72pZa2yiWOgr0K1zfQncIQ+IabYttQvi8xbXUDgyuKxll0j?=
- =?us-ascii?Q?XJIqWN4Bj+4psUFAP+mnWmnYQPHCQMrwZ6l3vMjB77+kr4y0Ut69sm06hmyb?=
- =?us-ascii?Q?QS4COXGIfJNUUpI6cBAqCiEn8C5lGtcxL5LvUOLwwB/GxQ4KsYkSsOdzLJ/O?=
- =?us-ascii?Q?BMTuTXBwewMl4nr9pc/JynDuoyo3Umh3Z59uMuneivzAjs+pPSDHbSuVAAEo?=
- =?us-ascii?Q?PeCnbHZ/W6thYes3CRaltfLQcmHyTRSZWlwPi3jwIWuBfa5CMLG2ibnpcxSy?=
- =?us-ascii?Q?/BwVX/6Kv/HpL7zTmxo1GznMfV0uKcK8jaTLtowuSTWAsr/sAQ8TpLdHcKGx?=
- =?us-ascii?Q?2w3lLW+HyOeT6WFr/qzuT+OLxWebKRir+guVG+sD9CqU2oSCP322x3iSSH3m?=
- =?us-ascii?Q?/9Qu31rDkUyONCpbjf8rvl7ijfHVnjBQSExlX1+MmQoyuBF5BQvDQbAavogU?=
- =?us-ascii?Q?ixU4Z3WPocp/GOEB8tePO03YV4FwLEB0gxx/esKbI90g60heHBljPIyxsSrB?=
- =?us-ascii?Q?aB/0P5VuWUI9vKeHRWA713sXgKfuEVbgFkeDFPATcQ8AubqQoelyHI9i8h9o?=
- =?us-ascii?Q?l4Xo7J8gRMkTETcqFR9Q0dWJg1P5pVykP09+xRTCSA3V5Q+z7SfE8Us0iX5N?=
- =?us-ascii?Q?BjQcVCODzESfGdB7lnoW6Q5XdA29hWYm7/VBz0DA3XsuhLgN1R+9LOFa0yLv?=
- =?us-ascii?Q?xd93cSfuzduiXk5AnakvYr61QI+f6iCvq1T2lI/ohLDapf3x8PieOAVD4sOS?=
- =?us-ascii?Q?UIAhZsOr72ON4xiereeDBWIhYE5uytY1/Mw5b6HOeLfQUVuFQ2PMkrJqXgB5?=
- =?us-ascii?Q?OIH/mxD1UYwmpXA5G1uakp116uD38a/2T3Jx0FSmP5nosYKiREPu9arIk0eh?=
- =?us-ascii?Q?gq3DK88ndxsrGEM3wY/jCYHvpO0ipcMgErpyTLwKiEHn3RRSFU+HLjdHEqlq?=
- =?us-ascii?Q?qwdYQy++wBFz9bm1tWN3h+YKAIUEmvZgI48hLOS6XW9iNhpnucKmQ8F/dA6b?=
- =?us-ascii?Q?oqVUkesuIXMkNHaG03CQIXWfBCy+OcyiHGGYpfgC/uhbl2UiRPdHZ05Esxfw?=
- =?us-ascii?Q?h+9LZ40R3cizPiKDnfSxX3cUoVYOzex2ven/az11?=
+ =?us-ascii?Q?4ts9+Nmkzjsl/dLplFjNYnxNafbL+FPdH47BZ1GgsNCp87vHVeSuCTftcAbw?=
+ =?us-ascii?Q?vVflaTINvxG68ZFI2Vr149fXpPFv5goiT4iKDhlCAFH6tsRKPlIaGkbynVmp?=
+ =?us-ascii?Q?0L+nV7PRoq2soI+tkYf61SYWTBTIh6XEb9DWQeRpK9Nyy1z7+Lg8dKv039pE?=
+ =?us-ascii?Q?KrVojMiVvWNzcjS7pxtyRJFI2XRGZo3sjqkm+Kf0wyAzZXZsEMAFgne5otbT?=
+ =?us-ascii?Q?e68aUXPinHtNbvJohRzc2SAZy4Bw0lN+KN8eB3wvmo3OhFixrdcYv8bXsX9n?=
+ =?us-ascii?Q?Sk7PyRj6z0tvy1OMPprX8VbYAoypQ/MVHXa9Ch1uhuAYmjsXyNRwJEtBAwfz?=
+ =?us-ascii?Q?29fMqDK5U2SXCcykZ73FXjEv1qLv9/+Rt8gUodKhjGf3VRHg9rqytMi12YMs?=
+ =?us-ascii?Q?zUXlz6RB78vav+bNYx/1nIGgVC+kRw2wPHM6kCnOgILyfkLZtc+g+Y+UNsgP?=
+ =?us-ascii?Q?nOzCJGcFVjK+RPM9+4qBUNMCouYO5HXobdSXfYswVD3JVb16MBhneHaP/RJB?=
+ =?us-ascii?Q?0kNtpT5RILZxa0KNLNphF9JlrXbIxDgKdIR0dcGtr0n9RdgIVA8Xqf9VEMTS?=
+ =?us-ascii?Q?ptl4h8JmfMkMo8oruMHLQ5Nxo1rn5M17Iw1JlHPHQ8vkiMqbUReRiu2MtUnx?=
+ =?us-ascii?Q?3Nhkzwdo+J7bVVcU2Rne2MXqkUFR5CitZvGSqcqpmYxKuc54iV1g75/W/frH?=
+ =?us-ascii?Q?VNond9+ZqrJZILTcuA4r2CMZfBWg+N1pvYPKdKIVonuwUpFVPEYFRHpbMYyy?=
+ =?us-ascii?Q?CGYw3iZDQvX/El/VTMnTAuTiGRpZvLVnRw+34+qqEiMkqjRzXioaRXGuKetP?=
+ =?us-ascii?Q?Ea5dV5pX2URMWZCMrvGpO/y0LGd8+RTVgKgjQVFUXhnK62v0SxL1dZXw+ofm?=
+ =?us-ascii?Q?8jy26y2ihbFUEDFziiUGM8LscerCG1QRh+HXi0jzL92lv9TBv3hqsINwmheC?=
+ =?us-ascii?Q?AqASsbXANbOYIt02m05hKqP4FVSTSJ/nOPw332cwy0XmnGM7aaLGPWt37nD0?=
+ =?us-ascii?Q?oKRBT2Heda0n5lNP1eLo/jGA7QjL345YNs47yXuFSZf9Q4n9mEQxOsNM8Z2G?=
+ =?us-ascii?Q?t80zn674mvoEdenrJDkpo5w8Qv4mB0x3PfoiZg8os7kGPS7Je8nkEolJcp46?=
+ =?us-ascii?Q?0oJuKk1bTgvgu330Wl8L05KdNVtqDfYdZyVcPmtcRv9rs9xZ5jkx5xWcpRaI?=
+ =?us-ascii?Q?cdSg1j2c0UVoLp7891Oxn53tAxHnvYjDwsf1jGPdCmtyTp3yOs1jwztJgixt?=
+ =?us-ascii?Q?9xYCldJK1JWeNBugxCYJfyXgji/EohqlFjLVtNBcIXmQagXjxi4XNDDZce0S?=
+ =?us-ascii?Q?kOY1wnqyBpM4ptkHYulKC69yRIaRlgnPlZWnvnyMG8r1oEwoI9qmh8Q4sK2J?=
+ =?us-ascii?Q?iP4foVtETmPk4AojcT3guyKMgGWTfxhgUQb9UDB+V78GwsP/DP6j7C9yhYzk?=
+ =?us-ascii?Q?x0FjMmDTeA1jq2H8bS/O5vcro2cPubkeu9rg4k2ZsF5u6mgNqhFBwIDRvB4N?=
+ =?us-ascii?Q?5s4iWbSOI/38Iaa/A6ZSLOM4NeohjfT+F6b0vit4ZvTFsEqW/xIkKxsJxFhn?=
+ =?us-ascii?Q?+vcjhAgEBmKcuUbITxJE0c7iixDfZ0b8QitO0k6h?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -123,159 +121,157 @@ MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3094112d-ed17-40c6-3ec8-08dbfabd12fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2023 02:50:17.6824
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ddfd894-7deb-4246-5628-08dbfabd4a3c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2023 02:51:50.4174
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lqbJbMLAe971PncbxVkaLKU2S204gd/SmrchKvXp8Z26yUGU0F+1WRNU9y7mpUkoOkGY4q5+HrYdqLegRrAOfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN3PEPF00013D7A
+X-MS-Exchange-CrossTenant-userprincipalname: V3bfxmYpWM6gRCJyX8MPIAEjHUx6SUwUnushPPQD6TkrQd6ZH2AaNuVpTe7Yif3uJUZUx8GEUFw+QXTg5oogvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1917
 
-> Hi Long Li,
+> @@ -502,12 +512,19 @@ static void mana_gd_deregiser_irq(struct gdma_queue
+> *queue)
+>  	if (WARN_ON(msix_index >=3D gc->num_msix_usable))
+>  		return;
 >=20
-> some minor feedback from my side.
->=20
-> ...
->=20
-> > diff --git a/drivers/infiniband/hw/mana/qp.c
-> > b/drivers/infiniband/hw/mana/qp.c index 4667b18ec1dd..186d9829bb93
-> > 100644
-> > --- a/drivers/infiniband/hw/mana/qp.c
-> > +++ b/drivers/infiniband/hw/mana/qp.c
-> > @@ -99,25 +99,34 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp=
-,
-> struct ib_pd *pd,
-> >  	struct mana_ib_qp *qp =3D container_of(ibqp, struct mana_ib_qp, ibqp)=
-;
-> >  	struct mana_ib_dev *mdev =3D
-> >  		container_of(pd->device, struct mana_ib_dev, ib_dev);
-> > +	struct ib_ucontext *ib_ucontext =3D pd->uobject->context;
-> >  	struct ib_rwq_ind_table *ind_tbl =3D attr->rwq_ind_tbl;
-> >  	struct mana_ib_create_qp_rss_resp resp =3D {};
-> >  	struct mana_ib_create_qp_rss ucmd =3D {};
-> > +	struct mana_ib_ucontext *mana_ucontext;
-> > +	struct gdma_queue **gdma_cq_allocated;
-> >  	mana_handle_t *mana_ind_table;
-> >  	struct mana_port_context *mpc;
-> > +	struct gdma_queue *gdma_cq;
-> >  	unsigned int ind_tbl_size;
-> >  	struct mana_context *mc;
-> >  	struct net_device *ndev;
-> > +	struct gdma_context *gc;
-> >  	struct mana_ib_cq *cq;
-> >  	struct mana_ib_wq *wq;
-> >  	struct gdma_dev *gd;
-> > +	struct mana_eq *eq;
-> >  	struct ib_cq *ibcq;
-> >  	struct ib_wq *ibwq;
-> >  	int i =3D 0;
-> >  	u32 port;
-> >  	int ret;
-> >
-> > -	gd =3D &mdev->gdma_dev->gdma_context->mana;
-> > +	gc =3D mdev->gdma_dev->gdma_context;
-> > +	gd =3D &gc->mana;
-> >  	mc =3D gd->driver_data;
-> > +	mana_ucontext =3D
-> > +		container_of(ib_ucontext, struct mana_ib_ucontext, ibucontext);
-> >
-> >  	if (!udata || udata->inlen < sizeof(ucmd))
-> >  		return -EINVAL;
->=20
-> nit: mana_ucontext appears to be set but unused.
+> -	gic =3D &gc->irq_contexts[msix_index];
+> -	gic->handler =3D NULL;
+> -	gic->arg =3D NULL;
+> -
+>  	spin_lock_irqsave(&r->lock, flags);
+> -	bitmap_clear(r->map, msix_index, 1);
+> +	gic =3D &gc->irq_contexts[msix_index];
+> +	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
+> +		if (queue =3D=3D eq) {
+> +			list_del_rcu(&eq->entry);
+> +			synchronize_rcu();
 
-Thank you, will fix this in v3.
-
->=20
->      Flagged by W=3D1 builds.
->=20
-> > @@ -179,6 +188,13 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibq=
-p,
-> struct ib_pd *pd,
-> >  		goto fail;
-> >  	}
-> >
-> > +	gdma_cq_allocated =3D kcalloc(ind_tbl_size, sizeof(*gdma_cq_allocated=
-),
-> > +				    GFP_KERNEL);
-> > +	if (!gdma_cq_allocated) {
-> > +		ret =3D -ENOMEM;
-> > +		goto fail;
-> > +	}
-> > +
-> >  	qp->port =3D port;
-> >
-> >  	for (i =3D 0; i < ind_tbl_size; i++) {
->=20
-> ...
->=20
-> > @@ -219,6 +236,21 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibq=
-p,
-> struct ib_pd *pd,
-> >  		resp.entries[i].wqid =3D wq->id;
-> >
-> >  		mana_ind_table[i] =3D wq->rx_object;
-> > +
-> > +		/* Create CQ table entry */
-> > +		WARN_ON(gc->cq_table[cq->id]);
-> > +		gdma_cq =3D kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
-> > +		if (!gdma_cq) {
-> > +			ret =3D -ENOMEM;
-> > +			goto fail;
-> > +		}
-> > +		gdma_cq_allocated[i] =3D gdma_cq;
-> > +
-> > +		gdma_cq->cq.context =3D cq;
-> > +		gdma_cq->type =3D GDMA_CQ;
-> > +		gdma_cq->cq.callback =3D mana_ib_cq_handler;
-> > +		gdma_cq->id =3D cq->id;
-> > +		gc->cq_table[cq->id] =3D gdma_cq;
-> >  	}
-> >  	resp.num_entries =3D i;
-> >
-> > @@ -238,6 +270,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp=
-,
-> struct ib_pd *pd,
-> >  		goto fail;
-> >  	}
-> >
-> > +	kfree(gdma_cq_allocated);
-> >  	kfree(mana_ind_table);
-> >
-> >  	return 0;
-> > @@ -247,8 +280,15 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibq=
-p,
-> struct ib_pd *pd,
-> >  		ibwq =3D ind_tbl->ind_tbl[i];
-> >  		wq =3D container_of(ibwq, struct mana_ib_wq, ibwq);
-> >  		mana_destroy_wq_obj(mpc, GDMA_RQ, wq->rx_object);
-> > +
-> > +		if (gdma_cq_allocated[i]) {
->=20
-> nit: It is not clear to me that condition can ever be false.
->      If we get here then gdma_cq_allocated[i] is a valid pointer.
-
-I'm removing this check.=20
-
-I spotted another bug here: mana_create_wq_obj() could fail and break the l=
-oop early. I will do a proper cleanup and send v3.
-
-Thanks,
+The usage of RCU is questionable in an atomic context. This code needs to b=
+e tested with multiple EQs.
 
 Long
 
+> +			break;
+> +		}
+> +	}
+> +	if (list_empty(&gic->eq_list)) {
+> +		gic->handler =3D NULL;
+> +		bitmap_clear(r->map, msix_index, 1);
+> +	}
+>  	spin_unlock_irqrestore(&r->lock, flags);
 >=20
-> > +			gc->cq_table[gdma_cq_allocated[i]->id] =3D
-> > +				NULL;
-> > +			kfree(gdma_cq_allocated[i]);
-> > +		}
-> >  	}
-> >
-> > +	kfree(gdma_cq_allocated);
-> >  	kfree(mana_ind_table);
-> >
-> >  	return ret;
+>  	queue->eq.msix_index =3D INVALID_PCI_MSIX_INDEX; @@ -587,7 +604,8
+> @@ static int mana_gd_create_eq(struct gdma_dev *gd,
+>  	u32 log2_num_entries;
+>  	int err;
 >=20
-> ...
+> -	queue->eq.msix_index =3D INVALID_PCI_MSIX_INDEX;
+> +	queue->eq.msix_index =3D spec->eq.msix_index;
+> +	queue->id =3D INVALID_QUEUE_ID;
+>=20
+>  	log2_num_entries =3D ilog2(queue->queue_size / GDMA_EQE_SIZE);
+>=20
+> @@ -819,6 +837,7 @@ free_q:
+>  	kfree(queue);
+>  	return err;
+>  }
+> +EXPORT_SYMBOL_NS(mana_gd_create_mana_eq, NET_MANA);
+>=20
+>  int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
+>  			      const struct gdma_queue_spec *spec, @@ -895,6
+> +914,7 @@ void mana_gd_destroy_queue(struct gdma_context *gc, struct
+> gdma_queue *queue)
+>  	mana_gd_free_memory(gmi);
+>  	kfree(queue);
+>  }
+> +EXPORT_SYMBOL_NS(mana_gd_destroy_queue, NET_MANA);
+>=20
+>  int mana_gd_verify_vf_version(struct pci_dev *pdev)  { @@ -1217,9 +1237,=
+14
+> @@ int mana_gd_poll_cq(struct gdma_queue *cq, struct gdma_comp *comp, int
+> num_cqe)  static irqreturn_t mana_gd_intr(int irq, void *arg)  {
+>  	struct gdma_irq_context *gic =3D arg;
+> +	struct list_head *eq_list =3D &gic->eq_list;
+> +	struct gdma_queue *eq;
+>=20
+> -	if (gic->handler)
+> -		gic->handler(gic->arg);
+> +	if (gic->handler) {
+> +		list_for_each_entry_rcu(eq, eq_list, entry) {
+> +			gic->handler(eq);
+> +		}
+> +	}
+>=20
+>  	return IRQ_HANDLED;
+>  }
+> @@ -1272,7 +1297,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+>  	for (i =3D 0; i < nvec; i++) {
+>  		gic =3D &gc->irq_contexts[i];
+>  		gic->handler =3D NULL;
+> -		gic->arg =3D NULL;
+> +		INIT_LIST_HEAD(&gic->eq_list);
+>=20
+>  		if (!i)
+>  			snprintf(gic->name, MANA_IRQ_NAME_SZ,
+> "mana_hwc@pci:%s", diff --git
+> a/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> index 9d1cd3b..0a5fc39 100644
+> --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> @@ -300,6 +300,7 @@ static int mana_hwc_create_gdma_eq(struct
+> hw_channel_context *hwc,
+>  	spec.eq.context =3D ctx;
+>  	spec.eq.callback =3D cb;
+>  	spec.eq.log2_throttle_limit =3D
+> DEFAULT_LOG2_THROTTLING_FOR_ERROR_EQ;
+> +	spec.eq.msix_index =3D INVALID_PCI_MSIX_INDEX;
+>=20
+>  	return mana_gd_create_hwc_queue(hwc->gdma_dev, &spec, queue);  }
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index fc3d290..8718c04 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1242,6 +1242,7 @@ static int mana_create_eq(struct mana_context *ac)
+>  	spec.eq.callback =3D NULL;
+>  	spec.eq.context =3D ac->eqs;
+>  	spec.eq.log2_throttle_limit =3D LOG2_EQ_THROTTLE;
+> +	spec.eq.msix_index =3D INVALID_PCI_MSIX_INDEX;
+>=20
+>  	for (i =3D 0; i < gc->max_num_queues; i++) {
+>  		err =3D mana_gd_create_mana_eq(gd, &spec, &ac->eqs[i].eq); diff
+> --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h index
+> 88b6ef7..8d6569d 100644
+> --- a/include/net/mana/gdma.h
+> +++ b/include/net/mana/gdma.h
+> @@ -293,6 +293,7 @@ struct gdma_queue {
+>=20
+>  	u32 head;
+>  	u32 tail;
+> +	struct list_head entry;
+>=20
+>  	/* Extra fields specific to EQ/CQ. */
+>  	union {
+> @@ -328,6 +329,7 @@ struct gdma_queue_spec {
+>  			void *context;
+>=20
+>  			unsigned long log2_throttle_limit;
+> +			unsigned int msix_index;
+>  		} eq;
+>=20
+>  		struct {
+> @@ -344,7 +346,7 @@ struct gdma_queue_spec {
+>=20
+>  struct gdma_irq_context {
+>  	void (*handler)(void *arg);
+> -	void *arg;
+> +	struct list_head eq_list;
+>  	char name[MANA_IRQ_NAME_SZ];
+>  };
+>=20
+> --
+> 2.43.0
+
 
