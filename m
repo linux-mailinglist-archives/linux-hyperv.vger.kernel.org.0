@@ -1,62 +1,62 @@
-Return-Path: <linux-hyperv+bounces-1347-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1348-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A41D5816268
-	for <lists+linux-hyperv@lfdr.de>; Sun, 17 Dec 2023 22:32:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 404AD81626C
+	for <lists+linux-hyperv@lfdr.de>; Sun, 17 Dec 2023 22:33:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1680CB2147F
-	for <lists+linux-hyperv@lfdr.de>; Sun, 17 Dec 2023 21:32:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA89E282509
+	for <lists+linux-hyperv@lfdr.de>; Sun, 17 Dec 2023 21:33:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DA8C49F6A;
-	Sun, 17 Dec 2023 21:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D58B4A9A2;
+	Sun, 17 Dec 2023 21:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/agvUpw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgIDyJup"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1683D48CE6;
-	Sun, 17 Dec 2023 21:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A532495FE;
+	Sun, 17 Dec 2023 21:32:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5e4e05eedf6so8023907b3.1;
-        Sun, 17 Dec 2023 13:32:19 -0800 (PST)
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4274fd310c2so15778991cf.3;
+        Sun, 17 Dec 2023 13:32:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702848739; x=1703453539; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1702848740; x=1703453540; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=auyx6SZcEGnvEGrHnzOQrDxyNrYMhwUgQ6pbJgj8x3Y=;
-        b=a/agvUpwupImSz1M5QAWqzrFv1ZTUftRc+9WNFLUrhy6mryAwumxQVEiuXztE3evU+
-         GeHlA902uOvQMMJMo2bT/blEYxBtQ52oGbgPY3bTWAcYRllAxsEX8D7rb+wKkZoX5gTn
-         7MGkT3Bk7Q8wuslIELajtArk8L02knN65zr9jGN8RodwffqK9TPwSB9z5sOx4+00B5u2
-         vWwO9ZNXRYX59yoXvvogwFbkbowqu4W7G/Zij+4ATUqfMRgADgVePop0jerdOmgAqBFF
-         bWOnq3ZbYh+wnUjcG7654GX5HCxW9oNkJqiXygT/1v57tUN7lYX5L0ZnKiJXS2DpPIHK
-         LRvw==
+        bh=wpzqsz/EY8Rq2EqPBcLuvwzIwmdW6wTukR95VYfZ1CM=;
+        b=IgIDyJupFClZoNgCuvM1/sUlMo6Cw+hjm7qrbaiZkto2eW3R6F+RUzay1Ql7ldABYp
+         ExVMfZSPIk49fOFoi6NceX2hxbioqcq0bMmo2RpsouhEgTxYdXElaGFlDZoVj5rOq13d
+         Qbgp2zP0wqQWGAXXJCeF8rb9+rrA4Jyua4DgVNRHtpQh5TsJRTOdFLi1VRnyjq5J5rOk
+         QFR1vmvNBGwRHeYSJ8M8WhLOgxehJlBYo1B8XjkKthPDhwPgUd04+ECtff5QU6LTb9YB
+         wZA0JSX/hbWw+Ova5chG1Ln3lVWg+dYihPQb5K5UDWLhRxQJ7STEHAhN2Mr1sh730cjj
+         cQgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702848739; x=1703453539;
+        d=1e100.net; s=20230601; t=1702848740; x=1703453540;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=auyx6SZcEGnvEGrHnzOQrDxyNrYMhwUgQ6pbJgj8x3Y=;
-        b=i6IubGn2kfDRIeW5hK6f50qKCyG3Wm/DqItUk3cyDotZQYoOllAUGPPC9lxYr8+rhD
-         VSv3BCoVhWm5Zf0aJt+/JgyDudMByNb9Ki6tL/oKwVzvcPpseEXcVVrNO/vRIG/mW7+g
-         4NU9n3GS37kwwQ/UCivD8HE8d2miyKGXD69y5WVpVz+rrM/c1FGeSSlEWrzz7F0DveuK
-         CoaxZaZ0Vrl9S8p+WXe3iRB4xztW+qb+HpBepmiXiVWqa1KXVh8Cas+9coXfdBlt9SGz
-         /W4WBtiFQep8IVJisME6ObF0UjJIvWG5+jj/cB32Ot589/HyYuPW3OBGFm1gleYl8x6a
-         s+AA==
-X-Gm-Message-State: AOJu0Ywu9HL1j59OW9gzVBxt7N5cliHF1ax8IsMGUgz0fVZ3/DRI6gyq
-	nKOBakDCZqzO2hShkIRzAZU=
-X-Google-Smtp-Source: AGHT+IHrVJh65QscY3p0Jy/D0oultjqQoAlOiktIjt87rcL3Qvqjz6HxK+awwKKSPzoRtatI2hoa3w==
-X-Received: by 2002:a81:5f08:0:b0:5e2:6d88:5b41 with SMTP id t8-20020a815f08000000b005e26d885b41mr4928049ywb.16.1702848738771;
-        Sun, 17 Dec 2023 13:32:18 -0800 (PST)
+        bh=wpzqsz/EY8Rq2EqPBcLuvwzIwmdW6wTukR95VYfZ1CM=;
+        b=B5+itcPcoYxZqTuxOg5NJtxqMJLNzeG5WynDO6OnZljgwVmp+xc88N+TcejCOU4Zkr
+         FT4vEY7TH2aawsEaAOKZh+0AdtfSj8z4i1FqdWC+fTeNvA0aJ+vjwSM32EI4AEX+Bnhv
+         nDpoZpswlVXzO+QPwi9Apnct+4v5oe55qZIjk8Vfm1yYdX72bMdka7CyWpGUYEWMBD8p
+         uGhYVwxzEe+VTkP7op4ipsdZjGkMhJC3EU1TgFVxK0GY9ElrHBjxX1+7aU4ofDhTbOQ5
+         Hr71gDm4f1VkO2Z/NBAyc81wWxbGrg3h/nLbqZ1XqdgRNj/J1C955VIMPva+f0Dejvh3
+         DcQA==
+X-Gm-Message-State: AOJu0YzqvHoDDsekiC7qm5QzmwyuR2gnZFvt1pKs2nwKz0edjHY+s/pn
+	Sx2AXSJLqvQQkN3Y6twVAf8=
+X-Google-Smtp-Source: AGHT+IEZVQkdZq/1iUqyA9DBOS4LYVte6GxBq8TXOHZIg5QPSd3+cDqAgWalYEOrgwQSUGHOemvrcw==
+X-Received: by 2002:a05:620a:2456:b0:77f:2496:4988 with SMTP id h22-20020a05620a245600b0077f24964988mr20524359qkn.14.1702848740308;
+        Sun, 17 Dec 2023 13:32:20 -0800 (PST)
 Received: from localhost ([2601:344:8301:57f0:9c41:1dd2:7d5d:e008])
-        by smtp.gmail.com with ESMTPSA id p5-20020a0dff05000000b005d38b70b3easm8337664ywf.19.2023.12.17.13.32.17
+        by smtp.gmail.com with ESMTPSA id p191-20020a0de6c8000000b005e3cbaa5ac3sm1564107ywe.105.2023.12.17.13.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Dec 2023 13:32:17 -0800 (PST)
+        Sun, 17 Dec 2023 13:32:19 -0800 (PST)
 From: Yury Norov <yury.norov@gmail.com>
 To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
 	kys@microsoft.com,
@@ -80,9 +80,9 @@ To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
 	linux-rdma@vger.kernel.org
 Cc: schakrabarti@microsoft.com,
 	paulros@microsoft.com
-Subject: [PATCH 1/3] cpumask: add cpumask_weight_andnot()
-Date: Sun, 17 Dec 2023 13:32:12 -0800
-Message-Id: <20231217213214.1905481-2-yury.norov@gmail.com>
+Subject: [PATCH 2/3] cpumask: define cleanup function for cpumasks
+Date: Sun, 17 Dec 2023 13:32:13 -0800
+Message-Id: <20231217213214.1905481-3-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231217213214.1905481-1-yury.norov@gmail.com>
 References: <20231217213214.1905481-1-yury.norov@gmail.com>
@@ -94,97 +94,34 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similarly to cpumask_weight_and(), cpumask_weight_andnot() is a handy
-helper that may help to avoid creating an intermediate mask just to
-calculate number of bits that set in a 1st given mask, and clear in 2nd
-one.
+Now we can simplify code that allocates cpumasks for local needs.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- include/linux/bitmap.h  | 12 ++++++++++++
- include/linux/cpumask.h | 13 +++++++++++++
- lib/bitmap.c            |  7 +++++++
- 3 files changed, 32 insertions(+)
+ include/linux/cpumask.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 99451431e4d6..5814e9ee40ba 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -54,6 +54,7 @@ struct device;
-  *  bitmap_full(src, nbits)                     Are all bits set in *src?
-  *  bitmap_weight(src, nbits)                   Hamming Weight: number set bits
-  *  bitmap_weight_and(src1, src2, nbits)        Hamming Weight of and'ed bitmap
-+ *  bitmap_weight_andnot(src1, src2, nbits)     Hamming Weight of andnot'ed bitmap
-  *  bitmap_set(dst, pos, nbits)                 Set specified bit area
-  *  bitmap_clear(dst, pos, nbits)               Clear specified bit area
-  *  bitmap_find_next_zero_area(buf, len, pos, n, mask)  Find bit free area
-@@ -169,6 +170,8 @@ bool __bitmap_subset(const unsigned long *bitmap1,
- unsigned int __bitmap_weight(const unsigned long *bitmap, unsigned int nbits);
- unsigned int __bitmap_weight_and(const unsigned long *bitmap1,
- 				 const unsigned long *bitmap2, unsigned int nbits);
-+unsigned int __bitmap_weight_andnot(const unsigned long *bitmap1,
-+				    const unsigned long *bitmap2, unsigned int nbits);
- void __bitmap_set(unsigned long *map, unsigned int start, int len);
- void __bitmap_clear(unsigned long *map, unsigned int start, int len);
- 
-@@ -425,6 +428,15 @@ unsigned long bitmap_weight_and(const unsigned long *src1,
- 	return __bitmap_weight_and(src1, src2, nbits);
- }
- 
-+static __always_inline
-+unsigned long bitmap_weight_andnot(const unsigned long *src1,
-+				   const unsigned long *src2, unsigned int nbits)
-+{
-+	if (small_const_nbits(nbits))
-+		return hweight_long(*src1 & ~(*src2) & BITMAP_LAST_WORD_MASK(nbits));
-+	return __bitmap_weight_andnot(src1, src2, nbits);
-+}
-+
- static __always_inline void bitmap_set(unsigned long *map, unsigned int start,
- 		unsigned int nbits)
- {
 diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index cfb545841a2c..228c23eb36d2 100644
+index 228c23eb36d2..1c29947db848 100644
 --- a/include/linux/cpumask.h
 +++ b/include/linux/cpumask.h
-@@ -719,6 +719,19 @@ static inline unsigned int cpumask_weight_and(const struct cpumask *srcp1,
- 	return bitmap_weight_and(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
+@@ -7,6 +7,7 @@
+  * set of CPUs in a system, one bit position per CPU number.  In general,
+  * only nr_cpu_ids (<= NR_CPUS) bits are valid.
+  */
++#include <linux/cleanup.h>
+ #include <linux/kernel.h>
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
+@@ -990,6 +991,8 @@ static inline bool cpumask_available(cpumask_var_t mask)
  }
+ #endif /* CONFIG_CPUMASK_OFFSTACK */
  
-+/**
-+ * cpumask_weight_andnot - Count of bits in (*srcp1 & ~*srcp2)
-+ * @srcp1: the cpumask to count bits (< nr_cpu_ids) in.
-+ * @srcp2: the cpumask to count bits (< nr_cpu_ids) in.
-+ *
-+ * Return: count of bits set in both *srcp1 and *srcp2
-+ */
-+static inline unsigned int cpumask_weight_andnot(const struct cpumask *srcp1,
-+						const struct cpumask *srcp2)
-+{
-+	return bitmap_weight_andnot(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
-+}
++DEFINE_FREE(free_cpumask_var, struct cpumask *, if (_T) free_cpumask_var(_T));
 +
- /**
-  * cpumask_shift_right - *dstp = *srcp >> n
-  * @dstp: the cpumask result
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 09522af227f1..b97692854966 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -348,6 +348,13 @@ unsigned int __bitmap_weight_and(const unsigned long *bitmap1,
- }
- EXPORT_SYMBOL(__bitmap_weight_and);
- 
-+unsigned int __bitmap_weight_andnot(const unsigned long *bitmap1,
-+				const unsigned long *bitmap2, unsigned int bits)
-+{
-+	return BITMAP_WEIGHT(bitmap1[idx] & ~bitmap2[idx], bits);
-+}
-+EXPORT_SYMBOL(__bitmap_weight_andnot);
-+
- void __bitmap_set(unsigned long *map, unsigned int start, int len)
- {
- 	unsigned long *p = map + BIT_WORD(start);
+ /* It's common to want to use cpu_all_mask in struct member initializers,
+  * so it has to refer to an address rather than a pointer. */
+ extern const DECLARE_BITMAP(cpu_all_bits, NR_CPUS);
 -- 
 2.40.1
 
