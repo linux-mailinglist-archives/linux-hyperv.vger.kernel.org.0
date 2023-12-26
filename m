@@ -1,173 +1,130 @@
-Return-Path: <linux-hyperv+bounces-1365-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1366-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8AC881D30F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Dec 2023 09:05:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3837581E922
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Dec 2023 20:09:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 495751F220CE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Dec 2023 08:05:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0DFF2817ED
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Dec 2023 19:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ACC08BF2;
-	Sat, 23 Dec 2023 08:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC743643;
+	Tue, 26 Dec 2023 19:09:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IVvJjoVB"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="w6g8HZHE"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F758BE0
-	for <linux-hyperv@vger.kernel.org>; Sat, 23 Dec 2023 08:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703318741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RUBshkXYLnMOjBb5DKpZF415KAW7AprSbIw5W2JKUNk=;
-	b=IVvJjoVBejdv3WALQXNuWRqR2QSS+iVdVRcqLhO9GcvsO68ChutGUGfc86WH6LFbrENlvN
-	ZERUtXgao7P6PNssMqsZTPFkLJrdDgOdcXVXaSNp7B+a3vxKuyH+Uf7R50KmDenYvGlp6P
-	YuzFD+NaxAM3PD5Cp5PI3Evo7TxJKcQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-2qVpIdo1PUy1r3rCWk-j4w-1; Sat, 23 Dec 2023 03:05:39 -0500
-X-MC-Unique: 2qVpIdo1PUy1r3rCWk-j4w-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-55438197a50so751936a12.1
-        for <linux-hyperv@vger.kernel.org>; Sat, 23 Dec 2023 00:05:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703318738; x=1703923538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RUBshkXYLnMOjBb5DKpZF415KAW7AprSbIw5W2JKUNk=;
-        b=lr81OXcfnLy0rUFS8kKI8RmnRsD0NOoZtGEiZPoDUxXXNQfwRSPSC17XZMBfu18CGD
-         su8TFj6jdRIS9N0+vGqn2IuS1xPStmV0UwF8Fis1EDTW1wvIDilxN+Rc18RB6ZSg4s9W
-         NiV4L+Lpa7MkQnu3/DnLI7uzqJcPZNCJ6r6rGFlqKDb+whlqtLaabi+OKkNetCv9766T
-         t1snZ/JJnVNtwq4bL5e2iQzFvysRmsz1zFwes6kzLcQRb8oyu6NrYCJZnLESD+McIcT6
-         /XaxvLhUmgJUQfv8r+eAiAQkHtS5KCzdBCl7z53wGdghf6LdwRse73/A7gAmxtcbsZW5
-         JReQ==
-X-Gm-Message-State: AOJu0Yzp2UTU3BZvCWzP71mFYZvDYaHYiulEjVIJpm1+qM0GK3j/uGoW
-	TQAJxUWpNAY0xZc3UZ6avI9dgYwmngAqJY3R84VeItIU7BAbhaq88yrE6/D1f8LEGrQzXg67GtR
-	HaG3ittO2M3IfUtqqqoddQ+oDy1UtyofNwbuM5FymkMBSxvC3
-X-Received: by 2002:a50:c34d:0:b0:553:a1e0:311f with SMTP id q13-20020a50c34d000000b00553a1e0311fmr1606631edb.25.1703318738388;
-        Sat, 23 Dec 2023 00:05:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGHJdTN/u/DmP7Uvbt5/cBKSo9kCI2NkUXyLgyM//v5EmWOM390R9Q+ypDdpDISQLMLvG/fGzDYCHyI3Jl0b+8=
-X-Received: by 2002:a50:c34d:0:b0:553:a1e0:311f with SMTP id
- q13-20020a50c34d000000b00553a1e0311fmr1606615edb.25.1703318738035; Sat, 23
- Dec 2023 00:05:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98141845;
+	Tue, 26 Dec 2023 19:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703617762; x=1704222562; i=markus.elfring@web.de;
+	bh=e+tBrgtJfsdqXLShYcAxcZWtl8ArgkpUQb9HNhch+6M=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=w6g8HZHEkpbryK5BLDOeQWt+/lpBqoGxbDnbb6dN2GVLEfRNnSHi9bdFdPHFbkCa
+	 QhWK+kIgXhjLVN6WqKbTGFrLpPIRDp9BybrEMyeb0i6/3kZsyKlNwHG/j/slAIhPQ
+	 oOEJml/hef9AR9qqJv0XjqjwoPu9WUqQvIKObyp8VlnXT/LZL/TjwVkUyvgAtVer5
+	 1yIUpVS/PO54spPLEyzKhqLauqEHGrCy4sjZSSwOx2tfgKDmL3Pr5Vx95ZbnzZ+rv
+	 UnSzlSkjQt1fszmBObyacSzmqC0KiYFyHE3yN1Nui7flNR4QA1MVr5c37DwACObqn
+	 1lGohnSUrYvql7oRlw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MQ8Wg-1reI1y1bJg-00MCdT; Tue, 26
+ Dec 2023 20:09:22 +0100
+Message-ID: <6d97cafb-ad7c-41c1-9f20-41024bb18515@web.de>
+Date: Tue, 26 Dec 2023 20:09:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1696847920-31125-1-git-send-email-shradhagupta@linux.microsoft.com>
- <A8905E07-2D01-46D6-A40D-C9F7461393EB@redhat.com> <CAK3XEhMzLvxTbP+sFjD7btfdjw5uxyAccdT09d4hcw5hkCKXHQ@mail.gmail.com>
-In-Reply-To: <CAK3XEhMzLvxTbP+sFjD7btfdjw5uxyAccdT09d4hcw5hkCKXHQ@mail.gmail.com>
-From: Ani Sinha <anisinha@redhat.com>
-Date: Sat, 23 Dec 2023 13:35:26 +0530
-Message-ID: <CAK3XEhOn+k7U88sMF2tXGSyhYvAL9u17sw6qvomL=oYESRMQkw@mail.gmail.com>
-Subject: Re: [PATCH v8] hv/hv_kvp_daemon:Support for keyfile based connection profile
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, Olaf Hering <olaf@aepfle.de>, 
-	Shradha Gupta <shradhagupta@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: linux-hyperv@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] Drivers: hv: vmbus: One function call less in
+ create_gpadl_header() after error detection
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wPOvhj5sZIFHtakgOhvLyjOxfuTw717tJTZVuzvrrqw47k7mvWx
+ CyzpwGDn4gaBT1CJjpK9GVIIMWi/S+S+fIkUTwBRp1cLMH3aCcOGz/YfYnvNQb+99MMh8oI
+ tB8wP2yHdAK21v+JUtEchHHOWMoILWeamZmQXeqoP4qlu2NabSKEM484Z3soOjX+jFhTJ4C
+ aeh2fY1OkfpLpgsLxcGMg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+GuqX/7+844=;mKtO/t28dF5Noz7+PWV5uyi6UzL
+ 7/31I3cEvXRYkQWA+hVKFQmOeWLyICCOmKCGX5QtKx+VQzGz5J+xCACsIPokktvmKoVBaUNOl
+ xNZkdW643wiWYJnR4le5+YS25/scz34z2OIsXOdVCh2qons627KD1GqYZ3UcvHSZWavrvPYOc
+ GrsvfGdSMZaoolsz3DLBivmTL5uaL2KCwkEbR+qHp7CTuvrP1Tdfr+I59JELsF7xpusF++GQ7
+ IIEuf0UQDPAGvxV48JJ6ZOvpuBOTe2Lk7sbu8Y6BeD7XNxyU9pFSpLdqEoxfSmeYKakeKgBIJ
+ mLkEkLA/hHZOtmywAxIOyCmJ6sMSNjh1DuLqQl14FHXGTs3ShtVGMk+eIaXOXgjhbGFS2bYfE
+ wDaQKwDlzYRvw5b6b5oz1tIMVV6eYS/R3Zxjjng3IB/05hx0w8n8Y38G56pzoMi3Ol1ccfCVj
+ 7aV89aa0n6Wgq1vb2YT4QGcnFQQEY579fhcceHzZF+xl+vRGVYMWtqOUnJydIope45l1hcTjx
+ Y6PKyXeU5EcnjGjqpvhSi5dr5l27OA7BYIN4/Lh0uJ6sTd5S+n923nrCs2vnVKmsoGSzMCEXb
+ 5ShpvJ9SNR8aYqW6E+hyPLSCD6qxZAtgbxrjR2umD4489dOR3+hsr57JNZMIqhqzNZ8/FdDiz
+ Nludh6j1qcdUdb/4EnZAt36PhVW46UAD+5SkcfvbDYGl1CJIUkW/U7GDQd9qs5485X7xqbTm3
+ DAdMQaJIES6dm3aBZtoKAtKF7LaKKj8n72SiZYMGgyhZtpZLAS0UsAO5DEslJ7mkpPy8ot9n4
+ APzpn7lW5qWto/xov4OzKsFlsKOGypiVfz6kco8PRYqkkKsU/OjiQZ4HvOpGkOY2frbVDvkjw
+ o7Pk8FS2Wocgqn8Im/UH49p0ICEv9pS6MxMBvLzErm/elfZjIzVD7ItR0pQzksE3Dio8aWDJ9
+ x2Lvmw==
 
-On Sat, Dec 23, 2023 at 12:43=E2=80=AFPM Ani Sinha <anisinha@redhat.com> wr=
-ote:
->
-> On Fri, Oct 13, 2023 at 3:06=E2=80=AFPM Ani Sinha <anisinha@redhat.com> w=
-rote:
-> >
-> >
-> >
-> > > On 09-Oct-2023, at 4:08 PM, Shradha Gupta <shradhagupta@linux.microso=
-ft.com> wrote:
-> > >
-> > > Ifcfg config file support in NetworkManger is deprecated. This patch
-> > > provides support for the new keyfile config format for connection
-> > > profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
-> > > to generate the new network configuration in keyfile
-> > > format(.ini-style format) along with a ifcfg format configuration.
-> > > The ifcfg format configuration is also retained to support easy
-> > > backward compatibility for distro vendors. These configurations are
-> > > stored in temp files which are further translated using the
-> > > hv_set_ifconfig.sh script. This script is implemented by individual
-> > > distros based on the network management commands supported.
-> > > For example, RHEL's implementation could be found here:
-> > > https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s=
-/hv_set_ifconfig.sh
-> > > Debian's implementation could be found here:
-> > > https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_s=
-et_ifconfig
-> > >
-> > > The next part of this support is to let the Distro vendors consume
-> > > these modified implementations to the new configuration format.
-> > >
-> > > Tested-on: Rhel9(Hyper-V, Azure)(nm and ifcfg files verified)
-> >
-> > Was this patch tested with ipv6? We are seeing a mix of ipv6 and ipv4 a=
-ddresses in ipv6 section:
->
-> There is also another issue which is kind of a design problem that
-> existed from the get go but now is exposed since keyfile support was
-> added.
-> Imagine we configure both ipv6 and ipv4 and some interfaces have ipv4
-> addresses and some have ipv6.
-> getifaddres() call in kvp_get_ip_info() will return a linked list per
-> interface. The code sets ip_buffer->addr_family based on the address
-> family of the address set for the interface. We use this to determine
-> which section in the keyfile to use, ipv6 or ipv4. However, once we
-> make this decision, we are locked in. The issue here is that
-> kvp_process_ip_address() that extracts the IP addresses concatenate
-> the addresses in a single buffer separating the IPs with ";". Thus
-> across interfaces, the buffer can contain both ipv4 and ipv6 addresses
-> separated by ";" if both v4 and v6 are configured. This is problematic
-> as the addr_family can be either ipv4 or ipv6 but not both.
-> Essentially, we can have a situation that for a single addr_family in
-> hv_kvp_ipaddr_value struct, the ip_addr member can be a buffer
-> containing both ipv6 and ipv4 addresses. Notice that
-> process_ip_string() handles this by iterating through the string and
-> for each ip extracted, it individually determines if the IP is a v6 or
-> a v4 and adds "IPV6ADDR" or "IPADDR" to the ifcfg file accordingly.
-> process_ip_string_nm() does not do that and solely makes the
-> determination based on is_ipv6 values which is based on a single
-> addr_family value above. Thus, it cannot possibly know whether the
-> specific IP address extracted from the string is a v4 or v6. Unlike
-> for ifcfg files, fir nm keyfiles, we need to add v4 and v6 addresses
-> in specific sections and we cannot mix the two. So we need to make two
-> passes. One for v4 and one for v6 and then add IPs in the respective
-> sections.
->
-> This issue needs to be looked into and unless it's resolved, we cannot
-> support both ipv4 and ipv6 addresses at the same time.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 26 Dec 2023 20:00:24 +0100
 
-In the short term, we should probably do this to avoid the mismatch :
+The kfree() function was called in two cases by
+the create_gpadl_header() function during error handling
+even if the passed variable contained a null pointer.
+This issue was detected by using the Coccinelle software.
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 318e2dad27e0..b77c8edfe663 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -1216,6 +1216,9 @@ static int process_ip_string_nm(FILE *f, char
-*ip_string, char *subnet,
-                                                       subnet_addr,
-                                                       (MAX_IP_ADDR_SIZE *
-                                                        2))) {
-+               if (is_ipv6 =3D=3D is_ipv4((char*) addr))
-+                   continue;
-+
-                if (!is_ipv6)
-                        plen =3D kvp_subnet_to_plen((char *)subnet_addr);
-                else
+Thus use another label.
 
-But this is really a short term hack.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/hv/channel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index 56f7e06c673e..4d1bbda895d8 100644
+=2D-- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -336,7 +336,7 @@ static int create_gpadl_header(enum hv_gpadl_type type=
+, void *kbuffer,
+ 			  sizeof(struct gpa_range) + pfncount * sizeof(u64);
+ 		msgheader =3D  kzalloc(msgsize, GFP_KERNEL);
+ 		if (!msgheader)
+-			goto nomem;
++			goto free_body;
+
+ 		INIT_LIST_HEAD(&msgheader->submsglist);
+ 		msgheader->msgsize =3D msgsize;
+@@ -417,7 +417,7 @@ static int create_gpadl_header(enum hv_gpadl_type type=
+, void *kbuffer,
+ 			  sizeof(struct gpa_range) + pagecount * sizeof(u64);
+ 		msgheader =3D kzalloc(msgsize, GFP_KERNEL);
+ 		if (msgheader =3D=3D NULL)
+-			goto nomem;
++			goto free_body;
+
+ 		INIT_LIST_HEAD(&msgheader->submsglist);
+ 		msgheader->msgsize =3D msgsize;
+@@ -439,6 +439,7 @@ static int create_gpadl_header(enum hv_gpadl_type type=
+, void *kbuffer,
+ 	return 0;
+ nomem:
+ 	kfree(msgheader);
++free_body:
+ 	kfree(msgbody);
+ 	return -ENOMEM;
+ }
+=2D-
+2.43.0
 
 
