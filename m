@@ -1,82 +1,82 @@
-Return-Path: <linux-hyperv+bounces-1373-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1374-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E851822B58
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47902822B59
 	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jan 2024 11:27:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EC4B1C231C6
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64A631C232E5
 	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jan 2024 10:27:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7490318C21;
-	Wed,  3 Jan 2024 10:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D8E818C27;
+	Wed,  3 Jan 2024 10:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RvAGn8cW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rIqwVG2m";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RvAGn8cW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rIqwVG2m"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mt+nl6wt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mc1m68iS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mt+nl6wt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mc1m68iS"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A3118EDC;
-	Wed,  3 Jan 2024 10:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5354B18EDD;
+	Wed,  3 Jan 2024 10:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3847321FB3;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8F81121FC4;
 	Wed,  3 Jan 2024 10:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
 	t=1704277603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ip26D6/xZyFRPOtQBkMkdGmk89Sh8EzMfHAG4F0eATE=;
-	b=RvAGn8cWh/TU0KTImyUahi+Opyp2xt7CiYufxLnQdZflRjQOzP4vnSpRBAaxlphxO4Rx8+
-	c5pkSP3I83UegVMSjB4C2/JRNRN0SSi9EXJ113mImYrpFe4wbAUa6o6AcJ7slp6BiTzFCN
-	nUtDNBCVPCGrWix/tn8+sW+1031S/fI=
+	bh=YSjY6JJfBEwJxJHNnM5TRKbfR+VWCIL7nuYGfXd6kqk=;
+	b=Mt+nl6wtMi/a5lycwHN8eoxEKgu+UTrjp8rB3onWh+NlhzEH8ZDOJAAaWSsmAs1hDRet9C
+	vNb4WECK2QZgE6hF+VXh0FIKVpq3osl6LbOZJcY1zlZiHhM2deZ1OZof2W+hntmQ388dFo
+	jBhht7X5xgM54HJUZhlqHmkxAhKQ4Zw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
 	s=susede2_ed25519; t=1704277603;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ip26D6/xZyFRPOtQBkMkdGmk89Sh8EzMfHAG4F0eATE=;
-	b=rIqwVG2mSK2r7Z+3RwvbsJKt74kI0Ha02bWY+LQdmNYRfdA9FItVTeQa+OKB4UbH3ewYRl
-	UCHaAYm3Fyihe5Dw==
+	bh=YSjY6JJfBEwJxJHNnM5TRKbfR+VWCIL7nuYGfXd6kqk=;
+	b=mc1m68iShmoN1z/q2w6ZSqQ2lExB8MBCt7ltuxXMZHEonU0dv/OltYsyacAFygxCea/47V
+	G5gE3LESTwD1XqCQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
 	t=1704277603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ip26D6/xZyFRPOtQBkMkdGmk89Sh8EzMfHAG4F0eATE=;
-	b=RvAGn8cWh/TU0KTImyUahi+Opyp2xt7CiYufxLnQdZflRjQOzP4vnSpRBAaxlphxO4Rx8+
-	c5pkSP3I83UegVMSjB4C2/JRNRN0SSi9EXJ113mImYrpFe4wbAUa6o6AcJ7slp6BiTzFCN
-	nUtDNBCVPCGrWix/tn8+sW+1031S/fI=
+	bh=YSjY6JJfBEwJxJHNnM5TRKbfR+VWCIL7nuYGfXd6kqk=;
+	b=Mt+nl6wtMi/a5lycwHN8eoxEKgu+UTrjp8rB3onWh+NlhzEH8ZDOJAAaWSsmAs1hDRet9C
+	vNb4WECK2QZgE6hF+VXh0FIKVpq3osl6LbOZJcY1zlZiHhM2deZ1OZof2W+hntmQ388dFo
+	jBhht7X5xgM54HJUZhlqHmkxAhKQ4Zw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
 	s=susede2_ed25519; t=1704277603;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ip26D6/xZyFRPOtQBkMkdGmk89Sh8EzMfHAG4F0eATE=;
-	b=rIqwVG2mSK2r7Z+3RwvbsJKt74kI0Ha02bWY+LQdmNYRfdA9FItVTeQa+OKB4UbH3ewYRl
-	UCHaAYm3Fyihe5Dw==
+	bh=YSjY6JJfBEwJxJHNnM5TRKbfR+VWCIL7nuYGfXd6kqk=;
+	b=mc1m68iShmoN1z/q2w6ZSqQ2lExB8MBCt7ltuxXMZHEonU0dv/OltYsyacAFygxCea/47V
+	G5gE3LESTwD1XqCQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DCD481340C;
-	Wed,  3 Jan 2024 10:26:42 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F4BF13C90;
+	Wed,  3 Jan 2024 10:26:43 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GAK7NGI2lWWmfgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 03 Jan 2024 10:26:42 +0000
+	id ICNFDmM2lWWmfgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 03 Jan 2024 10:26:43 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: drawat.floss@gmail.com,
 	javierm@redhat.com,
@@ -91,9 +91,9 @@ Cc: linux-hyperv@vger.kernel.org,
 	linux-fbdev@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 3/4] firmware/sysfb: Clear screen_info state after consuming it
-Date: Wed,  3 Jan 2024 11:15:11 +0100
-Message-ID: <20240103102640.31751-4-tzimmermann@suse.de>
+Subject: [PATCH 4/4] fbdev/hyperv_fb: Do not clear global screen_info
+Date: Wed,  3 Jan 2024 11:15:12 +0100
+Message-ID: <20240103102640.31751-5-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240103102640.31751-1-tzimmermann@suse.de>
 References: <20240103102640.31751-1-tzimmermann@suse.de>
@@ -107,8 +107,8 @@ Content-Transfer-Encoding: 8bit
 Authentication-Results: smtp-out1.suse.de;
 	none
 X-Spam-Level: *
-X-Spam-Score: 1.20
-X-Spamd-Result: default: False [1.20 / 50.00];
+X-Spam-Score: 1.19
+X-Spamd-Result: default: False [1.19 / 50.00];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 TO_DN_SOME(0.00)[];
 	 R_MISSING_CHARSET(2.50)[];
@@ -120,7 +120,7 @@ X-Spamd-Result: default: False [1.20 / 50.00];
 	 FREEMAIL_TO(0.00)[gmail.com,redhat.com,gmx.de,microsoft.com,kernel.org,ffwll.ch];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.00)[10.82%];
+	 BAYES_HAM(-0.01)[47.53%];
 	 ARC_NA(0.00)[];
 	 FROM_HAS_DN(0.00)[];
 	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
@@ -137,48 +137,43 @@ X-Spamd-Result: default: False [1.20 / 50.00];
 	 SUSPICIOUS_RECIPS(1.50)[]
 X-Spam-Flag: NO
 
-After consuming the global screen_info_state in sysfb_init(), the
-created platform device maintains the firmware framebuffer. Clear
-screen_info to avoid conflicting access. Subsequent kexec reboots
-now ignore the firmware framebuffer.
+Do not clear the global instance of screen_info. If necessary, clearing
+fields in screen_info should be done by architecture or firmware code
+that maintains the firmware framebuffer.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- drivers/firmware/sysfb.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/hyperv_fb.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/firmware/sysfb.c b/drivers/firmware/sysfb.c
-index 82fcfd29bc4d..19706bd2642a 100644
---- a/drivers/firmware/sysfb.c
-+++ b/drivers/firmware/sysfb.c
-@@ -71,7 +71,7 @@ EXPORT_SYMBOL_GPL(sysfb_disable);
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index 76c956b9a321..7d5717805c0b 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -48,7 +48,6 @@
+ #include <linux/aperture.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+-#include <linux/screen_info.h>
+ #include <linux/vmalloc.h>
+ #include <linux/init.h>
+ #include <linux/completion.h>
+@@ -1059,14 +1058,8 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
+ 	else
+ 		aperture_remove_all_conflicting_devices(KBUILD_MODNAME);
  
- static __init int sysfb_init(void)
- {
--	struct screen_info *si = &screen_info;
-+	const struct screen_info *si = &screen_info;
- 	struct simplefb_platform_data mode;
- 	const char *name;
- 	bool compatible;
-@@ -119,6 +119,18 @@ static __init int sysfb_init(void)
- 	if (ret)
- 		goto err;
+-	if (!gen2vm) {
++	if (!gen2vm)
+ 		pci_dev_put(pdev);
+-	} else if (IS_ENABLED(CONFIG_SYSFB)) {
+-		/* framebuffer is reallocated, clear screen_info to avoid misuse from kexec */
+-		screen_info.lfb_size = 0;
+-		screen_info.lfb_base = 0;
+-		screen_info.orig_video_isVGA = 0;
+-	}
  
-+	/*
-+	 * The firmware framebuffer is now maintained by the created
-+	 * device. Disable screen_info after we've consumed it. Prevents
-+	 * invalid access during kexec reboots.
-+	 *
-+	 * TODO: Vgacon still relies on the global screen_info. Make
-+	 *       vgacon work with the platform device, so we can clear
-+	 *       the screen_info unconditionally.
-+	 */
-+	if (strcmp(name, "platform-framebuffer"))
-+		screen_info.orig_video_isVGA = 0;
-+
- 	goto unlock_mutex;
- err:
- 	platform_device_put(pd);
+ 	return 0;
+ 
 -- 
 2.43.0
 
