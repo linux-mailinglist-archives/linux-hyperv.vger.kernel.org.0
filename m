@@ -1,145 +1,102 @@
-Return-Path: <linux-hyperv+bounces-1376-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1377-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E9B5824E2A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jan 2024 06:42:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1D538251F4
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jan 2024 11:29:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C72422854F6
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jan 2024 05:42:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F2C81F21C9B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jan 2024 10:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D1C63BF;
-	Fri,  5 Jan 2024 05:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D088250F5;
+	Fri,  5 Jan 2024 10:29:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sIMnf9mt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SDAQLXkn"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD1A610E;
-	Fri,  5 Jan 2024 05:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D96250E7;
+	Fri,  5 Jan 2024 10:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id E257A20ACF15; Thu,  4 Jan 2024 21:41:53 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E257A20ACF15
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8E4F120B3CC1;
+	Fri,  5 Jan 2024 02:29:36 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8E4F120B3CC1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704433313;
-	bh=ZHparnsAXqF4lWmx1ZSpxji42sUlAAumK+J8HFwwj/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sIMnf9mtuKHXQ7pCG87+/a2xlA8gsERPHy6Y7GMfqcdL+adEw00Kv07zHEkJaXNLX
-	 6fjHOinXlm/bimhEEdaFOFmtYQI+fZGUEZCh0Nf9Uq2XQKOFfnL/HmUvgP0b+GT8G3
-	 1AZqPUbe7ckTTEHPk5rtEwtpyH0KfIZLkHVB2WlA=
-Date: Thu, 4 Jan 2024 21:41:53 -0800
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Ani Sinha <anisinha@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Olaf Hering <olaf@aepfle.de>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v8] hv/hv_kvp_daemon:Support for keyfile based connection
- profile
-Message-ID: <20240105054153.GA18258@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1696847920-31125-1-git-send-email-shradhagupta@linux.microsoft.com>
- <A8905E07-2D01-46D6-A40D-C9F7461393EB@redhat.com>
- <CAK3XEhMzLvxTbP+sFjD7btfdjw5uxyAccdT09d4hcw5hkCKXHQ@mail.gmail.com>
- <CAK3XEhOn+k7U88sMF2tXGSyhYvAL9u17sw6qvomL=oYESRMQkw@mail.gmail.com>
+	s=default; t=1704450576;
+	bh=ovwReRwgxvp0zRcHfp5lvTMwMqQKQ9zFOKT4nznwl9o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SDAQLXknt9VcjaxANAxYyvW559RuOTuhEYKcM2kcX2xYjuOJ9C3LuOmaWegH9Ucyl
+	 bWyn0rlu7xxzL6ad+PvgSchTpWb2t3aN1o2aLhDaV/PDularhnhC8r3e2bLsxQlcnJ
+	 YmQmQUHtalVCZ97FrsJuydD/vEZdLvNR1kws5esI=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ssengar@microsoft.com
+Subject: [PATCH] x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
+Date: Fri,  5 Jan 2024 02:29:26 -0800
+Message-Id: <1704450566-26576-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK3XEhOn+k7U88sMF2tXGSyhYvAL9u17sw6qvomL=oYESRMQkw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Sat, Dec 23, 2023 at 01:35:26PM +0530, Ani Sinha wrote:
-> On Sat, Dec 23, 2023 at 12:43???PM Ani Sinha <anisinha@redhat.com> wrote:
-> >
-> > On Fri, Oct 13, 2023 at 3:06???PM Ani Sinha <anisinha@redhat.com> wrote:
-> > >
-> > >
-> > >
-> > > > On 09-Oct-2023, at 4:08 PM, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-> > > >
-> > > > Ifcfg config file support in NetworkManger is deprecated. This patch
-> > > > provides support for the new keyfile config format for connection
-> > > > profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
-> > > > to generate the new network configuration in keyfile
-> > > > format(.ini-style format) along with a ifcfg format configuration.
-> > > > The ifcfg format configuration is also retained to support easy
-> > > > backward compatibility for distro vendors. These configurations are
-> > > > stored in temp files which are further translated using the
-> > > > hv_set_ifconfig.sh script. This script is implemented by individual
-> > > > distros based on the network management commands supported.
-> > > > For example, RHEL's implementation could be found here:
-> > > > https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s/hv_set_ifconfig.sh
-> > > > Debian's implementation could be found here:
-> > > > https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_set_ifconfig
-> > > >
-> > > > The next part of this support is to let the Distro vendors consume
-> > > > these modified implementations to the new configuration format.
-> > > >
-> > > > Tested-on: Rhel9(Hyper-V, Azure)(nm and ifcfg files verified)
-> > >
-> > > Was this patch tested with ipv6? We are seeing a mix of ipv6 and ipv4 addresses in ipv6 section:
-> >
-> > There is also another issue which is kind of a design problem that
-> > existed from the get go but now is exposed since keyfile support was
-> > added.
-> > Imagine we configure both ipv6 and ipv4 and some interfaces have ipv4
-> > addresses and some have ipv6.
-> > getifaddres() call in kvp_get_ip_info() will return a linked list per
-> > interface. The code sets ip_buffer->addr_family based on the address
-> > family of the address set for the interface. We use this to determine
-> > which section in the keyfile to use, ipv6 or ipv4. However, once we
-> > make this decision, we are locked in. The issue here is that
-> > kvp_process_ip_address() that extracts the IP addresses concatenate
-> > the addresses in a single buffer separating the IPs with ";". Thus
-> > across interfaces, the buffer can contain both ipv4 and ipv6 addresses
-> > separated by ";" if both v4 and v6 are configured. This is problematic
-> > as the addr_family can be either ipv4 or ipv6 but not both.
-> > Essentially, we can have a situation that for a single addr_family in
-> > hv_kvp_ipaddr_value struct, the ip_addr member can be a buffer
-> > containing both ipv6 and ipv4 addresses. Notice that
-> > process_ip_string() handles this by iterating through the string and
-> > for each ip extracted, it individually determines if the IP is a v6 or
-> > a v4 and adds "IPV6ADDR" or "IPADDR" to the ifcfg file accordingly.
-> > process_ip_string_nm() does not do that and solely makes the
-> > determination based on is_ipv6 values which is based on a single
-> > addr_family value above. Thus, it cannot possibly know whether the
-> > specific IP address extracted from the string is a v4 or v6. Unlike
-> > for ifcfg files, fir nm keyfiles, we need to add v4 and v6 addresses
-> > in specific sections and we cannot mix the two. So we need to make two
-> > passes. One for v4 and one for v6 and then add IPs in the respective
-> > sections.
-> >
-> > This issue needs to be looked into and unless it's resolved, we cannot
-> > support both ipv4 and ipv6 addresses at the same time.
-> 
-> In the short term, we should probably do this to avoid the mismatch :
-> 
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 318e2dad27e0..b77c8edfe663 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -1216,6 +1216,9 @@ static int process_ip_string_nm(FILE *f, char
-> *ip_string, char *subnet,
->                                                        subnet_addr,
->                                                        (MAX_IP_ADDR_SIZE *
->                                                         2))) {
-> +               if (is_ipv6 == is_ipv4((char*) addr))
-> +                   continue;
-> +
->                 if (!is_ipv6)
->                         plen = kvp_subnet_to_plen((char *)subnet_addr);
->                 else
-> 
-> But this is really a short term hack.
-Thanks for bringing this up Ani. I will try to fix this in a new patch
-(would get the new testcases added in our suite as well)
+The current method for signaling the compatibility of a Hyper-V host
+with MSIs featuring 15-bit APIC IDs relies on a synthetic cpuid leaf.
+However, for higher VTLs, this leaf is not reported, due to the absence
+of an IO-APIC.
+
+As an alternative, assume that when running at a high VTL, the host
+supports 15-bit APIC IDs. This assumption is now deemed safe, as no
+architectural MSIs are employed at higher VTLs.
+
+This unblocks startup of VTL2 environments with more than 256 CPUs.
+
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ arch/x86/hyperv/hv_vtl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 539c7b5cfa2b..1c225362f88e 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -16,6 +16,11 @@
+ extern struct boot_params boot_params;
+ static struct real_mode_header hv_vtl_real_mode_header;
+ 
++static bool __init hv_vtl_msi_ext_dest_id(void)
++{
++	return true;
++}
++
+ void __init hv_vtl_init_platform(void)
+ {
+ 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+@@ -39,6 +44,8 @@ void __init hv_vtl_init_platform(void)
+ 	x86_platform.legacy.warm_reset = 0;
+ 	x86_platform.legacy.reserve_bios_regions = 0;
+ 	x86_platform.legacy.devices.pnpbios = 0;
++
++	x86_init.hyper.msi_ext_dest_id = hv_vtl_msi_ext_dest_id;
+ }
+ 
+ static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
+-- 
+2.25.1
+
 
