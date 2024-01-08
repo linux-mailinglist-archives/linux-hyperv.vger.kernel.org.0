@@ -1,103 +1,155 @@
-Return-Path: <linux-hyperv+bounces-1386-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1387-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24975826ACD
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jan 2024 10:36:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7003F826F46
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jan 2024 14:08:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A2551C21BFB
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jan 2024 09:36:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C01A1F22FDC
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jan 2024 13:08:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB00812B6C;
-	Mon,  8 Jan 2024 09:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3F14121E;
+	Mon,  8 Jan 2024 13:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fXG0IRqp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jxnJZAOv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4517912B68
-	for <linux-hyperv@vger.kernel.org>; Mon,  8 Jan 2024 09:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704706581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QF07YVQH2syGFQtZnfOAe1/qfQiBqJlIcNmMYcsZHj4=;
-	b=fXG0IRqpTFPyOzS04FM+pu7rLNoUqIxg/mWfDmyFzQygOtUq+/lNhlT6vG/OPVDs734Gy9
-	fVju/yv9mR+lqYQJrn/zZ0yD5AfrTV3XdzNxC6DvWUz30SSftV4N0WwXwtR3h0QoBOHNxK
-	Xu5wMS1hbuZUkJF4h2L3wOzzNOYqPKA=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-685-of1nBy3MNVKe2qvzO4sr4g-1; Mon, 08 Jan 2024 04:36:19 -0500
-X-MC-Unique: of1nBy3MNVKe2qvzO4sr4g-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2cd0804c5e6so13081921fa.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 08 Jan 2024 01:36:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704706578; x=1705311378;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QF07YVQH2syGFQtZnfOAe1/qfQiBqJlIcNmMYcsZHj4=;
-        b=pd8fhAcWlp9QOM2hYJ9k6LbWfFlkZL5sebyLQZ+yXIXK4lIT8QTCs3DHiJUBPAra1Q
-         mM1efZNyD+3c7Alz4vVLjYWzxYMkhl8DXw+mfc5CFqqO4rNKrV3i5/KNVY63KNEu6Iwk
-         Olp3YOBWyDRmw9ZhX/6RGo4fLS2Ny7PwSL0vgRcyeu1aJaIN9wX3W3cP4qVQulHDBkU+
-         6Aunfw9JszoakxUn9OVTAmv9UWnyQryGNFSa0ue7902kgUnsfS8bQsH3BvgOIiQAEF0a
-         QqTrwlEoi2rauyWMwRECAvE0rRE49ncnUquGVfAzY+2CjqX45ANw2Et4RdiEKOXtYxtr
-         v4jw==
-X-Gm-Message-State: AOJu0Yx4I0n6v4tCqcEw6es6RAt1mwZD3H6LqcfBoqKBTfX13/J9KZv2
-	D8a/eARKcdWeb7QS4FhVx8+GxHAtpaOtU3IEnV7fTO52VP3Xk4QzRxTCIp8LBLbQWevjjlL+Hlh
-	qkM96wvijjkUgvcpOoqxxlUUEB92Mh/HW
-X-Received: by 2002:a05:651c:a07:b0:2cd:10be:cf14 with SMTP id k7-20020a05651c0a0700b002cd10becf14mr1730538ljq.19.1704706578546;
-        Mon, 08 Jan 2024 01:36:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEofyXwklxoZpXnBRHO6GYjy+PST2V1Cnh2j8jUOksB0ztim7vP0b57O9VfxEXUzcwJzK8ZbA==
-X-Received: by 2002:a05:651c:a07:b0:2cd:10be:cf14 with SMTP id k7-20020a05651c0a0700b002cd10becf14mr1730525ljq.19.1704706578200;
-        Mon, 08 Jan 2024 01:36:18 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id l15-20020a5d410f000000b00336e43e8e57sm7273851wrp.58.2024.01.08.01.36.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 01:36:18 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, drawat.floss@gmail.com,
- deller@gmx.de, decui@microsoft.com, wei.liu@kernel.org,
- haiyangz@microsoft.com, kys@microsoft.com, daniel@ffwll.ch,
- airlied@gmail.com
-Cc: linux-hyperv@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 4/4] fbdev/hyperv_fb: Do not clear global screen_info
-In-Reply-To: <20240103102640.31751-5-tzimmermann@suse.de>
-References: <20240103102640.31751-1-tzimmermann@suse.de>
- <20240103102640.31751-5-tzimmermann@suse.de>
-Date: Mon, 08 Jan 2024 10:36:17 +0100
-Message-ID: <871qasdv5a.fsf@minerva.mail-host-address-is-not-set>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAD541218;
+	Mon,  8 Jan 2024 13:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704719288; x=1736255288;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jzTq7VWB7XmiLfpeuE4JA2ASHQLGj6MFtlAwRa1zfoE=;
+  b=jxnJZAOv5AJDJsoAOIBFNCnfri5g8WtrwTgYUNa3FiRwqbI0DsmsLd+q
+   6FuYixfwcbYyr1MqOOMtKcNBn5AYjRDS5HLOHu9A5emP+ghsDKoXrIo+v
+   Vq8fQet56MoT2dZJ9geulTjvBxaBHNitGvlmQWDq1lmFr1Ov2V/0gmWrt
+   3cn4jXmhZsyZ/OpdmDdRQaCFrC7rWT3kbdAnqmQ8ffco4hKDC0jOLS5Fc
+   OAXJsMJ4lhDcIJl9jhV5nN7ao80zCJSgancJ13J28mJsPEhefnxNVKiGN
+   vUJWdSciqdi01vua8lRvU3d8VgsEfYLzkBfuwsFawTmp7Wr9+mQ59r9nF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="4665009"
+X-IronPort-AV: E=Sophos;i="6.04,341,1695711600"; 
+   d="scan'208";a="4665009"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 05:08:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="815601069"
+X-IronPort-AV: E=Sophos;i="6.04,341,1695711600"; 
+   d="scan'208";a="815601069"
+Received: from ddraghic-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.212.53])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 05:08:00 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 5EB1510498C; Mon,  8 Jan 2024 16:07:57 +0300 (+03)
+Date: Mon, 8 Jan 2024 16:07:57 +0300
+From: kirill.shutemov@linux.intel.com
+To: mhklinux@outlook.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	luto@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+	urezki@gmail.com, hch@infradead.org, lstoakes@gmail.com,
+	thomas.lendacky@amd.com, ardb@kernel.org, jroedel@suse.de,
+	seanjc@google.com, rick.p.edgecombe@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	linux-hyperv@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 1/3] x86/hyperv: Use slow_virt_to_phys() in page
+ transition hypervisor callback
+Message-ID: <20240108130757.xryzva4fkmgeekhu@box.shutemov.name>
+References: <20240105183025.225972-1-mhklinux@outlook.com>
+ <20240105183025.225972-2-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240105183025.225972-2-mhklinux@outlook.com>
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
-
-> Do not clear the global instance of screen_info. If necessary, clearing
-> fields in screen_info should be done by architecture or firmware code
-> that maintains the firmware framebuffer.
->
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+On Fri, Jan 05, 2024 at 10:30:23AM -0800, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> In preparation for temporarily marking pages not present during a
+> transition between encrypted and decrypted, use slow_virt_to_phys()
+> in the hypervisor callback. As long as the PFN is correct,
+> slow_virt_to_phys() works even if the leaf PTE is not present.
+> The existing functions that depend on vmalloc_to_page() all
+> require that the leaf PTE be marked present, so they don't work.
+> 
+> Update the comments for slow_virt_to_phys() to note this broader usage
+> and the requirement to work even if the PTE is not marked present.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 > ---
+>  arch/x86/hyperv/ivm.c        |  9 ++++++++-
+>  arch/x86/mm/pat/set_memory.c | 13 +++++++++----
+>  2 files changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> index 02e55237d919..8ba18635e338 100644
+> --- a/arch/x86/hyperv/ivm.c
+> +++ b/arch/x86/hyperv/ivm.c
+> @@ -524,7 +524,14 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
+>  		return false;
+>  
+>  	for (i = 0, pfn = 0; i < pagecount; i++) {
+> -		pfn_array[pfn] = virt_to_hvpfn((void *)kbuffer + i * HV_HYP_PAGE_SIZE);
+> +		/*
+> +		 * Use slow_virt_to_phys() because the PRESENT bit has been
+> +		 * temporarily cleared in the PTEs.  slow_virt_to_phys() works
+> +		 * without the PRESENT bit while virt_to_hvpfn() or similar
+> +		 * does not.
+> +		 */
+> +		pfn_array[pfn] = slow_virt_to_phys((void *)kbuffer +
+> +					i * HV_HYP_PAGE_SIZE) >> HV_HYP_PAGE_SHIFT;
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+I think you can make it much more readable by introducing few variables:
+
+		virt = (void *)kbuffer + i * HV_HYPPAGE_SIZE;
+		phys = slow_virt_to_phys(virt);
+		pfn_array[pfn] = phys >> HV_HYP_PAGE_SHIFT;
+
+>  		pfn++;
+>  
+>  		if (pfn == HV_MAX_MODIFY_GPA_REP_COUNT || i == pagecount - 1) {
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index bda9f129835e..8e19796e7ce5 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -755,10 +755,15 @@ pmd_t *lookup_pmd_address(unsigned long address)
+>   * areas on 32-bit NUMA systems.  The percpu areas can
+>   * end up in this kind of memory, for instance.
+>   *
+> - * This could be optimized, but it is only intended to be
+> - * used at initialization time, and keeping it
+> - * unoptimized should increase the testing coverage for
+> - * the more obscure platforms.
+> + * It is also used in callbacks for CoCo VM page transitions between private
+> + * and shared because it works when the PRESENT bit is not set in the leaf
+> + * PTE. In such cases, the state of the PTEs, including the PFN, is otherwise
+> + * known to be valid, so the returned physical address is correct. The similar
+> + * function vmalloc_to_pfn() can't be used because it requires the PRESENT bit.
+> + *
+> + * This could be optimized, but it is only used in paths that are not perf
+> + * sensitive, and keeping it unoptimized should increase the testing coverage
+> + * for the more obscure platforms.
+>   */
+>  phys_addr_t slow_virt_to_phys(void *__virt_addr)
+>  {
+> -- 
+> 2.25.1
+> 
 
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+  Kiryl Shutsemau / Kirill A. Shutemov
 
