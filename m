@@ -1,35 +1,35 @@
-Return-Path: <linux-hyperv+bounces-1396-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1397-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFD39828451
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jan 2024 11:52:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B053828453
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jan 2024 11:53:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2FCC1F24F5D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jan 2024 10:52:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09D3B287C94
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jan 2024 10:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401C336AFD;
-	Tue,  9 Jan 2024 10:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B4AB38DF8;
+	Tue,  9 Jan 2024 10:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XiZAh96x"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YNAZu+v3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D63B5374FE;
-	Tue,  9 Jan 2024 10:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25AE1381D6;
+	Tue,  9 Jan 2024 10:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 5BF6820B3CC4; Tue,  9 Jan 2024 02:51:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5BF6820B3CC4
+	id F252120B3CC2; Tue,  9 Jan 2024 02:51:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F252120B3CC2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704797494;
-	bh=8KNJQqGWQfH/h7F1Q5rQO5g9we6YWyykhE+RQJsMV2o=;
+	s=default; t=1704797496;
+	bh=BjA1llB0tV0DNKtNQwDzCat1URmop7G8PpQu5Aagoj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XiZAh96x0GrkVeksmPP/EDDkT/8ig5CE2RNqsmwIkJv+CUAn9TwCYK0Fk0oZ9yoIV
-	 /YfUIVAK7/pDKml/bNYgCXIGxgVdYzScP1ZZS4SZgWg1IldxLz2iZWHXG4+4XtDUbL
-	 dvCq1n0okooemTO+NW3v2Sq44ARD4sqXbKCno0ek=
+	b=YNAZu+v3p4jhxsCl+dNOLV5ZCD7oKcv0KmwZforvUJgtpnAVrwmY5zXCykrDI7SM0
+	 5qPsJwpcp8fMmt2KGvayIzMFDV2Je6kTsr9GFsBfsvnoLfUusVmBcZFAMofUQCNBcX
+	 JnjYnZxDIfX/8zx/JP/KF/Zn1HLvqXAK+xcEjDPQ=
 From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -51,10 +51,11 @@ To: kys@microsoft.com,
 	linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org
 Cc: schakrabarti@microsoft.com,
-	paulros@microsoft.com
-Subject: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs per CPUs
-Date: Tue,  9 Jan 2024 02:51:17 -0800
-Message-Id: <1704797478-32377-4-git-send-email-schakrabarti@linux.microsoft.com>
+	paulros@microsoft.com,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: [PATCH 4/4 net-next] net: mana: Assigning IRQ affinity on HT cores
+Date: Tue,  9 Jan 2024 02:51:18 -0800
+Message-Id: <1704797478-32377-5-git-send-email-schakrabarti@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
 References: <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
@@ -64,136 +65,127 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-From: Yury Norov <yury.norov@gmail.com>
+Existing MANA design assigns IRQ to every CPU, including sibling
+hyper-threads. This may cause multiple IRQs to be active simultaneously
+in the same core and may reduce the network performance.
 
-Souradeep investigated that the driver performs faster if IRQs are
-spread on CPUs with the following heuristics:
+Improve the performance by assigning IRQ to non sibling CPUs in local
+NUMA node. The performance improvement we are getting using ntttcp with
+following patch is around 15 percent against existing design and
+approximately 11 percent, when trying to assign one IRQ in each core
+across NUMA nodes, if enough cores are present.
 
-1. No more than one IRQ per CPU, if possible;
-2. NUMA locality is the second priority;
-3. Sibling dislocality is the last priority.
-
-Let's consider this topology:
-
-Node            0               1
-Core        0       1       2       3
-CPU       0   1   2   3   4   5   6   7
-
-The most performant IRQ distribution based on the above topology
-and heuristics may look like this:
-
-IRQ     Nodes   Cores   CPUs
-0       1       0       0-1
-1       1       1       2-3
-2       1       0       0-1
-3       1       1       2-3
-4       2       2       4-5
-5       2       3       6-7
-6       2       2       4-5
-7       2       3       6-7
-
-The irq_setup() routine introduced in this patch leverages the
-for_each_numa_hop_mask() iterator and assigns IRQs to sibling groups
-as described above.
-
-According to [1], for NUMA-aware but sibling-ignorant IRQ distribution
-based on cpumask_local_spread() performance test results look like this:
-
-./ntttcp -r -m 16
-NTTTCP for Linux 1.4.0
----------------------------------------------------------
-08:05:20 INFO: 17 threads created
-08:05:28 INFO: Network activity progressing...
-08:06:28 INFO: Test run completed.
-08:06:28 INFO: Test cycle finished.
-08:06:28 INFO: #####  Totals:  #####
-08:06:28 INFO: test duration    :60.00 seconds
-08:06:28 INFO: total bytes      :630292053310
-08:06:28 INFO:   throughput     :84.04Gbps
-08:06:28 INFO:   retrans segs   :4
-08:06:28 INFO: cpu cores        :192
-08:06:28 INFO:   cpu speed      :3799.725MHz
-08:06:28 INFO:   user           :0.05%
-08:06:28 INFO:   system         :1.60%
-08:06:28 INFO:   idle           :96.41%
-08:06:28 INFO:   iowait         :0.00%
-08:06:28 INFO:   softirq        :1.94%
-08:06:28 INFO:   cycles/byte    :2.50
-08:06:28 INFO: cpu busy (all)   :534.41%
-
-For NUMA- and sibling-aware IRQ distribution, the same test works
-15% faster:
-
-./ntttcp -r -m 16
-NTTTCP for Linux 1.4.0
----------------------------------------------------------
-08:08:51 INFO: 17 threads created
-08:08:56 INFO: Network activity progressing...
-08:09:56 INFO: Test run completed.
-08:09:56 INFO: Test cycle finished.
-08:09:56 INFO: #####  Totals:  #####
-08:09:56 INFO: test duration    :60.00 seconds
-08:09:56 INFO: total bytes      :741966608384
-08:09:56 INFO:   throughput     :98.93Gbps
-08:09:56 INFO:   retrans segs   :6
-08:09:56 INFO: cpu cores        :192
-08:09:56 INFO:   cpu speed      :3799.791MHz
-08:09:56 INFO:   user           :0.06%
-08:09:56 INFO:   system         :1.81%
-08:09:56 INFO:   idle           :96.18%
-08:09:56 INFO:   iowait         :0.00%
-08:09:56 INFO:   softirq        :1.95%
-08:09:56 INFO:   cycles/byte    :2.25
-08:09:56 INFO: cpu busy (all)   :569.22%
-
-[1] https://lore.kernel.org/all/20231211063726.GA4977@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/
-
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Co-developed-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
 ---
- .../net/ethernet/microsoft/mana/gdma_main.c   | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 58 +++++++++++++++----
+ 1 file changed, 48 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 6367de0c2c2e..6a967d6be01e 100644
+index 6a967d6be01e..6715d6939bc7 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1243,6 +1243,35 @@ void mana_gd_free_res_map(struct gdma_resource *r)
- 	r->size = 0;
- }
+@@ -1274,13 +1274,16 @@ static __maybe_unused int irq_setup(unsigned int *irqs, unsigned int len, int no
  
-+static __maybe_unused int irq_setup(unsigned int *irqs, unsigned int len, int node)
-+{
-+	const struct cpumask *next, *prev = cpu_none_mask;
-+	cpumask_var_t cpus __free(free_cpumask_var);
-+	int cpu, weight;
-+
-+	if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	rcu_read_lock();
-+	for_each_numa_hop_mask(next, node) {
-+		weight = cpumask_weight_andnot(next, prev);
-+		while (weight > 0) {
-+			cpumask_andnot(cpus, next, prev);
-+			for_each_cpu(cpu, cpus) {
-+				if (len-- == 0)
-+					goto done;
-+				irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
-+				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
-+				--weight;
-+			}
-+		}
-+		prev = next;
-+	}
-+done:
-+	rcu_read_unlock();
-+	return 0;
-+}
-+
  static int mana_gd_setup_irqs(struct pci_dev *pdev)
  {
- 	unsigned int max_queues_per_port = num_online_cpus();
+-	unsigned int max_queues_per_port = num_online_cpus();
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
++	unsigned int max_queues_per_port;
+ 	struct gdma_irq_context *gic;
+ 	unsigned int max_irqs, cpu;
+-	int nvec, irq;
++	int start_irq_index = 1;
++	int nvec, *irqs, irq;
+ 	int err, i = 0, j;
+ 
++	cpus_read_lock();
++	max_queues_per_port = num_online_cpus();
+ 	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
+ 		max_queues_per_port = MANA_MAX_NUM_QUEUES;
+ 
+@@ -1288,8 +1291,18 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 	max_irqs = max_queues_per_port + 1;
+ 
+ 	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
+-	if (nvec < 0)
++	if (nvec < 0) {
++		cpus_read_unlock();
+ 		return nvec;
++	}
++	if (nvec <= num_online_cpus())
++		start_irq_index = 0;
++
++	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
++	if (!irqs) {
++		err = -ENOMEM;
++		goto free_irq_vector;
++	}
+ 
+ 	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
+ 				   GFP_KERNEL);
+@@ -1316,21 +1329,44 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 			goto free_irq;
+ 		}
+ 
+-		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+-		if (err)
+-			goto free_irq;
+-
+-		cpu = cpumask_local_spread(i, gc->numa_node);
+-		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
++		if (!i) {
++			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
++			if (err)
++				goto free_irq;
++
++			/* If number of IRQ is one extra than number of online CPUs,
++			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
++			 * same CPU.
++			 * Else we will use different CPUs for IRQ0 and IRQ1.
++			 * Also we are using cpumask_local_spread instead of
++			 * cpumask_first for the node, because the node can be
++			 * mem only.
++			 */
++			if (start_irq_index) {
++				cpu = cpumask_local_spread(i, gc->numa_node);
++				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
++			} else {
++				irqs[start_irq_index] = irq;
++			}
++		} else {
++			irqs[i - start_irq_index] = irq;
++			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
++					  gic->name, gic);
++			if (err)
++				goto free_irq;
++		}
+ 	}
+ 
++	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
++	if (err)
++		goto free_irq;
+ 	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
+ 	if (err)
+ 		goto free_irq;
+ 
+ 	gc->max_num_msix = nvec;
+ 	gc->num_msix_usable = nvec;
+-
++	cpus_read_unlock();
+ 	return 0;
+ 
+ free_irq:
+@@ -1343,8 +1379,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 	}
+ 
+ 	kfree(gc->irq_contexts);
++	kfree(irqs);
+ 	gc->irq_contexts = NULL;
+ free_irq_vector:
++	cpus_read_unlock();
+ 	pci_free_irq_vectors(pdev);
+ 	return err;
+ }
 -- 
 2.34.1
 
