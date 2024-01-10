@@ -1,116 +1,103 @@
-Return-Path: <linux-hyperv+bounces-1402-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1403-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31DD482915C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 01:28:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 677FE829333
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 06:11:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B7F7288CD6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 00:28:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F5C51C24113
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 05:11:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84A2A392;
-	Wed, 10 Jan 2024 00:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4813FD50F;
+	Wed, 10 Jan 2024 05:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="FfU+YEzL"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gs2QXTZh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2097.outbound.protection.outlook.com [40.92.18.97])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12olkn2069.outbound.protection.outlook.com [40.92.22.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9431362;
-	Wed, 10 Jan 2024 00:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C248BF7;
+	Wed, 10 Jan 2024 05:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SAReZOSp4WKrTDXPytXco/HgNuq1ZnPYfaDwmADtKHuohl7KIhOwf6VRe48s/sOj4Idr9ZoawhsfdIEFCEsZqtYI/ZmycgNuylTgPt1h5+HRHTQ5AH0q07X4iE+MUwaDztFSfDMtS8799PKrGjDDpt/N+w9faFJbEJZVxHpyInlDA5MropN/45wORcDzeR1nrdbhgqw+ifBC75UZwAvHWcSMxKoMOOXMbquxDwiKU/L5LQf3jepl4Oi0jAvQiq4Cz/tJONmY+luDr0R/x85EePo5EUDuF6LrLyYk3w5/OC1AYnxaRVBwy0v9WkIA4AXxz9HhOYd5lSJv3AudtpDC0Q==
+ b=MhZVl+42G+hrIne6JN+doHda4swuk8FnJNviJnbHgtzfpDAMDhZ1WNYRqc8cuUg6vwRxP++1zD0i5ZWQtBcTINKgF9zC8uQx3x3CpFtkRYogMfvJK2FjihZrJ+TC9KjB8RNdsEO9tECL28x20q739vHgNOqW9u3DRMWo+qs+kOCOB1eq6tCU2GK59UzMCARWo7DjpNsR5UUmsmtvzbxAPFWwqqJW7vcESO/ayP7tlbGi+65GCUbhFXxz3PBvTvX0ZTPhlIBuuVWtEGz7UndcvulD9L+xOyA7HGx84BNYJeLpOucjkNg19t3J/AST2AzXVBe1hK53SU+91hlS7qTJPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mA0+M8w4tOqwhum5aXQMMLl5zuzmw00OsEzd61e3Q80=;
- b=ErHnkYuMtMtiFPf4xJs763IyNPfkP2Vj4FdIkzfyojKJv8n7Fstz+1sswMfpb6ajpWZlhCaFe0CQiiAiCo5TB+ykXRWBS0b3FdvAA4vF8MPXEnt5IUkPdSTpI0DwQPzge6dne1XY43u8K0Z72egMnCzE8c+fuoETNSvyOWNR8Xc5P3FEMhtK3p/vrBtp+uq99xsRb6ABmZQRL5aw6q9/8JXTrSrELGvWi4IGplJ1QVQp6lkS1/hXbNOhDG8irB6kgCotw5+yRHZ45+GNI3kVpMyyrxkajvZXbiTqitFqXYp6QtGr4nikocEEtDPJ1aMusZuyyxWpTa720WoOX7VH+w==
+ bh=FiHhL2gkfLyNkU7NsrfzXauhRJs+V//SwRXlXKOlRbg=;
+ b=PwV1Rov1PZDf9uBP2iNNZ0pI+olZeIvmR+AJOMy2AfB4w9dAJxO2PiXI79CemtRdbYWJf9Rgf3/TsBaHb5vCcUcA8KQEmHMIGT8MgQPp07Tz800qx4flTiqDMJiNDeOqV6tfT+p0Fwx3XAgsG9p+tQgSlBrR1zJ8LShroaFa7SmXeSoWdjUvKA44SFGFDJ0nX8Yf5YygDCb2VmaE6aHFSdysVXuWRLjbLvsegie2HjKECN9fsTcWfJ8eYoOEn9L8GwUQ+nqrly2q1PSb3c25yJ2+I6g+6k/W3SscQLVaGWnfUuFavNZ4gxyyccM5XqWQGnaAKz8lpRMSm+Sl7+ZU6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mA0+M8w4tOqwhum5aXQMMLl5zuzmw00OsEzd61e3Q80=;
- b=FfU+YEzLhAXVLO+Z9euzyH5k1ecy/hMs7Vggr+lmaG8R+gAQgHsBMAGrLZL/uPmzRZ1IQI0ro7+MZCqiVg9pPnr7EiRFSqgaV13owMH0QDU1PdHNSjeNVRmbe1E9IXIUJuUHSed6EwNFspxhmCk4tCgXYsK+qimmyhKqRq+q0RP5aLx1Asi6UTaXWyF7wNVWlUu0ezr4/bWo22zRGMA2H+coilGVbz4nEw0VNQnPBZsQigRrL2vn5MdjGtYdM8enz5ybfxoj0/1jNuaOMYpfADWckRcfzVtxpwCUa86SuWoWBEKNhZ1pQZmDXNXdDjc7wk6q4A29K4F26py9lr+89g==
+ bh=FiHhL2gkfLyNkU7NsrfzXauhRJs+V//SwRXlXKOlRbg=;
+ b=gs2QXTZhup5fr3LXaSWTGlZvNTr6cr8x0RAdX5JDe2u4Py4MVrgUVhK/ZpZ0CwFbCEyowY3eic2R6Fl6T488CEP/Xh3YhF776byDWErwflF2z7gvZMkT86tWKdzr+k5aU7rgQThnOj0hZEttv8OIbNEpK+N4otZctx4dQ9fihR5Jx897pMtHSYZjo2xDv7L6KiDc54RQSZHztk3HEt4in3IdvuCcFPLwPs+ZrvCRQBj2EeQ5stTUWIzDIzJ1Lywnq/XyaOlXpBmlIxEcuY3MQu6Dm6CBf6RELDXJLGw9aMZR/T2T/NlHaJT1K4WkEE9BANn51828yst4UqRYuxhZxg==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH0PR02MB8260.namprd02.prod.outlook.com (2603:10b6:610:f4::14) with
+ by SJ0PR02MB8561.namprd02.prod.outlook.com (2603:10b6:a03:3f0::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.24; Wed, 10 Jan
- 2024 00:27:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.27; Wed, 10 Jan
+ 2024 05:10:47 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::3524:e4b3:632d:d8b2]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::3524:e4b3:632d:d8b2%4]) with mapi id 15.20.7181.015; Wed, 10 Jan 2024
- 00:27:54 +0000
+ 05:10:47 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Yury Norov <yury.norov@gmail.com>
-CC: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"longli@microsoft.com" <longli@microsoft.com>, "leon@kernel.org"
-	<leon@kernel.org>, "cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "schakrabarti@microsoft.com"
-	<schakrabarti@microsoft.com>, "paulros@microsoft.com" <paulros@microsoft.com>
-Subject: RE: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs per
- CPUs
-Thread-Topic: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs
- per CPUs
-Thread-Index: AQHaQuoWNi7Bv1N390Ch4p7DlTYrcLDR1sMggABKpoCAAAdtgA==
-Date: Wed, 10 Jan 2024 00:27:54 +0000
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "ssengar@microsoft.com" <ssengar@microsoft.com>
+Subject: RE: [PATCH] x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
+Thread-Topic: [PATCH] x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
+Thread-Index: AQHaP8IdXpQMxQOq3EyxPvaEs1hvhLDShPQw
+Date: Wed, 10 Jan 2024 05:10:47 +0000
 Message-ID:
- <SN6PR02MB415704D36B82D5793CC4558FD4692@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
- <1704797478-32377-4-git-send-email-schakrabarti@linux.microsoft.com>
- <SN6PR02MB4157CB3CB55A17255AE61BF6D46A2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <ZZ3Wsxq8rHShTUdA@yury-ThinkPad>
-In-Reply-To: <ZZ3Wsxq8rHShTUdA@yury-ThinkPad>
+ <SN6PR02MB415740C3EE66618A37A658EED4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1704450566-26576-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1704450566-26576-1-git-send-email-ssengar@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-x-tmn: [sMyKuHekd5BcrLdrZhEIJg+lFLZ/TRU0]
+x-tmn: [loTHMp+r8FO1u8f5sJjv1UX6ByBgMifN]
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH0PR02MB8260:EE_
-x-ms-office365-filtering-correlation-id: 50469f9e-41c2-4879-1adb-08dc1172fcb8
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB8561:EE_
+x-ms-office365-filtering-correlation-id: 0a657a98-8c20-4444-36ba-08dc119a8191
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- V8kl7IQn6GZLj2BhI6K8xZgRrvvQU7sfAVelueZ6UUncLo+DMlSqyUcQMxsw1F2n7+7zKTy+leGoy3aLzVjz8ZC2z2kRupdxM0xLD6Kdru51mwhduTSGK5C939uMRRr111179EAo1YLAgEcOd36wYhwx1CanKeI3RqTIql0oTBjRfpD6sQzC4EpaMKsV7OiN1Qjk95D9ULTHMIjnohHtnrsdBhYxjStFgX/noQR/AEAukmDIaaSibF3e/zEoSq41sHiH+F+7Gr8HCJDY+l+7ArXbi5Vrk/Yz0YjOU5NNGe+2Tu47JQ6NVFSsgE/J/ZZ3PhF9F23mNKRXnacKUAaNBuNj7e524EYILV7wdNiaPf5nbzae0k2Rmnp7u0on+CNTHMS0gq/7+EatPyKdDgcQXrYM5YQIbaVqn3AJHmbalykKP9INyymxzsP8EopqBmMib2he3WA2FROGxgenLfO1CU6J7VzCqZxGl9Oet+HxeVKEv8DyJEwlJoGJFNvElFo28ppYQ4R70e0KgTzbfddpOkkQKB8C+zi6Tq7O2pARWGxJldxjkM02mkVn+Lxjlhtf
+ 0ZKTpQ1ggf6IPbMRC5XB2EkNBH7kf5unkKpNT3Q2XB0uewrCROmtOgNd6n0KjSYSrjn+vynIGOO8uc1WIsI/n4Yo4Z2DfHOsyClj2W/rXWuRRRicyFYb1IBlIpVqxHqYFGIgLYBOCZI8Fx8fqEJlxogJUDKVdKsmJt3THaPgnVLvX8LY31g1tYHcdx5+mYx3aBHWRQ0t6n5silx+4chRsl1yD6HjNG4z1nTegPOKsjm5EHc0bEtK27lb1OZTmCxI4I6OX+39zsGzB4WdYJf/YnMbpbDe3+7Y26AWl4cFzPopRMwiW05Vrb/i99Lo0ayNCNTsNOHMlGvStNBzNcD/p79X2NEMh9JUXKwuZI3zoSh6EXEn0A7sktpAEXBEYj4/NxlYYOcm2HQ8x0yN6xXRjAARlTHo5caCrts/CIGbd78+xQBHLw4bdqf6gWO7d/nVHwWHvv9DuY95s+153UGUzlSdOBRDnxOYyaLaUihnYzSY1+wQMWk+OLv3TOz9ERUUn6025xqWhfQG4HZ7L1PDOjSTVa0KLQhY9dOPehQK3h+srHdeQiPpGAgIpKZ6OiaH
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?NiH/SaoMCTBAEsMnuyFoK9UVXP6ro6xtkdgWWchnpyPCzkmpEJ4NHOaiTI5S?=
- =?us-ascii?Q?9qw942BQ7K5rzXLp3W8PIO5iEfIOx3uFxQQJN7VmyL8Qq5p4fs1j1gN0gMtU?=
- =?us-ascii?Q?4LexbaTYe4MKLNnMdjsGqqJSld+xrLmeAtyTcWFzoAt40qOBNXQ3HECNHRYD?=
- =?us-ascii?Q?4JzP85NuxLFj7lQ/iKJxE5WMZ7zK5JbZeddNRxjxCjlUHrUs5I2r4k4vnCvL?=
- =?us-ascii?Q?5jnBdg6iC2mKbZJhRAp/Om2idnkhh59fAuWSlhAwF5ql6EVh88bv0fB9y3l1?=
- =?us-ascii?Q?mbe1s41lyrdIj0MtXeixLLzTTYAVuaXVDs3YqEZnAIx1UjxScrMVY3QCBjri?=
- =?us-ascii?Q?5YazoNd4hVbCqNzW5/uN2PlOl1kPxGB7CIhA0Cf5Wvzf2B/Fj3t8iLsmcBzy?=
- =?us-ascii?Q?L1WhI7iD8e+84PqPmLI0iT9zakuP+DLU+qCDAEQq3IcZriOqGsM4V+/poGML?=
- =?us-ascii?Q?c8qy59ATaqsk6eXplj18ArxF61A3y5N2VrCaa4jAGEUoM+oKKO9ikybFnCZC?=
- =?us-ascii?Q?iJC6HiJr2iKDedy9qyRJ0k57ovW5JyZPWqIPqhTzCTwEdvaSmK9uN1RyCFjg?=
- =?us-ascii?Q?iXr8Q/JFQkRECuROMgKGzX3puXaMhwdTk7FU6aAXSXAeUseVo0IwrMqmovgU?=
- =?us-ascii?Q?GY55SV1O+mlY02BenVhYQyCELAZJZTf/V8htwaq6xXdKeuNIoHCZY94BP5T/?=
- =?us-ascii?Q?A/U3jtSOCi8t8aL3H6MNPv+lmfnhAUWmgVtg4LRtHMP7kDSg0UwzBrNbdhDV?=
- =?us-ascii?Q?m+apBsKZ+Wp+1jgjrq12SGkqMiuFi2qipzxsVRXah78IYP/1BarrgoM+Eltf?=
- =?us-ascii?Q?1jhrJIpCgPYaRospEfYevOZ4X7K876zD0/3UTWO/O51xk5qJupcXQsVyoZDS?=
- =?us-ascii?Q?dvOiT6Ls3V72IDykGy1/MRAwNzDQ60ON7ikzd8YI34K5lDVmnKjOVN52eYkX?=
- =?us-ascii?Q?JPK3WW41oBDZGDVLc7rfFWGWYn/RjU7zgVkEJxBW9I4rlY2yiEGNDMUQpqrH?=
- =?us-ascii?Q?PTQCYDdYXl/azi0d/RXZVdIP7HE3rl1NGQKPQGjSewwHz87uUp6a3dm8fHd9?=
- =?us-ascii?Q?3xIkJc2Pj1T2DHgx9QAvUbsJ5ioIXobG0//nAnqN9drDUj2tANnftplWff6W?=
- =?us-ascii?Q?0OSPR86dUfhRNLeawvrKuuHyOwOtCZ/0KiSVwxZ6oOwUPAWlxNw9VvZ9/HL7?=
- =?us-ascii?Q?Ht9cEIXaMQN267mIAO5OAgLI0h5tRtxFKkF4ZQ=3D=3D?=
+ =?us-ascii?Q?IbBcD6h6n3KKoKUkJlggI6+A49YsfwfjXZNnoiETaYjcL0k18xyt7QCatXuO?=
+ =?us-ascii?Q?1GtZNXRmDmkf4W562/EJNPCzVTmHCUeGQV1u/gZc/D6c4OnBIKU2/kl0ud2E?=
+ =?us-ascii?Q?zJvuKF3IgEdG7f0G3fUOChs6WLt8tFWYebnoNqRZpLXXb2LadX0RLsnsIV6u?=
+ =?us-ascii?Q?ET7SfQVHUkqpIiz0sNXGyjDMUlBZgrPFLyVI0EDBJFAGuToydgggXkExzUcz?=
+ =?us-ascii?Q?rnLG8Y++8lol2Xo1ly4CVx/O9XPOdPZpCM5WOIh79q8I1E0qHIfrnbLCkrDj?=
+ =?us-ascii?Q?DV4Zci8PGBGmLF1sFXum2IPz3tuV3QjW5JzNPCfjH3B7hDyzj0I24yQty8Nv?=
+ =?us-ascii?Q?Dmu6yHGw6LneWAWZBAcggFiEQLY70Mdmtx5YLps4MoUszWGWgq2HpJbhigME?=
+ =?us-ascii?Q?E5EW7fA5shaheC/5h4u4sC2K3UINlj9PYikl/bYnv7ZRW+V1DxFmXDRNfIl0?=
+ =?us-ascii?Q?X3d5fw7CIKX/hIQ1K3PdozFRCuEdCpy1Rgm22CLqkGXT9wFO0mUK19wtsocX?=
+ =?us-ascii?Q?opZa2Ha6ztltj1lkO+vFZY9Re73EeHq097t+D5Pky3kQ49IgB89YzOkGqlc1?=
+ =?us-ascii?Q?Li07sBQoDRTEa4Kc3ttNey2jsvA7XphX/smTTqQyRGtqH4nn891Y6kZbd6sJ?=
+ =?us-ascii?Q?b45Cndpjo/H9HCmYPdxTQW0Ohpu56HlyO+JQyLV8t5VzwOKyXren1OIpgH9E?=
+ =?us-ascii?Q?5cw4QZlpdR6W7+qFl5YUT+AmN8Vk1+Lw3tiDbO6f224tIpZuWjhEvCkz/0U5?=
+ =?us-ascii?Q?5nwZnrSBBFFutOuTMDQ7/gxagWkaFi6KrkvwDFqROxC1nSUiXT35ZobNsw2v?=
+ =?us-ascii?Q?/fvkKkO7Ji+Hk+FuUKmRSk7+i0oTYjEMro15CxWD7wwFIxKZH+oCyTQW6xpx?=
+ =?us-ascii?Q?6LAv8vSbxWsQ6c9q7xfF5VRZUxTdoYE4wNmntGT7HjopqQIJdDWqEeHC0p4B?=
+ =?us-ascii?Q?dtf+dKLGoL3684dWYqk2kBQx600O8Gwp7omUw8d4OObvPPuOYH68VODfdlG2?=
+ =?us-ascii?Q?LjLyIzg+h7ls1cwnFqKy6TeFSi1GE/GQWvgZFJe4peczI4+6R9nHgHW5uV78?=
+ =?us-ascii?Q?uq8t6pslPo0TVT2V+6+xEvDxG1rdp2BXQ3vdCiQJ0/mL5/loDO30/eNvR2rO?=
+ =?us-ascii?Q?L8vdBDtvRQKXO0Eovq/PS1FdB34JSDITy4TciI30kz45iZkl1D+yb6w5EcSa?=
+ =?us-ascii?Q?OBDNdUpOgz3hQ5y0F19o1QdCEH+deWDNfe8BDg=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -123,187 +110,72 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50469f9e-41c2-4879-1adb-08dc1172fcb8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a657a98-8c20-4444-36ba-08dc119a8191
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2024 00:27:54.3450
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2024 05:10:47.6006
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR02MB8260
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8561
 
-From: Yury Norov <yury.norov@gmail.com> Sent: Tuesday, January 9, 2024 3:29=
- PM
+From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Friday, January 5,=
+ 2024 2:29 AM
 >=20
-> Hi Michael,
+> The current method for signaling the compatibility of a Hyper-V host
+> with MSIs featuring 15-bit APIC IDs relies on a synthetic cpuid leaf.
+> However, for higher VTLs, this leaf is not reported, due to the absence
+> of an IO-APIC.
 >=20
-> So, I'm just a guy who helped to formulate the heuristics in an
-> itemized form, and implement them using the existing kernel API.
-> I have no access to MANA machines and I ran no performance tests
-> myself.
+> As an alternative, assume that when running at a high VTL, the host
+> supports 15-bit APIC IDs. This assumption is now deemed safe, as no
+> architectural MSIs are employed at higher VTLs.
 
-Agreed. :-)   Given the heritage of the patch, I should have clarified
-that my question was directed to Souradeep.  Regardless, your work
-on the cpumask manipulation made everything better and clearer.
+I'm trying to fully understand this last sentence.  It has the words
+"now" and "deemed" as qualifiers.  Can you say anything more about
+why "now" (implying it wasn't safe at some point in the past)?
+And what are the implications of "deemed"?  Or are both just
+wordiness, and it would be just as good to say "This assumption is safe,
+as Hyper-V does not employ any architectural MSIs at higher VTLs." ?
 
->=20
-> On Tue, Jan 09, 2024 at 07:22:38PM +0000, Michael Kelley wrote:
-> > From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com> Sent:
-> Tuesday, January 9, 2024 2:51 AM
-> > >
-> > > From: Yury Norov <yury.norov@gmail.com>
-> > >
-> > > Souradeep investigated that the driver performs faster if IRQs are
-> > > spread on CPUs with the following heuristics:
-> > >
-> > > 1. No more than one IRQ per CPU, if possible;
-> > > 2. NUMA locality is the second priority;
-> > > 3. Sibling dislocality is the last priority.
-> > >
-> > > Let's consider this topology:
-> > >
-> > > Node            0               1
-> > > Core        0       1       2       3
-> > > CPU       0   1   2   3   4   5   6   7
-> > >
-> > > The most performant IRQ distribution based on the above topology
-> > > and heuristics may look like this:
-> > >
-> > > IRQ     Nodes   Cores   CPUs
-> > > 0       1       0       0-1
-> > > 1       1       1       2-3
-> > > 2       1       0       0-1
-> > > 3       1       1       2-3
-> > > 4       2       2       4-5
-> > > 5       2       3       6-7
-> > > 6       2       2       4-5
-> > > 7       2       3       6-7
-> >
-> > I didn't pay attention to the detailed discussion of this issue
-> > over the past 2 to 3 weeks during the holidays in the U.S., but
-> > the above doesn't align with the original problem as I understood
-> > it.  I thought the original problem was to avoid putting IRQs on
-> > both hyper-threads in the same core, and that the perf
-> > improvements are based on that configuration.  At least that's
-> > what the commit message for Patch 4/4 in this series says.
->=20
-> Yes, and the original distribution suggested by Souradeep looks very
-> similar:
->=20
->   IRQ     Nodes   Cores   CPUs
->   0       1       0       0
->   1       1       1       2
->   2       1       0       1
->   3       1       1       3
->   4       2       2       4
->   5       2       3       6
->   6       2       2       5
->   7       2       3       7
->=20
-> I just added a bit more flexibility, so that kernel may pick any
-> sibling for the IRQ. As I understand, both approaches have similar
-> performance. Probably my fine-tune added another half-percent...
->=20
-> Souradeep, can you please share the exact numbers on this?
->=20
-> > The above chart results in 8 IRQs being assigned to the 8 CPUs,
-> > probably with 1 IRQ per CPU.   At least on x86, if the affinity
-> > mask for an IRQ contains multiple CPUs, matrix_find_best_cpu()
-> > should balance the IRQ assignments between the CPUs in the mask.
-> > So the original problem is still present because both hyper-threads
-> > in a core are likely to have an IRQ assigned.
->=20
-> That's what I think, if the topology makes us to put IRQs in the
-> same sibling group, the best thing we can to is to rely on existing
-> balancing mechanisms in a hope that they will do their job well.
->=20
-> > Of course, this example has 8 IRQs and 8 CPUs, so assigning an
-> > IRQ to every hyper-thread may be the only choice.  If that's the
-> > case, maybe this just isn't a good example to illustrate the
-> > original problem and solution.
->=20
-> Yeah... This example illustrates the order of IRQ distribution.
-> I really doubt that if we distribute IRQs like in the above example,
-> there would be any difference in performance. But I think it's quite
-> a good illustration. I could write the title for the table like this:
->=20
->         The order of IRQ distribution for the best performance
->         based on [...] may look like this.
->=20
-> > But even with a better example
-> > where the # of IRQs is <=3D half the # of CPUs in a NUMA node,
-> > I don't think the code below accomplishes the original intent.
-> >
-> > Maybe I've missed something along the way in getting to this
-> > version of the patch.  Please feel free to set me straight. :-)
->=20
-> Hmm. So if the number of IRQs is the half # of CPUs in the nodes,
-> which is 2 in the example above, the distribution will look like
-> this:
->=20
->   IRQ     Nodes   Cores   CPUs
->   0       1       0       0-1
->   1       1       1       2-3
->=20
-> And each IRQ belongs to a different sibling group. This follows
-> the rules above.
->=20
-> I think of it like we assign an IRQ to a group of 2 CPUs, so from
-> the heuristic #1 perspective, each CPU is assigned with 1/2 of the
-> IRQ.
->=20
-> If I add one more IRQ, then according to the heuristics, NUMA locality
-> trumps sibling dislocality, so we'd assign IRO to the same node on any
-> core. My algorithm assigns it to the core #0:
->=20
->   2       1       0       0-1
->=20
-> This doubles # of IRQs for the CPUs 0 and 1: from 1/2 to 1.
->=20
-> The next IRQ should be assigned to the same node again, and we've got
-> the only choice:
->=20
->=20
->   3       1       1       2-3
->=20
-> Starting from IRQ #5, the node #1 is full - each CPU is assigned with
-> exactly one IRQ, and the heuristic #1 makes us to switch to the other
-> node; and then do the same thing:
->=20
->   4       2       2       4-5
->   5       2       3       6-7
->   6       2       2       4-5
->   7       2       3       6-7
->=20
-> So I think the algorithm is correct... Really hope the above makes
-> sense. :) If so, I can add it to the commit message for patch #3.
-
-Thinking about it further, I agree with you.  If we want NUMA
-locality to trump avoiding hyper-threads in the same core, then
-I'm good with the algorithm.   If I think of the "weight" variable
-in your function as the "number of IRQs to assign to CPUs in
-this NUMA hop", then it makes sense to decrement it by 1
-each time irq_set_affinity_and_hint() is called.  I was confused
-by likely removing multiple cpus from the "cpus" cpumask
-juxtaposed with decrementing "weight" by only 1, and by my
-preconception that to get the perf benefit we wanted to avoid
-hyper-threads in the same core.
-
->=20
-> Nevertheless... Souradeep, in addition to the performance numbers, can
-> you share your topology and actual IRQ distribution that gains 15%? I
-> think it should be added to the patch #4 commit message.
-
-Yes -- this is the key thing for me.  What is the configuration that
-shows the 15% performance gain?  Patch 3/4 and Patch 4/4 in the
-series need to be consistent in describing when there's a performance
-benefit and when there's no significant difference.   In Patch 4/4,
-the mana driver creates IRQs equal to the # of CPUs, up to
-MANA_MAX_NUM_QUEUES, which is 64.  So the new algorithm
-still assigns IRQs to both hyper-threads in cores in the local NUMA
-node (unless the node is bigger than 64 CPUs, which I don't think
-happens in Azure today).  For the first hop from the local NUMA
-node, IRQs might get assigned to only one hyper-thread in a core
-if the total CPU count in the VM is more than 64.
+The code LGTM.
 
 Michael
+
+>=20
+> This unblocks startup of VTL2 environments with more than 256 CPUs.
+>=20
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_vtl.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> index 539c7b5cfa2b..1c225362f88e 100644
+> --- a/arch/x86/hyperv/hv_vtl.c
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -16,6 +16,11 @@
+>  extern struct boot_params boot_params;
+>  static struct real_mode_header hv_vtl_real_mode_header;
+>=20
+> +static bool __init hv_vtl_msi_ext_dest_id(void)
+> +{
+> +	return true;
+> +}
+> +
+>  void __init hv_vtl_init_platform(void)
+>  {
+>  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+> @@ -39,6 +44,8 @@ void __init hv_vtl_init_platform(void)
+>  	x86_platform.legacy.warm_reset =3D 0;
+>  	x86_platform.legacy.reserve_bios_regions =3D 0;
+>  	x86_platform.legacy.devices.pnpbios =3D 0;
+> +
+> +	x86_init.hyper.msi_ext_dest_id =3D hv_vtl_msi_ext_dest_id;
+>  }
+>=20
+>  static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
+> --
+> 2.25.1
+>=20
+
 
