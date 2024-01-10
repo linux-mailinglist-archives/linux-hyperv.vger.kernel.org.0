@@ -1,220 +1,117 @@
-Return-Path: <linux-hyperv+bounces-1406-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1407-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3068295E1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 10:09:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BA5682982D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 11:59:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFE291C20D0F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 09:09:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 314A91C219AF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jan 2024 10:59:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 174503BB53;
-	Wed, 10 Jan 2024 09:09:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B7B4439B;
+	Wed, 10 Jan 2024 10:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DP3RQn8U"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="SDpSBKZA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 967193B780;
-	Wed, 10 Jan 2024 09:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 3E43220B3CC1; Wed, 10 Jan 2024 01:09:31 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3E43220B3CC1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704877771;
-	bh=Qpi7R7m3O+gdQIXeh5+h30ohlFKpfJGH9jVSMmph+NQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DP3RQn8UQ6QZwWzhzOHllflTcYyMB1LSjXmplQT+aEN1cYfPiXn0GbmCDSB/Qzwyo
-	 h81vxTkaCx/tFW7un6bYYzBi5vrh55NIcr2RyQ7b8ktsL4+9g0TmmQn9TXQZ8WH8Ld
-	 iPikSa8PwX53ln3Z/nHE/aewUoXaLoXQRsmYls98=
-Date: Wed, 10 Jan 2024 01:09:31 -0800
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"leon@kernel.org" <leon@kernel.org>,
-	"cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"schakrabarti@microsoft.com" <schakrabarti@microsoft.com>,
-	"paulros@microsoft.com" <paulros@microsoft.com>
-Subject: Re: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs
- per CPUs
-Message-ID: <20240110090931.GB5436@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1704797478-32377-1-git-send-email-schakrabarti@linux.microsoft.com>
- <1704797478-32377-4-git-send-email-schakrabarti@linux.microsoft.com>
- <SN6PR02MB4157CB3CB55A17255AE61BF6D46A2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <ZZ3Wsxq8rHShTUdA@yury-ThinkPad>
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7D6405C3;
+	Wed, 10 Jan 2024 10:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704884304; x=1705489104; i=markus.elfring@web.de;
+	bh=tY5224BW7/3IjkY5UwNCaDae9HcTzJg5/+WPa3JcuU4=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=SDpSBKZAnOLO3DFkJSvDRCP293a6xEV68IB5KjSUmeLQn5G4RGABZ7Pd5CyWKf4I
+	 Q2sE5dWpeDpbOqiDad3drrZks7wKlPPPiCr6DgxUJ1tEusfbAqjNHWk5cfMLkoCc4
+	 URHjcWQ4vtPw7lAGih6Vnzv7VG1lY53DpYE4COO8srVccjcJLs8HXvxY+jp57zre3
+	 45F612Ya5EPcj6WejT+ac55rk78BY+achTNU7vrJ0TxxVuzhqj34Bq8QiJnwehq9t
+	 1XQpn90idWpEEKbpmvCDLfDKrKVzZ2Qatr8snAvQ6OXtATlynlIzFp5t3ZbqFEHlJ
+	 sfBoaPM8vTSGBxjnHg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MK56y-1rbCKE26Pu-00LvHW; Wed, 10
+ Jan 2024 11:58:24 +0100
+Message-ID: <82054a0a-72e5-45b2-8808-e411a9587406@web.de>
+Date: Wed, 10 Jan 2024 11:58:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZ3Wsxq8rHShTUdA@yury-ThinkPad>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Drivers: hv: vmbus: One function call less in
+ create_gpadl_header() after error detection
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ "cocci@inria.fr" <cocci@inria.fr>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <6d97cafb-ad7c-41c1-9f20-41024bb18515@web.de>
+ <SN6PR02MB4157AA51AD8AEBB24D0668B7D4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <SN6PR02MB4157AA51AD8AEBB24D0668B7D4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KCTONhzZ1zvlF5SZjQrJ7BayTBtq1VFeyAJQcMCYzcZztdwB970
+ tEgvF8y4qMkcyeF40hwN74l8dTUTfEuqSbmmuIziS5yNHZbcp6Fw7IWEGTXtO3+M3+lw0DA
+ DmLy5NDffGEuZW00nKLPaCCVV63M3VxI9TKeohJLxoXysSNiz2p58g4OTXbXmRZJIXzRJ+2
+ IXj5ko0xyxr8zm9N/277A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8VsTKgjF7kw=;gQzASWqNdbCpILehGdiYjzn+qi4
+ Br75jSeb/C5j0J96bJCnxCHa5kEwVCBf/zernQWtcDavb6tASaSu8+X5ACzeCO3MrknR+5upl
+ wxCh8AciATerCMiC9WbikoycuNIpYW2Lg0U2Kq/mUQbpxIAWBD1U8I84p4Pnw7x7JemDS2tbj
+ NS4Pa7zZ+Sp4ogozFvgNj8RZyEz9VAAQ32Y5uT1qsxfIaUAMK2CxiNT7lyFOKccZTny86yAv7
+ 1p3jzyENhzS4nqKzPznntbcjur6R65yu0WVYh46jAmHJsA02FDxjGLfciqd51zE0diCYORJA/
+ ZD7hj3pJVDlavAG7LtMBuoiGcpgHKmXxRduvYbAsOYWedeGG3nKyzv+x5yiri+Bf3xIaos+aK
+ 7VfbEyMHB0/nLhibxGvQrZaLp65/BU1W/Rt9owh+WvQ7nflWwIYIYFeNHwL+c52oaxql2Cu47
+ yUldPpDTBzK14O8ze5lIJNk941HpeqlFfhAPqVnwTOhcxSCstmJuGZyoWK2j+n0iwrBaemS+9
+ qLRY9FEe6C9ADF7cVhzn9s+0RbNFAF4wekeyJorapvQlQytgeJtoVBtRx5MPtlSg+Bi7spPNt
+ MBm/KC1sxlPUQQYq5hl7aZUhCW2WdHw7zVQvLgDXdND9bhlogJNnFLsfjV1CDVz89MTlPjEsg
+ LjHWoqFRKVLTXSitUcAWCk6u1cZXP3Md71eUHTueQjTY21+lzwacl970ZfyaEIsa75rQ16823
+ cSaD11Fh4n3VysK9nDfsGXNJPw/aLJZY4xOVtBV+4wkZ2stwUpNuyoS7Q+GRfjMJu2Oge/shX
+ VRiwrs8YgydN+mJv4GMSglRkzFkTwdKTEStolt0+swgKtkmNOkxmb+WE7wJY0imnBLTZCJUA4
+ QqlziK/M4gU48REOqJt5YG9EUdefuK3VRjfQoW5Ya7fT+KLVzv+8Ycr1gJmv/3VVAq7zM6lAP
+ WVWJjmrSYW+NP9vEXdm6pqgj0Lc=
 
-On Tue, Jan 09, 2024 at 03:28:59PM -0800, Yury Norov wrote:
-> Hi Michael,
-> 
-> So, I'm just a guy who helped to formulate the heuristics in an
-> itemized form, and implement them using the existing kernel API.
-> I have no access to MANA machines and I ran no performance tests
-> myself.
-> 
-> On Tue, Jan 09, 2024 at 07:22:38PM +0000, Michael Kelley wrote:
-> > From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com> Sent: Tuesday, January 9, 2024 2:51 AM
-> > > 
-> > > From: Yury Norov <yury.norov@gmail.com>
-> > > 
-> > > Souradeep investigated that the driver performs faster if IRQs are
-> > > spread on CPUs with the following heuristics:
-> > > 
-> > > 1. No more than one IRQ per CPU, if possible;
-> > > 2. NUMA locality is the second priority;
-> > > 3. Sibling dislocality is the last priority.
-> > > 
-> > > Let's consider this topology:
-> > > 
-> > > Node            0               1
-> > > Core        0       1       2       3
-> > > CPU       0   1   2   3   4   5   6   7
-> > > 
-> > > The most performant IRQ distribution based on the above topology
-> > > and heuristics may look like this:
-> > > 
-> > > IRQ     Nodes   Cores   CPUs
-> > > 0       1       0       0-1
-> > > 1       1       1       2-3
-> > > 2       1       0       0-1
-> > > 3       1       1       2-3
-> > > 4       2       2       4-5
-> > > 5       2       3       6-7
-> > > 6       2       2       4-5
-> > > 7       2       3       6-7
-> > 
-> > I didn't pay attention to the detailed discussion of this issue
-> > over the past 2 to 3 weeks during the holidays in the U.S., but
-> > the above doesn't align with the original problem as I understood
-> > it.  I thought the original problem was to avoid putting IRQs on
-> > both hyper-threads in the same core, and that the perf
-> > improvements are based on that configuration.  At least that's
-> > what the commit message for Patch 4/4 in this series says.
-> 
-> Yes, and the original distribution suggested by Souradeep looks very
-> similar:
-> 
->   IRQ     Nodes   Cores   CPUs
->   0       1       0       0
->   1       1       1       2
->   2       1       0       1
->   3       1       1       3
->   4       2       2       4
->   5       2       3       6
->   6       2       2       5
->   7       2       3       7
-> 
-> I just added a bit more flexibility, so that kernel may pick any
-> sibling for the IRQ. As I understand, both approaches have similar
-> performance. Probably my fine-tune added another half-percent...
-> 
-> Souradeep, can you please share the exact numbers on this?
-> 
-> > The above chart results in 8 IRQs being assigned to the 8 CPUs,
-> > probably with 1 IRQ per CPU.   At least on x86, if the affinity
-> > mask for an IRQ contains multiple CPUs, matrix_find_best_cpu()
-> > should balance the IRQ assignments between the CPUs in the mask.
-> > So the original problem is still present because both hyper-threads
-> > in a core are likely to have an IRQ assigned.
-> 
-> That's what I think, if the topology makes us to put IRQs in the
-> same sibling group, the best thing we can to is to rely on existing
-> balancing mechanisms in a hope that they will do their job well.
-> 
-> > Of course, this example has 8 IRQs and 8 CPUs, so assigning an
-> > IRQ to every hyper-thread may be the only choice.  If that's the
-> > case, maybe this just isn't a good example to illustrate the
-> > original problem and solution.
-> 
-> Yeah... This example illustrates the order of IRQ distribution.
-> I really doubt that if we distribute IRQs like in the above example,
-> there would be any difference in performance. But I think it's quite
-> a good illustration. I could write the title for the table like this:
-> 
->         The order of IRQ distribution for the best performance
->         based on [...] may look like this.
-> 
-> > But even with a better example
-> > where the # of IRQs is <= half the # of CPUs in a NUMA node,
-> > I don't think the code below accomplishes the original intent.
-> > 
-> > Maybe I've missed something along the way in getting to this
-> > version of the patch.  Please feel free to set me straight. :-)
-> 
-> Hmm. So if the number of IRQs is the half # of CPUs in the nodes,
-> which is 2 in the example above, the distribution will look like
-> this:
-> 
->   IRQ     Nodes   Cores   CPUs
->   0       1       0       0-1
->   1       1       1       2-3
-> 
-> And each IRQ belongs to a different sibling group. This follows
-> the rules above.
-> 
-> I think of it like we assign an IRQ to a group of 2 CPUs, so from
-> the heuristic #1 perspective, each CPU is assigned with 1/2 of the
-> IRQ.
-> 
-> If I add one more IRQ, then according to the heuristics, NUMA locality
-> trumps sibling dislocality, so we'd assign IRO to the same node on any
-> core. My algorithm assigns it to the core #0:
-> 
->   2       1       0       0-1
-> 
-> This doubles # of IRQs for the CPUs 0 and 1: from 1/2 to 1.
-> 
-> The next IRQ should be assigned to the same node again, and we've got
-> the only choice:
-> 
-> 
->   3       1       1       2-3
-> 
-> Starting from IRQ #5, the node #1 is full - each CPU is assigned with
-> exactly one IRQ, and the heuristic #1 makes us to switch to the other
-> node; and then do the same thing:
-> 
->   4       2       2       4-5
->   5       2       3       6-7
->   6       2       2       4-5
->   7       2       3       6-7
-> 
-> So I think the algorithm is correct... Really hope the above makes
-> sense. :) If so, I can add it to the commit message for patch #3.
-> 
-> Nevertheless... Souradeep, in addition to the performance numbers, can
-> you share your topology and actual IRQ distribution that gains 15%? I
-> think it should be added to the patch #4 commit message.
-Sure I will add my topology in #4 commit message. Thanks for the suggestion.
-> 
-> Thanks,
-> Yury
+>> The kfree() function was called in two cases by
+>> the create_gpadl_header() function during error handling
+>> even if the passed variable contained a null pointer.
+>> This issue was detected by using the Coccinelle software.
+>>
+>> Thus use another label.
+>
+> Interestingly, there's a third case in this function where
+> "goto nomem" is done, and in this case, msgbody is NULL.
+> Does Coccinelle not complain about that case as well?
+>
+> As I'm sure you know, the code is correct as is, because kfree()
+> checks for a NULL argument.  So this is really an exercise in
+> making Coccinelle happy.  To me, the additional label is
+> incremental complexity for someone to deal with when
+> reading the code at some time in the future.  So I'd vote for
+> leaving the code as is.  But it's not a big deal either way.  I
+> can see you've been cleaning up a lot of Coccinelle-reported
+> issues across the kernel, most of which result in code
+> simplifications.  If leaving this unchanged causes you problems,
+> then I won't object (though perhaps that 3rd "goto nomem"
+> should be dealt with as well for consistency).
+
+How do you think about the clarification approach
+=E2=80=9CReconsidering kfree() calls for null pointers (with SmPL)=E2=80=
+=9D?
+https://lore.kernel.org/cocci/6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de/
+https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00096.html
+
+Regards,
+Markus
 
