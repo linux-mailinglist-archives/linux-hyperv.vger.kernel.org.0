@@ -1,129 +1,140 @@
-Return-Path: <linux-hyperv+bounces-1433-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1434-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBB9182D01D
-	for <lists+linux-hyperv@lfdr.de>; Sun, 14 Jan 2024 10:24:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A43D582D68E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Jan 2024 11:00:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F88D1C20DAE
-	for <lists+linux-hyperv@lfdr.de>; Sun, 14 Jan 2024 09:24:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28EF9284855
+	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Jan 2024 10:00:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4CCE1FA5;
-	Sun, 14 Jan 2024 09:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE18E57A;
+	Mon, 15 Jan 2024 10:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WZh0HSUh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kBi7HhCv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81F741C17;
-	Sun, 14 Jan 2024 09:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id DBD0720C80B9; Sun, 14 Jan 2024 01:24:30 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DBD0720C80B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1705224270;
-	bh=8BKEv879DQ/t/fqtxbNzOd/OELYyxrygiQU/Tuj80Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WZh0HSUhKTUM4BQXCarsMaJa6wUVji3H7VVPOAaABsvGyW3qFlRHZ4SUunxluj0HN
-	 jJcGQl5AVyIWxHD9hUE4waVNe5EklQzgSMieGDRg1vNrhJz5bDNURtK6LA53/mi/Hj
-	 skVs7KBhHHddFXCccvzW0Jv98dYjuQ9TVWDK7obc=
-Date: Sun, 14 Jan 2024 01:24:30 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F0BF9C2;
+	Mon, 15 Jan 2024 10:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705312820; x=1736848820;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=utTJkdiQ3vnztSPGEHcOmRJIWy6d/oKeObynN8qfOUs=;
+  b=kBi7HhCvaH2leHxkZOeIvjOfVwHdwNNYUngjOw7zARJXm/5kxKNJeKjF
+   PJitXnGRVV7DZrVMyVjxufPs8hpZa9DMi71Xd8yo47V2e6oLu8EoYX7/G
+   5WnHP2mSrax/oP+9NCMJOQJuQ0a7y2ZeWR1zrMm6LFhMkB5wV5Lp4EKin
+   9mLhO890duRfe4fu6mt516h2Xo0TGJDXFy5jkldqeFo2KYwGenmvV/Y+N
+   OhDOzpshOgOzCTwXIJ2r1/wkyJqEt6zLfTvpzP6DUBMarXJlEZgrU74I3
+   k2JwYilFMb0qgrXpjys8Xj9S/wmuE8isxxyYLltrPwvRAbwQONKKeKI+K
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="18182459"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
+   d="scan'208";a="18182459"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 02:00:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="874059378"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
+   d="scan'208";a="874059378"
+Received: from jeroenke-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.55.160])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 02:00:13 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 44E2E10A58F; Mon, 15 Jan 2024 13:00:11 +0300 (+03)
+Date: Mon, 15 Jan 2024 13:00:11 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
 To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"Lutomirski, Andy" <luto@kernel.org>,
+	"hch@infradead.org" <hch@infradead.org>,
 	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"seanjc@google.com" <seanjc@google.com>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"ssengar@microsoft.com" <ssengar@microsoft.com>
-Subject: Re: [PATCH] x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
-Message-ID: <20240114092430.GA13684@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1704450566-26576-1-git-send-email-ssengar@linux.microsoft.com>
- <SN6PR02MB415740C3EE66618A37A658EED4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"Cui, Dexuan" <decui@microsoft.com>,
+	"urezki@gmail.com" <urezki@gmail.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"Rodel, Jorg" <jroedel@suse.de>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"lstoakes@gmail.com" <lstoakes@gmail.com>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 1/3] x86/hyperv: Use slow_virt_to_phys() in page
+ transition hypervisor callback
+Message-ID: <20240115100011.yvecjjezrkcptnle@box.shutemov.name>
+References: <20240105183025.225972-1-mhklinux@outlook.com>
+ <20240105183025.225972-2-mhklinux@outlook.com>
+ <9dcdd088494b3fa285781cccfd35cd47a70d69c3.camel@intel.com>
+ <SN6PR02MB4157B123128F6C2F6C3600D9D46F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <3ddc237d9fbbe0aa8838babf0df790076017e9f7.camel@intel.com>
+ <SN6PR02MB415720444A3D848D444BB58AD46F2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB415740C3EE66618A37A658EED4692@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR02MB415720444A3D848D444BB58AD46F2@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Wed, Jan 10, 2024 at 05:10:47AM +0000, Michael Kelley wrote:
-> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Friday, January 5, 2024 2:29 AM
+On Fri, Jan 12, 2024 at 07:24:35PM +0000, Michael Kelley wrote:
+> From: Edgecombe, Rick P <rick.p.edgecombe@intel.com> Sent: Friday, January 12, 2024 9:17 AM
 > > 
-> > The current method for signaling the compatibility of a Hyper-V host
-> > with MSIs featuring 15-bit APIC IDs relies on a synthetic cpuid leaf.
-> > However, for higher VTLs, this leaf is not reported, due to the absence
-> > of an IO-APIC.
+> > On Fri, 2024-01-12 at 15:07 +0000, Michael Kelley wrote:
+> > > The comment is Kirill Shutemov's suggestion based on comments in
+> > > an earlier version of the patch series.  See [1].   The intent is to
+> > > prevent
+> > > some later revision to slow_virt_to_phys() from adding a check for
+> > > the
+> > > present bit and breaking the CoCo VM hypervisor callback.  Yes, the
+> > > comment could get stale, but I'm not sure how else to call out the
+> > > implicit dependency.  The idea of creating a private version of
+> > > slow_virt_to_phys() for use only in the CoCo VM hypervisor callback
+> > > is also discussed in the thread, but that seems worse overall.
 > > 
-> > As an alternative, assume that when running at a high VTL, the host
-> > supports 15-bit APIC IDs. This assumption is now deemed safe, as no
-> > architectural MSIs are employed at higher VTLs.
+> > Well, it's not a huge deal, but I would have just put a comment at the
+> > caller like:
+> > 
+> > /*
+> >  * Use slow_virt_to_phys() instead of vmalloc_to_page(), because it
+> >  * returns the PFN even for NP PTEs.
+> >  */
 > 
-> I'm trying to fully understand this last sentence.  It has the words
-> "now" and "deemed" as qualifiers.  Can you say anything more about
-> why "now" (implying it wasn't safe at some point in the past)?
-> And what are the implications of "deemed"?  Or are both just
-> wordiness, and it would be just as good to say "This assumption is safe,
-> as Hyper-V does not employ any architectural MSIs at higher VTLs." ?
+> Yes, that comment is added in this patch.
 > 
-> The code LGTM.
+> > 
+> > If someone is changing slow_virt_to_phys() they should check the
+> > callers to make sure they won't break anything. They can see the
+> > comment then and have an easy time.
+> > 
+> > An optional comment at slow_virt_to_phys() could explain how the
+> > function works in regards to the present bit, but not include details
+> > about CoCoO VM page transition's usage of the present bit. The proposed
+> > comment text looks like something more appropriate for a commit log.
+> 
+> Kirill -- you originally asked for a comment in slow_virt_to_phys(). [1]
+> Are you OK with Rick's proposal?
 
-Thank you for your review. Your phrasing appears better to me. I will revise
-the commit message as per your suggestions and submit V2.
+Yes, sounds sensible.
 
-- Saurabh
-
-> 
-> Michael
-> 
-> > 
-> > This unblocks startup of VTL2 environments with more than 256 CPUs.
-> > 
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_vtl.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> > index 539c7b5cfa2b..1c225362f88e 100644
-> > --- a/arch/x86/hyperv/hv_vtl.c
-> > +++ b/arch/x86/hyperv/hv_vtl.c
-> > @@ -16,6 +16,11 @@
-> >  extern struct boot_params boot_params;
-> >  static struct real_mode_header hv_vtl_real_mode_header;
-> > 
-> > +static bool __init hv_vtl_msi_ext_dest_id(void)
-> > +{
-> > +	return true;
-> > +}
-> > +
-> >  void __init hv_vtl_init_platform(void)
-> >  {
-> >  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-> > @@ -39,6 +44,8 @@ void __init hv_vtl_init_platform(void)
-> >  	x86_platform.legacy.warm_reset = 0;
-> >  	x86_platform.legacy.reserve_bios_regions = 0;
-> >  	x86_platform.legacy.devices.pnpbios = 0;
-> > +
-> > +	x86_init.hyper.msi_ext_dest_id = hv_vtl_msi_ext_dest_id;
-> >  }
-> > 
-> >  static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
-> > --
-> > 2.25.1
-> > 
-> 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
