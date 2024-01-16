@@ -1,235 +1,206 @@
-Return-Path: <linux-hyperv+bounces-1438-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1440-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 844BD82E7E1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jan 2024 03:20:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E230982E96A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jan 2024 07:13:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD5251F23898
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jan 2024 02:20:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E98011C229F7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jan 2024 06:13:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3683749F;
-	Tue, 16 Jan 2024 02:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0AF8DDB9;
+	Tue, 16 Jan 2024 06:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFmxPSlS"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EyUib51X"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2D46FD0;
-	Tue, 16 Jan 2024 02:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5c65ca2e1eeso4180740a12.2;
-        Mon, 15 Jan 2024 18:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705371633; x=1705976433; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bse0/qXZQoiuVJq8kHe7VoVGITL3RsI555OnNeb2YB0=;
-        b=RFmxPSlSwG2En+JVP0XLnnym7mG+pfWo7SJThANNtXQmp/HnQiBMu7uUQU3DbHMCMD
-         1FebT01evkMFwSLUGhUM7kB4gNMIZ214f2ErDwD5DAaNQYsL4m/nPsM1hgPY3nLcn6KO
-         oeg8agVfNoSCcekXX4VzZRKWFIz8xfmbvHVZAKYncGQL26CXV+IGdivwSfpHspeefyoL
-         GbxDK+XcDm5aRM0foW9m1poD/hycKUJsH0h3rHcOo7PLESluQWGr3mAZz7onYmXz2eLi
-         uBFFPNeo0wuRaQRYhzEcSapWCND8bXkwxbjYtbilc30YKC964rFAFVRGHWcw/ZR0cOYP
-         9RIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705371633; x=1705976433;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bse0/qXZQoiuVJq8kHe7VoVGITL3RsI555OnNeb2YB0=;
-        b=G0aYv5jZCkRUnBXi4s3jxLKWTp7wHQg97rWL9yoLQHUDCj0krzRWsG2xGPt9Abvg4I
-         cXDOzRikOj54cQSPH0G1hvguNHbVszfWIHAiTDKDeOgKFstiAXj+UbQRa+kZnBMRytnE
-         vJ3cfuqvKCQVjwy7Vxv2XYRRIo15lANSvFCxkVI5CpH7/wmzMvygGXiDtE3/Tsz3+pBv
-         TZE+EiLMaV41viHqF9jcpveNVc310056fX/kdqTSWDVlPV2uxT4kbXLPUIAnRgwJ9Ab2
-         xx/m7d7SGO0Tkjdu+NtuXV8qgidcI+2kQGksM0qIs0U5VW6YTvNomFtDgv5lFjq2hv++
-         y85g==
-X-Gm-Message-State: AOJu0Yz87pxOEnnVcu/zX2u5iTSwa98yUdZnN0k04dCWm/KHm1VJwdBK
-	RS554n4ITHhGQRz35/xYh+o=
-X-Google-Smtp-Source: AGHT+IEr2+CDYGS0V8/X7I1MGszR2ZNlclrOwLdx0/MeFP/gOuYxw/HddIq+C+XRl375qrBivD1cYQ==
-X-Received: by 2002:a05:6a20:e618:b0:19b:1da3:bafc with SMTP id my24-20020a056a20e61800b0019b1da3bafcmr760682pzb.4.1705371632710;
-        Mon, 15 Jan 2024 18:20:32 -0800 (PST)
-Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
-        by smtp.gmail.com with ESMTPSA id kn14-20020a170903078e00b001d1d1ef8be5sm8193379plb.173.2024.01.15.18.20.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 18:20:32 -0800 (PST)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	kirill.shutemov@linux.intel.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	akpm@linux-foundation.org,
-	urezki@gmail.com,
-	hch@infradead.org,
-	lstoakes@gmail.com,
-	thomas.lendacky@amd.com,
-	ardb@kernel.org,
-	jroedel@suse.de,
-	seanjc@google.com,
-	rick.p.edgecombe@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	linux-hyperv@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH v4 3/3] x86/hyperv: Make encrypted/decrypted changes safe for load_unaligned_zeropad()
-Date: Mon, 15 Jan 2024 18:20:08 -0800
-Message-Id: <20240116022008.1023398-4-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240116022008.1023398-1-mhklinux@outlook.com>
-References: <20240116022008.1023398-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 698DBD524;
+	Tue, 16 Jan 2024 06:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+	id D700B20DEEA1; Mon, 15 Jan 2024 22:13:43 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D700B20DEEA1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1705385623;
+	bh=5ClNWrdqiymwS8WaekmLGaesEdlzKLamfgXZ/1HrL9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EyUib51Xay3y7x0HFYZ+7k3pLh3rxBVlSFUnvPx+rIwFiR5QRjJ3XXbmPKXd1OotS
+	 KaFdK/p+mNtsFTOpBK6ERkkjBz8VSuAugAoBoUCu6y5kszyHcF9H2FimjDsfqMqAjU
+	 FlCgJrLHIjDz/55qwrimfy2a8HnmZ3KWka+N4Igg=
+Date: Mon, 15 Jan 2024 22:13:43 -0800
+From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>, "leon@kernel.org" <leon@kernel.org>,
+	"cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Souradeep Chakrabarti <schakrabarti@microsoft.com>,
+	Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [PATCH 3/4 net-next] net: mana: add a function to spread IRQs
+ per CPUs
+Message-ID: <20240116061343.GA24925@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1704797478-32377-4-git-send-email-schakrabarti@linux.microsoft.com>
+ <SN6PR02MB4157CB3CB55A17255AE61BF6D46A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZZ3Wsxq8rHShTUdA@yury-ThinkPad>
+ <SN6PR02MB415704D36B82D5793CC4558FD4692@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20240111061319.GC5436@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB4157234176238D6C1F35B90BD46F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <DS1PEPF00012A5F513F916690B9F94D3262CA6F2@DS1PEPF00012A5F.namprd21.prod.outlook.com>
+ <20240113063038.GD5436@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB4157372CF70059E8E35D5545D46E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZaLgdn53bBoYyT/h@yury-ThinkPad>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZaLgdn53bBoYyT/h@yury-ThinkPad>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Sat, Jan 13, 2024 at 11:11:50AM -0800, Yury Norov wrote:
+> On Sat, Jan 13, 2024 at 04:20:31PM +0000, Michael Kelley wrote:
+> > From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com> Sent: Friday, January 12, 2024 10:31 PM
+> > 
+> > > On Fri, Jan 12, 2024 at 06:30:44PM +0000, Haiyang Zhang wrote:
+> > > >
+> > > > > -----Original Message-----
+> > > > From: Michael Kelley <mhklinux@outlook.com> Sent: Friday, January 12, 2024 11:37 AM
+> > > > >
+> > > > > From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com> Sent:
+> > > > > Wednesday, January 10, 2024 10:13 PM
+> > > > > >
+> > > > > > The test topology was used to check the performance between
+> > > > > > cpu_local_spread() and the new approach is :
+> > > > > > Case 1
+> > > > > > IRQ     Nodes  Cores CPUs
+> > > > > > 0       1      0     0-1
+> > > > > > 1       1      1     2-3
+> > > > > > 2       1      2     4-5
+> > > > > > 3       1      3     6-7
+> > > > > >
+> > > > > > and with existing cpu_local_spread()
+> > > > > > Case 2
+> > > > > > IRQ    Nodes  Cores CPUs
+> > > > > > 0      1      0     0
+> > > > > > 1      1      0     1
+> > > > > > 2      1      1     2
+> > > > > > 3      1      1     3
+> > > > > >
+> > > > > > Total 4 channels were used, which was set up by ethtool.
+> > > > > > case 1 with ntttcp has given 15 percent better performance, than
+> > > > > > case 2. During the test irqbalance was disabled as well.
+> > > > > >
+> > > > > > Also you are right, with 64CPU system this approach will spread
+> > > > > > the irqs like the cpu_local_spread() but in the future we will offer
+> > > > > > MANA nodes, with more than 64 CPUs. There it this new design will
+> > > > > > give better performance.
+> > > > > >
+> > > > > > I will add this performance benefit details in commit message of
+> > > > > > next version.
+> > > > >
+> > > > > Here are my concerns:
+> > > > >
+> > > > > 1.  The most commonly used VMs these days have 64 or fewer
+> > > > > vCPUs and won't see any performance benefit.
+> > > > >
+> > > > > 2.  Larger VMs probably won't see the full 15% benefit because
+> > > > > all vCPUs in the local NUMA node will be assigned IRQs.  For
+> > > > > example, in a VM with 96 vCPUs and 2 NUMA nodes, all 48
+> > > > > vCPUs in NUMA node 0 will all be assigned IRQs.  The remaining
+> > > > > 16 IRQs will be spread out on the 48 CPUs in NUMA node 1
+> > > > > in a way that avoids sharing a core.  But overall the means
+> > > > > that 75% of the IRQs will still be sharing a core and
+> > > > > presumably not see any perf benefit.
+> > > > >
+> > > > > 3.  Your experiment was on a relatively small scale:   4 IRQs
+> > > > > spread across 2 cores vs. across 4 cores.  Have you run any
+> > > > > experiments on VMs with 128 vCPUs (for example) where
+> > > > > most of the IRQs are not sharing a core?  I'm wondering if
+> > > > > the results with 4 IRQs really scale up to 64 IRQs.  A lot can
+> > > > > be different in a VM with 64 cores and 2 NUMA nodes vs.
+> > > > > 4 cores in a single node.
+> > > > >
+> > > > > 4.  The new algorithm prefers assigning to all vCPUs in
+> > > > > each NUMA hop over assigning to separate cores.  Are there
+> > > > > experiments showing that is the right tradeoff?  What
+> > > > > are the results if assigning to separate cores is preferred?
+> > > >
+> > > > I remember in a customer case, putting the IRQs on the same
+> > > > NUMA node has better perf. But I agree, this should be re-tested
+> > > > on MANA nic.
+> > >
+> > > 1) and 2) The change will not decrease the existing performance, but for
+> > > system with high number of CPU, will be benefited after this.
+> > > 
+> > > 3) The result has shown around 6 percent improvement.
+> > > 
+> > > 4)The test result has shown around 10 percent difference when IRQs are
+> > > spread on multiple numa nodes.
+> > 
+> > OK, this looks pretty good.  Make clear in the commit messages what
+> > the tradeoffs are, and what the real-world benefits are expected to be.
+> > Some future developer who wants to understand why IRQs are assigned
+> > this way will thank you. :-)
+> 
+> I agree with Michael, this needs to be spoken aloud.
+> 
+> >From the above, is that correct that the best performance is achieved
+> when the # of IRQs is half the nubmer of CPUs in the 1st node, because
+> this configuration allows to spread IRQs across cores the most optimal
+> way?  And if we have more or less than that, it hurts performance, at
+> least for MANA networking?
+It does not decrease the performance from current cpu_local_spread(),
+but optimum performance comes when node has CPUs double that of number
+of IRQs (considering SMT==2). 
 
-In a CoCo VM, when transitioning memory from encrypted to decrypted, or
-vice versa, the caller of set_memory_encrypted() or set_memory_decrypted()
-is responsible for ensuring the memory isn't in use and isn't referenced
-while the transition is in progress.  The transition has multiple steps,
-and the memory is in an inconsistent state until all steps are complete.
-A reference while the state is inconsistent could result in an exception
-that can't be cleanly fixed up.
+Now only if the number of CPUs are same that of number of IRQs,
+(that is num of CPUs <= 64) then, we see same performance like existing
+design with cpu_local_spread().
 
-However, the kernel load_unaligned_zeropad() mechanism could cause a stray
-reference that can't be prevented by the caller of set_memory_encrypted()
-or set_memory_decrypted(), so there's specific code to handle this case.
-But a CoCo VM running on Hyper-V may be configured to run with a paravisor,
-with the #VC or #VE exception routed to the paravisor. There's no
-architectural way to forward the exceptions back to the guest kernel, and
-in such a case, the load_unaligned_zeropad() specific code doesn't work.
-
-To avoid this problem, mark pages as "not present" while a transition
-is in progress. If load_unaligned_zeropad() causes a stray reference, a
-normal page fault is generated instead of #VC or #VE, and the
-page-fault-based fixup handlers for load_unaligned_zeropad() resolve the
-reference. When the encrypted/decrypted transition is complete, mark the
-pages as "present" again.
-
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- arch/x86/hyperv/ivm.c | 53 +++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 49 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 851107c77f4d..95036feb95e7 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -15,6 +15,7 @@
- #include <asm/io.h>
- #include <asm/coco.h>
- #include <asm/mem_encrypt.h>
-+#include <asm/set_memory.h>
- #include <asm/mshyperv.h>
- #include <asm/hypervisor.h>
- #include <asm/mtrr.h>
-@@ -502,6 +503,31 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 		return -EFAULT;
- }
- 
-+/*
-+ * When transitioning memory between encrypted and decrypted, the caller
-+ * of set_memory_encrypted() or set_memory_decrypted() is responsible for
-+ * ensuring that the memory isn't in use and isn't referenced while the
-+ * transition is in progress.  The transition has multiple steps, and the
-+ * memory is in an inconsistent state until all steps are complete. A
-+ * reference while the state is inconsistent could result in an exception
-+ * that can't be cleanly fixed up.
-+ *
-+ * But the Linux kernel load_unaligned_zeropad() mechanism could cause a
-+ * stray reference that can't be prevented by the caller, so Linux has
-+ * specific code to handle this case. But when the #VC and #VE exceptions
-+ * routed to a paravisor, the specific code doesn't work. To avoid this
-+ * problem, mark the pages as "not present" while the transition is in
-+ * progress. If load_unaligned_zeropad() causes a stray reference, a normal
-+ * page fault is generated instead of #VC or #VE, and the page-fault-based
-+ * handlers for load_unaligned_zeropad() resolve the reference.  When the
-+ * transition is complete, hv_vtom_set_host_visibility() marks the pages
-+ * as "present" again.
-+ */
-+static bool hv_vtom_clear_present(unsigned long kbuffer, int pagecount, bool enc)
-+{
-+	return !set_memory_np(kbuffer, pagecount);
-+}
-+
- /*
-  * hv_vtom_set_host_visibility - Set specified memory visible to host.
-  *
-@@ -522,8 +548,10 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
- 	int i, pfn;
- 
- 	pfn_array = kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
--	if (!pfn_array)
--		return false;
-+	if (!pfn_array) {
-+		result = false;
-+		goto err_set_memory_p;
-+	}
- 
- 	for (i = 0, pfn = 0; i < pagecount; i++) {
- 		/*
-@@ -548,14 +576,30 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
- 		}
- 	}
- 
-- err_free_pfn_array:
-+err_free_pfn_array:
- 	kfree(pfn_array);
-+
-+err_set_memory_p:
-+	/*
-+	 * Set the PTE PRESENT bits again to revert what hv_vtom_clear_present()
-+	 * did. Do this even if there is an error earlier in this function in
-+	 * order to avoid leaving the memory range in a "broken" state. Setting
-+	 * the PRESENT bits shouldn't fail, but return an error if it does.
-+	 */
-+	if (set_memory_p(kbuffer, pagecount))
-+		result = false;
-+
- 	return result;
- }
- 
- static bool hv_vtom_tlb_flush_required(bool private)
- {
--	return true;
-+	/*
-+	 * Since hv_vtom_clear_present() marks the PTEs as "not present"
-+	 * and flushes the TLB, they can't be in the TLB. That makes the
-+	 * flush controlled by this function redundant, so return "false".
-+	 */
-+	return false;
- }
- 
- static bool hv_vtom_cache_flush_required(void)
-@@ -618,6 +662,7 @@ void __init hv_vtom_init(void)
- 	x86_platform.hyper.is_private_mmio = hv_is_private_mmio;
- 	x86_platform.guest.enc_cache_flush_required = hv_vtom_cache_flush_required;
- 	x86_platform.guest.enc_tlb_flush_required = hv_vtom_tlb_flush_required;
-+	x86_platform.guest.enc_status_change_prepare = hv_vtom_clear_present;
- 	x86_platform.guest.enc_status_change_finish = hv_vtom_set_host_visibility;
- 
- 	/* Set WB as the default cache mode. */
--- 
-2.25.1
-
+If node has more CPUs than 64, then we get better performance than 
+cpu_local_spread().
+> 
+> So, the B|A performance chart may look like this, right?
+> 
+>   irq     nodes     cores     cpus      perf
+>   0       1 | 1     0 | 0     0 | 0-1      0%
+>   1       1 | 1     0 | 1     1 | 2-3     +5%
+>   2       1 | 1     1 | 2     2 | 4-5    +10%
+>   3       1 | 1     1 | 3     3 | 6-7    +15%
+>   4       1 | 1     0 | 4     3 | 0-1    +12%
+>   ...       |         |         |
+>   7       1 | 1     1 | 7     3 | 6-7      0%
+>   ...
+>  15       2 | 2     3 | 3    15 | 14-15    0%
+> 
+> Souradeep, can you please confirm that my understanding is correct?
+> 
+> In v5, can you add a table like the above with real performance
+> numbers for your driver? I think that it would help people to
+> configure their VMs better when networking is a bottleneck.
+> 
+I will share a chart on next version of patch 3.
+Thanks for the suggestion.
+> Thanks,
+> Yury
 
