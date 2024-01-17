@@ -1,81 +1,70 @@
-Return-Path: <linux-hyperv+bounces-1447-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1448-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F10182FEC2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 03:22:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C2C882FEFA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 03:53:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFF6BB241A9
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 02:22:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E45041F26202
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 02:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92AE91C05;
-	Wed, 17 Jan 2024 02:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BDF61C0F;
+	Wed, 17 Jan 2024 02:53:27 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288F217E9;
-	Wed, 17 Jan 2024 02:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECB71C05
+	for <linux-hyperv@vger.kernel.org>; Wed, 17 Jan 2024 02:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705458166; cv=none; b=ddNM45kuj7D1rP/lTpOYM9rVZCjVqlUrTmFOsR5r1ALeOL8TtAEyeGtGUrGTO9e8pVKiX+FQHxqYpDRCaXe4DYrW/WvbY7ZFYGfMxn/xJOTh+cZ1MMa9iL+JljOhEFHUTUP8VHt+vtHerHoj2fIJ8kmonAG9/rSjC4IIUg+zGDU=
+	t=1705460007; cv=none; b=XekKl7LhUVIbpkLtecr9q79NX48Pc1OZks/QMzUCf10gP1RV3oRzqwXUcEHVxsd9ihaDD2B7YQfXAjUbPdHcLqKHixrFlJTRLeD9oDwLwy2ra2c81YyQcmW+4n8Ke3d/JtIEv5i4eTpmbKztjk0e9yT0nV8VZB1durWDfKGHJgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705458166; c=relaxed/simple;
-	bh=tjALmxBXd+DQQfMR8Vt2M3FgcBoGxOGfirrdXlPsCzE=;
+	s=arc-20240116; t=1705460007; c=relaxed/simple;
+	bh=gpMe888YvtJnOQcPd2e9tU0fRIAe3aKiVSHIQI4ytT0=;
 	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
 	 X-Google-Smtp-Source:X-Received:Received:Date:From:To:Cc:Subject:
 	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fpsC/x51VsnfqbUDM0p2RJUgYn8z6680ZwryEosA1Tv0fSWGNpa4Spgnn2ljLAKrd0BSBZUhbbtB5EjG/f884R4rtFVfUDFahVQ7kSM6g2d+AwFEnd5tcbVs9Gr8jeV60wyBnnOpLiRkxgqthVka3Blu3yZo3QTbOSlyuE8PD2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.54
+	 Content-Disposition:In-Reply-To; b=sYq804KqU+De2RpE0PssuZXwEm0IZ+gngXhCVkUTQUEV379LneXm0ckKof9KANjk1/A5b3uHVIvmLleilXfkKHj0KDjZFjLwlwBusA1/QJOYp3gQLyvgnpgJniQYibvuBGGFuoBwyIqaFMACA+SV8okN2laZL6lw/Panrod8+gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e0af93fdaaso2743778a34.3;
-        Tue, 16 Jan 2024 18:22:44 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6d9af1f52bcso5285351b3a.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 16 Jan 2024 18:53:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705458163; x=1706062963;
+        d=1e100.net; s=20230601; t=1705460005; x=1706064805;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZvCzHdCCoUAYXVnW660xRj2+vdtdV/6HpzjQHQyUWDg=;
-        b=Tf1BAQ1F1E1AB3kfFhoUA9iitz+MtlUAbNil35kah3J1p7rz7DcThbb7pRfRujZiCl
-         4S/8wKIg1fpIVNd2UWD2xVPRyaPLUDzxyWui8cBu5augkR+k/WX5Yn2yKBksPzJf+Q8Y
-         x7yqT2X2uW3XGw83K08IFXXRNh0xePF7vyi7UCJCFivxTljbsAQ4s0M0VlEf4WeKK1uu
-         +c/WTdk27J46r3bZVaVglr6rhIuCGsbdKVOTScr1FKG940eYPQreV+4F9BU9Gb+STwmZ
-         kgqBzLaYw+KJh9T/LhTh82FxFwTVFhFR9i6OIT/A4vb3fG6aByljVAeeynNrEkGVgTtP
-         PjMw==
-X-Gm-Message-State: AOJu0YzzAD0Ds9i/1xSg4eeCulho8/7PbFY5ndsVoXOmdSzJVlss44Tr
-	+EMjJqWfs7WzBW4qagBEEkI=
-X-Google-Smtp-Source: AGHT+IG7lJq8taiu2dFLP1BoUfxhekVtzTOyRXf1mavjJxh6yyLEVNpTV0pczEs0cRrNHW+EnYQYNg==
-X-Received: by 2002:a9d:6488:0:b0:6e0:16cb:4b4d with SMTP id g8-20020a9d6488000000b006e016cb4b4dmr9345003otl.29.1705458163117;
-        Tue, 16 Jan 2024 18:22:43 -0800 (PST)
+        bh=gK7wq43fs5/XGU8CCoMISRcb9lNGq0YDitZ6AgU4XYg=;
+        b=FSqkmUfAQ/ErHvOx143emWBIMR0TxMS3qhP5THfxPUINkxDLIsdMh50Dls+tGMIBJ0
+         +NlJWQq+I4B6qTPkhGMAqUoaLo0t4LzOBr/GeXVfKGN0P+IY9ZsMQ4GSt1fghHY9V0KX
+         vLY/cjCk2NG5g4u84etBW8f0C8eKsdg+rxwNrPtSJfUAngOYGGQcXCBTA94dDbibxv4k
+         cVR+i6ChOB0sPdpGalAPw4UTWACdsHETSTdMtzmYsQMACsqyAXQctJDhwSFOTCNwkMhx
+         ktHOK0zEdf58FgaD38qZL7MSa7emGWwHgnQOlhRTkAH/lEDrIGMRhdUWe9lpqlvCQPl1
+         Vwsg==
+X-Gm-Message-State: AOJu0YzgXCba6UckJRgrlHqDy1MdFWpMfj/aebV4zS274y265gHotxKQ
+	bymwLFP4rikluXu9FsDxJV0=
+X-Google-Smtp-Source: AGHT+IGu+GfTvSQYAZ9V4Tr0aWpvL2VUPCTFjYQXuIQSwZ02/Q3JPzQ/IXiBYmj6t23o6W0zgHZtAQ==
+X-Received: by 2002:a05:6a00:1790:b0:6d9:a5e9:528e with SMTP id s16-20020a056a00179000b006d9a5e9528emr5598146pfg.30.1705460005275;
+        Tue, 16 Jan 2024 18:53:25 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id y27-20020aa79e1b000000b006d9ac481eccsm258477pfq.220.2024.01.16.18.22.41
+        by smtp.gmail.com with ESMTPSA id e11-20020a63d94b000000b005c200b11b77sm10880416pgj.86.2024.01.16.18.53.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 18:22:42 -0800 (PST)
-Date: Wed, 17 Jan 2024 02:22:40 +0000
+        Tue, 16 Jan 2024 18:53:24 -0800 (PST)
+Date: Wed, 17 Jan 2024 02:53:23 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com, arnd@arndb.de,
-	bp@alien8.de, brijesh.singh@amd.com, dan.j.williams@intel.com,
-	dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
-	jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
-	kys@microsoft.com, linux-hyperv@vger.kernel.org, luto@kernel.org,
-	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-	tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
-	Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, Tianyu.Lan@microsoft.com,
-	rick.p.edgecombe@intel.com, andavis@redhat.com, mheslin@redhat.com,
-	vkuznets@redhat.com, xiaoyao.li@intel.com
-Subject: Re: [PATCH v3 08/10] x86/hyperv: Use TDX GHCI to access some MSRs in
- a TDX VM with the paravisor
-Message-ID: <Zac58P0MgEQ_ITOf@liuwe-devbox-debian-v2>
-References: <20230824080712.30327-1-decui@microsoft.com>
- <20230824080712.30327-9-decui@microsoft.com>
- <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
+To: "Yu, Lang" <Lang.Yu@amd.com>
+Cc: Iouri Tarassov <iourit@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] drivers: hv: dxgkrnl: Allow user to specify CPU VA for
+ device allocation
+Message-ID: <ZadBIxlwV_0KJ0oH@liuwe-devbox-debian-v2>
+References: <20231227034950.1975922-1-Lang.Yu@amd.com>
+ <MW6PR12MB88989AD3AA576FB36A023C33FB732@MW6PR12MB8898.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -84,43 +73,31 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
+In-Reply-To: <MW6PR12MB88989AD3AA576FB36A023C33FB732@MW6PR12MB8898.namprd12.prod.outlook.com>
 
-Hi Dave
-
-I was away and only saw your email now. Sorry for the late reply.
-
-On Mon, Dec 04, 2023 at 07:10:29AM -0800, Dave Hansen wrote:
-> On 8/24/23 01:07, Dexuan Cui wrote:
-> > +#ifdef CONFIG_INTEL_TDX_GUEST
-> > +static void hv_tdx_msr_write(u64 msr, u64 val)
-> > +{
-> > +	struct tdx_hypercall_args args = {
-> > +		.r10 = TDX_HYPERCALL_STANDARD,
-> > +		.r11 = EXIT_REASON_MSR_WRITE,
-> > +		.r12 = msr,
-> > +		.r13 = val,
-> > +	};
-> > +
-> > +	u64 ret = __tdx_hypercall(&args);
-> > +
-> > +	WARN_ONCE(ret, "Failed to emulate MSR write: %lld\n", ret);
-> > +}
+On Tue, Jan 16, 2024 at 01:58:53PM +0000, Yu, Lang wrote:
+> [Public]
 > 
-> First of all, I'd really appreciate if you could seek out explicit acks
-> for this kind of stuff before merging it.  This surprised me.
+> ping
 > 
+> >-----Original Message-----
+> >From: Yu, Lang <Lang.Yu@amd.com>
+> >Sent: Wednesday, December 27, 2023 11:50 AM
+> >To: Iouri Tarassov <iourit@linux.microsoft.com>
+> >Cc: linux-hyperv@vger.kernel.org; Yu, Lang <Lang.Yu@amd.com>
+> >Subject: [PATCH] drivers: hv: dxgkrnl: Allow user to specify CPU VA for device
+> >allocation
+> >
+> >The movtivation is we want to unify CPU VA and GPU VA.
+> >
+> >Signed-off-by: Lang Yu <Lang.Yu@amd.com>
 
-I eyeballed the code and thought it only touched only the Hyper-V files,
-so I merged this series without waiting.
+Hi Lang,
 
-> Can you please merge these generic things back into the main TDX code?
-> There's nothing Hyper-V specific about any of this code.  Basically, you
-> can make a hv_tdx_whatever() variant, but make _that_ in the generic TDX
-> code and then export only _that_.
+The driver is not merged upstream. I won't take any further action here
+because there is nothing I can do. Perhaps you can work directly with
+Iouri to merge the change to the driver he maintains.
 
-The code is still there. Dexuan, can you send a patch to do the
-refactoring?
-
+Thanks,
 Wei.
 
