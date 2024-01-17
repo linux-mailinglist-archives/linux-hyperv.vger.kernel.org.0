@@ -1,93 +1,126 @@
-Return-Path: <linux-hyperv+bounces-1446-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1447-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFE0482F2E8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jan 2024 18:10:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F10182FEC2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 03:22:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 331E12889D4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jan 2024 17:10:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFF6BB241A9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 02:22:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAFA1CA95;
-	Tue, 16 Jan 2024 17:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EuG93urs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92AE91C05;
+	Wed, 17 Jan 2024 02:22:46 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FCF1CA87;
-	Tue, 16 Jan 2024 17:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288F217E9;
+	Wed, 17 Jan 2024 02:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705425018; cv=none; b=Qvw1vx+rBbpzJbjpxEBgHzCJGqS+fnLbYGfP2swYafJr2iWORkUnhJIqgtbn1ucDPFRncJCVXmxFM/dqtky2FZrlXneeqlemw4usZZMeQJiJI8cWOL8KPknXYhzArM57gttX7b6y770PD57d8VnugvLVmNHcACj6LraODdFZckc=
+	t=1705458166; cv=none; b=ddNM45kuj7D1rP/lTpOYM9rVZCjVqlUrTmFOsR5r1ALeOL8TtAEyeGtGUrGTO9e8pVKiX+FQHxqYpDRCaXe4DYrW/WvbY7ZFYGfMxn/xJOTh+cZ1MMa9iL+JljOhEFHUTUP8VHt+vtHerHoj2fIJ8kmonAG9/rSjC4IIUg+zGDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705425018; c=relaxed/simple;
-	bh=+F0EM0MyQ7NcCg3Ixxu9z5Tybad96Gl5Tf0YqH4Dt+U=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:Message-ID:Subject:From:To:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
-	 MIME-Version; b=EiyoZ+MH9fAwwv7Nh/BWdMxYCu9WpoH4zIRgQSmHhdsj5sHlowZfHQ9PmkUImkNOfTN0MN/x7gNI14m6EBGI717kh0KwbXY0JSu0P2Co209rf2RWw7ZyNALr3S2Dho9PXyCsvsMon/mKGJA9wSNLKL7L9KB40oy0pEGB/+01S6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EuG93urs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705425017; x=1736961017;
-  h=message-id:subject:from:to:date:in-reply-to:references:
-   content-transfer-encoding:mime-version;
-  bh=+F0EM0MyQ7NcCg3Ixxu9z5Tybad96Gl5Tf0YqH4Dt+U=;
-  b=EuG93urs22+Rzqck03NUvlaV+3W1lMFn6/4m/KzkHiLIJ/ORTbux9dXx
-   u3DTMBzTzzOXnd5O2y9hYDYn2Kgg4uGdwPi3LZkuCO0GYS33Vm9fc4D3y
-   2spT9THB8/kyVJ+IjYSzvBuAwvHLqL12L7OlqbgSYw8g+ijldO+DXeuVW
-   UaPVH6RRtDTReTDLbvE7j3uiW33ea42OUzu7qaR12Kl7z9VPbm+ouIkd+
-   JeMogJslbJ77quzMwzt3M0x1bf9JbvI0dbeJCYS/cl/L860cYJ2anaGrd
-   YXS5Bl9bjvAN/uT/gWJVtK7eSEDVf1FNg+nhZpz6yi3QGEvLP5z3y7xTE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="7295108"
-X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
-   d="scan'208";a="7295108"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 09:10:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,199,1701158400"; 
-   d="scan'208";a="32529976"
-Received: from ticela-or-353.amr.corp.intel.com ([10.209.70.241])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 09:10:09 -0800
-Message-ID: <76352c8a2a91135b0fcc9041b6f6e06ff0e0a971.camel@linux.intel.com>
-Subject: Re: [PATCH v4 0/3] x86/hyperv: Mark CoCo VM pages not present when
- changing encrypted state
-From: Rick Edgecombe <rick.p.edgecombe@linux.intel.com>
-To: mhklinux@outlook.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de,  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
- kirill.shutemov@linux.intel.com, haiyangz@microsoft.com,
- wei.liu@kernel.org,  decui@microsoft.com, luto@kernel.org,
- peterz@infradead.org,  akpm@linux-foundation.org, urezki@gmail.com,
- hch@infradead.org, lstoakes@gmail.com,  thomas.lendacky@amd.com,
- ardb@kernel.org, jroedel@suse.de, seanjc@google.com, 
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-kernel@vger.kernel.org, 
- linux-coco@lists.linux.dev, linux-hyperv@vger.kernel.org, linux-mm@kvack.org
-Date: Tue, 16 Jan 2024 09:10:08 -0800
-In-Reply-To: <20240116022008.1023398-1-mhklinux@outlook.com>
-References: <20240116022008.1023398-1-mhklinux@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1705458166; c=relaxed/simple;
+	bh=tjALmxBXd+DQQfMR8Vt2M3FgcBoGxOGfirrdXlPsCzE=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fpsC/x51VsnfqbUDM0p2RJUgYn8z6680ZwryEosA1Tv0fSWGNpa4Spgnn2ljLAKrd0BSBZUhbbtB5EjG/f884R4rtFVfUDFahVQ7kSM6g2d+AwFEnd5tcbVs9Gr8jeV60wyBnnOpLiRkxgqthVka3Blu3yZo3QTbOSlyuE8PD2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e0af93fdaaso2743778a34.3;
+        Tue, 16 Jan 2024 18:22:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705458163; x=1706062963;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZvCzHdCCoUAYXVnW660xRj2+vdtdV/6HpzjQHQyUWDg=;
+        b=Tf1BAQ1F1E1AB3kfFhoUA9iitz+MtlUAbNil35kah3J1p7rz7DcThbb7pRfRujZiCl
+         4S/8wKIg1fpIVNd2UWD2xVPRyaPLUDzxyWui8cBu5augkR+k/WX5Yn2yKBksPzJf+Q8Y
+         x7yqT2X2uW3XGw83K08IFXXRNh0xePF7vyi7UCJCFivxTljbsAQ4s0M0VlEf4WeKK1uu
+         +c/WTdk27J46r3bZVaVglr6rhIuCGsbdKVOTScr1FKG940eYPQreV+4F9BU9Gb+STwmZ
+         kgqBzLaYw+KJh9T/LhTh82FxFwTVFhFR9i6OIT/A4vb3fG6aByljVAeeynNrEkGVgTtP
+         PjMw==
+X-Gm-Message-State: AOJu0YzzAD0Ds9i/1xSg4eeCulho8/7PbFY5ndsVoXOmdSzJVlss44Tr
+	+EMjJqWfs7WzBW4qagBEEkI=
+X-Google-Smtp-Source: AGHT+IG7lJq8taiu2dFLP1BoUfxhekVtzTOyRXf1mavjJxh6yyLEVNpTV0pczEs0cRrNHW+EnYQYNg==
+X-Received: by 2002:a9d:6488:0:b0:6e0:16cb:4b4d with SMTP id g8-20020a9d6488000000b006e016cb4b4dmr9345003otl.29.1705458163117;
+        Tue, 16 Jan 2024 18:22:43 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id y27-20020aa79e1b000000b006d9ac481eccsm258477pfq.220.2024.01.16.18.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 18:22:42 -0800 (PST)
+Date: Wed, 17 Jan 2024 02:22:40 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com, arnd@arndb.de,
+	bp@alien8.de, brijesh.singh@amd.com, dan.j.williams@intel.com,
+	dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
+	jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
+	kys@microsoft.com, linux-hyperv@vger.kernel.org, luto@kernel.org,
+	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
+	tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
+	Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, Tianyu.Lan@microsoft.com,
+	rick.p.edgecombe@intel.com, andavis@redhat.com, mheslin@redhat.com,
+	vkuznets@redhat.com, xiaoyao.li@intel.com
+Subject: Re: [PATCH v3 08/10] x86/hyperv: Use TDX GHCI to access some MSRs in
+ a TDX VM with the paravisor
+Message-ID: <Zac58P0MgEQ_ITOf@liuwe-devbox-debian-v2>
+References: <20230824080712.30327-1-decui@microsoft.com>
+ <20230824080712.30327-9-decui@microsoft.com>
+ <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f488fede-5c28-4840-af3c-3faa9a31caa0@intel.com>
 
-On Mon, 2024-01-15 at 18:20 -0800, mhkelley58@gmail.com wrote:
-> =C2=A0 x86/hyperv: Use slow_virt_to_phys() in page transition hypervisor
-> =C2=A0=C2=A0=C2=A0 callback
-> =C2=A0 x86/mm: Regularize set_memory_p() parameters and make non-static
-> =C2=A0 x86/hyperv: Make encrypted/decrypted changes safe for
-> =C2=A0=C2=A0=C2=A0 load_unaligned_zeropad()
+Hi Dave
 
-I'm not clear on the HyperV specifics, but everything else looked good
-to me. Thanks.
+I was away and only saw your email now. Sorry for the late reply.
+
+On Mon, Dec 04, 2023 at 07:10:29AM -0800, Dave Hansen wrote:
+> On 8/24/23 01:07, Dexuan Cui wrote:
+> > +#ifdef CONFIG_INTEL_TDX_GUEST
+> > +static void hv_tdx_msr_write(u64 msr, u64 val)
+> > +{
+> > +	struct tdx_hypercall_args args = {
+> > +		.r10 = TDX_HYPERCALL_STANDARD,
+> > +		.r11 = EXIT_REASON_MSR_WRITE,
+> > +		.r12 = msr,
+> > +		.r13 = val,
+> > +	};
+> > +
+> > +	u64 ret = __tdx_hypercall(&args);
+> > +
+> > +	WARN_ONCE(ret, "Failed to emulate MSR write: %lld\n", ret);
+> > +}
+> 
+> First of all, I'd really appreciate if you could seek out explicit acks
+> for this kind of stuff before merging it.  This surprised me.
+> 
+
+I eyeballed the code and thought it only touched only the Hyper-V files,
+so I merged this series without waiting.
+
+> Can you please merge these generic things back into the main TDX code?
+> There's nothing Hyper-V specific about any of this code.  Basically, you
+> can make a hv_tdx_whatever() variant, but make _that_ in the generic TDX
+> code and then export only _that_.
+
+The code is still there. Dexuan, can you send a patch to do the
+refactoring?
+
+Wei.
 
