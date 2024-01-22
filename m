@@ -1,232 +1,142 @@
-Return-Path: <linux-hyperv+bounces-1459-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1460-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA100836C9F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jan 2024 18:12:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42D06836CE7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jan 2024 18:20:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF41B1C24C4E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jan 2024 17:12:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 755791C21033
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jan 2024 17:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3DC26169B;
-	Mon, 22 Jan 2024 16:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257134F8B5;
+	Mon, 22 Jan 2024 16:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bHcvl2ma"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hE/QYKBQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715BF4D117;
-	Mon, 22 Jan 2024 16:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DC21DA5E;
+	Mon, 22 Jan 2024 16:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705939268; cv=none; b=f5hMBI6aV+aZKx8rQlIEDX5F5aaGWznoxd5qw4V2Ijvobh8GyoX3ZDoaDajr4eMqrOUDMNtXCeQjI/jdLpvdbTUj3x8C2ljQZORSw8MKsVb/Mn5c/0KTxeAEfzGMClHzzeR8NZ+cTbqjZx5GiZkOIeq9CtVe2suzeja4LdYzyWU=
+	t=1705940449; cv=none; b=XxyOoQ51T/J+y820hZ/NE6P/2bCguYRg+SaXvR4wuUeE8lVKhGqGZugYqWvSkgRjy6o7EjQafPBQUAfn9m5BS3ifPY+9bgDT2k+c24oGQquuuIcTLDbTwcaTU2WExGk14M9aMRRNLlHf4Ga3/SLFxPvyZ2DCyyUB2g3gcQWhWIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705939268; c=relaxed/simple;
-	bh=/V4sb8LgDiZWE3Juc5rPE5tfHJq1izPIerz9v0keYy0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=LxmBnZ6XwfVFnaK/90y00EQt4h4nYaysH5yw5yIxjjHzfCEpXhUf5A4EyaUb5QjiErvO+l0rc8YYNN+4kD6HsNScYEDeIGs7qtxUHzqBEm6QQtoxO6I0l7u/TEWRm4bQ3o5DeIlcDTLFdnaRYu2Wm4aqvZe/nURGRBcFGbv7jp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bHcvl2ma; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 5796220E2C09; Mon, 22 Jan 2024 08:01:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5796220E2C09
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1705939267;
-	bh=xk+J9offpgOWbG5/MefCVQrVZHtpJxME2AVu0bJoiYU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bHcvl2mayTfpazeaOQG9hVEQXa1ILyF8kUGfhE6iASJYmYhatoicq0AOly7Z4LuxU
-	 H8pbA507JOC4hRlF4LhZTc2OqPFEtH+7i6rGcIkjT6Pi8J4XzqVb6iTQRtHFpwW2zl
-	 aUezifPhXwAXFcDmV/+9GazlNkX72BqxTEoZr+IY=
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
+	s=arc-20240116; t=1705940449; c=relaxed/simple;
+	bh=bSPac5w3Ua0/oFHQn7g5yByEiVkWk7NFgy25K0R0z6M=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=OiRynBisCWdsWcfLHqNVsXeWon/4yrWKuMu2Yh5GOkirD4MM+tojuawUDyuap/98TuOEsBEK5hRilr15sYSLMzfoeuQSD0XM1bEq0OxEvvdkfXWEJcx3OkqHG4xbL6TXhTewQ3w7CZk1BgmpKKZWzQ9jaMfED/TeWUI2Gxjvg2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hE/QYKBQ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d427518d52so23572425ad.0;
+        Mon, 22 Jan 2024 08:20:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705940447; x=1706545247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=beNCKY2YPTCQZoiFJNHwWZK4ngyBLzXSe58xPdpNeOE=;
+        b=hE/QYKBQA5IfKMo7x331+lBcOC9kNU52VSZHpiycN02hkEPDide5Nxu/tqwqNXXsDs
+         oRsyO7Ui5TkyMEFZ5no3lDMB4KtFpln+VxPuRF11ylZBFTPwa6jSL5WwuqekYTsrc+vz
+         EZCEVpKXeK9mwPjfGBiU0YnoTtoFiDGgciYZyl9ZCTsDRUPkLeQif9PwJ7t7nvcOwHUx
+         UdUDbKUUf+hVtVw4kN0FX+WU4CTjmZglcXgkt+ebFM8MHbPcNM5ASqAtn5i5X1PVh078
+         4CZLHUG9JK+KBidFPpIPoeGKmyQsJpnburfFctp+PkM02q8YuaLhz0QOT6yw88THx6cK
+         voFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705940447; x=1706545247;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=beNCKY2YPTCQZoiFJNHwWZK4ngyBLzXSe58xPdpNeOE=;
+        b=bblL56+7JFO0mfPF/NUca8cQDAWcqWEvM2QJ5+IFLhZ71hnpEvoXLUbjaYYn1pPXsM
+         40ak7UCsHCwHfPLuhQrzqpmAOVBnTjl6Tx3C0RWy8wyr/I6U6+POZfLAiYfN8KCPouPM
+         hccSrD7izxm3E0TlL+ntS4Qf/Q9/On89bT7P/WIJ31/LXkGfE/BLJVwaJYh3Jjxlsvyf
+         w4GyTbNT/tN5x2rkddN5D/djW4KACwUAXsl5SknDgNzyXK2tXLZmzwDB/jYWzrnbDyM5
+         mp0LKgZuCaIB9Gqu37eOGKjh9d1vu3jyCnX0C7R18fRAVUvrNu19/YzG7Aa5ybE1Ug0U
+         h+/A==
+X-Gm-Message-State: AOJu0YzkNupRvAHwINsOh08IuI3XOJHp3RB+jUeyIo+rHUC+UmPiOS0F
+	e4rVGYtjGc9irEw/HVK8JBJtXoTTZZo3BJKZDVntgPmcrHAiJUEF
+X-Google-Smtp-Source: AGHT+IEq4zaOL3uQnFuYGqQgFx0cvUA2U0zZLlFxaZA5UV3GQ7HzTUEsbVt/kQs9dPpoQG/BBdJEiQ==
+X-Received: by 2002:a17:902:aa92:b0:1d7:274e:1573 with SMTP id d18-20020a170902aa9200b001d7274e1573mr5210584plr.60.1705940446972;
+        Mon, 22 Jan 2024 08:20:46 -0800 (PST)
+Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
+        by smtp.gmail.com with ESMTPSA id jx2-20020a170903138200b001d74a674620sm2388514plb.198.2024.01.22.08.20.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 08:20:46 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	davem@davemloft.net,
 	edumazet@google.com,
 	kuba@kernel.org,
 	pabeni@redhat.com,
-	longli@microsoft.com,
-	yury.norov@gmail.com,
-	leon@kernel.org,
-	cai.huoqing@linux.dev,
-	ssengar@linux.microsoft.com,
-	vkuznets@redhat.com,
-	tglx@linutronix.de,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: schakrabarti@microsoft.com,
-	paulros@microsoft.com,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Subject: [PATCH 4/4 V2 net-next] net: mana: Assigning IRQ affinity on HT cores
-Date: Mon, 22 Jan 2024 08:00:59 -0800
-Message-Id: <1705939259-2859-5-git-send-email-schakrabarti@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1705939259-2859-1-git-send-email-schakrabarti@linux.microsoft.com>
-References: <1705939259-2859-1-git-send-email-schakrabarti@linux.microsoft.com>
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net 1/1] hv_netvsc: Calculate correct ring size when PAGE_SIZE is not 4 Kbytes
+Date: Mon, 22 Jan 2024 08:20:28 -0800
+Message-Id: <20240122162028.348885-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Existing MANA design assigns IRQ to every CPU, including sibling
-hyper-threads. This may cause multiple IRQs to be active simultaneously
-in the same core and may reduce the network performance.
+From: Michael Kelley <mhklinux@outlook.com>
 
-Improve the performance by assigning IRQ to non sibling CPUs in local
-NUMA node. The performance improvement we are getting using ntttcp with
-following patch is around 15 percent against existing design and
-approximately 11 percent, when trying to assign one IRQ in each core
-across NUMA nodes, if enough cores are present.
-The change will improve the performance for the system
-with high number of CPU, where number of CPUs in a node is more than
-64 CPUs. Nodes with 64 CPUs or less than 64 CPUs will not be affected
-by this change.
+Current code in netvsc_drv_init() incorrectly assumes that PAGE_SIZE
+is 4 Kbytes, which is wrong on ARM64 with 16K or 64K page size. As a
+result, the default VMBus ring buffer size on ARM64 with 64K page size
+is 8 Mbytes instead of the expected 512 Kbytes. While this doesn't break
+anything, a typical VM with 8 vCPUs and 8 netvsc channels wastes 120
+Mbytes (8 channels * 2 ring buffers/channel * 7.5 Mbytes/ring buffer).
 
-The performance study was done using ntttcp tool in Azure.
-The node had 2 nodes with 32 cores each, total 128 vCPU and number of channels
-were 32 for 32 RX rings.
+Unfortunately, the module parameter specifying the ring buffer size
+is in units of 4 Kbyte pages. Ideally, it should be in units that
+are independent of PAGE_SIZE, but backwards compatibility prevents
+changing that now.
 
-The below table shows a comparison between existing design and new
-design:
+Fix this by having netvsc_drv_init() hardcode 4096 instead of using
+PAGE_SIZE when calculating the ring buffer size in bytes. Also
+use the VMBUS_RING_SIZE macro to ensure proper alignment when running
+with page size larger than 4K.
 
-IRQ   node-num    core-num   CPU        performance(%)
-1      0 | 0       0 | 0     0 | 0-1     0
-2      0 | 0       0 | 1     1 | 2-3     3
-3      0 | 0       1 | 2     2 | 4-5     10
-4      0 | 0       1 | 3     3 | 6-7     15
-5      0 | 0       2 | 4     4 | 8-9     15
+Cc: <stable@vger.kernel.org> # 5.15.x
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
----
-25     0 | 0       12| 24    24| 48-49   12
----
-32     0 | 0       15| 31    31| 62-63   12
-33     0 | 0       16| 0     32| 0-1     10
----
-64     0 | 0       31| 31    63| 62-63   0
+ drivers/net/hyperv/netvsc_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 61 +++++++++++++++----
- 1 file changed, 50 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 05a0ac054823..1332db9a08eb 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1249,7 +1249,7 @@ void mana_gd_free_res_map(struct gdma_resource *r)
- 	r->size = 0;
- }
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 4406427d4617..273bd8a20122 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -44,7 +44,7 @@
  
--static __maybe_unused int irq_setup(unsigned int *irqs, unsigned int len, int node)
-+static int irq_setup(unsigned int *irqs, unsigned int len, int node)
- {
- 	const struct cpumask *next, *prev = cpu_none_mask;
- 	cpumask_var_t cpus __free(free_cpumask_var);
-@@ -1280,13 +1280,16 @@ static __maybe_unused int irq_setup(unsigned int *irqs, unsigned int len, int no
+ static unsigned int ring_size __ro_after_init = 128;
+ module_param(ring_size, uint, 0444);
+-MODULE_PARM_DESC(ring_size, "Ring buffer size (# of pages)");
++MODULE_PARM_DESC(ring_size, "Ring buffer size (# of 4K pages)");
+ unsigned int netvsc_ring_bytes __ro_after_init;
  
- static int mana_gd_setup_irqs(struct pci_dev *pdev)
- {
--	unsigned int max_queues_per_port = num_online_cpus();
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	unsigned int max_queues_per_port;
- 	struct gdma_irq_context *gic;
- 	unsigned int max_irqs, cpu;
--	int nvec, irq;
-+	int start_irq_index = 1;
-+	int nvec, *irqs, irq;
- 	int err, i = 0, j;
- 
-+	cpus_read_lock();
-+	max_queues_per_port = num_online_cpus();
- 	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
- 		max_queues_per_port = MANA_MAX_NUM_QUEUES;
- 
-@@ -1294,8 +1297,18 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 	max_irqs = max_queues_per_port + 1;
- 
- 	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
--	if (nvec < 0)
-+	if (nvec < 0) {
-+		cpus_read_unlock();
- 		return nvec;
-+	}
-+	if (nvec <= num_online_cpus())
-+		start_irq_index = 0;
-+
-+	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
-+	if (!irqs) {
-+		err = -ENOMEM;
-+		goto free_irq_vector;
-+	}
- 
- 	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
- 				   GFP_KERNEL);
-@@ -1323,17 +1336,41 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 			goto free_irq;
- 		}
- 
--		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
--		if (err)
--			goto free_irq;
--
--		cpu = cpumask_local_spread(i, gc->numa_node);
--		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-+		if (!i) {
-+			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-+			if (err)
-+				goto free_irq;
-+
-+			/* If number of IRQ is one extra than number of online CPUs,
-+			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-+			 * same CPU.
-+			 * Else we will use different CPUs for IRQ0 and IRQ1.
-+			 * Also we are using cpumask_local_spread instead of
-+			 * cpumask_first for the node, because the node can be
-+			 * mem only.
-+			 */
-+			if (start_irq_index) {
-+				cpu = cpumask_local_spread(i, gc->numa_node);
-+				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-+			} else {
-+				irqs[start_irq_index] = irq;
-+			}
-+		} else {
-+			irqs[i - start_irq_index] = irq;
-+			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
-+					  gic->name, gic);
-+			if (err)
-+				goto free_irq;
-+		}
+ static const u32 default_msg = NETIF_MSG_DRV | NETIF_MSG_PROBE |
+@@ -2807,7 +2807,7 @@ static int __init netvsc_drv_init(void)
+ 		pr_info("Increased ring_size to %u (min allowed)\n",
+ 			ring_size);
  	}
+-	netvsc_ring_bytes = ring_size * PAGE_SIZE;
++	netvsc_ring_bytes = VMBUS_RING_SIZE(ring_size * 4096);
  
-+	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
-+	if (err)
-+		goto free_irq;
-+
- 	gc->max_num_msix = nvec;
- 	gc->num_msix_usable = nvec;
--
-+	cpus_read_unlock();
- 	return 0;
+ 	register_netdevice_notifier(&netvsc_netdev_notifier);
  
- free_irq:
-@@ -1346,8 +1383,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 	}
- 
- 	kfree(gc->irq_contexts);
-+	kfree(irqs);
- 	gc->irq_contexts = NULL;
- free_irq_vector:
-+	cpus_read_unlock();
- 	pci_free_irq_vectors(pdev);
- 	return err;
- }
 -- 
-2.34.1
+2.25.1
 
 
