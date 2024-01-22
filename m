@@ -1,108 +1,119 @@
-Return-Path: <linux-hyperv+bounces-1451-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1452-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3150B83072C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 14:37:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA546836401
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jan 2024 14:09:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8CE21F25963
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jan 2024 13:37:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E17A11C2294F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jan 2024 13:09:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717351F93C;
-	Wed, 17 Jan 2024 13:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 146BD3C697;
+	Mon, 22 Jan 2024 13:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NUXOzdNo"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="e6wfFtqi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9769C1F933;
-	Wed, 17 Jan 2024 13:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5271A3CF40;
+	Mon, 22 Jan 2024 13:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705498658; cv=none; b=atiBCb6R5xDDUzpoYs3D17Uh0U4W9dSrqgQN9UIt/abKkLf+RATmYyB5ILp1p5StDQOSC5UcDAAxjgp694XFxQAM/PhS4ojnrdOC5WWucdCnQ2rdKhwqt8grtxdMFfKJNjnUwyPRyo2RsIZrI3W6p8PU+tGEDx087NA4goUIhF8=
+	t=1705928956; cv=none; b=pR2vDwoPTZzclHNQF1zaGJeL08jUuKbZrnz3zE4hhjnvEnwuXw+0IdlsFCcRoDHb9colVTw1RSKRjSKkA8MfnCAJKhRAQhVLcBcG8y1DkgAK6qrqaxxtwlaq99+tOUFcunGZISYV//tcOym+CUg/f0GXTGNJLJtp1Ed88/6Hf8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705498658; c=relaxed/simple;
-	bh=juf1VSzmc/rX2xUCMcfOl74VIpM9SShaFHnSA69/YO4=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=GqaUobSaLF3xC3wDQirRGR1VuD+S/jGs96Pnh3FmmETXZ/WQysn8fyAw683nYqjoppQvuU339V8cmlQOyk3ZTSol7OCdt3PSyq6LduilpHuE2N8+bPEXf8BeRvWWqfrq4f/PVHW+vwqJ2d1Wt0nSga7YMwlnx0XEsyss2aLzk1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NUXOzdNo; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705498657; x=1737034657;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=juf1VSzmc/rX2xUCMcfOl74VIpM9SShaFHnSA69/YO4=;
-  b=NUXOzdNoB4vHx4uV5WOeVz7Tk6TdpylVK0WCUqbB3oOOZs4i1Xibsc62
-   c5GbURCMaOqo/rngHIomWP8IdOJazJX9pubQGUEVv7F1q3YRY75DDeBBb
-   t1TbJL3YSHwQNDBwvZY0zI14mCdjpclq1f0sEpdTP2D7lFrbnvQab1xKD
-   hSAVG6OwlV9wYTt38YYAc6ac3ncjQMbeE/iepctygzet2yMcgF58kl21e
-   H5SZvqrxnkErKoihHp5JwbcX/c5uoso8cRe+yEwvWgy0ISZsHA7jxWQGe
-   w6nfYl7AWV2yYQAi3/GM46CbraWS1pZj4kRnVHhhxy9X52e08dpd3Wzf4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="6883501"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="6883501"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 05:37:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="35999"
-Received: from lewbarto-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.39.118])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 05:37:30 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 9E5A710A515; Wed, 17 Jan 2024 16:37:27 +0300 (+03)
-Date: Wed, 17 Jan 2024 16:37:27 +0300
-From: kirill.shutemov@linux.intel.com
-To: mhklinux@outlook.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	luto@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-	urezki@gmail.com, hch@infradead.org, lstoakes@gmail.com,
-	thomas.lendacky@amd.com, ardb@kernel.org, jroedel@suse.de,
-	seanjc@google.com, rick.p.edgecombe@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 1/3] x86/hyperv: Use slow_virt_to_phys() in page
- transition hypervisor callback
-Message-ID: <20240117133727.3zzwifnunmgklotw@box.shutemov.name>
-References: <20240116022008.1023398-1-mhklinux@outlook.com>
- <20240116022008.1023398-2-mhklinux@outlook.com>
+	s=arc-20240116; t=1705928956; c=relaxed/simple;
+	bh=nBX1nAzCypBFAArWSdJUpcpURFil3TuK0uaA2ujkDzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rc8PwpMnmqvnyqwk6Gg9P++YiE4ygSAUrSWsvk6YqjLOMQw1s87GHnw8kavkwu8j/QeM85GS45FeMjEpFDXNQsOgwFvdK9ayhRFmK2f8q2zD/aehO9sFJMBb0KI0zGUSRXBpTbjWXvu8IRjoACoXF4SMcWW5iCat6AfCSOv8t8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=e6wfFtqi; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 85FBE40E01BB;
+	Mon, 22 Jan 2024 13:09:03 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id eLLUWNaX3eQF; Mon, 22 Jan 2024 13:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1705928940; bh=eTf0G+nsoYXpQyGDiFAXKjszCHpf9NvYJlgyMa5r3LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e6wfFtqitOlRYEO36RZo5CKnIlncNgICpDDk58+bdJ+2vSZnopKKWVngmLzJPdvnd
+	 PgVERWwlK9f15OX3gI7Q6CwH5TS2+DzskSmgzVCtKyoqgIVR53JxG4Doxit35vgBcr
+	 cR9pb5s0l4t4aPPss1i7RMMXhKlYDbiKqB1Cs502753r9tSXlOM4KHSCWHv3Xm9M/x
+	 KYo3qhCRyXTZIapgX63a3gIXI8awEZRwlWBWkty3jIaZ40Cc6jb7ioHwcMcXIOsHvc
+	 SQGPOqdsWAzItp/P/V3rJi0gK8hybmypxw9iVR84Y2yv1uizcVN7EgfiKI6etPN27k
+	 1B4q7qm3z+GNqfnBkyMPgffLc4vE3v358b0pdMKddE//bw0gKugu7SYS+yKq98aWqv
+	 yc9eH2BQXULkjmI7940CALRu1OCsdCgD1aa8hASVyUxAaWwuP6ntdCKI7wxMwsZmFW
+	 9/XXTkzpq0w0uNGDxzqLEpDMJ4zQ3pGlsafEWidbF6ooCpgbCD2kZxeyt11sjdb1CP
+	 92WMKyBt3wOHiiiw8ia1DZaLo3qAYFzONvwIkiF9KbhVRYldEPxcq0aqx5p7pfczAr
+	 O/iRhs84IdZOa0vbNQ4DUcEnAodPN3pzCKYdJqookoTLJQXIM1PFfvLH6ppQAZqjGl
+	 0kltp+3VBkgXFIvUP6z1Dh3o=
+Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1EFF040E0196;
+	Mon, 22 Jan 2024 13:08:37 +0000 (UTC)
+Date: Mon, 22 Jan 2024 14:08:27 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Xin Li <xin3.li@intel.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, luto@kernel.org, pbonzini@redhat.com,
+	seanjc@google.com, peterz@infradead.org, jgross@suse.com,
+	ravi.v.shankar@intel.com, mhiramat@kernel.org,
+	andrew.cooper3@citrix.com, jiangshanlai@gmail.com,
+	nik.borisov@suse.com, shan.kang@intel.com
+Subject: Re: [PATCH v13 07/35] x86/fred: Disable FRED support if
+ CONFIG_X86_FRED is disabled
+Message-ID: <20240122130827.GQZa5oy4OZHRFEqbsr@fat_crate.local>
+References: <20231205105030.8698-1-xin3.li@intel.com>
+ <20231205105030.8698-8-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240116022008.1023398-2-mhklinux@outlook.com>
+In-Reply-To: <20231205105030.8698-8-xin3.li@intel.com>
 
-On Mon, Jan 15, 2024 at 06:20:06PM -0800, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Tue, Dec 05, 2023 at 02:49:56AM -0800, Xin Li wrote:
+> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
 > 
-> In preparation for temporarily marking pages not present during a
-> transition between encrypted and decrypted, use slow_virt_to_phys()
-> in the hypervisor callback. As long as the PFN is correct,
-> slow_virt_to_phys() works even if the leaf PTE is not present.
-> The existing functions that depend on vmalloc_to_page() all
-> require that the leaf PTE be marked present, so they don't work.
+> Add CONFIG_X86_FRED to <asm/disabled-features.h> to make
+> cpu_feature_enabled() work correctly with FRED.
 > 
-> Update the comments for slow_virt_to_phys() to note this broader usage
-> and the requirement to work even if the PTE is not marked present.
+> Originally-by: Megha Dey <megha.dey@intel.com>
+> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Tested-by: Shan Kang <shan.kang@intel.com>
+> Signed-off-by: Xin Li <xin3.li@intel.com>
+> ---
 > 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Changes since v10:
+> * FRED feature is defined in cpuid word 12, not 13 (Nikolay Borisov).
+> ---
+>  arch/x86/include/asm/disabled-features.h       | 8 +++++++-
+>  tools/arch/x86/include/asm/disabled-features.h | 8 +++++++-
+>  2 files changed, 14 insertions(+), 2 deletions(-)
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Whoever applies this: this one and the previous one can be merged into
+one patch.
+
+Thx.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
