@@ -1,231 +1,197 @@
-Return-Path: <linux-hyperv+bounces-1475-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1477-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB6883FE38
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jan 2024 07:22:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 438D7841C6E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jan 2024 08:19:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64BE91F2111B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jan 2024 06:22:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A7E228618D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jan 2024 07:19:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BB4C4F1EB;
-	Mon, 29 Jan 2024 06:21:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F074C618;
+	Tue, 30 Jan 2024 07:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="k9AeTemi"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Sn9C0PKK"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8C904CDE5;
-	Mon, 29 Jan 2024 06:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B28C26AC7;
+	Tue, 30 Jan 2024 07:19:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706509295; cv=none; b=USEOFITGEwQU9B72fT7mNh6Nj8pvczRJXGjuxhku1Is07iIEzE7S+oyS1zaHuMx8p6os754yFwJHug+EgEjmSjEThquujSGzsPGGygmG34Uvvd+BXn+VZD7eX4O8rcNRq38bRls5kF0ZyvvxQs47R33oYVk0vn7wrz8NFoD30CE=
+	t=1706599144; cv=none; b=CW2TGJqn4b60KybrYk9kreSBbCcmiKzm7X21RBsDBKo+hMTM9o1PYCnHlYtD2ldC5i0Czl47mx1g9jl0d/77ePkoGWlyECG8RXHStD4xN5PbleF2y2JE2nmW5SnJ5mBPK074XV/49+njdpgkoeCssTBqoQ6TeA3xex8itldrQLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706509295; c=relaxed/simple;
-	bh=v9MDEJ1+0pMadpqw+Z8wm+0v+LwPNN7gls1lvIH64rw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=iSNhJ/O8uqXVuTaK3LkNm1EvslPDDzTBAkzYBmGxJ+CYVR8UjfjjbolyS1q00r6+ku/Uw+5/LzSMEaH3TNXTrykVJFLdcNXqoCDAyCtPzgPoB71LzGo5+J7wurPMSpjKFHFHrZN3bTB6HGCiaVUUYsg9/q8qYx/wHkVBXjHA50M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=k9AeTemi; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1706599144; c=relaxed/simple;
+	bh=XD0iHpQFJ0q6NZTMOVuKJqYMVJwALyyXiYdp7IAr+OQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=hQXlMbQEChoLY84Tg18LET3MGbtY3PTT0n/ne/Kk2j3udNYC7oUwGP2TX+U2c2zxEGgunMmrYQCLo2YVmPg5CndjIrCNGQ6kFc4yKe9vQN4eFsOuvBv1RU0cTkrP5T/gYKjOYQd2HZz2wnVQrqhPLf7cCgtksW9kAnbiIvW7sOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Sn9C0PKK; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id 48A0520E67C9; Sun, 28 Jan 2024 22:21:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48A0520E67C9
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 8875920B2000; Mon, 29 Jan 2024 23:18:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8875920B2000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706509293;
-	bh=1onNjZrx6dF0bIPOiAkazIzuK6UO0uUICqgy/1VAkLg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k9AeTemifJNcjNJk8+YBWpbkfIcUzKMQv3UJvACAgGqLSwxj39hanEgh+lzmuYYOu
-	 xZ/ixO2ed3yOJhsQ4MaSQg/uqsS+yQm++RwYyeLj8/EA+/tLCmCJhmfB+FoI4baoJP
-	 EuV3yNyATGCbdxtK7fRrZcR7J/T/10TEowtLdcUg=
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	longli@microsoft.com,
-	yury.norov@gmail.com,
-	leon@kernel.org,
-	cai.huoqing@linux.dev,
-	ssengar@linux.microsoft.com,
-	vkuznets@redhat.com,
-	tglx@linutronix.de,
+	s=default; t=1706599136;
+	bh=KFdAJcXVrqcUHwnaCxf3QIvJzyS/dFmrIoKhQOSds9g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Sn9C0PKKkRuccV6/DavK5CClBZPt3JRklmnKX5xKKvK/bcQZR8Azy7qhwbwD97MfX
+	 bY5ssVZDmaWP5qnjwuVz+ccR/c9JQSTR12RMPj2nSxqLtmLVjsAMyIa1JSnLtYIsWh
+	 lscE9CqeBH3nMk4R8tXzoQ1Do+tNuDcCbCwxh6kk=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Wojciech Drewek <wojciech.drewek@intel.com>,
 	linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: schakrabarti@microsoft.com,
-	paulros@microsoft.com,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Subject: [PATCH 4/4 V3 net-next] net: mana: Assigning IRQ affinity on HT cores
-Date: Sun, 28 Jan 2024 22:21:07 -0800
-Message-Id: <1706509267-17754-5-git-send-email-schakrabarti@linux.microsoft.com>
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	shradhagupta@microsoft.com,
+	stable@vger.kernel.org
+Subject: [PATCH] hv_netvsc:Register VF in netvsc_probe if NET_DEVICE_REGISTER missed
+Date: Mon, 29 Jan 2024 23:18:55 -0800
+Message-Id: <1706599135-12651-1-git-send-email-shradhagupta@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1706509267-17754-1-git-send-email-schakrabarti@linux.microsoft.com>
-References: <1706509267-17754-1-git-send-email-schakrabarti@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-Existing MANA design assigns IRQ to every CPU, including sibling
-hyper-threads. This may cause multiple IRQs to be active simultaneously
-in the same core and may reduce the network performance.
+If hv_netvsc driver is removed and reloaded, the NET_DEVICE_REGISTER
+handler cannot perform VF register successfully as the register call
+is received before netvsc_probe is finished. This is because we
+register register_netdevice_notifier() very early(even before
+vmbus_driver_register()).
+To fix this, we try to register each such matching VF( if it is visible
+as a netdevice) at the end of netvsc_probe.
 
-Improve the performance by assigning IRQ to non sibling CPUs in local
-NUMA node. The performance improvement we are getting using ntttcp with
-following patch is around 15 percent against existing design and
-approximately 11 percent, when trying to assign one IRQ in each core
-across NUMA nodes, if enough cores are present.
-The change will improve the performance for the system
-with high number of CPU, where number of CPUs in a node is more than
-64 CPUs. Nodes with 64 CPUs or less than 64 CPUs will not be affected
-by this change.
-
-The performance study was done using ntttcp tool in Azure.
-The node had 2 nodes with 32 cores each, total 128 vCPU and number of channels
-were 32 for 32 RX rings.
-
-The below table shows a comparison between existing design and new
-design:
-
-IRQ   node-num    core-num   CPU        performance(%)
-1      0 | 0       0 | 0     0 | 0-1     0
-2      0 | 0       0 | 1     1 | 2-3     3
-3      0 | 0       1 | 2     2 | 4-5     10
-4      0 | 0       1 | 3     3 | 6-7     15
-5      0 | 0       2 | 4     4 | 8-9     15
-...
-...
-25     0 | 0       12| 24    24| 48-49   12
-...
-32     0 | 0       15| 31    31| 62-63   12
-33     0 | 0       16| 0     32| 0-1     10
-...
-64     0 | 0       31| 31    63| 62-63   0
-
-Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Cc: stable@vger.kernel.org
+Fixes: 85520856466e ("hv_netvsc: Fix race of register_netdevice_notifier and VF register")
+Suggested-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Tested-on: Ubuntu22
+Testcases: LISA testsuites
+	   verify_reload_hyperv_modules, perf_tcp_ntttcp_sriov
 ---
- .../net/ethernet/microsoft/mana/gdma_main.c   | 61 +++++++++++++++----
- 1 file changed, 50 insertions(+), 11 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 49 ++++++++++++++++++++++++++++-----
+ 1 file changed, 42 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 05a0ac054823..1332db9a08eb 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1249,7 +1249,7 @@ void mana_gd_free_res_map(struct gdma_resource *r)
- 	r->size = 0;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 706ea5263e87..25c4dc9cc4bd 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -42,6 +42,10 @@
+ #define LINKCHANGE_INT (2 * HZ)
+ #define VF_TAKEOVER_INT (HZ / 10)
+ 
++/* Macros to define the context of vf registration */
++#define VF_REG_IN_PROBE		1
++#define VF_REG_IN_RECV_CBACK	2
++
+ static unsigned int ring_size __ro_after_init = 128;
+ module_param(ring_size, uint, 0444);
+ MODULE_PARM_DESC(ring_size, "Ring buffer size (# of pages)");
+@@ -2183,7 +2187,7 @@ static rx_handler_result_t netvsc_vf_handle_frame(struct sk_buff **pskb)
  }
  
--static __maybe_unused int irq_setup(unsigned int *irqs, unsigned int len, int node)
-+static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+ static int netvsc_vf_join(struct net_device *vf_netdev,
+-			  struct net_device *ndev)
++			  struct net_device *ndev, int context)
  {
- 	const struct cpumask *next, *prev = cpu_none_mask;
- 	cpumask_var_t cpus __free(free_cpumask_var);
-@@ -1280,13 +1280,16 @@ static __maybe_unused int irq_setup(unsigned int *irqs, unsigned int len, int no
- 
- static int mana_gd_setup_irqs(struct pci_dev *pdev)
- {
--	unsigned int max_queues_per_port = num_online_cpus();
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	unsigned int max_queues_per_port;
- 	struct gdma_irq_context *gic;
- 	unsigned int max_irqs, cpu;
--	int nvec, irq;
-+	int start_irq_index = 1;
-+	int nvec, *irqs, irq;
- 	int err, i = 0, j;
- 
-+	cpus_read_lock();
-+	max_queues_per_port = num_online_cpus();
- 	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
- 		max_queues_per_port = MANA_MAX_NUM_QUEUES;
- 
-@@ -1294,8 +1297,18 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 	max_irqs = max_queues_per_port + 1;
- 
- 	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
--	if (nvec < 0)
-+	if (nvec < 0) {
-+		cpus_read_unlock();
- 		return nvec;
-+	}
-+	if (nvec <= num_online_cpus())
-+		start_irq_index = 0;
-+
-+	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
-+	if (!irqs) {
-+		err = -ENOMEM;
-+		goto free_irq_vector;
-+	}
- 
- 	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
- 				   GFP_KERNEL);
-@@ -1323,17 +1336,41 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 			goto free_irq;
- 		}
- 
--		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
--		if (err)
--			goto free_irq;
--
--		cpu = cpumask_local_spread(i, gc->numa_node);
--		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-+		if (!i) {
-+			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-+			if (err)
-+				goto free_irq;
-+
-+			/* If number of IRQ is one extra than number of online CPUs,
-+			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-+			 * same CPU.
-+			 * Else we will use different CPUs for IRQ0 and IRQ1.
-+			 * Also we are using cpumask_local_spread instead of
-+			 * cpumask_first for the node, because the node can be
-+			 * mem only.
-+			 */
-+			if (start_irq_index) {
-+				cpu = cpumask_local_spread(i, gc->numa_node);
-+				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-+			} else {
-+				irqs[start_irq_index] = irq;
-+			}
-+		} else {
-+			irqs[i - start_irq_index] = irq;
-+			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
-+					  gic->name, gic);
-+			if (err)
-+				goto free_irq;
-+		}
+ 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
+ 	int ret;
+@@ -2205,8 +2209,11 @@ static int netvsc_vf_join(struct net_device *vf_netdev,
+ 			   ndev->name, ret);
+ 		goto upper_link_failed;
  	}
- 
-+	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
-+	if (err)
-+		goto free_irq;
-+
- 	gc->max_num_msix = nvec;
- 	gc->num_msix_usable = nvec;
 -
-+	cpus_read_unlock();
- 	return 0;
+-	schedule_delayed_work(&ndev_ctx->vf_takeover, VF_TAKEOVER_INT);
++	/* If this registration is called from probe context vf_takeover
++	 * is taken care of later in probe itself.
++	 */
++	if (context == VF_REG_IN_RECV_CBACK)
++		schedule_delayed_work(&ndev_ctx->vf_takeover, VF_TAKEOVER_INT);
  
- free_irq:
-@@ -1346,8 +1383,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 	}
+ 	call_netdevice_notifiers(NETDEV_JOIN, vf_netdev);
  
- 	kfree(gc->irq_contexts);
-+	kfree(irqs);
- 	gc->irq_contexts = NULL;
- free_irq_vector:
-+	cpus_read_unlock();
- 	pci_free_irq_vectors(pdev);
- 	return err;
+@@ -2344,7 +2351,7 @@ static int netvsc_prepare_bonding(struct net_device *vf_netdev)
+ 	return NOTIFY_DONE;
  }
+ 
+-static int netvsc_register_vf(struct net_device *vf_netdev)
++static int netvsc_register_vf(struct net_device *vf_netdev, int context)
+ {
+ 	struct net_device_context *net_device_ctx;
+ 	struct netvsc_device *netvsc_dev;
+@@ -2384,7 +2391,7 @@ static int netvsc_register_vf(struct net_device *vf_netdev)
+ 
+ 	netdev_info(ndev, "VF registering: %s\n", vf_netdev->name);
+ 
+-	if (netvsc_vf_join(vf_netdev, ndev) != 0)
++	if (netvsc_vf_join(vf_netdev, ndev, context) != 0)
+ 		return NOTIFY_DONE;
+ 
+ 	dev_hold(vf_netdev);
+@@ -2485,7 +2492,7 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+ static int netvsc_probe(struct hv_device *dev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+-	struct net_device *net = NULL;
++	struct net_device *net = NULL, *vf_netdev;
+ 	struct net_device_context *net_device_ctx;
+ 	struct netvsc_device_info *device_info = NULL;
+ 	struct netvsc_device *nvdev;
+@@ -2597,6 +2604,34 @@ static int netvsc_probe(struct hv_device *dev,
+ 	}
+ 
+ 	list_add(&net_device_ctx->list, &netvsc_dev_list);
++
++	/* When the hv_netvsc driver is removed and readded, the
++	 * NET_DEVICE_REGISTER for the vf device is replayed before probe
++	 * is complete. This is because register_netdevice_notifier() gets
++	 * registered before vmbus_driver_register() so that callback func
++	 * is set before probe and we don't miss events like NETDEV_POST_INIT
++	 * So, in this section we try to register each matching
++	 * vf device that is present as a netdevice, knowing that it's register
++	 * call is not processed in the netvsc_netdev_notifier(as probing is
++	 * progress and get_netvsc_byslot fails).
++	 */
++	for_each_netdev(dev_net(net), vf_netdev) {
++		if (vf_netdev->netdev_ops == &device_ops)
++			continue;
++
++		if (vf_netdev->type != ARPHRD_ETHER)
++			continue;
++
++		if (is_vlan_dev(vf_netdev))
++			continue;
++
++		if (netif_is_bond_master(vf_netdev))
++			continue;
++
++		netvsc_prepare_bonding(vf_netdev);
++		netvsc_register_vf(vf_netdev, VF_REG_IN_PROBE);
++		__netvsc_vf_setup(net, vf_netdev);
++	}
+ 	rtnl_unlock();
+ 
+ 	netvsc_devinfo_put(device_info);
+@@ -2773,7 +2808,7 @@ static int netvsc_netdev_event(struct notifier_block *this,
+ 	case NETDEV_POST_INIT:
+ 		return netvsc_prepare_bonding(event_dev);
+ 	case NETDEV_REGISTER:
+-		return netvsc_register_vf(event_dev);
++		return netvsc_register_vf(event_dev, VF_REG_IN_RECV_CBACK);
+ 	case NETDEV_UNREGISTER:
+ 		return netvsc_unregister_vf(event_dev);
+ 	case NETDEV_UP:
 -- 
 2.34.1
 
