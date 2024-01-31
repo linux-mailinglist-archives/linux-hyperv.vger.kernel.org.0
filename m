@@ -1,63 +1,63 @@
-Return-Path: <linux-hyperv+bounces-1489-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1490-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B88298444BC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Jan 2024 17:46:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B49C844655
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Jan 2024 18:40:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F4172899E0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Jan 2024 16:46:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAA6728A0BA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Jan 2024 17:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E0C12BEB0;
-	Wed, 31 Jan 2024 16:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C71312DD92;
+	Wed, 31 Jan 2024 17:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="CT8Dxppy"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="P30iVNDy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2123.outbound.protection.outlook.com [40.107.243.123])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2105.outbound.protection.outlook.com [40.107.102.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9769312BE8D;
-	Wed, 31 Jan 2024 16:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7507D12CD86;
+	Wed, 31 Jan 2024 17:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.105
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706719578; cv=fail; b=kfpxSD2+KsKVjVPd0cSvBpMN7zTAvn5IGKLz6TAJnyot0TYqiELLCHVcieW5XHb9jGz7V21gCtg8VinRqzlDkFwa8AT595ZygLXvCHeulLciIeP0fYfE4jkDA3bKLLRdt7QfGSz3TmS8rnq6YGFKT2k53BsJHYrt2c5m4xWg8Xw=
+	t=1706722824; cv=fail; b=gMli7G2cPc2ypWQsIe1rRISiDa+Fi6pq1DqD+KdHhyppYaNwSI8fuNqi0hYPhLVe4xHyaydHfK2Wk4KP8t8eg37lV6EzmQ8LWmYoAl2QPxIKQVj9aYJJ3DhIct1qLTNLPbgJ3Zu4keBhCX3ZTjXCLel/sX3TuN33I12dYhK4pDc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706719578; c=relaxed/simple;
-	bh=bZAIexGT0QAgo4i5H3tBbspaRo4Nj4Qf24z1dC4E4R4=;
+	s=arc-20240116; t=1706722824; c=relaxed/simple;
+	bh=urgceumXJJmVvmJ8XBVvXuDxWQRL5iqJH73dk+05rVg=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qwUEy6YhwaklhzuD6Ro+nsxOqDBa6GVp2/vB2Ss6qi5sXzZuI35/Z17YFPAv5iVubkepT2aEgqsUglEl7BTNxbLhNf7hxIdIzsB2Z8m9tvXac+Kv9iQiy0nwNAbTm8WaVsPzAKdbBzqT84fSAuSm7PQCdKPImLV7KAM6XP/DN7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=CT8Dxppy; arc=fail smtp.client-ip=40.107.243.123
+	 Content-Type:MIME-Version; b=LIHcCkHn/czVq6AXkmmcQqPBjedEknCs4R6xZjHM80tg5e0ooirVuC4Wz3d+96c9r3igR/xh1JufDlln0wWOyIENufphXDZJr3cr0VXEWUfy79k2IKsXk6Ymi/qEcE7hDiegRYdGaODw+pJG2Nq/IqACijibqgbD4W7RZvoASjc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=P30iVNDy; arc=fail smtp.client-ip=40.107.102.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lu6P9WCt9qieBo5hLL3mC/YuGCmZ9Cx3jVwQZmurS/fwEY9rGya/WmBh555dk1AfiQ98dlb6cvyhfkEAkptiDmo2r/vUXyRcI+XEbJRT1wwOJE7J5OrftCW5ObjpEWGJgsrxJi7cLZUD7swLqUvNEFi+cYZfNVmzUbZj1RCpTYY3Wi1o7QhB6Zv29vE7t4qSb2iTSwpqXHM4ltE3hbLPu7IVQKxzGQdJBYuGefa6/4Iiu2/qcc+DSyUDS9R7GwXnzbvtBPr1aPPvFulImJkD0nNuBQINvEDt0kIQYYYUEeYzkCvVU6dtgj9BH/pahherGCDSHA6ZOgHBnPScvhf6Qw==
+ b=SHsOheAiCczY/2IjykgWi6/AAh6br7V96ZPfPMrriOWXyplTilaKognB3lzBpj8F3hHW0dpZsXxkUh9DL0W1NVaSNXtDFJm1ZTEg83g8rhXl18SIJ5nAT6TtiSrIDmXxQ482FYPpHF+6pW6GgUadk1MtSXaSEx5QTn42X+g/sQm3d43R1SZndtvVb2BpZm+R+5OeoBv6YlEywp/q6OvWxAwT1+FgNs8SqruJ9+8JS2Xz2LL07kQvJoZx7L64ZeqH/5q0gkzBVEaL8p83W8s59DKqstvAYLLSopzfthF4Qr95HgeFMG1O6U2pHeMtKPP20dWHiuzK31A1u4jVqxi/bQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CiuB8AhCAUEnI22Avq2/9zfXo6sutDSdbO6Wc5sBkM0=;
- b=AB27MW1zxUR6HpL+bPcz4OdP6cWCf2CLyInQ+sY401ceb0dLK9FDyYakdmhERKQNv1376vQx41gepnM97G2AYGfUetDIAiIIWSte/v9ud5k0+0UaS3lDHhd1ztvdeyJgo8p9fG1h3oP0B44QLDq3q4yIXpe6EG0sAj/56bP/K3QEVRA1hnEPLJGLEB23guk6qBVO+PwrYlQ/U3IMAOiF7xDDOHgHL5uBaiseObfOc3SoGNIf97TXAX8A42JWAOmxu+L5RgRqcSECLzCP4s5UDa7evCOe82lyi03fNYMeJHKG0hgufbCH/mq67xdB/Siadyp3Bcq+kaZ4OA+jI6ljnQ==
+ bh=YeHUgy1ef+J8v0xmlX72sUawd0eRsH3koABvexjzjM4=;
+ b=BvcxQEcQTNBdWnkN+/JajwlOHPS5Kd+ZbdiLmUc0/KgCnOvSNRQJf1yy3hD+qBrAnrzpo/r/SqpahDCKsCyDuPRfZDktBRufz/ojlSdDkaiLUagNR5XeYzfhf1kiw3MpXYsfHBh8QKX/jQNc9s2lBPWi9bpoUdsIHCf5+uqnAAf9+nia3Tvr91vfVIOpi5rMSH0fZSP6AWCspiuH+jcdPyjw7QU07IceWKJOfiUqpglZR5EZhjKqFRF52DckuK4Q831xzF8WTP2QqoEv5CbqBeXw33jCUbR1YgZ9Rjy8SxoOGnJVslPQWOlQY7nsfVPChwOMxzpqwxACPBKQowQQ1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CiuB8AhCAUEnI22Avq2/9zfXo6sutDSdbO6Wc5sBkM0=;
- b=CT8DxppyZyWXtS8v9UbNXec9J+hxXVczDPugRymHu9w9d8P+HXU9FKSK/c8O+S6PgNkP2eeDyslLDcb/hixKZ3XO+okmTG1eeLgwzDrq9jSb1iLoL9pCPk8LBnVwnwtoFd7JzDDUYCgqE0sj2KjUfMnCXWQTGHjC9nlTelzxq3E=
-Received: from DS1PEPF00012A5F.namprd21.prod.outlook.com
- (2603:10b6:2c:400:0:3:0:10) by DM4PR21MB3272.namprd21.prod.outlook.com
- (2603:10b6:8:68::10) with Microsoft SMTP Server (version=TLS1_2,
+ bh=YeHUgy1ef+J8v0xmlX72sUawd0eRsH3koABvexjzjM4=;
+ b=P30iVNDyfr3PCh0011d+SUmQ0QmPgj+beGSQnAB9Z/QINVb5U4CIowTrpGdzEwOUpmL8/P1tMFsETH72fUtJbVuc3XyUf2Vfh3rzj2oGyN4nNIZvuGkYIoNnMO+zxIqhZ9/Lg6GE+oOLnzr3+9V7JNOJqWD9NDCzliZjHKxtz64=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by CY5PR21MB3770.namprd21.prod.outlook.com (2603:10b6:930:c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.9; Wed, 31 Jan
- 2024 16:46:13 +0000
-Received: from DS1PEPF00012A5F.namprd21.prod.outlook.com
- ([fe80::ff76:81ea:f8d6:45]) by DS1PEPF00012A5F.namprd21.prod.outlook.com
- ([fe80::ff76:81ea:f8d6:45%8]) with mapi id 15.20.7249.015; Wed, 31 Jan 2024
- 16:46:06 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>, Dexuan Cui
-	<decui@microsoft.com>
+ 2024 17:40:19 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::5d07:5716:225f:f717]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::5d07:5716:225f:f717%4]) with mapi id 15.20.7270.007; Wed, 31 Jan 2024
+ 17:40:18 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>, Shradha Gupta
+	<shradhagupta@linux.microsoft.com>
 CC: KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, "David S.
  Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
  Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Wojciech Drewek
@@ -70,16 +70,17 @@ Subject: RE: [PATCH] hv_netvsc:Register VF in netvsc_probe if
  NET_DEVICE_REGISTER missed
 Thread-Topic: [PATCH] hv_netvsc:Register VF in netvsc_probe if
  NET_DEVICE_REGISTER missed
-Thread-Index: AQHaU0yZNOZ7/lEXVUScWvjgIg8G/LDyyvGAgADDxwCAAI9LcA==
-Date: Wed, 31 Jan 2024 16:46:06 +0000
+Thread-Index: AQHaU0yZPmSUZITQDkq6vegFrHdKtbDyyvGAgADDxwCAAI9LcIAACpLg
+Date: Wed, 31 Jan 2024 17:40:18 +0000
 Message-ID:
- <DS1PEPF00012A5FD2F8DBDCA1A0A58C6AC6CA7C2@DS1PEPF00012A5F.namprd21.prod.outlook.com>
+ <SA1PR21MB133546A5D3B1E471E4021A00BF7C2@SA1PR21MB1335.namprd21.prod.outlook.com>
 References:
  <1706599135-12651-1-git-send-email-shradhagupta@linux.microsoft.com>
  <SA1PR21MB1335C5554F769454AAEDE1C8BF7D2@SA1PR21MB1335.namprd21.prod.outlook.com>
  <20240131075404.GA18190@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <DS1PEPF00012A5FD2F8DBDCA1A0A58C6AC6CA7C2@DS1PEPF00012A5F.namprd21.prod.outlook.com>
 In-Reply-To:
- <20240131075404.GA18190@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <DS1PEPF00012A5FD2F8DBDCA1A0A58C6AC6CA7C2@DS1PEPF00012A5F.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -89,44 +90,44 @@ msip_labels:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS1PEPF00012A5F:EE_|DM4PR21MB3272:EE_
-x-ms-office365-filtering-correlation-id: 66e5cea3-883e-4c3c-4020-08dc227c1ec2
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|CY5PR21MB3770:EE_
+x-ms-office365-filtering-correlation-id: b54e467b-1ba7-47f1-50e3-08dc2283b136
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- NctUCgyiMzlNUMdMETXEMZLB9lE8ZwQN4yZ+yT8U0vuEEhVEAqAB4VdWPo7bha23ddSWUmm8H78C8Cm80I4s5nSpV14CwJDY9iFVWVYrUREc+pXchQSlU09m1LKQObsavIxQ2BZGvwK+dDntxNaG6JVJAndRTBv8wjWyf4Hum2yaKubNmOQ1G8XHnkPLinJGZfeBqHRsAfkleUSh7Uuavywm+3mvgQ8lyoMi3CCYWuR/kRyFtrV09xyMos6bAFcDqFEoBjRawV9+U2BAvn3nM6eojv5yTbFSVXpkFhSf1RGSwuQZb8iNiUXlYjBU6X+vA78Cs/S60dfcoquAULtZq6CoUJGECtGl+LryZbr13jad+cfv1TSAuRyeGpYamvnOR5epMpzXyCkZw4/dV9rnuGspdaBzYKBvLr9iSQ9k4CDgBqJz7Gsi5TAXcFeinGkn3fx/ljK6VnRa2m+wTvvWu01hmuPg75j1cV2WDn4+djjSQiGKraGv1S5+qFyL/YCM7kpjHR3XfXCN4ia8Gxz1rcj/CvjsbSKsjXa1lfWgh+ioC6/4y51tTpy0MKs2kY4JB4l1Z4A8+8IlYJkeRKhQ0jta5ltHz3x8g1T2/AYQ+M0yBl0GwdUtmzUeVkRAvXLa
+ rqo3ZVTg99ZZ6f+UJ3y6EjFWrAI0rJa0PVfQSx81RcRLLzANLUiHL8X7QOkNwLV3gW9psTALIecm4pxAzdSyODDb0X3In66CIHb4KoqXT8qUrMFnwupLGDNvizpTieqUkeyTDVLa0dC08u6/ba7Q2ffRnqbiQIRZujShEVw6krO32o2TDtxSmdQp15jmeMCN4tUVEBfFwubXiuhVuaXmDuYrbjRgTFLj9X5co6Wg7MVSPTTelRw5qmpmbPr8g4Jz4b2lvuD0yT7/6Lj+jeiK8wTWQq2alfjQ7vexP8DTO3+yvsVcpTfcZp93oZ33N7jtK0H58oC3fU2bGKhdEIWNVSVViLId3LHhWfqYDyiCjR2PsfjfSD4XHRCVsrvhDGb5K2wVcPI7o8k9uxET4m0d4F0Ui5gxXd0rlTGcSDJ/Ih7FV/QpL67ZyPazgJe4P36hdGHWlhGwF9sjlvx9cDpYZbw1UaZ740CKZyoaKGpQ3XYo2vntmP9fOB2WpsStMN4mgDtabe7khfi9wIOkPbCU8l/IxhF1dHVey33iJ2y/LZgm9WJi6B4JuGPPB48nIjtjbXXRNEfvXie0X5Rpo7Wklk8M0YOeDWCJM7V/X616RtsqRR28zNv1URSMsYdQvFpG
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS1PEPF00012A5F.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(136003)(39860400002)(366004)(346002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(38100700002)(55016003)(9686003)(52536014)(5660300002)(33656002)(7416002)(7696005)(6506007)(83380400001)(53546011)(71200400001)(26005)(122000001)(82950400001)(82960400001)(478600001)(66446008)(64756008)(10290500003)(76116006)(86362001)(6636002)(316002)(54906003)(4326008)(8936002)(8676002)(8990500004)(38070700009)(66556008)(66476007)(110136005)(66946007)(2906002)(41300700001);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(346002)(376002)(396003)(366004)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(26005)(38100700002)(122000001)(82950400001)(82960400001)(7696005)(6506007)(4326008)(8936002)(8676002)(66946007)(66556008)(66446008)(110136005)(54906003)(5660300002)(7416002)(316002)(66476007)(2906002)(64756008)(52536014)(41300700001)(76116006)(71200400001)(86362001)(9686003)(8990500004)(10290500003)(478600001)(38070700009)(33656002)(55016003);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Magro8IAKvjL1QfSuwzNEhJO/6SrchiTvypp5k46i5+5C99tm7gDD4LB2P9H?=
- =?us-ascii?Q?YZtcL1dAvLJ5Npxiqv6+JMqpbtAGDM32N4vfgsknJHmTOMVOEhKLD2AUTEPO?=
- =?us-ascii?Q?e2mjnzPNFNz28s42wgkNNO4gTo1Jvv2LjA51KdRdOhzr4cXIEl/l3Rx2jbIF?=
- =?us-ascii?Q?mG6Wy8RNAgvLnTwdxc7DUImcJdRCMxssPj4G7ReXV9uRFBoUF+cvpokK5WYn?=
- =?us-ascii?Q?+poH03zUwHc8WRm5h3IVFpvo+8AYVOvKdylH7AzZ4IzfDuTL9uaNOtFqyucM?=
- =?us-ascii?Q?AqJEvj46wmnZ9NOSlh+jySYT/vp8ca+gGvLrPrh77RVlEQVigcr779qVpt1W?=
- =?us-ascii?Q?hzEmBwYMG3KR4f6/eIUw7wtkC/QEXiO0Ddsy4P9eL9Rj0xE+kmPQwNpcXA/7?=
- =?us-ascii?Q?rXw4S3QJj4VqqvkJKr8N7Ml0FHcBp6YtomwIXD1maP5+dRY74NlzaQOOoKWE?=
- =?us-ascii?Q?L0bd/Iuy9UL8ewW1Yh8v8iIgBurK2Tyw26XVXUjJHYq7Fi0vcfhhW9k1xr1x?=
- =?us-ascii?Q?ZnS5lQh1T3tEb8aovYn2q19Mz6vhvXvFDABtIuSsRSyyxr21lPWqDuI54lEX?=
- =?us-ascii?Q?EQxhhivT4aZMyoRMHbdV8Y8W2K5dJCRpE17B25D9Kx77lM6zPPJIGtyJmyoT?=
- =?us-ascii?Q?XnsOnsoiJ5Jeva4iYR+fsuhiCxvuma1jfX24wdNcNCVOg+LvmYyqlGi+P5Ix?=
- =?us-ascii?Q?A3MrsWgde28Gw2WkByg5V3QVXrIJce8HSI1q0HnAYsg+Izm6Q6g7ZS3oPAXw?=
- =?us-ascii?Q?GAHCOAgjaS7JFbg4gEwKgF/lWnzTq7IaFCt44bzrZBd9X2dwk5fvWw3TVFum?=
- =?us-ascii?Q?4DXWpPk8OE1dPrRIxtEF7tdl8Sz8AnM9KOBK5qmQz/cjFPsfxgejW8w3plRv?=
- =?us-ascii?Q?oXjhwKIxe9NbKYPCkaZeXQintdrmM/gM89eiarXn5Klzu09deq4ebOfB/3y6?=
- =?us-ascii?Q?brCDHKDdILiI+i1TbHlNNXz/rNfpNhEGIYR1U05d4ZlehheA8GIEHXhymRXd?=
- =?us-ascii?Q?CusY6S5d8n3JpGnJsWBrAgzjSX5QvaB0ZzWEYL5FQaQK/cM9mFMooAy/BHHE?=
- =?us-ascii?Q?v8y+IZ7ZzuoDqbILwndafecVVWi8LDQrjWLPb2pbZl5CujNUIUO/OCWHpI8+?=
- =?us-ascii?Q?TJ/gYwOnxxoOv4wEg+pX5SC5Kxazabfkr/PTMA2z139USiReC6y0lQmnVSHy?=
- =?us-ascii?Q?LA6jyqB1U0796cOFA+TZafA+JjrR3d/HeI5zoXZ0dG6l6NmYsbCXZuo0IiBp?=
- =?us-ascii?Q?6JYRWXMSwbrgNU6lrqYblyqBBVViIiiC4aYY17BKZe391SbF6J5K+DEg9Oce?=
- =?us-ascii?Q?rF5nFKgkgigNdrGeFGjc03qmkFZjK6P0+qkhPvbxLP84YWkL3yFPeTScFjWl?=
- =?us-ascii?Q?CRmwoBPrXGdE75+8Gu3m5oXib4OG6phaJuAJVvahoBlym0fvpFDykvZ3RQBi?=
- =?us-ascii?Q?DKd52wkHFPo6B9mS3eNOJVbf2dMY15UTrRIYxySObwh36ZeVB0EkqUebG/MQ?=
- =?us-ascii?Q?Nz+uBXbBvkBDKPo3XKOyxi8GkjnodDFHVcwQBKv+kTuhEWjfVuQpf99sebuo?=
- =?us-ascii?Q?psCtyLjXQUlM1UfSq4zjiR8Z+5NtRHQsaQ35St+z?=
+ =?us-ascii?Q?VAPdCy+GMtJps8eVWO6RqlD8RqHxmyPQfaAyIb1on/Krd9+JA04vBD9Z63O+?=
+ =?us-ascii?Q?FODtmQUGIWUM3LR5IWjxdM7LWYVr5AgCEqRTIvdZCF0UC5dNOvZkPxxaunUZ?=
+ =?us-ascii?Q?VTb7926CWoUZBrlqiEFtxQ/NeOLSEnF2gkoWKH6KjlUC/MQh5RzbG9zKNqqP?=
+ =?us-ascii?Q?ZLN0RxLcv5UPxICYDAvhZMiWewg2jE3eZQ3aoNzexT+yLojWi++UYKrhi0Xk?=
+ =?us-ascii?Q?2xlIVYEyA9K8fpIde9aneIr4iIEAJdTbX2G10nxBUjiD1crQHpytxOXq8ucA?=
+ =?us-ascii?Q?9z0XfWt64bk6llyEextF8jiF2VS55yktFw7jnNIs+micyhELIQZgEqDL9Cyn?=
+ =?us-ascii?Q?zN1z7LUiNlnH2kBLr0AnY9hHdaxEUa1ce/AiD+ADWUsgZiP45LyUoc+4hHrH?=
+ =?us-ascii?Q?TiRxsyQKk/WAXoZLmqSVMNWAOYm0asuoybI1wI6DlL0kZqC3kpBQC0f54GNB?=
+ =?us-ascii?Q?TCDpJ6Ih1FV3raflIzhXtxkixeMugKj4gjHtRSMWziYwEmQUD/mlrY+mPs+C?=
+ =?us-ascii?Q?kEMrO+z85/E5fH93jXWEZhFl7Rd4GBctzqmq1ZIhxOWLi6PVcdsAMVs+sMin?=
+ =?us-ascii?Q?1oXmm+u/dxAfAPHJkP99Qny3di/KsFCMDh0OeP5WFHavlmmS/8Aa+gW3T15h?=
+ =?us-ascii?Q?jfVFlQr7dY3ZVXzT+nMYmLOU+1RgDzQ3pFuOpPUxeWGKMmCL7jrOmaXN5PYM?=
+ =?us-ascii?Q?sH+Qs5uB9fV1nrGxbVKoj/kajZyo35XrVpmbPBmcKP5VwofKI8BzoMVWfAQ3?=
+ =?us-ascii?Q?hOQ5/RXAmT950zvNpA2g4y2StBHL6FlKS03c9yNG07JNeYAKQgmkDJJSodkl?=
+ =?us-ascii?Q?aYLKt51eZgmmVMgfZr87aQnTER0rwfUB5CRmsM/LuZ9fsrhjRyLV2bcLue7I?=
+ =?us-ascii?Q?zGEs2Rtls6Xk4qZrN4Lt6VmyiWxZJwbHuZ11IFCWtUuMeD4WxEiTc11KZDx6?=
+ =?us-ascii?Q?BfQ9GnMAr+RnA62oheZRHOEOm/mfKlRORUnOczPaS9VX4qjH1jFDAiwacThN?=
+ =?us-ascii?Q?xUar3LVDiZaKIKsI2bv1f90cD5pBIjYDnlM/EeplZxYFr/ZFBH+gBQ4855kB?=
+ =?us-ascii?Q?1/LSu64AAUyJtmBNaypvUG9i/P9Hx8TOj0qbQbr6Ewovid+orsypefbkjj6O?=
+ =?us-ascii?Q?qszdSa77cB9XP66CFGlFEPzPGvqCwec8Qcsmky6riGic4yN1rUXEZQUFGwZC?=
+ =?us-ascii?Q?ebeyscIp5VviQ26KiZUQ6WcjrifNEv2i5ooWn8gL0IaZbrhczA6mq4YPLzY/?=
+ =?us-ascii?Q?diDsH4QVtSeMU5om577AVuuEETL9G2w3812z4WiUApEFAa2fIwaczEDXnyQA?=
+ =?us-ascii?Q?ikfOX4yhJW6TBYJNO9jCd2HwzDcaCP7qHsFw9htNhEnMso2kLX66Q8vILmno?=
+ =?us-ascii?Q?pTIoPiff4qpqNxLg+dJVyW8Bazl/c0aNaGnaS/IzV4fMfgsv8jspIy2iRlTw?=
+ =?us-ascii?Q?zrub0dx+8NYR5t+bd3RMicu/MXJWrjvL6NQKKThXsOG58i0L2K7tJGynJVxM?=
+ =?us-ascii?Q?BDCh5W+J8FpQHrXYGOz/TXaA98A4R9Bn9G3T6xr89NmN54/KhbRwQHDILSbt?=
+ =?us-ascii?Q?hmhO+bdqaP3SK3pinbalS9hFnnRm9+ZQIjf0pk+U?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -137,168 +138,87 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF00012A5F.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66e5cea3-883e-4c3c-4020-08dc227c1ec2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 16:46:06.6588
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b54e467b-1ba7-47f1-50e3-08dc2283b136
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 17:40:18.8362
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gZ9Ka7EBWEHc36Yt/okfilKKEz2jCMiicnQH01M1ZFX6+JdWIeqho+5RSpOv6wf8oDfhxs8sFIaDqhkHWyOwOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3272
+X-MS-Exchange-CrossTenant-userprincipalname: BlbvIRQn2uCTNCkMK4p2E56dOdtwVpH1LtEJ8SBNee7oyrWzgwfU5gzZEFJSa+/pIxbEVV7qRKLnhtnDt5sKGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR21MB3770
 
-
-
-> -----Original Message-----
-> From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Sent: Wednesday, January 31, 2024 2:54 AM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; David S. Miller
-> <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub Kicinski
-> <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Wojciech Drewek
-> <wojciech.drewek@intel.com>; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Shradha Gupta
-> <shradhagupta@microsoft.com>; stable@vger.kernel.org
-> Subject: Re: [PATCH] hv_netvsc:Register VF in netvsc_probe if
-> NET_DEVICE_REGISTER missed
->=20
-> On Tue, Jan 30, 2024 at 08:13:21PM +0000, Dexuan Cui wrote:
-> > > From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > > Sent: Monday, January 29, 2024 11:19 PM
-> > >  [...]
-> > > If hv_netvsc driver is removed and reloaded, the NET_DEVICE_REGISTER
-> >
-> > s/removed/unloaded/
-> > unloaded looks more accurate to me :-)
-> >
+> From: Haiyang Zhang <haiyangz@microsoft.com>
+> Sent: Wednesday, January 31, 2024 8:46 AM
+>  [...]
+> > From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > Sent: Wednesday, January 31, 2024 2:54 AM
 > > > [...]
-> > > Tested-on: Ubuntu22
-> > > Testcases: LISA testsuites
-> > > 	   verify_reload_hyperv_modules, perf_tcp_ntttcp_sriov
-> > IMO the 3 lines can be removed: this bug is not specific to Ubuntu, and
-> the
-> > test case names don't provide extra value to help understand the issue
-> > here and they might cause more questions unnecessarily, e.g. what's
-> LISA,
-> > what exactly do the test cases do.
-> >
-> > > +/* Macros to define the context of vf registration */
-> > > +#define VF_REG_IN_PROBE		1
-> > > +#define VF_REG_IN_RECV_CBACK	2
-> >
-> > I think VF_REG_IN_NOTIFIER is a better name?
-> > RECV_CBALL looks inaccurate to me.
-> >
-> > > @@ -2205,8 +2209,11 @@ static int netvsc_vf_join(struct net_device
-> > > *vf_netdev,
-> > >  			   ndev->name, ret);
-> > >  		goto upper_link_failed;
-> > >  	}
-> > > -
-> > > -	schedule_delayed_work(&ndev_ctx->vf_takeover,
-> > > VF_TAKEOVER_INT);
-> > > +	/* If this registration is called from probe context vf_takeover
-> > > +	 * is taken care of later in probe itself.
-> > I suspect "later in probe itself" is not accurate.
-> > If 'context' is VF_REG_IN_PROBE, I suppose what happens here is:
-> > after netvsc_probe() finishes, the netvsc interface becomes available,
-> > so the user space will ifup it, and netvsc_open() will UP the VF
-> interface,
-> > and netvsc_netdev_event() is called for the VF with event =3D=3D
-> > NETDEV_POST_INIT (?) and NETDEV_CHANGE, and the data path is
-> > switched to the VF.
-> >
-> > If my understanding is correct, I think in the case of 'context' =3D=3D
-> > VF_REG_IN_PROBE, I suspect the "Align MTU of VF with master"
-> > and the "sync address list from ndev to VF" in __netvsc_vf_setup() are
-> > omitted? If so, should this be fixed? e.g. Not sure if the below is an
-> issue or not:
-> > 1) a VF is bound to a NetVSC interface, and a user sets the MTUs to
-> 1024.
-> > 2) rmmod hv_netvsc
-> > 3) modprobe hv_netvsc
-> > 4) the netvsc interface uses MTU=3D1500 (the default), and the VF still
-> uses 1024.
-> >
-> > > @@ -2597,6 +2604,34 @@ static int netvsc_probe(struct hv_device *dev,
-> > >  	}
+> > > > +		netvsc_prepare_bonding(vf_netdev);
+> > > > +		netvsc_register_vf(vf_netdev, VF_REG_IN_PROBE);
+> > > > +		__netvsc_vf_setup(net, vf_netdev);
 > > >
-> > >  	list_add(&net_device_ctx->list, &netvsc_dev_list);
-> > > +
-> > > +	/* When the hv_netvsc driver is removed and readded, the
-> >
-> > s/removed and readded/unloaded and reloaded/
-> >
-> > > +	 * NET_DEVICE_REGISTER for the vf device is replayed before
-> > > probe
-> > > +	 * is complete. This is because register_netdevice_notifier() gets
-> > > +	 * registered before vmbus_driver_register() so that callback func
-> > > +	 * is set before probe and we don't miss events like
-> > > NETDEV_POST_INIT
-> > > +	 * So, in this section we try to register each matching
-> >
-> > Looks like there are spaces at the end of the line. We can move up a
-> few words
-> > from the next line :-)
-> >
-> > s/each matching/the matching/
-> > A NetVSC interface has only 1 matching VF device.
-> >
-> > > +	 * vf device that is present as a netdevice, knowing that it's
-> register
-> >
-> > s/it's/its/
-> >
-> > > +	 * call is not processed in the netvsc_netdev_notifier(as probing
-> is
-> > > +	 * progress and get_netvsc_byslot fails).
-> > > +	 */
-> > > +	for_each_netdev(dev_net(net), vf_netdev) {
-> > > +		if (vf_netdev->netdev_ops =3D=3D &device_ops)
-> > > +			continue;
-> > > +
-> > > +		if (vf_netdev->type !=3D ARPHRD_ETHER)
-> > > +			continue;
-> > > +
-> > > +		if (is_vlan_dev(vf_netdev))
-> > > +			continue;
-> > > +
-> > > +		if (netif_is_bond_master(vf_netdev))
-> > > +			continue;
-> >
-> > The code above is duplicated from netvsc_netdev_event().
-> > Can we add a new helper function is_matching_vf() to avoid the
-> duplication?
-> Sure, I will do that. Thanks
-> >
-> > > +		netvsc_prepare_bonding(vf_netdev);
-> > > +		netvsc_register_vf(vf_netdev, VF_REG_IN_PROBE);
-> > > +		__netvsc_vf_setup(net, vf_netdev);
-> >
-> > add a "break;' ?
-> With MANA devices and multiport support there, the individual ports are
-> also net_devices.
-> Wouldn't this be needed for such scenario(where we have multiple mana
-> port net devices) to
-> register them all?
+> > > add a "break;' ?
+> > With MANA devices and multiport support there, the individual ports are
+> > also net_devices.
+> > Wouldn't this be needed for such scenario(where we have multiple mana
+> > port net devices) to
+> > register them all?
+>=20
+> Each device has separate probe() call, so only one VF will match in one
+> netvsc_probe().
+>=20
+> netvsc_prepare_bonding() &  netvsc_register_vf() have
+> get_netvsc_byslot(vf_netdev), but __netvsc_vf_setup() doesn't have. So,
+> in case of multi-Vfs, this code will run "this" netvsc NIC with multiple =
+VFs by
+> __netvsc_vf_setup() which isn't correct.
+>=20
+> You need to add the following lines before
+> netvsc_prepare_bonding(vf_netdev)
+> in netvsc_probe() to skip non-matching VFs:
+>=20
+> if (net !=3D get_netvsc_byslot(vf_netdev))
+> 	continue;
 
-Each device has separate probe() call, so only one VF will match in one=20
-netvsc_probe().
+Haiyang is correct.
+I think it's still good to add a "break;", e.g. my understanding is somethi=
+ng
+like the below (this is untested):
 
-netvsc_prepare_bonding() &  netvsc_register_vf() have=20
-get_netvsc_byslot(vf_netdev), but __netvsc_vf_setup() doesn't have. So,
-in case of multi-Vfs, this code will run "this" netvsc NIC with multiple VF=
-s by=20
-__netvsc_vf_setup() which isn't correct.
++static struct net_device *get_matching_netvsc_dev(net_device *event_ndev)
++{
++       /* Skip NetVSC interfaces */
++       if (event_ndev->netdev_ops =3D=3D &device_ops)
++               return NULL;
++
++       /* Avoid non-Ethernet type devices */
++       if (event_ndev->type !=3D ARPHRD_ETHER)
++               return NULL;
++
++       /* Avoid Vlan dev with same MAC registering as VF */
++       if (is_vlan_dev(event_ndev))
++               return NULL;
++
++       /* Avoid Bonding master dev with same MAC registering as VF */
++       if (netif_is_bond_master(event_ndev))
++               return NULL;
++
++       return get_netvsc_byslot(event_ndev);
++}
 
-You need to add the following lines before netvsc_prepare_bonding(vf_netdev=
-)
-in netvsc_probe() to skip non-matching VFs:
++	for_each_netdev(dev_net(net), vf_netdev) {
++ 		if (get_matching_netvsc_dev(event_dev) !=3D net)
++			continue;
++
++		netvsc_prepare_bonding(vf_netdev);
++		netvsc_register_vf(vf_netdev, VF_REG_IN_PROBE);
++		__netvsc_vf_setup(net, vf_netdev);
++
++		break;
++	}
 
-if (net !=3D get_netvsc_byslot(vf_netdev))
-	continue;
+We can also use get_matching_netvsc_dev() in netvsc_netdev_event().
 
-Thanks,
-- Haiyang
+BTW, please add a space between "hv_netvsc:" and "Register" in the Subject.
 
