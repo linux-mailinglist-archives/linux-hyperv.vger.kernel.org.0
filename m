@@ -1,102 +1,97 @@
-Return-Path: <linux-hyperv+bounces-1507-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1508-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84A35848478
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Feb 2024 09:08:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93C63848E1F
+	for <lists+linux-hyperv@lfdr.de>; Sun,  4 Feb 2024 14:40:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15356B276A7
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Feb 2024 08:08:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5F9E1C21974
+	for <lists+linux-hyperv@lfdr.de>; Sun,  4 Feb 2024 13:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275404F1E9;
-	Sat,  3 Feb 2024 08:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57A3224EA;
+	Sun,  4 Feb 2024 13:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="k0OfUKLR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdlsK2hj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C30F4EB25;
-	Sat,  3 Feb 2024 08:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945DE22064;
+	Sun,  4 Feb 2024 13:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706947732; cv=none; b=tgvzkD806y3DRlo47+c6IxjOTYPjbcmvTc618rQVSxyfs1p7AgEaIjb8qg2vhDKJ5ye/RfHNuNFZorwD6eYhl+h1BbqxxYnxru7N185pKjAd/N3o+y9PqcOzUoCT9H1wWSOG96yxHluPaTpBbPzeDNl+hXANCKSeaAgS9e0cFFY=
+	t=1707054026; cv=none; b=fT/LJb8xyXQBX02KgDB6/as668JUNBRmwJT+wf8DteQIgmGoOGeKe7bIvq6vKtCyHEiaN2PsOrpLEqqX9qO9UssMQdPP9stUPl9hRLwc8iFNYYpXED2ksdnsLZ/f0Xc/Qn64hRVHXjWHPKgrrCz03OrlpIU8ZIwviCtBJsVv21I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706947732; c=relaxed/simple;
-	bh=XGVfjG+sAX4pMvyR7XEzs8ZfGkMlTIaJ8Nl+H+MNGAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ctpWMBoLkD72BDzsX32EDuRh3WMlkHZFS05lokdA4wklPvQ/aDHsFaJxelcJeW9OYk2N+3MT0WkhXdQq7VUrDuWh4oyAEpbgoeg0SSUJIohJbo5X1OL7yo57PiZ59mZw9rvVgr8yhby1wZjmTfxMPRRI8HS/aSYwjEaLFk5jP5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=k0OfUKLR; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 1FEF220B2000; Sat,  3 Feb 2024 00:08:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FEF220B2000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706947730;
-	bh=07vG+62V6dqAkeDJQ2J+ZqfY5Na7tXr+v+0St/Ckcu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k0OfUKLRSHYVPhHV1EpWNPpWC6i1WTJcXBa2tZvc8JfqeyLHc9hXmmyjLL/7PFfog
-	 jZJk6fA7GbUoUCKRkLzRxY4HXST8rtvY0yxHbkTq8Mp07BNna9WUOBpKl9iTna8PjU
-	 D71g3xP55ydTQQjUHFGqhRYznWbhCF8MUzZA39ac=
-Date: Sat, 3 Feb 2024 00:08:50 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: mhklinux@outlook.com
-Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	drawat.floss@gmail.com, javierm@redhat.com, deller@gmx.de,
-	daniel@ffwll.ch, airlied@gmail.com, tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/1] fbdev/hyperv_fb: Fix logic error for Gen2 VMs in
- hvfb_getmem()
-Message-ID: <20240203080850.GA29113@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20240201060022.233666-1-mhklinux@outlook.com>
+	s=arc-20240116; t=1707054026; c=relaxed/simple;
+	bh=w5QM7+1JPXBZU46T1reJ00UqrQ3v4Gvwy+gpzb0INUU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=gGLS9virNXV7tZVuhpH3WEsWn8e9Q3fi85bo6LXezlTpzaRYyeghzCVUy0bPVKE780/IXNzzO1D32W8Q60VjoRvnhreCpLYcynQgUU+52X/iC14JPziTFkpl/i94/0krXC3AITOHEHGzd47eqzzTOFSs42sWtLSwnx+y8WXeCgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdlsK2hj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9DAA2C433C7;
+	Sun,  4 Feb 2024 13:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707054025;
+	bh=w5QM7+1JPXBZU46T1reJ00UqrQ3v4Gvwy+gpzb0INUU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=QdlsK2hj6TNjhFUKcVOBt7Gi001hj9Gq0j5y8/rb2v9cG19A4DxIwB+gb3KwdvI3Q
+	 EtDs4CtXt6zBAiTqTs8W/r+CmbNg/dbHdAqPgiyeJ/G9GJRSg2BhfxNlS7yFaxGLvZ
+	 jWh82wjzmQ/zOn/OmT9JlnDuYXyW70l94Jpt/eyIgPS2FiYudDs/wLcgc7TU+itXgC
+	 /ulTaTbpSKWLojgoXM8TS2NsenDdbiKYnXfdk4EegtT9uesoCelMLiEPWONR/SbJKm
+	 6dBMDuLatEZQw2NNvwc11rf/4pOF0iaP6+cehEidibBamqGbVzhVm9wmSb1pjiQ8oY
+	 tyQHKWMZUxfkQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8429EE2F2EC;
+	Sun,  4 Feb 2024 13:40:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201060022.233666-1-mhklinux@outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net,v2] hv_netvsc: Register VF in netvsc_probe if
+ NET_DEVICE_REGISTER missed
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170705402553.16095.3173468091429343383.git-patchwork-notify@kernel.org>
+Date: Sun, 04 Feb 2024 13:40:25 +0000
+References: <1706848838-24848-1-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To: <1706848838-24848-1-git-send-email-shradhagupta@linux.microsoft.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, wojciech.drewek@intel.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, shradhagupta@microsoft.com,
+ stable@vger.kernel.org
 
-On Wed, Jan 31, 2024 at 10:00:22PM -0800, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Thu,  1 Feb 2024 20:40:38 -0800 you wrote:
+> If hv_netvsc driver is unloaded and reloaded, the NET_DEVICE_REGISTER
+> handler cannot perform VF register successfully as the register call
+> is received before netvsc_probe is finished. This is because we
+> register register_netdevice_notifier() very early( even before
+> vmbus_driver_register()).
+> To fix this, we try to register each such matching VF( if it is visible
+> as a netdevice) at the end of netvsc_probe.
 > 
-> A recent commit removing the use of screen_info introduced a logic
-> error. The error causes hvfb_getmem() to always return -ENOMEM
-> for Generation 2 VMs. As a result, the Hyper-V frame buffer
-> device fails to initialize. The error was introduced by removing
-> an "else if" clause, leaving Gen2 VMs to always take the -ENOMEM
-> error path.
-> 
-> Fix the problem by removing the error path "else" clause. Gen 2
-> VMs now always proceed through the MMIO memory allocation code,
-> but with "base" and "size" defaulting to 0.
-> 
-> Fixes: 0aa0838c84da ("fbdev/hyperv_fb: Remove firmware framebuffers with aperture helpers")
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->  drivers/video/fbdev/hyperv_fb.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-> index c26ee6fd73c9..8fdccf033b2d 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -1010,8 +1010,6 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
->  			goto getmem_done;
->  		}
->  		pr_info("Unable to allocate enough contiguous physical memory on Gen 1 VM. Using MMIO instead.\n");
-> -	} else {
-> -		goto err1;
->  	}
->  
->  	/*
-> -- 
-> 2.25.1
->
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2] hv_netvsc: Register VF in netvsc_probe if NET_DEVICE_REGISTER missed
+    https://git.kernel.org/netdev/net/c/9cae43da9867
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
