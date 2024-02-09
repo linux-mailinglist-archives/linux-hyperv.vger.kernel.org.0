@@ -1,266 +1,217 @@
-Return-Path: <linux-hyperv+bounces-1534-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1535-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA3FB84F8E2
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Feb 2024 16:51:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E20DA84F8ED
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Feb 2024 16:54:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 045DC1C21154
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Feb 2024 15:51:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A4EB28D0CC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Feb 2024 15:54:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6389374E32;
-	Fri,  9 Feb 2024 15:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D1374E3A;
+	Fri,  9 Feb 2024 15:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ek8Aq4Ma"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="qJq53reP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2078.outbound.protection.outlook.com [40.92.46.78])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3585B73186;
-	Fri,  9 Feb 2024 15:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707493879; cv=fail; b=Z+Oin08HgfYapxYf+laDbV8SmRjzvjcNK+3VjHDhQPOsxrotpk6chorf5yOJHlooBPq2gp84+6wCQl7wDCMjNKnOgZ0T5NozAgVh13y8UMLrJSoeXfFfFetl80GWlF1ULOPNDzWIkdw0CvjZBythgNcqiK2kghrEKWtBE6r0TWY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707493879; c=relaxed/simple;
-	bh=SrKqnSszn0y1bOyTjJxXDvmXq7HoUh7qBRpw85zvrZQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UqqttvWHrNMKLv3W2bqAkj6dxABb+2Z8YqVPUMQeV5sTEdKLO0Fd3qPc1SCHpgFpbB9HV440/Pa6oOLLtzz+Qpf45iZwPH4wGuYA+1UGAjfkvaO3OF0Pta3l3Eb84jybJdqkDu/B3skYdh6oOGxvx+aXy3xDMiabMT+lV7QzBok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ek8Aq4Ma; arc=fail smtp.client-ip=40.92.46.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SMtoXlVZXQ56ua1Fqhik53+tvyUX3lQR5d7ksDdEHw6y2Mu5eev6nmwWUoHIOqmY+bxu/Abb4L2vTRkHnhpUqZPhPotIAfa+f/7Gki99AQuFoe0S58LMu4nqlxh2YyBv8ejv4ivA4BdvPhsuViG/h3uvkady5cp4gKDBXH2/pYF1YSq8jAzPyqgZUz6/yPLIAkKG06r5aeres+LZeiye+Ib4EEWoUV39fDNCXeXqg/SE+qdwtNymXZyfCb2CxnXsUZeuia0WOAoCDtAk8YQ6btEAHo+dSOcVro9oJojOq4sNbx2C44rigS8qEecVkirLc8uylyZiduNQoJ6Wu/1zWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U8CHvNv7PFbrd0VVBGEfglDX5/lrXoLYbZn9aB6aDtI=;
- b=JM9mFRIiKRx4QMcMedgP1WXux+KePLf0UTg45oXDPSLRdkNt9oh3eIogfESZ1sN46OYfo9KRg6Ey1XpEX5+zT1P6bvJ6klT+Yp6UV+y3IrUQKmJBeJRSuR+s4fOYyGY3prjMFw6WksNP/AwUfAoY+XrSpecZQPOk0KIqkkKGGN1a/GVMB45XOUDTNyangROtOzVNjA9tM+Rpn19rNqo9s4UEB2ufXegUZzvNbsvDIYt/AT54U/ce2n9XUHMwCP5A+0pn42xiEbbLiyxsU83tgf7gXEDQQyO6RPbwVvwInH0OkC7QYhiY+G6RfB6yJ9Y88aYuh9sTjUeI2kgGYccvdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U8CHvNv7PFbrd0VVBGEfglDX5/lrXoLYbZn9aB6aDtI=;
- b=ek8Aq4Ma6We50+wR7W2bFCa4dMzf5TCYCoKnfr1D5oKC1+grWIQWdULY5VWjJ5WddP2K2KoWTtIysHR8a9LK9iyH8FBGovac8h8VxE3GTopt0H+iEZCs68fFHSXKVcL3XN8/hM5eAfjPbzPZQOFBLHBbjWVX/QUffkBwjbQhjHtz631RlpH1xfTM++dDE5OxR0ie8w7VzThTxRK9BgSSB3892QQNrv7AxsML+umD8zClE96cjTbVJ340A6TyRwWTC1t+HdXwFNircFVuahFBIpUXMJlQBsVhGEWXZNcNXyfZw8fgepR8DMwoyrWTxnVY2ackoNqrJGLSu+FZuXCmfA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MW4PR02MB7492.namprd02.prod.outlook.com (2603:10b6:303:7c::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.27; Fri, 9 Feb
- 2024 15:51:13 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7249.027; Fri, 9 Feb 2024
- 15:51:13 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "decui@microsoft.com"
-	<decui@microsoft.com>, "luto@kernel.org" <luto@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "urezki@gmail.com" <urezki@gmail.com>,
-	"hch@infradead.org" <hch@infradead.org>, "lstoakes@gmail.com"
-	<lstoakes@gmail.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"ardb@kernel.org" <ardb@kernel.org>, "jroedel@suse.de" <jroedel@suse.de>,
-	"seanjc@google.com" <seanjc@google.com>, "rick.p.edgecombe@intel.com"
-	<rick.p.edgecombe@intel.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-coco@lists.linux.dev"
-	<linux-coco@lists.linux.dev>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: RE: [PATCH v4 0/3] x86/hyperv: Mark CoCo VM pages not present when
- changing encrypted state
-Thread-Topic: [PATCH v4 0/3] x86/hyperv: Mark CoCo VM pages not present when
- changing encrypted state
-Thread-Index: AQHaSCKexFAY/xZWtkOyLYyKvYn/6LECTKjA
-Date: Fri, 9 Feb 2024 15:51:12 +0000
-Message-ID:
- <SN6PR02MB41571A797CF7BA7ADE60AF03D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240116022008.1023398-1-mhklinux@outlook.com>
-In-Reply-To: <20240116022008.1023398-1-mhklinux@outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [G0Ndzn12MV+32UH1fR6q8PazfioyiZB2]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7492:EE_
-x-ms-office365-filtering-correlation-id: 6b768536-7678-4862-e6c3-08dc2986f11f
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 7tmkelpnU4exZliC2btPV8AbjsVP/vAqn6U8aCrOaj13oKcjhA5CsnoN35mtFXhkQA3ZyCyFbt85AZs/nGB/jV0p0e8pFRit2dXxcbav2b+5tV69B9WU+ivXgY4Rb4VxdEY/Qb4fdZsxXfKFFJv2Em9pskNEXBWjVg9DkU3Df4XxJZAYPmOBnc/KT339FFCOFSkekoTIvSSHqkluOF5YQvt7kI5JMbugIE2ienKf4vZgp+z2m7qu8+FqthQ+oUimIRnXwYmdVb9GMXB9eQ83aEtesHOhGTWB4FSGtv/JhXSLm17o1ov5MxAcRe9Hi4kyjIRlWeyBJfV17chay4Fkh9bY5gpcWzYeHA5DmYaeKybxS97YQRcmFebJjahxaQrgc+DIhfjqe9eWgRvdxhlUYfVvXr73yivytD56Vd1N6JaQ1jBEqJgDvu/cFnGBfOq9Q9WX5Gm9dObc/Z+pVfBY57mnqcHVe2VsdEgDO83kq36NDS1PgZYRJlqcab9Fe5yyRuvDORb8RXz0qvJs6CvTHQV6MBABP6Ul1w+b2/3F+3s=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?tKb2rB0KSVx8MNyWSPWc97epu7kltnzxCI32rOcTI7r0NqzV8rI7VKWqPNKt?=
- =?us-ascii?Q?Qojdq9Zj8jRILH43UbeD8Ki8ZyLTkzYGvgdMeWBRHR5ZI3jLEpi9so4rFG1r?=
- =?us-ascii?Q?xhthW+RZ3ZqunxD3vlV/hMc6LJpToSpkT2b2RAdZ0T7BHUHY5c69QfTVxyuf?=
- =?us-ascii?Q?RMsqeHAW7gcVjJceFlXx4r/wiuzoyjIj6ab4dR8Qb83L+yTkl3Jo5p8hJLKM?=
- =?us-ascii?Q?7VM1aqNJeEw+nXZG+w5tASb9YB26Z5204sG5I5kpxkamhExnmPhtuRcVDJJz?=
- =?us-ascii?Q?KyZRSZ6CItNYfRm43JqQOkkbEuZx64X7izsAtEyz6HR9ukLrqcdBZhlnyqeH?=
- =?us-ascii?Q?CI9ZSVmvwgAO7y61C2OtxRni/W8kWBPKr3EE9lw052SV/vNY+9UFRvtSFi6R?=
- =?us-ascii?Q?BH2pNe8khDV3/j8snR/LOeLakk/0V7mrXuM9JbQvk/RKaDBxszcw0phlqGPn?=
- =?us-ascii?Q?llnoDl8i4h1QT51UxJGt7X0dwf9UwJNMa9DUdYAm3jP+DjrWQGP409aRLYL4?=
- =?us-ascii?Q?jJpBXGTW50of+eh54034Unex9EQmZd9eXHqVVvWUjs/vF9XTXApwhLjwOhJ3?=
- =?us-ascii?Q?8o9/qtncij9J41DpxOwrh6MMITegWqu6s3UvmRa1ruzDVs7eveYzmPDnUj8z?=
- =?us-ascii?Q?7OBJdye4WWEyj0cH0KEFQ6LJPCqlsWnBVjGYopE/iZO/bwH33u/17pl4Sdqg?=
- =?us-ascii?Q?IsTYUBCUWLQNeeKlDE6bHuoBcvQMmDRs0xw/ZSJfRjjWASPK9rnbojVI+wrh?=
- =?us-ascii?Q?JuyRUSEnHmh6g3SqND4TM2w61NO2zRGSNLUApUFKXNb88y/PTIMhdnu3xfQO?=
- =?us-ascii?Q?d93VLCQU48j16/BhR8kJoUdqQdstDpdscErXQc9ZfwMc5CP47hvs8Mb4S4Dr?=
- =?us-ascii?Q?+Pl7ANx6a5KOZITHigsvTQrKkPV/4aWHGrlrfaKTGHSg52EPL6nO6s1hc/Sz?=
- =?us-ascii?Q?aKL4UbDVnEZi6WdxuD3SbDPGwQVD1XFleTPcugDy1tH1zU5Kbo/efVWsnNM9?=
- =?us-ascii?Q?KFCgkC5URT+xiQd0H3+Ta6qdhQrohdP1+g5rmeXsZWLcvsPKt4lel763MlJ3?=
- =?us-ascii?Q?7Z9LVD48qRz65HBvE3GAsltCwhlSGnY2X1r+pX0rKhpgkB/65/U1ai11kvFB?=
- =?us-ascii?Q?zBSPpC1GqN85+d/gpMdaGYAHNrzlRGakgovGFHCbtUn0pn2AIpBhgvU1RTD1?=
- =?us-ascii?Q?jUnWm4IuzkaE4gXhCg5Vqjn6LXCKFfCBTi0cr0pYSrBTCyqz8BaYZwWTeGg?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89737317B;
+	Fri,  9 Feb 2024 15:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707494054; cv=none; b=S48iZISMA8Zpx5L0IeX73x4nShEUjAmR62Pp6IF+3sZ2LtYRt03/uE8CH/mqxEn84yUD4Rm246oF+x2n5l24cK1N4gdwh8EJ+/4ad41ZEmSLKTbM6VUn1PkX8Ytm9pKRB556Yf/mAVbN9HW2Jdf3PaItQFnw1u9gO86wyxWpNsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707494054; c=relaxed/simple;
+	bh=NfxzhdKyztjF8ciazrBlmb+rl5JXJQ+cQZovv89eN0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AzoOHIRtrX4Q820EEjNi/zACPwdh8r4Y5kvMXqRKPuKWhO1+uommUd1KjRuZ5zP1z+6oFZducfijb8HNG/yIilzPmit34/+rUnbTiOeaWwWtMEy/emFiAqGf5oGcA/rsJKvyUDrPMcbDRmCfPm/nzBKUSKL2XDaJ94yAK93cac4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=qJq53reP; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1707494018; x=1708098818; i=deller@gmx.de;
+	bh=NfxzhdKyztjF8ciazrBlmb+rl5JXJQ+cQZovv89eN0A=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=qJq53rePK2vW8Lv3zisaV/7HPKeiY/59o73G2CBKrbefuehS4eDm5t059sdTI7kM
+	 bnd3I3zMbKqb3aS1EPyiztXU49TTqtY/BlYZUmmCRegAvmALA1fd+xwLf/TGGE8xH
+	 32jDL3V/WDVyc1rfd1J48HG1cJmY0f6ff2Z0v2uQQCgePs/Wae/i4neq6CgR8a4gy
+	 gB60G5HJSj6IiJETALpbvtD84RNgepS1gtMrejhZCMHgPXFo/Q5yESGLO60k/uBLX
+	 +OKTqkD226MnUhjm1tvI+BbynlEuehsPHTNHvqbyUFsGF6nBahyHaU1NZcuErTYln
+	 nMDBSqqjZsl7M3W4Tw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([94.134.148.154]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3UZ6-1rXuxk1fE2-000ZEv; Fri, 09
+ Feb 2024 16:53:38 +0100
+Message-ID: <8f6efa96-0744-4313-bb15-b38a992e05fc@gmx.de>
+Date: Fri, 9 Feb 2024 16:53:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b768536-7678-4862-e6c3-08dc2986f11f
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2024 15:51:12.7338
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7492
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] fbdev/hyperv_fb: Fix logic error for Gen2 VMs in
+ hvfb_getmem()
+Content-Language: en-US
+To: Michael Kelley <mhklinux@outlook.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+ "javierm@redhat.com" <javierm@redhat.com>, "daniel@ffwll.ch"
+ <daniel@ffwll.ch>, "airlied@gmail.com" <airlied@gmail.com>
+References: <20240201060022.233666-1-mhklinux@outlook.com>
+ <f2fe331b-06cb-4729-888f-1f5eafe18d0f@suse.de>
+ <SN6PR02MB4157811F082C62B6132EC283D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <SN6PR02MB4157811F082C62B6132EC283D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QSiZ+s4XAjHSPPDYeN2Jp309cR9lAC54p6AHsoDUVta6UMqBck8
+ uBQXIKMGM1WXxKm8/pNobcID9yl2jZVPS3ij5o7/r1mcIc6VdLuXSnxeia4eJeIzPu421Gu
+ SIvaTPW/KceoYB4E2jQutzimEzJURU9fhinfIIaJM76ybv7YUFctYDwGE51YlfzRHV3L5hV
+ 8XWwOJ7ssNXgHhyq+0/fw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:x1QbuVO1suU=;Z+0HoRj/htJU/tvJRZwKRTyrd6J
+ odHg16h6Mdr8rT4caDUlCHget/VV65tATPe9XVIzCRM9TynVBgcYGWh7qSpopMhT4PX/kscum
+ YUOLjmpo60RsJT/Ju11pCiB2pOSFpS2Wh6gSAtiz+fY74HaLGQSnsOkNn/QnGd95q03a7fRiq
+ cG0qIEE4Hh50GMk0r0BTmySTPSGHf0muNRzij364tqOwn3nHdWv++dDK+j9CqDMmoRS5bqM+P
+ XXNwtKxzFOdRO+v3u5eNZdsBY7OwNlamZT9qWvowHvG0OvgGypyu8sv0ILc+OUhdItwhXAUFk
+ BEKF+ThuKDpX9M7DRfFUDtX5HILWn3wFjdjbVw3kyabTGUBYoVD1ei7PjOyRqBBddICLZrVhf
+ SfnStDv+aqZCFgHFmJrMT0jbn8y6jozAXKVoNIUIohPtFE+7Yo/+YEkU2eEHiZ6HpETWzthcs
+ brqZFHSMGT0/mlWGXX+Whi4aFuMDTomL4IwqeZJ8MwiU8aVEBIxxv73isxzb/YJAqV0Qx0I7d
+ ag2Yk1dnf0uZUTtLUHjyLN/mqZGTACjCoohVFEu9kD9UfIYa/gsrwPL98n6zZuzw4LcMqWraA
+ GGXHP2fG2GPD82Wed+88n/Bt2GQ2bdTZBCcClX3uVi1Hqh23Q89Zs12rWRx9oBqKlFOrix57j
+ FHnyl1ahM35aCzJoZ9Q/Bi3KT1+WF7DDpiyOwv+oyz9NdqERHeutsOj+ob4/c93XFCmE8fQNX
+ pdAToYLdIQ0SulrNo4gN0M+7of7OV53NvFQRhTHh5NwBEPfDKZDtR8fkMCfV0egOcXOrKzT7l
+ CvWm4EfPiJRjNnce2CQwKMKRi3ITVO82qkchLCVVHdpHU=
 
-From: mhkelley58@gmail.com <mhkelley58@gmail.com> Sent: Monday, January 15,=
- 2024 6:20 PM
->=20
-> In a CoCo VM, when transitioning memory from encrypted to decrypted, or
-> vice versa, the caller of set_memory_encrypted() or set_memory_decrypted(=
-)
-> is responsible for ensuring the memory isn't in use and isn't referenced
-> while the transition is in progress.  The transition has multiple steps,
-> and the memory is in an inconsistent state until all steps are complete.
-> A reference while the state is inconsistent could result in an exception
-> that can't be cleanly fixed up.
->=20
-> However, the kernel load_unaligned_zeropad() mechanism could cause a stra=
-y
-> reference that can't be prevented by the caller of set_memory_encrypted()
-> or set_memory_decrypted(), so there's specific code to handle this case.
-> But a CoCo VM running on Hyper-V may be configured to run with a paraviso=
-r,
-> with the #VC or #VE exception routed to the paravisor. There's no
-> architectural way to forward the exceptions back to the guest kernel, and
-> in such a case, the load_unaligned_zeropad() specific code doesn't work.
->=20
-> To avoid this problem, mark pages as "not present" while a transition
-> is in progress. If load_unaligned_zeropad() causes a stray reference, a
-> normal page fault is generated instead of #VC or #VE, and the
-> page-fault-based fixup handlers for load_unaligned_zeropad() resolve the
-> reference. When the encrypted/decrypted transition is complete, mark the
-> pages as "present" again.
->=20
-> This version of the patch series marks transitioning pages "not present"
-> only when running as a Hyper-V guest with a paravisor. Previous
-> versions[1] marked transitioning pages "not present" regardless of the
-> hypervisor and regardless of whether a paravisor is in use.  That more
-> general use had the benefit of decoupling the load_unaligned_zeropad()
-> fixup from CoCo VM #VE and #VC exception handling.  But the implementatio=
+On 2/9/24 16:23, Michael Kelley wrote:
+> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, February 1=
+, 2024 12:17 AM
+>>
+>> Hi
+>>
+>> Am 01.02.24 um 07:00 schrieb mhkelley58@gmail.com:
+>>> From: Michael Kelley <mhklinux@outlook.com>
+>>>
+>>> A recent commit removing the use of screen_info introduced a logic
+>>> error. The error causes hvfb_getmem() to always return -ENOMEM
+>>> for Generation 2 VMs. As a result, the Hyper-V frame buffer
+>>> device fails to initialize. The error was introduced by removing
+>>> an "else if" clause, leaving Gen2 VMs to always take the -ENOMEM
+>>> error path.
+>>>
+>>> Fix the problem by removing the error path "else" clause. Gen 2
+>>> VMs now always proceed through the MMIO memory allocation code,
+>>> but with "base" and "size" defaulting to 0.
+>>
+>> Indeed, that's how it was supposed to work. IDK how I didn't notice thi=
+s
+>> bug. Thanks a lot for the fix.
+>>
+>>>
+>>> Fixes: 0aa0838c84da ("fbdev/hyperv_fb: Remove firmware framebufferswit=
+h aperture helpers")
+>>> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+>>
+>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>
+> Wei Liu and Helge Deller --
+>
+> Should this fix go through the Hyper-V tree or the fbdev tree?   I'm not
+> aware of a reason that it really matters, but it needs to be one or the
+> other, and sooner rather than later, because the Hyper-V driver is broke=
 n
-> was problematic for SEV-SNP because the SEV-SNP hypervisor callbacks
-> require a valid virtual address, not a physical address like with TDX and
-> the Hyper-V paravisor.  Marking the transitioning pages "not present"
-> causes the virtual address to not be valid, and the PVALIDATE
-> instruction in the SEV-SNP callback fails. Constructing a temporary
-> virtual address for this purpose is slower and adds complexity that
-> negates the benefits of the more general use. So this version narrows
-> the applicability of the approach to just where it is required
-> because of the #VC and #VE exceptions being routed to a paravisor.
->=20
-> The previous version minimized the TLB flushing done during page
-> transitions between encrypted and decrypted. Because this version
-> marks the pages "not present" in hypervisor specific callbacks and
-> not in __set_memory_enc_pgtable(), doing such optimization is more
-> difficult to coordinate. But the page transitions are not a hot path,
-> so this version eschews optimization of TLB flushing in favor of
-> simplicity.
->=20
-> Since this version no longer touches __set_memory_enc_pgtable(),
-> I've also removed patches that add comments about error handling
-> in that function.  Rick Edgecombe has proposed patches to improve
-> that error handling, and I'll leave those comments to Rick's
-> patches.
->=20
-> Patch 1 handles implications of the hypervisor callbacks needing
-> to do virt-to-phys translations on pages that are temporarily
-> marked not present.
->=20
-> Patch 2 makes the existing set_memory_p() function available for
-> use in the hypervisor callbacks.
->=20
-> Patch 3 is the core change that marks the transitioning pages
-> as not present.
->=20
-> This patch set is based on the linux-next20240103 code tree.
->=20
-> Changes in v4:
-> * Patch 1: Updated comment in slow_virt_to_phys() to reduce the
->   likelihood of the comment becoming stale.  The new comment
->   describes the requirement to work with leaf PTE not present,
->   but doesn't directly reference the CoCo hypervisor callbacks.
->   [Rick Edgecombe]
-> * Patch 1: Decomposed a complex line-wrapped statement into
->   multiple statements for ease of understanding. No functional
->   change compared with v3. [Kirill Shutemov]
-> * Patch 3: Fixed handling of memory allocation errors. [Rick
->   Edgecombe]
->=20
-> Changes in v3:
-> * Major rework and simplification per discussion above.
->=20
-> Changes in v2:
-> * Added Patches 3 and 4 to deal with the failure on SEV-SNP
->   [Tom Lendacky]
-> * Split the main change into two separate patches (Patch 5 and
->   Patch 6) to improve reviewability and to offer the option of
->   retaining both hypervisor callbacks.
-> * Patch 5 moves set_memory_p() out of an #ifdef CONFIG_X86_64
->   so that the code builds correctly for 32-bit, even though it
->   is never executed for 32-bit [reported by kernel test robot]
->=20
-> [1] https://lore.kernel.org/lkml/20231121212016.1154303-1-
-> mhklinux@outlook.com/
->=20
-> Michael Kelley (3):
->   x86/hyperv: Use slow_virt_to_phys() in page transition hypervisor
->     callback
->   x86/mm: Regularize set_memory_p() parameters and make non-static
->   x86/hyperv: Make encrypted/decrypted changes safe for
->     load_unaligned_zeropad()
->=20
->  arch/x86/hyperv/ivm.c             | 65 ++++++++++++++++++++++++++++---
->  arch/x86/include/asm/set_memory.h |  1 +
->  arch/x86/mm/pat/set_memory.c      | 24 +++++++-----
->  3 files changed, 75 insertions(+), 15 deletions(-)
->=20
+> starting in 6.8-rc1.
 
-Wei --
+I'm fine with either.
+If there is an upcoming hyper-v pull request, I'm fine if this is included
+there. If not, let me know and I can take it via fbdev.
 
-Can this series go through the Hyper-V tree?  It's mostly Hyper-V specific
-code, plus some comments and a minor tweak to a utility function in 'mm'.
+Helge
 
-All comments on earlier versions have been addressed, and it would be
-good to get some mileage in linux-next before the 6.9 merge window.
 
-Michael
 
+>
+> Michael
+>
+>>
+>>> ---
+>>>    drivers/video/fbdev/hyperv_fb.c | 2 --
+>>>    1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/hyperv_fb.c
+>> b/drivers/video/fbdev/hyperv_fb.c
+>>> index c26ee6fd73c9..8fdccf033b2d 100644
+>>> --- a/drivers/video/fbdev/hyperv_fb.c
+>>> +++ b/drivers/video/fbdev/hyperv_fb.c
+>>> @@ -1010,8 +1010,6 @@ static int hvfb_getmem(struct hv_device *hdev,
+>> struct fb_info *info)
+>>>    			goto getmem_done;
+>>>    		}
+>>>    		pr_info("Unable to allocate enough contiguous physical memory on =
+Gen 1 VM. Using MMIO instead.\n");
+>>> -	} else {
+>>> -		goto err1;
+>>>    	}
+>>>
+>>>    	/*
+>>
+>
+>
 
 
