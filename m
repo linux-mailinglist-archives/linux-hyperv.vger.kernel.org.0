@@ -1,426 +1,179 @@
-Return-Path: <linux-hyperv+bounces-1545-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1546-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECA14856CE1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Feb 2024 19:40:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B1EA856D52
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Feb 2024 20:04:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CA041C22E10
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Feb 2024 18:40:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DD951C2251F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Feb 2024 19:04:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87646137C57;
-	Thu, 15 Feb 2024 18:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8435913958C;
+	Thu, 15 Feb 2024 19:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="W3CpdI99"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EioZS31x"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B88136642;
-	Thu, 15 Feb 2024 18:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708022442; cv=none; b=X1PexrFvBFQW1hMbageL/hUrvliA/7B5EdfP8zyG4j+c3B7XheWCJJ8iArXf0m3Cbf0CxFydH5B6tEoyor2inpGq4rs6FEX2YmcJmWosFKbSSBEPsqzd3scKfmj+Gk7zKnWzwApBbQ89BGZUPTjD+AzAfZeTE3wtDXdd6L1QyKc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708022442; c=relaxed/simple;
-	bh=S5YPWfBuSkE3zFOFfW8hM8SCBI/YH1+kkWIlD4NiXz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OauevxZbJOzHMH1AXGqEOTj/bCVP0ECmbJ3ESPK7JBSUjHfl2K2XG3LuL5SEceQLO4WH5ljkPXEhqy6XMR6FKXzfKEmyFIi+19SB+BKP1DJIV3JI5/cWAbKC35ajKOEvaZMz/d1pJQPPo6ZF5LmB+/ZG7j4lr3MKmzsG3Of8XdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=W3CpdI99; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.64.0.215] (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6A04B207F21D;
-	Thu, 15 Feb 2024 10:40:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6A04B207F21D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1708022439;
-	bh=M1VG+09Of+DUNkgL/+6HMzHoWc/Kfz7A+20bXpD91MA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=W3CpdI9960Rt9Z8yN4T7tY9oqPFbELyarzZQ90uf0cdr6IhFNQ54uiKENHxE2nAcJ
-	 7CMyEXTnMcqpoe/4iDcqNQTUL5PTy1atQirl1AmGsfwWRi2Hv5TWPXqo+sTdGgzVl1
-	 Me7HLuDzJt7UW9n6bOQe9mXRrAuAxXsttoRzHqfA=
-Message-ID: <d75a2788-b8dc-46cc-b8ca-a740a1fb74f5@linux.microsoft.com>
-Date: Thu, 15 Feb 2024 10:40:38 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2104.outbound.protection.outlook.com [40.92.23.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779D013959E;
+	Thu, 15 Feb 2024 19:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708023864; cv=fail; b=Cr1kuy0fJKFyDlk9KMSwufG2MDpoAc3Q4RyiXsyGqZ4ISIhQAsNplbNIfw8cLMRgiY+JVx6fLD55parfwbt/0rfPVDIlgt7BTlsNPVqVi37U7EcR5YlkKoH8yRc6IYjtByAyXbSryc/EpHFqho/1oyoIsw0D1zVzRipz9ktP5iE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708023864; c=relaxed/simple;
+	bh=ylbo6S9RLhptQOpd09gDEboc32aSBwjQ6chPGMcthiY=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ps0bBl1eJ7Be573VkzE8Ir6vOEJtnwoF7krzMiDwNTe0IdIPNL0P8pe1Iv8/UaTjSStC54V7SdLeHxCm6ORFHeyPGfR3QVdUKBjtNepw7j3M1oJjgPuVwdcPy+NFtBOFWkCb9Dmm2YH++dpzs7G8IDchLooWXThK2ArCPLkOUD8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EioZS31x; arc=fail smtp.client-ip=40.92.23.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qs9+zrAg72jnNOmNxh+LxPZU6sOE4tR6NjxdbkdaWUQWnGyRPVn41FeOBkt9jQf/CjN4tvvpjmV/Ur8EHxFMTnom8sisHMWHX35KMMEoRNdNSFCuD9F3GHNEmqcFJb4gv61e383kMrLGh9ClDCsmTCe9zthkt4+bvI34agLJVfirqOXmATDlvag6TQM8L/ircMTX1AbYogrp564p5lx9FF1BxgdMufk9CBNBxzKSZoEf6B2V5mEnuYvpuNHcdOC27EzwpeLqyKGBfXB4aqOUUcrRWpY0lzXmKc2MW5vDox0AQQ1xr4x6HnpuftoG9obKcru42Gcse00YHjPw5+b3Iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X2LMhw2QMoMory3JT58Hpz1UUTreL8GDgbKC+UcBGtM=;
+ b=k5OUR+QMbGGDJKfvqjDKw0iKFhqXCEZkWbzZLCHXfUgRxf10r0LDaELHpNyNMeXPl5lBv1QTHxWc6gl5DxcLJyYgS6fNmjvkcOBlp5WdZxMrGbgdAyiPXMCZBkA9DOsrD31HvIrzXhXZb1L/WYxP8uRd9eJsIFKXD/5/Wf2FWN+ddoMvuEHO6D+VxRF8z75Ufo0fajbgCoYlanaYgscGGQaOIWYHWfGXWRbbFMFkJ8lhvGtjCVr5TK87HB7WgqxlOVgBQl4Y0A3LRs+IcFhE2PD2wZaBVv8jQnphkGLyHcc7iIQ9JcB+gTQ5n2Eww12mGKckddPeM1cAGd5zm13bfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X2LMhw2QMoMory3JT58Hpz1UUTreL8GDgbKC+UcBGtM=;
+ b=EioZS31xfHt1D7R0TtuZ69jNdv39+cLAzFtN6TjfuMOGG3wUh7eQy28onuGNnPkzLAeSNFhRQKS5v7nT+xY7VyZNmjFDtR3rsGWBh0rl9NlqiAwD4q/kSzbERjqjC1AEwHAH053FghbzGDNNYPmTZwW/dZ6N1FdtPr5fwCPohgrjbFzaQgPkLprjMKUuQk2CgLSWiUd2D/IGble3CUHLeCxYP/FS+ZWmNpkDBNUVBGovFrYP1KmgWyRCP8+i6hlTfrrwwGsq/OjZARnFT1UI7S5FzUr3sOKqgg3tDoxF6OKCGyaezH5bcdPRDFV1WLHYaei9Zsbtrh/Yf2rqLy7Xwg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH7PR02MB10135.namprd02.prod.outlook.com (2603:10b6:510:2e9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39; Thu, 15 Feb
+ 2024 19:04:19 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7270.033; Thu, 15 Feb 2024
+ 19:04:18 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "corbet@lwn.net"
+	<corbet@lwn.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>
+Subject: RE: [PATCH 1/1] Documentation: hyperv: Add overview of PCI pass-thru
+ device support
+Thread-Topic: [PATCH 1/1] Documentation: hyperv: Add overview of PCI pass-thru
+ device support
+Thread-Index: AQHaX5zLjfItck7t3UmPns+zVTEYbrELvbYAgAAFLlA=
+Date: Thu, 15 Feb 2024 19:04:17 +0000
+Message-ID:
+ <SN6PR02MB4157798C452BD3D01E784CADD44D2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240214232253.4558-1-mhklinux@outlook.com>
+ <d75a2788-b8dc-46cc-b8ca-a740a1fb74f5@linux.microsoft.com>
+In-Reply-To: <d75a2788-b8dc-46cc-b8ca-a740a1fb74f5@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [5ZycXhGFGTIpS12A/Ktbpfxo2zDQfrG3]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB10135:EE_
+x-ms-office365-filtering-correlation-id: 23e1f20c-3691-4843-19f7-08dc2e58e8c4
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ T4V3kXbgZp3TPCsREdXlYmEhBENESJR+/SQCqVWujGzBhSekIpAku/ZrfR+6TGpHlnyfYBl4n6QjGV7EJd+U65fn8zRApPLbKy7A3YjEfp6qAVAXkI3KZpN9W/RQjHlSsliAR4e9LsEM9sn3q/HRA8Q4iSfBbXi20NfX08IQfXZXCJrI0p/M3F4QMsBdJePKt8Vio7WaFoc1umCo4IeId200OvE0SLgdjNOVWP1Zz2EHn0ebbbh4rTx4KKFZ8TdrjXDLG64MZd6SDceT0XFsPFLBAzlmUX7khgEXX5okxRoJIZCHwgu/FkkVfX73vYjFFxSqwH3m20Uo2QbxUHB1u+5XqpqYbLvRr21cmNDy0FEQLheJLCBoC190dpBzaE9mCJZtmqAVpM9bd2siJx5YS6MiNVudq99WU4gzI3Inwrw1OF4RlBplQ7SjVAiLT5ULn7FaJ70HVvth/rQTG6NS5o54tdB2xij2ZjnbjBMuPf0HKLXT/3XUHArOBVd8XVt2QfCCojPi6L/yN98OWQMKN2Kv5icnK3BznavSI0Eefa1RJnyIJwq46Hj7D19Bv3u9
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?jMJ+R00CZ2c1nl34CSoJXwgLvnQCyQKMZUnYALqAxr00hiAhlOUHtAadelOj?=
+ =?us-ascii?Q?TIF6dhfgZ34kiB+qfrUs3SH35pJVB9krLLCAa0N3YPAhPv4XsB6VDYMZ1wx0?=
+ =?us-ascii?Q?KDuP8WAAmeyblnVhZU7k+R//+x/FM+BN6rD4w6WVosNSVhOSP5tyFJZsEPAE?=
+ =?us-ascii?Q?gbgcfDRv31HFvLhibSLlTjx7PIlfKkSMags11tmpZtoTxPrc3sfDAGdxwzOK?=
+ =?us-ascii?Q?XanBZZLQroxDQ4a8FS1NuoPVwKzRKFBRZB/UBvJuA2pnb97Bhyh10OUPPhOz?=
+ =?us-ascii?Q?qB5X8I1l6Pp9K6svBhF726/eMGVmQmVGiQVQeustxQ8sHgOADGR9abKMjtnN?=
+ =?us-ascii?Q?Vhw4htTHRgp15RQi49rlKqn2LhX8LpYPYCirKNNg4soMlbCB8mklkxfceMvO?=
+ =?us-ascii?Q?kXVIos5BpqJxe3k7ddhPnnem7yl6KI2WwYZ/yHlTr4XroJ3SJQoo5OiwyFKR?=
+ =?us-ascii?Q?lRIG0umBWXcQ4qv6BQf7HNElXSVEgn9Y8vnmdvXu7RB8XC+lpLH2R61eSO9q?=
+ =?us-ascii?Q?/dz2L4K9DxMQ9V6Z0IdFpvCKi2YxIfN3Ry3chieatFwD57c31nbnBrzMrC8a?=
+ =?us-ascii?Q?y0JcEPgVEzgWFtVAI8fCj/MGxa8eZV04vVNbVRua23885fD3qdeMdns+wf7R?=
+ =?us-ascii?Q?WXfQ4TpAZrtCmT/U45/z8R30DL1ZGajcwgAvPwZcIClfj2ZZPiM0ILu6UCMP?=
+ =?us-ascii?Q?zQQJo1KLzSJ5e1mmG3eA3UMvxLokDoins+XKIwewHS3wMk5ySLob5hsiHtnJ?=
+ =?us-ascii?Q?oqwHgJr51/Rjl+K1KZJALdN2LaDD6FSYe6ohS7TPi7rr3KFX716YSLulUt+0?=
+ =?us-ascii?Q?4pH3/PdBMIctqa3Oy5JjMf3HszbW00onIwbbY9WvCwR28M97njRupI1KTYeX?=
+ =?us-ascii?Q?D5XFI5+vEjQZYJggU+I98SP5/zB9QFooDOhhLXUuc6Fkryoz0MpRQZV9UKmq?=
+ =?us-ascii?Q?le7ZBIbUnmXyHDBRgI9bhwyrOGcmEOQ7hOaJ49hJMnV1PVujVji9l6xZdPdx?=
+ =?us-ascii?Q?mFFPGIo2VNvdfsRdhXc23o1K/9jxmBxw2OvpkbN8DPyUqOyucWuTHMOofHeV?=
+ =?us-ascii?Q?KGIQW4jSp3zI1YAe87pV7+M2qSXdByTnLPwCmQIQwnKkFrU8qTMvqvxfjgyh?=
+ =?us-ascii?Q?+PHxE640uTFYrsFwbtSitR/azYzrl+fqiNrBTOyXLPIJNu7pQWHcJRf5o17g?=
+ =?us-ascii?Q?obhJdD49Dkyav1VJ4uv8IsK3IfdK6F/xtc2wc+7qFfUVzm0dac1SPNvN3ZI?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] Documentation: hyperv: Add overview of PCI pass-thru
- device support
-Content-Language: en-US
-To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, corbet@lwn.net, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20240214232253.4558-1-mhklinux@outlook.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <20240214232253.4558-1-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23e1f20c-3691-4843-19f7-08dc2e58e8c4
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2024 19:04:17.6818
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB10135
 
-On 2/14/2024 3:22 PM, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> Add documentation topic for PCI pass-thru devices in Linux guests
-> on Hyper-V and for the associated PCI controller driver (pci-hyperv.c).
-> 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->  Documentation/virt/hyperv/index.rst |   1 +
->  Documentation/virt/hyperv/vpci.rst  | 316 ++++++++++++++++++++++++++++
->  2 files changed, 317 insertions(+)
->  create mode 100644 Documentation/virt/hyperv/vpci.rst
-> 
-> diff --git a/Documentation/virt/hyperv/index.rst b/Documentation/virt/hyperv/index.rst
-> index 4a7a1b738bbe..de447e11b4a5 100644
-> --- a/Documentation/virt/hyperv/index.rst
-> +++ b/Documentation/virt/hyperv/index.rst
-> @@ -10,3 +10,4 @@ Hyper-V Enlightenments
->     overview
->     vmbus
->     clocks
-> +   vpci
-> diff --git a/Documentation/virt/hyperv/vpci.rst b/Documentation/virt/hyperv/vpci.rst
-> new file mode 100644
-> index 000000000000..dbca50f31923
-> --- /dev/null
-> +++ b/Documentation/virt/hyperv/vpci.rst
-> @@ -0,0 +1,316 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +PCI pass-thru devices
-> +=========================
-> +In a Hyper-V guest VM, PCI pass-thru devices (also called
-> +virtual PCI devices, or vPCI devices) are physical PCI devices
-> +that are mapped directly into the VM's physical address space.
-> +Guest device drivers can interact directly with the hardware
-> +without intermediation by the host hypervisor.  This approach
-> +provides higher bandwidth access to the device with lower
-> +latency, compared with devices that are virtualized by the
-> +hypervisor.  The device should appear to the guest just as it
-> +would when running on bare metal, so no changes are required
-> +to the Linux device drivers for the device.
-> +
-> +Hyper-V terminology for vPCI devices is "Discrete Device
-> +Assignment" (DDA).  Public documentation for Hyper-V DDA is
-> +available here: `DDA`_
-> +
-> +.. _DDA: https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/plan/plan-for-deploying-devices-using-discrete-device-assignment
-> +
-> +DDA is typically used for storage controllers, such as NVMe,
-> +and for GPUs.  A similar mechanism for NICs is called SR-IOV
-> +and produces the same benefits by allowing a guest device
-> +driver to interact directly with the hardware.  See Hyper-V
-> +public documentation here: `SR-IOV`_
-> +
-> +.. _SR-IOV: https://learn.microsoft.com/en-us/windows-hardware/drivers/network/overview-of-single-root-i-o-virtualization--sr-iov-
-> +
-> +This discussion of vPCI devices includes DDA and SR-IOV
-> +devices.
-> +
-> +Device Presentation
-> +-------------------
-> +Hyper-V provides full PCI functionality for a vPCI device when
-> +it is operating, so the Linux device driver for the device can
-> +be used unchanged, provided it uses the correct Linux kernel
-> +APIs for accessing PCI config space and for other integration
-> +with Linux.  But the initial detection of the PCI device and
-> +its integration with the Linux PCI subsystem must use Hyper-V
-> +specific mechanisms.  Consequently, vPCI devices on Hyper-V
-> +have a dual identity.  They are initially presented to Linux
-> +guests as VMBus devices via the standard VMBus "offer"
-> +mechanism, so they have a VMBus identity and appear under
-> +/sys/bus/vmbus/devices.  The VMBus vPCI driver in Linux at
-> +drivers/pci/controller/pci-hyperv.c handles a newly introduced
-> +vPCI device by fabricating a PCI bus topology and creating all
-> +the normal PCI device data structures in Linux that would
-> +exist if the PCI device were discovered via ACPI on a bare-
-> +metal system.  Once those data structures are set up, the
-> +device also has a normal PCI identity in Linux, and the normal
-> +Linux device driver for the vPCI device can function as if it
-> +were running in Linux on bare-metal.  Because vPCI devices are
-> +presented dynamically through the VMBus offer mechanism, they
-> +do not appear in the Linux guest's ACPI tables.  vPCI devices
-> +may be added to a VM or removed from a VM at any time during
-> +the life of the VM, and not just during initial boot.
-> +
-> +With this approach, the vPCI device is a VMBus device and a
-> +PCI device at the same time.  In response to the VMBus offer
-> +message, the hv_pci_probe() function runs and establishes a
-> +VMBus connection to the vPCI VSP on the Hyper-V host.  That
-> +connection has a single VMBus channel.  The channel is used to
-> +exchange messages with the vPCI VSP for the purpose of setting
-> +up and configuring the vPCI device in Linux.  Once the device
-> +is fully configured in Linux as a PCI device, the VMBus
-> +channel is used only if Linux changes the vCPU to be
-> +interrupted in the guest, or 
+From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Thursday, Febru=
+ary 15, 2024 10:41 AM
+>=20
+> On 2/14/2024 3:22 PM, mhkelley58@gmail.com wrote:
+> >
+> > Add documentation topic for PCI pass-thru devices in Linux guests
+> > on Hyper-V and for the associated PCI controller driver (pci-hyperv.c).
+> >
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
 
+[snip]
 
-> ..............................if the vPCI device is removed by
-> +the VM while the VM is running.
+> > +
+> > +With this approach, the vPCI device is a VMBus device and a
+> > +PCI device at the same time.  In response to the VMBus offer
+> > +message, the hv_pci_probe() function runs and establishes a
+> > +VMBus connection to the vPCI VSP on the Hyper-V host.  That
+> > +connection has a single VMBus channel.  The channel is used to
+> > +exchange messages with the vPCI VSP for the purpose of setting
+> > +up and configuring the vPCI device in Linux.  Once the device
+> > +is fully configured in Linux as a PCI device, the VMBus
+> > +channel is used only if Linux changes the vCPU to be
+> > +interrupted in the guest, or
+>=20
+>=20
+> > ..............................if the vPCI device is removed by
+> > +the VM while the VM is running.
+>=20
+> This seems to conflict with the statement called out below. Did you
+> mean to say "if the vPCI device is removed *from* the VM..."?
+>=20
 
-This seems to conflict with the statement called out below. Did you
-mean to say "if the vPCI device is removed *from* the VM..."?
+Oops!  Yes, that should be "from the VM".
 
+[snip]
 
-> The ongoing operation of the
-> +device happens directly between the Linux device driver for
-> +the device and the hardware, with VMBus and the VMBus channel
-> +playing no role.
-> +
-> +PCI Device Setup
-> +----------------
-> +PCI device setup follows a sequence that Hyper-V originally
-> +created for Windows guests, and that can be ill-suited for
-> +Linux guests due to differences in the overall structure of
-> +the Linux PCI subsystem compared with Windows.  Nonetheless,
-> +with a bit of hackery in the Hyper-V virtual PCI driver for
-> +Linux, the virtual PCI device is setup in Linux so that
-> +generic Linux PCI subsystem code and the Linux driver for the
-> +device "just work".
-> +
-> +Each vPCI device is set up in Linux to be in its own PCI
-> +domain with a host bridge.  The PCI domainID is derived from
-> +bytes 4 and 5 of the instance GUID assigned to the VMBus vPCI
-> +device.  The Hyper-V host does not guarantee that these bytes
-> +are unique, so hv_pci_probe() has an algorithm to resolve
-> +collisions.  The collision resolution is intended to be stable
-> +across reboots of the same VM so that the PCI domainIDs don't
-> +change, as the domainID appears in the user space
-> +configuration of some devices.
-> +
-> +hv_pci_probe() allocates a guest MMIO range to be used as PCI
-> +config space for the device.  This MMIO range is communicated
-> +to the Hyper-V host over the VMBus channel as part of telling
-> +the host that the device is ready to enter d0.  See
-> +hv_pci_enter_d0().  When the guest subsequently accesses this
-> +MMIO range, the Hyper-V host intercepts the accesses and maps
-> +them to the physical device PCI config space.
-> +
-> +hv_pci_probe() also gets BAR information for the device from
-> +the Hyper-V host, and uses this information to allocate MMIO
-> +space for the BARs.  That MMIO space is then setup to be
-> +associated with the host bridge so that it works when generic
-> +PCI subsystem code in Linux processes the BARs.
-> +
-> +Finally, hv_pci_probe() creates the root PCI bus.  At this
-> +point the Hyper-V virtual PCI driver hackery is done, and the
-> +normal Linux PCI machinery for scanning the root bus works to
-> +detect the device, to perform driver matching, and to
-> +initialize the driver and device.
-> +
-> +PCI Device Removal
-> +------------------
-> +A Hyper-V host may initiate removal of a vPCI device from a
-> +guest VM at any time during the life of the VM.  The removal
-> +is instigated by an admin action taken on the Hyper-V host and
+>=20
+> Otherwise, FWIW
+>=20
+> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+>=20
 
+Thanks for reviewing and spotting that error.  I'll see what
+other comments accumulate and then send out a v2 with
+updates.
 
-> +is not under the control of the guest OS.
-
-See conflict here.
-
-> +
-> +A guest VM is notified of the removal by an unsolicited
-> +"Eject" message sent from the host to the guest over the VMBus
-> +channel associated with the vPCI device.  Upon receipt of such
-> +a message, the Hyper-V virtual PCI driver in Linux
-> +asynchronously invokes Linux kernel PCI subsystem calls to
-> +shutdown and remove the device.  When those calls are
-> +complete, an "Ejection Complete" message is sent back to
-> +Hyper-V over the VMBus channel indicating that the device has
-> +been removed.  At this point, Hyper-V sends a VMBus rescind
-> +message to the Linux guest, which the VMBus driver in Linux
-> +processes by removing the VMBus identity for the device.  Once
-> +that processing is complete, all vestiges of the device having
-> +been present are gone from the Linux kernel.  The rescind
-> +message also indicates to the guest that Hyper-V has stopped
-> +providing support for the vPCI device in the guest.  If the
-> +guest were to attempt to access that device's MMIO space, it
-> +would be an invalid reference. Hypercalls affecting the device
-> +return errors, and any further messages sent in the VMBus
-> +channel are ignored.
-> +
-> +After sending the Eject message, Hyper-V allows the guest VM
-> +60 seconds to cleanly shutdown the device and respond with
-> +Ejection Complete before sending the VMBus rescind
-> +message.  If for any reason the Eject steps don't complete
-> +within the allowed 60 seconds, the Hyper-V host forcibly
-> +performs the rescind steps, which will likely result in
-> +cascading errors in the guest because the device is now no
-> +longer present from the guest standpoint and accessing the
-> +device MMIO space will fail.
-> +
-> +Because ejection is asynchronous and can happen at any point
-> +during the guest VM lifecycle, proper synchronization in the
-> +Hyper-V virtual PCI driver is very tricky.  Ejection has been
-> +observed even before a newly offered vPCI device has been
-> +fully setup.  The Hyper-V virtual PCI driver has been updated
-> +several times over the years to fix race conditions when
-> +ejections happen at inopportune times. Care must be taken when
-> +modifying this code to prevent re-introducing such problems.
-> +See comments in the code.
-> +
-> +Interrupt Assignment
-> +--------------------
-> +The Hyper-V virtual PCI driver supports vPCI devices using
-> +MSI, multi-MSI, or MSI-X.  Assigning the guest vCPU that will> +receive the interrupt for a particular MSI or MSI-X message is
-> +complex because of the way the Linux setup of IRQs maps onto
-> +the Hyper-V interfaces.  For the single-MSI and MSI-X cases,
-> +Linux calls hv_compse_msi_msg() twice, with the first call
-> +containing a dummy vCPU and the second call containing the
-> +real vCPU.  Furthermore, hv_irq_unmask() is finally called
-> +(on x86) or the GICD registers are set (on arm64) to specify
-> +the real vCPU again.  Each of these three calls interact
-> +with Hyper-V, which must decide which physical CPU should
-> +receive the interrupt before it is forwarded to the guest VM.
-> +Unfortunately, the Hyper-V decision-making process is a bit
-> +limited, and can result in concentrating the physical
-> +interrupts on a single CPU, causing a performance bottleneck.
-> +See details about how this is resolved in the extensive
-> +comment above the function hv_compose_msi_req_get_cpu().
-> +
-> +The Hyper-V virtual PCI driver implements the
-> +irq_chip.irq_compose_msi_msg function as hv_compose_msi_msg().
-> +Unfortunately, on Hyper-V the implementation requires sending
-> +a VMBus message to the Hyper-V host and awaiting an interrupt
-> +indicating receipt of a reply message.  Since
-> +irq_chip.irq_compose_msi_msg can be called with IRQ locks
-> +held, it doesn't work to do the normal sleep until awakened by
-> +the interrupt. Instead hv_compose_msi_msg() must send the
-> +VMBus message, and then poll for the completion message. As
-> +further complexity, the vPCI device could be ejected/rescinded
-> +while the polling is in progress, so this scenario must be
-> +detected as well.  See comments in the code regarding this
-> +very tricky area.
-> +
-> +Most of the code in the Hyper-V virtual PCI driver (pci-
-> +hyperv.c) applies to Hyper-V and Linux guests running on x86
-> +and on arm64 architectures.  But there are differences in how
-> +interrupt assignments are managed.  On x86, the Hyper-V
-> +virtual PCI driver in the guest must make a hypercall to tell
-> +Hyper-V which guest vCPU should be interrupted by each
-> +MSI/MSI-X interrupt, and the x86 interrupt vector number that
-> +the x86_vector IRQ domain has picked for the interrupt.  This
-> +hypercall is made by hv_arch_irq_unmask().  On arm64, the
-> +Hyper-V virtual PCI driver manages the allocation of an SPI
-> +for each MSI/MSI-X interrupt.  The Hyper-V virtual PCI driver
-> +stores the allocated SPI in the architectural GICD registers,
-> +which Hyper-V emulates, so no hypercall is necessary as with
-> +x86.  Hyper-V does not support using LPIs for vPCI devices in
-> +arm64 guest VMs because it does not emulate a GICv3 ITS.
-> +
-> +The Hyper-V virtual PCI driver in Linux supports vPCI devices
-> +whose drivers create managed or unmanaged Linux IRQs.  If the
-> +smp_affinity for an unmanaged IRQ is updated via the /proc/irq
-> +interface, the Hyper-V virtual PCI driver is called to tell
-> +the Hyper-V host to change the interrupt targeting and
-> +everything works properly.  However, on x86 if the x86_vector
-> +IRQ domain needs to reassign an interrupt vector due to
-> +running out of vectors on a CPU, there's no path to inform the
-> +Hyper-V host of the change, and things break.  Fortunately,
-> +guest VMs operate in a constrained device environment where
-> +using all the vectors on a CPU doesn't happen. Since such a
-> +problem is only a theoretical concern rather than a practical
-> +concern, it has been left unaddressed.
-> +
-> +DMA
-> +---
-> +By default, Hyper-V pins all guest VM memory in the host
-> +when the VM is created, and programs the physical IOMMU to
-> +allow the VM to have DMA access to all its memory.  Hence
-> +it is safe to assign PCI devices to the VM, and allow the
-> +guest operating system to program the DMA transfers.  The
-> +physical IOMMU prevents a malicious guest from initiating
-> +DMA to memory belonging to the host or to other VMs on the
-> +host. From the Linux guest standpoint, such DMA transfers
-> +are in "direct" mode since Hyper-V does not provide a virtual
-> +IOMMU in the guest.
-> +
-> +Hyper-V assumes that physical PCI devices always perform
-> +cache-coherent DMA.  When running on x86, this behavior is
-> +required by the architecture.  When running on arm64, the
-> +architecture allows for both cache-coherent and
-> +non-cache-coherent devices, with the behavior of each device
-> +specified in the ACPI DSDT.  But when a PCI device is assigned
-> +to a guest VM, that device does not appear in the DSDT, so the
-> +Hyper-V VMBus driver propagates cache-coherency information
-> +from the VMBus node in the ACPI DSDT to all VMBus devices,
-> +including vPCI devices (since they have a dual identity as a VMBus
-> +device and as a PCI device).  See vmbus_dma_configure().
-> +Current Hyper-V versions always indicate that the VMBus is
-> +cache coherent, so vPCI devices on arm64 always get marked as
-> +cache coherent and the CPU does not perform any sync
-> +operations as part of dma_map/unmap_*() calls.
-> +
-> +vPCI protocol versions
-> +----------------------
-> +As previously described, during vPCI device setup and teardown
-> +messages are passed over a VMBus channel between the Hyper-V
-> +host and the Hyper-v vPCI driver in the Linux guest.  Some
-> +messages have been revised in newer versions of Hyper-V, so
-> +the guest and host must agree on the vPCI protocol version to
-> +be used.  The version is negotiated when communication over
-> +the VMBus channel is first established.  See
-> +hv_pci_protocol_negotiation(). Newer versions of the protocol
-> +extend support to VMs with more than 64 vCPUs, and provide
-> +additional information about the vPCI device, such as the
-> +guest virtual NUMA node to which it is most closely affined in
-> +the underlying hardware.
-> +
-> +Guest NUMA node affinity
-> +------------------------
-> +When the vPCI protocol version provides it, the guest NUMA
-> +node affinity of the vPCI device is stored as part of the Linux
-> +device information for subsequent use by the Linux driver. See
-> +hv_pci_assign_numa_node().  If the negotiated protocol version
-> +does not support the host providing NUMA affinity information,
-> +the Linux guest defaults the device NUMA node to 0.  But even
-> +when the negotiated protocol version includes NUMA affinity
-> +information, the ability of the host to provide such
-> +information depends on certain host configuration options.  If
-> +the guest receives NUMA node value "0", it could mean NUMA
-> +node 0, or it could mean "no information is available".
-> +Unfortunately it is not possible to distinguish the two cases
-> +from the guest side.
-> +
-> +PCI config space access in a CoCo VM
-> +------------------------------------
-> +Linux PCI device drivers access PCI config space using a
-> +standard set of functions provided by the Linux PCI subsystem.
-> +In Hyper-V guests these standard functions map to functions
-> +hv_pcifront_read_config() and hv_pcifront_write_config()
-> +in the Hyper-V virtual PCI driver.  In normal VMs,
-> +these hv_pcifront_*() functions directly access the PCI config
-> +space, and the accesses trap to Hyper-V to be handled.
-> +But in CoCo VMs, memory encryption prevents Hyper-V
-> +from reading the guest instruction stream to emulate the
-> +access, so the hv_pcifront_*() functions must invoke
-> +hypercalls with explicit arguments describing the access to be
-> +made.
-> +
-> +Config Block back-channel
-> +-------------------------
-> +The Hyper-V host and Hyper-V virtual PCI driver in Linux
-> +together implement a non-standard back-channel communication
-> +path between the host and guest.  The back-channel path uses
-> +messages sent over the VMBus channel associated with the vPCI
-> +device.  The functions hyperv_read_cfg_blk() and
-> +hyperv_write_cfg_blk() are the primary interfaces provided to
-> +other parts of the Linux kernel.  As of this writing, these
-> +interfaces are used only by the Mellanox mlx5 driver to pass
-> +diagnostic data to a Hyper-V host running in the Azure public
-> +cloud.  The functions hyperv_read_cfg_blk() and
-> +hyperv_write_cfg_blk() are implemented in a separate module
-> +(pci-hyperv-intf.c, under CONFIG_PCI_HYPERV_INTERFACE) that
-> +effectively stubs them out when running in non-Hyper-V
-> +environments.
-
-Otherwise, FWIW
-
-Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-
+Michael
 
