@@ -1,44 +1,44 @@
-Return-Path: <linux-hyperv+bounces-1558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1559-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A161F859176
-	for <lists+linux-hyperv@lfdr.de>; Sat, 17 Feb 2024 19:05:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA203859177
+	for <lists+linux-hyperv@lfdr.de>; Sat, 17 Feb 2024 19:05:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17636B219CD
-	for <lists+linux-hyperv@lfdr.de>; Sat, 17 Feb 2024 18:05:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FCF7280720
+	for <lists+linux-hyperv@lfdr.de>; Sat, 17 Feb 2024 18:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341EB7E58C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6B17E59B;
 	Sat, 17 Feb 2024 18:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ejZdU5Fx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Bow5uv9e"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5034F7E0F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 503047E0F7;
 	Sat, 17 Feb 2024 18:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708193077; cv=none; b=jPhRwi/R5ETac9Qjq1scRqWqai9EYtwhVd7HHCQHmzLxgDBJRueGZsFud3cFqD9QwNaHfK28YT6l1RzRd+BYpzBKajKaPn5dLYrp1ILBB185SdCw7wfggZnNKSY2AXIjAzoC4knfM6vhslIjsuV8uUM5EqdV9s3JhzHwRWzdt1w=
+	t=1708193077; cv=none; b=B7SEcOY6ujuGHtMc6QsiGxkS5dRBP2ZwkM1q+h+zPuJp49dYU39vHYIAo6T8ElUg/eYIE9g/JkhToYMesulxTOQ/8KVbEObzz3yAUVvSIFFQ6D4bkUfxUxjH5kmKt6nFryX1Kd/lXWzu4dcKhgL/JD7q1JPkS0XVdoGLvIkhrUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708193077; c=relaxed/simple;
-	bh=+rxgmxFlK5uw5wfQ1cB11w6cuZ2D0QxWkvur5AbTD/w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=XwRINiBRouL9IAx1hqYD08Zn1ymjs0q257AgMe/t2fMQxvnRISxGGMeFMkwE7KyCfxd2iU+qulWFPFKG0YHo5dkl6w9LX7fsrm3gs/AF5bE7uI3kxI81X9LoQqunB7Rm1gFeY1GV/zAhecCIeUw8zuedYIHjzdoK6CeHXsVU2hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ejZdU5Fx; arc=none smtp.client-ip=13.77.154.182
+	bh=iXl7+n90D24VmjvHSlyHAzS4VZYZT3a2zsGvinSZMyY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=l2z3lCvgedtL0h3oW5Fwpe3SLXEHoeqStHM5AARr3A44aduNFfKGF+4SBV3bCr6WvsfBwVC/pxMTQsd6Gfr1yelPOoSQPHV75v0Tye+mN3lzMWCQ3OXzneHDdBhpgcwwfisZxGzwUaBMA01Ll2wzU2+JA2Tm2hasR6C4rFUihgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Bow5uv9e; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CD5BB207FD4A;
+	by linux.microsoft.com (Postfix) with ESMTPSA id E65D320B2000;
 	Sat, 17 Feb 2024 10:04:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CD5BB207FD4A
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E65D320B2000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1708193067;
-	bh=MRXVp3YA7yWA2T84Hd3tEiVADcMqix8kDbIqH3OmHDo=;
+	bh=4e6WscZw363uPdpHMKn2QTF5ThLaddYx8Dlqe9FIBwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ejZdU5FxL38DR8Pi5A9IaCcRnGf8XkJcNMTp4S28B4rlUWyqst8coPhpXl717YKrX
-	 RkPB8/BrJLtwLPRRu1oKCbMuarjU6kfN+pPQceIWgnxWu4309XvGt/wf9o1wz3n9my
-	 oC5GSEFMHZ2dfUMZlcAByAXHkVNv1FW33u9cO0Qg=
+	b=Bow5uv9evjHpM4expeCG9SPN/X+7ZGxFBmDUEuiowu7dOC7LBAhbmhuOnuza5GNQ2
+	 Ix5ossa2PWxctP/4BVju2F+ylt7nCThk2JQfATJAARWZYQrKZCHyYdEgmwFbiUJ/dR
+	 m9/tXLPEsQ7PPL7+Uj9Ds9UinYota0ny5HLvuvX0=
 From: Saurabh Sengar <ssengar@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -48,9 +48,9 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: ssengar@microsoft.com
-Subject: [PATCH 5/6] tools: hv: Add new fcopy application based on uio driver
-Date: Sat, 17 Feb 2024 10:03:39 -0800
-Message-Id: <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
+Subject: [PATCH 6/6] Drivers: hv: Remove fcopy driver
+Date: Sat, 17 Feb 2024 10:03:40 -0800
+Message-Id: <1708193020-14740-7-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
 References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
@@ -60,548 +60,767 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-New fcopy application which utilizes uio_hv_vmbus_client driver
+As the new fcopy driver using uio is introduced, remove obsolete driver
+and application.
 
 Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 ---
- tools/hv/Build                 |   3 +-
- tools/hv/Makefile              |  10 +-
- tools/hv/hv_fcopy_uio_daemon.c | 488 +++++++++++++++++++++++++++++++++
- 3 files changed, 495 insertions(+), 6 deletions(-)
- create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
+ drivers/hv/Makefile        |   2 +-
+ drivers/hv/hv_fcopy.c      | 427 -------------------------------------
+ drivers/hv/hv_util.c       |  12 --
+ tools/hv/hv_fcopy_daemon.c | 266 -----------------------
+ 4 files changed, 1 insertion(+), 706 deletions(-)
+ delete mode 100644 drivers/hv/hv_fcopy.c
+ delete mode 100644 tools/hv/hv_fcopy_daemon.c
 
-diff --git a/tools/hv/Build b/tools/hv/Build
-index 6cf51fa4b306..7d1f1698069b 100644
---- a/tools/hv/Build
-+++ b/tools/hv/Build
-@@ -1,3 +1,4 @@
- hv_kvp_daemon-y += hv_kvp_daemon.o
- hv_vss_daemon-y += hv_vss_daemon.o
--hv_fcopy_daemon-y += hv_fcopy_daemon.o
-+hv_fcopy_uio_daemon-y += hv_fcopy_uio_daemon.o
-+hv_fcopy_uio_daemon-y += vmbus_bufring.o
-diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-index fe770e679ae8..944180cf916e 100644
---- a/tools/hv/Makefile
-+++ b/tools/hv/Makefile
-@@ -17,7 +17,7 @@ MAKEFLAGS += -r
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index d76df5c8c2a9..b992c0ed182b 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -10,7 +10,7 @@ hv_vmbus-y := vmbus_drv.o \
+ 		 hv.o connection.o channel.o \
+ 		 channel_mgmt.o ring_buffer.o hv_trace.o
+ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+-hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_fcopy.o hv_utils_transport.o
++hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
  
- override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+ # Code that must be built-in
+ obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
+diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
+deleted file mode 100644
+index 922d83eb7ddf..000000000000
+--- a/drivers/hv/hv_fcopy.c
++++ /dev/null
+@@ -1,427 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * An implementation of file copy service.
+- *
+- * Copyright (C) 2014, Microsoft, Inc.
+- *
+- * Author : K. Y. Srinivasan <ksrinivasan@novell.com>
+- */
+-
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+-#include <linux/nls.h>
+-#include <linux/workqueue.h>
+-#include <linux/hyperv.h>
+-#include <linux/sched.h>
+-#include <asm/hyperv-tlfs.h>
+-
+-#include "hyperv_vmbus.h"
+-#include "hv_utils_transport.h"
+-
+-#define WIN8_SRV_MAJOR		1
+-#define WIN8_SRV_MINOR		1
+-#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+-
+-#define FCOPY_VER_COUNT 1
+-static const int fcopy_versions[] = {
+-	WIN8_SRV_VERSION
+-};
+-
+-#define FW_VER_COUNT 1
+-static const int fw_versions[] = {
+-	UTIL_FW_VERSION
+-};
+-
+-/*
+- * Global state maintained for transaction that is being processed.
+- * For a class of integration services, including the "file copy service",
+- * the specified protocol is a "request/response" protocol which means that
+- * there can only be single outstanding transaction from the host at any
+- * given point in time. We use this to simplify memory management in this
+- * driver - we cache and process only one message at a time.
+- *
+- * While the request/response protocol is guaranteed by the host, we further
+- * ensure this by serializing packet processing in this driver - we do not
+- * read additional packets from the VMBUs until the current packet is fully
+- * handled.
+- */
+-
+-static struct {
+-	int state;   /* hvutil_device_state */
+-	int recv_len; /* number of bytes received. */
+-	struct hv_fcopy_hdr  *fcopy_msg; /* current message */
+-	struct vmbus_channel *recv_channel; /* chn we got the request */
+-	u64 recv_req_id; /* request ID. */
+-} fcopy_transaction;
+-
+-static void fcopy_respond_to_host(int error);
+-static void fcopy_send_data(struct work_struct *dummy);
+-static void fcopy_timeout_func(struct work_struct *dummy);
+-static DECLARE_DELAYED_WORK(fcopy_timeout_work, fcopy_timeout_func);
+-static DECLARE_WORK(fcopy_send_work, fcopy_send_data);
+-static const char fcopy_devname[] = "vmbus/hv_fcopy";
+-static u8 *recv_buffer;
+-static struct hvutil_transport *hvt;
+-/*
+- * This state maintains the version number registered by the daemon.
+- */
+-static int dm_reg_value;
+-
+-static void fcopy_poll_wrapper(void *channel)
+-{
+-	/* Transaction is finished, reset the state here to avoid races. */
+-	fcopy_transaction.state = HVUTIL_READY;
+-	tasklet_schedule(&((struct vmbus_channel *)channel)->callback_event);
+-}
+-
+-static void fcopy_timeout_func(struct work_struct *dummy)
+-{
+-	/*
+-	 * If the timer fires, the user-mode component has not responded;
+-	 * process the pending transaction.
+-	 */
+-	fcopy_respond_to_host(HV_E_FAIL);
+-	hv_poll_channel(fcopy_transaction.recv_channel, fcopy_poll_wrapper);
+-}
+-
+-static void fcopy_register_done(void)
+-{
+-	pr_debug("FCP: userspace daemon registered\n");
+-	hv_poll_channel(fcopy_transaction.recv_channel, fcopy_poll_wrapper);
+-}
+-
+-static int fcopy_handle_handshake(u32 version)
+-{
+-	u32 our_ver = FCOPY_CURRENT_VERSION;
+-
+-	switch (version) {
+-	case FCOPY_VERSION_0:
+-		/* Daemon doesn't expect us to reply */
+-		dm_reg_value = version;
+-		break;
+-	case FCOPY_VERSION_1:
+-		/* Daemon expects us to reply with our own version */
+-		if (hvutil_transport_send(hvt, &our_ver, sizeof(our_ver),
+-		    fcopy_register_done))
+-			return -EFAULT;
+-		dm_reg_value = version;
+-		break;
+-	default:
+-		/*
+-		 * For now we will fail the registration.
+-		 * If and when we have multiple versions to
+-		 * deal with, we will be backward compatible.
+-		 * We will add this code when needed.
+-		 */
+-		return -EINVAL;
+-	}
+-	pr_debug("FCP: userspace daemon ver. %d connected\n", version);
+-	return 0;
+-}
+-
+-static void fcopy_send_data(struct work_struct *dummy)
+-{
+-	struct hv_start_fcopy *smsg_out = NULL;
+-	int operation = fcopy_transaction.fcopy_msg->operation;
+-	struct hv_start_fcopy *smsg_in;
+-	void *out_src;
+-	int rc, out_len;
+-
+-	/*
+-	 * The  strings sent from the host are encoded in
+-	 * utf16; convert it to utf8 strings.
+-	 * The host assures us that the utf16 strings will not exceed
+-	 * the max lengths specified. We will however, reserve room
+-	 * for the string terminating character - in the utf16s_utf8s()
+-	 * function we limit the size of the buffer where the converted
+-	 * string is placed to W_MAX_PATH -1 to guarantee
+-	 * that the strings can be properly terminated!
+-	 */
+-
+-	switch (operation) {
+-	case START_FILE_COPY:
+-		out_len = sizeof(struct hv_start_fcopy);
+-		smsg_out = kzalloc(sizeof(*smsg_out), GFP_KERNEL);
+-		if (!smsg_out)
+-			return;
+-
+-		smsg_out->hdr.operation = operation;
+-		smsg_in = (struct hv_start_fcopy *)fcopy_transaction.fcopy_msg;
+-
+-		utf16s_to_utf8s((wchar_t *)smsg_in->file_name, W_MAX_PATH,
+-				UTF16_LITTLE_ENDIAN,
+-				(__u8 *)&smsg_out->file_name, W_MAX_PATH - 1);
+-
+-		utf16s_to_utf8s((wchar_t *)smsg_in->path_name, W_MAX_PATH,
+-				UTF16_LITTLE_ENDIAN,
+-				(__u8 *)&smsg_out->path_name, W_MAX_PATH - 1);
+-
+-		smsg_out->copy_flags = smsg_in->copy_flags;
+-		smsg_out->file_size = smsg_in->file_size;
+-		out_src = smsg_out;
+-		break;
+-
+-	case WRITE_TO_FILE:
+-		out_src = fcopy_transaction.fcopy_msg;
+-		out_len = sizeof(struct hv_do_fcopy);
+-		break;
+-	default:
+-		out_src = fcopy_transaction.fcopy_msg;
+-		out_len = fcopy_transaction.recv_len;
+-		break;
+-	}
+-
+-	fcopy_transaction.state = HVUTIL_USERSPACE_REQ;
+-	rc = hvutil_transport_send(hvt, out_src, out_len, NULL);
+-	if (rc) {
+-		pr_debug("FCP: failed to communicate to the daemon: %d\n", rc);
+-		if (cancel_delayed_work_sync(&fcopy_timeout_work)) {
+-			fcopy_respond_to_host(HV_E_FAIL);
+-			fcopy_transaction.state = HVUTIL_READY;
+-		}
+-	}
+-	kfree(smsg_out);
+-}
+-
+-/*
+- * Send a response back to the host.
+- */
+-
+-static void
+-fcopy_respond_to_host(int error)
+-{
+-	struct icmsg_hdr *icmsghdr;
+-	u32 buf_len;
+-	struct vmbus_channel *channel;
+-	u64 req_id;
+-
+-	/*
+-	 * Copy the global state for completing the transaction. Note that
+-	 * only one transaction can be active at a time. This is guaranteed
+-	 * by the file copy protocol implemented by the host. Furthermore,
+-	 * the "transaction active" state we maintain ensures that there can
+-	 * only be one active transaction at a time.
+-	 */
+-
+-	buf_len = fcopy_transaction.recv_len;
+-	channel = fcopy_transaction.recv_channel;
+-	req_id = fcopy_transaction.recv_req_id;
+-
+-	icmsghdr = (struct icmsg_hdr *)
+-			&recv_buffer[sizeof(struct vmbuspipe_hdr)];
+-
+-	if (channel->onchannel_callback == NULL)
+-		/*
+-		 * We have raced with util driver being unloaded;
+-		 * silently return.
+-		 */
+-		return;
+-
+-	icmsghdr->status = error;
+-	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
+-	vmbus_sendpacket(channel, recv_buffer, buf_len, req_id,
+-				VM_PKT_DATA_INBAND, 0);
+-}
+-
+-void hv_fcopy_onchannelcallback(void *context)
+-{
+-	struct vmbus_channel *channel = context;
+-	u32 recvlen;
+-	u64 requestid;
+-	struct hv_fcopy_hdr *fcopy_msg;
+-	struct icmsg_hdr *icmsghdr;
+-	int fcopy_srv_version;
+-
+-	if (fcopy_transaction.state > HVUTIL_READY)
+-		return;
+-
+-	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen, &requestid)) {
+-		pr_err_ratelimited("Fcopy request received. Could not read into recv buf\n");
+-		return;
+-	}
+-
+-	if (!recvlen)
+-		return;
+-
+-	/* Ensure recvlen is big enough to read header data */
+-	if (recvlen < ICMSG_HDR) {
+-		pr_err_ratelimited("Fcopy request received. Packet length too small: %d\n",
+-				   recvlen);
+-		return;
+-	}
+-
+-	icmsghdr = (struct icmsg_hdr *)&recv_buffer[
+-			sizeof(struct vmbuspipe_hdr)];
+-
+-	if (icmsghdr->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+-		if (vmbus_prep_negotiate_resp(icmsghdr,
+-				recv_buffer, recvlen,
+-				fw_versions, FW_VER_COUNT,
+-				fcopy_versions, FCOPY_VER_COUNT,
+-				NULL, &fcopy_srv_version)) {
+-
+-			pr_info("FCopy IC version %d.%d\n",
+-				fcopy_srv_version >> 16,
+-				fcopy_srv_version & 0xFFFF);
+-		}
+-	} else if (icmsghdr->icmsgtype == ICMSGTYPE_FCOPY) {
+-		/* Ensure recvlen is big enough to contain hv_fcopy_hdr */
+-		if (recvlen < ICMSG_HDR + sizeof(struct hv_fcopy_hdr)) {
+-			pr_err_ratelimited("Invalid Fcopy hdr. Packet length too small: %u\n",
+-					   recvlen);
+-			return;
+-		}
+-		fcopy_msg = (struct hv_fcopy_hdr *)&recv_buffer[ICMSG_HDR];
+-
+-		/*
+-		 * Stash away this global state for completing the
+-		 * transaction; note transactions are serialized.
+-		 */
+-
+-		fcopy_transaction.recv_len = recvlen;
+-		fcopy_transaction.recv_req_id = requestid;
+-		fcopy_transaction.fcopy_msg = fcopy_msg;
+-
+-		if (fcopy_transaction.state < HVUTIL_READY) {
+-			/* Userspace is not registered yet */
+-			fcopy_respond_to_host(HV_E_FAIL);
+-			return;
+-		}
+-		fcopy_transaction.state = HVUTIL_HOSTMSG_RECEIVED;
+-
+-		/*
+-		 * Send the information to the user-level daemon.
+-		 */
+-		schedule_work(&fcopy_send_work);
+-		schedule_delayed_work(&fcopy_timeout_work,
+-				      HV_UTIL_TIMEOUT * HZ);
+-		return;
+-	} else {
+-		pr_err_ratelimited("Fcopy request received. Invalid msg type: %d\n",
+-				   icmsghdr->icmsgtype);
+-		return;
+-	}
+-	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
+-	vmbus_sendpacket(channel, recv_buffer, recvlen, requestid,
+-			VM_PKT_DATA_INBAND, 0);
+-}
+-
+-/* Callback when data is received from userspace */
+-static int fcopy_on_msg(void *msg, int len)
+-{
+-	int *val = (int *)msg;
+-
+-	if (len != sizeof(int))
+-		return -EINVAL;
+-
+-	if (fcopy_transaction.state == HVUTIL_DEVICE_INIT)
+-		return fcopy_handle_handshake(*val);
+-
+-	if (fcopy_transaction.state != HVUTIL_USERSPACE_REQ)
+-		return -EINVAL;
+-
+-	/*
+-	 * Complete the transaction by forwarding the result
+-	 * to the host. But first, cancel the timeout.
+-	 */
+-	if (cancel_delayed_work_sync(&fcopy_timeout_work)) {
+-		fcopy_transaction.state = HVUTIL_USERSPACE_RECV;
+-		fcopy_respond_to_host(*val);
+-		hv_poll_channel(fcopy_transaction.recv_channel,
+-				fcopy_poll_wrapper);
+-	}
+-
+-	return 0;
+-}
+-
+-static void fcopy_on_reset(void)
+-{
+-	/*
+-	 * The daemon has exited; reset the state.
+-	 */
+-	fcopy_transaction.state = HVUTIL_DEVICE_INIT;
+-
+-	if (cancel_delayed_work_sync(&fcopy_timeout_work))
+-		fcopy_respond_to_host(HV_E_FAIL);
+-}
+-
+-int hv_fcopy_init(struct hv_util_service *srv)
+-{
+-	recv_buffer = srv->recv_buffer;
+-	fcopy_transaction.recv_channel = srv->channel;
+-	fcopy_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
+-
+-	/*
+-	 * When this driver loads, the user level daemon that
+-	 * processes the host requests may not yet be running.
+-	 * Defer processing channel callbacks until the daemon
+-	 * has registered.
+-	 */
+-	fcopy_transaction.state = HVUTIL_DEVICE_INIT;
+-
+-	hvt = hvutil_transport_init(fcopy_devname, 0, 0,
+-				    fcopy_on_msg, fcopy_on_reset);
+-	if (!hvt)
+-		return -EFAULT;
+-
+-	return 0;
+-}
+-
+-static void hv_fcopy_cancel_work(void)
+-{
+-	cancel_delayed_work_sync(&fcopy_timeout_work);
+-	cancel_work_sync(&fcopy_send_work);
+-}
+-
+-int hv_fcopy_pre_suspend(void)
+-{
+-	struct vmbus_channel *channel = fcopy_transaction.recv_channel;
+-	struct hv_fcopy_hdr *fcopy_msg;
+-
+-	/*
+-	 * Fake a CANCEL_FCOPY message for the user space daemon in case the
+-	 * daemon is in the middle of copying some file. It doesn't matter if
+-	 * there is already a message pending to be delivered to the user
+-	 * space since we force fcopy_transaction.state to be HVUTIL_READY, so
+-	 * the user space daemon's write() will fail with EINVAL (see
+-	 * fcopy_on_msg()), and the daemon will reset the device by closing
+-	 * and re-opening it.
+-	 */
+-	fcopy_msg = kzalloc(sizeof(*fcopy_msg), GFP_KERNEL);
+-	if (!fcopy_msg)
+-		return -ENOMEM;
+-
+-	tasklet_disable(&channel->callback_event);
+-
+-	fcopy_msg->operation = CANCEL_FCOPY;
+-
+-	hv_fcopy_cancel_work();
+-
+-	/* We don't care about the return value. */
+-	hvutil_transport_send(hvt, fcopy_msg, sizeof(*fcopy_msg), NULL);
+-
+-	kfree(fcopy_msg);
+-
+-	fcopy_transaction.state = HVUTIL_READY;
+-
+-	/* tasklet_enable() will be called in hv_fcopy_pre_resume(). */
+-	return 0;
+-}
+-
+-int hv_fcopy_pre_resume(void)
+-{
+-	struct vmbus_channel *channel = fcopy_transaction.recv_channel;
+-
+-	tasklet_enable(&channel->callback_event);
+-
+-	return 0;
+-}
+-
+-void hv_fcopy_deinit(void)
+-{
+-	fcopy_transaction.state = HVUTIL_DEVICE_DYING;
+-
+-	hv_fcopy_cancel_work();
+-
+-	hvutil_transport_destroy(hvt);
+-}
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 9c97c4065fe7..c4f525325790 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -154,14 +154,6 @@ static struct hv_util_service util_vss = {
+ 	.util_deinit = hv_vss_deinit,
+ };
  
--ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
-+ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_uio_daemon
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+-static struct hv_util_service util_fcopy = {
+-	.util_cb = hv_fcopy_onchannelcallback,
+-	.util_init = hv_fcopy_init,
+-	.util_pre_suspend = hv_fcopy_pre_suspend,
+-	.util_pre_resume = hv_fcopy_pre_resume,
+-	.util_deinit = hv_fcopy_deinit,
+-};
+-
+ static void perform_shutdown(struct work_struct *dummy)
+ {
+ 	orderly_poweroff(true);
+@@ -700,10 +692,6 @@ static const struct hv_vmbus_device_id id_table[] = {
+ 	{ HV_VSS_GUID,
+ 	  .driver_data = (unsigned long)&util_vss
+ 	},
+-	/* File copy GUID */
+-	{ HV_FCOPY_GUID,
+-	  .driver_data = (unsigned long)&util_fcopy
+-	},
+ 	{ },
+ };
  
- ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
-@@ -39,10 +39,10 @@ $(HV_VSS_DAEMON_IN): FORCE
- $(OUTPUT)hv_vss_daemon: $(HV_VSS_DAEMON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
- 
--HV_FCOPY_DAEMON_IN := $(OUTPUT)hv_fcopy_daemon-in.o
--$(HV_FCOPY_DAEMON_IN): FORCE
--	$(Q)$(MAKE) $(build)=hv_fcopy_daemon
--$(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
-+HV_FCOPY_UIO_DAEMON_IN := $(OUTPUT)hv_fcopy_uio_daemon-in.o
-+$(HV_FCOPY_UIO_DAEMON_IN): FORCE
-+	$(Q)$(MAKE) $(build)=hv_fcopy_uio_daemon
-+$(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
- 
- clean:
-diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
-new file mode 100644
-index 000000000000..f72c899328fc
---- /dev/null
-+++ b/tools/hv/hv_fcopy_uio_daemon.c
-@@ -0,0 +1,488 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * An implementation of host to guest copy functionality for Linux.
-+ *
-+ * Copyright (C) 2023, Microsoft, Inc.
-+ *
-+ * Author : K. Y. Srinivasan <kys@microsoft.com>
-+ * Author : Saurabh Sengar <ssengar@microsoft.com>
-+ *
-+ */
-+
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <getopt.h>
-+#include <locale.h>
-+#include <stdbool.h>
-+#include <stddef.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syslog.h>
-+#include <unistd.h>
-+#include <wchar.h>
-+#include <sys/stat.h>
-+#include <linux/hyperv.h>
-+#include <linux/limits.h>
-+#include "vmbus_bufring.h"
-+
-+#define ICMSGTYPE_NEGOTIATE	0
-+#define ICMSGTYPE_FCOPY		7
-+
-+#define WIN8_SRV_MAJOR		1
-+#define WIN8_SRV_MINOR		1
-+#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
-+
-+#define MAX_FOLDER_NAME		15
-+#define MAX_PATH_LEN		15
-+#define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
-+
-+#define FCOPY_VER_COUNT		1
-+static const int fcopy_versions[] = {
-+	WIN8_SRV_VERSION
-+};
-+
-+#define FW_VER_COUNT		1
-+static const int fw_versions[] = {
-+	UTIL_FW_VERSION
-+};
-+
-+#define HV_RING_SIZE		(4 * 4096)
-+
-+unsigned char desc[HV_RING_SIZE];
-+
-+static int target_fd;
-+static char target_fname[PATH_MAX];
-+static unsigned long long filesize;
-+
-+static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
-+{
-+	int error = HV_E_FAIL;
-+	char *q, *p;
-+
-+	filesize = 0;
-+	p = (char *)path_name;
-+	snprintf(target_fname, sizeof(target_fname), "%s/%s",
-+		 (char *)path_name, (char *)file_name);
-+
-+	/*
-+	 * Check to see if the path is already in place; if not,
-+	 * create if required.
-+	 */
-+	while ((q = strchr(p, '/')) != NULL) {
-+		if (q == p) {
-+			p++;
-+			continue;
-+		}
-+		*q = '\0';
-+		if (access(path_name, F_OK)) {
-+			if (flags & CREATE_PATH) {
-+				if (mkdir(path_name, 0755)) {
-+					syslog(LOG_ERR, "Failed to create %s",
-+					       path_name);
-+					goto done;
-+				}
-+			} else {
-+				syslog(LOG_ERR, "Invalid path: %s", path_name);
-+				goto done;
-+			}
-+		}
-+		p = q + 1;
-+		*q = '/';
-+	}
-+
-+	if (!access(target_fname, F_OK)) {
-+		syslog(LOG_INFO, "File: %s exists", target_fname);
-+		if (!(flags & OVER_WRITE)) {
-+			error = HV_ERROR_ALREADY_EXISTS;
-+			goto done;
-+		}
-+	}
-+
-+	target_fd = open(target_fname,
-+			 O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC, 0744);
-+	if (target_fd == -1) {
-+		syslog(LOG_INFO, "Open Failed: %s", strerror(errno));
-+		goto done;
-+	}
-+
-+	error = 0;
-+done:
-+	if (error)
-+		target_fname[0] = '\0';
-+	return error;
-+}
-+
-+/* copy the data into the file */
-+static int hv_copy_data(struct hv_do_fcopy *cpmsg)
-+{
-+	ssize_t len;
-+	int ret = 0;
-+
-+	len = pwrite(target_fd, cpmsg->data, cpmsg->size, cpmsg->offset);
-+
-+	filesize += cpmsg->size;
-+	if (len != cpmsg->size) {
-+		switch (errno) {
-+		case ENOSPC:
-+			ret = HV_ERROR_DISK_FULL;
-+			break;
-+		default:
-+			ret = HV_E_FAIL;
-+			break;
-+		}
-+		syslog(LOG_ERR, "pwrite failed to write %llu bytes: %ld (%s)",
-+		       filesize, (long)len, strerror(errno));
-+	}
-+
-+	return ret;
-+}
-+
-+static int hv_copy_finished(void)
-+{
-+	close(target_fd);
-+	target_fname[0] = '\0';
-+
-+	return 0;
-+}
-+
-+static void print_usage(char *argv[])
-+{
-+	fprintf(stderr, "Usage: %s [options]\n"
-+		"Options are:\n"
-+		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
-+		"  -h, --help             print this help\n", argv[0]);
-+}
-+
-+static bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, unsigned char *buf,
-+				      unsigned int buflen, const int *fw_version, int fw_vercnt,
-+				const int *srv_version, int srv_vercnt,
-+				int *nego_fw_version, int *nego_srv_version)
-+{
-+	int icframe_major, icframe_minor;
-+	int icmsg_major, icmsg_minor;
-+	int fw_major, fw_minor;
-+	int srv_major, srv_minor;
-+	int i, j;
-+	bool found_match = false;
-+	struct icmsg_negotiate *negop;
-+
-+	/* Check that there's enough space for icframe_vercnt, icmsg_vercnt */
-+	if (buflen < ICMSG_HDR + offsetof(struct icmsg_negotiate, reserved)) {
-+		syslog(LOG_ERR, "Invalid icmsg negotiate");
-+		return false;
-+	}
-+
-+	icmsghdrp->icmsgsize = 0x10;
-+	negop = (struct icmsg_negotiate *)&buf[ICMSG_HDR];
-+
-+	icframe_major = negop->icframe_vercnt;
-+	icframe_minor = 0;
-+
-+	icmsg_major = negop->icmsg_vercnt;
-+	icmsg_minor = 0;
-+
-+	/* Validate negop packet */
-+	if (icframe_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
-+	    icmsg_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
-+	    ICMSG_NEGOTIATE_PKT_SIZE(icframe_major, icmsg_major) > buflen) {
-+		syslog(LOG_ERR, "Invalid icmsg negotiate - icframe_major: %u, icmsg_major: %u\n",
-+		       icframe_major, icmsg_major);
-+		goto fw_error;
-+	}
-+
-+	/*
-+	 * Select the framework version number we will
-+	 * support.
-+	 */
-+
-+	for (i = 0; i < fw_vercnt; i++) {
-+		fw_major = (fw_version[i] >> 16);
-+		fw_minor = (fw_version[i] & 0xFFFF);
-+
-+		for (j = 0; j < negop->icframe_vercnt; j++) {
-+			if (negop->icversion_data[j].major == fw_major &&
-+			    negop->icversion_data[j].minor == fw_minor) {
-+				icframe_major = negop->icversion_data[j].major;
-+				icframe_minor = negop->icversion_data[j].minor;
-+				found_match = true;
-+				break;
-+			}
-+		}
-+
-+		if (found_match)
-+			break;
-+	}
-+
-+	if (!found_match)
-+		goto fw_error;
-+
-+	found_match = false;
-+
-+	for (i = 0; i < srv_vercnt; i++) {
-+		srv_major = (srv_version[i] >> 16);
-+		srv_minor = (srv_version[i] & 0xFFFF);
-+
-+		for (j = negop->icframe_vercnt;
-+			(j < negop->icframe_vercnt + negop->icmsg_vercnt);
-+			j++) {
-+			if (negop->icversion_data[j].major == srv_major &&
-+			    negop->icversion_data[j].minor == srv_minor) {
-+				icmsg_major = negop->icversion_data[j].major;
-+				icmsg_minor = negop->icversion_data[j].minor;
-+				found_match = true;
-+				break;
-+			}
-+		}
-+
-+		if (found_match)
-+			break;
-+	}
-+
-+	/*
-+	 * Respond with the framework and service
-+	 * version numbers we can support.
-+	 */
-+fw_error:
-+	if (!found_match) {
-+		negop->icframe_vercnt = 0;
-+		negop->icmsg_vercnt = 0;
-+	} else {
-+		negop->icframe_vercnt = 1;
-+		negop->icmsg_vercnt = 1;
-+	}
-+
-+	if (nego_fw_version)
-+		*nego_fw_version = (icframe_major << 16) | icframe_minor;
-+
-+	if (nego_srv_version)
-+		*nego_srv_version = (icmsg_major << 16) | icmsg_minor;
-+
-+	negop->icversion_data[0].major = icframe_major;
-+	negop->icversion_data[0].minor = icframe_minor;
-+	negop->icversion_data[1].major = icmsg_major;
-+	negop->icversion_data[1].minor = icmsg_minor;
-+
-+	return found_match;
-+}
-+
-+static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
-+{
-+	size_t len = 0;
-+
-+	while (len < dest_size) {
-+		if (src[len] < 0x80)
-+			dest[len++] = (char)(*src++);
-+		else
-+			dest[len++] = 'X';
-+	}
-+
-+	dest[len] = '\0';
-+}
-+
-+static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
-+{
-+	setlocale(LC_ALL, "en_US.utf8");
-+	size_t file_size, path_size;
-+	char *file_name, *path_name;
-+	char *in_file_name = (char *)smsg_in->file_name;
-+	char *in_path_name = (char *)smsg_in->path_name;
-+
-+	file_size = wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) + 1;
-+	path_size = wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) + 1;
-+
-+	file_name = (char *)malloc(file_size * sizeof(char));
-+	path_name = (char *)malloc(path_size * sizeof(char));
-+
-+	wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
-+	wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
-+
-+	return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
-+}
-+
-+static int hv_fcopy_send_data(struct hv_fcopy_hdr *fcopy_msg, int recvlen)
-+{
-+	int operation = fcopy_msg->operation;
-+
-+	/*
-+	 * The  strings sent from the host are encoded in
-+	 * utf16; convert it to utf8 strings.
-+	 * The host assures us that the utf16 strings will not exceed
-+	 * the max lengths specified. We will however, reserve room
-+	 * for the string terminating character - in the utf16s_utf8s()
-+	 * function we limit the size of the buffer where the converted
-+	 * string is placed to W_MAX_PATH -1 to guarantee
-+	 * that the strings can be properly terminated!
-+	 */
-+
-+	switch (operation) {
-+	case START_FILE_COPY:
-+		return hv_fcopy_start((struct hv_start_fcopy *)fcopy_msg);
-+	case WRITE_TO_FILE:
-+		return hv_copy_data((struct hv_do_fcopy *)fcopy_msg);
-+	case COMPLETE_FCOPY:
-+		return hv_copy_finished();
-+	}
-+
-+	return HV_E_FAIL;
-+}
-+
-+/* process the packet recv from host */
-+static int fcopy_pkt_process(struct vmbus_br *txbr)
-+{
-+	int ret, offset, pktlen;
-+	int fcopy_srv_version;
-+	const struct vmbus_chanpkt_hdr *pkt;
-+	struct hv_fcopy_hdr *fcopy_msg;
-+	struct icmsg_hdr *icmsghdr;
-+
-+	pkt = (const struct vmbus_chanpkt_hdr *)desc;
-+	offset = pkt->hlen << 3;
-+	pktlen = (pkt->tlen << 3) - offset;
-+	icmsghdr = (struct icmsg_hdr *)&desc[offset + sizeof(struct vmbuspipe_hdr)];
-+	icmsghdr->status = HV_E_FAIL;
-+
-+	if (icmsghdr->icmsgtype == ICMSGTYPE_NEGOTIATE) {
-+		if (vmbus_prep_negotiate_resp(icmsghdr, desc + offset, pktlen, fw_versions,
-+					      FW_VER_COUNT, fcopy_versions, FCOPY_VER_COUNT,
-+					      NULL, &fcopy_srv_version)) {
-+			syslog(LOG_INFO, "FCopy IC version %d.%d",
-+			       fcopy_srv_version >> 16, fcopy_srv_version & 0xFFFF);
-+			icmsghdr->status = 0;
-+		}
-+	} else if (icmsghdr->icmsgtype == ICMSGTYPE_FCOPY) {
-+		/* Ensure recvlen is big enough to contain hv_fcopy_hdr */
-+		if (pktlen < ICMSG_HDR + sizeof(struct hv_fcopy_hdr)) {
-+			syslog(LOG_ERR, "Invalid Fcopy hdr. Packet length too small: %u",
-+			       pktlen);
-+			return -ENOBUFS;
-+		}
-+
-+		fcopy_msg = (struct hv_fcopy_hdr *)&desc[offset + ICMSG_HDR];
-+		icmsghdr->status = hv_fcopy_send_data(fcopy_msg, pktlen);
-+	}
-+
-+	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
-+	ret = rte_vmbus_chan_send(txbr, 0x6, desc + offset, pktlen, 0);
-+	if (ret) {
-+		syslog(LOG_ERR, "Write to ringbuffer failed err: %d", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void fcopy_get_first_folder(char *path, char *chan_no)
-+{
-+	DIR *dir = opendir(path);
-+	struct dirent *entry;
-+
-+	if (!dir) {
-+		syslog(LOG_ERR, "Failed to open directory (errno=%s).\n", strerror(errno));
-+		return;
-+	}
-+
-+	while ((entry = readdir(dir)) != NULL) {
-+		if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 &&
-+		    strcmp(entry->d_name, "..") != 0) {
-+			strcpy(chan_no, entry->d_name);
-+			break;
-+		}
-+	}
-+
-+	closedir(dir);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int fcopy_fd = -1, tmp = 1;
-+	int daemonize = 1, long_index = 0, opt, ret = -EINVAL;
-+	struct vmbus_br txbr, rxbr;
-+	void *ring;
-+	uint32_t len = HV_RING_SIZE;
-+	char uio_name[MAX_FOLDER_NAME] = {0};
-+	char uio_dev_path[MAX_PATH_LEN] = {0};
-+
-+	static struct option long_options[] = {
-+		{"help",	no_argument,	   0,  'h' },
-+		{"no-daemon",	no_argument,	   0,  'n' },
-+		{0,		0,		   0,  0   }
-+	};
-+
-+	while ((opt = getopt_long(argc, argv, "hn", long_options,
-+				  &long_index)) != -1) {
-+		switch (opt) {
-+		case 'n':
-+			daemonize = 0;
-+			break;
-+		case 'h':
-+		default:
-+			print_usage(argv);
-+			goto exit;
-+		}
-+	}
-+
-+	if (daemonize && daemon(1, 0)) {
-+		syslog(LOG_ERR, "daemon() failed; error: %s", strerror(errno));
-+		goto exit;
-+	}
-+
-+	openlog("HV_UIO_FCOPY", 0, LOG_USER);
-+	syslog(LOG_INFO, "starting; pid is:%d", getpid());
-+
-+	fcopy_get_first_folder(FCOPY_UIO, uio_name);
-+	snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
-+	fcopy_fd = open(uio_dev_path, O_RDWR);
-+
-+	if (fcopy_fd < 0) {
-+		syslog(LOG_ERR, "open %s failed; error: %d %s",
-+		       uio_dev_path, errno, strerror(errno));
-+		ret = fcopy_fd;
-+		goto exit;
-+	}
-+
-+	ring = vmbus_uio_map(&fcopy_fd, HV_RING_SIZE);
-+	if (!ring) {
-+		ret = errno;
-+		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(ret));
-+		goto close;
-+	}
-+	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
-+	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
-+
-+	while (1) {
-+		/*
-+		 * In this loop we process fcopy messages after the
-+		 * handshake is complete.
-+		 */
-+		ret = pread(fcopy_fd, &tmp, sizeof(int), 0);
-+		if (ret < 0) {
-+			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
-+			continue;
-+		}
-+
-+		len = HV_RING_SIZE;
-+		ret = rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
-+		if (unlikely(ret <= 0)) {
-+			/* This indicates a failure to communicate (or worse) */
-+			syslog(LOG_ERR, "VMBus channel recv error: %d", ret);
-+		} else {
-+			ret = fcopy_pkt_process(&txbr);
-+			if (ret < 0)
-+				goto close;
-+
-+			/* Signal host */
-+			if ((write(fcopy_fd, &tmp, sizeof(int))) != sizeof(int)) {
-+				ret = errno;
-+				syslog(LOG_ERR, "Registration failed: %s\n", strerror(ret));
-+				goto close;
-+			}
-+		}
-+	}
-+close:
-+	close(fcopy_fd);
-+exit:
-+	return ret;
-+}
+diff --git a/tools/hv/hv_fcopy_daemon.c b/tools/hv/hv_fcopy_daemon.c
+deleted file mode 100644
+index 16d629b22c25..000000000000
+--- a/tools/hv/hv_fcopy_daemon.c
++++ /dev/null
+@@ -1,266 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * An implementation of host to guest copy functionality for Linux.
+- *
+- * Copyright (C) 2014, Microsoft, Inc.
+- *
+- * Author : K. Y. Srinivasan <kys@microsoft.com>
+- */
+-
+-
+-#include <sys/types.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <unistd.h>
+-#include <string.h>
+-#include <errno.h>
+-#include <linux/hyperv.h>
+-#include <linux/limits.h>
+-#include <syslog.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <getopt.h>
+-
+-static int target_fd;
+-static char target_fname[PATH_MAX];
+-static unsigned long long filesize;
+-
+-static int hv_start_fcopy(struct hv_start_fcopy *smsg)
+-{
+-	int error = HV_E_FAIL;
+-	char *q, *p;
+-
+-	filesize = 0;
+-	p = (char *)smsg->path_name;
+-	snprintf(target_fname, sizeof(target_fname), "%s/%s",
+-		 (char *)smsg->path_name, (char *)smsg->file_name);
+-
+-	syslog(LOG_INFO, "Target file name: %s", target_fname);
+-	/*
+-	 * Check to see if the path is already in place; if not,
+-	 * create if required.
+-	 */
+-	while ((q = strchr(p, '/')) != NULL) {
+-		if (q == p) {
+-			p++;
+-			continue;
+-		}
+-		*q = '\0';
+-		if (access((char *)smsg->path_name, F_OK)) {
+-			if (smsg->copy_flags & CREATE_PATH) {
+-				if (mkdir((char *)smsg->path_name, 0755)) {
+-					syslog(LOG_ERR, "Failed to create %s",
+-						(char *)smsg->path_name);
+-					goto done;
+-				}
+-			} else {
+-				syslog(LOG_ERR, "Invalid path: %s",
+-					(char *)smsg->path_name);
+-				goto done;
+-			}
+-		}
+-		p = q + 1;
+-		*q = '/';
+-	}
+-
+-	if (!access(target_fname, F_OK)) {
+-		syslog(LOG_INFO, "File: %s exists", target_fname);
+-		if (!(smsg->copy_flags & OVER_WRITE)) {
+-			error = HV_ERROR_ALREADY_EXISTS;
+-			goto done;
+-		}
+-	}
+-
+-	target_fd = open(target_fname,
+-			 O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC, 0744);
+-	if (target_fd == -1) {
+-		syslog(LOG_INFO, "Open Failed: %s", strerror(errno));
+-		goto done;
+-	}
+-
+-	error = 0;
+-done:
+-	if (error)
+-		target_fname[0] = '\0';
+-	return error;
+-}
+-
+-static int hv_copy_data(struct hv_do_fcopy *cpmsg)
+-{
+-	ssize_t bytes_written;
+-	int ret = 0;
+-
+-	bytes_written = pwrite(target_fd, cpmsg->data, cpmsg->size,
+-				cpmsg->offset);
+-
+-	filesize += cpmsg->size;
+-	if (bytes_written != cpmsg->size) {
+-		switch (errno) {
+-		case ENOSPC:
+-			ret = HV_ERROR_DISK_FULL;
+-			break;
+-		default:
+-			ret = HV_E_FAIL;
+-			break;
+-		}
+-		syslog(LOG_ERR, "pwrite failed to write %llu bytes: %ld (%s)",
+-		       filesize, (long)bytes_written, strerror(errno));
+-	}
+-
+-	return ret;
+-}
+-
+-/*
+- * Reset target_fname to "" in the two below functions for hibernation: if
+- * the fcopy operation is aborted by hibernation, the daemon should remove the
+- * partially-copied file; to achieve this, the hv_utils driver always fakes a
+- * CANCEL_FCOPY message upon suspend, and later when the VM resumes back,
+- * the daemon calls hv_copy_cancel() to remove the file; if a file is copied
+- * successfully before suspend, hv_copy_finished() must reset target_fname to
+- * avoid that the file can be incorrectly removed upon resume, since the faked
+- * CANCEL_FCOPY message is spurious in this case.
+- */
+-static int hv_copy_finished(void)
+-{
+-	close(target_fd);
+-	target_fname[0] = '\0';
+-	return 0;
+-}
+-static int hv_copy_cancel(void)
+-{
+-	close(target_fd);
+-	if (strlen(target_fname) > 0) {
+-		unlink(target_fname);
+-		target_fname[0] = '\0';
+-	}
+-	return 0;
+-
+-}
+-
+-void print_usage(char *argv[])
+-{
+-	fprintf(stderr, "Usage: %s [options]\n"
+-		"Options are:\n"
+-		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
+-		"  -h, --help             print this help\n", argv[0]);
+-}
+-
+-int main(int argc, char *argv[])
+-{
+-	int fcopy_fd = -1;
+-	int error;
+-	int daemonize = 1, long_index = 0, opt;
+-	int version = FCOPY_CURRENT_VERSION;
+-	union {
+-		struct hv_fcopy_hdr hdr;
+-		struct hv_start_fcopy start;
+-		struct hv_do_fcopy copy;
+-		__u32 kernel_modver;
+-	} buffer = { };
+-	int in_handshake;
+-
+-	static struct option long_options[] = {
+-		{"help",	no_argument,	   0,  'h' },
+-		{"no-daemon",	no_argument,	   0,  'n' },
+-		{0,		0,		   0,  0   }
+-	};
+-
+-	while ((opt = getopt_long(argc, argv, "hn", long_options,
+-				  &long_index)) != -1) {
+-		switch (opt) {
+-		case 'n':
+-			daemonize = 0;
+-			break;
+-		case 'h':
+-		default:
+-			print_usage(argv);
+-			exit(EXIT_FAILURE);
+-		}
+-	}
+-
+-	if (daemonize && daemon(1, 0)) {
+-		syslog(LOG_ERR, "daemon() failed; error: %s", strerror(errno));
+-		exit(EXIT_FAILURE);
+-	}
+-
+-	openlog("HV_FCOPY", 0, LOG_USER);
+-	syslog(LOG_INFO, "starting; pid is:%d", getpid());
+-
+-reopen_fcopy_fd:
+-	if (fcopy_fd != -1)
+-		close(fcopy_fd);
+-	/* Remove any possible partially-copied file on error */
+-	hv_copy_cancel();
+-	in_handshake = 1;
+-	fcopy_fd = open("/dev/vmbus/hv_fcopy", O_RDWR);
+-
+-	if (fcopy_fd < 0) {
+-		syslog(LOG_ERR, "open /dev/vmbus/hv_fcopy failed; error: %d %s",
+-			errno, strerror(errno));
+-		exit(EXIT_FAILURE);
+-	}
+-
+-	/*
+-	 * Register with the kernel.
+-	 */
+-	if ((write(fcopy_fd, &version, sizeof(int))) != sizeof(int)) {
+-		syslog(LOG_ERR, "Registration failed: %s", strerror(errno));
+-		exit(EXIT_FAILURE);
+-	}
+-
+-	while (1) {
+-		/*
+-		 * In this loop we process fcopy messages after the
+-		 * handshake is complete.
+-		 */
+-		ssize_t len;
+-
+-		len = pread(fcopy_fd, &buffer, sizeof(buffer), 0);
+-		if (len < 0) {
+-			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
+-			goto reopen_fcopy_fd;
+-		}
+-
+-		if (in_handshake) {
+-			if (len != sizeof(buffer.kernel_modver)) {
+-				syslog(LOG_ERR, "invalid version negotiation");
+-				exit(EXIT_FAILURE);
+-			}
+-			in_handshake = 0;
+-			syslog(LOG_INFO, "kernel module version: %u",
+-			       buffer.kernel_modver);
+-			continue;
+-		}
+-
+-		switch (buffer.hdr.operation) {
+-		case START_FILE_COPY:
+-			error = hv_start_fcopy(&buffer.start);
+-			break;
+-		case WRITE_TO_FILE:
+-			error = hv_copy_data(&buffer.copy);
+-			break;
+-		case COMPLETE_FCOPY:
+-			error = hv_copy_finished();
+-			break;
+-		case CANCEL_FCOPY:
+-			error = hv_copy_cancel();
+-			break;
+-
+-		default:
+-			error = HV_E_FAIL;
+-			syslog(LOG_ERR, "Unknown operation: %d",
+-				buffer.hdr.operation);
+-
+-		}
+-
+-		/*
+-		 * pwrite() may return an error due to the faked CANCEL_FCOPY
+-		 * message upon hibernation. Ignore the error by resetting the
+-		 * dev file, i.e. closing and re-opening it.
+-		 */
+-		if (pwrite(fcopy_fd, &error, sizeof(int), 0) != sizeof(int)) {
+-			syslog(LOG_ERR, "pwrite failed: %s", strerror(errno));
+-			goto reopen_fcopy_fd;
+-		}
+-	}
+-}
 -- 
 2.34.1
 
