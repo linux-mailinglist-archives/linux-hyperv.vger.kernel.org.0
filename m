@@ -1,53 +1,54 @@
-Return-Path: <linux-hyperv+bounces-1568-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1569-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A406859EC8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 09:51:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1687859ED7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 09:53:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0A1F9B2322E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 08:51:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D8A51F21609
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 08:53:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C8421362;
-	Mon, 19 Feb 2024 08:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D568D2375A;
+	Mon, 19 Feb 2024 08:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f+PyqisD"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="usZaX8Cp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8754D2135A;
-	Mon, 19 Feb 2024 08:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A547923757;
+	Mon, 19 Feb 2024 08:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332658; cv=none; b=LEIDA0p51dezfm6UYK1+rQE8ONiN036zlMHyfq7wQtxCBvVCQuuyFdyrT0HIRt82QUk5B3NQbs40YxTGsIGn827RPX1050G1oDRTcUvJxrKbSejgGEjztOZzvkcQyttBdBIIIOPGC35FYopzNRKDVbHkOcqaVS65Tnk1K6Fu+yg=
+	t=1708332784; cv=none; b=Q792QOum8P6ym5il6nAzt73mUjWHoQIY/HIv49P0lqx0MJmpKnD0b5pjdd3VHNuKfNBjl3RV59RJ0Tm0DI7ucKgIuP5n1hvOpEzkREpfOuT24IeAv33tA9TQYgA6Fe6pimyt3iA8+Ol47ek3N2P1cWl2nRsqm6cUIm4AaFL1tWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332658; c=relaxed/simple;
-	bh=Gdta+sVIghXZf3QcsNLG8QdvkbpOc6nIYPto/FbjQvc=;
+	s=arc-20240116; t=1708332784; c=relaxed/simple;
+	bh=SDQufJ9z5aiPeuINsDKd9XXb7cmghsbeEma5FC1MrU0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TNKZfPhHXUYwkk5tQNh1yJnLGpX1qYQZyFUbikeBN81KaBC2fBFKL92HWkhykA2MDyyXwK72GfQ0XcOvsdRa2YUdXZl7DS3Dsr9xodYnQKiWogxVKqPXMdAGBk8BdQWVDq5osWG2WPtXG50jVTJcQBKAxd984GhLRoDaUEQF2zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f+PyqisD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B934C433C7;
-	Mon, 19 Feb 2024 08:50:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPGQ1FpmwXDbGcewRZYES2/qI8M899vNE/0qoXKeAtY8RPq2u4CEB8TjRg+UdIIN4aYBUAn75+QV2z+x3ARIEnTfOxPQkGqiNNBDI/NQr2dAv8cw+7q7QvrKF8s2ckQtPsZfMGOz5f15PBw04IMYQ5TVTl9TRreDs/FSPmWZ/HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=usZaX8Cp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5DCC433F1;
+	Mon, 19 Feb 2024 08:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708332658;
-	bh=Gdta+sVIghXZf3QcsNLG8QdvkbpOc6nIYPto/FbjQvc=;
+	s=korg; t=1708332784;
+	bh=SDQufJ9z5aiPeuINsDKd9XXb7cmghsbeEma5FC1MrU0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f+PyqisDcAC14HikWSUp/Z/VjeWy3jqmgEHCrZb4vs0NIrpjJ8ZF0KoLUU/CT3gMg
-	 isOPrvk/flo5SEC1O/LpqHHZWt8Qa4McEC1goD+k6IEdNb+ZevFKpN31mIuGPFtz/R
-	 DBVVp7q9BgBvIiqJ6S0oEDumtv1eHK2aKrmABIEk=
-Date: Mon, 19 Feb 2024 09:50:54 +0100
+	b=usZaX8CpwwzXVWtYNNvZz3zqkH5sbHb5Q7ImfBBj7c1ILt/jj38fmd5torqaemTBL
+	 9rAKxRPStF6bWaiosQc/XDTT9TzgBf5ysirRQs0iWAn8jXS0F1YWJ0xSJ+pmLu3Oft
+	 rHhjXwdWv+orYqpGX5ark3KBTkECiXpiuq02aE7w=
+Date: Mon, 19 Feb 2024 09:53:01 +0100
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Saurabh Sengar <ssengar@linux.microsoft.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	decui@microsoft.com, linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org, ssengar@microsoft.com
-Subject: Re: [PATCH 2/6] uio_hv_generic: Query the ringbuffer size for device
-Message-ID: <2024021920-wincing-dyslexic-aae1@gregkh>
+Subject: Re: [PATCH 5/6] tools: hv: Add new fcopy application based on uio
+ driver
+Message-ID: <2024021908-royal-sequester-84be@gregkh>
 References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
- <1708193020-14740-3-git-send-email-ssengar@linux.microsoft.com>
+ <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,51 +57,149 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1708193020-14740-3-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1708193020-14740-6-git-send-email-ssengar@linux.microsoft.com>
 
-On Sat, Feb 17, 2024 at 10:03:36AM -0800, Saurabh Sengar wrote:
-> Query the ring buffer size from pre defined table per device.
-> Keep the size as is if the device doesn't have any preferred
-> ring size.
+On Sat, Feb 17, 2024 at 10:03:39AM -0800, Saurabh Sengar wrote:
+> New fcopy application which utilizes uio_hv_vmbus_client driver
 
-What is the "as is" size?
+What does this "application" do?
 
 > 
 > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > ---
->  drivers/uio/uio_hv_generic.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  tools/hv/Build                 |   3 +-
+>  tools/hv/Makefile              |  10 +-
+>  tools/hv/hv_fcopy_uio_daemon.c | 488 +++++++++++++++++++++++++++++++++
+>  3 files changed, 495 insertions(+), 6 deletions(-)
+>  create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
 > 
-> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-> index 20d9762331bd..4bda6b52e49e 100644
-> --- a/drivers/uio/uio_hv_generic.c
-> +++ b/drivers/uio/uio_hv_generic.c
-> @@ -238,6 +238,7 @@ hv_uio_probe(struct hv_device *dev,
->  	struct hv_uio_private_data *pdata;
->  	void *ring_buffer;
->  	int ret;
-> +	size_t ring_size = hv_dev_ring_size(channel);
+> diff --git a/tools/hv/Build b/tools/hv/Build
+> index 6cf51fa4b306..7d1f1698069b 100644
+> --- a/tools/hv/Build
+> +++ b/tools/hv/Build
+> @@ -1,3 +1,4 @@
+>  hv_kvp_daemon-y += hv_kvp_daemon.o
+>  hv_vss_daemon-y += hv_vss_daemon.o
+> -hv_fcopy_daemon-y += hv_fcopy_daemon.o
+> +hv_fcopy_uio_daemon-y += hv_fcopy_uio_daemon.o
+> +hv_fcopy_uio_daemon-y += vmbus_bufring.o
+> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+> index fe770e679ae8..944180cf916e 100644
+> --- a/tools/hv/Makefile
+> +++ b/tools/hv/Makefile
+> @@ -17,7 +17,7 @@ MAKEFLAGS += -r
 >  
->  	/* Communicating with host has to be via shared memory not hypercall */
->  	if (!channel->offermsg.monitor_allocated) {
-> @@ -245,12 +246,14 @@ hv_uio_probe(struct hv_device *dev,
->  		return -ENOTSUPP;
->  	}
+>  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
 >  
-> +	if (!ring_size)
-> +		ring_size = HV_RING_SIZE * PAGE_SIZE;
+> -ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+> +ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_uio_daemon
+>  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+>  
+>  ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
+> @@ -39,10 +39,10 @@ $(HV_VSS_DAEMON_IN): FORCE
+>  $(OUTPUT)hv_vss_daemon: $(HV_VSS_DAEMON_IN)
+>  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+>  
+> -HV_FCOPY_DAEMON_IN := $(OUTPUT)hv_fcopy_daemon-in.o
+> -$(HV_FCOPY_DAEMON_IN): FORCE
+> -	$(Q)$(MAKE) $(build)=hv_fcopy_daemon
+> -$(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
+> +HV_FCOPY_UIO_DAEMON_IN := $(OUTPUT)hv_fcopy_uio_daemon-in.o
+> +$(HV_FCOPY_UIO_DAEMON_IN): FORCE
+> +	$(Q)$(MAKE) $(build)=hv_fcopy_uio_daemon
+> +$(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
+>  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+>  
+>  clean:
+> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
+> new file mode 100644
+> index 000000000000..f72c899328fc
+> --- /dev/null
+> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+> @@ -0,0 +1,488 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * An implementation of host to guest copy functionality for Linux.
 
-Why the magic * PAGE_SIZE here?
+host to guest of what?  I think it's a specific type of host and guest,
+right?
 
-Where is it documented that ring_size is in pages?
+> + *
+> + * Copyright (C) 2023, Microsoft, Inc.
+> + *
+> + * Author : K. Y. Srinivasan <kys@microsoft.com>
+> + * Author : Saurabh Sengar <ssengar@microsoft.com>
+> + *
+> + */
+> +
+> +#include <dirent.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <getopt.h>
+> +#include <locale.h>
+> +#include <stdbool.h>
+> +#include <stddef.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <syslog.h>
+> +#include <unistd.h>
+> +#include <wchar.h>
+> +#include <sys/stat.h>
+> +#include <linux/hyperv.h>
+> +#include <linux/limits.h>
+> +#include "vmbus_bufring.h"
+> +
+> +#define ICMSGTYPE_NEGOTIATE	0
+> +#define ICMSGTYPE_FCOPY		7
+> +
+> +#define WIN8_SRV_MAJOR		1
+> +#define WIN8_SRV_MINOR		1
+> +#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+> +
+> +#define MAX_FOLDER_NAME		15
+> +#define MAX_PATH_LEN		15
+> +#define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
+> +
+> +#define FCOPY_VER_COUNT		1
+> +static const int fcopy_versions[] = {
+> +	WIN8_SRV_VERSION
+> +};
+> +
+> +#define FW_VER_COUNT		1
+> +static const int fw_versions[] = {
+> +	UTIL_FW_VERSION
+> +};
+> +
+> +#define HV_RING_SIZE		(4 * 4096)
 
-And what happens when PAGE_SIZE is changed?  Why are you relying on that
-arbritrary value to dictate your buffer sizes to a device that has
-no relationship with PAGE_SIZE?
+Hey, that doesn't match the kernel driver!  Why these values?
 
-Yes, I know you are copying what was there today, but you have the
-chance to rethink and most importantly, DOCUMENT this decision properly
-now.
+
+> +
+> +unsigned char desc[HV_RING_SIZE];
+> +
+> +static int target_fd;
+> +static char target_fname[PATH_MAX];
+> +static unsigned long long filesize;
+> +
+> +static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
+> +{
+> +	int error = HV_E_FAIL;
+> +	char *q, *p;
+> +
+> +	filesize = 0;
+> +	p = (char *)path_name;
+
+Why the unneeded cast?
+
+> +	snprintf(target_fname, sizeof(target_fname), "%s/%s",
+> +		 (char *)path_name, (char *)file_name);
+
+Again, why all of the unneeded casts?  This feels very odd, so I've
+stopped reading here, perhaps get an internal review first before
+sending this out again?
 
 thanks,
 
