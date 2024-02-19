@@ -1,176 +1,228 @@
-Return-Path: <linux-hyperv+bounces-1576-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1577-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1100D85A149
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 11:48:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D77D85AA67
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 18:53:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E3101C21656
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 10:48:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23BF72854FC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Feb 2024 17:53:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E8542C19B;
-	Mon, 19 Feb 2024 10:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE8E40BE5;
+	Mon, 19 Feb 2024 17:53:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHjMUYLu"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ixM4yGtC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2042.outbound.protection.outlook.com [40.92.21.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7D228E39;
-	Mon, 19 Feb 2024 10:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708339669; cv=none; b=nEwqS5X96ucPNlUJuotvBr7XvooyfmUQ3fmEHz7t1vh82SzaJlO890bPCTJvNPjutRkUfocvoPTOy6ezIhneMCs3GrTYk10oqz0PnYJwoS3HTIpJww4NlVj+6m+dcL4GGBa7+saxtc/Feo6TXJcl6K8154xefTBfjVwxLW2Oz6o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708339669; c=relaxed/simple;
-	bh=J76nWNpLPlCdb2/zC3wLiltJ7TgkL/vEOtz2wj3rw5Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=diHbzu54Dgdec3MIY5A+O0UoTCt71o/nVNiJUKqEGnbUsSFA8yH0+OpWlNVzMfIB2p2yf5d7qz6gZ7QSSj2naBA4uEGaWmg8ru1rUqJkg+E/6Er4oGCIq+banKO3y+AjfaoCUq2vlFn/HquGGV4amW+r2nBcy6jJ7wMrgDGV4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHjMUYLu; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708339667; x=1739875667;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=J76nWNpLPlCdb2/zC3wLiltJ7TgkL/vEOtz2wj3rw5Q=;
-  b=HHjMUYLueXl0HAW/+4iX45N5/PKfwIHniT2imWutWgAm14y9B2qadsJ/
-   bM/wWa1YmGuAHDjXnmTnVfZNp/NvDU9nRBEVuUjeLm2jd98gGS89eZ9Xb
-   Wm0fq2z6qLnJREXXp2SS+k+YF0DoeSMIo1ru3HLC8lUVQy5N+JiB6HhT4
-   gntvENNgxOARBEsgY8ZY1zI5c6mxUagDbDr9C2KsLN5sEOBDF1kYgn3Kb
-   uGnCLDeox3OjFLEliFUAsfMN8MlUxCFVOAgoou8dxcwKDSacfdjRrPqdH
-   4W0ob3NIY4qpSz2t4KB39zKcup0R1T17LBAp6hde2ZKAD9nUIfJe/h4Bu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2850781"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2850781"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:47:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4817735"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:47:42 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Feb 2024 12:47:33 +0200 (EET)
-To: Michael Kelley <mhklinux@outlook.com>
-cc: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-    "wei.liu@kernel.org" <wei.liu@kernel.org>, 
-    "decui@microsoft.com" <decui@microsoft.com>, 
-    "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-    "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-    "bhelgaas@google.com" <bhelgaas@google.com>, 
-    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v2 1/1] PCI: hv: Fix ring buffer size calculation
-In-Reply-To: <SN6PR02MB415749788D7DEA3D1D792913D44C2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Message-ID: <0a680c72-0c30-d3e7-5c67-a0aefe752be2@linux.intel.com>
-References: <20240215074823.51014-1-mhklinux@outlook.com> <0802ce88-c86d-3a74-501f-28393d6112f3@linux.intel.com> <SN6PR02MB415749788D7DEA3D1D792913D44C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A343B19D;
+	Mon, 19 Feb 2024 17:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708365210; cv=fail; b=BBTBZ16t+ryKsKggONsDLejNOlrwoqwdB0eWTedg9gTBchVBt4SG4niqOGFNzVRNWX/OPJCdQ4IrBsqUe4mvr3adGdc24hnb59LmSonlhcJ7MsfcL2iAdD+ScGkGWV7CeyIiFMQiFmI4BDC4lpRQlfBdjwc/K8GoEF862PGZ7q8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708365210; c=relaxed/simple;
+	bh=j/qgfFQKXqEnK8CE/1YR9LQ6S0y32jd/V6ZHPAQhPEI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gyVyAjcupycm2TAc6tYd8TOodZRrZWa45SFMf2RVimcTfBfI+5+MF2Fm7+zD2kjfOKPKZatcaespOk1mJpHYAtypdOi4RGX4budtJzW+lAv+h9MHKwwWyzE6+rFrVUdnBJs4LmVtmoZk60nNyyy+obgfHGdt9UC6jHDjgVm3W8A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ixM4yGtC; arc=fail smtp.client-ip=40.92.21.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FKjIABUx+4qtJ9VSkKRQl/CO9OyB8TUWTu9oO7T/KIgSlULzpoWiGOd6ZIDUp8i7lfbUvz0CsSU2lGotepQf2jS3fLxJKjJsJoAeSvKFpSD5k7/YKLVBPQhytQ+I+znNQz0LfkPN40xMR4dHcwzbqrT3BMbsfbkke8aShHuoGR1k6QGrwLfi/9s5CyeI/0FGfzIz/0rN179qXjLtasrJt9c+fiTDKqwnI1axcJ9iE6wXcyuj1h77zXRMPlMgfm12eXjcH3jrSx/CLxs3FLywGj5hGD9400yvBiwUd6VXMxizFeE7he7RB2k/hjYGS5Wgg9dyEZ6IQK9CuGWt2VyM/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kQ7//Y5aJCEY7dZVimJjpgIpVecczmnvMtZfRbJOYfo=;
+ b=CCTNnHHbf5ziIeoTmGnOCMkWdg7gz2ZZ8bbNiqLCB4dRAejNZ8X5Y0YcnO2e+MsApWYhw/zn7VY6dEOu9cXpwgkEQ3fNUrRiuu144iWYCAji3PQh3uQJ3xuu6LSjNKljUUsOgTFXNlKGom0uPp+SPlQMcdDFSMlVmI/+Yl8Eol1nwVNCWof77dvnlsvUPdC1LkZpaXg0i+jyFb7Go880VxFiF9lDOvi4x/JvmhsXvR2L2sEl9Et0xxg4t+XOQcMp2TiWlMxx0Qqz83ZNP3fFKIEXW/7NCQOVq/2/fVAohOg7An2AoH6R/cP0/BOoZPYrJ6ZRtMXntff9n980O2+tLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kQ7//Y5aJCEY7dZVimJjpgIpVecczmnvMtZfRbJOYfo=;
+ b=ixM4yGtCm+733Z536PaP78Yvl3+FdQ9LHLxWobL8E58aIBwZuNGtVT/kPM/ZjDKiVP/CT1Yz1ozEJa8+S4rekszUHPIi7GjoF5/MFcndK4bfv7rwNna8rVyC1bhcb9mHtszJBc0jMsTDKQmEbwMqtUFxPWX+jXuWzIxfs1hJqdTtpZZDPl/k7I5cXpW0BMoqS7QVysO+vyJEqCvcBFH0GUkjP5rh452TnX3VJ/v1OgqkPtUMx84SLtErKjT7dc1hxLNurzbKB6M2cEQfkV1is5ictZiQzARTWbFksb/dlQqpx1iQ2J4Vt2Z8vrlDqZOv3raiSVjJS7oYMMUt+ckiDg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ0PR02MB7197.namprd02.prod.outlook.com (2603:10b6:a03:293::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Mon, 19 Feb
+ 2024 17:53:25 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7292.029; Mon, 19 Feb 2024
+ 17:53:25 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "ssengar@microsoft.com"
+	<ssengar@microsoft.com>
+Subject: RE: [PATCH] Drivers: hv: Kconfig: select CPUMASK_OFFSTACK for Hyper-V
+Thread-Topic: [PATCH] Drivers: hv: Kconfig: select CPUMASK_OFFSTACK for
+ Hyper-V
+Thread-Index: AQHaYOHvK5zyzBkwkUeCyKTO1/OqarEOuT2wgAD6DICAAj61sA==
+Date: Mon, 19 Feb 2024 17:53:25 +0000
+Message-ID:
+ <SN6PR02MB41573212FCDBDF58305881ECD4512@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1708092603-14504-1-git-send-email-ssengar@linux.microsoft.com>
+ <SN6PR02MB415758508A7BE89E0CFBD976D4532@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20240218071727.GA19702@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To:
+ <20240218071727.GA19702@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [D+gHYmNQWzxy1Sdfl5o1+0j26BXSEvJx]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7197:EE_
+x-ms-office365-filtering-correlation-id: beca78f6-3bf0-4815-4fdc-08dc3173abe6
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ SS7hLwU+PYPF+IMN5SYo9aNDErCbFe+i8e1H+O2pxYFWA1unlgXWc+KeqYk5faCSs7hn1qf8nQ4e2Lw9lFfKI/bm0cFR85f76DAtcT2QRwXo3DKq/LJIvlTBgWHLfriXFQ73Qu88Bm4bXpaGM6v6WHIe3HukGiOcbZVQ0VpEd8Zz84VIrV9gbOJBNofIhKDrPx7pzY+Hy2UtjL+nwW7JX4Rezw0wgZWGBnM4kMI92I2oIGWklfNsDsZu5fhrHqKChdDg00P/WSwPLm3JLwDT9ILZnFfoLBXtJTd+BobtEN23KmWu4hGFzBaN1Ql/mOvW1XcEX0FKOhZoXEf/znxiF6vMO3tH8uJFgZJoX3wzMOpYpTxAKr6h2FdeIcIH4l4JrafiwoGn5wOxcHcrx5NitR2rzpMsr/mCUlbRBPh+TKmlBCpZtpOw6BDVWIFuWU/q9vAR6NvnBgVIhk7XYTRhFIwT9zK6gM+78kB67/pH2HCD16Ie8NbLQOSZOP65chqKNpVQquyq2qW1rtanBcdv3pki9suhk2I/XR/xZUd3gE7n7d31Q7YvoWd0ikxe8EclgmSepgu0NEsxYGZcmsf5Wpq/s9UQHYqbi6p+IBOsmFI=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?8ba9BTlYh2H/rm8GLM2izt93X56BWrl3aeJmTZWCznrFH5M8CzbWnlAcg5n/?=
+ =?us-ascii?Q?GRl3QNFyrrIroIr+Ldy2BIAvZ1VeHustxoURW07ou9exI+/JO9GFulaUZkzK?=
+ =?us-ascii?Q?TdrBh1h/o/jW6NdsxwC03SvRS09ZAC8rLC8iekhVM1WZlHkbWdG5UMGVuEJJ?=
+ =?us-ascii?Q?HJSkXlSBIj/KplTZZwB9SGW5ORfBDVZgeY69I56xZtYXe6Xb96CHSEPEC4E1?=
+ =?us-ascii?Q?EHprSJU50ZZixOt/kbtW2ySUxdxnkU48qKCJ76Zi/DXqpUYIi7aMPV13JhKK?=
+ =?us-ascii?Q?1vk1zfv10IoFoizsuzlgkDdhAgBizLF3UNuTVcjgxmKCDta1TOwPg4rs+ysT?=
+ =?us-ascii?Q?lLb5QHdUV1umTSvwIpeqgQYCA3bSc0KCnh91Yml6AL+DFiTSJAAEl70G4lnR?=
+ =?us-ascii?Q?QW/TymrHXUJAkoZff9PNn1HnSJINzsxAoOchJXMsPpIKEI0/HTwdKkhkwhRk?=
+ =?us-ascii?Q?7PClv2BUx+aldBld8mKXRpcVWBN2VnRLOR225sMQYxaB8apd9GnD6IC3rPsY?=
+ =?us-ascii?Q?Cy+H+MHslVZueFryznH0Ci2nvjfqhP4URenjneoiKkxBgbJDV8/xczuD1mn5?=
+ =?us-ascii?Q?tidnI/LVFqSAzg4ujcgQY7yZY8ANUK0GazhcBXx50ykFUCIg2N//XVMp5GIw?=
+ =?us-ascii?Q?6UIeZ2PS2KJJk/inul7WXENecorp0sZI412nj/+p4fy1sF+RTETKz/aQ5WVB?=
+ =?us-ascii?Q?casgq5HmaMCcORe5phf+yQFanLPPz4ASDTB2aBDDCSkl7Bxw/E1DVZBEV9iF?=
+ =?us-ascii?Q?w2rYNdP+6PB9naQC3W9UB7Jmuv1Hr9nl8ID1D6Bde0/Wpl69sW4PXtQ2dODH?=
+ =?us-ascii?Q?AV8G5pS05ejmUqfe1gybmPbbAj00GeLID0226tyXiKXhF9dKTTFbN0GtT7nz?=
+ =?us-ascii?Q?tZ45Zdf++swP39oL1L525PyGppVMjhavs5iGugtWaXKTRJKski+r4pPZb4Jz?=
+ =?us-ascii?Q?XF1E9KkXSq6Fj9Y+NOtabbeQF37XA+a6OlHvwWZy9SZvL/DBUF/AKe6b/dfc?=
+ =?us-ascii?Q?0aTbH/6QfrAAmam0tlp8i6LYs3aWi7ULdwojdA2MD3hdPadGBWV2x8YgqlwM?=
+ =?us-ascii?Q?Ig6yhItqcPprp8xA6K4aWoCQxOP0PsYmzqmWYZKB8Hkp3fcCmsL3YHK0Sfn6?=
+ =?us-ascii?Q?DTu0tcpu8MnRW9jSpqy3VYVYGsP/eU/WWrHAhP88jmu3yqO+26p8m80D5uej?=
+ =?us-ascii?Q?XK7wcB7ZbvyvfNHgLMpCE+WjA0C2UHslSgMCTA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1499309722-1708339653=:1174"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: beca78f6-3bf0-4815-4fdc-08dc3173abe6
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2024 17:53:25.4372
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7197
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1499309722-1708339653=:1174
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Fri, 16 Feb 2024, Michael Kelley wrote:
-
-> From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> Sent: Friday, Febru=
-ary 16, 2024 6:46 AM
-> >=20
-> > On Wed, 14 Feb 2024, mhkelley58@gmail.com wrote:
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, Fe=
+bruary 17, 2024 11:17 PM
 > > >
-> > > For a physical PCI device that is passed through to a Hyper-V guest V=
-M,
-> > > current code specifies the VMBus ring buffer size as 4 pages.  But th=
-is
-> > > is an inappropriate dependency, since the amount of ring buffer space
-> > > needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
-> > > size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ri=
-ng
-> > > size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
-> > > is used for only a few messages during device setup and removal, so a=
-ny
-> > > space above a few Kbytes is wasted.
+> > > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> > > index 0024210..bc3f496 100644
+> > > --- a/drivers/hv/Kconfig
+> > > +++ b/drivers/hv/Kconfig
+> > > @@ -9,6 +9,7 @@ config HYPERV
+> > >  	select PARAVIRT
+> > >  	select X86_HV_CALLBACK_VECTOR if X86
+> > >  	select OF_EARLY_FLATTREE if OF
+> > > +	select CPUMASK_OFFSTACK
+> > >  	help
+> > >  	  Select this option to run Linux as a Hyper-V client operating
+> > >  	  system.
+> > > --
+> > > 1.8.3.1
 > > >
-> > > Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
-> > > Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
-> > > header is properly accounted for, and so the size is rounded up to a
-> > > page boundary, using the page size for which the kernel is built. Whi=
-le
-> > > w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
-> > > 64 Kbyte ring buffer, that's the smallest possible with that page siz=
-e.
-> > > It's still 128 Kbytes better than the current code.
-> > >
-> > > Cc: <stable@vger.kernel.org> # 5.15.x
-> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > > Reviewed-by: Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > ---
-> > > Changes in v2:
-> > > * Use SZ_16K instead of 16 * 1024
-> > > ---
-> > >  drivers/pci/controller/pci-hyperv.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/contro=
-ller/pci-
-> > hyperv.c
-> > > index 1eaffff40b8d..baadc1e5090e 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -465,7 +465,7 @@ struct pci_eject_response {
-> > >  =09u32 status;
-> > >  } __packed;
-> > >
-> > > -static int pci_ring_size =3D (4 * PAGE_SIZE);
-> > > +static int pci_ring_size =3D VMBUS_RING_SIZE(SZ_16K);
-> > >
-> > >  /*
-> > >   * Driver specific state.
-> > >
-> >=20
-> > Hi,
-> >=20
-> > You forgot to add #include <linux/sizes.h> for it.
-> >=20
-> > With that fixed:
-> >=20
-> > Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> >=20
+> >
+> > I'm not sure that enabling CPUMASK_OFFSTACK for Hyper-V
+> > guests is the right thing to do, as there's additional runtime
+> > cost when CPUMASK_OFFSTACK is enabled.  I agree that for
+> > the most general case, you want NR_CPUS to be 2048, which
+> > requires CPUMASK_OFFSTACK.  But it would be legitimate to
+> > build a kernel with NR_CPUS set to something like 64 or 256
+> > for a more limited Hyper-V guest use case, and to not want to
+> > incur the cost of CPUMASK_OFFSTACK.
+> >
+> > You could consider doing something like this:
+> >
+> > 	select CPUMASK_OFFSTACK if NR_CPUS > 512
 >=20
-> Fixed in v3.  I mis-interpreted your previous comment about
-> adding the #include "if needed".  It's not needed to compile
-> correctly, as sizes.h is indirectly included through some other
-> #include.  But it's better to directly #include what's needed
-> lest some unrelated change cause a failure.
+> Thanks for your review.
+>=20
+> This was my first thought as well, but for x86, NR_CPUS itself depends
+> on CPUMASK_OFFSTACK and this creates some kind of circular dependency
+> and doesn't work effectively.
+>=20
+> Here are few key points to note:
+>=20
+> 1. In ARM64 as well for enabling CPUMASK_OFFSTACK we need to enable
+>    DEBUG_PER_CPU_MAPS and that will have additional overhead.
+>    This dependency is for all the archs. There was an earlier attempt
+>    to decouple it: https://lore.kernel.org/lkml/20220412231508.32629-1-li=
+bo.chen@oracle.com/=20
+>=20
+> 2. However, for ARM64, NR_CPUS doesn't have dependency on CPUMASK_OFFSTAC=
+K.
+>    In ARM64 NR_CPUS is quite independent from any policy, we can choose a=
+ny
+>    value for NR_CPUS freely, things are simple. This problem specificaly
+>    to be solved for x86.
+>=20
+> 3. If we have to select more then 512 CPUs on x86, CPUMASK_OFFSTACK
+>    needto be enabled, so this additional runtime cost is unavoidable
+>    for NR_CPUS > 512. There is no way today to enable CPUMASK_OFFSTACK
+>    apart from enabling MAXSMP or DEBUG_PER_CPU_MAPS. Both of these
+>    options we don't want to use.
+>=20
+> I agree that we possibly don't want to enable this option for HyperV VMs
+> where NR_CPUS < 512. I have two thoughts here:
+>=20
+> 1. Enable it only for VTL platforms, as current requirement for minimal k=
+ernel
+>    is only for VTL platforms only.
+>=20
+> 2. Fix this for all of x86. I couldn't find any reson why CPUMASK_OFFSTAC=
+K
+>    dependency is there on x86 for having more than 512 CPUs. What is spec=
+ial
+>    in x86 to have this restriction ? If there is no reason we should rela=
+x
+>    the restriction of CPUMASK_OFFSTACK for NR_CPUs similar to ARM and oth=
+er
+>    archs.
+>=20
 
-Yes, we try include the headers we use in the .c file. I used "if needed"=
-=20
-because I didn't check if it was already among the #includes in the file.
+You've done some deeper research than I did. :-(  What a mess.
 
-Our tools are lacking to enforce/check a file has correct set of #includes=
-=20
-so it's currently based mostly on reviewers noticing something is wrong=20
-with #includes, hopefully some time in the future, the tools also catch=20
-up.
+ARM64 seems to have it right.  On x86, the dependency between NR_CPUS
+and CPUMASK_OFFSTACK seems to flow the wrong direction. I would think
+you would select NR_CPUS first, and then if the number is large, select
+CPUMASK_OFFSTACK.
 
+And the display of CPUMASK_OFFSTACK in config tools should not be
+dependent on DEBUG_PER_CPU_MAPS.   It should be easy to independently
+select CPUMASK_OFFSTACK (modulo architectures that don't support it).
+In the Libo Chen thread, I don't understand the reluctance to make
+CPUMASK_OFFSTACK independent of DEBUG_PER_CPU_MAPS.
 
---=20
- i.
+I don't have any great suggestions for the path forward. :-(  Maybe
+revive the Libo Chen thread, with a better justification for removing
+the dependency between CPUMASK_OFFSTACK and
+DEBUG_PER_CPU_MAPS?  Or at least clarify why the dependency
+should be kept?
 
---8323328-1499309722-1708339653=:1174--
+Michael
 
