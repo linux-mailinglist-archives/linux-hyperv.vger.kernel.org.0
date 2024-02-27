@@ -1,266 +1,156 @@
-Return-Path: <linux-hyperv+bounces-1595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1596-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4722C86695A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Feb 2024 05:26:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BD748688F9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Feb 2024 07:31:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0294283207
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Feb 2024 04:25:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F2831F234C9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Feb 2024 06:31:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09181199DC;
-	Mon, 26 Feb 2024 04:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A66D1E4B0;
+	Tue, 27 Feb 2024 06:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhUMw5zz"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="f7cSadiR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11020002.outbound.protection.outlook.com [52.101.85.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256311759F;
-	Mon, 26 Feb 2024 04:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708921558; cv=none; b=PqUXmsm+qWIe31ZqzOOyJ4y8DF9i/igOPkJeaavUKP9XK0kWS1bpjH11m9+P12KAy/xBn8ssDm95yThgEIv0mXa0+zdhv9AoYDZCmwuEaKtf9AkyKRNHvU7MzF4w1lwODifYkPEJnkiks3Psp9j87gN+VQF2nqKtspx1HO+0yUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708921558; c=relaxed/simple;
-	bh=v3SlkIW6y6ipn1NCWJZvMnmhDwH0Fh2zjcrmBtZ0vWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNTPKlzbZvQ50oNpDm49XaX80lVFKIu0REKx0MARwCjez2nT2X2bCmwTeOqSfg0QdqhPyhSdesKTANvzJbLg5T2UALuy/mkqbDw1Qv+LXe2jXvF79m0k2hhIQfqtdDhBFhx2zf9QO8p4dvHGtqyUNEY0RkJKH0zRGmdeyGAsy9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DhUMw5zz; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-787aca0b502so85563585a.1;
-        Sun, 25 Feb 2024 20:25:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708921556; x=1709526356; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DW6Gg9E4iphRs2T7njr0TuJitmVKKihxKcXnC4puSug=;
-        b=DhUMw5zzGr6ThqogwfYEY+SFnPv0YsGgobL0ItCp7cyZzJj/Yq7lAxmelVytHT3xhy
-         lTDDGlSJTmO8ebwvh5oIBIM76brt4PwuynPuCBrYWLH7yoXhpaJ/vB+yfM41E4ffPRqs
-         T3rhHPUTSTz0MO3rbhi4KYluhR8PdPAT/UCz3OtpG90g5m3UwLt1opQyQKsyyHlGmaBc
-         GauwvP7J+YNeJtkb8m/7wWMQsvMCtRIAKnzT3+86t1eWvOJagTxY4oKZeb4yh6AVBtQ7
-         4phTrP6LgLyuYECSpADufU+DTlFo2B+S1VVRsOOuXab9oFbOdi20IkiJQVo7f7S6uFL7
-         aWJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708921556; x=1709526356;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DW6Gg9E4iphRs2T7njr0TuJitmVKKihxKcXnC4puSug=;
-        b=DJeBEMwfEJczk8KK9JJ2eIRK3Gs9Z463TE/XV6J3vCiP9t3yGQbn/jgdg4gyzIIF2m
-         wkY9djPlzwRzqXB1Aod1MmYX6nlDiE1sLaa6h9TKnzKT6EbdfDHasrxzN25BPN6bMm3V
-         wtcSBkko0JVZRWLLVhjgE1vnHludy7ORh9VsK74eELjAJeX1/KJneyGcpTWd7UjR+SKI
-         M+jLwIXDoSBaWLTGKI7LeVF3hXldiQFC0rrV18hlJIIGUCH54QREXH51gf7ltiNLOIdi
-         xkrjudAk9k3VNd7mglnvQjLcp2NC1nFHKABMpIM0S8A4wtdwEMAKSI2NiwV3E7qlkxQP
-         YzVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUopUs1xIjeNpT2qH9O2k/BBWVyxumy0EY/0xlrC84GarMsWqW4LFZ+KDlML+Q14duGSxPB947CfYkHcGhPYSsFIBIS1S8pqFCvILqQHdOqxPBfs3txx4sQql81bxFiqDUlZo/WdOl5uzv
-X-Gm-Message-State: AOJu0Yx3YGG6hR9LxmUKhFJMH/j582s5qiLYupu4PmXeszgWrHynHatN
-	9V2J+euOhGFuApPbCo3UTnyWB42MHWubVABloHRALJr8OFOIri7D
-X-Google-Smtp-Source: AGHT+IGYaQcZ1vWogncOvxWsM9WKWJ+6gvzLlVFfgpW+6iUYYpa0BdswfIujonfVUEwjHkIfPJ3kNw==
-X-Received: by 2002:a05:620a:359:b0:787:6f72:2080 with SMTP id t25-20020a05620a035900b007876f722080mr7142934qkm.26.1708921556012;
-        Sun, 25 Feb 2024 20:25:56 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id q7-20020ae9e407000000b00787ba4095dfsm2095596qkc.32.2024.02.25.20.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 20:25:55 -0800 (PST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailauth.nyi.internal (Postfix) with ESMTP id 30DE327C005B;
-	Sun, 25 Feb 2024 23:25:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sun, 25 Feb 2024 23:25:55 -0500
-X-ME-Sender: <xms:0hLcZSpIruUxrsIZhXxsTAHp1cXx8ri1j2uPUuBRUT1aGvIl36eRtw>
-    <xme:0hLcZQqSuJrnoDBXKETvEErpVTxs4s_vgZ1XMvVLfB5h2-M7kJxSdFF9QqRPSgz5F
-    YIz1JXthXq6Ze-IXg>
-X-ME-Received: <xmr:0hLcZXOCY_iRRN9adBSHNc6jtvViOygW0yzs3iIR6ciKIbAXe16fh3aRJ2Z1nQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedugdejudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudff
-    iedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:0xLcZR5JeWoYCVt-AiVOWgGULFcdXKgKKxYsmGRvtBAf7YG5QAqxlA>
-    <xmx:0xLcZR7aQPXkQzLUSg_UD0UPDX2PHuI6LU2f8VKTHNghR1hziMOa8A>
-    <xmx:0xLcZRhvIkm-FhxBNHYXLiMce1h8Or_xgedGK2vsCzUoCcxiQREVbQ>
-    <xmx:0xLcZcay8pjfLjb86FaYIe0Nq4_GUDGxmwRD5yZ03hK-HGIIEpuYAA>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 25 Feb 2024 23:25:54 -0500 (EST)
-Date: Sun, 25 Feb 2024 20:25:20 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Calculate ring buffer size for
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE65256A;
+	Tue, 27 Feb 2024 06:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709015483; cv=fail; b=ref8/nFN7WcOS01JYXsS7UpcdTffLa0HgtwHXdyGC5P3EA53Swcuhs8gjW9zbW8jBJhGzB5EYFfcqJI4lAGN7e4+ckzbh4TXWpiMIyKeoLsPXKDDgo11Bd5mMLTuACTLkgmVAzkUFZ5Cs41gXlLqJcTCWa6sf94qHW6TuDv0tbQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709015483; c=relaxed/simple;
+	bh=Y4PYnzyg9Cx96k+tXM9MvLSH30N0m1uqJQul9BVVCkQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=loq+jaV2ZUN6J7Vtqh7w1Vda/SVcMmUbXIKg+vbTSAqmcsJRdCS7MBbLLNmlknjisJxYGXGyPaGL2+yIhMc2bwokTaMQrmeG+/APoolIrOcQrOjiHgegz6FEme918wgnwDqb3wrmZIN14LZhHUkepr7R5PLbzBpR9C4jesDIeo8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=f7cSadiR; arc=fail smtp.client-ip=52.101.85.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dFuAcgevbBNZEoPsXGUfE8FndXiQowrRVrPQoLIncpRPRo8WOLFTRLtaMhlikInwK78xG54hNyNu8Cp1JyrwEHMRU256WnHyokaLuNe+G1Y7Sd5F33LJRREbTKpK2EiSeSd8pC2iJkL9PsJg130h9BkjAfl3o7Qa1OulEGlwlWINIbEfcjyg3h4M/GY86ePFT7u5LAaLq2Dx4X1TcE6gHaicGFwnKxm/RiPYBRCh9L7dHFBe+Nzx71s2ppRXm5CBPz3lMGAZocWMHozuAwp43NhSMhairUeNSMNnwTxzOVmvFaXvYhTlHN1zU7ZCDfZ7SAZFhkTs/Y0r3/N1hWSngg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FaRa7BPmEVdtJ5Jo/WyzcxReFQyzeSv3Eqa5iQdXr7Q=;
+ b=b4WfsOyNG4PxVpffhwRYFqo1Lvg+e1Zjgk6gM45RwWXYaDtStGxQ5fkE/83bLQ8haQsmEfTQNkS9xdOhuFEvPZd6D2mM0LqXuAgoxuE0mcVbrFQgrxW6RFOkvHRcLmlboIPv6NXUMNJgHgU1zsSeB+gigak2We0cTG7kf9/FgJtVUhQEe3wqIMMivkjZMuH2HCdLQcT2FWOP06OZkMv6qAbfkbTqVZ75beR2SZHEv4WUYSEZlJwDeAxiyzvw+NwvaiKXvmkqOIGGudGOT+Oi87e/HBRDtkHInYkd1UzpjFTEZNIzp9fANNxNNPMbGCV/0rRTrw+Pg86vvQBQLjro4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FaRa7BPmEVdtJ5Jo/WyzcxReFQyzeSv3Eqa5iQdXr7Q=;
+ b=f7cSadiRROUS4wV6loB/gSSIIF7pBjb/XvBYjGU+KCMx6x8tAkiQ1vsySYKrtWawcbhsjLvBtpiC7aQhfdkqbcbi7g/kP36MsRQxqWCJgpRD6jRziYIZshG2daJN1u5no5fL6h7nu10qjN0YdeLv2c6BDxPTalBydADNbHtH1XA=
+Received: from DM4PR21MB3753.namprd21.prod.outlook.com (2603:10b6:8:a0::8) by
+ DM4PR21MB3106.namprd21.prod.outlook.com (2603:10b6:8:62::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7362.10; Tue, 27 Feb 2024 06:31:18 +0000
+Received: from DM4PR21MB3753.namprd21.prod.outlook.com
+ ([fe80::8c16:b5af:f882:825e]) by DM4PR21MB3753.namprd21.prod.outlook.com
+ ([fe80::8c16:b5af:f882:825e%6]) with mapi id 15.20.7339.022; Tue, 27 Feb 2024
+ 06:31:18 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: "mhklinux@outlook.com" <mhklinux@outlook.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>
+CC: Souradeep Chakrabarti <schakrabarti@microsoft.com>
+Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Calculate ring buffer size for
  more efficient use of memory
-Message-ID: <ZdwSsH9bz05XztOb@boqun-archlinux>
+Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Calculate ring buffer size for
+ more efficient use of memory
+Thread-Index: AQHaXkSzHJ3Ld4NiOUmx8Lf6f9+/XLEdzvSg
+Date: Tue, 27 Feb 2024 06:31:18 +0000
+Message-ID:
+ <DM4PR21MB3753FBF2578EA6264986EDC1BF592@DM4PR21MB3753.namprd21.prod.outlook.com>
 References: <20240213061959.782110-1-mhklinux@outlook.com>
- <20240220063007.GA17584@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <ZdThZUUmGhY2shrX@boqun-archlinux>
- <SN6PR02MB4157CF4A309971B21296D465D4502@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <20240213061959.782110-1-mhklinux@outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=828672ae-65c4-452e-ac4d-5ed3c1f3fa16;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-02-27T06:25:24Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR21MB3753:EE_|DM4PR21MB3106:EE_
+x-ms-office365-filtering-correlation-id: 7b17af1d-5368-4454-fc70-08dc375db4b0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ rirLPM2ljsbTuAPG6VmmUtET2FeV6lU99zJmierG7BqjNHQ+rg5ukWN5eDNRrHbosjlnD9f/eNjpfyzg0NoB5Wn8M6y1gio7zL/TCqnNVaX88VHG9CGu5eDjCPv36fGfi4ZE+gcJkFXOhXUYo6fr7CAyl9mXi/4JVjfqosgC9mPWeCO8nlMdFQORB6n4szPkzCVVjjRGb+GFTCJtErucwnyGWmuWEuTjH0/vXDNmk4K4oNh0XitKP1/Cu8uWFuTDQUvFMwpZeKVO0InjzJ9cQG1MvKES+iF+hBGO/+ph42BbXIxwijNi5tSHdxTxBh4QUg6d0is+mKFccooTQGMoB8v9ng+z2ltWIPSPuZc9ugkEB39fAxB9m22LrEsS/VFmsV0gJevxUyTjjeoft9h+Bv9spwypuBnkLG3//AMQ0FcnS5hA5LQtbfIIGBBfq//7xcoTF1UJ1XYj3F7mGIVBEx0axEwYXlODlBzCBcDaeRdz7/0n8yZcuBzvHLUrnBNZhR9TPIilPUhYXVcn0Xqms4B48pwGfyVhH/shFCUUGmyvUCndnjpIgXYUjIZ3zffQQgz1wGvxwdesytsHQciWTGEXP86wdlP8NUzVCwsUELzNdhnheTQvWfos/3iclogypWyUCCxZydjORd/t2p+Misr3AAHDS5lhUM28Vl5EsQE=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR21MB3753.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?S1pivDOwWEQURTCpUOCT6XUZv+vURHve4BgkIrDGWqL627BnCSsLELYsA80z?=
+ =?us-ascii?Q?usZsH884qkqPSfkNROWj6IUoVy0HzmNYYVjRVz4RSIQEZ/ua9hx7ol5URmF0?=
+ =?us-ascii?Q?UJCb73QQtu6r5qkFqNkjxziyAzJ9NLjBPU9QPwkH30RbPnc8nqi/qoXViGt0?=
+ =?us-ascii?Q?pM2FVn0si6xASXyndoywjTtnAaxZ/e/Jo9s2higKHpy1p0LfdGzI893sJVxp?=
+ =?us-ascii?Q?Bsb+RdFughuazAUNnm4ewBDd4RZ8saROhNdl2wN9wJsCez6Izyzs4eIHpSvo?=
+ =?us-ascii?Q?oHQ2R4F5nF0Mub2Lfi4Zyptg2riIlBZrgGv3GWyCd8PQLnaexM8b2+VzQPjp?=
+ =?us-ascii?Q?Hx/2h6yf7cUnbTjwutR8tXiEcWVvJzMm4nQHdWxecxDWd6SOjZIN198a+4Nf?=
+ =?us-ascii?Q?ggXvNGTfODM3SkgrdYjn/Lwfqpq9Vh+zGvoEViVWvzyUU5J2d/oi72huezzA?=
+ =?us-ascii?Q?uYKK+rUHaWkB1hHnPr1c7jR+ilExlC+rHdTsYHn4bmcxtUGyEky4yv4ol9Vb?=
+ =?us-ascii?Q?YybSV8flhsoHc2sko7BwqHvB7RSJadqa9KyJxT/48jg9FMXkL2+vn4lj0uWf?=
+ =?us-ascii?Q?lez2+GrDjFWVppWcrJQFechvuY3VFDdE/ku1ubgGcqGNzVc3GWy7BboTD9Cu?=
+ =?us-ascii?Q?tuCopYYypre2ZrpKkvMJ/WRqjTwU+gQi65x/XNubesp7I6GzIsO9DADcnxa1?=
+ =?us-ascii?Q?7mPztUWWKUR+KHekaTLhckdHcyCf9ZbxTm8REZxeV6qLohoD/kjdhyzoYVQx?=
+ =?us-ascii?Q?WX4PzPNWjO/oVASDx2KbTvFuthh1CaIwBnW6lmWkQ/S8abKk7B8faxJpGrXH?=
+ =?us-ascii?Q?ppob6uH5GzgBbNtLx40tfME7GeNEBzbfXJS6wGNaKBN1SC/7dtuGdJwVkJKt?=
+ =?us-ascii?Q?GxH19/A/VmAin3flj7xezA6jiVvfb5kOJIzhinF8tAVs3qX16d9GJwLtCeLe?=
+ =?us-ascii?Q?tYRHdnQTFmIZjlPaqnHQwnCRXbNVW1oBQrzAgD7cky2Dr2HGmFfZa4lynckV?=
+ =?us-ascii?Q?9JVR+kGc/cN3CwlIhT3SjGzRiLNzfOz19Now2AV/KchCjA90EVrW+2KQAI1v?=
+ =?us-ascii?Q?qru1xUCXGVW5Q9DyDYOaxMkgfv0wTWcXTm8ymYzFAob9AeGFTruJ0NKX5ufa?=
+ =?us-ascii?Q?tuW21nE/lKvE9NmT4I+NfMsPKPGUBgfrQmAAFDgRNuXQRAwBgZYrNG2LldOQ?=
+ =?us-ascii?Q?gMOPyt3JnNc+/Z5jp9v6hG7bxPUFbpFY2nUAgvyHhgyXteaiuInkqO2Mq+VW?=
+ =?us-ascii?Q?6r8ghSXgkQD954/QtvTDVcOdgztD3JPV5q2ilOJLNpHtjv9RJHf8Ke8/hMMh?=
+ =?us-ascii?Q?AUFxkSm9rIEuBH6CoDnYd8lMOpcujHPr1l0+7aMxRrOM8D6YNwevzsFuKNY1?=
+ =?us-ascii?Q?cYwFNjiN2rNeDLnEu5trjOv0U8gt7kdGdq//h3RJkVw2+TWpJ6GFPVIRSw0g?=
+ =?us-ascii?Q?6hWFe8TYQzRlY8mDdbCc+LsFCi28YS4494iD5MBxwje43NQaYi26rc1NdAsq?=
+ =?us-ascii?Q?tzY8qmo5tx11jIcxLBMBvh8qnxSLN4ccq/b5J9Lh5+ZGpAtiJMSis86eh0wk?=
+ =?us-ascii?Q?ZfVLUlwr7tfjQTbQlbc=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157CF4A309971B21296D465D4502@SN6PR02MB4157.namprd02.prod.outlook.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR21MB3753.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b17af1d-5368-4454-fc70-08dc375db4b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2024 06:31:18.2736
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WxkrcUyap2O3DEmSsOt2F4Jw+n2ZpQ8GyeiDpvluJ0t2tYtIHXebCY0bojXwWgh0ArDtIqemJir4/GFqac8Q5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3106
 
-On Tue, Feb 20, 2024 at 06:15:52PM +0000, Michael Kelley wrote:
-> From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, February 20, 2024 9:29 AM
-> > 
-> > On Mon, Feb 19, 2024 at 10:30:07PM -0800, Saurabh Singh Sengar wrote:
-> > > On Mon, Feb 12, 2024 at 10:19:59PM -0800, mhkelley58@gmail.com wrote:
-> > > > From: Michael Kelley <mhklinux@outlook.com>
-> > > >
-> > > > The VMBUS_RING_SIZE macro adds space for a ring buffer header to the
-> > > > requested ring buffer size.  The header size is always 1 page, and so
-> > > > its size varies based on the PAGE_SIZE for which the kernel is built.
-> > > > If the requested ring buffer size is a large power-of-2 size and the header
-> > > > size is small, the resulting size is inefficient in its use of memory.
-> > > > For example, a 512 Kbyte ring buffer with a 4 Kbyte page size results in
-> > > > a 516 Kbyte allocation, which is rounded to up 1 Mbyte by the memory
-> > > > allocator, and wastes 508 Kbytes of memory.
-> > > >
-> > > > In such situations, the exact size of the ring buffer isn't that important,
-> > > > and it's OK to allocate the 4 Kbyte header at the beginning of the 512
-> > > > Kbytes, leaving the ring buffer itself with just 508 Kbytes. The memory
-> > > > allocation can be 512 Kbytes instead of 1 Mbyte and nothing is wasted.
-> > > >
-> > > > Update VMBUS_RING_SIZE to implement this approach for "large" ring buffer
-> > > > sizes.  "Large" is somewhat arbitrarily defined as 8 times the size of
-> > > > the ring buffer header (which is of size PAGE_SIZE).  For example, for
-> > > > 4 Kbyte PAGE_SIZE, ring buffers of 32 Kbytes and larger use the first
-> > > > 4 Kbytes as the ring buffer header.  For 64 Kbyte PAGE_SIZE, ring buffers
-> > > > of 512 Kbytes and larger use the first 64 Kbytes as the ring buffer
-> > > > header.  In both cases, smaller sizes add space for the header so
-> > > > the ring size isn't reduced too much by using part of the space for
-> > > > the header.  For example, with a 64 Kbyte page size, we don't want
-> > > > a 128 Kbyte ring buffer to be reduced to 64 Kbytes by allocating half
-> > > > of the space for the header.  In such a case, the memory allocation
-> > > > is less efficient, but it's the best that can be done.
-> > > >
-> > > > Fixes: c1135c7fd0e9 ("Drivers: hv: vmbus: Introduce types of GPADL")
-> > > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > > > ---
-> > > >  include/linux/hyperv.h | 22 +++++++++++++++++++++-
-> > > >  1 file changed, 21 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> > > > index 2b00faf98017..6ef0557b4bff 100644
-> > > > --- a/include/linux/hyperv.h
-> > > > +++ b/include/linux/hyperv.h
-> > > > @@ -164,8 +164,28 @@ struct hv_ring_buffer {
-> > > >  	u8 buffer[];
-> > > >  } __packed;
-> > > >
-> > > > +
-> > > > +/*
-> > > > + * If the requested ring buffer size is at least 8 times the size of the
-> > > > + * header, steal space from the ring buffer for the header. Otherwise, add
-> > > > + * space for the header so that is doesn't take too much of the ring buffer
-> > > > + * space.
-> > > > + *
-> > > > + * The factor of 8 is somewhat arbitrary. The goal is to prevent adding a
-> > > > + * relatively small header (4 Kbytes on x86) to a large-ish power-of-2 ring
-> > > > + * buffer size (such as 128 Kbytes) and so end up making a nearly twice as
-> > > > + * large allocation that will be almost half wasted. As a contrasting example,
-> > > > + * on ARM64 with 64 Kbyte page size, we don't want to take 64 Kbytes for the
-> > > > + * header from a 128 Kbyte allocation, leaving only 64 Kbytes for the ring.
-> > > > + * In this latter case, we must add 64 Kbytes for the header and not worry
-> > > > + * about what's wasted.
-> > > > + */
-> > > > +#define VMBUS_HEADER_ADJ(payload_sz) \
-> > > > +	((payload_sz) >=  8 * sizeof(struct hv_ring_buffer) ? \
-> > > > +	0 : sizeof(struct hv_ring_buffer))
-> > > > +
-> > > >  /* Calculate the proper size of a ringbuffer, it must be page-aligned */
-> > > > -#define VMBUS_RING_SIZE(payload_sz) PAGE_ALIGN(sizeof(struct hv_ring_buffer) + \
-> > > > +#define VMBUS_RING_SIZE(payload_sz) PAGE_ALIGN(VMBUS_HEADER_ADJ(payload_sz) + \
-> > > >  					       (payload_sz))
-> > 
-> > I generally see the point of this patch, however, it changes the
-> > semantics of VMBUS_RING_SIZE() (similiar as Saurabh mentioned below),
-> > before VMBUS_RING_SIZE() will give you a ring buffer size which has at
-> > least "payload_sz" bytes, but after the change, you may not get "enough"
-> > bytes for the vmbus ring buffer.
-> 
-> Storvsc and netvsc were previously not using VMBUS_RING_SIZE(),
-> so space for the ring buffer header was already being "stolen" from
-> the specified ring size.  But if this new version of VMBUS_RING_SIZE()
-> still allows the ring buffer header space to be "stolen" from the
-> large-ish ring buffers, I don't see that as a problem.  The ring buffer
-> sizes have always been a swag value for the low-speed devices with
-> small ring buffers.  For the high-speed devices (netvsc and storvsc)
-> the ring buffer sizes have been somewhat determined by perf
-> measurements, but the ring buffers are much bigger, so stealing
-> a little bit of space doesn't have any noticeable effect.  Even with
-> the perf measurements, the sizes aren't very exact. Performance
-> just isn't sensitive to the size of the ring buffer except at a gross level.
-> 
+> From: mhkelley58@gmail.com <mhkelley58@gmail.com>
+> Sent: Monday, February 12, 2024 10:20 PM
+>  [...]
+> Fixes: c1135c7fd0e9 ("Drivers: hv: vmbus: Introduce types of GPADL")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
 
-Fair enough.
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-> > 
-> > One cause of the waste memory is using alloc_pages() to get physical
-> > continuous, however, after a quick look into GPADL, looks like it also
-> > supports uncontinuous pages. Maybe that's the longer-term solution?
-> 
-> Yes, that seems like a desirable long-term solution.  While the GPADL
-> code handles vmalloc memory correctly (because the netvsc send and
-> receive buffers are vmalloc memory), hv_ringbuffer_init() assumes
-> physically contiguous memory.  It would need to use vmalloc_to_page()
-> in building the pages_wraparound array instead of just indexing into
-> the struct page array.  But that's an easy fix.  Another problem is the
-> uio_hv_generic.c driver, where hv_uio_ring_mmap() assumes a physically
-> contiguous ring. Maybe there's a straightforward way to fix it as well,
-> but it isn't immediately obvious to me.
-> 
-> Using vmalloc memory for ring buffers has another benefit as well.
-> Today, adding a new NIC to a VM that has been running for a while
-> could fail because of not being able to allocate 1 Mbyte contiguous
-> memory for the ring buffers used by each VMBus channel.  There
-> could be plenty of memory available, but fragmentation could prevent
-> getting 1 Mbyte contiguous.  Using vmalloc'ed ring buffers would
-> solve this problem.
-> 
+The info below would need to be added:
 
-Yep, that will be ideal.
+Fixes: 6941f67ad37d ("hv_netvsc: Calculate correct ring size when PAGE_SIZE=
+ is not 4 Kbytes")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218502
 
-Regards,
-Boqun
-
-> Michael
-> 
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > > >
-> > > >  struct hv_ring_buffer_info {
-> > >
-> > > Thanks for the patch.
-> > > It's worth noting that this will affect the size of ringbuffer calculation for
-> > > some of the drivers: netvsc, storvsc_drv, hid-hyperv, and hyperv-keyboard.c.
-> > > It will be nice to have this comment added in commit for future reference.
-> > >
-> > > Looks a good improvement to me,
-> > > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > >
-> > > > --
-> > > > 2.25.1
-> > > >
 
