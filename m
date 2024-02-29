@@ -1,181 +1,179 @@
-Return-Path: <linux-hyperv+bounces-1598-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1599-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5F4186A87A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Feb 2024 07:43:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF20F86BCF7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Feb 2024 01:45:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21D8E1F25D96
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Feb 2024 06:43:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EC831F23D2F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Feb 2024 00:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E15F62374C;
-	Wed, 28 Feb 2024 06:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5220B15E9C;
+	Thu, 29 Feb 2024 00:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A2pGNn3+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKbBTXkT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4672522638;
-	Wed, 28 Feb 2024 06:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD342125CA;
+	Thu, 29 Feb 2024 00:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709102621; cv=none; b=mK3h5T+D0u94MRB176g3g6VLAYm6fEEILE3EVdbcbpw7wH4t+T0eLDMND7sDGqSVFT9B69VbbT5imCMtWlu2OsDscnX10QOsrsgGpb+LWWYW8+RA3oQRhPKWgDlVkEJ5uNCdC4I1wSY5gYB/OgSyLeXoiJ2/eHFB4JMrFhMlURA=
+	t=1709167547; cv=none; b=g4EcDwMd9BdJU1vr63+3gr+3gE6z/s7+HszoXkz7e2Tc8pFmfZyH84r4Mugf+0/NSawV+SLP+Np4lkQf85LrYBEa+mF2cqR3ykMmpegKca61HRSvZibu7DeRyvrAoKHL9b9iYh7tviJ8GbiKf4NhKv+PexBmVGDqawrITZ/bZrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709102621; c=relaxed/simple;
-	bh=Kq1Ae7/0Yd/vncOJ774Xuv/NHFHZQvwgiW47Ijr+Mo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vf2VMHxCzh4Xw2LK9T8dCQk0pHyuA688VnpiVNSlsJuw8Ww9qj3+1eMFOUL/pUnTkLMewF0IdCryy0otj3CvgKLMbYErGvcQZXg02UOUV9jA85RpTwN0MEdtHJiu5/dahp1+JPNJsjEvHrtFBgltp17wSwuol95GyX3vMTzinfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=A2pGNn3+; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id B4FBD20B74C0; Tue, 27 Feb 2024 22:43:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B4FBD20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709102619;
-	bh=tmubg1SbFwAIrQWmTiq/y8+jK/3FCZfPgB+eI0chJE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A2pGNn3+Uc5rAZp8xS/+vBI7P7XxUqhLENU2bkV9fWXFhJxys4E3RY34Vfrr/zMdz
-	 q0ANyCINzUZo1/Okbjrj9WPv9RGYhySvtSrx3Y9wTpOmOw1rVK8F30fucPFU+nxcE0
-	 GA8EuUltFhMU3CyeRZWyz+7krjwNPXzwfwg+P/Es=
-Date: Tue, 27 Feb 2024 22:43:39 -0800
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Ani Sinha <anisinha@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Olaf Hering <olaf@aepfle.de>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v8] hv/hv_kvp_daemon:Support for keyfile based connection
- profile
-Message-ID: <20240228064339.GA10916@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1696847920-31125-1-git-send-email-shradhagupta@linux.microsoft.com>
- <A8905E07-2D01-46D6-A40D-C9F7461393EB@redhat.com>
- <CAK3XEhMzLvxTbP+sFjD7btfdjw5uxyAccdT09d4hcw5hkCKXHQ@mail.gmail.com>
- <CAK3XEhOn+k7U88sMF2tXGSyhYvAL9u17sw6qvomL=oYESRMQkw@mail.gmail.com>
- <20240105054153.GA18258@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <CAK3XEhNRuFq=x22q011uthNdrzWzTeFzzEoNX0ZjWfcivfhyCw@mail.gmail.com>
+	s=arc-20240116; t=1709167547; c=relaxed/simple;
+	bh=mL0+LWudGeaaHDI+xSeK69jieRGtjTjyv0Mt3l1ud8M=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=mKQpeVskQ90AUnZzgRukcxKObOOwzAudBrU+kUu85XxSdv2kLiapN/qS0YxHtQiMWJwBc26UMm6hAovWEPWs0wZjRWyexe2GSY0UvN9+pSa/phek95YQt9N62eAUelbp5lusuyrAkbs6ee21T4H+bKL4c7+K8BujNBYi3Y1AMvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKbBTXkT; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc96f64c10so3935445ad.1;
+        Wed, 28 Feb 2024 16:45:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709167545; x=1709772345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zKxWzZR1Bl8LnE+v4HnmwqndSh4isnczSEaDQ8WzU6k=;
+        b=mKbBTXkTd9SfeiBpfiX+6vi+rHegybw7khb7fM21FljAvX22YtYTf41SHnkM1PNtjx
+         j2EkpA4VdmTXbHSK/gqdNf3WpaikPiPXkZoTGP8S0aDy/45YpxHLFo+RE9h/tmTkKL64
+         33W1oIteOW5sTlcRKLhafDJkoBWHoKnNT3pcCncShHqsBUaFduasFAWmuqKMdMBi6L7O
+         qruuVXxV2HSKMSN1mQBTEfeLGBFTp/+pknDwo7m2Dh81LeqwA9U/IIbseynoX6eolBnt
+         FfUwMsvQA2ZfW8dGOTgYY7i+Y6962pQmILilKJl4sGmHH2JriY9jzW3RrhRlBQm0ECKT
+         zjCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709167545; x=1709772345;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zKxWzZR1Bl8LnE+v4HnmwqndSh4isnczSEaDQ8WzU6k=;
+        b=KFyqZoa2gi40cr2TWjIBmm469R1K+YQWbx/Lt7RKiX1+K6AntTPUvIx43lAyi/bRmg
+         faFVgn/D2N3oYj1MCNwyPnL89K6cc37grFsks6f7BvvrgdSOFTDe0+dlbPnLKnEFCKtP
+         FkSrlj6hDPJTbF58I/moKWeqkGoGZDvaXr1la1ggfExm3UepK/4lQl25ZsJ22xS62P9t
+         VBCbBGPxsY/Weq5mV2ABKcN/7gxsSppbvn1vfZ1HkYpq9BvM0MT19jY4gc6HI0L0Gi+d
+         /WfZLfVk0LHM2bRQGPoeOm3d2MlpEUweYmltWCEgOoZkUYazvdIFmnYn32LsEjaSK4n4
+         2pTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVitp5Lem294Dta3URgCrB3lBwQyGqQjR7+V7z/MEZ0xAoKAvs7IvU+KwzbYA/hmzDlIrk+zus3sU0wksfQEN/czzJrAi1p297pmNrp/TkZJHYecqjaICooY5g7jTNcQm1ZtpDyX0F6z4Ly
+X-Gm-Message-State: AOJu0Yy40XXhwp96CdPUcwbc8Fldqc03aAGdigo7YJcfbP0MfwS9Jx2e
+	+Kt1RKlgTgLe7PvkZeIPfW7SwOc68r+SHrBXC24maU4D69V8KhHE
+X-Google-Smtp-Source: AGHT+IEsURmdbvyFDBIimxZQbtTtSxcwklzH2T2C/rOEbg+lYw12Mgs53IuqqfM2xLSpvjjomNmgpQ==
+X-Received: by 2002:a17:902:a70c:b0:1dc:a844:a38b with SMTP id w12-20020a170902a70c00b001dca844a38bmr580579plq.67.1709167544830;
+        Wed, 28 Feb 2024 16:45:44 -0800 (PST)
+Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
+        by smtp.gmail.com with ESMTPSA id t3-20020a170902b20300b001db5e807cd2sm70418plr.82.2024.02.28.16.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 16:45:44 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	boqun.feng@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH v2 1/1] Drivers: hv: vmbus: Calculate ring buffer size for more efficient use of memory
+Date: Wed, 28 Feb 2024 16:45:33 -0800
+Message-Id: <20240229004533.313662-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK3XEhNRuFq=x22q011uthNdrzWzTeFzzEoNX0ZjWfcivfhyCw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 
-Hi Ani,
+From: Michael Kelley <mhklinux@outlook.com>
 
-This patch should be out for review by mid next week.
+The VMBUS_RING_SIZE macro adds space for a ring buffer header to the
+requested ring buffer size.  The header size is always 1 page, and so
+its size varies based on the PAGE_SIZE for which the kernel is built.
+If the requested ring buffer size is a large power-of-2 size and the header
+size is small, the resulting size is inefficient in its use of memory.
+For example, a 512 Kbyte ring buffer with a 4 Kbyte page size results in
+a 516 Kbyte allocation, which is rounded to up 1 Mbyte by the memory
+allocator, and wastes 508 Kbytes of memory.
 
-Thanks and Regards,
-Shradha.
-On Sat, Feb 24, 2024 at 09:48:17PM +0530, Ani Sinha wrote:
-> On Fri, 5 Jan, 2024, 11:12 am Shradha Gupta, <
-> shradhagupta@linux.microsoft.com> wrote:
-> 
-> > On Sat, Dec 23, 2023 at 01:35:26PM +0530, Ani Sinha wrote:
-> > > On Sat, Dec 23, 2023 at 12:43???PM Ani Sinha <anisinha@redhat.com>
-> > wrote:
-> > > >
-> > > > On Fri, Oct 13, 2023 at 3:06???PM Ani Sinha <anisinha@redhat.com>
-> > wrote:
-> > > > >
-> > > > >
-> > > > >
-> > > > > > On 09-Oct-2023, at 4:08 PM, Shradha Gupta <
-> > shradhagupta@linux.microsoft.com> wrote:
-> > > > > >
-> > > > > > Ifcfg config file support in NetworkManger is deprecated. This
-> > patch
-> > > > > > provides support for the new keyfile config format for connection
-> > > > > > profiles in NetworkManager. The patch modifies the hv_kvp_daemon
-> > code
-> > > > > > to generate the new network configuration in keyfile
-> > > > > > format(.ini-style format) along with a ifcfg format configuration.
-> > > > > > The ifcfg format configuration is also retained to support easy
-> > > > > > backward compatibility for distro vendors. These configurations are
-> > > > > > stored in temp files which are further translated using the
-> > > > > > hv_set_ifconfig.sh script. This script is implemented by individual
-> > > > > > distros based on the network management commands supported.
-> > > > > > For example, RHEL's implementation could be found here:
-> > > > > >
-> > https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s/hv_set_ifconfig.sh
-> > > > > > Debian's implementation could be found here:
-> > > > > >
-> > https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_set_ifconfig
-> > > > > >
-> > > > > > The next part of this support is to let the Distro vendors consume
-> > > > > > these modified implementations to the new configuration format.
-> > > > > >
-> > > > > > Tested-on: Rhel9(Hyper-V, Azure)(nm and ifcfg files verified)
-> > > > >
-> > > > > Was this patch tested with ipv6? We are seeing a mix of ipv6 and
-> > ipv4 addresses in ipv6 section:
-> > > >
-> > > > There is also another issue which is kind of a design problem that
-> > > > existed from the get go but now is exposed since keyfile support was
-> > > > added.
-> > > > Imagine we configure both ipv6 and ipv4 and some interfaces have ipv4
-> > > > addresses and some have ipv6.
-> > > > getifaddres() call in kvp_get_ip_info() will return a linked list per
-> > > > interface. The code sets ip_buffer->addr_family based on the address
-> > > > family of the address set for the interface. We use this to determine
-> > > > which section in the keyfile to use, ipv6 or ipv4. However, once we
-> > > > make this decision, we are locked in. The issue here is that
-> > > > kvp_process_ip_address() that extracts the IP addresses concatenate
-> > > > the addresses in a single buffer separating the IPs with ";". Thus
-> > > > across interfaces, the buffer can contain both ipv4 and ipv6 addresses
-> > > > separated by ";" if both v4 and v6 are configured. This is problematic
-> > > > as the addr_family can be either ipv4 or ipv6 but not both.
-> > > > Essentially, we can have a situation that for a single addr_family in
-> > > > hv_kvp_ipaddr_value struct, the ip_addr member can be a buffer
-> > > > containing both ipv6 and ipv4 addresses. Notice that
-> > > > process_ip_string() handles this by iterating through the string and
-> > > > for each ip extracted, it individually determines if the IP is a v6 or
-> > > > a v4 and adds "IPV6ADDR" or "IPADDR" to the ifcfg file accordingly.
-> > > > process_ip_string_nm() does not do that and solely makes the
-> > > > determination based on is_ipv6 values which is based on a single
-> > > > addr_family value above. Thus, it cannot possibly know whether the
-> > > > specific IP address extracted from the string is a v4 or v6. Unlike
-> > > > for ifcfg files, fir nm keyfiles, we need to add v4 and v6 addresses
-> > > > in specific sections and we cannot mix the two. So we need to make two
-> > > > passes. One for v4 and one for v6 and then add IPs in the respective
-> > > > sections.
-> > > >
-> > > > This issue needs to be looked into and unless it's resolved, we cannot
-> > > > support both ipv4 and ipv6 addresses at the same time.
-> > >
-> > > In the short term, we should probably do this to avoid the mismatch :
-> > >
-> > > diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> > > index 318e2dad27e0..b77c8edfe663 100644
-> > > --- a/tools/hv/hv_kvp_daemon.c
-> > > +++ b/tools/hv/hv_kvp_daemon.c
-> > > @@ -1216,6 +1216,9 @@ static int process_ip_string_nm(FILE *f, char
-> > > *ip_string, char *subnet,
-> > >                                                        subnet_addr,
-> > >                                                        (MAX_IP_ADDR_SIZE
-> > *
-> > >                                                         2))) {
-> > > +               if (is_ipv6 == is_ipv4((char*) addr))
-> > > +                   continue;
-> > > +
-> > >                 if (!is_ipv6)
-> > >                         plen = kvp_subnet_to_plen((char *)subnet_addr);
-> > >                 else
-> > >
-> > > But this is really a short term hack.
-> > Thanks for bringing this up Ani. I will try to fix this in a new patch
-> > (would get the new testcases added in our suite as well)
-> >
-> 
-> Has there been any progress on this front?
-> 
-> 
-> >
+In such situations, the exact size of the ring buffer isn't that important,
+and it's OK to allocate the 4 Kbyte header at the beginning of the 512
+Kbytes, leaving the ring buffer itself with just 508 Kbytes. The memory
+allocation can be 512 Kbytes instead of 1 Mbyte and nothing is wasted.
+
+Update VMBUS_RING_SIZE to implement this approach for "large" ring buffer
+sizes.  "Large" is somewhat arbitrarily defined as 8 times the size of
+the ring buffer header (which is of size PAGE_SIZE).  For example, for
+4 Kbyte PAGE_SIZE, ring buffers of 32 Kbytes and larger use the first
+4 Kbytes as the ring buffer header.  For 64 Kbyte PAGE_SIZE, ring buffers
+of 512 Kbytes and larger use the first 64 Kbytes as the ring buffer
+header.  In both cases, smaller sizes add space for the header so
+the ring size isn't reduced too much by using part of the space for
+the header.  For example, with a 64 Kbyte page size, we don't want
+a 128 Kbyte ring buffer to be reduced to 64 Kbytes by allocating half
+of the space for the header.  In such a case, the memory allocation
+is less efficient, but it's the best that can be done.
+
+While the new algorithm slightly changes the amount of space allocated
+for ring buffers by drivers that use VMBUS_RING_SIZE, the devices aren't
+known to be sensitive to small changes in ring buffer size, so there
+shouldn't be any effect.
+
+Fixes: c1135c7fd0e9 ("Drivers: hv: vmbus: Introduce types of GPADL")
+Fixes: 6941f67ad37d ("hv_netvsc: Calculate correct ring size when PAGE_SIZE is not 4 Kbytes")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218502
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Tested-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+---
+Changes in v2:
+* Updated the commit text [Saurabh Sengar]
+* Added the second Fixes: tag and Closes: tag [Dexuan Cui]
+* Added Cc: stable@vger.kernel.org tag
+* Added Reviewed-by: and Tested-by: tags
+* No changes to the code
+
+ include/linux/hyperv.h | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 2b00faf98017..6ef0557b4bff 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -164,8 +164,28 @@ struct hv_ring_buffer {
+ 	u8 buffer[];
+ } __packed;
+ 
++
++/*
++ * If the requested ring buffer size is at least 8 times the size of the
++ * header, steal space from the ring buffer for the header. Otherwise, add
++ * space for the header so that is doesn't take too much of the ring buffer
++ * space.
++ *
++ * The factor of 8 is somewhat arbitrary. The goal is to prevent adding a
++ * relatively small header (4 Kbytes on x86) to a large-ish power-of-2 ring
++ * buffer size (such as 128 Kbytes) and so end up making a nearly twice as
++ * large allocation that will be almost half wasted. As a contrasting example,
++ * on ARM64 with 64 Kbyte page size, we don't want to take 64 Kbytes for the
++ * header from a 128 Kbyte allocation, leaving only 64 Kbytes for the ring.
++ * In this latter case, we must add 64 Kbytes for the header and not worry
++ * about what's wasted.
++ */
++#define VMBUS_HEADER_ADJ(payload_sz) \
++	((payload_sz) >=  8 * sizeof(struct hv_ring_buffer) ? \
++	0 : sizeof(struct hv_ring_buffer))
++
+ /* Calculate the proper size of a ringbuffer, it must be page-aligned */
+-#define VMBUS_RING_SIZE(payload_sz) PAGE_ALIGN(sizeof(struct hv_ring_buffer) + \
++#define VMBUS_RING_SIZE(payload_sz) PAGE_ALIGN(VMBUS_HEADER_ADJ(payload_sz) + \
+ 					       (payload_sz))
+ 
+ struct hv_ring_buffer_info {
+-- 
+2.25.1
+
 
