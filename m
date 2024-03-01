@@ -1,148 +1,169 @@
-Return-Path: <linux-hyperv+bounces-1628-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1629-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83DFE86DE39
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Mar 2024 10:27:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C72E86DFC9
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Mar 2024 12:04:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B419C1C20E8D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Mar 2024 09:27:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 531C6284B63
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Mar 2024 11:04:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3BF6A33C;
-	Fri,  1 Mar 2024 09:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B836BFD0;
+	Fri,  1 Mar 2024 11:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZHY/nx0l"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4CD6BB21;
-	Fri,  1 Mar 2024 09:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B4A6BFC6;
+	Fri,  1 Mar 2024 11:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709285202; cv=none; b=e62GUgS78jEM6BKLfST2m6JYmuMhQ6EivEvWY9ZBuAQ3lQmpg9Y5tirEl8eztALZhCho6UsrYR7CiiNFxl1urJK7DVFcfK82HY0sx5Me4CclbclAMayNYiB5VxcAIIZ0wUZX6j5KxcB5v2cRqX97JBJPTJrYyrYoxu8bTp4i2bo=
+	t=1709291043; cv=none; b=WBYVSDCGdY30qz29pcUwm24q3UEWw2i59/VreB7XvxLS16keiFskEuAIEStnsDVJZdpZiJSGVq5fW6AYteogAF+B7t8DrAvkZsjVqInm8L1z4JYbd2RH9plmEN8+l0+Me4T5JoM6yRmqbFiA4am0X+W2WlrN9V0tGWzHApVE2vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709285202; c=relaxed/simple;
-	bh=0wdFpKbEyNhuu/RpjYvuz8KPZKT0kttiGp+cGiKwHZk=;
+	s=arc-20240116; t=1709291043; c=relaxed/simple;
+	bh=jNe/Uxf2dtNJ+TSKuJ5UUvXN6Zva3VEg28Sf51IxPB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uq1Uhv/kX4HOYZfg2hSTmyY5DZtbb94XbzEPjtnO78rFUI/jWwbWzLhTutYhh9QfQcpkEdLCYoGOZWBLdj5eM1lGMRjupXZx1CrUqcQKdj1DUuEsk8sxRjzJeYxrIc/gqhfjtkpy9NdqR2hCVC/9dtJBfC9BY6D/bMzu9biuVcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso1429749a12.3;
-        Fri, 01 Mar 2024 01:26:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709285201; x=1709890001;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7fp76SLNrOitLz2IPJZxtYaUARyA39f42XEHvT3cwYM=;
-        b=wrjuv3Wk9FR/qzOMrvkBV0U6QMzH5WI7lDVlldaTvJWOaD3jqq3UxdtKAaY4Jc40TN
-         3llrQ+Ka9uGMkYxulCTW+3lNz9ZDIJqh5GTnKOS/PXfY9b5cXY0+LPvQ/iDxPn9Gz4Ie
-         9UBnHmhPXl38olLNqUQTHQcK5fcEu+PKAuuN75GItuJAufhjMMMtgmOLyJwiA7yiUTkv
-         3Z777iBLYVu4dIrbbKQ5adrDD+P3kKt0GGKyGL0F64pXH4tWD9DQ9L4nEe5F5i6Cndqv
-         dWjo8oT7NAR14xkxcDTZR9vq7ToDyvitTS46Z/zPwXT9+Jg3Z1RNNotdO58EG6jjibdj
-         jXAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyAUSugSMcnDGMbY8YXlwSSzzfpejMofz9LLlv+aYn9QmY77cRxNo85zkzbrC3sDm1H5hGrWOKFQ7qM0zzJyewJOb7hUUHpMpgCGqHVxVn0xffC4BQigRP9PKcCeuMnCur3j+nnNP/d5fySnyc93DY6TxXFQvvURSSWpnuFzx3Wdy6
-X-Gm-Message-State: AOJu0Yym9L/5af98h0T37gnOgjiS/7dd8+6l4tocN3iQF6lB53VIMNQj
-	vPKOAt76ssIIKWOnv7jjTF9HGkk35WG1SFYR4dxI+fyiNOuXnTrZ
-X-Google-Smtp-Source: AGHT+IFzP30XgcgRz16jjeqSQMfVBbG9kjUBn2FuxIWeyBnM+Cs+BqPA7eeqULcAd7TXur4Xy4bBMg==
-X-Received: by 2002:a05:6a20:7343:b0:1a1:2f17:1bc2 with SMTP id v3-20020a056a20734300b001a12f171bc2mr989042pzc.35.1709285200822;
-        Fri, 01 Mar 2024 01:26:40 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d11-20020a170902cecb00b001d739667fc3sm2947317plg.207.2024.03.01.01.26.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 01:26:40 -0800 (PST)
-Date: Fri, 1 Mar 2024 09:26:38 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, mhklinux@outlook.com,
-	linux-hyperv@vger.kernel.org, gregkh@linuxfoundation.org,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, dave.hansen@linux.intel.com,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	elena.reshetova@intel.com
-Subject: Re: [RFC RFT PATCH 1/4] hv: Leak pages if set_memory_encrypted()
- fails
-Message-ID: <ZeGfTtlx0JOj9gVS@liuwe-devbox-debian-v2>
-References: <20240222021006.2279329-1-rick.p.edgecombe@intel.com>
- <20240222021006.2279329-2-rick.p.edgecombe@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWVNGiNaXUHOPk1fvEwlMsECi2BptFm60MX7Gr7bmreioIr1mJEJGv7TG/xk0jnjerWX4naN71CXAmm0P0Usp7tSQUttfxodm3hvbC76Em0xjGIiAGKFrSVTIdfvGNLtFzOwqO7LExT+y7fcBz8vubHsUuw1IEiJsRMG5wkcEJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZHY/nx0l; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709291042; x=1740827042;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=jNe/Uxf2dtNJ+TSKuJ5UUvXN6Zva3VEg28Sf51IxPB8=;
+  b=ZHY/nx0lKJB9QddKfvvWu9VcYPZuS6R200BtvyxzRseH63s0wlSjGTjh
+   tZfzGanMGl69mMxRSG5NErjAjTrpLkJeAmmQaknAayu4G3PQEvez25Y38
+   0DeME+M9+2Ij+2AL4LTePn0LqY/RmhXDR60RzhKP6R1f9hfhtN46wnUSC
+   +3ZHlI7QNf4VpSjOj0IB/KcbeBy/yhXU5OZ0de1MRFHysyl/fr6X0ZMNQ
+   z4aSgczXdj7RzMtKVj71Q8W+ig81wt8o+QTTSEuyWUc/TLuqWrJcEPWjS
+   Aj9rS+VmVlbb/ZgD2NSzfNRIyZsmEnZnhAX6nZ9mYwUj3A2uJpqGN/qJ8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3986123"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="3986123"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 03:04:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="8565542"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 01 Mar 2024 03:03:54 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rg0gA-000Dnj-32;
+	Fri, 01 Mar 2024 11:03:50 +0000
+Date: Fri, 1 Mar 2024 19:03:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/8] kunit: Run tests when the kernel is fully setup
+Message-ID: <202403011856.cJe6do38-lkp@intel.com>
+References: <20240229170409.365386-2-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240222021006.2279329-2-rick.p.edgecombe@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240229170409.365386-2-mic@digikod.net>
 
-On Wed, Feb 21, 2024 at 06:10:03PM -0800, Rick Edgecombe wrote:
-> On TDX it is possible for the untrusted host to cause
-> set_memory_encrypted() or set_memory_decrypted() to fail such that an
-> error is returned and the resulting memory is shared. Callers need to take
-> care to handle these errors to avoid returning decrypted (shared) memory to
-> the page allocator, which could lead to functional or security issues.
-> 
-> Hyperv could free decrypted/shared pages if set_memory_encrypted() fails.
+Hi Mickaël,
 
-"Hyper-V" throughout.
+kernel test robot noticed the following build warnings:
 
-> Leak the pages if this happens.
-> 
-> Only compile tested.
-> 
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> ---
->  drivers/hv/connection.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 3cabeeabb1ca..e39493421bbb 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -315,6 +315,7 @@ int vmbus_connect(void)
->  
->  void vmbus_disconnect(void)
->  {
-> +	int ret;
->  	/*
->  	 * First send the unload request to the host.
->  	 */
-> @@ -337,11 +338,13 @@ void vmbus_disconnect(void)
->  		vmbus_connection.int_page = NULL;
->  	}
->  
-> -	set_memory_encrypted((unsigned long)vmbus_connection.monitor_pages[0], 1);
-> -	set_memory_encrypted((unsigned long)vmbus_connection.monitor_pages[1], 1);
-> +	ret = set_memory_encrypted((unsigned long)vmbus_connection.monitor_pages[0], 1);
-> +	ret |= set_memory_encrypted((unsigned long)vmbus_connection.monitor_pages[1], 1);
->  
-> -	hv_free_hyperv_page(vmbus_connection.monitor_pages[0]);
-> -	hv_free_hyperv_page(vmbus_connection.monitor_pages[1]);
-> +	if (!ret) {
-> +		hv_free_hyperv_page(vmbus_connection.monitor_pages[0]);
-> +		hv_free_hyperv_page(vmbus_connection.monitor_pages[1]);
-> +	}
+[auto build test WARNING on d206a76d7d2726f3b096037f2079ce0bd3ba329b]
 
-This silently leaks the pages if set_memory_encrypted() fails.  I think
-there should print some warning or error messages here.
+url:    https://github.com/intel-lab-lkp/linux/commits/Micka-l-Sala-n/kunit-Run-tests-when-the-kernel-is-fully-setup/20240301-011020
+base:   d206a76d7d2726f3b096037f2079ce0bd3ba329b
+patch link:    https://lore.kernel.org/r/20240229170409.365386-2-mic%40digikod.net
+patch subject: [PATCH v1 1/8] kunit: Run tests when the kernel is fully setup
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240301/202403011856.cJe6do38-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 325f51237252e6dab8e4e1ea1fa7acbb4faee1cd)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403011856.cJe6do38-lkp@intel.com/reproduce)
 
-Thanks,
-Wei.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403011856.cJe6do38-lkp@intel.com/
 
->  	vmbus_connection.monitor_pages[0] = NULL;
->  	vmbus_connection.monitor_pages[1] = NULL;
->  }
-> -- 
-> 2.34.1
-> 
+All warnings (new ones prefixed by >>):
+
+   In file included from lib/kunit/executor.c:4:
+   In file included from include/kunit/test.h:24:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:173:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2188:
+   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     509 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     516 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     528 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     537 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> lib/kunit/executor.c:18:31: warning: unused variable 'final_suite_set' [-Wunused-variable]
+      18 | static struct kunit_suite_set final_suite_set = {};
+         |                               ^~~~~~~~~~~~~~~
+   6 warnings generated.
+
+
+vim +/final_suite_set +18 lib/kunit/executor.c
+
+    17	
+  > 18	static struct kunit_suite_set final_suite_set = {};
+    19	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
