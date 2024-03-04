@@ -1,66 +1,70 @@
-Return-Path: <linux-hyperv+bounces-1655-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1656-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D382F86F9FF
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Mar 2024 07:22:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB2D286FA05
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Mar 2024 07:24:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 105A71C2096F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Mar 2024 06:22:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D869281576
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Mar 2024 06:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975BBBE4C;
-	Mon,  4 Mar 2024 06:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E003C15B;
+	Mon,  4 Mar 2024 06:24:34 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22577C2C8;
-	Mon,  4 Mar 2024 06:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD42FBA5E;
+	Mon,  4 Mar 2024 06:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709533332; cv=none; b=CXTUc1KYw11/lcKP4ex2Q1aX3n3qzlv+imwgTRab62YKj5tyaIXWJeXR1W14u7NE/VcEZNIDDV2eps/wXU/2gtnV7KL9bIJqpma+JWny9M7vJ0P5Kc9e9nDhuNSAUFwPH1agiQ1PBHMgJATXMhsrPg8K3TBxHRdlOZwoG5HqpA0=
+	t=1709533474; cv=none; b=CFUsGNuDqRJeXv05gaCBFcWRSGigxQKfzGfGF2uQfrV3BcENz8q6eUkYnMlIaxXytAIbPGjiwjcSd/NRfuqik5EukMLtsQtereKdjqNjYTxGBG6/03o1L5zpqVG7N/2azQYP79dVpKk7PJl6sTEnEf2Fkz+7fIhejTPkILL6glY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709533332; c=relaxed/simple;
-	bh=X1D7s0fm2PMS0AJTwarQBIFcT1TzEvEHovub1KFd0gU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NmxYf09I68HQH1gWjM5GTINCLwRilfZtNlTKzBa1a5lM8nDAlf0dpvUsL10oqf7cc4nZqJGB2bT08eZggNBifRLqiK+vE9lwOrQhT5L8Cxpzw+RT8Zc9jfMwkct8KL0ArCHPegPL7gpqzNNtNNYDxWBKEI+vbHOzrtv4I1zxkxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1709533474; c=relaxed/simple;
+	bh=7cgEFo3Z7KS9w83A6EgR9pr+hmtVWdvYNr+fhPwZlOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLNlPFK6/JdINEac7a/IF29F7I+7DmfvKTZLgGm6qukodspoDpnXUj6LRKIkjr8wMgxAnptd0k/ayld1hglLW1lHXwoTxCHV04bGFOvQwZkgGua5ehc5B2lVRtaZhJzRtuEqLKTiia8T/ZDMGFH+Aa0bE7vaVGVK8hyw57ibdNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29b2c48fa3dso679595a91.1;
-        Sun, 03 Mar 2024 22:22:10 -0800 (PST)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e6082eab17so730595b3a.1;
+        Sun, 03 Mar 2024 22:24:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709533330; x=1710138130;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lgbpy/xhGDqTmje0FzgN23UkMz4aW7iaL1u0lYB0pLc=;
-        b=czK+7cLHCTuXT0AOZ8YeIApGpoenPoG9Dc34dByeuArZNwjctEYzycRHYRDTG9lKHQ
-         MZchpkOBiFDMp8LJdqMra5Yz/YPiflE5XdcbFJ/tMrPP7qrVuyrFnPrQ9kM1egzM7roS
-         iaMjcdTrXvuXQuAPGuanJYf013zef2T+3rqvjRESJuPStxDHswBVcfzXjTyzjrFu1erZ
-         wNzwhLwdyI1F+OUrtZe8KDPrRCwhnBEeLYoG/OvRoFgO1+bDJCcI8E9uen6x+zLgPpVb
-         CGaU+wfCdct7LELgN1b1TBIsyFYhGnFkUc7TFrVrnlJWwNp4bZUgZMpanZLsVtwVR6dc
-         prRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHP18EwWNswF9pJv82lxt6e1G6yFsLhaCG0UdszOY8B9hdwH0Kmbl7Hu99UTjQf75+t8Lj+zVVTf4kIPiVNluduXH6sVUx9nyxtBHvCA2KqlbPfVEa7c+2BnuP1eGZ8rnIjpntG/e3o2Ki
-X-Gm-Message-State: AOJu0YwbEiXjoYPh5wnGW6WC4frWY0rPJUL4UO3dG2LkwS3WNiGxgEpO
-	zJ86qO0oxyqzIUFuBVCx1YZTW6ee5sHSBNaiQOyAiaRN/1ohOmjhy45YZF/R
-X-Google-Smtp-Source: AGHT+IHpHhgFnFo7Zehyy4S+XRY7h9ujyWWNAjRKInsd4YEHOw2mwxTQxFa0UDd1dT+rUzd1JY6KGQ==
-X-Received: by 2002:a17:90a:a884:b0:29a:9c12:785 with SMTP id h4-20020a17090aa88400b0029a9c120785mr5890475pjq.1.1709533330360;
-        Sun, 03 Mar 2024 22:22:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709533472; x=1710138272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+bhc2/UNlCiB/z3MRcKCqHLzDqMQWaoERtyFDoVG3iM=;
+        b=IizX4Z4e42Vl4qLmMArFZnpiunuNNbdQ2i8LizYca0JeR8nwFryK3SUZMHXmjm0Ht+
+         25tpxAr8AgH2KdvivRgF9y3Kr7BXUp6YixPzEHGPuMsgie49XPeYZBBvWCzNdA+YNly4
+         mr+dtjTbCnggTa/576Wlk7gKUj09SXrOHr0RtIkeZGBkIX0PilWwdYTZt0Kq59k/xP5l
+         t8Ruwo9PN0cc3Rd8jR6cNd4wqty2dgY1N5ZmDD3VgB1u4vK7hJk4gqoBX5WCyNBgpLUz
+         IZdS49PFdZ18pwpxRLNsbC32WvrWLmSa/dI74qND6IC8gJkwT0mgtAmw3eMZ4VcU8s9/
+         1XLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVV7uheBkYEAsQwg003lgYdeqGrvBBKIc3dD8sifPSXJHqedjBMP9GaBQE6qCJOcyh5kqaZRKxv4XbgEuU7NXTHDb/Du08RPx6kuUOMQbwv+r+qzT13LHlnITmj8Rler7/2mIAmynBBe47N
+X-Gm-Message-State: AOJu0YziujKcPkwTPm/ptZ6DCUr7TuTUZ8jTnzBxo0Izyiw/mXZYYMBC
+	CxKaLSFz0X49oW3dec3shkx6wi1Zf+Ic3tmZOqMztMPhx8VZzyMfmtU2I8Pr
+X-Google-Smtp-Source: AGHT+IGZDCf5sioWcZ6ZqOHqhTmXWlEvatEqE5jLt/EbHUAUVl7gFv1mmLtXEFQ78yFzcE/adkey/w==
+X-Received: by 2002:a05:6a00:b8f:b0:6e6:13ec:7178 with SMTP id g15-20020a056a000b8f00b006e613ec7178mr2529403pfj.32.1709533471890;
+        Sun, 03 Mar 2024 22:24:31 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id y5-20020a17090aca8500b0029b59bf77b4sm31318pjt.42.2024.03.03.22.22.09
+        by smtp.gmail.com with ESMTPSA id u15-20020a62d44f000000b006e3635c5641sm6815407pfl.25.2024.03.03.22.24.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Mar 2024 22:22:09 -0800 (PST)
-Date: Mon, 4 Mar 2024 06:22:05 +0000
+        Sun, 03 Mar 2024 22:24:31 -0800 (PST)
+Date: Mon, 4 Mar 2024 06:24:27 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com,
-	haiyangz@microsoft.com, decui@microsoft.com
-Subject: [GIT PULL] Hyper-V fixes for 6.8-rc8
-Message-ID: <ZeVojbuNPk3SMDIn@liuwe-devbox-debian-v2>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, dwmw@amazon.co.uk, peterz@infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ssengar@microsoft.com, mhklinux@outlook.com
+Subject: Re: [PATCH v3] x86/hyperv: Use per cpu initial stack for vtl context
+Message-ID: <ZeVpG07p9ayjk7yb@liuwe-devbox-debian-v2>
+References: <1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,57 +73,110 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com>
 
+On Sun, Mar 03, 2024 at 12:01:36AM -0800, Saurabh Sengar wrote:
+> Currently, the secondary CPUs in Hyper-V VTL context lack support for
+> parallel startup. Therefore, relying on the single initial_stack fetched
+> from the current task structure suffices for all vCPUs.
+> 
+> However, common initial_stack risks stack corruption when parallel startup
+> is enabled. In order to facilitate parallel startup, use the initial_stack
+> from the per CPU idle thread instead of the current task.
+> 
+> Fixes: 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE")
 
-Hi Linus,
+I don't think this patch is buggy. Instead, it exposes an assumption in
+the VTL code. So this either should be dropped or point to the patch
+which introduces the assumption.
 
-The following changes since commit d206a76d7d2726f3b096037f2079ce0bd3ba329b:
+Let me know what you would prefer.
 
-  Linux 6.8-rc6 (2024-02-25 15:46:06 -0800)
+Thanks,
+Wei.
 
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20240303
-
-for you to fetch changes up to aa707b615ce1551c25c5a3500cca2cf620e36b12:
-
-  Drivers: hv: vmbus: make hv_bus const (2024-03-03 02:32:35 +0000)
-
-----------------------------------------------------------------
-hyperv-fixes for v6.8
- - Multiple fixes, cleanups and documentations for Hyper-V core code and
-   drivers.
-----------------------------------------------------------------
-Michael Kelley (8):
-      Drivers: hv: vmbus: Calculate ring buffer size for more efficient use of memory
-      fbdev/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem()
-      Drivers: hv: vmbus: Remove duplication and cleanup code in create_gpadl_header()
-      Drivers: hv: vmbus: Update indentation in create_gpadl_header()
-      Documentation: hyperv: Add overview of PCI pass-thru device support
-      x86/hyperv: Use slow_virt_to_phys() in page transition hypervisor callback
-      x86/mm: Regularize set_memory_p() parameters and make non-static
-      x86/hyperv: Make encrypted/decrypted changes safe for load_unaligned_zeropad()
-
-Peter Martincic (1):
-      hv_utils: Allow implicit ICTIMESYNCFLAG_SYNC
-
-Ricardo B. Marliere (1):
-      Drivers: hv: vmbus: make hv_bus const
-
-Saurabh Sengar (1):
-      x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
-
- Documentation/virt/hyperv/index.rst |   1 +
- Documentation/virt/hyperv/vpci.rst  | 316 ++++++++++++++++++++++++++++++++++++
- arch/x86/hyperv/hv_vtl.c            |   7 +
- arch/x86/hyperv/ivm.c               |  65 +++++++-
- arch/x86/include/asm/set_memory.h   |   1 +
- arch/x86/mm/pat/set_memory.c        |  24 +--
- drivers/hv/channel.c                | 176 ++++++++------------
- drivers/hv/hv_util.c                |  31 +++-
- drivers/hv/vmbus_drv.c              |   2 +-
- drivers/video/fbdev/hyperv_fb.c     |   2 -
- include/linux/hyperv.h              |  22 ++-
- 11 files changed, 521 insertions(+), 126 deletions(-)
- create mode 100644 Documentation/virt/hyperv/vpci.rst
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> [V3]
+>  - Added the VTL code dependency on SMP to fix kernel build error
+>    when SMP is disabled.
+> 
+>  arch/x86/hyperv/hv_vtl.c | 19 +++++++++++++++----
+>  drivers/hv/Kconfig       |  1 +
+>  2 files changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> index 804b629ea49d..b4e233954d0f 100644
+> --- a/arch/x86/hyperv/hv_vtl.c
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -12,6 +12,7 @@
+>  #include <asm/i8259.h>
+>  #include <asm/mshyperv.h>
+>  #include <asm/realmode.h>
+> +#include <../kernel/smpboot.h>
+>  
+>  extern struct boot_params boot_params;
+>  static struct real_mode_header hv_vtl_real_mode_header;
+> @@ -58,7 +59,7 @@ static void hv_vtl_ap_entry(void)
+>  	((secondary_startup_64_fn)secondary_startup_64)(&boot_params, &boot_params);
+>  }
+>  
+> -static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
+> +static int hv_vtl_bringup_vcpu(u32 target_vp_index, int cpu, u64 eip_ignored)
+>  {
+>  	u64 status;
+>  	int ret = 0;
+> @@ -72,7 +73,9 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
+>  	struct ldttss_desc *ldt;
+>  	struct desc_struct *gdt;
+>  
+> -	u64 rsp = current->thread.sp;
+> +	struct task_struct *idle = idle_thread_get(cpu);
+> +	u64 rsp = (unsigned long)idle->thread.sp;
+> +
+>  	u64 rip = (u64)&hv_vtl_ap_entry;
+>  
+>  	native_store_gdt(&gdt_ptr);
+> @@ -199,7 +202,15 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+>  
+>  static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
+>  {
+> -	int vp_id;
+> +	int vp_id, cpu;
+> +
+> +	/* Find the logical CPU for the APIC ID */
+> +	for_each_present_cpu(cpu) {
+> +		if (arch_match_cpu_phys_id(cpu, apicid))
+> +			break;
+> +	}
+> +	if (cpu >= nr_cpu_ids)
+> +		return -EINVAL;
+>  
+>  	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
+>  	vp_id = hv_vtl_apicid_to_vp_id(apicid);
+> @@ -213,7 +224,7 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
+>  		return -EINVAL;
+>  	}
+>  
+> -	return hv_vtl_bringup_vcpu(vp_id, start_eip);
+> +	return hv_vtl_bringup_vcpu(vp_id, cpu, start_eip);
+>  }
+>  
+>  int __init hv_vtl_early_init(void)
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 00242107d62e..862c47b191af 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -16,6 +16,7 @@ config HYPERV
+>  config HYPERV_VTL_MODE
+>  	bool "Enable Linux to boot in VTL context"
+>  	depends on X86_64 && HYPERV
+> +	depends on SMP
+>  	default n
+>  	help
+>  	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
+> -- 
+> 2.34.1
+> 
 
