@@ -1,363 +1,191 @@
-Return-Path: <linux-hyperv+bounces-1668-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1669-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECF4587329C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Mar 2024 10:34:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFE50873DA5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Mar 2024 18:43:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A6E9B2137E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Mar 2024 09:27:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9564B2812BF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Mar 2024 17:43:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DFD25D919;
-	Wed,  6 Mar 2024 09:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 586D913958C;
+	Wed,  6 Mar 2024 17:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XFxACi2z"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="OHqTf0AT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2028.outbound.protection.outlook.com [40.92.18.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC975D8FB
-	for <linux-hyperv@vger.kernel.org>; Wed,  6 Mar 2024 09:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709717252; cv=none; b=P+nZeq8ZrazYl+fuupnF31LNqqMb12i4bN2fK5FKF7HisA8P6v9BpHkKlZIiGP8on2sQtFTZaThf7CjQ0ySaB32fRdXaqtKkx5PQMB1w6lnbXxuWKns7oM6p0qoEH5yCoLMosZO7VJLrKXKaNYm2lDVr/jplkLF0H7SBoKGoQAg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709717252; c=relaxed/simple;
-	bh=HvXNosOI8PBmaGV32V3/Wd/i++F5cG42M+SR7Lu+Z+U=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=awsBp68/qlnvJ64w42VLRB8ds2zNX7LTN+CfXXNB9gwSfoPkC11RmCAF86oHxqtgxekWlan9Ia286kVb/8gfOzN45waVkAXBCn+yni48IZyGvsfVvWQKKe3XMqy+Ew4RjwWe4SxaYQPJq0xkMkIq6CudPFvRCQ1PnccBjbBLJZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XFxACi2z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709717250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aS/2iq54TyvTFJNOfej37LI9H38zniQqeQDzeMNsmjI=;
-	b=XFxACi2zXVxcdSFg9ASSRxgrS8ve4wdK/AXqDakXyHcZvZQ1zA+rEQ0lYlucPZUobhFkx9
-	0bCd+/nIljIvFWp62hm+RUibCRf3X2Yn1gf5GNu41sqmaCcxi4DdCQV4dFMXXlnVBI1yFp
-	cmDcTYIj4fQyQcA1bYL5kgYx1xfyRiY=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-I3jEMEzxOeuVlEH-XtbN5A-1; Wed, 06 Mar 2024 04:27:28 -0500
-X-MC-Unique: I3jEMEzxOeuVlEH-XtbN5A-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1dd129acd2aso34834825ad.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 06 Mar 2024 01:27:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709717248; x=1710322048;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aS/2iq54TyvTFJNOfej37LI9H38zniQqeQDzeMNsmjI=;
-        b=cBOPq2wke0lXB0QwDqqqpfVhRtoNxXvs8vtlgXEEfYOee5foPVL0XF5VBb2KviKah6
-         tU6qAEhIzCS18w81swIjEzjvtEXoMyDDltwNWfHPf6ohQ2L8+vaiYiBp6Xu//NgF3SKK
-         sb+P1jLpNisj7m3aA2aejeJ1lYb9WL4uBFNKpKIQ8fqV2JSx1T1/A37DOusIX2+tQZJX
-         TT3uOaEYkIxx2NdFb3TfzpQaZaYaBAsoi8mZjIBIqvcoKWmh1eFKMns/mw02lwFNynuP
-         ieymV+3O713XqaLqXCQviBJvQBGRrnPl5LcNVm4ZnSX8cQhuE6lWk/9zgzdSiIBqsCdH
-         UAcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUe6cuAmfC/n5o5hpj2smveQLXr/YRSe/HRUqZHpNJ7DXQc6d92LIWu28Ur7udvTc9UNjnfVSujMNpchkKdln9LXRCALKH0vIJFOirC
-X-Gm-Message-State: AOJu0Ywbs6dwgz+nKIUTj8eDApH7paWkTA+IZNZTgqOcQGVdEd5PT5XP
-	YpeDWOKiJrpoF3nB/1iswWpvcZRqRrC+zkzp0vFkh0LfYHkEIgm+USkebjDzXvdWZaWXlagULZo
-	sogINui6DKQiVBzU4PfBCl0UGb/hiJFrE22v8hDQNika9rP95gQDXykpZlIfqbg==
-X-Received: by 2002:a17:902:e883:b0:1dc:78bc:ad0a with SMTP id w3-20020a170902e88300b001dc78bcad0amr5594447plg.36.1709717247966;
-        Wed, 06 Mar 2024 01:27:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEjLULHrANw7xNSwvW+pqGBlzjXXuCu94BOTxa2Wq7PjapZbbs08OjU+s8864KgO2p5it9NMQ==
-X-Received: by 2002:a17:902:e883:b0:1dc:78bc:ad0a with SMTP id w3-20020a170902e88300b001dc78bcad0amr5594431plg.36.1709717247597;
-        Wed, 06 Mar 2024 01:27:27 -0800 (PST)
-Received: from smtpclient.apple ([115.96.30.47])
-        by smtp.gmail.com with ESMTPSA id p6-20020a170902b08600b001dc30f13e6asm12024747plr.137.2024.03.06.01.27.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2024 01:27:26 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7366E80601;
+	Wed,  6 Mar 2024 17:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709747026; cv=fail; b=jjkdI9InPZjjaaD5P0N0XV+2z0rczQS78Vu+pS1CFf+qYpuaCBqaq62AdlyXPL3kLkmzvrKjidoY3FnNEOq2qo5LjQrLXMUC3hItxkUB1eFCQ95RQ1MogFo0fJJEoHRMZTs1bNo4k55AeMxIozPCc4ENzN7aiazPFmO5tiCXSSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709747026; c=relaxed/simple;
+	bh=r0nc4VmAd1GgMbV+9XAHwToToGG9k56Gg7fl3V0X4e8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XV+W7J9FF/6zuOWsvRi4Qk+dr4nH5/GOez8bsQ0Rzc27JClhmIkHwUVnxkyACXo9uqWRePRvmCaUzCB/gAdTksM2tBav/NoUBwrK47y+67RylDBtgxWjpu4l8ucESiF/7UT++0GRQUjsO42zYa3rC+kq2RUN3s4vYNDdWniSm0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=OHqTf0AT; arc=fail smtp.client-ip=40.92.18.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g/aS9N+Z8O37ca5A/A1l214YIBq2NFnhz9L29eRNPWdk8fqP4Y+pMkP2HQSVqZx7lA1bSs7l/YRPyM/ljw8FezQI4gqxZEo+5ArLVzCRr5Wfg4lAeFmvuj63nCO9PNyruHrrOVbZKvYelhaK1gOlzXy15AO7HmsQJkpp4FrXn3kVINQCo4hwgWxIQEs47/JC7Ha+cJpqJBE08Ld2uXD2rDMEF31F4NNhf5ULnwyViQ/n2sEsq40uY27X/4Wb+YKyOXtrGce9UsIaeqCpaIMWgAKI9undGRec5Znu6brx8FCD2Ya+3/k1GtyYLLm4M2MDtY5rCRoRH5g75xT1xXqBOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VBQynf+cv/c992G73fUo+kv1Z//vQ9oKlM9bdkVPFh4=;
+ b=aW8JZ+qryRwqlbH6y5QcFzGu5X4A0ofuF6ix8X+mLsc51hZExGrVzlPMXo9siyC4TcVnPxcCRbyKUpl6m4jyVcIbhff/YJISCylmxtFi5oVjHlTKBnPmJxxznI1L0e8EMBTZgeoTLo28Ky4dikyuyVihctQ53xr1oj7LLjFugV4ms3yojCMOq3i+f5qZfhIpkpMUFf9M1pZo81MmYJtblch1i8DxGNLC6s5PKi+E/DzRktb/I4dpzLahErTtC6/xqXODD6PboeA18ZrRZEjL6NFA5n9vImsqRi+CTDb6SDB/WqxELpmxXFcNNJClbQP/CIQ2WduFOjhZwSznAEhSww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VBQynf+cv/c992G73fUo+kv1Z//vQ9oKlM9bdkVPFh4=;
+ b=OHqTf0AT3LG6FTpeiCkOB0X5JGxFmqbwDHMgK9hxpFjSKRYyi/4hSv7SC1QMBh1j+jkXPa5nLtYB05prViJ1/+zsYL+UhuKU8QChwlyM0NbPGcrdfxw9l8tSXed5M3S02KR9Xse02YhvCEuauWH0CA22mqsCoNvAi4IU81s29z+iHhWPFAbGdQZN3M+36wtEpP2hIb2fwvGCYtq1wwAPvq6cAt6itsbNS25PETyy4N/+jHYfdmguikAsAyBH6a32jwlKyd/LUTJHUWvUOx0DOOG+MPOEuju4X8l4pL8kFM6Os31gfL0TTbylFCjZ/vX0C6SUArxj6SNEhZC089CQAg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CH2PR02MB6537.namprd02.prod.outlook.com (2603:10b6:610:69::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Wed, 6 Mar
+ 2024 17:43:42 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7339.035; Wed, 6 Mar 2024
+ 17:43:42 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>, "tytso@mit.edu"
+	<tytso@mit.edu>, "Jason@zx2c4.com" <Jason@zx2c4.com>, "x86@kernel.org"
+	<x86@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, Saurabh Singh Sengar <ssengar@microsoft.com>,
+	Long Li <longli@microsoft.com>
+Subject: RE: [PATCH 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random
+ number generator
+Thread-Topic: [PATCH 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random
+ number generator
+Thread-Index: AQHaTVXupwvTPY5m0kOclayMSeGBz7ErP/XA
+Date: Wed, 6 Mar 2024 17:43:41 +0000
+Message-ID:
+ <SN6PR02MB4157B61CA09C0DAF0BB994E1D4212@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240122160003.348521-1-mhklinux@outlook.com>
+In-Reply-To: <20240122160003.348521-1-mhklinux@outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [fYpzzOH95P8VQZ1G+RxN64cqInnGNBfy]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB6537:EE_
+x-ms-office365-filtering-correlation-id: b4d9355c-f76f-4842-1ade-08dc3e04f6ae
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ AIvIwGepn0O54SAZ30wuVeZ3eVmia753Jp1AUWx7hLRAg0HZ36i8hVZGEC27Z585Sit6l9Ty3CboNpLj6ZTq5ykrg3cZHPBM09lR58Ni85gu5GTvuuSlh789TWBuBnXrGK1NI7vRcIgKozbrHE2wxuuqHD6M2DSXY+TTxCkQDPYsrK7dzegoViVt5oGG83uHGLUvREuC+yrPfvmYIHDZ5IPO0vCSjaKfj92v5ZvEPMUniGk8ia9XIpBdKo5aXabZBZ556mCj2gqGyBYDH1Jt3PLvzSG2wTzk3ny+i+DOSwqwbFiY9Lim/vgjEPNBZ5SY088xKYJ+iDmA6joP9NUHThhlgMpo2Xfw92a1gx7chSOZYsR1bD5unTTn3UF7MpG1G0Os30YuBZhFqagbFfbeNmHZxXn1pxLuiZaOpzfgt1Z/YX5+aJs6nI46zNxra+GSz64hGhKKRfN2Ni6f1AAW2jekBtO11dDy1zSdRdeqf3akrdCUbOmYFK1ZXEFZS0YPtnsBLvgmutEmiYHhK+EARA3gOF+CdcVxJl+SfbvwqNYVyMpZNaJacd24o4QDCMgH
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?oXyKs/TTzwlGr+UzVueZsbNZWsFgtLjqUIGfiO75AdrxT72ciJS93OrG+ZHW?=
+ =?us-ascii?Q?n7+VmcsmtxJejjgFFHEUxlP+VcY47zcSlQqCA1WOh14AJXsyYdNDD0boBwZw?=
+ =?us-ascii?Q?qvbO1FKL58nhsbsDD+fB/vBytQ+sP14eqFf27smV4gJUlZ0zm6fkDl8GyJ6Z?=
+ =?us-ascii?Q?s/A6Nt2wuLDoYjAsoeiwM/fzsRF3qNcCASF95Qzq4RgNccxeSmMN/ID/t/kH?=
+ =?us-ascii?Q?pEWg3GYoLcer6e06MSqml5GuubOZmDv8gZq4gvTm8QXNkZXIe+7HkF9AlNnP?=
+ =?us-ascii?Q?mU737zF6MDrZgnMQEnbZJwObXwjl4xLqcU/dtTm4lcLYC08gXGu+xGeKaEWh?=
+ =?us-ascii?Q?GXusU4Wh+bar/Z6b2hnpFkf2ShtHaV01xuCt0F2Tf5YAK71VraIFn9nY93mu?=
+ =?us-ascii?Q?1HTcW7u9kYa9sJJEIeTe8NF/uXkzbXUYmfYeWG0EY/PqU8wxG/SGLwKHx3qW?=
+ =?us-ascii?Q?ht+jwGH2sHFQZVdp0jcExRP46EVaHlP2IVfuYynBTDOwvr37GxMldI6RriXp?=
+ =?us-ascii?Q?p+FO+fZRtL6EhQo9WWTNaXBDGzz7o9sUogwEd6f28RTL1fBUfeaGvBkXwNdK?=
+ =?us-ascii?Q?pq2If1+6Hljf2MotF5KRTm99trSAl7x7fo2wfOMeqfKxOj2SfwkL71S9ltLT?=
+ =?us-ascii?Q?/G+22sjkG6IMX/Z9Ri94350Z6GygtEDVVtS2PIH/OCD/mInf6ZaCH1NzV/y9?=
+ =?us-ascii?Q?zf91d3Tg8dygPMr7+Y3JYSpGnqZeOuUOWhAwLJfJsnxlxgLEKsH9VF39ld/g?=
+ =?us-ascii?Q?lk1rz4PLEZPZkzpVRmLyPCR7q/7YqwYPo9nBBjyvyBwPmpyslsuAlkNZ6avr?=
+ =?us-ascii?Q?+pK2EgZL6l9v5T+3miUOR5bi1gl8R09HGuxGrYp2N7VIYc/TJB2MBxbSKWbn?=
+ =?us-ascii?Q?64SV5PtaK89i9Db2GZu2GuKocvsOYJvEG59rMd02/rRX9Q+/SPjwPEJx3VUR?=
+ =?us-ascii?Q?4aowzqnBXNqzysdKgfp0PUvJ+y3L2kQlTuydNX/s2WeZauBu1ypUCdr9tUSq?=
+ =?us-ascii?Q?hFXoqfM2m0MzTYGt6G//aBL5tLtFvC2o0TaNSBtjpvFJU3IAZjROaPxTAx/Z?=
+ =?us-ascii?Q?Sjf2dQC3qSj0FVZegW2sAMYjJaVJ2bFaXJyBJY91uMJcvtFOEYHGvB67lnio?=
+ =?us-ascii?Q?Tm+pZxUJdJZihOlVn8gNbmR9U8UIy5bM1D4fWdvZXQ8v1cRc5nwe+0L81ywU?=
+ =?us-ascii?Q?8Tsts3foKY31hajsyiANFlPX6VcKPU0S9xIJ2w=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: [PATCH] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for
- keyfile format
-From: Ani Sinha <anisinha@redhat.com>
-In-Reply-To: <1709297778-20420-1-git-send-email-shradhagupta@linux.microsoft.com>
-Date: Wed, 6 Mar 2024 14:57:12 +0530
-Cc: linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>,
- Michael Kelley <mikelley@microsoft.com>,
- Olaf Hering <olaf@aepfle.de>,
- Shradha Gupta <shradhagupta@microsoft.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4547D425-64EF-4974-A131-56811F25B9E6@redhat.com>
-References: <1709297778-20420-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-X-Mailer: Apple Mail (2.3774.400.31)
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4d9355c-f76f-4842-1ade-08dc3e04f6ae
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2024 17:43:41.8760
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6537
 
+From: wei.liu@kernel.org @ 2024-03-04  6:57 UTC
+>=20
+> > +void __init ms_hyperv_late_init(void)
+> > +{
+> > +	struct acpi_table_header *header;
+> > +	acpi_status status;
+> > +	u8 *randomdata;
+> > +	u32 length, i;
+> > +
+> > +	/*
+> > +	 * Seed the Linux random number generator with entropy provided by
+> > +	 * the Hyper-V host in ACPI table OEM0.  It would be nice to do this
+> > +	 * even earlier in ms_hyperv_init_platform(), but the ACPI subsystem
+> > +	 * isn't set up at that point. Skip if booted via EFI as generic EFI
+> > +	 * code has already done some seeding using the EFI RNG protocol.
+> > +	 */
+> > +	if (!IS_ENABLED(CONFIG_ACPI) || efi_enabled(EFI_BOOT))
+> > +		return;
+> > +
+> > +	status =3D acpi_get_table("OEM0", 0, &header);
+> > +	if (ACPI_FAILURE(status) || !header) {
+> > +		pr_info("Hyper-V: ACPI table OEM0 not found\n");
+>=20
+> I would like this to be a pr_debug() instead of pr_info(), considering
+> using the negative case may cause users to think not having this table
+> can be problematic.
+>=20
+> Alternatively, we can remove this message here, and then ...
+>=20
+> > +		return;
+> > +	}
+> > +
+>=20
+> ... add a pr_debug() here to indicate that the table was found.
+>=20
+> 	pr_info("Hyper-V: Seeding randomness with data from ACPI table OEM0\n");
 
+You wrote the code as "pr_info()" but your comment suggests "pr_debug()".
+I'm assuming pr_debug() is better because we don't really need any output
+on success or failure. If trying to debug something related to the rng,
+even with no explicit output it's relatively easy to tell whether a Gen1 VM
+picked up any entropy from the OEM0 table.  When it does, this dmesg
+line will appear much earlier than when it does not.
 
-> On 01-Mar-2024, at 18:26, Shradha Gupta =
-<shradhagupta@linux.microsoft.com> wrote:
->=20
-> If the network configuration strings are passed as a combination of =
-IPv and
-> IPv6 addresses, the current KVP daemon doesnot handle it for the =
-keyfile
-> configuration format.
-> With these changes, the keyfile config generation logic scans through =
-the
-> list twice to generate IPv4 and IPv6 sections for the configuration =
-files
-> to handle this support.
->=20
-> Built-on: Rhel9
-> Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
-> tools/hv/hv_kvp_daemon.c | 152 ++++++++++++++++++++++++++++-----------
-> 1 file changed, 112 insertions(+), 40 deletions(-)
->=20
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 318e2dad27e0..7e84e40b55fb 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -76,6 +76,11 @@ enum {
-> DNS
-> };
->=20
-> +enum {
-> + IPV4 =3D 1,
-> + IPV6
-> +};
-> +
-> static int in_hand_shake;
->=20
-> static char *os_name =3D "";
-> @@ -1171,6 +1176,18 @@ static int process_ip_string(FILE *f, char =
-*ip_string, int type)
-> return 0;
-> }
->=20
-> +int ip_version_check(const char *input_addr)
-> +{
-> + struct in6_addr addr;
-> +
-> + if (inet_pton(AF_INET, input_addr, &addr))
-> + return IPV4;
-> + else if (inet_pton(AF_INET6, input_addr, &addr))
-> + return IPV6;
-> + else
-> + return -EINVAL;
-> +}
-> +
-> /*
->  * Only IPv4 subnet strings needs to be converted to plen
->  * For IPv6 the subnet is already privided in plen format
-> @@ -1197,14 +1214,56 @@ static int kvp_subnet_to_plen(char =
-*subnet_addr_str)
-> return plen;
-> }
->=20
-> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-> +  int ip_sec)
-> +{
-> + char addr[INET6_ADDRSTRLEN], *output_str;
-> + int ip_offset =3D 0, error, ip_ver;
-> + char *param_name;
-> +
-> + output_str =3D malloc(strlen(ip_string));
-> +
-> + if (!output_str)
-> + return 1;
-> +
-> + output_str[0] =3D '\0';
-> +
-> + if (type =3D=3D DNS)
-> + param_name =3D "dns";
-> + else
-> + param_name =3D "gateway";
-> +
-> + while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> +   (MAX_IP_ADDR_SIZE * 2))) {
-> + ip_ver =3D ip_version_check(addr);
-> +
-> + if ((ip_ver =3D=3D IPV4 && ip_sec =3D=3D IPV4) ||
-> +    (ip_ver =3D=3D IPV6 && ip_sec =3D=3D IPV6)) {
-> + strcat(output_str, addr);
-> + strcat(output_str, ",");
+[    0.000000] random: crng init done
 
-We need to check if we are not going out of bounds here. So existing =
-length of output_str + length of addr + 1 should be < strlen(ip_string) =
-which is the length of the buffer. See parse_ip_val_buffer() how it does =
-out of bounds check.
+I'll spin a v2 with this tweak and your wording comment on the
+commit message.
 
-> + } else {
-> + continue;
-> + }
-> + }
-> +
-> + if (strlen(output_str)) {
-> + output_str[strlen(output_str) - 1] =3D '\0';
-> + error =3D fprintf(f, "%s=3D%s\n", param_name, output_str);
-> + if (error <  0)
-> + return error;
-> + }
-> +
-> + return 0;
-> +}
-> +
-> static int process_ip_string_nm(FILE *f, char *ip_string, char =
-*subnet,
-> - int is_ipv6)
-> + int ip_sec)
-> {
-> char addr[INET6_ADDRSTRLEN];
-> char subnet_addr[INET6_ADDRSTRLEN];
-> int error, i =3D 0;
-> int ip_offset =3D 0, subnet_offset =3D 0;
-> - int plen;
-> + int plen, ip_ver;
->=20
-> memset(addr, 0, sizeof(addr));
-> memset(subnet_addr, 0, sizeof(subnet_addr));
-> @@ -1216,10 +1275,13 @@ static int process_ip_string_nm(FILE *f, char =
-*ip_string, char *subnet,
->       subnet_addr,
->       (MAX_IP_ADDR_SIZE *
-> 2))) {
-> - if (!is_ipv6)
-> + ip_ver =3D ip_version_check(addr);
-> + if (ip_ver =3D=3D IPV4 && ip_sec =3D=3D IPV4)
-> plen =3D kvp_subnet_to_plen((char *)subnet_addr);
-> - else
-> + else if (ip_ver =3D=3D IPV6 && ip_sec =3D=3D IPV6)
-> plen =3D atoi(subnet_addr);
-> + else
-> + continue;
->=20
-> if (plen < 0)
-> return plen;
-> @@ -1242,8 +1304,8 @@ static int kvp_set_ip_info(char *if_name, struct =
-hv_kvp_ipaddr_value *new_val)
-> char if_filename[PATH_MAX];
-> char nm_filename[PATH_MAX];
-> FILE *ifcfg_file, *nmfile;
-> + int ip_sections_count;
-> char cmd[PATH_MAX];
-> - int is_ipv6 =3D 0;
-> char *mac_addr;
-> int str_len;
->=20
-> @@ -1421,52 +1483,62 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
-> if (error)
-> goto setval_error;
->=20
-> - if (new_val->addr_family & ADDR_FAMILY_IPV6) {
-> - error =3D fprintf(nmfile, "\n[ipv6]\n");
-> - if (error < 0)
-> - goto setval_error;
-> - is_ipv6 =3D 1;
-> - } else {
-> - error =3D fprintf(nmfile, "\n[ipv4]\n");
-> - if (error < 0)
-> - goto setval_error;
-> - }
-> -
-> /*
-> - * Now we populate the keyfile format
-> + * The keyfile format expects the IPv6 and IPv4 configuration in
-> + * different sections. Therefore we iterate through the list twice,
-> + * once to populate the IPv4 section and the next time for IPv6
-> */
-> + ip_sections_count =3D 1;
-> + do {
-> + if (ip_sections_count =3D=3D 1) {
-> + error =3D fprintf(nmfile, "\n[ipv4]\n");
-> + if (error < 0)
-> + goto setval_error;
-> + } else {
-> + error =3D fprintf(nmfile, "\n[ipv6]\n");
-> + if (error < 0)
-> + goto setval_error;
-> + }
->=20
-> - if (new_val->dhcp_enabled) {
-> - error =3D kvp_write_file(nmfile, "method", "", "auto");
-> - if (error < 0)
-> - goto setval_error;
-> - } else {
-> - error =3D kvp_write_file(nmfile, "method", "", "manual");
-> + /*
-> + * Now we populate the keyfile format
-> + */
-> +
-> + if (new_val->dhcp_enabled) {
-> + error =3D kvp_write_file(nmfile, "method", "", "auto");
-> + if (error < 0)
-> + goto setval_error;
-> + } else {
-> + error =3D kvp_write_file(nmfile, "method", "", "manual");
-> + if (error < 0)
-> + goto setval_error;
-> + }
-> +
-> + /*
-> + * Write the configuration for ipaddress, netmask, gateway and
-> + * name services
-> + */
-> + error =3D process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> +     (char *)new_val->sub_net,
-> +     ip_sections_count);
-> if (error < 0)
-> goto setval_error;
-> - }
->=20
-> - /*
-> - * Write the configuration for ipaddress, netmask, gateway and
-> - * name services
-> - */
-> - error =3D process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> -     (char *)new_val->sub_net, is_ipv6);
-> - if (error < 0)
-> - goto setval_error;
-> -
-> - /* we do not want ipv4 addresses in ipv6 section and vice versa */
-> - if (is_ipv6 !=3D is_ipv4((char *)new_val->gate_way)) {
-> - error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
-*)new_val->gate_way);
-> + error =3D process_dns_gateway_nm(nmfile,
-> +       (char *)new_val->gate_way,
-> +       GATEWAY, ip_sections_count);
-> if (error < 0)
-> goto setval_error;
-> - }
->=20
-> - if (is_ipv6 !=3D is_ipv4((char *)new_val->dns_addr)) {
-> - error =3D fprintf(nmfile, "dns=3D%s\n", (char *)new_val->dns_addr);
-> + error =3D process_dns_gateway_nm(nmfile,
-> +       (char *)new_val->dns_addr, DNS,
-> +       ip_sections_count);
-> if (error < 0)
-> goto setval_error;
-> - }
-> +
-> + ip_sections_count++;
-> + } while (ip_sections_count <=3D 2);
-> +
-> fclose(nmfile);
-> fclose(ifcfg_file);
->=20
-> --=20
-> 2.34.1
->=20
+Michael
 
+>=20
+> Dexuan, Saurabh, Haiyang and Long, can you give an ack or nack to this
+> patch and help test it?
+>=20
+> Thanks,
+> Wei.
 
