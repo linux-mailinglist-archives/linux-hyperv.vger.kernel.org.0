@@ -1,191 +1,248 @@
-Return-Path: <linux-hyperv+bounces-1669-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1670-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFE50873DA5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Mar 2024 18:43:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 530C3874547
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 01:47:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9564B2812BF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Mar 2024 17:43:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06040283FB6
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 00:47:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 586D913958C;
-	Wed,  6 Mar 2024 17:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827BD1859;
+	Thu,  7 Mar 2024 00:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="OHqTf0AT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bBBXU/Ng"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2028.outbound.protection.outlook.com [40.92.18.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7366E80601;
-	Wed,  6 Mar 2024 17:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709747026; cv=fail; b=jjkdI9InPZjjaaD5P0N0XV+2z0rczQS78Vu+pS1CFf+qYpuaCBqaq62AdlyXPL3kLkmzvrKjidoY3FnNEOq2qo5LjQrLXMUC3hItxkUB1eFCQ95RQ1MogFo0fJJEoHRMZTs1bNo4k55AeMxIozPCc4ENzN7aiazPFmO5tiCXSSg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709747026; c=relaxed/simple;
-	bh=r0nc4VmAd1GgMbV+9XAHwToToGG9k56Gg7fl3V0X4e8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XV+W7J9FF/6zuOWsvRi4Qk+dr4nH5/GOez8bsQ0Rzc27JClhmIkHwUVnxkyACXo9uqWRePRvmCaUzCB/gAdTksM2tBav/NoUBwrK47y+67RylDBtgxWjpu4l8ucESiF/7UT++0GRQUjsO42zYa3rC+kq2RUN3s4vYNDdWniSm0Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=OHqTf0AT; arc=fail smtp.client-ip=40.92.18.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g/aS9N+Z8O37ca5A/A1l214YIBq2NFnhz9L29eRNPWdk8fqP4Y+pMkP2HQSVqZx7lA1bSs7l/YRPyM/ljw8FezQI4gqxZEo+5ArLVzCRr5Wfg4lAeFmvuj63nCO9PNyruHrrOVbZKvYelhaK1gOlzXy15AO7HmsQJkpp4FrXn3kVINQCo4hwgWxIQEs47/JC7Ha+cJpqJBE08Ld2uXD2rDMEF31F4NNhf5ULnwyViQ/n2sEsq40uY27X/4Wb+YKyOXtrGce9UsIaeqCpaIMWgAKI9undGRec5Znu6brx8FCD2Ya+3/k1GtyYLLm4M2MDtY5rCRoRH5g75xT1xXqBOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VBQynf+cv/c992G73fUo+kv1Z//vQ9oKlM9bdkVPFh4=;
- b=aW8JZ+qryRwqlbH6y5QcFzGu5X4A0ofuF6ix8X+mLsc51hZExGrVzlPMXo9siyC4TcVnPxcCRbyKUpl6m4jyVcIbhff/YJISCylmxtFi5oVjHlTKBnPmJxxznI1L0e8EMBTZgeoTLo28Ky4dikyuyVihctQ53xr1oj7LLjFugV4ms3yojCMOq3i+f5qZfhIpkpMUFf9M1pZo81MmYJtblch1i8DxGNLC6s5PKi+E/DzRktb/I4dpzLahErTtC6/xqXODD6PboeA18ZrRZEjL6NFA5n9vImsqRi+CTDb6SDB/WqxELpmxXFcNNJClbQP/CIQ2WduFOjhZwSznAEhSww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VBQynf+cv/c992G73fUo+kv1Z//vQ9oKlM9bdkVPFh4=;
- b=OHqTf0AT3LG6FTpeiCkOB0X5JGxFmqbwDHMgK9hxpFjSKRYyi/4hSv7SC1QMBh1j+jkXPa5nLtYB05prViJ1/+zsYL+UhuKU8QChwlyM0NbPGcrdfxw9l8tSXed5M3S02KR9Xse02YhvCEuauWH0CA22mqsCoNvAi4IU81s29z+iHhWPFAbGdQZN3M+36wtEpP2hIb2fwvGCYtq1wwAPvq6cAt6itsbNS25PETyy4N/+jHYfdmguikAsAyBH6a32jwlKyd/LUTJHUWvUOx0DOOG+MPOEuju4X8l4pL8kFM6Os31gfL0TTbylFCjZ/vX0C6SUArxj6SNEhZC089CQAg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH2PR02MB6537.namprd02.prod.outlook.com (2603:10b6:610:69::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Wed, 6 Mar
- 2024 17:43:42 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7339.035; Wed, 6 Mar 2024
- 17:43:42 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "decui@microsoft.com"
-	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>, "tytso@mit.edu"
-	<tytso@mit.edu>, "Jason@zx2c4.com" <Jason@zx2c4.com>, "x86@kernel.org"
-	<x86@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, Saurabh Singh Sengar <ssengar@microsoft.com>,
-	Long Li <longli@microsoft.com>
-Subject: RE: [PATCH 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random
- number generator
-Thread-Topic: [PATCH 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random
- number generator
-Thread-Index: AQHaTVXupwvTPY5m0kOclayMSeGBz7ErP/XA
-Date: Wed, 6 Mar 2024 17:43:41 +0000
-Message-ID:
- <SN6PR02MB4157B61CA09C0DAF0BB994E1D4212@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240122160003.348521-1-mhklinux@outlook.com>
-In-Reply-To: <20240122160003.348521-1-mhklinux@outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [fYpzzOH95P8VQZ1G+RxN64cqInnGNBfy]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB6537:EE_
-x-ms-office365-filtering-correlation-id: b4d9355c-f76f-4842-1ade-08dc3e04f6ae
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- AIvIwGepn0O54SAZ30wuVeZ3eVmia753Jp1AUWx7hLRAg0HZ36i8hVZGEC27Z585Sit6l9Ty3CboNpLj6ZTq5ykrg3cZHPBM09lR58Ni85gu5GTvuuSlh789TWBuBnXrGK1NI7vRcIgKozbrHE2wxuuqHD6M2DSXY+TTxCkQDPYsrK7dzegoViVt5oGG83uHGLUvREuC+yrPfvmYIHDZ5IPO0vCSjaKfj92v5ZvEPMUniGk8ia9XIpBdKo5aXabZBZ556mCj2gqGyBYDH1Jt3PLvzSG2wTzk3ny+i+DOSwqwbFiY9Lim/vgjEPNBZ5SY088xKYJ+iDmA6joP9NUHThhlgMpo2Xfw92a1gx7chSOZYsR1bD5unTTn3UF7MpG1G0Os30YuBZhFqagbFfbeNmHZxXn1pxLuiZaOpzfgt1Z/YX5+aJs6nI46zNxra+GSz64hGhKKRfN2Ni6f1AAW2jekBtO11dDy1zSdRdeqf3akrdCUbOmYFK1ZXEFZS0YPtnsBLvgmutEmiYHhK+EARA3gOF+CdcVxJl+SfbvwqNYVyMpZNaJacd24o4QDCMgH
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?oXyKs/TTzwlGr+UzVueZsbNZWsFgtLjqUIGfiO75AdrxT72ciJS93OrG+ZHW?=
- =?us-ascii?Q?n7+VmcsmtxJejjgFFHEUxlP+VcY47zcSlQqCA1WOh14AJXsyYdNDD0boBwZw?=
- =?us-ascii?Q?qvbO1FKL58nhsbsDD+fB/vBytQ+sP14eqFf27smV4gJUlZ0zm6fkDl8GyJ6Z?=
- =?us-ascii?Q?s/A6Nt2wuLDoYjAsoeiwM/fzsRF3qNcCASF95Qzq4RgNccxeSmMN/ID/t/kH?=
- =?us-ascii?Q?pEWg3GYoLcer6e06MSqml5GuubOZmDv8gZq4gvTm8QXNkZXIe+7HkF9AlNnP?=
- =?us-ascii?Q?mU737zF6MDrZgnMQEnbZJwObXwjl4xLqcU/dtTm4lcLYC08gXGu+xGeKaEWh?=
- =?us-ascii?Q?GXusU4Wh+bar/Z6b2hnpFkf2ShtHaV01xuCt0F2Tf5YAK71VraIFn9nY93mu?=
- =?us-ascii?Q?1HTcW7u9kYa9sJJEIeTe8NF/uXkzbXUYmfYeWG0EY/PqU8wxG/SGLwKHx3qW?=
- =?us-ascii?Q?ht+jwGH2sHFQZVdp0jcExRP46EVaHlP2IVfuYynBTDOwvr37GxMldI6RriXp?=
- =?us-ascii?Q?p+FO+fZRtL6EhQo9WWTNaXBDGzz7o9sUogwEd6f28RTL1fBUfeaGvBkXwNdK?=
- =?us-ascii?Q?pq2If1+6Hljf2MotF5KRTm99trSAl7x7fo2wfOMeqfKxOj2SfwkL71S9ltLT?=
- =?us-ascii?Q?/G+22sjkG6IMX/Z9Ri94350Z6GygtEDVVtS2PIH/OCD/mInf6ZaCH1NzV/y9?=
- =?us-ascii?Q?zf91d3Tg8dygPMr7+Y3JYSpGnqZeOuUOWhAwLJfJsnxlxgLEKsH9VF39ld/g?=
- =?us-ascii?Q?lk1rz4PLEZPZkzpVRmLyPCR7q/7YqwYPo9nBBjyvyBwPmpyslsuAlkNZ6avr?=
- =?us-ascii?Q?+pK2EgZL6l9v5T+3miUOR5bi1gl8R09HGuxGrYp2N7VIYc/TJB2MBxbSKWbn?=
- =?us-ascii?Q?64SV5PtaK89i9Db2GZu2GuKocvsOYJvEG59rMd02/rRX9Q+/SPjwPEJx3VUR?=
- =?us-ascii?Q?4aowzqnBXNqzysdKgfp0PUvJ+y3L2kQlTuydNX/s2WeZauBu1ypUCdr9tUSq?=
- =?us-ascii?Q?hFXoqfM2m0MzTYGt6G//aBL5tLtFvC2o0TaNSBtjpvFJU3IAZjROaPxTAx/Z?=
- =?us-ascii?Q?Sjf2dQC3qSj0FVZegW2sAMYjJaVJ2bFaXJyBJY91uMJcvtFOEYHGvB67lnio?=
- =?us-ascii?Q?Tm+pZxUJdJZihOlVn8gNbmR9U8UIy5bM1D4fWdvZXQ8v1cRc5nwe+0L81ywU?=
- =?us-ascii?Q?8Tsts3foKY31hajsyiANFlPX6VcKPU0S9xIJ2w=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB8364C61;
+	Thu,  7 Mar 2024 00:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709772460; cv=none; b=SbAqxoaO4JbbgjuUR6w2C0f6KmGLvALjlRs9USBhqdaT159ZE6WIFW8NCL7D//ibC2lG3ZA9E7Ud4/G2EyxhP1KWO/jDNkliKrPCSR4cVR27PbOK6If0A0i0/IZ2AXan9OY/oacjapdLTgb+1xk5dwBIdWCN5jl3nWLEV3cfmuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709772460; c=relaxed/simple;
+	bh=oOInWFxvhByo2zBfLCcwTpadkEUFfCmGXhrK5+CpyDM=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=toJKKrzBM7yJeHppwmXIVu0zQNyFLVBtsx7ulK8fVi00S58IH/ACTDLgPlwVeTX8dcoSEVveWHIr/zkws2b/S8T/Cw9OIV9qCsYd9TTaL9KaqoGzlci39zyfCSp9Wa90nC6eD2Guwq0QgOlcYtCVYZomgNkPPnsm8vP2J/AI6n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bBBXU/Ng; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4319D20B74C0;
+	Wed,  6 Mar 2024 16:47:38 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4319D20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1709772458;
+	bh=pEn/hH9loE4lKfp7HHBXz6sgeltsHbVfRercOCDfPkw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bBBXU/NgVgP2GrPxc6IXY93e0aerTlX6qVa3q6lw+nwq3rHAAeFwZ+TzkD2WCkFNc
+	 omv1NEbSLhIjUs71y+uLVw/J9H+JfKvntTtE3NJsg/q/FrthImnCgAI1wQHHQhGnES
+	 zQY+luftJ+Y1DJo8fm/hKU+U9Z5m54U+PuNEm7uU=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: mhkelley58@gmail.com,
+	haiyangz@microsoft.com,
+	mhklinux@outlook.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	tglx@linutronix.de,
+	dave.hansen@linux.intel.com,
+	arnd@arndb.de
+Subject: [PATCH] mshyperv: Introduce hv_get_hypervisor_version function
+Date: Wed,  6 Mar 2024 16:47:34 -0800
+Message-Id: <1709772454-861-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4d9355c-f76f-4842-1ade-08dc3e04f6ae
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2024 17:43:41.8760
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6537
 
-From: wei.liu@kernel.org @ 2024-03-04  6:57 UTC
->=20
-> > +void __init ms_hyperv_late_init(void)
-> > +{
-> > +	struct acpi_table_header *header;
-> > +	acpi_status status;
-> > +	u8 *randomdata;
-> > +	u32 length, i;
-> > +
-> > +	/*
-> > +	 * Seed the Linux random number generator with entropy provided by
-> > +	 * the Hyper-V host in ACPI table OEM0.  It would be nice to do this
-> > +	 * even earlier in ms_hyperv_init_platform(), but the ACPI subsystem
-> > +	 * isn't set up at that point. Skip if booted via EFI as generic EFI
-> > +	 * code has already done some seeding using the EFI RNG protocol.
-> > +	 */
-> > +	if (!IS_ENABLED(CONFIG_ACPI) || efi_enabled(EFI_BOOT))
-> > +		return;
-> > +
-> > +	status =3D acpi_get_table("OEM0", 0, &header);
-> > +	if (ACPI_FAILURE(status) || !header) {
-> > +		pr_info("Hyper-V: ACPI table OEM0 not found\n");
->=20
-> I would like this to be a pr_debug() instead of pr_info(), considering
-> using the negative case may cause users to think not having this table
-> can be problematic.
->=20
-> Alternatively, we can remove this message here, and then ...
->=20
-> > +		return;
-> > +	}
-> > +
->=20
-> ... add a pr_debug() here to indicate that the table was found.
->=20
-> 	pr_info("Hyper-V: Seeding randomness with data from ACPI table OEM0\n");
+Introduce x86_64 and arm64 functions for getting the hypervisor version
+information and storing it in a structure for simpler parsing.
 
-You wrote the code as "pr_info()" but your comment suggests "pr_debug()".
-I'm assuming pr_debug() is better because we don't really need any output
-on success or failure. If trying to debug something related to the rng,
-even with no explicit output it's relatively easy to tell whether a Gen1 VM
-picked up any entropy from the OEM0 table.  When it does, this dmesg
-line will appear much earlier than when it does not.
+Use the new function to get and parse the version at boot time. While at
+it, print the version in the same format for each architecture, and move
+the printing code to hv_common_init() so it is not duplicated.
 
-[    0.000000] random: crng init done
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Acked-by: Wei Liu <wei.liu@kernel.org>
+---
+ arch/arm64/hyperv/mshyperv.c      | 19 ++++++++---------
+ arch/x86/kernel/cpu/mshyperv.c    | 35 ++++++++++++++-----------------
+ drivers/hv/hv_common.c            |  9 ++++++++
+ include/asm-generic/hyperv-tlfs.h | 23 ++++++++++++++++++++
+ include/asm-generic/mshyperv.h    |  2 ++
+ 5 files changed, 59 insertions(+), 29 deletions(-)
 
-I'll spin a v2 with this tweak and your wording comment on the
-commit message.
+diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+index f1b8a04ee9f2..55dc224d466d 100644
+--- a/arch/arm64/hyperv/mshyperv.c
++++ b/arch/arm64/hyperv/mshyperv.c
+@@ -19,10 +19,18 @@
+ 
+ static bool hyperv_initialized;
+ 
++int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
++{
++	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
++			 (struct hv_get_vp_registers_output *)info);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
++
+ static int __init hyperv_init(void)
+ {
+ 	struct hv_get_vp_registers_output	result;
+-	u32	a, b, c, d;
+ 	u64	guest_id;
+ 	int	ret;
+ 
+@@ -54,15 +62,6 @@ static int __init hyperv_init(void)
+ 		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
+ 		ms_hyperv.misc_features);
+ 
+-	/* Get information about the Hyper-V host version */
+-	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
+-	a = result.as32.a;
+-	b = result.as32.b;
+-	c = result.as32.c;
+-	d = result.as32.d;
+-	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+-		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
+-
+ 	ret = hv_common_init();
+ 	if (ret)
+ 		return ret;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index d306f6184cee..03a3445faf7a 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -350,13 +350,25 @@ static void __init reduced_hw_init(void)
+ 	x86_init.irqs.pre_vector_init	= x86_init_noop;
+ }
+ 
++int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
++{
++	unsigned int hv_max_functions;
++
++	hv_max_functions = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
++	if (hv_max_functions < HYPERV_CPUID_VERSION) {
++		pr_err("%s: Could not detect Hyper-V version\n", __func__);
++		return -ENODEV;
++	}
++
++	cpuid(HYPERV_CPUID_VERSION, &info->eax, &info->ebx, &info->ecx, &info->edx);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
++
+ static void __init ms_hyperv_init_platform(void)
+ {
+ 	int hv_max_functions_eax;
+-	int hv_host_info_eax;
+-	int hv_host_info_ebx;
+-	int hv_host_info_ecx;
+-	int hv_host_info_edx;
+ 
+ #ifdef CONFIG_PARAVIRT
+ 	pv_info.name = "Hyper-V";
+@@ -407,21 +419,6 @@ static void __init ms_hyperv_init_platform(void)
+ 		pr_info("Hyper-V: running on a nested hypervisor\n");
+ 	}
+ 
+-	/*
+-	 * Extract host information.
+-	 */
+-	if (hv_max_functions_eax >= HYPERV_CPUID_VERSION) {
+-		hv_host_info_eax = cpuid_eax(HYPERV_CPUID_VERSION);
+-		hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
+-		hv_host_info_ecx = cpuid_ecx(HYPERV_CPUID_VERSION);
+-		hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
+-
+-		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+-			hv_host_info_ebx >> 16, hv_host_info_ebx & 0xFFFF,
+-			hv_host_info_eax, hv_host_info_edx & 0xFFFFFF,
+-			hv_host_info_ecx, hv_host_info_edx >> 24);
+-	}
+-
+ 	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
+ 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
+ 		x86_platform.calibrate_tsc = hv_get_tsc_khz;
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 2f1dd4b07f9a..4d72c528af68 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -278,6 +278,15 @@ static void hv_kmsg_dump_register(void)
+ int __init hv_common_init(void)
+ {
+ 	int i;
++	union hv_hypervisor_version_info version;
++
++	/* Get information about the Hyper-V host version */
++	if (hv_get_hypervisor_version(&version) == 0) {
++		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
++			version.major_version, version.minor_version,
++			version.build_number, version.service_number,
++			version.service_pack, version.service_branch);
++	}
+ 
+ 	if (hv_is_isolation_supported())
+ 		sysctl_record_panic_msg = 0;
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index 3d1b31f90ed6..32514a870b98 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -817,6 +817,29 @@ struct hv_input_unmap_device_interrupt {
+ #define HV_SOURCE_SHADOW_NONE               0x0
+ #define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
+ 
++/*
++ * Version info reported by hypervisor
++ */
++union hv_hypervisor_version_info {
++	struct {
++		u32 build_number;
++
++		u32 minor_version : 16;
++		u32 major_version : 16;
++
++		u32 service_pack;
++
++		u32 service_number : 24;
++		u32 service_branch : 8;
++	};
++	struct {
++		u32 eax;
++		u32 ebx;
++		u32 ecx;
++		u32 edx;
++	};
++};
++
+ /*
+  * The whole argument should fit in a page to be able to pass to the hypervisor
+  * in one hypercall.
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index 04424a446bb7..452b7c089b71 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -161,6 +161,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+ 	}
+ }
+ 
++int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
++
+ void hv_setup_vmbus_handler(void (*handler)(void));
+ void hv_remove_vmbus_handler(void);
+ void hv_setup_stimer0_handler(void (*handler)(void));
+-- 
+2.25.1
 
-Michael
-
->=20
-> Dexuan, Saurabh, Haiyang and Long, can you give an ack or nack to this
-> patch and help test it?
->=20
-> Thanks,
-> Wei.
 
