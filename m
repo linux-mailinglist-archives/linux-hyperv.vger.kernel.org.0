@@ -1,260 +1,217 @@
-Return-Path: <linux-hyperv+bounces-1677-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1678-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15E0A875658
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 19:48:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C4128756C8
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 20:12:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A5CA1C2107E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 18:48:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FC831C2113B
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 19:12:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16E5134CDB;
-	Thu,  7 Mar 2024 18:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25F0135A6E;
+	Thu,  7 Mar 2024 19:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G88Txh06"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HP7VTMJs"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B0112EBE1;
-	Thu,  7 Mar 2024 18:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709837313; cv=none; b=Xyhm0/TW0rp8zIsaLcizDyRx//kzS0HzmVnh4o8mFaqBMg1bWHUCpp43QFdyeaUeJaqjMJpkJcxBLfJFARcDZhzgLWWWsA8gaiE8B4x1isJE+AFt7/tc8j/Q5nDlV4SmfZlL6v0DQp/oIiFNknMv42IN+j+Z+gwTJX/KzG6jhlw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709837313; c=relaxed/simple;
-	bh=ZlVuiwcY3+tKFvMTuVwdIuga51AzO7GCDg1uyB1uMmc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Cy1eVD9AFuSlwFwGx5V4xj71deghhLFeZbFIi7K97+cD9R7vGL1+e/F6ebvngdUIVkmumJ3JPinTc/NwsNyoTn1SFIMqv6u8r/vpmzdpMIwk+/5MQpngtl/KhtPt56oG1Ha7ne3fzV/RbWItPAMazRR+qzOBU1tdMbyGrgSxZHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G88Txh06; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dc75972f25so10513655ad.1;
-        Thu, 07 Mar 2024 10:48:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709837311; x=1710442111; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DM6xLHdRM5YVSpxA0XD8pf8TNWCksal/JAtwGJQYz8s=;
-        b=G88Txh06uLzX9d0vTLb/notD1X/oHcIipv2U84bd9yoJQ5zO+iXdjNgLvhDlbjx31V
-         gWWNXvuVQ9QLWd4nZic3b9NTLR4iXH9VEMGkmeMoKoQJYMlqqqn9/SQGrfT2/MMMqjzF
-         3I3BmBY6pgduhD+ntyjfS55zvCvb0jXw2tXumK+Qy3gE8mNN63i0LQq0oIolXqHVoBk/
-         xD6jdi5XK+bnDk72mI8SCoZiFe9eyZWOd64o/XxtTJKtG2Slsqo1lqjxlpYRsGfsFeOX
-         rCqaMcAmQTjTMbrba+HsFattfGTJhQlc5/0VIdzQ+ZdA7zOayNw1mjpkOZdcnVOdQ8JM
-         5eTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709837311; x=1710442111;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DM6xLHdRM5YVSpxA0XD8pf8TNWCksal/JAtwGJQYz8s=;
-        b=w84BkBjc8xnURgqmzLrjBdFDfcs9/rfWG+LZ8DVOUtnMVHQKPQOBD5W9oLKJdJb2Ae
-         MIesZ2RSVgvzBCa4ybQNYERY6JYcoTf/RmqUz9T1FroBKqQQsCtNq4gareFhuMGnwYE7
-         45CZ6KdrNJVBnUvjviwEEtdym3sE2mhJzuH6Jl0CeCMPrUIn+YftYvLNDmr0Nsrg3wzu
-         KEKWSD1iiyInnNLidkmg79/iMtxSg+o/bop9JkRYVhdinQwoAIqYHX4qm5Svf/QH3zXR
-         9IjV6Wtue4fnacB5dU2/TzT5aVClowXhxXpEYwEs00iagkwY2hb0cFqddqSJVm3ZWY46
-         UWDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRw6wSt1Owk2KG5yniOG0ZEzZsPeHxFcKb1ZC28QHxb7jUzJejJg2/HUrRRqysEAqgdnRkDPjnzOIs31t9JP45rkFMVANgHtZLknJTTW1SHA0TkqG4thiHnCXXOtYPbgNlqHeG3Cn+Q/DVc5ngVXm1z8+cik3U4OqVqjdL5ntDN31VwWeT3A==
-X-Gm-Message-State: AOJu0YxCaHDYb6Y3XxtrLGWxdKsnwcwRmKGrRcWE+64OcKYQfTptJ5d9
-	CXa+XTDym837K1TCymQYsyGG4ms4bPSrMVrfFxiVAwUCw3jhXux/MMryg8wu
-X-Google-Smtp-Source: AGHT+IH5lwnw1qFd96pNJ/vPQHDXDUC4wmgRO3AqnHGRP5XlyBljbgEjm9qmvgc+7czvdNbAnqbARw==
-X-Received: by 2002:a17:902:db0a:b0:1dd:a34:7321 with SMTP id m10-20020a170902db0a00b001dd0a347321mr10432443plx.25.1709837311226;
-        Thu, 07 Mar 2024 10:48:31 -0800 (PST)
-Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
-        by smtp.gmail.com with ESMTPSA id p24-20020a170903249800b001dbcfb4766csm14922726plw.226.2024.03.07.10.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 10:48:30 -0800 (PST)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	arnd@arndb.de,
-	tytso@mit.edu,
-	Jason@zx2c4.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v2 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random number generator
-Date: Thu,  7 Mar 2024 10:48:20 -0800
-Message-Id: <20240307184820.70589-1-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4461B13473E;
+	Thu,  7 Mar 2024 19:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709838747; cv=fail; b=Xs47p4QWkhSlwEvvfrmzi1UIK0w1wDnguAXbmwG581lvdSQF//LXv7h8UTXALzxq2ej8T6L6zirH2wARdtJgAx8emDDh4/iiCwCzP8P9GpjNp/prWODLv2Yw2MGa/BCzgWgsxhd/5cYztM6ppmSoH9XhQFUlClRKzW3oy+38Y3Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709838747; c=relaxed/simple;
+	bh=EPBGtHEZe//DeS3fBWSaf0PwoCj7Dun0JFHb4kZvi9o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hjLN6sHmdJjgMrphWdmi7U4fgPLGF3AZNZRjOm0uFI4buVQ/P8Abz3D2YsUdJW0NE6nuhhccfQRlmpytYPpM/DSzrLjNTS3uKr5Bm2cIHkHR5rYOPICxFzc8MTYoa9qK7tt0eEJnr+EIXkOdsPtl2T5ju4Bp57Og7BUvh7uRUM8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HP7VTMJs; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709838746; x=1741374746;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=EPBGtHEZe//DeS3fBWSaf0PwoCj7Dun0JFHb4kZvi9o=;
+  b=HP7VTMJsbMtRU0+kdSKfoVbvJUe0OyPu37EO55ooVMQ7LYE6+CRTGRq/
+   DQDbJ8u7VtH6k7BSyjenGqxRZnrDunHgRVCLYDpZ7MIxGTqmTJGMjcBPm
+   Wsoyj2dVr+AtiwReNlfX0I/OoRxsgvtSeuFMv6CWgJ+JnJeiPAI6ZyQAY
+   CcchBB0ioez4Pk8Og/csI8P9Qb6ZZQut1b6zHSLc4PpAhSAhe4T3F7rtj
+   0pOUMt2UXqyjsj8eJtTgeS7faea3VzPolscfVBmg7cbVmZYURmy954K8s
+   5NwDfThcM/DSJUic5/+aVHef4tE0M4pikti+hn+tJY7tTCC+sWBybJ6T7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4650265"
+X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
+   d="scan'208";a="4650265"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 11:12:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
+   d="scan'208";a="10341468"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Mar 2024 11:12:25 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 7 Mar 2024 11:12:25 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 7 Mar 2024 11:12:24 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 11:12:23 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 7 Mar 2024 11:12:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eW0CmZNtDu7tOIfV1Qw/knssC9XrFQzDrlvTo4b2x/bvlEbNDkN+K9W93+X3dAECaOCYXv36CiCb8pIdahYFQgGpyuwIK87hnC3KMwe60CNAY48zgygHFAoDyDi+4XOK+a2+kDgUtbE2WDGORWY8JpO1nhwxH1xGma1oqPNTvmmy6v4Zgrz8zCHellVLHvKCns8JISSvL2xoSKxrp9OnD98HiyXwt5Dm8jPI8ICKYITcC6Fudj0dSoHeDAMrs9T8tssYeEvYTEdRVrpgXFusKDm8GIgaqdrGJvx5EGQVtnV/CouoxL3uZ1GH2G6mqN66RWf7XSAO2D0emoM+TAwk+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EPBGtHEZe//DeS3fBWSaf0PwoCj7Dun0JFHb4kZvi9o=;
+ b=CfoEDfTo7QiPWwkFeQ56JgKh585FaMS0qS4VzLkyPMDhyyXGOomeE2lYSLTawpQM6gFpzjXDrTuQr8ZFg84fsXedAelI+kEqlKWSyfHXpVJI0SRQjuNAwjXmP3g0cw4LLqSFBcufMFA4iU8Nxev8bhNJB9miz3ycGhWjFa0MVCTL18WX5vs8255TX+Jx/AtDn48wz/5e+NtYzaelTKaHT3MnyPovc+f6NDrK4v0C6ukTblQDwQ1Ru46rRAVmlyNNb9EnUMnb5TtSlA15yxMiXkyH/LGWBMjS1+E4cl5lrlcbwEowauf9oibCKrfTAt3tTIHquaOKtJ02NlYDDj7qTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by PH8PR11MB8288.namprd11.prod.outlook.com (2603:10b6:510:1c8::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
+ 2024 19:12:20 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::fc9e:b72f:eeb5:6c7b]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::fc9e:b72f:eeb5:6c7b%5]) with mapi id 15.20.7386.005; Thu, 7 Mar 2024
+ 19:12:19 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"mhklinux@outlook.com" <mhklinux@outlook.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "davem@davemloft.net" <davem@davemloft.net>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "edumazet@google.com"
+	<edumazet@google.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>,
+	"Cui, Dexuan" <decui@microsoft.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>
+CC: "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "Reshetova, Elena"
+	<elena.reshetova@intel.com>
+Subject: Re: [RFC RFT PATCH 0/4] Handle  set_memory_XXcrypted() errors in
+ hyperv
+Thread-Topic: [RFC RFT PATCH 0/4] Handle  set_memory_XXcrypted() errors in
+ hyperv
+Thread-Index: AQHaZTRfFcBcSWU6jESvF40A9Qp/W7EjSvwAgAlPpoCAACG0gA==
+Date: Thu, 7 Mar 2024 19:12:19 +0000
+Message-ID: <9e12c7139ab5b9b39c73a4069493d8d826b21702.camel@intel.com>
+References: <20240222021006.2279329-1-rick.p.edgecombe@intel.com>
+	 <SN6PR02MB41575BD90488B63426A5CAB4D45E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 <SN6PR02MB4157AFF080839DB55294F5E9D4202@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157AFF080839DB55294F5E9D4202@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|PH8PR11MB8288:EE_
+x-ms-office365-filtering-correlation-id: 76a22ed0-3fa1-4b1f-9d11-08dc3eda82e3
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PhrZ9/sve+O3BNzoXUZEyhMkOcqORzzaFiP3bxWeXrIYYppvgmXqYEK1/bHy7iJhJrpdnBGhGkTihM+IF9rN9yeiNItsWD3wz4glCT0q7sskSFlLi3LM2rYJm0yyLNxG9CFqJeXIUrSp9dyY1U2xReqessXpHQD/TCnvjxxWhnbpSqbyh9RAV8hOIjY3658dwvxxSBG2YyQCaHOm1b7TF1rXb3dAloA6QcgR2z+asGisvzlEuFT1S6OpPw/USfe7aAxw7Cz76MLHf2OoPdAxxRMfzyiGlTkGov5D9b2ROql3x1ZNUh9437iiusa7SzorIqcZA8vd5hjmEdNXcRr7n+CumnjHlYVDT+pbwkGW7QTPGLRPtaipWv/bVhRV/0XdUFO+nEm3g7aS15fag1H0MUcTxKe8Xl+BwYSeF0uVwCmv4zXtbMxclyXK/dXsxtMVRmcwVx2NUiwGaYQW7or5svCKR1EREZk6NB3I87+PhzkNRGUdgde8QZ2tSPtEDmhsMi5EpZ9iExjEmJPe4TyRE3ibwJGh9tV52HIkVtO4gP2+zTP3ttLfjD0Z3p2XJWurOG+V10odeStBwplKZ4c2JEn71CfrryAeZB3Ta0ddBcEzUa6HEytgymR93PDdIOdj80ywyqfRl4+fzFTFy0p+qG6DrXa9EpiSjTDcm3HwRKLBxGV4O+3qdXtOTzsN919AhuHQ0AZ/FR9ShEIzBM+h/YZglIfu6wu7t3aLMswwKbM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(921011)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RjFMUHRoS3I2TUVIQlpoMWdxbkp5Qi8wbERJbGFmZVZXK3hpazdvRFEzbzIz?=
+ =?utf-8?B?YVVLQ3U1eVp1UkVVbW0yRmgwNkV6UFJkNTJIanFDWHZIUWV2UVd3R1hDaGo2?=
+ =?utf-8?B?a1N4RFVaNGdPZmtPNmYvSVV3bXlEdmFmTmQrciswRUxybThnRXprOENCNFc4?=
+ =?utf-8?B?QlRjNkJQQ0JsZlVObUZ1MldmeUlzRnBhRnRNRHhpeG1sMlpNOW9xcGJ0TklF?=
+ =?utf-8?B?bXdWS1Y4ZUE1QzlLajBNV0VvLzQrQmRPRGU2WXhlQ014OXkyM25KNHBnL3B5?=
+ =?utf-8?B?N2VUeW5RWmhLVFZpR3BNZkxRUm9DR0IyMFR1dVdKd3JXdk1zb2JXMHROV05t?=
+ =?utf-8?B?YlNaN2RuZlJzeEFRdy91VkdoMmI1enBGOHZmMXRWL2RvQlgxTnVkMDNzSHBU?=
+ =?utf-8?B?K0VCMjBkSTd4T3hackxxQ1Z2VzE3SjVBNE5RWFdGeEtYNWFLQUR1NDR3OWRr?=
+ =?utf-8?B?RVZUQU9mSUtiZlNwK2JVSlhBbndic2ZVaHhVdlEzd2o5OVhPRjZpNzhydDMr?=
+ =?utf-8?B?SFVGMnh4N1hSNzg0V2hjL3RiU3FvcW9HbWtlck13cURCaHNQbXdiQ1BvbHUz?=
+ =?utf-8?B?M3FFU1dyMGdsRlhiK0k4T29LUy9rS0lPbzNaQm5UcVZhTjl5VWVzTlpnTlhC?=
+ =?utf-8?B?MnhEajhVVkxSWS9Id04zOHZIQzl0WVZTbVBzWUkweUNSb2FRdGtIZUZKRmEy?=
+ =?utf-8?B?SEVXNGZVdmtNSDhBVTU0Z045aFJTUFNyVFVwOEhaZk1QbkdTVmV3RS83NVFE?=
+ =?utf-8?B?alkxdlBDeWtnbUdnM1N5WmtQajd3MmQxM3I4K1JaNng3a3FMSFh3bFJyZ2lj?=
+ =?utf-8?B?T2RwRGZ4aXZVck50dDgzZXc5aDRJK1haQWE3VkpHc1hlMFJOVzNZSFNXcHdR?=
+ =?utf-8?B?alc3cUxDVDV3RDJUc20yUFBJcHBoMzBsUWIrUVl3SHdpbmw2UDk3b2RlVHl6?=
+ =?utf-8?B?MC9qQ1NMTUNwRjhGSkRoL3VUNmUvSW9KMWhsSDdxektqOWJ1cll1VGpGTDln?=
+ =?utf-8?B?Q0xCQUhoQm5KZmliSUZMd2xMQlByRFpPN2ZZLys3TFozQ29UZGdYeVl0ZFM2?=
+ =?utf-8?B?akZmWjJjRFVBV25qajdhWGpVbGFhWXd1a01WMmFEQ3d3czk3ZjE3eEE5eC9S?=
+ =?utf-8?B?dXoxVkRRNWZMazVPT2o3WGMwSHJGdTRJVG5oZzYwUWxKY0h6ZkhLaEJ1SXkv?=
+ =?utf-8?B?dnNnUnd1dDEwSDloZTRTWjV2ZFZPSDJPbXBBVG9PVk1RTThFNDZjQmpCSUE3?=
+ =?utf-8?B?V3JhNWd4eTZkbnN0dXAzYjVsZHNDV2NmVlF6ZC9zOElZd1pCVHBtckkrTElx?=
+ =?utf-8?B?K2tLcnI2WkNIbnFxTHlTVERpNFE5U2E5SDBFZ2FoMkJJL1VCKzNMd29oWlJ1?=
+ =?utf-8?B?WnpvSFV1Y0RHUzZjUjVVQW9lQXYwM251N0FSa2tmb2xreCt2dWhPbVVjRmlW?=
+ =?utf-8?B?b0g4Yld0SVF4MEc4YlMxWU1kUUhWK1ErZXhHNnM4WXppK0NPdzBoSUZiaFJ0?=
+ =?utf-8?B?RERhZ2RaeldkaHB4OW1ibVdLNDZ0RjE3Y2NHV3A3dUxrSHZUWTRtVGxIWm5s?=
+ =?utf-8?B?MzRzVURMcFVxZHVEUEJhd1RIMHNtY3NyNXdJWU02dCtTc0lCa2VVRk10aERs?=
+ =?utf-8?B?NG1xd0NmVnV1S3RTRU13bGxpalloRTUxTGpPbnBWUlA5dnFGR1czOGFXRFE3?=
+ =?utf-8?B?WGZBanRPNEZJdFRjTHQwODZBdlRWSVFFbDdQV1lSNHFSd1hPUlN3Y09yeXdC?=
+ =?utf-8?B?SktwTXJkVUU3YnVhclVmZklmWUxQL25PSklWN2srejNaSngyVi9oUUN5Ny9m?=
+ =?utf-8?B?VnZjbmhhclFjVS9IM2wxVVNsK2VzL2liZ1FicVdtR0c4Y2V1TVN4bU5nemRI?=
+ =?utf-8?B?K0x6S2ZCa0txZHRPY1duV0M2WENCeFdseUk2VERyVzVCMnNMb01NNFpxTGlZ?=
+ =?utf-8?B?Y25zU21LYW80bjIvd1JNcFpYNVI4QzJVRVp1eE54K25IVjdTWjNGek9MSW1P?=
+ =?utf-8?B?NHBDcVdMTURWMkpxT0psQ0NQVndZSm9WckVkVnZINGVlb0syYzk4UWpYems4?=
+ =?utf-8?B?dE1SU3RZRFVuM1Z1OTlxcDhlYXVHMjBRU1M3OVdOTHliZkhQQTUzTmxYSlZV?=
+ =?utf-8?B?TklBdXlMZHdsb2VDeW5LYVVtVWp5QVExOHZRNEh6NVBaWGtYNmlySDExOEJW?=
+ =?utf-8?B?MFE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C5E2BD08422430428C4222110ADAC0A8@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76a22ed0-3fa1-4b1f-9d11-08dc3eda82e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2024 19:12:19.9060
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fb46jmAIaRP4FlAgeI+nVZTIaZ6qJ/yy/Sq/WGcc5iJyPRKCkDvQQ3obR/bPbhoie7ytpOk1IFCk0nq9Qv0z/TWyoF5X7bHDhxbAOZYS0ew=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8288
+X-OriginatorOrg: intel.com
 
-From: Michael Kelley <mhklinux@outlook.com>
-
-A Hyper-V host provides its guest VMs with entropy in a custom ACPI
-table named "OEM0".  The entropy bits are updated each time Hyper-V
-boots the VM, and are suitable for seeding the Linux guest random
-number generator (rng). See a brief description of OEM0 in [1].
-
-Generation 2 VMs on Hyper-V use UEFI to boot. Existing EFI code in
-Linux seeds the rng with entropy bits from the EFI_RNG_PROTOCOL.
-Via this path, the rng is seeded very early during boot with good
-entropy. The ACPI OEM0 table is still provided in such VMs, though
-it isn't needed.
-
-But Generation 1 VMs on Hyper-V boot from BIOS. For these VMs, Linux
-doesn't currently get any entropy from the Hyper-V host. While this
-is not fundamentally broken because Linux can generate its own entropy,
-using the Hyper-V host provided entropy would get the rng off to a
-better start and would do so earlier in the boot process.
-
-Improve the rng seeding for Generation 1 VMs by having Hyper-V specific
-code in Linux take advantage of the OEM0 table to seed the rng. Because
-the OEM0 table is custom to Hyper-V, parse it directly in the Hyper-V
-code in the Linux kernel and use add_bootloader_randomness() to
-seed the rng.  Once the entropy bits are read from OEM0, zero them
-out in the table so they don't appear in /sys/firmware/acpi/tables/OEM0
-in the running VM.
-
-An equivalent change is *not* made for Linux VMs on Hyper-V for
-ARM64. Such VMs are always Generation 2 and the rng is seeded
-with entropy obtained via the EFI_RNG_PROTOCOL as described above.
-
-[1] https://download.microsoft.com/download/1/c/9/1c9813b8-089c-4fef-b2ad-ad80e79403ba/Whitepaper%20-%20The%20Windows%2010%20random%20number%20generation%20infrastructure.pdf
-
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
-Changes in v2:
-* Tweaked commit message [Wei Liu]
-* Removed message when OEM0 table isn't found. Added debug-level
-  message when OEM0 is successfully used to add randomness. [Wei Liu]
-
- arch/x86/kernel/cpu/mshyperv.c |  1 +
- drivers/hv/hv_common.c         | 64 ++++++++++++++++++++++++++++++++++
- include/asm-generic/mshyperv.h |  2 ++
- 3 files changed, 67 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 303fef824167..65c9cbdd2282 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -648,6 +648,7 @@ const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
- 	.init.x2apic_available	= ms_hyperv_x2apic_available,
- 	.init.msi_ext_dest_id	= ms_hyperv_msi_ext_dest_id,
- 	.init.init_platform	= ms_hyperv_init_platform,
-+	.init.guest_late_init	= ms_hyperv_late_init,
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 	.runtime.sev_es_hcall_prepare = hv_sev_es_hcall_prepare,
- 	.runtime.sev_es_hcall_finish = hv_sev_es_hcall_finish,
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 0285a74363b3..219c4371314d 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -20,6 +20,8 @@
- #include <linux/sched/task_stack.h>
- #include <linux/panic_notifier.h>
- #include <linux/ptrace.h>
-+#include <linux/random.h>
-+#include <linux/efi.h>
- #include <linux/kdebug.h>
- #include <linux/kmsg_dump.h>
- #include <linux/slab.h>
-@@ -347,6 +349,68 @@ int __init hv_common_init(void)
- 	return 0;
- }
- 
-+void __init ms_hyperv_late_init(void)
-+{
-+	struct acpi_table_header *header;
-+	acpi_status status;
-+	u8 *randomdata;
-+	u32 length, i;
-+
-+	/*
-+	 * Seed the Linux random number generator with entropy provided by
-+	 * the Hyper-V host in ACPI table OEM0.  It would be nice to do this
-+	 * even earlier in ms_hyperv_init_platform(), but the ACPI subsystem
-+	 * isn't set up at that point. Skip if booted via EFI as generic EFI
-+	 * code has already done some seeding using the EFI RNG protocol.
-+	 */
-+	if (!IS_ENABLED(CONFIG_ACPI) || efi_enabled(EFI_BOOT))
-+		return;
-+
-+	status = acpi_get_table("OEM0", 0, &header);
-+	if (ACPI_FAILURE(status) || !header)
-+		return;
-+
-+	/*
-+	 * Since the "OEM0" table name is for OEM specific usage, verify
-+	 * that what we're seeing purports to be from Microsoft.
-+	 */
-+	if (strncmp(header->oem_table_id, "MICROSFT", 8))
-+		goto error;
-+
-+	/*
-+	 * Ensure the length is reasonable.  Requiring at least 32 bytes and
-+	 * no more than 256 bytes is somewhat arbitrary.  Hyper-V currently
-+	 * provides 64 bytes, but allow for a change in a later version.
-+	 */
-+	if (header->length < sizeof(*header) + 32 ||
-+	    header->length > sizeof(*header) + 256)
-+		goto error;
-+
-+	length = header->length - sizeof(*header);
-+	randomdata = (u8 *)(header + 1);
-+
-+	pr_debug("Hyper-V: Seeding rng with %d random bytes from ACPI table OEM0\n",
-+			length);
-+
-+	add_bootloader_randomness(randomdata, length);
-+
-+	/*
-+	 * To prevent the seed data from being visible in /sys/firmware/acpi,
-+	 * zero out the random data in the ACPI table and fixup the checksum.
-+	 */
-+	for (i = 0; i < length; i++) {
-+		header->checksum += randomdata[i];
-+		randomdata[i] = 0;
-+	}
-+
-+	acpi_put_table(header);
-+	return;
-+
-+error:
-+	pr_info("Hyper-V: Ignoring malformed ACPI table OEM0\n");
-+	acpi_put_table(header);
-+}
-+
- /*
-  * Hyper-V specific initialization and die code for
-  * individual CPUs that is common across all architectures.
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 430f0ae0dde2..e861223093df 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -193,6 +193,7 @@ extern u64 (*hv_read_reference_counter)(void);
- 
- int __init hv_common_init(void);
- void __init hv_common_free(void);
-+void __init ms_hyperv_late_init(void);
- int hv_common_cpu_init(unsigned int cpu);
- int hv_common_cpu_die(unsigned int cpu);
- 
-@@ -290,6 +291,7 @@ void hv_setup_dma_ops(struct device *dev, bool coherent);
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline bool hv_is_hibernation_supported(void) { return false; }
- static inline void hyperv_cleanup(void) {}
-+static inline void ms_hyperv_late_init(void) {}
- static inline bool hv_is_isolation_supported(void) { return false; }
- static inline enum hv_isolation_type hv_get_isolation_type(void)
- {
--- 
-2.25.1
-
+T24gVGh1LCAyMDI0LTAzLTA3IGF0IDE3OjExICswMDAwLCBNaWNoYWVsIEtlbGxleSB3cm90ZToN
+Cj4gVXNpbmcgeW91ciBwYXRjaGVzIHBsdXMgdGhlIGNoYW5nZXMgaW4gbXkgY29tbWVudHMsIEkn
+dmUNCj4gZG9uZSBtb3N0IG9mIHRoZSB0ZXN0aW5nIGRlc2NyaWJlZCBhYm92ZS4gVGhlIG5vcm1h
+bA0KPiBwYXRocyB3b3JrLCBhbmQgd2hlbiBJIGhhY2sgc2V0X21lbW9yeV9lbmNyeXB0ZWQoKQ0K
+PiB0byBmYWlsLCB0aGUgZXJyb3IgcGF0aHMgY29ycmVjdGx5IGRpZCBub3QgZnJlZSB0aGUgbWVt
+b3J5Lg0KPiBJIGNoZWNrZWQgYm90aCB0aGUgcmluZyBidWZmZXIgbWVtb3J5IGFuZCB0aGUgYWRk
+aXRpb25hbA0KPiB2bWFsbG9jIG1lbW9yeSBhbGxvY2F0ZWQgYnkgdGhlIG5ldHZzYyBkcml2ZXIg
+YW5kIHRoZSB1aW8NCj4gZHJpdmVyLsKgIFRoZSBtZW1vcnkgc3RhdHVzIGNhbiBiZSBjaGVja2Vk
+IGFmdGVyLXRoZS1mYWN0DQo+IHZpYSAvcHJvYy92bW1hbGxvY2luZm8gYW5kIC9wcm9jL2J1ZGR5
+aW5mbyBzaW5jZSB0aGVzZQ0KPiBhcmUgbW9zdGx5IGxhcmdlIGFsbG9jYXRpb25zLiBBcyBleHBl
+Y3RlZCwgdGhlIGRyaXZlcnMNCj4gb3V0cHV0IHRoZWlyIG93biBlcnJvciBtZXNzYWdlcyBhZnRl
+ciB0aGUgZmFpbHVyZXMgdG8NCj4gdGVhcmRvd24gdGhlIEdQQURMcy4NCj4gDQo+IEkgZGlkIG5v
+dCB0ZXN0IHRoZSB2bWJ1c19kaXNjb25uZWN0KCkgcGF0aCBzaW5jZSB0aGF0DQo+IGVmZmVjdGl2
+ZWx5IGtpbGxzIHRoZSBWTS4NCj4gDQo+IEkgdGVzdGVkIGluIGEgbm9ybWFsIFZNLCBhbmQgaW4g
+YW4gU0VWLVNOUCBWTS7CoCBJIGRpZG4ndA0KPiBzcGVjaWZpY2FsbHkgdGVzdCBpbiBhIFREWCBW
+TSwgYnV0IGdpdmVuIHRoYXQgSHlwZXItViBDb0NvDQo+IGd1ZXN0cyBydW4gd2l0aCBhIHBhcmF2
+aXNvciwgdGhlIGd1ZXN0IHNlZXMgdGhlIHNhbWUgdGhpbmcNCj4gZWl0aGVyIHdheS4NCg0KVGhh
+bmtzIE1pY2hhZWwhIEhvdyB3b3VsZCB5b3UgZmVlbCBhYm91dCByZXBvc3RpbmcgdGhlIHBhdGNo
+ZXMgd2l0aA0KeW91ciBjaGFuZ2VzIGFkZGVkPyBJIHRoaW5rIHlvdSBoYXZlIGEgdmVyeSBnb29k
+IGhhbmRsZSBvbiB0aGUgcGFydCBvZg0KdGhlIHByb2JsZW0gSSB1bmRlcnN0YW5kLCBhbmQgYWRk
+aXRpb25hbGx5IG11Y2ggbW9yZSBmYW1pbGlhcml0eSB3aXRoDQp0aGVzZSBkcml2ZXJzLg0K
 
