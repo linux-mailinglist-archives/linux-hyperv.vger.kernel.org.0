@@ -1,318 +1,281 @@
-Return-Path: <linux-hyperv+bounces-1680-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1681-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 288A9875772
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 20:48:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B77B68757EE
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 21:07:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C70F1C20995
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 19:48:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B7502816E4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 20:07:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A0C1350D6;
-	Thu,  7 Mar 2024 19:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E89137C54;
+	Thu,  7 Mar 2024 20:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Tcz47/e2"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="nMHvvKTc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7C91CABF;
-	Thu,  7 Mar 2024 19:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709840925; cv=none; b=O7ZHR7uI3vxUPOOeh30JAFN8z+aq1Q6dDzFdse5DlycBXwO4ehTn/ws3t/86F2H05ML+dRBNt+ho37tybHMIdKJKpVB8aTCWs/iI4R/+V33Xpv7P8WHKFdX/s7Jzx9Tin/pq7fV16h23YtIxy5bR4r0c+zblQM9nKgslXZq1yxk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709840925; c=relaxed/simple;
-	bh=WKpE3QWNLfAE8yAu4U59TjMXNMBmXmOW1c/7VEF0eG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bkP/0fA4pGVouavxXYHIa9SXKSyNGMRgmGtpUI/gQvwfWU4n7grvrWUneWP/NBzWT+/bP2Hd+AIUTzyF6mKSwQoOOAL11lLnaCP6508hMGofR65x4y41xIx0oTzs+GXYsoDAdUQqyDFk8cVaZtq+lMlL7mKAR2R5ovNMJDjl7GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Tcz47/e2; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-24-16-32-44.hsd1.wa.comcast.net [24.16.32.44])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9FE2C20B74C0;
-	Thu,  7 Mar 2024 11:48:42 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FE2C20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709840922;
-	bh=swZt0WDY7vnvvvY3C7GAziiKELVpLhpEriSn+90f/+0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Tcz47/e2qRv206ftSQG5rX+c/6bXhw62rZM+vjABMiNjE02sSAoY3jsRRSyqCc2HY
-	 VdrSqT5NvxLK/cBg9uBw/gmXBrv1ZUwdOB0K3IcHhrMR9yyOyQDvtnC8b67myniFkB
-	 Majy/MmluxeyhSAm4nJ/1WhEWf07nvyBWhjTc694=
-Message-ID: <83cf8fa7-c8c7-4d3c-9f6f-6a596644b974@linux.microsoft.com>
-Date: Thu, 7 Mar 2024 11:48:41 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2029.outbound.protection.outlook.com [40.92.40.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B092C1DA2F;
+	Thu,  7 Mar 2024 20:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.29
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709842043; cv=fail; b=F9VzSuUNYSKYH1LcGjPYtFFqcysUNaUHvkEjVCUTEXkHS1Ut3kkS60WJeqmPI7+l00HTBttj4VZo/WP20D9IyaBYjnnyB51kNgviWkGdAXB20p3XROb5s2lmBg55iVYvF2SRxeA2sQTZvQuPF45ZlmJjYM2jbIjuQ2WGexD5dGY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709842043; c=relaxed/simple;
+	bh=l2fuduD/UVbn+TOVxEs9RAH2r2bys3lvJOumO+iV3rk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VuAXrx3qrRN29TFP/6pEC6Ji9YbAoXxUx4aDOb4raQRuch5lXw4s0Nd0e4H7VgPpkG7XKLPqw2WYW4Hs6HkUbb1eDUv8RKU/SLsp9dWkUaHVNdC6xxdZjgJpSc18LHjMuOHjfsCwztJSoO/j8VVlVIFE8/NzREgzwC6FPbE2jpI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=nMHvvKTc; arc=fail smtp.client-ip=40.92.40.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lvIzMtcuR0xqqqqtzGpzQhQYT+Ty63P3LdTTd588xejxa+hqdBu/UoYH0dvef2WEX5+eK1Ltnv1NUMbAMd9aWitsO3qNlK2tFNlQiEp8pt8aZod3nPrK3UVyWeBlyvs9dbiFYxI/Q7/GRknbdpVqVpk6/qbKPDfucu2O2I2PrfFUj9kfcKfFk11yBBDR4ik3u5AREkBO3KNO7IG16jLOQtTm6aR1+alJRri//bM4Nr1B+ZLmZU9bgxI10kcbH2IyMbrZEkZVoTSPVmJC2xhswIVtDGLEWiOxaQtueI64JrxPIsuIpWZH4xWfnGecR2VlZNHSkQBwU/owGfeY4iCmBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l2fuduD/UVbn+TOVxEs9RAH2r2bys3lvJOumO+iV3rk=;
+ b=k7AwyN0wi2wrzgnm8F3TU9lfaAVbId8JGx0RheOEtmvTEtk4Dq+bzAHJEJFyGfGOahGo0aXS3Us6Rx3sw/wmc4Uthq3FLBy2G+Sy6J0OK6lZeuoivbY6RZg/dplRrjoGBhKj4VGTAUC2yDu2RZFVqXOK586bNktj39VmUcgz6fcqO4vRn1liK7/G+V1P1q0XcLkmb6NlxxJlHyOPtZF1Jhak1or7qhZc9WNGIXpV6oPe6lJCg08c9fJVpJ+2IO+fiPi0YeI9vJTW+l79hgaxpCixqj0AxZdz6tq5RUX+WHOzAnz1zWiaSFr5fMPCb6IRDzQFrQa4qXDJZhB5MwbfKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l2fuduD/UVbn+TOVxEs9RAH2r2bys3lvJOumO+iV3rk=;
+ b=nMHvvKTcL6LIt5o5IQu/S7xP44h/FCuhDhdL003TYF9+F1WYHQlkEFZG8bNKRmG0nioXxgFm84p5rNeJC8WUD6We8P75BTdXXx8qUWa8w8tcsHFZJpxZf4/FZUmlFweGKjGvToolEuaUu2MH+w+Szl55MJxsXipTXwBbxirZAn1oMduTvFjIBOGSFqMefOcCuB3nffVntCtEF8fVQhORVL1iMmYyOBc6kpK80IYjDQ59RbiSdT7e8h0tocGXfTb6xHKjMAwfcn4vB4X06T1qTxdujRcR85D4Tj7gxOT8x/W4IZjtY0UWWJ8FNhajuwwtu8jzsN/KBVEXnTARszf9OA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB7414.namprd02.prod.outlook.com (2603:10b6:510:1f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Thu, 7 Mar
+ 2024 20:07:17 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
+ 20:07:17 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "mhkelley58@gmail.com" <mhkelley58@gmail.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: RE: [PATCH] mshyperv: Introduce hv_get_hypervisor_version function
+Thread-Topic: [PATCH] mshyperv: Introduce hv_get_hypervisor_version function
+Thread-Index: AQHacCkXRLZn90Nzd0e0IGhecFdkYLEspa9AgAAK54CAAAO6QA==
+Date: Thu, 7 Mar 2024 20:07:17 +0000
+Message-ID:
+ <SN6PR02MB4157DB9B4030D666F9CD2152D4202@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1709772454-861-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157D470D0E46FA9B2ACD8EBD4202@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <83cf8fa7-c8c7-4d3c-9f6f-6a596644b974@linux.microsoft.com>
+In-Reply-To: <83cf8fa7-c8c7-4d3c-9f6f-6a596644b974@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [MwBe0f/Aqhm/ZPzr54921UB30eSVxKyw]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7414:EE_
+x-ms-office365-filtering-correlation-id: 06c46dfa-89a1-4c4e-a4e7-08dc3ee23058
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ VC3jkdEzwOWr3VZVx9oTAjsHSmakCSeFOSRCLJZD4uwst0NLNtn7Jp7ifwIbM2aw9Z0SxYc9XmRIs1mMZNh0338hf3ZeOAyr9H6nk8YJ8TechoinK4PFW7KSniYQ6VJrdvud+YJbdQUA73HSAKm4QhgfGhdW+QBdIiV5FG0d5F9ghCMlRJ3+PkaiRiaKzqieew7CSAKaV3GM+U9zIgpwQJ7WRM1RdHCpKamDz0wFi5oJF05BiDPFZmgYxFR1WriTM5eq+/1Q6ya70Ba6aHjbDXg20HzzIeqTzmTVBo9xo46oPvVLZ8q27zNVJNrjhtWuUaKC4xrtfRJ+ybh2dHAi2I7lBBLAG94ZSook9Ph23arGx5Hm/7H0ensCrWM8NZ1RGIFlKFVC9phN5Wf6Vgr2V+6RDqH7NwqclwapILSK6oR3k/diOACaJ3BybVQu0okhy5AX4PhzTc5GKDc5I1Mg0zUzJgdrtr+JYvKxB59aa+SLjD3gwgzO1z7Y3Y/p+YHwA16/dbvABV431ynGG3jshxyNdMDC4evlxKc18w8mnbd7I3qlrIFtjlJsDat02pZa
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?emFMdEhjMU9JcWJzRGJKRzJPeSsvTU5TcnZwWGdXMXBlVnpHZndJRTNWTUVp?=
+ =?utf-8?B?Y29zTHRiM1ZHdElxZnBUaGdrQ1c3enJxQ0dDenJSeml2by9PL2dDR0pUUXBl?=
+ =?utf-8?B?SGxhRXNWNjhCNnNrOXBtazZmdS9NZWZDUG40MHpWYjZDQjZWeE9yQnNpNHNh?=
+ =?utf-8?B?Qk42VFhlVGdEQmNxc3FOa2hTWHZneWkyL001OVMrb3V1NVJMMXhIR2ZhV3hk?=
+ =?utf-8?B?dkc2S2tyanF3aG5ta0Q3ZTc4MTIxNW11cEdxcnd3T1lDS2lVNC92bk1LamJl?=
+ =?utf-8?B?QWk3M2F4OG9uTjRYMVFyYmlkNmRQL3BNQUFlOGtYQmJWSVlnMVJuQU5WQmYy?=
+ =?utf-8?B?TktJS1VoUkVyZS9UaUhhVWdoMzhsclFxb1IrTWJTNyt3Vk1EY1pEcEhOVFpy?=
+ =?utf-8?B?UUZFQ3M2ZlZCa0NXcDBUQ1dmUHBNcWhXNVViV29BdGEzZ0xXYjRtcFVjc1J0?=
+ =?utf-8?B?ZzdkaHZ3VGFvSXRpMyttYnlRRDNJblN0aHV2YmRBaXZMcnJQSXQ3NHRuUHVO?=
+ =?utf-8?B?MUVMYW1ZZ2JxdXM2Si9US2RDQ253Y0JtblRScFZaenZsRDB4U2ROei9wWFAw?=
+ =?utf-8?B?dWR6WmJ2RjBlbzNEeUtHMkh1WXJUdW9JOWNFVkhYNEVYUVFhQ1krTU9RdlUz?=
+ =?utf-8?B?ZGp0K2NtUFM4VExxZU1JSzQ5OGN2TUlhLzRkY0FIdVJCKzVhNGkzSFM4VWlG?=
+ =?utf-8?B?U1EyN2J2MC8xdDhLZ2lwSkpxT0pNbzBQdnRFTkpvNVVjZXhjRkJEM1hHQ3p1?=
+ =?utf-8?B?NkF6N2VOeUs3dWx5QXgrTkFGNktLY05DUDBGYWlmcjN0ZUNJaDVXNHMzUnZE?=
+ =?utf-8?B?WndzNDdQZW9Rdi93NC94UWtubnhVYzR6aStSNzIwRzFrNGNJU0x1RmQ5b2sr?=
+ =?utf-8?B?RjZEQXNmMjl6Y1pCcmFKWmsvQy9sRW9zOHUvTXgzMWFLcE5MbXNqWjcyb2Jq?=
+ =?utf-8?B?Rno0Qk4xM3FNUW9Yb0VBSjV5Tys1VFZzRStla2paYzlUMGxjdlBHTFJaUGxB?=
+ =?utf-8?B?SUZBbDJvRy9IUlF5YjBGeDNLeXpsTTBOUlFSdTdocmx2UUdhbWFzZmljWkxj?=
+ =?utf-8?B?UjhhcHg4V0ZGeXJTUFMrMVNQR3YwNnNiVERwMXZla2V0MytQa1VtVUFCTFdJ?=
+ =?utf-8?B?b3pXWHdmaEJqUk9YMzlCbEJXamk1MlVXR2VCNy9HeE1rZlpiZ3hxcnQyZjJ5?=
+ =?utf-8?B?MFJCb1Jma09NSkdBbm5UNkFQL05PK2RjdEpmdEVLQ1d6Zzk2SFVCWDRmSklh?=
+ =?utf-8?B?aS9kNlhtM3dZMCt5aFJsbDU1STVzb21KckFMN09HQVRwUEkwRW1HblRIa3Bt?=
+ =?utf-8?B?Wlk0a1RsTnBoQ2VJQ0M1bVhVLzVFQVovWVNkdG5jN3ExSXRzMHJ6VVh4QWNr?=
+ =?utf-8?B?VHBkdnU3UVRlNmFQM3dEWXptWjNyblgzOG8zaFNlczdTTTZNT3lRM0RmTkxz?=
+ =?utf-8?B?MHhkUzZhU0FwWU5nN2h4YzF3ejZBd1VZZjlZNkRrQW5iZ1FDNmNGQlVBZDFs?=
+ =?utf-8?B?THRSV1JxckxNU1U3SkkweWdIUmFLMU82bmszZDNScVNIb1hGN051NWtOQ3pI?=
+ =?utf-8?B?NCtYajJpck05eDRsRERQYmxTTHEwYnI4TmZOamNwUUhvZXVLZ1cvQlBzcTJj?=
+ =?utf-8?B?M25aU0ZqSXBLUmhEWEs3dmZFcDZoL3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mshyperv: Introduce hv_get_hypervisor_version function
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "mhkelley58@gmail.com" <mhkelley58@gmail.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "arnd@arndb.de" <arnd@arndb.de>
-References: <1709772454-861-1-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157D470D0E46FA9B2ACD8EBD4202@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-CA
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157D470D0E46FA9B2ACD8EBD4202@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06c46dfa-89a1-4c4e-a4e7-08dc3ee23058
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2024 20:07:17.4339
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7414
 
-On 3/7/2024 11:22 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, March 6, 2024 4:48 PM
->>
->> Introduce x86_64 and arm64 functions for getting the hypervisor version
->> information and storing it in a structure for simpler parsing.
->>
->> Use the new function to get and parse the version at boot time. While at
->> it, print the version in the same format for each architecture, and move
->> the printing code to hv_common_init() so it is not duplicated.
-> 
-> Isn't the format already the same for x86 and ARM64?   A couple of
-> years ago they didn't match.  But that was fixed in commit eeda29db98f4.
-> 
-
-You're correct - I will amend the commit message. Thanks!
-
->>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> Acked-by: Wei Liu <wei.liu@kernel.org>
->> ---
->>  arch/arm64/hyperv/mshyperv.c      | 19 ++++++++---------
->>  arch/x86/kernel/cpu/mshyperv.c    | 35 ++++++++++++++-----------------
->>  drivers/hv/hv_common.c            |  9 ++++++++
->>  include/asm-generic/hyperv-tlfs.h | 23 ++++++++++++++++++++
->>  include/asm-generic/mshyperv.h    |  2 ++
->>  5 files changed, 59 insertions(+), 29 deletions(-)
->>
->> diff --git a/arch/arm64/hyperv/mshyperv.c
->> b/arch/arm64/hyperv/mshyperv.c
->> index f1b8a04ee9f2..55dc224d466d 100644
->> --- a/arch/arm64/hyperv/mshyperv.c
->> +++ b/arch/arm64/hyperv/mshyperv.c
->> @@ -19,10 +19,18 @@
->>
->>  static bool hyperv_initialized;
->>
->> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->> +{
->> +	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
->> +			 (struct hv_get_vp_registers_output *)info);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
-> 
-> I don't think this need to be exported, at least not for the usage in
-> this patch.  The caller in hv_common.c is never part of a module -- it's
-> always built-in. But maybe you are anticipating future use cases
-> from a module?
-> 
-
-Yes, it will be used in a module eventually. Do you think I should remove
-this and the below export until they are actually needed?
-
->> +
->>  static int __init hyperv_init(void)
->>  {
->>  	struct hv_get_vp_registers_output	result;
->> -	u32	a, b, c, d;
->>  	u64	guest_id;
->>  	int	ret;
->>
->> @@ -54,15 +62,6 @@ static int __init hyperv_init(void)
->>  		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
->>  		ms_hyperv.misc_features);
->>
->> -	/* Get information about the Hyper-V host version */
->> -	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
->> -	a = result.as32.a;
->> -	b = result.as32.b;
->> -	c = result.as32.c;
->> -	d = result.as32.d;
->> -	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
->> -		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
->> -
->>  	ret = hv_common_init();
->>  	if (ret)
->>  		return ret;
->> diff --git a/arch/x86/kernel/cpu/mshyperv.c
->> b/arch/x86/kernel/cpu/mshyperv.c
->> index d306f6184cee..03a3445faf7a 100644
->> --- a/arch/x86/kernel/cpu/mshyperv.c
->> +++ b/arch/x86/kernel/cpu/mshyperv.c
->> @@ -350,13 +350,25 @@ static void __init reduced_hw_init(void)
->>  	x86_init.irqs.pre_vector_init	= x86_init_noop;
->>  }
->>
->> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->> +{
->> +	unsigned int hv_max_functions;
->> +
->> +	hv_max_functions = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
->> +	if (hv_max_functions < HYPERV_CPUID_VERSION) {
->> +		pr_err("%s: Could not detect Hyper-V version\n", __func__);
->> +		return -ENODEV;
->> +	}
->> +
->> +	cpuid(HYPERV_CPUID_VERSION, &info->eax, &info->ebx, &info->ecx, &info->edx);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
-> 
-> Same for this EXPORT.
->>> +
->>  static void __init ms_hyperv_init_platform(void)
->>  {
->>  	int hv_max_functions_eax;
->> -	int hv_host_info_eax;
->> -	int hv_host_info_ebx;
->> -	int hv_host_info_ecx;
->> -	int hv_host_info_edx;
->>
->>  #ifdef CONFIG_PARAVIRT
->>  	pv_info.name = "Hyper-V";
->> @@ -407,21 +419,6 @@ static void __init ms_hyperv_init_platform(void)
->>  		pr_info("Hyper-V: running on a nested hypervisor\n");
->>  	}
->>
->> -	/*
->> -	 * Extract host information.
->> -	 */
->> -	if (hv_max_functions_eax >= HYPERV_CPUID_VERSION) {
->> -		hv_host_info_eax = cpuid_eax(HYPERV_CPUID_VERSION);
->> -		hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
->> -		hv_host_info_ecx = cpuid_ecx(HYPERV_CPUID_VERSION);
->> -		hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
->> -
->> -		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
->> -			hv_host_info_ebx >> 16, hv_host_info_ebx & 0xFFFF,
->> -			hv_host_info_eax, hv_host_info_edx & 0xFFFFFF,
->> -			hv_host_info_ecx, hv_host_info_edx >> 24);
->> -	}
->> -
->>  	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
->>  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
->>  		x86_platform.calibrate_tsc = hv_get_tsc_khz;
->> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
->> index 2f1dd4b07f9a..4d72c528af68 100644
->> --- a/drivers/hv/hv_common.c
->> +++ b/drivers/hv/hv_common.c
->> @@ -278,6 +278,15 @@ static void hv_kmsg_dump_register(void)
->>  int __init hv_common_init(void)
->>  {
->>  	int i;
->> +	union hv_hypervisor_version_info version;
->> +
->> +	/* Get information about the Hyper-V host version */
->> +	if (hv_get_hypervisor_version(&version) == 0) {
-> 
-> The usual idiom would be:
-> 
-> 	if (!hv_get_hypervisor_version(&version)) {
->
-Thanks, I'll change it.
- 
->> +		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
->> +			version.major_version, version.minor_version,
->> +			version.build_number, version.service_number,
->> +			version.service_pack, version.service_branch);
->> +	}
->>
->>  	if (hv_is_isolation_supported())
->>  		sysctl_record_panic_msg = 0;
->> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
->> index 3d1b31f90ed6..32514a870b98 100644
->> --- a/include/asm-generic/hyperv-tlfs.h
->> +++ b/include/asm-generic/hyperv-tlfs.h
->> @@ -817,6 +817,29 @@ struct hv_input_unmap_device_interrupt {
->>  #define HV_SOURCE_SHADOW_NONE               0x0
->>  #define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
->>
->> +/*
->> + * Version info reported by hypervisor
->> + */
->> +union hv_hypervisor_version_info {
->> +	struct {
->> +		u32 build_number;
->> +
->> +		u32 minor_version : 16;
->> +		u32 major_version : 16;
->> +
->> +		u32 service_pack;
->> +
->> +		u32 service_number : 24;
->> +		u32 service_branch : 8;
->> +	};
->> +	struct {
->> +		u32 eax;
->> +		u32 ebx;
->> +		u32 ecx;
->> +		u32 edx;
-> 
-> Nit:  These names are x86-isms appearing in the generic portion
-> of hyperv-tlfs.h.  On the ARM64 side I had called the four parts
-> "a", "b", "c", and "d" to be slightly more generic.  But if want to
-> keep the x86 register names, I won't object.
-> > Michael
-> 
-
-Good point. It's worth noting that these are now only used on the x86
-side as arguments to cpuid(), so I might just leave them as-is.
-Another option would be to add an x86-only union for this purpose:
-
-union hv_x86_hypervisor_version_info {
-	struct hv_hypervisor_version_info info;
-	struct {
-		u32 eax;
-		u32 ebx;
-		u32 ecx;
-		u32 edx;
-	};
-};
-
-But that is probably overkill...
-
-Thanks for the comments!
-
-Nuno
-
->> +	};
->> +};
->> +
->>  /*
->>   * The whole argument should fit in a page to be able to pass to the hypervisor
->>   * in one hypercall.
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-
->> generic/mshyperv.h
->> index 04424a446bb7..452b7c089b71 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -161,6 +161,8 @@ static inline void vmbus_signal_eom(struct
->> hv_message *msg, u32 old_msg_type)
->>  	}
->>  }
->>
->> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
->> +
->>  void hv_setup_vmbus_handler(void (*handler)(void));
->>  void hv_remove_vmbus_handler(void);
->>  void hv_setup_stimer0_handler(void (*handler)(void));
->> --
->> 2.25.1
->>
-
+RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
+ZW50OiBUaHVyc2RheSwgTWFyY2ggNywgMjAyNCAxMTo0OSBBTQ0KPiANCj4gT24gMy83LzIwMjQg
+MTE6MjIgQU0sIE1pY2hhZWwgS2VsbGV5IHdyb3RlOg0KPiA+IEZyb206IE51bm8gRGFzIE5ldmVz
+IDxudW5vZGFzbmV2ZXNAbGludXgubWljcm9zb2Z0LmNvbT4gU2VudDogV2VkbmVzZGF5LCBNYXJj
+aCA2LCAyMDI0IDQ6NDggUE0NCj4gPj4NCj4gPj4gSW50cm9kdWNlIHg4Nl82NCBhbmQgYXJtNjQg
+ZnVuY3Rpb25zIGZvciBnZXR0aW5nIHRoZSBoeXBlcnZpc29yIHZlcnNpb24NCj4gPj4gaW5mb3Jt
+YXRpb24gYW5kIHN0b3JpbmcgaXQgaW4gYSBzdHJ1Y3R1cmUgZm9yIHNpbXBsZXIgcGFyc2luZy4N
+Cj4gPj4NCj4gPj4gVXNlIHRoZSBuZXcgZnVuY3Rpb24gdG8gZ2V0IGFuZCBwYXJzZSB0aGUgdmVy
+c2lvbiBhdCBib290IHRpbWUuIFdoaWxlIGF0DQo+ID4+IGl0LCBwcmludCB0aGUgdmVyc2lvbiBp
+biB0aGUgc2FtZSBmb3JtYXQgZm9yIGVhY2ggYXJjaGl0ZWN0dXJlLCBhbmQgbW92ZQ0KPiA+PiB0
+aGUgcHJpbnRpbmcgY29kZSB0byBodl9jb21tb25faW5pdCgpIHNvIGl0IGlzIG5vdCBkdXBsaWNh
+dGVkLg0KPiA+DQo+ID4gSXNuJ3QgdGhlIGZvcm1hdCBhbHJlYWR5IHRoZSBzYW1lIGZvciB4ODYg
+YW5kIEFSTTY0PyAgIEEgY291cGxlIG9mDQo+ID4geWVhcnMgYWdvIHRoZXkgZGlkbid0IG1hdGNo
+LiAgQnV0IHRoYXQgd2FzIGZpeGVkIGluIGNvbW1pdCBlZWRhMjlkYjk4ZjQuDQo+ID4NCj4gDQo+
+IFlvdSdyZSBjb3JyZWN0IC0gSSB3aWxsIGFtZW5kIHRoZSBjb21taXQgbWVzc2FnZS4gVGhhbmtz
+IQ0KPiANCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNu
+ZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPg0KPiA+PiBBY2tlZC1ieTogV2VpIExpdSA8d2VpLmxp
+dUBrZXJuZWwub3JnPg0KPiA+PiAtLS0NCj4gPj4gIGFyY2gvYXJtNjQvaHlwZXJ2L21zaHlwZXJ2
+LmMgICAgICB8IDE5ICsrKysrKysrLS0tLS0tLS0tDQo+ID4+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1
+L21zaHlwZXJ2LmMgICAgfCAzNSArKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tDQo+ID4+
+ICBkcml2ZXJzL2h2L2h2X2NvbW1vbi5jICAgICAgICAgICAgfCAgOSArKysrKysrKw0KPiA+PiAg
+aW5jbHVkZS9hc20tZ2VuZXJpYy9oeXBlcnYtdGxmcy5oIHwgMjMgKysrKysrKysrKysrKysrKysr
+KysNCj4gPj4gIGluY2x1ZGUvYXNtLWdlbmVyaWMvbXNoeXBlcnYuaCAgICB8ICAyICsrDQo+ID4+
+ICA1IGZpbGVzIGNoYW5nZWQsIDU5IGluc2VydGlvbnMoKyksIDI5IGRlbGV0aW9ucygtKQ0KPiA+
+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9oeXBlcnYvbXNoeXBlcnYuYw0KPiA+PiBi
+L2FyY2gvYXJtNjQvaHlwZXJ2L21zaHlwZXJ2LmMNCj4gPj4gaW5kZXggZjFiOGEwNGVlOWYyLi41
+NWRjMjI0ZDQ2NmQgMTAwNjQ0DQo+ID4+IC0tLSBhL2FyY2gvYXJtNjQvaHlwZXJ2L21zaHlwZXJ2
+LmMNCj4gPj4gKysrIGIvYXJjaC9hcm02NC9oeXBlcnYvbXNoeXBlcnYuYw0KPiA+PiBAQCAtMTks
+MTAgKzE5LDE4IEBADQo+ID4+DQo+ID4+ICBzdGF0aWMgYm9vbCBoeXBlcnZfaW5pdGlhbGl6ZWQ7
+DQo+ID4+DQo+ID4+ICtpbnQgaHZfZ2V0X2h5cGVydmlzb3JfdmVyc2lvbih1bmlvbiBodl9oeXBl
+cnZpc29yX3ZlcnNpb25faW5mbyAqaW5mbykNCj4gPj4gK3sNCj4gPj4gKwlodl9nZXRfdnByZWdf
+MTI4KEhWX1JFR0lTVEVSX0hZUEVSVklTT1JfVkVSU0lPTiwNCj4gPj4gKwkJCSAoc3RydWN0IGh2
+X2dldF92cF9yZWdpc3RlcnNfb3V0cHV0ICopaW5mbyk7DQo+ID4+ICsNCj4gPj4gKwlyZXR1cm4g
+MDsNCj4gPj4gK30NCj4gPj4gK0VYUE9SVF9TWU1CT0xfR1BMKGh2X2dldF9oeXBlcnZpc29yX3Zl
+cnNpb24pOw0KPiA+DQo+ID4gSSBkb24ndCB0aGluayB0aGlzIG5lZWQgdG8gYmUgZXhwb3J0ZWQs
+IGF0IGxlYXN0IG5vdCBmb3IgdGhlIHVzYWdlIGluDQo+ID4gdGhpcyBwYXRjaC4gIFRoZSBjYWxs
+ZXIgaW4gaHZfY29tbW9uLmMgaXMgbmV2ZXIgcGFydCBvZiBhIG1vZHVsZSAtLSBpdCdzDQo+ID4g
+YWx3YXlzIGJ1aWx0LWluLiBCdXQgbWF5YmUgeW91IGFyZSBhbnRpY2lwYXRpbmcgZnV0dXJlIHVz
+ZSBjYXNlcw0KPiA+IGZyb20gYSBtb2R1bGU/DQo+ID4NCj4gDQo+IFllcywgaXQgd2lsbCBiZSB1
+c2VkIGluIGEgbW9kdWxlIGV2ZW50dWFsbHkuIERvIHlvdSB0aGluayBJIHNob3VsZCByZW1vdmUN
+Cj4gdGhpcyBhbmQgdGhlIGJlbG93IGV4cG9ydCB1bnRpbCB0aGV5IGFyZSBhY3R1YWxseSBuZWVk
+ZWQ/DQoNCkkgZG9uJ3QgaGF2ZSBhIHN0cm9uZyBmZWVsaW5nIGVpdGhlciB3YXkgaWYgdGhlIG1v
+ZHVsZS1iYXNlZCBjYWxsZXINCmNvbWVzIGFsb25nIHNvb24uICBCdXQgSSBrbm93IHNvbWUgcmV2
+aWV3ZXJzIGRvbid0IHdhbnQgc3R1ZmYNCmFkZGVkIHVudGlsIGl0IGlzIGFjdHVhbGx5IHVzZWQu
+DQoNCj4gDQo+ID4+ICsNCj4gPj4gIHN0YXRpYyBpbnQgX19pbml0IGh5cGVydl9pbml0KHZvaWQp
+DQo+ID4+ICB7DQo+ID4+ICAJc3RydWN0IGh2X2dldF92cF9yZWdpc3RlcnNfb3V0cHV0CXJlc3Vs
+dDsNCj4gPj4gLQl1MzIJYSwgYiwgYywgZDsNCj4gPj4gIAl1NjQJZ3Vlc3RfaWQ7DQo+ID4+ICAJ
+aW50CXJldDsNCj4gPj4NCj4gPj4gQEAgLTU0LDE1ICs2Miw2IEBAIHN0YXRpYyBpbnQgX19pbml0
+IGh5cGVydl9pbml0KHZvaWQpDQo+ID4+ICAJCW1zX2h5cGVydi5mZWF0dXJlcywgbXNfaHlwZXJ2
+LnByaXZfaGlnaCwgbXNfaHlwZXJ2LmhpbnRzLA0KPiA+PiAgCQltc19oeXBlcnYubWlzY19mZWF0
+dXJlcyk7DQo+ID4+DQo+ID4+IC0JLyogR2V0IGluZm9ybWF0aW9uIGFib3V0IHRoZSBIeXBlci1W
+IGhvc3QgdmVyc2lvbiAqLw0KPiA+PiAtCWh2X2dldF92cHJlZ18xMjgoSFZfUkVHSVNURVJfSFlQ
+RVJWSVNPUl9WRVJTSU9OLCAmcmVzdWx0KTsNCj4gPj4gLQlhID0gcmVzdWx0LmFzMzIuYTsNCj4g
+Pj4gLQliID0gcmVzdWx0LmFzMzIuYjsNCj4gPj4gLQljID0gcmVzdWx0LmFzMzIuYzsNCj4gPj4g
+LQlkID0gcmVzdWx0LmFzMzIuZDsNCj4gPj4gLQlwcl9pbmZvKCJIeXBlci1WOiBIb3N0IEJ1aWxk
+ICVkLiVkLiVkLiVkLSVkLSVkXG4iLA0KPiA+PiAtCQliID4+IDE2LCBiICYgMHhGRkZGLCBhLAlk
+ICYgMHhGRkZGRkYsIGMsIGQgPj4gMjQpOw0KPiA+PiAtDQo+ID4+ICAJcmV0ID0gaHZfY29tbW9u
+X2luaXQoKTsNCj4gPj4gIAlpZiAocmV0KQ0KPiA+PiAgCQlyZXR1cm4gcmV0Ow0KPiA+PiBkaWZm
+IC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NwdS9tc2h5cGVydi5jDQo+ID4+IGIvYXJjaC94ODYv
+a2VybmVsL2NwdS9tc2h5cGVydi5jDQo+ID4+IGluZGV4IGQzMDZmNjE4NGNlZS4uMDNhMzQ0NWZh
+ZjdhIDEwMDY0NA0KPiA+PiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L21zaHlwZXJ2LmMNCj4g
+Pj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NwdS9tc2h5cGVydi5jDQo+ID4+IEBAIC0zNTAsMTMg
+KzM1MCwyNSBAQCBzdGF0aWMgdm9pZCBfX2luaXQgcmVkdWNlZF9od19pbml0KHZvaWQpDQo+ID4+
+ICAJeDg2X2luaXQuaXJxcy5wcmVfdmVjdG9yX2luaXQJPSB4ODZfaW5pdF9ub29wOw0KPiA+PiAg
+fQ0KPiA+Pg0KPiA+PiAraW50IGh2X2dldF9oeXBlcnZpc29yX3ZlcnNpb24odW5pb24gaHZfaHlw
+ZXJ2aXNvcl92ZXJzaW9uX2luZm8gKmluZm8pDQo+ID4+ICt7DQo+ID4+ICsJdW5zaWduZWQgaW50
+IGh2X21heF9mdW5jdGlvbnM7DQo+ID4+ICsNCj4gPj4gKwlodl9tYXhfZnVuY3Rpb25zID0gY3B1
+aWRfZWF4KEhZUEVSVl9DUFVJRF9WRU5ET1JfQU5EX01BWF9GVU5DVElPTlMpOw0KPiA+PiArCWlm
+IChodl9tYXhfZnVuY3Rpb25zIDwgSFlQRVJWX0NQVUlEX1ZFUlNJT04pIHsNCj4gPj4gKwkJcHJf
+ZXJyKCIlczogQ291bGQgbm90IGRldGVjdCBIeXBlci1WIHZlcnNpb25cbiIsIF9fZnVuY19fKTsN
+Cj4gPj4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4+ICsJfQ0KPiA+PiArDQo+ID4+ICsJY3B1aWQo
+SFlQRVJWX0NQVUlEX1ZFUlNJT04sICZpbmZvLT5lYXgsICZpbmZvLT5lYngsICZpbmZvLT5lY3gs
+ICZpbmZvLT5lZHgpOw0KPiA+PiArDQo+ID4+ICsJcmV0dXJuIDA7DQo+ID4+ICt9DQo+ID4+ICtF
+WFBPUlRfU1lNQk9MX0dQTChodl9nZXRfaHlwZXJ2aXNvcl92ZXJzaW9uKTsNCj4gPg0KPiA+IFNh
+bWUgZm9yIHRoaXMgRVhQT1JULg0KPiA+Pj4gKw0KPiA+PiAgc3RhdGljIHZvaWQgX19pbml0IG1z
+X2h5cGVydl9pbml0X3BsYXRmb3JtKHZvaWQpDQo+ID4+ICB7DQo+ID4+ICAJaW50IGh2X21heF9m
+dW5jdGlvbnNfZWF4Ow0KPiA+PiAtCWludCBodl9ob3N0X2luZm9fZWF4Ow0KPiA+PiAtCWludCBo
+dl9ob3N0X2luZm9fZWJ4Ow0KPiA+PiAtCWludCBodl9ob3N0X2luZm9fZWN4Ow0KPiA+PiAtCWlu
+dCBodl9ob3N0X2luZm9fZWR4Ow0KPiA+Pg0KPiA+PiAgI2lmZGVmIENPTkZJR19QQVJBVklSVA0K
+PiA+PiAgCXB2X2luZm8ubmFtZSA9ICJIeXBlci1WIjsNCj4gPj4gQEAgLTQwNywyMSArNDE5LDYg
+QEAgc3RhdGljIHZvaWQgX19pbml0IG1zX2h5cGVydl9pbml0X3BsYXRmb3JtKHZvaWQpDQo+ID4+
+ICAJCXByX2luZm8oIkh5cGVyLVY6IHJ1bm5pbmcgb24gYSBuZXN0ZWQgaHlwZXJ2aXNvclxuIik7
+DQo+ID4+ICAJfQ0KPiA+Pg0KPiA+PiAtCS8qDQo+ID4+IC0JICogRXh0cmFjdCBob3N0IGluZm9y
+bWF0aW9uLg0KPiA+PiAtCSAqLw0KPiA+PiAtCWlmIChodl9tYXhfZnVuY3Rpb25zX2VheCA+PSBI
+WVBFUlZfQ1BVSURfVkVSU0lPTikgew0KPiA+PiAtCQlodl9ob3N0X2luZm9fZWF4ID0gY3B1aWRf
+ZWF4KEhZUEVSVl9DUFVJRF9WRVJTSU9OKTsNCj4gPj4gLQkJaHZfaG9zdF9pbmZvX2VieCA9IGNw
+dWlkX2VieChIWVBFUlZfQ1BVSURfVkVSU0lPTik7DQo+ID4+IC0JCWh2X2hvc3RfaW5mb19lY3gg
+PSBjcHVpZF9lY3goSFlQRVJWX0NQVUlEX1ZFUlNJT04pOw0KPiA+PiAtCQlodl9ob3N0X2luZm9f
+ZWR4ID0gY3B1aWRfZWR4KEhZUEVSVl9DUFVJRF9WRVJTSU9OKTsNCj4gPj4gLQ0KPiA+PiAtCQlw
+cl9pbmZvKCJIeXBlci1WOiBIb3N0IEJ1aWxkICVkLiVkLiVkLiVkLSVkLSVkXG4iLA0KPiA+PiAt
+CQkJaHZfaG9zdF9pbmZvX2VieCA+PiAxNiwgaHZfaG9zdF9pbmZvX2VieCAmIDB4RkZGRiwNCj4g
+Pj4gLQkJCWh2X2hvc3RfaW5mb19lYXgsIGh2X2hvc3RfaW5mb19lZHggJiAweEZGRkZGRiwNCj4g
+Pj4gLQkJCWh2X2hvc3RfaW5mb19lY3gsIGh2X2hvc3RfaW5mb19lZHggPj4gMjQpOw0KPiA+PiAt
+CX0NCj4gPj4gLQ0KPiA+PiAgCWlmIChtc19oeXBlcnYuZmVhdHVyZXMgJiBIVl9BQ0NFU1NfRlJF
+UVVFTkNZX01TUlMgJiYNCj4gPj4gIAkgICAgbXNfaHlwZXJ2Lm1pc2NfZmVhdHVyZXMgJiBIVl9G
+RUFUVVJFX0ZSRVFVRU5DWV9NU1JTX0FWQUlMQUJMRSkgew0KPiA+PiAgCQl4ODZfcGxhdGZvcm0u
+Y2FsaWJyYXRlX3RzYyA9IGh2X2dldF90c2Nfa2h6Ow0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9odi9odl9jb21tb24uYyBiL2RyaXZlcnMvaHYvaHZfY29tbW9uLmMNCj4gPj4gaW5kZXggMmYx
+ZGQ0YjA3ZjlhLi40ZDcyYzUyOGFmNjggMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvaHYvaHZf
+Y29tbW9uLmMNCj4gPj4gKysrIGIvZHJpdmVycy9odi9odl9jb21tb24uYw0KPiA+PiBAQCAtMjc4
+LDYgKzI3OCwxNSBAQCBzdGF0aWMgdm9pZCBodl9rbXNnX2R1bXBfcmVnaXN0ZXIodm9pZCkNCj4g
+Pj4gIGludCBfX2luaXQgaHZfY29tbW9uX2luaXQodm9pZCkNCj4gPj4gIHsNCj4gPj4gIAlpbnQg
+aTsNCj4gPj4gKwl1bmlvbiBodl9oeXBlcnZpc29yX3ZlcnNpb25faW5mbyB2ZXJzaW9uOw0KPiA+
+PiArDQo+ID4+ICsJLyogR2V0IGluZm9ybWF0aW9uIGFib3V0IHRoZSBIeXBlci1WIGhvc3QgdmVy
+c2lvbiAqLw0KPiA+PiArCWlmIChodl9nZXRfaHlwZXJ2aXNvcl92ZXJzaW9uKCZ2ZXJzaW9uKSA9
+PSAwKSB7DQo+ID4NCj4gPiBUaGUgdXN1YWwgaWRpb20gd291bGQgYmU6DQo+ID4NCj4gPiAJaWYg
+KCFodl9nZXRfaHlwZXJ2aXNvcl92ZXJzaW9uKCZ2ZXJzaW9uKSkgew0KPiA+DQo+IFRoYW5rcywg
+SSdsbCBjaGFuZ2UgaXQuDQo+IA0KPiA+PiArCQlwcl9pbmZvKCJIeXBlci1WOiBIb3N0IEJ1aWxk
+ICVkLiVkLiVkLiVkLSVkLSVkXG4iLA0KPiA+PiArCQkJdmVyc2lvbi5tYWpvcl92ZXJzaW9uLCB2
+ZXJzaW9uLm1pbm9yX3ZlcnNpb24sDQo+ID4+ICsJCQl2ZXJzaW9uLmJ1aWxkX251bWJlciwgdmVy
+c2lvbi5zZXJ2aWNlX251bWJlciwNCj4gPj4gKwkJCXZlcnNpb24uc2VydmljZV9wYWNrLCB2ZXJz
+aW9uLnNlcnZpY2VfYnJhbmNoKTsNCj4gPj4gKwl9DQo+ID4+DQo+ID4+ICAJaWYgKGh2X2lzX2lz
+b2xhdGlvbl9zdXBwb3J0ZWQoKSkNCj4gPj4gIAkJc3lzY3RsX3JlY29yZF9wYW5pY19tc2cgPSAw
+Ow0KPiA+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9hc20tZ2VuZXJpYy9oeXBlcnYtdGxmcy5oIGIv
+aW5jbHVkZS9hc20tZ2VuZXJpYy9oeXBlcnYtdGxmcy5oDQo+ID4+IGluZGV4IDNkMWIzMWY5MGVk
+Ni4uMzI1MTRhODcwYjk4IDEwMDY0NA0KPiA+PiAtLS0gYS9pbmNsdWRlL2FzbS1nZW5lcmljL2h5
+cGVydi10bGZzLmgNCj4gPj4gKysrIGIvaW5jbHVkZS9hc20tZ2VuZXJpYy9oeXBlcnYtdGxmcy5o
+DQo+ID4+IEBAIC04MTcsNiArODE3LDI5IEBAIHN0cnVjdCBodl9pbnB1dF91bm1hcF9kZXZpY2Vf
+aW50ZXJydXB0IHsNCj4gPj4gICNkZWZpbmUgSFZfU09VUkNFX1NIQURPV19OT05FICAgICAgICAg
+ICAgICAgMHgwDQo+ID4+ICAjZGVmaW5lIEhWX1NPVVJDRV9TSEFET1dfQlJJREdFX0JVU19SQU5H
+RSAgIDB4MQ0KPiA+Pg0KPiA+PiArLyoNCj4gPj4gKyAqIFZlcnNpb24gaW5mbyByZXBvcnRlZCBi
+eSBoeXBlcnZpc29yDQo+ID4+ICsgKi8NCj4gPj4gK3VuaW9uIGh2X2h5cGVydmlzb3JfdmVyc2lv
+bl9pbmZvIHsNCj4gPj4gKwlzdHJ1Y3Qgew0KPiA+PiArCQl1MzIgYnVpbGRfbnVtYmVyOw0KPiA+
+PiArDQo+ID4+ICsJCXUzMiBtaW5vcl92ZXJzaW9uIDogMTY7DQo+ID4+ICsJCXUzMiBtYWpvcl92
+ZXJzaW9uIDogMTY7DQo+ID4+ICsNCj4gPj4gKwkJdTMyIHNlcnZpY2VfcGFjazsNCj4gPj4gKw0K
+PiA+PiArCQl1MzIgc2VydmljZV9udW1iZXIgOiAyNDsNCj4gPj4gKwkJdTMyIHNlcnZpY2VfYnJh
+bmNoIDogODsNCj4gPj4gKwl9Ow0KPiA+PiArCXN0cnVjdCB7DQo+ID4+ICsJCXUzMiBlYXg7DQo+
+ID4+ICsJCXUzMiBlYng7DQo+ID4+ICsJCXUzMiBlY3g7DQo+ID4+ICsJCXUzMiBlZHg7DQo+ID4N
+Cj4gPiBOaXQ6ICBUaGVzZSBuYW1lcyBhcmUgeDg2LWlzbXMgYXBwZWFyaW5nIGluIHRoZSBnZW5l
+cmljIHBvcnRpb24NCj4gPiBvZiBoeXBlcnYtdGxmcy5oLiAgT24gdGhlIEFSTTY0IHNpZGUgSSBo
+YWQgY2FsbGVkIHRoZSBmb3VyIHBhcnRzDQo+ID4gImEiLCAiYiIsICJjIiwgYW5kICJkIiB0byBi
+ZSBzbGlnaHRseSBtb3JlIGdlbmVyaWMuICBCdXQgaWYgd2FudCB0bw0KPiA+IGtlZXAgdGhlIHg4
+NiByZWdpc3RlciBuYW1lcywgSSB3b24ndCBvYmplY3QuDQo+ID4gPiBNaWNoYWVsDQo+ID4NCj4g
+DQo+IEdvb2QgcG9pbnQuIEl0J3Mgd29ydGggbm90aW5nIHRoYXQgdGhlc2UgYXJlIG5vdyBvbmx5
+IHVzZWQgb24gdGhlIHg4Ng0KPiBzaWRlIGFzIGFyZ3VtZW50cyB0byBjcHVpZCgpLCBzbyBJIG1p
+Z2h0IGp1c3QgbGVhdmUgdGhlbSBhcy1pcy4NCj4gQW5vdGhlciBvcHRpb24gd291bGQgYmUgdG8g
+YWRkIGFuIHg4Ni1vbmx5IHVuaW9uIGZvciB0aGlzIHB1cnBvc2U6DQo+IA0KPiB1bmlvbiBodl94
+ODZfaHlwZXJ2aXNvcl92ZXJzaW9uX2luZm8gew0KPiAJc3RydWN0IGh2X2h5cGVydmlzb3JfdmVy
+c2lvbl9pbmZvIGluZm87DQo+IAlzdHJ1Y3Qgew0KPiAJCXUzMiBlYXg7DQo+IAkJdTMyIGVieDsN
+Cj4gCQl1MzIgZWN4Ow0KPiAJCXUzMiBlZHg7DQo+IAl9Ow0KPiB9Ow0KPiANCj4gQnV0IHRoYXQg
+aXMgcHJvYmFibHkgb3ZlcmtpbGwuLi4NCg0KWWVzLCBJIGFncmVlIHRoYXQgd291bGQgYmUgb3Zl
+cmtpbGwuICBBZ2FpbiwgSSdtIE9LIGlmIHlvdSBwcmVmZXINCnRvIGtlZXAgdGhlIHg4NiByZWdp
+c3RlciBuYW1lcy4NCg0KTWljaGFlbA0K
 
