@@ -1,60 +1,66 @@
-Return-Path: <linux-hyperv+bounces-1670-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1671-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 530C3874547
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 01:47:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6A0F875258
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 15:52:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06040283FB6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 00:47:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A01C1F23233
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Mar 2024 14:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827BD1859;
-	Thu,  7 Mar 2024 00:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA70912EBCB;
+	Thu,  7 Mar 2024 14:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bBBXU/Ng"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GoX4+C50"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB8364C61;
-	Thu,  7 Mar 2024 00:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2135D12C80A;
+	Thu,  7 Mar 2024 14:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709772460; cv=none; b=SbAqxoaO4JbbgjuUR6w2C0f6KmGLvALjlRs9USBhqdaT159ZE6WIFW8NCL7D//ibC2lG3ZA9E7Ud4/G2EyxhP1KWO/jDNkliKrPCSR4cVR27PbOK6If0A0i0/IZ2AXan9OY/oacjapdLTgb+1xk5dwBIdWCN5jl3nWLEV3cfmuQ=
+	t=1709823135; cv=none; b=f7ttwL4OOSOYBTukfoT4ZT/m+TnVOqoqilGWdb51+2Sd+E5KdZ1KPZmnKRymhseC1fGIBHPnPpAzEvjeYnjJyY9wph0ImbxoyiepNV/n82qZdLRz6tG3S5DSKP2R2shG7CbT+j6tuWSHqwftoiv914FLtuEB5l9FKEXhWzVbEII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709772460; c=relaxed/simple;
-	bh=oOInWFxvhByo2zBfLCcwTpadkEUFfCmGXhrK5+CpyDM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=toJKKrzBM7yJeHppwmXIVu0zQNyFLVBtsx7ulK8fVi00S58IH/ACTDLgPlwVeTX8dcoSEVveWHIr/zkws2b/S8T/Cw9OIV9qCsYd9TTaL9KaqoGzlci39zyfCSp9Wa90nC6eD2Guwq0QgOlcYtCVYZomgNkPPnsm8vP2J/AI6n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bBBXU/Ng; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1709823135; c=relaxed/simple;
+	bh=SVl7ghUZZvLmqoxnJx1TfVNS1aFO+cS/rPtTkMU4lFo=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Bh9Rqhnzulkw8xEqf96zhLbvei7DZhey1IFF60+5YcBfvTC8hLq1LHzpwr8IZqps00BjKsKfvV1lnIy+zY1hLG+zPflg3aRSWg7pfDumwodB1OKczv7ntOwptrFhn0idoHYM9lqSf44ZPWhJWlcJPt4p+kVayphvXyRjs8TWdtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GoX4+C50; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4319D20B74C0;
-	Wed,  6 Mar 2024 16:47:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4319D20B74C0
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 8480E20B74C0; Thu,  7 Mar 2024 06:52:13 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8480E20B74C0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709772458;
-	bh=pEn/hH9loE4lKfp7HHBXz6sgeltsHbVfRercOCDfPkw=;
+	s=default; t=1709823133;
+	bh=DQrX++fk8abFgdjKuqnBcAVgOubzkQFol/TFp+HA04s=;
 	h=From:To:Cc:Subject:Date:From;
-	b=bBBXU/NgVgP2GrPxc6IXY93e0aerTlX6qVa3q6lw+nwq3rHAAeFwZ+TzkD2WCkFNc
-	 omv1NEbSLhIjUs71y+uLVw/J9H+JfKvntTtE3NJsg/q/FrthImnCgAI1wQHHQhGnES
-	 zQY+luftJ+Y1DJo8fm/hKU+U9Z5m54U+PuNEm7uU=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: mhkelley58@gmail.com,
-	haiyangz@microsoft.com,
-	mhklinux@outlook.com,
-	kys@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	catalin.marinas@arm.com,
-	tglx@linutronix.de,
-	dave.hansen@linux.intel.com,
-	arnd@arndb.de
-Subject: [PATCH] mshyperv: Introduce hv_get_hypervisor_version function
-Date: Wed,  6 Mar 2024 16:47:34 -0800
-Message-Id: <1709772454-861-1-git-send-email-nunodasneves@linux.microsoft.com>
+	b=GoX4+C50fDnqEqTDLUQhX0jEvb2nweO7wCtxXMQfyCEtiaV1gxyaO5Rap/o7qic9e
+	 eSjxHeK0NdFqJQmUANMTP0aRr6atuBQktgzhNaWQ9arYXkyfks1vS7OL/jvY3BNDeU
+	 Fu/oiiRVCDjsDR+0hLQxeYSHfjLYGp/3JLuk+i7w=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH] net :mana : Add per-cpu stats for MANA device
+Date: Thu,  7 Mar 2024 06:52:12 -0800
+Message-Id: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -62,187 +68,196 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-Introduce x86_64 and arm64 functions for getting the hypervisor version
-information and storing it in a structure for simpler parsing.
+Extend 'ethtool -S' output for mana devices to include per-CPU packet
+stats
 
-Use the new function to get and parse the version at boot time. While at
-it, print the version in the same format for each architecture, and move
-the printing code to hv_common_init() so it is not duplicated.
-
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Built-on: Ubuntu22
+Tested-on: Ubuntu22
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- arch/arm64/hyperv/mshyperv.c      | 19 ++++++++---------
- arch/x86/kernel/cpu/mshyperv.c    | 35 ++++++++++++++-----------------
- drivers/hv/hv_common.c            |  9 ++++++++
- include/asm-generic/hyperv-tlfs.h | 23 ++++++++++++++++++++
- include/asm-generic/mshyperv.h    |  2 ++
- 5 files changed, 59 insertions(+), 29 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 22 ++++++++++
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 40 ++++++++++++++++++-
+ include/net/mana/mana.h                       | 12 ++++++
+ 3 files changed, 72 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index f1b8a04ee9f2..55dc224d466d 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -19,10 +19,18 @@
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 59287c6e6cee..b27ee6684936 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -224,6 +224,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	int gso_hs = 0; /* zero for non-GSO pkts */
+ 	u16 txq_idx = skb_get_queue_mapping(skb);
+ 	struct gdma_dev *gd = apc->ac->gdma_dev;
++	struct mana_pcpu_stats *pcpu_stats;
+ 	bool ipv4 = false, ipv6 = false;
+ 	struct mana_tx_package pkg = {};
+ 	struct netdev_queue *net_txq;
+@@ -234,6 +235,8 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	struct mana_cq *cq;
+ 	int err, len;
  
- static bool hyperv_initialized;
- 
-+int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
-+{
-+	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
-+			 (struct hv_get_vp_registers_output *)info);
++	pcpu_stats = this_cpu_ptr(apc->pcpu_stats);
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
+ 	if (unlikely(!apc->port_is_up))
+ 		goto tx_drop;
+ 
+@@ -412,6 +415,12 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	tx_stats->bytes += len;
+ 	u64_stats_update_end(&tx_stats->syncp);
+ 
++	/* Also update the per-CPU stats */
++	u64_stats_update_begin(&pcpu_stats->syncp);
++	pcpu_stats->tx_packets++;
++	pcpu_stats->tx_bytes += len;
++	u64_stats_update_end(&pcpu_stats->syncp);
 +
- static int __init hyperv_init(void)
- {
- 	struct hv_get_vp_registers_output	result;
--	u32	a, b, c, d;
- 	u64	guest_id;
- 	int	ret;
+ tx_busy:
+ 	if (netif_tx_queue_stopped(net_txq) && mana_can_tx(gdma_sq)) {
+ 		netif_tx_wake_queue(net_txq);
+@@ -425,6 +434,9 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	kfree(pkg.sgl_ptr);
+ tx_drop_count:
+ 	ndev->stats.tx_dropped++;
++	u64_stats_update_begin(&pcpu_stats->syncp);
++	pcpu_stats->tx_dropped++;
++	u64_stats_update_end(&pcpu_stats->syncp);
+ tx_drop:
+ 	dev_kfree_skb_any(skb);
+ 	return NETDEV_TX_OK;
+@@ -1505,6 +1517,8 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+ 	struct mana_stats_rx *rx_stats = &rxq->stats;
+ 	struct net_device *ndev = rxq->ndev;
+ 	uint pkt_len = cqe->ppi[0].pkt_len;
++	struct mana_pcpu_stats *pcpu_stats;
++	struct mana_port_context *apc;
+ 	u16 rxq_idx = rxq->rxq_idx;
+ 	struct napi_struct *napi;
+ 	struct xdp_buff xdp = {};
+@@ -1512,6 +1526,9 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+ 	u32 hash_value;
+ 	u32 act;
  
-@@ -54,15 +62,6 @@ static int __init hyperv_init(void)
- 		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
- 		ms_hyperv.misc_features);
++	apc = netdev_priv(ndev);
++	pcpu_stats = this_cpu_ptr(apc->pcpu_stats);
++
+ 	rxq->rx_cq.work_done++;
+ 	napi = &rxq->rx_cq.napi;
  
--	/* Get information about the Hyper-V host version */
--	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
--	a = result.as32.a;
--	b = result.as32.b;
--	c = result.as32.c;
--	d = result.as32.d;
--	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
--		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
--
- 	ret = hv_common_init();
- 	if (ret)
- 		return ret;
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index d306f6184cee..03a3445faf7a 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -350,13 +350,25 @@ static void __init reduced_hw_init(void)
- 	x86_init.irqs.pre_vector_init	= x86_init_noop;
+@@ -1570,6 +1587,11 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+ 		rx_stats->xdp_tx++;
+ 	u64_stats_update_end(&rx_stats->syncp);
+ 
++	u64_stats_update_begin(&pcpu_stats->syncp);
++	pcpu_stats->rx_packets++;
++	pcpu_stats->rx_bytes += pkt_len;
++	u64_stats_update_end(&pcpu_stats->syncp);
++
+ 	if (act == XDP_TX) {
+ 		skb_set_queue_mapping(skb, rxq_idx);
+ 		mana_xdp_tx(skb, ndev);
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index ab2413d71f6c..e3aa47ead601 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -83,8 +83,9 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
+ 	if (stringset != ETH_SS_STATS)
+ 		return -EINVAL;
+ 
+-	return ARRAY_SIZE(mana_eth_stats) + num_queues *
+-				(MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
++	return ARRAY_SIZE(mana_eth_stats) +
++	       (num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT)) +
++	       (num_present_cpus() * (MANA_STATS_RX_PCPU + MANA_STATS_TX_PCPU));
  }
  
-+int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
-+{
-+	unsigned int hv_max_functions;
-+
-+	hv_max_functions = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
-+	if (hv_max_functions < HYPERV_CPUID_VERSION) {
-+		pr_err("%s: Could not detect Hyper-V version\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	cpuid(HYPERV_CPUID_VERSION, &info->eax, &info->ebx, &info->ecx, &info->edx);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
-+
- static void __init ms_hyperv_init_platform(void)
- {
- 	int hv_max_functions_eax;
--	int hv_host_info_eax;
--	int hv_host_info_ebx;
--	int hv_host_info_ecx;
--	int hv_host_info_edx;
- 
- #ifdef CONFIG_PARAVIRT
- 	pv_info.name = "Hyper-V";
-@@ -407,21 +419,6 @@ static void __init ms_hyperv_init_platform(void)
- 		pr_info("Hyper-V: running on a nested hypervisor\n");
+ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+@@ -139,6 +140,19 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+ 		sprintf(p, "tx_%d_mana_map_err", i);
+ 		p += ETH_GSTRING_LEN;
  	}
- 
--	/*
--	 * Extract host information.
--	 */
--	if (hv_max_functions_eax >= HYPERV_CPUID_VERSION) {
--		hv_host_info_eax = cpuid_eax(HYPERV_CPUID_VERSION);
--		hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
--		hv_host_info_ecx = cpuid_ecx(HYPERV_CPUID_VERSION);
--		hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
--
--		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
--			hv_host_info_ebx >> 16, hv_host_info_ebx & 0xFFFF,
--			hv_host_info_eax, hv_host_info_edx & 0xFFFFFF,
--			hv_host_info_ecx, hv_host_info_edx >> 24);
--	}
--
- 	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
- 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
- 		x86_platform.calibrate_tsc = hv_get_tsc_khz;
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 2f1dd4b07f9a..4d72c528af68 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -278,6 +278,15 @@ static void hv_kmsg_dump_register(void)
- int __init hv_common_init(void)
- {
- 	int i;
-+	union hv_hypervisor_version_info version;
 +
-+	/* Get information about the Hyper-V host version */
-+	if (hv_get_hypervisor_version(&version) == 0) {
-+		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-+			version.major_version, version.minor_version,
-+			version.build_number, version.service_number,
-+			version.service_pack, version.service_branch);
++	for (i = 0; i < num_present_cpus(); i++) {
++		sprintf(p, "cpu%d_rx_packets", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "cpu%d_rx_bytes", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "cpu%d_tx_packets", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "cpu%d_tx_bytes", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "cpu%d_tx_dropped", i);
++		p += ETH_GSTRING_LEN;
 +	}
+ }
  
- 	if (hv_is_isolation_supported())
- 		sysctl_record_panic_msg = 0;
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 3d1b31f90ed6..32514a870b98 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -817,6 +817,29 @@ struct hv_input_unmap_device_interrupt {
- #define HV_SOURCE_SHADOW_NONE               0x0
- #define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
+ static void mana_get_ethtool_stats(struct net_device *ndev,
+@@ -222,6 +236,28 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 		data[i++] = csum_partial;
+ 		data[i++] = mana_map_err;
+ 	}
++
++	for_each_possible_cpu(q) {
++		const struct mana_pcpu_stats *pcpu_stats =
++				per_cpu_ptr(apc->pcpu_stats, q);
++		u64 rx_packets, rx_bytes, tx_packets, tx_bytes, tx_dropped;
++		unsigned int start;
++
++		do {
++			start = u64_stats_fetch_begin(&pcpu_stats->syncp);
++			rx_packets = pcpu_stats->rx_packets;
++			tx_packets = pcpu_stats->tx_packets;
++			rx_bytes = pcpu_stats->rx_bytes;
++			tx_bytes = pcpu_stats->tx_bytes;
++			tx_dropped = pcpu_stats->tx_dropped;
++		} while (u64_stats_fetch_retry(&pcpu_stats->syncp, start));
++
++		data[i++] = rx_packets;
++		data[i++] = rx_bytes;
++		data[i++] = tx_packets;
++		data[i++] = tx_bytes;
++		data[i++] = tx_dropped;
++	}
+ }
  
-+/*
-+ * Version info reported by hypervisor
-+ */
-+union hv_hypervisor_version_info {
-+	struct {
-+		u32 build_number;
-+
-+		u32 minor_version : 16;
-+		u32 major_version : 16;
-+
-+		u32 service_pack;
-+
-+		u32 service_number : 24;
-+		u32 service_branch : 8;
-+	};
-+	struct {
-+		u32 eax;
-+		u32 ebx;
-+		u32 ecx;
-+		u32 edx;
-+	};
+ static int mana_get_rxnfc(struct net_device *ndev, struct ethtool_rxnfc *cmd,
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 76147feb0d10..9a2414ee7f02 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -51,6 +51,8 @@ enum TRI_STATE {
+ /* Update this count whenever the respective structures are changed */
+ #define MANA_STATS_RX_COUNT 5
+ #define MANA_STATS_TX_COUNT 11
++#define MANA_STATS_RX_PCPU 2
++#define MANA_STATS_TX_PCPU 3
+ 
+ struct mana_stats_rx {
+ 	u64 packets;
+@@ -386,6 +388,15 @@ struct mana_ethtool_stats {
+ 	u64 rx_cqe_unknown_type;
+ };
+ 
++struct mana_pcpu_stats {
++	u64 rx_packets;
++	u64 rx_bytes;
++	u64 tx_packets;
++	u64 tx_bytes;
++	u64 tx_dropped;
++	struct u64_stats_sync syncp;
 +};
 +
- /*
-  * The whole argument should fit in a page to be able to pass to the hypervisor
-  * in one hypercall.
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 04424a446bb7..452b7c089b71 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -161,6 +161,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
- 	}
- }
+ struct mana_context {
+ 	struct gdma_dev *gdma_dev;
  
-+int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
-+
- void hv_setup_vmbus_handler(void (*handler)(void));
- void hv_remove_vmbus_handler(void);
- void hv_setup_stimer0_handler(void (*handler)(void));
+@@ -449,6 +460,7 @@ struct mana_port_context {
+ 	bool port_st_save; /* Saved port state */
+ 
+ 	struct mana_ethtool_stats eth_stats;
++	struct mana_pcpu_stats __percpu *pcpu_stats;
+ };
+ 
+ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
 -- 
-2.25.1
+2.34.1
 
 
