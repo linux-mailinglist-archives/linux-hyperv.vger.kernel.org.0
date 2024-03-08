@@ -1,96 +1,119 @@
-Return-Path: <linux-hyperv+bounces-1684-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1685-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE3D6875D90
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 06:31:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9BA5876039
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 09:52:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 976F5283CB3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 05:31:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07BA71C2254A
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 08:52:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99BE32E647;
-	Fri,  8 Mar 2024 05:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PTfa9+jt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9549E53818;
+	Fri,  8 Mar 2024 08:52:00 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8032564;
-	Fri,  8 Mar 2024 05:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794A3535BC
+	for <linux-hyperv@vger.kernel.org>; Fri,  8 Mar 2024 08:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709875865; cv=none; b=XGNas+N2e3NOLOB41tmxc6zTx4NHVA+cKlPy0ZxNbMtTh4iIQnTGqzPn+nCSbpQCvzqHgIEB8AoRvEavIGeY+Hp+mHeNkkhtn6nfDOPDxm1xLFOGRnG74Th6N5J6KCZC2eQCkvPl7nXO/MWL+8m/GKdxz/X/17k7TdJ7f0RITO4=
+	t=1709887920; cv=none; b=lu3TYdmxr7xTv//t4TxiDiZhatig/vz53ZEs9OVWwyFBrnw/HdlVDHZexnYosPKSQrqf6Md4eRC5H/pE04vf+XCTjZy03v5MivK6Pbfii616eDL1FBFK1QjT3mN7aeAQwtNjkkvotdYJ/pvyRIszYW1To1R9TxbdAfr6tuXcjhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709875865; c=relaxed/simple;
-	bh=4QA+qfkTVt82T4MJ6mB+KmRrnBaFSpMS1IGiL/1JjJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nMoSf8/pMBCSoPeCal5+i+72QuACjYleabrCtrwzpSTT7Lc6yj/Dqs9ViKsSEhMlpmlazWy04NxI1tAJJOK8PoVlil6zwIMCmVUFFONfZFQpRF5UdJYIxAYUVlpxdJHRyzoY6affHUFACS/nVJP4jy7NRxeLgVvpKWJBnZuRA1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PTfa9+jt; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 238CE20B74C0; Thu,  7 Mar 2024 21:30:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 238CE20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709875856;
-	bh=u2kPWb3IsqjyN6FSEPkizuq4H3ww/4ROAGYubZNDML8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PTfa9+jt0Q6hKwjBdaXtnHtFyd5ME7DtKa/Q8PYhW+s6pOgjSxmzLDFquvbnH1yh7
-	 4oaRwleRRtKqtNLao+7oXEFtJ67BPVLXXgglcbspIIUogItaQ2qhuJVT9N9+697WD0
-	 vnRBA/gNCCbPWUJF689KDtyKXn9qEWGZjtVTqdr8=
-Date: Thu, 7 Mar 2024 21:30:56 -0800
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] net :mana : Add per-cpu stats for MANA device
-Message-ID: <20240308053056.GA16944@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240307072923.6cc8a2ba@kernel.org>
- <DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
- <20240307090145.2fc7aa2e@kernel.org>
+	s=arc-20240116; t=1709887920; c=relaxed/simple;
+	bh=21qlWdEL13zxAc3GgDFH9Z+YSzcIC+Cu/2RsQE7l5PM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HF08tFTVTX3zERKNFeX9ed+zwDCU7IvW9dnlj9/aEE1F9iDfsyEApnfHdCYlH3aG7W1UZeZJ6DSw44lE0p6pcWQUJRJkKI7bSz8BPo+Ed6nNR/bFE8XWEyYeLVRaJ8NFaffQJQu2p9mdEAC8aF+oSytLr7qO0Lgzaum5av1VjSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1riVxF-0006vm-QH; Fri, 08 Mar 2024 09:51:49 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1riVxF-0056N9-C0; Fri, 08 Mar 2024 09:51:49 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1riVxF-00245Z-0v;
+	Fri, 08 Mar 2024 09:51:49 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: [PATCH] hv: vmbus: Convert to platform remove callback returning void
+Date: Fri,  8 Mar 2024 09:51:08 +0100
+Message-ID:  <920230729ddbeb9f3c4ff8282a18b0c0e1a37969.1709886922.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240307090145.2fc7aa2e@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1778; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=21qlWdEL13zxAc3GgDFH9Z+YSzcIC+Cu/2RsQE7l5PM=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl6tF+CE7/qQ6HxTa4lYuJBCgeRW9yVBn0QcUNb kSGSpQrvuuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZerRfgAKCRCPgPtYfRL+ TtNGB/sGfaGKOcejaIVdJdr9jZCvUYOPmOmjwJMwkeakEGebqtsBbjtA6U6NguP6OoR8sY+bDoZ R2R+f4hdGOMYwZ0z2siCax1pC9IzXyQ189nnJ/Ep7/7n01bOhLEq4M1H6Dbxx0R8bZlO0KGNI8G Wt4Lm4OEYIgnqcWxwMh/aiRi4w85u08zyDACc1J4+g/ARbK6B7biZVZdD4K0XLRpHiot0MWHmVk StqsJy9HkdD28lTVPD9JMlPwBi61Goeo3dvrNBBcTNk9LxckezgPZ7V2043p6XEVh7H25mC3n9E OIhfsHOLbG+eSGK5GM9VUm5EUl1Q7mabrgOh/0vz2QjgG2Zx
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hyperv@vger.kernel.org
 
-Thanks for the comments, I am sending out a newer version with these fixes.
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code. However the value returned is ignored (apart
+from emitting a warning) and this typically results in resource leaks.
 
-On Thu, Mar 07, 2024 at 09:01:45AM -0800, Jakub Kicinski wrote:
-> On Thu, 7 Mar 2024 15:49:15 +0000 Haiyang Zhang wrote:
-> > > > Extend 'ethtool -S' output for mana devices to include per-CPU packet
-> > > > stats  
-> > > 
-> > > But why? You already have per queue stats.  
-> > Yes. But the q to cpu binding is dynamic, we also want the per-CPU stat 
-> > to analyze the CPU usage by counting the packets and bytes on each CPU.
-> 
-> Dynamic is a bit of an exaggeration, right? On a well-configured system
-> each CPU should use a single queue assigned thru XPS. And for manual
-> debug bpftrace should serve the purpose quite well.
-> 
-> Please note that you can't use num_present_cpus() to size stats in
-> ethtool -S , you have to use possible_cpus(), because the retrieval
-> of the stats is done in a multi-syscall fashion and there are no
-> explicit lengths in the API. So you must always report all possible
-> stats, not just currently active :(
+To improve here there is a quest to make the remove callback return
+void. In the first step of this quest all drivers are converted to
+.remove_new(), which already returns void. Eventually after all drivers
+are converted, .remove_new() will be renamed to .remove().
+
+Trivially convert this driver from always returning zero in the remove
+callback to the void returning variant.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/hv/vmbus_drv.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 7f7965f3d187..4cb17603a828 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2359,10 +2359,9 @@ static int vmbus_platform_driver_probe(struct platform_device *pdev)
+ 		return vmbus_acpi_add(pdev);
+ }
+ 
+-static int vmbus_platform_driver_remove(struct platform_device *pdev)
++static void vmbus_platform_driver_remove(struct platform_device *pdev)
+ {
+ 	vmbus_mmio_remove();
+-	return 0;
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -2542,7 +2541,7 @@ static const struct dev_pm_ops vmbus_bus_pm = {
+ 
+ static struct platform_driver vmbus_platform_driver = {
+ 	.probe = vmbus_platform_driver_probe,
+-	.remove = vmbus_platform_driver_remove,
++	.remove_new = vmbus_platform_driver_remove,
+ 	.driver = {
+ 		.name = "vmbus",
+ 		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
+
+base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
+-- 
+2.43.0
+
 
