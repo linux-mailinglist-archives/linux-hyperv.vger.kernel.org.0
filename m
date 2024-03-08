@@ -1,106 +1,112 @@
-Return-Path: <linux-hyperv+bounces-1695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FD7F876BE2
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 21:33:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60EA6876DE1
+	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Mar 2024 00:41:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8884CB212A6
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 20:33:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 883F71C20F18
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 23:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84D745D900;
-	Fri,  8 Mar 2024 20:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y9f9RbSq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MOUx0g/2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BCCA3BBCB;
+	Fri,  8 Mar 2024 23:41:03 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE6E31A66;
-	Fri,  8 Mar 2024 20:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E10C6AC0;
+	Fri,  8 Mar 2024 23:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709930014; cv=none; b=Qi3ePBDTcPylSN0z8WBFv0gYP/1zfGynknf2KWY/6IZjXNuD+JLJfFMmIknRlF5yDWajAT6/ntLmoUrlBReI+5m8DAPnAj1LDW2AVWBEZCaUajct9GYa4A6eK0uje88AAyXog66cDzrMWl9OJ2Wo4cqDesymIvC0cJoZnZ590co=
+	t=1709941263; cv=none; b=td8aX7/O67XxDrIWk53+N08SfsbKloJMGX9oWJjOG5hUTRORFaiQAwTFeuiHqtgvTMi46Dr3DQPJeWwIojlVO+Ud+L9mLDZpxDdyWeV8GbQiYesTpSbWQXs8XR7hNS436xOXRxYAFwldlcLmMK4jriw2SSdYbQTRDiR3fLi/ciM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709930014; c=relaxed/simple;
-	bh=mbU8isap81SxzNzDKLf+EXRxnmhyRYSIpTTrNxuafgw=;
+	s=arc-20240116; t=1709941263; c=relaxed/simple;
+	bh=D6gzLwzqOzpvQah9QvGx9R5y4EQMAGBwu9cG1sS5btg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sOPzkLyt2YfrcOF+ESaSSsTYP+honxhjr9I2onevDVCYaZQ9ZJAF7d9KI9po0melq34ghTpneR0XlAFmPQR2paXK/wNuLDLMEOHmdxfIF2yKexcrr2nGRFziqLBzVcnZ/6l4ExxPOey8UpoRvZZaPM1ML1qQgMb018OIS0Ehr+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y9f9RbSq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MOUx0g/2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Fri, 8 Mar 2024 21:33:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709930010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vwt+VDLDRvl/LmacdV+mArgWDFVTfPr6L4CGq1jg7iM=;
-	b=Y9f9RbSqdey9V8dfdCvfDsnukOebtoJo+6d2pQKjR7kElvsby2DO2FvbgifxygGaG6lWZS
-	Ju8mCG9/05W3bHjnk+GD4SeMi2yIjHt+UYM1CvCRHEKZm0ntRs+qJAMWeh7ta+s3YlIseu
-	Wj3UNnRnSyAC5Fg8Z35dJu1hZXKwOjWd0biYGjnihXAq+1Hw56B9wPO1Qbfag96ZKDLl+k
-	wBNHhNyOixrZuoVwuQ/gQXESQ02d/o4Q2oNOBQRiyfQJIb9F+gBWSEH7RRGhzcr3vOej/F
-	oxOKYImAFl85qeUIjI4l2y1ZlZOjM0DiiUQgYCazCGJl1yHrEIgW5a5diGuBsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709930010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vwt+VDLDRvl/LmacdV+mArgWDFVTfPr6L4CGq1jg7iM=;
-	b=MOUx0g/2AvvcSiTbU8MX33za3/D88DDcKUIh16xlqY3skmnxiyrhRHlAgdgLf2qsj2+Ce/
-	q5/pd0mZvSVkZ/Aw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Alireza Dabagh <alid@microsoft.com>,
-	Sharath George John <sgeorgejohn@microsoft.com>
-Subject: Re: RE: [PATCH] net :mana : Add per-cpu stats for MANA device
-Message-ID: <20240308203328.IvakSEHd@linutronix.de>
-References: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240307072923.6cc8a2ba@kernel.org>
- <DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
- <20240307090145.2fc7aa2e@kernel.org>
- <CH2PR21MB1480D3ACADFFD2FC3B1BB7ECCA272@CH2PR21MB1480.namprd21.prod.outlook.com>
- <20240308112244.391b3779@kernel.org>
- <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKF9i3rWMskSAhvI+5ig/WwRwoz6vUJQx15/heQFGcwPXKR4mqmoxFQsLuKSTNvT/hVga7z8Rr+WmdXQFnSfy4vfnANEc7F5Ntro5PYqlDQZbf7YOXhJg30wFlsWvfWPg0eX7vI/PGvG76R2axJCWZiA+GmBIT1gixpYPIUoJYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dd6198c4e2so15266025ad.2;
+        Fri, 08 Mar 2024 15:41:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709941261; x=1710546061;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zlfQth9DPWSsn+arH/qgpKnNXviHjH835S37nR4dhGE=;
+        b=qn0wtM+rZHuWuZMSgEwae6WWIAEE55KsBd3N5ktRmEI24FCsI9ylv8/kHTBAQbOP87
+         5uwW9fZJ2S5mzc8bQykQemgHsxzPfsEv7vgl2SICGQnSMgSOLbqTra/YptyIcqwVL3TL
+         /bdDffnA4e6BTiXp83GTosITESl4EwRzTKCizs4YvoomhkXj/YMPje9e4Ug+Osi0v9O9
+         GMXSAan2ZObnoKN8/14kDuy0J1uQkej8+TLUYrTouOfxZiSuA0TqAyzQfUbYRReHgCC6
+         Bky7GsVdrZnSYS/iad92Blp58ZiWORpzCZfa91UxB1T/zTqwHmVCUvcQjUm/a4XPx5MJ
+         qFuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNRBouqO/+QvXz1dYBaCaP0OYzhpWM4342E4zoNDkJEuEgYxAn7yyLGmd+35sxP54U/qPUQQnH7ABAxHnnTxWfXA3bm5899CrWgodxicJxwgr0bGvoCJtQhktgyJHppWxNAeFcQq4I6Bfu
+X-Gm-Message-State: AOJu0YzRv1FVw6JnWlzMcWx8I8aErDJz5k0ib+ruvmzvNFantsyOvlRD
+	QVjC2jpdMwANAotaRFfZt5zXo5VPy+QxHyUU3S3BvwiX0A24Pmw2
+X-Google-Smtp-Source: AGHT+IGzZk1NMbfydS+xIShLQ6OuLXndJnAnzyGSFS+eV9QcPxPWGIumjzeC2yIzNsFyq4yVWsdabg==
+X-Received: by 2002:a17:902:cf11:b0:1dc:d642:aaf0 with SMTP id i17-20020a170902cf1100b001dcd642aaf0mr249479plg.6.1709941260826;
+        Fri, 08 Mar 2024 15:41:00 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id w10-20020a170902e88a00b001db55b5d68bsm188703plg.69.2024.03.08.15.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 15:41:00 -0800 (PST)
+Date: Fri, 8 Mar 2024 23:40:55 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>, kys@microsoft.com, haiyangz@microsoft.com,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, dwmw@amazon.co.uk, peterz@infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ssengar@microsoft.com, mhklinux@outlook.com
+Subject: Re: [PATCH v3] x86/hyperv: Use per cpu initial stack for vtl context
+Message-ID: <ZeuiB8bH-m5NTCHD@liuwe-devbox-debian-v2>
+References: <1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com>
+ <ZeVpG07p9ayjk7yb@liuwe-devbox-debian-v2>
+ <20240304070817.GA501@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <ZeZmysa1x4dogjQs@liuwe-devbox-debian-v2>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
+In-Reply-To: <ZeZmysa1x4dogjQs@liuwe-devbox-debian-v2>
 
-On 2024-03-08 19:43:57 [+0000], Haiyang Zhang wrote:
-> > Do you have experimental data showing this making a difference
-> > in production?
-> Shradha, could you please add some data before / after enabling irqbalancer 
-> which changes cpu affinity?
+On Tue, Mar 05, 2024 at 12:26:50AM +0000, Wei Liu wrote:
+> On Sun, Mar 03, 2024 at 11:08:17PM -0800, Saurabh Singh Sengar wrote:
+> > On Mon, Mar 04, 2024 at 06:24:27AM +0000, Wei Liu wrote:
+> > > On Sun, Mar 03, 2024 at 12:01:36AM -0800, Saurabh Sengar wrote:
+> > > > Currently, the secondary CPUs in Hyper-V VTL context lack support for
+> > > > parallel startup. Therefore, relying on the single initial_stack fetched
+> > > > from the current task structure suffices for all vCPUs.
+> > > > 
+> > > > However, common initial_stack risks stack corruption when parallel startup
+> > > > is enabled. In order to facilitate parallel startup, use the initial_stack
+> > > > from the per CPU idle thread instead of the current task.
+> > > > 
+> > > > Fixes: 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE")
+> > > 
+> > > I don't think this patch is buggy. Instead, it exposes an assumption in
+> > > the VTL code. So this either should be dropped or point to the patch
+> > > which introduces the assumption.
+> > > 
+> > > Let me know what you would prefer.
+> > 
+> > The VTL code will crash if this fix is not present post above mentioned patch:
+> > 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE").
+> > So I would prefer a fixes which added the assumption in VTL:
+> > 
+> > Fixes: 3be1bc2fe9d2 ("x86/hyperv: VTL support for Hyper-V")
+> > 
+> > Please let me know if you need V4 for it.
+> 
+> No need to repost. I can change the commit message.
 
-so you have one queue and one interrupt and then the irqbalancer is
-pushing the interrupt from CPU to another. What kind of information do
-you gain from per-CPU counters here?
-
-> Thanks,
-> - Haiyang
-
-Sebastian
+Applied to hyperv-next with the new Fixes tag. Thanks.
 
