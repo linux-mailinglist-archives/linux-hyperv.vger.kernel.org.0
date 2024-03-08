@@ -1,130 +1,136 @@
-Return-Path: <linux-hyperv+bounces-1698-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1699-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43FA4876DF7
-	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Mar 2024 00:50:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 43C19876E03
+	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Mar 2024 00:53:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74BA21C220A5
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 23:50:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E4791C212A1
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 23:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C28CC11707;
-	Fri,  8 Mar 2024 23:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10EF3BBF7;
+	Fri,  8 Mar 2024 23:53:09 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429C14084E
-	for <linux-hyperv@vger.kernel.org>; Fri,  8 Mar 2024 23:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8B623769;
+	Fri,  8 Mar 2024 23:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709941805; cv=none; b=oC6uNc9wPlTu/BqCnsPkV23w3qhcHiX0XYEb5t948tSNlraJAFXSnJpj+WjTk21WVg2ytY+e60txxS9uOST88NP9TUyHnrKo1ZJ+SEFPxfqcJlU73/H/75iIoiXQITndedLMGi0KX2ByorZ/DSSVBWdnEAwsWSYo7iPEm2HlyE4=
+	t=1709941989; cv=none; b=mEsCvpZO/xGxHdy54eTcpxT9qN8sraMn1Cs5lZa2/8ykPFAEnWsbN0vaJ4NVgCLfDdBJrQ3XLOhMw+GMDe0L/TbOy0zeJqm+0/9WcaSaZ1Awhkw+Cr0hTZIA8UL7sKRoRqAcE6o4r9C73S2AkZZihEBDMBq2KLptrv2Dd0YqGb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709941805; c=relaxed/simple;
-	bh=3opxjsCv7jMiquLBzb5ExZrne7HcckEGKoGZJf7dqeY=;
+	s=arc-20240116; t=1709941989; c=relaxed/simple;
+	bh=t8OA91R3kyR2UyyWnJ2g3tEc5o5p3PwzgyzGpkHmokU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=raOTFhMovBuX/MKpPR69M2/aEzfbQahvOaiIyGlL7l9nFB5KwOZel13spkk7gnjbkOGgQsY7i5FxqXmi04I1cv8fjr87VuXobI/OhGtaKFzv4L+D7Ic57oJqjcFINptJlnM0a2Dys36j4ptYdZ+cvfdm+8lBJjymbTrDSs7ESJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuRbDiUIYOX9Ps5JO0FjehJ4zPdugp8aTf8K/m6oyjM6S2WQUwVl/kUL/0q8H5Ukmvoh80xREkX/kqRlGMF+XSh/io0VmBSMorI8EidpOe+hBCEPAGmH/ScPieA/V0oynobYsWOds2zoJ0fo2pn2TxpywcGJqB46QDnvzD1roYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dc1ff3ba1aso20850235ad.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 08 Mar 2024 15:50:04 -0800 (PST)
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso2154395a12.3;
+        Fri, 08 Mar 2024 15:53:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709941803; x=1710546603;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7dM1IZ7rjEv78mjMS5HaIEo0TawbwnsyEqX6tF+gErk=;
-        b=mCKqmoMCl899sbNhFWB5Dtdz8jwpf6ZUbzqiKcq5Ykuj174Na33sEIe4/RWBIRMCQq
-         VZpJ73RK6msd26Q4QAxDbr68rzis74aQc280PP/jVu1VX5BHCFPVMWC578stH7qz+MD5
-         +6KrOZLzkRi1F+bY6OfkkpBdaY8mc2x2MhVhveLSL+9hRzVsJEvLSIxosVO9YDNlqgCt
-         K5XpbJT/LjZz12sLNs/7r+UERlK3P/ulbxBZyr5ZyN/hJsPnNB8DsL1jj7tYnLA4H9IC
-         NIdLAzCUWth8jf2N1eCwktJZO74cnJnJNCqC0tw1gZTQALSMQ6mlpyD0PeX80P7DMxnC
-         9RiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/AQe4VPlmzjHnTHzMeIGQnskC2Z6ZIUyOjCagswTNk1tQou5JTxO3F3RVaAXurl4gMJMXHXoG2EssOFu0+rvzzKtrE2sWNlEaks03
-X-Gm-Message-State: AOJu0Yw9IYAB8XM0oEvennJT4ezlwnTkQfIpLhhwi6B2jsKZfMjJPQ9r
-	ZNF8lvUQARpiQGkFpa9hlT1hnllEEzSMP2wXGRxuKWgEcz5nUx+Y
-X-Google-Smtp-Source: AGHT+IHqDm0xansHd1sSDYeVfuFhVzZmKHepPRsawaWqqYyEUuZyC8vvcFVTu+UfDyiIZY/Sed+w5g==
-X-Received: by 2002:a17:902:cf0a:b0:1dc:63b2:7c2e with SMTP id i10-20020a170902cf0a00b001dc63b27c2emr224637plg.31.1709941803479;
-        Fri, 08 Mar 2024 15:50:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709941988; x=1710546788;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qAaAtnWUg1rxpdk1BKsVfiXox0rISjedblr07JGTkYA=;
+        b=IDgKU9tNmT0Ao7TVwJZGynHeYEsQpbEvgk4C9AZk7O4NcxU4TH8sVaWgwdN3ErLqw8
+         jjUm3TvSX97sHxUhZVFcCjS1b4j70K3nmVhUdW6Jj1N8YxdHsLOAktGTT8cY3rylMyPh
+         BowQ74/w7Zk5C9/7c9tTHsRXrDfIvq9N5AsNdDmqiG9VYkNIOdyMTTupcD/lxEDuYv3y
+         K5WsVXWRwCWYcrFoJ0rY4NHHMREN7l0MQOR4dvq/am4LTbrHhTppn5xNXWB2qx/qoXXy
+         c+/fiSHE/1Cf8fxnFMSol/DYUReKP1YbhkCeY3P2Glao0GYQQoC7pm+Pv5ohqJWEVsto
+         cglg==
+X-Forwarded-Encrypted: i=1; AJvYcCWP5TAuy+NeQ7TRVXuav/21idlIT6CnYpEOErjLOcFpCz0AJtWxZi+gc0yROTwEubM+Uiaa5aDmAZp3wKlvi0fGEbQkfAVE48Cs7onUEy4L7Ut8uLlFbSrgAgDUMjZNffV2d9LP5vJt236C3SVWUDc3h2R5jhYDmSGEi5W6IhNqcSFvN92LhQ==
+X-Gm-Message-State: AOJu0YyiqhcnNIaHFNMjMAKXdaQ/e+ezStIt1XfcMgEqecgdvBhfOC1Y
+	fGXxFllgO7smG6vspWyDpyJ3JfaIzwrNhoqK4hHaNTHJU9yCLM96
+X-Google-Smtp-Source: AGHT+IF+FeulvTo1o6BjAN2xTdMb8Ul/K+KciGeAVDA7XkD632jeGsz0rIvfuwgHV41dXl5zLmsguw==
+X-Received: by 2002:a05:6a20:3424:b0:1a1:2fda:e785 with SMTP id i36-20020a056a20342400b001a12fdae785mr223595pzd.23.1709941987631;
+        Fri, 08 Mar 2024 15:53:07 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id y15-20020a17090264cf00b001dd744f97d0sm196561pli.273.2024.03.08.15.50.02
+        by smtp.gmail.com with ESMTPSA id u9-20020a62d449000000b006e57a3bf0e9sm263058pfl.82.2024.03.08.15.53.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 15:50:03 -0800 (PST)
-Date: Fri, 8 Mar 2024 23:49:58 +0000
+        Fri, 08 Mar 2024 15:53:07 -0800 (PST)
+Date: Fri, 8 Mar 2024 23:53:02 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	linux-hyperv@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] hv: vmbus: Convert to platform remove callback returning
- void
-Message-ID: <ZeukJmEAKtlO7GZ-@liuwe-devbox-debian-v2>
-References: <920230729ddbeb9f3c4ff8282a18b0c0e1a37969.1709886922.git.u.kleine-koenig@pengutronix.de>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"tytso@mit.edu" <tytso@mit.edu>,
+	"Jason@zx2c4.com" <Jason@zx2c4.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	Saurabh Singh Sengar <ssengar@microsoft.com>,
+	Long Li <longli@microsoft.com>
+Subject: Re: [PATCH 1/1] x86/hyperv: Use Hyper-V entropy to seed guest random
+ number generator
+Message-ID: <Zeuk3ixlvMFg1CDo@liuwe-devbox-debian-v2>
+References: <20240122160003.348521-1-mhklinux@outlook.com>
+ <SN6PR02MB4157B61CA09C0DAF0BB994E1D4212@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <920230729ddbeb9f3c4ff8282a18b0c0e1a37969.1709886922.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <SN6PR02MB4157B61CA09C0DAF0BB994E1D4212@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Fri, Mar 08, 2024 at 09:51:08AM +0100, Uwe Kleine-König wrote:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
+On Wed, Mar 06, 2024 at 05:43:41PM +0000, Michael Kelley wrote:
+> From: wei.liu@kernel.org @ 2024-03-04  6:57 UTC
+> > 
+> > > +void __init ms_hyperv_late_init(void)
+> > > +{
+> > > +	struct acpi_table_header *header;
+> > > +	acpi_status status;
+> > > +	u8 *randomdata;
+> > > +	u32 length, i;
+> > > +
+> > > +	/*
+> > > +	 * Seed the Linux random number generator with entropy provided by
+> > > +	 * the Hyper-V host in ACPI table OEM0.  It would be nice to do this
+> > > +	 * even earlier in ms_hyperv_init_platform(), but the ACPI subsystem
+> > > +	 * isn't set up at that point. Skip if booted via EFI as generic EFI
+> > > +	 * code has already done some seeding using the EFI RNG protocol.
+> > > +	 */
+> > > +	if (!IS_ENABLED(CONFIG_ACPI) || efi_enabled(EFI_BOOT))
+> > > +		return;
+> > > +
+> > > +	status = acpi_get_table("OEM0", 0, &header);
+> > > +	if (ACPI_FAILURE(status) || !header) {
+> > > +		pr_info("Hyper-V: ACPI table OEM0 not found\n");
+> > 
+> > I would like this to be a pr_debug() instead of pr_info(), considering
+> > using the negative case may cause users to think not having this table
+> > can be problematic.
+> > 
+> > Alternatively, we can remove this message here, and then ...
+> > 
+> > > +		return;
+> > > +	}
+> > > +
+> > 
+> > ... add a pr_debug() here to indicate that the table was found.
+> > 
+> > 	pr_info("Hyper-V: Seeding randomness with data from ACPI table OEM0\n");
 > 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
-> 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> You wrote the code as "pr_info()" but your comment suggests "pr_debug()".
+> I'm assuming pr_debug() is better because we don't really need any output
 
-Applied to hyperv-next, thanks!
+Yes, I meant to use pr_debug() here. Sorry for the confusion. The
+pr_info() was a c&p error.
 
-> ---
->  drivers/hv/vmbus_drv.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 7f7965f3d187..4cb17603a828 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -2359,10 +2359,9 @@ static int vmbus_platform_driver_probe(struct platform_device *pdev)
->  		return vmbus_acpi_add(pdev);
->  }
->  
-> -static int vmbus_platform_driver_remove(struct platform_device *pdev)
-> +static void vmbus_platform_driver_remove(struct platform_device *pdev)
->  {
->  	vmbus_mmio_remove();
-> -	return 0;
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> @@ -2542,7 +2541,7 @@ static const struct dev_pm_ops vmbus_bus_pm = {
->  
->  static struct platform_driver vmbus_platform_driver = {
->  	.probe = vmbus_platform_driver_probe,
-> -	.remove = vmbus_platform_driver_remove,
-> +	.remove_new = vmbus_platform_driver_remove,
->  	.driver = {
->  		.name = "vmbus",
->  		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
-> 
-> base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
-> -- 
-> 2.43.0
-> 
+Thanks,
+Wei.
 
