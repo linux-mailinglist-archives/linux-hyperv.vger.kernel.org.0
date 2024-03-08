@@ -1,89 +1,106 @@
-Return-Path: <linux-hyperv+bounces-1694-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9623876BD3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 21:27:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FD7F876BE2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 21:33:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4EF12828C7
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 20:27:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8884CB212A6
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 20:33:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFB55B5DD;
-	Fri,  8 Mar 2024 20:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84D745D900;
+	Fri,  8 Mar 2024 20:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AoOteGE2"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y9f9RbSq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MOUx0g/2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FC7524A2;
-	Fri,  8 Mar 2024 20:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE6E31A66;
+	Fri,  8 Mar 2024 20:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709929670; cv=none; b=BLnk936tUB/XA6UrprqKIMgn8gndBuwzV4m82FtQGJlcafeEGRHlaax3W1ZsBinOCiimP4HaAds4shsmvVB5qL4Aa7QoQFZF78fMuN/yn7DpDrjjSIJdx1T2Fcf7KlnhwacHLDlKGfY+JIEjdSNyEWjEQx/JCeZiFjX0LglLTP8=
+	t=1709930014; cv=none; b=Qi3ePBDTcPylSN0z8WBFv0gYP/1zfGynknf2KWY/6IZjXNuD+JLJfFMmIknRlF5yDWajAT6/ntLmoUrlBReI+5m8DAPnAj1LDW2AVWBEZCaUajct9GYa4A6eK0uje88AAyXog66cDzrMWl9OJ2Wo4cqDesymIvC0cJoZnZ590co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709929670; c=relaxed/simple;
-	bh=3NTsnRHMBLe0tb+2l4cedCjA/tS1VlSVd90rkwF9yXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GOYR2N2oiexgy0IbTpEb4wuzdQEH1HcKS42sP7VCy2gY8Abmn4FJ7m5Tv/4+zB+RmG2Ua5TJxDdgmGukLG7Xyq9Kx2G2FFqi6aQ8eJj4wptam5yVJ1G7hDtcgjQyIlCp/XGOZLlYd914IyKyi3TKg6lrSeWmqhOayqOf6I7d0KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AoOteGE2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F73EC433C7;
-	Fri,  8 Mar 2024 20:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709929669;
-	bh=3NTsnRHMBLe0tb+2l4cedCjA/tS1VlSVd90rkwF9yXk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AoOteGE2ZlnNfsRJ82oxMqGKp/TdZlsemCQIptPjNqmX4h2kWKjkwwHOeuz0eOyZq
-	 sm3qgWgYlem+xE6q3rJltAhD/se6FDrHvqmk3x8b5A6OByXkYzaNqWWfLgUdN0B52/
-	 X06nMiph4NSLCzrfdAa2Wy6mFajR89JNmvUdGL68/24x+DlpXEMaE70HwK4A5TG/nv
-	 7fGfdMCPTI2QP2MyX+RFnDlB3265VnsSd150bJ0KlxiFjXc+cK6C6pVSpdwobWBjOw
-	 yEWD5Mu7uBypXWs6wA59GcGGWsEOmjF1SrQwnJFl/YDFaOnsUKd6M+FCPIsfTdAu9U
-	 753L9VuXKP8RQ==
-Date: Fri, 8 Mar 2024 12:27:48 -0800
-From: Jakub Kicinski <kuba@kernel.org>
+	s=arc-20240116; t=1709930014; c=relaxed/simple;
+	bh=mbU8isap81SxzNzDKLf+EXRxnmhyRYSIpTTrNxuafgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOPzkLyt2YfrcOF+ESaSSsTYP+honxhjr9I2onevDVCYaZQ9ZJAF7d9KI9po0melq34ghTpneR0XlAFmPQR2paXK/wNuLDLMEOHmdxfIF2yKexcrr2nGRFziqLBzVcnZ/6l4ExxPOey8UpoRvZZaPM1ML1qQgMb018OIS0Ehr+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y9f9RbSq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MOUx0g/2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Fri, 8 Mar 2024 21:33:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709930010;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vwt+VDLDRvl/LmacdV+mArgWDFVTfPr6L4CGq1jg7iM=;
+	b=Y9f9RbSqdey9V8dfdCvfDsnukOebtoJo+6d2pQKjR7kElvsby2DO2FvbgifxygGaG6lWZS
+	Ju8mCG9/05W3bHjnk+GD4SeMi2yIjHt+UYM1CvCRHEKZm0ntRs+qJAMWeh7ta+s3YlIseu
+	Wj3UNnRnSyAC5Fg8Z35dJu1hZXKwOjWd0biYGjnihXAq+1Hw56B9wPO1Qbfag96ZKDLl+k
+	wBNHhNyOixrZuoVwuQ/gQXESQ02d/o4Q2oNOBQRiyfQJIb9F+gBWSEH7RRGhzcr3vOej/F
+	oxOKYImAFl85qeUIjI4l2y1ZlZOjM0DiiUQgYCazCGJl1yHrEIgW5a5diGuBsQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709930010;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vwt+VDLDRvl/LmacdV+mArgWDFVTfPr6L4CGq1jg7iM=;
+	b=MOUx0g/2AvvcSiTbU8MX33za3/D88DDcKUIh16xlqY3skmnxiyrhRHlAgdgLf2qsj2+Ce/
+	q5/pd0mZvSVkZ/Aw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>, Shradha Gupta
- <shradhagupta@microsoft.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-rdma@vger.kernel.org"
- <linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Ajay Sharma <sharmaajay@microsoft.com>, Leon
- Romanovsky <leon@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, KY Srinivasan
- <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Long Li <longli@microsoft.com>, Paul Rosswurm
- <paulros@microsoft.com>, Alireza Dabagh <alid@microsoft.com>, Sharath
- George John <sgeorgejohn@microsoft.com>
-Subject: Re: [PATCH] net :mana : Add per-cpu stats for MANA device
-Message-ID: <20240308122748.47c7dda5@kernel.org>
-In-Reply-To: <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Alireza Dabagh <alid@microsoft.com>,
+	Sharath George John <sgeorgejohn@microsoft.com>
+Subject: Re: RE: [PATCH] net :mana : Add per-cpu stats for MANA device
+Message-ID: <20240308203328.IvakSEHd@linutronix.de>
 References: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
-	<20240307072923.6cc8a2ba@kernel.org>
-	<DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
-	<20240307090145.2fc7aa2e@kernel.org>
-	<CH2PR21MB1480D3ACADFFD2FC3B1BB7ECCA272@CH2PR21MB1480.namprd21.prod.outlook.com>
-	<20240308112244.391b3779@kernel.org>
-	<CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
+ <20240307072923.6cc8a2ba@kernel.org>
+ <DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
+ <20240307090145.2fc7aa2e@kernel.org>
+ <CH2PR21MB1480D3ACADFFD2FC3B1BB7ECCA272@CH2PR21MB1480.namprd21.prod.outlook.com>
+ <20240308112244.391b3779@kernel.org>
+ <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
 
-On Fri, 8 Mar 2024 19:43:57 +0000 Haiyang Zhang wrote:
-> > Seems unlikely, but if it does work we should enable it for all
-> > devices, no driver by driver.  
-> There are some existing drivers, like mlx, rmnet, netvsc, etc. using percpu 
-> counters. Are you suggesting we add a common API for all drivers?
+On 2024-03-08 19:43:57 [+0000], Haiyang Zhang wrote:
+> > Do you have experimental data showing this making a difference
+> > in production?
+> Shradha, could you please add some data before / after enabling irqbalancer 
+> which changes cpu affinity?
 
-Hm, I don't think mlx does. The typical use case for pcpu stats so far
-has been software devices which don't have queues, and implement
-lockless Tx. In that case instead of recording stats on a local queue
-struct we can count per-cpu and not worry about locking.
+so you have one queue and one interrupt and then the irqbalancer is
+pushing the interrupt from CPU to another. What kind of information do
+you gain from per-CPU counters here?
+
+> Thanks,
+> - Haiyang
+
+Sebastian
 
