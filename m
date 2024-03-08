@@ -1,73 +1,76 @@
-Return-Path: <linux-hyperv+bounces-1696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1697-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60EA6876DE1
-	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Mar 2024 00:41:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4CA7876DE7
+	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Mar 2024 00:46:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 883F71C20F18
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 23:41:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50B4928268E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Mar 2024 23:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BCCA3BBCB;
-	Fri,  8 Mar 2024 23:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B423BBEA;
+	Fri,  8 Mar 2024 23:46:30 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E10C6AC0;
-	Fri,  8 Mar 2024 23:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33BD1E4BE;
+	Fri,  8 Mar 2024 23:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709941263; cv=none; b=td8aX7/O67XxDrIWk53+N08SfsbKloJMGX9oWJjOG5hUTRORFaiQAwTFeuiHqtgvTMi46Dr3DQPJeWwIojlVO+Ud+L9mLDZpxDdyWeV8GbQiYesTpSbWQXs8XR7hNS436xOXRxYAFwldlcLmMK4jriw2SSdYbQTRDiR3fLi/ciM=
+	t=1709941590; cv=none; b=AyU4Ujfrm6uvC+k60UVgPsDLadM03mj+8OJ2qHB9Udwi0dRWHGaVZjr+JBBDpthrvzutlUCU+guEqNna1Rc5PnVHYsdqMhy2odgOf0sh2Pzn4AKTF5/AZirSLA7CpPTL5fnAhe23LK2crfUvY8bmUdOfMgTiq/dvG7tHk+77NF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709941263; c=relaxed/simple;
-	bh=D6gzLwzqOzpvQah9QvGx9R5y4EQMAGBwu9cG1sS5btg=;
+	s=arc-20240116; t=1709941590; c=relaxed/simple;
+	bh=Q5QvRrR4aFEcW9c7Wwqrc/coRB4mf2hczN6lERPbiy0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CKF9i3rWMskSAhvI+5ig/WwRwoz6vUJQx15/heQFGcwPXKR4mqmoxFQsLuKSTNvT/hVga7z8Rr+WmdXQFnSfy4vfnANEc7F5Ntro5PYqlDQZbf7YOXhJg30wFlsWvfWPg0eX7vI/PGvG76R2axJCWZiA+GmBIT1gixpYPIUoJYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPJpq/2wMTJbe3ffRpB9lVrFnRhB7LXzdciPimSpJzUrbCWhY2BeZcBS3HzKYHp/9T04a3yPx3LZ3hsb51WscGx/nk+CHKYJdrvfAypzj+asuuAebm+iRzDk2yQbKhWcRb3s9+s/OJSlTSSrEhN+CICL/n8Gr2cRYm9mzb+PRlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dd6198c4e2so15266025ad.2;
-        Fri, 08 Mar 2024 15:41:01 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e66e8fcc2dso1055890b3a.3;
+        Fri, 08 Mar 2024 15:46:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709941261; x=1710546061;
+        d=1e100.net; s=20230601; t=1709941588; x=1710546388;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zlfQth9DPWSsn+arH/qgpKnNXviHjH835S37nR4dhGE=;
-        b=qn0wtM+rZHuWuZMSgEwae6WWIAEE55KsBd3N5ktRmEI24FCsI9ylv8/kHTBAQbOP87
-         5uwW9fZJ2S5mzc8bQykQemgHsxzPfsEv7vgl2SICGQnSMgSOLbqTra/YptyIcqwVL3TL
-         /bdDffnA4e6BTiXp83GTosITESl4EwRzTKCizs4YvoomhkXj/YMPje9e4Ug+Osi0v9O9
-         GMXSAan2ZObnoKN8/14kDuy0J1uQkej8+TLUYrTouOfxZiSuA0TqAyzQfUbYRReHgCC6
-         Bky7GsVdrZnSYS/iad92Blp58ZiWORpzCZfa91UxB1T/zTqwHmVCUvcQjUm/a4XPx5MJ
-         qFuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNRBouqO/+QvXz1dYBaCaP0OYzhpWM4342E4zoNDkJEuEgYxAn7yyLGmd+35sxP54U/qPUQQnH7ABAxHnnTxWfXA3bm5899CrWgodxicJxwgr0bGvoCJtQhktgyJHppWxNAeFcQq4I6Bfu
-X-Gm-Message-State: AOJu0YzRv1FVw6JnWlzMcWx8I8aErDJz5k0ib+ruvmzvNFantsyOvlRD
-	QVjC2jpdMwANAotaRFfZt5zXo5VPy+QxHyUU3S3BvwiX0A24Pmw2
-X-Google-Smtp-Source: AGHT+IGzZk1NMbfydS+xIShLQ6OuLXndJnAnzyGSFS+eV9QcPxPWGIumjzeC2yIzNsFyq4yVWsdabg==
-X-Received: by 2002:a17:902:cf11:b0:1dc:d642:aaf0 with SMTP id i17-20020a170902cf1100b001dcd642aaf0mr249479plg.6.1709941260826;
-        Fri, 08 Mar 2024 15:41:00 -0800 (PST)
+        bh=76NFj9Gkc1SKp3kfNLEvRY05NDu3hYQydbgadx/9sM0=;
+        b=EUvTtU7UtcywpudUe7SDSWWSXBvu3QoL5S4ahB2J+CnZzsv3XvMht0IoJxR4wgqC8/
+         kqI1Ppw1B3Myqen+j7RZkaWgROA49c9wMJRFFB/8Pu7//4iI6XXezcz5fTONDfZrxt+/
+         KpmijbyhdyC3YZX0sOwGYkDrpOKaDxKqivRdboD3mEQ8ED52EVt0/NT6DBYtsyC4tOqg
+         hVuj5S9YUgRYe84B6l8RxpJqK2RkZglgtJII5MyPkvxvKNSXYDN3CJHkYgzaai+eSgty
+         CjQUQTHwIYD8phZXvw3lkhln4KrYfyede7xqBNOfP2ZOKpNnY6tGXdYreFsV280ekTLp
+         lfkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOE/my9NKYh9umU60l6cr9oZPBwXhWHQb96ZZ4EPiQInsLYODJHGZkc78QSaPjMWIVTC+JCmERq8kWGy4xlCKtJIVQOKIQG6TrOwd3kqoHNj7G4S8Aq5Wmpri/SwdfExXCocBO/nVHvlDB
+X-Gm-Message-State: AOJu0YxMkL9rojQEGC/c4z6fbC8+7NH1g9ovr1moL8e6u666Rr8IfX0S
+	YyRCNE5xyVWJ6gy/8dXk+GwZUIX+gsYDhC49XTV3ughXljwzdWm0
+X-Google-Smtp-Source: AGHT+IFjJmlPtFDriyF/HxmpzAE0Jf7AXwHRUh3nwX5Ij/8PE3NZDth16THXbPxoEMWkM6HcWOmXkw==
+X-Received: by 2002:a05:6a00:22c5:b0:6e6:4705:a081 with SMTP id f5-20020a056a0022c500b006e64705a081mr553341pfj.33.1709941587906;
+        Fri, 08 Mar 2024 15:46:27 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id w10-20020a170902e88a00b001db55b5d68bsm188703plg.69.2024.03.08.15.40.59
+        by smtp.gmail.com with ESMTPSA id bn22-20020a056a00325600b006e6795932a4sm93481pfb.80.2024.03.08.15.46.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 15:41:00 -0800 (PST)
-Date: Fri, 8 Mar 2024 23:40:55 +0000
+        Fri, 08 Mar 2024 15:46:27 -0800 (PST)
+Date: Fri, 8 Mar 2024 23:46:22 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>, kys@microsoft.com, haiyangz@microsoft.com,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, dwmw@amazon.co.uk, peterz@infradead.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ssengar@microsoft.com, mhklinux@outlook.com
-Subject: Re: [PATCH v3] x86/hyperv: Use per cpu initial stack for vtl context
-Message-ID: <ZeuiB8bH-m5NTCHD@liuwe-devbox-debian-v2>
-References: <1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com>
- <ZeVpG07p9ayjk7yb@liuwe-devbox-debian-v2>
- <20240304070817.GA501@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <ZeZmysa1x4dogjQs@liuwe-devbox-debian-v2>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH v2] mshyperv: Introduce hv_get_hypervisor_version function
+Message-ID: <ZeujTnCGQ-EY7ap2@liuwe-devbox-debian-v2>
+References: <1709852618-29110-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB415711AAB604257B4F23A4AAD4272@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,37 +79,22 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeZmysa1x4dogjQs@liuwe-devbox-debian-v2>
+In-Reply-To: <SN6PR02MB415711AAB604257B4F23A4AAD4272@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Tue, Mar 05, 2024 at 12:26:50AM +0000, Wei Liu wrote:
-> On Sun, Mar 03, 2024 at 11:08:17PM -0800, Saurabh Singh Sengar wrote:
-> > On Mon, Mar 04, 2024 at 06:24:27AM +0000, Wei Liu wrote:
-> > > On Sun, Mar 03, 2024 at 12:01:36AM -0800, Saurabh Sengar wrote:
-> > > > Currently, the secondary CPUs in Hyper-V VTL context lack support for
-> > > > parallel startup. Therefore, relying on the single initial_stack fetched
-> > > > from the current task structure suffices for all vCPUs.
-> > > > 
-> > > > However, common initial_stack risks stack corruption when parallel startup
-> > > > is enabled. In order to facilitate parallel startup, use the initial_stack
-> > > > from the per CPU idle thread instead of the current task.
-> > > > 
-> > > > Fixes: 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE")
-> > > 
-> > > I don't think this patch is buggy. Instead, it exposes an assumption in
-> > > the VTL code. So this either should be dropped or point to the patch
-> > > which introduces the assumption.
-> > > 
-> > > Let me know what you would prefer.
+On Fri, Mar 08, 2024 at 03:58:45PM +0000, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, March 7, 2024 3:04 PM
 > > 
-> > The VTL code will crash if this fix is not present post above mentioned patch:
-> > 18415f33e2ac ("cpu/hotplug: Allow "parallel" bringup up to CPUHP_BP_KICK_AP_STATE").
-> > So I would prefer a fixes which added the assumption in VTL:
+> > Introduce x86_64 and arm64 functions to get the hypervisor version
+> > information and store it in a structure for simpler parsing.
 > > 
-> > Fixes: 3be1bc2fe9d2 ("x86/hyperv: VTL support for Hyper-V")
+> > Use the new function to get and parse the version at boot time. While at
+> > it, move the printing code to hv_common_init() so it is not duplicated.
 > > 
-> > Please let me know if you need V4 for it.
+> > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> > Acked-by: Wei Liu <wei.liu@kernel.org>
 > 
-> No need to repost. I can change the commit message.
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> 
 
-Applied to hyperv-next with the new Fixes tag. Thanks.
+Applied to hyperv-next. Thanks.
 
