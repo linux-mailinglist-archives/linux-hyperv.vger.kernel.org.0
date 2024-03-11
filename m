@@ -1,279 +1,253 @@
-Return-Path: <linux-hyperv+bounces-1713-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1714-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3B6C87873F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 19:26:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CAC48789FA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 22:21:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 791452826EF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 18:26:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70EA81C20E46
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 21:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69CB953E0A;
-	Mon, 11 Mar 2024 18:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D5656B8F;
+	Mon, 11 Mar 2024 21:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eP/1yYXB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fe9JsAcN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D524206B;
-	Mon, 11 Mar 2024 18:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969AE57304
+	for <linux-hyperv@vger.kernel.org>; Mon, 11 Mar 2024 21:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710181604; cv=none; b=rpRnN6YI6SQB5MWYlGys2EsQOEgaxfAik+Q8SSv7+yFZiyCK1SYSUcaaXPdhBiv3zRTLM5OBdT6c/JQhNmzfi2qWcL9HoOOojytS0zr9cFBVyOPh4CW+tzWFTv5HZxJgQrh9+YTfCiMSOIB4lS0Rhia47fliEzfHrxCFtKDyj3M=
+	t=1710192088; cv=none; b=N/Ya8T+pWImQOizlX5gVrO7Kvflx4+RCGqht7aQg1xdCuqTRsn+4zH4nSN6P3v2g9U3QpbrKFmgduj82k5aXu74YfpgdXXyhpSXPmIpffXUsq/WIE5DC2El/9giHjPcq3lR8//T5FXxAu8LS7LGq41159GBRM+cPDkAHVow9NmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710181604; c=relaxed/simple;
-	bh=a4JyKkLCCbO+MulXcAirdwxtoQe9OwOjnOmaZZ2bKBk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=n11RLy31gA0CLy+7gldOGCgY9da5oQYejIdB0qvWli7kUdc/Sfys6hnUIrTn5GRsLKrkDnZ5DRW+oymHO4zbHJOxvDbMxCqRP2EQ3Guw5jB9Duxikn+29mZOLTlqioPb/AxkwC9SuOAUl/4D4jkNX/CF0v2ybOx569U/vaOeuZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eP/1yYXB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-24-16-32-44.hsd1.wa.comcast.net [24.16.32.44])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2115720B74C0;
-	Mon, 11 Mar 2024 11:26:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2115720B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1710181602;
-	bh=Bdqb9HLBXGUlrozZBR7+QNODKCVBETr0bgd76Woo+0w=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=eP/1yYXBcoNL7inNHVfJ/dTgmvtoh4xrKyj1xzFODwmvac1XLVRQLnEfQwTTCAzDT
-	 gT1GJKGVBHr8O3Be8eUxg2dZ7Br/Vn6ApDxzkftjDmMA9f0wzQ3Ol6x15oS2jyvLNj
-	 sdNf6OII+zVL0GYtoSKyEbJfTw6uxHqRMbod9bss=
-Message-ID: <a2cb9fad-0109-4f1b-9996-35eb11b62435@linux.microsoft.com>
-Date: Mon, 11 Mar 2024 11:26:40 -0700
+	s=arc-20240116; t=1710192088; c=relaxed/simple;
+	bh=A6ntQXftXcfk9NPKtChVN+Afbvy2gvAYMqZPZc9sTXM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y0F+0jEFJeAwyilT9dA63Jpt1nBdhSLkesYMw8vFkd0EQYP1pY9v9h5UQtqvn/qudjSU0oAQrjtg7FCxg2BEd2GXGhbrKakSpOr/nYVw8KlfUPWLjvUb0cH4MFQbqT5oaESKPBICy9N5pWgnK5v3e5AzeJkzbP/P+odRBwL90JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fe9JsAcN; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-42ef8193ae6so20641cf.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 11 Mar 2024 14:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710192084; x=1710796884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWb2A9iIkGs3AmFlz53bU5Efj9ZUWJhfOe0zRp0tGRc=;
+        b=fe9JsAcNoppnf2NHLwSLwh8xceOCZguLT1vqJQ+vx3TMH5gp7+Py1/+ZZry+jaxZye
+         JHnSqCJuoIbruT0jYmEiG323JHDGZ8R7TVUwotAERoHvoFFlMVgp3dJ5KxXkjIa0EAKg
+         TPJdrO9vzTPwNmTdW1NucQCPjgzu5HccyYZHjQCWA74O4VJ+WJJaiISObYdBZrhlmkzE
+         xjXPvyRTnOluHpoP54BbvKobb0OAaRr9TvbZ48GSe4ZJgKxyx8NC0OQMfYXpkhT2Kuq4
+         mpBNA4XsZVI0Eam65OS7N7erBrL7+lWXvFJm6Tr8yf3M7KiYXs45AjTgcguK0UgXvIsT
+         N9Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710192084; x=1710796884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TWb2A9iIkGs3AmFlz53bU5Efj9ZUWJhfOe0zRp0tGRc=;
+        b=rMaUNc47VZltzjwuHBhNFAECV0Lca9heZvvWZdm7Z8b/DlSk5GLpryIZZQAfnWwmnZ
+         /UHSHhZe1iRMMooKFSVPBoP0yIVHnk5lYCryqXFqVWdfTJv0HJL2NWeKDDzjUaGkhuFN
+         3s47+3aHF309KHrRFsrmfSm2B0/OQqBUCSskqSGtGfMXlvh3U284YCmhEp7QUGnlJw9I
+         Wl8GQhbsSEjGxyA/y3D4A0Ik0z8BVCL0zXeMtyyUfkoEoOy4GunIV/h/3+3REEZ7l6kb
+         GOlpvhn3fdRJyLjhx6Yr84Uorz5hDqDAQdbICcAWVz/JM28CLmV8PdEArpaVGF6ixQB8
+         ZPlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXa2metfDTX2Zc6nGl53GlNSL+QzlLKKxnIcwq8GGHacVFjPqdKreXWI7324n5KsNfKGqhQPytUxExcuSacffUJxQPWKORJN4QR/UiB
+X-Gm-Message-State: AOJu0YzG04xvIViU88CxbAtgWT4w+bJnLT5Y6tM8hoO6JnlZVVIQCBtg
+	CXZz0I6iVQAlTPAE+sWTyvF7jy3Jf0wtE1HwKn6cPffPqnvw4tW1qHzC5kzUy/9IbjZvoZuwGlR
+	fZiPHaF3ki8d6OnwiX14a2Ky/7aKTg0qSdMDv
+X-Google-Smtp-Source: AGHT+IGiw3N/c7EMgtHBYf+GhpaM4BMFpUmbsLp7eZNB/I9uRFUCN7Phn/vKm3/rRq1HFpGOLfkrYTvw5DSVfzOksbM=
+X-Received: by 2002:ac8:748f:0:b0:42f:213a:dc9b with SMTP id
+ v15-20020ac8748f000000b0042f213adc9bmr36743qtq.19.1710192084473; Mon, 11 Mar
+ 2024 14:21:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mshyperv: Introduce hv_get_hypervisor_version function
-Content-Language: en-CA
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mhkelley58@gmail.com, haiyangz@microsoft.com, mhklinux@outlook.com,
- kys@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- catalin.marinas@arm.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
- arnd@arndb.de
-References: <1709852618-29110-1-git-send-email-nunodasneves@linux.microsoft.com>
-In-Reply-To: <1709852618-29110-1-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-5-mic@digikod.net>
+In-Reply-To: <20240301194037.532117-5-mic@digikod.net>
+From: Rae Moar <rmoar@google.com>
+Date: Mon, 11 Mar 2024 17:21:11 -0400
+Message-ID: <CA+GJov7in4o6bXt_JDqeGjjD08yOweiUshesS4cUWTHYfgJAwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] kunit: Handle test faults
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>, David Gow <davidgow@google.com>, 
+	Kees Cook <keescook@chromium.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-um@lists.infradead.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/7/2024 3:03 PM, Nuno Das Neves wrote:
-> Introduce x86_64 and arm64 functions to get the hypervisor version
-> information and store it in a structure for simpler parsing.
-> 
-> Use the new function to get and parse the version at boot time. While at
-> it, move the printing code to hv_common_init() so it is not duplicated.
-> 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Acked-by: Wei Liu <wei.liu@kernel.org>
+On Fri, Mar 1, 2024 at 2:40=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digiko=
+d.net> wrote:
+>
+> Previously, when a kernel test thread crashed (e.g. NULL pointer
+> dereference, general protection fault), the KUnit test hanged for 30
+> seconds and exited with a timeout error.
+>
+> Fix this issue by waiting on task_struct->vfork_done instead of the
+> custom kunit_try_catch.try_completion, and track the execution state by
+> initially setting try_result with -EFAULT and only setting it to 0 if
+
+Hello!
+
+Thanks for your patch! This has been tested and seems pretty good to
+me but I just have a few questions. First, do you mean here "setting
+try_result with -EINTR"  instead?
+
+But happy to add the tested-by.
+
+Tested-by: Rae Moar <rmoar@google.com>
+
+Thanks!
+-Rae
+
+> the test passed.
+>
+> Fix kunit_generic_run_threadfn_adapter() signature by returning 0
+> instead of calling kthread_complete_and_exit().  Because thread's exit
+> code is never checked, always set it to 0 to make it clear.
+>
+> Fix the -EINTR error message, which couldn't be reached until now.
+>
+> This is tested with a following patch.
+>
+> Cc: Brendan Higgins <brendanhiggins@google.com>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> Link: https://lore.kernel.org/r/20240301194037.532117-5-mic@digikod.net
 > ---
+>
 > Changes since v1:
-> - Amend commit message
-> - Address minor style issues
-> - Remove unneeded EXPORT_SYMBOL_GPL(hv_get_hypervisor_version)
+> * Added Kees's Reviewed-by.
 > ---
->  arch/arm64/hyperv/mshyperv.c      | 18 ++++++++--------
->  arch/x86/kernel/cpu/mshyperv.c    | 34 ++++++++++++++-----------------
->  drivers/hv/hv_common.c            |  8 ++++++++
->  include/asm-generic/hyperv-tlfs.h | 23 +++++++++++++++++++++
->  include/asm-generic/mshyperv.h    |  1 +
->  5 files changed, 55 insertions(+), 29 deletions(-)
-> 
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index f1b8a04ee9f2..99362716ac87 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -19,10 +19,17 @@
->  
->  static bool hyperv_initialized;
->  
-> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
-> +{
-> +	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
-> +			 (struct hv_get_vp_registers_output *)info);
-> +
-> +	return 0;
-> +}
-> +
->  static int __init hyperv_init(void)
+>  include/kunit/try-catch.h |  3 ---
+>  lib/kunit/try-catch.c     | 14 +++++++-------
+>  2 files changed, 7 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
+> index c507dd43119d..7c966a1adbd3 100644
+> --- a/include/kunit/try-catch.h
+> +++ b/include/kunit/try-catch.h
+> @@ -14,13 +14,11 @@
+>
+>  typedef void (*kunit_try_catch_func_t)(void *);
+>
+> -struct completion;
+>  struct kunit;
+>
+>  /**
+>   * struct kunit_try_catch - provides a generic way to run code which mig=
+ht fail.
+>   * @test: The test case that is currently being executed.
+> - * @try_completion: Completion that the control thread waits on while te=
+st runs.
+>   * @try_result: Contains any errno obtained while running test case.
+>   * @try: The function, the test case, to attempt to run.
+>   * @catch: The function called if @try bails out.
+> @@ -46,7 +44,6 @@ struct kunit;
+>  struct kunit_try_catch {
+>         /* private: internal use only. */
+>         struct kunit *test;
+> -       struct completion *try_completion;
+>         int try_result;
+>         kunit_try_catch_func_t try;
+>         kunit_try_catch_func_t catch;
+> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+> index cab8b24b5d5a..c6ee4db0b3bd 100644
+> --- a/lib/kunit/try-catch.c
+> +++ b/lib/kunit/try-catch.c
+> @@ -18,7 +18,7 @@
+>  void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
 >  {
->  	struct hv_get_vp_registers_output	result;
-> -	u32	a, b, c, d;
->  	u64	guest_id;
->  	int	ret;
->  
-> @@ -54,15 +61,6 @@ static int __init hyperv_init(void)
->  		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
->  		ms_hyperv.misc_features);
->  
-> -	/* Get information about the Hyper-V host version */
-> -	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
-> -	a = result.as32.a;
-> -	b = result.as32.b;
-> -	c = result.as32.c;
-> -	d = result.as32.d;
-> -	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-> -		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
-> -
->  	ret = hv_common_init();
->  	if (ret)
->  		return ret;
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index d306f6184cee..56e731d8f513 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -350,13 +350,24 @@ static void __init reduced_hw_init(void)
->  	x86_init.irqs.pre_vector_init	= x86_init_noop;
+>         try_catch->try_result =3D -EFAULT;
+> -       kthread_complete_and_exit(try_catch->try_completion, -EFAULT);
+> +       kthread_exit(0);
 >  }
->  
-> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
-> +{
-> +	unsigned int hv_max_functions;
-> +
-> +	hv_max_functions = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
-> +	if (hv_max_functions < HYPERV_CPUID_VERSION) {
-> +		pr_err("%s: Could not detect Hyper-V version\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	cpuid(HYPERV_CPUID_VERSION, &info->eax, &info->ebx, &info->ecx, &info->edx);
-> +
-> +	return 0;
-> +}
-> +
->  static void __init ms_hyperv_init_platform(void)
+>  EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
+>
+> @@ -26,9 +26,12 @@ static int kunit_generic_run_threadfn_adapter(void *da=
+ta)
 >  {
->  	int hv_max_functions_eax;
-> -	int hv_host_info_eax;
-> -	int hv_host_info_ebx;
-> -	int hv_host_info_ecx;
-> -	int hv_host_info_edx;
->  
->  #ifdef CONFIG_PARAVIRT
->  	pv_info.name = "Hyper-V";
-> @@ -407,21 +418,6 @@ static void __init ms_hyperv_init_platform(void)
->  		pr_info("Hyper-V: running on a nested hypervisor\n");
->  	}
->  
-> -	/*
-> -	 * Extract host information.
-> -	 */
-> -	if (hv_max_functions_eax >= HYPERV_CPUID_VERSION) {
-> -		hv_host_info_eax = cpuid_eax(HYPERV_CPUID_VERSION);
-> -		hv_host_info_ebx = cpuid_ebx(HYPERV_CPUID_VERSION);
-> -		hv_host_info_ecx = cpuid_ecx(HYPERV_CPUID_VERSION);
-> -		hv_host_info_edx = cpuid_edx(HYPERV_CPUID_VERSION);
-> -
-> -		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-> -			hv_host_info_ebx >> 16, hv_host_info_ebx & 0xFFFF,
-> -			hv_host_info_eax, hv_host_info_edx & 0xFFFFFF,
-> -			hv_host_info_ecx, hv_host_info_edx >> 24);
-> -	}
-> -
->  	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
->  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
->  		x86_platform.calibrate_tsc = hv_get_tsc_khz;
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 2f1dd4b07f9a..5d64cb0a709d 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -278,6 +278,14 @@ static void hv_kmsg_dump_register(void)
->  int __init hv_common_init(void)
->  {
->  	int i;
-> +	union hv_hypervisor_version_info version;
-> +
-> +	/* Get information about the Hyper-V host version */
-> +	if (!hv_get_hypervisor_version(&version))
-> +		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-> +			version.major_version, version.minor_version,
-> +			version.build_number, version.service_number,
-> +			version.service_pack, version.service_branch);
->  
->  	if (hv_is_isolation_supported())
->  		sysctl_record_panic_msg = 0;
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index 3d1b31f90ed6..32514a870b98 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -817,6 +817,29 @@ struct hv_input_unmap_device_interrupt {
->  #define HV_SOURCE_SHADOW_NONE               0x0
->  #define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
->  
-> +/*
-> + * Version info reported by hypervisor
-> + */
-> +union hv_hypervisor_version_info {
-> +	struct {
-> +		u32 build_number;
-> +
-> +		u32 minor_version : 16;
-> +		u32 major_version : 16;
-> +
-> +		u32 service_pack;
-> +
-> +		u32 service_number : 24;
-> +		u32 service_branch : 8;
-> +	};
-> +	struct {
-> +		u32 eax;
-> +		u32 ebx;
-> +		u32 ecx;
-> +		u32 edx;
-> +	};
-> +};
-> +
->  /*
->   * The whole argument should fit in a page to be able to pass to the hypervisor
->   * in one hypercall.
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index 04424a446bb7..f8e7428f1e55 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -275,6 +275,7 @@ static inline int cpumask_to_vpset_skip(struct hv_vpset *vpset,
->  	return __cpumask_to_vpset(vpset, cpus, func);
+>         struct kunit_try_catch *try_catch =3D data;
+>
+> +       try_catch->try_result =3D -EINTR;
+>         try_catch->try(try_catch->context);
+> +       if (try_catch->try_result =3D=3D -EINTR)
+> +               try_catch->try_result =3D 0;
+>
+> -       kthread_complete_and_exit(try_catch->try_completion, 0);
+> +       return 0;
+
+Really my only question is why we do not need to still do a
+kthread_exit(0) here? I realize we are not checking the thread's exit
+code but isn't it safer to call kthread_exit(). I'm new to kthread so
+I am not too sure.
+
 >  }
->  
-> +int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
->  void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
->  bool hv_is_hyperv_initialized(void);
->  bool hv_is_hibernation_supported(void);
-
-fixup! mshyperv: Introduce hv_get_hypervisor_version function
-
----
- include/asm-generic/mshyperv.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index f8e7428f1e55..452b7c089b71 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -161,6 +161,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
- 	}
- }
- 
-+int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
-+
- void hv_setup_vmbus_handler(void (*handler)(void));
- void hv_remove_vmbus_handler(void);
- void hv_setup_stimer0_handler(void (*handler)(void));
-@@ -275,7 +277,6 @@ static inline int cpumask_to_vpset_skip(struct hv_vpset *vpset,
- 	return __cpumask_to_vpset(vpset, cpus, func);
- }
- 
--int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
- void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
- bool hv_is_hyperv_initialized(void);
- bool hv_is_hibernation_supported(void);
--- 
-2.25.1
-
-
-
+>
+>  static unsigned long kunit_test_timeout(void)
+> @@ -58,13 +61,11 @@ static unsigned long kunit_test_timeout(void)
+>
+>  void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *contex=
+t)
+>  {
+> -       DECLARE_COMPLETION_ONSTACK(try_completion);
+>         struct kunit *test =3D try_catch->test;
+>         struct task_struct *task_struct;
+>         int exit_code, time_remaining;
+>
+>         try_catch->context =3D context;
+> -       try_catch->try_completion =3D &try_completion;
+>         try_catch->try_result =3D 0;
+>         task_struct =3D kthread_create(kunit_generic_run_threadfn_adapter=
+,
+>                                      try_catch, "kunit_try_catch_thread")=
+;
+> @@ -75,8 +76,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
+>         }
+>         get_task_struct(task_struct);
+>         wake_up_process(task_struct);
+> -
+> -       time_remaining =3D wait_for_completion_timeout(&try_completion,
+> +       time_remaining =3D wait_for_completion_timeout(task_struct->vfork=
+_done,
+>                                                      kunit_test_timeout()=
+);
+>         if (time_remaining =3D=3D 0) {
+>                 try_catch->try_result =3D -ETIMEDOUT;
+> @@ -92,7 +92,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
+>         if (exit_code =3D=3D -EFAULT)
+>                 try_catch->try_result =3D 0;
+>         else if (exit_code =3D=3D -EINTR)
+> -               kunit_err(test, "wake_up_process() was never called\n");
+> +               kunit_err(test, "try faulted\n");
+>         else if (exit_code =3D=3D -ETIMEDOUT)
+>                 kunit_err(test, "try timed out\n");
+>         else if (exit_code)
+> --
+> 2.44.0
+>
 
