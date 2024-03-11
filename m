@@ -1,89 +1,63 @@
-Return-Path: <linux-hyperv+bounces-1703-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1704-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A758C87842C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 16:50:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE34E87842F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 16:51:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59C71280F36
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 15:50:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 975FA282F5B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Mar 2024 15:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A7A644C6E;
-	Mon, 11 Mar 2024 15:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C05B744C86;
+	Mon, 11 Mar 2024 15:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="uvhuxONZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpGMOAXp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B653F44393
-	for <linux-hyperv@vger.kernel.org>; Mon, 11 Mar 2024 15:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3554122D;
+	Mon, 11 Mar 2024 15:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710172197; cv=none; b=L0zCP6X+ZZcZ2gn4PUMbfUxSXL4K2ATdxT2VIEoyIqn3A1Gy/xm1ekAZOOPonQd3qb5JgifwJ17hQwFSO+GDwSs0GSt1nNXGV9F32adAYZNeRzW9PeexFW7nCp8yP78OXPDs2ftnmvTzb8qe9j4FFIRLKoY49IVOWl2apo/F0IE=
+	t=1710172288; cv=none; b=KUOypfXMKv3iE6R3dMLXBl1hkCEEFbBNeyWOYWRFLZ8kfBn0xI7nPDE8ahUs5wpDTlywEr93p7F67iMTlhkF2u6ISclGeHQCMJwHMRVZsG+ygwWrCK/DbATnvJrcW7n/kKdWNV/GL93dKPfRUfww0TRCBJPyqmMEus/O8/NIPOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710172197; c=relaxed/simple;
-	bh=540orTLqH26liId0CGC0Q/FWP36fwWOz7fNBb2i9ZjQ=;
+	s=arc-20240116; t=1710172288; c=relaxed/simple;
+	bh=XNWhsq6o7ciElMMRkGWuW4CuG+Gx1UWKBsIqAvIJeAw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s2oA3vY/5M0VNIdBCZrYJUgQwQlIS9zu0APnU7y1YeVw69LyBULvJl6jPRTv1DIhURIUkFyBPaZlFE8rJEV3iY8gXdv+fHt3Su5bmywOfDrXEEMPf2JP9GRxyeHOlndYAyriIDok+kkNp2r/LAKiLUDzILGjJdDAk7Vm3nkPsnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=uvhuxONZ; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c22bca4cbeso1791673b6e.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 11 Mar 2024 08:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1710172195; x=1710776995; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h+Wtwgm/ud4Teqcm7McoWzRYdR5joosf5QXB8q6Nk6I=;
-        b=uvhuxONZedNAo3GtDxK6XQvovopD1Ijh+J/vIb3ZBiqmUccQhKBatJbWSpR5kwqkBA
-         JSjTWLqNc7z6WZmFjhAGmNXr4PrYPQJfEUtMQXbNiBHHEaY9zHnUx8jAiPyKC5SD5Zr+
-         YxVZX5XpADeS+HqOthRmlOlpj03iZAyxN74IwxAcCMPDfSwGQq0PTwgeEpmr+sEClimm
-         VOhVjGrPUx+USHJOzmre8LagfPio2IsZb9JhmcBXp1dz0NrljxrH8x6M/X2MttUPX8wX
-         E3U2Kl5uTojOt0Dy1EOLn4taPG7obOwct0HX5JOH6POlCu51F5IStcN3X7nNgjr+iRaF
-         2bHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710172195; x=1710776995;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h+Wtwgm/ud4Teqcm7McoWzRYdR5joosf5QXB8q6Nk6I=;
-        b=L+9HLppN70+3Vy063snKZyFJfkZBiN+6ZZbtwJxijyxphYkItSSPpvDQrtMnl/z8z0
-         bHW8wRmEgsx6bSaVozp+A6MYxD7wpmVEQQ1VCE0mv9olMLTqX+/WivQzoYmqP1LuWcUD
-         00ib4fYE/LVYQwTMy5B8iPCQXB6DeKohO+qkWpiIeMlQHWShR8cdIIZfOITgve540St8
-         XVtsgWnXXeFXmmXVdBLMHs0ORv29e1mQ40DNBQtr/+Yy+vYgyhda9BT4FElS4T3joM8g
-         HaGik5iZHofTtVWetUBhnR5/aElVcD6uYvRoidqu1bx5K2mDhnH09r0Ge+5mIeX87BGd
-         A1hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWxjgJU80gLsXM5eYH/Pn8degecy4jR7Vb+qyBbS5/7NAId9f1DDSZsuUwVtSwv2X87XiUfMkyACY8XNi7nGphJ1VAnrJg1BswnWIQL
-X-Gm-Message-State: AOJu0YzV6Fz3ziS8u7Z7K2Y3NPYzea9kmbxi53RatpT2Esce1oZtaCHt
-	7Hps39jvRB89sHXEIibsmOF8AVgCWjLiXKPBQlhJCOESvoto75IEosKha8kuqqo=
-X-Google-Smtp-Source: AGHT+IGn/4xKoBd1SYHfu6mVj6p5jAAE0MdJYK4ZZdUXmc3Vj7qqayvCjJPox671NbLnFAYatzWyPg==
-X-Received: by 2002:a05:6808:1406:b0:3c2:2cd7:2417 with SMTP id w6-20020a056808140600b003c22cd72417mr8036293oiv.36.1710172194760;
-        Mon, 11 Mar 2024 08:49:54 -0700 (PDT)
-Received: from hermes.local (204-195-123-141.wavecable.com. [204.195.123.141])
-        by smtp.gmail.com with ESMTPSA id b17-20020a637151000000b005cfbf96c733sm4509856pgn.30.2024.03.11.08.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 08:49:54 -0700 (PDT)
-Date: Mon, 11 Mar 2024 08:49:52 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
+	 MIME-Version:Content-Type; b=KtFK7hxPntoExM1XF9kgwTTp0PQ2amfIqX5Vf9gEGzWBM+HUHC1jQshPR233lvucnSfavV41DDN/6+WEFKvFnG2b5HoXl7oxWrKWeHwYweWgcfi8R8GtYcXHTd66f/sNC18Hs9fZAJLWb5RmIlVc4jhZcBeBVpu3cIYSMNOg9VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpGMOAXp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4A9C433F1;
+	Mon, 11 Mar 2024 15:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710172288;
+	bh=XNWhsq6o7ciElMMRkGWuW4CuG+Gx1UWKBsIqAvIJeAw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kpGMOAXpJd25+8/IDUvs7hkHrVGyOW6NfVYglOWk/RwNhFzrQ2GSeud23Rm9VZO7R
+	 9F5zSzq4yGwAucDuKT86FY5pN/TzwGALGUogfrEKZkHdHumPRyPbO2WOurexMIkB2I
+	 8Pij0GupcDlvtw3rJSwiHrbT9o6scfcuhAm+8gMiPtZl/A0humI6ohxO411uSVmH7B
+	 Twz+tHq368LwzdhzMxzrcM16Bvx0rQCoFcnWWFjhov/kHYK8H+GQoUxJjGxbIF8bNL
+	 cVLLGZzvcUy1V2KMIGmSCjMOuqnEaNyO+hgyWmE69rKeg4/ntNG7NVC0hKay5M4u8/
+	 e67Ax6Uk7zMiQ==
+Date: Mon, 11 Mar 2024 08:51:26 -0700
+From: Jakub Kicinski <kuba@kernel.org>
 To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Ajay Sharma
- <sharmaajay@microsoft.com>, Leon Romanovsky <leon@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, KY Srinivasan <kys@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
- <longli@microsoft.com>, Michael Kelley <mikelley@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>, Shradha Gupta
+ <shradhagupta@microsoft.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+ <linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Ajay Sharma <sharmaajay@microsoft.com>, Leon
+ Romanovsky <leon@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, KY Srinivasan
+ <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li <longli@microsoft.com>, Michael Kelley
+ <mikelley@microsoft.com>
 Subject: Re: [PATCH] net :mana : Add per-cpu stats for MANA device
-Message-ID: <20240311084952.643dba6e@hermes.local>
+Message-ID: <20240311085126.648f42e0@kernel.org>
 In-Reply-To: <20240311041950.GA19647@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
 	<20240307072923.6cc8a2ba@kernel.org>
@@ -101,30 +75,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 10 Mar 2024 21:19:50 -0700
-Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-
-> On Fri, Mar 08, 2024 at 11:22:44AM -0800, Jakub Kicinski wrote:
-> > On Fri, 8 Mar 2024 18:51:58 +0000 Haiyang Zhang wrote:  
-> > > > Dynamic is a bit of an exaggeration, right? On a well-configured system
-> > > > each CPU should use a single queue assigned thru XPS. And for manual
-> > > > debug bpftrace should serve the purpose quite well.    
-> > > 
-> > > Some programs, like irqbalancer can dynamically change the CPU affinity, 
-> > > so we want to add the per-CPU counters for better understanding of the CPU 
-> > > usage.  
-> > 
-> > Do you have experimental data showing this making a difference
-> > in production?  
-> Sure, will try to get that data for this discussion
-> > 
+On Sun, 10 Mar 2024 21:19:50 -0700 Shradha Gupta wrote:
 > > Seems unlikely, but if it does work we should enable it for all
 > > devices, no driver by driver.  
 > You mean, if the usecase seems valid we should try to extend the framework
 > mentioned by Rahul (https://lore.kernel.org/lkml/20240307072923.6cc8a2ba@kernel.org/)
 > to include these stats as well?
-> Will explore this a bit more and update. Thanks.
-> 
 
-Remember, statistics aren't free, and even per-cpu stats end up taking cache space.
+"framework" is a big word, but yes, add a netlink command to get 
+pcpu stats. Let's focus on the usefulness before investing time
+in a rewrite, tho.
 
