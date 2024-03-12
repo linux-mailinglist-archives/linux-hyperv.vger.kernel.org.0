@@ -1,53 +1,53 @@
-Return-Path: <linux-hyperv+bounces-1728-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1729-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FD838793EE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 13:15:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F38C88793F3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 13:16:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88A51B23F4F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 12:15:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80E201F23CCC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 12:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E2479DD4;
-	Tue, 12 Mar 2024 12:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FF977A712;
+	Tue, 12 Mar 2024 12:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="AAQtm6hv"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="NUnVJxRY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [84.16.66.171])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9527BBA28
-	for <linux-hyperv@vger.kernel.org>; Tue, 12 Mar 2024 12:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B037D7A709;
+	Tue, 12 Mar 2024 12:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710245725; cv=none; b=uUU0A72EY/jtsZOuQE8/Y+gHGkC5fpGVo3x9QvXJFVSGEd72HAk9NBkEv+m9qR4S/HnLx03F3nW7nByfsmLN60+MH/DJTB5GCKIKu6jEWe5bezsqaNwJtGqyq7wq+k3FVD6FvQHjQJbLCmr7HAWKFQs+qzxIbgRfI/x71Hahjz0=
+	t=1710245734; cv=none; b=esOkvh1eNz5WAPh3pqfPsTENzfdXElrUft+1Khc8yEgQOfKNnjuTaRqr34dHKq1YCnmcpkOtdF27tWB6ieFER1Ay1YjMZHGanzYBsSrNVicK+EKxobOsSNiWQjPFaZbrGVe+L7iAK9Dii7diKZ/SlGRgkVb+DVtdRClU33KKy5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710245725; c=relaxed/simple;
-	bh=UIPlBlQ2gSp7viPBKsB16/eqMI1pgjsYrWQKabWN1/s=;
+	s=arc-20240116; t=1710245734; c=relaxed/simple;
+	bh=WX7qXSs24cTps5vDqV6KBl/rCQO0ApI2/1NKiye/aPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sRjqCQMrlgpAgX2AoIfHwZWttP+SJm/AtEgO4ousLBtY86Ulq+I/k/f023AfFBh14Ww2i2JcobxcMSyTKa5oqjdETPEqnfY5tq9b1PL4EM78bZVcHreLrV/nlUFYGYUBwgmxsI6iHCpM1VK2rc0pM9ZJFGoSEuwvm+jN1Bk2x74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=AAQtm6hv; arc=none smtp.client-ip=84.16.66.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=BS4p81dhivbQPkV+Zw7zkfXAPVuCYOHo0O9vaq4Gq2u7NLV7OnrQWchE7CEraNCJRRouey3yl1ZwXoqqiVMHlzDzaMIBkFpnqaYhcABzg42WdmK6emul5QhtBi4eV3sIFzMmCtk43bN6ZuldiGnMbTfjat4YeAGP/KZolSnHRdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=NUnVJxRY; arc=none smtp.client-ip=45.157.188.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TvCJf11Fxz3my;
-	Tue, 12 Mar 2024 13:15:14 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TvCJc1dKzzsW;
-	Tue, 12 Mar 2024 13:15:12 +0100 (CET)
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TvCJx5bG2z18J;
+	Tue, 12 Mar 2024 13:15:29 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TvCJx0DYKzPVG;
+	Tue, 12 Mar 2024 13:15:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710245714;
-	bh=UIPlBlQ2gSp7viPBKsB16/eqMI1pgjsYrWQKabWN1/s=;
+	s=20191114; t=1710245729;
+	bh=WX7qXSs24cTps5vDqV6KBl/rCQO0ApI2/1NKiye/aPg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AAQtm6hvd8D/0qDhpfGiSpJYAJ7c4ZRRdmzxuwHAMDZ5D0rNCT9rpMwm0n6kBYZLn
-	 MIieECao+whDew4238DUdSRRjeO6cebzxSywIl7f+OXZViuaJ/cEfbfTEn2VgfYZI/
-	 vd+XiTlMZIXWiNScOcBSP9ExwIwlT9QI5LQs6vEU=
-Date: Tue, 12 Mar 2024 13:15:01 +0100
+	b=NUnVJxRYdJnS/bDaGHsN4zHTKQQYb939oUZSg9Hnzp9TS11vnfyS8RSzxpwgGNAqb
+	 ETdL/dMhVuBpsQ5F1dYlSb30lEAXXBxaf5XJsDir9Ica/YQdv1Nk/pPd545PoDvBMX
+	 +YunhN+2oVgCX8Ef5ZrfP6LV2dWsbN2XHt/7TyxA=
+Date: Tue, 12 Mar 2024 13:15:18 +0100
 From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Rae Moar <rmoar@google.com>
+To: David Gow <davidgow@google.com>
 Cc: Brendan Higgins <brendanhiggins@google.com>, 
-	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>, 
+	Kees Cook <keescook@chromium.org>, Rae Moar <rmoar@google.com>, 
 	Shuah Khan <skhan@linuxfoundation.org>, Alan Maguire <alan.maguire@oracle.com>, 
 	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
 	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
@@ -60,10 +60,10 @@ Cc: Brendan Higgins <brendanhiggins@google.com>,
 	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
 Subject: Re: [PATCH v2 4/7] kunit: Handle test faults
-Message-ID: <20240312.iuVoThuud2oi@digikod.net>
+Message-ID: <20240312.Ohfumeel9aes@digikod.net>
 References: <20240301194037.532117-1-mic@digikod.net>
  <20240301194037.532117-5-mic@digikod.net>
- <CA+GJov7in4o6bXt_JDqeGjjD08yOweiUshesS4cUWTHYfgJAwQ@mail.gmail.com>
+ <CABVgOSnzaO7EUdSW_xTZd22oc-q_yT9uVoSwTm2jn5pw5pP8Eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,11 +73,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+GJov7in4o6bXt_JDqeGjjD08yOweiUshesS4cUWTHYfgJAwQ@mail.gmail.com>
+In-Reply-To: <CABVgOSnzaO7EUdSW_xTZd22oc-q_yT9uVoSwTm2jn5pw5pP8Eg@mail.gmail.com>
 X-Infomaniak-Routing: alpha
 
-On Mon, Mar 11, 2024 at 05:21:11PM -0400, Rae Moar wrote:
-> On Fri, Mar 1, 2024 at 2:40 PM Mickaël Salaün <mic@digikod.net> wrote:
+On Tue, Mar 12, 2024 at 01:05:37PM +0800, David Gow wrote:
+> On Sat, 2 Mar 2024 at 03:40, Mickaël Salaün <mic@digikod.net> wrote:
 > >
 > > Previously, when a kernel test thread crashed (e.g. NULL pointer
 > > dereference, general protection fault), the KUnit test hanged for 30
@@ -86,23 +86,6 @@ On Mon, Mar 11, 2024 at 05:21:11PM -0400, Rae Moar wrote:
 > > Fix this issue by waiting on task_struct->vfork_done instead of the
 > > custom kunit_try_catch.try_completion, and track the execution state by
 > > initially setting try_result with -EFAULT and only setting it to 0 if
-> 
-> Hello!
-> 
-> Thanks for your patch! This has been tested and seems pretty good to
-> me but I just have a few questions. First, do you mean here "setting
-> try_result with -EINTR"  instead?
-
-Good catch, I indeed meant -EINTR.
-
-> 
-> But happy to add the tested-by.
-> 
-> Tested-by: Rae Moar <rmoar@google.com>
-> 
-> Thanks!
-> -Rae
-> 
 > > the test passed.
 > >
 > > Fix kunit_generic_run_threadfn_adapter() signature by returning 0
@@ -121,6 +104,34 @@ Good catch, I indeed meant -EINTR.
 > > Signed-off-by: Mickaël Salaün <mic@digikod.net>
 > > Link: https://lore.kernel.org/r/20240301194037.532117-5-mic@digikod.net
 > > ---
+> 
+> This works fine here, and looks good.
+> 
+> The use of task_struct->vfork_done is a bit confusing, as there's no
+> documentation (that I could find) about what vfork_done means for
+> kthreads. From the code, it looks to just be a copy of
+> kthread->exited, which is much more obvious a name.
+
+Indeed
+
+> 
+> Would it make sense to either (a) replace this with a call to
+> to_kthread(), and kthread->exited, or (b) add a comment explaining
+> what vfork_done means here. kthread_stop() itself is using
+> to_kthread() and kthread->exited -- even though task_struct is also
+> there -- so I'd feel a bit more comfortable with that option.
+
+I used vfork_done because to_kthread() and struct kthread are private.
+As for a vfork(2), vfork_done is useful to wait for the end of a task.
+Feel free to add a comment explaining vfork_done. Thanks
+
+> 
+> Otherwise,
+> Reviewed-by: David Gow <davidgow@google.com>
+> 
+> Cheers,
+> -- David
+> 
 > >
 > > Changes since v1:
 > > * Added Kees's Reviewed-by.
@@ -179,19 +190,6 @@ Good catch, I indeed meant -EINTR.
 > >
 > > -       kthread_complete_and_exit(try_catch->try_completion, 0);
 > > +       return 0;
-> 
-> Really my only question is why we do not need to still do a
-> kthread_exit(0) here? I realize we are not checking the thread's exit
-> code but isn't it safer to call kthread_exit(). I'm new to kthread so
-> I am not too sure.
-
-This function is the body of the thread, and as we can see in the
-signature it should return an integer that will then be passed to
-kthread_exit() (by kthread-specific code).  It is then useless to
-directly call kthread_exit() here, and it is cleaner to follow common
-thread function signature.
-
-> 
 > >  }
 > >
 > >  static unsigned long kunit_test_timeout(void)
@@ -231,5 +229,6 @@ thread function signature.
 > > --
 > > 2.44.0
 > >
-> 
+
+
 
