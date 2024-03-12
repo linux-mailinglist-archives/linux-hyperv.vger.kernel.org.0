@@ -1,60 +1,60 @@
-Return-Path: <linux-hyperv+bounces-1737-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1738-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF0A4879D1E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 21:57:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A853879D21
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 21:59:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C4D92835E6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 20:57:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2013A283266
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 20:59:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CD87E10A;
-	Tue, 12 Mar 2024 20:57:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1713142645;
+	Tue, 12 Mar 2024 20:59:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="c4FWcIwV"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="G2I+TGxT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL0PR05CU006.outbound.protection.outlook.com (mail-eastusazon11023015.outbound.protection.outlook.com [52.101.51.15])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11021006.outbound.protection.outlook.com [40.93.193.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D25C382;
-	Tue, 12 Mar 2024 20:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BFB382;
+	Tue, 12 Mar 2024 20:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.193.6
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710277061; cv=fail; b=XQTtY/AHjGPlC4yHUSqSUik9flThgBxvjm4t2FCdQcFHmGHvnftxZjfDGzc8kgrmuvn/4Y4Z3GQEUs8VlDU2fsuM47A+E9cO0Rh9smwAaMVUjb/Rj35g3d/1bOIdCtselIv3yxwbOX95AJ/4Idp/ejmq5ty88mojQNX3IgESeFw=
+	t=1710277194; cv=fail; b=I0Ny1S6ZwlzSN1mbMD95y7BubhO2h+z9absg9L0+vh4NP3PwAULsS3PT9vdV0eMdT4Y4FzRutQ829gBSFq9m2KazOQ2cwsBnI01eALnDYABrSWfb/C0tYpKvW5lBbEE9utQCMn3iPXzxQG/3moPI1IaO+YC+HeZOyjE++PA4NP0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710277061; c=relaxed/simple;
-	bh=bg3VLPL3rQ7t5ZeBes9oKsQ4iNzA3/qoc4WADmFm68Q=;
+	s=arc-20240116; t=1710277194; c=relaxed/simple;
+	bh=ZZf5HzpR2QX6OSr2GsuN+WSHyeXJBkrnB5u8CDZtIz8=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qUck5ZJCgwo4JbsxsEVAmz1fej3xYDNz4hyfH/iohTficp0/gEjQs6vQKW7AV9ZAJgLnAdzjltk/BJu8YdcAZA51bGxkmr+dDgPNO1V3tAE32j6cYdz0Igd641QFlzL50KSBDXyFeyO1tRnjQxUfO7keVrEILjvVeu3vmTD9bmY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=c4FWcIwV; arc=fail smtp.client-ip=52.101.51.15
+	 Content-Type:MIME-Version; b=pLeACHwyMvMliLhQv6RzEHeYAWrr/CASXDUQ35v7yYKvc/sd2X6cUWXVGs2kMHpoqDG4jel4Cr6Q/UMA8dCxXgUL8NEUSSvuyO3xs2FGsFM75POeJqNtXNlevlayWuZzlx35meTClYiJFuFb87b7u/EXQsHKJjcXlPYUBI6B8lY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=G2I+TGxT; arc=fail smtp.client-ip=40.93.193.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IgHsVVyhNHjSRVFjVr0/92g/Pkb66suBixKxpr3rgczUrpxnIX4k7EFDMeNd+RaOHrFSpLbgeTIqcwNx5cvC/e/Vz5g+p/mgEzs2FJi6q9jPtWQTev6e6GzbAoGAfA1EZ5pCFfq5kSGvw4kHzlQYs6rthp/LAhOKRlQYIk5LzU+0FExjNDIWk078Z7Gs0Oh1RUviK3QS4QOKa1EheGn+7YsQ6swInuwz8dVSJWnseOLnD5s6XuKROsGLMW9tloawKn0AKm449lAQp6is+/cEB/PZhIpDP3CdLmRzgs4dsGypLHWRLX4pAZka4VRfodyB1UjPnKQpdaqY0DUm+aw6tg==
+ b=B3wj+WPf/upRbo0gRWvLeFbhsJPpRAq/ObRPZF/l89EVIJOz2U/GXMdcCPFCdECS+X6M/UmN1WwuidsvK648yEXwkYLPaGIWmLzGfy94qSnbq/ZXBfsem0M1zcm6rtPjas1N4jWpe9kg/9pfbHx0jFvH1PsxdJxOY/GQ6OprgVXn5Gn/wy5+2jA8R7meYeCalG8yfE690Q/sjA0PCo0B73vFLKq0TB++5gYKUAdgiTYoTfF5+MTOPZNxYfT2gkbH8VRbuw4pG4OLz7ENtw2ZXdYuqsCJ0a3hO7ObtqgYUOcv0wiYo5MK0NIWtyfxl+o+o7MmCyevR94RDTmQziS76Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DwhieiwJ8ql+XEO2Z08Jij+WSgtcSCMPw6HcwAHUsrs=;
- b=Xs2ri+jwNKTpdv6XEicNcLglcV9Qsxixg02wraGmgEbhuJ/CDUR2r5R/JGWf2yCeTipv3hSLhjVEO2HyBZx53ORzgqW1EHKy9ja6uvv+feP5glILY/05cSonxnS6d+uNEh1holha7Gwj0Rv2uCvuPWuycM7zzSC2jiNxNX8RCNLBSGK0vMETX/tKIBvfvlcoC6UjmQb5QLLOl4TYVw8WEELBiZoK6Uljd7dYGwdlpHVwM5oLt40ztuuUxlerCh5zCHa+lF+/tiQPex+XFUYyhTlkTQH641ivgXxWLJ8aR0I/bTBcunIsQ80xROGUNH8QCRaFRqKmuNqwWVz6vITo5g==
+ bh=j0oqXTdcVxFes8pKvFPIQYY18crYERC4zWbc+d+EAcU=;
+ b=SV10kqnbDxaOQDs+Zs9cuGIt09kmgByjVh30XU+StS2cBNILCzUPwsG/OsoTiMCIuHkwD25NqXYCNBznPlg9p5oroXNXpfFWJnZSr2uDdkURyfzC0RjgyLz/7nx7YBWNhFIWgGXF59Dh5sdavh+A6nU6fBT2iq3rlkTASh4q1bMr9Aq6nkrGbkeTDO52LeL0gdiAN5BHqRp0BiAMhsmkIGDXMHusfLXDn6eA1sQIoPzgxHYox/FTvyx7Pqlx2LkHXBG7lf5QWY7FOGCca0dmZGoufbcfZ0CHKrkNxmOvi7gxjyM18rzU72jcbyxbTJp7ORhSsuAmqy3l9EHf5I9PMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DwhieiwJ8ql+XEO2Z08Jij+WSgtcSCMPw6HcwAHUsrs=;
- b=c4FWcIwVMZ6tEVuauAre5I9YlkbLl2vxVgwtKBwo7DLhYmtOxSeADC3+ubszAUn+DAB9SBmg14cGg5Fp+71iCZKe4kZJV61Qe+C1n73Vs94FJNmPo/lZPplkY2ZfJc4ydX3DZMc65jo7Ny0FMQr0h+0F9KfWF/cQ5cMFgukJd3A=
+ bh=j0oqXTdcVxFes8pKvFPIQYY18crYERC4zWbc+d+EAcU=;
+ b=G2I+TGxTdqiqziDSEbDml4snCgd6jANSptM81agLV75PWUsJfnyPmcamAqNy7ON6aGzUDpnQlUiQar03EZLtRRN/qMwfDYWLQOO12sDzmohRBLFlJ7XGjjue/xVWSvL5Hq1NmBGgT9yeqRGjRrm/3qV3DJQJSPzD7+OYKJJpOlk=
 Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
  by PH7PR21MB3236.namprd21.prod.outlook.com (2603:10b6:510:1d8::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.13; Tue, 12 Mar
- 2024 20:57:35 +0000
+ 2024 20:59:50 +0000
 Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
  ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
  ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7409.004; Tue, 12 Mar 2024
- 20:57:35 +0000
+ 20:59:50 +0000
 From: Long Li <longli@microsoft.com>
 To: Saurabh Sengar <ssengar@linux.microsoft.com>, KY Srinivasan
 	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
@@ -63,17 +63,17 @@ To: Saurabh Sengar <ssengar@linux.microsoft.com>, KY Srinivasan
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC: Saurabh Singh Sengar <ssengar@microsoft.com>
-Subject: RE: [PATCH 1/6] Drivers: hv: vmbus: Add utility function for querying
- ring size
-Thread-Topic: [PATCH 1/6] Drivers: hv: vmbus: Add utility function for
- querying ring size
-Thread-Index: AQHaYcvPQWb8WXDgsUGM5pUS3fQcJbE0u2xg
-Date: Tue, 12 Mar 2024 20:57:35 +0000
+Subject: RE: [PATCH 3/6] uio_hv_generic: Enable interrupt for low speed VMBus
+ devices
+Thread-Topic: [PATCH 3/6] uio_hv_generic: Enable interrupt for low speed VMBus
+ devices
+Thread-Index: AQHaYcvJgcNPZXWcHEu1pfrlhbcG+rE0vKpw
+Date: Tue, 12 Mar 2024 20:59:49 +0000
 Message-ID:
- <SJ1PR21MB34579239AC3349F4C28EBF63CE2B2@SJ1PR21MB3457.namprd21.prod.outlook.com>
+ <SJ1PR21MB34572B6E99C28D63F0ACD2D3CE2B2@SJ1PR21MB3457.namprd21.prod.outlook.com>
 References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
- <1708193020-14740-2-git-send-email-ssengar@linux.microsoft.com>
-In-Reply-To: <1708193020-14740-2-git-send-email-ssengar@linux.microsoft.com>
+ <1708193020-14740-4-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1708193020-14740-4-git-send-email-ssengar@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -82,43 +82,43 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|PH7PR21MB3236:EE_
-x-ms-office365-filtering-correlation-id: d9faf91e-07dc-4fc3-b906-08dc42d70b65
+x-ms-office365-filtering-correlation-id: ce39e220-c7ef-4abc-a3e0-08dc42d75b76
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- xwvjVYibIMKMw974KVRAPGqU6rMkGAHt4kzRqjkV04e9GI4sMzMz5VqfStNHLjTXBtMIngkLVP7qRsbGUc+xB+1Ofvxhv2W837KNoW3DV/zU043kVuuBYgstEFlFuPNfFLg2hCvRF68ZViOP7EmPEbOQyGuaIy5mtHroQp4qKlseJysSoLiLLOWRYLx+qna8hvMisb6dteGKIIiJbdPza7AGvAeDE6x+eyFXiPAGrJUUbAHPL02vWdQfGzXNvQIg6DdQQPgrucL0BnCfFEgtr4idu4rEzoHoLIHzR3EOh0fiO14dPbj3ijs+lgFCAKIm+JMWBdpcMc+OL3to3Vv4K0B972Oyqaw35DaUWTpb2SO/mCS4gSr6o4o/0qR7xyaa+7agBpeaeWLL8DO+rSrss02GNmO7mumv4gBBXvyl6CjvYcoGwgeSkpSvFlwo5yaci16c6RghJfUdhhS2ghEX/xba6pxBf9z+wRSDp6qYQn37Oj2d4FnlageoHMtIVYRP+xOCa3WRuC78Ylwc94bym/ZShmqT56pU5IZ221aEArbxfm4b1oSWHrDXyOz27q/pT+CaJ1ZeDBTN/t5kM91Rebkdl3gPP8Ets5e11QSF7VJomTrBjxLt2ZgCBV+l8nig1sGSgDS4h8qUCm2c7OIamnKeAehoTiLpgFwf4NHJ/nSVYLNRx9rA615YXo3Nn7KQH6WHcX0gqdBiWcNuXGMhIzcrj7TtegSm9WnEPG5dRgQ=
+ e6q+N5D2mw25S1vccTH9XzOzyjOO0bFpRWjS901GrdkKCtWFXooZ+pGDTPHdNO8ogQhWFWBzSi97lZ32V+S3Q31FU2KASJlVJcN3g0T8/LJOiZU4qRe/f4zBXOecJnY9P+LRzm3vplo6OVX7ib4eHZ8mocZhg4C9npjtL3/d2H3hoNsZixYpBFz6xMsrECnyXFwqB9PFrrgES3fRmOxMQ0sylYoqYFP4HObD9hPSjUBHrXuwblXnPQ1mG6aXB5C65RMEhbtqQjdgMMn0zxEfgqmW+i6vyzaOqZh02fz0ViyuKEKkk/wjexosXCWXRYhdwkOm3Wk5fwEnyko+13LZCbf+e4zonbPOJGxJtXaHFrLHnU+gLD/x+R123jkk0MWFvT4CK3Na0Fs3nteO5Mmta3/deqS51+L7yk4lHiKC2xH4mFIhlUmfbmJ3NqmO1bYnanHfjaZA2tutdOdUH9aEs2tWvxzFUluq/CR4RBBgATVAaZYwTGDUovh1uX4rvSNKr1Y+vQUyAxUjVeeCt8cMYEquufuNj0PIMErsrn7hVHflbHEv5OVg+A/kCPX65j9UCXyYiXkLbajgg77/6D3Uu8VPhPBEWQlzYVX/sB++d1siwt4ML9E9ONy+3TEXTgEjncIEWiVZTnBjtuUnYC5nzsvGrWq4A6hIT20x4ZuGRoazJF2SVmcYxSR6014EfrKdLiBeDkrSAKnio8y4crRqsTwxjz0NdbpbiUZew8JSC5o=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?pZvmAfMPyBDxrOCXc6KSoRckbGVOrq8Ew+BXFwumpuWYpaa1c/pNo3/2kHSM?=
- =?us-ascii?Q?rPM30qBaWkOQRzGgpvuZfZxXsdLLl1k9yv11/vD6p6DQL9nmClOKpiUoCObY?=
- =?us-ascii?Q?xc5KgFFacGdYG2P+50Q9lFrGl9ba1LYW75gzF9u1wHa9RWWRuiIXgtwrbzf6?=
- =?us-ascii?Q?bzuvPj5Ezis+B03K0/psZ0EOFCG5uRPvxkXAnj2ZqPQ+kL7vnQhb17pnd77O?=
- =?us-ascii?Q?++3lX2+R+hEpiuBdeQodWyd/ajYmQ0xEFuxpCjLVbwycqQGwA4+fqo9yMpOm?=
- =?us-ascii?Q?veUEZkzHrkS7cA52bVEbh0KwbnqBDt0sLdBbthz7LssJEokyjSQQ7bt/yiuy?=
- =?us-ascii?Q?F1JgdJ0iIzBYUB7uSUIOs4Atfb79/DwfPu1ual9uTMjfv4V2ek3FYZEG9rwk?=
- =?us-ascii?Q?D6hIKXGr/N80vEBaHbsKrohVA6dAN6WCzUCgFpdqUkD9jvAabLmLapTmVfHu?=
- =?us-ascii?Q?mk1TCyUpI+E6lRvkwy8YFLXSXIYxwvdaoiFd37VIq52Rnh/WR10+P0y2KsbC?=
- =?us-ascii?Q?DBpvcJrJmj1fJfQd+2K1MKg6azr9QNQ29NbcutpkxfLQEMeRvKPs5oCHDSwK?=
- =?us-ascii?Q?ujdyLZ6p95a125C20ldayXEGrZktT+hO+Kobe4FBmdZhCQvSM04lToxRC1FZ?=
- =?us-ascii?Q?oJ9DXex8cz+AoHQA595cvQzgHlgaeoIj1Jk2cEp8YyYfseGvWAeUdVVipDCX?=
- =?us-ascii?Q?b5OzIfyNMyFELuVO4Kfv+lLqxRugPnUDneQffs268//x9oOpZ4/jK5wzl+jC?=
- =?us-ascii?Q?SxE8BZKzF+VoqGFRt9hZxHa72rOaFWmS6x37GJM2roXnvVJqBYO4r5EkE0tk?=
- =?us-ascii?Q?frp7T/MTqH91JsffaSFWhM2bev3ahT5TJ57J6X8cbD4LlV/ZjpV7HKw7kmL/?=
- =?us-ascii?Q?DAGD8SEC6uSeZzHM0q3+bHt1a9AdrCi63+FHQsGDfrw1SKoVCVutfX+oNuym?=
- =?us-ascii?Q?ALVIIWgTef7OTTn3QjCFxv9ZfJ4jfIAe+MTMLZJafg3V5yVf5nrol2YHlJmV?=
- =?us-ascii?Q?xPIZvZOYCbTfheGxvUlRB9KQr3m0K/dd6qwULstawLEJAORtzAzo0NlNRNri?=
- =?us-ascii?Q?0EQSJhV1QaddAXkMHvtJh2s1cDvqEpsm3r8lan1m+AdPp65kTcc8ecYDSBCF?=
- =?us-ascii?Q?ZEKf5IWgzn8+cJyUVRrU+dCDRpXpqTT41TG+KJGpNeBq0Ib4TeamFxWaCgz/?=
- =?us-ascii?Q?m7D/NIpaJnbY7KXujXnYMPGuZ1b4eNokX+EKxK+ffH9QE4hFlR2EUuSjxZfS?=
- =?us-ascii?Q?aB5bAaYwSzTcCDGKXr79Qe+0vzsQiXWEIpl98KkpJZcguxFsuBoRrrvUUwIp?=
- =?us-ascii?Q?w4IAlRUlgay0k3S4Qr2x8pw1XeQZggT7EDjOlNsVqFTcwJG0o6khixPFZwOh?=
- =?us-ascii?Q?zl2l6GcIde3aOfdYhCdcHD9FfAP3qaSVmJGTZ4e80C7ytP1DY7LLgBI39krW?=
- =?us-ascii?Q?AtVAXu0ZS++TlL0yC5TOb99jIkw9Cd2jGpbpBzn8UAVYCo99CBbUe7WJpiJe?=
- =?us-ascii?Q?rdRyrc0mD5ya8n9Iyg0vQ8PTA1PUuDDYN2pe8C/P5Uhi+5G7D6EbxYi+tjUB?=
- =?us-ascii?Q?s1jMpgJAYqN3AREoyQsL1zeLQe2y0FRTJlqZq8RB?=
+ =?us-ascii?Q?nHpWSOQClnWIzM27uQGsfi7VhFH8Y/DyYjOPB70G/ly07PrdR9yy9F3kcxfD?=
+ =?us-ascii?Q?ZVWxbjjcfjPBnHok/tSxbxDar3Zd1E1xgXrh4+dw0GUhhaKJ5fjMfbvrXzWU?=
+ =?us-ascii?Q?/nWjNLVvyMwgSC5dWmYKLdOKqRZshwZTEbE857AEYp+dnp4to2/8N+ZEDnGR?=
+ =?us-ascii?Q?RgWjMdk4qt6TBqq4lukqZBddVY9XI+F95LqX8IQcIPwhHUchQYYIfk3EUcaF?=
+ =?us-ascii?Q?Kio4oWX/4fmnws6NEF6wGFcjjPrlNXD1EIXv5ErZIPpuCCYhiacmJBiHRWTV?=
+ =?us-ascii?Q?HHZx/G3DTruC2f8/TiLiErY/FKYTaZCZaOGzrQ2lT3ugM60NUVpmwT1I0oqh?=
+ =?us-ascii?Q?rizmf4oBg7lFBA2xgsN5vVwZ19OkG3ytw+nWcVQYGINiSfoKCuRdrd9f9BzR?=
+ =?us-ascii?Q?2S430+AwdnshBaJaqkdMyJVsYu12DZs5pu8y/xZ71pcQ/Vu2FDi4izUv9rkF?=
+ =?us-ascii?Q?AIja273H45RctJwPkancephZqcQAncIqPofygrg4Y+JdPAslRStRdskptt8d?=
+ =?us-ascii?Q?1i3dSWchgbnAd8veyuLNm0urCQDH3qFZHwC8inrFFOBSfrF17ci2eOFGGZfH?=
+ =?us-ascii?Q?5wSL8a6KkVKY9ipeqN8FYfsqbBtqhEB2yAFYLg0Bh/TMAHWaBEuSdRPo+o06?=
+ =?us-ascii?Q?gFyM8bzwIggALZ84dH4cGWyxCee6Vx/fS48kRYUWbqwkKRKfawaG8BGMmNlf?=
+ =?us-ascii?Q?F2gEFqXW2eWAmTDbuL7qMfDP1vgw/tbIfvckSTfbWSHh2pDZ48OhkyIOumDZ?=
+ =?us-ascii?Q?39gmfbyFFar2Cty8+PhzNB9x4ZcWGDA+C3ikANMmKfjZdKbM3qbRh9JDierH?=
+ =?us-ascii?Q?diu9t1mBcEUN+xq6GDHCHrHJd55gmD/L2+VK3N1Uya1LKHvpg6vlUxzKyv1S?=
+ =?us-ascii?Q?bqlwbAh+mZ7vVsYruaTBNEtz3Fgvtt8lLF1AAvAenVZFQ9ZLTr8wbryj9aib?=
+ =?us-ascii?Q?Fix4cX8uRWuv1mCfbheJlu4Lql2gaYT/PNWs8Avjeii05iCkpS64fL6u4759?=
+ =?us-ascii?Q?NZTkQW9oc4GGqT42bjZdEwld35EimKxBL44kepYhZdC/q2sdqfc78uSVEM+S?=
+ =?us-ascii?Q?pNNRR55U1SvIYFuHUSCJvSySsOXXykp0o4jTHAVFxb5eWjFfYhFhaS/vjLjQ?=
+ =?us-ascii?Q?by3y/pCM9lZ8e1P+d7hNcLzDckRTVDoSFqtoGAFUgd9/iP2ANC4riDJqg8zL?=
+ =?us-ascii?Q?G7vkWwR8msxHENMelYpMzeR6YuOghqKzBc+7DWuLTZQmtlaM5XhaIdAboXnQ?=
+ =?us-ascii?Q?UsIoIBZhLbN0R8+7JZg41GF9xHOr9dEQXAoejgo6PNJ/K2ZYugs4Bc8CCRqf?=
+ =?us-ascii?Q?xXgqfNxSjjdBl+6NMt6KJLkWwYK0Q4T59U2bb3czayrWlJI5973RqS5ilhl2?=
+ =?us-ascii?Q?unNLVg5tBg95xkyN1Q3vOkEpWGc5WmzgTOfhxXGftSFafwK0mpm+vMgB4OFN?=
+ =?us-ascii?Q?cJH1ZcAkQYKTkGJ6Zwcgl8LzY/7aOnqQl3akksMSaECE9HqUU+Ilyq2jpPjJ?=
+ =?us-ascii?Q?euiqOkqU6Nu/HMAsCQmQWasR36Xn8E9G9aUpRX33vVP/ZwHENhAbfN4G9Ugk?=
+ =?us-ascii?Q?ZFllgfVLqtRh9d66Dl0L65m2hEdOsazR6Lzpul8o?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -130,89 +130,67 @@ MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9faf91e-07dc-4fc3-b906-08dc42d70b65
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2024 20:57:35.6155
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce39e220-c7ef-4abc-a3e0-08dc42d75b76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2024 20:59:49.9059
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nTuRw/UsP56GSSgIAwHn1LUBWSSRDDUt7EUNRO1xr8o3p91ZzaZjiOmUhnf22l/965rvNLS32fpI8eRqTovr8w==
+X-MS-Exchange-CrossTenant-userprincipalname: 4RVQnpi+0bPw8TR2lpKfUa6BeXeZY/TetSs6fGEwzP/PEn3B+Mzct8/JI9KFAPpo7DREU/GUfGM9YQmrSAgjiA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3236
 
-> Subject: [PATCH 1/6] Drivers: hv: vmbus: Add utility function for queryin=
-g ring size
+> Subject: [PATCH 3/6] uio_hv_generic: Enable interrupt for low speed VMBus
+> devices
 >=20
-> Add a function to query for the preferred ring buffer size of VMBus devic=
-e.
-
-Patch looks good to me. It will be helpful if you can document the ring siz=
-es for each device and put it in the comment. (e.g  use a new ring size, or=
- keep using an existing ring size)
-
+> Hyper-V is adding some "specialty" synthetic devices. Instead of writing =
+new
+> kernel-level VMBus drivers for these devices, the devices will be present=
+ed to
+> user space via this existing Hyper-V generic UIO driver, so that a user s=
+pace driver
+> can handle the device. Since these new synthetic devices are low speed de=
+vices,
+> they don't support monitor bits and we must use vmbus_setevent() to enabl=
+e
+> interrupts from the host.
 >=20
 > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+
+Reviewed-by: Long Li <longli@microsoft.com>
+
 > ---
->  drivers/hv/channel_mgmt.c | 7 +++++--
->  drivers/hv/hyperv_vmbus.h | 5 +++++
->  include/linux/hyperv.h    | 1 +
->  3 files changed, 11 insertions(+), 2 deletions(-)
+>  drivers/uio/uio_hv_generic.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c index
-> 2f4d09ce027a..7ea444d72f9f 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -120,7 +120,8 @@ const struct vmbus_device vmbus_devs[] =3D {
->  	},
+> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c =
+index
+> 4bda6b52e49e..289611c7dfd7 100644
+> --- a/drivers/uio/uio_hv_generic.c
+> +++ b/drivers/uio/uio_hv_generic.c
+> @@ -84,6 +84,9 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
+>  	dev->channel->inbound.ring_buffer->interrupt_mask =3D !irq_state;
+>  	virt_mb();
 >=20
->  	/* File copy */
-> -	{ .dev_type =3D HV_FCOPY,
-> +	{ .pref_ring_size =3D 0x4000,
-> +	  .dev_type =3D HV_FCOPY,
->  	  HV_FCOPY_GUID,
->  	  .perf_device =3D false,
->  	  .allowed_in_isolated =3D false,
-> @@ -141,11 +142,13 @@ const struct vmbus_device vmbus_devs[] =3D {
->  	},
->=20
->  	/* Unknown GUID */
-> -	{ .dev_type =3D HV_UNKNOWN,
-> +	{ .pref_ring_size =3D 0x11000,
-> +	  .dev_type =3D HV_UNKNOWN,
->  	  .perf_device =3D false,
->  	  .allowed_in_isolated =3D false,
->  	},
->  };
-> +EXPORT_SYMBOL_GPL(vmbus_devs);
->=20
->  static const struct {
->  	guid_t guid;
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h index
-> f6b1e710f805..76ac5185a01a 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -417,6 +417,11 @@ static inline bool hv_is_perf_channel(struct
-> vmbus_channel *channel)
->  	return vmbus_devs[channel->device_id].perf_device;
+> +	if (!dev->channel->offermsg.monitor_allocated && irq_state)
+> +		vmbus_setevent(dev->channel);
+> +
+>  	return 0;
 >  }
 >=20
-> +static inline size_t hv_dev_ring_size(struct vmbus_channel *channel) {
-> +	return vmbus_devs[channel->device_id].pref_ring_size;
-> +}
-> +
->  static inline bool hv_is_allocated_cpu(unsigned int cpu)  {
->  	struct vmbus_channel *channel, *sc;
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h index
-> 2b00faf98017..5951c7bb5712 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -800,6 +800,7 @@ struct vmbus_requestor {  #define VMBUS_RQST_RESET
-> (U64_MAX - 3)
+> @@ -240,12 +243,6 @@ hv_uio_probe(struct hv_device *dev,
+>  	int ret;
+>  	size_t ring_size =3D hv_dev_ring_size(channel);
 >=20
->  struct vmbus_device {
-> +	size_t pref_ring_size;
->  	u16  dev_type;
->  	guid_t guid;
->  	bool perf_device;
+> -	/* Communicating with host has to be via shared memory not hypercall
+> */
+> -	if (!channel->offermsg.monitor_allocated) {
+> -		dev_err(&dev->device, "vmbus channel requires hypercall\n");
+> -		return -ENOTSUPP;
+> -	}
+> -
+>  	if (!ring_size)
+>  		ring_size =3D HV_RING_SIZE * PAGE_SIZE;
+>=20
 > --
 > 2.34.1
 >=20
