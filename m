@@ -1,61 +1,47 @@
-Return-Path: <linux-hyperv+bounces-1735-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1736-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E87387976A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 16:22:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 335A0879974
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 17:58:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A260F1F21B65
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 15:22:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4037FB22A11
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Mar 2024 16:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240D47C0AD;
-	Tue, 12 Mar 2024 15:22:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BEC2137C22;
+	Tue, 12 Mar 2024 16:58:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jOcCkFbf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="e4yEFBeG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C787C0A3;
-	Tue, 12 Mar 2024 15:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5BAE7C0B2;
+	Tue, 12 Mar 2024 16:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710256930; cv=none; b=Xa6L33daDuFmpS0pDrBckUq6xIsuCqp2igkyw65DfEm0X5ex+b9IPeE98MUQjV5BcDIMz9DULvYPkT9Y1iX2DuJgv0m9f/r/AefOp0TAaNLIjo8OcHK9V3EokgTeLx2ipP3nwPkAEw47EmocIqTpydl6cjbRpsUbW/oGh1/pQYc=
+	t=1710262687; cv=none; b=g3s3qlpcMKUoKS6U8nFxutAndd/Pc11e0iheES7FTbU1pG/Mb8LRRyfEn7xzd5CuNqnkC5JM0cyDdUtRlQOMzBiI3N+9jcrSudrtgOcVIhp4Hdepqhy6+hBxvuXrxUuRnmQuu7Eg6onNzhUUGcRlc50BR+jprvAjrXo7QbVlc20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710256930; c=relaxed/simple;
-	bh=/Ijo8rHPf1fyrPquGh0hCXAuvhCZNBSsRG3Zru7uFyM=;
+	s=arc-20240116; t=1710262687; c=relaxed/simple;
+	bh=7M3JOtuWE4IVXe/oN5epO/lknwhQ1BWe7uK40fES9/U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u3OSDvbkUvozDCvppX3oZSyogi9EOCftmDXxTNJTDA2qzAyHakEqfBRyl1YVlQN5auM+FUpuITZfYAgbV2eJbVorHVVPMYeLj1K4IDL8fdxmSwnqOAiMSF6RyqbOznMC58KRjWMKAa5ph+6X1kDE/OH089sRSRZnhnnGxcjEvsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jOcCkFbf; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710256929; x=1741792929;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/Ijo8rHPf1fyrPquGh0hCXAuvhCZNBSsRG3Zru7uFyM=;
-  b=jOcCkFbf2yBifM4x9VufuOXdMSquzzrPwWj9IdpdpZIEjIVabCAL6jLT
-   sxWw+Yot+XIFoTi1nSv6s0SbqJgpIHHvDuEHnZDXi76FU8T9ReuSgWzIX
-   osjqigxiseo09n3i4DvUH6OIaLlw2NOcA2VW1cC7QOJV47ZHkd/JhWMzg
-   bibAcK8EHQKjzxEXTEpHRxfrsWqJJ5/wqFbzWSuv7dOGtUPRIeIXUWZij
-   WkaOWMRzgGYdYgjte74mEL7PNc+HlfQqgsap9UuJoLLoSkPeAwuKFC/Ji
-   ZXmt79oMWx1EkK7HndYxkfStV+F1OubYasL61tqxMaiWw7wz+DK0mKKGL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5103847"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="5103847"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:22:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="11534111"
-Received: from hhutton-mobl1.amr.corp.intel.com (HELO [10.209.25.241]) ([10.209.25.241])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:22:07 -0700
-Message-ID: <4e6627b2-30cd-4c50-bf2f-24cf845cd4bc@linux.intel.com>
-Date: Tue, 12 Mar 2024 08:22:06 -0700
+	 In-Reply-To:Content-Type; b=I64Sutup46wpcFKasONrt6qDPHaGyobwqnwGyZuKmQKkkRBFUnlG0H4JOQN36bpkV6PKC4TnJw9+iKHUbHc/vsqPJ6Vo7GREVss2ODJdeEb/VDF3fbXr2XcrX7LLnHrHslgfwn3H4tnYnCcbQ3wtGXufNCsSDspCJtAnVLrWA2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=e4yEFBeG; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.160.249] (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 693EE20B74C0;
+	Tue, 12 Mar 2024 09:58:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 693EE20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1710262685;
+	bh=ozQaUNiP5dhmwGCp3i4ufKlOW6XPUdf59hzQAg3LXwA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e4yEFBeGxq1gtOLT9Ctwy/3UWT/4UZKqlPdj/qz6+nd4Mp0pNXreESjA63uxd45S9
+	 PeC478YzVSgbhKv4zg33yU6VGuxpwtrHbfVrGLQ93yuOTNS7Y+Q+71EOLkK5v83l73
+	 e3EHsUNSh8Xlxl/ACca7Y+TvWEEy7wGLAY9BbgzM=
+Message-ID: <3bf8844a-3e19-4105-8cce-2b1f8f98d3bc@linux.microsoft.com>
+Date: Tue, 12 Mar 2024 09:58:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,169 +49,217 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] Drivers: hv: vmbus: Track decrypted status in
- vmbus_gpadl
+Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for
+ keyfile format
 Content-Language: en-US
-To: Michael Kelley <mhklinux@outlook.com>,
- "rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>,
- "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Cc: "elena.reshetova@intel.com" <elena.reshetova@intel.com>
-References: <20240311161558.1310-1-mhklinux@outlook.com>
- <20240311161558.1310-3-mhklinux@outlook.com>
- <13581af9-e5f0-41ca-939f-33948b2133e7@linux.intel.com>
- <SN6PR02MB415742AEEE7F1389D80B6E51D42B2@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <SN6PR02MB415742AEEE7F1389D80B6E51D42B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Michael Kelley <mikelley@microsoft.com>, Olaf Hering <olaf@aepfle.de>,
+ Ani Sinha <anisinha@redhat.com>, Shradha Gupta <shradhagupta@microsoft.com>
+References: <1710247112-7414-1-git-send-email-shradhagupta@linux.microsoft.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+In-Reply-To: <1710247112-7414-1-git-send-email-shradhagupta@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 3/12/2024 5:38 AM, Shradha Gupta wrote:
+> If the network configuration strings are passed as a combination of IPv and
 
-On 3/11/24 11:07 PM, Michael Kelley wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> On 3/11/24 9:15 AM, mhkelley58@gmail.com wrote:
->>> From: Rick Edgecombe <rick.p.edgecombe@intel.com>
->>>
->>> In CoCo VMs it is possible for the untrusted host to cause
->>> set_memory_encrypted() or set_memory_decrypted() to fail such that an
->>> error is returned and the resulting memory is shared. Callers need to
->>> take care to handle these errors to avoid returning decrypted (shared)
->>> memory to the page allocator, which could lead to functional or security
->>> issues.
->>>
->>> In order to make sure callers of vmbus_establish_gpadl() and
->>> vmbus_teardown_gpadl() don't return decrypted/shared pages to
->>> allocators, add a field in struct vmbus_gpadl to keep track of the
->>> decryption status of the buffers. This will allow the callers to
->>> know if they should free or leak the pages.
->>>
->>> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
->>> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
->>> ---
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>  drivers/hv/channel.c   | 25 +++++++++++++++++++++----
->>>  include/linux/hyperv.h |  1 +
->>>  2 files changed, 22 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
->>> index 56f7e06c673e..bb5abdcda18f 100644
->>> --- a/drivers/hv/channel.c
->>> +++ b/drivers/hv/channel.c
->>> @@ -472,9 +472,18 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
->>>  		(atomic_inc_return(&vmbus_connection.next_gpadl_handle) - 1);
->>>
->>>  	ret = create_gpadl_header(type, kbuffer, size, send_offset, &msginfo);
->>> -	if (ret)
->>> +	if (ret) {
->>> +		gpadl->decrypted = false;
->> Why not set it by default at the beginning of the function?
-> I considered doing that.  But it's an extra step to execute in the normal
-> path, because a couple of lines below it is always set to "true".  But
-> I don't have a strong preference either way.
->
+                                                                      *IPv4*
 
-Got it. I am fine either way.
+> IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
+                                         *does not/doesn't*
+> configuration format.
+> With these changes, the keyfile config generation logic scans through the
+> list twice to generate IPv4 and IPv6 sections for the configuration files
+> to handle this support.
+> 
+> Built-on: Rhel9
+> Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
 
->>>  		return ret;
->>> +	}
->>>
->>> +	/*
->>> +	 * Set the "decrypted" flag to true for the set_memory_decrypted()
->>> +	 * success case. In the failure case, the encryption state of the
->>> +	 * memory is unknown. Leave "decrypted" as true to ensure the
->>> +	 * memory will be leaked instead of going back on the free list.
->>> +	 */
->>> +	gpadl->decrypted = true;
->>>  	ret = set_memory_decrypted((unsigned long)kbuffer,
->>>  				   PFN_UP(size));
->>>  	if (ret) {
->>> @@ -563,9 +572,15 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
->>>
->>>  	kfree(msginfo);
->>>
->>> -	if (ret)
->>> -		set_memory_encrypted((unsigned long)kbuffer,
->>> -				     PFN_UP(size));
->>> +	if (ret) {
->>> +		/*
->>> +		 * If set_memory_encrypted() fails, the decrypted flag is
->>> +		 * left as true so the memory is leaked instead of being
->>> +		 * put back on the free list.
->>> +		 */
->>> +		if (!set_memory_encrypted((unsigned long)kbuffer, PFN_UP(size)))
->>> +			gpadl->decrypted = false;
->>> +	}
->>>
->>>  	return ret;
->>>  }
->>> @@ -886,6 +901,8 @@ int vmbus_teardown_gpadl(struct vmbus_channel *channel, struct vmbus_gpadl *gpad
->>>  	if (ret)
->>>  		pr_warn("Fail to set mem host visibility in GPADL teardown %d.\n", ret);
->> Will this be called only if vmbus_establish_gpad() is successful? If not, you
->> might want to skip set_memory_encrypted() call for decrypted = false case.
-> It's only called if vmbus_establish_gpadl() is successful.  I agree
-> we don't want to call set_memory_encrypted() if the
-> set_memory_decrypted() wasn't executed or it failed.  But 
-> vmbus_teardown_gpadl() is never called with decrypted = false.
+As mentioned by Jakub[1], what value does this information provide?
+Please follow Haiyang's suggestion [2] and put SKU and test information, or just
+skip it.
 
-Since you rely on  vmbus_teardown_gpadl() callers, personally I think it
-is better to add that check. It is up to you.
+[1] https://lore.kernel.org/all/20240307072923.6cc8a2ba@kernel.org/
+[2] https://lore.kernel.org/all/DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com/
 
->>> +	gpadl->decrypted = ret;
->>> +
->> IMO, you can set it to false by default. Any way with non zero return, user
->> know about the decryption failure.
-> I don’t agree, but feel free to explain further if my thinking is
-> flawed.
->
-> If set_memory_encrypted() fails, we want gpadl->decrypted = true.
-> Yes, the caller can see that vmbus_teardown_gpadl() failed,
-> but there's also a memory allocation failure, so the caller
-> would have to distinguish error codes.  And the caller isn't
-> necessarily where the memory is freed (or leaked).  We
-> want the decrypted flag to be correct so the code that
-> eventually frees the memory can decide to leak instead of
-> freeing.
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> ---
+>  Changes in v2
+>  * Use calloc to avoid initialization later
+>  * Return standard error codes
+>  * Free the output_str pointer on completion
+>  * Add out-of bound checks while writing to buffers
+> ---
+>  tools/hv/hv_kvp_daemon.c | 173 +++++++++++++++++++++++++++++----------
+>  1 file changed, 132 insertions(+), 41 deletions(-)
+> 
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index 318e2dad27e0..ae65be004eb1 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -76,6 +76,12 @@ enum {
+>  	DNS
+>  };
+>  
+> +enum {
+> +	IPV4 = 1,
+> +	IPV6,
+> +	IP_TYPE_MAX
+> +};
+> +
+>  static int in_hand_shake;
+>  
+>  static char *os_name = "";
+> @@ -102,6 +108,7 @@ static struct utsname uts_buf;
+>  
+>  #define MAX_FILE_NAME 100
+>  #define ENTRIES_PER_BLOCK 50
+> +#define MAX_IP_ENTRIES 64
 
-I agree. I understood this part after looking at the rest of the series.
+Is this a limitation defined by hv_kvp? If so, is it possible it may change in a later
+version? A comment would help here
 
->
-> Michael
->
->>>  	return ret;
->>>  }
->>>  EXPORT_SYMBOL_GPL(vmbus_teardown_gpadl);
->>> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
->>> index 2b00faf98017..5bac136c268c 100644
->>> --- a/include/linux/hyperv.h
->>> +++ b/include/linux/hyperv.h
->>> @@ -812,6 +812,7 @@ struct vmbus_gpadl {
->>>  	u32 gpadl_handle;
->>>  	u32 size;
->>>  	void *buffer;
->>> +	bool decrypted;
->>>  };
->>>
->>>  struct vmbus_channel {
->> --
->> Sathyanarayanan Kuppuswamy
->> Linux Kernel Developer
+>  
+>  struct kvp_record {
+>  	char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
+> @@ -1171,6 +1178,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
+>  	return 0;
+>  }
+>  
+> +int ip_version_check(const char *input_addr)
+> +{
+> +	struct in6_addr addr;
+> +
+> +	if (inet_pton(AF_INET, input_addr, &addr))
+> +		return IPV4;
+> +	else if (inet_pton(AF_INET6, input_addr, &addr))
+> +		return IPV6;
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+You can skip the else here...
+
+> +	else
+> +		return -EINVAL;
+
+...and you can skip the else here as well and just return -EINVAL
+
+> +}
+> +
+>  /*
+>   * Only IPv4 subnet strings needs to be converted to plen
+>   * For IPv6 the subnet is already privided in plen format
+> @@ -1197,14 +1216,71 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
+>  	return plen;
+>  }
+>  
+> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
+> +				  int ip_sec)
+> +{
+> +	char addr[INET6_ADDRSTRLEN], *output_str;
+> +	int ip_offset = 0, error = 0, ip_ver;
+> +	char *param_name;
+> +
+> +	output_str = (char *)calloc(INET6_ADDRSTRLEN * MAX_IP_ENTRIES,
+> +				    sizeof(char));
+> +
+> +	if (!output_str)
+> +		return -ENOMEM;
+> +
+> +	memset(addr, 0, sizeof(addr));
+> +
+> +	if (type == DNS) {
+> +		param_name = "dns";
+> +	} else if (type == GATEWAY) {
+> +		param_name = "gateway";
+> +	} else {
+> +		error = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
+> +				   (MAX_IP_ADDR_SIZE * 2))) {
+> +		ip_ver = ip_version_check(addr);
+> +		if (ip_ver < 0)
+> +			continue;
+> +
+> +		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
+> +		    (ip_ver == IPV6 && ip_sec == IPV6)) {
+> +			if (((INET6_ADDRSTRLEN * MAX_IP_ENTRIES) - strlen(output_str)) >
+> +			    (strlen(addr))) {
+> +				strcat(output_str, addr);
+> +				strcat(output_str, ",");
+
+Prefer strncat() here
+
+> +			}
+> +			memset(addr, 0, sizeof(addr));
+> +
+> +		} else {
+> +			memset(addr, 0, sizeof(addr));
+> +			continue;
+> +		}
+> +	}
+> +
+> +	if (strlen(output_str)) {
+> +		output_str[strlen(output_str) - 1] = '\0';
+> +		error = fprintf(f, "%s=%s\n", param_name, output_str);
+> +		if (error <  0)
+> +			goto cleanup;
+> +	}
+> +
+> +cleanup:
+> +	free(output_str);
+> +	return error;
+> +}
+> +
+>  static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> -				int is_ipv6)
+> +				int ip_sec)
+>  {
+>  	char addr[INET6_ADDRSTRLEN];
+>  	char subnet_addr[INET6_ADDRSTRLEN];
+>  	int error, i = 0;
+>  	int ip_offset = 0, subnet_offset = 0;
+> -	int plen;
+> +	int plen, ip_ver;
+>  
+>  	memset(addr, 0, sizeof(addr));
+>  	memset(subnet_addr, 0, sizeof(subnet_addr));
+> @@ -1216,10 +1292,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+>  						       subnet_addr,
+>  						       (MAX_IP_ADDR_SIZE *
+>  							2))) {
+> -		if (!is_ipv6)
+> +		ip_ver = ip_version_check(addr);
+> +		if (ip_ver < 0)
+> +			continue;
+> +
+> +		if (ip_ver == IPV4 && ip_sec == IPV4)
+>  			plen = kvp_subnet_to_plen((char *)subnet_addr);
+> -		else
+> +		else if (ip_ver == IPV6 && ip_sec == IPV6)
+>  			plen = atoi(subnet_addr);
+> +		else
+> +			continue;
+>  
+>  		if (plen < 0)
+>  			return plen;
+> @@ -1238,12 +1320,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+>  
+>  static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+>  {
+> -	int error = 0;
+> +	int error = 0, ip_type;
+
+nit: Can we keep ip_ver through all the functions for consistency
+
+<snip>
+
+Thanks,
+Easwar
 
 
