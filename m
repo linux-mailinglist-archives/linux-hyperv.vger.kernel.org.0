@@ -1,274 +1,182 @@
-Return-Path: <linux-hyperv+bounces-1742-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1743-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E71E687A29C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Mar 2024 06:22:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C0FE87A2AE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Mar 2024 06:29:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BC2C283BEA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Mar 2024 05:22:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79B771F21E08
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Mar 2024 05:29:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD7F11713;
-	Wed, 13 Mar 2024 05:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2968A11713;
+	Wed, 13 Mar 2024 05:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="j4gXjK/q"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LdamE+F7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E08B7111A9;
-	Wed, 13 Mar 2024 05:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710307338; cv=none; b=QrttQSHwJQaXsxkUN+tlujuQ6EN+ZFkvHjNtjZBaGxo8l/31cxnNxfZwLZWCPyqsxrR3L8nlqfmsbaPpGcp05SMjxFN1H5Buj+5K/WWaSIy+5UMN2nMGi2DEFDCq+XBq/k2L50dbeYnLkRbM6qf/Cf51prqoHX7frMTq1HFX5us=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710307338; c=relaxed/simple;
-	bh=TDLZ8JzOACQCQokCdWVJIRKElg5w9ZfrCTFI5yrtP1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HrC3Pb4dfuiRpGz3IrfYLCfpT0LthRGBUlue6Fhv2TAr+5VAXMnM+Qf8tbzUJeTbKU0CTfMOuzidLX7r29Z6ydNBrUwCFkv6vC451vEpkV09jO9p/9/Regm6WS0hOX6aHDXZN1f62qRJTi8shD2itWnCI3dBtaD1TLGi+tcV+ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=j4gXjK/q; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id A662D20B74C0; Tue, 12 Mar 2024 22:22:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A662D20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1710307332;
-	bh=GUTohkD5BgI6P+4EcgS2Ta5LLd+OYJcdqIU+ix7d/sA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j4gXjK/qwYqjFw4v2jYwOhml2b/zXf3JrPggLUnLAhyd9+v/17d1/9SmnC60SlG0f
-	 SSjm+Fs0UX1fJuN8H9KAnOzI9OIRNP3XyjHs5DcJxCTEO70Gi6lmWUAaYVpPh+YeTT
-	 ofzHJY08lt1UItU/ZApQemK002xjVdvj2HljjPAE=
-Date: Tue, 12 Mar 2024 22:22:12 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	Olaf Hering <olaf@aepfle.de>, Ani Sinha <anisinha@redhat.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination
- for keyfile format
-Message-ID: <20240313052212.GB22465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1710247112-7414-1-git-send-email-shradhagupta@linux.microsoft.com>
- <3bf8844a-3e19-4105-8cce-2b1f8f98d3bc@linux.microsoft.com>
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2073.outbound.protection.outlook.com [40.92.42.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02302C122;
+	Wed, 13 Mar 2024 05:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710307753; cv=fail; b=Rrk/tEp4LsW6nJb7HDwxKhHBXldxED9NWLC4oM1ferNNkgBBGP7hD/uWi0so+QVBicF9keQoxSM6x6/mpZzl/d4sPV7MSNNecc33XFQlwFBwPKjAlPvWP2v/NfmSldrDM/hzrsNbKRbCWBGCk+PdzkJDdA+PZ9tTexwFjJU9Q4s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710307753; c=relaxed/simple;
+	bh=NvkPFvN54TKLnCOtVSwr+VvP2H/C+sqAffwBchB/2Ec=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=c1vR4suJDl97Smcr0hRp35hBxdVeS7uYieGvuqWvGfhRBY5mxYtRp4OFK5QoO9wygZ4lQcS3Ma7bWuyllWjT4/Olm+sGR78P4VJ416FC8ERPLNIQbfQNffwrZL41KNhSJxbRbzOEc0vbOwC07aeuF5ccttSzvIXHjPwlomjdcrQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LdamE+F7; arc=fail smtp.client-ip=40.92.42.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GiovIq3zql6MU/UBvFRbEIoMG5c+cKDHLf3QtehSwMHNHo/KCUam+3Xs2q2INKvxBRk/Mqc6ZxHsBtSNica97zeHf1hqLkUMr0OM97CqxS5OnMQ4gNIYg8fYez3TZ21oxZGmpsOEese2fhE9IDjcI8UbMAXSGFoVgBahW9BSkTcAP88fPessILLs7nNBEU1pnFNUBhLVvHF7NQRDGZddUsPREMV2uqRx3vOVDdgICH8UHV67vCqIV7323VRb78YXofi6sg2oKhZ8dUdnuoUm2J+Kg6XEEwB1k/C3HKFj2oie8AFSMzX/b1/VYgwqVw9axdRqtGcpMUm/W+wdNA8sog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dQcA4PPjT92tte1SYGIIIHpkAJ6BCQKzEw3zceAB3dw=;
+ b=aXMn0UftU8ZV1JspaNrZSIdXjfnx41ckzsXdfuFDiSwyTcBGu091IBk3DizR1exeNrQRgPBbveytlKqhXzfX+rYEAryRNNKx1FldUf17vDUwx2Uq8QCeadY3UCB6Ac9vaxiYfJ6FBUZZTEZXfeeSRBsTE2Pke5dlMf/aYwLFEQsfR1Yyae52kJeWEsnvUQZBDoyYXMTTBAl7TGr6H5bhInAVd2GrqDYjKP1oAlAEcokNc0krOLW5Q2ih3kyhEGe3UlI4iOVY5u6e/dc6XzWtvTj4V+B1EtM3nQwA20u/EEI60n4+vbUKDVy84AJWBDD4zte9c0XHeU9gXgocPmgNTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dQcA4PPjT92tte1SYGIIIHpkAJ6BCQKzEw3zceAB3dw=;
+ b=LdamE+F7FpBlj57yZSyBhZ7c+f50frtwdtPPdRusEYgeregb1jMOffv3PhshCaCIrNeVqWUJYQ0Lh8tl6uc0JcqPLtDOqWgq3A4OTNPIPWB4aQ6LqEUbL4qwT9LZwbRPXFFspomCT4b+Yws1r/4HEFZ+JjvfNjCWEmNGIUJlA67Ufz9QGp8/kaFryiwRmgP1Zc+kpq6+MzQtncnsYYEvBDbJriFRfrFdLTHhXZ3PrgYgzEE7TPix017g0qc80K6tEvM9s5p5aEXW7v4oF6u0+rJ0pStBPzz6CG8Ti1L1K06qPdvNdBWzvvGQVaSkBd2U5IsTIREhnV6TEF1XKXa0rg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CH0PR02MB7932.namprd02.prod.outlook.com (2603:10b6:610:101::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.34; Wed, 13 Mar
+ 2024 05:29:08 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7362.035; Wed, 13 Mar 2024
+ 05:29:08 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Long Li <longli@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>, "tytso@mit.edu"
+	<tytso@mit.edu>, jason <jason@zx2c4.com>, "x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v2 1/1] x86/hyperv: Use Hyper-V entropy to seed guest
+ random number generator
+Thread-Topic: [PATCH v2 1/1] x86/hyperv: Use Hyper-V entropy to seed guest
+ random number generator
+Thread-Index: AQHacMAZOd50lMXg2E+WGXTGLlHRJ7E1IpWAgAAI74A=
+Date: Wed, 13 Mar 2024 05:29:08 +0000
+Message-ID:
+ <SN6PR02MB4157E883A8EA7796264D3AA7D42A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240307184820.70589-1-mhklinux@outlook.com>
+ <SJ1PR21MB34571493BC1473790F5917E0CE2A2@SJ1PR21MB3457.namprd21.prod.outlook.com>
+In-Reply-To:
+ <SJ1PR21MB34571493BC1473790F5917E0CE2A2@SJ1PR21MB3457.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [nnO0d94QcuK1BYdK/tzW9m4QBCPsuQ37]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH0PR02MB7932:EE_
+x-ms-office365-filtering-correlation-id: 73373275-ae45-45b2-9caf-08dc431e8191
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Qzyd28YrsVpSc8Fyq4c6/jztR4WwUWgdcoBe8X2Gp2GZctcr/ljCOgJeGcQwBVXP4WCdsm6nw4XTKzrbNI+kGH4pzGIcUNOrKRCyaWyCC0BJjudUBXzXCK3loxnmw2cn0jk05XDKgtx/jo5pDTa8cx/DUcbj11p4JTnln4kzAUdSbAAgSjbTYXLyiRnb5woI3YT6/xYnQLe+mn1r6vAYFN/Ny0sQ5r+jJ8gVXVnnGAtLMqJhryn5pMcGC59KXtv7NEYsL7fGFPKrlp1hn4vw17g01pio13bM8tlC6I3dUhAAet0W6JNO1mBGQLuKi0TXJCuyiknoiSpk7vfg/D2twLn+8RIj2/Ta5COCezw2nXbbTJU3Vvtv0Mm0wq5io4xZ/kSxIG8859RYvd9sQ1eUpxlKiDlTq5ZoXwEEx8X79yfS7P5rX/VbayVREAXc6+0CBH4cUHXMa+eit7McV4SMccx1gtxv2mDpSeQTsP9PSzRgr0CDpE6ubqPEqcTDO20BjlSR6iqlnRL4czIz+qjCnLJ8lWlKnnnBP5O/eSWllI2hQ/h4qGZSYq5T9GvLh06R+ujnitvLUJFLZR2Snt7r/4evorNRkXKypqchK5vmlhlCl//IMd+JS1nfKvm6/RDmaRKWKaZZZYJGPn5b5bhHyVdWCZGc6GQaewU/kwYyUGA=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Z7xo2yiUw5cdOubkGGdIbCIIqkPHbd+BVMP+ZirBIaXEjnLV7zdvh2mb+SFZ?=
+ =?us-ascii?Q?HTkTYYt6d9z9S9tAbUtG65giKj4ejjUdJSBBUwOjWKy3wRcp9Z7qvFvXn3ea?=
+ =?us-ascii?Q?2aeN4VY+19o34BocfvEOlmeysfR7WJGU1ygePM6EWb9VGLn6qz5FtBgJ2MVm?=
+ =?us-ascii?Q?0UwVomQeQEHlszPCs7yioQirTU5+qsqouzs2dCnr+dwRPll4JmnRvu0VTR6G?=
+ =?us-ascii?Q?QHJXPblSV+qQrNFk79kzDQq6HKg7AZDalJjpKdxx4t4gifmW2GrIlKCfEW/d?=
+ =?us-ascii?Q?ztIL0qwE1WzxRcdLWC9DhJ8Z+CxwWp6GS7NmL1yWo/T9UeDEtnJV6Ram08eK?=
+ =?us-ascii?Q?O4ZssmOjDM5iEwMRn8yB0tP8GjQV/bQyR/F8WqtB3KhZoOxE57lWMCHYFXAy?=
+ =?us-ascii?Q?rrc2Zg+vJFP8TKgX5i0FT9c2dNPjNabqSnkp3M+9/VXtBK2uK7ElDIMqbk8+?=
+ =?us-ascii?Q?uL1qHhlCsHhKjmKwI5qJZhjx1rSTsuZM6w238MJ3p6O/XQHI4A0B12KACTCh?=
+ =?us-ascii?Q?YqRqWlUtoPolxXCAEOT49kGvO83bEksmL0G+mn9vWWEZ2c+diWr+goONfBzn?=
+ =?us-ascii?Q?apWUW/zcAbmsrxsB6+eDvbJPV9T3tqGnXHPaGF8zEFLGlWHnu7WbJCCP1cFE?=
+ =?us-ascii?Q?wtYgr60KZ5yJ/LRmZWz4UanrTjhurVdHD5qCdtWrojG/Gf0id7BWeLFq2mLR?=
+ =?us-ascii?Q?Q0FgPEaGWqPa2f0rY8EDjZNeRf0S/NJBckEFxW7Vclsga5X5kJGWzdrKF8rS?=
+ =?us-ascii?Q?ie8Q/L6SlnEZosgGdPVU7NXSKQqky+9vaMBBWS7b5FZEcrxo9nA39vdzZMyB?=
+ =?us-ascii?Q?268DsiNdDj3EFAI9BOrgvlEhOP5ISm/33DqWUX8CW/Y0W5w3voTx5LeTF5lV?=
+ =?us-ascii?Q?5A+7bIQRtaNIkFJfjctiTFn/NtEWRTdKPwDJrI2nV8+y2QsSJ0FK0oP0ccIc?=
+ =?us-ascii?Q?kzI58PNNROgQWrxx0wliAp7ZyNboYe1yPzj2swdWD1qDLDcmTse0PiraX8ah?=
+ =?us-ascii?Q?o9Zc4vXDm/x/490K76o27D9S0RGvsb/j28BYgqu36s6NENz0n9FN2+qlp5aX?=
+ =?us-ascii?Q?umqLThvzIs+0ahEhU+X2gu2spWt1+XzBf1txS7CGlNo26MvTz9XDtDifxU7Z?=
+ =?us-ascii?Q?fKQQGTiM5t84mrEhEVinOYiUwFUsVS6nJOB8M8HtHSscxtl2d9V0m95L4GOd?=
+ =?us-ascii?Q?YW53oHzkdLaUGCdQp4M4i9Lw56Qcs9bkMYhJHA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bf8844a-3e19-4105-8cce-2b1f8f98d3bc@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73373275-ae45-45b2-9caf-08dc431e8191
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2024 05:29:08.1551
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR02MB7932
 
-On Tue, Mar 12, 2024 at 09:58:03AM -0700, Easwar Hariharan wrote:
-> On 3/12/2024 5:38 AM, Shradha Gupta wrote:
-> > If the network configuration strings are passed as a combination of IPv and
-> 
->                                                                       *IPv4*
-> 
-> > IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
->                                          *does not/doesn't*
-> > configuration format.
-> > With these changes, the keyfile config generation logic scans through the
-> > list twice to generate IPv4 and IPv6 sections for the configuration files
-> > to handle this support.
-> > 
-> > Built-on: Rhel9
-> > Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-> 
-> As mentioned by Jakub[1], what value does this information provide?
-> Please follow Haiyang's suggestion [2] and put SKU and test information, or just
-> skip it.
-> 
-> [1] https://lore.kernel.org/all/20240307072923.6cc8a2ba@kernel.org/
-> [2] https://lore.kernel.org/all/DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com/
-Hi Easwar, unlike the other patch this one has details about the tests that were performed.
-Since this is Hyper-v VMs specific, I could not add details around SKU or LISA tests(as it
-could not be tested using LISA). In the last patch we had missed the IPv4, IPv6 combination
-testing(which had some design issues). That's why I feel it is important to call it out in
-this patch.
-> 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > ---
-> >  Changes in v2
-> >  * Use calloc to avoid initialization later
-> >  * Return standard error codes
-> >  * Free the output_str pointer on completion
-> >  * Add out-of bound checks while writing to buffers
-> > ---
-> >  tools/hv/hv_kvp_daemon.c | 173 +++++++++++++++++++++++++++++----------
-> >  1 file changed, 132 insertions(+), 41 deletions(-)
-> > 
-> > diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> > index 318e2dad27e0..ae65be004eb1 100644
-> > --- a/tools/hv/hv_kvp_daemon.c
-> > +++ b/tools/hv/hv_kvp_daemon.c
-> > @@ -76,6 +76,12 @@ enum {
-> >  	DNS
-> >  };
-> >  
-> > +enum {
-> > +	IPV4 = 1,
-> > +	IPV6,
-> > +	IP_TYPE_MAX
-> > +};
-> > +
-> >  static int in_hand_shake;
-> >  
-> >  static char *os_name = "";
-> > @@ -102,6 +108,7 @@ static struct utsname uts_buf;
-> >  
-> >  #define MAX_FILE_NAME 100
-> >  #define ENTRIES_PER_BLOCK 50
-> > +#define MAX_IP_ENTRIES 64
-> 
-> Is this a limitation defined by hv_kvp? If so, is it possible it may change in a later
-> version? A comment would help here
-Sure, would update accordingly
-> 
-> >  
-> >  struct kvp_record {
-> >  	char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
-> > @@ -1171,6 +1178,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
-> >  	return 0;
-> >  }
-> >  
-> > +int ip_version_check(const char *input_addr)
+From: Long Li <longli@microsoft.com> Sent: Tuesday, March 12, 2024 9:51 PM
+>=20
+> > +void __init ms_hyperv_late_init(void)
 > > +{
-> > +	struct in6_addr addr;
+> > +       struct acpi_table_header *header;
+> > +       acpi_status status;
+> > +       u8 *randomdata;
+> > +       u32 length, i;
 > > +
-> > +	if (inet_pton(AF_INET, input_addr, &addr))
-> > +		return IPV4;
-> > +	else if (inet_pton(AF_INET6, input_addr, &addr))
-> > +		return IPV6;
-> 
-> You can skip the else here...
-> 
-> > +	else
-> > +		return -EINVAL;
-> 
-> ...and you can skip the else here as well and just return -EINVAL
-right, will change this in the next version.
-> 
-> > +}
+> > +       /*
+> > +        * Seed the Linux random number generator with entropy provided=
+ by
+> > +        * the Hyper-V host in ACPI table OEM0.  It would be nice to do=
+ this
+> > +        * even earlier in ms_hyperv_init_platform(), but the ACPI subs=
+ystem
+> > +        * isn't set up at that point. Skip if booted via EFI as generi=
+c EFI
+> > +        * code has already done some seeding using the EFI RNG protoco=
+l.
+> > +        */
+> > +       if (!IS_ENABLED(CONFIG_ACPI) || efi_enabled(EFI_BOOT))
+> > +               return;
 > > +
-> >  /*
-> >   * Only IPv4 subnet strings needs to be converted to plen
-> >   * For IPv6 the subnet is already privided in plen format
-> > @@ -1197,14 +1216,71 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
-> >  	return plen;
-> >  }
-> >  
-> > +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-> > +				  int ip_sec)
-> > +{
-> > +	char addr[INET6_ADDRSTRLEN], *output_str;
-> > +	int ip_offset = 0, error = 0, ip_ver;
-> > +	char *param_name;
-> > +
-> > +	output_str = (char *)calloc(INET6_ADDRSTRLEN * MAX_IP_ENTRIES,
-> > +				    sizeof(char));
-> > +
-> > +	if (!output_str)
-> > +		return -ENOMEM;
-> > +
-> > +	memset(addr, 0, sizeof(addr));
-> > +
-> > +	if (type == DNS) {
-> > +		param_name = "dns";
-> > +	} else if (type == GATEWAY) {
-> > +		param_name = "gateway";
-> > +	} else {
-> > +		error = -EINVAL;
-> > +		goto cleanup;
-> > +	}
-> > +
-> > +	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> > +				   (MAX_IP_ADDR_SIZE * 2))) {
-> > +		ip_ver = ip_version_check(addr);
-> > +		if (ip_ver < 0)
-> > +			continue;
-> > +
-> > +		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
-> > +		    (ip_ver == IPV6 && ip_sec == IPV6)) {
-> > +			if (((INET6_ADDRSTRLEN * MAX_IP_ENTRIES) - strlen(output_str)) >
-> > +			    (strlen(addr))) {
-> > +				strcat(output_str, addr);
-> > +				strcat(output_str, ",");
-> 
-> Prefer strncat() here
-> 
-> > +			}
-> > +			memset(addr, 0, sizeof(addr));
-> > +
-> > +		} else {
-> > +			memset(addr, 0, sizeof(addr));
-> > +			continue;
-> > +		}
-> > +	}
-> > +
-> > +	if (strlen(output_str)) {
-> > +		output_str[strlen(output_str) - 1] = '\0';
-> > +		error = fprintf(f, "%s=%s\n", param_name, output_str);
-> > +		if (error <  0)
-> > +			goto cleanup;
-> > +	}
-> > +
-> > +cleanup:
-> > +	free(output_str);
-> > +	return error;
-> > +}
-> > +
-> >  static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> > -				int is_ipv6)
-> > +				int ip_sec)
-> >  {
-> >  	char addr[INET6_ADDRSTRLEN];
-> >  	char subnet_addr[INET6_ADDRSTRLEN];
-> >  	int error, i = 0;
-> >  	int ip_offset = 0, subnet_offset = 0;
-> > -	int plen;
-> > +	int plen, ip_ver;
-> >  
-> >  	memset(addr, 0, sizeof(addr));
-> >  	memset(subnet_addr, 0, sizeof(subnet_addr));
-> > @@ -1216,10 +1292,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >  						       subnet_addr,
-> >  						       (MAX_IP_ADDR_SIZE *
-> >  							2))) {
-> > -		if (!is_ipv6)
-> > +		ip_ver = ip_version_check(addr);
-> > +		if (ip_ver < 0)
-> > +			continue;
-> > +
-> > +		if (ip_ver == IPV4 && ip_sec == IPV4)
-> >  			plen = kvp_subnet_to_plen((char *)subnet_addr);
-> > -		else
-> > +		else if (ip_ver == IPV6 && ip_sec == IPV6)
-> >  			plen = atoi(subnet_addr);
-> > +		else
-> > +			continue;
-> >  
-> >  		if (plen < 0)
-> >  			return plen;
-> > @@ -1238,12 +1320,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >  
-> >  static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >  {
-> > -	int error = 0;
-> > +	int error = 0, ip_type;
-> 
-> nit: Can we keep ip_ver through all the functions for consistency
-sure.
-> 
-> <snip>
-> 
-> Thanks,
-> Easwar
+> > +       status =3D acpi_get_table("OEM0", 0, &header);
+> > +       if (ACPI_FAILURE(status) || !header)
+> > +               return;
+>=20
+> Should we call acpi_put_table() if header =3D=3D 0?
+
+No.  acpi_get_table() setting header to NULL is equivalent to
+returning a failure status, per a comment in the code for
+acpi_get_table().  So checking header for NULL is probably
+redundant, but it doesn't hurt.
+
+> It will also be helpful doing a
+> pr_info() here so user knows that hyper-v random number is not used.
+
+In v1 of the patch, I had such a pr_info(), but Wei Liu recommended
+removing it, and I agreed it wasn't really necessary.  See the brief=20
+discussion here:
+
+https://lore.kernel.org/linux-hyperv/SN6PR02MB4157B61CA09C0DAF0BB994E1D4212=
+@SN6PR02MB4157.namprd02.prod.outlook.com/
+
+Michael
+
+
 
