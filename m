@@ -1,204 +1,278 @@
-Return-Path: <linux-hyperv+bounces-1761-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1762-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E15687C3E6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Mar 2024 21:01:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E621887CE82
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Mar 2024 15:09:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7CCE6B230BE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Mar 2024 20:01:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7216B281D24
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Mar 2024 14:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C93D76020;
-	Thu, 14 Mar 2024 20:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE108364D9;
+	Fri, 15 Mar 2024 14:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="h32EPGqp"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GMfy8FA5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11022010.outbound.protection.outlook.com [52.101.56.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF59671750;
-	Thu, 14 Mar 2024 20:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710446490; cv=fail; b=FtSzG+VerXiV4g5fJwFiZ3DnYh3kaJ7/eJNkNU3FksMlLOnlvgEpER95Iv92HeLZRe4eMhnJFeDkKempQuPVUB6BJPDg0/So4U/E+JThjqrAGEZBKrVscynuY5qGa5uezRxUvpgAXHXFTJCyILxYBBMY3wY2Qh79gwKrhBgctvU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710446490; c=relaxed/simple;
-	bh=1SpLRVCfEjISTYCPKjGxiTx9t3J1NNuTBs0qNEaFQPk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=b8AX6TawUGJRFOti/F8dXnnPK85cF0OK4Y0OBT7xKx7OVZswxQIbRBrTC0UJW34tyxkXW78YF+82u7+smQ1pqBm+cS73fsLnRxHyzraBh5ObkQq4qVEA5OYLuyL0LwIw9+rdsWZOVyOzu5ybC2sf8ff9i7c77adMQ4BhsS9PQv8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=h32EPGqp; arc=fail smtp.client-ip=52.101.56.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kSL5ZF2cT1h4SCSnBs8ByizX8s937XH1Zzu4erVsS6sZ3R/3mN9FJWNkZN6ytsVEd7FG+avJ8Oqsi6/dCv5pzWbtOoBT2xdLdGi8wgSk6TznD7n0viAKWp8ju9oHErfwesl3RzvwZNdWWELKD6Zdzm+4GgPW4ahUcxeIyuqid0Mbwi5hdE5/Ixw3atXj1CflMq6811DmTHtoXBdZkykolrWtEjo+03hgrv8v9VYAE3QdExBft6csValkFvO/Rnti8x1g3T6R/4UudKlV7edIMKZ3SCx0qBz/1uZdyFRrQrMWtFaSwqaWpPTYymvGfGygF2cZ+kxFQ5dXrOUXzNQGXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1SpLRVCfEjISTYCPKjGxiTx9t3J1NNuTBs0qNEaFQPk=;
- b=FJXJ+CVQrwtJc8kQ67syxjc2N/icNjxjazfaJHaqjKGq8nz4EV2+mBAYSEyVe0cdTKJw0vMaeMWnLZ18T7arF2P3ZT758hCc4urnw4QYvwwbxrdGriKA2nj+1tx1fztAiY7k8CvW0Hl9+/SqSIMQ9TCT5NMEaqeFTNHw+g5s1EOcQeUtdSkEdPdlLbi7WzwKvRT7jWi10pyv5hxGz6JvG8606acVVpKbJOnyVB2iP7TPpLh1p+9TZvvoieaSFS/OPbxzE4iJ9nOpKJTLzaaxBvBkWLfQc3RuUZpM21/ETaSkQHHyCKU6h1AfVtGFScRRyAtbo1OQ1+ICCbM6zc8qag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1SpLRVCfEjISTYCPKjGxiTx9t3J1NNuTBs0qNEaFQPk=;
- b=h32EPGqplJ6TKoYmR8Ol+xZhXaQzRTta+l3W5fqgYmA0H3BhziHKJvoC0J7jhYbgfJwkXmVwdTPHUWdlW34PVMNR8PspoozGK47vhQj95d6nJZQSeFaYCDlEy7KyDo6zOo/g1hmSu8fjBvAlGHPlvtGq53A/0UmPLCsVRXTcb0E=
-Received: from SA3PR21MB3963.namprd21.prod.outlook.com (2603:10b6:806:300::10)
- by IA1PR21MB3593.namprd21.prod.outlook.com (2603:10b6:208:3e2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.7; Thu, 14 Mar
- 2024 20:01:25 +0000
-Received: from SA3PR21MB3963.namprd21.prod.outlook.com
- ([fe80::2cef:e7c8:da89:6c9e]) by SA3PR21MB3963.namprd21.prod.outlook.com
- ([fe80::2cef:e7c8:da89:6c9e%5]) with mapi id 15.20.7409.007; Thu, 14 Mar 2024
- 20:01:25 +0000
-From: Alireza Dabagh <alid@microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>
-CC: Shradha Gupta <shradhagupta@linux.microsoft.com>, Shradha Gupta
-	<shradhagupta@microsoft.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
-	<pabeni@redhat.com>, Ajay Sharma <sharmaajay@microsoft.com>, Leon Romanovsky
-	<leon@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej
- Siewior <bigeasy@linutronix.de>, KY Srinivasan <kys@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
-	<longli@microsoft.com>, Michael Kelley <mikelley@microsoft.com>, Paul
- Rosswurm <paulros@microsoft.com>
-Subject: RE: [EXTERNAL] Re: [PATCH] net :mana : Add per-cpu stats for MANA
- device
-Thread-Topic: [EXTERNAL] Re: [PATCH] net :mana : Add per-cpu stats for MANA
- device
-Thread-Index:
- AQHacJ8N8LLwvYYKc0y/h+tCzJvDjrEsZziAgAADR7CAABaHgIABr8IAgAAJ9wCAA7q6AIAEn/IAgAED5wCAAAUH8IAABZAAgAANXkA=
-Date: Thu, 14 Mar 2024 20:01:24 +0000
-Message-ID:
- <SA3PR21MB39636B2DBFA00CFE3AD84845C1292@SA3PR21MB3963.namprd21.prod.outlook.com>
-References:
- <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
-	<20240307072923.6cc8a2ba@kernel.org>
-	<DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
-	<20240307090145.2fc7aa2e@kernel.org>
-	<CH2PR21MB1480D3ACADFFD2FC3B1BB7ECCA272@CH2PR21MB1480.namprd21.prod.outlook.com>
-	<20240308112244.391b3779@kernel.org>
-	<20240311041950.GA19647@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-	<20240314025720.GA13853@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-	<20240314112734.5f1c9f7e@kernel.org>
-	<DM6PR21MB14819A8CDB1431EBF88216ABCA292@DM6PR21MB1481.namprd21.prod.outlook.com>
- <20240314120528.1ac154d1@kernel.org>
-In-Reply-To: <20240314120528.1ac154d1@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=85f577f3-c12b-42ae-92b7-529ec268a746;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-03-14T19:53:19Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR21MB3963:EE_|IA1PR21MB3593:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Kmw9wnsuHCel86xV2+EomYy1iPAwO1tDgVSvgg6Xy/SVL1jPOSmyshjDcuN05bhyQ/2kXc5PdjtgXP0eBcWM1o9rJgXEkMJZwOSqobPrEI3Ck2Nitu6u3Oox2sonimNrRQ4E4qUMRodKVlOhmadES4MTHFMn7L1NxrqXFGZWHsOjIjMBPGpi0+VLHcQZX0xEz8Bwe8g4+fXP54azcUOwnLohMuobkcAPMjaEskqGdNOTRaTcQvVIrL9JG+K4wOnyhIcY+8IfBi/9t1nIENEPlnrRDT4cM4vTzTFgwLarpGM+CH0tnBbJg6QuK7X5LKATt6OgEoDLEZh/J9I4iG8C8GVmb1o3jwSvSUReQAMpeHceVjV8jCjctgDQ3YqUSpEPRmjT/ShQ/WJ7LVPdF/Qij9ENUxqfSiuOiYseibOcyOShWxHOQ1vp24bPKe7aFK97eKNPGMC1Zj1rH/7+zqpdqWk0iJw3pxUHqkHATyC4p+6GfihblSgb4v5ZBiQW47GXZBe4FyMMpcQGyGfFNgTA2lYQHvK0k9RKVSgl7X/Lbt22qsiDOy/mdjYmBpGMsj7/nQZRQTVcB6Df72vUSCIpm4X2ZxRsEBxma53Atm7E0xGsq4PP2esb5uo38apjratBUw2caJmkBJg4/OR+vBmPqbyV28p/b4/Cqz09uw+OP9M=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3963.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?NwsOSez8b2ahOX6Xl8uUZ5NSHzMt05LGeUHFA+N1zcCmjOIdrnXC456Av2m1?=
- =?us-ascii?Q?QSWQv+JwwBjlaPVcHyTFOwuWj/L9QohJ7FblQVr01qf6NZL4F9Mnn+Y3NYpX?=
- =?us-ascii?Q?AYnaZm7FYSPs4FztxBU/bQGw+GoGGeTmMPw0balIfFgzfulUXztyXqDOXbaY?=
- =?us-ascii?Q?GjlYdxMDNqr58C838c+0iNLhC6XDEONMDweXWSQ3hky7qEdsR9lgK/OZnFlR?=
- =?us-ascii?Q?2iaZB/UxnmbYfNHiPfiReGVIGu3oqu31UrhWKE71fAQWKtRgAb6vcOhxLxDS?=
- =?us-ascii?Q?ghstrWkA/JVvQSAhWaaB0Kir1hO/NFQy5xGGe5fVfGBSYyKcn1nmWVmYupfD?=
- =?us-ascii?Q?/9XQYafYkqT3R8tDqfef4Gqnemt/JBeUw1bmY8jYjkBMeZ7+wI4kZlVvxGcU?=
- =?us-ascii?Q?aOYH8MG8JsMvcn2l8pWRYdwGMzhYvoaJuR+ZE+BBVhpjZecE/XFVW1qdwKSP?=
- =?us-ascii?Q?ye4nVEd2qpvn52nATCyse/ZFrXGF+lOQdu43FGAiI6+9Sj38pxjN73hxJok+?=
- =?us-ascii?Q?ykfYIMR5vwFdrcRg53tU9r7h8qWGN7dMKXsGfIf6YK537Nld7Z9L9lq8TYfM?=
- =?us-ascii?Q?nPYr9i/rKXEH9nkjQ1G9EpEreN2mRRHNgQpST0zIhIUGRlH/ugmOIm6QP8Ou?=
- =?us-ascii?Q?rYtyKK+xQqZJeRmcHK5bxPTSxgo3nWVNo5JzwXetU6gz8Lvk3rfCEoRQD0IS?=
- =?us-ascii?Q?Rh+WgI9Xk9PJ4WC+x6GToZgHQ0HnykC7dAmxj4ueiTpn5kMLB7rsYBP2mI7L?=
- =?us-ascii?Q?XGFevbwYZ8VuFiGgkh0BhAMIxFqhiMq5oAwntXCqy7QPOFSchmJq8kAKtDZA?=
- =?us-ascii?Q?0ss3jLepZTAoDkZOBkyIZsf4RzLFQ8mlLzGMEZBffqaMOUPF6QsDasakZTZo?=
- =?us-ascii?Q?2zR/OdM7mQCOR3OdI/jpzIpv0tPJ5wPx1VkbIs5nKK9319oTayS3lo9uLyz5?=
- =?us-ascii?Q?9q2bFTe7Gs3pLTr8D0KtA23QzD3IViI8GHq9ttWOJYMOPq8oVk2bWGB/4A9E?=
- =?us-ascii?Q?LnvHRYh3Tj8zonOrbdy30ONTm29334B7ogkCpdW1P0rXOGR5PnXeeA1sCla7?=
- =?us-ascii?Q?3CRMYXUNwjbmSFg1nI9MDQPlVEBN32/izVh5Ds/Cu7V/psi+JWTOtBKKQK2c?=
- =?us-ascii?Q?caYnQtbtYeshg9CK8se/q0a/wnKDzYLypmQ8aeuMRbQg81Juq9F09UKKjRWI?=
- =?us-ascii?Q?jbGYwbSBV7ZIumyYEJZgohUwz5FPgroCKrmim2DhcTbPwoVTpO6ch6/rwqhb?=
- =?us-ascii?Q?+Is2liz7shf+XwR6kVZtRSa1nqx7tcSsBhR/Fzq4WbsbG5Fr7KD/6LiDBnKO?=
- =?us-ascii?Q?LTEKN/KJslbxC+M/jXGOcNU0e5QrLAnG15LwptxYLGoKbPUAlQidhZNmaSw6?=
- =?us-ascii?Q?lz6BLCJgSoAc0LD3UqDTJgqheu4clDDIXaUI6e+lbAegkPL39I+/Quq9pl3w?=
- =?us-ascii?Q?k5tpc1OsPNLWg0XpYbIqiFdcgyKIs9FQi84J+b9UAOj1o1urrgF1G+8VNm4x?=
- =?us-ascii?Q?35iOYjEAgjT8/lPsn4xQY5TinwtcusCAdymMN/B/1UG8+4MbVLp2ybJIS8f+?=
- =?us-ascii?Q?uHrn+wNDeiL2jy3IQ4nXntMScyU/mL79Mmf+iJtzBBUUzNhzQvC0d7RC3kaa?=
- =?us-ascii?Q?7VT01pqT2UB8n4md5VDI8XqZLWecSDQAsjbDI2fSQdm+?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40FAE1BF28;
+	Fri, 15 Mar 2024 14:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710511761; cv=none; b=PerM/1jrZZdZxFefnqdP2lh1AHpOLOmRsh0I9fFP/s77Bx82kxWOAxWTmL1OqeJKp17E7tJk/uy51ZRsIUPzg6qFllcUBZ8g1tQ3AdSB/8B860sh+Tdlvcwb5JkndMUQT1uftM3N0jhsAocKNXQ/NavONr7gAXJRy/EaoAxk0Rg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710511761; c=relaxed/simple;
+	bh=+80NF6M/ccn4BkFumd8sbKKEzf080dOQ87GcTcUi+7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cW40g8VZH5qAm2M4dlfGD85wCIPyWHu2rCqcsyxHOBmnCBuIMuY9w1BSZqovvYKzvc84WzEqv5ckm2An2L7zFQxHMaoVym1XwTjCkZMFPxco2rsiUBkDLjEZyGRyn/D+axbNBpp76fgZ6kjFi79qGc35NUSiKXPGmJFd3DMMSAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GMfy8FA5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id C63AD20B74C0; Fri, 15 Mar 2024 07:09:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C63AD20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1710511754;
+	bh=4+AAib52IJ6d/7D5JTyP0xeLIwO9U0JM0O87i60Cwpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GMfy8FA5CglkxAUpz90SFDaXwS0kKZV8GBQdHccIXWKdmb1/aJSAyat8GdyLbiEqY
+	 3uLo1Ix8LEqS6Eki201QwdHPfdGKMMJjOV3FdfBC94pzR2Gie7hpsTUAo9ACbUQGvW
+	 cYMrVHJVYGH3cl/BTQatpfA0Di6N0TJsy2jOuF2c=
+Date: Fri, 15 Mar 2024 07:09:14 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Olaf Hering <olaf@aepfle.de>, Ani Sinha <anisinha@redhat.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination
+ for keyfile format
+Message-ID: <20240315140914.GA14685@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1710247112-7414-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <3bf8844a-3e19-4105-8cce-2b1f8f98d3bc@linux.microsoft.com>
+ <20240313052212.GB22465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3963.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dde612c-1039-40d2-fe63-08dc4461871d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2024 20:01:24.8870
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2y36mKU3QZK50egR5CpNHsr/W6LCQoXrkaSGU0DjzFhyfRhv8h1xlXssajc1gTfDKircBZ1A2G/Vjk50xE+hiRHteP0oxyKl4hBlu4Ssbwc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3593
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240313052212.GB22465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Per processor network stats have been supported on netvsc and Mellanox NICs=
- for years. They are also supported on Windows.
-
-I routinely use these stats to rule in/out the issues with RSS imbalance du=
-e to either NIC not handling RSS correctly, incorrect MSI-X affinity, or no=
-t having enough entropy in flows.=20
-
-And yes, I perfectly understand that there are cases that packets received =
-on processor x are processed (in tcp/ip stack) on processor y. But in many =
-cases, there is a correlation between individual processor utilization and =
-the processor where these packets are received on by the NIC.
-
--thanks, ali
-(some suggested that I do mention on this thread that I am one of the origi=
-nal inventors of RSS. So there you have it. Personally I don't think that t=
-elling people "I invented the damn thing and I know what I am talking about=
-" is the right way to handle this.)=20
------Original Message-----
-From: Jakub Kicinski <kuba@kernel.org>=20
-Sent: Thursday, March 14, 2024 12:05 PM
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>; Shradha Gupta <shradh=
-agupta@microsoft.com>; linux-kernel@vger.kernel.org; linux-hyperv@vger.kern=
-el.org; linux-rdma@vger.kernel.org; netdev@vger.kernel.org; Eric Dumazet <e=
-dumazet@google.com>; Paolo Abeni <pabeni@redhat.com>; Ajay Sharma <sharmaaj=
-ay@microsoft.com>; Leon Romanovsky <leon@kernel.org>; Thomas Gleixner <tglx=
-@linutronix.de>; Sebastian Andrzej Siewior <bigeasy@linutronix.de>; KY Srin=
-ivasan <kys@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui <decui=
-@microsoft.com>; Long Li <longli@microsoft.com>; Michael Kelley <mikelley@m=
-icrosoft.com>; Alireza Dabagh <alid@microsoft.com>; Paul Rosswurm <paulros@=
-microsoft.com>
-Subject: [EXTERNAL] Re: [PATCH] net :mana : Add per-cpu stats for MANA devi=
-ce
-
-On Thu, 14 Mar 2024 18:54:31 +0000 Haiyang Zhang wrote:
-> We understand irqbalance may be a "bad idea", and recommended some=20
-> customers to disable it when having problems with it... But it's still=20
-> enabled by default, and we cannot let all distro vendors and custom=20
-> image makers to disable the irqbalance. So, our host- networking team=20
-> is eager to have per-CPU stats for analyzing CPU usage related to=20
-> irqbalance or other issues.
-
-You need a use case to get the stats upstream.
-"CPU usage related to irqbalance or other issues" is both too vague, and ir=
-qbalance is a user space problem.
+On Tue, Mar 12, 2024 at 10:22:12PM -0700, Shradha Gupta wrote:
+> On Tue, Mar 12, 2024 at 09:58:03AM -0700, Easwar Hariharan wrote:
+> > On 3/12/2024 5:38 AM, Shradha Gupta wrote:
+> > > If the network configuration strings are passed as a combination of IPv and
+> > 
+> >                                                                       *IPv4*
+> > 
+> > > IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
+> >                                          *does not/doesn't*
+> > > configuration format.
+> > > With these changes, the keyfile config generation logic scans through the
+> > > list twice to generate IPv4 and IPv6 sections for the configuration files
+> > > to handle this support.
+> > > 
+> > > Built-on: Rhel9
+> > > Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
+> > 
+> > As mentioned by Jakub[1], what value does this information provide?
+> > Please follow Haiyang's suggestion [2] and put SKU and test information, or just
+> > skip it.
+> > 
+> > [1] https://lore.kernel.org/all/20240307072923.6cc8a2ba@kernel.org/
+> > [2] https://lore.kernel.org/all/DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com/
+> Hi Easwar, unlike the other patch this one has details about the tests that were performed.
+> Since this is Hyper-v VMs specific, I could not add details around SKU or LISA tests(as it
+> could not be tested using LISA). In the last patch we had missed the IPv4, IPv6 combination
+> testing(which had some design issues). That's why I feel it is important to call it out in
+> this patch.
+> > 
+> > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > > ---
+> > >  Changes in v2
+> > >  * Use calloc to avoid initialization later
+> > >  * Return standard error codes
+> > >  * Free the output_str pointer on completion
+> > >  * Add out-of bound checks while writing to buffers
+> > > ---
+> > >  tools/hv/hv_kvp_daemon.c | 173 +++++++++++++++++++++++++++++----------
+> > >  1 file changed, 132 insertions(+), 41 deletions(-)
+> > > 
+> > > diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> > > index 318e2dad27e0..ae65be004eb1 100644
+> > > --- a/tools/hv/hv_kvp_daemon.c
+> > > +++ b/tools/hv/hv_kvp_daemon.c
+> > > @@ -76,6 +76,12 @@ enum {
+> > >  	DNS
+> > >  };
+> > >  
+> > > +enum {
+> > > +	IPV4 = 1,
+> > > +	IPV6,
+> > > +	IP_TYPE_MAX
+> > > +};
+> > > +
+> > >  static int in_hand_shake;
+> > >  
+> > >  static char *os_name = "";
+> > > @@ -102,6 +108,7 @@ static struct utsname uts_buf;
+> > >  
+> > >  #define MAX_FILE_NAME 100
+> > >  #define ENTRIES_PER_BLOCK 50
+> > > +#define MAX_IP_ENTRIES 64
+> > 
+> > Is this a limitation defined by hv_kvp? If so, is it possible it may change in a later
+> > version? A comment would help here
+> Sure, would update accordingly
+> > 
+> > >  
+> > >  struct kvp_record {
+> > >  	char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
+> > > @@ -1171,6 +1178,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +int ip_version_check(const char *input_addr)
+> > > +{
+> > > +	struct in6_addr addr;
+> > > +
+> > > +	if (inet_pton(AF_INET, input_addr, &addr))
+> > > +		return IPV4;
+> > > +	else if (inet_pton(AF_INET6, input_addr, &addr))
+> > > +		return IPV6;
+> > 
+> > You can skip the else here...
+> > 
+> > > +	else
+> > > +		return -EINVAL;
+> > 
+> > ...and you can skip the else here as well and just return -EINVAL
+> right, will change this in the next version.
+> > 
+> > > +}
+> > > +
+> > >  /*
+> > >   * Only IPv4 subnet strings needs to be converted to plen
+> > >   * For IPv6 the subnet is already privided in plen format
+> > > @@ -1197,14 +1216,71 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
+> > >  	return plen;
+> > >  }
+> > >  
+> > > +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
+> > > +				  int ip_sec)
+> > > +{
+> > > +	char addr[INET6_ADDRSTRLEN], *output_str;
+> > > +	int ip_offset = 0, error = 0, ip_ver;
+> > > +	char *param_name;
+> > > +
+> > > +	output_str = (char *)calloc(INET6_ADDRSTRLEN * MAX_IP_ENTRIES,
+> > > +				    sizeof(char));
+> > > +
+> > > +	if (!output_str)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	memset(addr, 0, sizeof(addr));
+> > > +
+> > > +	if (type == DNS) {
+> > > +		param_name = "dns";
+> > > +	} else if (type == GATEWAY) {
+> > > +		param_name = "gateway";
+> > > +	} else {
+> > > +		error = -EINVAL;
+> > > +		goto cleanup;
+> > > +	}
+> > > +
+> > > +	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
+> > > +				   (MAX_IP_ADDR_SIZE * 2))) {
+> > > +		ip_ver = ip_version_check(addr);
+> > > +		if (ip_ver < 0)
+> > > +			continue;
+> > > +
+> > > +		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
+> > > +		    (ip_ver == IPV6 && ip_sec == IPV6)) {
+> > > +			if (((INET6_ADDRSTRLEN * MAX_IP_ENTRIES) - strlen(output_str)) >
+> > > +			    (strlen(addr))) {
+> > > +				strcat(output_str, addr);
+> > > +				strcat(output_str, ",");
+> > 
+> > Prefer strncat() here
+Is this needed with the bound check above. I am trying to keep parity with the rest of the 
+file.
+> > 
+> > > +			}
+> > > +			memset(addr, 0, sizeof(addr));
+> > > +
+> > > +		} else {
+> > > +			memset(addr, 0, sizeof(addr));
+> > > +			continue;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (strlen(output_str)) {
+> > > +		output_str[strlen(output_str) - 1] = '\0';
+> > > +		error = fprintf(f, "%s=%s\n", param_name, output_str);
+> > > +		if (error <  0)
+> > > +			goto cleanup;
+> > > +	}
+> > > +
+> > > +cleanup:
+> > > +	free(output_str);
+> > > +	return error;
+> > > +}
+> > > +
+> > >  static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> > > -				int is_ipv6)
+> > > +				int ip_sec)
+> > >  {
+> > >  	char addr[INET6_ADDRSTRLEN];
+> > >  	char subnet_addr[INET6_ADDRSTRLEN];
+> > >  	int error, i = 0;
+> > >  	int ip_offset = 0, subnet_offset = 0;
+> > > -	int plen;
+> > > +	int plen, ip_ver;
+> > >  
+> > >  	memset(addr, 0, sizeof(addr));
+> > >  	memset(subnet_addr, 0, sizeof(subnet_addr));
+> > > @@ -1216,10 +1292,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> > >  						       subnet_addr,
+> > >  						       (MAX_IP_ADDR_SIZE *
+> > >  							2))) {
+> > > -		if (!is_ipv6)
+> > > +		ip_ver = ip_version_check(addr);
+> > > +		if (ip_ver < 0)
+> > > +			continue;
+> > > +
+> > > +		if (ip_ver == IPV4 && ip_sec == IPV4)
+> > >  			plen = kvp_subnet_to_plen((char *)subnet_addr);
+> > > -		else
+> > > +		else if (ip_ver == IPV6 && ip_sec == IPV6)
+> > >  			plen = atoi(subnet_addr);
+> > > +		else
+> > > +			continue;
+> > >  
+> > >  		if (plen < 0)
+> > >  			return plen;
+> > > @@ -1238,12 +1320,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
+> > >  
+> > >  static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+> > >  {
+> > > -	int error = 0;
+> > > +	int error = 0, ip_type;
+> > 
+> > nit: Can we keep ip_ver through all the functions for consistency
+> sure.
+> > 
+> > <snip>
+> > 
+> > Thanks,
+> > Easwar
 
