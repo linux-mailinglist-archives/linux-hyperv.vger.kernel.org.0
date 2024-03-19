@@ -1,189 +1,428 @@
-Return-Path: <linux-hyperv+bounces-1781-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1782-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C9A987F359
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Mar 2024 23:50:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8E7287F626
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Mar 2024 04:44:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 77341B20B3B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Mar 2024 22:50:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73D6B1F2282B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Mar 2024 03:44:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E0E5A78C;
-	Mon, 18 Mar 2024 22:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138497BAFF;
+	Tue, 19 Mar 2024 03:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AV/Zv/lY"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="XqesdReY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02olkn2103.outbound.protection.outlook.com [40.92.15.103])
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C542D5A786;
-	Mon, 18 Mar 2024 22:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.15.103
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710802202; cv=fail; b=std5uDRWDUzC3b9RMFna26wFW3cVjaU+L2FX+OMqpXNyMsZ/hQEu2vhvSr/9+scuyTrNaHCyAXb582b0VZmfkwKe8H6Y/tbrOrmCSC3tuEFiJRK5afWp1Kd2yH+DxOtTe+bHOgj1OPw227SHae1wUejPh4pIKHHHtOP08UKPAHM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710802202; c=relaxed/simple;
-	bh=i9PCq4onUtwphcMj91ITBeejLhoKsXBkr1vxkQxmjx4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=M2atgFj9L39Lm1R+6f9ECYyot2ofgPf3y6+tBo0vrpIFNufafwOzbLzt58CTkSLAgSXNCGt8hv+s5G6eGACzft1s69roSn5DJaGLGngwlaDqBGhMhB+9zs+Rv4RmDUofRDOzwAgL2TqWqc+NmxVVGw9VEVgLO4YzVJmWOapaAXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AV/Zv/lY; arc=fail smtp.client-ip=40.92.15.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dbOgbQqnBM3v1yTmtXBBCX6bgjP6jxsc+krH9Aj3doIN2UFP11s68kR6DP1cSMW15Ko24MNeP9/31jzJq+PSw0oxr7rQrg3ikEpoGyVa0D1QgH4n6xIHaCANAgTwsEMGsC7tC2Xh3Ag75qBE5DFx7AhzjVZtfH0nJVnDr1/7dBHQ9cuF1Bu2dxNGm4MnFxDP08qe5LkteXJW3gqzmAmIoIPWcMbV3F/9A9FwiS1H86/XtL7qeGjwvfGCQUXPYv3EGsOKKaA6jsSLXT9YqEyLONKkyZlI1juBzi0z897MQEXJ7hN1nQNX2SRm4lzkf1DljidhjbOcoiqfQMLW3mCgKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=maiBQrljasbuZsLtowxm600l1PKQkjqwe9jHJubESto=;
- b=RKmil6ZfNyDq1eI/zYZFHjJ83/Q8atTqc3mxGJocZan2+7fqhHrB/3X73wy7+jroUVwdIB/be647qmcX8CLvEVwUCCSIHQ30oUuy5vokS4P9KZqND5j4VehKQJWwLOLyCVf7xLrktTjQlIsxpkmVK+AAglM8OqcQM10R+xvckc3nGuJhAON6BWGel1rujjTPAm5iDZIRjaeXnNzPgStEokeWO8Ktdt0cO2mkhORthdCIQ73R/RYB9sPHvkDROk6O3ZFABbdKh/nVqxTE8qBUxkRzzFMsuoLI7UrxuRP4+9bPPHBPJx7lUBA7jcraFddKb6DDC9zwfIWXwA2WdJ0iqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=maiBQrljasbuZsLtowxm600l1PKQkjqwe9jHJubESto=;
- b=AV/Zv/lYceeSxY7WoF/LkgjlBj9/+gL9+hF3EGUV5Fz0KUFEgnx4i5OZke+hf9L6Pl593BjJ+CEMfb92/USwR6xCY2fNDDg6/Mhpt9RRjEBJOZnd5Pikn6mCRaToY/k+E3ualtwlZ3pC//KMjM5cnkhFzT+AG/R5A68JrUetksvc0cmNADvXe3s55mfTBb/C77/vgHJZeSQGijuJA8QHVeQenXFq0bqGCNKlRvIu9vaf3ghDzm6YEyVSmz77okUnHbbO5oiVDcqRB0TWjveVt6TVqzTnJsZVW1Qa8vnrI8MS8Mn8JIaF0sAQzKMBQYikBjFF0lpy5b/LpbbaI3RoKA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DM6PR02MB6844.namprd02.prod.outlook.com (2603:10b6:5:21a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Mon, 18 Mar
- 2024 22:49:58 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7386.025; Mon, 18 Mar 2024
- 22:49:58 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-CC: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
-	<will@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>, "tytso@mit.edu"
-	<tytso@mit.edu>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v3 1/1] x86/hyperv: Use Hyper-V entropy to seed guest
- random number generator
-Thread-Topic: [PATCH v3 1/1] x86/hyperv: Use Hyper-V entropy to seed guest
- random number generator
-Thread-Index: AQHaeUyZvwlmluIhS0+V4P/P+ldkWLE9/NGAgAAdLDA=
-Date: Mon, 18 Mar 2024 22:49:58 +0000
-Message-ID:
- <SN6PR02MB4157453833547D915BF3F326D42D2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240318155408.216851-1-mhklinux@outlook.com>
- <ZfisGSPX9et2hGzx@zx2c4.com>
-In-Reply-To: <ZfisGSPX9et2hGzx@zx2c4.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [7DBf6Z14ITcOtsql4Wsdki4yxE9lKbUX]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB6844:EE_
-x-ms-office365-filtering-correlation-id: f31aa55f-b56b-4054-1929-08dc479dbcdb
-x-ms-exchange-slblob-mailprops:
- 7J/vb0KDx3g6a7F03Qev6DWobkb5Oxer2eYaH9yW8GEq1ETVn48NmetZM85QL/FJnByTrmhxydlUrObM7odeGRiBDak9D0Ngxea9nAXbDfjMY4Q5B3cvq1icE6EeaweJPVSI81x0Aub8IKyshePtxYhQwS/tFAmElEhkBa2k46pFgQL67JTPTH3iNwHJrrUcF+iU4N2BbVqm7WHrjxqXsmudcUJYxzt8Bm9iUEDFgrl9vpYH3QxebXIkKshuHpnW2vKFaA2T9VSR1iFqx2afUglKwhEa+D3oQ2p+IUPL8XgfWXlxxGFJLliT2sKEmesxtyM8NfE/bMy6Zk8uMLFjHO4gh1ITgTgkzLOUYEeoF4VtjQJDvdHQ/1xLnxPq61UYu+S+lhwwM6Y8Ly0PpFWK3blnlGYu583OXFPr5HGNJM/c6jJJE6tnTkNEIziJqegLgmoOYol5Nv9ouMKYW5e48z9VZ83PsKeTChwMbLkIc7t8MUN5eOn5YqY18E0EEsZuYbhFu/babmiYs/LgEpXmvdPe0Y7w1gStNtATBD0Opdv/akTe8Ql8FMQiJ0fgDqVo7cPOlaRIpizf10RkwlsBNumFMz7cFdfVpZwm1v3tVY2Jl+YotBNw9sEBxbYiaVVi1nmQRdTSCj38bCqkQkLzNdXsuxShGoO6v13SIgfEWNDUHUXGm8L5CITdkXgqRgrNkoysP4IEGQL0SI9P1vqPirwMOHWmXA1Vvluq3mnVEVvc+apEZHeIJzJPCYOkPGcrR8npMRdjBy4scPwUSvgG+5gx/REBlJgrOsrUlp4rUtA=
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- AoCqUZyeBiV+eP/bAfVoktpf/SaNvh+NBRONVaaXMi2o8oG/j3aYzM4yr8muho8YdS45OW2ADBtkMjiRLEI7Gr56aYZ6GePBj81F8b/mMnd6PZZefiv6SBvWNrdHsnhNPkz9eeMYOpsAikmINzJecNP7jzl/g4D+Fmhmbyevaoy919wp3E4wTZFvAsdkxyx/cSIzvWUdvk8vHZk4m50SK/ZmUZu2nVFqXoarlPKKXztiF/2bJWFuivw1ROw8ucxnJYURhtN9+KVIerHBAGHwqiNLLjKibLad/kPGptVfYTlwDil9V0roh7dnrKff1SAM6Pg9pLKIgciq9hgXcJVPlTxxmUOMO0TiVMU6Gmw37F++9zsbl4/AAMPxbhm2DPNn8E1Sp02tPaby+OY/0z5Cm7VZZ7X+P5lI9QoHvbp7qhmqIxK+/BI06pYFq5N/3vX8bWrCyg0MhNlTLNd2ISTvfAhvNRcdo00tNPivZP5UJ9SenlfaoghlfUu7lh/MPW903fLkSM500FweO90/U3Kx5jHS2Y6gSB8TNIYZ230IfoQFMpgI51UYC6i/EzfPl5cpDmb95EePOLnL8DtKWgn32m+KJp+E01CX4AjiwuRVtwA9ksE6UGQ9eCC/S75/++BaBUkIQtbg7IwKxJrfSvAilaA+kppKjrif43PHr11qxNQ=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?O/GQgU5oslylRLhqsvsuV+l54u523uEE5ufPK/L0odYZTEUUPQ0Ej9sAXL3A?=
- =?us-ascii?Q?FSLylDoOHjwO7KKbS5evZRWHF52iOpBljLNrnX8HCI3iTPye9qek4T2ioIpr?=
- =?us-ascii?Q?Q95+J0TWf6UKPe4yaLs4vcuX0+URw6EFOELeuBsOPfjFxMX/nddTZZPTavI5?=
- =?us-ascii?Q?UcuZwqnUmYYRt5uDLDwwB1IIMmX1gLPOXWCoYOToVUjHqO2l6cqy9IFKu4ad?=
- =?us-ascii?Q?wNf/GNk/wltEk/cpEycgRSTYygHCW+rlTWhETpadQrheFTJRsvAEKx+Iw74+?=
- =?us-ascii?Q?eHL0p9pM1yoHpbIWWpgUfEQRQLLifNUkshKWNw+AqSvLhd0B1+chXXM1q0Gw?=
- =?us-ascii?Q?D/aboRb3XvT7q6nkt5cjLNFZwwwcVubjITQoffMBplr9/5wR2tFQtbnscZwc?=
- =?us-ascii?Q?yv/eyZAxIfwEidRsRBvlDL04VcvIF9eth5QF9u45cjkXIXkTLS5K8z0CtYYL?=
- =?us-ascii?Q?N2TP2jOO6qNEcyvEDQUpQrkkhFS+BIBdaVlzbz7DG5Ihwv5SR+3X3jCGRSDs?=
- =?us-ascii?Q?wfhCArEkq8AvY3Bg9ggpo6lVgAWwkDxKkjmyCeRwvFXj2riguH3zomOiJy6X?=
- =?us-ascii?Q?BJRWlaCPDDrw95vzNmYH3ZQlAH0IFaVg8q+XxOcG44/xBpixbGTyH17ZJbUg?=
- =?us-ascii?Q?8195QOWdTUopYp699R5a7KTYYBDnZCsNaS9Z6Bihj2OIqboN5b1x3DmeQQRr?=
- =?us-ascii?Q?0HSCw/mGVQyxhEuqByZQJOr1+6bWa2IYTj2mKyLn9gHi0nB4kyvrcBWsSzw8?=
- =?us-ascii?Q?UjXb1rPBMNVbJn3ag9qDAnPBo6haNe0Udak+x3Y49Qg2CbYkEMIEm7QUoUB6?=
- =?us-ascii?Q?7T83icVrHP4APMyXf7YPxtKkgNJJcq3K4/nkxXMKT+vsvAhi7V3rqiN2mAvY?=
- =?us-ascii?Q?Xo8/iRLf0VMAEyatjPJWpym6fdbegiSNeDyRKehpJR3pJuQzW0ewqgxHfrwA?=
- =?us-ascii?Q?vumlI9MHwkLtcxl4zxlURloW8C+6ufEt2XQ3E3OxnUCvTr/t0h/Rbg5IOdfF?=
- =?us-ascii?Q?KiJdLsXpdp0+qYJrJ6Q0EweW8MAQi4Z11E4CwmmsW/VL97Fg66lOKOqS06h7?=
- =?us-ascii?Q?EaHqWZNtE7fcq1Pihu4+ZcZOrX1+GJBhFwg17atBb0rVJa+dZH+uxT97fiRl?=
- =?us-ascii?Q?MqP3tLb99/EK8sit8r4nA5khGDkxcQ89zQtAHEX2pyc9z+0wMKWq+R0Kvkyz?=
- =?us-ascii?Q?aCJ68oqrr9KQLBpClxkcmmv2r75Ifum2tqb/fw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFB47BAF0;
+	Tue, 19 Mar 2024 03:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710819851; cv=none; b=tQKZZeE8WLKyIh/z92xYzK6LCayD/fNwKBIAw+j6/PUMQmP/luPClZWnCH8AcneI84O37GSdvY2A8Ejk/jCu9/AvAzD573L4I8jZkS9bz6Gy3sGwfECCAd3BNSTDR+rPhQ3mzHERczypJei0hnV+3wCB2A3pnqh9myZhnyuos/I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710819851; c=relaxed/simple;
+	bh=V5r8LcMDVOhylr0403axJbjXQUUgSy+13S7QWHsKshc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cr6vFaOHMYVJEEF52ySsJdB5MrJALpG0WcweIIXDoF2PFcEbiZFt5CTwpQnVu6qeniuH5/L+clbBiBmLsv1lRuCBrDwE73XV7Vc+1Wbem2gSuDDxrqSXJmYPLqQX5i7EkTxHe0CI7QCTo6AW6TRjBhQLIX0xmQLypoDovIMp8jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=XqesdReY; arc=none smtp.client-ip=139.138.37.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1710819848; x=1742355848;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V5r8LcMDVOhylr0403axJbjXQUUgSy+13S7QWHsKshc=;
+  b=XqesdReYwtqhvlhxvMiJrWoyIrGBa+j8rK5YVZ1PQMCLkV1oL06Q5kZj
+   5woVIzeB8gyL/CrjlmV0vnprRsmvcx7t1bsEbIYYKBESV3cbcPCKPfcG7
+   cBDh6vvJyicn7hNCF7K9nMFfJrwB8kniBSS27HdfwUuwYwcETJMB8yYVp
+   1evH5Eau2VsM5V6rJTuILLdUFc+SClhkvdsJ/VeiCf5LLMmfJ429QdGZc
+   9M5l4P7/85BJd1LTDA281eIGAe/ZOOHUFnnxu33VoUMoi/bmrNB6icoYC
+   vdXWIMzJLmMX4VAuK8Dl2G8iD6cEbfsupd2y7SbK2ei/PzJ4F0fFAQ38f
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="131984966"
+X-IronPort-AV: E=Sophos;i="6.07,135,1708354800"; 
+   d="scan'208";a="131984966"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 12:43:58 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 7C213D4805;
+	Tue, 19 Mar 2024 12:43:56 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 9B82BB4E25;
+	Tue, 19 Mar 2024 12:43:55 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 27AC920097CC4;
+	Tue, 19 Mar 2024 12:43:55 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.226.45])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 8133D1A006B;
+	Tue, 19 Mar 2024 11:43:54 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-kernel@vger.kernel.org
+Cc: Li Zhijian <lizhijian@fujitsu.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH] hv: vmbus: Convert sprintf() family to sysfs_emit() family
+Date: Tue, 19 Mar 2024 11:43:50 +0800
+Message-Id: <20240319034350.1574454-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f31aa55f-b56b-4054-1929-08dc479dbcdb
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2024 22:49:58.3559
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6844
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28260.004
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28260.004
+X-TMASE-Result: 10--12.014700-10.000000
+X-TMASE-MatchedRID: vWLMKRYJCzcbO59FK9BdmJiHtCNYjckMjkDrBOJwwnQ8JmmJxjOaQXVX
+	Q3/qdw5yDiqGKKMcNgRhoUIS5GGeEs1HQN/TlJ3ZOIQ9GP2P2u/0swHSFcVJ6C99T+uJIleRfDo
+	fTpsyCK+KztDhRgoFQW4suX2uLJTkj56IjTnLR+lO5y1KmK5bJRSLgSFq3Tnj31GU/N5W5BDIvl
+	CZY6Ax8I86i7wAXPvIb/+iW2gmXjwz/CH/seULK8+1GdiGC77k9kNxPzDYM+p3de2OoBqgwlrdf
+	Vv+SM1snW1tJNv42A2dqC2fLtk9xB8TzIzimOwPC24oEZ6SpSkj80Za3RRg8ALt/pGZBmeWbYGF
+	h48Enoj8j4vdOAc0peEJMoRLBuciEze1V/T0TyU=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-From: Jason A. Donenfeld <Jason@zx2c4.com> Sent: Monday, March 18, 2024 2:0=
-3 PM
->=20
-> On Mon, Mar 18, 2024 at 08:54:08AM -0700, mhkelley58@gmail.com wrote:
-> > From: Michael Kelley <mhklinux@outlook.com>
-> >
-> > A Hyper-V host provides its guest VMs with entropy in a custom ACPI
-> > table named "OEM0".  The entropy bits are updated each time Hyper-V
-> > boots the VM, and are suitable for seeding the Linux guest random
-> > number generator (rng). See a brief description of OEM0 in [1].
-> >
-> > Generation 2 VMs on Hyper-V use UEFI to boot. Existing EFI code in
-> > Linux seeds the rng with entropy bits from the EFI_RNG_PROTOCOL.
-> > Via this path, the rng is seeded very early during boot with good
-> > entropy. The ACPI OEM0 table provided in such VMs is an additional
-> > source of entropy.
-> >
-> > Generation 1 VMs on Hyper-V boot from BIOS. For these VMs, Linux
-> > doesn't currently get any entropy from the Hyper-V host. While this
-> > is not fundamentally broken because Linux can generate its own entropy,
-> > using the Hyper-V host provided entropy would get the rng off to a
-> > better start and would do so earlier in the boot process.
-> >
-> > Improve the rng seeding for Generation 1 VMs by having Hyper-V specific
-> > code in Linux take advantage of the OEM0 table to seed the rng. For
-> > Generation 2 VMs, use the OEM0 table to provide additional entropy
-> > beyond the EFI_RNG_PROTOCOL. Because the OEM0 table is custom to
-> > Hyper-V, parse it directly in the Hyper-V code in the Linux kernel
-> > and use add_bootloader_randomness() to add it to the rng. Once the
-> > entropy bits are read from OEM0, zero them out in the table so
-> > they don't appear in /sys/firmware/acpi/tables/OEM0 in the running
-> > VM. The zero'ing is done out of an abundance of caution to avoid
-> > potential security risks to the rng. Also set the OEM0 data length
-> > to zero so a kexec or other subsequent use of the table won't try
-> > to use the zero'ed bits.
-> >
-> > [1] https://download.microsoft.com/download/1/c/9/1c9813b8-089c-4fef-b2=
-ad-ad80e79403ba/Whitepaper%20-%20The%20Windows%2010%20random%20number%20gen=
-eration%20infrastructure.pdf=20
->=20
-> Looks good to me. Assuming you've tested this and it works,
+Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+or sysfs_emit_at() when formatting the value to be returned to user space.
 
-Yes, tested on both x86 and arm64.  Thanks.
+coccinelle complains that there are still a couple of functions that use
+snprintf(). Convert them to sysfs_emit().
 
-Michael
+sprintf() and scnprintf() will be converted as well if they have.
 
->=20
->  Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
->=20
-> Thanks for the v3.
->=20
-> Jason
+Generally, this patch is generated by
+make coccicheck M=<path/to/file> MODE=patch \
+COCCI=scripts/coccinelle/api/device_attr_show.cocci
+
+No functional change intended
+
+CC: "K. Y. Srinivasan" <kys@microsoft.com>
+CC: Haiyang Zhang <haiyangz@microsoft.com>
+CC: Wei Liu <wei.liu@kernel.org>
+CC: Dexuan Cui <decui@microsoft.com>
+CC: linux-hyperv@vger.kernel.org
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
+Split them per subsystem so that the maintainer can review it easily
+[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+---
+ drivers/hv/vmbus_drv.c | 94 +++++++++++++++++++-----------------------
+ 1 file changed, 42 insertions(+), 52 deletions(-)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 7f7965f3d187..121f1ab32b51 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -131,7 +131,7 @@ static ssize_t id_show(struct device *dev, struct device_attribute *dev_attr,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n", hv_dev->channel->offermsg.child_relid);
++	return sysfs_emit(buf, "%d\n", hv_dev->channel->offermsg.child_relid);
+ }
+ static DEVICE_ATTR_RO(id);
+ 
+@@ -142,7 +142,7 @@ static ssize_t state_show(struct device *dev, struct device_attribute *dev_attr,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n", hv_dev->channel->state);
++	return sysfs_emit(buf, "%d\n", hv_dev->channel->state);
+ }
+ static DEVICE_ATTR_RO(state);
+ 
+@@ -153,7 +153,7 @@ static ssize_t monitor_id_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n", hv_dev->channel->offermsg.monitorid);
++	return sysfs_emit(buf, "%d\n", hv_dev->channel->offermsg.monitorid);
+ }
+ static DEVICE_ATTR_RO(monitor_id);
+ 
+@@ -164,8 +164,8 @@ static ssize_t class_id_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "{%pUl}\n",
+-		       &hv_dev->channel->offermsg.offer.if_type);
++	return sysfs_emit(buf, "{%pUl}\n",
++			  &hv_dev->channel->offermsg.offer.if_type);
+ }
+ static DEVICE_ATTR_RO(class_id);
+ 
+@@ -176,8 +176,8 @@ static ssize_t device_id_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "{%pUl}\n",
+-		       &hv_dev->channel->offermsg.offer.if_instance);
++	return sysfs_emit(buf, "{%pUl}\n",
++			  &hv_dev->channel->offermsg.offer.if_instance);
+ }
+ static DEVICE_ATTR_RO(device_id);
+ 
+@@ -186,7 +186,7 @@ static ssize_t modalias_show(struct device *dev,
+ {
+ 	struct hv_device *hv_dev = device_to_hv_device(dev);
+ 
+-	return sprintf(buf, "vmbus:%*phN\n", UUID_SIZE, &hv_dev->dev_type);
++	return sysfs_emit(buf, "vmbus:%*phN\n", UUID_SIZE, &hv_dev->dev_type);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+@@ -199,7 +199,7 @@ static ssize_t numa_node_show(struct device *dev,
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+ 
+-	return sprintf(buf, "%d\n", cpu_to_node(hv_dev->channel->target_cpu));
++	return sysfs_emit(buf, "%d\n", cpu_to_node(hv_dev->channel->target_cpu));
+ }
+ static DEVICE_ATTR_RO(numa_node);
+ #endif
+@@ -212,9 +212,8 @@ static ssize_t server_monitor_pending_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n",
+-		       channel_pending(hv_dev->channel,
+-				       vmbus_connection.monitor_pages[0]));
++	return sysfs_emit(buf, "%d\n", channel_pending(hv_dev->channel,
++			  vmbus_connection.monitor_pages[0]));
+ }
+ static DEVICE_ATTR_RO(server_monitor_pending);
+ 
+@@ -226,9 +225,8 @@ static ssize_t client_monitor_pending_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n",
+-		       channel_pending(hv_dev->channel,
+-				       vmbus_connection.monitor_pages[1]));
++	return sysfs_emit(buf, "%d\n", channel_pending(hv_dev->channel,
++			  vmbus_connection.monitor_pages[1]));
+ }
+ static DEVICE_ATTR_RO(client_monitor_pending);
+ 
+@@ -240,9 +238,8 @@ static ssize_t server_monitor_latency_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n",
+-		       channel_latency(hv_dev->channel,
+-				       vmbus_connection.monitor_pages[0]));
++	return sysfs_emit(buf, "%d\n", channel_latency(hv_dev->channel,
++			  vmbus_connection.monitor_pages[0]));
+ }
+ static DEVICE_ATTR_RO(server_monitor_latency);
+ 
+@@ -254,9 +251,8 @@ static ssize_t client_monitor_latency_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n",
+-		       channel_latency(hv_dev->channel,
+-				       vmbus_connection.monitor_pages[1]));
++	return sysfs_emit(buf, "%d\n", channel_latency(hv_dev->channel,
++			  vmbus_connection.monitor_pages[1]));
+ }
+ static DEVICE_ATTR_RO(client_monitor_latency);
+ 
+@@ -268,9 +264,8 @@ static ssize_t server_monitor_conn_id_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n",
+-		       channel_conn_id(hv_dev->channel,
+-				       vmbus_connection.monitor_pages[0]));
++	return sysfs_emit(buf, "%d\n", channel_conn_id(hv_dev->channel,
++			  vmbus_connection.monitor_pages[0]));
+ }
+ static DEVICE_ATTR_RO(server_monitor_conn_id);
+ 
+@@ -282,9 +277,8 @@ static ssize_t client_monitor_conn_id_show(struct device *dev,
+ 
+ 	if (!hv_dev->channel)
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n",
+-		       channel_conn_id(hv_dev->channel,
+-				       vmbus_connection.monitor_pages[1]));
++	return sysfs_emit(buf, "%d\n", channel_conn_id(hv_dev->channel,
++			  vmbus_connection.monitor_pages[1]));
+ }
+ static DEVICE_ATTR_RO(client_monitor_conn_id);
+ 
+@@ -303,7 +297,7 @@ static ssize_t out_intr_mask_show(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", outbound.current_interrupt_mask);
++	return sysfs_emit(buf, "%d\n", outbound.current_interrupt_mask);
+ }
+ static DEVICE_ATTR_RO(out_intr_mask);
+ 
+@@ -321,7 +315,7 @@ static ssize_t out_read_index_show(struct device *dev,
+ 					  &outbound);
+ 	if (ret < 0)
+ 		return ret;
+-	return sprintf(buf, "%d\n", outbound.current_read_index);
++	return sysfs_emit(buf, "%d\n", outbound.current_read_index);
+ }
+ static DEVICE_ATTR_RO(out_read_index);
+ 
+@@ -340,7 +334,7 @@ static ssize_t out_write_index_show(struct device *dev,
+ 					  &outbound);
+ 	if (ret < 0)
+ 		return ret;
+-	return sprintf(buf, "%d\n", outbound.current_write_index);
++	return sysfs_emit(buf, "%d\n", outbound.current_write_index);
+ }
+ static DEVICE_ATTR_RO(out_write_index);
+ 
+@@ -359,7 +353,7 @@ static ssize_t out_read_bytes_avail_show(struct device *dev,
+ 					  &outbound);
+ 	if (ret < 0)
+ 		return ret;
+-	return sprintf(buf, "%d\n", outbound.bytes_avail_toread);
++	return sysfs_emit(buf, "%d\n", outbound.bytes_avail_toread);
+ }
+ static DEVICE_ATTR_RO(out_read_bytes_avail);
+ 
+@@ -378,7 +372,7 @@ static ssize_t out_write_bytes_avail_show(struct device *dev,
+ 					  &outbound);
+ 	if (ret < 0)
+ 		return ret;
+-	return sprintf(buf, "%d\n", outbound.bytes_avail_towrite);
++	return sysfs_emit(buf, "%d\n", outbound.bytes_avail_towrite);
+ }
+ static DEVICE_ATTR_RO(out_write_bytes_avail);
+ 
+@@ -396,7 +390,7 @@ static ssize_t in_intr_mask_show(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", inbound.current_interrupt_mask);
++	return sysfs_emit(buf, "%d\n", inbound.current_interrupt_mask);
+ }
+ static DEVICE_ATTR_RO(in_intr_mask);
+ 
+@@ -414,7 +408,7 @@ static ssize_t in_read_index_show(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", inbound.current_read_index);
++	return sysfs_emit(buf, "%d\n", inbound.current_read_index);
+ }
+ static DEVICE_ATTR_RO(in_read_index);
+ 
+@@ -432,7 +426,7 @@ static ssize_t in_write_index_show(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", inbound.current_write_index);
++	return sysfs_emit(buf, "%d\n", inbound.current_write_index);
+ }
+ static DEVICE_ATTR_RO(in_write_index);
+ 
+@@ -451,7 +445,7 @@ static ssize_t in_read_bytes_avail_show(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", inbound.bytes_avail_toread);
++	return sysfs_emit(buf, "%d\n", inbound.bytes_avail_toread);
+ }
+ static DEVICE_ATTR_RO(in_read_bytes_avail);
+ 
+@@ -470,7 +464,7 @@ static ssize_t in_write_bytes_avail_show(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%d\n", inbound.bytes_avail_towrite);
++	return sysfs_emit(buf, "%d\n", inbound.bytes_avail_towrite);
+ }
+ static DEVICE_ATTR_RO(in_write_bytes_avail);
+ 
+@@ -480,7 +474,7 @@ static ssize_t channel_vp_mapping_show(struct device *dev,
+ {
+ 	struct hv_device *hv_dev = device_to_hv_device(dev);
+ 	struct vmbus_channel *channel = hv_dev->channel, *cur_sc;
+-	int buf_size = PAGE_SIZE, n_written, tot_written;
++	int n_written;
+ 	struct list_head *cur;
+ 
+ 	if (!channel)
+@@ -488,25 +482,21 @@ static ssize_t channel_vp_mapping_show(struct device *dev,
+ 
+ 	mutex_lock(&vmbus_connection.channel_mutex);
+ 
+-	tot_written = snprintf(buf, buf_size, "%u:%u\n",
+-		channel->offermsg.child_relid, channel->target_cpu);
++	n_written = sysfs_emit(buf, "%u:%u\n",
++			       channel->offermsg.child_relid,
++			       channel->target_cpu);
+ 
+ 	list_for_each(cur, &channel->sc_list) {
+-		if (tot_written >= buf_size - 1)
+-			break;
+ 
+ 		cur_sc = list_entry(cur, struct vmbus_channel, sc_list);
+-		n_written = scnprintf(buf + tot_written,
+-				     buf_size - tot_written,
+-				     "%u:%u\n",
+-				     cur_sc->offermsg.child_relid,
+-				     cur_sc->target_cpu);
+-		tot_written += n_written;
++		n_written += sysfs_emit_at(buf, n_written, "%u:%u\n",
++					  cur_sc->offermsg.child_relid,
++					  cur_sc->target_cpu);
+ 	}
+ 
+ 	mutex_unlock(&vmbus_connection.channel_mutex);
+ 
+-	return tot_written;
++	return n_written;
+ }
+ static DEVICE_ATTR_RO(channel_vp_mapping);
+ 
+@@ -516,7 +506,7 @@ static ssize_t vendor_show(struct device *dev,
+ {
+ 	struct hv_device *hv_dev = device_to_hv_device(dev);
+ 
+-	return sprintf(buf, "0x%x\n", hv_dev->vendor_id);
++	return sysfs_emit(buf, "0x%x\n", hv_dev->vendor_id);
+ }
+ static DEVICE_ATTR_RO(vendor);
+ 
+@@ -526,7 +516,7 @@ static ssize_t device_show(struct device *dev,
+ {
+ 	struct hv_device *hv_dev = device_to_hv_device(dev);
+ 
+-	return sprintf(buf, "0x%x\n", hv_dev->device_id);
++	return sysfs_emit(buf, "0x%x\n", hv_dev->device_id);
+ }
+ static DEVICE_ATTR_RO(device);
+ 
+@@ -551,7 +541,7 @@ static ssize_t driver_override_show(struct device *dev,
+ 	ssize_t len;
+ 
+ 	device_lock(dev);
+-	len = snprintf(buf, PAGE_SIZE, "%s\n", hv_dev->driver_override);
++	len = sysfs_emit(buf, "%s\n", hv_dev->driver_override);
+ 	device_unlock(dev);
+ 
+ 	return len;
+-- 
+2.29.2
+
 
