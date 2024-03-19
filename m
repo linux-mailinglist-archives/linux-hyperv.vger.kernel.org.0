@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-1785-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1786-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECBCC87FC28
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Mar 2024 11:50:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 085CD87FC46
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Mar 2024 11:55:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 435A7B215FD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Mar 2024 10:50:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D24D1F22D32
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Mar 2024 10:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88AD47E78D;
-	Tue, 19 Mar 2024 10:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9854464CEF;
+	Tue, 19 Mar 2024 10:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="TePPjuqL"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="UewFEH4i"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BC05787B
-	for <linux-hyperv@vger.kernel.org>; Tue, 19 Mar 2024 10:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B7D56444;
+	Tue, 19 Mar 2024 10:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845375; cv=none; b=LtuaFyZm3mWFGNcBkr3+BaWND7PoOJv6RCdfQXLv2kOkd9ABSyd1nL9nozVY4kSCzZDw3iTC5FeCvMmnc2M1Gn3xf2bJl+bFqaYEUV5OwKUrXE5rB+Hj8ckXCeI09cWuw6ltFTnOdQF4E40fr3Fb64grN+Bjcn7jM+S8LDayQKY=
+	t=1710845714; cv=none; b=cEZiWLzrSoEBVihpkJXpNR2TBmLvWcb2suc1kY46jQIP9N5vsJZeoYupkGszc6adjAkkYtAfIMHzu/Ypxz/BORMxYL7KgJCxn/41efsi0iUjMqepYghuAV6bovJa3UfJ+jH0RXZEhev6Dc4vbMlibglN7FWdvs/a4F3L4t+3oTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845375; c=relaxed/simple;
-	bh=Y7LFLz2yHd9yIyVMMmNOIi+K+sOwaMQ2yNDvGWc72JM=;
+	s=arc-20240116; t=1710845714; c=relaxed/simple;
+	bh=71EEtOY8haZwTtkTzteQK0uaERkTAj9zbYONX0mzdMA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d7eJnOLyFiZIQrc9sUMMJfp35HhylKQLh2QWC0ERTOPmWa+N2/tVehzzDlb6M1jXvgMzX+qcvTNA8r0eHu6TcGfCkAG9yPIAJe0daPtaNAZrne07+WE/FK1mJeQIhC9JRsf52BL6tdEW+mHwW3Uuw+hHca761h58Pral+nP8Gks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=TePPjuqL; arc=none smtp.client-ip=45.157.188.9
+	 MIME-Version:Content-Type; b=C+kyWezc+oko8rXFUMjlfsqifZ7b4zpfKaioQQyyxDCzH2lwykqtWxUSBa/YzfrQL+8NqVDmZckRTwBXPxomQeb5Rdv+uTfziVKG8Z1F78GNelnJDinycag+13rJI/eWDyres8aDwQPSRu2cyjvuXl3vmr47K+GTsWD1RjpZups=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=UewFEH4i; arc=none smtp.client-ip=45.157.188.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4P3th8zMZ7;
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [10.7.10.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4Q53BnzMq2xZ;
+	Tue, 19 Mar 2024 11:49:26 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4P6PZPzlgm;
 	Tue, 19 Mar 2024 11:49:25 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4N4spgzMpnPc;
-	Tue, 19 Mar 2024 11:49:24 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710845365;
-	bh=Y7LFLz2yHd9yIyVMMmNOIi+K+sOwaMQ2yNDvGWc72JM=;
+	s=20191114; t=1710845366;
+	bh=71EEtOY8haZwTtkTzteQK0uaERkTAj9zbYONX0mzdMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TePPjuqLC0xBIEbGy6Z1xt0ZB9ximrtLx/5QCewjGn/21CT19iJrOHPjeJJcGFBzk
-	 eSXUz8nNDlsgAzA6EMU+PVtlrIO60Kp81l/DqdVb8z6QUxahUJeJ+p+LFoQpM+hMG0
-	 b8C/ungtLOe4nlLJoXcf8eHZFHxSt0XXyNyiwYoE=
+	b=UewFEH4iSrJrSPok5JS56YwvhtiOCFyy6B9GXYlmlHWpW3KWLdiRoId3n+kFBXjMF
+	 etwj9/UZH7Ip6ElZVb89YVw79q7dLm3KuQrZ/8/TT5X81VPhxlKYsM6gBmIBzZv/Vk
+	 NDB2kDMrDI0ThVP+B7S6krYlWLMWDirT6vs4HyD0=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Brendan Higgins <brendanhiggins@google.com>,
 	David Gow <davidgow@google.com>,
@@ -74,9 +74,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	x86@kernel.org
-Subject: [PATCH v3 6/7] kunit: Print last test location on fault
-Date: Tue, 19 Mar 2024 11:48:56 +0100
-Message-ID: <20240319104857.70783-7-mic@digikod.net>
+Subject: [PATCH v3 7/7] kunit: Add tests for fault
+Date: Tue, 19 Mar 2024 11:48:57 +0100
+Message-ID: <20240319104857.70783-8-mic@digikod.net>
 In-Reply-To: <20240319104857.70783-1-mic@digikod.net>
 References: <20240319104857.70783-1-mic@digikod.net>
 Precedence: bulk
@@ -89,148 +89,98 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-This helps identify the location of test faults with opportunistic calls
-to _KUNIT_SAVE_LOC().  This can be useful while writing tests or
-debugging them.  It is possible to call KUNIT_SUCCESS() to explicit save
-last location.
+Add a test case to check NULL pointer dereference and make sure it would
+result as a failed test.
+
+The full kunit_fault test suite is marked as skipped when run on UML
+because it would result to a kernel panic.
+
+Tested with:
+./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
+./tools/testing/kunit/kunit.py run --arch arm64 \
+  --cross_compile=aarch64-linux-gnu- kunit_fault
 
 Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
 Cc: Rae Moar <rmoar@google.com>
 Cc: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: David Gow <davidgow@google.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240319104857.70783-7-mic@digikod.net
+Link: https://lore.kernel.org/r/20240319104857.70783-8-mic@digikod.net
 ---
 
 Changes since v2:
-* Extend the commit message according to discussion with David.
+* Add David's Reviewed-by.
 
 Changes since v1:
-* Add Kees's Reviewed-by.
+* Remove the rodata and const test cases for now.
+* Replace CONFIG_X86 check with !CONFIG_UML, and remove the "_x86"
+  references.
 ---
- include/kunit/test.h  | 24 +++++++++++++++++++++---
- lib/kunit/try-catch.c | 10 +++++++---
- 2 files changed, 28 insertions(+), 6 deletions(-)
+ lib/kunit/kunit-test.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index fcb4a4940ace..f3aa66eb0087 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -301,6 +301,8 @@ struct kunit {
- 	struct list_head resources; /* Protected by lock. */
- 
- 	char status_comment[KUNIT_STATUS_COMMENT_SIZE];
-+	/* Saves the last seen test. Useful to help with faults. */
-+	struct kunit_loc last_seen;
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index f7980ef236a3..0fdca5fffaec 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -109,6 +109,48 @@ static struct kunit_suite kunit_try_catch_test_suite = {
+ 	.test_cases = kunit_try_catch_test_cases,
  };
  
- static inline void kunit_set_failure(struct kunit *test)
-@@ -567,6 +569,15 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
- #define kunit_err(test, fmt, ...) \
- 	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
- 
-+/*
-+ * Must be called at the beginning of each KUNIT_*_ASSERTION().
-+ * Cf. KUNIT_CURRENT_LOC.
-+ */
-+#define _KUNIT_SAVE_LOC(test) do {					       \
-+	WRITE_ONCE(test->last_seen.file, __FILE__);			       \
-+	WRITE_ONCE(test->last_seen.line, __LINE__);			       \
-+} while (0)
++#ifndef CONFIG_UML
 +
- /**
-  * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-  * @test: The test context object.
-@@ -575,7 +586,7 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
-  * words, it does nothing and only exists for code clarity. See
-  * KUNIT_EXPECT_TRUE() for more information.
-  */
--#define KUNIT_SUCCEED(test) do {} while (0)
-+#define KUNIT_SUCCEED(test) _KUNIT_SAVE_LOC(test)
++static void kunit_test_null_dereference(void *data)
++{
++	struct kunit *test = data;
++	int *null = NULL;
++
++	*null = 0;
++
++	KUNIT_FAIL(test, "This line should never be reached\n");
++}
++
++static void kunit_test_fault_null_dereference(struct kunit *test)
++{
++	struct kunit_try_catch_test_context *ctx = test->priv;
++	struct kunit_try_catch *try_catch = ctx->try_catch;
++
++	kunit_try_catch_init(try_catch,
++			     test,
++			     kunit_test_null_dereference,
++			     kunit_test_catch);
++	kunit_try_catch_run(try_catch, test);
++
++	KUNIT_EXPECT_EQ(test, try_catch->try_result, -EINTR);
++	KUNIT_EXPECT_TRUE(test, ctx->function_called);
++}
++
++#endif /* !CONFIG_UML */
++
++static struct kunit_case kunit_fault_test_cases[] = {
++#ifndef CONFIG_UML
++	KUNIT_CASE(kunit_test_fault_null_dereference),
++#endif /* !CONFIG_UML */
++	{}
++};
++
++static struct kunit_suite kunit_fault_test_suite = {
++	.name = "kunit_fault",
++	.init = kunit_try_catch_test_init,
++	.test_cases = kunit_fault_test_cases,
++};
++
+ /*
+  * Context for testing test managed resources
+  * is_resource_initialized is used to test arbitrary resources
+@@ -826,6 +868,7 @@ static struct kunit_suite kunit_current_test_suite = {
  
- void __noreturn __kunit_abort(struct kunit *test);
+ kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
+ 		  &kunit_log_test_suite, &kunit_status_test_suite,
+-		  &kunit_current_test_suite, &kunit_device_test_suite);
++		  &kunit_current_test_suite, &kunit_device_test_suite,
++		  &kunit_fault_test_suite);
  
-@@ -601,14 +612,16 @@ void __kunit_do_failed_assertion(struct kunit *test,
- } while (0)
- 
- 
--#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...)		       \
-+#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...) do {		       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	_KUNIT_FAILED(test,						       \
- 		      assert_type,					       \
- 		      kunit_fail_assert,				       \
- 		      kunit_fail_assert_format,				       \
- 		      {},						       \
- 		      fmt,						       \
--		      ##__VA_ARGS__)
-+		      ##__VA_ARGS__);					       \
-+} while (0)
- 
- /**
-  * KUNIT_FAIL() - Always causes a test to fail when evaluated.
-@@ -637,6 +650,7 @@ void __kunit_do_failed_assertion(struct kunit *test,
- 			      fmt,					       \
- 			      ...)					       \
- do {									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(!!(condition_) == !!expected_true_))			       \
- 		break;							       \
- 									       \
-@@ -698,6 +712,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left op __right))					       \
- 		break;							       \
- 									       \
-@@ -758,6 +773,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely((__left) && (__right) && (strcmp(__left, __right) op 0)))   \
- 		break;							       \
- 									       \
-@@ -791,6 +807,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left && __right))					       \
- 		if (likely(memcmp(__left, __right, __size) op 0))	       \
- 			break;						       \
-@@ -815,6 +832,7 @@ do {									       \
- do {									       \
- 	const typeof(ptr) __ptr = (ptr);				       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (!IS_ERR_OR_NULL(__ptr))					       \
- 		break;							       \
- 									       \
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 7a3910dd78a6..d36e78095fdc 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -96,9 +96,13 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 
- 	if (exit_code == -EFAULT)
- 		try_catch->try_result = 0;
--	else if (exit_code == -EINTR)
--		kunit_err(test, "try faulted\n");
--	else if (exit_code == -ETIMEDOUT)
-+	else if (exit_code == -EINTR) {
-+		if (test->last_seen.file)
-+			kunit_err(test, "try faulted after %s:%d\n",
-+				  test->last_seen.file, test->last_seen.line);
-+		else
-+			kunit_err(test, "try faulted before the first test\n");
-+	} else if (exit_code == -ETIMEDOUT)
- 		kunit_err(test, "try timed out\n");
- 	else if (exit_code)
- 		kunit_err(test, "Unknown error: %d\n", exit_code);
+ MODULE_LICENSE("GPL v2");
 -- 
 2.44.0
 
