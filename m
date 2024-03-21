@@ -1,189 +1,104 @@
-Return-Path: <linux-hyperv+bounces-1810-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1811-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F2AD885EC3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 17:55:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48488885F45
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 18:09:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C6DFB25072
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 16:55:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0445F283C8F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 17:09:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D49F285286;
-	Thu, 21 Mar 2024 16:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF36979C8;
+	Thu, 21 Mar 2024 17:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PYuJlswX"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JQ6H1ty2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11022010.outbound.protection.outlook.com [52.101.51.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312BF1804C;
-	Thu, 21 Mar 2024 16:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039391; cv=fail; b=A5VG9BsZSKkIA4n2her7BBqAVBftclzOm9YKfSiM4Xpn3xj+EHCEf/1dBvOpK1CATalPxE4d3Mh8sBprwuYK985ZDosEnhHcd5OsBDHU8XrLbvRTxTmXwLilGltcA2Ot6vKEF8El1j2/UcmHXSSH3K80Jfa75XBLefQRc2T+gdk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039391; c=relaxed/simple;
-	bh=AKHApDJmJLmlA6jbbYKSd6bekX6hU6VLZ1ecgoz0DNk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=dcbeIGCHpZky8nK7oqJ/DbQjIQfUy1jxyKqx7WNc6b0J7qg+LKmrUijNBAPh6OneHJdOqhkz2K3YbMaM6qYG2+ajKksri3wlJq3UTC0j5OKJMcZuR9GWP83B/aL5UPzpkPrxzk4OT3ke3tb6qXX1X7lBC3gR7pzww2LSZhw7j+w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=PYuJlswX; arc=fail smtp.client-ip=52.101.51.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K8E76L8CCiZbSwueMY04gnfVudAt2XYTkTRpk2cASfQAfyGdhtLv2xO8ATAUTeJnNMQF47oYYnTzWw4S32xIA+rTl3Gq/fDDxQOAvMTRITjOhmfqJZAigRMTHxCcOpCtgi5Fmxx9uHHcNGLEiatCTUg3QZ7DYjdjn4kV953qOKgfhnayGQBRTWW5lfhZMHdJ9GPWujmHXZLGczJ46NDJemPlTGJYu2uuT6fgp6VKi89zEO8PQ6O8KDU0LfQ5qBIbYjtuQpQltjB58vMpw9tq/8Fw/Hvp/QeDZwa5cGbNlurQHBgWXHjlyAx+X09hfEh06eGhIDWPBT9DVyJzmeyT+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LBYLvh5fHJlkw26b1T60p9VKaDxbcjzC5BikvtT7J2c=;
- b=frsH1ucMM+Ed4ADKNHIIpmMIdvytJWkvK7dUsvhZRVKHXvvh1dTEy0zIP7RvocL2LdqAtTkPPKtnZgRXg3ctE180COB13F/qs6c0aN1Pw6/0CqbGmdst6bNuqxmaFkc6/ki65/6iZ3ncUpATHTGIWAQNNdyYsUMtrR7JSHHTpO3cZn1yDtDC51y/Z34xqvu8yvR8zcMBeF1A1P9nWrZigQmRRwuSoyYdrWFTqtiL7iTzndOC3BlT9w1CfxaPBU7B+5Y19By46oHSioN/RU+ohuvF0B+CmX0pY5sy+L8l3CYmuP2+lnIH/ErCdxD3eP2WqQbt9dF7MtavXia7rqyvfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LBYLvh5fHJlkw26b1T60p9VKaDxbcjzC5BikvtT7J2c=;
- b=PYuJlswXNlB4VDD/C6GrbK8qNPHWzKYmeSZya7FY2+Sh1oO8p2OFkAI0n7LDdXUCmqLtE/5r09+E2Lynzu1v/lK55aYKHiR30rznnBGj+x21PAenrAmi9f5v8hrzXe3pVTxZpVDhgf+wsPz2/a94/5IPSUe5ex/Bht34ZveLxfY=
-Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
- by SA0PR21MB1962.namprd21.prod.outlook.com (2603:10b6:806:e2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.15; Thu, 21 Mar
- 2024 16:43:05 +0000
-Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
- ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
- ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7409.010; Thu, 21 Mar 2024
- 16:43:05 +0000
-From: Long Li <longli@microsoft.com>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>, KY Srinivasan
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC: Saurabh Singh Sengar <ssengar@microsoft.com>
-Subject: RE: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio
- driver
-Thread-Topic: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio
- driver
-Thread-Index: AQHaerGMxvAnQM2QGUadCBNqLuvFZ7FCZVFw
-Date: Thu, 21 Mar 2024 16:42:44 +0000
-Message-ID:
- <SJ1PR21MB3457E5B4D852A914CD691E53CE322@SJ1PR21MB3457.namprd21.prod.outlook.com>
-References: <1710930584-31180-1-git-send-email-ssengar@linux.microsoft.com>
- <1710930584-31180-6-git-send-email-ssengar@linux.microsoft.com>
-In-Reply-To: <1710930584-31180-6-git-send-email-ssengar@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e8e94552-1fa4-4089-b6f0-ec16c1cf85cf;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-03-21T16:32:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|SA0PR21MB1962:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- THc0mv1SD/WKJLrnMaDUfLJewZGn2CTNsGxyplWtsoJm1SSk7KiwXXs4ayy3h2+bUe8f4x53ei6XOsL7oEyV5mlJiqYpp+0joDubzWqmAWgxM3nhSnLbEW/07Pvsxs/FPMIkuodkjcCTmWyLV7SiJHzHfl0EIBK8P00QMn0Kc03d6x8dOuIXzEx5+Zv6kdHrF3AqvS88vufwS0dDxmbAU3fkzkGp4vKI1FXEvUVrSswTw3E8YlU4BTRlxxmJqYo79bxPgLaeWA6RJTUM23rpY1fwaBkoeFDer6/K9/565JbWY+J8gp2crPqQoJf+V72nOF70Ixn2XkhGoeRYsiglzLamhL6GMOn2cM+aDD5wLXRFZZ4f1BW1XQ5KsKDmNTgk+kfPOBQ5WIAv39USa36nW0yv6HafFC8kHjE7QixpC042Jr8LCG7fvuOpSuIdvkDWYlYrnZsq/kUkuQnHjCYl3Rl7LuBTF+KTlWGkIB9bPDvc6wk+2EGvStp4Ag9t3gL8BlopTs6DiYNR4zUikNqpGflGDjC8SJY/+XGXwka6HXEocLnNSadSAnf1ajscxGgI4MADcxBRazIXBBB/mFkPkiNZi4Uv1H7+71ttZwmEtuZr2KTWDt5QeG1GU/X8TM7HYZIxqSMwyrWpmMzYCCJA8YdHs15Iinu3boaV6iYihkk=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?PtfdrgDEpfQCqnH1ZTSR4B5n8J1/XotDX+Ad5GsPt1kaAJCaV4E4fpSuoKK9?=
- =?us-ascii?Q?lmyBtEP60jOXCidHQikBcMBkM7tnlXUv8OY07eSnRh7xKFVg+TiSKfloKoE7?=
- =?us-ascii?Q?aHnLCgf0Cr+4z0xQ+7O/6W3biCQolyPVlzQjxadyBXO/DzU7tg+9/ddOFKP2?=
- =?us-ascii?Q?HRU3dA2pTFXVg5gV1TGSmXZ9ZkK1c0VTNfp/rEvgDVTeu4SrJK4IjTuL5YB6?=
- =?us-ascii?Q?PadvlBBPZ+Fj8oKZ0NQJSkN1BqoyUFqO4JihO7oA5eSmfQuRtSJLm0/EUUuY?=
- =?us-ascii?Q?wtd0LyrH1Wif83M9an12fZq3Gs+vKcwEATnfEH7+/PwRuKVxSATTkeVI0zJ5?=
- =?us-ascii?Q?zdxUtno9/Zblj3rv3A8gXgZI0v3JGfCKyiZEE6JV5Dlg9F7GjLB3qbkySQbx?=
- =?us-ascii?Q?EqJebpi5EJkhzocSkDRZ6oNLhLJTOiyasMDtLU2qBjywWOhd6WIfLdpoM/2g?=
- =?us-ascii?Q?kvTo4MJFStQBWznw4kWZ/g4AAv59hFtYTyCPWczGz3qMAwMO0IVScqFu/vct?=
- =?us-ascii?Q?d1xPIoseW7nHYKXVAF7WXMxdmz+EyU8kfZr9P6/MzhtrrexfP1aNe54p4M9x?=
- =?us-ascii?Q?4sVnTAacxZeiDnybpIWK7XzpWA2shv1k5ZLZEhUTWV0gz9U5HV2Fh6fRA1Ri?=
- =?us-ascii?Q?Mvqe36yQenky27lKpLF/Jzpx1Ix/M7Bxb3zVGyy3FC5jx4t7QIh27Q6bVSW6?=
- =?us-ascii?Q?0x7f9iqS2BVAFrSpmK5CCobuzGCyV0Gdv6QLj5Z3gJdJXSy9XM+REed212Iv?=
- =?us-ascii?Q?DXaUcKB+1sruQ6ah9UGP6CVq07xR4QZ4aHaS1BCS4YFIMYzMUBHLsr6tLomQ?=
- =?us-ascii?Q?05qN73N/TICTfZCjkJMH6ex1dZYVFlpBCXEqPmfpdCrj3C0cOvlmskIjKRbI?=
- =?us-ascii?Q?X1G7DA35wgCGVWCoeatn5HRWArk7nBo4+s5bSWB9l+EsqYFEqtkOj7RHMC51?=
- =?us-ascii?Q?nHzBnFycGgdpdNVGqS1tJTCjlZgpmhjGckzpikcEI73j+sqRKMKNLDBy0cnk?=
- =?us-ascii?Q?UUj8K0vZcLNJp+CbuYydeybh7aUrauEV1EcH5q/VIn3ui9EU89p4q9CzINMX?=
- =?us-ascii?Q?2SUq99QzCZ/VgPGluvsFPfq1PbSz++uofHEgxo0XBsbbEc1tPOoGR4JVNbH3?=
- =?us-ascii?Q?vDgKhfpmJKkJ2XTvnu84iVhQG8BtprIO5NaRSgcXK/Lq07cWJ8d+8PTfJVmr?=
- =?us-ascii?Q?JlRxDLbHTVg2g7kII5kKPl95BTqKg4CB9GYOVHmgUowJSRiVR4U2Fu6hE5Z4?=
- =?us-ascii?Q?4YSYhOh+T2wW6kzQVdT96eKjkO350EPu0gLrTxDVoXUno1y/0vNFq9ZIiJhz?=
- =?us-ascii?Q?RX0UhSJWSgqzLfuDtstjXfbuB8XuVgywD8aoy5wEIyBakuEY/WqxuOoER+gs?=
- =?us-ascii?Q?3sQlnnTLi0LhYpQrhA8KFufkrqmSDqXeaNSVMOtBYKJ25lsWX6mXJd/63w/1?=
- =?us-ascii?Q?fzvJGaFOe9997boLcbsG4gr0K26hA2cth+hQS3gN7v8ETdOJaAYTZh87yqz0?=
- =?us-ascii?Q?/VVkLjDmS+FcesWG48Yc6cP64mbNgDeO+AFdceZOxzWOmE3SaRIV3S8ybmxc?=
- =?us-ascii?Q?YWs17x8KqP94jzBsMAzLCRNpWRhbvxLTDsgbjrD0?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86256B673
+	for <linux-hyperv@vger.kernel.org>; Thu, 21 Mar 2024 17:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711040836; cv=none; b=TUsjwoguRpQGABa/X8Ko19/roA+qruSRMcSstFiLyEuJ9KesbbzoNmwkqpNRkrXR4GmN1ulUrEagYoOYI3AD7oNSqeGzvDeSyn5/zvmpiWBXg05IS7PQtup81gVyLQxIdASCUgt7hrmkyc4eTKWnmMRjwtYYYsZSAia+7azXR8o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711040836; c=relaxed/simple;
+	bh=kJJk/+Zdsmcv1wL0Fg0q/2+f4j2RqoeS5rRQ6udYmmc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cU/8BoM9Jnd8KhWdIN801DPeYSmtMMY1//yyoQALEH6FBCQjFKGgrVTDZPyKrRxeuITCENmC3s1eEgt8uKN5iFM5UGr2ZO2zpqKbS8ZG9R36w1NPmue1WW35Yd/MI5ZyNW6drIhOIVVv7+9dMoXlQK3Y5eiUqM5LMZR+75E2+Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JQ6H1ty2; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a46d0a8399aso391305566b.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 21 Mar 2024 10:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1711040832; x=1711645632; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MsVbd2140swEcLwTG+MF1x3NLhBkmZkIVQJKoZyOCjI=;
+        b=JQ6H1ty28ullPGWs32TbOduX/siWev5wKYccWZjqFuHDUODPJZJiPVol7MCFjNfJCt
+         gyc7CbGU7FpyiRPZlu8Ao8MSCz4Wur0PvNx9+D75CxNyR6W2oCG0nHkitfu3m7Qp2IMJ
+         Z+H0joBlfCoh+joSQ/0hQ/6JSIPUSq08CX6v0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711040832; x=1711645632;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MsVbd2140swEcLwTG+MF1x3NLhBkmZkIVQJKoZyOCjI=;
+        b=IX9rcAu1QmvbY55tbOUavFjA0JijyoyPxshXhONs94TCJSxFMUz8swXMDsZ6XTd6ja
+         RLkj0yqdu2wYN/XdMwwYivvqgP97aBKUhD+y6iIccnN492AKGfuaf7NMRKdVbVUCL60B
+         rUS+TKfe0R0s3efaCtbh1X0GlbXVv/TGaOjSwGJDjcrDoldzAtjNe7E2QIQlQRPuI2S7
+         DjJoOmS9U2SpiFMernL8ELKDFlzMyLlvu+QFmwfJySm9WlOTSd2i9ml7l8U3Ai7vqlCU
+         +OhLi9bgPQ+jcpETDTw2pfBb5OXUqs9Szc2PZ6GEgXQGAqH/fmjvHFpqgO9nqtay8DI/
+         gyfA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5MP6PQNjMCeJpXun+W4HMdvkBdsufqF3ga8TqtgyvNTTulrQzcqYMvecgWlb8J+gMMgHMa6/VfiHYIlfqHPCACQ4yqOV/Jh02kfOR
+X-Gm-Message-State: AOJu0Yy2VO3xvsqGolxoALh7YtIY4CnH/tS/La1lgt/r+7/Yw85IEvS0
+	mNiaBcYaP7WFFzseLClR/uN3QbT8B1h8yKSldAXtTaVYlE+XpuEDNJPyhYuWj9upn+jy+7cbbEa
+	pdEF13Q==
+X-Google-Smtp-Source: AGHT+IFdAvbohDybkGhng1LdAhNfvl/N7CCNNE0AkUBUYUIqq1sKhRQhHLlEArajICz8ooUjQQgTgw==
+X-Received: by 2002:a17:906:74f:b0:a47:1b25:a7bb with SMTP id z15-20020a170906074f00b00a471b25a7bbmr1549702ejb.4.1711040832564;
+        Thu, 21 Mar 2024 10:07:12 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id v6-20020a17090606c600b00a46025483c7sm116780ejb.72.2024.03.21.10.07.10
+        for <linux-hyperv@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Mar 2024 10:07:10 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4707502aafso219838666b.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 21 Mar 2024 10:07:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVeLg3EJUX5hH1DT0xCWUERnpMHGHDM1c3vkGlb5SNuNsQr+GF+uipiLWrnjArtSXyRBzvps+k9GPOg7Xa6tTwoEmjmGztoCTIpeT97
+X-Received: by 2002:a17:906:360e:b0:a47:1c5a:6577 with SMTP id
+ q14-20020a170906360e00b00a471c5a6577mr1106916ejb.35.1711040830359; Thu, 21
+ Mar 2024 10:07:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85e41aae-46e1-445e-1d91-08dc49c5ef02
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2024 16:42:44.6945
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ofpFS0cMtsqq6Y4d89WRzaVuUc/Ha0/cmdYkg7LQFhWNUpGAjcZBODnq6iTMAdC2RBUPRgf8vn42HnbIu22WMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1962
+References: <Zfuy5ZyocT7SRNCa@liuwe-devbox-debian-v2>
+In-Reply-To: <Zfuy5ZyocT7SRNCa@liuwe-devbox-debian-v2>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 21 Mar 2024 10:06:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjCD994KKNL7LGTNpF4B6-E2_A13J2hjP-ufnYt0KJdCA@mail.gmail.com>
+Message-ID: <CAHk-=wjCD994KKNL7LGTNpF4B6-E2_A13J2hjP-ufnYt0KJdCA@mail.gmail.com>
+Subject: Re: [GIT PULL] Hyper-V commits for 6.9
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Linux Kernel List <linux-kernel@vger.kernel.org>, 
+	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 
-> Subject: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio=
- driver
->=20
-> New fcopy application using uio_hv_generic driver. This application copie=
-s file
-> from Hyper-V host to guest VM.
->=20
-> A big part of this code is copied from tools/hv/hv_fcopy_daemon.c which t=
-his new
-> application is replacing.
->=20
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> ---
-> [V2]
-> - Improve commit message.
-> - Change (4 * 4096) to 0x4000 for ring buffer size
-> - Removed some unnecessary type casting.
-> - Mentioned in file copy right header that this code is copied.
-> - Changed the print from "Registration failed" to "Signal to host failed"=
-.
-> - Fixed mask for rx buffer interrupt to 0 before waiting for interrupt.
->=20
->  tools/hv/Build                 |   3 +-
->  tools/hv/Makefile              |  10 +-
->  tools/hv/hv_fcopy_uio_daemon.c | 490
-> +++++++++++++++++++++++++++++++++
->  3 files changed, 497 insertions(+), 6 deletions(-)  create mode 100644
-> tools/hv/hv_fcopy_uio_daemon.c
->=20
-> diff --git a/tools/hv/Build b/tools/hv/Build index 6cf51fa4b306..7d1f1698=
-069b
-> 100644
-> --- a/tools/hv/Build
-> +++ b/tools/hv/Build
-> @@ -1,3 +1,4 @@
->  hv_kvp_daemon-y +=3D hv_kvp_daemon.o
->  hv_vss_daemon-y +=3D hv_vss_daemon.o
-> -hv_fcopy_daemon-y +=3D hv_fcopy_daemon.o
-> +hv_fcopy_uio_daemon-y +=3D hv_fcopy_uio_daemon.o hv_fcopy_uio_daemon-y
-> +=3D
-> +vmbus_bufring.o
-> diff --git a/tools/hv/Makefile b/tools/hv/Makefile index
-> fe770e679ae8..944180cf916e 100644
-> --- a/tools/hv/Makefile
-> +++ b/tools/hv/Makefile
+On Wed, 20 Mar 2024 at 21:09, Wei Liu <wei.liu@kernel.org> wrote:
+>
+>   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20240320
 
-I'm not sure if vmbus_bufring will compile on ARM.
-If it's not supported, can use some flags in Makefile to not build this.
+Pulled, but...
+
+Your pgp key expired two weeks ago. Please extend the expiration date
+(and not something small!) and make sure to refresh the kernel.org
+repo and/or other keyservers.
+
+                 Linus
 
