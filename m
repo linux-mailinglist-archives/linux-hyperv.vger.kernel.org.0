@@ -1,466 +1,189 @@
-Return-Path: <linux-hyperv+bounces-1809-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1810-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDB35885C73
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 16:46:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F2AD885EC3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 17:55:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D93B1C22A20
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 15:46:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C6DFB25072
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 16:55:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083AA86640;
-	Thu, 21 Mar 2024 15:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D49F285286;
+	Thu, 21 Mar 2024 16:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eKn7hYk+"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PYuJlswX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB5E086ACD;
-	Thu, 21 Mar 2024 15:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711035910; cv=none; b=tH24z5hXEvvfvGyvApI0hcDVoPnTkwsw+a7bLgB3fRPbUzUrJo6+bhLQmB7TA/cnr75U7WBeAmAXBFNXvsb8qux7aeSPvkPP5jbq3KcdmgxJOUH2Lu2sxkTILlTNj8rVCKZ+XTkm63Yz3J7TiYxNHX2ipCk83fiAfmXgMiqJl/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711035910; c=relaxed/simple;
-	bh=XRolXUbz/HQbzw+yfn9BPwRJo4PycuARrV0YMaB1s3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AWf7BOxls2SIxJyhEMn8mtAKUKY/ZR9SRHhv2+iXiGYcXhO6HbUI2tbSCGkG7I7r41+y5YqrkIS7XQRjlX/umMl7hSfQOaIyQmb6XGKkPlDNrBJoUQnEq3IjTp6Dcpy4q6HkTDwh45ZTj4OmtL+9eTkvvq/BHZPXta5RacImNuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eKn7hYk+; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 506C820B74C0; Thu, 21 Mar 2024 08:45:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 506C820B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1711035908;
-	bh=Rydhyk+OBBmiBPqDDx6Ad5LVDtXGYv55rW6oej+Pi3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eKn7hYk+cVhZzjbl0Qij8Aqgad6vJnEI/Sf6XTPUcIa5BJEWNb0nfU+T/sMTYF1fn
-	 zbXsgQ1zUBxvj/0vtyqXEw0xTWprImP/mOot2cJJZhxAAzhLUQ1z7LNf5URXBiQAbH
-	 l2CJtD9mVkVOcU5erPeZjjMZca2FnDmTp5ypsUjc=
-Date: Thu, 21 Mar 2024 08:45:08 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Ani Sinha <anisinha@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Olaf Hering <olaf@aepfle.de>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination
- for keyfile format
-Message-ID: <20240321154508.GA13704@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1710933451-6312-1-git-send-email-shradhagupta@linux.microsoft.com>
- <9879EB6C-FEC4-42AD-8B40-90457455F0DD@redhat.com>
- <A940B76F-8409-4147-8C09-DB2B3FD2EAF5@redhat.com>
- <0aef5a81-8b8c-6165-d05d-77c9cf639ebd@redhat.com>
- <20240321131042.GA2731@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <94FF7ECA-9D84-4626-BD72-EB0530AE22DC@redhat.com>
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11022010.outbound.protection.outlook.com [52.101.51.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312BF1804C;
+	Thu, 21 Mar 2024 16:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711039391; cv=fail; b=A5VG9BsZSKkIA4n2her7BBqAVBftclzOm9YKfSiM4Xpn3xj+EHCEf/1dBvOpK1CATalPxE4d3Mh8sBprwuYK985ZDosEnhHcd5OsBDHU8XrLbvRTxTmXwLilGltcA2Ot6vKEF8El1j2/UcmHXSSH3K80Jfa75XBLefQRc2T+gdk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711039391; c=relaxed/simple;
+	bh=AKHApDJmJLmlA6jbbYKSd6bekX6hU6VLZ1ecgoz0DNk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dcbeIGCHpZky8nK7oqJ/DbQjIQfUy1jxyKqx7WNc6b0J7qg+LKmrUijNBAPh6OneHJdOqhkz2K3YbMaM6qYG2+ajKksri3wlJq3UTC0j5OKJMcZuR9GWP83B/aL5UPzpkPrxzk4OT3ke3tb6qXX1X7lBC3gR7pzww2LSZhw7j+w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=PYuJlswX; arc=fail smtp.client-ip=52.101.51.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K8E76L8CCiZbSwueMY04gnfVudAt2XYTkTRpk2cASfQAfyGdhtLv2xO8ATAUTeJnNMQF47oYYnTzWw4S32xIA+rTl3Gq/fDDxQOAvMTRITjOhmfqJZAigRMTHxCcOpCtgi5Fmxx9uHHcNGLEiatCTUg3QZ7DYjdjn4kV953qOKgfhnayGQBRTWW5lfhZMHdJ9GPWujmHXZLGczJ46NDJemPlTGJYu2uuT6fgp6VKi89zEO8PQ6O8KDU0LfQ5qBIbYjtuQpQltjB58vMpw9tq/8Fw/Hvp/QeDZwa5cGbNlurQHBgWXHjlyAx+X09hfEh06eGhIDWPBT9DVyJzmeyT+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LBYLvh5fHJlkw26b1T60p9VKaDxbcjzC5BikvtT7J2c=;
+ b=frsH1ucMM+Ed4ADKNHIIpmMIdvytJWkvK7dUsvhZRVKHXvvh1dTEy0zIP7RvocL2LdqAtTkPPKtnZgRXg3ctE180COB13F/qs6c0aN1Pw6/0CqbGmdst6bNuqxmaFkc6/ki65/6iZ3ncUpATHTGIWAQNNdyYsUMtrR7JSHHTpO3cZn1yDtDC51y/Z34xqvu8yvR8zcMBeF1A1P9nWrZigQmRRwuSoyYdrWFTqtiL7iTzndOC3BlT9w1CfxaPBU7B+5Y19By46oHSioN/RU+ohuvF0B+CmX0pY5sy+L8l3CYmuP2+lnIH/ErCdxD3eP2WqQbt9dF7MtavXia7rqyvfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LBYLvh5fHJlkw26b1T60p9VKaDxbcjzC5BikvtT7J2c=;
+ b=PYuJlswXNlB4VDD/C6GrbK8qNPHWzKYmeSZya7FY2+Sh1oO8p2OFkAI0n7LDdXUCmqLtE/5r09+E2Lynzu1v/lK55aYKHiR30rznnBGj+x21PAenrAmi9f5v8hrzXe3pVTxZpVDhgf+wsPz2/a94/5IPSUe5ex/Bht34ZveLxfY=
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
+ by SA0PR21MB1962.namprd21.prod.outlook.com (2603:10b6:806:e2::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.15; Thu, 21 Mar
+ 2024 16:43:05 +0000
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7409.010; Thu, 21 Mar 2024
+ 16:43:05 +0000
+From: Long Li <longli@microsoft.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC: Saurabh Singh Sengar <ssengar@microsoft.com>
+Subject: RE: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio
+ driver
+Thread-Topic: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio
+ driver
+Thread-Index: AQHaerGMxvAnQM2QGUadCBNqLuvFZ7FCZVFw
+Date: Thu, 21 Mar 2024 16:42:44 +0000
+Message-ID:
+ <SJ1PR21MB3457E5B4D852A914CD691E53CE322@SJ1PR21MB3457.namprd21.prod.outlook.com>
+References: <1710930584-31180-1-git-send-email-ssengar@linux.microsoft.com>
+ <1710930584-31180-6-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1710930584-31180-6-git-send-email-ssengar@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e8e94552-1fa4-4089-b6f0-ec16c1cf85cf;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-03-21T16:32:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|SA0PR21MB1962:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ THc0mv1SD/WKJLrnMaDUfLJewZGn2CTNsGxyplWtsoJm1SSk7KiwXXs4ayy3h2+bUe8f4x53ei6XOsL7oEyV5mlJiqYpp+0joDubzWqmAWgxM3nhSnLbEW/07Pvsxs/FPMIkuodkjcCTmWyLV7SiJHzHfl0EIBK8P00QMn0Kc03d6x8dOuIXzEx5+Zv6kdHrF3AqvS88vufwS0dDxmbAU3fkzkGp4vKI1FXEvUVrSswTw3E8YlU4BTRlxxmJqYo79bxPgLaeWA6RJTUM23rpY1fwaBkoeFDer6/K9/565JbWY+J8gp2crPqQoJf+V72nOF70Ixn2XkhGoeRYsiglzLamhL6GMOn2cM+aDD5wLXRFZZ4f1BW1XQ5KsKDmNTgk+kfPOBQ5WIAv39USa36nW0yv6HafFC8kHjE7QixpC042Jr8LCG7fvuOpSuIdvkDWYlYrnZsq/kUkuQnHjCYl3Rl7LuBTF+KTlWGkIB9bPDvc6wk+2EGvStp4Ag9t3gL8BlopTs6DiYNR4zUikNqpGflGDjC8SJY/+XGXwka6HXEocLnNSadSAnf1ajscxGgI4MADcxBRazIXBBB/mFkPkiNZi4Uv1H7+71ttZwmEtuZr2KTWDt5QeG1GU/X8TM7HYZIxqSMwyrWpmMzYCCJA8YdHs15Iinu3boaV6iYihkk=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?PtfdrgDEpfQCqnH1ZTSR4B5n8J1/XotDX+Ad5GsPt1kaAJCaV4E4fpSuoKK9?=
+ =?us-ascii?Q?lmyBtEP60jOXCidHQikBcMBkM7tnlXUv8OY07eSnRh7xKFVg+TiSKfloKoE7?=
+ =?us-ascii?Q?aHnLCgf0Cr+4z0xQ+7O/6W3biCQolyPVlzQjxadyBXO/DzU7tg+9/ddOFKP2?=
+ =?us-ascii?Q?HRU3dA2pTFXVg5gV1TGSmXZ9ZkK1c0VTNfp/rEvgDVTeu4SrJK4IjTuL5YB6?=
+ =?us-ascii?Q?PadvlBBPZ+Fj8oKZ0NQJSkN1BqoyUFqO4JihO7oA5eSmfQuRtSJLm0/EUUuY?=
+ =?us-ascii?Q?wtd0LyrH1Wif83M9an12fZq3Gs+vKcwEATnfEH7+/PwRuKVxSATTkeVI0zJ5?=
+ =?us-ascii?Q?zdxUtno9/Zblj3rv3A8gXgZI0v3JGfCKyiZEE6JV5Dlg9F7GjLB3qbkySQbx?=
+ =?us-ascii?Q?EqJebpi5EJkhzocSkDRZ6oNLhLJTOiyasMDtLU2qBjywWOhd6WIfLdpoM/2g?=
+ =?us-ascii?Q?kvTo4MJFStQBWznw4kWZ/g4AAv59hFtYTyCPWczGz3qMAwMO0IVScqFu/vct?=
+ =?us-ascii?Q?d1xPIoseW7nHYKXVAF7WXMxdmz+EyU8kfZr9P6/MzhtrrexfP1aNe54p4M9x?=
+ =?us-ascii?Q?4sVnTAacxZeiDnybpIWK7XzpWA2shv1k5ZLZEhUTWV0gz9U5HV2Fh6fRA1Ri?=
+ =?us-ascii?Q?Mvqe36yQenky27lKpLF/Jzpx1Ix/M7Bxb3zVGyy3FC5jx4t7QIh27Q6bVSW6?=
+ =?us-ascii?Q?0x7f9iqS2BVAFrSpmK5CCobuzGCyV0Gdv6QLj5Z3gJdJXSy9XM+REed212Iv?=
+ =?us-ascii?Q?DXaUcKB+1sruQ6ah9UGP6CVq07xR4QZ4aHaS1BCS4YFIMYzMUBHLsr6tLomQ?=
+ =?us-ascii?Q?05qN73N/TICTfZCjkJMH6ex1dZYVFlpBCXEqPmfpdCrj3C0cOvlmskIjKRbI?=
+ =?us-ascii?Q?X1G7DA35wgCGVWCoeatn5HRWArk7nBo4+s5bSWB9l+EsqYFEqtkOj7RHMC51?=
+ =?us-ascii?Q?nHzBnFycGgdpdNVGqS1tJTCjlZgpmhjGckzpikcEI73j+sqRKMKNLDBy0cnk?=
+ =?us-ascii?Q?UUj8K0vZcLNJp+CbuYydeybh7aUrauEV1EcH5q/VIn3ui9EU89p4q9CzINMX?=
+ =?us-ascii?Q?2SUq99QzCZ/VgPGluvsFPfq1PbSz++uofHEgxo0XBsbbEc1tPOoGR4JVNbH3?=
+ =?us-ascii?Q?vDgKhfpmJKkJ2XTvnu84iVhQG8BtprIO5NaRSgcXK/Lq07cWJ8d+8PTfJVmr?=
+ =?us-ascii?Q?JlRxDLbHTVg2g7kII5kKPl95BTqKg4CB9GYOVHmgUowJSRiVR4U2Fu6hE5Z4?=
+ =?us-ascii?Q?4YSYhOh+T2wW6kzQVdT96eKjkO350EPu0gLrTxDVoXUno1y/0vNFq9ZIiJhz?=
+ =?us-ascii?Q?RX0UhSJWSgqzLfuDtstjXfbuB8XuVgywD8aoy5wEIyBakuEY/WqxuOoER+gs?=
+ =?us-ascii?Q?3sQlnnTLi0LhYpQrhA8KFufkrqmSDqXeaNSVMOtBYKJ25lsWX6mXJd/63w/1?=
+ =?us-ascii?Q?fzvJGaFOe9997boLcbsG4gr0K26hA2cth+hQS3gN7v8ETdOJaAYTZh87yqz0?=
+ =?us-ascii?Q?/VVkLjDmS+FcesWG48Yc6cP64mbNgDeO+AFdceZOxzWOmE3SaRIV3S8ybmxc?=
+ =?us-ascii?Q?YWs17x8KqP94jzBsMAzLCRNpWRhbvxLTDsgbjrD0?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94FF7ECA-9D84-4626-BD72-EB0530AE22DC@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85e41aae-46e1-445e-1d91-08dc49c5ef02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2024 16:42:44.6945
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ofpFS0cMtsqq6Y4d89WRzaVuUc/Ha0/cmdYkg7LQFhWNUpGAjcZBODnq6iTMAdC2RBUPRgf8vn42HnbIu22WMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1962
 
-On Thu, Mar 21, 2024 at 08:29:58PM +0530, Ani Sinha wrote:
-> 
-> 
-> > On 21 Mar 2024, at 18:40, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-> > 
-> > On Thu, Mar 21, 2024 at 05:36:05PM +0530, Ani Sinha wrote:
-> >> 
-> >> 
-> >> On Thu, 21 Mar 2024, Ani Sinha wrote:
-> >> 
-> >>> 
-> >>> 
-> >>>> On 21 Mar 2024, at 09:25, Ani Sinha <anisinha@redhat.com> wrote:
-> >>>> 
-> >>>> 
-> >>>> 
-> >>>>> On 20 Mar 2024, at 16:47, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-> >>>>> 
-> >>>>> If the network configuration strings are passed as a combination of IPv4
-> >>>>> and IPv6 addresses, the current KVP daemon does not handle processing for
-> >>>>> the keyfile configuration format.
-> >>>>> With these changes, the keyfile config generation logic scans through the
-> >>>>> list twice to generate IPv4 and IPv6 sections for the configuration files
-> >>>>> to handle this support.
-> >>>>> 
-> >>>>> Testcases ran:Rhel 9, Hyper-V VMs
-> >>>>>            (IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-> >>>>> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> >>>>> ---
-> >>>>> Changes in v4
-> >>>>> * Removed the unnecessary memset for addr in the start
-> >>>>> * Added a comment to describe how we erase the last comma character
-> >>>>> * Fixed some typos in the commit description
-> >>>>> * While using strncat, skip copying the '\0' character.
-> >>>>> ---
-> >>>>> tools/hv/hv_kvp_daemon.c | 181 ++++++++++++++++++++++++++++++---------
-> >>>>> 1 file changed, 140 insertions(+), 41 deletions(-)
-> >>>>> 
-> >>>>> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> >>>>> index 318e2dad27e0..d64d548a802f 100644
-> >>>>> --- a/tools/hv/hv_kvp_daemon.c
-> >>>>> +++ b/tools/hv/hv_kvp_daemon.c
-> >>>>> @@ -76,6 +76,12 @@ enum {
-> >>>>> DNS
-> >>>>> };
-> >>>>> 
-> >>>>> +enum {
-> >>>>> + IPV4 = 1,
-> >>>>> + IPV6,
-> >>>>> + IP_TYPE_MAX
-> >>>>> +};
-> >>>>> +
-> >>>>> static int in_hand_shake;
-> >>>>> 
-> >>>>> static char *os_name = "";
-> >>>>> @@ -102,6 +108,11 @@ static struct utsname uts_buf;
-> >>>>> 
-> >>>>> #define MAX_FILE_NAME 100
-> >>>>> #define ENTRIES_PER_BLOCK 50
-> >>>>> +/*
-> >>>>> + * Change this entry if the number of addresses increases in future
-> >>>>> + */
-> >>>>> +#define MAX_IP_ENTRIES 64
-> >>>>> +#define OUTSTR_BUF_SIZE ((INET6_ADDRSTRLEN + 1) * MAX_IP_ENTRIES)
-> >>>>> 
-> >>>>> struct kvp_record {
-> >>>>> char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
-> >>>>> @@ -1171,6 +1182,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
-> >>>>> return 0;
-> >>>>> }
-> >>>>> 
-> >>>>> +int ip_version_check(const char *input_addr)
-> >>>>> +{
-> >>>>> + struct in6_addr addr;
-> >>>>> +
-> >>>>> + if (inet_pton(AF_INET, input_addr, &addr))
-> >>>>> + return IPV4;
-> >>>>> + else if (inet_pton(AF_INET6, input_addr, &addr))
-> >>>>> + return IPV6;
-> >>>>> +
-> >>>>> + return -EINVAL;
-> >>>>> +}
-> >>>>> +
-> >>>>> /*
-> >>>>> * Only IPv4 subnet strings needs to be converted to plen
-> >>>>> * For IPv6 the subnet is already privided in plen format
-> >>>>> @@ -1197,14 +1220,75 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
-> >>>>> return plen;
-> >>>>> }
-> >>>>> 
-> >>>>> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-> >>>>> +  int ip_sec)
-> >>>>> +{
-> >>>>> + char addr[INET6_ADDRSTRLEN], *output_str;
-> >>>>> + int ip_offset = 0, error = 0, ip_ver;
-> >>>>> + char *param_name;
-> >>>>> +
-> >>>>> + if (type == DNS)
-> >>>>> + param_name = "dns";
-> >>>>> + else if (type == GATEWAY)
-> >>>>> + param_name = "gateway";
-> >>>>> + else
-> >>>>> + return -EINVAL;
-> >>>>> +
-> >>>>> + output_str = (char *)calloc(OUTSTR_BUF_SIZE, sizeof(char));
-> >>>>> + if (!output_str)
-> >>>>> + return -ENOMEM;
-> >>>>> +
-> >>>>> + while (1) {
-> >>>>> + memset(addr, 0, sizeof(addr));
-> >>>>> +
-> >>>>> + if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> >>>>> + (MAX_IP_ADDR_SIZE * 2)))
-> >>>>> + break;
-> >>>>> +
-> >>>>> + ip_ver = ip_version_check(addr);
-> >>>>> + if (ip_ver < 0)
-> >>>>> + continue;
-> >>>>> +
-> >>>>> + if ((ip_ver == IPV4 && ip_sec == IPV4) ||
-> >>>>> +    (ip_ver == IPV6 && ip_sec == IPV6)) {
-> >>>>> + /*
-> >>>>> + * do a bound check to avoid out-of bound writes
-> >>>>> + */
-> >>>>> + if ((OUTSTR_BUF_SIZE - strlen(output_str)) >
-> >>>>> +    (strlen(addr) + 1)) {
-> >>>>> + strncat(output_str, addr,
-> >>>>> + OUTSTR_BUF_SIZE -
-> >>>>> + strlen(output_str) - 1);
-> >>>>> + strncat(output_str, ",",
-> >>>>> + OUTSTR_BUF_SIZE -
-> >>>>> + strlen(output_str) - 1);
-> >>>>> + }
-> >>>>> + } else {
-> >>>>> + continue;
-> >>>>> + }
-> >>>>> + }
-> >>>>> +
-> >>>>> + if (strlen(output_str)) {
-> >>>>> + /*
-> >>>>> + * This is to get rid of that extra comma character
-> >>>>> + * in the end of the string
-> >>>>> + */
-> >>>>> + output_str[strlen(output_str) - 1] = '\0';
-> >>>>> + error = fprintf(f, "%s=%s\n", param_name, output_str);
-> >>>>> + }
-> >>>>> +
-> >>>>> + free(output_str);
-> >>>>> + return error;
-> >>>>> +}
-> >>>>> +
-> >>>>> static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >>>>> - int is_ipv6)
-> >>>>> + int ip_sec)
-> >>>>> {
-> >>>>> char addr[INET6_ADDRSTRLEN];
-> >>>>> char subnet_addr[INET6_ADDRSTRLEN];
-> >>>>> int error, i = 0;
-> >>>>> int ip_offset = 0, subnet_offset = 0;
-> >>>>> - int plen;
-> >>>>> + int plen, ip_ver;
-> >>>>> 
-> >>>>> memset(addr, 0, sizeof(addr));
-> >>>>> memset(subnet_addr, 0, sizeof(subnet_addr));
-> >>>>> @@ -1216,10 +1300,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >>>>>     subnet_addr,
-> >>>>>     (MAX_IP_ADDR_SIZE *
-> >>>>> 2))) {
-> >>>>> - if (!is_ipv6)
-> >>>>> + ip_ver = ip_version_check(addr);
-> >>>>> + if (ip_ver < 0)
-> >>>>> + continue;
-> >>>>> +
-> >>>>> + if (ip_ver == IPV4 && ip_sec == IPV4)
-> >>>>> plen = kvp_subnet_to_plen((char *)subnet_addr);
-> >>>>> - else
-> >>>>> + else if (ip_ver == IPV6 && ip_sec == IPV6)
-> >>>>> plen = atoi(subnet_addr);
-> >>>>> + else
-> >>>>> + continue;
-> >>>>> 
-> >>>>> if (plen < 0)
-> >>>>> return plen;
-> >>>>> @@ -1238,12 +1328,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >>>>> 
-> >>>>> static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >>>>> {
-> >>>>> - int error = 0;
-> >>>>> + int error = 0, ip_ver;
-> >>>>> char if_filename[PATH_MAX];
-> >>>>> char nm_filename[PATH_MAX];
-> >>>>> FILE *ifcfg_file, *nmfile;
-> >>>>> char cmd[PATH_MAX];
-> >>>>> - int is_ipv6 = 0;
-> >>>>> char *mac_addr;
-> >>>>> int str_len;
-> >>>>> 
-> >>>>> @@ -1421,52 +1510,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >>>>> if (error)
-> >>>>> goto setval_error;
-> >>>>> 
-> >>>>> - if (new_val->addr_family & ADDR_FAMILY_IPV6) {
-> >>>>> - error = fprintf(nmfile, "\n[ipv6]\n");
-> >>>>> - if (error < 0)
-> >>>>> - goto setval_error;
-> >>>>> - is_ipv6 = 1;
-> >>>>> - } else {
-> >>>>> - error = fprintf(nmfile, "\n[ipv4]\n");
-> >>>>> - if (error < 0)
-> >>>>> - goto setval_error;
-> >>>>> - }
-> >>>>> -
-> >>>>> /*
-> >>>>> - * Now we populate the keyfile format
-> >>>>> + * The keyfile format expects the IPv6 and IPv4 configuration in
-> >>>>> + * different sections. Therefore we iterate through the list twice,
-> >>>>> + * once to populate the IPv4 section and the next time for IPv6
-> >>>>> */
-> >>>>> + ip_ver = IPV4;
-> >>>>> + do {
-> >>>>> + if (ip_ver == IPV4) {
-> >>>>> + error = fprintf(nmfile, "\n[ipv4]\n");
-> >>>>> + if (error < 0)
-> >>>>> + goto setval_error;
-> >>>>> + } else {
-> >>>>> + error = fprintf(nmfile, "\n[ipv6]\n");
-> >>>>> + if (error < 0)
-> >>>>> + goto setval_error;
-> >>>>> + }
-> >>>>> 
-> >>>>> - if (new_val->dhcp_enabled) {
-> >>>>> - error = kvp_write_file(nmfile, "method", "", "auto");
-> >>>>> - if (error < 0)
-> >>>>> - goto setval_error;
-> >>>>> - } else {
-> >>>>> - error = kvp_write_file(nmfile, "method", "", "manual");
-> >>>>> + /*
-> >>>>> + * Now we populate the keyfile format
-> >>>>> + */
-> >>>>> +
-> >>>>> + if (new_val->dhcp_enabled) {
-> >>>>> + error = kvp_write_file(nmfile, "method", "", "auto");
-> >>>>> + if (error < 0)
-> >>>>> + goto setval_error;
-> >>>>> + } else {
-> >>>>> + error = kvp_write_file(nmfile, "method", "", "manual");
-> >>>>> + if (error < 0)
-> >>>>> + goto setval_error;
-> >>>> 
-> >>>> There is a problem with this code. dhcp_enabled is only valid for ipv4. From looking at ifcfg files that were generated before, I do not see IPV6_AUTOCONF related settings.
-> >>> 
-> >>> So dhcp_enabled comes from running hv_get_shcp_info.sh which greps for ???dhcp??? in ifcfg files. If it is a hit, it sets dhcp_enabled to true.
-> >>> The ifcfg files will have ???dhcp??? only if it???s set in BOOTPROTO=dhcp. So it is indeed ipv4 specific.
-> >>> 
-> >>>> So maybe we should set method only for ipv4 and not for ipv6.
-> >> 
-> >> After some internal testing, it seems we need to set some method for both,
-> >> otherwise, nm is complaining. Therefore, I propose the following patch
-> >> 
-> >>> From e1c3f4ece2c4bd191369582d84b8b508db5b5510 Mon Sep 17 00:00:00 2001
-> >> From: Ani Sinha <anisinha@redhat.com>
-> >> Date: Thu, 21 Mar 2024 10:00:26 +0530
-> >> Subject: [PATCH] Handle dhcp configuration properly for ipv4 and ipv6
-> >> 
-> >> dhcp_enabled is only valid for ipv4. So do not set dhcp methods for ipv6 based
-> >> on dhcp_enabled flag. For ipv4, set method to manual only when dhcp_enabled is
-> >> false and specific ipv4 addresses are configured. If neither dhcp_enabled is
-> >> true and no ipv4 addresses are configured, set method to 'disabled'.
-> >> 
-> >> For ipv6, set method to manual when we configure ipv6 addresses. Otherwise set
-> >> method to 'auto' so that SLAAC from RA may be used.
-> >> 
-> >> Signed-off-by: Ani Sinha <anisinha@redhat.com>
-> >> ---
-> >> hv_kvp_daemon.c | 57 +++++++++++++++++++++++++++++++++++--------------
-> >> 1 file changed, 41 insertions(+), 16 deletions(-)
-> >> 
-> >> diff --git a/hv_kvp_daemon.c b/hv_kvp_daemon.c
-> >> index b368d3d..a0e6e4a 100644
-> >> --- a/hv_kvp_daemon.c
-> >> +++ b/hv_kvp_daemon.c
-> >> @@ -1286,7 +1286,7 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >> {
-> >> char addr[INET6_ADDRSTRLEN];
-> >> char subnet_addr[INET6_ADDRSTRLEN];
-> >> - int error, i = 0;
-> >> + int error = 0, i = 0;
-> >> int ip_offset = 0, subnet_offset = 0;
-> >> int plen, ip_ver;
-> >> 
-> >> @@ -1323,7 +1323,7 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >> memset(subnet_addr, 0, sizeof(subnet_addr));
-> >> }
-> >> 
-> >> - return 0;
-> >> + return error;
-> >> }
-> >> 
-> >> static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >> @@ -1511,6 +1511,8 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >> goto setval_error;
-> >> 
-> >> /*
-> >> +  * Now we populate the keyfile format
-> >> +  *
-> >>  * The keyfile format expects the IPv6 and IPv4 configuration in
-> >>  * different sections. Therefore we iterate through the list twice,
-> >>  * once to populate the IPv4 section and the next time for IPv6
-> >> @@ -1527,20 +1529,6 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >> goto setval_error;
-> >> }
-> >> 
-> >> - /*
-> >> -  * Now we populate the keyfile format
-> >> -  */
-> >> -
-> >> - if (new_val->dhcp_enabled) {
-> >> - error = kvp_write_file(nmfile, "method", "", "auto");
-> >> - if (error < 0)
-> >> - goto setval_error;
-> >> - } else {
-> >> - error = kvp_write_file(nmfile, "method", "", "manual");
-> >> - if (error < 0)
-> >> - goto setval_error;
-> >> - }
-> >> -
-> >> /*
-> >>  * Write the configuration for ipaddress, netmask, gateway and
-> >>  * name services
-> >> @@ -1551,6 +1539,43 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> >> if (error < 0)
-> >> goto setval_error;
-> >> 
-> >> + if (ip_ver == IPV4) {
-> >> + if (new_val->dhcp_enabled) {
-> >> + error = kvp_write_file(nmfile, "method", "", "auto");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + } else if (error) {
-> >> + /* if ipv4 addresses were written, set method to 'manual' */
-> >> + error = kvp_write_file(nmfile, "method", "", "manual");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + } else {
-> >> + /*
-> >> +  * if no ipv4 addresses were set and dhcp was not enabled,
-> >> +  * disable ipv4 configuration.
-> >> +  */
-> >> + error = kvp_write_file(nmfile, "method", "", "disabled");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + }
-> >> +
-> >> + } else if (ip_ver == IPV6) {
-> >> + if (error) {
-> >> + /* if ipv6 addresses were written, set method to 'manual' */
-> >> + error = kvp_write_file(nmfile, "method", "", "manual");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + } else {
-> >> + /*
-> >> +  * By default for ipv6, set method to 'auto' so that
-> >> +  * SLAAC in RA can be used to configure the interface
-> >> +  */
-> >> + error = kvp_write_file(nmfile, "method", "", "auto");
-> >> + if (error < 0)
-> >> + goto setval_error;
-> >> + }
-> >> + }
-> >> +
-> >> error = process_dns_gateway_nm(nmfile,
-> >>        (char *)new_val->gate_way,
-> >>        GATEWAY, ip_ver);
-> >> -- 
-> > Hi Ani,
-> > Thanks, the proposed patch looks clean and would fix the problem at hand.
-> > I was wondering if it would make more sense to implement the distro specific script
-> > hv_get_dhcp_info.sh to include dhcp configuration for Ipv6 specific configuration
-> > instead.
-> 
-> The way I see it is that the daemon should provide some ???reasonable??? configuration for both ipv4 and ipv6. Then the distro specific script can override it in any way they see fit if required. Leaving out ipv6 would make it incomplete and half baked.
+> Subject: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio=
+ driver
+>=20
+> New fcopy application using uio_hv_generic driver. This application copie=
+s file
+> from Hyper-V host to guest VM.
+>=20
+> A big part of this code is copied from tools/hv/hv_fcopy_daemon.c which t=
+his new
+> application is replacing.
+>=20
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+> [V2]
+> - Improve commit message.
+> - Change (4 * 4096) to 0x4000 for ring buffer size
+> - Removed some unnecessary type casting.
+> - Mentioned in file copy right header that this code is copied.
+> - Changed the print from "Registration failed" to "Signal to host failed"=
+.
+> - Fixed mask for rx buffer interrupt to 0 before waiting for interrupt.
+>=20
+>  tools/hv/Build                 |   3 +-
+>  tools/hv/Makefile              |  10 +-
+>  tools/hv/hv_fcopy_uio_daemon.c | 490
+> +++++++++++++++++++++++++++++++++
+>  3 files changed, 497 insertions(+), 6 deletions(-)  create mode 100644
+> tools/hv/hv_fcopy_uio_daemon.c
+>=20
+> diff --git a/tools/hv/Build b/tools/hv/Build index 6cf51fa4b306..7d1f1698=
+069b
+> 100644
+> --- a/tools/hv/Build
+> +++ b/tools/hv/Build
+> @@ -1,3 +1,4 @@
+>  hv_kvp_daemon-y +=3D hv_kvp_daemon.o
+>  hv_vss_daemon-y +=3D hv_vss_daemon.o
+> -hv_fcopy_daemon-y +=3D hv_fcopy_daemon.o
+> +hv_fcopy_uio_daemon-y +=3D hv_fcopy_uio_daemon.o hv_fcopy_uio_daemon-y
+> +=3D
+> +vmbus_bufring.o
+> diff --git a/tools/hv/Makefile b/tools/hv/Makefile index
+> fe770e679ae8..944180cf916e 100644
+> --- a/tools/hv/Makefile
+> +++ b/tools/hv/Makefile
 
-Sure, That makes sense. Let's go ahead with this then.
-> 
-> > 
-> > I see for IPv6 the older ifcfg format also did not honor dhcp_enable flag, but how about
-> > we add support for it starting with the keyfile format in the script.
-> > 
-> > That way distro vendors could have more control over the logic to get dhcp_enable data
-> > and it would be easier to change
-> > Thoughts? Hope I am making sense :)
-> > 
-> > Regards,
-> > Shradha.
-> 
+I'm not sure if vmbus_bufring will compile on ARM.
+If it's not supported, can use some flags in Makefile to not build this.
 
