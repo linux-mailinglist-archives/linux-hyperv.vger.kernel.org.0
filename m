@@ -1,79 +1,121 @@
-Return-Path: <linux-hyperv+bounces-1812-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1813-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23506885FD2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 18:34:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3EBA88604E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 19:07:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D389E283900
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 17:34:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0618287222
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Mar 2024 18:07:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD898613B;
-	Thu, 21 Mar 2024 17:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB7221332A6;
+	Thu, 21 Mar 2024 18:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieX9247Y"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qkMJ/tdE"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5877C85937;
-	Thu, 21 Mar 2024 17:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61A1B13342F;
+	Thu, 21 Mar 2024 18:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711042480; cv=none; b=NmkPyVzNpk8S8/OXdNo6tbM9x1qECHAjrk19lmL1wNPQCaZricoR3c1G7sXUet/wxxYxgxF3ftxCTO1qvtKYr8DtgdUin5cP3YGpYD3asYiBisocXAAT4Vq+fOKsPlPNzTNUMASUGk45bZjLuRZ4OwSQp/VysSyGDZY2j8NrN9g=
+	t=1711044433; cv=none; b=uV9Kw71CVzPh8RaaTelLj0RMxa7ie4WSTSye2/1uYNsZcw7aEjMhRK1rPTWb9yJRHG287vTnvbUGfggbhEf6B9fv9KRaGqlT6Sac7KGQL6tG1Jv8dT45Hn262D8VpQTqSWD1vI9+OXHS/ExsaHFJmjeGJx+wvukZ9NCc3rd7AKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711042480; c=relaxed/simple;
-	bh=K7WpSl6AiRYcxcqj81IGT7P52vOFRswU8sUuEgJhgy0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=U/aF9MdUlF76BD4IGkwrtxowrNrfqDr8BqnOaZuKOClIYps5gExHi0Q4f+xwRsbP7udminFEN63XCKmd6K5gGiaPSGKQT3W/7p8T4/8or/YfXCNW9GuIDmCXbF64RT5bXuPvs1tgEgMnzGspOleUbKs8M6HcA4rkdY6Y9ZgDiJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieX9247Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 38FBCC43390;
-	Thu, 21 Mar 2024 17:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711042480;
-	bh=K7WpSl6AiRYcxcqj81IGT7P52vOFRswU8sUuEgJhgy0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ieX9247YeMZrAawIZSNOTTqiK7dpVhB9plRMRWOrQGH9XcQvNHHYtG89whs79ohSo
-	 Yjc+XnfOOVIv9HF8+/Ccmtz6+Apu8Wk4nuiQ31xZACK99+3+mSJwiaqh3ibrgie4xZ
-	 37hwxwPcpiSjonKee6Y+mCswCnKRZO0n6FX7KMWn3d+tLLX4Li+RhFmuAX4Ab5Mx/A
-	 NyLTqnAPDv8o3MWiSxLzNb1I5e3lfwYy/C7lyzZOfMs1+1oofhpbjBh/UFvT6+5n1I
-	 MeSEEtp7y0TMzIJqqYcCpaCxUs5tvr3t1qvZXZnWPtCdf8CmH4SsWSV0n6X4J0u67b
-	 9LhQxe96R48Qw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 291EDD95060;
-	Thu, 21 Mar 2024 17:34:40 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V commits for 6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Zfuy5ZyocT7SRNCa@liuwe-devbox-debian-v2>
-References: <Zfuy5ZyocT7SRNCa@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Zfuy5ZyocT7SRNCa@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20240320
-X-PR-Tracked-Commit-Id: f2580a907e5c0e8fc9354fd095b011301c64f949
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cfce216e1439d67a52a4b4c709299f6555946c33
-Message-Id: <171104248016.9254.6771809565359866205.pr-tracker-bot@kernel.org>
-Date: Thu, 21 Mar 2024 17:34:40 +0000
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Wei Liu <wei.liu@kernel.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+	s=arc-20240116; t=1711044433; c=relaxed/simple;
+	bh=05ZEYDmt2+qqCLfDyEKQhHqR7TKdqX5zogWxaN4oz3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YljOykEH5jIqlUg2yza4/aGaOBcKpKevceKk9u0rBcVfg6+4k9s6GM6zh7QCWIUL4NXDsrTbJatVeA3amybi6QKt0UZ05TJtPskaP0cbd51eKTA4ifdKx/8knMkuJ5TNjCpK//R9b/JjpGOWd7MpoEr6qS5UKWgXP7CFdWnlPwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qkMJ/tdE; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 0ACEA20B74C0; Thu, 21 Mar 2024 11:07:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0ACEA20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1711044426;
+	bh=3TunyeQrBBOJTdW13HcN0B0MpmXt0vTpUXifX+gGy4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qkMJ/tdEq8BHkpDVPjwShASHaPP8LviJ26jsmrkSScJXHVFrcNPbw3eUPe+s/D2pF
+	 0XQ/NoJSs+t/bFtRbSK0MRz69VnlypivU2mMggm692qMqusppHUTg4bQ/KoGLy0dvz
+	 zG7rH5low6mZOVO7M3CNBN9+kNXA1VllhHfycMBc=
+Date: Thu, 21 Mar 2024 11:07:06 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Long Li <longli@microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	Saurabh Singh Sengar <ssengar@microsoft.com>
+Subject: Re: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio
+ driver
+Message-ID: <20240321180705.GA12387@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1710930584-31180-1-git-send-email-ssengar@linux.microsoft.com>
+ <1710930584-31180-6-git-send-email-ssengar@linux.microsoft.com>
+ <SJ1PR21MB3457E5B4D852A914CD691E53CE322@SJ1PR21MB3457.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SJ1PR21MB3457E5B4D852A914CD691E53CE322@SJ1PR21MB3457.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-The pull request you sent on Thu, 21 Mar 2024 04:09:09 +0000:
+On Thu, Mar 21, 2024 at 04:42:44PM +0000, Long Li wrote:
+> > Subject: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio driver
+> > 
+> > New fcopy application using uio_hv_generic driver. This application copies file
+> > from Hyper-V host to guest VM.
+> > 
+> > A big part of this code is copied from tools/hv/hv_fcopy_daemon.c which this new
+> > application is replacing.
+> > 
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> > [V2]
+> > - Improve commit message.
+> > - Change (4 * 4096) to 0x4000 for ring buffer size
+> > - Removed some unnecessary type casting.
+> > - Mentioned in file copy right header that this code is copied.
+> > - Changed the print from "Registration failed" to "Signal to host failed".
+> > - Fixed mask for rx buffer interrupt to 0 before waiting for interrupt.
+> > 
+> >  tools/hv/Build                 |   3 +-
+> >  tools/hv/Makefile              |  10 +-
+> >  tools/hv/hv_fcopy_uio_daemon.c | 490
+> > +++++++++++++++++++++++++++++++++
+> >  3 files changed, 497 insertions(+), 6 deletions(-)  create mode 100644
+> > tools/hv/hv_fcopy_uio_daemon.c
+> > 
+> > diff --git a/tools/hv/Build b/tools/hv/Build index 6cf51fa4b306..7d1f1698069b
+> > 100644
+> > --- a/tools/hv/Build
+> > +++ b/tools/hv/Build
+> > @@ -1,3 +1,4 @@
+> >  hv_kvp_daemon-y += hv_kvp_daemon.o
+> >  hv_vss_daemon-y += hv_vss_daemon.o
+> > -hv_fcopy_daemon-y += hv_fcopy_daemon.o
+> > +hv_fcopy_uio_daemon-y += hv_fcopy_uio_daemon.o hv_fcopy_uio_daemon-y
+> > +=
+> > +vmbus_bufring.o
+> > diff --git a/tools/hv/Makefile b/tools/hv/Makefile index
+> > fe770e679ae8..944180cf916e 100644
+> > --- a/tools/hv/Makefile
+> > +++ b/tools/hv/Makefile
+> 
+> I'm not sure if vmbus_bufring will compile on ARM.
+> If it's not supported, can use some flags in Makefile to not build this.
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20240320
+You are right, this is not supported on ARM64. I can query uname in Makefile
+and compile this only for arch != aarch64.
+I will add this info in commit message as well.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cfce216e1439d67a52a4b4c709299f6555946c33
+- Saurabh
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
 
