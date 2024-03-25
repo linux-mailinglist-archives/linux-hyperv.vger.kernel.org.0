@@ -1,341 +1,182 @@
-Return-Path: <linux-hyperv+bounces-1823-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1824-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F66888776C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Mar 2024 08:37:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99FFC88A378
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Mar 2024 15:01:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B73D0B212E6
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Mar 2024 07:37:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B347D1C3A277
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Mar 2024 14:01:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5034C15B;
-	Sat, 23 Mar 2024 07:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEFC14600D;
+	Mon, 25 Mar 2024 10:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0fey9osi"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="HLN6HlwQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa7.fujitsucc.c3s2.iphmx.com (esa7.fujitsucc.c3s2.iphmx.com [68.232.159.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ECBBE7F
-	for <linux-hyperv@vger.kernel.org>; Sat, 23 Mar 2024 07:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711179459; cv=none; b=LGj8O0pyxDJbnVtciGkhsOGOB87ZTw9idrPVDwGPfffoG9KDQ+3AqF+2f8j5oCHtw2oc42z7k3UhX5f403os30FcGikkghYV3cjvoNGd2Nb1WhcRhR/F00erqsUkBH9PdW26MzTyqjU4IXBXefS/KkAhmIjwihBAXOXY1n4Dvhw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711179459; c=relaxed/simple;
-	bh=tL/HbXq/4kTqLeNSTOc0tMaIomHi2bXBUiC+c5oNm5E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B0LZwopXVXEXnfSk+0rV2lgis9ZGVdY0EWMMJJup07Dy+PJic9LEe6x2RL6uHCzvdaMnp5VIVO+XCMOpQ3+B6B9d5pHR3MfE6w7fXP7ZNcfPFs9rFS/DN60YGYtbxGpLcqNUTK6/Xjt8+LxGiEeTKIcMqBSyw6lixVPmkvHrXzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0fey9osi; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56bb5b9ab89so3023a12.1
-        for <linux-hyperv@vger.kernel.org>; Sat, 23 Mar 2024 00:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711179456; x=1711784256; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w80PVL5U8JA89600wdCSP/P8poGwREnFiHbQnxydJXc=;
-        b=0fey9osiXUW8KWARjld6GZvnv+IuGMBV8Ityvw4Kq6icFh05rF8U76idmR8h4VNqGz
-         UhPh5p0UVcnmQojtIK9mXgX5EVpTNM98AC3/+6vpNQsiInORx+EMzQcudSO5yIiOFMvx
-         NAc1po3OvKoTcMIqjBcWT/9JRiaIO+UN+1DNMusyqt1YioCsqN1FgRi08S3nBPcpXxRR
-         3iPBPPKy+IVVGQDnMAiQ4S8heRyrEnrxAdC4vJEECbI5qP/3dTv7e50gY6TT3sonpzDZ
-         E7uTkAriGErIdjH0fs/Kc4+D9aMFERxkDRj0qUCDoqAfpQyJ/tFsKTLjiai3mfLI5f1I
-         OORQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711179456; x=1711784256;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w80PVL5U8JA89600wdCSP/P8poGwREnFiHbQnxydJXc=;
-        b=CmJ5gLJvVFiz52oHIHuh1hcjG2gfK6uauy1ASF9sDcrRLTPnBvUO9j1tGLNmrZvuNr
-         jpV4pS78G2mx8ajmhqrm+wTtdaOMGA7KbdQIMjur9SuXNsfYTZVXp8R2jQVTLQMKtbVs
-         2EWoGHvSBhCoUJ3wuYZH7fRvsp5+/4F2xQimmX0f7uCS5HaZStfCiwEnNm8lRdklWo8T
-         /Jupn0/J1ET9khwFM4dolx2RaoyUBIJFGGIRg8PuHZ7PYdhp/EjxgtBDoxAQ6zv5Yekw
-         xzGA0QPyyoCvsraAGlupn1FTD7DN966WbgTp9lc1BSJRdeYXGM9UDn17zgwEijF6jPOY
-         RfbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYEGizhDTmrcBovRPYXRYCBC6+43ER3Mm9kUE7n9sabb2zfNFjmf/oF7fjRfi8Q+bbEoOPof/cf2v9ogzacQrtxTk4Txh4K4xpv878
-X-Gm-Message-State: AOJu0YwUj7bwFmQaMLmdjTsIyn3WVGZzKXYtao02wBV5PzomgcX0EkBN
-	RviDIl3UXfHqWo5PWfHCjxnPCdKmY7ITuDXqV03isdYuGrV437pykRvzN/Qkhg1ZB6N80sTjyaN
-	AiZA2TJpqVRVvOtLBSj4OURQrus0dD4ri03ET
-X-Google-Smtp-Source: AGHT+IHoSCOy0iQP/pMF3d7tGchN3NXJm8dNECET/DoxfxKmnGUQPfY7JLX3nKLMol3Kg4hkIRlrgYhoFRIcHE3aVjY=
-X-Received: by 2002:a05:6402:612:b0:56b:fc63:5558 with SMTP id
- n18-20020a056402061200b0056bfc635558mr8005edv.5.1711179455724; Sat, 23 Mar
- 2024 00:37:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194A1145B29;
+	Mon, 25 Mar 2024 09:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711359608; cv=fail; b=TDMXYuHdebQccox2LXCsaGbknwc5TmLpSmtW1PweNbYSHIUibioT7cJIdEvSKboQZ3fucj/DTsRjLDhgllWRXXg+gO/2fLFZ9/Vzj5nhqaau77GbKLUmwQU+pp8IECfeECr1J8wyZndvqzGqR0cq8BrBUJCreesKRX/xPGM5/84=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711359608; c=relaxed/simple;
+	bh=Z/5xlqoM86PbZ6pyYYzGmk7tZBzKI7XiMVMWlvi9/5Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PPXhXne5C7KhB+6EzwZoIoz3eeJY5fURie5cVvRRnIYDP1zTO+QbTCIO9r7vgRVN/lXz/WzLOCYIm2P7ZcEOz0rgRMOpIXUg0hneDn10/2+Xm7Bwr4vNf124rSR9PjxniL9SeV1fF88t5dLO0JTfubho5F1GjS2mlRbiNM71Y78=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=HLN6HlwQ; arc=fail smtp.client-ip=68.232.159.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1711359607; x=1742895607;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Z/5xlqoM86PbZ6pyYYzGmk7tZBzKI7XiMVMWlvi9/5Y=;
+  b=HLN6HlwQP/vq7g6lPHsp3iFnP7RD/H3xmOnXZaHxUpDHwPapTNVxHxge
+   UEtwN2FS+/YdpXyY8nLQca3zSMaapVkVu8wmJ6MyByvSIK9VQ3UCKOocc
+   Luji8N71Jh+ks8fbzXJ2XZPMWPkezn/1ydR5qOuXHl7uEMjvuEW8IPAiX
+   LNlmIsFDc3S3Ye+e8fu+74+xdUImnhURjMWGBCLWgYnb1BJtXXSJdTRza
+   iJO0NCHr4QHCUSD5+cxS7I0QtTY94R7Z2FgEcZ+oQmyobJZuvVWiGqGwW
+   fNcjf/6Tdvyp2sXfOhw1SMGicVPcYRxXzoe14rKK1EIpRVr30FBtSSt9c
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="114950600"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708354800"; 
+   d="scan'208";a="114950600"
+Received: from mail-japaneastazlp17011004.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.4])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 18:39:56 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fVdF7RFuK/AYuqggDRIcBYnOpaHt+bT6KI1noXJye1mMxtBzM0ZJq530Y5XuXrTo9PnUMDhtumvAIL3IkNEjK430XKHOI97A3JnzMo/0MalReZiBaXcHwtxh8PQJSALR3/iVePsq0MyEtgEsKlRmusih/R3vQ9eG4L8p6Vl/Ex1/g/XDJaeUarhBpa6YeeBaQVrzg0dDfW96UaPoKBVo7It6WGvvHKV9VNoptlBZy+x9G76gobxaBgHOHxi/lw8GWTgka3Cztmf4TwpsLQmtn2bV1hKY3EB2WYy9OUPdqpYFcfnxnKYF/DrikiWk3vqxmY5KNg+V8j5RDrW+J4vVow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z/5xlqoM86PbZ6pyYYzGmk7tZBzKI7XiMVMWlvi9/5Y=;
+ b=SJEtnCgDIc4wCU19uOpS8OskHRDrLVfY0isEnPYPd7xedmEzuDUrOtNVpIS7U7+TJde059tesBAM8uYR34FBbvv1GbBBbbvyP8pzxxzx4WKvZzOIj2Vk1PpZ7uoLUvznKVfrMbrUrQGxa+SrCpam7013s6HlJP9ktMEdgT26GtaduupnmCjEAYKJEfc9eJcxtFkLpmR11TT10lk6GEwlYT0mT6RVFcnUN3GRC4S2ZKHeeA/aYdxeNAEq9zRxJOFpN1uPmKbH8rM0X1bmogfhWvbPdq4tOFCK7Ejn0g4u+pTh+vK930Yf6P/H7g0yC95KnUo8jIhw9F/+SbzutuPgmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TYAPR01MB5818.jpnprd01.prod.outlook.com
+ (2603:1096:404:8059::10) by TYYPR01MB10593.jpnprd01.prod.outlook.com
+ (2603:1096:400:30d::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
+ 2024 09:39:52 +0000
+Received: from TYAPR01MB5818.jpnprd01.prod.outlook.com
+ ([fe80::c52a:473a:a14f:7f0e]) by TYAPR01MB5818.jpnprd01.prod.outlook.com
+ ([fe80::c52a:473a:a14f:7f0e%3]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 09:39:52 +0000
+From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+To: Wei Liu <wei.liu@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH] hv: vmbus: Convert sprintf() family to sysfs_emit()
+ family
+Thread-Topic: [PATCH] hv: vmbus: Convert sprintf() family to sysfs_emit()
+ family
+Thread-Index: AQHaea+sGRGDRSgQ6kqU8QEjVmbOQrFEcIoAgAPM24A=
+Date: Mon, 25 Mar 2024 09:39:52 +0000
+Message-ID: <5c1f6aba-bd3c-438c-8e00-548fe29d8136@fujitsu.com>
+References: <20240319034350.1574454-1-lizhijian@fujitsu.com>
+ <Zf4WUMyNq38LyDLW@liuwe-devbox-debian-v2>
+In-Reply-To: <Zf4WUMyNq38LyDLW@liuwe-devbox-debian-v2>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYAPR01MB5818:EE_|TYYPR01MB10593:EE_
+x-ms-office365-filtering-correlation-id: 95affd22-0669-410d-57b5-08dc4caf85e1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ YXnNG+oEBpuLFK4OwBO2G0f71a0JAFhlym1Pz8/c1vZkjHB/DdIHeU2JKhkk/7si6uvyGItzpbNOK2mfw8nSb2tsY9AZK3OyjXzfWIGaIZpfpN60K3cY8nVKSN9EqdozAtMLqA3pf+3KgEd+6lptCxYGWJUt3Blz2GoeXnd9wk5ohdL/rhxzuF8f79yK0JRIRgxgyM/x8taQWHlKSuw1P44ubFtHE98y9KBn/rUrfoSFgzQT1J8MmCJkGg6R9Fqpu4cdlqHE9ypQu4RSm229oXU2awO3kPvk1WM88I7c0nhI3Q5oNswfpOZ8ygkPkWtCsuwiN7NLfZSG62D8vWt/FDUiJUNyFcTpxvYoGdBd4fCIWdx2f3RRK+ppvKci3Kunxe8egoFL6mq7uIdVWU01hkVvuRqRXRrYKQ5zb42oJtBLmypf89fjp4DGWDavgvY/e9wRGVCOWdF+jANIn0Q9R2Yq0z/O7Q9TVa02XXqeQ8A/rx+5zl6zjgqElLqkv9JUdHVjvvWjDrmOjclfISCbZhNJD9hSOBMlOnvLlHzsWOIsXPrj/mJJXgFV/3GLigxvnv+Wnhq5PqN2VSCL6SbJiyU6o7WlpFd52Z/aV+AXo69nrx4jfixmK5boNwuiWX3Wq3MOnd1c9r2/g0Rl5ZQ784aKMTT9T1DXgjTNHqCe2AyWFrMN4WlSaAHJkl8AnmvKxYP6AHZFlFmrZZGqORlJps+J0T9O0FHJgJ/6Emn/Y/SrG+PqH1YTuJPwjgAunLlr
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB5818.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(1580799018)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cHMwa2s2VnBuUXVkbVF0cklqbWs5K1BhMmZibFVDMzIvSzVoTW1Ddk5FMDZw?=
+ =?utf-8?B?cnZMZUpSV1djYTNuNVNGVzZtVG1Tcm5RWW5nNDBQVVpxT3pSSTA5QllpK0FL?=
+ =?utf-8?B?dmYrcXYyRXRyYk0xQ3NCaXZnV2sxQlQxTTNHZFBOSTBXSFdlUjZmMEpQZU1w?=
+ =?utf-8?B?RlMyd0J0QTZXY2pNY1lCQkdpT25GWlRtQXlXQUhkTVNGTTlPUGtwRi9RL1NM?=
+ =?utf-8?B?UjBBOFoxV0JUR2VzSGQvVnlZUEJ4bFNBT3BsaExyc0xCa0xZekZiMExuSFJr?=
+ =?utf-8?B?Umo5M2hma1VmR3hnaXJsOHFKZUdrZHVqNmd0bklscUZDejQxUjRHbmM4TWlI?=
+ =?utf-8?B?d0FnQXBlQldyQXR3aDF3ZDVzTTdkeFV1K0xaK2g0TjI1ajVaakszdkcvcDIv?=
+ =?utf-8?B?dDNINzVrWU12Tzh3MitxRkRBZHRCckdJYkhmVk1tTER0Zm12ZXk3ZGdQeDV4?=
+ =?utf-8?B?VlNhTW0xMUxmcW9hbzVXWTBaY3hGSXk3bGZWR1U2cHNOVTRaUzdqSmJDZkdq?=
+ =?utf-8?B?K3dvNnl4K0o5WFVvS3NmWDNpanhiTFdzUlZUakZZT3NiVWRCYlZhVmdCUG5W?=
+ =?utf-8?B?TmxXM3hKUXdsMWpKY0hkT3BPZmtwRDA5TkRpYXZqbWdjSmY5c29kRjRPSU1q?=
+ =?utf-8?B?Nkt3YkJCcUg3bVdJS25RWUowOW5xenRkMjBEcnRhL0NTaFlYK3ZXQTRzK2JO?=
+ =?utf-8?B?UWNmMnVUbW9yZStmUjNsaUU2UERNcjR0c0xoWGt3a3pRK0t5VG5NTG1EYk1N?=
+ =?utf-8?B?SU5ydWJwNHFQbTRqZ1FENXkybTJaUFBrZVBteEdjQVJIWEdmQWVrS1JGSnoz?=
+ =?utf-8?B?UFlkLzFJV3Yva1EyWjNuNkw4QllZbDVlZ2FFK2RPNWZSZWFCNHFvRTdCbHBv?=
+ =?utf-8?B?RUMwWERXTHB3ZFhVVVJZekZkejIvRVduZ0ZXTUN0c1hNV2poaWhwTEI1QmRy?=
+ =?utf-8?B?QTlJdjhILy83bHVmdklPUTM4SjhrKzZXeHVqYmJHVGVCQVh3VVQ3eGQybmlN?=
+ =?utf-8?B?RkZ5U1RxaEhFbFc0d0hwdkFCR2ZlTCtjMERlbUt5TFU0NDZLbjZGaFJlbm5j?=
+ =?utf-8?B?ZzNiUFRqYmdxaUovVzRxYkhwQjZaaGozSGx2TC9HVWM0RGI2TWhhcU9BSFAw?=
+ =?utf-8?B?Y2M3VFhsb2tBWHF2bmpaQytMTFdUWFdqSlhaenVVTS9XSFVNcDREY1FCZGVZ?=
+ =?utf-8?B?b3l5eS9KY2JleFlVR0hMbEV2UWZMTFoyNjdqbTdRa2N0Y09UblJDMVNzdnVj?=
+ =?utf-8?B?V1krUDVXdm1Wcy80Nk5ESzRrOWd6QUxid0oxUTIrUy9mcHZlUXRCUkRZQjBQ?=
+ =?utf-8?B?cjdRamgxa2FlZDFCOERldlpLZXJrdUgwWlpuZFo1dndKbFlsQWsrS3ZwRzdr?=
+ =?utf-8?B?UGlqOWM3Rm5IdC9KMGVCUDlTcTVSOHFDWEl5T3RPQ0Z3bS9qVWZaWW4yTFVm?=
+ =?utf-8?B?SHlLT2RReDl4aFIybm1RR21mbzlxSUR0bks4N0tpengrNG1YcWdrMFZqRG1M?=
+ =?utf-8?B?Z0ZIbzlWODFWM2s2RzZSUUhBM0U5Zi8xODBZVFNaMkJDcDZhWkR1SFZrRG9V?=
+ =?utf-8?B?WFpPd3BNNGQvc2VOVjNkZExPUkxDS3grcldIbk9QVUxZZlZGNThDWmJiSW5o?=
+ =?utf-8?B?R0Nra1F1bUpNWGNtb1V3bXhsdlZib3k5Q2c5TWxLTmJ6ZnNvdkNZZzNvaWRp?=
+ =?utf-8?B?UEtwL2VLcU4vQzAyWTRwU1pvQTY1VFE3WTNHQytXb25uYWE2US9VZy9rWmJu?=
+ =?utf-8?B?Q0RLSStXaE41YkFIWXJDOVpwYVFXYjNtOXVCMytrTVpJcEZiWmd4eit0T29D?=
+ =?utf-8?B?anZBMi9XdW5VSVlYL1JVN09wVm8vM29rVXRSS0hIZURIZXVyU1ZtZmZnR1Rm?=
+ =?utf-8?B?MGJDZVl3S2xpZnNPQXdvUkZPRGlocm9yMzFPVjkySHE4UEd3eE5JN095ekYy?=
+ =?utf-8?B?UTZXWGhGL0QyNlQwUkRpS202UVErMW1HQVBIemJiSlpDZ1RrSGVHTkFyYWNU?=
+ =?utf-8?B?K1dQbGR4MTA4ejkyWXJuTURkV25uTGQrYTA4YmJ5bTV2NVRzQzdHQWFkL1I0?=
+ =?utf-8?B?QU52ZHc1OFRKdExYcmhNWnhmOHUrTFZJdHFMbjlxcHRUcjE5cTRDSGtTVVRv?=
+ =?utf-8?B?RzNOQkRwYWtzUGd1ZFVvZUsxVEVCNWxRWmR0L3UvQ1hOMlBPbU9xL3ZNMlJj?=
+ =?utf-8?B?VXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <643D9C6F1962174A8B82D5CC9597722A@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319104857.70783-1-mic@digikod.net> <20240319104857.70783-5-mic@digikod.net>
-In-Reply-To: <20240319104857.70783-5-mic@digikod.net>
-From: David Gow <davidgow@google.com>
-Date: Sat, 23 Mar 2024 15:37:21 +0800
-Message-ID: <CABVgOSksVq5_AeObEBZFAezZpiQ41C7ZHWEtRBR_1d2UQQYXbw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] kunit: Handle test faults
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Morris <jamorris@linux.microsoft.com>, Kees Cook <keescook@chromium.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-um@lists.infradead.org, x86@kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000a2eb5a06144f03b2"
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	MY/3nN+p9kY+C2xtS/29tGneS9VcrL1ueEJIV65XA1rx+xuDZ3xVamb+Sbr0YvcaiPf74+HHimMu5yOqcAF9p0I06jXO4IRDEemaS4hqYCmx1cjtDdY4z+iFghxpGXgKOX9j4ntDJ9QjwxnGATVktcCrowrhkT5FqFRFcuXptcx0qHHMbukzegymn4WcskrJJrtOoeijzC3S9GXf+mwFuWVb81Wr+Tg34a2H+oh3uDJUJxsMnuvlmOq1vQuw65n0vYJwTUU0vzgc140qvJGq6EbkSm5jg4kS8WUlXKEVGyiXfIXPLO0t7ny7RlkZGNDTrjV8oucDMAidz8FokFS8+wiESC5yEoYL9MwDygO98nT3CQBTXkbKeISfyONTzZYfxn5Qrj7nAZ7+hyhqNx/SVVwkhDTlpSjPMy/AFgiQwjAm7Gl+XyX/Czr+gJoQ0Ux0q31D2rmtSW/8M6kNDeSStde0Ohp3gs3b7Z3ch+7l2Wd8Y1PYswDXGs/SEkxYXYgNkKKEGEYpM7hWwNluuK3p7BwaLgFSn42ST80jSiEC37YuQnJkpAWBC5G7MJ4VY6wF8aLzLVadk9TQkAxJK6haOdza3wGdol0gdoYZUY+8EBXRkZRHyOgqqkgVaQo1dABh
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYAPR01MB5818.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95affd22-0669-410d-57b5-08dc4caf85e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 09:39:52.8631
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9ZHWFh2J42p/r1RclpvQL0rXWKhPM6hQFFSejz722FqTyBEo1ZLPZ9WZ3s4cHY0tiv+TYongcPDN5kLtCi4e0w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB10593
 
---000000000000a2eb5a06144f03b2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 19 Mar 2024 at 18:49, Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> wr=
-ote:
->
-> Previously, when a kernel test thread crashed (e.g. NULL pointer
-> dereference, general protection fault), the KUnit test hanged for 30
-> seconds and exited with a timeout error.
->
-> Fix this issue by waiting on task_struct->vfork_done instead of the
-> custom kunit_try_catch.try_completion, and track the execution state by
-> initially setting try_result with -EINTR and only setting it to 0 if
-> the test passed.
->
-> Fix kunit_generic_run_threadfn_adapter() signature by returning 0
-> instead of calling kthread_complete_and_exit().  Because thread's exit
-> code is never checked, always set it to 0 to make it clear.
->
-> Fix the -EINTR error message, which couldn't be reached until now.
->
-> This is tested with a following patch.
->
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: David Gow <davidgow@google.com>
-> Tested-by: Rae Moar <rmoar@google.com>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240319104857.70783-5-mic@digikod.net
-> ---
->
-> Changes since v2:
-> * s/-EFAULT/-EINTR/ in commit message as spotted by Rae.
-> * Add a comment explaining vfork_done as suggested by David.
-> * Add David's Reviewed-by.
-> * Add Rae's Tested-by.
->
-> Changes since v1:
-> * Add Kees's Reviewed-by.
-> ---
->  include/kunit/try-catch.h |  3 ---
->  lib/kunit/try-catch.c     | 19 ++++++++++++-------
->  2 files changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-> index c507dd43119d..7c966a1adbd3 100644
-> --- a/include/kunit/try-catch.h
-> +++ b/include/kunit/try-catch.h
-> @@ -14,13 +14,11 @@
->
->  typedef void (*kunit_try_catch_func_t)(void *);
->
-> -struct completion;
->  struct kunit;
->
->  /**
->   * struct kunit_try_catch - provides a generic way to run code which mig=
-ht fail.
->   * @test: The test case that is currently being executed.
-> - * @try_completion: Completion that the control thread waits on while te=
-st runs.
->   * @try_result: Contains any errno obtained while running test case.
->   * @try: The function, the test case, to attempt to run.
->   * @catch: The function called if @try bails out.
-> @@ -46,7 +44,6 @@ struct kunit;
->  struct kunit_try_catch {
->         /* private: internal use only. */
->         struct kunit *test;
-> -       struct completion *try_completion;
->         int try_result;
->         kunit_try_catch_func_t try;
->         kunit_try_catch_func_t catch;
-> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index cab8b24b5d5a..7a3910dd78a6 100644
-> --- a/lib/kunit/try-catch.c
-> +++ b/lib/kunit/try-catch.c
-> @@ -18,7 +18,7 @@
->  void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
->  {
->         try_catch->try_result =3D -EFAULT;
-> -       kthread_complete_and_exit(try_catch->try_completion, -EFAULT);
-> +       kthread_exit(0);
-
-It turns out kthread_exit() is not exported, so this doesn't work if
-KUnit is built as a module.
-
-I think the options we have are:
-- Add EXPORT_SYMBOL(kthread_exit).
-- Keep using out own completion, and kthread_complete_and_exit()
-- try_get_module() before spawning the thread, and use
-module_put_and_kthread_exit().
-
-I think all of these would be okay, but I could've missed something.
-
--- David
-
->  }
->  EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
->
-> @@ -26,9 +26,12 @@ static int kunit_generic_run_threadfn_adapter(void *da=
-ta)
->  {
->         struct kunit_try_catch *try_catch =3D data;
->
-> +       try_catch->try_result =3D -EINTR;
->         try_catch->try(try_catch->context);
-> +       if (try_catch->try_result =3D=3D -EINTR)
-> +               try_catch->try_result =3D 0;
->
-> -       kthread_complete_and_exit(try_catch->try_completion, 0);
-> +       return 0;
->  }
->
->  static unsigned long kunit_test_timeout(void)
-> @@ -58,13 +61,11 @@ static unsigned long kunit_test_timeout(void)
->
->  void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *contex=
-t)
->  {
-> -       DECLARE_COMPLETION_ONSTACK(try_completion);
->         struct kunit *test =3D try_catch->test;
->         struct task_struct *task_struct;
->         int exit_code, time_remaining;
->
->         try_catch->context =3D context;
-> -       try_catch->try_completion =3D &try_completion;
->         try_catch->try_result =3D 0;
->         task_struct =3D kthread_create(kunit_generic_run_threadfn_adapter=
-,
->                                      try_catch, "kunit_try_catch_thread")=
-;
-> @@ -75,8 +76,12 @@ void kunit_try_catch_run(struct kunit_try_catch *try_c=
-atch, void *context)
->         }
->         get_task_struct(task_struct);
->         wake_up_process(task_struct);
-> -
-> -       time_remaining =3D wait_for_completion_timeout(&try_completion,
-> +       /*
-> +        * As for a vfork(2), task_struct->vfork_done (pointing to the
-> +        * underlying kthread->exited) can be used to wait for the end of=
- a
-> +        * kernel thread.
-> +        */
-> +       time_remaining =3D wait_for_completion_timeout(task_struct->vfork=
-_done,
->                                                      kunit_test_timeout()=
-);
->         if (time_remaining =3D=3D 0) {
->                 try_catch->try_result =3D -ETIMEDOUT;
-> @@ -92,7 +97,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->         if (exit_code =3D=3D -EFAULT)
->                 try_catch->try_result =3D 0;
->         else if (exit_code =3D=3D -EINTR)
-> -               kunit_err(test, "wake_up_process() was never called\n");
-> +               kunit_err(test, "try faulted\n");
->         else if (exit_code =3D=3D -ETIMEDOUT)
->                 kunit_err(test, "try timed out\n");
->         else if (exit_code)
-> --
-> 2.44.0
->
-
---000000000000a2eb5a06144f03b2
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
-mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
-wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
-5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
-ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIJvt7h5o12z8IiD0t5jRS/DC8KtWReNf4h1gSZ0qRHv7MBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMyMzA3MzczNlowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBMTp5b
-Td1xJx+p44tCgJ0yL8S6nZE2lo5pXW1B1GdQtEXo9I2vKE9YysMJlUqVOOvMUtDJp2Kx5yZTqHPM
-GGkVnOZs8j7XrB9/G4FjLNsu/729mAgQe+7+1xYQGSzHuPEfXXj2Yh6DNVg7Vzp3Fnw7WgmNtL2Z
-XnCn0ezoSBk+76eTUX4Sox2U/QsZxeGT2tZNt370NDICs+QqCJMADye7y4balXahUPfOcsCjvV/S
-b5Ok+sXchNr05gJlfldWTsgAgl8IcCsL1duBN/2bU/sU2xR35XZyXQtH/lKVtxLh1fVCg4ne/MaU
-Q7KiSn5c0eY1Q/T3GmPMFYChhCiWnJ2Y
---000000000000a2eb5a06144f03b2--
+DQoNCk9uIDIzLzAzLzIwMjQgMDc6MzcsIFdlaSBMaXUgd3JvdGU6DQo+IEhpIFpoaWppYW4sDQo+
+IA0KPiBPbiBUdWUsIE1hciAxOSwgMjAyNCBhdCAxMTo0Mzo1MEFNICswODAwLCBMaSBaaGlqaWFu
+IHdyb3RlOg0KPj4gUGVyIGZpbGVzeXN0ZW1zL3N5c2ZzLnJzdCwgc2hvdygpIHNob3VsZCBvbmx5
+IHVzZSBzeXNmc19lbWl0KCkNCj4+IG9yIHN5c2ZzX2VtaXRfYXQoKSB3aGVuIGZvcm1hdHRpbmcg
+dGhlIHZhbHVlIHRvIGJlIHJldHVybmVkIHRvIHVzZXIgc3BhY2UuDQo+Pg0KPj4gY29jY2luZWxs
+ZSBjb21wbGFpbnMgdGhhdCB0aGVyZSBhcmUgc3RpbGwgYSBjb3VwbGUgb2YgZnVuY3Rpb25zIHRo
+YXQgdXNlDQo+PiBzbnByaW50ZigpLiBDb252ZXJ0IHRoZW0gdG8gc3lzZnNfZW1pdCgpLg0KPj4N
+Cj4+IHNwcmludGYoKSBhbmQgc2NucHJpbnRmKCkgd2lsbCBiZSBjb252ZXJ0ZWQgYXMgd2VsbCBp
+ZiB0aGV5IGhhdmUuDQo+IA0KPiBUaGlzIHNlbnRlbmNlIHNlZW1zIHRvIGhhdmUgYmVlbiBjdXQg
+b2ZmIGhhbGZ3YXkuIElmIHRoZXkgaGF2ZSB3aGF0Pw0KDQpJcyBpdCBoYXJkIHRvIHVuZGVyc3Rh
+bmQsIHdoYXQgSSB3YW50IHRvIHNheSBpczoNCg0KU3ByaW50ZigpIGFuZCBzY25wcmludGYoKSB3
+aWxsIGJlIGNvbnZlcnRlZCBpZiB0aGVzZSBmaWxlcyBoYXZlIHN1Y2ggYWJ1c2VkIGNhc2VzLg0K
+DQpTaGFsbCBJIHVwZGF0ZSBpdCBhbmQgc2VuZCBhIFYyPw0KDQpUaGFua3MNClpoaWppYW4NCg0K
+DQoNCj4gDQo+IFRoZSBjb2RlIGxvb2tzIGZpbmUuDQo+IA0KPiBUaGFua3MsDQo+IFdlaS4=
 
