@@ -1,129 +1,141 @@
-Return-Path: <linux-hyperv+bounces-1837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1838-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 076F288D519
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Mar 2024 04:40:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1471F88E121
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Mar 2024 13:52:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39A5A1C23A67
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Mar 2024 03:40:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B468A296F45
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Mar 2024 12:52:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AD1225D6;
-	Wed, 27 Mar 2024 03:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C9F5155310;
+	Wed, 27 Mar 2024 12:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KH+PR2NJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM28g1N3"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2024F23763;
-	Wed, 27 Mar 2024 03:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3242D155302;
+	Wed, 27 Mar 2024 12:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711510839; cv=none; b=SYoyMloI0rnB1J9Lum4wAKiKCHm9S42ntqiPenID/RlYEnA9+JOQopZxHeCwtEkvHrB1QzgHHZiRTBoms4Ng9p0TSxqKAv10aqvt8sNS2CyvbD5sA0UZjan75857WepcYy3Jr85iw7h87jM5CZPu+QiOmOC3YaUc8PTdqETyE8U=
+	t=1711541738; cv=none; b=ackhj9CIUV2dosZ+HEOH5jYLMU3MMl4Z2/jThDL+hA0GCfjuYNL9NWj79itFY/Sdsri5IjWWKxNQiyiX0VIVnwS2ywAxQkBLQkoNKZBCx+FPP6icw9ruSM3RogfT5easKvnhPkeOxgXxWGKkqOSIsmE7HjIOCGYfMR9QYC0WZ68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711510839; c=relaxed/simple;
-	bh=Qy9jNwoADlloXLB/O/YDSRWz34f2X4WLlvwpB0CLSKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=psiGWiuv74xW2BcisIbYtPkwLI+L8H4DbjlO8pjl+N4SIFNMbXF72mez0VOmkPkRtYsqpHZb7lSIjslPu53VrBBFMkBYFYoSjpZsiXirq2rsBDyiz7ujpCXbWcKtMOaF/rk5qmlaW9fz8e3atlfO/bIVsu/esQ6GmnYOGg94et8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KH+PR2NJ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 820E7208444F; Tue, 26 Mar 2024 20:40:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 820E7208444F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1711510837;
-	bh=4WwOkF9QcocRskGPQZaISh5gvanICY1Ewo+yRt6ITI4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KH+PR2NJT9MAI9WHMxn7DG+mfgYB4OiJWsDUCRNM/0e1hq7N/Q9iYajobG1DJH04m
-	 x7zHhawGfqygZbnDkrYZB8OAnz63zhnSRkeodlvJ/Nf/CWNlcTUMUlBBqseJanUmJw
-	 hyOo4nLVdBVKIkPnXe9B+FgpZZqYFFFlCLUsw7NM=
-Date: Tue, 26 Mar 2024 20:40:37 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Long Li <longli@microsoft.com>
-Cc: KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	Saurabh Singh Sengar <ssengar@microsoft.com>
-Subject: Re: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio
- driver
-Message-ID: <20240327034037.GA22340@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1710930584-31180-1-git-send-email-ssengar@linux.microsoft.com>
- <1710930584-31180-6-git-send-email-ssengar@linux.microsoft.com>
- <SJ1PR21MB3457E5B4D852A914CD691E53CE322@SJ1PR21MB3457.namprd21.prod.outlook.com>
- <20240321180705.GA12387@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1711541738; c=relaxed/simple;
+	bh=lHt9D14ybf0nnCyk5lSioH5vZZl9kQOLC2vqJw8avK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s75FR/UF+gW79OIcpPSWI8NSEHaaCVz8QP5ZSCp++4pFPfEAsMeepzLD9BNJ8Q24ZUD0TkKjTBGMXFn1GfC5boXZfoEPJrBHMY0ZUkWCtaxgGXnEP7BsyPzFp8ub9PZvpqznpwr8NK7KkfsK8rJkkTYtj0cFXr6C+H/XJypzEDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM28g1N3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB88C433F1;
+	Wed, 27 Mar 2024 12:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541738;
+	bh=lHt9D14ybf0nnCyk5lSioH5vZZl9kQOLC2vqJw8avK8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZM28g1N3oWXkNTB/3BP/mxDQfA1bHQPS0LsIAs0IbJUY7LPC5U6ss3aYt/MLqG8Zo
+	 grnPfZ+pwns9sShKCQTSGebRH96+2nlbVywOEnBEtcVM2b/IBF7g6Iy2SAvFuXNA0v
+	 b2ujEcFUvngQqv29FjZC5JUxl1C77WoZ5bbQ4c9GC58Lolc4o/KK1LopQRLwEoAnFp
+	 a3LpIbHpVg4XW+gK7/2hfKZ1ZtalD6OXR2mSDukIlGIXy/0HHtu0yMMWKXZzYNBXlK
+	 mAeDw/Sp6aBX9KPJCNKBV9Rr3BF+3kS8n6M8saJ18yIPG2d0+2V+ntvEA+f//5tTb2
+	 KQiWgoZB7ITRQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	mhklinux@outlook.com
+Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Long Li <longli@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "PCI: hv: Fix ring buffer size calculation" failed to apply to 5.15-stable tree
+Date: Wed, 27 Mar 2024 08:15:35 -0400
+Message-ID: <20240327121536.2832043-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321180705.GA12387@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 21, 2024 at 11:07:06AM -0700, Saurabh Singh Sengar wrote:
-> On Thu, Mar 21, 2024 at 04:42:44PM +0000, Long Li wrote:
-> > > Subject: [PATCH v2 5/7] tools: hv: Add new fcopy application based on uio driver
-> > > 
-> > > New fcopy application using uio_hv_generic driver. This application copies file
-> > > from Hyper-V host to guest VM.
-> > > 
-> > > A big part of this code is copied from tools/hv/hv_fcopy_daemon.c which this new
-> > > application is replacing.
-> > > 
-> > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > > ---
-> > > [V2]
-> > > - Improve commit message.
-> > > - Change (4 * 4096) to 0x4000 for ring buffer size
-> > > - Removed some unnecessary type casting.
-> > > - Mentioned in file copy right header that this code is copied.
-> > > - Changed the print from "Registration failed" to "Signal to host failed".
-> > > - Fixed mask for rx buffer interrupt to 0 before waiting for interrupt.
-> > > 
-> > >  tools/hv/Build                 |   3 +-
-> > >  tools/hv/Makefile              |  10 +-
-> > >  tools/hv/hv_fcopy_uio_daemon.c | 490
-> > > +++++++++++++++++++++++++++++++++
-> > >  3 files changed, 497 insertions(+), 6 deletions(-)  create mode 100644
-> > > tools/hv/hv_fcopy_uio_daemon.c
-> > > 
-> > > diff --git a/tools/hv/Build b/tools/hv/Build index 6cf51fa4b306..7d1f1698069b
-> > > 100644
-> > > --- a/tools/hv/Build
-> > > +++ b/tools/hv/Build
-> > > @@ -1,3 +1,4 @@
-> > >  hv_kvp_daemon-y += hv_kvp_daemon.o
-> > >  hv_vss_daemon-y += hv_vss_daemon.o
-> > > -hv_fcopy_daemon-y += hv_fcopy_daemon.o
-> > > +hv_fcopy_uio_daemon-y += hv_fcopy_uio_daemon.o hv_fcopy_uio_daemon-y
-> > > +=
-> > > +vmbus_bufring.o
-> > > diff --git a/tools/hv/Makefile b/tools/hv/Makefile index
-> > > fe770e679ae8..944180cf916e 100644
-> > > --- a/tools/hv/Makefile
-> > > +++ b/tools/hv/Makefile
-> > 
-> > I'm not sure if vmbus_bufring will compile on ARM.
-> > If it's not supported, can use some flags in Makefile to not build this.
-> 
-> You are right, this is not supported on ARM64. I can query uname in Makefile
-> and compile this only for arch != aarch64.
-> I will add this info in commit message as well.
-> 
-> - Saurabh
+The patch below does not apply to the 5.15-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Greg/Long,
+Thanks,
+Sasha
 
-I will be sending the V3 fixing above comment. Hope there are no
-further comments.
+------------------ original commit in Linus's tree ------------------
 
-- Saurabh
+From b5ff74c1ef50fe08e384026875fec660fadfaedd Mon Sep 17 00:00:00 2001
+From: Michael Kelley <mhklinux@outlook.com>
+Date: Fri, 16 Feb 2024 12:22:40 -0800
+Subject: [PATCH] PCI: hv: Fix ring buffer size calculation
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+For a physical PCI device that is passed through to a Hyper-V guest VM,
+current code specifies the VMBus ring buffer size as 4 pages.  But this
+is an inappropriate dependency, since the amount of ring buffer space
+needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
+size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ring
+size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
+is used for only a few messages during device setup and removal, so any
+space above a few Kbytes is wasted.
+
+Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
+Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
+header is properly accounted for, and so the size is rounded up to a
+page boundary, using the page size for which the kernel is built. While
+w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
+64 Kbyte ring buffer, that's the smallest possible with that page size.
+It's still 128 Kbytes better than the current code.
+
+Link: https://lore.kernel.org/linux-pci/20240216202240.251818-1-mhklinux@outlook.com
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+Cc: <stable@vger.kernel.org> # 5.15.x
+---
+ drivers/pci/controller/pci-hyperv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 1eaffff40b8d4..5992280e8110b 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -49,6 +49,7 @@
+ #include <linux/refcount.h>
+ #include <linux/irqdomain.h>
+ #include <linux/acpi.h>
++#include <linux/sizes.h>
+ #include <asm/mshyperv.h>
+ 
+ /*
+@@ -465,7 +466,7 @@ struct pci_eject_response {
+ 	u32 status;
+ } __packed;
+ 
+-static int pci_ring_size = (4 * PAGE_SIZE);
++static int pci_ring_size = VMBUS_RING_SIZE(SZ_16K);
+ 
+ /*
+  * Driver specific state.
+-- 
+2.43.0
+
+
+
+
 
