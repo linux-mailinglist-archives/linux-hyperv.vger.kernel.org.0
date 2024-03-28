@@ -1,186 +1,168 @@
-Return-Path: <linux-hyperv+bounces-1869-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1870-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 641678909B6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Mar 2024 20:51:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82081890A42
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Mar 2024 20:56:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 870D31C2DA44
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Mar 2024 19:51:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CCBE2967A0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Mar 2024 19:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48E3F13A890;
-	Thu, 28 Mar 2024 19:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8395D13E8A6;
+	Thu, 28 Mar 2024 19:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="X3sVGjuP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="er4EJv7v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSZjD/ti"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC2D13A87F;
-	Thu, 28 Mar 2024 19:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2F13E6D0;
+	Thu, 28 Mar 2024 19:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655412; cv=none; b=Y9Bb4rzsF4fR355Mb8eM4k7P1bYCD8k33El6W4rz2T5DYhI9xdNaxXTDUD+m/gaARdp33mz2rG2TY3n0ko2XdR7kiK+WG2s5TISka+D+r7fsfcGezxRRolRY7Av7eexkDOJgtoEpFajRgCw7YeGGKOSxkm+KSRMg5JV2Lp7+QKE=
+	t=1711655549; cv=none; b=G8iCXSuIcdYKcIbYGG308uWA28EJpLf7XXNpfrfZPczb7e7/F8zJq4UHd88AlyZO8OK8BL3R/aHEzcBchYI1sUZx60XC4TDrrsYrDzh+uuVud66n41wMS8vFUzLsXhXFNOAlGB8yHIVDWY8gmoCmyRd1kfaoMScn/Re9OBWEdR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655412; c=relaxed/simple;
-	bh=82WZ09r8X2wdE/vjUS1bY2Z6AeLXgQBKptYWCvEjiiY=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=YlOwbM24sHVz27nZkQhWE+YS53sVX9gwDY+QgDtw2i06Ro6zFe4mpCX7qtMde0cePtoVqsWYw9OgkHmi2APKAKz+rQ8KotLXutbz34Gi4k9M6r9Pk0brNkOPHi7BXDwPvu3QlDT+UQIu493UiaWWl6G6Z3HenDj/HY1O/jZlMi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=X3sVGjuP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=er4EJv7v; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 1AE681140139;
-	Thu, 28 Mar 2024 15:50:08 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 28 Mar 2024 15:50:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711655408; x=1711741808; bh=BW4gpjPip0
-	MIz7Sv02WTjVBL1poTtTjeiFToXn5W8yQ=; b=X3sVGjuPXyGkNnz0RtLc111lKk
-	iDA1+K/BClsRH/uoanrfo/6bUQanVYQGzizx/DSwhnCo9sAk53BamXVqtPGpHHDN
-	IoMhB+caj4C2Zvu1VkwXJcOGhb00OnxZr7g1p1ImAxtXgScCWekOI3dh5lq7+kK8
-	756x4TJzYdvoyrophAYiXt3KYjXHkYVzLL2RyHA1PDPWAJmACkkFpqeR6hEX5FWT
-	8c+kLk7X+ZdAN3MXMwTxay2K4pZLpTmn7xiq0pgk0vvm3NWi8FMLAxTocO69OSqh
-	iJ1J/qbrLrXkBf3IzrD8N71zNtnUgScU7RzH9WmVJ74k6IuTpmP08DQuCAXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711655408; x=1711741808; bh=BW4gpjPip0MIz7Sv02WTjVBL1poT
-	tTjeiFToXn5W8yQ=; b=er4EJv7vpQ314GUweWPL7lb7mIhf28FJ1g9uM9zUGh2E
-	2hJujbQy01D5uJiU+OhkzwzO5csza+Cp1GOmcNOUTlMRDQak6Pb9OSCJ6JkVwDj+
-	gDz2/CPyETbRahetWWZUmB359hYjbZANj30LmxFaNIYCbGIXcp200wWOQ5C3lt7U
-	wL2g3ZZiveDcSKL4doiViZZ/AzcmMVwa6UrlQu5ph8EFzqsMY7PlJiM3xVszFBkD
-	3rej2/Dqt/gc5KWKhCEilqKC3u4JlI1NT0dd69L/vBrSbcox+G2fv831znRQvhaC
-	sQ026xHWJtNDKBsnQOWf2mAIzAI88OLjwBwJfxQ+hQ==
-X-ME-Sender: <xms:7ckFZpDNYIkA2t9-qcVzdID6qP0usEKGYUQS1-wNkxjQGRgV4mdp-w>
-    <xme:7ckFZngCnR-uaOutDT0Ozn25YFLpIo5sfMlExSRSHoKsbJmDmjrcD3K2G3N_CwBJZ
-    DKGyHFhmgTxY3gtzb8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduledguddvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:7ckFZkk1EtQiblf_nid5SaPE8zuqyhxTpV7P0da2Bb0LaW4sXaWF3g>
-    <xmx:7ckFZjyyz1nYkhvxUzj050Ly1qSCgVqx7fsYn6ARf5x2Wv71j6WHAA>
-    <xmx:7ckFZuSPJGtGvhHfRwwFtoqahvwu7HLZTmxZZkly_Ml1Y149BBocVQ>
-    <xmx:7ckFZma47lZuxhffrZb_n6fjlCTBI66VWrbQLoiXue6vLyXCRdmOyw>
-    <xmx:8MkFZuzi9SW-igSjg52_ZUIskJ4gzWDF5zWFAwTDZzhoC52P6Oh2pg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7B52EB6008D; Thu, 28 Mar 2024 15:50:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
+	s=arc-20240116; t=1711655549; c=relaxed/simple;
+	bh=qmQFGHYUei7BOkNgnnntn6VCVy9UtjipJi0ZJ6b8pZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJbdZtoySnpArpKIq3Y++q+4noEuikoyvfCKGgU8nniqriLp3WjGlhCSIQN2aO4CrNverX+/B/cC/BW8I6UvBtosmiOx8siUe/3mvobdXBRnWiXZaeixC20ZngOUUvSRuBphg/9H4753nOZ4nW1WhH/TYgI+Dba7Tiwa3tKER0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSZjD/ti; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c3ceeb2d04so901583b6e.1;
+        Thu, 28 Mar 2024 12:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711655547; x=1712260347; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YT6C4kyGaXJTnO4s5bmEmPWYlNQPKErlDo5CuGDxbV8=;
+        b=DSZjD/tiqsflzsxPPIOjMyejt0NBAWGlYrE2Wvot3e2jzuoCM7HG1rkaLTYcDhFPbC
+         6JJVcTkheE8+myU/0c2kKCD+JeGq9uPq2wvOFjjZhhDSNSp0mCwxKDs4pYOeM9dneme+
+         rQMJ5kN8T1EPBxkfQv5GDoArt3WXZnsrrLTpOXQ2PldTrs9wil7tjOS2ppDuZxDigVNj
+         WMSJJEI4YSQXkA36kT/PwmFc+KbfYrbBUZOdcXvfNgFNC7npGmcxED87Trhu5D8gSnC1
+         xTcLxX25ONlDU1LnLheM/+AU8swKE3a8XmzqovSYzvtKKhyDzp9rIaLDdRlOra2Of76J
+         OKUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711655547; x=1712260347;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YT6C4kyGaXJTnO4s5bmEmPWYlNQPKErlDo5CuGDxbV8=;
+        b=GHxTWz3eZFtKTpj2JYaz9XJyvfZgYbWOcFm55wd/HQ+1ybTDC7fW8VozjpP0K4Q1v2
+         dYHvMcxjFAeL8D4EgosuIUAniUGwBUlTn6u6/s40SDOxasgEYKy7ii8oW8+UWv2gIuOq
+         50d4z7Uy3YYWGX3ij8SJ1ifu8YgSBaWNK5IUNnorkX7fATMRHtZ2CEDv98fpLPUcoo5+
+         6++7jJBP4QaVfY02gMF9NQIYByLPJy0njLlVYaJHmVcCZ7RXYaYGmmFsBlLaN43Svby3
+         c5eaKKr/6a91koJPXrgEiTY6mae3zfqckAnQd/DpGNDwK6SCHuoSgDUhX9tYX7jBEZo8
+         Ctzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXngZi6NV1xWSwl46mmaCS/lRJprCGnNUF5tvTYqkxHzjRJ9kBHF+HEe3CgNSPvgSmLgbg9WATEEfSu4arW/HaAsKqlCA66XzeaxJpfK/kir+QVpyZluM1EgCEYqVBDe09DrFYzjyOweTdyf4EZL10KMnTUjspiVwGsduQDqgdrdcoyeU1jli+yNkOMLBA+SzR3cc5GYiV6Z63pLdt0Wfwlq+DJJU4CQOQSynFm6okMnOdr+EWdKlvPZ1kVBOxTTw39YCHs+MbYN/J/dxiuiegzLxiPd+nMDcx25djrqmPMqeiZl6jU1TsQxbS/ODJGnP5jkuIUnwQtX2IHMK7WoVQeWI+LbRFlGVnqY3+f2hsPE2wUrRJ3vqFUXDTjuC53OlZBF6/X9mXEwOOABw5g+bi/8zau3uMyicxHJSNbbW7FiSm4tAzg5pSLV+bKwpxa59zZjQdfqxKHOldoTghq5dYtBdI60KdZt9EtrV4NGrJ26PZTU5AbIf8nE8q9Bw6Gqoal9ZAGLk3A4AYLQEgG5RPckvRZjCEl4m0PJ609n0wILfgk1BcZtnMbl/woNwWBAZw8j62XbJ3uVPubsSk2j/c=
+X-Gm-Message-State: AOJu0YyvXq7J/e6xvMdgvbJKc/measjiCe7T07f8gLtC4S2Yx+tgo37m
+	sDKyRqpR0Ualfik/5wj3qOb2zUlx8Ve+Mtylw6bHQvfE3OfGqbk=
+X-Google-Smtp-Source: AGHT+IGa6m7tWMYIWy51l607HYGlrsX0qHDQfT9gmhvhIngwQWHc2ccP79f2XqPzu8hB8uCGkbHOGQ==
+X-Received: by 2002:a05:6808:1790:b0:3c3:d1a8:6d14 with SMTP id bg16-20020a056808179000b003c3d1a86d14mr306232oib.35.1711655546757;
+        Thu, 28 Mar 2024 12:52:26 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.181.2])
+        by smtp.gmail.com with ESMTPSA id 22-20020aca2816000000b003c3d6dab111sm345409oix.30.2024.03.28.12.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 12:52:26 -0700 (PDT)
+Sender: Corey Minyard <tcminyard@gmail.com>
+Received: from mail.minyard.net (unknown [IPv6:2001:470:b8f6:1b:b987:69e:202a:697a])
+	by serve.minyard.net (Postfix) with ESMTPSA id 4B51A180059;
+	Thu, 28 Mar 2024 19:52:25 +0000 (UTC)
+Date: Thu, 28 Mar 2024 14:52:24 -0500
+From: Corey Minyard <minyard@acm.org>
+To: Allen <allen.lkml@gmail.com>
+Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org,
+	tj@kernel.org, keescook@chromium.org, vkoul@kernel.org,
+	marcan@marcan.st, sven@svenpeter.dev, florian.fainelli@broadcom.com,
+	rjui@broadcom.com, sbranden@broadcom.com, paul@crapouillou.net,
+	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
+	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
+	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
+	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
+	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+	patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+	wens@csie.org, jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
+	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
+	ulf.hansson@linaro.org, manuel.lauss@gmail.com,
+	mirq-linux@rere.qmqm.pl, jh80.chung@samsung.com, oakad@yahoo.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
+	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
+	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
+	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-mediatek@lists.infradead.org,
+	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 6/9] ipmi: Convert from tasklet to BH workqueue
+Message-ID: <ZgXKeL36ckOyNpI/@mail.minyard.net>
+Reply-To: minyard@acm.org
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-7-apais@linux.microsoft.com>
+ <ZgRePyo2zC4A1Fp4@mail.minyard.net>
+ <CAOMdWS+1AFxEqmACiBYzPHc+q0Ut6hp15tdV50JHvfVeUNCGQw@mail.gmail.com>
+ <ZgXDmx1HvujsMYAR@mail.minyard.net>
+ <CAOMdWS+nB5EENp_Vb=k1j77nrch5JgbZP2XYPJ2ieTja14zB0w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <678ba20b-9f1d-41cb-8a25-e716b61ffafe@app.fastmail.com>
-In-Reply-To: 
- <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-3-apais@linux.microsoft.com> <ZgUGXTKPVhrA1tam@matsya>
- <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com>
- <ZgW3j1qkLA-QU4iM@matsya>
- <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com>
-Date: Thu, 28 Mar 2024 20:49:44 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: Allen <allen.lkml@gmail.com>, "Vinod Koul" <vkoul@kernel.org>
-Cc: "Allen Pais" <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org,
- "Tejun Heo" <tj@kernel.org>, "Kees Cook" <keescook@chromium.org>,
- "Hector Martin" <marcan@marcan.st>, "Sven Peter" <sven@svenpeter.dev>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Ray Jui" <rjui@broadcom.com>, "Scott Branden" <sbranden@broadcom.com>,
- "Paul Cercueil" <paul@crapouillou.net>, Eugeniy.Paltsev@synopsys.com,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Viresh Kumar" <vireshk@kernel.org>, "Frank Li" <Frank.Li@nxp.com>,
- "Leo Li" <leoyang.li@nxp.com>, zw@zh-kernel.org,
- "Zhou Wang" <wangzhou1@hisilicon.com>, haijie1@huawei.com,
- "Shawn Guo" <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Sean Wang" <sean.wang@mediatek.com>,
- "Matthias Brugger" <matthias.bgg@gmail.com>,
- "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, logang@deltatee.com,
- "Daniel Mack" <daniel@zonque.org>,
- "Haojian Zhuang" <haojian.zhuang@gmail.com>,
- "Robert Jarzmik" <robert.jarzmik@free.fr>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konrad.dybcio@linaro.org>,
- "Orson Zhai" <orsonzhai@gmail.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Chunyan Zhang" <zhang.lyra@gmail.com>,
- "Patrice Chotard" <patrice.chotard@foss.st.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Chen-Yu Tsai" <wens@csie.org>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>, peter.ujfalusi@gmail.com,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Jassi Brar" <jassisinghbrar@gmail.com>,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>,
- maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
- "Ulf Hansson" <ulf.hansson@linaro.org>,
- "Manuel Lauss" <manuel.lauss@gmail.com>,
- =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
- "jh80.chung" <jh80.chung@samsung.com>, oakad@yahoo.com,
- "Kunihiko Hayashi" <hayashi.kunihiko@socionext.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, brucechang@via.com.tw,
- HaraldWelte@viatech.com, pierre@ossman.eu,
- "Duncan Sands" <duncan.sands@free.fr>,
- "Alan Stern" <stern@rowland.harvard.edu>,
- "Oliver Neukum" <oneukum@suse.com>,
- openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
- imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-mediatek@lists.infradead.org, linux-actions@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-media@vger.kernel.org,
- "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
- Linux-OMAP <linux-omap@vger.kernel.org>,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
- linux-s390@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMdWS+nB5EENp_Vb=k1j77nrch5JgbZP2XYPJ2ieTja14zB0w@mail.gmail.com>
 
-On Thu, Mar 28, 2024, at 20:39, Allen wrote:
->> >
->> > Since almost every driver associates the tasklet with the
->> > dma_chan, we could go one step further and add the
->> > work_queue structure directly into struct dma_chan,
->> > with the wrapper operating on the dma_chan rather than
->> > the work_queue.
->>
->> I think that is very great idea. having this wrapped in dma_chan would
->> be very good way as well
->>
->> Am not sure if Allen is up for it :-)
->
->  Thanks Arnd, I know we did speak about this at LPC. I did start
-> working on using completion. I dropped it as I thought it would
-> be easier to move to workqueues.
+On Thu, Mar 28, 2024 at 12:41:22PM -0700, Allen wrote:
+> > > > I believe that work queues items are execute single-threaded for a work
+> > > > queue, so this should be good.  I need to test this, though.  It may be
+> > > > that an IPMI device can have its own work queue; it may not be important
+> > > > to run it in bh context.
+> > >
+> > >   Fair point. Could you please let me know once you have had a chance to test
+> > > these changes. Meanwhile, I will work on RFC wherein IPMI will have its own
+> > > workqueue.
+> > >
+> > >  Thanks for taking time out to review.
+> >
+> > After looking and thinking about it a bit, a BH context is still
+> > probably the best for this.
+> >
+> > I have tested this patch under load and various scenarios and it seems
+> > to work ok.  So:
+> >
+> > Tested-by: Corey Minyard <cminyard@mvista.com>
+> > Acked-by: Corey Minyard <cminyard@mvista.com>
+> >
+> > Or I can take this into my tree.
+> >
+> > -corey
+> 
+>  Thank you very much. I think it should be okay for you to carry it into
+> your tree.
 
-It's definitely easier to do the workqueue conversion as a first
-step, and I agree adding support for the completion right away is
-probably too much. Moving the work_struct into the dma_chan
-is probably not too hard though, if you leave your current
-approach for the cases where the tasklet is part of the
-dma_dev rather than the dma_chan.
+Ok, it's in my for-next tree.  I fixed the directory reference, and I
+changed all the comments where you changed "tasklet" to "work" to
+instead say "workqueue".
 
-      Arnd
+-corey
+
+> 
+> - Allen
+> 
 
