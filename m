@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-1873-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1874-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 130788921C1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Mar 2024 17:39:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 272478921D2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Mar 2024 17:39:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBDEB1F24051
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Mar 2024 16:39:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD9911F24332
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Mar 2024 16:39:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C115B1E7;
-	Fri, 29 Mar 2024 16:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8D780600;
+	Fri, 29 Mar 2024 16:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEituwgn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uW7qxP8y"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0452D781;
-	Fri, 29 Mar 2024 16:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC1422075;
+	Fri, 29 Mar 2024 16:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711730344; cv=none; b=jc+9bkBL2wQj3pMdI6pGRf1yh1g6kQWknddt2ymYF8jQ3fSy3k6iN6650yXpifj7sZ9OpFONQjev/G1sGNtxzuI43/EXps+kXmgu59fnBU8w95EbOseMoObcX/MBOd8t0ncmbc0uVFc1se+v+u0yqw33SKNfEwmYqoeTWkb+Xgc=
+	t=1711730379; cv=none; b=W0SvH0vhQF5Daz/mkL2FjSexSefYH+RudWNOQ9mM9pziEPMGYTFGKxWLV92lKlTFzZ4/ZvBwKl3nsGXRWqGpWwDSP2Cg2gwzkMhgceq7Mn3Bn6E1kxg4/U2K+q/Y68BX4OncRfDy9EueLLmOrqFvagA1GRau7CB9enAwYRmnRGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711730344; c=relaxed/simple;
-	bh=mu709RK6RdUvGezRsei4fEVVFDMPGmRnjx++n5sjyL0=;
+	s=arc-20240116; t=1711730379; c=relaxed/simple;
+	bh=bg+h7PlnfTedz1YBjzApxZkMOAnsBGDd8/EzMTXhZfQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OAJmHWzesT5fcmCnQNJhS2UiH0VZFtmDrdxPLag8o3wp6bYMw2/bl4rr196gudTn1VkTGidnH5lc4nrgFE76iz3JCvL7KlGCv60R7zr7idekbnicm9VuQ5ZmC6xayuwCK2db1rAKY8424a/Kre+R7/+XcQtzQtkNUS7E5VW9pNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEituwgn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 717E8C433C7;
-	Fri, 29 Mar 2024 16:39:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dFqDq9Fg2X0yRxLQCIq4kT74ICYEQkQ9Ig+AV/efNoNp6CpybpsL4e3Jyq4r4aFWahKP8xbk1E4uWsOACZiyzlpiwTBlfGuxlVcBWACjSC8KNy5BpcE1QOlHAXFaic/nr72DLOu7evcB0CXVangeKuZi8wxvigdTvQSTIgSahRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uW7qxP8y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D9DC433C7;
+	Fri, 29 Mar 2024 16:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711730343;
-	bh=mu709RK6RdUvGezRsei4fEVVFDMPGmRnjx++n5sjyL0=;
+	s=k20201202; t=1711730378;
+	bh=bg+h7PlnfTedz1YBjzApxZkMOAnsBGDd8/EzMTXhZfQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uEituwgn1xxAMuURhdwt3/iaLtwEGCu1+Mclwo9+Ty7wLbaMiWmyQU0rOPlf9vJzM
-	 o13NJKluh2NnMuLRvgLiGrQVrebzv3a2gzICu48+3LXXhQ45oB4NluNbhd7SB44a70
-	 M0Wt2X6l0SJT7LJi3C8GA4V9BEhry7YR3ma4wI/3OylDT4TAEwBE8hLV/q3auS8o5H
-	 9muF3kTL6rkQ20Iba0mAQK6pIs92yEx6N2CKY/CrPm5aLVKXPn+H3gbBFziiX6OMqC
-	 zpP4PltZewjblpXJOZBFZ8cpmv8jSqFoiAAks6EZfkeP36KAWbWprPmsY2/9TNUion
-	 NxXBlJGeFB7CQ==
-Date: Fri, 29 Mar 2024 22:08:58 +0530
+	b=uW7qxP8y8ACgUR891lLqNXK4nRCSSexkXmk3NVlX/43RdUbJKhMUBo+3F7ImHHCLd
+	 EgMy3VnFONlXXBX8N/84xV65QgEoe3byfIcVSoYOnvkYvas222h0lZkI0ts/7GK5dK
+	 RXDBa+pCTcdJsCx5bNqP+0NeWpjfPDjTw0LzbJBD2TGFbdPiUtd9S2xCHSf/YkWg3h
+	 LkeVRnbJmAa4tPbrg134PWkZdQ7HBQC4t3veXbL+goDjmVnDap5Tj4fOkvn8ClJwbk
+	 uuZW1rzs8wZhLpPlp2dMwsOxB3VXY8Xf/XxfLnuX/VdqMAE2Sw5BpezoMJa9uZRiGz
+	 dYTGMY6Ps7ZVQ==
+Date: Fri, 29 Mar 2024 22:09:34 +0530
 From: Vinod Koul <vkoul@kernel.org>
 To: Allen <allen.lkml@gmail.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, Allen Pais <apais@linux.microsoft.com>,
@@ -85,8 +85,7 @@ Cc: Arnd Bergmann <arnd@arndb.de>, Allen Pais <apais@linux.microsoft.com>,
 	"jh80.chung" <jh80.chung@samsung.com>, oakad@yahoo.com,
 	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>, brucechang@via.com.tw,
-	HaraldWelte@viatech.com, pierre@ossman.eu,
-	Duncan Sands <duncan.sands@free.fr>,
+	HaraldWelte@viatech.com, pierre@ossman.eu, duncan.sands@free.fr,
 	Alan Stern <stern@rowland.harvard.edu>,
 	Oliver Neukum <oneukum@suse.com>,
 	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
@@ -104,15 +103,13 @@ Cc: Arnd Bergmann <arnd@arndb.de>, Allen Pais <apais@linux.microsoft.com>,
 	linux-s390@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
 	linux-usb@vger.kernel.org
 Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Message-ID: <ZgbuotY4IX4iHm9U@matsya>
+Message-ID: <ZgbuxmxncU0-0jhA@matsya>
 References: <20240327160314.9982-1-apais@linux.microsoft.com>
  <20240327160314.9982-3-apais@linux.microsoft.com>
  <ZgUGXTKPVhrA1tam@matsya>
  <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com>
  <ZgW3j1qkLA-QU4iM@matsya>
  <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com>
- <678ba20b-9f1d-41cb-8a25-e716b61ffafe@app.fastmail.com>
- <CAOMdWSKC4B8zn6N+=5DssB_BiR6JkHBEpJr0ohKb149eJvCKMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -121,39 +118,23 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOMdWSKC4B8zn6N+=5DssB_BiR6JkHBEpJr0ohKb149eJvCKMQ@mail.gmail.com>
+In-Reply-To: <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com>
 
-On 28-03-24, 13:01, Allen wrote:
-> > >> > Since almost every driver associates the tasklet with the
-> > >> > dma_chan, we could go one step further and add the
-> > >> > work_queue structure directly into struct dma_chan,
-> > >> > with the wrapper operating on the dma_chan rather than
-> > >> > the work_queue.
-> > >>
-> > >> I think that is very great idea. having this wrapped in dma_chan would
-> > >> be very good way as well
-> > >>
-> > >> Am not sure if Allen is up for it :-)
-> > >
-> > >  Thanks Arnd, I know we did speak about this at LPC. I did start
-> > > working on using completion. I dropped it as I thought it would
-> > > be easier to move to workqueues.
+On 28-03-24, 12:39, Allen wrote:
+
+> > I think that is very great idea. having this wrapped in dma_chan would
+> > be very good way as well
 > >
-> > It's definitely easier to do the workqueue conversion as a first
-> > step, and I agree adding support for the completion right away is
-> > probably too much. Moving the work_struct into the dma_chan
-> > is probably not too hard though, if you leave your current
-> > approach for the cases where the tasklet is part of the
-> > dma_dev rather than the dma_chan.
-> >
+> > Am not sure if Allen is up for it :-)
 > 
->  Alright, I will work on moving work_struck into the dma_chan and
-> leave the dma_dev as is (using bh workqueues) and post a RFC.
-> Once reviewed, I could move to the next step.
+>  Thanks Arnd, I know we did speak about this at LPC. I did start
+> working on using completion. I dropped it as I thought it would
+> be easier to move to workqueues.
+> 
+> Vinod, I would like to give this a shot and put out a RFC, I would
+> really appreciate review and feedback.
 
-That might be better from a performance pov but the current design is a
-global tasklet and not a per chan one... We would need to carefully
-review and test this for sure
+Sounds like a good plan to me
 
 -- 
 ~Vinod
