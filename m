@@ -1,203 +1,245 @@
-Return-Path: <linux-hyperv+bounces-1887-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1886-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A47A89322C
-	for <lists+linux-hyperv@lfdr.de>; Sun, 31 Mar 2024 18:02:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7AB889320B
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 Mar 2024 17:05:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 796D6282875
-	for <lists+linux-hyperv@lfdr.de>; Sun, 31 Mar 2024 16:02:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3078B2168D
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 Mar 2024 15:05:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E86AB145340;
-	Sun, 31 Mar 2024 16:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69FAF1448ED;
+	Sun, 31 Mar 2024 15:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iJIgd8nj"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ieCGqDyH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04olkn2078.outbound.protection.outlook.com [40.92.75.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD3314532F;
-	Sun, 31 Mar 2024 16:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=62.96.220.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A7B2628C;
+	Sun, 31 Mar 2024 15:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.75.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711900911; cv=pass; b=GM4WKG1yQv4O+jk8KiB4YsolFeG4AALWAZe1nu4OIR6YPfs/pL88GzTbTEgXwmxTZg+6pbCzFSXWv6bQcuCpXHyTQlCFWML2oagQgLFbphRZVc4eETiXJTipOb7iCaCKQO1CifA4FXskGJkB0YcgdP9VD2vLdd3n9Sg1EH6WFDA=
+	t=1711897526; cv=fail; b=cKx+l4SnOBrfC9inKSqxsPrXgaKrc3y3/EhqV+mxKfx60MZqA5MB+dXh3dcNOiWCyo352qdjRQEPv7g5Eps0R9oH2k3YdCMGJeGXazUzL18plSOxEEsQLN/mQ+e7qq8heSHNnYzzDKvnY/PP6TYOTsWb6gG8O7hPXEOfmjjEM/U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711900911; c=relaxed/simple;
-	bh=JvItBV8S7Y31HMTBenjNqg15k1PnGv+HzKdN7fwkC+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FWNB5D+5FD/ee8T0cb6dOBJV0NMKPZQ7pgREetan+IXO6yI/6FCNotbpam/h895+Qfx9oTJQF1bJVKyV3nOT+wWQl+3L+LCbzMxHz5mmicOpgW9ISBaCPMNr1dy1qWJ79zgu4HlA0Z44rgfWQXP3dx2DS1Rc5XIMkU41mPYKbiE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=fail smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iJIgd8nj; arc=none smtp.client-ip=13.77.154.182; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=pass smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.microsoft.com
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id 4F3BF2067F;
-	Sun, 31 Mar 2024 18:01:48 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id PgEYT208xhjF; Sun, 31 Mar 2024 18:01:47 +0200 (CEST)
-Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id B5ACB20612;
-	Sun, 31 Mar 2024 18:01:47 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com B5ACB20612
-Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id A89F280004A;
-	Sun, 31 Mar 2024 18:01:47 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:01:47 +0200
-Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 15:52:44 +0000
-X-sender: <linux-kernel+bounces-125624-steffen.klassert=secunet.com@vger.kernel.org>
-X-Receiver: <steffen.klassert@secunet.com>
- ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
- X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
-	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
-X-CreatedBy: MSExchange15
-X-HeloDomain: b.mx.secunet.com
-X-ExtendedProps: BQBjAAoA+C5rGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAYgAKAD8BAADWigAABQBkAA8AAwAAAEh1Yg==
-X-Source: SMTP:Default MBX-ESSEN-01
-X-SourceIPAddress: 62.96.220.37
-X-EndOfInjectedXHeaders: 14840
-X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=139.178.88.99; helo=sv.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125624-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 93FFD20315
-Authentication-Results: b.mx.secunet.com;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iJIgd8nj"
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711788731; cv=none; b=OIsy2/5zncrPDDDv1SmbSfoJZbQrxMXwLvs279O35EZFVQCH7ye/9Swsc0vGkEk/zjSCRdZvVBFzJSnUMY0qckVwdUyjmvFKJCcJ6m2OOj0W00sjnQQ4bi/gTpL2mQZGSH9+Z/STTqtjRTwTxQHrVGCKnlizHx6SWebU/NkjkIs=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711788731; c=relaxed/simple;
-	bh=JvItBV8S7Y31HMTBenjNqg15k1PnGv+HzKdN7fwkC+Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TBa0ltExKXXF1Ou2+D77LPWx7mwpku8pLAIMt5e2dh4rsvorH1htnZfl1Uuag6OpFrRHYTBRXf24QnhNLXf+xpmsUd7jcDnI9khZ/NQwSaOU7E9EH28W1z8+F/QcHI6p7ivB+kCT8FNN6fVUFNIwg/qEOTTOwfdiTj6bsmUjOAA=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iJIgd8nj; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 40B5520E7039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1711788728;
-	bh=BtKE7O5OWVM7SyPdRoHlAAnjh2otvkVJidlO3O/WDfU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iJIgd8njauEFfrqab1aHlcM8q6HjkukZ6SmfRUHRtttswzVuFTjGIJAFAlHb9vzeB
-	 pz9jaClMEtTXns1dXkYp3ODhFJufdDI47sAKnRvsSbiEX1W2EGW2dY0fYlNVTQ/4vz
-	 X/9mWe/yPSL2QgYHC7cSJkvTw+6UH74KqYsLVRiA=
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	gregkh@linuxfoundation.org,
+	s=arc-20240116; t=1711897526; c=relaxed/simple;
+	bh=B3OGipwb+0sVeBg2LNsYHRRypUheYKwyXM86w1Nyujk=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=afiRfxXEiZUnYbD2JlR68VYSJD3MD/B1RcGc92qoek++ZIl7veAuUdGQPWKtPinNb6CQmXYpVMnZFy/3WsXxtww3BQKX5aOA3lKVXIbePbhKImuCiY+ObmyZCx/D1p3j2HmmmwagMki+GpZk7u+oWy0K/iRs2XSLvAG3ENjh0wI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ieCGqDyH; arc=fail smtp.client-ip=40.92.75.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OlO3PJ8M1wQi6oakfmortGMTjxaRT+K0uqGzMGDSgG5IpcBkWu40ShGYEp1kFnkEFuaCZukmcRvTSDVgfJ1gNvs/GBneuzU7tbMfzTPGWAWkOeFWkBfERvq22aj9QvI5bc2QJmEOADSqI3NAlqT4E24jYp20Z5t2aLzWkYE1QODH+Y0shjBv1Cy5U5yTo9xPkz7e6Lem0QMZ7pS2WM0kRWdeBQK8g7FdavAY39enYKJ5XQ7szFLkE5d++8pezeviUKX3UkRmXUFWyh1hXIwKzGUKBu0pIVhrbLSSyvptauLi6lgP9XcEnjLp66DkeJ64bUbwRfeEL2Owzf7GDkvm9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lzE0RtM1Zo7qthW93kAZAngHg9wpx8iF5BRNORZhF4c=;
+ b=H+iMcCenIgzSAem3Cny/5npZ6639K3nW7bUFe/az9kN/knuXWWkr3un4f1wdbKPoap3tOqPJhRIlf7lHdmwpzXRzQSvOJFS6Pu+vFhttNhsQOVghCfH5S2AsH4vnoKOZtyLIWLSeij+I7D4rPnSv4uA8LQXZMzl7OBjUmTbvjhxznlaGWg1GTlLK7u4a6FNRoOlShBVoD0biwKKIZqve6Ylb6mdy3Rx8poVmBAYO0AIe23txJPSVgB1wKiRcy/REKzbtvVe0VUak5rc7SCsXDJvV/YJPL66bhJ0k1ztR28LZPsEuNHemqkYQ8X/Pd+NSRAvgfNUhOHPZqR4pnPS/qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lzE0RtM1Zo7qthW93kAZAngHg9wpx8iF5BRNORZhF4c=;
+ b=ieCGqDyHIQy8aDxva7JsLFcgG8TCVTrk12Fu48OXLcC5vJ8RCwDlzhmmiMf2m7qVOnPFKB3WaXRVJY1CHkakX06XVkq1NuY29zCw80wfJT5ZizIpWQ19T79FjB/WbgP5XexvIx0DxucOqMPiWjx74JK7/szNibKGpJPeYe66OEQvP4kL2zatl90wk5Z6PA9UM8dJK++elXVvWhhBejj4HHndAjn3hNVPEKgxRpwB/BBVknIrZW1rUfNldvaB0tj3gxygwMwUNZLNM0LAGNGEWJcBlX7ibf3DwCpeJvuQZvj2KwEDXsyyi6Kc30y9203CtmKwYTq9d78Du4vUIqlOSw==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by DU0PR02MB8690.eurprd02.prod.outlook.com (2603:10a6:10:3ed::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sun, 31 Mar
+ 2024 15:05:20 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::9817:eaf5:e2a7:e486]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::9817:eaf5:e2a7:e486%4]) with mapi id 15.20.7409.042; Sun, 31 Mar 2024
+ 15:05:20 +0000
+From: Erick Archer <erick.archer@outlook.com>
+To: Long Li <longli@microsoft.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Cc: longli@microsoft.com,
-	ssengar@microsoft.com
-Subject: [PATCH v3 1/7] Drivers: hv: vmbus: Add utility function for querying ring size
-Date: Sat, 30 Mar 2024 01:51:57 -0700
-Message-ID: <1711788723-8593-2-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1711788723-8593-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1711788723-8593-1-git-send-email-ssengar@linux.microsoft.com>
-Precedence: bulk
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] RDMA/mana_ib: Add flex array to struct mana_cfg_rx_steer_req_v2
+Date: Sun, 31 Mar 2024 17:04:53 +0200
+Message-ID:
+ <AS8PR02MB7237974EF1B9BAFA618166C38B382@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [ax2AMivpXtObadqhPIRt7GSws6HmSCa/]
+X-ClientProxiedBy: MA3P292CA0015.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2c::11) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID:
+ <20240331150453.5432-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DU0PR02MB8690:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2725dda3-38b9-4383-539a-08dc5193fb94
+X-MS-Exchange-SLBlob-MailProps:
+	qdrM8TqeFBsbamEakaZu1wFzLqU5ubB8EJuublZ4zULzY+Y+3WPTzZFjw0UTpAp5bJxoxVy7oJxCgKwEEr8MAOmSCvzSUbAx2Oz7j6tth9ThI4qv9rAc8i5s0UOIOu2krBdLVjUcaTosnES15mEPD5EWyBgwFliEJy73mQDRVrzJRgJ06jjDNpvgmitzplvQNPXOuOGcDcORQzq0iPohPkazZVNI+xvZomA9Csahf9LgUTR8Df9k6fhALVDkESwc6E1bJCpix2LM2aZvAHOk27Fn/iGkH/NKTKrKvH3X+UoLnHJdjGDkECaxN/cIPaTXu2TbEvODCEY1Gou9kFeirhR/GmzBkUMOrd+huc4E+eWaJVO5l8rO8eXamfTyRQlYIHZkV73xUwlONmSlDHAjo5pYyVQ4fIRzpS7bjzouS5yfGnxTwUNG7hp8QSQ38HDkL16HHb4vBymQs11MSme9T8ROU7mgcTw1OSO7Temhuwin+LQKnHYjGa2aBSZLFXtGHKQ7bgRCalmoSHDn/V4oWHA3/f0a5qZht7yviw+m7TZjSSS5x8BTGcGYfOmtJhHjhSN3pKoQIYT9BFwRWzjcSFetcwXw8SppwwsuSldjA1NyCpOm6vof5VCKbU+wAXGF27eIZLgGqpJU/ja7GxhAd12ds07nRF4EheiUqyUdVhU8BWNDjMjZf/oA2MgkbHgp/2IXSHlxybZPP1hNd7PkX/+r62Hc32SCwT8eUoYK6lbdbFpy0vEV+k1Hv8W2o/k6MsZD3+5kMGCeJwwk+9AW/SKufCvKjoeG
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	XyUYUnDC+fEiim2xlTA//XPjLZpg84E1IaSysCt7WxY4iHw1ZvDSUGkOarebfnPwi15yigOAgyFApFdim9Rmw0Jf418paEctIhOQO388lkfjZ7QDe+AbUzy/HBuw2zg1rDFzFaOyl40Q/PVCxtFTJfyeMniPZ59J0Uk55CecsU5BmIKa55V+MAa+c2ZOKpqRgC0oeUFtAbvlHsxmpAD+bZ7/I0pd8UgMhOrdNksKiHO6emwtUb53kckDcoA2F6hINPbLKN5VH+4hF/L2+tcsAFTuCanGoYn7O2IChPwjfofEdXuyvSVFUv2GgQDjkHtydWqpLosJvNkUzJeIesUK1kd5QTvSyVrnne+72dXmYLfHi/nOH07hN/hqKCbE6hLRKWYOFYWkm8htNv3WFrV4kQr1JO3dmj2n3yiYhGqumUp9UKet79S0V8jyBrfK9pAvo82MeTa/CbeC80BWrcyBcm/+dS2PEJskIN6S/v2WitpXpt52NYKZxFVmPGRGapKuNtBlddW6ywHWVRGLp6i79qXmc1eTTHMTQBZZZpkY9rszpcrEr+TvbOa8mjiEgt0fpN8tPkb7ayZDhbxN869y3VLm+e5A5sMaEKF039gesjPv7YBJ/bHTstqbw/+z6xUNJYFkXh55UWHz4h9nxs8HeJsAJLBXrXK5qGD6Vw8mVfJuc1iHfvMG5nLcNqd7BMZI
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qJhDBq/GG/JiMVVX3Nq2evRaBJRNNGIUMYeeL9/ZxBW0eXTBt//q2wWn05jU?=
+ =?us-ascii?Q?7qznjmlI7PH4ql1Tjo64uUhMdQfxsBkqm5tn762WcPF0ffLjz3D5xX7fuHOD?=
+ =?us-ascii?Q?TcqA0Gg1ZjzlVOuUn+093VCUHSuKUE+8BvMQMvFDaJTbRK5R2nl/Rx4d/OFE?=
+ =?us-ascii?Q?TC/JabyEtTIyhEjs4R1l5aUIpwVg1eUZxZJbS3Kl/PpaYv61uYURCDRlWbNF?=
+ =?us-ascii?Q?9wjbrMTVJ0u0e//EPM7QxkwqYpO9UTfmSe5EkcrBtudYWyKtws2O4S+Dfoy+?=
+ =?us-ascii?Q?4smmuU4pew+RLMFAnH/dE3zMOaZScfvuPMZyI/nlFR+FUmopwkoCspMpq4/Z?=
+ =?us-ascii?Q?i605RMwx31Yv62MoCxVkJbDX24tbX+8b2aN0Htz/cjPdEweTeO8cc16rQZMC?=
+ =?us-ascii?Q?mvfFR54FvBDi1ie7relhgVG+Lj6b8wWGx+Jsb5z8DebzWTTQ0JY9cbSLcBJu?=
+ =?us-ascii?Q?2/+gIG6FL4yYcUIVqfHJu99MC6oKwsBb1aGur9+gW9oPfIKv8lPvtgtM+yzL?=
+ =?us-ascii?Q?G2+FjyzH3kLU5OVdmP5NlaT9SJNblXlGPy5TVX/G+iop/3iD/zxTOMX6scJI?=
+ =?us-ascii?Q?h/a3Mk6hKiHzSUgst1QNc3LVf4HgWplNut8C+L8HrwuUFIs2LFdb5fCLal3o?=
+ =?us-ascii?Q?6vWtP6w7xdP4oimrMa6+NVPy/F3gjToBF+kt5Dv0rEhXMPTe2kFCfcS+vJ03?=
+ =?us-ascii?Q?wpC7MvizUB9IOrA43YMS6EBC3qGpIOSxx+hn1Y2bC0z4lSZRC7CXMnBUbKm7?=
+ =?us-ascii?Q?wBaAvy/twYYbHn1Vz0fhKbbAqk8MP22hI0u2XzaBXjyyvZEcKec40HZsJk7x?=
+ =?us-ascii?Q?JmL7xHmeusGOfBTllRz4Y4/Fpng8TKA6edZSV0CGBBBJjOLWR9GmwuXI3b+M?=
+ =?us-ascii?Q?B7FzWQO7j5MNyU1S8bX91Il8RoOswbNRRNHMbJNVIQN5Jo6qlNVXiQlahwbC?=
+ =?us-ascii?Q?OdiLhBEP4gBkpP0hHTrVJfHQQxa0kBdSFhjk9kX+CBULsJL+Qsh75mkd0uzC?=
+ =?us-ascii?Q?OgaZSHSyZii2IG1QIabskF/NKjzsvSX+1R9IE+2tuZlFLFobHB9GcHb0IYKT?=
+ =?us-ascii?Q?mBU+ZadFTKFPQEOvTty3PU/X2nWwiq9Op4SuswGwrKp+BNvE06YmDeD7AkSv?=
+ =?us-ascii?Q?bd/k74m1SJFJQtntZgZnjKQX6FAFV/E9lDGp5amHDgsvDtK2aR3enmuAE/DJ?=
+ =?us-ascii?Q?L0rBcIvaBDUzQp2QAr02XJGsF4YzVRo0rW0yh0+1ffFj+Epvzbe3Mn4YL+pG?=
+ =?us-ascii?Q?rtYig0buB88VQueXs+eI?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2725dda3-38b9-4383-539a-08dc5193fb94
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2024 15:05:20.4865
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB8690
 
-Add a function to query for the preferred ring buffer size of VMBus
-device. This will allow the drivers (eg. UIO) to allocate the most
-optimized ring buffer size for devices.
+The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of
+trailing elements. Specifically, it uses a "mana_handle_t" array. So,
+use the preferred way in the kernel declaring a flexible array [1].
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Long Li <longli@microsoft.com>
+Also, avoid the open-coded arithmetic in the memory allocator functions
+[2] using the "struct_size" macro.
+
+Moreover, use the "offsetof" helper to get the indirect table offset
+instead of the "sizeof" operator and avoid the open-coded arithmetic in
+pointers using the new flex member.
+
+Now, it is also possible to use the "flex_array_size" helper to compute
+the size of these trailing elements in the "memcpy" function.
+
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
 ---
-[V2]
-- Added more details in commit message.
-- Added comments for preferred ring sizes and there values.
-- Added reviewed-by from Long Li.
+ drivers/infiniband/hw/mana/qp.c               | 8 ++++----
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 9 +++++----
+ include/net/mana/mana.h                       | 1 +
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
- drivers/hv/channel_mgmt.c | 15 ++++++++++++---
- drivers/hv/hyperv_vmbus.h |  5 +++++
- include/linux/hyperv.h    |  2 ++
- 3 files changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 2f4d09ce027a..3c6011a48dab 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -120,7 +120,9 @@ const struct vmbus_device vmbus_devs[] = {
- 	},
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index 6e7627745c95..c2a39db8ef92 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -22,8 +22,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
  
- 	/* File copy */
--	{ .dev_type = HV_FCOPY,
-+	/* fcopy always uses 16KB ring buffer size and is working well for last many years */
-+	{ .pref_ring_size = 0x4000,
-+	  .dev_type = HV_FCOPY,
- 	  HV_FCOPY_GUID,
- 	  .perf_device = false,
- 	  .allowed_in_isolated = false,
-@@ -140,12 +142,19 @@ const struct vmbus_device vmbus_devs[] = {
- 	  .allowed_in_isolated = false,
- 	},
+ 	gc = mdev_to_gc(dev);
  
--	/* Unknown GUID */
--	{ .dev_type = HV_UNKNOWN,
-+	/*
-+	 * Unknown GUID
-+	 * 64 KB ring buffer + 4 KB header should be sufficient size for any Hyper-V device apart
-+	 * from HV_NIC and HV_SCSI. This case avoid the fallback for unknown devices to allocate
-+	 * much bigger (2 MB) of ring size.
-+	 */
-+	{ .pref_ring_size = 0x11000,
-+	  .dev_type = HV_UNKNOWN,
- 	  .perf_device = false,
- 	  .allowed_in_isolated = false,
- 	},
- };
-+EXPORT_SYMBOL_GPL(vmbus_devs);
+-	req_buf_size =
+-		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
++	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
+ 	req = kzalloc(req_buf_size, GFP_KERNEL);
+ 	if (!req)
+ 		return -ENOMEM;
+@@ -44,11 +43,12 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 		req->rss_enable = true;
  
- static const struct {
- 	guid_t guid;
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index f6b1e710f805..76ac5185a01a 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -417,6 +417,11 @@ static inline bool hv_is_perf_channel(struct vmbus_channel *channel)
- 	return vmbus_devs[channel->device_id].perf_device;
- }
+ 	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
+-	req->indir_tab_offset = sizeof(*req);
++	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
++					 indir_tab);
+ 	req->update_indir_tab = true;
+ 	req->cqe_coalescing_enable = 1;
  
-+static inline size_t hv_dev_ring_size(struct vmbus_channel *channel)
-+{
-+	return vmbus_devs[channel->device_id].pref_ring_size;
-+}
-+
- static inline bool hv_is_allocated_cpu(unsigned int cpu)
- {
- 	struct vmbus_channel *channel, *sc;
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 6ef0557b4bff..7de9f90d3f95 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -820,6 +820,8 @@ struct vmbus_requestor {
- #define VMBUS_RQST_RESET (U64_MAX - 3)
+-	req_indir_tab = (mana_handle_t *)(req + 1);
++	req_indir_tab = req->indir_tab;
+ 	/* The ind table passed to the hardware must have
+ 	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
+ 	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 59287c6e6cee..04aa096c6cc4 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1062,7 +1062,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	u32 req_buf_size;
+ 	int err;
  
- struct vmbus_device {
-+	/* preferred ring buffer size in KB, 0 means no preferred size for this device */
-+	size_t pref_ring_size;
- 	u16  dev_type;
- 	guid_t guid;
- 	bool perf_device;
+-	req_buf_size = sizeof(*req) + sizeof(mana_handle_t) * num_entries;
++	req_buf_size = struct_size(req, indir_tab, num_entries);
+ 	req = kzalloc(req_buf_size, GFP_KERNEL);
+ 	if (!req)
+ 		return -ENOMEM;
+@@ -1074,7 +1074,8 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 
+ 	req->vport = apc->port_handle;
+ 	req->num_indir_entries = num_entries;
+-	req->indir_tab_offset = sizeof(*req);
++	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
++					 indir_tab);
+ 	req->rx_enable = rx;
+ 	req->rss_enable = apc->rss_state;
+ 	req->update_default_rxobj = update_default_rxobj;
+@@ -1087,9 +1088,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
+ 
+ 	if (update_tab) {
+-		req_indir_tab = (mana_handle_t *)(req + 1);
++		req_indir_tab = req->indir_tab;
+ 		memcpy(req_indir_tab, apc->rxobj_table,
+-		       req->num_indir_entries * sizeof(mana_handle_t));
++		       flex_array_size(req, indir_tab, req->num_indir_entries));
+ 	}
+ 
+ 	err = mana_send_request(apc->ac, req, req_buf_size, &resp,
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 76147feb0d10..20ffcae29e1e 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -671,6 +671,7 @@ struct mana_cfg_rx_steer_req_v2 {
+ 	u8 hashkey[MANA_HASH_KEY_SIZE];
+ 	u8 cqe_coalescing_enable;
+ 	u8 reserved2[7];
++	mana_handle_t indir_tab[];
+ }; /* HW DATA */
+ 
+ struct mana_cfg_rx_steer_resp {
 -- 
-2.34.1
-
+2.25.1
 
 
