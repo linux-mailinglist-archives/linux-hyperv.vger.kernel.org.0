@@ -1,85 +1,84 @@
-Return-Path: <linux-hyperv+bounces-1911-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1912-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCE0D897134
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Apr 2024 15:34:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2623897574
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Apr 2024 18:44:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16D5728AA63
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Apr 2024 13:34:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F4CA1F274AE
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Apr 2024 16:44:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ECA0149C53;
-	Wed,  3 Apr 2024 13:33:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F3F014A62A;
+	Wed,  3 Apr 2024 16:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFrcg6if"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0GskreP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8381149C41;
-	Wed,  3 Apr 2024 13:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923CB1B7F4;
+	Wed,  3 Apr 2024 16:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712151217; cv=none; b=r+iHO/4bXut4mVh9wfFKchJ3c6drs51yPxw/QW8QcDmt4QHQNVl0snSpqXj0shSIpzpFRjrZUDoGDdniTMUHbm7zONLRcoc/HeqByGXGKNHSylgdDYTsJWvULMCEi2HVio9NWY5e1UWNlGRmH9DKOEvGxOXQHlGmfxBiwzajXgM=
+	t=1712162654; cv=none; b=CDHlBXcmPRoxxJMZbyn5VkACDhQ9TUWXXR1fqJmAvuYqfAOrxh+6nWk9q0LkSvUDORa7/ntY57CeNM79DLrbFQTcOHCTE2ELiaQeWLf8yxujw+Gv4zKEcD503q8LZPHmFh9acDj/+Wtn9gPYKd8w9hVBMvubd0dUYwNAfYW6GzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712151217; c=relaxed/simple;
-	bh=Qt01KTjE4NGp5XEomZDf90wNSv9JiA1QkpnnyKlsblA=;
+	s=arc-20240116; t=1712162654; c=relaxed/simple;
+	bh=M1neYOlhzngATdBbVyJaKe7fkRAK//9DrStR8GOcQu4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=okKQmTJA9V2ou0EcVoPoGoTC20G11Agi2nqNNyDKJ8tTQsnOgKG1LMu1M6Xp6s6oTCGiH7vWSNo1cnufA0hlIGZ+YQcTZL/kg9g5hNJPlhyC1SR+SFZ+Y511y76nUsxaJpHGGVbnU1089qET6rNFvGOndKggCL/MavE3P+l0aEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFrcg6if; arc=none smtp.client-ip=209.85.210.46
+	 To:Cc:Content-Type; b=HZT2XFqARwF4Z+85DrgQGT9BNu/Qrhxwgl8kP7Kvm8wgPlOlU/6YaxP4O4hledGA1mkNbcaArPbCmwBNh874p01oMZ7M+zmfhwIFzX9WxPwNE6IJi2Zzcv3q9EeX9nmUg35ytnMDbJMJvOYA0YtYAitbeCsfo+gmgvjcjnhaH6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0GskreP; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e9e1a52b74so109541a34.0;
-        Wed, 03 Apr 2024 06:33:35 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4da6995e58bso3887e0c.1;
+        Wed, 03 Apr 2024 09:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712151215; x=1712756015; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712162651; x=1712767451; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UfJ432sdibD0Lka67Qj4+39whrzSunQCkb9XAcwEVWQ=;
-        b=GFrcg6ifPUmcvvrEYoC2e/fgnq3m6ynUXwoJW1avVY6MvV8MtWIreHzW8sGg+/Dgtb
-         +z1o1duNbklzWnVoJk6bAsd1lGlStxJqDkSJbsTd303lw/NCevYRZRs2auW6JrY6UC8l
-         Ykbe4uMJU6fRE5F7cS0aXAJMgQ7wf9U8FtznXnnQ0nJtQPNBguh7WC170paMLQNtV9Pc
-         76sO8TjKSQUENsdMu745TLGpx8ahkqAhaVQhC/AYElH6GpweItCj4bbWGDMuoQa3TyU2
-         oKXzfmQWcPrq/jeH/dvjNeNqnYRKHJbifBAzNRSK1DswOtLRgw09DdW/6BSoPyRPUi/e
-         U6zQ==
+        bh=Aej6QFoETxeFvbQm8/sOYYAdEcWAnghw/7Ynm8n0ucQ=;
+        b=i0GskreP3bhVFE7L+jTrP55NTeLGEOiadN1sTEIYfQZF05ZqD7aFwgcHEWZzggB27p
+         Iu9pSvcSJvv9ctMRtptjRYbadJq2t5PSTI2cbljCYV4c1eP3C39UqNHbXsHjXVWPgRF4
+         cUNtQf66y29Ij0Ux473Ma14olhaOmCPIXPj2UkCmSyIiiLfd/Et1NmcTyn3tZ2/5CroR
+         JGJgD9ELhuJW4HPsYoaybFcG5Or8NO7kPPs+wVFcewF/98zylX3MkbB9YRRmtZLed4a1
+         /rF+ytNHfDippVqXcj/p/3MB6p+36Kb2Su2g3ayZiSDGs4JicOJMXB6apxu1GA4my1On
+         wA5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712151215; x=1712756015;
+        d=1e100.net; s=20230601; t=1712162651; x=1712767451;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UfJ432sdibD0Lka67Qj4+39whrzSunQCkb9XAcwEVWQ=;
-        b=kO4xowc508/21GLenfR1n/ijywgGMDAoh34C7NC1/x8VvWeNw065QYnd5fiurnaspW
-         eP4mgmCJKUQ3S4Owsk2c6+3TPRoDcArZ9+2QlBZ94hqGF6a23oIv/0P7Of4McasxMh1O
-         1JOqLhxSPvM0RFgVQlBnw3eXy7eD5VYtKyVq3pHtt6doD2Klq1nLzK/yKmpfvw7hZEVl
-         6lvra/RXlBHacJpIpDkPDvkJNA/1lYZaMOxUJsWq5NhVjnS0TCqPOEYP+4FMnUQCpzIz
-         IBH/1UoIjTqgsKwP5m7E+nLlll7vh3gwEPjh4NBFVXtGI8Zbdoqj46H2Ly3lt7McwVPi
-         MPXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWq/y2WuoLVfYku4/gGat76A4J4eCMNbwKOlTmpU+P1/U1wqGBPETnqCoMmtHfU7Y1jbk6SgAJsYXltYmlW8qYSJ5Bwi1TJCi/KOXG1LWji7veSWe6T8dokathTeNxjpSj3I36+aVLIPHMihgXkW5tuytoS0LCWNIczqMVfvcf3f8vsElQ7OBOlcQnfjyXVN7wuI++P0+DHwmCtSaOR4yrdZUiO4kIpoZ9ciIm0nrjZFWNRG/QhkUzgT5WcyTKHLPAgNcCiaM3PUm027V6fR+8wzw5xK1UDyv8ren/ktAqJBzQUgt6vcUSOzDuBX4XfrkyMp61Do8ofQaOsxVu9JLuhska0UShrxjtA4mtYcm1LazrqHr9Az1MjNmi8iIkib8CwVxTcDPUP9tXJwqu+O5VPhGK3a9nfLoxLTOc8qTDXo8sEz6X/+BR5bOKyZFFbuSK8Qo2ggiB/znPLEEX01EphopPbUGd9dH1mepavTKYaXW5nPXOCucF8G1cuD9m7fiqSXxDeQbb/Sn8UTyHPRWMaBIyAjpDy9KES9YUo98VBZ9QMne8WwdI4gBa5N8Tk+AsBW7zDX+O2oiApbXR9C80=
-X-Gm-Message-State: AOJu0YyAg0bfQn4eSM/nDFsw20mm33qDbjC45uaTrGRfKXWv8pY3m5+G
-	EQFxVkgoAqVTKbiUNFolH2xe5/RQXnXrKlXBCOxXySJ1HRR3QpNzUBLQ3H3QyxKMb4x/IhzW4j3
-	O27XhK+X9guVH61TyCqFhu+ik8dg=
-X-Google-Smtp-Source: AGHT+IFsoYFg4TPJZ/xBylk5B9Nfa55HU119ldFLC4g550cJsZKKSI+Id/ONzGwerMZ8W2tZHWzr/Kf097BxBvAdyL0=
-X-Received: by 2002:a05:6808:181d:b0:3c5:d426:9b87 with SMTP id
- bh29-20020a056808181d00b003c5d4269b87mr1074785oib.23.1712151214780; Wed, 03
- Apr 2024 06:33:34 -0700 (PDT)
+        bh=Aej6QFoETxeFvbQm8/sOYYAdEcWAnghw/7Ynm8n0ucQ=;
+        b=e8yBpGhE0mKo3L6OmYGnR55qeIfLG1anmLG/C9J7ZN+3APLmsWh6CvVnaVCYsjCiAq
+         hrNtZxk5KKZnV09ovVAOzQxwB01QW0NNKc7ScDXWNxQ0zT+i61WPf/HwALGzRKQ/BiSX
+         2r2pgmwbGI+J8jma1PQLhQpFVG8uK0yJELN2QNQ/ZEPXA5GxeVSzqk/IdcBm3yahGwRn
+         oed2hqf8dr7V23Fc6MYt4JHlKRTXO29I5BVGoVp8dN9jWEDGfcCwZ82JN9BHBfYpLw+e
+         /dx+zr5qFizvfFylmLkqTFSlx5t4y2pg5rZFtWvn0zdGhdzMxA2/t5cd0Hlv5PzNvCJT
+         s8PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpasyVqxm4S9hgcbs8dUy8q6r+F+STTWmT6MCdat3oYYGFf+6rfr/8BT6yKy29uM1AbAIolt6SJh3lZYGu+DdYx9rzuUZiacHksRrNK21d6PVKAmcA2bpy1ts6Yz9bGXjhHCps2uWJIbPr/dVtNNfyydVyE+K1ucGwYnGAjdY8ancrFK+L0hNax/c1XJjskEYv0wHpLr3QYcYae0jP0AbcIV7ty92/ff7x1UVKg/DHrQ4m6vd6MPfODU9MtPOA44TG4uH72P9SYMTl8iJ2Ymh/B+II5LqiE8dVCoxE0cInMo7xr933GhgCTU9KJIPBF0gQ+pJTOetPWCfC4PSf48Ob4/F3T0jmLDQrzHEiBXzlQ9uOWnlsVOsi4UII2DcFQsmqCVxhtgxyxlHQxh8eD2L7lMlo4zNFCgiUX02hHGzwheLA4FNBh6P5J9lVZbQvfyrD8swvpZGH79BZRxgEksXawYvBHZWkIm5bDVqAJDXTaUbQfuH7mx3HADTE5vaD85KO48aJ4TNlbvfSjEfa2sFySReyB4JFNhSFbk7HS6ecFe8=
+X-Gm-Message-State: AOJu0YwxuG7mpFcprqH+unaPXUWhDi4M8kWHnrmwwEENz8OeMEG3DaYw
+	/CXUPwT+I6xRjhFEM44yzLJqF6NH9qPNdRXdt6gxeHK+bYkky7/7uoKKDbs7asmf72EjxBTb0AM
+	t1tSGUHKch652xWodKB7wWjUMX4s=
+X-Google-Smtp-Source: AGHT+IFEFFEcpcdQfCxRWJYlDuuUETZ0sWBciDlGUMCvLnJmEBIY1oP87nAaJSL5QQDatxb4oTnFcly4MrzzQ8OrF5o=
+X-Received: by 2002:a05:6122:499a:b0:4d3:b326:5ae8 with SMTP id
+ ex26-20020a056122499a00b004d3b3265ae8mr10815788vkb.14.1712162651582; Wed, 03
+ Apr 2024 09:44:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-8-apais@linux.microsoft.com> <ea4ac7a3-13ae-4d22-a3d9-fcb7d9e8d751@linux.ibm.com>
-In-Reply-To: <ea4ac7a3-13ae-4d22-a3d9-fcb7d9e8d751@linux.ibm.com>
+References: <20240327160314.9982-1-apais@linux.microsoft.com> <20240327160314.9982-2-apais@linux.microsoft.com>
+In-Reply-To: <20240327160314.9982-2-apais@linux.microsoft.com>
 From: Allen <allen.lkml@gmail.com>
-Date: Wed, 3 Apr 2024 06:33:23 -0700
-Message-ID: <CAOMdWS+wH9qZ_08nVSQV1sY0C=uHMC+3NmPuFjwKzBFCgMa7MQ@mail.gmail.com>
-Subject: Re: [PATCH 7/9] s390: Convert from tasklet to BH workqueue
-To: Alexandra Winter <wintera@linux.ibm.com>
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org, tj@kernel.org, 
-	keescook@chromium.org, vkoul@kernel.org, marcan@marcan.st, sven@svenpeter.dev, 
+Date: Wed, 3 Apr 2024 09:43:57 -0700
+Message-ID: <CAOMdWSLavg27YZgnfE2QHjO=4RNmFx_7veAURaPG_=qWX=KMVA@mail.gmail.com>
+Subject: Re: [PATCH 1/9] hyperv: Convert from tasklet to BH workqueue
+To: Allen Pais <apais@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, tj@kernel.org, keescook@chromium.org, 
+	vkoul@kernel.org, marcan@marcan.st, sven@svenpeter.dev, 
 	florian.fainelli@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com, 
 	paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, 
 	manivannan.sadhasivam@linaro.org, vireshk@kernel.org, Frank.Li@nxp.com, 
@@ -112,59 +111,36 @@ Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org, tj@ker
 	linux-s390@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-> >
-> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> > ---
-> >  drivers/s390/block/dasd.c              | 42 ++++++++++++------------
-> >  drivers/s390/block/dasd_int.h          | 10 +++---
-> >  drivers/s390/char/con3270.c            | 27 ++++++++--------
-> >  drivers/s390/crypto/ap_bus.c           | 24 +++++++-------
-> >  drivers/s390/crypto/ap_bus.h           |  2 +-
-> >  drivers/s390/crypto/zcrypt_msgtype50.c |  2 +-
-> >  drivers/s390/crypto/zcrypt_msgtype6.c  |  4 +--
-> >  drivers/s390/net/ctcm_fsms.c           |  4 +--
-> >  drivers/s390/net/ctcm_main.c           | 15 ++++-----
-> >  drivers/s390/net/ctcm_main.h           |  5 +--
-> >  drivers/s390/net/ctcm_mpc.c            | 12 +++----
-> >  drivers/s390/net/ctcm_mpc.h            |  7 ++--
-> >  drivers/s390/net/lcs.c                 | 26 +++++++--------
-> >  drivers/s390/net/lcs.h                 |  2 +-
-> >  drivers/s390/net/qeth_core_main.c      |  2 +-
-> >  drivers/s390/scsi/zfcp_qdio.c          | 45 +++++++++++++-------------
-> >  drivers/s390/scsi/zfcp_qdio.h          |  9 +++---
-> >  17 files changed, 117 insertions(+), 121 deletions(-)
-> >
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
 >
+> This patch converts drivers/hv/* from tasklet to BH workqueue.
 >
-> We're looking into the best way to test this.
+> Based on the work done by Tejun Heo <tj@kernel.org>
+> Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
 >
-> For drivers/s390/net/ctcm* and drivers/s390/net/lcs*:
-> Acked-by: Alexandra Winter <wintera@linux.ibm.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> ---
+>  drivers/hv/channel.c      |  8 ++++----
+>  drivers/hv/channel_mgmt.c |  5 ++---
+>  drivers/hv/connection.c   |  9 +++++----
+>  drivers/hv/hv.c           |  3 +--
+>  drivers/hv/hv_balloon.c   |  4 ++--
+>  drivers/hv/hv_fcopy.c     |  8 ++++----
+>  drivers/hv/hv_kvp.c       |  8 ++++----
+>  drivers/hv/hv_snapshot.c  |  8 ++++----
+>  drivers/hv/hyperv_vmbus.h |  9 +++++----
+>  drivers/hv/vmbus_drv.c    | 19 ++++++++++---------
+>  include/linux/hyperv.h    |  2 +-
+>  11 files changed, 42 insertions(+), 41 deletions(-)
 
- Thank you very much.
+Wei,
 
->
->
-> [...]
-> > diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-> > index a0cce6872075..10ea95abc753 100644
-> > --- a/drivers/s390/net/qeth_core_main.c
-> > +++ b/drivers/s390/net/qeth_core_main.c
-> > @@ -2911,7 +2911,7 @@ static int qeth_init_input_buffer(struct qeth_card *card,
-> >       }
-> >
-> >       /*
-> > -      * since the buffer is accessed only from the input_tasklet
-> > +      * since the buffer is accessed only from the input_work
-> >        * there shouldn't be a need to synchronize; also, since we use
-> >        * the QETH_IN_BUF_REQUEUE_THRESHOLD we should never run  out off
-> >        * buffers
->
-> I propose to delete the whole comment block. There have been many changes and
-> I don't think it is helpful for the current qeth driver.
+ I need to send out a v2 as I did not include the second patch that
+updates drivers/pci/controller/pci-hyperv.c
 
-
- Sure, I will have it fixed in v2.
-
-- Allen
+Thanks.
 
