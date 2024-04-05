@@ -1,121 +1,116 @@
-Return-Path: <linux-hyperv+bounces-1918-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1919-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B0608999A2
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Apr 2024 11:38:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ABFB89A223
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Apr 2024 18:09:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C49A1C21404
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Apr 2024 09:38:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DC19B26362
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Apr 2024 16:09:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D411607A2;
-	Fri,  5 Apr 2024 09:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 697E6171078;
+	Fri,  5 Apr 2024 16:08:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ZcrcoLqs"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RF1P1tAq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CAC15FA9C;
-	Fri,  5 Apr 2024 09:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15C16C858
+	for <linux-hyperv@vger.kernel.org>; Fri,  5 Apr 2024 16:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712309901; cv=none; b=AkwXRnRMetJ0L9IbHlnUlbm/I0PKkqbVheFMD6/h7gGzzCCEy3N0M6MCj5zef/kgVgDLuYdVbDKvVZa2ntxLYmVOH9+UNCMoJUCM5lDHULesMw/QG1A4N4mKQkWQ1JBmToVuVKemW8967bjjTRSDQiUl8coDx2ZJP5dEQov/leg=
+	t=1712333285; cv=none; b=Gf/eImbml0qQ+agSLfmXIk7kTBPrRXiB+9IGc4Xx8YafIL7paP7QqjKV9PXoh0uehFl8pypwDQC2lJCY0ANVU0q25tXfxPfz7NshmF3SqgLaqOCDZsHKW0RKa+/N9xXKxjJ75sfV4bjPYh/crYCQugOxl6M4zGh8q79Q1bcepyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712309901; c=relaxed/simple;
-	bh=gui0f6MViE5zSAEEOcDKHdPoDszSctiaYWprNP7GSNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TYx9XDMOKHsxsxgpErRPS/ygvPDzCeAlZTHPD8jU6Un/vl7oitKkIppyqtOYrexLuq9vY46aMb/YVGm7xn8ldd+hst08TGbqT5Eu4ZsNBxcPdZveBtSAApHlqy+wE0mswPrfmKn1k9Vlu1n6YEW+MMhGa8Dopk6yoUAbjF5ae08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=ZcrcoLqs; arc=none smtp.client-ip=91.227.64.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-	t=1712309337; bh=gui0f6MViE5zSAEEOcDKHdPoDszSctiaYWprNP7GSNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZcrcoLqsz/zzlMruWf44PYk75DueBejOUyr1Eh31EyaZcoY7ODel3t0vFK51sQutC
-	 YY7dBqw6x5FiEghmAZFtz/zTJMGq5GtkEocuVfbQcN9BDPuRIei5HZ4DdjLpHxZ7+6
-	 E7lgHaOaQ5/+P2XOh5i4UPTyYivuDu5pF+wIovDfOhmC0jyS7Po0jdQpgN6Tw+kWcU
-	 BR21bYeWeQT2EX7dHW/mtmIf4RbdkqX5exTxh2367mA4o2zBmZSc7BFV4XrNkiEptZ
-	 Q5SBD2Ru9xBFkYUfXpcQGRwkKRKwaEBGta6Gar0WuqKpV+3lBKaNoDOSXQIouXFRPP
-	 Bq/roRR1X1cQQ==
-Received: from remote.user (localhost [127.0.0.1])
-	by rere.qmqm.pl (Postfix) with ESMTPSA id 4V9tTX48kvz8B;
-	Fri,  5 Apr 2024 11:28:48 +0200 (CEST)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.0.3 at mail
-Date: Fri, 5 Apr 2024 11:28:47 +0200
-From: =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To: Allen Pais <apais@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, tj@kernel.org, keescook@chromium.org,
-	vkoul@kernel.org, marcan@marcan.st, sven@svenpeter.dev,
-	florian.fainelli@broadcom.com, rjui@broadcom.com,
-	sbranden@broadcom.com, paul@crapouillou.net,
-	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
-	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
-	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
-	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-	patrice.chotard@foss.st.com, linus.walleij@linaro.org,
-	wens@csie.org, jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
-	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
-	ulf.hansson@linaro.org, manuel.lauss@gmail.com,
-	jh80.chung@samsung.com, oakad@yahoo.com,
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
-	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
-	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-mediatek@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 9/9] mmc: Convert from tasklet to BH workqueue
-Message-ID: <Zg_ET2XmZM_Id_Ad@qmqm.qmqm.pl>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-10-apais@linux.microsoft.com>
+	s=arc-20240116; t=1712333285; c=relaxed/simple;
+	bh=WQf37KnE8UstSt4WJHEZVKafftMROgs9kzOlz+UeEzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iU9xSc2Ph05tCbrbBrj3eagAsCqlnmxlqWYp3UFa9kOzRQ1fEB0Ijr9XXxb9kRgzWiJJ5Ec/uW00B84CXyV8HgEKgTDybzvJicMj1TY3sMINFUWFNi5tWEefOfttLl4KRPXxegOim5zZ+sqkdUxzfeKcVwJL610sViAGn8Ay7/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RF1P1tAq; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so47671839f.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 05 Apr 2024 09:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712333283; x=1712938083; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oAuKDU6QiZ6ML3XGubjP2fNWyg1GAOwTBQh+lV89r38=;
+        b=RF1P1tAqP3quLAouu2FwQVEKMZfuTL/RhbhOTdyP7oTf3gFptlw/NVwiayTL9e2JgE
+         Uk5xCIZssSK6EvgKVWsChs3tfpMRfspjYJqtKqKl4iHHLDiY5viu6FVIaiMcr4D9wkuF
+         ON7QY9G+UxHZZWqbwZbrWIXqrpsywHPYczIOA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712333283; x=1712938083;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oAuKDU6QiZ6ML3XGubjP2fNWyg1GAOwTBQh+lV89r38=;
+        b=EO+hR+4eZ3Nf0oO5wlUpZ+ijD1L2o+m956r6518vwuA9s6fu6uv2J7QcAT+yEjAk+B
+         A/jQHS8k025XX6N5vqNmssDA5V+J/HJqX5zgZMo7eDTkdSHIbSqdYXVIcALbd4+ugby1
+         PX36JP15aE3L6yhqK3MXljwdDz95N+eklq41jiM5ZTBf/WKu3G/5f/Lyg7CRxdTcNQTd
+         98oMGeZGMy0GCzkt0/3d0yEvwIrK/OYXOtI3mPrPOMIun8ld24Q7qo8ej8j6J+5yU5gi
+         yep3O5N6GJziextQKai6jKwyDR7zkyiMht1kBSefF2+e8f6giZq2ivCNpsw0D1LTmQE/
+         NyNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXv8iSS7dAZgCT8B/rgdRnG5e1LrPJcHe37rLBVwpQM+Eby8MwVNuCLIvT0l4dzegFWfHEGAcn27Ohx7oHJ6m/Pn6LJlgZvFdcqk2U/
+X-Gm-Message-State: AOJu0YzzRnmNp/QlQ5O9Ud1mUr67pHRrqJOqX+a4oG6xFO1L5qoXAkQw
+	5/8McBnROW4iue7GLHJ/eCK5yNRLXFpXYXKIePJ6pfjgUK+rDMCrvNmvrED4lUQ=
+X-Google-Smtp-Source: AGHT+IEFSBlsclA6e2FP+b8IjmZLWOus+sNYfoqoIt8htlDfnprRT5+aCUKOtOxFEmmqkr93Xto/Bw==
+X-Received: by 2002:a05:6602:148:b0:7d0:bd2b:43ba with SMTP id v8-20020a056602014800b007d0bd2b43bamr1795873iot.0.1712333282821;
+        Fri, 05 Apr 2024 09:08:02 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id f4-20020a5edf04000000b007cc78dafb96sm578949ioq.7.2024.04.05.09.08.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Apr 2024 09:08:02 -0700 (PDT)
+Message-ID: <60d96894-a146-4ebb-b6d0-e1988a048c64@linuxfoundation.org>
+Date: Fri, 5 Apr 2024 10:08:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/7] Handle faults in KUnit tests
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Brendan Higgins <brendanhiggins@google.com>, David Gow
+ <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+ Marco Pagani <marpagan@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov
+ <vkuznets@redhat.com>, Zahra Tarkhani <ztarkhani@microsoft.com>,
+ kvm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
+ x86@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240326095118.126696-1-mic@digikod.net>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240326095118.126696-1-mic@digikod.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240327160314.9982-10-apais@linux.microsoft.com>
 
-On Wed, Mar 27, 2024 at 04:03:14PM +0000, Allen Pais wrote:
-> The only generic interface to execute asynchronously in the BH context is
-> tasklet; however, it's marked deprecated and has some design flaws. To
-> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> behaves similarly to regular workqueues except that the queued work items
-> are executed in the BH context.
+On 3/26/24 03:51, MickaÃ«l SalaÃ¼n wrote:
+> Hi,
 > 
-> This patch converts drivers/infiniband/* from tasklet to BH workqueue.
+> This patch series teaches KUnit to handle kthread faults as errors, and
+> it brings a few related fixes and improvements.
 > 
-> Based on the work done by Tejun Heo <tj@kernel.org>
-> Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
-> 
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> ---
-[...]
->  drivers/mmc/host/cb710-mmc.c                  | 15 ++--
->  drivers/mmc/host/cb710-mmc.h                  |  3 +-
-[...]
+> Shuah, everything should be OK now, could you please merge this series?
 
-Acked-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+Please cc linux-kselftest and kunit mailing lists. You got the world cc'ed
+except for the important ones. :)
+
+thanks,
+-- Shuah
 
