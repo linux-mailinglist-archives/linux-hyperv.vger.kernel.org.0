@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-1924-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1925-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24A1589ABB8
-	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Apr 2024 17:44:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 693A289AC03
+	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Apr 2024 18:24:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72190B21485
-	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Apr 2024 15:44:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C7641C20C2B
+	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Apr 2024 16:24:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCD943A1D7;
-	Sat,  6 Apr 2024 15:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD3B3CF73;
+	Sat,  6 Apr 2024 16:24:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ttGGsH4q"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="MsGYFUNX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2028.outbound.protection.outlook.com [40.92.74.28])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2015.outbound.protection.outlook.com [40.92.90.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C7E33080;
-	Sat,  6 Apr 2024 15:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA153C087;
+	Sat,  6 Apr 2024 16:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712418259; cv=fail; b=kObzVkVcKP5tsrxFFjY0vbhNXHMH5S5lKw2HZEnzatfDhS7UjLdRoE2mIxhHlBLKiC1OK6VVdsLA6+LOFfigvX9dbTB9q1SvPcCbr7IUYnJ6p+LmeFYd1fbF+nL4AbsGk09fIRwZUmu9g3RjQA2BcsclCR738YD9DKZ9Lqfeh5Y=
+	t=1712420668; cv=fail; b=TFia7+9dvLY/yDa2TRH53b8Lc6InsecpafUMVkRzcMuU5D++FI9NeFVv6CTWQrOJ6UZHBhPaqwkoAZ6BTTCFaFU1Vx7k/zmWOeaTI7YCIXnJDVkWbzG4VugLw3Q1TQpw3DWsdx7FH6ivzfjbQg/R7FKBF+a1mJw4+uLC0XjUYa0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712418259; c=relaxed/simple;
-	bh=muAATVnktKmhuQXw0M3TndzIes0X+Ysq/z8ox9UmZAU=;
+	s=arc-20240116; t=1712420668; c=relaxed/simple;
+	bh=em0KuTuS5v17wCYbmf3zMkFaHtwR1H6btaoNK7MFnqo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=o2A0qGs57oQhAarMy9OC/VWH88zUvaxG9F0L8KmdDvOAWMwNgdKax193Y3ed+Ec/vKcnx8WIxMUXCY4feZk4pceAwg7JTjD2uQzVDdE30Ao+kqUJNYsGbkoQcrxo3xmGo18GiE4p8+4pBH40ymPEONa6ZJ/+bqoJV9OYNn4nOAo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ttGGsH4q; arc=fail smtp.client-ip=40.92.74.28
+	 Content-Type:MIME-Version; b=f7jjqAf7sNuUx4n2YstigdiNAHTq4IFHZlSgtP0/sykhaHAT0D/tBsXp0DAK+ZcxT5G3wBR5OJEP3yfX5rqXF4I32S16sLPQtONpJOsRBMCriPwQhoxCO7IgYhtSid3IoovD5pErG4ifZDtpzUXQDwpoR83VFycRz+NjBGF1Gf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=MsGYFUNX; arc=fail smtp.client-ip=40.92.90.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lhxvRcvm5cQfeRt6nCakd/xn4c1dbbuzC/tmml59UmnmeIUG3lTmSoRCKgt2q/vKdKEFa+dCoKWEoe8mFIZDAOvJtXWQ5z140YhfKabhgADfwgUUxfKXD/k6I/AsY5D3w396E2mvzMnqNfaJrwrm4l2SI94dhAEC5iymrutTG9KRF1vWp8oik3YJgXdc2NLv9rI1AUlYxNTrfF3NNn4tGokdvPPLrzeILVzrv0airXqpQAUnovUNG6hnns9zRM8bKgtSUP15LvbcHD/c0GmxGcFr8ENbZ2MMKZefyI1LnBzb6nUX+C/toH5EKyRF1kJw0VX4joaqSKg3Mwk4OGeEQA==
+ b=DOAuPUI3GCFvdWS02y8lYX+Btl759fFtLz9XBkXpU6nc1U7x4A2adtJgW2HMOj6BmYHdZ/zzmjtEl/FaMwMYCSA7QNkx4qQYQpBO31bgo/zlpMBn4Iqb1oJxseHBIqioaHkBG4axX1fjF6cbpxlStIy7v6jKr/Qd4JDXA8pE+nV3ArBUVj8M97JU4ZOti2jnnCY/jLsDxBykGE54zkAZcVOVi6M8MvDl5QmDyIsN1MsORsUKgeMmSDB3VZmHi/F9mPPHW39Q/RSpn5Xl6/1G3R5Mo6p79EWsM+gASwIave6BCJ3BmXhawWTeTzHqRN9xyHciWGcEhS1kRtNB/DfPjQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eOzBCswJvl8184g//x7v9ru060DdT9pSGglnMTKJ1Kc=;
- b=ly7lluf/WNo5/tw9q0naet88N0MG3V88k7ehD2A+G+PG2m6FwkhUFHbztpMaoJHtHc+hB9zWZJeQVn4MVrtUHT0byzga1syoruC401n1oXctWdPwzTZGaaWgn6antxs474jk4n1gQ5phVKyKsrpU+3nsogQEoFutQlt2n68mY+G27v61nve7lto3DogYaqE2Key8PPfxfhqkqb57Ny9122yP/uwZPvtdzNQNUOivnkkS/OcnViGjHokZJKzTDCM8tMRRY8FFjQUVtbXdmAiMnAso0C/o2W4e4Wxn1VMpdag1orCXObPNKa9FOi7evGRFQ9dgQSvqkRsVBAp2GHDiqQ==
+ bh=78EOzeiJpMwIvqdyeb+jNXi711WZpDuzvqqWUG13Uhw=;
+ b=YlR+qatxpUXpOsmAAdM8iRuaVnp1mFJ1HjV5gfLL3gzsScaI0zkykG4bEDieel81IvxdTNUkid3KcrCfPaxi+HU1eultff35hBflNmgsMg4tHE94zhKoW/rePopxiazz4XCeCoHM9t91UArZ/1pj46LzPfyu45DMgtKhj3/RSuAb05GGS1l9BvOX6si3n1NbQEhztyQ6h7weXuoofzzl5gx74WdYCxnpoX4SXxPBzNCWmsmmZ9CbaL91YK+k+QarikG4TjYfr9I929p5gjaD5biAduQesJeaLBNkTDBRyU5JnE4IUvAzZVbVyRODHVUS9QRRzFv/40ySnZ+knlpGiw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eOzBCswJvl8184g//x7v9ru060DdT9pSGglnMTKJ1Kc=;
- b=ttGGsH4qUa3E3a4qV52cUAM9l2Ae2OYVLzwW7/vyN01dwpZxrVeMGoRJXTjTo3/n+CFyFsUo7JI+s6H4XvPKR2AG7lxMesNM5HsUPn3jp/sGuld6ICXmj7Bb4qn2XZ8bpM0UoO7Xyxw+KyAOR5VJ5u8XKe8jqSDJTVKuD3N4kUoprVCiOq378Z2cGzArrigM92SMZsFeXcM5JDJCE8KcVzvmYwfpqgAnCVJlPr6l8S4Za60WUCIyqG/6uZjr1CacOL/2s1CNq27lkqr921sjjn0SYCKx6SYyGRY0PeAiagQFvsBhe4QTgt1DGogiztqoE6p8nESfu6s0kqUZW4HKSg==
+ bh=78EOzeiJpMwIvqdyeb+jNXi711WZpDuzvqqWUG13Uhw=;
+ b=MsGYFUNX9o4ieQ4Qn3OmFt9qnPNd4LxXPzY3+VmYbMiZnQvSGOZu2rQ+Us8GvaETy+RsZ54Do9ZLf6hhfJWwp/uGUArQxv3qG80QLVY4DD0xtV+myToh+uX6aaJxqc243qe44qXb5d7MXTFthsf49k22qOgez7XbU3nZPkIgN5R56E0WnH5LuvG3nCJ2v4e2JwoxvEsoY/1sRcrzWEyLNrxSGb2sshSKEEb/2HdzDdScDxQ6INBs+OoKMSKjdRf2iizhoaHD6hX93eq578gvz/gr5xyGxpObD2t82yaWLBmQ7KghN/WZ+Xbmq3JQp7gLHxx7uI/q1eQbdXR/kFE1Qg==
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by DB9PR02MB9777.eurprd02.prod.outlook.com (2603:10a6:10:459::11) with
+ by DU0PR02MB9121.eurprd02.prod.outlook.com (2603:10a6:10:464::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sat, 6 Apr
- 2024 15:44:15 +0000
+ 2024 16:24:22 +0000
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::9817:eaf5:e2a7:e486]) by AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::9817:eaf5:e2a7:e486%4]) with mapi id 15.20.7409.049; Sat, 6 Apr 2024
- 15:44:14 +0000
+ 16:24:22 +0000
 From: Erick Archer <erick.archer@outlook.com>
 To: Long Li <longli@microsoft.com>,
 	Ajay Sharma <sharmaajay@microsoft.com>,
@@ -82,20 +82,21 @@ Cc: Erick Archer <erick.archer@outlook.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v3 2/3] RDMA/mana_ib: Prefer struct_size over open coded arithmetic
-Date: Sat,  6 Apr 2024 16:23:36 +0200
+Subject: [PATCH v3 3/3] net: mana: Avoid open coded arithmetic
+Date: Sat,  6 Apr 2024 16:23:37 +0200
 Message-ID:
- <AS8PR02MB72375EB06EE1A84A67BE722E8B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <AS8PR02MB7237A21355C86EC0DCC0D83B8B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240406142337.16241-1-erick.archer@outlook.com>
 References: <20240406142337.16241-1-erick.archer@outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [zNZV2QuriLTH4cBB6X+2iUPSwKagj/JV]
-X-ClientProxiedBy: MA2P292CA0029.ESPP292.PROD.OUTLOOK.COM (2603:10a6:250::19)
- To AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+X-TMN: [IjmoCuAyloIqhvoUYW9pNGyBpZ9aP3ZY]
+X-ClientProxiedBy: MA4P292CA0011.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2d::17) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
 X-Microsoft-Original-Message-ID:
- <20240406142337.16241-3-erick.archer@outlook.com>
+ <20240406142337.16241-4-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -104,46 +105,46 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB9PR02MB9777:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1de0c22b-33d4-40e4-d44a-08dc5650692c
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DU0PR02MB9121:EE_
+X-MS-Office365-Filtering-Correlation-Id: a83463e9-01d5-437c-88e7-08dc5656044e
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Cl9NkR8WkPL4ovw/RK971JOxEbBLk8MHksjo/92/k0mOgYfgKMqFiQhtsx6pxB7y+lsRoQRr5eJ8+2fE3qhQknx6mFLhx23ypF1ziwcdbS1RpRTY4sUnaR4ImzENUhm3U069CRUNgeBhFGCXpfze8LFvCx/yglMwDXlOYV3SJpPXifVZf3UA/NGueXcOkGPnvs4CPc+/7xMQCzzIgUiPcoDafhMFddd48Ed690VSVsaSq4zi3Ga+tffiwGehKmYsxMC/erO7UZsMYuHSQqYxOBCX3fahopvl26yDeZAR98R6f2AH0duSDByjjkhG4Irdx0k0gMsKGahDXFc4ss7bOTxm7qK59Vfa8SMIlRCzVZZPDVlqNcZMqLk4kV2VJ9Essikr8cQApM9t1SFuiTRWIfWsvQpMDe/pjqRSz+T/k6RwEzccGKobLX4EZgNGomaYcZV/AioIKuwBEgJpEkKrhDgG6RhCeoX/FfrAuHgT3mF/x68unfaE+YdSM/5HkCKzJkwW2zdTnKg/SDPgUrcO+Onl0aqE5CEuFwopjZm6wVAVPZlrAKR05bYjEeKZFvO1JrWBH8h1o6gFLxUTleRDf5zdbl1WvzEm4yR9DFVeqwCtDrOWmIIOvlt3x/dPGv3rysxzIx5p+Kev/cGfh8b3j92hbb/zl8l+VmysTvHRslCujRiSHhNvUnHC8hNnJwGEiF7SDvY6MZKX11JqLU1rgA==
+	fmAByG4ma+dK8Rj55/hFD4vso/r9uC/2Bz1PS6+SQo77Bb0CnEgVXzR12W+2H2TMK6OvXWfMjf8t9RP0fuPXr8YDA1zzxjiP63yQ18gfRkf7GCSjyBoSUu4z8mCD6JxYudlL0ORmsJ8a27z3bsJxm1LPYfzv3Fhxgz1j1nY1tgQo7GdfDeksB0X4GeoJd+gNV/TU4XRZAZZNdq3BAMNhI+oHfMSu1Vdoywq8DFzkWBNbgN4q0Q1LmKYGbG5JzKaZFOJVi+SyuUhIQ0voWFjSEcFwwbN5hVuLOQT0n00JUXRRw0Gp8SEUNCARAR409DkPcbvUhCRG67gjIB6uAZ7szhafmpLlkvQDawZNzEc4wD6PpxEpziZeOcD2AvOARbOvbcOCsHQHmXCmrbYutYgGtHjqWSuDMrF8Qch5QuQOT6UWWakLqPjUgH71EwSOGVuxN64A+/KnpioHpM2gg++wkgcN/1Um4Vv4gCvYVZpY6CPcqSj639AJYeRHY2iNgee6Rj3gCtVL0rc9htXDFjbnrD6OciIOGhGI/ko1b8Z5L/CxCzUUHn7A3TT2y+tFDaySazPpETdf5oP8n22cskEp0pzCnQiSYOsKTlxWfYZuKY34Hgh9A66oNR2hLGsUTrW2bITX4Yx0WD0m1+Y5Df/8ww77xbbNtWIyuuE4CDXXVsXqMNy27lKGEv5CFjFyoz4XFhP90EtXMmsdOsUaMaPG1w==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jDlZ1JdTtLDvIhV5+zdSPMwZYrb+YhK5k1VhabhzCt+KbNkx+AN/c50xP65I?=
- =?us-ascii?Q?1ISRX7inrQT79J/j58wyEIO5Qy/Y7t0bqZPUs4wTalczkQ4N6KUMHYe4D5+i?=
- =?us-ascii?Q?ilOoMR5mTw/38w2IcGNwv4rM2WNJREGdYluqNHV6ODM5BtzoKGL0nUIGR8oF?=
- =?us-ascii?Q?NyoLeZ8U7HGUGoKV5St479LCxQhEQtI3zu74KfVDLs765YoGIjxZcsCIJPEU?=
- =?us-ascii?Q?jXCMwzgM/hXYPcLXKXSMyr7SyzfUdfRNw8u/TaXARxzYGxvOzTeuW9V18clz?=
- =?us-ascii?Q?vvjTOAiMjUlJBnCcKqv7hnyNU6ODhCfZ6U0HYPRx6D0B4XuhtqRBSo+FX3K3?=
- =?us-ascii?Q?mQWqvKB/Gh941zRqJIOI+OW/XjgNqG7sUHyPtmwKRx526iiTDU95ge5RoK5v?=
- =?us-ascii?Q?S+KatNDGwHmKXpbvBlEBS4UOzu3f2/pu0jwPbw8FDYAxZvmjEWvilWEQSxiR?=
- =?us-ascii?Q?nTGf2S+RL6ZQMtFxmeVwk8XuB7A+IvmbbSTsXH5Y5bHNPW5ANVwIM5YYNPRn?=
- =?us-ascii?Q?9CN+aKzkYBE9mYqmNKOvPpQzKaMRyEC0zUpJOfaq5poz0AfJe3xKU6zbVp+/?=
- =?us-ascii?Q?WC2BOU8IGUQvFyzNMHNhfBbTNdRq4XmaHFTewhCnDM1yLrL3m+Q7mSGaUMsz?=
- =?us-ascii?Q?ajR7DEWvsDW8J86XU2aX4i7wyqweNGa6oyLd/kbOKyE42kOaiIOQZ4JdIpyB?=
- =?us-ascii?Q?EL3uF4R4KHU7AEfUWcSi8BamkqzYl4IClcku9RGKcTo+YRDF6aCIIhGeMthk?=
- =?us-ascii?Q?7FWsLlaB5KUKdPL902+HEBK35OdR8Gveh2NSZOZqs/5OlPu7ew3xiUDxyb6b?=
- =?us-ascii?Q?CM5lStvewG6/9a2IqSIUdGxnh7MFaHBIiBBAUp1DwNHTbWic3as1zphp2Wxp?=
- =?us-ascii?Q?FcKBc3l2g3tnqUPuUf2y04fPb9+sGg/SKSXmKB9+UgTxihDh8sYj1tliPu3k?=
- =?us-ascii?Q?kwAelQsbWdifleaFCvrjZZluxSUCsHNkFTnBjLc+t7AyPCxsiXe5Ax5tHTsv?=
- =?us-ascii?Q?tQ1sCWZHZyHo6YoW6EagI26KbjMJWh3rbB2CVOcJLhAuaGm2nRfDA1I97whR?=
- =?us-ascii?Q?K+9IL0NCSOI6wVKBfIMj2OM/aKjm1dIwzLNYuWf6ppvIZXrg7lhlBeEU/jN1?=
- =?us-ascii?Q?rIoHIzclmvqJbpTg8gPTWRuwHSPv6xnQRp+kL6fucqDesGwI34zKOV9wWeZa?=
- =?us-ascii?Q?DzBpnxVgrhhRPjUFZ/l5c24D2AxqJb9vj2k0JcybYYyJjTAWwl6ENu0YOEF5?=
- =?us-ascii?Q?m/v6+f9F2WK5OaLSiBiD?=
+	=?us-ascii?Q?x+NWygIoX/E7zdR3o15zzkhmyeh9NM3/hLj/sqpX5ZrTznHVy7G0Dd3qWURk?=
+ =?us-ascii?Q?Fjrw03gGJ/vUqrk93iB8X1M9OjZd+YZ3FzbEAsN/yNS5HgsJvUkniC+6FUIq?=
+ =?us-ascii?Q?VH4e6IYNJMLBWNuvIjkLYB3xRXb9QXIKCN+2rznnE5XiGFSwmnWzDp/ci+PJ?=
+ =?us-ascii?Q?YdN4Wu2vDO7tcPGX/1GTkQAQcp03vLEO8jAMF+vOZnFrMR0irMGGfq18+4UI?=
+ =?us-ascii?Q?aWYhrCNPqdhddaV9i1pzhkxU3WEyRqxjH4SDIi3YAJ8OQMsfWBfRGFbR/AdB?=
+ =?us-ascii?Q?cPx5YsBpSaztOXBGP0JYfsK8oSjcfQsv9ebqpx41l8aI/XV85s/fesTVhoHx?=
+ =?us-ascii?Q?i+LQ77LJ0fEMmkumWdWILeQ2i5KztcZENcTvL0zIjN1ICbFA3HdVZu8Hmlf9?=
+ =?us-ascii?Q?Sd5x2TzBFMLwiHWd5H04exp383hrdWjc3UJkedDm94sR9CYGbaDqQ+cSSobJ?=
+ =?us-ascii?Q?UVBB+Fz/GXSi6rq6+bpIJfJzrw0LwR0HClZlc5IDKWvmLOExfF9y4JKQu6sA?=
+ =?us-ascii?Q?ex7QoVZUGekG4wBtyVTFx0PnT3/gAecEE7dY8620K6CABFM7h5AyLogYw/K1?=
+ =?us-ascii?Q?g3S1ZgeuviP4Wg8LFAcAIWILZW/6i111xgtvqGXM4in4FoOG3nheijWC2unl?=
+ =?us-ascii?Q?rWfJGXgajODKjR4lfzAk7Sdj2/RTNvq+cx9HBTe7jtMOM59N3oiWrgQYDD/D?=
+ =?us-ascii?Q?DxPbWkLsmS1ePvbjpEWY0BgbwsdEhDjVmoi4V+cdB7cSDHye+kD6uUl4U47p?=
+ =?us-ascii?Q?5Pgc/ivUWRkaeunOCD6L9Qh/ulScSza5LorKy/Fk7ZQULG+LoTOnq5VLnO+V?=
+ =?us-ascii?Q?CIZuNz0CkV+Aje//Z6/zu/+CgpXjIJQUxQV/ZPZMU30qf/3Trmlr36jnDV7V?=
+ =?us-ascii?Q?9yU8Jtonv+69USUMU4+azbHKKb2Xvbjl4gaHLf80wwCjq9TJaXp0w3bvcMxs?=
+ =?us-ascii?Q?YXcw83Z1frjZ+7CVV4xVMqDRdiO5u/h/s41jmILwhRouySm6qrZsJ3akfrSW?=
+ =?us-ascii?Q?6hzs2t21fN04u1ZwTFnjs+lONtvLqEY1uj1WCyiVJr8eq+20UXfFIiopgkbY?=
+ =?us-ascii?Q?qFv4L3QFfL7xtuBaKNSNS9PsrYR12hqrnMDr6tkv4Qy8Z+ucYM8OAqkFIFMI?=
+ =?us-ascii?Q?PjfTm5iqkE1nLAWun9PBjwrA8ZA5WzCozx39uzDit2WWOb1Z/rzIxy9GZVEi?=
+ =?us-ascii?Q?gJ8RvR6odiv8/uRyVyun0JY4UJBVyX3BIfFo6MsZGgLKiN3BzK5V9TfQ8exc?=
+ =?us-ascii?Q?/9kawPV6I8vrX/j7Z4bA?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1de0c22b-33d4-40e4-d44a-08dc5650692c
+X-MS-Exchange-CrossTenant-Network-Message-Id: a83463e9-01d5-437c-88e7-08dc5656044e
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2024 15:44:14.7499
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2024 16:24:22.1362
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB9777
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB9121
 
 This is an effort to get rid of all multiplications from allocation
 functions in order to prevent integer overflows [1][2].
@@ -152,7 +153,7 @@ As the "req" variable is a pointer to "struct mana_cfg_rx_steer_req_v2"
 and this structure ends in a flexible array:
 
 struct mana_cfg_rx_steer_req_v2 {
-	[...]
+        [...]
         mana_handle_t indir_tab[] __counted_by(num_indir_entries);
 };
 
@@ -165,6 +166,9 @@ instead of the "sizeof" operator and avoid the open-coded arithmetic in
 pointers using the new flex member. This new structure member also allow
 us to remove the "req_indir_tab" variable since it is no longer needed.
 
+Now, it is also possible to use the "flex_array_size" helper to compute
+the size of these trailing elements in the "memcpy" function.
+
 This way, the code is more readable and safer.
 
 This code was detected with the help of Coccinelle, and audited and
@@ -174,55 +178,51 @@ Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-
 Link: https://github.com/KSPP/linux/issues/160 [2]
 Signed-off-by: Erick Archer <erick.archer@outlook.com>
 ---
- drivers/infiniband/hw/mana/qp.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index ef0a6dc664d0..4cd8f8afe80d 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -15,15 +15,13 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	struct mana_port_context *mpc = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index d8af5e7e15b4..f2fae659bf3b 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1058,11 +1058,10 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
  	struct mana_cfg_rx_steer_req_v2 *req;
  	struct mana_cfg_rx_steer_resp resp = {};
+ 	struct net_device *ndev = apc->ndev;
 -	mana_handle_t *req_indir_tab;
- 	struct gdma_context *gc;
  	u32 req_buf_size;
- 	int i, err;
+ 	int err;
  
- 	gc = mdev_to_gc(dev);
- 
--	req_buf_size =
--		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
-+	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
+-	req_buf_size = sizeof(*req) + sizeof(mana_handle_t) * num_entries;
++	req_buf_size = struct_size(req, indir_tab, num_entries);
  	req = kzalloc(req_buf_size, GFP_KERNEL);
  	if (!req)
  		return -ENOMEM;
-@@ -44,20 +42,20 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 		req->rss_enable = true;
+@@ -1074,7 +1073,8 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
  
- 	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
+ 	req->vport = apc->port_handle;
+ 	req->num_indir_entries = num_entries;
 -	req->indir_tab_offset = sizeof(*req);
 +	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
 +					 indir_tab);
- 	req->update_indir_tab = true;
- 	req->cqe_coalescing_enable = 1;
+ 	req->rx_enable = rx;
+ 	req->rss_enable = apc->rss_state;
+ 	req->update_default_rxobj = update_default_rxobj;
+@@ -1086,11 +1086,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	if (update_key)
+ 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
  
--	req_indir_tab = (mana_handle_t *)(req + 1);
- 	/* The ind table passed to the hardware must have
- 	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
- 	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
- 	 */
- 	ibdev_dbg(&dev->ib_dev, "ind table size %u\n", 1 << log_ind_tbl_size);
- 	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
--		req_indir_tab[i] = ind_table[i % (1 << log_ind_tbl_size)];
-+		req->indir_tab[i] = ind_table[i % (1 << log_ind_tbl_size)];
- 		ibdev_dbg(&dev->ib_dev, "index %u handle 0x%llx\n", i,
--			  req_indir_tab[i]);
-+			  req->indir_tab[i]);
- 	}
+-	if (update_tab) {
+-		req_indir_tab = (mana_handle_t *)(req + 1);
+-		memcpy(req_indir_tab, apc->rxobj_table,
+-		       req->num_indir_entries * sizeof(mana_handle_t));
+-	}
++	if (update_tab)
++		memcpy(req->indir_tab, apc->rxobj_table,
++		       flex_array_size(req, indir_tab, req->num_indir_entries));
  
- 	req->update_hashkey = true;
+ 	err = mana_send_request(apc->ac, req, req_buf_size, &resp,
+ 				sizeof(resp));
 -- 
 2.25.1
 
