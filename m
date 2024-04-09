@@ -1,149 +1,92 @@
-Return-Path: <linux-hyperv+bounces-1947-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1948-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D43489E187
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Apr 2024 19:28:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50D3189E51D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Apr 2024 23:44:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FBF41C22FCE
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Apr 2024 17:28:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C7A928459C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Apr 2024 21:44:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 762F215666A;
-	Tue,  9 Apr 2024 17:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65AA5158A31;
+	Tue,  9 Apr 2024 21:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="E+vy51t5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBeC0vs6"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F62156239
-	for <linux-hyperv@vger.kernel.org>; Tue,  9 Apr 2024 17:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9C412F381;
+	Tue,  9 Apr 2024 21:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712683691; cv=none; b=sPiRAigN3l19B0kQyKD8AeTy9c9p503+/2VoMMSjZwC3Q6iIPGj3U33vuHCMiqPKBzBjLHG5SIxiD9GRhA074lVOhXZ1ZwhvGayK03tf4YtW/XBIY1JHcQNLbF6Jn64OEHFFJ/fzuKb8IPdXik76XqIw04+GfJ6lUG8gwep+1QM=
+	t=1712699062; cv=none; b=pR3SkwVmediL7WE7q3Ps9KTQoqUd0Vr2M8+lKwUUNVfMGWQTlL0KHcEip6MaS9ciF8XCtO7BNEl/kGX8i/qx5WsXmZSv0S8ZLuqVP2JmAG2u3EBdrE+j76X2ju3+MevjM2wiL0wn/fInYQtvrSuMXCqdV7Jf8RIUdRhl77iTzEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712683691; c=relaxed/simple;
-	bh=TPhpU6GJEU734JPKrGvqBheDD6F81x0OYRJ4s8MuK+E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iRb4tPTuaZ6QcElMWD9XH5LK9C/zrDv5JOMNWZwuwLab4S/hvzia70LAaBTYOKraiY3sU9sliPcX7lhSFDmQlIdQYpiSrmJ+hkgbhzKru3P9S+A4uC3SXr3U/BwzGUKw/ct3rYCYI28yePdTzUKr7rUcZKSHP8dTQkMS0iqTzPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=E+vy51t5; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso47333139f.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 09 Apr 2024 10:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712683688; x=1713288488; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bzDpECgxcv/gVK2Eh47txfcjeUm+DcSXrEiDNVslfT0=;
-        b=E+vy51t5hbFKtlPfWz63OAwISfam8JoJQJPF3AsULQlTZX/HvoniDiNyRzbxSMrbZ4
-         mk0VY5pVQ9SrzbabNxxJkimfIKhLT06ENVXFV0HjjURiYtwsvqJdGLxrKYQsqSYYXRWB
-         TAbhQeAzpAwOREQqlwbspbUY82B4xrV390hiU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712683688; x=1713288488;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bzDpECgxcv/gVK2Eh47txfcjeUm+DcSXrEiDNVslfT0=;
-        b=ZvTH61z+FRtdhRXDpr+PiiuuiJmQXE/KKr0a4i8Pm7fRZ9SOMnq3+6KPxeL3t0CLjU
-         TyYICR8nQZ4QI967m08FmgDJ5JEz55TB4hqZasBzQGPNnqodPMT6XYsgO/LlaeSeDqSc
-         sdycTat5fLrhAflkDjn2HsKGWig9U45OYrBtqxzfMVUJIdGBy676r2A1R+wEXCkmpuiM
-         6I+dDSWmLBB1QX+gZOg4/ASUjjJBtQYjXdmOgMiCb+gMYAEAZnloOnFy5yJPOXNYXI9S
-         4jVyQ/PkAM2TDZU3E/x/FhFVAr9W4tYADZ8trC/nVdxurAtFUVC+YZsZXTAacqUS861g
-         KD/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVNJzqGsL78JFg1umdDP87UVXXk7mEKOMLiyibyu1jhQzUTQtFuSpAWOGia0FMI8GBuGmxAnB1HgT5NfSoBg0DUEzJ6oqyllFtsiwGR
-X-Gm-Message-State: AOJu0YxObPTq6AwId1VuZg/egaSG0IzJJexuyl8xujoC9EWAfBNNDYNm
-	280sd6s48WdgfjkSbrcWi3pqS/zvAgX5WzM8RI5s11HmUQWTyZuHEat+Hr5DGoM=
-X-Google-Smtp-Source: AGHT+IFk5z8PoAK3T9resPRUq+Mhgn4hfhcghzxIpzPidDvzpWozapI9Iaz2Vi75WE2H0KeSIVTCNQ==
-X-Received: by 2002:a05:6602:3b98:b0:7d5:de5b:1ac2 with SMTP id dm24-20020a0566023b9800b007d5de5b1ac2mr468468iob.2.1712683688027;
-        Tue, 09 Apr 2024 10:28:08 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id cn23-20020a0566383a1700b00482b4a8f07esm35302jab.61.2024.04.09.10.28.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 10:28:07 -0700 (PDT)
-Message-ID: <5a04e40c-daba-4a1d-b5db-f70d2e51c403@linuxfoundation.org>
-Date: Tue, 9 Apr 2024 11:28:06 -0600
+	s=arc-20240116; t=1712699062; c=relaxed/simple;
+	bh=gmPhoEZQy7H8+eEDT13YM1nQeRhuIBur3SEMSC6wVTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=slKe03b1UeHzx4cD3a2XZMdVAQINfWIKxLEnq2lnnR2IHQTqq/qSc/Pgrwa/wkX4qfKqVGmQi3pYsbiUVJjki/2QlaPZVT7EOM5zY+9hZHGTg+rc3Us0djRpUe+snQSU2YxG1/MGGhueq0NUUl5LeyMWige/BP3BV2YhYS0yRG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBeC0vs6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51721C433F1;
+	Tue,  9 Apr 2024 21:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712699061;
+	bh=gmPhoEZQy7H8+eEDT13YM1nQeRhuIBur3SEMSC6wVTg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kBeC0vs6D2fvf+lsS/n8G0lta7BNfZAuk1/4mf/TRvmI4GVp05cmjiZ96zfT2IRvz
+	 XMzlzbe1pUq4KXjae9qBQivng6f+ciojwBrNToODd/XXXE2LiQLs12GREzh5sZPhfY
+	 7rvi8THMxQKfLg+xdwQDMh9YyfjT0wLMmpmfeyRwvnsd4942DAMDc5drnu3st4ATr4
+	 6Qp+B7XtXqjl/a9Elw14myYvdSHMvbMft5p3W3K33PqcXWHTA4MIGLoSDQKtGHPCU1
+	 2qohVAGUHihmNDPFH0Dy+XSeGTWdSWT8KA4X3jJLzQL8Or8pRD8UqZIexkxTgCqKPG
+	 b9AkuzVskncag==
+Date: Tue, 9 Apr 2024 14:44:19 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Edward Cree <ecree.xilinx@gmail.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Erick Archer
+ <erick.archer@outlook.com>, Long Li <longli@microsoft.com>, Ajay Sharma
+ <sharmaajay@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Kees Cook
+ <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shradha Gupta
+ <shradhagupta@linux.microsoft.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, linux-rdma@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
+ mana_cfg_rx_steer_req_v2
+Message-ID: <20240409144419.6dc12ebb@kernel.org>
+In-Reply-To: <ca8a0df8-b178-31ff-026f-b2d298f3aa84@gmail.com>
+References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	<20240408110730.GE8764@unreal>
+	<20240408183657.7fb6cc35@kernel.org>
+	<ca8a0df8-b178-31ff-026f-b2d298f3aa84@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND 0/7] Handle faults in KUnit tests
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- Brendan Higgins <brendanhiggins@google.com>, David Gow
- <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
- James Morris <jamorris@linux.microsoft.com>,
- Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>,
- "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
- Marco Pagani <marpagan@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>,
- Thara Gopinath <tgopinath@microsoft.com>,
- Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov
- <vkuznets@redhat.com>, Zahra Tarkhani <ztarkhani@microsoft.com>,
- kunit-dev@googlegroups.com, kvm@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
- x86@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240408074625.65017-1-mic@digikod.net>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240408074625.65017-1-mic@digikod.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 4/8/24 01:46, Mickaël Salaün wrote:
-> Hi,
+On Tue, 9 Apr 2024 18:01:40 +0100 Edward Cree wrote:
+> > Shared branch would be good. Ed has some outstanding patches 
+> > to refactor the ethtool RSS API.  
 > 
-> This patch series teaches KUnit to handle kthread faults as errors, and
-> it brings a few related fixes and improvements.
-> 
-> Shuah, everything should be OK now, could you please merge this series?
-> 
-> All these tests pass (on top of v6.8):
-> ./tools/testing/kunit/kunit.py run --alltests
-> ./tools/testing/kunit/kunit.py run --alltests --arch x86_64
-> ./tools/testing/kunit/kunit.py run --alltests --arch arm64 \
->    --cross_compile=aarch64-linux-gnu-
-> 
-> I also built and ran KUnit tests as a kernel module.
-> 
-> A new test case check NULL pointer dereference, which wasn't possible
-> before.
-> 
-> This is useful to test current kernel self-protection mechanisms or
-> future ones such as Heki: https://github.com/heki-linux
-> 
-> Previous versions:
-> v3: https://lore.kernel.org/r/20240319104857.70783-1-mic@digikod.net
-> v2: https://lore.kernel.org/r/20240301194037.532117-1-mic@digikod.net
-> v1: https://lore.kernel.org/r/20240229170409.365386-1-mic@digikod.net
-> 
-> Regards,
-> 
-> Mickaël Salaün (7):
->    kunit: Handle thread creation error
->    kunit: Fix kthread reference
->    kunit: Fix timeout message
->    kunit: Handle test faults
->    kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
->    kunit: Print last test location on fault
->    kunit: Add tests for fault
-> 
+> For the record I am extremely unlikely to have time to get those
+>  done this cycle :(
+> Though in any case fwiw it doesn't look like this series touches
+>  anything that would conflict; mana doesn't appear to support
+>  custom RSS contexts and besides the changes are well away from
+>  the ethtool API handling.
 
-Thank you for the resend. Applied to linux-kselftest kunit branch
-for Linux 6.10-rc1.
-
-thanks,
--- Shuah
-
+Better safe than sorry, since the change applies cleanly on an -rc tag
+having it applied to both trees should be very little extra work.
 
