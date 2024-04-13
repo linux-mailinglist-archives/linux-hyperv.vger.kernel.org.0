@@ -1,670 +1,277 @@
-Return-Path: <linux-hyperv+bounces-1961-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1962-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D6668A25B8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Apr 2024 07:28:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B6D38A3CC5
+	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Apr 2024 15:06:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 605911C230EE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Apr 2024 05:28:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C06A1B211D1
+	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Apr 2024 13:06:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63ADB1BC2A;
-	Fri, 12 Apr 2024 05:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F86446AF;
+	Sat, 13 Apr 2024 13:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZbqM+OL5"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=schierlm@gmx.de header.b="O9QHXzZX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E421BC20;
-	Fri, 12 Apr 2024 05:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B688D446AC;
+	Sat, 13 Apr 2024 13:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712899694; cv=none; b=IBSL7vk4hu/kpFoQX/KpRs8ZdBKC76DG1r85KGqNyDrbU7UQXdhM7+ZVlEgkcHn6KyOujNQnVRTVlDYLO9QyRgeR17EmGheTl0rU4UnhObqmB6wPbVCRCekqd5RoTC0qLuyJEH0D/KIZxMoIB7K09fkXWbGok9IVJNIWbid/Szw=
+	t=1713013578; cv=none; b=W4/tqeXz+wULe7H4bNnNnR7Kq7Frw2MoJNG2D9Ri0fVUDYec93ucOro1Gd14e3aIQfTf69K1eLjswg2Hj3cEtBoGcz1A4HEgEEiavBapicixQi06hClX9yoQVqWTvTp03zgGLBfCfHZ7k97Off/5ezTQGZbwNxffWAi0xUEGDFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712899694; c=relaxed/simple;
-	bh=c2qX+r7o67c39QyDTl0KCKlk3dTBmdcaGzn5WhybZ3g=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=fL8CI548XxDCPb2q66gIYIqfT5VnWYIGTejYOubdzdpLXsFu7czOWtsjLkY47e+1MBC679kYz/FlrSDboYOBfBSXqShnyQW4q/QKwim7MfKVaxyu2KeH1VOJ2b9Wf0T/r9KdRX++Ijc0SzNOLtvlpbtCnrlnEoObrOgXkYL7dxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZbqM+OL5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1175)
-	id AF54E20EC331; Thu, 11 Apr 2024 22:28:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AF54E20EC331
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1712899691;
-	bh=s+D3pXwxs413r0Kzmf3Y08R1+6WnhQwUp5PmAYtOlAI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZbqM+OL5QNTNy52BkDYS3dJesYX1ISuqZeH6lYd5tHW0JzibybeB9iGf7eJv7VrAz
-	 y+w040Y7/3slwrNiVS4evIaFjh2bLp7a7QURMpfVqXzpouH651lPProbDTdSQXM24m
-	 O9bzobuLyoVvuU64IJ70sDTWDMvF4jKOFijKLXp4=
-From: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-To: adityanagesh@microsoft.com,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-Subject: [PATCH v3] Drivers: hv: Cosmetic changes for hv.c and balloon.c
-Date: Thu, 11 Apr 2024 22:28:03 -0700
-Message-Id: <1712899683-20311-1-git-send-email-adityanagesh@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1713013578; c=relaxed/simple;
+	bh=MzbVw7TG8Upbp7umydgmO+bsnapGUtlFn/xOM1E7JMk=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=S6U2CoH4kMfgts6K9pQn9HFzq1FXIfcJ8WnVI1KLf+oFu1egFoJ2Ie+xGG+4Y6Vf6bOzGtr+2z8q6EhsTTUKSTcvTTYn6+DU/AVlUuCDH8W58gMNEaS+KH9U6Fv22NNRuYzjdv7AhqSg62ioIVbdqAdDIsToFeHCH1aDYueJgI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=schierlm@gmx.de header.b=O9QHXzZX; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1713013565; x=1713618365; i=schierlm@gmx.de;
+	bh=Zmy6kJuf0Yp448xeLYX/7DYKynh6RAhzDjoFxgh3wP8=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+	b=O9QHXzZXZSR6wr2WOCIFugzkNBmySaQfVC5/Qw80jSLJgktMrh4uk9igyzpMN0Tl
+	 6bg7sQbwlKK5R01yZqIllZupdrHHdir9wH1X5ih7sVkDVaXfkBMxEguF4vKhTybO1
+	 vy2WYJ0WnpOfkbF72LUhCshAdytDhZ1tRYSqEwg3acS9uMYSCaNmQczeBLHcJZ7GJ
+	 NPTWFi1NsnF8/BNCpyEJZLkhqR7YykK26ZSnacgtiV42aLCPsmQQx/xfC3GBbnguw
+	 RkScODEFKmt+me1R/MzNuydTAhI0H/iD2O70hvY8bv/Hl0J4SpeRW74aj4/9w0Hno
+	 CPRK8YeWDeyodMgy9Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.178.56] ([84.145.191.35]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPGRp-1s86Lo0AsX-00Pgfa; Sat, 13
+ Apr 2024 15:06:05 +0200
+Message-ID: <2db080ae-5e59-46e8-ac4e-13cdf26067cc@gmx.de>
+Date: Sat, 13 Apr 2024 15:06:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: de-DE
+From: Michael Schierl <schierlm@gmx.de>
+To: Jean Delvare <jdelvare@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Early kernel panic in dmi_decode when running 32-bit kernel on
+ Hyper-V on Windows 11
+Autocrypt: addr=schierlm@gmx.de; keydata=
+ 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
+ uxTR60TDY/d6Kz8=
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wnxcfEPvQSVin60yHibRAREf98iazoETSilrkYIx7JMsOUo1qkn
+ 0zE9CCA3FG+YrC+bL62Qik1o8EOa45AtunEUpFB0J7ATf4SL1upAdNuK0vo2ii2OdpeMZzs
+ nhdvyJajyhQYjnzB4Ax+8ws2IcY86q/ssCuAHweMloF1Xu0b767bXrPzUfJ4bV5ygufZJ0C
+ +whvzuD0zcQIW6Oko6Dpg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:m+0TQ2x8aVQ=;2wkxSnulSUw2bmjnwoGSEX+Pkbj
+ ciAu6SWgL/kAtBETGUkDUe786/8UBRA6utA6DxuQ25HxxBuRSaXSvfK/ox19dd2PPKYyPLIII
+ bPCby1XqCqbkyYw7CM6yLxEr7zYN9fYx9pdCBREOozvLpJ9W8A6DiIl5dH/xH449kFLGtbhtR
+ 83+ITcr2Nwglm7Q4mrMay59NHQ/0yg32hcUwzYgc2VGxCoHGkVfX7xP8yU3UsYhQoMSfgk9jD
+ y/PYsj5nkUNYP24tShfBOOIp/neXgN6t0554fZgfYmsJAyL8ogYow0dVnjrUExFIQrE4yaQVz
+ bl4qyKjzhFA7lNJQqbiFfEIklf+cqveaJiHxsi62QWwxRz/KWMLbsd/tqSol8Xcrl+dQxWMJo
+ X/uN1JIevRhB3pxjVlRhO/licZfB2P8rgAzaBhCr768eM2oofhMHXdiA3T2TCnsLU1iniZJK0
+ TSMfOOep4cfugwMtZWIIIv1d0fSKE7ZghrkNuSRZSjfMQUD9i1J++d5cil1gT76aOXRA7cHpG
+ hMcXry41QJF9UuCdUHJHObEG0x+CIOiUin4L3T6MEYL9I+1ZCbrwCgRsJxVuu4VJ/TeA2YTNx
+ GjJTqvQ79Qysw7CGb/44WliPcXiCO2NIkoZ52PZ3fW7BG22PerHJM8cowvhlQByFdObOjLKMC
+ NBlGSrezzMnWP82QROtGq72cgg3DSF4FAXApmChc7kgDByEA9wDszZ3gW8cHwhVrwcLM1GwwS
+ v95gMeAnw2582Jz4TAz/d4JBXEA+9nFb++C8SAyICQVoIk2qmbe8C6duI3xkU/YlXYn5jQ7HP
+ Klr3tvO1AJ3q1zNkHKo9mrddt1XpKuBBnDqpyOSXT1Ix4=
 
-Fix issues reported by checkpatch.pl script in hv.c and
-balloon.c
- - Remove unnecessary parentheses
- - Remove extra newlines
- - Remove extra spaces
- - Add spaces between comparison operators
- - Remove comparison with NULL in if statements
+[please cc: me as I am not subscribed to either mailing list]
 
-No functional changes intended
+Hello,
 
-Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
----
-[V3]
-Fix alignment issues in multiline function parameters.
 
-[V2]
-Change Subject from "Drivers: hv: Fix Issues reported by checkpatch.pl script"
- to "Drivers: hv: Cosmetic changes for hv.c and balloon.c"
+I am writing to you as Jean is listed as maintainer of dmi, and the rest
+are listed as maintainer for Hyper-V drivers. If I should have written
+elsewhere, please kindly point me to the correct location.
 
- drivers/hv/hv.c         |  35 +++++++-------
- drivers/hv/hv_balloon.c | 101 +++++++++++++++-------------------------
- 2 files changed, 54 insertions(+), 82 deletions(-)
+I am having issues running 32-bit Debian (kernel 6.1.0) on Hyper-V on
+Windows 11 (10.0.22631.3447) when the virtual machine has assigned more
+than one vCPU. The kernel does not boot and no output is shown on screen.
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index a8ad728354cb..4906611475fb 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -45,7 +45,7 @@ int hv_init(void)
-  * This involves a hypercall.
-  */
- int hv_post_message(union hv_connection_id connection_id,
--		  enum hv_message_type message_type,
-+		    enum hv_message_type message_type,
- 		  void *payload, size_t payload_size)
- {
- 	struct hv_input_post_message *aligned_msg;
-@@ -86,7 +86,7 @@ int hv_post_message(union hv_connection_id connection_id,
- 			status = HV_STATUS_INVALID_PARAMETER;
- 	} else {
- 		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
--				aligned_msg, NULL);
-+					 aligned_msg, NULL);
- 	}
- 
- 	local_irq_restore(flags);
-@@ -111,7 +111,7 @@ int hv_synic_alloc(void)
- 
- 	hv_context.hv_numa_map = kcalloc(nr_node_ids, sizeof(struct cpumask),
- 					 GFP_KERNEL);
--	if (hv_context.hv_numa_map == NULL) {
-+	if (!hv_context.hv_numa_map) {
- 		pr_err("Unable to allocate NUMA map\n");
- 		goto err;
- 	}
-@@ -120,11 +120,11 @@ int hv_synic_alloc(void)
- 		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
- 
- 		tasklet_init(&hv_cpu->msg_dpc,
--			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
-+			     vmbus_on_msg_dpc, (unsigned long)hv_cpu);
- 
- 		if (ms_hyperv.paravisor_present && hv_isolation_type_tdx()) {
- 			hv_cpu->post_msg_page = (void *)get_zeroed_page(GFP_ATOMIC);
--			if (hv_cpu->post_msg_page == NULL) {
-+			if (!hv_cpu->post_msg_page) {
- 				pr_err("Unable to allocate post msg page\n");
- 				goto err;
- 			}
-@@ -147,14 +147,14 @@ int hv_synic_alloc(void)
- 		if (!ms_hyperv.paravisor_present && !hv_root_partition) {
- 			hv_cpu->synic_message_page =
- 				(void *)get_zeroed_page(GFP_ATOMIC);
--			if (hv_cpu->synic_message_page == NULL) {
-+			if (!hv_cpu->synic_message_page) {
- 				pr_err("Unable to allocate SYNIC message page\n");
- 				goto err;
- 			}
- 
- 			hv_cpu->synic_event_page =
- 				(void *)get_zeroed_page(GFP_ATOMIC);
--			if (hv_cpu->synic_event_page == NULL) {
-+			if (!hv_cpu->synic_event_page) {
- 				pr_err("Unable to allocate SYNIC event page\n");
- 
- 				free_page((unsigned long)hv_cpu->synic_message_page);
-@@ -203,14 +203,13 @@ int hv_synic_alloc(void)
- 	return ret;
- }
- 
--
- void hv_synic_free(void)
- {
- 	int cpu, ret;
- 
- 	for_each_present_cpu(cpu) {
--		struct hv_per_cpu_context *hv_cpu
--			= per_cpu_ptr(hv_context.cpu_context, cpu);
-+		struct hv_per_cpu_context *hv_cpu =
-+			per_cpu_ptr(hv_context.cpu_context, cpu);
- 
- 		/* It's better to leak the page if the encryption fails. */
- 		if (ms_hyperv.paravisor_present && hv_isolation_type_tdx()) {
-@@ -262,8 +261,8 @@ void hv_synic_free(void)
-  */
- void hv_synic_enable_regs(unsigned int cpu)
- {
--	struct hv_per_cpu_context *hv_cpu
--		= per_cpu_ptr(hv_context.cpu_context, cpu);
-+	struct hv_per_cpu_context *hv_cpu =
-+		per_cpu_ptr(hv_context.cpu_context, cpu);
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
- 	union hv_synic_sint shared_sint;
-@@ -277,8 +276,8 @@ void hv_synic_enable_regs(unsigned int cpu)
- 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
- 		u64 base = (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
- 				~ms_hyperv.shared_gpa_boundary;
--		hv_cpu->synic_message_page
--			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
-+		hv_cpu->synic_message_page =
-+			(void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
- 		if (!hv_cpu->synic_message_page)
- 			pr_err("Fail to map synic message page.\n");
- 	} else {
-@@ -296,8 +295,8 @@ void hv_synic_enable_regs(unsigned int cpu)
- 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
- 		u64 base = (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
- 				~ms_hyperv.shared_gpa_boundary;
--		hv_cpu->synic_event_page
--			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
-+		hv_cpu->synic_event_page =
-+			(void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
- 		if (!hv_cpu->synic_event_page)
- 			pr_err("Fail to map synic event page.\n");
- 	} else {
-@@ -348,8 +347,8 @@ int hv_synic_init(unsigned int cpu)
-  */
- void hv_synic_disable_regs(unsigned int cpu)
- {
--	struct hv_per_cpu_context *hv_cpu
--		= per_cpu_ptr(hv_context.cpu_context, cpu);
-+	struct hv_per_cpu_context *hv_cpu =
-+		per_cpu_ptr(hv_context.cpu_context, cpu);
- 	union hv_synic_sint shared_sint;
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index e000fa3b9f97..29abed90badf 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -41,8 +41,6 @@
-  * Begin protocol definitions.
-  */
- 
--
--
- /*
-  * Protocol versions. The low word is the minor version, the high word the major
-  * version.
-@@ -71,8 +69,6 @@ enum {
- 	DYNMEM_PROTOCOL_VERSION_CURRENT = DYNMEM_PROTOCOL_VERSION_WIN10
- };
- 
--
--
- /*
-  * Message Types
-  */
-@@ -101,7 +97,6 @@ enum dm_message_type {
- 	DM_VERSION_1_MAX		= 12
- };
- 
--
- /*
-  * Structures defining the dynamic memory management
-  * protocol.
-@@ -115,7 +110,6 @@ union dm_version {
- 	__u32 version;
- } __packed;
- 
--
- union dm_caps {
- 	struct {
- 		__u64 balloon:1;
-@@ -148,8 +142,6 @@ union dm_mem_page_range {
- 	__u64  page_range;
- } __packed;
- 
--
--
- /*
-  * The header for all dynamic memory messages:
-  *
-@@ -174,7 +166,6 @@ struct dm_message {
- 	__u8 data[]; /* enclosed message */
- } __packed;
- 
--
- /*
-  * Specific message types supporting the dynamic memory protocol.
-  */
-@@ -271,7 +262,6 @@ struct dm_status {
- 	__u32 io_diff;
- } __packed;
- 
--
- /*
-  * Message to ask the guest to allocate memory - balloon up message.
-  * This message is sent from the host to the guest. The guest may not be
-@@ -286,14 +276,13 @@ struct dm_balloon {
- 	__u32 reservedz;
- } __packed;
- 
--
- /*
-  * Balloon response message; this message is sent from the guest
-  * to the host in response to the balloon message.
-  *
-  * reservedz: Reserved; must be set to zero.
-  * more_pages: If FALSE, this is the last message of the transaction.
-- * if TRUE there will atleast one more message from the guest.
-+ * if TRUE there will be at least one more message from the guest.
-  *
-  * range_count: The number of ranges in the range array.
-  *
-@@ -314,7 +303,7 @@ struct dm_balloon_response {
-  * to the guest to give guest more memory.
-  *
-  * more_pages: If FALSE, this is the last message of the transaction.
-- * if TRUE there will atleast one more message from the guest.
-+ * if TRUE there will be at least one more message from the guest.
-  *
-  * reservedz: Reserved; must be set to zero.
-  *
-@@ -342,7 +331,6 @@ struct dm_unballoon_response {
- 	struct dm_header hdr;
- } __packed;
- 
--
- /*
-  * Hot add request message. Message sent from the host to the guest.
-  *
-@@ -390,7 +378,6 @@ enum dm_info_type {
- 	MAX_INFO_TYPE
- };
- 
--
- /*
-  * Header for the information message.
-  */
-@@ -480,10 +467,10 @@ static unsigned long last_post_time;
- 
- static int hv_hypercall_multi_failure;
- 
--module_param(hot_add, bool, (S_IRUGO | S_IWUSR));
-+module_param(hot_add, bool, 0644);
- MODULE_PARM_DESC(hot_add, "If set attempt memory hot_add");
- 
--module_param(pressure_report_delay, uint, (S_IRUGO | S_IWUSR));
-+module_param(pressure_report_delay, uint, 0644);
- MODULE_PARM_DESC(pressure_report_delay, "Delay in secs in reporting pressure");
- static atomic_t trans_id = ATOMIC_INIT(0);
- 
-@@ -502,7 +489,6 @@ enum hv_dm_state {
- 	DM_INIT_ERROR
- };
- 
--
- static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
- static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
- #define PAGES_IN_2M (2 * 1024 * 1024 / PAGE_SIZE)
-@@ -595,12 +581,12 @@ static inline bool has_pfn_is_backed(struct hv_hotadd_state *has,
- 	struct hv_hotadd_gap *gap;
- 
- 	/* The page is not backed. */
--	if ((pfn < has->covered_start_pfn) || (pfn >= has->covered_end_pfn))
-+	if (pfn < has->covered_start_pfn || pfn >= has->covered_end_pfn)
- 		return false;
- 
- 	/* Check for gaps. */
- 	list_for_each_entry(gap, &has->gap_list, list) {
--		if ((pfn >= gap->start_pfn) && (pfn < gap->end_pfn))
-+		if (pfn >= gap->start_pfn && pfn < gap->end_pfn)
- 			return false;
- 	}
- 
-@@ -724,7 +710,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
- 	unsigned long processed_pfn;
- 	unsigned long total_pfn = pfn_count;
- 
--	for (i = 0; i < (size/HA_CHUNK); i++) {
-+	for (i = 0; i < (size / HA_CHUNK); i++) {
- 		start_pfn = start + (i * HA_CHUNK);
- 
- 		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
-@@ -745,7 +731,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
- 
- 		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
- 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
--				(HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
-+				 (HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
- 
- 		if (ret) {
- 			pr_err("hot_add memory failed error is %d\n", ret);
-@@ -787,8 +773,8 @@ static void hv_online_page(struct page *pg, unsigned int order)
- 	guard(spinlock_irqsave)(&dm_device.ha_lock);
- 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
- 		/* The page belongs to a different HAS. */
--		if ((pfn < has->start_pfn) ||
--				(pfn + (1UL << order) > has->end_pfn))
-+		if (pfn < has->start_pfn ||
-+		    (pfn + (1UL << order) > has->end_pfn))
- 			continue;
- 
- 		hv_bring_pgs_online(has, pfn, 1UL << order);
-@@ -855,7 +841,7 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
- }
- 
- static unsigned long handle_pg_range(unsigned long pg_start,
--					unsigned long pg_count)
-+				     unsigned long pg_count)
- {
- 	unsigned long start_pfn = pg_start;
- 	unsigned long pfn_cnt = pg_count;
-@@ -866,7 +852,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
- 	unsigned long res = 0, flags;
- 
- 	pr_debug("Hot adding %lu pages starting at pfn 0x%lx.\n", pg_count,
--		pg_start);
-+		 pg_start);
- 
- 	spin_lock_irqsave(&dm_device.ha_lock, flags);
- 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
-@@ -902,10 +888,9 @@ static unsigned long handle_pg_range(unsigned long pg_start,
- 			if (start_pfn > has->start_pfn &&
- 			    online_section_nr(pfn_to_section_nr(start_pfn)))
- 				hv_bring_pgs_online(has, start_pfn, pgs_ol);
--
- 		}
- 
--		if ((has->ha_end_pfn < has->end_pfn) && (pfn_cnt > 0)) {
-+		if (has->ha_end_pfn < has->end_pfn && pfn_cnt > 0) {
- 			/*
- 			 * We have some residual hot add range
- 			 * that needs to be hot added; hot add
-@@ -1010,7 +995,7 @@ static void hot_add_req(struct work_struct *dummy)
- 	rg_start = dm->ha_wrk.ha_region_range.finfo.start_page;
- 	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
- 
--	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
-+	if (rg_start == 0 && !dm->host_specified_ha_region) {
- 		unsigned long region_size;
- 		unsigned long region_start;
- 
-@@ -1033,7 +1018,7 @@ static void hot_add_req(struct work_struct *dummy)
- 
- 	if (do_hot_add)
- 		resp.page_count = process_hot_add(pg_start, pfn_cnt,
--						rg_start, rg_sz);
-+						  rg_start, rg_sz);
- 
- 	dm->num_pages_added += resp.page_count;
- #endif
-@@ -1211,11 +1196,10 @@ static void post_status(struct hv_dynmem_device *dm)
- 				sizeof(struct dm_status),
- 				(unsigned long)NULL,
- 				VM_PKT_DATA_INBAND, 0);
--
- }
- 
- static void free_balloon_pages(struct hv_dynmem_device *dm,
--			 union dm_mem_page_range *range_array)
-+			       union dm_mem_page_range *range_array)
- {
- 	int num_pages = range_array->finfo.page_cnt;
- 	__u64 start_frame = range_array->finfo.start_page;
-@@ -1231,8 +1215,6 @@ static void free_balloon_pages(struct hv_dynmem_device *dm,
- 	}
- }
- 
--
--
- static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 					unsigned int num_pages,
- 					struct dm_balloon_response *bl_resp,
-@@ -1278,7 +1260,6 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 			page_to_pfn(pg);
- 		bl_resp->range_array[i].finfo.page_cnt = alloc_unit;
- 		bl_resp->hdr.size += sizeof(union dm_mem_page_range);
--
- 	}
- 
- 	return i * alloc_unit;
-@@ -1332,7 +1313,7 @@ static void balloon_up(struct work_struct *dummy)
- 
- 		if (num_ballooned == 0 || num_ballooned == num_pages) {
- 			pr_debug("Ballooned %u out of %u requested pages.\n",
--				num_pages, dm_device.balloon_wrk.num_pages);
-+				 num_pages, dm_device.balloon_wrk.num_pages);
- 
- 			bl_resp->more_pages = 0;
- 			done = true;
-@@ -1366,16 +1347,15 @@ static void balloon_up(struct work_struct *dummy)
- 
- 			for (i = 0; i < bl_resp->range_count; i++)
- 				free_balloon_pages(&dm_device,
--						 &bl_resp->range_array[i]);
-+						   &bl_resp->range_array[i]);
- 
- 			done = true;
- 		}
- 	}
--
- }
- 
- static void balloon_down(struct hv_dynmem_device *dm,
--			struct dm_unballoon_request *req)
-+			 struct dm_unballoon_request *req)
- {
- 	union dm_mem_page_range *range_array = req->range_array;
- 	int range_count = req->range_count;
-@@ -1389,7 +1369,7 @@ static void balloon_down(struct hv_dynmem_device *dm,
- 	}
- 
- 	pr_debug("Freed %u ballooned pages.\n",
--		prev_pages_ballooned - dm->num_pages_ballooned);
-+		 prev_pages_ballooned - dm->num_pages_ballooned);
- 
- 	if (req->more_pages == 1)
- 		return;
-@@ -1415,7 +1395,7 @@ static int dm_thread_func(void *dm_dev)
- 
- 	while (!kthread_should_stop()) {
- 		wait_for_completion_interruptible_timeout(
--						&dm_device.config_event, 1*HZ);
-+						&dm_device.config_event, 1 * HZ);
- 		/*
- 		 * The host expects us to post information on the memory
- 		 * pressure every second.
-@@ -1439,9 +1419,8 @@ static int dm_thread_func(void *dm_dev)
- 	return 0;
- }
- 
--
- static void version_resp(struct hv_dynmem_device *dm,
--			struct dm_version_response *vresp)
-+			 struct dm_version_response *vresp)
- {
- 	struct dm_version_request version_req;
- 	int ret;
-@@ -1502,7 +1481,7 @@ static void version_resp(struct hv_dynmem_device *dm,
- }
- 
- static void cap_resp(struct hv_dynmem_device *dm,
--			struct dm_capabilities_resp_msg *cap_resp)
-+		     struct dm_capabilities_resp_msg *cap_resp)
- {
- 	if (!cap_resp->is_accepted) {
- 		pr_err("Capabilities not accepted by host\n");
-@@ -1535,7 +1514,7 @@ static void balloon_onchannelcallback(void *context)
- 		switch (dm_hdr->type) {
- 		case DM_VERSION_RESPONSE:
- 			version_resp(dm,
--				 (struct dm_version_response *)dm_msg);
-+				     (struct dm_version_response *)dm_msg);
- 			break;
- 
- 		case DM_CAPABILITIES_RESPONSE:
-@@ -1565,7 +1544,7 @@ static void balloon_onchannelcallback(void *context)
- 
- 			dm->state = DM_BALLOON_DOWN;
- 			balloon_down(dm,
--				 (struct dm_unballoon_request *)recv_buffer);
-+				     (struct dm_unballoon_request *)recv_buffer);
- 			break;
- 
- 		case DM_MEM_HOT_ADD_REQUEST:
-@@ -1603,17 +1582,15 @@ static void balloon_onchannelcallback(void *context)
- 
- 		default:
- 			pr_warn_ratelimited("Unhandled message: type: %d\n", dm_hdr->type);
--
- 		}
- 	}
--
- }
- 
- #define HV_LARGE_REPORTING_ORDER	9
- #define HV_LARGE_REPORTING_LEN (HV_HYP_PAGE_SIZE << \
- 		HV_LARGE_REPORTING_ORDER)
- static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
--		    struct scatterlist *sgl, unsigned int nents)
-+			       struct scatterlist *sgl, unsigned int nents)
- {
- 	unsigned long flags;
- 	struct hv_memory_hint *hint;
-@@ -1648,7 +1625,7 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
- 		 */
- 
- 		/* page reporting for pages 2MB or higher */
--		if (order >= HV_LARGE_REPORTING_ORDER ) {
-+		if (order >= HV_LARGE_REPORTING_ORDER) {
- 			range->page.largepage = 1;
- 			range->page_size = HV_GPA_PAGE_RANGE_PAGE_SIZE_2MB;
- 			range->base_large_pfn = page_to_hvpfn(
-@@ -1662,23 +1639,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
- 			range->page.additional_pages =
- 				(sg->length / HV_HYP_PAGE_SIZE) - 1;
- 		}
--
- 	}
- 
- 	status = hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
- 				     hint, NULL);
- 	local_irq_restore(flags);
- 	if (!hv_result_success(status)) {
--
- 		pr_err("Cold memory discard hypercall failed with status %llx\n",
--				status);
-+		       status);
- 		if (hv_hypercall_multi_failure > 0)
- 			hv_hypercall_multi_failure++;
- 
- 		if (hv_result(status) == HV_STATUS_INVALID_PARAMETER) {
- 			pr_err("Underlying Hyper-V does not support order less than 9. Hypercall failed\n");
- 			pr_err("Defaulting to page_reporting_order %d\n",
--					pageblock_order);
-+			       pageblock_order);
- 			page_reporting_order = pageblock_order;
- 			hv_hypercall_multi_failure++;
- 			return -EINVAL;
-@@ -1712,7 +1687,7 @@ static void enable_page_reporting(void)
- 		pr_err("Failed to enable cold memory discard: %d\n", ret);
- 	} else {
- 		pr_info("Cold memory discard hint enabled with order %d\n",
--				page_reporting_order);
-+			page_reporting_order);
- 	}
- }
- 
-@@ -1795,7 +1770,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	if (ret)
- 		goto out;
- 
--	t = wait_for_completion_timeout(&dm_device.host_event, 5*HZ);
-+	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
- 	if (t == 0) {
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -1850,7 +1825,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	if (ret)
- 		goto out;
- 
--	t = wait_for_completion_timeout(&dm_device.host_event, 5*HZ);
-+	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
- 	if (t == 0) {
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -1891,8 +1866,8 @@ static int hv_balloon_debug_show(struct seq_file *f, void *offset)
- 	char *sname;
- 
- 	seq_printf(f, "%-22s: %u.%u\n", "host_version",
--				DYNMEM_MAJOR_VERSION(dm->version),
--				DYNMEM_MINOR_VERSION(dm->version));
-+			DYNMEM_MAJOR_VERSION(dm->version),
-+			DYNMEM_MINOR_VERSION(dm->version));
- 
- 	seq_printf(f, "%-22s:", "capabilities");
- 	if (ballooning_enabled())
-@@ -1941,10 +1916,10 @@ static int hv_balloon_debug_show(struct seq_file *f, void *offset)
- 	seq_printf(f, "%-22s: %u\n", "pages_ballooned", dm->num_pages_ballooned);
- 
- 	seq_printf(f, "%-22s: %lu\n", "total_pages_committed",
--				get_pages_committed(dm));
-+		   get_pages_committed(dm));
- 
- 	seq_printf(f, "%-22s: %llu\n", "max_dynamic_page_count",
--				dm->max_dynamic_page_count);
-+		   dm->max_dynamic_page_count);
- 
- 	return 0;
- }
-@@ -1954,7 +1929,7 @@ DEFINE_SHOW_ATTRIBUTE(hv_balloon_debug);
- static void  hv_balloon_debugfs_init(struct hv_dynmem_device *b)
- {
- 	debugfs_create_file("hv-balloon", 0444, NULL, b,
--			&hv_balloon_debug_fops);
-+			    &hv_balloon_debug_fops);
- }
- 
- static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
-@@ -2097,7 +2072,6 @@ static int balloon_suspend(struct hv_device *hv_dev)
- 	tasklet_enable(&hv_dev->channel->callback_event);
- 
- 	return 0;
--
- }
- 
- static int balloon_resume(struct hv_device *dev)
-@@ -2156,7 +2130,6 @@ static  struct hv_driver balloon_drv = {
- 
- static int __init init_balloon_drv(void)
- {
--
- 	return vmbus_driver_register(&balloon_drv);
- }
- 
--- 
-2.34.1
+I was able to redirect early printk to serial port and capture this panic:
 
+> early console in setup code
+> Probing EDD (edd=3Doff to disable)... ok
+> [    0.000000] Linux version 6.1.0-18-686-pae (debian-kernel@lists.debia=
+n.org) (gcc-12 (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian)=
+ 2.40) #1 SMP PREEMPT_DYNAMIC Debian 6.1.76-1 (2024-02-01)
+> [    0.000000] BIOS-provided physical RAM map:
+> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] us=
+able
+> [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] re=
+served
+> [    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] re=
+served
+> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007ffeffff] us=
+able
+> [    0.000000] BIOS-e820: [mem 0x000000007fff0000-0x000000007fffefff] AC=
+PI data
+> [    0.000000] BIOS-e820: [mem 0x000000007ffff000-0x000000007fffffff] AC=
+PI NVS
+> [    0.000000] printk: bootconsole [earlyser0] enabled
+> [    0.000000] NX (Execute Disable) protection: active
+> [    0.000000] BUG: unable to handle page fault for address: ffa45000
+> [    0.000000] #PF: supervisor read access in kernel mode
+> [    0.000000] #PF: error_code(0x0000) - not-present page
+> [    0.000000] *pdpt =3D 000000000fe74001
+> [    0.000000] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.1.0-18-686-pae =
+#1  Debian 6.1.76-1
+> [    0.000000] EIP: dmi_decode+0x2e3/0x40e
+> [    0.000000] Code: 10 53 e8 b8 f9 ff ff 83 c4 0c e9 3e 01 00 00 0f b6 =
+7e 01 31 db 83 ef 04 d1 ef 39 df 0f 8e 2b 01 00 00 8a 4c 5e 04 84 c9 79 1e=
+ <0f> b6 54 5e 05 89 f0 88 4d f0 e8 c0 f7 ff ff 8a 4d f0 89 c2 89 c8
+> [    0.000000] EAX: cff6d220 EBX: 000024bd ECX: cfd2caff EDX: cf9e942c
+> [    0.000000] ESI: ffa40681 EDI: 7ffffffe EBP: cfc37e90 ESP: cfc37e80
+> [    0.000000] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 0021=
+0086
+> [    0.000000] CR0: 80050033 CR2: ffa45000 CR3: 0fe78000 CR4: 00000020
+> [    0.000000] Call Trace:
+> [    0.000000]  ? __die_body.cold+0x14/0x1a
+> [    0.000000]  ? __die+0x21/0x26
+> [    0.000000]  ? page_fault_oops+0x69/0x120
+> [    0.000000]  ? uuid_string+0x157/0x1a0
+> [    0.000000]  ? kernelmode_fixup_or_oops.constprop.0+0x80/0xe0
+> [    0.000000]  ? __bad_area_nosemaphore.constprop.0+0xfc/0x130
+> [    0.000000]  ? bad_area_nosemaphore+0xf/0x20
+> [    0.000000]  ? do_kern_addr_fault+0x79/0x90
+> [    0.000000]  ? exc_page_fault+0xbc/0x160
+> [    0.000000]  ? paravirt_BUG+0x10/0x10
+> [    0.000000]  ? handle_exception+0x133/0x133
+> [    0.000000]  ? dmi_disable_osi_vista+0x1/0x37
+> [    0.000000]  ? paravirt_BUG+0x10/0x10
+> [    0.000000]  ? dmi_decode+0x2e3/0x40e
+> [    0.000000]  ? dmi_disable_osi_vista+0x1/0x37
+> [    0.000000]  ? paravirt_BUG+0x10/0x10
+> [    0.000000]  ? dmi_decode+0x2e3/0x40e
+> [    0.000000]  ? dmi_smbios3_present+0xd8/0xd8
+> [    0.000000]  dmi_decode_table+0xa9/0xe0
+> [    0.000000]  ? dmi_smbios3_present+0xd8/0xd8
+> [    0.000000]  ? dmi_smbios3_present+0xd8/0xd8
+> [    0.000000]  dmi_walk_early+0x34/0x58
+> [    0.000000]  dmi_present+0x149/0x1b6
+> [    0.000000]  dmi_setup+0x18d/0x22e
+> [    0.000000]  setup_arch+0x676/0xd3f
+> [    0.000000]  ? lockdown_lsm_init+0x1c/0x20
+> [    0.000000]  ? initialize_lsm+0x33/0x4e
+> [    0.000000]  start_kernel+0x65/0x644
+> [    0.000000]  ? set_intr_gate+0x45/0x58
+> [    0.000000]  ? early_idt_handler_common+0x44/0x44
+> [    0.000000]  i386_start_kernel+0x48/0x4a
+> [    0.000000]  startup_32_smp+0x161/0x164
+> [    0.000000] Modules linked in:
+> [    0.000000] CR2: 00000000ffa45000
+> [    0.000000] ---[ end trace 0000000000000000 ]---
+> [    0.000000] EIP: dmi_decode+0x2e3/0x40e
+> [    0.000000] Code: 10 53 e8 b8 f9 ff ff 83 c4 0c e9 3e 01 00 00 0f b6 =
+7e 01 31 db 83 ef 04 d1 ef 39 df 0f 8e 2b 01 00 00 8a 4c 5e 04 84 c9 79 1e=
+ <0f> b6 54 5e 05 89 f0 88 4d f0 e8 c0 f7 ff ff 8a 4d f0 89 c2 89 c8
+> [    0.000000] EAX: cff6d220 EBX: 000024bd ECX: cfd2caff EDX: cf9e942c
+> [    0.000000] ESI: ffa40681 EDI: 7ffffffe EBP: cfc37e90 ESP: cfc37e80
+> [    0.000000] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 0021=
+0086
+> [    0.000000] CR0: 80050033 CR2: ffa45000 CR3: 0fe78000 CR4: 00000020
+> [    0.000000] Kernel panic - not syncing: Attempted to kill the idle ta=
+sk!
+> [    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill th=
+e idle task! ]---
+
+The same panic can be reproduced with vanilla 6.8.4 kernel.
+
+By adding some (or rather a lot of) printk into dmi_scan.c, I believe
+that the issue is caused by this line:
+
+<https://github.com/torvalds/linux/blob/13a0ac816d22aa47d6c393f14a99f39e49=
+b960df/drivers/firmware/dmi_scan.c#L295>
+
+Or rather by a dmi_header with dm->type =3D=3D 10 and dm->length =3D=3D 0.
+
+As the length is (unsigned) zero, after subtracting the (unsigned)
+header length and dividing by two, count is slightly below signed
+integer max value (and stays there after being casted to signed),
+resulting in the loop running "forever" until it reaches non-mapped
+memory, resulting in the panic above.
+
+
+I am unsure who is the culprit, whether DMI header is supposed to not
+have length zero or whether Linux is supposed to parse it more gracefully.
+
+In any case, when adding an extra if clause to this function to return
+early in case dm->length is zero, the system boots fine and appears to
+work fine at first glance. As I unfortunately have no idea what DMI is
+used for by the kernels, I do not know if there are any other things I
+should test, since the "Onboard device information" is obviously missing.
+
+
+If I should perform other tests, please tell me. Otherwise I hope that
+either an update of Hyper-V or the Linux kernel (or maybe some kernel
+parameter I missed) can make 32-bit Linux bootable on Hyper-V again in
+the future.
+
+[Slightly off-topic: As 64-bit kernels work fine, if there are ways to
+run a 32-bit userland containerized or chrooted in a 64-bit kernel so
+that the userland (espeically uname and autoconf) cannot distinguish
+from a 32-bit kernel, that might be another option for my use case.
+Nested virtualization would of course also work, but the performance
+loss due to nested virtualization negates the effect of being able to
+pass more than one of the (2 physical, 4 hyperthreaded) cores of my
+laptop to the VM].
+
+
+
+Thanks for help and best regards,
+
+
+Michael
 
