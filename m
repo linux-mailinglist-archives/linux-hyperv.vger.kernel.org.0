@@ -1,277 +1,493 @@
-Return-Path: <linux-hyperv+bounces-1962-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1963-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B6D38A3CC5
-	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Apr 2024 15:06:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 123F28A4461
+	for <lists+linux-hyperv@lfdr.de>; Sun, 14 Apr 2024 19:15:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C06A1B211D1
-	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Apr 2024 13:06:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 68D4CB20CCA
+	for <lists+linux-hyperv@lfdr.de>; Sun, 14 Apr 2024 17:15:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F86446AF;
-	Sat, 13 Apr 2024 13:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 092071353F4;
+	Sun, 14 Apr 2024 17:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=schierlm@gmx.de header.b="O9QHXzZX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MquWNYP+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B688D446AC;
-	Sat, 13 Apr 2024 13:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1440134730
+	for <linux-hyperv@vger.kernel.org>; Sun, 14 Apr 2024 17:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713013578; cv=none; b=W4/tqeXz+wULe7H4bNnNnR7Kq7Frw2MoJNG2D9Ri0fVUDYec93ucOro1Gd14e3aIQfTf69K1eLjswg2Hj3cEtBoGcz1A4HEgEEiavBapicixQi06hClX9yoQVqWTvTp03zgGLBfCfHZ7k97Off/5ezTQGZbwNxffWAi0xUEGDFM=
+	t=1713114898; cv=none; b=E8lZDeq8MfwHAurTbm9A7JZCeTFGGWi3pTGBag0kCgfyytk1Wcffiusc+dOoZiMRZ1vN5ZEPaukmQurPFgZ21mFo8IpXNbZ7RCC5Tnvbzmrs1n/7of8JHyfoo+7yBITcv3ADpk+jvz1Sv8zC/RNCeAjensohWGlT1QnzSrVGUvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713013578; c=relaxed/simple;
-	bh=MzbVw7TG8Upbp7umydgmO+bsnapGUtlFn/xOM1E7JMk=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=S6U2CoH4kMfgts6K9pQn9HFzq1FXIfcJ8WnVI1KLf+oFu1egFoJ2Ie+xGG+4Y6Vf6bOzGtr+2z8q6EhsTTUKSTcvTTYn6+DU/AVlUuCDH8W58gMNEaS+KH9U6Fv22NNRuYzjdv7AhqSg62ioIVbdqAdDIsToFeHCH1aDYueJgI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=schierlm@gmx.de header.b=O9QHXzZX; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1713013565; x=1713618365; i=schierlm@gmx.de;
-	bh=Zmy6kJuf0Yp448xeLYX/7DYKynh6RAhzDjoFxgh3wP8=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-	b=O9QHXzZXZSR6wr2WOCIFugzkNBmySaQfVC5/Qw80jSLJgktMrh4uk9igyzpMN0Tl
-	 6bg7sQbwlKK5R01yZqIllZupdrHHdir9wH1X5ih7sVkDVaXfkBMxEguF4vKhTybO1
-	 vy2WYJ0WnpOfkbF72LUhCshAdytDhZ1tRYSqEwg3acS9uMYSCaNmQczeBLHcJZ7GJ
-	 NPTWFi1NsnF8/BNCpyEJZLkhqR7YykK26ZSnacgtiV42aLCPsmQQx/xfC3GBbnguw
-	 RkScODEFKmt+me1R/MzNuydTAhI0H/iD2O70hvY8bv/Hl0J4SpeRW74aj4/9w0Hno
-	 CPRK8YeWDeyodMgy9Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.178.56] ([84.145.191.35]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPGRp-1s86Lo0AsX-00Pgfa; Sat, 13
- Apr 2024 15:06:05 +0200
-Message-ID: <2db080ae-5e59-46e8-ac4e-13cdf26067cc@gmx.de>
-Date: Sat, 13 Apr 2024 15:06:05 +0200
+	s=arc-20240116; t=1713114898; c=relaxed/simple;
+	bh=s0xZjPnsFVzQ/xziSdtwHcUmokflyzJmDWqDF/A6E88=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=oi0Xy7HUK6MvhCjBbaBBVRvSIFolM2ejM9QM0lh9BfPcj0vaaa8gKTWfKcwk5ycphphL4fAZC2z/9NYZPv94iGHg9xOc1X8XncbojHmpmA81kKwE1rjW1xUJDCGMr2CbM4vZj/7tk24HsWw4zO/K71n/n7PKb5WD9yG6iz4TqNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MquWNYP+; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so2832045e87.2
+        for <linux-hyperv@vger.kernel.org>; Sun, 14 Apr 2024 10:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713114894; x=1713719694; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uQXcJhWhGp8E/YuzL/wC3BQ0ftVDAZHne6hubF9x8M0=;
+        b=MquWNYP+reeTDlGGYKA4W3wv0TCF6uLleZtNEgT/3HIuTrYbzDDZscyjxUkBCHLFVt
+         p21B5BDuFJbh9qL/pFfzWzzdqZIWmRRBbSMZJmEwsflqAMoqBpYft/1BwTSsUiR5ezDw
+         GkZdX0kB0V0LaHx7R7jp7UxQkC49sQosoQghHwqCi/1CW8trpcwAZYjj7LnJMHRAsGN3
+         eIcR8o5F/KSqpF7z4D3lGgQq43jPXEGoakAnA3/n0YBtgNOCx3DU9/tOQv2b9ujqcZdv
+         fxaND1W2e0CsMxLVjpaL1tEBBS4iYlnfb2yJZ7C/JTf6y6Qx7z+ssMtZVHwJIwwrJqrs
+         mr9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713114894; x=1713719694;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uQXcJhWhGp8E/YuzL/wC3BQ0ftVDAZHne6hubF9x8M0=;
+        b=uYf3g6AQvG2ydtVFjG09WZn6Sse3vBdd8EUlp4XbS3RdY6rFg9qYLeR6Gmo7Cmgysn
+         n/b08choOV0JLBcbYzA4omdY3kB5jvbFK/TFcceLqGvJJz22O1lDlex7GuU96LKL4LfB
+         w7aV/k1RZtqDaxmXvu0JqTACMEKJ25R36+bjOY78YMvrbW6/CngAvJwO9y/KcHx5bXDi
+         GsXZhnIf57ION5CT1IlKoewOKDr00jPzOlmmU9lg8QhkOfIkaF+VAYc7r8Qw0e1b2Ilo
+         onfryVYdWOyzkGm/IDRS8qXhBbub1Xx0xsPxS8QAUJi28wBDwV52VBfTfygn3/6iA1vg
+         tl4A==
+X-Gm-Message-State: AOJu0Yzet2Sqr4WlJL+Osvm6+Sp1OVIaTanvH5kr/L3XvC+25tXfPmEU
+	8s2qSZ8Uk+JgS7fwkGgzuFkLFD1lXDqHLyRzJJJmq1WwMKb7jaDyfsddEumsiwDr6ZjL78ezyDh
+	AU7jBeeEBEPlop7z7VAbz2R1e4JtrEZrRz7fQmg==
+X-Google-Smtp-Source: AGHT+IHtEm9j34GnM9u2PY5dC0k+1E3pDQpl+g2g0dcgr/frKrrPd5tLNDTG7K78NpP62kY6vHIlNTsU9R+9Y2ePlU8=
+X-Received: by 2002:a05:6512:55b:b0:516:c860:3c70 with SMTP id
+ h27-20020a056512055b00b00516c8603c70mr4727281lfl.57.1713114894016; Sun, 14
+ Apr 2024 10:14:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: de-DE
-From: Michael Schierl <schierlm@gmx.de>
-To: Jean Delvare <jdelvare@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Early kernel panic in dmi_decode when running 32-bit kernel on
- Hyper-V on Windows 11
-Autocrypt: addr=schierlm@gmx.de; keydata=
- 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
- uxTR60TDY/d6Kz8=
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Francois <rigault.francois@gmail.com>
+Date: Sun, 14 Apr 2024 19:14:42 +0200
+Message-ID: <CAMc2VtSNEb1yogTs1fy15xW94_UwqOUVoxaLS2eJ6mcpiaXOXA@mail.gmail.com>
+Subject: Nic flaps for 1 minute when reconnecting
+To: linux-hyperv@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wnxcfEPvQSVin60yHibRAREf98iazoETSilrkYIx7JMsOUo1qkn
- 0zE9CCA3FG+YrC+bL62Qik1o8EOa45AtunEUpFB0J7ATf4SL1upAdNuK0vo2ii2OdpeMZzs
- nhdvyJajyhQYjnzB4Ax+8ws2IcY86q/ssCuAHweMloF1Xu0b767bXrPzUfJ4bV5ygufZJ0C
- +whvzuD0zcQIW6Oko6Dpg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:m+0TQ2x8aVQ=;2wkxSnulSUw2bmjnwoGSEX+Pkbj
- ciAu6SWgL/kAtBETGUkDUe786/8UBRA6utA6DxuQ25HxxBuRSaXSvfK/ox19dd2PPKYyPLIII
- bPCby1XqCqbkyYw7CM6yLxEr7zYN9fYx9pdCBREOozvLpJ9W8A6DiIl5dH/xH449kFLGtbhtR
- 83+ITcr2Nwglm7Q4mrMay59NHQ/0yg32hcUwzYgc2VGxCoHGkVfX7xP8yU3UsYhQoMSfgk9jD
- y/PYsj5nkUNYP24tShfBOOIp/neXgN6t0554fZgfYmsJAyL8ogYow0dVnjrUExFIQrE4yaQVz
- bl4qyKjzhFA7lNJQqbiFfEIklf+cqveaJiHxsi62QWwxRz/KWMLbsd/tqSol8Xcrl+dQxWMJo
- X/uN1JIevRhB3pxjVlRhO/licZfB2P8rgAzaBhCr768eM2oofhMHXdiA3T2TCnsLU1iniZJK0
- TSMfOOep4cfugwMtZWIIIv1d0fSKE7ZghrkNuSRZSjfMQUD9i1J++d5cil1gT76aOXRA7cHpG
- hMcXry41QJF9UuCdUHJHObEG0x+CIOiUin4L3T6MEYL9I+1ZCbrwCgRsJxVuu4VJ/TeA2YTNx
- GjJTqvQ79Qysw7CGb/44WliPcXiCO2NIkoZ52PZ3fW7BG22PerHJM8cowvhlQByFdObOjLKMC
- NBlGSrezzMnWP82QROtGq72cgg3DSF4FAXApmChc7kgDByEA9wDszZ3gW8cHwhVrwcLM1GwwS
- v95gMeAnw2582Jz4TAz/d4JBXEA+9nFb++C8SAyICQVoIk2qmbe8C6duI3xkU/YlXYn5jQ7HP
- Klr3tvO1AJ3q1zNkHKo9mrddt1XpKuBBnDqpyOSXT1Ix4=
 
-[please cc: me as I am not subscribed to either mailing list]
+hello (I'm not subscribed to this list)
+I run a few Linux machines on Hyper-V on my Windows 10 laptop
+and notice that, from time to time, they lose the network for about 1 minut=
+e
+(briefly coming back up then down again)
+I don't know what the actual trigger is, but I believe the "flapping"
+is caused by the delay linked to "LINKCHANGE_INT".
 
-Hello,
+Following is how I reproduce, the logs on Linux side, Windows side,
+and patch I am running to avoid this.
 
+I manage to reproduce this way: in Windows, run the "Services" app,
+right click the "Internet Connecting Sharing (ICS)" service, choose restart=
+...
 
-I am writing to you as Jean is listed as maintainer of dmi, and the rest
-are listed as maintainer for Hyper-V drivers. If I should have written
-elsewhere, please kindly point me to the correct location.
+on my VM I read these logs:
 
-I am having issues running 32-bit Debian (kernel 6.1.0) on Hyper-V on
-Windows 11 (10.0.22631.3447) when the virtual machine has assigned more
-than one vCPU. The kernel does not boot and no output is shown on screen.
+----
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream NetworkManager[1013]: <trace>
+[1703407173.1367] platform-linux: event-notification: RTM_NEWLINK,
+flags 0, seq 0: 2: enx00155d343101 <UP;broadcast,multicast,up> mtu
+1500 arp 1 ethernet? not-init addrgenmode none>d=C3=A9c. 24 09:39:33 stream
+NetworkManager[1013]: <debug> [1703407173.1368] platform:
+(enx00155d343101) signal: link changed: 2: enx00155d343101
+<UP;broadcast,multicast,up> mtu 1500 arp 1 ethernet? init addrgenmode
+none addr 00:15:5D:34:3>d=C3=A9c. 24 09:39:33 stream NetworkManager[1013]:
+<trace> [1703407173.1368] l3cfg[17837add519934e3,ifindex=3D2]: emit
+signal (platform-change, obj-type=3Dlink, change=3Dchanged, obj=3D2:
+enx00155d343101 <UP;broadcast,multicast,up> mtu 1500 arp 1 >d=C3=A9c. 24
+09:39:33 stream kernel: hv_netvsc 9538b269-5961-4c95-aa0b-b2994c468668
+enx00155d343101: RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf
+len 0, buf offset 0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream NetworkManager[1013]: <debug>
+[1703407173.1368] device[cf06ffc422da9956] (enx00155d343101): queued
+link change for ifindex 2
+d=C3=A9c. 24 09:39:33 stream NetworkManager[1013]: <debug>
+[1703407173.1371] device[cf06ffc422da9956] (enx00155d343101): carrier:
+link disconnected (deferring action for 6000 milliseconds)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000c, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 20, status 0x4001000b, buf len 0, buf offset
+0)
+d=C3=A9c. 24 09:39:33 stream kernel: hv_netvsc
+9538b269-5961-4c95-aa0b-b2994c468668 enx00155d343101:
+RNDIS_MSG_INDICATE (len 176, status 0x40020006, buf len 156, buf
+offset 12)
+d=C3=A9c. 24 09:39:37 stream NetworkManager[1013]: <trace>
+[1703407177.2456] platform-linux: event-notification: RTM_NEWLINK,
+flags 0, seq 0: 2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running,lowerup> mtu 1500 arp 1
+ethernet? >d=C3=A9c. 24 09:39:37 stream NetworkManager[1013]: <debug>
+[1703407177.2457] platform: (enx00155d343101) signal: link changed: 2:
+enx00155d343101 <UP,LOWER_UP;broadcast,multicast,up,running,lowerup>
+mtu 1500 arp 1 ethernet? init addrgenmod>d=C3=A9c. 24 09:39:37 stream
+NetworkManager[1013]: <trace> [1703407177.2457]
+l3cfg[17837add519934e3,ifindex=3D2]: emit signal (platform-change,
+obj-type=3Dlink, change=3Dchanged, obj=3D2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running>d=C3=A9c. 24 09:39:37 stream
+NetworkManager[1013]: <debug> [1703407177.2458]
+device[cf06ffc422da9956] (enx00155d343101): queued link change for
+ifindex 2
+d=C3=A9c. 24 09:39:37 stream NetworkManager[1013]: <info>
+[1703407177.2460] device (enx00155d343101): carrier: link connected
+d=C3=A9c. 24 09:39:37 stream NetworkManager[1013]: <debug>
+[1703407177.2461] device[cf06ffc422da9956] (enx00155d343101): carrier:
+link disconnected (canceling deferred action)
+d=C3=A9c. 24 09:39:37 stream NetworkManager[1013]: <trace>
+[1703407177.2462] ethtool[2]: ETHTOOL_GSET, enx00155d343101: success
+d=C3=A9c. 24 09:39:39 stream NetworkManager[1013]: <trace>
+[1703407179.2935] platform-linux: event-notification: RTM_NEWLINK,
+flags 0, seq 0: 2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running,lowerup> mtu 1500 arp 1
+ethernet? >d=C3=A9c. 24 09:39:39 stream NetworkManager[1013]: <debug>
+[1703407179.2936] platform: (enx00155d343101) signal: link changed: 2:
+enx00155d343101 <UP,LOWER_UP;broadcast,multicast,up,running,lowerup>
+mtu 1500 arp 1 ethernet? init addrgenmod>d=C3=A9c. 24 09:39:39 stream
+NetworkManager[1013]: <trace> [1703407179.2936]
+l3cfg[17837add519934e3,ifindex=3D2]: emit signal (platform-change,
+obj-type=3Dlink, change=3Dchanged, obj=3D2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running>d=C3=A9c. 24 09:39:39 stream
+NetworkManager[1013]: <debug> [1703407179.2936]
+device[cf06ffc422da9956] (enx00155d343101): queued link change for
+ifindex 2
+d=C3=A9c. 24 09:39:39 stream NetworkManager[1013]: <trace>
+[1703407179.2936] platform-linux: event-notification: RTM_NEWLINK,
+flags 0, seq 0: 2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running,lowerup> mtu 1500 arp 1
+ethernet? >d=C3=A9c. 24 09:39:41 stream NetworkManager[1013]: <trace>
+[1703407181.3417] platform-linux: event-notification: RTM_NEWLINK,
+flags 0, seq 0: 2: enx00155d343101 <UP;broadcast,multicast,up> mtu
+1500 arp 1 ethernet? not-init addrgenmode none>d=C3=A9c. 24 09:39:41 stream
+NetworkManager[1013]: <debug> [1703407181.3418] platform:
+(enx00155d343101) signal: link changed: 2: enx00155d343101
+<UP;broadcast,multicast,up> mtu 1500 arp 1 ethernet? init addrgenmode
+none addr 00:15:5D:34:3>d=C3=A9c. 24 09:39:41 stream NetworkManager[1013]:
+<trace> [1703407181.3418] l3cfg[17837add519934e3,ifindex=3D2]: emit
+signal (platform-change, obj-type=3Dlink, change=3Dchanged, obj=3D2:
+enx00155d343101 <UP;broadcast,multicast,up> mtu 1500 arp 1 >d=C3=A9c. 24
+09:39:41 stream NetworkManager[1013]: <debug> [1703407181.3418]
+device[cf06ffc422da9956] (enx00155d343101): queued link change for
+ifindex 2
+d=C3=A9c. 24 09:39:41 stream NetworkManager[1013]: <debug>
+[1703407181.3424] device[cf06ffc422da9956] (enx00155d343101): carrier:
+link disconnected (deferring action for 6000 milliseconds)
+d=C3=A9c. 24 09:39:45 stream NetworkManager[1013]: <trace>
+[1703407185.4376] platform-linux: event-notification: RTM_NEWLINK,
+flags 0, seq 0: 2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running,lowerup> mtu 1500 arp 1
+ethernet? >d=C3=A9c. 24 09:39:45 stream NetworkManager[1013]: <debug>
+[1703407185.4377] platform: (enx00155d343101) signal: link changed: 2:
+enx00155d343101 <UP,LOWER_UP;broadcast,multicast,up,running,lowerup>
+mtu 1500 arp 1 ethernet? init addrgenmod>d=C3=A9c. 24 09:39:45 stream
+NetworkManager[1013]: <trace> [1703407185.4377]
+l3cfg[17837add519934e3,ifindex=3D2]: emit signal (platform-change,
+obj-type=3Dlink, change=3Dchanged, obj=3D2: enx00155d343101
+<UP,LOWER_UP;broadcast,multicast,up,running>d=C3=A9c. 24 09:39:45 stream
+NetworkManager[1013]: <debug> [1703407185.4377]
+device[cf06ffc422da9956] (enx00155d343101): queued link change for
+ifindex 2
+d=C3=A9c. 24 09:39:45 stream NetworkManager[1013]: <info>
+[1703407185.4380] device (enx00155d343101): carrier: link connected
+d=C3=A9c. 24 09:39:45 stream NetworkManager[1013]: <debug>
+[1703407185.4381] device[cf06ffc422da9956] (enx00155d343101): carrier:
+link disconnected (canceling deferred action)
+d=C3=A9c. 24 09:39:45 stream NetworkManager[1013]: <trace>
+[1703407185.4382] ethtool[2]: ETHTOOL_GSET, enx00155d343101: success
+...
+d=C3=A9c. 24 09:39:53 stream NetworkManager[1013]: <info>
+[1703407193.6298] device (enx00155d343101): carrier: link connected
+...
+d=C3=A9c. 24 09:40:01 stream NetworkManager[1013]: <info>
+[1703407201.8219] device (enx00155d343101): carrier: link connected
+...
+d=C3=A9c. 24 09:40:10 stream NetworkManager[1013]: <info>
+[1703407210.0138] device (enx00155d343101): carrier: link connected
+...
+d=C3=A9c. 24 09:40:18 stream NetworkManager[1013]: <info>
+[1703407218.2059] device (enx00155d343101): carrier: link connected
+----
 
-I was able to redirect early printk to serial port and capture this panic:
+while Windows events show:
 
-> early console in setup code
-> Probing EDD (edd=3Doff to disable)... ok
-> [    0.000000] Linux version 6.1.0-18-686-pae (debian-kernel@lists.debia=
-n.org) (gcc-12 (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian)=
- 2.40) #1 SMP PREEMPT_DYNAMIC Debian 6.1.76-1 (2024-02-01)
-> [    0.000000] BIOS-provided physical RAM map:
-> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] us=
-able
-> [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] re=
-served
-> [    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] re=
-served
-> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007ffeffff] us=
-able
-> [    0.000000] BIOS-e820: [mem 0x000000007fff0000-0x000000007fffefff] AC=
-PI data
-> [    0.000000] BIOS-e820: [mem 0x000000007ffff000-0x000000007fffffff] AC=
-PI NVS
-> [    0.000000] printk: bootconsole [earlyser0] enabled
-> [    0.000000] NX (Execute Disable) protection: active
-> [    0.000000] BUG: unable to handle page fault for address: ffa45000
-> [    0.000000] #PF: supervisor read access in kernel mode
-> [    0.000000] #PF: error_code(0x0000) - not-present page
-> [    0.000000] *pdpt =3D 000000000fe74001
-> [    0.000000] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.1.0-18-686-pae =
-#1  Debian 6.1.76-1
-> [    0.000000] EIP: dmi_decode+0x2e3/0x40e
-> [    0.000000] Code: 10 53 e8 b8 f9 ff ff 83 c4 0c e9 3e 01 00 00 0f b6 =
-7e 01 31 db 83 ef 04 d1 ef 39 df 0f 8e 2b 01 00 00 8a 4c 5e 04 84 c9 79 1e=
- <0f> b6 54 5e 05 89 f0 88 4d f0 e8 c0 f7 ff ff 8a 4d f0 89 c2 89 c8
-> [    0.000000] EAX: cff6d220 EBX: 000024bd ECX: cfd2caff EDX: cf9e942c
-> [    0.000000] ESI: ffa40681 EDI: 7ffffffe EBP: cfc37e90 ESP: cfc37e80
-> [    0.000000] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 0021=
-0086
-> [    0.000000] CR0: 80050033 CR2: ffa45000 CR3: 0fe78000 CR4: 00000020
-> [    0.000000] Call Trace:
-> [    0.000000]  ? __die_body.cold+0x14/0x1a
-> [    0.000000]  ? __die+0x21/0x26
-> [    0.000000]  ? page_fault_oops+0x69/0x120
-> [    0.000000]  ? uuid_string+0x157/0x1a0
-> [    0.000000]  ? kernelmode_fixup_or_oops.constprop.0+0x80/0xe0
-> [    0.000000]  ? __bad_area_nosemaphore.constprop.0+0xfc/0x130
-> [    0.000000]  ? bad_area_nosemaphore+0xf/0x20
-> [    0.000000]  ? do_kern_addr_fault+0x79/0x90
-> [    0.000000]  ? exc_page_fault+0xbc/0x160
-> [    0.000000]  ? paravirt_BUG+0x10/0x10
-> [    0.000000]  ? handle_exception+0x133/0x133
-> [    0.000000]  ? dmi_disable_osi_vista+0x1/0x37
-> [    0.000000]  ? paravirt_BUG+0x10/0x10
-> [    0.000000]  ? dmi_decode+0x2e3/0x40e
-> [    0.000000]  ? dmi_disable_osi_vista+0x1/0x37
-> [    0.000000]  ? paravirt_BUG+0x10/0x10
-> [    0.000000]  ? dmi_decode+0x2e3/0x40e
-> [    0.000000]  ? dmi_smbios3_present+0xd8/0xd8
-> [    0.000000]  dmi_decode_table+0xa9/0xe0
-> [    0.000000]  ? dmi_smbios3_present+0xd8/0xd8
-> [    0.000000]  ? dmi_smbios3_present+0xd8/0xd8
-> [    0.000000]  dmi_walk_early+0x34/0x58
-> [    0.000000]  dmi_present+0x149/0x1b6
-> [    0.000000]  dmi_setup+0x18d/0x22e
-> [    0.000000]  setup_arch+0x676/0xd3f
-> [    0.000000]  ? lockdown_lsm_init+0x1c/0x20
-> [    0.000000]  ? initialize_lsm+0x33/0x4e
-> [    0.000000]  start_kernel+0x65/0x644
-> [    0.000000]  ? set_intr_gate+0x45/0x58
-> [    0.000000]  ? early_idt_handler_common+0x44/0x44
-> [    0.000000]  i386_start_kernel+0x48/0x4a
-> [    0.000000]  startup_32_smp+0x161/0x164
-> [    0.000000] Modules linked in:
-> [    0.000000] CR2: 00000000ffa45000
-> [    0.000000] ---[ end trace 0000000000000000 ]---
-> [    0.000000] EIP: dmi_decode+0x2e3/0x40e
-> [    0.000000] Code: 10 53 e8 b8 f9 ff ff 83 c4 0c e9 3e 01 00 00 0f b6 =
-7e 01 31 db 83 ef 04 d1 ef 39 df 0f 8e 2b 01 00 00 8a 4c 5e 04 84 c9 79 1e=
- <0f> b6 54 5e 05 89 f0 88 4d f0 e8 c0 f7 ff ff 8a 4d f0 89 c2 89 c8
-> [    0.000000] EAX: cff6d220 EBX: 000024bd ECX: cfd2caff EDX: cf9e942c
-> [    0.000000] ESI: ffa40681 EDI: 7ffffffe EBP: cfc37e90 ESP: cfc37e80
-> [    0.000000] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 0021=
-0086
-> [    0.000000] CR0: 80050033 CR2: ffa45000 CR3: 0fe78000 CR4: 00000020
-> [    0.000000] Kernel panic - not syncing: Attempted to kill the idle ta=
-sk!
-> [    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill th=
-e idle task! ]---
+----
+Get-WinEvent -LogName  Microsoft-Windows-Hyper-V-VmSwitch-Operational
+-MaxEvents 50 -FilterXPath "*[System[Level<5]]"
 
-The same panic can be reproduced with vanilla 6.8.4 kernel.
+   ProviderName: Microsoft-Windows-Hyper-V-VmSwitch
 
-By adding some (or rather a lot of) printk into dmi_scan.c, I believe
-that the issue is caused by this line:
+TimeCreated                      Id LevelDisplayName Message
+-----------                      -- ---------------- -------
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Connected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(Nic Disconnected) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49...
+24/12/2023 09:39:33             220 Information      Status change
+(IPSEC Disable) sent to Nic
+40DBAAF6-D408-452F-BC2E-B76AAF065732--B670C9DF-AB50-49C4-...
+----
 
-<https://github.com/torvalds/linux/blob/13a0ac816d22aa47d6c393f14a99f39e49=
-b960df/drivers/firmware/dmi_scan.c#L295>
+It seems there is a quick succession of disconnections and  reconnections.
+On the kernel side there seems to be a delay of 2s imposed for each of
+these, so I applied this patch, as a proof of concept, to workaround
+the issue:
 
-Or rather by a dmi_header with dm->type =3D=3D 10 and dm->length =3D=3D 0.
+----
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -39,7 +39,7 @@
 
-As the length is (unsigned) zero, after subtracting the (unsigned)
-header length and dividing by two, count is slightly below signed
-integer max value (and stays there after being casted to signed),
-resulting in the loop running "forever" until it reaches non-mapped
-memory, resulting in the panic above.
+ #define RING_SIZE_MIN  64
 
+-#define LINKCHANGE_INT (2 * HZ)
++#define LINKCHANGE_INT (2 * HZ / 100)
+ #define VF_TAKEOVER_INT (HZ / 10)
 
-I am unsure who is the culprit, whether DMI header is supposed to not
-have length zero or whether Linux is supposed to parse it more gracefully.
+ static unsigned int ring_size __ro_after_init =3D 128;
+----
 
-In any case, when adding an extra if clause to this function to return
-early in case dm->length is zero, the system boots fine and appears to
-work fine at first glance. As I unfortunately have no idea what DMI is
-used for by the kernels, I do not know if there are any other things I
-should test, since the "Onboard device information" is obviously missing.
+which works great. Do you know if there is a real need for a 2s delay
+for link change?
+I experienced this issue on all the Linux VMs I booted on my laptop,
+although I'm primarily running Centos Stream9.
+(I reported the issue there without much luck
+https://issues.redhat.com/browse/RHEL-20224, ticket is private)
 
-
-If I should perform other tests, please tell me. Otherwise I hope that
-either an update of Hyper-V or the Linux kernel (or maybe some kernel
-parameter I missed) can make 32-bit Linux bootable on Hyper-V again in
-the future.
-
-[Slightly off-topic: As 64-bit kernels work fine, if there are ways to
-run a 32-bit userland containerized or chrooted in a 64-bit kernel so
-that the userland (espeically uname and autoconf) cannot distinguish
-from a 32-bit kernel, that might be another option for my use case.
-Nested virtualization would of course also work, but the performance
-loss due to nested virtualization negates the effect of being able to
-pass more than one of the (2 physical, 4 hyperthreaded) cores of my
-laptop to the VM].
-
-
-
-Thanks for help and best regards,
-
-
-Michael
+Thanks!
+Francois
 
