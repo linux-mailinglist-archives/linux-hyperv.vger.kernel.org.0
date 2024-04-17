@@ -1,91 +1,95 @@
-Return-Path: <linux-hyperv+bounces-1981-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1982-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EDE08A800A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Apr 2024 11:44:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13A678A87B3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Apr 2024 17:34:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4D6EB22A02
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Apr 2024 09:44:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3F36282D14
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Apr 2024 15:33:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4D811311A1;
-	Wed, 17 Apr 2024 09:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DA721474DA;
+	Wed, 17 Apr 2024 15:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T0WUYhTn"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yh08Z7Ry";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/OjCaona";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yh08Z7Ry";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/OjCaona"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375D2137905
-	for <linux-hyperv@vger.kernel.org>; Wed, 17 Apr 2024 09:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C09147C6D;
+	Wed, 17 Apr 2024 15:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713347027; cv=none; b=brT6hhdEEyZXn3RkJ5muXEleD6dB7ykjfn84zvt8iQh/9MDOdQ6gBCLhmTtE5qUjla9n6fGQyW8YeI1cs/obQ6vYXgmv447ikYm8bvHhZCPuAezFWiSj/xm8Eq8vu/fMMnqcap0X7hqr1LnW4kWZUm+niooXYajs89H3pSIqsuo=
+	t=1713368024; cv=none; b=NbiU31+cIHQTso6Y9u1Yp5FxwHlNGudUwUME3LP9WqZPyhYZ5zVA8XrwE3welnWyPM1MeSeCVkp83Xm/wgwpv4SQE4i4wfYQyKQDc3Okm/TkXPZiYVeN0l6Tvra2ihNNaUDAzEig4R2DBNZJYpBdDuq76OL8l08FO5f6dJqj6s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713347027; c=relaxed/simple;
-	bh=w3o8leo25QcjK4qrTJgMN1jmfr4020YxZP94VRDPevM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tlS9rYr3VDv5156W4rIq/tocFsJDZu/f7A7kgMg9vFX97L0ax99Dm+xDCHm5myLI6+yK3zdu4PaRMKm2bWTqqNyK/NFirpjEvB/kf8dePBswE+xKCiHKH0FJaQ8lhUnAdIEpDPR1jStpdSVF608aOgWt6WB5czgq+lzfuyL9qNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T0WUYhTn; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-418c979ddd2so1200755e9.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 17 Apr 2024 02:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1713347023; x=1713951823; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Jv9SOJzPOWywE+aYo4Ww07EOr0/J/ij1YiDDdM753ws=;
-        b=T0WUYhTn0Weo0areXpaKFVgx0y3hYRbR/1YYyHRv5GWcyfBJ7x0xW7XSaxuEellq08
-         Y7OAvHs0Lth5IYSiW0JAgqN5LvmErWKKa73NVytD4RYRrBloXtjwOPLZ+y5CyyVR9S9R
-         5Px9sNyVH+ff1PpbDEY8Lst1YX4hUUATFCxoyJ4C12PwqBntMAzKmjAw18HixHBWqVLr
-         C7wfPs0zquJ2qIYjGNtAG+mxTHzQe0zjvIqZ8LQVaGhHwOjUj53xxGsLeSSYOqLoFoHz
-         Ki9se3ymEG+i5cpB4/BGQxKlUTHaZRZVMzYUCRgrpyCVGir0ZVypMJMUrJPqSZsS+Lrs
-         1rvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713347023; x=1713951823;
-        h=content-transfer-encoding:mime-version:user-agent:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jv9SOJzPOWywE+aYo4Ww07EOr0/J/ij1YiDDdM753ws=;
-        b=wpBTH92n8hIkWWndBuFNQgtrJ5CWCrDBBsiBxZEZCppzlexvu6BgfRWilXgsZZ/0ap
-         xz/PPP5jD8IJeyp2Nj5twCdIqnXHrNIvR/P84WRs11H64xHyqyBmwBeTVxwVvVZiSi5n
-         iXjRqUboNGYCWUJodwMvPmKWpG2f2b71D8hYUef/e7pjp9QheStZdJ9CqmgzRK70fZt0
-         nXIlzjm62rA+JNqXIDx7ZtytlVrLnwfzJ2wv3yNDeOK3aHv3hWPI3fAtcFq4fM4OPuUT
-         Q2+3qJ103lSFueRngRUloZgHI0gi1K+21kT5g/Bo703Kr8Ag9i0yOAGOKBFnIY9keXBO
-         2k8A==
-X-Gm-Message-State: AOJu0Ywo2ZUMp4W96pL90wiXP+w7cHgVR1iwhjqTKMie7QTRwY8HIznk
-	qZ/EvA8jEk32us4ypLScBDktlabdwLeBMjH1XM8uNIr2dzmY/Ff9Y/kIFexvp/0=
-X-Google-Smtp-Source: AGHT+IGWdC8Yq351EgLwbOBCAxedraqh33vc8Xw4UxUKZzE4tZxJVPzxIa6Ne56u8vHzyAmwcvOP4A==
-X-Received: by 2002:a7b:ce16:0:b0:415:6daf:c626 with SMTP id m22-20020a7bce16000000b004156dafc626mr14209969wmc.21.1713347023377;
-        Wed, 17 Apr 2024 02:43:43 -0700 (PDT)
-Received: from ?IPv6:2a01:e0a:1d:5380:6cdc:9dff:7d8c:ff76? ([2a01:e0a:1d:5380:6cdc:9dff:7d8c:ff76])
-        by smtp.gmail.com with ESMTPSA id h21-20020a05600c351500b0041825f17a71sm2076571wmq.30.2024.04.17.02.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 02:43:42 -0700 (PDT)
-Message-ID: <dade3cd83d4957d4407470f0ea494777406b44bd.camel@suse.com>
-Subject: Re: Early kernel panic in dmi_decode when running 32-bit kernel on
- Hyper-V on Windows 11
-From: Jean DELVARE <jdelvare@suse.com>
-To: Michael Kelley <mhklinux@outlook.com>, Michael Schierl
- <schierlm@gmx.de>,  "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Date: Wed, 17 Apr 2024 11:43:40 +0200
-In-Reply-To: <SN6PR02MB4157CFEA1F504635E4B8B471D4082@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <2db080ae-5e59-46e8-ac4e-13cdf26067cc@gmx.de>
-	 <SN6PR02MB41578C71EB900E5725231462D4092@SN6PR02MB4157.namprd02.prod.outlook.com>
-	 <e416f2a0-6162-481e-9194-11101fa1224c@gmx.de>
-	 <SN6PR02MB41573B2FED887B1E3DCADB55D4092@SN6PR02MB4157.namprd02.prod.outlook.com>
-	 <71af4abb-cffd-449e-b397-bd3134d98fb3@gmx.de>
-	 <SN6PR02MB4157CFEA1F504635E4B8B471D4082@SN6PR02MB4157.namprd02.prod.outlook.com>
-Organization: SUSE Linux
+	s=arc-20240116; t=1713368024; c=relaxed/simple;
+	bh=z4xdnmvSlM4ErphcHTjBQHmq8728znhdZOdtFL1RS9Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=kJuztUVUb1DBlSOGgMVqU9LIDdQOYDtBWH0DbgbssQBLlSLZCsmcqSlxTBFz/Ve0EQVRtbIztG+IaThmKeY2qBk0Li+PmVHh3H1XI3VpvkQpDBE62Xp3KKbIdggkyfCj+9KojQBabGydh0iATZ9MOWqwu7+LjZJpqjHTBDJf1r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yh08Z7Ry; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/OjCaona; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yh08Z7Ry; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/OjCaona; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 822CA33E51;
+	Wed, 17 Apr 2024 15:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713368015; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VuKnNaKUeQ9SJ3jWfyd0fdlNcPS7skWvdmgj3sD0E3w=;
+	b=yh08Z7RyxeWTfmzuZreHxBUECDczM1rMSJas/xS8LSQa8/hjAsULZYOm0AWBQksb0i2Fvp
+	gRoAhn1MAnCe25Ua1cCLCU/0/h4mV3Aczs0MRMuu0EvTtWJVXpcgZJtIjaBT1hFQljyPa2
+	FNXTK1er79ADShDGZoKtOsKt1WmdtUs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713368015;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VuKnNaKUeQ9SJ3jWfyd0fdlNcPS7skWvdmgj3sD0E3w=;
+	b=/OjCaona8ocShcErlgs0HFzuIFxMAOlRRtd+kf8/o9Cvmpxg68hyCGFMXe0ijcUVUVbRPX
+	Q7aJkzp3+cVNzxBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713368015; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VuKnNaKUeQ9SJ3jWfyd0fdlNcPS7skWvdmgj3sD0E3w=;
+	b=yh08Z7RyxeWTfmzuZreHxBUECDczM1rMSJas/xS8LSQa8/hjAsULZYOm0AWBQksb0i2Fvp
+	gRoAhn1MAnCe25Ua1cCLCU/0/h4mV3Aczs0MRMuu0EvTtWJVXpcgZJtIjaBT1hFQljyPa2
+	FNXTK1er79ADShDGZoKtOsKt1WmdtUs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713368015;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VuKnNaKUeQ9SJ3jWfyd0fdlNcPS7skWvdmgj3sD0E3w=;
+	b=/OjCaona8ocShcErlgs0HFzuIFxMAOlRRtd+kf8/o9Cvmpxg68hyCGFMXe0ijcUVUVbRPX
+	Q7aJkzp3+cVNzxBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BEA871384C;
+	Wed, 17 Apr 2024 15:33:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TP+8J87rH2b8ZAAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Wed, 17 Apr 2024 15:33:34 +0000
+Message-ID: <b702b36b90b63b615d41e778570707043ea81551.camel@suse.de>
+Subject: [PATCH] firmware: dmi: Stop decoding on broken entry
+From: Jean Delvare <jdelvare@suse.de>
+To: Michael Schierl <schierlm@gmx.de>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, Michael
+ Kelley <mhklinux@outlook.com>
+Date: Wed, 17 Apr 2024 17:33:32 +0200
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.42.4 
 Precedence: bulk
@@ -94,126 +98,69 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -3.18
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.18 / 50.00];
+	BAYES_HAM(-1.88)[94.33%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmx.de];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
 
-Hi Michael and Michael,
+If a DMI table entry is shorter than 4 bytes, it is invalid. Due to
+how DMI table parsing works, it is impossible to safely recover from
+such an error, so we have to stop decoding the table.
 
-Thanks to both of you for all the data and early analysis.
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Link: https://lore.kernel.org/linux-kernel/Zh2K3-HLXOesT_vZ@liuwe-devbox-debian-v2/T/
+---
+Michael, can you please test this patch and confirm that it prevents
+the early oops?
 
-On Tue, 2024-04-16 at 23:20 +0000, Michael Kelley wrote:
-> Thanks for the information.  I now have a repro of "dmidecode"
-> in user space complaining about a zero length entry, when running
-> in a Gen 1 VM with a 64-bit Linux guest.  Looking at
-> /sys/firmware/dmi/tables/DMI, that section of the DMI blob definitely
-> seems messed up.  The handle is 0x0005, which is the next handle in
-> sequence, but the length and type of the entry are zero.  This is a bit
-> different from the type 10 entry that you saw the 32-bit kernel
-> choking on, and I don't have an explanation for that.  After this
-> bogus entry, there are a few bytes I don't recognize, then about
-> 100 bytes of zeros, which also seems weird.
+The root cause of the DMI table corruption still needs to be
+investigated.
 
-Don't let the type 10 distract you. It is entirely possible that the
-byte corresponding to type == 10 is already part of the corrupted
-memory area. Can you check if the DMI table generated by Hyper-V is
-supposed to contain type 10 records at all?
+ drivers/firmware/dmi_scan.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-This smells like the DMI table has been overwritten by "something".
-Either it happened even before boot, that is, the DMI table generated
-by the VM itself is corrupted in the first place, or the DMI table was
-originally good but other kernel code wrote some data at the same
-memory location (I've seen this once in the past, although that was on
-bare metal). That would possibly still be the result of bad information
-provided by the VM (for example 2 "hardware" features being told to use
-overlapping memory ranges).
-
-You should also check the memory map (as displayed early at boot, so
-near the top of dmesg) and verify that the DMI table is located in a
-"reserved" memory area, so that area can't be used for memory
-allocation. Example on my laptop :
-
-# dmidecode 3.4
-Getting SMBIOS data from sysfs.
-SMBIOS 3.1.1 present.
-Table at 0xBA135000.
-
-So the table starts at physical address 0xba135000, which is in the
-following memory map segment:
-
-reserve setup_data: [mem 0x00000000b87b0000-0x00000000bb77dfff] reserved
-
-This memory area is marked as "reserved" so all is well. In my case,
-the table is 2256 bytes in size (not always displayed by dmidecode by
-default, but you can check the size of file
-/sys/firmware/dmi/tables/DMI), so the last byte of the table is at
-0xba135000 + 0x8d0 - 1 = 0xba1358cf, which is still within the reserved
-range.
-
-If the whole DMI table is NOT located in a "reserved" memory area then
-it can get corrupted by any memory allocation.
-
-If the whole DMI table IS located in a "reserved" memory area, it can
-still get corrupted, but only by code which itself operates on data
-located in a reserved memory area.
-
-> But at this point, it's good that I have a repro. It has been a while since
-> I've built and run a 32-bit kernel, but I think I can get that set up with
-> the ability to get output during early boot. I'll do some further
-> debugging with dmidecode and with the 32-bit kernel to figure out
-> what's going on.  There are several mysteries here:  1) Is Hyper-V
-> really building a bad DMI blob, or is something else trashing it?
-
-This is a good question, my guess is that the table gets corrupted
-afterwards, but better not assume and actually check what the table
-looks like at generation time, from the host's perspective.
-
-> 2) Why does a 64-bit kernel succeed on the putative bad DMI blob,
-> while a 32-bit kernel fails?
-
-Both DMI tables are corrupted, but are they corrupted in the exact same
-way?
-
->   3) Is dmidecode seeing something different from the Linux kernel?
-
-The DMI table is remapped early at boot time and the result is then
-read from dmidecode through /sys/firmware/dmi/tables/DMI. To be honest,
-I'm not sure if this "remapping" is a one-time copy or if future
-corruption would be reflected to the file. In any case, dmidecode can't
-possibly see a less corrupted version of the table. The different
-outcome is because dmidecode is more robust to invalid input than the
-in-kernel parser.
-
-Note that you can force dmidcode to read the table directly from memory
-by using the --no-sysfs option.
-
-
-> Give me a few days to sort all this out.  And if Linux can be made
-> more robust in the face of a bad DMI table entry, I'll submit a
-> Linux kernel patch for that.
-
-I agree that the in-kernel DMI table parser should not choke on bad
-data. dmidecode has an explicit check on "short entries":
-
-		/*
-		 * If a short entry is found (less than 4 bytes), not only it
-		 * is invalid, but we cannot reliably locate the next entry.
-		 * Better stop at this point, and let the user know his/her
-		 * table is broken.
-		 */
-		if (h.length < 4)
-		{
-			if (!(opt.flags & FLAG_QUIET))
-			{
-				fprintf(stderr,
-					"Invalid entry length (%u). DMI table "
-					"is broken! Stop.\n\n",
-					(unsigned int)h.length);
-				opt.flags |= FLAG_QUIET;
-			}
-			break;
-		}
-
-We need to add something similar to the kernel DMI table parser,
-presumably in dmi_scan.c:dmi_decode_table().
+--- linux-6.8.orig/drivers/firmware/dmi_scan.c
++++ linux-6.8/drivers/firmware/dmi_scan.c
+@@ -102,6 +102,17 @@ static void dmi_decode_table(u8 *buf,
+ 		const struct dmi_header *dm = (const struct dmi_header *)data;
+ 
+ 		/*
++		 * If a short entry is found (less than 4 bytes), not only it
++		 * is invalid, but we cannot reliably locate the next entry.
++		 */
++		if (dm->length < sizeof(struct dmi_header)) {
++			pr_warn(FW_BUG
++				"Corrupted DMI table (only %d entries processed)\n",
++				i);
++			break;
++		}
++
++		/*
+ 		 *  We want to know the total length (formatted area and
+ 		 *  strings) before decoding to make sure we won't run off the
+ 		 *  table in dmi_decode or dmi_string
 
 -- 
 Jean Delvare
