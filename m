@@ -1,146 +1,178 @@
-Return-Path: <linux-hyperv+bounces-1993-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-1994-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18B038A9979
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Apr 2024 14:06:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97D718A99BE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Apr 2024 14:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A40F31F222DA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Apr 2024 12:06:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45C8A28251D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Apr 2024 12:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487AD15FA7A;
-	Thu, 18 Apr 2024 12:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65CE615F411;
+	Thu, 18 Apr 2024 12:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A8dciqX0"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c+frCZT7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hohUDKmb";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c+frCZT7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hohUDKmb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1707B15F3E1
-	for <linux-hyperv@vger.kernel.org>; Thu, 18 Apr 2024 12:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1C215F405;
+	Thu, 18 Apr 2024 12:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713441967; cv=none; b=TpFuJBGDICFm8WyDKUiRAWTABcNf8shX/uTZ5Gs3R+asSO9N8UBCh+Yl6j/MWLgyZlhhd1WzVraBnU1uK04hlKOACPeWg/5F2npWuHw30W2VJatMMctTWT7FHvWmACoDNXyivO3Nfc7lQF3cgCPX8qtSt1wg2yMjKGgwrfUX+gY=
+	t=1713443262; cv=none; b=YQcWyDH0d1G8kYbsWnnhheQfwnuYfDgaJL1sYb6J74Iz7bxTP3livlgthPfPPCB23U/ENzd2hHTMlakaSiwMsgB5lS5pyCX5Mqtj+xha9qTfIB2C/pOSLWD22Lbte5ZNjRMJIpQUhJBZqtJansIbCT2kXTilnKn4+Y6sEEQOr6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713441967; c=relaxed/simple;
-	bh=wV1q09azHgzZ3Yre/HZZew17vHq85B77RfcsujVrHlI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cwXCzq0P6QFdPB860uWXQD6qzdco8KXf78MHhcunUIWBfClYyKy4GQDaR+6TAI7E989mgNySdRk96A20hIZ2gma70szgdYlINjDOw9EzsLbamsWGHsA7hFfeEpVyn9tCLMZegmci5vW0UwhACNYdzIs5Z+SH4xRs3prbcOXHu0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A8dciqX0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713441964;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	s=arc-20240116; t=1713443262; c=relaxed/simple;
+	bh=pATeS5SPR6X8cLAtFccaCt0+DXe5ZptNwFh+l7hFbzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bK7SlSWLagmjf34jzuaY4W6LEs55Bw8sP9wAUV0HKRIPLDlj6AOgajn1lsy+NhNhlq05V/h3eWnGnwqOVnnJY6KEy8l7JYn6KKfKhq1kbreYOkw2VSq6VQCVMfN2XElvgw3PmwBM5xhH0AsD8bT99mcDZMIBfNdoKoYFp3cB5Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=c+frCZT7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hohUDKmb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=c+frCZT7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hohUDKmb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 939EA5CA72;
+	Thu, 18 Apr 2024 12:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713443258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=oxCCv+GY90eEUwoIFbKmjfk3gXJKwVh094KBVsL50+w=;
-	b=A8dciqX0vZobJ282dthU79nwTwue3KRE9CG6dRRasrn6TpRLh9Uy4Vs3CkPPVamU9WrPjz
-	qE2LEjo+muM/cMO1gRVMiMPVaqBepyaycH/hdjlYG249ynnA8neyLDS/AUDy/nzujiAInc
-	RSNGOi5tKzvQD54McPOHuAZgczjo5kI=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-311-Ti97iLwNOCm2OwzWyF_6yQ-1; Thu, 18 Apr 2024 08:06:00 -0400
-X-MC-Unique: Ti97iLwNOCm2OwzWyF_6yQ-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2a2fe3c35a1so964718a91.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 18 Apr 2024 05:05:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713441959; x=1714046759;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oxCCv+GY90eEUwoIFbKmjfk3gXJKwVh094KBVsL50+w=;
-        b=Ss3/LiBh9F15iWUp9MeHqte39I4u84AZ700NG/oLrisRJ3/9JrZlmuiNpGrwhM0w7x
-         lPbCg+MrjroVhTtmblV4EidQ+LZxw+6BzYiyfKUCgAlaJfaMgjAxxm08VXLoVw/GaDHF
-         JtiBTx8jmflkpwilf9gt1LIYqjjapkI+J+WnLegRKdN0ogewR0ZylUwvFZ/A09M4D7uw
-         RDzdLKp9et9jrRsSLBKfc9OUzUZ0jd8OglxBZH2sJ7MvC1iEPNTS5/TYm8aW4pfYUxlT
-         HOM4GI51NcXYqxnII6Cx25+/xHSjLM70VuHAL+EajZmgZVcRnWGIks7KoWojfkqYitym
-         Ohgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqcP/ugLym3HfCWlsZpYDdfQtB+6H3q4CawMnzvcIrVzmFkqGVP4F/0GAedJMP85up5FO8M2SnJQ2o3VT3fuOHgY99kTV5+vXEfYl3
-X-Gm-Message-State: AOJu0YwppFnSdYt0gbJZmuVdylyYKOJ14rSA0nhkSYhQnttTdCXdh3vM
-	wbjyHKPCe3Dm0ZqMUDhMStR/9n9U14X4pyoMq58Q1X1SI2A8hlRGgrGM70rTZvfu9d1ym+zkBue
-	WNtR7XNA0RPubzMYSXwrxUeBCZFnxCfGiyKUOdErWw1zQIf+BcjW6NPU8UZIHuA==
-X-Received: by 2002:a17:90a:ea8c:b0:2a6:e5d0:d42b with SMTP id h12-20020a17090aea8c00b002a6e5d0d42bmr2356066pjz.2.1713441958966;
-        Thu, 18 Apr 2024 05:05:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFabCbK8j7WqSqyOEIhDwAd5yXN/ORmENxfb2k0++RkIZ1ey0r4T8exz9+3edB3aS8OXfSnqQ==
-X-Received: by 2002:a17:90a:ea8c:b0:2a6:e5d0:d42b with SMTP id h12-20020a17090aea8c00b002a6e5d0d42bmr2356036pjz.2.1713441958430;
-        Thu, 18 Apr 2024 05:05:58 -0700 (PDT)
-Received: from localhost.localdomain ([116.73.134.11])
-        by smtp.googlemail.com with ESMTPSA id s4-20020a17090aa10400b002a54632931bsm3006491pjp.23.2024.04.18.05.05.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 05:05:58 -0700 (PDT)
-From: Ani Sinha <anisinha@redhat.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>
-Cc: Ani Sinha <anisinha@redhat.com>,
-	shradhagupta@linux.microsoft.com,
-	eahariha@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Add a header in ifcfg and nm keyfiles describing the owner of the files
-Date: Thu, 18 Apr 2024 17:35:49 +0530
-Message-ID: <20240418120549.59018-1-anisinha@redhat.com>
-X-Mailer: git-send-email 2.42.0
+	bh=iacDreTbLiNlUPYvwqy/30EORNDWG1S3S2E0kuUcCNE=;
+	b=c+frCZT7hbNPKmkRaTVa+XlOe1+FcDcaRSIGfpEIWLG0f3/FguLbbsWrOA6Ythm6x1AcDR
+	Do0xmHuYQL9cyRqQsDihzRKAxag0BnhJZYZR1HMAjlCj4/3EcJqNKkYyXW0xRWDPDaX577
+	IogtWDi1/wU9ZqRxIOzhJkjaDyhR+hQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713443258;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iacDreTbLiNlUPYvwqy/30EORNDWG1S3S2E0kuUcCNE=;
+	b=hohUDKmb2sC4HKhlB15tjpKVe69ZXufxX7ytFpa2CLdUrxVa+y46FACYMoTbrGpLXyAquc
+	Rh1EdRZYn+G6MEDA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=c+frCZT7;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=hohUDKmb
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713443258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iacDreTbLiNlUPYvwqy/30EORNDWG1S3S2E0kuUcCNE=;
+	b=c+frCZT7hbNPKmkRaTVa+XlOe1+FcDcaRSIGfpEIWLG0f3/FguLbbsWrOA6Ythm6x1AcDR
+	Do0xmHuYQL9cyRqQsDihzRKAxag0BnhJZYZR1HMAjlCj4/3EcJqNKkYyXW0xRWDPDaX577
+	IogtWDi1/wU9ZqRxIOzhJkjaDyhR+hQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713443258;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iacDreTbLiNlUPYvwqy/30EORNDWG1S3S2E0kuUcCNE=;
+	b=hohUDKmb2sC4HKhlB15tjpKVe69ZXufxX7ytFpa2CLdUrxVa+y46FACYMoTbrGpLXyAquc
+	Rh1EdRZYn+G6MEDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB7F613687;
+	Thu, 18 Apr 2024 12:27:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id T67NLrkRIWYeeAAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Thu, 18 Apr 2024 12:27:37 +0000
+Date: Thu, 18 Apr 2024 14:27:34 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Michael Schierl <schierlm@gmx.de>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, Michael 
+ Kelley <mhklinux@outlook.com>
+Subject: [PATCH v2] firmware: dmi: Stop decoding on broken entry
+Message-ID: <20240418142734.56e1db4b@endymion.delvare>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_TO(0.00)[gmx.de];
+	TO_DN_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 939EA5CA72
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
 
-A comment describing the source of writing the contents of the ifcfg and
-network manager keyfiles (hyperv kvp daemon) is useful. It is valuable both
-for debugging as well as for preventing users from modifying them.
+If a DMI table entry is shorter than 4 bytes, it is invalid. Due to
+how DMI table parsing works, it is impossible to safely recover from
+such an error, so we have to stop decoding the table.
 
-CC: shradhagupta@linux.microsoft.com
-CC: eahariha@linux.microsoft.com
-CC: wei.liu@kernel.org
-Signed-off-by: Ani Sinha <anisinha@redhat.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Reported-by: Michael Schierl <schierlm@gmx.de>
+Link: https://lore.kernel.org/linux-kernel/Zh2K3-HLXOesT_vZ@liuwe-devbox-debian-v2/T/
+Tested-by: Michael Schierl <schierlm@gmx.de>
 ---
- tools/hv/hv_kvp_daemon.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes since v1:
+ * Also log the offset of the corrupted entry (suggested by Michael Kelley)
 
-changelog:
-v2: simplify and fix issues with error handling.
+ drivers/firmware/dmi_scan.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index ae57bf69ad4a..014e45be6981 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -94,6 +94,8 @@ static char *lic_version = "Unknown version";
- static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
- static struct utsname uts_buf;
+--- linux-6.8.orig/drivers/firmware/dmi_scan.c
++++ linux-6.8/drivers/firmware/dmi_scan.c
+@@ -102,6 +102,17 @@ static void dmi_decode_table(u8 *buf,
+ 		const struct dmi_header *dm = (const struct dmi_header *)data;
  
-+#define CFG_HEADER "# Generated by hyperv key-value pair daemon. Please do not modify.\n"
+ 		/*
++		 * If a short entry is found (less than 4 bytes), not only it
++		 * is invalid, but we cannot reliably locate the next entry.
++		 */
++		if (dm->length < sizeof(struct dmi_header)) {
++			pr_warn(FW_BUG
++				"Corrupted DMI table, offset %ld (only %d entries processed)\n",
++				data - buf, i);
++			break;
++		}
 +
- /*
-  * The location of the interface configuration file.
-  */
-@@ -1435,6 +1437,18 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 		return HV_E_FAIL;
- 	}
- 
-+	/* Write the config file headers */
-+	error = fprintf(ifcfg_file, CFG_HEADER);
-+	if (error < 0) {
-+		error = HV_E_FAIL;
-+		goto setval_error;
-+	}
-+	error = fprintf(nmfile, CFG_HEADER);
-+	if (error < 0) {
-+		error = HV_E_FAIL;
-+		goto setval_error;
-+	}
-+
- 	/*
- 	 * First write out the MAC address.
- 	 */
++		/*
+ 		 *  We want to know the total length (formatted area and
+ 		 *  strings) before decoding to make sure we won't run off the
+ 		 *  table in dmi_decode or dmi_string
+
+
 -- 
-2.42.0
-
+Jean Delvare
+SUSE L3 Support
 
