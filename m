@@ -1,214 +1,280 @@
-Return-Path: <linux-hyperv+bounces-2005-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2006-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADAEB8AB169
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Apr 2024 17:12:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FBB28AB36C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Apr 2024 18:36:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 644C8285319
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Apr 2024 15:12:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43DC51C2139F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Apr 2024 16:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB8B22B2D7;
-	Fri, 19 Apr 2024 15:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 326AA130A73;
+	Fri, 19 Apr 2024 16:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a0Ypl7g1"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="NkggnRnQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2085.outbound.protection.outlook.com [40.107.7.85])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2092.outbound.protection.outlook.com [40.92.18.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F5712F38D;
-	Fri, 19 Apr 2024 15:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C11D85629;
+	Fri, 19 Apr 2024 16:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713539540; cv=fail; b=GeyfoJXLcKTv6o6vUjGiKJ8xCD7uhV3/LMWKpLyJVc5g4o3+/lTKMdMOA1FJ7mO4V7TmtSvky3zD5NWjQ1xhGNyY73DX+S6qxA/Xg9t1HVfQWcfNKKZMeCrBvgcbjy32SF8NSxk1EQ1yOLoN1WmSNW5xw+VFn7LYZY6KSacv7sE=
+	t=1713544574; cv=fail; b=n5vWE4e8HWcpQauB0AHOHlrG+QUpxvBDzSjCUlkvTHcamfMEc9UK7b7dTLchtJq+5OsMCKdwlB9+094Rj8Eaq4MtOIo+BlPcFsrbVlQyRoacmR0VGlNReOOaiKCIbVmbdqeQ54BVsT/kQpLKHWzZVp60p13Xl9f/QfBikAHxjjQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713539540; c=relaxed/simple;
-	bh=ZmAMmuwHqkJa/N3+RfO/Y+gc/w1LSanjyFkGnUspK4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VzqaID8Gs/oJBoF3g4NDhJOWI6/WSkKviTxfYv+r5bqxNNhSsqNAslKbACQILFzBNY9IMvliscVhhy+AqbVbz22Vw5qB+Svkb2cDjN0fy5Bf2AykJYvczOu69+fnxkWee+/VkzJpr5zHOYsFzIsNyefYyntOQbAJAHqJS24A7Cg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=a0Ypl7g1; arc=fail smtp.client-ip=40.107.7.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1713544574; c=relaxed/simple;
+	bh=vtkiSEhUKyqqQsfsxpOajjN5LKXuqC1ctH86sAa6/0A=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PdnDfG0tB6PWcAsSAB4JaQg91Y9twUIp8RWORfBkMI4in/O7R9fCcw1/g45helCYsISW7bSTF0I5MkTNzXqNoFd0/8xsXjqRAaM/cbskzCIKnWW//8pOmnbMIQtjC7jLL6CDBkP8fMEEmFgtFrAJxaFXKXvMvFdIIQDLBoWQNhM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=NkggnRnQ; arc=fail smtp.client-ip=40.92.18.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M3IdMo/n3XLBHRDD6IU01JNv0e2Ske+oXz9VlxAXp/wZ8Nh4bPR56G2A8VrMLQnDMnlxUw4m4o4pCiX4gGnBVrZlvsLkokGoWdy9t1oKFvG4+xi/7CXXlbYWz1MsRgDbSP/RHTcA9H9hMR0xim6ecNtwl21WPDlbMqaU0fkF6q/CxyDoamoe1yhq8uGEgtsxBwHQZKmFsHfPbfkQwqudmAUYmQP0x0U5OJGpXhYKr7nWBuLx+GEyjQYcW9WiFOWz1Pg46hUpsS3QWPqrNdBskVFo6THlG4kOGx/x/1iT9TB94oAhOgz49P/LUe9wGZ+Dds7PNcqlsCSeOTamzFm7dw==
+ b=kY9R/xkBY4In7nKUQi7sTnF52f3O67nYxo5OBM4yR4G3yR0B8DrcjRqLkQzBKUcAqpN0+ndZ+uoml/VrnV8gMzfNQVwOBAXkZujBuDlebg6UILY2oCvT+fS4BZZI3OtbZdH4nA2TCzweN9eY3eJbsMtnXpmWaE0UHI9i0C4qp+50PuekASJQneFPBWkLyUX+V6KZt4cETffFp2YuPqgUPsOIgqRW2onwrQlt3fLTiv8sLl1f7v+SGY3R2EqYErwO8RSVcoy1uaoqlwL7AcLGFM5IWSCxvgqiCmDG6BBuCnF0gqmF2qg5FhVO2t64GFL3apmfrP53uU1AhL3wMCCH9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PK+lL+E0BQKSAbqzmXxPO9CqNmmXKuWkBv9uFDTvWEQ=;
- b=kwNnFT7eggwKFxRFojapG7Gjm0s6PpAXYaqI/+f1ik7nu9/hG3Z4SbE/p9EYRLyhHdAK2bxwJHWfRODXMkvpi9yL+BCLn47JLYhnjJ128tXtT7oaWdrHseQXgC3lBAonly4LKl+pLFUITcbhrX7RgxtN8m+mfAglvol5zohJZ2jIKELsZ+y9TN0SrGnZ8e0ZCA+5+HJLnfHWn5dRnoQkEbPCWWRdYuTerpD+En82WoPNLN313DfRv20FlHWDW+VfZ1dcGTDZKONHusKRgSvxeL3SoiGuomoifL/Z+XqKWonVHWjuKTQzKJuMqO7l2K67vJDo4apOK4BiX/To61vs3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=TxEOJgb0DA6/6UHB+taOyDpW7j3MK9eJAE0UUJi3xtc=;
+ b=AiA7w5szqEFe5I0+qoUd/I8CyugOcYEzNH0GQPP5NSUp/ULukv0ExwZNVWTS+YdTn/3J9ex+p19xw+CF7cWErk4kLkqXGq8I5FlXlv3fW2uyfaODEvYmjj0k6qsht3Z+j0Mnwy2jjyDDcXbzD9kcVKzDmzXYzNuwlmcItkGrf37J+rXVrllE5xPHFDY92R8W7yYiETwAafZp7BYmTazELHGf8E+7vkAfFmeeVKNBA4GLfXkxlFXALdFJQ7dwiPWE+4M5cXNeJxR+fOTGNtLuTVAifzWwg9KhGLiBiSSoLFBRhAwK7+bVfsHLjZgL/U+GoR1/snYmRRo1GftmrCftUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PK+lL+E0BQKSAbqzmXxPO9CqNmmXKuWkBv9uFDTvWEQ=;
- b=a0Ypl7g10PjlAdocqWwr6rA3b+40J2LzhqR3wdop3ZbcP1ZUZisEzfFJcE6bW1i71ijt1cNjJ/x9wNqLG9nVtF+1fv9MCuM5PCp4nVcR1I1dknLFqHns1ZbZVU6qEd8jsRCTcpuGnZ/Xea7fTWhsTGAVDfWaY2vwvI3hN7w10cI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM9PR04MB8210.eurprd04.prod.outlook.com (2603:10a6:20b:3e7::17) with
+ bh=TxEOJgb0DA6/6UHB+taOyDpW7j3MK9eJAE0UUJi3xtc=;
+ b=NkggnRnQ5oVKKW9gPML4AZo+K1pW4UGInhwEyic9mn3qfnPPYTo+5ghPa3zxK/3aamovEGOPZbOTAINx1vcZ/lDxF1PJT87SE2uuWOFHqi8fvW9x3HoAwnp5/KKxN+dnJjLAuf7dfDSQ0YA0RS0sBv2nCbpDZGxba+kgGncsoM9HnMaCd1rBEjytSiDlgnVePR09gITrAJRG0o15zjQ78Q6oUEXr1vx8aPmQ0/Mwch31g9PQBV76XQFjSbeE4hEFoPbughBK9pu0+eGpZ9DcHwA3QyousRbV5/j5m3HFkkOyN0TQzeUpztybmq37wxkyq40lz1R4Y7b+uAM/M5MZiA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ0PR02MB7614.namprd02.prod.outlook.com (2603:10b6:a03:323::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
- 2024 15:12:16 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7472.037; Fri, 19 Apr 2024
- 15:12:16 +0000
-Date: Fri, 19 Apr 2024 11:12:07 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Dexuan Cui <decui@microsoft.com>
-Cc: bhelgaas@google.com, wei.liu@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, lpieralisi@kernel.org,
-	linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Boqun.Feng@microsoft.com,
-	sunilmut@microsoft.com, ssengar@microsoft.com
-Subject: Re: [PATCH] PCI: Add a mutex to protect the global list
- pci_domain_busn_res_list
-Message-ID: <ZiKJxz/vtn5/kBT8@lizhi-Precision-Tower-5810>
-References: <20240419015302.13871-1-decui@microsoft.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419015302.13871-1-decui@microsoft.com>
-X-ClientProxiedBy: BY3PR05CA0012.namprd05.prod.outlook.com
- (2603:10b6:a03:254::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 19 Apr
+ 2024 16:36:10 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7472.037; Fri, 19 Apr 2024
+ 16:36:10 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Michael Kelley <mhklinux@outlook.com>, Michael Schierl <schierlm@gmx.de>,
+	Jean DELVARE <jdelvare@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan
+ Cui <decui@microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Early kernel panic in dmi_decode when running 32-bit kernel on
+ Hyper-V on Windows 11
+Thread-Topic: Early kernel panic in dmi_decode when running 32-bit kernel on
+ Hyper-V on Windows 11
+Thread-Index:
+ AQHajaNnaKjzbQWkCEqfKgwSAQ9VW7FopBnAgAExRwCAACYysIABcguAgAAcUjCAALI+AIAAvzYAgAAT/rCAAsG3QA==
+Date: Fri, 19 Apr 2024 16:36:09 +0000
+Message-ID:
+ <SN6PR02MB415733CB1854317C980C3F18D40D2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <2db080ae-5e59-46e8-ac4e-13cdf26067cc@gmx.de>
+ <SN6PR02MB41578C71EB900E5725231462D4092@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <e416f2a0-6162-481e-9194-11101fa1224c@gmx.de>
+ <SN6PR02MB41573B2FED887B1E3DCADB55D4092@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <71af4abb-cffd-449e-b397-bd3134d98fb3@gmx.de>
+ <SN6PR02MB4157CFEA1F504635E4B8B471D4082@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <dade3cd83d4957d4407470f0ea494777406b44bd.camel@suse.com>
+ <3c6f9fea-6865-40da-96c5-d12bc08ba266@gmx.de>
+ <SN6PR02MB4157C677FDAD6507B443A8C7D40F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB4157C677FDAD6507B443A8C7D40F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [DC1IZUTyTVK1WPrxen6/zSmf3d136UZz]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7614:EE_
+x-ms-office365-filtering-correlation-id: bf651c8b-0219-4955-7615-08dc608ed1ba
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 1h7VCyh4nwaUHRDStKvfk0n/AH/B678n7qP8Y8r1ky2F3R3qwgUeV6xx9vj2bhkVpVA41Tfk9Qgw2Z7W92fs3e7w8WYjXSWuMFV6q66ZHsqSO5ROCr6ZKhmdfgX2NyC/LP0TQWRhptGUC1RYJudRbbRGZZisof8YPtLxI3bdk3QFtBq2dDNHd/g2qgJ8KcuGaUnocE5G4z5SZMaJseFLzhz2xSU2YFs1bEI/QGY6H7CgsLDJRdqffUbRQnuMVZqoN68zPsEBjMeBMl/LEoO1gz9tk/RMEPt/kNDnX+W3BRC+ZsmZqUIQFgg0SAb/U5NA1ipB9oMmzeiZVefinWo70NOfkycvPhx5lmcp1EVyhESVJGshgzDLZQyNA/5HUNxN4CCRSXg3MwFFjFL6lWCYxdLKYPrt++EYpzz1uxq0GTdMEBkW35i+O8LB71O3+9/l2c4wjLd4M7eSHX0LrSF9tKBRyHs0xTSZ+28WXxLy8q+zcBLYoy0hlLomUrUzIrMRB0FtXOnlxGWgkDYnyUdkeiu8WCtbrYf9IKwyZ20xclPIAbsj49Ey69/GPNPfzmlmUWwuSjDR6y0oY7I3LQj0Fg+A5J0HgsWjzKuAxaPVrKFJK9sYJdgLL19gcXP+ij9y
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ExNsu3CF62pI4DevhCMthK5ljXZkwfQvAJLgbvA/yyT0Y1UVHbVXCsEltu0O?=
+ =?us-ascii?Q?GIDXn0Lf/SvKij/1RWkWIi5bZ4lg461GUxBTOhKuboRorh1i5xz3YXDWIbUh?=
+ =?us-ascii?Q?cXBGlvqQdvPymSdQypAdG7Zv7nJTxYU5wG9DhVjFeBy9gmAr0MjxamB3ZlHB?=
+ =?us-ascii?Q?dJhJVsnartTjbLbWotBb8EudwBTe1QBDJ3SyPFRsvAptDhHDNVBsvqjTfYEl?=
+ =?us-ascii?Q?r/iztzmxaJvOy9MfFoaWGMc9DN8kYXZvB+rW0Mlqqw/1AxpYQ3cmj/TDT4G1?=
+ =?us-ascii?Q?TWM2CVPSnlErXTFA8nQCq/ecdYta2jto/OxEmF69zEd0M4xwDQsZgv9kaRcd?=
+ =?us-ascii?Q?4+3HzOalJ1d/GjVRXJlaBLulUddPzGzZjTpTGbGib+wnz3ZnYI7UiZBSHdRf?=
+ =?us-ascii?Q?E2J1y6mHxPoHmuj6f9wphlWEsX5HyUCDr8SG/jLH2iT18TAVqU4HelDMZetP?=
+ =?us-ascii?Q?u9e/MGE5qHoBNIEaTlUah2HnqTZaWueJuKxC/tQvc8Dqlm3Z8JVfzWMGkFoA?=
+ =?us-ascii?Q?a5A8wqlJhWZCiDFKmXYGhZ/8g3kpOggPT2U5GTjl4gojx9siN5Ycc06LVNfY?=
+ =?us-ascii?Q?VZ4GeQI/ShN/7yYBA4r34tuTw1/BokTb5SbtqJl4gOLWOwMlH3S01ukvdtd5?=
+ =?us-ascii?Q?drnVGCn3ibg7D29ETpSeLdc82S9681a5+q6LmAwBO1hxF4n9fFdeQK5i/5zu?=
+ =?us-ascii?Q?Lbn4SHNjjYGDsVkdoIhBF/fZf6EceLifRI0jyHCbWe6rhqE9JWjvJhcpP+7N?=
+ =?us-ascii?Q?A+CTz1PjifEbMst0QZXS+6l0XuQx/2WcRcvVrLKen5uloO7JghbipHQCEdlL?=
+ =?us-ascii?Q?YzIbAhxYVAWp+Bwb3KoXn/5rNSLdhOuw4o8PJT7UFfLLIMgohHjfPhUPGCBJ?=
+ =?us-ascii?Q?LpXU51UOLEFsmq1OAEE3JBphnJ+sGY4lyqmxFXuFROlQnzM6ERanQvW/kGsF?=
+ =?us-ascii?Q?eh/rBgd49Ip81zDVyTKXz8ObngowBv/A5TQR/Lxop/YfgDr9kIRX23orbjRp?=
+ =?us-ascii?Q?oOstsiLpWPFLINs4ApVzIrCf0Eg2wq4WsNGHHmjuSCVMG3Aqxqp2WC4OEAyT?=
+ =?us-ascii?Q?AEO2aBTjN9CZvXzddejuqGadwx7a2vWwSDHEanb8l0oC0svZCwQGjdyjMKRV?=
+ =?us-ascii?Q?2XFOG6aMzu6kD2w5jHa1JhA1cVBnBTSsa96UbvIWCvxuTSEk5gSwU+UnKmdt?=
+ =?us-ascii?Q?JTVPkI/WN+7eM8OizFLxxIZDCtrBQHtKFqYUQA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11c72167-0def-4f6c-62d9-08dc60831952
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	cAkvZp8C59hZXtMHVHrAGKBMPsSx/ctKoeK8gpkg0SJZFlkqOKb5tMtWjGKAzcBt7A5g5u0zdKH62qFubcQXUDF4VJlZfLnT4KQSL6+ebBQ8PLHLVqh+ovAqYRZDF6QXNXcQ0hl3s2znnMj3ypHGezQ166UgJWDE4GSCGxZl+jvGw+ef/bey5hv0FB2NmBP4WiEA/KUbRZTTnVIP5zhNlwub3jR6AqmpFc09+9Pd52Dk2g7QmSbEBwAyh9WL6B/CF/XVseG5I4Stxzgf0H6fTJHVxueIEQ9zaURutgYkEAj3x4B8NHzVjVcsEiPYao5v5gXI2DxCUFgHkCgzgVmjCYU7KY2RuVJ3x8HFXYE1TyNzODsZyAP/Zb18gvlu75/vv5WJwvcYx3HFFDADrz7teTebgnoRLev9hSZsljpzPCDBFe1OR9sgYDjeKN+e7oLWqGoLQzi3joYWrxU8VBeash+iLBKHZWmrd0s9MbgyKf3e+cgI+M+AQTcXies1WKSnqsaHt7bozU/kAKvqrbssIqfMdv/8WEMW4EqVZ3g54Hmpk3ZiSaON8Oj8IaUnef9tbMtLQijfYEL9wjCmARK7IlEUamvWZDB1/Kf2vKY8erCNaJhRbpOyguhZrOWd6LcKesKaml4iQPJZd34dOHuyQjbLZ/lqGDTr0ky2rkovHzUt5Hq7n/H+RWaoMFLOHN2rF468al1KBZb/qZxfdCnCI16mQ9z1nZNZiWVkli4Ny1g=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005)(52116005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BhhL7iypL8H4Giee47ZlI9BKO8zwhL4TNX0JnHlmIMaJR8npEUm4ZN+60Zvx?=
- =?us-ascii?Q?pr4lVX3i/WVaKtC4N+epHbsrTgZ/RF0n8EzWG//h4jxHbobOEeB6iwahCrPa?=
- =?us-ascii?Q?2Ufl8UYkddm2SPFkQ1g9oh0HllP5QAt3AhTaIBrbQaghtK5shiE3vOOjXZT+?=
- =?us-ascii?Q?+pE25F8F0tlt2VeBmf72N0WPS+m/zWnSNB4EgrdDXzMYAAh4yLA7Z/KB1rls?=
- =?us-ascii?Q?ZYPBNySGgffnvepzhjz2eh4D0PTtzPTD+hchw+S1So7yav3UCZkYeje4GTXr?=
- =?us-ascii?Q?0r6sg2pHyH4CNwQ+t2J63iGqjl4hwcnPi7JSJr9G+1zz542lZvXJuuj365uy?=
- =?us-ascii?Q?mY0IxJbs2ElUMm62BPSxjdAQeLx4anV/Ny+EToku9pO3PSBitJXirkV2u9J9?=
- =?us-ascii?Q?hKu3dGk1wG8kElVxDfmvx6OT93fcvBQKNbcVmBugFNtnbPaC4pIp1YPxRH/L?=
- =?us-ascii?Q?f0tAc8I5RIFmlP1yzTuH5rOJroS9Tg5NBIuhBHR9/qMAevGSyev0dycvZWSA?=
- =?us-ascii?Q?7H8PCfICUhtsrQSC1basdqNQPVfqYQCF/qH/iyDL2e0Tcr6MAROm8wJjMom2?=
- =?us-ascii?Q?kz5mxvKan2+YQ4ftoYn8J2c2SKlIHBXbgFg0QZSjK0G5+6y0U6MdzwL5Owvu?=
- =?us-ascii?Q?Lx1RKpUZx5/gMXnx6guTD0lM860G2Z3g1J99+R6FPkXI81viXXAs/bAxavWY?=
- =?us-ascii?Q?99s/Z3yoMvkJU8/VA8TjsvSdmDhRFuO8s0VL8RAGXvgpdIZpuVSRsxOrW/1d?=
- =?us-ascii?Q?Q5Wfhz3c/RcglNwyYjK4WZBnRLZL4UfYE9/KpWmTluoo1ASVXq7o5wP081a8?=
- =?us-ascii?Q?h8BT2OUhxG9yPZ5ZdvymCIS6kvwwiMffY+CjUjw/BWrRkzxiZWcdVBrshggF?=
- =?us-ascii?Q?KE8NSWLWOW92xOAVTjUPoiW2nx5juTIWXRLCxadfwWEhpzPPGJf1flstfpV7?=
- =?us-ascii?Q?rrOQFIvxEbfeMHT4TOy9q4Nr8l/l3zryI/9rSk3RdQkivH0SLBOvJuCBHdKS?=
- =?us-ascii?Q?juvL5j9IbLlrIv2NqeFH5NbYu2T6YYCgCEOqlj+R5GZX4qlkx5pJUJBRf0eO?=
- =?us-ascii?Q?eBF6HmDV9b6hQDm5yqzDs0KABnevvk1raXnGNe+T586GqzGbfsipxTdDnt6u?=
- =?us-ascii?Q?hrieICubVbmHZfGkbDI17RWrp1k3zB7uDJ4ZrEblKMNdq0xbpgrE9BNWlqYt?=
- =?us-ascii?Q?TCXmSAoYQ+9CuF6eB25xZnNoW1BVCVTCJ+xbpr2582MI64/80EzEx8Scchtd?=
- =?us-ascii?Q?m08asBWZHtiQGe+0DGJ/GGL9ZN5IYxeeZmxs5CLQscbCBPAF7yUTn2U+1abi?=
- =?us-ascii?Q?hQCPZBOquZc953GnMQagNAelsJQZGm5e8WHeUZAetHM5lX6wzpAOYEb2xE0y?=
- =?us-ascii?Q?Rado62R6DTdpg+mkukhqSQ3yvV4x0/ERqPwJhSBeGDMccsogIr7wTbFf/pXj?=
- =?us-ascii?Q?6ys6f89U4a3NFA1gAE3URrk7wGolbWhBZ4zBYg0emRWBIL/A3dvzbeIiUDtw?=
- =?us-ascii?Q?+FLKEwiuX1nHGNuksze9k3yQ7sMV8maaln8+PeOsaxGV9Ki+ilJeSgKODEF/?=
- =?us-ascii?Q?1HKyV+bPQArFSDm6aiBQJRqE8Wi4vyhVVoqJscgN?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11c72167-0def-4f6c-62d9-08dc60831952
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 15:12:16.2365
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf651c8b-0219-4955-7615-08dc608ed1ba
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2024 16:36:09.9574
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HS4rMV2I2+00g3ErlwdHZ6CmQLZNWyg7Xp+512n+cXEU1ICPCG8ilGepx7ny/BG5P08/SYfoWJYO87dp+C36Nw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8210
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7614
 
-On Thu, Apr 18, 2024 at 06:53:02PM -0700, Dexuan Cui wrote:
-> There has been an effort to make the pci-hyperv driver support
-> async-probing to reduce the boot time. With async-probing, multiple
-> kernel threads can be running hv_pci_probe() -> create_root_hv_pci_bus() ->
-> pci_scan_root_bus_bridge() -> pci_bus_insert_busn_res() at the same time to
-> update the global list, causing list corruption.
-> 
-> Add a mutex to protect the list.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/probe.c | 25 ++++++++++++++++++-------
->  1 file changed, 18 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index e19b79821dd6..1327fd820b24 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -37,6 +37,7 @@ LIST_HEAD(pci_root_buses);
->  EXPORT_SYMBOL(pci_root_buses);
->  
->  static LIST_HEAD(pci_domain_busn_res_list);
-> +static DEFINE_MUTEX(pci_domain_busn_res_list_lock);
->  
->  struct pci_domain_busn_res {
->  	struct list_head list;
-> @@ -47,14 +48,22 @@ struct pci_domain_busn_res {
->  static struct resource *get_pci_domain_busn_res(int domain_nr)
->  {
->  	struct pci_domain_busn_res *r;
-> +	struct resource *ret;
->  
-> -	list_for_each_entry(r, &pci_domain_busn_res_list, list)
-> -		if (r->domain_nr == domain_nr)
-> -			return &r->res;
-> +	mutex_lock(&pci_domain_busn_res_list_lock);
+From: Michael Kelley <mhklinux@outlook.com> Sent: Wednesday, April 17, 2024=
+ 3:35 PM
+>=20
+> From: Michael Schierl <schierlm@gmx.de> Sent: Wednesday, April 17, 2024 2=
+:08 PM
+> >
+> > > Don't let the type 10 distract you. It is entirely possible that the
+> > > byte corresponding to type =3D=3D 10 is already part of the corrupted
+> > > memory area. Can you check if the DMI table generated by Hyper-V is
+> > > supposed to contain type 10 records at all?
+> >
+> > How? Hyper-V is not open source :-)
+>=20
+> I think that request from Jean is targeted to me or the Microsoft
+> people on the thread.  :-)
+>=20
+> >
+> > My best guess to get Linux out of the equation would be to boot my
+> > trusted MS-DOS 6.2 floppy and use debug.com to dump the DMI:
+> >
+> > > | A:\>debug
+> > > | -df000:93d0 [to inspect]
+> > > | -nfromdos.dmi
+> > > | -rcx
+> > > | CX 0000
+> > > | :439B
+> > > | -w f000:93d0
+> > > | -q
+> >
+> >
+> > The result is byte-for-byte identical to the DMI dump I created from
+> > sysfs and pasted earlier in this thread. Of course, it does not have to
+> > be identical to the memory situation while it was parsed.
+>=20
+> I've been looking at the details of the DMI blob in a Linux VM on my
+> local Windows 11 laptop, as well as in a Generation 1 VM in the Azure
+> public cloud, which uses Hyper-V.   The overall size and layout
+> of the DMI blob appears to be the same in both cases.  The blob is
+> corrupted in the VM on the local laptop, but good in the Azure VM.
+>=20
+> I was wondering how to check if the Linux bootloaders and grub
+> were somehow corrupting the DMI blob, but now you've
+> answered the question by running MS-DOS and dumping the
+> contents.  Excellent experiment!
+>=20
+> I still want to understand why 32-bit Linux is taking an oops during
+> boot while 64-bit Linux does not. =20
 
-Using
-	guard(mutex)(&pci_domain_busn_res_list_lock);
+The difference is in this statement in dmi_save_devices():
 
-to simple logic, especially there are goto.
+	count =3D (dm->length - sizeof(struct dmi_header)) / 2;
 
-You can avoid goto out, direct return NULL;
+On a 64-bit system, count is 0xFFFFFFFE.  That's seen as a
+negative value, and the "for" loop does not do any iterations. So
+nothing bad happens.
 
-Frank
+But on a 32-bit system, count is 0x7FFFFFFE. That's a big
+positive number, and the "for" loop iterates to non-existent
+memory as Michael Schierl originally described.
 
-> +
-> +	list_for_each_entry(r, &pci_domain_busn_res_list, list) {
-> +		if (r->domain_nr == domain_nr) {
-> +			ret = &r->res;
-> +			goto out;
-> +		}
-> +	}
->  
->  	r = kzalloc(sizeof(*r), GFP_KERNEL);
-> -	if (!r)
-> -		return NULL;
-> +	if (!r) {
-> +		ret = NULL;
-> +		goto out;
-> +	}
->  
->  	r->domain_nr = domain_nr;
->  	r->res.start = 0;
-> @@ -62,8 +71,10 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
->  	r->res.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED;
->  
->  	list_add_tail(&r->list, &pci_domain_busn_res_list);
-> -
-> -	return &r->res;
-> +	ret = &r->res;
-> +out:
-> +	mutex_unlock(&pci_domain_busn_res_list_lock);
-> +	return ret;
->  }
->  
->  /*
-> -- 
-> 2.25.1
-> 
+I don't know the "C" rules for mixed signed and unsigned
+expressions, and how they differ on 32-bit and 64-bit systems.
+But that's the cause of the different behavior.
+
+Regardless of the 32-bit vs. 64-bit behavior, the DMI blob is malformed,
+almost certainly as created by Hyper-V.  I'll see if I can bring this to
+the attention of one of my previous contacts on the Hyper-V team.
+
+Michael
+
+> During boot, I can see that 64-bit
+> Linux wanders through the corrupted part of the DMI blob and
+> looks at a lot of bogus entries before it gets back on track again.
+> But the bogus entries don't cause an oops.  Once I figure out
+> those details, we still have the corrupted DMI blob, and based on
+> your MS-DOS experiment, it's looking like Hyper-V created the
+> corrupted form.   I want to think more about how to debug that.
+>=20
+> FWIW, in comparing the Azure VM with my local VM, it looks like
+> the corrupted entry is the first type 4 entry describing a CPU.
+>=20
+> Michael Kelley
+>=20
+> >
+> > > You should also check the memory map (as displayed early at boot, so
+> > > near the top of dmesg) and verify that the DMI table is located in a
+> > > "reserved" memory area, so that area can't be used for memory
+> > > allocation.
+> >
+> > The e820 memory map was included in the early printk output I posted
+> > earlier:
+> >
+> > > [    0.000000] BIOS-provided physical RAM map:
+> > > [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]=
+ usable
+> > > [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]=
+ reserved
+> > > [    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff]=
+ reserved
+> > > [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007ffeffff]=
+ usable
+> > > [    0.000000] BIOS-e820: [mem 0x000000007fff0000-0x000000007fffefff]=
+ ACPI data
+> > > [    0.000000] BIOS-e820: [mem 0x000000007ffff000-0x000000007fffffff]=
+ ACPI NVS
+> >
+> > And from the dmidecode I pasted earlier:
+> >
+> > > Table at 0x000F93D0.
+> >
+> > The size is 0x0000439B, so the last byte should be at 0x000FD76A, well
+> > inside the third i820 entry (the second reserved one) - and accessible
+> > even from DOS without requiring any extra effort.
+> >
+> > > So the table starts at physical address 0xba135000, which is in the
+> > > following memory map segment:
+> > >
+> > > reserve setup_data: [mem 0x00000000b87b0000-0x00000000bb77dfff] reser=
+ved
+> >
+> > Looks like UEFI, and well outside the 1MB range :-)
+> >
+> > > If the whole DMI table IS located in a "reserved" memory area, it can
+> > > still get corrupted, but only by code which itself operates on data
+> > > located in a reserved memory area.
+> >
+> >
+> > > Both DMI tables are corrupted, but are they corrupted in the exact sa=
+me
+> > > way?
+> >
+> > At least the dumped tables are byte-for-byte identical on both OS
+> > flavors. And (as I tested above) byte-for-byte identical to a version
+> > dumped from MS-DOS.
+> >
+> >
+> > Regards,
+> >
+> >
+> > Michael
+>=20
+
 
