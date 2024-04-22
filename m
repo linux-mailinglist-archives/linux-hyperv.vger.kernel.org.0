@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-2033-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2034-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56D668ADA84
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 02:14:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73CAD8ADA86
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 02:15:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 820ED1C21781
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 00:14:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E5C1287661
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 00:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD1D5181310;
-	Mon, 22 Apr 2024 23:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28D8181329;
+	Mon, 22 Apr 2024 23:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNGLl0FB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8Bplyve"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A418D15884C;
-	Mon, 22 Apr 2024 23:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776FF181325;
+	Mon, 22 Apr 2024 23:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713830278; cv=none; b=k6rkK9Jv/xmIngBpZZr6dbyLmD6Cuh0kiPrG1ERa1tsrbXyCW1SdqBHVACrroCya5H12vpUqryIpnH6sXul03GBN26LBrJwUhT7hupS68DP7K0oWdgqeB6BXONs0umXn4NLK1Tr/oMZYryLX7BaRAmvQzEJccRXRCYLGIeyVKV0=
+	t=1713830280; cv=none; b=s32rujAVwo4uSrE+abDkse9HDtVRhbUlOAJGir9JBDzqG309Ji+AVEuKrrJHFj+ViCXtIRg/QdFruq6xq//JwjKP8KkSWDuIm/iEkd7qNe5k7NZqTTMoVUsdPV8yay9QCvYh9AIYQKeMsEL9AoO30BmV/FczQGcnVR34SlEV7Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713830278; c=relaxed/simple;
-	bh=18m4ZYSaNZlIgA8xL5VdKckI3qxeX5rvbkwFzIq1d0Q=;
+	s=arc-20240116; t=1713830280; c=relaxed/simple;
+	bh=K5EStZlXPC94lOCkAltlvbRFc2NgIMhrY1Z9hChs+qs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=na7H0FA2vE5yugGoWtat/ShNv9TYmaIbmOV3mLZnNDecESn+s5riG2VCmBtnSltqV92b+cLt/TKabr7vubi/M5fSEJc2e/GwJ17vYrLt0rilc+DtKlDp2L8FOIl1K5i8BwhCfht/wLW/TjeUck/3DJz+TF2h6lCbmOlDIIg6xGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNGLl0FB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48313C2BD11;
-	Mon, 22 Apr 2024 23:57:57 +0000 (UTC)
+	 MIME-Version; b=QHJ+yJJDmyLe6Qpxp+mL1X+1mJ2KAPDEK2uZquvnN1c/S7J6Ciw0JbPSCkR5HICtC0tqanAAcl9K79fY9uH+PjhDJsos4iqzl1eTOnnSFNSXgBITJwFOEg4a3W/+WXNf7OcCtZfZITSqKSrG9FxxCQZJxL9sqynOPYiI7o4z+QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8Bplyve; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38A4C32786;
+	Mon, 22 Apr 2024 23:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713830278;
-	bh=18m4ZYSaNZlIgA8xL5VdKckI3qxeX5rvbkwFzIq1d0Q=;
+	s=k20201202; t=1713830280;
+	bh=K5EStZlXPC94lOCkAltlvbRFc2NgIMhrY1Z9hChs+qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uNGLl0FBCIB4OE7pEZg61inW6VNPcFPUnWsjjFwRBSJNFRxoBC8RkwzST9LGtAtdA
-	 fQGwwEQGct+FTs9/GdUdPsessju3Rrbwn77P0cyZn+f7RfEobskToPKuAibLscdAG/
-	 jY1XtfirGPukDivEU42FoHonH0QpmsGNR61R1MUevpe5XulRiwd5S9auCQhzAFtObF
-	 HkMuFlGVvjAYqtMfqSEBQ1aVh5E63hGLhXlvGAqT6UDzy9ZKV9ziRFIuh3g3gnJReP
-	 7PDSpYRoDpgAmTwvw/cJE7L5HhTQYXRnUGRdymSlqLmusQ8LqEmo+1yzsaeIbV8rp/
-	 EyOKGb9eWCU/Q==
+	b=U8BplyveHxNH1jTsbgEA266CF6rYizfu/ia4gWBg5HCiQS+Ty79MPJhF04Ud+dga+
+	 hSlbxFt+vwE4pFIayIfV0sFUM4zoEEaA1/uZkEq6fvySmyIyHeELfE9Po0210Wk1x7
+	 6avYOqKKhwO++nw06Jys2fJHFhl/2f7kM/f+Uq54aNXkz4JkP7sroVz0JH97k85zrs
+	 /risj7o3d+LktBcOr5n1QQg0WAbDzx0c1aPsByBlwJU6rTU0cQc0uoUe+hPqVWGnsn
+	 STU7aV/94KpiZkPsjQJ3V9Zd+Hbo4qmEyVBw13KGIL9i3iIIgTg8A8WGe0cMnKNXNp
+	 pt0shcbv5icYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -53,10 +53,11 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>,
 	kys@microsoft.com,
 	haiyangz@microsoft.com,
 	decui@microsoft.com,
+	gregkh@linuxfoundation.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 16/19] Drivers: hv: vmbus: Track decrypted status in vmbus_gpadl
-Date: Mon, 22 Apr 2024 19:18:30 -0400
-Message-ID: <20240422231845.1607921-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 17/19] uio_hv_generic: Don't free decrypted memory
+Date: Mon, 22 Apr 2024 19:18:31 -0400
+Message-ID: <20240422231845.1607921-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240422231845.1607921-1-sashal@kernel.org>
 References: <20240422231845.1607921-1-sashal@kernel.org>
@@ -73,7 +74,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-[ Upstream commit 211f514ebf1ef5de37b1cf6df9d28a56cfd242ca ]
+[ Upstream commit 3d788b2fbe6a1a1a9e3db09742b90809d51638b7 ]
 
 In CoCo VMs it is possible for the untrusted host to cause
 set_memory_encrypted() or set_memory_decrypted() to fail such that an
@@ -82,89 +83,63 @@ take care to handle these errors to avoid returning decrypted (shared)
 memory to the page allocator, which could lead to functional or security
 issues.
 
-In order to make sure callers of vmbus_establish_gpadl() and
-vmbus_teardown_gpadl() don't return decrypted/shared pages to
-allocators, add a field in struct vmbus_gpadl to keep track of the
-decryption status of the buffers. This will allow the callers to
-know if they should free or leak the pages.
+The VMBus device UIO driver could free decrypted/shared pages if
+set_memory_decrypted() fails. Check the decrypted field in the gpadl
+to decide whether to free the memory.
 
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Link: https://lore.kernel.org/r/20240311161558.1310-3-mhklinux@outlook.com
+Link: https://lore.kernel.org/r/20240311161558.1310-5-mhklinux@outlook.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <20240311161558.1310-3-mhklinux@outlook.com>
+Message-ID: <20240311161558.1310-5-mhklinux@outlook.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/channel.c   | 25 +++++++++++++++++++++----
- include/linux/hyperv.h |  1 +
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ drivers/uio/uio_hv_generic.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 56f7e06c673e4..bb5abdcda18f8 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -472,9 +472,18 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
- 		(atomic_inc_return(&vmbus_connection.next_gpadl_handle) - 1);
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index c08a6cfd119f2..e5789dfcaff61 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -181,12 +181,14 @@ hv_uio_cleanup(struct hv_device *dev, struct hv_uio_private_data *pdata)
+ {
+ 	if (pdata->send_gpadl.gpadl_handle) {
+ 		vmbus_teardown_gpadl(dev->channel, &pdata->send_gpadl);
+-		vfree(pdata->send_buf);
++		if (!pdata->send_gpadl.decrypted)
++			vfree(pdata->send_buf);
+ 	}
  
- 	ret = create_gpadl_header(type, kbuffer, size, send_offset, &msginfo);
--	if (ret)
-+	if (ret) {
-+		gpadl->decrypted = false;
- 		return ret;
-+	}
+ 	if (pdata->recv_gpadl.gpadl_handle) {
+ 		vmbus_teardown_gpadl(dev->channel, &pdata->recv_gpadl);
+-		vfree(pdata->recv_buf);
++		if (!pdata->recv_gpadl.decrypted)
++			vfree(pdata->recv_buf);
+ 	}
+ }
  
-+	/*
-+	 * Set the "decrypted" flag to true for the set_memory_decrypted()
-+	 * success case. In the failure case, the encryption state of the
-+	 * memory is unknown. Leave "decrypted" as true to ensure the
-+	 * memory will be leaked instead of going back on the free list.
-+	 */
-+	gpadl->decrypted = true;
- 	ret = set_memory_decrypted((unsigned long)kbuffer,
- 				   PFN_UP(size));
+@@ -295,7 +297,8 @@ hv_uio_probe(struct hv_device *dev,
+ 	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
+ 				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
  	if (ret) {
-@@ -563,9 +572,15 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+-		vfree(pdata->recv_buf);
++		if (!pdata->recv_gpadl.decrypted)
++			vfree(pdata->recv_buf);
+ 		goto fail_close;
+ 	}
  
- 	kfree(msginfo);
+@@ -317,7 +320,8 @@ hv_uio_probe(struct hv_device *dev,
+ 	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
+ 				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
+ 	if (ret) {
+-		vfree(pdata->send_buf);
++		if (!pdata->send_gpadl.decrypted)
++			vfree(pdata->send_buf);
+ 		goto fail_close;
+ 	}
  
--	if (ret)
--		set_memory_encrypted((unsigned long)kbuffer,
--				     PFN_UP(size));
-+	if (ret) {
-+		/*
-+		 * If set_memory_encrypted() fails, the decrypted flag is
-+		 * left as true so the memory is leaked instead of being
-+		 * put back on the free list.
-+		 */
-+		if (!set_memory_encrypted((unsigned long)kbuffer, PFN_UP(size)))
-+			gpadl->decrypted = false;
-+	}
- 
- 	return ret;
- }
-@@ -886,6 +901,8 @@ int vmbus_teardown_gpadl(struct vmbus_channel *channel, struct vmbus_gpadl *gpad
- 	if (ret)
- 		pr_warn("Fail to set mem host visibility in GPADL teardown %d.\n", ret);
- 
-+	gpadl->decrypted = ret;
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(vmbus_teardown_gpadl);
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 4fbd5d8417111..811d59cf891ba 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -832,6 +832,7 @@ struct vmbus_gpadl {
- 	u32 gpadl_handle;
- 	u32 size;
- 	void *buffer;
-+	bool decrypted;
- };
- 
- struct vmbus_channel {
 -- 
 2.43.0
 
