@@ -1,51 +1,50 @@
-Return-Path: <linux-hyperv+bounces-2034-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2035-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73CAD8ADA86
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 02:15:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ECDB8ADA96
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 02:16:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E5C1287661
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 00:14:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 652A4B29F80
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 00:15:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28D8181329;
-	Mon, 22 Apr 2024 23:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45356181B89;
+	Mon, 22 Apr 2024 23:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8Bplyve"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3OOi8cX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776FF181325;
-	Mon, 22 Apr 2024 23:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DE1181B85;
+	Mon, 22 Apr 2024 23:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713830280; cv=none; b=s32rujAVwo4uSrE+abDkse9HDtVRhbUlOAJGir9JBDzqG309Ji+AVEuKrrJHFj+ViCXtIRg/QdFruq6xq//JwjKP8KkSWDuIm/iEkd7qNe5k7NZqTTMoVUsdPV8yay9QCvYh9AIYQKeMsEL9AoO30BmV/FczQGcnVR34SlEV7Vw=
+	t=1713830282; cv=none; b=IaPkvHacg6FPJ7bqlRZ/tIUUUOmhSHlPbOrG4/nZZ9nJqoGgx2EudTyRNgKszZxBwToG9qv8Oy79g3rJxrbM3+UYUCwMhnt8KwDrrgLqdGZpCcwvhsU94+vSn2RL4dMhSHOsvVnvSkYK7HKgz2oZQUwGKPUSXjdRCsMlztzVAf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713830280; c=relaxed/simple;
-	bh=K5EStZlXPC94lOCkAltlvbRFc2NgIMhrY1Z9hChs+qs=;
+	s=arc-20240116; t=1713830282; c=relaxed/simple;
+	bh=6DH5Rwdcqy+9xB/0WqPMQDHvka0BwH6+dpCDTEw5Oj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QHJ+yJJDmyLe6Qpxp+mL1X+1mJ2KAPDEK2uZquvnN1c/S7J6Ciw0JbPSCkR5HICtC0tqanAAcl9K79fY9uH+PjhDJsos4iqzl1eTOnnSFNSXgBITJwFOEg4a3W/+WXNf7OcCtZfZITSqKSrG9FxxCQZJxL9sqynOPYiI7o4z+QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8Bplyve; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38A4C32786;
-	Mon, 22 Apr 2024 23:57:58 +0000 (UTC)
+	 MIME-Version; b=nIcbeiQp4XCRSVLi05GEuCMhKIPJTAJNymhOzYF6s1slU88mwnCVsR6kFxYyZqWgbl+L4BxcpYkjftLjEK0rtdai4F3RPF6pAWaTMLd/TkzyI4sjq6VoxxALUfQGxpDSl+lATpcg7Pc6suxXyBNauWviOBS+jDkrtAtxfOW1iKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3OOi8cX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3316C113CC;
+	Mon, 22 Apr 2024 23:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713830280;
-	bh=K5EStZlXPC94lOCkAltlvbRFc2NgIMhrY1Z9hChs+qs=;
+	s=k20201202; t=1713830282;
+	bh=6DH5Rwdcqy+9xB/0WqPMQDHvka0BwH6+dpCDTEw5Oj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U8BplyveHxNH1jTsbgEA266CF6rYizfu/ia4gWBg5HCiQS+Ty79MPJhF04Ud+dga+
-	 hSlbxFt+vwE4pFIayIfV0sFUM4zoEEaA1/uZkEq6fvySmyIyHeELfE9Po0210Wk1x7
-	 6avYOqKKhwO++nw06Jys2fJHFhl/2f7kM/f+Uq54aNXkz4JkP7sroVz0JH97k85zrs
-	 /risj7o3d+LktBcOr5n1QQg0WAbDzx0c1aPsByBlwJU6rTU0cQc0uoUe+hPqVWGnsn
-	 STU7aV/94KpiZkPsjQJ3V9Zd+Hbo4qmEyVBw13KGIL9i3iIIgTg8A8WGe0cMnKNXNp
-	 pt0shcbv5icYg==
+	b=O3OOi8cXNEa+a1F28vveS+J8os0bvdixPo0OZFRjQBonNB/X9CIp84KeHxOhjlgsg
+	 +9in8vRsvCVJfOWhi0hjcyAAhs/gcU9Jp5nND1UB47ImZ/DF01NXs5fOid7CmqPK6g
+	 Flb6awJHD9ycjxOWWrYbEx9PzZSb/c7W4PrfE76w0fwy61zBK4XAODwcem7gZVfvXH
+	 A2KGKNp64VYzO+JPP2FZxvYwyeKX7FmN7GLLNgBVBgQr/CI6r6A/2PSpdpzNXOILHP
+	 hbB3q3LVUqKOg9Kq/ew2PKG5eWI+5CFMDYbr16yySnA84H7ogFPMn3w0V1UFJ06uuH
+	 r4sOpEiAk/djg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Michael Kelley <mhklinux@outlook.com>,
+Cc: Michael Kelley <mhklinux@outlook.com>,
 	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
 	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
 	Wei Liu <wei.liu@kernel.org>,
@@ -53,11 +52,10 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>,
 	kys@microsoft.com,
 	haiyangz@microsoft.com,
 	decui@microsoft.com,
-	gregkh@linuxfoundation.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 17/19] uio_hv_generic: Don't free decrypted memory
-Date: Mon, 22 Apr 2024 19:18:31 -0400
-Message-ID: <20240422231845.1607921-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 18/19] Drivers: hv: vmbus: Don't free ring buffers that couldn't be re-encrypted
+Date: Mon, 22 Apr 2024 19:18:32 -0400
+Message-ID: <20240422231845.1607921-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240422231845.1607921-1-sashal@kernel.org>
 References: <20240422231845.1607921-1-sashal@kernel.org>
@@ -72,9 +70,9 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.87
 Content-Transfer-Encoding: 8bit
 
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+From: Michael Kelley <mhklinux@outlook.com>
 
-[ Upstream commit 3d788b2fbe6a1a1a9e3db09742b90809d51638b7 ]
+[ Upstream commit 30d18df6567be09c1433e81993e35e3da573ac48 ]
 
 In CoCo VMs it is possible for the untrusted host to cause
 set_memory_encrypted() or set_memory_decrypted() to fail such that an
@@ -83,63 +81,36 @@ take care to handle these errors to avoid returning decrypted (shared)
 memory to the page allocator, which could lead to functional or security
 issues.
 
-The VMBus device UIO driver could free decrypted/shared pages if
-set_memory_decrypted() fails. Check the decrypted field in the gpadl
-to decide whether to free the memory.
+The VMBus ring buffer code could free decrypted/shared pages if
+set_memory_decrypted() fails. Check the decrypted field in the struct
+vmbus_gpadl for the ring buffers to decide whether to free the memory.
 
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Link: https://lore.kernel.org/r/20240311161558.1310-5-mhklinux@outlook.com
+Link: https://lore.kernel.org/r/20240311161558.1310-6-mhklinux@outlook.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <20240311161558.1310-5-mhklinux@outlook.com>
+Message-ID: <20240311161558.1310-6-mhklinux@outlook.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/uio/uio_hv_generic.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hv/channel.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index c08a6cfd119f2..e5789dfcaff61 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -181,12 +181,14 @@ hv_uio_cleanup(struct hv_device *dev, struct hv_uio_private_data *pdata)
- {
- 	if (pdata->send_gpadl.gpadl_handle) {
- 		vmbus_teardown_gpadl(dev->channel, &pdata->send_gpadl);
--		vfree(pdata->send_buf);
-+		if (!pdata->send_gpadl.decrypted)
-+			vfree(pdata->send_buf);
- 	}
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index bb5abdcda18f8..47e1bd8de9fcf 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -153,7 +153,9 @@ void vmbus_free_ring(struct vmbus_channel *channel)
+ 	hv_ringbuffer_cleanup(&channel->inbound);
  
- 	if (pdata->recv_gpadl.gpadl_handle) {
- 		vmbus_teardown_gpadl(dev->channel, &pdata->recv_gpadl);
--		vfree(pdata->recv_buf);
-+		if (!pdata->recv_gpadl.decrypted)
-+			vfree(pdata->recv_buf);
- 	}
- }
- 
-@@ -295,7 +297,8 @@ hv_uio_probe(struct hv_device *dev,
- 	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
- 				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
- 	if (ret) {
--		vfree(pdata->recv_buf);
-+		if (!pdata->recv_gpadl.decrypted)
-+			vfree(pdata->recv_buf);
- 		goto fail_close;
- 	}
- 
-@@ -317,7 +320,8 @@ hv_uio_probe(struct hv_device *dev,
- 	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
- 				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
- 	if (ret) {
--		vfree(pdata->send_buf);
-+		if (!pdata->send_gpadl.decrypted)
-+			vfree(pdata->send_buf);
- 		goto fail_close;
- 	}
- 
+ 	if (channel->ringbuffer_page) {
+-		__free_pages(channel->ringbuffer_page,
++		/* In a CoCo VM leak the memory if it didn't get re-encrypted */
++		if (!channel->ringbuffer_gpadlhandle.decrypted)
++			__free_pages(channel->ringbuffer_page,
+ 			     get_order(channel->ringbuffer_pagecount
+ 				       << PAGE_SHIFT));
+ 		channel->ringbuffer_page = NULL;
 -- 
 2.43.0
 
