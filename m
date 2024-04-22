@@ -1,70 +1,68 @@
-Return-Path: <linux-hyperv+bounces-2020-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2021-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C0528AD743
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 00:28:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 219708AD747
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 00:29:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D17521F219BF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Apr 2024 22:28:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4C151F219B2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Apr 2024 22:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6798C2134A;
-	Mon, 22 Apr 2024 22:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FAF51CF8B;
+	Mon, 22 Apr 2024 22:29:02 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126DB208B6;
-	Mon, 22 Apr 2024 22:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F30B1DFF8
+	for <linux-hyperv@vger.kernel.org>; Mon, 22 Apr 2024 22:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713824891; cv=none; b=CecfFFIEDHtEYAq7Ue+FwlTivCcP8gW+TDSKwkba6pdvetFjZtv9+isKOAmi+tcsElmBc7EQLVaURRmw7jKKqMNVqzBhnWKSJ7fETmzxVpvE7JwRqFyeYqlL5TqE2FxFRsd1A52fePu51bg0XKauWOi9qn85y6KMJmYrPxIP8CU=
+	t=1713824942; cv=none; b=Ei/4RFJiUCC2RJijpqr9C0OHqxzjEP+pF48RXAnWN00hv+aGfDPZnLVbgU0j7e70ZmgHGzWbVjnoY0n9vKuCG89USdnKa3fSLBKNTFKqEVKN93V5fH+SffhAo0bfxsQCISqbA5f8bJkwGiLD2BtlqeEQOtSmzoI7/n1iZke8b8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713824891; c=relaxed/simple;
-	bh=Zmn7rxgBzacBQvLI0YQOk8g36SVobMKWauuJpwXIrdg=;
+	s=arc-20240116; t=1713824942; c=relaxed/simple;
+	bh=U0fxksQslgnE89mvg43U+1vmjOCz2KlNMrt52+MtWaM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T/uZtuuc32DG5qISCM+xy5JVrOxBXjbYrdUHYKJaZYOjjC0gDk854yS6MxCjeQPgqL+S4dkOJMxjPdNfaVsi3voIlpBwzYpdnZCVUCZ32oRIh36swfGJFVkXmB5eqSTz0at96CKMKjXLz2DOb4F1lsSBQt/sxeVCs2Q0b0mYe7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+9DzvkkfBAMXsg3EyPgmaynTMZq7WlCM9Uw4LPkzjyDuSChZxxjS0nlQ5IGoM6s91GTjdMFAjkfXzAYusKpMxsBs2KqC+CwLsZ0BMziwi7zFz7jR691a+X4jmuwC2nZx1RghSEEZbJZISs7ggLUW4KpKpHIMxe84qHO8zSW4cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed01c63657so4338141b3a.2;
-        Mon, 22 Apr 2024 15:28:09 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so47727785ad.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Apr 2024 15:29:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713824889; x=1714429689;
+        d=1e100.net; s=20230601; t=1713824940; x=1714429740;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LY6VYJdX+mT+ApQTEHHLNEGVbc7XbWrqfjCB4cChop8=;
-        b=by6qMYPKfBqyaKc62AGsvpruDlQAUuW0+9IIZOQENJm6itx6qBFfW0XfqFPsvDLvxe
-         yKO/s0bfsLlSJNulLUJqJajSnHLd+Hv8wvKGSH20Sem63BOgF6OolXvImGSW7lEHpiab
-         A5xa2nRljdIvuh8/pzVEg8SALH2IzzmQ4/otbCeleoHrnXSTWKfSHzp9kF0Wv71aYcHv
-         pId7pKYWGIwppJxSYUnri64usEdubZ9sS7mFGxj431YklxBmrQH9TKTJ7qApJCmqYm8y
-         os26v2hriZRdP3FPMZjNyTAk6KjDieMYCTbYznrA0mdi3iEEJaS8A6hkkhM0BrV4xzId
-         rG7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVn8Nes3m3jnS9m0hDO6aZiKpdhU1fdNC/BtXQAWDLXiLVwCo0KRJfYa7/0CDOrj/DLq4Xlj0ii31bzJjS+FFill44zqWQY37ES3/MaNyYykvRW24lqAOUoQBpGIz23s9BAjANEIFvcut54
-X-Gm-Message-State: AOJu0YzcbFBMm9rkyw8Y+xqy83IYokwvkMOnCQy4IalEPtjSxRAkBClj
-	WOf7ZQT+DysTYio6+kpeCbrNz752j+jrXu/DFhr7ADseOXJl6l0/avhvrw==
-X-Google-Smtp-Source: AGHT+IFHaSIv4plemsU3bD4Hckd8u3UkNP5MYDoI73EromUcKrpfMt9CkLbkBJsDSMZ0PsyjCxSEGw==
-X-Received: by 2002:a05:6a00:13a0:b0:6ed:2f52:9acd with SMTP id t32-20020a056a0013a000b006ed2f529acdmr12961961pfg.24.1713824889202;
-        Mon, 22 Apr 2024 15:28:09 -0700 (PDT)
+        bh=XBPicW9htWKTDA2yPbffwBm7HGQX0sZptKJ2fW4ZjFo=;
+        b=wlg5lroibsepMxFtuVnNXPFCqw+H0SEmOiIbhFyZA/xkDWbcFp9oiPJObgSzIss9/a
+         x0yyOM6XH05zL53Nxha0qL8BSrHpLmc0p2Xb3LsMDCVYPslRILSUMJ+6UtkxJ1UDUpzi
+         toop8h/OrW/hiQF4/bhJDHwaRdPa2/4tZwe5tWXRFVAzg5If56+2uRtT/aGo24beVgGZ
+         XBKD1RyupuTiZuL8jo+4G/qbXJp0adGjzMuAm9VP/fOb4wgUU25CpZH2kpK6tRZCOBBE
+         Tpz3kL9amz8eb65rzh4TL+RarSPFFDo41biqf4SnafaPabtSSZstyvwaO9RmIKfARagP
+         iHRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQpJg719pM3OYsRT310eKHFagXK/A3aYp72S8jXUl2DEqWWunY695b+M6Leca0B2ac7NzrZ1D3gjjyNF/MiloZ2srCegHMnRw3zJkH
+X-Gm-Message-State: AOJu0YyidnanJd+dTFTgDw5KC8EtqNMe/6q+SmSIqg+WP4CwXkI6Drj/
+	daYSgCvBVbXGpkxyNQl9pUn2AVRZrXHUu/Zep4X8nMiouI4dvLNG
+X-Google-Smtp-Source: AGHT+IH58saGqIVODGi6s4WjoB/DKcmTTM/0rhJ9ind7wM6P5gXwo6XdX3dZUdfNfArBP9j2SdBNhQ==
+X-Received: by 2002:a17:903:41cf:b0:1e4:fd4:48d0 with SMTP id u15-20020a17090341cf00b001e40fd448d0mr16699232ple.62.1713824940244;
+        Mon, 22 Apr 2024 15:29:00 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id b19-20020a056a000cd300b006f0af5bfda5sm7055078pfv.102.2024.04.22.15.28.08
+        by smtp.gmail.com with ESMTPSA id jz15-20020a170903430f00b001e4e8278847sm8659012plb.56.2024.04.22.15.28.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 15:28:08 -0700 (PDT)
-Date: Mon, 22 Apr 2024 22:28:05 +0000
+        Mon, 22 Apr 2024 15:28:59 -0700 (PDT)
+Date: Mon, 22 Apr 2024 22:28:57 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Ani Sinha <anisinha@redhat.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	shradhagupta@linux.microsoft.com, eahariha@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Add a header in ifcfg and nm keyfiles describing the
- owner of the files
-Message-ID: <ZibkdQDdM4QENTl7@liuwe-devbox-debian-v2>
-References: <20240418120549.59018-1-anisinha@redhat.com>
+To: Li RongQing <lirongqing@baidu.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, x86@kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] x86/hyperv: Consider NUMA affinity when allocating
+ memory for per-CPU vmsa
+Message-ID: <ZibkqT2XMOatmkcK@liuwe-devbox-debian-v2>
+References: <20240415085712.49980-1-lirongqing@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,24 +71,15 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418120549.59018-1-anisinha@redhat.com>
+In-Reply-To: <20240415085712.49980-1-lirongqing@baidu.com>
 
-On Thu, Apr 18, 2024 at 05:35:49PM +0530, Ani Sinha wrote:
-> A comment describing the source of writing the contents of the ifcfg and
-> network manager keyfiles (hyperv kvp daemon) is useful. It is valuable both
-> for debugging as well as for preventing users from modifying them.
+On Mon, Apr 15, 2024 at 04:57:12PM +0800, Li RongQing wrote:
+> per-CPU vmsa are dominantly accessed from their own local CPUs,
+> so allocate them node-local to improve performance.
 > 
-> CC: shradhagupta@linux.microsoft.com
-> CC: eahariha@linux.microsoft.com
-> CC: wei.liu@kernel.org
-> Signed-off-by: Ani Sinha <anisinha@redhat.com>
+> And reorganized variables to be reverse christmas tree order
+> 
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 
-Applied to hyperv-fixes.
-
-I changed hyperv to Hyper-V and changed the subject to
-
-  hv/hv_kvp_daemon: indicate the configuration files are generated
-
-Thanks,
-Wei.
+Applied. Thanks.
 
