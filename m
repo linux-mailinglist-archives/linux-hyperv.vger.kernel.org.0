@@ -1,118 +1,118 @@
-Return-Path: <linux-hyperv+bounces-2017-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2018-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 392658ACA48
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Apr 2024 12:09:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E33748ACDFA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Apr 2024 15:15:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88562B21AC6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Apr 2024 10:09:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20D451C22316
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Apr 2024 13:15:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E67613DDCB;
-	Mon, 22 Apr 2024 10:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4829114F124;
+	Mon, 22 Apr 2024 13:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dPP0TSga"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XaC5f4gj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4195513DBB2;
-	Mon, 22 Apr 2024 10:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A92314F120;
+	Mon, 22 Apr 2024 13:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713780496; cv=none; b=mmYY5cOt2afxKbQQ4kPyaE0FACOgIZOXvDlmRlNfxzrsynY45kSLQFBudmobIGUiB1siFqRU9eS4P+G0SaARxVvXttNnWcOaqY6C7EY7oNAWPD1AKh2+lnuJQQpnosYdAaArO9wxzZQx7TLJyuPpTgK/pxDWcSAvGu2icbiVnRQ=
+	t=1713791741; cv=none; b=etXz2ngCKUzcKbfQ1xpsKTnSjhCDCgIh4dRZedrxUVNyO+dJp/vtKneApkpOTPgFzEl26dp+oT1EASfCKIdtcG27yleJ7zz/ugCRBOmgn3ozAI08fgg6yNuq8qN40IpL1Pjx2Uow946b1fPQ2Ds0ju+7jIpyI08SjPGdZX+7uh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713780496; c=relaxed/simple;
-	bh=5t1Bfop7a73SP2Xoc+JjPX3eauf9YdecV0ZqhsEjPCA=;
+	s=arc-20240116; t=1713791741; c=relaxed/simple;
+	bh=GjhTJjoSiC3IDIVXzgKQ4P+qNveHUQ6lI+EgnHlfUqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BuVBuBEZino09RyhkDxIP2acCOjRvDSwGJGjunQk80gNsJG2ypDsgxgzlpO2fy3w39zcBOZcD2XdKl0Fq6hiAYcVt1JnjBrM6QxWCuQ5eS5OI8gQeMPAaH7E63SE3jFOvfhtwhnlHJgWR5kFsFR/rZRUvGKEey8nFXYGOJPUm8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dPP0TSga; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 5A40E20FEB70; Mon, 22 Apr 2024 03:08:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5A40E20FEB70
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1713780489;
-	bh=p/91VOpGr+sXlA4jv/RAoPR3l3/fwg6j5nhp26gdg74=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=TW68cmkH9mzVjo5TDS8IZsvyrBakPluW7FjU/e3YEWK2n2LBCoGUg9KruwCBByDsBWISF9iEwkQnEXupwfzUMFCVeCyaaGtsHJNkiwlZaFtJSosZlo6eDnN5dmb6B/zUSJdc0CVCEHnjC+rqpqbm+0zPfhgyrPVoAkHwGg6M734=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XaC5f4gj; arc=none smtp.client-ip=84.16.66.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VNQYc6JShz3q7;
+	Mon, 22 Apr 2024 15:08:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1713791332;
+	bh=GjhTJjoSiC3IDIVXzgKQ4P+qNveHUQ6lI+EgnHlfUqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dPP0TSgaJivoAFhSsrYk9liFUNizFn+wcBwR9iR/96vvpWhIJ69DCFlE4IpyE5UuF
-	 0XveB92uwHC46KXjCMY1uBItDd0eSw0IfWb6BHVAM9EH4fQ6s9Qny5cJhpK2ClRmmL
-	 nxtJWq6M81hbyyDZt/fiDiPALWzxvP39K2cVGn94=
-Date: Mon, 22 Apr 2024 03:08:09 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <yanjun.zhu@linux.dev>,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Subject: Re: [PATCH net-next] net: mana: Add new device attributes for mana
-Message-ID: <20240422100809.GA9873@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1713174589-29243-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240415161305.GO223006@ziepe.ca>
- <56b0a8c1-50f6-41a9-9ea5-ed45ada58892@linux.dev>
- <b34bfb11-98a3-4418-b482-14f2e50745d3@lunn.ch>
- <20240418060108.GB13182@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20240418175059.GZ223006@ziepe.ca>
- <f3e7ea07-2903-4f19-ba86-94bba569dae9@lunn.ch>
- <20240419165926.GC506@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <fc345b4d-0747-4ca3-aee0-c53064cc7fe1@lunn.ch>
+	b=XaC5f4gjQmTg7HWgvo8OaBYgvZVVaUnv+Y6B/jdsg0Q4f2OLDr4AYla0dAr871yUg
+	 SXigC7/aA4mp4zabDYUfQYwz/kj2V8GznfSGfeIslpVajiSP9OYd5T8+9TTpiL7YOt
+	 axM86vO0S3TpXTEvr00XTnMRotQwMoJZqzDgMjqE=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VNQYb16q2zrw3;
+	Mon, 22 Apr 2024 15:08:50 +0200 (CEST)
+Date: Mon, 22 Apr 2024 15:08:50 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Guenter Roeck <linux@roeck-us.net>, David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>, 
+	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
+	Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v3 7/7] kunit: Add tests for fault
+Message-ID: <20240422.thesh7quoo0U@digikod.net>
+References: <20240319104857.70783-1-mic@digikod.net>
+ <20240319104857.70783-8-mic@digikod.net>
+ <928249cc-e027-4f7f-b43f-502f99a1ea63@roeck-us.net>
+ <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fc345b4d-0747-4ca3-aee0-c53064cc7fe1@lunn.ch>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
+X-Infomaniak-Routing: alpha
 
-On Fri, Apr 19, 2024 at 08:51:02PM +0200, Andrew Lunn wrote:
-> On Fri, Apr 19, 2024 at 09:59:26AM -0700, Shradha Gupta wrote:
-> > On Thu, Apr 18, 2024 at 08:42:59PM +0200, Andrew Lunn wrote:
-> > > > >From an RDMA perspective this is all available from other APIs already
-> > > > at least and I wouldn't want to see new sysfs unless there is a netdev
-> > > > justification.
-> > > 
-> > > It is unlikely there is a netdev justification. Configuration happens
-> > > via netlink, not sysfs.
-> > > 
-> > >     Andrew
+On Fri, Apr 19, 2024 at 04:38:01PM -0700, Guenter Roeck wrote:
+> On Fri, Apr 19, 2024 at 03:33:49PM -0700, Guenter Roeck wrote:
+> > Hi,
 > > 
-> > Thanks. Sure, it makes sense to make the generic attribute configurable
-> > through the netdevice ops or netlink implementation. I will keep that in
-> > mind while adding the next set of configuration attributes for the driver.
-> > These attributes(from the patch) however, are hardware specific(that show
-> > the maximum supported values by the hardware in most cases).
+> > On Tue, Mar 19, 2024 at 11:48:57AM +0100, Mickaël Salaün wrote:
+> > > Add a test case to check NULL pointer dereference and make sure it would
+> > > result as a failed test.
+> > > 
+> > > The full kunit_fault test suite is marked as skipped when run on UML
+> > > because it would result to a kernel panic.
+> > > 
+> > > Tested with:
+> > > ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
+> > > ./tools/testing/kunit/kunit.py run --arch arm64 \
+> > >   --cross_compile=aarch64-linux-gnu- kunit_fault
+> > > 
+> > 
+> > What is the rationale for adding those tests unconditionally whenever
+> > CONFIG_KUNIT_TEST is enabled ? This completely messes up my test system
+> > because it concludes that it is pointless to continue testing
+> > after the "Unable to handle kernel NULL pointer dereference" backtrace.
+> > At the same time, it is all or nothing, meaning I can not disable
+> > it but still run other kunit tests.
+> > 
+
+CONFIG_KUNIT_TEST is to test KUnit itself.  Why does this messes up your
+test system, and what is your test system?  Is it related to the kernel
+warning and then the message you previously sent?
+https://lore.kernel.org/r/fd604ae0-5630-4745-acf2-1e51c69cf0c0@roeck-us.net
+It seems David has a solution to suppress such warning.
+
 > 
->         ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
->         ndev->min_mtu = ETH_MIN_MTU;
+> Oh, never mind. I just disabled CONFIG_KUNIT_TEST in my test bed
+> to "solve" the problem. I'll take that as one of those "unintended
+> consequences" items: Instead of more tests, there are fewer.
 > 
-> This does not appear to be specific to your device. This is very
-> generic. We already have /sys/class/net/eth42/mtu, why not add
-> /sys/class/net/eth42/max_mtu and /sys/class/net/eth42/min_mtu for
-> every driver?
+> Guenter
 > 
-> Are these values really hardware specific? Are they really unique to
-> your hardware? I have to wounder because you clearly did not think
-> much about MTU, and how it is actually generic...
-> 
->      Andrew
-That makes sense. I will make these as generic attributes in the next version.
-Thanks.
 
