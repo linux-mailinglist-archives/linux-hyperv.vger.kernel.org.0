@@ -1,677 +1,260 @@
-Return-Path: <linux-hyperv+bounces-2036-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2037-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 372CE8ADC2D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 05:19:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 670E78AE0F0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 11:23:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2228D1C21255
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 03:19:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCD8A1F22918
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Apr 2024 09:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95BBB1BC26;
-	Tue, 23 Apr 2024 03:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F92D5FBB3;
+	Tue, 23 Apr 2024 09:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="J4ujlJ/4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rVzIS9uc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CF0318E1D;
-	Tue, 23 Apr 2024 03:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBAD5A0F4
+	for <linux-hyperv@vger.kernel.org>; Tue, 23 Apr 2024 09:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713842338; cv=none; b=qk8NNo7FTaMY8TVGXzD9sP7Jjj7/T1OuvTYfdFB71XFW3kwHY2eeEN1VRpPAhbyyFzrnVSteJdOKtUw0tkUgU6oHivU7wM2KEeAEf9usUu85gJfKWE+7JfMIHRUE6DhCp56rZZQNPeo1vHYKv0vkPiu8n/KOTfJ7zQmU2CDzFrU=
+	t=1713864161; cv=none; b=RTMWdhnYhlI3uOK7m8oSRfNAu7XDMs6kBEDQ54SNWmE/UGmxJ60hqOBEj4iSYGTiT7IeTA0B/VODVJwzHmIyxwFzk3W585k65YTu8kP9KbyN6vb7f+ib0uhzviVrEZCfYtOPdSNgA8rRWJsg5DK9iTSuQVDOy4NhfuDX+C9kyaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713842338; c=relaxed/simple;
-	bh=skEEO4kFgAczopC58RFqHys/Huw2qXQ5TOdygai9m8Y=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=AbMU3rLZEzhOOOkg9R8bAwObxkwfIMkPuwbHTJhwoGOFAig2UGTvF9hn2OiPsR4gESDAs56FqMi2axsWKXcg05tat+hUoPj0jzoxSwkbL7RpXsIdXTZivQFTj6qqo5bWvzaY7BNHDCmJ/ZqePhIu8T2Fkezo3gTe/VQKLxyvpaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=J4ujlJ/4; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1175)
-	id 07F0320FF4E7; Mon, 22 Apr 2024 20:18:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 07F0320FF4E7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1713842336;
-	bh=SfykjGU21KpWUT3oWGxO9sK6oF9flIGG1eXp5wVmNbw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J4ujlJ/4TwDKpBZXR9CO3q6TLnGvNgGuBcU2qpoh9X1yDwQd4+f+R2vVq4emk2h30
-	 fFchOHeQ55Q08g4QIJsLdKVd/20efuuZBrJyCht9KUnG5LzCVvnifVpBrMTKfbuouG
-	 FWn22kBUcggUuoPbipKZ8ByqJs/nd6OHTbO1WjJY=
-From: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-To: adityanagesh@microsoft.com,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-Subject: [PATCH v4] Drivers: hv: Cosmetic changes for hv.c and balloon.c
-Date: Mon, 22 Apr 2024 20:18:46 -0700
-Message-Id: <1713842326-25576-1-git-send-email-adityanagesh@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1713864161; c=relaxed/simple;
+	bh=I1CDMyVn+l07M1ZwRTveCgNGXiD5sboh34VVZJKOJ9M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rBvBv+Z9ZXx1C1UJnCqZ5DLCcocZQUo+hAFrIiwCE+FWmeX42+JK6LwT6NaGSs937lefC0KcVYkmfkqFKWhSTlm0WcxyzTh8VaiI+j1Yccp32FbDHKa1ZKo30b0KQDMrwdBoJfGeT7aH8WlFSJgGUBCARdPy272N/LFs/5VUyvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rVzIS9uc; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-434ffc2b520so154501cf.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 23 Apr 2024 02:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713864158; x=1714468958; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=62MxRvgQZG4uMXv427thEFsxF44MrCiQPQ3n6eew/mU=;
+        b=rVzIS9ucXRmER95oHQKjV5jRH0n2ekQbh0Rs7xBicT689LsceLHPieNs+ctudoEaY+
+         flJxf4khmAHVj35RyeoCyVAnM7qBZooNF3N5EwDxlG2L3VQJv4QiKiW0tcKHAl1FOzwy
+         nFTsn2NMZmz0736o+WlL9NfAfuWVU4YRk3YbwmeH/mE/6U9L/VWa8PuJd6hqpQKp+qjq
+         aM2FZ4UDNkxVryfsPbKYEExJ1wbjUNXRBvdwzDzisepwimhjYup31GrhXoPObnsTBYOj
+         NnGFlKWm/VluvuVII96NydNBIMfT6opsYHZseh8yqBbIsZFZhWGbPvgBPA2UrZasyJgC
+         wFtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713864158; x=1714468958;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=62MxRvgQZG4uMXv427thEFsxF44MrCiQPQ3n6eew/mU=;
+        b=jclvUK7UrAtpl4CzCFzejyTZ0VpHrzYGVKEleB7hrhF5GFcTcjtPPV49txFRa+NsgW
+         cCbnrxmTRZgzY8Ac+RVY+IsBqU8oDnZ96oskOmgh7OBKWvzSk/EyRzdRNbwAD4vDPQte
+         FgOj7owa2RcGAn1C/iqbOloJ3rzUz5Azmg4LYxEefxHUnO33C9X1+JKPoHl6Jj7L7I2x
+         NdsV97s5SwGxC/CfsGi1XNVDhLmLEbyh8k3H/l7Dp3YVhBgfRJ29KYUHeNOYdzIuDwGc
+         zyM7isnQNM6yA/E8vA2m145lilJ7EZuRA7GodKY+oekDMZGyfEXVunzkS2saZVJBoAdW
+         iCSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPC3Nr/W2XFfRatU0M8PeiqVINOho7R86ZhZ9DfQbsJWUBiAhq0aQkJJpUgY1IetkUJxIiyGyn/rJt5a9hk4RUg50Pev3WZWLKzams
+X-Gm-Message-State: AOJu0YxKLBfTOgR0VX6MDTlDIOBPTiIGnbS10zzGjDGceDe9NuM5E4mv
+	+1EUfqkz6llJo4acxfETbOVGkyPcHx0etvpQln0RpreED/vNOUkYQpAkEfoFLWPmaFCGKZzd1aI
+	lDbtFUC8Q6AxAZDrMG9sE9+xNHp5aHCz+X8sZ
+X-Google-Smtp-Source: AGHT+IHUVImZr46KE7NjLsb4voeWSuhmpLmq8uDA7LeYXKhI00U6dSCZBVehDUFO7fu/ApIxReC1GPQBk/y0xeNhlH0=
+X-Received: by 2002:ac8:6682:0:b0:439:891f:bbd2 with SMTP id
+ d2-20020ac86682000000b00439891fbbd2mr232880qtp.28.1713864158511; Tue, 23 Apr
+ 2024 02:22:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240319104857.70783-1-mic@digikod.net> <20240319104857.70783-8-mic@digikod.net>
+ <928249cc-e027-4f7f-b43f-502f99a1ea63@roeck-us.net> <b70332b0-3e55-4375-935f-35ef3167a151@roeck-us.net>
+ <20240422.thesh7quoo0U@digikod.net> <a0179848-99a2-4169-b7b2-1a8cddb27615@roeck-us.net>
+In-Reply-To: <a0179848-99a2-4169-b7b2-1a8cddb27615@roeck-us.net>
+From: David Gow <davidgow@google.com>
+Date: Tue, 23 Apr 2024 17:22:24 +0800
+Message-ID: <CABVgOS=MOaWhUwVb2Rp2JDTK9=qX_p2SDZp7ZAj+03isZps9iA@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] kunit: Add tests for fault
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Morris <jamorris@linux.microsoft.com>, Kees Cook <keescook@chromium.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-um@lists.infradead.org, x86@kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000006307b10616c01899"
 
-Fix issues reported by checkpatch.pl script in hv.c and
-balloon.c
- - Remove unnecessary parentheses
- - Remove extra newlines
- - Remove extra spaces
- - Add spaces between comparison operators
- - Remove comparison with NULL in if statements
+--0000000000006307b10616c01899
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-No functional changes intended
+On Mon, 22 Apr 2024 at 21:36, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 4/22/24 06:08, Micka=C3=ABl Sala=C3=BCn wrote:
+> > On Fri, Apr 19, 2024 at 04:38:01PM -0700, Guenter Roeck wrote:
+> >> On Fri, Apr 19, 2024 at 03:33:49PM -0700, Guenter Roeck wrote:
+> >>> Hi,
+> >>>
+> >>> On Tue, Mar 19, 2024 at 11:48:57AM +0100, Micka=C3=ABl Sala=C3=BCn wr=
+ote:
+> >>>> Add a test case to check NULL pointer dereference and make sure it w=
+ould
+> >>>> result as a failed test.
+> >>>>
+> >>>> The full kunit_fault test suite is marked as skipped when run on UML
+> >>>> because it would result to a kernel panic.
+> >>>>
+> >>>> Tested with:
+> >>>> ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_fault
+> >>>> ./tools/testing/kunit/kunit.py run --arch arm64 \
+> >>>>    --cross_compile=3Daarch64-linux-gnu- kunit_fault
+> >>>>
+> >>>
+> >>> What is the rationale for adding those tests unconditionally whenever
+> >>> CONFIG_KUNIT_TEST is enabled ? This completely messes up my test syst=
+em
+> >>> because it concludes that it is pointless to continue testing
+> >>> after the "Unable to handle kernel NULL pointer dereference" backtrac=
+e.
+> >>> At the same time, it is all or nothing, meaning I can not disable
+> >>> it but still run other kunit tests.
+> >>>
+> >
+> > CONFIG_KUNIT_TEST is to test KUnit itself.  Why does this messes up you=
+r
+> > test system, and what is your test system?  Is it related to the kernel
+> > warning and then the message you previously sent?
+>
+> It is not a warning, it is a BUG which terminates the affected kernel thr=
+ead.
+> NULL pointer dereferences are normally fatal, which is why I abort tests
+> if one is encountered. I am not going to start introducing code into my
+> scripts to ignore such warnings (or BUG messages) on a case by case basis=
+;
+> this would be unmaintainable.
+>
+> > https://lore.kernel.org/r/fd604ae0-5630-4745-acf2-1e51c69cf0c0@roeck-us=
+.net
+> > It seems David has a solution to suppress such warning.
+> >
+>
+> I don't think so. My series tried to suppress warning backtraces, not BUG
+> messages. BUG messages can not easily be suppressed since the reaction is
+> architecture specific and typically fatal.
+>
+> As I said below, never mind, I just disabled CONFIG_KUNIT_TEST in my test=
+ing.
+>
+> Guenter
+>
 
-Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-[V4]
-Fix Alignment issue and revert a line since 100 characters are allowed in a line
+I think it probably makes sense to permit disabling the fault tests
+independently, at least until we have a way of suppressing the
+warnings.
 
-[V3]
-Fix alignment issues in multiline function parameters.
+I've sent out a patch to add a CONFIG_KUNIT_FAULT_TEST option to
+disable these tests. Would that help?
+https://lore.kernel.org/linux-kselftest/20240423090808.242389-1-davidgow@go=
+ogle.com/
 
-[V2]
-Change Subject from "Drivers: hv: Fix Issues reported by checkpatch.pl script"
- to "Drivers: hv: Cosmetic changes for hv.c and balloon.c"
+(The other option is to split the tests out into a totally separate
+file / module. I think that's an option (and would make the config
+option more consistent with other test options) but since they're
+otherwise part of the KUnit tests, I think I prefer to keep them
+together.)
 
- drivers/hv/hv.c         |  37 +++++++--------
- drivers/hv/hv_balloon.c | 102 +++++++++++++++-------------------------
- 2 files changed, 55 insertions(+), 84 deletions(-)
+Cheers,
+-- David
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index a8ad728354cb..e0d676c74f14 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -45,8 +45,8 @@ int hv_init(void)
-  * This involves a hypercall.
-  */
- int hv_post_message(union hv_connection_id connection_id,
--		  enum hv_message_type message_type,
--		  void *payload, size_t payload_size)
-+			enum hv_message_type message_type,
-+			void *payload, size_t payload_size)
- {
- 	struct hv_input_post_message *aligned_msg;
- 	unsigned long flags;
-@@ -86,7 +86,7 @@ int hv_post_message(union hv_connection_id connection_id,
- 			status = HV_STATUS_INVALID_PARAMETER;
- 	} else {
- 		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
--				aligned_msg, NULL);
-+					 aligned_msg, NULL);
- 	}
- 
- 	local_irq_restore(flags);
-@@ -111,7 +111,7 @@ int hv_synic_alloc(void)
- 
- 	hv_context.hv_numa_map = kcalloc(nr_node_ids, sizeof(struct cpumask),
- 					 GFP_KERNEL);
--	if (hv_context.hv_numa_map == NULL) {
-+	if (!hv_context.hv_numa_map) {
- 		pr_err("Unable to allocate NUMA map\n");
- 		goto err;
- 	}
-@@ -120,11 +120,11 @@ int hv_synic_alloc(void)
- 		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
- 
- 		tasklet_init(&hv_cpu->msg_dpc,
--			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
-+			     vmbus_on_msg_dpc, (unsigned long)hv_cpu);
- 
- 		if (ms_hyperv.paravisor_present && hv_isolation_type_tdx()) {
- 			hv_cpu->post_msg_page = (void *)get_zeroed_page(GFP_ATOMIC);
--			if (hv_cpu->post_msg_page == NULL) {
-+			if (!hv_cpu->post_msg_page) {
- 				pr_err("Unable to allocate post msg page\n");
- 				goto err;
- 			}
-@@ -147,14 +147,14 @@ int hv_synic_alloc(void)
- 		if (!ms_hyperv.paravisor_present && !hv_root_partition) {
- 			hv_cpu->synic_message_page =
- 				(void *)get_zeroed_page(GFP_ATOMIC);
--			if (hv_cpu->synic_message_page == NULL) {
-+			if (!hv_cpu->synic_message_page) {
- 				pr_err("Unable to allocate SYNIC message page\n");
- 				goto err;
- 			}
- 
- 			hv_cpu->synic_event_page =
- 				(void *)get_zeroed_page(GFP_ATOMIC);
--			if (hv_cpu->synic_event_page == NULL) {
-+			if (!hv_cpu->synic_event_page) {
- 				pr_err("Unable to allocate SYNIC event page\n");
- 
- 				free_page((unsigned long)hv_cpu->synic_message_page);
-@@ -203,14 +203,13 @@ int hv_synic_alloc(void)
- 	return ret;
- }
- 
--
- void hv_synic_free(void)
- {
- 	int cpu, ret;
- 
- 	for_each_present_cpu(cpu) {
--		struct hv_per_cpu_context *hv_cpu
--			= per_cpu_ptr(hv_context.cpu_context, cpu);
-+		struct hv_per_cpu_context *hv_cpu =
-+			per_cpu_ptr(hv_context.cpu_context, cpu);
- 
- 		/* It's better to leak the page if the encryption fails. */
- 		if (ms_hyperv.paravisor_present && hv_isolation_type_tdx()) {
-@@ -262,8 +261,8 @@ void hv_synic_free(void)
-  */
- void hv_synic_enable_regs(unsigned int cpu)
- {
--	struct hv_per_cpu_context *hv_cpu
--		= per_cpu_ptr(hv_context.cpu_context, cpu);
-+	struct hv_per_cpu_context *hv_cpu =
-+		per_cpu_ptr(hv_context.cpu_context, cpu);
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
- 	union hv_synic_sint shared_sint;
-@@ -277,8 +276,8 @@ void hv_synic_enable_regs(unsigned int cpu)
- 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
- 		u64 base = (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
- 				~ms_hyperv.shared_gpa_boundary;
--		hv_cpu->synic_message_page
--			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
-+		hv_cpu->synic_message_page =
-+			(void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
- 		if (!hv_cpu->synic_message_page)
- 			pr_err("Fail to map synic message page.\n");
- 	} else {
-@@ -296,8 +295,8 @@ void hv_synic_enable_regs(unsigned int cpu)
- 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
- 		u64 base = (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
- 				~ms_hyperv.shared_gpa_boundary;
--		hv_cpu->synic_event_page
--			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
-+		hv_cpu->synic_event_page =
-+			(void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
- 		if (!hv_cpu->synic_event_page)
- 			pr_err("Fail to map synic event page.\n");
- 	} else {
-@@ -348,8 +347,8 @@ int hv_synic_init(unsigned int cpu)
-  */
- void hv_synic_disable_regs(unsigned int cpu)
- {
--	struct hv_per_cpu_context *hv_cpu
--		= per_cpu_ptr(hv_context.cpu_context, cpu);
-+	struct hv_per_cpu_context *hv_cpu =
-+		per_cpu_ptr(hv_context.cpu_context, cpu);
- 	union hv_synic_sint shared_sint;
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index e000fa3b9f97..c3c16756a0fb 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -41,8 +41,6 @@
-  * Begin protocol definitions.
-  */
- 
--
--
- /*
-  * Protocol versions. The low word is the minor version, the high word the major
-  * version.
-@@ -71,8 +69,6 @@ enum {
- 	DYNMEM_PROTOCOL_VERSION_CURRENT = DYNMEM_PROTOCOL_VERSION_WIN10
- };
- 
--
--
- /*
-  * Message Types
-  */
-@@ -101,7 +97,6 @@ enum dm_message_type {
- 	DM_VERSION_1_MAX		= 12
- };
- 
--
- /*
-  * Structures defining the dynamic memory management
-  * protocol.
-@@ -115,7 +110,6 @@ union dm_version {
- 	__u32 version;
- } __packed;
- 
--
- union dm_caps {
- 	struct {
- 		__u64 balloon:1;
-@@ -148,8 +142,6 @@ union dm_mem_page_range {
- 	__u64  page_range;
- } __packed;
- 
--
--
- /*
-  * The header for all dynamic memory messages:
-  *
-@@ -174,7 +166,6 @@ struct dm_message {
- 	__u8 data[]; /* enclosed message */
- } __packed;
- 
--
- /*
-  * Specific message types supporting the dynamic memory protocol.
-  */
-@@ -271,7 +262,6 @@ struct dm_status {
- 	__u32 io_diff;
- } __packed;
- 
--
- /*
-  * Message to ask the guest to allocate memory - balloon up message.
-  * This message is sent from the host to the guest. The guest may not be
-@@ -286,14 +276,13 @@ struct dm_balloon {
- 	__u32 reservedz;
- } __packed;
- 
--
- /*
-  * Balloon response message; this message is sent from the guest
-  * to the host in response to the balloon message.
-  *
-  * reservedz: Reserved; must be set to zero.
-  * more_pages: If FALSE, this is the last message of the transaction.
-- * if TRUE there will atleast one more message from the guest.
-+ * if TRUE there will be at least one more message from the guest.
-  *
-  * range_count: The number of ranges in the range array.
-  *
-@@ -314,7 +303,7 @@ struct dm_balloon_response {
-  * to the guest to give guest more memory.
-  *
-  * more_pages: If FALSE, this is the last message of the transaction.
-- * if TRUE there will atleast one more message from the guest.
-+ * if TRUE there will be at least one more message from the guest.
-  *
-  * reservedz: Reserved; must be set to zero.
-  *
-@@ -342,7 +331,6 @@ struct dm_unballoon_response {
- 	struct dm_header hdr;
- } __packed;
- 
--
- /*
-  * Hot add request message. Message sent from the host to the guest.
-  *
-@@ -390,7 +378,6 @@ enum dm_info_type {
- 	MAX_INFO_TYPE
- };
- 
--
- /*
-  * Header for the information message.
-  */
-@@ -480,10 +467,10 @@ static unsigned long last_post_time;
- 
- static int hv_hypercall_multi_failure;
- 
--module_param(hot_add, bool, (S_IRUGO | S_IWUSR));
-+module_param(hot_add, bool, 0644);
- MODULE_PARM_DESC(hot_add, "If set attempt memory hot_add");
- 
--module_param(pressure_report_delay, uint, (S_IRUGO | S_IWUSR));
-+module_param(pressure_report_delay, uint, 0644);
- MODULE_PARM_DESC(pressure_report_delay, "Delay in secs in reporting pressure");
- static atomic_t trans_id = ATOMIC_INIT(0);
- 
-@@ -502,7 +489,6 @@ enum hv_dm_state {
- 	DM_INIT_ERROR
- };
- 
--
- static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
- static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
- #define PAGES_IN_2M (2 * 1024 * 1024 / PAGE_SIZE)
-@@ -595,12 +581,12 @@ static inline bool has_pfn_is_backed(struct hv_hotadd_state *has,
- 	struct hv_hotadd_gap *gap;
- 
- 	/* The page is not backed. */
--	if ((pfn < has->covered_start_pfn) || (pfn >= has->covered_end_pfn))
-+	if (pfn < has->covered_start_pfn || pfn >= has->covered_end_pfn)
- 		return false;
- 
- 	/* Check for gaps. */
- 	list_for_each_entry(gap, &has->gap_list, list) {
--		if ((pfn >= gap->start_pfn) && (pfn < gap->end_pfn))
-+		if (pfn >= gap->start_pfn && pfn < gap->end_pfn)
- 			return false;
- 	}
- 
-@@ -724,7 +710,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
- 	unsigned long processed_pfn;
- 	unsigned long total_pfn = pfn_count;
- 
--	for (i = 0; i < (size/HA_CHUNK); i++) {
-+	for (i = 0; i < (size / HA_CHUNK); i++) {
- 		start_pfn = start + (i * HA_CHUNK);
- 
- 		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
-@@ -745,7 +731,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
- 
- 		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
- 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
--				(HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
-+				 (HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
- 
- 		if (ret) {
- 			pr_err("hot_add memory failed error is %d\n", ret);
-@@ -787,8 +773,8 @@ static void hv_online_page(struct page *pg, unsigned int order)
- 	guard(spinlock_irqsave)(&dm_device.ha_lock);
- 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
- 		/* The page belongs to a different HAS. */
--		if ((pfn < has->start_pfn) ||
--				(pfn + (1UL << order) > has->end_pfn))
-+		if (pfn < has->start_pfn ||
-+		    (pfn + (1UL << order) > has->end_pfn))
- 			continue;
- 
- 		hv_bring_pgs_online(has, pfn, 1UL << order);
-@@ -855,7 +841,7 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
- }
- 
- static unsigned long handle_pg_range(unsigned long pg_start,
--					unsigned long pg_count)
-+				     unsigned long pg_count)
- {
- 	unsigned long start_pfn = pg_start;
- 	unsigned long pfn_cnt = pg_count;
-@@ -866,7 +852,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
- 	unsigned long res = 0, flags;
- 
- 	pr_debug("Hot adding %lu pages starting at pfn 0x%lx.\n", pg_count,
--		pg_start);
-+		 pg_start);
- 
- 	spin_lock_irqsave(&dm_device.ha_lock, flags);
- 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
-@@ -902,10 +888,9 @@ static unsigned long handle_pg_range(unsigned long pg_start,
- 			if (start_pfn > has->start_pfn &&
- 			    online_section_nr(pfn_to_section_nr(start_pfn)))
- 				hv_bring_pgs_online(has, start_pfn, pgs_ol);
--
- 		}
- 
--		if ((has->ha_end_pfn < has->end_pfn) && (pfn_cnt > 0)) {
-+		if (has->ha_end_pfn < has->end_pfn && pfn_cnt > 0) {
- 			/*
- 			 * We have some residual hot add range
- 			 * that needs to be hot added; hot add
-@@ -1010,7 +995,7 @@ static void hot_add_req(struct work_struct *dummy)
- 	rg_start = dm->ha_wrk.ha_region_range.finfo.start_page;
- 	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
- 
--	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
-+	if (rg_start == 0 && !dm->host_specified_ha_region) {
- 		unsigned long region_size;
- 		unsigned long region_start;
- 
-@@ -1033,7 +1018,7 @@ static void hot_add_req(struct work_struct *dummy)
- 
- 	if (do_hot_add)
- 		resp.page_count = process_hot_add(pg_start, pfn_cnt,
--						rg_start, rg_sz);
-+						  rg_start, rg_sz);
- 
- 	dm->num_pages_added += resp.page_count;
- #endif
-@@ -1211,11 +1196,10 @@ static void post_status(struct hv_dynmem_device *dm)
- 				sizeof(struct dm_status),
- 				(unsigned long)NULL,
- 				VM_PKT_DATA_INBAND, 0);
--
- }
- 
- static void free_balloon_pages(struct hv_dynmem_device *dm,
--			 union dm_mem_page_range *range_array)
-+			       union dm_mem_page_range *range_array)
- {
- 	int num_pages = range_array->finfo.page_cnt;
- 	__u64 start_frame = range_array->finfo.start_page;
-@@ -1231,8 +1215,6 @@ static void free_balloon_pages(struct hv_dynmem_device *dm,
- 	}
- }
- 
--
--
- static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 					unsigned int num_pages,
- 					struct dm_balloon_response *bl_resp,
-@@ -1278,7 +1260,6 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 			page_to_pfn(pg);
- 		bl_resp->range_array[i].finfo.page_cnt = alloc_unit;
- 		bl_resp->hdr.size += sizeof(union dm_mem_page_range);
--
- 	}
- 
- 	return i * alloc_unit;
-@@ -1332,7 +1313,7 @@ static void balloon_up(struct work_struct *dummy)
- 
- 		if (num_ballooned == 0 || num_ballooned == num_pages) {
- 			pr_debug("Ballooned %u out of %u requested pages.\n",
--				num_pages, dm_device.balloon_wrk.num_pages);
-+				 num_pages, dm_device.balloon_wrk.num_pages);
- 
- 			bl_resp->more_pages = 0;
- 			done = true;
-@@ -1366,16 +1347,15 @@ static void balloon_up(struct work_struct *dummy)
- 
- 			for (i = 0; i < bl_resp->range_count; i++)
- 				free_balloon_pages(&dm_device,
--						 &bl_resp->range_array[i]);
-+						   &bl_resp->range_array[i]);
- 
- 			done = true;
- 		}
- 	}
--
- }
- 
- static void balloon_down(struct hv_dynmem_device *dm,
--			struct dm_unballoon_request *req)
-+			 struct dm_unballoon_request *req)
- {
- 	union dm_mem_page_range *range_array = req->range_array;
- 	int range_count = req->range_count;
-@@ -1389,7 +1369,7 @@ static void balloon_down(struct hv_dynmem_device *dm,
- 	}
- 
- 	pr_debug("Freed %u ballooned pages.\n",
--		prev_pages_ballooned - dm->num_pages_ballooned);
-+		 prev_pages_ballooned - dm->num_pages_ballooned);
- 
- 	if (req->more_pages == 1)
- 		return;
-@@ -1414,8 +1394,7 @@ static int dm_thread_func(void *dm_dev)
- 	struct hv_dynmem_device *dm = dm_dev;
- 
- 	while (!kthread_should_stop()) {
--		wait_for_completion_interruptible_timeout(
--						&dm_device.config_event, 1*HZ);
-+		wait_for_completion_interruptible_timeout(&dm_device.config_event, 1 * HZ);
- 		/*
- 		 * The host expects us to post information on the memory
- 		 * pressure every second.
-@@ -1439,9 +1418,8 @@ static int dm_thread_func(void *dm_dev)
- 	return 0;
- }
- 
--
- static void version_resp(struct hv_dynmem_device *dm,
--			struct dm_version_response *vresp)
-+			 struct dm_version_response *vresp)
- {
- 	struct dm_version_request version_req;
- 	int ret;
-@@ -1502,7 +1480,7 @@ static void version_resp(struct hv_dynmem_device *dm,
- }
- 
- static void cap_resp(struct hv_dynmem_device *dm,
--			struct dm_capabilities_resp_msg *cap_resp)
-+		     struct dm_capabilities_resp_msg *cap_resp)
- {
- 	if (!cap_resp->is_accepted) {
- 		pr_err("Capabilities not accepted by host\n");
-@@ -1535,7 +1513,7 @@ static void balloon_onchannelcallback(void *context)
- 		switch (dm_hdr->type) {
- 		case DM_VERSION_RESPONSE:
- 			version_resp(dm,
--				 (struct dm_version_response *)dm_msg);
-+				     (struct dm_version_response *)dm_msg);
- 			break;
- 
- 		case DM_CAPABILITIES_RESPONSE:
-@@ -1565,7 +1543,7 @@ static void balloon_onchannelcallback(void *context)
- 
- 			dm->state = DM_BALLOON_DOWN;
- 			balloon_down(dm,
--				 (struct dm_unballoon_request *)recv_buffer);
-+				     (struct dm_unballoon_request *)recv_buffer);
- 			break;
- 
- 		case DM_MEM_HOT_ADD_REQUEST:
-@@ -1603,17 +1581,15 @@ static void balloon_onchannelcallback(void *context)
- 
- 		default:
- 			pr_warn_ratelimited("Unhandled message: type: %d\n", dm_hdr->type);
--
- 		}
- 	}
--
- }
- 
- #define HV_LARGE_REPORTING_ORDER	9
- #define HV_LARGE_REPORTING_LEN (HV_HYP_PAGE_SIZE << \
- 		HV_LARGE_REPORTING_ORDER)
- static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
--		    struct scatterlist *sgl, unsigned int nents)
-+			       struct scatterlist *sgl, unsigned int nents)
- {
- 	unsigned long flags;
- 	struct hv_memory_hint *hint;
-@@ -1648,7 +1624,7 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
- 		 */
- 
- 		/* page reporting for pages 2MB or higher */
--		if (order >= HV_LARGE_REPORTING_ORDER ) {
-+		if (order >= HV_LARGE_REPORTING_ORDER) {
- 			range->page.largepage = 1;
- 			range->page_size = HV_GPA_PAGE_RANGE_PAGE_SIZE_2MB;
- 			range->base_large_pfn = page_to_hvpfn(
-@@ -1662,23 +1638,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
- 			range->page.additional_pages =
- 				(sg->length / HV_HYP_PAGE_SIZE) - 1;
- 		}
--
- 	}
- 
- 	status = hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
- 				     hint, NULL);
- 	local_irq_restore(flags);
- 	if (!hv_result_success(status)) {
--
- 		pr_err("Cold memory discard hypercall failed with status %llx\n",
--				status);
-+		       status);
- 		if (hv_hypercall_multi_failure > 0)
- 			hv_hypercall_multi_failure++;
- 
- 		if (hv_result(status) == HV_STATUS_INVALID_PARAMETER) {
- 			pr_err("Underlying Hyper-V does not support order less than 9. Hypercall failed\n");
- 			pr_err("Defaulting to page_reporting_order %d\n",
--					pageblock_order);
-+			       pageblock_order);
- 			page_reporting_order = pageblock_order;
- 			hv_hypercall_multi_failure++;
- 			return -EINVAL;
-@@ -1712,7 +1686,7 @@ static void enable_page_reporting(void)
- 		pr_err("Failed to enable cold memory discard: %d\n", ret);
- 	} else {
- 		pr_info("Cold memory discard hint enabled with order %d\n",
--				page_reporting_order);
-+			page_reporting_order);
- 	}
- }
- 
-@@ -1795,7 +1769,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	if (ret)
- 		goto out;
- 
--	t = wait_for_completion_timeout(&dm_device.host_event, 5*HZ);
-+	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
- 	if (t == 0) {
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -1850,7 +1824,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	if (ret)
- 		goto out;
- 
--	t = wait_for_completion_timeout(&dm_device.host_event, 5*HZ);
-+	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
- 	if (t == 0) {
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -1891,8 +1865,8 @@ static int hv_balloon_debug_show(struct seq_file *f, void *offset)
- 	char *sname;
- 
- 	seq_printf(f, "%-22s: %u.%u\n", "host_version",
--				DYNMEM_MAJOR_VERSION(dm->version),
--				DYNMEM_MINOR_VERSION(dm->version));
-+			DYNMEM_MAJOR_VERSION(dm->version),
-+			DYNMEM_MINOR_VERSION(dm->version));
- 
- 	seq_printf(f, "%-22s:", "capabilities");
- 	if (ballooning_enabled())
-@@ -1941,10 +1915,10 @@ static int hv_balloon_debug_show(struct seq_file *f, void *offset)
- 	seq_printf(f, "%-22s: %u\n", "pages_ballooned", dm->num_pages_ballooned);
- 
- 	seq_printf(f, "%-22s: %lu\n", "total_pages_committed",
--				get_pages_committed(dm));
-+		   get_pages_committed(dm));
- 
- 	seq_printf(f, "%-22s: %llu\n", "max_dynamic_page_count",
--				dm->max_dynamic_page_count);
-+		   dm->max_dynamic_page_count);
- 
- 	return 0;
- }
-@@ -1954,7 +1928,7 @@ DEFINE_SHOW_ATTRIBUTE(hv_balloon_debug);
- static void  hv_balloon_debugfs_init(struct hv_dynmem_device *b)
- {
- 	debugfs_create_file("hv-balloon", 0444, NULL, b,
--			&hv_balloon_debug_fops);
-+			    &hv_balloon_debug_fops);
- }
- 
- static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
-@@ -2097,7 +2071,6 @@ static int balloon_suspend(struct hv_device *hv_dev)
- 	tasklet_enable(&hv_dev->channel->callback_event);
- 
- 	return 0;
--
- }
- 
- static int balloon_resume(struct hv_device *dev)
-@@ -2156,7 +2129,6 @@ static  struct hv_driver balloon_drv = {
- 
- static int __init init_balloon_drv(void)
- {
--
- 	return vmbus_driver_register(&balloon_drv);
- }
- 
--- 
-2.34.1
+--0000000000006307b10616c01899
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
+MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
+BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
+BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
+Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
+Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
+FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
+YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
+AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
+mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
+wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
+5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
+ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
+MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
+IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
+hvcNAQkEMSIEICOgtZbnjNPnp0XK9jkyAuFSQkAiQFiPF/waq0dMweU1MBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyMzA5MjIzOFowaQYJKoZIhvcNAQkPMVww
+WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCLzff9
+FDeDetOWvy6uoOdJnlb25fbO6q5RHkefp+asUsi42FPODqn3EfHQdwwl4+C+keK704m9Y6zGgg4T
+0vxixRA/BtSXwbM8Fl6Df200ElutWw3ljz5zva1NfMfAx2CNpDgHNtbAmEOhYUYd+VGOxVVlCOOk
+0gsqxi6xHO2Yxbyf0Wkz6fPhz3TyElZQUrHt/Jim/6rNIaDHAlKzp34cdFdWdsIu9R+eJSazQHy0
+ruGHCF3+zW0TxdeWINQJE/W2WKrLUAUhBQgatT1cAY5aMozV35d8JLYMiZ1m/Ft57btFmiR78bxn
+aX+P2Imbjr5ryox6Ves599tT+j+e7/kq
+--0000000000006307b10616c01899--
 
