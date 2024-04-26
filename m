@@ -1,232 +1,91 @@
-Return-Path: <linux-hyperv+bounces-2047-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2048-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B77818B3377
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Apr 2024 10:59:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B5408B3647
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Apr 2024 13:06:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBAEB1C20DB1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Apr 2024 08:59:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBA552834ED
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Apr 2024 11:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE72A13D500;
-	Fri, 26 Apr 2024 08:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2639144D1D;
+	Fri, 26 Apr 2024 11:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IxxRzPQ6"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eBiLJ1bI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F8B13CF96
-	for <linux-hyperv@vger.kernel.org>; Fri, 26 Apr 2024 08:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 869CF142E62;
+	Fri, 26 Apr 2024 11:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714121945; cv=none; b=ODH4K2mP3npmeh2LYje3X/1zr51SCRQusg1RyNhAuvLNcEvSvVrPiptVy8JJWBIKndzaOIcEahyaudw7cWQMkRo4clBK0BrGXabMhCURKG0KsNok3hV7Fi2qROW4fQdmQZUBVVQXyGAW5cDNvsaCiY+sMNt+szRg/mjxfLlr6CQ=
+	t=1714129596; cv=none; b=HQiMwQmW2yYR2yUMF5EqmP5r5OgL3RsmcG8IpUUwflWuV2swM0Mu/ctpjxlQ1SoygOmJoQbe4Ag/VW/eJASc+Q6a2LbjGWM23yL5npEYValJ64fGBFkfeUnPoHy9J09JNvK0LZM+zh/VrRUn8dpeNVw4mwCspesH5EH+UwRBquQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714121945; c=relaxed/simple;
-	bh=HMamG9MoqMPfhj+TthBpo7UGGso+zE8qisWfdyo8OB4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=eW0zvajW/r1X+DAqAVMnz04Vn6aHDaUxGScl0xev1HYmIMwTLAZiWQrObmW89QWQRk2PgK2S2yHytZSwzWsSOxQWctuYcINZWpoznv+viTjv7m7huB4Z5Hm4ELpCX8mcqpDGFunLtaENajpraYS4hS8qvpV+KfSuk6Hh34zrtWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IxxRzPQ6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714121943;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bRPXKQ+KIC0ZxHv4USsHQnv5JvvbpfCYVb/U1bJ6Y7s=;
-	b=IxxRzPQ6Q4hOZeL6AOIVFMu4FeLgTH2ZMDAqN3TLU0Ptmi9ii/qCm8l8MZxngLi8OAP9q4
-	AFPKF9hQ9FHKYDAUsdACD04oI3RZmHLXpEV1zRL3xL8luSpB/pualpje3pYYaNmeEP+e2X
-	JyyKgjEJiPxi7OSCOxz3dsc8ek4bgBw=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-385-SuIHTqz-MD6ftEf2Q30Irg-1; Fri, 26 Apr 2024 04:58:59 -0400
-X-MC-Unique: SuIHTqz-MD6ftEf2Q30Irg-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2dc8418e64cso15498521fa.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 26 Apr 2024 01:58:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714121938; x=1714726738;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bRPXKQ+KIC0ZxHv4USsHQnv5JvvbpfCYVb/U1bJ6Y7s=;
-        b=tejZgOKciMVsChaT7dXMnsUZWR86WWTX5pFSmkv/RJ4DS1F5Af9F5BAxrC2bUrzQSI
-         kFvofGdxhw4qqn+yV9esciVJpOCwG5GBAh3zoE/tZNlhzDKOcZQqLaHAtg/Tr24i+xiE
-         kU32PtPuIwl89Ql39SFefe2dnH8Haexf7+emDBZGrkngddFB9VGiy6tg4awbRkyDLdIp
-         qiB3DNI14ygn2H+Ljgli1tqyeevVxJYvs2VL0TD7+fAprLzFsexuA7cVyCcpnRtauy1+
-         POtp7xpMXITxLthfP83GcQI2s6norGiucxKT2d7aFUiv7icHtE/Tfkpj53ojNSUQyYAz
-         IYGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaOj0kCKDJSBAaCbv0rcS6TBr+Jhy0ECon4Hm8+j19CalI16PAEy7GFjZZlPVQMOCPmt5ZlZzRY9a7Ni8gwQmk8AV4QNlI8ugoAPey
-X-Gm-Message-State: AOJu0Yx+CBw1y5YaO0J4Tj8pTr86y5jVJs/5eAoBr1eJMHwcS+1xDtue
-	jLg23zFMNz0U9Xm0BdK8m7ZLP+F2WmVXAXZ0/bfhy1Raxqp4ll75owD5u/eGxToSzqHT8WFviQC
-	KQkpbAUabyanbtD8Uk2Y5iRxcLayiHOzXcTesrp4ULnOMeKeMg7JukrmAz4/u9Q==
-X-Received: by 2002:a05:651c:14b:b0:2d8:452b:f7af with SMTP id c11-20020a05651c014b00b002d8452bf7afmr1220467ljd.48.1714121937696;
-        Fri, 26 Apr 2024 01:58:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOXKjCgLhxrflbnYwmKhb8DJCFK6unuwmUTd4j4GAlzdCfQPiB+ZvAYSrIwmpxZAqjBISe4w==
-X-Received: by 2002:a05:651c:14b:b0:2d8:452b:f7af with SMTP id c11-20020a05651c014b00b002d8452bf7afmr1220445ljd.48.1714121937180;
-        Fri, 26 Apr 2024 01:58:57 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c726:6100:20f2:6848:5b74:ca82? (p200300cbc726610020f268485b74ca82.dip0.t-ipconnect.de. [2003:cb:c726:6100:20f2:6848:5b74:ca82])
-        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041a3f700ccesm18313617wmn.40.2024.04.26.01.58.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 01:58:56 -0700 (PDT)
-Message-ID: <30d66f75-60c8-4ebf-8451-839806400dd4@redhat.com>
-Date: Fri, 26 Apr 2024 10:58:56 +0200
+	s=arc-20240116; t=1714129596; c=relaxed/simple;
+	bh=sEdc3Wd2Fm3DEJTPTv7niYyLcLuR3dw+/x1Hk9vi/hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OG51pZfjqvOfj5GLNpurL8pMLU/ag70rzwbowMWZJkrbdHQQBYTLX+TxErVSbQQRnrjk4hpUJjMGp9GP4IZLtkfZTom66Ql3+/hFDnVbQzjofOS3RBi17xt8uu8DKBHixXiC7e7381uXrE5NM2xhouMRoHva2zGTe+N8gICxuus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eBiLJ1bI; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 786D5210EF22; Fri, 26 Apr 2024 04:06:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 786D5210EF22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1714129589;
+	bh=xkuHjmKRLCXBtGZZ4FZ4i74BJRj9p2Go7cH+OnO/rk0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eBiLJ1bIi33wQRtMb/OLiSGvOBQe/3ClahGrmK4squu/fn+DxBcyR1aUbt2F9CNtt
+	 djN9YxxAfntWQ71OYTFmgKXB5XhCxj72nGt5bwYROgrV8Cr6Ho6AFOxvKNNP2ZejmN
+	 DHyRC6TGRfCfZyj+IJpn1q0rtWy2QEKpQeQCOTYY=
+Date: Fri, 26 Apr 2024 04:06:29 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Breno Leitao <leitao@debian.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Yury Norov <yury.norov@gmail.com>, linux-hyperv@vger.kernel.org,
+	shradhagupta@microsoft.com
+Subject: Re: [PATCH net-next v2 1/2] net: Add sysfs atttributes for max_mtu
+ min_mtu
+Message-ID: <20240426110629.GA19743@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1713954774-29953-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1713954817-30133-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20240424202703.29f1b59a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] hv_balloon: Enable hot-add for memblock sizes > 128
- Mbytes
-To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-References: <20240311181238.1241-1-mhklinux@outlook.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240311181238.1241-1-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424202703.29f1b59a@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 11.03.24 19:12, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Wed, Apr 24, 2024 at 08:27:03PM -0700, Jakub Kicinski wrote:
+> On Wed, 24 Apr 2024 03:33:37 -0700 Shradha Gupta wrote:
+> > Add sysfs attributes to read max_mtu and min_mtu value for
+> > network devices
 > 
-> The Hyper-V balloon driver supports hot-add of memory in addition
-> to ballooning. Current code hot-adds in fixed size chunks of
-> 128 Mbytes (fixed constant HA_CHUNK in the code).  While this works
-> in Hyper-V VMs with 64 Gbytes or less or memory where the Linux
-> memblock size is 128 Mbytes, the hot-add fails for larger memblock
-> sizes because add_memory() expects memory to be added in chunks
-> that match the memblock size. Messages like the following are
-> reported when Linux has a 256 Mbyte memblock size:
+> Absolutely pointless. You posted v1, dumping this as a driver
+> specific value, even tho it's already reported by the core...
+> And you can't even produce a meaningful commit message longer
+> than one sentence.
 > 
-> [  312.668859] Block size [0x10000000] unaligned hotplug range:
->                 start 0x310000000, size 0x8000000
-> [  312.668880] hv_balloon: hot_add memory failed error is -22
-> [  312.668984] hv_balloon: Memory hot add failed
-> 
-> Larger memblock sizes are usually used in VMs with more than
-> 64 Gbytes of memory, depending on the alignment of the VM's
-> physical address space.
-
-Right, that's the case since 2018.
-
-
-> 
-> Fix this problem by having the Hyper-V balloon driver determine
-> the Linux memblock size, and process hot-add requests in that
-> chunk size instead of a fixed 128 Mbytes. Also update the hot-add
-> alignment requested of the Hyper-V host to match the memblock
-> size instead of being a fixed 128 Mbytes.
-
-That way, we should never be getting unaligned ranges IIRC, correct? I 
-think we added ways in QEMU to guarantee that for the HV-balloon 
-implementation as well.
-
-> 
-> The code changes look significant, but in fact are just a
-
-Nah, it's okay :)
-
-> simple text substitution of a new global variable for the
-> previous HA_CHUNK constant. No algorithms are changed except
-> to initialize the new global variable and to calculate the
-> alignment value to pass to Hyper-V. Testing with memblock
-> sizes of 256 Mbytes and 2 Gbytes shows correct operation.
-> 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->   drivers/hv/hv_balloon.c | 64 ++++++++++++++++++++++++-----------------
->   1 file changed, 37 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index e000fa3b9f97..d3bfbf3d274a 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -425,11 +425,11 @@ struct dm_info_msg {
->    * The range start_pfn : end_pfn specifies the range
->    * that the host has asked us to hot add. The range
->    * start_pfn : ha_end_pfn specifies the range that we have
-> - * currently hot added. We hot add in multiples of 128M
-> - * chunks; it is possible that we may not be able to bring
-> - * online all the pages in the region. The range
-> + * currently hot added. We hot add in chunks equal to the
-> + * memory block size; it is possible that we may not be able
-> + * to bring online all the pages in the region. The range
->    * covered_start_pfn:covered_end_pfn defines the pages that can
-> - * be brough online.
-> + * be brought online.
->    */
->   
->   struct hv_hotadd_state {
-> @@ -505,8 +505,9 @@ enum hv_dm_state {
->   
->   static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
->   static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
-> +static unsigned long ha_chunk_pgs;
-
-Why not stick to PAGES_IN_2M and call this
-
-ha_pages_in_chunk? Much easier to get than "pgs".
-
-Apart from that looks good. Some helper macros to convert size to chunks 
-etc. might make the code even more readable.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> This is not meeting the bar. Please get your patches reviewed
+> internally at Microsoft by someone with good understanding of
+> Linux networking before you post.
+Noted, I'll do the needful going forward. Apologies.
 
