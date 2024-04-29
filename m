@@ -1,85 +1,94 @@
-Return-Path: <linux-hyperv+bounces-2051-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2052-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44C8C8B5B3B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Apr 2024 16:29:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94AA38B5C01
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Apr 2024 16:54:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE48A1F21C85
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Apr 2024 14:29:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C187286FBF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Apr 2024 14:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2B5F78B4E;
-	Mon, 29 Apr 2024 14:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D496A7FBD3;
+	Mon, 29 Apr 2024 14:54:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cg29qHmp"
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZORcMHjz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F158877F11;
-	Mon, 29 Apr 2024 14:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C4F7641B;
+	Mon, 29 Apr 2024 14:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714400974; cv=none; b=BMz3UZ7mEavGje20tJ9bUtpoDOQoNWdxDVx4f5MO2gl4v24RtaS/gvvRP3G/Lcq6pYqp8yw+SjTGGMekxcRu4aaiqnYigl4+glZ477AvBRSrGuzpf6TAOJuhR7PwmaV3+tZgRRAGJLnNAixBH9juoi+kehAxgTVA7VvqXIwUoaQ=
+	t=1714402469; cv=none; b=uVG0JQ2aeArBvxGwHylCGMrNfEmudW7rWjS80WbDLsLVbc0s3KDzFeG5Y4c2ggZSnxkSpqIxAJPoXzYzLqZBJ/0hpeIKULL7OcX0a2jv6DDgsOgrabj6ciQdHObgK1/9hnWOIR8tHAvKZ7XfenArHXT+1m7U+nJ0uc5PUZjeB7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714400974; c=relaxed/simple;
-	bh=lnmpDQnRv6ZNQZTqtUONOeLziTno1c2pGB56FVkEOEE=;
+	s=arc-20240116; t=1714402469; c=relaxed/simple;
+	bh=d0oc8G80VdSpAwcd1EQtmBVCJEcmiX7YwVY7qsonknc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8G9GTfBknAoNwsoCq5phZfTGyJgaQxSe4MoCiZkSxYtrsw+6N7Bl3yedr5NWk8nj7KFigVql6faJGDe2EmXpEMXeRpB994DJY9Vl4wXHZGA3zFgZfL3HxNIWhQOaVK9cEol+GG+vrh1wPa7bgUmISDkObKV79+vHPnxdinGNsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cg29qHmp; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714400972; x=1745936972;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lnmpDQnRv6ZNQZTqtUONOeLziTno1c2pGB56FVkEOEE=;
-  b=cg29qHmpJxUhLcE/S2f8s+I+RTy3BN5/Up/6WFJV0ULB4xApKQhz2XuF
-   iaP5teZYd5rnucwst2w+ok86df4Xqb9jzC8RKQW5/Rp5tjEC6j2rd5IsH
-   3tod0+y/wWO11j9gM/6LrvNNu3n2gZex9O2BUDJONyzXjlGSKV20NdyFC
-   S4vrMC0xvjwpMaSrOHRy0nveSLGuUcqSj3QB5ssMT3yQ0pN6uKmS8e0v6
-   +ooZ9KoyYDmTXs3TG5qf9bTMxuVNu+rJKtUaXExwGp+2Jemv9O/ugw+T0
-   D8aGrbsj9rlSjFUWrRcAH+06Rw7rpC15jLNzFdt68LLjCY9+saJEK1nJY
-   g==;
-X-CSE-ConnectionGUID: /qHsT91hQg2JAlhCd756Ng==
-X-CSE-MsgGUID: bPQFmcSXTFus8RNEGf6Raw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10227692"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="10227692"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 07:29:31 -0700
-X-CSE-ConnectionGUID: jCUPWXxUTdG7tdcGTA0h9w==
-X-CSE-MsgGUID: vwoW0j5TRESQOwxzFM6Tuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="57006944"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 29 Apr 2024 07:29:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 82C161A0; Mon, 29 Apr 2024 17:29:23 +0300 (EEST)
-Date: Mon, 29 Apr 2024 17:29:23 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Tao Liu <ltao@redhat.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=i8MoUqZSc2JaLZhJ3k6VZSIL7WP/4ehg9OBa7gSvIr4/7sfrpl+Ww+Sf5l57NxYmJWP0HTy6t4RtQeKcspnZXMb2RCEwjn8iE/BwabC87dz7aIVgS7nBab2dLs34tMszBQaSlzjJ9ioDLJpXdqdZ5cj826y8k3MfU+QPra1P2fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZORcMHjz reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B335D40E016B;
+	Mon, 29 Apr 2024 14:54:25 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 3XVfKGstbIKd; Mon, 29 Apr 2024 14:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1714402459; bh=/OGKprZdYSootanFbGT+iAmhKwb8pptaRzuZ0S3c60k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZORcMHjzGCl+zJPL/bWqyORvPswFKKMXZ4Qkxok344k6zGoSeJ/TuomgqjSut4YJI
+	 DIEyj9pDjnCXYyAAlMFzaJzF6oHVB1FgzjltTOelnOKErr1lhmPIX3RPq+HDmrz92C
+	 bsx6t5hBSDFgHwTp+IOgocsFKkjI81tMH7O0i8i05r7Y9hNZ41kWht7dH5v44RTTLD
+	 yLTPPKCR0U3YyB7t2L+UJEzyQ1Sv3KT3h68oFbK1nY55c68Rsv7YH9Nsg8U6QkTyw1
+	 Hifqk+Duo66bpVmksfda6WkGhnXW5ZADpc2GiKXcANcig6ywCwGyosZyzCfkofu+KE
+	 Fb/Qqq4UuwJLGzc7WhfUnKIJwYOXflUTfINnX1xvYDIt/6z9V3s4LXMassdmY2NjcK
+	 ovMt0ygI/bLDesptnxCgsQE7p5zxprV8u7PllMqCK0mV/jTNoJB9esy3TDmBuh+isM
+	 sg7pXPEX8WUZBkgfEi6iAjR75YDXHOyru1SUNTZCRCI7gEksg5QmCFkzCaLTz8i5WS
+	 DU0c5Re8AhkI7qrte+Ai8CHrbXNxiv60WKxfsbivbH4v9KFzq57xIt7C36+o9sk6i+
+	 gDBsb5FeZZhxWbHBmeASqC1QfttFXH08TxxAKehBf7xV5yqRdWYm8rqAImQdGRrXMK
+	 g2HO5+ta+4tre3sRqqsGiQtg=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D13D40E00B2;
+	Mon, 29 Apr 2024 14:53:52 +0000 (UTC)
+Date: Mon, 29 Apr 2024 16:53:51 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
+	Tao Liu <ltao@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org
 Subject: Re: [PATCHv10 06/18] x86/mm: Make
  x86_platform.guest.enc_status_change_*() return errno
-Message-ID: <xoksw5s5tl6wso4xirh4u422xmera4pyulptfmn3zeqtp5lmt2@d3y6ucap37da>
+Message-ID: <20240429145351.GIZi-0fzy7H_UpEJ5w@fat_crate.local>
 References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
  <20240409113010.465412-7-kirill.shutemov@linux.intel.com>
  <20240428172557.GLZi6GpTaSBj-DphCL@fat_crate.local>
+ <xoksw5s5tl6wso4xirh4u422xmera4pyulptfmn3zeqtp5lmt2@d3y6ucap37da>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -88,58 +97,58 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240428172557.GLZi6GpTaSBj-DphCL@fat_crate.local>
+In-Reply-To: <xoksw5s5tl6wso4xirh4u422xmera4pyulptfmn3zeqtp5lmt2@d3y6ucap37da>
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 28, 2024 at 07:25:57PM +0200, Borislav Petkov wrote:
-> On Tue, Apr 09, 2024 at 02:29:58PM +0300, Kirill A. Shutemov wrote:
-> > TDX is going to have more than one reason to fail
-> > enc_status_change_prepare().
-> > 
-> > Change the callback to return errno instead of assuming -EIO;
-> > enc_status_change_finish() changed too to keep the interface symmetric.
-> 
-> "Change enc_status_change_finish() too... "
-> 
-> "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
-> instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
-> to do frotz", as if you are giving orders to the codebase to change
-> its behaviour."
+On Mon, Apr 29, 2024 at 05:29:23PM +0300, Kirill A. Shutemov wrote:
+> Hm. I considered the sentence to be in imperative mood already. I guess=
+ I
+> don't fully understand what imperative mood is. Will fix.
 
-Hm. I considered the sentence to be in imperative mood already. I guess I
-don't fully understand what imperative mood is. Will fix.
+This:
 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-> > Reviewed-by: Kai Huang <kai.huang@intel.com>
-> > Tested-by: Tao Liu <ltao@redhat.com>
-> > ---
-> >  arch/x86/coco/tdx/tdx.c         | 20 +++++++++++---------
-> >  arch/x86/hyperv/ivm.c           | 22 ++++++++++------------
-> >  arch/x86/include/asm/x86_init.h |  4 ++--
-> >  arch/x86/kernel/x86_init.c      |  4 ++--
-> >  arch/x86/mm/mem_encrypt_amd.c   |  8 ++++----
-> >  arch/x86/mm/pat/set_memory.c    |  8 +++++---
-> >  6 files changed, 34 insertions(+), 32 deletions(-)
-> 
-> Another thing you should long know by now: get_maintainer.pl. You do
-> know that when you send a patch which touches multiple different
-> "places", you run it through get_maintainer.pl to get some hints as to
-> who to CC, right?
+https://en.wikipedia.org/wiki/Imperative_mood
 
-You are right, I didn't run get_maintainer.pl this time. I never got it
-integrated properly into my workflow. How do you use it? Is it part of
-'git send-email' hooks or do you do it manually somehow.
+but basically the sentence is a command.
 
-I don't feel I can trust the script to do The Right Thing™ all the time
-to put into my hooks. I expect it to blow up on tree-wide patches for
-instance.
+> You are right, I didn't run get_maintainer.pl this time. I never got it
+> integrated properly into my workflow. How do you use it? Is it part of
+> 'git send-email' hooks or do you do it manually somehow.
 
-As result I only run it occasionally, when I remember to which is
-suboptimal.
+So what I do after the whole set is applied, is:
 
-Any tips?
+git diff HEAD~<NUM>.. | ./scripts/get_maintainer.pl
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+where <NUM> is the number of patches which belong to the series.
+
+IOW, you get a full diff of the set and you run that diff through
+get_maintainer.pl.
+
+It'll give you a whole lot of people but you can go through that list
+and prune it to the people who are really relevant for the set.
+
+And then you do
+
+git send-email --cc-cmd=3Dcccmd.sh ...
+
+and that script simply echoes a "Cc: <name>" one per line. That is, if
+there are a lot of people to Cc. If there are only 1-3ish or so, you can
+supply each with the "--cc" option to git-send-email.
+
+Anyway, this is what I do. Someone has probably a lot better flow tho.
+
+> I don't feel I can trust the script to do The Right Thing=E2=84=A2 all =
+the time
+> to put into my hooks. I expect it to blow up on tree-wide patches for
+> instance.
+
+Yeah, not even going there. :-)
+
+HTH.
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
