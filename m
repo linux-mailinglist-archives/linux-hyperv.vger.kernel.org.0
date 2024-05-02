@@ -1,81 +1,81 @@
-Return-Path: <linux-hyperv+bounces-2059-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2060-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E5B18B9511
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 May 2024 09:06:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA9D88B951D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 May 2024 09:17:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB7F5B22393
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 May 2024 07:06:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7611C283105
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 May 2024 07:17:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B0A728DC9;
-	Thu,  2 May 2024 07:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F339A21A04;
+	Thu,  2 May 2024 07:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJzRc3BI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="froEeZMa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075F3249EB
-	for <linux-hyperv@vger.kernel.org>; Thu,  2 May 2024 07:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49338224DD
+	for <linux-hyperv@vger.kernel.org>; Thu,  2 May 2024 07:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714633572; cv=none; b=B4Ffiqjuwtw/nnzduz1lwZjRxVQrHLwGQvs9ECca/fRukGviLmozB2RAVIVOvsyvMhlPvgxF9So2lMNz4NA/w51BF1WK1IXBnEyWOYD3wcOUpAT4zKWsC1H/PEC6jOVw9aW9zh8OYY/88ZPdvY6yTpkGCVtqZtjFKiBKKtBUCHY=
+	t=1714634234; cv=none; b=sW+fNbALEoL4W4Yhl/RNyrpvfNLSJLAvLHioooo7SeMRfra7DY3Zs1RrOKBjcN9R1XUNCDJxsLTUjC4bS2+VMba1yaqk5D0ssRgo/bEPXcOTDtx6Uq0lsz41+/gmxbigPNio9q3/ikOvPnWxuDXs0njQkU8w20KEvjJAR1z92lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714633572; c=relaxed/simple;
-	bh=SB62APbq3iH0ch9xM+8WuyA+92QlwsDLbgFkacggKmY=;
+	s=arc-20240116; t=1714634234; c=relaxed/simple;
+	bh=7TpwHRC8mNhefr1Z9wG9HCEWGdaojPeMn62/wY12xTI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iQ7gQviYMS8iiBWCcDT8qSgezi3SBhapT5wtfsCu3rgsi5WBu3RGz0TDFFic0uUCZ+uZNduzu/T6x5hwVLFz9HeUbJIxxaSxrz4w1pn/7Hjur+a2DhXyIvTClWviUWBnEZnMGVMnkn6fsfKKnfQcBR5Yzpw0hy1r7Ej3h+U+tCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dJzRc3BI; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=HcthqovfpVG/VJmzZaswpK5L6R1/2UKvGFVLXFsloGr/xEsHjQ1lXL1nwWNWq8N9QxD3VtKwhbXlN4tYXxluUM9tYNb6wiMRoL9ONPKWjXsR/BlXhTDZKdrlkBlgqjFGX5GY16K0O7H+CfMy/raH6rd0ZWu19Isfp/NpN+RS+/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=froEeZMa; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714633569;
+	s=mimecast20190719; t=1714634232;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Y/d4yuyVkisorATTW5TLptiRR8w+kLvhe+ZUaPi7E/w=;
-	b=dJzRc3BIVh9/vbibuU8ep1TjgmbWFwthUTyaroH9AilrvXvjiAK1GbXAfy3A+5tgdHoIMD
-	2etLCAYqHtafAcO519Cjv+R3Q713XZR6olRzme4oyI5Yb9iITNGUFlrbtv3CwFVE1Pcf3r
-	qrH6JAQ+GroDhfW8g7so26BmBWwovtM=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=OIDhyH20/Kg5nJwECZysNFVnVnJydF4EiDXJ0DvvH0A=;
+	b=froEeZMa9CXF6Mjoc74pN4NNuAiCzP0CGtfCcdcFP6yJ69IjkNjdYlIK6qKwWSSWsGQ/3j
+	+hFuFiAyUEtjm6Qw7EY84E5nYrNMllpRRvT0Kg9/f2E37G4cLt+lzLP7A8TUDEL0wQJlf1
+	KYxBzHpHArKwhLYBr+9kWJZ+Zd9U3nI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-sejzWSoeMtWKLCFSpBvU_A-1; Thu, 02 May 2024 03:06:07 -0400
-X-MC-Unique: sejzWSoeMtWKLCFSpBvU_A-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-51c7abe8da8so5185350e87.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 02 May 2024 00:06:07 -0700 (PDT)
+ us-mta-444-IugALIIpP5W0Yj-QGYbwkw-1; Thu, 02 May 2024 03:17:08 -0400
+X-MC-Unique: IugALIIpP5W0Yj-QGYbwkw-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-418df23b51cso34031645e9.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 02 May 2024 00:17:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714633566; x=1715238366;
+        d=1e100.net; s=20230601; t=1714634227; x=1715239027;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y/d4yuyVkisorATTW5TLptiRR8w+kLvhe+ZUaPi7E/w=;
-        b=bsM/fzLqhtUygcCUMa6KXNSoO/lkAtGm2WFlaSFZSaV2gRNstYlfl/o/QCBtSM052s
-         3UEEpr9BHhCByiiStWmkU9NvtZs3VMWZi2rbHKfX2Xkl4qoj+iYoGcU/03A/BiQuPJ7h
-         ZEwMR6VYfrQHnBiSm/NiNvkKXXvv9sMZbfWAkdpuJfPvjAKv5UU+xTNasrttXu9vKHlQ
-         SqPukcbdPhJyoOcQa9S76i0e93duk6+cdF0crxum6bTClsRzPGjR/BYLB/a2/OYs0SCX
-         0eKpFkLkuE8x5Mhbtqh51B9FoxWXGCoKOpcOOLeYd6rYKw7qGIiJ6fw0JvtKRQxpuKaj
-         wnLg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9RAUwlApFLlX1QHuhT5GqJSJMKY/DV+TCTu8em3vLuPxUbu+3osfan3a72+BBgMdpbJ5r0eNXcPQxMm4UnTUFD0Okx4xDbcEvLV9w
-X-Gm-Message-State: AOJu0YxbQ8rbUrGX/tyjT9b4pTX52qj+jlFy1WOLcOwkGeoPzs/oq5Ea
-	bg5xl4zEQwqBMtO4pOqkE4nAw++z9qep0xhDFtaJSvAxqPva/nPTWQo8JLZjrHsFQ6BZg3HRnjt
-	lntOHf9RztVCbmn8o/b/jNrmZobockcMAOuCI6RVYF/Ik5tPM0duV14UsE0vsNg==
-X-Received: by 2002:ac2:5bc7:0:b0:51c:b47b:31a2 with SMTP id u7-20020ac25bc7000000b0051cb47b31a2mr528093lfn.60.1714633566167;
-        Thu, 02 May 2024 00:06:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5JnK9oLZpoyYve9PjlgsaPu5zW1OGd6EtGAeV1NYEpEuuB65NwNf4RokoCTPAkGcquhv+mg==
-X-Received: by 2002:ac2:5bc7:0:b0:51c:b47b:31a2 with SMTP id u7-20020ac25bc7000000b0051cb47b31a2mr528079lfn.60.1714633565720;
-        Thu, 02 May 2024 00:06:05 -0700 (PDT)
+        bh=OIDhyH20/Kg5nJwECZysNFVnVnJydF4EiDXJ0DvvH0A=;
+        b=L5zmfsc7pSf81ck0ObJrdP4epXL1DsHXcoYgya9cnEaZ/egsSAAnOwWXXG1hKWlVmR
+         9dOq1TcZoE8SJ0x4ZL5iCS6kkf7rLTrlijJqk7Xn5+8H1TRBKgbKqW2fUbULDnnVe9zD
+         1jnNntA0mn6rReXdp6k4bdmOW+mfvDKCrsypYwYbfF+Nz8X4sXi6U0umBNSeCSTDy+es
+         RwGNSsHs5naDrQJcCGWsqTzyT7M5B+Go0Kfuk6FCDb1RgYctGfwIU0kVbepRtqIs48kI
+         qUwD0oJF3EWnq65hHHiTVkfvacKQ7ZcFMgXAChIkJXblFU68yheuv0XEOSa29qZLgFUk
+         ut2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWZfu1VAtj5yiEx0q4MC7G/ujStjos46bPqSbzQRQsa6+gtvyTLZEzLW/o6p1Hb1BG11xLxSlV/sllTA0RjNN03QVjd/bBem7WPP6Zl
+X-Gm-Message-State: AOJu0YxQpItYNpbu1hTNUd6Ml41cRBxpqGIzGuIlRLbnBycVYOK4Zbhr
+	Jf/KVkILzyOHp59ik/T+3n3HllGu9X5x49CnIoBgY2TZ6IOQ7aClnxFzoIf9HERdRfF2jT3CTS1
+	Q4MQuzUteyzoBRFtG88X5YBsBCqDHwlNeBELh17HaHa3cqnIFu6nmGUYrJVPf4A==
+X-Received: by 2002:a05:600c:28f:b0:41a:5958:d6ac with SMTP id 15-20020a05600c028f00b0041a5958d6acmr3324886wmk.21.1714634227178;
+        Thu, 02 May 2024 00:17:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF07gI3S4azoLNp9q3O2vtJeRnV5wS6cxOWEbtkm5Hj9oe2Cb4AiFxdx1hXKm+bYVrxjlVctA==
+X-Received: by 2002:a05:600c:28f:b0:41a:5958:d6ac with SMTP id 15-20020a05600c028f00b0041a5958d6acmr3324864wmk.21.1714634226701;
+        Thu, 02 May 2024 00:17:06 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c71e:bf00:eba1:3ab9:ab0f:d676? (p200300cbc71ebf00eba13ab9ab0fd676.dip0.t-ipconnect.de. [2003:cb:c71e:bf00:eba1:3ab9:ab0f:d676])
-        by smtp.gmail.com with ESMTPSA id d18-20020adfef92000000b0034c71090653sm486732wro.57.2024.05.02.00.06.04
+        by smtp.gmail.com with ESMTPSA id g19-20020a05600c311300b0041496734318sm4660626wmo.24.2024.05.02.00.17.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 00:06:05 -0700 (PDT)
-Message-ID: <2ff54327-b387-4ede-9858-049b20ca8118@redhat.com>
-Date: Thu, 2 May 2024 09:06:04 +0200
+        Thu, 02 May 2024 00:17:06 -0700 (PDT)
+Message-ID: <d320cf89-768f-4ae8-8a32-dff4e5699f0a@redhat.com>
+Date: Thu, 2 May 2024 09:17:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -83,12 +83,13 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] hv_balloon: Use kernel macros to simplify open
- coded sequences
+Subject: Re: [PATCH v2 2/2] hv_balloon: Enable hot-add for memblock sizes >
+ 128 MiB
 To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, linux-kernel@vger.kernel.org,
  linux-hyperv@vger.kernel.org
 References: <20240501151458.2807-1-mhklinux@outlook.com>
+ <20240501151458.2807-2-mhklinux@outlook.com>
 Content-Language: en-US
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
@@ -136,26 +137,148 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20240501151458.2807-1-mhklinux@outlook.com>
+In-Reply-To: <20240501151458.2807-2-mhklinux@outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 01.05.24 17:14, mhkelley58@gmail.com wrote:
 > From: Michael Kelley <mhklinux@outlook.com>
 > 
-> Code sequences equivalent to ALIGN(), ALIGN_DOWN(), and umin() are
-> currently open coded. Change these to use the kernel macro to
-> improve code clarity. ALIGN() and ALIGN_DOWN() require the
-> alignment value to be a power of 2, which is the case here.
+> The Hyper-V balloon driver supports hot-add of memory in addition
+> to ballooning. Current code hot-adds in fixed size chunks of
+> 128 MiB (fixed constant HA_CHUNK in the code). While this works
+> in Hyper-V VMs with 64 GiB or less or memory where the Linux
+> memblock size is 128 MiB, the hot-add fails for larger memblock
+> sizes because add_memory() expects memory to be added in chunks
+> that match the memblock size. Messages like the following are
+> reported when Linux has a 256 MiB memblock size:
+> 
+> [  312.668859] Block size [0x10000000] unaligned hotplug range:
+>                 start 0x310000000, size 0x8000000
+> [  312.668880] hv_balloon: hot_add memory failed error is -22
+> [  312.668984] hv_balloon: Memory hot add failed
+> 
+> Larger memblock sizes are usually used in VMs with more than
+> 64 GiB of memory, depending on the alignment of the VM's
+> physical address space.
+> 
+> Fix this problem by having the Hyper-V balloon driver determine
+> the Linux memblock size, and process hot-add requests in that
+> chunk size instead of a fixed 128 MiB. Also update the hot-add
+> alignment requested of the Hyper-V host to match the memblock
+> size.
+> 
+> The code changes look significant, but in fact are just a
+> simple text substitution of a new global variable for the
+> previous HA_CHUNK constant. No algorithms are changed except
+> to initialize the new global variable and to calculate the
+> alignment value to pass to Hyper-V. Testing with memblock
+> sizes of 256 MiB and 2 GiB shows correct operation.
 > 
 > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 > ---
 > Changes in v2:
-> * No changes. This is a new patch that goes with v2 of patch 2 of this series.
+> * Change new global variable name from ha_chunk_pgs to
+>    ha_pages_in_chunk [David Hildenbrand]
+> * Use kernel macros ALIGN(), ALIGN_DOWN(), and umin()
+>    to simplify code and reduce references to HA_CHUNK. For
+>    ease of review, this is done in a new patch preceeding
+>    this one. [David Hildenbrand]
 > 
+>   drivers/hv/hv_balloon.c | 55 +++++++++++++++++++++++++----------------
+>   1 file changed, 34 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 9f45b8a6762c..e0a1a18041ca 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -425,11 +425,11 @@ struct dm_info_msg {
+>    * The range start_pfn : end_pfn specifies the range
+>    * that the host has asked us to hot add. The range
+>    * start_pfn : ha_end_pfn specifies the range that we have
+> - * currently hot added. We hot add in multiples of 128M
+> - * chunks; it is possible that we may not be able to bring
+> - * online all the pages in the region. The range
+> + * currently hot added. We hot add in chunks equal to the
+> + * memory block size; it is possible that we may not be able
+> + * to bring online all the pages in the region. The range
+>    * covered_start_pfn:covered_end_pfn defines the pages that can
+> - * be brough online.
+> + * be brought online.
+>    */
+>   
+>   struct hv_hotadd_state {
+> @@ -505,8 +505,9 @@ enum hv_dm_state {
+>   
+>   static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
+>   static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
+> +static unsigned long ha_pages_in_chunk;
+> +
+>   #define PAGES_IN_2M (2 * 1024 * 1024 / PAGE_SIZE)
+> -#define HA_CHUNK (128 * 1024 * 1024 / PAGE_SIZE)
+>   
+>   struct hv_dynmem_device {
+>   	struct hv_device *dev;
+> @@ -724,21 +725,21 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+>   	unsigned long processed_pfn;
+>   	unsigned long total_pfn = pfn_count;
+>   
+> -	for (i = 0; i < (size/HA_CHUNK); i++) {
+> -		start_pfn = start + (i * HA_CHUNK);
+> +	for (i = 0; i < (size/ha_pages_in_chunk); i++) {
+> +		start_pfn = start + (i * ha_pages_in_chunk);
+>   
+>   		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+> -			has->ha_end_pfn +=  HA_CHUNK;
+> -			processed_pfn = umin(total_pfn, HA_CHUNK);
+> +			has->ha_end_pfn += ha_pages_in_chunk;
+> +			processed_pfn = umin(total_pfn, ha_pages_in_chunk);
+>   			total_pfn -= processed_pfn;
+> -			has->covered_end_pfn +=  processed_pfn;
+> +			has->covered_end_pfn += processed_pfn;
+>   		}
+>   
+>   		reinit_completion(&dm_device.ol_waitevent);
+>   
+>   		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+>   		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+> -				(HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
+> +				(ha_pages_in_chunk << PAGE_SHIFT), MHP_MERGE_RESOURCE);
+>   
+
+HA_BYTES_IN_CHUNK might be reasonable to have (see below)
+
+>   	if (do_hot_add)
+> @@ -1807,10 +1808,13 @@ static int balloon_connect_vsp(struct hv_device *dev)
+>   	cap_msg.caps.cap_bits.hot_add = hot_add_enabled();
+>   
+>   	/*
+> -	 * Specify our alignment requirements as it relates
+> -	 * memory hot-add. Specify 128MB alignment.
+> +	 * Specify our alignment requirements for memory hot-add. The value is
+> +	 * the log base 2 of the number of megabytes in a chunk. For example,
+> +	 * with 256 MiB chunks, the value is 8. The number of MiB in a chunk
+> +	 * must be a power of 2.
+>   	 */
+> -	cap_msg.caps.cap_bits.hot_add_alignment = 7;
+> +	cap_msg.caps.cap_bits.hot_add_alignment =
+> +			ilog2(ha_pages_in_chunk >> (20 - PAGE_SHIFT));
+
+I was wondering if we can remove some of the magic here. Something along 
+the lines of:
+
+ilog2(ha_pages_in_chunk / (SZ_1M >> PAGE_SHIFT))
+
+or simply
+
+#define HA_BYTES_IN_CHUNK (ha_pages_in_chunk << PAGE_SHIFT)
+
+ilog2(HA_BYTES_IN_CHUNK / SZ_1M)
+
+
+Apart from that nothing jumped at me; looks much cleaner.
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
-
 
 -- 
 Cheers,
