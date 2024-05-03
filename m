@@ -1,68 +1,70 @@
-Return-Path: <linux-hyperv+bounces-2075-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2076-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 315348BB02C
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 17:43:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EA758BB02E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 17:43:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B07B81F217FA
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 15:43:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1A1A1C21216
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 15:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C029B15358B;
-	Fri,  3 May 2024 15:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30DC154BF3;
+	Fri,  3 May 2024 15:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dff+ZjOr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VL233G9X"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A34314F9DA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8B11509A4;
 	Fri,  3 May 2024 15:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714751002; cv=none; b=Zg0+pv1rMLVhVTDI+r9nEKkhN9CfJzS40b7S9vWe2FCqZfyxcEP7q1aOnwkrOHPE37AtedV0dBSyqU9qaotO9hKDMfITvUvJIXAWQvQbdGCXU/VvpehrNJYVTmJTAQTblHQkVZYsMq8w1jvnYakoFHIG9ngPjc+ARzNa8FCxGAs=
+	t=1714751003; cv=none; b=pFaJGVQZ310RBwV7SG1DTW9hgLxvv4lQz9BlJu9gBJjuJJwMeoKCZhCSLGnZiPACNLWA4EWnA2Wmwt8ZFjEpSzgm4PjA1hIttrFeBpNHaKOelCswfvyWieuHNV+oDJWdC8naCg4Jou31enRGvmGgF9bdq4dCQvOV0GVH1WFr9sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714751002; c=relaxed/simple;
-	bh=XDDDZ47yhQtUxvILRo0KvZEL28i4xZIyZurncqqyka8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hvj5ht9HBow963rIR/TBUTG2UEoveVJ3jBxkFJYUs2Dmv29MsBwbRfjVKiG4zQdyiD6i929bOOfHTC4D5G5TQE1v1t4XfEOUJ8osfnoIPILa1WMKX2Nld3vKaaraKYSdvYR4vytDoIZ/2DnALgsvDnWXiPAJ4uIzaBBcEgySx2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dff+ZjOr; arc=none smtp.client-ip=209.85.210.177
+	s=arc-20240116; t=1714751003; c=relaxed/simple;
+	bh=eG3D+U6/UhOsATpCqsQrYefMwC96shPjiM1PpiwXa08=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=W7RATbRLTOzGWX4mzQXtCRdpv+DqhZ7IaE0v4Df1HayNlaXzHMK9erF/G27qEiW34kEVWKA2iMCTLyP9t9a/UMh4QRhN2HrH+voIvH10gB1whM9gRqCGDE7+l1+crg+vzGSHhwlS+Wr59f6Mx/aZ1wXaQMBb0PvOteSKuGukEPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VL233G9X; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f4496af4cdso974565b3a.0;
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f43ee95078so1609343b3a.1;
         Fri, 03 May 2024 08:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714751000; x=1715355800; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m9gJHKcOFTrvpGkcMuXJ5PC60P56qGsVSgAqoLbMrj0=;
-        b=dff+ZjOrKAB51qg/cN12qmO7oGXzCJDkq52Jkac0i9D2bCFx+xi1sjVra836MuZtIR
-         IjNtHpi//9vHf+rXgrCTEH0YGNFyY42U/eSOtDSZ1bxup1i7e9ZMcE/wSONi/9qg1mCH
-         wqekJFytrHANbHjDZzr7NhH3NR913uWFC9ot5aZYk4NVw/czcazOl46+XATI8UoKdsy/
-         2qqUFx3zKrKuI3Jsak8JQxdUa7yZ8ZpqjjdehcmUkSWHyLCNBSCgSLOHK7ZDb8CgcQlZ
-         elxScegOickpNrVwEYaN1IvsNOsmHnye6yO8QbJfr2v9EuvCZmyFXKf2br0KHLL+qF9d
-         eK6Q==
+        d=gmail.com; s=20230601; t=1714751001; x=1715355801; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=St4eKB61r2ntu243VURf4jLQ3azSqkf+eWSak832Umw=;
+        b=VL233G9XXK5dv1A227csxYLJ8OBGPIpaWvpyKg0RyhAwhV5jr8RJUq3eII64cO5zkO
+         SZq8b87yV5QXAP65F3NdMtut76n5rhamgPly3v+Cz3yP+VWsLoDSKstTH7eCiUe3P+ri
+         GebxJn8aal5uNjGAWJOiykwB7jctgosab164MSLsm1i44AmbVwbWuNHyivy7BzNpkUuo
+         9d5Fk17zKjc1j4b9ZleFEzyuaupygiWBTDbUEuhIQkUTHEWivH4cRJVOn/tqf7HmJQIY
+         iL1pniKLjNZlxG1zX8ldM2+wGL2CA+Zr12GxQAD/GscScGfx283rL1yiYm2GFzyJGruq
+         1zLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714751000; x=1715355800;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m9gJHKcOFTrvpGkcMuXJ5PC60P56qGsVSgAqoLbMrj0=;
-        b=Sd5FLqWVTAWNJTyoJMnsme6ryPpQx9uqmYFYZcSaqX/kBJgkdAUtzIQK6+elziM0aX
-         5riIqYCc4ouaaRZzx0xXMj6+GMWNc/AP41PE2/doV0XSlxzQnoU4/r3hGkNyMcMm8xm2
-         zlekBkwAol5iN6q4ut1jx8H/kehZfb3AEOb52+OeQalx1QGBEW18h4m+yt44kJFQDoqX
-         EJ9E6dRKzSLdakqX1nuU5PmLm4HL+adEy2fFjznCKvemu6vSyVJkKD7N7XMQ6cOXom7+
-         FGo7C7oqCq0ANAgyEEb5pfmteasIsnteI6ogcssv2R7Z2oifNCCPvq63MOTlAGV6AmEj
-         7gog==
-X-Forwarded-Encrypted: i=1; AJvYcCV4a797WKJnm4xBm7Ynyxm+dp0hIgFyihYUWx1GHkJqcEIuuMYeqgjCKxui2NLhSJ1Ef7U+rBCqUWiUuyVGG+dJQo/+QdTq3WYJXra8irRUMPHpyQWTxfXgp2RBxFyGzrZKNXnA1HpyJz6E
-X-Gm-Message-State: AOJu0Ywuqk3tk0kqqGNsvRR/9Jv+gsIok9myVOINmHEKqTbz5+gXXlFe
-	5tmMFzHktbS8llOKiX3l7e5TlKBpGVhEcsB1i2MldwdcMEhLSmLDnadkRA32
-X-Google-Smtp-Source: AGHT+IEExpn+pFvyYzxmhPYMENO6fqLl3pfporH6QVHjwlPp4WGyn7vP43b2gPyk7WzXa31wBIK94g==
-X-Received: by 2002:a05:6a20:5a96:b0:1ad:1612:7656 with SMTP id kh22-20020a056a205a9600b001ad16127656mr2817999pzb.59.1714751000481;
-        Fri, 03 May 2024 08:43:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714751001; x=1715355801;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=St4eKB61r2ntu243VURf4jLQ3azSqkf+eWSak832Umw=;
+        b=hW0jrWAQBsyV1a6FFQNvu1a05kVsMKNX9pdJL0sY2QtNQ1EoYY1AmaCb3wlyym5BAi
+         zeins+Zu5SQnWFwYi95iMFalCb+Vvk55QaTfkiCmm3PHQuBwrKLFIyW9M8BmlBICtPnY
+         l2KpEt/LT7KcHNA6kYOHm4jPrpF/0JKAdihOfEyrm71dMIt66VG4G89D7PkjN/YCX1Fb
+         ojsn3ifRU7DIU70aH/eew0GLBvGn8Z+wnirJXinaFZpzCLh4KNkRDbn1HlPCU/ZEzfmn
+         3bKwUivWmwidv+XM8CXf334twmSCWthZifQe61FBOC/mg0xf/QtaoBZAzbBuo+tEWY7t
+         UrWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIsIyF5FVTAkV8lFGAd3KdsGG0wA3pD5ojnrPOtrDrTLOyffJ3ae2cUuJvwvTpQ9jTzj9Nj2qVukWLspFMNt3OLDm13hgpArBQRqNriJti5G3bWtvKdKMFX0gvW1xvJGcNjKSVHUWomrr2
+X-Gm-Message-State: AOJu0YxS/N+xlGM8SJcdxQm1ChWre8MPqDYgPjteAP0E4tv4tVlicSt7
+	zrTJ0StjBlyria7aDa/O1KW/wkGoXkTB8RluvHhb8QR851V0DXQ0
+X-Google-Smtp-Source: AGHT+IHeWy5A+8UEkYq5gPfMvdrZoY0OAdhatWuEX5WeelmWT0BL3FP4snAyFmOrIfXJBFRYKv68Zg==
+X-Received: by 2002:a05:6a20:1591:b0:1ab:7a57:e466 with SMTP id h17-20020a056a20159100b001ab7a57e466mr3069533pzj.52.1714751001269;
+        Fri, 03 May 2024 08:43:21 -0700 (PDT)
 Received: from localhost.localdomain ([67.161.114.176])
-        by smtp.gmail.com with ESMTPSA id u9-20020a1709026e0900b001e604438791sm3446362plk.156.2024.05.03.08.43.19
+        by smtp.gmail.com with ESMTPSA id u9-20020a1709026e0900b001e604438791sm3446362plk.156.2024.05.03.08.43.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 03 May 2024 08:43:20 -0700 (PDT)
 From: mhkelley58@gmail.com
@@ -73,10 +75,12 @@ To: haiyangz@microsoft.com,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
 Cc: david@redhat.com
-Subject: [PATCH v3 1/2] hv_balloon: Use kernel macros to simplify open coded sequences
-Date: Fri,  3 May 2024 08:43:11 -0700
-Message-Id: <20240503154312.142466-1-mhklinux@outlook.com>
+Subject: [PATCH v3 2/2] hv_balloon: Enable hot-add for memblock sizes > 128 MiB
+Date: Fri,  3 May 2024 08:43:12 -0700
+Message-Id: <20240503154312.142466-2-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240503154312.142466-1-mhklinux@outlook.com>
+References: <20240503154312.142466-1-mhklinux@outlook.com>
 Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -88,110 +92,213 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-Code sequences equivalent to ALIGN(), ALIGN_DOWN(), and umin() are
-currently open coded. Change these to use the kernel macro to
-improve code clarity. ALIGN() and ALIGN_DOWN() require the
-alignment value to be a power of 2, which is the case here.
+The Hyper-V balloon driver supports hot-add of memory in addition
+to ballooning. Current code hot-adds in fixed size chunks of
+128 MiB (fixed constant HA_CHUNK in the code). While this works
+in Hyper-V VMs with 64 GiB or less or memory where the Linux
+memblock size is 128 MiB, the hot-add fails for larger memblock
+sizes because add_memory() expects memory to be added in chunks
+that match the memblock size. Messages like the following are
+reported when Linux has a 256 MiB memblock size:
+
+[  312.668859] Block size [0x10000000] unaligned hotplug range:
+               start 0x310000000, size 0x8000000
+[  312.668880] hv_balloon: hot_add memory failed error is -22
+[  312.668984] hv_balloon: Memory hot add failed
+
+Larger memblock sizes are usually used in VMs with more than
+64 GiB of memory, depending on the alignment of the VM's
+physical address space.
+
+Fix this problem by having the Hyper-V balloon driver determine
+the Linux memblock size, and process hot-add requests in that
+chunk size instead of a fixed 128 MiB. Also update the hot-add
+alignment requested of the Hyper-V host to match the memblock
+size.
+
+The code changes look significant, but in fact are just a
+simple text substitution of a new global variable for the
+previous HA_CHUNK constant. No algorithms are changed except
+to initialize the new global variable and to calculate the
+alignment value to pass to Hyper-V. Testing with memblock
+sizes of 256 MiB and 2 GiB shows correct operation.
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
 Changes in v3:
-* No changes.
+* Introduce HA_BYTES_IN_CHUNK and use in two places. [David Hildenbrand]
+* Set ha_pages_in_chunk in balloon_probe() instead of init_balloon_drv()
+  so that memory_block_size_bytes() can be under an existing #ifdef
+  CONFIG_MEMORY_HOTPLUG [kernel test robot]
 
 Changes in v2:
-* No changes. This is a new patch that goes with v2 of patch 2 of this series.
+* Change new global variable name from ha_chunk_pgs to ha_pages_in_chunk
+  [David Hildenbrand]
+* Use kernel macros ALIGN(), ALIGN_DOWN(), and umin() to simplify code
+  and reduce references to HA_CHUNK. For ease of review, this is done
+  in a new patch preceeding this one. [David Hildenbrand]
 
- drivers/hv/hv_balloon.c | 40 ++++++++--------------------------------
- 1 file changed, 8 insertions(+), 32 deletions(-)
+ drivers/hv/hv_balloon.c | 64 +++++++++++++++++++++++++++--------------
+ 1 file changed, 43 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index e000fa3b9f97..9f45b8a6762c 100644
+index 9f45b8a6762c..4370ad31b5b3 100644
 --- a/drivers/hv/hv_balloon.c
 +++ b/drivers/hv/hv_balloon.c
-@@ -729,15 +729,8 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+@@ -25,6 +25,7 @@
+ #include <linux/notifier.h>
+ #include <linux/percpu_counter.h>
+ #include <linux/page_reporting.h>
++#include <linux/sizes.h>
+ 
+ #include <linux/hyperv.h>
+ #include <asm/hyperv-tlfs.h>
+@@ -425,11 +426,11 @@ struct dm_info_msg {
+  * The range start_pfn : end_pfn specifies the range
+  * that the host has asked us to hot add. The range
+  * start_pfn : ha_end_pfn specifies the range that we have
+- * currently hot added. We hot add in multiples of 128M
+- * chunks; it is possible that we may not be able to bring
+- * online all the pages in the region. The range
++ * currently hot added. We hot add in chunks equal to the
++ * memory block size; it is possible that we may not be able
++ * to bring online all the pages in the region. The range
+  * covered_start_pfn:covered_end_pfn defines the pages that can
+- * be brough online.
++ * be brought online.
+  */
+ 
+ struct hv_hotadd_state {
+@@ -505,8 +506,11 @@ enum hv_dm_state {
+ 
+ static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
+ static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
++
++static unsigned long ha_pages_in_chunk;
++#define HA_BYTES_IN_CHUNK (ha_pages_in_chunk << PAGE_SHIFT)
++
+ #define PAGES_IN_2M (2 * 1024 * 1024 / PAGE_SIZE)
+-#define HA_CHUNK (128 * 1024 * 1024 / PAGE_SIZE)
+ 
+ struct hv_dynmem_device {
+ 	struct hv_device *dev;
+@@ -724,21 +728,21 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 	unsigned long processed_pfn;
+ 	unsigned long total_pfn = pfn_count;
+ 
+-	for (i = 0; i < (size/HA_CHUNK); i++) {
+-		start_pfn = start + (i * HA_CHUNK);
++	for (i = 0; i < (size/ha_pages_in_chunk); i++) {
++		start_pfn = start + (i * ha_pages_in_chunk);
  
  		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
- 			has->ha_end_pfn +=  HA_CHUNK;
--
--			if (total_pfn > HA_CHUNK) {
--				processed_pfn = HA_CHUNK;
--				total_pfn -= HA_CHUNK;
--			} else {
--				processed_pfn = total_pfn;
--				total_pfn = 0;
--			}
--
-+			processed_pfn = umin(total_pfn, HA_CHUNK);
-+			total_pfn -= processed_pfn;
- 			has->covered_end_pfn +=  processed_pfn;
+-			has->ha_end_pfn +=  HA_CHUNK;
+-			processed_pfn = umin(total_pfn, HA_CHUNK);
++			has->ha_end_pfn += ha_pages_in_chunk;
++			processed_pfn = umin(total_pfn, ha_pages_in_chunk);
+ 			total_pfn -= processed_pfn;
+-			has->covered_end_pfn +=  processed_pfn;
++			has->covered_end_pfn += processed_pfn;
  		}
  
-@@ -800,7 +793,7 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
- {
- 	struct hv_hotadd_state *has;
- 	struct hv_hotadd_gap *gap;
--	unsigned long residual, new_inc;
-+	unsigned long residual;
- 	int ret = 0;
+ 		reinit_completion(&dm_device.ol_waitevent);
  
- 	guard(spinlock_irqsave)(&dm_device.ha_lock);
-@@ -836,15 +829,9 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ 		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+ 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+-				(HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
++				 HA_BYTES_IN_CHUNK, MHP_MERGE_RESOURCE);
+ 
+ 		if (ret) {
+ 			pr_err("hot_add memory failed error is %d\n", ret);
+@@ -753,7 +757,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 				do_hot_add = false;
+ 			}
+ 			scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+-				has->ha_end_pfn -= HA_CHUNK;
++				has->ha_end_pfn -= ha_pages_in_chunk;
+ 				has->covered_end_pfn -=  processed_pfn;
+ 			}
+ 			break;
+@@ -829,9 +833,9 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
  		 * our current limit; extend it.
  		 */
  		if ((start_pfn + pfn_cnt) > has->end_pfn) {
-+			/* Extend the region by multiples of HA_CHUNK */
+-			/* Extend the region by multiples of HA_CHUNK */
++			/* Extend the region by multiples of ha_pages_in_chunk */
  			residual = (start_pfn + pfn_cnt - has->end_pfn);
--			/*
--			 * Extend the region by multiples of HA_CHUNK.
--			 */
--			new_inc = (residual / HA_CHUNK) * HA_CHUNK;
--			if (residual % HA_CHUNK)
--				new_inc += HA_CHUNK;
--
--			has->end_pfn += new_inc;
-+			has->end_pfn += ALIGN(residual, HA_CHUNK);
+-			has->end_pfn += ALIGN(residual, HA_CHUNK);
++			has->end_pfn += ALIGN(residual, ha_pages_in_chunk);
  		}
  
  		ret = 1;
-@@ -915,9 +902,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+@@ -897,12 +901,12 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 			 * We have some residual hot add range
+ 			 * that needs to be hot added; hot add
+ 			 * it now. Hot add a multiple of
+-			 * HA_CHUNK that fully covers the pages
++			 * ha_pages_in_chunk that fully covers the pages
+ 			 * we have.
  			 */
  			size = (has->end_pfn - has->ha_end_pfn);
  			if (pfn_cnt <= size) {
--				size = ((pfn_cnt / HA_CHUNK) * HA_CHUNK);
--				if (pfn_cnt % HA_CHUNK)
--					size += HA_CHUNK;
-+				size = ALIGN(pfn_cnt, HA_CHUNK);
+-				size = ALIGN(pfn_cnt, HA_CHUNK);
++				size = ALIGN(pfn_cnt, ha_pages_in_chunk);
  			} else {
  				pfn_cnt = size;
  			}
-@@ -1011,9 +996,6 @@ static void hot_add_req(struct work_struct *dummy)
- 	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
- 
- 	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
--		unsigned long region_size;
--		unsigned long region_start;
--
- 		/*
- 		 * The host has not specified the hot-add region.
- 		 * Based on the hot-add page range being specified,
-@@ -1021,14 +1003,8 @@ static void hot_add_req(struct work_struct *dummy)
+@@ -1003,8 +1007,8 @@ static void hot_add_req(struct work_struct *dummy)
  		 * that need to be hot-added while ensuring the alignment
  		 * and size requirements of Linux as it relates to hot-add.
  		 */
--		region_size = (pfn_cnt / HA_CHUNK) * HA_CHUNK;
--		if (pfn_cnt % HA_CHUNK)
--			region_size += HA_CHUNK;
--
--		region_start = (pg_start / HA_CHUNK) * HA_CHUNK;
--
--		rg_start = region_start;
--		rg_sz = region_size;
-+		rg_start = ALIGN_DOWN(pg_start, HA_CHUNK);
-+		rg_sz = ALIGN(pfn_cnt, HA_CHUNK);
+-		rg_start = ALIGN_DOWN(pg_start, HA_CHUNK);
+-		rg_sz = ALIGN(pfn_cnt, HA_CHUNK);
++		rg_start = ALIGN_DOWN(pg_start, ha_pages_in_chunk);
++		rg_sz = ALIGN(pfn_cnt, ha_pages_in_chunk);
  	}
  
  	if (do_hot_add)
+@@ -1807,10 +1811,13 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	cap_msg.caps.cap_bits.hot_add = hot_add_enabled();
+ 
+ 	/*
+-	 * Specify our alignment requirements as it relates
+-	 * memory hot-add. Specify 128MB alignment.
++	 * Specify our alignment requirements for memory hot-add. The value is
++	 * the log base 2 of the number of megabytes in a chunk. For example,
++	 * with 256 MiB chunks, the value is 8. The number of MiB in a chunk
++	 * must be a power of 2.
+ 	 */
+-	cap_msg.caps.cap_bits.hot_add_alignment = 7;
++	cap_msg.caps.cap_bits.hot_add_alignment =
++					ilog2(HA_BYTES_IN_CHUNK / SZ_1M);
+ 
+ 	/*
+ 	 * Currently the host does not use these
+@@ -1960,8 +1967,23 @@ static int balloon_probe(struct hv_device *dev,
+ 		hot_add = false;
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
++	/*
++	 * Hot-add must operate in chunks that are of size equal to the
++	 * memory block size because that's what the core add_memory()
++	 * interface requires. The Hyper-V interface requires that the memory
++	 * block size be a power of 2, which is guaranteed by the check in
++	 * memory_dev_init().
++	 */
++	ha_pages_in_chunk = memory_block_size_bytes() / PAGE_SIZE;
+ 	do_hot_add = hot_add;
+ #else
++	/*
++	 * Without MEMORY_HOTPLUG, the guest returns a failure status for all
++	 * hot add requests from Hyper-V, and the chunk size is used only to
++	 * specify alignment to Hyper-V as required by the host/guest protocol.
++	 * Somewhat arbitrarily, use 128 MiB.
++	 */
++	ha_pages_in_chunk = SZ_128M / PAGE_SIZE;
+ 	do_hot_add = false;
+ #endif
+ 	dm_device.dev = dev;
 -- 
 2.25.1
 
