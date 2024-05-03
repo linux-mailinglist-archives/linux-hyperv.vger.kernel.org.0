@@ -1,187 +1,198 @@
-Return-Path: <linux-hyperv+bounces-2074-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2075-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F01C18BAE60
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 16:03:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 315348BB02C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 17:43:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 079A01C20AFC
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 14:03:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B07B81F217FA
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 15:43:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD1C154448;
-	Fri,  3 May 2024 14:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C029B15358B;
+	Fri,  3 May 2024 15:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bF95IclE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dff+ZjOr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6760715442B
-	for <linux-hyperv@vger.kernel.org>; Fri,  3 May 2024 14:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A34314F9DA;
+	Fri,  3 May 2024 15:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714745005; cv=none; b=k4BTEuC1XLeLq8xPEcf0E4AK3DU36FLH+htpNROKhmFFbDUaU6p9WkHOJdEjMO2sO4H3tXgQS8hFPzSyB1B6Dmx469vlvWLzWIZlh/Mu1pXVz+Kf8Gq3yTlRyNzJPIQLcuCaOwC12HVH0FMNX62Wl2guz50BpjjkU+ANkvj8Kos=
+	t=1714751002; cv=none; b=Zg0+pv1rMLVhVTDI+r9nEKkhN9CfJzS40b7S9vWe2FCqZfyxcEP7q1aOnwkrOHPE37AtedV0dBSyqU9qaotO9hKDMfITvUvJIXAWQvQbdGCXU/VvpehrNJYVTmJTAQTblHQkVZYsMq8w1jvnYakoFHIG9ngPjc+ARzNa8FCxGAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714745005; c=relaxed/simple;
-	bh=7+85l5gtG9BMCJsXUhbIe6mJsJUfD1GuV0eeYeZs6G4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=q8cy1WclcfuucCHANbgttJhBhlgYvwoHUTwKB/aZojL7eHOrSyDrYW7zH6hZSK5A0qsohOE0zPKeLO2MN2szLnd+DQsGLekNZ/836vQvqvDCk+fc9FsdmmGzMrSUkugPWuZOq3n1pCBx6fa6Qx7GkjZXwy5K8ywNmNbgfxXEaRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bF95IclE; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de59ff8af0bso13577754276.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 03 May 2024 07:03:24 -0700 (PDT)
+	s=arc-20240116; t=1714751002; c=relaxed/simple;
+	bh=XDDDZ47yhQtUxvILRo0KvZEL28i4xZIyZurncqqyka8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hvj5ht9HBow963rIR/TBUTG2UEoveVJ3jBxkFJYUs2Dmv29MsBwbRfjVKiG4zQdyiD6i929bOOfHTC4D5G5TQE1v1t4XfEOUJ8osfnoIPILa1WMKX2Nld3vKaaraKYSdvYR4vytDoIZ/2DnALgsvDnWXiPAJ4uIzaBBcEgySx2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dff+ZjOr; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f4496af4cdso974565b3a.0;
+        Fri, 03 May 2024 08:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714745003; x=1715349803; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a136SOKV90n/XcmvCvD6zgQKrJ5kR/Q+OhiUt3FbOiE=;
-        b=bF95IclEvfWouhYNKzZo185b+kPSyCvdGhAB/HcI3+gO2u9Qva5QKOI9UBojc23RSD
-         3WlhbYeb4zIlpbVbo8f9PY7DxRJJudohJPnX2n1XLiNQDHV4G186oTFYIcocjbp6LMNn
-         f5sqSxaeMVBY1Oc6xRzM07z6tp6F8RKRESK0YIOpgdwQ66olItMpU7P0n80OypPETIRe
-         mW4NZDMte/3F62OIBfeyn0WkvoByQZE28QNUpa9VJA8+zGwd7msbErV3T4NvqnYa+obz
-         +WuDcfYnv1Re348zODbiUSpkIhCls7/DV5i1LlId6gsKr9yKQKG9He6E2TvG3hCMPCuO
-         juPg==
+        d=gmail.com; s=20230601; t=1714751000; x=1715355800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m9gJHKcOFTrvpGkcMuXJ5PC60P56qGsVSgAqoLbMrj0=;
+        b=dff+ZjOrKAB51qg/cN12qmO7oGXzCJDkq52Jkac0i9D2bCFx+xi1sjVra836MuZtIR
+         IjNtHpi//9vHf+rXgrCTEH0YGNFyY42U/eSOtDSZ1bxup1i7e9ZMcE/wSONi/9qg1mCH
+         wqekJFytrHANbHjDZzr7NhH3NR913uWFC9ot5aZYk4NVw/czcazOl46+XATI8UoKdsy/
+         2qqUFx3zKrKuI3Jsak8JQxdUa7yZ8ZpqjjdehcmUkSWHyLCNBSCgSLOHK7ZDb8CgcQlZ
+         elxScegOickpNrVwEYaN1IvsNOsmHnye6yO8QbJfr2v9EuvCZmyFXKf2br0KHLL+qF9d
+         eK6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714745003; x=1715349803;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a136SOKV90n/XcmvCvD6zgQKrJ5kR/Q+OhiUt3FbOiE=;
-        b=U186XGq9QvuNamBItEIUvr6oZxFAM2YCzeZrR9pRhLfztTHZpw97RadTWNPQCEANzW
-         Zj3ny9KYvZ7Hlue86pkFNkYrjbHhBKf8WINzh2HFnhm3yoDV6UWkb1dvRHwHx9vUPmD3
-         hcOgjKUDpI/U8nMDdvjdnVb62svGFCvCL3XHyBTpSzWeL1I/GDMQIQ2uOOh+BTgeEdc2
-         Ta5dLn1JqRV3a0ycCKKL2OBD7C1QEqBqulE8gjHUzzf6xaAap/aIApRQqv5bk6go1u5B
-         RHGMWxLza8Nr2yMbXmyt6x1xBk8sjhSgMZjRXhaMdpDm+onZUurYT7PK9fOsnUnIiBEX
-         HLOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWezmjgvfAhxApTz4AgXsU0BzrCcnJGjilgcQXOaCs1yexGc7hxR9Y4Jo2WYkczAtwP8pCtw0QJVCcGzIpiO3e9p2CwXcB/n5B2ekbY
-X-Gm-Message-State: AOJu0YwzGrf+vouOYglbxQvqoYx32kwPFMGncZ1qNnPsKZeWRP7CUjmy
-	6cMM0lWHCFIR4QSE5VUEMT074iu0fkGzAdLujn2VpJ78s1GE3mR/dFPruvQ3Y4xH8BMbjPL55SH
-	fyQ==
-X-Google-Smtp-Source: AGHT+IG8Se+FDx3icVQiBS8y3Ql+XygTIGhFwTldpFeLgMxDQJNLd2QsRcCHI+DmhaCm9MeTHgIbmJIbKcw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1201:b0:de6:141a:b0de with SMTP id
- s1-20020a056902120100b00de6141ab0demr337561ybu.10.1714745003300; Fri, 03 May
- 2024 07:03:23 -0700 (PDT)
-Date: Fri, 3 May 2024 07:03:21 -0700
-In-Reply-To: <20240503131910.307630-4-mic@digikod.net>
+        d=1e100.net; s=20230601; t=1714751000; x=1715355800;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m9gJHKcOFTrvpGkcMuXJ5PC60P56qGsVSgAqoLbMrj0=;
+        b=Sd5FLqWVTAWNJTyoJMnsme6ryPpQx9uqmYFYZcSaqX/kBJgkdAUtzIQK6+elziM0aX
+         5riIqYCc4ouaaRZzx0xXMj6+GMWNc/AP41PE2/doV0XSlxzQnoU4/r3hGkNyMcMm8xm2
+         zlekBkwAol5iN6q4ut1jx8H/kehZfb3AEOb52+OeQalx1QGBEW18h4m+yt44kJFQDoqX
+         EJ9E6dRKzSLdakqX1nuU5PmLm4HL+adEy2fFjznCKvemu6vSyVJkKD7N7XMQ6cOXom7+
+         FGo7C7oqCq0ANAgyEEb5pfmteasIsnteI6ogcssv2R7Z2oifNCCPvq63MOTlAGV6AmEj
+         7gog==
+X-Forwarded-Encrypted: i=1; AJvYcCV4a797WKJnm4xBm7Ynyxm+dp0hIgFyihYUWx1GHkJqcEIuuMYeqgjCKxui2NLhSJ1Ef7U+rBCqUWiUuyVGG+dJQo/+QdTq3WYJXra8irRUMPHpyQWTxfXgp2RBxFyGzrZKNXnA1HpyJz6E
+X-Gm-Message-State: AOJu0Ywuqk3tk0kqqGNsvRR/9Jv+gsIok9myVOINmHEKqTbz5+gXXlFe
+	5tmMFzHktbS8llOKiX3l7e5TlKBpGVhEcsB1i2MldwdcMEhLSmLDnadkRA32
+X-Google-Smtp-Source: AGHT+IEExpn+pFvyYzxmhPYMENO6fqLl3pfporH6QVHjwlPp4WGyn7vP43b2gPyk7WzXa31wBIK94g==
+X-Received: by 2002:a05:6a20:5a96:b0:1ad:1612:7656 with SMTP id kh22-20020a056a205a9600b001ad16127656mr2817999pzb.59.1714751000481;
+        Fri, 03 May 2024 08:43:20 -0700 (PDT)
+Received: from localhost.localdomain ([67.161.114.176])
+        by smtp.gmail.com with ESMTPSA id u9-20020a1709026e0900b001e604438791sm3446362plk.156.2024.05.03.08.43.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 08:43:20 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: david@redhat.com
+Subject: [PATCH v3 1/2] hv_balloon: Use kernel macros to simplify open coded sequences
+Date: Fri,  3 May 2024 08:43:11 -0700
+Message-Id: <20240503154312.142466-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240503131910.307630-1-mic@digikod.net> <20240503131910.307630-4-mic@digikod.net>
-Message-ID: <ZjTuqV-AxQQRWwUW@google.com>
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-From: Sean Christopherson <seanjc@google.com>
-To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
-	Angelina Vu <angelinavu@linux.microsoft.com>, 
-	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
-	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
-	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
-	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
-	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
-	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
-	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
-	virtualization@lists.linux-foundation.org, x86@kernel.org, 
-	xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 03, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
-> Add an interface for user space to be notified about guests' Heki policy
-> and related violations.
->=20
-> Extend the KVM_ENABLE_CAP IOCTL with KVM_CAP_HEKI_CONFIGURE and
-> KVM_CAP_HEKI_DENIAL. Each one takes a bitmask as first argument that can
-> contains KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4. The
-> returned value is the bitmask of known Heki exit reasons, for now:
-> KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4.
->=20
-> If KVM_CAP_HEKI_CONFIGURE is set, a VM exit will be triggered for each
-> KVM_HC_LOCK_CR_UPDATE hypercalls according to the requested control
-> register. This enables to enlighten the VMM with the guest
-> auto-restrictions.
->=20
-> If KVM_CAP_HEKI_DENIAL is set, a VM exit will be triggered for each
-> pinned CR violation. This enables the VMM to react to a policy
-> violation.
->=20
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240503131910.307630-4-mic@digikod.net
-> ---
->=20
-> Changes since v1:
-> * New patch. Making user space aware of Heki properties was requested by
->   Sean Christopherson.
+From: Michael Kelley <mhklinux@outlook.com>
 
-No, I suggested having userspace _control_ the pinning[*], not merely be no=
-tified
-of pinning.
+Code sequences equivalent to ALIGN(), ALIGN_DOWN(), and umin() are
+currently open coded. Change these to use the kernel macro to
+improve code clarity. ALIGN() and ALIGN_DOWN() require the
+alignment value to be a power of 2, which is the case here.
 
- : IMO, manipulation of protections, both for memory (this patch) and CPU s=
-tate
- : (control registers in the next patch) should come from userspace.  I hav=
-e no
- : objection to KVM providing plumbing if necessary, but I think userspace =
-needs to
- : to have full control over the actual state.
- :=20
- : One of the things that caused Intel's control register pinning series to=
- stall
- : out was how to handle edge cases like kexec() and reboot.  Deferring to =
-userspace
- : means the kernel doesn't need to define policy, e.g. when to unprotect m=
-emory,
- : and avoids questions like "should userspace be able to overwrite pinned =
-control
- : registers".
- :=20
- : And like the confidential VM use case, keeping userspace in the loop is =
-a big
- : beneifit, e.g. the guest can't circumvent protections by coercing usersp=
-ace into
- : writing to protected memory.
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+Changes in v3:
+* No changes.
 
-I stand by that suggestion, because I don't see a sane way to handle things=
- like
-kexec() and reboot without having a _much_ more sophisticated policy than w=
-ould
-ever be acceptable in KVM.
+Changes in v2:
+* No changes. This is a new patch that goes with v2 of patch 2 of this series.
 
-I think that can be done without KVM having any awareness of CR pinning wha=
-tsoever.
-E.g. userspace just needs to ability to intercept CR writes and inject #GPs=
-.  Off
-the cuff, I suspect the uAPI could look very similar to MSR filtering.  E.g=
-. I bet
-userspace could enforce MSR pinning without any new KVM uAPI at all.
+ drivers/hv/hv_balloon.c | 40 ++++++++--------------------------------
+ 1 file changed, 8 insertions(+), 32 deletions(-)
 
-[*] https://lore.kernel.org/all/ZFUyhPuhtMbYdJ76@google.com
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index e000fa3b9f97..9f45b8a6762c 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -729,15 +729,8 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 
+ 		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+ 			has->ha_end_pfn +=  HA_CHUNK;
+-
+-			if (total_pfn > HA_CHUNK) {
+-				processed_pfn = HA_CHUNK;
+-				total_pfn -= HA_CHUNK;
+-			} else {
+-				processed_pfn = total_pfn;
+-				total_pfn = 0;
+-			}
+-
++			processed_pfn = umin(total_pfn, HA_CHUNK);
++			total_pfn -= processed_pfn;
+ 			has->covered_end_pfn +=  processed_pfn;
+ 		}
+ 
+@@ -800,7 +793,7 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ {
+ 	struct hv_hotadd_state *has;
+ 	struct hv_hotadd_gap *gap;
+-	unsigned long residual, new_inc;
++	unsigned long residual;
+ 	int ret = 0;
+ 
+ 	guard(spinlock_irqsave)(&dm_device.ha_lock);
+@@ -836,15 +829,9 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ 		 * our current limit; extend it.
+ 		 */
+ 		if ((start_pfn + pfn_cnt) > has->end_pfn) {
++			/* Extend the region by multiples of HA_CHUNK */
+ 			residual = (start_pfn + pfn_cnt - has->end_pfn);
+-			/*
+-			 * Extend the region by multiples of HA_CHUNK.
+-			 */
+-			new_inc = (residual / HA_CHUNK) * HA_CHUNK;
+-			if (residual % HA_CHUNK)
+-				new_inc += HA_CHUNK;
+-
+-			has->end_pfn += new_inc;
++			has->end_pfn += ALIGN(residual, HA_CHUNK);
+ 		}
+ 
+ 		ret = 1;
+@@ -915,9 +902,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 			 */
+ 			size = (has->end_pfn - has->ha_end_pfn);
+ 			if (pfn_cnt <= size) {
+-				size = ((pfn_cnt / HA_CHUNK) * HA_CHUNK);
+-				if (pfn_cnt % HA_CHUNK)
+-					size += HA_CHUNK;
++				size = ALIGN(pfn_cnt, HA_CHUNK);
+ 			} else {
+ 				pfn_cnt = size;
+ 			}
+@@ -1011,9 +996,6 @@ static void hot_add_req(struct work_struct *dummy)
+ 	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
+ 
+ 	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
+-		unsigned long region_size;
+-		unsigned long region_start;
+-
+ 		/*
+ 		 * The host has not specified the hot-add region.
+ 		 * Based on the hot-add page range being specified,
+@@ -1021,14 +1003,8 @@ static void hot_add_req(struct work_struct *dummy)
+ 		 * that need to be hot-added while ensuring the alignment
+ 		 * and size requirements of Linux as it relates to hot-add.
+ 		 */
+-		region_size = (pfn_cnt / HA_CHUNK) * HA_CHUNK;
+-		if (pfn_cnt % HA_CHUNK)
+-			region_size += HA_CHUNK;
+-
+-		region_start = (pg_start / HA_CHUNK) * HA_CHUNK;
+-
+-		rg_start = region_start;
+-		rg_sz = region_size;
++		rg_start = ALIGN_DOWN(pg_start, HA_CHUNK);
++		rg_sz = ALIGN(pfn_cnt, HA_CHUNK);
+ 	}
+ 
+ 	if (do_hot_add)
+-- 
+2.25.1
+
 
