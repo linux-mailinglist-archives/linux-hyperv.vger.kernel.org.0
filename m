@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-2070-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2071-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52EDD8BAD94
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 15:20:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA518BAD9B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 15:21:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D439C1F22BF4
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 13:20:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1C1AB20A83
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 May 2024 13:21:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C791C15533E;
-	Fri,  3 May 2024 13:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66078154C0B;
+	Fri,  3 May 2024 13:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="HFWITQU/"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="YqIvlgiE"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+Received: from smtp-bc0c.mail.infomaniak.ch (smtp-bc0c.mail.infomaniak.ch [45.157.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C221153BFE;
-	Fri,  3 May 2024 13:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71962153BF3;
+	Fri,  3 May 2024 13:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714742367; cv=none; b=GQ9OHg/xEOhOpwbuzGZAhyfV7QD0JzREqSGAvwHovYdc/O5G/RyrKZuE6jM1GjNi6+/KYU1EgS2xPGQlR3kZXFHNC2+281PaDpzmFsFz81UzwAWwDnuExPM+97VVnEdIdg4IacuIDtd3swWz8qHRHj2djrV0OMTQSEDY6VgpjeU=
+	t=1714742369; cv=none; b=nolxMgT5xQ5kgFuUNSlKQjoQJnrNnPCkNnhlwJcTgVQnORkYZ5Iw2eTWYq5bvQSZg888dEvELfXrrHaomuG8ALEibF3XQ9dVoSwkMX3nRDr6i3jWwYsQt+TdF+OPGM+9/W/8J94NCDKUv+L6hK5Sg6GfDjLhlc8b8SH4KS8Couc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714742367; c=relaxed/simple;
-	bh=UoeYf5nSk52yPkAQOPZ4IYRYsP6lzs+qv6PV8R5PQV8=;
+	s=arc-20240116; t=1714742369; c=relaxed/simple;
+	bh=5C2oJwkaABGy0N3TgDchTsaJRP0NaN1sG1zefdnqG5Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kyjS1gT/9CP/7apbXSeDNSp4tkp6j5aGfbWb0nEab0TLphQpvxPlHyvhRqYQ1kHT/1aD4XRtPosm12MYufKbg9eA+wotzTdfgPQDhZWp+12t/hPm2kOAHSgydhfIgofNn9JNwmbcqPmp93UgI/ny7Uw9f3spu4SsjzlG1d6TwTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=HFWITQU/; arc=none smtp.client-ip=45.157.188.10
+	 MIME-Version:Content-Type; b=kKKYg5b/rOT/ahthxXtn6tarm6pqIAmS9JdoizqU9XJvIheAukgSx4kKspUcn8V26cEC9AjK3SgwTJTWOKgn2mfA+/NUhoFUKZbPpNFv/J77aJng5VIfwfDNf0aiH+Z6/bFR/mQN9tiBgn64fA+exVUkH+hwfT6msAR8oPgE6Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=YqIvlgiE; arc=none smtp.client-ip=45.157.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VWBGg1gbwzQgV;
-	Fri,  3 May 2024 15:19:23 +0200 (CEST)
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VWBGh4fbkzS3b;
+	Fri,  3 May 2024 15:19:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1714742363;
-	bh=UoeYf5nSk52yPkAQOPZ4IYRYsP6lzs+qv6PV8R5PQV8=;
+	s=20191114; t=1714742364;
+	bh=5C2oJwkaABGy0N3TgDchTsaJRP0NaN1sG1zefdnqG5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HFWITQU/9X3b9ffsqT8cXmFLNi73I0373rD/PFtktQpoOH+2zmgwV5Yfw+E/F3R8K
-	 ZQMa5hgDHaXOz1twAAsinnIZ+pVrQ6lX74KgknaVZVKex/5MbuFdKHrG4JhjfAKeSk
-	 26YP9U0qWz7UdHB+iwnqs+toDdVpb4+HaghZoTfY=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VWBGf1DjgzGSs;
-	Fri,  3 May 2024 15:19:22 +0200 (CEST)
+	b=YqIvlgiE19ek2V9SMYQfmDo9Wa87WmiGMnbGB2jn2HxiItp8TNw5d9eeeBTU8LpK3
+	 AZT0MKxeoxXmSYrZ0EETcC/IslnkqX1RyIwnBoKBpYfJ00vOsRqigZFHpCXr5dOfgY
+	 YVXF5SDClUmkftFfBhN3Uo9dR3fSNJeaCw/yx6WM=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VWBGg5Ql1zZFN;
+	Fri,  3 May 2024 15:19:23 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
@@ -84,9 +84,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	virtualization@lists.linux-foundation.org,
 	x86@kernel.org,
 	xen-devel@lists.xenproject.org
-Subject: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy configuration and violation
-Date: Fri,  3 May 2024 15:19:08 +0200
-Message-ID: <20240503131910.307630-4-mic@digikod.net>
+Subject: [RFC PATCH v3 4/5] heki: Lock guest control registers at the end of guest kernel init
+Date: Fri,  3 May 2024 15:19:09 +0200
+Message-ID: <20240503131910.307630-5-mic@digikod.net>
 In-Reply-To: <20240503131910.307630-1-mic@digikod.net>
 References: <20240503131910.307630-1-mic@digikod.net>
 Precedence: bulk
@@ -99,361 +99,316 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add an interface for user space to be notified about guests' Heki policy
-and related violations.
+The hypervisor needs to provide some functions to support Heki. These
+form the Heki-Hypervisor API.
 
-Extend the KVM_ENABLE_CAP IOCTL with KVM_CAP_HEKI_CONFIGURE and
-KVM_CAP_HEKI_DENIAL. Each one takes a bitmask as first argument that can
-contains KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4. The
-returned value is the bitmask of known Heki exit reasons, for now:
-KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4.
+Define a heki_hypervisor structure to house the API functions. A
+hypervisor that supports Heki must instantiate a heki_hypervisor
+structure and pass it to the Heki common code. This allows the common
+code to access these functions in a hypervisor-agnostic way.
 
-If KVM_CAP_HEKI_CONFIGURE is set, a VM exit will be triggered for each
-KVM_HC_LOCK_CR_UPDATE hypercalls according to the requested control
-register. This enables to enlighten the VMM with the guest
-auto-restrictions.
+The first function that is implemented is lock_crs() (lock control
+registers). That is, certain flags in the control registers are pinned
+so that they can never be changed for the lifetime of the guest.
 
-If KVM_CAP_HEKI_DENIAL is set, a VM exit will be triggered for each
-pinned CR violation. This enables the VMM to react to a policy
-violation.
+Implement Heki support in the guest:
+
+- Each supported hypervisor in x86 implements a set of functions for the
+  guest kernel. Add an init_heki() function to that set.  This function
+  initializes Heki-related stuff. Call init_heki() for the detected
+  hypervisor in init_hypervisor_platform().
+
+- Implement init_heki() for the guest.
+
+- Implement kvm_lock_crs() in the guest to lock down control registers.
+  This function calls a KVM hypercall to do the job.
+
+- Instantiate a heki_hypervisor structure that contains a pointer to
+  kvm_lock_crs().
+
+- Pass the heki_hypervisor structure to Heki common code in init_heki().
+
+Implement a heki_late_init() function and call it at the end of kernel
+init. This function calls lock_crs(). In other words, control registers
+of a guest are locked down at the end of guest kernel init.
 
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Kees Cook <keescook@chromium.org>
-Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Sean Christopherson <seanjc@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc: Wanpeng Li <wanpengli@tencent.com>
+Co-developed-by: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+Signed-off-by: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240503131910.307630-4-mic@digikod.net
+Link: https://lore.kernel.org/r/20240503131910.307630-5-mic@digikod.net
 ---
+
+Changes since v2:
+* Hide CONFIG_HYPERVISOR_SUPPORTS_HEKI from users.
 
 Changes since v1:
-* New patch. Making user space aware of Heki properties was requested by
-  Sean Christopherson.
+* Shrinked the patch to only manage the CR pinning.
 ---
- arch/x86/kvm/vmx/vmx.c   |   5 +-
- arch/x86/kvm/x86.c       | 114 +++++++++++++++++++++++++++++++++++----
- arch/x86/kvm/x86.h       |   7 +--
- include/linux/kvm_host.h |   2 +
- include/uapi/linux/kvm.h |  22 ++++++++
- 5 files changed, 136 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/x86_init.h  |  1 +
+ arch/x86/kernel/cpu/hypervisor.c |  1 +
+ arch/x86/kernel/kvm.c            | 56 ++++++++++++++++++++++++++++++++
+ arch/x86/kvm/Kconfig             |  1 +
+ include/linux/heki.h             | 22 +++++++++++++
+ init/main.c                      |  1 +
+ virt/heki/Kconfig                |  8 ++++-
+ virt/heki/main.c                 | 25 ++++++++++++++
+ 8 files changed, 114 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 7ba970b525f7..5869a1ed7866 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5445,6 +5445,7 @@ static int handle_cr(struct kvm_vcpu *vcpu)
- 	int reg;
- 	int err;
- 	int ret;
-+	bool exit = false;
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 6149eabe200f..113998799473 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -128,6 +128,7 @@ struct x86_hyper_init {
+ 	bool (*msi_ext_dest_id)(void);
+ 	void (*init_mem_mapping)(void);
+ 	void (*init_after_bootmem)(void);
++	void (*init_heki)(void);
+ };
  
- 	exit_qualification = vmx_get_exit_qual(vcpu);
- 	cr = exit_qualification & 15;
-@@ -5454,8 +5455,8 @@ static int handle_cr(struct kvm_vcpu *vcpu)
- 		val = kvm_register_read(vcpu, reg);
- 		trace_kvm_cr_write(cr, val);
+ /**
+diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
+index 553bfbfc3a1b..6085c8129e0c 100644
+--- a/arch/x86/kernel/cpu/hypervisor.c
++++ b/arch/x86/kernel/cpu/hypervisor.c
+@@ -106,4 +106,5 @@ void __init init_hypervisor_platform(void)
  
--		ret = heki_check_cr(vcpu, cr, val);
--		if (ret)
-+		ret = heki_check_cr(vcpu, cr, val, &exit);
-+		if (exit)
- 			return ret;
+ 	x86_hyper_type = h->type;
+ 	x86_init.hyper.init_platform();
++	x86_init.hyper.init_heki();
+ }
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 7f0732bc0ccd..a54f2c0d7cd0 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -29,6 +29,7 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/cc_platform.h>
+ #include <linux/efi.h>
++#include <linux/heki.h>
+ #include <asm/timer.h>
+ #include <asm/cpu.h>
+ #include <asm/traps.h>
+@@ -999,6 +1000,60 @@ static bool kvm_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
+ }
+ #endif
  
- 		switch (cr) {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a5f47be59abc..865e88f2b0fc 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -119,6 +119,10 @@ static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
- 
- #define KVM_CAP_PMU_VALID_MASK KVM_PMU_CAP_DISABLE
- 
-+#define KVM_HEKI_EXIT_REASON_VALID_MASK ( \
-+	KVM_HEKI_EXIT_REASON_CR0 | \
-+	KVM_HEKI_EXIT_REASON_CR4)
-+
- #define KVM_X2APIC_API_VALID_FLAGS (KVM_X2APIC_API_USE_32BIT_IDS | \
-                                     KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK)
- 
-@@ -4836,6 +4840,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
- 			r |= BIT(KVM_X86_SW_PROTECTED_VM);
- 		break;
-+	case KVM_CAP_HEKI_CONFIGURE:
-+	case KVM_CAP_HEKI_DENIAL:
-+		r = KVM_HEKI_EXIT_REASON_VALID_MASK;
-+		break;
- 	default:
- 		break;
- 	}
-@@ -6729,6 +6737,22 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		}
- 		mutex_unlock(&kvm->lock);
- 		break;
 +#ifdef CONFIG_HEKI
-+	case KVM_CAP_HEKI_CONFIGURE:
-+		r = -EINVAL;
-+		if (cap->args[0] & ~KVM_HEKI_EXIT_REASON_VALID_MASK)
-+			break;
-+		kvm->heki_configure_exit_reason = cap->args[0];
-+		r = 0;
-+		break;
-+	case KVM_CAP_HEKI_DENIAL:
-+		r = -EINVAL;
-+		if (cap->args[0] & ~KVM_HEKI_EXIT_REASON_VALID_MASK)
-+			break;
-+		kvm->heki_denial_exit_reason = cap->args[0];
-+		r = 0;
-+		break;
-+#endif
- 	default:
- 		r = -EINVAL;
- 		break;
-@@ -8283,11 +8307,60 @@ static unsigned long emulator_get_cr(struct x86_emulate_ctxt *ctxt, int cr)
- 
- #ifdef CONFIG_HEKI
- 
-+static int complete_heki_configure_exit(struct kvm_vcpu *const vcpu)
++
++extern unsigned long cr4_pinned_mask;
++
++/*
++ * TODO: Check SMP policy consistency, e.g. with
++ * this_cpu_read(cpu_tlbstate.cr4)
++ */
++static int kvm_lock_crs(void)
 +{
-+	kvm_rax_write(vcpu, 0);
-+	++vcpu->stat.hypercalls;
-+	return kvm_skip_emulated_instruction(vcpu);
++	unsigned long cr4;
++	int err;
++
++	err = kvm_hypercall3(KVM_HC_LOCK_CR_UPDATE, 0, X86_CR0_WP, 0);
++	if (err)
++		return err;
++
++	cr4 = __read_cr4();
++	err = kvm_hypercall3(KVM_HC_LOCK_CR_UPDATE, 4, cr4 & cr4_pinned_mask,
++			     0);
++	return err;
 +}
 +
-+static int complete_heki_denial_exit(struct kvm_vcpu *const vcpu)
++static struct heki_hypervisor kvm_heki_hypervisor = {
++	.lock_crs = kvm_lock_crs,
++};
++
++static void kvm_init_heki(void)
 +{
-+	kvm_inject_gp(vcpu, 0);
-+	return 1;
-+}
++	long err;
 +
-+/* Returns true if the @exit_reason is handled by @vcpu->kvm. */
-+static bool heki_exit_cr(struct kvm_vcpu *const vcpu, const __u32 exit_reason,
-+			 const u64 heki_reason, unsigned long value)
-+{
-+	switch (exit_reason) {
-+	case KVM_EXIT_HEKI_CONFIGURE:
-+		if (!(vcpu->kvm->heki_configure_exit_reason & heki_reason))
-+			return false;
-+
-+		vcpu->run->heki_configure.reason = heki_reason;
-+		memset(vcpu->run->heki_configure.reserved, 0,
-+		       sizeof(vcpu->run->heki_configure.reserved));
-+		vcpu->run->heki_configure.cr_pinned = value;
-+		vcpu->arch.complete_userspace_io = complete_heki_configure_exit;
-+		break;
-+	case KVM_EXIT_HEKI_DENIAL:
-+		if (!(vcpu->kvm->heki_denial_exit_reason & heki_reason))
-+			return false;
-+
-+		vcpu->run->heki_denial.reason = heki_reason;
-+		memset(vcpu->run->heki_denial.reserved, 0,
-+		       sizeof(vcpu->run->heki_denial.reserved));
-+		vcpu->run->heki_denial.cr_value = value;
-+		vcpu->arch.complete_userspace_io = complete_heki_denial_exit;
-+		break;
-+	default:
-+		WARN_ON_ONCE(1);
-+		return false;
++	if (!kvm_para_available()) {
++		/* Cannot make KVM hypercalls. */
++		return;
 +	}
 +
-+	vcpu->run->exit_reason = exit_reason;
-+	return true;
++	err = kvm_hypercall3(KVM_HC_LOCK_CR_UPDATE, 0, 0,
++			     KVM_LOCK_CR_UPDATE_VERSION);
++	if (err < 1) {
++		/* Ignores host not supporting at least the first version. */
++		return;
++	}
++
++	heki.hypervisor = &kvm_heki_hypervisor;
 +}
 +
- #define HEKI_ABI_VERSION 1
- 
- static int heki_lock_cr(struct kvm_vcpu *const vcpu, const unsigned long cr,
--			unsigned long pin, unsigned long flags)
-+			unsigned long pin, unsigned long flags, bool *exit)
- {
-+	*exit = false;
++#else /* CONFIG_HEKI */
 +
- 	if (flags) {
- 		if ((flags == KVM_LOCK_CR_UPDATE_VERSION) && !cr && !pin)
- 			return HEKI_ABI_VERSION;
-@@ -8307,6 +8380,8 @@ static int heki_lock_cr(struct kvm_vcpu *const vcpu, const unsigned long cr,
- 			return -KVM_EINVAL;
++static void kvm_init_heki(void)
++{
++}
++
++#endif /* CONFIG_HEKI */
++
+ const __initconst struct hypervisor_x86 x86_hyper_kvm = {
+ 	.name				= "KVM",
+ 	.detect				= kvm_detect,
+@@ -1007,6 +1062,7 @@ const __initconst struct hypervisor_x86 x86_hyper_kvm = {
+ 	.init.x2apic_available		= kvm_para_available,
+ 	.init.msi_ext_dest_id		= kvm_msi_ext_dest_id,
+ 	.init.init_platform		= kvm_init_platform,
++	.init.init_heki			= kvm_init_heki,
+ #if defined(CONFIG_AMD_MEM_ENCRYPT)
+ 	.runtime.sev_es_hcall_prepare	= kvm_sev_es_hcall_prepare,
+ 	.runtime.sev_es_hcall_finish	= kvm_sev_es_hcall_finish,
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 0ebdd088f28b..68e0e8d7230a 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -44,6 +44,7 @@ config KVM
+ 	select KVM_VFIO
+ 	select HAVE_KVM_PM_NOTIFIER if PM
+ 	select KVM_GENERIC_HARDWARE_ENABLING
++	select HYPERVISOR_SUPPORTS_HEKI
+ 	help
+ 	  Support hosting fully virtualized guest machines using hardware
+ 	  virtualization extensions.  You will need a fairly recent
+diff --git a/include/linux/heki.h b/include/linux/heki.h
+index 4c18d2283392..96ccb17657e5 100644
+--- a/include/linux/heki.h
++++ b/include/linux/heki.h
+@@ -9,6 +9,7 @@
+ #define __HEKI_H__
  
- 		atomic_long_or(pin, &vcpu->kvm->heki_pinned_cr0);
-+		*exit = heki_exit_cr(vcpu, KVM_EXIT_HEKI_CONFIGURE,
-+				     KVM_HEKI_EXIT_REASON_CR0, pin);
- 		return 0;
- 	case 4:
- 		/* Checks for irrelevant bits. */
-@@ -8316,24 +8391,37 @@ static int heki_lock_cr(struct kvm_vcpu *const vcpu, const unsigned long cr,
- 		/* Ignores bits not present in host. */
- 		pin &= __read_cr4();
- 		atomic_long_or(pin, &vcpu->kvm->heki_pinned_cr4);
-+		*exit = heki_exit_cr(vcpu, KVM_EXIT_HEKI_CONFIGURE,
-+				     KVM_HEKI_EXIT_REASON_CR4, pin);
- 		return 0;
- 	}
- 	return -KVM_EINVAL;
- }
+ #include <linux/types.h>
++#include <linux/bug.h>
+ #include <linux/cache.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -16,15 +17,36 @@
+ 
+ #ifdef CONFIG_HEKI
  
 +/*
-+ * Sets @exit to true if the caller must exit (i.e. denied access) with the
-+ * returned value:
-+ * - 0 when kvm_run is configured;
-+ * - 1 when there is no user space handler.
++ * A hypervisor that supports Heki will instantiate this structure to
++ * provide hypervisor specific functions for Heki.
 + */
- int heki_check_cr(struct kvm_vcpu *const vcpu, const unsigned long cr,
--		  const unsigned long val)
-+		  const unsigned long val, bool *exit)
- {
- 	unsigned long pinned;
- 
-+	*exit = false;
++struct heki_hypervisor {
++	int (*lock_crs)(void); /* Lock control registers. */
++};
 +
- 	switch (cr) {
- 	case 0:
- 		pinned = atomic_long_read(&vcpu->kvm->heki_pinned_cr0);
- 		if ((val & pinned) != pinned) {
- 			pr_warn_ratelimited(
- 				"heki: Blocked CR0 update: 0x%lx\n", val);
--			kvm_inject_gp(vcpu, 0);
--			return 1;
-+			*exit = true;
-+			if (heki_exit_cr(vcpu, KVM_EXIT_HEKI_DENIAL,
-+					 KVM_HEKI_EXIT_REASON_CR0, val))
-+				return 0;
-+			return complete_heki_denial_exit(vcpu);
- 		}
- 		return 0;
- 	case 4:
-@@ -8341,8 +8429,11 @@ int heki_check_cr(struct kvm_vcpu *const vcpu, const unsigned long cr,
- 		if ((val & pinned) != pinned) {
- 			pr_warn_ratelimited(
- 				"heki: Blocked CR4 update: 0x%lx\n", val);
--			kvm_inject_gp(vcpu, 0);
--			return 1;
-+			*exit = true;
-+			if (heki_exit_cr(vcpu, KVM_EXIT_HEKI_DENIAL,
-+					 KVM_HEKI_EXIT_REASON_CR4, val))
-+				return 0;
-+			return complete_heki_denial_exit(vcpu);
- 		}
- 		return 0;
++/*
++ * If the active hypervisor supports Heki, it will plug its heki_hypervisor
++ * pointer into this heki structure.
++ */
++struct heki {
++	struct heki_hypervisor *hypervisor;
++};
++
++extern struct heki heki;
+ extern bool heki_enabled;
+ 
+ void heki_early_init(void);
++void heki_late_init(void);
+ 
+ #else /* !CONFIG_HEKI */
+ 
+ static inline void heki_early_init(void)
+ {
+ }
++static inline void heki_late_init(void)
++{
++}
+ 
+ #endif /* CONFIG_HEKI */
+ 
+diff --git a/init/main.c b/init/main.c
+index bec2c8d939aa..c2dc663ab4b5 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1454,6 +1454,7 @@ static int __ref kernel_init(void *unused)
+ 	exit_boot_config();
+ 	free_initmem();
+ 	mark_readonly();
++	heki_late_init();
+ 
+ 	/*
+ 	 * Kernel mappings are now finalized - update the userspace page-table
+diff --git a/virt/heki/Kconfig b/virt/heki/Kconfig
+index 66e73d212856..0c764e342f48 100644
+--- a/virt/heki/Kconfig
++++ b/virt/heki/Kconfig
+@@ -8,6 +8,12 @@ config ARCH_SUPPORTS_HEKI
+ 	# and run with CONFIG_HEKI. That is, it should provide all of the
+ 	# architecture support required for the HEKI feature.
+ 
++config HYPERVISOR_SUPPORTS_HEKI
++	bool
++	# A hypervisor should select this when it can successfully build
++	# and run with CONFIG_HEKI. That is, it should provide all of the
++	# hypervisor support required for the Heki feature.
++
+ menuconfig HEKI_MENU
+ 	bool "Virtualization hardening"
+ 
+@@ -15,7 +21,7 @@ if HEKI_MENU
+ 
+ config HEKI
+ 	bool "Hypervisor Enforced Kernel Integrity (Heki)"
+-	depends on ARCH_SUPPORTS_HEKI
++	depends on ARCH_SUPPORTS_HEKI && HYPERVISOR_SUPPORTS_HEKI
+ 	help
+ 	  This feature enhances guest virtual machine security by taking
+ 	  advantage of security features provided by the hypervisor for guests.
+diff --git a/virt/heki/main.c b/virt/heki/main.c
+index 25c25f5700f7..ef0530a03e09 100644
+--- a/virt/heki/main.c
++++ b/virt/heki/main.c
+@@ -11,6 +11,7 @@
+ #include "common.h"
+ 
+ bool heki_enabled __ro_after_init = true;
++struct heki heki;
+ 
+ /*
+  * Must be called after kmem_cache_init().
+@@ -22,6 +23,30 @@ __init void heki_early_init(void)
+ 		return;
  	}
-@@ -8356,9 +8447,10 @@ static int emulator_set_cr(struct x86_emulate_ctxt *ctxt, int cr, ulong val)
- {
- 	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
- 	int res = 0;
-+	bool exit = false;
- 
--	res = heki_check_cr(vcpu, cr, val);
--	if (res)
-+	res = heki_check_cr(vcpu, cr, val, &exit);
-+	if (exit)
- 		return res;
- 
- 	switch (cr) {
-@@ -10222,7 +10314,11 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
- 		if (a0 > U32_MAX) {
- 			ret = -KVM_EINVAL;
- 		} else {
--			ret = heki_lock_cr(vcpu, a0, a1, a2);
-+			bool exit = false;
+ 	pr_warn("Heki is enabled\n");
 +
-+			ret = heki_lock_cr(vcpu, a0, a1, a2, &exit);
-+			if (exit)
-+				return ret;
- 		}
- 		break;
- #endif /* CONFIG_HEKI */
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index ade7d68ddaff..2740b74ab583 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -292,18 +292,19 @@ static inline bool kvm_check_has_quirk(struct kvm *kvm, u64 quirk)
- 
- #ifdef CONFIG_HEKI
- 
--int heki_check_cr(struct kvm_vcpu *vcpu, unsigned long cr, unsigned long val);
-+int heki_check_cr(struct kvm_vcpu *vcpu, unsigned long cr, unsigned long val,
-+		  bool *exit);
- 
- #else /* CONFIG_HEKI */
- 
- static inline int heki_check_cr(struct kvm_vcpu *vcpu, unsigned long cr,
--				unsigned long val)
-+				unsigned long val, bool *exit)
- {
- 	return 0;
++	if (!heki.hypervisor) {
++		/* This happens for kernels running on bare metal as well. */
++		pr_warn("No support for Heki in the active hypervisor\n");
++		return;
++	}
++	pr_warn("Heki is supported by the active Hypervisor\n");
++}
++
++/*
++ * Must be called after mark_readonly().
++ */
++void heki_late_init(void)
++{
++	struct heki_hypervisor *hypervisor = heki.hypervisor;
++
++	if (!heki_enabled || !heki.hypervisor)
++		return;
++
++	/* Locks control registers so a compromised guest cannot change them. */
++	if (WARN_ON(hypervisor->lock_crs()))
++		return;
++
++	pr_warn("Control registers locked\n");
  }
  
- static inline int heki_lock_cr(struct kvm_vcpu *const vcpu, unsigned long cr,
--			       unsigned long pin)
-+			       unsigned long pin, bool *exit)
- {
- 	return 0;
- }
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 6ff13937929a..cf8e271d47aa 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -839,6 +839,8 @@ struct kvm {
- #ifdef CONFIG_HEKI
- 	atomic_long_t heki_pinned_cr0;
- 	atomic_long_t heki_pinned_cr4;
-+	u64 heki_configure_exit_reason;
-+	u64 heki_denial_exit_reason;
- #endif /* CONFIG_HEKI */
- 
- #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 2190adbe3002..1051c2f817ba 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -178,6 +178,8 @@ struct kvm_xen_exit {
- #define KVM_EXIT_NOTIFY           37
- #define KVM_EXIT_LOONGARCH_IOCSR  38
- #define KVM_EXIT_MEMORY_FAULT     39
-+#define KVM_EXIT_HEKI_CONFIGURE   40
-+#define KVM_EXIT_HEKI_DENIAL      41
- 
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -433,6 +435,24 @@ struct kvm_run {
- 			__u64 gpa;
- 			__u64 size;
- 		} memory_fault;
-+		/* KVM_EXIT_HEKI_CONFIGURE */
-+		struct {
-+#define KVM_HEKI_EXIT_REASON_CR0	(1ULL << 0)
-+#define KVM_HEKI_EXIT_REASON_CR4	(1ULL << 1)
-+			__u64 reason;
-+			union {
-+				__u64 cr_pinned;
-+				__u64 reserved[7]; /* ignored */
-+			};
-+		} heki_configure;
-+		/* KVM_EXIT_HEKI_DENIAL */
-+		struct {
-+			__u64 reason;
-+			union {
-+				__u64 cr_value;
-+				__u64 reserved[7]; /* ignored */
-+			};
-+		} heki_denial;
- 		/* Fix the size of the union. */
- 		char padding[256];
- 	};
-@@ -917,6 +937,8 @@ struct kvm_enable_cap {
- #define KVM_CAP_MEMORY_ATTRIBUTES 233
- #define KVM_CAP_GUEST_MEMFD 234
- #define KVM_CAP_VM_TYPES 235
-+#define KVM_CAP_HEKI_CONFIGURE 236
-+#define KVM_CAP_HEKI_DENIAL 237
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
+ static int __init heki_parse_config(char *str)
 -- 
 2.45.0
 
