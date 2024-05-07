@@ -1,268 +1,269 @@
-Return-Path: <linux-hyperv+bounces-2084-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2085-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F4A98BE354
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 May 2024 15:17:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A86FA8BE87F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 May 2024 18:16:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFBD71F22214
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 May 2024 13:17:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E993284680
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 May 2024 16:16:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC1A715E218;
-	Tue,  7 May 2024 13:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE13168AE8;
+	Tue,  7 May 2024 16:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7HyKSyF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uMeGXue2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE0015DBC0;
-	Tue,  7 May 2024 13:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A2816ABC4
+	for <linux-hyperv@vger.kernel.org>; Tue,  7 May 2024 16:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087792; cv=none; b=IN8fULgJe0Ty+l54oAErCtwUqa0SfPIeuJGrPeQ69DOyeugR4weOdAPKqSV4fmLIJOKOuho+KR05gHvszxGwAZ00Hv9Mg9P+kaPR2+zStUmvSfvNyfOnww6YfM17l/pydOhgAEQKvtXVbTW42jO2tMtDQdHOOjUzrYvXuEjULf8=
+	t=1715098570; cv=none; b=qt1d+acNdcNbic9b7IM2tuQI565pNJOrCyLDqiG5RDCdhEzx6FmyOA9wg+uLwZrEaKg9B1bOgLZvvFB/jTvZjZkWOvGGCbmluZAdQVlMinEGKTCa+KaZ/XlnT4UgeQPRFX82xoDiJZmnP1PK6RlW0a6TFYEWUWh2Y9+tr+xEdlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715087792; c=relaxed/simple;
-	bh=0uKvsasIj33/Tyfsa9oOCGaF+gpRdd5U8GQpflVQ0s0=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mGj9Hgg6sKn9kxzr5qnAJ+9xCdvmNotdke/TKwBwBv1enB8xnXKMGxslIuvOduuimSfIiyWCsXS6ygSUbPevTXgH9XTAjyZwGWlfQS07T2oGK0ehq+B7ypI+iY8tq8wwMupcal1I2eCVWmgPOvoBNVBL1o81E/xV7kNEQyrkTEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7HyKSyF; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4551f2725so3003428b3a.1;
-        Tue, 07 May 2024 06:16:30 -0700 (PDT)
+	s=arc-20240116; t=1715098570; c=relaxed/simple;
+	bh=n4oL9QdCVInqGhf/IejBHhOJycGpmskHhXQcPvV0+5w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lK7yvi5kPSvrZUUq8UDGGX7XKALDLx10+Re5sc7zNVdBzuZp3VWlibN9xlX3aqY1RLy6QvovRqjgeJil5cDPatPZT+4a4bQuWBiiU+xzPjvUF+XZf3CkmKTjVuq3sg1kBk+APJe8Voc1sziPOFjaLy9UMwaO8LbmA9PKchVL8j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uMeGXue2; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de61a10141fso4638255276.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 07 May 2024 09:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715087790; x=1715692590; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6Qb9gUXAb6B0uEKdTy5ff19pWlQ4SHfnnvxveJ1/rLE=;
-        b=C7HyKSyFS+uM5ukYnlpGIAKqw1R3n5+vS2UIdLZML+vv5Oa3qzYX0WfsfPaD83lG/V
-         3rQMXpTJZMHeCpHDzoWMW+1KvNTXshrV4i0GJcTwVKK67mafmFMLp3VZeyYl6lPO8v4U
-         91WGvo95i9/sGtRks3wlnIPR3E7iMmDomkStg+UHMjdM08rnjeHHUkHz/F72Q7w9vonP
-         exPu277jh7xQI2tyjhA2zGNVhc2jEqy1MxkBUhA5qDEVgZ7gKom3GB760aySpF0fNSz2
-         Z1N/YIHt30d91JuWqRb2eN8YGtoJCEM64epjAAFV4kv+MUBtESfoiMbW7tSYloSbkFNs
-         4Fvg==
+        d=google.com; s=20230601; t=1715098568; x=1715703368; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IWxS0mCdKrqU6bVOz4n3NTmQy0CRO7Urzkw5a/fWZlQ=;
+        b=uMeGXue2xAiO8uSusy505x4973sRuVnPct94e5Cm2OQalOkV7vjyNrPO67Zr/vC7wP
+         YpAyg4pYPeVIBfb++egKABY8H7nYzv47k9KyfxJf8SkimcuHBDCvgo2iciZr8k6yDQ3H
+         +sKHpl9zwTVagTolmTyDNn0QDXKvkrI6sH0AIyyN9r1kMI2Sm0AiY630D1Dwuo3Nvlyv
+         eskfWdD3kraqjff94Bi5xRxWpwSQpf499jXnWgRxk9897sxPdyz5hz057kUh6sRrP//3
+         auAcQscoQb2UY63/ImrOfBvfYOSoNzdQRAeSPhuFJUkFZ4VV3m5OwkDiiOMMo/STzzRb
+         94sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715087790; x=1715692590;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6Qb9gUXAb6B0uEKdTy5ff19pWlQ4SHfnnvxveJ1/rLE=;
-        b=gTezF8XE9CYPOluwxBIPaO9YNY4kzuJdesCFA3GtM9q+uzVOFNDQR/qwKpWq+ZHEgc
-         VhY+pqwXPochftHy4no7qUzkn+BHiMkGYjbGjcoSjXvbzBuKNV/5bdR+zk6jnxY94A4/
-         gg7WFns42Ggh9KQbxus1Ir45TRip0iQOjS5IUK9i9osZVb1kZkHmlzuZsfnnqcXPHwB9
-         tRpuU+M1mm3pLf7Op1SwxVr00zLYtvSFXo83UzviBk3SGoMS4QFoEOgzAbsUSK3UnqFH
-         daAbDkAIWHFDzNk7yAi4Qdm/Rv8FM+cF24Lv/7R3OeBgE1lxv0KJqf5UFphnPh7jonkR
-         P2jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPn0GIKrQ5BaOVCemyb9MXslJx8u6lBRA0o/6spWAbGood5C0NGsRzJttTJIxfjQqrIctC+pGhIaerD2RzgB2cbcAAXyberRXxaJ+c4XwzBAMyB/ivO65FlJ7EzRdK5JoaVT8EzC8mGHp+DciCr/BwiOn6H0oN3bgKQV5QNFot/PrmJZFh
-X-Gm-Message-State: AOJu0YxhLE7RcE/ZcyN4VZG7pdifGtbcE70yrTVrOqnWTfsUI2IZ8ehh
-	hWb8hR/2S+noGyJDYXd0SEg7uR6SbueIJVVQkGaCJPlyeBINlh3hTNZmoA==
-X-Google-Smtp-Source: AGHT+IG2IrpnFoACtA5A61A4XB+TtRNsqtbtyLYV99OhtMdAW5NHuGMGGrCLiF2rhlRex6gnjeYUeA==
-X-Received: by 2002:a05:6a00:801:b0:6ed:21d5:fc2c with SMTP id m1-20020a056a00080100b006ed21d5fc2cmr16619970pfk.26.1715087790260;
-        Tue, 07 May 2024 06:16:30 -0700 (PDT)
-Received: from localhost.localdomain ([67.161.114.176])
-        by smtp.gmail.com with ESMTPSA id fi26-20020a056a00399a00b006f3ec69bc09sm9382237pfb.75.2024.05.07.06.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 06:16:29 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	kys@microsoft.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 2/2] Documentation: hyperv: Improve synic and interrupt handling description
-Date: Tue,  7 May 2024 06:16:07 -0700
-Message-Id: <20240507131607.367571-2-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240507131607.367571-1-mhklinux@outlook.com>
-References: <20240507131607.367571-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+        d=1e100.net; s=20230601; t=1715098568; x=1715703368;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IWxS0mCdKrqU6bVOz4n3NTmQy0CRO7Urzkw5a/fWZlQ=;
+        b=v4MXXlAQ3YED36M6MJ+6ar3ljUixorBfSxBtgOC4UIdQVw9zmSkoxo3dUlvGdFX9O3
+         Sz8llupylvVVvOytcvZOs0FzWLm5pPVDVYYpgick3Ptp+zAeoAnFtf0hvkoDuNBrnO+3
+         48gsb4brIyzqtPk/UcB6ltKDo6Rlr75KwhDcQNBWL8jL7d/IX9XOkZES+3CX0r2V2RdK
+         jh5ghgztv+lQyRG8h9CGh0z5LJYVSG/9/xfxPFA576TiezZGFSO1yrXaQ8Rz5yBmpTKw
+         DGUxi5+1AXvLhMmJ0MGEp6PE6NvFXU+xiz0nV0e9n2Q+nYKQJdz4gov/SiS6wZ8x5+LC
+         Whog==
+X-Forwarded-Encrypted: i=1; AJvYcCV1+5k4FbNK9d54yZ30U32C1AwLEFRn7cD8fEg6suOAv2x76NXdhDsiABAdWPToeNTGVBhdRbf80Tx03cGx0R2y1EzfL9uq6wiQ2LU9
+X-Gm-Message-State: AOJu0YzcdCQp8M01KsK6GEM57HKjqCt20eNfF2lm/UeHq9yMpOfvHUB3
+	5ythvXKgLPrksJDlUfnMZH1tJU75wVj35IZUNr2SnGeFpUOpz9PDeJfhy/wYWTLHF6VcxVf/F0C
+	MkQ==
+X-Google-Smtp-Source: AGHT+IEEPkTwPJaOTGouRKDc7DVHMnqTRjb0yesgQ4YUUdFhPv8WpJzXBwRvcXmUBR39ssSE6I5KsNiqYrA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:707:b0:dbe:30cd:8fcb with SMTP id
+ 3f1490d57ef6-debb9c0032emr11950276.0.1715098567940; Tue, 07 May 2024 09:16:07
+ -0700 (PDT)
+Date: Tue, 7 May 2024 09:16:06 -0700
+In-Reply-To: <20240507.ieghomae0UoC@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240503131910.307630-1-mic@digikod.net> <20240503131910.307630-4-mic@digikod.net>
+ <ZjTuqV-AxQQRWwUW@google.com> <20240506.ohwe7eewu0oB@digikod.net>
+ <ZjmFPZd5q_hEBdBz@google.com> <20240507.ieghomae0UoC@digikod.net>
+Message-ID: <ZjpTxt-Bxia3bRwB@google.com>
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+From: Sean Christopherson <seanjc@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, 
+	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
+	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
+	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
+	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
+	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
+	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
+	virtualization@lists.linux-foundation.org, x86@kernel.org, 
+	xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Tue, May 07, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> > Actually, potential bad/crazy idea.  Why does the _host_ need to define=
+ policy?
+> > Linux already knows what assets it wants to (un)protect and when.  What=
+'s missing
+> > is a way for the guest kernel to effectively deprivilege and re-authent=
+icate
+> > itself as needed.  We've been tossing around the idea of paired VMs+vCP=
+Us to
+> > support VTLs and SEV's VMPLs, what if we usurped/piggybacked those idea=
+s, with a
+> > bit of pKVM mixed in?
+> >=20
+> > Borrowing VTL terminology, where VTL0 is the least privileged, userspac=
+e launches
+> > the VM at VTL0.  At some point, the guest triggers the deprivileging se=
+quence and
+> > userspace creates VTL1.  Userpace also provides a way for VTL0 restrict=
+ access to
+> > its memory, e.g. to effectively make the page tables for the kernel's d=
+irect map
+> > writable only from VTL1, to make kernel text RO (or XO), etc.  And VTL0=
+ could then
+> > also completely remove its access to code that changes CR0/CR4.
+> >=20
+> > It would obviously require a _lot_ more upfront work, e.g. to isolate t=
+he kernel
+> > text that modifies CR0/CR4 so that it can be removed from VTL0, but tha=
+t should
+> > be doable with annotations, e.g. tag relevant functions with __magic or=
+ whatever,
+> > throw them in a dedicated section, and then free/protect the section(s)=
+ at the
+> > appropriate time.
+> >=20
+> > KVM would likely need to provide the ability to switch VTLs (or whateve=
+r they get
+> > called), and host userspace would need to provide a decent amount of th=
+e backend
+> > mechanisms and "core" policies, e.g. to manage VTL0 memory, teardown (t=
+urn off?)
+> > VTL1 on kexec(), etc.  But everything else could live in the guest kern=
+el itself.
+> > E.g. to have CR pinning play nice with kexec(), toss the relevant kexec=
+() code into
+> > VTL1.  That way VTL1 can verify the kexec() target and tear itself down=
+ before
+> > jumping into the new kernel.=20
+> >=20
+> > This is very off the cuff and have-wavy, e.g. I don't have much of an i=
+dea what
+> > it would take to harden kernel text patching, but keeping the policy in=
+ the guest
+> > seems like it'd make everything more tractable than trying to define an=
+ ABI
+> > between Linux and a VMM that is rich and flexible enough to support all=
+ the
+> > fancy things Linux does (and will do in the future).
+>=20
+> Yes, we agree that the guest needs to manage its own policy.  That's why
+> we implemented Heki for KVM this way, but without VTLs because KVM
+> doesn't support them.
+>=20
+> To sum up, is the VTL approach the only one that would be acceptable for
+> KVM? =20
 
-Current documentation does not describe how Linux handles the synthetic
-interrupt controller (synic) that Hyper-V provides to guest VMs, nor how
-VMBus or timer interrupts are handled. Add text describing the synic and
-reorganize existing text to make this more clear.
+Heh, that's not a question you want to be asking.  You're effectively askin=
+g me
+to make an authorative, "final" decision on a topic which I am only passing=
+ly
+familiar with.
 
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- Documentation/virt/hyperv/clocks.rst | 21 +++++---
- Documentation/virt/hyperv/vmbus.rst  | 79 ++++++++++++++++++----------
- 2 files changed, 66 insertions(+), 34 deletions(-)
+But since you asked it... :-)  Probably?
 
-diff --git a/Documentation/virt/hyperv/clocks.rst b/Documentation/virt/hyperv/clocks.rst
-index a56f4837d443..919bb92d6d9d 100644
---- a/Documentation/virt/hyperv/clocks.rst
-+++ b/Documentation/virt/hyperv/clocks.rst
-@@ -62,12 +62,21 @@ shared page with scale and offset values into user space.  User
- space code performs the same algorithm of reading the TSC and
- applying the scale and offset to get the constant 10 MHz clock.
- 
--Linux clockevents are based on Hyper-V synthetic timer 0. While
--Hyper-V offers 4 synthetic timers for each CPU, Linux only uses
--timer 0. Interrupts from stimer0 are recorded on the "HVS" line in
--/proc/interrupts.  Clockevents based on the virtualized PIT and
--local APIC timer also work, but the Hyper-V synthetic timer is
--preferred.
-+Linux clockevents are based on Hyper-V synthetic timer 0 (stimer0).
-+While Hyper-V offers 4 synthetic timers for each CPU, Linux only uses
-+timer 0. In older versions of Hyper-V, an interrupt from stimer0
-+results in a VMBus control message that is demultiplexed by
-+vmbus_isr() as described in the VMBus documentation. In newer versions
-+of Hyper-V, stimer0 interrupts can be mapped to an architectural
-+interrupt, which is referred to as "Direct Mode". Linux prefers
-+to use Direct Mode when available. Since x86/x64 doesn't support
-+per-CPU interrupts, Direct Mode statically allocates an x86 interrupt
-+vector (HYPERV_STIMER0_VECTOR) across all CPUs and explicitly codes it
-+to call the stimer0 interrupt handler. Hence interrupts from stimer0
-+are recorded on the "HVS" line in /proc/interrupts rather than being
-+associated with a Linux IRQ. Clockevents based on the virtualized
-+PIT and local APIC timer also work, but Hyper-V stimer0
-+is preferred.
- 
- The driver for the Hyper-V synthetic system clock and timers is
- drivers/clocksource/hyperv_timer.c.
-diff --git a/Documentation/virt/hyperv/vmbus.rst b/Documentation/virt/hyperv/vmbus.rst
-index f0d83ebda626..1dcef6a7fda3 100644
---- a/Documentation/virt/hyperv/vmbus.rst
-+++ b/Documentation/virt/hyperv/vmbus.rst
-@@ -102,10 +102,10 @@ resources.  For Windows Server 2019 and later, this limit is
- approximately 1280 Mbytes.  For versions prior to Windows Server
- 2019, the limit is approximately 384 Mbytes.
- 
--VMBus messages
----------------
--All VMBus messages have a standard header that includes the message
--length, the offset of the message payload, some flags, and a
-+VMBus channel messages
-+----------------------
-+All messages sent in a VMBus channel have a standard header that includes
-+the message length, the offset of the message payload, some flags, and a
- transactionID.  The portion of the message after the header is
- unique to each VSP/VSC pair.
- 
-@@ -137,7 +137,7 @@ control message contains a list of GPAs that describe the data
- buffer.  For example, the storvsc driver uses this approach to
- specify the data buffers to/from which disk I/O is done.
- 
--Three functions exist to send VMBus messages:
-+Three functions exist to send VMBus channel messages:
- 
- 1. vmbus_sendpacket():  Control-only messages and messages with
-    embedded data -- no GPAs
-@@ -165,6 +165,37 @@ performed in this temporary buffer without the risk of Hyper-V
- maliciously modifying the message after it is validated but before
- it is used.
- 
-+Synthetic Interrupt Controller (synic)
-+--------------------------------------
-+Hyper-V provides each guest CPU with a synthetic interrupt controller
-+that is used by VMBus for host-guest communication. While each synic
-+defines 16 synthetic interrupts (SINT), Linux uses only one of the 16
-+(VMBUS_MESSAGE_SINT). All interrupts related to communication between
-+the Hyper-V host and a guest CPU use that SINT.
-+
-+The SINT is mapped to a single per-CPU architectural interrupt (i.e,
-+an 8-bit x86/x64 interrupt vector, or an arm64 PPI INTID). Because
-+each CPU in the guest has a synic and may receive VMBus interrupts,
-+they are best modeled in Linux as per-CPU interrupts. This model works
-+well on arm64 where a single per-CPU Linux IRQ is allocated for
-+VMBUS_MESSAGE_SINT. This IRQ appears in /proc/interrupts as an IRQ labelled
-+"Hyper-V VMbus". Since x86/x64 lacks support for per-CPU IRQs, an x86
-+interrupt vector is statically allocated (HYPERVISOR_CALLBACK_VECTOR)
-+across all CPUs and explicitly coded to call vmbus_isr(). In this case,
-+there's no Linux IRQ, and the interrupts are visible in aggregate in
-+/proc/interrupts on the "HYP" line.
-+
-+The synic provides the means to demultiplex the architectural interrupt into
-+one or more logical interrupts and route the logical interrupt to the proper
-+VMBus handler in Linux. This demultiplexing is done by vmbus_isr() and
-+related functions that access synic data structures.
-+
-+The synic is not modeled in Linux as an irq chip or irq domain,
-+and the demultiplexed logical interrupts are not Linux IRQs. As such,
-+they don't appear in /proc/interrupts or /proc/irq. The CPU
-+affinity for one of these logical interrupts is controlled via an
-+entry under /sys/bus/vmbus as described below.
-+
- VMBus interrupts
- ----------------
- VMBus provides a mechanism for the guest to interrupt the host when
-@@ -176,16 +207,18 @@ unnecessary.  If a guest sends an excessive number of unnecessary
- interrupts, the host may throttle that guest by suspending its
- execution for a few seconds to prevent a denial-of-service attack.
- 
--Similarly, the host will interrupt the guest when it sends a new
--message on the VMBus control path, or when a VMBus channel "in" ring
--buffer transitions from empty to non-empty.  Each CPU in the guest
--may receive VMBus interrupts, so they are best modeled as per-CPU
--interrupts in Linux.  This model works well on arm64 where a single
--per-CPU IRQ is allocated for VMBus.  Since x86/x64 lacks support for
--per-CPU IRQs, an x86 interrupt vector is statically allocated (see
--HYPERVISOR_CALLBACK_VECTOR) across all CPUs and explicitly coded to
--call the VMBus interrupt service routine.  These interrupts are
--visible in /proc/interrupts on the "HYP" line.
-+Similarly, the host will interrupt the guest via the synic when
-+it sends a new message on the VMBus control path, or when a VMBus
-+channel "in" ring buffer transitions from empty to non-empty due to
-+the host inserting a new VMBus channel message. The control message stream
-+and each VMBus channel "in" ring buffer are separate logical interrupts
-+that are demultiplexed by vmbus_isr(). It demultiplexes by first checking
-+for channel interrupts by calling vmbus_chan_sched(), which looks at a synic
-+bitmap to determine which channels have pending interrupts on this CPU.
-+If multiple channels have pending interrupts for this CPU, they are
-+processed sequentially.  When all channel interrupts have been processed,
-+vmbus_isr() checks for and processes any messages received on the VMBus
-+control path.
- 
- The guest CPU that a VMBus channel will interrupt is selected by the
- guest when the channel is created, and the host is informed of that
-@@ -212,10 +245,9 @@ neither "unmanaged" nor "managed" interrupts.
- The CPU that a VMBus channel will interrupt can be seen in
- /sys/bus/vmbus/devices/<deviceGUID>/ channels/<channelRelID>/cpu.
- When running on later versions of Hyper-V, the CPU can be changed
--by writing a new value to this sysfs entry.  Because the interrupt
--assignment is done outside of the normal Linux affinity mechanism,
--there are no entries in /proc/irq corresponding to individual
--VMBus channel interrupts.
-+by writing a new value to this sysfs entry. Because VMBus channel
-+interrupts are not Linux IRQs, there are no entries in /proc/interrupts
-+or /proc/irq corresponding to individual VMBus channel interrupts.
- 
- An online CPU in a Linux guest may not be taken offline if it has
- VMBus channel interrupts assigned to it.  Any such channel
-@@ -223,15 +255,6 @@ interrupts must first be manually reassigned to another CPU as
- described above.  When no channel interrupts are assigned to the
- CPU, it can be taken offline.
- 
--When a guest CPU receives a VMBus interrupt from the host, the
--function vmbus_isr() handles the interrupt.  It first checks for
--channel interrupts by calling vmbus_chan_sched(), which looks at a
--bitmap setup by the host to determine which channels have pending
--interrupts on this CPU.  If multiple channels have pending
--interrupts for this CPU, they are processed sequentially.  When all
--channel interrupts have been processed, vmbus_isr() checks for and
--processes any message received on the VMBus control path.
--
- The VMBus channel interrupt handling code is designed to work
- correctly even if an interrupt is received on a CPU other than the
- CPU assigned to the channel.  Specifically, the code does not use
--- 
-2.25.1
+I see a lot of advantages to a VTL/VSM-like approach:
 
+ 1. Provides Linux-as-a guest the flexibility it needs to meaningfully adva=
+nce
+    its security, with the least amount of policy built into the guest/host=
+ ABI.
+
+ 2. Largely decouples guest policy from the host, i.e. should allow the gue=
+st to
+    evolve/update it's policy without needing to coordinate changes with th=
+e host.
+
+ 3. The KVM implementation can be generic enough to be reusable for other f=
+eatures.
+
+ 4. Other groups are already working on VTL-like support in KVM, e.g. for V=
+SM
+    itself, and potentially for VMPL/SVSM support.
+
+IMO, #2 is a *huge* selling point.  Not having to coordinate changes across
+multiple code bases and/or organizations and/or maintainers is a big win fo=
+r
+velocity, long term maintenance, and probably the very viability of HEKI.
+
+Providing the guest with the tools to define and implement its own policy m=
+eans
+end users don't have to way for some third party, e.g. CSPs, to deploy the
+accompanying host-side changes, because there are no host-side changes.
+
+And encapsulating everything in the guest drastically reduces the friction =
+with
+changes in the kernel that interact with hardening, both from a technical a=
+nd a
+social perspective.  I.e. giving the kernel (near) complete control over it=
+s
+destiny minimizes the number of moving parts, and will be far, far easier t=
+o sell
+to maintainers.  I would expect maintainers to react much more favorably to=
+ being
+handed tools to harden the kernel, as opposed to being presented a set of A=
+PIs
+that can be used to make the kernel compliant with _someone else's_ vision =
+of
+what kernel hardening should look like.
+
+E.g. imagine a new feature comes along that requires overriding CR0/CR4 pin=
+ning
+in a way that doesn't fit into existing policy.  If the VMM is involved in
+defining/enforcing the CR pinning policy, then supporting said new feature =
+would
+require new guest/host ABI and an updated host VMM in order to make the new
+feature compatible with HEKI.  Inevitably, even if everything goes smoothly=
+ from
+an upstreaming perspective, that will result in guests that have to choose =
+between
+HEKI and new feature X, because there is zero chance that all hosts that ru=
+n Linux
+as a guest will be updated in advance of new feature X being deployed.
+
+And if/when things don't go smoothly, odds are very good that kernel mainta=
+iners
+will eventually tire of having to coordinate and negotiate with QEMU and ot=
+her
+VMMs, and will become resistant to continuing to support/extend HEKI.
+
+> If yes, that would indeed require a *lot* of work for something we're not
+> sure will be accepted later on.
+
+Yes and no.  The AWS folks are pursuing VSM support in KVM+QEMU, and SVSM s=
+upport
+is trending toward the paired VM+vCPU model.  IMO, it's entirely feasible t=
+o
+design KVM support such that much of the development load can be shared bet=
+ween
+the projects.  And having 2+ use cases for a feature (set) makes it _much_ =
+more
+likely that the feature(s) will be accepted.
+
+And similar to what Paolo said regarding HEKI not having a complete story, =
+I
+don't see a clear line of sight for landing host-defined policy enforcement=
+, as
+there are many open, non-trivial questions that need answers. I.e. upstream=
+ing
+HEKI in its current form is also far from a done deal, and isn't guaranteed=
+ to
+be substantially less work when all is said and done.
 
