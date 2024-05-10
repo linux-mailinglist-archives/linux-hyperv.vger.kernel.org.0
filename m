@@ -1,127 +1,144 @@
-Return-Path: <linux-hyperv+bounces-2092-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2094-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C16F38C287C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 May 2024 18:06:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 790768C290C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 May 2024 19:04:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 439E9B22645
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 May 2024 16:06:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE2A9281880
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 May 2024 17:04:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6731172BD4;
-	Fri, 10 May 2024 16:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16BB15E86;
+	Fri, 10 May 2024 17:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JEsp25bu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XN6g+rFX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530C0172796;
-	Fri, 10 May 2024 16:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A306168BD;
+	Fri, 10 May 2024 17:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715357189; cv=none; b=kMMj35b0wZ7hKtawtO6/9p/RYO3koCkjs6w2Pke37NsNEj/rdRz4h1xfec73qEWR2WJvHj76UwtnCejjOXKh9XJNh8k6ovTHIt6mt/nzMqs7BwZN1iw6Zm4HV1ZHBK9b2VmTyQqdTbmT5oSSPH5tnHq9gwwHDukN4R0pYzetnwc=
+	t=1715360666; cv=none; b=uqbqAIGBT6HgEQp7MTNxQrSzxe1l8ek9NZaT003KrZdFjtF98MMame9bUftxtPVLuYzEJumIf8FOAcfaeNtYfZBVtGnwdigSzybMuGT8gw+Xqd7srfRQxLjrk9UTewGYZ/7QdUCPAN0BL3ysKsqx9x8hGSlwajdL0iiOiVs/93s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715357189; c=relaxed/simple;
-	bh=GE5tLHN9OT+uWRNNqUExw+u/b0/lJKng9dDqqJYdNds=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nWR4WYsaFsGee4+XNDq1bhvgPN2wILGS6RKYpbuRt9TfHi0pUO/bR+2XpKGiXpNnfVR6nbbDr0gwpWFKqp1oUeuqvTxVcYXgI7EqWgO2ZBSfScCcqlTeJzWqi94qy8fzSOp/aa5g2Cz3DCfPCn827Ap/mP9Yg4CPfWc/MAD1fmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JEsp25bu; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1715360666; c=relaxed/simple;
+	bh=W8ZlpyVfAQ2NmbLul5CfY32bP45vGBrmtSAre6V9Nrk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r0feinKfrgGBmUestw7iJwjpxHNkqPdmr7IqM+e8ZwPwHSmd/xSEx5R7IaaZe3TevHErqxhhABSGzfIGTjbBp3JkCV1q97J9anW+VlcjMb/THWqP627kEiYSr6QmsS638A3EKQSSBd1CH9oi4W4IzL401HmP6g3cHDopXaWPUZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XN6g+rFX; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from xps-8930.corp.microsoft.com (unknown [131.107.160.48])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1B1FC20B2C89;
-	Fri, 10 May 2024 09:06:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B1FC20B2C89
+Received: from [192.168.49.54] (c-73-118-245-227.hsd1.wa.comcast.net [73.118.245.227])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C1AA220B2C87;
+	Fri, 10 May 2024 10:04:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C1AA220B2C87
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1715357181;
-	bh=LXs8J2ZnHM4aNGPgsOLCUM2M1nDXtO2ZATnKq4lTGJQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JEsp25buXL/eu6noVCZeqa+pgVEbi+bxNHCUVYCludbleCn/LBBAPI5/pookttIQZ
-	 2Am6wmKVDXb+pCVNUtyLfSbVCuLI7qj3ytRsE4UxGxmE1laIh6AFbvdkpZsx6poyk4
-	 E5wi5P4c/TM730HDuNsd7yFHGV9iVWv13tP6Ct54=
-From: romank@linux.microsoft.com
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: ssengar@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH 6/6] drivers/pci/hyperv/arm64: vPCI MSI IRQ domain from DT
-Date: Fri, 10 May 2024 09:05:05 -0700
-Message-ID: <20240510160602.1311352-7-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240510160602.1311352-1-romank@linux.microsoft.com>
-References: <20240510160602.1311352-1-romank@linux.microsoft.com>
+	s=default; t=1715360665;
+	bh=D6rlDT4v0DLvneUWLv+DfcU6XBGP07Du9qcg/Pby8a8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XN6g+rFX+VYKAfFTaommksIyHGDKm1XYil5liTozTFlJkjQaqdtfXVr7iX72/HsPV
+	 ePInUOrUTvZwRweD7UyzSSs0PEQZAZNoOKuL+7Ki0BaqC9L3mTGAOURtVh0d1HB95p
+	 3aKwDzBIHutXT9+Owql37VwUlFMplEyBMdsjKkyw=
+Message-ID: <46eae37e-0c0d-4963-a39c-c9f1d2318c85@linux.microsoft.com>
+Date: Fri, 10 May 2024 10:04:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] arm64/hyperv: Support DeviceTree
+To: romank@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, linux-hyperv@vger.kernel.org,
+ rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org
+Cc: ssengar@microsoft.com, sunilmut@microsoft.com
+References: <20240510160602.1311352-1-romank@linux.microsoft.com>
+ <20240510160602.1311352-2-romank@linux.microsoft.com>
+Content-Language: en-CA
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+In-Reply-To: <20240510160602.1311352-2-romank@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Roman Kisel <romank@linux.microsoft.com>
+On 5/10/2024 9:05 AM, romank@linux.microsoft.com wrote:
+> From: Roman Kisel <romank@linux.microsoft.com>
+> 
+> Update the driver to support DeviceTree boot as well along with ACPI.
+> This enables the Virtual Trust Level platforms boot up on ARM64.
+> 
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  arch/arm64/hyperv/mshyperv.c | 34 +++++++++++++++++++++++++++++-----
+>  1 file changed, 29 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index b1a4de4eee29..208a3bcb9686 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -15,6 +15,9 @@
+>  #include <linux/errno.h>
+>  #include <linux/version.h>
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/libfdt.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+>  #include <asm/mshyperv.h>
+>  
+>  static bool hyperv_initialized;
+> @@ -27,6 +30,29 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>  	return 0;
+>  }
+>  
+> +static bool hyperv_detect_fdt(void)
+> +{
+> +#ifdef CONFIG_OF
+> +	const unsigned long hyp_node = of_get_flat_dt_subnode_by_name(
+> +			of_get_flat_dt_root(), "hypervisor");
+> +
+> +	return (hyp_node != -FDT_ERR_NOTFOUND) &&
+> +			of_flat_dt_is_compatible(hyp_node, "microsoft,hyperv");
+> +#else
+> +	return false;
+> +#endif
+> +}
+> +
+> +static bool hyperv_detect_acpi(void)
+> +{
+> +#ifdef CONFIG_ACPI
+> +	return !acpi_disabled &&
+> +			!strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8);
+> +#else
+> +	return false;
+> +#endif
+> +}
+> +
 
-This change allows Hyper-V PCI to be enabled on arm64
-via DT when booting in a Virtual Trust Level.
+Could using IS_ENABLED() allow collapsing these two functions into one hyperv_detect_fw()?
+I am wondering if #ifdef was explicitly chosen to allow for the code to be compiled in if CONFIG* is defined
+v/s IS_ENABLED() only being true if the CONFIG value is true.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
- drivers/pci/controller/pci-hyperv.c | 13 ++++++++++---
- include/linux/acpi.h                | 10 ++++++++++
- 2 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 1eaffff40b8d..ccc2b54206f4 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -906,9 +906,16 @@ static int hv_pci_irqchip_init(void)
- 	 * way to ensure that all the corresponding devices are also gone and
- 	 * no interrupts will be generated.
- 	 */
--	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
--							  fn, &hv_pci_domain_ops,
--							  chip_data);
-+	if (acpi_disabled)
-+		hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
-+			irq_find_matching_fwnode(fn, DOMAIN_BUS_ANY),
-+			0, HV_PCI_MSI_SPI_NR,
-+			fn, &hv_pci_domain_ops,
-+			chip_data);
-+	else
-+		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-+			fn, &hv_pci_domain_ops,
-+			chip_data);
- 
- 	if (!hv_msi_gic_irq_domain) {
- 		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b7165e52b3c6..eb93d355bb6d 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1077,6 +1077,16 @@ static inline bool acpi_sleep_state_supported(u8 sleep_state)
- 	return false;
- }
- 
-+
-+static inline struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
-+					     unsigned int size,
-+					     struct fwnode_handle *fwnode,
-+					     const struct irq_domain_ops *ops,
-+					     void *host_data)
-+{
-+	return NULL;
-+}
-+
- #endif	/* !CONFIG_ACPI */
- 
- extern void arch_post_acpi_subsys_init(void);
--- 
-2.45.0
+>  static int __init hyperv_init(void)
+>  {
+>  	struct hv_get_vp_registers_output	result;
+> @@ -35,13 +61,11 @@ static int __init hyperv_init(void)
+>  
+>  	/*
+>  	 * Allow for a kernel built with CONFIG_HYPERV to be running in
+> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
+> +	 * a non-Hyper-V environment.
+> +	 *
+>  	 * In such cases, do nothing and return success.
+>  	 */
+> -	if (acpi_disabled)
+> -		return 0;
+> -
+> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
+> +	if (!hyperv_detect_fdt() && !hyperv_detect_acpi())
+>  		return 0;
+>  
+>  	/* Setup the guest ID */
 
 
