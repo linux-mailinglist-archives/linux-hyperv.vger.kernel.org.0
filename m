@@ -1,129 +1,125 @@
-Return-Path: <linux-hyperv+bounces-2109-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2110-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 994F88C55FC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 May 2024 14:24:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21FCD8C5DB5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2024 00:45:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37AC9281189
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 May 2024 12:24:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FD6DB21920
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 May 2024 22:45:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 932C755C36;
-	Tue, 14 May 2024 12:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46878182C83;
+	Tue, 14 May 2024 22:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="HUYIhJQS"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hxA4XCe8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A607050278
-	for <linux-hyperv@vger.kernel.org>; Tue, 14 May 2024 12:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1A751DDEE;
+	Tue, 14 May 2024 22:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715689437; cv=none; b=UlH1KCHZaQb/AoWCANBvpmLIXaKQgENdKTVQxNJobNn9TlxxT3ilPIJue5xvQJsqAj8yq/P3IGZTPFBoY8J3yqTqVzoELV3PAf8H6KfH5GAPrltUI/kTIuckKvnPOWznTamOITMsIXX4sQSftX0uc9TVZwGf3NxL9viYyxt3O6s=
+	t=1715726728; cv=none; b=k4Lgo8KlKKCTmjCjQJuMg3GQc50enuUlWzhK0LJ+FaxIALlojDirH1ME++96ax/T4n10YzVSuzWifkffE9C2mdHLk0FxOKIyCOG5qvHsMcht0PDS7Xakv8KziGQPit4Tu5HtnrACTdvySTgqooctJBv/00GM/RW1bdMBghbzwq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715689437; c=relaxed/simple;
-	bh=bRkarWPZPXCcGNKnN/GFmEsDu3L8Us8oWBdG536diIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t52wKnLwA+JHNPfsnjboFPqqUOm6Pk7lWou+FosP+4rAhCGZM/kA27VwYeMlqcbHE2iV2JUUL58hTCTvM16QeBJBSG9qGKBCFfrL5uMmXa/YaxUAgLcNRmc6y8BVNAlpnG+IjhNxXNFmoQEBnfAAYGyHGGaL7uaCh5xLMTkyzoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=HUYIhJQS; arc=none smtp.client-ip=185.125.25.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VdwWP64pbzTXk;
-	Tue, 14 May 2024 14:23:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1715689425;
-	bh=I0eZWdP4Q+KPu4Hx3s3mpwHuoQ0UvkeO9/nafOAr82w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HUYIhJQSGxJF3jwUizanlmonUX7sygOvcV8noUaAFzN0V3a3iKwuGB8/GEum6Clxq
-	 EcKo1qBH3Un5VS8jWoGkoTi3TiKlCjIcaIL1kB+8poVzqExKvp5IQ2ywDDPeKqlugY
-	 OVZlyAPCKt5gtA5k6143lcqKUer3NgtqPGvwYp+A=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VdwWN5tzlzF2L;
-	Tue, 14 May 2024 14:23:44 +0200 (CEST)
-Date: Tue, 14 May 2024 14:23:42 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	Kees Cook <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
-	Alexander Graf <graf@amazon.com>, Angelina Vu <angelinavu@linux.microsoft.com>, 
-	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
-	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>, =?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>, 
-	Thara Gopinath <tgopinath@microsoft.com>, Trilok Soni <quic_tsoni@quicinc.com>, 
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
-	Yu Zhang <yu.c.zhang@linux.intel.com>, =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>, 
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org, 
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-Message-ID: <20240514.mai3Ahdoo2qu@digikod.net>
-References: <20240503131910.307630-1-mic@digikod.net>
- <20240503131910.307630-4-mic@digikod.net>
- <ZjTuqV-AxQQRWwUW@google.com>
- <20240506.ohwe7eewu0oB@digikod.net>
- <ZjmFPZd5q_hEBdBz@google.com>
- <20240507.ieghomae0UoC@digikod.net>
- <ZjpTxt-Bxia3bRwB@google.com>
- <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com>
+	s=arc-20240116; t=1715726728; c=relaxed/simple;
+	bh=HHDHLSCUcDkXx2uqLNf9uPS83M7l1vBf2On96gJLrfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j1vrtLNWT2bDERDzsIpzXWxHPQLC1+tBf8yA5GVrp9nVe+IUEdLilGNuPbaWGj/zcHp+n7pjlYau6UYPB60mOntGW+8HnPMkP69lbwEG9zBqtXFndFjtuml9vPbG+kF7sTJeAwjrYiGS4V02HKattkGT5tXB/IJpxRsdFs1B9uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hxA4XCe8; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from xps-8930.corp.microsoft.com (unknown [131.107.160.48])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8524D2095D0A;
+	Tue, 14 May 2024 15:45:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8524D2095D0A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1715726720;
+	bh=qxYAU41ufrcEuk5MBvISwhpcVtWEJqX1bSnGVnSsBJA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hxA4XCe8Juhir+FZZpJrKKh+6AgX5CJywj6GV8Xi/9mMDaSuTJADZOUG6chVjOeoI
+	 iFIa6Lspd7PVMua/OJlt8zSCUs/T4QbGvSO/XjtyBlWqNOG/FKHivMiM5m2YwtLVoM
+	 Dmgp84jtkEDkxqeGm8kbKFXVtvJqijFdODzWecY0=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@arndb.de,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	kw@linux.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	lpieralisi@kernel.org,
+	mingo@redhat.com,
+	mhklinux@outlook.com,
+	rafael@kernel.org,
+	robh@kernel.org,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	x86@kernel.org
+Cc: ssengar@microsoft.com,
+	sunilmut@microsoft.com,
+	vdso@hexbites.dev
+Subject: [PATCH v2 0/6] arm64/hyperv: Support Virtual Trust Level Boot
+Date: Tue, 14 May 2024 15:43:47 -0700
+Message-ID: <20240514224508.212318-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 10, 2024 at 10:07:00AM +0000, Nicolas Saenz Julienne wrote:
-> On Tue May 7, 2024 at 4:16 PM UTC, Sean Christopherson wrote:
-> > > If yes, that would indeed require a *lot* of work for something we're not
-> > > sure will be accepted later on.
-> >
-> > Yes and no.  The AWS folks are pursuing VSM support in KVM+QEMU, and SVSM support
-> > is trending toward the paired VM+vCPU model.  IMO, it's entirely feasible to
-> > design KVM support such that much of the development load can be shared between
-> > the projects.  And having 2+ use cases for a feature (set) makes it _much_ more
-> > likely that the feature(s) will be accepted.
-> 
-> Since Sean mentioned our VSM efforts, a small update. We were able to
-> validate the concept of one KVM VM per VTL as discussed in LPC. Right
-> now only for single CPU guests, but are in the late stages of bringing
-> up MP support. The resulting KVM code is small, and most will be
-> uncontroversial (I hope). If other obligations allow it, we plan on
-> having something suitable for review in the coming months.
+This patch set enables the Hyper-V code to boot on ARM64 inside a Virtual Trust
+Level. These levels are a part of the Virtual Secure Mode documented in the
+Top-Level Functional Specification available at
+https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm
 
-Looks good!
+[V2]
+    - Decreased number of #ifdef's
+    - Updated the wording in the commit messages to adhere to the guidlines
+    - Sending to the correct set of maintainers and mail lists
 
-> 
-> Our implementation aims to implement all the VSM spec necessary to run
-> with Microsoft Credential Guard. But note that some aspects necessary
-> for HVCI are not covered, especially the ones that depend on MBEC
-> support, or some categories of secure intercepts.
+Roman Kisel (6):
+  arm64/hyperv: Support DeviceTree
+  drivers/hv: Enable VTL mode for arm64
+  drivers/hv: arch-neutral implementation of get_vtl()
+  arm64/hyperv: Boot in a Virtual Trust Level
+  drivers/hv/vmbus: Get the irq number from DeviceTree
+  drivers/pci/hyperv/arm64: vPCI MSI IRQ domain from DT
 
-We already implemented support for MBEC, so that should not be an issue.
-We just need to find the best interface to configure it.
+ arch/arm64/hyperv/Makefile          |  1 +
+ arch/arm64/hyperv/hv_vtl.c          | 19 +++++++++++++
+ arch/arm64/hyperv/mshyperv.c        | 40 +++++++++++++++++++++++----
+ arch/arm64/include/asm/mshyperv.h   |  8 ++++++
+ arch/x86/hyperv/hv_init.c           | 34 -----------------------
+ arch/x86/hyperv/hv_vtl.c            |  2 +-
+ arch/x86/include/asm/hyperv-tlfs.h  |  7 -----
+ drivers/hv/Kconfig                  |  6 ++--
+ drivers/hv/hv_common.c              | 43 +++++++++++++++++++++++++++++
+ drivers/hv/vmbus_drv.c              | 37 +++++++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv.c | 13 +++++++--
+ include/asm-generic/hyperv-tlfs.h   |  7 +++++
+ include/asm-generic/mshyperv.h      |  6 ++++
+ include/linux/acpi.h                |  9 ++++++
+ 14 files changed, 179 insertions(+), 53 deletions(-)
+ create mode 100644 arch/arm64/hyperv/hv_vtl.c
 
-> 
-> Development happens
-> https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
-> branch, but I'd advice against looking into it until we add some order
-> to the rework. Regardless, feel free to get in touch.
 
-Thanks for the update.
+base-commit: f2580a907e5c0e8fc9354fd095b011301c64f949
+-- 
+2.45.0
 
-Could we schedule a PUCK meeting to synchronize and help each other?
-What about June 12?
 
