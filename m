@@ -1,140 +1,131 @@
-Return-Path: <linux-hyperv+bounces-2124-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2125-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 831328C6421
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2024 11:48:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BDD88C65FA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2024 13:56:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27E011F21B60
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2024 09:48:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB08F284916
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2024 11:56:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03BCB59B68;
-	Wed, 15 May 2024 09:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A724E74C14;
+	Wed, 15 May 2024 11:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sbsC2YkB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7QqoPiH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856331DFFD;
-	Wed, 15 May 2024 09:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B4174416;
+	Wed, 15 May 2024 11:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715766501; cv=none; b=LGDa+XMBs2ZNoY51t1yKqJZH02JCW9OBgtc9QR4UX03+KPKoSzjOW582jj8xGF6RLR9cKk3oN9DM65oYbubS32HCkZEva5L8XO3f8XdqmyVzWI/RfJzujwbjdjiAk6Meew7yDoPSD+X/ajAGfK4/bPkPceY9zf5zJMws9pStJZc=
+	t=1715774172; cv=none; b=nVvFOsy9r4Pvb38Hmco78MXY9zcEeiD72JivDx+alIbeCzt8+eq/5ikE2f7LpATmLXH+3w+7pxhk+2CAJSnUszRVUS4k7NVAgDSv/qX7yXXcWSKf82HP9nAVA/JABCLexueXqKeXV4LqXi8pIBIf6rIDmSHcV5pYvdpmQsFKMRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715766501; c=relaxed/simple;
-	bh=DWMXLBoPPceddodR+n4Z64JB4Nh2VGdGGIpJtZw0Vks=;
+	s=arc-20240116; t=1715774172; c=relaxed/simple;
+	bh=KLIJf6dyuUtjxVo29n46MFMN5nAM6CJEG8L1rIRFJXc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZEWB+RRS03Eck9wUGbJxa9gmpVRootmyoekgi0wUudAFLAY37onHzxWijnN4m5dHg6de3qnJOb/a7hPzHxFVIWbOwNN+IW6wRSfrlQyWax51uzycll9l1+P/wfpjgRbVDaC23hk2L3r+pf/vBgYGKeO7XNRpW++RUM3HivjpvN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sbsC2YkB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 1FB0C20B2C82; Wed, 15 May 2024 02:48:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FB0C20B2C82
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1715766500;
-	bh=RP6KAOAdizMehQEBvNjNqD2oKi1HizOL3blKYGvIfEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sbsC2YkBDl7aC0npjPyjeCm95s6BBpPfjSk3E8X2TeZQwS5J2/1yIFjgCGxnuSsQU
-	 ujq0fSAdTMPJl9hvAwZKYr7KhdPGT5h9ZJ2fjwT1quUd4+zKqBhr4WqcGAXGW+8ssf
-	 V+qbxOCk4LCO5W6A63L+E2x2aTAL6PjVkGTAiqDw=
-Date: Wed, 15 May 2024 02:48:20 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
-	kw@linux.com, kys@microsoft.com, lenb@kernel.org,
-	lpieralisi@kernel.org, mingo@redhat.com, mhklinux@outlook.com,
-	rafael@kernel.org, robh@kernel.org, tglx@linutronix.de,
-	wei.liu@kernel.org, will@kernel.org, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, x86@kernel.org, ssengar@microsoft.com,
-	sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH v2 6/6] drivers/pci/hyperv/arm64: vPCI MSI IRQ domain
- from DT
-Message-ID: <20240515094820.GB22844@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20240514224508.212318-1-romank@linux.microsoft.com>
- <20240514224508.212318-7-romank@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpTm//1M7feMuxac8zDS6UnKEkh21MFKoH0YkFH0jfbgyBR5PO5UuUWEtDDUjni2UBlJxodxBGnLOEd438E/j3pz7M0DCaoyoVg7uGjSJT8rFmq2xCDixg7kCk/uWlpA+6QkUN2f1HGSthM1+S3bZiol74Bo7BmI7aFBGmoGBnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7QqoPiH; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f6765226d0so474851b3a.3;
+        Wed, 15 May 2024 04:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715774170; x=1716378970; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KLIJf6dyuUtjxVo29n46MFMN5nAM6CJEG8L1rIRFJXc=;
+        b=V7QqoPiH4mE1vYcxyxLYiYiRwbMO0AYPCg7QJQ1kcHOLWHnzdmCqyCCLw33MkpDh4b
+         +MlPTg43EyXPO24Ff4B+xWJis7DGv7znPjU+ok9WV9E9eUYOPunuHCzzqAIYUfhHJ7WU
+         IYHecI4GmoJ2N8Jy5mPSW+E7MTjsbaU1CUILbKZeMTzJWlTiAC2I1Y0HqIduxkrbB0wr
+         Ah1+WTdam7dQFjvic/+zJj/uPiMZULewxbgprSg0Zd8m01jgpDVs//Iyljgm/4umKsID
+         lyzqEVdAchXQiAIAl4NdAzFhajJSD2kfVwrJufRkbeP44BfoV4VUoaXpTR/rSskk4jEX
+         XSEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715774170; x=1716378970;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KLIJf6dyuUtjxVo29n46MFMN5nAM6CJEG8L1rIRFJXc=;
+        b=XFa026hChOWUEtHvHCs0kiqPgkte4rCeupjBRJ4gGFhgey0kJIu1fNDDKSB5qo03CY
+         WsSWiviykY+Q60uBLZeQBfTnAaA0Y6I0th+OXFIy+8MlxN9daa6FVd5rphF8xcZx7e9X
+         BUwGXoF79fl7pQsWIYar86b60D6FxsEnQ8b6SToMcDWrz6mMiUnvjlyuumXomoO7xN6+
+         SlHMMwCCka6M0rIoBbuWxD5lrQnlIR8mZxI6r35P2Zs6V3YpH/R9J+eA+zcPsvkU25AB
+         on6ILYD2K3F2Th/FTtlmOOu5OH8L8w4sAybV4qwYiU8E3HvvqqwOpUm2JoLZEY/Rx4Cr
+         4U5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUI5TJMyxTSdRLFMJSfwj6rJSRjGd6pOewTGKMMr8/vF9K2k+hJjX8YPQkBu5EGJQM9jtuUm7KuJb4VbDfRC4ZRSlgSFOfRWjEcMTiSM9X9pHmWk9XIXUPXlvm+5qBhWnR9tBlMHUSFAxOJIkBcVuYKnzX+Tyt0pRfodqqBdfGnx3d88/zm
+X-Gm-Message-State: AOJu0YzUFWZdMl6raZSkb6K+Y4kQogYJkg4owTpGJlhcgIm+7Zc1yiOE
+	xmv/ghW3FV/Km4FGiVsOGlE1jAIognkptjCBtTqYY3qHNUw1zHKlWLSEgg==
+X-Google-Smtp-Source: AGHT+IGbixuRdWw3hpUoH/eg1XmRvH8la1VlEm92zf5wZvmtJsIjySYZuMUHfsOOYQLyQZwHSeeW7A==
+X-Received: by 2002:a05:6a20:5504:b0:1a9:da1f:1679 with SMTP id adf61e73a8af0-1afde0e20f6mr13397919637.34.1715774170370;
+        Wed, 15 May 2024 04:56:10 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30c95sm115677075ad.125.2024.05.15.04.56.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 04:56:09 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 7272A19C325FD; Wed, 15 May 2024 18:56:07 +0700 (WIB)
+Date: Wed, 15 May 2024 18:56:06 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, kys@microsoft.com, corbet@lwn.net,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Mao Zhu <zhumao001@208suo.com>, Ran Sun <sunran001@208suo.com>,
+	Xiang wangx <wangxiang@cdjrlc.com>,
+	Shaomin Deng <dengshaomin@cdjrlc.com>,
+	Charles Han <hanchunchao@inspur.com>,
+	Attreyee M <tintinm2017@gmail.com>, LihaSika <lihasika@gmail.com>
+Subject: Re: [PATCH v2 1/2] Documentation: hyperv: Update spelling and fix
+ typo
+Message-ID: <ZkSi1raEBdu7MdBE@archie.me>
+References: <20240511133818.19649-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3mYU1ClqV7Ho83G5"
 Content-Disposition: inline
-In-Reply-To: <20240514224508.212318-7-romank@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20240511133818.19649-1-mhklinux@outlook.com>
 
-On Tue, May 14, 2024 at 03:43:53PM -0700, Roman Kisel wrote:
-> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration
-> on arm64 thereby it won't be able to do that in the VTL mode where
-> only DeviceTree can be used.
-> 
-> Update the hyperv-pci driver to discover interrupt configuration
-> via DeviceTree.
 
-Subject prefix should be "PCI: hv:"
+--3mYU1ClqV7Ho83G5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 13 ++++++++++---
->  include/linux/acpi.h                |  9 +++++++++
->  2 files changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 1eaffff40b8d..ccc2b54206f4 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -906,9 +906,16 @@ static int hv_pci_irqchip_init(void)
->  	 * way to ensure that all the corresponding devices are also gone and
->  	 * no interrupts will be generated.
->  	 */
-> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-> -							  fn, &hv_pci_domain_ops,
-> -							  chip_data);
-> +	if (acpi_disabled)
-> +		hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
-> +			irq_find_matching_fwnode(fn, DOMAIN_BUS_ANY),
-> +			0, HV_PCI_MSI_SPI_NR,
-> +			fn, &hv_pci_domain_ops,
-> +			chip_data);
-> +	else
-> +		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-> +			fn, &hv_pci_domain_ops,
-> +			chip_data);
+On Sat, May 11, 2024 at 06:38:17AM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+>=20
+> Update spelling from "VMbus" to "VMBus" to match Hyper-V product
+> documentation. Also correct typo: "SNP-SEV" should be "SEV-SNP".
+>=20
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-Upto 100 characters per line are supported now, we can have less
-line breaks.
+LGTM, thanks!
 
->  
->  	if (!hv_msi_gic_irq_domain) {
->  		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index b7165e52b3c6..498cbb2c40a1 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1077,6 +1077,15 @@ static inline bool acpi_sleep_state_supported(u8 sleep_state)
->  	return false;
->  }
->  
-> +static inline struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
-> +					     unsigned int size,
-> +					     struct fwnode_handle *fwnode,
-> +					     const struct irq_domain_ops *ops,
-> +					     void *host_data)
-> +{
-> +	return NULL;
-> +}
-> +
->  #endif	/* !CONFIG_ACPI */
->  
->  extern void arch_post_acpi_subsys_init(void);
-> -- 
-> 2.45.0
-> 
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--3mYU1ClqV7Ho83G5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkSi0wAKCRD2uYlJVVFO
+oxgoAQDmu6lTcbrHgqcQ1gt7KND0JsUN7RpkeyB7/6Ot0t2pwwD/d6Gvmzh1zJBg
+7y20CyvYAA6LPQ7TrB9/ITaX0kci/AU=
+=pwFL
+-----END PGP SIGNATURE-----
+
+--3mYU1ClqV7Ho83G5--
 
