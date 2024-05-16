@@ -1,121 +1,169 @@
-Return-Path: <linux-hyperv+bounces-2146-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2147-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB4308C782D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 16:02:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 009828C7965
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 17:27:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 973DE285EF4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 14:02:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB61F1F2148A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 15:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1237714B940;
-	Thu, 16 May 2024 14:02:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7F5914D2A6;
+	Thu, 16 May 2024 15:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k+OJX8QB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JzU6VQwP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609C114A4D7;
-	Thu, 16 May 2024 14:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D45F14C5B3;
+	Thu, 16 May 2024 15:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715868155; cv=none; b=myLHs5mYp6MgpDzAe8VH6zQngntsWttLAgAmp6HuH6JrE6xkzIdtZqzWjhd7J4IflSf5m3Swp65UNCBvQ3knF8WtwVsFlsSQnHAjnRJmcMQvu8GpCFfbpUUbs3aMATNA77CeLVBFSCGPAPgIzFP3OO0xcxAoPdu8HCerulpyqQQ=
+	t=1715873239; cv=none; b=av5yTqMVOfMd6mTF9LyH438zu5cAnj1g6OQekExyNFk76d1/VLtpVNez3jmX4YS6xF2rpRHkCvzzIIj6T0I+xxMdEZxA6LVoS1IUDzZVF8TlIVl7ufP/1M8V/PhinVIQoq6UFb0NrCs0FzIY7LM/kNHcGG+TXksM04XzBcYBKXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715868155; c=relaxed/simple;
-	bh=PII+OyY3HRsFOpjW5l++XBk5W4fZ/zADl3BCmJlUORM=;
-	h=Subject:MIME-Version:Content-Type:Date:Message-ID:CC:From:To:
-	 References:In-Reply-To; b=VOtslJur2zmnM700pOzHZn1PZXRU5uA3i3yp/+ipWYQicF1BGlVkJRv8Oqfqjtn8jwW0CTbHt1wTPHOfPou7A3M08NkaEKXKvSGF7qNNUer8hzTZ5SE5AY/lfNN5OgjJ9x7dKbMHf5fzxYDYP9mmtx1UDdwFg0lFkkzykvPke24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=k+OJX8QB; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1715868154; x=1747404154;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   cc:from:to:references:in-reply-to:subject;
-  bh=PII+OyY3HRsFOpjW5l++XBk5W4fZ/zADl3BCmJlUORM=;
-  b=k+OJX8QBKhlhXLL+yP7jzjxSe2kwEGUIlf1RVVo8QLlDuet++05n1dC7
-   dwhyvpEbW+sLKcnNuXJDwX9Dp1D1vS6zEXehHOJDcwbUoiDoTf/1MKlFU
-   esPMfQq5KW/aAQJWLPNk5j+/JXm0kvAxHpvRtIW0QAvZOHvajT8m1wCpz
-   k=;
-X-IronPort-AV: E=Sophos;i="6.08,164,1712620800"; 
-   d="scan'208";a="419475431"
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 14:02:24 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:61258]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.38.98:2525] with esmtp (Farcaster)
- id 669cf238-0252-433a-b5ae-10131f992275; Thu, 16 May 2024 14:02:23 +0000 (UTC)
-X-Farcaster-Flow-ID: 669cf238-0252-433a-b5ae-10131f992275
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 16 May 2024 14:02:23 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 16 May
- 2024 14:02:12 +0000
+	s=arc-20240116; t=1715873239; c=relaxed/simple;
+	bh=BccJ0HF5Illb00Em11qtCvLHarKzg0ooqw7/HcoSL9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iPp5X7vOfhikA3TRzw8U6OT8K+VxH/wYJUKa0XDgUshnSnl9o2JRKogaACZOr0hWFQVY2994R6n11WkYwN37MnDVP5UOHKJmh2YgHiEDN2b4oSLqMuos1G/tFV/f72L2HhrLWN7cx9OQpQtDpw5bJ2mcpm6AEWnTzNFuHy0RHug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JzU6VQwP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.186.190] (unknown [131.107.159.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5FC4B20B915A;
+	Thu, 16 May 2024 08:27:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5FC4B20B915A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1715873232;
+	bh=VYw2CBFjzoPTujslbESLr1CJ6eokJI9FsmFec2GE+5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JzU6VQwPnDgbMyagVyu7XqnShkR+OoIMv1PiyI6c8vySazBXPTP89U3QX55rMeN9P
+	 eiLb6A/YK7IWrQgnf8XdBiCzyCtDgr2Dgi8M/N05AinyH7IlTmsfRCLFfFRAmVOAAt
+	 YU54Hr3Y0apONAux+8AwswlIiJfpZ8lltciPPiDc=
+Message-ID: <9b216f16-a2ea-48d7-8986-f0c2e3f3d009@linux.microsoft.com>
+Date: Thu, 16 May 2024 08:27:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Thu, 16 May 2024 14:02:09 +0000
-Message-ID: <D1B4HKJAJG21.2DH9F3E1Q6J9L@amazon.com>
-CC: Sean Christopherson <seanjc@google.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, "Paolo
- Bonzini" <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Vitaly
- Kuznetsov" <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, "Rick P
- Edgecombe" <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>,
-	Angelina Vu <angelinavu@linux.microsoft.com>, Anna Trikalinou
-	<atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>,
-	"Forrest Yuan Yu" <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>, John Andersen
-	<john.s.andersen@intel.com>, "Madhavan T . Venkataraman"
-	<madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>,
-	=?utf-8?q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
-	=?utf-8?q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>, Thara
- Gopinath <tgopinath@microsoft.com>, "Trilok Soni" <quic_tsoni@quicinc.com>,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, Yu Zhang
-	<yu.c.zhang@linux.intel.com>, =?utf-8?q?=C8=98tefan_=C8=98icleru?=
-	<ssicleru@bitdefender.com>, <dev@lists.cloudhypervisor.org>,
-	<kvm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-security-module@vger.kernel.org>, <qemu-devel@nongnu.org>,
-	<virtualization@lists.linux-foundation.org>, <x86@kernel.org>,
-	<xen-devel@lists.xenproject.org>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-X-Mailer: aerc 0.17.0-129-gd582ac682cdf-dirty
-References: <20240503131910.307630-1-mic@digikod.net>
- <20240503131910.307630-4-mic@digikod.net> <ZjTuqV-AxQQRWwUW@google.com>
- <20240506.ohwe7eewu0oB@digikod.net> <ZjmFPZd5q_hEBdBz@google.com>
- <20240507.ieghomae0UoC@digikod.net> <ZjpTxt-Bxia3bRwB@google.com>
- <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com> <20240514.mai3Ahdoo2qu@digikod.net>
-In-Reply-To: <20240514.mai3Ahdoo2qu@digikod.net>
-X-ClientProxiedBy: EX19D046UWA001.ant.amazon.com (10.13.139.112) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] arm64/hyperv: Support DeviceTree
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, dave.hansen@linux.intel.com, decui@microsoft.com,
+ haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, mingo@redhat.com,
+ mhklinux@outlook.com, rafael@kernel.org, robh@kernel.org,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20240514224508.212318-1-romank@linux.microsoft.com>
+ <20240514224508.212318-2-romank@linux.microsoft.com>
+ <20240515143359142-0700.eberman@hu-eberman-lv.qualcomm.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20240515143359142-0700.eberman@hu-eberman-lv.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue May 14, 2024 at 12:23 PM UTC, Micka=C3=ABl Sala=C3=BCn wrote:
-> > Development happens
-> > https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
-> > branch, but I'd advice against looking into it until we add some order
-> > to the rework. Regardless, feel free to get in touch.
->
-> Thanks for the update.
->
-> Could we schedule a PUCK meeting to synchronize and help each other?
-> What about June 12?
 
-Sounds great! June 12th works for me.
 
-Nicolas
+On 5/15/2024 3:02 PM, Elliot Berman wrote:
+> On Tue, May 14, 2024 at 03:43:48PM -0700, Roman Kisel wrote:
+>> The Virtual Trust Level platforms rely on DeviceTree, and the
+>> arm64/hyperv code supports ACPI only. Update the logic to
+>> support DeviceTree on boot as well as ACPI.
+> 
+> Could you use Call UID query from SMCCC? KVM [1] and Gunyah [2] have
+> been using this to identify if guest is running under those respective
+> hypervisors. This works in both DT and ACPI cases.
+> 
+> [1]: https://lore.kernel.org/all/20210330145430.996981-2-maz@kernel.org/
+> [2]: https://lore.kernel.org/all/20240222-gunyah-v17-4-1e9da6763d38@quicinc.com/
+
+That would be very neat indeed, thanks! Talking to the hypervisor folks.
+
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   arch/arm64/hyperv/mshyperv.c | 34 +++++++++++++++++++++++++++++-----
+>>   1 file changed, 29 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+>> index b1a4de4eee29..208a3bcb9686 100644
+>> --- a/arch/arm64/hyperv/mshyperv.c
+>> +++ b/arch/arm64/hyperv/mshyperv.c
+>> @@ -15,6 +15,9 @@
+>>   #include <linux/errno.h>
+>>   #include <linux/version.h>
+>>   #include <linux/cpuhotplug.h>
+>> +#include <linux/libfdt.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_fdt.h>
+>>   #include <asm/mshyperv.h>
+>>   
+>>   static bool hyperv_initialized;
+>> @@ -27,6 +30,29 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>>   	return 0;
+>>   }
+>>   
+>> +static bool hyperv_detect_fdt(void)
+>> +{
+>> +#ifdef CONFIG_OF
+>> +	const unsigned long hyp_node = of_get_flat_dt_subnode_by_name(
+>> +			of_get_flat_dt_root(), "hypervisor");
+>> +
+>> +	return (hyp_node != -FDT_ERR_NOTFOUND) &&
+>> +			of_flat_dt_is_compatible(hyp_node, "microsoft,hyperv");
+>> +#else
+>> +	return false;
+>> +#endif
+>> +}
+>> +
+>> +static bool hyperv_detect_acpi(void)
+>> +{
+>> +#ifdef CONFIG_ACPI
+>> +	return !acpi_disabled &&
+>> +			!strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8);
+>> +#else
+>> +	return false;
+>> +#endif
+>> +}
+>> +
+>>   static int __init hyperv_init(void)
+>>   {
+>>   	struct hv_get_vp_registers_output	result;
+>> @@ -35,13 +61,11 @@ static int __init hyperv_init(void)
+>>   
+>>   	/*
+>>   	 * Allow for a kernel built with CONFIG_HYPERV to be running in
+>> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
+>> +	 * a non-Hyper-V environment.
+>> +	 *
+>>   	 * In such cases, do nothing and return success.
+>>   	 */
+>> -	if (acpi_disabled)
+>> -		return 0;
+>> -
+>> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
+>> +	if (!hyperv_detect_fdt() && !hyperv_detect_acpi())
+>>   		return 0;
+>>   
+>>   	/* Setup the guest ID */
+>> -- 
+>> 2.45.0
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Thank you,
+Roman
 
