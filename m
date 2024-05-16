@@ -1,186 +1,220 @@
-Return-Path: <linux-hyperv+bounces-2144-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2145-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DAAA8C6E64
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 00:04:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F2B8C705B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 04:41:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 925D4B20AC0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2024 22:04:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17E66283E65
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2024 02:41:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D8415B129;
-	Wed, 15 May 2024 22:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD0215C9;
+	Thu, 16 May 2024 02:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MQyPlHhp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AdtpgE6f"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966083BBEA;
-	Wed, 15 May 2024 22:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A39138E;
+	Thu, 16 May 2024 02:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715810662; cv=none; b=hGKd6XVfyb/Vkl8ZU35+jTr9ymJ8/5UE4ZBK8xAhEcQdYAWt3ONWt0iezHTOFTQ3EhNooi+ukd+YKdHAFnOERR7YvEbT9y1/BTaaeFZvR55EB5FEUevLJJ21BF/ldJZZ96UMJb3s53oS+59eINLGb1MDn2Rm3nbO6k+Y1EB/yd8=
+	t=1715827295; cv=none; b=mNpo1+lKn7E+8H0HtmEYCxV+FENET7b9mjD3EavFDPjOOPJZP1r52q8rzf8VfC7Vw4/3tC/aUa3aLIgemsej5tsllcjDMpqatUlyC/oCSskqaqorXoGN683DkYqQcSkvEHZf5KZ2/iDEh11A6sJT7d5Ypr3oqtY3a3fI7vz9pK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715810662; c=relaxed/simple;
-	bh=A2JE1wFblMMdWw30BZhpMz3CO8n24X5cU5MY3GMBBp8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+m3TASRLOMq1VcppBfe2iiuSWVaqKnfaCG0CGIQ/Jzs8UTHBNqNVcaQvCG+53LeT7QEfAo1+O1upoH9ZRQze3pqyDWCG3EED2ol4zwQ/9nQP9tLuV6JR6QeCiWFsCk6RO1Q9hTiTr3mRRRhu2Xxy/CAO7TFZmRthtkcMvYSPs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MQyPlHhp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44FLnG3L014218;
-	Wed, 15 May 2024 22:02:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=QDBa3xO9SVZC0wA2OjFbS
-	SGVBA+x1q/1DDGJo/BLO2I=; b=MQyPlHhp1n4fCWGyt3zgw7uZYWtpd92rUGJQz
-	8lkiNoMpg9wNRG1Z4UMGpor453kwHi/95tOXEi9FnpUzhdtYoF5ZBz6MknfKWOqy
-	sRysZ0+7h509TFYw35HozsSeq8qzkZJ1CSzcgZzGBUyKRbYxcQ2/N6kBzGg8bseg
-	ws2hOTF7UNB5kTufM8+RQARntGoyzijoVFuqh5JYSxSIt2hzYUhnOEh7k9UEheLX
-	VCea4kIgNhB9hnzH9/nFRMTusHl3joiCTv5YPVJD9cQBI9BRl8okPKU9wO1/Xhc1
-	Y2G8g1X8/+Volxv+8CmSN5HhVoOEz9ImAVx2FWB6Ci2lIK3uw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y20w224dd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 22:02:56 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44FM2tBB015195
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 22:02:55 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 15 May 2024 15:02:54 -0700
-Date: Wed, 15 May 2024 15:02:54 -0700
-From: Elliot Berman <quic_eberman@quicinc.com>
-To: Roman Kisel <romank@linux.microsoft.com>
-CC: <arnd@arndb.de>, <bhelgaas@google.com>, <bp@alien8.de>,
-        <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
-        <decui@microsoft.com>, <haiyangz@microsoft.com>, <hpa@zytor.com>,
-        <kw@linux.com>, <kys@microsoft.com>, <lenb@kernel.org>,
-        <lpieralisi@kernel.org>, <mingo@redhat.com>, <mhklinux@outlook.com>,
-        <rafael@kernel.org>, <robh@kernel.org>, <tglx@linutronix.de>,
-        <wei.liu@kernel.org>, <will@kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arch@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <x86@kernel.org>, <ssengar@microsoft.com>,
-        <sunilmut@microsoft.com>, <vdso@hexbites.dev>
-Subject: Re: [PATCH v2 1/6] arm64/hyperv: Support DeviceTree
-Message-ID: <20240515143359142-0700.eberman@hu-eberman-lv.qualcomm.com>
-References: <20240514224508.212318-1-romank@linux.microsoft.com>
- <20240514224508.212318-2-romank@linux.microsoft.com>
+	s=arc-20240116; t=1715827295; c=relaxed/simple;
+	bh=mXdch1UBCDPV/pTWNG0+XNlFw7TAWjTMQFw4h3/dUo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkBSMSeaKlLOPknMOetKXWTG/sLJ3a+QPo3XEWM72tO1BQJ2LqkVXTJEyTbRKlQBZX+6bK86fbETTAI/D/ChbdhLJkrKg3nUCnZFp94Q+Q1rVI8U6p++kCnhMXkxE+iAbja0vEjilCYPEdfpqigYM+TjeDGreTRQOel1pwlwoFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AdtpgE6f; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715827293; x=1747363293;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mXdch1UBCDPV/pTWNG0+XNlFw7TAWjTMQFw4h3/dUo8=;
+  b=AdtpgE6fyYdIkXzz/SNoqzzOEfanSlZP4TRM9SXvp9m+xTFrol1S6QQC
+   n1ru0i7tkPZQtWQRZAMGsifXFC0IWafV8+AQFgiNtaXv94MSHJveRwJUg
+   X/7mX93jzLIAwF2hLOH0pTznTSTAMyiHbHM6sAcA14vELc9qwRWYquDej
+   zrIHP8Jhb8MPYZJ0vc6RewyE1ZHCypoaL1D4HCdGXG1SR1Yxhbnm9BmpW
+   JEllYFvdLsQauGu10lWUg+eQWSE6DJXu1Uqb/Jk6wXLjGTmfjHJDulSz6
+   W6LXIcg9cUOr9qt55UzOgJoK2Tm0mtP9ZKbe5Sag/k6Yp6shmgjo2FVn4
+   g==;
+X-CSE-ConnectionGUID: rViN6xjjQbKi/EiV3D4xhw==
+X-CSE-MsgGUID: Ps9oPjZoRkmad6lOA5vpgQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="34426398"
+X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
+   d="scan'208";a="34426398"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 19:41:32 -0700
+X-CSE-ConnectionGUID: PylPfyqSTxWAlB0PRaGvmw==
+X-CSE-MsgGUID: FjmMsRktQDaDNpFHXLYLNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
+   d="scan'208";a="31198142"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 15 May 2024 19:41:25 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s7R3a-000DWV-2v;
+	Thu, 16 May 2024 02:41:22 +0000
+Date: Thu, 16 May 2024 10:40:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Roman Kisel <romank@linux.microsoft.com>, arnd@arndb.de,
+	bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com,
+	kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+	mingo@redhat.com, mhklinux@outlook.com, rafael@kernel.org,
+	robh@kernel.org, tglx@linutronix.de, wei.liu@kernel.org,
+	will@kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, ssengar@microsoft.com,
+	sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from
+ DeviceTree
+Message-ID: <202405161034.f4v8i4eI-lkp@intel.com>
+References: <20240514224508.212318-6-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240514224508.212318-2-romank@linux.microsoft.com>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: DgLWzryxOWhF7b4rEhDpYrNv9kFCQJeQ
-X-Proofpoint-GUID: DgLWzryxOWhF7b4rEhDpYrNv9kFCQJeQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_14,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
- clxscore=1011 priorityscore=1501 bulkscore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405010000 definitions=main-2405150158
+In-Reply-To: <20240514224508.212318-6-romank@linux.microsoft.com>
 
-On Tue, May 14, 2024 at 03:43:48PM -0700, Roman Kisel wrote:
-> The Virtual Trust Level platforms rely on DeviceTree, and the
-> arm64/hyperv code supports ACPI only. Update the logic to
-> support DeviceTree on boot as well as ACPI.
+Hi Roman,
 
-Could you use Call UID query from SMCCC? KVM [1] and Gunyah [2] have
-been using this to identify if guest is running under those respective
-hypervisors. This works in both DT and ACPI cases.
+kernel test robot noticed the following build errors:
 
-[1]: https://lore.kernel.org/all/20210330145430.996981-2-maz@kernel.org/
-[2]: https://lore.kernel.org/all/20240222-gunyah-v17-4-1e9da6763d38@quicinc.com/
-> 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  arch/arm64/hyperv/mshyperv.c | 34 +++++++++++++++++++++++++++++-----
->  1 file changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index b1a4de4eee29..208a3bcb9686 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -15,6 +15,9 @@
->  #include <linux/errno.h>
->  #include <linux/version.h>
->  #include <linux/cpuhotplug.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
->  #include <asm/mshyperv.h>
->  
->  static bool hyperv_initialized;
-> @@ -27,6 +30,29 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->  	return 0;
->  }
->  
-> +static bool hyperv_detect_fdt(void)
-> +{
-> +#ifdef CONFIG_OF
-> +	const unsigned long hyp_node = of_get_flat_dt_subnode_by_name(
-> +			of_get_flat_dt_root(), "hypervisor");
-> +
-> +	return (hyp_node != -FDT_ERR_NOTFOUND) &&
-> +			of_flat_dt_is_compatible(hyp_node, "microsoft,hyperv");
-> +#else
-> +	return false;
-> +#endif
-> +}
-> +
-> +static bool hyperv_detect_acpi(void)
-> +{
-> +#ifdef CONFIG_ACPI
-> +	return !acpi_disabled &&
-> +			!strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8);
-> +#else
-> +	return false;
-> +#endif
-> +}
-> +
->  static int __init hyperv_init(void)
->  {
->  	struct hv_get_vp_registers_output	result;
-> @@ -35,13 +61,11 @@ static int __init hyperv_init(void)
->  
->  	/*
->  	 * Allow for a kernel built with CONFIG_HYPERV to be running in
-> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
-> +	 * a non-Hyper-V environment.
-> +	 *
->  	 * In such cases, do nothing and return success.
->  	 */
-> -	if (acpi_disabled)
-> -		return 0;
-> -
-> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
-> +	if (!hyperv_detect_fdt() && !hyperv_detect_acpi())
->  		return 0;
->  
->  	/* Setup the guest ID */
-> -- 
-> 2.45.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+[auto build test ERROR on f2580a907e5c0e8fc9354fd095b011301c64f949]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Roman-Kisel/arm64-hyperv-Support-DeviceTree/20240515-064749
+base:   f2580a907e5c0e8fc9354fd095b011301c64f949
+patch link:    https://lore.kernel.org/r/20240514224508.212318-6-romank%40linux.microsoft.com
+patch subject: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from DeviceTree
+config: arm64-randconfig-r053-20240515 (https://download.01.org/0day-ci/archive/20240516/202405161034.f4v8i4eI-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d3455f4ddd16811401fa153298fadd2f59f6914e)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240516/202405161034.f4v8i4eI-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405161034.f4v8i4eI-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-hif.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-aud.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-img.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-ipe.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-mdp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-vdec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-img.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-ipe.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vdec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vdo0.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vdo1.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-venc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vpp0.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-vpp1.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-apusys_pll.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-cam.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-img.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-imp_iic_wrap.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-ipe.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-scp_adsp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-vdec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-vdo0.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-vdo1.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-vpp0.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-vpp1.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-wpe.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/meson-clkc-utils.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/meson-aoclk.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/meson-eeclk.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/a1-pll.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/gxbb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/gxbb-aoclk.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/meson/s4-peripherals.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/qcom/lpass-gfm-sm8250.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/qcom/videocc-sdm845.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/versatile/clk-vexpress-osc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk-gate_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/amlogic/meson-clk-measure.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap-rng.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap3-rom-rng.o
+WARNING: modpost: drivers/char/hw_random/mxc-rnga: section mismatch in reference: mxc_rnga_driver+0x10 (section: .data) -> mxc_rnga_remove (section: .exit.text)
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/cavium-rng.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/cavium-rng-vf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-abt-y030xx067a.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611uxc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sii9234.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/bochs.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-kunit.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-ram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-raw-ram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/arizona.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/vexpress-sysreg.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_acpi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-fsl-lib.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/firewire-uapi-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_aec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/hd44780_common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pcmcia/i82092.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/misc/soc_button_array.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/lib_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/dvb-frontends/au8522_decoder.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/v4l2-core/v4l2-async.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/v4l2-core/v4l2-fwnode.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/corsair-cpro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_emmc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/host/tmio_mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/flash/leds-rt4505.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-belkin.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-evision.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-google-stadiaff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gyration.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ite.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kensington.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kye.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-microsoft.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-saitek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sjoy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-speedlink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-topseed.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-twinhan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-xinmo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zpff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zydacron.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_powersave.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm-ccn.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/fsl_imx8_ddr_perf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/marvell_cn10k_ddr_pmu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-aspeed.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/spmi-pmic-arb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/adc/xilinx-ams.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/buffer/kfifo_buf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/siox/siox-bus-gpio.o
+>> ERROR: modpost: "irq_to_desc" [drivers/hv/hv_vmbus.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
