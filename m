@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-2179-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2180-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B10358C893F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 17:21:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 971268C8955
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 17:28:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 166C41F21CE7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 15:21:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9C3F1C21CA9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 15:28:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 209B612D201;
-	Fri, 17 May 2024 15:21:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D7E12CDBB;
+	Fri, 17 May 2024 15:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cYPrEfsx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NVt7EclR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A9A12CDBB;
-	Fri, 17 May 2024 15:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8172B8479;
+	Fri, 17 May 2024 15:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715959301; cv=none; b=j0OVzKFH6GgY9FVZLeIFbyzJIrWYUNS1MJNS0o2mvMdxt9br6NgpBuwTnaRKnWBZ0KCp0LdSSZce/djFrBP4fFemNG0oSXo9LCP6+h6QChi5t8HgUduqc7XKvIAZqxVU/4AncfliQVfQoiPBKD36Ib+S+S1u4k5Qt9yjSBVJ56A=
+	t=1715959713; cv=none; b=uGLCHfb055E8oUhf1GLdQWYK+ErqOBmVEHV9TG5ARQiLAZzVZD0qxi74WbS4vovyv69g8Lf+Sv1BYStcOMIGPZIEF1O6T4zfcAI0zkqQ4uuataIZU+EcekbO+R8ZUo46at3lr81+4QuEdtQYEkUcO1JUQj67OKYjMT8wjTjy2As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715959301; c=relaxed/simple;
-	bh=jpNsC9cI9iGi7aedbr9RL6SWorewOwQj+OYp2jQWsx8=;
+	s=arc-20240116; t=1715959713; c=relaxed/simple;
+	bh=g8JS6bBoQYrQ2CsJAX04DJwH1PeKrgcCCBfxu8xCBA8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r9jIW++LHGbBiIgmyeDs5iFzb/NzVXxb+2S5mNlJ6Ux5RmgL23RWkQScJGgHu7Hd6n2HvZ20nMOXUuYtF7YqnRJo+Iv4qT17GLncHC541w0xrIWMXqQ1zEmUzycM8S5YmtebO0gewWxg+cQ8VPLGZvBxgturxXa6XrtrrqHEJbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cYPrEfsx; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=AjpuYyQruAFyScipJ2S+xMmkYlMUhgFvtRQPE+HXcT9XT4NiUpegrRGMVapVz1QbhCcQE+fd+98eN+/unhSojkE4Rrqs6jN0Kt0LlP43FoGA9uqIWwS0FWaGvN8zkMNeLp+kwXaiFcqrD8w7M6T/InziXMc1gpqEJ6o6kZ6hmW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NVt7EclR; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715959299; x=1747495299;
+  t=1715959711; x=1747495711;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=jpNsC9cI9iGi7aedbr9RL6SWorewOwQj+OYp2jQWsx8=;
-  b=cYPrEfsxPp/Ovf1mb6cABpic0qFnlv6lyrnBtrO81cuJfQqXTZvULHRu
-   5an1cnfxWNXTGmaKwqOFhg9sbTqq50cf5f2hxBKdZEvjp4M+BJAdMXKOm
-   etYO/2iafAQ9pcv162d5Rpny4aJRXlo7G7vISm9SQIZK1WdROmT950o7k
-   Zmq8wYuR50MYaVqcC52Y+xe1/D8x2U4zR4lOiLtDmATBwqas2fQIekaNs
-   1dhf2UJAGk7ROOAblNbHOYajUM5WKhSqOnYgAFlGRqzh5WKa5DN2gbEBB
-   xG9swVG8zqZS37UIsQ0QzoWFoKcH46f5nnot1glSjZsoaxxLXLn13a13U
-   w==;
-X-CSE-ConnectionGUID: QFLsj6XjSFiaaZP5Zf0gbA==
-X-CSE-MsgGUID: HLUM5D2fSCOL3B1/4Napdg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="23280080"
+  bh=g8JS6bBoQYrQ2CsJAX04DJwH1PeKrgcCCBfxu8xCBA8=;
+  b=NVt7EclR2IrlUI6bbjxhlLF3IXtqyzUYiXkIwx7lXlR5QlAszXiQJXbF
+   BuYJ1IokkmNld91//0D73JzE+wu6gvhvEoQ3mNuZuoAxUspzWEGGm030n
+   Dt1CSQcoJTWS8aQhhg03K9Iw3gnxoT9Hp6t72I01Jh8E2cnrnAEu18eP6
+   W0gGBk/ynR63xz1FvF8L8futer8ZJ/q3RGBrZ3U4AQyvuRVKpyir4tft5
+   kSydgEhsGntAM279J5gS0A6xbJRbAyy+t42NggqjfEPBgcOrSnO1ccrjL
+   92hGc31MAFdtrYhBe0DDUedwIy//pDDGJh7rSuZhfSeNyGRy46sAFYQx6
+   A==;
+X-CSE-ConnectionGUID: dlSu8bw6RliwLqWfiNiLuQ==
+X-CSE-MsgGUID: oSLy/RXETM633nVlO5CRPQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="11984201"
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="23280080"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:21:39 -0700
-X-CSE-ConnectionGUID: yIfU3bf3Q8agb0Pm4A51zg==
-X-CSE-MsgGUID: 10hV1spdSGC4s6JDTrAs2g==
+   d="scan'208";a="11984201"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:28:30 -0700
+X-CSE-ConnectionGUID: IkdWLzVWSdGak18HA6W0/w==
+X-CSE-MsgGUID: PmKCwDnNSUWuDUlsCzWl0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="62655258"
+   d="scan'208";a="31817188"
 Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.108.204]) ([10.125.108.204])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:21:38 -0700
-Message-ID: <395850c4-f8a3-46ed-9b0c-b1f47386610c@intel.com>
-Date: Fri, 17 May 2024 08:21:37 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:28:29 -0700
+Message-ID: <dc292ce2-d450-400c-a0e9-c807aeb671dc@intel.com>
+Date: Fri, 17 May 2024 08:28:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,7 +67,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/20] x86/tdx: Introduce tdvmcall_trampoline()
+Subject: Re: [PATCH 03/20] x86/tdx: Convert port I/O handling to use new
+ TDVMCALL macros
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Sean Christopherson <seanjc@google.com>, Paolo Bonzini
  <pbonzini@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
@@ -80,9 +81,9 @@ To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
 Cc: linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-hyperv@vger.kernel.org
 References: <20240517141938.4177174-1-kirill.shutemov@linux.intel.com>
- <20240517141938.4177174-2-kirill.shutemov@linux.intel.com>
-Content-Language: en-US
+ <20240517141938.4177174-4-kirill.shutemov@linux.intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
  xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
  oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
@@ -126,22 +127,28 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20240517141938.4177174-2-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240517141938.4177174-4-kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/17/24 07:19, Kirill A. Shutemov wrote:
-> TDCALL calls are centralized into a few megawrappers that take the
-> struct tdx_module_args as input. Most of the call sites only use a few
-> arguments, but they have to zero out unused fields in the structure to
-> avoid data leaks to the VMM. This leads to the compiler generating
-> inefficient code: dozens of instructions per call site to clear unused
-> fields of the structure.
+>  static inline void tdx_io_out(int size, u16 port, u32 value)
+>  {
+> -	struct tdx_module_args args = {
+> -		.r10 = TDX_HYPERCALL_STANDARD,
+> -		.r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
+> -		.r12 = size,
+> -		.r13 = 1,
+> -		.r14 = port,
+> -		.r15 = value,
+> -	};
+> -
+> -	__tdx_hypercall(&args);
+> +	TDVMCALL_0(hcall_func(EXIT_REASON_IO_INSTRUCTION),
+> +		   size, TDX_PORT_WRITE, port, value);
+>  }
 
-I agree that this is what the silly compiler does in practice.  But my
-first preference for fixing it would just be an out-of-line memset() or
-a pretty bare REP;MOV.
-
-In other words, I think this as the foundational justification for the
-rest of the series leaves a little to be desired.
+I actually really like the self-documenting nature of the structures.  I
+don't think it's a win if this is where the lines-of-code savings comes
+from.
 
