@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-2181-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2182-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E998E8C89A8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 17:57:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 011688C89C5
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 18:08:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51ECBB21895
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 15:57:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2232A1C2165B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 16:08:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A01E112F5B4;
-	Fri, 17 May 2024 15:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03AF712F5AC;
+	Fri, 17 May 2024 16:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="krjj7Zb7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOY1QxpZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E4112F597;
-	Fri, 17 May 2024 15:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2602D12F5A3;
+	Fri, 17 May 2024 16:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715961434; cv=none; b=tzcTe8KxznaHds3QkDAbgHEdVluRlmtf9WOdVl7qllrxLNTSwIMLlpzRMzKfebRMA8DVrWJzvwB/fpJaxaIkAK28Y8K3CtU9A1X6kQip8wqlx5WO5cUtu78UTMrX9lCixg/bLktDWzv+ht0iBYYydX313lWMhp3DpywXmd1OBlk=
+	t=1715962081; cv=none; b=E6r++WuRhw0nH4KROb0XvaREoMtyJ3IN8YakDDf7oj+ACG/3ZVr5V17defqA5ARKyqH+CCQqlwbVsucbWjh9GajQmDPkB/4pmZhRddYFK54ZC2RqU6SjYBQIBkhddTMaeiEwD5eoGCyx3bKeqzexJWQBmPO+F+FeauQTSFm1LbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715961434; c=relaxed/simple;
-	bh=/THtfddWNe2X0O3uTjzuAOx1zf4DbLYV51WhztiYedo=;
+	s=arc-20240116; t=1715962081; c=relaxed/simple;
+	bh=J0ZrYaWrs/Vd5RrjpLaRO2cveV9VPuP6HI48xKjxsII=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2GMA8cGbGEZ0V/7Rq/8Xw3bj3IINAitjWvhk3y6a4Cxl2xCV8sbhsXlpkIOsXBBEYOZKDWkG5cYBU7bHeRryqg2z1fPMGHS5XwjMRy59i803onZk4ShMOQSO8cyYHG6FyCtu0Y1sH7Y9d6mEEiZ6hTq1T+EcGv6XAEYDb9h8LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=krjj7Zb7; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=dYudD5Mib/lBHglNbpIj4cd3MlUCEDutrpZ2lhD58E3/spEnXa6Czq0ZowxlfZzNH1s6gocZEr/r4rtOmFjVVZbHBlpLYi0qt/dRtCTEFCiLBJbjk0mQoRPSUyDfNG+4dx+F2gk7AIO+mW88gwpv+qsLEp9Eqxs3hkG/XiinFsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BOY1QxpZ; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715961433; x=1747497433;
+  t=1715962079; x=1747498079;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=/THtfddWNe2X0O3uTjzuAOx1zf4DbLYV51WhztiYedo=;
-  b=krjj7Zb7XELS2yLkUZQuiRe1MKcsqoUXy+A5V/KLr4Y04qPD7zTW0ylg
-   k++CDQ9TpGcvI64vb+k2vyFj4k9ttAwPEuRoIXFxLgPSylh3qPVbLXlvh
-   8gMzDZtH5r3eFpjQXoI2F3NmJ1ALsq+QhUBehpuxyyney5FXEkMA1IQlf
-   rdtiVPhD9gEEYN5DcWhvKv4zH4bYi9SbD2x7+pLlRF0uCmVGVLKWSzGmz
-   c5h3RKlmOkCmv+KgIfC8AsCjBML4cY49bS+W6WRVm6fL8Z9OfMIw5cAhk
-   kHRvdhpyEiFi53omY1oEeZ9tIUGSlIjucvVrll8v6PVtfk9UIcDpQwFC2
-   g==;
-X-CSE-ConnectionGUID: kJsJ2F8iQLqODgA6sIywEg==
-X-CSE-MsgGUID: +p2qjS7ASVicVFHMnhCEBw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="23284583"
+  bh=J0ZrYaWrs/Vd5RrjpLaRO2cveV9VPuP6HI48xKjxsII=;
+  b=BOY1QxpZ/QSFwAECisaKR37Q3v1BhsT1Zaj1DxFIN89J6UMl+vXT7e4p
+   kPWcLBalnWqtANWymTZ44a5dRh7M1JyhaOMKKgE57pHoil6den8bebrNS
+   roTqPgpKFD8nR0dUlNh4cwbLnODRVOynRwsPJYALq6JuEusFpxHhBzT+M
+   ZZ6AlksJerItMxD2NQWIptRaEmS9lrRqte2eXs1sxGSaWt5TkFqXb166H
+   AGMqgYOKh+f9m0HL8EyhNrbh6PCCgnmc3YgjgrPWgkR1KPCLAYbYkgZoL
+   7NFBy4MNn8S17TXJS1C/u1AKWrqMX6klsHpDE6Fs3ovwWgfuTR0cvvCz3
+   w==;
+X-CSE-ConnectionGUID: EbNW0F0DSciKzP0YpcLwwg==
+X-CSE-MsgGUID: obAEfDqsRrWL5e/JYh0nuQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="15977519"
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="23284583"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:57:12 -0700
-X-CSE-ConnectionGUID: n4bU1dzLT4OY/9YPGl9Wqg==
-X-CSE-MsgGUID: yICPwXpfS9K3ATPuIxaOfg==
+   d="scan'208";a="15977519"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 09:07:56 -0700
+X-CSE-ConnectionGUID: gqVsuMebTZeLgkuPO4ZITw==
+X-CSE-MsgGUID: saJ3jLV1Sby/Z/Pzubv2bA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="31751403"
+   d="scan'208";a="36360534"
 Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.108.204]) ([10.125.108.204])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:57:11 -0700
-Message-ID: <ca2adcf7-5708-4142-bdd5-8700b98b4a5b@intel.com>
-Date: Fri, 17 May 2024 08:57:10 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 09:07:55 -0700
+Message-ID: <3a210286-7d0f-4404-ad79-c8eab1514381@intel.com>
+Date: Fri, 17 May 2024 09:07:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/20] x86/tdx: Convert VP_INFO tdcall to use new
- TDCALL_5() macro
+Subject: Re: [PATCH 17/20] x86/tdx: Convert VM_RD/VM_WR tdcalls to use new
+ TDCALL macros
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Sean Christopherson <seanjc@google.com>, Paolo Bonzini
  <pbonzini@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
@@ -81,9 +81,9 @@ To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
 Cc: linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-hyperv@vger.kernel.org
 References: <20240517141938.4177174-1-kirill.shutemov@linux.intel.com>
- <20240517141938.4177174-17-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+ <20240517141938.4177174-18-kirill.shutemov@linux.intel.com>
 Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
 Autocrypt: addr=dave.hansen@intel.com; keydata=
  xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
  oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
@@ -127,20 +127,46 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20240517141938.4177174-17-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240517141938.4177174-18-kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/17/24 07:19, Kirill A. Shutemov wrote:
-> -	/*
-> -	 * TDINFO TDX module call is used to get the TD execution environment
-> -	 * information like GPA width, number of available vcpus, debug mode
-> -	 * information, etc. More details about the ABI can be found in TDX
-> -	 * Guest-Host-Communication Interface (GHCI), section 2.4.2 TDCALL
-> -	 * [TDG.VP.INFO].
-> -	 */
-> -	tdcall(TDG_VP_INFO, &args);
-> +	tdg_vp_info(&gpa_width, &td_attr);
+Let's say you're debugging tdg_vm_rd().  You suspect someone read the
+spec wrong.  You pull up the spec:
 
-Why is the comment going away?
+	https://sr71.net/~dave/intel/tdg.vm.rd.png
+
+On 5/17/24 07:19, Kirill A. Shutemov wrote:
+>  static inline u64 tdg_vm_rd(u64 field, u64 *value)
+>  {
+> -	struct tdx_module_args args = {
+> -		.rdx = field,
+> -	};
+
+RDX is assigned 'field'.  Makes sense based on the input operands.
+
+> -	u64 ret;
+> -
+> -	ret = __tdcall_ret(TDG_VM_RD, &args)> -	*value = args.r8;
+
+'value' is set to r8.  Also matches the spec.  It's obvious that this is
+a 'two return values' pattern.
+
+> -	return ret;
+
+This is also obviously correct.
+
+Compare that to:
+
+> +	return TDCALL_1(TDG_VM_RD, 0, field, 0, 0, value);
+>  }
+
+Where it's 100% opaque which registers thing to into or that 'value' is
+an output, not an input.
+
+So, yeah, this is fewer lines of C code.  But it's *WAY* less
+self-documenting.  It's harder to audit.  It's harder to understand and
+it's more opaque.
+
+While the goals here are laudable, I'm not a big fan of the end result.
 
