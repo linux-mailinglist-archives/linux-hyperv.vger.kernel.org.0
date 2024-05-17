@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-2172-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2173-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 701FD8C87F0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 16:22:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF6DA8C87F2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 16:23:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3C0FB23B47
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 14:22:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CB601C23A95
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 May 2024 14:23:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFCE73539;
-	Fri, 17 May 2024 14:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58156745F0;
+	Fri, 17 May 2024 14:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fa+jE+S9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FbWaeQgy"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D0271750;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA23D73165;
 	Fri, 17 May 2024 14:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715955607; cv=none; b=eXq7euzZohIjYNG3hlpiNgglVW3sNLYQzPW/rqjwRsDfo9+JR6bWWOfME0W4I9SD8O4jvdhQJmyq+SYcEagr3lETy4vOTS4nCKfFUVp7R1yCHVxsyPJa5R9e+sI0b0ngHJkh0IvpqGxGxue0bImXBI5maw4YfYrZrbwHM5Fq2qc=
+	t=1715955608; cv=none; b=SpXKmZae8tv3E1SxxYYoSf/VpbA//wOvSDLDCihe4hetei/ziCuj+1EwnSpFLZI+56kOz+kChrtjMagYDFNAz7OQcrMeh7vIvzsfCizTRjB26/hsPQfUl/PwzvBmVt+Yy54w5+uAmubiQPr5jmvmGxacUvTF7ql83tZRcIR1s3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715955607; c=relaxed/simple;
-	bh=0sOCyuIE9yUNs9m+zPMFvR+dpm6EUDIzGSm4n+Yw9H8=;
+	s=arc-20240116; t=1715955608; c=relaxed/simple;
+	bh=mpeI7dxGBjXJkH2OOGSAH6mbSJNyYYKdgngapiZV/lM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AN+Z1/MQxsNjmcpqmmKzWMKsSLBZzDG6FtCLucxB2Z2tnffszyZpE1IXB5EuEQHXVKkn3ROvNAT7GW6FNwcFVgDL9ghahPZ4mxOcJF7vkxHC0Sz7Q/q/wr9wGynG2CG+Zjb5yy13gwo98QzowNdO7CHeRqJZ/OdWcBsb3SjBGpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fa+jE+S9; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=qthxnX5NUiDf0gBofzMRZhWHAFsPz525zxNKz8yvv9Yz7vIRaP+c0azvqR/6+8PHodxBpXHN8xeqTH3PeUc6CKabt3agDNal2z5RNQpxl5UtMpWRwG3mvnUh2cAUGV2RTUGQ8AwR7qIeyeDHjuMKftpOY9hla25VCd0B6FSKrXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FbWaeQgy; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715955606; x=1747491606;
+  t=1715955607; x=1747491607;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0sOCyuIE9yUNs9m+zPMFvR+dpm6EUDIzGSm4n+Yw9H8=;
-  b=fa+jE+S9VKRCFbxq+aimz5+aVgZPokraQl8xD9uVOcQjnXVfoeIj/2hY
-   iTtD3w+ImUWYJz8xUHMWdCuUHF/83IlKteBtUWji2uWjMnjAm5XUQZluS
-   E2Cc71KsDFM/a/cdd+0QqBbzU/cTs/x9UN+eHC3iCITBafCIBf0iLH03/
-   vltlmwdOpr55EkHH1ETNK6XxeDXDj4CRq4IcTxtYT5qXv0Sc0IQwugqRA
-   XI+92kINmdGIRtedwQlVWX7Xl7W9gpkWlNsZnuJUQynkvglwyLHLkVcax
-   Sh/4ZEwZpYXMaYBzpNNcmQvgI3YcnXIJkrFdJ31skuWmCwwRT1vj2Q7fh
-   A==;
-X-CSE-ConnectionGUID: +boyJUc8T2OD97z34jwl4w==
-X-CSE-MsgGUID: 4xCxoDkkSsmfXGbgmuhBQA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="22808729"
+  bh=mpeI7dxGBjXJkH2OOGSAH6mbSJNyYYKdgngapiZV/lM=;
+  b=FbWaeQgyXb6f9UJWMqeDMueYJbo0BW2fiXikr/E8Zh/zhHn7JAeum2iG
+   PQaqUV/V+qTbN58bL8VMwS8kZOw8TU6/wyoaF0ZGXAzECQ7ADD+Sv65Jj
+   RS1ZEdvNi8IN0dQd1q7k7Pwe1hsp3howTqdvMuFgLaMy3g0zTyIGQukMC
+   CxBq932OOl5ZVFv2Ra2CI2FjHajcQ78eGCbU316ICSqnhiXRXr4zl+Zg6
+   2gJTgvqK4XwUkl5/tkbTX8K2pbwzVOwIwME3f8fPi+wE7/azz/uzQLu0T
+   //rPl9vXKPR902kKXYlwTxBbI6mMuzOYnH1sVxqOh1OKaQY55eaw+TAtt
+   g==;
+X-CSE-ConnectionGUID: C2Hwg27xR5KrPOTjBaezhA==
+X-CSE-MsgGUID: NOcnVgdHS362lSNKt+W4NQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="22808741"
 X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="22808729"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 07:20:04 -0700
-X-CSE-ConnectionGUID: Yq5WDUTCRuOlXKKW2AH2Qw==
-X-CSE-MsgGUID: KD9wOimsS0GmnoCnwUgOkQ==
+   d="scan'208";a="22808741"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 07:20:05 -0700
+X-CSE-ConnectionGUID: E0nY6EjER3W1Z8B9VDY4QQ==
+X-CSE-MsgGUID: XFBXlvQ6QW2hjlEr2xFsAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="69253422"
+   d="scan'208";a="31944628"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 17 May 2024 07:20:00 -0700
+  by orviesa009.jf.intel.com with ESMTP; 17 May 2024 07:20:01 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 69760F21; Fri, 17 May 2024 17:19:50 +0300 (EEST)
+	id 756D11084; Fri, 17 May 2024 17:19:50 +0300 (EEST)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
@@ -79,9 +79,9 @@ Cc: linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 15/20] x86/tdx: Convert PAGE_ACCEPT tdcall to use new TDCALL_0() macro
-Date: Fri, 17 May 2024 17:19:33 +0300
-Message-ID: <20240517141938.4177174-16-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 16/20] x86/tdx: Convert VP_INFO tdcall to use new TDCALL_5() macro
+Date: Fri, 17 May 2024 17:19:34 +0300
+Message-ID: <20240517141938.4177174-17-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240517141938.4177174-1-kirill.shutemov@linux.intel.com>
 References: <20240517141938.4177174-1-kirill.shutemov@linux.intel.com>
@@ -93,44 +93,69 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use newly introduced TDCALL_0() instead of __tdcall() to issue
-PAGE_ACCEPT tdcall.
+Use newly introduced TDCALL_5() instead of tdcall() to issue VP_INFO
+tdcall.
 
-It cuts code bloat substantially:
+It cuts code bloat slightly:
 
 Function                                     old     new   delta
-tdx_accept_memory                            592     233    -359
+tdx_early_init                               780     744     -36
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/coco/tdx/tdx-shared.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/coco/tdx/tdx.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/coco/tdx/tdx-shared.c b/arch/x86/coco/tdx/tdx-shared.c
-index 1655aa56a0a5..9104e96eeefd 100644
---- a/arch/x86/coco/tdx/tdx-shared.c
-+++ b/arch/x86/coco/tdx/tdx-shared.c
-@@ -5,8 +5,8 @@ static unsigned long try_accept_one(phys_addr_t start, unsigned long len,
- 				    enum pg_level pg_level)
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index e7ffe1cd6d32..e1849878f3bc 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -247,20 +247,22 @@ static void enable_cpu_topology_enumeration(void)
+ 	tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_ENUM_TOPOLOGY, TD_CTLS_ENUM_TOPOLOGY);
+ }
+ 
++static void tdg_vp_info(u64 *gpa_width, u64 *attributes)
++{
++	u64 dummy, ret;
++
++	ret = TDCALL_5(TDG_VP_INFO, 0, 0, 0, 0, *gpa_width, *attributes, dummy,
++		       dummy, dummy);
++	BUG_ON(ret);
++
++	*gpa_width &= GENMASK(5, 0);
++}
++
+ static void tdx_setup(u64 *cc_mask)
  {
- 	unsigned long accept_size = page_level_size(pg_level);
 -	struct tdx_module_args args = {};
- 	u8 page_size;
-+	u64 ret;
+-	unsigned int gpa_width;
+-	u64 td_attr;
++	u64 gpa_width, td_attr;
  
- 	if (!IS_ALIGNED(start, accept_size))
- 		return 0;
-@@ -34,8 +34,8 @@ static unsigned long try_accept_one(phys_addr_t start, unsigned long len,
- 		return 0;
- 	}
+-	/*
+-	 * TDINFO TDX module call is used to get the TD execution environment
+-	 * information like GPA width, number of available vcpus, debug mode
+-	 * information, etc. More details about the ABI can be found in TDX
+-	 * Guest-Host-Communication Interface (GHCI), section 2.4.2 TDCALL
+-	 * [TDG.VP.INFO].
+-	 */
+-	tdcall(TDG_VP_INFO, &args);
++	tdg_vp_info(&gpa_width, &td_attr);
  
--	args.rcx = start | page_size;
--	if (__tdcall(TDG_MEM_PAGE_ACCEPT, &args))
-+	ret = TDCALL_0(TDG_MEM_PAGE_ACCEPT, start | page_size, 0, 0, 0);
-+	if (ret)
- 		return 0;
+ 	/*
+ 	 * The highest bit of a guest physical address is the "sharing" bit.
+@@ -269,11 +271,8 @@ static void tdx_setup(u64 *cc_mask)
+ 	 * The GPA width that comes out of this call is critical. TDX guests
+ 	 * can not meaningfully run without it.
+ 	 */
+-	gpa_width = args.rcx & GENMASK(5, 0);
+ 	*cc_mask = BIT_ULL(gpa_width - 1);
  
- 	return accept_size;
+-	td_attr = args.rdx;
+-
+ 	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
+ 	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
+ 
 -- 
 2.43.0
 
