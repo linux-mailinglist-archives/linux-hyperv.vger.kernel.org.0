@@ -1,66 +1,66 @@
-Return-Path: <linux-hyperv+bounces-2196-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2197-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B2A58C9B67
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 May 2024 12:35:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D26938C9B69
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 May 2024 12:36:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAD10280F5A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 May 2024 10:35:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 920691F2242E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 May 2024 10:36:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E704E1CE;
-	Mon, 20 May 2024 10:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A64543AA1;
+	Mon, 20 May 2024 10:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gx9CISCq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fd6EO12v"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD003E47B;
-	Mon, 20 May 2024 10:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D70E50286;
+	Mon, 20 May 2024 10:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716201348; cv=none; b=m2TUa0QUcoLnzYMXMP4XC5bApJmphN5ce255MxY7XYdSmytsHoZ2HXYRFvesBey5xKslwrVnB+V2to/72UU9BJxx+L+5kOZUXYgcklNpX+VTLjAOqecsJH/Gcz3aOmQF5hTwnOUwYZ/8moSykR+Wbl5ruXocsA3vqhjF3MbeIf4=
+	t=1716201363; cv=none; b=SH1KsHTU75XqNRkfp6MuDlY1g5LpcLgHgYHktJcfHrnP+FJOjfkr9XwFUBzxVk1PyMR2WpuDOpf8JK9nG1D1U8kMX5g70RswSs8fF3qy49EiIt1iv5Sg44KIFjOcOZt3J51vbdjbXUY2IP6JyP15dylcZD8XX50GUIEkAnnppBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716201348; c=relaxed/simple;
-	bh=A/ZtKIOzjGzmus/h85YRhlIv2OaZKnnSRZwq4D30MIw=;
+	s=arc-20240116; t=1716201363; c=relaxed/simple;
+	bh=syda7rkpQQnrGgjV/E2QmFzu1fbgMQWQf+ASj41Ru3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrdpH72rtbvnIcjiSWiyZDcPzhHPrWjCXh4Y5AArcBn7ccXea5NR4dIXCL9YgEuSdCC53L24E8jeoCXXUtiJCQqM5GVu9RbnpbXtW+7ZsUcFsCv1G2n1wO1bhZLQ9COjVO598kFL3QlNjGDQK+xmZGskYJZdybczcPe1ikHVSzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gx9CISCq; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=mAbBrwvuIEQu1JOv9ZYj+mwtJiFXi/OK9aFLOJuADH/kBJAHNuvndK3NXs3hYKCMxf+7bsqbj5D1Sq6mNxS34R+8/JH45ZfcBU5mTUCBrAV8cm+90inGL/EoO40AW3LyQMpYE3RLaHCnHLnYV6NRTSKqCiWUvZu2EajwUQ5KKUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fd6EO12v; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716201347; x=1747737347;
+  t=1716201362; x=1747737362;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=A/ZtKIOzjGzmus/h85YRhlIv2OaZKnnSRZwq4D30MIw=;
-  b=Gx9CISCq8eNbT5ZnT8fMXP963rgXu/ci2u64x7cuI5qR0EyIm1D6r7rn
-   N/evgfK091pLoeTZ1R357taYGUhaf9TqTyDV2GNp0qCMsKZJEkuQNxkcV
-   6SjIQWy5Yr3LUdoQJZAApTRlq2C6EGAe98/i9vNfupOJiuQh3cAA44F84
-   OGrwF/CwwkQLXGnn4eU6uqZyUS+XkBWlgWcHkuYxPKXcE9NA+hoOt5r5g
-   upApOOLCOJOPjJmpdtvYt24gROkXpGOQA4FuTlgCGme7K6Kb9w1kyH4QP
-   Av+GWtqWnwPxsoaW1t/1deuWcsc+e4E40ZoGjRHOpF/RLDou2TUJ/NC49
+  bh=syda7rkpQQnrGgjV/E2QmFzu1fbgMQWQf+ASj41Ru3Q=;
+  b=fd6EO12vUbH3Q10DNh6OqvHz775rCIHYHxjQKGFYyC6PuxRXUbitHikd
+   j2wcKPOmi3YFzhC42S0VNuB8Q2sEObrumBhN7PhI0J2h5DoJkZ1YOsWkq
+   sr5ThtAuzxSy9zZw10YvTSrHnobvUUidUtPiP9vrDjZbij5Ug2yXd8y1T
+   hy5YyoOR947HWgYW7vU0QmOfIxFvVzl6HWqCAgeN066BIlFqSUOWfHxBJ
+   +iXhkgOTGyUT6DoGNbKQnY7rVreYIw3X2sBzqEH/y/tOfsCKUD5pHZfiJ
+   40qJ6TeZVrOTCLku7d4A3sIGwYpicpGsukPXS34h2ik5792o+qLPUZoT4
    w==;
-X-CSE-ConnectionGUID: mwYH+XVYQPGRjh6jGPiNZw==
-X-CSE-MsgGUID: FjGtkcOKTXmwR1uOmcZJ5g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="34836330"
+X-CSE-ConnectionGUID: fHAW2mC7Sl+gO1OujUAv+w==
+X-CSE-MsgGUID: dkGsCD1rS/K60+A+rrqOzQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="34836384"
 X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="34836330"
+   d="scan'208";a="34836384"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 03:35:46 -0700
-X-CSE-ConnectionGUID: MELpyzzDQnWS3eqmSDJPtw==
-X-CSE-MsgGUID: 6BfR/RPaSR6mpxmR7CD7vQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 03:36:01 -0700
+X-CSE-ConnectionGUID: 46FNNeaMSFGrbq2vToqboA==
+X-CSE-MsgGUID: q8r12nkES3agOfd9DnoX6g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="32624271"
+   d="scan'208";a="32624402"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 20 May 2024 03:35:43 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 20 May 2024 03:35:57 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D7E0D2AD; Mon, 20 May 2024 13:35:41 +0300 (EEST)
-Date: Mon, 20 May 2024 13:35:41 +0300
+	id 206232AD; Mon, 20 May 2024 13:35:56 +0300 (EEST)
+Date: Mon, 20 May 2024 13:35:56 +0300
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Sean Christopherson <seanjc@google.com>, 
@@ -70,11 +70,11 @@ Cc: Sean Christopherson <seanjc@google.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
 	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
 	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 01/20] x86/tdx: Introduce tdvmcall_trampoline()
-Message-ID: <d6nrxz2rxguyjj7rmmj7jl7uvtmo5o2kpbqqxtn5wxyqjurfr6@niuyjy3l3jpy>
+Subject: Re: [PATCH 02/20] x86/tdx: Add macros to generate TDVMCALL wrappers
+Message-ID: <je6a3ftfcfwhiz26kcy5wkcini6mfjd7czrvmyn245hzbb7aeb@53hvyzvjgzip>
 References: <20240517141938.4177174-1-kirill.shutemov@linux.intel.com>
- <20240517141938.4177174-2-kirill.shutemov@linux.intel.com>
- <9cd7f179-673b-4e96-be08-128dc6fb6271@redhat.com>
+ <20240517141938.4177174-3-kirill.shutemov@linux.intel.com>
+ <58b02adc-7389-4fcd-a443-1856af7886b7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -83,17 +83,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9cd7f179-673b-4e96-be08-128dc6fb6271@redhat.com>
+In-Reply-To: <58b02adc-7389-4fcd-a443-1856af7886b7@redhat.com>
 
-On Fri, May 17, 2024 at 07:02:25PM +0200, Paolo Bonzini wrote:
+On Fri, May 17, 2024 at 06:54:15PM +0200, Paolo Bonzini wrote:
 > On 5/17/24 16:19, Kirill A. Shutemov wrote:
-> > The function will be used from inline assembly to handle most TDVMCALL
-> > cases.
+> > Introduce a set of macros that allow to generate wrappers for TDVMCALL
+> > leafs. The macros uses tdvmcall_trmapoline() and provides SYSV-complaint
+> > ABI on top of it.
 > 
-> Perhaps add that the calling convention is designed to allow using the asm
-> constraints a/b/c/d/S/D and keep the asm blocks simpler?
+> Not really SYSV-compliant, more like "The macros use asm() to call
+> tdvmcall_trampoline with its custom parameter passing convention".
 
-Sure.
+Sounds better, thanks.
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
