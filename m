@@ -1,68 +1,86 @@
-Return-Path: <linux-hyperv+bounces-2222-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2223-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DCFE8D1406
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 07:42:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DD7C8D1703
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 11:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EE7D1F22403
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 05:42:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEEC11C22C61
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 09:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF3F4CB4E;
-	Tue, 28 May 2024 05:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8C086F525;
+	Tue, 28 May 2024 09:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxsOeS6W"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C892E3F9FC;
-	Tue, 28 May 2024 05:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B7917E8F3;
+	Tue, 28 May 2024 09:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716874946; cv=none; b=O3WhqjqznybsZny7WuK65ApEYPlS4ToMd00zOwW8blmWE6Tne1oL2pffHzL6uPaSYpDcoVn9c5KyR0QLlT2+lVmajFKbq4MKoojF71GyjPirw8twPFCkze4zY67nkORNoGTfeTGUYaR4TD3tymBOvLadm6U+VMcv/UlBYXMrlLk=
+	t=1716887773; cv=none; b=HLSx9EZ07i1T0uCBI2yt0U6kw11v0kO5fOu+xmN6fx/jnnn1InahuTypsph2RGWs0LwBLQZfRLPvV7Oqwn6L8tLw1w7u76LJG0sT80xpqaU3KAKdNmCzjVFjCMzosvQoUpbeonFcMuytsqsr+zv+Hina+ji1GM2t2KMgZxaQryY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716874946; c=relaxed/simple;
-	bh=3DQfssdRW+iUJSUSl6k5ZV4jcESjudzuyWB/cFlaOL0=;
+	s=arc-20240116; t=1716887773; c=relaxed/simple;
+	bh=ODCeOz68Tw5iqfAQ+za+X6Ik/MLNV933HgaQ30waK/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y9ct47Qq/gX3mfDMUB0HwWfeD8fuvl+Za4SemJhKfRfgI+G3uM/nSY67lnHRimLh3KmWeGoP9TJ89i5nfWTQGxxxSBTeJiffaoanqhO2A6IWsAC8SczMu2v/kBjewFdoMLLHQXroUIje/kmZxU2eVJ/ma+JU0cI5gmA99mmdDps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f47eb21f0aso4022945ad.1;
-        Mon, 27 May 2024 22:42:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716874944; x=1717479744;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fy9n6lh6/7Mb5daFJ2g6ZixLgVz7dPgqfc9MDBTUFyE=;
-        b=FyYxFqF/p+2Tl3u4ut33VI67BjevJiERJI80x2g1vaWvyC5vux/WaQ9DtESoDdk/0+
-         2nC+uoTLkerZ+ecvCI9uDs4xTIAFUqM9KCT7/Akd+zUplVHEKYBHxJ2a/ruXnXzSCA1u
-         rSL/s7cTDoEQXyRDl8lVlnb2nuQLfS0/FfyejVge/6+QEAO6Xk6Cv1bx8uhQI59ynMD2
-         Bjtnl8g09Ygzpbq3XL247X9IAL0SkStwyMGwnh6CeS+j/EklyTKTg6CkAlFcwe65la2+
-         Om8zkxjIX0g4lRdCXO1ZJ7EgjLLjfW8jxaQ8VIDm7LABklyDDF7pzHoNSk7YCYUgsh8c
-         HNsg==
-X-Forwarded-Encrypted: i=1; AJvYcCV57/tpvhJsWkpVip0oOvuEl2dK0N9XE2dKggqrkN5uvpjaqS7c13LRkykjas8XiBAWlpkwI/BSFlkRhV1JdF8Ry5hJ+KWuP+OBTTAQCknYLBM0su3k7c6uaryKhLPqazIL+LmpkaCAZFYP
-X-Gm-Message-State: AOJu0Yx/ulVlg0wzhTrLsgeYVDu2jDcPMxbxnMDUBlDAN2atGvHpKW5S
-	V6bXuI/AhiAVkWS3L5keQ2ky89AD4TWc1bb0zFKVrigTQQ1A0Gd5/NQ12A==
-X-Google-Smtp-Source: AGHT+IG/sGdiCI9ZO/RdX4gnDMM5AfDcrgTo9NdR4VfDVMWu62hTyogSKIItAEkEi9OL/Upsko7wsQ==
-X-Received: by 2002:a17:903:41ce:b0:1eb:4c1d:ed2a with SMTP id d9443c01a7336-1f44871e51bmr125122135ad.27.1716874943969;
-        Mon, 27 May 2024 22:42:23 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f49c155d6bsm29404025ad.229.2024.05.27.22.42.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 22:42:23 -0700 (PDT)
-Date: Tue, 28 May 2024 05:42:22 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-Cc: adityanagesh@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] Drivers: hv: Cosmetic changes for hv.c and balloon.c
-Message-ID: <ZlVuvkWTBVmAyrZK@liuwe-devbox-debian-v2>
-References: <1713842326-25576-1-git-send-email-adityanagesh@linux.microsoft.com>
- <ZlVo6bhEvBCIG_1d@liuwe-devbox-debian-v2>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UGhwkSraWu2iI7JvBy6r9WE//kq3jyHGpsebgkRXFqkL4rGASUfGgHoGaSJJKU3LZlNWd/aBaRRDEfYqJ79QVMVe0DmUOzDvTS6j8lrcd1zOTp8NiZLX4fCjYv1RQ6daHVvEW5z3yS/C+cDccwOICZeI9tJX18Sp9YsFohxpbE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxsOeS6W; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716887772; x=1748423772;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ODCeOz68Tw5iqfAQ+za+X6Ik/MLNV933HgaQ30waK/4=;
+  b=bxsOeS6WEGzt0QHsQEdQA7gDddEgsBm84682Flt11bLuZFnOwBFk1q6I
+   mRjev80Gz0meEImcoXmOqyTOzF731XWt/gHsHBUInAv2fD1aJJyu69RZ3
+   yljYED4NHf4xRJZ+1AhIQpgR6FdN0j6SyRxriNZSZ/LrjS1Y+jWjP5FFQ
+   SRgKC+fgsx8Raun8Ur5aPt77E8VAct9qXFM09YDS2xlR+r9ayH5CK//Er
+   oTkXjpFv4qlTRF+htgYIq/rvniHpT+fpTjue3ujMBEREREeqdkt9/hlGX
+   cn5LAjf11BRfgMWirFrmopMZ+H5dH5aUC166+zkKFgFMkPsKzBbJwaNLr
+   w==;
+X-CSE-ConnectionGUID: 6lMTsNc2Q6+sA0lHHqcmaA==
+X-CSE-MsgGUID: ZVltBjMyTfCDh7jI82aupQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="23884590"
+X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
+   d="scan'208";a="23884590"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 02:16:11 -0700
+X-CSE-ConnectionGUID: Om5udNsHS6m98j9lL/vqJg==
+X-CSE-MsgGUID: PeGsG56JQ/ehJ5bU6MIA6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
+   d="scan'208";a="35093312"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 28 May 2024 02:16:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 19534184; Tue, 28 May 2024 12:16:05 +0300 (EEST)
+Date: Tue, 28 May 2024 12:16:05 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	"hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>, 
+	"luto@kernel.org" <luto@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, 
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, jason <jason@zx2c4.com>, 
+	"mhklinux@outlook.com" <mhklinux@outlook.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tytso@mit.edu" <tytso@mit.edu>, "ardb@kernel.org" <ardb@kernel.org>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: Re: [RFC PATCH] clocksource: hyper-v: Enable the tsc_page for a TDX
+ VM in TD mode
+Message-ID: <pwwqslpypa4zbyypq25qkvyayu5qpmz7wkjmax7zs6s4f7mr5t@7pf4gq2w6o7u>
+References: <20240523022441.20879-1-decui@microsoft.com>
+ <299a83e8-cb13-4599-9737-adb3bb922169@intel.com>
+ <SA1PR21MB1317CD997CCD64654B438754BFF52@SA1PR21MB1317.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -71,25 +89,56 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZlVo6bhEvBCIG_1d@liuwe-devbox-debian-v2>
+In-Reply-To: <SA1PR21MB1317CD997CCD64654B438754BFF52@SA1PR21MB1317.namprd21.prod.outlook.com>
 
-On Tue, May 28, 2024 at 05:17:29AM +0000, Wei Liu wrote:
-> On Mon, Apr 22, 2024 at 08:18:46PM -0700, Aditya Nagesh wrote:
-> > Fix issues reported by checkpatch.pl script in hv.c and
-> > balloon.c
-> >  - Remove unnecessary parentheses
-> >  - Remove extra newlines
-> >  - Remove extra spaces
-> >  - Add spaces between comparison operators
-> >  - Remove comparison with NULL in if statements
+On Fri, May 24, 2024 at 08:45:42AM +0000, Dexuan Cui wrote:
+> > From: Dave Hansen <dave.hansen@intel.com>
+> > Sent: Thursday, May 23, 2024 7:26 AM
+> > [...]
+> > On 5/22/24 19:24, Dexuan Cui wrote:
+> > ...
+> > > +static bool noinstr intel_cc_platform_td_l2(enum cc_attr attr)
+> > > +{
+> > > +	switch (attr) {
+> > > +	case CC_ATTR_GUEST_MEM_ENCRYPT:
+> > > +	case CC_ATTR_MEM_ENCRYPT:
+> > > +		return true;
+> > > +	default:
+> > > +		return false;
+> > > +	}
+> > > +}
+> > > +
+> > >  static bool noinstr intel_cc_platform_has(enum cc_attr attr)
+> > >  {
+> > > +	if (tdx_partitioned_td_l2)
+> > > +		return intel_cc_platform_td_l2(attr);
+> > > +
+> > >  	switch (attr) {
+> > >  	case CC_ATTR_GUEST_UNROLL_STRING_IO:
+> > >  	case CC_ATTR_HOTPLUG_DISABLED:
 > > 
-> > No functional changes intended
-> > 
-> > Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-> > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > On its face, this _looks_ rather troubling.  It just hijacks all of the
+> > attributes.  It totally bifurcates the code.  Anything that gets added
+> > to intel_cc_platform_has() now needs to be considered for addition to
+> > intel_cc_platform_td_l2().
 > 
-> Applied to hyperv-fixes, thanks!
+> Maybe the bifurcation is necessary?
 
-Actually, can you rebase this path to hyperv-fixes and resend? It
-conflicts with other patches in that branch.
+I would like to keep the same code paths for all TDX guests level, if
+possible.
+
+> TD mode is different from
+> Partitioned TD mode (L2), after all. Another reason for the bifurcation
+> is:  currently online/offline'ing is disallowed for a TD VM, but actually
+> Hyper-V is able to support CPU online/offline'ing for a TD VM in
+> Partitioned TD mode (L2) -- how can we allow online/offline'ing for such
+> a VM?
+
+This is going to be fixed by kexec patchset. It was wrong to block offline
+based on TDX enumeration. It has to be stopped for MADT wake up method, if
+reset vector is not supported.
+
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
