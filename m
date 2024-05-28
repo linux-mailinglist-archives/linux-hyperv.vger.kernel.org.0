@@ -1,67 +1,68 @@
-Return-Path: <linux-hyperv+bounces-2216-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2217-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 910EF8D13C5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 07:17:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C3058D13D9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 07:26:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C26681C20AF1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 05:17:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24B90284EED
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 May 2024 05:26:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CC74879B;
-	Tue, 28 May 2024 05:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D366A4C622;
+	Tue, 28 May 2024 05:26:49 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAA24AEC6;
-	Tue, 28 May 2024 05:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A524AEDF;
+	Tue, 28 May 2024 05:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716873453; cv=none; b=QRUtcsvEskYqxCwRjrK3/m+kDmsFPQPl5v9W/PZuWArsJl4m5N1wMlZ0IomNK0gCli/gMbv1A6eU9UVbx5T4kyIGBm3qLcjnyHiYsQkqCxKbCwV0C0qsnl48UTZ4ebPKSqb0ZOUlvA/00D3hcOgL17FxuOS6C4p3rLMxrbHxOuc=
+	t=1716874009; cv=none; b=upV02N/F8KFXhm7ZVbA5mYtoQgI3bw8rYRPWjoluiCY5c8BLH2kZdXnK44dPZDz5yR73+lswzRsJ+o3gGDes5sMa+Uw6oFu/aJjX+mWICfyQZMpKKhMSZuTIaeRlFyJz7GT/rQpaddBZgMfupyWUTB9NlJlgJrbhQFOVdtIooRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716873453; c=relaxed/simple;
-	bh=IuHMtwTeyqlpqYeXM422lXhrG4rbRJ+Mx575mDzsOgg=;
+	s=arc-20240116; t=1716874009; c=relaxed/simple;
+	bh=dKUKg1WZRn2ZtGiTBy4fF17rlWdKqnSB17dRNHS6h9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GCC9XQmXFta1ayAeBBBWD8zgx14gnxjSKxbj1JMaDerd81Gry0R760xW9N2vB5pZp35PZ6e6ikJYuWE0NcHzIzky75cKGGnzRmQZZ4OJcQNp+kHU225jWCY2zseLz01dJZlNfmqVCoSS4/1DJJlDY080aMUdCM7lYb2U/mDWOu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=eN5qy0iYhyrSdOKzem5T0NDlZ/h0OgiiXkIMonN1FXRiDC/cQPvJtk3iwtkMhQEMqVJ+noiaRUl8HT83fzFHEG4bBZTvQQ9KlfDOO0gwbCjJ7rA+c4I/SzrtWd3qkfs8CNxPdEhPYqCgtjOntxhG/c8bHOP8Jb0R/BSDYQU5o/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f8e9878514so281712b3a.1;
-        Mon, 27 May 2024 22:17:32 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6fcbd812b33so328126b3a.3;
+        Mon, 27 May 2024 22:26:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716873452; x=1717478252;
+        d=1e100.net; s=20230601; t=1716874008; x=1717478808;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mwu2A3L+vnaLJrpl04TOxaMqzUnVipp0rU1gzlqdkuo=;
-        b=aHRjPyggbSauRsUIhRYDrekWSlTpfgvHutl/JTs1yJdGVpMmNkr0Tf19kizrQHE3ts
-         1VSmfDDuF2FMGsimYaxYnHh2EpKMmV7BE4dUaYG/AkkVkizgcLQPOKYLAFvDu/SS9BAd
-         P+ecDt6/VGm18MKe/9uVRMAhdgSDlu5osN3wb0aMsk8zTG6Q4kTnN8/ZKq0ZH2TCJedm
-         IIRMKoju0j/Kpc3zhgZgvKmo2+qR8PYsRJZ/tjWJja/n19M6sdgBFCvWfZ4JEZULMW6H
-         lRYtta8FAXXJV0Vcex4CdkjRi2KNWIBg4xKJO4b+gcRJFKQRwVfCh2g9r01XG9nNrUku
-         AEAw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3OC5KwH0dz2PhP9Lzq5yBSPXlrNwA/d6BJ8NI0wQVFBbtWvWCdf8iLZ1rLXRw1tqRFTfeLRMr1KWaomTyvQHO1hyeK1guq2dOXPaP4Tqts8tlf/z8Fr32DkzFTVgcrdZ8c65iNyt9IeBp
-X-Gm-Message-State: AOJu0Yzx+aoE+Y3ChOn6gz3vAGq+cqOReIfTxDe5U3fnpDUGvhs7TJEM
-	RBoS2m51Oc1Y5N3nv3E/VsARVLbq6nOEefQ+S6Ty/oQ0e9VBC4xR
-X-Google-Smtp-Source: AGHT+IFxGawmR0bNdr/hoyLH4cc/hCM4hOcXhFoeTTnkd7P16HJzB7T8Q7mkRXK36PzJy8X41oYjEQ==
-X-Received: by 2002:a05:6a20:d409:b0:1af:d6dc:86b9 with SMTP id adf61e73a8af0-1b212e3520fmr9309648637.53.1716873451770;
-        Mon, 27 May 2024 22:17:31 -0700 (PDT)
+        bh=vlW4EAxcB8L4oBnHXmOPp25+g4VhoDida1etdRjJ2Ts=;
+        b=EcIRDmHBUkWQuDXJbdoTknCXz/YhkLyNX+M90FawkOGrYFFyuBvEbnADL1JibcFq4/
+         w39uphA+vjOlJOKsWJ6IOqZTqU2DhVtCSKlUZHuTK4foNxFmo3RxQsfuNjZWOqBGnITU
+         nX4BbKuvLsyhY5n5twzMwcxm4LgnJl3+EAm0bzONL0xcm52qi6vVq2j/qo4KjBTuebnJ
+         /HUkXnemq6/rGyMHW/62KF6yp+qAxRP+L5+pINNsaNO0o88S9UsM0Sa/WI+Fp30kMF/K
+         GNB8ahASI2eHm1yucX7cKldq6/BtdnmLHvL8jfg8MaWtZCKk0KhBhz0loC9BJm3yH5Mt
+         /7gg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSLWiqZ9uE8jszycszPXMamzhvu8fh2cbRvW9qhSlDdrFev4uiOWrvOO6VVlBF51uY5V67qdXyiauZQs67kEmfR3SpuUmrCQ9M4TfCmlO+DArqjl2Ed7e8mUAj+SK951hCN3/LLGvKIetZ
+X-Gm-Message-State: AOJu0YzzqVFzIsbr864FzmbQ+JezblLpy5IiNTNnHjh6JI3BBccZDOGl
+	+Sgo2iZWPz/PSgytkuIleZEWLQg1w0+aHcx21s5nt/3HF2yCojiA
+X-Google-Smtp-Source: AGHT+IFxcs5Rgra1V+5YmxELkVYBOYu9H90j8f+i8Q13SeOWT1vR3ADDU1FNAFGjYjnfMvqQTy6jmA==
+X-Received: by 2002:a05:6a20:104d:b0:1b0:2ef4:e5b0 with SMTP id adf61e73a8af0-1b212d04f52mr9352895637.17.1716874007154;
+        Mon, 27 May 2024 22:26:47 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9dd375sm70655385ad.288.2024.05.27.22.17.30
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f48bbbcaf0sm36113225ad.48.2024.05.27.22.26.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 22:17:31 -0700 (PDT)
-Date: Tue, 28 May 2024 05:17:29 +0000
+        Mon, 27 May 2024 22:26:46 -0700 (PDT)
+Date: Tue, 28 May 2024 05:26:45 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-Cc: adityanagesh@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] Drivers: hv: Cosmetic changes for hv.c and balloon.c
-Message-ID: <ZlVo6bhEvBCIG_1d@liuwe-devbox-debian-v2>
-References: <1713842326-25576-1-git-send-email-adityanagesh@linux.microsoft.com>
+To: mhklinux@outlook.com
+Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	david@redhat.com
+Subject: Re: [PATCH v3 1/2] hv_balloon: Use kernel macros to simplify open
+ coded sequences
+Message-ID: <ZlVrFUIFLxxDpyCo@liuwe-devbox-debian-v2>
+References: <20240503154312.142466-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,21 +71,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1713842326-25576-1-git-send-email-adityanagesh@linux.microsoft.com>
+In-Reply-To: <20240503154312.142466-1-mhklinux@outlook.com>
 
-On Mon, Apr 22, 2024 at 08:18:46PM -0700, Aditya Nagesh wrote:
-> Fix issues reported by checkpatch.pl script in hv.c and
-> balloon.c
->  - Remove unnecessary parentheses
->  - Remove extra newlines
->  - Remove extra spaces
->  - Add spaces between comparison operators
->  - Remove comparison with NULL in if statements
+On Fri, May 03, 2024 at 08:43:11AM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> No functional changes intended
+> Code sequences equivalent to ALIGN(), ALIGN_DOWN(), and umin() are
+> currently open coded. Change these to use the kernel macro to
+> improve code clarity. ALIGN() and ALIGN_DOWN() require the
+> alignment value to be a power of 2, which is the case here.
 > 
-> Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-Applied to hyperv-fixes, thanks!
+Applied. Thanks.
 
