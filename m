@@ -1,166 +1,667 @@
-Return-Path: <linux-hyperv+bounces-2255-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2256-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFFD38D3A7B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 May 2024 17:16:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16ED58D3BE5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 May 2024 18:08:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FB431F26702
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 May 2024 15:16:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C01F1284377
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 May 2024 16:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF20E181B83;
-	Wed, 29 May 2024 15:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41D6B181D1B;
+	Wed, 29 May 2024 16:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PdGuX3Gd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="k1jSedwb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AB01802BB;
-	Wed, 29 May 2024 15:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2B9156C61;
+	Wed, 29 May 2024 16:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716995775; cv=none; b=EqPbeSgzjOkfI60dD+h22TYjsKasJ1pm4q8coNpVuSoYXMuzttzviRiIdWT3CsrplU5WpxXiY1vTUrO2WUPC8IhcJ4TUOnh1AStIupYuotKS/oVggjO1kQdi8G8/sfaC7hDn1YK/v0g/uyhjpkVNc2FtyWqgs7w5h3fqSHTpBCc=
+	t=1716998891; cv=none; b=j6qI6R+L1QkUE3BnZPYZuv3/K9nhpmcxNhZwcv5N4PxNGYUj4AcCn2BUOVnn+i2QgjndpdUfvsata7nJ2o0nvW7f5F/p5i9QzwQ+dHxNLUOt5CySkAke5XLSyka95iZkVtoVuzw0GqfQ6wPTVLq84wng53qHiVonP7j8x4k6lXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716995775; c=relaxed/simple;
-	bh=WtwgqPxIEy4rw+nholzssSrglNHugW0jbWtwXs+eqEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E7WGhIGbHj+GUhHqKw1aYQXKcLtx3KDv5YL6JZia++3rf93Yc2pp4J+81XkHqatGO+k+jJ1jDIyYHaGMAka65w45uCoB5YULu9lSvTld3mNafxXqAbcPA3FszzCRfRMTwvF35dTGs8L/QhpY8tUZRVevVK/sWaxiGLeHU/xQt8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PdGuX3Gd reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 38D7840E01A3;
-	Wed, 29 May 2024 15:16:11 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NoOJQ2BFJLv9; Wed, 29 May 2024 15:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1716995765; bh=JxEAHhbyQDE99cyLseBirGgp8UILWOP5Nko9ahp4ykk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PdGuX3GdGiTa0UBwqDbqBBMWaahwz8CoKM8nSbk04nqa1vJJRShBdhSaMbJOBrOMS
-	 Q2dU9SKv0i+u0By+NNXxoInoL89E8cB/UwRvQmEsbp0t9yeuptVk2+nMPiTa4YcVLS
-	 CjhmDbntRtHeUoH0J/C5Payhj7MEEFDjwF6IvqT1PLULC38ho+iNxbpNPNVzkewdAn
-	 psgdhkReuIkiERedkFSLAyGesfzLJ8F26P1AG+zP8BK+UOya9928tQ3UfRu8SjKw2V
-	 P7sZOzs1ZlQk+rskHq2y7cEwA5kKlcGSFbIjdLoQXts0wDcNuVsJQm0tN1/dwbdkTe
-	 yT8o9AeEw3ief09u3TvxcCEqgfh3D3iiUvUxBHDT+gHUolf0IK7jHToeQCiYz4mE57
-	 DXSXJ6LCXNKvr16AW64LSuVZq1PUZLtjsPuJwLw3zb7H7wpkMI2K2/9zQwQEWDdQ0I
-	 X0hCShNDcG3nur10QB3v3pIOER7veBEKaDBy1oOm8MK81qL16xr6HE20KLek5ES3DK
-	 j2MCIyPKND/pZaSW2T8qfpkFydT2gl/95e+3hc9ThfFPyn0o3J4rbrit+6qSygYqb+
-	 rkF9qhe71TCRmtWM4+jNZI1JKSQoJomFiEC6sNSBg4aDPLoLZivG2TqZWEsf0SxkKc
-	 HvWFFqhKGF+2G/5xqStlY82I=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 73B3740E0177;
-	Wed, 29 May 2024 15:15:37 +0000 (UTC)
-Date: Wed, 29 May 2024 17:15:31 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Andrew Cooper <andrew.cooper3@citrix.com>,
-	Nikolay Borisov <nik.borisov@suse.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
- confusion
-Message-ID: <20240529151531.GDZldGk5cBbyPrOBRP@fat_crate.local>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
- <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
- <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
- <20240529112852.GBZlcRdI3oqBtjKxAV@fat_crate.local>
- <55bc0649-c017-49ab-905d-212f140a403f@citrix.com>
+	s=arc-20240116; t=1716998891; c=relaxed/simple;
+	bh=Ino/q2I3E9Xzt1NAas5LzUcFBtyYg4rCUD0aIpB3Xg8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=akphov7l4HQW53LA8n3QSJHV0MEYkVISIRD5cRXhjvm3tVFnVA2JepqHe2dxghM/e9iAHGSJnXM6ygru5epP+ZNqxGVXvDX/6ArYoVO4qvc8c/Y/rzZ6H3S1RWMcAJnmPpWprn9/PRaic+h8GVP06OmzpNARQlua4EXuKdWaB4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=k1jSedwb; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1175)
+	id ABBD920B9260; Wed, 29 May 2024 09:08:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ABBD920B9260
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1716998888;
+	bh=Xml5LLhIGUqtB23zv/flkjf+gjxvHy5gJZ3yfro86I8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k1jSedwbdRAI4VADIYnlkTgRDAq7iaSO2k15r8s10iem6nxweg3CJJHj8OrwnZDWJ
+	 oCkDFb6HlJ6aiTSiCz5KWDV4SX35l1g8sn/iiL+1MylEmHrbtcSoq+bJ6gtbRg3ThC
+	 0FSRFuOBaCxOtMTuHB8OGkon+yThiVzZASyd2/Tk=
+From: Aditya Nagesh <adityanagesh@linux.microsoft.com>
+To: adityanagesh@microsoft.com,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Aditya Nagesh <adityanagesh@linux.microsoft.com>
+Subject: [PATCH v5] Drivers: hv: Cosmetic changes for hv.c and balloon.c
+Date: Wed, 29 May 2024 09:04:55 -0700
+Message-Id: <1716998695-32135-1-git-send-email-adityanagesh@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <55bc0649-c017-49ab-905d-212f140a403f@citrix.com>
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 01:33:35PM +0100, Andrew Cooper wrote:
-> Seems I've gained a reputation...
+Fix issues reported by checkpatch.pl script in hv.c and
+balloon.c
+ - Remove unnecessary parentheses
+ - Remove extra newlines
+ - Remove extra spaces
+ - Add spaces between comparison operators
+ - Remove comparison with NULL in if statements
 
-Yes you have. You have this weird interest in very deep uarch details
-that I can't share. Not at that detail. :-P
+No functional changes intended
 
-> jmp 1f dates back to ye olde 8086, which started the whole trend of the
-> instruction pointer just being a figment of the ISA's imagination[1].
->=20
-> Hardware maintains the pointer to the next byte to fetch (the prefetch
-> queue was up to 6 bytes), and there was a micro-op to subtract the
-> current length of the prefetch queue from the accumulator.
->=20
-> In those days, the prefetch queue was not coherent with main memory, an=
-d
-> jumps (being a discontinuity in the instruction stream) simply flushed
-> the prefetch queue.
->=20
-> This was necessary after modifying executable code, because otherwise
-> you could end up executing stale bytes from the prefetch queue and then
-> non-stale bytes thereafter.=C2=A0 (Otherwise known as the way to distin=
-guish
-> the 8086 from the 8088 because the latter only had a 4 byte prefetch qu=
-eue.)
+Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+[V5]
+Rebase to hyperv-fixes
 
-Thanks - that certainly wakes up a long-asleep neuron in the back of my
-mind...
+[V4]
+Fix Alignment issue and revert a line since 100 characters are allowed in a line
 
-> Anyway.=C2=A0 It's how you used to spell "serialising operation" before=
- that
-> term ever entered the architecture.=C2=A0 Linux still supports CPUs pri=
-or to
-> the Pentium, so still needs to care about prefetch queues in the 486.
->=20
-> However, this example appears to be in 64bit code and following a write
-> to CR4 which will be fully serialising, so it's probably copy&paste fro=
-m
-> 32bit code where it would be necessary in principle.
+[V3]
+Fix alignment issues in multiline function parameters.
 
-Yap, fully agreed. We could try to remove it and see what complains.
+[V2]
+Change Subject from "Drivers: hv: Fix Issues reported by checkpatch.pl script"
+ to "Drivers: hv: Cosmetic changes for hv.c and balloon.c"
+ drivers/hv/hv.c         |  37 +++++++-------
+ drivers/hv/hv_balloon.c | 105 ++++++++++++++--------------------------
+ 2 files changed, 53 insertions(+), 89 deletions(-)
 
-Nikolay, wanna do a patch which properly explains the situation?
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index a8ad728354cb..e0d676c74f14 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -45,8 +45,8 @@ int hv_init(void)
+  * This involves a hypercall.
+  */
+ int hv_post_message(union hv_connection_id connection_id,
+-		  enum hv_message_type message_type,
+-		  void *payload, size_t payload_size)
++			enum hv_message_type message_type,
++			void *payload, size_t payload_size)
+ {
+ 	struct hv_input_post_message *aligned_msg;
+ 	unsigned long flags;
+@@ -86,7 +86,7 @@ int hv_post_message(union hv_connection_id connection_id,
+ 			status = HV_STATUS_INVALID_PARAMETER;
+ 	} else {
+ 		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
+-				aligned_msg, NULL);
++					 aligned_msg, NULL);
+ 	}
+ 
+ 	local_irq_restore(flags);
+@@ -111,7 +111,7 @@ int hv_synic_alloc(void)
+ 
+ 	hv_context.hv_numa_map = kcalloc(nr_node_ids, sizeof(struct cpumask),
+ 					 GFP_KERNEL);
+-	if (hv_context.hv_numa_map == NULL) {
++	if (!hv_context.hv_numa_map) {
+ 		pr_err("Unable to allocate NUMA map\n");
+ 		goto err;
+ 	}
+@@ -120,11 +120,11 @@ int hv_synic_alloc(void)
+ 		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
+ 
+ 		tasklet_init(&hv_cpu->msg_dpc,
+-			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
++			     vmbus_on_msg_dpc, (unsigned long)hv_cpu);
+ 
+ 		if (ms_hyperv.paravisor_present && hv_isolation_type_tdx()) {
+ 			hv_cpu->post_msg_page = (void *)get_zeroed_page(GFP_ATOMIC);
+-			if (hv_cpu->post_msg_page == NULL) {
++			if (!hv_cpu->post_msg_page) {
+ 				pr_err("Unable to allocate post msg page\n");
+ 				goto err;
+ 			}
+@@ -147,14 +147,14 @@ int hv_synic_alloc(void)
+ 		if (!ms_hyperv.paravisor_present && !hv_root_partition) {
+ 			hv_cpu->synic_message_page =
+ 				(void *)get_zeroed_page(GFP_ATOMIC);
+-			if (hv_cpu->synic_message_page == NULL) {
++			if (!hv_cpu->synic_message_page) {
+ 				pr_err("Unable to allocate SYNIC message page\n");
+ 				goto err;
+ 			}
+ 
+ 			hv_cpu->synic_event_page =
+ 				(void *)get_zeroed_page(GFP_ATOMIC);
+-			if (hv_cpu->synic_event_page == NULL) {
++			if (!hv_cpu->synic_event_page) {
+ 				pr_err("Unable to allocate SYNIC event page\n");
+ 
+ 				free_page((unsigned long)hv_cpu->synic_message_page);
+@@ -203,14 +203,13 @@ int hv_synic_alloc(void)
+ 	return ret;
+ }
+ 
+-
+ void hv_synic_free(void)
+ {
+ 	int cpu, ret;
+ 
+ 	for_each_present_cpu(cpu) {
+-		struct hv_per_cpu_context *hv_cpu
+-			= per_cpu_ptr(hv_context.cpu_context, cpu);
++		struct hv_per_cpu_context *hv_cpu =
++			per_cpu_ptr(hv_context.cpu_context, cpu);
+ 
+ 		/* It's better to leak the page if the encryption fails. */
+ 		if (ms_hyperv.paravisor_present && hv_isolation_type_tdx()) {
+@@ -262,8 +261,8 @@ void hv_synic_free(void)
+  */
+ void hv_synic_enable_regs(unsigned int cpu)
+ {
+-	struct hv_per_cpu_context *hv_cpu
+-		= per_cpu_ptr(hv_context.cpu_context, cpu);
++	struct hv_per_cpu_context *hv_cpu =
++		per_cpu_ptr(hv_context.cpu_context, cpu);
+ 	union hv_synic_simp simp;
+ 	union hv_synic_siefp siefp;
+ 	union hv_synic_sint shared_sint;
+@@ -277,8 +276,8 @@ void hv_synic_enable_regs(unsigned int cpu)
+ 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
+ 		u64 base = (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
+ 				~ms_hyperv.shared_gpa_boundary;
+-		hv_cpu->synic_message_page
+-			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
++		hv_cpu->synic_message_page =
++			(void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
+ 		if (!hv_cpu->synic_message_page)
+ 			pr_err("Fail to map synic message page.\n");
+ 	} else {
+@@ -296,8 +295,8 @@ void hv_synic_enable_regs(unsigned int cpu)
+ 		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
+ 		u64 base = (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
+ 				~ms_hyperv.shared_gpa_boundary;
+-		hv_cpu->synic_event_page
+-			= (void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
++		hv_cpu->synic_event_page =
++			(void *)ioremap_cache(base, HV_HYP_PAGE_SIZE);
+ 		if (!hv_cpu->synic_event_page)
+ 			pr_err("Fail to map synic event page.\n");
+ 	} else {
+@@ -348,8 +347,8 @@ int hv_synic_init(unsigned int cpu)
+  */
+ void hv_synic_disable_regs(unsigned int cpu)
+ {
+-	struct hv_per_cpu_context *hv_cpu
+-		= per_cpu_ptr(hv_context.cpu_context, cpu);
++	struct hv_per_cpu_context *hv_cpu =
++		per_cpu_ptr(hv_context.cpu_context, cpu);
+ 	union hv_synic_sint shared_sint;
+ 	union hv_synic_simp simp;
+ 	union hv_synic_siefp siefp;
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 4370ad31b5b3..8f94240e5910 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -42,8 +42,6 @@
+  * Begin protocol definitions.
+  */
+ 
+-
+-
+ /*
+  * Protocol versions. The low word is the minor version, the high word the major
+  * version.
+@@ -72,8 +70,6 @@ enum {
+ 	DYNMEM_PROTOCOL_VERSION_CURRENT = DYNMEM_PROTOCOL_VERSION_WIN10
+ };
+ 
+-
+-
+ /*
+  * Message Types
+  */
+@@ -102,7 +98,6 @@ enum dm_message_type {
+ 	DM_VERSION_1_MAX		= 12
+ };
+ 
+-
+ /*
+  * Structures defining the dynamic memory management
+  * protocol.
+@@ -116,7 +111,6 @@ union dm_version {
+ 	__u32 version;
+ } __packed;
+ 
+-
+ union dm_caps {
+ 	struct {
+ 		__u64 balloon:1;
+@@ -149,8 +143,6 @@ union dm_mem_page_range {
+ 	__u64  page_range;
+ } __packed;
+ 
+-
+-
+ /*
+  * The header for all dynamic memory messages:
+  *
+@@ -175,7 +167,6 @@ struct dm_message {
+ 	__u8 data[]; /* enclosed message */
+ } __packed;
+ 
+-
+ /*
+  * Specific message types supporting the dynamic memory protocol.
+  */
+@@ -272,7 +263,6 @@ struct dm_status {
+ 	__u32 io_diff;
+ } __packed;
+ 
+-
+ /*
+  * Message to ask the guest to allocate memory - balloon up message.
+  * This message is sent from the host to the guest. The guest may not be
+@@ -287,14 +277,13 @@ struct dm_balloon {
+ 	__u32 reservedz;
+ } __packed;
+ 
+-
+ /*
+  * Balloon response message; this message is sent from the guest
+  * to the host in response to the balloon message.
+  *
+  * reservedz: Reserved; must be set to zero.
+  * more_pages: If FALSE, this is the last message of the transaction.
+- * if TRUE there will atleast one more message from the guest.
++ * if TRUE there will be at least one more message from the guest.
+  *
+  * range_count: The number of ranges in the range array.
+  *
+@@ -315,7 +304,7 @@ struct dm_balloon_response {
+  * to the guest to give guest more memory.
+  *
+  * more_pages: If FALSE, this is the last message of the transaction.
+- * if TRUE there will atleast one more message from the guest.
++ * if TRUE there will be at least one more message from the guest.
+  *
+  * reservedz: Reserved; must be set to zero.
+  *
+@@ -343,7 +332,6 @@ struct dm_unballoon_response {
+ 	struct dm_header hdr;
+ } __packed;
+ 
+-
+ /*
+  * Hot add request message. Message sent from the host to the guest.
+  *
+@@ -391,7 +379,6 @@ enum dm_info_type {
+ 	MAX_INFO_TYPE
+ };
+ 
+-
+ /*
+  * Header for the information message.
+  */
+@@ -481,10 +468,10 @@ static unsigned long last_post_time;
+ 
+ static int hv_hypercall_multi_failure;
+ 
+-module_param(hot_add, bool, (S_IRUGO | S_IWUSR));
++module_param(hot_add, bool, 0644);
+ MODULE_PARM_DESC(hot_add, "If set attempt memory hot_add");
+ 
+-module_param(pressure_report_delay, uint, (S_IRUGO | S_IWUSR));
++module_param(pressure_report_delay, uint, 0644);
+ MODULE_PARM_DESC(pressure_report_delay, "Delay in secs in reporting pressure");
+ static atomic_t trans_id = ATOMIC_INIT(0);
+ 
+@@ -503,7 +490,6 @@ enum hv_dm_state {
+ 	DM_INIT_ERROR
+ };
+ 
+-
+ static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
+ static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
+ 
+@@ -599,12 +585,12 @@ static inline bool has_pfn_is_backed(struct hv_hotadd_state *has,
+ 	struct hv_hotadd_gap *gap;
+ 
+ 	/* The page is not backed. */
+-	if ((pfn < has->covered_start_pfn) || (pfn >= has->covered_end_pfn))
++	if (pfn < has->covered_start_pfn || pfn >= has->covered_end_pfn)
+ 		return false;
+ 
+ 	/* Check for gaps. */
+ 	list_for_each_entry(gap, &has->gap_list, list) {
+-		if ((pfn >= gap->start_pfn) && (pfn < gap->end_pfn))
++		if (pfn >= gap->start_pfn && pfn < gap->end_pfn)
+ 			return false;
+ 	}
+ 
+@@ -784,8 +770,8 @@ static void hv_online_page(struct page *pg, unsigned int order)
+ 	guard(spinlock_irqsave)(&dm_device.ha_lock);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+ 		/* The page belongs to a different HAS. */
+-		if ((pfn < has->start_pfn) ||
+-				(pfn + (1UL << order) > has->end_pfn))
++		if (pfn < has->start_pfn ||
++		    (pfn + (1UL << order) > has->end_pfn))
+ 			continue;
+ 
+ 		hv_bring_pgs_online(has, pfn, 1UL << order);
+@@ -846,7 +832,7 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ }
+ 
+ static unsigned long handle_pg_range(unsigned long pg_start,
+-					unsigned long pg_count)
++				     unsigned long pg_count)
+ {
+ 	unsigned long start_pfn = pg_start;
+ 	unsigned long pfn_cnt = pg_count;
+@@ -857,7 +843,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 	unsigned long res = 0, flags;
+ 
+ 	pr_debug("Hot adding %lu pages starting at pfn 0x%lx.\n", pg_count,
+-		pg_start);
++		 pg_start);
+ 
+ 	spin_lock_irqsave(&dm_device.ha_lock, flags);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+@@ -893,10 +879,9 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 			if (start_pfn > has->start_pfn &&
+ 			    online_section_nr(pfn_to_section_nr(start_pfn)))
+ 				hv_bring_pgs_online(has, start_pfn, pgs_ol);
+-
+ 		}
+ 
+-		if ((has->ha_end_pfn < has->end_pfn) && (pfn_cnt > 0)) {
++		if (has->ha_end_pfn < has->end_pfn && pfn_cnt > 0) {
+ 			/*
+ 			 * We have some residual hot add range
+ 			 * that needs to be hot added; hot add
+@@ -999,21 +984,14 @@ static void hot_add_req(struct work_struct *dummy)
+ 	rg_start = dm->ha_wrk.ha_region_range.finfo.start_page;
+ 	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
+ 
+-	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
++	if (rg_start == 0 && !dm->host_specified_ha_region) {
+ 		/*
+-		 * The host has not specified the hot-add region.
+ 		 * Based on the hot-add page range being specified,
+-		 * compute a hot-add region that can cover the pages
+-		 * that need to be hot-added while ensuring the alignment
+-		 * and size requirements of Linux as it relates to hot-add.
+-		 */
+-		rg_start = ALIGN_DOWN(pg_start, ha_pages_in_chunk);
+-		rg_sz = ALIGN(pfn_cnt, ha_pages_in_chunk);
+ 	}
+ 
+ 	if (do_hot_add)
+ 		resp.page_count = process_hot_add(pg_start, pfn_cnt,
+-						rg_start, rg_sz);
++						  rg_start, rg_sz);
+ 
+ 	dm->num_pages_added += resp.page_count;
+ #endif
+@@ -1191,11 +1169,10 @@ static void post_status(struct hv_dynmem_device *dm)
+ 				sizeof(struct dm_status),
+ 				(unsigned long)NULL,
+ 				VM_PKT_DATA_INBAND, 0);
+-
+ }
+ 
+ static void free_balloon_pages(struct hv_dynmem_device *dm,
+-			 union dm_mem_page_range *range_array)
++			       union dm_mem_page_range *range_array)
+ {
+ 	int num_pages = range_array->finfo.page_cnt;
+ 	__u64 start_frame = range_array->finfo.start_page;
+@@ -1211,8 +1188,6 @@ static void free_balloon_pages(struct hv_dynmem_device *dm,
+ 	}
+ }
+ 
+-
+-
+ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 					unsigned int num_pages,
+ 					struct dm_balloon_response *bl_resp,
+@@ -1258,7 +1233,6 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 			page_to_pfn(pg);
+ 		bl_resp->range_array[i].finfo.page_cnt = alloc_unit;
+ 		bl_resp->hdr.size += sizeof(union dm_mem_page_range);
+-
+ 	}
+ 
+ 	return i * alloc_unit;
+@@ -1312,7 +1286,7 @@ static void balloon_up(struct work_struct *dummy)
+ 
+ 		if (num_ballooned == 0 || num_ballooned == num_pages) {
+ 			pr_debug("Ballooned %u out of %u requested pages.\n",
+-				num_pages, dm_device.balloon_wrk.num_pages);
++				 num_pages, dm_device.balloon_wrk.num_pages);
+ 
+ 			bl_resp->more_pages = 0;
+ 			done = true;
+@@ -1346,16 +1320,15 @@ static void balloon_up(struct work_struct *dummy)
+ 
+ 			for (i = 0; i < bl_resp->range_count; i++)
+ 				free_balloon_pages(&dm_device,
+-						 &bl_resp->range_array[i]);
++						   &bl_resp->range_array[i]);
+ 
+ 			done = true;
+ 		}
+ 	}
+-
+ }
+ 
+ static void balloon_down(struct hv_dynmem_device *dm,
+-			struct dm_unballoon_request *req)
++			 struct dm_unballoon_request *req)
+ {
+ 	union dm_mem_page_range *range_array = req->range_array;
+ 	int range_count = req->range_count;
+@@ -1369,7 +1342,7 @@ static void balloon_down(struct hv_dynmem_device *dm,
+ 	}
+ 
+ 	pr_debug("Freed %u ballooned pages.\n",
+-		prev_pages_ballooned - dm->num_pages_ballooned);
++		 prev_pages_ballooned - dm->num_pages_ballooned);
+ 
+ 	if (req->more_pages == 1)
+ 		return;
+@@ -1394,8 +1367,7 @@ static int dm_thread_func(void *dm_dev)
+ 	struct hv_dynmem_device *dm = dm_dev;
+ 
+ 	while (!kthread_should_stop()) {
+-		wait_for_completion_interruptible_timeout(
+-						&dm_device.config_event, 1*HZ);
++		wait_for_completion_interruptible_timeout(&dm_device.config_event, 1 * HZ);
+ 		/*
+ 		 * The host expects us to post information on the memory
+ 		 * pressure every second.
+@@ -1419,9 +1391,8 @@ static int dm_thread_func(void *dm_dev)
+ 	return 0;
+ }
+ 
+-
+ static void version_resp(struct hv_dynmem_device *dm,
+-			struct dm_version_response *vresp)
++			 struct dm_version_response *vresp)
+ {
+ 	struct dm_version_request version_req;
+ 	int ret;
+@@ -1482,7 +1453,7 @@ static void version_resp(struct hv_dynmem_device *dm,
+ }
+ 
+ static void cap_resp(struct hv_dynmem_device *dm,
+-			struct dm_capabilities_resp_msg *cap_resp)
++		     struct dm_capabilities_resp_msg *cap_resp)
+ {
+ 	if (!cap_resp->is_accepted) {
+ 		pr_err("Capabilities not accepted by host\n");
+@@ -1515,7 +1486,7 @@ static void balloon_onchannelcallback(void *context)
+ 		switch (dm_hdr->type) {
+ 		case DM_VERSION_RESPONSE:
+ 			version_resp(dm,
+-				 (struct dm_version_response *)dm_msg);
++				     (struct dm_version_response *)dm_msg);
+ 			break;
+ 
+ 		case DM_CAPABILITIES_RESPONSE:
+@@ -1545,7 +1516,7 @@ static void balloon_onchannelcallback(void *context)
+ 
+ 			dm->state = DM_BALLOON_DOWN;
+ 			balloon_down(dm,
+-				 (struct dm_unballoon_request *)recv_buffer);
++				     (struct dm_unballoon_request *)recv_buffer);
+ 			break;
+ 
+ 		case DM_MEM_HOT_ADD_REQUEST:
+@@ -1583,17 +1554,15 @@ static void balloon_onchannelcallback(void *context)
+ 
+ 		default:
+ 			pr_warn_ratelimited("Unhandled message: type: %d\n", dm_hdr->type);
+-
+ 		}
+ 	}
+-
+ }
+ 
+ #define HV_LARGE_REPORTING_ORDER	9
+ #define HV_LARGE_REPORTING_LEN (HV_HYP_PAGE_SIZE << \
+ 		HV_LARGE_REPORTING_ORDER)
+ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+-		    struct scatterlist *sgl, unsigned int nents)
++			       struct scatterlist *sgl, unsigned int nents)
+ {
+ 	unsigned long flags;
+ 	struct hv_memory_hint *hint;
+@@ -1628,7 +1597,7 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+ 		 */
+ 
+ 		/* page reporting for pages 2MB or higher */
+-		if (order >= HV_LARGE_REPORTING_ORDER ) {
++		if (order >= HV_LARGE_REPORTING_ORDER) {
+ 			range->page.largepage = 1;
+ 			range->page_size = HV_GPA_PAGE_RANGE_PAGE_SIZE_2MB;
+ 			range->base_large_pfn = page_to_hvpfn(
+@@ -1642,23 +1611,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+ 			range->page.additional_pages =
+ 				(sg->length / HV_HYP_PAGE_SIZE) - 1;
+ 		}
+-
+ 	}
+ 
+ 	status = hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
+ 				     hint, NULL);
+ 	local_irq_restore(flags);
+ 	if (!hv_result_success(status)) {
+-
+ 		pr_err("Cold memory discard hypercall failed with status %llx\n",
+-				status);
++		       status);
+ 		if (hv_hypercall_multi_failure > 0)
+ 			hv_hypercall_multi_failure++;
+ 
+ 		if (hv_result(status) == HV_STATUS_INVALID_PARAMETER) {
+ 			pr_err("Underlying Hyper-V does not support order less than 9. Hypercall failed\n");
+ 			pr_err("Defaulting to page_reporting_order %d\n",
+-					pageblock_order);
++			       pageblock_order);
+ 			page_reporting_order = pageblock_order;
+ 			hv_hypercall_multi_failure++;
+ 			return -EINVAL;
+@@ -1692,7 +1659,7 @@ static void enable_page_reporting(void)
+ 		pr_err("Failed to enable cold memory discard: %d\n", ret);
+ 	} else {
+ 		pr_info("Cold memory discard hint enabled with order %d\n",
+-				page_reporting_order);
++			page_reporting_order);
+ 	}
+ }
+ 
+@@ -1775,7 +1742,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	if (ret)
+ 		goto out;
+ 
+-	t = wait_for_completion_timeout(&dm_device.host_event, 5*HZ);
++	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
+ 	if (t == 0) {
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+@@ -1833,7 +1800,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	if (ret)
+ 		goto out;
+ 
+-	t = wait_for_completion_timeout(&dm_device.host_event, 5*HZ);
++	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
+ 	if (t == 0) {
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+@@ -1874,8 +1841,8 @@ static int hv_balloon_debug_show(struct seq_file *f, void *offset)
+ 	char *sname;
+ 
+ 	seq_printf(f, "%-22s: %u.%u\n", "host_version",
+-				DYNMEM_MAJOR_VERSION(dm->version),
+-				DYNMEM_MINOR_VERSION(dm->version));
++			DYNMEM_MAJOR_VERSION(dm->version),
++			DYNMEM_MINOR_VERSION(dm->version));
+ 
+ 	seq_printf(f, "%-22s:", "capabilities");
+ 	if (ballooning_enabled())
+@@ -1924,10 +1891,10 @@ static int hv_balloon_debug_show(struct seq_file *f, void *offset)
+ 	seq_printf(f, "%-22s: %u\n", "pages_ballooned", dm->num_pages_ballooned);
+ 
+ 	seq_printf(f, "%-22s: %lu\n", "total_pages_committed",
+-				get_pages_committed(dm));
++		   get_pages_committed(dm));
+ 
+ 	seq_printf(f, "%-22s: %llu\n", "max_dynamic_page_count",
+-				dm->max_dynamic_page_count);
++		   dm->max_dynamic_page_count);
+ 
+ 	return 0;
+ }
+@@ -1937,7 +1904,7 @@ DEFINE_SHOW_ATTRIBUTE(hv_balloon_debug);
+ static void  hv_balloon_debugfs_init(struct hv_dynmem_device *b)
+ {
+ 	debugfs_create_file("hv-balloon", 0444, NULL, b,
+-			&hv_balloon_debug_fops);
++			    &hv_balloon_debug_fops);
+ }
+ 
+ static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
+@@ -2095,7 +2062,6 @@ static int balloon_suspend(struct hv_device *hv_dev)
+ 	tasklet_enable(&hv_dev->channel->callback_event);
+ 
+ 	return 0;
+-
+ }
+ 
+ static int balloon_resume(struct hv_device *dev)
+@@ -2154,7 +2120,6 @@ static  struct hv_driver balloon_drv = {
+ 
+ static int __init init_balloon_drv(void)
+ {
+-
+ 	return vmbus_driver_register(&balloon_drv);
+ }
+ 
+-- 
+2.34.1
 
-> https://www.righto.com/2023/01/inside-8086-processors-instruction.html#=
-fn:pc
->=20
-> In fact, anyone who hasn't should read the entire series on the 8086,
-> https://www.righto.com/p/index.html
-
-Oh yeah, already bookmarked.
-
-Thanks Andy!
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
