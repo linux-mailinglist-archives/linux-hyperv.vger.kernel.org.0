@@ -1,78 +1,71 @@
-Return-Path: <linux-hyperv+bounces-2260-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2261-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E25BE8D46C9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2024 10:12:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B02018D4E64
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2024 16:50:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A469C281E87
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2024 08:12:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27C741F227CD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2024 14:50:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E791474DA;
-	Thu, 30 May 2024 08:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D931117D880;
+	Thu, 30 May 2024 14:50:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6t/r9e7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6AILQ/O"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9E91487F1;
-	Thu, 30 May 2024 08:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66B317C230;
+	Thu, 30 May 2024 14:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717056759; cv=none; b=mTtL9U9akKKGXS3swfIaD/4aCcxWgOLRPQAPJoFdKNvvjgu0IgEcZmWH5Iyf8JjEYg5nTksETFxHBVDCnchf8N3Nmg0v8KAxaf2hNOnFrxScTbuljLfZj59uG1ZcdmqTTnVXu85lcPTzqCXnTjbvy5uhT9Ffiynz+afoLS9zLrE=
+	t=1717080623; cv=none; b=kEqjWwHnIiRkSnXnApi0F9w/wi8sC5n6zqZ1lBE/fjO1M2WdS94MHGu4ktI8S7DUJMOowqWyu1rAKJ5BSh0rLdvxGN1Y/+AM7hOnrBe/7UnRKqquOyZbnVNr/3VNsM+CQOgeyE07fOC9XkDyUHcQVTf456gwgcu60xF5Yyfn4bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717056759; c=relaxed/simple;
-	bh=uLA4wCaq7A2u/eyrQk8XHfRRjmbUeF0S9C9i4nJzoyc=;
+	s=arc-20240116; t=1717080623; c=relaxed/simple;
+	bh=uoEbranSexhBtM6sYAMs71WXTST/7oP3dHBpmZCNSSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fZ3lDtz+RkpsIyxVrqY28MbDhctzKQU5YnUMeiWwZYtou4jETyjlCsw74i1nAOl/PA5O6yXOlDrigp8sRjk9l+DoEbHGTEyM78oE8KE8HYxZR7cAWjgGW8SK5I2afYbWsKLdiDNGxlvdVeB6VYD2v6kHoc06EMkLYt2Rv9B5Y/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6t/r9e7; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717056757; x=1748592757;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uLA4wCaq7A2u/eyrQk8XHfRRjmbUeF0S9C9i4nJzoyc=;
-  b=C6t/r9e7s7cCDivHk/6SLNoYOSXrDaFxqVQyeW5GQV5vh05ebEeeLmhc
-   yu5gc2+Gex4/0qTDvo3QRJSTanXyJi3k/YtdXop1Mky+L3UQ+3fjhFIqn
-   8cT9AsH0vdy9XQrPQuP+VEDywgyHtHtLMiuvWX2jUN93o3W3P6u6Ja0gz
-   49Yae8bFcf3fuBA45gdq4fGYIVowbqTK9rUOJ/1z6eCdfoMTZJW4J8RpC
-   MyIradlU8RzZr9OrFXWscUAdChV911yHqpYt8u56Cs1eeGZ8naYRgF/96
-   6NYm+gsDNyWEbm/f1DoOZj2WxwQme/CrvnGehYsO5KdE9xe7zt8jEIIsv
-   Q==;
-X-CSE-ConnectionGUID: xwccT18YSNyahXu1A2I8pw==
-X-CSE-MsgGUID: 7jU3fpDVS9SBflGGmLsyUw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="17315060"
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="17315060"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 01:12:36 -0700
-X-CSE-ConnectionGUID: hZ7dxmihRoSeywTi4GgBJQ==
-X-CSE-MsgGUID: Fypt2OqRRbuYKw1Z1ny1Yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="36216189"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 30 May 2024 01:12:34 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCati-000Ezu-1l;
-	Thu, 30 May 2024 08:12:30 +0000
-Date: Thu, 30 May 2024 16:12:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aditya Nagesh <adityanagesh@linux.microsoft.com>,
-	adityanagesh@microsoft.com, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Aditya Nagesh <adityanagesh@linux.microsoft.com>
-Subject: Re: [PATCH v5] Drivers: hv: Cosmetic changes for hv.c and balloon.c
-Message-ID: <202405301550.DKuS2OzK-lkp@intel.com>
-References: <1716998695-32135-1-git-send-email-adityanagesh@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sMhy9B6vi6D01iiQriArq9t8gcvKRspHePpE/GPGaHixN5cIO8AnpKLyp/xImm+vQJ1Cj+rajTepjCbCcmvXPI0i7gX7h+sUFZ/9fmu756ZekEnh74e51CKOSnERIkPWt7QTr/cPNtYjFumoPLBMZcvE+sEbAZXG395LxvJGddU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6AILQ/O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D868C32782;
+	Thu, 30 May 2024 14:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717080623;
+	bh=uoEbranSexhBtM6sYAMs71WXTST/7oP3dHBpmZCNSSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K6AILQ/OdhAbCH4bCBit0p0BJgPiu8NdjtZGt4cN13QHqY+k8paEepb7us8U+yIQA
+	 tEPcDbz0YnudqHHeljeQOGXBuz0UMIyo+Id7M5dO5thxYcPMKFlWp9o9dkB/9xs/Sh
+	 dgUlHtdDzN6cu2Pep8tlaN/Nra7aGNqrrhbwqXfB/8Y7ukmO+cj1UyHxTqpRtQMCWG
+	 lheAap6ieLzYtSNniRIWFvuOCa5znKmuY+eMiVGStDSlba1vlfczmdL/y5tUtsxGQD
+	 FlhdrdVVUvju4MTFUTF62T2bDxIcQgyvdUk0e0cLLv3VOWOze4izw5E5gm3rd0RYvc
+	 uC7nkxRG4ZrJg==
+Date: Thu, 30 May 2024 17:37:02 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v2] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240530143702.GB3884@unreal>
+References: <1716960955-3195-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -81,162 +74,389 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1716998695-32135-1-git-send-email-adityanagesh@linux.microsoft.com>
+In-Reply-To: <1716960955-3195-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-Hi Aditya,
+On Tue, May 28, 2024 at 10:35:55PM -0700, Shradha Gupta wrote:
+> Allow variable size indirection table allocation in MANA instead
+> of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> indirection table is allocated dynamically.
+> 
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  Changes in v2:
+>  * Rebased to latest net-next tree
+>  * Rearranged cleanup code in mana_probe_port to avoid extra operations
+> ---
+>  drivers/infiniband/hw/mana/qp.c               | 10 +--
 
-kernel test robot noticed the following build errors:
+Jakub,
 
-[auto build test ERROR on next-20240529]
-[cannot apply to linus/master v6.10-rc1 v6.9 v6.9-rc7 v6.10-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Once you are ok with this patch, let me create shared branch for it.
+It is -rc1 and Konstantin already submitted some changes to qp.c
+https://lore.kernel.org/all/1716366242-558-1-git-send-email-kotaranov@linux.microsoft.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Aditya-Nagesh/Drivers-hv-Cosmetic-changes-for-hv-c-and-balloon-c/20240530-000928
-base:   next-20240529
-patch link:    https://lore.kernel.org/r/1716998695-32135-1-git-send-email-adityanagesh%40linux.microsoft.com
-patch subject: [PATCH v5] Drivers: hv: Cosmetic changes for hv.c and balloon.c
-config: arm64-randconfig-002-20240530 (https://download.01.org/0day-ci/archive/20240530/202405301550.DKuS2OzK-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240530/202405301550.DKuS2OzK-lkp@intel.com/reproduce)
+This specific patch applies on top of Konstantin's changes cleanly.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405301550.DKuS2OzK-lkp@intel.com/
+Thanks
 
-All error/warnings (new ones prefixed by >>):
-
-   drivers/hv/hv_balloon.c: In function 'hot_add_req':
->> drivers/hv/hv_balloon.c:998:9: warning: "/*" within comment [-Wcomment]
-     998 |         /*
-         |          
->> drivers/hv/hv_balloon.c:980: error: unterminated #ifdef
-     980 | #ifdef CONFIG_MEMORY_HOTPLUG
-         | 
->> drivers/hv/hv_balloon.c:978:39: error: expected declaration or statement at end of input
-     978 |         resp.hdr.size = sizeof(struct dm_hot_add_response);
-         |                                       ^~~~~~~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:974:34: warning: unused variable 'dm' [-Wunused-variable]
-     974 |         struct hv_dynmem_device *dm = &dm_device;
-         |                                  ^~
-   drivers/hv/hv_balloon.c: At top level:
->> drivers/hv/hv_balloon.c:575:13: warning: 'post_status' declared 'static' but never defined [-Wunused-function]
-     575 | static void post_status(struct hv_dynmem_device *dm);
-         |             ^~~~~~~~~~~
->> drivers/hv/hv_balloon.c:577:13: warning: 'enable_page_reporting' declared 'static' but never defined [-Wunused-function]
-     577 | static void enable_page_reporting(void);
-         |             ^~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:579:13: warning: 'disable_page_reporting' declared 'static' but never defined [-Wunused-function]
-     579 | static void disable_page_reporting(void);
-         |             ^~~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:967:13: warning: 'hot_add_req' defined but not used [-Wunused-function]
-     967 | static void hot_add_req(struct work_struct *dummy)
-         |             ^~~~~~~~~~~
->> drivers/hv/hv_balloon.c:496:22: warning: 'ha_pages_in_chunk' defined but not used [-Wunused-variable]
-     496 | static unsigned long ha_pages_in_chunk;
-         |                      ^~~~~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:494:13: warning: 'balloon_up_send_buffer' defined but not used [-Wunused-variable]
-     494 | static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
-         |             ^~~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:493:13: warning: 'recv_buffer' defined but not used [-Wunused-variable]
-     493 | static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
-         |             ^~~~~~~~~~~
->> drivers/hv/hv_balloon.c:478:12: warning: 'dm_ring_size' defined but not used [-Wunused-variable]
-     478 | static int dm_ring_size = VMBUS_RING_SIZE(16 * 1024);
-         |            ^~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:476:17: warning: 'trans_id' defined but not used [-Wunused-variable]
-     476 | static atomic_t trans_id = ATOMIC_INIT(0);
-         |                 ^~~~~~~~
->> drivers/hv/hv_balloon.c:469:12: warning: 'hv_hypercall_multi_failure' defined but not used [-Wunused-variable]
-     469 | static int hv_hypercall_multi_failure;
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:467:22: warning: 'last_post_time' defined but not used [-Wunused-variable]
-     467 | static unsigned long last_post_time;
-         |                      ^~~~~~~~~~~~~~
->> drivers/hv/hv_balloon.c:455:13: warning: 'do_hot_add' defined but not used [-Wunused-variable]
-     455 | static bool do_hot_add;
-         |             ^~~~~~~~~~
->> drivers/hv/hv_balloon.c:453:13: warning: 'allow_hibernation' defined but not used [-Wunused-variable]
-     453 | static bool allow_hibernation;
-         |             ^~~~~~~~~~~~~~~~~
-
-
-vim +980 drivers/hv/hv_balloon.c
-
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   966  
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  @967  static void hot_add_req(struct work_struct *dummy)
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   968  {
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   969  	struct dm_hot_add_response resp;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   970  #ifdef CONFIG_MEMORY_HOTPLUG
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   971  	unsigned long pg_start, pfn_cnt;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   972  	unsigned long rg_start, rg_sz;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   973  #endif
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  @974  	struct hv_dynmem_device *dm = &dm_device;
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14   975  
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14   976  	memset(&resp, 0, sizeof(struct dm_hot_add_response));
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14   977  	resp.hdr.type = DM_MEM_HOT_ADD_RESPONSE;
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  @978  	resp.hdr.size = sizeof(struct dm_hot_add_response);
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14   979  
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  @980  #ifdef CONFIG_MEMORY_HOTPLUG
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   981  	pg_start = dm->ha_wrk.ha_page_range.finfo.start_page;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   982  	pfn_cnt = dm->ha_wrk.ha_page_range.finfo.page_cnt;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   983  
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   984  	rg_start = dm->ha_wrk.ha_region_range.finfo.start_page;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   985  	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   986  
-1aa0ebde593dfb1 Aditya Nagesh    2024-05-29   987  	if (rg_start == 0 && !dm->host_specified_ha_region) {
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   988  		/*
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   989  		 * Based on the hot-add page range being specified,
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   990  	}
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   991  
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18   992  	if (do_hot_add)
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   993  		resp.page_count = process_hot_add(pg_start, pfn_cnt,
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   994  						  rg_start, rg_sz);
-549fd280b145e21 Vitaly Kuznetsov 2015-02-28   995  
-549fd280b145e21 Vitaly Kuznetsov 2015-02-28   996  	dm->num_pages_added += resp.page_count;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15   997  #endif
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  @998  	/*
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18   999  	 * The result field of the response structure has the
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1000  	 * following semantics:
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1001  	 *
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1002  	 * 1. If all or some pages hot-added: Guest should return success.
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1003  	 *
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1004  	 * 2. If no pages could be hot-added:
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1005  	 *
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1006  	 * If the guest returns success, then the host
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1007  	 * will not attempt any further hot-add operations. This
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1008  	 * signifies a permanent failure.
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1009  	 *
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1010  	 * If the guest returns failure, then this failure will be
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1011  	 * treated as a transient failure and the host may retry the
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1012  	 * hot-add operation after some delay.
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1013  	 */
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  1014  	if (resp.page_count > 0)
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  1015  		resp.result = 1;
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1016  	else if (!do_hot_add)
-7f4f2302a11173d K. Y. Srinivasan 2013-03-18  1017  		resp.result = 1;
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  1018  	else
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1019  		resp.result = 0;
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1020  
-25bd2b2f1f05347 Dexuan Cui       2019-11-19  1021  	if (!do_hot_add || resp.page_count == 0) {
-25bd2b2f1f05347 Dexuan Cui       2019-11-19  1022  		if (!allow_hibernation)
-223e1e4d2c16fed Vitaly Kuznetsov 2018-03-04  1023  			pr_err("Memory hot add failed\n");
-25bd2b2f1f05347 Dexuan Cui       2019-11-19  1024  		else
-25bd2b2f1f05347 Dexuan Cui       2019-11-19  1025  			pr_info("Ignore hot-add request!\n");
-25bd2b2f1f05347 Dexuan Cui       2019-11-19  1026  	}
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  1027  
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  1028  	dm->state = DM_INITIALIZED;
-20138d6cb838aa0 K. Y. Srinivasan 2013-07-17  1029  	resp.hdr.trans_id = atomic_inc_return(&trans_id);
-1cac8cd4d146b60 K. Y. Srinivasan 2013-03-15  1030  	vmbus_sendpacket(dm->dev->channel, &resp,
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1031  			sizeof(struct dm_hot_add_response),
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1032  			(unsigned long)NULL,
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1033  			VM_PKT_DATA_INBAND, 0);
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1034  }
-9aa8b50b2b3d3a7 K. Y. Srinivasan 2012-11-14  1035  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 68 ++++++++++++++++---
+>  .../ethernet/microsoft/mana/mana_ethtool.c    | 20 ++++--
+>  include/net/mana/gdma.h                       |  4 +-
+>  include/net/mana/mana.h                       |  9 +--
+>  5 files changed, 84 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+> index ba13c5abf8ef..2d411a16a127 100644
+> --- a/drivers/infiniband/hw/mana/qp.c
+> +++ b/drivers/infiniband/hw/mana/qp.c
+> @@ -21,7 +21,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+>  
+>  	gc = mdev_to_gc(dev);
+>  
+> -	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
+> +	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_DEF_SIZE);
+>  	req = kzalloc(req_buf_size, GFP_KERNEL);
+>  	if (!req)
+>  		return -ENOMEM;
+> @@ -41,18 +41,18 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+>  	if (log_ind_tbl_size)
+>  		req->rss_enable = true;
+>  
+> -	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
+> +	req->num_indir_entries = MANA_INDIRECT_TABLE_DEF_SIZE;
+>  	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
+>  					 indir_tab);
+>  	req->update_indir_tab = true;
+>  	req->cqe_coalescing_enable = 1;
+>  
+>  	/* The ind table passed to the hardware must have
+> -	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
+> +	 * MANA_INDIRECT_TABLE_DEF_SIZE entries. Adjust the verb
+>  	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
+>  	 */
+>  	ibdev_dbg(&dev->ib_dev, "ind table size %u\n", 1 << log_ind_tbl_size);
+> -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
+> +	for (i = 0; i < MANA_INDIRECT_TABLE_DEF_SIZE; i++) {
+>  		req->indir_tab[i] = ind_table[i % (1 << log_ind_tbl_size)];
+>  		ibdev_dbg(&dev->ib_dev, "index %u handle 0x%llx\n", i,
+>  			  req->indir_tab[i]);
+> @@ -137,7 +137,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+>  	}
+>  
+>  	ind_tbl_size = 1 << ind_tbl->log_ind_tbl_size;
+> -	if (ind_tbl_size > MANA_INDIRECT_TABLE_SIZE) {
+> +	if (ind_tbl_size > MANA_INDIRECT_TABLE_DEF_SIZE) {
+>  		ibdev_dbg(&mdev->ib_dev,
+>  			  "Indirect table size %d exceeding limit\n",
+>  			  ind_tbl_size);
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index d087cf954f75..851e1b9761b3 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -481,7 +481,7 @@ static int mana_get_tx_queue(struct net_device *ndev, struct sk_buff *skb,
+>  	struct sock *sk = skb->sk;
+>  	int txq;
+>  
+> -	txq = apc->indir_table[hash & MANA_INDIRECT_TABLE_MASK];
+> +	txq = apc->indir_table[hash & (apc->indir_table_sz - 1)];
+>  
+>  	if (txq != old_q && sk && sk_fullsock(sk) &&
+>  	    rcu_access_pointer(sk->sk_dst_cache))
+> @@ -962,7 +962,16 @@ static int mana_query_vport_cfg(struct mana_port_context *apc, u32 vport_index,
+>  
+>  	*max_sq = resp.max_num_sq;
+>  	*max_rq = resp.max_num_rq;
+> -	*num_indir_entry = resp.num_indirection_ent;
+> +	if (resp.num_indirection_ent > 0 &&
+> +	    resp.num_indirection_ent <= MANA_INDIRECT_TABLE_MAX_SIZE &&
+> +	    is_power_of_2(resp.num_indirection_ent)) {
+> +		*num_indir_entry = resp.num_indirection_ent;
+> +	} else {
+> +		netdev_warn(apc->ndev,
+> +			    "Setting indirection table size to default %d for vPort %d\n",
+> +			    MANA_INDIRECT_TABLE_DEF_SIZE, apc->port_idx);
+> +		*num_indir_entry = MANA_INDIRECT_TABLE_DEF_SIZE;
+> +	}
+>  
+>  	apc->port_handle = resp.vport;
+>  	ether_addr_copy(apc->mac_addr, resp.mac_addr);
+> @@ -1054,14 +1063,13 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+>  				   bool update_default_rxobj, bool update_key,
+>  				   bool update_tab)
+>  {
+> -	u16 num_entries = MANA_INDIRECT_TABLE_SIZE;
+>  	struct mana_cfg_rx_steer_req_v2 *req;
+>  	struct mana_cfg_rx_steer_resp resp = {};
+>  	struct net_device *ndev = apc->ndev;
+>  	u32 req_buf_size;
+>  	int err;
+>  
+> -	req_buf_size = struct_size(req, indir_tab, num_entries);
+> +	req_buf_size = struct_size(req, indir_tab, apc->indir_table_sz);
+>  	req = kzalloc(req_buf_size, GFP_KERNEL);
+>  	if (!req)
+>  		return -ENOMEM;
+> @@ -1072,7 +1080,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+>  	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
+>  
+>  	req->vport = apc->port_handle;
+> -	req->num_indir_entries = num_entries;
+> +	req->num_indir_entries = apc->indir_table_sz;
+>  	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
+>  					 indir_tab);
+>  	req->rx_enable = rx;
+> @@ -1111,7 +1119,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+>  	}
+>  
+>  	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
+> -		    apc->port_handle, num_entries);
+> +		    apc->port_handle, apc->indir_table_sz);
+>  out:
+>  	kfree(req);
+>  	return err;
+> @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
+>  	return mana_create_txq(apc, net);
+>  }
+>  
+> +static int mana_rss_table_alloc(struct mana_port_context *apc)
+> +{
+> +	if (!apc->indir_table_sz) {
+> +		netdev_err(apc->ndev,
+> +			   "Indirection table size not set for vPort %d\n",
+> +			   apc->port_idx);
+> +		return -EINVAL;
+> +	}
+> +
+> +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
+> +	if (!apc->indir_table)
+> +		return -ENOMEM;
+> +
+> +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
+> +	if (!apc->rxobj_table) {
+> +		kfree(apc->indir_table);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void mana_rss_table_init(struct mana_port_context *apc)
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> +	for (i = 0; i < apc->indir_table_sz; i++)
+>  		apc->indir_table[i] =
+>  			ethtool_rxfh_indir_default(i, apc->num_queues);
+>  }
+> @@ -2361,7 +2391,7 @@ int mana_config_rss(struct mana_port_context *apc, enum TRI_STATE rx,
+>  	int i;
+>  
+>  	if (update_tab) {
+> -		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
+> +		for (i = 0; i < apc->indir_table_sz; i++) {
+>  			queue_idx = apc->indir_table[i];
+>  			apc->rxobj_table[i] = apc->rxqs[queue_idx]->rxobj;
+>  		}
+> @@ -2466,7 +2496,6 @@ static int mana_init_port(struct net_device *ndev)
+>  	struct mana_port_context *apc = netdev_priv(ndev);
+>  	u32 max_txq, max_rxq, max_queues;
+>  	int port_idx = apc->port_idx;
+> -	u32 num_indirect_entries;
+>  	int err;
+>  
+>  	err = mana_init_port_context(apc);
+> @@ -2474,7 +2503,7 @@ static int mana_init_port(struct net_device *ndev)
+>  		return err;
+>  
+>  	err = mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
+> -				   &num_indirect_entries);
+> +				   &apc->indir_table_sz);
+>  	if (err) {
+>  		netdev_err(ndev, "Failed to query info for vPort %d\n",
+>  			   port_idx);
+> @@ -2723,6 +2752,10 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+>  	if (err)
+>  		goto free_net;
+>  
+> +	err = mana_rss_table_alloc(apc);
+> +	if (err)
+> +		goto reset_apc;
+> +
+>  	netdev_lockdep_set_classes(ndev);
+>  
+>  	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+> @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+>  	err = register_netdev(ndev);
+>  	if (err) {
+>  		netdev_err(ndev, "Unable to register netdev.\n");
+> -		goto reset_apc;
+> +		goto free_indir;
+>  	}
+>  
+>  	return 0;
+>  
+> +free_indir:
+> +	apc->indir_table_sz = 0;
+> +	kfree(apc->indir_table);
+> +	apc->indir_table = NULL;
+> +	kfree(apc->rxobj_table);
+> +	apc->rxobj_table = NULL;
+>  reset_apc:
+>  	kfree(apc->rxqs);
+>  	apc->rxqs = NULL;
+> @@ -2897,6 +2936,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  {
+>  	struct gdma_context *gc = gd->gdma_context;
+>  	struct mana_context *ac = gd->driver_data;
+> +	struct mana_port_context *apc;
+>  	struct device *dev = gc->dev;
+>  	struct net_device *ndev;
+>  	int err;
+> @@ -2908,6 +2948,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  
+>  	for (i = 0; i < ac->num_ports; i++) {
+>  		ndev = ac->ports[i];
+> +		apc = netdev_priv(ndev);
+>  		if (!ndev) {
+>  			if (i == 0)
+>  				dev_err(dev, "No net device to remove\n");
+> @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  		}
+>  
+>  		unregister_netdevice(ndev);
+> +		apc->indir_table_sz = 0;
+> +		kfree(apc->indir_table);
+> +		apc->indir_table = NULL;
+> +		kfree(apc->rxobj_table);
+> +		apc->rxobj_table = NULL;
+>  
+>  		rtnl_unlock();
+>  
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> index ab2413d71f6c..1667f18046d2 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> @@ -245,7 +245,9 @@ static u32 mana_get_rxfh_key_size(struct net_device *ndev)
+>  
+>  static u32 mana_rss_indir_size(struct net_device *ndev)
+>  {
+> -	return MANA_INDIRECT_TABLE_SIZE;
+> +	struct mana_port_context *apc = netdev_priv(ndev);
+> +
+> +	return apc->indir_table_sz;
+>  }
+>  
+>  static int mana_get_rxfh(struct net_device *ndev,
+> @@ -257,7 +259,7 @@ static int mana_get_rxfh(struct net_device *ndev,
+>  	rxfh->hfunc = ETH_RSS_HASH_TOP; /* Toeplitz */
+>  
+>  	if (rxfh->indir) {
+> -		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> +		for (i = 0; i < apc->indir_table_sz; i++)
+>  			rxfh->indir[i] = apc->indir_table[i];
+>  	}
+>  
+> @@ -273,8 +275,8 @@ static int mana_set_rxfh(struct net_device *ndev,
+>  {
+>  	struct mana_port_context *apc = netdev_priv(ndev);
+>  	bool update_hash = false, update_table = false;
+> -	u32 save_table[MANA_INDIRECT_TABLE_SIZE];
+>  	u8 save_key[MANA_HASH_KEY_SIZE];
+> +	u32 *save_table;
+>  	int i, err;
+>  
+>  	if (!apc->port_is_up)
+> @@ -284,13 +286,17 @@ static int mana_set_rxfh(struct net_device *ndev,
+>  	    rxfh->hfunc != ETH_RSS_HASH_TOP)
+>  		return -EOPNOTSUPP;
+>  
+> +	save_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
+> +	if (!save_table)
+> +		return -ENOMEM;
+> +
+>  	if (rxfh->indir) {
+> -		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> +		for (i = 0; i < apc->indir_table_sz; i++)
+>  			if (rxfh->indir[i] >= apc->num_queues)
+>  				return -EINVAL;
+>  
+>  		update_table = true;
+> -		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
+> +		for (i = 0; i < apc->indir_table_sz; i++) {
+>  			save_table[i] = apc->indir_table[i];
+>  			apc->indir_table[i] = rxfh->indir[i];
+>  		}
+> @@ -306,7 +312,7 @@ static int mana_set_rxfh(struct net_device *ndev,
+>  
+>  	if (err) { /* recover to original values */
+>  		if (update_table) {
+> -			for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> +			for (i = 0; i < apc->indir_table_sz; i++)
+>  				apc->indir_table[i] = save_table[i];
+>  		}
+>  
+> @@ -316,6 +322,8 @@ static int mana_set_rxfh(struct net_device *ndev,
+>  		mana_config_rss(apc, TRI_STATE_TRUE, update_hash, update_table);
+>  	}
+>  
+> +	kfree(save_table);
+> +
+>  	return err;
+>  }
+>  
+> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+> index 27684135bb4d..c547756c4284 100644
+> --- a/include/net/mana/gdma.h
+> +++ b/include/net/mana/gdma.h
+> @@ -543,11 +543,13 @@ enum {
+>   */
+>  #define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
+>  #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
+> +#define GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT BIT(5)
+>  
+>  #define GDMA_DRV_CAP_FLAGS1 \
+>  	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+>  	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+> -	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG)
+> +	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+> +	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT)
+>  
+>  #define GDMA_DRV_CAP_FLAGS2 0
+>  
+> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+> index 561f6719fb4e..59823901b74f 100644
+> --- a/include/net/mana/mana.h
+> +++ b/include/net/mana/mana.h
+> @@ -30,8 +30,8 @@ enum TRI_STATE {
+>  };
+>  
+>  /* Number of entries for hardware indirection table must be in power of 2 */
+> -#define MANA_INDIRECT_TABLE_SIZE 64
+> -#define MANA_INDIRECT_TABLE_MASK (MANA_INDIRECT_TABLE_SIZE - 1)
+> +#define MANA_INDIRECT_TABLE_MAX_SIZE 512
+> +#define MANA_INDIRECT_TABLE_DEF_SIZE 64
+>  
+>  /* The Toeplitz hash key's length in bytes: should be multiple of 8 */
+>  #define MANA_HASH_KEY_SIZE 40
+> @@ -410,10 +410,11 @@ struct mana_port_context {
+>  	struct mana_tx_qp *tx_qp;
+>  
+>  	/* Indirection Table for RX & TX. The values are queue indexes */
+> -	u32 indir_table[MANA_INDIRECT_TABLE_SIZE];
+> +	u32 *indir_table;
+> +	u32 indir_table_sz;
+>  
+>  	/* Indirection table containing RxObject Handles */
+> -	mana_handle_t rxobj_table[MANA_INDIRECT_TABLE_SIZE];
+> +	mana_handle_t *rxobj_table;
+>  
+>  	/*  Hash key used by the NIC */
+>  	u8 hashkey[MANA_HASH_KEY_SIZE];
+> -- 
+> 2.34.1
+> 
 
