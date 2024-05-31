@@ -1,455 +1,216 @@
-Return-Path: <linux-hyperv+bounces-2267-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2268-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8620D8D65E2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2024 17:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 036B58D6833
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2024 19:35:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AF3C1F22268
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2024 15:37:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82E021F26269
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2024 17:35:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3611E1420DD;
-	Fri, 31 May 2024 15:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAF817B404;
+	Fri, 31 May 2024 17:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cEOcR0sN"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PsL9h2ho"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51FAD446D1;
-	Fri, 31 May 2024 15:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717169865; cv=none; b=fNmqyH2RcxytjNhDSxz1cnGPKgfcaiivztWv2GH/sszOZc5y689kRYQiF1Qhd9TPpMEya2MglN959TtqcSOIYvLSRw/NEoI46LuCThXbkU00oAtqhZEXJlmqgmZnTuvV2npiCSrPUXhz/hgiARkM1amDRLebDs7TONYCCX/PLt8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717169865; c=relaxed/simple;
-	bh=FPejSZZiZIcBnV2TPK2Blto/z6I3heHgtMM7MwQS5oY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=E7e7Bt6TBqGEBnkAPG9/tOOTt8A/zgGufp7yAyAZXwczpTE+5RMojGm7Mg4Mj5vygBM0ByQKTDwYurvFle8AUo4eLK1rMnuoHJksUTlyu+I4D/vQms9KmbXREPzDXA6YH8tBTbq+Spc8au96nYgbCW8Z/O9aSqHGGYK3PqTUGdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cEOcR0sN; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id B62BF20B9260; Fri, 31 May 2024 08:37:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B62BF20B9260
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1717169862;
-	bh=zVvzDHc4tywNkogvmQhwwT+HpR7IgyF4mq3wnML7CaE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cEOcR0sNPVl6rNDAZYnxmrlo2zTlHKkB6687HJJ0QEPTOcDUEZrj/cMCJsYfogmFL
-	 OnRqvuyaAmZ7s2GhvlZ+pfeTbWJfWEmm2JajvyeS92irYePzcVi3rKKMuUkOsc9Ghj
-	 ktDIPqLwJf8JOJSFrzdSOhoBog2qh88FZczI5F7w=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH net-next v3] net: mana: Allow variable size indirection table
-Date: Fri, 31 May 2024 08:37:41 -0700
-Message-Id: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41152E3F2;
+	Fri, 31 May 2024 17:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717176897; cv=fail; b=nvvc+qO3NyT3IBHnhq4Vh7xon6MFSYHIvbyaOcofiLenNMRRhj4Qlotw6oWNyVF0QONAO4F8v0EkZkeaUWlXfwtbnJ5mNcsEXiTHn1Lna7IsyfKmw8Xpoqror7LtNArZHJBHg/iKap36gYakuWpDyq/1Xv37is/WUao8q/nfFl0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717176897; c=relaxed/simple;
+	bh=HGbbPn0j7cSGbgxUWMBBu1dBJhQERpAie1cW8BITsbM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=n1f4EJ4gLH50MTf3hnihz/00SNgxz8VCy4Uwj4E4tw4tFGt6lYQq3b7mJPorOjETE6hkPnBjhxCR/4Z/XZtzIukuFO0l9V8q2qVnKOyFqhsgM9beZcef8N86PqbAAKOdjkSh6JNQhw14u5dFwLZaqzrSG7T2c/F0V4DvCTHTU9U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PsL9h2ho; arc=fail smtp.client-ip=40.107.223.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GJhbAgIpyuoPRsYceDKT4/CEC4zFyR6+1rDCuuM37JLKHizlbb0+hInhYaW9BxJfN3AqI3qfw4S6P1RLlRbxYOqghpjrQyqdIpgXMu1Im4hu+cxxzJa4Hi4jOxoBpHrnaa470ML8O0zsVA4ZCoisaOn2cl85Mer4f5wvuvN0L+opyzW+vQ1z/QpeF98uVe9tIMB80TQrl6lrqTEsLgkdRTgBX5H9A958Nkn/3J3FayRsKdq/bebN9Yboul/8cVwcn23272GC4Aorv0mNOU7q5nZShyyrRkNP/8lrYyd1ct2lKSvXOz9E6qr0aiJTlTHZszUJhK2lmIDb8HBSp7Z2vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QoaySfdFh0dO4uC3xsOiM+R0hlt1UwwokZlhF1tZNqs=;
+ b=kDRwA6hrWkT1LaPvSHQuNJWm2IOnUkHWgE4oP7sO8L4/2qKXwTKzRwGMkBPg7/W5WHNh69nRD5Xnc4X93JxLKn+zHkRVEEBltlJ1SB9zyFJ98tt40WNvRNq/m5P4CsN/vApWMToMddTYhSQXWg83YMR2u4l6OZofvVJhc4xhARLGXwRrn7+xOKn5jclfm+2giGE9wzOsxC6D0znWCSM+2KXF0LbMMxi++ySnPDp3UxzKSVJBL/nVh8b3VALRaxMQ0mPvFaTKIIkEQ3S7OJ21GjKKnk/qEw6iUrzQW72+xfq09AhCkvxLvf5nkT3UhdS1wnhFA2/vhrSoV1/Y3UrGyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QoaySfdFh0dO4uC3xsOiM+R0hlt1UwwokZlhF1tZNqs=;
+ b=PsL9h2hoYa8YDeAJaHrKB34M7Rfdro0R1dJNTRnj0Vj+h50EFBaB1M+ROpItUmPQ9LH8/bDIFjWYU4XlbkJKhOwOFHqkqJNZA+hbxOZjZF/G/dS+JeMcMLHIx7NapdhfBDG+HyHyEdBPLwy2XEWBQoHBmOxI1wZrfpMLGI3J+8A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
+ by PH8PR12MB6793.namprd12.prod.outlook.com (2603:10b6:510:1c4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Fri, 31 May
+ 2024 17:34:52 +0000
+Received: from SN6PR12MB2767.namprd12.prod.outlook.com
+ ([fe80::e441:89a7:4dd:dce7]) by SN6PR12MB2767.namprd12.prod.outlook.com
+ ([fe80::e441:89a7:4dd:dce7%4]) with mapi id 15.20.7633.018; Fri, 31 May 2024
+ 17:34:52 +0000
+Message-ID: <75cb309b-b05c-42a0-a3ca-de08fa1cae59@amd.com>
+Date: Fri, 31 May 2024 12:34:49 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv11 11/19] x86/tdx: Convert shared memory back to private
+ on kexec
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Tao Liu <ltao@redhat.com>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-12-kirill.shutemov@linux.intel.com>
+ <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0085.namprd04.prod.outlook.com
+ (2603:10b6:806:121::30) To SN6PR12MB2767.namprd12.prod.outlook.com
+ (2603:10b6:805:75::23)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|PH8PR12MB6793:EE_
+X-MS-Office365-Filtering-Correlation-Id: df64b88d-5847-41d3-8d6b-08dc8197faa5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015|7416005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R0Z1OWJ2aS9ib2Z6YW1xV3JrZjBObzBpUUg0bmI2ZWRWSlVDMEFSZWdsMGRL?=
+ =?utf-8?B?Vjc5OGQxU1R0bzRqQ1Y3eG9YcmFpUUVsRW40VzROUDg1TXRzdUR1bDJ5K0gz?=
+ =?utf-8?B?dE5XL21nT01kc2ZuNUxIRXp4eW9ZYk5adVo1aDl6SzhSU1lnLy9GVEJleUs3?=
+ =?utf-8?B?aGpvV3pYeFJocUR3Wm03WEtuQk81Tm9Ga0pNMVQvbHZqQnF2OFIrV0dOY0I4?=
+ =?utf-8?B?N2xoeTVqU3FzNUdLTHJtMVRXb2JCaTFhMmsrSlhwL0xaZ05PWmI4YlcwNVdN?=
+ =?utf-8?B?T0NvTjhWY0s3ck5HMngrRVNlZVROaHNPTlBJTytGd2pqUFltWldrQmtmK3o0?=
+ =?utf-8?B?c2VCd1FBNWRRbnJQSTFKR21GV0U3eERDV1RsV3RCeEtsclhLMmhXOGhreVRn?=
+ =?utf-8?B?aU9ITXp6T3l1OGttc1NNYmJxdXB2dEhHVVZXNWljd2s1MWhjdHNRbDNFS1VI?=
+ =?utf-8?B?M0lVUGhxRklBTHVEU3VEY0FjTkhOK2VBZ2xZWGdYQk5JVENsMjJaaVNsdE9w?=
+ =?utf-8?B?YTEzRm1JejZQbjdEa242YmJxdkZjNUlxcVY4bTgxOXhVUHpRQ1NjR1QvTFph?=
+ =?utf-8?B?aHMrL1I3WmdWTjAvelhYaXRGWGR0S1hZTTEyNUh5MlBpdUlzRlNKeFBhODg1?=
+ =?utf-8?B?S3BrRkNsUTBPaGNVUXFISVFla2hUS2pHTlY4NFhOV2dRK0RYSzdZVG12N2N5?=
+ =?utf-8?B?b2hhVER5bG91VzZrbC9KTDNnWEUvNTVzMUlNRzhka0dXRTM2Z1JnbzVueUxr?=
+ =?utf-8?B?Wi8rSTNhbHpKaVBkYlNLSlhzMjB1YVBJZk5KbytyM1VJR0R3NzhuTXk3N3Vk?=
+ =?utf-8?B?SFVlTEpaczVCalNtcGd5UTRuQ0FzZ3hyQXFtRE9mSXZmRndhU0VRWkZuTWNr?=
+ =?utf-8?B?ZXYvTE45c1lwbDBTOE9VbWRXaHMxT2lJV2U5QVNKYnlydW9lNUp4NVc3VXNQ?=
+ =?utf-8?B?dFZaRmQ0c3UyQWc4eFRTdmlON2VqQnFlb3ZoRFhQcStQVXhOZHFPckR1ZENU?=
+ =?utf-8?B?eXlNMi9vTWJJSEJLM091WDBZMUZDNWo0Z2NZcDhGMXNGbk5BTk9nSkllQVVC?=
+ =?utf-8?B?TmZtaUxkS2hTb1U5K2VyeUk5eFdWc0xJWFhlankvb2NDNVZFTFNTWkwzK21i?=
+ =?utf-8?B?eHRjYnEyWnJjRHJMWDRXNFJJc3RwMGFkRm5qTjhCckFSeHk1RjhIamJ6UkY1?=
+ =?utf-8?B?TkpUNmIvelB4VEkyd1NUd0Z0NURhQi9jOGpPaTFBbHlxbFhuaVhpQ01iVHFo?=
+ =?utf-8?B?L20rUzRjY2VVNXYzaERaR0lpcmtWUXF3MjQ0Ny83djBTOVR5MERkaVBIVXZX?=
+ =?utf-8?B?UGhqSXR0bUlRcWdwaHVjN3FTVkIzNjZ3YytJSWNXaC9yby9wQWtCcFBLZ1Q3?=
+ =?utf-8?B?MEZQY05DTWsrVFlqNkFxcmZDUnVPYUEvdWxTRXJlMmx2M0dYUFF3MnBvRGlB?=
+ =?utf-8?B?emk5SzJvNnRaS1RRL05sTENhSFZQbERZZk52aXcxcEFxbGwwU2VDVUJpdU1m?=
+ =?utf-8?B?UGY2TUp6U3BBMWJYUkJncFlYS0JLY2ZJRVdTdHp6TnlqMjRsdU5EVWZtMGtC?=
+ =?utf-8?B?RXBsMllDakREYVNHd1o4QWNZcysxQnRCUy9sQW9BOHpFeEdQNURlQ2pKY1p0?=
+ =?utf-8?B?alpRTERwaTZQNzVEOERJelpwQUJVWW8zWnNOc3hkQ1VJYStKdDBDV0dJTitE?=
+ =?utf-8?B?R0JBUy91SXptNmNFMTJXTFVlR2pVZTNwd0F3THU5Ky9xanFSV2FsdG9RPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VXZYUDdnVUZEY3BRM0VKUHFFNmVJUWJUT2RwMlVITWpvTnhFL3FNbG9JdjFr?=
+ =?utf-8?B?OUQwYnhqaG03QnZjZjVOWlBKcndOVjE1RHlrQjBnTHFVS1VUaWZrZEtSQVB2?=
+ =?utf-8?B?RlpNcjB1MzFxekRzUHp4d3FyWFRoc3VKU0hTV3JyTFZXVjRjMkJJNnpoWEVU?=
+ =?utf-8?B?dWF3TisxdCtLT29mK0VxVk9rK1UrT0FPNXJzSDh5RXBESVJFcnZ0MHNPeHli?=
+ =?utf-8?B?YW9rQW9LTzhCZnhpeTJ6Y0IyZC8yeTMwS1VkMzRUS01Kd2V5aGVaK2RYM1pO?=
+ =?utf-8?B?aW5zQUxQSGdWWk5sVjg1VCtrdVRVcHp6cXErYkdSd0NFbUkvOTRkSzNJQW5u?=
+ =?utf-8?B?M0tzdEp3Y09xMGUvTVBKeWg0ckNFTHJZb2xpVk1ERFpQU09nNHNTYU1PWHRT?=
+ =?utf-8?B?bGVIdXg5amVuVTlHcFFtRmFubHJCZG5RY0ZnYkxRd3Z4elB3SG9Za2lZVU1E?=
+ =?utf-8?B?S1p0dGdUQ0pSWlJjdEh1NlUySzhZMTF0YnVBNW5jd0pRejl6L3ZVN2cxT0Nk?=
+ =?utf-8?B?L05hYUpkTWpoWVJzR2hLc3JUZHdDRFhLUUpyeXZLTHhzcGxuTkl4Z1hhQ0JU?=
+ =?utf-8?B?YUp3R0pXRm1ZT05MVFpNRnFmR0phTHV4M2tpOGNOV2lETnFHUVV3QWRlWWtP?=
+ =?utf-8?B?UFhLaU5QNW9QZm5kZEhnUWRqeUdtTElBNUtzYU9BMElmL1dSV3FnTExnZ0Ey?=
+ =?utf-8?B?MWpxMEZUUE1sWWFrVm9tTGdGY2VOdkloaGUrYXJBMC85QnJOVVg4R2dzdVlF?=
+ =?utf-8?B?bzZhLzlGQmttVVNKcUFxdG9aNmFybCsxNk8xalp5SWFPSU14WXRhMnh6dDFx?=
+ =?utf-8?B?U2ZQUzdXdVYvSENCNWJsT21SSDdLN0ZuVjdEekhWY2pNeFh1WVJuNUh3K0c3?=
+ =?utf-8?B?YjNjMGJuUVp5cFVQZFlPZHBPQTlHWWxiV3ZYVmg3SzVHRHgwR25FV1FXSU5C?=
+ =?utf-8?B?VUtXcEZXeTBjYkNVUEJiWnZ2RkRYblhIeDFHWDQyUUN3WWh6bkZna3c1U09F?=
+ =?utf-8?B?Q0RpL2IrTEE5dmtvb2Z4NVFLMFlpQ0hoSDMrQVlYbEIrc3hqZFJKYS92QTFm?=
+ =?utf-8?B?NmN3L2w2YXc1ekVEUkdoNmlFUTZuVlplTTBsWURPaE5uZVQxNzRuSmlqc3Ez?=
+ =?utf-8?B?T1ArS25TUjNjQjdJVE1sU2wzR09xcHUwTmhubTRVc0dsUllzUlRiVUR2eWZ5?=
+ =?utf-8?B?TG1YYXBMcCttYnRWeCszd3lsRW1DbHF3dDJwWVhLSVV5QUZDakJqbXlOZVBE?=
+ =?utf-8?B?RFNQRU5tMWpNRkFoelMyT3ZJdzM2YWNZa1FFOGVacEJUMlU0MGpJT25EMDNm?=
+ =?utf-8?B?M21OTGZiQ3NxbzA4Ti9DZUkzL0Z3T0ZOTzFlYnl5RVFuOHJZc1dBOVFYa2Yr?=
+ =?utf-8?B?RkwrSjZlTkVLbXh2Y1lxTHZpMEs0Ly9paEFmWTNQNmFrc0YvcEdUYSt6ZGI5?=
+ =?utf-8?B?K3JWMjlsY2JBY0x1MnFRaEJxV2JIZGtxQVpJYzZnK3k1dkVwT2tROG9aU1Y2?=
+ =?utf-8?B?RFZwdjBJam9UNExWcWNuQk5IMHdmdmJSQnpCdkNzWlRiUU1GNVp6d0lhbFJt?=
+ =?utf-8?B?dmhGQS9taXo1eVVZeDl6M1plSWEzUklhb2Q1MFZ2RHNJdU13SGNOOEhSTmdt?=
+ =?utf-8?B?UlVseGlYZk0rR0FTbU1rL3k1OUtnSXlRQk8wemR1ZVRXcHVlUUVjcmw4SnRj?=
+ =?utf-8?B?RHBiUmkvYUJCUEd2T2RLRkJwaXNCYW1ubEc0S0tIU0VHcStCb1A5K2NRVmNY?=
+ =?utf-8?B?d1kzVHMvS3E5cFRlVlkzdFhTTUJta2hYM1Z5VHI1RFNUVE1aVmdWMGVHRlBs?=
+ =?utf-8?B?Q2d6TGxVRnp3NG14dFJiMEw0enJBZkdETmpKd21xSS9LVnJjaStnYmJ0dXBr?=
+ =?utf-8?B?ZzI1bUROcHJ2c2RZWi9TUjR3K3hRN1JtZm1mVEVHeFU3bmJVcWJoUG16U1lM?=
+ =?utf-8?B?S2hjUDcwaTVkVHZmMHR1TS85NkJUSmNMQzk3N3hNNkZPUmdvQ1A3ajV0Uk1T?=
+ =?utf-8?B?elB2THhocWlndGJJc1RUcXNONUg0eEhIR3B3ZUdzSElpZzMwbjgxMjdRZnVq?=
+ =?utf-8?B?MFo3MXI2c2lac0JSRHZJZ1E2SHhiOHVsdUt0WXl3UjZzMlR5R0FJTHVjcnZ3?=
+ =?utf-8?Q?BBgkNZhiTwGfW9UBkd1RBYmOX?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df64b88d-5847-41d3-8d6b-08dc8197faa5
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 17:34:52.6184
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RluoCCIPvHPGUK1eLXUJ6QtR8F7LnSAZPticLq9SNyRw5eCyRC5Dq6EbdzORfMtAvUp/yxtg1R08csf+daBqzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6793
 
-Allow variable size indirection table allocation in MANA instead
-of using a constant value MANA_INDIRECT_TABLE_SIZE.
-The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-indirection table is allocated dynamically.
+Hello Boris,
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v3:
- * Fixed the memory leak(save_table) in mana_set_rxfh()
+On 5/31/2024 10:14 AM, Borislav Petkov wrote:
+>>   static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+>>   {
+>> -	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
+>> -		return __set_memory_enc_pgtable(addr, numpages, enc);
+>> +	int ret = 0;
+>>   
+>> -	return 0;
+>> +	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
+>> +		if (!down_read_trylock(&mem_enc_lock))
+>> +			return -EBUSY;
+>> +
+>> +		ret = __set_memory_enc_pgtable(addr, numpages, enc);
+>> +
+>> +		up_read(&mem_enc_lock);
+>> +	}
+> So CC_ATTR_MEM_ENCRYPT is set for SEV* guests too. You need to change
+> that code here to take the lock only on TDX, where you want it, not on
+> the others.
 
- Changes in v2:
- * Rebased to latest net-next tree
- * Rearranged cleanup code in mana_probe_port to avoid extra operations
----
- drivers/infiniband/hw/mana/qp.c               | 10 +--
- drivers/net/ethernet/microsoft/mana/mana_en.c | 68 ++++++++++++++++---
- .../ethernet/microsoft/mana/mana_ethtool.c    | 27 +++++---
- include/net/mana/gdma.h                       |  4 +-
- include/net/mana/mana.h                       |  9 +--
- 5 files changed, 89 insertions(+), 29 deletions(-)
+SNP guest kexec patches are based on top of this patch-series and SNP 
+guests also need this exclusive mem_enc_lock protection, so 
+CC_ATTR_MEM_ENCRYPT makes sense to be used here.
 
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index ba13c5abf8ef..2d411a16a127 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -21,7 +21,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 
- 	gc = mdev_to_gc(dev);
- 
--	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
-+	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_DEF_SIZE);
- 	req = kzalloc(req_buf_size, GFP_KERNEL);
- 	if (!req)
- 		return -ENOMEM;
-@@ -41,18 +41,18 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	if (log_ind_tbl_size)
- 		req->rss_enable = true;
- 
--	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
-+	req->num_indir_entries = MANA_INDIRECT_TABLE_DEF_SIZE;
- 	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
- 					 indir_tab);
- 	req->update_indir_tab = true;
- 	req->cqe_coalescing_enable = 1;
- 
- 	/* The ind table passed to the hardware must have
--	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
-+	 * MANA_INDIRECT_TABLE_DEF_SIZE entries. Adjust the verb
- 	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
- 	 */
- 	ibdev_dbg(&dev->ib_dev, "ind table size %u\n", 1 << log_ind_tbl_size);
--	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
-+	for (i = 0; i < MANA_INDIRECT_TABLE_DEF_SIZE; i++) {
- 		req->indir_tab[i] = ind_table[i % (1 << log_ind_tbl_size)];
- 		ibdev_dbg(&dev->ib_dev, "index %u handle 0x%llx\n", i,
- 			  req->indir_tab[i]);
-@@ -137,7 +137,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	}
- 
- 	ind_tbl_size = 1 << ind_tbl->log_ind_tbl_size;
--	if (ind_tbl_size > MANA_INDIRECT_TABLE_SIZE) {
-+	if (ind_tbl_size > MANA_INDIRECT_TABLE_DEF_SIZE) {
- 		ibdev_dbg(&mdev->ib_dev,
- 			  "Indirect table size %d exceeding limit\n",
- 			  ind_tbl_size);
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index d087cf954f75..851e1b9761b3 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -481,7 +481,7 @@ static int mana_get_tx_queue(struct net_device *ndev, struct sk_buff *skb,
- 	struct sock *sk = skb->sk;
- 	int txq;
- 
--	txq = apc->indir_table[hash & MANA_INDIRECT_TABLE_MASK];
-+	txq = apc->indir_table[hash & (apc->indir_table_sz - 1)];
- 
- 	if (txq != old_q && sk && sk_fullsock(sk) &&
- 	    rcu_access_pointer(sk->sk_dst_cache))
-@@ -962,7 +962,16 @@ static int mana_query_vport_cfg(struct mana_port_context *apc, u32 vport_index,
- 
- 	*max_sq = resp.max_num_sq;
- 	*max_rq = resp.max_num_rq;
--	*num_indir_entry = resp.num_indirection_ent;
-+	if (resp.num_indirection_ent > 0 &&
-+	    resp.num_indirection_ent <= MANA_INDIRECT_TABLE_MAX_SIZE &&
-+	    is_power_of_2(resp.num_indirection_ent)) {
-+		*num_indir_entry = resp.num_indirection_ent;
-+	} else {
-+		netdev_warn(apc->ndev,
-+			    "Setting indirection table size to default %d for vPort %d\n",
-+			    MANA_INDIRECT_TABLE_DEF_SIZE, apc->port_idx);
-+		*num_indir_entry = MANA_INDIRECT_TABLE_DEF_SIZE;
-+	}
- 
- 	apc->port_handle = resp.vport;
- 	ether_addr_copy(apc->mac_addr, resp.mac_addr);
-@@ -1054,14 +1063,13 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 				   bool update_default_rxobj, bool update_key,
- 				   bool update_tab)
- {
--	u16 num_entries = MANA_INDIRECT_TABLE_SIZE;
- 	struct mana_cfg_rx_steer_req_v2 *req;
- 	struct mana_cfg_rx_steer_resp resp = {};
- 	struct net_device *ndev = apc->ndev;
- 	u32 req_buf_size;
- 	int err;
- 
--	req_buf_size = struct_size(req, indir_tab, num_entries);
-+	req_buf_size = struct_size(req, indir_tab, apc->indir_table_sz);
- 	req = kzalloc(req_buf_size, GFP_KERNEL);
- 	if (!req)
- 		return -ENOMEM;
-@@ -1072,7 +1080,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
- 
- 	req->vport = apc->port_handle;
--	req->num_indir_entries = num_entries;
-+	req->num_indir_entries = apc->indir_table_sz;
- 	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
- 					 indir_tab);
- 	req->rx_enable = rx;
-@@ -1111,7 +1119,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 	}
- 
- 	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
--		    apc->port_handle, num_entries);
-+		    apc->port_handle, apc->indir_table_sz);
- out:
- 	kfree(req);
- 	return err;
-@@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
- 	return mana_create_txq(apc, net);
- }
- 
-+static int mana_rss_table_alloc(struct mana_port_context *apc)
-+{
-+	if (!apc->indir_table_sz) {
-+		netdev_err(apc->ndev,
-+			   "Indirection table size not set for vPort %d\n",
-+			   apc->port_idx);
-+		return -EINVAL;
-+	}
-+
-+	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-+	if (!apc->indir_table)
-+		return -ENOMEM;
-+
-+	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
-+	if (!apc->rxobj_table) {
-+		kfree(apc->indir_table);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
- static void mana_rss_table_init(struct mana_port_context *apc)
- {
- 	int i;
- 
--	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-+	for (i = 0; i < apc->indir_table_sz; i++)
- 		apc->indir_table[i] =
- 			ethtool_rxfh_indir_default(i, apc->num_queues);
- }
-@@ -2361,7 +2391,7 @@ int mana_config_rss(struct mana_port_context *apc, enum TRI_STATE rx,
- 	int i;
- 
- 	if (update_tab) {
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
-+		for (i = 0; i < apc->indir_table_sz; i++) {
- 			queue_idx = apc->indir_table[i];
- 			apc->rxobj_table[i] = apc->rxqs[queue_idx]->rxobj;
- 		}
-@@ -2466,7 +2496,6 @@ static int mana_init_port(struct net_device *ndev)
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	u32 max_txq, max_rxq, max_queues;
- 	int port_idx = apc->port_idx;
--	u32 num_indirect_entries;
- 	int err;
- 
- 	err = mana_init_port_context(apc);
-@@ -2474,7 +2503,7 @@ static int mana_init_port(struct net_device *ndev)
- 		return err;
- 
- 	err = mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
--				   &num_indirect_entries);
-+				   &apc->indir_table_sz);
- 	if (err) {
- 		netdev_err(ndev, "Failed to query info for vPort %d\n",
- 			   port_idx);
-@@ -2723,6 +2752,10 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	if (err)
- 		goto free_net;
- 
-+	err = mana_rss_table_alloc(apc);
-+	if (err)
-+		goto reset_apc;
-+
- 	netdev_lockdep_set_classes(ndev);
- 
- 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
-@@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	err = register_netdev(ndev);
- 	if (err) {
- 		netdev_err(ndev, "Unable to register netdev.\n");
--		goto reset_apc;
-+		goto free_indir;
- 	}
- 
- 	return 0;
- 
-+free_indir:
-+	apc->indir_table_sz = 0;
-+	kfree(apc->indir_table);
-+	apc->indir_table = NULL;
-+	kfree(apc->rxobj_table);
-+	apc->rxobj_table = NULL;
- reset_apc:
- 	kfree(apc->rxqs);
- 	apc->rxqs = NULL;
-@@ -2897,6 +2936,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- {
- 	struct gdma_context *gc = gd->gdma_context;
- 	struct mana_context *ac = gd->driver_data;
-+	struct mana_port_context *apc;
- 	struct device *dev = gc->dev;
- 	struct net_device *ndev;
- 	int err;
-@@ -2908,6 +2948,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 
- 	for (i = 0; i < ac->num_ports; i++) {
- 		ndev = ac->ports[i];
-+		apc = netdev_priv(ndev);
- 		if (!ndev) {
- 			if (i == 0)
- 				dev_err(dev, "No net device to remove\n");
-@@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 		}
- 
- 		unregister_netdevice(ndev);
-+		apc->indir_table_sz = 0;
-+		kfree(apc->indir_table);
-+		apc->indir_table = NULL;
-+		kfree(apc->rxobj_table);
-+		apc->rxobj_table = NULL;
- 
- 		rtnl_unlock();
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index ab2413d71f6c..146d5db1792f 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -245,7 +245,9 @@ static u32 mana_get_rxfh_key_size(struct net_device *ndev)
- 
- static u32 mana_rss_indir_size(struct net_device *ndev)
- {
--	return MANA_INDIRECT_TABLE_SIZE;
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+
-+	return apc->indir_table_sz;
- }
- 
- static int mana_get_rxfh(struct net_device *ndev,
-@@ -257,7 +259,7 @@ static int mana_get_rxfh(struct net_device *ndev,
- 	rxfh->hfunc = ETH_RSS_HASH_TOP; /* Toeplitz */
- 
- 	if (rxfh->indir) {
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-+		for (i = 0; i < apc->indir_table_sz; i++)
- 			rxfh->indir[i] = apc->indir_table[i];
- 	}
- 
-@@ -273,8 +275,8 @@ static int mana_set_rxfh(struct net_device *ndev,
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	bool update_hash = false, update_table = false;
--	u32 save_table[MANA_INDIRECT_TABLE_SIZE];
- 	u8 save_key[MANA_HASH_KEY_SIZE];
-+	u32 *save_table;
- 	int i, err;
- 
- 	if (!apc->port_is_up)
-@@ -284,13 +286,19 @@ static int mana_set_rxfh(struct net_device *ndev,
- 	    rxfh->hfunc != ETH_RSS_HASH_TOP)
- 		return -EOPNOTSUPP;
- 
-+	save_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-+	if (!save_table)
-+		return -ENOMEM;
-+
- 	if (rxfh->indir) {
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
--			if (rxfh->indir[i] >= apc->num_queues)
--				return -EINVAL;
-+		for (i = 0; i < apc->indir_table_sz; i++)
-+			if (rxfh->indir[i] >= apc->num_queues) {
-+				err = -EINVAL;
-+				goto cleanup;
-+			}
- 
- 		update_table = true;
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
-+		for (i = 0; i < apc->indir_table_sz; i++) {
- 			save_table[i] = apc->indir_table[i];
- 			apc->indir_table[i] = rxfh->indir[i];
- 		}
-@@ -306,7 +314,7 @@ static int mana_set_rxfh(struct net_device *ndev,
- 
- 	if (err) { /* recover to original values */
- 		if (update_table) {
--			for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-+			for (i = 0; i < apc->indir_table_sz; i++)
- 				apc->indir_table[i] = save_table[i];
- 		}
- 
-@@ -316,6 +324,9 @@ static int mana_set_rxfh(struct net_device *ndev,
- 		mana_config_rss(apc, TRI_STATE_TRUE, update_hash, update_table);
- 	}
- 
-+cleanup:
-+	kfree(save_table);
-+
- 	return err;
- }
- 
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 27684135bb4d..c547756c4284 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -543,11 +543,13 @@ enum {
-  */
- #define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
- #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
-+#define GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT BIT(5)
- 
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
--	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG)
-+	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
-+	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 561f6719fb4e..59823901b74f 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -30,8 +30,8 @@ enum TRI_STATE {
- };
- 
- /* Number of entries for hardware indirection table must be in power of 2 */
--#define MANA_INDIRECT_TABLE_SIZE 64
--#define MANA_INDIRECT_TABLE_MASK (MANA_INDIRECT_TABLE_SIZE - 1)
-+#define MANA_INDIRECT_TABLE_MAX_SIZE 512
-+#define MANA_INDIRECT_TABLE_DEF_SIZE 64
- 
- /* The Toeplitz hash key's length in bytes: should be multiple of 8 */
- #define MANA_HASH_KEY_SIZE 40
-@@ -410,10 +410,11 @@ struct mana_port_context {
- 	struct mana_tx_qp *tx_qp;
- 
- 	/* Indirection Table for RX & TX. The values are queue indexes */
--	u32 indir_table[MANA_INDIRECT_TABLE_SIZE];
-+	u32 *indir_table;
-+	u32 indir_table_sz;
- 
- 	/* Indirection table containing RxObject Handles */
--	mana_handle_t rxobj_table[MANA_INDIRECT_TABLE_SIZE];
-+	mana_handle_t *rxobj_table;
- 
- 	/*  Hash key used by the NIC */
- 	u8 hashkey[MANA_HASH_KEY_SIZE];
--- 
-2.34.1
+Thanks, Ashish
 
 
