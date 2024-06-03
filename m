@@ -1,131 +1,160 @@
-Return-Path: <linux-hyperv+bounces-2279-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2280-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C48BB8D7D98
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 10:41:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 780418D827D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 14:39:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BA8FB209D8
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 08:41:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4FDE1B249D1
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 12:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE246A032;
-	Mon,  3 Jun 2024 08:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C020F12C481;
+	Mon,  3 Jun 2024 12:39:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5eK3gvV"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Hqcgmw4m"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9823383BE;
-	Mon,  3 Jun 2024 08:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E167212C473;
+	Mon,  3 Jun 2024 12:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717404088; cv=none; b=X0TA16Mb3pbaePZcLULsFrglXndAX31Hc4HK3rNG/W9Wdcu7i5GQrYvAAXLyV/UxWCBjM2IgsjTfSHOv7TCX+TQZRuyh31jVmWOk9rvGLQBGV8gOM4UM4/3WPUv4QBa5WG/36ucXl+S+52okOk85qdm+aHrRSLVh6tRn0cWz5vg=
+	t=1717418358; cv=none; b=Vk/eOovX1rtovngQD33wcFTz1tsOUENVxJq7oWHjIIkuDlOAfn+NRPefGKpXBrAbMD50P4EbdgXOKdCcxLNL7DYlxk9cqoBEgxaMajy6MT/GW7Xs68CHKfCTICBVr1+VzP5LZFXDuYgx/E4lqc9xiPrtd7U4dA/3EcNCTKfKZc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717404088; c=relaxed/simple;
-	bh=fKoLx7kOYeVfEWenmuVw+KXEUzR3ArFKL0In9YO3j6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nNC++AG2gPm8Xh1uXmJ9h1yYSTpb3jNi98c6aVMFZqRfc2hL+ZCO2g28rxEMfWbccffli+yzH7Mm4utaHzPLSu2GNSPlutJA4RFakuvZy/GDWtIfUbk4f4q8RRjuZ8RXumrQs1N4Dw1IfRMJnZh3xf4990Tw61MnA/9jlr+GBu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5eK3gvV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A961C2BD10;
-	Mon,  3 Jun 2024 08:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717404087;
-	bh=fKoLx7kOYeVfEWenmuVw+KXEUzR3ArFKL0In9YO3j6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S5eK3gvVgBdd3RmU/4lx4tWmr33Pn0YJBBdp3sp6wDd90SlKHniAGHiuGx9v3A+ZV
-	 x7qP3KRBcOrG1FQLT68MMCjufbbCoJz6q0UxQ7MjVexqjCwcg0nqKuw3+fcMaNe4NE
-	 Etv3Oo/ONlm/huQEH9PW3pVAomVMG5ww1RFneGBG+rw9ZIY4h4Xx7y+MW60niNjfTD
-	 xp7h8KDwe+RVkRc94XRBUOYt3ufp6buIPgk3qPaTgMwuFXEPTEfNMg2XnsN8cwlyAO
-	 A0xKNgYWAuxVaBlrBc5afKzeMR+5vCJ0jnLH2lJtv4ChMKyjwRULBg6E06orXjmJil
-	 0XLHupbgFxm2Q==
-Date: Mon, 3 Jun 2024 11:41:22 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240603084122.GK3884@unreal>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=arc-20240116; t=1717418358; c=relaxed/simple;
+	bh=LEM9nLCZweC6fzBGd3LiqBJyI0EVR5DWYNV+RHxhfJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Rk9j9+yPewQeBwWkcfpqTv/2MUBRkd96DN9uvKLncenknwEqkwIwWeL8LvNvxyVGw8zoK+QqXBUX33BV8gf5Cbs2FbbzDo9+qlb17gWRUNQTHVawf2rIrDf61oFVDX+5MOspdqPCl2cPHh1zlYtsNrCpSRcyyZD1TBaDnCVrwbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Hqcgmw4m; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1717418356; x=1748954356;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LEM9nLCZweC6fzBGd3LiqBJyI0EVR5DWYNV+RHxhfJc=;
+  b=Hqcgmw4moR5xrn3ljGdNG2NQIqkjpx77ho9zS40XDNG2X3wb34CUkuya
+   X/mt32h+rUIU0pzJci/Ji1fsu/fcQxsni0pycwJPYZMybmJ9+da3Bqhe+
+   QRLyxgI0JOR7uXmU/EF8JF1RKBIpsXNd0o16tFy+L44kcuJp+QW/q6oJ0
+   NhAJzLZ0M4xuF5Aw+lk8aZ6MkwDPrIcWdT4qJPG61eu3enuINwaherele
+   ghX+9sPDzlaZ4vZOYHUNDgiwNl+85sbGEvJA0Sk9jhg6rhrPNTEVHkd5V
+   SipaiU+scw1XcuBPMYKDZUtj4XS3gEvmCQCTM12MAE38i40ax4V1plv7I
+   g==;
+X-CSE-ConnectionGUID: mGTV6IY0SjuqO4B8d/I3Zg==
+X-CSE-MsgGUID: cs2mH/dwScqctcaN/BguNA==
+X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
+   d="scan'208";a="194291692"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jun 2024 05:39:11 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 3 Jun 2024 05:38:36 -0700
+Received: from [10.159.227.221] (10.10.85.11) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 3 Jun 2024 05:38:23 -0700
+Message-ID: <7e618af0-51a7-4941-a386-0ac68c66d358@microchip.com>
+Date: Mon, 3 Jun 2024 14:38:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 9/9] mmc: Convert from tasklet to BH workqueue
+To: Allen Pais <apais@linux.microsoft.com>, <linux-kernel@vger.kernel.org>
+CC: <tj@kernel.org>, <keescook@chromium.org>, <vkoul@kernel.org>,
+	<marcan@marcan.st>, <sven@svenpeter.dev>, <florian.fainelli@broadcom.com>,
+	<rjui@broadcom.com>, <sbranden@broadcom.com>, <paul@crapouillou.net>,
+	<Eugeniy.Paltsev@synopsys.com>, <manivannan.sadhasivam@linaro.org>,
+	<vireshk@kernel.org>, <Frank.Li@nxp.com>, <leoyang.li@nxp.com>,
+	<zw@zh-kernel.org>, <wangzhou1@hisilicon.com>, <haijie1@huawei.com>,
+	<shawnguo@kernel.org>, <s.hauer@pengutronix.de>, <sean.wang@mediatek.com>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<afaerber@suse.de>, <logang@deltatee.com>, <daniel@zonque.org>,
+	<haojian.zhuang@gmail.com>, <robert.jarzmik@free.fr>, <andersson@kernel.org>,
+	<konrad.dybcio@linaro.org>, <orsonzhai@gmail.com>,
+	<baolin.wang@linux.alibaba.com>, <zhang.lyra@gmail.com>,
+	<patrice.chotard@foss.st.com>, <linus.walleij@linaro.org>, <wens@csie.org>,
+	<jernej.skrabec@gmail.com>, <peter.ujfalusi@gmail.com>, <kys@microsoft.com>,
+	<haiyangz@microsoft.com>, <wei.liu@kernel.org>, <decui@microsoft.com>,
+	<jassisinghbrar@gmail.com>, <mchehab@kernel.org>,
+	<maintainers@bluecherrydvr.com>, <ulf.hansson@linaro.org>,
+	<manuel.lauss@gmail.com>, <mirq-linux@rere.qmqm.pl>,
+	<jh80.chung@samsung.com>, <oakad@yahoo.com>,
+	<hayashi.kunihiko@socionext.com>, <mhiramat@kernel.org>,
+	<brucechang@via.com.tw>, <HaraldWelte@viatech.com>, <pierre@ossman.eu>,
+	<duncan.sands@free.fr>, <stern@rowland.harvard.edu>, <oneukum@suse.com>,
+	<openipmi-developer@lists.sourceforge.net>, <dmaengine@vger.kernel.org>,
+	<asahi@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-rpi-kernel@lists.infradead.org>, <linux-mips@vger.kernel.org>,
+	<imx@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-actions@lists.infradead.org>,
+	<linux-arm-msm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+	<linux-omap@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-10-apais@linux.microsoft.com>
+Content-Language: en-US, fr
+From: Aubin Constans <aubin.constans@microchip.com>
+In-Reply-To: <20240327160314.9982-10-apais@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> Allow variable size indirection table allocation in MANA instead
-> of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> indirection table is allocated dynamically.
+On 27/03/2024 17:03, Allen Pais wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 > 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  Changes in v3:
->  * Fixed the memory leak(save_table) in mana_set_rxfh()
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
 > 
->  Changes in v2:
->  * Rebased to latest net-next tree
->  * Rearranged cleanup code in mana_probe_port to avoid extra operations
+> This patch converts drivers/infiniband/* from tasklet to BH workqueue.
+> 
+> Based on the work done by Tejun Heo <tj@kernel.org>
+> Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
+> 
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 > ---
->  drivers/infiniband/hw/mana/qp.c               | 10 +--
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 68 ++++++++++++++++---
->  .../ethernet/microsoft/mana/mana_ethtool.c    | 27 +++++---
->  include/net/mana/gdma.h                       |  4 +-
->  include/net/mana/mana.h                       |  9 +--
->  5 files changed, 89 insertions(+), 29 deletions(-)
+>   drivers/mmc/host/atmel-mci.c                  | 35 ++++-----
+[...]
 
-<...>
+For atmel-mci, judging from a few simple tests, performance is preserved.
+E.g. writing to a SD Card on the SAMA5D3-Xplained board:
+time dd if=/dev/zero of=/opt/_del_me bs=4k count=64k
 
-> +free_indir:
-> +	apc->indir_table_sz = 0;
-> +	kfree(apc->indir_table);
-> +	apc->indir_table = NULL;
-> +	kfree(apc->rxobj_table);
-> +	apc->rxobj_table = NULL;
->  reset_apc:
->  	kfree(apc->rxqs);
->  	apc->rxqs = NULL;
-> @@ -2897,6 +2936,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
->  {
+      Base 6.9.0 : 0.07user 5.05system 0:18.92elapsed 27%CPU
+   Patched 6.9.0+: 0.12user 4.92system 0:18.76elapsed 26%CPU
 
-<...>
+However, please resolve what checkpatch is complaining about:
+scripts/checkpatch.pl --strict 
+PATCH-9-9-mmc-Convert-from-tasklet-to-BH-workqueue.mbox
 
-> @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
->  		}
->  
->  		unregister_netdevice(ndev);
-> +		apc->indir_table_sz = 0;
-> +		kfree(apc->indir_table);
-> +		apc->indir_table = NULL;
-> +		kfree(apc->rxobj_table);
-> +		apc->rxobj_table = NULL;
+   WARNING: please, no space before tabs
+   #72: FILE: drivers/mmc/host/atmel-mci.c:367:
+   +^Istruct work_struct ^Iwork;$
 
-Why do you need to NULLify here? Will apc is going to be accessible
-after call to mana_remove? or port probe failure?
+Same as discussions on the USB patch[1] and others in this series, I am 
+also in favour of "workqueue" or similar in the comments, rather than 
+just "work".
 
-Thanks
+Apart from that:
+Tested-by: Aubin Constans <aubin.constans@microchip.com>
+Acked-by: Aubin Constans <aubin.constans@microchip.com>
+
+Thanks.
+
+[1]: 
+https://lore.kernel.org/linux-mmc/CAOMdWSLipPfm3OZTpjZz4uF4M+E_8QAoTeMcKBXawLnkTQx6Jg@mail.gmail.com/
 
