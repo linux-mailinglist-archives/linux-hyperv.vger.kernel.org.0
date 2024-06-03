@@ -1,185 +1,208 @@
-Return-Path: <linux-hyperv+bounces-2281-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2282-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E67A28D841E
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 15:37:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1134B8D8808
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 19:35:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 156501C20DB7
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 13:37:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34FCF1C2178F
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 17:35:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A8E82893;
-	Mon,  3 Jun 2024 13:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F365313776F;
+	Mon,  3 Jun 2024 17:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4mVGPXY"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="arwB9k2c"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FF72209B;
-	Mon,  3 Jun 2024 13:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9841366;
+	Mon,  3 Jun 2024 17:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717421869; cv=none; b=a/shoZ9w6oX1qnyg+3rNlXbK7u3hau5Axsnz0aWtILludn2CItKXRojAtIwMa98sLuH3yUC61wTqW3USqVG2Kt9ax/w3J4NHHo99luRdOeFhfHph5bQvuQKnn6eAwRE8gMs3xXElu4J+Z1UUw5LI4OZuf42En9NmVTzoU7RQPC8=
+	t=1717436098; cv=none; b=FCfTHfEDddyBQEn1WhZnWryYKueBt1KPLCbSY+3BereApdu77pBzVVv3L5aKUkaPr3fKJMD3vRAG3zd7Q5LLW+b2reG/syj4QAVUYt0dpSeiVT1CjjEJNZhQWruUVcdAapozOdsZbudnrk7PsEiue9rH2ggaKjvft+KM0at6uXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717421869; c=relaxed/simple;
-	bh=HlV1JYmTkGuDRNbsB9qr/fO7nygHIol5hw422pO5L4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a6Ps8OlkxUD/4t5rZJxN4EEYQoCnCq87osM6bH+rpenOI2WAuslElEyq6QljUcteASBv3+m0gHBryUj6SvpJGI2zJVnEXW9N8rvxwLu96aMCo/GlVGR+k9Pbu8Pe5HFlFxSF+ubBy85HSE+lEtSIaJFymjH1LkJAnPKTmz1JTSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4mVGPXY; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717421868; x=1748957868;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HlV1JYmTkGuDRNbsB9qr/fO7nygHIol5hw422pO5L4M=;
-  b=E4mVGPXYtprinpWFDcxUdmsMUESXDQqPRImq2D90CxZF8G4Ri+llMWTN
-   D/nZAxPQC+5m/OZtmLFxPg5WliRy9DX0vkkPhdmUBURxhWjUFfGispWkR
-   PdzlD5sI8IYgjNW6yczMBl4074o+O8SMLVJQomWCjLmo02S8nCrKj3NcN
-   Js5l1zuOlpYeWa2dGLrUgn3wkY1rqLaStlj/rx2mNs0hlcZuDs/cf+O/6
-   6x+1zncNLLsP1aNlFxbvwRkxEq10hI0UzFrxndvgkIp0adR83v9bCi2Zu
-   CWv5eY2s099YaT+rWISaSEJb2E0Pwpx5ZTseRRga1clFzDgMSFGPF6ATx
-   Q==;
-X-CSE-ConnectionGUID: 2SONHhRuSL2+jSiL/yO8/g==
-X-CSE-MsgGUID: nIst8LprSHixydGorTiRZA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25312981"
-X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="25312981"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 06:37:47 -0700
-X-CSE-ConnectionGUID: e3PY2hWTRwGwd4Jzk9FnEg==
-X-CSE-MsgGUID: eaPVAzSiQQmJ8pD3Nwl74Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="36862228"
-Received: from ibganev-desk.amr.corp.intel.com (HELO [10.125.108.143]) ([10.125.108.143])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 06:37:46 -0700
-Message-ID: <8992921e-7343-4279-9953-0c042d8baf90@intel.com>
-Date: Mon, 3 Jun 2024 06:37:45 -0700
+	s=arc-20240116; t=1717436098; c=relaxed/simple;
+	bh=DKulNpWMB5g4h3LO0UnPAP8vpdAsv+ZuVpLPHeUsdwQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=M5XH+hIln6mlA4WGV/JhOO/EonsIduLgZHDrUlZAeQ7PmkPS4batJRkkVZEsNCt64qWewd77f3Nsn0WvmmDYM/IIm/SLCqu9RodrycAo2f5o+S8DJtw/YaN54OgdCj4NXt+ct9P12fTPu41eIuKs77zxP/F7AcOa+AxicHiMpgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=arwB9k2c; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4684920681D5;
+	Mon,  3 Jun 2024 10:25:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4684920681D5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1717435514;
+	bh=4DfOU8aQl0aDoujS+l1W8I9cPbB9Sd5aNNyJFDGp/QQ=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+	b=arwB9k2cp5qmOpH04JZQJkpaQ68dKr6NHq6/nWjIeKTEglSLJZbHneTkxRo0iYye3
+	 dopPLk66Mp6Cqqtct/3LWOtVyWSXCVY5VMtnmDbdTLbXrzM1H6t1A8KCeQ5Sp+gzGS
+	 Acr7rY4qAUIDkO+vSD/92kHIH7AgZovgYBJ1BnFc=
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/tdx: Enhance code generation for TDCALL and SEAMCALL
- wrappers
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-References: <20240602115444.1863364-1-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240602115444.1863364-1-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH 9/9] mmc: Convert from tasklet to BH workqueue
+From: Allen Pais <apais@linux.microsoft.com>
+In-Reply-To: <7e618af0-51a7-4941-a386-0ac68c66d358@microchip.com>
+Date: Mon, 3 Jun 2024 10:25:02 -0700
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Tejun Heo <tj@kernel.org>,
+ Kees Cook <keescook@chromium.org>,
+ Vinod Koul <vkoul@kernel.org>,
+ marcan@marcan.st,
+ sven@svenpeter.dev,
+ florian.fainelli@broadcom.com,
+ Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>,
+ Paul Cercueil <paul@crapouillou.net>,
+ Eugeniy.Paltsev@synopsys.com,
+ manivannan.sadhasivam@linaro.org,
+ Viresh Kumar <vireshk@kernel.org>,
+ Frank.Li@nxp.com,
+ Leo Li <leoyang.li@nxp.com>,
+ zw@zh-kernel.org,
+ Zhou Wang <wangzhou1@hisilicon.com>,
+ haijie1@huawei.com,
+ Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Sean Wang <sean.wang@mediatek.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ angelogioacchino.delregno@collabora.com,
+ =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Logan Gunthorpe <logang@deltatee.com>,
+ Daniel Mack <daniel@zonque.org>,
+ Haojian Zhuang <haojian.zhuang@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>,
+ andersson@kernel.org,
+ konrad.dybcio@linaro.org,
+ Orson Zhai <orsonzhai@gmail.com>,
+ baolin.wang@linux.alibaba.com,
+ Lyra Zhang <zhang.lyra@gmail.com>,
+ Patrice CHOTARD <patrice.chotard@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Chen-Yu Tsai <wens@csie.org>,
+ =?utf-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+ peter.ujfalusi@gmail.com,
+ kys@microsoft.com,
+ haiyangz@microsoft.com,
+ wei.liu@kernel.org,
+ decui@microsoft.com,
+ jassisinghbrar@gmail.com,
+ mchehab@kernel.org,
+ maintainers@bluecherrydvr.com,
+ ulf.hansson@linaro.org,
+ manuel.lauss@gmail.com,
+ mirq-linux@rere.qmqm.pl,
+ jh80.chung@samsung.com,
+ oakad@yahoo.com,
+ hayashi.kunihiko@socionext.com,
+ mhiramat@kernel.org,
+ brucechang@via.com.tw,
+ HaraldWelte@viatech.com,
+ pierre@ossman.eu,
+ duncan.sands@free.fr,
+ stern@rowland.harvard.edu,
+ oneukum@suse.com,
+ openipmi-developer@lists.sourceforge.net,
+ dmaengine@vger.kernel.org,
+ asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org,
+ linux-mips@vger.kernel.org,
+ imx@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-mediatek@lists.infradead.org,
+ linux-actions@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ linux-sunxi@lists.linux.dev,
+ linux-tegra@vger.kernel.org,
+ linux-hyperv@vger.kernel.org,
+ linux-rdma@vger.kernel.org,
+ linux-media@vger.kernel.org,
+ linux-mmc@vger.kernel.org,
+ linux-omap@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org,
+ linux-usb@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <61F36002-C765-410C-8EF9-203593C269FF@linux.microsoft.com>
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-10-apais@linux.microsoft.com>
+ <7e618af0-51a7-4941-a386-0ac68c66d358@microchip.com>
+To: Aubin Constans <aubin.constans@microchip.com>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-On 6/2/24 04:54, Kirill A. Shutemov wrote:
-> Sean observed that the compiler is generating inefficient code to clear
-> the tdx_module_args struct for TDCALL and SEAMCALL wrappers. The
-> compiler is generating numerous instructions at each call site to clear
-> the unused fields of the structure.
-> 
-> To address this issue, avoid using C99-initializer and instead
-> explicitly use string instructions to clear the struct.
-> 
-> With Clang, this change results in a savings of approximately 3K with my
-> configuration:
-> 
-> add/remove: 0/0 grow/shrink: 0/21 up/down: 0/-3187 (-3187)
-> 
-> With GCC, the savings are less significant at around 300 bytes:
-> 
-> add/remove: 0/0 grow/shrink: 3/22 up/down: 17/-313 (-296)
-> 
-> GCC tends to generate string instructions more frequently to clear the
-> struct.
 
-<shrug>
 
-I don't think moving away from perfectly normal C struct initialization
-is worth it for 300 bytes of text in couple of slow paths.
+> On Jun 3, 2024, at 5:38=E2=80=AFAM, Aubin Constans =
+<aubin.constans@microchip.com> wrote:
+>=20
+> On 27/03/2024 17:03, Allen Pais wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you =
+know the content is safe
+>> The only generic interface to execute asynchronously in the BH =
+context is
+>> tasklet; however, it's marked deprecated and has some design flaws. =
+To
+>> replace tasklets, BH workqueue support was recently added. A BH =
+workqueue
+>> behaves similarly to regular workqueues except that the queued work =
+items
+>> are executed in the BH context.
+>> This patch converts drivers/infiniband/* from tasklet to BH =
+workqueue.
+>> Based on the work done by Tejun Heo <tj@kernel.org>
+>> Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git =
+for-6.10
+>> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+>> ---
+>>  drivers/mmc/host/atmel-mci.c                  | 35 ++++-----
+> [...]
+>=20
+> For atmel-mci, judging from a few simple tests, performance is =
+preserved.
+> E.g. writing to a SD Card on the SAMA5D3-Xplained board:
+> time dd if=3D/dev/zero of=3D/opt/_del_me bs=3D4k count=3D64k
+>=20
+>     Base 6.9.0 : 0.07user 5.05system 0:18.92elapsed 27%CPU
+>  Patched 6.9.0+: 0.12user 4.92system 0:18.76elapsed 26%CPU
+>=20
+> However, please resolve what checkpatch is complaining about:
+> scripts/checkpatch.pl --strict =
+PATCH-9-9-mmc-Convert-from-tasklet-to-BH-workqueue.mbox
+>=20
+>  WARNING: please, no space before tabs
+>  #72: FILE: drivers/mmc/host/atmel-mci.c:367:
+>  +^Istruct work_struct ^Iwork;$
+>=20
+> Same as discussions on the USB patch[1] and others in this series, I =
+am also in favour of "workqueue" or similar in the comments, rather than =
+just "work".
 
-If someone out there is using clang, is confident that it is doing the
-right thing and not just being silly, _and_ is horribly bothered by its
-code generation, then please speak up.
+ Will send out a new version.
 
-> +static __always_inline void tdx_arg_init(struct tdx_module_args *args)
-> +{
-> +	asm ("rep stosb"
-> +	     : "+D" (args)
-> +	     : "c" (sizeof(*args)), "a" (0)
-> +	     : "memory");
-> +}
+Thank you very much for testing and providing your review.
 
-The inline assembly also has the side-effect of tripping up the
-compiler.  The compiler can't optimize across these at all and it
-probably has the effect of bloating the code.
+- Allen
 
-Oh, and if we're going to leave this weirdo initialization idiom for
-TDX, it needs to be well commented:
+>=20
+> Apart from that:
+> Tested-by: Aubin Constans <aubin.constans@microchip.com>
+> Acked-by: Aubin Constans <aubin.constans@microchip.com>
+>=20
+> Thanks.
+>=20
+> [1]: =
+https://lore.kernel.org/linux-mmc/CAOMdWSLipPfm3OZTpjZz4uF4M+E_8QAoTeMcKBX=
+awLnkTQx6Jg@mail.gmail.com/
 
-/*
- * Using normal " = {};" to initialize tdx_module_args results in
- * bloated hard-to-read assembly.  Zero it using the most compact way
- * available.
- */
-
-Eh?
 
