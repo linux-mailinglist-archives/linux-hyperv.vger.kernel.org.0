@@ -1,111 +1,129 @@
-Return-Path: <linux-hyperv+bounces-2283-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2284-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A88FB8D88D5
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 20:45:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A0EC8FA69F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 01:47:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C7E41F220B6
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 18:45:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A352DB221F3
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Jun 2024 23:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6558612DDA5;
-	Mon,  3 Jun 2024 18:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C96D81AB5;
+	Mon,  3 Jun 2024 23:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="xgOLEnz6"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="F6kPfk5m"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4925F9E9
-	for <linux-hyperv@vger.kernel.org>; Mon,  3 Jun 2024 18:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950788061F;
+	Mon,  3 Jun 2024 23:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717440348; cv=none; b=FgwdoAI5Emp6tCNZYHtLGdTwAv8b2JKDMumIUn0oyBmZftS2u0RlG2pTt1iuOghN8gmUbTL7zdm1hPfNNhI1pXnFPqVnmJNwYxIJ1jqVB2A5BKQXvExkFQAV25QelerLBP/AB0g20kEL49a3bI9kloP4oLGcbpZ+5HtyNVGr/CU=
+	t=1717458454; cv=none; b=VokH/e3Z9hqU+3tQqTD9rzsF3LcBamZUMZ7XY+xryxnKR40FOxEZh+9+xRf2SBv2FfV3CaCxU7Ulj1DWakLUjU7YDCGiD4Fv2RmBLdZyD+TjKgbdSwLq4/g/ecgKI7fyDvsAX2JdvRew2pnQCeVNGBKx60tDKoI6xuHl5XDzj/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717440348; c=relaxed/simple;
-	bh=45DMRn2FH77YelrORvqcFvTIqhXAmUJq7b7LNS71ris=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZhXkKOJ+QAAnZJwln1jGTSyiECgH8vBvzf61JpMXM1QsCELEEE8Miw23jxVohh+FQpEd3VGfKeeYJThXRZyl1TJ4vtvWH73YNPOXRaRH+lndG0+PC3van+/M6jsjhbbqj6tOneQBpdMnrzUQL+2FwItR2fiuJL6Wylqis/tOmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=xgOLEnz6; arc=none smtp.client-ip=45.157.188.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VtMvh6qFGzbqD;
-	Mon,  3 Jun 2024 20:39:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1717439968;
-	bh=gtIaPUDSXyeON8s2CCg1DgIhDlLJpeFMkqvOS8MasVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xgOLEnz6SJcIhFjVsyAJkws+cB0hDF1vBl5UhdAnMFZ3IwIv9+mfJG3z/z022GaLC
-	 hucCNjddaf0O63psa6tLWOQ3L5xKcN9U7KIay9a2JpyiZ7tPESeMWs+1ppcAXahNNL
-	 fGKNj5z+dog4VQDnEUOYMq6wUCsWbim9yiLiW2VQ=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VtMvf5T4yz1Y3;
-	Mon,  3 Jun 2024 20:39:26 +0200 (CEST)
-Date: Mon, 3 Jun 2024 20:39:24 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	Kees Cook <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
-	Alexander Graf <graf@amazon.com>, Angelina Vu <angelinavu@linux.microsoft.com>, 
-	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
-	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>, =?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>, 
-	Thara Gopinath <tgopinath@microsoft.com>, Trilok Soni <quic_tsoni@quicinc.com>, 
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
-	Yu Zhang <yu.c.zhang@linux.intel.com>, =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>, 
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org, 
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-Message-ID: <20240603.ahNg8waif6Fu@digikod.net>
-References: <20240503131910.307630-1-mic@digikod.net>
- <20240503131910.307630-4-mic@digikod.net>
- <ZjTuqV-AxQQRWwUW@google.com>
- <20240506.ohwe7eewu0oB@digikod.net>
- <ZjmFPZd5q_hEBdBz@google.com>
- <20240507.ieghomae0UoC@digikod.net>
- <ZjpTxt-Bxia3bRwB@google.com>
- <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com>
- <20240514.mai3Ahdoo2qu@digikod.net>
- <ZkUb2IWj4Z9FziCb@google.com>
+	s=arc-20240116; t=1717458454; c=relaxed/simple;
+	bh=6bEpQgcxUVGW2oHLoP+LTHY1R7E8TDG7aTpirGPEYG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=inshmYfGXCBcBmM3d1In0pqcIl85d6R1mOS+ML8aYVM5rvRFzFF26L0jPIgI/IuveUuS72sY9uAPG5HbvvYJEztX5O15OiDR3Eh+5RlGZevtArJ8TX6HXYRMNETrIvnE3prrgYtJQjhfmAbUvqO6ed3LePuGB8uQzWw2jJJYY9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=F6kPfk5m; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [IPV6:2601:646:8002:4641:eb14:ad94:2806:1c1a] ([IPv6:2601:646:8002:4641:eb14:ad94:2806:1c1a])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 453EhCwn3610090
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 3 Jun 2024 07:43:12 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 453EhCwn3610090
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024051501; t=1717425794;
+	bh=sOv2pml39rCUmYtq263pd0Mke6ArsY5AX7diMAElB7o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=F6kPfk5mkSk5h0hAkB5UJ45Gs5fwkaIkIuhFTy8KR1NFWRKyqxjf62B+INqAcQtYS
+	 1K1lC+HHZJuFQJH2hrVwQHOc06tWtoXdTqdjxCtihWqxWYG502lPDyIQ4rkBMhLEhX
+	 K5hZO67HdOTy/G6fEJulnDhrID0NSaitVzskOa4cHmaexkEmC7pQImZo+W84PK6HAo
+	 bnuJkaQAPQoM+KjEcz2CDmaFd2wNeI3Zuz5LkufhuWzQsKUTxlzUbNf3l2hZnESq6D
+	 qE+/LWd5MSggxOHt2HBe0b+7WMwUp6U2gtRzKKnfqNHrh1XhfRO17fyfW7MrCcVKLc
+	 kcU1XkhpOZnLg==
+Message-ID: <5d7dca1e-5889-4440-b3a0-48610f11200e@zytor.com>
+Date: Mon, 3 Jun 2024 07:43:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
+ confusion
+To: Nikolay Borisov <nik.borisov@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish"
+ <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Baoquan He <bhe@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+        linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
+ <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZkUb2IWj4Z9FziCb@google.com>
-X-Infomaniak-Routing: alpha
 
-On Wed, May 15, 2024 at 01:32:24PM -0700, Sean Christopherson wrote:
-> On Tue, May 14, 2024, Mickaël Salaün wrote:
-> > On Fri, May 10, 2024 at 10:07:00AM +0000, Nicolas Saenz Julienne wrote:
-> > > Development happens
-> > > https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
-> > > branch, but I'd advice against looking into it until we add some order
-> > > to the rework. Regardless, feel free to get in touch.
-> > 
-> > Thanks for the update.
-> > 
-> > Could we schedule a PUCK meeting to synchronize and help each other?
-> > What about June 12?
+On 5/29/24 03:47, Nikolay Borisov wrote:
+>>
+>> diff --git a/arch/x86/kernel/relocate_kernel_64.S 
+>> b/arch/x86/kernel/relocate_kernel_64.S
+>> index 56cab1bb25f5..085eef5c3904 100644
+>> --- a/arch/x86/kernel/relocate_kernel_64.S
+>> +++ b/arch/x86/kernel/relocate_kernel_64.S
+>> @@ -148,9 +148,10 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>>        */
+>>       movl    $X86_CR4_PAE, %eax
+>>       testq    $X86_CR4_LA57, %r13
+>> -    jz    1f
+>> +    jz    .Lno_la57
+>>       orl    $X86_CR4_LA57, %eax
+>> -1:
+>> +.Lno_la57:
+>> +
+>>       movq    %rax, %cr4
+>>       jmp 1f
 > 
-> June 12th works on my end.
+> That jmp 1f becomes redundant now as it simply jumps 1 line below.
+> 
 
-Can you please send an invite?
+Uh... am I the only person to notice that ALL that is needed here is:
 
- Mickaël
+	andl $(X86_CR4_PAE|X86_CR4_LA57), %r13d
+	movq %r13, %rax
+
+... since %r13 is dead afterwards, and PAE *will* have been set in %r13 
+already?
+
+I don't believe that this specific jmp is actually needed -- there are 
+several more synchronizing jumps later -- but it doesn't hurt.
+
+However, if the effort is for improving the readability, it might be 
+worthwhile to encapsulate the "jmp 1f; 1:" as a macro, e.g. "SYNC_CODE".
+
+	-hpa
 
