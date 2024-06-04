@@ -1,181 +1,119 @@
-Return-Path: <linux-hyperv+bounces-2315-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2316-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 585BC8FB8DE
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 18:28:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7003B8FBB10
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 19:58:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 485801C21402
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 16:28:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B752289500
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 17:58:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F9A1487CC;
-	Tue,  4 Jun 2024 16:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660BD14A4FC;
+	Tue,  4 Jun 2024 17:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NuRpy5Q6"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gWdLoPL0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D78F1465AA;
-	Tue,  4 Jun 2024 16:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FD884A33;
+	Tue,  4 Jun 2024 17:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717518483; cv=none; b=GJ+vQm0PL3VxGlnPmpCm9YzKkkNbN/HnxDiRlEvaDjmjjwMnVt0jUOI6at8QGwrmM0qk2fTVHk+X5GylHZMrTPro7NEKsuyiWWmvlBtMFb2+IiUu5UVFzGnRqyX+dNijmh76bw4z1iQUNtc6CgkF6SrMEBpRf6uc6Vj42CJTgcI=
+	t=1717523878; cv=none; b=lkKVV48JZ+aXeOSzg0oomL2PLCEhM3NFuOlkIYRGlr1ubfLGs9W8Bl8FukiTApYLRoPX65C4C2VWbk7Cicgtx6HwLzmnwnnTk3UUTJyaePb0phiR851/XvYpX1bzjxFztDY2f4F/6CMpzLnURVr4usxITGuMjCZ8JnPeJNwPyjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717518483; c=relaxed/simple;
-	bh=/lnf6CYK7u74rxaN3J//73iP7uRLzgmeeUan2mDXC58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fluuJGI17BqMTFipKDNNqWX+NWUQeC1f6ljoyvZKO0+lptFTipSPr5maX1IjVoEKcqU9gIzAOjjjHHW+egUsGOWPSamvpWF8weeW202HWksrl8yUzBDeG+LC7FsZfdSgIEtbIyaAsV5OyNxbtSzvZsLszxQcbz8WwHGpWzfNiZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NuRpy5Q6; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717518483; x=1749054483;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/lnf6CYK7u74rxaN3J//73iP7uRLzgmeeUan2mDXC58=;
-  b=NuRpy5Q6GMQ5nM0/AfRw2PDsQtzPZcC2l/agxlE9SFiC8hNM6gYn8CII
-   XnJQSje9TjtG7aTvCkOO+laCQPXGqXGycHavZW3Ty2ETD5q5Jc7wQiqWb
-   MmZdxjeMDw4cpwflvjlAvoPRNJHJRJxSnUwGC2IG8CFXFQUj/cSbiAMd/
-   PKw6CIxlAHJLiua3yb19C7Df+jVjIEzUEHkHFO4stBuzymNno9yAX9o8D
-   7JNBlGjJFzmPTXmyS1drB41M0E+jDwn2JjfCuB+X3pJ8ve2lfSDvvNyEp
-   NYyHhMSKuJg7IX7e+JECfVHdPu8jlTsJ5Qa3lbFNLB9CYuVWXs2344XPj
-   w==;
-X-CSE-ConnectionGUID: DEkNfhGyTGmkFMH+B/K/oA==
-X-CSE-MsgGUID: 6AyIXTyHTm6w4FJZXSUMog==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="31615676"
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="31615676"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:28:02 -0700
-X-CSE-ConnectionGUID: 2bpf4B91TpKpUNHk9CEgqw==
-X-CSE-MsgGUID: Ur5EqPltQjyX9vlxq9vRCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="37230836"
-Received: from cdpresto-mobl2.amr.corp.intel.com.amr.corp.intel.com (HELO [10.125.108.218]) ([10.125.108.218])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:28:00 -0700
-Message-ID: <68943e0b-8d82-42de-8f09-058e97d9a392@intel.com>
-Date: Tue, 4 Jun 2024 09:27:59 -0700
+	s=arc-20240116; t=1717523878; c=relaxed/simple;
+	bh=E+MtxwwhVqCdGJffmyAZCA/EMI2HiYm5YWLiS0Lw7ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VXlNHmM20utVuBi61Il763NeJj3JRq0gn0r6QMs72WbKJSeg7mZF6vtKPjAbO2IdDUZKTjMzLeej6ZKx3f0UCrltf+4cExNC0EXY6x8aOXGo35dHHEfjUpaNavPDhqwinOSLIgBlrAb46SI8vGnu7XGHRIH+ECtFeHFToWemiCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gWdLoPL0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 412E240E016E;
+	Tue,  4 Jun 2024 17:57:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id GcSvWKOLzVkh; Tue,  4 Jun 2024 17:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717523869; bh=JXZbniqiYmCh6nO8eOuM412v/bVplPF4NQw9IrGcNgw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gWdLoPL0Geu18Mg09ep22E8CJvmQKeIXM/qeFRd35Ee5DINk9hJ1k1uSdd+ZOYIVO
+	 577lBvho2BI8wZgUCZ7BotNPN9ZSqJNOtt11EkNZ2loxtHuj8mbIkJFcl2qWeXJ0CG
+	 uyQUAYVCQZTEUTmNrujRy260AyawFlCuPwcjaYet1+adCC00xHv70iET5PgQlYWJDf
+	 DL16UmrcR6KGpH7E2N7lvUaxNbpIBQo3jNTJut7Xax9DEXl6iROBaVoTFWeI6C4y++
+	 tiZAsXGByTnT2xL5rqqPNd/kvJ58OHLWgFy8HscK8we8+E1mhPhCwHInvpmyzzRJS2
+	 Wz/ZBqVfp8zpns6YR83BDw1nG2AHceAXRgUqbdABY32fFb6BCBJGaFYaLz269a/j5B
+	 DlKjsKQYNMarJVeLOYyqJLwyBBA17yNQadN9DTU+bf2J2IlDy6XkiNjl8MlbxR6lct
+	 qNEHwEcdgyNtRx02O6juN14djEeE3l5mB6c873EcMJ66gTKaXCJVpeSkPe6IAK807h
+	 N4tX9FAxP6X6ty3nug+8TCqm9+CkycFBJM7wdSfahJXtGG66JqySNhiMdBDpVeJME0
+	 ZMChUXpW3VpwL9K5Y3GjTNasyDugQa60YGhSG0iEFji/ORi5QW3VcERJ8YpRHWCdSn
+	 g9SttyT/p/diiD2uywWfVs64=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 09B9640E0081;
+	Tue,  4 Jun 2024 17:57:22 +0000 (UTC)
+Date: Tue, 4 Jun 2024 19:57:16 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
+ confusion
+Message-ID: <20240604175716.GGZl9VfDwv_JhmzwPH@fat_crate.local>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
+ <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+ <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
+ <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
+ <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
+ <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv11 11/19] x86/tdx: Convert shared memory back to private
- on kexec
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
- Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
- Tao Liu <ltao@redhat.com>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-12-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240528095522.509667-12-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
 
-On 5/28/24 02:55, Kirill A. Shutemov wrote:
-> +/* Stop new private<->shared conversions */
-> +static void tdx_kexec_begin(bool crash)
-> +{
-> +	/*
-> +	 * Crash kernel reaches here with interrupts disabled: can't wait for
-> +	 * conversions to finish.
-> +	 *
-> +	 * If race happened, just report and proceed.
-> +	 */
-> +	if (!set_memory_enc_stop_conversion(!crash))
-> +		pr_warn("Failed to stop shared<->private conversions\n");
-> +}
+On Tue, Jun 04, 2024 at 06:21:27PM +0300, Kirill A. Shutemov wrote:
+> What about this?
 
-I don't like having to pass 'crash' in here.
+Yeah, LGTM.
 
-If interrupts are the problem we have ways of testing for those directly.
+Thx.
 
-If it's being in an oops that's a problem, we have 'oops_in_progress'
-for that.
+-- 
+Regards/Gruss,
+    Boris.
 
-In other words, I'd much rather this function (or better yet
-set_memory_enc_stop_conversion() itself) use some existing API to change
-its behavior in a crash rather than have the context be passed down and
-twiddled through several levels of function calls.
-
-There are a ton of these in the console code:
-
-	if (oops_in_progress)
-		foo_trylock();
-	else
-		foo_lock();
-
-To me, that's a billion times more clear than a 'wait' argument that
-gets derives from who-knows-what that I have to trace through ten levels
-of function calls.
-
-	
+https://people.kernel.org/tglx/notes-about-netiquette
 
