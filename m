@@ -1,132 +1,121 @@
-Return-Path: <linux-hyperv+bounces-2317-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2318-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 004798FBB35
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 20:06:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E1DE8FBB57
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 20:14:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0815EB216D4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 18:06:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 244EF281998
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 18:14:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20CFA14A0B8;
-	Tue,  4 Jun 2024 18:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FFE414A08B;
+	Tue,  4 Jun 2024 18:14:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Qcd3QTnu"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yWklZzVM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i5UbluQk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40F4149006;
-	Tue,  4 Jun 2024 18:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2391474A5;
+	Tue,  4 Jun 2024 18:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717524392; cv=none; b=F42oYbWXWDS8TAhusjENPn8h95SXoN8bWrKuA08Q7QfShkXHdlO9rFXKojo/hsv4secAqpRFin0+BpTNh93dtxIN3WY6N4pD9qnogpmF3PRBlkgVKiq9UFg0Yajc90QE+2X+VSWFUfqzOnUSqYE5DELM1VUEFNaEHC1XlpgZw/c=
+	t=1717524847; cv=none; b=lwYbRqa+f2k9epQc0hVvR9XveBpCwaPKj/xAAFxu8LjgBmRdLtcA5iZ0hu2kZLInp314KKDjzGUcQh+E2TcXyaY6KrE8XurDz6M22aAUiWCWzwGvKdskStRUNSYiVoKNDhBwONXo997cg5JBTpfDdW64QB/K89zO/2hV6bMxUsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717524392; c=relaxed/simple;
-	bh=wO7W7vb+/AxcklDnL0MSQsYaiZgoy9/y22Xrp2mnyfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejAPPvsJ8qtDaN7FkObSuqYnEwRn/ONIbsw6vqoWcofpbhZCIZqVTChAon/oFrZqmrSDrF1XwKeZfsWbsgN3EGU6eO+dcTFrBXfgqL67pahudy+oLzn3hKzDZci7rMqOZOJVa9tbhkH3BOgLxbMUN6IwTGhEjJ9qFLiRBCjtpbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Qcd3QTnu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0479840E0081;
-	Tue,  4 Jun 2024 18:06:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id aODJicEVTnQO; Tue,  4 Jun 2024 18:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717524384; bh=meS63MnlFXX/qkUgab/1h3yFeTOB2Up4cbcyhv6eQF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qcd3QTnuRZDQQm/WVb/kDGKGIpKkoDMDIl29qUOVk6IaxfBNHQnzuQDtyt3xEbmAH
-	 IOM9C4JdKAGGTQXzVzIzefFqProE8Rt4rDQVjOV9kNQF9DUtTllwV+9FLs08PyBlGY
-	 q+bJelC25FNaCJkKW857MzL7VncyvOyYS6aCpZhFHUmQ1lW7V5RmvTWjXUZDfw3k81
-	 TNSnu8YrHoI2PL8KtLePPs9P3iF3SPGJWtYUbpeeTnafko0PVz65UuMt9VtWA5pjcI
-	 fdVZlnTjckoOiFrxcmVsoYv49oM6R+GqdtVlQtmhZfJvgFws8n0ofh42pG13ggDO+Y
-	 D7twSe/5QDvNqlY9hRtyqNJn9uqtUc7WVSQjWvLIgNEYgiCAPvTIiFpbOkmMzrUrp6
-	 MeG7p3zMGl6w7Z0FM6ibJvMdlW4l3wMlZTN57RvoXToXJnBELOqoYv7KLTY1s5InD+
-	 bOdkt8HsRuCXWXLxgAz9NkFSJzI8IQK6jYt/lh6FhwqBo5Zbh2KO9ZMbvmUqqGtAY+
-	 VMk0ek/yLx7IS7AHpI/CfdH6AXooAyDqNwTLcQjEpmipTiAwUA9BmVhOt2MPqCP5/e
-	 DbnB9bTDYGSNTsIJk7mxnKbAB7Du7Rfm+s7W5czyESBY91PK4AlHZ9QnV2JDOKUDyi
-	 95STKxzaeIVOQ4XnMKySMkIs=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CCCBA40E016A;
-	Tue,  4 Jun 2024 18:05:55 +0000 (UTC)
-Date: Tue, 4 Jun 2024 20:05:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, adrian.hunter@intel.com,
-	ardb@kernel.org, ashish.kalra@amd.com, bhe@redhat.com,
-	dave.hansen@linux.intel.com, elena.reshetova@intel.com,
-	haiyangz@microsoft.com, hpa@zytor.com, jun.nakajima@intel.com,
-	kai.huang@intel.com, kexec@lists.infradead.org, kys@microsoft.com,
-	linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ltao@redhat.com, mingo@redhat.com, peterz@infradead.org,
-	rafael@kernel.org, rick.p.edgecombe@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, x86@kernel.org
-Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to
- private on kexec
-Message-ID: <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
-References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
- <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
- <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
- <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
- <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
- <u3hg3fqc2nxsjtfugjmmzlahwriyqlebnkxrbzgrxlkj6l3k36@yd3yudglgevi>
+	s=arc-20240116; t=1717524847; c=relaxed/simple;
+	bh=IQorAkEYVe7up2fEOE5YbCTLI6WLK8ATjBO+3so6jGo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Yc5VsutnOE8VkhiSnqbySgodd4+uZVhuYYZdEotTCxIGUnJXv5NcEhcEOiK+nu6umw9RHbOaBBIYT3CMB6n3qlxKw8n39jtni05EwiYLBTtalhQ592uzCHOaAHvIXJ6okgY68wn7Gu9DWozoUyaHt+ITmhSJpUYzB5het8Nc+Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yWklZzVM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i5UbluQk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717524843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=prqacbQcjn+n2e778DNwJeCBy7KaYouq/VzGoavNVk0=;
+	b=yWklZzVMpbVPvo1jsg92p8nTHAt1+QsyoNE2Jqvzm/GJhF53kUgNnWEK0/VSjE0lInxBJk
+	6QlzenLDS2bav5DZMTXwghTPabby9O+Wcn35RIM7N6SXchmN56eQo8ZWJwhBjlIZDjuFH9
+	C1eQu+zyGFJMIMi31hmA/cNS7thPysEDB59EtjIeQzMz4zvgZtezwUHwX8/SLdOwSXVUHn
+	OtUjg4nSWaY3qhLzt0nT+GEKGWP6cst3YplGGVzD31cO2/vRebBzO6atGsGw6RjAGFdRm0
+	cDlWXOc+XUPHbzxbl16+md+qkDOExEqrlMk4CaWP/sy+tPRW4/uWvKUdypWiZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717524843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=prqacbQcjn+n2e778DNwJeCBy7KaYouq/VzGoavNVk0=;
+	b=i5UbluQk14qgiFhIoUjI4lmomrHRuLLynuD8lVZmZelI6F0yTli9Pi7qVDz6qBXyjFmMV7
+	DzFuKq0VCpesHjCg==
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ arnd@arndb.de, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-arch@vger.kernel.org
+Cc: maz@kernel.org, den@valinux.co.jp, jgowans@amazon.com,
+ dawei.li@shingroup.cn
+Subject: Re: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
+ IRQ stats
+In-Reply-To: <20240604050940.859909-7-mhklinux@outlook.com>
+References: <20240604050940.859909-1-mhklinux@outlook.com>
+ <20240604050940.859909-7-mhklinux@outlook.com>
+Date: Tue, 04 Jun 2024 20:13:47 +0200
+Message-ID: <87h6e860f8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <u3hg3fqc2nxsjtfugjmmzlahwriyqlebnkxrbzgrxlkj6l3k36@yd3yudglgevi>
+Content-Type: text/plain
 
-On Tue, Jun 04, 2024 at 07:14:00PM +0300, Kirill A. Shutemov wrote:
-> 			/*
-> 			 * If tdx_enc_status_changed() fails, it leaves memory
-> 			 * in an unknown state. If the memory remains shared,
-> 			 * it can result in an unrecoverable guest shutdown on
-> 			 * the first accessed through a private mapping.
+Michael!
 
-"access"
+On Mon, Jun 03 2024 at 22:09, mhkelley58@gmail.com wrote:
+> Hyper-V VMBus devices generate interrupts that are multiplexed
+> onto a single per-CPU architectural interrupt. The top-level VMBus
+> driver ISR demultiplexes these interrupts and invokes per-device
+> handlers. Currently, these per-device handlers are not modeled as
+> Linux IRQs, so /proc/interrupts shows all VMBus interrupts as accounted
+> to the top level architectural interrupt. Visibility into per-device
+> interrupt stats requires accessing VMBus-specific entries in sysfs.
+> The top-level VMBus driver ISR also handles management-related
+> interrupts that are not attributable to a particular VMBus device.
+>
+> As part of changing VMBus to model VMBus per-device handlers as
+> normal Linux IRQs, the top-level VMBus driver needs to conditionally
+> account for interrupts. If it passes the interrupt off to a
+> device-specific IRQ, the interrupt stats are done by that IRQ
+> handler, and accounting for the interrupt at the top level
+> is duplicative. But if it handles a management-related interrupt
+> itself, then it should account for the interrupt itself.
+>
+> Introduce a new flow handler that provides this functionality.
+> The new handler parallels handle_percpu_irq(), but does stats
+> only if the ISR returns other than IRQ_NONE. The existing
+> handle_untracked_irq() can't be used because it doesn't work for
+> per-cpu IRQs, and it doesn't provide conditional stats.
 
-So this sentence above can go too, right?
+There is a two other options to solve this:
 
-Because that comment is in tdx_kexec_finish() and we're basically going
-off to kexec. So can a guest even access it through a private mapping?
-We're shutting down so nothing is running anymore...
+   1) Move the inner workings of handle_percpu_irq() out into
+      a static function which returns the 'handled' value and
+      share it between the two handler functions.
 
-> 			 * The kdump kernel boot is not impacted as it uses
-> 			 * a pre-reserved memory range that is always private.
-> 			 * However, gathering crash information could lead to
-> 			 * a crash if it accesses unconverted memory through
-> 			 * a private mapping.
+   2) Allocate a proper interrupt for the management mode and invoke it
+      via generic_handle_irq() just as any other demultiplex interrupt.
+      That spares all the special casing in the core code and just
+      works.
 
-When does the kexec kernel even get such a private mapping? It is not
-even up yet...
+Thanks,
 
-> 			 * pr_err() may assist in understanding such crashes.
-
-"Print error info in order to leave bread crumbs for debugging." is what
-I'd say.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+        tglx
 
