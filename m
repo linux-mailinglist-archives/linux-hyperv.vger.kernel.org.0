@@ -1,154 +1,141 @@
-Return-Path: <linux-hyperv+bounces-2304-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2305-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C098F8FAE3A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 11:01:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C44A88FAE83
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 11:16:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79D51284729
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 09:01:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64E131F2503D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 09:16:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C5D1420DA;
-	Tue,  4 Jun 2024 09:01:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE1514374E;
+	Tue,  4 Jun 2024 09:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AsidLimY"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iSXAQOJn"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3E4652;
-	Tue,  4 Jun 2024 09:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C111514372F;
+	Tue,  4 Jun 2024 09:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717491672; cv=none; b=esVvlLyh4VYb0YAkKQ6yVLusHeROAhOR/qiYSVz5JJ+xjQesNXnEO5Rls/rukUM3fcguhWdpkhFri8+7dBVmeBGZ5zM1GpxQLsHthj2LjEnTz+TAltNc/hzzV408SWtd++BM2X2okxuUKl+pnRoe4xNE131D+SCaWJnZAi2SBAo=
+	t=1717492555; cv=none; b=tdYdlxQT2Wi3cxm78CNiiNrfmElY6rDzz5mxLnMgc3c+rKMhHFCY5QyNjqq7V/NNCN60gJhM5bH5LIw4RgM4nLZMYODMhrgYZohkAyxVnL/vrMuq1Cv4Lg3J9VY7fPy4tyooCCyBkJZFfVESDXmpKKAHMPFXSB/aXCWRWTLtqlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717491672; c=relaxed/simple;
-	bh=77c9JqkTvByLnMHXjAWcS4jMhO6cdGjdlVGhwyYHjZQ=;
+	s=arc-20240116; t=1717492555; c=relaxed/simple;
+	bh=Z6h+FaQ2mydG81kK5UyAdLTDhUweVtTAlyL20v2DzGg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TNpNMtgSDWFV/+CxXDfHKj6ZjERHtuMIFICfO3p50rlDZiYiF3Ss80f4frAhUb9kdsj8hc0pSTTdFbh6wbDyM1bgMUuOqH6lZp7gmok3VNoLyd4Lo8EwzWSJly14b9E+2vCXdPdkruqEQTXz2Scq1ePvTKY0Z9+ihXl8aCWFlyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AsidLimY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 45F2220B915A; Tue,  4 Jun 2024 02:01:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 45F2220B915A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1717491670;
-	bh=UQ3dE+N/0pFO6FIyT3FNM4hfEUPHqbcPEwjKMAJv84M=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwy+zrChoDHFaoCzRs9GAJgD/hyJjRdzPx3me0JGoeGn0N0oUHVQ4veFv640V3VaRFrUXg3YJpM74DODZ1rvWwzsdifp8xgbrwOacFA0nTN4OsBcAXHg+0Je7lIiQ8KQuv4vYESGuxgtaBsgKCcoLbUHnQb/llKmCkSmYBf2z5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iSXAQOJn; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A3B6840E0176;
+	Tue,  4 Jun 2024 09:15:43 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ulBYaKGPw-vH; Tue,  4 Jun 2024 09:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717492540; bh=m7NFIk8+6rvmt15s5vCen1cbEwqjokjsUgs57ILsKtA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AsidLimY5TPpyvOLbjRWzCVqbqAUnF7dDloZafb856Z1DJsm5Z1Nq/RYsydZSy0ro
-	 DcOYptWLGpA7fc+3cMVqo+SQkxHI7EaFpLkJUr0xqAkc4WmoHwwoTQvhp+ZklDCxDH
-	 6JqNAXLTvTTWeLz5NgyF15mjLaiaH91MFA/oy7Aw=
-Date: Tue, 4 Jun 2024 02:01:10 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
+	b=iSXAQOJn+SPDaD84vEh7wouOYiZfNCaoiWTp8IPjbiadFjeUbQ8PgOq9mgi7jWbuB
+	 Rm3LQjYTbnpdicihxVy1yB07uSul8gr+Z1gaL7WeDAiwfwqkFMzX+2TGECuiXmhDA4
+	 iSlqfTMjYs9AfTUpI055P9dnTsOjXQmdcnM5TeuC0Mbgo5lc56brjSNqBpHib4ypnO
+	 gCmeqhMFDjnpAFTpEriJjZiYIQSt6rWHxHZP91+aq119WX55MnsAV/sDeoUt4lWHJ8
+	 KFxtXI6OcP1YDtpUUwXpwY9rTFm6SOFEm9YUAQrKWrjC0TErYpKinePUPvrMt/AjaG
+	 nhHNfSE9qW+YOI94ONFGWjwJqvQV3wtQUoBLS6TWKQFxhe4OUMqebRCfFLLNCYXcEV
+	 U4g3HjizjUXvjeZLEQ55FODZEJkRqyH/e8O+n0MpgewAno8Fovq7xeyInc2IQS3L8A
+	 k96/PUr5SRZjrEXHGz3hIay6/6WYwAPA5Ut5ILbQCy33psGebm4rsFuXUK5NG3Odlh
+	 wWFWvJWDPZXAr+gwwH0jpG8nriHspHEfS6rXaK8FHG5wDXAo0FmyJUSTTPB6KHfG3Q
+	 WhBJ+sqT/SIm6U9Ic2kvopPHvEQpFhwhmfiB1F3kgoVGjpbH+8W7qL4xFSLk/KWhG2
+	 UKgi1KIS3RI6wwRh5/Bu5Muw=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A28D540E016C;
+	Tue,  4 Jun 2024 09:15:12 +0000 (UTC)
+Date: Tue, 4 Jun 2024 11:15:03 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240604090110.GA11436@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240603084122.GK3884@unreal>
- <20240604053648.GA14220@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20240604083205.GM3884@unreal>
+	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
+ confusion
+Message-ID: <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
+ <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+ <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
+ <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240604083205.GM3884@unreal>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
 
-On Tue, Jun 04, 2024 at 11:32:05AM +0300, Leon Romanovsky wrote:
-> On Mon, Jun 03, 2024 at 10:36:48PM -0700, Shradha Gupta wrote:
-> > On Mon, Jun 03, 2024 at 11:41:22AM +0300, Leon Romanovsky wrote:
-> > > On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> > > > Allow variable size indirection table allocation in MANA instead
-> > > > of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> > > > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> > > > indirection table is allocated dynamically.
+On Mon, Jun 03, 2024 at 05:24:00PM -0700, H. Peter Anvin wrote:
+> Trying one more time; sorry (again) if someone receives this in duplicate.
+> 
 > > > > 
-> > > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> > > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > > ---
-> > > >  Changes in v3:
-> > > >  * Fixed the memory leak(save_table) in mana_set_rxfh()
-> > > > 
-> > > >  Changes in v2:
-> > > >  * Rebased to latest net-next tree
-> > > >  * Rearranged cleanup code in mana_probe_port to avoid extra operations
-> > > > ---
-> > > >  drivers/infiniband/hw/mana/qp.c               | 10 +--
-> > > >  drivers/net/ethernet/microsoft/mana/mana_en.c | 68 ++++++++++++++++---
-> > > >  .../ethernet/microsoft/mana/mana_ethtool.c    | 27 +++++---
-> > > >  include/net/mana/gdma.h                       |  4 +-
-> > > >  include/net/mana/mana.h                       |  9 +--
-> > > >  5 files changed, 89 insertions(+), 29 deletions(-)
-> > > 
-> > > <...>
-> > > 
-> > > > +free_indir:
-> > > > +	apc->indir_table_sz = 0;
-> > > > +	kfree(apc->indir_table);
-> > > > +	apc->indir_table = NULL;
-> > > > +	kfree(apc->rxobj_table);
-> > > > +	apc->rxobj_table = NULL;
-> > > >  reset_apc:
-> > > >  	kfree(apc->rxqs);
-> > > >  	apc->rxqs = NULL;
-> > > > @@ -2897,6 +2936,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> > > >  {
-> > > 
-> > > <...>
-> > > 
-> > > > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> > > >  		}
-> > > >  
-> > > >  		unregister_netdevice(ndev);
-> > > > +		apc->indir_table_sz = 0;
-> > > > +		kfree(apc->indir_table);
-> > > > +		apc->indir_table = NULL;
-> > > > +		kfree(apc->rxobj_table);
-> > > > +		apc->rxobj_table = NULL;
-> > > 
-> > > Why do you need to NULLify here? Will apc is going to be accessible
-> > > after call to mana_remove? or port probe failure?
-> > Right, they won't be accessed. This is just for the sake of completeness
-> > and to prevent double free in case there are code bug in other place.
+> > > > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> > > > index 56cab1bb25f5..085eef5c3904 100644
+> > > > --- a/arch/x86/kernel/relocate_kernel_64.S
+> > > > +++ b/arch/x86/kernel/relocate_kernel_64.S
+> > > > @@ -148,9 +148,10 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> > > >    	 */
+> > > >    	movl	$X86_CR4_PAE, %eax
+> > > >    	testq	$X86_CR4_LA57, %r13
+> > > > -	jz	1f
+> > > > +	jz	.Lno_la57
+> > > >    	orl	$X86_CR4_LA57, %eax
+> > > > -1:
+> > > > +.Lno_la57:
+> > > > +
+> > > >    	movq	%rax, %cr4
 > 
-> This coding patter is called defensive programming, which is discouraged
-> in the kernel. You are not preventing double free, but hiding bugs which
-> were possible to be found by various static analysis tools.
+> If we are cleaning up this code... the above can simply be:
 > 
-> Please don't do it.
+> 	andl $(X86_CR4_PAE | X86_CR4_LA54), %r13
+> 	movq %r13, %cr4
 > 
-> Thanks
-Understood, it makes sense. Let me fix this in the next version.
+> %r13 is dead afterwards, and the PAE bit *will* be set in %r13 anyway.
 
-Regards,
-Shradha
-> 
-> > 
-> > Regards,
-> > Shradha.
-> > > 
-> > > Thanks
+Yeah, with a proper comment. The testing of bits is not really needed.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
