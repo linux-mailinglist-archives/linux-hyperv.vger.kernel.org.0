@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-2310-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2311-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7175F8FB83A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 17:59:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 055488FB888
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 18:08:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0AED6B2CA6E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 15:50:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27F1D1C23EF4
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Jun 2024 16:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CD0148FF5;
-	Tue,  4 Jun 2024 15:47:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F5BD1474BC;
+	Tue,  4 Jun 2024 16:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YPW9AtaF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+LfK803"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07485148FEC;
-	Tue,  4 Jun 2024 15:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A6153BE;
+	Tue,  4 Jun 2024 16:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717516047; cv=none; b=Fcbz/yOcnpWVFd614kwi5qcNbsWAmLSdpn+H1Akux/jF2ASwLCRI+LSP1fy92Gz/RPQIxCgvCP2919s4KutZd8zKrJYNqBMRWSxSm/C8efYe3NrNVCBnGa8HfoQ6UmH6AY6Q6BUKlrXOnk2X7Ym52rZiPdH6QFXW0kein17ClV8=
+	t=1717517311; cv=none; b=Il4LTMNPrMucP6rk3tPEMNTPvK5WT7xAt+RP23mYo5x8+aGKu25wwlXUf0i74hC9QzilK/cjNfUGRIjo+xADuoYSqRvhaPmOPFEFTzJBpIADAP9dfnkISZQ1xlgkSr5GMrs6QCZE/Rh+nvv3cZeHAHfQUuMVV8q/SSN2v7xVS2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717516047; c=relaxed/simple;
-	bh=Id5s0PIaCRkCPJFLJmSoHhlSb8MaiixVnBKq2JDaGHw=;
+	s=arc-20240116; t=1717517311; c=relaxed/simple;
+	bh=XSjy6YxFesdMOR6JzoV48NYYd8/0S1BEVnZIXtD3nK0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cZac9iBO+eArQuWcVhC9es7rd3a/1jx1SfsPSk0ybo+hQUV0R3tf7tLEzmsZtm0YfIEGnpXZtNBuxJI+qRgymcehKfLPPSmOY8PGW7r0dx4GKQxNkuvelPx79BLQ8vrgPkenp63KlMeDciH+S26ozpS7pMfoTmHDzVrWJMuebio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YPW9AtaF; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=oknzBDUOCV5dw+0UljyqW3KhZP56X2mdSbUgtOqVa7F2+TbsQhOE7a25+s0JF5nBy6yuVDMD+AmXv+g1JPK2SFI42siALoP/MKWY5w3hXeieZ0uLLcYlBcJFYXo8zUpbb3pSt7ap/H6u7lcl/xXgfFvz+PtO4pED6EQt7lhuhQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+LfK803; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717516046; x=1749052046;
+  t=1717517309; x=1749053309;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Id5s0PIaCRkCPJFLJmSoHhlSb8MaiixVnBKq2JDaGHw=;
-  b=YPW9AtaFDyWHTIZYqBw7o4552PAP/8FeIgOazMdjoHQEW3y53rvPdsKS
-   8ylIFDNOJip/DRX6LaeMZ8BYecTxj6OX4/LNGUZRRp38/pRXZW13xJjNO
-   L1dmjnMKOkh1SHES8uXDuaL/bwSsD2IsVAw5uqaKWTlWEKHF3QAgyT26W
-   J7igImFsKSyERnLfAYVxkoeN1aJqqUakkLVOH3IRUQNun96ufOfDF/ycl
-   i988wBzmmFz0s1+DYr9vZJ8W101X93aQRXKqpdDsR3u5rPExE6yAwVCne
-   aQ8+syLAnJb05fCqDHr+TaOx15CrjXz8k0Wl69opFd+1t6JCK5BozXwhP
-   w==;
-X-CSE-ConnectionGUID: 551QbBPaRNyHROExCizNXg==
-X-CSE-MsgGUID: /JSw070/S8yQlfJT0mu6Rw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13880598"
+  bh=XSjy6YxFesdMOR6JzoV48NYYd8/0S1BEVnZIXtD3nK0=;
+  b=e+LfK803uGoOwfmDUI8YHWqL81H23/Nn4Hq0u2Phj/v22OVJ/Nym9ENw
+   rHWbjxWAa53y1xdFe0S7eXQASlQML9v1NYeKdMEMb2L0q4vwhfTjU4G0N
+   pXV1fWerzsQLkEBLFKu+E6XbbP9d6bSCwgZbnvsSjsGVMcp3P+cUWfxCz
+   TfGMubhPeMt/iteg6NxnHkjWYLAqsfPOvWWZa8IlpwJDA5cZZsRracsKG
+   vRRDY1X4ABxvYkmCSdKrtYzbIj5ba7ZlH44+0ev+jrlxt4vuHZPONSyVn
+   16/nFARdJgeT6HMieN1yZnt3kCOT4/9IlStJBM5VZ2eeuHpV/IMd79P10
+   g==;
+X-CSE-ConnectionGUID: ivKEXyoISUC0ReQeI1nY8g==
+X-CSE-MsgGUID: Fnw4z5J4S9CuPgqrbPc/Ng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13918265"
 X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="13880598"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:47:25 -0700
-X-CSE-ConnectionGUID: QXdAuQZmT2GFwoVISydTzw==
-X-CSE-MsgGUID: X8E8y0NZTz2TgIvJMAAlKw==
+   d="scan'208";a="13918265"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:08:29 -0700
+X-CSE-ConnectionGUID: z2GB6NqfTPOjmfKsW00vug==
+X-CSE-MsgGUID: UUAir5M0R0KfDhtDtVquyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="37354255"
+   d="scan'208";a="42225128"
 Received: from cdpresto-mobl2.amr.corp.intel.com.amr.corp.intel.com (HELO [10.125.108.218]) ([10.125.108.218])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:47:23 -0700
-Message-ID: <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
-Date: Tue, 4 Jun 2024 08:47:22 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:08:26 -0700
+Message-ID: <6fd2c15b-5bd9-4e7e-8da0-4ca2c89b38f9@intel.com>
+Date: Tue, 4 Jun 2024 09:08:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,24 +67,29 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to private
- on kexec
+Subject: Re: [PATCHv11 09/19] x86/tdx: Account shared memory
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Borislav Petkov <bp@alien8.de>
-Cc: adrian.hunter@intel.com, ardb@kernel.org, ashish.kalra@amd.com,
- bhe@redhat.com, dave.hansen@linux.intel.com, elena.reshetova@intel.com,
- haiyangz@microsoft.com, hpa@zytor.com, jun.nakajima@intel.com,
- kai.huang@intel.com, kexec@lists.infradead.org, kys@microsoft.com,
- linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, ltao@redhat.com,
- mingo@redhat.com, peterz@infradead.org, rafael@kernel.org,
- rick.p.edgecombe@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- seanjc@google.com, tglx@linutronix.de, thomas.lendacky@amd.com,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
  x86@kernel.org
-References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
- <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
- <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
- <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Tao Liu <ltao@redhat.com>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -130,51 +135,32 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+In-Reply-To: <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/4/24 08:32, Kirill A. Shutemov wrote:
-> What about the comment below?
-> 
-> 			/*
-> 			 * One possible reason for the failure is if kexec raced
-> 			 * with memory conversion. In this case shared bit in
-> 			 * page table got set (or not cleared) during
-> 			 * shared<->private conversion, but the page is actually
-> 			 * private. So this failure is not going to affect the
-> 			 * kexec'ed kernel.
-> 			 *
-> 			 * The only thing one can do at this point on failure
-> 			 * at this point is panic. In absence of better options,
-> 			 * it is reasonable to proceed, hoping the failure is a
-> 			 * benign shared bit mismatch due to the race.
-> 			 *
-> 			 * Also, even if the failure is real and the page cannot
-> 			 * be touched as private, the kdump kernel will boot
-> 			 * fine as it uses pre-reserved memory. What happens
-> 			 * next depends on what the dumping process does and
-> 			 * there's a reasonable chance to produce useful dump
-> 			 * on crash.
-> 			 *
-> 			 * Regardless, the print leaves a trace in the log to
-> 			 * give a clue for debug.
-> 			 */
+On 5/28/24 02:55, Kirill A. Shutemov wrote:
+> Keep track of the number of shared pages. This will allow for 
+> cross-checking against the shared information in the direct mapping
+> and reporting if the shared bit is lost.
 
-It's rambling too much for my taste.
+It's probably also worth mentioning that conversions are slow and
+relatively rare and even though a global atomic isn't really scalable,
+it also isn't worth doing anything fancier.
+> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+> index 26fa47db5782..979891e97d83 100644
+> --- a/arch/x86/coco/tdx/tdx.c
+> +++ b/arch/x86/coco/tdx/tdx.c
+> @@ -38,6 +38,8 @@
+>  
+>  #define TDREPORT_SUBTYPE_0	0
+>  
+> +static atomic_long_t nr_shared;
 
-Let's boil this down to what matters:
+Doesn't this technically need to be:
 
- 1. Failures to change encryption status here can lead a future kernel
-    to touch shared memory with a private mapping
- 2. That causes an immediate unrecoverable guest shutdown (right?)
- 3. kdump kernels should not be affected since they have their own
-    memory ranges and its encryption status is not being tweawked here
- 4. The pr_err() may help make some sense out of #2 when it happens
+	static atomic_long_t nr_shared = ATOMIC_LONG_INIT(0);
 
-I'm not sure the reason behind the failed conversion is important here.
-
-I wouldn't mention panic().
-
-We don't need to opine about what the next kernel might or might not do.
+?  I thought we had some architectures where the 0 logical value wasn't
+actually all 0's.
 
