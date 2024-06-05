@@ -1,69 +1,87 @@
-Return-Path: <linux-hyperv+bounces-2321-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2322-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE8D48FC6D5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2024 10:45:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2679D8FCE55
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2024 15:07:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2768B261BE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2024 08:39:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF9A21C24A4E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2024 13:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8061946BF;
-	Wed,  5 Jun 2024 08:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACE41D3653;
+	Wed,  5 Jun 2024 12:21:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HanVOSjg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iG0rIBEp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5C324963E;
-	Wed,  5 Jun 2024 08:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFDD1D3651;
+	Wed,  5 Jun 2024 12:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717576748; cv=none; b=bBqgBXiHTKtnlmPGPGLsThf5q+nlPblj+RoNSQnDcxFvGogo1gSSdTBVAyfURlt9SXu5Juq+wODpwbT3vDhJfnXg7Ef6x3wpAdSbNXIwSSDO/+z/QuHIBnG7We/UhcbUka0TqXDNitp3+Tv0CCvLUVSbOrNH2sDNZdOGRuBnSIk=
+	t=1717590111; cv=none; b=W0wP7zMQTjqdhUaOWy4b6OiJiAKqhwgVR5+mN+Y1ODkuDyEJFGES3fEJeY9uiA7Yv2rYIopZITR8ECyNvghazXmGZKZPtqCWNLMSbhE2vHdghPmL0m66FU+htjI+cc/oSIMDrmYyMduPCkrYQhNmk6eWU7e56O4VfOIbZt2vJD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717576748; c=relaxed/simple;
-	bh=CNAuilfiRwwKm0fGNUOB0FH43WBrxg4Srl1Cepe++Do=;
+	s=arc-20240116; t=1717590111; c=relaxed/simple;
+	bh=UHHCuXxgr4YI01SKxX+c/bFPiTRBKJKPTARrf8CN9LM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ashag912Xmsgkj1v3d1VQakwdi438KNAGYLQtacsom2XSKIaWvXcsJ9j5jxCUbKxTUb6pLBomch2ei33E8hN+qtkz8xV+BybGqx78jagWqsUUBGNzw0LJqI9AVFj8QJl1uTLv4LW7Q3LCrm0+upQLMWVY8Lbcfagm7tTCYhfyiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HanVOSjg; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 678D120B9260; Wed,  5 Jun 2024 01:39:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 678D120B9260
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1717576746;
-	bh=TrGB2Ttu+2GQP4P667beS3OkIPRmk8NFPGqeTHHLFWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HanVOSjgakHW3wIPeXeqrGKQ1S3YE4V/rsqZcbU8ENuI6HzP2JbQ/gZM2NzgEAvV9
-	 yutTk2fmzDfEd/kXALFdNom5jAXN17IeP5kKUuv8Xwe4sB7CPBfj4TsdS90ZzkH58c
-	 fDqpCeXRUSUtle0vYZxpyFrajGZLw4X+sjyHRrpQ=
-Date: Wed, 5 Jun 2024 01:39:06 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240605083906.GA15889@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240604093349.GP491852@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdsIykdupdVCNw6FTES+pylz9Nf0ZH9DzubP46R3AWUjGvKEZUeYE3TwV+BJ2/6V/T7h/BVyGcZqKjks3C32K2EvPW/tYPH+08Yng6CEEZ6kJFEviEdxHKS3OdvVpmSZxnN0Xn+RGKxoOtBvVje7i8z8MxtrHVS9yhsw/zEVq1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iG0rIBEp; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717590110; x=1749126110;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UHHCuXxgr4YI01SKxX+c/bFPiTRBKJKPTARrf8CN9LM=;
+  b=iG0rIBEpIqDlSNQ9xy3z1IUpZZhOjEOJQCLm3JOytg0QVLRLQTKMzy2t
+   t08zE4bJupjrd4JEbQaDqlHiH4FIqfOp202xa1S4tadLX0Gwn7geVSIao
+   M5OWxzym+YJjExTula0L2GSIAjTYMBqUJvYE5MSRrVfrtF3sADX6uomuS
+   KTuUUKRSCZqwH9yJxgYnhGNk053Vog63ruOcPFRtkoOmObZzsotwTNUye
+   smGS8SWdc06j9HrXqTAo6+TOdRCu8Q0JzBPsx1YWuyNr9PVnWvb4SSDXg
+   rgXikCBVulhxt+d1mgODtQA+dWSumAv1TyfrVg4g/nmZs+Tn0C4cQgj/f
+   w==;
+X-CSE-ConnectionGUID: JP5Hg7PqSwC7Qq2DAG/WFA==
+X-CSE-MsgGUID: BiSN2J+PSLq+MZpHu1INXA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13998764"
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="13998764"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 05:21:49 -0700
+X-CSE-ConnectionGUID: CApkPYYZQBC0yiDEy7bMSw==
+X-CSE-MsgGUID: 1fIP69SpRjaarDLU3PYGpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="68714614"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 05 Jun 2024 05:21:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 5E1A81B6; Wed, 05 Jun 2024 15:21:42 +0300 (EEST)
+Date: Wed, 5 Jun 2024 15:21:42 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@intel.com>, adrian.hunter@intel.com, 
+	ardb@kernel.org, ashish.kalra@amd.com, bhe@redhat.com, 
+	dave.hansen@linux.intel.com, elena.reshetova@intel.com, haiyangz@microsoft.com, hpa@zytor.com, 
+	jun.nakajima@intel.com, kai.huang@intel.com, kexec@lists.infradead.org, 
+	kys@microsoft.com, linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, ltao@redhat.com, mingo@redhat.com, 
+	peterz@infradead.org, rafael@kernel.org, rick.p.edgecombe@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	x86@kernel.org
+Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to
+ private on kexec
+Message-ID: <alkew673cceojzmhsp3wj43yv76cek5ydh2iosfcphuv6ro26q@pj6whxcoetht>
+References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
+ <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
+ <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
+ <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+ <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
+ <u3hg3fqc2nxsjtfugjmmzlahwriyqlebnkxrbzgrxlkj6l3k36@yd3yudglgevi>
+ <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,148 +90,52 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240604093349.GP491852@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
 
-On Tue, Jun 04, 2024 at 10:33:49AM +0100, Simon Horman wrote:
-> On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> > Allow variable size indirection table allocation in MANA instead
-> > of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> > indirection table is allocated dynamically.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+On Tue, Jun 04, 2024 at 08:05:54PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 04, 2024 at 07:14:00PM +0300, Kirill A. Shutemov wrote:
+> > 			/*
+> > 			 * If tdx_enc_status_changed() fails, it leaves memory
+> > 			 * in an unknown state. If the memory remains shared,
+> > 			 * it can result in an unrecoverable guest shutdown on
+> > 			 * the first accessed through a private mapping.
 > 
-> ...
-> 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> 
-> ...
-> 
-> > @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
-> >  	return mana_create_txq(apc, net);
-> >  }
-> >  
-> > +static int mana_rss_table_alloc(struct mana_port_context *apc)
-> > +{
-> > +	if (!apc->indir_table_sz) {
-> > +		netdev_err(apc->ndev,
-> > +			   "Indirection table size not set for vPort %d\n",
-> > +			   apc->port_idx);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-> > +	if (!apc->indir_table)
-> > +		return -ENOMEM;
-> > +
-> > +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
-> > +	if (!apc->rxobj_table) {
-> > +		kfree(apc->indir_table);
-> 
-> Hi, Shradha
-> 
-> Perhaps I am on the wrong track here, but I have some concerns
-> about clean-up paths.
-> 
-> Firstly.  I think that apc->indir_table should be to NULL here for
-> consistency with other clean-up paths. Or alternatively, fields of apc
-> should not set to NULL elsewhere after being freed.
+> "access"
 
-Hi Simon,
+Okay.
 
-Thanks for the comments. This makes sense, I am planning of consistently removing
-the NULLify from other places too as per Leon's comments.
-> 
-> In looking into this I noticed that mana_probe() does not call
-> mana_remove() or return an error in the cases where mana_probe_port() or
-> mana_attach() fail unless add_adev also fails. If so, is that intentional?
+> So this sentence above can go too, right?
 
-Right, so most calls like mana_probe_port(), mana_attach() cleanup after themselves
-in the code if there is any error. So, not having to call mana_remove() in these
-cases in mana_probe() is intentional. But I do agree that an error is returned in
-mana_probe() only if add_adev also fails. I'll fix that too in the next version
-> 
-> In any case, I would suggest as a follow-up, arranging things so that when
-> an error occurs in a function, anything that was allocated is unwound
-> before returning an error.
-> 
-> I think this would make allocation/deallocation easier to reason with.
-> And I suspect it would avoid both the need for fields of structures to be
-> zeroed after being freed, and the need to call mana_remove() from
-> mana_probe().
+I don't think so.
 
-Agreed
-> 
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static void mana_rss_table_init(struct mana_port_context *apc)
-> >  {
-> >  	int i;
-> >  
-> > -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-> > +	for (i = 0; i < apc->indir_table_sz; i++)
-> >  		apc->indir_table[i] =
-> >  			ethtool_rxfh_indir_default(i, apc->num_queues);
-> >  }
-> 
-> ...
-> 
-> > @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
-> >  	err = register_netdev(ndev);
-> >  	if (err) {
-> >  		netdev_err(ndev, "Unable to register netdev.\n");
-> > -		goto reset_apc;
-> > +		goto free_indir;
-> >  	}
-> >  
-> >  	return 0;
-> >  
-> > +free_indir:
-> > +	apc->indir_table_sz = 0;
-> > +	kfree(apc->indir_table);
-> > +	apc->indir_table = NULL;
-> > +	kfree(apc->rxobj_table);
-> > +	apc->rxobj_table = NULL;
-> >  reset_apc:
-> >  	kfree(apc->rxqs);
-> >  	apc->rxqs = NULL;
-> 
-> nit: Not strictly related to this patch, but the reset_apc code should
->      probably be a call to mana_cleanup_port_context() as it is the dual of
->      mana_init_port_context() which is called earlier in mana_probe_port()
+> Because that comment is in tdx_kexec_finish() and we're basically going
+> off to kexec. So can a guest even access it through a private mapping?
+> We're shutting down so nothing is running anymore...
 
-Sure, let me do that too.
-> 
-> ...
-> 
-> > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> >  		}
-> >  
-> >  		unregister_netdevice(ndev);
-> > +		apc->indir_table_sz = 0;
-> > +		kfree(apc->indir_table);
-> > +		apc->indir_table = NULL;
-> > +		kfree(apc->rxobj_table);
-> > +		apc->rxobj_table = NULL;
-> 
-> The code to free and zero indir_table_sz and indir_table appears twice
-> in this patch. Perhaps a helper to do this, which would be the dual
-> of mana_rss_table_alloc is in order.
-Makes sense, will change this too.
+This kernel can't. But the next kernel can.
 
-Thanks,
-Shradha.
+If a page can be accessed via private mapping is determined by the
+presence in Secure EPT. This state persist across kexec.
+
+> > 			 * The kdump kernel boot is not impacted as it uses
+> > 			 * a pre-reserved memory range that is always private.
+> > 			 * However, gathering crash information could lead to
+> > 			 * a crash if it accesses unconverted memory through
+> > 			 * a private mapping.
 > 
-> >  
-> >  		rtnl_unlock();
-> >  
+> When does the kexec kernel even get such a private mapping? It is not
+> even up yet...
+
+Crash kernel provides access to this memory via /proc/vmcore. Crash kernel
+will assume all memory there is private.
+
+> > 			 * pr_err() may assist in understanding such crashes.
 > 
-> ...
+> "Print error info in order to leave bread crumbs for debugging." is what
+> I'd say.
+
+Okay.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
