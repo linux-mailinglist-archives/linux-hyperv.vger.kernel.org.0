@@ -1,165 +1,133 @@
-Return-Path: <linux-hyperv+bounces-2332-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2333-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A11228FE2F0
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2024 11:34:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80B838FE6B0
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2024 14:40:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B69861C22DBA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2024 09:34:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18775B214EC
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2024 12:39:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2701613FD84;
-	Thu,  6 Jun 2024 09:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6E59195B0A;
+	Thu,  6 Jun 2024 12:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MATPO10Q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YGCAIQIF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwRFQG9r"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D1713C676;
-	Thu,  6 Jun 2024 09:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217A7195B08;
+	Thu,  6 Jun 2024 12:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666447; cv=none; b=tfca36MbpJusgtPj1q2UWuGBEvbB3BGcy2JnOUZ7oJ5s9/BrOEbb8wuYRj6jJ4qaXxmgdCYrczgCUQeyt/KKlV9CLdRboY6KHXTxeWMmxD4JIBPsWmF4RIPIPOYG1+9VwE4FtXYA7OzyoloiCRE9HDYyoFAbdEjWAgQ16O0b9MY=
+	t=1717677595; cv=none; b=E0sM+3RWgBV2o5UxQFdzIUyOL+uNYw3KaYTliEL5o6lKItLEYkWBIdsNJ2MHGBCnZL61+nkW4sUcGvI32y+bPBg1qNBTB5X0poi7F9v4Pq27jK+1bnWFuLxtt4c5Np085xmUzzHL38wFrLVehoSnygBddavRLRhAWTQW5opZB0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666447; c=relaxed/simple;
-	bh=7CsufZK2miEU5UnmC5oGSmYNS+ai0Uwb0uhJhcKAtRo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ywfjb1WfPRLuVCJ2YD6JL3W/P6Klq9n7Z5PfqRmHf0Tb3G8ejpyRfVBjaaTj8OJ95atp8h6j2xxWhlEQJ9j2oayYkcT/RALcvZ35dVN1atHRUH1M6OikLlrHGDLGQZX+CZChzkhaoFXG4MDFd6Gc+3irt7YgXb0eniT7KI1SKVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MATPO10Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YGCAIQIF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717666443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GI0Ast9VZDly/xi6jCxjuQpHUZTGPm46ngg6M3zfBXs=;
-	b=MATPO10QOHKv4k4VQnrpfoCLSbqRmbY7gqT/F7T0Lc/2E7Du63oB8161P4q5JWozu3fZnB
-	V9RDyzJh7XWLYDycTqRoUWo2plgch3aRjBVw4XZSkNQNjZvqWHAT9K73qLd8nN0rKfCezR
-	Bp18ybroip0aRG4RB4z2CLeZ5dBwCqJ129sBCgauC9Ok0NyqMbHNvXlLWaGPfMJDdgC1aW
-	1SCPm4PXh9MoYg0TniyHUitOsT2qoJgTjF2aFxkh2/JlM+j4ONJmcdKHivsjP+Q4SU/D6g
-	cfGOJyLnD7ell8quwLO5W77UB0wdhQtYpvI8JHvTB8xeEEA7ZtyGSV72RTe36Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717666443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GI0Ast9VZDly/xi6jCxjuQpHUZTGPm46ngg6M3zfBXs=;
-	b=YGCAIQIFH0BDyKRWYSb4HAgVmuTgJ2BKHKaHx9TT01zEtsSvWNKJWbqK6SEyypSe+CHCDb
-	ASnT1HJAMDuvaFBA==
-To: Michael Kelley <mhklinux@outlook.com>, "kys@microsoft.com"
- <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
- <decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
- "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
- <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "James.Bottomley@HansenPartnership.com"
- <James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
- <martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
- <den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
- "dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
-Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
- IRQ stats
-In-Reply-To: <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240604050940.859909-1-mhklinux@outlook.com>
- <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
- <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87zfrz4jce.ffs@tglx>
- <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cyov4glm.ffs@tglx>
- <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Date: Thu, 06 Jun 2024 11:34:03 +0200
-Message-ID: <87le3i2z5g.ffs@tglx>
+	s=arc-20240116; t=1717677595; c=relaxed/simple;
+	bh=8j0QTwBVqBlEew+vXzNvM2j0bxIyUPIq7t89df/Ovig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rOgF8CmHDcuLH9saR+cYsD50KdUhStJ9P1g/+luhkcOkNqLI9mx8hHHtVjPUCjMLos6MBbkExHFhhL7PWBsDGods08IkKv4oBkh55WABj7+O6PjLz31NxBRTskXUx6cvs+lG0qZgGS5JmWizciQEmvAIuGTQr60tK00qBOqoaQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwRFQG9r; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717677594; x=1749213594;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8j0QTwBVqBlEew+vXzNvM2j0bxIyUPIq7t89df/Ovig=;
+  b=jwRFQG9rzCvzAebTGvIRpq64S4GhVy2/nx2NA5zPhxs7+qU2yDAkLDCK
+   NLxR9AlfQ6T8R0al2BovCpH8qEL4tdcN026MB5gu5XxiG/TN2JlFcXuig
+   wwTKS67tZfbxMBcv8sYvY1Aqhd2CVbtwNK8j0cZTBCbghEeRiauwDj1/T
+   4xYA62szx7H7+JZvh6ReADssXT4bffhUMoGneJ+ZdtyfJ1T1WLGnVJXeK
+   EK/BfTnOkq/nb9cupcd4ojzuwI1BvDc5BvBTpJa1B2xOmcH4HqgKXGRmu
+   ozcciifKEgZF4hlMyC5q7I0jCVsaEMpNJPRfqGCD+IQrNsV3ya99lyfB9
+   Q==;
+X-CSE-ConnectionGUID: mg0+IGHyS52Mj63PWZvW0w==
+X-CSE-MsgGUID: P5ETKNCfRBaPjk47uwqfOw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="31839965"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="31839965"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 05:39:53 -0700
+X-CSE-ConnectionGUID: uwimgMbWSnCttp4dnD+tsw==
+X-CSE-MsgGUID: fBNz2Le5QS25iPTszSSU9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="37812017"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 06 Jun 2024 05:39:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id E8F782A4; Thu, 06 Jun 2024 15:39:45 +0300 (EEST)
+Date: Thu, 6 Jun 2024 15:39:45 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@intel.com>, adrian.hunter@intel.com, 
+	ardb@kernel.org, ashish.kalra@amd.com, bhe@redhat.com, 
+	dave.hansen@linux.intel.com, elena.reshetova@intel.com, haiyangz@microsoft.com, hpa@zytor.com, 
+	jun.nakajima@intel.com, kai.huang@intel.com, kexec@lists.infradead.org, 
+	kys@microsoft.com, linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, ltao@redhat.com, mingo@redhat.com, 
+	peterz@infradead.org, rafael@kernel.org, rick.p.edgecombe@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	x86@kernel.org
+Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to
+ private on kexec
+Message-ID: <thox3qsdozhcl3xk5zmdjhz6xdkhhz6xefknj2ib427q4qw22q@uizbc32vuu55>
+References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
+ <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
+ <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
+ <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+ <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
+ <u3hg3fqc2nxsjtfugjmmzlahwriyqlebnkxrbzgrxlkj6l3k36@yd3yudglgevi>
+ <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
+ <alkew673cceojzmhsp3wj43yv76cek5ydh2iosfcphuv6ro26q@pj6whxcoetht>
+ <20240605162419.GJZmCRM8V6xooyvm9H@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605162419.GJZmCRM8V6xooyvm9H@fat_crate.local>
 
-On Thu, Jun 06 2024 at 03:14, Michael Kelley wrote:
-> From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 7:20 AM
->> 
->> On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
->> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 6:20 AM
->> >
->> > In /proc/interrupts, the double-counting isn't a problem, and is
->> > potentially helpful as you say. But /proc/stat, for example, shows a total
->> > interrupt count, which will be roughly double what it was before. That
->> > /proc/stat value then shows up in user space in vmstat, for example.
->> > That's what I was concerned about, though it's not a huge problem in
->> > the grand scheme of things.
->> 
->> That's trivial to solve. We can mark interrupts to be excluded from
->> /proc/stat accounting.
->> 
->
-> OK.  On x86, some simple #ifdef'ery in arch_irq_stat_cpu() can filter
-> out the HYP interrupts. But what do you envision on arm64, where
-> there is no arch_irq_stat_cpu()?  On arm64, the top-level interrupt is a
-> normal Linux IRQ, and its count is included in the "kstat.irqs_sum" field
-> with no breakout by IRQ. Identifying the right IRQ and subtracting it
-> out later looks a lot uglier than the conditional stats accounting.
+On Wed, Jun 05, 2024 at 06:24:19PM +0200, Borislav Petkov wrote:
+> On Wed, Jun 05, 2024 at 03:21:42PM +0300, Kirill A. Shutemov wrote:
+> > If a page can be accessed via private mapping is determined by the
+> > presence in Secure EPT. This state persist across kexec.
+> 
+> I just love it how I tickle out details each time I touch this comment
+> because we three can't write a single concise and self-contained
+> explanation. :-(
+> 
+> Ok, next version:
+> 
+> "Private mappings persist across kexec. If tdx_enc_status_changed() fails
 
-Sure. There are two ways to solve that:
+s/Private mappings persist /Memory encryption state persists /
 
-1) Introduce a IRQ_NO_PER_CPU_STATS flag, mark the interrupt
-   accordingly and make the stats increment conditional on it.
-   The downside is that the conditional affects every interrupt.
+> in the first kernel, it leaves memory in an unknown state.
+> 
+> If that memory remains shared, accessing it in the *next* kernel through
+> a private mapping will result in an unrecoverable guest shutdown.
+> 
+> The kdump kernel boot is not impacted as it uses a pre-reserved memory
+> range that is always private.  However, gathering crash information
+> could lead to a crash if it accesses unconverted memory through
+> a private mapping which is possible when accessing that memory through
+> /proc/vmcore, for example.
+> 
+> In all cases, print error info in order to leave enough bread crumbs for
+> debugging."
+> 
+> I think this is getting in the right direction as it actually makes
+> sense now.
 
-2) Do something like this:
+Otherwise looks good to me.
 
-static inline
-void __handle_percpu_irq(struct irq_desc *desc, irqreturn_t (*handle)(struct irq_desc *))
-{
-	struct irq_chip *chip = irq_desc_get_chip(desc);
-
-	if (chip->irq_ack)
-		chip->irq_ack(&desc->irq_data);
-
-	handle(desc);
-
-	if (chip->irq_eoi)
-		chip->irq_eoi(&desc->irq_data);
-}
-
-void handle_percpu_irq(struct irq_desc *desc)
-{
-	/*
-	 * PER CPU interrupts are not serialized. Do not touch
-	 * desc->tot_count.
-	 */
-	__kstat_incr_irqs_this_cpu(desc);
-	__handle_percpu_irq(desc, handle_irq_event_percpu);
-}
-
-void handle_percpu_irq_nostat(struct irq_desc *desc)
-{
-	__this_cpu_inc(desc->kstat_irqs->cnt);
-	__handle_percpu_irq(desc, __handle_irq_event_percpu);
-}
- 
-So that keeps the interrupt accounted for in /proc/interrupts. If you
-don't want that remove the __this_cpu_inc() and mark the interrupt with
-irq_set_status_flags(irq, IRQ_HIDDEN). That will exclude it from
-/proc/interrupts too.
-
-Thanks,
-
-        tglx
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
