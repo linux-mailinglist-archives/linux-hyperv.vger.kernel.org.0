@@ -1,552 +1,255 @@
-Return-Path: <linux-hyperv+bounces-2341-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2342-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 309CD900AF6
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jun 2024 19:04:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26FD2900BF7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jun 2024 20:41:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99FCC1F265FB
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jun 2024 17:04:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FCB41F22D5B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jun 2024 18:41:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4013719923C;
-	Fri,  7 Jun 2024 17:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1958613DB9B;
+	Fri,  7 Jun 2024 18:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Acyy7jMF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCpO61Ao"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2052.outbound.protection.outlook.com [40.92.74.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8FC190688;
-	Fri,  7 Jun 2024 17:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717779886; cv=fail; b=kgI0WR+ZJ3a35QcK6iH90Bl8K3B9MLYQYggH0w9Z0Ym03AK2lu7RhEmg5DDX3V7atoexsy8Sj8O9lnSVtlJZZ/VeV9dIkBdRUHw+R96Uk3t7/BJjbOExpHzCo1cxM6OzIGzMrdkGHqOcGj8rD3c/R1IkwfATCdjeZGY8sWYEAVU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717779886; c=relaxed/simple;
-	bh=/APxzBdGAgCQHYOYy6c4nInDZafkzaHQiFIO8imWRiE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=SAG9Zndv6KczJGTZI1JuzHN/w4DI07ICiNc8XspYu5A5Gx7TeTZD/VIDrUacq8YHy+PneicmIcF7NnfILmu+ITiOXvjaZ9AVsbw/5fiyWcEoWeM55qRFbYZfszJxMDo4M56Mucp9C+ghFFfBd/YOdfejBUzoelGgOgGEdNy35qc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Acyy7jMF; arc=fail smtp.client-ip=40.92.74.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oOC//jrf+iCdMI+ddKAALgzfejKMmud2WHC96QjxcWxr2E5bOnfXw2gLSSCZ9OdbrvNfh6QNk1SO+ghdtC3VfolSRShCaSbfi6UAbehGyo17i7sHV/KRbxqlZ9uh/zhmkhd8AY6smfTsurtbb5RXN+P+czSMHLj8pZkOkz6Zw8S7er5sq7aCQ1+DxjT46hjm/J5ydxH6DSotjw0V7TsycokJmd4+e/KdSOfDrqg/7nDACfFj/WCsiKUjIYNHtE2BBciZYDIbpVK1R/3H2t8TfYiBQ1jZ5m3GvTiplTv61SsPlscWoGAN9XShwSgPi6SpkUfZrg22iyqQZHMipQ8ECQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ny7VFuoEWNcQDzleN9fURMkBSPtAa8xUyfA1sR83lBY=;
- b=hIHYv76/dmms1lnC/hHyrpy5eGArqckXoWIYvowKPHL+cKVBj7Irm0xyIq+XDV7vm8ATyUmB3mDPfTCP1qNEf0bv4UpDd/l7PCDefRSoqQQFHaPV23RDMxYR8C+upTaHJtP6Tgkmg1p8WmcMExhpa3f/zcR/Ii1o6BmGbdqiVrBwNd5dhz7MvslgrwaICHdix47LiGCqSJlnEYPYT1gIZty37JtR3RUzgWN5iaNtVMQuClkEySEYPCKRcCldA7C8kibJGzn7cpPKrndDj6ZRole4L5xwkZbIMWz14TQfbT97KFC5wb/0tqqQytdCg7d1RmV2nT2gBf9dlDik97d+9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ny7VFuoEWNcQDzleN9fURMkBSPtAa8xUyfA1sR83lBY=;
- b=Acyy7jMFEMynlmbwEStYSQnQt0qUdWh1XwUvFGoGLizb7urvZdp1SqG8m5+W4leqj+2OoGQUVZiEMHzsZHNwD3zLeBo4eTOUlK0XePjQDe6X57xiFDN7j3Z8cVXppjuTbjg3kiVbuUZ2DMEc7MoAwfb+hAUO8Ajf7VrVedq7TF2NOZaT4j38uaHz8s5tLRCGv3QuFCXVoh7wGUYJqIBosf5+kfEwpAqg21RFYkUe8pxYEMSMtzRJBueTf28In1J8G7nCHALktFDsJ1PKsO1IczMs8aK9JIRMlEIjoET++WNNJbPnyTEM2AAB+kBXO8nDpLovR6K1HmN8WM60HOKffg==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AS4PR02MB7925.eurprd02.prod.outlook.com (2603:10a6:20b:4b4::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.23; Fri, 7 Jun
- 2024 17:04:40 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
- 17:04:40 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Stephen Chandler Paul <thatslyude@gmail.com>,
-	Michal Simek <michal.simek@amd.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] Input: serio - use sizeof(*pointer) instead of sizeof(type)
-Date: Fri,  7 Jun 2024 19:04:23 +0200
-Message-ID:
- <AS8PR02MB7237D3D898CCC9C50C18DE078BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [dvbqOSLz1KQslgDXxDtV2E6m9/LG8Bu7]
-X-ClientProxiedBy: MA2P292CA0015.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:1::12) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240607170423.10654-1-erick.archer@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598087347D
+	for <linux-hyperv@vger.kernel.org>; Fri,  7 Jun 2024 18:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717785660; cv=none; b=BC/EJxlvU+6Y9Gy/VkkFfD9nVfP4hydE10TrIFNn6gdWliYAZ9bkhFNFgrhiMgdI7xilHlqfLT/7Ak8Shk+M95YarWd0dk1iHTD6yuGOl2RFYvn3nH4me2aR2ne84vSLC9gU1vRGOVOT277RUTlIi6+X27OGIz40Ywszaxf32kA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717785660; c=relaxed/simple;
+	bh=MYPF51Z+xg0HbgYb3YvIJPDFq+AjCN4zn84m7UTnV6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XsnMnkefx1T7I3VJVHfr/BNpL4hluFMTBRjUsu4UUgsbpPzh64udfudcxe0pzKp4CZQJTXI+ph/u68CFmDuAOz70gufwsHggR0VfIN+6f5uhq5QC+BsAag2RtirLUT3sey0I8NJj9GjGt/6tqB/sKvBxIh/q5QqKURe4zj8F07U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DCpO61Ao; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717785657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=J1hUmjCQX6fG/8RrOn/s4Zg+H1krUQrxIX7N8cOfAjs=;
+	b=DCpO61AoaDEQJQ717YrptT/89ioDnru5pC7VE3SEgp5O+BZKzGJ6zszmbjlGzidW6RpXwQ
+	o0W0xUydxkfcuc7rALsvYUQiMg7pbaNrXooDQgOV1puO5QGIkLIKtX7kspY3QF/+mkf2an
+	2tEvAimo7BeW2eWDAwtNVjTPGerkrQI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-677-8DpCorfyOViNKzbNwXbFPQ-1; Fri, 07 Jun 2024 14:40:56 -0400
+X-MC-Unique: 8DpCorfyOViNKzbNwXbFPQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4212a3ddb6bso17427095e9.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 07 Jun 2024 11:40:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717785655; x=1718390455;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=J1hUmjCQX6fG/8RrOn/s4Zg+H1krUQrxIX7N8cOfAjs=;
+        b=VonthfGMMP/6z7+nTlcXiqkCMbSz1GgtEdkKFdiTaoyCDOzBMnAB1BbKwD72gJ1l+b
+         Zz6kwV6WzdtmyI8P7JEtSpijLFvVc9GcyG+E0MgmLbZaAFIphA0tGgb9WI/5UGLCk6Kc
+         SMKWcH8UAvhfT71Ci6/JdeYf3KhcXocdjQSfepDNtmtDYLGZvVqIBTYMhlv32fxWoWo1
+         2D1jcQ15fv/H4xtqqmMGBWMIAlY3SjmvilxjxVm7XPu87Dsp/4/xAeZvfiIA1foKaIH2
+         wQNcyijcp2sL7PwTxgrSMTs6cplM1OwUmXAH3keN25XOjvUfOWqLM4Jvyf2fDckObSTV
+         Z6IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDwooyHvheDjh2uAIjFu8O7b98FkaGVcF5H7cARnk32IbnyNzKnhqNybAtX6xpDUS1PFXVn6HdqQ3IhWM4Yu4FXc4+Nauy2uKe0njU
+X-Gm-Message-State: AOJu0YzDENkDVR9zwstMKnbzXwRrPjlWDHqwHkEBsW1woawtdWLBDz1y
+	E80nNv6r4QIYSu/2TYlJyZe2vy3Lrpw5hDystlsJzZMwHvn5QBtrdNNLSpXiETmJHme70Mdvj2Y
+	nnvhJD+Eq3CcLTaemAf1iZ6ptq5gPMOfiF+g8go2aTBA9ODhselXUpDSze+UqeA==
+X-Received: by 2002:a05:600c:3b22:b0:421:1f68:f80c with SMTP id 5b1f17b1804b1-42164a3274cmr33024175e9.25.1717785654967;
+        Fri, 07 Jun 2024 11:40:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHjxAAobdln9o8Z+ZSwK+8DP+joAlNWvnty2OQv0sD2CWIRw1H0eU3Abu8j4Jf1XLd5TYqa1A==
+X-Received: by 2002:a05:600c:3b22:b0:421:1f68:f80c with SMTP id 5b1f17b1804b1-42164a3274cmr33023775e9.25.1717785654411;
+        Fri, 07 Jun 2024 11:40:54 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c71a:2200:31c4:4d18:1bdd:fb7a? (p200300cbc71a220031c44d181bddfb7a.dip0.t-ipconnect.de. [2003:cb:c71a:2200:31c4:4d18:1bdd:fb7a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158148f43sm93769755e9.33.2024.06.07.11.40.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 11:40:54 -0700 (PDT)
+Message-ID: <b72e6efd-fb0a-459c-b1a0-88a98e5b19e2@redhat.com>
+Date: Fri, 7 Jun 2024 20:40:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AS4PR02MB7925:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88bf67e8-b015-482a-ecd4-08dc8713eb85
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	g7++UpJXAeFjvG1VvrY86WUaIIdelj18I4EXpPfUZoy+iJ7yTcfJVgJRO3OX5jXzYBr79VWkYe/dZwSmqA4wBUlyUWy1vypToG4AJe8WtDgGMijGJuw72NhkyVYXuwFIrvoGXI6rU0p6m0R0CI1RKfP/gfrc43jxrOM2lC8TJLK6RMJBEFFXbT3GM0X4hkZ0IbO1m8otH9h3npQqqgfwYNw2xhTpTF2N8C6idJDsf60cHmPUQUEVGfpJVeRyunOgOzFzYoawaL5LYHALAe1/5XmWdLhNTSuk0Km2CRTxMwkzdvuKjm56uEUH+DkrWaTqO9puh7JVZJ0zPO0JiCzCqd9bHNb29yx0VXyrBUFmdTyGbhgGVf9pDLhIFCeL/f0YvlT7/9Zz0C+fNrkp9XrpmNV/3Zf4Z0SIU4mlqWqvsWy78ZuiZmH6b7x/02/aFjV4VLcHTvxch+Bm1kL/7ZonWtPulaSPLZmLeKRw+fjELzM5msqHnZHIa2LEh62dZtx89y/0pWL/TM4F0LJ1jQUZWK4wzaT2yIiBa0eWyNc8mwC8ekySyYLLYMFd1Qlrl2B0nSS1xFrxhgAWZKIIqLnOClJUJCVT8Qyp/5tzY3u8H9p1fRFQOV5eNHX5+gnQ/KK8
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vgL3luBTyVrYerYLRXYoe5DYG44XQG058xyWLRWyPjfofTqAxOc/pgyZ39pZ?=
- =?us-ascii?Q?zAG/89clXbx6x3XMG9nFCYvOooxzFVsOm+do1eoOW/t8yySnXLXi70y488ga?=
- =?us-ascii?Q?4aDABBvDPSjJNpo22pkqWmIqHccKuUl3OjnSaSgvvybCtuMEfV46FTU5KwFf?=
- =?us-ascii?Q?kZmI+kHM0kgIGZNnn0bwhSORQjJtNSuOUK2eDxLd19HLBQKJL7hgpcBvpFpT?=
- =?us-ascii?Q?xGiS3PqQYhVMrJu9xYvqRLCLbDW0OE1pSHdiyaH6W1qpWQRcsXCtSdaVTIFA?=
- =?us-ascii?Q?T5m9tPPmEbWp6Yx8EXzcTnpcBsifWMi3SQWHD05YZ2HTOmuJdz2GJMDuqkx7?=
- =?us-ascii?Q?T8+dT13afJesaqrVRkh2mWZSA84e3FYyd34oE6SgaR1FK98jKxWko9aVman0?=
- =?us-ascii?Q?i1LFmR2nYRvUD8+isfxGTOcoUOcM9wuwwh2/5qOzadRLMjgT4trh5KcX0X0e?=
- =?us-ascii?Q?IYvLIeJ65v3NTp70ExytVyRNfFt+HUDyRKzML534NohCOMLdp39rPkjO/TCF?=
- =?us-ascii?Q?RSszpEMg0n2SQUbHEMCIJdu8o/maYZ6f3QA3sQ9QletRKZ6Jd4oTjlHjtlhU?=
- =?us-ascii?Q?K42nk3woCL+kVRMq7Bp5j9+keIEL2AaPAxIkjOSlHrBQbYGhRKiGRiHzY7TO?=
- =?us-ascii?Q?I5OFyJ/fdCwaW0E1WY+1b5afdYCtAd+TOCEE0jYpaEBmuIRENp5oQmJN4EfA?=
- =?us-ascii?Q?SR59jC4AVMFW5qF6J8SAs0KJ3Z0F12Z2fgbzXXna8peO8CSiOtNnUIqEVnW3?=
- =?us-ascii?Q?hxTx+v6JACO/KagE7J0jrNzPuNRbJ6l1jD9op2KN9YcHiwiLUHWrXGYhKhUf?=
- =?us-ascii?Q?l4r/Ymw8PEC0bGddyurv7hA7ZDmkFFYqzabcPCXzfoF/rX2ndfXT+8N0SYGG?=
- =?us-ascii?Q?OWm0dFXCwfNrxyziVYpxi5f9iJjY8uEiru1OQdMaEhpzowk3U8UVE4lGv1kW?=
- =?us-ascii?Q?XukDUZtaDB0dndnf4mBsnakfVXm7EnrSSyFZm7MCq5fU8QitbOMMiQTXuY6Q?=
- =?us-ascii?Q?u2KWP1B61jn6n9jhPL+uE5Cp9sgIEu+RLSCmE1v5XOXWczPJAiNL95yjfKLi?=
- =?us-ascii?Q?IWz+TvZ1IzsF7eGD6Cbu0BrOT56C907PK1dyWaLNc0pyrkAyutDhcMr2L45P?=
- =?us-ascii?Q?qhitC2LVwikXwZBOIyTfKLDQJ0H/M38J/EeAQGshMVxr23d7HXFOoMUv1cvp?=
- =?us-ascii?Q?btSTZAcHEBbKRt7i7gIbb4I0RyvZWdH9tzSSKjpdQTETa4vSZ8XAHG4ydjuS?=
- =?us-ascii?Q?Rf7d8Ltnn6G32ZlcrjbC?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88bf67e8-b015-482a-ecd4-08dc8713eb85
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 17:04:40.7566
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR02MB7925
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] mm: pass meminit_context to __free_pages_core()
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
+ kasan-dev@googlegroups.com, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>
+References: <20240607090939.89524-1-david@redhat.com>
+ <20240607090939.89524-2-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240607090939.89524-2-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-It is preferred to use sizeof(*pointer) instead of sizeof(type)
-due to the type of the variable can change and one needs not
-change the former (unlike the latter). This patch has no effect
-on runtime behavior.
+On 07.06.24 11:09, David Hildenbrand wrote:
+> In preparation for further changes, let's teach __free_pages_core()
+> about the differences of memory hotplug handling.
+> 
+> Move the memory hotplug specific handling from generic_online_page() to
+> __free_pages_core(), use adjust_managed_page_count() on the memory
+> hotplug path, and spell out why memory freed via memblock
+> cannot currently use adjust_managed_page_count().
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   mm/internal.h       |  3 ++-
+>   mm/kmsan/init.c     |  2 +-
+>   mm/memory_hotplug.c |  9 +--------
+>   mm/mm_init.c        |  4 ++--
+>   mm/page_alloc.c     | 17 +++++++++++++++--
+>   5 files changed, 21 insertions(+), 14 deletions(-)
+> 
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 12e95fdf61e90..3fdee779205ab 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -604,7 +604,8 @@ extern void __putback_isolated_page(struct page *page, unsigned int order,
+>   				    int mt);
+>   extern void memblock_free_pages(struct page *page, unsigned long pfn,
+>   					unsigned int order);
+> -extern void __free_pages_core(struct page *page, unsigned int order);
+> +extern void __free_pages_core(struct page *page, unsigned int order,
+> +		enum meminit_context);
+>   
+>   /*
+>    * This will have no effect, other than possibly generating a warning, if the
+> diff --git a/mm/kmsan/init.c b/mm/kmsan/init.c
+> index 3ac3b8921d36f..ca79636f858e5 100644
+> --- a/mm/kmsan/init.c
+> +++ b/mm/kmsan/init.c
+> @@ -172,7 +172,7 @@ static void do_collection(void)
+>   		shadow = smallstack_pop(&collect);
+>   		origin = smallstack_pop(&collect);
+>   		kmsan_setup_meta(page, shadow, origin, collect.order);
+> -		__free_pages_core(page, collect.order);
+> +		__free_pages_core(page, collect.order, MEMINIT_EARLY);
+>   	}
+>   }
+>   
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 171ad975c7cfd..27e3be75edcf7 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -630,14 +630,7 @@ EXPORT_SYMBOL_GPL(restore_online_page_callback);
+>   
+>   void generic_online_page(struct page *page, unsigned int order)
+>   {
+> -	/*
+> -	 * Freeing the page with debug_pagealloc enabled will try to unmap it,
+> -	 * so we should map it first. This is better than introducing a special
+> -	 * case in page freeing fast path.
+> -	 */
+> -	debug_pagealloc_map_pages(page, 1 << order);
+> -	__free_pages_core(page, order);
+> -	totalram_pages_add(1UL << order);
+> +	__free_pages_core(page, order, MEMINIT_HOTPLUG);
+>   }
+>   EXPORT_SYMBOL_GPL(generic_online_page);
+>   
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index 019193b0d8703..feb5b6e8c8875 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1938,7 +1938,7 @@ static void __init deferred_free_range(unsigned long pfn,
+>   	for (i = 0; i < nr_pages; i++, page++, pfn++) {
+>   		if (pageblock_aligned(pfn))
+>   			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
+> -		__free_pages_core(page, 0);
+> +		__free_pages_core(page, 0, MEMINIT_EARLY);
+>   	}
+>   }
 
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
- drivers/input/serio/altera_ps2.c      | 2 +-
- drivers/input/serio/ambakmi.c         | 4 ++--
- drivers/input/serio/apbps2.c          | 2 +-
- drivers/input/serio/arc_ps2.c         | 2 +-
- drivers/input/serio/ct82c710.c        | 2 +-
- drivers/input/serio/gscps2.c          | 4 ++--
- drivers/input/serio/hyperv-keyboard.c | 4 ++--
- drivers/input/serio/i8042.c           | 4 ++--
- drivers/input/serio/maceps2.c         | 2 +-
- drivers/input/serio/olpc_apsp.c       | 4 ++--
- drivers/input/serio/parkbd.c          | 2 +-
- drivers/input/serio/pcips2.c          | 4 ++--
- drivers/input/serio/ps2-gpio.c        | 4 ++--
- drivers/input/serio/ps2mult.c         | 2 +-
- drivers/input/serio/q40kbd.c          | 4 ++--
- drivers/input/serio/rpckbd.c          | 2 +-
- drivers/input/serio/sa1111ps2.c       | 4 ++--
- drivers/input/serio/serio.c           | 2 +-
- drivers/input/serio/serio_raw.c       | 4 ++--
- drivers/input/serio/serport.c         | 4 ++--
- drivers/input/serio/sun4i-ps2.c       | 4 ++--
- drivers/input/serio/userio.c          | 4 ++--
- drivers/input/serio/xilinx_ps2.c      | 4 ++--
- 23 files changed, 37 insertions(+), 37 deletions(-)
+The build bot just reminded me that I missed another case in this function:
+(CONFIG_DEFERRED_STRUCT_PAGE_INIT)
 
-diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
-index c5b634940cfc..611eb9fe2d04 100644
---- a/drivers/input/serio/altera_ps2.c
-+++ b/drivers/input/serio/altera_ps2.c
-@@ -100,7 +100,7 @@ static int altera_ps2_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/ambakmi.c b/drivers/input/serio/ambakmi.c
-index 496bb7a312d2..de4b3915c37d 100644
---- a/drivers/input/serio/ambakmi.c
-+++ b/drivers/input/serio/ambakmi.c
-@@ -114,8 +114,8 @@ static int amba_kmi_probe(struct amba_device *dev,
- 	if (ret)
- 		return ret;
- 
--	kmi = kzalloc(sizeof(struct amba_kmi_port), GFP_KERNEL);
--	io = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	kmi = kzalloc(sizeof(*kmi), GFP_KERNEL);
-+	io = kzalloc(sizeof(*io), GFP_KERNEL);
- 	if (!kmi || !io) {
- 		ret = -ENOMEM;
- 		goto out;
-diff --git a/drivers/input/serio/apbps2.c b/drivers/input/serio/apbps2.c
-index dbbb10251520..4015e75fcb90 100644
---- a/drivers/input/serio/apbps2.c
-+++ b/drivers/input/serio/apbps2.c
-@@ -165,7 +165,7 @@ static int apbps2_of_probe(struct platform_device *ofdev)
- 	/* Set reload register to core freq in kHz/10 */
- 	iowrite32be(freq_hz / 10000, &priv->regs->reload);
- 
--	priv->io = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	priv->io = kzalloc(sizeof(*priv->io), GFP_KERNEL);
- 	if (!priv->io)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/arc_ps2.c b/drivers/input/serio/arc_ps2.c
-index 9d8726830140..a9180a005872 100644
---- a/drivers/input/serio/arc_ps2.c
-+++ b/drivers/input/serio/arc_ps2.c
-@@ -155,7 +155,7 @@ static int arc_ps2_create_port(struct platform_device *pdev,
- 	struct arc_ps2_port *port = &arc_ps2->port[index];
- 	struct serio *io;
- 
--	io = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	io = kzalloc(sizeof(*io), GFP_KERNEL);
- 	if (!io)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/ct82c710.c b/drivers/input/serio/ct82c710.c
-index d5c9bb3d0103..6834440b37f6 100644
---- a/drivers/input/serio/ct82c710.c
-+++ b/drivers/input/serio/ct82c710.c
-@@ -158,7 +158,7 @@ static int __init ct82c710_detect(void)
- 
- static int ct82c710_probe(struct platform_device *dev)
- {
--	ct82c710_port = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ct82c710_port = kzalloc(sizeof(*ct82c710_port), GFP_KERNEL);
- 	if (!ct82c710_port)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index 633c7de49d67..d94c01eb3fc9 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -338,8 +338,8 @@ static int __init gscps2_probe(struct parisc_device *dev)
- 	if (dev->id.sversion == 0x96)
- 		hpa += GSC_DINO_OFFSET;
- 
--	ps2port = kzalloc(sizeof(struct gscps2port), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ps2port = kzalloc(sizeof(*ps2port), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!ps2port || !serio) {
- 		ret = -ENOMEM;
- 		goto fail_nomem;
-diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-index 31def6ce5157..31d9dacd2fd1 100644
---- a/drivers/input/serio/hyperv-keyboard.c
-+++ b/drivers/input/serio/hyperv-keyboard.c
-@@ -318,8 +318,8 @@ static int hv_kbd_probe(struct hv_device *hv_dev,
- 	struct serio *hv_serio;
- 	int error;
- 
--	kbd_dev = kzalloc(sizeof(struct hv_kbd_dev), GFP_KERNEL);
--	hv_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	kbd_dev = kzalloc(sizeof(*kbd_dev), GFP_KERNEL);
-+	hv_serio = kzalloc(sizeof(*hv_serio), GFP_KERNEL);
- 	if (!kbd_dev || !hv_serio) {
- 		error = -ENOMEM;
- 		goto err_free_mem;
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index 9fbb8d31575a..e0fb1db653b7 100644
---- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -1329,7 +1329,7 @@ static int i8042_create_kbd_port(void)
- 	struct serio *serio;
- 	struct i8042_port *port = &i8042_ports[I8042_KBD_PORT_NO];
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-@@ -1359,7 +1359,7 @@ static int i8042_create_aux_port(int idx)
- 	int port_no = idx < 0 ? I8042_AUX_PORT_NO : I8042_MUX_PORT_NO + idx;
- 	struct i8042_port *port = &i8042_ports[port_no];
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/maceps2.c b/drivers/input/serio/maceps2.c
-index 5ccfb82759b3..42ac1eb94866 100644
---- a/drivers/input/serio/maceps2.c
-+++ b/drivers/input/serio/maceps2.c
-@@ -117,7 +117,7 @@ static struct serio *maceps2_allocate_port(int idx)
- {
- 	struct serio *serio;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (serio) {
- 		serio->id.type		= SERIO_8042;
- 		serio->write		= maceps2_write;
-diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_apsp.c
-index 240a714f7081..0ad95e880cc2 100644
---- a/drivers/input/serio/olpc_apsp.c
-+++ b/drivers/input/serio/olpc_apsp.c
-@@ -188,7 +188,7 @@ static int olpc_apsp_probe(struct platform_device *pdev)
- 		return priv->irq;
- 
- 	/* KEYBOARD */
--	kb_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	kb_serio = kzalloc(sizeof(*kb_serio), GFP_KERNEL);
- 	if (!kb_serio)
- 		return -ENOMEM;
- 	kb_serio->id.type	= SERIO_8042_XL;
-@@ -203,7 +203,7 @@ static int olpc_apsp_probe(struct platform_device *pdev)
- 	serio_register_port(kb_serio);
- 
- 	/* TOUCHPAD */
--	pad_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	pad_serio = kzalloc(sizeof(*pad_serio), GFP_KERNEL);
- 	if (!pad_serio) {
- 		error = -ENOMEM;
- 		goto err_pad;
-diff --git a/drivers/input/serio/parkbd.c b/drivers/input/serio/parkbd.c
-index 0d54895428f5..328932297aad 100644
---- a/drivers/input/serio/parkbd.c
-+++ b/drivers/input/serio/parkbd.c
-@@ -165,7 +165,7 @@ static struct serio *parkbd_allocate_serio(void)
- {
- 	struct serio *serio;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (serio) {
- 		serio->id.type = parkbd_mode;
- 		serio->write = parkbd_write;
-diff --git a/drivers/input/serio/pcips2.c b/drivers/input/serio/pcips2.c
-index 05878750f2c2..6b9abb2e18c9 100644
---- a/drivers/input/serio/pcips2.c
-+++ b/drivers/input/serio/pcips2.c
-@@ -137,8 +137,8 @@ static int pcips2_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (ret)
- 		goto disable;
- 
--	ps2if = kzalloc(sizeof(struct pcips2_data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ps2if = kzalloc(sizeof(*ps2if), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!ps2if || !serio) {
- 		ret = -ENOMEM;
- 		goto release;
-diff --git a/drivers/input/serio/ps2-gpio.c b/drivers/input/serio/ps2-gpio.c
-index c3ff60859a03..0c8b390b8b4f 100644
---- a/drivers/input/serio/ps2-gpio.c
-+++ b/drivers/input/serio/ps2-gpio.c
-@@ -404,8 +404,8 @@ static int ps2_gpio_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int error;
- 
--	drvdata = devm_kzalloc(dev, sizeof(struct ps2_gpio_data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!drvdata || !serio) {
- 		error = -ENOMEM;
- 		goto err_free_serio;
-diff --git a/drivers/input/serio/ps2mult.c b/drivers/input/serio/ps2mult.c
-index 902e81826fbf..937ecdea491d 100644
---- a/drivers/input/serio/ps2mult.c
-+++ b/drivers/input/serio/ps2mult.c
-@@ -127,7 +127,7 @@ static int ps2mult_create_port(struct ps2mult *psm, int i)
- 	struct serio *mx_serio = psm->mx_serio;
- 	struct serio *serio;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/q40kbd.c b/drivers/input/serio/q40kbd.c
-index 3f81f8749cd5..cd4d5be946a3 100644
---- a/drivers/input/serio/q40kbd.c
-+++ b/drivers/input/serio/q40kbd.c
-@@ -108,8 +108,8 @@ static int q40kbd_probe(struct platform_device *pdev)
- 	struct serio *port;
- 	int error;
- 
--	q40kbd = kzalloc(sizeof(struct q40kbd), GFP_KERNEL);
--	port = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	q40kbd = kzalloc(sizeof(*q40kbd), GFP_KERNEL);
-+	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!q40kbd || !port) {
- 		error = -ENOMEM;
- 		goto err_free_mem;
-diff --git a/drivers/input/serio/rpckbd.c b/drivers/input/serio/rpckbd.c
-index 9bbfefd092c0..e236bb7e1014 100644
---- a/drivers/input/serio/rpckbd.c
-+++ b/drivers/input/serio/rpckbd.c
-@@ -108,7 +108,7 @@ static int rpckbd_probe(struct platform_device *dev)
- 	if (tx_irq < 0)
- 		return tx_irq;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	rpckbd = kzalloc(sizeof(*rpckbd), GFP_KERNEL);
- 	if (!serio || !rpckbd) {
- 		kfree(rpckbd);
-diff --git a/drivers/input/serio/sa1111ps2.c b/drivers/input/serio/sa1111ps2.c
-index 2724c3aa512c..1311caf7dba4 100644
---- a/drivers/input/serio/sa1111ps2.c
-+++ b/drivers/input/serio/sa1111ps2.c
-@@ -256,8 +256,8 @@ static int ps2_probe(struct sa1111_dev *dev)
- 	struct serio *serio;
- 	int ret;
- 
--	ps2if = kzalloc(sizeof(struct ps2if), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ps2if = kzalloc(sizeof(*ps2if), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!ps2if || !serio) {
- 		ret = -ENOMEM;
- 		goto free;
-diff --git a/drivers/input/serio/serio.c b/drivers/input/serio/serio.c
-index a8838b522627..04967494eeb6 100644
---- a/drivers/input/serio/serio.c
-+++ b/drivers/input/serio/serio.c
-@@ -258,7 +258,7 @@ static int serio_queue_event(void *object, struct module *owner,
- 		}
- 	}
- 
--	event = kmalloc(sizeof(struct serio_event), GFP_ATOMIC);
-+	event = kmalloc(sizeof(*event), GFP_ATOMIC);
- 	if (!event) {
- 		pr_err("Not enough memory to queue event %d\n", event_type);
- 		retval = -ENOMEM;
-diff --git a/drivers/input/serio/serio_raw.c b/drivers/input/serio/serio_raw.c
-index 1e4770094415..0186d1b38f49 100644
---- a/drivers/input/serio/serio_raw.c
-+++ b/drivers/input/serio/serio_raw.c
-@@ -92,7 +92,7 @@ static int serio_raw_open(struct inode *inode, struct file *file)
- 		goto out;
- 	}
- 
--	client = kzalloc(sizeof(struct serio_raw_client), GFP_KERNEL);
-+	client = kzalloc(sizeof(*client), GFP_KERNEL);
- 	if (!client) {
- 		retval = -ENOMEM;
- 		goto out;
-@@ -293,7 +293,7 @@ static int serio_raw_connect(struct serio *serio, struct serio_driver *drv)
- 	struct serio_raw *serio_raw;
- 	int err;
- 
--	serio_raw = kzalloc(sizeof(struct serio_raw), GFP_KERNEL);
-+	serio_raw = kzalloc(sizeof(*serio_raw), GFP_KERNEL);
- 	if (!serio_raw) {
- 		dev_dbg(&serio->dev, "can't allocate memory for a device\n");
- 		return -ENOMEM;
-diff --git a/drivers/input/serio/serport.c b/drivers/input/serio/serport.c
-index 1db3f30011c4..5a2b5404ffc2 100644
---- a/drivers/input/serio/serport.c
-+++ b/drivers/input/serio/serport.c
-@@ -82,7 +82,7 @@ static int serport_ldisc_open(struct tty_struct *tty)
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	serport = kzalloc(sizeof(struct serport), GFP_KERNEL);
-+	serport = kzalloc(sizeof(*serport), GFP_KERNEL);
- 	if (!serport)
- 		return -ENOMEM;
- 
-@@ -167,7 +167,7 @@ static ssize_t serport_ldisc_read(struct tty_struct * tty, struct file * file,
- 	if (test_and_set_bit(SERPORT_BUSY, &serport->flags))
- 		return -EBUSY;
- 
--	serport->serio = serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serport->serio = serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
-index aec66d9f5176..95cd8aaee65d 100644
---- a/drivers/input/serio/sun4i-ps2.c
-+++ b/drivers/input/serio/sun4i-ps2.c
-@@ -213,8 +213,8 @@ static int sun4i_ps2_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int error;
- 
--	drvdata = kzalloc(sizeof(struct sun4i_ps2data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!drvdata || !serio) {
- 		error = -ENOMEM;
- 		goto err_free_mem;
-diff --git a/drivers/input/serio/userio.c b/drivers/input/serio/userio.c
-index 9ab5c45c3a9f..a88e2eee55c3 100644
---- a/drivers/input/serio/userio.c
-+++ b/drivers/input/serio/userio.c
-@@ -77,7 +77,7 @@ static int userio_char_open(struct inode *inode, struct file *file)
- {
- 	struct userio_device *userio;
- 
--	userio = kzalloc(sizeof(struct userio_device), GFP_KERNEL);
-+	userio = kzalloc(sizeof(*userio), GFP_KERNEL);
- 	if (!userio)
- 		return -ENOMEM;
- 
-@@ -85,7 +85,7 @@ static int userio_char_open(struct inode *inode, struct file *file)
- 	spin_lock_init(&userio->buf_lock);
- 	init_waitqueue_head(&userio->waitq);
- 
--	userio->serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	userio->serio = kzalloc(sizeof(*userio->serio), GFP_KERNEL);
- 	if (!userio->serio) {
- 		kfree(userio);
- 		return -ENOMEM;
-diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/xilinx_ps2.c
-index bb758346a33d..1543267d02ac 100644
---- a/drivers/input/serio/xilinx_ps2.c
-+++ b/drivers/input/serio/xilinx_ps2.c
-@@ -252,8 +252,8 @@ static int xps2_of_probe(struct platform_device *ofdev)
- 		return -ENODEV;
- 	}
- 
--	drvdata = kzalloc(sizeof(struct xps2data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!drvdata || !serio) {
- 		error = -ENOMEM;
- 		goto failed1;
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index feb5b6e8c8875..5a0752261a795 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1928,7 +1928,7 @@ static void __init deferred_free_range(unsigned long pfn,
+         if (nr_pages == MAX_ORDER_NR_PAGES && IS_MAX_ORDER_ALIGNED(pfn)) {
+                 for (i = 0; i < nr_pages; i += pageblock_nr_pages)
+                         set_pageblock_migratetype(page + i, MIGRATE_MOVABLE);
+-               __free_pages_core(page, MAX_PAGE_ORDER);
++               __free_pages_core(page, MAX_PAGE_ORDER, MEMINIT_EARLY);
+                 return;
+         }
+  
+
 -- 
-2.25.1
+Cheers,
+
+David / dhildenb
 
 
