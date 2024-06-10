@@ -1,189 +1,134 @@
-Return-Path: <linux-hyperv+bounces-2371-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2372-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4CAB9020AA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jun 2024 13:47:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 572749022C8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jun 2024 15:41:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20F37B22B60
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jun 2024 11:47:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51B121C21A23
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jun 2024 13:41:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4DDE7E58F;
-	Mon, 10 Jun 2024 11:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BE9824BB;
+	Mon, 10 Jun 2024 13:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jQO+Qx/4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pE7TkXSX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jQO+Qx/4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pE7TkXSX"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RAgqE/J7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818D17581D;
-	Mon, 10 Jun 2024 11:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1D07CF18;
+	Mon, 10 Jun 2024 13:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020054; cv=none; b=OoI6TvV7vRp4mLFpdjflFOzqhmcGIY2LSJt1pU25GyeWshooahg+tbwMGrlIEXoLurPL8mLTphRH3r7dvQ71J/xcrnEkDEI1I8Wxd9Rkeavir9KbKtoSXoFgCowdFzxWKojqU3cC8mJQGpFdon2vI2lPEbr/Udmno8Ya2fj0paM=
+	t=1718026861; cv=none; b=aNSKbtiZvuyeUK7gYLB3Nv049WNvqXdfu3uIQajLLXqyfpv5k2TtUTFPnrjAk984wB2uUUBzgr/0wUtpuTLkOT+kZtBAr1/Gl7qZw1a3VGr91fbI7tR5FOFeXqLYoPzdsO28QIOZpkpeevV7jigjCr7zIoT7+19gpahqLfzL/vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020054; c=relaxed/simple;
-	bh=7iIJx2j8iSuki6xIdbK8K2GFSXMHa46eeRn+C5M4uUI=;
+	s=arc-20240116; t=1718026861; c=relaxed/simple;
+	bh=JuxtQK8wJ8d18l/WXYXjUxW+m/Hl3f1aDqb0jspQ4Es=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jMDkydwrRlKOhLU82WuNbiA+G3kwofMzxalLam6tIBKKJYwZ2j0rw+NKkBIzNefomm1oTrJp8FVqrFH4TkRZC9TSCrsPliyJTiPE45yQui5hRXhPrp9evAWT9fzyZfR7f5iYlISG6VqUkZurC9x3MN5JFuAdo7kf+27KJDBCLUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jQO+Qx/4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pE7TkXSX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jQO+Qx/4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pE7TkXSX; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObQxXIlt/u99lzzediHZLrf+g0H/yf+ASOQo99R7RiSkbq2ftfbzsTk7EkoNWgJlKcxmOyo9OOQIxP2YhKLKHAy2gTe7oxGkBs0KULV3qk0hSKSLJBB4UUPaVCiJ+h9WoRti7xeHIOJgHVR+oBy8JqLhw86NiKF4RYc86m+KN3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RAgqE/J7; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9026440E0027;
+	Mon, 10 Jun 2024 13:40:56 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BUFwCUSrFD-r; Mon, 10 Jun 2024 13:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718026853; bh=TKZL5OH/kDVlLa031KsOxyH44GZqkwpf2xf/NrcUB1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RAgqE/J7Ok93ksM7RtpCaB8UMngdFS25e57JRb50u3sKy2aXLEYs7ZIJdXRh7770b
+	 8tJ38vJJfmF+2lks4s0Kk3L/O+E7DpVBgirqSTwXmN3Cg7h7aT+WJYcRwIREzYTXSA
+	 mGbgyz1EAd+LdfCkO2rOre+Yh6CX9BLqgetnFzrQIPY0kIICIb66Q4u09EhKZMSTDG
+	 whB4l+lf1iWiRuB9BudtYv0l0x1J3FTCg7jIOIJJzqT5+NNZFZfYj/vbMf/Hry6HfV
+	 HLWaqUrB6VrKkNKzVnyQ4pBboypnsi9vczV76jjy92uNm+0gNXz9tI1tm8f4Ke5gJB
+	 b1cq0aTjHTOGxqbRJ5L7votIQoLRGdmrLnbyqVRT4NiziZA7kWChfTowkyg1YHQoML
+	 JDUghCIg2Uq3ihZyMHw8FccJb4I5I6GjkK5d9RUkEc96pPkoRqgZZkKiPRAGAlbtBc
+	 q2BzF8SqutNpMl2dbt6IUyNL09xMU+gAOx8Ye8U6g7A9OzNIgh0BYlG/LHBrg8ZXIG
+	 ZKyF/y73C3djtMnu47EvtxsSp+VwqSmHw73qy20s/VpKX2vv85A0fw/gXMJtG9pegE
+	 ex9NTXqzBQRFZyChjWvcJGcOPhpsYz+xR0FfBItTSftmPtuGCU4zCERIzXImhReePM
+	 BIhyBxa03PlP5oHNxuJxtal8=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8172421A5B;
-	Mon, 10 Jun 2024 11:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718020049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WJbUj0Me5/uIhq7+KJarpD1i6Sf3idu2woFatetNcL0=;
-	b=jQO+Qx/4Mj+vDjMEgjaHWKq33ho5f4Qb6TYgmmU0qZfZs7hYxUfoNdVh0yH7bMllbzqIzj
-	cBgRVPF2mcuk7QqY+/pskie2ykcdmVfJAarIg0QR57zOzx4iU4VSWIXTSa8mKRdzIBa0QD
-	lO9DjXCGRfL9yocXH6oR8JUqcqdOAxc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718020049;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WJbUj0Me5/uIhq7+KJarpD1i6Sf3idu2woFatetNcL0=;
-	b=pE7TkXSXVcV2z59Zw2hFhiW+a9rT+ETwB+nt36sIeCijTXDS4lhfOoWDZeBLz9algnI9z/
-	eVn0jCO+My8aZ1Ag==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718020049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WJbUj0Me5/uIhq7+KJarpD1i6Sf3idu2woFatetNcL0=;
-	b=jQO+Qx/4Mj+vDjMEgjaHWKq33ho5f4Qb6TYgmmU0qZfZs7hYxUfoNdVh0yH7bMllbzqIzj
-	cBgRVPF2mcuk7QqY+/pskie2ykcdmVfJAarIg0QR57zOzx4iU4VSWIXTSa8mKRdzIBa0QD
-	lO9DjXCGRfL9yocXH6oR8JUqcqdOAxc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718020049;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WJbUj0Me5/uIhq7+KJarpD1i6Sf3idu2woFatetNcL0=;
-	b=pE7TkXSXVcV2z59Zw2hFhiW+a9rT+ETwB+nt36sIeCijTXDS4lhfOoWDZeBLz9algnI9z/
-	eVn0jCO+My8aZ1Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6843213A7F;
-	Mon, 10 Jun 2024 11:47:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5brfFtDnZmbLFQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 10 Jun 2024 11:47:28 +0000
-Date: Mon, 10 Jun 2024 13:47:18 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	xen-devel@lists.xenproject.org, kasan-dev@googlegroups.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0E4FB40E0081;
+	Mon, 10 Jun 2024 13:40:26 +0000 (UTC)
+Date: Mon, 10 Jun 2024 15:40:20 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v1 1/3] mm: pass meminit_context to __free_pages_core()
-Message-ID: <ZmbnxrOuoarMbC6X@localhost.localdomain>
-References: <20240607090939.89524-1-david@redhat.com>
- <20240607090939.89524-2-david@redhat.com>
- <ZmZ7GgwJw4ucPJaM@localhost.localdomain>
- <13070847-4129-490c-b228-2e52bd77566a@redhat.com>
+	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
+ ACPI MADT wakeup method
+Message-ID: <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
+ <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
+ <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <13070847-4129-490c-b228-2e52bd77566a@redhat.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.993];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+In-Reply-To: <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
 
-On Mon, Jun 10, 2024 at 10:38:05AM +0200, David Hildenbrand wrote:
-> On 10.06.24 06:03, Oscar Salvador wrote:
-> > On Fri, Jun 07, 2024 at 11:09:36AM +0200, David Hildenbrand wrote:
-> > > In preparation for further changes, let's teach __free_pages_core()
-> > > about the differences of memory hotplug handling.
-> > > 
-> > > Move the memory hotplug specific handling from generic_online_page() to
-> > > __free_pages_core(), use adjust_managed_page_count() on the memory
-> > > hotplug path, and spell out why memory freed via memblock
-> > > cannot currently use adjust_managed_page_count().
-> > > 
-> > > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > 
-> > All looks good but I am puzzled with something.
-> > 
-> > > +	} else {
-> > > +		/* memblock adjusts totalram_pages() ahead of time. */
-> > > +		atomic_long_add(nr_pages, &page_zone(page)->managed_pages);
-> > > +	}
-> > 
-> > You say that memblock adjusts totalram_pages ahead of time, and I guess
-> > you mean in memblock_free_all()
-> 
-> And memblock_free_late(), which uses atomic_long_inc().
+On Fri, Jun 07, 2024 at 06:14:28PM +0300, Kirill A. Shutemov wrote:
+>   I was able to address this issue by switching cpa_lock to a mutex.
+>   However, this solution will only work if the callers for set_memory
+>   interfaces are not called from an atomic context. I need to verify if
+>   this is the case.
 
-Ah yes.
+Dunno, I'd be nervous about this. Althouth from looking at
 
- 
-> Right (it's suboptimal, but not really problematic so far. Hopefully Wei can
-> clean it up and move it in here as well)
+   ad5ca55f6bdb ("x86, cpa: srlz cpa(), global flush tlb after splitting big page and before doing cpa")
 
-That would be great.
+I don't see how "So that we don't allow any other cpu" can't be done
+with a mutex. Perhaps the set_memory* interfaces should be usable in as
+many contexts as possible.
 
-> For the time being
-> 
-> "/* memblock adjusts totalram_pages() manually. */"
+Have you run this with lockdep enabled?
 
-Yes, I think that is better ;-)
+> - The function __flush_tlb_all() in kernel_(un)map_pages_in_pgd() must be
+>   called with preemption disabled. Once again, I am unsure why this has
+>   not caused issues in the EFI case.
 
-Thanks!
- 
+It could be because EFI does all that setup on the BSP only before the
+others have arrived but I don't remember anymore... It is more than
+a decade ago when I did this...
+
+Thx.
 
 -- 
-Oscar Salvador
-SUSE Labs
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
