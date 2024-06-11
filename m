@@ -1,71 +1,116 @@
-Return-Path: <linux-hyperv+bounces-2376-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2377-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61B8E903131
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 07:35:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C60C903423
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 09:46:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6382B1C252F8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 05:35:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C24B281897
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 07:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D4217108D;
-	Tue, 11 Jun 2024 05:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED87A172796;
+	Tue, 11 Jun 2024 07:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OTXxlE4p"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u5mEgWuS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vs4QnX1R";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="beS+LyS4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="blQE/fLA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B31C6433C4;
-	Tue, 11 Jun 2024 05:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBC616F85B;
+	Tue, 11 Jun 2024 07:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718083913; cv=none; b=awMWsy7AVbP5ctfCIGPfGD69m6sslidJdS14OFt47T518lGrHvSlCOZkX2Zuy/J95ay1LIy5TIvNrCvdXJ6wDqpyHal+SlsLTGcDjBBCEyksMVw0HcnDqyZNN+jrVnH3eRgYxlh0hZCylfrQh2etzt1vQvn6vp9pniGK10/MQkM=
+	t=1718091961; cv=none; b=Y6sTi11zo/u6ZT8ms/P3pAxKxKMAl+tGc3cRIbeZosm2EPSna7FQR/HD1fZCPTeoqhugvIisTUT+c2rcsxM1IwVRASd2A1QCrJte8vsaYfxRy8Wl8LYmc3AYHUS1lJZfaN+xKVez4gcgX/6g1eJc40dkJiYwVrX7io8q5tAzB+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718083913; c=relaxed/simple;
-	bh=wTgHUoRXGB8qJoR4h9Pr5wfL0FU6959WzxM5R7bvukk=;
+	s=arc-20240116; t=1718091961; c=relaxed/simple;
+	bh=mp2IL7MdmeQ+2HOU+/QV+QdLYLJxOsq9VsJKxybVlgY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=di86FrygPfAL3c99FdhagLdezSjVCwjBXyL4zqdDehcvrPdtdlBmGUyt2zni4Phj/w4b+omo7NDsK9EXsmK0NmehuBkdYNPPULtHJES7MArAYzqpBmJCtAwUCDHEelYpBRaQKTB+TAwOZ1IB3WYW4nphG+Wuq4OdOBvUAfR648k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OTXxlE4p; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 1174B20B915A; Mon, 10 Jun 2024 22:31:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1174B20B915A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1718083911;
-	bh=r6S0G3Lmx1ajN1WsB9gfo8FcV54B6HHSqOabKV392fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OTXxlE4p5/ddsVzESS8fcIGl0XfyJJuNk+XTi6QFJPPGA7Qv12BK7PGS0N9ZMAnGB
-	 HTGg+2pKyxCAL+tEe11V62Af7jiC1pmwxhyL45/HUTM1BKRv552wfWzWvQLIVOoio+
-	 HUrt5B3mU9Hp5FB4UPO1Oz37rlaAQFFED+RwZPlU=
-Date: Mon, 10 Jun 2024 22:31:51 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSXORAKkCqdRWIT9oYVdC1AH1KnpddTZKFaSxK8fbZNZumBjJTN4IZIWfjssoE+pWgzU+8f6ViC8rT26R7oi2FDi/ojcNc2fXNXRt1seVaqYx8/gEeIzunPl4oMyE7OR9VkyWeX3GrMRRuME0CridmGEMf9sHbZBCtJVDAcWZZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u5mEgWuS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vs4QnX1R; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=beS+LyS4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=blQE/fLA; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0B24722CCD;
+	Tue, 11 Jun 2024 07:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718091958; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HVao4QsDP4Z+JAjo5dOzj5sxwVNV/Y4USEllUqua+SQ=;
+	b=u5mEgWuSpunEORDd99KB+qYCCofPeL9U0D+nligMM1u7MVYkAsDQ4tHD3Kx6+UbLLoWb9Q
+	ZKLtpOD0A7zMaX96b5O0y7p1jSfvfiouCBinzY0ukzGsQHISDNnZX5BxP7yYnZl30CXRvD
+	XUtm+fRniwugupRUTF0pqvUJ6aUhHeI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718091958;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HVao4QsDP4Z+JAjo5dOzj5sxwVNV/Y4USEllUqua+SQ=;
+	b=Vs4QnX1RXzMMer0yUJ/gnSrGDlsxSJRsNXNkxuY1DjYdWEK4c26NAw8fho5r6ae0TqbKkl
+	TducIsP3PboEO4DQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718091957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HVao4QsDP4Z+JAjo5dOzj5sxwVNV/Y4USEllUqua+SQ=;
+	b=beS+LyS4FBWnwGXe6a5zd/EhBO0SySrgPbqyL6f5aR8KILqXrR2/CI5lDKJ80NRBdN/pSq
+	JbySBQlifQRqEKrIl1R/jcgrzWFcaHlw0Fl6CIKXrfrMDA8Ys0+B7INFr6lrOOFwfTr1iS
+	ef8d3ylhBReZsLmY5KbBBlD/myYBhkQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718091957;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HVao4QsDP4Z+JAjo5dOzj5sxwVNV/Y4USEllUqua+SQ=;
+	b=blQE/fLATW0heDMQ1LEDrIBV+gvCQOtxZiUyMLRgeESKGRSW5JNnkJ/TCLcUuKPV7v/6M6
+	dbtt7phZc0CzDZBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D8AB213A55;
+	Tue, 11 Jun 2024 07:45:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4MdfMrMAaGYMUQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 11 Jun 2024 07:45:55 +0000
+Date: Tue, 11 Jun 2024 09:45:54 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+	xen-devel@lists.xenproject.org, kasan-dev@googlegroups.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240611053151.GA7510@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240604093349.GP491852@kernel.org>
- <20240605083906.GA15889@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20240606163334.GO791188@kernel.org>
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: initialize memmap of
+ !ZONE_DEVICE with PageOffline() instead of PageReserved()
+Message-ID: <ZmgAsolx7SAHeDW7@localhost.localdomain>
+References: <20240607090939.89524-1-david@redhat.com>
+ <20240607090939.89524-3-david@redhat.com>
+ <ZmZ_3Xc7fdrL1R15@localhost.localdomain>
+ <5d9583e1-3374-437d-8eea-6ab1e1400a30@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -74,154 +119,80 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240606163334.GO791188@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <5d9583e1-3374-437d-8eea-6ab1e1400a30@redhat.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Thu, Jun 06, 2024 at 05:33:34PM +0100, Simon Horman wrote:
-> On Wed, Jun 05, 2024 at 01:39:06AM -0700, Shradha Gupta wrote:
-> > On Tue, Jun 04, 2024 at 10:33:49AM +0100, Simon Horman wrote:
-> > > On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> > > > Allow variable size indirection table allocation in MANA instead
-> > > > of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> > > > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> > > > indirection table is allocated dynamically.
-> > > > 
-> > > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> > > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > 
-> > > ...
-> > > 
-> > > > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > > 
-> > > ...
-> > > 
-> > > > @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
-> > > >  	return mana_create_txq(apc, net);
-> > > >  }
-> > > >  
-> > > > +static int mana_rss_table_alloc(struct mana_port_context *apc)
-> > > > +{
-> > > > +	if (!apc->indir_table_sz) {
-> > > > +		netdev_err(apc->ndev,
-> > > > +			   "Indirection table size not set for vPort %d\n",
-> > > > +			   apc->port_idx);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-> > > > +	if (!apc->indir_table)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
-> > > > +	if (!apc->rxobj_table) {
-> > > > +		kfree(apc->indir_table);
-> > > 
-> > > Hi, Shradha
-> > > 
-> > > Perhaps I am on the wrong track here, but I have some concerns
-> > > about clean-up paths.
-> > > 
-> > > Firstly.  I think that apc->indir_table should be to NULL here for
-> > > consistency with other clean-up paths. Or alternatively, fields of apc
-> > > should not set to NULL elsewhere after being freed.
-> > 
-> > Hi Simon,
-> > 
-> > Thanks for the comments. This makes sense, I am planning of consistently
-> > removing the NULLify from other places too as per Leon's comments.
+On Mon, Jun 10, 2024 at 10:56:02AM +0200, David Hildenbrand wrote:
+> There are fortunately not that many left.
 > 
-> Great!
+> I'd even say marking them (vmemmap) reserved is more wrong than right: note
+> that ordinary vmemmap pages after memory hotplug are not reserved! Only
+> bootmem should be reserved.
+
+Ok, that is a very good point that I missed.
+I thought that hotplugged-vmemmap pages (not selfhosted) were marked as
+Reserved, that is why I thought this would be inconsistent.
+But then, if that is the case, I think we are safe as kernel can already
+encounter vmemmap pages that are not reserved and it deals with them
+somehow.
+
+> Let's take at the relevant core-mm ones (arch stuff is mostly just for MMIO
+> remapping)
 > 
-> > > In looking into this I noticed that mana_probe() does not call
-> > > mana_remove() or return an error in the cases where mana_probe_port()
-> > > or mana_attach() fail unless add_adev also fails. If so, is that
-> > > intentional?
-> > 
-> > Right, so most calls like mana_probe_port(), mana_attach() cleanup after
-> > themselves in the code if there is any error. So, not having to call
-> > mana_remove() in these cases in mana_probe() is intentional. But I do
-> > agree that an error is returned in mana_probe() only if add_adev also
-> > fails. I'll fix that too in the next version
-> 
-> I'm not entirely sure, but perhaps that is a candidate for a separate patch.
-> 
-> > > 
-> > > In any case, I would suggest as a follow-up, arranging things so that
-> > > when an error occurs in a function, anything that was allocated is
-> > > unwound before returning an error.
-> > > 
-> > > I think this would make allocation/deallocation easier to reason with.
-> > > And I suspect it would avoid both the need for fields of structures to
-> > > be zeroed after being freed, and the need to call mana_remove() from
-> > > mana_probe().
-> > 
-> > Agreed
-> > > 
-> > > > +		return -ENOMEM;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static void mana_rss_table_init(struct mana_port_context *apc)
-> > > >  {
-> > > >  	int i;
-> > > >  
-> > > > -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-> > > > +	for (i = 0; i < apc->indir_table_sz; i++)
-> > > >  		apc->indir_table[i] =
-> > > >  			ethtool_rxfh_indir_default(i, apc->num_queues);
-> > > >  }
-> > > 
-> > > ...
-> > > 
-> > > > @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
-> > > >  	err = register_netdev(ndev);
-> > > >  	if (err) {
-> > > >  		netdev_err(ndev, "Unable to register netdev.\n");
-> > > > -		goto reset_apc;
-> > > > +		goto free_indir;
-> > > >  	}
-> > > >  
-> > > >  	return 0;
-> > > >  
-> > > > +free_indir:
-> > > > +	apc->indir_table_sz = 0;
-> > > > +	kfree(apc->indir_table);
-> > > > +	apc->indir_table = NULL;
-> > > > +	kfree(apc->rxobj_table);
-> > > > +	apc->rxobj_table = NULL;
-> > > >  reset_apc:
-> > > >  	kfree(apc->rxqs);
-> > > >  	apc->rxqs = NULL;
-> > > 
-> > > nit: Not strictly related to this patch, but the reset_apc code should
-> > >      probably be a call to mana_cleanup_port_context() as it is the dual of
-> > >      mana_init_port_context() which is called earlier in mana_probe_port()
-> > 
-> > Sure, let me do that too.
-> 
-> FWIIW, I think it would be appropriate to put that change in a separate patch.
-Fixing this and other similar changes in a different patch. Thanks
-> 
-> > > 
-> > > ...
-> > > 
-> > > > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> > > >  		}
-> > > >  
-> > > >  		unregister_netdevice(ndev);
-> > > > +		apc->indir_table_sz = 0;
-> > > > +		kfree(apc->indir_table);
-> > > > +		apc->indir_table = NULL;
-> > > > +		kfree(apc->rxobj_table);
-> > > > +		apc->rxobj_table = NULL;
-> > > 
-> > > The code to free and zero indir_table_sz and indir_table appears twice
-> > > in this patch. Perhaps a helper to do this, which would be the dual
-> > > of mana_rss_table_alloc is in order.
-> > Makes sense, will change this too.
-> 
-> Thanks.
+... 
+> Any PageReserved user that I am missing, or why we should handle these
+> vmemmap pages differently than the ones allocated during ordinary memory
+> hotplug?
+
+No, I cannot think of a reason why normal vmemmap pages should behave
+different than self-hosted.
+
+I was also confused because I thought that after this change
+pfn_to_online_page() would be different for self-hosted vmemmap pages,
+because I thought that somehow we relied on PageOffline(), but it is not
+the case.
+
+> In the future, we might want to consider using a dedicated page type for
+> them, so we can stop using a bit that doesn't allow to reliably identify
+> them. (we should mark all vmemmap with that type then)
+
+Yes, a all-vmemmap pages type would be a good thing, so we do not have
+to special case.
+
+Just one last thing.
+Now self-hosted vmemmap pages will have the PageOffline cleared, and that
+will still remain after the memory-block they belong to has gone
+offline, which is ok because those vmemmap pages lay around until the
+chunk of memory gets removed.
+
+Ok, just wanted to convince myself that there will no be surprises.
+
+Thanks David for claryfing.
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
 
