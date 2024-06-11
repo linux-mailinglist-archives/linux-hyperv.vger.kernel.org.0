@@ -1,81 +1,81 @@
-Return-Path: <linux-hyperv+bounces-2379-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2380-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44F339034BF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 10:04:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9956903818
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 11:43:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF291282928
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 08:04:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 280DDB20B94
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 09:43:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABDB171082;
-	Tue, 11 Jun 2024 08:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30FED176FB4;
+	Tue, 11 Jun 2024 09:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="biL/kLWJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xq8flxKR"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA842AF11
-	for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2024 08:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951F217623D
+	for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2024 09:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718093069; cv=none; b=VWjpq0aub3Vp1xO7xC9A2w1jO8thdOQtJ/ZV6rSvU/YPBl3UaFTn77w+kZX90tokQaz+dl5dZSChznWrSue4vEi7GxbfYlBbHfSlMjoyMMhTn2tOq6amsWzBBvw8eLanJpZXwiJG8kA6peUtOkcuDwmlV/Nj6YCwwIep8A1JHE0=
+	t=1718098986; cv=none; b=pX7wg3Y/lNMVAZalZTRP6IW17UBZzRu68Q570gkNqDxRj83+bt3yVaGE9CtZBtnO6iQzPiRm0mEATYwjJn5FkEHOIGoPURnN+HVjnmglyIDyWC4aM/iNtEASzAn3NxrpM8Trp9pBaymq/08/Z5GgFSVaeCzjBUJL4V0NaMKZRgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718093069; c=relaxed/simple;
-	bh=IGkPU0Scjshr8UBWNnXfhsHmwWKbEoHOCDVcv+syyFo=;
+	s=arc-20240116; t=1718098986; c=relaxed/simple;
+	bh=PjgyDSFoWWSLuBYP8YRI3EDHBqV5H/aqSV8Hc10U6vY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IS9EBrEpJowFNZ/3WrJexdCdVYMvEQyNI0ahpzovVA6IT5i+aEX6OkAsCqwpGNM3L3UJNEVBUC7f8d8QtcUPQRblbkhzAXQ23kSkdZZjpN6CPefvwyxP3/E3Yt2QI1YEeOJ/DuO43Za6pDcIOgJ2gZ9kU/AhebddJEJ4Slr/6qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=biL/kLWJ; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=rVUQ6W5bioHroAa/X1yiTbuOuqPLBef3EG9qekh1sI64n+EuYQBeblA7AM3NPfrivVH07pkVizsylNKj/UwWvKwvvB06AR4tX9FhIhH7rnbrjHQhrNmwQ9Zuq76Up98f6o0DAMbY5Mmc3Egx1ivUnk0DzMnq9FlH0ecQfit0AB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xq8flxKR; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718093066;
+	s=mimecast20190719; t=1718098983;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hqXBYKFMfHuGo/oWXFTKDIQ0hmdU9g1oFp9QTADLe9k=;
-	b=biL/kLWJMREardvu7DxoxdJPKP8nyhEAn50y/PXX9p4/Tf5z5GSQ3nQSjIT/HieiLPJlTK
-	tvxjF1g4UYB+wSNCAXxwTWZRvymwp5xSqYed2cnm/GM4yzlDWm2nEIdb5830XjvOU6sXSW
-	9vHmaa6Y0i4DmX8P5stZ3KY0bJ6hVwQ=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=4Fvo4snqjmjLL5YGwAq7AoShRlEWBSMshPzLS47jMwA=;
+	b=Xq8flxKREp5EWDJs4TaCnmhGhqL84gU77+ziXtUsQnCG49HTxTfu28Yi+o/S3hALui2nJt
+	Q4GZeWnbXC4jdc/DM4XmcKB8+wS2revVa2xg73vyf2MoZDNCM7QcGW6i2KH4BEjBNJfTyd
+	l9wIzAVCmL6hEgsUWRIKRkJB9+oT5/Y=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-IQsCM4XdPjuv0g5buBTvRQ-1; Tue, 11 Jun 2024 04:04:19 -0400
-X-MC-Unique: IQsCM4XdPjuv0g5buBTvRQ-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2eae96cecaeso30962441fa.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2024 01:04:19 -0700 (PDT)
+ us-mta-121-ouCO_XVgN02gNze47Pr15g-1; Tue, 11 Jun 2024 05:43:02 -0400
+X-MC-Unique: ouCO_XVgN02gNze47Pr15g-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52c6f37cc97so2314460e87.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2024 02:43:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718093058; x=1718697858;
+        d=1e100.net; s=20230601; t=1718098979; x=1718703779;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=hqXBYKFMfHuGo/oWXFTKDIQ0hmdU9g1oFp9QTADLe9k=;
-        b=r1vwgKrWxS0rZfCd8ozBjjdvgsja2RwDShdKlFxrQmGNiCyeKi1BLZxz2YrOCwm0V8
-         Xnriv78FcGEqmzsuaCp5oUN5SwU1itZ7glKbvf2Y1/+TzUqhiBGJbAo8L1/cBHX7Ha2N
-         leYZ1l8WleS7KCe8eJnldmzQqDutE3YSfmgguu/qzFMGRLk7Ow/hOHQ3fTvmqaU4bBrk
-         qV6xfGwVKDMXg/PPZkIqwgYlhNTHfkgKQV4f+MT1bfQuiSdROXp1wR01m6Vlj4Wv7DPL
-         zEWdx1q8xA0jZggE/ezPjHevK5S6Xat4R+naQMSFjT7bDdjDLkpVW8xSWJbCAnOsvKkA
-         fsGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVH31E0TaD5CMPY5XD8h0hdCcK3UfKI4E1fUFMuU2OIIuYCaaNmjbDVxyyImfHbHEZg2pNtiSy67TKKz54XpjIkhhcl1991IsW1+Cm3
-X-Gm-Message-State: AOJu0YyaV7lKgWCfBVBSlnvVgZeBA8pYrFByQSsVJTSvRnhiRK9sEm5P
-	i3bRFScPM7WHcbMKjP8ijS01o53xtQRK1jV9OyqRsn5a7YaS2tpMBnb/+9wSdw9UtQveUglT26G
-	EyobZNUuDbYDr/PO3OKGDxtzab1XLySMQiLZ+dL8eZ8wQ2Ld6CbwH9md09vrq+A==
-X-Received: by 2002:a2e:87cb:0:b0:2eb:f82a:d8d2 with SMTP id 38308e7fff4ca-2ebf82adfe7mr159561fa.41.1718093058330;
-        Tue, 11 Jun 2024 01:04:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKToayglVvfmqXbbZxIgMw6bY+YaaS9CFQLQWFoPjFHVHH1W6TdHfgwTXUw4yHKqwXuMGUGQ==
-X-Received: by 2002:a2e:87cb:0:b0:2eb:f82a:d8d2 with SMTP id 38308e7fff4ca-2ebf82adfe7mr159231fa.41.1718093057647;
-        Tue, 11 Jun 2024 01:04:17 -0700 (PDT)
+        bh=4Fvo4snqjmjLL5YGwAq7AoShRlEWBSMshPzLS47jMwA=;
+        b=QVKHCxYIljnZPGFD4ReAbhHKa5d0cNS9Wn7VbAdfWsNB66aYp/cHu9kz+jKoM5+S/q
+         08VFIFeY9NEsdWFG/opisv/xZu4ZKd1ylMxjYe2CmTB4sXjpDXEh5QXWIpmABxPAP7ht
+         maQ4vdU6Iz4BNm9vgahyZsXrvCIJ9j4W6AS70+PkOXFedIHDyJDZlP1JDMxzPDPNpNC4
+         Qp+3duHx0Th9l/B9es2jcSitE3wHgHMXTvVm5dxXsc/vyG8e1wsiIKKlDnBWk3EGicU4
+         zIkUNt6SxEmZubdzaB2I187LS6NCxEX2guNE157g+nmgdd4LG0jEl9JqNNWyQE9lUK32
+         B3ow==
+X-Forwarded-Encrypted: i=1; AJvYcCW6CSZmQ3Wkk2ccTa6ghvHlW6p5eh6VWTSgCDfq9UZfxQXoYRWTasYoHJfWA/3SxHAEvyNTfLDfpfLEaxXQ38sa1AiBQu50FKw/PN9j
+X-Gm-Message-State: AOJu0YyReSMB1n/ElYcwhBSuWini5ravmttZfaS/pm+dFKo7eDWLFUaj
+	0l+TFXMAC+lRXim3wgCBNkT0sEXxllJ0Fnoujq0KfbHCpfjkK6fp6U9qhapS2hSAT11RRnrgoiO
+	5/L9+HvN1pyagneI4NT2xZPof0gc73TSQK6Lwwm89fXrPdBBZMebkK+pcoD091g==
+X-Received: by 2002:ac2:5a43:0:b0:52b:e7ff:4eb7 with SMTP id 2adb3069b0e04-52be7ff4ed8mr5513973e87.59.1718098978994;
+        Tue, 11 Jun 2024 02:42:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXolbyC1nt04woF61IXkeFzl40jH1amuFwhtMdKb0jcnAeO4WTr7EvpCOinxTpGFsUzHiFKA==
+X-Received: by 2002:ac2:5a43:0:b0:52b:e7ff:4eb7 with SMTP id 2adb3069b0e04-52be7ff4ed8mr5513958e87.59.1718098978571;
+        Tue, 11 Jun 2024 02:42:58 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42182ed2b23sm75337235e9.18.2024.06.11.01.04.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c2cd247sm176185215e9.40.2024.06.11.02.42.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 01:04:17 -0700 (PDT)
-Message-ID: <30b5d493-b7c2-4e63-86c1-dcc73d21dc15@redhat.com>
-Date: Tue, 11 Jun 2024 10:04:15 +0200
+        Tue, 11 Jun 2024 02:42:57 -0700 (PDT)
+Message-ID: <824c319a-530e-4153-80f5-20e2c463fa81@redhat.com>
+Date: Tue, 11 Jun 2024 11:42:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -85,12 +85,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: initialize memmap of
  !ZONE_DEVICE with PageOffline() instead of PageReserved()
-To: Oscar Salvador <osalvador@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- xen-devel@lists.xenproject.org, kasan-dev@googlegroups.com,
- Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
+To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
+ kasan-dev@googlegroups.com, Mike Rapoport <rppt@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>, "K. Y. Srinivasan" <kys@microsoft.com>,
  Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
  Dexuan Cui <decui@microsoft.com>, "Michael S. Tsirkin" <mst@redhat.com>,
  Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
@@ -102,9 +101,6 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Dmitry Vyukov <dvyukov@google.com>
 References: <20240607090939.89524-1-david@redhat.com>
  <20240607090939.89524-3-david@redhat.com>
- <ZmZ_3Xc7fdrL1R15@localhost.localdomain>
- <5d9583e1-3374-437d-8eea-6ab1e1400a30@redhat.com>
- <ZmgAsolx7SAHeDW7@localhost.localdomain>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -152,69 +148,54 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <ZmgAsolx7SAHeDW7@localhost.localdomain>
+In-Reply-To: <20240607090939.89524-3-david@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11.06.24 09:45, Oscar Salvador wrote:
-> On Mon, Jun 10, 2024 at 10:56:02AM +0200, David Hildenbrand wrote:
->> There are fortunately not that many left.
->>
->> I'd even say marking them (vmemmap) reserved is more wrong than right: note
->> that ordinary vmemmap pages after memory hotplug are not reserved! Only
->> bootmem should be reserved.
+On 07.06.24 11:09, David Hildenbrand wrote:
+> We currently initialize the memmap such that PG_reserved is set and the
+> refcount of the page is 1. In virtio-mem code, we have to manually clear
+> that PG_reserved flag to make memory offlining with partially hotplugged
+> memory blocks possible: has_unmovable_pages() would otherwise bail out on
+> such pages.
 > 
-> Ok, that is a very good point that I missed.
-> I thought that hotplugged-vmemmap pages (not selfhosted) were marked as
-> Reserved, that is why I thought this would be inconsistent.
-> But then, if that is the case, I think we are safe as kernel can already
-> encounter vmemmap pages that are not reserved and it deals with them
-> somehow.
+> We want to avoid PG_reserved where possible and move to typed pages
+> instead. Further, we want to further enlighten memory offlining code about
+> PG_offline: offline pages in an online memory section. One example is
+> handling managed page count adjustments in a cleaner way during memory
+> offlining.
 > 
->> Let's take at the relevant core-mm ones (arch stuff is mostly just for MMIO
->> remapping)
->>
-> ...
->> Any PageReserved user that I am missing, or why we should handle these
->> vmemmap pages differently than the ones allocated during ordinary memory
->> hotplug?
+> So let's initialize the pages with PG_offline instead of PG_reserved.
+> generic_online_page()->__free_pages_core() will now clear that flag before
+> handing that memory to the buddy.
 > 
-> No, I cannot think of a reason why normal vmemmap pages should behave
-> different than self-hosted.
+> Note that the page refcount is still 1 and would forbid offlining of such
+> memory except when special care is take during GOING_OFFLINE as
+> currently only implemented by virtio-mem.
 > 
-> I was also confused because I thought that after this change
-> pfn_to_online_page() would be different for self-hosted vmemmap pages,
-> because I thought that somehow we relied on PageOffline(), but it is not
-> the case.
+> With this change, we can now get non-PageReserved() pages in the XEN
+> balloon list. From what I can tell, that can already happen via
+> decrease_reservation(), so that should be fine.
+> 
+> HV-balloon should not really observe a change: partial online memory
+> blocks still cannot get surprise-offlined, because the refcount of these
+> PageOffline() pages is 1.
+> 
+> Update virtio-mem, HV-balloon and XEN-balloon code to be aware that
+> hotplugged pages are now PageOffline() instead of PageReserved() before
+> they are handed over to the buddy.
+> 
+> We'll leave the ZONE_DEVICE case alone for now.
+> 
 
-Fortunately not :) PageFakeOffline() or PageLogicallyOffline()  might be 
-clearer, but I don't quite like these names. If you have a good idea, 
-please let me know.
+@Andrew, can we add here:
 
-> 
->> In the future, we might want to consider using a dedicated page type for
->> them, so we can stop using a bit that doesn't allow to reliably identify
->> them. (we should mark all vmemmap with that type then)
-> 
-> Yes, a all-vmemmap pages type would be a good thing, so we do not have
-> to special case.
-> 
-> Just one last thing.
-> Now self-hosted vmemmap pages will have the PageOffline cleared, and that
-> will still remain after the memory-block they belong to has gone
-> offline, which is ok because those vmemmap pages lay around until the
-> chunk of memory gets removed.
-
-Yes, and that memmap might even get poisoned in debug kernels to catch 
-any wrong access.
-
-> 
-> Ok, just wanted to convince myself that there will no be surprises.
-> 
-> Thanks David for claryfing.
-
-Thanks for the review and raising that. I'll add more details to the 
-patch description!
+"Note that self-hosted vmemmap pages will no longer be marked as 
+reserved. This matches ordinary vmemmap pages allocated from the buddy 
+during memory hotplug. Now, really only vmemmap pages allocated from 
+memblock during early boot will be marked reserved. Existing 
+PageReserved() checks seem to be handling all relevant cases correctly 
+even after this change."
 
 -- 
 Cheers,
