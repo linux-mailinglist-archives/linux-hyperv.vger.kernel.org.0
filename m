@@ -1,200 +1,579 @@
-Return-Path: <linux-hyperv+bounces-2395-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2396-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D84F90453A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 21:51:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B0D8904923
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jun 2024 04:42:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4475282A46
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2024 19:51:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4BFF1C2128E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jun 2024 02:42:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 103491527A2;
-	Tue, 11 Jun 2024 19:51:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B247C8E0;
+	Wed, 12 Jun 2024 02:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2u31ezr"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="C8NAj7QF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2047.outbound.protection.outlook.com [40.92.21.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25C11514C9
-	for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2024 19:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718135460; cv=none; b=p3VfrR5QbxM1k/8SbuSgji2Qljcn/TmPaiVAwMqbPUiZsVwYwuMyh26gTyOR4IcwXZtrlGLYOFjJnPsKKeQ/socdJNSOUuHBwEOQt9DXEhjbtGQ+XCe1B7KWJClNcFBPxXuEcDsDFddpc2hVJYKj3a+NrznlIoneiaX9P1qcgLE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718135460; c=relaxed/simple;
-	bh=tLhF0gzIDb0MMKkTBdWoOAVCCwxF0E4J4wjD9vy2SBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JATSjEFOjADfZCqDdMTHz4tsyQZEzxcUUjcIjLDtTAGfFbDEnsKe6mRrQenl9kWnodghTqODTZ7dpjFBOzNgBsso9cZYUNvaUJWFyU27Jqnx+CKXjPwKzx7jRL9cCGiEyn/vjebYaZFNoumREXA1GNCHb+nptrjeIGA9ladiJbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D2u31ezr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718135458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VC/FKQpyiv8QuT0prkiboQ+mv2U8+abllOC5cV7bqrg=;
-	b=D2u31ezrnjgBAxp9J5QUBXEJ2kRFoMpc/7lLHczFAjU1hGqhn+zqpRUY9wcez5yHHpyIoq
-	SUlQA6GbwwfFEPcN+DAPdH09MqZrhU2zd1/RpSoAPxMkQJxaIoMr8ub25Qnur8m2mEintn
-	4Q17pTcH6OBsjm0kNt861gvcPgQbZjg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-10ZCTVCOPXmyhYQWgkBgYw-1; Tue, 11 Jun 2024 15:50:56 -0400
-X-MC-Unique: 10ZCTVCOPXmyhYQWgkBgYw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-421eed70e30so17815905e9.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2024 12:50:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718135455; x=1718740255;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VC/FKQpyiv8QuT0prkiboQ+mv2U8+abllOC5cV7bqrg=;
-        b=TzUcnBj3oDKSvejwIjoBqXSWWCpkTfEOAqYBeAAjvL6mAx1Jau8UcEMbPdE6gKvriO
-         1c4INSNGEi0uSd1B5MJgKGLlP6VRpFyg+eXEVWZAEw3PVGEO0wTmSW8DqPsDBIrhfVhD
-         SFg5jMjeip1bBYENczU2YtHVq0UvgtPaF/H57bW6DmdZPiuCOSXPRJQLyMzRRoVU+DXr
-         vBZToRN2kl7UiG5m9VxNSgKh089pgtNMeYCCIpy48wwpnqN70WIFC8DGUxnKyh0s5Jwh
-         LnALVNmT5p3stWWZaAmsnx69SiTvsNP/ZdhotMmRABxceE8K0uVUbGk8LuZK7WUKEs+p
-         PlOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmcNXGUf0hMzNbZp3IMg+eHTDrvLMGspju4h55YSxHtOk/vYAUHVA93O5uc4KeO4bmKL8NeN3qtSvwwHXeFHq6NFG5R/WzOfe7PvxH
-X-Gm-Message-State: AOJu0YwSOYQxQi6KGuQnNgjhwELmxO0B7oIp8OpXICsUrn8xjLZuS5YM
-	IM4ToJIz+TZpWFTOskHHXoKFPNc/Eu7BdwJqGcpCILGhDld7TcXTLI5d+9NxuPpVmngYHW0Quvt
-	c5TM0kDp20GdkylZbZy0bVOF54hdgwbaWyGXpU16cafpmg2V/cgJmOnKYeG/fZQ==
-X-Received: by 2002:a05:600c:1c91:b0:421:8028:a507 with SMTP id 5b1f17b1804b1-4218028a5f6mr70330515e9.18.1718135455371;
-        Tue, 11 Jun 2024 12:50:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeIZw5rvJCb1LtW+k52Hf6likkqbQ5y9zsOlyQgFY0I2VYm+kIPKpawNjMsNjEje9W3JPASg==
-X-Received: by 2002:a05:600c:1c91:b0:421:8028:a507 with SMTP id 5b1f17b1804b1-4218028a5f6mr70330165e9.18.1718135454911;
-        Tue, 11 Jun 2024 12:50:54 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42274379b83sm16254225e9.28.2024.06.11.12.50.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 12:50:54 -0700 (PDT)
-Message-ID: <fff6e4d3-4a11-4481-b28c-edfb072daf35@redhat.com>
-Date: Tue, 11 Jun 2024 21:50:52 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC60B663;
+	Wed, 12 Jun 2024 02:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718160130; cv=fail; b=GOhWkT8+AmBNaOlLX1+AkOGbgXHMrzzlIsnhCkqXWQv1VMkutDJziJ0WQl79qbiOzEApigT1nT6sV6opzgD1gSCkFMpLvmuqioP47MQUnYZKFd1eWpf7wzqFDQx9lGm6JWj6uZBujLJs+rRY9iiibKj5KGVy2n0hdTWeN2GeZxg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718160130; c=relaxed/simple;
+	bh=hIyM3zQu5esR6g/MhKmTkTeSR7shtjj+yytprlzD6zw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oKFaTSBxFQURXUYJXD2IbTpLhyU4pVQM6pmzii7qtx6i7hgPnjml9iD1GvT422nBCTEpsqNoMyJ0VKPILU1Y8CJ0GNrCqFz4g0vw9HSNVH9hlun2dxmS21N1kI99euJyJoo+9rGo9HUIZi0Gri/loJLHcdn1VfhNfs9ZJN96Apg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=C8NAj7QF; arc=fail smtp.client-ip=40.92.21.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mFeyr91B3NjLAYML3ad0m3cN9ify7itOGR26TnKV4JJI5PgMOVg3j2+lZVcOnHgh1t9EphFMt+JiuqkQBkKWIOVHetHKoIvXGfrtF5sO+3ynaPHo646oM80J3R/BQnjS0IuB7NTqkwMdGy2JFXGR+FJDU8wGGfRheHTYyNo2LHP6kOSEPQyltujEf4D9LTcQKddLxJKCLb9bjyoT2E/OXiyvehSt4fCQi9A4n8HiGWSlyKiISfPh5twCyJJT5OQd7lMkGxnrdatzCvXq6c4XCWvVSOuLGdk2GkJLcHV/DJcjEugpt7wUlag1C49Unq6jHm2dvT+WEvjqTFH3eBXMmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KvP83TA+VmOuyLpJUQs2V2PpTNbmT0mMILqzi0eWOMc=;
+ b=jPbbMOnsCHA8iTuNE3EMjVFn/gbeywMWalXWd1+7Oiy03yfft17AV13rN0P6snDmKlc9LFhHv7DotIEbmPBijuuSSeJMQTRLL29TiXcuEe4qPmbdQimUb4D4KVsazkIEnIRqqQCDW7zZ68mHVC4k+37+5GUpZKPrIolzvEfE/7SQ2Y1Vbb+XDTGLH1/DU4TbZkAwtGLGs/JGvHQqWymkU1PsIUKE+90KkDzaK2ikYKYTlrFPfsNRBoDUuhPdM5Xry0/z41ROfu4GKIIT+HndO847TM8L5nyyIVcUQmhrBMmwMp6apNsEz+B5ABOkXvtsj+q7Spr/ovHFeksvCINKiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KvP83TA+VmOuyLpJUQs2V2PpTNbmT0mMILqzi0eWOMc=;
+ b=C8NAj7QFIDxwYieNgvwgkTP6QnyBB2rv1pPS6vyzsl+/5cgMIZAYvpNUo9p2eef0tr/CVVjg8l7PaNoTG6UuLOuNMNusBlo83uJ/2s5owMduL8gDdVhuyLipByC39UOoJqOq2DtCNuL2Z69toSrCorKKNZwo7tshRi5rrXIso2TicCNL3vvtdUi+G6exxAI8J+EmIo3jP/TeH2whNeIJznxtUztxDDERywe1l4UCaOrKzPtaYaHTn3OuN0f5B6iPzTURJjgk9m+B81jlz8kpudH0QqIQKlj2KaRLeeCTmoiOQClm2yY7DsNsYb4TSmqGiYKxSKtqaMZLpwe94Sc0gw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by BY5PR02MB6485.namprd02.prod.outlook.com (2603:10b6:a03:1d2::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Wed, 12 Jun
+ 2024 02:42:03 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7633.036; Wed, 12 Jun 2024
+ 02:42:03 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
+CC: Dexuan Cui <decui@microsoft.com>, "stephen@networkplumber.org"
+	<stephen@networkplumber.org>, KY Srinivasan <kys@microsoft.com>,
+	"olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+	"davem@davemloft.net" <davem@davemloft.net>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"leon@kernel.org" <leon@kernel.org>, Long Li <longli@microsoft.com>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>, "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"ast@kernel.org" <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "shradhagupta@linux.microsoft.com"
+	<shradhagupta@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] net: mana: Add support for variable page sizes
+ of ARM64
+Thread-Topic: [PATCH net-next] net: mana: Add support for variable page sizes
+ of ARM64
+Thread-Index: AQHau3yTy3MTSCK18E+o6KIehToY2rHCttmAgAAb84CAAAP6gIAAj8ZA
+Date: Wed, 12 Jun 2024 02:42:03 +0000
+Message-ID:
+ <SN6PR02MB415781A68B43463F34A884E2D4C02@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1718054553-6588-1-git-send-email-haiyangz@microsoft.com>
+ <SN6PR02MB41572E928DCF6B7FDF89899DD4C72@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <DM6PR21MB14818F4519381967A9FEE8B8CAC72@DM6PR21MB1481.namprd21.prod.outlook.com>
+ <DM6PR21MB1481E3F4E4E26765CCF6114DCAC72@DM6PR21MB1481.namprd21.prod.outlook.com>
+In-Reply-To:
+ <DM6PR21MB1481E3F4E4E26765CCF6114DCAC72@DM6PR21MB1481.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3fb4882b-67e9-4568-8c78-027b60b1813e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-06-11T16:45:19Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+x-tmn: [PTGGn2h3fcdNigf1HCQuH4RyMY2zP6CT]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BY5PR02MB6485:EE_
+x-ms-office365-filtering-correlation-id: 6545f9e1-ccb9-459e-f7bf-08dc8a893de9
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199020|3412199017|102099026|440099020;
+x-microsoft-antispam-message-info:
+ E2sLHUm5KjPb4In7QKGwTQSY1skc8yUQywP80J2/UobUlXD3SHtgIiCah9670niXpmhB/T8gaNF30+oyRZabD5M3iBH2FiWCdKTE+0U7/+mjs4z6BZrMcK/eSMb0CJncu2PjrxhW13qeWLMsyIyU1RjRWsp3TvaSmVoLbu7i7UWubJZlXncnut9k8cEz8kt+f6qXRZDUebodvbvSmlE7atzFNZ1XUrX4+SOS/EATRPFFfgiNiFynCJsFLADcdE4LUW9aOk+UuMIhS1mpKYko6J2/wlF6xkwv0VGNxnK1f1qhwehFE96skkPSHyQvbp4f+ZcnALV3k9OARJQXjJNNuJyEvx/dv4l1dJYqgJmTh7weW635TW1sU7cLz5RrXD5wE90vRKYQhcKYF6g8BPxmAZnity8VRRZYX5kcBBjDDo7d6V4/AdG3lEiZapPRN/BqdiEZmq39cIhMG/9vTBfuEfyttruCwoejoiU3M1pbzG5Ae4fwRkLrWMXFjZLyAkO9ncwF2Rlfmif4506Qj8eDKlA48ZdZr8XNLQB+ql3z2yjDB+IDTZX0ECBsx3C3KG2d
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?9aYYqp2pL4UfBLpLKuVV78aAp/mQxesNgnzZS/+vVjbuYyKzupR49uyVto?=
+ =?iso-8859-1?Q?v7E2BUOFypmUx9xe0ol+c8PffT/BYTY7DeRbjKnVoSYUnT/0K8qFwTjC/g?=
+ =?iso-8859-1?Q?lQTB9dfhbaghXcnmRYIoPa8QPaFzJatRxBxD5hBbUv1ZyRVEXixcYQtETk?=
+ =?iso-8859-1?Q?8OsPSMvgpo5vjnzM2klrOM5Z1l0yqz5PUp89uflfXh/vBpczcEyuMZLzpC?=
+ =?iso-8859-1?Q?RZRn62tFOZebF9Rq3Qx80rqSPu8ulbckB5BUO0MkFdFL1Ea4ILDhymnn/n?=
+ =?iso-8859-1?Q?Bh3jfbTHQFlUDLUXI8l3FRgveB6V8opQkVVFJGGFDA2n+Gf4J3Xt5sRZNZ?=
+ =?iso-8859-1?Q?OH+zFvy35Yur0r2jhTlWMa+tX3AoLNLJyRlc/sNoCCoUgq8BTcwmIAbERR?=
+ =?iso-8859-1?Q?w/y/xzYYmr8pQYSS9/DPN8hHvVKxSpoM+zNDWgwiDEsfLtfJ7JYPXxMs/z?=
+ =?iso-8859-1?Q?KEmfKyHsESdShD1T9S3qlG6Vk36a+6j8oEC8xmbTIK/ssRwd4AaN6l4Hoe?=
+ =?iso-8859-1?Q?Fwl9Sj2Bd0JeWTaN2Tci7Lkguvyp+dOGl+HoqhQY1XAvATVfOyhhIv8CBu?=
+ =?iso-8859-1?Q?tT9XpXEbcumAJ6GT8hY1sgvIcgzr5W+rjvVreNkZ0FAjFGD9QiZm9jugsq?=
+ =?iso-8859-1?Q?3vEUJUehJEyiaNObqR4G++ueOoq4bIMTZ07cURX1jKZh3bCOeGLfkbxVIG?=
+ =?iso-8859-1?Q?CXoifCAMvCB7i3bfvS7sPzxVGpe9lcYXrkEZ4+zElZ5SKFEDgivR6i1K0n?=
+ =?iso-8859-1?Q?IFMEHwoGGw8NroXGnw3gSA8ZMyHfwabap7rpKMTPeDH4wKHpJcMbaGWfew?=
+ =?iso-8859-1?Q?CM433UQ3RnwVCdFtEyGjrjFXxNVD+y6Lp//hXwmJ/FnzVez+QTpnx7k0XB?=
+ =?iso-8859-1?Q?IDy3We5/+TQWoQrW5xY/pfIIBEz+s68qrU1rJuV3Gad4SAC6my4+nqVccO?=
+ =?iso-8859-1?Q?ZNUAnyFhnVWetjJlqkcgTFUZCUJEstyQGO8BtjhIPZrRRzityT+2KljvRT?=
+ =?iso-8859-1?Q?G5KQR2u67cPOJeI0hahQd8nOkCaCbSTZgvRaDQmF+RUETpFeZd3danc1gJ?=
+ =?iso-8859-1?Q?DUp3rl1U60A7bIADt0Tv+GFNXsJvYINyZHsgl8fxy33sqa6ciT1UqqZgoD?=
+ =?iso-8859-1?Q?nGD0/VqQ/9zquBzUQXXIAVGIlBAULchsvwFKOp1Dw9gSXEGMTL9HvzpcWh?=
+ =?iso-8859-1?Q?ffkIliJZH8OtbNtyIGjyVmSd7lDKcuq5ud8F9R2HWur/RbE6zAy+kmc2Vk?=
+ =?iso-8859-1?Q?usV6vi4Yh2Wfs9/VQKbuh38n/yGNPDyQT1Q3KcuSI=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] mm: pass meminit_context to __free_pages_core()
-To: Tim Chen <tim.c.chen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
- kasan-dev@googlegroups.com, Andrew Morton <akpm@linux-foundation.org>,
- Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Dmitry Vyukov <dvyukov@google.com>
-References: <20240607090939.89524-1-david@redhat.com>
- <20240607090939.89524-2-david@redhat.com>
- <80532f73e52e2c21fdc9aac7bce24aefb76d11b0.camel@linux.intel.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <80532f73e52e2c21fdc9aac7bce24aefb76d11b0.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6545f9e1-ccb9-459e-f7bf-08dc8a893de9
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2024 02:42:03.3245
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6485
 
-On 11.06.24 21:41, Tim Chen wrote:
-> On Fri, 2024-06-07 at 11:09 +0200, David Hildenbrand wrote:
->> In preparation for further changes, let's teach __free_pages_core()
->> about the differences of memory hotplug handling.
->>
->> Move the memory hotplug specific handling from generic_online_page() to
->> __free_pages_core(), use adjust_managed_page_count() on the memory
->> hotplug path, and spell out why memory freed via memblock
->> cannot currently use adjust_managed_page_count().
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   mm/internal.h       |  3 ++-
->>   mm/kmsan/init.c     |  2 +-
->>   mm/memory_hotplug.c |  9 +--------
->>   mm/mm_init.c        |  4 ++--
->>   mm/page_alloc.c     | 17 +++++++++++++++--
->>   5 files changed, 21 insertions(+), 14 deletions(-)
->>
->> diff --git a/mm/internal.h b/mm/internal.h
->> index 12e95fdf61e90..3fdee779205ab 100644
->> --- a/mm/internal.h
->> +++ b/mm/internal.h
->> @@ -604,7 +604,8 @@ extern void __putback_isolated_page(struct page *page, unsigned int order,
->>   				    int mt);
->>   extern void memblock_free_pages(struct page *page, unsigned long pfn,
->>   					unsigned int order);
->> -extern void __free_pages_core(struct page *page, unsigned int order);
->> +extern void __free_pages_core(struct page *page, unsigned int order,
->> +		enum meminit_context);
-> 
-> Shouldn't the above be
-> 		enum meminit_context context);
+From: Haiyang Zhang <haiyangz@microsoft.com> Sent: Tuesday, June 11, 2024 1=
+0:44 AM
+>=20
+> > -----Original Message-----
+> > From: Michael Kelley <mailto:mhklinux@outlook.com>
+> > Sent: Tuesday, June 11, 2024 12:35 PM
+> > To: Haiyang Zhang <mailto:haiyangz@microsoft.com>; mailto:linux-hyperv@=
+vger.kernel.org;
+> > mailto:netdev@vger.kernel.org
+> > Cc: Dexuan Cui <mailto:decui@microsoft.com>; mailto:stephen@networkplum=
+ber.org; KY
+> > Srinivasan <mailto:kys@microsoft.com>; Paul Rosswurm <mailto:paulros@mi=
+crosoft.com>;
+> > mailto:olaf@aepfle.de; vkuznets <mailto:vkuznets@redhat.com>; mailto:da=
+vem@davemloft.net;
+> > mailto:wei.liu@kernel.org; mailto:edumazet@google.com; mailto:kuba@kern=
+el.org;
+> > mailto:pabeni@redhat.com; mailto:leon@kernel.org; Long Li <mailto:longl=
+i@microsoft.com>;
+> > mailto:ssengar@linux.microsoft.com; mailto:linux-rdma@vger.kernel.org;
+> > mailto:daniel@iogearbox.net; mailto:john.fastabend@gmail.com; mailto:bp=
+f@vger.kernel.org;
+> > mailto:ast@kernel.org; mailto:hawk@kernel.org; mailto:tglx@linutronix.d=
+e;
+> > mailto:shradhagupta@linux.microsoft.com; mailto:linux-kernel@vger.kerne=
+l.org
+> > Subject: RE: [PATCH net-next] net: mana: Add support for variable page
+> > sizes of ARM64
+> >
+> > From: LKML haiyangz <mailto:lkmlhyz@microsoft.com> On Behalf Of Haiyang=
+ Zhang
+> > Sent: Monday, June 10, 2024 2:23 PM
+> > >
+> > > As defined by the MANA Hardware spec, the queue size for DMA is 4KB
+> > > minimal, and power of 2.
+> >
+> > You say the hardware requires 4K "minimal". But the definitions in this
+> > patch hardcode to 4K, as if that's the only choice. Is the hardcoding t=
+o
+> > 4K a design decision made to simplify the MANA driver?
+>=20
+> The HWC q size has to be exactly 4k, which is by HW design.
+> Other "regular" queues can be 2^n >=3D 4k.
+>=20
+> >
+> > > To support variable page sizes (4KB, 16KB, 64KB) of ARM64, define
+> >
+> > A minor nit, but "variable" page size doesn't seem like quite the right
+> > description -- both here and in the Subject line.=A0 On ARM64, the page=
+ size
+> > is a choice among a few fixed options.=A0 Perhaps call it support for "=
+page sizes
+> > other than 4K"?
+>=20
+> "page sizes other than 4K" sounds good.
+>=20
+> >
+> > > the minimal queue size as a macro separate from the PAGE_SIZE, which
+> > > we always assumed it to be 4KB before supporting ARM64.
+> > > Also, update the relevant code related to size alignment, DMA region
+> > > calculations, etc.
+> > >
+> > > Signed-off-by: Haiyang Zhang <mailto:haiyangz@microsoft.com>
+> > > ---
+> > >=A0 drivers/net/ethernet/microsoft/Kconfig=A0=A0=A0=A0=A0=A0=A0 |=A0 2=
+ +-
+> > >=A0 .../net/ethernet/microsoft/mana/gdma_main.c=A0=A0 |=A0 8 +++----
+> > >=A0 .../net/ethernet/microsoft/mana/hw_channel.c=A0 | 22 +++++++++----=
+------
+> > >=A0 drivers/net/ethernet/microsoft/mana/mana_en.c |=A0 8 +++----
+> > >=A0 .../net/ethernet/microsoft/mana/shm_channel.c |=A0 9 ++++----
+> > >=A0 include/net/mana/gdma.h=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 7 +++++-
+> > >=A0 include/net/mana/mana.h=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 3 ++-
+> > >=A0 7 files changed, 33 insertions(+), 26 deletions(-)
+> > >
+> > > diff --git a/drivers/net/ethernet/microsoft/Kconfig
+> > > b/drivers/net/ethernet/microsoft/Kconfig
+> > > index 286f0d5697a1..901fbffbf718 100644
+> > > --- a/drivers/net/ethernet/microsoft/Kconfig
+> > > +++ b/drivers/net/ethernet/microsoft/Kconfig
+> > > @@ -18,7 +18,7 @@ if NET_VENDOR_MICROSOFT
+> > >=A0 config MICROSOFT_MANA
+> > >=A0 tristate "Microsoft Azure Network Adapter (MANA) support"
+> > >=A0 depends on PCI_MSI
+> > > - depends on X86_64 || (ARM64 && !CPU_BIG_ENDIAN && ARM64_4K_PAGES)
+> > > + depends on X86_64 || (ARM64 && !CPU_BIG_ENDIAN)
+> > >=A0 depends on PCI_HYPERV
+> > >=A0 select AUXILIARY_BUS
+> > >=A0 select PAGE_POOL
+> > > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > index 1332db9a08eb..c9df942d0d02 100644
+> > > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > > @@ -182,7 +182,7 @@ int mana_gd_alloc_memory(struct gdma_context *gc,
+> > > unsigned int length,
+> > >=A0 dma_addr_t dma_handle;
+> > >=A0 void *buf;
+> > >
+> > > - if (length < PAGE_SIZE || !is_power_of_2(length))
+> > > + if (length < MANA_MIN_QSIZE || !is_power_of_2(length))
+> > >=A0 =A0=A0=A0=A0=A0=A0 return -EINVAL;
+> > >
+> > >=A0 gmi->dev =3D gc->dev;
+> > > @@ -717,7 +717,7 @@ EXPORT_SYMBOL_NS(mana_gd_destroy_dma_region, NET_=
+MANA);
+> > >=A0 static int mana_gd_create_dma_region(struct gdma_dev *gd,
+> > >=A0 =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=
+=A0=A0struct gdma_mem_info *gmi)
+> > >=A0 {
+> > > - unsigned int num_page =3D gmi->length / PAGE_SIZE;
+> > > + unsigned int num_page =3D gmi->length / MANA_MIN_QSIZE;
+> >
+> > This calculation seems a bit weird when using MANA_MIN_QSIZE. The
+> > number of pages, and the construction of the page_addr_list array
+> > a few lines later, seem unrelated to the concept of a minimum queue
+> > size. Is the right concept really a "mapping chunk", and num_page
+> > would conceptually be "num_chunks", or something like that?=A0 Then
+> > a queue must be at least one chunk in size, but that's derived from the
+> > chunk size, and is not the core concept.
+>=20
+> I think calling it "num_chunks" is fine.
+> May I use "num_chunks" in next version?
+>=20
 
-Although C allows parameters without names in declarations, this was 
-unintended.
+I think first is the decision on what to use for MANA_MIN_QSIZE. I'm
+admittedly not familiar with mana and gdma, but the function
+mana_gd_create_dma_region() seems fairly typical in defining a
+logical region that spans multiple 4K chunks that may or may not
+be physically contiguous.  So you set up an array of physical
+addresses that identify the physical memory location of each chunk.
+It seems very similar to a Hyper-V GPADL. I typically *do* see such
+chunks called "pages", but a "mapping chunk" or "mapping unit"
+is probably OK too.  So mana_gd_create_dma_region() would use
+MANA_CHUNK_SIZE instead of MANA_MIN_QSIZE.  Then you could
+also define MANA_MIN_QSIZE to be MANA_CHUNK_SIZE, for use
+specifically when checking the size of a queue.
 
-Thanks!
+Then if you are using MANA_CHUNK_SIZE, the local variable
+would be "num_chunks".  The use of "page_count", "page_addr_list",
+and "offset_in_page" field names in struct
+gdma_create_dma_region_req should then be changed as well.
 
--- 
-Cheers,
+Looking further at the function mana_gd_create_dma_region(),
+there's also the use of offset_in_page(), which is based on the
+guest PAGE_SIZE.  Wouldn't this be problematic if PAGE_SIZE
+is 64K?
 
-David / dhildenb
+But perhaps Paul would weigh in further on his thoughts.
+
+> >
+> > Another approach might be to just call it "MANA_PAGE_SIZE", like
+> > has been done with HV_HYP_PAGE_SIZE.=A0 HV_HYP_PAGE_SIZE exists to
+> > handle exactly the same issue of the guest PAGE_SIZE potentially
+> > being different from the fixed 4K size that must be used in host-guest
+> > communication on Hyper-V.=A0 Same thing here with MANA.
+>=20
+> I actually called it "MANA_PAGE_SIZE" in my previous internal patch.
+> But Paul from Hostnet team opposed using that name, because
+> 4kB is the min q size. MANA doesn't have "page" at HW level.
+>=20
+>=20
+> > >=A0 struct gdma_create_dma_region_req *req =3D NULL;
+> > >=A0 struct gdma_create_dma_region_resp resp =3D {};
+> > >=A0 struct gdma_context *gc =3D gd->gdma_context;
+> > > @@ -727,7 +727,7 @@ static int mana_gd_create_dma_region(struct gdma_=
+dev *gd,
+> > >=A0 int err;
+> > >=A0 int i;
+> > >
+> > > - if (length < PAGE_SIZE || !is_power_of_2(length))
+> > > + if (length < MANA_MIN_QSIZE || !is_power_of_2(length))
+> > >=A0 =A0=A0=A0=A0=A0=A0 return -EINVAL;
+> > >
+> > >=A0 if (offset_in_page(gmi->virt_addr) !=3D 0)
+> > > @@ -751,7 +751,7 @@ static int mana_gd_create_dma_region(struct gdma_=
+dev *gd,
+> > >=A0 req->page_addr_list_len =3D num_page;
+> > >
+> > >=A0 for (i =3D 0; i < num_page; i++)
+> > > -=A0=A0=A0=A0=A0=A0 req->page_addr_list[i] =3D gmi->dma_handle +=A0 i=
+ * PAGE_SIZE;
+> > > +=A0=A0=A0=A0=A0=A0 req->page_addr_list[i] =3D gmi->dma_handle +=A0 i=
+ * MANA_MIN_QSIZE;
+> > >
+> > >=A0 err =3D mana_gd_send_request(gc, req_msg_size, req, sizeof(resp), =
+&resp);
+> > >=A0 if (err)
+> > > diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> > > b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> > > index bbc4f9e16c98..038dc31e09cd 100644
+> > > --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> > > +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> > > @@ -362,12 +362,12 @@ static int mana_hwc_create_cq(struct hw_channel=
+_context
+> > > *hwc, u16 q_depth,
+> > >=A0 int err;
+> > >
+> > >=A0 eq_size =3D roundup_pow_of_two(GDMA_EQE_SIZE * q_depth);
+> > > - if (eq_size < MINIMUM_SUPPORTED_PAGE_SIZE)
+> > > -=A0=A0=A0=A0=A0=A0 eq_size =3D MINIMUM_SUPPORTED_PAGE_SIZE;
+> > > + if (eq_size < MANA_MIN_QSIZE)
+> > > +=A0=A0=A0=A0=A0=A0 eq_size =3D MANA_MIN_QSIZE;
+> > >
+> > >=A0 cq_size =3D roundup_pow_of_two(GDMA_CQE_SIZE * q_depth);
+> > > - if (cq_size < MINIMUM_SUPPORTED_PAGE_SIZE)
+> > > -=A0=A0=A0=A0=A0=A0 cq_size =3D MINIMUM_SUPPORTED_PAGE_SIZE;
+> > > + if (cq_size < MANA_MIN_QSIZE)
+> > > +=A0=A0=A0=A0=A0=A0 cq_size =3D MANA_MIN_QSIZE;
+> > >
+> > >=A0 hwc_cq =3D kzalloc(sizeof(*hwc_cq), GFP_KERNEL);
+> > >=A0 if (!hwc_cq)
+> > > @@ -429,7 +429,7 @@ static int mana_hwc_alloc_dma_buf(struct hw_chann=
+el_context *hwc, u16 q_depth,
+> > >
+> > >=A0 dma_buf->num_reqs =3D q_depth;
+> > >
+> > > - buf_size =3D PAGE_ALIGN(q_depth * max_msg_size);
+> > > + buf_size =3D MANA_MIN_QALIGN(q_depth * max_msg_size);
+> > >
+> > >=A0 gmi =3D &dma_buf->mem_info;
+> > >=A0 err =3D mana_gd_alloc_memory(gc, buf_size, gmi);
+> > > @@ -497,8 +497,8 @@ static int mana_hwc_create_wq(struct hw_channel_c=
+ontext
+> > > *hwc,
+> > >=A0 else
+> > >=A0 =A0=A0=A0=A0=A0=A0 queue_size =3D roundup_pow_of_two(GDMA_MAX_SQE_=
+SIZE * q_depth);
+> > >
+> > > - if (queue_size < MINIMUM_SUPPORTED_PAGE_SIZE)
+> > > -=A0=A0=A0=A0=A0=A0 queue_size =3D MINIMUM_SUPPORTED_PAGE_SIZE;
+> > > + if (queue_size < MANA_MIN_QSIZE)
+> > > +=A0=A0=A0=A0=A0=A0 queue_size =3D MANA_MIN_QSIZE;
+> > >
+> > >=A0 hwc_wq =3D kzalloc(sizeof(*hwc_wq), GFP_KERNEL);
+> > >=A0 if (!hwc_wq)
+> > > @@ -628,10 +628,10 @@ static int mana_hwc_establish_channel(struct
+> > > gdma_context *gc, u16 *q_depth,
+> > >=A0 init_completion(&hwc->hwc_init_eqe_comp);
+> > >
+> > >=A0 err =3D mana_smc_setup_hwc(&gc->shm_channel, false,
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 eq->mem_info.=
+dma_handle,
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cq->mem_info.=
+dma_handle,
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rq->mem_info.=
+dma_handle,
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sq->mem_info.=
+dma_handle,
+> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 virt_to_phys(=
+eq->mem_info.virt_addr),
+> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 virt_to_phys(=
+cq->mem_info.virt_addr),
+> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 virt_to_phys(=
+rq->mem_info.virt_addr),
+> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 virt_to_phys(=
+sq->mem_info.virt_addr),
+> >
+> > This change seems unrelated to handling guest PAGE_SIZE values
+> > other than 4K.=A0 Does it belong in a separate patch?=A0 Or maybe it ju=
+st
+> > needs an explanation in the commit message of this patch?
+>=20
+> I know dma_handle is usually just the phys adr. But this is not always
+> True if IOMMU is used...
+> I have no problem to put it to a separate patch if desired.
+
+Yes, that would seem like a separate patch.  It's not related to handling
+page size other than 4K.
+
+>=20
+> >
+> > >=A0 =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =A0eq->eq.m=
+six_index);
+> > >=A0 if (err)
+> > >=A0 =A0=A0=A0=A0=A0=A0 return err;
+> > > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > > b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > > index d087cf954f75..6a891dbce686 100644
+> > > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > > @@ -1889,10 +1889,10 @@ static int mana_create_txq(struct mana_port_c=
+ontext
+> > > *apc,
+> > >=A0 =A0*=A0 to prevent overflow.
+> > >=A0 =A0*/
+> > >=A0 txq_size =3D MAX_SEND_BUFFERS_PER_QUEUE * 32;
+> > > - BUILD_BUG_ON(!PAGE_ALIGNED(txq_size));
+> > > + BUILD_BUG_ON(!MANA_MIN_QALIGNED(txq_size));
+> > >
+> > >=A0 cq_size =3D MAX_SEND_BUFFERS_PER_QUEUE * COMP_ENTRY_SIZE;
+> > > - cq_size =3D PAGE_ALIGN(cq_size);
+> > > + cq_size =3D MANA_MIN_QALIGN(cq_size);
+> > >
+> > >=A0 gc =3D gd->gdma_context;
+> > >
+> > > @@ -2189,8 +2189,8 @@ static struct mana_rxq *mana_create_rxq(struct =
+mana_port_context *apc,
+> > >=A0 if (err)
+> > >=A0 =A0=A0=A0=A0=A0=A0 goto out;
+> > >
+> > > - rq_size =3D PAGE_ALIGN(rq_size);
+> > > - cq_size =3D PAGE_ALIGN(cq_size);
+> > > + rq_size =3D MANA_MIN_QALIGN(rq_size);
+> > > + cq_size =3D MANA_MIN_QALIGN(cq_size);
+> > >
+> > >=A0 /* Create RQ */
+> > >=A0 memset(&spec, 0, sizeof(spec));
+> > > diff --git a/drivers/net/ethernet/microsoft/mana/shm_channel.c
+> > > b/drivers/net/ethernet/microsoft/mana/shm_channel.c
+> > > index 5553af9c8085..9a54a163d8d1 100644
+> > > --- a/drivers/net/ethernet/microsoft/mana/shm_channel.c
+> > > +++ b/drivers/net/ethernet/microsoft/mana/shm_channel.c
+> > > @@ -6,6 +6,7 @@
+> > >=A0 #include <linux/io.h>
+> > >=A0 #include <linux/mm.h>
+> > >
+> > > +#include <net/mana/gdma.h>
+> > >=A0 #include <net/mana/shm_channel.h>
+> > >
+> > >=A0 #define PAGE_FRAME_L48_WIDTH_BYTES 6
+> > > @@ -183,7 +184,7 @@ int mana_smc_setup_hwc(struct shm_channel *sc, bo=
+ol reset_vf, u64 eq_addr,
+> > >
+> > >=A0 /* EQ addr: low 48 bits of frame address */
+> > >=A0 shmem =3D (u64 *)ptr;
+> > > - frame_addr =3D PHYS_PFN(eq_addr);
+> > > + frame_addr =3D MANA_PFN(eq_addr);
+> > >=A0 *shmem =3D frame_addr & PAGE_FRAME_L48_MASK;
+> > >=A0 all_addr_h4bits |=3D (frame_addr >> PAGE_FRAME_L48_WIDTH_BITS) <<
+> > >=A0 =A0=A0=A0=A0=A0=A0 (frame_addr_seq++ * PAGE_FRAME_H4_WIDTH_BITS);
+> >
+> > In mana_smc_setup_hwc() a few lines above this change, code using
+> > PAGE_ALIGNED() is unchanged.=A0 Is it correct that the eq/cq/rq/sq
+> > addresses
+> > must be aligned to 64K if PAGE_SIZE is 64K?
+>=20
+> Since we still using PHYS_PFN on them, if not aligned to PAGE_SIZE,
+> the lower bits may be lost. (You said the same below.)
+>=20
+> >
+> > Related, I wonder about how MANA_PFN() is defined. If PAGE_SIZE is 64K,
+> > MANA_PFN() will first right-shift 16, then left shift 4. The net is
+> > right-shift 12,
+> > corresponding to the 4K chunks that MANA expects. But that approach
+> > guarantees
+> > that the rightmost 4 bits of the MANA PFN will always be zero. That's
+> > consistent
+> > with requiring the addresses to be PAGE_ALIGNED() to 64K, but I'm uncle=
+ar
+> > whether
+> > that is really the requirement. You might compare with the definition o=
+f
+> > HVPFN_DOWN(), which has a similar goal for Linux guests communicating
+> > with
+> > Hyper-V.
+>=20
+> @Paul Rosswurm You said MANA HW has "no page concept". So the "frame_addr=
+"
+> In the mana_smc_setup_hwc() is NOT related to physical page number, corre=
+ct?
+> Can we just use phys_adr >> 12 like below?
+>=20
+> #define MANA_MIN_QSHIFT 12
+> #define MANA_PFN(a) ((a) >> MANA_MIN_QSHIFT)
+>=20
+> =A0=A0=A0=A0=A0 /* EQ addr: low 48 bits of frame address */
+> =A0=A0=A0=A0 shmem =3D (u64 *)ptr;
+> -=A0=A0=A0=A0 frame_addr =3D PHYS_PFN(eq_addr);
+> +=A0=A0=A0=A0 frame_addr =3D MANA_PFN(eq_addr);
+>=20
+> >
+> > > @@ -191,7 +192,7 @@ int mana_smc_setup_hwc(struct shm_channel *sc, bo=
+ol
+> > > reset_vf, u64 eq_addr,
+> > >
+> > >=A0 /* CQ addr: low 48 bits of frame address */
+> > >=A0 shmem =3D (u64 *)ptr;
+> > > - frame_addr =3D PHYS_PFN(cq_addr);
+> > > + frame_addr =3D MANA_PFN(cq_addr);
+> > >=A0 *shmem =3D frame_addr & PAGE_FRAME_L48_MASK;
+> > >=A0 all_addr_h4bits |=3D (frame_addr >> PAGE_FRAME_L48_WIDTH_BITS) <<
+> > >=A0 =A0=A0=A0=A0=A0=A0 (frame_addr_seq++ * PAGE_FRAME_H4_WIDTH_BITS);
+> > > @@ -199,7 +200,7 @@ int mana_smc_setup_hwc(struct shm_channel *sc, bo=
+ol
+> > > reset_vf, u64 eq_addr,
+> > >
+> > >=A0 /* RQ addr: low 48 bits of frame address */
+> > >=A0 shmem =3D (u64 *)ptr;
+> > > - frame_addr =3D PHYS_PFN(rq_addr);
+> > > + frame_addr =3D MANA_PFN(rq_addr);
+> > >=A0 *shmem =3D frame_addr & PAGE_FRAME_L48_MASK;
+> > >=A0 all_addr_h4bits |=3D (frame_addr >> PAGE_FRAME_L48_WIDTH_BITS) <<
+> > >=A0 =A0=A0=A0=A0=A0=A0 (frame_addr_seq++ * PAGE_FRAME_H4_WIDTH_BITS);
+> > > @@ -207,7 +208,7 @@ int mana_smc_setup_hwc(struct shm_channel *sc, bo=
+ol
+> > > reset_vf, u64 eq_addr,
+> > >
+> > >=A0 /* SQ addr: low 48 bits of frame address */
+> > >=A0 shmem =3D (u64 *)ptr;
+> > > - frame_addr =3D PHYS_PFN(sq_addr);
+> > > + frame_addr =3D MANA_PFN(sq_addr);
+> > >=A0 *shmem =3D frame_addr & PAGE_FRAME_L48_MASK;
+> > >=A0 all_addr_h4bits |=3D (frame_addr >> PAGE_FRAME_L48_WIDTH_BITS) <<
+> > >=A0 =A0=A0=A0=A0=A0=A0 (frame_addr_seq++ * PAGE_FRAME_H4_WIDTH_BITS);
+> > > diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+> > > index 27684135bb4d..b392559c33e9 100644
+> > > --- a/include/net/mana/gdma.h
+> > > +++ b/include/net/mana/gdma.h
+> > > @@ -224,7 +224,12 @@ struct gdma_dev {
+> > >=A0 struct auxiliary_device *adev;
+> > >=A0 };
+> > >
+> > > -#define MINIMUM_SUPPORTED_PAGE_SIZE PAGE_SIZE
+> > > +/* These are defined by HW */
+> > > +#define MANA_MIN_QSHIFT 12
+> > > +#define MANA_MIN_QSIZE (1 << MANA_MIN_QSHIFT)
+> > > +#define MANA_MIN_QALIGN(x) ALIGN((x), MANA_MIN_QSIZE)
+> > > +#define MANA_MIN_QALIGNED(addr) IS_ALIGNED((unsigned long)(addr),
+> > MANA_MIN_QSIZE)
+> > > +#define MANA_PFN(a) (PHYS_PFN(a) << (PAGE_SHIFT - MANA_MIN_QSHIFT))
+> >
+> > See comments above about how this is defined.
+>=20
+> Replied above.
+> Thank you for all the detailed comments!
+>=20
+> - Haiyang
 
 
