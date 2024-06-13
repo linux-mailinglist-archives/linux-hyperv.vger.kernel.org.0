@@ -1,129 +1,100 @@
-Return-Path: <linux-hyperv+bounces-2411-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2412-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A2D79075D7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jun 2024 16:57:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0C48907FE8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2024 01:50:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E60761F24E91
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jun 2024 14:57:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32F811F22926
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jun 2024 23:50:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57566148848;
-	Thu, 13 Jun 2024 14:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0B614D71E;
+	Thu, 13 Jun 2024 23:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ja3zVbuE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lleNsJm7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8747F14883C;
-	Thu, 13 Jun 2024 14:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3044280624;
+	Thu, 13 Jun 2024 23:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718290646; cv=none; b=GytmrOLUwwZF460L7F0JMRj/T89RyM2rIMP83uf4fkmyX3EsZzMVdGRFdFG7qxEkG8TzTD5K/DOJY3witxcHHrJH595Xbc6fobYPDuJquuoq4bal6VjoskrRvWMToclg8Pzu5kW0Wi2Zd4Rf6pX8TRpZ90bHVNJf/krcYhO8Utk=
+	t=1718322631; cv=none; b=kC5MMyqIdw9Dbb4BIm5ZF/fVeChHiM4zw/chcK62f8CI9HfwALJNMdd1dBWcfyPKc4a73uDV3jvabQu49D41DFudVB28wiZIs8cnI1waf6c0TqP6CWSJoLj3X9ZDEDjNy5Ph8t7nrHuKgtPnu75i6oGmzbnY6yyoxeR5FX9ETiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718290646; c=relaxed/simple;
-	bh=nGI5SQtPbmjFzz0oS2g0Vv0q9MObkyinZcCMmyUMgc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fh26RsvfRPL+SrXga36708VA17mccW5gd+F5Pq3skatVx/v55HSoq2MYu85mVZHrMXnmBvg/pclW6IapnTOyXas5lPF5LsSRSRQXH+VmdeaE84FXhHZbPaypk0cBxVbe0y9i9CpreP7PwTd1O2mt040NogFYc+zilw+csosbARo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ja3zVbuE; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 371AB40E00C9;
-	Thu, 13 Jun 2024 14:57:14 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id VxFUwAUY_gPk; Thu, 13 Jun 2024 14:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718290629; bh=4PpkPfFOmQteTZnPUEGfiyHPxl3RB0xgm8bItFqnfk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ja3zVbuEKXRUlqooI8H7OOrG10geSsCj9PBH5w2Id4s1ieQGglEfA7XJoKDFTF9JX
-	 epVhd/OSmSar4OcKkNykGLcf6rMfDeLqA2tharfM0zkRXHajeBWf4w7K+StiHBaYy+
-	 UmDqQGt6Gj6JW1RRmZEYjjYb9ugcch3i4wkay5YCl94poFAL1newXDTzG4cEGkoLWv
-	 NFTAg/aE+yDOGGuge2S6Ph8C9MIGPr1cm1iHz/TOedm1P4nH3dzgcwu7Oq6QCyNBwk
-	 QYqYkNMfTqbbiiMnckCwDq3Z5e6kt+LlkdDk1O4x9qCwldl17tWmfZ2BUKjgNxXRbB
-	 2/ckNhH1LU+HhGZC8VmO3+KkBDwJ8D7mUE2I63WKZGNOlnQdQt1ZalHutsPPm9fnfa
-	 iiRJCFaTfi8wE5Zdz7IPFHXJpdKwMeCYplQvoz0iM+RgxPC9lN1fMVR9b3Ih9nGfd2
-	 tHvDFD2YFDfqZ4+ljm6uk/Z4rpLfmpRIevGB+ZBZS5tJ12HYHcKp+jttN8SVc+N/uO
-	 lNQqFpWTSFrXj2kUWtXUw/aAhSIR0kw7wNt9hBDphnTPZeQDgkW48SqxzTM10A7j0b
-	 yquOA/Sp4tsEXR60IN3GhEe0pX6itv6tdbmM/O81pLhEwP+hGqkFA2xUtwPTWTTM8k
-	 x1TfveMz3kITMZ845FfSr1YE=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BC90040E0031;
-	Thu, 13 Jun 2024 14:56:41 +0000 (UTC)
-Date: Thu, 13 Jun 2024 16:56:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
- ACPI MADT wakeup method
-Message-ID: <20240613145636.GGZmsIpHn16R04QlaN@fat_crate.local>
-References: <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
- <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
- <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
- <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
- <hidvykk3yan5rtlhum6go7j3lwgrcfcgxlwyjug3osfakw2x6f@4ohvo23zaesv>
- <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
- <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
- <2kc27uzrsvpevtvos2harqj3bgfkizi5dhhxkigswlylpnogr5@lk6fi2okv53i>
- <20240612092943.GCZmlqh7O662JB-yGu@fat_crate.local>
- <w6ohbffl5wwmralg255ec7nozxksge4z4nnkmwncthxzhuv46d@qq46r2wrjlog>
+	s=arc-20240116; t=1718322631; c=relaxed/simple;
+	bh=9Rwb9V89e521vCos4JoUPsTmonIgE7LjwTwvWYKkfsY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=R6JL3T32dpiRhBsyFHCYh9e9gcZrvsNuvxo4GwXNhWw5gD5Kb6gycXBtEtNpKYWfAtXKmz3dbtRQY2bRbqFZw0EdI5MWch+RcuZpw3j+EC+ZpKmnRd+0ix6Jm5AdCef9NzU8lXvLriiXEMJZHOSGy4/d99Ipo+4hjIiMz62+WJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lleNsJm7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B3915C4AF1A;
+	Thu, 13 Jun 2024 23:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718322630;
+	bh=9Rwb9V89e521vCos4JoUPsTmonIgE7LjwTwvWYKkfsY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=lleNsJm722b8c7cL9urUpRTpFkcGroOwytrJTkgBdm84yhj46kL+T5x34yiqb9TnE
+	 IMhgD4yYgG0sj92nJLm+yw8qVz0BpN+Gd0xK3IOVbkAai3Cc+JlRS+/+l+4gwOugJs
+	 M3tGLjmn9l4etsHDK1cqTF3UZkM82FUxYZDiSaHdZDl/dxFz1BlpkfJFKnFAwVrsYr
+	 DSWJojpLt5kvOEnXsB4n11naVBPQO4T3sryCYVxF7hU7+ejdEzR4/JXh7oAw81ix3l
+	 yQc1QQaKP99M3mAMGzcCQuE1Kosn4n/aaDYvv8M3unyVxKyT1z4L6X6XyzVI1F11zu
+	 Yg7s1fviSoxsw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A27F5C43619;
+	Thu, 13 Jun 2024 23:50:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <w6ohbffl5wwmralg255ec7nozxksge4z4nnkmwncthxzhuv46d@qq46r2wrjlog>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v4] net: mana: Allow variable size indirection table
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171832263066.32226.1051481550894111174.git-patchwork-notify@kernel.org>
+Date: Thu, 13 Jun 2024 23:50:30 +0000
+References: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, colin.i.king@gmail.com, ahmed.zaki@intel.com,
+ pavan.chebbi@broadcom.com, schakrabarti@linux.microsoft.com,
+ kotaranov@microsoft.com, keescook@chromium.org, pabeni@redhat.com,
+ kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+ decui@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
+ kys@microsoft.com, leon@kernel.org, jgg@ziepe.ca, longli@microsoft.com,
+ shradhagupta@microsoft.com
 
-On Thu, Jun 13, 2024 at 04:41:00PM +0300, Kirill A. Shutemov wrote:
-> It is easy enough to do. See the patch below.
+Hello:
 
-Thanks, will have a look.
+This patch was applied to netdev/net-next.git (main)
+by Leon Romanovsky <leon@kernel.org>:
 
-> But I am not sure if I can justify it properly. If someone doesn't really
-> need 5-level paging, disabling it at compile-time would save ~34K of
-> kernel code with the configuration.
+On Mon, 10 Jun 2024 03:28:39 -0700 you wrote:
+> Allow variable size indirection table allocation in MANA instead
+> of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> indirection table is allocated dynamically.
 > 
-> Is it worth saving ~100 lines of code?
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> 
+> [...]
 
-Well, it goes both ways: is it worth saving ~34K kernel text and for that make
-the code a lot less conditional, more readable, contain less ugly ifdeffery,
-...?
+Here is the summary with links:
+  - [net-next,v4] net: mana: Allow variable size indirection table
+    https://git.kernel.org/netdev/net-next/c/7fc45cb68696
 
+You are awesome, thank you!
 -- 
-Regards/Gruss,
-    Boris.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
 
