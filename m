@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-2427-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2425-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B88D390890D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2024 12:02:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C335E908905
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2024 12:02:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15863B2089F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2024 10:02:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F887B21CC8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2024 10:02:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5AA19AD71;
-	Fri, 14 Jun 2024 09:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C241119A2BA;
+	Fri, 14 Jun 2024 09:59:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dBUsq7IU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FzPXUuOx"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7311F1991C9;
-	Fri, 14 Jun 2024 09:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF6A198A11;
+	Fri, 14 Jun 2024 09:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359168; cv=none; b=anZP/b2sDQtaC3uasFLFZhedZrRFAwzN3hi8Uy1UK0/QLAw3TReEEO+pVEezE4WKg/SmSyzIDVfrz65QVIkCjUSH2g5S/+Zrjvtb6JaJtT08auX9Fkp6imDJmL2JX8dOhr5hijdBgEpi8hhKCTdsfDl80dzevteLiFdLrJKJpuM=
+	t=1718359167; cv=none; b=dgJPnTAJscxdrC38XLdHL823/CcY1q/rDwkvU0UYosFbXicYuzzMm1gQRJxRqKYtdxzVSEQkL9xC7xkHDspe08qNNvUAZzQgBElexlMNMyN3erBQVYgWuUdz10mP2pWm39T5cdd8kh3AnZNl4QlBKDnqysd7HkUav0sk7zujx3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359168; c=relaxed/simple;
-	bh=8oUo3AHOPVWP0yU5bkr/khntypl8fcyNHpiWhFTzrxM=;
+	s=arc-20240116; t=1718359167; c=relaxed/simple;
+	bh=sMf7Bj61UHDCBOlFd+domeR/Su8pHK5UaLOkIveDSIM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kAbHY2zerKFmzla3gax30OmfhYPovQw2QJWgStRelOx+bqy+hW5n9u0vjt46qnFXCkHrH163HOoW9pSCSwJZp5ge+ZIIcn4hHosz0uH+wmIKqUAHwlzarp8VaSeh5fv/Sr6n/m4iisQ/J4nZmy1tCS3dh8wirHaoug9n/I0MsTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dBUsq7IU; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=Qy58I8DkC6gnhOB6o9CGkmlMnYISUa2X0glbbpDQvbVP+UGaHJETw1blFlpbWA1Gmv6D1ij7xqiLod0Jo7LSZXhYsrkW5240pv/yC+EX85JIdf8Z11qaDXMsIzuNUzRwj0/JNzDd454ra1SYkUYvbI/UiaShr3WC8h4RT4uxm/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FzPXUuOx; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718359167; x=1749895167;
+  t=1718359166; x=1749895166;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8oUo3AHOPVWP0yU5bkr/khntypl8fcyNHpiWhFTzrxM=;
-  b=dBUsq7IUJvThh12R2Dfr1CyTE0+SYosft7S2/KztpNqa7CStFThps8ti
-   WoGFZbRMdL72MBMtwfAaTHjPSoRh5+5p1sB2euT3R943kYzVJpu2MyGxw
-   ykC7E/Ks6oZAZG/06xh83oRHfcfoHaMqCWHt7h2FxeEZKr5dz8Be0PJZX
-   GXChuFH/NiX5ZUMiXmd1+TdiqHbDdbjzZfDXIAG05eNcNAoMikh0swrl1
-   nzjl85jt1zaeuwEsrUj3In1p8x0ccxeMaEyw0mv05hLpt/OMBIItRuU2g
-   fSuff+/omembAqb32gFDkw9oCon5GGBdBrC6Pi8Pf6l2XX51dyMw1SoGY
-   w==;
-X-CSE-ConnectionGUID: 5dm+aeuoTB67mW+f0bFDIQ==
-X-CSE-MsgGUID: QlNxbRalSK6eCDbTmyevHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="12072413"
+  bh=sMf7Bj61UHDCBOlFd+domeR/Su8pHK5UaLOkIveDSIM=;
+  b=FzPXUuOx3s9ht3Xap5S7ZE5sXyJ2Tb58N+7Dbw3WWm9GZ3HyZ5IQy7z8
+   TV7bL42bNEUp2bTSSlhmXp+TNT8gqQwUiHW4MdpK6L58Wyge+H4ef7M5P
+   0b6kEkRifWrtnRu6GaLOST2QZGR42tGASh3ag+t81+e20pIu/eNiEfuBU
+   1QN4hQ42PvfTuaXuk9vANiCxwrn+zhtT3gCFfYarsjz//StJsYA+qaJA1
+   Q+y4+vqqx8qVPA6IOzmcMz66u+ckpI+UurwWrtGzGIyandhTOZ21hH/FU
+   2j5D2B1xQzJYFtqEtYuYiUzAwPtv6yFzwbWp8lJBo9ueqAHUCk5glb+rT
+   g==;
+X-CSE-ConnectionGUID: l4QEdaOJQyO5EJv1isj1HQ==
+X-CSE-MsgGUID: N/Y0B8npQ1e0sAahZmyR7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="15466705"
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="12072413"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 02:59:23 -0700
-X-CSE-ConnectionGUID: 2Dv0h5crS2SCvOXbhTbfqg==
-X-CSE-MsgGUID: RQ2MZZXZRgyJxhuHgeaElw==
+   d="scan'208";a="15466705"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 02:59:23 -0700
+X-CSE-ConnectionGUID: 7bkpa9pFTPyeRcUwRDQleg==
+X-CSE-MsgGUID: U27jgO9IS663GpcuAt7e1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="44995857"
+   d="scan'208";a="77930013"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 14 Jun 2024 02:59:17 -0700
+  by orviesa001.jf.intel.com with ESMTP; 14 Jun 2024 02:59:17 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 130AB2AF1; Fri, 14 Jun 2024 12:59:09 +0300 (EEST)
+	id 2074B2B0D; Fri, 14 Jun 2024 12:59:09 +0300 (EEST)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -88,10 +88,11 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-acpi@vger.kernel.org,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
 	Tao Liu <ltao@redhat.com>
-Subject: [PATCHv12 11/19] x86/tdx: Convert shared memory back to private on kexec
-Date: Fri, 14 Jun 2024 12:58:56 +0300
-Message-ID: <20240614095904.1345461-12-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv12 12/19] x86/mm: Make e820__end_ram_pfn() cover E820_TYPE_ACPI ranges
+Date: Fri, 14 Jun 2024 12:58:57 +0300
+Message-ID: <20240614095904.1345461-13-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com>
 References: <20240614095904.1345461-1-kirill.shutemov@linux.intel.com>
@@ -103,253 +104,74 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-TDX guests allocate shared buffers to perform I/O. It is done by
-allocating pages normally from the buddy allocator and converting them
-to shared with set_memory_decrypted().
+e820__end_of_ram_pfn() is used to calculate max_pfn which, among other
+things, guides where direct mapping ends. Any memory above max_pfn is
+not going to be present in the direct mapping.
 
-The second, kexec-ed kernel has no idea what memory is converted this
-way. It only sees E820_TYPE_RAM.
+e820__end_of_ram_pfn() finds the end of the RAM based on the highest
+E820_TYPE_RAM range. But it doesn't includes E820_TYPE_ACPI ranges into
+calculation.
 
-Accessing shared memory via private mapping is fatal. It leads to
-unrecoverable TD exit.
+Despite the name, E820_TYPE_ACPI covers not only ACPI data, but also EFI
+tables and might be required by kernel to function properly.
 
-On kexec walk direct mapping and convert all shared memory back to
-private. It makes all RAM private again and second kernel may use it
-normally.
+Usually the problem is hidden because there is some E820_TYPE_RAM memory
+above E820_TYPE_ACPI. But crashkernel only presents pre-allocated crash
+memory as E820_TYPE_RAM on boot. If the preallocated range is small, it
+can fit under the last E820_TYPE_ACPI range.
 
-The conversion occurs in two steps: stopping new conversions and
-unsharing all memory. In the case of normal kexec, the stopping of
-conversions takes place while scheduling is still functioning. This
-allows for waiting until any ongoing conversions are finished. The
-second step is carried out when all CPUs except one are inactive and
-interrupts are disabled. This prevents any conflicts with code that may
-access shared memory.
+Modify e820__end_of_ram_pfn() and e820__end_of_low_ram_pfn() to cover
+E820_TYPE_ACPI memory.
+
+The problem was discovered during debugging kexec for TDX guest. TDX
+guest uses E820_TYPE_ACPI to store the unaccepted memory bitmap and pass
+it between the kernels on kexec.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 Tested-by: Tao Liu <ltao@redhat.com>
 ---
- arch/x86/coco/tdx/tdx.c           | 94 +++++++++++++++++++++++++++++++
- arch/x86/include/asm/pgtable.h    |  5 ++
- arch/x86/include/asm/set_memory.h |  3 +
- arch/x86/mm/pat/set_memory.c      | 42 +++++++++++++-
- 4 files changed, 141 insertions(+), 3 deletions(-)
+ arch/x86/kernel/e820.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 979891e97d83..078e2bac2553 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -7,6 +7,7 @@
- #include <linux/cpufeature.h>
- #include <linux/export.h>
- #include <linux/io.h>
-+#include <linux/kexec.h>
- #include <asm/coco.h>
- #include <asm/tdx.h>
- #include <asm/vmx.h>
-@@ -14,6 +15,7 @@
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
- #include <asm/pgtable.h>
-+#include <asm/set_memory.h>
- 
- /* MMIO direction */
- #define EPT_READ	0
-@@ -831,6 +833,95 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
- 	return 0;
- }
- 
-+/* Stop new private<->shared conversions */
-+static void tdx_kexec_begin(void)
-+{
-+	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+		return;
-+
-+	/*
-+	 * Crash kernel reaches here with interrupts disabled: can't wait for
-+	 * conversions to finish.
-+	 *
-+	 * If race happened, just report and proceed.
-+	 */
-+	if (!set_memory_enc_stop_conversion())
-+		pr_warn("Failed to stop shared<->private conversions\n");
-+}
-+
-+/* Walk direct mapping and convert all shared memory back to private */
-+static void tdx_kexec_finish(void)
-+{
-+	unsigned long addr, end;
-+	long found = 0, shared;
-+
-+	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+		return;
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	addr = PAGE_OFFSET;
-+	end  = PAGE_OFFSET + get_max_mapped();
-+
-+	while (addr < end) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
-+
-+		pte = lookup_address(addr, &level);
-+		size = page_level_size(level);
-+
-+		if (pte && pte_decrypted(*pte)) {
-+			int pages = size / PAGE_SIZE;
-+
-+			/*
-+			 * Touching memory with shared bit set triggers implicit
-+			 * conversion to shared.
-+			 *
-+			 * Make sure nobody touches the shared range from
-+			 * now on.
-+			 */
-+			set_pte(pte, __pte(0));
-+
-+			/*
-+			 * Memory encryption state persists across kexec.
-+			 * If tdx_enc_status_changed() fails in the first
-+			 * kernel, it leaves memory in an unknown state.
-+			 *
-+			 * If that memory remains shared, accessing it in the
-+			 * *next* kernel through a private mapping will result
-+			 * in an unrecoverable guest shutdown.
-+			 *
-+			 * The kdump kernel boot is not impacted as it uses
-+			 * a pre-reserved memory range that is always private.
-+			 * However, gathering crash information could lead to
-+			 * a crash if it accesses unconverted memory through
-+			 * a private mapping which is possible when accessing
-+			 * that memory through /proc/vmcore, for example.
-+			 *
-+			 * In all cases, print error info in order to leave
-+			 * enough bread crumbs for debugging.
-+			 */
-+			if (!tdx_enc_status_changed(addr, pages, true)) {
-+				pr_err("Failed to unshare range %#lx-%#lx\n",
-+				       addr, addr + size);
-+			}
-+
-+			found += pages;
-+		}
-+
-+		addr += size;
-+	}
-+
-+	__flush_tlb_all();
-+
-+	shared = atomic_long_read(&nr_shared);
-+	if (shared != found) {
-+		pr_err("shared page accounting is off\n");
-+		pr_err("nr_shared = %ld, nr_found = %ld\n", shared, found);
-+	}
-+}
-+
- void __init tdx_early_init(void)
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 68b09f718f10..4893d30ce438 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -828,7 +828,7 @@ u64 __init e820__memblock_alloc_reserved(u64 size, u64 align)
+ /*
+  * Find the highest page frame number we have available
+  */
+-static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
++static unsigned long __init e820__end_ram_pfn(unsigned long limit_pfn)
  {
- 	struct tdx_module_args args = {
-@@ -890,6 +981,9 @@ void __init tdx_early_init(void)
- 	x86_platform.guest.enc_cache_flush_required  = tdx_cache_flush_required;
- 	x86_platform.guest.enc_tlb_flush_required    = tdx_tlb_flush_required;
+ 	int i;
+ 	unsigned long last_pfn = 0;
+@@ -839,7 +839,8 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
+ 		unsigned long start_pfn;
+ 		unsigned long end_pfn;
  
-+	x86_platform.guest.enc_kexec_begin	     = tdx_kexec_begin;
-+	x86_platform.guest.enc_kexec_finish	     = tdx_kexec_finish;
-+
- 	/*
- 	 * TDX intercepts the RDMSR to read the X2APIC ID in the parallel
- 	 * bringup low level code. That raises #VE which cannot be handled
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 65b8e5bb902c..e39311a89bf4 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -140,6 +140,11 @@ static inline int pte_young(pte_t pte)
- 	return pte_flags(pte) & _PAGE_ACCESSED;
- }
+-		if (entry->type != type)
++		if (entry->type != E820_TYPE_RAM &&
++		    entry->type != E820_TYPE_ACPI)
+ 			continue;
  
-+static inline bool pte_decrypted(pte_t pte)
-+{
-+	return cc_mkdec(pte_val(pte)) == pte_val(pte);
-+}
-+
- #define pmd_dirty pmd_dirty
- static inline bool pmd_dirty(pmd_t pmd)
+ 		start_pfn = entry->addr >> PAGE_SHIFT;
+@@ -865,12 +866,12 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
+ 
+ unsigned long __init e820__end_of_ram_pfn(void)
  {
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 9aee31862b4a..4b2abce2e3e7 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -49,8 +49,11 @@ int set_memory_wb(unsigned long addr, int numpages);
- int set_memory_np(unsigned long addr, int numpages);
- int set_memory_p(unsigned long addr, int numpages);
- int set_memory_4k(unsigned long addr, int numpages);
-+
-+bool set_memory_enc_stop_conversion(void);
- int set_memory_encrypted(unsigned long addr, int numpages);
- int set_memory_decrypted(unsigned long addr, int numpages);
-+
- int set_memory_np_noalias(unsigned long addr, int numpages);
- int set_memory_nonglobal(unsigned long addr, int numpages);
- int set_memory_global(unsigned long addr, int numpages);
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index a7a7a6c6a3fb..443a97e515c0 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2227,12 +2227,48 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 	return ret;
+-	return e820_end_pfn(MAX_ARCH_PFN, E820_TYPE_RAM);
++	return e820__end_ram_pfn(MAX_ARCH_PFN);
  }
  
-+/*
-+ * The lock serializes conversions between private and shared memory.
-+ *
-+ * It is taken for read on conversion. A write lock guarantees that no
-+ * concurrent conversions are in progress.
-+ */
-+static DECLARE_RWSEM(mem_enc_lock);
-+
-+/*
-+ * Stop new private<->shared conversions.
-+ *
-+ * Taking the exclusive mem_enc_lock waits for in-flight conversions to complete.
-+ * The lock is not released to prevent new conversions from being started.
-+ */
-+bool set_memory_enc_stop_conversion(void)
-+{
-+	/*
-+	 * In a crash scenario, sleep is not allowed. Try to take the lock.
-+	 * Failure indicates that there is a race with the conversion.
-+	 */
-+	if (oops_in_progress)
-+		return down_write_trylock(&mem_enc_lock);
-+
-+	down_write(&mem_enc_lock);
-+
-+	return true;
-+}
-+
- static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+ unsigned long __init e820__end_of_low_ram_pfn(void)
  {
--	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
--		return __set_memory_enc_pgtable(addr, numpages, enc);
-+	int ret = 0;
- 
--	return 0;
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
-+		if (!down_read_trylock(&mem_enc_lock))
-+			return -EBUSY;
-+
-+		ret = __set_memory_enc_pgtable(addr, numpages, enc);
-+
-+		up_read(&mem_enc_lock);
-+	}
-+
-+	return ret;
+-	return e820_end_pfn(1UL << (32 - PAGE_SHIFT), E820_TYPE_RAM);
++	return e820__end_ram_pfn(1UL << (32 - PAGE_SHIFT));
  }
  
- int set_memory_encrypted(unsigned long addr, int numpages)
+ static void __init early_panic(char *msg)
 -- 
 2.43.0
 
