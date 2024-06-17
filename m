@@ -1,112 +1,79 @@
-Return-Path: <linux-hyperv+bounces-2442-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2443-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADAC790B539
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2024 17:51:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26EA990BA67
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2024 21:00:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 645241F23F18
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2024 15:51:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA6ED1F22C05
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2024 19:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6749D14AAD;
-	Mon, 17 Jun 2024 15:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29FC5198838;
+	Mon, 17 Jun 2024 19:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="b6PfhvWe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3/sANzz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D24134DE;
-	Mon, 17 Jun 2024 15:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D6C1741CD;
+	Mon, 17 Jun 2024 19:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718638102; cv=none; b=WnPDjgpKAJRa9tZXAN7Jz+Jh0xB7979wMMjAnOugFjZbXO7EKE7G+YqugTRCgCs+0kw/Wzvwi904HjSzTR+33kpF2Hqmgnvy18Aa/FqGb3Jw0iwsrZEMie+GhBxWtDWpkVT488m23IkPPjjEQuZxC4QUjBTH29MXHpgmx2mD34w=
+	t=1718650841; cv=none; b=A5MRcB8oB5CrdmL2jqokn+P5fLqfKkWeXnv1Z4PqXLY4upjogwWgzaA9FtEfS6UO86ZAszqTn/pQ6sDfykBbUonfJfADBkxKwr4+rartxrN3BFHShXOBdJ7uC5uJVE2b/XIIeugZpzD9Xtupwc1gq/YRjs+DFBVLxXMCafmNjYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718638102; c=relaxed/simple;
-	bh=1dDye3xMz9kCshlVTroWnygLjhXc9vMSQN03NQdnELM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=URTc+fSo65ZjIWElw2kifNh6Db2eII44go/8rWVe3RQuQEar/jRilNCsHIV0n7Yy4aSl4LuprJ7YgOLXWLadnsJ1XoptQbIPG+dZ7Y3+3jQ+XccgpTpiPg2YzRTCF3EGckVL+IdaHtNXoTMtL3IpB51TKAWDTwB4wKK1hKB66jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=b6PfhvWe; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718638096; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=l+12FevlX3fdnfHXW0LMF9KRFfVUfjKWXSd2yQeA1ZQ=;
-	b=b6PfhvWejcbXIWb0eUa8M/7QGPtM8N+KrmHU5QCUWBZP7UzfV+3aagQ/4LygyR5pWIcB401HcNlDV+EYRgxr4TOWcDIdvjmmV5b0DoaDQi7qA02h2fRX4tAZRAyKrjiWjn6j2EM2GF75gtt+9Q45FVymrVdpHXzdD/2T0a6wmw4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W8gs1NW_1718638094;
-Received: from 30.15.205.40(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W8gs1NW_1718638094)
-          by smtp.aliyun-inc.com;
-          Mon, 17 Jun 2024 23:28:15 +0800
-Message-ID: <2f77825b-c6db-491a-867d-1d7d357ea2a3@linux.alibaba.com>
-Date: Mon, 17 Jun 2024 23:28:14 +0800
+	s=arc-20240116; t=1718650841; c=relaxed/simple;
+	bh=zAsGAyMXxFvkRg/djLZNz8tnkKkMGOudgMy5giKZRZU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AvpoqRd9eD/bhAhHO4/GQMv+Xi+zVmtw9jiuYL6PqRBbspkuBJlvfrpUh7FXa+jdMosryHBrnOLT1N3u62qcs3bfGi5qHKVdBCR8MdBpyBe3y5OovX02bvh3MwLivMekR2Lwu1+1+cY08P7txuvxz/i9uPOZEFhp7AV1lheNJVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3/sANzz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A360C2BD10;
+	Mon, 17 Jun 2024 19:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718650840;
+	bh=zAsGAyMXxFvkRg/djLZNz8tnkKkMGOudgMy5giKZRZU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=W3/sANzzdH+GCg32P0uTEqwiSvt6pqst0ko0+bfuMiOIrJsBkZwcjgEBVj5Zk95A4
+	 aPKTfOPd/makh3sqgsrYErkZdxwd+OlT3Y5cY4fXBvpUD0l2NqW0x7IH+NOPnGbjfC
+	 u8pueE8ckXvlRulIDMpkG1PWm63bEkfieF98jqN7QT3x4HUL5gsbGKHX/pFRFPe3gf
+	 wbAI2UPeA0li1JhrLc1BLgDgUpoim4lyOWNlNvJe0hK99CinZpy11+kqQrg0hVLFef
+	 x1XddueU7k+9k81OCqjgBC+oBCStukCqQ70i3mMfJ/y/d9UZ5LLzbBo6XZmv1r/rF/
+	 BkMEWoyus6dYQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6A68AC4361A;
+	Mon, 17 Jun 2024 19:00:40 +0000 (UTC)
+Subject: Re: [GIT PULL] Hyper-V fixes for v6.10-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Zm_hlTTK0pZFMujj@liuwe-devbox-debian-v2>
+References: <Zm_hlTTK0pZFMujj@liuwe-devbox-debian-v2>
+X-PR-Tracked-List-Id: <linux-hyperv.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Zm_hlTTK0pZFMujj@liuwe-devbox-debian-v2>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20240616
+X-PR-Tracked-Commit-Id: 831bcbcead6668ebf20b64fdb27518f1362ace3a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6226e74900d7c106c7c86b878dc6779cfdb20c2b
+Message-Id: <171865084041.27486.2889459138073270147.pr-tracker-bot@kernel.org>
+Date: Mon, 17 Jun 2024 19:00:40 +0000
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: mana: Use mana_cleanup_port_context() for
- rxq cleanup
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
- Erick Archer <erick.archer@outlook.com>,
- Konstantin Taranov <kotaranov@microsoft.com>, Simon Horman
- <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- "David S. Miller" <davem@davemloft.net>, Dexuan Cui <decui@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Shradha Gupta <shradhagupta@microsoft.com>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
- linux-hyperv@vger.kernel.org
-References: <1718349548-28697-1-git-send-email-shradhagupta@linux.microsoft.com>
-From: Heng Qi <hengqi@linux.alibaba.com>
-In-Reply-To: <1718349548-28697-1-git-send-email-shradhagupta@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+The pull request you sent on Mon, 17 Jun 2024 07:11:17 +0000:
 
-在 2024/6/14 下午3:19, Shradha Gupta 写道:
-> To cleanup rxqs in port context structures, instead of duplicating the
-> code, use existing function mana_cleanup_port_context() which does
-> the exact cleanup that's needed.
->
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->   drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index b89ad4afd66e..93e526e5dd16 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -2529,8 +2529,7 @@ static int mana_init_port(struct net_device *ndev)
->   	return 0;
->   
->   reset_apc:
-> -	kfree(apc->rxqs);
-> -	apc->rxqs = NULL;
-> +	mana_cleanup_port_context(apc);
->   	return err;
->   }
->   
-> @@ -2787,8 +2786,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
->   free_indir:
->   	mana_cleanup_indir_table(apc);
->   reset_apc:
-> -	kfree(apc->rxqs);
-> -	apc->rxqs = NULL;
-> +	mana_cleanup_port_context(apc);
->   free_net:
->   	*ndev_storage = NULL;
->   	netdev_err(ndev, "Failed to probe vPort %d: %d\n", port_idx, err);
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20240616
 
-Reviewed-by: Heng Qi <hengqi@linux.alibaba.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6226e74900d7c106c7c86b878dc6779cfdb20c2b
 
-Thanks!
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
