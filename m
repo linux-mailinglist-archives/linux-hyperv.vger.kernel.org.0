@@ -1,146 +1,160 @@
-Return-Path: <linux-hyperv+bounces-2459-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2460-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8126911204
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Jun 2024 21:23:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2D7C91122F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Jun 2024 21:34:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88568285B3B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Jun 2024 19:23:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6A721C22ABC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Jun 2024 19:34:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A57D61B47BA;
-	Thu, 20 Jun 2024 19:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BFE41B5838;
+	Thu, 20 Jun 2024 19:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HFoeBB5g"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QXOI90px"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4039F22EED;
-	Thu, 20 Jun 2024 19:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C0B1B47BA
+	for <linux-hyperv@vger.kernel.org>; Thu, 20 Jun 2024 19:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718911388; cv=none; b=I0Hg/uE+Fq4nU4Wh6DGF8AOyMcQvVScKHuVYOm11T3iGJ7GeaOEt8BuLbGU8U+J0AE1HhsdqUgZbbs/OneKdF5bHz4feGiUx37PZIQXM9fi/GfZdVK6LSD5EBRAFS/Ly+3zbN1AYn0p36FemmwZLwiFYkRli61Rdwbm71CsRXd4=
+	t=1718912053; cv=none; b=itqMXzq7opZtcNbZPBEYiWlazvjvq9yOLQq5rGFYAAcUMLh4giU5UvwzGZmHkFsR1SHy+gz/FlIw2gSXlx2djrmc4jPEOmBMqU13EYvKF9E+iu39bwNizvQ6TXIf/LGWTcUak2A6Jqit4FKf7fXVWJszQ7aITPgL4H6iPl9uMsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718911388; c=relaxed/simple;
-	bh=eCMeN0lzP9UrNuCqV1ZUPlK/kylfQtBMoQitfd2StEg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MY0dzFy/+NKqnpOFjIgCkJo5tQ62454aY3KLabv6MtqrmVNz+P4HqOilML/m156Qo5Ebz0912SoliglvzNhZZk0/7MVgYDg6CFsPMEaa7Ff++vzzmHV8xVr9fC4akEiVL0BOeIBONrCvDcoDpoul0q9zZZRzbCKtBpMlHR3mdmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HFoeBB5g; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.186.190] (unknown [131.107.159.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7CB4820B7004;
-	Thu, 20 Jun 2024 12:23:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7CB4820B7004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1718911386;
-	bh=VnHT0brBrdifbJ8+mZwZG6m8zfp7b8yTRmWCV073osI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HFoeBB5gWFzriPUx6xUfOnLsQp1SheK3ziWa/tKzSJUUEVOUJd5CPp494VhSQzrd2
-	 wuwUVA6hrCT0b2rfagoubPI6/uY0sifbenRqgzK2QQtUmcj2+dDG/43GRpDUxIAEkV
-	 fVqMZMOsGH3HKSggFYXc/mqR+frM4fMFR6uxsR+Y=
-Message-ID: <d0382b2a-2d8f-45f3-a29b-0bd49103a182@linux.microsoft.com>
-Date: Thu, 20 Jun 2024 12:23:06 -0700
+	s=arc-20240116; t=1718912053; c=relaxed/simple;
+	bh=LMJhwXKqZKwDoZfSA47gsl66tl0ZA7Fm/pP5alDoprs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BlnmuZfZOkY2gr6exyyCHaa+Ul2ktc2CGRyyk8FbSFqDOL0Q/x62hR+LBU9ivwRxTpJeAV6yRlTL1tHhW+xByPb5VSNIg+x3E9sPVBnK1phUr1hqY8cLGpwMQ7A/waUjh5FouueMOnb8y7A6avqnv71aW6RpkEadLay067iDIwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QXOI90px; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f0c3d0792so153727166b.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 20 Jun 2024 12:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1718912050; x=1719516850; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rxmltmQrKwAluprbf/AG1nvFIcYg57/7dnDwU0ucSDg=;
+        b=QXOI90px2q8/Dlj4Zbxqp6s21gmTYByGAui55zg+dh8gr+tK1+PxZ9gZsP42Slw8/v
+         SZeP5Ze5X2K0UbccNT4FHsJkojy3+DW7AF72GTsclM4Cz85ZENfCWdT2hUkPviZ30sFZ
+         GXzCB2pCiyeX2SbUHuhl2mydxcxulQxcVpAkw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718912050; x=1719516850;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rxmltmQrKwAluprbf/AG1nvFIcYg57/7dnDwU0ucSDg=;
+        b=JihpxU5bWRoJOdxp5wbVXJl3a7kZKiJ53hpa+5Irh7et+v8Fi7X40crP8Ufs/g7jn2
+         nW4V4b5SU3hoeMtK0aXrq1hr2fzjtNsZaJs/xkLQSgjXhi4OU4WjUnsBoECPlkFiUJwX
+         2ZaV4Ob/SQc2SE86cMzdsdzDvcilkSPTXE2jz5pEGfhiatAtaT/HUd74BS7z2HgIXMxW
+         DJMf4h94xdVIOEajya93vtwjIsb3FcdCoC090uTGbKWcrlGEZQkbWwjeESbl4FdT7Kt/
+         Cl/haghtC2TBHT8KT1qnfr/MlQqLRdGtBUAhzZs5jDzJTp+SAEffk3xWN/sqEso2QPuX
+         GVxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGoJa0ygA/xnUinB4GhrNH7ZihpV0g50P/mNWuaZcgNespLTKA2bPkB4a2PLAyvL07MadgLVpLG2pYPyWdsNQRxtY2GsWgtJRm97uf
+X-Gm-Message-State: AOJu0YzpqbkE3RazIw9rtvo53/cElybVS2uhSs1AWkhfqqqyVNM0T3hl
+	FDotpIiVM0eSqAy3G/L6lh4a115RygtisUMnv8iL+b9p0dAsJNNsjN26Jf36J3hdq5hLKR17aHT
+	YpMpe8mPQ
+X-Google-Smtp-Source: AGHT+IExNoAuDX/vGAL9xPvGrNHik0xX3PyfPAaOakzwHS9ZRaLqfkgosDCSgJhCA7chbnhYSU2/Ig==
+X-Received: by 2002:a17:906:13d8:b0:a6f:4dfc:5f31 with SMTP id a640c23a62f3a-a6fab7d0af8mr365859466b.73.1718912049757;
+        Thu, 20 Jun 2024 12:34:09 -0700 (PDT)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf48b445sm3635866b.82.2024.06.20.12.34.09
+        for <linux-hyperv@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jun 2024 12:34:09 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-364b2f92388so875750f8f.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 20 Jun 2024 12:34:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXSKN+ryNY3jEtfz5Xu5ObYBoJCWJFUrEPRoA46qSVYthQ5Aoy8ca/NjRajTQNgf5KHJjOLvPUi3dlzl4LZBIpEbM1do5LE5Bai/C8z
+X-Received: by 2002:a5d:6152:0:b0:35f:308a:cab0 with SMTP id
+ ffacd0b85a97d-363170ecbe5mr4379764f8f.13.1718911595412; Thu, 20 Jun 2024
+ 12:26:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clocksource: hyper-v: Use lapic timer in a TDX VM without
- paravisor
-To: Dexuan Cui <decui@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Daniel Lezcano
- <daniel.lezcano@linaro.org>,
- "open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>
-Cc: stable@vger.kernel.org
-References: <20240619002504.3652-1-decui@microsoft.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20240619002504.3652-1-decui@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240620175703.605111-1-yury.norov@gmail.com> <CAHk-=wiUTXC452qbypG3jW6XCZGfc8d-iehSavxn5JkQ=sv0zA@mail.gmail.com>
+ <ZnR1tQN01kN97G_F@yury-ThinkPad>
+In-Reply-To: <ZnR1tQN01kN97G_F@yury-ThinkPad>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 20 Jun 2024 12:26:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjv-DkukaKb7f04WezyPjRERp=xfxv34j5fA8cDQ_JudA@mail.gmail.com>
+Message-ID: <CAHk-=wjv-DkukaKb7f04WezyPjRERp=xfxv34j5fA8cDQ_JudA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/40] lib/find: add atomic find_bit() primitives
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	"H. Peter Anvin" <hpa@zytor.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, "Md. Haris Iqbal" <haris.iqbal@ionos.com>, 
+	Akinobu Mita <akinobu.mita@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	Christian Brauner <brauner@kernel.org>, Damien Le Moal <damien.lemoal@opensource.wdc.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Disseldorp <ddiss@suse.de>, 
+	Edward Cree <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>, 
+	Fenghua Yu <fenghua.yu@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Greenman <gregory.greenman@intel.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>, 
+	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>, 
+	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
+	Karsten Graul <kgraul@linux.ibm.com>, Karsten Keil <isdn@linux-pingi.de>, 
+	Kees Cook <keescook@chromium.org>, Leon Romanovsky <leon@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Martin Habets <habetsm.xilinx@gmail.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, 
+	Nicholas Piggin <npiggin@gmail.com>, Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Sean Christopherson <seanjc@google.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>, Stanislaw Gruszka <stf_xl@wp.pl>, 
+	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+	Will Deacon <will@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org, 
+	ath10k@lists.infradead.org, dmaengine@vger.kernel.org, iommu@lists.linux.dev, 
+	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-media@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-net-drivers@amd.com, 
+	linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	mpi3mr-linuxdrv.pdl@broadcom.com, netdev@vger.kernel.org, 
+	sparclinux@vger.kernel.org, x86@kernel.org, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>, 
+	Matthew Wilcox <willy@infradead.org>, Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Shtylyov <s.shtylyov@omp.ru>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 20 Jun 2024 at 11:32, Yury Norov <yury.norov@gmail.com> wrote:
+>
+> Is that in master already? I didn't get any email, and I can't find
+> anything related in the master branch.
 
+It's 5d272dd1b343 ("cpumask: limit FORCE_NR_CPUS to just the UP case").
 
-On 6/18/2024 5:25 PM, Dexuan Cui wrote:
-> In a TDX VM without paravisor, currently the default timer is the Hyper-V
-> timer, which depends on the slow VM Reference Counter MSR: the Hyper-V TSC
-> page is not enabled in such a VM because the VM uses Invariant TSC as a
-> better clocksource and it's challenging to mark the Hyper-V TSC page shared
-> in very early boot.
-> 
-> Lower the rating of the Hyper-V timer so the local APIC timer becomes the
-> the default timer in such a VM. This change should cause no perceivable
-> performance difference.
-> 
-> Cc: stable@vger.kernel.org # 6.6+
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->   arch/x86/kernel/cpu/mshyperv.c     |  6 +++++-
->   drivers/clocksource/hyperv_timer.c | 16 +++++++++++++++-
->   2 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index e0fd57a8ba840..745af47ca0459 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -449,9 +449,13 @@ static void __init ms_hyperv_init_platform(void)
->   			ms_hyperv.hints &= ~HV_X64_APIC_ACCESS_RECOMMENDED;
->   
->   			if (!ms_hyperv.paravisor_present) {
-> -				/* To be supported: more work is required.  */
-> +				/* Use Invariant TSC as a better clocksource. */
->   				ms_hyperv.features &= ~HV_MSR_REFERENCE_TSC_AVAILABLE;
->   
-> +				/* Use the Ref Counter in case Invariant TSC is unavailable. */
-> +				if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
-> +					pr_warn("Hyper-V: Invariant TSC is unavailable\n");
-> +
->   				/* HV_MSR_CRASH_CTL is unsupported. */
->   				ms_hyperv.misc_features &= ~HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
->   
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index b2a080647e413..99177835cadec 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -137,7 +137,21 @@ static int hv_stimer_init(unsigned int cpu)
->   	ce->name = "Hyper-V clockevent";
->   	ce->features = CLOCK_EVT_FEAT_ONESHOT;
->   	ce->cpumask = cpumask_of(cpu);
-> -	ce->rating = 1000;
-> +
-> +	/*
-> +	 * Lower the rating of the Hyper-V timer in a TDX VM without paravisor,
-> +	 * so the local APIC timer (lapic_clockevent) is the default timer in
-> +	 * such a VM. The Hyper-V timer is not preferred in such a VM because
-> +	 * it depends on the slow VM Reference Counter MSR (the Hyper-V TSC
-> +	 * page is not enbled in such a VM because the VM uses Invariant TSC
-> +	 * as a better clocksource and it's challenging to mark the Hyper-V
-> +	 * TSC page shared in very early boot).
-> +	 */
-> +	if (!ms_hyperv.paravisor_present && hv_isolation_type_tdx())
-> +		ce->rating = 90;
-> +	else
-> +		ce->rating = 1000;
-> +
->   	ce->set_state_shutdown = hv_ce_shutdown;
->   	ce->set_state_oneshot = hv_ce_set_oneshot;
->   	ce->set_next_event = hv_ce_set_next_event;
+> > New rule: before you send some optimization, you need to have NUMBERS.
+>
+> I tried to underline that it's not a performance optimization at my
+> best.
 
-LGTM.
+If it's not about performance, then it damn well shouldn't be 90%
+inline functions in a header file.
 
-Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+If it's a helper function, it needs to be a real function elsewhere. Not this:
 
--- 
-Thank you,
-Roman
+ include/linux/find_atomic.h                  | 324 +++++++++++++++++++
+
+because either performance really matters, in which case you need to
+show profiles, or performance doesn't matter, in which case it damn
+well shouldn't have special cases for small bitsets that double the
+size of the code.
+
+              Linus
 
