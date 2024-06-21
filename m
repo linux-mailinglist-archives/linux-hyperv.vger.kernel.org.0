@@ -1,117 +1,161 @@
-Return-Path: <linux-hyperv+bounces-2474-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2475-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CAA8912994
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Jun 2024 17:26:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC52912D62
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Jun 2024 20:41:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B759EB270EB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Jun 2024 15:18:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E083B1C25C40
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Jun 2024 18:41:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87214F8BB;
-	Fri, 21 Jun 2024 15:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B106017B40F;
+	Fri, 21 Jun 2024 18:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="soE/sBnO"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="a0iHPEoi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2027.outbound.protection.outlook.com [40.92.23.27])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2124.outbound.protection.outlook.com [40.107.236.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171AE38DE1;
-	Fri, 21 Jun 2024 15:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974A517B411;
+	Fri, 21 Jun 2024 18:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718983119; cv=fail; b=RXobiIr9ha7hwljajaXK2ARLAQFl0NNXOAbKn3jhUt+uynueyBAc0WU1PQhzEW12GGiLSMhiI99R6NuhrwDROz+tpi/jaB/KLQyDv7wC/5cWDD3OFvqVNymGgUz2qE7XoMEjYeWIFEi6SKjsgU1OJ8IJP3RtyZJ8qHrVgqY/Xx0=
+	t=1718995269; cv=fail; b=WSjRUbYewDXQrx10cgnRSymv6VGJUHaz6i22SSmsK/JE2jZ7qBSOaXUtSCgZmL67Ix+aqOKiqC0Zp9m6PPhHgv1X7VY3K9FcYXKNccfzFr4uL4JWwyeqaTRtrMoVZH6vJFoGZ/uTof+QGTu8IXqXr4trf8/AbWU7lnqjBJnB1Jw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718983119; c=relaxed/simple;
-	bh=SRHwyjZXTEaCiZnoY9QUdRUkB2ktF+ALQo37gRdq7SI=;
+	s=arc-20240116; t=1718995269; c=relaxed/simple;
+	bh=E5+8h7o3q52BzuKPJWZAnVY4+zOsfJdDlvgiZaI6520=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PQTckGvYGc+YwI/KSSbmgkJfnrYfZTtHOIURq6CUDhlvVhG4n0rwKyFHlpgXS5hpom3xQqvZ1dFD3NK8fm6mI7T5KpbkJy+w8Crk50CuQp9eseiqs5WNdTrYFyOT7ne7CLMCaJSCl2usHFQPTTZi7s07vkTCtt5NlFzZNKkuDMw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=soE/sBnO; arc=fail smtp.client-ip=40.92.23.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	 Content-Type:MIME-Version; b=L5G/jDuKO9UgsKYnRzJNyK37YcIpZ8QuZcn2kzaLtDqg7sit71C7NLty1C3jhppa+7U7Q9ef5r785/5BQN3oriesgJ2obm1BJV7PlXW8oskMvR+YmYtiZSasFV7WcY1XmTHik/NW8mZ1ujEibZOS6Z+C/DAUKcno1gvFNziW2I8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=a0iHPEoi; arc=fail smtp.client-ip=40.107.236.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BH2HTfFN4k85dkdAPIilQ3XY8kBCO3X9DrdsbHyBSqVg5NgQghv1OMWXYfFGYjrlx5dbNBJKreDWpr0FyYZUjcQ4ZfGKtAzmWpCPJskLoJqmZcHHs9TexoMnYlR/JZsZOqsP8izgPkdUevX8tiDH5puyflXKfcokeuxEeduOdgtkQIuJsYBYQSKP5R5XJlAm4mle/cVC0QhFL5HV75q2Ydb/fl6kQ4SQg4ai2jmdoayWVNvVDa1bEgxMfvXeefkCsrm7JlOZkpDwlTfdieZ8tsKjxp2b1LrLX+uSbcQ6O9bMv+OZsEgy47H6kbEqmmjqroSyWMaQoDVWD38TVFx9jQ==
+ b=gPmn3RkxwfG+mN9fi7iquZGNzh0n80wW1z+Ct7ZVw+ApKImBRM8cMa4NefiQSq/7TMnNrP3Qnl3Eu9SVRGc3JQHgqgV3OHSBKOK9GCY8OH6zq0ckYe8g71Hk5NeUUfNqhkNO0lLujYIRuk+zF4tTRI5spmjkv7USksPA4VJ9jJ2/hbzLkiDqik+7VaAUU5nS8+azZyW+dJZ/Gfd5mOEzOlfXt8WpfFzpsYwuhWrkE4R5HpNjj5HZAEQ81EUcBJmQahaSG1Fe6AT3aLK4eD6B/6QLGfLqt0R6dzlSG+766DlxrQgNfkzU92R5uR02yYf3WDigz56psj+x3RNiYhPPgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HF1y6NiatmkPVsUBu2jZEF2IEgCXTGFfvNOsLwWzJSE=;
- b=Ivs3qy/D9kbfYFCw5NU6oYLdllLlUW878ZVbyommK8JpwfqmW+vFk31MARqQeCH2x8YjfF80P64tFovg0PDXeXLlbLKIyuS5yZLKhu+4vu2EUUsCPG5d5jftoRPRNREKAYzbcm7Rh3+LyZqaJj1WG+kSlclw94bYGbphn/ZFEBd25wH5RHyEvRb33zmzBYjhxgRsA4uuQzQ7FJVFf7GxflvBNdsT8SEDAQOK47JuH/2FAibLvurZWU+2EXreY4UIbQWZltbxs50rD1XzvmlUdL5ejzi9Wyj9l37XNObxnvMIWeZMpVIB/hvMh+9wTIa+Xd4PgWWmwMyt/FZVlsBt6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=ZaR010Qw8KflOTGlXKcTlyCM7+UieuWbHi2lU+Hw21k=;
+ b=i4DDYSE5BG51PPtc9N3DhmPWyVUT496EUfAd3MzrjQDl9KFp0NRt/4WzOZ9KIaD4iAumiyYQ1cYAkoZ5zq6MrDVPToAZg/JLVtFmgZknbIbz19tglFr+6WpcP5SNeLmPGIcuyqI/YLuaSmPc8PYyFrZGqa25YF/2BgDH39HC4YvqS1C0FW3BlwV4LgqqLQJXl1YDlFQ9dmmrX8E3ICRwefnlyZC3Zq5HVBxtyoXvui6cUIE7BAeDzvtL9u+n316kSQSNTe4QjcWNkPuuLnvED9tp9Co894AgGWmJUNrzrO3hWB98V20sNUYcw/AuX+Z+cr1z2IhCqDQOpXvA+dHw7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HF1y6NiatmkPVsUBu2jZEF2IEgCXTGFfvNOsLwWzJSE=;
- b=soE/sBnOMU+UMjbvyT1cMYc/lxp1HfOA3hjcJ6w+inwFFaVQOJSPy5OyNEK9gAZ3swvbHonGsJrkW+IKV6z3ypqFCwbFRhFfD3JRCRcnE3W0ZXfQHabj7FjT2EoGtjWrNMHU3wVPzSbyfIQ+UYQ0IPUs4gZYjmtdnzjhOAu8zseAN9gHdArNqkDHRa0taLTeQTZAvvJfrhsYg/yJdRzR8yU28zBJz22tSDrY8oCXrFmh7tMHWqaAPKuyvwYdlEtMyLDpw5OA1tFpa6wQCPi/41s7TQrXQ1dVrWh2cZ1UaRot5Iylwp1xVn2MZSQaP10adetkxyR5bzaR2M3wXsp30Q==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB8497.namprd02.prod.outlook.com (2603:10b6:a03:3e5::19) with
+ bh=ZaR010Qw8KflOTGlXKcTlyCM7+UieuWbHi2lU+Hw21k=;
+ b=a0iHPEoi2AxpZS2hTMx4sSk+ZNunhpgpCKs46c5VrvWPswAwXJKOdLtiXK9AqjJsp6nDJkI9KzLCA6bQKjchC4iqdoOOAwaV5Ob6p/nAawDS+z7l4yDAh85VeK8Z2Reu/tXgisjHtv6GhxKdeBq4UJsy368aMhX/kaqidhNqSmw=
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com (2603:10b6:806:1f0::9)
+ by BL1PR21MB3235.namprd21.prod.outlook.com (2603:10b6:208:39b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.22; Fri, 21 Jun
- 2024 15:18:32 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7698.017; Fri, 21 Jun 2024
- 15:18:31 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Dexuan Cui <decui@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter
- Anvin" <hpa@zytor.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "open
- list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, "open
- list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>, Roman Kisel
-	<romank@linux.microsoft.com>
-Subject: RE: [PATCH v2] clocksource: hyper-v: Use lapic timer in a TDX VM
- without paravisor
-Thread-Topic: [PATCH v2] clocksource: hyper-v: Use lapic timer in a TDX VM
- without paravisor
-Thread-Index: AQHaw6KqBhSJMhSVSU+BM+3i2rTULrHSVPkQ
-Date: Fri, 21 Jun 2024 15:18:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.14; Fri, 21 Jun
+ 2024 18:41:04 +0000
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef]) by SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef%5]) with mapi id 15.20.7698.007; Fri, 21 Jun 2024
+ 18:41:04 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Jake Oshins <jakeo@microsoft.com>, Saurabh Singh Sengar
+	<ssengar@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>
+CC: mhklinux <mhklinux@outlook.com>, Linux on Hyper-V List
+	<linux-hyperv@vger.kernel.org>, "stable@kernel.org" <stable@kernel.org>, KY
+ Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "open list:PCI NATIVE
+ HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Thread-Topic: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Thread-Index: AQHaw8qnHYzFGgGTa02cnbydXb1ZD7HSbe/KgAAcvNA=
+Date: Fri, 21 Jun 2024 18:41:04 +0000
 Message-ID:
- <SN6PR02MB4157A232D59ADF60CA3BD265D4C92@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240621061614.8339-1-decui@microsoft.com>
-In-Reply-To: <20240621061614.8339-1-decui@microsoft.com>
+ <SA1PR21MB13178E3D11B407F9B272E8F4BFC92@SA1PR21MB1317.namprd21.prod.outlook.com>
+References: <20240621014815.263590-1-wei.liu@kernel.org>
+ <SN6PR02MB4157C9FD41483E9AC7ED9E70D4C92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZnUbWUdVE7q8oNjj@liuwe-devbox-debian-v2>
+ <20240621110327.GA19602@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <DM4PR21MB36085B06555AF3CD6244ACEAABC92@DM4PR21MB3608.namprd21.prod.outlook.com>
+In-Reply-To:
+ <DM4PR21MB36085B06555AF3CD6244ACEAABC92@DM4PR21MB3608.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-x-tmn: [SD+EfaiptBWMiS58pP4W3G6dYj6hGzUr]
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-06-21T16:50:44.901Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB8497:EE_
-x-ms-office365-filtering-correlation-id: 71a3fa82-36c5-4143-326e-08dc9205690b
+x-ms-traffictypediagnostic: SA1PR21MB1317:EE_|BL1PR21MB3235:EE_
+x-ms-office365-filtering-correlation-id: e2ea07bc-ea33-4ae5-0b6d-08dc9221b49c
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:14566002|461199025|440099025|3412199022|102099029;
+ BCL:0;ARA:13230037|376011|7416011|366013|1800799021|38070700015;
 x-microsoft-antispam-message-info:
- dwcONAf9tdJZHH81odxkfp6q1Sotyopiu4sy74HyUBrdQ/gpTXCHPfL+XgxBuYq+uouVOz23gZfie9x8C2ROcj0aiZdjErpRwietauI6X6m9KjEaNWaocbTeHwt1TX2J5DSrIDlfzpEU7B0LQ1uUl12+4dfCrlOh/bXbWiByQuxft9mvKcNTETpCnLKYVa52GmWJxWbboPHiMDyRFqhEn8WrLxAokd11bh8uT2vhC7spSWCst/yI/WiAOlxkuQEe+dUMqquT53jqVQFSjv5n4Qzd33VBizRXCvoJtH8hCnLxjFIZhNHONCPpro1WD6T+oHXBlZN0TK6SmRXLsL57e47jaYlEWS2nJ8FV9sMO3qiy2DAGk98nf4BCk8j3uLjj29yH9JXiN880ke4XZSz1RXZdSPChSVnJJqdcwF34qFVNfYP7wmKk8bNkATuv6t5XZbLoZnE1h40vCet5ZYr31uVxdE0f7Riygj7vgQiaKDKAUibKe9vgc0b5CFqv1OuJYN4JmRGtlFL5a1bSf4b7fEq1tYlwtFtr4c3FyYEPSmZHExbg8yW88yJWwDnK2LYF
+ =?iso-8859-2?Q?JRSF12bvLlh1zmRoRQo+kypnOsDwc//66xBCIbKu4JEUJsdb1vC69LhBCN?=
+ =?iso-8859-2?Q?8HEConc7xLWZCznozsNq5RMOgUfKnys/sOek0RT8MDcUzNg2C4Db7/pKrD?=
+ =?iso-8859-2?Q?K/jxzK6Gf6OGcm6ZEylneZy+KYHggGW9uzcZMLpOagyms9A1w+u/u8PSP8?=
+ =?iso-8859-2?Q?Jcgia2Yw6f2vRbnM+EIzyFOfMpDmgbXIxVV238J3NOfhLHVeWWBeSCBA3A?=
+ =?iso-8859-2?Q?gX5vP/gdD7bx059s1BFGlYP68f996Yg+6ukRIpS3ISGBjOSzey7lcnWp3d?=
+ =?iso-8859-2?Q?+cNOVZacOZJPK/yRsOYsWhSBKoVThqihTWIit328uNbQNfD0B2LSQrsf+O?=
+ =?iso-8859-2?Q?LYD2qFDgXLMdidhDFIBn00illDlDhHNDBOZTCjGu9ypSaaRo36SUyCBaCw?=
+ =?iso-8859-2?Q?r5DXp776QVGS8qHy1PhhVRNG8uabtME45d2Dc/MK95/TOt+WAFpMJJcwTs?=
+ =?iso-8859-2?Q?0twZnXe39l4dsDtNpx0RZeNv9J6fS48Um4kmetIium3fsBoPtrTuCcMjHD?=
+ =?iso-8859-2?Q?ik6C6Hmbm7OE2fGRbAbErghW1DLEreElhGuL/kbAD0fsRqZSGteiscxDoz?=
+ =?iso-8859-2?Q?u13lTPZX9JSIhA4gIOQmcKUAYAj9O1eVmjyHB2tQep7FWIJsnVTVQVFDJu?=
+ =?iso-8859-2?Q?fV200K483FQmwVsfaIPWjLuAuNlp0Ht1j06RpecK+shjjs39daBYtvfl52?=
+ =?iso-8859-2?Q?sN9OOpc1ZzuhUk0Cot9137vkSiZK5Anmb9z0/LAxfVeCJki+cfi7hYkPgp?=
+ =?iso-8859-2?Q?HHy0v4gZI2vP54b1T0eKE1RPEi7OzYvy9nywfUAGOGsznhlYI5S1OxBTtn?=
+ =?iso-8859-2?Q?ttzPxDg42V+E2QIU2s1+pfZrnSqGn0UIMaWvN61lVIh3enCWLwv6gXLEcb?=
+ =?iso-8859-2?Q?KGELYAzWSere9iw8JX48viQEJszdb8Ld0E6f8P/zW0VSSWqIoXc7PRAPPD?=
+ =?iso-8859-2?Q?m3/AiR1UrLRFUDvGhu5M7e9xpsYPJjtjePw+q3rsjP5aERvzwYjf/qMLiy?=
+ =?iso-8859-2?Q?luug8kK1rnBbqfmtwmW/DacD6sHitHguH7YS70wAIER1Z44+Bw6BTHN/34?=
+ =?iso-8859-2?Q?YlZgFAlE0HjQDMVv6MD03uo3IWKWLJ/qml2GCjpeLsS81lcDcMhV5nxvZM?=
+ =?iso-8859-2?Q?XUM9m9QSyLnPgaSZcVqL5QgEQJMLF0OMdqVxnpOAJaS3szRMnHWz78WOLO?=
+ =?iso-8859-2?Q?4J4ouQnMpihsJTlhWz8qRm/P+SeaKfKjUR4xMPofttGUnXioH2EJW2pMEU?=
+ =?iso-8859-2?Q?gFDI7s+Ykp3m87j6B1drwwOfyq1NBtCD5iareSksBNb2fLbAfU8xGEfbdf?=
+ =?iso-8859-2?Q?Hu1whm0PROPq1HSABXMAEM+aF538W5ccAkHN8lCRHVQb/4FjbWHzF664z9?=
+ =?iso-8859-2?Q?dSXRt1uLnLH8lR1hdgu1lRrhWjKaEKopqlu1e2pgvl+U9l1QYoyEcRm/Lx?=
+ =?iso-8859-2?Q?7qpB+D6xacNc1GyGNYF20Hggiuqg7HLlkLJc8Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1317.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(7416011)(366013)(1800799021)(38070700015);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?S+sYVzWtCa5R2tn9sbM7l3Fh4BtjQN9dzX+wU7w4iWLfcRBqww7v+woMhf3H?=
- =?us-ascii?Q?BdIvTRZxo1Mf7JjNY78bSgQyaoJ4dWp0a39aV+7FsX3OBp86RWWkmFqEBe9g?=
- =?us-ascii?Q?tnP6t3s8IwT1HwGJe8zMaBUbzCUkoFR94qB7gfzEe3LREjTlVn702hJA31Ai?=
- =?us-ascii?Q?qUcgaw//HW9B3I/Hr0PxoomMdRRZQEqYjADeb0Er+PuIQSnG3nxn4drrHzD6?=
- =?us-ascii?Q?gJ57zaCZ6jd2A1Mn77R+gLzA5FBupAnQlA3rg0b32SDVTpIXCiJe56WXkZoq?=
- =?us-ascii?Q?6huHm7h7AbcAL896V78z7b7ZjRhV2uzVTS2NaZOjMqLlXI4DOrJUQ8paKvmx?=
- =?us-ascii?Q?nONiDDRAYMfhUZeojJt26YHV/v4JshSLbz9lh+iDSr1xJ3X47GXSnwwgotId?=
- =?us-ascii?Q?HZIgWSR9rVTo1mi6MbfSCanK+PAKhFsEn6f9WvEB8fskfm6Zkm2nxJRCKBXP?=
- =?us-ascii?Q?RetvnK7ryFy+eR967Gdcy0/6PJc8hHqeYErt+gV3PO8nlgKs40gCg/jPX/LP?=
- =?us-ascii?Q?qsR5wxVZsqMfTdq0sWcmsWTtVhFpSJgYxUk/efadPjBo0YU97n3wo+V7izB/?=
- =?us-ascii?Q?/6VIZeTwOurNkD5O2DgDEMSVgadTO3U70EwCC/BbHGEencOatiYeCWEYBa3u?=
- =?us-ascii?Q?NWqjc64ua0rbGAk5N6Z9fMPOIUup7Ip/anDyWfu22X8u1ShIgxKNvkNe0MkG?=
- =?us-ascii?Q?n14gr/F/1/5anb8KNng8MMV33lrWgCPjo13oyZVe2jLp86yi2od/J4faOXPf?=
- =?us-ascii?Q?LSL6dTh/zEB9E957blFnc5UdgI6UUF9IcKGb7X/iLL3Wa/a//6MT42IehqvG?=
- =?us-ascii?Q?2mV1DQK/iF6mw0O1WyoprN8yJsuCx0AWL6o+EpHhRFwiu4gnWCotpq+IzZDP?=
- =?us-ascii?Q?34yb+Bx4v+15YsKdvBve5DOYUmQjDi36kHn6ZgsvWhCWhJxFm8EZQw3MtrIj?=
- =?us-ascii?Q?JQM8e1ixqPrVUP94+2VmI9tvnxyG6ZACEB3mnnb4vT/Dm8EFflm3Oc1QJLHu?=
- =?us-ascii?Q?2A9ZhfJ2ON/cwO5W3WfZD+TWr9pUMCvcYxnNk0TxBV84mOpJafMiWmBkR10z?=
- =?us-ascii?Q?f2DW8kIyV15QdVDQGApmr5HMz9XO4lIdQHJTX6fYhYaH8cbzi4pOdGn27iRo?=
- =?us-ascii?Q?YwzrKd2T4zf6yj92HodChvq38WowUot8enBjwwmFytQmm6Mb1K+IWqz3UVg8?=
- =?us-ascii?Q?sUjs3cDw0aMdrNliDzaS0vBOmrJBkGoUQJfoZ6CMht0vJZvMWRrT284aO6A?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
+ =?iso-8859-2?Q?RGL/PiJ9UC8+QX8lQVF+qwYKQKM3+3/Au+nYOviIf43e7rcPQqwmPmr9UU?=
+ =?iso-8859-2?Q?1DKPgpwr1laJT1a1k6Zpdp7930z4QaKfJEH5pDQbiBqM0QGFdt3PYGVjhD?=
+ =?iso-8859-2?Q?RTA9T1tHzpsuzOvJtOUbRoiclyunQBHX5+39WXqY4JhTNtnGE9W/95ISqX?=
+ =?iso-8859-2?Q?fuULH+VnG2nWW7OGgA2u7KTuLOwoYBtDJmBRSgA7pq5gmdmDKAZNDw08aM?=
+ =?iso-8859-2?Q?Ij6BKXn3KUMzz1X5iw4TaFQVQ5oJYpguMB9OIUxvcz2xVto0XdFJZxORya?=
+ =?iso-8859-2?Q?ynwDVuQROJnR+2cyVdf4w3Ztwx+3wIsoDU5nyS5YnKRrZIxLVnwVAtQCJE?=
+ =?iso-8859-2?Q?v0swrAhtkGTtMwyQc62Tk2jUZSBb3SeQ3/zmcWBGXkmkRUYYJqYM3X1fi2?=
+ =?iso-8859-2?Q?YKicVo2IAOyb6ZoL7cNY9gItU0ziSa4HECojtQ8n1VT1/J8iSZEj88EVtA?=
+ =?iso-8859-2?Q?8Lu97Vdq4FyPNesUnevxn7WaHaVPXiLywjWSoJIUwsUkfRBOETcdf57vT9?=
+ =?iso-8859-2?Q?GhA9SFQ1d65utzSHPzJ2J5cjSiAEmZqM9VFVcnjsxFI+mYR3maE5mkFqGO?=
+ =?iso-8859-2?Q?QEvYyD0f7u7SdmptcqKyI5IyfBy5GBe/BMOyUyFYwUL8acsm9R2w9XyRte?=
+ =?iso-8859-2?Q?1PWvckplOQiln+JBimvkl2dbJ/kMB0Gbc19WEuIvkcGoQDlIbdht8HIWBb?=
+ =?iso-8859-2?Q?JN5R3uQM1whvRMzUbE0kHeKowwvf+80Tde4tT04iDbOgZ42fwyMxkXTOlP?=
+ =?iso-8859-2?Q?04TGGtLvIbtqhoLG2rECSRW689R7IqCcLVP0rxIwYnVh5gQdbeQJF3xAeY?=
+ =?iso-8859-2?Q?nY1r597UIfJhAVjQXuedcfbBKfyypcAmqQnVkX3+4qjUOsMlgcSPVqPmGO?=
+ =?iso-8859-2?Q?lalBTlszFSg/KEoLHcfjHZX5jXTLXG18nqnhUz11uEfv+e7xTJMgnUEgwy?=
+ =?iso-8859-2?Q?YjqRAeRhxe+KlfWFmieJsCpXAAyHnk0yBu8439a4ksCiVFom4LuKuVmcEl?=
+ =?iso-8859-2?Q?9U/6RXxNPmBVxHlYkIJ9xTpR4i8Dp1hzVKl+ffAbf92d3zfKOS0QDeXg+3?=
+ =?iso-8859-2?Q?kX3fzBE5HXGtcjfCXR77n+4CKXH8HuD8wiR455eO1eJyH9sPWsnCCYArbX?=
+ =?iso-8859-2?Q?+/fIZoSxTi1EE+wXmCI/L3MU6GDyQn/Y9gS+KIRhxLvYo89s02pW4KiCMl?=
+ =?iso-8859-2?Q?n7bsvlB8Y96f3DPeA1HihIGTNlsIYTOIgi31mppItNwHePDJ0BNaZWyP5/?=
+ =?iso-8859-2?Q?E8cTVxb3GApZslz4TaWlZZ8bSfOvpnIybwZ+hGsCRf8WRt9eunCBLQrSNs?=
+ =?iso-8859-2?Q?hf5PDD4pmRcvbx2/qWbFPkj9n/Av7vXPjgXcdYI7X92G2bMuzBdw6D7YbS?=
+ =?iso-8859-2?Q?nJrIxdrNtlLqkli2bLJWcrLpA0jtUCZA9O9WM1yU/m926HxH3kp278iSlU?=
+ =?iso-8859-2?Q?1UQAZBKOL04NiiIC2Y5oe1FiFNNbSUUwZ728rO3FM34i2+URYs/p1ZbSVX?=
+ =?iso-8859-2?Q?r+MWSHG5wAYu7PdwzLF8aSFWsh5CcF3600nYWKaieY3UnKDAUQqtPScbAP?=
+ =?iso-8859-2?Q?GwrGhyWpO2arB4l5JEwRWkBY3UsLvSp5wM1sW65bP6T7OhNh+BSSacA9w7?=
+ =?iso-8859-2?Q?kPO4ORvzkfFMy2OAUwrwh9k3XSCkZwLsUc?=
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -119,110 +163,57 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71a3fa82-36c5-4143-326e-08dc9205690b
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 15:18:31.4315
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1317.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2ea07bc-ea33-4ae5-0b6d-08dc9221b49c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 18:41:04.1340
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8497
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0Dmqq2OoAuPLfdP6eQuDzxpziLv8mfltyJKlpBt35SG36qi1n0aionfwdmzjuFj/FgAvjMj+fLPRy9IQ/OFChA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3235
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Thursday, June 20, 2024 11:16 =
-PM
->=20
-> In a TDX VM without paravisor, currently the default timer is the Hyper-V
-> timer, which depends on the slow VM Reference Counter MSR: the Hyper-V TS=
-C
-> page is not enabled in such a VM because the VM uses Invariant TSC as a
-> better clocksource and it's challenging to mark the Hyper-V TSC page shar=
-ed
-> in very early boot.
->=20
-> Lower the rating of the Hyper-V timer so the local APIC timer becomes the
-> the default timer in such a VM, and print a warning in case Invariant TSC
-> is unavailable in such a VM. This change should cause no perceivable
-> performance difference.
->=20
-> Cc: stable@vger.kernel.org # 6.6+
-> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->=20
-> Changes in v2:
->     Improved the comments in ms_hyperv_init_platform() [Michael Kelley]
->     Added "print a warning in case Invariant TSC  unavailable" in the cha=
-ngelog.
->     Added Roman's Reviewed-by.
->=20
->  arch/x86/kernel/cpu/mshyperv.c     | 16 +++++++++++++++-
->  drivers/clocksource/hyperv_timer.c | 16 +++++++++++++++-
->  2 files changed, 30 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
-v.c
-> index e0fd57a8ba840..954b7cbfa2f02 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -449,9 +449,23 @@ static void __init ms_hyperv_init_platform(void)
->  			ms_hyperv.hints &=3D ~HV_X64_APIC_ACCESS_RECOMMENDED;
->=20
->  			if (!ms_hyperv.paravisor_present) {
-> -				/* To be supported: more work is required.  */
-> +				/*
-> +				 * Mark the Hyper-V TSC page feature as disabled
-> +				 * in a TDX VM without paravisor so that the
-> +				 * Invariant TSC, which is a better clocksource
-> +				 * anyway, is used instead.
-> +				 */
->  				ms_hyperv.features &=3D ~HV_MSR_REFERENCE_TSC_AVAILABLE;
->=20
-> +				/*
-> +				 * The Invariant TSC is expected to be available
-> +				 * in a TDX VM without paravisor, but if not,
-> +				 * print a warning message. The slower Hyper-V MSR-based
-> +				 * Ref Counter should end up being the clocksource.
-> +				 */
-> +				if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
-> +					pr_warn("Hyper-V: Invariant TSC is unavailable\n");
-> +
->  				/* HV_MSR_CRASH_CTL is unsupported. */
->  				ms_hyperv.misc_features &=3D ~HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
->=20
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
-erv_timer.c
-> index b2a080647e413..99177835cadec 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -137,7 +137,21 @@ static int hv_stimer_init(unsigned int cpu)
->  	ce->name =3D "Hyper-V clockevent";
->  	ce->features =3D CLOCK_EVT_FEAT_ONESHOT;
->  	ce->cpumask =3D cpumask_of(cpu);
-> -	ce->rating =3D 1000;
-> +
-> +	/*
-> +	 * Lower the rating of the Hyper-V timer in a TDX VM without paravisor,
-> +	 * so the local APIC timer (lapic_clockevent) is the default timer in
-> +	 * such a VM. The Hyper-V timer is not preferred in such a VM because
-> +	 * it depends on the slow VM Reference Counter MSR (the Hyper-V TSC
-> +	 * page is not enbled in such a VM because the VM uses Invariant TSC
-> +	 * as a better clocksource and it's challenging to mark the Hyper-V
-> +	 * TSC page shared in very early boot).
-> +	 */
-> +	if (!ms_hyperv.paravisor_present && hv_isolation_type_tdx())
-> +		ce->rating =3D 90;
-> +	else
-> +		ce->rating =3D 1000;
-> +
->  	ce->set_state_shutdown =3D hv_ce_shutdown;
->  	ce->set_state_oneshot =3D hv_ce_set_oneshot;
->  	ce->set_next_event =3D hv_ce_set_next_event;
-> --
-> 2.25.1
+From: Jake Oshins <jakeo@microsoft.com>=20
+Sent: Friday, June 21, 2024 9:51 AM
+> [...]
+>On Fri, Jun 21, 2024 at 06:19:05AM +0000, Wei Liu wrote:
+> On Fri, Jun 21, 2024 at 03:15:19AM +0000, Michael Kelley wrote:
+> > From: Wei Liu <mailto:wei.liu@kernel.org> Sent: Thursday, June 20, 2024=
+ 6:48 PM
+> > >
+> > > The intent of the code snippet is to always return 0 for both fields.
+> > > The check is wrong though. Fix that.
+> > >
+> > > This is discovered by this call in VFIO:
+> > >
+> > >=A0=A0=A0=A0 pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin)=
+;
+> > >
+> > > The old code does not set *val to 0 because the second half of the ch=
+eck is
+> > > incorrect.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Hi Wei, so you got a non-zero 'pin' value returned by the host when the gue=
+st reads
+from the MMIO config page. What's the consequence? Will VFIO try to use the=
+ legacy INTx=20
+rather than MSI/MSI-X? I'm curious how you noticed the bug. I'm also curiou=
+s why the
+host doesn't return 0 for the 'PIN' register when the guest reads it from t=
+he config page.
 
+>  I believe that this fix is correct.=A0 (And I'm frankly surprised that t=
+his bug didn't
+> cause a problem before this.=A0 It's been there since I first wrote the c=
+ode.)
+> -- Jake Oshins
+
+I suppose it didn't cause any issue because the PCI device drivers use MSI/=
+MSI-X,
+so they don't care about the values of the 'PIN' and 'LINE' registers.
+
+Thanks,
+Dexuan
 
