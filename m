@@ -1,183 +1,150 @@
-Return-Path: <linux-hyperv+bounces-2479-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2480-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51A8C913EC7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Jun 2024 00:05:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 500809140CD
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Jun 2024 05:21:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D4311C209B6
-	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Jun 2024 22:05:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7171B20586
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Jun 2024 03:21:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92D7418508D;
-	Sun, 23 Jun 2024 22:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AzEjf3Bo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BDF567D;
+	Mon, 24 Jun 2024 03:21:49 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2078.outbound.protection.outlook.com [40.92.20.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B4765C;
-	Sun, 23 Jun 2024 22:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719180329; cv=fail; b=IJKKUDBkz+Ko9+XRMCh+quQ7jTvwuxEjmZ6RNCk7v9dA+r7gpvkcD9aU+kOwyfLQZvwn2SK8mzTcjP6d2Dj+YuUQTIRBx5aM1WDlh+iK5qV8/7IQ6zAuBbgPPk4jOyHd3J9KpAA4Fj+9rq7OwgMGS8RKCPjdbERux/5HgZlD4x8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719180329; c=relaxed/simple;
-	bh=TMMN4LFgj9aP9rnpuqGp/1R5pfmdbpkrGenWuYjA/n4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XlmKeuuMRlxjQh6hLJi/+jU/4oUSOOkWMheZ203Ho74XXDlLMP3UAXVFN1A3RDFZ8IMj4n42OE+T8IGlAICcHwpUzHgUluEtDT6QO4fS/wL8nhVzoPDSWpgkDJuOCv/xCCFXh+TqDbzukjK+C3dvc/hRkbil8qCaWNd5jKFsOPQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AzEjf3Bo; arc=fail smtp.client-ip=40.92.20.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h/XW6bTsLhimS7Rr7l2DNJuDuJcmUFuSed9QcUIYaWG4isRKeOYyR0RY6O3xF5UVpL5ww+ahNVrnQVoGPJB8dWMHr8sKPwYNarKkGuv7dyA7i6By7IwAEBnfCIXwrx7gWWrkbjJqy91eVE3Sn/1ZF/YQo6SCwcSzqgqDc5VCew1ADuIBi2hM5ieWe+NAdvjaavVYaZBF+e9YTW7fJiF8Vtl4Z7Aki91qaZPmFFOj0VpyzZ0YLTFUekS/FYIIsbKK7jYfBLJ1IEH9FzBNS38WKSg0aaiy8lhMzqH2vQQAPCuaV/sJkPkuG3WuT3i21de6RT5xmoERJoQueIv8fOXkFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q2nrl7Xrq+DYfGdxwj9pMNi2PIfkOtj4d/FVtmU55UE=;
- b=CkvD3jGaWIKzdpOBjrtgjYWyVTYR/tZ/ARFzXRwaxbRawFm9v/abqtFRBxrr5GXcPtQcI9lzCh+sR0fsqGzoSLJodg6rrH7MyUNE3PFqC6ltuQY4FrdQfgZAkiwOmfNzPr3+o1QMAZ+WvNTkn8CFhFttd363ru3fkAXp5cgJ29tWpxEJ8wy2TUoQXv0TbeZ83/Zn8UJIvb4k05CI9xcscV/qX/uE1SiOyOGdR91BCS/yQ80zBOdNGtbLfJoA0qsTXiCOl9EpyqYpj3FsMdXk2Fdgm0C/fg9nkDT4MHdpoYwwpQDd8Foge+73cKbL83RbYoVThardkbk84xFVEH6wJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q2nrl7Xrq+DYfGdxwj9pMNi2PIfkOtj4d/FVtmU55UE=;
- b=AzEjf3Bo0/WNQLxRe0JkaqU0FNYK0hpuoBDnjJ6ejHydUQi+4NrpZKGschC/ycdUeZ+vw1lLGkU7crlJLtIcbS0AHo1CfAksoO9KFaNxAqMlrf6vtHT8CyC08ipuu+7pqjTU3WuafoxTXZ6zt0LkteKJrpf0RQDw+nE+litDrjo/VTRUBYhDEE74QkzXXX4R/MD8fHGb7SwpdwNhN95LqL63ss+vM5z0GbxElccQcpo2QEB25uHlnbL5OfF9m0xHS4GvNPzmt0GQqitpkIMfdT1uM/VZyQ2IDL1+pwqQ/F0PWh17a+zsA+DdPpBSBGU7S95aTVsvFJbAIkc0TOYPKw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MW4PR02MB7395.namprd02.prod.outlook.com (2603:10b6:303:65::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Sun, 23 Jun
- 2024 22:05:25 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7698.025; Sun, 23 Jun 2024
- 22:05:19 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List
-	<linux-hyperv@vger.kernel.org>
-CC: "stable@kernel.org" <stable@kernel.org>, "K. Y. Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui
-	<decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jake Oshins
-	<jakeo@microsoft.com>, "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT
- DRIVERS" <linux-pci@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
-Thread-Topic: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
-Thread-Index: AQHaxB4UADugxPO6qUmNkOLfUig9oLHV6nUg
-Date: Sun, 23 Jun 2024 22:05:19 +0000
-Message-ID:
- <SN6PR02MB415732C96E9AECB6B3A75852D4CB2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240621210018.350429-1-wei.liu@kernel.org>
-In-Reply-To: <20240621210018.350429-1-wei.liu@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [FvjTu9ytwNb8zdHXM7Bl99PWOy2MO11q]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7395:EE_
-x-ms-office365-filtering-correlation-id: b168900e-f86a-4dbe-355d-08dc93d0923b
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199025|3412199022|440099025|102099029;
-x-microsoft-antispam-message-info:
- N2YDMUPoApAOMDnplv4LLvKnT+JEg6413VzYNmEkdKNpqY/EnClYDMx/Iyf/aXb++i5NkvczeQX46LLvVgV5yMfRrDlQgpGseNT6BC8vBmK0ARcH88uV+LTwRAIem06ak4FFaHFRrG1LdtzDMET68gBNfjn+GBXs5U5b9bjmo0qyhCHXOYt/a2C1ySPNvfjid+hVoHWOfuP8t8tMPjHxsUsmUaFYQvk3dI/MZds7dRyA9SzzTpqPUx5xMPReDK19nDreAPvjqP5KaD/9Z/Ntj/S0xdYx7eJ07hIjdfHhgT3G8UJb+nOSGkLSa8xkvSGDC7cu19Gpabc3WCN5iMACHyzaHzhAMQvAMx7VADrDc1eQLwb4WVuFn5panwisyuDGibZ8gdP/yKBJpZAv9GQCqQ1sMV5ODo5nF3Bp5x7JyRvtH5vdFQKEHtA5QBYFSaeOqHSd+MRYORr5QNUC2PP2TRx5/CEGTEr6NM3JXgn20PLMgBXf8OL6q7dfA7rZMtgsvlqaIjSg2L91FVTmmRxMNb5WBM+Oqj6tZP64p1gdSUF2TRXQHpAof/exOlQTWOvZ
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?jNQJsrEuT1KUSItKpZX09bE2heJ+FTTHuHBvbe3Ou7nObXD+/lAiSAmELa?=
- =?iso-8859-2?Q?Mrl1nhABbR3/QAgYCxA2jXhfVUQX4a4VAOI4yNzpLofhCu0fQyXTGrJaLZ?=
- =?iso-8859-2?Q?eTWN5L6so2m81/VesUc/SkMLJyrmN0s0U64IltOWHWooveYLbVDvuMBS/c?=
- =?iso-8859-2?Q?ixysV1OPa352PMDfyke3C/WerGJEnYFmg3KtJlU+B8+zSB4WILo9vRGxy/?=
- =?iso-8859-2?Q?k1fhjQ6H2GoK6PMzi5+W1rUDT40qVa3AsaB99+/FKu/TSLM6P5AKXzne8U?=
- =?iso-8859-2?Q?G0QhZe4SYdyujMphW9S94TXfRu/N4o9ysBH/mFDMcTXmR7yIpTxD4QGHTi?=
- =?iso-8859-2?Q?EVg5Hx8GmvE8e/5ASRWREWkMjfJFd4bHrvhkWyLUjpWLk9EKVcdcT2o3XX?=
- =?iso-8859-2?Q?3uV8KK66O9Cgzv1Xui3/tx09Wf+UJ0UyBFPL8FYDEHlCamzixQkKFfZYYR?=
- =?iso-8859-2?Q?PXU6yr5G4DPaXP5edi3o/6zTpPui9mNdbelwBTStK00PB3hKFA+2bddXWA?=
- =?iso-8859-2?Q?B9FMLnmccJ0PlGmF5iAisboqe9Ice1POfTb1UiF0M8ZbWQT59wF/Ea8E3z?=
- =?iso-8859-2?Q?RkOWP6ShvHAPKAFaLmop4U3YV/QuUKYookQrCGaUbywElgGOACLfpvI1N4?=
- =?iso-8859-2?Q?VnkV9JPVo3FcYhaSdwKX8IQiCAmXGbi/OZGsF8WuW05HlhBvjgT1S8GrGs?=
- =?iso-8859-2?Q?iKp92GQ7Tdx8BKGinvNnwna7lA/HKY9fRR+S+wDIWEJvPquN3EOMhHwl9f?=
- =?iso-8859-2?Q?cfmdRvAYFMdFt9L+McEfBdbYqCKGc6073+uLrirsrAjEWni8ulcWCc326n?=
- =?iso-8859-2?Q?HXrJFcv3pfzMGYqZ2i/c6FpBp/k14nBEevzGB8MtcfEHII3g/DQys5qKNB?=
- =?iso-8859-2?Q?sf3z4vZtLR10gaBBHQZs52ndt4SZ0tVerH7Jf28EYb2Ta38PUZfvrzqzpP?=
- =?iso-8859-2?Q?vrwC+H2qtoOLCn50NUS9oGz30+/7+GkVYSr5t6zZLFTmvNmnLQEiu9rc1p?=
- =?iso-8859-2?Q?RXkqYkrpTKkLVM2jKFJSOmPYibeVzBsc3UJt/po+hmnAoRC7K4TKf8bWU7?=
- =?iso-8859-2?Q?J7dLEhqvXreEKCorL/wyMTbFO0L8PW7+/rh7b4G85dzj7shFqOnmGXUI1r?=
- =?iso-8859-2?Q?YbZObo54RukHFuXxwi0Ssn0E7LVhR4DnBEuPGN/rx17MhUE12YwgF4xcxY?=
- =?iso-8859-2?Q?JidgvotHMYOKkoTIT6LiLxPb7vfM+J5ZC4+TCf1PCNDNNKBcMwY6B1RRvq?=
- =?iso-8859-2?Q?K4/8u/9i2iuLboa1IJy1ExbIde8klV8b1TDsCpqNg=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33D04C97;
+	Mon, 24 Jun 2024 03:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719199309; cv=none; b=HZWK0KrrpWHBfHB01tvwfez/NNLusZIFJvHPqjrvPfjRhVR2sIL7w/v2zGRsm+FKGkPfOJkDE+0g+iR/mpdf8dFgUwoyMRC9Np/z69vWn2Mp0Njvst7NMtFyTippXnGlPsBu+/7+hpFrOuaxZKwiPFCWMgJ4BaqsQZN/0j8hLoQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719199309; c=relaxed/simple;
+	bh=TPlUmIidaURK649FmMFhIidH8ry2RADSBWmEC7zhf00=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kQ+rI4sttsWahOWwwkwfvG02KbjVZR+XrNDG9L12mrGvRu8zlst4KLBquWmgIG8uTV1Z7pxvU9g/YidE4vCYJhXLZCAXMrNnl3KyZnaA1lCDLfEEs20rbdqy6yxsJUzk0bOD1EbMdx23ryg3BhGKyDMFAqG3lL3jBD+OgIln6/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowACnr+cp5nhm1XhzEg--.23104S2;
+	Mon, 24 Jun 2024 11:21:21 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	shradhagupta@linux.microsoft.com,
+	horms@kernel.org,
+	kotaranov@microsoft.com,
+	linyunsheng@huawei.com,
+	schakrabarti@linux.microsoft.com,
+	make24@iscas.ac.cn,
+	erick.archer@outlook.com
+Cc: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: mana: Fix possible double free in error handling path
+Date: Mon, 24 Jun 2024 11:21:12 +0800
+Message-Id: <20240624032112.2286526-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b168900e-f86a-4dbe-355d-08dc93d0923b
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2024 22:05:19.5177
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7395
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACnr+cp5nhm1XhzEg--.23104S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr4UAF1fKFW3WF18Zr1rtFb_yoW8Xw4fpa
+	13Jay5KryxKw4S9a18Xrs5XFy5W397t3sxury7Cw1fCwn8tFs5ZF4SyFyUGryrXrWDtF1S
+	yF4Yv3W5CFn0g3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUGVWUWwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
+	4UJVW0owAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+	x2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUPGYJUUUUU=
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-From: Wei Liu <wei.liu@kernel.org> Sent: Friday, June 21, 2024 2:00 PM
->=20
-> The intent of the code snippet is to always return 0 for both
-> PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
->=20
-> The check misses PCI_INTERRUPT_PIN. This patch fixes that.
->=20
-> This is discovered by this call in VFIO:
->=20
->     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
->=20
-> The old code does not set *val to 0 because it misses the check for
-> PCI_INTERRUPT_PIN.
->=20
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsof=
-t Hyper-V
-> VMs")
-> Cc: stable@kernel.org
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
-> v2:
-> * Change the commit subject line and message
-> * Change the code according to feedback
-> ---
->  drivers/pci/controller/pci-hyperv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 5992280e8110..cdd5be16021d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_=
-dev
-> *hpdev, int where,
->  		   PCI_CAPABILITY_LIST) {
->  		/* ROM BARs are unimplemented */
->  		*val =3D 0;
-> -	} else if (where >=3D PCI_INTERRUPT_LINE && where + size <=3D
-> -		   PCI_INTERRUPT_PIN) {
-> +	} else if ((where >=3D PCI_INTERRUPT_LINE && where + size <=3D
-> PCI_INTERRUPT_PIN) ||
-> +		   (where >=3D PCI_INTERRUPT_PIN && where + size <=3D PCI_MIN_GNT)) {
->  		/*
->  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
->  		 * because this front-end only supports message-signaled
-> --
-> 2.43.0
->=20
+When auxiliary_device_add() returns error and then calls
+auxiliary_device_uninit(), callback function adev_release
+calls kfree(madev) to free memory. We shouldn't call kfree(padev)
+again in the error handling path.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 31 +++++++++----------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index d087cf954f75..1754c92a6c15 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2785,8 +2785,10 @@ static int add_adev(struct gdma_dev *gd)
+ 
+ 	adev = &madev->adev;
+ 	ret = mana_adev_idx_alloc();
+-	if (ret < 0)
+-		goto idx_fail;
++	if (ret < 0) {
++		kfree(madev);
++		return ret;
++	}
+ 	adev->id = ret;
+ 
+ 	adev->name = "rdma";
+@@ -2795,26 +2797,21 @@ static int add_adev(struct gdma_dev *gd)
+ 	madev->mdev = gd;
+ 
+ 	ret = auxiliary_device_init(adev);
+-	if (ret)
+-		goto init_fail;
++	if (ret) {
++		mana_adev_idx_free(adev->id);
++		kfree(madev);
++		return ret;
++	}
+ 
+ 	ret = auxiliary_device_add(adev);
+-	if (ret)
+-		goto add_fail;
++	if (ret) {
++		auxiliary_device_uninit(adev);
++		mana_adev_idx_free(adev->id);
++		return ret;
++	}
+ 
+ 	gd->adev = adev;
+ 	return 0;
+-
+-add_fail:
+-	auxiliary_device_uninit(adev);
+-
+-init_fail:
+-	mana_adev_idx_free(adev->id);
+-
+-idx_fail:
+-	kfree(madev);
+-
+-	return ret;
+ }
+ 
+ int mana_probe(struct gdma_dev *gd, bool resuming)
+-- 
+2.25.1
+
 
