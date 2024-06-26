@@ -1,61 +1,81 @@
-Return-Path: <linux-hyperv+bounces-2499-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2500-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2AB791855E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jun 2024 17:10:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15AC191874C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jun 2024 18:26:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B6A01F28DE2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jun 2024 15:10:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 390321C22332
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jun 2024 16:26:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 013B91891DE;
-	Wed, 26 Jun 2024 15:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703B618F2F7;
+	Wed, 26 Jun 2024 16:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHxR4Gl4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FguW4hKE"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AD41891CB;
-	Wed, 26 Jun 2024 15:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4235718E748;
+	Wed, 26 Jun 2024 16:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719414642; cv=none; b=GC6QL2hKCsFSgoVRmLpPjKZkYBnhn6Vv1t2ll4EYUFgUTrNuCkhb+5/KX2yHyvRd64O3OQJQDY73olTJDdLm95Nk0GJlYBDlWM745Gr9AXnvolwurR2okkdaSUhVIS3YaNIWvL+ypqNg7F57i6fzy+bwTuERZ0jrsbhMAIbNkhU=
+	t=1719419164; cv=none; b=VkyzaK+WUiZfr72a0E8vgurTNAgVnJOECjfCXF769a12CXmkbY+ysYY/fMmN+CDCNahgRbE9MBBoZvfhql5HO/lMyfETfzFBPxUsGarsLcdsoV3o98qn6o4zTvd0W+hl9GrFxg1T98IWyo7LATyFHFwF9vp5ti4klu2axAU7ZCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719414642; c=relaxed/simple;
-	bh=ekPNzLzryuR1LD67ikqc01Jk5UMQeCiAfkaRGoSGRzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=YjFaWZSySGTlCICCaxbP01qRIR+uF4r0wh1FF1jaM/yaGNuKtvwq0vAwjsbLytGYE6lMbcLKgLWZqyWS49SS+xJto93/dXSihJDHgUbVMn7+drLZRIvn+uceoTGWvjN2TvbS2JSXDrrzBmKv5ncUzKoJLRAnbcXWbGQf/3FLWgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHxR4Gl4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07AD4C116B1;
-	Wed, 26 Jun 2024 15:10:41 +0000 (UTC)
+	s=arc-20240116; t=1719419164; c=relaxed/simple;
+	bh=GAWylhdOcvosi/+tg4zAZrTIoC6PCFwLB0e0teIJHnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iLJGqQyfkYpaOiX1d4K/hzAud6w5tG4XnGEOrt7CiGD3JLMnQBjmI9SwHtlYx5GQZ/qujnmDfjtjiFRfBqg20tF3XwPvx/ANxrOkYDVqCkVmwzNfuJ41AQo6Y2jMI/7Ht9J1GIekXmKz8A85OQUYAiWpS4zesahfFLspyMFIu/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FguW4hKE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7728C116B1;
+	Wed, 26 Jun 2024 16:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719414642;
-	bh=ekPNzLzryuR1LD67ikqc01Jk5UMQeCiAfkaRGoSGRzs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OHxR4Gl4p5LAIKrmqfWH2GbraItePMGCNEfR+wMu9M4cejZ+RwzM/fPEzl/EKXSWK
-	 sDzKGnAERZZgz1NSiXYYZlkO1DPFVgx4KNNXPx53+uES+riMDC4nu3db17Yznmr+1K
-	 JvvZGWJ4El3IS8tSUk4OajBfYoCRrfCFRp/3/OJVCXp0y4JmXuvFFAnGRL/9Ba1h/i
-	 gKXQBZlHMaQFRmZoZL/BbArG97KotyLM13Drqqqyf1PE4HqhGd0GXk8EIge56Y9E6r
-	 H1rK9h1/EmWjmPkNT4I/oWnJZwFXeFxS8tXU6wrkzIopMw1l6Zxz5w6f9b/9eHGtEv
-	 GtyqRqd8kZHhw==
-Date: Wed, 26 Jun 2024 10:10:39 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, stable@kernel.org,
+	s=k20201202; t=1719419163;
+	bh=GAWylhdOcvosi/+tg4zAZrTIoC6PCFwLB0e0teIJHnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FguW4hKEq944Yj80w28xR3oois6jmD3GQj+a5a+wnGZH+NoYwEOxgP1WoAwOpvFrD
+	 7+lySWTpa7AAq4YT8550GFbZcgZLRVAWQ+V/zTjdMESGtv566fsPSoNhSgNVwhANmF
+	 74jQReC/V+fSEh2WFsfw/XGhjxYbDWn+6sSTTsbjRIiyS4zvssb5r72hadLAI/e3ok
+	 CLtrIejvidOAiHUUXV4myZrcEo4ZzzQ7w1ZlYsb5q3gc2XidvT2v/mbBD8tOGoCyKw
+	 H2YJ1gW4TYKVWQRsE372s3YKqAW1kH/QhKkSH9VY5OrUGLwmON8QIr9OdPPwjB24Qw
+	 SdXcHlgdfoUGA==
+Date: Wed, 26 Jun 2024 09:26:03 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jocelyn Falempe <jfalempe@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jake Oshins <jakeo@microsoft.com>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
-Message-ID: <20240626151039.GA1466747@bhelgaas>
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: Add a short description string to kmsg_dump()
+Message-ID: <202406260906.533095B1@keescook>
+References: <20240625123954.211184-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,54 +84,210 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240621210018.350429-1-wei.liu@kernel.org>
+In-Reply-To: <20240625123954.211184-1-jfalempe@redhat.com>
 
-1) Capitalize subject to match history
-2) Say something more specific than "fix reading ..."
+On Tue, Jun 25, 2024 at 02:39:29PM +0200, Jocelyn Falempe wrote:
+> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+> callback.
+> This patch adds a new parameter "const char *desc" to the kmsg_dumper
+> dump() callback, and update all drivers that are using it.
+> 
+> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+> function and a macro for backward compatibility.
+> 
+> I've written this for drm_panic, but it can be useful for other
+> kmsg_dumper.
+> It allows to see the panic reason, like "sysrq triggered crash"
+> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
 
-Apparently this returns garbage in some case where you want to return
-zero?
+Seems reasonable. Given the prototype before/after:
 
-On Fri, Jun 21, 2024 at 09:00:18PM +0000, Wei Liu wrote:
-> The intent of the code snippet is to always return 0 for both
-> PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
-> 
-> The check misses PCI_INTERRUPT_PIN. This patch fixes that.
-> 
-> This is discovered by this call in VFIO:
-> 
->     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
-> 
-> The old code does not set *val to 0 because it misses the check for
-> PCI_INTERRUPT_PIN.
-> 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> Cc: stable@kernel.org
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
-> v2:
-> * Change the commit subject line and message
-> * Change the code according to feedback
-> ---
->  drivers/pci/controller/pci-hyperv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 5992280e8110..cdd5be16021d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
->  		   PCI_CAPABILITY_LIST) {
->  		/* ROM BARs are unimplemented */
->  		*val = 0;
-> -	} else if (where >= PCI_INTERRUPT_LINE && where + size <=
-> -		   PCI_INTERRUPT_PIN) {
-> +	} else if ((where >= PCI_INTERRUPT_LINE && where + size <= PCI_INTERRUPT_PIN) ||
-> +		   (where >= PCI_INTERRUPT_PIN && where + size <= PCI_MIN_GNT)) {
->  		/*
->  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
->  		 * because this front-end only supports message-signaled
-> -- 
-> 2.43.0
-> 
+dump(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason)
+
+dump(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason,
+     const char *desc)
+
+Perhaps this should instead be a struct that the panic fills in? Then
+it'll be easy to adjust the struct in the future:
+
+struct kmsg_dump_detail {
+	enum kmsg_dump_reason reason;
+	const char *description;
+};
+
+dump(struct kmsg_dumper *dumper, struct kmsg_dump *detail)
+
+This .cocci could do the conversion:
+
+
+@ dump_func @
+identifier DUMPER, CALLBACK;
+@@
+
+  struct kmsg_dumper DUMPER = {
+    .dump = CALLBACK,
+  };
+
+@ detail @
+identifier dump_func.CALLBACK;
+identifier DUMPER, REASON;
+@@
+
+	CALLBACK(struct kmsg_dumper *DUMPER,
+-		 enum kmsg_dump_reason REASON
++		 struct kmsg_dump_detail *detail
+		)
+	{
+		<...
+-		REASON
++		detail->reason
+		...>
+	}
+
+
+Also, just to double-check, doesn't the panic reason show up in the
+kmsg_dump log itself (at the end?) I ask since for pstore, "desc" is
+likely redundant since it's capturing the entire console log.
+
+-Kees
+
+Here's the patch from the above cocci:
+
+
+diff -u -p a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -207,13 +207,13 @@ static int hv_die_panic_notify_crash(str
+  * buffer and call into Hyper-V to transfer the data.
+  */
+ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+-			 enum kmsg_dump_reason reason)
++			 struct kmsg_dump_detail *detail)
+ {
+ 	struct kmsg_dump_iter iter;
+ 	size_t bytes_written;
+ 
+ 	/* We are only interested in panics. */
+-	if (reason != KMSG_DUMP_PANIC || !sysctl_record_panic_msg)
++	if (detail->reason != KMSG_DUMP_PANIC || !sysctl_record_panic_msg)
+ 		return;
+ 
+ 	/*
+diff -u -p a/arch/powerpc/platforms/powernv/opal-kmsg.c b/arch/powerpc/platforms/powernv/opal-kmsg.c
+--- a/arch/powerpc/platforms/powernv/opal-kmsg.c
++++ b/arch/powerpc/platforms/powernv/opal-kmsg.c
+@@ -20,13 +20,13 @@
+  * message, it just ensures that OPAL completely flushes the console buffer.
+  */
+ static void kmsg_dump_opal_console_flush(struct kmsg_dumper *dumper,
+-				     enum kmsg_dump_reason reason)
++				     struct kmsg_dump_detail *detail)
+ {
+ 	/*
+ 	 * Outside of a panic context the pollers will continue to run,
+ 	 * so we don't need to do any special flushing.
+ 	 */
+-	if (reason != KMSG_DUMP_PANIC)
++	if (detail->reason != KMSG_DUMP_PANIC)
+ 		return;
+ 
+ 	opal_flush_console(0);
+diff -u -p a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
+--- a/arch/powerpc/kernel/nvram_64.c
++++ b/arch/powerpc/kernel/nvram_64.c
+@@ -73,7 +73,7 @@ static const char *nvram_os_partitions[]
+ };
+ 
+ static void oops_to_nvram(struct kmsg_dumper *dumper,
+-			  enum kmsg_dump_reason reason);
++			  struct kmsg_dump_detail *detail);
+ 
+ static struct kmsg_dumper nvram_kmsg_dumper = {
+ 	.dump = oops_to_nvram
+@@ -643,7 +643,7 @@ void __init nvram_init_oops_partition(in
+  * partition.  If that's too much, go back and capture uncompressed text.
+  */
+ static void oops_to_nvram(struct kmsg_dumper *dumper,
+-			  enum kmsg_dump_reason reason)
++			  struct kmsg_dump_detail *detail)
+ {
+ 	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
+ 	static unsigned int oops_count = 0;
+@@ -655,7 +655,7 @@ static void oops_to_nvram(struct kmsg_du
+ 	unsigned int err_type = ERR_TYPE_KERNEL_PANIC_GZ;
+ 	int rc = -1;
+ 
+-	switch (reason) {
++	switch (detail->reason) {
+ 	case KMSG_DUMP_SHUTDOWN:
+ 		/* These are almost always orderly shutdowns. */
+ 		return;
+@@ -671,7 +671,7 @@ static void oops_to_nvram(struct kmsg_du
+ 		break;
+ 	default:
+ 		pr_err("%s: ignoring unrecognized KMSG_DUMP_* reason %d\n",
+-		       __func__, (int) reason);
++		       __func__, (int) detail->reason);
+ 		return;
+ 	}
+ 
+warning: detail, node 59: record.reason = ... ;[1,2,21,22,32] in pstore_dump may be inconsistently modified
+warning: detail, node 105: if[1,2,21,22,54] in pstore_dump may be inconsistently modified
+diff -u -p a/fs/pstore/platform.c b/fs/pstore/platform.c
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -275,7 +275,7 @@ void pstore_record_init(struct pstore_re
+  * end of the buffer.
+  */
+ static void pstore_dump(struct kmsg_dumper *dumper,
+-			enum kmsg_dump_reason reason)
++			struct kmsg_dump_detail *detail)
+ {
+ 	struct kmsg_dump_iter iter;
+ 	unsigned long	total = 0;
+@@ -285,9 +285,9 @@ static void pstore_dump(struct kmsg_dump
+ 	int		saved_ret = 0;
+ 	int		ret;
+ 
+-	why = kmsg_dump_reason_str(reason);
++	why = kmsg_dump_reason_str(detail->reason);
+ 
+-	if (pstore_cannot_block_path(reason)) {
++	if (pstore_cannot_block_path(detail->reason)) {
+ 		if (!spin_trylock_irqsave(&psinfo->buf_lock, flags)) {
+ 			pr_err("dump skipped in %s path because of concurrent dump\n",
+ 					in_nmi() ? "NMI" : why);
+@@ -311,7 +311,7 @@ static void pstore_dump(struct kmsg_dump
+ 		pstore_record_init(&record, psinfo);
+ 		record.type = PSTORE_TYPE_DMESG;
+ 		record.count = oopscount;
+-		record.reason = reason;
++		record.reason = detail->reason;
+ 		record.part = part;
+ 		record.buf = psinfo->buf;
+ 
+@@ -352,7 +352,7 @@ static void pstore_dump(struct kmsg_dump
+ 		}
+ 
+ 		ret = psinfo->write(&record);
+-		if (ret == 0 && reason == KMSG_DUMP_OOPS) {
++		if (ret == 0 && detail->reason == KMSG_DUMP_OOPS) {
+ 			pstore_new_entry = 1;
+ 			pstore_timer_kick();
+ 		} else {
+diff -u -p a/arch/um/kernel/kmsg_dump.c b/arch/um/kernel/kmsg_dump.c
+--- a/arch/um/kernel/kmsg_dump.c
++++ b/arch/um/kernel/kmsg_dump.c
+@@ -8,7 +8,7 @@
+ #include <os.h>
+ 
+ static void kmsg_dumper_stdout(struct kmsg_dumper *dumper,
+-				enum kmsg_dump_reason reason)
++				struct kmsg_dump_detail *detail)
+ {
+ 	static struct kmsg_dump_iter iter;
+ 	static DEFINE_SPINLOCK(lock);
+
+-- 
+Kees Cook
 
