@@ -1,169 +1,97 @@
-Return-Path: <linux-hyperv+bounces-2501-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2502-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 860A991A068
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Jun 2024 09:29:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C71F891A42A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Jun 2024 12:42:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 132F71F21B18
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Jun 2024 07:29:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 812F2281119
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Jun 2024 10:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93C5D4D8C3;
-	Thu, 27 Jun 2024 07:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A93F14830A;
+	Thu, 27 Jun 2024 10:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyLJ7Udo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObLTprxC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBC94C3C3
-	for <linux-hyperv@vger.kernel.org>; Thu, 27 Jun 2024 07:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCD3146D7D;
+	Thu, 27 Jun 2024 10:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719473375; cv=none; b=R1MwiGZtP5Y2GdvLdbam+zwEPiwsRVlYLrULRaneEnqoaAHcxrfNfx5Cpl85eEjA7BDGNCCzr3wcTDscYEKAMDdYgTKJKloZJf2iDAIZdV0VZSOvV/FSn+KdZvcOIbntX8V2vx7c9er4Pgw8XYVHlzE3bnrCGCJDEvJ+M9/G3pQ=
+	t=1719484829; cv=none; b=ceLi3bQNX1VuVeo/nwL8lcgU3nAMLQavpwjG4C9ihCNvYFG677Pj/rr42qWMzs4pUwRRmGDboTSCP1vPMvGEevWyIvWD2yKjx1bW2b0chRitkncczuY0NbC8zmFS+Nio0IvffSgn+UgwJME+bPVHCpKGmczbuidUDI2moPhbDK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719473375; c=relaxed/simple;
-	bh=JjSO9oA+bMwMgeph3RVib8k7guo+CU2X8VGJGV3hKAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IDi7OOxJsvfHueTtx34tO5JX79I3xiz41fCW7hkCQcAKgin/oYUHreLEK9X9fEX/uLSfuCgCwBF4Sy9oe18q+bXVOc74+Q8KPzFWFGxzt5addPMDW3rDJpOs64PZ8Yjd+izegXvbrwcqFvFEoDoMH7mbT2N14qnjVOIuyK68orU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EyLJ7Udo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719473372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ArljJjB0JyJS00KNOlxMunWxUs1/GD1Wf4W99edQFdU=;
-	b=EyLJ7UdomRa9e5Z3kF/dB3puDnEMRL8o8z/0OQy9cUudAiFpF01X+0Xn+XRnlLE6HGwfzJ
-	V7L4YL7i5TNl5ZTcnSqPbmLmefjxtcaJqjgscy9uMf9Sphe19AfO38egrTFrRexM4WN3pm
-	lwVMhmkUfRxfFVzZCr0xGAuqg7zAN+o=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-138-lXhheiA8Oeud2HEGjAvdJg-1; Thu, 27 Jun 2024 03:29:30 -0400
-X-MC-Unique: lXhheiA8Oeud2HEGjAvdJg-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52ce007cdd4so3808089e87.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 27 Jun 2024 00:29:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719473369; x=1720078169;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ArljJjB0JyJS00KNOlxMunWxUs1/GD1Wf4W99edQFdU=;
-        b=NET8DDob+FswanbBq5WwIFe2rjQP+1Ha63bjyg9DGomfpHtpkSnM2NFCRCcwFHxaJj
-         anQvKS3cSAgrDz7CQ+yaMdgSQ5gJ0w8coqpBBTWZWeoIKaMOekVhyKw+xT0wLilkckij
-         CFECvJ2JQUe45+nJkPzulq/HtuAs1TNrC41WCDMn3gt5HVmTEKsm+YlIq+E1/4W7ZvkS
-         t1xAkmNGCfpvwWHLWEa/O7dwgB5cq0RFvMfSC/MImjtgrnpk56p/NsvTboUGNyO230An
-         OhU2j7zLinUlkqpLTy3ZJt77sdM0aYR8N7UjGNyoesqVhI9LQ5lSgRwOXrzXtHyXUTSi
-         6Cuw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9EMBqiCxVTwDtd4EnE0bpwfp5MTvvCDDEhMupLMrk+n3Gq+lMRQli/NTWFJQJ8A0uxLQpjeAZiCotO9DkgIUbLaFRzndPjsBNsDqP
-X-Gm-Message-State: AOJu0YwZjDIuXUkgTjzoOqdINY5EpEjR6rHsTGc401bjwKr/j/PUfFmA
-	6vMuZGa1MTLe/GRoctMdM7yjj94vCQ/+2MECaXZLzbqAoFZsGb7gtQ4/ETuhCV8mTNbSdliF73S
-	d9bDdL5/rs2gI3xvG5xz3h5I0f0VYvWqWi/AyTHDtjKLLTg4obbYt7bhB8BkeXA==
-X-Received: by 2002:a05:6512:688:b0:52c:8837:718a with SMTP id 2adb3069b0e04-52ce185cffdmr9405300e87.43.1719473369047;
-        Thu, 27 Jun 2024 00:29:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHbOO3gAiuM5teegTvAjdpAZYISeHz2jPAZuVwH5HNKIpTCZBH+tcy4/G9Q3EUr6abmm1rODg==
-X-Received: by 2002:a05:6512:688:b0:52c:8837:718a with SMTP id 2adb3069b0e04-52ce185cffdmr9405275e87.43.1719473368602;
-        Thu, 27 Jun 2024 00:29:28 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e? ([2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8245e7csm52601955e9.3.2024.06.27.00.29.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 00:29:28 -0700 (PDT)
-Message-ID: <4aa3a028-04e5-4658-9879-df60dab06c54@redhat.com>
-Date: Thu, 27 Jun 2024 09:29:25 +0200
+	s=arc-20240116; t=1719484829; c=relaxed/simple;
+	bh=2MDDXR4KEvuWBsQmvWfPZ5K4Y9VhgvoWonIB2qz20OI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=D7Z/lmnpBPRiwBuebu3UQXE7n1kbOeiG4pSfUg4F8XHBkoQBtKBJARhRL8KQ6d7e5lv2Sr0KMrzJ5oq3957wEbiSuOrpQ1l40+HJi8eghv1VONFEiPZYLj/P1HWyx9jtVHKkRJ0XcOSbhJzv0XfiXcnHWE6jrOJzdd7VAbsVFlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObLTprxC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A299DC32789;
+	Thu, 27 Jun 2024 10:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719484828;
+	bh=2MDDXR4KEvuWBsQmvWfPZ5K4Y9VhgvoWonIB2qz20OI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ObLTprxCIkX2ujT0zyILcCHMJkH9dxPmWD0tZvicY6nT4/z6oh+JRRjxZY8SXxhVr
+	 5c1q7RPE5ybiVkEHFKHxk0XaiT67kiePfXdLeZDTiOMC3mEwZz2IMnJfmDvQGh6cVx
+	 ZX8n74FBGuNLHNZAbjBUOV0KxrosJdJCvXFjicHA6a2ThYmJrzXmyMZ5u8oHOIE/sw
+	 LK4aE5h3QMKpkavWd1hSjwKFEmOiVMJSA/jFIaM6vhvdub8jpGdAFk/kgB6OWUyq8X
+	 hDvm1UNpcWVsor1wtyqO+2atJQNiqtPOf+QiKj2Hc+g9fLr892Jktttn4imL3slHWM
+	 8eJWJ271msG2w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 94ED9C4167D;
+	Thu, 27 Jun 2024 10:40:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] printk: Add a short description string to kmsg_dump()
-To: Petr Mladek <pmladek@suse.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Steven Rostedt <rostedt@goodmis.org>, John Ogness
- <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240625123954.211184-1-jfalempe@redhat.com>
- <ZnvKcnC9ruaIHYij@pathway.suse.cz>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <ZnvKcnC9ruaIHYij@pathway.suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] net: mana: Fix possible double free in error handling path
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171948482860.885.1093281785997333661.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Jun 2024 10:40:28 +0000
+References: <20240625130314.2661257-1-make24@iscas.ac.cn>
+In-Reply-To: <20240625130314.2661257-1-make24@iscas.ac.cn>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shradhagupta@linux.microsoft.com,
+ horms@kernel.org, kotaranov@microsoft.com, longli@microsoft.com,
+ schakrabarti@linux.microsoft.com, erick.archer@outlook.com, leon@kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
+Hello:
 
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-On 26/06/2024 10:00, Petr Mladek wrote:
-> On Tue 2024-06-25 14:39:29, Jocelyn Falempe wrote:
->> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
->> callback.
->> This patch adds a new parameter "const char *desc" to the kmsg_dumper
->> dump() callback, and update all drivers that are using it.
->>
->> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
->> function and a macro for backward compatibility.
->>
->> I've written this for drm_panic, but it can be useful for other
->> kmsg_dumper.
->> It allows to see the panic reason, like "sysrq triggered crash"
->> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
->>
->> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
->> ---
->>   arch/powerpc/kernel/nvram_64.c             |  3 ++-
->>   arch/powerpc/platforms/powernv/opal-kmsg.c |  3 ++-
->>   drivers/gpu/drm/drm_panic.c                |  3 ++-
->>   drivers/hv/hv_common.c                     |  3 ++-
->>   drivers/mtd/mtdoops.c                      |  3 ++-
->>   fs/pstore/platform.c                       |  3 ++-
->>   include/linux/kmsg_dump.h                  | 13 ++++++++++---
->>   kernel/panic.c                             |  2 +-
->>   kernel/printk/printk.c                     |  8 +++++---
->>   9 files changed, 28 insertions(+), 13 deletions(-)
+On Tue, 25 Jun 2024 21:03:14 +0800 you wrote:
+> When auxiliary_device_add() returns error and then calls
+> auxiliary_device_uninit(), callback function adev_release
+> calls kfree(madev). We shouldn't call kfree(madev) again
+> in the error handling path. Set 'madev' to NULL.
 > 
-> The parameter is added into all dumpers. I guess that it would be
-> used only drm_panic() because it is graphics and might be "fancy".
-> The others simply dump the log buffer and the reason is in
-> the dumped log as well.
-
-Ok, I also tried to retrieve the reason from the dumped log, but that's 
-really fragile.
-
+> Fixes: a69839d4327d ("net: mana: Add support for auxiliary device")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 > 
-> Anyway, the passed buffer is static. Alternative solution would
-> be to make it global and export it like, for example, panic_cpu.
+> [...]
 
-It's not a static buffer, because the string is generated at runtime.
-eg: https://elixir.bootlin.com/linux/latest/source/arch/arm/mm/init.c#L158
+Here is the summary with links:
+  - [v3] net: mana: Fix possible double free in error handling path
+    https://git.kernel.org/netdev/net/c/1864b8224195
 
-So it will be hard to avoid race conditions.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> 
-> Best Regards,
-> Petr
-> 
 
 
