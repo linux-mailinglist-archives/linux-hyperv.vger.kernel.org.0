@@ -1,133 +1,131 @@
-Return-Path: <linux-hyperv+bounces-2510-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2511-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD0BE91DA1B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 10:37:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 418A291DB70
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 11:31:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4769DB207FC
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 08:37:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 738BD1C22EBB
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 09:31:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE111C144;
-	Mon,  1 Jul 2024 08:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47FD53804;
+	Mon,  1 Jul 2024 09:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dg771uiv"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="H/D+Q2VC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6879D2C6BB
-	for <linux-hyperv@vger.kernel.org>; Mon,  1 Jul 2024 08:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5842C859;
+	Mon,  1 Jul 2024 09:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823070; cv=none; b=UCsb2Oz1nW3r8IwgKClUUeznSynrOP4t+OgCIh9noDVbcVFIMYWG8T49QTGpjhmGWxXDtH+uNZ2COE0Z4j6VY+aaBYP1vTbpH2k3Sa9dCwi629t6Jelv+1M90OMUly3w45Tdyha5obs9XzR/uWkZ8RC3chIHO1/YxRXVsPDv23c=
+	t=1719826272; cv=none; b=lNqqlkjD5ME3IIloUL1b0yVqhjmhlSJ5vvXWnv4XeaZHQIDtgIW/gxVfxSE6Wf10iatJUT/lLOIeU6pUu6N34O8BSMRheSeXR+jslUHCjht3zhvp2wMclQHfm3gdANIUnwIwG0q5ARU+PMINz5m6ZJHXjvsbxVqMtFrF6vaM6+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823070; c=relaxed/simple;
-	bh=c4cWViksxlV1AZY1IdTsd8wh4QTXnLbNVosxvs7/Js0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IZO1wuli0JbY1dS2GETq2iKykLI2KSAmJG0+Pex3tIsnoc0/L8TblyaeOD6m6Atw/O3/E4xbqOji3gj5eL1VyqoC0EuoKC3htv2Ar5de2XN4gIpsk/gvcz+opTfeKIYl5be46+9l712KQUQppI0xYQTOA3hKbUmx2UiPyzuFiNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dg771uiv; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70683d96d0eso1448632b3a.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 01 Jul 2024 01:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719823068; x=1720427868; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CLT2u1IgJly2bHB8vwMCHTWIybJZJ4OoHUhhxxDVW70=;
-        b=dg771uiv3ZrEZPm4o4bv/4iO63EHkStIjxLC6ccUN+fowuR9wnhC3cGZ0ARJh3KMxT
-         qGdBqys+KFWyXUSg4TG3P4L6dToKrxCpEKrZR6jLoYwdL6WTZEbYoKgS60t5Ndu8gFTN
-         Mp8HzRfmf3ops+0asOobrdTn7TlPhCcvw838We5nrBMzanE9YilZjeLcIVbL5sfQX1Vq
-         mVHCJ8UsIRS6o//DRGSU5Ko718zZDNIqL7ckrLp0FeetE9LTTTDVcg9mlmxkiFpX5PNw
-         KdI2Wys58wUohFIpjJpfNnHjlr6EpeJl0d5/JW9m2mHuQM6ZZGjoc0DVFq8zc3XwAu6g
-         um+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823068; x=1720427868;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CLT2u1IgJly2bHB8vwMCHTWIybJZJ4OoHUhhxxDVW70=;
-        b=Mtl0RupRczn2EBiTTqrvOGs+9sqaic0/wevlCzyyPcbNeKSZElTEJDWb2RNqT0v/pc
-         TB8ZTPjgS4WYpMWJnnjoGiTTwX9AmMmym2gs645XdUCmWxu7iibyFiQdg0Ga9UuSm9FB
-         SmbpzgZqj9b3NMt7/K5yDhfxeXi2yWXPNknBBky+aKNBfGkXNiBWAjDz72suS5XcQoH9
-         C82g7Qloik/0SCq3PLLSL6WC2NkQhm0tpIq3GykwEZj10plASaJ1CBRLPed/ngRKA958
-         5ptYu/1XpvwU368xPXKpzPv1owEIKWd5213KLWkSzG+FY4m75qRNrxj0JHGs83j6J34b
-         K/Mg==
-X-Gm-Message-State: AOJu0Yy3GOxzV8VnQknYuKJ5QQmdtSRlUjMPJkVlthC4Es9NrrqWfIwk
-	AlDzk6HsVMrAFbMHLNeNblxg2ShN7eWFqbySNYwRoTkyEee/oaInvk1ht7nG
-X-Google-Smtp-Source: AGHT+IE9HB+eJ5SVVUnVnbC98u8fDPJVl6J+7M2+uguqVEKqdDmB5qOOHAJo4t0a4lpcao3Lx18OZA==
-X-Received: by 2002:a05:6a20:a11a:b0:1be:c967:311f with SMTP id adf61e73a8af0-1bef611b816mr3598455637.13.1719823068310;
-        Mon, 01 Jul 2024 01:37:48 -0700 (PDT)
-Received: from lab-vm-annandaa-0607173234-role-0.. ([20.171.147.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e2197sm59027105ad.63.2024.07.01.01.37.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 01:37:48 -0700 (PDT)
-From: Anthony Nandaa <profnandaa@gmail.com>
-To: linux-hyperv@vger.kernel.org,
-	decui@microsoft.com,
-	mhklinux@outlook.com
-Cc: kys@microsoft.com,
-	Anthony Nandaa <profnandaa@gmail.com>
-Subject: [PATCH] tools: hv: lsvmbus: change shebang to use python3
-Date: Mon,  1 Jul 2024 08:35:55 +0000
-Message-Id: <20240701083554.11967-1-profnandaa@gmail.com>
-X-Mailer: git-send-email 2.33.8
+	s=arc-20240116; t=1719826272; c=relaxed/simple;
+	bh=U9zvGVR6EM9VmPPgkNfEiRVaS2I3tAhr6eAPgnKQLfY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=ZSLtGfxyNSgSKfqCErz3g5wAU+Z9wMonWxpX3KZItzS3hJEwqJBySXxi2LILAQMle2ldm2GcetjMZ2oBCFnYk5p5c8iLoSGlXCpFeuI7Z/pCeoPbphMYgNpk2TTBqjozXd5BzIkcoR7da/FRtnfjKnS8XCPRPWRup4nIuT/fZIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=H/D+Q2VC; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1719826236; x=1720431036; i=markus.elfring@web.de;
+	bh=0n79Gfup/hAkeMvlN7WvUCrlNjugDCmGLSow+BGQudY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=H/D+Q2VCEGNpgZjCQoz5qfWGbAGoxvEpb3BnHr6WhxJa238nWq3xEx3tNKKhrcsX
+	 +vqj7W5CY2Rq3U/4a7WqR3ZMyIF1AG9hlc9OpUvQ+gnb2GaHRCKw5EhsE/1c3JAH/
+	 uuisi/h97NoYLKf/IvE34dwAJ28Af+bZdBJfa5n+3RtqKb+MCTYg0ODQNsKhiyPN8
+	 C1Q7Uj2iTFcUNxar2lfbCpCnQuI/dYvpfTz+lrJNDtU0i5BN+HM45K2XzbWE+szjZ
+	 kDXtkQIf0RHI2HywE3mEDtqW6LNxjE94eQkrJQ2HkN7RR7QPhMcxEdiMazPZ8cAyM
+	 el8AMWLxoNGPgZaaWw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0Zns-1sCABs1tOm-018I67; Mon, 01
+ Jul 2024 11:30:36 +0200
+Message-ID: <6e5dffe8-69fa-4d91-8cf1-136265bb5500@web.de>
+Date: Mon, 1 Jul 2024 11:30:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Haoxiang Li <make24@iscas.ac.cn>, linux-hyperv@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Andrea Parri <parri.andrea@gmail.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Michael Kelley <mikelley@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240701023059.83616-1-make24@iscas.ac.cn>
+Subject: Re: [PATCH] Drivers: hv: vmbus: Add missing check for dma_set_mask in
+ vmbus_device_register()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240701023059.83616-1-make24@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oj/fHA+sMZUu4U5nVZUuyMGcCxNNLJ8V8FmFWYOwlpnsBvPbOmw
+ VsYOXmr6EXKAUde4IUSN+xXPQALYyhWCkF0W683c21KV5aqbdt0EBckVJlJgq8o9e/PCZDG
+ 0b1a23dmIcN417xhKaQDL5VJjuPqc8rr0mnPYxDkJ95lvnpAfK1nzEU58aJiWW9kJBFw8D4
+ bBJxD4aZjN9Ytf3WPvylQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:nqZCyd0z8HM=;0q72lLX8mmvOxhJ5Agdviowh1UU
+ TkZ+qORi6u9sNW+4yjdp8/Qc/VkOHdQREMhCtOSzkkwUR0Za11AoxuIgLcPrAWnNuOGrxj+m3
+ HDJqzCBm2VF18Xh7yQxzL/MWk3bHFptjN2dyJc1qwMkRV3mJPiu8e/+9MNpCLq0cIK28Ciob6
+ iUro3RzxdrUf5eJmENHJsJRY7xfxvyzMXy0X9UhYprRTzNuPbq4irRQIucQIXXlvK2YhsH44B
+ a/e7PYhATvE2AjCQwRDctxldwgSiYlNzmbO9+QRn/IMXpwcLMysORi2t01JXVz8Ege0fjaEVk
+ Bo8vb61rlzu3LWVdpaq/hrb1zFPGaoZzcOKrKRs3ke0mOnUhpYMu78LL4wELLxQXANx2uuIi5
+ wgsXhnw4W9i1bIM1z/s1VHqlhPfuAF2qYGJqxsomihXlNGJ5HsCJbNOnEvgkrJv3vIf0liRkP
+ kFbec3C/kdMDPsEhUl1Au5TurYB3crGwDo9q/noyYKUnBLyASdyi/ueormOitoDno4MRLgl89
+ UeAGZDcBxQVIdn8pW3E7BP7ChwolkTyB3076Jwp8Pvz8TD/M3cnjt01KAsFnVZst4uaZwQSRu
+ ff8VLNpwAB7quC53cDfEWFw06vPbozchbvhZZYbH0qnXOfp4fMRbEi4sQb9dFk9//aoLaRzTO
+ ZK/nhPEujrgiMHPQej/Fhkes1P8DkPBIm9nRlyrjJcjGNJ9nFupamutkf07eWk0EJnAMZsHKD
+ Ip1XfG+JDzgZTF+72VMX6kVSApklwi7TOF0KjXZdac+eVfrXYCMlWi/Y8IcCWXZp3nand/kRF
+ BXgAmp2bB1YulO80ylQZL7XznVi0cAmSLzmTMEsYknD3U=
 
-This patch updates the shebang in the lsvmbus tool to use python3
-instead of python. The change is necessary because Python 2 has
-reached its end of life as of January 1, 2020, and is no longer
-maintained[1]. Many modern systems do not have python pointing to
-Python 2, and instead use python3.
+> child_device_obj->device cannot perform DMA properly if dma_set_mask()
+> returns non-zero. =E2=80=A6
 
-By explicitly using python3, we ensure compatibility with modern
-systems since Python 2 is no longer being shipped by default.
+Another wording suggestion:
+  Direct memory access can not be properly performed any more
+  after a dma_set_mask() call failed.
 
-This change also updates the file permissions to make the script
-executable, so that the script runs out of the box.
-Also, similar scripts within `tools/hv` have mode `755`:
 
-```
--rwxr-xr-x 1 labuser labuser   930 Jun 28 16:15 hv_get_dhcp_info.sh
--rwxr-xr-x 1 labuser labuser   622 Jun 28 16:15 hv_get_dns_info.sh
--rwxr-xr-x 1 labuser labuser  1888 Jun 28 16:15 hv_set_ifconfig.sh
-```
+See also:
+https://elixir.bootlin.com/linux/v6.10-rc6/source/kernel/dma/mapping.c#L80=
+4
 
-Before fix, this is what you get when you attempt to run `lsvmbus`:
-```
-/usr/bin/env: ‘python’: No such file or directory
-```
 
-[1] https://www.python.org/doc/sunset-python-2/
+>      =E2=80=A6 child_device_obj->device is not initialized here, so use =
+kfree() to
+> free child_device_obj->device.
 
-Signed-off-by: Anthony Nandaa <profnandaa@gmail.com>
----
- tools/hv/lsvmbus | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- mode change 100644 => 100755 tools/hv/lsvmbus
+How did you come to the conclusion that meaningful data processing
+would still be possible according to such information?
 
-diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
-old mode 100644
-new mode 100755
-index 55e7374bade0..23dcd8e705be
---- a/tools/hv/lsvmbus
-+++ b/tools/hv/lsvmbus
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- 
- import os
--- 
-2.33.8
 
+=E2=80=A6
+> Signed-off-by: Haoxiang Li <make24@iscas.ac.cn>
+
+I find it interesting that another personal name is presented here.
+I noticed that some patches were published with the name =E2=80=9CMa Ke=E2=
+=80=9D previously.
+How will requirements be resolved for the Developer's Certificate of Origi=
+n?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n398
+
+
+Would you like to append parentheses to another function name in the summa=
+ry phrase?
+
+Regards,
+Markus
 
