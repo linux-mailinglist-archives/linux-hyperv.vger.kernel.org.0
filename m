@@ -1,165 +1,133 @@
-Return-Path: <linux-hyperv+bounces-2509-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2510-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D83091D7F9
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 08:16:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD0BE91DA1B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 10:37:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14C151F20FD6
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 06:16:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4769DB207FC
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 08:37:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8301639FCE;
-	Mon,  1 Jul 2024 06:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE111C144;
+	Mon,  1 Jul 2024 08:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dg771uiv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B3D2B9BF;
-	Mon,  1 Jul 2024 06:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6879D2C6BB
+	for <linux-hyperv@vger.kernel.org>; Mon,  1 Jul 2024 08:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719814591; cv=none; b=YyxodEubEv/oNW8LWDovKU217J/rqVK8aQEwc6o+eVxXA8taX9/73rsYy6+fpiha0CNxTKkFhmqpSR05v06scn9KEn6H2vMsHJ+edy0BpXLjKcrd8e8B2QYoh8d+kbOP80elAHo04ces52g7IaGCyCqYRG/mz5shIJyDjISoehc=
+	t=1719823070; cv=none; b=UCsb2Oz1nW3r8IwgKClUUeznSynrOP4t+OgCIh9noDVbcVFIMYWG8T49QTGpjhmGWxXDtH+uNZ2COE0Z4j6VY+aaBYP1vTbpH2k3Sa9dCwi629t6Jelv+1M90OMUly3w45Tdyha5obs9XzR/uWkZ8RC3chIHO1/YxRXVsPDv23c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719814591; c=relaxed/simple;
-	bh=+oYyA2t91VJ5Zv4CluJBZ7kYxo1DqJ18AJpDzTQeCHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eF8sKK05ffCYqyT2qEJuVnbQQMnV8HzzS26RUZmbXcaeo42hvW0DrpClp5vgQYjqXCMUCMkF7T/4TIB8MBoeTbyvuoa7aX+cjpzX9P6nzo3JDUIv8HoYECGV1aymByLCFaeQXerlLzEFR5KeAjji/mS7/naneaHe/JYOYXUhD78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1719823070; c=relaxed/simple;
+	bh=c4cWViksxlV1AZY1IdTsd8wh4QTXnLbNVosxvs7/Js0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IZO1wuli0JbY1dS2GETq2iKykLI2KSAmJG0+Pex3tIsnoc0/L8TblyaeOD6m6Atw/O3/E4xbqOji3gj5eL1VyqoC0EuoKC3htv2Ar5de2XN4gIpsk/gvcz+opTfeKIYl5be46+9l712KQUQppI0xYQTOA3hKbUmx2UiPyzuFiNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dg771uiv; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d63332595cso1177941b6e.3;
-        Sun, 30 Jun 2024 23:16:29 -0700 (PDT)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70683d96d0eso1448632b3a.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 01 Jul 2024 01:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719823068; x=1720427868; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CLT2u1IgJly2bHB8vwMCHTWIybJZJ4OoHUhhxxDVW70=;
+        b=dg771uiv3ZrEZPm4o4bv/4iO63EHkStIjxLC6ccUN+fowuR9wnhC3cGZ0ARJh3KMxT
+         qGdBqys+KFWyXUSg4TG3P4L6dToKrxCpEKrZR6jLoYwdL6WTZEbYoKgS60t5Ndu8gFTN
+         Mp8HzRfmf3ops+0asOobrdTn7TlPhCcvw838We5nrBMzanE9YilZjeLcIVbL5sfQX1Vq
+         mVHCJ8UsIRS6o//DRGSU5Ko718zZDNIqL7ckrLp0FeetE9LTTTDVcg9mlmxkiFpX5PNw
+         KdI2Wys58wUohFIpjJpfNnHjlr6EpeJl0d5/JW9m2mHuQM6ZZGjoc0DVFq8zc3XwAu6g
+         um+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719814589; x=1720419389;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rTyii9XBbJ4Ky0TNjSfhn+DHUjISOA38nQqAS4bi8KQ=;
-        b=UwxpPYsoq19fdFZHZ5r8RLWmCOzlTEFAYYHyV8ZmJbWEdPMLPXO5Uo8eMS9nGofiiL
-         PEjShq9f7HZaXi2m10DaM5OToYSWaDffHw77XdChv37QT+Jbh9cVsfBBUJs/zOPEB4aN
-         O2GK4JvMtM1VMKfWldu4AB1i51Np3KfgOUfVJnvLD2eqc5p7hfwhpZ9O2ZDSWhuHV+X0
-         7awbEXY+YWvC0hJjPO0KnGJHx1nyvJt4XCn9oUZyf+Iis11RIcCNhdI0DCVBb8+3U/Ch
-         eyP9MqZcsoOR92yf+Q1Vehq1OfNZvl+mllV/+MbygNfhynRtgItxA+pPua1xpKuSckT5
-         cbKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVAPLCjn31dzOimi1TVubE4mFRip7kTD8b6Dd2IWafcqfo1FO3PicfxMg+/S6q/Y3VhiVPldTqRILsijZfd/BZwqk67xA1+wGvwW1uMf3Ddn+vMQ7CrgLFqJCP/3zf0CMLfVS7+5c9EPkZCOFJvv61PMPi0gSfMFlQsO49IjrfoO4vc6rv
-X-Gm-Message-State: AOJu0YxO4GIEeC/yCioaCYJMjw09klINdrzgxSW+G2kysz9KE01Q3NXG
-	nLRwbg+2fHLkmGwlGNw/5p2kd+rvQUl8xmCYY47BQwmXDoFsw7wb
-X-Google-Smtp-Source: AGHT+IFYqg+/QLVGWkm2Bb11LtZmSlEFPu4ScAz9HoXJiKNTs0C3lcornbmodvP0o7eEZaKOlW86BQ==
-X-Received: by 2002:a05:6808:2288:b0:3d6:331d:b52d with SMTP id 5614622812f47-3d6b2f07e53mr7284293b6e.4.1719814588940;
-        Sun, 30 Jun 2024 23:16:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708044ac419sm5655629b3a.164.2024.06.30.23.16.28
+        d=1e100.net; s=20230601; t=1719823068; x=1720427868;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CLT2u1IgJly2bHB8vwMCHTWIybJZJ4OoHUhhxxDVW70=;
+        b=Mtl0RupRczn2EBiTTqrvOGs+9sqaic0/wevlCzyyPcbNeKSZElTEJDWb2RNqT0v/pc
+         TB8ZTPjgS4WYpMWJnnjoGiTTwX9AmMmym2gs645XdUCmWxu7iibyFiQdg0Ga9UuSm9FB
+         SmbpzgZqj9b3NMt7/K5yDhfxeXi2yWXPNknBBky+aKNBfGkXNiBWAjDz72suS5XcQoH9
+         C82g7Qloik/0SCq3PLLSL6WC2NkQhm0tpIq3GykwEZj10plASaJ1CBRLPed/ngRKA958
+         5ptYu/1XpvwU368xPXKpzPv1owEIKWd5213KLWkSzG+FY4m75qRNrxj0JHGs83j6J34b
+         K/Mg==
+X-Gm-Message-State: AOJu0Yy3GOxzV8VnQknYuKJ5QQmdtSRlUjMPJkVlthC4Es9NrrqWfIwk
+	AlDzk6HsVMrAFbMHLNeNblxg2ShN7eWFqbySNYwRoTkyEee/oaInvk1ht7nG
+X-Google-Smtp-Source: AGHT+IE9HB+eJ5SVVUnVnbC98u8fDPJVl6J+7M2+uguqVEKqdDmB5qOOHAJo4t0a4lpcao3Lx18OZA==
+X-Received: by 2002:a05:6a20:a11a:b0:1be:c967:311f with SMTP id adf61e73a8af0-1bef611b816mr3598455637.13.1719823068310;
+        Mon, 01 Jul 2024 01:37:48 -0700 (PDT)
+Received: from lab-vm-annandaa-0607173234-role-0.. ([20.171.147.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e2197sm59027105ad.63.2024.07.01.01.37.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 23:16:28 -0700 (PDT)
-Date: Mon, 1 Jul 2024 06:16:18 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-	stable@kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jake Oshins <jakeo@microsoft.com>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
-Message-ID: <ZoJJsolJJcLUYiVG@liuwe-devbox-debian-v2>
-References: <20240621210018.350429-1-wei.liu@kernel.org>
- <20240626151039.GA1466747@bhelgaas>
+        Mon, 01 Jul 2024 01:37:48 -0700 (PDT)
+From: Anthony Nandaa <profnandaa@gmail.com>
+To: linux-hyperv@vger.kernel.org,
+	decui@microsoft.com,
+	mhklinux@outlook.com
+Cc: kys@microsoft.com,
+	Anthony Nandaa <profnandaa@gmail.com>
+Subject: [PATCH] tools: hv: lsvmbus: change shebang to use python3
+Date: Mon,  1 Jul 2024 08:35:55 +0000
+Message-Id: <20240701083554.11967-1-profnandaa@gmail.com>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626151039.GA1466747@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 26, 2024 at 10:10:39AM -0500, Bjorn Helgaas wrote:
-> 1) Capitalize subject to match history
+This patch updates the shebang in the lsvmbus tool to use python3
+instead of python. The change is necessary because Python 2 has
+reached its end of life as of January 1, 2020, and is no longer
+maintained[1]. Many modern systems do not have python pointing to
+Python 2, and instead use python3.
 
-What do you mean here? I got the "PCI: hv: ..." format from recent
-commits. "PCI" is capitalized. You want to to capitalize "fix"?
+By explicitly using python3, we ensure compatibility with modern
+systems since Python 2 is no longer being shipped by default.
 
-> 2) Say something more specific than "fix reading ..."
-> 
-> Apparently this returns garbage in some case where you want to return
-> zero?
+This change also updates the file permissions to make the script
+executable, so that the script runs out of the box.
+Also, similar scripts within `tools/hv` have mode `755`:
 
-Yes. *val is not changed in the old code, so garbage is returned.
+```
+-rwxr-xr-x 1 labuser labuser   930 Jun 28 16:15 hv_get_dhcp_info.sh
+-rwxr-xr-x 1 labuser labuser   622 Jun 28 16:15 hv_get_dns_info.sh
+-rwxr-xr-x 1 labuser labuser  1888 Jun 28 16:15 hv_set_ifconfig.sh
+```
 
-Here is the updated commit message. I can resend once you confirm you're
-happy with it.
+Before fix, this is what you get when you attempt to run `lsvmbus`:
+```
+/usr/bin/env: ‘python’: No such file or directory
+```
 
-    PCI: hv: Fix reading of PCI_INTERRUPT_PIN
+[1] https://www.python.org/doc/sunset-python-2/
 
-    The intent of the code snippet is to always return 0 for both
-    PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
+Signed-off-by: Anthony Nandaa <profnandaa@gmail.com>
+---
+ tools/hv/lsvmbus | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ mode change 100644 => 100755 tools/hv/lsvmbus
 
-    The check misses PCI_INTERRUPT_PIN. This patch fixes that.
+diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
+old mode 100644
+new mode 100755
+index 55e7374bade0..23dcd8e705be
+--- a/tools/hv/lsvmbus
++++ b/tools/hv/lsvmbus
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ import os
+-- 
+2.33.8
 
-    This is discovered by this call in VFIO:
-
-        pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
-
-    The old code does not set *val to 0 because it misses the check for
-    PCI_INTERRUPT_PIN. Garbage is returned in this case.
-
-    Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-    Cc: stable@kernel.org
-    Signed-off-by: Wei Liu <wei.liu@kernel.org>
-
-Thanks,
-Wei.
-
-
-> 
-> On Fri, Jun 21, 2024 at 09:00:18PM +0000, Wei Liu wrote:
-> > The intent of the code snippet is to always return 0 for both
-> > PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
-> > 
-> > The check misses PCI_INTERRUPT_PIN. This patch fixes that.
-> > 
-> > This is discovered by this call in VFIO:
-> > 
-> >     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
-> > 
-> > The old code does not set *val to 0 because it misses the check for
-> > PCI_INTERRUPT_PIN.
-> > 
-> > Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> > Cc: stable@kernel.org
-> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> > ---
-> > v2:
-> > * Change the commit subject line and message
-> > * Change the code according to feedback
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index 5992280e8110..cdd5be16021d 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
-> >  		   PCI_CAPABILITY_LIST) {
-> >  		/* ROM BARs are unimplemented */
-> >  		*val = 0;
-> > -	} else if (where >= PCI_INTERRUPT_LINE && where + size <=
-> > -		   PCI_INTERRUPT_PIN) {
-> > +	} else if ((where >= PCI_INTERRUPT_LINE && where + size <= PCI_INTERRUPT_PIN) ||
-> > +		   (where >= PCI_INTERRUPT_PIN && where + size <= PCI_MIN_GNT)) {
-> >  		/*
-> >  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
-> >  		 * because this front-end only supports message-signaled
-> > -- 
-> > 2.43.0
-> > 
 
