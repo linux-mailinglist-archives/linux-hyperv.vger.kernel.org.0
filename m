@@ -1,131 +1,122 @@
-Return-Path: <linux-hyperv+bounces-2511-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2512-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 418A291DB70
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 11:31:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E293391E68C
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 19:21:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 738BD1C22EBB
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 09:31:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95B831F218F7
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jul 2024 17:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47FD53804;
-	Mon,  1 Jul 2024 09:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A11F16E88C;
+	Mon,  1 Jul 2024 17:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="H/D+Q2VC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTqfCJZ6"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5842C859;
-	Mon,  1 Jul 2024 09:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF28616E87A;
+	Mon,  1 Jul 2024 17:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719826272; cv=none; b=lNqqlkjD5ME3IIloUL1b0yVqhjmhlSJ5vvXWnv4XeaZHQIDtgIW/gxVfxSE6Wf10iatJUT/lLOIeU6pUu6N34O8BSMRheSeXR+jslUHCjht3zhvp2wMclQHfm3gdANIUnwIwG0q5ARU+PMINz5m6ZJHXjvsbxVqMtFrF6vaM6+s=
+	t=1719854456; cv=none; b=Wo53KICyXb7AWT9PP74KLM2lH2gX+g1Q87546mikWmYaFiBx57T9t8AXyy5xuAXyTk76fymQdFu14jwXEem/jczTq7dD6TPDGAxFit2xMsIzcaE22k9dNvVdPUWhvxFdng3uHi9YcQHHVVyPKCOITQc+YUf7WU1gsul4fVg3dLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719826272; c=relaxed/simple;
-	bh=U9zvGVR6EM9VmPPgkNfEiRVaS2I3tAhr6eAPgnKQLfY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ZSLtGfxyNSgSKfqCErz3g5wAU+Z9wMonWxpX3KZItzS3hJEwqJBySXxi2LILAQMle2ldm2GcetjMZ2oBCFnYk5p5c8iLoSGlXCpFeuI7Z/pCeoPbphMYgNpk2TTBqjozXd5BzIkcoR7da/FRtnfjKnS8XCPRPWRup4nIuT/fZIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=H/D+Q2VC; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719826236; x=1720431036; i=markus.elfring@web.de;
-	bh=0n79Gfup/hAkeMvlN7WvUCrlNjugDCmGLSow+BGQudY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=H/D+Q2VCEGNpgZjCQoz5qfWGbAGoxvEpb3BnHr6WhxJa238nWq3xEx3tNKKhrcsX
-	 +vqj7W5CY2Rq3U/4a7WqR3ZMyIF1AG9hlc9OpUvQ+gnb2GaHRCKw5EhsE/1c3JAH/
-	 uuisi/h97NoYLKf/IvE34dwAJ28Af+bZdBJfa5n+3RtqKb+MCTYg0ODQNsKhiyPN8
-	 C1Q7Uj2iTFcUNxar2lfbCpCnQuI/dYvpfTz+lrJNDtU0i5BN+HM45K2XzbWE+szjZ
-	 kDXtkQIf0RHI2HywE3mEDtqW6LNxjE94eQkrJQ2HkN7RR7QPhMcxEdiMazPZ8cAyM
-	 el8AMWLxoNGPgZaaWw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0Zns-1sCABs1tOm-018I67; Mon, 01
- Jul 2024 11:30:36 +0200
-Message-ID: <6e5dffe8-69fa-4d91-8cf1-136265bb5500@web.de>
-Date: Mon, 1 Jul 2024 11:30:32 +0200
+	s=arc-20240116; t=1719854456; c=relaxed/simple;
+	bh=0NqUIdCaQNe/JmGKwMDcVL1B+VgTgCG7plMAVhrtBB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NmZR96vX0UyUhK2ki4M3xBNEbJ/Ewg3lOIjvxhxAjtQ5u8uJWVVPRGcR5VJ/fmCP9bFB+fWzxitRzFNuYGahLAis3tPSsN1AQLzzSxh3LRZyMqxDMJgf5CGNT+RFgZFtdi/aVV0ae5fLTOVZZYxP3QndOcWdC1H/pBJTbaV40G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTqfCJZ6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47121C2BD10;
+	Mon,  1 Jul 2024 17:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719854455;
+	bh=0NqUIdCaQNe/JmGKwMDcVL1B+VgTgCG7plMAVhrtBB4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=VTqfCJZ6c2Pj7OMrsXKBkVrkXzgrEIbOaGuFg4N/BScgNcEV0wKOu0RUGo4YxoH57
+	 w9kkph99DKesMy0vnRm8GVY6wC+Ak4cRQFLxox4Kh+p/mDjfAp2jVODNJmvkSO4giK
+	 1tJrBu2jrtC1wYtYH5B2HJGK29OYkIek5uQndV5oYKI6rPqxxhMrE3Paeao3qIXH2X
+	 0jJ6SvmSle19OEZ09Ux9SxiOvbbsSSl0czgVUQKlbAn0sS5NeGgzsqFBhxOogojMtP
+	 3gqapU1E+7Mo94KYGEDSTW/kcMEgCcxDt3SRZrcdCzLTo4h8ugHrg+sP7xWCtzmGv1
+	 znraxD0Ey6B7A==
+Date: Mon, 1 Jul 2024 12:20:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, stable@kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jake Oshins <jakeo@microsoft.com>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
+Message-ID: <20240701172053.GA10100@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Haoxiang Li <make24@iscas.ac.cn>, linux-hyperv@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Andrea Parri <parri.andrea@gmail.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Michael Kelley <mikelley@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240701023059.83616-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Add missing check for dma_set_mask in
- vmbus_device_register()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240701023059.83616-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oj/fHA+sMZUu4U5nVZUuyMGcCxNNLJ8V8FmFWYOwlpnsBvPbOmw
- VsYOXmr6EXKAUde4IUSN+xXPQALYyhWCkF0W683c21KV5aqbdt0EBckVJlJgq8o9e/PCZDG
- 0b1a23dmIcN417xhKaQDL5VJjuPqc8rr0mnPYxDkJ95lvnpAfK1nzEU58aJiWW9kJBFw8D4
- bBJxD4aZjN9Ytf3WPvylQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nqZCyd0z8HM=;0q72lLX8mmvOxhJ5Agdviowh1UU
- TkZ+qORi6u9sNW+4yjdp8/Qc/VkOHdQREMhCtOSzkkwUR0Za11AoxuIgLcPrAWnNuOGrxj+m3
- HDJqzCBm2VF18Xh7yQxzL/MWk3bHFptjN2dyJc1qwMkRV3mJPiu8e/+9MNpCLq0cIK28Ciob6
- iUro3RzxdrUf5eJmENHJsJRY7xfxvyzMXy0X9UhYprRTzNuPbq4irRQIucQIXXlvK2YhsH44B
- a/e7PYhATvE2AjCQwRDctxldwgSiYlNzmbO9+QRn/IMXpwcLMysORi2t01JXVz8Ege0fjaEVk
- Bo8vb61rlzu3LWVdpaq/hrb1zFPGaoZzcOKrKRs3ke0mOnUhpYMu78LL4wELLxQXANx2uuIi5
- wgsXhnw4W9i1bIM1z/s1VHqlhPfuAF2qYGJqxsomihXlNGJ5HsCJbNOnEvgkrJv3vIf0liRkP
- kFbec3C/kdMDPsEhUl1Au5TurYB3crGwDo9q/noyYKUnBLyASdyi/ueormOitoDno4MRLgl89
- UeAGZDcBxQVIdn8pW3E7BP7ChwolkTyB3076Jwp8Pvz8TD/M3cnjt01KAsFnVZst4uaZwQSRu
- ff8VLNpwAB7quC53cDfEWFw06vPbozchbvhZZYbH0qnXOfp4fMRbEi4sQb9dFk9//aoLaRzTO
- ZK/nhPEujrgiMHPQej/Fhkes1P8DkPBIm9nRlyrjJcjGNJ9nFupamutkf07eWk0EJnAMZsHKD
- Ip1XfG+JDzgZTF+72VMX6kVSApklwi7TOF0KjXZdac+eVfrXYCMlWi/Y8IcCWXZp3nand/kRF
- BXgAmp2bB1YulO80ylQZL7XznVi0cAmSLzmTMEsYknD3U=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoJJsolJJcLUYiVG@liuwe-devbox-debian-v2>
 
-> child_device_obj->device cannot perform DMA properly if dma_set_mask()
-> returns non-zero. =E2=80=A6
+On Mon, Jul 01, 2024 at 06:16:18AM +0000, Wei Liu wrote:
+> On Wed, Jun 26, 2024 at 10:10:39AM -0500, Bjorn Helgaas wrote:
+> > 1) Capitalize subject to match history
+> 
+> What do you mean here? I got the "PCI: hv: ..." format from recent
+> commits. "PCI" is capitalized. You want to to capitalize "fix"?
 
-Another wording suggestion:
-  Direct memory access can not be properly performed any more
-  after a dma_set_mask() call failed.
+Yes.  Look at the history:
 
+  $ git log --oneline --no-merges drivers/pci/controller/pci-hyperv.c
+  b5ff74c1ef50 PCI: hv: Fix ring buffer size calculation
+  07e8f88568f5 x86/apic: Drop apic::delivery_mode
+  f741bcadfe52 PCI: hv: Annotate struct hv_dr_state with __counted_by
+  04bbe863241a PCI: hv: Fix a crash in hv_pci_restore_msi_msg() during hibernation
+  067d6ec7ed5b PCI: hv: Add a per-bus mutex state_lock
+  a847234e24d0 Revert "PCI: hv: Fix a timing issue which causes kdump to fail occasionally"
+  add9195e69c9 PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
+  2738d5ab7929 PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
+  ...
 
-See also:
-https://elixir.bootlin.com/linux/v6.10-rc6/source/kernel/dma/mapping.c#L80=
-4
+> > 2) Say something more specific than "fix reading ..."
+> > 
+> > Apparently this returns garbage in some case where you want to return
+> > zero?
+> 
+> Yes. *val is not changed in the old code, so garbage is returned.
+> 
+> Here is the updated commit message. I can resend once you confirm you're
+> happy with it.
+> 
+>     PCI: hv: Fix reading of PCI_INTERRUPT_PIN
 
+Maybe:
 
->      =E2=80=A6 child_device_obj->device is not initialized here, so use =
-kfree() to
-> free child_device_obj->device.
+  PCI: hv: Return zero, not garbage, when reading PCI_INTERRUPT_PIN
 
-How did you come to the conclusion that meaningful data processing
-would still be possible according to such information?
+>     The intent of the code snippet is to always return 0 for both
+>     PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
+> 
+>     The check misses PCI_INTERRUPT_PIN. This patch fixes that.
+> 
+>     This is discovered by this call in VFIO:
+> 
+>         pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+> 
+>     The old code does not set *val to 0 because it misses the check for
+>     PCI_INTERRUPT_PIN. Garbage is returned in this case.
+> 
+>     Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+>     Cc: stable@kernel.org
+>     Signed-off-by: Wei Liu <wei.liu@kernel.org>
 
-
-=E2=80=A6
-> Signed-off-by: Haoxiang Li <make24@iscas.ac.cn>
-
-I find it interesting that another personal name is presented here.
-I noticed that some patches were published with the name =E2=80=9CMa Ke=E2=
-=80=9D previously.
-How will requirements be resolved for the Developer's Certificate of Origi=
-n?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n398
-
-
-Would you like to append parentheses to another function name in the summa=
-ry phrase?
-
-Regards,
-Markus
+Looks fine.
 
