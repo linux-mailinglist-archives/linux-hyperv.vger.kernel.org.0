@@ -1,116 +1,109 @@
-Return-Path: <linux-hyperv+bounces-2529-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2530-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67E9C9260D2
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 14:49:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35D199261A7
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 15:19:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E073288203
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 12:49:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1D221F2153E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 13:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023B217A594;
-	Wed,  3 Jul 2024 12:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2542178CEE;
+	Wed,  3 Jul 2024 13:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7QCLfwU"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="h10xqMoj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7840A17A58A
-	for <linux-hyperv@vger.kernel.org>; Wed,  3 Jul 2024 12:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64007175555;
+	Wed,  3 Jul 2024 13:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720010929; cv=none; b=Yr4+oqyTedfD+DBGbFLZEAw1Z01owYVcPQO3lLIc583AQpZZpXMEIbXvn5EGiP8mKHveZGJCgy0C5HnYIGtGiCXqTWZLTkBXgzsTQEL5H2+Z8MlJmG2bKNRZQwGVvF/kktqk/mM4hyKWUKXUCz9vi/ZOje0GQtr/AEAwZS1R33w=
+	t=1720012743; cv=none; b=uPE/ZdaI9lBRQRRa1KxKjVqF8n03p5a+DlplQ9P8q/c7TmJCafs+5hZK6CdXCrGG+h91Jli+rI9mqBnAZwOk7A1XppRB3+aXj2BfuT1AaPHokX56ZNgDSYpKBwSH4vLrcZ4TER2BPvhXQvsbA1UNpcJJ9HGwmEuYcoTnW5d46Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720010929; c=relaxed/simple;
-	bh=nOrLYdaQKWbCBzur09331cdOZ260WekYtYvlyXlVvNg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M+Cgjvyn6uPP+e4WuY8s29uwKQ9SDYtDPayAceugkQfCeOqaf1ieuJh8RoVRr9LF980gVhxAIoFdwpICPP7oI4S2yKmrufQ+umw8xTlRzbZSsRyEMzFbMGzi+249GLyPMrqk/sJGvQXuIAI1tV3+dikWeG/4GZNrYHogfGalunw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7QCLfwU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720010927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2MEP5KBKlMKx9T4CmY7WwoI0xWCk7Wv3Ry4wWTTbIMQ=;
-	b=P7QCLfwUcz3mg2A5ElG0ooCZzvadMZYJQAY+KS5kE9t26MDPBMjQjMeIVsODzCMY0DCEJe
-	Ep41J0lxy3oVja+gVxtNGpFAqxAWuEZ+B4IoZ6kbPZ0+Ce8G1w7kNVvkv7sURdc29q/d8S
-	McbqP4YFFDZhyIzrpg868ivJMZwIMfI=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-344-qAX94j5VOcmH3xdlb8X3aQ-1; Wed, 03 Jul 2024 08:48:46 -0400
-X-MC-Unique: qAX94j5VOcmH3xdlb8X3aQ-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ee864483c2so6101661fa.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 03 Jul 2024 05:48:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720010924; x=1720615724;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2MEP5KBKlMKx9T4CmY7WwoI0xWCk7Wv3Ry4wWTTbIMQ=;
-        b=FNeykPo0hX3PsKlKVGMRtGlueK2rhMG7cTob3D+DX4+EpVoxcDYwQPF8DuZZe4bIwd
-         4a/UYGNwX3O2kYGzx9Q82v+MBVmta4CqO+DHNbF9mGhZ3GO2nYfHCJDk/SZqND65ASDB
-         qlHYL8ust4w/3RXfwtgR49Pdj1Jw5qK1V+FTSlppRhOqChnyBgnLX4Nf3vxJiozGMMG4
-         5KXkc+rh937rJIFd9I3Wx+6+Xq7tdreNhL8tnEAZLCe2yIbHwhWvryjNs8bmzsplKriI
-         c+rkIdNu1TS+uAiWsx7BcHXhhjxTzID0NnsOI7OucCqhhNtcV9P0O9BEWaLCpNk9G2vE
-         ItGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvCa07Oa8QNxPfH9h6wpr6j0+O9ujfhGzwh8C9Anl6gVpPE0elkvPIlYmijDXhEk9kUK6o5tkVaMWlN6mfNEFauUM2o97/vPX0gt0e
-X-Gm-Message-State: AOJu0YyZp7O6OOqZxxq0cevyE13OjGY5QCXwL4aJsdgEZzCNRukufTDR
-	6gcURvDLDbG5tPB3Mv73m2x1DKjLKojPZZhgLWenEkUVLE037wj3W2KnDuYDaXx3qskdq4y0J84
-	SD1u5uVMp9Mz5eGfZoPT/MZB3G1MqLGH3AGcrYsds++C+vuFBlTR1Lxfe4ssmlg==
-X-Received: by 2002:a2e:a7c2:0:b0:2ee:45f3:1d13 with SMTP id 38308e7fff4ca-2ee5e704e51mr78433911fa.47.1720010924673;
-        Wed, 03 Jul 2024 05:48:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFP5TqWKFAuIwTILcZtQfViw3L54aF8RKuLImctjrV+bIlLQQRnHKZJF7c8esvbcZCiclXd1w==
-X-Received: by 2002:a2e:a7c2:0:b0:2ee:45f3:1d13 with SMTP id 38308e7fff4ca-2ee5e704e51mr78433691fa.47.1720010924256;
-        Wed, 03 Jul 2024 05:48:44 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d8cd8sm15773145f8f.27.2024.07.03.05.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 05:48:43 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>, seanjc@google.com
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
- nsaenz@amazon.com, linux-trace-kernel@vger.kernel.org, graf@amazon.de,
- dwmw2@infradead.org, pdurrant@amazon.co.uk, mlevitsk@redhat.com,
- jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, amoorthy@google.com
-Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM
- Emulation
-In-Reply-To: <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
-Date: Wed, 03 Jul 2024 14:48:42 +0200
-Message-ID: <87ikxm63px.fsf@redhat.com>
+	s=arc-20240116; t=1720012743; c=relaxed/simple;
+	bh=zUu2F1hV+miT5I8Gkjrxe7EVSNhBDwp44fj2E7hlYsg=;
+	h=Subject:MIME-Version:Content-Type:Date:Message-ID:From:To:CC:
+	 References:In-Reply-To; b=KTj/oKm/gJBi3UXE1D37oPapzdIYILnXosbFLyGgUnhx2a26JSYWFABRvOVQm3N9svGU3WQeve3NWz6+guGbTpcyCOVZs0KaRkmaXMJhikCaDyybylUapou2QN8NBlmvjoeUlGW1CuBZiFxzSsvnucAWxfQbfPp3SbAiDHtBs14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=h10xqMoj; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1720012742; x=1751548742;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   from:to:cc:references:in-reply-to:subject;
+  bh=zUu2F1hV+miT5I8Gkjrxe7EVSNhBDwp44fj2E7hlYsg=;
+  b=h10xqMojGvcnQ9vfl7ywtrgPImF73FdjFAK9o4Xgkl5eMqIDKEeupLrt
+   9dGOok6wCF8fVcjiL7Ep6bQ0hEN9RijbSI8V4z7CQJ5DQjOClb3gVxXj6
+   fO32zvVMbsehWh4krmsxZ/9qIPOvqdrpz7qx3R7zmJARcShegY9NAdpUU
+   w=;
+X-IronPort-AV: E=Sophos;i="6.09,182,1716249600"; 
+   d="scan'208";a="417489642"
+Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM Emulation
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:18:59 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:59500]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.20.30:2525] with esmtp (Farcaster)
+ id 4b69d89c-843b-442a-9219-fefd3322b1f3; Wed, 3 Jul 2024 13:18:58 +0000 (UTC)
+X-Farcaster-Flow-ID: 4b69d89c-843b-442a-9219-fefd3322b1f3
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 3 Jul 2024 13:18:57 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Wed, 3 Jul 2024
+ 13:18:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 3 Jul 2024 13:18:48 +0000
+Message-ID: <D2FXMJ39HOWV.MEBKDIO1F1TM@amazon.com>
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>, <seanjc@google.com>
+CC: <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
+	<dwmw2@infradead.org>, <pdurrant@amazon.co.uk>, <mlevitsk@redhat.com>,
+	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
+X-Mailer: aerc 0.17.0-152-g73bcb4661460-dirty
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com> <87ikxm63px.fsf@redhat.com>
+In-Reply-To: <87ikxm63px.fsf@redhat.com>
+X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
+Hi Vitaly,
 
-> Hi Sean,
+On Wed Jul 3, 2024 at 12:48 PM UTC, Vitaly Kuznetsov wrote:
+> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
 >
-> On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
->> This series introduces core KVM functionality necessary to emulate Hyper-V's
->> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
+> > Hi Sean,
+> >
+> > On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
+> >> This series introduces core KVM functionality necessary to emulate Hyp=
+er-V's
+> >> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
+> >
+> > Just wanted to make sure the series is in your radar.
+> >
 >
-> Just wanted to make sure the series is in your radar.
->
+> Not Sean here but I was planning to take a look at least at Hyper-V
+> parts of it next week.
 
-Not Sean here but I was planning to take a look at least at Hyper-V
-parts of it next week.
+Thanks for the update.
 
--- 
-Vitaly
-
+Nicolas
 
