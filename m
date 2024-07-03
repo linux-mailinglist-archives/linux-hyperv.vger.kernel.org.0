@@ -1,109 +1,123 @@
-Return-Path: <linux-hyperv+bounces-2530-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2531-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35D199261A7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 15:19:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80516926482
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 17:11:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1D221F2153E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 13:19:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BA9028E1DD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 15:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2542178CEE;
-	Wed,  3 Jul 2024 13:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E1CD17C205;
+	Wed,  3 Jul 2024 15:11:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="h10xqMoj"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QctYtcqB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64007175555;
-	Wed,  3 Jul 2024 13:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DE61DA319;
+	Wed,  3 Jul 2024 15:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720012743; cv=none; b=uPE/ZdaI9lBRQRRa1KxKjVqF8n03p5a+DlplQ9P8q/c7TmJCafs+5hZK6CdXCrGG+h91Jli+rI9mqBnAZwOk7A1XppRB3+aXj2BfuT1AaPHokX56ZNgDSYpKBwSH4vLrcZ4TER2BPvhXQvsbA1UNpcJJ9HGwmEuYcoTnW5d46Z8=
+	t=1720019467; cv=none; b=Gh0Km+NDm3G6DG16BjoPfGj7NCIgXDq2D0JA+6UDvrONPhk4XHCm/sUm6LlDwtz8YZVy1BkFT/w9B/3UqF6lSLf5Hz1PaEICgBoPjZvLLFcrEiXipduQ26+t5AtdGD3ta88Y5cI4YgFTpHV1ziTJZbPqrBhau0uQ4mwHeu/0YG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720012743; c=relaxed/simple;
-	bh=zUu2F1hV+miT5I8Gkjrxe7EVSNhBDwp44fj2E7hlYsg=;
-	h=Subject:MIME-Version:Content-Type:Date:Message-ID:From:To:CC:
-	 References:In-Reply-To; b=KTj/oKm/gJBi3UXE1D37oPapzdIYILnXosbFLyGgUnhx2a26JSYWFABRvOVQm3N9svGU3WQeve3NWz6+guGbTpcyCOVZs0KaRkmaXMJhikCaDyybylUapou2QN8NBlmvjoeUlGW1CuBZiFxzSsvnucAWxfQbfPp3SbAiDHtBs14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=h10xqMoj; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1720012742; x=1751548742;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   from:to:cc:references:in-reply-to:subject;
-  bh=zUu2F1hV+miT5I8Gkjrxe7EVSNhBDwp44fj2E7hlYsg=;
-  b=h10xqMojGvcnQ9vfl7ywtrgPImF73FdjFAK9o4Xgkl5eMqIDKEeupLrt
-   9dGOok6wCF8fVcjiL7Ep6bQ0hEN9RijbSI8V4z7CQJ5DQjOClb3gVxXj6
-   fO32zvVMbsehWh4krmsxZ/9qIPOvqdrpz7qx3R7zmJARcShegY9NAdpUU
-   w=;
-X-IronPort-AV: E=Sophos;i="6.09,182,1716249600"; 
-   d="scan'208";a="417489642"
-Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM Emulation
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:18:59 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:59500]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.20.30:2525] with esmtp (Farcaster)
- id 4b69d89c-843b-442a-9219-fefd3322b1f3; Wed, 3 Jul 2024 13:18:58 +0000 (UTC)
-X-Farcaster-Flow-ID: 4b69d89c-843b-442a-9219-fefd3322b1f3
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Wed, 3 Jul 2024 13:18:57 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Wed, 3 Jul 2024
- 13:18:51 +0000
+	s=arc-20240116; t=1720019467; c=relaxed/simple;
+	bh=3wjTP1DBKceOOiIIRZ+CtbjKJjvmYWz9hXD+GkONhlo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=G6G+R5c7NE25FndVIBgOc4IPngj3zYC1/N7yQ66Ok0Xu4hMvnLhF46g+w2n/dN9K3lpuhxo9HLB7USjZM8m+NBbUlc5oDHSFUuh5QmnsNA61hxC/TdcwRFp1peKFSyvhojOw2UvlHCj0lueJ5+jMuiDSEFocRVRxwzPAfoxPriM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QctYtcqB; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720019462; x=1720624262; i=markus.elfring@web.de;
+	bh=uzXyAXmbJBxGH6PQ3hVx3H9XYijhY9dW2zRghJjaRTI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QctYtcqBAc9Z7SyNbdJh4kGMRJx+WhM3exw+AS54JsJAzzZq4gkRLIQRZBh/ZNdb
+	 uI6gZykd6BzQo4orusmIJM/tWoGmoNRyGzcDykFjb5lQkDAGkaqEFb+uHGM8dNrAn
+	 2BpIRCqL7Z3ZboCPKX+cMjk6Rrj/FmDtQFTZa38sM+nDycmzezFBDj3M4rzqdUoHG
+	 Nh4Aw7GxsMH7bQA4ZL3147x892CPOhKKfxjqf/XRsH4oy16Ht/dX7qjNmTsYqNy8/
+	 SORh5RcMOBzieCuU5x1d+X6LLZ+eEb02Pm6ZhTwTmDKZX0IygU7i8wz7JytqlfmHu
+	 gD1IPlNrNCu6L2bEIQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Ml46w-1rzp832BZM-00ekp4; Wed, 03
+ Jul 2024 17:05:15 +0200
+Message-ID: <b0fe50c3-9279-4225-aad5-2869b335fe53@web.de>
+Date: Wed, 3 Jul 2024 17:05:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Haoxiang Li <make24@iscas.ac.cn>, linux-hyperv@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Andrea Parri <parri.andrea@gmail.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Michael Kelley
+ <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240703084221.12057-1-make24@iscas.ac.cn>
+Subject: Re: [PATCH v2] drivers: hv: vmbus: Add missing check for dma_set_mask
+ in vmbus_device_register()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240703084221.12057-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Wed, 3 Jul 2024 13:18:48 +0000
-Message-ID: <D2FXMJ39HOWV.MEBKDIO1F1TM@amazon.com>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>, <seanjc@google.com>
-CC: <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
-	<dwmw2@infradead.org>, <pdurrant@amazon.co.uk>, <mlevitsk@redhat.com>,
-	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
-X-Mailer: aerc 0.17.0-152-g73bcb4661460-dirty
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com> <87ikxm63px.fsf@redhat.com>
-In-Reply-To: <87ikxm63px.fsf@redhat.com>
-X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+X-Provags-ID: V03:K1:YV8ws4IVXhh8faxR3kOPPdm6RfB/oTFu1GWuLpn3YbmM6sIdPrS
+ kdcANEgP8Z3mzIkApf8ZC6F+eE8H9zgChVOZllxO5YZyDBJz7IvNo2qG7WZgbV1FEo/YUZx
+ En6C+uRQWZKf47+Fgyqh7vgGCu8V+2e07I/2hNOm/g7UJknTRyTAscOnJG+1QSKMHoQuMxQ
+ DH1aX6qwRzRq7oCWtKbTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:njd83SA+1ts=;J++nmAq9qfV+/27rRiJIp7+2skC
+ ie7foP98eRndAw9gUKDk3/WRDjb7nlNxefeJLjVZakxQyUUScjeabFmhN8y4YEBlfvqIgbiEp
+ KPWTpuOYnD1/EArT0dYcenbLcWv8sjapAypkUOzyrxC0QVk8ZbCdWezbK+K3EG8tr3FwuenQY
+ 14CLBPN7IlmhOa041iu7KW047zdTuG7NZalH5csWhpX91GuZkFKQhoNPVoW9waBQjaTzb4nyu
+ jq0XJWtMdN/q2F+1s9EEspSgpqSK4oZHxx/aPGq9M0W8698cglHJV/fDkbyOlM1z5p3iA1Onv
+ EBXX9y1GZmE5yXOeKicPzEFGDr3eDiBdMHQ6rcMmHxB8xpxGHcNAXdWdFokSE++jZpiojWzxB
+ GxJGttL9jCv4COvG0PK1y9hnTdUH+mi5gGnAAgVaNwoJJv1mvSNjegmgMWksRHTaTfgdroxs4
+ 5b4rXt8zBwhOjCvuOHu6EM8wx+OrhviaufEY1AvOryfnqreFIGN8soeaGvfTBZJ49QILoD7/c
+ T6L8/W3jHqlL5B5dmouUk+y2n23JwdfzzHX85AstyF7nmQu42rrPNpAhHhg0Tvd95MVk/Ahop
+ 2lpP24KXemslIloJjLqPwNKLog79crjZKVDIzkv4XvJKTT+AugA6t8DHZ6umkOV1AxCPArWpD
+ qTpuH5iw5d7GEm28JtTW92Nf45Uo9nQM7gUWvuLg0JWe9rRe1edMIih5ViQ1cn/ppS9kB1hXK
+ m6M+gTkoCrKx4wGSHv1lMaGB0POF22yFUY3SV5G+tTigD7oq7InFz3Bfm5v54I6/9cDoeh5Y/
+ tbSYpyOkwHymqUMLqwj/jpnEGADY4DBwejG2RmYLuqliQ=
 
-Hi Vitaly,
+> child_device_obj->device cannot perform DMA properly if dma_set_mask()
+> returns non-zero. =E2=80=A6
 
-On Wed Jul 3, 2024 at 12:48 PM UTC, Vitaly Kuznetsov wrote:
-> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
->
-> > Hi Sean,
-> >
-> > On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
-> >> This series introduces core KVM functionality necessary to emulate Hyp=
-er-V's
-> >> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
-> >
-> > Just wanted to make sure the series is in your radar.
-> >
->
-> Not Sean here but I was planning to take a look at least at Hyper-V
-> parts of it next week.
+Can the repetition of another wording suggestion influence the software ev=
+olution?
+  Direct memory access can not be properly performed any more
+  after a dma_set_mask() call failed.
 
-Thanks for the update.
 
-Nicolas
+See also:
+https://elixir.bootlin.com/linux/v6.10-rc6/source/kernel/dma/mapping.c#L80=
+4
+
+
+=E2=80=A6
+> Signed-off-by: Haoxiang Li <make24@iscas.ac.cn>
+
+Under which circumstances will applications of the Developer's Certificate=
+ of Origin
+be reconsidered any more (after three different names were presented so fa=
+r)?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n398
+
+
+Would you like to append parentheses to another function name in the summa=
+ry phrase?
+
+Regards,
+Markus
 
