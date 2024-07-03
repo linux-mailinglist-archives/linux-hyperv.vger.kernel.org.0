@@ -1,215 +1,176 @@
-Return-Path: <linux-hyperv+bounces-2533-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2534-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1B13926640
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 18:40:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35DB392664F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 18:44:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 574F9B20D58
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 16:40:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6FE41F24D0D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 16:44:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 472711822EC;
-	Wed,  3 Jul 2024 16:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA2F01822FF;
+	Wed,  3 Jul 2024 16:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hr1hiLgu"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oOFDmAyZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2012.outbound.protection.outlook.com [40.92.19.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A152317995
-	for <linux-hyperv@vger.kernel.org>; Wed,  3 Jul 2024 16:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720024820; cv=none; b=d3Mza3GS/1leQf55v1K8OZzbei29FsUq0lA1Obiu3BVl/bjtowzcdiWr0XVPROwJr8l7Mm/JfHpV8gPcAK4DUVeNJdBTlTeCcqtiYn9gITDoVG8KZiBeRW9F+63iImqyhLVpb8/yc1eCcGDHI5aJcL+5btBpCWWBSKm9EwRWUbc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720024820; c=relaxed/simple;
-	bh=21K+un7CaiJVoHI9Gxi8vgmdLcVLvKjA1T7x4gcPYqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UuqOQtQp7RqZKvB/CufLfUUU/BbVTpOlWj1re/fndqMit0TZmRDasF8c8v6Rrj5Oey9FZGu2xjmlggPM+y/Tou1F1j0pYw6B6FTQ6gxIUJzy84ErJfVR7UQQEInT+ltwCRIvIcdXUfHzdxICrw6Zt7mNxvDiIr/gX8zbxfTNAIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hr1hiLgu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720024817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f/NKPoncPw4sIDqFM3t6GuhdQa0oQUQo4XXTqMGF3ME=;
-	b=Hr1hiLguSGzp+Ntsm0ONhMyTT/yPsioiNQjnA+1D3qy+IV6yvHXOJzQ4SiXax7Tvx0TTEm
-	lwwwHBWezU7N0TUF8ENVncZCvOhFx3eDkRrms7TXbb2yKds5k8GzAB1opWxu9jtYC50fkA
-	Sl/uGgiySc0510ha6304DOOEdwMp4zs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-7U-vT19YPSqAlrKt6t3RDg-1; Wed, 03 Jul 2024 12:40:16 -0400
-X-MC-Unique: 7U-vT19YPSqAlrKt6t3RDg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3678f832c75so1088813f8f.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 03 Jul 2024 09:40:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720024815; x=1720629615;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/NKPoncPw4sIDqFM3t6GuhdQa0oQUQo4XXTqMGF3ME=;
-        b=VBmRRTzwWt9flaZJ7Q2G1d5QkW7lnAwX3JzzIdl15auEeS5S1hneS9XdTf7cPC/9HB
-         KHIqDCPw3s8Jv1fsWvaZegmvg0ctD8934DSrCQcMqzpOPaDfJI2Lz7ze1wCHxw589YKf
-         67fxBw0OJ/9wsrnyB2hDsyiKlZDwdsuFIMPBbAqtyUPFJ+0JalGO4Rx8oaCCB/p16jf+
-         cidsiqdljK57yC8ugzTZPc/wLYuyHcV3prh0Jafq7mh2391u/9S5tAsrcQZ2DulFghM9
-         K8+k8NckGG45EsGej9Nc/9/eue5N2MbNzmGLYGHZ+rwwTQ2IoFW+PIApFtpTwRJMxWB8
-         Md3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX3zBBNjrILqnc8sxOgvbhVjjRu3o8iqko5Fu4T05Wh41OGdWSTW6QdiIrX5DyLcJHexRn/UQmUUMgV07huA85iezIH8S6LuUzR0Kc0
-X-Gm-Message-State: AOJu0YwLkoHEWxfHmZtSmjG5YhGdeikI4wkbMgaBzbIIoJYk9LFTN0Av
-	5pSktF3azSt3BGkCU57VI4Y829CgA0HDhBtMHMO7ywGts2xLLUtPWFy9JEoHtxt3oCWGUvJzzUZ
-	4I/JlTMiLNO9wFbmpHBBFiz+UyokAJQ4VIxqASV2WQieGug+b5ATF8LCquKAO6Q==
-X-Received: by 2002:adf:fa83:0:b0:367:890e:838e with SMTP id ffacd0b85a97d-367890e86c6mr3596790f8f.40.1720024815358;
-        Wed, 03 Jul 2024 09:40:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFECIbpt3OJn614ksUNxWcM5kxqBGXD+RFA85ATl3K5a4iBL/0MjztMRm9i7OEdpByRhuroqQ==
-X-Received: by 2002:adf:fa83:0:b0:367:890e:838e with SMTP id ffacd0b85a97d-367890e86c6mr3596739f8f.40.1720024814927;
-        Wed, 03 Jul 2024 09:40:14 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:d5:a000:680e:9bf4:b6a9:959b? ([2a01:e0a:d5:a000:680e:9bf4:b6a9:959b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36791d7a93bsm2401812f8f.81.2024.07.03.09.40.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 09:40:14 -0700 (PDT)
-Message-ID: <9e7023f4-775c-4371-ade5-1ed860545aaa@redhat.com>
-Date: Wed, 3 Jul 2024 18:40:12 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D72183099
+	for <linux-hyperv@vger.kernel.org>; Wed,  3 Jul 2024 16:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720025050; cv=fail; b=eSwms+64RFF2BEaCRTUS1oYMiTlT2A26vBhwoGt5dTLfYuS0aJOd6PBEZa9XMRmrAntAL1jzD0BANo/4+R6fy+3vQZADhnx7CQqi6OinSnPiwhF7BSNdBgxpbCXmF9Vpzfx8D2PWqWN4tx6ybX79uD8nyISJ+uVIeNkhrf8SazY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720025050; c=relaxed/simple;
+	bh=bLySIAkyqUc16lFoEJhBV4/wYh3gw830YNNRTcG/B0Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NaaGk3yWX7FRy8EIJZGQgBEs4R0gKEU7Y0WKM9UEwyK4u4YTO39f4rlWBA7CsUtqisZUzd4iJIOVp3Whrx7RchuTHtJYJBMNctMWtW5Q1QYzJma4em+GVkCJAvLsJMP9lKfEzXzgBhxpO/dSZuST5+Bj55YsBeUG+aDN7Obn5ok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oOFDmAyZ; arc=fail smtp.client-ip=40.92.19.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ypvg/r2/qDsOWFVsrCJb58uDqHmTJYbG9pph/PbHcl7QrouWXQkdXtnUlU1X2c6f1ltLJknknHrt+Qujz15jUpZRsS2TdFizjejEKqAEta9R1cVfgFlfb0klDwUCkH+/EGZm6Ijj0LNt5s4IIlp3SVndo8dqrTnyp5YcfRDy143dlAbZ8u+4BPO9lVXjNl4d4/O55hN1KcGNtwhKiN7AfHgO9ApES9ZkAHOOAFuC6eJzqSLGrPE3/D7MzehXQ1XX6YCsf8C7QI/iRG5vONlS9crx+xnQddgFIX6pbaK1lEXCaFoC5G0rcSg8vOi/BvQEHwEh9DyDbg8r3nJ/Id71Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y9a91M9af5vpaTnu6mGpg/hQJMMeExDGg4MFZU9rlxg=;
+ b=gdmmwnz6jJT6/QKTn0L9b1l+0F6fyRYELiyfTY88/q7mT2rbqcntUf2VRUsYN0PC/zp2E85wWapb9FjbdAaDXtD7jOqRgC9BTWRhNB8YP61xY3ofeEaisIW+nzxGULjfLTAk45ckpdQvaW4WDKfxImDNaAS+fpy0p6+s2kqBckulvqfNVNlMh/QaajCHos5stkR9m0zDnzyR4gdIMNjqOVN3a2qbmzB6ttTLnV1hhNtK+VjZGzpZ3N22+F0qAacXHgTsXC0ZULAr/aVrEJBDy36EXxnkhdyjgRV55/ykEkDILsxu+SevFrheZ89Uojnp04ho9jHzVrgF5LmON4sdFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y9a91M9af5vpaTnu6mGpg/hQJMMeExDGg4MFZU9rlxg=;
+ b=oOFDmAyZlOHoxHqOypduz3ZihfwLQ1N1RkHZnJp8UurE0pYqhwvYm3e0Dxlhcma74BMAkcYGlVmRmzx5gsz4SbJ1IyfaxxcQ1qAjXpBx3AqQ/0AKmB/EmXVd1hRfvHqLJpqERbuNLCJ9jqOhdaohquikP4Iyz4h6936QvhX8jYKIJCO99qrUSGE7qthav+/z0mGSOVZ7RKU/uBc187zfq+GEIDMP5djzYYYcABVYJuU+tWcaKibiVNOiAo8v94HvUfQUBLkRv+WyoMztbA3EflXdYmnGMhiJQYiOkqGBumJGBT4SpvHBO+tpwKsn0/S+wi6LLS6L4muCjxQkpp3pCQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by LV3PR02MB10787.namprd02.prod.outlook.com (2603:10b6:408:285::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.23; Wed, 3 Jul
+ 2024 16:44:06 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.7741.017; Wed, 3 Jul 2024
+ 16:44:06 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Anthony Nandaa <profnandaa@gmail.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>
+CC: "kys@microsoft.com" <kys@microsoft.com>
+Subject: RE: [PATCH v2] tools: hv: lsvmbus: change shebang to use python3
+Thread-Topic: [PATCH v2] tools: hv: lsvmbus: change shebang to use python3
+Thread-Index: AQHazGnTrihdwP+Fo0KaqE8YkwNQurHlNzpg
+Date: Wed, 3 Jul 2024 16:44:05 +0000
+Message-ID:
+ <SN6PR02MB4157AFC98992A53FC05EC312D4DD2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240702102250.13935-1-profnandaa@gmail.com>
+In-Reply-To: <20240702102250.13935-1-profnandaa@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [QPA4BjKzarKDEIJPOpcKpNCeP3qJ/xO5]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10787:EE_
+x-ms-office365-filtering-correlation-id: 9a9c2cf8-0f7c-40c3-a160-08dc9b7f5a74
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|8060799006|102099032|440099028|3412199025;
+x-microsoft-antispam-message-info:
+ 2fRyQ6QqNv1xwRqNniRT6N0CZYDXmAUxN5zOKRzdu/dBJw1hxhB/0/brLRDCt52buS8deQctls4Y9VQaHzLDMTfG8X843e84CRkP/NPjTHju3mCq+M+uNwyy4sOIULNYgKfH8ZznPpaXjwSe6IGseG+lPsfZ0iwlSnw2HA8MSbUZZMVAMfglcx/i6Hhjl73GwB/zoz/XzQuL+WP0YfZOw9lvefr4cRK8Uv1lvO3j4sj7pPCJ6KJivElvNWBBOBAX2oKqdimAoCjchNeLRw0TdwJUSUxY6ZBdT/gttDxNdHAFoFP0F9Zd6nq66NfzHgaeMuPt1bXi+VztfAdiq4duw2nXaZXZsD3Id8NtkETzxrH4Wpp+jpkbPRDUIyqpJwx5g16J/ff6FW7eLt0EnoyrCrb0Kwfhs33bhME5kjD4rc3S1QWeCr6vqn87GAdCxeQA3UfxTMUXeFtIhWARfVEGhf+HhWUHXiwV81uSP0rgNxiga6tKHp33IVr0yDRjy+8eray9nd/fqinT2Tm6BFlQw/Oe2+V7uWQ8+sypPyOABB4LgCvjPzwRWqNl74tZWA7WNkaJKCCFnGnBP1f72XZEeLvXkk0WR4GbY87KnTxQIO/oSnKAzmCtji3StDl6YmY870TkTpBE5YJcJDGBxfC5m1Jv1xJaQfCIhMEMQlG2DVo=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?24+9dF9tu2B+mYnZI+4l2TMXTKfPR53AdNoX5HLRD0P7vPTMbAImE7WyJVjX?=
+ =?us-ascii?Q?k0db6ORkgXpEVtTLt1oTY7tjHKP8u+VOJnJHjS2ISlFiXXWdjs+Ng/54RFJo?=
+ =?us-ascii?Q?wXL7GDGLAkCIPEOWSzDG5jhmPJf1CyKaHXsLwaMgYf7dLiOwsQJC1uJo5R6K?=
+ =?us-ascii?Q?RuGHxpJj77KQPFcQr27zcSjCzjSKRWH4Jw8NtSHRT85xonjX55ZNEbrfgokD?=
+ =?us-ascii?Q?yflrZvha7AY99bKHMxOGd7mlZwOzW5HxJWMBZj17zTJ34hJ56elqRHcx6eSl?=
+ =?us-ascii?Q?kdrNbm1Dioqt+U03GGPzKK3Am9OD/ZeXIbSAOwYq4UX/Uptf3AFJID34yxHV?=
+ =?us-ascii?Q?w4g4PY0TAbSQU3BwoaBzVYpq8xEPED8tNaVswwdyz5B45hy04+Afx79Z+WV0?=
+ =?us-ascii?Q?M/s/6kU6NFb9B5tLIj58S1u0T44wMycsNEGlsrZeBG0wYJfT4/t0U2lIl6qw?=
+ =?us-ascii?Q?RoYynb5FrMXxAb75RA3gWaLrY+UJJoAk3wcYtl8CVLPjhW5ZOEDGcLQFRonv?=
+ =?us-ascii?Q?kumbbXg+fem5yOGEysAT5quW6XIkPcvTqhcF7AzcXr0lpMUTGWWSvIRRaeJm?=
+ =?us-ascii?Q?AZ57PaplWhH3kXB5n+hGXG594hV4zH5hIsDVhfbhKzApZmX/6eTNLSv9MKRa?=
+ =?us-ascii?Q?J+cnrlDkNlB0cmQFWc/84Fq0pU3hwAK5qUAz+13m/+SBpOtzibDlmdHe/Hi6?=
+ =?us-ascii?Q?WMdLRLNXM+G/8e1jqrQFozwdGNqt67ycipWNoEXjgMnj6HD9e72vKhrEECkT?=
+ =?us-ascii?Q?e/1kCY0LjaxY/COPSMGUdJWyTgoSsyzM2pliYfocPzyDISspzO8rrr3ML7Iv?=
+ =?us-ascii?Q?W/OThhF/3I9fAgPUQPadmop8rRAITojHYP2HmG+UnLLHZcyqgzv3BOSLKUfJ?=
+ =?us-ascii?Q?JLAixRN3DehmzUDfA+R++Zvn4lnq99Ul3MGHybljRkOXLP6B5HFjdhll4Ccq?=
+ =?us-ascii?Q?Sqc7bnMINsT/qtWxILxdcuUU3uv0zCKcKEFhRNhzrfaTqG1ea0FErc9SygEP?=
+ =?us-ascii?Q?c1drJ9tSMWjPgR8VDRiqY1raCcFfPwFiy++NbTyeaJSOYwfX4tJWnSjBuCLf?=
+ =?us-ascii?Q?xuz5jh9klxRPX1Y/jFm70/JpcnsS5IzcTPOp0UgIMy2ZNgqv2O/GcibBYtZN?=
+ =?us-ascii?Q?vjDDDob8c3hwa8fTrMuYDDGbNOcjoj6sNCOqHRpgLOTeV7qow7otAhFi/hnW?=
+ =?us-ascii?Q?Whjo5pt7J0mL2XKnf11zQYvY50rnKmUJUbHYNM41flBe0VW3dF6G2m5YoF4?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240702122639.248110-1-jfalempe@redhat.com>
- <202407021326.E75B8EA@keescook>
- <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
- <ZoUKM9-RiOrv0_Vf@pathway.suse.cz> <202407030926.D5DA9B901D@keescook>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <202407030926.D5DA9B901D@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a9c2cf8-0f7c-40c3-a160-08dc9b7f5a74
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2024 16:44:05.9997
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10787
 
+From: Anthony Nandaa <profnandaa@gmail.com> Sent: Tuesday, July 2, 2024 3:2=
+3 AM
+>=20
+> In many modern Linux distros, running `lsvmbus` returns the error:
+> ```
+> /usr/bin/env: 'python': No such file or directory
+> ```
+> because 'python' doesn't point anywhere.
+>=20
+> Now that python2 has reached EOL as of January 1, 2020 and is no longer
+> maintained[1], these distros have python3 instead.
+>=20
+> Also, the script isn't executable by default because the permissions are
+> set to mode 644.
+>=20
+> Fix this by updating the shebang in the `lsvmbus` to use python3 instead
+> of python. Also fix the permissions to be 755 so that is executable by
+> default, which matches other similar scripts in `tools/hv`.
+>=20
+> The script is also tested and verified that is compatible with
+> python3.
+>=20
+> [1] https://www.python.org/doc/sunset-python-2/
+>=20
+> Signed-off-by: Anthony Nandaa <profnandaa@gmail.com>
+> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> v2:
+> * change the commit message body to conform to guidelines.
+> ---
+>  tools/hv/lsvmbus | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>  mode change 100644 =3D> 100755 tools/hv/lsvmbus
+>=20
+> diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
+> old mode 100644
+> new mode 100755
+> index 55e7374bade0..23dcd8e705be
+> --- a/tools/hv/lsvmbus
+> +++ b/tools/hv/lsvmbus
+> @@ -1,4 +1,4 @@
+> -#!/usr/bin/env python
+> +#!/usr/bin/env python3
+>  # SPDX-License-Identifier: GPL-2.0
+>=20
+>  import os
+> --
 
-
-On 03/07/2024 18:27, Kees Cook wrote:
-> On Wed, Jul 03, 2024 at 10:22:11AM +0200, Petr Mladek wrote:
->> On Wed 2024-07-03 09:57:26, Jocelyn Falempe wrote:
->>>
->>>
->>> On 02/07/2024 22:29, Kees Cook wrote:
->>>> On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
->>>>> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
->>>>> callback.
->>>>> This patch adds a new struct kmsg_dump_detail, that will hold the
->>>>> reason and description, and pass it to the dump() callback.
->>>>
->>>> Thanks! I like this much better. :)
->>>>
->>>>>
->>>>> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
->>>>> function and a macro for backward compatibility.
->>>>>
->>>>> I've written this for drm_panic, but it can be useful for other
->>>>> kmsg_dumper.
->>>>> It allows to see the panic reason, like "sysrq triggered crash"
->>>>> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
->>>>>
->>>>> v2:
->>>>>    * Use a struct kmsg_dump_detail to hold the reason and description
->>>>>      pointer, for more flexibility if we want to add other parameters.
->>>>>      (Kees Cook)
->>>>>    * Fix powerpc/nvram_64 build, as I didn't update the forward
->>>>>      declaration of oops_to_nvram()
->>>>
->>>> The versioning history commonly goes after the "---".
->>>
->>> ok, I was not aware of this.
->>>>
->>>>> [...]
->>>>> diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
->>>>> index 906521c2329c..65f5a47727bc 100644
->>>>> --- a/include/linux/kmsg_dump.h
->>>>> +++ b/include/linux/kmsg_dump.h
->>>>> @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
->>>>>    	u64	next_seq;
->>>>>    };
->>>>> +/**
->>>>> + *struct kmsg_dump_detail - kernel crash detail
->>>>
->>>> Is kern-doc happy with this? I think there is supposed to be a space
->>>> between the "*" and the first word:
->>>>
->>>>    /**
->>>>     * struct kmsg...
->>>>
->>>>
->>> Good catch, yes there is a space missing.
->>>
->>> I just checked with "make htmldocs", and in fact include/linux/kmsg_dump.h
->>> is not indexed for kernel documentation.
->>> And you can't find the definition of struct kmsg_dumper in the online doc.
->>> https://www.kernel.org/doc/html/latest/search.html?q=kmsg_dumper
->>>
->>>> Otherwise looks good to me!
->>>>
->>>
->>> Thanks.
->>>
->>> As this patch touches different subsystems, do you know on which tree it
->>> should land ?
->>
->> Andrew usually takes patches against kernel/panic.c.
->>
->> Or you could take it via the DRM tree, especially if you already have the code
->> using the string.
-
-If it's not taken in Andrew's tree next week, I will see if I can push 
-it to the drm-misc tree. I think there is a very low chance of conflicts.
-
->>
->> Also I could take it via the printk tree. The only complication is
->> that I am going to be away the following two weeks and would come
->> back in the middle of the merge window. I do not expect much problems
->> with this change but...
-> 
-> If DRM doesn't want to carry it, I can put it in through the pstore
-> tree. Let me know! :)
-> 
-
-Thanks for the proposition, I will see how it goes, it would be nice to 
-have it in time for the v6.11 merge window.
-
-Best regards,
-
--- 
-
-Jocelyn
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
