@@ -1,123 +1,173 @@
-Return-Path: <linux-hyperv+bounces-2531-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2532-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80516926482
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 17:11:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 556EE92661D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 18:27:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BA9028E1DD
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 15:11:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D042EB217FB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jul 2024 16:27:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E1CD17C205;
-	Wed,  3 Jul 2024 15:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178A41822D0;
+	Wed,  3 Jul 2024 16:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QctYtcqB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rwd9e7kl"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DE61DA319;
-	Wed,  3 Jul 2024 15:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFC72BD19;
+	Wed,  3 Jul 2024 16:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720019467; cv=none; b=Gh0Km+NDm3G6DG16BjoPfGj7NCIgXDq2D0JA+6UDvrONPhk4XHCm/sUm6LlDwtz8YZVy1BkFT/w9B/3UqF6lSLf5Hz1PaEICgBoPjZvLLFcrEiXipduQ26+t5AtdGD3ta88Y5cI4YgFTpHV1ziTJZbPqrBhau0uQ4mwHeu/0YG8=
+	t=1720024026; cv=none; b=kP+yhL7reQ74DWcW30tLJy0H5d9j8xdLOrptYxdKv5JrgJTW2yY4zY2pT09b61Tr/RCnE5kkKs4jvU2p4nCAJ4Lxbp4FeELc3ejUztYMsaKbTU9IX9f+j13tj0eJoKTG7J3BO0oftRBpXmUP5sDyeW16YtFDeZtSQGqKFgQd4lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720019467; c=relaxed/simple;
-	bh=3wjTP1DBKceOOiIIRZ+CtbjKJjvmYWz9hXD+GkONhlo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=G6G+R5c7NE25FndVIBgOc4IPngj3zYC1/N7yQ66Ok0Xu4hMvnLhF46g+w2n/dN9K3lpuhxo9HLB7USjZM8m+NBbUlc5oDHSFUuh5QmnsNA61hxC/TdcwRFp1peKFSyvhojOw2UvlHCj0lueJ5+jMuiDSEFocRVRxwzPAfoxPriM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QctYtcqB; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720019462; x=1720624262; i=markus.elfring@web.de;
-	bh=uzXyAXmbJBxGH6PQ3hVx3H9XYijhY9dW2zRghJjaRTI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QctYtcqBAc9Z7SyNbdJh4kGMRJx+WhM3exw+AS54JsJAzzZq4gkRLIQRZBh/ZNdb
-	 uI6gZykd6BzQo4orusmIJM/tWoGmoNRyGzcDykFjb5lQkDAGkaqEFb+uHGM8dNrAn
-	 2BpIRCqL7Z3ZboCPKX+cMjk6Rrj/FmDtQFTZa38sM+nDycmzezFBDj3M4rzqdUoHG
-	 Nh4Aw7GxsMH7bQA4ZL3147x892CPOhKKfxjqf/XRsH4oy16Ht/dX7qjNmTsYqNy8/
-	 SORh5RcMOBzieCuU5x1d+X6LLZ+eEb02Pm6ZhTwTmDKZX0IygU7i8wz7JytqlfmHu
-	 gD1IPlNrNCu6L2bEIQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Ml46w-1rzp832BZM-00ekp4; Wed, 03
- Jul 2024 17:05:15 +0200
-Message-ID: <b0fe50c3-9279-4225-aad5-2869b335fe53@web.de>
-Date: Wed, 3 Jul 2024 17:05:14 +0200
+	s=arc-20240116; t=1720024026; c=relaxed/simple;
+	bh=iqYxlC1bhe/7ALpkNeE5phKu3N9aTBnG3R0HukiaLws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V1yBaJAbyPHG/aPd/2DutaH1s7uc8gB7Zrl17/T8/AiLKI0QLe3uMiu9iswLxQSYhNMFwuiEUFAL/gnAfAAfu1zenH7rvEhQ5e95+mZsoFourDBa1TLBNnoJkktqHZtB9hHBouo775gcCkjDDphLGjDQtFYSsHs3yxSUN/UtPMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rwd9e7kl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC89C2BD10;
+	Wed,  3 Jul 2024 16:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720024025;
+	bh=iqYxlC1bhe/7ALpkNeE5phKu3N9aTBnG3R0HukiaLws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rwd9e7kliYyzi9FQPgDbHOkyrNE+y0jJRVWnOdmXhAkVOD1ALZD0O10DjNWFdt3yC
+	 ofb8OUs3AK4tJ1ETzauW/+3t+eb/4uqnz3ZVD6XWlRjMjQGvlP8UR9uBfs+9//130N
+	 CeN/pC1bgOCnO1VB1B+hlwcVy289AeM/esB0ht8j55bH9Y8nSprZ7wpAtbvdTbz9AL
+	 iL/UQJKak4mdUS3H81Mn47L1q38rjm7FaAXhIo9ngCEgZjFb3ikj1ZDBhqbVK8SiJr
+	 HZg0QGdZ9zMNJD8lbhhVjPqYxuorXhgrPYWZkHunA9J73aHALa3eQQyUQIz2HvRh3j
+	 HNWAuSbLQR1RA==
+Date: Wed, 3 Jul 2024 09:27:04 -0700
+From: Kees Cook <kees@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Jocelyn Falempe <jfalempe@redhat.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
+Message-ID: <202407030926.D5DA9B901D@keescook>
+References: <20240702122639.248110-1-jfalempe@redhat.com>
+ <202407021326.E75B8EA@keescook>
+ <10ea2ea1-e692-443e-8b48-ce9884e8b942@redhat.com>
+ <ZoUKM9-RiOrv0_Vf@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Haoxiang Li <make24@iscas.ac.cn>, linux-hyperv@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Andrea Parri <parri.andrea@gmail.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Michael Kelley
- <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240703084221.12057-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH v2] drivers: hv: vmbus: Add missing check for dma_set_mask
- in vmbus_device_register()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240703084221.12057-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YV8ws4IVXhh8faxR3kOPPdm6RfB/oTFu1GWuLpn3YbmM6sIdPrS
- kdcANEgP8Z3mzIkApf8ZC6F+eE8H9zgChVOZllxO5YZyDBJz7IvNo2qG7WZgbV1FEo/YUZx
- En6C+uRQWZKf47+Fgyqh7vgGCu8V+2e07I/2hNOm/g7UJknTRyTAscOnJG+1QSKMHoQuMxQ
- DH1aX6qwRzRq7oCWtKbTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:njd83SA+1ts=;J++nmAq9qfV+/27rRiJIp7+2skC
- ie7foP98eRndAw9gUKDk3/WRDjb7nlNxefeJLjVZakxQyUUScjeabFmhN8y4YEBlfvqIgbiEp
- KPWTpuOYnD1/EArT0dYcenbLcWv8sjapAypkUOzyrxC0QVk8ZbCdWezbK+K3EG8tr3FwuenQY
- 14CLBPN7IlmhOa041iu7KW047zdTuG7NZalH5csWhpX91GuZkFKQhoNPVoW9waBQjaTzb4nyu
- jq0XJWtMdN/q2F+1s9EEspSgpqSK4oZHxx/aPGq9M0W8698cglHJV/fDkbyOlM1z5p3iA1Onv
- EBXX9y1GZmE5yXOeKicPzEFGDr3eDiBdMHQ6rcMmHxB8xpxGHcNAXdWdFokSE++jZpiojWzxB
- GxJGttL9jCv4COvG0PK1y9hnTdUH+mi5gGnAAgVaNwoJJv1mvSNjegmgMWksRHTaTfgdroxs4
- 5b4rXt8zBwhOjCvuOHu6EM8wx+OrhviaufEY1AvOryfnqreFIGN8soeaGvfTBZJ49QILoD7/c
- T6L8/W3jHqlL5B5dmouUk+y2n23JwdfzzHX85AstyF7nmQu42rrPNpAhHhg0Tvd95MVk/Ahop
- 2lpP24KXemslIloJjLqPwNKLog79crjZKVDIzkv4XvJKTT+AugA6t8DHZ6umkOV1AxCPArWpD
- qTpuH5iw5d7GEm28JtTW92Nf45Uo9nQM7gUWvuLg0JWe9rRe1edMIih5ViQ1cn/ppS9kB1hXK
- m6M+gTkoCrKx4wGSHv1lMaGB0POF22yFUY3SV5G+tTigD7oq7InFz3Bfm5v54I6/9cDoeh5Y/
- tbSYpyOkwHymqUMLqwj/jpnEGADY4DBwejG2RmYLuqliQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoUKM9-RiOrv0_Vf@pathway.suse.cz>
 
-> child_device_obj->device cannot perform DMA properly if dma_set_mask()
-> returns non-zero. =E2=80=A6
+On Wed, Jul 03, 2024 at 10:22:11AM +0200, Petr Mladek wrote:
+> On Wed 2024-07-03 09:57:26, Jocelyn Falempe wrote:
+> > 
+> > 
+> > On 02/07/2024 22:29, Kees Cook wrote:
+> > > On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
+> > > > kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+> > > > callback.
+> > > > This patch adds a new struct kmsg_dump_detail, that will hold the
+> > > > reason and description, and pass it to the dump() callback.
+> > > 
+> > > Thanks! I like this much better. :)
+> > > 
+> > > > 
+> > > > To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+> > > > function and a macro for backward compatibility.
+> > > > 
+> > > > I've written this for drm_panic, but it can be useful for other
+> > > > kmsg_dumper.
+> > > > It allows to see the panic reason, like "sysrq triggered crash"
+> > > > or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+> > > > 
+> > > > v2:
+> > > >   * Use a struct kmsg_dump_detail to hold the reason and description
+> > > >     pointer, for more flexibility if we want to add other parameters.
+> > > >     (Kees Cook)
+> > > >   * Fix powerpc/nvram_64 build, as I didn't update the forward
+> > > >     declaration of oops_to_nvram()
+> > > 
+> > > The versioning history commonly goes after the "---".
+> > 
+> > ok, I was not aware of this.
+> > > 
+> > > > [...]
+> > > > diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+> > > > index 906521c2329c..65f5a47727bc 100644
+> > > > --- a/include/linux/kmsg_dump.h
+> > > > +++ b/include/linux/kmsg_dump.h
+> > > > @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
+> > > >   	u64	next_seq;
+> > > >   };
+> > > > +/**
+> > > > + *struct kmsg_dump_detail - kernel crash detail
+> > > 
+> > > Is kern-doc happy with this? I think there is supposed to be a space
+> > > between the "*" and the first word:
+> > > 
+> > >   /**
+> > >    * struct kmsg...
+> > > 
+> > > 
+> > Good catch, yes there is a space missing.
+> > 
+> > I just checked with "make htmldocs", and in fact include/linux/kmsg_dump.h
+> > is not indexed for kernel documentation.
+> > And you can't find the definition of struct kmsg_dumper in the online doc.
+> > https://www.kernel.org/doc/html/latest/search.html?q=kmsg_dumper
+> > 
+> > > Otherwise looks good to me!
+> > > 
+> > 
+> > Thanks.
+> > 
+> > As this patch touches different subsystems, do you know on which tree it
+> > should land ?
+> 
+> Andrew usually takes patches against kernel/panic.c.
+> 
+> Or you could take it via the DRM tree, especially if you already have the code
+> using the string.
+> 
+> Also I could take it via the printk tree. The only complication is
+> that I am going to be away the following two weeks and would come
+> back in the middle of the merge window. I do not expect much problems
+> with this change but...
 
-Can the repetition of another wording suggestion influence the software ev=
-olution?
-  Direct memory access can not be properly performed any more
-  after a dma_set_mask() call failed.
+If DRM doesn't want to carry it, I can put it in through the pstore
+tree. Let me know! :)
 
-
-See also:
-https://elixir.bootlin.com/linux/v6.10-rc6/source/kernel/dma/mapping.c#L80=
-4
-
-
-=E2=80=A6
-> Signed-off-by: Haoxiang Li <make24@iscas.ac.cn>
-
-Under which circumstances will applications of the Developer's Certificate=
- of Origin
-be reconsidered any more (after three different names were presented so fa=
-r)?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n398
-
-
-Would you like to append parentheses to another function name in the summa=
-ry phrase?
-
-Regards,
-Markus
+-- 
+Kees Cook
 
