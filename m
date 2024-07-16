@@ -1,491 +1,300 @@
-Return-Path: <linux-hyperv+bounces-2568-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2569-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DABA931DB5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jul 2024 01:40:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C7F7932028
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jul 2024 07:49:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F3D6DB211EB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Jul 2024 23:40:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDBC71F21BBE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jul 2024 05:49:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEEC143754;
-	Mon, 15 Jul 2024 23:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E27E17BAA;
+	Tue, 16 Jul 2024 05:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiU9du0G"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BXrUzEs7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A50E13D24C;
-	Mon, 15 Jul 2024 23:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5FA2187F;
+	Tue, 16 Jul 2024 05:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721086809; cv=none; b=LqmwzT4xkgqEnXe/Ro/SZk+bbH2VEj2zHUU1zIkzGXAsOacdArq/kKdbtl3yD8YdOL8yfxgeAxUdo0QlRoI0EIU6R3YdP710krBT5bGJrGR2U1ocqC0P6D1nzpjHAXMckl2TGG8IhiVepwIBmgKpdqnqq8G8jKmLoCrUQ8JC4H8=
+	t=1721108977; cv=none; b=OWAd8zLQho4sGR8d0VfENGUxldpPR8RNGl1ASm/4wG2PRY0VFNfwaeIXC7V90AL33mBK79yTb67/W2pu+RcSqVbVGhQ6r9JH4dUFrfS+p5U329C9RyUazP9Xke/SDw4y+j9wUw1SF1AHzy7Ogy+oRao/40GmqT5TNI35H9Exdv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721086809; c=relaxed/simple;
-	bh=IYxflzTkvvDnzo/O5Exeaaz6QZwX1+dOjhXFIdh5qjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N+0cMOvCKGTx2BlsM30R2ovEHqhFte+FE5n+tr1xattTH8qAAm83ex5yVGjQQMlHuRezGZaDH62kjl3EangAkI1WcmN5iFbt17co9nMlErDqa6+byjGMqxTD/g/CIHNWpGs7hvw9HaYC/sGYFMq2m1qiftsDPoibP5NxIopmZz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZiU9du0G; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e05a61303b7so2277649276.0;
-        Mon, 15 Jul 2024 16:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721086806; x=1721691606; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=11nSWK2DsfMrraLYfcTYiqBnSNQFLOrBGZBeHRpNduU=;
-        b=ZiU9du0GDvirzo1EdkN6k0NsyFMYTdtQbRmK6pAWqjqYO60J9dnzg0Gb0GTCHcm9eo
-         dya4qAffU58RABzc0OiY8T3LQWJI1F2618mat/RV/sPOJloiK0b4FJN7l6RGNJfua1mP
-         mRxU2E2W/c3iGOeh6QLqGtFOWzkzDmsWf1bnLPBOoP401z3FsyOAXTSgtteQ+5NT3NpT
-         ku8wAniKbjRBGPUdaocFFfGhkn7mDK8VLRl3EvjrET4Oyg+nQKJbJVdDQtNBHigPcnmr
-         oG1EYa9ydyWc7Or23CAxc4ffardZqNh0fjgEKBf/anqFhq/sqF8n8W8UYSmm/5Y1XqVo
-         BStQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721086806; x=1721691606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=11nSWK2DsfMrraLYfcTYiqBnSNQFLOrBGZBeHRpNduU=;
-        b=hxxHuToI2Io5nsENGl0mIbDshGZ2bGQacSF/mRVZioXPP2/hfBV5KZsQIZDp0Ve6ka
-         aZwQe8ZKyqvt0Gdw0YwG6cgHFUP6q2p9gtn8ILHW7bVDSmcMIpqECd0bRF+wIyUS/wyo
-         hDwst8qB2rvDjgjmpqLfMBO74G449ySyzcn0A6k4DHt6gV6zkqJ4tngKcAtgNqBTynqy
-         riibd7fj0Nbr4fDSZqEA5Csfe/Bo4ZKpec5/7iS28jB9z3XlNkXdxNiyKIMNN1/naFpM
-         bXlnrAv3Sq7s54jC282FhVDbIeqfGY7DIWHHbdeXcutzgIHUfkiiKTtukQrbvKHly4eA
-         HQvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXirCa6MMeUOhlgp/iN/Pd36KxQI68bPjHSNkzH2R2WWTA4BQjccuwIGufSMySBpm+HNLhBUUIgZeX1joCTdo43is/wILAWExf9u6/NVNP3YaornASlKfgcKEZnP2Szd+4gtivAbFaCP9wRR/aY6TSkW5xxs7jzadcpVxcC4jaJWE/del92gYOeElg5oHmR0OOSKaek9xs4wIZJbAt0wV13NuNzIjcCBQp7J0pn
-X-Gm-Message-State: AOJu0YzBkGRxW5Xno5/NfpjQNCHo/tEo28n0SVvgKzM4STu6/gDhO4r7
-	gD8i/bNgLkFpMdblE5blF4IN1zbEal8OD/mVMMSnBnBr2ArnRNBAMlyX0M4zpeoX1KAJE8iQAzp
-	bd84+z7+kyS8P6j6gnTc7RCQxe8Q=
-X-Google-Smtp-Source: AGHT+IEBq0pvl8kIIqh5kP5RjyqtMxsRfTwvg+dA7+/RIKG3tCsg9lQtVLnTQrLXFec1OXYriekS+isTPIt8B7q07RA=
-X-Received: by 2002:a05:6902:114c:b0:e03:ab31:9aa6 with SMTP id
- 3f1490d57ef6-e05d56d3d2dmr919642276.24.1721086806098; Mon, 15 Jul 2024
- 16:40:06 -0700 (PDT)
+	s=arc-20240116; t=1721108977; c=relaxed/simple;
+	bh=unrQTfUGwi2XKgGjhjSa4F/hWYLvObAIJjaz3ROgp84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oCkVPPlhRkYjpOLT91DyIyGtyB/qc2Iv3E1yFN856hLI0x95P/cjWNbNUZbliHOlp7OFKkFqBZ/brtEbBks6jigsNEf/ZuVG9kir4To4rxMtUZLwt5I7lAnC3ebXyyGpjfBeL3ZMNbVjzVU+RxYPaKKcZKs9/OENb60I8wHBQQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BXrUzEs7; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 2716D20B7165; Mon, 15 Jul 2024 22:49:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2716D20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1721108975;
+	bh=Wcq4TqXUAwH02yqw1hYhMpHhOGWAu4Dgb+cf9NCpUUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BXrUzEs7sEnofdVDx7YUAFRvJqzNi7GXF3GIW9TYFIZ5gRg7Swqt70/DVTz2IktZC
+	 OpY/NJ1PHlHBef68ukl6ot2MEgkdSXvUmmrYoWbZk6qtUOnyoMtL350nohtVeBmGsq
+	 WHiXe2rar/t+0zvubrp6TtMAcqfgAfHqPt1sPD3s=
+Date: Mon, 15 Jul 2024 22:49:35 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>
+Subject: Re: [PATCH net-next] net: mana: Implement
+ get_ringparam/set_ringparam for mana
+Message-ID: <20240716054935.GA16469@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1721014820-2507-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <0ab5c566-d86a-42bd-9a54-376d4363d030@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710212555.1617795-2-amery.hung@bytedance.com> <AS2P194MB2170B9984C55A5F460F9E03E9AA12@AS2P194MB2170.EURP194.PROD.OUTLOOK.COM>
-In-Reply-To: <AS2P194MB2170B9984C55A5F460F9E03E9AA12@AS2P194MB2170.EURP194.PROD.OUTLOOK.COM>
-From: Amery Hung <ameryhung@gmail.com>
-Date: Mon, 15 Jul 2024 16:39:55 -0700
-Message-ID: <CAMB2axPcjTvbriw7rNXRy5dN4n8Zq-myesXWsH1USM44XFyMxA@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 01/14] af_vsock: generalize
- vsock_dgram_recvmsg() to all transports
-To: Luigi Leonardi <luigi.leonardi@outlook.com>
-Cc: amery.hung@bytedance.com, bobby.eshleman@bytedance.com, 
-	bpf@vger.kernel.org, bryantan@vmware.com, dan.carpenter@linaro.org, 
-	davem@davemloft.net, decui@microsoft.com, edumazet@google.com, 
-	haiyangz@microsoft.com, jasowang@redhat.com, jiang.wang@bytedance.com, 
-	kuba@kernel.org, kvm@vger.kernel.org, kys@microsoft.com, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com, 
-	netdev@vger.kernel.org, oxffffaa@gmail.com, pabeni@redhat.com, 
-	pv-drivers@vmware.com, sgarzare@redhat.com, simon.horman@corigine.com, 
-	stefanha@redhat.com, vdasa@vmware.com, 
-	virtualization@lists.linux-foundation.org, wei.liu@kernel.org, 
-	xiyou.wangcong@gmail.com, xuanzhuo@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ab5c566-d86a-42bd-9a54-376d4363d030@linux.dev>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, Jul 15, 2024 at 1:02=E2=80=AFAM Luigi Leonardi
-<luigi.leonardi@outlook.com> wrote:
->
-> Hi Amery, Bobby
->
-> > From: Bobby Eshleman <bobby.eshleman@bytedance.com>
+On Mon, Jul 15, 2024 at 06:42:16AM +0200, Zhu Yanjun wrote:
+> ??? 2024/7/15 5:40, Shradha Gupta ??????:
+> >Currently the values of WQs for RX and TX queues for MANA devices
+> >are hardcoded to default sizes.
+> >Allow configuring these values for MANA devices as ringparam
+> >configuration(get/set) through ethtool_ops.
 > >
-> > This commit drops the transport->dgram_dequeue callback and makes
-> > vsock_dgram_recvmsg() generic to all transports.
+> >Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> >Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> >Reviewed-by: Long Li <longli@microsoft.com>
+> >---
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 20 +++--
+> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 79 +++++++++++++++++++
+> >  include/net/mana/mana.h                       | 21 ++++-
+> >  3 files changed, 109 insertions(+), 11 deletions(-)
 > >
-> > To make this possible, two transport-level changes are introduced:
-> > - transport in the receiving path now stores the cid and port into
-> >   the control buffer of an skb when populating an skb. The information
-> >   later is used to initialize sockaddr_vm structure in recvmsg()
-> >   without referencing vsk->transport.
-> > - transport implementations set the skb->data pointer to the beginning
-> >   of the payload prior to adding the skb to the socket's receive queue.
-> >   That is, they must use skb_pull() before enqueuing. This is an
-> >   agreement between the transport and the socket layer that skb->data
-> >   always points to the beginning of the payload (and not, for example,
-> >   the packet header).
-> >
-> Like in the other patch, please use imperative in the commit message.
-> >
-> > Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-> > Signed-off-by: Amery Hung <amery.hung@bytedance.com>
-> > ---
-> >  drivers/vhost/vsock.c                   |  1 -
-> >  include/linux/virtio_vsock.h            |  5 ---
-> >  include/net/af_vsock.h                  | 11 ++++-
-> >  net/vmw_vsock/af_vsock.c                | 42 +++++++++++++++++-
-> >  net/vmw_vsock/hyperv_transport.c        |  7 ---
-> >  net/vmw_vsock/virtio_transport.c        |  1 -
-> >  net/vmw_vsock/virtio_transport_common.c |  9 ----
-> >  net/vmw_vsock/vmci_transport.c          | 59 +++----------------------
-> >  net/vmw_vsock/vsock_loopback.c          |  1 -
-> >  9 files changed, 55 insertions(+), 81 deletions(-)
-> >
-> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > index ec20ecff85c7..97fffa914e66 100644
-> > --- a/drivers/vhost/vsock.c
-> > +++ b/drivers/vhost/vsock.c
-> > @@ -419,7 +419,6 @@ static struct virtio_transport vhost_transport =3D =
-{
-> >               .cancel_pkt               =3D vhost_transport_cancel_pkt,
-> >
-> >               .dgram_enqueue            =3D virtio_transport_dgram_enqu=
-eue,
-> > -             .dgram_dequeue            =3D virtio_transport_dgram_dequ=
-eue,
-> >               .dgram_bind               =3D virtio_transport_dgram_bind=
-,
-> >               .dgram_allow              =3D virtio_transport_dgram_allo=
-w,
-> >
-> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.=
-h
-> > index c82089dee0c8..8b56b8a19ddd 100644
-> > --- a/include/linux/virtio_vsock.h
-> > +++ b/include/linux/virtio_vsock.h
-> > @@ -177,11 +177,6 @@ virtio_transport_stream_dequeue(struct vsock_sock =
-*vsk,
-> >                               size_t len,
-> >                               int type);
-> >  int
-> > -virtio_transport_dgram_dequeue(struct vsock_sock *vsk,
-> > -                            struct msghdr *msg,
-> > -                            size_t len, int flags);
-> > -
-> > -int
-> >  virtio_transport_seqpacket_enqueue(struct vsock_sock *vsk,
-> >                                  struct msghdr *msg,
-> >                                  size_t len);
-> > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-> > index 535701efc1e5..7aa1f5f2b1a5 100644
-> > --- a/include/net/af_vsock.h
-> > +++ b/include/net/af_vsock.h
-> > @@ -120,8 +120,6 @@ struct vsock_transport {
-> >
-> >       /* DGRAM. */
-> >       int (*dgram_bind)(struct vsock_sock *, struct sockaddr_vm *);
-> > -     int (*dgram_dequeue)(struct vsock_sock *vsk, struct msghdr *msg,
-> > -                          size_t len, int flags);
-> >       int (*dgram_enqueue)(struct vsock_sock *, struct sockaddr_vm *,
-> >                            struct msghdr *, size_t len);
-> >       bool (*dgram_allow)(u32 cid, u32 port);
-> > @@ -219,6 +217,15 @@ void vsock_for_each_connected_socket(struct vsock_=
-transport *transport,
-> >  int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *=
-psk);
-> >  bool vsock_find_cid(unsigned int cid);
-> >
-> > +struct vsock_skb_cb {
-> > +     unsigned int src_cid;
-> > +     unsigned int src_port;
-> > +};
-> > +
-> > +static inline struct vsock_skb_cb *vsock_skb_cb(struct sk_buff *skb) {
-> > +     return (struct vsock_skb_cb *)skb->cb;
-> > +};
-> > +
-> >
->
-> Running scripts/checkpatch.pl --strict --codespell on the patch shows thi=
-s error:
->
->  ERROR: open brace '{' following function definitions go on the next line
->  #183: FILE: include/net/af_vsock.h:225:
->  +static inline struct vsock_skb_cb *vsock_skb_cb(struct sk_buff *skb) {
->
->  total: 1 errors, 0 warnings, 0 checks, 235 lines checked
-> >
-> >  /**** TAP ****/
-> >
-> >  struct vsock_tap {
-> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> > index 4b040285aa78..5e7d4d99ea2c 100644
-> > --- a/net/vmw_vsock/af_vsock.c
-> > +++ b/net/vmw_vsock/af_vsock.c
-> > @@ -1273,11 +1273,15 @@ static int vsock_dgram_connect(struct socket *s=
-ock,
-> >  int vsock_dgram_recvmsg(struct socket *sock, struct msghdr *msg,
-> >                       size_t len, int flags)
+> >diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> >index 91f10910ea44..31355a95e891 100644
+> >--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> >+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> >@@ -618,7 +618,7 @@ static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+> >  	dev = mpc->ac->gdma_dev->gdma_context->dev;
+> >-	num_rxb = mpc->num_queues * RX_BUFFERS_PER_QUEUE;
+> >+	num_rxb = mpc->num_queues * mpc->rx_queue_size;
+> >  	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
+> >  	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
+> >@@ -1899,14 +1899,15 @@ static int mana_create_txq(struct mana_port_context *apc,
+> >  		return -ENOMEM;
+> >  	/*  The minimum size of the WQE is 32 bytes, hence
+> >-	 *  MAX_SEND_BUFFERS_PER_QUEUE represents the maximum number of WQEs
+> >+	 *  apc->tx_queue_size represents the maximum number of WQEs
+> >  	 *  the SQ can store. This value is then used to size other queues
+> >  	 *  to prevent overflow.
+> >+	 *  Also note that the txq_size is always going to be MANA_PAGE_ALIGNED,
+> >+	 *  as tx_queue_size is always a power of 2.
+> >  	 */
+> >-	txq_size = MAX_SEND_BUFFERS_PER_QUEUE * 32;
+> >-	BUILD_BUG_ON(!MANA_PAGE_ALIGNED(txq_size));
+> >+	txq_size = apc->tx_queue_size * 32;
+> >-	cq_size = MAX_SEND_BUFFERS_PER_QUEUE * COMP_ENTRY_SIZE;
+> >+	cq_size = apc->tx_queue_size * COMP_ENTRY_SIZE;
+> >  	cq_size = MANA_PAGE_ALIGN(cq_size);
+> >  	gc = gd->gdma_context;
+> >@@ -2145,10 +2146,11 @@ static int mana_push_wqe(struct mana_rxq *rxq)
+> >  static int mana_create_page_pool(struct mana_rxq *rxq, struct gdma_context *gc)
 > >  {
-> > +     struct vsock_skb_cb *vsock_cb;
-> >  #ifdef CONFIG_BPF_SYSCALL
-> >       const struct proto *prot;
-> >  #endif
-> >       struct vsock_sock *vsk;
-> > +     struct sk_buff *skb;
-> > +     size_t payload_len;
-> >       struct sock *sk;
-> > +     int err;
-> >
-> >       sk =3D sock->sk;
-> >       vsk =3D vsock_sk(sk);
-> > @@ -1288,7 +1292,43 @@ int vsock_dgram_recvmsg(struct socket *sock, str=
-uct msghdr *msg,
-> >               return prot->recvmsg(sk, msg, len, flags, NULL);
-> >  #endif
-> >
-> > -     return vsk->transport->dgram_dequeue(vsk, msg, len, flags);
-> > +     if (flags & MSG_OOB || flags & MSG_ERRQUEUE)
-> > +             return -EOPNOTSUPP;
-> > +
-> > +     if (unlikely(flags & MSG_ERRQUEUE))
-> > +             return sock_recv_errqueue(sk, msg, len, SOL_VSOCK, 0);
-> >
-> This if statement is always false!
-> >
-> > +
-> > +     /* Retrieve the head sk_buff from the socket's receive queue. */
-> > +     err =3D 0;
-> > +     skb =3D skb_recv_datagram(sk_vsock(vsk), flags, &err);
-> > +     if (!skb)
-> > +             return err;
-> > +
-> > +     payload_len =3D skb->len;
-> > +
-> nit: I'd remove this blank line.
-> > +     if (payload_len > len) {
-> > +             payload_len =3D len;
-> > +             msg->msg_flags |=3D MSG_TRUNC;
-> > +     }
-> > +
-> > +     /* Place the datagram payload in the user's iovec. */
-> > +     err =3D skb_copy_datagram_msg(skb, 0, msg, payload_len);
-> > +     if (err)
-> > +             goto out;
-> > +
-> > +     if (msg->msg_name) {
-> > +             /* Provide the address of the sender. */
-> > +             DECLARE_SOCKADDR(struct sockaddr_vm *, vm_addr, msg->msg_=
-name);
-> > +
-> > +             vsock_cb =3D vsock_skb_cb(skb);
-> > +             vsock_addr_init(vm_addr, vsock_cb->src_cid, vsock_cb->src=
-_port);
-> > +             msg->msg_namelen =3D sizeof(*vm_addr);
-> > +     }
-> > +     err =3D payload_len;
-> > +
-> > +out:
-> > +     skb_free_datagram(&vsk->sk, skb);
-> > +     return err;
+> >+	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
+> >  	struct page_pool_params pprm = {};
+> >  	int ret;
+> >-	pprm.pool_size = RX_BUFFERS_PER_QUEUE;
+> >+	pprm.pool_size = mpc->rx_queue_size;
+> >  	pprm.nid = gc->numa_node;
+> >  	pprm.napi = &rxq->rx_cq.napi;
+> >  	pprm.netdev = rxq->ndev;
+> >@@ -2180,13 +2182,13 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+> >  	gc = gd->gdma_context;
+> >-	rxq = kzalloc(struct_size(rxq, rx_oobs, RX_BUFFERS_PER_QUEUE),
+> >+	rxq = kzalloc(struct_size(rxq, rx_oobs, apc->rx_queue_size),
+> >  		      GFP_KERNEL);
+> >  	if (!rxq)
+> >  		return NULL;
+> >  	rxq->ndev = ndev;
+> >-	rxq->num_rx_buf = RX_BUFFERS_PER_QUEUE;
+> >+	rxq->num_rx_buf = apc->rx_queue_size;
+> >  	rxq->rxq_idx = rxq_idx;
+> >  	rxq->rxobj = INVALID_MANA_HANDLE;
+> >@@ -2734,6 +2736,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+> >  	apc->ndev = ndev;
+> >  	apc->max_queues = gc->max_num_queues;
+> >  	apc->num_queues = gc->max_num_queues;
+> >+	apc->tx_queue_size = DEF_TX_BUFFERS_PER_QUEUE;
+> >+	apc->rx_queue_size = DEF_RX_BUFFERS_PER_QUEUE;
+> >  	apc->port_handle = INVALID_MANA_HANDLE;
+> >  	apc->pf_filter_handle = INVALID_MANA_HANDLE;
+> >  	apc->port_idx = port_idx;
+> >diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> >index 146d5db1792f..7a4752dda7b8 100644
+> >--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> >+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> >@@ -369,6 +369,83 @@ static int mana_set_channels(struct net_device *ndev,
+> >  	return err;
 > >  }
-> >  EXPORT_SYMBOL_GPL(vsock_dgram_recvmsg);
-> >
-> > diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_tr=
-ansport.c
-> > index e2157e387217..326dd41ee2d5 100644
-> > --- a/net/vmw_vsock/hyperv_transport.c
-> > +++ b/net/vmw_vsock/hyperv_transport.c
-> > @@ -556,12 +556,6 @@ static int hvs_dgram_bind(struct vsock_sock *vsk, =
-struct sockaddr_vm *addr)
-> >       return -EOPNOTSUPP;
-> >  }
-> >
-> > -static int hvs_dgram_dequeue(struct vsock_sock *vsk, struct msghdr *ms=
-g,
-> > -                          size_t len, int flags)
-> > -{
-> > -     return -EOPNOTSUPP;
-> > -}
-> > -
-> >  static int hvs_dgram_enqueue(struct vsock_sock *vsk,
-> >                            struct sockaddr_vm *remote, struct msghdr *m=
-sg,
-> >                            size_t dgram_len)
-> > @@ -833,7 +827,6 @@ static struct vsock_transport hvs_transport =3D {
-> >       .shutdown                 =3D hvs_shutdown,
-> >
-> >       .dgram_bind               =3D hvs_dgram_bind,
-> > -     .dgram_dequeue            =3D hvs_dgram_dequeue,
-> >       .dgram_enqueue            =3D hvs_dgram_enqueue,
-> >       .dgram_allow              =3D hvs_dgram_allow,
-> >
-> > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_tr=
-ansport.c
-> > index 43d405298857..a8c97e95622a 100644
-> > --- a/net/vmw_vsock/virtio_transport.c
-> > +++ b/net/vmw_vsock/virtio_transport.c
-> > @@ -508,7 +508,6 @@ static struct virtio_transport virtio_transport =3D=
- {
-> >               .cancel_pkt               =3D virtio_transport_cancel_pkt=
-,
-> >
-> >               .dgram_bind               =3D virtio_transport_dgram_bind=
-,
-> > -             .dgram_dequeue            =3D virtio_transport_dgram_dequ=
-eue,
-> >               .dgram_enqueue            =3D virtio_transport_dgram_enqu=
-eue,
-> >               .dgram_allow              =3D virtio_transport_dgram_allo=
-w,
-> >
-> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/vi=
-rtio_transport_common.c
-> > index 16ff976a86e3..4bf73d20c12a 100644
-> > --- a/net/vmw_vsock/virtio_transport_common.c
-> > +++ b/net/vmw_vsock/virtio_transport_common.c
-> > @@ -810,15 +810,6 @@ virtio_transport_seqpacket_enqueue(struct vsock_so=
-ck *vsk,
-> >  }
-> >  EXPORT_SYMBOL_GPL(virtio_transport_seqpacket_enqueue);
-> >
-> > -int
-> > -virtio_transport_dgram_dequeue(struct vsock_sock *vsk,
-> > -                            struct msghdr *msg,
-> > -                            size_t len, int flags)
-> > -{
-> > -     return -EOPNOTSUPP;
-> > -}
-> > -EXPORT_SYMBOL_GPL(virtio_transport_dgram_dequeue);
-> > -
-> >  s64 virtio_transport_stream_has_data(struct vsock_sock *vsk)
-> >  {
-> >       struct virtio_vsock_sock *vvs =3D vsk->trans;
-> > diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transp=
-ort.c
-> > index b370070194fa..b39df3ed8c8d 100644
-> > --- a/net/vmw_vsock/vmci_transport.c
-> > +++ b/net/vmw_vsock/vmci_transport.c
-> > @@ -610,6 +610,7 @@ vmci_transport_datagram_create_hnd(u32 resource_id,
-> >
-> >  static int vmci_transport_recv_dgram_cb(void *data, struct vmci_datagr=
-am *dg)
-> >  {
-> > +     struct vsock_skb_cb *vsock_cb;
-> >       struct sock *sk;
-> >       size_t size;
-> >       struct sk_buff *skb;
-> > @@ -637,10 +638,14 @@ static int vmci_transport_recv_dgram_cb(void *dat=
-a, struct vmci_datagram *dg)
-> >       if (!skb)
-> >               return VMCI_ERROR_NO_MEM;
-> >
-> > +     vsock_cb =3D vsock_skb_cb(skb);
-> > +     vsock_cb->src_cid =3D dg->src.context;
-> > +     vsock_cb->src_port =3D dg->src.resource;
-> >       /* sk_receive_skb() will do a sock_put(), so hold here. */
-> >       sock_hold(sk);
-> >       skb_put(skb, size);
-> >       memcpy(skb->data, dg, size);
-> > +     skb_pull(skb, VMCI_DG_HEADERSIZE);
-> >       sk_receive_skb(sk, skb, 0);
-> >
-> >       return VMCI_SUCCESS;
-> > @@ -1731,59 +1736,6 @@ static int vmci_transport_dgram_enqueue(
-> >       return err - sizeof(*dg);
-> >  }
-> >
-> > -static int vmci_transport_dgram_dequeue(struct vsock_sock *vsk,
-> > -                                     struct msghdr *msg, size_t len,
-> > -                                     int flags)
-> > -{
-> > -     int err;
-> > -     struct vmci_datagram *dg;
-> > -     size_t payload_len;
-> > -     struct sk_buff *skb;
-> > -
-> > -     if (flags & MSG_OOB || flags & MSG_ERRQUEUE)
-> > -             return -EOPNOTSUPP;
-> > -
-> > -     /* Retrieve the head sk_buff from the socket's receive queue. */
-> > -     err =3D 0;
-> > -     skb =3D skb_recv_datagram(&vsk->sk, flags, &err);
-> > -     if (!skb)
-> > -             return err;
-> > -
-> > -     dg =3D (struct vmci_datagram *)skb->data;
-> > -     if (!dg)
-> > -             /* err is 0, meaning we read zero bytes. */
-> > -             goto out;
-> > -
-> > -     payload_len =3D dg->payload_size;
-> > -     /* Ensure the sk_buff matches the payload size claimed in the pac=
-ket. */
-> > -     if (payload_len !=3D skb->len - sizeof(*dg)) {
-> > -             err =3D -EINVAL;
-> > -             goto out;
-> > -     }
-> > -
-> > -     if (payload_len > len) {
-> > -             payload_len =3D len;
-> > -             msg->msg_flags |=3D MSG_TRUNC;
-> > -     }
-> > -
-> > -     /* Place the datagram payload in the user's iovec. */
-> > -     err =3D skb_copy_datagram_msg(skb, sizeof(*dg), msg, payload_len)=
-;
-> > -     if (err)
-> > -             goto out;
-> > -
-> > -     if (msg->msg_name) {
-> > -             /* Provide the address of the sender. */
-> > -             DECLARE_SOCKADDR(struct sockaddr_vm *, vm_addr, msg->msg_=
-name);
-> > -             vsock_addr_init(vm_addr, dg->src.context, dg->src.resourc=
-e);
-> > -             msg->msg_namelen =3D sizeof(*vm_addr);
-> > -     }
-> > -     err =3D payload_len;
-> > -
-> > -out:
-> > -     skb_free_datagram(&vsk->sk, skb);
-> > -     return err;
-> > -}
-> > -
-> >  static bool vmci_transport_dgram_allow(u32 cid, u32 port)
-> >  {
-> >       if (cid =3D=3D VMADDR_CID_HYPERVISOR) {
-> > @@ -2040,7 +1992,6 @@ static struct vsock_transport vmci_transport =3D =
-{
-> >       .release =3D vmci_transport_release,
-> >       .connect =3D vmci_transport_connect,
-> >       .dgram_bind =3D vmci_transport_dgram_bind,
-> > -     .dgram_dequeue =3D vmci_transport_dgram_dequeue,
-> >       .dgram_enqueue =3D vmci_transport_dgram_enqueue,
-> >       .dgram_allow =3D vmci_transport_dgram_allow,
-> >       .stream_dequeue =3D vmci_transport_stream_dequeue,
-> > diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loopb=
-ack.c
-> > index 6dea6119f5b2..11488887a5cc 100644
-> > --- a/net/vmw_vsock/vsock_loopback.c
-> > +++ b/net/vmw_vsock/vsock_loopback.c
-> > @@ -66,7 +66,6 @@ static struct virtio_transport loopback_transport =3D=
- {
-> >               .cancel_pkt               =3D vsock_loopback_cancel_pkt,
-> >
-> >               .dgram_bind               =3D virtio_transport_dgram_bind=
-,
-> > -             .dgram_dequeue            =3D virtio_transport_dgram_dequ=
-eue,
-> >               .dgram_enqueue            =3D virtio_transport_dgram_enqu=
-eue,
-> >               .dgram_allow              =3D virtio_transport_dgram_allo=
-w,
-> >
-> > --
-> > 2.20.1
-> >
-> >
->
-> Small changes :)
-> Rest LGTM!
->
-
-I will fix the two style issues.
-
-Thank you,
-Amery
-
+> >+static void mana_get_ringparam(struct net_device *ndev,
+> >+			       struct ethtool_ringparam *ring,
+> >+			       struct kernel_ethtool_ringparam *kernel_ring,
+> >+			       struct netlink_ext_ack *extack)
+> >+{
+> >+	struct mana_port_context *apc = netdev_priv(ndev);
+> >+
+> >+	ring->rx_pending = apc->rx_queue_size;
+> >+	ring->tx_pending = apc->tx_queue_size;
+> >+	ring->rx_max_pending = MAX_RX_BUFFERS_PER_QUEUE;
+> >+	ring->tx_max_pending = MAX_TX_BUFFERS_PER_QUEUE;
+> >+}
+> >+
+> >+static int mana_set_ringparam(struct net_device *ndev,
+> >+			      struct ethtool_ringparam *ring,
+> >+			      struct kernel_ethtool_ringparam *kernel_ring,
+> >+			      struct netlink_ext_ack *extack)
+> >+{
+> >+	struct mana_port_context *apc = netdev_priv(ndev);
+> >+	u32 new_tx, new_rx;
+> >+	u32 old_tx, old_rx;
+> >+	int err1, err2;
+> >+
+> >+	if (ring->rx_jumbo_pending) {
+> >+		netdev_err(ndev, "%s: rx_jumbo_pending not supported\n", __func__);
+> 
+> I noticed that "rx_jumbo_pending not supported".
+> 
+> #define ENOTSUP 134		/* Not supported */
+> 
+> So can we use the error -ENOTSUP?
+> 
+> >+		return -EINVAL;
+> >+	}
+> >+	if (ring->rx_mini_pending) {
+> >+		netdev_err(ndev, "%s: rx_mini_pending not supported\n", __func__);
+> 
+> ditto. " rx_mini_pending not supported"
+> 
 > Thanks,
-> Luigi
+> Zhu Yanjun
+
+Thanks for the pointers Zhu Yanjun, I'll take care of these in the next version.
+> 
+> >+		return -EINVAL;
+> >+	}
+> >+
+> >+	if (!apc)
+> >+		return -EINVAL;
+> >+
+> >+	old_tx = apc->tx_queue_size;
+> >+	old_rx = apc->rx_queue_size;
+> >+	new_tx = clamp_t(u32, ring->tx_pending, MIN_TX_BUFFERS_PER_QUEUE, MAX_TX_BUFFERS_PER_QUEUE);
+> >+	new_rx = clamp_t(u32, ring->rx_pending, MIN_RX_BUFFERS_PER_QUEUE, MAX_RX_BUFFERS_PER_QUEUE);
+> >+
+> >+	if (new_tx == old_tx && new_rx == old_rx)
+> >+		return 0;
+> >+
+> >+	if (!is_power_of_2(new_tx)) {
+> >+		netdev_err(ndev, "%s:Tx:%d not supported\n", __func__, new_tx);
+> >+		return -EINVAL;
+> >+	}
+> >+
+> >+	if (!is_power_of_2(new_rx)) {
+> >+		netdev_err(ndev, "%s:Rx:%d not supported\n", __func__, new_rx);
+> >+		return -EINVAL;
+> >+	}
+> >+
+> >+	err1 = mana_detach(ndev, false);
+> >+	if (err1) {
+> >+		netdev_err(ndev, "mana_detach failed: %d\n", err1);
+> >+		return err1;
+> >+	}
+> >+
+> >+	apc->tx_queue_size = new_tx;
+> >+	apc->rx_queue_size = new_rx;
+> >+	err1 = mana_attach(ndev);
+> >+	if (!err1)
+> >+		return 0;
+> >+
+> >+	netdev_err(ndev, "mana_attach failed: %d\n", err1);
+> >+
+> >+	/* Try rolling back to the older values */
+> >+	apc->tx_queue_size = old_tx;
+> >+	apc->rx_queue_size = old_rx;
+> >+	err2 = mana_attach(ndev);
+> >+	if (err2)
+> >+		netdev_err(ndev, "mana_reattach failed: %d\n", err2);
+> >+
+> >+	return err1;
+> >+}
+> >+
+> >  const struct ethtool_ops mana_ethtool_ops = {
+> >  	.get_ethtool_stats	= mana_get_ethtool_stats,
+> >  	.get_sset_count		= mana_get_sset_count,
+> >@@ -380,4 +457,6 @@ const struct ethtool_ops mana_ethtool_ops = {
+> >  	.set_rxfh		= mana_set_rxfh,
+> >  	.get_channels		= mana_get_channels,
+> >  	.set_channels		= mana_set_channels,
+> >+	.get_ringparam          = mana_get_ringparam,
+> >+	.set_ringparam          = mana_set_ringparam,
+> >  };
+> >diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+> >index e39b8676fe54..3e27ca5155aa 100644
+> >--- a/include/net/mana/mana.h
+> >+++ b/include/net/mana/mana.h
+> >@@ -38,9 +38,21 @@ enum TRI_STATE {
+> >  #define COMP_ENTRY_SIZE 64
+> >-#define RX_BUFFERS_PER_QUEUE 512
+> >+/* This Max value for RX buffers is derived from __alloc_page()'s max page
+> >+ * allocation calculation. It allows maximum 2^(MAX_ORDER -1) pages. RX buffer
+> >+ * size beyond this value gets rejected by __alloc_page() call.
+> >+ */
+> >+#define MAX_RX_BUFFERS_PER_QUEUE 8192
+> >+#define DEF_RX_BUFFERS_PER_QUEUE 512
+> >+#define MIN_RX_BUFFERS_PER_QUEUE 128
+> >-#define MAX_SEND_BUFFERS_PER_QUEUE 256
+> >+/* This max value for TX buffers is dervied as the maximum allocatable
+> >+ * pages supported on host per guest through testing. TX buffer size beyond
+> >+ * this value is rejected by the hardware.
+> >+ */
+> >+#define MAX_TX_BUFFERS_PER_QUEUE 16384
+> >+#define DEF_TX_BUFFERS_PER_QUEUE 256
+> >+#define MIN_TX_BUFFERS_PER_QUEUE 128
+> >  #define EQ_SIZE (8 * MANA_PAGE_SIZE)
+> >@@ -285,7 +297,7 @@ struct mana_recv_buf_oob {
+> >  	void *buf_va;
+> >  	bool from_pool; /* allocated from a page pool */
+> >-	/* SGL of the buffer going to be sent has part of the work request. */
+> >+	/* SGL of the buffer going to be sent as part of the work request. */
+> >  	u32 num_sge;
+> >  	struct gdma_sge sgl[MAX_RX_WQE_SGL_ENTRIES];
+> >@@ -437,6 +449,9 @@ struct mana_port_context {
+> >  	unsigned int max_queues;
+> >  	unsigned int num_queues;
+> >+	unsigned int rx_queue_size;
+> >+	unsigned int tx_queue_size;
+> >+
+> >  	mana_handle_t port_handle;
+> >  	mana_handle_t pf_filter_handle;
 
