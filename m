@@ -1,116 +1,165 @@
-Return-Path: <linux-hyperv+bounces-2571-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2572-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B47B9932032
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jul 2024 07:52:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0228D933C00
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jul 2024 13:14:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 543701F22BCA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jul 2024 05:52:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6552DB22DC6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jul 2024 11:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27B6F17C91;
-	Tue, 16 Jul 2024 05:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC1B17F4E8;
+	Wed, 17 Jul 2024 11:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Kfz2fJX8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SE3AWkhA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D103A17BAA;
-	Tue, 16 Jul 2024 05:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A264A17F398
+	for <linux-hyperv@vger.kernel.org>; Wed, 17 Jul 2024 11:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721109160; cv=none; b=ZsOvzRvWNeclzzEnPlewS3X2d5jEkSgtKjENneyRso8BN576tQHUO8ScrGDqZzYKvkAD/uyu4xkbZLBPmn3DQOpCq2z3ZOvM46UImdTLAtMh5081fy3oNV6KKVm/Hhnl8Db+EdHrqbNiW/s4a1rg81zup/GbeuaY9u7LAnB716M=
+	t=1721214856; cv=none; b=F85R7BiZQpuwIZpRV1XmPQYCcwtUUSio0EHNFwF+IvhInZw9w+HYf87ZvPziKV1i4aGTBw/8qjFMof7+OX0nhW4BS7qnz+ePuxzE6wZDJfzCgH2H/tX4YEPLicXg9hQWrb0pugmU5lNAcJpZgQNmrC7iOoNzNJB3duvO2u63Ezc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721109160; c=relaxed/simple;
-	bh=lxA/bOoTsrzGF5ZrrKJOhVVAsW6vWLK5zIiPznI1C88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N50j0B7AiR+RtBhAP1debn8JEBzHpxhE6CW+qTMuI5EhAztihR4O92GPbbKzoRNV811LrMvtB2tCwLyvyeTqmd0mk0n3NMQ+pH1zxpUa8zzKykFOgw766Xks+g/1tJMIt0CnjuuxRqroFap0CSS0KEjCltJwqEGKDwUbEMyg1oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Kfz2fJX8; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 5AB2820B7165; Mon, 15 Jul 2024 22:52:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AB2820B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1721109158;
-	bh=0Ma31MmB44D6lO+VmB474XyxCD3bBumrQiidhEUKV88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kfz2fJX8n5tY4xcbOx8uFBhU5ckHsjNwX7GZIQKFg1GNpQGUHmB2B+6FvZO3EgDlp
-	 5a/bcv96jpLylmbIYWeWR2OolcZcaVN8yJxe4kEOE64dsz+396W618Q/wgrAd/rlIw
-	 7lx5XUb3QeoShbBkIJDw0BV8evL3D9nCu8AJkuLg=
-Date: Mon, 15 Jul 2024 22:52:38 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Subject: Re: [PATCH net-next] net: mana: Implement
- get_ringparam/set_ringparam for mana
-Message-ID: <20240716055238.GC16469@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1721014820-2507-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240715064551.6036d46b@kernel.org>
+	s=arc-20240116; t=1721214856; c=relaxed/simple;
+	bh=sQzUg2Q/1MYsGWnhU/zaTOxAtlBYe1TRtcDNO8bXWyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Q1VKvh6V+oxt3D2s89rfOzHky1Xzer/nj0lqqgQKzUAntL7NUf+jnhV8hWjhUEVNfGjLaX10dMIHpBVNGYxqaemuDU9aJGxfn4Sj2trIp4dh5MpUW0GKPaxrQ9z0e2oK+QTj7pWxlxkq+DM4IuzqlM8FR4hjvlLVBokfr9wGRwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SE3AWkhA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721214852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RAGmeywEZ/JgSZ6hAqPsmz089vwWWyWA+lKvknqNmtE=;
+	b=SE3AWkhA+4UZaCJekQMUNxUI9cKBoZAZXU1LGG3dxjhyaSgB06lZJDVczgpoPTNGwYLf1r
+	s+8nBGvPnKI2f6rg6xfsnAfOVIYhOEP0yOX4kPdcXT6zDidvGMhkUih5aKUN9cWP2p/UoY
+	go16Wgh0r/ACUqZjOL6XvY1btn+ijxM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-509-WldJXrwlP2abVJKBJCxw2Q-1; Wed, 17 Jul 2024 07:14:11 -0400
+X-MC-Unique: WldJXrwlP2abVJKBJCxw2Q-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-36805bfd95aso3551291f8f.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 17 Jul 2024 04:14:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721214850; x=1721819650;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RAGmeywEZ/JgSZ6hAqPsmz089vwWWyWA+lKvknqNmtE=;
+        b=FHeJ1H21xyDOgvgzXtrT1UxZq29hsL+ZEVrOgHW5TkzhafhK4Nm7a0bUFVm3bgHInu
+         fuBm0pVgnT7nZbJtXjD2L3CVVD7hLjiSXyfq7ZMR1aVNR7FFxzAgyk5iai0MqVTey9wx
+         sq+zyr2OmOn/KBYxz1CE4kiIm5aMsdANHOac4j/lM8VCngozPt8H+fWcURuyc+prmI9i
+         bxQbT+JdK50hWcF9hUFu+efgDkjVvz2MRIxV5+0wpF6MSmvwjshbTKQHFgYfjReVHT1b
+         0IwT9IMiPaVQXhfEcDXsCnagF3NY450dXv0P2I46OedyKHaQqR1pJFXHaBB3aHJ3JWOm
+         OkqA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5YfKX1i+UdjXkbudqn9O9ZGVKZzRxnoBH49W4A0L8kHUZtP0vMmTSAnb3qXmcpp+VtFrJwySUHU1RFzpSOKBPl6OnDbCaR2HabtiR
+X-Gm-Message-State: AOJu0YxAJzjF79zwKmIIK7T2Dz2O5b/vN2r+pAF7qU7cUk/bbDgn/UOj
+	85y/6UCr3ARl6e2pfhhH3IRmwbT6C+MPo6OS6/AXpqzg9Cz48JFoA2Nsg5qa6gAHo7TYAZpJOJQ
+	t9UQgwn1RIZ16DHwHxlk1sExEo9kt3qK8/vk6F5Q9QEmgPr1SFE9iFwcya2weSw==
+X-Received: by 2002:a5d:5f8c:0:b0:367:943e:f436 with SMTP id ffacd0b85a97d-36831652b7cmr1395245f8f.30.1721214850122;
+        Wed, 17 Jul 2024 04:14:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkv5VJxD9qI1kB5PB9WhCMM3ozFKBNBC+x5bcWuyaH6WTwCYKMg89QMw7W+wtEnk2KMCsWzg==
+X-Received: by 2002:a5d:5f8c:0:b0:367:943e:f436 with SMTP id ffacd0b85a97d-36831652b7cmr1395208f8f.30.1721214849630;
+        Wed, 17 Jul 2024 04:14:09 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbec3sm11450684f8f.85.2024.07.17.04.14.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 04:14:09 -0700 (PDT)
+Message-ID: <f559a33a-6d2e-476d-87f6-cb1887e99b62@redhat.com>
+Date: Wed, 17 Jul 2024 13:14:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715064551.6036d46b@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jani Nikula <jani.nikula@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20240702122639.248110-1-jfalempe@redhat.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 15, 2024 at 06:45:51AM -0700, Jakub Kicinski wrote:
-> On Sun, 14 Jul 2024 20:40:20 -0700 Shradha Gupta wrote:
-> > +	if (ring->rx_jumbo_pending) {
-> > +		netdev_err(ndev, "%s: rx_jumbo_pending not supported\n", __func__);
-> > +		return -EINVAL;
-> > +	}
-> > +	if (ring->rx_mini_pending) {
-> > +		netdev_err(ndev, "%s: rx_mini_pending not supported\n", __func__);
-> > +		return -EINVAL;
-> > +	}
-> 
-> I think that core already checks this
-> 
-> > +	if (!apc)
-> > +		return -EINVAL;
-> 
-> Provably impossible, apc is netdev + sizeof(netdev) so it'd have to
-> wrap a 64b integer to be NULL :|
-> 
-> > +	old_tx = apc->tx_queue_size;
-> > +	old_rx = apc->rx_queue_size;
-> > +	new_tx = clamp_t(u32, ring->tx_pending, MIN_TX_BUFFERS_PER_QUEUE, MAX_TX_BUFFERS_PER_QUEUE);
-> > +	new_rx = clamp_t(u32, ring->rx_pending, MIN_RX_BUFFERS_PER_QUEUE, MAX_RX_BUFFERS_PER_QUEUE);
-> > +
-> > +	if (new_tx == old_tx && new_rx == old_rx)
-> > +		return 0;
-> 
-> Pretty sure core will also not call you if there's no change.
-> If it does please update core instead of catching this in the driver.
 
-Thanks for the comments Jakub. I'll verify these and make the relevant changes in the next version
-
+On 02/07/2024 14:26, Jocelyn Falempe wrote:
+> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+> callback.
+> This patch adds a new struct kmsg_dump_detail, that will hold the
+> reason and description, and pass it to the dump() callback.
 > 
-> Please keep in mind that net-next will be closed for the duration
-> of the merge window.
-Noted, Thanks.
+> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+> function and a macro for backward compatibility.
+> 
+> I've written this for drm_panic, but it can be useful for other
+> kmsg_dumper.
+> It allows to see the panic reason, like "sysrq triggered crash"
+> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+> 
+> v2:
+>   * Use a struct kmsg_dump_detail to hold the reason and description
+>     pointer, for more flexibility if we want to add other parameters.
+>     (Kees Cook)
+>   * Fix powerpc/nvram_64 build, as I didn't update the forward
+>     declaration of oops_to_nvram()
+> 
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> ---
+>   arch/powerpc/kernel/nvram_64.c             |  8 ++++----
+>   arch/powerpc/platforms/powernv/opal-kmsg.c |  4 ++--
+>   arch/um/kernel/kmsg_dump.c                 |  2 +-
+>   drivers/gpu/drm/drm_panic.c                |  4 ++--
+>   drivers/hv/hv_common.c                     |  4 ++--
+>   drivers/mtd/mtdoops.c                      |  2 +-
+>   fs/pstore/platform.c                       | 10 +++++-----
+>   include/linux/kmsg_dump.h                  | 22 +++++++++++++++++++---
+>   kernel/panic.c                             |  2 +-
+>   kernel/printk/printk.c                     | 11 ++++++++---
+>   10 files changed, 45 insertions(+), 24 deletions(-)
+> 
 
-> -- 
-> pw-bot: cr
+[...]
+
+I pushed it to drm-misc-next, with the whitespace change in kmsg_dump.h
+
+Thanks all for your reviews and comments.
+
+Best regards,
+
+-- 
+
+Jocelyn
+
 
