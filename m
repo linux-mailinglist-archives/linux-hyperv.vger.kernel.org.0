@@ -1,116 +1,124 @@
-Return-Path: <linux-hyperv+bounces-2574-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2575-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBDDE93422B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jul 2024 20:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1387A9382CA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Jul 2024 22:11:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92D312842A5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jul 2024 18:19:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D18A32815BA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Jul 2024 20:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 261DA183060;
-	Wed, 17 Jul 2024 18:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07F67148832;
+	Sat, 20 Jul 2024 20:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OhFxAIc6"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="XOBw0mCr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB54812E75;
-	Wed, 17 Jul 2024 18:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F56F1B86E6;
+	Sat, 20 Jul 2024 20:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721240349; cv=none; b=nJnj85oQ1dR1BNyVrAeblrudYbqgcViyOsw1KrkIy8NNcJ+jD4qGz7YR/rP7raz/Ak/TwnOkndMt1/q4XQvphoEzsX4jLAggePcFaxBrtgsWsWjtXgXEoOPZLnQXdJ3dpxwGs1rlbkvrQ6zvhWV9O9hadkL0tlk29FY5pidDokg=
+	t=1721506277; cv=none; b=AOrXTBy2KNPOkYE1QbLSBHFCjho8oS4acq+YbHtTgLBVdpjbIh1xpMVI8vst+GEAxrcp4QW0/biYyanZdK4lrD9cnig5vyidmHis+gLybuoM/532w99hfUbmJPz+hi5cKvdnhNfoZuyFLLZetPe0GJWjIEJUSHG07I/u492JXaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721240349; c=relaxed/simple;
-	bh=b1aouR+Nif/3pJdFAc+mKgJd7ddCAcxvRCJD0JbS8jI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bXc8wEq+fbTAPY+9hI04TR5XVYuIM4FJeSfDH6SU/WslPWGc3jaESjslfZYtk+Q4cixZesVLYDFrGAjLFCAguGijtHeywDpF0OWcCHvwRX9QOeyFpBGEITJIC+d1aOiQ7zhhAs2C3PS3UlqcLwRfV/oWAVkzNv86Cz12+YMwovw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OhFxAIc6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8C91C20B7165;
-	Wed, 17 Jul 2024 11:19:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C91C20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1721240347;
-	bh=tJdPiTzkzL7kgsepa1RSwY8pS6OHdOQ3F2zaVjV9kCg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=OhFxAIc677f8IqoXw8fkc7DEx9Q+cXUJi3G4rOZDYBneRlzPDrjR/CFTVzqwIbbm0
-	 HFEb5lGZUS8QYZIRkCfOC+BMbijncDDiglaGQAisAM2JNl8ST6zjFRhrGXClE1Dh67
-	 CFadODeFv2QGdIzToPUffWMbbhbsJOjiIRQfib3I=
-Message-ID: <c13f74fc-1c18-480e-84d4-55f11bcb1e98@linux.microsoft.com>
-Date: Wed, 17 Jul 2024 11:19:03 -0700
+	s=arc-20240116; t=1721506277; c=relaxed/simple;
+	bh=MMccahpFs/BX2/ZmF+Ahe+wf3beg9doy+mIncCTABp4=;
+	h=Message-ID:Date:MIME-Version:In-Reply-To:To:CC:From:Subject:
+	 Content-Type; b=u0i2O8nWcv7T59FRhKkAwN0/xeiW7h9P7LQoOL+HyMfZ95jeLtLcy9xCvrXBgehj4H6zmoQdFmeKjNUyQt7RH48nclhAl4hPYeA4U4y60vOO//Xwj6qOjhLHoC+s38YWJiYfWNx083+lAsIfj7JWWSSSYwFe+ofZaTBtIpuCgZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=XOBw0mCr; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 6F39C120003;
+	Sat, 20 Jul 2024 23:11:03 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6F39C120003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1721506263;
+	bh=US63tdy4CVQs+687WGqzILjkxPtutPxeQcKuCPb5QWE=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type:From;
+	b=XOBw0mCrV7p9Zi+pEfyVJhDbFSCAllSki3+OQFo1UD8PDCgyWMKGxd82B8vppA3By
+	 3n04+nn1OmyrqRAxCEI/6iHHe/2yce0wlqwh+WC8O42G2/5tf9KVh0/3wtQy2RN3oI
+	 UqLkWj/JtfahxoHKnBMXgqxOhjhxxRLLupCSrR0JLTqfJWc07CtWM1elgsrynBS9tq
+	 gfxgjCNrA2HmbRQ218tRvyitPcQW5smW963cWZkKIpjA4DrP7+FuUgLJlvt2JQvsdg
+	 Fn70wFoJcG+kvUnqbTPdgq+rJjNl9rpYBlpD5ID80vSYAHzDAn3bJlnM3llh1aApV7
+	 Yl8MidrEAKk1A==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Sat, 20 Jul 2024 23:11:03 +0300 (MSK)
+Received: from [172.28.192.160] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sat, 20 Jul 2024 23:11:01 +0300
+Message-ID: <8e3071f2-682c-7f0d-ff10-2865d7c2d8d4@salutedevices.com>
+Date: Sat, 20 Jul 2024 22:58:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-To: Jocelyn Falempe <jfalempe@redhat.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Petr Mladek
- <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240702122639.248110-1-jfalempe@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
 Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20240710212555.1617795-15-amery.hung@bytedance.com>
+To: <stefanha@redhat.com>, <sgarzare@redhat.com>, <mst@redhat.com>,
+	<jasowang@redhat.com>, <xuanzhuo@linux.alibaba.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<kys@microsoft.com>, <haiyangz@microsoft.com>, <wei.liu@kernel.org>,
+	<decui@microsoft.com>, <bryantan@vmware.com>, <vdasa@vmware.com>,
+	<pv-drivers@vmware.com>
+CC: <dan.carpenter@linaro.org>, <simon.horman@corigine.com>,
+	<oxffffaa@gmail.com>, <kvm@vger.kernel.org>,
+	<virtualization@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <bobby.eshleman@bytedance.com>,
+	<jiang.wang@bytedance.com>, <amery.hung@bytedance.com>,
+	<ameryhung@gmail.com>, <xiyou.wangcong@gmail.com>
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Subject: Re: [RFC PATCH net-next v6 14/14] test/vsock: add vsock dgram tests
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186631 [Jul 20 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/20 18:23:00 #26109921
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 7/2/2024 5:26 AM, Jocelyn Falempe wrote:
-> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-> callback.
-> This patch adds a new struct kmsg_dump_detail, that will hold the
-> reason and description, and pass it to the dump() callback.
-> 
-> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-> function and a macro for backward compatibility.
-> 
-> I've written this for drm_panic, but it can be useful for other
-> kmsg_dumper.
-> It allows to see the panic reason, like "sysrq triggered crash"
-> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-> 
-> v2:
->  * Use a struct kmsg_dump_detail to hold the reason and description
->    pointer, for more flexibility if we want to add other parameters.
->    (Kees Cook)
->  * Fix powerpc/nvram_64 build, as I didn't update the forward
->    declaration of oops_to_nvram()
-> 
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-> ---
->  arch/powerpc/kernel/nvram_64.c             |  8 ++++----
->  arch/powerpc/platforms/powernv/opal-kmsg.c |  4 ++--
->  arch/um/kernel/kmsg_dump.c                 |  2 +-
->  drivers/gpu/drm/drm_panic.c                |  4 ++--
->  drivers/hv/hv_common.c                     |  4 ++--
++static void test_dgram_sendto_client(const struct test_opts *opts)
++{
++	union {
++		struct sockaddr sa;
++		struct sockaddr_vm svm;
++	} addr = {
++		.svm = {
++			.svm_family = AF_VSOCK,
++			.svm_port = 1234,
 
-Acked-by: Nuno Das Neves <nunodasneves@linux.microsoft.com> (hyperv)
+^^^
+port is not hardcoded, it is 'opts->peer_port'
 
-LGTM
++			.svm_cid = opts->peer_cid,
++		},
++	};
++	int fd;
+
+Thanks, Arseniy
 
