@@ -1,303 +1,114 @@
-Return-Path: <linux-hyperv+bounces-2599-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2600-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 015F493DB21
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 01:22:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED28093DD70
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 07:34:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E0121C231EA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jul 2024 23:22:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A3C41C21417
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 05:34:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D297E14EC4E;
-	Fri, 26 Jul 2024 23:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAAB314A8F;
+	Sat, 27 Jul 2024 05:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/nL+KNw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELkNsDzC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B26314036F;
-	Fri, 26 Jul 2024 23:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8344A05
+	for <linux-hyperv@vger.kernel.org>; Sat, 27 Jul 2024 05:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722036149; cv=none; b=gd4pYc37WiKgyHwac254kwGoY6Wq2raxFKHh1z9QuGEME4BNpsu7OYAPLFagb0SVOTYkoVgkJYvzBSvnxmMA21ngHuYJmeBIMuTlLnJncg4QwrdbsS2LBXSpHhNoCxCZmKGaO8nxS0c+MGBTgSaLASD+VgPlH4VBeUJ0bOiUS2Y=
+	t=1722058442; cv=none; b=b4yJSxrxGZ+GvEMMVElUF3PdiF62+NfY+kWUf9Aup7gxsgNJZmLgz2ZAgv3cZ7HFSyymd4NMRfpbgsIVcx4OwwrGYCrdDgnYh57NvDy7F/roV2Vm/MDM4CGyLHw6Ht+qvcLBAw0nmV8TTNiyoeYmtPrEzlEojaUHXMc2amgduY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722036149; c=relaxed/simple;
-	bh=QTihwxKdNfbuodKGhHZUu2S0sWalLUNdFqu3G+fz6vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zt1dby+YLE2W2uQWBjBsox9qqnuc7HOrgKVU/ZQ8/byubQxoYQH/blbwjbQL3RbGYnvrC0TJlLjfwrGjOp3WlwBPFbUCRu0BadM7SnayKHtMaQBLzVpflK7u+1iv7h5ZP0gbVm/5m5IUlb6JBPqds3SJyaaWh7McyyT1tGcxY88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a/nL+KNw; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e05e4c3228bso211066276.0;
-        Fri, 26 Jul 2024 16:22:27 -0700 (PDT)
+	s=arc-20240116; t=1722058442; c=relaxed/simple;
+	bh=W7z9D1l9AwqvXtkqfvvaiEVnjw3TuJ02dQfagSztV8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fg4xsiAQeaPOOVfSaiydPJ5rbzxL98M7hgB0P5byK6Kdtt2aeT7H9jL3v5Q3N08mmH+A/hVy6hHqPBVIbovf1EdYUXCy9fQUazph61wJoI9LDmbFCo+DLiO/c+0MoZkS7kacMb5E7TKqCt65oG3o/ZpfbE5WulYSSN7+Dtr8PhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ELkNsDzC; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-26106ec9336so1106737fac.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 26 Jul 2024 22:34:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722036147; x=1722640947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2v48RWsL/8+kJWmWAAV3oUELstcaxL2EQr9QFsJ90o4=;
-        b=a/nL+KNw9ML5A2GdrNinB6CBn4ErDspZR2Z8JpFRBPpsV4ZGf0OS7pHKCFhbdwPIBo
-         GPNmgfDEDSroql4m+iTQud4F/s8l8hgnVBCwhnLpN/4vp7TlQ0EN3einUX7Gi1qbhzdA
-         lKXSfxXkjFfRCVwfCSWKyvz1zXsIVQf0CXpslhpRPHQpz9ExrO41t3vqoy2RMKqgU5yG
-         1DIqzkM52y8MHnfLWbTawG29gZrg1fgga5+cT+4JPE8ItwMPZ9c7Uwx7LB5IJexltqkZ
-         9COSLyGk3i0Aek4QQI86v09r8impkexxd2qOF9YZbI4e/SyinxORrRNQW+F0wqwOxY5T
-         5Y0w==
+        d=linaro.org; s=google; t=1722058440; x=1722663240; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DGu0ogYBtBZzC7i8X6qLCIyiHpoQtCp6oDiRTmIQVhs=;
+        b=ELkNsDzCeW3VatU9ECypb16T0rYxokhTvnG3czoMlIWankdAkM13F2ZILXuzT4QsCD
+         QblAtpausTS+5U7vfSQyk9KCrsQXZRA6Kyy313BuZzOZd56NJC/Gi727nsDoJ2df/UPZ
+         7/QT6ihR6ZRwGw7cL+FImSF34TguD9iDII0AmNxkn4CumUjWuzww/YP8rbGmsfvHB4+l
+         9uMO6lONM7VKa63jy49M4qlahBUSDB1QKyEvLSDK8Vfm32CIKTqOHCz/PXO95zlEtYQq
+         aSBbz/Ubhq7dMCjvIJee0A2IL4sD7SqlBdgCddiaHGw8HnxUZDxblr9fV/gTLe/zC/Tf
+         87Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722036147; x=1722640947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2v48RWsL/8+kJWmWAAV3oUELstcaxL2EQr9QFsJ90o4=;
-        b=DZjuKtJ7Fm57LwiyeATFl4L/F6FAG0+ZkjOKg2BhcqYJKgcVstYED4uXSTQliV91Va
-         e54xe4AlLRTv3LbWJgAuuPST6joRi2uEiAaYrTTO1+CUMbMDlgJCdpkB7DW42hYYx26L
-         50NnVV5P6E2tx20QoIlYN8aSiNUBN9Rql88YcwzVmmV+WEL9e0YL6onJRjjhO8o6/pNN
-         S58yoTNJHIHyIG8ml1zpNJ8ZqR+NGKW9zuV8YLOcGNdWj39Q0k7hwj1+bt56Mj3bs7Hh
-         uXdX/X/YV6Kucf/0tHAY2XVM8aFaG0YAjFOsUyCiNqjrfMHNOhSBhbEdXweRz4DWhUGQ
-         LHbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUA0r5TyuSJ4SP33okGS0ghSy26pcaURA5CJuf5h6qVc7epLP4Kga0H4+9g9fnndjkhmsV9zNWvVCNS0QDYqFmp5PsxXxzcgE1zxzBge/n9mz1JWd9obAqZ5MP4lxhHDCIyMVlfAXh+1zVr9cCAiLs7dSWRrTCIagp7Z0vZgHuobtVZEawBYA9RWtb9wOgYfs8XdmB/fmUAcaA5MkcvU9l0NocEQ2hyQoh/zmSt
-X-Gm-Message-State: AOJu0Yy/PCmK8IYs2R+fUYCUnVKY8bUNZQ/QRGgrEqO1oT+OVqUwLYG0
-	A0VVJLDhehKLJExUaod9aFuV8D3T6+y4Wpt5gBUxFEpGtIvB8FPZv4p1j7BjcJWEZvbD1Alz+vZ
-	Q0M+UxlgCz5m3EqQsFCSgEr4yhYk=
-X-Google-Smtp-Source: AGHT+IE8eQ8lHv0aThBvkkelmXblMeJEqsMKM3GoNmG5ryHhqvDYjHXResG10v+ubvnoi/etG44LWQwWd+owOufroPA=
-X-Received: by 2002:a25:8907:0:b0:e08:5ee3:7a03 with SMTP id
- 3f1490d57ef6-e0b5447b082mr1495365276.22.1722036147014; Fri, 26 Jul 2024
- 16:22:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722058440; x=1722663240;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DGu0ogYBtBZzC7i8X6qLCIyiHpoQtCp6oDiRTmIQVhs=;
+        b=Tvti7yw22ROCvYEGHLVd+sM100SwN9pRvOARdxVOSv76d2UCfTF4vDKA06FEyxCxm+
+         5WPZZmd3TXQsHHqw18GUTl3XSj7YUac4yHkKuo6w9FDpLvu6rujPIpxcgkfUo6PhG5i7
+         t90+i6v7lYYw+aOBMrkLrIeA76Cozh7NOp2OPsBChcGWQYIQcuqSFt6uW3UheCo0goAl
+         +N/l0Sz5TR5l5zItyzGyaVH6toU3/UltwpcxQh1HaNcZSsel1GFy95vFRZ8LX+cH6Pg4
+         ACf3f7jNk3IDVxIDb31kLYQiCSnk62+kbSVgJ4OihNx6kHflYkuihmz+MntSDtaGx4M/
+         1bLQ==
+X-Gm-Message-State: AOJu0Yx2j5VBeJwR0utPWSF4MeeSEcAi39g/YWtbfL/H8XSV1uezxF6g
+	QL+cJmVqGORQGQxruI1a/U1qx1WcL/cM+H5zO0I3OE7QHSQjtkTQw0XI4Nr4dNU=
+X-Google-Smtp-Source: AGHT+IGNkaRysTG+cnrmwOYjWJuwRTb60MWhIhLY5qFtjmaoehh7Bvp/6SZr/0uyPkITrp0hVkKqzw==
+X-Received: by 2002:a05:6871:724a:b0:261:1177:6a56 with SMTP id 586e51a60fabf-267d4d5dbf5mr1996922fac.20.1722058440171;
+        Fri, 26 Jul 2024 22:34:00 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700::1cb1])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-265771e4907sm967934fac.35.2024.07.26.22.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jul 2024 22:33:59 -0700 (PDT)
+Date: Sat, 27 Jul 2024 00:33:56 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: linux-hyperv@vger.kernel.org
+Subject: [bug report] Drivers: hv: vmbus: Track decrypted status in
+ vmbus_gpadl
+Message-ID: <4036aa13-e8e1-413c-b0ad-5b82b3f2615d@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710212555.1617795-1-amery.hung@bytedance.com>
- <20240710212555.1617795-8-amery.hung@bytedance.com> <bpb36dtlbs6osr5cudvwrbagt7bls3cllg35lsusrly5pxwe7o@kjphrbuc64ix>
-In-Reply-To: <bpb36dtlbs6osr5cudvwrbagt7bls3cllg35lsusrly5pxwe7o@kjphrbuc64ix>
-From: Amery Hung <ameryhung@gmail.com>
-Date: Fri, 26 Jul 2024 16:22:16 -0700
-Message-ID: <CAMB2axPwUV9EusNPaemLVx5NN2_1wkq0ney4NazAj7P+WRo=NQ@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 07/14] virtio/vsock: add common datagram
- send path
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
-	xuanzhuo@linux.alibaba.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, bryantan@vmware.com, 
-	vdasa@vmware.com, pv-drivers@vmware.com, dan.carpenter@linaro.org, 
-	simon.horman@corigine.com, oxffffaa@gmail.com, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	bpf@vger.kernel.org, bobby.eshleman@bytedance.com, jiang.wang@bytedance.com, 
-	amery.hung@bytedance.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jul 23, 2024 at 7:42=E2=80=AFAM Stefano Garzarella <sgarzare@redhat=
-.com> wrote:
->
-> On Wed, Jul 10, 2024 at 09:25:48PM GMT, Amery Hung wrote:
-> >From: Bobby Eshleman <bobby.eshleman@bytedance.com>
-> >
-> >This commit implements the common function
-> >virtio_transport_dgram_enqueue for enqueueing datagrams. It does not add
-> >usage in either vhost or virtio yet.
-> >
-> >Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-> >Signed-off-by: Amery Hung <amery.hung@bytedance.com>
-> >---
-> > include/linux/virtio_vsock.h            |  1 +
-> > include/net/af_vsock.h                  |  2 +
-> > net/vmw_vsock/af_vsock.c                |  2 +-
-> > net/vmw_vsock/virtio_transport_common.c | 87 ++++++++++++++++++++++++-
-> > 4 files changed, 90 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> >index f749a066af46..4408749febd2 100644
-> >--- a/include/linux/virtio_vsock.h
-> >+++ b/include/linux/virtio_vsock.h
-> >@@ -152,6 +152,7 @@ struct virtio_vsock_pkt_info {
-> >       u16 op;
-> >       u32 flags;
-> >       bool reply;
-> >+      u8 remote_flags;
-> > };
-> >
-> > struct virtio_transport {
-> >diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-> >index 44db8f2c507d..6e97d344ac75 100644
-> >--- a/include/net/af_vsock.h
-> >+++ b/include/net/af_vsock.h
-> >@@ -216,6 +216,8 @@ void vsock_for_each_connected_socket(struct vsock_tr=
-ansport *transport,
-> >                                    void (*fn)(struct sock *sk));
-> > int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *p=
-sk);
-> > bool vsock_find_cid(unsigned int cid);
-> >+const struct vsock_transport *vsock_dgram_lookup_transport(unsigned int=
- cid,
-> >+                                                         __u8 flags);
->
-> Why __u8 and not just u8?
->
+Hello Rick Edgecombe,
 
-Will change to u8.
+Commit 211f514ebf1e ("Drivers: hv: vmbus: Track decrypted status in
+vmbus_gpadl") from Mar 11, 2024 (linux-next), leads to the following
+Smatch static checker warning:
 
->
-> >
-> > struct vsock_skb_cb {
-> >       unsigned int src_cid;
-> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> >index ab08cd81720e..f83b655fdbe9 100644
-> >--- a/net/vmw_vsock/af_vsock.c
-> >+++ b/net/vmw_vsock/af_vsock.c
-> >@@ -487,7 +487,7 @@ vsock_connectible_lookup_transport(unsigned int cid,=
- __u8 flags)
-> >       return transport;
-> > }
-> >
-> >-static const struct vsock_transport *
-> >+const struct vsock_transport *
-> > vsock_dgram_lookup_transport(unsigned int cid, __u8 flags)
-> > {
-> >       const struct vsock_transport *transport;
-> >diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/vir=
-tio_transport_common.c
-> >index a1c76836d798..46cd1807f8e3 100644
-> >--- a/net/vmw_vsock/virtio_transport_common.c
-> >+++ b/net/vmw_vsock/virtio_transport_common.c
-> >@@ -1040,13 +1040,98 @@ int virtio_transport_shutdown(struct vsock_sock =
-*vsk, int mode)
-> > }
-> > EXPORT_SYMBOL_GPL(virtio_transport_shutdown);
-> >
-> >+static int virtio_transport_dgram_send_pkt_info(struct vsock_sock *vsk,
-> >+                                              struct virtio_vsock_pkt_i=
-nfo *info)
-> >+{
-> >+      u32 src_cid, src_port, dst_cid, dst_port;
-> >+      const struct vsock_transport *transport;
-> >+      const struct virtio_transport *t_ops;
-> >+      struct sock *sk =3D sk_vsock(vsk);
-> >+      struct virtio_vsock_hdr *hdr;
-> >+      struct sk_buff *skb;
-> >+      void *payload;
-> >+      int noblock =3D 0;
-> >+      int err;
-> >+
-> >+      info->type =3D virtio_transport_get_type(sk_vsock(vsk));
-> >+
-> >+      if (info->pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
-> >+              return -EMSGSIZE;
-> >+
-> >+      transport =3D vsock_dgram_lookup_transport(info->remote_cid, info=
-->remote_flags);
->
-> Can `transport` be null?
->
-> I don't understand why we are calling vsock_dgram_lookup_transport()
-> again. Didn't we already do that in vsock_dgram_sendmsg()?
->
+	drivers/hv/channel.c:870 vmbus_teardown_gpadl()
+	warn: assigning signed to unsigned: 'gpadl->decrypted = ret' 's32min-s32max'
 
-transport should be valid here since we null-checked it in
-vsock_dgram_sendmsg(). The reason vsock_dgram_lookup_transport() is
-called again here is we don't have the transport when we called into
-transport->dgram_enqueue(). I can also instead add transport to the
-argument of dgram_enqueue() to eliminate this redundant lookup.
+drivers/hv/channel.c
+    860         list_del(&info->msglistentry);
+    861         spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
+    862 
+    863         kfree(info);
+    864 
+    865         ret = set_memory_encrypted((unsigned long)gpadl->buffer,
+    866                                    PFN_UP(gpadl->size));
+    867         if (ret)
+    868                 pr_warn("Fail to set mem host visibility in GPADL teardown %d.\n", ret);
+    869 
+--> 870         gpadl->decrypted = ret;
 
-> Also should we add a comment mentioning that we can't use
-> virtio_transport_get_ops()? IIUC becuase the vsk can be not assigned
-> to a specific transport, right?
->
+ret is error codes but ->decrypted is bool.  So error codes mean decrypted is
+true.
 
-Correct. For virtio dgram socket, transport is not assigned unless
-vsock_dgram_connect() is called. I will add a comment here explaining
-this.
+    871 
+    872         return ret;
+    873 }
 
-> >+      t_ops =3D container_of(transport, struct virtio_transport, transp=
-ort);
-> >+      if (unlikely(!t_ops))
-> >+              return -EFAULT;
-> >+
-> >+      if (info->msg)
-> >+              noblock =3D info->msg->msg_flags & MSG_DONTWAIT;
-> >+
-> >+      /* Use sock_alloc_send_skb to throttle by sk_sndbuf. This helps a=
-void
-> >+       * triggering the OOM.
-> >+       */
-> >+      skb =3D sock_alloc_send_skb(sk, info->pkt_len + VIRTIO_VSOCK_SKB_=
-HEADROOM,
-> >+                                noblock, &err);
-> >+      if (!skb)
-> >+              return err;
-> >+
-> >+      skb_reserve(skb, VIRTIO_VSOCK_SKB_HEADROOM);
-> >+
-> >+      src_cid =3D t_ops->transport.get_local_cid();
-> >+      src_port =3D vsk->local_addr.svm_port;
-> >+      dst_cid =3D info->remote_cid;
-> >+      dst_port =3D info->remote_port;
-> >+
-> >+      hdr =3D virtio_vsock_hdr(skb);
-> >+      hdr->type       =3D cpu_to_le16(info->type);
-> >+      hdr->op         =3D cpu_to_le16(info->op);
-> >+      hdr->src_cid    =3D cpu_to_le64(src_cid);
-> >+      hdr->dst_cid    =3D cpu_to_le64(dst_cid);
-> >+      hdr->src_port   =3D cpu_to_le32(src_port);
-> >+      hdr->dst_port   =3D cpu_to_le32(dst_port);
-> >+      hdr->flags      =3D cpu_to_le32(info->flags);
-> >+      hdr->len        =3D cpu_to_le32(info->pkt_len);
-> >+
-> >+      if (info->msg && info->pkt_len > 0) {
-> >+              payload =3D skb_put(skb, info->pkt_len);
-> >+              err =3D memcpy_from_msg(payload, info->msg, info->pkt_len=
-);
-> >+              if (err)
-> >+                      goto out;
-> >+      }
-> >+
-> >+      trace_virtio_transport_alloc_pkt(src_cid, src_port,
-> >+                                       dst_cid, dst_port,
-> >+                                       info->pkt_len,
-> >+                                       info->type,
-> >+                                       info->op,
-> >+                                       info->flags,
-> >+                                       false);
-> >+
-> >+      return t_ops->send_pkt(skb);
-> >+out:
-> >+      kfree_skb(skb);
-> >+      return err;
-> >+}
-> >+
-> > int
-> > virtio_transport_dgram_enqueue(struct vsock_sock *vsk,
-> >                              struct sockaddr_vm *remote_addr,
-> >                              struct msghdr *msg,
-> >                              size_t dgram_len)
-> > {
-> >-      return -EOPNOTSUPP;
-> >+      /* Here we are only using the info struct to retain style uniform=
-ity
-> >+       * and to ease future refactoring and merging.
-> >+       */
-> >+      struct virtio_vsock_pkt_info info =3D {
-> >+              .op =3D VIRTIO_VSOCK_OP_RW,
-> >+              .remote_cid =3D remote_addr->svm_cid,
-> >+              .remote_port =3D remote_addr->svm_port,
-> >+              .remote_flags =3D remote_addr->svm_flags,
-> >+              .msg =3D msg,
-> >+              .vsk =3D vsk,
-> >+              .pkt_len =3D dgram_len,
-> >+      };
-> >+
-> >+      return virtio_transport_dgram_send_pkt_info(vsk, &info);
-> > }
-> > EXPORT_SYMBOL_GPL(virtio_transport_dgram_enqueue);
-> >
-> >--
-> >2.20.1
-> >
->
+regards,
+dan carpenter
 
