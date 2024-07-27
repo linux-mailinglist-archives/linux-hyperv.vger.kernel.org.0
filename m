@@ -1,114 +1,150 @@
-Return-Path: <linux-hyperv+bounces-2600-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2601-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED28093DD70
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 07:34:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B87D393DDDD
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 10:53:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A3C41C21417
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 05:34:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6471C283E1F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Jul 2024 08:53:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAAB314A8F;
-	Sat, 27 Jul 2024 05:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D79F9433CE;
+	Sat, 27 Jul 2024 08:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELkNsDzC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ohr4DxEm"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8344A05
-	for <linux-hyperv@vger.kernel.org>; Sat, 27 Jul 2024 05:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930B042070;
+	Sat, 27 Jul 2024 08:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722058442; cv=none; b=b4yJSxrxGZ+GvEMMVElUF3PdiF62+NfY+kWUf9Aup7gxsgNJZmLgz2ZAgv3cZ7HFSyymd4NMRfpbgsIVcx4OwwrGYCrdDgnYh57NvDy7F/roV2Vm/MDM4CGyLHw6Ht+qvcLBAw0nmV8TTNiyoeYmtPrEzlEojaUHXMc2amgduY0=
+	t=1722070423; cv=none; b=dwjEMy8wEdUpciqOYKFnziGVZxm7eDbiQdaVXlK5IRxY3aWUIBMYAwJgobQEAgjlS1wPP2g92ckGhw7H2FKgel5ijmq6YtkHhK45atyoMr16qEIFEiS6Bk2TYZIhkVXh9bbpj0uSNThkSIJdl+/JCHXpMQVSt14aiYj4Ra4Qn3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722058442; c=relaxed/simple;
-	bh=W7z9D1l9AwqvXtkqfvvaiEVnjw3TuJ02dQfagSztV8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fg4xsiAQeaPOOVfSaiydPJ5rbzxL98M7hgB0P5byK6Kdtt2aeT7H9jL3v5Q3N08mmH+A/hVy6hHqPBVIbovf1EdYUXCy9fQUazph61wJoI9LDmbFCo+DLiO/c+0MoZkS7kacMb5E7TKqCt65oG3o/ZpfbE5WulYSSN7+Dtr8PhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ELkNsDzC; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-26106ec9336so1106737fac.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 26 Jul 2024 22:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722058440; x=1722663240; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DGu0ogYBtBZzC7i8X6qLCIyiHpoQtCp6oDiRTmIQVhs=;
-        b=ELkNsDzCeW3VatU9ECypb16T0rYxokhTvnG3czoMlIWankdAkM13F2ZILXuzT4QsCD
-         QblAtpausTS+5U7vfSQyk9KCrsQXZRA6Kyy313BuZzOZd56NJC/Gi727nsDoJ2df/UPZ
-         7/QT6ihR6ZRwGw7cL+FImSF34TguD9iDII0AmNxkn4CumUjWuzww/YP8rbGmsfvHB4+l
-         9uMO6lONM7VKa63jy49M4qlahBUSDB1QKyEvLSDK8Vfm32CIKTqOHCz/PXO95zlEtYQq
-         aSBbz/Ubhq7dMCjvIJee0A2IL4sD7SqlBdgCddiaHGw8HnxUZDxblr9fV/gTLe/zC/Tf
-         87Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722058440; x=1722663240;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DGu0ogYBtBZzC7i8X6qLCIyiHpoQtCp6oDiRTmIQVhs=;
-        b=Tvti7yw22ROCvYEGHLVd+sM100SwN9pRvOARdxVOSv76d2UCfTF4vDKA06FEyxCxm+
-         5WPZZmd3TXQsHHqw18GUTl3XSj7YUac4yHkKuo6w9FDpLvu6rujPIpxcgkfUo6PhG5i7
-         t90+i6v7lYYw+aOBMrkLrIeA76Cozh7NOp2OPsBChcGWQYIQcuqSFt6uW3UheCo0goAl
-         +N/l0Sz5TR5l5zItyzGyaVH6toU3/UltwpcxQh1HaNcZSsel1GFy95vFRZ8LX+cH6Pg4
-         ACf3f7jNk3IDVxIDb31kLYQiCSnk62+kbSVgJ4OihNx6kHflYkuihmz+MntSDtaGx4M/
-         1bLQ==
-X-Gm-Message-State: AOJu0Yx2j5VBeJwR0utPWSF4MeeSEcAi39g/YWtbfL/H8XSV1uezxF6g
-	QL+cJmVqGORQGQxruI1a/U1qx1WcL/cM+H5zO0I3OE7QHSQjtkTQw0XI4Nr4dNU=
-X-Google-Smtp-Source: AGHT+IGNkaRysTG+cnrmwOYjWJuwRTb60MWhIhLY5qFtjmaoehh7Bvp/6SZr/0uyPkITrp0hVkKqzw==
-X-Received: by 2002:a05:6871:724a:b0:261:1177:6a56 with SMTP id 586e51a60fabf-267d4d5dbf5mr1996922fac.20.1722058440171;
-        Fri, 26 Jul 2024 22:34:00 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700::1cb1])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-265771e4907sm967934fac.35.2024.07.26.22.33.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 22:33:59 -0700 (PDT)
-Date: Sat, 27 Jul 2024 00:33:56 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: linux-hyperv@vger.kernel.org
-Subject: [bug report] Drivers: hv: vmbus: Track decrypted status in
- vmbus_gpadl
-Message-ID: <4036aa13-e8e1-413c-b0ad-5b82b3f2615d@stanley.mountain>
+	s=arc-20240116; t=1722070423; c=relaxed/simple;
+	bh=dXGvZKxGmNpF5RdmEdYVeR7vTOwZwUjhaxpu0fu4ArU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UYJe07qTwwuRgGCjz69YM5UpBDc0nF/E6M7D/XIWLpia1prBErruSvdiMSBgWmxmu6p0SxyqpGXrrffS6TmhZmHkR6Gd411pTCGcaqezvuQAKFOal6XF1PHwlJSXRPBFw/jq9A/2/r9yOvmtTShfpo/C6To/2dKC4veUtU5QHx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ohr4DxEm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71017C32781;
+	Sat, 27 Jul 2024 08:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722070423;
+	bh=dXGvZKxGmNpF5RdmEdYVeR7vTOwZwUjhaxpu0fu4ArU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ohr4DxEmE6QJLT1zKSwAwaWcOiQ+mliG+bPW6E1AYjQghwKbPiQJTTZhXBcUUHL5k
+	 Dw7fZDNeAp1ULicuNRNsUfll6TwClWSCTE7qySyi+2Pxy+sEzdq6Re+BEw6bmeBbl4
+	 Lg7AXqPyaHqH6fK472jnTUx4CYtJZ0NOh7J8LQ6mcbe612WT525glY0KSH0zkDeOjU
+	 I3xwkBrMcFkF1lwpRJIf2oQtk6ga5JEe0dgznPUU5ii055jd0xn09uob4RsIQo6Col
+	 1CO0YUVAth7wBISZuTszcbVO2Ql6eBvUhXuQhK667SmTNnb3Fu5+GJAvdCM73va2WN
+	 zEY3iDm7skZWA==
+Message-ID: <c45516aa-3cf9-444e-8c71-f701dfd8a15b@kernel.org>
+Date: Sat, 27 Jul 2024 10:53:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/7] dt-bindings: bus: Add Hyper-V VMBus cache
+ coherency and IRQs
+To: Roman Kisel <romank@linux.microsoft.com>, arnd@arndb.de,
+ bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, kw@linux.com, kys@microsoft.com, lenb@kernel.org,
+ lpieralisi@kernel.org, mingo@redhat.com, rafael@kernel.org, robh@kernel.org,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Cc: apais@microsoft.com, benhill@microsoft.com, ssengar@microsoft.com,
+ sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20240726225910.1912537-1-romank@linux.microsoft.com>
+ <20240726225910.1912537-6-romank@linux.microsoft.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240726225910.1912537-6-romank@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Rick Edgecombe,
+On 27/07/2024 00:59, Roman Kisel wrote:
+> Add dt-bindings for the Hyper-V VMBus DMA cache coherency
+> and interrupt specification.
+> 
 
-Commit 211f514ebf1e ("Drivers: hv: vmbus: Track decrypted status in
-vmbus_gpadl") from Mar 11, 2024 (linux-next), leads to the following
-Smatch static checker warning:
+You did not add any bindings. I don't understand this description.
 
-	drivers/hv/channel.c:870 vmbus_teardown_gpadl()
-	warn: assigning signed to unsigned: 'gpadl->decrypted = ret' 's32min-s32max'
+Anyway, not tested.
 
-drivers/hv/channel.c
-    860         list_del(&info->msglistentry);
-    861         spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
-    862 
-    863         kfree(info);
-    864 
-    865         ret = set_memory_encrypted((unsigned long)gpadl->buffer,
-    866                                    PFN_UP(gpadl->size));
-    867         if (ret)
-    868                 pr_warn("Fail to set mem host visibility in GPADL teardown %d.\n", ret);
-    869 
---> 870         gpadl->decrypted = ret;
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
 
-ret is error codes but ->decrypted is bool.  So error codes mean decrypted is
-true.
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
 
-    871 
-    872         return ret;
-    873 }
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
 
-regards,
-dan carpenter
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
+
+
+Best regards,
+Krzysztof
+
 
