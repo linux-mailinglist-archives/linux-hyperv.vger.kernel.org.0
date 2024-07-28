@@ -1,173 +1,256 @@
-Return-Path: <linux-hyperv+bounces-2609-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2610-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB4B393E5F2
-	for <lists+linux-hyperv@lfdr.de>; Sun, 28 Jul 2024 17:40:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F7F393E8EC
+	for <lists+linux-hyperv@lfdr.de>; Sun, 28 Jul 2024 20:53:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DE7E281794
-	for <lists+linux-hyperv@lfdr.de>; Sun, 28 Jul 2024 15:40:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DFF91C20D98
+	for <lists+linux-hyperv@lfdr.de>; Sun, 28 Jul 2024 18:53:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D126F51C4A;
-	Sun, 28 Jul 2024 15:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D706769D31;
+	Sun, 28 Jul 2024 18:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A6UXQDK1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJ6Fzakj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 504EF4F215;
-	Sun, 28 Jul 2024 15:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5AA53AC;
+	Sun, 28 Jul 2024 18:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722181227; cv=none; b=QFfkDV480t9/gA+fHdfbP+gcfwp2dICu8veyhgtIpe7gNUR8UkEYTIQEHdnTXIcmzUHzweq4k7lKmD6x4auVLvJpxgaPSfz9LFEzt2yFQZM4sn9HmhZ1rYxx4cx/0LQFdm+vwfUdve4bU3VlI9IFilkQA7jaiXhXsRkWX0ljOHw=
+	t=1722192787; cv=none; b=OQ1hAqWRvXgxjw1Dr7H9PtKPISQwSYPDQRrgS1/9CHxVgXdWwVSdgDm9YX/zSyq3MaCxDrL3JW4zSgMpkFcjU6ZOIu33doftl+9aV/CjKrCkOA2nGeXHtDDMvSblODfHzc8Ecp7HpO7KHYOUnijnX5L78hXbICoLX8iQFVyK3bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722181227; c=relaxed/simple;
-	bh=8D3E0F4RnRkRSDwtwrjP45yZo9yq5sp/csJk6zHXvTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ng3LORr7GINOrKKZz8wirW6KdxPRpC7hsWMwa/gAvP4GmOaweumieLwy9qGbcScZ8obxPJDKRi6Auy0Sik3aMCmzVoHsZHIGhE++le1tDDox+czmgkD9FifJ0rHtF3cFxqrBBQN81A2vVpiY6R5gf/tCFGltGu8YuK9ltQdGnaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=A6UXQDK1; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id D029120B7165; Sun, 28 Jul 2024 08:40:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D029120B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722181225;
-	bh=lPXXCeDXmSH05tbxe02TX4INPx+mbErPHQUqfsylHXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A6UXQDK1O3IC3YhojHwMw02D1H0Xg14EGG3jm+WU8L5OlK7mDpUEsA6WJsWXIO9DI
-	 hni2BbmsIfXfVcXvqA51Mnmap5zMOzUazWXTJzEly1r5lHuiKeImeOakWQdGzvovtw
-	 M8DPcgtOixLFrnmQxxbxpLOBboV3SIOXs8uQP0fA=
-Date: Sun, 28 Jul 2024 08:40:25 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"ssengar@microsoft.com" <ssengar@microsoft.com>,
-	"srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Deferring per cpu tasks
-Message-ID: <20240728154025.GA17111@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1721885164-6962-1-git-send-email-ssengar@linux.microsoft.com>
- <SN6PR02MB4157BB3FF96D869D87B0A5D2D4B62@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240728091811.GA32127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB4157A6C0CA988FE0381F007BD4B62@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=arc-20240116; t=1722192787; c=relaxed/simple;
+	bh=PPREMhC5736ADe8UjUj7yOVHwR1uO6w7vYqpo8l6SzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lftrWYSO+Op+FpE61rq4PDzqKXK+vN1ZF2z8P038t679OwSLKANIxQlfQeqY67SsXAYdQs08dJNxt+mm7IwYHi4wDeXzQHv/GPic3OFzi/ROtMHHXKcWHm0q92Vikue2+L6uzoFIKhpDTp97XNWqe2HpV0gEcHZH0SqKZbADrSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJ6Fzakj; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e0875778facso1207688276.3;
+        Sun, 28 Jul 2024 11:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722192785; x=1722797585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+WaFwUhUy7huwacOsYHZwdSyihUsKnDhkCHGxr+gg2M=;
+        b=RJ6FzakjqLqJvGSjc4irmshpPsI+/KrXGgxVErb/pvnTMvk3JfWZ+qi9d54Pxn3cuA
+         mcBDDMaxWyPZVTa+FhpbcYnL/f12HSDBLvfkq/vgfRbzMpYTcDzGXvkfZGBZVmyZs8nR
+         gWtwxwDi4e4jujYJ62Urecih/rSrkVCeQRtJdWnVuNftH4w+XTge0LzwyOi0QpIMmRC9
+         knTGCU0r2jOs6SuGlhsi3Wf3gzn1fBAoY5YaS6r9FzxlKjkJBrgQSz8j8scqXPMPALJC
+         xrwjjdJ7rjD6GGuoygLjnYCXWuJHvsscFyQFg1JP7mN4w+tiEwXu8lmeAEpdwrgVJ4EV
+         q/Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722192785; x=1722797585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+WaFwUhUy7huwacOsYHZwdSyihUsKnDhkCHGxr+gg2M=;
+        b=pEOQbBVdyBYtF/U4tckeCXaz5ejZW4igLwhG34+Hv7ZP3TwkBLjJEPcmqfvSSssL1q
+         f7HRPScmmAfOzZ4+WmaG197E3O1ez2904GqwC3Gs9xu0oNnKwy7csRFRSd9vJ0Q1DgNl
+         Zq4+t0825kGzxemmZGGb2gwax0Vvm/6zBickrLJZsuDsHd0SpNG5ZGghfamB5hDsPKLl
+         nYFHvhPjSrkO/113PREbi7n93Vm62ZG9w/7LpSQJzKDdYUfMVez7ienUSTaistyF71wQ
+         9RAsU5ZrqmxMvhxrLji73NwbMcCh0dm2jg6YsK89bOk6IwJjAYQ3014GbzwngtoGGiut
+         DBEg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ekoQHL5W86kEZYxnfa3ZmdTcjFs06BsBIfIu1Q97FDiq0FaFi9kutlQ9F08Q31hBbR58s7x7Ugx9EN2QjVdWV0UFoxYMx8TolFP5MUPRptTWKEX9P0To1eW3oXp27fKZ9AiltsWXdMXOxBEOrPO2FHWAEF/OB6p00rerRXqy21q3ArcQuXLv+coX+ZYl4L31WVSpoL+ETPjF09CoutzCRXTQioVbePnwv9iz
+X-Gm-Message-State: AOJu0YwARApF2BQBlv2nchwk0RRGv8kpiHXUe1uxwDAxfPT2C96N1W44
+	DC/aFqfHz3gC7Kb2aM8qnqidbl6H1ezwA7zpCJlESb5SIZH0CmUEtFyu18zLiGG7Vkq8bVnlEGb
+	b+K7bhLblXUsZ/NU4eSRTGC8kRds=
+X-Google-Smtp-Source: AGHT+IFTRoCPd34HHWfTgIQNU+sTEkr3o4CgrkzGKLra2JgW08IJHV2eZgSUAorTK4dr8M4YsaVo8uy6TqxmtUJfv/0=
+X-Received: by 2002:a25:854f:0:b0:e08:70e7:91d3 with SMTP id
+ 3f1490d57ef6-e0b546070aamr5384474276.56.1722192784965; Sun, 28 Jul 2024
+ 11:53:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157A6C0CA988FE0381F007BD4B62@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20240710212555.1617795-1-amery.hung@bytedance.com>
+ <20240710212555.1617795-5-amery.hung@bytedance.com> <CAGxU2F7wCUR-KhDRBopK+0gv=bM0PCKeWM87j1vEYmbvhO8WHQ@mail.gmail.com>
+In-Reply-To: <CAGxU2F7wCUR-KhDRBopK+0gv=bM0PCKeWM87j1vEYmbvhO8WHQ@mail.gmail.com>
+From: Amery Hung <ameryhung@gmail.com>
+Date: Sun, 28 Jul 2024 11:52:54 -0700
+Message-ID: <CAMB2axNUZa221WKTjLt0G5KNdtkAbm20ViDZRGBh6pL9y3wosg@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 04/14] af_vsock: generalize bind table functions
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, bryantan@vmware.com, 
+	vdasa@vmware.com, pv-drivers@vmware.com, dan.carpenter@linaro.org, 
+	simon.horman@corigine.com, oxffffaa@gmail.com, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	bpf@vger.kernel.org, bobby.eshleman@bytedance.com, jiang.wang@bytedance.com, 
+	amery.hung@bytedance.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 28, 2024 at 02:06:41PM +0000, Michael Kelley wrote:
-> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Sunday, July 28, 2024 2:18 AM
-> > 
-> > On Sun, Jul 28, 2024 at 04:32:23AM +0000, Michael Kelley wrote:
-> > > From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Wednesday, July 24,
-> > 2024 10:26 PM
-> > > >
-> > > > Currently on a very large system with 1780 CPUs, hv_acpi_init takes
-> > > > around 3 seconds to complete for all the CPUs. This is because of
-> > > > sequential synic initialization for each CPU.
-> > > >
-> > > > Defer these tasks so that each CPU executes hv_acpi_init in parallel
-> > > > to take full advantage of multiple CPUs.
-> > > >
-> > > > This solution saves around 2 seconds of boot time on a 1780 CPU system,
-> > > > that around 66% improvement in the existing logic.
-> > > >
-> > > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > > > ---
-> > > >  drivers/hv/vmbus_drv.c | 33 ++++++++++++++++++++++++++++++---
-> > > >  1 file changed, 30 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > > > index c857dc3975be..3395526ad0d0 100644
-> > > > --- a/drivers/hv/vmbus_drv.c
-> > > > +++ b/drivers/hv/vmbus_drv.c
-> > > > @@ -1306,6 +1306,13 @@ static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
-> > > >  	return IRQ_HANDLED;
-> > > >  }
-> > > >
-> > > > +static void vmbus_percpu_work(struct work_struct *work)
-> > > > +{
-> > > > +	unsigned int cpu = smp_processor_id();
-> > > > +
-> > > > +	hv_synic_init(cpu);
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * vmbus_bus_init -Main vmbus driver initialization routine.
-> > > >   *
-> > > > @@ -1316,7 +1323,8 @@ static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
-> > > >   */
-> > > >  static int vmbus_bus_init(void)
-> > > >  {
-> > > > -	int ret;
-> > > > +	int ret, cpu;
-> > > > +	struct work_struct __percpu *works;
-> > > >
-> > > >  	ret = hv_init();
-> > > >  	if (ret != 0) {
-> > > > @@ -1355,12 +1363,31 @@ static int vmbus_bus_init(void)
-> > > >  	if (ret)
-> > > >  		goto err_alloc;
-> > > >
-> > > > +	works = alloc_percpu(struct work_struct);
-> > > > +	if (!works) {
-> > > > +		ret = -ENOMEM;
-> > > > +		goto err_alloc;
-> > > > +	}
-> > > > +
-> > > >  	/*
-> > > >  	 * Initialize the per-cpu interrupt state and stimer state.
-> > > >  	 * Then connect to the host.
-> > > >  	 */
-> > > > -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
-> > > > -				hv_synic_init, hv_synic_cleanup);
-> > > > +	cpus_read_lock();
-> > > > +	for_each_online_cpu(cpu) {
-> > > > +		struct work_struct *work = per_cpu_ptr(works, cpu);
-> > > > +
-> > > > +		INIT_WORK(work, vmbus_percpu_work);
-> > > > +		schedule_work_on(cpu, work);
-> > > > +	}
-> > > > +
-> > > > +	for_each_online_cpu(cpu)
-> > > > +		flush_work(per_cpu_ptr(works, cpu));
-> > > > +
-> > > > +	ret = __cpuhp_setup_state_cpuslocked(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online", false,
-> > > > +					     hv_synic_init, hv_synic_cleanup, false);
-> > >
-> > > I'd suggest using cpuhp_setup_state_nocalls_cpuslocked().  It appears to be
-> > > the interface intended for users outside the cpuhotplug code, whereas
-> > > __cpuhp_setup_state_cpuslocked() should be private to the cpuhotplug code.
-> > >
-> > 
-> > Thanks for your review.
-> > 
-> > The function cpuhp_setup_state_nocalls_cpuslocked() is commonly used across the
-> > kernel drivers hence it was a first choice for me as well. However, it includes a
-> > cpus_read_lock that we already introduced separately in above code. To avoid recursive
-> > locking, I opted for __cpuhp_setup_state_cpuslocked.
-> 
-> cpuhp_setup_state_nocalls() includes the cpus_read_lock() as you describe.
-> But cpuhp_setup_state_nocalls_cpuslocked() explicitly assumes that the
-> cpus_read_lock() is already held, so is suitable for use in this case.  There are
-> several variants with the _cpuslocked suffix, which indicates that the caller
-> is responsible for the cpus_read_lock().
+On Tue, Jul 23, 2024 at 7:40=E2=80=AFAM Stefano Garzarella <sgarzare@redhat=
+.com> wrote:
+>
+> On Wed, Jul 10, 2024 at 09:25:45PM GMT, Amery Hung wrote:
+> >From: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> >
+> >This commit makes the bind table management functions in vsock usable
+> >for different bind tables. Future work will introduce a new table for
+> >datagrams to avoid address collisions, and these functions will be used
+> >there.
+> >
+> >Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> >---
+> > net/vmw_vsock/af_vsock.c | 34 +++++++++++++++++++++++++++-------
+> > 1 file changed, 27 insertions(+), 7 deletions(-)
+> >
+> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >index acc15e11700c..d571be9cdbf0 100644
+> >--- a/net/vmw_vsock/af_vsock.c
+> >+++ b/net/vmw_vsock/af_vsock.c
+> >@@ -232,11 +232,12 @@ static void __vsock_remove_connected(struct vsock_=
+sock *vsk)
+> >       sock_put(&vsk->sk);
+> > }
+> >
+> >-static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr)
+> >+static struct sock *vsock_find_bound_socket_common(struct sockaddr_vm *=
+addr,
+> >+                                                 struct list_head *bind=
+_table)
+> > {
+> >       struct vsock_sock *vsk;
+> >
+> >-      list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_table) =
+{
+> >+      list_for_each_entry(vsk, bind_table, bound_table) {
+> >               if (vsock_addr_equals_addr(addr, &vsk->local_addr))
+> >                       return sk_vsock(vsk);
+> >
+> >@@ -249,6 +250,11 @@ static struct sock *__vsock_find_bound_socket(struc=
+t sockaddr_vm *addr)
+> >       return NULL;
+> > }
+> >
+> >+static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr)
+> >+{
+> >+      return vsock_find_bound_socket_common(addr, vsock_bound_sockets(a=
+ddr));
+> >+}
+> >+
+> > static struct sock *__vsock_find_connected_socket(struct sockaddr_vm *s=
+rc,
+> >                                                 struct sockaddr_vm *dst=
+)
+> > {
+> >@@ -671,12 +677,18 @@ static void vsock_pending_work(struct work_struct =
+*work)
+> >
+> > /**** SOCKET OPERATIONS ****/
+> >
+> >-static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> >-                                  struct sockaddr_vm *addr)
+> >+static int vsock_bind_common(struct vsock_sock *vsk,
+> >+                           struct sockaddr_vm *addr,
+> >+                           struct list_head *bind_table,
+> >+                           size_t table_size)
+> > {
+> >       static u32 port;
+> >       struct sockaddr_vm new_addr;
+> >
+> >+      if (WARN_ONCE(table_size < VSOCK_HASH_SIZE,
+> >+                    "table size too small, may cause overflow"))
+> >+              return -EINVAL;
+> >+
+>
+> I'd add this in another commit.
+>
+> >       if (!port)
+> >               port =3D get_random_u32_above(LAST_RESERVED_PORT);
+> >
+> >@@ -692,7 +704,8 @@ static int __vsock_bind_connectible(struct
+> >vsock_sock *vsk,
+> >
+> >                       new_addr.svm_port =3D port++;
+> >
+> >-                      if (!__vsock_find_bound_socket(&new_addr)) {
+> >+                      if (!vsock_find_bound_socket_common(&new_addr,
+> >+                                                          &bind_table[V=
+SOCK_HASH(addr)])) {
+>
+> Can we add a macro for `&bind_table[VSOCK_HASH(addr)])` ?
 >
 
-Thank you for the clarification. I will fix this up in v2.
+Definitely. I will add the following macro:
 
-- Saurabh
- 
+#define vsock_bound_sockets_in_table(bind_table, addr) \
+        (&bind_table[VSOCK_HASH(addr)])
+
+> >                               found =3D true;
+> >                               break;
+> >                       }
+> >@@ -709,7 +722,8 @@ static int __vsock_bind_connectible(struct vsock_soc=
+k *vsk,
+> >                       return -EACCES;
+> >               }
+> >
+> >-              if (__vsock_find_bound_socket(&new_addr))
+> >+              if (vsock_find_bound_socket_common(&new_addr,
+> >+                                                 &bind_table[VSOCK_HASH=
+(addr)]))
+> >                       return -EADDRINUSE;
+> >       }
+> >
+> >@@ -721,11 +735,17 @@ static int __vsock_bind_connectible(struct vsock_s=
+ock *vsk,
+> >        * by AF_UNIX.
+> >        */
+> >       __vsock_remove_bound(vsk);
+> >-      __vsock_insert_bound(vsock_bound_sockets(&vsk->local_addr), vsk);
+> >+      __vsock_insert_bound(&bind_table[VSOCK_HASH(&vsk->local_addr)], v=
+sk);
+> >
+> >       return 0;
+> > }
+> >
+> >+static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> >+                                  struct sockaddr_vm *addr)
+> >+{
+> >+      return vsock_bind_common(vsk, addr, vsock_bind_table, VSOCK_HASH_=
+SIZE + 1);
+>
+> What about using ARRAY_SIZE(x) ?
+>
+> BTW we are using that size just to check it, but all the arrays we use
+> are statically allocated, so what about a compile time check like
+> BUILD_BUG_ON()?
+>
+
+I will remove the table_size check you mentioned earlier and the
+argument here as the arrays are allocated statically like you
+mentioned.
+
+If you think this check may be a good addition, I can add a
+BUILD_BUG_ON() in the new vsock_bound_sockets_in_table() macro.
+
+Thanks,
+Amery
+
+> Thanks,
+> Stefano
+>
+>
+> >+}
+> >+
+> > static int __vsock_bind_dgram(struct vsock_sock *vsk,
+> >                             struct sockaddr_vm *addr)
+> > {
+> >--
+> >2.20.1
+> >
+>
 
