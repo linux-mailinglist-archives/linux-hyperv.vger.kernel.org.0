@@ -1,231 +1,183 @@
-Return-Path: <linux-hyperv+bounces-2625-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2626-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DFDB93FEDC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jul 2024 22:13:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 758A993FEF9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jul 2024 22:17:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50CFB1C22462
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jul 2024 20:13:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE0911F223C2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jul 2024 20:17:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E6E51891C3;
-	Mon, 29 Jul 2024 20:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB5201741D9;
+	Mon, 29 Jul 2024 20:17:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="X1ABmKZ4"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YUS7dxHC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020078.outbound.protection.outlook.com [52.101.193.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8AC188CB3;
-	Mon, 29 Jul 2024 20:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722283983; cv=none; b=hxdvfq2DwU92VldLit3I3Kz0NSpnRodxcV8l8Kw+88jW/NX8Sc1zkpkfKeEIzoVZ7qEGY+SRjxuXerU6LcXI5cMFLAZerfDNSl6LANtaqdFq08AZbxzyuchqdRfgYzZxy340CE3uRo4WOyhn8cMpEZkJHZ0TY81TQbmGVjzx6/E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722283983; c=relaxed/simple;
-	bh=crICF1i5RQKEnw5gmthwsCxsW7dV+fc7ifqG4NAJLHE=;
-	h=Message-ID:Date:MIME-Version:In-Reply-To:To:CC:From:Subject:
-	 Content-Type; b=jQ0epu8aBDU2Umyz53hq9AFaLVq8U6YhNPidTLxgx58L1yOh65fKowCwaxyrIpbUWM+sdJguC/Cu9IG2LwSplVoZbvBLkcKB5vSAf1NoZIJaIoLvWChAFFUKDeFC+earSKX04VQuV2ksjqM0u38xDIxejug4Rztb7Zzq/QWDdU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=X1ABmKZ4; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id E8F50120003;
-	Mon, 29 Jul 2024 23:12:56 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E8F50120003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1722283976;
-	bh=wqCOH0OMZnBR80J18ev/8FeOuZRcI6ZPg6yEni5bP5E=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type:From;
-	b=X1ABmKZ44Jlf8L31CHuQAeIk4ZIqA6FntZHkexU9nNc/jFP1zP/GqdXt8tmR7aRMK
-	 hEXlF60medUb1VpmwEdY2Y78WUdmT8XBBB5wJSljFT6TrIDVQZWlSFJxxKpxTzxL67
-	 TIpv7Dctt1Rxat40rZVpl75dUMp+7ohkUBxK5f2qxfZbad28FuC5mqduVUtMX29L2B
-	 uKqrvUuC76txADmCn6hykswCviJN2lJe2SS/Yw0nyaOwe2P/Fp8a/Ub9npGnph8hhp
-	 tpMLqcRmiINh5AiqbgvlWCWZECR6KtPcgC5d2cEBoEohi196cjA4z5FnM+CJuNRAQM
-	 L/wZAreMfwHOw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon, 29 Jul 2024 23:12:56 +0300 (MSK)
-Received: from [172.28.128.200] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 29 Jul 2024 23:12:55 +0300
-Message-ID: <e1647f5f-5056-5cf0-e81c-5ef71fd6efd0@salutedevices.com>
-Date: Mon, 29 Jul 2024 23:00:36 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF6C37708;
+	Mon, 29 Jul 2024 20:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722284245; cv=fail; b=kPDD1Vbs7S2WMwywGjYer2vpS8jxHrwMEsO+7q8dGKX1SyR1iO3r4KMZW0sKbVsBSEy9UWpGr5loLv9lVUoo1B3R/FTEqtNNmC2Y5CVzadQVw2l/p+wLH9rp57TeAW+il9cjR5PUEcQKL5z4Bi3s44E0/7XtZngDyunYdxe2Sck=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722284245; c=relaxed/simple;
+	bh=90mCfNCZBbGmFXClQDvFE7z2O9SdUd27IJpDJjMooPI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cgVaTRGKXj+G31Nl+oR0IgNwXqWQczJXF7zcFMm8ALw4ZTXumH1My0/4eRZ/Iug91+19gT8MA9mdjhAwGaNhCDV2cCi7VxJht+JqVLWlCbBuG57p3oSwBZW+/zYTbfXoDsIc7LXEMm/8haWhbxDzCHhU1WAWDVcdVlhG8sFQ84g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=YUS7dxHC; arc=fail smtp.client-ip=52.101.193.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SYlVr9+y5KhDZSn5R6PmKPRE8/AEkheLAFPJV8o1/22pc+yXSIFkul+wmR70Ro2MyHWZFz/iTN2S8X8xDbMCbnToahDzwUvJKnUteCN4wUxtwKUhSu0K/zas64kB1Lbp5H2NMxylosqeUeCPNZH5cGk7SHSU6wUq65lXlEiHXI8Wrr0vK2GyIQk3GBiD/ZxsCLWOU+RNEx9LaBKAYG2TRfma8bG5xBOMbpW/L5CFCZI1WzPNtkqJxF5GJ0h+XNT8sV5QYFcjcr+5yg7alskUYtuyHxIggNpbSujvf9kzB5cD6J0FwS1JTqad5QsfAOIiZG+H8WTaU7Q8KtYelCXDdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tEb+WuPIuExYVLYhrvBMYNwh2T73vUcQUhGHvgobT1c=;
+ b=haRtZeLkTuTh9I58gBrMUSThPNH9Y1xUZGoUMANulTFFLarU2zcDfOIfpGW+Q0hmynB/Y+18EH7WvSPBqKncg5+G05fNFbfM/9aIu5KscwPVSsu1DXrMYT+elituJcjA68OlQa2mLJPXtaM5CPT1nMu5wGkRWzlRB5AOPWFCBqMIFWNmai6iDLLgQ5B1ElCrz8fxJeEvH0qX8WbwbVv1Sp5S4BNVIiuZuZ6NP1jUj4tYWPPYL6bh63lbnrGsAUF1eZhleF7xbEV52CCrtSJHp+cl6SCFBS0nxKlGp5sHPPIIZRuRzTLawVUBkIMrH5cF5Ie5+JAeYAf2JITBRxCWog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tEb+WuPIuExYVLYhrvBMYNwh2T73vUcQUhGHvgobT1c=;
+ b=YUS7dxHCv16dvHCB1HOG/D8trwB4ztOD118zg/GBd1uSBX9J2AcBS9SNkmsj8rK+UhbBUspy8/scRwH2grPwtC1llW90AjYb2/BclbB85I8y6qXPRClAGCZGjkmf9udsFtFJiNKdfRyBmuPmfqfxewsFE27DjRnpH9F3TKCJl28=
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com (2603:10b6:806:1f0::9)
+ by DM6PR21MB1498.namprd21.prod.outlook.com (2603:10b6:5:25b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.3; Mon, 29 Jul
+ 2024 20:17:21 +0000
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef]) by SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef%7]) with mapi id 15.20.7849.002; Mon, 29 Jul 2024
+ 20:17:21 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Saurabh Singh Sengar <ssengar@microsoft.com>, "srivatsa@csail.mit.edu"
+	<srivatsa@csail.mit.edu>
+Subject: RE: [PATCH v2] Drivers: hv: vmbus: Optimize boot time by concurrent
+ execution of hv_synic_init()
+Thread-Topic: [PATCH v2] Drivers: hv: vmbus: Optimize boot time by concurrent
+ execution of hv_synic_init()
+Thread-Index: AQHa4Yz1qgB4iDDyG0q2bjprWsok8LIOJAyw
+Date: Mon, 29 Jul 2024 20:17:21 +0000
+Message-ID:
+ <SA1PR21MB1317E317DE46E7F5DB8364BFBFB72@SA1PR21MB1317.namprd21.prod.outlook.com>
+References: <1722239838-10957-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1722239838-10957-1-git-send-email-ssengar@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fb7992d0-b14b-46ba-985e-e59cdf6940de;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-07-29T20:12:02Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1317:EE_|DM6PR21MB1498:EE_
+x-ms-office365-filtering-correlation-id: 57a6ce59-85f1-4db9-2094-08dcb00b73d6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?KMmArnmY4Qf2VRnSUkQlHoszktm6vJGHzsNlm9p9WDgIqcegoAT2+ctIOtVx?=
+ =?us-ascii?Q?DyIIQLa/cr4eeAJoZggQao4qpLcgLu2YfiANojJJ8j/wjimWLh7CTveEyaVz?=
+ =?us-ascii?Q?FbOVM480wtFUjng41Tlh7CavuUgPcunSGztP2zs0D2PBzJvRw5yol5ZYeZB4?=
+ =?us-ascii?Q?4SE4fwrC9tdeZyfmTjVTNZnZ9mq9XHX3GEWMlvYL/jzpdkQ4xWgETnTP/cPg?=
+ =?us-ascii?Q?x4TZP5qHzAYhDELnrm5Z/NxfYRCTUHpNBJ8SfVx9N61mpE7x6e/16E+2Hs8U?=
+ =?us-ascii?Q?hwZIqCADLaIJmD6GB8RphmE1KZ6jxIepkVHtrw/DWdsuJbSKnBgF/SSj/L0C?=
+ =?us-ascii?Q?J/l9S+jbWYkTNjqZvpfC6FewDf+CfVrkxph5TnmCNHXXsr6bZWJmAQQg8vZB?=
+ =?us-ascii?Q?qdzB5hBBnn12VfjTErxGVinivfTKJf2dAF1pNLOeuMN+rUol2XJZE4Pn14sy?=
+ =?us-ascii?Q?Yuf2FVETXBv4okz+TYW9Vz6+XrFrHW/EyYx50zTJriZZ8N2gP45ttWcB8O8H?=
+ =?us-ascii?Q?X5qI6I3kDJ0Gclc0Civ0fULLzVS54uCnwihfPUURILtVy4L9X+ctUIoH9KHI?=
+ =?us-ascii?Q?QwMMVGVjTzHiDJwFrPhNKnG4fIvxuHcceYAiEEG9sC/eH77+4FobpKPmKzD2?=
+ =?us-ascii?Q?BxRGLpOiF57RYuGUYRzTzdqyKDAE+o/vPlMA5p9ylGnZXsnyl3VKeMJQKMrv?=
+ =?us-ascii?Q?/qZWllaJnxFb4WgjdiXGo1faYvUbMrzNf4/vDZSpB6itCGuZoGeY1T9C8khs?=
+ =?us-ascii?Q?UZHfkNx8vWwBVRPNDxgWThxqedEAo19sQSK+20MIhVpeRczaPvh1K9l1w50L?=
+ =?us-ascii?Q?ofvIBOO49HwSFbp/3619fAutDzFPDYrS7GyELZYscOzeu3NxZqIk2+zyknk8?=
+ =?us-ascii?Q?beED05C/GhXhv9zTLRMfnnZqhpRITRnfkQ30sjkl3+ugHbCQ9EnioDXekfx5?=
+ =?us-ascii?Q?HMJSyAWifBnxYsQEA5voQjUglRYyXmZnI5kgkAFwbvtm90BleEc6CrOCYKdd?=
+ =?us-ascii?Q?C+OjSviHLiCXPwYyGFIFO7UdA3AFXc1oIP94aIJHc2yqfzIfiinbcz0G9Phi?=
+ =?us-ascii?Q?6kwAgQCS4+FSc5OACK3YI0octNEvwyhREAtyBa/WD2sKsmKLyRFHabuLjkFi?=
+ =?us-ascii?Q?UrYMQzIMDwL+qEHVGiFQkMBSRsjvb0Gu1Jk7m2asyMkpm//26VoshDfwXFIs?=
+ =?us-ascii?Q?rUCeaU//fDmIy20REZc44eblBLZAIgnu6wc44QJHEuTxDwSTQIDKvd842cje?=
+ =?us-ascii?Q?qAfNXNxueuxN4+p9tnpkv+HbI4EdnnXrRQXk+PtlzbM9xl1+599UjMqEsJOr?=
+ =?us-ascii?Q?AiZE7F7iiqsLygaymrYhgCt5kw2TrjQvAl9Vklbwr8hnldU7X2iCpj1JwRdG?=
+ =?us-ascii?Q?VvY+ud8y6fDAUjzCIMqWPMb79kgISzvXQlHlaQOqyl/01oEAcA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1317.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Ad71atCoApHmL43QVZBtr6sbY3TBI6IvFrzkkmrQo8g3u7Q+mPplNCVlftzL?=
+ =?us-ascii?Q?qt5jw3ppJceJllZltYDxqM99Z0C6CW7jVJ/R1a9SQZraZeuiYeQKvPicBn/z?=
+ =?us-ascii?Q?/Labr/iFhbtcyyp2NReeQ/KMTHwr91XvU2d7z7smo8kze8pIil/agLQVVtp1?=
+ =?us-ascii?Q?9UMb7gWpeiwDj86lSRRmkAvk0K7mjqgISrwMnsEr1jI6mEhjdWHpavUR6H2m?=
+ =?us-ascii?Q?532BK/OMXQ4PIGzggF/v8PB0GVK0syPAtt+PRgssnbGLhp4R0raFbfJHUn/R?=
+ =?us-ascii?Q?aY+cY3a8svFflxdpCVyFnevkv+dT+NvcKL42IdrhRHfq3OJiP4332XRGjHmS?=
+ =?us-ascii?Q?nEGBf/BeP7OxBuLz9/02dSfv71Vr+V6z23pJTIWkaYf7WQ8xOuaKdrOA6K2Y?=
+ =?us-ascii?Q?C3ZEaNQc9bKHmVT+5msMYsgIW4UnL0V+k76J6PvYPmTtiE8c2aAV/upHnHqk?=
+ =?us-ascii?Q?RaBLbWJViLiqEX5GY4b1WUzYs7wf0n2FyBKd0/Px6RUX9p5z2US1/+yjazvy?=
+ =?us-ascii?Q?xly15Cp1SoGWLdwTAp8pn82I2nXwD55VZJDPZydlKlHOVvTYbV2c5+8qF72+?=
+ =?us-ascii?Q?9WTrYTrYw1WJshqjpRsrL4bD3kNZpHN8UFZn9CRcP83igXJpT5XocQaQXlXC?=
+ =?us-ascii?Q?NfTANcYEqZHBmzTtFANuSIgLax8C5Turfrpk6jtCuKR8PeSFoIPpwC47Nolg?=
+ =?us-ascii?Q?u7tYQ5zzx6J/jcjRvHTogzWmT0h3EaFnkW5k2N+sn+MFfb5qL+/40p0HD9JQ?=
+ =?us-ascii?Q?fQ6i/QmiGOuCeP2KH/bP7v9zNnps5BiWgkZlRMaOkIy2vFz+jlt2CUKhlV0G?=
+ =?us-ascii?Q?cQrhM0FxPZHYKalp+MOaV+3T49IODiivS6TFNuwrRPzc94fovHAZUX0lHEdA?=
+ =?us-ascii?Q?fX6FYILD14G9QBJmpUzswLJw4L139VoWyuS1PwLXVKDghxKRaqcMT6yZq/YV?=
+ =?us-ascii?Q?NiiJlsYamao8xAoWACmqk78cSG9lWJ7oHePsCiDnYcIo89sLCNsChXNZxkMv?=
+ =?us-ascii?Q?5z9rXn39XKllgLT/OFkpOa9+SeoFImd6nK6kKNosgjQA6d8WZJJA1tyb1ln4?=
+ =?us-ascii?Q?tSS4Kc62Va8ZibwHnqoz80oDOrRkk8Wan4UaT844n6oGS/rdYxKr5BA9LoI7?=
+ =?us-ascii?Q?4sUyJ1AKK4lg8pe0OsUwCLjjlIkwr05G6Y9xTYkvyLgIcjMXwNpthzURBYje?=
+ =?us-ascii?Q?fSarhxh4MUtjiV5l+fh56P2xT/bsIIg+csFOJmaLi0nphg/vHKZlURAbD6Mf?=
+ =?us-ascii?Q?7d6PZ7R76Qj7Z+mxLpbIcAgZhr6tq1W9MgemtbJjQYEVUmEGjz/pll0Uyr6z?=
+ =?us-ascii?Q?rcIjhhhhwjKgcqWeVzApa+THtswthHeQ4hiyPvxVgoKKFURzuhbUWgfzJ6Qc?=
+ =?us-ascii?Q?z6OVOUqkg3IGhitljip/fkgzmjik919rcqLrXKgsT63neift1V+873SPfNta?=
+ =?us-ascii?Q?dOltEQMZrAt+ShBS9WjFKoqAeOTgRDj2gW5ElyZg3zFP1FcuHAgOcZAqMcWS?=
+ =?us-ascii?Q?S1hCV58ERzRXlKwNgYOv2zObgX3QGH5eT9+fsJyJ8KZ3JMoEBdNsGVzCu7fz?=
+ =?us-ascii?Q?M5zJvSusbWBQXn54AbdWVU9V+xj6WUkk8tbhtHd8TwsK34zHS+ltZZDbAiaC?=
+ =?us-ascii?Q?s+J4/vUALn0nkN5u2XZkzHg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Content-Language: en-US
-In-Reply-To: <20240710212555.1617795-8-amery.hung@bytedance.com>
-To: <stefanha@redhat.com>, <sgarzare@redhat.com>, <mst@redhat.com>,
-	<jasowang@redhat.com>, <xuanzhuo@linux.alibaba.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<kys@microsoft.com>, <haiyangz@microsoft.com>, <wei.liu@kernel.org>,
-	<decui@microsoft.com>, <bryantan@vmware.com>, <vdasa@vmware.com>,
-	<pv-drivers@vmware.com>
-CC: <dan.carpenter@linaro.org>, <simon.horman@corigine.com>,
-	<oxffffaa@gmail.com>, <kvm@vger.kernel.org>,
-	<virtualization@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <bobby.eshleman@bytedance.com>,
-	<jiang.wang@bytedance.com>, <amery.hung@bytedance.com>,
-	<ameryhung@gmail.com>, <xiyou.wangcong@gmail.com>, <kernel@sberdevices.ru>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Subject: [RFC PATCH net-next v6 07/14] virtio/vsock: add common datagram send
- path
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186779 [Jul 29 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/29 16:49:00 #26175127
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1317.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57a6ce59-85f1-4db9-2094-08dcb00b73d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2024 20:17:21.4188
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HMCppT+Y61KWM4JypnYGdK+7UJBe1rt8PorYq18LciBLP/EMqS91YTSANlkSGpspqlqnK16R06Uv16olxJaXBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1498
 
-Hi,
+> From: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Sent: Monday, July 29, 2024 12:57 AM
+>  [...]
+> +	/* register the callback for hotplug CPUs */
+> +	ret =3D
+> cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN,
+> "hyperv/vmbus:online",
 
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> index a1c76836d798..46cd1807f8e3 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -1040,13 +1040,98 @@ int virtio_transport_shutdown(struct vsock_sock *vsk, int mode)
->  }
->  EXPORT_SYMBOL_GPL(virtio_transport_shutdown);
->  
-> +static int virtio_transport_dgram_send_pkt_info(struct vsock_sock *vsk,
-> +						struct virtio_vsock_pkt_info *info)
-> +{
-> +	u32 src_cid, src_port, dst_cid, dst_port;
-> +	const struct vsock_transport *transport;
-> +	const struct virtio_transport *t_ops;
-> +	struct sock *sk = sk_vsock(vsk);
-> +	struct virtio_vsock_hdr *hdr;
-> +	struct sk_buff *skb;
-> +	void *payload;
-> +	int noblock = 0;
-> +	int err;
-> +
-> +	info->type = virtio_transport_get_type(sk_vsock(vsk));
-> +
-> +	if (info->pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
-> +		return -EMSGSIZE;
+AFAIK, Hyper-V doesn't support vCPU "hotplug" for VMs; it does
+support vCPU online/offline'ing.
 
-Small suggestion, i think we can check for packet length earlier ? Before
-info->type = ...
+To be more accurate, I suggested the comment below instead.
+/* Register the callbacks for possible CPU online/offline'ing */
 
-> +
-> +	transport = vsock_dgram_lookup_transport(info->remote_cid, info->remote_flags);
-> +	t_ops = container_of(transport, struct virtio_transport, transport);
-> +	if (unlikely(!t_ops))
-> +		return -EFAULT;
-> +
-> +	if (info->msg)
-> +		noblock = info->msg->msg_flags & MSG_DONTWAIT;
-> +
-> +	/* Use sock_alloc_send_skb to throttle by sk_sndbuf. This helps avoid
-> +	 * triggering the OOM.
-> +	 */
-> +	skb = sock_alloc_send_skb(sk, info->pkt_len + VIRTIO_VSOCK_SKB_HEADROOM,
-> +				  noblock, &err);
-> +	if (!skb)
-> +		return err;
-> +
-> +	skb_reserve(skb, VIRTIO_VSOCK_SKB_HEADROOM);
-> +
-> +	src_cid = t_ops->transport.get_local_cid();
-> +	src_port = vsk->local_addr.svm_port;
-> +	dst_cid = info->remote_cid;
-> +	dst_port = info->remote_port;
-> +
-> +	hdr = virtio_vsock_hdr(skb);
-> +	hdr->type	= cpu_to_le16(info->type);
-> +	hdr->op		= cpu_to_le16(info->op);
-> +	hdr->src_cid	= cpu_to_le64(src_cid);
-> +	hdr->dst_cid	= cpu_to_le64(dst_cid);
-> +	hdr->src_port	= cpu_to_le32(src_port);
-> +	hdr->dst_port	= cpu_to_le32(dst_port);
-> +	hdr->flags	= cpu_to_le32(info->flags);
-> +	hdr->len	= cpu_to_le32(info->pkt_len);
-
-There is function 'virtio_transport_init_hdr()' in this file, may be reuse it ?
-
-> +
-> +	if (info->msg && info->pkt_len > 0) {
-
-If pkt_len is 0, do we really need to send such packets ? Because for connectible
-sockets, we ignore empty OP_RW packets.
-
-> +		payload = skb_put(skb, info->pkt_len);
-> +		err = memcpy_from_msg(payload, info->msg, info->pkt_len);
-> +		if (err)
-> +			goto out;
-> +	}
-> +
-> +	trace_virtio_transport_alloc_pkt(src_cid, src_port,
-> +					 dst_cid, dst_port,
-> +					 info->pkt_len,
-> +					 info->type,
-> +					 info->op,
-> +					 info->flags,
-> +					 false);
-
-^^^ For SOCK_DGRAM, include/trace/events/vsock_virtio_transport_common.h also should
-be updated?
-
-> +
-> +	return t_ops->send_pkt(skb);
-> +out:
-> +	kfree_skb(skb);
-> +	return err;
-> +}
-> +
->  int
->  virtio_transport_dgram_enqueue(struct vsock_sock *vsk,
->  			       struct sockaddr_vm *remote_addr,
->  			       struct msghdr *msg,
->  			       size_t dgram_len)
->  {
-> -	return -EOPNOTSUPP;
-> +	/* Here we are only using the info struct to retain style uniformity
-> +	 * and to ease future refactoring and merging.
-> +	 */
-> +	struct virtio_vsock_pkt_info info = {
-> +		.op = VIRTIO_VSOCK_OP_RW,
-> +		.remote_cid = remote_addr->svm_cid,
-> +		.remote_port = remote_addr->svm_port,
-> +		.remote_flags = remote_addr->svm_flags,
-> +		.msg = msg,
-> +		.vsk = vsk,
-> +		.pkt_len = dgram_len,
-> +	};
-> +
-> +	return virtio_transport_dgram_send_pkt_info(vsk, &info);
->  }
->  EXPORT_SYMBOL_GPL(virtio_transport_dgram_enqueue);
->  
-> -- 
-> 2.20.1
-
-Thanks, Arseniy
+Otherwise, LGTM
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
