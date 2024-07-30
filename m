@@ -1,296 +1,263 @@
-Return-Path: <linux-hyperv+bounces-2635-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2636-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BF7C941BFE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 19:02:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C9E0941F14
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 19:57:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0A6C1C213C8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 17:01:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFB031F246B0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 17:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E999189B93;
-	Tue, 30 Jul 2024 17:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0766C18A6A6;
+	Tue, 30 Jul 2024 17:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gGewjpFn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVkAudVa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3B61FBA;
-	Tue, 30 Jul 2024 17:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA1E184547;
+	Tue, 30 Jul 2024 17:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722358905; cv=none; b=nCYamo2T9ACm/S014EgX0EhrXl6XH/QzwF7fq+Yb9xOH3jrsoAkZeqQpP6oW4eq+wNucBwhiPa/MyhUd3KKDIufLZxuST+2GRdKVEDg0RGA9YhZ/7MtFj6/tjvimmNktHzqo6JMwpqeMjutCXY+8eJ2LAmME0D1TrYDtBpBK6JY=
+	t=1722362220; cv=none; b=E4VQlCzumnSOWsOEuCxcRLPydhw/YJmmHlwWxfjVLZIU+Vbr8ournb7dR0JbHaKAElRVR0rczktChrvP/QUfixRSv0xI73UNMkwAijg9q1XOFYUces3Wd4FpDBkszhp43aDT9hL4pDpaOlTu0UCrW1Ymbunusy9KRx22hkJtIBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722358905; c=relaxed/simple;
-	bh=4KNYO/LkRl1nTWRQ7DygrxXgDTJ60HivC3wPrtCfxaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=eMbjuV+FVJPxJX6Xw6jyrfE4wmUPA0r/2tY1yP6mqO+68mJlohAKL1wfcTKwGPWJr6Jj0bNyfho20uch1jGSTGbcI6vmWnvYRgxiegQVeRWSpetsBcBkj+RAdnqqUOgjBXe+BzJ3B8sz2KG0M/f+bY+DI6pYrzT+X5WcCVYJGDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gGewjpFn; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 268F620B7165; Tue, 30 Jul 2024 10:01:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 268F620B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722358897;
-	bh=uThGGTifZtsapDvCDXWSI39lKEc1fXkcmZhpPtkqAug=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gGewjpFn+1SvTqBU96yqFjFI9JOnSqjwi3v8vI3i0qEZAbin9lpcvikSjlqehNYSN
-	 urqBL7A311yQcE/aV0B6BvsCoNLQO14dt0lvPcJkVZBoIbiLfzVDiUPF9N1QeWKCC/
-	 bkSHUY91+PaCR9t6B5gT/k47yixrAEWeI2kj39Mw=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Subject: [PATCH net-next v2] net: mana: Implement get_ringparam/set_ringparam for mana
-Date: Tue, 30 Jul 2024 10:01:35 -0700
-Message-Id: <1722358895-13430-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1722362220; c=relaxed/simple;
+	bh=Yq/ggOUNW+hktq+nK4p6E6tkRE5rk8sFRRmqvpaJpcc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hk4kUmZ3oUdpP9f0xJqb5KfY+cqIWEPN4J4ie2MW6EA7UM6JhD7xOEIIhuw4GPG2/5pnFySjWlnTuW7RKiaIORVqhyjvFwB/tVQoGyBcm1wP+d7z/dNA11UTALToDisW5HpqSRSuUxqk6qRv9382T19gy1LPAlQ6Hsr8ycDur5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVkAudVa; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e087641d2a2so3753220276.0;
+        Tue, 30 Jul 2024 10:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722362218; x=1722967018; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2tJ9LmFr+EeYpInIUds90yt7v1m8/2stEKp9e7T6m1w=;
+        b=mVkAudVa+U7V3BVQqZjVzNSi1MmaSQOlplVTk7tx+na8oQY5C9/nANgcxJnWWUzSQd
+         pSmhh6KYmzoUHWBpHAMcMwBDaIKa/AgNuME2BnINvxTK63P2x1EIdIvY1vAv5OGvuQ+i
+         yVBtxHNzD6CEAXrzNYk74QjvBcMtIpwQQUCJfxODo5VQKapOX28oyOqD5UptbVNQve29
+         lyc/eCQaEDPQAjZ7paoJnDixR6tWXKMSV4Bmt7DghhO1FKTtNKk89S6HSFBj1yCe0/MB
+         CF2s+wtvOpLhkdR6500Gxw+umBB37bFSANpQy/MUHrwGmnf/6jdviXzeiZwbPWElDid0
+         CILg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722362218; x=1722967018;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2tJ9LmFr+EeYpInIUds90yt7v1m8/2stEKp9e7T6m1w=;
+        b=fyX37PNuMzLO2uc9wz7n89ePnQFcaEc9n0br4C/HEo28KNGT0cxhY2gj8DuVdI56Iq
+         s465syl770b7Yey9OWwRcRIfqFtHkQISd7k8ZLUBnsxR+jisjsXkyqGiWjnBkT4mhSV6
+         JVRR0pT9Mk1BJWses5kqTtXiZfyjVFMm8lFRb7kwaPcznPK4DWNc5ZqTqUasz3fS7Ioz
+         M0UNaorBLtaRzBpxx65gSEYWXMbPLZa1kbzSxbR5cBk3EhneUMe6xXQGPVSkIokDG48I
+         Tv+xeFKxcC4ul/Pe2cJwtPHsDI2MZlmaO85yNFOuFOLAYwOmvXnPKg7XtryX8fNVdFBg
+         Kgtw==
+X-Forwarded-Encrypted: i=1; AJvYcCXy3I8H5ZfaSBJmC/fjnSQ15yQBl2jjB62jUuhrOgoUccbXJLglYEQDQs9Sd21O6I7cAnNBha0HLzoJzJeIV4iuqiyDYQu7QH+ujgtAYvXabY8DVKy9tx2/NUupCJ1ljy//NBrgxaNvmW2LiWxP7u02tyyTFWZdo6ijgEagbIhtfI7XL951CEpoV8hsUkvWOfZZNMJKUwoaRYB23PF5DzIKId9ewSW88RTr2Jzf
+X-Gm-Message-State: AOJu0Yy1QtZGw3xmVFUKuskJ8Tq/lOxfM55WXaqN25l9H6bFICCpG6z/
+	PNK+1H4AutMReJxMfj5ywBke9b8axXo9GjG5TN8ZotOiwlWzOCc4/XiSpsQL1fjkkHoFepD4WR0
+	aM9RsqXrOlHLS6+sVUGq8kbXYmcY=
+X-Google-Smtp-Source: AGHT+IEeFCqCt/8oTNqAY4RtLq00QVkD5Ag05gXDYxk2tQVY/F4tyERpQH8H3d42Bd+DygSbMlFnsnAzg7VIuPpEhJA=
+X-Received: by 2002:a05:6902:2742:b0:e0b:b2d6:f528 with SMTP id
+ 3f1490d57ef6-e0bb2d701c8mr529006276.38.1722362218035; Tue, 30 Jul 2024
+ 10:56:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240710212555.1617795-1-amery.hung@bytedance.com>
+ <20240710212555.1617795-5-amery.hung@bytedance.com> <CAGxU2F7wCUR-KhDRBopK+0gv=bM0PCKeWM87j1vEYmbvhO8WHQ@mail.gmail.com>
+ <CAMB2axNUZa221WKTjLt0G5KNdtkAbm20ViDZRGBh6pL9y3wosg@mail.gmail.com> <ba2hivznnjcyeftr7ch7gvrwjvkimx5u2t2anv7wv7n7yb3j36@dbagnaylvu6o>
+In-Reply-To: <ba2hivznnjcyeftr7ch7gvrwjvkimx5u2t2anv7wv7n7yb3j36@dbagnaylvu6o>
+From: Amery Hung <ameryhung@gmail.com>
+Date: Tue, 30 Jul 2024 10:56:46 -0700
+Message-ID: <CAMB2axPfz0kOFau0tX2=87e=2EPSLxX1AXHPpsv3QyaLYaBvoA@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 04/14] af_vsock: generalize bind table functions
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, bryantan@vmware.com, 
+	vdasa@vmware.com, pv-drivers@vmware.com, dan.carpenter@linaro.org, 
+	simon.horman@corigine.com, oxffffaa@gmail.com, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	bpf@vger.kernel.org, bobby.eshleman@bytedance.com, jiang.wang@bytedance.com, 
+	amery.hung@bytedance.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently the values of WQs for RX and TX queues for MANA devices
-are hardcoded to default sizes.
-Allow configuring these values for MANA devices as ringparam
-configuration(get/set) through ethtool_ops.
+On Tue, Jul 30, 2024 at 1:00=E2=80=AFAM Stefano Garzarella <sgarzare@redhat=
+.com> wrote:
+>
+> On Sun, Jul 28, 2024 at 11:52:54AM GMT, Amery Hung wrote:
+> >On Tue, Jul 23, 2024 at 7:40=E2=80=AFAM Stefano Garzarella <sgarzare@red=
+hat.com> wrote:
+> >>
+> >> On Wed, Jul 10, 2024 at 09:25:45PM GMT, Amery Hung wrote:
+> >> >From: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> >> >
+> >> >This commit makes the bind table management functions in vsock usable
+> >> >for different bind tables. Future work will introduce a new table for
+> >> >datagrams to avoid address collisions, and these functions will be us=
+ed
+> >> >there.
+> >> >
+> >> >Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> >> >---
+> >> > net/vmw_vsock/af_vsock.c | 34 +++++++++++++++++++++++++++-------
+> >> > 1 file changed, 27 insertions(+), 7 deletions(-)
+> >> >
+> >> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >> >index acc15e11700c..d571be9cdbf0 100644
+> >> >--- a/net/vmw_vsock/af_vsock.c
+> >> >+++ b/net/vmw_vsock/af_vsock.c
+> >> >@@ -232,11 +232,12 @@ static void __vsock_remove_connected(struct vso=
+ck_sock *vsk)
+> >> >       sock_put(&vsk->sk);
+> >> > }
+> >> >
+> >> >-static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *ad=
+dr)
+> >> >+static struct sock *vsock_find_bound_socket_common(struct sockaddr_v=
+m *addr,
+> >> >+                                                 struct list_head *b=
+ind_table)
+> >> > {
+> >> >       struct vsock_sock *vsk;
+> >> >
+> >> >-      list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_tabl=
+e) {
+> >> >+      list_for_each_entry(vsk, bind_table, bound_table) {
+> >> >               if (vsock_addr_equals_addr(addr, &vsk->local_addr))
+> >> >                       return sk_vsock(vsk);
+> >> >
+> >> >@@ -249,6 +250,11 @@ static struct sock *__vsock_find_bound_socket(st=
+ruct sockaddr_vm *addr)
+> >> >       return NULL;
+> >> > }
+> >> >
+> >> >+static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *ad=
+dr)
+> >> >+{
+> >> >+      return vsock_find_bound_socket_common(addr, vsock_bound_socket=
+s(addr));
+> >> >+}
+> >> >+
+> >> > static struct sock *__vsock_find_connected_socket(struct sockaddr_vm=
+ *src,
+> >> >                                                 struct sockaddr_vm *=
+dst)
+> >> > {
+> >> >@@ -671,12 +677,18 @@ static void vsock_pending_work(struct work_stru=
+ct *work)
+> >> >
+> >> > /**** SOCKET OPERATIONS ****/
+> >> >
+> >> >-static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> >> >-                                  struct sockaddr_vm *addr)
+> >> >+static int vsock_bind_common(struct vsock_sock *vsk,
+> >> >+                           struct sockaddr_vm *addr,
+> >> >+                           struct list_head *bind_table,
+> >> >+                           size_t table_size)
+> >> > {
+> >> >       static u32 port;
+> >> >       struct sockaddr_vm new_addr;
+> >> >
+> >> >+      if (WARN_ONCE(table_size < VSOCK_HASH_SIZE,
+> >> >+                    "table size too small, may cause overflow"))
+> >> >+              return -EINVAL;
+> >> >+
+> >>
+> >> I'd add this in another commit.
+> >>
+> >> >       if (!port)
+> >> >               port =3D get_random_u32_above(LAST_RESERVED_PORT);
+> >> >
+> >> >@@ -692,7 +704,8 @@ static int __vsock_bind_connectible(struct
+> >> >vsock_sock *vsk,
+> >> >
+> >> >                       new_addr.svm_port =3D port++;
+> >> >
+> >> >-                      if (!__vsock_find_bound_socket(&new_addr)) {
+> >> >+                      if (!vsock_find_bound_socket_common(&new_addr,
+> >> >+                                                          &bind_tabl=
+e[VSOCK_HASH(addr)])) {
+> >>
+> >> Can we add a macro for `&bind_table[VSOCK_HASH(addr)])` ?
+> >>
+> >
+> >Definitely. I will add the following macro:
+> >
+> >#define vsock_bound_sockets_in_table(bind_table, addr) \
+> >        (&bind_table[VSOCK_HASH(addr)])
+>
+> yeah.
+>
+> >
+> >> >                               found =3D true;
+> >> >                               break;
+> >> >                       }
+> >> >@@ -709,7 +722,8 @@ static int __vsock_bind_connectible(struct vsock_=
+sock *vsk,
+> >> >                       return -EACCES;
+> >> >               }
+> >> >
+> >> >-              if (__vsock_find_bound_socket(&new_addr))
+> >> >+              if (vsock_find_bound_socket_common(&new_addr,
+> >> >+                                                 &bind_table[VSOCK_H=
+ASH(addr)]))
+> >> >                       return -EADDRINUSE;
+> >> >       }
+> >> >
+> >> >@@ -721,11 +735,17 @@ static int __vsock_bind_connectible(struct vsoc=
+k_sock *vsk,
+> >> >        * by AF_UNIX.
+> >> >        */
+> >> >       __vsock_remove_bound(vsk);
+> >> >-      __vsock_insert_bound(vsock_bound_sockets(&vsk->local_addr), vs=
+k);
+> >> >+      __vsock_insert_bound(&bind_table[VSOCK_HASH(&vsk->local_addr)]=
+, vsk);
+> >> >
+> >> >       return 0;
+> >> > }
+> >> >
+> >> >+static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> >> >+                                  struct sockaddr_vm *addr)
+> >> >+{
+> >> >+      return vsock_bind_common(vsk, addr, vsock_bind_table, VSOCK_HA=
+SH_SIZE + 1);
+> >>
+> >> What about using ARRAY_SIZE(x) ?
+> >>
+> >> BTW we are using that size just to check it, but all the arrays we use
+> >> are statically allocated, so what about a compile time check like
+> >> BUILD_BUG_ON()?
+> >>
+> >
+> >I will remove the table_size check you mentioned earlier and the
+> >argument here as the arrays are allocated statically like you
+> >mentioned.
+> >
+> >If you think this check may be a good addition, I can add a
+> >BUILD_BUG_ON() in the new vsock_bound_sockets_in_table() macro.
+>
+> If you want to add it, we need to do it in a separate commit. But since
+> we already have so many changes and both arrays are statically allocated
+> in the same file, IMHO we can avoid the check.
+>
+> Stefano
+>
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Long Li <longli@microsoft.com>
----
- Changes in v2:
- * Removed unnecessary validations in mana_set_ringparam()
- * Fixed codespell error
- * Improved error message to indicate issue with the parameter
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 20 +++---
- .../ethernet/microsoft/mana/mana_ethtool.c    | 66 +++++++++++++++++++
- include/net/mana/mana.h                       | 21 +++++-
- 3 files changed, 96 insertions(+), 11 deletions(-)
+Okay. I will not add the check.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index d2f07e179e86..598ac62be47d 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -618,7 +618,7 @@ static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
- 
- 	dev = mpc->ac->gdma_dev->gdma_context->dev;
- 
--	num_rxb = mpc->num_queues * RX_BUFFERS_PER_QUEUE;
-+	num_rxb = mpc->num_queues * mpc->rx_queue_size;
- 
- 	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
- 	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
-@@ -1899,14 +1899,15 @@ static int mana_create_txq(struct mana_port_context *apc,
- 		return -ENOMEM;
- 
- 	/*  The minimum size of the WQE is 32 bytes, hence
--	 *  MAX_SEND_BUFFERS_PER_QUEUE represents the maximum number of WQEs
-+	 *  apc->tx_queue_size represents the maximum number of WQEs
- 	 *  the SQ can store. This value is then used to size other queues
- 	 *  to prevent overflow.
-+	 *  Also note that the txq_size is always going to be MANA_PAGE_ALIGNED,
-+	 *  as tx_queue_size is always a power of 2.
- 	 */
--	txq_size = MAX_SEND_BUFFERS_PER_QUEUE * 32;
--	BUILD_BUG_ON(!MANA_PAGE_ALIGNED(txq_size));
-+	txq_size = apc->tx_queue_size * 32;
- 
--	cq_size = MAX_SEND_BUFFERS_PER_QUEUE * COMP_ENTRY_SIZE;
-+	cq_size = apc->tx_queue_size * COMP_ENTRY_SIZE;
- 	cq_size = MANA_PAGE_ALIGN(cq_size);
- 
- 	gc = gd->gdma_context;
-@@ -2145,10 +2146,11 @@ static int mana_push_wqe(struct mana_rxq *rxq)
- 
- static int mana_create_page_pool(struct mana_rxq *rxq, struct gdma_context *gc)
- {
-+	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
- 	struct page_pool_params pprm = {};
- 	int ret;
- 
--	pprm.pool_size = RX_BUFFERS_PER_QUEUE;
-+	pprm.pool_size = mpc->rx_queue_size;
- 	pprm.nid = gc->numa_node;
- 	pprm.napi = &rxq->rx_cq.napi;
- 	pprm.netdev = rxq->ndev;
-@@ -2180,13 +2182,13 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 
- 	gc = gd->gdma_context;
- 
--	rxq = kzalloc(struct_size(rxq, rx_oobs, RX_BUFFERS_PER_QUEUE),
-+	rxq = kzalloc(struct_size(rxq, rx_oobs, apc->rx_queue_size),
- 		      GFP_KERNEL);
- 	if (!rxq)
- 		return NULL;
- 
- 	rxq->ndev = ndev;
--	rxq->num_rx_buf = RX_BUFFERS_PER_QUEUE;
-+	rxq->num_rx_buf = apc->rx_queue_size;
- 	rxq->rxq_idx = rxq_idx;
- 	rxq->rxobj = INVALID_MANA_HANDLE;
- 
-@@ -2734,6 +2736,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	apc->ndev = ndev;
- 	apc->max_queues = gc->max_num_queues;
- 	apc->num_queues = gc->max_num_queues;
-+	apc->tx_queue_size = DEF_TX_BUFFERS_PER_QUEUE;
-+	apc->rx_queue_size = DEF_RX_BUFFERS_PER_QUEUE;
- 	apc->port_handle = INVALID_MANA_HANDLE;
- 	apc->pf_filter_handle = INVALID_MANA_HANDLE;
- 	apc->port_idx = port_idx;
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 146d5db1792f..34707da6ff68 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -369,6 +369,70 @@ static int mana_set_channels(struct net_device *ndev,
- 	return err;
- }
- 
-+static void mana_get_ringparam(struct net_device *ndev,
-+			       struct ethtool_ringparam *ring,
-+			       struct kernel_ethtool_ringparam *kernel_ring,
-+			       struct netlink_ext_ack *extack)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+
-+	ring->rx_pending = apc->rx_queue_size;
-+	ring->tx_pending = apc->tx_queue_size;
-+	ring->rx_max_pending = MAX_RX_BUFFERS_PER_QUEUE;
-+	ring->tx_max_pending = MAX_TX_BUFFERS_PER_QUEUE;
-+}
-+
-+static int mana_set_ringparam(struct net_device *ndev,
-+			      struct ethtool_ringparam *ring,
-+			      struct kernel_ethtool_ringparam *kernel_ring,
-+			      struct netlink_ext_ack *extack)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+	u32 new_tx, new_rx;
-+	u32 old_tx, old_rx;
-+	int err1, err2;
-+
-+	old_tx = apc->tx_queue_size;
-+	old_rx = apc->rx_queue_size;
-+	new_tx = clamp_t(u32, ring->tx_pending, MIN_TX_BUFFERS_PER_QUEUE, MAX_TX_BUFFERS_PER_QUEUE);
-+	new_rx = clamp_t(u32, ring->rx_pending, MIN_RX_BUFFERS_PER_QUEUE, MAX_RX_BUFFERS_PER_QUEUE);
-+
-+	if (!is_power_of_2(new_tx)) {
-+		netdev_err(ndev, "%s:Tx:%d not supported. Needs to be a power of 2\n",
-+			   __func__, new_tx);
-+		return -EINVAL;
-+	}
-+
-+	if (!is_power_of_2(new_rx)) {
-+		netdev_err(ndev, "%s:Rx:%d not supported. Needs to be a power of 2\n",
-+			   __func__, new_rx);
-+		return -EINVAL;
-+	}
-+
-+	err1 = mana_detach(ndev, false);
-+	if (err1) {
-+		netdev_err(ndev, "mana_detach failed: %d\n", err1);
-+		return err1;
-+	}
-+
-+	apc->tx_queue_size = new_tx;
-+	apc->rx_queue_size = new_rx;
-+	err1 = mana_attach(ndev);
-+	if (!err1)
-+		return 0;
-+
-+	netdev_err(ndev, "mana_attach failed: %d\n", err1);
-+
-+	/* Try rolling back to the older values */
-+	apc->tx_queue_size = old_tx;
-+	apc->rx_queue_size = old_rx;
-+	err2 = mana_attach(ndev);
-+	if (err2)
-+		netdev_err(ndev, "mana_reattach failed: %d\n", err2);
-+
-+	return err1;
-+}
-+
- const struct ethtool_ops mana_ethtool_ops = {
- 	.get_ethtool_stats	= mana_get_ethtool_stats,
- 	.get_sset_count		= mana_get_sset_count,
-@@ -380,4 +444,6 @@ const struct ethtool_ops mana_ethtool_ops = {
- 	.set_rxfh		= mana_set_rxfh,
- 	.get_channels		= mana_get_channels,
- 	.set_channels		= mana_set_channels,
-+	.get_ringparam          = mana_get_ringparam,
-+	.set_ringparam          = mana_set_ringparam,
- };
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 6439fd8b437b..8f922b389883 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -38,9 +38,21 @@ enum TRI_STATE {
- 
- #define COMP_ENTRY_SIZE 64
- 
--#define RX_BUFFERS_PER_QUEUE 512
-+/* This Max value for RX buffers is derived from __alloc_page()'s max page
-+ * allocation calculation. It allows maximum 2^(MAX_ORDER -1) pages. RX buffer
-+ * size beyond this value gets rejected by __alloc_page() call.
-+ */
-+#define MAX_RX_BUFFERS_PER_QUEUE 8192
-+#define DEF_RX_BUFFERS_PER_QUEUE 512
-+#define MIN_RX_BUFFERS_PER_QUEUE 128
- 
--#define MAX_SEND_BUFFERS_PER_QUEUE 256
-+/* This max value for TX buffers is derived as the maximum allocatable
-+ * pages supported on host per guest through testing. TX buffer size beyond
-+ * this value is rejected by the hardware.
-+ */
-+#define MAX_TX_BUFFERS_PER_QUEUE 16384
-+#define DEF_TX_BUFFERS_PER_QUEUE 256
-+#define MIN_TX_BUFFERS_PER_QUEUE 128
- 
- #define EQ_SIZE (8 * MANA_PAGE_SIZE)
- 
-@@ -285,7 +297,7 @@ struct mana_recv_buf_oob {
- 	void *buf_va;
- 	bool from_pool; /* allocated from a page pool */
- 
--	/* SGL of the buffer going to be sent has part of the work request. */
-+	/* SGL of the buffer going to be sent as part of the work request. */
- 	u32 num_sge;
- 	struct gdma_sge sgl[MAX_RX_WQE_SGL_ENTRIES];
- 
-@@ -437,6 +449,9 @@ struct mana_port_context {
- 	unsigned int max_queues;
- 	unsigned int num_queues;
- 
-+	unsigned int rx_queue_size;
-+	unsigned int tx_queue_size;
-+
- 	mana_handle_t port_handle;
- 	mana_handle_t pf_filter_handle;
- 
--- 
-2.34.1
-
+Thanks,
+Amery
 
