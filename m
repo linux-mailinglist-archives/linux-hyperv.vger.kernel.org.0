@@ -1,330 +1,168 @@
-Return-Path: <linux-hyperv+bounces-2633-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2634-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9507D940BBC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 10:36:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 902F4940DC0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 11:34:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13B211F2566C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 08:36:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 515DF283109
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jul 2024 09:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11497198A2C;
-	Tue, 30 Jul 2024 08:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2180A196DA1;
+	Tue, 30 Jul 2024 09:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kp28W/Tk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b="nt6yqnGq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076F9198A04
-	for <linux-hyperv@vger.kernel.org>; Tue, 30 Jul 2024 08:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E471194C74;
+	Tue, 30 Jul 2024 09:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.30.2.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722328375; cv=none; b=NP7KYdogTtR6B1Lfsnga8T3QHwKUUcTBNuQNcrprN5mTpPiDkC7BJr+/OmY65jqM+/HfyvYg1ajOElHf5KqlYwVht2P72DNsPA3ZZy1C/iztSw9WG/fHIDFetuY7iyeb89O5LlGiWLvHA6ReIz/IFeQkDlpdMTjuWxdTpPCIKhk=
+	t=1722331874; cv=none; b=aTa180aaWeaGWPR84Tvb68DE7f7EDchHUw1uYQLPeZxFrRocwu4vu9wxnvVk0zpLhzBsVQ0PgmeNhh8ULpSGw0eHv1UcTXaSWyi8I3MllQjCTzCFpnOTEovIBA9cgxrUCyoAQdBYEBGYdf+3n/KRQEKwx5rbpcjb/B4U0KccrAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722328375; c=relaxed/simple;
-	bh=E6gmvD0Q7zeWVOo4lEzOWRmLUPeP28JDg0QFfxt2s8M=;
+	s=arc-20240116; t=1722331874; c=relaxed/simple;
+	bh=FI9fwSCGcX+EKhM3a6roYO2SraOUdV1Vik/+z9uWPbc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cokhgs7GatslRXELbk9TE1f3JGop/bVy7AaZ8aJuRHW9jBBqIjiUKw5sJTPluf0aj0Mup42cwyGLjiaG80nGnzqpmslydxpRzl4wmULFQRgO15jD0QMoSTSYriov7jS63gfOFkv1Gdu8/1gEw2bJZl9dFV3PLsa1+CROuikeGuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kp28W/Tk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722328373;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KUu9DqweMZplPZPw8zixj088PoW8Kyk6wuUBLwD2TsA=;
-	b=Kp28W/TkLva9fitao4Iib4y5TH3KR+B+rVKwU9Fr+kj4XCPIhuwBEQVhhVJWo8LCdB5Ll6
-	mZ+wBZxAcRu2wQkZNaE6ZXP1rL/Cz5BGPck+40Ikrg7gTReC9sKB3iaXzSMhp1yXBHjuHH
-	mRqVIGIuUu/W0TL4w/ZjtZWxH2wheg8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-s880LtPMPLCO0jdm1iVYpA-1; Tue, 30 Jul 2024 04:32:50 -0400
-X-MC-Unique: s880LtPMPLCO0jdm1iVYpA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4281b7196bbso17504085e9.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Jul 2024 01:32:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722328369; x=1722933169;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KUu9DqweMZplPZPw8zixj088PoW8Kyk6wuUBLwD2TsA=;
-        b=Q+kqht6uCmha37E5CwR0LaOdLQEwlVTk6ptF1jJvETiLCcod8rDhxCqP9bIBJgfbq/
-         4pdX2KRJ7F7EgI9WWGqWu/YGV4dbEaY2P2wgeZQeOec4RptpS6Uo0dY96V6c22YdzVlz
-         U6LriT28cyXNUbJokijq3Qg4CUgpLte8ZieEC0PV/q/sFknPBtnY7ikbhIfligYsBphy
-         68BVjvrIHePQaMR+6B2Lt4zPpF0wWSvgwemTQRx6BxDDtGzqnEj0cJ9BCk0fq4cdsynD
-         d4rvGIdFwrzeJ9t0FOvLzL1nrvFNt9qgS7Fu9x/R+U9WdEmRwylc6QKpa5wkvjcc/4+H
-         sg2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVpDl6SyK7jxn/GM2cmUxkMNSdYYuJqlt4r/fmlKzDwylfuRntfc6W9qzPQEWczjt+d68rlEJT8KB2yriGbOIOtMJRGF5KHwUTz5Yhe
-X-Gm-Message-State: AOJu0Yzsdma6QdTgASwfAperI2JhYdQWyKv7ItYMH79XVfUN8muTd+oH
-	NpgkigpjBgRc3Zk7rtL5fCYwP3F334RAVTCjy/l1eWHotn+/SK2M33M0dLDEc2kgWhTLRAIEiS4
-	hzgMbjRNI//EKcEfxTwHo4iOZGzpk+8dcZBO/u/QTJCPrq+GUN9jEvP2hzEgGcg==
-X-Received: by 2002:a05:600c:2d53:b0:426:59fc:cdec with SMTP id 5b1f17b1804b1-42811da1b88mr71529815e9.21.1722328369118;
-        Tue, 30 Jul 2024 01:32:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFIZbaDTrEZBCLXIF/bnAzy6Ax7DEDAW4LkM0HdYou7XpcwkGyKPBEX2idkqwXBZnxwkKn71A==
-X-Received: by 2002:a05:600c:2d53:b0:426:59fc:cdec with SMTP id 5b1f17b1804b1-42811da1b88mr71529585e9.21.1722328368349;
-        Tue, 30 Jul 2024 01:32:48 -0700 (PDT)
-Received: from sgarzare-redhat ([62.205.9.89])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280574b2c2sm203448165e9.28.2024.07.30.01.32.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 01:32:47 -0700 (PDT)
-Date: Tue, 30 Jul 2024 10:32:44 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Amery Hung <ameryhung@gmail.com>
-Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
-	xuanzhuo@linux.alibaba.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, bryantan@vmware.com, vdasa@vmware.com, pv-drivers@vmware.com, 
-	dan.carpenter@linaro.org, simon.horman@corigine.com, oxffffaa@gmail.com, 
-	kvm@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	bpf@vger.kernel.org, bobby.eshleman@bytedance.com, jiang.wang@bytedance.com, 
-	amery.hung@bytedance.com, xiyou.wangcong@gmail.com
-Subject: Re: [RFC PATCH net-next v6 09/14] virtio/vsock: add common datagram
- recv path
-Message-ID: <yx5phoynacbxobystxaa3zca5ehzbupzzwz3ayptb7wu5d74mc@ic3lvpjnvkkr>
-References: <20240710212555.1617795-1-amery.hung@bytedance.com>
- <20240710212555.1617795-10-amery.hung@bytedance.com>
- <ldyfzp5k2qmhlydflu7biz6bcrekothacitzgbmw2k264zwuxh@hmgoku5kgghp>
- <CAMB2axNx=nCh-B-=XLtto2nEsKsV0p+b7yzXRX9OKSgUbRzzWA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cpv70io5t1kjFPC967zyf77RaAFl4OuLz7BICjRj1iB7+TW1E2L950pF8BQKV9hsSSGXDQ3JbgKh0p+hDOILnyzLO+D9+qelcY8i2KbLXxicPXEw/zcQkRYePJ0dc/n/CKNHB7t5u5CjPTauBgxpjDb/J6rzvj+KQqstqJauEnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu; spf=pass smtp.mailfrom=csail.mit.edu; dkim=pass (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b=nt6yqnGq; arc=none smtp.client-ip=128.30.2.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=vIsP67wcAGqmw3YkuPGmIdTV5Er81csfAnp1h6UEIIA=; t=1722331872; x=1723195872; 
+	b=nt6yqnGqxoGtXgdS/jv2I9iotHQdByqNAigERuEbJ77bSg1RBDO7VKzrbKQABqhqO2vOxHky8BB
+	sd5CH4p3zD1bobe9rlGN0FoPMFCEoAJrTubRUkc00eSPhfGI4sxnQ24DOEobzrDfO5QRfR2y1fUmA
+	RR8/v3Orlc4jVY51BmkN0TWTYEtJ1+iD9cXrw9EvFlBV5TBXBTWqOSnjEP+JSXtusiaZCSIHP8OxR
+	siy6KRHO34nnEod+RYcUjGCY0X0UvvdEEdfHhgLcxf6TZsP2Mgpg0j1qvDMv0t909XYil8CQR0wGC
+	hpeHLWZSpaVprOGLYiyCQy+T79ukXbzGU1XQ==;
+Received: from [172.179.10.40] (helo=csail.mit.edu)
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srivatsa@csail.mit.edu>)
+	id 1sYjC1-0006Mb-Vu;
+	Tue, 30 Jul 2024 05:30:54 -0400
+Date: Tue, 30 Jul 2024 09:30:48 +0000
+From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ssengar@microsoft.com
+Subject: Re: [PATCH v2] Drivers: hv: vmbus: Optimize boot time by concurrent
+ execution of hv_synic_init()
+Message-ID: <ZqiyyDEHLgvjxfRH@csail.mit.edu>
+References: <1722239838-10957-1-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMB2axNx=nCh-B-=XLtto2nEsKsV0p+b7yzXRX9OKSgUbRzzWA@mail.gmail.com>
+In-Reply-To: <1722239838-10957-1-git-send-email-ssengar@linux.microsoft.com>
 
-On Mon, Jul 29, 2024 at 05:35:01PM GMT, Amery Hung wrote:
->On Tue, Jul 23, 2024 at 7:42 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
->>
->> On Wed, Jul 10, 2024 at 09:25:50PM GMT, Amery Hung wrote:
->> >From: Bobby Eshleman <bobby.eshleman@bytedance.com>
->> >
->> >This commit adds the common datagram receive functionality for virtio
->> >transports. It does not add the vhost/virtio users of that
->> >functionality.
->> >
->> >This functionality includes:
->> >- changes to the virtio_transport_recv_pkt() path for finding the
->> >  bound socket receiver for incoming packets
->> >- virtio_transport_recv_pkt() saves the source cid and port to the
->> >  control buffer for recvmsg() to initialize sockaddr_vm structure
->> >  when using datagram
->> >
->> >Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
->> >Signed-off-by: Amery Hung <amery.hung@bytedance.com>
->> >---
->> > net/vmw_vsock/virtio_transport_common.c | 79 +++++++++++++++++++++----
->> > 1 file changed, 66 insertions(+), 13 deletions(-)
->> >
->> >diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
->> >index 46cd1807f8e3..a571b575fde9 100644
->> >--- a/net/vmw_vsock/virtio_transport_common.c
->> >+++ b/net/vmw_vsock/virtio_transport_common.c
->> >@@ -235,7 +235,9 @@ EXPORT_SYMBOL_GPL(virtio_transport_deliver_tap_pkt);
->> >
->> > static u16 virtio_transport_get_type(struct sock *sk)
->> > {
->> >-      if (sk->sk_type == SOCK_STREAM)
->> >+      if (sk->sk_type == SOCK_DGRAM)
->> >+              return VIRTIO_VSOCK_TYPE_DGRAM;
->> >+      else if (sk->sk_type == SOCK_STREAM)
->> >               return VIRTIO_VSOCK_TYPE_STREAM;
->> >       else
->> >               return VIRTIO_VSOCK_TYPE_SEQPACKET;
->> >@@ -1422,6 +1424,33 @@ virtio_transport_recv_enqueue(struct vsock_sock *vsk,
->> >               kfree_skb(skb);
->> > }
->> >
->> >+static void
->> >+virtio_transport_dgram_kfree_skb(struct sk_buff *skb, int err)
->> >+{
->> >+      if (err == -ENOMEM)
->> >+              kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_RCVBUFF);
->> >+      else if (err == -ENOBUFS)
->> >+              kfree_skb_reason(skb, SKB_DROP_REASON_PROTO_MEM);
->> >+      else
->> >+              kfree_skb(skb);
->> >+}
->> >+
->> >+/* This function takes ownership of the skb.
->> >+ *
->> >+ * It either places the skb on the sk_receive_queue or frees it.
->> >+ */
->> >+static void
->> >+virtio_transport_recv_dgram(struct sock *sk, struct sk_buff *skb)
->> >+{
->> >+      int err;
->> >+
->> >+      err = sock_queue_rcv_skb(sk, skb);
->> >+      if (err) {
->> >+              virtio_transport_dgram_kfree_skb(skb, err);
->> >+              return;
->> >+      }
->> >+}
->> >+
->> > static int
->> > virtio_transport_recv_connected(struct sock *sk,
->> >                               struct sk_buff *skb)
->> >@@ -1591,7 +1620,8 @@ virtio_transport_recv_listen(struct sock *sk, struct sk_buff *skb,
->> > static bool virtio_transport_valid_type(u16 type)
->> > {
->> >       return (type == VIRTIO_VSOCK_TYPE_STREAM) ||
->> >-             (type == VIRTIO_VSOCK_TYPE_SEQPACKET);
->> >+             (type == VIRTIO_VSOCK_TYPE_SEQPACKET) ||
->> >+             (type == VIRTIO_VSOCK_TYPE_DGRAM);
->> > }
->> >
->> > /* We are under the virtio-vsock's vsock->rx_lock or vhost-vsock's vq->mutex
->> >@@ -1601,44 +1631,57 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
->> >                              struct sk_buff *skb)
->> > {
->> >       struct virtio_vsock_hdr *hdr = virtio_vsock_hdr(skb);
->> >+      struct vsock_skb_cb *vsock_cb;
->>
->> This can be defined in the block where it's used.
->>
->
->Got it.
->
->> >       struct sockaddr_vm src, dst;
->> >       struct vsock_sock *vsk;
->> >       struct sock *sk;
->> >       bool space_available;
->> >+      u16 type;
->> >
->> >       vsock_addr_init(&src, le64_to_cpu(hdr->src_cid),
->> >                       le32_to_cpu(hdr->src_port));
->> >       vsock_addr_init(&dst, le64_to_cpu(hdr->dst_cid),
->> >                       le32_to_cpu(hdr->dst_port));
->> >
->> >+      type = le16_to_cpu(hdr->type);
->> >+
->> >       trace_virtio_transport_recv_pkt(src.svm_cid, src.svm_port,
->> >                                       dst.svm_cid, dst.svm_port,
->> >                                       le32_to_cpu(hdr->len),
->> >-                                      le16_to_cpu(hdr->type),
->> >+                                      type,
->> >                                       le16_to_cpu(hdr->op),
->> >                                       le32_to_cpu(hdr->flags),
->> >                                       le32_to_cpu(hdr->buf_alloc),
->> >                                       le32_to_cpu(hdr->fwd_cnt));
->> >
->> >-      if (!virtio_transport_valid_type(le16_to_cpu(hdr->type))) {
->> >+      if (!virtio_transport_valid_type(type)) {
->> >               (void)virtio_transport_reset_no_sock(t, skb);
->> >               goto free_pkt;
->> >       }
->> >
->> >-      /* The socket must be in connected or bound table
->> >-       * otherwise send reset back
->> >+      /* For stream/seqpacket, the socket must be in connected or bound table
->> >+       * otherwise send reset back.
->> >+       *
->> >+       * For datagrams, no reset is sent back.
->> >        */
->> >       sk = vsock_find_connected_socket(&src, &dst);
->> >       if (!sk) {
->> >-              sk = vsock_find_bound_socket(&dst);
->> >-              if (!sk) {
->> >-                      (void)virtio_transport_reset_no_sock(t, skb);
->> >-                      goto free_pkt;
->> >+              if (type == VIRTIO_VSOCK_TYPE_DGRAM) {
->> >+                      sk = vsock_find_bound_dgram_socket(&dst);
->> >+                      if (!sk)
->> >+                              goto free_pkt;
->> >+              } else {
->> >+                      sk = vsock_find_bound_socket(&dst);
->> >+                      if (!sk) {
->> >+                              (void)virtio_transport_reset_no_sock(t, skb);
->> >+                              goto free_pkt;
->> >+                      }
->> >               }
->> >       }
->> >
->> >-      if (virtio_transport_get_type(sk) != le16_to_cpu(hdr->type)) {
->> >-              (void)virtio_transport_reset_no_sock(t, skb);
->> >+      if (virtio_transport_get_type(sk) != type) {
->> >+              if (type != VIRTIO_VSOCK_TYPE_DGRAM)
->> >+                      (void)virtio_transport_reset_no_sock(t, skb);
->> >               sock_put(sk);
->> >               goto free_pkt;
->> >       }
->> >@@ -1654,12 +1697,21 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
->> >
->> >       /* Check if sk has been closed before lock_sock */
->> >       if (sock_flag(sk, SOCK_DONE)) {
->> >-              (void)virtio_transport_reset_no_sock(t, skb);
->> >+              if (type != VIRTIO_VSOCK_TYPE_DGRAM)
->> >+                      (void)virtio_transport_reset_no_sock(t, skb);
->> >               release_sock(sk);
->> >               sock_put(sk);
->> >               goto free_pkt;
->> >       }
->> >
->> >+      if (sk->sk_type == SOCK_DGRAM) {
->> >+              vsock_cb = vsock_skb_cb(skb);
->> >+              vsock_cb->src_cid = src.svm_cid;
->> >+              vsock_cb->src_port = src.svm_port;
->> >+              virtio_transport_recv_dgram(sk, skb);
->>
->>
->> What about adding an API that transports can use to hide this?
->>
->> I mean something that hide vsock_cb creation and queue packet in the
->> socket receive queue. I'd also not expose vsock_skb_cb in an header, but
->> I'd handle it internally in af_vsock.c. So I'd just expose API to
->> queue/dequeue them.
->>
->
->Got it. I will move vsock_skb_cb to af_vsock.c and create an API:
->
->vsock_dgram_skb_save_src_addr(struct sk_buff *skb, u32 cid, u32 port)
+On Mon, Jul 29, 2024 at 12:57:18AM -0700, Saurabh Sengar wrote:
+> Currently on a very large system with 1780 CPUs, hv_acpi_init() takes
+> around 3 seconds to complete. This is because of sequential synic
+> initialization for each CPU performed by hv_synic_init().
+> 
+> Schedule these tasks parallelly so that each CPU executes hv_synic_init()
+> in parallel to take full advantage of multiple CPUs.
+> 
+> This solution saves around 2 seconds of boot time on a 1780 CPU system,
+> which is around 66% improvement in the existing logic.
+> 
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
 
-This is okay, but I would try to go further by directly adding an API to 
-queue dgrams in af_vsock.c (if it's feasible).
 
->
->Different dgram implementations will call this API instead of the code
->block above to save the source address information into the control
->buffer.
->
->A side note on why this is a vsock API instead of a member )unction in
->transport: As we move to support multi-transport dgram, different
->transport implementations can place skb into the sk->sk_receive_queue.
->Therefore, we cannot call transport-specific function in
->vsock_dgram_recvmsg() to initialize struct sockaddr_vm. Hence, the
->receiving paths of different transports need to call this API to save
->source address.
+Reviewed-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
 
-What I meant is, why virtio_transport_recv_dgram() can't be exposed by 
-af_vsock.c as vsock_recv_dgram() and handle all internally, like 
-populate vsock_cb, call sock_queue_rcv_skb(), etc.
+Regards,
+Srivatsa
+Microsoft Linux Systems Group
 
->
->> Also why VMCI is using sk_receive_skb(), while we are using
->> sock_queue_rcv_skb()?
->>
->
->I _think_ originally we referred to UDP and UDS when designing virtio
->dgram, and ended up with placing skb into sk_receive_queue directly. I
->will look into this to provide better justification.
-
-Great, thanks.
-
-Maybe we can also ping VMCI maintainers to understand if they can switch 
-to sock_queue_rcv_skb(). But we should understand better the difference.
-
-Thanks,
-Stefano
-
+> [V2]
+>  - used cpuhp_setup_state_nocalls_cpuslocked instead of internal function
+>  - improve commit message and subject
+>  - Added a comment for cpu hotplug callback
+> 
+> 
+>  drivers/hv/vmbus_drv.c | 34 +++++++++++++++++++++++++++++++---
+>  1 file changed, 31 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index c857dc3975be..f769b34445b8 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1306,6 +1306,13 @@ static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void vmbus_percpu_work(struct work_struct *work)
+> +{
+> +	unsigned int cpu = smp_processor_id();
+> +
+> +	hv_synic_init(cpu);
+> +}
+> +
+>  /*
+>   * vmbus_bus_init -Main vmbus driver initialization routine.
+>   *
+> @@ -1316,7 +1323,8 @@ static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
+>   */
+>  static int vmbus_bus_init(void)
+>  {
+> -	int ret;
+> +	int ret, cpu;
+> +	struct work_struct __percpu *works;
+>  
+>  	ret = hv_init();
+>  	if (ret != 0) {
+> @@ -1355,12 +1363,32 @@ static int vmbus_bus_init(void)
+>  	if (ret)
+>  		goto err_alloc;
+>  
+> +	works = alloc_percpu(struct work_struct);
+> +	if (!works) {
+> +		ret = -ENOMEM;
+> +		goto err_alloc;
+> +	}
+> +
+>  	/*
+>  	 * Initialize the per-cpu interrupt state and stimer state.
+>  	 * Then connect to the host.
+>  	 */
+> -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
+> -				hv_synic_init, hv_synic_cleanup);
+> +	cpus_read_lock();
+> +	for_each_online_cpu(cpu) {
+> +		struct work_struct *work = per_cpu_ptr(works, cpu);
+> +
+> +		INIT_WORK(work, vmbus_percpu_work);
+> +		schedule_work_on(cpu, work);
+> +	}
+> +
+> +	for_each_online_cpu(cpu)
+> +		flush_work(per_cpu_ptr(works, cpu));
+> +
+> +	/* register the callback for hotplug CPUs */
+> +	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
+> +						   hv_synic_init, hv_synic_cleanup);
+> +	cpus_read_unlock();
+> +	free_percpu(works);
+>  	if (ret < 0)
+>  		goto err_alloc;
+>  	hyperv_cpuhp_online = ret;
+> -- 
+> 2.43.0
+> 
 
