@@ -1,55 +1,54 @@
-Return-Path: <linux-hyperv+bounces-2639-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2640-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 900919441FD
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Aug 2024 05:49:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97446944203
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Aug 2024 05:50:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45C871F21F2D
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Aug 2024 03:49:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4CFE1C2241E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Aug 2024 03:50:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E995FEED;
-	Thu,  1 Aug 2024 03:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0953513D24D;
+	Thu,  1 Aug 2024 03:50:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="entvHzVG"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="D0o4hWWE"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B540E1EB492;
-	Thu,  1 Aug 2024 03:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1F291EB4A6;
+	Thu,  1 Aug 2024 03:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722484153; cv=none; b=oE0G1z5B4zIZ1rBjaeVgJHVtErZSWe8VyNzNqicUEKqF6Ac9GrFalwbtXhjUlrZMzGLTL2M5TXqMSFNRc+DENEls9Us0h/9DXhohN9DRVgj8Giv0cwY6P5LJUskXD/sewPc8UnGfh9o1K4HluJqC4sWelQVxp3WUimpxiRM38DM=
+	t=1722484228; cv=none; b=sar1BdtseJboSIQTOUyK9LLi9RE/lwLVDJy7Eky7Xc+IaQ957P3EKmW4DfjSJDS4C14Nitv7I2ay9kZOiX7y2HatAdg2//P8HOgkACquGM1tgL0KpnNrGMspT8D3gAPYsxcTRBsYx822dNLchx4rGVHARc8omjSkkU+m8LtqubI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722484153; c=relaxed/simple;
-	bh=9ej2VIyOHYjd3QEyrOyewzphaHVD5p/LyehItNSoxfA=;
+	s=arc-20240116; t=1722484228; c=relaxed/simple;
+	bh=HrsWFVh6vYnpFvkY4E2sOyGfiJQqrAqNdgRIIPss8Ts=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SReRPBF4V3kaFMhpgnR2L5QnVsp9/48QfrHqMHVPhiSjJjHwiISSQwqEHoJgR+TK1ZgZNyiumJVgS6O9KtRIYOVKzP7OPAqgacDC0u/EHtrPJrd6YSQ0ZUWA/mrIDYJTltICzR1X9T+waD3pB571FVu6C1YKh77lOun56pjNgs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=entvHzVG; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=NVyYaRIJVDX+WBp/9xDapB+kr/3J7z3RDv1K818oB5MeZRDBPBALq/WeBoCft3cD0HMTS7xz+mM8Qi4uyxaWgS7NBsgReeSzAndb2v8frPen7wTVutaDfya7WekmA4iWGI7ZNgeSc9WKTzVc4IZSfWqkpDCEn3kEAI/pYKhMoBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=D0o4hWWE; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 1A35920B7165; Wed, 31 Jul 2024 20:49:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1A35920B7165
+	id 4AC6520B7165; Wed, 31 Jul 2024 20:50:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4AC6520B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722484145;
-	bh=3adnSLI18j54XBzRjMcz1DkYZ3QcEDWZpj4XNWwo1I4=;
+	s=default; t=1722484227;
+	bh=ofmpsUy6qB0LD3wyBj59NGh/Bko3GAAYq/DGsj+elKg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=entvHzVGLPRXGY5QPMtAqcqN906PBEYCYRxHRPN0QFGZJDK80mn6ffaMzayOq6SMu
-	 +q+1EZwyyx5YDXkkpBzjVy2kTtKJiSDGL07KFuzfnYWoAiTSudeJ0JmiBTUin8qORe
-	 l7CF8XCWBUrluhiAupcfHa/mTwIvs/uTFh078UVI=
-Date: Wed, 31 Jul 2024 20:49:05 -0700
+	b=D0o4hWWE+/ghnBxJhIbRuHv44e34flOAqM12WtvvRFuPmMZLDfkBkHbhLHVG3UOs9
+	 OjO1vj2JHpXA3oqF93QrEyaJR53bu4sLt2R5jINWl3kstHcFvJDoFHzJ+RYDoQpeZW
+	 Jddv+tWlS7kqroUtb6+rI4+4p0A6icu4aqE7v1SI=
+Date: Wed, 31 Jul 2024 20:50:27 -0700
 From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Naman Jain <namjain@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
 Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
 	Long Li <longli@microsoft.com>,
 	Ajay Sharma <sharmaajay@microsoft.com>,
 	Simon Horman <horms@kernel.org>,
@@ -61,9 +60,9 @@ Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
 	Colin Ian King <colin.i.king@gmail.com>
 Subject: Re: [PATCH net-next v2] net: mana: Implement
  get_ringparam/set_ringparam for mana
-Message-ID: <20240801034905.GA28115@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Message-ID: <20240801035027.GB28115@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <1722358895-13430-1-git-send-email-shradhagupta@linux.microsoft.com>
- <f9dfaf0e-2f72-4917-be75-78856fb27712@linux.microsoft.com>
+ <20240731171518.3cbfc83b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,53 +71,38 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9dfaf0e-2f72-4917-be75-78856fb27712@linux.microsoft.com>
+In-Reply-To: <20240731171518.3cbfc83b@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Jul 31, 2024 at 02:19:34PM +0530, Naman Jain wrote:
+On Wed, Jul 31, 2024 at 05:15:18PM -0700, Jakub Kicinski wrote:
+> On Tue, 30 Jul 2024 10:01:35 -0700 Shradha Gupta wrote:
+> > +	err1 = mana_detach(ndev, false);
+> > +	if (err1) {
+> > +		netdev_err(ndev, "mana_detach failed: %d\n", err1);
+> > +		return err1;
+> > +	}
+> > +
+> > +	apc->tx_queue_size = new_tx;
+> > +	apc->rx_queue_size = new_rx;
+> > +	err1 = mana_attach(ndev);
+> > +	if (!err1)
+> > +		return 0;
+> > +
+> > +	netdev_err(ndev, "mana_attach failed: %d\n", err1);
+> > +
+> > +	/* Try rolling back to the older values */
+> > +	apc->tx_queue_size = old_tx;
+> > +	apc->rx_queue_size = old_rx;
+> > +	err2 = mana_attach(ndev);
 > 
-> 
-> On 7/30/2024 10:31 PM, Shradha Gupta wrote:
-> >Currently the values of WQs for RX and TX queues for MANA devices
-> >are hardcoded to default sizes.
-> >Allow configuring these values for MANA devices as ringparam
-> >configuration(get/set) through ethtool_ops.
-> >
-> >Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> >Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> >Reviewed-by: Long Li <longli@microsoft.com>
-> >---
-> >  Changes in v2:
-> >  * Removed unnecessary validations in mana_set_ringparam()
-> >  * Fixed codespell error
-> >  * Improved error message to indicate issue with the parameter
-> >---
-> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 20 +++---
-> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 66 +++++++++++++++++++
-> >  include/net/mana/mana.h                       | 21 +++++-
-> >  3 files changed, 96 insertions(+), 11 deletions(-)
-> >
-> 
-> From what I understand, we are adding support for "ethtool -G --set-
-> ring"  command.
-> Please correct me if I am wrong.
-> 
-> Maybe it would be good to capture the benefit/purpose of this patch in
-> the commit msg, as in which use-cases/scenarios we are now trying to
-> support that previously were not supported. The "why?" part basically.
+> If system is under memory pressure there's no guarantee you'll get 
+> the memory back, even if you revert to the old counts.
+> We strongly recommend you refactor the code to hold onto the old memory
+> until you're sure new config works.
+Okay, that makes sense. Let me try to make that change
 
-Hi Naman,
-Thanks for your comment. 
-It is a pretty standard support for network drivers to allow changing
-TX/RX queue sizes. We are working on improving customizations in MANA
-driver based on VM configurations. This patch is a part of that series.
-Hope that makes things more clear.
-
-regards,
-Shradha
-> 
-> 
-> 
-> Regards,
-> Naman Jain
+Thanks,
+Shradha.
+> -- 
+> pw-bot: cr
 
