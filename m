@@ -1,71 +1,65 @@
-Return-Path: <linux-hyperv+bounces-2667-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2668-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4819945B96
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 11:56:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 919E3945BE7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 12:22:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0773328303F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 09:56:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B013BB20B5B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 10:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6D41DB446;
-	Fri,  2 Aug 2024 09:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 967A31DD384;
+	Fri,  2 Aug 2024 10:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JV28x5pG"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fz8UvOn5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4BB1DB449;
-	Fri,  2 Aug 2024 09:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7701DC490;
+	Fri,  2 Aug 2024 10:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722592552; cv=none; b=pI07baPm2mzkM3rOnVELWBTH24oUaDqFuH/fOY6AugqNf/AD06zP7UsW+VkfG9jnlzsRaDi+zQJroey6jorei4ync1H7Brzr0Axr49rU3dAdSWZoV8S8ENNNQlMukRJ5UmZ5G0nd56b7z9y8FQyk5FOi0WlwNet1Hcnv+UZangM=
+	t=1722594097; cv=none; b=srwZua1bC8p+LRXgHGrDnxciHeIstJQ3EU16uu/RciC0FY5leZ6+ykhAcCnJvYwcrm+rg1q8iKdULz+LEHIbd9H59iKyCi+qP+v8LldbKYFwadJYZM9MbIpEh5NzxfGaEWaaMXnUKiJf18QdxHsHioBlXQfB83ldY9HNUvMwKVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722592552; c=relaxed/simple;
-	bh=gfsrsy9aeFqAqU9yWbURrKdcmZt8i2YdtBvOr4UTBCc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HSMvBBGLXAzSb4TQb45xa56Po/S/7GrhaYjJjd3wJxnOpVYqcujbKxe/26e6PQlxzpKdwTn6FwzRHDn28axldrZTTCh/GaaSL9m2fkwOVj7TU+3qkN3AM5EJmcKaDf0rt3Mb9ugMDuuDm9YIDVUUhLqe6JsxYuPfuirPSAr8/UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JV28x5pG; arc=none smtp.client-ip=90.155.50.34
+	s=arc-20240116; t=1722594097; c=relaxed/simple;
+	bh=HqKIksQl6zH43WdGmb3ctuyphRcYoHRwcYZiqUMybMI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YQfMMgKa9jD8rCIHzUUVY8aDQtwhYT3lC2uhiLdnjgU0zqmS1QK1jrDO3iToRbY+RlsS40OsnB/uIMFBoUUKM2hOkcS1yODeW7B4691Li52QWgmlyxhnKNwuIpxVxm+dmstYlDZ1c6cktuhq1K5toaOA3sQ7VOHetvdb2p3J/VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fz8UvOn5; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:To:From:Subject:Message-ID:Sender:Reply-To:Cc:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rtTDTw9Gni8KubcFPNZLhAg4nyhV2TlscOI77GxZyTg=; b=JV28x5pGsjRxLlL/zVBlfnvKtx
-	fTIMVj8qf33X5hc+bSXRB/4RHHpH3Bfjn2TTWjqjg3l2DkxsyyQXsChraUSjKDq0lrgq/Fr0Bfm1h
-	ehRCygpSwJMkVYkMJDg4eq9wH9EkJTQ9+ApEL/plSZ8b5Fx8Jzc5xx+vpGUJ2hj/eaDuvVrS/oEtC
-	YRDzGEE0aa8A59offfNmQTpOf3Lw51bISVfEN2L2cBfc27O7mqO9jZY1r2a2YLhmSHLT/EjVEdPyK
-	C3HBABAHo3raY2l6Cn8YvGscSa0yFTirPcE3bib5rp8SzjRjCb07b8iFW2AKB205ONl8K7Hr9ZN0m
-	Igod/B5Q==;
+	bh=xTEj3hPhK+TXxiVpZqB0oQUNAYw7EnBUdR7FIiNwGow=; b=fz8UvOn51agiBqQ7sEeqP5H9Vf
+	xBrzDM+LEr+O8GvQQDwJbFLdbSfiG10xMbGHCVVyt0OQ8QMHAvZJRmR1mn+z0kphf44rAU/s/3tzP
+	eB14WDJWgcItR4fIMvgR4TdIrekFE/YBXxeMs7wUjINGzgQMyyscvZYHB4Xw8cjTWab7EP/+n9ylu
+	FxR5ZchJ9G0/NE4i+r9kiEiQ+AGhmKdXxZnl3xPLmPE/nu3moYEOyGm8tlf9pTnzOaHrAii7tE8EJ
+	xzQEbmPJbgMAatsbiyV3IOypztcDU8/4Fiv4trMbmfSTv+0yG0mzmUvSjKR9T0Zr6XL/h9p7wiTZQ
+	Hn4EPh1w==;
 Received: from [2001:8b0:10b:5:9c27:6796:c1af:9131] (helo=u3832b3a9db3152.ant.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZp0X-00000000sx2-49Ev;
-	Fri, 02 Aug 2024 09:55:34 +0000
-Message-ID: <e83f8294a27d8b76d0c65ab7c105b2d4b8a53474.camel@infradead.org>
-Subject: Re: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
- shutdown
+	id 1sZpPa-00000000uBX-2GEe;
+	Fri, 02 Aug 2024 10:21:26 +0000
+Message-ID: <3bc237678ade809cc685fedb8c1a3d435e590639.camel@infradead.org>
+Subject: [PATCH 2/1] i8253: Fix stop sequence for timer 0
 From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, lirongqing@baidu.com, 
- seanjc@google.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org,  decui@microsoft.com, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com,  x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Fri, 02 Aug 2024 10:55:33 +0100
-In-Reply-To: <1508F48A-DCCF-4AF6-8CA3-109B289E98B2@infradead.org>
-References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
-	 <87ttg42uju.ffs@tglx>
-	 <e9a9fb03a4fd47ebddc3bf984726c0f789d94489.camel@infradead.org>
-	 <87ikwk2hcs.ffs@tglx>
-	 <cf5bf4eec7cb36eec0b673353ff027bee853dd48.camel@infradead.org>
-	 <87a5hw2euf.ffs@tglx>
-	 <bb8c97ea2b3596f605b9e1b27a221a1c64727e59.camel@infradead.org>
-	 <871q382b0v.ffs@tglx> <1508F48A-DCCF-4AF6-8CA3-109B289E98B2@infradead.org>
+To: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com, 
+ haiyangz@microsoft.com, kys@microsoft.com, linux-hyperv@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, lirongqing@baidu.com, mingo@redhat.com, 
+ seanjc@google.com, tglx@linutronix.de, wei.liu@kernel.org, x86
+ <x86@kernel.org>
+Cc: kvm <kvm@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Michael Kelley <mhklinux@outlook.com>
+Date: Fri, 02 Aug 2024 11:21:23 +0100
+In-Reply-To: <6cd62b5058e11a6262cb2e798cc85cc5daead3b1.camel@infradead.org>
+References: <6cd62b5058e11a6262cb2e798cc85cc5daead3b1.camel@infradead.org>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-5FxiMSjbSBwrghl1/Sjz"
+	boundary="=-yw7Og4z5FW9WNB12FjLp"
 User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -76,122 +70,241 @@ MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 
---=-5FxiMSjbSBwrghl1/Sjz
-Content-Type: multipart/mixed; boundary="=-/xP/5EMQood0nPv+fEDF"
-
---=-/xP/5EMQood0nPv+fEDF
+--=-yw7Og4z5FW9WNB12FjLp
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-08-01 at 22:31 +0100, David Woodhouse wrote:
-> On 1 August 2024 22:22:56 BST, Thomas Gleixner <tglx@linutronix.de> wrote=
-:
-> > On Thu, Aug 01 2024 at 21:49, David Woodhouse wrote:
-> > > On Thu, 2024-08-01 at 22:00 +0200, Thomas Gleixner wrote:
-> > > > > I justify my cowardice on the basis that it doesn't *matter* if a
-> > > > > hardware implementation is still toggling the IRQ pin; in that ca=
-se
-> > > > > it's only a few irrelevant transistors which are busy, and it doe=
-sn't
-> > > > > translate to steal time.
-> > > >=20
-> > > > On real hardware it translates to power...
-> > >=20
-> > > Perhaps, although I'd guess it's a negligible amount. Still, happy to
-> > > be brave and make it unconditional. Want a new version of the patch?
-> >=20
-> > Let'ss fix the shutdown sequence first (See Michaels latest mail) and
-> > then do the clockevents_i8253_init() change on top.
->=20
-> Makes sense.
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-On second thoughts, let's add clockevent_i8253_disable() first and call
-it when the PIT isn't being used, then we can bikeshed the precise
-behaviour of that function to our hearts' content.
+According to the data sheet, writing the MODE register should stop the
+counter (and thus the interrupts). This appears to work on real hardware,
+at least modern Intel and AMD systems. It should also work on Hyper-V.
 
-I think it should look like this. Revised version of your test program
-attached.
+However, on some buggy virtual machines the mode change doesn't have any
+effect until the counter is subsequently loaded (or perhaps when the IRQ
+next fires).
 
-void clockevent_i8253_disable(void)
-{
-	raw_spin_lock(&i8253_lock);
+So, set MODE 0 and then load the counter, to ensure that those buggy VMs
+do the right thing and the interrupts stop. And then write MODE 0 *again*
+to stop the counter on compliant implementations too.
 
-	/*
-	 * Writing the MODE register should stop the counter, according to
-	 * the datasheet. This appears to work on real hardware (well, on
-	 * modern Intel and AMD boxes; I didn't dig the Pegasos out of the
-	 * shed).
-	 *
-	 * However, some virtual implementations differ, and the MODE change
-	 * doesn't have any effect until either the counter is written (KVM
-	 * in-kernel PIT) or the next interrupt (QEMU). And in those cases,
-	 * it may not stop the *count*, only the interrupts. Although in
-	 * the virt case, that probably doesn't matter, as the value of the
-	 * counter will only be calculated on demand if the guest reads it;
-	 * it's the interrupts which cause steal time.
-	 *
-	 * Hyper-V apparently has a bug where even in mode 0, the IRQ keeps
-	 * firing repeatedly if the counter is running. But it *does* do the
-	 * right thing when the MODE register is written.
-	 *
-	 * So: write the MODE and then load the counter, which ensures that
-	 * the IRQ is stopped on those buggy virt implementations. And then
-	 * write the MODE again, which is the right way to stop it.
-	 */
-	outb_p(0x30, PIT_MODE);
-	outb_p(0, PIT_CH0);
-	outb_p(0, PIT_CH0);
+Apparently, Hyper-V keeps firing the IRQ *repeatedly* even in mode zero
+when it should only happen once, but the second MODE write stops that too.
 
-	outb_p(0x30, PIT_MODE);
+Userspace test program (mostly written by tglx):
+=3D=3D=3D=3D=3D
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <sys/io.h>
 
-	raw_spin_unlock(&i8253_lock);
+typedef unsigned char	uint8_t;
+typedef unsigned short	uint16_t;
+
+static __always_inline void __out##bwl(type value, uint16_t port)	\
+{									\
+	asm volatile("out" #bwl " %" #bw "0, %w1"			\
+		     : : "a"(value), "Nd"(port));			\
+}									\
+									\
+static __always_inline type __in##bwl(uint16_t port)			\
+{									\
+	type value;							\
+	asm volatile("in" #bwl " %w1, %" #bw "0"			\
+		     : "=3Da"(value) : "Nd"(port));			\
+	return value;							\
 }
 
+BUILDIO(b, b, uint8_t)
 
---=-/xP/5EMQood0nPv+fEDF
-Content-Disposition: attachment; filename="i8254.c"
-Content-Transfer-Encoding: base64
-Content-Type: text/x-csrc; name="i8254.c"; charset="UTF-8"
+ #define inb __inb
+ #define outb __outb
 
-I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KI2luY2x1ZGUgPHN0ZGxpYi5o
-PgojaW5jbHVkZSA8c3RkaW50Lmg+CiNpbmNsdWRlIDxzeXMvaW8uaD4KCnR5cGVkZWYgdW5zaWdu
-ZWQgY2hhcgl1aW50OF90Owp0eXBlZGVmIHVuc2lnbmVkIHNob3J0CXVpbnQxNl90OwoKI2RlZmlu
-ZSBCVUlMRElPKGJ3bCwgYncsIHR5cGUpCQkJCQkJXApzdGF0aWMgX19hbHdheXNfaW5saW5lIHZv
-aWQgX19vdXQjI2J3bCh0eXBlIHZhbHVlLCB1aW50MTZfdCBwb3J0KQlcCnsJCQkJCQkJCQlcCglh
-c20gdm9sYXRpbGUoIm91dCIgI2J3bCAiICUiICNidyAiMCwgJXcxIgkJCVwKCQkgICAgIDogOiAi
-YSIodmFsdWUpLCAiTmQiKHBvcnQpKTsJCQlcCn0JCQkJCQkJCQlcCgkJCQkJCQkJCVwKc3RhdGlj
-IF9fYWx3YXlzX2lubGluZSB0eXBlIF9faW4jI2J3bCh1aW50MTZfdCBwb3J0KQkJCVwKewkJCQkJ
-CQkJCVwKCXR5cGUgdmFsdWU7CQkJCQkJCVwKCWFzbSB2b2xhdGlsZSgiaW4iICNid2wgIiAldzEs
-ICUiICNidyAiMCIJCQlcCgkJICAgICA6ICI9YSIodmFsdWUpIDogIk5kIihwb3J0KSk7CQkJXAoJ
-cmV0dXJuIHZhbHVlOwkJCQkJCQlcCn0KCkJVSUxESU8oYiwgYiwgdWludDhfdCkKCiNkZWZpbmUg
-aW5iIF9faW5iCiNkZWZpbmUgb3V0YiBfX291dGIKCiNkZWZpbmUgUElUX01PREUJMHg0MwojZGVm
-aW5lIFBJVF9DSDAJCTB4NDAKI2RlZmluZSBQSVRfQ0gyCQkweDQyCgpzdGF0aWMgaW50IGlzODI1
-NDsKCnN0YXRpYyB2b2lkIGR1bXBfcGl0KHZvaWQpCnsKCWlmIChpczgyNTQpIHsKCQkvLyBMYXRj
-aCBhbmQgb3V0cHV0IGNvdW50ZXIgYW5kIHN0YXR1cwoJCW91dGIoMHhDMiwgUElUX01PREUpOwoJ
-CXByaW50ZigiJTAyeCAlMDJ4ICUwMnhcbiIsIGluYihQSVRfQ0gwKSwgaW5iKFBJVF9DSDApLCBp
-bmIoUElUX0NIMCkpOwoJfSBlbHNlIHsKCQkvLyBMYXRjaCBhbmQgb3V0cHV0IGNvdW50ZXIKCQlv
-dXRiKDB4MCwgUElUX01PREUpOwoJCXByaW50ZigiJTAyeCAlMDJ4XG4iLCBpbmIoUElUX0NIMCks
-IGluYihQSVRfQ0gwKSk7Cgl9Cn0KCmludCBtYWluKGludCBhcmdjLCBjaGFyKiBhcmd2W10pCnsK
-CWludCBucl9jb3VudHMgPSAyOwoKCWlmIChhcmdjID4gMSkKCQlucl9jb3VudHMgPSBhdG9pKGFy
-Z3ZbMV0pOwoKCWlmIChhcmdjID4gMikKCQlpczgyNTQgPSAxOwoKCWlmIChpb3Blcm0oMHg0MCwg
-NCwgMSkgIT0gMCkKCQlyZXR1cm4gMTsKCglkdW1wX3BpdCgpOwoKCXByaW50ZigiU2V0IG9uZXNo
-b3RcbiIpOwoJb3V0YigweDM4LCBQSVRfTU9ERSk7CglvdXRiKDB4MDAsIFBJVF9DSDApOwoJb3V0
-YigweDBGLCBQSVRfQ0gwKTsKCglkdW1wX3BpdCgpOwoJdXNsZWVwKDEwMDApOwoJZHVtcF9waXQo
-KTsKCglwcmludGYoIlNldCBwZXJpb2RpY1xuIik7CglvdXRiKDB4MzQsIFBJVF9NT0RFKTsKCW91
-dGIoMHgwMCwgUElUX0NIMCk7CglvdXRiKDB4MEYsIFBJVF9DSDApOwoKCWR1bXBfcGl0KCk7Cgl1
-c2xlZXAoMTAwMCk7CglkdW1wX3BpdCgpOwoJZHVtcF9waXQoKTsKCXVzbGVlcCgxMDAwMDApOwoJ
-ZHVtcF9waXQoKTsKCXVzbGVlcCgxMDAwMDApOwoJZHVtcF9waXQoKTsKCglwcmludGYoIlNldCBz
-dG9wICglZCBjb3VudGVyIHdyaXRlcylcbiIsIG5yX2NvdW50cyk7CglvdXRiKDB4MzAsIFBJVF9N
-T0RFKTsKCXdoaWxlIChucl9jb3VudHMtLSkKCQlvdXRiKDB4RkYsIFBJVF9DSDApOwoKCWR1bXBf
-cGl0KCk7Cgl1c2xlZXAoMTAwMDAwKTsKCWR1bXBfcGl0KCk7Cgl1c2xlZXAoMTAwMDAwKTsKCWR1
-bXBfcGl0KCk7CgoJcHJpbnRmKCJTZXQgTU9ERSAwXG4iKTsKCW91dGIoMHgzMCwgUElUX01PREUp
-OwoKCWR1bXBfcGl0KCk7Cgl1c2xlZXAoMTAwMDAwKTsKCWR1bXBfcGl0KCk7Cgl1c2xlZXAoMTAw
-MDAwKTsKCWR1bXBfcGl0KCk7CgoJcmV0dXJuIDA7Cn0K
+ #define PIT_MODE	0x43
+ #define PIT_CH0	0x40
+ #define PIT_CH2	0x42
+
+static int is8254;
+
+static void dump_pit(void)
+{
+	if (is8254) {
+		// Latch and output counter and status
+		outb(0xC2, PIT_MODE);
+		printf("%02x %02x %02x\n", inb(PIT_CH0), inb(PIT_CH0), inb(PIT_CH0));
+	} else {
+		// Latch and output counter
+		outb(0x0, PIT_MODE);
+		printf("%02x %02x\n", inb(PIT_CH0), inb(PIT_CH0));
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	int nr_counts =3D 2;
+
+	if (argc > 1)
+		nr_counts =3D atoi(argv[1]);
+
+	if (argc > 2)
+		is8254 =3D 1;
+
+	if (ioperm(0x40, 4, 1) !=3D 0)
+		return 1;
+
+	dump_pit();
+
+	printf("Set oneshot\n");
+	outb(0x38, PIT_MODE);
+	outb(0x00, PIT_CH0);
+	outb(0x0F, PIT_CH0);
+
+	dump_pit();
+	usleep(1000);
+	dump_pit();
+
+	printf("Set periodic\n");
+	outb(0x34, PIT_MODE);
+	outb(0x00, PIT_CH0);
+	outb(0x0F, PIT_CH0);
+
+	dump_pit();
+	usleep(1000);
+	dump_pit();
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+
+	printf("Set stop (%d counter writes)\n", nr_counts);
+	outb(0x30, PIT_MODE);
+	while (nr_counts--)
+		outb(0xFF, PIT_CH0);
+
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+
+	printf("Set MODE 0\n");
+	outb(0x30, PIT_MODE);
+
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+
+	return 0;
+}
+=3D=3D=3D=3D=3D
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/x86/kernel/cpu/mshyperv.c | 10 ----------
+ drivers/clocksource/i8253.c    | 36 +++++++++++++++++++++++-----------
+ include/linux/i8253.h          |  1 -
+ 3 files changed, 25 insertions(+), 22 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.=
+c
+index e0fd57a8ba84..64fdbada83db 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -522,16 +522,6 @@ static void __init ms_hyperv_init_platform(void)
+ 	if (efi_enabled(EFI_BOOT))
+ 		x86_platform.get_nmi_reason =3D hv_get_nmi_reason;
+=20
+-	/*
+-	 * Hyper-V VMs have a PIT emulation quirk such that zeroing the
+-	 * counter register during PIT shutdown restarts the PIT. So it
+-	 * continues to interrupt @18.2 HZ. Setting i8253_clear_counter
+-	 * to false tells pit_shutdown() not to zero the counter so that
+-	 * the PIT really is shutdown. Generation 2 VMs don't have a PIT,
+-	 * and setting this value has no effect.
+-	 */
+-	i8253_clear_counter_on_shutdown =3D false;
+-
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	if ((hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_VBS) ||
+ 	    ms_hyperv.paravisor_present)
+diff --git a/drivers/clocksource/i8253.c b/drivers/clocksource/i8253.c
+index cb215e6f2e83..39f7c2d736d1 100644
+--- a/drivers/clocksource/i8253.c
++++ b/drivers/clocksource/i8253.c
+@@ -20,13 +20,6 @@
+ DEFINE_RAW_SPINLOCK(i8253_lock);
+ EXPORT_SYMBOL(i8253_lock);
+=20
+-/*
+- * Handle PIT quirk in pit_shutdown() where zeroing the counter register
+- * restarts the PIT, negating the shutdown. On platforms with the quirk,
+- * platform specific code can set this to false.
+- */
+-bool i8253_clear_counter_on_shutdown __ro_after_init =3D true;
+-
+ #ifdef CONFIG_CLKSRC_I8253
+ /*
+  * Since the PIT overflows every tick, its not very useful
+@@ -112,12 +105,33 @@ void clockevent_i8253_disable(void)
+ {
+ 	raw_spin_lock(&i8253_lock);
+=20
++	/*
++	 * Writing the MODE register should stop the counter, according to
++	 * the datasheet. This appears to work on real hardware (well, on
++	 * modern Intel and AMD boxes; I didn't dig the Pegasos out of the
++	 * shed).
++	 *
++	 * However, some virtual implementations differ, and the MODE change
++	 * doesn't have any effect until either the counter is written (KVM
++	 * in-kernel PIT) or the next interrupt (QEMU). And in those cases,
++	 * it may not stop the *count*, only the interrupts. Although in
++	 * the virt case, that probably doesn't matter, as the value of the
++	 * counter will only be calculated on demand if the guest reads it;
++	 * it's the interrupts which cause steal time.
++	 *
++	 * Hyper-V apparently has a bug where even in mode 0, the IRQ keeps
++	 * firing repeatedly if the counter is running. But it *does* do the
++	 * right thing when the MODE register is written.
++	 *
++	 * So: write the MODE and then load the counter, which ensures that
++	 * the IRQ is stopped on those buggy virt implementations. And then
++	 * write the MODE again, which is the right way to stop it.
++	 */
+ 	outb_p(0x30, PIT_MODE);
++	outb_p(0, PIT_CH0);
++	outb_p(0, PIT_CH0);
+=20
+-	if (i8253_clear_counter_on_shutdown) {
+-		outb_p(0, PIT_CH0);
+-		outb_p(0, PIT_CH0);
+-	}
++	outb_p(0x30, PIT_MODE);
+=20
+ 	raw_spin_unlock(&i8253_lock);
+ }
+diff --git a/include/linux/i8253.h b/include/linux/i8253.h
+index bf169cfef7f1..56c280eb2d4f 100644
+--- a/include/linux/i8253.h
++++ b/include/linux/i8253.h
+@@ -21,7 +21,6 @@
+ #define PIT_LATCH	((PIT_TICK_RATE + HZ/2) / HZ)
+=20
+ extern raw_spinlock_t i8253_lock;
+-extern bool i8253_clear_counter_on_shutdown;
+ extern struct clock_event_device i8253_clockevent;
+ extern void clockevent_i8253_init(bool oneshot);
+ extern void clockevent_i8253_disable(void);
+--=20
+2.44.0
 
 
---=-/xP/5EMQood0nPv+fEDF--
 
---=-5FxiMSjbSBwrghl1/Sjz
+--=-yw7Og4z5FW9WNB12FjLp
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -283,25 +396,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwODAyMDk1NTMzWjAvBgkqhkiG9w0BCQQxIgQgZhpOr9X5
-BxeB7DfoJerzB9bWhPWdLerta1PuNHxGwdgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwODAyMTAyMTIzWjAvBgkqhkiG9w0BCQQxIgQgKCSqDxcd
+HE0ijrThV+YGT+wRBjzt9lIzlByi54i9eBEwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCmcjS7cmPTkhgs4j0RBRccssPRZU55XEpn
-BKL/1frLy/bKbvXDJEezEe/3QiuCK6Il891upGxRXgLZ+4XCpVm97yos3qLYoCX5ZCMG1ctigNtr
-j5lEWUNrB2EQfDg2NVCkcHuSSd2qxhL0oDqEG34U1S59giQg8zOLGvxT2O/8wLtczFgCR5HuiTux
-v8vmu0DzbMlTFlj0uKWbUuD6ASy+Z15FmgDSgtyqDBKBgM60h9rzmf/xhXDyC5AQ+zBjmxFw9Gog
-AVy4zPBHe6DrJu0v6uHmqK1uTBMJOiNiXbC8IG2M5m6G7YDFp5gWXkB/7mY/UNzwdH6EU1UFiQjR
-r1JuzIoDNJMKD6vGVfYaMCOdg4la5UjRZvnfqtw6HY+do04/QBAAh9c+ge36chw1v6aeSWLgJFl0
-aOo18ahyRgxNvHaajb7uuCjH5tDvQaFok8p7wzzxXhpfou/eJm7t30C/jOukwAD7EICK47I4pP7I
-4iCPAkDQWs0/o2QDdUnXWJV3/+p2ysxdMqNLyNJwfeiAf32N57sV4oHemwAldgcTwtweiOPKV/UX
-elb2p9l94hGyO0IWMxYbyEUfj21Jj2tS1Vu11cD2brNvuwoovYcTPTi3CYwL2tp7l7+2u503cH5v
-JXbid2sHdKFjLkLU3JBx9aFAkdcsDzbyUnRCuIgQ4wAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgA/LoFOkfrLlH0Wp6yPJDVjUFTc6SzHk6Ui
+wy1T4PfwNzElEblBB+RSVBijA5qYyNrbUnHsYKPVg1FGG+vK+GmUNolzrZd95OmS+rBNiaG9n3Fi
+rCfAr2iHdcrIPrFFMxv5ybxvKPjcg5WtQ44c7nPoeszkZW8jSkN06pJpM8XOZFKG7FbzV8fV+WU/
+55aKnoqIJXcluh9dLRBPSzZ0ndMRk5fnNxStbmOzn2c0BX4Zo+YcKYuJUjKXMaM9SGUzlTHAG7lj
+FdbU0NXo1jdZVAkdnT9EhBULki1EWOLpoZVfBrg4/2AEPJAy5q9UwegTIqy2t4mnEWQdisuayfHw
+cvngJX3Ohy31WS48sDf7Ej+FDykx9lV0Zjr83lgkTX0TuTkHkPrATht5Pe7tzNp2sojfp1j6OTlu
+SfIB+YlmYG5SesiJ4r+D1hMTCX3IvxDnUeeY63BNt+0lCMi6wSDCXAwbtkh4ve9aTkhcq5BnYfdK
+fIFunorN2SyFWQIzQFPv9kpFWgxxOzzO1in7Qy7cEA9g6mTC+DSrsVSKLjU73vVg1+e0C9GpyKtX
+eBdjlzBbO2g3zL9WC8pilA/a4loqADkaBZEcmkj7Dmy14U7L2zWeoFldY7KNhMYMCLLzb1yZFCr4
+1mAtXg2rNVKnpiROpmRhELM3D5Tbm91AqIuHDThSDQAAAAAAAA==
 
 
---=-5FxiMSjbSBwrghl1/Sjz--
+--=-yw7Og4z5FW9WNB12FjLp--
 
