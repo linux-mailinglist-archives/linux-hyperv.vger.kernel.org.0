@@ -1,51 +1,52 @@
-Return-Path: <linux-hyperv+bounces-2674-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2673-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 577BE945EEF
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 15:56:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A079A945EED
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 15:56:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10A65284865
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 13:56:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AA9B1F21B0E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 13:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4AF1DF693;
-	Fri,  2 Aug 2024 13:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9B61E213C;
+	Fri,  2 Aug 2024 13:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BbAwCzb+"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SOvEXJCa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2D1E4875;
-	Fri,  2 Aug 2024 13:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E549481AA;
+	Fri,  2 Aug 2024 13:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722606974; cv=none; b=VSmeHBoSTpQne4oMRh/YLydYxNuv0VcNx8henEYEIJC45WoOM0OuUvVqXrBI1FI+P2P97UuBDSiGHjdzdyXcjFoo0Um9/dWBuYxFge0tL6mU7PYpd6y/l+E+CPmjAsITZ3nHQ2HFY25M4NZLnZYW4Wa7WKOJyJI8zjfr7+0tq+U=
+	t=1722606968; cv=none; b=HGbikKPbfwBM3rEmOelT5MDLLkyotsWWmxyLl/0rbJJy2KgGdmZ+b6LfroWPMoSm9IvyfeG5XX7BK3M52F11ZBseothiYUAuekRRZ2A/RJdQuDlPZq0+GF/3OQjrrGxINW3DmLojcG7enVvtjwItvINM3cBGC5HtLv8/IDbKErI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722606974; c=relaxed/simple;
-	bh=VmKErhGLNPdSvFCfFfKzw5bcu6Dk7oPwizBjKNpfpMI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bidWhMkOxu4tQ1wQX1Dty83Z9eNfkMTJwxsGYLCbWWPBPHabJ51oadd2huCaD6rOr7DCRY8nAkhaH2W9wCnca6+TtW9mpMCak64JGNcJxhxZUAbZFNKNkwNQAAzITgzcK9vXIp1K8W57HLdynbvSEA+tkBSOrhcUUGYcnC0+lRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BbAwCzb+; arc=none smtp.client-ip=90.155.92.199
+	s=arc-20240116; t=1722606968; c=relaxed/simple;
+	bh=9i62uvU3vquQ4VDYBNi7Pj/dTMaRPf4gQonktvDOnC0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DCfx6AmTRiWTdG49T8izAX1wDUfJ5fqfNBcC0rzaOBVjHiob3hyQxY7UZ99ZRjhnSc4Wj+lZd2kLfewBwbzhlUpWFC0nBiphppgpKHlfY04FnW5RDVkjWK6xi2gV/gJrJmtfPv8rH8IIdrLgKxkE3z+51HPLvA9oD9pbM2C0bio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SOvEXJCa; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=YygvPNTpQv1mbf3Vhp9DhrD9o1CnlYqQvU0rIy6TD7c=; b=BbAwCzb+Ns3supSKyRYxGP8DCm
-	SeB9WatSqxJhC7+NHsYbR3pKyv42HNyaeArtLt2lBTfr/MkGuqg8hqZVRob93CplaBDJieEFbhoqJ
-	udJwff3isYe8rMLN0zKKgI8c0juRwjnOLDWUEEnNnuQMFOwWSMpligRfIkqMkqh2XxGxYYGFn47tY
-	kPCz0zDECS++Inn6aITXgdt+Eo+n+jUrzsOH8+4vq4HMxHdcX8XgOuW2jka6nWauLvPoA+oZbHbTW
-	Pqkfn+nPZDmDIi9SbPk5aZAng2rsJMPN8pjInomblfGC/ktlRvqWYKeTUxgSSjCK/LKLNcHOq7tlr
-	3zQV3S9g==;
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=vkQpZz2gsBF/v6Di7+RwfMjdxIpkChfuRjXsssMC83Q=; b=SOvEXJCaLqHsMVXb7hwyiRjpo2
+	by2Lc43sDAzx3HGXnVI75PwrVKl/6DMoa3mibxvbrA3S6KXEakfbA38/4sSEIwe8mpVOD3aq95hXg
+	Rslez+ur2gPnGe2Bsp0VGxckDzVe2ZQE8H4mZY3UwNizqH5WgdyW+xj1x+NB5olMx2r8oS8wlIquY
+	fxxa4Bc5gWbyuTr+6iyOW9gSe5Pr9xYBwEeUGXfX8g+WVuizLIzPLRNP8B7+lK80XaRoJwIMTzyO0
+	+ubJV8gEtjWSoYkANthBWsW6CXsVZdN4XrmmoQRPkeKjJ5FNK65nemrs3XQjHzaaWbBbkKrv1Jo5o
+	hTtu0i6w==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZslB-00000005ioL-1mjV;
-	Fri, 02 Aug 2024 13:55:57 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZslA-0000000155l-0put;
+	Fri, 02 Aug 2024 13:55:56 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZsl9-00000002My8-38T7;
+	id 1sZsl9-00000002MyB-3Z2g;
 	Fri, 02 Aug 2024 14:55:55 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: tglx@linuxtronix.de,
@@ -63,10 +64,12 @@ Cc: lirongqing@baidu.com,
 	linux-kernel@vger.kernel.org,
 	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Michael Kelley <mhklinux@outlook.com>
-Subject: [PATCH 1/2] i8253: Disable PIT timer 0 when not in use
-Date: Fri,  2 Aug 2024 14:55:54 +0100
-Message-ID: <20240802135555.564941-1-dwmw2@infradead.org>
+Subject: [PATCH 2/2] i8253: Fix stop sequence for timer 0
+Date: Fri,  2 Aug 2024 14:55:55 +0100
+Message-ID: <20240802135555.564941-2-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240802135555.564941-1-dwmw2@infradead.org>
+References: <20240802135555.564941-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -75,99 +78,239 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-Leaving the PIT interrupt running can cause noticeable steal time for
-virtual guests. The VMM generally has a timer which toggles the IRQ input
-to the PIC and I/O APIC, which takes CPU time away from the guest. Even
-on real hardware, running the counter may use power needlessly (albeit
-not much).
+According to the data sheet, writing the MODE register should stop the
+counter (and thus the interrupts). This appears to work on real hardware,
+at least modern Intel and AMD systems. It should also work on Hyper-V.
 
-Make sure it's turned off if it isn't going to be used.
+However, on some buggy virtual machines the mode change doesn't have any
+effect until the counter is subsequently loaded (or perhaps when the IRQ
+next fires).
 
+So, set MODE 0 and then load the counter, to ensure that those buggy VMs
+do the right thing and the interrupts stop. And then write MODE 0 *again*
+to stop the counter on compliant implementations too.
+
+Apparently, Hyper-V keeps firing the IRQ *repeatedly* even in mode zero
+when it should only happen once, but the second MODE write stops that too.
+
+Userspace test program (mostly written by tglx):
+=====
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <sys/io.h>
+
+static __always_inline void __out##bwl(type value, uint16_t port)	\
+{									\
+	asm volatile("out" #bwl " %" #bw "0, %w1"			\
+		     : : "a"(value), "Nd"(port));			\
+}									\
+									\
+static __always_inline type __in##bwl(uint16_t port)			\
+{									\
+	type value;							\
+	asm volatile("in" #bwl " %w1, %" #bw "0"			\
+		     : "=a"(value) : "Nd"(port));			\
+	return value;							\
+}
+
+BUILDIO(b, b, uint8_t)
+
+ #define inb __inb
+ #define outb __outb
+
+ #define PIT_MODE	0x43
+ #define PIT_CH0	0x40
+ #define PIT_CH2	0x42
+
+static int is8254;
+
+static void dump_pit(void)
+{
+	if (is8254) {
+		// Latch and output counter and status
+		outb(0xC2, PIT_MODE);
+		printf("%02x %02x %02x\n", inb(PIT_CH0), inb(PIT_CH0), inb(PIT_CH0));
+	} else {
+		// Latch and output counter
+		outb(0x0, PIT_MODE);
+		printf("%02x %02x\n", inb(PIT_CH0), inb(PIT_CH0));
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	int nr_counts = 2;
+
+	if (argc > 1)
+		nr_counts = atoi(argv[1]);
+
+	if (argc > 2)
+		is8254 = 1;
+
+	if (ioperm(0x40, 4, 1) != 0)
+		return 1;
+
+	dump_pit();
+
+	printf("Set oneshot\n");
+	outb(0x38, PIT_MODE);
+	outb(0x00, PIT_CH0);
+	outb(0x0F, PIT_CH0);
+
+	dump_pit();
+	usleep(1000);
+	dump_pit();
+
+	printf("Set periodic\n");
+	outb(0x34, PIT_MODE);
+	outb(0x00, PIT_CH0);
+	outb(0x0F, PIT_CH0);
+
+	dump_pit();
+	usleep(1000);
+	dump_pit();
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+
+	printf("Set stop (%d counter writes)\n", nr_counts);
+	outb(0x30, PIT_MODE);
+	while (nr_counts--)
+		outb(0xFF, PIT_CH0);
+
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+
+	printf("Set MODE 0\n");
+	outb(0x30, PIT_MODE);
+
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+	usleep(100000);
+	dump_pit();
+
+	return 0;
+}
+=====
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Co-authored-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/kernel/i8253.c     | 11 +++++++++--
- drivers/clocksource/i8253.c | 13 +++++++++----
- include/linux/i8253.h       |  1 +
- 3 files changed, 19 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c | 11 -----------
+ drivers/clocksource/i8253.c    | 36 +++++++++++++++++++++++-----------
+ include/linux/i8253.h          |  1 -
+ 3 files changed, 25 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/kernel/i8253.c b/arch/x86/kernel/i8253.c
-index 2b7999a1a50a..80e262bb627f 100644
---- a/arch/x86/kernel/i8253.c
-+++ b/arch/x86/kernel/i8253.c
-@@ -8,6 +8,7 @@
- #include <linux/timex.h>
- #include <linux/i8253.h>
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index e0fd57a8ba84..3d4237f27569 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -16,7 +16,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/kexec.h>
+-#include <linux/i8253.h>
+ #include <linux/random.h>
+ #include <asm/processor.h>
+ #include <asm/hypervisor.h>
+@@ -522,16 +521,6 @@ static void __init ms_hyperv_init_platform(void)
+ 	if (efi_enabled(EFI_BOOT))
+ 		x86_platform.get_nmi_reason = hv_get_nmi_reason;
  
-+#include <asm/hypervisor.h>
- #include <asm/apic.h>
- #include <asm/hpet.h>
- #include <asm/time.h>
-@@ -39,9 +40,15 @@ static bool __init use_pit(void)
- 
- bool __init pit_timer_init(void)
- {
--	if (!use_pit())
-+	if (!use_pit()) {
-+		/*
-+		 * Don't just ignore the PIT. Ensure it's stopped, because
-+		 * VMMs otherwise steal CPU time just to pointlessly waggle
-+		 * the (masked) IRQ.
-+		 */
-+		clockevent_i8253_disable();
- 		return false;
+-	/*
+-	 * Hyper-V VMs have a PIT emulation quirk such that zeroing the
+-	 * counter register during PIT shutdown restarts the PIT. So it
+-	 * continues to interrupt @18.2 HZ. Setting i8253_clear_counter
+-	 * to false tells pit_shutdown() not to zero the counter so that
+-	 * the PIT really is shutdown. Generation 2 VMs don't have a PIT,
+-	 * and setting this value has no effect.
+-	 */
+-	i8253_clear_counter_on_shutdown = false;
 -
-+	}
- 	clockevent_i8253_init(true);
- 	global_clock_event = &i8253_clockevent;
- 	return true;
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	if ((hv_get_isolation_type() == HV_ISOLATION_TYPE_VBS) ||
+ 	    ms_hyperv.paravisor_present)
 diff --git a/drivers/clocksource/i8253.c b/drivers/clocksource/i8253.c
-index d4350bb10b83..cb215e6f2e83 100644
+index cb215e6f2e83..39f7c2d736d1 100644
 --- a/drivers/clocksource/i8253.c
 +++ b/drivers/clocksource/i8253.c
-@@ -108,11 +108,8 @@ int __init clocksource_i8253_init(void)
- #endif
+@@ -20,13 +20,6 @@
+ DEFINE_RAW_SPINLOCK(i8253_lock);
+ EXPORT_SYMBOL(i8253_lock);
  
- #ifdef CONFIG_CLKEVT_I8253
--static int pit_shutdown(struct clock_event_device *evt)
-+void clockevent_i8253_disable(void)
- {
--	if (!clockevent_state_oneshot(evt) && !clockevent_state_periodic(evt))
--		return 0;
+-/*
+- * Handle PIT quirk in pit_shutdown() where zeroing the counter register
+- * restarts the PIT, negating the shutdown. On platforms with the quirk,
+- * platform specific code can set this to false.
+- */
+-bool i8253_clear_counter_on_shutdown __ro_after_init = true;
 -
+ #ifdef CONFIG_CLKSRC_I8253
+ /*
+  * Since the PIT overflows every tick, its not very useful
+@@ -112,12 +105,33 @@ void clockevent_i8253_disable(void)
+ {
  	raw_spin_lock(&i8253_lock);
  
++	/*
++	 * Writing the MODE register should stop the counter, according to
++	 * the datasheet. This appears to work on real hardware (well, on
++	 * modern Intel and AMD boxes; I didn't dig the Pegasos out of the
++	 * shed).
++	 *
++	 * However, some virtual implementations differ, and the MODE change
++	 * doesn't have any effect until either the counter is written (KVM
++	 * in-kernel PIT) or the next interrupt (QEMU). And in those cases,
++	 * it may not stop the *count*, only the interrupts. Although in
++	 * the virt case, that probably doesn't matter, as the value of the
++	 * counter will only be calculated on demand if the guest reads it;
++	 * it's the interrupts which cause steal time.
++	 *
++	 * Hyper-V apparently has a bug where even in mode 0, the IRQ keeps
++	 * firing repeatedly if the counter is running. But it *does* do the
++	 * right thing when the MODE register is written.
++	 *
++	 * So: write the MODE and then load the counter, which ensures that
++	 * the IRQ is stopped on those buggy virt implementations. And then
++	 * write the MODE again, which is the right way to stop it.
++	 */
  	outb_p(0x30, PIT_MODE);
-@@ -123,6 +120,14 @@ static int pit_shutdown(struct clock_event_device *evt)
- 	}
++	outb_p(0, PIT_CH0);
++	outb_p(0, PIT_CH0);
+ 
+-	if (i8253_clear_counter_on_shutdown) {
+-		outb_p(0, PIT_CH0);
+-		outb_p(0, PIT_CH0);
+-	}
++	outb_p(0x30, PIT_MODE);
  
  	raw_spin_unlock(&i8253_lock);
-+}
-+
-+static int pit_shutdown(struct clock_event_device *evt)
-+{
-+	if (!clockevent_state_oneshot(evt) && !clockevent_state_periodic(evt))
-+		return 0;
-+
-+	clockevent_i8253_disable();
- 	return 0;
  }
- 
 diff --git a/include/linux/i8253.h b/include/linux/i8253.h
-index 8336b2f6f834..bf169cfef7f1 100644
+index bf169cfef7f1..56c280eb2d4f 100644
 --- a/include/linux/i8253.h
 +++ b/include/linux/i8253.h
-@@ -24,6 +24,7 @@ extern raw_spinlock_t i8253_lock;
- extern bool i8253_clear_counter_on_shutdown;
+@@ -21,7 +21,6 @@
+ #define PIT_LATCH	((PIT_TICK_RATE + HZ/2) / HZ)
+ 
+ extern raw_spinlock_t i8253_lock;
+-extern bool i8253_clear_counter_on_shutdown;
  extern struct clock_event_device i8253_clockevent;
  extern void clockevent_i8253_init(bool oneshot);
-+extern void clockevent_i8253_disable(void);
- 
- extern void setup_pit_timer(void);
- 
+ extern void clockevent_i8253_disable(void);
 -- 
 2.44.0
 
