@@ -1,100 +1,235 @@
-Return-Path: <linux-hyperv+bounces-2669-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2670-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAD53945C71
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 12:49:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 882EB945CC7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 13:05:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E45391C2175C
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 10:49:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B939AB227F7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 11:05:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CACB1DE85D;
-	Fri,  2 Aug 2024 10:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4D891DB422;
+	Fri,  2 Aug 2024 11:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sm/p7mRZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X7cjAgSA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ec9oN1S6"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0780F1DD3A3;
-	Fri,  2 Aug 2024 10:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF1114A4E0;
+	Fri,  2 Aug 2024 11:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722595775; cv=none; b=GueCEa1g84GvODgNttawSgfPj5A/Z22icsYKpq6/oSB0ZrV8MHEL47GQiv5QMhZDfGsDjDu94MNhqu9Y37FZqhf3KV4NxBsmrK5nPHj16opsUU5Qa/7GjJe2dfuPM56FdXU2U6NnzTLuUictgUUlOEsYjsM8SncTch6qPioVn8A=
+	t=1722596698; cv=none; b=EAae9mh2R9IdF9lDo5C3el+kYc97tekNaqOagRMckXolInYYcc6Vhrv7aIj97HadbSElYDf8mjoGJZpvmxnpFePSsibiXB76RFKDsaUulKxxHdtSybnMA7AeNSFGUdNqZJ5e8H+DnnbI//I/ao5CKF97BVtkJMTPz3PgKc9fCzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722595775; c=relaxed/simple;
-	bh=uKD5n+Fyw0Tc++G+1tWBwfRqWW4+SIcM2EoHyUoa6Ys=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FSjYwcBn5LcCnblyoaO/yG/vo+S0TgLAXH9B8aRvWCBA8Y3HtmQRpLte83TW6RkGDyURKvyrcySscQL9rOgfzzO4+v5KKk218TX94oiibbKkyRlaIWQHrM8Ukq5Pe2wuO+RIWwmJkNttfKzZD5QGWjNAdvwPi/1n1nVreaxQWrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sm/p7mRZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X7cjAgSA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722595772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SQt8wBPDiuKy5NmhfMiZCL2jdGAW+eRJfAbnOWADkhs=;
-	b=Sm/p7mRZvo7SS9biUuWJoGsAKBrMo1ThxReiCIdJOiZuzc8992sPBMqu86aGNaEvT98rQ6
-	n0EkpqrGZ9BtNm5M3l/gbe5HeWqXS3IIsbNhoQ3mU2Y2M+yoBK9gQgG3lIG9UDri5RmbwK
-	pgRJEglOg64v6JUUgDwsU0aKt6n6g7vuzF4KXTlFC9VuLXHS0Yg/3JLK9oioDHLeSXiSGf
-	/9vDcPF4QQoeM1p0JKM1vv9iGVL8j+eFcgGQtzCVN9eWeCJILpQTUG1Mnz05GPs/AIe5AV
-	7Bk6GqK3I1vyUi6DeWbuHtCC7C07z2pnbzyP0Wr+P1mxFzynF5oQ17KeeSWdWw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722595772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SQt8wBPDiuKy5NmhfMiZCL2jdGAW+eRJfAbnOWADkhs=;
-	b=X7cjAgSAAz4Fw7ci80yDFlWubGjjgzyUmarxj5H+Oozgd4vRyX0oST3WaeEpIucCYBWjGG
-	z2eVaAcL4XECMrCQ==
-To: David Woodhouse <dwmw2@infradead.org>, lirongqing@baidu.com,
- seanjc@google.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1722596698; c=relaxed/simple;
+	bh=qhFQVPhb1RH6Rk7Z58wVgNCZcx8HpUrulUGe86NfTds=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=I/ihQzrNoC65Ad5W7yplVzTgGkj6vVp69iSgnZb2qwjlTjfkNaAp1rabYRk0ntIM0rJVPCP78n4QQbvUoOD2RIg7TbYKGxTClg3L7tEUT4ZscHsWWnHrFeLo/JQ1fwOl+e/qFakzeUZnBCrh8Ra+JIrXH4D0WghzQhTMQmVgNL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ec9oN1S6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:To:From:Subject:Message-ID:Sender:Reply-To:Cc:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qhFQVPhb1RH6Rk7Z58wVgNCZcx8HpUrulUGe86NfTds=; b=ec9oN1S66TgbO+5A89r5K3Tdgf
+	FvUQG63O5N2qdaB3qBEBfM1UqWY28AbNU9iMKgvecSLfv9kGpNMyPKfegqcuo4AcO2u/dLfD1aq6L
+	l4oyFv0iC8II6ezVdVI//yPakhEO3/Gw3b+nDC7z+PX5q7wJS12c2qPnW53x8ZSu50zcn2/onu3B2
+	aIPeKBtzvNepSBnwok+XdwbqSrPFuzGEf0dGE1JauLHjHJcH1F4w9T+U7hH0edtAuXnUDzvCgNoff
+	Iuajl3zalth5EpAc4R/5hW0nJZdt/mcV5b7xDe7cv8rpc7i4oOOoSwIFUDPdxqo3zcBzDhX7mdbFt
+	+pdsA1sg==;
+Received: from [2001:8b0:10b:5:9c27:6796:c1af:9131] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZq5S-00000000wKN-2l7Z;
+	Fri, 02 Aug 2024 11:04:42 +0000
+Message-ID: <544598eefaf23cd5c62d97012a7fe2128870d7aa.camel@infradead.org>
 Subject: Re: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
  shutdown
-In-Reply-To: <56d3780bc42c98721e15129b7fd53080c4530760.camel@infradead.org>
+From: David Woodhouse <dwmw2@infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>, lirongqing@baidu.com, 
+ seanjc@google.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org,  decui@microsoft.com, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com,  x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Fri, 02 Aug 2024 12:04:41 +0100
+In-Reply-To: <87plqr19oj.ffs@tglx>
 References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
- <87ttg42uju.ffs@tglx>
- <e9a9fb03a4fd47ebddc3bf984726c0f789d94489.camel@infradead.org>
- <b781a3f94e7ff1c2b49101255d382ab9d8d74035.camel@infradead.org>
- <87le1g2hrx.ffs@tglx>
- <56d3780bc42c98721e15129b7fd53080c4530760.camel@infradead.org>
-Date: Fri, 02 Aug 2024 12:49:32 +0200
-Message-ID: <87plqr19oj.ffs@tglx>
+	 <87ttg42uju.ffs@tglx>
+	 <e9a9fb03a4fd47ebddc3bf984726c0f789d94489.camel@infradead.org>
+	 <b781a3f94e7ff1c2b49101255d382ab9d8d74035.camel@infradead.org>
+	 <87le1g2hrx.ffs@tglx>
+	 <56d3780bc42c98721e15129b7fd53080c4530760.camel@infradead.org>
+	 <87plqr19oj.ffs@tglx>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-1OZehtYprt/9OhQvFftv"
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Aug 02 2024 at 09:07, David Woodhouse wrote:
-> On Thu, 2024-08-01 at 20:57 +0200, Thomas Gleixner wrote:
->> It's not counting right out of reset. But once it started counting it's
->> tedious to stop :)
->
-> My reading of the data sheet definitely suggests that it *shouldn't*
-> be.
->
-> Mode 0 says: "The output will be initially low after the mode set
-> operation. After the count is loaded into the selected count
-> register... the counter will count."
 
-Hmm. Indeed. That does not stop the counter, but it prevents the
-interrupt from firing over and over.
+--=-1OZehtYprt/9OhQvFftv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-So fine, we can go with the patch from Li, but the changelog needs a
-rewrite and the code want's a big fat comment.
+On Fri, 2024-08-02 at 12:49 +0200, Thomas Gleixner wrote:
+> On Fri, Aug 02 2024 at 09:07, David Woodhouse wrote:
+> > On Thu, 2024-08-01 at 20:57 +0200, Thomas Gleixner wrote:
+> > > It's not counting right out of reset. But once it started counting it=
+'s
+> > > tedious to stop :)
+> >=20
+> > My reading of the data sheet definitely suggests that it *shouldn't*
+> > be.
+> >=20
+> > Mode 0 says: "The output will be initially low after the mode set
+> > operation. After the count is loaded into the selected count
+> > register... the counter will count."
+>=20
+> Hmm. Indeed. That does not stop the counter, but it prevents the
+> interrupt from firing over and over.
+>=20
+> So fine, we can go with the patch from Li, but the changelog needs a
+> rewrite and the code want's a big fat comment.
 
-Thanks,
+Nah, it wants to be MODE, COUNT, COUNT, MODE to handle all known
+implementations.
 
-        tglx
+Already posted as [PATCH 2/1] (with big fat comments and a version of
+your test) at
+
+https://lore.kernel.org/kvm/3bc237678ade809cc685fedb8c1a3d435e590639.camel@=
+infradead.org/
+
+Although I just realised that I edited the first patch (to *remove* the
+now-bogus comments about the stop sequence) before posting that one, so
+they don't follow cleanly from one another; there's a trivial conflict.
+I also forgot to remove the pre-1999 typedefs from the test program,
+despite fixing it to use <stdint.h> like it's the 21st century :)
+
+Top two commits of
+https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/clocks
+
+I'll repost properly if you're happy with them?
+
+--=-1OZehtYprt/9OhQvFftv
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwODAyMTEwNDQxWjAvBgkqhkiG9w0BCQQxIgQgJFNVwGmL
+EbZBT8LXxUuNCCq/qZpIWQK9pgYcubdqUuQwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBSXTx8rC0+EXNbv0mlwUNxHIRi1eaUyj9T
+4cHFeXTkJaK1vj4s2MjiXg6odw5qOopXbl18TjCqzFnKcO00tukKdzj9mXYO33Kl/fG5ZY3rMyAB
+vNI3pOzaSkq8Lwx3/ktrFVXJMGhFyoGg+gQJMjk5Q1JQSks/kxGjJveKZJRUO7kGBYRBrAnUQoY1
+zqUG05DAEB4uSpO0i4OBX9AoUd+IyUzs5aDScePhYAMqXMVdOtqP5s84wqbJTUDH1OrrcVHRJJs7
+kPph+pOB1qVq6fYSnoU3YnKXUS8b03ZErtYVX3O4Sy28O577spi20QA1htOl6K9OSWOIoul9rt/3
+IDF+lBbWLBnpyO9ISr/0UJBAuSW8cXuM8O/NLE1tAIUzk3r35Mr0hF21L7XzFBCZPd4QV9Une5om
+MRuO20QuNBLQ5oCjFLbnng0lCrboWz3A/Mxi8xtEkiH4vwrojOPhQwxkGVdq4HZmQl0jdcIILk35
+o9mrRgtlRrwxpG59nVZPXT/SoCxd9o9hDmmiKyHdO9hU5gowzUi09dOIroGbp7AvmcmPDIE9LEiD
+bD8cUpoSpvCdbknMmX8KnqIRQmAMNAXBlTS0VU11Gy4BZcCIxho2Cf1GypDjYlQW9IQIAtcGzn4G
+epipBcL52tW2rhxRjrRHpsfob5JGbDxBjTXdl71ChgAAAAAAAA==
+
+
+--=-1OZehtYprt/9OhQvFftv--
 
