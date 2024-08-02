@@ -1,68 +1,72 @@
-Return-Path: <linux-hyperv+bounces-2665-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2666-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67019945994
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 10:08:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD3779459CC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 10:22:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B5EC1C22887
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 08:08:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 26DA3B22016
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2024 08:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B3A1C2310;
-	Fri,  2 Aug 2024 08:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8002E1BF31B;
+	Fri,  2 Aug 2024 08:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vdWmuGjN"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pyytnpPe"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549E51C0DE3;
-	Fri,  2 Aug 2024 08:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49BF1CAB3;
+	Fri,  2 Aug 2024 08:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722586080; cv=none; b=Tter7xZjsELVjviLqvjQjSXFE8Zw7TJSwH8CfeXNx/0tqx9pz0rwVPB5VmvLmUKmDvYlyhlls2AH1dqePN25UN4QSpHpw6vNPGU3wjjH8G59HwxrxdY5q64X9HFrNB8NefYBP0Imjv86qpPoev3z3Fe88IDMy8jKdEPSOp3Ov+A=
+	t=1722586928; cv=none; b=RDIMv2+0eXFrOvT10KxBkEk6Ey7J6bZqZz9ZpACPNO7sRBCq/pGMGYYtX6JI18B7vk94vYy2ODLsdq8fAlFHOioRLOdG6Si2kDNrp4C+KoErC4PZimnFqJ1jGbgd/PrMAta7PWMvqOErYyh+OEQazeWG5SzK9iKEjQsEvylfxMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722586080; c=relaxed/simple;
-	bh=hC3dsI+GTIuTDsXNhXCp5tpm+E/56IypxXjF+Gl31bc=;
+	s=arc-20240116; t=1722586928; c=relaxed/simple;
+	bh=SWEQWD4ugcpKjp64Oh0ixEaK7T6WuL7MBHuZx20SFKY=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mChpA8+1b/S4cl/0vP5YdkWoADOcTf39qbkAo5KoMllSQ5f0ZICmY5qmQwWa7fc2pSt4bHwm8MKyTwRCgGPw43r9HhUWsGDzoNJbifA3P91ZFV2R1dHWhB6Fb13Ps+XdeqVpQReuD/e0ksW16xum5DJDALj7AtKkoOpqsZOj8r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vdWmuGjN; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=hslccyZF4y9MNdlGx0pNcth12dC+ZbD5B3Z1XyBrzm+jZHVVO48oUQaOH5bCof22NeIAau9I4F24Dh3OijtJoXP+hfn8p3GuNwE92MQah/L8Su5TPiNLsxNjCOdZ4clvceyUleLR5gWXquVDoqIFyq8mdVLk98raihdqevAVGUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pyytnpPe; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:To:From:Subject:Message-ID:Sender:Reply-To:Cc:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hC3dsI+GTIuTDsXNhXCp5tpm+E/56IypxXjF+Gl31bc=; b=vdWmuGjNS539MQBVzLb/xY4/Ue
-	JBEvk2FBnhQ/OqkltIzI4UDngfAoNku5MCj4wXip729idWdflKFhQ77TGng9ziqlMQoviVeHYMJGA
-	WeyT7tCcAUDJ+CY7tATx9Sd9yxAPdTkYiAX/o45XFmKAQedhyep1HXIenzw/xDJwbxWyQUOJPT+cQ
-	2fnMvllLai5uNwHQdjWeuiHQtOBW3K4kz2GOn0CUh76SgrVhapJuIWQ8CZWS1lkNZY1DJbzft1o30
-	ChaN4QsHaxDc8h1hcwoYF18cl8rRGmbShpOmg5g2FSdvA/Jf+iiATJw+scM6GQ+FyqPLNjC9XUjY5
-	A+tEaeIw==;
+	bh=SWEQWD4ugcpKjp64Oh0ixEaK7T6WuL7MBHuZx20SFKY=; b=pyytnpPeUW7eQmuNR8Iku1ZCVv
+	m5oNcb9ynGE9d57nP1VhIdds+r9Oi3edfVyxdduwvT3+2fEGppzoHZzTptDnk0L0uH+kXoMsRiEcM
+	CiwCiKau/7mGiWRyUeNUNywOuHdChas/K5DDS8EnlrRrfp2nt3VA+WqHyiyhrb+otrjEuDikIIExU
+	iQ9ejsz83YXWVlhUASj7FfWnez0AbZ+PALRkLSDFJxJGNroTMxZQyC0vmwr9LGH4bEPEnG7/OKRTk
+	CEJfkzZkS60ni2M9KP0nX4m93VFdQr9bp+8lvyY1EEiNMkwW53vtn8iOqrnnF3UmQLtZU7NvGuFog
+	OStzfB2A==;
 Received: from [2001:8b0:10b:5:9c27:6796:c1af:9131] (helo=u3832b3a9db3152.ant.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZnJy-00000000nSL-1KWm;
-	Fri, 02 Aug 2024 08:07:30 +0000
-Message-ID: <56d3780bc42c98721e15129b7fd53080c4530760.camel@infradead.org>
+	id 1sZnXr-00000000oBW-2s8X;
+	Fri, 02 Aug 2024 08:21:52 +0000
+Message-ID: <30eb7680b3c7ae5370dfbf7510e664181f38b80e.camel@infradead.org>
 Subject: Re: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
  shutdown
 From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, lirongqing@baidu.com, 
- seanjc@google.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org,  decui@microsoft.com, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com,  x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Fri, 02 Aug 2024 09:07:29 +0100
-In-Reply-To: <87le1g2hrx.ffs@tglx>
+To: Thomas Gleixner <tglx@linutronix.de>, Michael Kelley
+ <mhklinux@outlook.com>,  "lirongqing@baidu.com" <lirongqing@baidu.com>,
+ "seanjc@google.com" <seanjc@google.com>,  "kys@microsoft.com"
+ <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+ <decui@microsoft.com>,  "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,  "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date: Fri, 02 Aug 2024 09:21:51 +0100
+In-Reply-To: <87o76c2hw2.ffs@tglx>
 References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
 	 <87ttg42uju.ffs@tglx>
-	 <e9a9fb03a4fd47ebddc3bf984726c0f789d94489.camel@infradead.org>
-	 <b781a3f94e7ff1c2b49101255d382ab9d8d74035.camel@infradead.org>
-	 <87le1g2hrx.ffs@tglx>
+	 <SN6PR02MB41571AE611E7D249DABFE56DD4B22@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 <87o76c2hw2.ffs@tglx>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-8LG+sl0OKAMOmJTFB4rO"
+	boundary="=-4CSCRaYGchRhReR6T79l"
 User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -73,91 +77,43 @@ MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 
---=-8LG+sl0OKAMOmJTFB4rO
+--=-4CSCRaYGchRhReR6T79l
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-08-01 at 20:57 +0200, Thomas Gleixner wrote:
-> On Thu, Aug 01 2024 at 19:25, David Woodhouse wrote:
-> > On Thu, 2024-08-01 at 18:49 +0100, David Woodhouse wrote:
-> > > > The stop sequence is wrong:
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 When there is a count in progress, writing a new=
- LSB before the
-> > > > =C2=A0=C2=A0=C2=A0 counter has counted down to 0 and rolled over to=
- FFFFh, WILL stop
-> > > > =C2=A0=C2=A0=C2=A0 the counter.=C2=A0 However, if the LSB is loaded=
- AFTER the counter has
-> > > > =C2=A0=C2=A0=C2=A0 rolled over to FFFFh, so that an MSB now exists =
-in the counter, then
-> > > > =C2=A0=C2=A0=C2=A0 the counter WILL NOT stop.
-> > > >=20
-> > > > The original i8253 datasheet says:
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 1) Write 1st byte stops the current counting
-> > > > =C2=A0=C2=A0=C2=A0 2) Write 2nd byte starts the new count
-> > >=20
+On Thu, 2024-08-01 at 20:54 +0200, Thomas Gleixner wrote:
+> On Thu, Aug 01 2024 at 16:14, Michael Kelley wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, August
+> > 1, 2024 7:21 AM
+> > FWIW, in Hyper-V guests with the Hyper-V quirk removed, tglx's new
+> > sequence does *not* stop the PIT. But this sequence does:
 > >=20
-> > It also prefixes that with "Rewriting a counter register during
-> > counting results in the following:".
+> > outb_p(0x30, PIT_MODE);
+> > outb_p(0xff, PIT_CH0);
+> > outb_p(0xff, PIT_CH0);
 > >=20
-> > But after you write the MODE register, is it actually supposed to be
-> > counting? Just a little further up, under 'Counter Loading', it says:
+> > outb_p(0x30, PIT_MODE);
+> > outb_p(0xff, PIT_CH0);
 >=20
-> It's not counting right out of reset. But once it started counting it's
-> tedious to stop :)
+> That works on bare metal too
 
-My reading of the data sheet definitely suggests that it *shouldn't*
-be.
+What about writing *just* the MODE? The datasheet definitely seems to
+be saying that should work too. And I believe it works on Hyper-V;
+that's what the "workaround" has been doing, because Hyper-V actually
+got it right.
 
-
-Mode 0 says: "The output will be initially low after the mode set
-operation. After the count is loaded into the selected count
-register... the counter will count."
-
-Mode 2 says: "When this mode is set, the output will remain high until
-after the count register is loaded."
-
-Mode 4 says: "After the mode is set, the output will be high. When the
-count is loaded, the counter will begin counting".
-
-All of that strongly hints to me that a *compliant* implementation
-(haha) would stop the interrupts (and the count) when the MODE is set.
-
-So writing *only* the mode ought to work, in theory. If the failure
-mode is just that a bad implementation takes a little bit more power or
-steal time, I wonder if that's what we should do? It's what Hyper-V
-wants, it seems. And if other hypervisors/VMMs want to avoid taking
-pointless steal time, they can fix their bugs.
-
-(... gets more coffee and starts fixing bugs ...)
-
-
-> > "The count register is not loaded until the count value is written (one
-> > or two bytes, depending on the mode selected by the RL bits), followed
-> > by a rising edge and a falling edge of the clock. Any read of the
-> > counter prior to that falling clock edge may yield invalid data".
-> >=20
-> > OK, but what *triggers* that invalid state? Given that it explicitly
-> > says that a one-byte counter write ends that state, it isn't the first
-> > of two bytes. Surely that means that from the time the MODE register is
-> > written, any read of the counter may yield invalid data, until the
-> > counter is written?
+> > I don't have a convenient way to test my sequence on KVM.
 >=20
-> It seems to keep ticking with the old value.
->=20
-> > I suspect there are as many implementations (virt and hardware) as
-> > there are reasonable interpretations of the spec... and then some.
->=20
-> Indeed.
->=20
-> Thanks,
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tglx
->=20
+> But still fails in KVM
+
+By KVM you mean the in-kernel one that we want to kill because everyone
+should be using userspace IRQ chips these days?
+
+I don't know that we care; the failure mode is basically harmless so
+let's just let it get fixed in KVM rather than pandering to it?
 
 
---=-8LG+sl0OKAMOmJTFB4rO
+--=-4CSCRaYGchRhReR6T79l
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -249,25 +205,25 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwODAyMDgwNzI5WjAvBgkqhkiG9w0BCQQxIgQgUqQk+Zg8
-rF9keYeAiZ0HKe9ijE42ecp0tne1NKkUwLswgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwODAyMDgyMTUxWjAvBgkqhkiG9w0BCQQxIgQgqdwixv61
+K1tyjjaR1E4Uhhy9jwLiTnqQrMuH3JothI0wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCUSeXYmthBuDY6tIye5G/ZEYtRU1eBtN0v
-dCcuBZoK5OJcWDWc85plRjsecMim4D2fEef7KHgQp34eiIuZnRaeVGcn9EBa1TAJnam7iF7hHurk
-QRgrBjNdOOSVeeRxplww3DiPiHRyhz/wkXVW4VRH71ud5VBKaTb5rCUCl6n7i4sX/gIRcCeFx068
-1BPxTkxoxuBfsl/pMPxSFepcRvFohmucKC79QgQ3OXPAiKVFf+Q9okURTJqMGvhb+jNy8FFGyHcf
-mpnxCE3vSgZVYJg+DyqZQO240vMCeW3a5Nw5PP7d0/Sb5rOO2DUFJ42Mo8w1CIcwalxBH2JOIet7
-HSSG34c+EHiZtpZLshCjc0+7IN1ujN67oTzLvtCeBINouQ4KyFVSDqTLmMN9DYIz2WAA7J0/S1DK
-U265hhxXcMQbBKrK23cZlkDcgz8g/cxLASntAzUT7rMx4BVtmoh7xi6fZmDhRLcjJUKOuZKs9EHQ
-6pPtBPZ2UsMbqN3wbLDCmK7sy2eLVrNwzkhm25c6k7oY4aHP2sywfQ5jNwuI6x1LjfMjiwbF6OhJ
-CnNwY+h1iOkudHR4ez4/5+oJFgx0OAHQ7MYxH8UY5k1E6p4G+XW2eTQIll1/2tDwx7eEh/+T5HwA
-Xlf9z95uSMEhNAgpEaCYrw923xo+Q1N1NP6ugjhGcwAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBmnrCS6a+O4S6QtET7CFRvFxdJvZoCiJc+
+y+oMp9RtayyMyYlPF1Ti/HuHWjYVaoJ1hh4vedzluxiNXvg2+DdjZS72wgWgtjbJ51MkaOw5mRve
+6R1ZRI+xzpuF0kdi4Tui149yWv4ay3YEsEsszyi0vyCHNoVpp/dwVLkwN3+cS7ODfRGdiIR2oBQy
+QcAGJ62AgVQFA/KY7q7M6LVOvqZuXUK04xr/XQ5rpQN9jBo46W+3OF/hi666fxuZsn7MoBrF2qif
+p2RDSYxdDtt7b/BL6lYHcCpBXuRj84MwmqXbQ2H83wqXFRlukG/3GaHpabGCXYDA7SQWphCF8wzL
+Y9KXZ6jfwpPTQCkGvBPe9d57iqm8e42/E7281Um+10IsGpf6/UngNH8SxGWOAI/AI6ZbxPVpkQND
+oTv8bSUWeGGYQG2BuU7aHLoF9s1AIAL5XH8oQyJesoN310cZZ2ujKy6Do/z3pV9nFJsV09woh1YZ
+YRJG3xcZNDkHILryOuatKnHcWXJ89KZdjC3pfJHnx1K7HIFceb599IS4rC2vywv1dlkh/k3A19v2
+RPyBwVaHdGODnPUbZ4UoexcJeZNL1pwCmJSJ2f1A7Tqc/y/6Bpu6VTwkC88iZdfAUoAz8hOhaYyW
+RyyOh1Y5rSPQX+GHYdykwDyy8toisZ3FpbfjNWCi8AAAAAAAAA==
 
 
---=-8LG+sl0OKAMOmJTFB4rO--
+--=-4CSCRaYGchRhReR6T79l--
 
