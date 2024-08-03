@@ -1,79 +1,77 @@
-Return-Path: <linux-hyperv+bounces-2682-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2683-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1C7F946669
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Aug 2024 02:13:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F64D9466A7
+	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Aug 2024 03:21:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AF83280F9B
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Aug 2024 00:13:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D018FB21387
+	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Aug 2024 01:21:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3DC193;
-	Sat,  3 Aug 2024 00:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87464A39;
+	Sat,  3 Aug 2024 01:21:03 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279E9182;
-	Sat,  3 Aug 2024 00:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B3C63A9;
+	Sat,  3 Aug 2024 01:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722644004; cv=none; b=Rgak3YmjPxniEaLscMX28dvmiPA3KT2R0YW2CkdrKxilqDI52lq8LmNQi7oUaUH2d4ErCxmVD/D2C+TyOYMgVSNVvV5Sdwhg+OFSYfHz3mbrZKDgi6OmJAAooZ4NHyuSCOHshKYS6p3t0UqRuXzr5t0W2oxGUDyKw4Lgx9rkRe4=
+	t=1722648063; cv=none; b=DcmqSDgNTMejIIpHDBz/LhiiKJOqR/kxLbfd8xRLYMVBq4GgOnNftb5vBxjO1VByaKB5W7jWk2YYJErZZ7XsJoUvMx7V96emqOooprQAqI4umwaZOXcuUTrSHbMeSZRUgbhKy6/Er2eRm4sUKLMKRF3bkGkcyd7EF8VLmIInhfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722644004; c=relaxed/simple;
-	bh=ZKZBS/MH7im0JwkEk0PsV+A2uYf8zojcYPPsjYAnhAA=;
+	s=arc-20240116; t=1722648063; c=relaxed/simple;
+	bh=oEAO0LgkYP9rczh1sSRCG+VW1RMEXo+f+xqob+rZ3xo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EW2NEAtFPVeLq4iIqqtM3IaNZC/H1FzkAH0Efw+ZaWkGuGjw5soPQjZMvSOXtSK+DltVfH4yD8Y1TqDxIlpgsNMFf9HJ+W1keOeDHl0XMnf7jApcShBKYU7K3wrjStWuMplCtInkvdVdWbNYq1K2eWQi1k6bNyG4xpkwvMlO1UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=hVee9OVdQgvHRDFQvDGRDjiVQ7fS7vqvsQLIhXeJBiki1gwAGnkTp0Qc26WWsNf01WKifcouP3zU8/te0QS+sNOF4JgoYNrGFTZIGvVqtTWR/taFxQ41LBL+FOxeqcalw/E38CbZa7dPaKQxorgJIPFgiInbrwINBObDEcsaUeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3dc16d00ba6so564762b6e.0;
-        Fri, 02 Aug 2024 17:13:22 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2cd2f89825fso6129873a91.1;
+        Fri, 02 Aug 2024 18:21:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722644002; x=1723248802;
+        d=1e100.net; s=20230601; t=1722648061; x=1723252861;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ccJOGn30bUAN8TsbHnPAhjA3sjnjxhCGVa7sB/q0q18=;
-        b=iEzvLhqckDH3XfXduYihNVvqwoR+cWigHfZlzLDUG1iWsHs3AgUr6NSLU2+lLS06iC
-         rXwjUy5iaVWG+NtBP88uO3BGrFWxAXTpmPm02XfK+nO+rgrG21N6q+vDvn3a6hK0vhAM
-         85gwHrPIfQLjljp4TCyF8tVEP4xgQhlf3uzIcLhhSw3AYyw4gs6w7M/aOQxTr870vpC5
-         kpA1VpCvLZBcfVDHhRoIw2E1IIFs3QcJZc/l84qxU0tlM3jncIsaTjsuGJubb/mZXuiF
-         uXHeHAFghpqz2lVIq2dmrVBrDbcysJNcpWfnLuZC1yF8ruPnnJnuSbvwPvgDc/sG7BgY
-         ORHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXy2aPRWZeJLCOmoag0esat+KdKiEtBgKS426LKGyPtKAPuUPlKRlQIFlD8dFp0m8SQ65TSwpUJfpYqGdcsu1zsbU6khyPC7cVrbHxkOjIc0moR2IeNOiGO1/PKru/3NqfhEUTyR4HULOO+
-X-Gm-Message-State: AOJu0YwysYeJPtjHU0FYSnNYoQl69YUEhunv5v7zL/VbD9Hdszd4ZHt9
-	EkH6WX3HAG2BJQx9eTEpiiYrq8Bktq7v2Pw/2srJMFgOhFwek2Vf
-X-Google-Smtp-Source: AGHT+IE1UQJI5eUtHMF2/Uke5fcUQiEaNcSw/b2w90jpRVoUFSKMFk1ufL0TsbHnePiXIsxtcfxOrQ==
-X-Received: by 2002:a05:6808:1449:b0:3d9:245c:4224 with SMTP id 5614622812f47-3db5582e282mr5345750b6e.40.1722644002134;
-        Fri, 02 Aug 2024 17:13:22 -0700 (PDT)
+        bh=mn6019YORpOIN4p+uI+hS2FuSm00+ndoCRPl9w+srXE=;
+        b=mE8LW/6PxB0xoXPQCmP6yH8S4DE3xZtkTKFMd0oA7hg/pl4qMKFlgfuM7FN/lPSxwj
+         N2D1QyDjv3mMV2kdyoHFYmP2i2GHxM9EcYp/Rgp2q+QGJ1hZWX75vkL25BCw9ENl0Q+6
+         U9b0t6Q8oLD+2afmlT1hGc21lM8zpPaleeZtFjF3GR6QWlJHwKYe5OcdVfumxak0ZT6Y
+         O2tOHSBzaGbYZUTdMQhZltXgIS88BhmucPyy753zkKQgJafqkIcCdrgqMpDOjXZO0DuG
+         U55oFSwc/lvMcNnFyKCE/ZTYbmmOIxwgk2+UpMZqgfLQDkHfjlcDsaBkOn6Fv1yAn4V1
+         kk0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVGsALTIISONFPf5FOeOYj966Pjdh8ymZKEnzmsQjRgjSY1uTJQKQNKEly+OCaiCJhuNFjcPIocHZD8WhCWm8UH2bA/1DRulSpPisHWRWeXoQziy/63jM134E0tbX6XcJZbq+l+8/+JYSITp+xVd2rL+XZc0BocFeEzFnIJsYHZjlLRBeTzjjKM1XEEtJLlg49pZQ8TnSvglWWzZCSbQz/uHFOf3NILJIkm/h7BQLKC/A7hlfl7Esxqzq6L1Po=
+X-Gm-Message-State: AOJu0YwIfKMy/lKHT5dxauowVFaoU7FgnoWIw33UJO1auK8Cmkfs/uth
+	BRqPfRBSxJge+4VX2owrRKbPFj88Tb3RYGVwy9TDYVlGmyqXXNNI
+X-Google-Smtp-Source: AGHT+IGcypEO6f2Pzk3wUXNz0LUEZUBSbjvtENiURYxWYOfgVYejP9sulcneRglr4VAxIUSiI4HadA==
+X-Received: by 2002:a17:90a:fc92:b0:2c9:6b02:15ca with SMTP id 98e67ed59e1d1-2cff9544e21mr6464426a91.39.1722648061281;
+        Fri, 02 Aug 2024 18:21:01 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b76346af44sm1874085a12.30.2024.08.02.17.13.21
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cfca2a2af6sm4671139a91.0.2024.08.02.18.21.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 17:13:21 -0700 (PDT)
-Date: Sat, 3 Aug 2024 00:13:20 +0000
+        Fri, 02 Aug 2024 18:21:00 -0700 (PDT)
+Date: Sat, 3 Aug 2024 01:20:58 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Roman Kisel <romank@linux.microsoft.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"sashal@kernel.org" <sashal@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"apais@microsoft.com" <apais@microsoft.com>,
-	"benhill@microsoft.com" <benhill@microsoft.com>,
-	"ssengar@microsoft.com" <ssengar@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>,
-	"vdso@hexbites.dev" <vdso@hexbites.dev>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Fix the misplaced function
- description
-Message-ID: <Zq12ILqoxEzjLOq2@liuwe-devbox-debian-v2>
-References: <20240801212235.352220-1-romank@linux.microsoft.com>
- <SN6PR02MB41578B75E804B59A2B8A8E24D4B32@SN6PR02MB4157.namprd02.prod.outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
+	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+	kw@linux.com, kys@microsoft.com, lenb@kernel.org,
+	lpieralisi@kernel.org, mingo@redhat.com, rafael@kernel.org,
+	robh@kernel.org, tglx@linutronix.de, wei.liu@kernel.org,
+	will@kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, ssengar@microsoft.com,
+	sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH v3 7/7] PCI: hv: Get vPCI MSI IRQ domain from DT
+Message-ID: <Zq2F-l2FWIrQ2Jt1@liuwe-devbox-debian-v2>
+References: <20240726225910.1912537-1-romank@linux.microsoft.com>
+ <20240726225910.1912537-8-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -82,54 +80,152 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41578B75E804B59A2B8A8E24D4B32@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <20240726225910.1912537-8-romank@linux.microsoft.com>
 
-On Fri, Aug 02, 2024 at 03:51:37PM +0000, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Thursday, August 1, 2024 2:23 PM
-> > 
-> > When hv_synic_disable_regs was introduced, it received the description
-> > of hv_synic_cleanup. Fix that.
-> > 
-> > Fixes: dba61cda3046 ("Drivers: hv: vmbus: Break out synic enable and disable
-> > operations")
-> > 
-> > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > ---
-> >  drivers/hv/hv.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> > index e0d676c74f14..36d9ba097ff5 100644
-> > --- a/drivers/hv/hv.c
-> > +++ b/drivers/hv/hv.c
-> > @@ -342,9 +342,6 @@ int hv_synic_init(unsigned int cpu)
-> >  	return 0;
-> >  }
-> > 
-> > -/*
-> > - * hv_synic_cleanup - Cleanup routine for hv_synic_init().
-> > - */
-> >  void hv_synic_disable_regs(unsigned int cpu)
-> >  {
-> >  	struct hv_per_cpu_context *hv_cpu =
-> > @@ -436,6 +433,9 @@ static bool hv_synic_event_pending(void)
-> >  	return pending;
-> >  }
-> > 
-> > +/*
-> > + * hv_synic_cleanup - Cleanup routine for hv_synic_init().
-> > + */
-> >  int hv_synic_cleanup(unsigned int cpu)
-> >  {
-> >  	struct vmbus_channel *channel, *sc;
-> > 
-> > base-commit: 831bcbcead6668ebf20b64fdb27518f1362ace3a
-> > --
-> > 2.34.1
-> > 
+On Fri, Jul 26, 2024 at 03:59:10PM -0700, Roman Kisel wrote:
+> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
+> arm64. It won't be able to do that in the VTL mode where only DeviceTree
+> can be used.
 > 
-> Reviewed-by: Michael Kelley <mhkelley@outlook.com>
+> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
+> case, too.
 > 
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c              | 23 +++++++-----
+>  drivers/pci/controller/pci-hyperv.c | 55 +++++++++++++++++++++++++++--
+>  include/linux/hyperv.h              |  2 ++
+>  3 files changed, 69 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 7eee7caff5f6..038bd9be64b7 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -45,7 +45,8 @@ struct vmbus_dynid {
+>  	struct hv_vmbus_device_id id;
+>  };
+>  
+> -static struct device  *hv_dev;
+> +/* VMBus Root Device */
+> +static struct device  *vmbus_root_device;
 
-Applied to hyperv-fixes. Thanks.
+You're changing the name of the variable. That should preferably be done
+in a separate patch. That's going to make this patch shorter and easier
+to review.
+
+>  
+>  static int hyperv_cpuhp_online;
+>  
+> @@ -80,9 +81,15 @@ static struct resource *fb_mmio;
+>  static struct resource *hyperv_mmio;
+>  static DEFINE_MUTEX(hyperv_mmio_lock);
+>  
+> +struct device *get_vmbus_root_device(void)
+> +{
+> +	return vmbus_root_device;
+> +}
+> +EXPORT_SYMBOL_GPL(get_vmbus_root_device);
+
+I would like you to add "hv_" prefix to this exported symbol, or rename
+it to "vmbus_get_root_device()".
+
+> +
+>  static int vmbus_exists(void)
+>  {
+> -	if (hv_dev == NULL)
+> +	if (vmbus_root_device == NULL)
+>  		return -ENODEV;
+>  
+>  	return 0;
+> @@ -861,7 +868,7 @@ static int vmbus_dma_configure(struct device *child_device)
+>  	 * On x86/x64 coherence is assumed and these calls have no effect.
+>  	 */
+>  	hv_setup_dma_ops(child_device,
+> -		device_get_dma_attr(hv_dev) == DEV_DMA_COHERENT);
+> +		device_get_dma_attr(vmbus_root_device) == DEV_DMA_COHERENT);
+>  	return 0;
+>  }
+>  
+> @@ -1892,7 +1899,7 @@ int vmbus_device_register(struct hv_device *child_device_obj)
+>  		     &child_device_obj->channel->offermsg.offer.if_instance);
+>  
+>  	child_device_obj->device.bus = &hv_bus;
+> -	child_device_obj->device.parent = hv_dev;
+> +	child_device_obj->device.parent = vmbus_root_device;
+>  	child_device_obj->device.release = vmbus_device_release;
+>  
+>  	child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
+> @@ -2253,7 +2260,7 @@ static int vmbus_acpi_add(struct platform_device *pdev)
+>  	struct acpi_device *ancestor;
+>  	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+>  
+> -	hv_dev = &device->dev;
+> +	vmbus_root_device = &device->dev;
+>  
+>  	/*
+>  	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
+> @@ -2342,7 +2349,7 @@ static int vmbus_device_add(struct platform_device *pdev)
+>  	struct device_node *np = pdev->dev.of_node;
+>  	int ret;
+>  
+> -	hv_dev = &pdev->dev;
+> +	vmbus_root_device = &pdev->dev;
+>  
+>  	ret = of_range_parser_init(&parser, np);
+>  	if (ret)
+> @@ -2675,7 +2682,7 @@ static int __init hv_acpi_init(void)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (!hv_dev) {
+> +	if (!vmbus_root_device) {
+>  		ret = -ENODEV;
+>  		goto cleanup;
+>  	}
+> @@ -2706,7 +2713,7 @@ static int __init hv_acpi_init(void)
+>  
+>  cleanup:
+>  	platform_driver_unregister(&vmbus_platform_driver);
+> -	hv_dev = NULL;
+> +	vmbus_root_device = NULL;
+>  	return ret;
+>  }
+>  
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 5992280e8110..cdecefd1f9bd 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -50,6 +50,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/acpi.h>
+>  #include <linux/sizes.h>
+> +#include <linux/of_irq.h>
+>  #include <asm/mshyperv.h>
+>  
+>  /*
+> @@ -887,6 +888,35 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
+>  	.activate = hv_pci_vec_irq_domain_activate,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +
+> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
+> +{
+> +	struct device_node *parent;
+> +	struct irq_domain *domain;
+> +
+> +	parent = of_irq_find_parent(to_platform_device(get_vmbus_root_device())->dev.of_node);
+> +	domain = NULL;
+> +	if (parent) {
+> +		domain = irq_find_host(parent);
+> +		of_node_put(parent);
+> +	}
+> +
+
+I cannot really comment on the ARM side of things around how this system
+is set up. I will leave that to someone who's more familiar with the
+matter to review.
+
+Thanks,
+Wei.
 
