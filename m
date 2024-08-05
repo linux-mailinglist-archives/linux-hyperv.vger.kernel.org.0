@@ -1,70 +1,64 @@
-Return-Path: <linux-hyperv+bounces-2696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2697-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE8E89473FB
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Aug 2024 05:48:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 013C5947402
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Aug 2024 05:53:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3A1EB2100F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Aug 2024 03:48:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20DCB1C21000
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Aug 2024 03:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D074D8B6;
-	Mon,  5 Aug 2024 03:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AED4813CA93;
+	Mon,  5 Aug 2024 03:53:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NrDJ9Dof"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ad8VkI/J"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EC3217C;
-	Mon,  5 Aug 2024 03:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DAF0225A2;
+	Mon,  5 Aug 2024 03:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722829707; cv=none; b=MMOsBGWXjj7ovcc0H7w3hJId70IMx33s5GdxyiXwD0sJQFwbE3Udfz+eP0mTnFrcPLxHQy0KhA4Es920RIznXPE+jYmRQqxHS4S6EYcebZh6Pa8L/uB/qLsaNVVR0hrEKo9IXQ8KdugD78YoLF6ECvxDYao0TLTDNhQbEk/TSGs=
+	t=1722830022; cv=none; b=uKEFouTwh+STsuraTAaQVNdh1cjzqxArIDmePj4FSye4aV+bOdQ001TXRm2q8PeoSid5zYbE2ODVeobcMdsNeRc0U1W4zufcerArRkRnmwfqM5cgjhZwuoRLcB7j+IyICS0iTR9mxO0xWgBfvgOYYLSbxBItP7yUYP8kqIJo6HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722829707; c=relaxed/simple;
-	bh=Kr8VkxqwdLJEc+8lOx1IkDrCAtqFKqHlW/+7miCSysE=;
+	s=arc-20240116; t=1722830022; c=relaxed/simple;
+	bh=33eDFO8W6d7SI7QE9iOfChQ/0I3uFJfhv7yR7349Fxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nH24TebcwgE3Wzkh/WIF0giEtPLkSrwaSCqkR00Ev0/GmrPdO+voHAuRmXUA2PhpFnEPhJeJ2nteetyvSDi02KDC3cP78QbFwdETnEkcjoqG6ltOEYbu+pUDWTFv4ABIg7hdxQJAfr7DxKRjOhcjv91hclUe7NVe7G8r6187nTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NrDJ9Dof; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=f4GTCwF9JWs6mhgEYgeJf6XbIAIv3AMo/wFuQKlbhK5QdYrhXSirQLEU3GcBi2YK2ZQWpIdGGMoaMrxKDVQbC7eDiitnfI9oFmkVWO5UoRzxEdij7rTcEk35tYGSdzA8u4Mfv+7bylf39w+kVW/q2Q6oPHM6ggSlROy1p/HTV2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ad8VkI/J; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id E3DB920B7165; Sun,  4 Aug 2024 20:48:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3DB920B7165
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id CB21520B7165; Sun,  4 Aug 2024 20:53:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB21520B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722829699;
-	bh=FPsbgCxMbUXjFs/OhpM8wOzYmZyMHdRgGS32F/SfBnc=;
+	s=default; t=1722830020;
+	bh=3yOa1R3fy9ib0F7SoxeqWZ1vzxyTRhDKhyThdqdBT88=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NrDJ9DofGmKuoc8YEMfKljJv5hpwMUL1rMOloJcJ/RxcsgsqKcuTDvx5rjdbyKT/W
-	 FKEY/7l+sTWJaKTthE5gB+3qAfuAH0QOje3itL83xSSq+mTGJCqItnF/A+qjKRQ913
-	 5iBjhiD8A+/uz93Xk+LcwHId6lKrl99qZRvV2sjo=
-Date: Sun, 4 Aug 2024 20:48:19 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Subject: Re: [PATCH net-next v2] net: mana: Implement
- get_ringparam/set_ringparam for mana
-Message-ID: <20240805034819.GA13225@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1722358895-13430-1-git-send-email-shradhagupta@linux.microsoft.com>
- <4c32b96f-d962-4427-87c2-4953c91c9e43@linux.dev>
- <20240803113154.67a37efb@hermes.local>
+	b=ad8VkI/JXiWlExVRDoTa5Sy6bK3M5YFwKWrWBWRpQbbfEPze/uHhSdtBwWpFnTNqx
+	 MbmBKtOfvc6C6Hk5YUYNsq/S7+JDxpRbap11VP8RM0wmfUDfdZkB/q6GchobQUj9Q+
+	 nfbtGRKEIIW3X1fLaWWSRV6adawJDL93sbdM2ks4=
+Date: Sun, 4 Aug 2024 20:53:40 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
+	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+	kw@linux.com, kys@microsoft.com, lenb@kernel.org,
+	lpieralisi@kernel.org, mingo@redhat.com, rafael@kernel.org,
+	robh@kernel.org, tglx@linutronix.de, wei.liu@kernel.org,
+	will@kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, ssengar@microsoft.com,
+	sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH v3 1/7] arm64: hyperv: Use SMC to detect hypervisor
+ presence
+Message-ID: <20240805035340.GA13276@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20240726225910.1912537-1-romank@linux.microsoft.com>
+ <20240726225910.1912537-2-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,38 +67,66 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240803113154.67a37efb@hermes.local>
+In-Reply-To: <20240726225910.1912537-2-romank@linux.microsoft.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Sat, Aug 03, 2024 at 11:31:54AM -0700, Stephen Hemminger wrote:
-> On Sun, 4 Aug 2024 02:09:21 +0800
-> Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
+On Fri, Jul 26, 2024 at 03:59:04PM -0700, Roman Kisel wrote:
+> The arm64 Hyper-V startup path relies on ACPI to detect
+> running under a Hyper-V compatible hypervisor. That
+> doesn't work on non-ACPI systems.
 > 
-> > >   
-> > >   	/*  The minimum size of the WQE is 32 bytes, hence
-> > > -	 *  MAX_SEND_BUFFERS_PER_QUEUE represents the maximum number of WQEs
-> > > +	 *  apc->tx_queue_size represents the maximum number of WQEs
-> > >   	 *  the SQ can store. This value is then used to size other queues
-> > >   	 *  to prevent overflow.
-> > > +	 *  Also note that the txq_size is always going to be MANA_PAGE_ALIGNED,
-> > > +	 *  as tx_queue_size is always a power of 2.
-> > >   	 */
-> > > -	txq_size = MAX_SEND_BUFFERS_PER_QUEUE * 32;
-> > > -	BUILD_BUG_ON(!MANA_PAGE_ALIGNED(txq_size));
-> > > +	txq_size = apc->tx_queue_size * 32;  
-> > 
-> > Not sure if the following is needed or not.
-> > "
-> > WARN_ON(!MANA_PAGE_ALIGNED(txq_size));
-> > "
-> > 
-> > Zhu Yanjun
+> Hoist the ACPI detection logic into a separate function,
+> use the new SMC added recently to Hyper-V to use in the
+> non-ACPI case.
 > 
-> On many systems warn is set to panic the system.
-> Any constraint like this should be enforced where user input
-> is managed. In this patch, that would be earlier in mana_set_ringparam().
-> Looking there, the only requirement is that txq_size is between
-> the min/max buffers per queue and a power of 2.
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  arch/arm64/hyperv/mshyperv.c      | 36 ++++++++++++++++++++++++++-----
+>  arch/arm64/include/asm/mshyperv.h |  5 +++++
+>  2 files changed, 36 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index b1a4de4eee29..341f98312667 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -27,6 +27,34 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>  	return 0;
+>  }
+>  
+> +static bool hyperv_detect_via_acpi(void)
+> +{
+> +	if (acpi_disabled)
+> +		return false;
+> +#if IS_ENABLED(CONFIG_ACPI)
+> +	/* Hypervisor ID is only available in ACPI v6+. */
+> +	if (acpi_gbl_FADT.header.revision < 6)
+> +		return false;
+> +	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) == 0;
+> +#else
+> +	return false;
+> +#endif
+> +}
+> +
+> +static bool hyperv_detect_via_smc(void)
+> +{
+> +	struct arm_smccc_res res = {};
+> +
+> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+> +		return false;
+> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+> +
+> +	return res.a0 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0 &&
+> +		res.a1 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1 &&
+> +		res.a2 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2 &&
+> +		res.a3 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3;
+> +}
 
-Thanks Stephen, that's right.
+As you mentioned in the cover letter this is supported in latest Hyper-V hypervisor,
+can we add a comment about it, specifying the exact version in it would be great.
+
+If someone attempts to build non-ACPI kernel on older Hyper-V what is the
+behaviour of this function, do we need to safeguard or handle that case ?
+
+- Saurabh
+
 
