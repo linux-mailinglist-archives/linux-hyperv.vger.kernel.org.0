@@ -1,63 +1,63 @@
-Return-Path: <linux-hyperv+bounces-2737-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2738-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A74EF949B1B
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 00:14:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C78D3949B1F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 00:14:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80DCA1C22935
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Aug 2024 22:14:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5213D1F22F5C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Aug 2024 22:14:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062BA17799F;
-	Tue,  6 Aug 2024 22:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A32617838E;
+	Tue,  6 Aug 2024 22:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lNUbJG89"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbrTeDy8"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2954D176AB8;
-	Tue,  6 Aug 2024 22:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88526176FB8;
+	Tue,  6 Aug 2024 22:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722982387; cv=none; b=eblmEoDUoVlvQu4f8/J7gkpgyZLERlcNoDJDetyAh1Y+g3AYk8rWRaWRGL1CP5Xaem7DXiPhUhemN6kBEU8t27lH3jYd5lI0lVsWey6vHd6LAOu2D4Ks3wKK/eMjKRSCeSeWYuha2DmzfaxayD6x7BVwMh48d3YlvxpPdDlOZGk=
+	t=1722982389; cv=none; b=pu4vodxPWvXc7VlDoXbQxfrGN5hvROHkEBSLppH/3ncVXQli8GI96YUC7qzfG8aC/O3Hm+8VhKS1HVZRXougfoqQzZST9VNDfJt0lhuJ29QMrEXxg5nnvK0xabEGAGwvygUIP3/UHJmrzvbW1WpXl6ooEAYI6dtySeR+HZmy5eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722982387; c=relaxed/simple;
-	bh=GvAvetipniNPqDCAsSTJ2tKWGXpPgxdxr/ozQTWDvlk=;
+	s=arc-20240116; t=1722982389; c=relaxed/simple;
+	bh=ZUq86fmEIT+y08JWAU6WM9quSZ2U1+eaMw8WLXb0+0I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yol5ohQFfMPIEX4o6T5WIrLMBzbDwnUzBin7scxQHaScEzP2DaJdKvQAzZK4EB0FOL6Q9G4h9DpFEakOMv+hrZnnwRhX2wgFwtpCoMDCrLmoDDZ3f5B2hLaxy8BmF3OPnSWI8T/tpquo6FV4CJZUVWrceIWrWNA6AxEBadgbNkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lNUbJG89; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=fmZrX9fQGESiB4cwuBpGjTd3/VIBtXTboCA7ZmDMXLzCBIvCX+Va7eB3SfnVcC//H0j4sfr5k2OYoIqR3X8urgyFIAVtl6G6fHYElqxjDaVMRFbORp71oBz5Sk78ahK6Dfkiso+auRMabhMIslC47QWqOYikVboJYzo+8y4aY7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbrTeDy8; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722982386; x=1754518386;
+  t=1722982388; x=1754518388;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GvAvetipniNPqDCAsSTJ2tKWGXpPgxdxr/ozQTWDvlk=;
-  b=lNUbJG89xzqttfZ5O/PjOEYayu53aa2k3tmBxa7e/sekh4B/c1R1RKO0
-   mCFf3iKITNNht6b7r2u4BEOC6t4PE6glH81wWvPm63PI92yNU4FrcVpMW
-   ZopxEuo14rnGcH2Usf2+JmHESI4PzCUeUHZta1v2WVDG4j3bVbX7onsOP
-   ZnpftkDyWa67Ayrtm+ZUykytbNsXRh70gZrseSTke1fnnLmMzuRa4phkH
-   LLq9JK6gRS34km0Mz15g4shiM632bd6Vy05lJI953GRYUDh9kMbM54W8K
-   7LUiS5v3h2QkGEwSpLwb1pt+qy1T3Eh37AwSzZ1bBQOCUlYHPNf9xE6et
-   g==;
-X-CSE-ConnectionGUID: Qne+LIBSQFi7o0xsl3Sl5w==
-X-CSE-MsgGUID: Lq9DLeo9QXax/YCyn3la0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="38534405"
+  bh=ZUq86fmEIT+y08JWAU6WM9quSZ2U1+eaMw8WLXb0+0I=;
+  b=nbrTeDy8K5vCFF1cwX2G6CM47gqlHP4DrWT9llPgQKWShqsBKGsLjn0g
+   DPB0mQTks/TgJSbQNv3UmYe70oiDbAs1GV6PNTnyrOKtU2n+YSiMl9FEx
+   ZfXQJIXmlk64kCGj4Pdy7hpAVEmsT0XeatP4ZREn15IEKJ2NeEVXAAEdB
+   i+lHKoI5PaY/DEsonxKO8RKwmGXmJBAaFxm2KJk+YDuriHtufj71g6VPR
+   /PCZfui6kMWgFSEiMK0D9fc6JCb2mFxU30Wkftj6TPeJpZwEvGSeaLYzQ
+   NOKjfJaGT5zS9KDREaCypHnqdvGhxHUqYNlhnxZD48Qt7AurCVOGwirNy
+   A==;
+X-CSE-ConnectionGUID: RggpQsz6TIKEcHwp4n4QTQ==
+X-CSE-MsgGUID: TXqHKEqiQGCTmoKEGy6Sig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="38534413"
 X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="38534405"
+   d="scan'208";a="38534413"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 15:13:06 -0700
-X-CSE-ConnectionGUID: R6lNlHPWSLuWhnu03N0OBA==
-X-CSE-MsgGUID: tu2pjLBeRdqKJzGInNHZmg==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 15:13:07 -0700
+X-CSE-ConnectionGUID: 1VXGpvhbRb+biuLLfyBGhg==
+X-CSE-MsgGUID: hLgNtRGXRWGozjepu793sA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="61465646"
+   d="scan'208";a="61465652"
 Received: from yjiang5-dev1.sc.intel.com ([172.25.103.134])
-  by orviesa003.jf.intel.com with ESMTP; 06 Aug 2024 15:13:05 -0700
+  by orviesa003.jf.intel.com with ESMTP; 06 Aug 2024 15:13:06 -0700
 From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -80,9 +80,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-acpi@vger.kernel.org,
 	yunhong.jiang@linux.intel.com
-Subject: [PATCH 5/7] x86/hyperv: Mark ACPI wakeup mailbox page as private
-Date: Tue,  6 Aug 2024 15:12:35 -0700
-Message-Id: <20240806221237.1634126-6-yunhong.jiang@linux.intel.com>
+Subject: [PATCH 6/7] x86/hyperv: Reserve real mode when ACPI wakeup mailbox is available
+Date: Tue,  6 Aug 2024 15:12:36 -0700
+Message-Id: <20240806221237.1634126-7-yunhong.jiang@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240806221237.1634126-1-yunhong.jiang@linux.intel.com>
 References: <20240806221237.1634126-1-yunhong.jiang@linux.intel.com>
@@ -94,50 +94,67 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ACPI wakeup mailbox is accessed by the OS and the firmware, both are
-in the guest's context, instead of the hypervisor/VMM context. Mark the
-address private explicitly.
+The trampoline_start64 is utilized when the BSP wakes up the APs through
+ACPI wakeup mailbox mechanism. Because trampoline_start64 is currently
+part of the real model startup code, the real mode memory need to be
+reserved.
 
 Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 ---
- arch/x86/hyperv/hv_vtl.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/x86/hyperv/hv_vtl.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 04775346369c..bfe54afcdf1d 100644
+index bfe54afcdf1d..a1eb5548bd4d 100644
 --- a/arch/x86/hyperv/hv_vtl.c
 +++ b/arch/x86/hyperv/hv_vtl.c
-@@ -22,12 +22,28 @@ static bool __init hv_vtl_msi_ext_dest_id(void)
- 	return true;
+@@ -13,6 +13,7 @@
+ #include <asm/mshyperv.h>
+ #include <asm/realmode.h>
+ #include <../kernel/smpboot.h>
++#include <linux/memblock.h>
+ 
+ extern struct boot_params boot_params;
+ static struct real_mode_header hv_vtl_real_mode_header;
+@@ -34,12 +35,28 @@ static bool hv_is_private_mmio_tdx(u64 addr)
+ 	return false;
  }
  
-+/*
-+ * The ACPI wakeup mailbox are accessed by the OS and the BIOS, both are in the
-+ * guest's context, instead of the hypervisor/VMM context.
-+ */
-+static bool hv_is_private_mmio_tdx(u64 addr)
++static void __init hv_reserve_real_mode(void)
 +{
-+	if (wakeup_mailbox_addr && (addr >= wakeup_mailbox_addr &&
-+	    addr < (wakeup_mailbox_addr + PAGE_SIZE)))
-+		return true;
-+	return false;
++	phys_addr_t mem;
++	size_t size = real_mode_size_needed();
++
++	/*
++	 * We only need the memory to be <4GB since the 64-bit trampoline goes
++	 * down to 32-bit mode.
++	 */
++	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, SZ_4G);
++	if (!mem)
++		panic("No sub-4G memory is available for the trampoline\n");
++	set_real_mode_mem(mem);
 +}
 +
  void __init hv_vtl_init_platform(void)
  {
  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
  
--	x86_platform.realmode_reserve = x86_init_noop;
--	x86_platform.realmode_init = x86_init_noop;
-+	if (wakeup_mailbox_addr) {
-+		x86_platform.hyper.is_private_mmio = hv_is_private_mmio_tdx;
-+	} else {
-+		x86_platform.realmode_reserve = x86_init_noop;
-+		x86_platform.realmode_init = x86_init_noop;
-+	}
- 	x86_init.irqs.pre_vector_init = x86_init_noop;
- 	x86_init.timers.timer_init = x86_init_noop;
+ 	if (wakeup_mailbox_addr) {
+ 		x86_platform.hyper.is_private_mmio = hv_is_private_mmio_tdx;
++		x86_platform.realmode_reserve = hv_reserve_real_mode;
+ 	} else {
+ 		x86_platform.realmode_reserve = x86_init_noop;
+ 		x86_platform.realmode_init = x86_init_noop;
+@@ -259,7 +276,8 @@ int __init hv_vtl_early_init(void)
+ 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
+ 			  "Please add 'noxsave' to the kernel command line.\n");
  
+-	real_mode_header = &hv_vtl_real_mode_header;
++	if (!wakeup_mailbox_addr)
++		real_mode_header = &hv_vtl_real_mode_header;
+ 	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
+ 
+ 	return 0;
 -- 
 2.25.1
 
