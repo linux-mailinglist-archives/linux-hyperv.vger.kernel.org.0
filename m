@@ -1,134 +1,137 @@
-Return-Path: <linux-hyperv+bounces-2746-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2747-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CF8B94AE8C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 19:00:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCABB94AE90
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 19:01:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5782284BA1
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 17:00:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AA23286051
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 17:01:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2E913BAE3;
-	Wed,  7 Aug 2024 16:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCAC313A87A;
+	Wed,  7 Aug 2024 17:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="odad3vo+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lRkUIkz4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJxh2eT9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFFA13B7A3;
-	Wed,  7 Aug 2024 16:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6047829C;
+	Wed,  7 Aug 2024 17:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723049974; cv=none; b=MuWRhcePi/ZirprAB67HqvKPZIt7ZwzPWmjoGuoKgbllSIbeOZHY2/G+v8jZ/Ic3+ofv9cqe+5VZ5MaUfRPnRlh78HrFvivX25MO8IeUkQiTCKsCsHIZvQMbmRm/YPrTfBh8VvpQKT2GAaj+NH5igkHQNI7tfxS01QM+CevCT7o=
+	t=1723050019; cv=none; b=B6x3hzGiDdaJ7ImdfenTU4U/FMJ8l/DBkXry3KSSmx22WpoetDTnxZzvKmNA+N2PwRRFQkGz0L2Aju+bZZO4QbiJoOlo4jMDhR6xCkXwtII3tPn8FuyEqdoIAmMZOlbo48416ptKxAgRAUMbJjMOKLo+XicIAQ629S0IgqW+VqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723049974; c=relaxed/simple;
-	bh=byyLyYIES1ujG0m93DaLgMws/0hwctl4+3xQEzXVUr8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=icQk4t8D4S2EWFgpKBeEg2WWIVJmdSdjb9jInCnK45L8BjQIHR+pOSxwgjNWGBnXaKUcE+YpHBw9nInZqNAJDr9/Ig+HJKzS/XBaB5CiSQwZ9V59ygTPd3/juDkihXjMLExRu+J1/7a9/FjhDS/gPFhD3NAMeFuoldIPisUmAnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=odad3vo+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lRkUIkz4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723049969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otPONBhSjDgKNxkH5EJTvsINrlb7+i62Ck70fxMf50E=;
-	b=odad3vo+qUtZ9DlO1uiwY0uN7nkJOcCa0MdCPoKRZzxQeQ4a1iHLV5n+8crXQpXbQLKDjZ
-	8wiqZLRyJ8U4stKdY5gqUejQc4YdRItobgRlMcK7F4F1AgZDNOufBlIo+e+KjVv3oJAqaq
-	KNhj1npGtgwDFaw48kW7265b70J83JfSzoYzLIzlt03MmHPgzve5Fb998in/RU/UbEMwE0
-	cwwikcPMJvGY0JFYg/ZbsVXd/l92ShIaG7SaLzvXojecG2gLYsP6/58EQ9/OnYNtm+TZ0z
-	y02Sk+Gl+mC+XvUP8RDgVPdmM2baRDyJGglxhN1oP6wMP4SQLIxildrIw3agGw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723049969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otPONBhSjDgKNxkH5EJTvsINrlb7+i62Ck70fxMf50E=;
-	b=lRkUIkz4Q837ijx3A+o6+lW3kLfalmRxfy2GgdVe9Mrvk0Z5uCAjd/mAyqHLWRbNJydqgk
-	0Dt+bTYYxsuMh4Dw==
-To: Yunhong Jiang <yunhong.jiang@linux.intel.com>, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, rafael@kernel.org, lenb@kernel.org,
- kirill.shutemov@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
- yunhong.jiang@linux.intel.com
-Subject: Re: [PATCH 5/7] x86/hyperv: Mark ACPI wakeup mailbox page as private
-In-Reply-To: <20240806221237.1634126-6-yunhong.jiang@linux.intel.com>
+	s=arc-20240116; t=1723050019; c=relaxed/simple;
+	bh=0ZzIZ3Ein6AVG3K74QzGFETXpKkjUXKztkvYhZlNk4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hYoTXWan3SDSSjkVh+XOafSWpEelTXziFeH9ysth/R+t9czlYRm9jIkNHRM4D5CcXFjiqUyjZbSiRr9UkicqtR+PoZtEDOLwkJ196hqWU5mBpWvKbOVyBAhf8Pl059cfISdV7GZpqmNToaoEmb38pkVohBTMxf4qwEGB8SdE9K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJxh2eT9; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723050018; x=1754586018;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0ZzIZ3Ein6AVG3K74QzGFETXpKkjUXKztkvYhZlNk4g=;
+  b=jJxh2eT9lbwRZ8EF11nfyqcbN5fHEMICVr6KRPhDzPX3j1YZI6vWvdYv
+   T1hpcTdgLm9ISUsO5SeqQC1MJm6n9sldxRbz9MZdbUjZ8B5aiFIHSS/IU
+   DnXoZxOmhPUodafheYEOEXvXvICtRy3/eLD+xWp/X7Ec7CeDDZ2QoJ3ww
+   SqIKjkSTWtmWQlfbIs2nvdtF5htgQ0t1dpRVats2mmXYDuKGPHSSIVZRH
+   jaMkGY6qHzL2hdADLa7oEX9ezZU8V2IdWPtiNa2RlLBv0QXNoPkHKFKAI
+   G0UEqneWP9j4MlljKxIKErS1wlRmogYNkGqToq7aijAAIUjXbtE323QU0
+   w==;
+X-CSE-ConnectionGUID: PEDp9FNsQuegr3Lo8c/Qqg==
+X-CSE-MsgGUID: 2rslIHkNS8G6UODXXhSbCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="25010745"
+X-IronPort-AV: E=Sophos;i="6.09,270,1716274800"; 
+   d="scan'208";a="25010745"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2024 10:00:17 -0700
+X-CSE-ConnectionGUID: MMNhW7tgTMSk/jXHgJU0EA==
+X-CSE-MsgGUID: pMcRMVPgRDe7MKO0BxsgYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,270,1716274800"; 
+   d="scan'208";a="57614514"
+Received: from xuexue-mobl1.ccr.corp.intel.com (HELO localhost) ([10.124.166.194])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2024 10:00:16 -0700
+Date: Wed, 7 Aug 2024 10:00:14 -0700
+From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	haiyangz@microsoft.com, krzk+dt@kernel.org, x86@kernel.org,
+	wei.liu@kernel.org, dave.hansen@linux.intel.com,
+	devicetree@vger.kernel.org, hpa@zytor.com,
+	linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
+	mingo@redhat.com, rafael@kernel.org, kys@microsoft.com,
+	kirill.shutemov@linux.intel.com, conor+dt@kernel.org,
+	lenb@kernel.org, decui@microsoft.com
+Subject: Re: [PATCH 2/7] dt-bindings: x86: Add ACPI wakeup mailbox
+Message-ID: <20240807170014.GB17382@yjiang5-mobl.amr.corp.intel.com>
 References: <20240806221237.1634126-1-yunhong.jiang@linux.intel.com>
- <20240806221237.1634126-6-yunhong.jiang@linux.intel.com>
-Date: Wed, 07 Aug 2024 18:59:28 +0200
-Message-ID: <87cymk2rrj.ffs@tglx>
+ <20240806221237.1634126-3-yunhong.jiang@linux.intel.com>
+ <172298750308.229414.6420535043181861002.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172298750308.229414.6420535043181861002.robh@kernel.org>
 
-On Tue, Aug 06 2024 at 15:12, Yunhong Jiang wrote:
-> The ACPI wakeup mailbox is accessed by the OS and the firmware, both are
-> in the guest's context, instead of the hypervisor/VMM context. Mark the
-> address private explicitly.
+On Tue, Aug 06, 2024 at 05:38:25PM -0600, Rob Herring (Arm) wrote:
+> 
+> On Tue, 06 Aug 2024 15:12:32 -0700, Yunhong Jiang wrote:
+> > Add the binding to use the ACPI wakeup mailbox mechanism to bringup APs.
+> > 
+> > Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> > ---
+> >  .../devicetree/bindings/x86/wakeup.yaml       | 41 +++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/x86/wakeup.yaml
+> > 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> ./Documentation/devicetree/bindings/x86/wakeup.yaml:4:1: [error] syntax error: expected '<document start>', but found '<block mapping start>' (syntax)
+> ./Documentation/devicetree/bindings/x86/wakeup.yaml:41:111: [warning] line too long (153 > 110 characters) (line-length)
+> 
+> dtschema/dtc warnings/errors:
+> make[2]: *** Deleting file 'Documentation/devicetree/bindings/x86/wakeup.example.dts'
+> Documentation/devicetree/bindings/x86/wakeup.yaml:4:1: did not find expected <document start>
+> make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/x86/wakeup.example.dts] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> ./Documentation/devicetree/bindings/x86/wakeup.yaml:4:1: did not find expected <document start>
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/x86/wakeup.yaml: ignoring, error parsing file
+> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1430: dt_binding_check] Error 2
+> make: *** [Makefile:240: __sub-make] Error 2
+> 
+> doc reference errors (make refcheckdocs):
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240806221237.1634126-3-yunhong.jiang@linux.intel.com
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
+> 
+I remember I ran 'make dt_binding_check' in the early development stage, but
+possibly missed the error information. Will fix this.
 
-This lacks information why the realmode area must be reserved and
-initialized, which is what the change is doing implicitely.
-
-> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
->  
-> +/*
-> + * The ACPI wakeup mailbox are accessed by the OS and the BIOS, both are in the
-> + * guest's context, instead of the hypervisor/VMM context.
-> + */
-> +static bool hv_is_private_mmio_tdx(u64 addr)
-> +{
-> +	if (wakeup_mailbox_addr && (addr >= wakeup_mailbox_addr &&
-> +	    addr < (wakeup_mailbox_addr + PAGE_SIZE)))
-> +		return true;
-> +	return false;
-> +}
-
-static inline bool within_page(u64 addr, u64 start)
-{
-	return addr >= start && addr < (start + PAGE_SIZE);
-}
-
-static bool hv_is_private_mmio_tdx(u64 addr)
-{
-        return wakeup_mailbox_addr && within_page(addr, wakeup_mailbox_addr)
-}
-
-Hmm?
-
-> +
->  void __init hv_vtl_init_platform(void)
->  {
->  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
->  
-> -	x86_platform.realmode_reserve = x86_init_noop;
-> -	x86_platform.realmode_init = x86_init_noop;
-> +	if (wakeup_mailbox_addr) {
-
-Wants a comment vs. realmode here.
-
-> +		x86_platform.hyper.is_private_mmio = hv_is_private_mmio_tdx;
-> +	} else {
-> +		x86_platform.realmode_reserve = x86_init_noop;
-> +		x86_platform.realmode_init = x86_init_noop;
-> +	}
->  	x86_init.irqs.pre_vector_init = x86_init_noop;
->  	x86_init.timers.timer_init = x86_init_noop;
-
-Thanks,
-
-        tglx
+Thank you
+--jyh
 
