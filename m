@@ -1,202 +1,164 @@
-Return-Path: <linux-hyperv+bounces-2748-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2749-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 847AE94AEF7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 19:34:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E941494B387
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Aug 2024 01:17:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3B3FB21DC1
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 17:33:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74062B20C0B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2024 23:17:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9602F13C9A2;
-	Wed,  7 Aug 2024 17:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F91C155352;
+	Wed,  7 Aug 2024 23:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KSpGaFRJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sERAv430"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="s6mUbQgb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD62C12C465;
-	Wed,  7 Aug 2024 17:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 037EE14EC55;
+	Wed,  7 Aug 2024 23:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723052010; cv=none; b=TaGxW3Ifv0CTSjTa/qSkIsuvJzLJ+reWXTnKA4RUmw1Z8a3FNIUDykP6MBMyRKLmTlTcKy6J3y5JWrIjfmLoX2+g26M9qSxUlPF6emV460FNunMAKok8gp89xhTfmhCp1zx1ws7XTF4Un2fnE291/xT8HO9B2uvae7LGhCCuZ7o=
+	t=1723072633; cv=none; b=N+d5FQrL/fQRW/xe8A5+9qeRpvxxnV+JGRwnUb65aLdlr1xrdPHHZF3SqL2RdG8NLcEGhf3MPKCBF6UQfBDi/wucDU0bnnh3qwCQ1rJSMdg+5VRXAZP1k56QvroemKUWCN1LDDlLoqGgN9ucsmOr9u2+hjm4xRF71JEsgBsZGAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723052010; c=relaxed/simple;
-	bh=k5Q4CZ8cUfM1zYiJ/MG0eS7kuEq1mdGVpXNIl1FNhYM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FkGD/v8uOo4lVV824yBbBgiEZT/B9DI9RVzjBzwPyGslo/vj7tzWmmj6aNyxBnAZ0pt+EZaSlacYx6SE5E9VQel6xm/v25BwPuz3fJdM4B9qsvl/ieizs5yP4m9vI9HD/xxtEfidurhAKgiE94GN8850+6smjjeCM8MMXrzIjZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KSpGaFRJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sERAv430; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723052007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xuqh98j/r4CgK85vbcGJbJsFxU9Ph3Ujqns0jxVK4rk=;
-	b=KSpGaFRJjJqdYd2TE3dKamP43ILEw+i4AnMR6H7g0AivhWljstUXJnasMe0Jx3DkS9EJJa
-	NjDV3SibOT1ES+2gOdsfoXp7b96IpdA86fNxYxwept1zelRiEshaVM366AbCzuUliy723C
-	eDDL8FNm1Gwvx4fTevugizs/VWz5I/+iN/BAZSqjbWtQ6ud2RxUkx5hJ5z3+ch/mYgSSzz
-	8q6QQFO6ENFwqiUJ/BRXx+sSMFvLFxTxP5cm7fK9tZSh/m23Vx7ZS5ztdN1+hi8hYUHlJd
-	wy/Nx3K396D3dRVxfkhFCD32AQaPn59QLCWtypAzWNJZ+j6t2F+nWyonMGLbpQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723052007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xuqh98j/r4CgK85vbcGJbJsFxU9Ph3Ujqns0jxVK4rk=;
-	b=sERAv430bitc2W3PXrAlMhOokYz+X84Wg06SWRIFgozuoJrjLNnrauo2nv7ZgTVN7isig3
-	EX6IA11ofipHk7CQ==
-To: Yunhong Jiang <yunhong.jiang@linux.intel.com>, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, rafael@kernel.org, lenb@kernel.org,
- kirill.shutemov@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
- yunhong.jiang@linux.intel.com
-Subject: Re: [PATCH 6/7] x86/hyperv: Reserve real mode when ACPI wakeup
- mailbox is available
-In-Reply-To: <20240806221237.1634126-7-yunhong.jiang@linux.intel.com>
-References: <20240806221237.1634126-1-yunhong.jiang@linux.intel.com>
- <20240806221237.1634126-7-yunhong.jiang@linux.intel.com>
-Date: Wed, 07 Aug 2024 19:33:26 +0200
-Message-ID: <87a5ho2q6x.ffs@tglx>
+	s=arc-20240116; t=1723072633; c=relaxed/simple;
+	bh=9UvoLi5cJO00aEAElI4jIxcTmYYWVZzyvrhZaKFx6g4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=qQjb/2iBWdpPkcups7O8RwqYkziJBE35Od4cZaJeFobXCaK7WaDSn+szOsLklCk1GAY2cTFdvqWBCtBOiiya6ZHy7+sOirEVaL5oQvncQgEDV5OGXlzqdhhzJxvlV5AsfjJCL8jdOXsNqVk4kVRimiuLY/l2WnTAuZiiW+qND8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=s6mUbQgb; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id 7DC3D20B7165; Wed,  7 Aug 2024 16:17:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7DC3D20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1723072631;
+	bh=O7xwfu9nS3te7zal8RpgadWiWfv4YgCbtr93q45X56s=;
+	h=From:To:Cc:Subject:Date:Reply-To:From;
+	b=s6mUbQgby0seKrrQc49gyHn2eVdqBIpPn9L39Odo3ZvcYkaQ7W5PeoqciSRkW+Zuu
+	 d9QG8dlLh4a6I6iAEvC8Lgt48y/xFJTGquj/iL1KbnSii+voY9kJnh8ehFmdtPYx0E
+	 MHqrV3GC5It99k90qag78OUX+7c/55WEJAZTTQK4=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 net] net: mana: Fix doorbell out of order violation and avoid unnecessary doorbell rings
+Date: Wed,  7 Aug 2024 16:17:06 -0700
+Message-Id: <1723072626-32221-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: longli@microsoft.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Tue, Aug 06 2024 at 15:12, Yunhong Jiang wrote:
-> +static void __init hv_reserve_real_mode(void)
-> +{
-> +	phys_addr_t mem;
-> +	size_t size = real_mode_size_needed();
-> +
-> +	/*
-> +	 * We only need the memory to be <4GB since the 64-bit trampoline goes
-> +	 * down to 32-bit mode.
-> +	 */
-> +	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, SZ_4G);
-> +	if (!mem)
-> +		panic("No sub-4G memory is available for the trampoline\n");
-> +	set_real_mode_mem(mem);
-> +}
+From: Long Li <longli@microsoft.com>
 
-We really don't need another copy of reserve_real_mode(). See uncompiled
-patch below. It does not panic when the allocation fails, but why do you
-want to panic in that case? If it's not there then the system boots with
-a single CPU, so what.
+After napi_complete_done() is called when NAPI is polling in the current
+process context, another NAPI may be scheduled and start running in
+softirq on another CPU and may ring the doorbell before the current CPU
+does. When combined with unnecessary rings when there is no need to arm
+the CQ, it triggers error paths in the hardware.
 
->  void __init hv_vtl_init_platform(void)
->  {
->  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
->  
->  	if (wakeup_mailbox_addr) {
->  		x86_platform.hyper.is_private_mmio = hv_is_private_mmio_tdx;
-> +		x86_platform.realmode_reserve = hv_reserve_real_mode;
->  	} else {
->  		x86_platform.realmode_reserve = x86_init_noop;
->  		x86_platform.realmode_init = x86_init_noop;
-> @@ -259,7 +276,8 @@ int __init hv_vtl_early_init(void)
->  		panic("XSAVE has to be disabled as it is not supported by this module.\n"
->  			  "Please add 'noxsave' to the kernel command line.\n");
->  
-> -	real_mode_header = &hv_vtl_real_mode_header;
-> +	if (!wakeup_mailbox_addr)
-> +		real_mode_header = &hv_vtl_real_mode_header;
+This patch fixes this by calling napi_complete_done() after doorbell
+rings. It limits the number of unnecessary rings when there is
+no need to arm. MANA hardware specifies that there must be one doorbell
+ring every 8 CQ wraparounds. This driver guarantees one doorbell ring as
+soon as the number of consumed CQEs exceeds 4 CQ wraparounds. In pratical
+workloads, the 4 CQ wraparounds proves to be big enough that it rarely
+exceeds this limit before all the napi weight is consumed.
 
-Why is that not suffient to be done in hv_vtl_init_platform() inside the
-condition which clears x86_platform.realmode_reserve/init?
+To implement this, add a per-CQ counter cq->work_done_since_doorbell,
+and make sure the CQ is armed as soon as passing 4 wraparounds of the CQ.
 
-x86_platform.realmode_init() is invoked from an early initcall while
-hv_vtl_init_platform() is called during early boot.
+Cc: stable@vger.kernel.org
+Fixes: e1b5683ff62e ("net: mana: Move NAPI from EQ to CQ")
 
-Thanks,
-
-        tglx
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Long Li <longli@microsoft.com>
 ---
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -31,12 +31,18 @@ struct x86_init_mpparse {
-  *				platform
-  * @memory_setup:		platform specific memory setup
-  * @dmi_setup:			platform specific DMI setup
-+ * @realmode_limit:		platform specific address limit for the realmode trampoline
-+ *				(default 1M)
-+ * @reserve_bios:		platform specific address limit for reserving the BIOS area
-+ *				(default 1M)
-  */
- struct x86_init_resources {
- 	void (*probe_roms)(void);
- 	void (*reserve_resources)(void);
- 	char *(*memory_setup)(void);
- 	void (*dmi_setup)(void);
-+	unsigned long realmode_limit;
-+	unsigned long reserve_bios;
- };
- 
- /**
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -8,6 +8,7 @@
- #include <linux/ioport.h>
- #include <linux/export.h>
- #include <linux/pci.h>
-+#include <linux/sizes.h>
- 
- #include <asm/acpi.h>
- #include <asm/bios_ebda.h>
-@@ -68,6 +69,8 @@ struct x86_init_ops x86_init __initdata
- 		.reserve_resources	= reserve_standard_io_resources,
- 		.memory_setup		= e820__memory_setup_default,
- 		.dmi_setup		= dmi_setup,
-+		.realmode_limit		= SZ_1M,
-+		.reserve_bios		= SZ_1M,
- 	},
- 
- 	.mpparse = {
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -45,7 +45,7 @@ void load_trampoline_pgtable(void)
- 
- void __init reserve_real_mode(void)
+
+change in v2:
+Added more details to comments to explain the patch
+
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
+ include/net/mana/mana.h                       |  1 +
+ 2 files changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index d2f07e179e86..f83211f9e737 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1788,7 +1788,6 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
  {
--	phys_addr_t mem;
-+	phys_addr_t mem, limit = x86_init.resources.realmode_limit;
- 	size_t size = real_mode_size_needed();
+ 	struct mana_cq *cq = context;
+-	u8 arm_bit;
+ 	int w;
  
- 	if (!size)
-@@ -54,17 +54,15 @@ void __init reserve_real_mode(void)
- 	WARN_ON(slab_is_available());
+ 	WARN_ON_ONCE(cq->gdma_cq != gdma_queue);
+@@ -1799,16 +1798,23 @@ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+ 		mana_poll_tx_cq(cq);
  
- 	/* Has to be under 1M so we can execute real-mode AP code. */
--	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, 1<<20);
-+	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, limit);
- 	if (!mem)
--		pr_info("No sub-1M memory is available for the trampoline\n");
-+		pr_info("No memory below %lluM for the real-mode trampoline\n", limit >> 20);
- 	else
- 		set_real_mode_mem(mem);
+ 	w = cq->work_done;
+-
+-	if (w < cq->budget &&
+-	    napi_complete_done(&cq->napi, w)) {
+-		arm_bit = SET_ARM_BIT;
+-	} else {
+-		arm_bit = 0;
++	cq->work_done_since_doorbell += w;
++
++	if (w < cq->budget) {
++		mana_gd_ring_cq(gdma_queue, SET_ARM_BIT);
++		cq->work_done_since_doorbell = 0;
++		napi_complete_done(&cq->napi, w);
++	} else if (cq->work_done_since_doorbell >
++		   cq->gdma_cq->queue_size / COMP_ENTRY_SIZE * 4) {
++		/* MANA hardware requires at least one doorbell ring every 8
++		 * wraparounds of CQ even if there is no need to arm the CQ.
++		 * This driver rings the doorbell as soon as we have exceeded
++		 * 4 wraparounds.
++		 */
++		mana_gd_ring_cq(gdma_queue, 0);
++		cq->work_done_since_doorbell = 0;
+ 	}
  
--	/*
--	 * Unconditionally reserve the entire first 1M, see comment in
--	 * setup_arch().
--	 */
--	memblock_reserve(0, SZ_1M);
-+	/* Reserve the entire first 1M, if enabled. See comment in setup_arch(). */
-+	if (x86_init.resources.reserve_bios)
-+		memblock_reserve(0, x86_init.resources.reserve_bios);
+-	mana_gd_ring_cq(gdma_queue, arm_bit);
+-
+ 	return w;
  }
  
- static void __init sme_sev_setup_real_mode(struct trampoline_header *th)
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 6439fd8b437b..7caa334f4888 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -275,6 +275,7 @@ struct mana_cq {
+ 	/* NAPI data */
+ 	struct napi_struct napi;
+ 	int work_done;
++	int work_done_since_doorbell;
+ 	int budget;
+ };
+ 
+-- 
+2.17.1
+
 
