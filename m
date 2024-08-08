@@ -1,139 +1,168 @@
-Return-Path: <linux-hyperv+bounces-2751-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2752-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BD6594B808
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Aug 2024 09:41:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D037694BBD4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Aug 2024 13:00:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B86891F21AF3
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Aug 2024 07:41:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D74D281F18
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Aug 2024 11:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 481AB187FE2;
-	Thu,  8 Aug 2024 07:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C304118A6D0;
+	Thu,  8 Aug 2024 11:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihRLBV2x"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fJhunPSN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A24E7464;
-	Thu,  8 Aug 2024 07:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34774286A6;
+	Thu,  8 Aug 2024 11:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723102886; cv=none; b=gGK2YselL1Iymhgxpdfr9+oWyvruAx3bY6CR4o+/Fk/Fz6mW8cQnJnI+vBUZO6Tjyiq5/t++gA2ur54948xc+fNTqSbSTbBiUuiJ/m34wJ9P+9Vd2DJetGAzNWmOil67SUO0Q5wcGKLTukGVWi9+3dDg+jgrumamWHHdaqJ5gM4=
+	t=1723114828; cv=none; b=L1kvwwvJwhrLPp4vxlr/Pamk+ALnq//UmlDAaIfUF4/Vg3wfwGle7XyhU/UFZ1Zh0RjKqNhwPAt5nPy8RYQ/Iav4XK2k+GvOCyMwph3KibmO7fhGChjnzi8lqR/S6w+npOWSs6ZOY6HNhvEjhGIRhB/CVc7hJ5Q4+zRcwYVITao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723102886; c=relaxed/simple;
-	bh=t5N9T8xEia2siECJTMsRWguXbC34r9Rct6OyQFGhP9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iTyPmW9KG1vVYCBUKBUv736xx5VeyQByzoAysfUtJuTbMnLcfCGd3Mlg1uNlLkiV+B9HpObPUJg6vJ5+8Mq01Pk+5NKjgGKux1blmYKAgj50oJpNMouAEMM47l9+CeR2wlWY6I/9FHAJd++fr7XENKRKIeNyxCr1PsPFI9ybuoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihRLBV2x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6D0C32782;
-	Thu,  8 Aug 2024 07:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723102885;
-	bh=t5N9T8xEia2siECJTMsRWguXbC34r9Rct6OyQFGhP9o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ihRLBV2xENNc6I36F7U9ysx1gpHzl99qCakbmON5ZGiNh0UPMp3SCOcbypmQxj85E
-	 kvjxWexdHLd0JGzbSiBA5k6/A8M+dY687iCczdVJtURHLVtgHJcZuM5D/7pTg39qpC
-	 te0yYk/MYaYkX4a7bIZYipzYvuVyjUz8bQVE6ovTO++/oZU2IMeN+6u+ST3RA04eLn
-	 gINAJ2TJ2Hrlte7Fm5B+dMtTfAYjjTbjwVOqJwhItRW9Ylr2nCHyDNoTL5o7wGH2RI
-	 H1zfdJTMjdXlYKLhPGoufODiIZmpYxt3b8exl+hdgdhPkSZ1/T98fuvkGcxB7O5Ytc
-	 Ryh3RLi+jbU8w==
-Message-ID: <624e1985-7dd2-4abe-a918-78cb43556967@kernel.org>
-Date: Thu, 8 Aug 2024 09:41:16 +0200
+	s=arc-20240116; t=1723114828; c=relaxed/simple;
+	bh=OR+VhU9mhCyJce7HDHe1Uv/U/dBXIye6qP8H9dbJTn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxPByh0zUidFyjfqLrWj6Q7claLOKE01kRABTCHbTSrcFxneJ4qcFvDMSF2wWJE+24ZIF3LhdxTlWTR2smo2WMcfzfKZiGS8tu0EXESiSdWsQKeWjjmMHdj0VCDdh52/IdV08wKIpau2K3m2QSqklGqa75SVpt+OaJLofmY/dFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fJhunPSN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id BAA1A20B7165; Thu,  8 Aug 2024 04:00:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BAA1A20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1723114826;
+	bh=Q9TBJrSTIxZWyLx3nUhN0aGNn1LRkcSdO2AwzlYwPoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fJhunPSNNqAjK+gCkGDTz7UrVynoxZHaHyzpVKaKYe8kN/R8J55Hn/2Y7l7EDut16
+	 tFrSjzR3zJrHEWxZFrkjO8foCUQ6La6A5Qtq7kNjWoQUxyM2aytL/81WYZEPKlBfdf
+	 g1++8zHNCjFRKBE7DIjJRivbLmouRz52GgjFQDtM=
+Date: Thu, 8 Aug 2024 04:00:26 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: longli@microsoft.com
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 net] net: mana: Fix doorbell out of order violation
+ and avoid unnecessary doorbell rings
+Message-ID: <20240808110026.GA25550@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1723072626-32221-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] dt-bindings: x86: Add ACPI wakeup mailbox
-To: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- rafael@kernel.org, lenb@kernel.org, kirill.shutemov@linux.intel.com,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20240806221237.1634126-1-yunhong.jiang@linux.intel.com>
- <20240806221237.1634126-3-yunhong.jiang@linux.intel.com>
- <ce4903f2-2a9d-45c4-bd4d-ac5165211a83@kernel.org>
- <20240807165658.GA17382@yjiang5-mobl.amr.corp.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240807165658.GA17382@yjiang5-mobl.amr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1723072626-32221-1-git-send-email-longli@linuxonhyperv.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 07/08/2024 18:56, Yunhong Jiang wrote:
-> On Wed, Aug 07, 2024 at 07:57:43AM +0200, Krzysztof Kozlowski wrote:
->> On 07/08/2024 00:12, Yunhong Jiang wrote:
->>> Add the binding to use the ACPI wakeup mailbox mechanism to bringup APs.
->>
->> We do not have bindings for ACPI. I think in the past it was mentioned
->> pretty clear - we do not care what ACPI has in the wild.
+On Wed, Aug 07, 2024 at 04:17:06PM -0700, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Thank you for review.
-> Can you please give a bit more information on "do not have bindings for ACPI"?
-> We don't put the ACPI table into the device tree, but reuse some existing ACPI
-> mailbox mechanism. Is this acceptable for you?
+> After napi_complete_done() is called when NAPI is polling in the current
+> process context, another NAPI may be scheduled and start running in
+> softirq on another CPU and may ring the doorbell before the current CPU
+> does. When combined with unnecessary rings when there is no need to arm
+> the CQ, it triggers error paths in the hardware.
+> 
+> This patch fixes this by calling napi_complete_done() after doorbell
+> rings. It limits the number of unnecessary rings when there is
+> no need to arm. MANA hardware specifies that there must be one doorbell
+> ring every 8 CQ wraparounds. This driver guarantees one doorbell ring as
+> soon as the number of consumed CQEs exceeds 4 CQ wraparounds. In pratical
+> workloads, the 4 CQ wraparounds proves to be big enough that it rarely
+> exceeds this limit before all the napi weight is consumed.
+> 
+> To implement this, add a per-CQ counter cq->work_done_since_doorbell,
+> and make sure the CQ is armed as soon as passing 4 wraparounds of the CQ.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: e1b5683ff62e ("net: mana: Move NAPI from EQ to CQ")
+> 
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+> 
+> change in v2:
+> Added more details to comments to explain the patch
+> 
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
+>  include/net/mana/mana.h                       |  1 +
+>  2 files changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index d2f07e179e86..f83211f9e737 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1788,7 +1788,6 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+>  static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+>  {
+>  	struct mana_cq *cq = context;
+> -	u8 arm_bit;
+>  	int w;
+>  
+>  	WARN_ON_ONCE(cq->gdma_cq != gdma_queue);
+> @@ -1799,16 +1798,23 @@ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+>  		mana_poll_tx_cq(cq);
+>  
+>  	w = cq->work_done;
+> -
+> -	if (w < cq->budget &&
+> -	    napi_complete_done(&cq->napi, w)) {
+> -		arm_bit = SET_ARM_BIT;
+> -	} else {
+> -		arm_bit = 0;
+> +	cq->work_done_since_doorbell += w;
+> +
+> +	if (w < cq->budget) {
+> +		mana_gd_ring_cq(gdma_queue, SET_ARM_BIT);
+> +		cq->work_done_since_doorbell = 0;
+> +		napi_complete_done(&cq->napi, w);
+> +	} else if (cq->work_done_since_doorbell >
+> +		   cq->gdma_cq->queue_size / COMP_ENTRY_SIZE * 4) {
 
-I understood that rationale behind this patch is "ACPI" thus that reply.
-This one sentence in commit msg is not helping. Entire binding
-description speaks about ACPI, so yeah - I don't care what ACPI does.
-Provide proper explanation/description of firmware or hardware, then
-sure. But the patch saying ACPI is doing something, so bindings will be
-doing the same is for me NAK. Whatever ACPI is doing is never a reason
-alone to do the same in Devicetree.
+should we define a macro for 4? may be 'CQ_WRAPAROUND_LIMIT'
 
-Best regards,
-Krzysztof
-
+> +		/* MANA hardware requires at least one doorbell ring every 8
+> +		 * wraparounds of CQ even if there is no need to arm the CQ.
+> +		 * This driver rings the doorbell as soon as we have exceeded
+> +		 * 4 wraparounds.
+> +		 */
+> +		mana_gd_ring_cq(gdma_queue, 0);
+> +		cq->work_done_since_doorbell = 0;
+>  	}
+>  
+> -	mana_gd_ring_cq(gdma_queue, arm_bit);
+> -
+>  	return w;
+>  }
+>  
+> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+> index 6439fd8b437b..7caa334f4888 100644
+> --- a/include/net/mana/mana.h
+> +++ b/include/net/mana/mana.h
+> @@ -275,6 +275,7 @@ struct mana_cq {
+>  	/* NAPI data */
+>  	struct napi_struct napi;
+>  	int work_done;
+> +	int work_done_since_doorbell;
+>  	int budget;
+>  };
+>  
+> -- 
+> 2.17.1
 
