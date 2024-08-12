@@ -1,99 +1,138 @@
-Return-Path: <linux-hyperv+bounces-2764-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2765-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5227F94ED01
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Aug 2024 14:30:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD25C94FA83
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2024 01:59:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A30FBB21A74
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Aug 2024 12:30:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63E5E1F21D12
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Aug 2024 23:59:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731BC17A939;
-	Mon, 12 Aug 2024 12:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 320C118E022;
+	Mon, 12 Aug 2024 23:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBQJV8AK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jaUCRFJ7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F3B17A5B5;
-	Mon, 12 Aug 2024 12:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B346C1804F
+	for <linux-hyperv@vger.kernel.org>; Mon, 12 Aug 2024 23:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723465828; cv=none; b=Vsp2Ar+9IBiVjAndNBgOVm76xJY9Qim4mCTnLd2S9+q12UJqRLxgpnV4+lFqejXskNCG4hTsTwG0aetfcaWCTpaYKrcQsun9vNweJYfNN5qN4LUgJ/GNMg7PotkYfqz5wQOrpIT1IbBsclH8SSd1+/OZh0YJEO5wij/kNiZip1k=
+	t=1723507184; cv=none; b=A5/tRuk1GLV4vCJINqHI/P/pxfk7nbiEcC9Jatz4aYEcZDYn1mY2wLufrkqgZ2INzT5WwDnNnXPATB2aPiAOKmnCf7kVa8jjAg++Y1p3KLfaNiX8V+H6DhdkORWY8DjqpUIZu3lOYjGhn3aZokgXujVl62W+OwYTKIQ/Gx+J7wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723465828; c=relaxed/simple;
-	bh=daslIMI9OAMAvqRfkYqd0A4uF/CVa60AExTLNpeFK9U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ub7uX0geD8JwyP9Z/Tvu65YgOHkC1uGgwZAQBRxCz3FPsbHmKRctK+u8APlxTDKUWeIgyqMgILcY+TYSHBOkdkaY87jzUvgrRSj9tyLSRTu2+6Zi1uTx21BS1IENrVwmsp7hVDZkbeeZUjYadYsTAgXoUBsiKpiJqbwNyq/HON0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBQJV8AK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D7CC4AF0E;
-	Mon, 12 Aug 2024 12:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723465827;
-	bh=daslIMI9OAMAvqRfkYqd0A4uF/CVa60AExTLNpeFK9U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cBQJV8AK+rCicBDSwVUri/rjC57zlg2FU2Hx8gttFSiZbrsEfD6tB+v46ULi98a3B
-	 Auq5FZWFhsp3F6szggHozl+fNZoELFMCQshx11bfFB/4Z6UW6zVolneZIUCqASx/ko
-	 BO6NJAwQH+KYkIYx5HaVAiSXuCaEQHJ3zCnaO1Fwl0MLOehK1YsxytUJLy2VEc1Cvd
-	 /oQxRpGpUlYeMbR4oIZQEgF6JHaqms6XbkwXP2eTrSbJmgp/Xux5Jnz2+xYtt1maJq
-	 D2FinY154EiDJjXsVkPjO4oQKB2x+208zpGPye8lOCKgOYxEUmi+Do6RXxe13cT0L5
-	 jnEUbQ+z6E06w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EC8CC382332D;
-	Mon, 12 Aug 2024 12:30:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1723507184; c=relaxed/simple;
+	bh=g0tyl5PUP+wK9NuBMt6TH2vOO/Fwr+C64cHZyDZ4lDs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NQqcbgjmOx2dLL1H9hQ6ln0Jv7hQ7FuRiheOY8EZmlBzYOUBtwdrsIo9eYYLSF7iRNH279arfOL9V71kXICaPrBmKBS3NRmFJAHJBf6LGvUl+zuqEcpco4uCyNhZLcsMWEI32Ch/IVMIrfqEDEcDWhj6fO905tiUGg+Bfq1BfeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jaUCRFJ7; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1fc4e03a885so41571225ad.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 12 Aug 2024 16:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723507182; x=1724111982; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xkVLv7LlrGu9r3Iv9qG0e2Nje3x1aHRRiIR2Xt4n2gc=;
+        b=jaUCRFJ7VnQ4Zh+zkARZDOII52M0Bv3V0vDHmmz7v3GNbyNldjhOlcjTcL42z7rIc3
+         3w9TsaNLkZDSUSAebxqTIKqfQk1ORNnKJ/s8609G/x0zvZVbyA2bD+IZ6C07ovd5+N1B
+         myp9oIOmsHgqIsPYYnjq4qULIH9PrSoOLhiAdL3aNPNlOjeFkB2XPvkZTPGkYvTal1TF
+         1ryqbngTFFYT/JZBCKJ3cpxKSBtYtOssgJAjC/7NhyzzItHfz/pXdK6m+1Hw4mGEDm7S
+         82M8xUJI2TAhgrbrD/8Dp98sgYJ1Kr75eO6p1no59w9I7Zlbw3fCl3VT+m8ceolAPQCH
+         0sTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723507182; x=1724111982;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xkVLv7LlrGu9r3Iv9qG0e2Nje3x1aHRRiIR2Xt4n2gc=;
+        b=RDKfZ71x1w4mWDFp4HMYRWWbFLGgYg92LOcqHOTm7VKo/prga+1KtF2rcFUnpJT/pl
+         ujCvemAhyLgPjkLUQO7FzLsfSMGb7AM4XjKVluOrVP13lyhdnz0OG04GbysFNWB66nKh
+         HgU93BT+g7e6DD/XOJOkg30pJgMkImKdjY8glXtsX9eIGGu/Odug5o7JRrP/00Nni8Dg
+         cryj/DBEwzHBBxdB5lh0PpHHd1kZsTF1TXvp3De6cpxnYwWpbZoyVBQgF6oSP3IKd6g5
+         OyhF0afs+Q+4tufAkbjyjg69EJsTshn6Z8OHcKEI8V+H057IOoF7+RdMqFjSAXXEnF6I
+         9QNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHJuSnnE/LXI2mTB+SimsehuoEIgkJMlOFkwzndlmq0/JjoshtR5133jDqGUHWbDVTrgyzG546wcVNckQN/Hd/8nBEkgzEKxY8SPfE
+X-Gm-Message-State: AOJu0YwfJaXKj8XFDtlRJjT/BpRqJwATiZmDMSCisKQDOqhBZMYMvCFJ
+	KtA2eRPfaMQhTZ7va2tNc6sr2ZxdoQqsfA1e7kVr9Dytbx5wtVHkFMpG7kt0o7NGTg7MZY2Fab8
+	ezw==
+X-Google-Smtp-Source: AGHT+IE54zpvNYRIpauQx2fUW2c4J1ybAMAV0sQcl0g+l007AvifWUKHU2UqnMcCve5fnXfoOaV5cigMM/Y=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:c406:b0:1fd:9d0c:999e with SMTP id
+ d9443c01a7336-201ca19e6e6mr690325ad.9.1723507181791; Mon, 12 Aug 2024
+ 16:59:41 -0700 (PDT)
+Date: Mon, 12 Aug 2024 16:59:40 -0700
+In-Reply-To: <35624750846f564e6789c22801300a542cafa7fb.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: mana: Fix RX buf alloc_size alignment and atomic op
- panic
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172346582650.1009420.18122025004130803028.git-patchwork-notify@kernel.org>
-Date: Mon, 12 Aug 2024 12:30:26 +0000
-References: <1723237284-7262-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1723237284-7262-1-git-send-email-haiyangz@microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
- stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
- olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
+Mime-Version: 1.0
+References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
+ <87ttg42uju.ffs@tglx> <SN6PR02MB41571AE611E7D249DABFE56DD4B22@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87o76c2hw2.ffs@tglx> <30eb7680b3c7ae5370dfbf7510e664181f38b80e.camel@infradead.org>
+ <ZqzzVRQYCmUwD0OL@google.com> <35624750846f564e6789c22801300a542cafa7fb.camel@infradead.org>
+Message-ID: <Zrqh7GlPMRVOVtvY@google.com>
+Subject: Re: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in shutdown
+From: Sean Christopherson <seanjc@google.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Michael Kelley <mhklinux@outlook.com>, 
+	"lirongqing@baidu.com" <lirongqing@baidu.com>, "kys@microsoft.com" <kys@microsoft.com>, 
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, 
+	"decui@microsoft.com" <decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Fri, Aug 02, 2024, David Woodhouse wrote:
+> On Fri, 2024-08-02 at 07:55 -0700, Sean Christopherson wrote:
+> > On Fri, Aug 02, 2024, David Woodhouse wrote:
+> > > On Thu, 2024-08-01 at 20:54 +0200, Thomas Gleixner wrote:
+> > > > On Thu, Aug 01 2024 at 16:14, Michael Kelley wrote:
+> > > > > I don't have a convenient way to test my sequence on KVM.
+> > > >=20
+> > > > But still fails in KVM
+> > >=20
+> > > By KVM you mean the in-kernel one that we want to kill because everyo=
+ne
+> > > should be using userspace IRQ chips these days?
+> >=20
+> > What exactly do you want to kill?=C2=A0 In-kernel local APIC obviously =
+needs to stay
+> > for APICv/AVIC.
+>=20
+> The legacy PIT, PIC and I/O APIC.
+>=20
+> > And IMO, encouraging userspace I/O APIC emulation is a net negative for=
+ KVM and
+> > the community as a whole, as the number of VMMs in use these days resul=
+ts in a
+> > decent amount of duplicated work in userspace VMMs, especially when acc=
+ounting
+> > for hardware and software quirks.
+>=20
+> I don't particularly care, but I thought the general trend was towards
+> split irqchip mode, with the local APIC in-kernel but i8259 PIC and I/O
+> APIC (and the i8254 PIT, which was the topic of this discussion) being
+> done in userspace.
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri,  9 Aug 2024 14:01:24 -0700 you wrote:
-> The MANA driver's RX buffer alloc_size is passed into napi_build_skb() to
-> create SKB. skb_shinfo(skb) is located at the end of skb, and its alignment
-> is affected by the alloc_size passed into napi_build_skb(). The size needs
-> to be aligned properly for better performance and atomic operations.
-> Otherwise, on ARM64 CPU, for certain MTU settings like 4000, atomic
-> operations may panic on the skb_shinfo(skb)->dataref due to alignment fault.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net] net: mana: Fix RX buf alloc_size alignment and atomic op panic
-    https://git.kernel.org/netdev/net/c/32316f676b4e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Yeah, that's where most everyone is headed, if not already there.  Letting =
+the
+I/O APIC live in userspace is probably the right direction long term, I jus=
+t don't
+love that every VMM seems to have it's own slightly different version.  But=
+ I think
+the answer to that is to build a library for (legacy?) device emulation so =
+that
+VMMs can link to an implementation instead of copy+pasting from somwhere el=
+se and
+inevitably ending up with code that's frozen in time.
 
