@@ -1,133 +1,99 @@
-Return-Path: <linux-hyperv+bounces-2766-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2767-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F9FF94FE05
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2024 08:40:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F97D95039D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2024 13:30:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDF231F21D0A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2024 06:40:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A88531C20B20
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2024 11:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AAD63BBC5;
-	Tue, 13 Aug 2024 06:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0BEE198E6E;
+	Tue, 13 Aug 2024 11:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P7rkgZDX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOCT/6Ks"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBFA1CD23;
-	Tue, 13 Aug 2024 06:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA85518B480;
+	Tue, 13 Aug 2024 11:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723531216; cv=none; b=QLEt0GTrZJOD8tAs65Ta5FDcc0k2ivOh45JNZvO/U1r7fGuhbXa9ea4oFoHJze/hFytcdSPU7zvm6bo5/wy2d8p0HZJ6BoVzY/dQkOytaWzjZCSH1jfZFOzcl86XimYP4RCsK2V5GmntIB5LqzgnOpilW6VesUepbyQ4bZMVIgM=
+	t=1723548630; cv=none; b=OJ7feyqhrIAuwkZAB0cVOvAi8VJ+FiFR08CZwRDqYftLJEDAlpICBiDhtKifFfVjp2Qvk5fxdl3f2+M6gohbfjm4SHsLLLM4e9sExrb4dG7S248GvPTIM0QUk40K23bBuKnSRwsbUnOA9r3bLIAbRCPajk0BCdS2bJu/qBzRAwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723531216; c=relaxed/simple;
-	bh=eiYImyIe+mYjjDD8xoPOCd/hI2KuNIuxHNorm1aWa00=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Q+omTF25YDllZbJs0CVXvvwiPwS9BG6vdSoAcSsP0bo0hH/WP1xEWCeshUu5f+/Ipv/m4kOFxnJEmwO3sbjDiOJpmxrSXyZhxG3mjklxiNJ4+9xiFu6StZ5XV8vMtzK9QdLf2H8HaJEKDnOM39+sMyj6l0q9sipTTHTYAcHhIT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P7rkgZDX; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=x6xW72eBbWVaT+8NJmpt2BbFpDPPo+52uKh39Es5tzM=; b=P7rkgZDXPAcSh3DJ7mBNjP3z6s
-	ItrrNL1K6IJAE9O4ITaSiUeL8R5XscIDB7ozUMlRHM4Jmbokwg9YAsXB1hyFxwrcIg9FvB2NB0kV1
-	t5a9QuJYN099pcrF7/ugyTvo2r4D9BYino8Wmho2ycwT6ETMg1zjy1Z072huUF5DsohEeWX9uB4Io
-	sewVC04a7CuG2boXbTOCFdQohPYscvJBg4Gr+LDWnFYjtDtaZj6xn6mi+KUo+I/eX2B/DWDz4sv99
-	98vO/d3Ny1UKvVst7PtKN5pUsw57D7dHPZmGb+2Qm295m2EZixSoJUHhFyWfa6YgCAN0sQZvwjhAs
-	rqhip9tQ==;
-Received: from [2a00:23ee:1958:1906:2ed8:c63c:8737:bcca] (helo=[IPv6:::1])
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdlCF-00000007iJU-1EG0;
-	Tue, 13 Aug 2024 06:39:56 +0000
-Date: Tue, 13 Aug 2024 07:39:51 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Michael Kelley <mhklinux@outlook.com>,
- "lirongqing@baidu.com" <lirongqing@baidu.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_clockevents/drivers/i8253=3A?=
- =?US-ASCII?Q?_Do_not_zero_timer_counter_in_shutdown?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Zrqh7GlPMRVOVtvY@google.com>
-References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com> <87ttg42uju.ffs@tglx> <SN6PR02MB41571AE611E7D249DABFE56DD4B22@SN6PR02MB4157.namprd02.prod.outlook.com> <87o76c2hw2.ffs@tglx> <30eb7680b3c7ae5370dfbf7510e664181f38b80e.camel@infradead.org> <ZqzzVRQYCmUwD0OL@google.com> <35624750846f564e6789c22801300a542cafa7fb.camel@infradead.org> <Zrqh7GlPMRVOVtvY@google.com>
-Message-ID: <B8008048-5D99-4B78-B63F-862207F78D73@infradead.org>
+	s=arc-20240116; t=1723548630; c=relaxed/simple;
+	bh=kiwXUxfjx4OtcKC14SZI8xUFCU5QGPX4eXEN8CbXRLM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=sShtepDCZRwFfuBZ0rmg1akSWDaMsw0J9jjFZhJYEB2qTteieBBeu1AP1a/Fg5V/xbAKthCALi1npdWnBa3+McaKs4afDvyKily+28coPyNZUiAk3Vc5/aJa8/FP7VzCkjNLpDcj1TSBwtKrRwOTjOhT6Fbl3L6yJaf/m3ps1t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOCT/6Ks; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C097C4AF0B;
+	Tue, 13 Aug 2024 11:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723548630;
+	bh=kiwXUxfjx4OtcKC14SZI8xUFCU5QGPX4eXEN8CbXRLM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=HOCT/6Ks9SESeseIvikOwerpDR78YS4ROZoV5WqO9XHA9EokNr5d3KulKwHsxH9Vm
+	 +lIwOH4EXJkWrf+/cmvX6AX2jhSiOdHyFtxIhtTjGxLxx/CHYhCPLesXAMmh7ucSmg
+	 gAZmQt7mDq6wbgHQDvtGGfhyQS3bXxrouzAsn5uE/G/dKD5EfQIixWoUDsKucnupEp
+	 0JLll8NdhvHt6P+8nyURKE5n9Qc9DbH/xtBpYT5vVjYk8Ys9fakAj1q97Hy8w1MEjO
+	 3gkVR+z+iXhQQBTr9RlOzQcj9ip7YOiAkqP5153xDUJ3Rb+QC/xbOiqgLD7FECOA49
+	 qv3Z8t3nAEMAA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70EB83823327;
+	Tue, 13 Aug 2024 11:30:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 net] net: mana: Fix doorbell out of order violation and
+ avoid unnecessary doorbell rings
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172354862926.1604273.6519840713233454447.git-patchwork-notify@kernel.org>
+Date: Tue, 13 Aug 2024 11:30:29 +0000
+References: <1723219138-29887-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1723219138-29887-1-git-send-email-longli@linuxonhyperv.com>
+To: Long Li <longli@linuxonhyperv.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shradhagupta@linux.microsoft.com,
+ horms@kernel.org, kotaranov@microsoft.com, schakrabarti@linux.microsoft.com,
+ erick.archer@outlook.com, paulros@microsoft.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ longli@microsoft.com, stable@vger.kernel.org
 
-On 13 August 2024 00:59:40 BST, Sean Christopherson <seanjc@google=2Ecom> w=
-rote:
->On Fri, Aug 02, 2024, David Woodhouse wrote:
->> On Fri, 2024-08-02 at 07:55 -0700, Sean Christopherson wrote:
->> > On Fri, Aug 02, 2024, David Woodhouse wrote:
->> > > On Thu, 2024-08-01 at 20:54 +0200, Thomas Gleixner wrote:
->> > > > On Thu, Aug 01 2024 at 16:14, Michael Kelley wrote:
->> > > > > I don't have a convenient way to test my sequence on KVM=2E
->> > > >=20
->> > > > But still fails in KVM
->> > >=20
->> > > By KVM you mean the in-kernel one that we want to kill because ever=
-yone
->> > > should be using userspace IRQ chips these days?
->> >=20
->> > What exactly do you want to kill?=C2=A0 In-kernel local APIC obviousl=
-y needs to stay
->> > for APICv/AVIC=2E
->>=20
->> The legacy PIT, PIC and I/O APIC=2E
->>=20
->> > And IMO, encouraging userspace I/O APIC emulation is a net negative f=
-or KVM and
->> > the community as a whole, as the number of VMMs in use these days res=
-ults in a
->> > decent amount of duplicated work in userspace VMMs, especially when a=
-ccounting
->> > for hardware and software quirks=2E
->>=20
->> I don't particularly care, but I thought the general trend was towards
->> split irqchip mode, with the local APIC in-kernel but i8259 PIC and I/O
->> APIC (and the i8254 PIT, which was the topic of this discussion) being
->> done in userspace=2E
->
->Yeah, that's where most everyone is headed, if not already there=2E  Lett=
-ing the
->I/O APIC live in userspace is probably the right direction long term, I j=
-ust don't
->love that every VMM seems to have it's own slightly different version=2E =
- But I think
->the answer to that is to build a library for (legacy?) device emulation s=
-o that
->VMMs can link to an implementation instead of copy+pasting from somwhere =
-else and
->inevitably ending up with code that's frozen in time=2E
+Hello:
 
-Some would say the right answer is to present a micro-vm machine model tha=
-t doesn't have any of that crap at all=2E
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Sadly we're going in the wrong direction=2E For >255 vCPUs on AMD machines=
- it looks like we even have to emulate a full virtual IOMMU with DMA transl=
-ation support=2E Well done, AMD!
+On Fri,  9 Aug 2024 08:58:58 -0700 you wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> After napi_complete_done() is called when NAPI is polling in the current
+> process context, another NAPI may be scheduled and start running in
+> softirq on another CPU and may ring the doorbell before the current CPU
+> does. When combined with unnecessary rings when there is no need to arm
+> the CQ, it triggers error paths in the hardware.
+> 
+> [...]
 
-(Linux is OK with the 15-bit Extended Destination ID, but not Windows)
+Here is the summary with links:
+  - [v3,net] net: mana: Fix doorbell out of order violation and avoid unnecessary doorbell rings
+    https://git.kernel.org/netdev/net/c/58a63729c957
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
