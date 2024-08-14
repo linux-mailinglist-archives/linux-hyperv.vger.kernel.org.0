@@ -1,131 +1,235 @@
-Return-Path: <linux-hyperv+bounces-2772-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2773-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40E5C952659
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Aug 2024 01:55:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B55395265C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Aug 2024 01:57:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE4732843E1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Aug 2024 23:55:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC5BC1F21980
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Aug 2024 23:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0D9614B972;
-	Wed, 14 Aug 2024 23:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CEF014B976;
+	Wed, 14 Aug 2024 23:57:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQ7d13Cy"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="NPpE7be0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02olkn2054.outbound.protection.outlook.com [40.92.43.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C5514B954
-	for <linux-hyperv@vger.kernel.org>; Wed, 14 Aug 2024 23:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723679713; cv=none; b=aV1cW8ZuXork1Lckw4KBqb9VrB4YD8aR5a1LP+WONGuo1jV+iU8dhrkkGh9VECXB1CQW2KAywuMPkG+HMeOewOraeEFniIpl94ZSoawUkr0ACYd1lcqU36J9fsgpafQgeWX7EdQMr5TT4QS7KF8qRl5X++hk1zXmbnW6D2Ts928=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723679713; c=relaxed/simple;
-	bh=P8eLxh7llwh4LoqmAsThwDf+/XNbKv4mXEFvfQGE1Ms=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DbvvBcE1jRHeQUB3jIKL7WPiO2r6oHOLTRZ1gOpzZO/SmZsDrroFzuvPAx0vKGMJSLDor2M/BT4k+Ztb7l3dcsNb+UIY0DjHjFfYT32w8NlwMIjSp0UPoL5L8YTHF0OiqinVbjP5pUiLuMH2g1kC1XHKmEKbOh38ukoI56L4h1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQ7d13Cy; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f1798eaee6so3829491fa.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 14 Aug 2024 16:55:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723679710; x=1724284510; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4gKUJ7BgIioQGpheXxO7yFFFZCnz70o6nWdkTjS1DSQ=;
-        b=JQ7d13CyjeDTPpUKgcuQ/uWMNLSosT1u2+Z3/s+vT65g2B5tDqaxS9SpdxWtITnHzL
-         nobRBVknY3A9h1UtF1kkyqej5J7qBVJ8yXMi3rVBq1LD+rdj+RPgArEoE5nQ08jI2guW
-         lxdPP9aAxcJAu8GRDfCi0v1j8UQFfkEv1S+mWioq7MCYqOkm9xpbwjOJq7P3XVylsI60
-         PpHWVI5JXHD4Pc39ZQacp5K118zUfnhEZSMY8nBCJnneicy7zlAA/wgDifPGnOfcofSO
-         ZfnZW98hpANbgVu+Iq4DUMY0dCDyEHokojBNvSV5g1SpePMUDKMJI4tYlK2BYEMViYxx
-         0p9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723679710; x=1724284510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4gKUJ7BgIioQGpheXxO7yFFFZCnz70o6nWdkTjS1DSQ=;
-        b=oIeT1+aK7OquE4DiICohTFM6EFDpHFLw4xr6oPwfe3Bz/O4gmDpyoVN0a5EVK+7sp8
-         KI1qROZ2vbvudCj9vOTaMpRuvA2iMF7kzPQfWFSc0757kuxVPoJac7jK3opZYTLM0GGb
-         mwfIgDqLM73S95gu+1w5P58nsi5pxtaY8SiQUkxyN8HeTyNMGLbHsRBMJjuK6Cwp4LTP
-         9NAD3h8MTJuTMi5x/Cy+bOrhfsVsMV7ZyaJ0Vr22XD73iSYUfZRkEOb0/scdFaP/lpaX
-         qJ3cvykQCWY95ukpY+aFBLp/DgZxGrXXbeqTIdRUjHyGZvKcoGcr7e7svPZv2QfazJch
-         273g==
-X-Forwarded-Encrypted: i=1; AJvYcCVj2YxcuyJZmgFgOXP7ZSztOVzZ7UqJNLrPOLZGxorrprfGOU6khtkgu1kjfUr1MDlS/87aog+jKM6dd18=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvGmvGefc+z+soHhYSzq5EN7ytOpeg3ai2k34ZK3Os35VRVeu0
-	1fZ2Q3zHm/5EKsJz2OCcu0ehcwSqZFHsbqalwIuM2qQSQS8ggXg02ujKV+ABo4Igvo69RYWLg70
-	dkFQDlQGBEi6wa2n0qmGO/8b0zPdOG+TQsOzJ
-X-Google-Smtp-Source: AGHT+IGITCV+NxW2t2FFmiAHXYUgW4K81ddad9LMlv8z9QqkyqSmBsNKPnRt432UsGjq1zcHJYZysBN1xvUbt8V+5jU=
-X-Received: by 2002:a05:6512:1243:b0:52e:fcd0:241f with SMTP id
- 2adb3069b0e04-532eda81509mr2901467e87.29.1723679709353; Wed, 14 Aug 2024
- 16:55:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C60839FE5;
+	Wed, 14 Aug 2024 23:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.43.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723679832; cv=fail; b=ADs+QdSMec/Gjoh018NIOvtzSkoAM1Ro28BUrY2ot/MedHZXhU+1GUGDdauZU9vbfEu22L6E1n089zpLHuLd+FapNp8NvexEoJn5PlhE3nfBGjsne2kYQX93Ekfa1/GqcCce4S5H+DG9W/ddfaMUve3PMLZ70rbqM/mTdoUZpGg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723679832; c=relaxed/simple;
+	bh=hFu7bIUm5KXpUtlqIFq6XbW3C2XZETPO/Nv8ulpH0Ds=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Zx/YsNlJoj22HVkQuTeu9QQ7dvcVOtr2BvnZ5iRt1FPklC19T+pAy/o9x/f3oF5eE5CtgEFwfLR5lFwHOVPuZB97CRdxWNCUcJvX3fdJ8qVkNBwXmpvRupH8AbNIQRtWofKyGH1kUUo3eEBVP+G7JsBVEPS+j/qag3H2oXttQJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=NPpE7be0; arc=fail smtp.client-ip=40.92.43.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i2QmxD4CB6UuZ6DTizWw6ZE7QJKvYVVDeAHgnKEk4/o0nkLluU/hbDpRSMnDVCmm1YVFrdrOalnwhqPRyjcBVxivkxdbeL83X6QrGwD65eEOJG6Jrziqi3sPGziVMMkGjVNVqN7KF7S5SF2mcuoLERxCrovX6P81Drca8hq+9AuvtpUku7DL2FwJqGumV5sYTiPwpoX8psyiQnxagwHAuPnCE/p7rEc9bqo1xHaI45nRidomT7C10lgZ45Oa+cZGhg655n3aCFNRq/Lw0FxRApRbDf+Tcb1riB0PhhNbbaS7hyB3szKp90i/Mwtwpt996/CaslvP/LJtAkoLqzgm+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l0bxjjdjaZW+x3wGlCC3Dlde+V/r1A/YrT99HoZbFlk=;
+ b=FlZvU1fkUGGpVYK/eEg9gYNk5DuFh2Ra0JbrpLqdnd3iXDMSCJZhFGyPtVdlCv+tmsLtljJ54h26C+HFdF8Er2SMbmTsdDDLvTKEO9TubSHHoh++7KBFYK/siA2YrGJ34nICvl59nM3mcP8NjRaPjpgKM+Pqi/C0vE97IBumA3heyaSUHCf/8rEmkd1XOoLOTtFewmilf35r3MytauEnW2Fk7e+IijtD8kFj/jnjy3Fe5wgsjF2ORDL8e2cK/RoB+F9e/Sh6X5F6pbu17zz441lh8sNErF4rxDCJLZHHXF2A02Fj7VmgQhc5dkl7C0gvWfRo0t+Org6aysk8waZ/8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l0bxjjdjaZW+x3wGlCC3Dlde+V/r1A/YrT99HoZbFlk=;
+ b=NPpE7be0vnP8Lfz0oQPVx31sBCFNMknKQ4WgpWnvWvTmcd6HteSNdyTVUSUKsdPEOV2J0ihK1RnXim7gp2TY6LHJEOP9eVb40w6zYNZPuQron6n8HnEa4I+I/YmWq7VeHzePoEGHwZeGOsthPC2DmTk6X18CfEalITs1gUXraCquZw6HkIeY1DLc2bDJKm7q+EouOY1HHTRaIvgv1iSPIWKlCfWV1f1hquYiBbBXKd0lyTBRSGdtE7I/z9Dsmq4Z8JXALpi1gEdj9hlcg7cAn8eDcicsS7raIdqihRhjX+4wxjZJWlCTy1gi+SLtipcezxxAlmnqPeaDr9v4MF971A==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM6PR02MB6809.namprd02.prod.outlook.com (2603:10b6:5:218::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.20; Wed, 14 Aug
+ 2024 23:57:07 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%6]) with mapi id 15.20.7849.021; Wed, 14 Aug 2024
+ 23:57:07 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "ernis@microsoft.com" <ernis@microsoft.com>
+Subject: RE: [PATCH v2] net: netvsc: Update default VMBus channels
+Thread-Topic: [PATCH v2] net: netvsc: Update default VMBus channels
+Thread-Index: AQHa7mtihlctUjAqEkyZ5zpnW8ltobInaf0A
+Date: Wed, 14 Aug 2024 23:57:07 +0000
+Message-ID:
+ <SN6PR02MB4157330500B79F4E728DFF7FD4872@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1723654753-27893-1-git-send-email-ernis@linux.microsoft.com>
+In-Reply-To: <1723654753-27893-1-git-send-email-ernis@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [s+QGmKsdXT8sQhy65HLMtdmDdXU4oPmm]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB6809:EE_
+x-ms-office365-filtering-correlation-id: 102b9317-ae4e-4ef4-b3f2-08dcbcbccde3
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799003|19110799003|8060799006|461199028|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ XjPrM6M7YPRS0uNuUt3ZFE+OKCQ6mSbjXINRwN+Iu+0hv5EK6ku4UwZcXuT8xd/U52j44fn2u5JdBBGq3R4YxQVYHACIVa4Gu/1vZK0gq9vHlZm/QkHCK1mQMLYNI+uZyD0UkepJtqNz0ayrJ9nygBZgZ3fyXrGetoOrcwh0NyuYPKfhxm/W2I6y4Bkq0Efff4b4p6KsB5MwHQwy4kHUsCIgg5V7W7ji58Pv9dgtoxfZgkLvivqnm/LdEDHlJwZAvNBzMmDi6UVLoEp/S3vloFL/2eW0uV3//WnGjMFDM/6hnxW7yY42u6hRLLIlTGmkWSpRHioi63ZMuPvyVlV38Xe/45+uJqgg3/8Rl49DGUyR5Wfti5BEMOYY8V4FnzpNlHO4bBIs67TJxTAFyTNfYhBgEHPsY6PUJTc8ajA5jBQ0YPFqrEBk0dY62jOJiSboFP3XVFtmXFvyNIkgwjzruOYMvB6r3ZXkNwTX4/IazIGIsyVi/fVMQrHl1ShxVONf9rNmHhovSC/RwzhCtzH1DPyMtXEhc6XCqyHIhfM03l1RlbT7cBMklPbkRGdqhE0Lndb4h5qvI9OqVMb2DQpYsDRXxHqOIBDLkO3uPx9Y5oPBgHzYL+cozSkt0BkW6CvTuErKnw8331gcyZzST4gJZhBTMBIDXRpGZApmc7uupYMHiqCwyIwAigMtHBOh/Agv
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?r+APi7rHDS6jcfcjtEcLN7IC4Edt/WcKXmA1NZeXu9kQgSBqmhZ2Yw1Lytjz?=
+ =?us-ascii?Q?oKuiwFH8Nr36JQCFbXWSvenrqcSSRF2P5f6vH1xsweVedwdJjlp7OhzJzSp3?=
+ =?us-ascii?Q?iJdFUSvLl9N1gs5wZgjc9OQNTwsEvlCM/4Qfb6YFJ3v1RE8/IpX5J1/Ca9RU?=
+ =?us-ascii?Q?A/2BuuqMDDVYkyW2P15JwtP5ILgRB8ew/VqcLGEmRgYNbzEdV0JQWsnmv5+q?=
+ =?us-ascii?Q?Exa2+WRINtfB0Z8pCCEHaiQ/hsAaW6GfNtOugRJdd9j4BtOQrD/18yxTqXcs?=
+ =?us-ascii?Q?e9uI04B2d27HPoz5YkR90GAzlZ0Vox9qZbLg8E7f8La2eeVsOeLbhVEZjEQS?=
+ =?us-ascii?Q?BmGoQ/3nSv1X1qbou653I/UV5zjmwxrvOYHfwrImtyGLXliOLTJ6669MK96O?=
+ =?us-ascii?Q?YJIfEZ3M4vK+TeAu/u4Z7KN89Q9VzPUnayPDQvGGe4J7cLVbK7JrqeRz5+Wq?=
+ =?us-ascii?Q?Nm18rN462dUn4eDjyotaGUZPHqlgo6S3ehykuxEd2wGgFtof5m6YqfneDI00?=
+ =?us-ascii?Q?7kSerpdA8BXpDfH06PSL0SCbP7Y9NI7Af2dSSk2qh9HfD/EyX72R1m36rfAV?=
+ =?us-ascii?Q?j0C7u+18Zw0yu2s7avPc7SIEmlwf3oY4SKgCgJx4x7EOkksj4WReHetsqev3?=
+ =?us-ascii?Q?8+X5qvaM4mQpHSs4YaUsEpjiNxALFxofG0L7iuBaLuTUtaqNIWNISZazvot7?=
+ =?us-ascii?Q?qDgIRKYLGAH4tJKrPOOi6b+SK9jJjqSNPQUvz3bbjHcyvrNOE5jSDGwVd7sl?=
+ =?us-ascii?Q?P6XGffquayMeWuUsvOaLkN3CxRY6w38cLULk8ZMdgiDZoL6GHvF07BFK0Bvx?=
+ =?us-ascii?Q?F0PK3h2wm6FxtQoS3J6aVcErU0sPwPxYW8FDutc74JzRqJ2/X3l9uBdE7vcD?=
+ =?us-ascii?Q?Eh/eutS9o4kcpvvn9WwRpBy0zB08sB4+88CohbJ37hK1czISuHzILOgKw+1F?=
+ =?us-ascii?Q?F9OcPgoRhkEtSLJlAIoYCBuADFcocPgqM9yQsgtbUz915OqXhJzZc3q6IN9I?=
+ =?us-ascii?Q?h/2o2xJlvH7sIKldX9vTZkuNTZIHEyk7rU24z+ughaCeM9e0yUUQ9nVqAilf?=
+ =?us-ascii?Q?IIC3G+F+7Mu8CkdIx0v3R9Alju/ajQJ3DQKbH4bZ4hryRDdw7AUn0r27KrO8?=
+ =?us-ascii?Q?1umnAhwtr70GttLiTAprxj197XmEP0lpuOMy4dUXtq2lkqbhjiR9uPuM4fuk?=
+ =?us-ascii?Q?6xNCs+efpWJlZpZzStUu2CWLZyiRez059gH4qLqVkqn5swZci1iRG8auhTs?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240805201247.427982-1-yosryahmed@google.com>
-In-Reply-To: <20240805201247.427982-1-yosryahmed@google.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 14 Aug 2024 16:54:32 -0700
-Message-ID: <CAJD7tkZTFNm3k3OM9G1qtd8-FyjKDvj5C-CPKvuS3AipKb7x8Q@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/hyperv: use helpers to read control registers in hv_snp_boot_ap()
-To: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 102b9317-ae4e-4ef4-b3f2-08dcbcbccde3
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2024 23:57:07.3388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6809
 
-On Mon, Aug 5, 2024 at 1:12=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com> =
-wrote:
->
-> Use native_read_cr*() helpers to read control registers into vmsa->cr*
-> instead of open-coded assembly.
->
-> No functional change intended, unless there was a purpose to specifying
-> rax.
->
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com> Sent: Wednesday, A=
+ugust 14, 2024 9:59 AM
+>=20
+> Change VMBus channels macro (VRSS_CHANNEL_DEFAULT) in
+> Linux netvsc from 8 to 16 to align with Azure Windows VM
+> and improve networking throughput.
+>=20
+> For VMs having less than 16 vCPUS, the channels depend
+> on number of vCPUs. Between 16 to 32 vCPUs, the channels
+> default to VRSS_CHANNEL_DEFAULT. For greater than 32 vCPUs,
+> set the channels to number of physical cores / 2 as a way
+> to optimize CPU resource utilization and scale for high-end
+> processors with many cores.
+> Maximum number of channels are by default set to 64.
+
+Where in the code is this enforced? It's not part of this patch. It
+might be in rndis_set_subchannel(), where a value larger than
+64 could be sent to the Hyper-V host, expecting that the Hyper-V
+host will limit it to 64. But netvsc driver code is declaring an array
+of size VRSS_CHANNEL_MAX, and there's nothing that guarantees
+that Hyper-V will always limit the channel count to 64. But maybe
+the netvsc driver enforces the limit of VRSS_CHANNEL_MAX in a
+place that I didn't immediately see in a quick look at the code.
+
+>=20
+> Based on this change the subchannel creation would change as follows:
+>=20
+> -------------------------------------------------------------
+> |No. of vCPU	|dev_info->num_chn	|subchannel created |
+> -------------------------------------------------------------
+> |  0-16		|	16		|	vCPU	    |
+> | >16 & <=3D32	|	16		|	16          |
+> | >32 & <=3D128	|	vCPU/2		|	vCPU/2      |
+> | >128		|	vCPU/2		|	64          |
+> -------------------------------------------------------------
+
+The terminology here is slightly wrong. A VMBus device has one
+primary channel plus zero or more subchannels. The chart
+above is specifying the total number of channels (primary plus
+subchannels), not the number of subchannels.
+
+Michael
+
+>=20
+> Performance tests showed significant improvement in throughput:
+> - 0.54% for 16 vCPUs
+> - 0.83% for 32 vCPUs
+> - 1.76% for 48 vCPUs
+> - 10.35% for 64 vCPUs
+> - 13.47% for 96 vCPUs
+>=20
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 > ---
->
-> v1 -> v2:
-> - Fixed a silly bug that overwrote vmsa->cr3 instead of reading
->   vmsa->cr0.
->
+> Changes in v2:
+> * Set dev_info->num_chn based on vCPU count
 > ---
-
-Friendly ping on this, any thoughts?
-
->  arch/x86/hyperv/ivm.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index b4a851d27c7cb..60fc3ed728304 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -321,9 +321,9 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
->
->         vmsa->efer =3D native_read_msr(MSR_EFER);
->
-> -       asm volatile("movq %%cr4, %%rax;" : "=3Da" (vmsa->cr4));
-> -       asm volatile("movq %%cr3, %%rax;" : "=3Da" (vmsa->cr3));
-> -       asm volatile("movq %%cr0, %%rax;" : "=3Da" (vmsa->cr0));
-> +       vmsa->cr4 =3D native_read_cr4();
-> +       vmsa->cr3 =3D __native_read_cr3();
-> +       vmsa->cr0 =3D native_read_cr0();
->
->         vmsa->xcr0 =3D 1;
->         vmsa->g_pat =3D HV_AP_INIT_GPAT_DEFAULT;
+>  drivers/net/hyperv/hyperv_net.h | 2 +-
+>  drivers/net/hyperv/netvsc_drv.c | 5 ++++-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_=
+net.h
+> index 810977952f95..e690b95b1bbb 100644
+> --- a/drivers/net/hyperv/hyperv_net.h
+> +++ b/drivers/net/hyperv/hyperv_net.h
+> @@ -882,7 +882,7 @@ struct nvsp_message {
+>=20
+>  #define VRSS_SEND_TAB_SIZE 16  /* must be power of 2 */
+>  #define VRSS_CHANNEL_MAX 64
+> -#define VRSS_CHANNEL_DEFAULT 8
+> +#define VRSS_CHANNEL_DEFAULT 16
+>=20
+>  #define RNDIS_MAX_PKT_DEFAULT 8
+>  #define RNDIS_PKT_ALIGN_DEFAULT 8
+> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_=
+drv.c
+> index 44142245343d..e32eb2997bf7 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/rtnetlink.h>
+>  #include <linux/netpoll.h>
+>  #include <linux/bpf.h>
+> +#include <linux/cpumask.h>
+>=20
+>  #include <net/arp.h>
+>  #include <net/route.h>
+> @@ -987,7 +988,9 @@ struct netvsc_device_info *netvsc_devinfo_get(struct
+> netvsc_device *nvdev)
+>  			dev_info->bprog =3D prog;
+>  		}
+>  	} else {
+> -		dev_info->num_chn =3D VRSS_CHANNEL_DEFAULT;
+> +		int count =3D num_online_cpus();
+> +
+> +		dev_info->num_chn =3D (count < 32) ? VRSS_CHANNEL_DEFAULT : DIV_ROUND_=
+UP(count, 2);
+>  		dev_info->send_sections =3D NETVSC_DEFAULT_TX;
+>  		dev_info->send_section_size =3D NETVSC_SEND_SECTION_SIZE;
+>  		dev_info->recv_sections =3D NETVSC_DEFAULT_RX;
 > --
-> 2.46.0.rc2.264.g509ed76dc8-goog
->
+> 2.34.1
+>=20
 
