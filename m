@@ -1,59 +1,64 @@
-Return-Path: <linux-hyperv+bounces-2784-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2785-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 133A0958957
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2024 16:31:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6BFF958E79
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2024 21:12:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94E40B20B37
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2024 14:31:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 720AF284DCB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2024 19:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2E653D97F;
-	Tue, 20 Aug 2024 14:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12E41547F7;
+	Tue, 20 Aug 2024 19:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DcN3D1xp"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jSmrmKBi"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7195012E5B;
-	Tue, 20 Aug 2024 14:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508C114C5A3;
+	Tue, 20 Aug 2024 19:12:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724164272; cv=none; b=IS141ZKCurXKbLR+u7VIdxphYq/HZLesD4+alwOh3lxsBLHkbaIh0QPlzo88NpIeuI1CqV1ksC3FVLCIquTjTnERlP2u6Rnu5MaAXUcJbShsHRvCrGwcY+EJ9j2g44TabnqQlXW9bdCVh8O8kbC1ROOy9IIKfHxTY1mMFYEy4GY=
+	t=1724181139; cv=none; b=nXb/+wa3kHO3jOcF3vYr5nGWrbLbAAzbLwbBBfSZhXSHBELEhyRGgkhcIca9Lwx/RoIWFZ+8tBwHq9IQ1F7s/yG9P5TUhjUUEgmmfaCsw5PnSNOSkUPY1MIvPch0E8/LS+hZNcrFAhOklJCpp4ESN5ZZlZpP3OfA6K8RwvOaf1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724164272; c=relaxed/simple;
-	bh=Nx41brjKEDFFos0q0F3Oabrix0OEde0yAxnb5FLy4ts=;
+	s=arc-20240116; t=1724181139; c=relaxed/simple;
+	bh=CQgWYc56r5iE9h8k6AEkA3iGag7hNM9c1UA9/XpCiLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MpQnLrkGzeqUfrbn929WXnpMOp399wUlmFSraS2wCalmC528kszZF+8MCMCSYK8zfIJMQTT2cGljtnc93Ri2p5qUt66lDJX1nsE6BAJZZbyW5IvlepkeguTusVr8t8JrRmG0t6dmF6jfYZRPI4aH9NPA2d9rPW5o2udlnYs6INw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DcN3D1xp; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=UD+/uR0qV8FWCvaiaP2U3hjtK0bbFSeBnNdajUToz466unoayBfNVyz/M5IVECkN0bH/H+GHQIj0BZDLXXkedy5SKqHOEk5IOxCp0ThH3TMGRupuutJHAymwPr8T2xnduFc1LLvdGOsg7O2DfNEsY6RdbIC0BPrnPW+tSJezunY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jSmrmKBi; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id EA73A20B7165; Tue, 20 Aug 2024 07:31:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA73A20B7165
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 03BCC20B7165; Tue, 20 Aug 2024 12:12:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 03BCC20B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1724164270;
-	bh=IoNKfxiL4MfdGcXY3hsvWv5FPlsBVMMfZLN/22/WZ6M=;
+	s=default; t=1724181132;
+	bh=OQg0JXOAKQX95k93uaZW7X/palY8JO7oGBXbVZmigB4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DcN3D1xpI48X11un6qTVo2asl4kQHeOYsA7oaGwbBFl7ggX0G8pc7VD33oqTQAv+k
-	 IvwXBIgeEE8W9xSYPtnBcooJAMq7mqRfy8pFH3pNbQcGznv2w9fneF3fAH6ocg+86P
-	 keXJNAMOiGwPfCxJ8STlyuTO0taeLKTrc7kYs7yI=
-Date: Tue, 20 Aug 2024 07:31:10 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
-	yury.norov@gmail.com, leon@kernel.org, cai.huoqing@linux.dev,
-	ssengar@linux.microsoft.com, vkuznets@redhat.com,
-	tglx@linutronix.de, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, schakrabarti@microsoft.com
-Subject: Re: [PATCH net] net: mana: Fix error handling in
- mana_create_txq/rxq's NAPI cleanup
-Message-ID: <20240820143110.GA15699@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1724149347-14430-1-git-send-email-schakrabarti@linux.microsoft.com>
+	b=jSmrmKBipkrhLyX6+tlRxvz/eRUfuiM9wGNW8tp63kBO8g3R/262/eOSnIbV0aVr9
+	 RpJn2JHd0qCu9ZukAHw6SvRWfKXH5erwerr45Qmrkf03MtBNBYnUL2b9eEY99JflCD
+	 KSpIOhBBK0FTUKbM4AtrhMjgYJZ4wx/2SkDTjTbM=
+Date: Tue, 20 Aug 2024 12:12:11 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>,
+	Erni Sri Satya Vennela <ernis@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] net: netvsc: Update default VMBus channels
+Message-ID: <20240820191211.GA15387@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1723654753-27893-1-git-send-email-ernis@linux.microsoft.com>
+ <20240815090856.7f8ec005@kernel.org>
+ <CH2PPF910B3338DB4798D086CB50600C2FBCA802@CH2PPF910B3338D.namprd21.prod.outlook.com>
+ <20240816085241.326978a6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -62,137 +67,39 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1724149347-14430-1-git-send-email-schakrabarti@linux.microsoft.com>
+In-Reply-To: <20240816085241.326978a6@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Aug 20, 2024 at 03:22:27AM -0700, Souradeep Chakrabarti wrote:
-> Currently napi_disable() gets called during rxq and txq cleanup,
-> even before napi is enabled and hrtimer is initialized. It causes
-> kernel panic.
+On Fri, Aug 16, 2024 at 08:52:41AM -0700, Jakub Kicinski wrote:
+> On Thu, 15 Aug 2024 19:23:50 +0000 Haiyang Zhang wrote:
+> > Your suggestion on netif_get_num_default_rss_queues() is not ignored.
+> > We discussed internally on the formula we used for the num_chn, and
+> > chose a similar formula for higher number of vCPUs as in 
+> > netif_get_num_default_rss_queues().
+> > For lower number of vCPUs, we use the same default as Windows guests,
+> > because we don't want any potential regression.
 > 
-> ? page_fault_oops+0x136/0x2b0
->   ? page_counter_cancel+0x2e/0x80
->   ? do_user_addr_fault+0x2f2/0x640
->   ? refill_obj_stock+0xc4/0x110
->   ? exc_page_fault+0x71/0x160
->   ? asm_exc_page_fault+0x27/0x30
->   ? __mmdrop+0x10/0x180
->   ? __mmdrop+0xec/0x180
->   ? hrtimer_active+0xd/0x50
->   hrtimer_try_to_cancel+0x2c/0xf0
->   hrtimer_cancel+0x15/0x30
->   napi_disable+0x65/0x90
->   mana_destroy_rxq+0x4c/0x2f0
->   mana_create_rxq.isra.0+0x56c/0x6d0
->   ? mana_uncfg_vport+0x50/0x50
->   mana_alloc_queues+0x21b/0x320
->   ? skb_dequeue+0x5f/0x80
+> Ideally you'd just use netif_get_num_default_rss_queues()
+> but the code is close enough to that, and I don't have enough
+> experience with the question of online CPUs vs physical CPUs.
 > 
-> Fixes: e1b5683ff62e ("net: mana: Move NAPI from EQ to CQ")
+> I would definitely advise you to try this on real workloads.
+> While "iperf" looks great with a lot of rings, real workloads
+> suffer measurably from having more channels eating up memory
+> and generating interrupts.
 > 
-> Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 41 +++++++++++++------
->  1 file changed, 28 insertions(+), 13 deletions(-)
+> But if you're confident with the online_cpus() / 2, that's fine.
+> You may be better off coding it up using max:
 > 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 39f56973746d..882b05e087b9 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1862,7 +1862,7 @@ static void mana_deinit_txq(struct mana_port_context *apc, struct mana_txq *txq)
->  	mana_gd_destroy_queue(gd->gdma_context, txq->gdma_sq);
->  }
->  
-> -static void mana_destroy_txq(struct mana_port_context *apc)
-> +static void mana_cleanup_napi_txq(struct mana_port_context *apc)
->  {
->  	struct napi_struct *napi;
->  	int i;
-> @@ -1875,7 +1875,17 @@ static void mana_destroy_txq(struct mana_port_context *apc)
->  		napi_synchronize(napi);
->  		napi_disable(napi);
->  		netif_napi_del(napi);
-> +	}
-> +}
-> +
-> +static void mana_destroy_txq(struct mana_port_context *apc)
-> +{
-> +	int i;
-> +
-> +	if (!apc->tx_qp)
-> +		return;
->  
-> +	for (i = 0; i < apc->num_queues; i++) {
->  		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
->  
->  		mana_deinit_cq(apc, &apc->tx_qp[i].tx_cq);
-> @@ -2007,6 +2017,21 @@ static int mana_create_txq(struct mana_port_context *apc,
->  	return err;
->  }
-I think the mana_cleanup_napi_txq() call should also be added in the out
-path of mana_create_txq(). Consider this, the napi enable for first few
-tx queue succeeds but if queue creation for any further SQ fails, we
-don't cleanup the napi's for previously successful ones.
->  
-> +static void mana_cleanup_napi_rxq(struct mana_port_context *apc,
-> +				  struct mana_rxq *rxq, bool validate_state)
-> +{
-> +	struct napi_struct *napi;
-> +
-> +	if (!rxq)
-> +		return;
-> +
-> +	napi = &rxq->rx_cq.napi;
-> +	if (validate_state)
-> +		napi_synchronize(napi);
-> +	napi_disable(napi);
-> +	netif_napi_del(napi);
-> +}
-> +
->  static void mana_destroy_rxq(struct mana_port_context *apc,
->  			     struct mana_rxq *rxq, bool validate_state)
->  
-> @@ -2014,24 +2039,14 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
->  	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
->  	struct mana_recv_buf_oob *rx_oob;
->  	struct device *dev = gc->dev;
-> -	struct napi_struct *napi;
->  	struct page *page;
->  	int i;
->  
->  	if (!rxq)
->  		return;
->  
-> -	napi = &rxq->rx_cq.napi;
-> -
-> -	if (validate_state)
-> -		napi_synchronize(napi);
-> -
-> -	napi_disable(napi);
-> -
->  	xdp_rxq_info_unreg(&rxq->xdp_rxq);
->  
-> -	netif_napi_del(napi);
-> -
->  	mana_destroy_wq_obj(apc, GDMA_RQ, rxq->rxobj);
->  
->  	mana_deinit_cq(apc, &rxq->rx_cq);
-> @@ -2336,11 +2351,11 @@ static void mana_destroy_vport(struct mana_port_context *apc)
->  		rxq = apc->rxqs[rxq_idx];
->  		if (!rxq)
->  			continue;
-> -
-> +		mana_cleanup_napi_rxq(apc, rxq, true);
->  		mana_destroy_rxq(apc, rxq, true);
->  		apc->rxqs[rxq_idx] = NULL;
->  	}
-> -
-> +	mana_cleanup_napi_txq(apc);
->  	mana_destroy_txq(apc);
->  	mana_uncfg_vport(apc);
->  
-> -- 
-> 2.34.1
-> 
-> 
+> 	dev_info->num_chn = max(DIV_ROUND_UP(num_online_cpus(), 2),
+> 				VRSS_CHANNEL_DEFAULT);
+Due to hyper-threading, #of physical cores = online CPUs/2.
+Therefore, netif_get_num_default_rss_queues() returns 
+#of physical cores/2 = online CPUs/4.
+
+In my testing, the throughput performance was similar for both the
+configurations even for higher SKUs.To utilize lesser CPU resources, 
+will be using netif_get_num_default_rss_queues() for the next version 
+of the patch.
+ 
 
