@@ -1,72 +1,72 @@
-Return-Path: <linux-hyperv+bounces-2808-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2809-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF42B95BE63
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 20:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 80D7695BE66
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 20:39:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51D38B27D54
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 18:39:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7D6ACB2813D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 18:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D981D1F69;
-	Thu, 22 Aug 2024 18:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9371D2792;
+	Thu, 22 Aug 2024 18:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWoyRjoO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHW2lTJA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963FF1D1731;
-	Thu, 22 Aug 2024 18:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64191D04A3;
+	Thu, 22 Aug 2024 18:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724351875; cv=none; b=Ft5rmdTecV3hWsvpT1sf3q0EazCULkU8kD2f2YHcnJCIAM+EJN0j59DtHzWFwkP/RVuPhiPKxeeEzOl310Yjda/5jPPfK24L/GW/m9zNeCoGFBa35rR7yrH4Ir8EjYqVzyTsIFe4yspNtEm2jSCDOM5V9YGeG+HwqRgxJG7L09M=
+	t=1724351876; cv=none; b=sea4+MYfz5p9fgxsPi1gLdkeyaKmsvvml9/KpAgac8djYPvMm0RXsqD37T35J7ILqoto4aY9I2zn+VEHMfTiEL9vDIcCm1qdWov80moO1EXTtJb0LLRiszl4i1TFtqTANy6UFEmTNwTq++c2TVuvx4EXne9eNCNYHBGULtaI3Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724351875; c=relaxed/simple;
-	bh=h7/QaozXkfleYoirlRN16+9s8z8TVAPkUO7bp7owxBs=;
+	s=arc-20240116; t=1724351876; c=relaxed/simple;
+	bh=vZUjHFmFvrYfCCwn47JEj2O7xPIiU/Pgnb18WTQj4is=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GzjP1Up18RCsTZzo8oQgvCOMBvLE2/6Er++9/m1bBd0BrHhW6d4BC1UJHK6gscVY05KJaRSA4USZ4xcxlLuydOVls1v6VtbNpm7ytVGphyn0pBDPXLk3W6TqBD26iPTwgzaeiPYTQ7hk2Sa9UAaIg6tJW5sjYMr9ZRh2JzwwTIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWoyRjoO; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=KsxOE+WsGBQ2KA6WPGpQJ3Qt/jPvGTChFdWvgT7E/pNBmK8FZvzewg4PNw7APvaHM4SIH+HcJGmhpOWnvX4tKRzMn9I9NGvqqGG+l4sS2RlgFAmCFAmXYRz/odaeKVNJuE6woZHKJw7gZOwevrDlBRBNUCbAPJMkf3RHLGtgJ1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHW2lTJA; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-202508cb8ebso8578655ad.3;
-        Thu, 22 Aug 2024 11:37:53 -0700 (PDT)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fec34f94abso11359465ad.2;
+        Thu, 22 Aug 2024 11:37:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724351873; x=1724956673; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724351874; x=1724956674; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6/YtNwLPh5pTk6gSo6t/PeLiCmJLTlpJ+ybh0IcUxoY=;
-        b=cWoyRjoOdU1PCtjbfKWdEKBmTqMJr5AIkGJLWFS0HTb1eNf+BIFtH4hvUT/ddiWeV1
-         Z5/yohspZdjekhfBBEmQBY4SEuxw2U3YJjig1h/GBkFcCxE+wFwVYg4roqCnGxlF5FkR
-         N71qV4auGHqHJSSx43UpV5474hAkG9VveNUwHK2rDhF7W9Lbaj1+3DbXiuP4msgI4xqr
-         pvYNCvXLoafJUGSoR+MASI8u8yiNOe+0O/0mcccaip3k/3tjDy1rwrbwvos4tAqvaBth
-         Uwf8x+4Q+ivuhIo0Tzfmn/Gv06eCOdwyiIA1l2ntG650z1Y3J9PYvJDk26qtQX4c8cPT
-         UgZQ==
+        bh=1Hlc/i1KYMFZn1UW3B36jY0bAKWAgeG5KXhGYCaItEQ=;
+        b=LHW2lTJAldE/Uz5Y5H0xOGSRgixDn/dgr6L7llcRddcOvgO+ccohnvpForui0qSCbA
+         V/f8pci7cnQpRFFHwcxtSwtzPeRx4Obkl72eKKpYFHu8/bVigNwNj63kFs4IDhutsJmE
+         9ix7gy5DROKtaNfgqx4wHYWBWujZdwVjEMD1d4Ui+8jVlRzovHpQwWij1nJ3aIDOPRtb
+         Oe46MiUmVKrDU7IPhKteXV6Pq3OdJYdASSr+0WNl7y0Rn2zSREEymGvWuR93gVfSmSMD
+         +10mHbL1e9XyTOqDEvua/1wldrFy0SOPamrl4h2PSnSbMBSUhrqddFY+7ldtj3RI3JKR
+         wH5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724351873; x=1724956673;
+        d=1e100.net; s=20230601; t=1724351874; x=1724956674;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6/YtNwLPh5pTk6gSo6t/PeLiCmJLTlpJ+ybh0IcUxoY=;
-        b=J/TlfNdg52M3iaoaRCZYvaML//W1O6+LooRuyWEPUe496gU8MIqMyyeF4Zw1nzN15G
-         TDPpFL3CFtblM8kyt77V8fkd3QkjVRWNUKO+u+Tf7KfbBuZ3S3vCqPq5ft/NHNtVKVeA
-         RmRx9HXiRH/48FR2D8+fEeM0PBIaVflWfSWZOhc9QFFVm3jfVsR8qMmgmmACa26S/MTg
-         rJmCDXUdSXy9unqfgK38Ryvr7gGDVNO/e1+hTQdrIrr71Uam94DQ60RU6x0HzMgiE1Rj
-         6sEiYcaWGHs4dZwgMxpwYUWbwiDCrThy+3pG63ayC4rMfF8bqjCo2GpSBVJLIUovmp4I
-         rMHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzzKznzgNTwDmOWmvcR4m+OmK3pGt0H/JyGpCyQ/P049/NTNW3f5UxZgMotb4ZUefnJ0mD7KQsawikCno=@vger.kernel.org, AJvYcCVFFlfVanqWCvyAQWzU0g4jL0c9cL9nsvSMNU2bCcXIQBRVaPMNGC0xWQRi+XseLa/S7ZEa1PuFRY8KDg==@vger.kernel.org, AJvYcCVpO/r1qDnTJPVXURWpIu9d2zxsp3j7xJTZRgnJY3n33DV/tecmlGVGH3zcDLXysDhxpr2lgzMOG656Z+40@vger.kernel.org
-X-Gm-Message-State: AOJu0YyznbbK6v7iFa94a3rxwF9xGZ/rUDlNjgWsSp3mcUYgx2QZ0tcs
-	FxT/RSajwX4tR6KGyjbokelxTF4NtbCWvAHKDihyq8TkGvdxfmP1
-X-Google-Smtp-Source: AGHT+IHsbZYUaJ+JFNxFtzKvzmApZirKvGrVSmexHXzuMk4WrKRW/BVna5OKSIa9Rz2aGy+9FiDPnQ==
-X-Received: by 2002:a17:902:e84a:b0:202:1529:3b01 with SMTP id d9443c01a7336-20367e651d0mr80002225ad.39.1724351872813;
-        Thu, 22 Aug 2024 11:37:52 -0700 (PDT)
+        bh=1Hlc/i1KYMFZn1UW3B36jY0bAKWAgeG5KXhGYCaItEQ=;
+        b=Am7GoIg9w2ciNZz5osSW596XcE9zFFxRhrbaxb9TMzHmnu/Vr3I7v6eCEEmAMIk66Y
+         NpdUEhp8TjosYKDsKTQQIfVJ1zNIbQzkBC8FNu8swPupQKTSNC2BQPC+mmmb5pebw7tA
+         70Jfa4RVKyKYjmZfmir2IKaXjM/GJpfXTqOUJN0Vf7PjHvbo3nWWv/6DNzmVR5ZG9UjJ
+         0l3dahQKZoEEEqDcVEKqCxBEs4XKkXSXIfSyAGkCLc6MP6aTieEeyePARvx86DHa5szt
+         onC8urdThoTpElQyJe3SPLstx4T3+p4gZqMANn9EQLk91vzc7bODdMR+O/KMUjeyW8hY
+         4GzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV823huBSNkDOulcDn43oz44jRs9dU8MDClv8GMX+abz8EHCGjlyZSaczzxOrv18P+VIWCuShYiryF3Sjo=@vger.kernel.org, AJvYcCVumV+b/QqllqIC1q4/7dQcuwf45Bc9NesCLGeVA1QUYBPeUPFKF9Syv+0qYb2ypUWV7e1mB/Y2QaSOww==@vger.kernel.org, AJvYcCXw8uxrs0l8OQ8ezRgBb+679gZqSICoReU1PMxiHWuXysQ4WNgo7VkuB8sM5dtMv84WxxgyHDEDZa4enGXd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRiavsOizqcw2BtifTbWGO1oVdGygi/9LceJ6nGyEuVKTNdcrd
+	RneB80kQJL9cAJDN1kco8xj+Z/B5Ll61FP6YR3zbT7dMHYWpg9J+
+X-Google-Smtp-Source: AGHT+IE+oTsuXbaq9ZvaSNrcslYkvt3uX+Tvp8+A11rBrdRfV8hOJKmntJKX/3gWBiFYZVMV3hYEuw==
+X-Received: by 2002:a17:902:d2ce:b0:202:13ca:d73e with SMTP id d9443c01a7336-20388240fbcmr30142745ad.28.1724351873947;
+        Thu, 22 Aug 2024 11:37:53 -0700 (PDT)
 Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2038557e4f9sm15667145ad.65.2024.08.22.11.37.51
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2038557e4f9sm15667145ad.65.2024.08.22.11.37.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 11:37:52 -0700 (PDT)
+        Thu, 22 Aug 2024 11:37:53 -0700 (PDT)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: kbusch@kernel.org,
@@ -88,9 +88,9 @@ To: kbusch@kernel.org,
 	linux-scsi@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-coco@lists.linux.dev
-Subject: [RFC 6/7] nvme: Move BLK_MQ_F_BLOCKING indicator to struct nvme_ctrl
-Date: Thu, 22 Aug 2024 11:37:17 -0700
-Message-Id: <20240822183718.1234-7-mhklinux@outlook.com>
+Subject: [RFC 7/7] nvme: Enable swiotlb throttling for NVMe PCI devices
+Date: Thu, 22 Aug 2024 11:37:18 -0700
+Message-Id: <20240822183718.1234-8-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240822183718.1234-1-mhklinux@outlook.com>
 References: <20240822183718.1234-1-mhklinux@outlook.com>
@@ -105,86 +105,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-The NVMe setting that controls the BLK_MQ_F_BLOCKING flag on the
-request queue is currently a flag in struct nvme_ctrl_ops, where
-it is not writable. A new use case needs this flag to be writable
-based on a determination made during the NVMe device probe function.
+In a CoCo VM, all DMA-based I/O must use swiotlb bounce buffers
+because DMA cannot be done to private (encrypted) portions of VM
+memory. The bounce buffer memory is marked shared (decrypted) at
+boot time, so I/O is done to/from the bounce buffer memory and then
+copied by the CPU to/from the final target memory (i.e, "bounced").
+Storage devices can be large consumers of bounce buffer memory because
+it is possible to have large numbers of I/Os in flight across multiple
+devices. Bounce buffer memory must be pre-allocated at boot time, and
+it is difficult to know how much memory to allocate to handle peak
+storage I/O loads. Consequently, bounce buffer memory is typically
+over-provisioned, which wastes memory, and may still not avoid a peak
+that exhausts bounce buffer memory and cause storage I/O errors.
 
-Move this setting to struct nvme_ctrl, and update the only user to
-set it in the new location.
-
-No functional change.
+For Coco VMs running with NVMe PCI devices, update the driver to
+permit bounce buffer throttling. Gate the throttling behavior
+on a DMA layer check indicating that throttling is useful, so that
+no change occurs in a non-CoCo VM. If throttling is useful, enable
+the BLK_MQ_F_BLOCKING flag, and pass the DMA_ATTR_MAY_BLOCK attribute
+into dma_map_bvec() and dma_map_sgtable() calls. With these options in
+place, DMA map requests are pended when necessary to reduce the
+likelihood of usage peaks caused by the NVMe driver that could exhaust
+bounce buffer memory and generate errors.
 
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
- drivers/nvme/host/core.c | 4 ++--
- drivers/nvme/host/nvme.h | 2 +-
- drivers/nvme/host/tcp.c  | 3 ++-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/nvme/host/pci.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 33fa01c599ad..f1ce325471f1 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4495,7 +4495,7 @@ int nvme_alloc_admin_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
- 		set->reserved_tags = 2;
- 	set->numa_node = ctrl->numa_node;
- 	set->flags = BLK_MQ_F_NO_SCHED;
--	if (ctrl->ops->flags & NVME_F_BLOCKING)
-+	if (ctrl->blocking)
- 		set->flags |= BLK_MQ_F_BLOCKING;
- 	set->cmd_size = cmd_size;
- 	set->driver_data = ctrl;
-@@ -4565,7 +4565,7 @@ int nvme_alloc_io_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
- 		set->reserved_tags = 1;
- 	set->numa_node = ctrl->numa_node;
- 	set->flags = BLK_MQ_F_SHOULD_MERGE;
--	if (ctrl->ops->flags & NVME_F_BLOCKING)
-+	if (ctrl->blocking)
- 		set->flags |= BLK_MQ_F_BLOCKING;
- 	set->cmd_size = cmd_size,
- 	set->driver_data = ctrl;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index ae5314d32943..28709f166cab 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -338,6 +338,7 @@ struct nvme_ctrl {
- 	unsigned int shutdown_timeout;
- 	unsigned int kato;
- 	bool subsystem;
-+	bool blocking;
- 	unsigned long quirks;
- 	struct nvme_id_power_state psd[32];
- 	struct nvme_effects_log *effects;
-@@ -546,7 +547,6 @@ struct nvme_ctrl_ops {
- 	unsigned int flags;
- #define NVME_F_FABRICS			(1 << 0)
- #define NVME_F_METADATA_SUPPORTED	(1 << 1)
--#define NVME_F_BLOCKING			(1 << 2)
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 6cd9395ba9ec..2c39943a87f8 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -156,6 +156,7 @@ struct nvme_dev {
+ 	dma_addr_t host_mem_descs_dma;
+ 	struct nvme_host_mem_buf_desc *host_mem_descs;
+ 	void **host_mem_desc_bufs;
++	unsigned long dma_attrs;
+ 	unsigned int nr_allocated_queues;
+ 	unsigned int nr_write_queues;
+ 	unsigned int nr_poll_queues;
+@@ -735,7 +736,8 @@ static blk_status_t nvme_setup_prp_simple(struct nvme_dev *dev,
+ 	unsigned int offset = bv->bv_offset & (NVME_CTRL_PAGE_SIZE - 1);
+ 	unsigned int first_prp_len = NVME_CTRL_PAGE_SIZE - offset;
  
- 	const struct attribute_group **dev_attr_groups;
- 	int (*reg_read32)(struct nvme_ctrl *ctrl, u32 off, u32 *val);
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 9ea6be0b0392..6b9fdf7dc1ac 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -2658,7 +2658,7 @@ static const struct blk_mq_ops nvme_tcp_admin_mq_ops = {
- static const struct nvme_ctrl_ops nvme_tcp_ctrl_ops = {
- 	.name			= "tcp",
- 	.module			= THIS_MODULE,
--	.flags			= NVME_F_FABRICS | NVME_F_BLOCKING,
-+	.flags			= NVME_F_FABRICS,
- 	.reg_read32		= nvmf_reg_read32,
- 	.reg_read64		= nvmf_reg_read64,
- 	.reg_write32		= nvmf_reg_write32,
-@@ -2762,6 +2762,7 @@ static struct nvme_tcp_ctrl *nvme_tcp_alloc_ctrl(struct device *dev,
- 	if (ret)
- 		goto out_kfree_queues;
+-	iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req), 0);
++	iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req),
++					dev->dma_attrs);
+ 	if (dma_mapping_error(dev->dev, iod->first_dma))
+ 		return BLK_STS_RESOURCE;
+ 	iod->dma_len = bv->bv_len;
+@@ -754,7 +756,8 @@ static blk_status_t nvme_setup_sgl_simple(struct nvme_dev *dev,
+ {
+ 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
  
-+	ctrl->ctrl.blocking = true;
- 	return ctrl;
- out_kfree_queues:
- 	kfree(ctrl->queues);
+-	iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req), 0);
++	iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req),
++					dev->dma_attrs);
+ 	if (dma_mapping_error(dev->dev, iod->first_dma))
+ 		return BLK_STS_RESOURCE;
+ 	iod->dma_len = bv->bv_len;
+@@ -800,7 +803,7 @@ static blk_status_t nvme_map_data(struct nvme_dev *dev, struct request *req,
+ 		goto out_free_sg;
+ 
+ 	rc = dma_map_sgtable(dev->dev, &iod->sgt, rq_dma_dir(req),
+-			     DMA_ATTR_NO_WARN);
++			     dev->dma_attrs | DMA_ATTR_NO_WARN);
+ 	if (rc) {
+ 		if (rc == -EREMOTEIO)
+ 			ret = BLK_STS_TARGET;
+@@ -828,7 +831,8 @@ static blk_status_t nvme_map_metadata(struct nvme_dev *dev, struct request *req,
+ 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+ 	struct bio_vec bv = rq_integrity_vec(req);
+ 
+-	iod->meta_dma = dma_map_bvec(dev->dev, &bv, rq_dma_dir(req), 0);
++	iod->meta_dma = dma_map_bvec(dev->dev, &bv, rq_dma_dir(req),
++					dev->dma_attrs);
+ 	if (dma_mapping_error(dev->dev, iod->meta_dma))
+ 		return BLK_STS_IOERR;
+ 	cmnd->rw.metadata = cpu_to_le64(iod->meta_dma);
+@@ -3040,6 +3044,12 @@ static struct nvme_dev *nvme_pci_alloc_dev(struct pci_dev *pdev,
+ 	 * a single integrity segment for the separate metadata pointer.
+ 	 */
+ 	dev->ctrl.max_integrity_segments = 1;
++
++	if (dma_recommend_may_block(dev->dev)) {
++		dev->ctrl.blocking = true;
++		dev->dma_attrs = DMA_ATTR_MAY_BLOCK;
++	}
++
+ 	return dev;
+ 
+ out_put_device:
 -- 
 2.25.1
 
