@@ -1,148 +1,201 @@
-Return-Path: <linux-hyperv+bounces-2791-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2792-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86DBA95ACE7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 07:35:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C567395AD12
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 07:52:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46CB528153A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 05:35:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A1411F2340E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 05:52:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECA655885;
-	Thu, 22 Aug 2024 05:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE4B7A15B;
+	Thu, 22 Aug 2024 05:52:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="XVS3x+Gq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U3pMlWgg"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from msa.smtpout.orange.fr (smtp-65.smtpout.orange.fr [80.12.242.65])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA14A2E3EE;
-	Thu, 22 Aug 2024 05:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2C123CB
+	for <linux-hyperv@vger.kernel.org>; Thu, 22 Aug 2024 05:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724304948; cv=none; b=d+dKlwkYOutUSsd7HucrZuxxL5uh1wxUZxyOHjkJD1QJi6GyV0nlrQdhuuAajU3lm1RE/a2uYO3IrFShdNbCY0p+NANb7/4BuTzkGuRvJpe1XqqfWuhdDTdueM3RCk+44bq1bmCAf95u2URWrsB8xY4TPcU8jqHRGftkBbLWRlw=
+	t=1724305945; cv=none; b=MNIQKhprC+1a+PNjVheBP9f/nHD0kLYfwwypTZR+RmUOYh80jUcwqqMvqV1CSHZ10U7Wi+WmlSUaUB3D/llHfjtEuF88xxLZuPX0GdNohmeS3mdjb/dKPxGcaZIks2GLyNb4jf9unhbVM9Njoj7TwlI/Hth5p3x5/KjaMzhIAMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724304948; c=relaxed/simple;
-	bh=XdvD1KyMTUI1+9GAfEn02LHXODNszkiZ2XbS5NvGUqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C/3fNyxYUXdgNEGvcoeYzZRKnLNDWtrQvunDOTqaHSSZ6QX0qZkc2Zbb2duHZy6VcL3QBP3CR73BWVD3SzPWa+FL50kx5tU18MYP8DLEefjQUnN6ndgaEkSsEx2ajbQ0XF/EuzCStq26RImnWsc3pV8bqgqB3ezkAIK/vBCUBoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=XVS3x+Gq; arc=none smtp.client-ip=80.12.242.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id h0Sesc5R58iG0h0Sfsuo75; Thu, 22 Aug 2024 07:34:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1724304874;
-	bh=BmQSPiNuluw12WlvUYDCD0UY6O2GPBeyKleY3PHQSBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=XVS3x+Gqr0Umk1fLe69p3azBWSp7OIVtY5YHyJNxNu1dJSO61RJp8dcKsElv+GbYF
-	 TwBhBsmCh8HeTNa34OXkw3rtMtAKRPVvJaeMdI7yanvsk/0480JZvCLdv5xUtB+W1K
-	 VIAZOa2lX+eHsKnoZV2nVK3PriXSOSuLRPofDa8THYd3fq6oYkJj79UXGD8ibFfORJ
-	 Bm70SDhwdP6Wv/lAvy1C5sQW2x+qP6IVUO/1QIHsVSzi4cQbsBGx9gwdH8/yIPHMUm
-	 YkEZf5jix0ElLNeYUXTD7T3bgekagtN1gaKbeO2l4ahUvOyoRw0bMKPaBtrh2VmUNr
-	 MOdFJBuAcJkjA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 22 Aug 2024 07:34:34 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <1fe20e5e-1c90-4029-9d40-625ec3bb3248@wanadoo.fr>
-Date: Thu, 22 Aug 2024 07:34:16 +0200
+	s=arc-20240116; t=1724305945; c=relaxed/simple;
+	bh=ZDPRDTlLhRB8Ca5AowgVDx3jfAvGtbwAcPsMhXtWWrw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KWAw1Hu5HlBJQPDZ/6wLoeAhve5H3ikBy0aIUW8zMmBFXtEWSNJGwK77MtIboocKxAWHRbS2KxtD18Z8sK0Ay5DdKDicLwN4v87Iv8v6nZXEt21sfV/bcLtBSVzIT89iRdRo+IvUEfHbYVTGsYFgdDRzGMVxK7ux2YMcrNTtizw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U3pMlWgg; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0be1808a36so770686276.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Aug 2024 22:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724305941; x=1724910741; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=04JaEmUuzFfbKL4CGnL5ZC4xtx6kxsSTreaHJ5A6DDg=;
+        b=U3pMlWggtRE4AjLO2WvUhyfWMSX5BadmYCADPoZ+t9FX5BK8DN0xwd5sttY3g+qv3G
+         MKTa+AtPxSELwZoNkLCHPXkyD5lWaCcxcfcGVKKBNXz9pSj8OsybUBSafOOPy+/YF4iR
+         rJ7m3tUC2aSS0qsLJ3NckU1H8n1Fr07piNgysdxbQlP5al5vCvu+Uws6lCbn1OZvWmfz
+         Gx3xLDI+2Mmlvb41JpiT/MAoH73tkNuv+LGxC0o3KYEVqFQJPIF+9U9M3P4gUWRl4lLs
+         BvQ5Bjv7RHrROUh9MoF27RlsFdMp4voQCIkjQIG9D3Iv0E+asD9c1MwbAHsOLcyYpBqP
+         IQ6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724305941; x=1724910741;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=04JaEmUuzFfbKL4CGnL5ZC4xtx6kxsSTreaHJ5A6DDg=;
+        b=nJoI2bbnAQAuSsXSKVuam/Mww+Ko2+BpHyIgBhWW7c5d7fm040DuDFoIpl2g9Ym35M
+         qblU8BX7700my3QDTZa8UD1pAwpzBciC0WwX1Fn0KNWsnT1mel8CCM3ajsOjaSNTLbU8
+         PT6OYx8FtpfTUBYNu1XO5Xymge02Cs4psPMG6Syzf0pvJVnKldFWLT802fybVa925Q7f
+         S/7/3IO2yZ4k5p7AtCWE/L16zLX+hKA9blx30DTCj9Huh87O2vA9+H8VvcL0X8btsZYW
+         F/dmWjHOEqlbLvCZs+pglbY3yL2BSjm9ZCaC7P0h8E8zye4Jwx61B1wt5/srioiBGGC3
+         n3IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8/I03nd4/lCi/iqtFFxupfM/9yDrA85eX9hjquAnV7swIKzondOHlsFBWXocMS8r+QFIlS0fB6fSesj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAjA1USUA+YN/qQv2wRMOpUsTtiXimculVcVwGip/WDL1lZWnJ
+	h4sOFSrC5ZEDXW5jg089MhELu0/wxOODXx9NSmaL7jxAIF8/NOT48pmWRnQXYzlz2gB8wDEiOQM
+	kTazf6LPzDjXDc9Nmx7LjzQ==
+X-Google-Smtp-Source: AGHT+IETrPBlj0Tv3ojSIAQFzaGbRbQ3B+XAZxSguR7Lp9ncSuSBoJfqKynKHzdekC+vdVaJRzY63BBhLOJMi+USHg==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:1370:b0:e16:5303:7bcc with
+ SMTP id 3f1490d57ef6-e166553ae90mr12157276.10.1724305940891; Wed, 21 Aug 2024
+ 22:52:20 -0700 (PDT)
+Date: Thu, 22 Aug 2024 05:51:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: mana: Fix race of mana_hwc_post_rx_wqe and new
- hwc response
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
- davem@davemloft.net, decui@microsoft.com, edumazet@google.com,
- hawk@kernel.org, jesse.brandeburg@intel.com, john.fastabend@gmail.com,
- kuba@kernel.org, kys@microsoft.com, leon@kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, longli@microsoft.com, netdev@vger.kernel.org,
- olaf@aepfle.de, pabeni@redhat.com, paulros@microsoft.com,
- shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
- stable@vger.kernel.org, stephen@networkplumber.org, tglx@linutronix.de,
- vkuznets@redhat.com, wei.liu@kernel.org
-References: <1724272949-2044-1-git-send-email-haiyangz@microsoft.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <1724272949-2044-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
+Message-ID: <20240822055154.4176338-1-almasrymina@google.com>
+Subject: [PATCH net-next v2] net: refactor ->ndo_bpf calls into dev_xdp_propagate
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, Jay Vosburgh <jv@jvosburgh.net>, 
+	Andy Gospodarek <andy@greyhouse.net>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Le 21/08/2024 à 22:42, Haiyang Zhang a écrit :
-> The mana_hwc_rx_event_handler() / mana_hwc_handle_resp() calls
-> complete(&ctx->comp_event) before posting the wqe back. It's
-> possible that other callers, like mana_create_txq(), start the
-> next round of mana_hwc_send_request() before the posting of wqe.
-> And if the HW is fast enough to respond, it can hit no_wqe error
-> on the HW channel, then the response message is lost. The mana
-> driver may fail to create queues and open, because of waiting for
-> the HW response and timed out.
-> Sample dmesg:
-> [  528.610840] mana 39d4:00:02.0: HWC: Request timed out!
-> [  528.614452] mana 39d4:00:02.0: Failed to send mana message: -110, 0x0
-> [  528.618326] mana 39d4:00:02.0 enP14804s2: Failed to create WQ object: -110
-> 
-> To fix it, move posting of rx wqe before complete(&ctx->comp_event).
-> 
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
-> Signed-off-by: Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>
-> ---
->   .../net/ethernet/microsoft/mana/hw_channel.c  | 62 ++++++++++---------
->   1 file changed, 34 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-> index cafded2f9382..a00f915c5188 100644
-> --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
-> +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-> @@ -52,9 +52,33 @@ static int mana_hwc_verify_resp_msg(const struct hwc_caller_ctx *caller_ctx,
->   	return 0;
->   }
->   
-> +static int mana_hwc_post_rx_wqe(const struct hwc_wq *hwc_rxq,
-> +				struct hwc_work_request *req)
-> +{
-> +	struct device *dev = hwc_rxq->hwc->dev;
-> +	struct gdma_sge *sge;
-> +	int err;
-> +
-> +	sge = &req->sge;
-> +	sge->address = (u64)req->buf_sge_addr;
-> +	sge->mem_key = hwc_rxq->msg_buf->gpa_mkey;
-> +	sge->size = req->buf_len;
-> +
-> +	memset(&req->wqe_req, 0, sizeof(struct gdma_wqe_request));
-> +	req->wqe_req.sgl = sge;
-> +	req->wqe_req.num_sge = 1;
-> +	req->wqe_req.client_data_unit = 0;
+When net devices propagate xdp configurations to slave devices,
+we will need to perform a memory provider check to ensure we're
+not binding xdp to a device using unreadable netmem.
 
-Hi,
+Currently the ->ndo_bpf calls in a few places. Adding checks to all
+these places would not be ideal.
 
-unrelated to your patch, but this initialization is useless, it is 
-already memset(0)'ed a few lines above.
-So why client_data_unit and not some other fields?
+Refactor all the ->ndo_bpf calls into one place where we can add this
+check in the future.
 
-> +
-> +	err = mana_gd_post_and_ring(hwc_rxq->gdma_wq, &req->wqe_req, NULL);
-> +	if (err)
-> +		dev_err(dev, "Failed to post WQE on HWC RQ: %d\n", err);
-> +	return err;
-> +}
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-...
+---
 
-Just my 2c.
+v2:
+- Don't refactor the calls in net/xdp/xsk_buff_pool.c and
+  kernel/bpf/offload.c (Jakub)
+---
+ drivers/net/bonding/bond_main.c | 8 ++++----
+ drivers/net/hyperv/netvsc_bpf.c | 2 +-
+ include/linux/netdevice.h       | 1 +
+ net/core/dev.c                  | 9 +++++++++
+ 4 files changed, 15 insertions(+), 5 deletions(-)
 
-CJ
-
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index f9633a6f8571..73f9416c6c1b 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2258,7 +2258,7 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 			goto err_sysfs_del;
+ 		}
+ 
+-		res = slave_dev->netdev_ops->ndo_bpf(slave_dev, &xdp);
++		res = dev_xdp_propagate(slave_dev, &xdp);
+ 		if (res < 0) {
+ 			/* ndo_bpf() sets extack error message */
+ 			slave_dbg(bond_dev, slave_dev, "Error %d calling ndo_bpf\n", res);
+@@ -2394,7 +2394,7 @@ static int __bond_release_one(struct net_device *bond_dev,
+ 			.prog	 = NULL,
+ 			.extack  = NULL,
+ 		};
+-		if (slave_dev->netdev_ops->ndo_bpf(slave_dev, &xdp))
++		if (dev_xdp_propagate(slave_dev, &xdp))
+ 			slave_warn(bond_dev, slave_dev, "failed to unload XDP program\n");
+ 	}
+ 
+@@ -5584,7 +5584,7 @@ static int bond_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 			goto err;
+ 		}
+ 
+-		err = slave_dev->netdev_ops->ndo_bpf(slave_dev, &xdp);
++		err = dev_xdp_propagate(slave_dev, &xdp);
+ 		if (err < 0) {
+ 			/* ndo_bpf() sets extack error message */
+ 			slave_err(dev, slave_dev, "Error %d calling ndo_bpf\n", err);
+@@ -5616,7 +5616,7 @@ static int bond_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 		if (slave == rollback_slave)
+ 			break;
+ 
+-		err_unwind = slave_dev->netdev_ops->ndo_bpf(slave_dev, &xdp);
++		err_unwind = dev_xdp_propagate(slave_dev, &xdp);
+ 		if (err_unwind < 0)
+ 			slave_err(dev, slave_dev,
+ 				  "Error %d when unwinding XDP program change\n", err_unwind);
+diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
+index 4a9522689fa4..e01c5997a551 100644
+--- a/drivers/net/hyperv/netvsc_bpf.c
++++ b/drivers/net/hyperv/netvsc_bpf.c
+@@ -183,7 +183,7 @@ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+ 	xdp.command = XDP_SETUP_PROG;
+ 	xdp.prog = prog;
+ 
+-	ret = vf_netdev->netdev_ops->ndo_bpf(vf_netdev, &xdp);
++	ret = dev_xdp_propagate(vf_netdev, &xdp);
+ 
+ 	if (ret && prog)
+ 		bpf_prog_put(prog);
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 614ec5d3d75b..f0ff269ce262 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3923,6 +3923,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *skb, struct net_device *dev,
+ 
+ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+ u8 dev_xdp_prog_count(struct net_device *dev);
++int dev_xdp_propagate(struct net_device *dev, struct netdev_bpf *bpf);
+ u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode);
+ 
+ int __dev_forward_skb(struct net_device *dev, struct sk_buff *skb);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index e7260889d4cb..165e9778d422 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -9369,6 +9369,15 @@ u8 dev_xdp_prog_count(struct net_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(dev_xdp_prog_count);
+ 
++int dev_xdp_propagate(struct net_device *dev, struct netdev_bpf *bpf)
++{
++	if (!dev->netdev_ops->ndo_bpf)
++		return -EOPNOTSUPP;
++
++	return dev->netdev_ops->ndo_bpf(dev, bpf);
++}
++EXPORT_SYMBOL_GPL(dev_xdp_propagate);
++
+ u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode)
+ {
+ 	struct bpf_prog *prog = dev_xdp_prog(dev, mode);
+-- 
+2.46.0.295.g3b9ea8a38a-goog
 
 
