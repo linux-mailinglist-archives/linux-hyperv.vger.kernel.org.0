@@ -1,142 +1,131 @@
-Return-Path: <linux-hyperv+bounces-2797-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2798-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3830895B949
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 17:06:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F251295B9F8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 17:21:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAF112842EB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 15:06:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A9651F243D0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 15:21:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983CC1CBE94;
-	Thu, 22 Aug 2024 15:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7FC215749E;
+	Thu, 22 Aug 2024 15:21:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fEhz7fCP"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Nb3175Ni"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4A21CB31B;
-	Thu, 22 Aug 2024 15:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6570D2C87A;
+	Thu, 22 Aug 2024 15:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724339182; cv=none; b=qRd8ipXYcPIKnEcAJljpGaOeQX9jRizQ8kivvih3IpZkq3uAVY9l8hzEjXNCiHEncBk9KCVXLwB/QIS6OuXrpCMRxbZaO/yD8IPJPqrhxqcIjZqRsUDjT2Zd32AS5HFag3tnO9jU9OjE9XxZCekyRoNYNoLHEm00quqI/lrbvl0=
+	t=1724340077; cv=none; b=OKS6VDokbvBVkGPHL0j3/qg1VSJPhxwyPXXdoN5qUSeXdp4mNamARu2YhgqxTXQUmpwcUO2STYNTjeM86Bp8ugpiBxc+llos8LKsccW/BagKdAL8OVeWa0kduZalqlCE93yW9PDyeb3wJkEps/gu3RJuHg4mrWG8xX7iKCS1SK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724339182; c=relaxed/simple;
-	bh=w1WMQAnyWSzskX4164UJpPQqWq1VBFOrPzKkXmke+zQ=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Q740wfHk9pb5ay21XAcyMzw4+VyrLHGzM1zIkfdJJLMtyMz3qlV+JH7efawuUZyeKzBeSFv4Gu2TG7mX/wXXZbfWnuuSHEnbpCngFtlPAX6Uwv6LxDriT+GLsuc8xqB3ReSCP818lh4e2GOd4LTU3IECOQAXWJsG+eg2uMrkLL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fEhz7fCP; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id AC4E120B7165; Thu, 22 Aug 2024 08:06:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AC4E120B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1724339180;
-	bh=rd7R630toxj6aIKFFnZEA9j1f3Unx/sdBFKbopGVCek=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fEhz7fCP2j5Gc9JGK8Dn9aiz9aKFz6DKnoy7VBmhXp1WkacarqJX540jBN9L3o16d
-	 pGw9SEZw8m3JcQuo2PN5q4ygpjcn+J92UvQswlLDkWMovP04GjMVsbo6Ic2g6ctIDV
-	 r4mPJIanrGpFQxXWAEDgBlIOQUEnXoF8xaYJJ3mM=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ernis@microsoft.com,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Subject: [PATCH v3] net: netvsc: Update default VMBus channels
-Date: Thu, 22 Aug 2024 08:06:08 -0700
-Message-Id: <1724339168-20913-1-git-send-email-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1724340077; c=relaxed/simple;
+	bh=0ebK4nIoa5BOEpjmy0XRvJ7VKPjWzhDV62tWEIf3CvI=;
+	h=MIME-Version:Content-Type:Date:Message-ID:Subject:From:To:CC:
+	 References:In-Reply-To; b=f3cMRQPypWpP9xBgt2Yu3WsqFxPxlPIVUBlPzi4r5chT5co6HVQFM+lhN+IPx9Ez+ChreuQ7S6v1K/L3Pu2qKWi+WFkOQSz4DDjp4IPULbxANbZ5qD746M/RFiqvLD4ttxvY45XQ859TGj7h1KUI+TiXDKztwg96w3KGefUqf88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Nb3175Ni; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1724340076; x=1755876076;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   subject:from:to:cc:references:in-reply-to;
+  bh=f2eZRkmfeS+Cis+NAGo9bRj42tCz3s9a2o3q7s6DBDI=;
+  b=Nb3175NisnR/bLRTZF5JH6RsxlhnLRl4jkdVvDYmOEDpb1BAzPLVGMhd
+   riJlEe8TVeazzg14jUnoxOq6nFTd/eNN7MtsOZr1T0Iw32dIZBRS+bclh
+   NcMXkPQJLulj8VcPAjbLFUiAokMerKtGAtuY912QW53BvmS0BQ+GL9U/5
+   A=;
+X-IronPort-AV: E=Sophos;i="6.10,167,1719878400"; 
+   d="scan'208";a="20619224"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 15:21:13 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:7014]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.33.212:2525] with esmtp (Farcaster)
+ id a3167566-1ec3-4ce8-b883-c56528e2878a; Thu, 22 Aug 2024 15:21:12 +0000 (UTC)
+X-Farcaster-Flow-ID: a3167566-1ec3-4ce8-b883-c56528e2878a
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Thu, 22 Aug 2024 15:21:11 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Thu, 22 Aug 2024
+ 15:21:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Thu, 22 Aug 2024 15:21:02 +0000
+Message-ID: <D3MJJCTNY7OM.WOB5W8AVBH9G@amazon.com>
+Subject: Re: [PATCH 16/18] KVM: x86: Take mem attributes into account when
+ faulting memory
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+CC: <pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<graf@amazon.de>, <dwmw2@infradead.org>, <pdurrant@amazon.com>,
+	<mlevitsk@redhat.com>, <jgowans@amazon.com>, <corbet@lwn.net>,
+	<decui@microsoft.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	<amoorthy@google.com>
+X-Mailer: aerc 0.18.2-22-gfff69046b02f-dirty
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <20240609154945.55332-17-nsaenz@amazon.com>
+In-Reply-To: <20240609154945.55332-17-nsaenz@amazon.com>
+X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-Change VMBus channels macro (VRSS_CHANNEL_DEFAULT) in
-Linux netvsc from 8 to 16 to align with Azure Windows VM
-and improve networking throughput.
+On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
+> Take into account access restrictions memory attributes when faulting
+> guest memory. Prohibited memory accesses will cause an user-space fault
+> exit.
+>
+> Additionally, bypass a warning in the !tdp case. Access restrictions in
+> guest page tables might not necessarily match the host pte's when memory
+> attributes are in use.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 
-For VMs having less than 16 vCPUS, the channels depend
-on number of vCPUs. Between 16 to 64 vCPUs, the channels
-default to VRSS_CHANNEL_DEFAULT. For greater than 64 vCPUs,
-set the channels to number of physical cores / 2 returned by
-netif_get_num_default_rss_queues() as a way to optimize CPU
-resource utilization and scale for high-end processors with
-many cores. Due to hyper-threading, the number of
-physical cores = vCPUs/2.
-Maximum number of channels are by default set to 64.
+I now realize that only taking into account memory attributes during
+faults isn't good enough for VSM. We should check the attributes anytime
+KVM takes GPAs as input for any action initiated by the guest. If the
+memory attributes are incompatible with such action, it should be
+stopped. Failure to do so opens side channels that unprivileged VTLs can
+abuse to infer information about privileged VTL. Some examples I came up
+with:
+- Guest page walks: VTL0 could install malicious directory entries that
+  point to GPAs only visible to VTL1. KVM will happily continue the
+  walk. Among other things, this could be use to infer VTL1's GVA->GPA
+  mappings.
+- PV interfaces like the Hyper-V TSC page or VP assist page, could be
+  used to modify portions of VTL1 memory.
+- Hyper-V hypercalls that take GPAs as input/output can be abused in a
+  myriad of ways. Including ones that exit into user-space.
 
-Based on this change the channel creation would change as follows:
+We would be protected against all these if we implemented the memory
+access restrictions through the memory slots API. As is, it has the
+drawback of having to quiesce the whole VM for any non-trivial slot
+modification (i.e. VSM's memory protections). But if we found a way to
+speed up the slot updates we could rely on that, and avoid having to
+teach kvm_read/write_guest() and friends to deal with memattrs. Note
+that we would still need to use memory attributes to request for faults
+to exit onto user-space on those select GPAs. Any opinions or
+suggestions?
 
--------------------------------------------------------------
-| No. of vCPU	|  dev_info->num_chn	| channels created  |
--------------------------------------------------------------
-|  0-16		|       16		|       vCPU        |
-| >16 & <=64	|       16		|       16          |
-| >64 & <=256	|       vCPU/4		|       vCPU/4      |
-| >256		|       vCPU/4		|       64          |
--------------------------------------------------------------
+Note that, for now, I'll stick with the memory attributes approach to
+see what the full solution looks like.
 
-Performance tests showed significant improvement in throughput:
-- 0.54% for 16 vCPUs
-- 0.83% for 32 vCPUs
-- 0.86% for 48 vCPUs
-- 9.72% for 64 vCPUs
-- 13.57% for 96 vCPUs
-
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
-Changes in v3:
-* Use netif_get_num_default_rss_queues() to set channels
-* Change terminology for channels in commit message
----
-Changes in v2:
-* Set dev_info->num_chn based on vCPU count.
----
- drivers/net/hyperv/hyperv_net.h | 2 +-
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 810977952f95..e690b95b1bbb 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -882,7 +882,7 @@ struct nvsp_message {
- 
- #define VRSS_SEND_TAB_SIZE 16  /* must be power of 2 */
- #define VRSS_CHANNEL_MAX 64
--#define VRSS_CHANNEL_DEFAULT 8
-+#define VRSS_CHANNEL_DEFAULT 16
- 
- #define RNDIS_MAX_PKT_DEFAULT 8
- #define RNDIS_PKT_ALIGN_DEFAULT 8
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 44142245343d..a6482afe4217 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -987,7 +987,8 @@ struct netvsc_device_info *netvsc_devinfo_get(struct netvsc_device *nvdev)
- 			dev_info->bprog = prog;
- 		}
- 	} else {
--		dev_info->num_chn = VRSS_CHANNEL_DEFAULT;
-+		dev_info->num_chn = max(VRSS_CHANNEL_DEFAULT,
-+					netif_get_num_default_rss_queues());
- 		dev_info->send_sections = NETVSC_DEFAULT_TX;
- 		dev_info->send_section_size = NETVSC_SEND_SECTION_SIZE;
- 		dev_info->recv_sections = NETVSC_DEFAULT_RX;
--- 
-2.34.1
-
+Nicolas
 
