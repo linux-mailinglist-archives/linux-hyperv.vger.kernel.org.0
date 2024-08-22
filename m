@@ -1,72 +1,72 @@
-Return-Path: <linux-hyperv+bounces-2804-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2805-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DF6995BE56
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 20:38:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F7395BE59
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 20:38:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFDD41F24C6B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 18:38:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09F27285F97
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2024 18:38:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D69B1D0DCF;
-	Thu, 22 Aug 2024 18:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ADC11D0DF1;
+	Thu, 22 Aug 2024 18:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzRi/wgo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LB2gUFjr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C611D04A3;
-	Thu, 22 Aug 2024 18:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0297C1D04AD;
+	Thu, 22 Aug 2024 18:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724351870; cv=none; b=ERJa/NhxAT4ks4LN+rDYzwnSIw/bMPT/vpGeBCs9tiTAVRVqrzwqf3tplU/cDGvtjP4onwagcrUb++3M/2vLLQ1+Ft74BCvMul7oeL8LkuJswj2Ckz+JJx4r7d/qZCGKSG09lYE5X1a9IkuhdeVgc3ugcveMe7DCP/siLC5qlcw=
+	t=1724351871; cv=none; b=cYUkhbNOJx4bxcq05TtKDQiO4oW8zlHCDMLFp+XS9hsKxgbDSu2gqrBIwAfTaBFqxe8v6hfzAUtgffMSGn7x7iOOeIe8o0jofb6qH/AE7jWik36PIHE6Jp3zVLy0zQ4XBtVc/GZkZP7YkeyZpVeYO69YoAiQoZ6ZpQu23gwhvH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724351870; c=relaxed/simple;
-	bh=t7o/ANRPJFs0l8TeamTdj8dI882TkX1rTKCkymHtYNQ=;
+	s=arc-20240116; t=1724351871; c=relaxed/simple;
+	bh=NVFmBvAgubMJWBFshBt0g9Yy9k4ztAxKDlDYqd+NV3E=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sNwVVueQlv0VfXkpeXfO69G4Vwyj2HFtHfkAR7Acq+K56/hUH8Ecgxq2s/kihbcI2TZvd7808riO5yIx3SiGUD2V8TPpd8HLcl6W3ZqbNm7h5Wk8ok59u97R3sZ8ZoZnDVzakFdRm3nQGGag4Zv8ZdcbORoqP9p4MqqzQOERoP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzRi/wgo; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=TnDc70wGjR4qf5vfiPK4OWkK6ZCGbVWxulLd8QG+g9xXSPla4QEhkb08mhiP2TUJ9k2BNoiChLOqSO9E7NLYO5NLho1NozurVeHSsYiGDYIZzBewna/TyZ/PCYsfbJDSKKHyCksRjrdbzpIifiPJ1sGwH7GihBSPmiEGEis4yBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LB2gUFjr; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-20208830de8so9578615ad.1;
-        Thu, 22 Aug 2024 11:37:48 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fc611a0f8cso10085975ad.2;
+        Thu, 22 Aug 2024 11:37:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724351868; x=1724956668; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724351869; x=1724956669; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A/ThqndoEMvfHog7jEmoHMSz79N0bCj0y64RGbOiEjY=;
-        b=OzRi/wgoVrZDJ5Rkh+0iPMQIXeyjTV1ftxw2uki2dS9gMIIM2IvlcC8mqXvh4uyX4V
-         xYIOxzeROfx0KcFaXUxID1rP6kMMEqInb8k2oWZIzIYjxvQftsKNj7FfVn5xOsl5uNq2
-         ic/tESASFCndVqudGGqlPU3MQhPcnwYWY6OYRvNv7xAyJ8poMoBjBytRuOUAKiIknvHH
-         JLROu2RrrpZwFUR5l32nmnz4eorlO0oDmgkfhTTJF8Q//A1vRBMpLA3iwqEiGvB2h5QZ
-         6IRlDYfbwPVQPikjsKGXegSoWbOtFqJ0h7zejWogeggbKXAQCSM7DptLpALHvNR0vjm3
-         OWow==
+        bh=AYiVVcr8/wboBmezLWjDsQm81ttJxTuVeu5qAg4kVjI=;
+        b=LB2gUFjrgDRg9dMvjS2uMmjJStL4L7Y27GcE99FlX+3ALJfrDoUqyPaDbwpL8z6PKH
+         h/sNdX2kcEooPHOdbQJyOiwbmrrvMq/C7KCng8DFXQFYKeY7q7B20eABLmiqLgmGvMSa
+         pJ8BmKfgFFyRm6IWHGQAhN+PnDavXUrLIXctmPACc78K465ru2mstDm5XfIwkS2OSsP3
+         e/fmoxgKNABtOlnMryQ8F3K0GgXAveP47/jyLDO5cNQJ12joTOwhPLbZCOfx83Ra6DZy
+         XSRLd7NwOMCljkZ63yTjYZQK4XoBNEqF/USfUSsCzcvchh5t/sIz3x361X1o7GycyDKM
+         uyoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724351868; x=1724956668;
+        d=1e100.net; s=20230601; t=1724351869; x=1724956669;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=A/ThqndoEMvfHog7jEmoHMSz79N0bCj0y64RGbOiEjY=;
-        b=HqALGnFQXwe5N1lefH5KIpRwrNr8+AWISCx5loojud4epryXbGuF0Fo9OzVnxWhe6k
-         SjBb7OBuo0qnux1UW4BnfmHgS7cPzNG/PcsB8HLbw7zDEqLQopPGjk4py94MBFQDyxqB
-         YssJ4y0mIfXrPr0BIb542Mdt08SOmrJt8qw1DwvbkFIq9AIrtfe42zwbxzHdyogZADnZ
-         bD5Ffi/vcA5z4tBoIpBYBtc9p/qXmJjbqNrdt4VjkvJzCL84J6EF9ymCNnEAnx8Dfc6p
-         7l7QBDkHFtJdO6ZhyWi+d5zbx97OtjoT1QEZ8R8iTX7hsvPTrDNdxgkBvydM43QDHMso
-         VqHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKuCWlU1Z0q7UkmU0mLAqETLzVRvPYIQlIrY2mbDGbfYpG/TeRfOcniPZrsWkQQly61YpjQgsi42Kb29hg@vger.kernel.org, AJvYcCW6n9KMU0VEGteCumo55XDN5T5x0PNyopOtOsD+73il4wwIy4dnFcrKWVLa5FJ+gA924XAvF/ySwQmOcA==@vger.kernel.org, AJvYcCXE/Y2TSuX6kiibKbGLXS0pR5SSDECz6gN0Hvbz57qL063JQ4zyb5QbGdfsYtDxxbkUso72SL9BDThd1Y4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFz/losVgYPcgOG1tdi1UwYGh/fgealbrOK296eS0i+beSiuEN
-	I1nXnR5Vy+ENhA+Ql8x2VyZ+8Y1zov1LofhHSzXsyzSgx8eTc6qm
-X-Google-Smtp-Source: AGHT+IE5HU0h4JUoQwfjPC2hkmon5bCJZ8hz8HnwTaO4uEWN3UXUQmXUdXTWmLmVascnml4B3X8Sbw==
-X-Received: by 2002:a17:902:d4ca:b0:202:162c:1f36 with SMTP id d9443c01a7336-20367d3b815mr78784005ad.36.1724351868111;
-        Thu, 22 Aug 2024 11:37:48 -0700 (PDT)
+        bh=AYiVVcr8/wboBmezLWjDsQm81ttJxTuVeu5qAg4kVjI=;
+        b=Y26DNJ7jRn1veU2M4AwyoASvzR4vqwQ3PFkJtRAW73jNdI9vb+4z7vCE6eDMHGYILd
+         KfVCFVyUfNGeKc5s9FpqvHxJpNTrrXTcsLfjGe7ib5KBsxCH5eQkJ4iQ5/wEQWJXrpTD
+         dmkULtFXE9uKiA8xfFUMTJylCKrqOfoKWfN9ApQlhgh2FB79A0A3L7nyGt+QvoUIptE5
+         U+uc5Wn6K3WW81Dgm9n2ciVw3UwmUKQgkD3z7g0+KtcqluuUYe7cOyHVegeZusK6IdkC
+         CGcIXaieJIkVkd/0mo7PU9+1b78M+CVHNafVo7jk1/nZDjf+P1HV6hkLGIQ3XmIIrOX0
+         s/uA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGhm83E9RRflMzYayJQji1mtLF8PyVpiGC68aBVj+JKaRt7YbBdNx91wtUSiiTWhQ0yx+0f+/BqoXfrrE=@vger.kernel.org, AJvYcCVse2JRJVxySDQxGvxUNMWhwvZm4koT14vSKBLOb4LoThZGuVTu0fmqeVulm3cOTsHvnxUfiJN6/I+2tut0@vger.kernel.org, AJvYcCWkjugV6s9oiPLFJMe3A0DXJKMlhPmgge2n0i+H6sxCGtXL8MhR8+sMIKP0TVV+ycSnMGqT5NzJNsrsBQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbdjjW00piTWCs1Iqu4sKOq8gdypL/4/T1EdNvEPbYBasuZtSU
+	4CAjbWxufbfYlaYN8ni/eh/E0MIV7Wq9GpdAKqULgQIazqOLCvfx
+X-Google-Smtp-Source: AGHT+IH8+45q6oXd8x8II3Jds1dxAoYSz31lmfPW/kQ0FnzP0cCsfuNQ8sVNo0lwZUKJpv9rCx8MxQ==
+X-Received: by 2002:a17:903:228d:b0:1fc:f65:cd8a with SMTP id d9443c01a7336-20367d1394dmr75819225ad.18.1724351869298;
+        Thu, 22 Aug 2024 11:37:49 -0700 (PDT)
 Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2038557e4f9sm15667145ad.65.2024.08.22.11.37.47
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2038557e4f9sm15667145ad.65.2024.08.22.11.37.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 11:37:47 -0700 (PDT)
+        Thu, 22 Aug 2024 11:37:49 -0700 (PDT)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: kbusch@kernel.org,
@@ -88,9 +88,9 @@ To: kbusch@kernel.org,
 	linux-scsi@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-coco@lists.linux.dev
-Subject: [RFC 2/7] dma: Handle swiotlb throttling for SGLs
-Date: Thu, 22 Aug 2024 11:37:13 -0700
-Message-Id: <20240822183718.1234-3-mhklinux@outlook.com>
+Subject: [RFC 3/7] dma: Add function for drivers to know if allowing blocking is useful
+Date: Thu, 22 Aug 2024 11:37:14 -0700
+Message-Id: <20240822183718.1234-4-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240822183718.1234-1-mhklinux@outlook.com>
 References: <20240822183718.1234-1-mhklinux@outlook.com>
@@ -105,101 +105,101 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-When a DMA map request is for a SGL, each SGL entry results in an
-independent mapping operation. If the mapping requires a bounce buffer
-due to running in a CoCo VM or due to swiotlb=force on the boot line,
-swiotlb is invoked. If swiotlb throttling is enabled for the request,
-each SGL entry results in a separate throttling operation. This is
-problematic because a thread may be holding swiotlb memory while waiting
-for memory to become free.
+With the addition of swiotlb throttling functionality, storage
+device drivers may want to know whether using the DMA_ATTR_MAY_BLOCK
+attribute is useful. In a CoCo VM or environment where swiotlb=force
+is used, the MAY_BLOCK attribute enables swiotlb throttling. But if
+throttling is not enable or useful, storage device drivers probably
+do not want to set BLK_MQ_F_BLOCKING at the blk-mq request queue level.
 
-Resolve this problem by only allowing throttling on the 0th SGL
-entry. When unmapping the SGL, unmap entries 1 thru N-1 first, then
-unmap entry 0 so that the throttle isn't released until all swiotlb
-memory has been freed.
+Add function dma_recommend_may_block() that indicates whether
+the underlying implementation of the DMA map calls would benefit
+from allowing blocking. If the kernel was built with
+CONFIG_SWIOTLB_THROTTLE, and swiotlb=force is set (on the kernel
+command line or due to being a CoCo VM), this function returns
+true. Otherwise it returns false.
 
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
-This approach to SGLs muddies the line between DMA direct and swiotlb
-throttling functionality. To keep the MAY_BLOCK attr fully generic, it
-should propagate to the mapping of all SGL entries.
+ include/linux/dma-mapping.h |  5 +++++
+ kernel/dma/direct.c         |  6 ++++++
+ kernel/dma/direct.h         |  1 +
+ kernel/dma/mapping.c        | 10 ++++++++++
+ 4 files changed, 22 insertions(+)
 
-An alternate approach is to define an additional DMA attribute that
-is internal to the DMA layer. Instead of clearing MAX_BLOCK, this
-attr is added by dma_direct_map_sg() when mapping SGL entries other
-than the 0th entry. swiotlb would do throttling only when MAY_BLOCK
-is set and this new attr is not set.
-
-This approach has a modest amount of additional complexity. Given
-that we currently have no other users of the MAY_BLOCK attr, the
-conceptual cleanliness may not be warranted until we do.
-
-Thoughts?
-
- kernel/dma/direct.c | 35 ++++++++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 5 deletions(-)
-
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 7b78294813be..ec2edf068218 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -145,6 +145,7 @@ int dma_set_mask(struct device *dev, u64 mask);
+ int dma_set_coherent_mask(struct device *dev, u64 mask);
+ u64 dma_get_required_mask(struct device *dev);
+ bool dma_addressing_limited(struct device *dev);
++bool dma_recommend_may_block(struct device *dev);
+ size_t dma_max_mapping_size(struct device *dev);
+ size_t dma_opt_mapping_size(struct device *dev);
+ unsigned long dma_get_merge_boundary(struct device *dev);
+@@ -252,6 +253,10 @@ static inline bool dma_addressing_limited(struct device *dev)
+ {
+ 	return false;
+ }
++static inline bool dma_recommend_may_block(struct device *dev)
++{
++	return false;
++}
+ static inline size_t dma_max_mapping_size(struct device *dev)
+ {
+ 	return 0;
 diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 4480a3cd92e0..80e03c0838d4 100644
+index 80e03c0838d4..34d14e4ace64 100644
 --- a/kernel/dma/direct.c
 +++ b/kernel/dma/direct.c
-@@ -438,6 +438,18 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
- 		arch_sync_dma_for_cpu_all();
+@@ -649,6 +649,12 @@ bool dma_direct_all_ram_mapped(struct device *dev)
+ 				      check_ram_in_range_map);
  }
  
-+static void dma_direct_unmap_sgl_entry(struct device *dev,
-+		struct scatterlist *sgl, enum dma_data_direction dir,
-+		unsigned long attrs)
-+
++bool dma_direct_recommend_may_block(struct device *dev)
 +{
-+	if (sg_dma_is_bus_address(sgl))
-+		sg_dma_unmark_bus_address(sgl);
-+	else
-+		dma_direct_unmap_page(dev, sgl->dma_address,
-+				      sg_dma_len(sgl), dir, attrs);
++	return IS_ENABLED(CONFIG_SWIOTLB_THROTTLE) &&
++			is_swiotlb_force_bounce(dev);
 +}
 +
- /*
-  * Unmaps segments, except for ones marked as pci_p2pdma which do not
-  * require any further action as they contain a bus address.
-@@ -449,12 +461,20 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
- 	int i;
+ size_t dma_direct_max_mapping_size(struct device *dev)
+ {
+ 	/* If SWIOTLB is active, use its maximum mapping size */
+diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
+index d2c0b7e632fc..63516a540276 100644
+--- a/kernel/dma/direct.h
++++ b/kernel/dma/direct.h
+@@ -21,6 +21,7 @@ bool dma_direct_need_sync(struct device *dev, dma_addr_t dma_addr);
+ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 		enum dma_data_direction dir, unsigned long attrs);
+ bool dma_direct_all_ram_mapped(struct device *dev);
++bool dma_direct_recommend_may_block(struct device *dev);
+ size_t dma_direct_max_mapping_size(struct device *dev);
  
- 	for_each_sg(sgl,  sg, nents, i) {
--		if (sg_dma_is_bus_address(sg))
--			sg_dma_unmark_bus_address(sg);
--		else
--			dma_direct_unmap_page(dev, sg->dma_address,
--					      sg_dma_len(sg), dir, attrs);
-+		/*
-+		 * Skip the 0th SGL entry in case this SGL consists of
-+		 * throttled swiotlb mappings. In such a case, any other
-+		 * entries should be unmapped first since unmapping the
-+		 * 0th entry will release the throttle semaphore.
-+		 */
-+		if (!i)
-+			continue;
-+		dma_direct_unmap_sgl_entry(dev, sg, dir, attrs);
- 	}
-+
-+	/* Now do the 0th SGL entry */
-+	if (nents)
-+		dma_direct_unmap_sgl_entry(dev, sgl, dir, attrs);
+ #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index b1c18058d55f..832982bafd5a 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -858,6 +858,16 @@ bool dma_addressing_limited(struct device *dev)
  }
- #endif
+ EXPORT_SYMBOL_GPL(dma_addressing_limited);
  
-@@ -492,6 +512,11 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
- 			ret = -EIO;
- 			goto out_unmap;
- 		}
++bool dma_recommend_may_block(struct device *dev)
++{
++	const struct dma_map_ops *ops = get_dma_ops(dev);
 +
-+		/* Allow only the 0th SGL entry to block */
-+		if (!i)
-+			attrs &= ~DMA_ATTR_MAY_BLOCK;
++	if (dma_map_direct(dev, ops))
++		return dma_direct_recommend_may_block(dev);
++	return false;
++}
++EXPORT_SYMBOL_GPL(dma_recommend_may_block);
 +
- 		sg_dma_len(sg) = sg->length;
- 	}
- 
+ size_t dma_max_mapping_size(struct device *dev)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
 -- 
 2.25.1
 
