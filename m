@@ -1,61 +1,61 @@
-Return-Path: <linux-hyperv+bounces-2837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2838-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBC2B95D99F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 01:24:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E2E295D9A3
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 01:24:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 114981C22730
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 23:24:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0D8228499E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 23:24:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC3D1CDA2F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B1C1CE6E5;
 	Fri, 23 Aug 2024 23:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="arpjZs72"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dp/RiTy5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A111C9DC2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C291CB31B;
 	Fri, 23 Aug 2024 23:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724455437; cv=none; b=QTAPnrtxBNVoD9YdXrIDI/J799c0u0TnXB+ElDfyrS0f1sUDKRnVRdF/tehNLUJOtdE5MoJAuTKpETUMzNSp6GCG20ZzMXXBnCpO72drzNFxkSk8vP1HYEGjc7D6/PKhABySTnyHrN5YUEtk0htBWc4pavvRa3Y2uMOErQJzyEE=
+	t=1724455438; cv=none; b=LApQc96nyWfTIhVgkyxBJdR342iwOdqujULhbiK/dCIM85j2YpuESoq10O5p+sOmCOMkImnJER+EaJOw1UQO8slJAA9xMiBF32fJEQMZTUIOQ2kv12JTGnzVRXaGYdxI9bHkgUZZ2/BVACJDOHdvlEX/8GtxSV0X6MvW+c5PXgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724455437; c=relaxed/simple;
-	bh=G/CSfmqqJqpJgE3a56H70L4rj4zApcX4WMSQea2EUAs=;
+	s=arc-20240116; t=1724455438; c=relaxed/simple;
+	bh=OD3m+O+sKRGN8XwA4mQy2TaqiRJ40gPU6Id+zBd9F+M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PmrBqxl03uYLblXKeY2JlXgjVHmjeoEZFn0gCix7MJ70/KNqg0sbm2054AoSKrFqepj4ojH/SdnAGd/egvjKLYct/AHwWRVzf4keJQmmy3inhDYiZgkHpEP3bFOLisBca1Bz14JGrTcEaYp/h1k+uBQIdjSw8UYZs50CfLcVGGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=arpjZs72; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=gsdLR42w49pZ2wfph07ZiyFXWAf5mQciTqauytq29Yg40O7xn7PzWbgJn33N9dxfgKy4TgkG8CEbb6YM0I39yUDUv21T+7LdXZCzosSv4L4e4Dcfiho4LLlObLM9a9C3ItEsJmlW97l+QHwim5+4/ixVeUr6/bWBim9xTy6E3TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dp/RiTy5; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724455436; x=1755991436;
+  t=1724455437; x=1755991437;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=G/CSfmqqJqpJgE3a56H70L4rj4zApcX4WMSQea2EUAs=;
-  b=arpjZs722BF/JuRUDEBWBMAx3V+3CdHWaJbIoGioEzWklsOsk7ZxKeZ1
-   gggN/GWenRp7ehvp3yVR5FYn/8ISY+P+pVdQFq8n2xcFQvPoyTDhMlLkl
-   gYuUksDWnJUVf7NUJkCJD0+k0HihvvXsfawu9HHMy0gNJPSalPeFKOjY8
-   WrJqnkiWq4aGaPwosjGD69/kVtbSxCuhXOysVcznLVi2EXCqWZWQiUaii
-   AzRtvHbZZAyS49R1h8hoJfe4rblZGLPGc5V0rqNvvh9FfJTgqK5Ezsg9S
-   XpSaU7p4jmUWzn94Wi8lrRN2x04q/CMLCGpKQdV+NF0rZysPy6dyh9dea
+  bh=OD3m+O+sKRGN8XwA4mQy2TaqiRJ40gPU6Id+zBd9F+M=;
+  b=Dp/RiTy54g2mHzT93tII+8Ff8MaaJVitO++NKLagF/6n4lcLhjtaF7sj
+   EuXA1JOJBqc8TuSO0gO7WytSG2pWw1M6xwc299iDehkISUD8rki2fot/4
+   uNlvZh+o/1diN49OBqboeozZaxik1FYALhbFaVpQu92W3dIkmgvIg9h54
+   FZk4AN5GRSfH34b0J0AoOKXdPwFdj6RvK0dzlVwya+Lcbf371IuRlz4+9
+   0/J1A+WHrsBabfm+m3Wk/E5XN6LL1UGbSP0skpL648ZM+vKSwd3/DbYSH
+   5Q++Iohs74iVWjd3l7V+m4CtGvXvN10sWdJI/wGw1/qiLS+YWono2DQ0f
    A==;
-X-CSE-ConnectionGUID: 3bY2KzRnTCu/z/Ssf0+7Fg==
-X-CSE-MsgGUID: HVYrGjjWRjaPTJMsmr/XSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="33619298"
+X-CSE-ConnectionGUID: Wi1bp94kScOj7zYYigyF8A==
+X-CSE-MsgGUID: ndDRybC1Q6WhKKK0vJHjOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="33619305"
 X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="33619298"
+   d="scan'208";a="33619305"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 16:23:54 -0700
-X-CSE-ConnectionGUID: q1uY/s0DTO6DNvor61UFTQ==
-X-CSE-MsgGUID: ZIkIOQXvT4GM4A6a1pcBmA==
+X-CSE-ConnectionGUID: 3HyKYy15SDyoigchZ7zZkw==
+X-CSE-MsgGUID: HQVhJAUASQmMzsazYr8bMw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="61641007"
+   d="scan'208";a="61641010"
 Received: from yjiang5-dev1.sc.intel.com ([172.25.103.134])
   by fmviesa007.fm.intel.com with ESMTP; 23 Aug 2024 16:23:53 -0700
 From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
@@ -80,9 +80,9 @@ Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH v2 4/9] x86/hyperv: Parse the ACPI wakeup mailbox
-Date: Fri, 23 Aug 2024 16:23:22 -0700
-Message-Id: <20240823232327.2408869-5-yunhong.jiang@linux.intel.com>
+Subject: [PATCH v2 5/9] x86/hyperv: Mark ACPI wakeup mailbox page as private
+Date: Fri, 23 Aug 2024 16:23:23 -0700
+Message-Id: <20240823232327.2408869-6-yunhong.jiang@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
 References: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
@@ -94,70 +94,48 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Parse the wakeup mailbox VTL2 TDX guest. Put it to the guest_late_init, so
-that it will be invoked before hyperv_init() where the mailbox address is
-checked.
+Current code maps MMIO devices as shared (decrypted) by default in a
+confidential computing VM. However, the wakeup mailbox must be accessed
+as private (encrypted) because it's accessed by the OS and the firmware,
+both are in the guest's context and encrypted. Set the wakeup mailbox
+range as private explicitly.
 
 Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 ---
- arch/x86/include/asm/mshyperv.h | 3 +++
- arch/x86/kernel/cpu/mshyperv.c  | 2 ++
- drivers/hv/hv_common.c          | 8 ++++++++
- 3 files changed, 13 insertions(+)
+ arch/x86/hyperv/hv_vtl.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 390c4d13956d..5178b96c7fc9 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -10,6 +10,7 @@
- #include <asm/nospec-branch.h>
- #include <asm/paravirt.h>
- #include <asm/mshyperv.h>
-+#include <asm/madt_wakeup.h>
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 04775346369c..987a6a1200b0 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -22,10 +22,26 @@ static bool __init hv_vtl_msi_ext_dest_id(void)
+ 	return true;
+ }
  
- /*
-  * Hyper-V always provides a single IO-APIC at this MMIO address.
-@@ -49,6 +50,8 @@ extern u64 hv_current_partition_id;
- 
- extern union hv_ghcb * __percpu *hv_ghcb_pg;
- 
-+extern u64 wakeup_mailbox_addr;
++static inline bool within_page(u64 addr, u64 start)
++{
++	return addr >= start && addr < (start + PAGE_SIZE);
++}
 +
- bool hv_isolation_type_snp(void);
- bool hv_isolation_type_tdx(void);
- u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 3d4237f27569..f6b727b4bd0b 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -43,6 +43,8 @@ struct ms_hyperv_info ms_hyperv;
- bool hyperv_paravisor_present __ro_after_init;
- EXPORT_SYMBOL_GPL(hyperv_paravisor_present);
- 
-+u64 wakeup_mailbox_addr;
++/*
++ * The ACPI wakeup mailbox are accessed by the OS and the BIOS, both are in the
++ * guest's context, instead of the hypervisor/VMM context.
++ */
++static bool hv_is_private_mmio_tdx(u64 addr)
++{
++	return wakeup_mailbox_addr && within_page(addr, wakeup_mailbox_addr);
++}
 +
- #if IS_ENABLED(CONFIG_HYPERV)
- static inline unsigned int hv_get_nested_msr(unsigned int reg)
+ void __init hv_vtl_init_platform(void)
  {
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 9c452bfbd571..14b005b6270f 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -365,6 +365,14 @@ void __init ms_hyperv_late_init(void)
- 	u8 *randomdata;
- 	u32 length, i;
+ 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
  
-+	/*
-+	 * Parse the ACPI wakeup structure information from device tree.
-+	 * Currently VTL2 TDX guest only.
-+	 */
-+#ifdef CONFIG_X86_64
-+	wakeup_mailbox_addr = dtb_parse_mp_wake();
-+#endif
-+
- 	/*
- 	 * Seed the Linux random number generator with entropy provided by
- 	 * the Hyper-V host in ACPI table OEM0.
++	if (hv_isolation_type_tdx())
++		x86_platform.hyper.is_private_mmio = hv_is_private_mmio_tdx;
+ 	x86_platform.realmode_reserve = x86_init_noop;
+ 	x86_platform.realmode_init = x86_init_noop;
+ 	x86_init.irqs.pre_vector_init = x86_init_noop;
 -- 
 2.25.1
 
