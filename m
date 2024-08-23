@@ -1,53 +1,53 @@
-Return-Path: <linux-hyperv+bounces-2816-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2817-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0B7D95C76C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 10:07:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A46195C784
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 10:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C80DBB23BB9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 08:07:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9944287B06
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 08:09:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ECEB140E23;
-	Fri, 23 Aug 2024 08:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DFE149C5A;
+	Fri, 23 Aug 2024 08:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="p+kw04hK"
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="ANKZx1em"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277A38485;
-	Fri, 23 Aug 2024 08:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B805E149C62;
+	Fri, 23 Aug 2024 08:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724400445; cv=none; b=gstawIIhiK6O71Imj22HiPGbCKt2w1j/y6dXq+84dUuTcZZ9cFVGaLkATg61ZpIg7Pybo2Ntz6laFD5Tyej1ZpmUzV8veZnNFPyiRwoCfAfDEg3cfKXIesI52gKEcaWSYVvxVpNyhi5vH6TbeQNQ2IcDggNFfxKUZk/rsClA0RU=
+	t=1724400538; cv=none; b=cco5NFoq/kZOkU4UhlH7B9GaOOSvtJ1PgBflnecsyPAtQfHu2ArKjysVyMfx7z0AshIDJFVL/+zzZmEfo8e/d49keD/2ayWJqvo/ravgw2ATdwoNqrS2vSTx2hG4T+nPBrwhBm/S0oFGT6FCFwomAgFf/+60/2MHmz2s/rKQbxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724400445; c=relaxed/simple;
-	bh=c5TtL1JYGCa5Xd355i0NWE1wY0+4+3+JnKTo13DJ0V4=;
+	s=arc-20240116; t=1724400538; c=relaxed/simple;
+	bh=8qbO4TvxcDkSJEXI7K+mXHRTyJP04PNgQbY90dWFpNM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E6E5dJwo+wLwZu9YtXckUFX4FeP+Anj4OL7tVT6meGMZFzRPcDcl8VHSCn6t25+7CiDXQGKvSkws/B6lkhUJ0kFi8iYBMJkbuCo8+oUf+hDlRQ4BgnIvRWLM6t98YiQGvJy7hI1cYDa8VpoFuhmrjLGlGyQfHKpCYZHE5xyL0WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=p+kw04hK; arc=none smtp.client-ip=37.205.15.56
+	 MIME-Version:Content-Type; b=lfMruUuxyR/IrNheLBwQH64tufR24NRip+7dUl1Lu46o8jjf3FricnzRwCahq8EST5PFjpWSKDDQiPHemVqsDLdhe24snAsHX0PNuxwEVHRYItRrdFgtGZ9/qzqR+n+9QbaJ4wJtlOtdm2RcLIgMz/xMzxJbWGA+T1ideSDLy1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=ANKZx1em; arc=none smtp.client-ip=37.205.15.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 392571F0D4A;
-	Fri, 23 Aug 2024 10:07:21 +0200 (CEST)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id EB98F1F1F0E;
+	Fri, 23 Aug 2024 10:08:53 +0200 (CEST)
 Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1724400441; bh=R3LorF1iYiKFCkPDfnFvmc496X0vNcOlfaEpxRvaltc=;
+	t=1724400534; bh=O4JppdwbWGFP1nVYHk+FUidvoThmdHfNE8PVWBlwh/8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p+kw04hKxmhjtBi2ko7YOgdYbWCkiGrsvAijGSBMpQ1X290wHvgyzdW2MhitT7rAJ
-	 1a14TS7thrt+wKbcGG3ymn+VF3O1+rgFn9ZwI+VTma+0lOEMEfKt2ccAMzTsCzigdo
-	 +ej5BcxxowUMS0jo/CwksRwFhAATkl0HBjOXBnEN5hIZLCRImn/6j8fF0enYrrWs2x
-	 qNQPTj7SwamNsKF9ablze7tx6bhhMBmnAHeHPqWk2XLyCTa8DHaB19Wxbq/SialwPY
-	 u8DI9jGkONAC4YHiLfdVVQK2jaU5Q8dUT+TQyKYgVCh1ctFRgCbave3CovTdxUaWCE
-	 HVzpdFbdAtgNQ==
-Date: Fri, 23 Aug 2024 10:07:20 +0200
+	b=ANKZx1em/5Hq+8j2ti8Uu3/wZvJAcwNqvopisDqkkv0AfwfKI/eteuieZAqpAky0Y
+	 fmrScluuWbIfY2O9que2bpi3QOuIYuK55RLkpQ0soLVsLIPlK+EGZzx7iUqXMbP+A+
+	 Rx0yX9NKjrjcwroew40JHSjb6jhtE9tlEePOiIu1MYkeD5PV5/8jfe3KZ5sg2O+j6+
+	 w7oacKUAjf2joF8DWR2CKq///aRssgU+blLd5urdTAzb7IoJCtDi9RSqC1WciFRFwt
+	 KfMQxbW0xM/vurn0o+aY1rX2FFXPFmlUTpiqjVKV5/K6Ns4lo25l+xdDDe1Rce08QJ
+	 Sl8wmIb2j5dnQ==
+Date: Fri, 23 Aug 2024 10:08:53 +0200
 From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
 To: mhkelley58@gmail.com
 Cc: mhklinux@outlook.com, kbusch@kernel.org, axboe@kernel.dk,
@@ -58,12 +58,11 @@ Cc: mhklinux@outlook.com, kbusch@kernel.org, axboe@kernel.dk,
  linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
  linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
  linux-coco@lists.linux.dev
-Subject: Re: [RFC 3/7] dma: Add function for drivers to know if allowing
- blocking is useful
-Message-ID: <20240823100720.679a520f@meshulam.tesarici.cz>
-In-Reply-To: <20240822183718.1234-4-mhklinux@outlook.com>
+Subject: Re: [RFC 4/7] scsi_lib_dma: Add _attrs variant of scsi_dma_map()
+Message-ID: <20240823100853.6cab2245@meshulam.tesarici.cz>
+In-Reply-To: <20240822183718.1234-5-mhklinux@outlook.com>
 References: <20240822183718.1234-1-mhklinux@outlook.com>
-	<20240822183718.1234-4-mhklinux@outlook.com>
+	<20240822183718.1234-5-mhklinux@outlook.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -74,24 +73,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Aug 2024 11:37:14 -0700
+On Thu, 22 Aug 2024 11:37:15 -0700
 mhkelley58@gmail.com wrote:
 
 > From: Michael Kelley <mhklinux@outlook.com>
 > 
-> With the addition of swiotlb throttling functionality, storage
-> device drivers may want to know whether using the DMA_ATTR_MAY_BLOCK
-> attribute is useful. In a CoCo VM or environment where swiotlb=force
-> is used, the MAY_BLOCK attribute enables swiotlb throttling. But if
-> throttling is not enable or useful, storage device drivers probably
-> do not want to set BLK_MQ_F_BLOCKING at the blk-mq request queue level.
-> 
-> Add function dma_recommend_may_block() that indicates whether
-> the underlying implementation of the DMA map calls would benefit
-> from allowing blocking. If the kernel was built with
-> CONFIG_SWIOTLB_THROTTLE, and swiotlb=force is set (on the kernel
-> command line or due to being a CoCo VM), this function returns
-> true. Otherwise it returns false.
+> Extend the SCSI DMA mapping interfaces by adding the "_attrs" variant
+> of scsi_dma_map(). This variant allows passing DMA_ATTR_* values, such
+> as is needed to support swiotlb throttling. The existing scsi_dma_map()
+> interface is unchanged, so no incompatibilities are introduced.
 > 
 > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
@@ -102,84 +92,72 @@ Reviewed-by: Petr Tesarik <ptesarik@suse.com>
 Petr T
 
 > ---
->  include/linux/dma-mapping.h |  5 +++++
->  kernel/dma/direct.c         |  6 ++++++
->  kernel/dma/direct.h         |  1 +
->  kernel/dma/mapping.c        | 10 ++++++++++
->  4 files changed, 22 insertions(+)
+>  drivers/scsi/scsi_lib_dma.c | 13 +++++++------
+>  include/scsi/scsi_cmnd.h    |  7 +++++--
+>  2 files changed, 12 insertions(+), 8 deletions(-)
 > 
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index 7b78294813be..ec2edf068218 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -145,6 +145,7 @@ int dma_set_mask(struct device *dev, u64 mask);
->  int dma_set_coherent_mask(struct device *dev, u64 mask);
->  u64 dma_get_required_mask(struct device *dev);
->  bool dma_addressing_limited(struct device *dev);
-> +bool dma_recommend_may_block(struct device *dev);
->  size_t dma_max_mapping_size(struct device *dev);
->  size_t dma_opt_mapping_size(struct device *dev);
->  unsigned long dma_get_merge_boundary(struct device *dev);
-> @@ -252,6 +253,10 @@ static inline bool dma_addressing_limited(struct device *dev)
->  {
->  	return false;
->  }
-> +static inline bool dma_recommend_may_block(struct device *dev)
-> +{
-> +	return false;
-> +}
->  static inline size_t dma_max_mapping_size(struct device *dev)
->  {
->  	return 0;
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 80e03c0838d4..34d14e4ace64 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -649,6 +649,12 @@ bool dma_direct_all_ram_mapped(struct device *dev)
->  				      check_ram_in_range_map);
->  }
+> diff --git a/drivers/scsi/scsi_lib_dma.c b/drivers/scsi/scsi_lib_dma.c
+> index 5723915275ad..34453a79be97 100644
+> --- a/drivers/scsi/scsi_lib_dma.c
+> +++ b/drivers/scsi/scsi_lib_dma.c
+> @@ -14,30 +14,31 @@
+>  #include <scsi/scsi_host.h>
 >  
-> +bool dma_direct_recommend_may_block(struct device *dev)
-> +{
-> +	return IS_ENABLED(CONFIG_SWIOTLB_THROTTLE) &&
-> +			is_swiotlb_force_bounce(dev);
-> +}
-> +
->  size_t dma_direct_max_mapping_size(struct device *dev)
+>  /**
+> - * scsi_dma_map - perform DMA mapping against command's sg lists
+> + * scsi_dma_map_attrs - perform DMA mapping against command's sg lists
+>   * @cmd:	scsi command
+> + * @attrs:	DMA attribute flags
+>   *
+>   * Returns the number of sg lists actually used, zero if the sg lists
+>   * is NULL, or -ENOMEM if the mapping failed.
+>   */
+> -int scsi_dma_map(struct scsi_cmnd *cmd)
+> +int scsi_dma_map_attrs(struct scsi_cmnd *cmd, unsigned long attrs)
 >  {
->  	/* If SWIOTLB is active, use its maximum mapping size */
-> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-> index d2c0b7e632fc..63516a540276 100644
-> --- a/kernel/dma/direct.h
-> +++ b/kernel/dma/direct.h
-> @@ -21,6 +21,7 @@ bool dma_direct_need_sync(struct device *dev, dma_addr_t dma_addr);
->  int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
->  		enum dma_data_direction dir, unsigned long attrs);
->  bool dma_direct_all_ram_mapped(struct device *dev);
-> +bool dma_direct_recommend_may_block(struct device *dev);
->  size_t dma_direct_max_mapping_size(struct device *dev);
+>  	int nseg = 0;
 >  
->  #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-> index b1c18058d55f..832982bafd5a 100644
-> --- a/kernel/dma/mapping.c
-> +++ b/kernel/dma/mapping.c
-> @@ -858,6 +858,16 @@ bool dma_addressing_limited(struct device *dev)
+>  	if (scsi_sg_count(cmd)) {
+>  		struct device *dev = cmd->device->host->dma_dev;
+>  
+> -		nseg = dma_map_sg(dev, scsi_sglist(cmd), scsi_sg_count(cmd),
+> -				  cmd->sc_data_direction);
+> +		nseg = dma_map_sg_attrs(dev, scsi_sglist(cmd),
+> +			scsi_sg_count(cmd), cmd->sc_data_direction, attrs);
+>  		if (unlikely(!nseg))
+>  			return -ENOMEM;
+>  	}
+>  	return nseg;
 >  }
->  EXPORT_SYMBOL_GPL(dma_addressing_limited);
+> -EXPORT_SYMBOL(scsi_dma_map);
+> +EXPORT_SYMBOL(scsi_dma_map_attrs);
 >  
-> +bool dma_recommend_may_block(struct device *dev)
-> +{
-> +	const struct dma_map_ops *ops = get_dma_ops(dev);
+>  /**
+> - * scsi_dma_unmap - unmap command's sg lists mapped by scsi_dma_map
+> + * scsi_dma_unmap - unmap command's sg lists mapped by scsi_dma_map_attrs
+>   * @cmd:	scsi command
+>   */
+>  void scsi_dma_unmap(struct scsi_cmnd *cmd)
+> diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
+> index 45c40d200154..6603003bc588 100644
+> --- a/include/scsi/scsi_cmnd.h
+> +++ b/include/scsi/scsi_cmnd.h
+> @@ -170,11 +170,14 @@ extern void scsi_kunmap_atomic_sg(void *virt);
+>  blk_status_t scsi_alloc_sgtables(struct scsi_cmnd *cmd);
+>  void scsi_free_sgtables(struct scsi_cmnd *cmd);
+>  
+> +#define scsi_dma_map(cmd) scsi_dma_map_attrs(cmd, 0)
 > +
-> +	if (dma_map_direct(dev, ops))
-> +		return dma_direct_recommend_may_block(dev);
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(dma_recommend_may_block);
-> +
->  size_t dma_max_mapping_size(struct device *dev)
->  {
->  	const struct dma_map_ops *ops = get_dma_ops(dev);
+>  #ifdef CONFIG_SCSI_DMA
+> -extern int scsi_dma_map(struct scsi_cmnd *cmd);
+> +extern int scsi_dma_map_attrs(struct scsi_cmnd *cmd, unsigned long attrs);
+>  extern void scsi_dma_unmap(struct scsi_cmnd *cmd);
+>  #else /* !CONFIG_SCSI_DMA */
+> -static inline int scsi_dma_map(struct scsi_cmnd *cmd) { return -ENOSYS; }
+> +static inline int scsi_dma_map_attrs(struct scsi_cmnd *cmd, unsigned long attrs)
+> +						{ return -ENOSYS; }
+>  static inline void scsi_dma_unmap(struct scsi_cmnd *cmd) { }
+>  #endif /* !CONFIG_SCSI_DMA */
+>  
 
 
