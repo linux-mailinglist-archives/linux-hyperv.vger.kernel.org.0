@@ -1,53 +1,53 @@
-Return-Path: <linux-hyperv+bounces-2815-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2816-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BBA295C733
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 10:03:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0B7D95C76C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 10:07:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A9A828294D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 08:03:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C80DBB23BB9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 08:07:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A314713AA2A;
-	Fri, 23 Aug 2024 08:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ECEB140E23;
+	Fri, 23 Aug 2024 08:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="UaMjInLF"
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="p+kw04hK"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE7B13B2A9;
-	Fri, 23 Aug 2024 08:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277A38485;
+	Fri, 23 Aug 2024 08:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724400183; cv=none; b=qJZ9SvSVq/qUs01pk3GHPY0JHyNjSHsgMcR/t0nAuG4whzV5AvM9uaM3AYmebb5ZY1Yh82Y37+pyL6MOFNg0WBFMfyttjO4OpWVvJXeXfoaS/6gBrhTpKwv9QGdbGjutQ0csb+3OYImRZuGa7AyQF5cBXTmJm63utpT5Nkc4Rmw=
+	t=1724400445; cv=none; b=gstawIIhiK6O71Imj22HiPGbCKt2w1j/y6dXq+84dUuTcZZ9cFVGaLkATg61ZpIg7Pybo2Ntz6laFD5Tyej1ZpmUzV8veZnNFPyiRwoCfAfDEg3cfKXIesI52gKEcaWSYVvxVpNyhi5vH6TbeQNQ2IcDggNFfxKUZk/rsClA0RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724400183; c=relaxed/simple;
-	bh=RCzLBGrSgxEPifownce8btohGXHc/a+7byMcwyzI2TM=;
+	s=arc-20240116; t=1724400445; c=relaxed/simple;
+	bh=c5TtL1JYGCa5Xd355i0NWE1wY0+4+3+JnKTo13DJ0V4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WbPauv37uMH/XGSWPXmdWYIP1ErIPxXt2AxASQxXDWEe5Yqhjk851TzD8IZcm5U2vilqMHt++xQryzDmBYD1xmOnvzl8ll2v1PIaxqGz4FAjovadFL0cL6ucqvHd9J7eD1TH0+69oFInxiGadyMIdipN4ruvSrbD4Mnwya94G3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=UaMjInLF; arc=none smtp.client-ip=37.205.15.56
+	 MIME-Version:Content-Type; b=E6E5dJwo+wLwZu9YtXckUFX4FeP+Anj4OL7tVT6meGMZFzRPcDcl8VHSCn6t25+7CiDXQGKvSkws/B6lkhUJ0kFi8iYBMJkbuCo8+oUf+hDlRQ4BgnIvRWLM6t98YiQGvJy7hI1cYDa8VpoFuhmrjLGlGyQfHKpCYZHE5xyL0WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=p+kw04hK; arc=none smtp.client-ip=37.205.15.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 2D8C21EFF40;
-	Fri, 23 Aug 2024 10:02:53 +0200 (CEST)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 392571F0D4A;
+	Fri, 23 Aug 2024 10:07:21 +0200 (CEST)
 Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1724400173; bh=tvmG/sMa+Qp7dOabskQKJ8ju2mqFsxT02CkXxGsxk9Q=;
+	t=1724400441; bh=R3LorF1iYiKFCkPDfnFvmc496X0vNcOlfaEpxRvaltc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UaMjInLFyWQnfqYiMg3/uumOWVIHR/EHNkJUKfBAIdDHxgnmlxI+sc6jnZlt/X6Ju
-	 l8iMbK4HnW6Hm/ExWi2g9Y8cxxiqWWaiohigWu7F06tI1dgJxfXd7f//zLpK+8gMCV
-	 zCT0ZTMLplxAAcrWEf1jXuVJ7XNi2qysiG3K3On89gV6KULIvForp9VJj6BFRMQszA
-	 7oxN+Xg0KRllxwas/A+U0YTwAcuSXq6WCsU/C9HNpENoXaZLQE+flZg5s7hk591Qd3
-	 ml602dwx6ghnW4W8TFbkF/0L+DAYhcOB5lEtVKEQVKqsTdynwT5IE4zJrJ6ZvKFTL/
-	 dNY5cWtoRrD2Q==
-Date: Fri, 23 Aug 2024 10:02:52 +0200
+	b=p+kw04hKxmhjtBi2ko7YOgdYbWCkiGrsvAijGSBMpQ1X290wHvgyzdW2MhitT7rAJ
+	 1a14TS7thrt+wKbcGG3ymn+VF3O1+rgFn9ZwI+VTma+0lOEMEfKt2ccAMzTsCzigdo
+	 +ej5BcxxowUMS0jo/CwksRwFhAATkl0HBjOXBnEN5hIZLCRImn/6j8fF0enYrrWs2x
+	 qNQPTj7SwamNsKF9ablze7tx6bhhMBmnAHeHPqWk2XLyCTa8DHaB19Wxbq/SialwPY
+	 u8DI9jGkONAC4YHiLfdVVQK2jaU5Q8dUT+TQyKYgVCh1ctFRgCbave3CovTdxUaWCE
+	 HVzpdFbdAtgNQ==
+Date: Fri, 23 Aug 2024 10:07:20 +0200
 From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
 To: mhkelley58@gmail.com
 Cc: mhklinux@outlook.com, kbusch@kernel.org, axboe@kernel.dk,
@@ -58,11 +58,12 @@ Cc: mhklinux@outlook.com, kbusch@kernel.org, axboe@kernel.dk,
  linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
  linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
  linux-coco@lists.linux.dev
-Subject: Re: [RFC 2/7] dma: Handle swiotlb throttling for SGLs
-Message-ID: <20240823100252.4f2a1a43@meshulam.tesarici.cz>
-In-Reply-To: <20240822183718.1234-3-mhklinux@outlook.com>
+Subject: Re: [RFC 3/7] dma: Add function for drivers to know if allowing
+ blocking is useful
+Message-ID: <20240823100720.679a520f@meshulam.tesarici.cz>
+In-Reply-To: <20240822183718.1234-4-mhklinux@outlook.com>
 References: <20240822183718.1234-1-mhklinux@outlook.com>
-	<20240822183718.1234-3-mhklinux@outlook.com>
+	<20240822183718.1234-4-mhklinux@outlook.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -73,129 +74,112 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Aug 2024 11:37:13 -0700
+On Thu, 22 Aug 2024 11:37:14 -0700
 mhkelley58@gmail.com wrote:
 
 > From: Michael Kelley <mhklinux@outlook.com>
 > 
-> When a DMA map request is for a SGL, each SGL entry results in an
-> independent mapping operation. If the mapping requires a bounce buffer
-> due to running in a CoCo VM or due to swiotlb=force on the boot line,
-> swiotlb is invoked. If swiotlb throttling is enabled for the request,
-> each SGL entry results in a separate throttling operation. This is
-> problematic because a thread may be holding swiotlb memory while waiting
-> for memory to become free.
+> With the addition of swiotlb throttling functionality, storage
+> device drivers may want to know whether using the DMA_ATTR_MAY_BLOCK
+> attribute is useful. In a CoCo VM or environment where swiotlb=force
+> is used, the MAY_BLOCK attribute enables swiotlb throttling. But if
+> throttling is not enable or useful, storage device drivers probably
+> do not want to set BLK_MQ_F_BLOCKING at the blk-mq request queue level.
 > 
-> Resolve this problem by only allowing throttling on the 0th SGL
-> entry. When unmapping the SGL, unmap entries 1 thru N-1 first, then
-> unmap entry 0 so that the throttle isn't released until all swiotlb
-> memory has been freed.
+> Add function dma_recommend_may_block() that indicates whether
+> the underlying implementation of the DMA map calls would benefit
+> from allowing blocking. If the kernel was built with
+> CONFIG_SWIOTLB_THROTTLE, and swiotlb=force is set (on the kernel
+> command line or due to being a CoCo VM), this function returns
+> true. Otherwise it returns false.
 > 
 > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
-> This approach to SGLs muddies the line between DMA direct and swiotlb
-> throttling functionality. To keep the MAY_BLOCK attr fully generic, it
-> should propagate to the mapping of all SGL entries.
-> 
-> An alternate approach is to define an additional DMA attribute that
-> is internal to the DMA layer. Instead of clearing MAX_BLOCK, this
-> attr is added by dma_direct_map_sg() when mapping SGL entries other
-> than the 0th entry. swiotlb would do throttling only when MAY_BLOCK
-> is set and this new attr is not set.
-> 
-> This approach has a modest amount of additional complexity. Given
-> that we currently have no other users of the MAY_BLOCK attr, the
-> conceptual cleanliness may not be warranted until we do.
-> 
-> Thoughts?
 
-If we agree to change the unthrottling logic (see my comment to your
-RFC 1/7), we'll need an additional attribute to delay unthrottling when
-unmapping sg list entries 1 to N-1. This attribute could convey that
-the mapping is the non-initial segment of an sg list and it could then
-be also used to disable blocking in swiotlb_tbl_map_single().
+LGTM.
 
-> 
->  kernel/dma/direct.c | 35 ++++++++++++++++++++++++++++++-----
->  1 file changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 4480a3cd92e0..80e03c0838d4 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -438,6 +438,18 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
->  		arch_sync_dma_for_cpu_all();
->  }
->  
-> +static void dma_direct_unmap_sgl_entry(struct device *dev,
-> +		struct scatterlist *sgl, enum dma_data_direction dir,
-
-Nitpick: This parameter should probably be called "sg", because it is
-never used to do any operation on the whole list. Similarly, the
-function could be called dma_direct_unmap_sg_entry(), because there is
-no dma_direct_unmap_sgl() either...
-
-> +		unsigned long attrs)
-> +
-> +{
-> +	if (sg_dma_is_bus_address(sgl))
-> +		sg_dma_unmark_bus_address(sgl);
-> +	else
-> +		dma_direct_unmap_page(dev, sgl->dma_address,
-> +				      sg_dma_len(sgl), dir, attrs);
-> +}
-> +
->  /*
->   * Unmaps segments, except for ones marked as pci_p2pdma which do not
->   * require any further action as they contain a bus address.
-> @@ -449,12 +461,20 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
->  	int i;
->  
->  	for_each_sg(sgl,  sg, nents, i) {
-> -		if (sg_dma_is_bus_address(sg))
-> -			sg_dma_unmark_bus_address(sg);
-> -		else
-> -			dma_direct_unmap_page(dev, sg->dma_address,
-> -					      sg_dma_len(sg), dir, attrs);
-> +		/*
-> +		 * Skip the 0th SGL entry in case this SGL consists of
-> +		 * throttled swiotlb mappings. In such a case, any other
-> +		 * entries should be unmapped first since unmapping the
-> +		 * 0th entry will release the throttle semaphore.
-> +		 */
-> +		if (!i)
-> +			continue;
-> +		dma_direct_unmap_sgl_entry(dev, sg, dir, attrs);
->  	}
-> +
-> +	/* Now do the 0th SGL entry */
-> +	if (nents)
-
-I wonder if nents can ever be zero here, but it's nowhere enforced and
-dma_map_sg_attrs() is exported, so I agree, let's play it safe.
-
-> +		dma_direct_unmap_sgl_entry(dev, sgl, dir, attrs);
->  }
->  #endif
->  
-> @@ -492,6 +512,11 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
->  			ret = -EIO;
->  			goto out_unmap;
->  		}
-> +
-> +		/* Allow only the 0th SGL entry to block */
-> +		if (!i)
-
-Are you sure? I think the modified value of attrs is first used in the
-next loop iteration, so the conditional should be removed, or else both
-segment index 0 and 1 will keep the flag.
+Reviewed-by: Petr Tesarik <ptesarik@suse.com>
 
 Petr T
 
-> +			attrs &= ~DMA_ATTR_MAY_BLOCK;
-> +
->  		sg_dma_len(sg) = sg->length;
->  	}
+> ---
+>  include/linux/dma-mapping.h |  5 +++++
+>  kernel/dma/direct.c         |  6 ++++++
+>  kernel/dma/direct.h         |  1 +
+>  kernel/dma/mapping.c        | 10 ++++++++++
+>  4 files changed, 22 insertions(+)
+> 
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index 7b78294813be..ec2edf068218 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -145,6 +145,7 @@ int dma_set_mask(struct device *dev, u64 mask);
+>  int dma_set_coherent_mask(struct device *dev, u64 mask);
+>  u64 dma_get_required_mask(struct device *dev);
+>  bool dma_addressing_limited(struct device *dev);
+> +bool dma_recommend_may_block(struct device *dev);
+>  size_t dma_max_mapping_size(struct device *dev);
+>  size_t dma_opt_mapping_size(struct device *dev);
+>  unsigned long dma_get_merge_boundary(struct device *dev);
+> @@ -252,6 +253,10 @@ static inline bool dma_addressing_limited(struct device *dev)
+>  {
+>  	return false;
+>  }
+> +static inline bool dma_recommend_may_block(struct device *dev)
+> +{
+> +	return false;
+> +}
+>  static inline size_t dma_max_mapping_size(struct device *dev)
+>  {
+>  	return 0;
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 80e03c0838d4..34d14e4ace64 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -649,6 +649,12 @@ bool dma_direct_all_ram_mapped(struct device *dev)
+>  				      check_ram_in_range_map);
+>  }
 >  
+> +bool dma_direct_recommend_may_block(struct device *dev)
+> +{
+> +	return IS_ENABLED(CONFIG_SWIOTLB_THROTTLE) &&
+> +			is_swiotlb_force_bounce(dev);
+> +}
+> +
+>  size_t dma_direct_max_mapping_size(struct device *dev)
+>  {
+>  	/* If SWIOTLB is active, use its maximum mapping size */
+> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
+> index d2c0b7e632fc..63516a540276 100644
+> --- a/kernel/dma/direct.h
+> +++ b/kernel/dma/direct.h
+> @@ -21,6 +21,7 @@ bool dma_direct_need_sync(struct device *dev, dma_addr_t dma_addr);
+>  int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+>  		enum dma_data_direction dir, unsigned long attrs);
+>  bool dma_direct_all_ram_mapped(struct device *dev);
+> +bool dma_direct_recommend_may_block(struct device *dev);
+>  size_t dma_direct_max_mapping_size(struct device *dev);
+>  
+>  #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index b1c18058d55f..832982bafd5a 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -858,6 +858,16 @@ bool dma_addressing_limited(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_addressing_limited);
+>  
+> +bool dma_recommend_may_block(struct device *dev)
+> +{
+> +	const struct dma_map_ops *ops = get_dma_ops(dev);
+> +
+> +	if (dma_map_direct(dev, ops))
+> +		return dma_direct_recommend_may_block(dev);
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(dma_recommend_may_block);
+> +
+>  size_t dma_max_mapping_size(struct device *dev)
+>  {
+>  	const struct dma_map_ops *ops = get_dma_ops(dev);
 
 
