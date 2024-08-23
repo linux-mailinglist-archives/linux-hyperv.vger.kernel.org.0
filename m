@@ -1,34 +1,34 @@
-Return-Path: <linux-hyperv+bounces-2836-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2F1695D99D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 01:24:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBC2B95D99F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 01:24:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C734B2244A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 23:24:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 114981C22730
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2024 23:24:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E5CB1CC889;
-	Fri, 23 Aug 2024 23:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC3D1CDA2F;
+	Fri, 23 Aug 2024 23:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Svs1PoSF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="arpjZs72"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E11F1C93AB;
-	Fri, 23 Aug 2024 23:23:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A111C9DC2;
+	Fri, 23 Aug 2024 23:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724455437; cv=none; b=QpfsvckNS9aD7VqRKTqHr0jmR3PKy+eboPejurj0hYNWxFI0m0fNBn0+AQpKuNXjUjzANyHewIfYpw+IrBKa4wd/FDLf06cKcs/3OBPJ/lvjyx4VXx8rtfiC2/suM4tRj248D2NLTDLaOqgOlDZpX72Bg3EGBwn/kUhjd1xpUCE=
+	t=1724455437; cv=none; b=QTAPnrtxBNVoD9YdXrIDI/J799c0u0TnXB+ElDfyrS0f1sUDKRnVRdF/tehNLUJOtdE5MoJAuTKpETUMzNSp6GCG20ZzMXXBnCpO72drzNFxkSk8vP1HYEGjc7D6/PKhABySTnyHrN5YUEtk0htBWc4pavvRa3Y2uMOErQJzyEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724455437; c=relaxed/simple;
-	bh=nZn1ciyBR2B58kThtRvuFisoY3nNii91Qu7mIDzoZRk=;
+	bh=G/CSfmqqJqpJgE3a56H70L4rj4zApcX4WMSQea2EUAs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GWaHI+8BRbrshWukUz53/gyLSlx6kD+hZvEQ5S1OQ5YBEyZ8k3l8h8+tKKJMzTlq3SY0AVa+NUA2vouuKk5p1bHzrd3DqNJ1jWdXpnRfQ/GyeotdcTyvdJw/EbemjS3bCBVCGC/yEhnw0teH4odLsdTK27x0IsMf5ailENOv2SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Svs1PoSF; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=PmrBqxl03uYLblXKeY2JlXgjVHmjeoEZFn0gCix7MJ70/KNqg0sbm2054AoSKrFqepj4ojH/SdnAGd/egvjKLYct/AHwWRVzf4keJQmmy3inhDYiZgkHpEP3bFOLisBca1Bz14JGrTcEaYp/h1k+uBQIdjSw8UYZs50CfLcVGGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=arpjZs72; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,28 +36,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1724455436; x=1755991436;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nZn1ciyBR2B58kThtRvuFisoY3nNii91Qu7mIDzoZRk=;
-  b=Svs1PoSFDpx4lzFEy+jDVsWKyMrS/KynkMX64MZtXTHjju87XLH6ZsYL
-   4GG+5e6UuzFLUl56pLz0VQNXu8oYYjGJlA/jj0fIbOGL17pETQa4zEC5E
-   o/TVFRIxSMYsfPpCKo0dmNehSk/45jzFA+DV7uFODp+OtZzM6YFdmeWlW
-   4lxW/TD8A43ydKYUa+2QYGkH8rsCINwsmufr4/zEE+a0UkDYyry3+cDoV
-   oHdyxajC8vGZjoSEvkuG8eX4MrximiY4oMhwdxFQNGDjuXRJx+tciC6so
-   Ylyma9e4eoDlN4g+3KfarE5v6L27NkLZsPmYaUijobXEaGeb/I2bxQxQH
-   w==;
-X-CSE-ConnectionGUID: XDCrokDETsWVfz7hbBkwJQ==
-X-CSE-MsgGUID: mpXhe/XpQjmD5iigTi6tpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="33619291"
+  bh=G/CSfmqqJqpJgE3a56H70L4rj4zApcX4WMSQea2EUAs=;
+  b=arpjZs722BF/JuRUDEBWBMAx3V+3CdHWaJbIoGioEzWklsOsk7ZxKeZ1
+   gggN/GWenRp7ehvp3yVR5FYn/8ISY+P+pVdQFq8n2xcFQvPoyTDhMlLkl
+   gYuUksDWnJUVf7NUJkCJD0+k0HihvvXsfawu9HHMy0gNJPSalPeFKOjY8
+   WrJqnkiWq4aGaPwosjGD69/kVtbSxCuhXOysVcznLVi2EXCqWZWQiUaii
+   AzRtvHbZZAyS49R1h8hoJfe4rblZGLPGc5V0rqNvvh9FfJTgqK5Ezsg9S
+   XpSaU7p4jmUWzn94Wi8lrRN2x04q/CMLCGpKQdV+NF0rZysPy6dyh9dea
+   A==;
+X-CSE-ConnectionGUID: 3bY2KzRnTCu/z/Ssf0+7Fg==
+X-CSE-MsgGUID: HVYrGjjWRjaPTJMsmr/XSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="33619298"
 X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="33619291"
+   d="scan'208";a="33619298"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 16:23:53 -0700
-X-CSE-ConnectionGUID: cXsBjzu7TOK844sOw0PN9g==
-X-CSE-MsgGUID: XJ/Gd9XORcmLHgqaB4gRyQ==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 16:23:54 -0700
+X-CSE-ConnectionGUID: q1uY/s0DTO6DNvor61UFTQ==
+X-CSE-MsgGUID: ZIkIOQXvT4GM4A6a1pcBmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="61641005"
+   d="scan'208";a="61641007"
 Received: from yjiang5-dev1.sc.intel.com ([172.25.103.134])
-  by fmviesa007.fm.intel.com with ESMTP; 23 Aug 2024 16:23:52 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 23 Aug 2024 16:23:53 -0700
 From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -80,9 +80,9 @@ Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH v2 3/9] x86/dt: Support the ACPI multiprocessor wakeup for device tree
-Date: Fri, 23 Aug 2024 16:23:21 -0700
-Message-Id: <20240823232327.2408869-4-yunhong.jiang@linux.intel.com>
+Subject: [PATCH v2 4/9] x86/hyperv: Parse the ACPI wakeup mailbox
+Date: Fri, 23 Aug 2024 16:23:22 -0700
+Message-Id: <20240823232327.2408869-5-yunhong.jiang@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
 References: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
@@ -94,169 +94,70 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a TDX guest boots with the device tree instead of ACPI, it can
-reuse the ACPI multiprocessor wakeup mechanism to wake up application
-processors(AP), without introducing a new mechanism from scrach.
-
-In the ACPI spec, two structures are defined to wake up the APs: the
-multiprocessor wakeup structure and the multiprocessor wakeup mailbox
-structure. The multiprocessor wakeup structure is passed to OS through a
-Multiple APIC Description Table(MADT), one field specifying the physical
-address of the multiprocessor wakeup mailbox structure. The OS sends
-a message to firmware through the multiprocessor wakeup mailbox
-structure, to bring up the APs.
-
-In device tree environment, the multiprocessor wakeup structure is not
-used, to reduce the dependency on the generic ACPI table. The
-information defined in this structure is defined in the properties of
-cpus node in the device tree. The "wakeup-mailbox-addr" property
-specifies the physical address of the multiprocessor wakeup mailbox
-structure. The OS will follow the ACPI spec to send the message to the
-firmware to bring up the APs.
+Parse the wakeup mailbox VTL2 TDX guest. Put it to the guest_late_init, so
+that it will be invoked before hyperv_init() where the mailbox address is
+checked.
 
 Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 ---
- MAINTAINERS                        |  1 +
- arch/x86/Kconfig                   |  2 +-
- arch/x86/include/asm/acpi.h        |  1 -
- arch/x86/include/asm/madt_wakeup.h | 16 +++++++++++++
- arch/x86/kernel/madt_wakeup.c      | 38 ++++++++++++++++++++++++++++++
- 5 files changed, 56 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/include/asm/madt_wakeup.h
+ arch/x86/include/asm/mshyperv.h | 3 +++
+ arch/x86/kernel/cpu/mshyperv.c  | 2 ++
+ drivers/hv/hv_common.c          | 8 ++++++++
+ 3 files changed, 13 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5555a3bbac5f..900de6501eba 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -288,6 +288,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
- F:	Documentation/ABI/testing/configfs-acpi
- F:	Documentation/ABI/testing/sysfs-bus-acpi
- F:	Documentation/firmware-guide/acpi/
-+F:	arch/x86/include/asm/madt_wakeup.h
- F:	arch/x86/kernel/acpi/
- F:	arch/x86/kernel/madt_playdead.S
- F:	arch/x86/kernel/madt_wakeup.c
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d422247b2882..dba46dd30049 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1123,7 +1123,7 @@ config X86_LOCAL_APIC
- config ACPI_MADT_WAKEUP
- 	def_bool y
- 	depends on X86_64
--	depends on ACPI
-+	depends on ACPI || OF
- 	depends on SMP
- 	depends on X86_LOCAL_APIC
- 
-diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-index 21bc53f5ed0c..0e082303ca26 100644
---- a/arch/x86/include/asm/acpi.h
-+++ b/arch/x86/include/asm/acpi.h
-@@ -83,7 +83,6 @@ union acpi_subtable_headers;
- int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 			      const unsigned long end);
- 
--void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 390c4d13956d..5178b96c7fc9 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -10,6 +10,7 @@
+ #include <asm/nospec-branch.h>
+ #include <asm/paravirt.h>
+ #include <asm/mshyperv.h>
++#include <asm/madt_wakeup.h>
  
  /*
-  * Check if the CPU can handle C2 and deeper
-diff --git a/arch/x86/include/asm/madt_wakeup.h b/arch/x86/include/asm/madt_wakeup.h
-new file mode 100644
-index 000000000000..a8cd50af581a
---- /dev/null
-+++ b/arch/x86/include/asm/madt_wakeup.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_X86_MADT_WAKEUP_H
-+#define __ASM_X86_MADT_WAKEUP_H
+  * Hyper-V always provides a single IO-APIC at this MMIO address.
+@@ -49,6 +50,8 @@ extern u64 hv_current_partition_id;
+ 
+ extern union hv_ghcb * __percpu *hv_ghcb_pg;
+ 
++extern u64 wakeup_mailbox_addr;
 +
-+void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
+ bool hv_isolation_type_snp(void);
+ bool hv_isolation_type_tdx(void);
+ u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 3d4237f27569..f6b727b4bd0b 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -43,6 +43,8 @@ struct ms_hyperv_info ms_hyperv;
+ bool hyperv_paravisor_present __ro_after_init;
+ EXPORT_SYMBOL_GPL(hyperv_paravisor_present);
+ 
++u64 wakeup_mailbox_addr;
 +
-+#if defined(CONFIG_OF) && defined(CONFIG_ACPI_MADT_WAKEUP)
-+u64 dtb_parse_mp_wake(void);
-+#else
-+static inline u64 dtb_parse_mp_wake(void)
-+{
-+	return 0;
-+}
+ #if IS_ENABLED(CONFIG_HYPERV)
+ static inline unsigned int hv_get_nested_msr(unsigned int reg)
+ {
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 9c452bfbd571..14b005b6270f 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -365,6 +365,14 @@ void __init ms_hyperv_late_init(void)
+ 	u8 *randomdata;
+ 	u32 length, i;
+ 
++	/*
++	 * Parse the ACPI wakeup structure information from device tree.
++	 * Currently VTL2 TDX guest only.
++	 */
++#ifdef CONFIG_X86_64
++	wakeup_mailbox_addr = dtb_parse_mp_wake();
 +#endif
 +
-+#endif /* __ASM_X86_MADT_WAKEUP_H */
-diff --git a/arch/x86/kernel/madt_wakeup.c b/arch/x86/kernel/madt_wakeup.c
-index d5ef6215583b..7257e7484569 100644
---- a/arch/x86/kernel/madt_wakeup.c
-+++ b/arch/x86/kernel/madt_wakeup.c
-@@ -14,6 +14,8 @@
- #include <asm/nmi.h>
- #include <asm/processor.h>
- #include <asm/reboot.h>
-+#include <asm/madt_wakeup.h>
-+#include <asm/prom.h>
- 
- /* Physical address of the Multiprocessor Wakeup Structure mailbox */
- static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
-@@ -122,6 +124,7 @@ static int __init init_transition_pgtable(pgd_t *pgd)
- 	return 0;
- }
- 
-+#ifdef CONFIG_ACPI
- static int __init acpi_mp_setup_reset(u64 reset_vector)
- {
- 	struct x86_mapping_info info = {
-@@ -168,6 +171,7 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 
- 	return 0;
- }
-+#endif
- 
- static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
- {
-@@ -226,6 +230,7 @@ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
- 	return 0;
- }
- 
-+#ifdef CONFIG_ACPI
- static void acpi_mp_disable_offlining(struct acpi_madt_multiproc_wakeup *mp_wake)
- {
- 	cpu_hotplug_disable_offlining();
-@@ -290,3 +295,36 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 
- 	return 0;
- }
-+#endif /* CONFIG_ACPI */
-+
-+#ifdef CONFIG_OF
-+u64 __init dtb_parse_mp_wake(void)
-+{
-+	struct device_node *node;
-+	u64 mailaddr = 0;
-+
-+	node = of_find_node_by_path("/cpus");
-+	if (!node)
-+		return 0;
-+
-+	if (of_property_match_string(node, "enable-method", "acpi-wakeup-mailbox") < 0) {
-+		pr_err("No acpi wakeup mailbox enable-method\n");
-+		goto done;
-+	}
-+
-+	if (of_property_read_u64(node, "wakeup-mailbox-addr", &mailaddr)) {
-+		pr_err("Invalid wakeup mailbox addr\n");
-+		goto done;
-+	}
-+	acpi_mp_wake_mailbox_paddr = mailaddr;
-+	pr_info("dt wakeup-mailbox: addr 0x%llx\n", mailaddr);
-+
-+	/* No support for the MADT reset vector yet */
-+	cpu_hotplug_disable_offlining();
-+	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
-+
-+done:
-+	of_node_put(node);
-+	return mailaddr;
-+}
-+#endif /* CONFIG_OF */
+ 	/*
+ 	 * Seed the Linux random number generator with entropy provided by
+ 	 * the Hyper-V host in ACPI table OEM0.
 -- 
 2.25.1
 
