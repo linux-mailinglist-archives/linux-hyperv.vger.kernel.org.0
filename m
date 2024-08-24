@@ -1,94 +1,97 @@
-Return-Path: <linux-hyperv+bounces-2853-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2854-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 963DB95DCE2
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 10:16:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E89795DE5A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 16:30:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19BCBB22A97
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 08:16:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8380B21C1F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2024 14:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84D361547CC;
-	Sat, 24 Aug 2024 08:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E10FD1714BD;
+	Sat, 24 Aug 2024 14:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxEL6Y+J"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C641179BD;
-	Sat, 24 Aug 2024 08:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75D4210FB;
+	Sat, 24 Aug 2024 14:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724487385; cv=none; b=ICqCANXD1z/dowhtaF9UFnAaM9umJzKHuwABnpUpLiJ4brCfUFW73hV+U2U2jkfXIrJztkZGnxp3kQSPt4ausI+2uzz4rp+ga75y/T9K4qIOwlAZD1G/OqFbt7NIsVJ9o421g7SHOEfpE+mLqQ0oAgJbFelISYiuK5YL/ACkZLE=
+	t=1724509833; cv=none; b=e9WJReyu6rObxA6Fo6YvRZveAQGohPgEhPQfdoH1/xSiHz9Jp1kpropjru5StOoSfeRuTgI7YHbXMMlxNRC05PpMkaBwY4gkSZb9gdIVW0/fT3uJVfNETrRVvPYGGVhL9zCrMgIJ0jxGSXbNYmAoOG38tGjstgPl7YHhgTJ81ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724487385; c=relaxed/simple;
-	bh=tPuCwHyIKcY3Z4wwkH2t8Pvr1gWq8xRTEmWqoLqXl88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GphJcCz3Q6Uzfy9OaZ1fZuTLnwFnuXWX0l6O5dgzBt8mGU0bwyd97rb1NuD8Lq0Df+ncsmFdQa2U4PHK1jWJvP72OHviXUQT1r0Cv4WoWatJybHqsAmvZFyM4+istFHMg2ZlBsH6UYwkNEmx+muLVYdme6hSTE05ksHTVg2YeC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 4F46A227A87; Sat, 24 Aug 2024 10:16:18 +0200 (CEST)
-Date: Sat, 24 Aug 2024 10:16:18 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: mhklinux@outlook.com
-Cc: kbusch@kernel.org, axboe@kernel.dk, sagi@grimberg.me,
-	James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, robin.murphy@arm.com, hch@lst.de,
-	m.szyprowski@samsung.com, petr@tesarici.cz, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [RFC 0/7] Introduce swiotlb throttling
-Message-ID: <20240824081618.GB8527@lst.de>
-References: <20240822183718.1234-1-mhklinux@outlook.com>
+	s=arc-20240116; t=1724509833; c=relaxed/simple;
+	bh=cwNK1QghZyRiXSy88f++TojKFP6BbpAE9nFehSteBXg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Xe38jWVnhxSgXCPbycz9hGpbmztu6TA7A3LVcp5QYR2vX2vFyEXb0JAgckedRP7io4a4WwBQgw63NyQu6Yp87jrK21yLFirDKdXSfpzPakO3el53Bq2M5D3rrZDS7a43GFUZGPlxue7V4tRhvDhOjFQ5+UALPMIg4r+H5Vmdh80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxEL6Y+J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 294ACC32781;
+	Sat, 24 Aug 2024 14:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724509833;
+	bh=cwNK1QghZyRiXSy88f++TojKFP6BbpAE9nFehSteBXg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rxEL6Y+J7XNmwpz6v4PAA+BfFTCxRRZtIwc3LuOGot7j24+1qQug8YWZsQmtXM+3C
+	 MAvUOJEq/kCjETMoaQnIMMCn3DZXn8Z06eSZHg55FPpxJMH55V1o6GxH8EHFkhBN4N
+	 CkHybx67OZWTpn/GKgezAyFG7Daid4Mj+l6ATx+GjUzCsAWd1/BGbGu3h5VPKQUoCk
+	 H/bm+gMDGbjRPsSasr6keRCCg8aCTLg/w6jYNhNjgLF+wUcKnzH5ps+HjbeI4bvnYl
+	 7qXx7ym7BYyAVkt46UhZVKVxUehya7q0vSM/6veUXZjJgae/9eNYALkyHXMziYiIMQ
+	 QtGZHbhD+KAfg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CE63823327;
+	Sat, 24 Aug 2024 14:30:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240822183718.1234-1-mhklinux@outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] net: refactor ->ndo_bpf calls into
+ dev_xdp_propagate
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172450983301.3235196.2834576800924054534.git-patchwork-notify@kernel.org>
+Date: Sat, 24 Aug 2024 14:30:33 +0000
+References: <20240822055154.4176338-1-almasrymina@google.com>
+In-Reply-To: <20240822055154.4176338-1-almasrymina@google.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, bpf@vger.kernel.org, jv@jvosburgh.net,
+ andy@greyhouse.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+ john.fastabend@gmail.com
 
-On Thu, Aug 22, 2024 at 11:37:11AM -0700, mhkelley58@gmail.com wrote:
-> Because it's not possible to detect at runtime whether a DMA map call
-> is made in a context that can block, the calls in key device drivers
-> must be updated with a MAY_BLOCK attribute, if appropriate. When this
-> attribute is set and swiotlb memory usage is above a threshold, the
-> swiotlb allocation code can serialize swiotlb memory usage to help
-> ensure that it is not exhausted.
+Hello:
 
-One thing I've been doing for a while but haven't gotten to due to
-my lack of semantic patching skills is that we really want to split
-the few flags useful for dma_map* from DMA_ATTR_* which largely
-only applies to dma_alloc.
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Only DMA_ATTR_WEAK_ORDERING (if we can't just kill it entirely)
-and for now DMA_ATTR_NO_WARN is used for both.
+On Thu, 22 Aug 2024 05:51:54 +0000 you wrote:
+> When net devices propagate xdp configurations to slave devices,
+> we will need to perform a memory provider check to ensure we're
+> not binding xdp to a device using unreadable netmem.
+> 
+> Currently the ->ndo_bpf calls in a few places. Adding checks to all
+> these places would not be ideal.
+> 
+> [...]
 
-DMA_ATTR_SKIP_CPU_SYNC and your new SLEEP/BLOCK attribute is only
-useful for mapping, and the rest is for allocation only.
+Here is the summary with links:
+  - [net-next,v2] net: refactor ->ndo_bpf calls into dev_xdp_propagate
+    https://git.kernel.org/netdev/net-next/c/7d3aed652d09
 
-So I'd love to move to a DMA_MAP_* namespace for the mapping flags
-before adding more on potentially widely used ones.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-With a little grace period we can then also phase out DMA_ATTR_NO_WARN
-for allocations, as the gfp_t can control that much better.
-
-> In general, storage device drivers can take advantage of the MAY_BLOCK
-> option, while network device drivers cannot. The Linux block layer
-> already allows storage requests to block when the BLK_MQ_F_BLOCKING
-> flag is present on the request queue.
-
-Note that this also in general involves changes to the block drivers
-to set that flag, which is a bit annoying, but I guess there is not
-easy way around it without paying the price for the BLK_MQ_F_BLOCKING
-overhead everywhere.
 
 
