@@ -1,202 +1,348 @@
-Return-Path: <linux-hyperv+bounces-2869-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2870-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84C4495F503
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 17:27:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68E4995F60F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 18:07:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9C5FB2196E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 15:27:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E3341C21D46
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 16:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10FE919307B;
-	Mon, 26 Aug 2024 15:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC2E193065;
+	Mon, 26 Aug 2024 16:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ppOXEFGH"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Yks2BJOD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010008.outbound.protection.outlook.com [52.103.20.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0991917DB;
-	Mon, 26 Aug 2024 15:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724686056; cv=fail; b=u+kdLB+yq172Ivevww37NFK4F2OMeKrPzr+NLWeA4rKTiDAlANC0byI9yF2wUNOD+WlIoC+IKkBFdojorAl+tgBq7utyZlJxJoegH01U0rzRwB1NXFGvrLr5BceMi63DN39VrFUphi8tdGiZ1rNTt6dzcPkwnRfPzqPm7PzPYbk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724686056; c=relaxed/simple;
-	bh=9mudKu77TYvx5Wc961AnAqTG5a0YjtyocFHB5JP0a8Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eY2OYWt9j3SkrEU2/3/yUCrSR4bog/OfYfjD9EDhrcYaEpyGtdW3vWgCs1Nuzbt18c4nhHT283NxvGDgsmNxMcID0z7FnurV/p/YeU+BOpRLxYTMq28YvWg5yD/MwCc5zoKJiwq/BzHzyUAS7AmjO0qNPVaj/MPbVX01Yn8hPFg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ppOXEFGH; arc=fail smtp.client-ip=52.103.20.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e9H1+DkuJGmGHZ/DYVqqWfwl9z5r8jNnprrkg4c6iq0JUwBtEjuyFxLozYvUULsbxyQATjTy9TZbR3iRsXGkB16rQ3MkYV0dgnn6OzAblHWuNHXoLPemY4qBdUso4+s2VRFVLhcdtibcTHEHcARn6QTf+DoMokJXfG6jlWQbZqSXlgVcj9AE75JKXCQ4/yVZJR8L/JtIfFNbEzC+HgzAXpVPrZs6JfYyTNtqPHLZbpAIEbuDwjgkTMm0V4dBOqBcdGVTiCG5T//umb5hQ9V2Dmvfk7dvwk4iS6QbcFNskqsm3rJgAfWJFH1/2Yt4lVTiRtmSdrDXoDaVFAkgBPdXNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9mudKu77TYvx5Wc961AnAqTG5a0YjtyocFHB5JP0a8Y=;
- b=ExFHqENbnnJNTaOXAjs1KJcXozIOrj2dAvWN4M1eh2ViwcmtNmFPS1Gg8QyDbJt+i0IkJoRbQfa9RvRAlRXulrMmBmnTrZAFw3mLUwJoW0dD38zkPTWjc86BikleBmBEUWiDnGefBXsXK0hCNQOpQO3XIyb11p3EtkMgtbpP4VeN2cL5Hb+enWfrOHvLCUSa0fhbi1gEawGcIhToPNxoQhD8zJGGKycfArAHpvGOWh18xyKusLcprvxZ1ZiePZwpocCclls+ozHpOFKcSU3NEH50JYW11t1JwHWP6NrMmLgkvhlQgRH/WVn8bHucMMaEPZYvAR7dahde5BwabvmPQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9mudKu77TYvx5Wc961AnAqTG5a0YjtyocFHB5JP0a8Y=;
- b=ppOXEFGHV3buaLu2/nLC4WFqLsojJNWM45+2Iuetxg3/8MyohhmxqabwihWCqLb27SxYCcGgst2pe8yvlQMXdY4EC09NL66P+xCHiYyywmRf6VvPuvmLtC7UtX34lBt/9un5OwvTpoig/SnUD1ttCq+AXJy5OHnkO4PAK8jE/5ZIGPkpgwsJmZvf+W2vyRi0TQMQArpPB8OhDT8OTUmwp9qvQJkgaEo4CdclWlZ7bwz+BGL6BR9TZ6dHojM3m1eRdphW9ciwytZDaAtcrOre0JrxMm6ePn0eH8IgNDGcisZ3FAES2A7MCn6frfFxUOm/FFAd3THOG4hgpQYsNtNmcQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7397.namprd02.prod.outlook.com (2603:10b6:510:1d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.25; Mon, 26 Aug
- 2024 15:27:30 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%6]) with mapi id 15.20.7875.018; Mon, 26 Aug 2024
- 15:27:30 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Christoph Hellwig <hch@lst.de>
-CC: "kbusch@kernel.org" <kbusch@kernel.org>, "axboe@kernel.dk"
-	<axboe@kernel.dk>, "sagi@grimberg.me" <sagi@grimberg.me>,
-	"James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "m.szyprowski@samsung.com"
-	<m.szyprowski@samsung.com>, "petr@tesarici.cz" <petr@tesarici.cz>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: RE: [RFC 0/7] Introduce swiotlb throttling
-Thread-Topic: [RFC 0/7] Introduce swiotlb throttling
-Thread-Index: AQHa9MJuV8zHlUlbFEOu4P5Y/AqjALI2EkUAgAOYOYA=
-Date: Mon, 26 Aug 2024 15:27:30 +0000
-Message-ID:
- <SN6PR02MB415753359387FBC8977A9598D48B2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240822183718.1234-1-mhklinux@outlook.com>
- <20240824081618.GB8527@lst.de>
-In-Reply-To: <20240824081618.GB8527@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [UtZ6MtBY5zmwwb3JLrbRfcbWjbAk8MCv]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7397:EE_
-x-ms-office365-filtering-correlation-id: a84d859a-14a9-4ec5-263a-08dcc5e399a6
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799006|461199028|19110799003|15080799006|3412199025|440099028|102099032;
-x-microsoft-antispam-message-info:
- WJglet5RGfQv8F13bmg4tfifFr9cwxwF3+HorjqEmA5D+1IbQA6sORsf/tZGpEXQ+ba+69R70PDLBL67LntHSXd6+WBIAC4KeurVYO5oThCpujGAloIjuLkunibp2P/L4MxIdW1GTfW59tsBCz2wwZpij8mUdIbYMaZM8kfvxssEBPvvWsY//OHcDP6s2cL5N78yIiWkP4v3r+LSRNwRFx58GLaTfT0+QpXPedZO2AjAZXWEL/9LageoMjXDfVtUa+UVI9bLo7gfl0fudbd6GlN39IdRrFPwWwXk8t1KXwzawZwUQgO25LV7Da4aK6xgbmUmVEeIqZcJLQc8HpJXlzRNhitBCL8uqoliYLK+DRrmlwbUiRgsjhAgoNgt13xYGpurGsWbUVfF3985l9sXcOuWxMkAETmx6BG+RJW6GaySG8uxeKaurXgKtAddH3FmVbfBSRbSzd1cjdAy78zZekx4HMvMdh9goYrPuVoflZ9vxgic8Tco0HAsFpRH2O5kZfry9c+HXTe0NFPh0kVVB86G2X9oD03h1M9XRMefC14kpJbfiSLW9iSN1G14Oek6kkmqKHXE01mxdaOJB0t9QJoyu8JSZrG8JQvoaR6ZxyZzRTWAf+LwYwTc4S2dnIYPe479FOSj5CZn+pp3AMd1pvykRWFElUgAcSuQdM3gq58drLalT+qKzu50rAj5LDUw
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?zVwWPjr7Xu3tar2V88mq5duC4vH9rcG7nn1CadxsEJY3DlmnrIgp+AvyB7G7?=
- =?us-ascii?Q?V5lFan8vnhaMTXBwHej5SzQLuGGUSmxskUUOVGo4QvhXKikvAWLxwoQpj2h4?=
- =?us-ascii?Q?UbRcglcJyljtb/cqdM+A/Ul9s81PGe0OYJyawxoyQvrm8bi9mulAY8sAFzCE?=
- =?us-ascii?Q?ELr+2cnfWVUB/CaYg9KixY20Pw7GdTS6eu46j3ROSl/89MZWh77Plh+NqvZ1?=
- =?us-ascii?Q?FrDMuCZvFm4gfqyCAy8OF9FDiQUKkABYRvYWM4J8yIWD5CwS9yUlNtXqAgOw?=
- =?us-ascii?Q?ZGHpgZEfWvThvU1D1eNo5khVt1eEm1vNSWxVumSp0zqf4RSSWXaGAA86Y+Vd?=
- =?us-ascii?Q?UvrdtMzT+GZzAA+nhL0R4pQ3Yyoyd2QuG49dBn4RZTkL+cVA1shT/NkYAo6e?=
- =?us-ascii?Q?clBD3nRTYl0S/DzB+ZjIILQmkVo+DDpL6A2tNSzEYNfeUF0nXnUfKHVSsW6L?=
- =?us-ascii?Q?nOjSl0haxN11s4ttrRAiCNH9lmCvRES7/rAMKzTyACe4ADeP7CO/6zTMW8BS?=
- =?us-ascii?Q?Qv5Qm1KjTyBte8hwxCCbAaLN+6VpOw7dv2ilrvGlV8IVZqpiHbiqt+EJTXuY?=
- =?us-ascii?Q?MkcEJ+w638dEq8d5wnbE5G8BzGLvIpbSbSm1j8EXbCY47kdWlxacUap/5pKZ?=
- =?us-ascii?Q?oCYivpiJEQg6ELgl7KTP3WH4U/AtNDbMggHNs8bSD7+Y0qloQNqMEcyJsV49?=
- =?us-ascii?Q?ULSbpMEoVTh3pGcTgsfX8cH3tiMk8unbCdyNSZ6NyyPo4DLnMkuyYD6JFcFW?=
- =?us-ascii?Q?BPz+hp74yNhd10jvCLjLA7kzjf8Y8aH3oL8J9LzT4Db0bEhmQuxzpBEqpMjH?=
- =?us-ascii?Q?d0bjQn0gPS2WNd5xd+PCrtgblQ71/Y50o1chBsVX/qNxqSxGD4UPTMG+29cN?=
- =?us-ascii?Q?edW6WPai7pzJbjxoiEs3sbMAwTwDAoEYEdMfwmB1AhYZIeVYaEd6yN079+wr?=
- =?us-ascii?Q?uyRA0r3Vk6mo6DVEH4qG/5BQYl+Y+gEFt3GW8lXCUZGLOsTM5w0Y+ccdTN0q?=
- =?us-ascii?Q?vSAeAsyd4lN0kso4MTpxdIJjUPfE77vNmGufd/dPv5M+6/Mp/BcrPDAqBlyq?=
- =?us-ascii?Q?gUclGKpDDnNEytJ6+Bpr53fhaSkvC9fVrabhJOnUNIJIaesYi7R8Pk3HkF1B?=
- =?us-ascii?Q?rjVegzRdPCzwmMrawCliDK7Im/L68DaMGAmj0xM1xVeor0/lszosAZy5f7Ft?=
- =?us-ascii?Q?6y/VRbZi37JItHLZl0KtNxYT9V8eDlys/9URo/1zwRiipdxOqlwEhH5Zzfs?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 128CA4C96;
+	Mon, 26 Aug 2024 16:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724688464; cv=none; b=XwdAXroMtO6DOzQ9TVMEEySH0CVCP62O72DBzMRWq/vvD5YePO2eJ1pDZY4viDRx2XVXmL8HP8yP5c9W/0or3cMI+nw0ClPO2Q1jPgauqEETqiwPKWZtsJPV3iI5HrhVcvGE9j2iZ7WZXD6jMOVOMz3qovfhbn74GB/s7haazEU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724688464; c=relaxed/simple;
+	bh=/ozgmyMFiXk7gIRkK63WKNRgXQDEC51LMLNkWQt3iGg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=eHBSuQhinbhp/9+RRU7pWI8QwTU9RN9M388rod0pVd/5jFIoKLjdcGxowp/+PhzUvGVRtr0AfB7tmPeOUSD2s7TB1v7tia+TLMdJvxm93OE35ctGfFWv0jr/bpslk6666KXD/hbfMGWlcREALNFgRMH3MY+ND7ONH2khQTW8U/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Yks2BJOD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 6C9E620B7165; Mon, 26 Aug 2024 09:07:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6C9E620B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1724688462;
+	bh=VSHTryh0VrlbwAdWAsc99E9Li+yqU5L3CTFRMtcWLdE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Yks2BJODo3EK7wC3lbI2bhjKrtg3hzrBtwXtzorM6zqeAjfNEr19hVJc5/W9Xgq45
+	 B1qtWNI0qEyivuEPOwzNEmq2sYK1VbzVoui/MM/HXbISV5YiNGnNYvWlPE1JYEPkq6
+	 tAQMdhCqnbaN7d0B5nQ9LZ3pkINzi6P27/jGa3y0=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH net-next v5] net: mana: Implement get_ringparam/set_ringparam for mana
+Date: Mon, 26 Aug 2024 09:07:41 -0700
+Message-Id: <1724688461-12203-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a84d859a-14a9-4ec5-263a-08dcc5e399a6
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2024 15:27:30.5339
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7397
 
-From: Christoph Hellwig <hch@lst.de> Sent: Saturday, August 24, 2024 1:16 A=
-M
->=20
-> On Thu, Aug 22, 2024 at 11:37:11AM -0700, mhkelley58@gmail.com wrote:
-> > Because it's not possible to detect at runtime whether a DMA map call
-> > is made in a context that can block, the calls in key device drivers
-> > must be updated with a MAY_BLOCK attribute, if appropriate. When this
-> > attribute is set and swiotlb memory usage is above a threshold, the
-> > swiotlb allocation code can serialize swiotlb memory usage to help
-> > ensure that it is not exhausted.
->=20
-> One thing I've been doing for a while but haven't gotten to due to
-> my lack of semantic patching skills is that we really want to split
-> the few flags useful for dma_map* from DMA_ATTR_* which largely
-> only applies to dma_alloc.
->=20
-> Only DMA_ATTR_WEAK_ORDERING (if we can't just kill it entirely)
-> and for now DMA_ATTR_NO_WARN is used for both.
->=20
-> DMA_ATTR_SKIP_CPU_SYNC and your new SLEEP/BLOCK attribute is only
-> useful for mapping, and the rest is for allocation only.
->=20
-> So I'd love to move to a DMA_MAP_* namespace for the mapping flags
-> before adding more on potentially widely used ones.
+Currently the values of WQs for RX and TX queues for MANA devices
+are hardcoded to default sizes.
+Allow configuring these values for MANA devices as ringparam
+configuration(get/set) through ethtool_ops.
+Pre-allocate buffers at the beginning of this operation, to
+prevent complete network loss in low-memory conditions.
 
-OK, this makes sense to me. The DMA_ATTR_* symbols are currently
-defined as just values that are not part of an enum or any other higher
-level abstraction, and the "attrs" parameter to the dma_* functions is
-just "unsigned long". Are you thinking that the separate namespace is
-based only on the symbolic name (i.e., DMA_MAP_* vs DMA_ATTR_*),
-with the values being disjoint? That seems straightforward to me.
-Changing the "attrs" parameter to an enum is a much bigger change ....
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+Changes in v5:
+ * Explained comment better about not using MANA_PAGE_ALIGN
+ * remove unnecessay MANA_PAGE_ALIGN step for cq_size
+---
+Changes in v4:
+ * if not apower of two, find the nearest power of 2 value and
+   use it as ring parameter
+ * Skip the max value check for parameters
+---
+Changes in v3:
+ * pre-allocate buffers before changing the queue sizes
+ * rebased to latest net-next
+---
+ Changes in v2:
+ * Removed unnecessary validations in mana_set_ringparam()
+ * Fixed codespell error
+ * Improved error message to indicate issue with the parameter
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 27 ++++---
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 74 +++++++++++++++++++
+ include/net/mana/mana.h                       | 23 +++++-
+ 3 files changed, 110 insertions(+), 14 deletions(-)
 
-For a transition period we can have both DMA_ATTR_SKIP_CPU_SYNC
-and DMA_MAP_SKIP_CPU_SYNC, and then work to change all
-occurrences of the former to the latter.
-
-I'll have to look more closely at WEAK_ORDERING and NO_WARN.
-
-There are also a couple of places where DMA_ATTR_NO_KERNEL_MAPPING
-is used for dma_map_* calls, but those are clearly bogus since that
-attribute is never tested in the map path.
-
->=20
-> With a little grace period we can then also phase out DMA_ATTR_NO_WARN
-> for allocations, as the gfp_t can control that much better.
->=20
-> > In general, storage device drivers can take advantage of the MAY_BLOCK
-> > option, while network device drivers cannot. The Linux block layer
-> > already allows storage requests to block when the BLK_MQ_F_BLOCKING
-> > flag is present on the request queue.
->=20
-> Note that this also in general involves changes to the block drivers
-> to set that flag, which is a bit annoying, but I guess there is not
-> easy way around it without paying the price for the BLK_MQ_F_BLOCKING
-> overhead everywhere.
-
-Agreed. I assumed there was some cost to BLK_MQ_F_BLOCKING since
-the default is !BLK_MQ_F_BLOCKING, but I don't really know what
-that is. Do you have a short summary, just for my education?
-
-Michael
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index d2f07e179e86..0a97bbdd958e 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -511,7 +511,7 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
+ }
+ 
+ /* Release pre-allocated RX buffers */
+-static void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
++void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
+ {
+ 	struct device *dev;
+ 	int i;
+@@ -604,7 +604,7 @@ static void mana_get_rxbuf_cfg(int mtu, u32 *datasize, u32 *alloc_size,
+ 	*datasize = mtu + ETH_HLEN;
+ }
+ 
+-static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
++int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+ {
+ 	struct device *dev;
+ 	struct page *page;
+@@ -618,7 +618,7 @@ static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+ 
+ 	dev = mpc->ac->gdma_dev->gdma_context->dev;
+ 
+-	num_rxb = mpc->num_queues * RX_BUFFERS_PER_QUEUE;
++	num_rxb = mpc->num_queues * mpc->rx_queue_size;
+ 
+ 	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
+ 	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
+@@ -1899,15 +1899,17 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 		return -ENOMEM;
+ 
+ 	/*  The minimum size of the WQE is 32 bytes, hence
+-	 *  MAX_SEND_BUFFERS_PER_QUEUE represents the maximum number of WQEs
++	 *  apc->tx_queue_size represents the maximum number of WQEs
+ 	 *  the SQ can store. This value is then used to size other queues
+ 	 *  to prevent overflow.
++	 *  Also note that the txq_size is always going to be MANA_PAGE_ALIGNED,
++	 *  as min val of apc->tx_queue_size is 128 and that would make
++	 *  txq_size 128*32 = 4096 and the other higher values of apc->tx_queue_size
++	 *  are always power of two
+ 	 */
+-	txq_size = MAX_SEND_BUFFERS_PER_QUEUE * 32;
+-	BUILD_BUG_ON(!MANA_PAGE_ALIGNED(txq_size));
++	txq_size = apc->tx_queue_size * 32;
+ 
+-	cq_size = MAX_SEND_BUFFERS_PER_QUEUE * COMP_ENTRY_SIZE;
+-	cq_size = MANA_PAGE_ALIGN(cq_size);
++	cq_size = apc->tx_queue_size * COMP_ENTRY_SIZE;
+ 
+ 	gc = gd->gdma_context;
+ 
+@@ -2145,10 +2147,11 @@ static int mana_push_wqe(struct mana_rxq *rxq)
+ 
+ static int mana_create_page_pool(struct mana_rxq *rxq, struct gdma_context *gc)
+ {
++	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
+ 	struct page_pool_params pprm = {};
+ 	int ret;
+ 
+-	pprm.pool_size = RX_BUFFERS_PER_QUEUE;
++	pprm.pool_size = mpc->rx_queue_size;
+ 	pprm.nid = gc->numa_node;
+ 	pprm.napi = &rxq->rx_cq.napi;
+ 	pprm.netdev = rxq->ndev;
+@@ -2180,13 +2183,13 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 
+ 	gc = gd->gdma_context;
+ 
+-	rxq = kzalloc(struct_size(rxq, rx_oobs, RX_BUFFERS_PER_QUEUE),
++	rxq = kzalloc(struct_size(rxq, rx_oobs, apc->rx_queue_size),
+ 		      GFP_KERNEL);
+ 	if (!rxq)
+ 		return NULL;
+ 
+ 	rxq->ndev = ndev;
+-	rxq->num_rx_buf = RX_BUFFERS_PER_QUEUE;
++	rxq->num_rx_buf = apc->rx_queue_size;
+ 	rxq->rxq_idx = rxq_idx;
+ 	rxq->rxobj = INVALID_MANA_HANDLE;
+ 
+@@ -2734,6 +2737,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	apc->ndev = ndev;
+ 	apc->max_queues = gc->max_num_queues;
+ 	apc->num_queues = gc->max_num_queues;
++	apc->tx_queue_size = DEF_TX_BUFFERS_PER_QUEUE;
++	apc->rx_queue_size = DEF_RX_BUFFERS_PER_QUEUE;
+ 	apc->port_handle = INVALID_MANA_HANDLE;
+ 	apc->pf_filter_handle = INVALID_MANA_HANDLE;
+ 	apc->port_idx = port_idx;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 146d5db1792f..d6a35fbda447 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -369,6 +369,78 @@ static int mana_set_channels(struct net_device *ndev,
+ 	return err;
+ }
+ 
++static void mana_get_ringparam(struct net_device *ndev,
++			       struct ethtool_ringparam *ring,
++			       struct kernel_ethtool_ringparam *kernel_ring,
++			       struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++
++	ring->rx_pending = apc->rx_queue_size;
++	ring->tx_pending = apc->tx_queue_size;
++	ring->rx_max_pending = MAX_RX_BUFFERS_PER_QUEUE;
++	ring->tx_max_pending = MAX_TX_BUFFERS_PER_QUEUE;
++}
++
++static int mana_set_ringparam(struct net_device *ndev,
++			      struct ethtool_ringparam *ring,
++			      struct kernel_ethtool_ringparam *kernel_ring,
++			      struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++	u32 new_tx, new_rx;
++	u32 old_tx, old_rx;
++	int err;
++
++	old_tx = apc->tx_queue_size;
++	old_rx = apc->rx_queue_size;
++
++	if (ring->tx_pending < MIN_TX_BUFFERS_PER_QUEUE) {
++		NL_SET_ERR_MSG_FMT(extack, "tx:%d less than the min:%d", ring->tx_pending,
++				   MIN_TX_BUFFERS_PER_QUEUE);
++		return -EINVAL;
++	}
++
++	if (ring->rx_pending < MIN_RX_BUFFERS_PER_QUEUE) {
++		NL_SET_ERR_MSG_FMT(extack, "rx:%d less than the min:%d", ring->rx_pending,
++				   MIN_RX_BUFFERS_PER_QUEUE);
++		return -EINVAL;
++	}
++
++	new_rx = roundup_pow_of_two(ring->rx_pending);
++	new_tx = roundup_pow_of_two(ring->tx_pending);
++	netdev_info(ndev, "Using nearest power of 2 values for Txq:%d Rxq:%d\n",
++		    new_tx, new_rx);
++
++	/* pre-allocating new buffers to prevent failures in mana_attach() later */
++	apc->rx_queue_size = new_rx;
++	err = mana_pre_alloc_rxbufs(apc, ndev->mtu);
++	apc->rx_queue_size = old_rx;
++	if (err) {
++		netdev_err(ndev, "Insufficient memory for new allocations\n");
++		return err;
++	}
++
++	err = mana_detach(ndev, false);
++	if (err) {
++		netdev_err(ndev, "mana_detach failed: %d\n", err);
++		goto out;
++	}
++
++	apc->tx_queue_size = new_tx;
++	apc->rx_queue_size = new_rx;
++
++	err = mana_attach(ndev);
++	if (err) {
++		netdev_err(ndev, "mana_attach failed: %d\n", err);
++		apc->tx_queue_size = old_tx;
++		apc->rx_queue_size = old_rx;
++	}
++out:
++	mana_pre_dealloc_rxbufs(apc);
++	return err;
++}
++
+ const struct ethtool_ops mana_ethtool_ops = {
+ 	.get_ethtool_stats	= mana_get_ethtool_stats,
+ 	.get_sset_count		= mana_get_sset_count,
+@@ -380,4 +452,6 @@ const struct ethtool_ops mana_ethtool_ops = {
+ 	.set_rxfh		= mana_set_rxfh,
+ 	.get_channels		= mana_get_channels,
+ 	.set_channels		= mana_set_channels,
++	.get_ringparam          = mana_get_ringparam,
++	.set_ringparam          = mana_set_ringparam,
+ };
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 6439fd8b437b..80a1e53471a6 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -38,9 +38,21 @@ enum TRI_STATE {
+ 
+ #define COMP_ENTRY_SIZE 64
+ 
+-#define RX_BUFFERS_PER_QUEUE 512
++/* This Max value for RX buffers is derived from __alloc_page()'s max page
++ * allocation calculation. It allows maximum 2^(MAX_ORDER -1) pages. RX buffer
++ * size beyond this value gets rejected by __alloc_page() call.
++ */
++#define MAX_RX_BUFFERS_PER_QUEUE 8192
++#define DEF_RX_BUFFERS_PER_QUEUE 512
++#define MIN_RX_BUFFERS_PER_QUEUE 128
+ 
+-#define MAX_SEND_BUFFERS_PER_QUEUE 256
++/* This max value for TX buffers is derived as the maximum allocatable
++ * pages supported on host per guest through testing. TX buffer size beyond
++ * this value is rejected by the hardware.
++ */
++#define MAX_TX_BUFFERS_PER_QUEUE 16384
++#define DEF_TX_BUFFERS_PER_QUEUE 256
++#define MIN_TX_BUFFERS_PER_QUEUE 128
+ 
+ #define EQ_SIZE (8 * MANA_PAGE_SIZE)
+ 
+@@ -285,7 +297,7 @@ struct mana_recv_buf_oob {
+ 	void *buf_va;
+ 	bool from_pool; /* allocated from a page pool */
+ 
+-	/* SGL of the buffer going to be sent has part of the work request. */
++	/* SGL of the buffer going to be sent as part of the work request. */
+ 	u32 num_sge;
+ 	struct gdma_sge sgl[MAX_RX_WQE_SGL_ENTRIES];
+ 
+@@ -437,6 +449,9 @@ struct mana_port_context {
+ 	unsigned int max_queues;
+ 	unsigned int num_queues;
+ 
++	unsigned int rx_queue_size;
++	unsigned int tx_queue_size;
++
+ 	mana_handle_t port_handle;
+ 	mana_handle_t pf_filter_handle;
+ 
+@@ -472,6 +487,8 @@ struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
+ void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
+ int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
+ void mana_query_gf_stats(struct mana_port_context *apc);
++int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu);
++void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
+ 
+ extern const struct ethtool_ops mana_ethtool_ops;
+ 
+-- 
+2.34.1
 
 
