@@ -1,172 +1,144 @@
-Return-Path: <linux-hyperv+bounces-2861-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2862-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 433ED95E75B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 05:40:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBCF995E7EC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 07:31:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62F1F1C20380
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 03:40:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 828C32813CB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 05:31:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7753410A0D;
-	Mon, 26 Aug 2024 03:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9998044C94;
+	Mon, 26 Aug 2024 05:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lkx6incI"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ICk5FQ1b"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECED6FB0;
-	Mon, 26 Aug 2024 03:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1879F2E400;
+	Mon, 26 Aug 2024 05:31:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724643641; cv=none; b=UxAiTMoiGBbVWd67VFN+au/LPPoQ/T0q+iHJ/h9dFRo+3JcZwHvvpipQsl7C6qL4o4nSK7sBdQZR/9HQ1IHQUTot+v0GX0CsPkY/NINUefObLJWn+zCZjf1ZkwesdVfCK7z+Yw9eA0dOkQ3VQQMC/EdyImRQGzUL4AktGJftZx0=
+	t=1724650306; cv=none; b=qcohycAHuNoP0uJK0rIGszHDIqRhxysD6+yeBSXgFTrvAzj2i2XExnNwgqWbhm9HS1NzfpkuJhj8tqsdVx+VOB8ZW9sHcNDrolaylpus8TX8RWtQECj1X1G9juk0Tzu7usZq6CBY0Mq3Q/PMdmzNZc2lz8gD0y+wgabnQNbrDaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724643641; c=relaxed/simple;
-	bh=OZkhINXhhdJ5a2itT7O0sq5VB5j84KcBAom6XsHNMec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E3m5CGDY/93xofHkaNUFJuXrtKv+s2ljuNh/MLliJcgn7RHGhy1z0VOv9WZDiejFgvPYk0r4VefRXvN/+/uZ9PGm4V5htUcBn06lhJQy8qiOC3YMhyAEAeTaqTBfcGgKN8BBOm5b3qGghG2grYfe3swMkxT67nTqMgr8vD/dehA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Lkx6incI; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1724650306; c=relaxed/simple;
+	bh=Wl6iQ9exmLvbfbEZipfqq2w+vo7s4TZ/fP2e7N1r6/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g66EzN9fNtHezYQHM7MrV4hp2OmnmOrxibexg62Rv5N+WFGHOlXzaWPQ6EbfWerfaj+te7mI91Y74d4V26DKB6j3O5Ci1VL/55gxJq2Ekwt167Leplqih+C4L40b/fKJ+J78ugARRQzfElZntHtav2D+nI3JF/1yOwlnWU9UKWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ICk5FQ1b; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id D138F20B7165; Sun, 25 Aug 2024 20:40:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D138F20B7165
+Received: from [10.95.75.183] (unknown [167.220.238.215])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 36B1820B7165;
+	Sun, 25 Aug 2024 22:31:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 36B1820B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1724643632;
-	bh=sTJz20f+S1v60PklKi56Ty5OsgrZAofJ6pB+FmTF7e0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lkx6incILLKxcvBgF1alAVH3E/oIto//Jyen7Z4+FuqVsIMbaZFQgA6zhaN7SQ4te
-	 TgPWyOOU7uxeXBarDvFmLQxpqI8cIwFQxB06FtJaiPDJv9uMtJyv5ux1fhb2dh96LH
-	 lCYCNeL66V8uX9aZ620d7ONgNMidau4OEzm/L5lY=
-Date: Sun, 25 Aug 2024 20:40:32 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>, Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v4] net: mana: Implement
- get_ringparam/set_ringparam for mana
-Message-ID: <20240826034032.GA1883@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1724341989-27612-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240823113454.GA24427@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=default; t=1724650304;
+	bh=Pz7/mxA+dgmB3ZGl3+LDfNGWOqZQC0Nmel5YIM0XAbA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ICk5FQ1bYFieyUcf6RoA98ssS8Rp/OF8fQLtPgCWCDsI0qIuTczTR59ptSAW1bwH+
+	 qEgwDJmk4VRiG2sLupyCwo5q5V8z9BxCC+ScMCsdBG1ZPVZM3chz07f+UQkmY+gGgI
+	 QtMyMVMAYS3bTdhGwA5eRy5yvIrU1XvbDkVPq3cQ=
+Message-ID: <a447911b-ef12-46de-ba01-13105e34b8fe@linux.microsoft.com>
+Date: Mon, 26 Aug 2024 11:01:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240823113454.GA24427@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] Drivers: hv: vmbus: Fix rescind handling in
+ uio_hv_generic
+To: Michael Kelley <mhklinux@outlook.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Stephen Hemminger <stephen@networkplumber.org>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>
+References: <20240822110912.13735-1-namjain@linux.microsoft.com>
+ <20240822110912.13735-3-namjain@linux.microsoft.com>
+ <SN6PR02MB4157FB898345A1A8B88D1F4DD48A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157FB898345A1A8B88D1F4DD48A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 23, 2024 at 04:34:54AM -0700, Saurabh Singh Sengar wrote:
-> On Thu, Aug 22, 2024 at 08:53:09AM -0700, Shradha Gupta wrote:
-> > Currently the values of WQs for RX and TX queues for MANA devices
-> > are hardcoded to default sizes.
-> > Allow configuring these values for MANA devices as ringparam
-> > configuration(get/set) through ethtool_ops.
-> > Pre-allocate buffers at the beginning of this operation, to
-> > prevent complete network loss in low-memory conditions.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Changes in v4:
-> >  * Roundup the ring parameter value to a power of 2
-> >  * Skip the max value check for parameters
-> >  * Use extack to log errors
-> > ---
-> >  Changes in v3:
-> >  * pre-allocate buffers before changing the queue sizes
-> >  * rebased to latest net-next
-> > ---
-> >  Changes in v2:
-> >  * Removed unnecessary validations in mana_set_ringparam()
-> >  * Fixed codespell error
-> >  * Improved error message to indicate issue with the parameter
-> > ---
-> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 +++---
-> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 74 +++++++++++++++++++
-> >  include/net/mana/mana.h                       | 23 +++++-
-> >  3 files changed, 108 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index d2f07e179e86..4e3ade5926bc 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > @@ -511,7 +511,7 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
-> >  }
-> >  
-> >  /* Release pre-allocated RX buffers */
-> > -static void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
-> > +void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
-> >  {
-> >  	struct device *dev;
-> >  	int i;
-> > @@ -604,7 +604,7 @@ static void mana_get_rxbuf_cfg(int mtu, u32 *datasize, u32 *alloc_size,
-> >  	*datasize = mtu + ETH_HLEN;
-> >  }
-> >  
-> > -static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
-> > +int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
-> >  {
-> >  	struct device *dev;
-> >  	struct page *page;
-> > @@ -618,7 +618,7 @@ static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
-> >  
-> >  	dev = mpc->ac->gdma_dev->gdma_context->dev;
-> >  
-> > -	num_rxb = mpc->num_queues * RX_BUFFERS_PER_QUEUE;
-> > +	num_rxb = mpc->num_queues * mpc->rx_queue_size;
-> >  
-> >  	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
-> >  	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
-> > @@ -1899,14 +1899,15 @@ static int mana_create_txq(struct mana_port_context *apc,
-> >  		return -ENOMEM;
-> >  
-> >  	/*  The minimum size of the WQE is 32 bytes, hence
-> > -	 *  MAX_SEND_BUFFERS_PER_QUEUE represents the maximum number of WQEs
-> > +	 *  apc->tx_queue_size represents the maximum number of WQEs
-> >  	 *  the SQ can store. This value is then used to size other queues
-> >  	 *  to prevent overflow.
-> > +	 *  Also note that the txq_size is always going to be MANA_PAGE_ALIGNED,
-> > +	 *  as tx_queue_size is always a power of 2.
-> >  	 */
-> 
-> 	MANA_PAGE_ALIGNED aligned means aligned by 0x1000. tx_queue_size being
-> 	'power of 2' * 32 is not a sufficient condition for it to be aligned to
-> 	0x1000. We possibly can explain more.
-> 
-> 
-> > -	txq_size = MAX_SEND_BUFFERS_PER_QUEUE * 32;
-> > -	BUILD_BUG_ON(!MANA_PAGE_ALIGNED(txq_size));
-> > +	txq_size = apc->tx_queue_size * 32;
-> >  
-> > -	cq_size = MAX_SEND_BUFFERS_PER_QUEUE * COMP_ENTRY_SIZE;
-> > +	cq_size = apc->tx_queue_size * COMP_ENTRY_SIZE;
-> >  	cq_size = MANA_PAGE_ALIGN(cq_size);
-> 
-> 	COMP_ENTRY_SIZE is 64, that means cq_size is double of txq_size.
-> 	If we are certain that txq_size is always aligned to MANA_PAGE,
-> 	that means cq_size is already aligned to MANA_PAGE as well.
-> 
-> - Saurabh
-Thanks Saurabh.
 
-I'll incorporate these in the next version
+
+On 8/25/2024 8:27 AM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, August 22, 2024 4:09 AM
+>>
+>> Rescind offer handling relies on rescind callbacks for some of the
+>> resources cleanup, if they are registered. It does not unregister
+>> vmbus device for the primary channel closure, when callback is
+>> registered.
+>> Add logic to unregister vmbus for the primary channel in rescind callback
+>> to ensure channel removal and relid release, and to ensure rescind flag
+>> is false when driver probe happens again.
+>>
+>> Fixes: ca3cda6fcf1e ("uio_hv_generic: add rescind support")
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c       | 1 +
+>>   drivers/uio/uio_hv_generic.c | 7 +++++++
+>>   2 files changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index c857dc3975be..4bae382a3eb4 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -1952,6 +1952,7 @@ void vmbus_device_unregister(struct hv_device
+>> *device_obj)
+>>   	 */
+>>   	device_unregister(&device_obj->device);
+>>   }
+>> +EXPORT_SYMBOL_GPL(vmbus_device_unregister);
+>>
+>>   #ifdef CONFIG_ACPI
+>>   /*
+>> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+>> index c99890c16d29..ea26c0b460d6 100644
+>> --- a/drivers/uio/uio_hv_generic.c
+>> +++ b/drivers/uio/uio_hv_generic.c
+>> @@ -121,6 +121,13 @@ static void hv_uio_rescind(struct vmbus_channel *channel)
+>>
+>>   	/* Wake up reader */
+>>   	uio_event_notify(&pdata->info);
+>> +
+>> +	/*
+>> +	 * With rescind callback registered, rescind path will not unregister the device
+>> +	 * when the primary channel is rescinded. Without it, next onoffer msg does not come.
+>> +	 */
+>> +	if (!channel->primary_channel)
+>> +		vmbus_device_unregister(channel->device_obj);
+> 
+> When the rescind callback is *not* set, vmbus_onoffer_rescind() makes the
+> call to vmbus_device_unregister(). But it does so bracketed with get_device()/
+> put_device(). Your code here does not do the bracketing. Is there a reason for
+> the difference? Frankly, I'm not sure why vmbus_onoffer_rescind() does the
+> bracketing, and I can't definitively say if it is really needed. So I guess I'm
+> just asking if you know. :-)
+> 
+> Michael
+> 
+>>   }
+>>
+>>   /* ysfs API to allow mmap of the ring buffers
+>> --
+>> 2.34.1
+>>
+
+IMHO, we have already NULL checked channel->device_obj and other couple 
+of things to make sure we are safe to clean this up. At other places as 
+well, I don't see the use of put and get device. So I think its not 
+required. I am open to suggestions.
+
+Regards,
+Naman
 
