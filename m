@@ -1,143 +1,172 @@
-Return-Path: <linux-hyperv+bounces-2860-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2861-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F019C95E253
-	for <lists+linux-hyperv@lfdr.de>; Sun, 25 Aug 2024 09:10:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 433ED95E75B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 05:40:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE2D328272D
-	for <lists+linux-hyperv@lfdr.de>; Sun, 25 Aug 2024 07:10:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62F1F1C20380
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2024 03:40:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F0B4F20E;
-	Sun, 25 Aug 2024 07:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7753410A0D;
+	Mon, 26 Aug 2024 03:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9vyTaN8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lkx6incI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E67710E6;
-	Sun, 25 Aug 2024 07:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECED6FB0;
+	Mon, 26 Aug 2024 03:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724569806; cv=none; b=MjMX5WS7OEYqdKT1zLd09lvlLpTjshY4G0C2BgwzpRtsckoY0bIxiPGrhKfXU0bi5/0HIv8f3iao3rmIMM+6kbmd7GgNyXblRvxZsim0m/dHLAbnKxEI4AEqHlcPlDZuu3yPwEtovun0JiPwEECNlQIoCJ5blKw30fdzU7WsswI=
+	t=1724643641; cv=none; b=UxAiTMoiGBbVWd67VFN+au/LPPoQ/T0q+iHJ/h9dFRo+3JcZwHvvpipQsl7C6qL4o4nSK7sBdQZR/9HQ1IHQUTot+v0GX0CsPkY/NINUefObLJWn+zCZjf1ZkwesdVfCK7z+Yw9eA0dOkQ3VQQMC/EdyImRQGzUL4AktGJftZx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724569806; c=relaxed/simple;
-	bh=U/Oq2er/y7XgBVRnIf3CZHOyXgN+R1fGm+JuTjj/FG8=;
+	s=arc-20240116; t=1724643641; c=relaxed/simple;
+	bh=OZkhINXhhdJ5a2itT7O0sq5VB5j84KcBAom6XsHNMec=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=apW4r6HnFZTv8MDNX+00sw5i7BXuoU80pMVtqw/rP1TDCDNCXYBjBzHYyAIZwnPKIaBks6GvUWV30udyljqwn44tRqjHhneuG5zKG9QtrTN20rC/kc0aMw7tRzvBqocscPBf3XgKHjZ8usD9OA3AYFJa0XXk9tt4qqxt/oAyhhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9vyTaN8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB87DC32782;
-	Sun, 25 Aug 2024 07:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724569805;
-	bh=U/Oq2er/y7XgBVRnIf3CZHOyXgN+R1fGm+JuTjj/FG8=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=E3m5CGDY/93xofHkaNUFJuXrtKv+s2ljuNh/MLliJcgn7RHGhy1z0VOv9WZDiejFgvPYk0r4VefRXvN/+/uZ9PGm4V5htUcBn06lhJQy8qiOC3YMhyAEAeTaqTBfcGgKN8BBOm5b3qGghG2grYfe3swMkxT67nTqMgr8vD/dehA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Lkx6incI; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id D138F20B7165; Sun, 25 Aug 2024 20:40:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D138F20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1724643632;
+	bh=sTJz20f+S1v60PklKi56Ty5OsgrZAofJ6pB+FmTF7e0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c9vyTaN829lJaSdkU2m9TPa1dfiS0mEDAUOwvkkyFh38keko/Rf6lV7UaTWZ761nf
-	 8BYRP41HOB71UNXocqw9lEVU0O5Qu6obqz5E0Dx7i6W4+tVBfvQVTtsAczw+Zzq4Ag
-	 CeaBkK3gS/G3PRwchprIhaCXhY48sfN7ew66HdIPTQEBxmXhtyjyTGKhaD0DKAZWVT
-	 4L//pWNUZrmVe8+VODPW3VuOLNrRqNB+u4D0MpEYh4sVF+a5sccfq4r49EiJdBJoqr
-	 DCDN6NAeB3ECM6jB9vXqgDDrS501jUv+ZRffLHIPX2GxOMe1CYOHQJVpO2MOnuFksk
-	 IMp+Fe1UvXk9w==
-Date: Sun, 25 Aug 2024 09:10:01 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org, lenb@kernel.org, 
-	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 2/9] dt-bindings: x86: Add a binding for x86 wakeup
- mailbox
-Message-ID: <ujfqrllrii6iijlhbwx3bltpjogiosw4xx5pqbcddgpxjobrzh@xqqrfxi5lv3i>
-References: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
- <20240823232327.2408869-3-yunhong.jiang@linux.intel.com>
+	b=Lkx6incILLKxcvBgF1alAVH3E/oIto//Jyen7Z4+FuqVsIMbaZFQgA6zhaN7SQ4te
+	 TgPWyOOU7uxeXBarDvFmLQxpqI8cIwFQxB06FtJaiPDJv9uMtJyv5ux1fhb2dh96LH
+	 lCYCNeL66V8uX9aZ620d7ONgNMidau4OEzm/L5lY=
+Date: Sun, 25 Aug 2024 20:40:32 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>, Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v4] net: mana: Implement
+ get_ringparam/set_ringparam for mana
+Message-ID: <20240826034032.GA1883@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1724341989-27612-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20240823113454.GA24427@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240823232327.2408869-3-yunhong.jiang@linux.intel.com>
+In-Reply-To: <20240823113454.GA24427@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Fri, Aug 23, 2024 at 04:23:20PM -0700, Yunhong Jiang wrote:
-> Add the binding to use mailbox wakeup mechanism to bringup APs.
+On Fri, Aug 23, 2024 at 04:34:54AM -0700, Saurabh Singh Sengar wrote:
+> On Thu, Aug 22, 2024 at 08:53:09AM -0700, Shradha Gupta wrote:
+> > Currently the values of WQs for RX and TX queues for MANA devices
+> > are hardcoded to default sizes.
+> > Allow configuring these values for MANA devices as ringparam
+> > configuration(get/set) through ethtool_ops.
+> > Pre-allocate buffers at the beginning of this operation, to
+> > prevent complete network loss in low-memory conditions.
+> > 
+> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > ---
+> >  Changes in v4:
+> >  * Roundup the ring parameter value to a power of 2
+> >  * Skip the max value check for parameters
+> >  * Use extack to log errors
+> > ---
+> >  Changes in v3:
+> >  * pre-allocate buffers before changing the queue sizes
+> >  * rebased to latest net-next
+> > ---
+> >  Changes in v2:
+> >  * Removed unnecessary validations in mana_set_ringparam()
+> >  * Fixed codespell error
+> >  * Improved error message to indicate issue with the parameter
+> > ---
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 +++---
+> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 74 +++++++++++++++++++
+> >  include/net/mana/mana.h                       | 23 +++++-
+> >  3 files changed, 108 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > index d2f07e179e86..4e3ade5926bc 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > @@ -511,7 +511,7 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
+> >  }
+> >  
+> >  /* Release pre-allocated RX buffers */
+> > -static void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
+> > +void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
+> >  {
+> >  	struct device *dev;
+> >  	int i;
+> > @@ -604,7 +604,7 @@ static void mana_get_rxbuf_cfg(int mtu, u32 *datasize, u32 *alloc_size,
+> >  	*datasize = mtu + ETH_HLEN;
+> >  }
+> >  
+> > -static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+> > +int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+> >  {
+> >  	struct device *dev;
+> >  	struct page *page;
+> > @@ -618,7 +618,7 @@ static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+> >  
+> >  	dev = mpc->ac->gdma_dev->gdma_context->dev;
+> >  
+> > -	num_rxb = mpc->num_queues * RX_BUFFERS_PER_QUEUE;
+> > +	num_rxb = mpc->num_queues * mpc->rx_queue_size;
+> >  
+> >  	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
+> >  	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
+> > @@ -1899,14 +1899,15 @@ static int mana_create_txq(struct mana_port_context *apc,
+> >  		return -ENOMEM;
+> >  
+> >  	/*  The minimum size of the WQE is 32 bytes, hence
+> > -	 *  MAX_SEND_BUFFERS_PER_QUEUE represents the maximum number of WQEs
+> > +	 *  apc->tx_queue_size represents the maximum number of WQEs
+> >  	 *  the SQ can store. This value is then used to size other queues
+> >  	 *  to prevent overflow.
+> > +	 *  Also note that the txq_size is always going to be MANA_PAGE_ALIGNED,
+> > +	 *  as tx_queue_size is always a power of 2.
+> >  	 */
 > 
-> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> ---
->  .../devicetree/bindings/x86/wakeup.yaml       | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/x86/wakeup.yaml
+> 	MANA_PAGE_ALIGNED aligned means aligned by 0x1000. tx_queue_size being
+> 	'power of 2' * 32 is not a sufficient condition for it to be aligned to
+> 	0x1000. We possibly can explain more.
 > 
-> diff --git a/Documentation/devicetree/bindings/x86/wakeup.yaml b/Documentation/devicetree/bindings/x86/wakeup.yaml
-> new file mode 100644
-> index 000000000000..cb84e2756bca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/x86/wakeup.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2024 Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/x86/wakeup.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: x86 mailbox wakeup
-> +maintainers:
-> +  - Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> +
-> +description: |
-> +  The x86 mailbox wakeup mechanism defines a mechanism to let the bootstrap
-> +  processor (BSP) to wake up application processors (APs) through a wakeup
-> +  mailbox.
-> +
-> +  The "wakeup-mailbox-addr" property specifies the wakeup mailbox address. The
-> +  wakeup mailbox is a 4K-aligned 4K-size memory block allocated in the reserved
-> +  memory.
-> +
-> +  The wakeup mailbox structure is defined as follows.
-> +
-> +    uint16_t command;
-> +    uint16_t reserved;
-> +    uint32_t apic_id;
-> +    uint64_t wakeup_vector;
-> +    uint8_t  reservedForOs[2032];
-> +
-> +  The memory after reservedForOs field is reserved and OS should not touch it.
-> +
-> +  To wakes up a AP, the BSP prepares the wakeup routine, fills the wakeup
-> +  routine's address into the wakeup_vector field, fill the apic_id field with
-> +  the target AP's APIC_ID, and write 1 to the command field. After receiving the
-> +  wakeup command, the target AP will jump to the wakeup routine.
-> +
-> +  For each AP, the mailbox can be used only once for the wakeup command. After
-> +  the AP jumps to the wakeup routine, the mailbox will no longer be checked by
-> +  this AP.
-> +
-> +  The wakeup mailbox structure and the wakeup process is the same as
-> +  the Multiprocessor Wakeup Mailbox Structure defined in ACPI spec version 6.5,
-> +  section 5.2.12.19 [1].
-> +
-> +  References:
-> +
-> +  [1] https://uefi.org/specs/ACPI/6.5/05_ACPI_Software_Programming_Model.html
-> +
-> +select: false
+> 
+> > -	txq_size = MAX_SEND_BUFFERS_PER_QUEUE * 32;
+> > -	BUILD_BUG_ON(!MANA_PAGE_ALIGNED(txq_size));
+> > +	txq_size = apc->tx_queue_size * 32;
+> >  
+> > -	cq_size = MAX_SEND_BUFFERS_PER_QUEUE * COMP_ENTRY_SIZE;
+> > +	cq_size = apc->tx_queue_size * COMP_ENTRY_SIZE;
+> >  	cq_size = MANA_PAGE_ALIGN(cq_size);
+> 
+> 	COMP_ENTRY_SIZE is 64, that means cq_size is double of txq_size.
+> 	If we are certain that txq_size is always aligned to MANA_PAGE,
+> 	that means cq_size is already aligned to MANA_PAGE as well.
+> 
+> - Saurabh
+Thanks Saurabh.
 
-This schema is still a no-op because of this false.
-
-What is the point of defining one property if it is not placed anywhere?
-Every device node can have it? Seems wrong...
-
-You need to come with proper schema. Lack of an example is another thing
-- this cannot be even validated by the tools. 
-
-Best regards,
-Krzysztof
-
+I'll incorporate these in the next version
 
