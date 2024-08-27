@@ -1,142 +1,111 @@
-Return-Path: <linux-hyperv+bounces-2875-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2876-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F0FE9600F5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 07:16:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3500E9602BB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 09:15:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A157B22A8C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 05:16:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4C1F1F2308F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 07:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F2A54648;
-	Tue, 27 Aug 2024 05:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oXzKgh7X"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEC3D155322;
+	Tue, 27 Aug 2024 07:14:44 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E09F49450;
-	Tue, 27 Aug 2024 05:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D80815383F;
+	Tue, 27 Aug 2024 07:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724735800; cv=none; b=Qx3VsuBLTHgKPfj7ADAxcjfSBe9gD8LbDi8kzNZ04s5SX2lAV102klN0N0r0fi30nys69LqtbGvBX1IHYkusJ+FQ+vHbFyecoqY8kca7n0tFatvPML8tS/Ga+etJz/p5pg1vlQHV8mkLiLOVdiI+XVPuXq5Ru1VxdlyopmGeKwM=
+	t=1724742884; cv=none; b=cSJdKsiPAPrtRK/XSSDW4hCF4yZCuqDObggNWEWlSUqJieDKBe3/cMLZNeqSmlbcjCnBu4ZlunJip6DQFiqDWk7tQswbCWFrTwKzBxVLdjqGTvPpMUPl0C5wrnwQqTe3ayXZOyuwMCcJSh1Tq/cdHE0CEUBcMz8BUZ9PJpA/sng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724735800; c=relaxed/simple;
-	bh=K+GmY4gdcn7uAYZPeaBQygIXA8pVBbxuLeRLl3Cz9HA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=gN2CfvzFoap/1byLKJb1CyLa/dKHxk4icNeoAf7jFwTo/7YYALjYGrwZqM3RVZK0xkuUoQTT9e1RdPOmOWRvY/Y9xctdwAIQs5f92bedy66IvR+byDiSXg9HciV5nSwiV+BMAD17h83XPoi1HzqI4O2MwAbOQazEzCIZXJI/c7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oXzKgh7X; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 86F7C20B7165; Mon, 26 Aug 2024 22:16:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86F7C20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1724735798;
-	bh=KhV9yigjdRhu5Msq5dP4Yrc+yBo/M/rjxpLcEAj8cSQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oXzKgh7XwbflA9IbBEd9Tm8Nux2CDIdM6Xtt7N3GNbA4J8AUz5tom6VoZsaSh2zAs
-	 PzDhd/3DCTYW+3aLihuFtCH5fKUU1HIZ42Gp+kJHuGMAa4Sa2O/r2dN6Jbi5DXoInH
-	 PQ+8+Xu4hZlEonQovM/auCrm/sxDHE5souIDjNdE=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ernis@microsoft.com,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Subject: [PATCH v4] net: netvsc: Update default VMBus channels
-Date: Mon, 26 Aug 2024 22:16:31 -0700
-Message-Id: <1724735791-22815-1-git-send-email-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1724742884; c=relaxed/simple;
+	bh=nhjxhmNHLo5IoXdK9az/5+6rhAZctBlOH954/my4wZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nr1cLdX5Ee+67UWm/uPk+4bbGkphTov1RHjoXxr9Fu5mE8WibDKdC8ZZlpqQyOCN8hLosshzctNvM0iryLzl5CSQYT1mPDPEz63EdDYr033GOAhR1jjQb+VwxONxW5wki/ZN7jpyBPfMsnQnQ7i96vVk/blHG6YFSSHNytb9Mtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 6526A227AAA; Tue, 27 Aug 2024 09:14:28 +0200 (CEST)
+Date: Tue, 27 Aug 2024 09:14:28 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Christoph Hellwig <hch@lst.de>, "kbusch@kernel.org" <kbusch@kernel.org>,
+	"axboe@kernel.dk" <axboe@kernel.dk>,
+	"sagi@grimberg.me" <sagi@grimberg.me>,
+	"James.Bottomley@HansenPartnership.com" <James.Bottomley@HansenPartnership.com>,
+	"martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+	"petr@tesarici.cz" <petr@tesarici.cz>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
+Subject: Re: [RFC 0/7] Introduce swiotlb throttling
+Message-ID: <20240827071428.GA12797@lst.de>
+References: <20240822183718.1234-1-mhklinux@outlook.com> <20240824081618.GB8527@lst.de> <SN6PR02MB415753359387FBC8977A9598D48B2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB415753359387FBC8977A9598D48B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Change VMBus channels macro (VRSS_CHANNEL_DEFAULT) in
-Linux netvsc from 8 to 16 to align with Azure Windows VM
-and improve networking throughput.
+On Mon, Aug 26, 2024 at 03:27:30PM +0000, Michael Kelley wrote:
+> OK, this makes sense to me. The DMA_ATTR_* symbols are currently
+> defined as just values that are not part of an enum or any other higher
+> level abstraction, and the "attrs" parameter to the dma_* functions is
+> just "unsigned long". Are you thinking that the separate namespace is
+> based only on the symbolic name (i.e., DMA_MAP_* vs DMA_ATTR_*),
+> with the values being disjoint? That seems straightforward to me.
 
-For VMs having less than 16 vCPUS, the channels depend
-on number of vCPUs. For greater than 16 vCPUs,
-set the channels to maximum of VRSS_CHANNEL_DEFAULT and
-number of physical cores / 2 which is returned by
-netif_get_num_default_rss_queues() as a way to optimize CPU
-resource utilization and scale for high-end processors with
-many cores.
-Maximum number of channels are by default set to 64.
+Yes. Although initially I'd just keep ATTR for the allocation and then
+maybe do a scripted run to convert it.
 
-Based on this change the channel creation would change as follows:
+> Changing the "attrs" parameter to an enum is a much bigger change ....
 
------------------------------------------------------------------
-| No. of vCPU |  dev_info->num_chn |    channels created        |
------------------------------------------------------------------
-|    1-16     |        16	   |          vCPU              |
-|    >16      |  max(16,#cores/2)  | min(64 , max(16,#cores/2)) |
------------------------------------------------------------------
+I don't think an enum makes much sense as we have bits defined.  A
+__bitwise type would be nice, but not required.
 
-Performance tests showed significant improvement in throughput:
-- 0.54% for 16 vCPUs
-- 0.83% for 32 vCPUs
-- 0.86% for 48 vCPUs
-- 9.72% for 64 vCPUs
-- 13.57% for 96 vCPUs
+> For a transition period we can have both DMA_ATTR_SKIP_CPU_SYNC
+> and DMA_MAP_SKIP_CPU_SYNC, and then work to change all
+> occurrences of the former to the latter.
+> 
+> I'll have to look more closely at WEAK_ORDERING and NO_WARN.
+> 
+> There are also a couple of places where DMA_ATTR_NO_KERNEL_MAPPING
+> is used for dma_map_* calls, but those are clearly bogus since that
+> attribute is never tested in the map path.
 
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
-Changes in v4:
-* Update commit message for channels created
----
-Changes in v3:
-* Use netif_get_num_default_rss_queues() to set channels
-* Change terminology for channels in commit message
----
-Changes in v2:
-* Set dev_info->num_chn based on vCPU count.
----
- drivers/net/hyperv/hyperv_net.h | 2 +-
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Yeah, these kinds of bogus things is what I'd like to kill..
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 810977952f95..e690b95b1bbb 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -882,7 +882,7 @@ struct nvsp_message {
- 
- #define VRSS_SEND_TAB_SIZE 16  /* must be power of 2 */
- #define VRSS_CHANNEL_MAX 64
--#define VRSS_CHANNEL_DEFAULT 8
-+#define VRSS_CHANNEL_DEFAULT 16
- 
- #define RNDIS_MAX_PKT_DEFAULT 8
- #define RNDIS_PKT_ALIGN_DEFAULT 8
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 44142245343d..a6482afe4217 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -987,7 +987,8 @@ struct netvsc_device_info *netvsc_devinfo_get(struct netvsc_device *nvdev)
- 			dev_info->bprog = prog;
- 		}
- 	} else {
--		dev_info->num_chn = VRSS_CHANNEL_DEFAULT;
-+		dev_info->num_chn = max(VRSS_CHANNEL_DEFAULT,
-+					netif_get_num_default_rss_queues());
- 		dev_info->send_sections = NETVSC_DEFAULT_TX;
- 		dev_info->send_section_size = NETVSC_SEND_SECTION_SIZE;
- 		dev_info->recv_sections = NETVSC_DEFAULT_RX;
--- 
-2.34.1
+
+> > Note that this also in general involves changes to the block drivers
+> > to set that flag, which is a bit annoying, but I guess there is not
+> > easy way around it without paying the price for the BLK_MQ_F_BLOCKING
+> > overhead everywhere.
+> 
+> Agreed. I assumed there was some cost to BLK_MQ_F_BLOCKING since
+> the default is !BLK_MQ_F_BLOCKING, but I don't really know what
+> that is. Do you have a short summary, just for my education?
+
+I think the biggest issue is that synchronize_srcu is pretty damn
+expensive, but there's also a whole bunch of places that unconditionally
+defer to the workqueue.
 
 
