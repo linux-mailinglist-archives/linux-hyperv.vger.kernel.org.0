@@ -1,228 +1,172 @@
-Return-Path: <linux-hyperv+bounces-2877-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2878-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B9159603CB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 10:01:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66C9196040B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 10:09:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F1871C21494
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 08:01:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BF8A1C2284D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2024 08:09:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7FB136E21;
-	Tue, 27 Aug 2024 08:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EED3819CD08;
+	Tue, 27 Aug 2024 08:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="pq1t7xe6"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="SYKbZR39"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A85820328;
-	Tue, 27 Aug 2024 08:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724745664; cv=none; b=A7ZZMgaL7+04KMVR7ZxSTCuFMR6ervg7xmMpAFg4pREZQNBsgi/HWfl3cVcMrsAXJklwlDU/sb0xGFpll71R+h0HfiUddhc/xBzmGp1kUdXZ676odimZ68Ea5nJ1TYCt/2wbBhRPo+TyFDvTRgUkI3OH9AdxmW5WtFWzNfXLUC8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724745664; c=relaxed/simple;
-	bh=XeuKHYphwj6HEB8Fy7aHZAKGom5ZSuFWmNc9MuomPmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hTJA+7hY1FueXz+LmSQ+EikbMtTRgjoxq6iclxKuQmA12W6xMI3wtCW7H2+ZyXsUUJ0MfhXY7jeeYGD1xPEqzM9eAbUyoe6AXh5wcjaDuhjTJxHeihz+gJ06tqV4cTaH8XIDjIJIFJZf9Uft0k6ir7omPXX0+ydTVOGHFMG9hSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=pq1t7xe6; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
-Received: from mordecai.tesarici.cz (unknown [193.86.92.181])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 405871F5F37;
-	Tue, 27 Aug 2024 10:00:58 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1724745658; bh=gTsz4OLuUenCez/Nx0yB83T9U09ihDAGrzP/1JubWmI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pq1t7xe6FE1ajRU0n1PIq3R0gO1GVYddI2phd9r8voNaVUl1hVZCcMkdAtwXygweV
-	 ubQch50HX9nRGZuSq2WaOoIyzOf8JRlfxP3DsxcsgNJRwa29w/uCwJhCoPCTk+giRq
-	 Ob+JY9iTxQE0nkQRJp+MjLSF5mUWl6g4W/qQ5UFLBoGiRi25nGiKRAnEbTSucAQ23t
-	 Li5T+VY6hbL127O+5EkAOruj2eel+5WtjGBrPgnvfsLOdYVDgcqq8jhiWKaHIMhEi+
-	 leVYLJJkH7xnfpUmFRyn8mdp5aSg7zsrHzJIfXms3JVY5ILYZwXLozpWs1/eHtuI+/
-	 Jm5Qur/0EyZ0w==
-Date: Tue, 27 Aug 2024 10:00:53 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kbusch@kernel.org" <kbusch@kernel.org>, "axboe@kernel.dk"
- <axboe@kernel.dk>, "sagi@grimberg.me" <sagi@grimberg.me>,
- "James.Bottomley@HansenPartnership.com"
- <James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
- <martin.petersen@oracle.com>, "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
- <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
- "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [RFC 0/7] Introduce swiotlb throttling
-Message-ID: <20240827100053.2f5c3403@mordecai.tesarici.cz>
-In-Reply-To: <SN6PR02MB41571FA9E40ECA5954001A57D4942@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240822183718.1234-1-mhklinux@outlook.com>
-	<20240823084458.4394b401@meshulam.tesarici.cz>
-	<SN6PR02MB415758F12C59E6CA67227DCFD4882@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<20240824220556.0e2587d5@meshulam.tesarici.cz>
-	<SN6PR02MB41577933B499309EA3CE4DDBD48B2@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<20240826212803.3e11d2f9@meshulam.tesarici.cz>
-	<SN6PR02MB41571FA9E40ECA5954001A57D4942@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE72194136;
+	Tue, 27 Aug 2024 08:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724746123; cv=pass; b=XorO425WzeCwWqNYZSHwN93YVDOSCdMmBOhNH5n0X1+rkrRVTHHueVt4HRT1CoBbeHn0YCktX4NRsRs+WEXw3x+34oiXUN1CgaOCQO/McWpPgI7+iBQOl6tGrcl/iKiX5iMTLk0kL+SQnIywdFyrgOVjOeyaSVVebxFHTd0CcX8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724746123; c=relaxed/simple;
+	bh=0HsOksNJT9R9KbeUb6IVcPk2ehrn0odcjcGVeX1aFnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgFl8MkN2NA0KNV+XFPgLrCowZ6Vq4/ol45QtZIHrD8j3Ck8rzfezgGKyEZPbChW8VawwcIGE67KyNZ1ZFB0/tsnB1ZCj+nweIDNjLj2d2klhoTXj69DkE1O2SbanCQwTf4aW4mjAF8f/GEmzVsbEHG885nwEwQEuY73H3v7ZbY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=fail (0-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=SYKbZR39 reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1724746097; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cgxVTTMHZzvapGuM7vngv+DBMxw2qlQ1gNHPRVrZnmoezXjNbF+/MkZc+RVEk6VXt9DTRGAnd6/mDlbIyGDbC/EKktcimUdilEyUbEl4IRQRF4DRn2LodLGXlzBJWrWCAPg312IG0CDCHqEbTtUhOn7377rJkqTPmJYL6VbaQi4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724746097; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Yhda3ZaakIRr5Jfh9tLkpGI4s2ObP0t0lO8nd/HrFCI=; 
+	b=aUx0I7HHauNRq3i045wRmuB0ePWWSxjR9eh5uH3WVnmNmL33NXHei/lpn1KB2tePG/rhwtXFGakJLB57LG1h+sWN7hhC5yc/Yc3+VsJ8a2DFH9niiPYWQHC2lwX12gabnbiLYWo4meMqL4asU4FAzZeiQ2pB/wrQWlTAHr9h1cY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724746097;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=Yhda3ZaakIRr5Jfh9tLkpGI4s2ObP0t0lO8nd/HrFCI=;
+	b=SYKbZR39/CIGEAZT0wX9xS9l/bTRgeUH5SIxC6ymVgqCSBa2WL/qxLHrnTyInQy9
+	65GmWv+EdpPs/ps8fY3K6MTUnBgDhM90hLo3P5hpKVGsgYuFr6ryp/f/bB//8+GhpMS
+	/awoMc3XVbvNkdIM36SWvk4sAAMwZyJCfItCCQ5E=
+Received: by mx.zohomail.com with SMTPS id 1724746096946252.20843917403852;
+	Tue, 27 Aug 2024 01:08:16 -0700 (PDT)
+Date: Tue, 27 Aug 2024 08:08:10 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: stable@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] x86/hyperv: fix kexec crash due to VP assist page
+ corruption
+Message-ID: <Zs2JamdDJs07WCS5@anirudh-surface.>
+References: <20240826105029.3173782-1-anirudh@anirudhrb.com>
+ <87zfozxxyb.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zfozxxyb.fsf@redhat.com>
+X-ZohoMailClient: External
 
-On Tue, 27 Aug 2024 00:26:36 +0000
-Michael Kelley <mhklinux@outlook.com> wrote:
+On Mon, Aug 26, 2024 at 02:36:44PM +0200, Vitaly Kuznetsov wrote:
+> Anirudh Rayabharam <anirudh@anirudhrb.com> writes:
+> 
+> > From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> >
+> > 9636be85cc5b ("x86/hyperv: Fix hyperv_pcpu_input_arg handling when CPUs go
+> > online/offline") introduces a new cpuhp state for hyperv initialization.
+> >
+> > cpuhp_setup_state() returns the state number if state is CPUHP_AP_ONLINE_DYN
+> > or CPUHP_BP_PREPARE_DYN and 0 for all other states. For the hyperv case,
+> > since a new cpuhp state was introduced it would return 0. However,
+> > in hv_machine_shutdown(), the cpuhp_remove_state() call is conditioned upon
+> > "hyperv_init_cpuhp > 0". This will never be true and so hv_cpu_die() won't be
+> > called on all CPUs. This means the VP assist page won't be reset. When the
+> > kexec kernel tries to setup the VP assist page again, the hypervisor corrupts
+> > the memory region of the old VP assist page causing a panic in case the kexec
+> > kernel is using that memory elsewhere. This was originally fixed in dfe94d4086e4
+> > ("x86/hyperv: Fix kexec panic/hang issues").
+> >
+> > Set hyperv_init_cpuhp to CPUHP_AP_HYPERV_ONLINE upon successful setup so that
+> > the hyperv cpuhp state is removed correctly on kexec and the necessary cleanup
+> > takes place.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 9636be85cc5b ("x86/hyperv: Fix hyperv_pcpu_input_arg handling when CPUs go online/offline")
+> > Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > ---
+> >  arch/x86/hyperv/hv_init.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index 17a71e92a343..81d1981a75d1 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -607,7 +607,7 @@ void __init hyperv_init(void)
+> >  
+> >  	register_syscore_ops(&hv_syscore_ops);
+> >  
+> > -	hyperv_init_cpuhp = cpuhp;
+> > +	hyperv_init_cpuhp = CPUHP_AP_HYPERV_ONLINE;
+> 
+> Do we really need 'hyperv_init_cpuhp' at all? I.e. post-change (which
+> LGTM btw), I can only see one usage in hv_machine_shutdown():
+> 
+>    if (kexec_in_progress && hyperv_init_cpuhp > 0)
+>            cpuhp_remove_state(hyperv_init_cpuhp);
+> 
+> and I'm wondering if the 'hyperv_init_cpuhp' check is really
+> needed. This only case where this check would fail is if we're crashing
+> in between ms_hyperv_init_platform() and hyperv_init() afaiu. Does it
 
-> From: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> Sent: Monday, August 26, =
-2024 12:28 PM
-> >=20
-> > On Mon, 26 Aug 2024 16:24:53 +0000
-> > Michael Kelley <mhklinux@outlook.com> wrote:
-> >  =20
-> > > From: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> Sent: Saturday, Augus=
-t 24, 2024 1:06 PM =20
-> > > >
-> > > > On Fri, 23 Aug 2024 20:40:16 +0000
-> > > > Michael Kelley <mhklinux@outlook.com> wrote:
-> > > > =20
-> > > > > From: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> Sent: Thursday, A=
-ugust 22, 2024 11:45 PM
-> > > > >[...] =20
-> > > > > > > Discussion
-> > > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > > > * Since swiotlb isn't visible to device drivers, I've specifi=
-cally
-> > > > > > > named the DMA attribute as MAY_BLOCK instead of MAY_THROTTLE =
-or
-> > > > > > > something swiotlb specific. While this patch set consumes MAY=
-_BLOCK
-> > > > > > > only on the DMA direct path to do throttling in the swiotlb c=
-ode,
-> > > > > > > there might be other uses in the future outside of CoCo VMs, =
-or
-> > > > > > > perhaps on the IOMMU path. =20
-> > > > > >
-> > > > > > I once introduced a similar flag and called it MAY_SLEEP. I cho=
-se
-> > > > > > MAY_SLEEP, because there is already a might_sleep() annotation,=
- but I
-> > > > > > don't have a strong opinion unless your semantics is supposed t=
-o be
-> > > > > > different from might_sleep(). If it is, then I strongly prefer
-> > > > > > MAY_BLOCK to prevent confusing the two. =20
-> > > > >
-> > > > > My intent is that the semantics are the same as might_sleep(). I
-> > > > > vacillated between MAY_SLEEP and MAY_BLOCK. The kernel seems
-> > > > > to treat "sleep" and "block" as equivalent, because blk-mq has
-> > > > > the BLK_MQ_F_BLOCKING flag, and SCSI has the
-> > > > > queuecommand_may_block flag that is translated to
-> > > > > BLK_MQ_F_BLOCKING. So I settled on MAY_BLOCK, but as you
-> > > > > point out, that's inconsistent with might_sleep(). Either way will
-> > > > > be inconsistent somewhere, and I don't have a preference. =20
-> > > >
-> > > > Fair enough. Let's stay with MAY_BLOCK then, so you don't have to
-> > > > change it everywhere.
-> > > > =20
-> > > > >[...] =20
-> > > > > > > Open Topics
-> > > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > > > 1. swiotlb allocations from Xen and the IOMMU code don't make=
- use
-> > > > > > > of throttling. This could be added if beneficial.
-> > > > > > >
-> > > > > > > 2. The throttling values are currently exposed and adjustable=
- in
-> > > > > > > /sys/kernel/debug/swiotlb. Should any of this be moved so it =
-is
-> > > > > > > visible even without CONFIG_DEBUG_FS? =20
-> > > > > >
-> > > > > > Yes. It should be possible to control the thresholds through
-> > > > > > sysctl. =20
-> > > > >
-> > > > > Good point.  I was thinking about creating /sys/kernel/swiotlb, b=
-ut
-> > > > > sysctl is better. =20
-> > > >
-> > > > That still leaves the question where it should go.
-> > > >
-> > > > Under /proc/sys/kernel? Or should we make a /proc/sys/kernel/dma
-> > > > subdirectory to make room for more dma-related controls? =20
-> > >
-> > > I would be good with /proc/sys/kernel/swiotlb (or "dma"). There
-> > > are only two entries (high_throttle and low_throttle), but just
-> > > dumping everything directly in /proc/sys/kernel doesn't seem like
-> > > a good long-term approach.  Even though there are currently a lot
-> > > of direct entries in /proc/sys/kernel, that may be historical, and not
-> > > changeable due to backwards compatibility requirements. =20
-> >=20
-> > I think SWIOTLB is a bit too narrow. How many controls would we add
-> > under /proc/sys/kernel/swiotlb? The chances seem higher if we call it
-> > /proc/sys/kernel/dma/swiotlb_{low,high}_throttle, and it follows the
-> > paths in source code (which are subject to change any time, however).
-> > Anyway, I don't want to get into bikeshedding; I'm fine with whatever
-> > you send in the end. :-)
-> >=20
-> > BTW those entries directly under /proc/sys/kernel are not all
-> > historical. The io_uring_* controls were added just last year, see
-> > commit 76d3ccecfa18.
-> >  =20
->=20
-> Note that there could be multiple instances of the throttle values, since
-> a DMA restricted pool has its own struct io_tlb_mem that is separate
-> from the default. I wrote the code so that throttling is independently
-> applied to a restricted pool as well, though I haven't tested it.
+Or if we fail to setup the cpuhp state for some reason but don't
+actually crash and then later do a kexec?
 
-Good point. I didn't think about it.
+I guess I was just trying to be extra safe and make sure we have
+actually setup the cpuhp state before calling cpuhp_remove_state()
+for it. However, looking elsewhere in the kernel code I don't
+see anybody doing this for custom states...
 
-> So the typical case is that we'll have high and low throttle values for t=
-he
-> default swiotlb pool, but we could also have high and low throttle
-> values for any restricted pools.
->=20
-> Maybe the /proc pathnames would need to be:
->=20
->    /proc/sys/kernel/dma/swiotlb_default/high_throttle
->    /proc/sys/kernel/dma/swiotlb_default/low_throttle
->    /proc/sys/kernel/dma/swiotlb_<rpoolname>/high_throttle
->    /proc/sys/kernel/dma/swiotlb_<rpoolname>/low_throttle
+> hurt if we try cpuhp_remove_state() anyway?
 
-If a subdirectory is needed anyway, then we may ditch the dma
-directory idea and place swiotlb subdirectories directly under
-/proc/sys/kernel.
+cpuhp_invoke_callback() would trigger a WARNING if we try to remove a
+cpuhp state that was never setup.
 
-> Or we could throw all the throttles directly into the "dma" directory,
-> though that makes for fairly long names in lieu of a deeper directory
-> structure:
->=20
->    /proc/sys/kernel/dma/default_swiotlb_high_throttle
->    /proc/sys/kernel/dma/default_swiotlb_low_throttle
->    /proc/sys/kernel/dma/<rpoolname>_swiotlb_high_throttle
->    /proc/sys/kernel/dma/<rpoolname_>swiotlb_low_throttle
->=20
-> Thoughts?
+184         if (cpuhp_step_empty(bringup, step)) {
+185                 WARN_ON_ONCE(1);
+186                 return 0;
+187         }
 
-I have already said I don't care much as long as the naming and/or
-placement is not downright confusing. If the default values are
-adjusted, they will end up in a config file under /etc/sysctl.d, and
-admins will copy&paste it from Stack Exchange.
+Thanks,
+Anirudh
 
-I mean, you're probably the most interested person on the planet, so
-make a choice, and we'll adapt. ;-)
-
-Petr T
+> 
+> >  
+> >  	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_ACCESS_PARTITION_ID)
+> >  		hv_get_partition_id();
+> > @@ -637,7 +637,7 @@ void __init hyperv_init(void)
+> >  clean_guest_os_id:
+> >  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+> >  	hv_ivm_msr_write(HV_X64_MSR_GUEST_OS_ID, 0);
+> > -	cpuhp_remove_state(cpuhp);
+> > +	cpuhp_remove_state(CPUHP_AP_HYPERV_ONLINE);
+> >  free_ghcb_page:
+> >  	free_percpu(hv_ghcb_pg);
+> >  free_vp_assist_page:
+> 
+> -- 
+> Vitaly
+> 
 
