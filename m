@@ -1,115 +1,118 @@
-Return-Path: <linux-hyperv+bounces-2898-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2899-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62CE3962AB0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Aug 2024 16:48:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F1CE962ADE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Aug 2024 16:54:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D0862831AF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Aug 2024 14:48:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00FE81F245BF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Aug 2024 14:54:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77327199FB9;
-	Wed, 28 Aug 2024 14:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E0491A08DB;
+	Wed, 28 Aug 2024 14:54:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AgWCcvpC"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="fKhBUv7e"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19010012.outbound.protection.outlook.com [52.103.11.12])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazolkn19010078.outbound.protection.outlook.com [52.103.2.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9168B175D28;
-	Wed, 28 Aug 2024 14:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE051A08AF;
+	Wed, 28 Aug 2024 14:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724856483; cv=fail; b=HiRv1Nl+DncNseVVObVYM4fYahYxtf8me5NNz9/EldT7Tb/fPwjFc3F7ez2mpq3bZ7IItLwNz/X9xmXDZIrDSX0wdWnlVH3nmfByYeKku0+8WlExKY3Xr8OXZEqaRuFozjmwTL+ZqgjPPmGOA8zPYQvOGgBKPmzF241MrY8/it0=
+	t=1724856841; cv=fail; b=Rpy/VbuDHHc+lknY70tVzGyVBjTGZI55zNXSuJ9qjPkOZ59ND9bcJAAOpNTK3hBpHYq7JGgimux3yIUaesB0O15/e4XIAhtDoytyyNpKa8WdySLg9RnG6EfD8NEgRZxBzKWIhAqGBJtRSn31ec9Z0HnG8NA4PQGIXL/EqirS4YA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724856483; c=relaxed/simple;
-	bh=iJvliiQjpVGbHdaoZSUayATqJOcJX2LixYyA81+UMDc=;
+	s=arc-20240116; t=1724856841; c=relaxed/simple;
+	bh=vajn8yJkoGzVg0vlVLnRbf31/KNlcYrLykCaZooIuEY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z9hsg1QXW8osk9k7t3TF/NEfqsQzlp4x7smuPU+P5jNvatVqCp7Vk0wz0H1H7y402LVnLyJAZcVEK8rOaw1VxTK/ny6CEPWMBerieYY12n1mJOobed8ZEoBVk0+73yp+P/0/gwHZdNzECseiKqkDMt/ua8UiaW+4dMiU4E15o0Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AgWCcvpC; arc=fail smtp.client-ip=52.103.11.12
+	 Content-Type:MIME-Version; b=ca7WYGW+ggINJLfK7G8v4MGCfB2H5mv2t2BdnLZ6qx1czqKqbj7m8IFfGRT4L0yZwNEhpi+rLqZOTY27tjU1/tpqV4kSknBbNF695rRuq+dFeq5J5ET4v+lxbkir0sBgdJ9WVjCaxHIeqLZcZfDYlXgziD/S8/mVoZmIW2ip7a0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=fKhBUv7e; arc=fail smtp.client-ip=52.103.2.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XDtxUYFu3TyHrzhQEhPmtdGsISbnuTPZNIq3Nr35+rA+wkOkwI4EdIucMV0LeDu5SdKELbT8c3mXlOSRdAjCl0WaM5tgou2zi6tMPiFtJHUHyELyvWMj0/0pHLrWgavyBsaK48eEu3FByVCT7FHVgZkWgzuS5ly/gwn8vm9P3cFtEcB09EG93eGVsToHr7t5+pBnS+nyHn+WkTIt72dKpXO/VeWaysz4u0+B0djLklVbNQ+G4TUdBiy+U3JTZEjlHTB64jXQSWMohGXEjAsvUXcQTH3fRK08333rcdySZ3G6IZ2nmwKNg80NQRggqiVqJJ2aGK26/XBRCwrmmsuYAA==
+ b=kB0R4wgci/AxlDaggRjHClS12/wMLeNnvHOOhW5i7PfEPeNai8o//2jZKgsqT49waSl1WTl1wZBti4VUOOKdfM5ycocEYxQtNN2HMOhUV9hhRQlGxQ+E6kT/oXTGGu4XvCLYGCjTp4pC3AQ4ciG8N66vD36lEb8+rYIBOyjVp89UrNrTq1qNjCa5kbn56HI/U5qxFs1aymvKp+QyUhRPUJ8+gQr5uam7ubPmOUgKxLD1ejx9yDjhdA1q2OedjX57j3BMO8/gE65sb+l5ntK1Zr/K1D/kK9ly5E5Ygez+iF43i+v+FZZg9n9KiFY0ahBwI2L0qMVnwSxJr9/H2jdW2w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iJvliiQjpVGbHdaoZSUayATqJOcJX2LixYyA81+UMDc=;
- b=jxXaJGI/O3TOQcqR444Rnqu1OvcY6tOOZeazzD2Kcw4qJJfOfUXjO7dsoO/FABipPq/SGKEJvjG/KYZ/J9wVebwL9sjoSC6Uu4JF7N3KJv121cOnfTtvKo0RGIIc+ENwvuK4WFPHQe8ZruKCH4X99AdBcI0yPjS8rWdv9VtvF0OzTneudfUhFEo4uqKURVf/F4yGc3IYg2GT1iCVagU67IUrpTZj4v3Vi+W7do/hM+CgcBW0OqdIt1XPfn2lenRa3/RTM595Kqn3Vwc03IzsbbDEegVhnfMWJTsUuo525NofX5eXYEzDdf+59aSTdaoA+9b5tFHkyBTxJrMgMVS7zw==
+ bh=FTRN/7OQzC5LXEq3b9gTqPI5kAM9cGxO3IIX6e9l/W4=;
+ b=kBE00rAQR/5oJtlTPxsaDWFHw8tA3PqPCm5WRg/ekEHur/2/RU39BgoEBUSx3RUSoYSLyIwJg21f5mTxtCXtpACmU1c0Kw/AoHHA42nRHWuZlUZ5hgMJKHIHFBELCowNlnCPhgdwQzv56UifRgZM72vciGfeQEI4w+LjqM14te+uOd41yzcFb0ZS3jt7lRWMhum1NOQvkZYwFqsO38GfttokPw74Kf1TGWm7z60dGKYA1ZA0GtLwTFN4RlCEVruVXfTu7lKsctTuRIjqR1dnE1cf1ToBSKRHYEM0QAm+B/cbTm5RIGFO7poqf7Lc21UC1ovP8aIsN6wk2PmDoaCI6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iJvliiQjpVGbHdaoZSUayATqJOcJX2LixYyA81+UMDc=;
- b=AgWCcvpCO5pH4/G/Zh6oL2310Gyem0rTSE3Rg5bPGplEEPUQGi6FJdwzGltYPf/6PvU05NQ5DJvFzkrVO1Z7jGSMTYmZKYjEXrJzrsjkNWH57qilu1NPbDAuWmZpMM0fMOVu94o8rbAoSgu9P9bDb6Cb5nBnrUkrmpX7wbFxsfsWyOTQHCSe0LNU9yK62aqinb/OF+eNnCJLm+3I7sGP6OHMoavnuRLGOWG8CdnD6r+cQvBN/L/LPvjh8XWWhvWawG1zPKEgAUvxjxUjn4F69gO42cUUo+Bhko9h9FcAGre341UWhSicDo08+8dpstYrmMDTHpGfiWQGbZgeZ4j6ZA==
+ bh=FTRN/7OQzC5LXEq3b9gTqPI5kAM9cGxO3IIX6e9l/W4=;
+ b=fKhBUv7e+tbODjEpHR/pswSO+1uMR0QZlo1K3h++q107IKKoZa+SBlNk+Y1z+JQmIgh/XAPWSgnfFs/+ocSaewsC8xDuteavnjQamhd+Kyjkt/8d0fEkotbKafz29XMgs6ZmFRxnlqXaPHLrQhckSvMr1nQaCLMJMGnMqPYt6E2LG2pX4lBxySauTYocWYfF7oRHE0oTKRGmRbjMqTGthDTwSj+RuRIse36Z9uz127AvhlCwceJ56piIBPGo5t4MHrqqcknPhav194KbYAttBLZY6cVcgGEec5LgxnhtF0XPXpG0Zu6UxSth/Fw3svF4iM5iWj8FgNj8hy5WMtbTyw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH0PR02MB8194.namprd02.prod.outlook.com (2603:10b6:610:ff::7) with
+ by SJ0PR02MB7119.namprd02.prod.outlook.com (2603:10b6:a03:298::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.28; Wed, 28 Aug
- 2024 14:47:59 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.26; Wed, 28 Aug
+ 2024 14:53:57 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%6]) with mapi id 15.20.7875.018; Wed, 28 Aug 2024
- 14:47:59 +0000
+ 14:53:56 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>, "K. Y. Srinivasan"
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+CC: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
 	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov
-	<vkuznets@redhat.com>, Michael Kelley <mikelley@microsoft.com>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Stephen Hemminger <stephen@networkplumber.org>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] x86/hyperv: fix kexec crash due to VP assist page
- corruption
-Thread-Topic: [PATCH v2] x86/hyperv: fix kexec crash due to VP assist page
- corruption
-Thread-Index: AQHa+TymH146oPCIsEikrG8bTi6q/7I8v5WQ
-Date: Wed, 28 Aug 2024 14:47:59 +0000
+Subject: RE: [PATCH 2/2] Drivers: hv: vmbus: Fix rescind handling in
+ uio_hv_generic
+Thread-Topic: [PATCH 2/2] Drivers: hv: vmbus: Fix rescind handling in
+ uio_hv_generic
+Thread-Index: AQHa9IPP2ZEuiKarEkiNA338VE6Og7I3SmgwgAG/A4CAAAG7YIACaGwAgAFWDYA=
+Date: Wed, 28 Aug 2024 14:53:56 +0000
 Message-ID:
- <SN6PR02MB4157E80B8050CBFD02E3077ED4952@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240828112158.3538342-1-anirudh@anirudhrb.com>
-In-Reply-To: <20240828112158.3538342-1-anirudh@anirudhrb.com>
+ <SN6PR02MB4157E8227056DCA579A9E3EBD4952@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240822110912.13735-1-namjain@linux.microsoft.com>
+ <20240822110912.13735-3-namjain@linux.microsoft.com>
+ <SN6PR02MB4157FB898345A1A8B88D1F4DD48A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <a447911b-ef12-46de-ba01-13105e34b8fe@linux.microsoft.com>
+ <SN6PR02MB415711F672364610BBE6861DD48B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20240827182406.GA32019@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To:
+ <20240827182406.GA32019@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-x-tmn: [cYQ+jgdNVG6WU9FC/xUVD4PGMhA/sVgo]
+x-tmn: [wSEPfzpQEUw5qu0wioN6792qo7f1BKbX]
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH0PR02MB8194:EE_
-x-ms-office365-filtering-correlation-id: 9bc08db3-1c28-4aae-69fa-08dcc77068ff
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7119:EE_
+x-ms-office365-filtering-correlation-id: 4c1c1182-4dfd-4ff2-13cd-08dcc7713e1d
 x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799006|461199028|8060799006|19110799003|440099028|3412199025|102099032;
+ BCL:0;ARA:14566002|461199028|19110799003|8060799006|15080799006|56899033|3412199025|440099028|102099032;
 x-microsoft-antispam-message-info:
- U9dtjzARcxKqorR3W28/tbvXecvwtiTctHoxLgfVwPG/hdCrUkAOh9NWXltEywpO5l54NoQtVMYXweghs81jtjPqd4AGGxZBRGicJLgAccJMs6+4mhYwoLxAxWy7UTfftNiJoontauj9hHnwBS5PXWmvdTfCLvxn1KKPMtllxZLZWIZAvbj8Rn+hLIlgeuOukrsXEHEiY6BJnioPG4575wfkh0mjv+f8/3UR2Q0TWlbNqmZD4SQX+N6RhxmNfRkTkzGnOm2cWciXUMAF14S7DNfnz7g0I0X/xWiOG+/KpnKswHT3s1Z7YOOYPzATB0W5a0pdknLXNIznQctr0nU0t7SwTbGVlTAmXnubLM0/sFpxOaJxiV9Ai3kc4ypokeMtMIaY1ia8YmiIjful1+LGxlBypb5FzurFVNNanNhschLI63AmL2F1OoeWqhRIIfZaILxzA8SgKXqmYG5wTSHQJNd+E/kq43mkVEmbCWkz3nNbmnLNM5Rne/y/JbOec/ZmnUOZENa34ud4nA4oMbZ4lW4xBx7ghfVElcUPe/U+AIiiIE4vHYuVOF9sNvFOfa65GcIC5COy9A+zbKVjR6CimCiza1D0sIfl9Eya9UOYnLg/8bZYIWqwxll7vg+EVqPlE68uNSX9dsVAKGvwWBmjplKu7FFG5WFp1T9cXHhD4Mo=
+ 0dt+2t07/nkrUIELV1C14bTgQqLia8tuQg6dDtXuV4TNJXKlT3xbIjHYUBpEpx49wSFNnViVXFiKKXrjqwT9WeQGupEiMISs0epRYpS6MIBXza7J9X07uINQCLbg4zjoJn2S9MehntKUbgcuUg3OQvZpxvePRP9msbaLsVsdL5z50lrJgUb0Ntx058JzSdF48n2i8qTeg2FnQk44ngP8gU+EuM+ZE86fDXcR8jQOfa2U07fZ/8lby//Dz14XesDHVba7QHmr9DzAD0zmGP0vBUrUQEH4iTtdOR+z2MJIek4n8ONMM/e7hVvutgGj/52UaNXSWM/GHAXP1mbUKRkHieVTCG0Ae9QSQdDsQtBmxa7R8cdyz7OOvlne8CCQpuQV2MYu7NkmIicMdDhtM6ayTnZOeBbInROdAKfMGAM3cOhr3RzOXwHXMMwo8qbiImBYz9//M23t638vvoorUMO9fqD2F6kt9YngJDuMejmdPA+bWqv6QA1gr3ArCRgt3CWfyTbM+/ZaeAWQJDoXxF9mPu+OYh8Bw5C2vUEBNTE0JjHIt2cxsPHWxNZ443w36r60PSIp8/+2v+Df+SpKKm4OLFFSqJ7VcMZ1On1K22BTSIrRYAyuaOoRAj+pieFiF6izgs5Zvot71EC1k1KQU6RjGzv0omeKTcWBLz0oTLzoJ8sdO2b8UsEJ0HYVhrxNMtKf
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?DXP2g5pNIwOjikt0C9c26WuJQtN2nA0P+JoY+nqWRPaRVRm/Vd5LzO7P1X6p?=
- =?us-ascii?Q?sL26F0BGdMNV+WWuNewF3XWQYFMOVV5nAPz33lm9AKK6ewpEOPn6+qMYiZ5Y?=
- =?us-ascii?Q?xPp8uQcMfr6oi5Fq8mBlrwSBx7wZxC9iGT5n/y08fAclY2CSP57GrxF9WXe8?=
- =?us-ascii?Q?Tn3AadWA3FBLalUDcbAGG0fhvK3L6/VXNNiI/7fmE9fsWT6hCPmOu7qln+GE?=
- =?us-ascii?Q?1rKZJpn7LjVkCwvmgdjHqsp5r7nv2F8qj99SzGwx11njGPc42ZM7XzY1w3Ec?=
- =?us-ascii?Q?fzgA/pewgg2k3xomkUt6Vz3nMUSnWnPdRGcMoTDzxWtdlpFfNEs0XAiKyN15?=
- =?us-ascii?Q?SoFSc8m16SKe31Z5pw5mbRpWT/2Omc1Ewquh3VqpmumTeBRlxvlDUp5sWUHh?=
- =?us-ascii?Q?j2TP60mF++D1erClIQ4A8hB+e7V7ZtQ7A+JZeuWfcf+OeTHEGI+rTRE0d8gE?=
- =?us-ascii?Q?rp3kO7AsRQ4SXptt/vw7n790KNkhpvKyLMg1VulxG+52Co6ZNPpL75Zml+sB?=
- =?us-ascii?Q?61I+P6Zrwh4kbr8U8nHqK/bp9F8z62mf5kP1x10D0RzYeJMqhd+UGwl/+EOf?=
- =?us-ascii?Q?cp4H88sA8VSYxsSqkukBAAuDzr7d0V5j9T6mCS7JUZ/Ph+fXBKtD5bs1ylgE?=
- =?us-ascii?Q?pMxyoVvOHiCBk/zMTQEaT198pqspv+3EJC8+eif0hZKZeYo+nB6IJAfFQgDo?=
- =?us-ascii?Q?TKSsasfGS9TwXiKkVN+fWWCn1qv2a4qfIIlQkMhgDv8XzgKob+5tbjtuEzsS?=
- =?us-ascii?Q?+13KoaEzuTEa0Dj2NZ34xctzfXqmPamNtjF+ZMD/IZ+vPfgw6SXkCZ/qnagT?=
- =?us-ascii?Q?+HLXQ3ASFmRRO5uCRJyLUsXUnxUs46R4xc8KSwgjSs870KAzAIAQcPirSFyw?=
- =?us-ascii?Q?vs9P8EZB9f9bksuRGT3QsRKM3YJQc6NTxED/JU/8pACsvA5s9HTQtuci5HjV?=
- =?us-ascii?Q?stS0fKBSX35lml9lU86ED5X1xXrhzpVumr/Htbp07qq/mXv51NgaHcnO12jg?=
- =?us-ascii?Q?1PQmI6lHT8tSgFbSh68Xd5Jsl7KKYlUjaH17BnzSQ0+YBgnmKJE4Zyzo/JK3?=
- =?us-ascii?Q?vPjcaoFnL6SQ1qVB3OAbQcfKnItX8QemC9Jwe0Vc4YHNB3FFLQQF9SgOMWoh?=
- =?us-ascii?Q?2bytmvjAEAwGkOwH6cISsEzHMeIQcekSrkyYCTOjwcKX43lC0ft9lJxNRpN6?=
- =?us-ascii?Q?LZ/hhrkQO/LUKhxh9ryNZI1nLCXd5erxuno2v3+T90Jt85O/TjPdZLtNfGA?=
+ =?us-ascii?Q?GThzisDOOcdD5xnvfaXJvS5KkLg8MISmUoo72VJgb7mgBrbMBLGvjAo5/Mjl?=
+ =?us-ascii?Q?afEcFoKsMC3Z2dxm2yjjBIN+IpBt6E38OwD1/5F49zgM042TcOjC9ivXW8K/?=
+ =?us-ascii?Q?gvieYaiwP6hc5KJGIx6Y8SM2bGmck1Ko98Xs8GFI+GT5Zyw06wltM6nu++8v?=
+ =?us-ascii?Q?xQ/pmdGzMxFF0B5B3g+0Ht2jKbCIhsBF1X+J67kfM+Xlokq0CphZsiStjzRC?=
+ =?us-ascii?Q?gPy4HX/QNp8t3Z6hxxGVF4WD/HGwClfkm6Zy+kBxA7y0RAUL9NYUdBB4L/v+?=
+ =?us-ascii?Q?xz1xhx0H9dgOixWTFmNLytuc9ggXFbz2QiEhMsTuXD2GZ8qiGHKKtBN/kLID?=
+ =?us-ascii?Q?FdAmA4E0Vyj1e17EcgPNEh2UmTXVDYiB4aFFHHmv1H9+qF3lcXoUR5yQO/ST?=
+ =?us-ascii?Q?J1QwD51U90iTI4GMFqgUosFVgmfx+VIYD2Ax3eFCr+bT4rExuJjR1insUq+J?=
+ =?us-ascii?Q?5LQkacjZktjgkVWF8moJkIwmJoOFBmFZwmCDwe6gPGGORLcCyQrhoypF5P2E?=
+ =?us-ascii?Q?AJfwT+oa47UAZsprsJtwnltmXiZ50Qb4nmqSWEav+GCGE/H2ZFhKTZgPeYug?=
+ =?us-ascii?Q?pSFV4vh+lL9zrHFqzUED5IxbiBmyCrY2ifste9d+Si2DUiLFG7liUirk+UIp?=
+ =?us-ascii?Q?pHF6q5Wc6btfFnugAAO6fndraplIOFL1AVSPHnDNX9YmsUrMhBaBB/W/Umbr?=
+ =?us-ascii?Q?t7/BJ/uivEXgAQ+Y62hBIVTYG6PkngC23UtmoDUz9c6SOrNDMXLma5q56+rq?=
+ =?us-ascii?Q?oDgX/0Y4zFaZXEegGaAKH8yoZI5JI0rH2UrzMyM6kFM9HLdXihfqMmLDqRpY?=
+ =?us-ascii?Q?+0basJoXe0/ykuWQE0b2C608LW+fomxa5QVGyyFKdPnoIpnHSA8A/M0VVtrn?=
+ =?us-ascii?Q?SrIHwPIdN5dHrH3JEFfcREu7uudU1AFrPxLgfjXIgLKKYObW/gYlnJcmC2gb?=
+ =?us-ascii?Q?kQ32y8S+i/i5iT+kzgcrGikMgwfT/ymF+EUYS5kZjPHlEJ3+Z0dx6IPLW4qb?=
+ =?us-ascii?Q?qnfycZ4HOPVW04r7BTPKB1bKewIARuQM+jwYiaW9v0HLoGGieXp6HU55T8pc?=
+ =?us-ascii?Q?UmFQD5jN5Km8PI6NVOJMJIxvOC6gMyDhxv4VMaMGBlS26+eDIJWEsFomIf2A?=
+ =?us-ascii?Q?5HSV9yvxTHYW+bdD4ei4y+QJ6lGIeAaqHt2SDnV0bdBIwsnKWDDDU76g7/8y?=
+ =?us-ascii?Q?Psxt52QTrRemn7NzMNog8+1GPySx6WZMcfRQr6JfLS6hluMNrgg25RMM9gU?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -123,48 +126,151 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bc08db3-1c28-4aae-69fa-08dcc77068ff
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c1c1182-4dfd-4ff2-13cd-08dcc7713e1d
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2024 14:47:59.1376
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2024 14:53:56.6875
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR02MB8194
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7119
 
-From: Anirudh Rayabharam <anirudh@anirudhrb.com> Sent: Wednesday, August 28=
-, 2024 4:22 AM
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Tuesday, Aug=
+ust 27, 2024 11:24 AM
 >=20
-> commit 9636be85cc5b ("x86/hyperv: Fix hyperv_pcpu_input_arg handling when
-> CPUs go online/offline") introduces a new cpuhp state for hyperv
-> initialization.
+> On Mon, Aug 26, 2024 at 05:40:37AM +0000, Michael Kelley wrote:
+> > From: Naman Jain <namjain@linux.microsoft.com> Sent: Sunday, August 25,=
+ 2024 10:32 PM
+> > >
+> > > On 8/25/2024 8:27 AM, Michael Kelley wrote:
+> > > > From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, Augu=
+st 22, 2024 4:09 AM
+> > > >>
+> > > >> Rescind offer handling relies on rescind callbacks for some of the
+> > > >> resources cleanup, if they are registered. It does not unregister
+> > > >> vmbus device for the primary channel closure, when callback is
+> > > >> registered.
+> > > >> Add logic to unregister vmbus for the primary channel in rescind c=
+allback
+> > > >> to ensure channel removal and relid release, and to ensure rescind=
+ flag
+> > > >> is false when driver probe happens again.
+> > > >>
+> > > >> Fixes: ca3cda6fcf1e ("uio_hv_generic: add rescind support")
+> > > >> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> > > >> ---
+> > > >>   drivers/hv/vmbus_drv.c       | 1 +
+> > > >>   drivers/uio/uio_hv_generic.c | 7 +++++++
+> > > >>   2 files changed, 8 insertions(+)
+> > > >>
+> > > >> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > > >> index c857dc3975be..4bae382a3eb4 100644
+> > > >> --- a/drivers/hv/vmbus_drv.c
+> > > >> +++ b/drivers/hv/vmbus_drv.c
+> > > >> @@ -1952,6 +1952,7 @@ void vmbus_device_unregister(struct hv_devic=
+e *device_obj)
+> > > >>   	 */
+> > > >>   	device_unregister(&device_obj->device);
+> > > >>   }
+> > > >> +EXPORT_SYMBOL_GPL(vmbus_device_unregister);
+> > > >>
+> > > >>   #ifdef CONFIG_ACPI
+> > > >>   /*
+> > > >> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_gen=
+eric.c
+> > > >> index c99890c16d29..ea26c0b460d6 100644
+> > > >> --- a/drivers/uio/uio_hv_generic.c
+> > > >> +++ b/drivers/uio/uio_hv_generic.c
+> > > >> @@ -121,6 +121,13 @@ static void hv_uio_rescind(struct vmbus_chann=
+el *channel)
+> > > >>
+> > > >>   	/* Wake up reader */
+> > > >>   	uio_event_notify(&pdata->info);
+> > > >> +
+> > > >> +	/*
+> > > >> +	 * With rescind callback registered, rescind path will not unreg=
+ister the device
+> > > >> +	 * when the primary channel is rescinded. Without it, next onoff=
+er msg does not come.
+> > > >> +	 */
+> > > >> +	if (!channel->primary_channel)
+> > > >> +		vmbus_device_unregister(channel->device_obj);
+> > > >
+> > > > When the rescind callback is *not* set, vmbus_onoffer_rescind() mak=
+es the
+> > > > call to vmbus_device_unregister(). But it does so bracketed with ge=
+t_device()/
+> > > > put_device(). Your code here does not do the bracketing. Is there a=
+ reason for
+> > > > the difference? Frankly, I'm not sure why vmbus_onoffer_rescind() d=
+oes the
+> > > > bracketing, and I can't definitively say if it is really needed. So=
+ I guess I'm
+> > > > just asking if you know. :-)
+> > > >
+> > > > Michael
+> > >
+> > > IMHO, we have already NULL checked channel->device_obj and other coup=
+le
+> > > of things to make sure we are safe to clean this up. At other places =
+as
+> > > well, I don't see the use of put and get device. So I think its not
+> > > required. I am open to suggestions.
+> > >
+> > > Regards,
+> > > Naman
+> >
+> > OK. I'm good with what you've said, and don't have any further suggesti=
+ons.
+> > Go with what your patch already has. :-)
+> >
+> > Michael
 >=20
-> cpuhp_setup_state() returns the state number if state is
-> CPUHP_AP_ONLINE_DYN or CPUHP_BP_PREPARE_DYN and 0 for all other states.
-> For the hyperv case, since a new cpuhp state was introduced it would
-> return 0. However, in hv_machine_shutdown(), the cpuhp_remove_state() cal=
-l
-> is conditioned upon "hyperv_init_cpuhp > 0". This will never be true and
-> so hv_cpu_die() won't be called on all CPUs. This means the VP assist pag=
-e
-> won't be reset. When the kexec kernel tries to setup the VP assist page
-> again, the hypervisor corrupts the memory region of the old VP assist pag=
-e
-> causing a panic in case the kexec kernel is using that memory elsewhere.
-> This was originally fixed in commit dfe94d4086e4 ("x86/hyperv: Fix kexec
-> panic/hang issues").
 >=20
-> Get rid of hyperv_init_cpuhp entirely since we are no longer using a
-> dynamic cpuhp state and use CPUHP_AP_HYPERV_ONLINE directly with
-> cpuhp_remove_state().
+> Michael,
 >=20
-> Cc: stable@vger.kernel.org
-> Fixes: 9636be85cc5b ("x86/hyperv: Fix hyperv_pcpu_input_arg handling when=
- CPUs go online/offline")
-> Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> If we look at vmbus_onoffer_rescind function, hv_uio_rescind can only be =
+called
+> if channel->device_obj is not NULL. By this if we conclude that hv_uio_re=
+scind can
+> never be called for secondary channel I think we can simplify hv_uio_resc=
+ind
+> only for primary channel.
+>=20
+> In the first patch of this series, instead of this:
+> +	struct hv_device *hv_dev =3D channel->primary_channel ?
+> +				   channel->primary_channel->device_obj : channel->device_obj;
+>=20
+> We can only have
+>=20
+> +	struct hv_device *hv_dev =3D channel->device_obj;
+>=20
 
-Good find, and thanks for fixing up my mistake. :-(
+Agreed. That was the intent of my previous comments on the first patch.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+>=20
+> In second patch, instead of this:
+> +        if (!channel->primary_channel)
+> +                vmbus_device_unregister(channel->device_obj);
+>=20
+> We can only have:
+> +                vmbus_device_unregister(channel->device_obj);
+>=20
+
+Agreed.
+
+>=20
+> Possibly WARN for secondary channel is also not required as that will nev=
+er happen ?
+>=20
+
+Agreed -- the WARN is optional. I'm OK with leaving it out. But please
+leave a comment in both places that the function is only called for
+the primary channel, so it's not necessary to do any checking of the
+primary_channel field. Future readers of the code will thank you. :-)
+
+Michael
 
 
+>=20
+> - Saurabh
 
