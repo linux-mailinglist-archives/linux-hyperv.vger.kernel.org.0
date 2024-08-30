@@ -1,161 +1,124 @@
-Return-Path: <linux-hyperv+bounces-2917-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2919-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0787B965152
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2024 23:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F38C0965604
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Aug 2024 05:58:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D4101F23E98
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2024 21:00:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D1131F23F66
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Aug 2024 03:58:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DFEF18C008;
-	Thu, 29 Aug 2024 21:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1FE136E3F;
+	Fri, 30 Aug 2024 03:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YA67oQmE"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kKGeTYzl"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022080.outbound.protection.outlook.com [52.101.43.80])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2029.outbound.protection.outlook.com [40.92.40.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B188014A614;
-	Thu, 29 Aug 2024 21:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A883FF1;
+	Fri, 30 Aug 2024 03:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.29
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724965209; cv=fail; b=APOSZQzMAkiSAJ+dMptPYN3d8gBXwrERch91DrriKlFUU+R5l1/sIJlJy0jzOiUs1mKlmPjfmDB/ihBdn3rtT3FhIr7p0FpVS4LiZ/AL5HMwcmrYNR27qo4Iiy9dGNsQoWWfRKysK5JstlwYDrMMA0irSlTYyKBeOK/bBdxigxE=
+	t=1724990302; cv=fail; b=eFTBo3i/Ljr7p9J1vNx7uIfA6Z5nXYqSwqIoDSMCtZSrI6SPvzHDpE/KORKNDlQqhRCdByHA2i9aYO32UkykwXqqrJZntLzFSXebIseDG+/kWmvZyxtzEqcVAvcpVX5M3+6tqvVGMdJb0QhTsdoZhcfPoJrlaYJUWhvl0fbUoHU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724965209; c=relaxed/simple;
-	bh=f27eXtFWYBAJbOcks5t/sh8WSX4sJ161JZU2SldPw8U=;
+	s=arc-20240116; t=1724990302; c=relaxed/simple;
+	bh=jPcciqwgxZdPPl5o7GuGG+IYM/LeORIt5qI+6yU+8GA=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SvhpKMySGv6cuX5+U5ByJClkl1BgDNaxNqDkuj3wasLFQTsJHTTj5FFQ0CsFOJRZ2wgkrWwDAc0UP1WXnL/1RRop7bN2/fJJC/mD/3ctb7Xh70agEqycsZm9vuooYBn9Q4ndhWgUKv5rWABR2U4DJsFlOKTs1+b4l5Zpm/qAyto=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=YA67oQmE; arc=fail smtp.client-ip=52.101.43.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	 Content-Type:MIME-Version; b=p+SoG+DUhv0b5x377w1Ek9eUlnZdudhn6JXVCdWO62QhTkk/sW6ZuWoQnWHoYf9AtVUZFRa9BoUNBUou6od9S0tbQo8HLux5AhN53sfcRqhQ+g8Ph/LcRm3AUnrl0BkzGzscOtaOrAEVQSsr1r8YPf5DovBLwxguaMDSww/lgrY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kKGeTYzl; arc=fail smtp.client-ip=40.92.40.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U7Jvn75LtC6PBlApd01JND6PTAb5wDESb+QaHCWZVnjdBwSAu88rnE5i1Wmhz6u6xjguxNgy9i8pufjVGgSeYZtX27hh/13yQNC0X7B1Jb7KvmYdusSCx2bgWySR2Ywyep81atvUHyUtkKqx9jkerkf6EKsmSopPL8vXOhmBkUct2RNrS26ht/S6PdOkPZ8LWZ8TNqwYa4aEr3/dFL1x0dOsafHtfusmhLhzm4k6f/TxHWBbmnmyojUoORgNTibnTg3Ya7pSS0UwtUEZsnZZ+koKXvGClARyiNMDHqP7T5QS2jReoVxJ2/cEbDNegdep3qwJu0K5EtCoX6sPaGedWA==
+ b=lpTMbQ+yLSQKd35VAZ4ztd6UTqs+EpvRrLzYc48KWjz8ZWwdpGhG5IX2IL1QG5DJstQ5DmGF0dgHFUlSVxxTEpH6Qll+vHrCAJtMaAqJ/B6uZBymK9UiLkeEZh+/G8TLsgbRj4bTT1afqBIMFwefS5RAJ3z2Q6DKPdriuzSRsnBh7rDhFVBT6+EgG02jKZJ/iPmJSyLmEZNqYvdEQCfC/+8W5HS4c3pRl91+MXbj0oEshf2vaJz7/lt7KoCtBu3xfZ77FM7LqdobSfvuZkNgq8WT0q8GJETnuJyEl30PB+rWk50kfg6S+qtFMlHJrHfaDFCsgeEW6c4mDclADn4e6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HyQUp8m/Ann93ujmMas7TuVFYdEXwkPW+ttKcdhWay8=;
- b=pXY2D+euTCwkdQnLuMZJ/ekJ++oZ1rFiWizAHJIb+49wkCFF470zRHhzTm+jYJ0KP0ZMv9A7plcfN1TDO830lJqD5hboCwD/2NFSmdPVMaKKY3Ybg2F0N3q5COp8tt9MOWHXaNRR3nM8sv82nNk3cvUp0lIjCauBVdm7e7uf0UdZDevwsYYwcnlNb4Ady5K92oXV2IS9NGBoRV/A8qY3U8v9/lsLb+nI3vytg+rsi/aNZo2El1Oqd7tWeN5YYKmWaJxttbgxQg3FBp4XiiS6spBADn7tDoyNC0uW8xKEYFtojNhfzRBP0oE+IAFzQnetJbsyUm7DFdz7GPcAtP+D9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ bh=jPcciqwgxZdPPl5o7GuGG+IYM/LeORIt5qI+6yU+8GA=;
+ b=DBFqZB4arMhqG55vBpsDbGMMS8lT85aLKyMiOL6hebArZBIsDLKNQnliaTVeNwWbeMLFHZ45E8a5ILMAqhYjRMbqbzZ5LIUUEcPyCuUjLEz+hWAJZCFknPnGy4SFWFmp0HXBkQg2QikTYz7W07ZLKMADa/Fq/xsidtrK0DQk/2h/Z3Mkdwh0Z1qzSeasNKPHU+8IC1y/5WtrzL5faitr3qzGR9kMVX6fFFJzFlf/m+rXXVj3kcUwuuZDSMseauXhxDnp55Yr1tbSH7MGCqROrxBoQZZYypnQzP4/IjUEyq7/PcfC06Wfpg3+QFrAqEPdozDWMKPfmor1Rm6HSpuyWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HyQUp8m/Ann93ujmMas7TuVFYdEXwkPW+ttKcdhWay8=;
- b=YA67oQmEbfXPq89hBHMKH7pMgFy179qpvIX/hvLXS0eMGfFvB2C+Ds+1lXd9pZS/z29QSBMtrYv93wo0HV1GCHF+L1ONDhvdkPfSP4z3GdmJvRjsCDlMmCV+2rP65C5NL1uyvSjMr/FycPzR+JG04cFSY47ORtNobfixN9sBY30=
-Received: from PH7PR21MB3260.namprd21.prod.outlook.com (2603:10b6:510:1d8::15)
- by CH4PR21MB4241.namprd21.prod.outlook.com (2603:10b6:610:231::13) with
+ bh=jPcciqwgxZdPPl5o7GuGG+IYM/LeORIt5qI+6yU+8GA=;
+ b=kKGeTYzl5ABk0+auMYYbFZxq8u7RCp4I5RnoakfTAmrzcknSBaM/5keotJg+jlttY6fPdsgKqFTlaukQUv1ta1Jj+h4jiwgi598CFg0xImrBp5iIEudSsSYsicNKnk+d5Iq4/51r24w7PpACD6v/LaKT/OmmiM+oAUTXGTz7IXLtEiekwd8p+Q3hLL8fGllxVpUrJyEg2TVOaVhwkPJkjnavxVLcCD48j3aQqrhyXBtiDmriL+FOQuabU+2TZvuxUEYt1vV8xDgmo13tpdxbPrK8jdHO13mw8MYfjdypl4RVRIM8ART7VEbuMkhgirgYO+Xuf9yGe3FjBKHmPvNqvQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB9308.namprd02.prod.outlook.com (2603:10b6:510:288::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.7; Thu, 29 Aug
- 2024 21:00:05 +0000
-Received: from PH7PR21MB3260.namprd21.prod.outlook.com
- ([fe80::a4dd:601a:6a96:9ef0]) by PH7PR21MB3260.namprd21.prod.outlook.com
- ([fe80::a4dd:601a:6a96:9ef0%3]) with mapi id 15.20.7918.006; Thu, 29 Aug 2024
- 21:00:05 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Gerhard Engleder <gerhard@engleder-embedded.com>, Shradha Gupta
-	<shradhagupta@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>
-CC: KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan
- Cui <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Long Li <longli@microsoft.com>, Simon Horman
-	<horms@kernel.org>, Konstantin Taranov <kotaranov@microsoft.com>, Souradeep
- Chakrabarti <schakrabarti@linux.microsoft.com>, Erick Archer
-	<erick.archer@outlook.com>, Pavan Chebbi <pavan.chebbi@broadcom.com>, Ahmed
- Zaki <ahmed.zaki@intel.com>, Colin Ian King <colin.i.king@gmail.com>, Shradha
- Gupta <shradhagupta@microsoft.com>
-Subject: RE: [PATCH net-next] net: mana: Improve mana_set_channels() for low
- mem conditions
-Thread-Topic: [PATCH net-next] net: mana: Improve mana_set_channels() for low
- mem conditions
-Thread-Index: AQHa+h4Zz3147dIpF0+H7Go6T/1OULI+pjoAgAALOCA=
-Date: Thu, 29 Aug 2024 21:00:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.28; Fri, 30 Aug
+ 2024 03:58:16 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%6]) with mapi id 15.20.7875.018; Fri, 30 Aug 2024
+ 03:58:16 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Robin Murphy <robin.murphy@arm.com>, =?iso-8859-2?Q?Petr_Tesa=F8=EDk?=
+	<petr@tesarici.cz>
+CC: "kbusch@kernel.org" <kbusch@kernel.org>, "axboe@kernel.dk"
+	<axboe@kernel.dk>, "sagi@grimberg.me" <sagi@grimberg.me>,
+	"James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
+	"hch@lst.de" <hch@lst.de>, "m.szyprowski@samsung.com"
+	<m.szyprowski@samsung.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
+Subject: RE: [RFC 0/7] Introduce swiotlb throttling
+Thread-Topic: [RFC 0/7] Introduce swiotlb throttling
+Thread-Index: AQHa9MJuV8zHlUlbFEOu4P5Y/AqjALI8msyAgAARKQCAAHGNgIACBi6w
+Date: Fri, 30 Aug 2024 03:58:16 +0000
 Message-ID:
- <PH7PR21MB32606D2D49A7F0837A29835DCA962@PH7PR21MB3260.namprd21.prod.outlook.com>
-References:
- <1724941006-2500-1-git-send-email-shradhagupta@linux.microsoft.com>
- <d73d45af-e76e-4e87-8df1-0ed71e823abc@engleder-embedded.com>
-In-Reply-To: <d73d45af-e76e-4e87-8df1-0ed71e823abc@engleder-embedded.com>
+ <SN6PR02MB4157DA9719D1F6EEC4F00E57D4972@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240822183718.1234-1-mhklinux@outlook.com>
+ <efc1eafc-dba4-4991-9f9a-58ceca1d9a35@arm.com>
+ <20240828150356.46d3d3dc@mordecai.tesarici.cz>
+ <bb7dd4ca-948f-4af7-b2ac-3ca02e82699f@arm.com>
+In-Reply-To: <bb7dd4ca-948f-4af7-b2ac-3ca02e82699f@arm.com>
 Accept-Language: en-US
 Content-Language: en-US
-X-Mentions: shradhagupta@linux.microsoft.com
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7d2eba1b-2456-4463-b5f6-f31fe12f0e37;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-08-29T20:34:26Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-tmn: [XnpFdCy9JpXFM4vaUkM7MP1hn62bVrVO]
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3260:EE_|CH4PR21MB4241:EE_
-x-ms-office365-filtering-correlation-id: d3b65b00-840c-4c89-bf91-08dcc86d8eb6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB9308:EE_
+x-ms-office365-filtering-correlation-id: e77092f7-9564-4a2a-469f-08dcc8a7fa3f
 x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+ BCL:0;ARA:14566002|461199028|8060799006|15080799006|19110799003|56899033|440099028|3412199025|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?1jteJ5tuvn/xALaGW2499bl+31Ivd8t18Th4WyIn1FS5eQG4Be6GjR/hRYBt?=
- =?us-ascii?Q?GKG+If3KdQ0LXfv9whUE6fir3yDUs1Jsvl6NAobJVoicyOBtQoSp6LW/dRM5?=
- =?us-ascii?Q?V74LhWYEvDayI51XA44e5mBQdF5L71H90lxHer/2RcXK7MS/NFbp0x8A8N36?=
- =?us-ascii?Q?qq4ZadNxiEkFDJc4WJ0SSwi63qa490LqcaAftnPIF1M8P3Qyx50JMOGLoDrx?=
- =?us-ascii?Q?97EBqLLWt0aBXFCWSu3ztfjdygWjJQq43MXmDDwGgaM96VTv4D9I/+Ym2auL?=
- =?us-ascii?Q?H7qBezu7dqGm3KnbmZpVjjZqhRKlfz91zaGtxLky4OaBcLKCaj+d8i1Zj8GB?=
- =?us-ascii?Q?fI94rMYmmlsYXrPqM0y5cel3JvjSgQZTdvsWs/3fxVHtHt1FqH2tJoe4h3fM?=
- =?us-ascii?Q?AbiX1ngXq1Ve6x+zebANQ0FXyvktgL3kUkiSJOZu3z4+rJCOyJzOG8K4DjFd?=
- =?us-ascii?Q?qrTGG5X4n8YJHmwZUR4x4wtN/AU1eBzX8cmg3p4jnD4Ad5RMZPj6lovv3/HQ?=
- =?us-ascii?Q?/LLXwu28heE9PePwO6rCBjeEy3GZQuv5N4J/eFk7NBhG1zVgRHVg1N+E65tW?=
- =?us-ascii?Q?LXbbUcsOPIbOEPwlPLuAZCPOHTwCYYqe1B7s7nOpGgSkyH+EPy/0/NEpizQ9?=
- =?us-ascii?Q?fX0YWP3xbqRBSe8XLgsVp99RZgEpY3US3kXrFa2Ceztqob+rnVL6FcYJqrcr?=
- =?us-ascii?Q?uorja7bA7I2zq/1URH00lpkcNdrh3PtAP7HHs+WeuGtCn1Y1k1XEZ15I57pi?=
- =?us-ascii?Q?T9GzzuOxKnGoIiTXjeh43WoQecX0Yu+eppPQf9n5u7KYxEBOZeHTVlPA3r03?=
- =?us-ascii?Q?q5AlUh7z6l53LrPazFcsVbks2/TU6EgqPZKG1Twu91ptinUlWxJ56mXZcn/g?=
- =?us-ascii?Q?hURC2gfGzcgKtCZZ+8uPJFs5yjDipy7SCm2+FQU3eZhDLJCA8i1oTJBtOISZ?=
- =?us-ascii?Q?kMM2Lj2IiH2T9McyLTAsCEn0wrKKj1ChI3OQzkm6mqqXVSG9NKNs4x5ikZft?=
- =?us-ascii?Q?G9DlVVn9FxLMqi/p5Nt+khWnW00eCn0XyQ7vw81n1f7okvSL59IRnWvbf02I?=
- =?us-ascii?Q?oqmii6lpqYm3dsfra9rjZPKzSc1ljhONBuecPgV4AE6cpbghxvyu/6H5xgFU?=
- =?us-ascii?Q?r1ZgElnTedGkVs8HauokDtV5sRJ/hdq4mbR9rtVpYHCuxkoYLa/xZwfb5nVl?=
- =?us-ascii?Q?uq3IwAclWyCjslgmQbjsiENI0gdaVfG3qF/fgYipL+PF+JRigZD9o3buiSCP?=
- =?us-ascii?Q?F0dvs4F7nV0rPKRKyvaKt0kKTa+Ntw7/NLlwl6CD8aD+y/lY4jYxM5XSz+2W?=
- =?us-ascii?Q?KlAFAKnfi9b0mmVxrZ1u4VRCPbnVRywIt61N5GB5BhnNFObmwwb3M3Ldrg9B?=
- =?us-ascii?Q?MzU2F/tcIlQ9UmNowW0wQXeGmc2168Yzd9Q9PD1byUGgP0wjVw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3260.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+ aPivHA7xj6RKuxZVK/mXErjbvwleqZnT+UzQL9I+rUtWExOCWwEJ0NA3u9kLmednAD2ECOHEhc4w7JlOUbxfnQB9Stk/YErHwEFYQu3skUgPcoJDmDd7TS2WJFqNoTFEStAibERrtDwdUFRO++PVm19c3KWxr/vOhpwDrXN3PXEL7ksPmX4GAEyWDZXZ4md/4BKsf7b8NLsO+ABx/Zm7QYBLcbgMi7eyrYZtlKMmwTldVEopK1aAnxgJUMmwOFMo7IAyscc6u3jX+swF2iVsa+9CUQVlg+zh9GmlZA4LKU0MYyltx6+3+vONyTd/CXKSP+hWjdlzxCxCTbLnvJVgiVwDOgHdOPrbjr7pfoPECI1qHxDZDKKJzYRPhPQ/Tj/UahSNOm4WrDBeY4mFv4G/vY3EiKirRM2hoi2WnXUUuTyu+bz9Vbea9Hv0JXz6Ox34T5si5B3UW0QD1sQKrkbQoBgL6xuVi/H4j/+L8X5vEbOqwyp/z4ollTLVgXDwoqAl3j8oXsl0/J5zYFfGnpEakgVrM7t09wGjhhhH00Afc+wv19giutEefC7dV7JBS8IDwsXkv/28cia4HvihusJsIGcItD/JsnClTnIjeXP4FKJz/GnfdxygWQMTXX3NBlw29j7e8KVepM4VPklyjA0tpQ9EjkZZqs24Q6ogL73yxh7SmNHEADqtO3WjcHKAiYzI
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?J18EevIfC1puHLgdYsSZxk0EQnBJz9lXV0GujnLvix5qd2McWuEWC+y/Xfpp?=
- =?us-ascii?Q?Zq/SIti03oqdMMJq4RCGsQF+EAQoirgGO4WxEbdjPVU4lkPc3OvNLWq/K5ws?=
- =?us-ascii?Q?RIkSxtcIYoP+/jfJJNix+eCIKZ6SDQvNnwImM0c2j7olj/mWDyxm9hMEg0Ji?=
- =?us-ascii?Q?/u+7MTijI82Erl3Yc8ErvmeMy47b6BIC26b2/XW0LsAhB5cEFwZFuBu9T6Fu?=
- =?us-ascii?Q?hzMlU+4hSWWTYSOl5CrWl6CkNbUn6XH+lO6KX2gCCu8PQk1a0WIyRw0YlfnS?=
- =?us-ascii?Q?Wmt8DuG+b+IYaCFT8SoifEMClQO2cVQK8CpzY5uBx7lWvN1pP1wMWvm9GXuB?=
- =?us-ascii?Q?CFKCHwWMM8WVj6YCm71lh9f71NIXqnxYkgniwf1+LYSBckV9joU/I0asZE0Q?=
- =?us-ascii?Q?9DboNohVAH/sHVJ9hLK0Qataa7yQM/RC9ny6TT5MMeU0BDQJoPJxx3czXx5d?=
- =?us-ascii?Q?Eofw3Ewu8XynEGhqn+HRmovwMEaVzR/dwkpzQ2CBffopYQrYvyDvGz+2K5R0?=
- =?us-ascii?Q?J8wImQN4ApKy9COaKxMDFvhsgTCKN1CiDLUUhYvMMbzQLVsDSz4hmKycLpMi?=
- =?us-ascii?Q?gM4FVifdzLHTHqq2Swp/7KDgZip9IgTMb+NXq3ZDYrbXJWZS4oOuoIcanbNF?=
- =?us-ascii?Q?ziKxQsEIX38J5TWt4+nlZEqUcMTkbIDzeZB0q1snFa5tYm58pejLVUwVdHFE?=
- =?us-ascii?Q?e9kFAtpGY5pN21TlTuMGaIbTW3dnl8o2jNyJtSulaTkHWx43zTAT62lEaNfa?=
- =?us-ascii?Q?QxihTfeZ/f9HiZTa0rXqh4/V70DPKQ/tudyyZShfEYfRSlB6Gg6QZwvcWSRb?=
- =?us-ascii?Q?VCcZKOT/1noescax6bNLouwfNWAHMrlxZuGizAH/ytgYC+/3wwfaQKcnusN4?=
- =?us-ascii?Q?mY0LsdTi3A2HqYpZVW2dC8C1mVHlm7ctFHk4PIXGSbF5i4P5mXOZ2PJUaBvL?=
- =?us-ascii?Q?3CfXaMzMwyJyxJsQaxupN155u4//VMLT7ufFJQfIf3dawtUWL2FW1g+/yjSL?=
- =?us-ascii?Q?vb5YAvUA1Hx8hgrnmroufBDpC4PG2sYLgMuGuPIGzyL+QnJb4w2volTUhptw?=
- =?us-ascii?Q?/I0WYI4AgTkBzHEEut03jNsHBHiEihoXie2o8tI6K3oUqrsuJiteiinQWgdo?=
- =?us-ascii?Q?5NvSw7gf4XOcJBxk/n2qrEh0CaXMZ44QdLaWC4jvHndcwvbrVj65Rolvw/xs?=
- =?us-ascii?Q?P+d7Lif1WfumB8AUXoNpr2nTx8Em9T2aAafVFLmLPoVj22kk8tTWpzVnceW3?=
- =?us-ascii?Q?wp/aBL4g98odwrkR4NNhC3R1Ub8VrQl4XIj9k1ol2fZ/j1f7eEVahlrI0kNu?=
- =?us-ascii?Q?wUDWBvnnXU2wI7605PMMIQDfz/VCPTkxStSZKL7TdKIHnc65RX+deKO57JbY?=
- =?us-ascii?Q?Nt7gC+gCafSD2AdDayK4bpemahPNE7q7n650p2/Sr+Ae0BOUi3nZ6oRxOfFr?=
- =?us-ascii?Q?69Vkrb2x2cJsXpFGilAKvdhgp3vaTWt9zmJ26LyhHgD5H4YcdSDv0MEaLTAi?=
- =?us-ascii?Q?Xuk253IFS2O3L58wWzaNRp7US6Hen+y4gpwnFa+oH51tFfOvopbcfPK8doiE?=
- =?us-ascii?Q?HQITpoOd8vpZarBRJDlIk2cDnYj3sd346wY0VCA5?=
-Content-Type: text/plain; charset="us-ascii"
+ =?iso-8859-2?Q?KACHvPkVyfmJYRzbfqDqKxJyqYh8AYKBa/PvNsUQC9FocSTXxZLxTBmKQI?=
+ =?iso-8859-2?Q?a22fLRwXNONVSkTEKIdTWU/cFLcXtZdp2H/SUzG6reGnfPvU4XFa5lvR4y?=
+ =?iso-8859-2?Q?TQH9oVEcS8ov0gb8VqOAYNwn8BUD0A1U/YHDiA3yrKn71kPgFbwROOfbYu?=
+ =?iso-8859-2?Q?nyLRXRoyjvnJk/WyriLF/qOjYhA1dgNkEU7CgtyNEAqZr+Ue24rYwEYjaP?=
+ =?iso-8859-2?Q?th2IhTbTKcdWDr8mJz3+elkEEMGnafbWYugdK+uIEZShr6zqtTGxMbau0C?=
+ =?iso-8859-2?Q?2kvvMux3qkf7LBxuJ4qbBus5X3tUEPeciK2JQSJCsWmc0YS1ltpF7Lam2e?=
+ =?iso-8859-2?Q?dStb+xX4n5FK4CvFTAxexo39zn48Dmq5zpbDzq7FaKw22ecE35ZOgse93w?=
+ =?iso-8859-2?Q?ncjr4jq40Vp0eH4vIhk3EDQDmX6O4OXEkDfrLHPbOVDktoYlpP8bIjFeGR?=
+ =?iso-8859-2?Q?EbAZ+pqYAdo1KFC4a4DBHkY7qaGjgA++A/N9XUp08eDnUsRSXi2hTh/Pw6?=
+ =?iso-8859-2?Q?GoY2+3Z/9yJaCDB6QhjkpXPQ3w8nXxfjY7eAop5V5EgpAGZQSgUSomxmsx?=
+ =?iso-8859-2?Q?3vVQUCUjjX/I7XpIAofy/3a/fJI75lTg83z1aO3GrUlruo6yqy2CzOiQID?=
+ =?iso-8859-2?Q?zcnirkNLbtvQGobV9ZP4unlvIHXE/fNPmvJAYeFzlBOW5Aj7NOZer5/HuD?=
+ =?iso-8859-2?Q?gia2Fuf3vBY/tPSyjeI+zMTLWXTyFdnTqtdt4Ei8Gi46Rlj1Q/xG4kPcvP?=
+ =?iso-8859-2?Q?wzT46fWA3RMiI0CdaY/8LPqjroBGncboLtJTJWNOuky0Bp49SWwnf4CJJ3?=
+ =?iso-8859-2?Q?CvxZgv48HsOQX26VtM5sXJ2A3lneEkFsEzSccn1/rwFsSP0Bs3ZlYE9Ge+?=
+ =?iso-8859-2?Q?yFYgZRP7xIsOUZz3xsy/2MhCllPJl/TER8/0dzxkdv7arfxOre5p/MI2U1?=
+ =?iso-8859-2?Q?yH4Ogx1T3Xobg7sLccXGg1M4aEJafvNZuUtgUspFXeNpbAp8Ku5tZJycQ5?=
+ =?iso-8859-2?Q?KoEo2ELysfutcBM9qZdcCz4pWJmmUkib+5prPQF7h5sJ+q8DtzI7CDaaM0?=
+ =?iso-8859-2?Q?F4/WEd/eG9UdCDGb3GBeTFsr9FMPryHnSNzRv10XHbRsV7msK69226N4zt?=
+ =?iso-8859-2?Q?/r2uRGknQMRHsfKJhEIkQlVbXW5i0LANhRp5qxpZclc1mSxLmq0Z8MAY/V?=
+ =?iso-8859-2?Q?vpnY35Vr5kFGhOCU8smBPPqrdLE4H69RRLvhO+IHgz5WsOTQJI+MRNh1RU?=
+ =?iso-8859-2?Q?eShmC3xGgNIaspaG2blbPW3RhYNB7SMlCT9PIVgmQ=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -163,87 +126,208 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3260.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3b65b00-840c-4c89-bf91-08dcc86d8eb6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2024 21:00:05.0657
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e77092f7-9564-4a2a-469f-08dcc8a7fa3f
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2024 03:58:16.2933
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /kqu7BU6R5d464BMBv4Hb+QKQVsllIueSHRh+dysRPWDqV/TMsZ4udE2ysWSyVa42EKAHeHX/GE5minGw2E/DQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR21MB4241
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB9308
 
-
-
-> -----Original Message-----
-> From: Gerhard Engleder <gerhard@engleder-embedded.com>
-> Sent: Thursday, August 29, 2024 3:54 PM
-> To: Shradha Gupta <shradhagupta@linux.microsoft.com>; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-rdma@vger.kernel.org
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
-> <decui@microsoft.com>; David S. Miller <davem@davemloft.net>; Eric
-> Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo
-> Abeni <pabeni@redhat.com>; Long Li <longli@microsoft.com>; Simon Horman
-> <horms@kernel.org>; Konstantin Taranov <kotaranov@microsoft.com>;
-> Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>; Erick Archer
-> <erick.archer@outlook.com>; Pavan Chebbi <pavan.chebbi@broadcom.com>;
-> Ahmed Zaki <ahmed.zaki@intel.com>; Colin Ian King
-> <colin.i.king@gmail.com>; Shradha Gupta <shradhagupta@microsoft.com>
-> Subject: Re: [PATCH net-next] net: mana: Improve mana_set_channels() for
-> low mem conditions
+From: Robin Murphy <robin.murphy@arm.com> Sent: Wednesday, August 28, 2024 =
+12:50 PM
 >=20
-> [Some people who received this message don't often get email from
-> gerhard@engleder-embedded.com. Learn why this is important at
-> https://aka.ms/LearnAboutSenderIdentification ]
->=20
-> On 29.08.24 16:16, Shradha Gupta wrote:
-> > The mana_set_channels() function requires detaching the mana
-> > driver and reattaching it with changed channel values.
-> > During this operation if the system is low on memory, the reattach
-> > might fail, causing the network device being down.
-> > To avoid this we pre-allocate buffers at the beginning of set
-> operation,
-> > to prevent complete network loss
+> On 2024-08-28 2:03 pm, Petr Tesa=F8=EDk wrote:
+> > On Wed, 28 Aug 2024 13:02:31 +0100
+> > Robin Murphy <robin.murphy@arm.com> wrote:
 > >
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > ---
-> >   .../ethernet/microsoft/mana/mana_ethtool.c    | 28 +++++++++++-------
-> -
-> >   1 file changed, 16 insertions(+), 12 deletions(-)
+> >> On 2024-08-22 7:37 pm, mhkelley58@gmail.com wrote:
+> >>> From: Michael Kelley <mhklinux@outlook.com>
+> >>>
+> >>> Background
+> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>> Linux device drivers may make DMA map/unmap calls in contexts that
+> >>> cannot block, such as in an interrupt handler. Consequently, when a
+> >>> DMA map call must use a bounce buffer, the allocation of swiotlb
+> >>> memory must always succeed immediately. If swiotlb memory is
+> >>> exhausted, the DMA map call cannot wait for memory to be released. Th=
+e
+> >>> call fails, which usually results in an I/O error.
+> >>>
+> >>> Bounce buffers are usually used infrequently for a few corner cases,
+> >>> so the default swiotlb memory allocation of 64 MiB is more than
+> >>> sufficient to avoid running out and causing errors. However, recently
+> >>> introduced Confidential Computing (CoCo) VMs must use bounce buffers
+> >>> for all DMA I/O because the VM's memory is encrypted. In CoCo VMs
+> >>> a new heuristic allocates ~6% of the VM's memory, up to 1 GiB, for
+> >>> swiotlb memory. This large allocation reduces the likelihood of a
+> >>> spike in usage causing DMA map failures. Unfortunately for most
+> >>> workloads, this insurance against spikes comes at the cost of
+> >>> potentially "wasting" hundreds of MiB's of the VM's memory, as swiotl=
+b
+> >>> memory can't be used for other purposes.
+> >>>
+> >>> Approach
+> >>> =3D=3D=3D=3D=3D=3D=3D=3D
+> >>> The goal is to significantly reduce the amount of memory reserved as
+> >>> swiotlb memory in CoCo VMs, while not unduly increasing the risk of
+> >>> DMA map failures due to memory exhaustion.
+> >>
+> >> Isn't that fundamentally the same thing that SWIOTLB_DYNAMIC was alrea=
+dy
+> >> meant to address? Of course the implementation of that is still young
+> >> and has plenty of scope to be made more effective, and some of the ide=
+as
+> >> here could very much help with that, but I'm struggling a little to se=
+e
+> >> what's really beneficial about having a completely disjoint mechanism
+> >> for sitting around doing nothing in the precise circumstances where it
+> >> would seem most possible to allocate a transient buffer and get on wit=
+h it.
 > >
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> > index d6a35fbda447..5077493fdfde 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> > @@ -345,27 +345,31 @@ static int mana_set_channels(struct net_device
-> *ndev,
-> >       struct mana_port_context *apc =3D netdev_priv(ndev);
-> >       unsigned int new_count =3D channels->combined_count;
-> >       unsigned int old_count =3D apc->num_queues;
-> > -     int err, err2;
-> > +     int err;
-> > +
-> > +     apc->num_queues =3D new_count;
-> > +     err =3D mana_pre_alloc_rxbufs(apc, ndev->mtu);
-> > +     apc->num_queues =3D old_count;
+> > This question can be probably best answered by Michael, but let me give
+> > my understanding of the differences. First the similarity: Yes, one
+> > of the key new concepts is that swiotlb allocation may block, and I
+> > introduced a similar attribute in one of my dynamic SWIOTLB patches; it
+> > was later dropped, but dynamic SWIOTLB would still benefit from it.
+> >
+> > More importantly, dynamic SWIOTLB may deplete memory following an I/O
+> > spike. I do have some ideas how memory could be returned back to the
+> > allocator, but the code is not ready (unlike this patch series).
+> > Moreover, it may still be a better idea to throttle the devices
+> > instead, because returning DMA'able memory is not always cheap. In a
+> > CoCo VM, this memory must be re-encrypted, and that requires a
+> > hypercall that I'm told is expensive.
 >=20
-> Are you sure that temporary changing num_queues has no side effects on
-> other num_queues users like mana_chn_setxdp()?
+> Sure, making a hypercall in order to progress is expensive relative to
+> being able to progress without doing that, but waiting on a lock for an
+> unbounded time in the hope that other drivers might release their DMA
+> mappings soon represents a potentially unbounded expense, since it
+> doesn't even carry any promise of progress at all=20
+
+FWIW, the implementation in this patch set guarantees forward
+progress for throttled requests as long as drivers that use MAY_BLOCK
+are well-behaved.
+
+> - oops userspace just
+> filled up SWIOTLB with a misguided dma-buf import and now the OS has
+> livelocked on stalled I/O threads fighting to retry :(
 >=20
+> As soon as we start tracking thresholds etc. then that should equally
+> put us in the position to be able to manage the lifecycle of both
+> dynamic and transient pools more effectively - larger allocations which
+> can be reused by multiple mappings until the I/O load drops again could
+> amortise that initial cost quite a bit.
 
-mana_chn_setxdp() is protected by rtnl_lock, which is OK. But I'm not sure
-if all other users are protected. mana_get_stats64() seems not.
+I'm not understanding what you envision here. Could you elaborate?
+With the current implementation of SWIOTLB_DYNAMIC, dynamic
+pools are already allocated with size MAX_PAGE_ORDER (or smaller
+if that size isn't available). That size really isn't big enough in CoCo
+VMs with more than 16 vCPUs since we want to split the allocation
+into per-CPU areas. To fix this, we would need to support swiotlb
+pools that are stitched together from multiple contiguous physical
+memory ranges. That probably could be done, but I don't see how
+it's related to thresholds.
 
-@Shradha Gupta You can add num_queues as an argument of mana_pre_alloc_rxbu=
-fs()
-to avoid changing apc->num_queues.
+>=20
+> Furthermore I'm not entirely convinced that the rationale for throttling
+> being beneficial is even all that sound. Serialising requests doesn't
+> make them somehow use less memory, it just makes them use it...
+> serially. If a single CPU is capable of queueing enough requests at once
+> to fill the SWIOTLB, this is going to do absolutely nothing; if two CPUs
+> are capable of queueing enough requests together to fill the SWIOTLB,
+> making them take slightly longer to do so doesn't inherently mean
+> anything more than reaching the same outcome more slowly.
 
-Thanks,
-- Haiyang
+I don't get your point. My intent with throttling is that it caps the
+system-wide high-water mark for swiotlb memory usage, without
+causing I/O errors due to DMA map failures. Without
+SWIOTLB_DYNAMIC, the original boot-time allocation size is the limit
+for swiotlb memory usage, and DMA map fails if the system-wide
+high-water mark tries to rise above that limit. With SWIOTLB_DYNAMIC,
+the current code continues to allocate additional system memory and
+turn it into swiotlb memory, with no limit. There probably *should*
+be a limit, even for SWIOTLB_DYNAMIC.
+=20
+I've run "fio" loads with and without throttling as implemented in this
+patch set. Without SWIOTLB_DYNAMIC and no throttling, it's pretty
+easy to reach the limit and get I/O errors due to DMA map failure. With
+throttling and the same "fio" load, the usage high-water mark stays
+near the throttling threshold, with no I/O errors. The limit should be
+set large enough for a workload to operate below the throttling
+threshold. But if the threshold is exceeded, throttling should avoid a
+big failure due to DMA map failures.
 
+My mental model here is somewhat like blk-mq tags. There's a fixed
+number allocated with the storage controller. Block I/O requests must
+get a tag, and if one isn't available, the requesting thread is pended
+until one becomes available. The fixed number of tags is the limit, but
+the requestor doesn't get an error if a tag isn't available -- it just
+waits. The fixed number of tags necessarily imposes a kind of
+resource limit on block I/O requests, rather than just always allocating
+an additional tag if there's a request that can't get an existing tag. I th=
+ink
+the same model makes sense for swiotlb memory when the device
+driver can support it.
+
+> At worst, if a
+> thread is blocked from polling for completion and releasing a bunch of
+> mappings of already-finished descriptors because it's stuck on an unfair
+> lock trying to get one last one submitted, then throttling has actively
+> harmed the situation.
+
+OK, yes, I can understand there might be an issue with a driver (like
+NVMe) that supports polling. I'll look at that more closely and see
+if there is.
+
+>=20
+> AFAICS this is dependent on rather particular assumptions of driver
+> behaviour in terms of DMA mapping patterns and interrupts, plus the
+> overall I/O workload shape, and it's not clear to me how well that
+> really generalises.
+>=20
+> > In short, IIUC it is faster in a CoCo VM to delay some requests a bit
+> > than to grow the swiotlb.
+>=20
+> I'm not necessarily disputing that for the cases where the assumptions
+> do hold, it's still more a question of why those two things should be
+> separate and largely incompatible (I've only skimmed the patches here,
+> but my impression is that it doesn't look like they'd play all that
+> nicely together if both enabled).
+
+As I've mulled over your comments the past day, I'm not sure the two
+things really are incompatible or even overlapping. To me it seems like
+SWIOTLB_DYNAMIC is about whether the swiotlb memory is pre-allocated
+at boot time, or allocated as needed. But SWIOTLB_DYNAMIC currently
+doesn't have a limit to how much it will allocate, and it probably should.
+(Though SWIOTLB_DYNAMIC has a limit imposed upon it if there's isn't
+enough contiguous physical memory to grow the swiotlb pool.) Given a
+limit, both the pre-allocate case and allocate-as-needed case have the
+same question about what to do when the limit is reached. In both cases,
+we're generally forced to set the limit pretty high, because DMA map
+failures occur if you broach the limit. Throttling is about dealing with
+the limit in a better way when permitted by the driver. That in turn
+allows setting a tighter limit and not having to overprovision the
+swiotlb memory.
+
+> To me it would make far more sense for
+> this to be a tuneable policy of a more holistic SWIOTLB_DYNAMIC itself,
+> i.e. blockable calls can opportunistically wait for free space up to a
+> well-defined timeout, but then also fall back to synchronously
+> allocating a new pool in order to assure a definite outcome of success
+> or system-is-dying-level failure.
+
+Yes, I can see value in the kind of interaction you describe before any
+limits are approached. But to me the primary question is dealing better
+with the limit.
+
+Michael=20
+
+>=20
+> Thanks,
+> Robin.
 
