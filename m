@@ -1,157 +1,147 @@
-Return-Path: <linux-hyperv+bounces-2922-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2923-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1676966819
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Aug 2024 19:36:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 216BC966D89
+	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Aug 2024 02:34:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01E601C23AF1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Aug 2024 17:36:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD131283270
+	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Aug 2024 00:34:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D4B41BAEFC;
-	Fri, 30 Aug 2024 17:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7E6233FE;
+	Sat, 31 Aug 2024 00:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="M9JRhsyw"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aMHbg8Js"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020112.outbound.protection.outlook.com [52.101.61.112])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022137.outbound.protection.outlook.com [40.93.195.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF0815C153;
-	Fri, 30 Aug 2024 17:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BF31D1309;
+	Sat, 31 Aug 2024 00:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.137
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725039383; cv=fail; b=E71OkPXv7HMTNhxj03yp165IOBuguP+rrFA7ciQM2YnpGJQTEzl7fOhXOUp4KZu2Ff/YFh+TkiWtmQZ7ZycGJX5yfKpx09VFKgLcsakV5Xn5Qa/fBMFuoZYMdx55xv6mBmrswJGPy7uctiYYnhqmV0ZC4rcfPOqAxMnVyfuCLhE=
+	t=1725064487; cv=fail; b=f+RGH23IIiNpMBrguWiX9Tx28tfw7oqaWeE5YqYDEVk/GT+cTSnGJkyIYWM0PKRG0pWandqqXmhVSFSJn3ZWewEf5egfy7rNSDe5jAjqQsZdzy7ESvmhWtbXjMlutX8dvvvTgdq7Rr73VNPkQke9+qRLezHFP4pEqV5lnDIPkbk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725039383; c=relaxed/simple;
-	bh=Fk6nwa3iYRS3icnLh52AJiF61F2kngImezMoKDqIY3Q=;
+	s=arc-20240116; t=1725064487; c=relaxed/simple;
+	bh=ZACvIu8C97mv3mIuxzlmFu2WMj9Fhh4/IGgMfKPjP9Q=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=W0R2wx1iXLACIfRgnsAtj9LjgoexPhVCkHP98KR5lIUusehSk8mZIi+DaQTDmIESJsFSmDPPefSfwgpzvSSgMIc79hbbOsydbe4zU4Pn2VNIyYwutHhrvrECpBG/a3V7wYVHZ52ZzKfLzpeY23CO7myHE098K/JfqhCo7yikSMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=M9JRhsyw; arc=fail smtp.client-ip=52.101.61.112
+	 Content-Type:MIME-Version; b=fmGkgbSWA8anauu0RDXPPNIBWqdnq6yMbxAzt0K69ymDwdbLXrBdOZaF7/fRlXPXJWSwuJV6+HxneKoigJT++TnFUgQUeCa08kXTeYlyMfCL3yYJEreTeOpKGpUC+go814tJrHciwV24YmQG6Rvg+/uIs3HjBVewIWcTdxn1nIM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=aMHbg8Js; arc=fail smtp.client-ip=40.93.195.137
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BNAZv56BIv8dLdi8ftxe+Tc5PjsyrACqXRGS156tJ2fU6qTOF/+WPlZHG0Ov32FUaDvmJJhJEqdrtC+OHUiu28CkhHye9KVdKmlQNOXtOPW0tegzGgOXs6KR8f0o+iS8qkGFT/OOphMeXrxGjekA4XjWQ5g6GncEeBveDtDkq2XyGB2Lu3SCM5NVG/9DKSyMTHy/Q6VHtIScWJWRlEFPSBCGnBHKWyZGGkvnCFA0qJ9W4L1AYmhoTaqgcEDOsDrP4ZclAWgtATWMGyOFxQqtUXYRSFEyoYnJ5v0rsVckF+CVEvMaCyQoAXzYLMBVIVaWIkzkH4oyvvbgJUGolsjebg==
+ b=EnICN+qw37MZSrpcCaox0pvUztHm/CRVTmnvsRD9UK7n1h3PE82+pVFzeZXdP1c9wYtAROhR2nKj5iOi0FdXbc+OaK/x8LgbN2XvdVa8cyCx+ZQ1TNWGE3Kun9sNsHLMUIMbw+mr26sgiyOar1NVtaazAE2z87n/UAlLnUWqqTmPPSp4PBt8A6AJLSur2t03RtxV+eFqBNFeekGVMCphOHe1jurxIc6worTqmA3rRKenUE28Os0rjja6KWimEhm3YWPstSyBrx4N8GPQxVQLnsD3F8uQbOsznMI3QdaF0NKy3jVzj5WSJLhbOZEGsLwnHL+cwAhQSaVJG5xIhtrEOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lECmH+nxX8c96NDE61s/Qj4abeg4ol3ZAdHK6S9o1Gg=;
- b=gmIM+e6WsflPtmVw51FSLQBr8c4lqhMfE1GTfNE0wDfx49GX57JekrNYNYIreE16V9RGPdpibn1uzfUajsWESuc9C6MnyedVO0G/5CN/dLpve5Wz9dORphIforIyejIK/7QUQpZkn4A/tcNYrufN/as1TY5o2W/OOzUtoCwtsnam3l/oIHNZi/SnRjQScOtyKpD93dxi5o3oXEC9/2xGBckwb7fVshqcy9ffXDATKNA910blHgfHFx7/YW1z2Bp+iLqveAgDhdfona7zh/jvrCle24XGTIyKIL2PlfBohPYDGOvt8tsGfKYEl9JYyuLNsxJpgAa90HhKQECMNsecdA==
+ bh=AMASVgHBiDJPyK3GXXT3weCnyKIL5KbxOl/CrNS4c+I=;
+ b=PJ5JIjCqIUAGUsBrMsw1gwXrLNakZzbv9L1qaZAYgBpZCOw14OytAka9lXb+/kqyOFFiAH/IEDnDzLyKHfQxWruKsGI1P5YLXWxNo59oGHnQhupNzRnC3BGZjBPLQfiUa3j2srXiRAYeIqUtFVo3WDm0Hj3Ujkbso+68XooFzelBsC4B5swhhvNfjzo4snh4UHOyuJAfn/Kdqucfo8SPlKUT+ARYJjohEuooRijaX5x9S1bmzB8bgMnqfD7yBk1mQmvPwnF4APVu6guhmCFsmPKwH0TcnL95oa8UgWZDjpvSkM3YHD1ZTEZmjgvqXSwx423naVhvkmV/2vyOZxA74g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lECmH+nxX8c96NDE61s/Qj4abeg4ol3ZAdHK6S9o1Gg=;
- b=M9JRhsywPVjc2pQzuhry/6Ci3CdXfNdBafAMCbOMgTtqg61nUCVTyp/SNu503x9pLHh4rjjgZj7mVfjjxcbIWk5C+VWKbmLwvg8vNalRCl4nXiiBr712vTfbE88d/Yk+nISYcAunVTMp0A6uuwVCTkEUcVlLONAVj79RTaDNRw8=
-Received: from BL1PR21MB3256.namprd21.prod.outlook.com (2603:10b6:208:398::16)
- by LV3PR21MB4255.namprd21.prod.outlook.com (2603:10b6:408:272::16) with
+ bh=AMASVgHBiDJPyK3GXXT3weCnyKIL5KbxOl/CrNS4c+I=;
+ b=aMHbg8JsB2d/N9WsVbnnopon4tp2Q6bBG47DFs9AVUG4qABa+Tg+XX1GRzp0sIfJ8SKz4IVPJYn7ASrCiY5Fpxh6t34+e7GD0+55z8Z5DoyEJ7sfkUYJEQbg6OfvIBxQ2d983tZfNEKA/3wHUwwDhH3NuvfGrcceu6V2zqdlgDc=
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com (2603:10b6:806:1f0::9)
+ by LV3PR21MB4080.namprd21.prod.outlook.com (2603:10b6:408:23f::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.8; Fri, 30 Aug
- 2024 17:36:18 +0000
-Received: from BL1PR21MB3256.namprd21.prod.outlook.com
- ([fe80::944b:ec13:2f2f:92b1]) by BL1PR21MB3256.namprd21.prod.outlook.com
- ([fe80::944b:ec13:2f2f:92b1%7]) with mapi id 15.20.7918.006; Fri, 30 Aug 2024
- 17:36:18 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>, Souradeep Chakrabarti
-	<schakrabarti@linux.microsoft.com>
-CC: KY Srinivasan <kys@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, Souradeep
- Chakrabarti <schakrabarti@microsoft.com>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: RE: [PATCH V3 net] net: mana: Fix error handling in
- mana_create_txq/rxq's NAPI cleanup
-Thread-Topic: [PATCH V3 net] net: mana: Fix error handling in
- mana_create_txq/rxq's NAPI cleanup
-Thread-Index: AQHa+e6j7hVwv/g+nkyjJvATfz6ZwbI/U7iAgACcznA=
-Date: Fri, 30 Aug 2024 17:36:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.10; Sat, 31 Aug
+ 2024 00:34:43 +0000
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef]) by SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef%4]) with mapi id 15.20.7939.007; Sat, 31 Aug 2024
+ 00:34:43 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Zhu Jun <zhujun2@cmss.chinamobile.com>, KY Srinivasan <kys@microsoft.com>
+CC: Haiyang Zhang <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] tools/hv: Add memory allocation check in
+ hv_fcopy_start
+Thread-Topic: [PATCH v2] tools/hv: Add memory allocation check in
+ hv_fcopy_start
+Thread-Index: AQHa+b1vG8hrFEeCykO1A3EareCyOLJAhOww
+Date: Sat, 31 Aug 2024 00:34:43 +0000
 Message-ID:
- <BL1PR21MB3256A6BE2A1A5D523FA1AF36CA972@BL1PR21MB3256.namprd21.prod.outlook.com>
-References:
- <1724920610-15546-1-git-send-email-schakrabarti@linux.microsoft.com>
- <20240830061355.GA2986@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To:
- <20240830061355.GA2986@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SA1PR21MB13179B929747B9B88948DCA5BF902@SA1PR21MB1317.namprd21.prod.outlook.com>
+References: <20240829024446.3041-1-zhujun2@cmss.chinamobile.com>
+In-Reply-To: <20240829024446.3041-1-zhujun2@cmss.chinamobile.com>
 Accept-Language: en-US
 Content-Language: en-US
-X-Mentions: schakrabarti@linux.microsoft.com
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ff70d3d8-4636-4132-990a-4061df14368e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-08-30T15:35:09Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=93a71bf1-2621-4514-bfc9-c0500b2c5759;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-08-31T00:24:54Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR21MB3256:EE_|LV3PR21MB4255:EE_
-x-ms-office365-filtering-correlation-id: 83e21d6c-5bf5-4c24-919b-08dcc91a4175
+x-ms-traffictypediagnostic: SA1PR21MB1317:EE_|LV3PR21MB4080:EE_
+x-ms-office365-filtering-correlation-id: 53a3178f-a20e-437a-23c5-08dcc954b513
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?eLCQ+CrMI9J/eDzLKcU9JjUcAS795JwwiKFrTCApqJH6cxCQxabbo8ZFhq8M?=
- =?us-ascii?Q?2/XmupBj1mnEc8hKXuKpzxzrjeq3wP9Qp6q9mQDayglnsYgJgZk/lSHkKEK1?=
- =?us-ascii?Q?Sme0hrTX1j0rTcFLd2tk9XeXdG4JQEM8kGftE5SgwdW6WsfVgRyDOKynT38K?=
- =?us-ascii?Q?ibA7qjCFAOFYsYbyvoJesHX9x7EQt/BKWzSzO9YHqiA7qGSmbVc4UluacNhD?=
- =?us-ascii?Q?e+60VZq6wYNdM173Zp1sTRq4wAB7NPwfFwJqUvzZekPc0v9Vsq8fBw16hghC?=
- =?us-ascii?Q?62ywl9QHLhcV8F9RiI5WbL8qISw59QD6KIPUQ6w41iQYEpAW49+rBgtbIHXU?=
- =?us-ascii?Q?fazJ52ez+x99GUOTmJefvISAL+GXWBaWv972SsFRATJ2yqnFhKEIgMCV8mVe?=
- =?us-ascii?Q?TuiyyP4UyIbsJKk4PytSfIh01wGYmMlsyXzb6wbjlFinpLSwEM4Cgt1vdQef?=
- =?us-ascii?Q?BoLKozdMO16+CJwHkY7zL/reid2M8J1lb78lp9D8Uw8lNDXOSQwgqgzzt88l?=
- =?us-ascii?Q?QkHWzhMzsCDgy4V07W3074e5z/f4GRUJebLRIGL0ZiuUoGJX/JuZfZM2dBi1?=
- =?us-ascii?Q?aqcV5BeksJJf9jUG+vgNdrssIFCr0mam4cNZ9ib39Aq15q3y45la2YwcFqo5?=
- =?us-ascii?Q?U6QbzBE+dWg0LcRCO/G3uDavVxFdF1usCMic4E+a/LzvBwOyDO4N643Ep1I9?=
- =?us-ascii?Q?hoTIqHtygMU3vpu6/KjFrZPsyL72FnGomtmp5Rg9iIXnDbTidz+UHR/no6Xm?=
- =?us-ascii?Q?LzetgMX1vMDUEEamygHrpMYWlvTGEUHg84v8yYmt50o6MQkwFZfEuLR9nofW?=
- =?us-ascii?Q?pxxx0lz2TRwPzTCilwrRHj4xn/C4Z7WZrQVbgkblclVZTGrDOPTRBWC/aL0b?=
- =?us-ascii?Q?iUiNSxbSOdSV9VfRqYUEX3hM883sNw/dEdLA5h7y1vLnWkKqjTbVTxPfigd8?=
- =?us-ascii?Q?ASDVLXmet1b8zVFwdplEmQ+wWybUj8x4vL5nv9CvKbX9Okg7Dt9jL4cqEpvR?=
- =?us-ascii?Q?UUapjEHwSWz9lxeMOQ+gHVwBbBGJgFLp40SUYrp5M+ckWyWzoGn6QcbTLAn9?=
- =?us-ascii?Q?79IoY1QlZFsuf97N8bT0ag4nW7j/UnPzapmuBIioSDl8juEurnLunSwJ35um?=
- =?us-ascii?Q?NaT13C2BrWuYCVeNCigqwTHbveMA7h4W3yu1L2yYCwvv+evFQ2MScCHk+tyf?=
- =?us-ascii?Q?zDj8hkhdIDJ10GDYjvKgAHmHJudEdFGb+4PTHJ3exc79MYxxRnLQGGjlGgit?=
- =?us-ascii?Q?DpWooUWIho7my1mkQhNs82du4upSRTOvffSn5gYDllDrGJXO7mjI4AvZeOm4?=
- =?us-ascii?Q?vTtdRN7jmQL8R5IUhcrD7JZfeCIStY1usYyoGZYaJ37c4Eg865/1lYph9jJr?=
- =?us-ascii?Q?gvKR4L+xJaRNu9Jt9dGdEIrnAqy3y8p9bD8dFxmLjdFGb6bGYA=3D=3D?=
+ =?us-ascii?Q?bo8kRs7rl3qKZnaqj2p2wUQnw2LTFp4VTxLei03dJg6W4hp5WyjmfoTfVwGA?=
+ =?us-ascii?Q?+Kv2Q8KJAuLsNdbkdZB6eLrqR7PUqv0TXlC0TxQ8YHgURzGlxe5lxSgk+N1q?=
+ =?us-ascii?Q?3uoASaF8eMWrozhEUEg2w44uOUZUHUFLgIhyj4gpYhEdmjlqfUSWrv7NO5ac?=
+ =?us-ascii?Q?dwWaMqzULjiF/TLCdy+Ec4pOONZHZh8L4v8Yl3jHRXUiBR6+ELdDP2Qms6I0?=
+ =?us-ascii?Q?9p15db1Rff+T4CzYR56Dhom1TQJObK4KkXnEVVfMQE2OUDQzHbWIg8ezw6M5?=
+ =?us-ascii?Q?YqQJup4ecR6mDZqFRF91hmXU0v2iD6bugmp4zMZkuJ814tWesTIeQb/TTXli?=
+ =?us-ascii?Q?jFIfXH52Fk6fytQRZm/QbYSsmlIOKyDBSoDYAg7NX3lfpzW8IYbILvgDgN0g?=
+ =?us-ascii?Q?vLmrkuMWKeAL5FsK4BlMhmkigWXEYVJQPfBDEer4+JwPTWOxGEQnql8jNvAl?=
+ =?us-ascii?Q?+NgAM5/YqnDSF4KT4Q0jbhBzRs9vYXX2jxVzyv0JkeKF6xkYgfwbeTnr498H?=
+ =?us-ascii?Q?wRBHWf+Wi7v2UY6SA2rTMKkBqISYYwI7/d9Op8PGL9+BM2xcZQCH8odyc7RA?=
+ =?us-ascii?Q?IRN8c3Oz/oOfD/hn7AmOT4EXijRyZkuTNww8yZyI6lrYkoA2kFCEUIP+dhCO?=
+ =?us-ascii?Q?3gGuP7hUkowFHbc+t9l09JMmStyzz3irG8ylXvYLCJMYs7XcjFgnpx9Mp3Xt?=
+ =?us-ascii?Q?rcexsuX/xLzo1JB9HQDjDBmf55dRK+gA2ZMizAmqKvTxT2Us+7ytJb6ejlTb?=
+ =?us-ascii?Q?bWDkiDi1SMcM7yduD7XoBzKedFy1igejCKb4PM+JLaRZaPATv2DyncM5H14+?=
+ =?us-ascii?Q?4XKAGegMDsFPj11p33T8RVnrQV5RDDx8eLCpX8GlDFQLCePjn40M0OxZ/MfW?=
+ =?us-ascii?Q?Ado+V2VZk4+WiMM+OZTvFoyo+MPe6B5rJ4URzv5lTyud1A3wHDFLGW+VzeT3?=
+ =?us-ascii?Q?yC1Cl/ONfhUctgNRFwSETE2KEJ75RwdO7lDeiQHzYJ3EAsqS/w72jb5ieRhb?=
+ =?us-ascii?Q?lNqhxVhHdy4NxZMz/RbiRLE3NjO999byPFzY4kbHhKgA31X1ex1AqxmQ6m8F?=
+ =?us-ascii?Q?aboJWLB2Q4r1ZXywWBiPWA/9IdgSwQM1TJHyAvLE5lJSb5kcPw17ZTtSwVQB?=
+ =?us-ascii?Q?/eBRaLIWUf7U1bK2Z/Sebw6E5odFJv2KOYPI78MERW5xJ9DSjBiFgxT8BoSw?=
+ =?us-ascii?Q?xUrN0NjGnA/5Xwj3GY6qJgSBMTrAI9yRVJI3kT9+VzXnBCfEnqrVEBzRizpY?=
+ =?us-ascii?Q?kgyfGRoOkcGXFQJJsGO9SqGx2YXHWu+aXW3R77u/sfSE2AppU6QrDHX4KJI4?=
+ =?us-ascii?Q?DTxvPD3ZNdzWOvwo9ZZvATbpdGqn+zItPOYDH8p1J4b1sJUSgctvRkTndutF?=
+ =?us-ascii?Q?0rAUbE+ELkbsnUW6HdYdkAzrZ8NubPw3XyeTG+V6NQTOnX50Fw=3D=3D?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR21MB3256.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1317.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?UqQGylzHPa5nUMTHvxviem3IVGCxkw7vPEvHRy9fGY12fIkXKxnhDNNCEEre?=
- =?us-ascii?Q?hCTgeMJ/uWuHU6mFVZmp+xGA+02mq5LBpApTVCGZsWQkFG5Bs8UEHkm7MO8y?=
- =?us-ascii?Q?o1XUB/jlBA3ckGxJdf2sao4j1CXtAVGx9wFmdT5Q5WrF+cQLJI/mU0c+6Mw2?=
- =?us-ascii?Q?7vYIhebFpVj9Jtf/GrLtn+v/z49rADxHolyT1U28ocsSLA7/HMNWCFzsXKgs?=
- =?us-ascii?Q?64VV4XTH4WqFpstRPGXYHUoP/MEKrQVF2ZsidOQrvB/A6UJ+fUU9axmdO1gq?=
- =?us-ascii?Q?zO0IO2NRfC9Yvx+9lpIxXCWD1kYL4BWh4Hf11gtcnBpRP47JcRE+5Ju31R4h?=
- =?us-ascii?Q?ALVcU7DiizoZZUP5Y74lq1qYdL3Rh/6faObTZ1zcV2GN8amE1QFI7tLPhdK5?=
- =?us-ascii?Q?S82iGZqMfPcDpGgTMPfs7Ahv0U4fZ8R3XGBrMiTcT5pL7yq5P3rWJs6TiZbS?=
- =?us-ascii?Q?aodsSq8Q5deOwxX83QcIFqWRzqQHhf5EsB0eyCy8w45Urdq9Fp60uVMHovX6?=
- =?us-ascii?Q?hYSwbPsaQHGte9DQHMGxvJyyYwpu8tqVozZTd6HpdQYeBVXNOIlJvcYnsNf3?=
- =?us-ascii?Q?+DCv5+RBYA9CSYU/3XuvMO3r14JpAQ6w/sor900qbcXNBpuWDS31Oj7dWT4c?=
- =?us-ascii?Q?YWM2ipotsEENmmFSWvQaoOejDsm2jWfn7XzV5KpyLEHjCd/H+t0AcX3e1+vC?=
- =?us-ascii?Q?UWIXS0hYSPP9zydCU2hfE7p4zIndlT6MU1jRhU63J5tfPrcKeZValjVPEbHF?=
- =?us-ascii?Q?nIs9zkqKf8hjHaGrvtW+n45h+VjrwqDYL3p14+vCHTkA453SEoh3P6C3gRYC?=
- =?us-ascii?Q?ebE9lqwbsaXfagmrn4OrL+HZkTj7FRVLJ6YEv8G7m0pAFKAp5Z3sGM/Vq/D4?=
- =?us-ascii?Q?L8jIMt2nJTNBWhC/C9MGmYGGA5YhuCxllSLll6XK2itdmoGiIHm6h8f9upth?=
- =?us-ascii?Q?zW3B0XM32DFFQLZQRSw9G3EngUQcdbYWDOdGiu4jgxpBWfiKNRTR51w8MDMT?=
- =?us-ascii?Q?qFbcXAzeoehoNvgGyEatVeFJUGnFZyauhPeZraX7wc08Wy3Ku4tAJL+iDfra?=
- =?us-ascii?Q?ORifkVcABEkLlkR6Qd1fzM3xlrzGI3h5S8Nx06bo1ao1vDxCneXuRRS9mlKY?=
- =?us-ascii?Q?prg1OT4HuNtwNC4hvwStp4fAVDLeJLMSxAbomJjURBxN+okT/87NQcSMzfHb?=
- =?us-ascii?Q?wyrpbXzlQl/Dorf1RZexobHEhmMOFGxskF5Z2SkpehyhXAkHz0ukaVtLp140?=
- =?us-ascii?Q?BVY7kTp3kg5pkkUbVPpUw82poiz0mqB4EyTbU6CUePD8XtNcew/osqzKc1GX?=
- =?us-ascii?Q?DOwTISMSGYkZrBuJVjqDLMlCyjD8RFju/JDuc+sCs3KviXs9OsCgh2RpFqlF?=
- =?us-ascii?Q?xnp7zvEQk4b4NY1cDgHQloTJ5R6U9nreYEWq8Lg772WOluWgrnt0wRtRLVv1?=
- =?us-ascii?Q?vynWR5a6kawKcUVoleFMaeAULVXYAEz7jmpg5Y4EGJ1v6U2Wcaln95D+kGwf?=
- =?us-ascii?Q?qJ9rXoHUP/NlHYM0ZIC66bOWdvPXRHGeswstnokcSp4oEUpZxDJ1y9DDki+I?=
- =?us-ascii?Q?xobS+m0507EM/QVlmgVLXnzSUDc7NPYbDV3XDZMJ?=
+ =?us-ascii?Q?esP6RhtIocIld5VYuuBTyG4bBtqkHtNnlum6Nd7epNK7nUGbkEf6/FLk5SSf?=
+ =?us-ascii?Q?VohqTMNHs2qAE9kreyy3fbTcSE+L3DmdaXDzNqFAHwMUsjYoXbvZohH8w50I?=
+ =?us-ascii?Q?oxI1TcrELuwdccljtNFbGtOauyr6pplUHwU7I+mxYCsCkTo2x9LKU0GH25A5?=
+ =?us-ascii?Q?Ba0Ycdmifs4ZNoEXwxDQAphKky0RUpCK0H7qTkJGkx94+qTKvIvBMYEFTaQJ?=
+ =?us-ascii?Q?nsVS/YYMR9VlBI2zMLix1ADcWTztcNAECW/91ohLmDsnwHfpnGQxTag7fsjh?=
+ =?us-ascii?Q?Koz5P8hmvsVRmB6HC++vQrbuA4G7L8mxJM9EWgA8lC/LiECQrhdLuuNBDKEm?=
+ =?us-ascii?Q?L13TBBvgPgbu6Z301f4U6TxOJLOyUg2ERzCIRfrrVvy9HpvYa7+KHp2k0rpq?=
+ =?us-ascii?Q?Pm6U6WDoQmcbZXnhMUOHNkmWjOFhFMXKPRZAAGrr3OSOzgGSKy2Gcn17s+YJ?=
+ =?us-ascii?Q?gzst2X9tCIqJuLGWyFbxgXYrc4CmLZWHDzFmLzG8mrGh8fogWdL1/pbKNckQ?=
+ =?us-ascii?Q?gVeqN/i+tCUTW/ekdZKCHqqi5VgP0veUfpJUi3wjExRXkMOPhTuywOwIyc5Z?=
+ =?us-ascii?Q?7jGx5OOcxwyKQHB//TkaxolAvrCdoEc+xaR/0nWnVICt/15AYIEgqBtlcxxn?=
+ =?us-ascii?Q?TZdBRb5veCuaCuDnQg4P+IKrrqHv+/WFiGDlY5kXbo3SWfz1Kq5sApVLfPY7?=
+ =?us-ascii?Q?gXEq16q6gyhfKcp9v7gjH8F8mZ1BFiberJwbCgGW8A1MSlLnrvDBXTQ8pGki?=
+ =?us-ascii?Q?mNNzSf+HIGSIJlzGaQiIsMWc4lPP7OAeezX1ZrGQ0PTztuwAgSJlDNKzGwgE?=
+ =?us-ascii?Q?7GGXI25q01fr82AV5BQryt5XBupsrsSm48kJuiIHzwb91IHjr52y5+1yf3TL?=
+ =?us-ascii?Q?9Q8dzhLNrj5PEavhg8623gcCCn5FJIifYXOGwmpmIO/1t1rwujGIvMYgb6JN?=
+ =?us-ascii?Q?KSq6sgeO9EZr7sXvtA9I7PGfAt6MGCZ/h0GswnQ4qy4wmJuroCJYYXHaYdb7?=
+ =?us-ascii?Q?YfrAr4oQMq0mAwWgyDnSKuRZNqsat7Ilv0MEL0WngukXNoUquaeReVpYIDnH?=
+ =?us-ascii?Q?CnljBkcUSlFiBbm0c1bmuuG83SRIAxd4RZvZQ9jCVJfKmWkqL3tgdr0MxUcJ?=
+ =?us-ascii?Q?AjbmnZlXme3mXYhg/PKKEf9Ah29kakL2JSv5zpAYcKrlozp0dWfYs74Lgmwc?=
+ =?us-ascii?Q?OiWTpYeB54GRh46R43J5om2dk6jG2XtTQTWBUXWtkFiGn0uEPBMT/zCrUdZ2?=
+ =?us-ascii?Q?C4+5zUZh6Gjwr/rrJ5o592I/2QjzRQaS2rQAVGJcKYU0rlsAysDtp/410k5X?=
+ =?us-ascii?Q?KMxH0gNzOK8L6DCFP0SvKALmUCUG/KM3K69KBIeqQf7fU+3bgIanrbOJ0kEW?=
+ =?us-ascii?Q?ErN7El0o1pr5rhdY0H4IGJvHdcJxVGOLlSd6gGq/hK57+uZN3Z/ejMKCavia?=
+ =?us-ascii?Q?iuLq7qJcQwL0Yl5OeLXG/5I+ItKhrkj8+uNPADPksHpVS7bC7IOBRTLn20/s?=
+ =?us-ascii?Q?BNRunxT/gOxv0cm9Bli4Rs7thTKQzLtz0XtIb1os9SF2AouRSusPXYJ/+K+l?=
+ =?us-ascii?Q?OG0Gom8gZcMWr3RMLhPL4hq83Hebj6wXTbrJlkeLs7B1YYFJ6oOzHC0DW1Id?=
+ =?us-ascii?Q?LmC07zkcgltuqHGmNqrz87E=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -162,158 +152,52 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR21MB3256.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83e21d6c-5bf5-4c24-919b-08dcc91a4175
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2024 17:36:18.3815
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1317.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53a3178f-a20e-437a-23c5-08dcc954b513
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2024 00:34:43.1537
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mTSBzMJrE4xJmUP6DzywF/UjZsZkhdp8j1I+PrhkkcvzfSw/hctMzOPDEJtrNamOx2/0X2yWoo+I7Lfn8ufLOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR21MB4255
+X-MS-Exchange-CrossTenant-userprincipalname: ESBLct3Uq7a+r/4lMBobbgKZ8ydkM5EPasdscFpmU/36sg5eB495fQkcmGq+HIX3+dIPpvYGqHquywpgjKTFrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR21MB4080
 
-> -----Original Message-----
-> From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Sent: Friday, August 30, 2024 2:14 AM
-> To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
-> <decui@microsoft.com>; davem@davemloft.net; Long Li
-> <longli@microsoft.com>; ssengar@linux.microsoft.com; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-rdma@vger.kernel.org; Souradeep Chakrabarti
-> <schakrabarti@microsoft.com>; stable@vger.kernel.org
-> Subject: Re: [PATCH V3 net] net: mana: Fix error handling in
-> mana_create_txq/rxq's NAPI cleanup
+> From: Zhu Jun <zhujun2@cmss.chinamobile.com>
+> Sent: Wednesday, August 28, 2024 7:45 PM
+> @@ -296,6 +296,18 @@ static int hv_fcopy_start(struct hv_start_fcopy
+> *smsg_in)
+>         file_name =3D (char *)malloc(file_size * sizeof(char));
+>         path_name =3D (char *)malloc(path_size * sizeof(char));
 >=20
-> On Thu, Aug 29, 2024 at 01:36:50AM -0700, Souradeep Chakrabarti wrote:
-> > Currently napi_disable() gets called during rxq and txq cleanup,
-> > even before napi is enabled and hrtimer is initialized. It causes
-> > kernel panic.
-> >
-> > ? page_fault_oops+0x136/0x2b0
-> >   ? page_counter_cancel+0x2e/0x80
-> >   ? do_user_addr_fault+0x2f2/0x640
-> >   ? refill_obj_stock+0xc4/0x110
-> >   ? exc_page_fault+0x71/0x160
-> >   ? asm_exc_page_fault+0x27/0x30
-> >   ? __mmdrop+0x10/0x180
-> >   ? __mmdrop+0xec/0x180
-> >   ? hrtimer_active+0xd/0x50
-> >   hrtimer_try_to_cancel+0x2c/0xf0
-> >   hrtimer_cancel+0x15/0x30
-> >   napi_disable+0x65/0x90
-> >   mana_destroy_rxq+0x4c/0x2f0
-> >   mana_create_rxq.isra.0+0x56c/0x6d0
-> >   ? mana_uncfg_vport+0x50/0x50
-> >   mana_alloc_queues+0x21b/0x320
-> >   ? skb_dequeue+0x5f/0x80
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: e1b5683ff62e ("net: mana: Move NAPI from EQ to CQ")
-> > Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > ---
-> > V3 -> V2:
-> > Instead of using napi internal attribute, using an atomic
-> > attribute to verify napi is initialized for a particular txq / rxq.
-> >
-> > V2 -> V1:
-> > Addressed the comment on cleaning up napi for the queues,
-> > where queue creation was successful.
-> > ---
-> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 30 ++++++++++++-------
-> >  include/net/mana/mana.h                       |  4 +++
-> >  2 files changed, 24 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index 39f56973746d..bd303c89cfa6 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > @@ -1872,10 +1872,12 @@ static void mana_destroy_txq(struct
-> mana_port_context *apc)
-> >
-> >  	for (i =3D 0; i < apc->num_queues; i++) {
-> >  		napi =3D &apc->tx_qp[i].tx_cq.napi;
-> > -		napi_synchronize(napi);
-> > -		napi_disable(napi);
-> > -		netif_napi_del(napi);
-> > -
-> > +		if (atomic_read(&apc->tx_qp[i].txq.napi_initialized)) {
-> > +			napi_synchronize(napi);
-> > +			napi_disable(napi);
-> > +			netif_napi_del(napi);
-> > +			atomic_set(&apc->tx_qp[i].txq.napi_initialized, 0);
-> > +		}
-> >  		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-> >
-> >  		mana_deinit_cq(apc, &apc->tx_qp[i].tx_cq);
-> > @@ -1931,6 +1933,7 @@ static int mana_create_txq(struct
-> mana_port_context *apc,
-> >  		txq->ndev =3D net;
-> >  		txq->net_txq =3D netdev_get_tx_queue(net, i);
-> >  		txq->vp_offset =3D apc->tx_vp_offset;
-> > +		atomic_set(&txq->napi_initialized, 0);
-> >  		skb_queue_head_init(&txq->pending_skbs);
-> >
-> >  		memset(&spec, 0, sizeof(spec));
-> > @@ -1997,6 +2000,7 @@ static int mana_create_txq(struct
-> mana_port_context *apc,
-> >
-> >  		netif_napi_add_tx(net, &cq->napi, mana_poll);
-> >  		napi_enable(&cq->napi);
-> > +		atomic_set(&txq->napi_initialized, 1);
-> >
-> >  		mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
-> >  	}
-> > @@ -2023,14 +2027,18 @@ static void mana_destroy_rxq(struct
-> mana_port_context *apc,
-> >
-> >  	napi =3D &rxq->rx_cq.napi;
-> >
-> > -	if (validate_state)
-> > -		napi_synchronize(napi);
-> > +	if (atomic_read(&rxq->napi_initialized)) {
-> >
-> > -	napi_disable(napi);
-> > +		if (validate_state)
-> > +			napi_synchronize(napi);
->=20
-> Is this validate_state flag still needed? The new napi_initialized
-> variable will make sure the napi_synchronize() is called only for rxqs
-> that have napi_enabled.
->=20
+> +    if (!file_name) {
+> +        free(file_name);
+> +        syslog(LOG_ERR, "Can't allocate file_name memory!");
+> +        exit(EXIT_FAILURE);
+> +    }
+> +
+> +    if (!path_name) {
+> +        free(path_name);
+> +        syslog(LOG_ERR, "Can't allocate path_name memory!");
+> +        exit(EXIT_FAILURE);
+> +    }
 
-Yes, the validate_state flag for mana_destroy_rxq() can be combined/renamed=
-.
+If we're calling exit() just 2 lines later, it doesn't make a lot of sense
+to call free().
 
-@Souradeep Chakrabarti, As Jakub suggested in V2, you may:
-Rename the parameter validate_state to napi_initialized. The two callers
-below can still call like before.
-1 mana_en.c mana_create_rxq    2296 mana_destroy_rxq(apc, rxq, false);
-2 mana_en.c mana_destroy_vport 2340 mana_destroy_rxq(apc, rxq, true);
+How about this:
 
-So you don't need to add napi_initialized struct mana_rxq.
+@@ -296,6 +296,12 @@ static int hv_fcopy_start(struct hv_start_fcopy *smsg_=
+in)
+        file_name =3D (char *)malloc(file_size * sizeof(char));
+        path_name =3D (char *)malloc(path_size * sizeof(char));
 
-In mana_destroy_rxq() you can have code like this
-if (napi_initialized) {
-        napi =3D &rxq->rx_cq.napi;
++       if (!file_name || !path_name) {
++               free(file_name);
++               free(path_name);
++ 	   syslog(LOG_ERR, "Can't allocate memory for file name and/or path name=
+");
++               return HV_E_FAIL;
++       }
 
-        napi_synchronize(napi);
-
-        napi_disable(napi);
-
-        xdp_rxq_info_unreg(&rxq->xdp_rxq);
-
-        netif_napi_del(napi);
-}
-
-For mana_destroy_txq, it looks more complex, your adding napi_initialized
-to struct mana_txq is good.
-
-Thanks,
-- Haiyang
-
+Note: free(NULL) is valid (refer to "man 3 free").
 
