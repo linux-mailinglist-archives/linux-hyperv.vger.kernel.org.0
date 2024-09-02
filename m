@@ -1,193 +1,88 @@
-Return-Path: <linux-hyperv+bounces-2928-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2929-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E969967E3B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 05:45:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95AFF967F34
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 08:14:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 148521F22491
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 03:45:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D48651F21456
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 06:14:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FB873F8F7;
-	Mon,  2 Sep 2024 03:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RQ3gVQr8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C151154BE9;
+	Mon,  2 Sep 2024 06:14:14 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96095A32;
-	Mon,  2 Sep 2024 03:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from cmccmta1.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19B091AACA;
+	Mon,  2 Sep 2024 06:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725248743; cv=none; b=K2iEzPnvuEFUSZyzMICFIhXx9KqVPvxPpj1N+ch5DF1LEz3sgZ/rhxaXMv5+hz1Y6AT+b03c5EttMgumAGo4X/YCSsGZcBkzxCrwLMRwhWhyJ22UBLjpAdzjp6Vt4IIdRdUW9jpWIFPiappHNW8QjU9IbQkzAkVTjBJSVXgmTGc=
+	t=1725257654; cv=none; b=eMmVXGsS24XMb5DbN/a6jiJ0O9S2Ot6polfY3vwKODTT1AiffC/2cDBq5vobymBYFMQ2caWN9tJLbrc8SQoY8dFu1fR/z+6a+oy60Q8jL+ciZWIVr1Xc16X5Tk2bG7+R7KWUxoYeaKQmNTPH0uGhpzQtkT59SLVVtNpxhpTLCcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725248743; c=relaxed/simple;
-	bh=+MBIPJtYIoiJf8QT9pP6fMzxLjVl9hSOhEt9z81QUYs=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=iwP2KzxSHrIW5jfWUHRC5yu7jZZAeWzZE79V2KVD2Cb0PEqvRbsCwAoH9L91AAjGJWlZ7pFjkyT4qYUrjehEgPDfURimnpoCew8+LtZusGiOhXbL94AgHEd/9T/WlaH68JeV5p17BMVnCEdjd0xWcThGcx76q/MYXM5X1n4nvUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RQ3gVQr8; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id F35BA20B7165; Sun,  1 Sep 2024 20:45:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F35BA20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1725248735;
-	bh=+wnfCgqjbsq5/x6cwBds07gGYWXxjV04gceiknVyHO0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RQ3gVQr8ew1PBzO1Rn7mXiFsgiG8lNjlgoNs5OKsuV6LmUlqmxpAcCvPncjV46UEH
-	 enGljgeenLsMJEgl4TTnRVDPFJ7V/KtzpfzZDTCnTSjDmz3P4QXK5VvH7Ia14Su8x3
-	 SXZYU/O/pvoUbrfFW3YmjBc8rFICpQf2isd43XbY=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1725257654; c=relaxed/simple;
+	bh=3DAWqnVCfA9f+ulc7JhR2oVaVpHUUinchMrXeR052DU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rryx2xS0ph/Rxn9iFfvTTtgr9e62yrLEuCixNEHahU2MUwEVJ/qUTrqnWJhBCrixUGI34+NRGQ0pGRSMPz/G8HX88Hpk2v9O8XKpSv2r9OBzTIGAzqEQVg3uin0PVdW55TU8wC8TtQHZ0wMVLDMEWT7USxQVhaWKVeRHKE4On7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee166d557b0805-a0105;
+	Mon, 02 Sep 2024 14:14:08 +0800 (CST)
+X-RM-TRANSID:2ee166d557b0805-a0105
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain (unknown[223.108.79.98])
+	by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee566d557af5da-8abab;
+	Mon, 02 Sep 2024 14:14:08 +0800 (CST)
+X-RM-TRANSID:2ee566d557af5da-8abab
+From: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
+To: kys@microsoft.com
+Cc: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH net-next v2] net: mana: Improve mana_set_channels() in low mem conditions
-Date: Sun,  1 Sep 2024 20:45:34 -0700
-Message-Id: <1725248734-21760-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	zhang jiao <zhangjiao2@cmss.chinamobile.com>
+Subject: [PATCH] tools: hv: rm .*.cmd when make clean
+Date: Mon,  2 Sep 2024 12:21:03 +0800
+Message-Id: <20240902042103.5867-1-zhangjiao2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The mana_set_channels() function requires detaching the mana
-driver and reattaching it with changed channel values.
-During this operation if the system is low on memory, the reattach
-might fail, causing the network device being down.
-To avoid this we pre-allocate buffers at the beginning of set operation,
-to prevent complete network loss
+From: zhang jiao <zhangjiao2@cmss.chinamobile.com>
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+rm .*.cmd when make clean
+
+Signed-off-by: zhang jiao <zhangjiao2@cmss.chinamobile.com>
 ---
- Changes in v2
- * Pass num_queues as argument in mana_pre_alloc_rxbufs()
----
- drivers/net/ethernet/microsoft/mana/mana_en.c |  6 ++--
- .../ethernet/microsoft/mana/mana_ethtool.c    | 28 ++++++++++---------
- include/net/mana/mana.h                       |  2 +-
- 3 files changed, 19 insertions(+), 17 deletions(-)
+ tools/hv/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 3e865985340e..a174ca719aba 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -608,7 +608,7 @@ static void mana_get_rxbuf_cfg(int mtu, u32 *datasize, u32 *alloc_size,
- 	*datasize = mtu + ETH_HLEN;
- }
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index 2e60e2c212cd..34ffcec264ab 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -52,7 +52,7 @@ $(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
  
--int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
-+int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_queues)
- {
- 	struct device *dev;
- 	struct page *page;
-@@ -622,7 +622,7 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
+ clean:
+ 	rm -f $(ALL_PROGRAMS)
+-	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
++	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete -o -name '\.*.cmd' -delete
  
- 	dev = mpc->ac->gdma_dev->gdma_context->dev;
- 
--	num_rxb = mpc->num_queues * mpc->rx_queue_size;
-+	num_rxb = num_queues * mpc->rx_queue_size;
- 
- 	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
- 	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
-@@ -682,7 +682,7 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
- 	int err;
- 
- 	/* Pre-allocate buffers to prevent failure in mana_attach later */
--	err = mana_pre_alloc_rxbufs(mpc, new_mtu);
-+	err = mana_pre_alloc_rxbufs(mpc, new_mtu, mpc->num_queues);
- 	if (err) {
- 		netdev_err(ndev, "Insufficient memory for new MTU\n");
- 		return err;
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index d6a35fbda447..dc3864377538 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -345,27 +345,29 @@ static int mana_set_channels(struct net_device *ndev,
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int new_count = channels->combined_count;
- 	unsigned int old_count = apc->num_queues;
--	int err, err2;
-+	int err;
-+
-+	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, new_count);
-+	if (err) {
-+		netdev_err(ndev, "Insufficient memory for new allocations");
-+		return err;
-+	}
- 
- 	err = mana_detach(ndev, false);
- 	if (err) {
- 		netdev_err(ndev, "mana_detach failed: %d\n", err);
--		return err;
-+		goto out;
- 	}
- 
- 	apc->num_queues = new_count;
- 	err = mana_attach(ndev);
--	if (!err)
--		return 0;
--
--	netdev_err(ndev, "mana_attach failed: %d\n", err);
--
--	/* Try to roll it back to the old configuration. */
--	apc->num_queues = old_count;
--	err2 = mana_attach(ndev);
--	if (err2)
--		netdev_err(ndev, "mana re-attach failed: %d\n", err2);
-+	if (err) {
-+		apc->num_queues = old_count;
-+		netdev_err(ndev, "mana_attach failed: %d\n", err);
-+	}
- 
-+out:
-+	mana_pre_dealloc_rxbufs(apc);
- 	return err;
- }
- 
-@@ -414,7 +416,7 @@ static int mana_set_ringparam(struct net_device *ndev,
- 
- 	/* pre-allocating new buffers to prevent failures in mana_attach() later */
- 	apc->rx_queue_size = new_rx;
--	err = mana_pre_alloc_rxbufs(apc, ndev->mtu);
-+	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
- 	apc->rx_queue_size = old_rx;
- 	if (err) {
- 		netdev_err(ndev, "Insufficient memory for new allocations\n");
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 1f869624811d..dfbf78d4e557 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -488,7 +488,7 @@ struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
- void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
- int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
- void mana_query_gf_stats(struct mana_port_context *apc);
--int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu);
-+int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
- void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
- 
- extern const struct ethtool_ops mana_ethtool_ops;
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(sbindir); \
 -- 
-2.34.1
+2.33.0
+
+
 
 
