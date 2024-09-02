@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-2926-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2927-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D73A4967E32
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 05:35:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73261967E36
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 05:36:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 637811F22420
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 03:35:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29F5128185E
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2024 03:36:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CD7F145B00;
-	Mon,  2 Sep 2024 03:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA0513AA27;
+	Mon,  2 Sep 2024 03:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AOgqTXFY"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lHfO6xts"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azolkn19011036.outbound.protection.outlook.com [52.103.12.36])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012048.outbound.protection.outlook.com [52.103.2.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA3B143888;
-	Mon,  2 Sep 2024 03:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A12714A91;
+	Mon,  2 Sep 2024 03:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725248123; cv=fail; b=nF6/bM0vZ8F7XIEeiPFmVrSbbN7DZFQVKYVWMDAEfdtZwo1vgq5bcPGbMQCi7hRHhnO0/yHWXQY2+jmd7tDSg0MliYAbPfuWYWq7DQe3kKvV7Gd6w61D8+UnC2wg3DTqqwgQwZETj7olmvYryQ+YZuDEuLOvDHlDD9c2yQ5HgQw=
+	t=1725248132; cv=fail; b=GmARZ8S0Sd08H3fYHG5xtNzXrmVSsbsQCmLI5hRC5KUfQB4RqdytZH9uo8lt4nmz0rO7VT0i+vbr51LuF4sOvEyzb+e0uah+9G7Jiv3MQxf/KkyNDiAoyX2HO1hQ7BEt5B0YrxFIu7LlGSm7+T55seY5H2RY11KD5X0WSzgmxic=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725248123; c=relaxed/simple;
-	bh=ZeDBUL/48N/obMNiBqxm8P6Nn4uzR1pkjC3wjJMbDtI=;
+	s=arc-20240116; t=1725248132; c=relaxed/simple;
+	bh=9aycErN3FUtrUeY3vq7aGxL/hcyttKuEeBn+4LiPBFs=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rVWReztJvpJxBmcKw3IhhTozBa+a0R//dMUCi6eyO7KtZsGBT4sp4yWUk4I2EDQtaYIQW6JAwPcb7sCWKWB5394zeAo4u10B6CaZQGENHlUTu4Sc+fG2KoVujwqLjx9rgz84lpcaIY3YmgDbl6LjQX4J2dOnUgzLcSclGT7GO6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AOgqTXFY; arc=fail smtp.client-ip=52.103.12.36
+	 Content-Type:MIME-Version; b=Wii5HvPy02MaQDy177C3bbDSD7y52Ul2oYxKc6Z5xsK/1R924Agi/6N0I7aBbQkkCE8HcPgy4CDdLfHw4mOoL2CQiiZuP7Hx155JejtT0IzpN4cSR+T4LscXjSkGZX8Rs4abiM+R6EFSxeVK+m7nvybaP/ifiBC5Fk7SKgOt9zU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lHfO6xts; arc=fail smtp.client-ip=52.103.2.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gb8DVTZYIK+Lf1vxFXYxKiAEdRz5SZPoxtQgXvWuaEhhwwJUdVeiicv+qwRSJKTQ5DaereKA8GTMkTQO68Uv+PoXmfk6vYjNy9C5Nwnw19/c/SO29+2eYIkb95DzzmqjIcK61duP+DfPRMIM+3kBNZTCNLMeB9keyoJVS/WqOKb+p6iYVUsuNe/FtkdctZN6/oG3o8imyXtMJvqP7tJIxKiEXgNWPchRaQ1dLpQ7YDcE/uQFROYNhAumkiPvoJZV5WpgmU1V/d4m05utN4wjz7O9kmYuxhurSYG2kig23FopAqJRR0eHo7HDGrRk2g4O2IBz7qQ4H7pwyp+UbTZyRQ==
+ b=Oj3orrghZrRvKd4o4ePVzmDQnMUKta2NfmH29oNKah08Jf8gYZoGlOBynChgGS864EEuXRkKJLGdpsnsSZoxIZ6xuaXWzYbX5k0Hxj21SQeHG21flL5Ob7m47cS2IbJycQ6BpK3z5CURcXr3gR5w2KrYNnvL5OmRy8J8z23hXh8BQ079e9VOH9/VtaYGJTcmos6n1P+IuWW6S2N/eJpQTWCYEyK9YZsIF1obpHECw3bnTMcQRecGPlqLhHAkfUAgs8DCu32RuizEdVGyMJtukwfBwQ35lGqDtfVCCUzx5oLmfh+Tm948XUfHlWNW2fPv1Ws5HBMRaeUjnRTzQPLEvw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j+CClqkRg177sxJ9usP34tRllPGDfhuMAnxmsgfe2NM=;
- b=vEEHGr7xhAu4WQaLQnhe/+wJsQ8weqt50tSHa/sm7I2+Gvk4y3r7cmUOxQfXst4savaWuvI/VsZEwdz3/yeY/ZAWwVyH84l1y6teHLTizmuirA51DS48XBsxlqIUurnW71AKZe2OfACOeUkHP2sIxPh25TuFiZUahvjQgHN0qH/fn3SDKScjQE10Rqjh7gmMQCRSP3Qn5mmAR/iPtYT9iLC3dZ0BeoZvQDA0SBsxSTTpO7pMObCdItVYIb5ZvzVSdyCfsPt0H/Wzxris3zZLBCc7y9Wggd2w1oxuzqJfwi8xFkNha0gBaoh2sZfy3MhBFtLB8Lw9F6hn5s3M3zwR3Q==
+ bh=46AK7aXq19P0pccXufpruYVcRDgFbDDEhZOvFBS85sI=;
+ b=Yw3rEfq1bMZaghP1sbL0bZTtL5EcSoiKjBOtC+QL7ZJhKx52Rgx6M/ykB9skef+zWr41nn7xAjyHcdJ2fgwt9VFIq9pRwxL2tMIzO2HU/kgTK8BW+sX9MdTf5K7eGGtRTdf9qAXLY66zZer3oSrME+cesQAsw/moTUzoApCJik/FCFG0nVAePQKfcBHrOLYtgm4OeuA4Q3cH67lUqqEWaHBfycbOx+jE1AT5db6RdM8bA6OuY9IAeKliAzM0i2dxKGcIdY4l8H48x3E8DsX+O3LxPwRrTEEpWZGKR+NFpvvtnQxKui1WN9xCl8nPdiIfcMqAWINTuhtq7pj87p9pqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j+CClqkRg177sxJ9usP34tRllPGDfhuMAnxmsgfe2NM=;
- b=AOgqTXFYfVe1hJik8up0dCWaCAwZK1Y7+ti9M/d7FnSn0cjaWY1WKZFaxiwYEj8i4X3uq1wcnhveHLK+gYPkJ43WrGGKIbygjjGR2Yiy4B/lfxrX5I1JWPmtbUA/UrW4F7mjGUxVhTJDpMzTdh3mFmfTHVffIQg9vmF1gFW8MglXuIUZzxx5hJeydgdDOXkxcU/KJ9CjO2SdNOItgQPohKFE69UyYsqf7CJo4R4Vpvu2ZdOpL3yg0DtTY5YnCQQX3vrf9uXfym9qm73h6ilZtLUEqpGSDXXwB+N1s2n2ldLmOVOZmVIb8OeP426Hjlb3n41xLPWIet1ML4hYPKi7xw==
+ bh=46AK7aXq19P0pccXufpruYVcRDgFbDDEhZOvFBS85sI=;
+ b=lHfO6xtsU4y6Y5TNqiXVr8L+NTXlITDssEpe1FHY2UayLQuERK2k4tB/XH7igkPur3fjQloF2OA0vVQKCZfv0735SGDUdR/xVFOrucA0IyuORJ0fnImhreXFqw8KC7FECQxEbORLdNAa6rIavWszOlSS2Ps6+M7YBFP127jikz3vnXLZgF2hOb4xwIDqm0YIgN728+V1Y8nIZMDCYCp0ukclE9sCoHB9X+ryNr6qLxHYIC1rS8DpSj8mznBeBSTxL/gYQgqEYdWg/ThoqlRrhiY/UWnZX6AmtxwCT/3gVea11BvbLxhbsQsThufw+amvBJhF/bk8jTAUTILSySUS3w==
 Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
  by SA1PR02MB8655.namprd02.prod.outlook.com (2603:10b6:806:1fe::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Mon, 2 Sep
- 2024 03:35:18 +0000
+ 2024 03:35:28 +0000
 Received: from BN7PR02MB4148.namprd02.prod.outlook.com
  ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
  ([fe80::1c3a:f677:7a85:4911%7]) with mapi id 15.20.7875.019; Mon, 2 Sep 2024
- 03:35:18 +0000
+ 03:35:28 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Yunhong Jiang <yunhong.jiang@linux.intel.com>, "tglx@linutronix.de"
 	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
@@ -70,52 +70,52 @@ CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
 	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH v2 5/9] x86/hyperv: Mark ACPI wakeup mailbox page as
- private
-Thread-Topic: [PATCH v2 5/9] x86/hyperv: Mark ACPI wakeup mailbox page as
- private
-Thread-Index: AQHa9bO/8V6yP8NKL0Kh7Jr/YhMZqbJDIAOw
-Date: Mon, 2 Sep 2024 03:35:18 +0000
+Subject: RE: [PATCH v2 8/9] x86/hyperv: Set realmode_limit to 4G for VTL2 TDX
+ guest
+Thread-Topic: [PATCH v2 8/9] x86/hyperv: Set realmode_limit to 4G for VTL2 TDX
+ guest
+Thread-Index: AQHa9bPS4R/MiBEGtEaf0VbvD9Al97JDAi1A
+Date: Mon, 2 Sep 2024 03:35:27 +0000
 Message-ID:
- <BN7PR02MB4148A328FA019239196CFB15D4922@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <BN7PR02MB4148C40929A99B9B9B47D86FD4922@BN7PR02MB4148.namprd02.prod.outlook.com>
 References: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
- <20240823232327.2408869-6-yunhong.jiang@linux.intel.com>
-In-Reply-To: <20240823232327.2408869-6-yunhong.jiang@linux.intel.com>
+ <20240823232327.2408869-9-yunhong.jiang@linux.intel.com>
+In-Reply-To: <20240823232327.2408869-9-yunhong.jiang@linux.intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-x-tmn: [mieN62r3/lq0ZZG9ihE/ehGbcQEhxcOF]
+x-tmn: [Ryiz0U37ZPfn+JzzpJomfZH52/oGbyFx]
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|SA1PR02MB8655:EE_
-x-ms-office365-filtering-correlation-id: b740b4a1-24ff-45cf-4af4-08dccb00442d
+x-ms-office365-filtering-correlation-id: ec8051bc-80c4-4b61-70d3-08dccb0049d5
 x-microsoft-antispam:
  BCL:0;ARA:14566002|15080799006|8060799006|19110799003|461199028|3412199025|440099028|102099032;
 x-microsoft-antispam-message-info:
- 1QHpCZoAmYHbBqL1tdBCMqkB4EOAKaNjrSAS+H8mJQYcvyJlyEc3pCx9Nbiqs+2MLWWK/1uwltf7V3qX+T0eia7pUKdtbaqxKhT8qSppGWwTkqrl7zCSGjpjpku1lvm1E20MPo1j8FiKk15NUEy3Y9yqpCWcjsqPzSn0GwOLzC1taszh+rrdteupPnGERuHITqp5BD0AAjhXzR3u2wkN/dmhq6NE1Bk0nTRt/2PqGqaBNQX3rC5uSiu3BzJ76lB8CccapvFGqWa60KLjoQp1cmHIfwfJqyFubQYe9XanCvlJ6hbzRqL/XixK1me9usfjE66xtpcAlMeacELhUdd8+LHKYNxN1Ag/nqSM0BckIO4F/gVkf20Y62Re8zux8hV6JPAnaLVyfqYCju9VghFv0LBml2eXzz3UaPMEKAXORm7l768JGbIur5Z9d9q1fP9HVGsbGkDTZW6qyT1bi6nGKp6vZjXCE7jLH/JEd2T3mUvgiufD7JXh354cPhkwmpQWOz7xaXhr+ztyMvmzzTNaaraDciBK4uQwvBmXQuaQiVXYeMDQfPx0OBDPi3EdQisqwH7uipMUlJu+dw0Ego0gXDv6V5K5LAL0BhmeosacsQWVj4Ey7HffuC0gDyQxkGDuI0fVIrtw/AZhpXSc9P1zIvQPnKDIJrEpI4Z7z21qoUDhV27DVo2AoeeuTtkkw83x
+ URTTbsfYW9pModfOnsP9RsKFnVUVsKx2IbGrM3ttkar1sPmqgv+qkKmoewpJuYyKOFNMp3JxmJqI4xYxdE8YKrRdSuu72Nah2anjjkf11OXX9QeKgzxF4Cr+CaV4JW4SA1ZZxxpmslAQzZ26LZWuZXFOjkyrabq0XZ7U4ar5U6jPpWiihKYaWgVfrmCCB9bXQUz9MNiFngQbZsVpjr15AY81EHqN3ydj4WIJTbvbnX6qtLtP0wGnWA/LWR/AXM3mvsU/oLznx+urZ+eGWycp0J7/8m5JpjLuSEIvNkxFcAG3PUkerWx7MZxGFBtd5SCSccWxRTTAj3JUK97eyGsbWhJET2V2+3IoAL/lEVBpb+QbY3dIGCti1H9vAw3lCdPI8e1pDuqU7Nz6an5gBMc8RaQ4vtx0j503KswGoxBGS2yYuJCfgKAVIBQ9PSAHPvWav60lJlCidlgU8B+QjcyTfY4CqK4kRz9udMlpY3xQvDAKTTFGl7Lhy6DM908b9i5wl8nrOKMcTPPmm+CK4ze6HxkSM9Ny8zD3IdFU430yylK0oZNloqnfhi7RpNSpGYVMrV6o+uDsXiPIYyFX1ACS/s4gJggfIXFCeFc3fHYnXDzzp8/YfZUaxkNg8XUd+5jC4ie7C0wUrd0pyY5ffquNlNcpShi7UO8FuVAnAZRvHC3LJKwpR6CbQK/OFcNEbRtS
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?owRnMCiwFmo1LZv0xiRLnnliBfnCIkJu5A4iqJc6kF2CkcL0YiOqm8zRKI1/?=
- =?us-ascii?Q?hmJET9SBPOuK9+1Fc+fDup+vzevFRfinpSbIpobGc5B5r9faHGA2SWX2FBv3?=
- =?us-ascii?Q?UGBrv/QZM5CMK5QtMqm/UXP5q9neDFr/v87koWm0CCFyAYSvDJLRYngU7bZd?=
- =?us-ascii?Q?iOVMyaIcckaElxf/PCmAZSd4rI29j27IBIRTP1LcpiTAuJva02jZ68tkHfGg?=
- =?us-ascii?Q?+vWiLmekN0kjjgSkzBsxcL6MS49WsOGaP5icHZtIE745jGwjP2bvYkCTox6H?=
- =?us-ascii?Q?BXt9d7ABDhHg4y3ppcxA9o0ELk+goDQmMEryYAQvpHAPNsrYjSU55FFGlPbQ?=
- =?us-ascii?Q?1HQlHxr+uGHV0D6k3uDlkBdaAcjDsxr5t/5dqRYIEUc/jP582UqVW78qOE6B?=
- =?us-ascii?Q?B+PVp2P5rvMe77n0abbuE9ylWinwwPJ9As9dErd19EQ5S7cwadhOB/gZ90T1?=
- =?us-ascii?Q?xEb6+FHfmlYj/y53snsteI+I8oSV0vScLkiaAMJaH31RKI0+Rhq031I6Ms40?=
- =?us-ascii?Q?sM3jgJNRb64Rzs31SrVmIJx2ODXh7NVzYjr8lTwdFrfe9fkN8ObSanh01duu?=
- =?us-ascii?Q?9oa93NqldY2oHiYMRExB8aiLohWNv/mxC5Ze3WvIjSuzD+zq4NEgYykK1DTo?=
- =?us-ascii?Q?Qel7o4tEXuGOVS/LLzQScYvUoeS0qktpYMaXfjZyctDiKORPifDWuTzqzbN5?=
- =?us-ascii?Q?j4QJJbRoKbWYKHtGki95pD1/nadQXBzQNAt18pGv42KttwdRBE19/8tJWbEQ?=
- =?us-ascii?Q?GxpgzKOL07aN0UtJwV4ARHelJ6jyRMgBTxTDG+wErQKM0h03H+I7FhkW3Nm4?=
- =?us-ascii?Q?xFPnvgj+WjiEk8w8tAxb/mklH0nwSQjsNMSx4NaVzlczttUOUoxLGE3LjCDe?=
- =?us-ascii?Q?P3KtGPiuVq8EC6DDUCKsjxUicghkbrjpP4jvqB9+VCL9HJ588q8xib6S4pCV?=
- =?us-ascii?Q?zX9ts2j9rMSaVfm1DxqD6ZyrXkmDxTS37o1TQ1bMPx7Mb0PpVKrbmoETM72U?=
- =?us-ascii?Q?14qghyQp/eniwn+lHEaUySYKZSz7vpVarZ9YKjILpYMJqFU8eh8NgQ7D1UwV?=
- =?us-ascii?Q?FS/TXbwhBG/C1a0ROHmPP+NVE2B6KFMNLEqtKYMi7Za96nz5xPEU2xrs5f9g?=
- =?us-ascii?Q?P+CP2lKQI7JC/yVm5P28Hq8/+4R8urKzv/eLS970hl3iCkPdk5fG+pp/Stdc?=
- =?us-ascii?Q?0c7T8oeK+01ILF3ATaIw/0YtKPT/SiRhiyF54vqATiBY6i9Xz2SOLEAMnWU?=
+ =?us-ascii?Q?yQuOldNMStbTC8xnRxKWHyDhZb1Co/gGYPbURT+9oX9Rg8IOsWVtZh907Os3?=
+ =?us-ascii?Q?vJl6Hzg7eInGcb9mlbwIDhXF+pAfzBUJtzR+eYGSZ19L4d7kS0Rj0RF191IF?=
+ =?us-ascii?Q?Rpj1XbW3zL/uHByY35hltOvr/v/cK55rgjaQrxff7KkMofC16MH7c9o1vDNK?=
+ =?us-ascii?Q?3zc2lAgeomav6lZTuS/HqQy+g7b53KiQtmS6VxXDrvY519yTm2INOrKmdNkn?=
+ =?us-ascii?Q?8e04tTep2mkNiUwS44KrCUjJm6rh7+3Nt4kqTumAAs0Dfc81IMfqBkazyKn5?=
+ =?us-ascii?Q?y+Rga9/vCz5eGnhHoJtKa17x3AQE3QhZNUrEKw8qr9GcGW2Et3xh3CwLxLK8?=
+ =?us-ascii?Q?Eb0hXpX3AihSpt7PQVqJ6mGXVLsAyHWpypRRgVS8xE5d7TEugNEnK6c68HUM?=
+ =?us-ascii?Q?EFvnKUqB3vvFiHjJWFt9a7F/INvto9+2H/DC3Dq+ZypD1KE5kwDPCOwib5A1?=
+ =?us-ascii?Q?PPMI7hEOGdME5qptNYNfKN/kVBRw34WHNgeiFRj5z6T6DYjHqj3jZbl6huil?=
+ =?us-ascii?Q?yE9npht6GTAW/YA16r9hV/wlhCVko6AYj9pmrHRuwhqSYNVZYSCZ94PkG1vN?=
+ =?us-ascii?Q?Q7NDKOZd7zAPt2y9iQGF6yfomptP0CRAM/BqlP3YqkzHGcxl5eoQ2Zuwx+6x?=
+ =?us-ascii?Q?PO4MbPbQck6YP5zUqElOsY31ro0kDyj8lCvNNPfhi8SRYBbunw5TCa9i8p3x?=
+ =?us-ascii?Q?xGnXpZG74cZbXsezEttcLObF1vEhjgUbv0a5atjEhtmGC4/WvpgGD/y76W+z?=
+ =?us-ascii?Q?M2JQPghIpGXgjNhNiuHEHv5To2BdxMog+NkamTxtfaiCYWjYVzsnlH4BmMJJ?=
+ =?us-ascii?Q?7sP9pRpFAnqcw0gUZQjyy766zb/f+QcxaygeC6HA0OUCXdgKWeNE5oHrn183?=
+ =?us-ascii?Q?GWN96hTzdF3CWWq8acBIeGO6svhkV2ZqIxIQ73v8MsdGGdyYOZdZpOgxU327?=
+ =?us-ascii?Q?mv5ubRnLExErecJAcu2W3WwzsW6GHhFyYDW9wACUxSbVGF0NgcHg2hAd+le5?=
+ =?us-ascii?Q?SJLcaE389zG+yKqJSifoMVvN+MULuYKd9XWjfYsu31Yc+LajWj1eWjyQBIin?=
+ =?us-ascii?Q?a53JAnPXJCWUsbRW+iMBhfNdhTLqGu+x1ABFsOWCqTIgxB/v44Qj0wKxYhqe?=
+ =?us-ascii?Q?i/QGek2ieAT/cvHxwlyp0OOkHT75Yh+CSNgfNHVWigh1qV6deAz+xI+BP4yc?=
+ =?us-ascii?Q?sOFeSpME8MQnaESenFbfAefIa6TniVKq0DSAH+0hfNG0jeS/th8ivEIFOeI?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -129,70 +129,55 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b740b4a1-24ff-45cf-4af4-08dccb00442d
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec8051bc-80c4-4b61-70d3-08dccb0049d5
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2024 03:35:18.3521
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2024 03:35:27.8839
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8655
 
-From: Yunhong Jiang <yunhong.jiang@linux.intel.com> Sent: Friday, August 23=
-, 2024 4:23 PM
+From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 >=20
-> Current code maps MMIO devices as shared (decrypted) by default in a
-> confidential computing VM. However, the wakeup mailbox must be accessed
-> as private (encrypted) because it's accessed by the OS and the firmware,
-> both are in the guest's context and encrypted. Set the wakeup mailbox
-> range as private explicitly.
->=20
-> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> ---
->  arch/x86/hyperv/hv_vtl.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index 04775346369c..987a6a1200b0 100644
-> --- a/arch/x86/hyperv/hv_vtl.c
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -22,10 +22,26 @@ static bool __init hv_vtl_msi_ext_dest_id(void)
->  	return true;
->  }
->=20
-> +static inline bool within_page(u64 addr, u64 start)
-> +{
-> +	return addr >=3D start && addr < (start + PAGE_SIZE);
-> +}
-> +
-> +/*
-> + * The ACPI wakeup mailbox are accessed by the OS and the BIOS, both are=
- in the
-> + * guest's context, instead of the hypervisor/VMM context.
-> + */
-> +static bool hv_is_private_mmio_tdx(u64 addr)
-> +{
-> +	return wakeup_mailbox_addr && within_page(addr, wakeup_mailbox_addr);
-> +}
-> +
->  void __init hv_vtl_init_platform(void)
->  {
->  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
->=20
-> +	if (hv_isolation_type_tdx())
-> +		x86_platform.hyper.is_private_mmio =3D hv_is_private_mmio_tdx;
+> The VTL2 TDX guest may have no sub-1M memory available, but it needs to
+> invoke trampoline_start64 to wake up the APs through the wakeup mailbox
+> mechanism. Set realmode_limit to 4G for the VTL2 TDX guest, so that
+> reserve_real_mode allocae memory under 4G.
 
-hv_vtl_init_platform() is unconditionally called in
-ms_hyperv_init_platform(). So in the case of a normal TDX guest
-running with a paravisor on Hyper-V, the above code will overwrite
-the is_private_mmio function that was set in hv_vtom_init(). Then
-the mapping of the emulated IOAPIC and TPM provided by the
-paravisor won't be correct.
+s/allocate/allocate/
 
 Michael
 
->  	x86_platform.realmode_reserve =3D x86_init_noop;
->  	x86_platform.realmode_init =3D x86_init_noop;
+>=20
+> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> ---
+>  arch/x86/hyperv/hv_vtl.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> index e5aa2688cdd0..5829aac74f80 100644
+> --- a/arch/x86/hyperv/hv_vtl.c
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -40,11 +40,15 @@ void __init hv_vtl_init_platform(void)
+>  {
+>  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+>=20
+> -	if (hv_isolation_type_tdx())
+> +	if (hv_isolation_type_tdx()) {
+>  		x86_platform.hyper.is_private_mmio =3D hv_is_private_mmio_tdx;
+> -	x86_platform.realmode_reserve =3D x86_init_noop;
+> -	x86_platform.realmode_init =3D x86_init_noop;
+> -	real_mode_header =3D &hv_vtl_real_mode_header;
+> +		x86_init.resources.realmode_limit =3D SZ_4G;
+> +		x86_init.resources.reserve_bios =3D 0;
+> +	} else {
+> +		x86_platform.realmode_reserve =3D x86_init_noop;
+> +		x86_platform.realmode_init =3D x86_init_noop;
+> +		real_mode_header =3D &hv_vtl_real_mode_header;
+> +	}
 >  	x86_init.irqs.pre_vector_init =3D x86_init_noop;
+>  	x86_init.timers.timer_init =3D x86_init_noop;
+>=20
 > --
 > 2.25.1
 >=20
