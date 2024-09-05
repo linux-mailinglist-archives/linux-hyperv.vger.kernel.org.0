@@ -1,67 +1,69 @@
-Return-Path: <linux-hyperv+bounces-2976-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2977-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A56F96D052
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 09:24:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAFDC96D056
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 09:25:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A16F1C223E6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 07:24:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61DFB1F227F8
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 07:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E281925BD;
-	Thu,  5 Sep 2024 07:24:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4739192B91;
+	Thu,  5 Sep 2024 07:25:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BF883CC1;
-	Thu,  5 Sep 2024 07:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D7283CC1;
+	Thu,  5 Sep 2024 07:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725521070; cv=none; b=AOduWUZcaKf6kZh9mLc4Rh9lFjrILU/EGGzcur+n/zJ1FVl5wCdzCPm97AClGQ/yiCTnFCfiQfi9NXIkpYyJ8qIvOPzlCI1w7hrSlGVzlB8zmTkqyp3RxVYvy7q/HabnXhq5I6KBCUAh//CVVjJ9vGBLg19AFlY5Ovft/DphNO0=
+	t=1725521145; cv=none; b=DacIcui1I2sy1CxecwqenV1GRjJnHAxZ9oWez/Oc5E11Ogr//Kf30mRbvJ6qk868IqsuI9NByXMImUMBbN8BiQexkkARA4hW9i8lks+69sqGVzrMjgKPyEhZ0D+8V4DkRwrmaJwDvb0E8M9amU917REdx8hkYyIFUt+IW6K9T6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725521070; c=relaxed/simple;
-	bh=FI1PSoZVVa16CmQKuL37Mc9NrGaPOmoviQARBeYRlDk=;
+	s=arc-20240116; t=1725521145; c=relaxed/simple;
+	bh=ExgF/JsMeCuSh6yY7uEjFS2Jx+Qqvu9SyCRzzC744PU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u+soOk/DbbzumrvHpiD8IX0kkuhls3otgVTc26Sc3flzBHYZVFXf+1Q/B4MWsQbNsL+q5RivsG/EXoE3J4Xh0QZVfh1SztTUN5JF+7QSvc2bKgoH123m/Z+I+6DIXO4rJPDUUqadXMVZOISsQ3y/AiYRLT1LcxJO0e3m21im7d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=BwYxkcRoerIK2BIN9XEd6Jm1uq2KBdBk0Ndgx4B3Lc6ThtqhXb0S7+nP1COzZIEsBR439L3jFk1tSEpAMVppN771hakNxB5AljlJryPHFb56nD6dZgIAWo4XYXgWiL9Ntoh661dCLW3LTP23YUHIcXGa0zCP2YfJn5Jzxf0VYDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2d87196ec9fso310157a91.1;
-        Thu, 05 Sep 2024 00:24:28 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-205909afad3so4869165ad.2;
+        Thu, 05 Sep 2024 00:25:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725521068; x=1726125868;
+        d=1e100.net; s=20230601; t=1725521144; x=1726125944;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kNiAqN+VzlgYYj2aMS1AwVSsFBR8MBF/9uFYPl6rH7Y=;
-        b=euydnsCk76ayVyTOZ0FZhnjiH2UFUppr6SLR2nOZ8oWenkzr6ZSTcyg2j1IKi9zfBH
-         0lnucDPk3BQDKgCTxXBlrrbQwXrCK9uUYz6yfOKhOmuDvSAgkq8aBEmmbTJaGNFtPpN3
-         qnOEzRgYk+BOWEZXv10gWWyPYyHVgfeyYMSRf194u/BwLWfkjrAQSfuaSBaEvhBPCHPY
-         omgvK2v+JLxqveNsJCDRLeB3UVpV+yNixeL4C0trKMGyY1JCbBdbOIiK37BnYpOUJ+bg
-         IsrNGU1uwEGkNq9iOiVVaWWwUVtPLWEYltElw23XocKYJWxX7ncWbTiSMnVioLcUyLU8
-         Y+Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCX4yvK41pXMXW7r9H0YumW0UMOQKRdYv4lVd7u4oxmMj68O7tKMmYD5125V7h6tsk0XHv7Xt+xiA8o9YQE=@vger.kernel.org, AJvYcCXtOgkS93TMmTyNVoso0yuzE8ReX080PkmE26w3aKx9RfbV7tk2AFhiC1gRjiZCcTMlfBj9KOuJ9kYkG6BX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWSBC8EBASyY0+vszhH4U7U1fdoxL02ZDNlUbf12Bl33ZBfaw6
-	bg5BY/NgxOt4rbUdpIiTuxnIx7u80PIFrzO0WoIRXatbMPMrlMfY
-X-Google-Smtp-Source: AGHT+IEAWRmsEJ0YWW5GOsmmdA89/655luLaBSoBEdlieU+Mk5lsvRwDxyNZ0pnJt0krG1TwjjP6ag==
-X-Received: by 2002:a17:90b:1042:b0:2d8:6f66:1ebf with SMTP id 98e67ed59e1d1-2d8972c4aaamr16144405a91.20.1725521067529;
-        Thu, 05 Sep 2024 00:24:27 -0700 (PDT)
+        bh=aWF3d5CZAE6FQa8cQgLDyunLL5+EiNEmxwaWt34sNTY=;
+        b=cHBS13d38AfJNDQaMOU1hM+jKsHfPw4NQRVRfG/wwVOQOYnViMxnEqKryPqbdExq05
+         m7s7xusbh4CR8F9pePOTKf6ZSZS70XoomhtaAgXoi0POxrHceTxX4JU9INeyA6BxHjP9
+         hANCVwSQeYfhkFhPjKhOijrut810AwNRFu9tvwILG0SgitbwbWu5EjOH3RnboO2xUjlW
+         R30G0f9Nwn5vGsQMp0qo1DeR7XJxSmTwk5/UCxfYdNwlLbHMU6QBzyCzffAdCIMQ8Ouc
+         plqoP/wysv7hKtE6OSkLkxDGu3lX5Q/VnGmcfvva/JOkNXuPSV2Nv070bztA8wXol7Vz
+         rtcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ8K2fiIqs6NiflUMNLxNVxTGlYrIiQGGXniHGdTOnIRdIdN6GIJ5ikeBuSJSN0zVNAprioI7ubWTTTf4x@vger.kernel.org, AJvYcCVhFMko21q/6jur4VUTW5zXKl8cChbPlkpIk9ipKKgzzLJgh/Tpdj3ieoLXCNoTH0AGOLafqnNtzIBdIV2v@vger.kernel.org, AJvYcCX38dTB6z0i/FcExXL1NfFgyVA44mcxRliw8PXlWYpdgeVDTFgpDXrXXk5Q1Q2nbDvUKQph0uNywdFSug==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsBQM9P5UXQ2eQn4scXKk85mAyL9wj1MSvIuorvl1pVbe8zSVG
+	CmOJVqyBDxlMCp5LtTqOutw7j8Jezo6J9o5vjtNICq8P5Yl6Orrr
+X-Google-Smtp-Source: AGHT+IFMnOvpW82/5MfGgSUynTFsXrs4aTyyIzgK4cEezwML2xWL6vrWpxzCX6SNUHQHvPrWg6EbMw==
+X-Received: by 2002:a17:903:1245:b0:1fc:6c23:8a3b with SMTP id d9443c01a7336-2050c354a4bmr257050595ad.17.1725521143483;
+        Thu, 05 Sep 2024 00:25:43 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d8ebdf56c0sm7315888a91.23.2024.09.05.00.24.26
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206aea67c98sm23282035ad.252.2024.09.05.00.25.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 00:24:27 -0700 (PDT)
-Date: Thu, 5 Sep 2024 07:24:12 +0000
+        Thu, 05 Sep 2024 00:25:43 -0700 (PDT)
+Date: Thu, 5 Sep 2024 07:25:27 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
+To: Chen Ni <nichen@iscas.ac.cn>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	decui@microsoft.com, deller@gmx.de, gpiccoli@igalia.com,
+	mikelley@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools: hv: rm .*.cmd when make clean
-Message-ID: <ZtlcnDLv7_A1Cg43@liuwe-devbox-debian-v2>
-References: <20240902042103.5867-1-zhangjiao2@cmss.chinamobile.com>
+Subject: Re: [PATCH] fbdev/hyperv_fb: Convert comma to semicolon
+Message-ID: <Ztlc52c6fIz3azbn@liuwe-devbox-debian-v2>
+References: <20240902074402.3824431-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,28 +72,34 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240902042103.5867-1-zhangjiao2@cmss.chinamobile.com>
+In-Reply-To: <20240902074402.3824431-1-nichen@iscas.ac.cn>
 
-On Mon, Sep 02, 2024 at 12:21:03PM +0800, zhangjiao2 wrote:
-> From: zhang jiao <zhangjiao2@cmss.chinamobile.com>
+On Mon, Sep 02, 2024 at 03:44:02PM +0800, Chen Ni wrote:
+> Replace a comma between expression statements by a semicolon.
 > 
-> rm .*.cmd when make clean
-> 
-> Signed-off-by: zhang jiao <zhangjiao2@cmss.chinamobile.com>
+> Fixes: d786e00d19f9 ("drivers: hv, hyperv_fb: Untangle and refactor Hyper-V panic notifiers")
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+
+Applied to hyperv-fixes, thanks!
+
 > ---
->  tools/hv/Makefile | 2 +-
+>  drivers/video/fbdev/hyperv_fb.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-> index 2e60e2c212cd..34ffcec264ab 100644
-> --- a/tools/hv/Makefile
-> +++ b/tools/hv/Makefile
-> @@ -52,7 +52,7 @@ $(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
+> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> index 8fdccf033b2d..7fdb5edd7e2e 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -1189,7 +1189,7 @@ static int hvfb_probe(struct hv_device *hdev,
+>  	 * which is almost at the end of list, with priority = INT_MIN + 1.
+>  	 */
+>  	par->hvfb_panic_nb.notifier_call = hvfb_on_panic;
+> -	par->hvfb_panic_nb.priority = INT_MIN + 10,
+> +	par->hvfb_panic_nb.priority = INT_MIN + 10;
+>  	atomic_notifier_chain_register(&panic_notifier_list,
+>  				       &par->hvfb_panic_nb);
 >  
->  clean:
->  	rm -f $(ALL_PROGRAMS)
-> -	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
-> +	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete -o -name '\.*.cmd' -delete
-
-Applied to hyperv-fixes. Thanks.
+> -- 
+> 2.25.1
+> 
 
