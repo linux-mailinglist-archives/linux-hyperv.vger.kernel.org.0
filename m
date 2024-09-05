@@ -1,98 +1,132 @@
-Return-Path: <linux-hyperv+bounces-2945-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2946-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DE6E96CAE4
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 01:41:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E627196CC21
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 03:15:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 230A31F2679F
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Sep 2024 23:41:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4044281754
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 01:15:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0993518893C;
-	Wed,  4 Sep 2024 23:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NgmRDTcG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B008F66;
+	Thu,  5 Sep 2024 01:15:02 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8EB17ADFF;
-	Wed,  4 Sep 2024 23:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB698F40
+	for <linux-hyperv@vger.kernel.org>; Thu,  5 Sep 2024 01:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725493239; cv=none; b=a+38UIJrctzJDjUhjmfO6UbW2bbJZc4zgFC2d9zQ3GBjMTfIW10s3h90x3fpyRXcgtFBdtYIofxIiCQh93q8r7mTRv6mUeTRGVovDV2GLCY+htmvHChJrpy6aC1t5fiBLzYldelHtfG+KaIvgsRFihIwskM3RiUAbi1CvxNIMVU=
+	t=1725498902; cv=none; b=gsXKWX/925sQJYYGP6SyIug+2p2n+ct/kod6qQbY7u+HidbRyJrEdS9upCQY7Yo4Obw7yPl1BKsSuKmkRikwxl8wem932i5Qbp1iLlqLApiE+MeEd6k9COYCkkKX/JfAvAP/qf4pgb7oxrP53Ri72sQjcD6Wehs8MORJvWuE9b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725493239; c=relaxed/simple;
-	bh=mKjD8xk0OPeXnIPaePzDkxOuIVCyQqxsKu1AG2UDAkM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UjU36RmQyN/IX4nSEOH6mM/Elfb1cYFZVi3nfUtmXq28bOystxAIwAafr7uVcLYFD9QXUafiXcR4g2KX8ZDGxqmCFy4j66XiXw2skdwt7E4cO7EgPf4Xtv0tSatHWqbxn0JYFW8K1luwO4eGbMtLNSzR8vzle4DlA5UoSDOqq2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NgmRDTcG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D324C4CEC9;
-	Wed,  4 Sep 2024 23:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725493238;
-	bh=mKjD8xk0OPeXnIPaePzDkxOuIVCyQqxsKu1AG2UDAkM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NgmRDTcGKp3Cz5PjQLlYScpPJBdeXZdsJTp3DDep9k3I/ptIzruj80g17njHG8tm9
-	 mEr34zrxcIJuv4ZjpJqFOOSWJ3gh5nk6s5WwMul1xA7r6A9C3SD6gZoFdaTubnMJ+7
-	 rt88jkFTMbHJx91NYe2qh+SxlDjqpIgc0xZjAfGvoivqXatHvyj21BzJS3Kydjn48B
-	 RKb2rytk+pJ95d6neXfn2IJ5HUvOpeILd8sR6TAfcUCwBRIkGX+ixNftEaXg92A451
-	 YnYgjDML4LMYwvzYhuXjVkiAt4/fRBOPf621WG7ie4tTl8xaNtid35rT6hih6tvUE6
-	 KKKPW6Kxn+nBw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 715A93822D30;
-	Wed,  4 Sep 2024 23:40:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1725498902; c=relaxed/simple;
+	bh=sOTIxRvOCs1Ijt8PAYcD4XG4thsD5EAQ+1TVOTbWsq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Uol+pucH0oq8RnkM0wsFtXoI5thEhaqAk7LPN5UNWuO9Y9xTmjUqMLivNK2GEXcMmF+V6bgeobqyMeA8AXYaKoAbb6Gw6uohks8x9gvhhPeK8WiMCPevpUD+iwgJRdinEXsXD+ftRvu9e4md9RPm7mO42Y1mDqi1ZyXutepwIRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Wzh9M6Y47z20nLG;
+	Thu,  5 Sep 2024 09:09:59 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id A3A951400FD;
+	Thu,  5 Sep 2024 09:14:57 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 5 Sep 2024 09:14:57 +0800
+Message-ID: <4ff906fd-406e-4b7f-bdbb-e35c04e95c59@huawei.com>
+Date: Thu, 5 Sep 2024 09:14:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] hv: vmbus: Constify struct kobj_type and struct
+ attribute_group
+Content-Language: en-US
+To: Naman Jain <namjain@linux.microsoft.com>, <kys@microsoft.com>,
+	<haiyangz@microsoft.com>, <wei.liu@kernel.org>, <decui@microsoft.com>
+CC: <linux-hyperv@vger.kernel.org>
+References: <20240904011553.2010203-1-lihongbo22@huawei.com>
+ <690efd2f-c814-40d0-b017-e93089e814b2@linux.microsoft.com>
+ <c4fb0fb3-a787-4946-952d-841599509341@huawei.com>
+ <fec0bb67-7fc3-4f67-818e-a0439a9822a9@linux.microsoft.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <fec0bb67-7fc3-4f67-818e-a0439a9822a9@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] net: mana: Improve mana_set_channels() in low mem
- conditions
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172549323899.1198891.6547340343364681759.git-patchwork-notify@kernel.org>
-Date: Wed, 04 Sep 2024 23:40:38 +0000
-References: <1725248734-21760-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1725248734-21760-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- longli@microsoft.com, horms@kernel.org, kotaranov@microsoft.com,
- schakrabarti@linux.microsoft.com, erick.archer@outlook.com,
- pavan.chebbi@broadcom.com, ahmed.zaki@intel.com, colin.i.king@gmail.com,
- shradhagupta@microsoft.com
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun,  1 Sep 2024 20:45:34 -0700 you wrote:
-> The mana_set_channels() function requires detaching the mana
-> driver and reattaching it with changed channel values.
-> During this operation if the system is low on memory, the reattach
-> might fail, causing the network device being down.
-> To avoid this we pre-allocate buffers at the beginning of set operation,
-> to prevent complete network loss
+On 2024/9/4 19:10, Naman Jain wrote:
 > 
-> [...]
+> 
+> On 9/4/2024 3:48 PM, Hongbo Li wrote:
+>>
+>>
+>> On 2024/9/4 18:09, Naman Jain wrote:
+>>>
+>>>
+>>> On 9/4/2024 6:45 AM, Hongbo Li wrote:
+>>>> The `struct attribute_group` and `struct kobj_type` are not
+>>>> modified, and they are only used in the helpers which take a
+>>>> const type parameter.
+>>>>
+>>>> Constifying these structure and moving them to a read-only section,
+>>>> and this can increase over all security.
+>>>>
+>>>> ```
+>>>> [Before]
+>>>>     text   data    bss    dec    hex    filename
+>>>>    20568   4699     48  25315   62e3    drivers/hv/vmbus_drv.o
+>>>>
+>>>> [After]
+>>>>     text   data    bss    dec    hex    filename
+>>>>    20696   4571     48  25315   62e3    drivers/hv/vmbus_drv.o
+>>>> ```
+>>>>
+> 
+> ...
+> 
+>>>
+>>> Small thing, I hope you included before and after logs in commit msg to
+>>> show that some of the data section moved to text as you made these
+>>> variables constant. If not, please move these after ---.
+>>>
+>> You mean remove the '```' or move the whole part after --- ?
+> 
+> Never mind. IMO, mentioning these stats was really optional since we are 
+> not saving any memory here. This could have been moved to the section 
+> after --- so that it does not get captured in git log.
+Thank you, I got it and have learned something.
 
-Here is the summary with links:
-  - [net-next,v2] net: mana: Improve mana_set_channels() in low mem conditions
-    https://git.kernel.org/netdev/net-next/c/1705341485ff
+Thanks,
+Hongbo
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+  However there's
+> no harm in keeping it where it is. So your call.
+> 
+> 
+> Regards,
+> Naman
+> 
+>>
+>> Thanks,
+>> Hongbo
+>>
+>>>
+>>> Reviewed-by: Naman Jain <namjain@linux.microsoft.com>
+>>>
+>>> Regards,
+>>> Naman
+> 
 
