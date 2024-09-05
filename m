@@ -1,72 +1,72 @@
-Return-Path: <linux-hyperv+bounces-2969-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2970-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C8D396CDE8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 06:22:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C83DC96CDEA
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 06:23:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FA33B2322F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 04:22:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E8E828569E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 04:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C42192D8D;
-	Thu,  5 Sep 2024 04:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02A0619309A;
+	Thu,  5 Sep 2024 04:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MksIINeG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6+uJdtz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA4192B72;
-	Thu,  5 Sep 2024 04:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BEC192D78;
+	Thu,  5 Sep 2024 04:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725509898; cv=none; b=UlUOo9/8ACMmUpulrwLqK9hjqzJN2Rcz/1DhV6LkTSw8RI2Mf501tCz5lM8ku+m3RY+RLYx8ScTI6Fth83+Th1MIB1l0JLftz+XmQdz4/pW5Zhdpr54k43WKyX/E5PR/nhm0jeNv44yjHz2qEvbddDPPoQ+LthVxkRd7W07qNcI=
+	t=1725509899; cv=none; b=qHvyryyUImFZCOm+qyaZ4jZg+TkmgkuUFit80UpCXfpG6h8kHofoRAX3OVw84nQd1RUVHDndE46r+7YXGlm2qYOu4i4WNVIDCBvc4cQ6sbOPCxEz/T3lNn5h3G89fw9JngBnCPkiDrH3oEjeWLeGa49RiZDVzcySDkHL+UsgDEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725509898; c=relaxed/simple;
-	bh=jrCdNxs3nPBprZ1EecOJZBm3IZPKT2/NNteZ18Jw+dU=;
+	s=arc-20240116; t=1725509899; c=relaxed/simple;
+	bh=5GigJjEmPSDI+ItuxoJq+Z/lu1obXOo3IU5s0mY7pME=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dF67uxbQrbdPiEjeMCjYAjF+QJbbYyz/xD1HaT2penZ034wpXPEvETM5/zyVHmcb57VPbZMDZ1haapWnGbUPK+1ZLFTEXnS5SS0yPHs+YKceilUhjQxCweczw1WqOMoYSbntcfqlDoc8oyZ6vS163FPSFoVgPDbE0UqPxOcyXkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MksIINeG; arc=none smtp.client-ip=209.85.210.51
+	 MIME-Version; b=QN9XLDrVJs7WcsVEAxdCi20F4lRT6c7ZISxEMQb2jTSqSwL0b1PEKYwnINMkOCwg6agOMlwdjsO/JD4Vq8JBj5P0ybz0WowRFmxzKEQ5WnjqW/YBPEkEDWPYsyaRKTnEDG+gSg2xwMnn7Ec28r7tn9qY+zIkr7CbdtAWAUySshY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j6+uJdtz; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7093997dffdso168892a34.2;
-        Wed, 04 Sep 2024 21:18:16 -0700 (PDT)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7176212de5cso259886b3a.0;
+        Wed, 04 Sep 2024 21:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725509896; x=1726114696; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725509897; x=1726114697; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xz2erQSg3sDaQU8qTCUlHXjZi76BIHFsta/dILnpIUo=;
-        b=MksIINeGNGEUAYYwSLfJGv1NFUAFtedZr2Lo7fTMlH7CXEnCtEbfmbJotrbc9JZG6K
-         t8r/s1pU7Lq//RG1aEJuD0VL+DNj3s7dx5w9Au8hBvp3izCAGL8zjn/Ko+VCnUNhdr15
-         L/RBKivcN5y4bF+VmFDGMfT5++LOM9lkp2Vskx3awHsR+tiIfQ5kDgUosc7zl3DjCwLf
-         wsXOqMP+2293xsxpYJzCPaxuorsYbheLpImR860Dni/9fhn08eJc5RoHGTLZna+9i8eF
-         yjpi7txTZyQkY4OTBdyHik4JgYFR27Wpm/9VoKx1Hs7JKQiuemi7xjk1NQqlVeCYRFvD
-         7b8A==
+        bh=KAMMGFcdQQuvbLfMZ1RSK1JtSdD6Ii5X8caybj72d5Y=;
+        b=j6+uJdtz87BaWwSrLuBzdxwgLAeDjAyxJoYGj6oRAUrR8bRXoOAygP3ly085Qc6jWg
+         0q+L2ybXqFmBA7SSK8QVY7A6oh4vVGrej3t1Xyq2QS1UDR/1rrY5Cab8WVwW3p3lvCZx
+         3/1xh9utyIYz9hn5Wz4vG0kENC8Y9dUUV2SiD40xvGU5LeASO75DT9sPacNAltUyJJ4O
+         snMX2L87GNbG9trjhDOzn+eeabpsXt/TObzoolZXtUDoFVn6OUeLwi1niGiLlmQRZdYD
+         yd54SiBFgs3LAh74DxiKtTaA2r66mQFexkD2qYz/P0xLa5aIvq+xYD3gPSnBSNF0CQAR
+         XV6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725509896; x=1726114696;
+        d=1e100.net; s=20230601; t=1725509897; x=1726114697;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xz2erQSg3sDaQU8qTCUlHXjZi76BIHFsta/dILnpIUo=;
-        b=IHbmg+/rATCGPxFNagOGPXGFQwcRzLGwP7swaoZrbvvFh49lEqcC8zAOcjjKD2qWju
-         uJbRri6n/BlHXn5ceKKTSJn9iV8n7pbxCDLxzU8gH2ulzL54ZC7w7+ZfDGVM7gKYBCNF
-         hFAc8VfUVe0idGZdSUg2S8gVtiY+QqujmYHYMdObPBLf5GsX0V3qqypkfU+ATWM7ZjMb
-         saT4HqED5mCbv/LkVQ0Q3K4OCWDgoRUqDbUZ/rkxprmqQqjdIi//aZv534Tp4y+aTgym
-         ksJISKJmEFC4/fj5hLhwz3DPbURQlnJLQihiDx6W0oEPYyad0PPFmU5Dbc1RztlTqpGD
-         ZWAw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3NX0aOkWHt2jIpX9mP1D23mkb4tdbAUMlLKw8mPMGBW+SuDcdVwcTUVmsn4I86uj5baMh9HuLNFYxlTA=@vger.kernel.org, AJvYcCXj3mXpaGxA8Mj8a1+67Hv5sftOjJCnnVLYaKIW2tCnoh3hBQLv8IHKfgqZPW5h74/EUOuwfdUwml6rHxU3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyigFqCBKGgw6DGMYd+wMXEF39o5VQ4yyJCxa3D0Yc06FKtWw1p
-	FE6VH5mDgkWyHRzkEogg5G4B4Sdk/XC7B/7m7fXBTYkhEnGjU3A/W1+6DA==
-X-Google-Smtp-Source: AGHT+IFPTVGs3vyKg3Li6dflqJQ+JnKv/J7SxlC09OoKIqCCU5IWw2pa42IFrQdn8vuEJ1eR5r+pIw==
-X-Received: by 2002:a05:6359:5f8a:b0:1b5:e9e0:2421 with SMTP id e5c5f4694b2df-1b7e37a5389mr2316618255d.6.1725509895909;
-        Wed, 04 Sep 2024 21:18:15 -0700 (PDT)
+        bh=KAMMGFcdQQuvbLfMZ1RSK1JtSdD6Ii5X8caybj72d5Y=;
+        b=G30iSwnkcu3cWZbBCOthJO685moH14siwFR/YrIwGi3SUiohl14xH1poImS8shbl3l
+         YZcarJHWPXh+gVeGWwaz9T1oWoyzcnyJQT5Qc+eRsxBU2hlIhK+dY8rrHhyANFHGf268
+         MegV0vJ3Bruo/BVDrDc08H4eX6Kl4fZlJYfm0+pGjv+KYZJ6WC6QvTp6vmi2TFazbBEh
+         LfA4avDNYXOF2+gzp6N6Rrh0g53+H48w4bGXhQOt4i4y5y/vzFxufx4fpOciqXwF8xrg
+         7CsjV7ufaBjVBqT7eLFILGhiZPEMb6FJxWuQsfn5BkgE1D7fG051UtYVpR6pnUY+L2Uq
+         HP4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVJS32CMaNsoev0D2NBRjmqQvGpv8VzKPA0Mh2fzzEfqobir8IllTfvnOYoA8DCoQqdwdaYQHq3O6Xxipk=@vger.kernel.org, AJvYcCWjbN+MvD7VfXzoIRCOg/NBGpv+eTburEXZCv00yW30HF1VEBqgDAT7J/p3EvF+IIrTcPoGe5js8wIA7DEy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvSWT870WvKduz4DRzl9YCEJTwf9HxSlLLEBmlMtvTpiVoqD+l
+	wVUkZTGHV9a/d9U/8hjOU3e6I9GKDyKurHhLEaVv4fVm/QCXI2hNAjuZdA==
+X-Google-Smtp-Source: AGHT+IFRCdJkRXUogbTin1hoFmZGnh04XwNGpXWLmx6ydoLDsoywhBNvkL2ZX38vN1+wCOtB2uPKFA==
+X-Received: by 2002:a05:6a00:3e1c:b0:70d:2a4d:2eeb with SMTP id d2e1a72fcca58-7173c1e3e18mr16886428b3a.3.1725509897218;
+        Wed, 04 Sep 2024 21:18:17 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:13bd:b4e:4c0f:4c37])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8d52esm2450216a12.32.2024.09.04.21.18.14
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8d52esm2450216a12.32.2024.09.04.21.18.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 21:18:15 -0700 (PDT)
+        Wed, 04 Sep 2024 21:18:16 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: linux-input@vger.kernel.org
 Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
@@ -82,9 +82,9 @@ Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev
-Subject: [PATCH 22/24] Input: sun4i-ps2 - use guard notation when acquiring spinlock
-Date: Wed,  4 Sep 2024 21:17:27 -0700
-Message-ID: <20240905041732.2034348-23-dmitry.torokhov@gmail.com>
+Subject: [PATCH 23/24] Input: userio - switch to using cleanup functions
+Date: Wed,  4 Sep 2024 21:17:28 -0700
+Message-ID: <20240905041732.2034348-24-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 In-Reply-To: <20240905041732.2034348-1-dmitry.torokhov@gmail.com>
 References: <20240905041732.2034348-1-dmitry.torokhov@gmail.com>
@@ -96,56 +96,244 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Using guard notation makes the code more compact and error handling
-more robust by ensuring that locks are released in all code paths
-when control leaves critical section.
+Use __free() and guard() primitives to simplify the code and error
+handling.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/serio/sun4i-ps2.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/input/serio/userio.c | 141 +++++++++++++++++------------------
+ 1 file changed, 70 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
-index 95cd8aaee65d..267214ca9b51 100644
---- a/drivers/input/serio/sun4i-ps2.c
-+++ b/drivers/input/serio/sun4i-ps2.c
-@@ -101,7 +101,7 @@ static irqreturn_t sun4i_ps2_interrupt(int irq, void *dev_id)
- 	unsigned int rxflags = 0;
- 	u32 rval;
- 
--	spin_lock(&drvdata->lock);
-+	guard(spinlock)(&drvdata->lock);
- 
- 	/* Get the PS/2 interrupts and clear them */
- 	intr_status  = readl(drvdata->reg_base + PS2_REG_LSTS);
-@@ -134,8 +134,6 @@ static irqreturn_t sun4i_ps2_interrupt(int irq, void *dev_id)
- 	writel(intr_status, drvdata->reg_base + PS2_REG_LSTS);
- 	writel(fifo_status, drvdata->reg_base + PS2_REG_FSTS);
- 
--	spin_unlock(&drvdata->lock);
--
- 	return IRQ_HANDLED;
- }
- 
-@@ -146,7 +144,6 @@ static int sun4i_ps2_open(struct serio *serio)
- 	u32 clk_scdf;
- 	u32 clk_pcdf;
- 	u32 rval;
+diff --git a/drivers/input/serio/userio.c b/drivers/input/serio/userio.c
+index a88e2eee55c3..66c9838a1fa7 100644
+--- a/drivers/input/serio/userio.c
++++ b/drivers/input/serio/userio.c
+@@ -55,18 +55,15 @@ struct userio_device {
+ static int userio_device_write(struct serio *id, unsigned char val)
+ {
+ 	struct userio_device *userio = id->port_data;
 -	unsigned long flags;
  
- 	/* Set line control and enable interrupt */
- 	rval = PS2_LCTL_STOPERREN | PS2_LCTL_ACKERREN
-@@ -171,9 +168,8 @@ static int sun4i_ps2_open(struct serio *serio)
- 	rval = PS2_GCTL_RESET | PS2_GCTL_INTEN | PS2_GCTL_MASTER
- 		| PS2_GCTL_BUSEN;
+-	spin_lock_irqsave(&userio->buf_lock, flags);
++	scoped_guard(spinlock_irqsave, &userio->buf_lock) {
++		userio->buf[userio->head] = val;
++		userio->head = (userio->head + 1) % USERIO_BUFSIZE;
  
--	spin_lock_irqsave(&drvdata->lock, flags);
-+	guard(spinlock_irqsave)(&drvdata->lock);
- 	writel(rval, drvdata->reg_base + PS2_REG_GCTL);
--	spin_unlock_irqrestore(&drvdata->lock, flags);
+-	userio->buf[userio->head] = val;
+-	userio->head = (userio->head + 1) % USERIO_BUFSIZE;
+-
+-	if (userio->head == userio->tail)
+-		dev_warn(userio_misc.this_device,
+-			 "Buffer overflowed, userio client isn't keeping up");
+-
+-	spin_unlock_irqrestore(&userio->buf_lock, flags);
++		if (userio->head == userio->tail)
++			dev_warn(userio_misc.this_device,
++				 "Buffer overflowed, userio client isn't keeping up");
++	}
+ 
+ 	wake_up_interruptible(&userio->waitq);
+ 
+@@ -75,9 +72,8 @@ static int userio_device_write(struct serio *id, unsigned char val)
+ 
+ static int userio_char_open(struct inode *inode, struct file *file)
+ {
+-	struct userio_device *userio;
+-
+-	userio = kzalloc(sizeof(*userio), GFP_KERNEL);
++	struct userio_device *userio __free(kfree) =
++			kzalloc(sizeof(*userio), GFP_KERNEL);
+ 	if (!userio)
+ 		return -ENOMEM;
+ 
+@@ -86,15 +82,13 @@ static int userio_char_open(struct inode *inode, struct file *file)
+ 	init_waitqueue_head(&userio->waitq);
+ 
+ 	userio->serio = kzalloc(sizeof(*userio->serio), GFP_KERNEL);
+-	if (!userio->serio) {
+-		kfree(userio);
++	if (!userio->serio)
+ 		return -ENOMEM;
+-	}
+ 
+ 	userio->serio->write = userio_device_write;
+-	userio->serio->port_data = userio;
++	userio->serio->port_data = userio;;
+ 
+-	file->private_data = userio;
++	file->private_data = no_free_ptr(userio);
  
  	return 0;
  }
+@@ -118,14 +112,32 @@ static int userio_char_release(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++static size_t userio_fetch_data(struct userio_device *userio, u8 *buf,
++				size_t count, size_t *copylen)
++{
++	size_t available, len;
++
++	guard(spinlock_irqsave)(&userio->buf_lock);
++
++	available = CIRC_CNT_TO_END(userio->head, userio->tail,
++				    USERIO_BUFSIZE);
++	len = min(available, count);
++	if (len) {
++		memcpy(buf, &userio->buf[userio->tail], len);
++		userio->tail = (userio->tail + len) % USERIO_BUFSIZE;
++	}
++
++	*copylen = len;
++	return available;
++}
++
+ static ssize_t userio_char_read(struct file *file, char __user *user_buffer,
+ 				size_t count, loff_t *ppos)
+ {
+ 	struct userio_device *userio = file->private_data;
+ 	int error;
+-	size_t nonwrap_len, copylen;
+-	unsigned char buf[USERIO_BUFSIZE];
+-	unsigned long flags;
++	size_t available, copylen;
++	u8 buf[USERIO_BUFSIZE];
+ 
+ 	/*
+ 	 * By the time we get here, the data that was waiting might have
+@@ -135,21 +147,8 @@ static ssize_t userio_char_read(struct file *file, char __user *user_buffer,
+ 	 * of course).
+ 	 */
+ 	for (;;) {
+-		spin_lock_irqsave(&userio->buf_lock, flags);
+-
+-		nonwrap_len = CIRC_CNT_TO_END(userio->head,
+-					      userio->tail,
+-					      USERIO_BUFSIZE);
+-		copylen = min(nonwrap_len, count);
+-		if (copylen) {
+-			memcpy(buf, &userio->buf[userio->tail], copylen);
+-			userio->tail = (userio->tail + copylen) %
+-							USERIO_BUFSIZE;
+-		}
+-
+-		spin_unlock_irqrestore(&userio->buf_lock, flags);
+-
+-		if (nonwrap_len)
++		available = userio_fetch_data(userio, buf, count, &copylen);
++		if (available)
+ 			break;
+ 
+ 		/* buffer was/is empty */
+@@ -176,40 +175,21 @@ static ssize_t userio_char_read(struct file *file, char __user *user_buffer,
+ 	return copylen;
+ }
+ 
+-static ssize_t userio_char_write(struct file *file, const char __user *buffer,
+-				 size_t count, loff_t *ppos)
++static int userio_execute_cmd(struct userio_device *userio,
++			      const struct userio_cmd *cmd)
+ {
+-	struct userio_device *userio = file->private_data;
+-	struct userio_cmd cmd;
+-	int error;
+-
+-	if (count != sizeof(cmd)) {
+-		dev_warn(userio_misc.this_device, "Invalid payload size\n");
+-		return -EINVAL;
+-	}
+-
+-	if (copy_from_user(&cmd, buffer, sizeof(cmd)))
+-		return -EFAULT;
+-
+-	error = mutex_lock_interruptible(&userio->mutex);
+-	if (error)
+-		return error;
+-
+-	switch (cmd.type) {
++	switch (cmd->type) {
+ 	case USERIO_CMD_REGISTER:
+ 		if (!userio->serio->id.type) {
+ 			dev_warn(userio_misc.this_device,
+ 				 "No port type given on /dev/userio\n");
+-
+-			error = -EINVAL;
+-			goto out;
++			return -EINVAL;
+ 		}
+ 
+ 		if (userio->running) {
+ 			dev_warn(userio_misc.this_device,
+ 				 "Begin command sent, but we're already running\n");
+-			error = -EBUSY;
+-			goto out;
++			return -EBUSY;
+ 		}
+ 
+ 		userio->running = true;
+@@ -220,32 +200,51 @@ static ssize_t userio_char_write(struct file *file, const char __user *buffer,
+ 		if (userio->running) {
+ 			dev_warn(userio_misc.this_device,
+ 				 "Can't change port type on an already running userio instance\n");
+-			error = -EBUSY;
+-			goto out;
++			return -EBUSY;
+ 		}
+ 
+-		userio->serio->id.type = cmd.data;
++		userio->serio->id.type = cmd->data;
+ 		break;
+ 
+ 	case USERIO_CMD_SEND_INTERRUPT:
+ 		if (!userio->running) {
+ 			dev_warn(userio_misc.this_device,
+ 				 "The device must be registered before sending interrupts\n");
+-			error = -ENODEV;
+-			goto out;
++			return -ENODEV;
+ 		}
+ 
+-		serio_interrupt(userio->serio, cmd.data, 0);
++		serio_interrupt(userio->serio, cmd->data, 0);
+ 		break;
+ 
+ 	default:
+-		error = -EOPNOTSUPP;
+-		goto out;
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static ssize_t userio_char_write(struct file *file, const char __user *buffer,
++				 size_t count, loff_t *ppos)
++{
++	struct userio_device *userio = file->private_data;
++	struct userio_cmd cmd;
++	int error;
++
++	if (count != sizeof(cmd)) {
++		dev_warn(userio_misc.this_device, "Invalid payload size\n");
++		return -EINVAL;
++	}
++
++	if (copy_from_user(&cmd, buffer, sizeof(cmd)))
++		return -EFAULT;
++
++	scoped_cond_guard(mutex_intr, return -EINTR, &userio->mutex) {
++		error = userio_execute_cmd(userio, &cmd);
++		if (error)
++			return error;
+ 	}
+ 
+-out:
+-	mutex_unlock(&userio->mutex);
+-	return error ?: count;
++	return count;
+ }
+ 
+ static __poll_t userio_char_poll(struct file *file, poll_table *wait)
 -- 
 2.46.0.469.g59c65b2a67-goog
 
