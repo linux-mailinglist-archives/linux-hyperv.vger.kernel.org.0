@@ -1,72 +1,72 @@
-Return-Path: <linux-hyperv+bounces-2967-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2966-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A027896CDE1
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 06:22:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7017696CDDE
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 06:22:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B2931F23E53
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 04:22:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2845B284AAD
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 04:22:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CBD1925AC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0037C1925A9;
 	Thu,  5 Sep 2024 04:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mTR2Qcg+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G88cEEzu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177CC192584;
-	Thu,  5 Sep 2024 04:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F50E155393;
+	Thu,  5 Sep 2024 04:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725509895; cv=none; b=VCXMNa4mTBY05JhbyScVfxZFiY8MW3y4s879hMheKww+MyqolffUtXy2OddIvDrfDvtHIMkvAX2DnNPLM7TT7uCQ/LnHH9indVz0ezsmpjq5kL7VYq2FVwqcmvedJ8hQFvTbItgR+JqUSw6pslS3emhnMUwrTkqq5Lw1qRSPlDM=
+	t=1725509895; cv=none; b=JTU3vn6W673uvgTkN28z7WHyx7Qf6e3ipIdKE+fVWc3Wc646tzLatyvYxrnrYCoCuEOInIOM4wx9a3dVxdabswOUZeR/VNgI5j3GQYJDnV4uQfVJDhweivaqqtiRPb2a3Cp/XuA3ObfropoNdqfXsIBZNTQeErEjoLDmGOdKw7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1725509895; c=relaxed/simple;
-	bh=pakshvX2RA3yQrO6ycKRxTchHdBk7nScpIeEjlcuObQ=;
+	bh=cJYWxYF5OhQ8taYCVKZbQ3/a9KN9ESKsltEQmoM54CM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N9UTWFgzI2WL9qIPKWdo9USb32W78M9cXOoZ0nRTpmAvuSo2gllKRuUdA2NK0PkcF+HBxWo9RHTignPeJkFzykeOH+k+nm+fF/SzPAURJo4EinpL0r/9j0/Bh2rdypHLGBoIXKYxl05gGdILJ9SPXU44qZgrg2fknnUPfl/BsN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mTR2Qcg+; arc=none smtp.client-ip=209.85.167.181
+	 MIME-Version; b=Y17GHb2Xu/LtNy+qAFJXqgm1LJBCuZbTgfPnWk8JR4ERueYNG+537nLPXPVjwXk81w1J1HLb6nOf8qX3xldom80tlW0mi5Hlo7X1U+HGhJ3FI5uSGwJ9rVP0hvCguqYZ+FNACS76h7uxqf8+3SOM5dwG9J03jkrFv+R4dc/pFoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G88cEEzu; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3e0059dc06bso207846b6e.0;
-        Wed, 04 Sep 2024 21:18:12 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-715cdc7a153so246256b3a.0;
+        Wed, 04 Sep 2024 21:18:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725509892; x=1726114692; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725509893; x=1726114693; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NPWoWt+316Jv4PRkQXpmOTDxa9BtNdvynfRmo3h2lZU=;
-        b=mTR2Qcg+FTPbf3Fx3MuJWFtGEtM8fT14FL5OCSng7j9bad0+vslsSkVmIjc+VQj7GC
-         mfMd9AMLh4dxSMKPq+i9vsSIDKY9Fx0VZdvFpIc38FAQtMXXciqJfNwu9wdVJNWg+Dit
-         DGvv0larftvwh5MGq0vdajNP4ZMFVr7FCNOHs8HZQ+cp1A8ntMfFDWtloyogOpbXFFIq
-         WXT6rfh4IQKAq85wlol4RkleXQrffaMy+vTI5ICrPah4xxGdfnzhR4FCuLk7pCNFzIEy
-         PXYhkn02QFRjM1tE/YrIGF7clQvDJqueWnK+CVb/N0newAHMmLobe17j/WlgSmzc19HQ
-         V2xQ==
+        bh=j96TxrzClXBkhwjMJZl6JNr36upS20Gw21hZhz5UEQc=;
+        b=G88cEEzuTfHbOGDMiZtix5KnsuD5JHZeJV54m49kbPyeKOQGwd1MOiiggNgEiHPW6c
+         2KfS7StYAQW2pwr3UVxlOPY1JmZ60XpKb0G8wy7nwF597GV8L7u2nUhoOA897FRj46s4
+         M12tOGVGl0EVFui2GN3x9ClKtTeFU1Fq3r5JUDd+QTvZ1Ybb4TF+WzlEInuac6PHnVxJ
+         /elmEU/Hu0wN/vvhk0/Js+tp8ibYn3L1q4yBvjoljPCFslcIrG6+QTkBCNkFJTiCp04h
+         E7haNGRkOY6/5+O5jybfxk3GR4IVqmeRI6tZ0ZE/feb2YVasEipuZ3Ay3TvAfUoOJpux
+         wmxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725509892; x=1726114692;
+        d=1e100.net; s=20230601; t=1725509893; x=1726114693;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NPWoWt+316Jv4PRkQXpmOTDxa9BtNdvynfRmo3h2lZU=;
-        b=Q3NBu+6AzoUDEyXo/nT6o99N8/Pxp+t0BANyQYRZws0c25GIlqUlEdzF8WhOsbibvk
-         oTo2KmK7ncVshChk74n96sFMOfAMkQlrNOp0gGK6XLZf+UmF07+FEnLdT5sr3tbPf3Xd
-         K7XwjoKgn+Ry5CHwDVTvJRe23UWIfxgU8LXlbvC1PgP0J9sshSI8fPQtN8WENfQtk9Cz
-         vUvxVwSxH3JUT4tJt/2XOA3IN0JphHM8VLo3Ri/onz3ri8xL6HnVmsZA2zlIx8uuk9l4
-         SotnAkmvJ8lXouT9O7/6GwqZSuahyYaEfM7eMNB0IJDzclWzOmKEskvFyslJCwfpuuw9
-         zXWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbGgFw+s37DS3S46atUfhw5Wjz2WVmmOK//jgDb61hyUS1VrndzBlxI9osFOBtv+2kLXhBwBUcKBuf0+9Z@vger.kernel.org, AJvYcCWao+MYF/gSQC7b5Q5a3qNZQ0rFobhylwsaiHUcrLkRuNZ79iaN6tnMBgZLiTqkt3li3AZodJhDYfKlaAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVwdt9Cq7dnC0JIizF26yeIvGOXEXfcR/Tx9Rv2nIFgSxVPD8l
-	4ToCaLdvbs5T0t9uhBiE/9X36WN8dXv+it+V8iNBkD8cI2kapNb08GVAww==
-X-Google-Smtp-Source: AGHT+IFtOulSXoC/ctTuMj+I0PsDPFtHbtTpoHZ22Oz6oQvpBi8n8BbUuwVttzMnsxsQEnZDRv+dFQ==
-X-Received: by 2002:a05:6808:bd6:b0:3d6:3450:7fe0 with SMTP id 5614622812f47-3df21eea911mr18954848b6e.9.1725509891740;
-        Wed, 04 Sep 2024 21:18:11 -0700 (PDT)
+        bh=j96TxrzClXBkhwjMJZl6JNr36upS20Gw21hZhz5UEQc=;
+        b=OF6yW0l6t0cK/xkY3gaxsji7rd8fLCDH/jjRYByvgqZZ2AR2/94yxv+6NDTlk8nJpd
+         iAGx4gQAAsap6VqYxG5i+VYcN1x1Zsmnsa+5QAuxfjZ91kKodxxi7plZcLwKQUSQvwQw
+         Il+9/PO3yPFAYD0Ohto/h6a2pK9GscUZs2cPntD09KfohZJsqPyWlL0voqXvCR0HWKcC
+         mtatpr9I9CxVx5WCl5hnlVNwk9O35FdWxzhaq58WLo/7KfrJtsHNLZbjjMySQAnkzN2c
+         w/l8L8a0716FP3y7jxEDP7KDwTTGY+UZI7dcHVoXYmOZhJTgDUpw4oAkrAPcj3OmscZy
+         nLCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPol0KTULhLqJjdY1dpAAPrMp16zmu1Htkt2+lBfsWZKi74i6NX/3Jal4Fbrunpq4zeOqfykbsQdyor8o1@vger.kernel.org, AJvYcCVD1nw2JMeEXWMNnn/IbiaOxQRwsvUTM3tFO7uf8s5yvAJveSxxoFeo9nivRCI9+INslsJieySUg8V3QTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOv7UGt7u0gQCjQ4hnGziAA9lSekFvjmIaBRLIjjAtlZcp0aWQ
+	fm7PymWAXSCGATyGupAxA370qPYYIvTauPrHLHymXXkhTn60Ec2A/wt0uw==
+X-Google-Smtp-Source: AGHT+IEtbS6Hh36TyocrzyvtNt8382uDa9MHZZCYVlpcXz+bDRK1U/OJOVBLjLQwYZ/02bwTa26XXA==
+X-Received: by 2002:a05:6a20:4c10:b0:1cc:d5d1:fe64 with SMTP id adf61e73a8af0-1cf0803a591mr6663245637.14.1725509893151;
+        Wed, 04 Sep 2024 21:18:13 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:13bd:b4e:4c0f:4c37])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8d52esm2450216a12.32.2024.09.04.21.18.10
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8d52esm2450216a12.32.2024.09.04.21.18.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 21:18:11 -0700 (PDT)
+        Wed, 04 Sep 2024 21:18:12 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: linux-input@vger.kernel.org
 Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
@@ -82,9 +82,9 @@ Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev
-Subject: [PATCH 19/24] Input: serio - use guard notation when acquiring mutexes and spinlocks
-Date: Wed,  4 Sep 2024 21:17:24 -0700
-Message-ID: <20240905041732.2034348-20-dmitry.torokhov@gmail.com>
+Subject: [PATCH 20/24] Input: serio_raw - use guard notation for locks and other resources
+Date: Wed,  4 Sep 2024 21:17:25 -0700
+Message-ID: <20240905041732.2034348-21-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 In-Reply-To: <20240905041732.2034348-1-dmitry.torokhov@gmail.com>
 References: <20240905041732.2034348-1-dmitry.torokhov@gmail.com>
@@ -96,406 +96,203 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Using guard notation makes the code more compact and error handling
-more robust by ensuring that locks are released in all code paths
-when control leaves critical section.
+Use guard notation when acquiring mutexes and spinlocks, and when
+pausing and resuming serio port. Such guard notation makes the code
+more compact and error handling more robust by ensuring that locks
+are released in all code paths when control leaves critical section.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/serio/serio.c | 164 ++++++++++++++----------------------
- 1 file changed, 65 insertions(+), 99 deletions(-)
+ drivers/input/serio/serio_raw.c | 121 +++++++++++++-------------------
+ 1 file changed, 49 insertions(+), 72 deletions(-)
 
-diff --git a/drivers/input/serio/serio.c b/drivers/input/serio/serio.c
-index 29a2b13a8cf5..aa386eb37a16 100644
---- a/drivers/input/serio/serio.c
-+++ b/drivers/input/serio/serio.c
-@@ -37,33 +37,27 @@ static void serio_reconnect_subtree(struct serio *serio);
- 
- static int serio_connect_driver(struct serio *serio, struct serio_driver *drv)
+diff --git a/drivers/input/serio/serio_raw.c b/drivers/input/serio/serio_raw.c
+index 0186d1b38f49..aef8301313b2 100644
+--- a/drivers/input/serio/serio_raw.c
++++ b/drivers/input/serio/serio_raw.c
+@@ -75,41 +75,31 @@ static int serio_raw_open(struct inode *inode, struct file *file)
  {
+ 	struct serio_raw *serio_raw;
+ 	struct serio_raw_client *client;
 -	int retval;
--
--	mutex_lock(&serio->drv_mutex);
--	retval = drv->connect(serio, drv);
--	mutex_unlock(&serio->drv_mutex);
-+	guard(mutex)(&serio->drv_mutex);
  
--	return retval;
-+	return drv->connect(serio, drv);
- }
+-	retval = mutex_lock_interruptible(&serio_raw_mutex);
+-	if (retval)
+-		return retval;
++	scoped_guard(mutex_intr, &serio_raw_mutex) {
++		serio_raw = serio_raw_locate(iminor(inode));
++		if (!serio_raw)
++			return -ENODEV;
  
- static int serio_reconnect_driver(struct serio *serio)
- {
--	int retval = -1;
-+	guard(mutex)(&serio->drv_mutex);
+-	serio_raw = serio_raw_locate(iminor(inode));
+-	if (!serio_raw) {
+-		retval = -ENODEV;
+-		goto out;
+-	}
++		if (serio_raw->dead)
++			return -ENODEV;
  
--	mutex_lock(&serio->drv_mutex);
- 	if (serio->drv && serio->drv->reconnect)
--		retval = serio->drv->reconnect(serio);
--	mutex_unlock(&serio->drv_mutex);
-+		return serio->drv->reconnect(serio);
+-	if (serio_raw->dead) {
+-		retval = -ENODEV;
+-		goto out;
+-	}
++		client = kzalloc(sizeof(*client), GFP_KERNEL);
++		if (!client)
++			return -ENOMEM;
  
--	return retval;
-+	return -1;
- }
- 
- static void serio_disconnect_driver(struct serio *serio)
- {
--	mutex_lock(&serio->drv_mutex);
-+	guard(mutex)(&serio->drv_mutex);
-+
- 	if (serio->drv)
- 		serio->drv->disconnect(serio);
--	mutex_unlock(&serio->drv_mutex);
- }
- 
- static int serio_match_port(const struct serio_device_id *ids, struct serio *serio)
-@@ -145,9 +139,8 @@ static LIST_HEAD(serio_event_list);
- static struct serio_event *serio_get_event(void)
- {
- 	struct serio_event *event = NULL;
--	unsigned long flags;
- 
--	spin_lock_irqsave(&serio_event_lock, flags);
-+	guard(spinlock_irqsave)(&serio_event_lock);
- 
- 	if (!list_empty(&serio_event_list)) {
- 		event = list_first_entry(&serio_event_list,
-@@ -155,7 +148,6 @@ static struct serio_event *serio_get_event(void)
- 		list_del_init(&event->node);
- 	}
- 
--	spin_unlock_irqrestore(&serio_event_lock, flags);
- 	return event;
- }
- 
-@@ -169,9 +161,8 @@ static void serio_remove_duplicate_events(void *object,
- 					  enum serio_event_type type)
- {
- 	struct serio_event *e, *next;
--	unsigned long flags;
- 
--	spin_lock_irqsave(&serio_event_lock, flags);
-+	guard(spinlock_irqsave)(&serio_event_lock);
- 
- 	list_for_each_entry_safe(e, next, &serio_event_list, node) {
- 		if (object == e->object) {
-@@ -187,15 +178,13 @@ static void serio_remove_duplicate_events(void *object,
- 			serio_free_event(e);
- 		}
- 	}
--
--	spin_unlock_irqrestore(&serio_event_lock, flags);
- }
- 
- static void serio_handle_event(struct work_struct *work)
- {
- 	struct serio_event *event;
- 
--	mutex_lock(&serio_mutex);
-+	guard(mutex)(&serio_mutex);
- 
- 	while ((event = serio_get_event())) {
- 
-@@ -222,8 +211,6 @@ static void serio_handle_event(struct work_struct *work)
- 		serio_remove_duplicate_events(event->object, event->type);
- 		serio_free_event(event);
- 	}
--
--	mutex_unlock(&serio_mutex);
- }
- 
- static DECLARE_WORK(serio_event_work, serio_handle_event);
-@@ -231,11 +218,9 @@ static DECLARE_WORK(serio_event_work, serio_handle_event);
- static int serio_queue_event(void *object, struct module *owner,
- 			     enum serio_event_type event_type)
- {
--	unsigned long flags;
- 	struct serio_event *event;
--	int retval = 0;
- 
--	spin_lock_irqsave(&serio_event_lock, flags);
-+	guard(spinlock_irqsave)(&serio_event_lock);
- 
- 	/*
- 	 * Scan event list for the other events for the same serio port,
-@@ -247,7 +232,7 @@ static int serio_queue_event(void *object, struct module *owner,
- 	list_for_each_entry_reverse(event, &serio_event_list, node) {
- 		if (event->object == object) {
- 			if (event->type == event_type)
--				goto out;
-+				return 0;
- 			break;
- 		}
- 	}
-@@ -255,16 +240,14 @@ static int serio_queue_event(void *object, struct module *owner,
- 	event = kmalloc(sizeof(*event), GFP_ATOMIC);
- 	if (!event) {
- 		pr_err("Not enough memory to queue event %d\n", event_type);
+-	client = kzalloc(sizeof(*client), GFP_KERNEL);
+-	if (!client) {
 -		retval = -ENOMEM;
 -		goto out;
-+		return -ENOMEM;
- 	}
+-	}
++		client->serio_raw = serio_raw;
++		file->private_data = client;
  
- 	if (!try_module_get(owner)) {
- 		pr_warn("Can't get module reference, dropping event %d\n",
- 			event_type);
- 		kfree(event);
--		retval = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
+-	client->serio_raw = serio_raw;
+-	file->private_data = client;
++		kref_get(&serio_raw->kref);
  
- 	event->type = event_type;
-@@ -274,9 +257,7 @@ static int serio_queue_event(void *object, struct module *owner,
- 	list_add_tail(&event->node, &serio_event_list);
- 	queue_work(system_long_wq, &serio_event_work);
+-	kref_get(&serio_raw->kref);
++		scoped_guard(serio_pause_rx, serio_raw->serio)
++			list_add_tail(&client->node, &serio_raw->client_list);
+ 
+-	serio_pause_rx(serio_raw->serio);
+-	list_add_tail(&client->node, &serio_raw->client_list);
+-	serio_continue_rx(serio_raw->serio);
++		return 0;
++	}
  
 -out:
--	spin_unlock_irqrestore(&serio_event_lock, flags);
+-	mutex_unlock(&serio_raw_mutex);
 -	return retval;
-+	return 0;
++	return -EINTR;
  }
  
- /*
-@@ -286,9 +267,8 @@ static int serio_queue_event(void *object, struct module *owner,
- static void serio_remove_pending_events(void *object)
+ static void serio_raw_free(struct kref *kref)
+@@ -126,9 +116,8 @@ static int serio_raw_release(struct inode *inode, struct file *file)
+ 	struct serio_raw_client *client = file->private_data;
+ 	struct serio_raw *serio_raw = client->serio_raw;
+ 
+-	serio_pause_rx(serio_raw->serio);
+-	list_del(&client->node);
+-	serio_continue_rx(serio_raw->serio);
++	scoped_guard(serio_pause_rx, serio_raw->serio)
++		list_del(&client->node);
+ 
+ 	kfree(client);
+ 
+@@ -139,19 +128,15 @@ static int serio_raw_release(struct inode *inode, struct file *file)
+ 
+ static bool serio_raw_fetch_byte(struct serio_raw *serio_raw, char *c)
  {
- 	struct serio_event *event, *next;
--	unsigned long flags;
+-	bool empty;
++	guard(serio_pause_rx)(serio_raw->serio);
  
--	spin_lock_irqsave(&serio_event_lock, flags);
-+	guard(spinlock_irqsave)(&serio_event_lock);
+-	serio_pause_rx(serio_raw->serio);
+-
+-	empty = serio_raw->head == serio_raw->tail;
+-	if (!empty) {
+-		*c = serio_raw->queue[serio_raw->tail];
+-		serio_raw->tail = (serio_raw->tail + 1) % SERIO_RAW_QUEUE_LEN;
+-	}
++	if (serio_raw->head == serio_raw->tail)
++		return false; /* queue is empty */
  
- 	list_for_each_entry_safe(event, next, &serio_event_list, node) {
- 		if (event->object == object) {
-@@ -296,8 +276,6 @@ static void serio_remove_pending_events(void *object)
- 			serio_free_event(event);
+-	serio_continue_rx(serio_raw->serio);
++	*c = serio_raw->queue[serio_raw->tail];
++	serio_raw->tail = (serio_raw->tail + 1) % SERIO_RAW_QUEUE_LEN;
+ 
+-	return !empty;
++	return true;
+ }
+ 
+ static ssize_t serio_raw_read(struct file *file, char __user *buffer,
+@@ -200,40 +185,32 @@ static ssize_t serio_raw_write(struct file *file, const char __user *buffer,
+ {
+ 	struct serio_raw_client *client = file->private_data;
+ 	struct serio_raw *serio_raw = client->serio_raw;
+-	int retval = 0;
++	int written;
+ 	unsigned char c;
+ 
+-	retval = mutex_lock_interruptible(&serio_raw_mutex);
+-	if (retval)
+-		return retval;
++	scoped_guard(mutex_intr, &serio_raw_mutex) {
++		if (serio_raw->dead)
++			return -ENODEV;
+ 
+-	if (serio_raw->dead) {
+-		retval = -ENODEV;
+-		goto out;
+-	}
++		if (count > 32)
++			count = 32;
+ 
+-	if (count > 32)
+-		count = 32;
++		while (count--) {
++			if (get_user(c, buffer++))
++				return -EFAULT;
+ 
+-	while (count--) {
+-		if (get_user(c, buffer++)) {
+-			retval = -EFAULT;
+-			goto out;
+-		}
++			if (serio_write(serio_raw->serio, c)) {
++				/* Either signal error or partial write */
++				return written ?: -EIO;
++			}
+ 
+-		if (serio_write(serio_raw->serio, c)) {
+-			/* Either signal error or partial write */
+-			if (retval == 0)
+-				retval = -EIO;
+-			goto out;
++			written++;
  		}
+ 
+-		retval++;
++		return written;
  	}
--
--	spin_unlock_irqrestore(&serio_event_lock, flags);
+ 
+-out:
+-	mutex_unlock(&serio_raw_mutex);
+-	return retval;
++	return -EINTR;
  }
  
- /*
-@@ -309,23 +287,19 @@ static void serio_remove_pending_events(void *object)
- static struct serio *serio_get_pending_child(struct serio *parent)
+ static __poll_t serio_raw_poll(struct file *file, poll_table *wait)
+@@ -379,10 +356,10 @@ static void serio_raw_hangup(struct serio_raw *serio_raw)
  {
- 	struct serio_event *event;
--	struct serio *serio, *child = NULL;
--	unsigned long flags;
-+	struct serio *serio;
+ 	struct serio_raw_client *client;
  
--	spin_lock_irqsave(&serio_event_lock, flags);
-+	guard(spinlock_irqsave)(&serio_event_lock);
+-	serio_pause_rx(serio_raw->serio);
+-	list_for_each_entry(client, &serio_raw->client_list, node)
+-		kill_fasync(&client->fasync, SIGIO, POLL_HUP);
+-	serio_continue_rx(serio_raw->serio);
++	scoped_guard(serio_pause_rx, serio_raw->serio) {
++		list_for_each_entry(client, &serio_raw->client_list, node)
++			kill_fasync(&client->fasync, SIGIO, POLL_HUP);
++	}
  
- 	list_for_each_entry(event, &serio_event_list, node) {
- 		if (event->type == SERIO_REGISTER_PORT) {
- 			serio = event->object;
--			if (serio->parent == parent) {
--				child = serio;
--				break;
--			}
-+			if (serio->parent == parent)
-+				return serio;
- 		}
- 	}
- 
--	spin_unlock_irqrestore(&serio_event_lock, flags);
--	return child;
-+	return NULL;
+ 	wake_up_interruptible(&serio_raw->wait);
  }
+@@ -394,10 +371,10 @@ static void serio_raw_disconnect(struct serio *serio)
  
- /*
-@@ -376,29 +350,26 @@ static ssize_t drvctl_store(struct device *dev, struct device_attribute *attr, c
- 	struct device_driver *drv;
- 	int error;
+ 	misc_deregister(&serio_raw->dev);
  
--	error = mutex_lock_interruptible(&serio_mutex);
--	if (error)
--		return error;
--
--	if (!strncmp(buf, "none", count)) {
--		serio_disconnect_port(serio);
--	} else if (!strncmp(buf, "reconnect", count)) {
--		serio_reconnect_subtree(serio);
--	} else if (!strncmp(buf, "rescan", count)) {
--		serio_disconnect_port(serio);
--		serio_find_driver(serio);
--		serio_remove_duplicate_events(serio, SERIO_RESCAN_PORT);
--	} else if ((drv = driver_find(buf, &serio_bus)) != NULL) {
--		serio_disconnect_port(serio);
--		error = serio_bind_driver(serio, to_serio_driver(drv));
--		serio_remove_duplicate_events(serio, SERIO_RESCAN_PORT);
--	} else {
--		error = -EINVAL;
-+	scoped_cond_guard(mutex_intr, return -EINTR, &serio_mutex) {
-+		if (!strncmp(buf, "none", count)) {
-+			serio_disconnect_port(serio);
-+		} else if (!strncmp(buf, "reconnect", count)) {
-+			serio_reconnect_subtree(serio);
-+		} else if (!strncmp(buf, "rescan", count)) {
-+			serio_disconnect_port(serio);
-+			serio_find_driver(serio);
-+			serio_remove_duplicate_events(serio, SERIO_RESCAN_PORT);
-+		} else if ((drv = driver_find(buf, &serio_bus)) != NULL) {
-+			serio_disconnect_port(serio);
-+			error = serio_bind_driver(serio, to_serio_driver(drv));
-+			serio_remove_duplicate_events(serio, SERIO_RESCAN_PORT);
-+			return error;
-+		} else {
-+			return -EINVAL;
-+		}
- 	}
+-	mutex_lock(&serio_raw_mutex);
+-	serio_raw->dead = true;
+-	list_del_init(&serio_raw->node);
+-	mutex_unlock(&serio_raw_mutex);
++	scoped_guard(mutex, &serio_raw_mutex) {
++		serio_raw->dead = true;
++		list_del_init(&serio_raw->node);
++	}
  
--	mutex_unlock(&serio_mutex);
--
--	return error ? error : count;
-+	return count;
- }
- 
- static ssize_t serio_show_bind_mode(struct device *dev, struct device_attribute *attr, char *buf)
-@@ -520,9 +491,9 @@ static void serio_add_port(struct serio *serio)
- 	int error;
- 
- 	if (parent) {
--		serio_pause_rx(parent);
-+		guard(serio_pause_rx)(parent);
-+
- 		list_add_tail(&serio->child_node, &parent->children);
--		serio_continue_rx(parent);
- 	}
- 
- 	list_add_tail(&serio->node, &serio_list);
-@@ -554,9 +525,9 @@ static void serio_destroy_port(struct serio *serio)
- 		serio->stop(serio);
- 
- 	if (serio->parent) {
--		serio_pause_rx(serio->parent);
-+		guard(serio_pause_rx)(serio->parent);
-+
- 		list_del_init(&serio->child_node);
--		serio_continue_rx(serio->parent);
- 		serio->parent = NULL;
- 	}
- 
-@@ -697,10 +668,10 @@ EXPORT_SYMBOL(__serio_register_port);
-  */
- void serio_unregister_port(struct serio *serio)
- {
--	mutex_lock(&serio_mutex);
-+	guard(mutex)(&serio_mutex);
-+
- 	serio_disconnect_port(serio);
- 	serio_destroy_port(serio);
--	mutex_unlock(&serio_mutex);
- }
- EXPORT_SYMBOL(serio_unregister_port);
- 
-@@ -711,12 +682,12 @@ void serio_unregister_child_port(struct serio *serio)
- {
- 	struct serio *s, *next;
- 
--	mutex_lock(&serio_mutex);
-+	guard(mutex)(&serio_mutex);
-+
- 	list_for_each_entry_safe(s, next, &serio->children, child_node) {
- 		serio_disconnect_port(s);
- 		serio_destroy_port(s);
- 	}
--	mutex_unlock(&serio_mutex);
- }
- EXPORT_SYMBOL(serio_unregister_child_port);
- 
-@@ -780,10 +751,10 @@ static void serio_driver_remove(struct device *dev)
- 
- static void serio_cleanup(struct serio *serio)
- {
--	mutex_lock(&serio->drv_mutex);
-+	guard(mutex)(&serio->drv_mutex);
-+
- 	if (serio->drv && serio->drv->cleanup)
- 		serio->drv->cleanup(serio);
--	mutex_unlock(&serio->drv_mutex);
- }
- 
- static void serio_shutdown(struct device *dev)
-@@ -822,7 +793,7 @@ void serio_unregister_driver(struct serio_driver *drv)
- {
- 	struct serio *serio;
- 
--	mutex_lock(&serio_mutex);
-+	guard(mutex)(&serio_mutex);
- 
- 	drv->manual_bind = true;	/* so serio_find_driver ignores it */
- 
-@@ -837,15 +808,14 @@ void serio_unregister_driver(struct serio_driver *drv)
- 	}
- 
- 	driver_unregister(&drv->driver);
--	mutex_unlock(&serio_mutex);
- }
- EXPORT_SYMBOL(serio_unregister_driver);
- 
- static void serio_set_drv(struct serio *serio, struct serio_driver *drv)
- {
--	serio_pause_rx(serio);
-+	guard(serio_pause_rx)(serio);
-+
- 	serio->drv = drv;
--	serio_continue_rx(serio);
- }
- 
- static int serio_bus_match(struct device *dev, struct device_driver *drv)
-@@ -906,14 +876,14 @@ static int serio_resume(struct device *dev)
- 	struct serio *serio = to_serio_port(dev);
- 	int error = -ENOENT;
- 
--	mutex_lock(&serio->drv_mutex);
--	if (serio->drv && serio->drv->fast_reconnect) {
--		error = serio->drv->fast_reconnect(serio);
--		if (error && error != -ENOENT)
--			dev_warn(dev, "fast reconnect failed with error %d\n",
--				 error);
-+	scoped_guard(mutex, &serio->drv_mutex) {
-+		if (serio->drv && serio->drv->fast_reconnect) {
-+			error = serio->drv->fast_reconnect(serio);
-+			if (error && error != -ENOENT)
-+				dev_warn(dev, "fast reconnect failed with error %d\n",
-+					 error);
-+		}
- 	}
--	mutex_unlock(&serio->drv_mutex);
- 
- 	if (error) {
- 		/*
-@@ -960,21 +930,17 @@ EXPORT_SYMBOL(serio_close);
- irqreturn_t serio_interrupt(struct serio *serio,
- 		unsigned char data, unsigned int dfl)
- {
--	unsigned long flags;
--	irqreturn_t ret = IRQ_NONE;
-+	guard(spinlock_irqsave)(&serio->lock);
- 
--	spin_lock_irqsave(&serio->lock, flags);
-+	if (likely(serio->drv))
-+		return serio->drv->interrupt(serio, data, dfl);
- 
--        if (likely(serio->drv)) {
--                ret = serio->drv->interrupt(serio, data, dfl);
--	} else if (!dfl && device_is_registered(&serio->dev)) {
-+	if (!dfl && device_is_registered(&serio->dev)) {
- 		serio_rescan(serio);
--		ret = IRQ_HANDLED;
-+		return IRQ_HANDLED;
- 	}
- 
--	spin_unlock_irqrestore(&serio->lock, flags);
--
--	return ret;
-+	return IRQ_NONE;
- }
- EXPORT_SYMBOL(serio_interrupt);
+ 	serio_raw_hangup(serio_raw);
  
 -- 
 2.46.0.469.g59c65b2a67-goog
