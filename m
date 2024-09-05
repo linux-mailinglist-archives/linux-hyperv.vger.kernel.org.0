@@ -1,72 +1,72 @@
-Return-Path: <linux-hyperv+bounces-2964-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2965-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67BB996CDD9
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 06:21:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7104196CDDC
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 06:22:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F1111F217B3
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 04:21:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28E68280F13
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Sep 2024 04:22:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8615218FDBB;
-	Thu,  5 Sep 2024 04:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC82F1922ED;
+	Thu,  5 Sep 2024 04:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILDZvvdl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZ8jOGk1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C3C155326;
-	Thu,  5 Sep 2024 04:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F1F18F2C3;
+	Thu,  5 Sep 2024 04:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725509891; cv=none; b=T6VZC9IgZeWX/Xpq63sL5ClwWkKsv22rMpFGGYP+HrPRgAtitocEb92E9p7/k47/mN8akUMlxfgJCIRzbVYKlAEpef99pS1wHvSJ9mvvJVtnLI3+8wawL5Ys0JeSzU2OJlI7J/JOYweCHKSi01W5FlRjZdEWWgmFqqhdfeSiBX4=
+	t=1725509893; cv=none; b=fnbpD4C+L5rcWex9qL1Y7LNArYqyoqjZpr7kvnp1IPydP2hXj7FtIhUthOmi9d1FPtNulPXM0Lbwp3GwU1T3p7+DeFatBrnKgxZwC034sCT/JbZXXu8ut2pI37xdQNgw2WIgAwUEqJsmn8SV8uLc0DXqNEIY8KZqTJQi+jEKDus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725509891; c=relaxed/simple;
-	bh=+xmHtxPCJGTBzSClQJ+yBa81QsqtA24ObFByUE16CfE=;
+	s=arc-20240116; t=1725509893; c=relaxed/simple;
+	bh=1ANKjU3VKrs6X/QdpJ9WLabYERlHb97KjzLTZSjxQWk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WjgekNkN5yBwVKmiTSATAJdSxZN0qWzD34dMvNSGBIx8NQp02kxDXcc2huTZ9gFMhhXb+zGAEusDrNHffCMf3tZ7c/qLYvqRDI7YHE6pu+wUhgDe8IJWxygY4VlFXIDBSfopQ9EA2SfcHfJ4l782oI35+7cx2A8Di7ztdLk5ygE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILDZvvdl; arc=none smtp.client-ip=209.85.161.47
+	 MIME-Version; b=XX41ubWeu+Ujw7qlNLfSu2iLLkclqMqFyxNxJCvagIQCQVXNb9Ji9eqv3uLwlbKO3VnwH46LjVCVJS+a+73VdLJZA8m67fS0zMrdrtg7fbUy37tpEKuVFe2KMKXq825vsAe4+wFSF0Hc6uZ8tMr2df6xPPMfVKTSHdQnY8UNnUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZ8jOGk1; arc=none smtp.client-ip=209.85.210.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5df998d7a44so211997eaf.2;
-        Wed, 04 Sep 2024 21:18:09 -0700 (PDT)
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-70f6e65d605so210223a34.3;
+        Wed, 04 Sep 2024 21:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725509889; x=1726114689; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725509890; x=1726114690; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2hL/oJ8v77sFrESpjTE2muwhc7qNiYaOX9Ne/zSSlqk=;
-        b=ILDZvvdlmDcttsrNTqqBAHO84NZqZt/83IUvkMUoWkqK6pKqzcWFVUpC3f/2IUyosf
-         pTswE1n8oow0OXNn23gQwqbsOA9e2xbhQVfWsCu3zZpI9kJ4jD52R/QtCpFJpSzsUn+F
-         InztcWL1ovbZX0PAb0lTZBzYo+kQyEphIJRJP+0mYOOPduw4TfAC7gvSfuHLB3jbBeka
-         XQ/k2dK6tvegpxP0zeHd8I7SfMejLylRXMZnTkLnGwxWaUAXHH4CRyRmUy17igwMNP5Z
-         vwJvS19Zj1j4e5W1wb9mxo/s4yex6m/FVj58x+7MvIBJJ2L2FZAiai2LtE52GmnVqKkH
-         sPvg==
+        bh=zdj97WNnHfmaSgwSXHcMMW5oApE6Xxi6ExD1cTeMbgs=;
+        b=FZ8jOGk1yZWfOKa+fHpy5E7ST+zv1Vlz7LYPzbmcgOh1hffumkdJEzb8k6jw5/bQG2
+         ogq9NxMdiV4qiXCdzAyTIWT6W6PUiL8MWMjORDoY2jswqNyV8yIAb55XdVsdQXZh0KJd
+         SJ53uxXXOF/U35jPYgmmf3f5BOlm4BKhUSLzM5ngZ0MJKRweFq3HLQHTx7gZhGyqaD+K
+         iXkRbmwFPbAOnqcquTC4yOxSWk178uu3jiLMDkS0jXa1shHoZo1IPaG3IZoyrDNzCgzd
+         Jv4k0mg5LW+kvFScxEGY/E3vNPrNgP8391wlIBDEj+rToL7e6IEOk2dX8QP/v7LdMvHj
+         SojA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725509889; x=1726114689;
+        d=1e100.net; s=20230601; t=1725509890; x=1726114690;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2hL/oJ8v77sFrESpjTE2muwhc7qNiYaOX9Ne/zSSlqk=;
-        b=qUuQ+zlzDiDkFpXHwNFNrs4BODF+CcvIgh97twpt6RFAJucdBwexTWWWDCvC8U1aGF
-         L+vle/p52C++SHjKAqaX1sPTu2rV3X4wQEHmxbBACeetKw5zgY1WXJqzNC3HBiQ7RP2C
-         jZ0FLSZRUI+gRuAB92lgFnTvk0gsvqWmWTxDJqCwjJWCtyWRwCUjwjgzKlFKcWvMX9EN
-         y9gCgWjouitm/BEkPdQCK4v9g4aHJ8JpjrqcttlCc2VTQ0CfTfy32tsz45yR9cWpIWxn
-         S+BxRtoo02SwwylEt/uyLse5XFTSMqSSpIp5rx+GVuNqf1NXGoLiwOdLAR7joJO8P9oN
-         yFug==
-X-Forwarded-Encrypted: i=1; AJvYcCULLsLWf8w8TdeIxR+/t7UzTELntAoM2Y9sIagGgsg07leJg0NBKmrxdjFsXHEZ1iEQ0bgaFiRI0SxcFLZt@vger.kernel.org, AJvYcCUMewu8liXtjNyAO5r9BWz1or4O17ldlV519LjeR2/kxtlbOcF6XPPfSqJ1642brybb3JwgyubqK6oJp1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbt7+jpjOPL0GZt1IxblU/ZBtiFbxZaDNGm74SGzU4vvPwAi9b
-	6HZQ770gzxd7acG7QxT9SpCbYfCiV9tC8BkwGbQv9/MuZrwWypqT4br9BA==
-X-Google-Smtp-Source: AGHT+IHFtlZtt/7jfalAzcdSLrrI2tqquQOXGQfEgeIl9ZKOtYpILy5RI3LJ8SU6F2JK5e0j4C+FUw==
-X-Received: by 2002:a05:6359:410e:b0:1b5:fa8a:791b with SMTP id e5c5f4694b2df-1b8117ef578mr1137606955d.23.1725509888625;
-        Wed, 04 Sep 2024 21:18:08 -0700 (PDT)
+        bh=zdj97WNnHfmaSgwSXHcMMW5oApE6Xxi6ExD1cTeMbgs=;
+        b=YCTbgSwiIr4kp+viKfC9vgKCaPyyjKhiRZjOdxnED2teIWm9wxvRxHCBEjf3fEPDrz
+         mnbMXai55MrBpWpvbblrtGXGteA7BcsG7h0lsrdinXJ3QOYx7GK9rCKQ+9tbLH64KaUF
+         fwXd+aVKR3bWFoAgnokfaYid4P6PBdidOXypSrPkR7xixQnYflhdsCxn9D9Zr2ePwM/l
+         OofMO35KG9VesrQYo2R+sznOvsB+Q2xrXEGyo2j9qSdEOCUBmWhn+SnHWR30Wt9Mcy2t
+         js+Jv4JtA4MxarL+6oRoh4wltYyppCIEz8oSNWLqQYgAIqD9b66zguPxEm39T1avwKjy
+         vgiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlUvmvqvtYzgPajtLXNSFkfcSzsameyVZ8KyR7CwFizsWTnWrQyEH5k3yV6KNu+e8m0KH76IBSJDxJnWs=@vger.kernel.org, AJvYcCWPw7HmyKJbgC3wWly/FDn3iz04uMmeN0V0MMxBSxg/boK5dUWHT2aETiIlANmr50nMJAzRdlK/n8fTzkM5@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwGAjHTWavlgWkLx9c3f2CkUVu5GKv4Ql46OvOb+6BXIXYpGX9
+	Lq7dgT2cW2EI42FOOa2tHWL6+A9gdV03aYsYz2MVbFWrmsJnRPao16ym3w==
+X-Google-Smtp-Source: AGHT+IEMAZJeCSqiHRSgN3+WWWCHuQRgdHGicuqXLtwn/x3wJa2d1mAi8u8uVrAj+0Ri9jh32shyow==
+X-Received: by 2002:a05:6830:6e8f:b0:70f:7752:3967 with SMTP id 46e09a7af769-70f77523c01mr18497699a34.27.1725509890118;
+        Wed, 04 Sep 2024 21:18:10 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:13bd:b4e:4c0f:4c37])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8d52esm2450216a12.32.2024.09.04.21.18.07
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8d52esm2450216a12.32.2024.09.04.21.18.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 21:18:08 -0700 (PDT)
+        Wed, 04 Sep 2024 21:18:09 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: linux-input@vger.kernel.org
 Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
@@ -82,9 +82,9 @@ Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev
-Subject: [PATCH 17/24] Input: sa1111ps2 - use guard notation when acquiring spinlock
-Date: Wed,  4 Sep 2024 21:17:22 -0700
-Message-ID: <20240905041732.2034348-18-dmitry.torokhov@gmail.com>
+Subject: [PATCH 18/24] Input: serport - use guard notation when acquiring spinlock
+Date: Wed,  4 Sep 2024 21:17:23 -0700
+Message-ID: <20240905041732.2034348-19-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 In-Reply-To: <20240905041732.2034348-1-dmitry.torokhov@gmail.com>
 References: <20240905041732.2034348-1-dmitry.torokhov@gmail.com>
@@ -102,51 +102,95 @@ when control leaves critical section.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/serio/sa1111ps2.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/input/serio/serport.c | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/input/serio/sa1111ps2.c b/drivers/input/serio/sa1111ps2.c
-index 1311caf7dba4..375c6f5f905c 100644
---- a/drivers/input/serio/sa1111ps2.c
-+++ b/drivers/input/serio/sa1111ps2.c
-@@ -92,7 +92,8 @@ static irqreturn_t ps2_txint(int irq, void *dev_id)
- 	struct ps2if *ps2if = dev_id;
- 	unsigned int status;
- 
--	spin_lock(&ps2if->lock);
-+	guard(spinlock)(&ps2if->lock);
-+
- 	status = readl_relaxed(ps2if->base + PS2STAT);
- 	if (ps2if->head == ps2if->tail) {
- 		disable_irq_nosync(irq);
-@@ -101,7 +102,6 @@ static irqreturn_t ps2_txint(int irq, void *dev_id)
- 		writel_relaxed(ps2if->buf[ps2if->tail], ps2if->base + PS2DATA);
- 		ps2if->tail = (ps2if->tail + 1) & (sizeof(ps2if->buf) - 1);
- 	}
--	spin_unlock(&ps2if->lock);
- 
- 	return IRQ_HANDLED;
- }
-@@ -113,10 +113,9 @@ static irqreturn_t ps2_txint(int irq, void *dev_id)
- static int ps2_write(struct serio *io, unsigned char val)
+diff --git a/drivers/input/serio/serport.c b/drivers/input/serio/serport.c
+index 5a2b5404ffc2..74ac88796187 100644
+--- a/drivers/input/serio/serport.c
++++ b/drivers/input/serio/serport.c
+@@ -50,11 +50,9 @@ static int serport_serio_write(struct serio *serio, unsigned char data)
+ static int serport_serio_open(struct serio *serio)
  {
- 	struct ps2if *ps2if = io->port_data;
+ 	struct serport *serport = serio->port_data;
 -	unsigned long flags;
- 	unsigned int head;
  
--	spin_lock_irqsave(&ps2if->lock, flags);
-+	guard(spinlock_irqsave)(&ps2if->lock);
+-	spin_lock_irqsave(&serport->lock, flags);
++	guard(spinlock_irqsave)(&serport->lock);
+ 	set_bit(SERPORT_ACTIVE, &serport->flags);
+-	spin_unlock_irqrestore(&serport->lock, flags);
  
- 	/*
- 	 * If the TX register is empty, we can go straight out.
-@@ -133,7 +132,6 @@ static int ps2_write(struct serio *io, unsigned char val)
- 		}
- 	}
- 
--	spin_unlock_irqrestore(&ps2if->lock, flags);
  	return 0;
  }
+@@ -63,11 +61,9 @@ static int serport_serio_open(struct serio *serio)
+ static void serport_serio_close(struct serio *serio)
+ {
+ 	struct serport *serport = serio->port_data;
+-	unsigned long flags;
  
+-	spin_lock_irqsave(&serport->lock, flags);
++	guard(spinlock_irqsave)(&serport->lock);
+ 	clear_bit(SERPORT_ACTIVE, &serport->flags);
+-	spin_unlock_irqrestore(&serport->lock, flags);
+ }
+ 
+ /*
+@@ -118,14 +114,13 @@ static void serport_ldisc_receive(struct tty_struct *tty, const u8 *cp,
+ 				  const u8 *fp, size_t count)
+ {
+ 	struct serport *serport = tty->disc_data;
+-	unsigned long flags;
+ 	unsigned int ch_flags = 0;
+ 	int i;
+ 
+-	spin_lock_irqsave(&serport->lock, flags);
++	guard(spinlock_irqsave)(&serport->lock);
+ 
+ 	if (!test_bit(SERPORT_ACTIVE, &serport->flags))
+-		goto out;
++		return;
+ 
+ 	for (i = 0; i < count; i++) {
+ 		if (fp) {
+@@ -146,9 +141,6 @@ static void serport_ldisc_receive(struct tty_struct *tty, const u8 *cp,
+ 
+ 		serio_interrupt(serport->serio, cp[i], ch_flags);
+ 	}
+-
+-out:
+-	spin_unlock_irqrestore(&serport->lock, flags);
+ }
+ 
+ /*
+@@ -246,11 +238,9 @@ static int serport_ldisc_compat_ioctl(struct tty_struct *tty,
+ static void serport_ldisc_hangup(struct tty_struct *tty)
+ {
+ 	struct serport *serport = tty->disc_data;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&serport->lock, flags);
+-	set_bit(SERPORT_DEAD, &serport->flags);
+-	spin_unlock_irqrestore(&serport->lock, flags);
++	scoped_guard(spinlock_irqsave, &serport->lock)
++		set_bit(SERPORT_DEAD, &serport->flags);
+ 
+ 	wake_up_interruptible(&serport->wait);
+ }
+@@ -258,12 +248,11 @@ static void serport_ldisc_hangup(struct tty_struct *tty)
+ static void serport_ldisc_write_wakeup(struct tty_struct * tty)
+ {
+ 	struct serport *serport = tty->disc_data;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&serport->lock, flags);
++	guard(spinlock_irqsave)(&serport->lock);
++
+ 	if (test_bit(SERPORT_ACTIVE, &serport->flags))
+ 		serio_drv_write_wakeup(serport->serio);
+-	spin_unlock_irqrestore(&serport->lock, flags);
+ }
+ 
+ /*
 -- 
 2.46.0.469.g59c65b2a67-goog
 
