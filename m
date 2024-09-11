@@ -1,117 +1,251 @@
-Return-Path: <linux-hyperv+bounces-2997-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-2998-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D83309729A4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Sep 2024 08:38:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C73E974969
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Sep 2024 06:56:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8BDD01F2607B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Sep 2024 06:38:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34EE12886E7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Sep 2024 04:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBF4175D2F;
-	Tue, 10 Sep 2024 06:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536D94D8D0;
+	Wed, 11 Sep 2024 04:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QodAntrm"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jXdFqoie"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7339E1741FE;
-	Tue, 10 Sep 2024 06:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FC2E5589B;
+	Wed, 11 Sep 2024 04:56:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725950286; cv=none; b=IX56RFazWouSzY5baQQ5sDRTrK4JGC6pgrIy7vbfwfC2gnuEkFKUfRZfEoWRgkHl9WoLCokkMyZeFmjsdI0hoAsT0Bd69E0oyp0+MctBH+fBrueCA3C/2dTKh1Sw1lreZUQ4hoCxPYzspGWRkxu6yhvXSUmqX+3ckSCg1zyrefs=
+	t=1726030606; cv=none; b=Rj43tzFs6nzrzaR0Y4XX8o/5SqahIIfLbJDdPLO2USf+fqftGfKr/9sAPJUV4+87GOHxtvZiT+NduOwBTc+p+3vRaAvLEIyoPr38xh6sWyoy5jauWChiEn5xvgXvoowTjXHgDLweFOQ3Gj3zdsqGEoLYJKOyJYdE5tXIClWRUSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725950286; c=relaxed/simple;
-	bh=VjEIbjqPBq3Lp/fNF9Xa+R+uI/8Mp6sw85Dh8NFlIB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tONcdZSXUQrsTP/LClrnTCd8MrD0zkS9zFFg2NAGOrkXvcOanC+APb+bZO8+C+dK8Zlj/dCvRwuV9jAxXuRYpPA0K+hp0UA6SDOBBqb3duGUkTSVptqh9ZSwuY0aBeEGEzJ/OMfiwYw33KuVl2JlXBIFBChwP8pbgxAqUkJWKuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QodAntrm; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1726030606; c=relaxed/simple;
+	bh=WCT3gLIPKi2rloiBhOc+oD67Lrpf+PtV0i/c70mMkeo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=huLTEgWeUVb13Veuwx3Jgok8cneWvxAiunJnMkA3CnCo+6zo5nJHrcj12gBXko8itvL+E0aFpDZWfYWgURiYkEF0naZ54tyEFvr0xFaEeAcWNjl3pBHnA6VWHsMNVfSLzi/V/9Zm2I5WGsZ7PR7I/XNEdd+8ks23Jw6TFgqWvRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jXdFqoie; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.224.114] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8E01320B9A6A;
-	Mon,  9 Sep 2024 23:37:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8E01320B9A6A
+Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.141])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DC2C620B9A88;
+	Tue, 10 Sep 2024 21:56:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC2C620B9A88
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1725950279;
-	bh=jQczYn4IGDpSbJMWUYwJY7GUd+3u9rqMfdxFfIyCuZM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QodAntrm/M+rGXnVAIDrpNgDFRklZCJG34eYYhdCqhPwx1sYzQwYjN8pkVZZ69I7x
-	 YLIBEw+ZUiYP2aXvrFrqetk9A3V02Cd3Rveiw9l+AzshSXV4RGA7O0NyZPZrTjqGN0
-	 UNG+zKE7ukm15BRcjHFFM7kOHRkP8PCTOyOBuYaU=
-Message-ID: <f982f176-c171-44db-b86c-f91b7d926949@linux.microsoft.com>
-Date: Tue, 10 Sep 2024 12:07:53 +0530
+	s=default; t=1726030603;
+	bh=9bq4kQISS+sdNw0M52IYsF90Bgvmo3NQ+h9q6SDUnJE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jXdFqoiexQLH9gRlzWsQEGaUBok2wTyWLeF5OYUKyLNYKXTHqoQyT+kzNMIST/qjp
+	 YEaTmS9TWu/WOjJTeWwKCbd+Dj4+NPSq2XJrNBIJNjQYrej0Rq5oJ+aOiTxSV1IE0V
+	 43evBpQCHSNuywQYNt5PNavK52Xrrlimik/V6AVw=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	namjain@linux.microsoft.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2] clocksource: hyper-v: Fix hv tsc page based sched_clock for hibernation
+Date: Wed, 11 Sep 2024 10:26:32 +0530
+Message-Id: <20240911045632.3757-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: RE: [PATCH] clocksource: hyper-v: Fix hv tsc page based
- sched_clock for hibernation
-To: Michael Kelley <mhklinux@outlook.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20240909053923.8512-1-namjain@linux.microsoft.com>
- <SN6PR02MB4157141DD58FD6EAE96C7CABD4992@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157141DD58FD6EAE96C7CABD4992@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+read_hv_sched_clock_tsc() assumes that the Hyper-V clock counter is
+bigger than the variable hv_sched_clock_offset, which is cached during
+early boot, but depending on the timing this assumption may be false
+when a hibernated VM starts again (the clock counter starts from 0
+again) and is resuming back (Note: hv_init_tsc_clocksource() is not
+called during hibernation/resume); consequently,
+read_hv_sched_clock_tsc() may return a negative integer (which is
+interpreted as a huge positive integer since the return type is u64)
+and new kernel messages are prefixed with huge timestamps before
+read_hv_sched_clock_tsc() grows big enough (which typically takes
+several seconds).
 
+Fix the issue by saving the Hyper-V clock counter just before the
+suspend, and using it to correct the hv_sched_clock_offset in
+resume. Override x86_platform.save_sched_clock_state  and
+x86_platform.restore_sched_clock_state.
 
-On 9/9/2024 9:16 PM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Sunday, September 8, 2024 10:39 PM
->>
->> read_hv_sched_clock_tsc() assumes that the Hyper-V clock counter is
->> bigger than the variable hv_sched_clock_offset, which is cached during
->> early boot, but depending on the timing this assumption may be false
+Note: if Invariant TSC is available, the issue doesn't happen because
+1) we don't register read_hv_sched_clock_tsc() for sched clock:
+See commit e5313f1c5404 ("clocksource/drivers/hyper-v: Rework
+clocksource and sched clock setup");
+2) the common x86 code adjusts TSC similarly: see
+__restore_processor_state() ->  tsc_verify_tsc_adjust(true) and
+x86_platform.restore_sched_clock_state().
 
-..
+Cc: stable@vger.kernel.org
+Fixes: 1349401ff1aa ("clocksource/drivers/hyper-v: Suspend/resume Hyper-V clocksource for hibernation")
+Co-developed-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+---
+Changes from v1:
+https://lore.kernel.org/all/20240909053923.8512-1-namjain@linux.microsoft.com/
+* Reorganized code as per Michael's comment, and moved the logic to x86
+specific files, to keep hyperv_timer.c arch independent.
 
->> +	old_save_sched_clock_state = x86_platform.save_sched_clock_state;
->> +	x86_platform.save_sched_clock_state = hv_save_sched_clock_state;
->> +	old_restore_sched_clock_state = x86_platform.restore_sched_clock_state;
->> +	x86_platform.restore_sched_clock_state = hv_restore_sched_clock_state;
-> 
-> This Hyper-V clocksource/timer driver has intentionally been kept
-> instruction set architecture independent.  See the comment at the top
-> of the source code file. We've also avoided any "#ifdef x86" or similar, though
-> it's OK to have #ifdef's on specific clock-related functionality like
-> GENERIC_SCHED_CLOCK.
-> 
-> The reference to "x86_platform" violates the intended independence. The
-> code to save-on-suspend and update-on-resume can probably stay in this
-> module in generic form, but hooking the functions into the x86_platform
-> function call mechanism should move to x86-specific code.
-> 
-> Michael
-> 
+---
+ arch/x86/kernel/cpu/mshyperv.c     | 70 ++++++++++++++++++++++++++++++
+ drivers/clocksource/hyperv_timer.c |  8 +++-
+ include/clocksource/hyperv_timer.h |  8 ++++
+ 3 files changed, 85 insertions(+), 1 deletion(-)
 
-Thanks for the review and guidance Michael. I'll take care of it in v2.
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index e0fd57a8ba84..d83a694e387c 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -224,6 +224,75 @@ static void hv_machine_crash_shutdown(struct pt_regs *regs)
+ 	hyperv_cleanup();
+ }
+ #endif /* CONFIG_CRASH_DUMP */
++
++static u64 hv_sched_clock_offset_saved;
++static void (*old_save_sched_clock_state)(void);
++static void (*old_restore_sched_clock_state)(void);
++
++/*
++ * Hyper-V clock counter resets during hibernation. Save and restore clock
++ * offset during suspend/resume, while also considering the time passed
++ * before suspend. This is to make sure that sched_clock using hv tsc page
++ * based clocksource, proceeds from where it left off during suspend and
++ * it shows correct time for the timestamps of kernel messages after resume.
++ */
++static void save_hv_clock_tsc_state(void)
++{
++	hv_sched_clock_offset_saved = hv_read_reference_counter();
++}
++
++static void restore_hv_clock_tsc_state(void)
++{
++	/*
++	 * hv_sched_clock_offset = offset that is used by hyperv_timer clocksource driver
++	 *                         to get time.
++	 * Time passed before suspend = hv_sched_clock_offset_saved
++	 *                            - hv_sched_clock_offset (old)
++	 *
++	 * After Hyper-V clock counter resets, hv_sched_clock_offset needs a correction.
++	 *
++	 * New time = hv_read_reference_counter() (future) - hv_sched_clock_offset (new)
++	 * New time = Time passed before suspend + hv_read_reference_counter() (future)
++	 *                                       - hv_read_reference_counter() (now)
++	 *
++	 * Solving the above two equations gives:
++	 *
++	 * hv_sched_clock_offset (new) = hv_sched_clock_offset (old)
++	 *                             - hv_sched_clock_offset_saved
++	 *                             + hv_read_reference_counter() (now))
++	 */
++	hv_adj_sched_clock_offset(hv_sched_clock_offset_saved - hv_read_reference_counter());
++}
++
++/*
++ * Functions to override save_sched_clock_state and restore_sched_clock_state
++ * functions of x86_platform. The Hyper-V clock counter is reset during
++ * suspend-resume and the offset used to measure time needs to be
++ * corrected, post resume.
++ */
++static void hv_save_sched_clock_state(void)
++{
++	old_save_sched_clock_state();
++	save_hv_clock_tsc_state();
++}
++
++static void hv_restore_sched_clock_state(void)
++{
++	restore_hv_clock_tsc_state();
++	old_restore_sched_clock_state();
++}
++
++static void __init x86_setup_ops_for_tsc_pg_clock(void)
++{
++	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
++		return;
++
++	old_save_sched_clock_state = x86_platform.save_sched_clock_state;
++	x86_platform.save_sched_clock_state = hv_save_sched_clock_state;
++
++	old_restore_sched_clock_state = x86_platform.restore_sched_clock_state;
++	x86_platform.restore_sched_clock_state = hv_restore_sched_clock_state;
++}
+ #endif /* CONFIG_HYPERV */
+ 
+ static uint32_t  __init ms_hyperv_platform(void)
+@@ -575,6 +644,7 @@ static void __init ms_hyperv_init_platform(void)
+ 
+ 	/* Register Hyper-V specific clocksource */
+ 	hv_init_clocksource();
++	x86_setup_ops_for_tsc_pg_clock();
+ 	hv_vtl_init_platform();
+ #endif
+ 	/*
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index b2a080647e41..e424892444ed 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -27,7 +27,8 @@
+ #include <asm/mshyperv.h>
+ 
+ static struct clock_event_device __percpu *hv_clock_event;
+-static u64 hv_sched_clock_offset __ro_after_init;
++/* Note: offset can hold negative values after hibernation. */
++static u64 hv_sched_clock_offset __read_mostly;
+ 
+ /*
+  * If false, we're using the old mechanism for stimer0 interrupts
+@@ -456,6 +457,11 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
+ 	hv_set_msr(HV_MSR_REFERENCE_TSC, tsc_msr.as_uint64);
+ }
+ 
++void hv_adj_sched_clock_offset(u64 offset)
++{
++	hv_sched_clock_offset -= offset;
++}
++
+ #ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
+ static int hv_cs_enable(struct clocksource *cs)
+ {
+diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
+index 6cdc873ac907..62e2bad754c0 100644
+--- a/include/clocksource/hyperv_timer.h
++++ b/include/clocksource/hyperv_timer.h
+@@ -38,6 +38,14 @@ extern void hv_remap_tsc_clocksource(void);
+ extern unsigned long hv_get_tsc_pfn(void);
+ extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+ 
++/*
++ * Called during resume from hibernation, from overridden
++ * x86_platform.restore_sched_clock_state routine. This is to adjust offsets
++ * used to calculate time for hv tsc page based sched_clock, to account for
++ * time spent before hibernation.
++ */
++extern void hv_adj_sched_clock_offset(u64 offset);
++
+ static __always_inline bool
+ hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
+ 		     u64 *cur_tsc, u64 *time)
 
-
-Regards,
-Naman
-
-
->> +
->>   	/*
->>   	 * TSC page mapping works differently in root compared to guest.
->>   	 * - In guest partition the guest PFN has to be passed to the
->>
->> base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
->> --
->> 2.25.1
-> 
+base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
+-- 
+2.25.1
 
 
