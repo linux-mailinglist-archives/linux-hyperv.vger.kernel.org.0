@@ -1,145 +1,208 @@
-Return-Path: <linux-hyperv+bounces-3013-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3014-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5D9F978710
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 19:44:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 656F2978772
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 20:03:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F0391F21BC7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 17:44:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9088E1C20C27
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 18:03:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D3579DC7;
-	Fri, 13 Sep 2024 17:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24D9126F0A;
+	Fri, 13 Sep 2024 18:02:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d19BrIOi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eyd6t+6J"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D48282D83;
-	Fri, 13 Sep 2024 17:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A35824A0
+	for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 18:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726249455; cv=none; b=nO4x9/UglDMxlHyDXDu+vsM/js2jFP3fvMXLk7CiaoY11DQhZ33LbqNf0qbKrrv4c6N/anxSHSvJVX8XVgrheBM/NdoPI4SIBiTGo5MBAPORbVlaPp9mYFwN8qO9GojS6XfNitSxjZzAmXfg5CVr5O5ArYlyAsThdU1dYnx8bMM=
+	t=1726250573; cv=none; b=tF9MHkFVNMdMekoZxOQ6UQg6TrTofhRj8ejgmJplRpwxGAFMn0CCttCTebu8bgzbpDnPKQ2Z6ty7KdEpjFasXy/mywF9ouomxYA+8maFgxP9F+fIex7ImdkYVfg3VwYMSzCXMWu6yNcuvuGlOnF0ItZ3sbtBw6Lqc30rdtK0bFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726249455; c=relaxed/simple;
-	bh=jGzGLS5jc1tgtr1VvrVQOwCVcOgKD27bW3hONB0me0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NcA71fIYfz+/dRdFulUNRK+Cwypu5bpB1aVaTIR/SPDYycaSYThMkuSKpzwXKN/vYnuupqH/zGE/+aYjvTLmkkVMrdASnp/A0E4YdPpoWubNTf4C9uOeMM9kcfHFxVFhZl7m6kDbvezqYqoe9T6/xT81T65h8QwTZmUEx78damE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d19BrIOi; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726249454; x=1757785454;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jGzGLS5jc1tgtr1VvrVQOwCVcOgKD27bW3hONB0me0s=;
-  b=d19BrIOiJWvB28tQvjgBwlX5DGQJL9gmcx6UewE0VmB3AgT5ZhpC+AC6
-   oY91oDS2jWkn1n2SRa8+W7Y891B437rvgSibfIH5O81Y8StQMOTXqgxIl
-   PFrA1Y8tLkUzp8aPfF8Nbinb9sCHZbLyz5hlfLBbVj/HgjQeRqcrTANNe
-   FFX/ymiL+ZKlcu21qX//Ip6CTp1Wl3Cp0vqKdZIVoQLDbzIYi3ohETIoI
-   UddVMWdufjHQeYolaRSM5y2cvJJZTk79a+N+y+ur4bsy/mm/IP3j4WLQh
-   /cME/hyPlhWsXf7ZHj6cNiX+TolAECJFiVQxVuyp3rAF3tqXg9kWZ3q/6
-   Q==;
-X-CSE-ConnectionGUID: D8T5PTAtTjKyymi0V7ts4g==
-X-CSE-MsgGUID: nY9kI+vqQwGXsAFxLkv5MA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="35829380"
-X-IronPort-AV: E=Sophos;i="6.10,226,1719903600"; 
-   d="scan'208";a="35829380"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 10:44:13 -0700
-X-CSE-ConnectionGUID: CpJnrJr1RpeKBeAlx1cR5Q==
-X-CSE-MsgGUID: mnDRyL3fS8Kw/nImH3rKAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,226,1719903600"; 
-   d="scan'208";a="67761067"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 13 Sep 2024 10:44:10 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1spAL2-0006lY-0W;
-	Fri, 13 Sep 2024 17:44:08 +0000
-Date: Sat, 14 Sep 2024 01:43:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	jikos@kernel.org, bentiss@kernel.org, dmitry.torokhov@gmail.com,
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ernis@microsoft.com,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Disable Suspend-to-Idle for VMBus
-Message-ID: <202409140137.5jZxplAp-lkp@intel.com>
-References: <1726176470-13133-2-git-send-email-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1726250573; c=relaxed/simple;
+	bh=aGCUDXfV/u877/fkGI51wat4K8lT5ShFVAK8Wj6tNt4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vra7RfR187Q67TT0/5tKF0s7rwwRjnAJdxqm4iasLyybRp032QZqZVCdPVPlsarn5pcvEE+I9kwBF0mrIIxpdHTktZYg6bAiWBmrPFSF26t8ldOsIBiqQATonaWoA/egyXgBIvV22RGyE/eJMrBsII3B2ReTdaoU6VCuqTLMojc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eyd6t+6J; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6d7124938d1so62318717b3.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 11:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726250570; x=1726855370; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdKtMk3zFpIjWQQtYnxSCkrmfWA0I64F86jP4xgplJo=;
+        b=eyd6t+6J3YIemQOT4ft7gvNG0mImDRIyXa09JbpLgTu27NSWSJAVgBmhWv1qZtCjkX
+         xZprwB6PrcnusHDuVUbdr89Mo2i56cDpkfKWvb3SPEecYp2YLOJGJ4UL8yw/icFD56Pt
+         +S7ysWPwnnnTU3/fSTbe54r49ldVv3cRs2YV3cYOW+EbLDmGXKmQlfAitG2gkacCp7K8
+         yRKQ0unGkXReFP5wsrWe29ZQ+w7O3W1TOmPsN2kQ9AqbxxqDdFpZXbxiTmMwlchvsQJp
+         gaeLcW44zKdaCmzw1DbzEwtocX8NlebuTQrG8VM4NxeFVeapieboDeTZlqcPmqz41eiw
+         RBPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726250570; x=1726855370;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdKtMk3zFpIjWQQtYnxSCkrmfWA0I64F86jP4xgplJo=;
+        b=pFjQ/zgn8BlIQcFzUKTBWAc90NP42B+76h0s5KDTB3RxZt4u2q9NlSc6MjCHo2bEUJ
+         D5VNUyA79cJY32S9l8RcySkDItHroKoPXwx52l7doYRUT7OhMzccLzCL976dQ0LFB2rs
+         UcNApb2TngMe3P/60jJEAEr00GTmy78Mzsf9pSgqXWZm/1hqGl1DwJvkvejhpZM3fi+o
+         rBJzJ67gQMj+91oabPPf7iYZHA7JJNlsfLMjEEHXjM5hkxF2pJnEctgnMVxA/Viprrhv
+         OotYDXb02j0d1BKZaZ6XJt8BGnKBwLrG0+RuZCbcukE+MtkwPWObDkGCER8J2M0k+Apc
+         lLcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqc+1G+h0oBEmimQVKEvQ6c8qBOUP2aPSHQuqXPTaCK6pn06LkDRJte1imxtM+q1wWm2/S4uOvIIUVdi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS1TxDAdMWt0KLkWLNzrZ65YCrkpKiiFKptdHnj0mnCWdNnJSY
+	70CVX54frZbNjfznyo/KtQAYaLZBzvXQPXW1JlUZrcrRwpibHNvT3wIZqODPeprwYrDqTCKEncG
+	PlA==
+X-Google-Smtp-Source: AGHT+IGT5Cq9F/Hq6fJKYSOkySIR4cK8FdX4I3mm6MNrBQ/Kg+JyiB86l9pHtdUOjWBXR4MFXaP3rIm2mPU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:4d43:b0:6db:cd39:4dad with SMTP id
+ 00721157ae682-6dbcd395214mr2114647b3.5.1726250570352; Fri, 13 Sep 2024
+ 11:02:50 -0700 (PDT)
+Date: Fri, 13 Sep 2024 11:02:48 -0700
+In-Reply-To: <20240609154945.55332-5-nsaenz@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1726176470-13133-2-git-send-email-ernis@linux.microsoft.com>
+Mime-Version: 1.0
+References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-5-nsaenz@amazon.com>
+Message-ID: <ZuR-SPaaTBwLTxW3@google.com>
+Subject: Re: [PATCH 04/18] KVM: x86: hyper-v: Introduce VTL awareness to
+ Hyper-V's PV-IPIs
+From: Sean Christopherson <seanjc@google.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
+	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	graf@amazon.de, dwmw2@infradead.org, paul@amazon.com, mlevitsk@redhat.com, 
+	jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	amoorthy@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Erni,
+On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
+> HvCallSendSyntheticClusterIpi and HvCallSendSyntheticClusterIpiEx allow
+> sending VTL-aware IPIs. Honour the hcall by exiting to user-space upon
+> receiving a request with a valid VTL target. This behaviour is only
+> available if the VSM CPUID flag is available and exposed to the guest.
+> It doesn't introduce a behaviour change otherwise.
+> 
+> User-space is accountable for the correct processing of the PV-IPI
+> before resuming execution.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
+> ---
+>  arch/x86/kvm/hyperv.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 42f44546fe79c..d00baf3ffb165 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -2217,16 +2217,20 @@ static void kvm_hv_send_ipi_to_many(struct kvm *kvm, u32 vector,
+>  
+>  static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  {
+> +	bool vsm_enabled = kvm_hv_cpuid_vsm_enabled(vcpu);
+>  	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+>  	u64 *sparse_banks = hv_vcpu->sparse_banks;
+>  	struct kvm *kvm = vcpu->kvm;
+>  	struct hv_send_ipi_ex send_ipi_ex;
+>  	struct hv_send_ipi send_ipi;
+> +	union hv_input_vtl *in_vtl;
+>  	u64 valid_bank_mask;
+> +	int rsvd_shift;
+>  	u32 vector;
+>  	bool all_cpus;
+>  
+>  	if (hc->code == HVCALL_SEND_IPI) {
+> +		in_vtl = &send_ipi.in_vtl;
 
-kernel test robot noticed the following build errors:
+I don't see any value in having a local pointer to a union.  Just use send_ipi.in_vtl.
 
-[auto build test ERROR on hid/for-next]
-[also build test ERROR on dtor-input/next dtor-input/for-linus linus/master v6.11-rc7 next-20240913]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>  		if (!hc->fast) {
+>  			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &send_ipi,
+>  						    sizeof(send_ipi))))
+> @@ -2235,16 +2239,22 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  			vector = send_ipi.vector;
+>  		} else {
+>  			/* 'reserved' part of hv_send_ipi should be 0 */
+> -			if (unlikely(hc->ingpa >> 32 != 0))
+> +			rsvd_shift = vsm_enabled ? 40 : 32;
+> +			if (unlikely(hc->ingpa >> rsvd_shift != 0))
+>  				return HV_STATUS_INVALID_HYPERCALL_INPUT;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Erni-Sri-Satya-Vennela/Drivers-hv-vmbus-Disable-Suspend-to-Idle-for-VMBus/20240913-053127
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-patch link:    https://lore.kernel.org/r/1726176470-13133-2-git-send-email-ernis%40linux.microsoft.com
-patch subject: [PATCH 1/3] Drivers: hv: vmbus: Disable Suspend-to-Idle for VMBus
-config: i386-randconfig-003-20240913 (https://download.01.org/0day-ci/archive/20240914/202409140137.5jZxplAp-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240914/202409140137.5jZxplAp-lkp@intel.com/reproduce)
+The existing error handling doesn't make any sense to me.  Why is this the _only_
+path that enforces reserved bits?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409140137.5jZxplAp-lkp@intel.com/
+Regarding the shift, I think it makes more sense to do:
 
-All errors (new ones prefixed by >>):
+			/* Bits 63:40 are always reserved. */
+			if (unlikely(hc->ingpa >> 40 != 0))
+				return HV_STATUS_INVALID_HYPERCALL_INPUT;
 
->> drivers/hv/vmbus_drv.c:985:27: error: 'vmbus_freeze' undeclared here (not in a function); did you mean 'vmbus_remove'?
-     985 |         .suspend_noirq  = vmbus_freeze,
-         |                           ^~~~~~~~~~~~
-         |                           vmbus_remove
+			send_ipi.in_vtl.as_uint8 = (u8)(hc->ingpa >> 32);
+			if (unlikely(!vsm_enabled && send_ipi.in_vtl.as_uint8))
+				return HV_STATUS_INVALID_HYPERCALL_INPUT;
 
+so that it's more obvious exactly what is/isn't reserved when VSM isn't/is enabled.
 
-vim +985 drivers/hv/vmbus_drv.c
+> +			in_vtl->as_uint8 = (u8)(hc->ingpa >> 32);
+>  			sparse_banks[0] = hc->outgpa;
+>  			vector = (u32)hc->ingpa;
+>  		}
+>  		all_cpus = false;
+>  		valid_bank_mask = BIT_ULL(0);
+>  
+> +		if (in_vtl->use_target_vtl)
 
-   973	
-   974	/*
-   975	 * Note: we must use the "noirq" ops: see the comment before vmbus_bus_pm.
-   976	 *
-   977	 * suspend_noirq/resume_noirq are set to NULL to support Suspend-to-Idle: we
-   978	 * shouldn't suspend the vmbus devices upon Suspend-to-Idle, otherwise there
-   979	 * is no way to wake up a Generation-2 VM.
-   980	 *
-   981	 * The other 4 ops are for hibernation.
-   982	 */
-   983	
-   984	static const struct dev_pm_ops vmbus_pm = {
- > 985		.suspend_noirq  = vmbus_freeze,
-   986		.resume_noirq	= NULL,
-   987		.freeze_noirq	= vmbus_suspend,
-   988		.thaw_noirq	= vmbus_resume,
-   989		.poweroff_noirq	= vmbus_suspend,
-   990		.restore_noirq	= vmbus_resume,
-   991	};
-   992	
+Due to the lack of error checking for the !hc->fast case, this will do the wrong
+thing if vsm_enabled=false.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +			return -ENODEV;
+> +
+>  		trace_kvm_hv_send_ipi(vector, sparse_banks[0]);
+>  	} else {
+> +		in_vtl = &send_ipi_ex.in_vtl;
+>  		if (!hc->fast) {
+>  			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &send_ipi_ex,
+>  						    sizeof(send_ipi_ex))))
+> @@ -2253,8 +2263,12 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  			send_ipi_ex.vector = (u32)hc->ingpa;
+>  			send_ipi_ex.vp_set.format = hc->outgpa;
+>  			send_ipi_ex.vp_set.valid_bank_mask = sse128_lo(hc->xmm[0]);
+> +			in_vtl->as_uint8 = (u8)(hc->ingpa >> 32);
+>  		}
+>  
+> +		if (vsm_enabled && in_vtl->use_target_vtl)
+> +			return -ENODEV;
+> +
+>  		trace_kvm_hv_send_ipi_ex(send_ipi_ex.vector,
+>  					 send_ipi_ex.vp_set.format,
+>  					 send_ipi_ex.vp_set.valid_bank_mask);
+> @@ -2682,6 +2696,9 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+>  			break;
+>  		}
+>  		ret = kvm_hv_send_ipi(vcpu, &hc);
+> +		/* VTL-enabled ipi, let user-space handle it */
+> +		if (ret == -ENODEV)
+
+I generally don't love "magic" error codes, but I don't see an obvious better
+solution either.  The other weird thing is that "ret" is a u64, versus the more
+common int or even long.  I doubt it's problematic in practice, just a bit odd.
+
+> +			goto hypercall_userspace_exit;
+>  		break;
+>  	case HVCALL_POST_DEBUG_DATA:
+>  	case HVCALL_RETRIEVE_DEBUG_DATA:
+> -- 
+> 2.40.1
+> 
 
