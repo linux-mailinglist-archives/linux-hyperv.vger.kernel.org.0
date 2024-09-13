@@ -1,157 +1,207 @@
-Return-Path: <linux-hyperv+bounces-3015-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3016-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 223AB9787CD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 20:27:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AE3997885A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 21:01:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C85C28919D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 18:27:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12A64B25806
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 19:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41D112CDA5;
-	Fri, 13 Sep 2024 18:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB89145B0F;
+	Fri, 13 Sep 2024 19:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uK0xHbEn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eIDoxL9z"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD64C8C11;
-	Fri, 13 Sep 2024 18:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F179B1386BF
+	for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 19:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726252050; cv=none; b=PyAM7ygDyNmH6xBe1Qot3OMIWPllZud37udy0nA+Om1LjMrKAPbQfxFmXRlyBrXbLDEgVC3B/W28ydUJbaWBPkZvdwHIsQDraJD1uKzN9GDiEG2w9VkVWZqORZ/BtzhQrOnqvDRS5rf1FPFPItENf8WPpTBf15U7AQicG2sKQxQ=
+	t=1726254081; cv=none; b=c6lowCn3IZjbKo0wlBUzXrzI1vu9QQpoE/wh5lzUCO9k+GUxKsURHITZzuAU04d0zYvA1/6y1zSCMES6JD6vv2cq8IUmGNOThM6mLg9dLU6O3qSrDO7fqEIDxzsYIHofyiLlsZ+EGpmDdqkjiOlHukmR1ED/T7AK9rmc3hiqc+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726252050; c=relaxed/simple;
-	bh=T/FAGmskof49WPg60zyMYqxdzTPYLl+utpDpDsGWIgI=;
-	h=Subject:MIME-Version:Content-Type:Date:Message-ID:From:To:CC:
-	 References:In-Reply-To; b=XnvrYJAMPc/AtQYr4QPSpbH9BRlK3L+r0lz9VebhDqayDF473vMCT23gnwqglARKgIvf9uxeEvhHm1b0kaX1Bfzs/jRG7LKfe7KnHc7IWgcDKWvyySjWpW1DOd/Emu+ZWlR0mbSM4CJ+09xBAqBTAgv45dJ04u/Z9aezkQyXBRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=uK0xHbEn; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1726254081; c=relaxed/simple;
+	bh=E1eRAu8n5ez/oUS4tq7qANEINJSQOuFuP0bxVY+xPPA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tQXOiAsrk9bZeAxwR4HbkTWh8bUUXq/8DGw+3YmbfjZc7eqPQ9pCXmB4dvBU3vOL/Aim3XwZVp6dAgW55JumcbjZeqMC3n47aoRHlnwBPTZ5yHugqKHycbiEcbe+Qmve7Gtqt4KuJa3zjnwzgvqB9xB1raGxCgX12+3aRNXn86w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eIDoxL9z; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e1dab3a941fso2223718276.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 12:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1726252049; x=1757788049;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   from:to:cc:references:in-reply-to:subject;
-  bh=wLLXE9tAXmUWkp0mNTmCfQvKPHj+bdubDsMn8oPnwBc=;
-  b=uK0xHbEnzY8FgxjONqDUcW47zA2JDsb/aUMi+un9nh5LtYk91J/tVm1W
-   RyWuBl/P7WuQOS0lF13r7QK1L8tSMM/SRanwgtbcctoSVH4leW8WOMyD5
-   aXYpwY/+ZXiV3fBFuiDrHys3ilhdn/89hxe1CK1TAgDianeSGIjElTjbE
-   o=;
-X-IronPort-AV: E=Sophos;i="6.10,226,1719878400"; 
-   d="scan'208";a="453843029"
-Subject: Re: [PATCH 16/18] KVM: x86: Take mem attributes into account when faulting
- memory
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 18:27:18 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:19490]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.41.21:2525] with esmtp (Farcaster)
- id 4d96842b-9f62-44f5-97a0-d8ad265e11a9; Fri, 13 Sep 2024 18:27:04 +0000 (UTC)
-X-Farcaster-Flow-ID: 4d96842b-9f62-44f5-97a0-d8ad265e11a9
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Fri, 13 Sep 2024 18:27:04 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Fri, 13 Sep 2024
- 18:26:58 +0000
+        d=google.com; s=20230601; t=1726254078; x=1726858878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cd5FUrdjat42hoHRpGz2FP5m+uOzjPunqQr7W48J0MY=;
+        b=eIDoxL9zHnUz69jyVE52OewjTZUPlpOGlEbXO/XHDr3vzI8y8nkAHmhNACy6uvIsGI
+         1/267aTw5lDVYLSC4DA+OgwNZQh1itBZHgk7jLo9mOqxn/UYhw5vZQIyJj2qLk1hBQcS
+         vL5NHYJgv9561PSgD8X9d3N66MPmn++APD2clecdcfdYXlags0bZ07pp83hUPVdv2I4E
+         n3leFiZOg9qKZBzJ3Sw/PXeXvb8Fc7DQArXpJbgjIXKgVZ3ITn5zNpt/uhrAtPO2O1r3
+         gSe+Uep030wlQYm/fq8D8sCfAOiyhYPLACyY5qAZETII4+aWbS3+oMr9UA8LTSTR9oAT
+         2t9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726254078; x=1726858878;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Cd5FUrdjat42hoHRpGz2FP5m+uOzjPunqQr7W48J0MY=;
+        b=hIZMgT2aj9NkFbuq/umyoqFu/XCYAsmlUUFgk797wHLoRt29H//MTJROSz/AEL9yUz
+         sfp0uyUaCLWQ0nJfmr36nyTRMWGQbu4stks2UY08pX9y4w4/+vEv0Wq1mfKNjVnqpQLs
+         hVkYlG2PBPZZdxWnCzQ+NhXOE3K1sC2UEtndZvhJTj0BM9wpgd+Wy6kWJdw+0D6r70QX
+         WJkpzKQrT0ST/CsYCab4oIKUBWWH077F5SzbZcaV6voNl9R+kKFp197drLWc49p7hvrs
+         Vjjk/8Pd9a9oIw5Cd+IIO0txjNWPK6jQD3qR0SYBY1yNS43PfIa5Xzy4qNwYoLkLIYQd
+         y3xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzbRuvLitiDmVS8UQhS8y0t/Qt3ZKARIhgiIUr02HXqTB12dLcIFIkR4K385X+I1H//J6N9A2glCNzSWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJmaJT8XaZWlu7CPtRiM9KZtAk97Cb6jNYqGEE8oCRs4qcB8U8
+	F7LG/po2HB7Pccgzta9pizm/7j/2UiPrkKQ+bU869ninskBNj8eoqMlTZz/Lxnz2+P6PSUHpcpU
+	Nww==
+X-Google-Smtp-Source: AGHT+IEDv8fggeewTOqZNOqNHA4N99QDZMuot5y4ilmd4s6i5ZFifjrvMHV2hbXtsE3V6EXZKIaTHsh+QCM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:74cb:0:b0:e1d:20cf:aec5 with SMTP id
+ 3f1490d57ef6-e1db010002emr7547276.9.1726254077940; Fri, 13 Sep 2024 12:01:17
+ -0700 (PDT)
+Date: Fri, 13 Sep 2024 12:01:16 -0700
+In-Reply-To: <20240609154945.55332-6-nsaenz@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-6-nsaenz@amazon.com>
+Message-ID: <ZuSL_FCfvVywCPxm@google.com>
+Subject: Re: [PATCH 05/18] KVM: x86: hyper-v: Introduce MP_STATE_HV_INACTIVE_VTL
+From: Sean Christopherson <seanjc@google.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
+	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	graf@amazon.de, dwmw2@infradead.org, paul@amazon.com, mlevitsk@redhat.com, 
+	jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	amoorthy@google.com
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Fri, 13 Sep 2024 18:26:54 +0000
-Message-ID: <D45D9NN03CSH.3B25KJ1XKV6XE@amazon.com>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<pbonzini@redhat.com>, <vkuznets@redhat.com>, <linux-doc@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
-	<dwmw2@infradead.org>, <pdurrant@amazon.com>, <mlevitsk@redhat.com>,
-	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049-dirty
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <20240609154945.55332-17-nsaenz@amazon.com>
- <D3MJJCTNY7OM.WOB5W8AVBH9G@amazon.com> <ZsduQ7tg0oQFDY8h@google.com>
-In-Reply-To: <ZsduQ7tg0oQFDY8h@google.com>
-X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On Thu Aug 22, 2024 at 4:58 PM UTC, Sean Christopherson wrote:
-> On Thu, Aug 22, 2024, Nicolas Saenz Julienne wrote:
-> > On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
-> > > Take into account access restrictions memory attributes when faulting
-> > > guest memory. Prohibited memory accesses will cause an user-space fau=
-lt
-> > > exit.
-> > >
-> > > Additionally, bypass a warning in the !tdp case. Access restrictions =
-in
-> > > guest page tables might not necessarily match the host pte's when mem=
-ory
-> > > attributes are in use.
-> > >
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
-> >
-> > I now realize that only taking into account memory attributes during
-> > faults isn't good enough for VSM. We should check the attributes anytim=
-e
-> > KVM takes GPAs as input for any action initiated by the guest. If the
-> > memory attributes are incompatible with such action, it should be
-> > stopped. Failure to do so opens side channels that unprivileged VTLs ca=
-n
-> > abuse to infer information about privileged VTL. Some examples I came u=
-p
-> > with:
-> > - Guest page walks: VTL0 could install malicious directory entries that
-> >   point to GPAs only visible to VTL1. KVM will happily continue the
-> >   walk. Among other things, this could be use to infer VTL1's GVA->GPA
-> >   mappings.
-> > - PV interfaces like the Hyper-V TSC page or VP assist page, could be
-> >   used to modify portions of VTL1 memory.
-> > - Hyper-V hypercalls that take GPAs as input/output can be abused in a
-> >   myriad of ways. Including ones that exit into user-space.
-> >
-> > We would be protected against all these if we implemented the memory
-> > access restrictions through the memory slots API. As is, it has the
-> > drawback of having to quiesce the whole VM for any non-trivial slot
-> > modification (i.e. VSM's memory protections). But if we found a way to
-> > speed up the slot updates we could rely on that, and avoid having to
-> > teach kvm_read/write_guest() and friends to deal with memattrs. Note
-> > that we would still need to use memory attributes to request for faults
-> > to exit onto user-space on those select GPAs. Any opinions or
-> > suggestions?
-> >
-> > Note that, for now, I'll stick with the memory attributes approach to
-> > see what the full solution looks like.
+On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
+> Model inactive VTL vCPUs' behaviour with a new MP state.
+>=20
+> Inactive VTLs are in an artificial halt state. They enter into this
+> state in response to invoking HvCallVtlCall, HvCallVtlReturn.
+> User-space, which is VTL aware, can processes the hypercall, and set the
+> vCPU in MP_STATE_HV_INACTIVE_VTL. When a vCPU is run in this state it'll
+> block until a wakeup event is received. The rules of what constitutes an
+> event are analogous to halt's except that VTL's ignore RFLAGS.IF.
 >
-> FWIW, I suspect we'll be better off honoring memory attributes.  It's not=
- just
-> the KVM side that has issues with memslot updates, my understanding is us=
-erspace
-> has also built up "slow" code with respect to memslot updates, in part be=
-cause
-> it's such a slow path in KVM.
+> When a wakeup event is registered, KVM will exit to user-space with a
+> KVM_SYSTEM_EVENT exit, and KVM_SYSTEM_EVENT_WAKEUP event type.
+> User-space is responsible of deciding whether the event has precedence
+> over the active VTL and will switch the vCPU to KVM_MP_STATE_RUNNABLE
+> before resuming execution on it.
+>=20
+> Running a KVM_MP_STATE_HV_INACTIVE_VTL vCPU with pending events will
+> return immediately to user-space.
+>=20
+> Note that by re-using the readily available halt infrastructure in
+> KVM_RUN, MP_STATE_HV_INACTIVE_VTL correctly handles (or disables)
+> virtualisation features like the VMX preemption timer or APICv before
+> blocking.
 
-Sean, since I see you're looking at the series. I don't think it's worth
-spending too much time with the memory attributes patches. Since
-figuring out the sidechannels mentioned above, I found even more
-shortcomings in this implementation. I'm reworking the whole thing in a
-separate series [1], taking into account sidechannels, MMIO, non-TDP
-MMUs, etc. and introducing selftests and an in-depth design document.
+IIUC, this is a convoluted and roundabout way to let userspace check if a v=
+CPU
+has a wake event, correct?  Even by the end of the series, KVM never sets
+MP_STATE_HV_INACTIVE_VTL, i.e. the only use for this is to combine it as:
 
-[1] https://github.com/vianpl/linux branch 'vsm/memory-protections' (wip)
+  KVM_SET_MP_STATE =3D> KVM_RUN =3D> KVM_SET_MP_STATE =3D> KVM_RUN
 
-Thanks,
-Nicolas
+The upside to this approach is that it requires minimal uAPI and very few K=
+VM
+changes, but that's about it AFAICT.  On the other hand, making this so pai=
+nfully
+specific feels like a missed opportunity, and unnecessarily bleeds VTL deta=
+ils
+into KVM.
+
+Bringing halt-polling into the picture (by going down kvm_vcpu_halt()) is a=
+lso
+rather bizarre since quite a bit of time has already elapsed since the vCPU=
+ first
+did HvCallVtlCall/HvCallVtlReturn.  But that doesn't really have anything t=
+o do
+with MP_STATE_HV_INACTIVE_VTL, e.g. it'd be just as easy to go to kvm_vcpu_=
+block().
+
+Why not add an ioctl() to very explicitly block until a wake event is ready=
+?
+Or probably better, a generic "wait" ioctl() that takes the wait type as an
+argument.
+
+Kinda like your idea of supporting .poll() on the vCPU FD[*], except it's v=
+ery
+specifically restricted to a single caller (takes vcpu->mutex).  We could p=
+robably
+actually implement it via .poll(), but I suspect that would be more confusi=
+ng than
+helpful.
+
+E.g. extract the guts of vcpu_block() to a separate helper, and then wire t=
+hat
+up to an ioctl().
+
+As for the RFLAGS.IF quirk, maybe handle that via a kvm_run flag?  That way=
+,
+userspace doesn't need to do a round-trip just to set a single bit.  E.g. I=
+ think
+we should be able to squeeze it into "struct kvm_hyperv_exit".
+
+Actually, speaking of kvm_hyperv_exit, is there a reason we can't simply wi=
+re up
+HVCALL_VTL_CALL and/or HVCALL_VTL_RETURN to a dedicated complete_userspace_=
+io()
+callback that blocks if some flag is set?  That would make it _much_ cleane=
+r to
+scope the RFLAGS.IF check to kvm_hyperv_exit, and would require little to n=
+o new
+uAPI.
+
+> @@ -3797,6 +3798,10 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!gif_set(svm))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return true;
+>
+> + =C2=A0 =C2=A0 =C2=A0 /*
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* The Hyper-V TLFS states that RFLAGS.IF is =
+ignored when deciding
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* whether to block interrupts targeted at in=
+active VTLs.
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (is_guest_mode(vcpu)) {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* As long as int=
+errupts are being delivered... =C2=A0*/
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if ((svm->nested.=
+ctl.int_ctl & V_INTR_MASKING_MASK)
+> @@ -3808,7 +3813,7 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (nested_exit_o=
+n_intr(svm))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return false;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!svm_get_if_flag(v=
+cpu))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!svm_get_if_flag(v=
+cpu) && !kvm_hv_vcpu_is_idle_vtl(vcpu))
+
+Speaking of RFLAGS.IF, I think it makes sense to add a common x86 helper to=
+ handle
+the RFLAGS.IF vs. idle VTL logic.  Naming will be annoying, but that's abou=
+t it.
+
+E.g. kvm_is_irq_blocked_by_rflags_if() or so.
+
+[*] https://lore.kernel.org/lkml/20231001111313.77586-1-nsaenz@amazon.com
 
