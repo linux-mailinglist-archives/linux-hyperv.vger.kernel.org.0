@@ -1,152 +1,77 @@
-Return-Path: <linux-hyperv+bounces-3010-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3011-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4B34977968
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 09:19:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A17959779A6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 09:31:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89B5F2847BA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 07:19:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5FC7A1F25751
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 07:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C481B9B3E;
-	Fri, 13 Sep 2024 07:19:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9E491420D0;
+	Fri, 13 Sep 2024 07:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="imibRC3f"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hi1ij3Pk"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A6731B9822;
-	Fri, 13 Sep 2024 07:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960121D52B;
+	Fri, 13 Sep 2024 07:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726211975; cv=none; b=bzcoeg/Wzw3ECLzXnsSmAjvjFMp+bY9BZdFVL2moh8j6PgAzoI5pIvBVC302IwsZkQYJJ688+hofWb+xUUY8fKnGNtDuImuUPNTxSNEUu2/g/wKFd/xINt1fvowkoztCxmYAkmrFzndbaTDdhsS+Ct7U2yQNEJi/jdSwPxBjjhM=
+	t=1726212660; cv=none; b=gxLKGTuh8N38L1YSKbaajiI77egf9p+0Zlag2pZ6pl/j9zAi6oRPXduM4Fdolfu75QVFwFIOLf5msuaJlPadjjKG8HzsU7NqBEUvY682WFkY3dQVdNEP7CLRgVIm8ugJ8IY8hzeYbo58/Rq/vrFaN8MZknBRnjRxVopW3YLeB9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726211975; c=relaxed/simple;
-	bh=Fqm5j5PqqykRHz2N46Qm0vMp5IoVJm/4hc1kAcp4CnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XpOA5w0QMcqdI3RxEiBjOL0k4G4oDLeNKwu0iAQNDo8yrHWt6nSFzBc8xoo7yBdwgF5/ahZzMzV+0qQGwb3mGS0UazPZMgyR66/0b/u5HPlJg0rghsaVmWUyyuTDZ0yA6OF8HR7sZG1tI6qanZy/KMqV1hnk1o6eiUj9SmWYLbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=imibRC3f; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1726212660; c=relaxed/simple;
+	bh=fuc484oEqFVh7ZCZ35h2KtIXgb6/b8NccyYwWkJdeIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TKOTir3azwbk0Fry0qaBFVw+6YVN1uYai3qUobGzMCGjXMnVQFFsrVNAwJj+fNkyuSMtUAy4K0BKVyc8CqGvJILyZc/638s3N0qg6FUSKt1U7s8dEYZ9ax9o8jp5PZ9gc545weHMf3wJAtlMxwA5PzjUGcxH5JQU+Yp4Z2njTCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hi1ij3Pk; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.224.211] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A8C8020BE570;
-	Fri, 13 Sep 2024 00:19:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A8C8020BE570
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 3841120BE55B; Fri, 13 Sep 2024 00:30:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3841120BE55B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1726211973;
-	bh=FCp9C1OMLBEJyfEFicP99zjs2mgecvyy+xP/KU9OG8E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=imibRC3frCTJ9zv/vE1JZvnbjZKWo+rZq52QVyLqrUgly/fraCylcM0EDt7wnVN8j
-	 pLFai2TO6psw+pKbNeCJhW8JB29eoO5grWJ1chy8laysKzIgdq7NnngWiF5edljDb+
-	 fgf4xdxcB19IfO+bkcCXPfFzcgMLAH3/DmeNNb6Y=
-Message-ID: <b480a355-dbfa-4422-ad3c-65ec931a3ba0@linux.microsoft.com>
-Date: Fri, 13 Sep 2024 12:49:27 +0530
+	s=default; t=1726212658;
+	bh=Rs8LeY5J9D4uBBCMTuW93Bs/WfIZZQY4vY67iBAKjXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hi1ij3Pk2ZBe12f36mXBAklIIgOGJCJHkurP5FWBt7QqS80hWX10BlC9xQ/kcBf5a
+	 NE47gXW0EHBAjamzGLfX+w5DXkYhRQgJr87Soo6bQXmWTxYU5eXWLmnT4R4jkcLwJs
+	 8k1PLC6sQtQ8QDolkL+yKWOzZF705MKz2KnxF1Cs=
+Date: Fri, 13 Sep 2024 00:30:58 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] tools: hv: Fix a complier warning in the fcopy uio daemon
+Message-ID: <20240913073058.GA24840@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20240910004433.50254-1-decui@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Disable Suspend-to-Idle for VMBus
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- jikos@kernel.org, bentiss@kernel.org, dmitry.torokhov@gmail.com,
- linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: ernis@microsoft.com, Saurabh Sengar <ssengar@linux.microsoft.com>
-References: <1726176470-13133-1-git-send-email-ernis@linux.microsoft.com>
- <1726176470-13133-2-git-send-email-ernis@linux.microsoft.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <1726176470-13133-2-git-send-email-ernis@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240910004433.50254-1-decui@microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+On Tue, Sep 10, 2024 at 12:44:32AM +0000, Dexuan Cui wrote:
+> hv_fcopy_uio_daemon.c:436:53: warning: '%s' directive output may be truncated
+> writing up to 14 bytes into a region of size 10 [-Wformat-truncation=]
+>   436 |  snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
 
+Makefile today doesn't have -Wformat-truncation flag enabled, I tried to add
+-Wformat-truncation=2 but I don't see any error in this file.
 
-On 9/13/2024 2:57 AM, Erni Sri Satya Vennela wrote:
-> If the Virtual Machine Connection window is focused,
-> a Hyper-V VM user can unintentionally touch the keyboard/mouse
-> when the VM is hibernating or resuming, and consequently the
-> hibernation or resume operation can be aborted unexpectedly.
-> Fix the issue by no longer registering the keyboard/mouse as
-> wakeup devices (see the other two patches for the
-> changes to drivers/input/serio/hyperv-keyboard.c and
-> drivers/hid/hid-hyperv.c).
-> 
-> The keyboard/mouse were registered as wakeup devices because the
-> VM needs to be woken up from the Suspend-to-Idle state after
-> a user runs "echo freeze > /sys/power/state". It seems like
-> the Suspend-to-Idle feature has no real users in practice, so
-> let's no longer support that by returning -EOPNOTSUPP if a
-> user tries to use that.
-> 
+Do you mind sharing more details how you get this error ?
 
-Maybe it would be good to capture here the kind of VMs that this is
-going to be not supported - HyperV based VMs. You mentioned it in cover
-letter, but it would be good to add it here as well, as cover letter
-does not go to git log.
+- Saurabh
 
-Also, the subject suggests that we are disabling suspend-to-idle for
-vmbus specifically, but from commit description, it suggests that
-"suspend to idle" feature itself is no longer supported on these
-particular VMs. Please rephrase it based on what exactly we are trying
-to do here. IIUC, we are now returning an error (EOPNOTSUPP) in vmbus
-driver callback, which insures that we don't support Suspend-to-Idle in
-these VMs.
-
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> ---
->   drivers/hv/vmbus_drv.c | 15 ++++++++++++++-
->   1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 965d2a4efb7e..4efd8856392f 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -900,6 +900,19 @@ static void vmbus_shutdown(struct device *child_device)
->   }
->   
->   #ifdef CONFIG_PM_SLEEP
-> +/*
-> + * vmbus_freeze - Suspend-to-Idle
-> + */
-> +static int vmbus_freeze(struct device *child_device)
-> +{
-> +/*
-> + * Do not support Suspend-to-Idle ("echo freeze > /sys/power/state") as
-> + * that would require registering the Hyper-V synthetic mouse/keyboard
-> + * devices as wakeup devices, which can abort hibernation/resume unexpectedly.
-> + */
-> +	return -EOPNOTSUPP;
-> +}
-> +
->   /*
->    * vmbus_suspend - Suspend a vmbus device
->    */
-> @@ -969,7 +982,7 @@ static void vmbus_device_release(struct device *device)
->    */
->   
->   static const struct dev_pm_ops vmbus_pm = {
-> -	.suspend_noirq	= NULL,
-> +	.suspend_noirq  = vmbus_freeze,
->   	.resume_noirq	= NULL,
->   	.freeze_noirq	= vmbus_suspend,
-
-I am not sure if this is OK or how it works, but this naming scheme
-seems a bit confusing to me -
-*suspend* -> vmbus_*freeze*
-*freeze* -> vmbus_*suspend*
-and we are removing support for "freeze" by returning EOPNOTSUPP in
-suspend callback.
-
-I'll try to understand more on this, but just see if its OK.
-
->   	.thaw_noirq	= vmbus_resume,
-
-Regards,
-Naman
 
