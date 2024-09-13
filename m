@@ -1,80 +1,81 @@
-Return-Path: <linux-hyperv+bounces-3017-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3018-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBE52978889
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 21:10:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 734AB97889A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 21:12:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B16F8B24F33
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 19:10:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 116C11F256B7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2024 19:12:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DAC51465BD;
-	Fri, 13 Sep 2024 19:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1A3D15099D;
+	Fri, 13 Sep 2024 19:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4Jt31Cd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wroRNBrX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EADB14037F
-	for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 19:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE79914EC55
+	for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 19:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726254617; cv=none; b=bvwwtt0w6BrZ+fCxZTP4xJLmPchtq5db9p03EJvLZCs8ERxhbMBIHCcn0TDhXcU/3ALu/rqmY5IqJHo7aacWlITfi1eRtAAxc8e6UNHuMISQKqYKAD3o19poCJ7yqbm/x2SZe+gD0XgkjIub5hwjoIsX+UKlJG1vdFCuAAmptxI=
+	t=1726254702; cv=none; b=NJGd3vAme84THTC3yZpmagCl6/koe1Y5NWA5CsRmPwFMmEFFTi8GvBbNzSwXIdc8tVtNst/ULMrFO9uZYVEOZYs5AJOBIn0z3d78ReL4YWbTNHiujpo+9Km5qFWijmnI7j+4iKXzcD/KRLJAPa9rUaODXWrY9KQLONEb3OghvnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726254617; c=relaxed/simple;
-	bh=VCyxAOb358DQX0k5EUUYXJ03GN/6cyA8WwZwwvkZ4Gs=;
+	s=arc-20240116; t=1726254702; c=relaxed/simple;
+	bh=df/OdVQzmZ9IIzivyT0nVwAaqNoCrQVBqFQJsmOtcdo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=S9u4WmED8u1/hJ5y9Nj1WY85BVs82nJ9tdrl9EdYTyTTNlL5bnqTWm25EAy2NyBjsp2gt6p4NBv9SfceljGkCTYmgwvuRzSYE9e9gvzSWOnr/cM9cu1URPQQtZcisYPRz/HXdy63Dga79ihygYgTqboZCFqVmankRC8UgeRG13U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u4Jt31Cd; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=cQnsCmTmj9+6nHErXOoXFlAy5p6CjMQVHC8+Ub0SzbSCPbn+7CduxguGHuaW2qbvfiSN6wCUMCqzLHApI1X+yJV8+BblK5TJpHgaeBTaCPJROFH5vRFXHw46i8bQsgu9VyamiuBGKoBEWSTLaM0kYTad5t0xPqn0c6dRYado7ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wroRNBrX; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2d876431c4aso2463429a91.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 12:10:15 -0700 (PDT)
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e03623b24ddso4093008276.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 13 Sep 2024 12:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726254614; x=1726859414; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1726254700; x=1726859500; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/PZCN7uc3ggROC6ytkOyGfCP32yMnxJ330RaYLSQz4=;
-        b=u4Jt31CdeQvM0UFzDkAXLJsXmA1D/aYY5hmXFpri4d0PgVLUrElI6JZ1Gwxe/FVH9I
-         6KG5CCJBayULcGfLGqtkVEjDHAF5lz0qS09mwdvnEzrvLVvDFyljQZP91Bbyo5AloDY7
-         QXt6sZilSyCwlKakY5tAdGSJcURiG/UD86s+qCx+6lSZEhrKVWhBXOMTg6A/8JmoT43x
-         h4MqF3hmgFem5Pzaw/zEy6Xtof7jjUREcFJ9wVCw1eQsI0R5j7MkZJUMdWHTNWp5hXeY
-         ztTz9Ki7cyz5hJYVPaxfsXsD8DVE9QhNTkj+yxequI4bm6DPKO08dSIqjnul7nyt9ke4
-         Cg7g==
+        bh=df/OdVQzmZ9IIzivyT0nVwAaqNoCrQVBqFQJsmOtcdo=;
+        b=wroRNBrXifviZNzryntxniZPn+arxL0Nh4JCbHM6SqVsnPfMvchzAZ17PLO6xruIfR
+         U9tl6oIAONK7yKRTz4Yufr4XW74eNNVuoMKP7wYgyOgvSEDMoShIlNGM0yjF/w4HHGCw
+         BK1PYUd2/5DL4gzJ8NW1Dn3TtLMq7rXyNSKD3o3AE1U85mk661wLL6tYANSrRbvgWpH6
+         uTt0ZBJBFBL0oWqayKB4Fi3h2V9atHVfw15s/zesi8mtX+h0u3LtacD4Ow2svhk+fAma
+         fsDnYrRAdEwLB2U5IxpW5GRrN1Z4MhgBbpISNQ3V66RVMM+2QtKkRpOBG8A/ZUTtkOEA
+         JmYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726254614; x=1726859414;
+        d=1e100.net; s=20230601; t=1726254700; x=1726859500;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/PZCN7uc3ggROC6ytkOyGfCP32yMnxJ330RaYLSQz4=;
-        b=OVL1aW/uc42/pTKsIZO0kUDb648H6ze5/AukEWsSRsZrpxxw+r3Z1ZOFO+i92l1P6d
-         Ov75/WJHwfDcRdiqEZgcoC8ERAlmFWCDkHKZy00e3hNuv9YyX5BuI9uTYpgbEOmlcjC4
-         bN5Z9eBArCC+eGmAuKSjXOMglZI656j2TZA9xEjP//JGbmd5DUUrX3cuvgGmY8/HTDud
-         Q0NAQzYxJuYj+Z+jbuWUxThL7yfjWAXmyWKhU3nbISWhEXtGcdq1Fm1cVozEM5RkFvzD
-         HE0le85DCNu0QiIMw71EcApyI8oDP5STqgetxkL70lCP3isjGzJLihibj8dFaD3go6IX
-         bj8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOaE9ftskb4KgoASLLw19Qg5rZJIkRVY1KWMQQUiSmu6M1soYc7II7mZecbrll3Q8h5xDbA9BJj1Ah1wo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWtagmCaW/IhpvQSRddE2L5iKBkQWBDaYmiPDWiDacLAhLUmPs
-	1sEbCUJj1fH2Gtb+ocMj9WxInPzTW7Jy9za+Y/iO5rx9EnXha9eBdrgDZi2Ufwg+hFhWyUNbxqU
-	pwQ==
-X-Google-Smtp-Source: AGHT+IFwbi6CjhGrfff5iqz7S20uwCX00VZkU3GsK5N6YCDvxwkQJ/4maqNVoiyI0T9MiWjqzz7IZ8Usvns=
+        bh=df/OdVQzmZ9IIzivyT0nVwAaqNoCrQVBqFQJsmOtcdo=;
+        b=w40K6eC14qrpxMBCQ56M+Bk+EmH2BcOvwRkW3TiM0rr2O01aTUXwnOVFBDAdDgTmec
+         5daFv2S1wkGj1HLvOg5za97Dq/2fU78738mS2dQ8Z164w9hey/vGZ6TEajY5CSm1PiSV
+         UGETA1hJagfxa4jKl1R4pRBVMJSaZn5JmUsrWQ4sg/YIc9EKYdZPGDZ0k3A9C8lNqr5h
+         eRykIloTjOinP2xZaTSVYXnnErmL1IXp+t13t5gtuKY6vfvrxP/fM3hlYrT/41Yh3Ka0
+         8El2RAvYw+Gf8NJ3ywtLltLnBBzMkx+cKJ0B/AXdOm+nlUpgkJbY3FZsgOTUvUOSCEmY
+         Pncw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl+mLvHYPcVW0IERDMBFMdpIQ+j+6yFJprw51iiP8B6/njj4RH5ag5Ws78nJbyU4MF9QzK7ZfmG24iavY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuZmuTl27JoUPz6VXPeXOPLGH6jP5y7IY+tQtulIGonRqKdww4
+	+XWZZGjRYYCoH+iOWttZixyejQmrUrSx59wAWTAZU7khvyen+TyqpzzVz4uR9Cm1I1iadEN4vFQ
+	0JA==
+X-Google-Smtp-Source: AGHT+IHWKdvpTgRToeIjzP7LiLbwdIQd0DfavHeMBa0nhxmMEncC0lsKplD9gP28OszQ1s0UsOTgeX3hi0E=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:d489:b0:2d8:e4f9:259e with SMTP id
- 98e67ed59e1d1-2dba003b5b0mr39455a91.3.1726254614188; Fri, 13 Sep 2024
- 12:10:14 -0700 (PDT)
-Date: Fri, 13 Sep 2024 12:10:12 -0700
-In-Reply-To: <20240609154945.55332-11-nsaenz@amazon.com>
+ (user=seanjc job=sendgmr) by 2002:a25:86c9:0:b0:e11:5a3c:26c7 with SMTP id
+ 3f1490d57ef6-e1d9dc4275fmr12810276.9.1726254699289; Fri, 13 Sep 2024 12:11:39
+ -0700 (PDT)
+Date: Fri, 13 Sep 2024 12:11:37 -0700
+In-Reply-To: <20240609154945.55332-12-nsaenz@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-11-nsaenz@amazon.com>
-Message-ID: <ZuSOFJJbkp1cNdsJ@google.com>
-Subject: Re: [PATCH 10/18] KVM: x86: Keep track of instruction length during faults
+References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-12-nsaenz@amazon.com>
+Message-ID: <ZuSOaTw1vgwquqTE@google.com>
+Subject: Re: [PATCH 11/18] KVM: x86: Pass the instruction length on memory
+ fault user-space exits
 From: Sean Christopherson <seanjc@google.com>
 To: Nicolas Saenz Julienne <nsaenz@amazon.com>
 Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
@@ -87,50 +88,11 @@ Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com,
 Content-Type: text/plain; charset="us-ascii"
 
 On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
-> Both VMX and SVM provide the length of the instruction
-> being run at the time of the page fault. Save it within 'struct
-> kvm_page_fault', as it'll become useful in the future.
+> In order to simplify Hyper-V VSM secure memory intercept generation in
+> user-space (it avoids the need of implementing an x86 instruction
+> decoder and the actual decoding). Pass the instruction length being run
+> at the time of the guest exit as part of the memory fault exit
+> information.
 
-Nit, please wrap closer to 75 characters.
-
-> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c          | 11 ++++++++---
->  arch/x86/kvm/mmu/mmu_internal.h |  5 ++++-
->  arch/x86/kvm/vmx/vmx.c          | 16 ++++++++++++++--
->  3 files changed, 26 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 8d74bdef68c1d..39b113afefdfc 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4271,7 +4271,8 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
->  	      work->arch.cr3 != kvm_mmu_get_guest_pgd(vcpu, vcpu->arch.mmu))
->  		return;
->  
-> -	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, work->arch.error_code, true, NULL);
-> +	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, work->arch.error_code,
-> +			      true, NULL, 0);
-
-Hrm, I just proposed adding another (out) parameter to kvm_mmu_do_page_fault()
-in the TDX series[*], I wonder if we're reaching the point where it makes sense
-to have kvm_mmu_do_page_fault() take a struct too.
-
-[*] https://lore.kernel.org/all/ZuR09EqzU1WbQYGd@google.com
-
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ac0682fece604..9ba38e0b0c7a8 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5807,11 +5807,13 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
->  	if (unlikely(allow_smaller_maxphyaddr && !kvm_vcpu_is_legal_gpa(vcpu, gpa)))
->  		return kvm_emulate_instruction(vcpu, 0);
->  
-> -	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
-> +	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL,
-> +				  vmcs_read32(VM_EXIT_INSTRUCTION_LEN));
-
-It might be worth adding a cached EXREG for instruction length, e.g.
-VCPU_EXREG_EXIT_INFO_3 + vmx_get_insn_len(), similar to how for vmx_get_exit_qual()
-and vmx_get_intr_info() pair up with VCPU_EXREG_EXIT_INFO_{1,2}.
+Why does userspace need the instruction length, but not the associated code stream?
 
