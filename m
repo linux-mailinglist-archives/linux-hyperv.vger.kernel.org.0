@@ -1,91 +1,124 @@
-Return-Path: <linux-hyperv+bounces-3021-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3022-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80D7B978D1C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Sep 2024 05:23:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 385FA9794A4
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Sep 2024 06:56:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E58071F23C2D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Sep 2024 03:23:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 606A31C21BF9
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Sep 2024 04:56:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B771171AF;
-	Sat, 14 Sep 2024 03:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375B311CAF;
+	Sun, 15 Sep 2024 04:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plFPg7ue"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="W6Dd31fd"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F438C;
-	Sat, 14 Sep 2024 03:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B73911B85CD;
+	Sun, 15 Sep 2024 04:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726284229; cv=none; b=rinss6rohUdxzO9iK4FRuZCdTWGHEUzThLe4xuDlRfc8Cyatjv/iaLd7H1uPVjlT2O9q7yNTrgfC/5tpmGozae7kjqRylbIaLm6H3mVlPBDKyVJxjDDFbOKlsocK36K0JeNDnUmoQBrnDyV2E8Z8svLO2RV1OgcqLH7bQRcObnQ=
+	t=1726376187; cv=none; b=n5ywVrWrdZTvRTiSqpVXn4Li+lUAdvrveCj1Ki6xNcVLZZtMkA4cCx5oar6m4QPxajxRE5QsmZpx5Qtsv/Hm4V+20NODd5bxQx0RWrjHjp6grIlJVsRMlpzFmnCyFD6xRYZDkT4Cl13Ctaie7Vln9rgIRgXyqHTndqyCJhdDBUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726284229; c=relaxed/simple;
-	bh=t8ACe+kBe17ftvgZRD57F7hxmi2YhhPH6Tq5XKVYETg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C7MXPGLuAx88h87Ogv9P4WiQwFKOd0ODd7j/HYwtxEOy48mhjxCw5ZCDbAQZmIHVrW4YWXR/oexhBY0l1puQyCiF2m0Eo5SMrO9zmUX3tl3Z+15iG5iI+9z05cOHaShNoMT13qtCC7Y0TnhUt2n9E3HE7YR5XV9d61ITkVnACx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plFPg7ue; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 154ABC4CEC0;
-	Sat, 14 Sep 2024 03:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726284228;
-	bh=t8ACe+kBe17ftvgZRD57F7hxmi2YhhPH6Tq5XKVYETg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=plFPg7ueWM1ycxvsHQy2y7MgxyRyUXmihmPPwRDQu08A4BpXoNxMjtP625TopzuQo
-	 nERqnBD6YU8TNQ340AL8ms9xt/n980Qhx+YuGbWCl+lxzRlzI5/+wHY/MmDaOHhN6W
-	 v1KY6GApyxuqyc1Y3nbf8n+i9WkQJddfyrTjJOJ3ZliL2tJbSP33ibmVLXwJnN/sAJ
-	 wO1rN1nnSkTogjn9HaLVWj7SpdbkZe72XEfOJHqUKd7NYkwJ303h/BW+ikO36AIDUV
-	 JcC/1QBod+szL71vU8477adOBJ2knlT8N55kiHDp2dx506dPOUqyVpaX93wzbgDgiC
-	 mASD2dA1vE8Uw==
-Date: Fri, 13 Sep 2024 20:23:47 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, shradhagupta@linux.microsoft.com, ahmed.zaki@intel.com,
- colin.i.king@gmail.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: mana: Add get_link and get_link_ksettings in
- ethtool
-Message-ID: <20240913202347.2b74f75e@kernel.org>
-In-Reply-To: <1726127083-28538-1-git-send-email-ernis@linux.microsoft.com>
-References: <1726127083-28538-1-git-send-email-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1726376187; c=relaxed/simple;
+	bh=9w30dChxYIMmPxhl67+/YhDv8UAzy02LRnlwADKHBNg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Tbt3iMr1STSbA9v2n5zE58Idlhf49eUqmUL2Ia6X53ixYpSsylOs/HhDex3pXXjTzaKv047kadHbXzmSIXHBeHJMG0//9iadOtMwAAacMqksnwgXNBcF4DsR4BbIeHORDIBCX5Sl4/i4Gm3BGnCGj94C1m/Y+xdHKR9RYZdUOsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=W6Dd31fd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 2ED1D20C08A3; Sat, 14 Sep 2024 21:56:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2ED1D20C08A3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1726376185;
+	bh=N+lwgWnXJnJIv3ORmL8lZsGxIiQ/BGyrO1aZxWResDM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=W6Dd31fdlCYaoBHGnUNiNgYBg4SHFoHewSeoHayK7WCFR7ECh3Bfk+yRFdiI3D/++
+	 Je6I0S9nR6LcT6MrU8LyY/0/d4yHDuYCMe6a17I4Xp7vK6OuDtsX3iI+aETGDkUgP5
+	 UQRO3XlqkPP4bFxi2Xsa3Yj9xYEbLyeYjxuPafzw=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH net-next] net: mana: Increase the DEF_RX_BUFFERS_PER_QUEUE to 1024
+Date: Sat, 14 Sep 2024 21:56:24 -0700
+Message-Id: <1726376184-14874-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 12 Sep 2024 00:44:43 -0700 Erni Sri Satya Vennela wrote:
-> Add support for the ethtool get_link and get_link_ksettings
-> operations. Display standard port information using ethtool.
+Through some experiments, we found out that increasing the default
+RX buffers count from 512 to 1024, gives slightly better throughput
+and significantly reduces the no_wqe_rx errs on the receiver side.
+Along with these, other parameters like cpu usage, retrans seg etc
+also show some improvement with 1024 value.
 
-Any reason why? Sometimes people add this callback for virtual
-devices to expose some approximate speed, but you're not reporting
-speed, so I'm curious.
+Following are some snippets from the experiments
 
-> +static int mana_get_link_ksettings(struct net_device *ndev,
-> +				   struct ethtool_link_ksettings *cmd)
-> +{
-> +	cmd->base.duplex = DUPLEX_FULL;
+ntttcp tests with 512 Rx buffers
+---------------------------------------
+connections|  throughput|  no_wqe errs|
+---------------------------------------
+1          |  40.93Gbps | 123,211     |
+16         | 180.15Gbps | 190,120
+128        | 180.20Gbps | 173,508     |
+256        | 180.27Gbps | 189,884     |
 
-make sense
+ntttcp tests with 1024 Rx buffers
+---------------------------------------
+connections|  throughput|  no_wqe errs|
+---------------------------------------
+1          |  44.22Gbps | 19,864      |
+16         | 180.19Gbps | 4,430       |
+128        | 180.21Gbps | 2,560       |
+256        | 180.29Gbps | 1,529       |
 
-> +	cmd->base.autoneg = AUTONEG_ENABLE;
+So, increasing the default RX buffers per queue count to 1024
 
-what's the point of autoneg if we show no link info?
-DISABLE seems more suitable
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ include/net/mana/mana.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	cmd->base.port = PORT_DA;
-
-Any reason why DA? I'd think PORT_OTHER may be better?
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index f2a5200d8a0f..9b0faa24b758 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -43,7 +43,7 @@ enum TRI_STATE {
+  * size beyond this value gets rejected by __alloc_page() call.
+  */
+ #define MAX_RX_BUFFERS_PER_QUEUE 8192
+-#define DEF_RX_BUFFERS_PER_QUEUE 512
++#define DEF_RX_BUFFERS_PER_QUEUE 1024
+ #define MIN_RX_BUFFERS_PER_QUEUE 128
+ 
+ /* This max value for TX buffers is derived as the maximum allocatable
 -- 
-pw-bot: cr
+2.34.1
+
 
