@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3042-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3043-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DE8C97B879
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 09:19:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB23597B87C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 09:20:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAAF61F243C4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 07:19:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2132284F06
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 07:20:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1F561779BD;
-	Wed, 18 Sep 2024 07:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C5F2170A0E;
+	Wed, 18 Sep 2024 07:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeS8RSep"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFlFh7mx"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B541E170A0E;
-	Wed, 18 Sep 2024 07:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126E816C852;
+	Wed, 18 Sep 2024 07:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726643916; cv=none; b=BPIvXZdGecdeRWXU+lADnz0nLcQ4lOkKhiyAtYbU+r+V4PWZjbtHRqKO6lBktxaDCcdwlYZ4n+x71agrQwS1NQxcg0Pig1FDS6tXF6ShlJ+SDvh8GvCBc73CTSTmUlVUhDaxYlnmRQEDbTiupNxu8dl+0zANU0Ikb8NYMSlND8E=
+	t=1726643923; cv=none; b=ajwVexT6yBjuxVVZ3mmpwK58DymitWEnwYf+hh7tf/BG865x369zukjeQ+6SVSmxawTzydmXu+b5g5lThg7rOs5EXQFJ5MTt5U3cSl+1x20unNy216I5d4iX6PkohdDDjXHzvXge95BXJYV2gzwmDwdxxOi4GFahFZCcDjmO6m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726643916; c=relaxed/simple;
-	bh=hh+WycHH6Z6p+W6icKMvD7SXRmmE5UIy5QgBOc1EhWg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=evwuWmTPFPLz83ouIWme0EPjtVLu/XpZ75nR/873vWWJi7RW3KpWSB8VMkths8BEza/bJ0prdGPwEzJmrpGi1zPfNXeREvkOteDTVVr6DHb7EcxQZba4ZYnWbqkDssnnsNQbBHIxFoSOhlrSkYPU7G7P2LmKwIcQbPDe3MxISX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeS8RSep; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F3EC4CED0;
-	Wed, 18 Sep 2024 07:18:32 +0000 (UTC)
+	s=arc-20240116; t=1726643923; c=relaxed/simple;
+	bh=mDUm5HnuT8XAIWwSA2FsYNYxm7HOA0+SdLfLadWOtQ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1PPLKht3QQanL3W1k4ckvQMf1K5l8XTxln18xA1gtXxqLDCAwTAWaHpJ8p2QE0YePdP8mBhQSSimif10G9Zk3aBSIltOphDE30sANdtsGgAAnMzaWhjecC0IrQ6TRpSprPq7Vsrb5gU55i6asJvqIxUg/A+t5heLgip+9aA8o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFlFh7mx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912F8C4CED1;
+	Wed, 18 Sep 2024 07:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726643916;
-	bh=hh+WycHH6Z6p+W6icKMvD7SXRmmE5UIy5QgBOc1EhWg=;
+	s=k20201202; t=1726643922;
+	bh=mDUm5HnuT8XAIWwSA2FsYNYxm7HOA0+SdLfLadWOtQ8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=IeS8RSepcS3GOBxamo1kITCmvyoN2a5n5vTrnHY6JVAKWDyEoOcY6moC+BKgDT0v4
-	 21Z+flXe//Ee/DNRRYMp0yokeA7h6Ttv/n2bAPslSZNvPbD5B9fu3HhoMTTFbJqYRs
-	 KfM1K4M0nx+r9LLaV/gHR7W73QJmitT83tb2myfQj9zVM04bP1n3SO8Oh00DsoiD/j
-	 HC09YUGKJGVifJP+xMMsIoOthIE4vLErs4k2n223TnPMlzcwwKZQnbd8TVvG3bBw4Z
-	 n1Z1SsD4ggP1ToObkOanc6OnE+7Cz8EsqTh6gOOqprfYauqRIpgK+3QCk1whe7/Crd
-	 ToqjYbMQA7uBQ==
+	b=UFlFh7mxQSimASiTpj0jSP/v75dr6jLz+prn+1QUvtY7VmmHQS2AnGdQJbQ5J4gKG
+	 jmR3kkv8azxm8AgIFJ7fJboG3v1nj9BDSFic0gLf84acGdl41jRv4WCKGf9hgXx99g
+	 7k/BVA6n3ZVgXB/Oc8d2ba46kezg4LzfavcOsTtwOBeFJPBnwlNBUBeN5mDYPto3gc
+	 VG5y1vX1ixSmgjUrc/kUI9X854Co5qhrjPebTbzpaRiY0kCoUbQ+OdhJ1e0gd22yq2
+	 Syn3IOOnN4vtLuoAOQQ6z/xoSU+i9bAWY77qxhx+sh1AQuxYVCNZSQRxNIh2wKtTQN
+	 zsCzy1/UEMljg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -57,9 +57,9 @@ Cc: Michael Kelley <mhklinux@outlook.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10] x86/hyperv: Set X86_FEATURE_TSC_KNOWN_FREQ when Hyper-V provides frequency
-Date: Wed, 18 Sep 2024 02:36:54 -0400
-Message-ID: <20240918063655.239021-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4] x86/hyperv: Set X86_FEATURE_TSC_KNOWN_FREQ when Hyper-V provides frequency
+Date: Wed, 18 Sep 2024 02:37:01 -0400
+Message-ID: <20240918063701.239061-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.226
+X-stable-base: Linux 5.4.284
 Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
@@ -101,10 +101,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 021cd067733e..a91aad434d03 100644
+index 51d95c4b692c..cebbcc6c36ae 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -275,6 +275,7 @@ static void __init ms_hyperv_init_platform(void)
+@@ -256,6 +256,7 @@ static void __init ms_hyperv_init_platform(void)
  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
  		x86_platform.calibrate_tsc = hv_get_tsc_khz;
  		x86_platform.calibrate_cpu = hv_get_tsc_khz;
