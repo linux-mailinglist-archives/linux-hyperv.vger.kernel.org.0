@@ -1,118 +1,135 @@
-Return-Path: <linux-hyperv+bounces-3044-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3045-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DB4397B87F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 09:20:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E77EC97B8D3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 09:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE14B1F251B2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 07:20:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A66EC284D3B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Sep 2024 07:56:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8CFE171E40;
-	Wed, 18 Sep 2024 07:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D5C9170A27;
+	Wed, 18 Sep 2024 07:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qG7rcNAS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPk6lIPO"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D75F16C852;
-	Wed, 18 Sep 2024 07:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDEE170836
+	for <linux-hyperv@vger.kernel.org>; Wed, 18 Sep 2024 07:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726643929; cv=none; b=TvwJ0c3xuqAr7pVQykEL3s+QD0ih7mD0nG5ycRloLtYSicvDsb4TJeAW3CX8ImXg3eCiP3A4MgNYU8oV8Y0eCHThBzKhuV8oDPWk16+C9TGiHfFvWpdK1M9A7ppUyrbA/LKX2jteL4bDUsp5+AX+9mRFzA1jyyNixAww5r8FRw4=
+	t=1726646180; cv=none; b=U8XAXsduYtbsgqAyT3X7OUEw2PewgQPS4WzKZhrQas74qnXlSjXYyPRGknCW4ebxm9UVgkQhr+dYtbTcJY8FjbUfTSBEYb5VfJOXcSNv+j3vCLPYYQvj4+o/jVrvKCa+GacVnj86HX9/ptjKsWOxjTF+utxPTguScf+rOjiAiH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726643929; c=relaxed/simple;
-	bh=fIa3wVVCW5R5P5pqEr4eBZ0oenK86QFnyOrqyo7qkg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PLp21CDP8FMowPbvTD5HqKH+O4pwmV/YQFRQfWR4YnV2mo+GYA7/L2hOAPbXzpYC+po7ioDg7Qmrp8wB4Z3dIy3ilj2kEeDW2M3K82BhHAsNUC7rw9UkGgEeq+D7rC+NiUic8A4mbHhjepDoSdaYYrgJZ1FJRIWZz9IB6JGKnRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qG7rcNAS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD7EC4CECF;
-	Wed, 18 Sep 2024 07:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726643929;
-	bh=fIa3wVVCW5R5P5pqEr4eBZ0oenK86QFnyOrqyo7qkg8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qG7rcNAS8gq6STwMf58yCPSkjX7YgPGGIePxUtN/5iK1I8QZogjKHorz97NCBnxJu
-	 6/MySugP7nAIe0UuMAGkswisiQhqakMdxmPqpGjIz+UDFE1TVjjYFGAFJRdelwfLqf
-	 ylbDq1pojNbbNfdkx+lkruUcDMGR6zIX4yFwh6mKBPrLy6ufOjApa2flckTeWjKXp7
-	 zlH2RDANtsgE5B/M81DcXUaHlf5XCJbZwrRJhpPwux/3GgBMUidinsmBcGeONFsGCf
-	 mKDK2XTjo5RbEpejNJSj8R8R7MDFeI9t9s7lKqsw8XzL8VZa35DEW/21GSHmLvhY12
-	 XIviAeCpH0qOg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	Roman Kisel <romank@linux.microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	sthemmin@microsoft.com,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19] x86/hyperv: Set X86_FEATURE_TSC_KNOWN_FREQ when Hyper-V provides frequency
-Date: Wed, 18 Sep 2024 02:37:07 -0400
-Message-ID: <20240918063708.239096-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1726646180; c=relaxed/simple;
+	bh=E6sYje1FTSCQR6Phn3zxl12MQWQkG0ia5UJs7jeqW10=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mZXFiSBThSkoexN6X8Us8Pkyim8IANvOTBEkkzxvzmP6zHnZCMnzLdnBOHiwgRP9AGF6UGe7Vg6JwIUaIdg14fmQAL9Iond2TGg3aUW5/AaJU1pMvyy733iPnNkz9ps6lxdbO2RVftbJ39na4fSYMES9I1Jgk99Gg/6IgYR8gak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gPk6lIPO; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6d4426ad833so169247257b3.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 18 Sep 2024 00:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726646178; x=1727250978; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GlQ4Yaq6kY+TAD4XQKPrVKTHn9jUpmIJO7M7toxIG6M=;
+        b=gPk6lIPOsqP16q1fdb3o6WNodLbzsTyU1ysSFXMqsaG/P4g2Pf2cvHCo/X2K140idI
+         wssA+PpidHLMZTG/qqroSwuJtLeKpLA+gZGSdEa8xkJKpFB0lfaFA3vzYLkmb0SvmhmA
+         CRaNDFR8DaNavU+EXZQI0r9gVBKBUdSAC/LNI9yKuAUa/sQ8/ddkfLDLqQ2UCMfGTCnG
+         XsuOtTMxW2IG+40XdrGiLCheMBtfp40Y7fVqW4EFJFF5jXdhNGCGawy5tmLTkAS+XnQA
+         eRwsLyFeTrG2ThfQwOOGOsICyhCtFoNFPrQj39CMeFqXzo1VJtMZDbZoccNmN8L3Yt3b
+         EfsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726646178; x=1727250978;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GlQ4Yaq6kY+TAD4XQKPrVKTHn9jUpmIJO7M7toxIG6M=;
+        b=uw26SmPKLSbUhrLD9uabMnbUxe7bb1YpkqhgC4uN3yWeybU66PZ0jAPGyO+MNkabTo
+         Fmpw/alF56NY6XDlHWtVB5N2iMI8x/uwJiKpOt9b/04uZ21f5dZdgy3w97iP0SDq8rfp
+         Fg8a7bI9eFKK9DeNU1Lv7dSMpU4FtHwHewRr4WLjddIHgL/UO/8PHjGeaYHUC8KrsgWe
+         HN7Ic9CNkF8+0F8ffkL0LMOxDOxLUHDzr5P9SlsCx//JzxspYbH9n7s7vTK/NN2bTPPw
+         3g7AT0H6ooFAzfR1KquOiK/IwdyJfsgAKMYezzXX8KL89GC5D2LuqxBMY971ZjN8hO5u
+         P+Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwMMGjNJj81KifbV+WxgjposlFpRfw3vs7OML4+CJKMFxJi3b8rqzqxhCS8dkVzNxee2m3lhPKLNpRB/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWDHgYHrVXF7wDDZiBO+fTDE45CMUE1zgqkiVy/KsUjwg0uLeo
+	pdPO1S3xEAi2wYddZHCv3U5QxpIVL9laEjigMwQYRtYlIkueq7uxwSA1XRFUIy8u6jIu4D6qFaM
+	cfw==
+X-Google-Smtp-Source: AGHT+IG5J5++nWPV0aFihORTlQmC2H/Ah9MYQoDGjE3lVKqRoNKbWt/ZoG4m7Y5ovFCNYdEeJv75pFhcNIA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:e947:0:b0:6ae:d83e:9172 with SMTP id
+ 00721157ae682-6dbb6b865b6mr3800587b3.5.1726646178348; Wed, 18 Sep 2024
+ 00:56:18 -0700 (PDT)
+Date: Wed, 18 Sep 2024 00:56:16 -0700
+In-Reply-To: <D47TGLMWFTN2.2VCKLFM1K4GM8@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.322
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-6-nsaenz@amazon.com>
+ <ZuSL_FCfvVywCPxm@google.com> <D47TGLMWFTN2.2VCKLFM1K4GM8@amazon.com>
+Message-ID: <ZuqHoK1E8gyMC6Ew@google.com>
+Subject: Re: [PATCH 05/18] KVM: x86: hyper-v: Introduce MP_STATE_HV_INACTIVE_VTL
+From: Sean Christopherson <seanjc@google.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
+	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	graf@amazon.de, dwmw2@infradead.org, mlevitsk@redhat.com, jgowans@amazon.com, 
+	corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	amoorthy@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Mon, Sep 16, 2024, Nicolas Saenz Julienne wrote:
+> On Fri Sep 13, 2024 at 7:01 PM UTC, Sean Christopherson wrote:
+> > On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
+> > E.g. extract the guts of vcpu_block() to a separate helper, and then wire that
+> > up to an ioctl().
+> >
+> > As for the RFLAGS.IF quirk, maybe handle that via a kvm_run flag?  That way,
+> > userspace doesn't need to do a round-trip just to set a single bit.  E.g. I think
+> > we should be able to squeeze it into "struct kvm_hyperv_exit".
+> 
+> It's things like the RFLAG.IF exemption that deterred me from building a
+> generic interface. We might find out that the generic blocking logic
+> doesn't match the expected VTL semantics and be stuck with a uAPI that
+> isn't enough for VSM, nor useful for any other use-case.
 
-[ Upstream commit 8fcc514809de41153b43ccbe1a0cdf7f72b78e7e ]
+That's only motivation for ensuring that we are as confident as we can reasonably
+be that the uAPI we merge will work for VSM, e.g. by building out userspace and
+proving that a generic ioctl() provides the necessary functionality.  If there's
+no other immediate use case, then there's no reason to merge a generic ioctl()
+until VSM support is imminent.  And if there is another use case, then the concern
+that a generic ioctl() isn't useful obviously goes away.
 
-A Linux guest on Hyper-V gets the TSC frequency from a synthetic MSR, if
-available. In this case, set X86_FEATURE_TSC_KNOWN_FREQ so that Linux
-doesn't unnecessarily do refined TSC calibration when setting up the TSC
-clocksource.
+> We can always introduce 'flags' I guess.
+>
+> Note that I'm just being cautious here, AFAICT the generic approach
+> works, and I'm fine with going the "wait" ioctl.
+> 
+> > Actually, speaking of kvm_hyperv_exit, is there a reason we can't simply wire up
+> > HVCALL_VTL_CALL and/or HVCALL_VTL_RETURN to a dedicated complete_userspace_io()
+> > callback that blocks if some flag is set?  That would make it _much_ cleaner to
+> > scope the RFLAGS.IF check to kvm_hyperv_exit, and would require little to no new
+> > uAPI.
+> 
+> So IIUC, the approach is to have complete_userspace_io() block after
+> re-entering HVCALL_VTL_RETURN. Then, have it exit back onto user-space
+> whenever an event is made available (maybe re-using KVM_SYSTEM_EVENT_WAKEUP?).
 
-With this change, a message such as this is no longer output during boot
-when the TSC is used as the clocksource:
+Mostly out of curiosity, why does control need to return to userspace?
 
-[    1.115141] tsc: Refined TSC clocksource calibration: 2918.408 MHz
+> That would work, but will need something extra to be compatible with
+> migration/live-update.
 
-Furthermore, the guest and host will have exactly the same view of the
-TSC frequency, which is important for features such as the TSC deadline
-timer that are emulated by the Hyper-V host.
-
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
-Link: https://lore.kernel.org/r/20240606025559.1631-1-mhklinux@outlook.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <20240606025559.1631-1-mhklinux@outlook.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/cpu/mshyperv.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index f8b0fa2dbe37..b43f25b3c99d 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -243,6 +243,7 @@ static void __init ms_hyperv_init_platform(void)
- 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
- 		x86_platform.calibrate_tsc = hv_get_tsc_khz;
- 		x86_platform.calibrate_cpu = hv_get_tsc_khz;
-+		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
- 	}
- 
- 	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
--- 
-2.43.0
-
+Gah, right, because KVM's generic ABI is that userspace must complete I/O exits
+before saving/restoring state.  Yeah, having KVM automatically enter a blocking
+state is probably a bad idea.
 
