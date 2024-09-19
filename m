@@ -1,88 +1,290 @@
-Return-Path: <linux-hyperv+bounces-3049-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3050-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C53697C50D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 09:46:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4060897CE1A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 21:19:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E0C01B219AC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 07:46:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA85D28532F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 19:19:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ADD118E055;
-	Thu, 19 Sep 2024 07:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4752D21345;
+	Thu, 19 Sep 2024 19:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrFsYpbx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGIf7V1t"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB5C23A6;
-	Thu, 19 Sep 2024 07:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248FD2B9B6;
+	Thu, 19 Sep 2024 19:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726731960; cv=none; b=InTYMOPzPOgzJdcSlrTAqaKLy96hKI5ux6ay3YcU6OSwpBRifgU8jP2peA2mTQc5dpoV1wIbuf39o1u4Z6VHTTBzwquxVjjYgGXdhUjlu7wa3A9Y9NrKB92i2uRdizfM/UnJ8EnVUDRFIROhSuYUrnxXbnSG/glQ7ib0ZOfnER8=
+	t=1726773547; cv=none; b=OJd6NxjO0ckI8IUX3Bz0lmafocfXeoj3vJZm+vDxKfEiTVQ+IQ93T/1Mk41lYIE/wpOo/lXwMH/cio7yA6aHEMl4d/Zwyz4hiezsf60AVnMMDTsphYJuEZ563CdHobJ/8ofZDFleNwWdxsXP73fjoQBNCcPWjXxG34HV1QN2zlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726731960; c=relaxed/simple;
-	bh=qEMMGKMY3GETYdqOm3V9vI9ZoJfC7eDMAGarWiM29K0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=srjoNCKNKN8yYenunSXKIkiXbnZY15e/ojWo111s8UYQhbsbZ4iDvGuAyAlQCFGbegvKTCd9b4iNIkX/MIpseEdBh2/MQpjv417sayoAl9D0QtraqsswOhRQejpDtrtbdvYMJWXEWbpjpNLuXLn1AIbyoh1twErt8VRaQRQdiO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrFsYpbx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76CE3C4CEC4;
-	Thu, 19 Sep 2024 07:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726731959;
-	bh=qEMMGKMY3GETYdqOm3V9vI9ZoJfC7eDMAGarWiM29K0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IrFsYpbxMy35Es+LTwzPeFkyDIKQDOdt/OXY31hQbpdLFUjFb+ctXB7lpotvh6XwO
-	 0w0KBhgdIfVoGWksf6+T6/Ir+8cbFslQ52gqKckjrH81M8zVCoN6YFz8spLBeOdhY6
-	 eBkbMHfs0/CxTUMUWCjQTOgpBuuUaXakWrffOcqVyhKC/6NARq4gQs5jwxDFYasQLx
-	 rekX1hcOgQPZieCIZESLlXdzQcaS/Ken9/eXLHs08mgCTwKvVfB9omdGgMLx+GKPeO
-	 M9ySPvzTLNDFZBMaKae5lkfBcRzUu+EFx/xStfFTs+sUjikqW5wx+cmXKaiIHC0t56
-	 Ogv/O1zvWR2Fw==
-Date: Thu, 19 Sep 2024 09:45:53 +0200
-From: Jakub Kicinski <kuba@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, KY Srinivasan
- <kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "shradhagupta@linux.microsoft.com"
- <shradhagupta@linux.microsoft.com>, "ahmed.zaki@intel.com"
- <ahmed.zaki@intel.com>, "colin.i.king@gmail.com" <colin.i.king@gmail.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: mana: Add get_link and get_link_ksettings in
- ethtool
-Message-ID: <20240919094553.1ee7776c@kernel.org>
-In-Reply-To: <PH7PR21MB32606C49F796ED9E7AD0E5ABCA612@PH7PR21MB3260.namprd21.prod.outlook.com>
-References: <1726127083-28538-1-git-send-email-ernis@linux.microsoft.com>
-	<20240913202347.2b74f75e@kernel.org>
-	<PH7PR21MB3260F88970A04FDB9C0ACCC4CA612@PH7PR21MB3260.namprd21.prod.outlook.com>
-	<20240917170406.6a9d6e27@kernel.org>
-	<PH7PR21MB32606C49F796ED9E7AD0E5ABCA612@PH7PR21MB3260.namprd21.prod.outlook.com>
+	s=arc-20240116; t=1726773547; c=relaxed/simple;
+	bh=fiP9sGFsWyj/Kji37XnWAPo1IIryNQB3IyWf1MjA+9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ib7XgVXik2kmUypJGVWvSoP2gwe05gCs/xYbxA+u0AE7XLraMCQwLDaCMXgCTr34PM7cQAxnmCuS81H5iRKAV79pwPmKx0XyEH1zYJftUwjhuHYZ3DVF7BM+R1hB9zA1ZPMHpLIGPWY68LXgmRm0NVKImR0if/tvQFj3Z0r3UZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGIf7V1t; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726773545; x=1758309545;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fiP9sGFsWyj/Kji37XnWAPo1IIryNQB3IyWf1MjA+9Q=;
+  b=GGIf7V1tJWczWBH04cmT75/+7YobBGED2wzyLDbL4mtl+3vHAYmLBw7x
+   qw+imeOXruxo7dIyLuoKYoPpgMkZUEG/guQAs2rOgb5drLAjzoQqETPPr
+   d/Pxr59+RMKU9Po+PuE6jt3PRrR7fgUmGLauIJmlXnOEz9N8QP1OOOoYn
+   YZzOM2K3/u2uak0VBL5/YyR0mrAA9UUrXXAXiK/ZUGdb6cr+ZDJS8X4DI
+   UIuBvw9Wwq18VyTg35q7AQOCgSkZwOMigIGR6a9siew3rI+Sb6zBbCnyP
+   xqkA4V6q+Wtjf+VZJ6PgpfJKShekXzgmpoow06n27YSy/LQ+pzmGs0okp
+   A==;
+X-CSE-ConnectionGUID: 2NarL3mgT+y4M+hOqPfpcA==
+X-CSE-MsgGUID: zsZFx3NiSEStkPZc+zkwtA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11200"; a="43278646"
+X-IronPort-AV: E=Sophos;i="6.10,242,1719903600"; 
+   d="scan'208";a="43278646"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 12:19:04 -0700
+X-CSE-ConnectionGUID: pDyNspbeRLeD8Srea3Rr1w==
+X-CSE-MsgGUID: 7q3vNhOuSNWPcjZhtn/g4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,242,1719903600"; 
+   d="scan'208";a="93323770"
+Received: from yjiang5-mobl.amr.corp.intel.com (HELO localhost) ([10.124.27.106])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 12:19:03 -0700
+Date: Thu, 19 Sep 2024 12:19:01 -0700
+From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, rafael@kernel.org, lenb@kernel.org,
+	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 2/9] dt-bindings: x86: Add a binding for x86 wakeup
+ mailbox
+Message-ID: <20240919191725.GA11928@yjiang5-mobl.amr.corp.intel.com>
+References: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
+ <20240823232327.2408869-3-yunhong.jiang@linux.intel.com>
+ <ujfqrllrii6iijlhbwx3bltpjogiosw4xx5pqbcddgpxjobrzh@xqqrfxi5lv3i>
+ <20240827204549.GA4545@yjiang5-mobl.amr.corp.intel.com>
+ <20240910061227.GA76@yjiang5-mobl.amr.corp.intel.com>
+ <1d0ba3fc-1504-4af3-a0bc-fba86abe41e8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d0ba3fc-1504-4af3-a0bc-fba86abe41e8@kernel.org>
 
-On Tue, 17 Sep 2024 20:34:40 +0000 Haiyang Zhang wrote:
-> > Unless I'm misreading I don't see the answer to the "why?" in your
-> > reply.
+On Mon, Sep 16, 2024 at 10:56:38AM +0200, Krzysztof Kozlowski wrote:
+> On 10/09/2024 08:13, Yunhong Jiang wrote:
+> > On Tue, Aug 27, 2024 at 01:45:49PM -0700, Yunhong Jiang wrote:
+> >> On Sun, Aug 25, 2024 at 09:10:01AM +0200, Krzysztof Kozlowski wrote:
+> >>> On Fri, Aug 23, 2024 at 04:23:20PM -0700, Yunhong Jiang wrote:
+> >>>> Add the binding to use mailbox wakeup mechanism to bringup APs.
+> >>>>
+> >>>> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> >>>> ---
+> >>>>  .../devicetree/bindings/x86/wakeup.yaml       | 64 +++++++++++++++++++
+> >>>>  1 file changed, 64 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/x86/wakeup.yaml
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/x86/wakeup.yaml b/Documentation/devicetree/bindings/x86/wakeup.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..cb84e2756bca
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/x86/wakeup.yaml
+> >>>> @@ -0,0 +1,64 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>> +# Copyright (C) 2024 Intel Corporation
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/x86/wakeup.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: x86 mailbox wakeup
+> >>>> +maintainers:
+> >>>> +  - Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> >>>> +
+> >>>> +description: |
+> >>>> +  The x86 mailbox wakeup mechanism defines a mechanism to let the bootstrap
+> >>>> +  processor (BSP) to wake up application processors (APs) through a wakeup
+> >>>> +  mailbox.
+> >>>> +
+> >>>> +  The "wakeup-mailbox-addr" property specifies the wakeup mailbox address. The
+> >>>> +  wakeup mailbox is a 4K-aligned 4K-size memory block allocated in the reserved
+> >>>> +  memory.
+> >>>> +
+> >>>> +  The wakeup mailbox structure is defined as follows.
+> >>>> +
+> >>>> +    uint16_t command;
+> >>>> +    uint16_t reserved;
+> >>>> +    uint32_t apic_id;
+> >>>> +    uint64_t wakeup_vector;
+> >>>> +    uint8_t  reservedForOs[2032];
+> >>>> +
+> >>>> +  The memory after reservedForOs field is reserved and OS should not touch it.
+> >>>> +
+> >>>> +  To wakes up a AP, the BSP prepares the wakeup routine, fills the wakeup
+> >>>> +  routine's address into the wakeup_vector field, fill the apic_id field with
+> >>>> +  the target AP's APIC_ID, and write 1 to the command field. After receiving the
+> >>>> +  wakeup command, the target AP will jump to the wakeup routine.
+> >>>> +
+> >>>> +  For each AP, the mailbox can be used only once for the wakeup command. After
+> >>>> +  the AP jumps to the wakeup routine, the mailbox will no longer be checked by
+> >>>> +  this AP.
+> >>>> +
+> >>>> +  The wakeup mailbox structure and the wakeup process is the same as
+> >>>> +  the Multiprocessor Wakeup Mailbox Structure defined in ACPI spec version 6.5,
+> >>>> +  section 5.2.12.19 [1].
+> >>>> +
+> >>>> +  References:
+> >>>> +
+> >>>> +  [1] https://uefi.org/specs/ACPI/6.5/05_ACPI_Software_Programming_Model.html
+> >>>> +
+> >>>> +select: false
+> >>>
+> >>> This schema is still a no-op because of this false.
+> >>>
+> >>> What is the point of defining one property if it is not placed anywhere?
+> >>> Every device node can have it? Seems wrong...
+> >>>
+> >>> You need to come with proper schema. Lack of an example is another thing
+> >>> - this cannot be even validated by the tools. 
+> >>>
+> >>> Best regards,
+> >>> Krzysztof
 > > 
-> > What benefit does reporting duplex on a virtual device bring?
-> > What kind of SW need this current patch?
-> > etc.  
+> > Hi, Krzysztof, I'm working to address your comments and have some questions.
+> > Hope to get help/guide from your side.
+> > 
+> > For the select, the writing-schema.rst describes it as "A json-schema used to
+> > match nodes for applying the schema" but I'm a bit confused. In my case, should
+> > it be "cpus" node? Is there any code/tools that uses this property, so that I
+> > can have a better understanding?
 > 
-> I'm not aware of any SW has such requirement either.
-> We just want the "ethtool <nic>" cmd can output something we already know.
-> Is this acceptable?
+> Usually we expect matching by compatible, but it does not seem suitable
+> here because it is not related to any specific device, right? That is
+> the problem with all this DT-reuse-for-virtual-stuff work. It just does
+> not follow usual expectations and guidelines - you do not describe a device.
 
-Yeah, that's fine, I was just curious. 
+Thank you for the reply.
+
+I'm a bit confused on your "do not describe a device".
+I think VM is also a device, it's just a virtual device, but I don't see much
+difference of the virtual and physical device from DT point of view, possibly I
+missed some point.
+ 
+> 
+> You can still match by nodes. See all top-level bindings.
+
+After checking the code at
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/validator.py,
+seems the 'select' is translated to 'if'/'then'.
+
+Do you have any example of "top-level bindings"? I tried to check binding for
+enable-methods like arm/cpu-enable-method/nuvoton,npcm750-smp or
+cpu/idle-states.yaml, but they are either not schema file, or quite different.
+
+I have been struggling on this device binding document for a while. I
+reconsidered what this binding is for. This binding means, if the cpus node has
+"enable-method" as "acpi-wakeup-mailbox", then the device should have property
+"wakeup-mailbox-addr" with uint64 type.
+
+In that case, I'm considering to set the "select" to be true so that it will
+apply to any potential device, and add if/then keyword to check the
+enable-method. But seems it does not work and I'm still trying to figure out the
+reason (I'm new to the json/json schema and is still learning).
+
+I received followed error:
+cpus: '#address-cells', '#size-cells', 'cpu@0', 'enable-method' do not match any of the regexes: 'pinctrl-[0-9]+'
+        from schema $id: http://devicetree.org/schemas/x86/wakeup.yaml#
+cpu@0: 'device_type', 'reg' do not match any of the regexes: 'pinctrl-[0-9]+'
+        from schema $id: http://devicetree.org/schemas/x86/wakeup.yaml#
+
+With the followed yaml file (I delete some description).
+
+$ cat Documentation/devicetree/bindings/x86/wakeup.yaml
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+# Copyright (C) 2024 Intel Corporation
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/x86/wakeup.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: x86 mailbox wakeup
+maintainers:
+  - Yunhong Jiang <yunhong.jiang@linux.intel.com>
+
+description: |
+  ......
+  Removed to save space.
+
+properties:
+  wakeup-mailbox-addr:
+    $ref: /schemas/types.yaml#/definitions/uint32
+    description: |
+      ......
+      Removed to save space.
+
+select: true
+
+if:
+  properties:
+    enable-method:
+      contains:
+        const: acpi-wakeup-mailbox
+  required:
+    - enable-method
+
+then:
+  required:
+    - wakeup-mailbox-addr
+
+additionalProperties: false
+
+examples:
+  - |
+    cpus {
+      #address-cells = <1>;
+      #size-cells = <0>;
+      enable-method = "acpi-wakeup-mailbox";
+      wakeup-mailbox-addr = <0x1c000500>;
+      cpu@0 {
+        device_type = "cpu";
+        reg = <0x1>;
+      };
+    };
+...
+
+> 
+> > 
+> > For your "validated by the tools", can you please share the tools you used to
+> > validate the schema? I used "make dt_binding_check" per the
+> > submitting-patches.rst but I think your comments is about another tool.
+> 
+> See writing-schema document.
+Yes, I figured out in the end that the validate tools means the dt-schema tools.
+
+Thank you
+--jyh
+
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
