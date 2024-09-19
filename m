@@ -1,79 +1,88 @@
-Return-Path: <linux-hyperv+bounces-3048-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3049-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2EB497C469
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 08:48:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C53697C50D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 09:46:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79E911F244E9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 06:48:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E0C01B219AC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2024 07:46:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 384DA18DF6A;
-	Thu, 19 Sep 2024 06:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ADD118E055;
+	Thu, 19 Sep 2024 07:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjF5mtRt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrFsYpbx"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E73D3FBA5;
-	Thu, 19 Sep 2024 06:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB5C23A6;
+	Thu, 19 Sep 2024 07:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726728486; cv=none; b=E2o9z/5LSligLOsnOfRBNDW0C0YFNgqJOBZZA5lRSCosYB6TxvO/xtF1f/+TXEOULQeNp/j2gygfaArbMIQfaBA3NtegbGUy76ku4JzE7XE5PYj32afLhnmEvDIILffN66XiJ70NaWvVqLIsIs3Gn3O7NN7yfFUxwx3/Q8fvYGU=
+	t=1726731960; cv=none; b=InTYMOPzPOgzJdcSlrTAqaKLy96hKI5ux6ay3YcU6OSwpBRifgU8jP2peA2mTQc5dpoV1wIbuf39o1u4Z6VHTTBzwquxVjjYgGXdhUjlu7wa3A9Y9NrKB92i2uRdizfM/UnJ8EnVUDRFIROhSuYUrnxXbnSG/glQ7ib0ZOfnER8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726728486; c=relaxed/simple;
-	bh=l8QuQExTIALeEogvOZYS7ZFTbRcrL+7Jen45HIbIHJg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AS4y+dKPK5LC4zyCzMgkbHI/KO6OZgX8PkZrEx8wb+xDJOU1O8XHhADySK/2ccqvDdJ3w5fSkog0+PVbiwazfY5FJWSUYaVOZibZFtxYRe8EHze513USGl9C4PAv/2ANCVbqB38KP7XOrTO+PkoqGITAGHWnzocI4fvD8yFdr7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjF5mtRt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4089C4CEC4;
-	Thu, 19 Sep 2024 06:48:05 +0000 (UTC)
+	s=arc-20240116; t=1726731960; c=relaxed/simple;
+	bh=qEMMGKMY3GETYdqOm3V9vI9ZoJfC7eDMAGarWiM29K0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=srjoNCKNKN8yYenunSXKIkiXbnZY15e/ojWo111s8UYQhbsbZ4iDvGuAyAlQCFGbegvKTCd9b4iNIkX/MIpseEdBh2/MQpjv417sayoAl9D0QtraqsswOhRQejpDtrtbdvYMJWXEWbpjpNLuXLn1AIbyoh1twErt8VRaQRQdiO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrFsYpbx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76CE3C4CEC4;
+	Thu, 19 Sep 2024 07:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726728485;
-	bh=l8QuQExTIALeEogvOZYS7ZFTbRcrL+7Jen45HIbIHJg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=DjF5mtRtPP1DryiMKTpyzxa7FzZC9bFybST0raRYWwFuHS/neBnFCUxW0ZC+uv/6Q
-	 WEabu9FhqmX3RZMhbtxL//EY878ISsO41hzHClKmMyq03f+cq+A63sug/SlTQ2nQiQ
-	 imDWfCkVOcG00kS7LlnDnITwLdhs8gv9UGXpZwMMRTZDaxMrJ8P60JIa+xP9p/gbaU
-	 OIRfg5Q6LA6SXpGYOpIau8sb9jBrSHcykRC/jR1TXFHBSbLkeT8MdFMggtBwUasCcN
-	 LSqwNdiGzJFDd/l1Z0okoRVDOrLDloqqRstQnANyOGl9JgVfRlOKpDq4TXK2uHJrpF
-	 PwZbeVbDXvY4w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0213809A80;
-	Thu, 19 Sep 2024 06:48:08 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V next for v6.12
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZujPjfi61CEVvhw3@liuwe-devbox-debian-v2>
-References: <ZujPjfi61CEVvhw3@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-hyperv.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZujPjfi61CEVvhw3@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20240916
-X-PR-Tracked-Commit-Id: 94e86b174d103d941b4afc4f016af8af9e5352fa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1d7bb2bf7ad8c95cd50e97a83461610385b5259d
-Message-Id: <172672848758.1360580.9472539844905759378.pr-tracker-bot@kernel.org>
-Date: Thu, 19 Sep 2024 06:48:07 +0000
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+	s=k20201202; t=1726731959;
+	bh=qEMMGKMY3GETYdqOm3V9vI9ZoJfC7eDMAGarWiM29K0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IrFsYpbxMy35Es+LTwzPeFkyDIKQDOdt/OXY31hQbpdLFUjFb+ctXB7lpotvh6XwO
+	 0w0KBhgdIfVoGWksf6+T6/Ir+8cbFslQ52gqKckjrH81M8zVCoN6YFz8spLBeOdhY6
+	 eBkbMHfs0/CxTUMUWCjQTOgpBuuUaXakWrffOcqVyhKC/6NARq4gQs5jwxDFYasQLx
+	 rekX1hcOgQPZieCIZESLlXdzQcaS/Ken9/eXLHs08mgCTwKvVfB9omdGgMLx+GKPeO
+	 M9ySPvzTLNDFZBMaKae5lkfBcRzUu+EFx/xStfFTs+sUjikqW5wx+cmXKaiIHC0t56
+	 Ogv/O1zvWR2Fw==
+Date: Thu, 19 Sep 2024 09:45:53 +0200
+From: Jakub Kicinski <kuba@kernel.org>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, KY Srinivasan
+ <kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "shradhagupta@linux.microsoft.com"
+ <shradhagupta@linux.microsoft.com>, "ahmed.zaki@intel.com"
+ <ahmed.zaki@intel.com>, "colin.i.king@gmail.com" <colin.i.king@gmail.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: mana: Add get_link and get_link_ksettings in
+ ethtool
+Message-ID: <20240919094553.1ee7776c@kernel.org>
+In-Reply-To: <PH7PR21MB32606C49F796ED9E7AD0E5ABCA612@PH7PR21MB3260.namprd21.prod.outlook.com>
+References: <1726127083-28538-1-git-send-email-ernis@linux.microsoft.com>
+	<20240913202347.2b74f75e@kernel.org>
+	<PH7PR21MB3260F88970A04FDB9C0ACCC4CA612@PH7PR21MB3260.namprd21.prod.outlook.com>
+	<20240917170406.6a9d6e27@kernel.org>
+	<PH7PR21MB32606C49F796ED9E7AD0E5ABCA612@PH7PR21MB3260.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Tue, 17 Sep 2024 00:38:37 +0000:
+On Tue, 17 Sep 2024 20:34:40 +0000 Haiyang Zhang wrote:
+> > Unless I'm misreading I don't see the answer to the "why?" in your
+> > reply.
+> > 
+> > What benefit does reporting duplex on a virtual device bring?
+> > What kind of SW need this current patch?
+> > etc.  
+> 
+> I'm not aware of any SW has such requirement either.
+> We just want the "ethtool <nic>" cmd can output something we already know.
+> Is this acceptable?
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20240916
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1d7bb2bf7ad8c95cd50e97a83461610385b5259d
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Yeah, that's fine, I was just curious. 
 
