@@ -1,137 +1,114 @@
-Return-Path: <linux-hyperv+bounces-3056-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3057-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED0397DA3B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Sep 2024 23:18:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D9D897DABD
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Sep 2024 01:13:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFEA628294E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Sep 2024 21:18:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8B30B21924
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Sep 2024 23:13:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A1B184534;
-	Fri, 20 Sep 2024 21:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1796618DF68;
+	Fri, 20 Sep 2024 23:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SUIzWG4E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiVeK4hj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51BC2558BC;
-	Fri, 20 Sep 2024 21:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D751C693;
+	Fri, 20 Sep 2024 23:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726867107; cv=none; b=e9jZciN+FCKaNjw0TtzjWs3DlV9Vk64Sb5ovYJC9jDm7ymNQrujlprFw0t76s1NbqO6G7nrfdQ5EkJZZk25lJsQpFlxRW0B+SatNF+NsVWCVBkSMVMTsThrFxSuklTitn63flrWqmqfr+uXKdv2PfWIj4DT4OMO3bVCDCUOXaxs=
+	t=1726873991; cv=none; b=SvwB7bl9bMX0mSNMfo4vvSgrZMQtDNID0MKQE2B1BLYj/r5tpa2bFlwY8Jmdy7f+UpTi5I/AxbCWji5nwSeTtlv12DJRwiF3yOsQSDLs1NcJh/WLO8F7TCBnOEHdKrFA7rxrG8gxl1gZMWN+ymSqoOYXMzLFwhLgvwnK/azH28g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726867107; c=relaxed/simple;
-	bh=VBBKALegdhR59CYTd2UllHzTLDvAds0WaiDy8WW2DKM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=gDP5FBWZ3Qx7tm0gIRs4HSRBjioBjx/B8RbqG9XJ4gejkSteh/w7uXyyfpqOkAeW35SR3tzbu7/kDPzGWaYLDwX7YLQslqrAZO9g241HUyKu16EHyapA2gqUZU3BxDc97SFjN5IDYha4wuavusqOCdrLrJ1LHbGWtiag8svWoto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SUIzWG4E; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id D7C7820C0B35; Fri, 20 Sep 2024 14:18:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D7C7820C0B35
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1726867105;
-	bh=BpdSP4DAHYZuzbODydBsRdZaeOFwXuLS3KrCe9Oaq38=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SUIzWG4EvxhJEiPzddecPf7FqLD0/pGiQZ8fKbUVUDUFClbMRPZqybNB0OGC+vKRz
-	 VXd5chVxUu5tyRBOwQ7UCUXRRzfEfpkEExzWv3EV3SIv0Bl6PC0sUesTuKgPDhscDP
-	 ngVf/7RRnYc2/2dSafkDuX+mvwNeXoHYZ1M0jI/A=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	shradhagupta@linux.microsoft.com,
-	ahmed.zaki@intel.com,
-	leon@kernel.org,
-	colin.i.king@gmail.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ernis@microsoft.com,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Subject: [PATCH v2] net: mana: Add get_link and get_link_ksettings in ethtool
-Date: Fri, 20 Sep 2024 14:18:23 -0700
-Message-Id: <1726867103-19295-1-git-send-email-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1726873991; c=relaxed/simple;
+	bh=+CbtnYI/5ORGbbRU1OhnMdiA6deltgQ52qYdl/OS+Ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tXOty0ZfUUeuE0dJxuNqWS0ppQY0IV4tzWdIPD10nVZtr3h4f/JxgpOVZUkph6CKRRJ3dkeNjUiqGbjthDQrvu9T1dYYU+x7WxQpRgZi476E+jcvqa447fQ2JgZkY6QrYrTtSYaD7BSCPEvXCbHwNl62c8FH9K5ft5Vn1pvfJp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiVeK4hj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F1DC4CEC3;
+	Fri, 20 Sep 2024 23:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726873989;
+	bh=+CbtnYI/5ORGbbRU1OhnMdiA6deltgQ52qYdl/OS+Ok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kiVeK4hjoJc9Eu0ncckqydFSpzyBITFhQViNa96hU8zj303xNGFlP5l/AVb7YUrW/
+	 MMYZmViZSBnoL8LJf9qET6QugL0EZ06S1Q362GvIhgI+Ztf0HBFwagdh6B2697zFfC
+	 JH7vqgUw6v8Ym+KYOpW+8mXSPj5ee6M87jdDVRQaFxr+kce6dCfRxRdmBJdhIKFtiX
+	 vAMBJdm9mMoWusz0drX9SKUtl3+xqeAuDZY5oWKan0anGqC4fLVvk6rnAOLSXB7p1Q
+	 Ev+LIz5XEw7DoW2dMADqySR+8NJ6uRPDzC9l8+P/mBUoz/J5Do3KZ6ZXUwPWoSLUGm
+	 /XPnIUTB6M2gw==
+Date: Fri, 20 Sep 2024 18:13:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, James.Bottomley@hansenpartnership.com,
+	martin.petersen@oracle.com, arnd@arndb.de,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-arch@vger.kernel.org, maz@kernel.org, den@valinux.co.jp,
+	jgowans@amazon.com, dawei.li@shingroup.cn
+Subject: Re: [RFC 04/12] PCI: hv: Annotate the VMBus channel IRQ name
+Message-ID: <20240920231307.GA1073064@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604050940.859909-5-mhklinux@outlook.com>
 
-Add support for the ethtool get_link and get_link_ksettings
-operations. Display standard port information using ethtool.
+On Mon, Jun 03, 2024 at 10:09:32PM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> In preparation for assigning Linux IRQs to VMBus channels, annotate
+> the IRQ name in the single VMBus channel used for setup and teardown
+> of a virtual PCI device in a Hyper-V guest. The annotation adds the
+> 16-bit PCI domain ID that the Hyper-V vPCI driver assigns to the
+> virtual PCI bus for the device.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-Before the change:
-$ethtool enP30832s1
-> No data available
+Seems fine to me.
 
-After the change:
-$ethtool enP30832s1
-> Settings for enP30832s1:
-        Supported ports: [  ]
-        Supported link modes:   Not reported
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  Not reported
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: Unknown!
-        Duplex: Full
-        Auto-negotiation: off
-        Port: Other
-        PHYAD: 0
-        Transceiver: internal
-        Link detected: yes
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
-Changes in v2:
-* Remove support for displaying auto-negotiation details
-* Change PORT_DA to PORT_OTHER
----
- drivers/net/ethernet/microsoft/mana/mana_ethtool.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index dc3864377538..349f11bf8e64 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -443,6 +443,15 @@ static int mana_set_ringparam(struct net_device *ndev,
- 	return err;
- }
- 
-+static int mana_get_link_ksettings(struct net_device *ndev,
-+				   struct ethtool_link_ksettings *cmd)
-+{
-+	cmd->base.duplex = DUPLEX_FULL;
-+	cmd->base.port = PORT_OTHER;
-+
-+	return 0;
-+}
-+
- const struct ethtool_ops mana_ethtool_ops = {
- 	.get_ethtool_stats	= mana_get_ethtool_stats,
- 	.get_sset_count		= mana_get_sset_count,
-@@ -456,4 +465,6 @@ const struct ethtool_ops mana_ethtool_ops = {
- 	.set_channels		= mana_set_channels,
- 	.get_ringparam          = mana_get_ringparam,
- 	.set_ringparam          = mana_set_ringparam,
-+	.get_link_ksettings	= mana_get_link_ksettings,
-+	.get_link		= ethtool_op_get_link,
- };
--- 
-2.34.1
-
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 5992280e8110..4f70cddb61dc 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3705,6 +3705,9 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	hdev->channel->request_addr_callback = vmbus_request_addr;
+>  	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
+>  
+> +	snprintf(hdev->channel->irq_name, VMBUS_CHAN_IRQ_NAME_MAX,
+> +				"vpci:%04x", dom);
+> +
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+>  			 hv_pci_onchannelcallback, hbus);
+>  	if (ret)
+> @@ -4018,6 +4021,8 @@ static int hv_pci_resume(struct hv_device *hdev)
+>  	hdev->channel->next_request_id_callback = vmbus_next_request_id;
+>  	hdev->channel->request_addr_callback = vmbus_request_addr;
+>  	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
+> +	snprintf(hdev->channel->irq_name, VMBUS_CHAN_IRQ_NAME_MAX,
+> +				"vpci:%04x", hbus->bridge->domain_nr);
+>  
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+>  			 hv_pci_onchannelcallback, hbus);
+> -- 
+> 2.25.1
+> 
 
