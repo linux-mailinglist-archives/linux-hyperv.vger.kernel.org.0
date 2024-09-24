@@ -1,67 +1,59 @@
-Return-Path: <linux-hyperv+bounces-3064-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3065-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46441983B97
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Sep 2024 05:29:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ED0A984ACE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Sep 2024 20:23:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C886EB228C6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Sep 2024 03:29:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13A51281DE5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Sep 2024 18:23:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A50E71A270;
-	Tue, 24 Sep 2024 03:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA001ABECA;
+	Tue, 24 Sep 2024 18:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b="r/cen+gm"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Dk6pALFL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FE311CAF;
-	Tue, 24 Sep 2024 03:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.30.2.78
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6334E11CA0;
+	Tue, 24 Sep 2024 18:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727148586; cv=none; b=jXWoGM0o5Sd38mvXocj6C8a5E05kGFMQtpQYflpNnf2bt4wpiOkifrY2UAPlUyy5GPPSMmHPgA7nWgOhRQgXl/5C8Hsb498tKFMulr2hQkvqVzo6bxRkfEmwZAiteZJt3C07pzqUyvoG0qMTl+L0ldWnHLaoB4795Z+herg7Kpg=
+	t=1727202177; cv=none; b=Y4drxIuHuoB08X/a+jt6GEcG5c3hCDQVToYDNXFqIfSHne4HBqwOFY6VFWpSHjz4VsLTZmbJHdK0q4WmBiX5Pt5LE2do5VK5NTtjabPWMPnotK+EwLMr7xUNj6N7qofuvxV0dDTJAvDWQusUPOY1gaKevN96UTmP5eA24mG2jF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727148586; c=relaxed/simple;
-	bh=He4RSk+VyNqC7R9e8sia//RliWJ2E0nW4v8e5cf2rHw=;
+	s=arc-20240116; t=1727202177; c=relaxed/simple;
+	bh=TUwq8CJ3h1KyuGejnrJdKWp5w35wORDJxiEqbkcXqnY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kto0g2eGVGFqPfl2hMCTJ2m6eUaH1STWLHcv15dz4mjTGh9C68Nryx6ZpbUwyq8bI7xYUdQAiKR9wrB0ThQlKTS/RyRThs8/Q+AQkBr01Kwk58gjaF6SJJaTYa9j1JlktRGh3DWJf2J3FQ15dKOOAppmsYBVCRB+IJpcOcKFXzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu; spf=pass smtp.mailfrom=csail.mit.edu; dkim=pass (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b=r/cen+gm; arc=none smtp.client-ip=128.30.2.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CLHuzZ3zITPRDC0K133CNkneyz/m1pTgbOcS+Htx+l0=; t=1727148585; x=1728012585; 
-	b=r/cen+gmCwRcmiFkbD1Y+MNeK4HY7FDebxbHZ/Ff8otczSZdvebTQxkRhA9zF6lgl2Q9hOS2I+K
-	Yp89Ee2tGrC1lh7Qe446i5WNlX7Cds3Q/PlawQDZXzrnuomnv2O5oonvCYljeRoImsMeoJr0s9y3N
-	64l0EQWOBlPjvUANzmVK05P9Uv3bh3Tgpmkfx6S54eahOmdivuwTt2DGgWRxSFQe2XLInQjqgXLW4
-	I87d3B92Gw5tbzCAoBc++/rEEF2xDx250Ue85wR+3WpLOUjfpG8bqDM9JFF6j6E8PHCymG7sJ7YQL
-	RBZMfo2bZaE1VIC8UFU1SVrI2AQ5iNIycLwA==;
-Received: from [172.179.10.40] (helo=csail.mit.edu)
-	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <srivatsa@csail.mit.edu>)
-	id 1sswFC-00EsWF-DI;
-	Mon, 23 Sep 2024 23:29:42 -0400
-Date: Tue, 24 Sep 2024 03:29:39 +0000
-From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, jikos@kernel.org, bentiss@kernel.org,
-	dmitry.torokhov@gmail.com, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ernis@microsoft.com, rafael@kernel.org, pavel@ucw.cz,
-	lenb@kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 3/3] Revert "HID: hyperv: register as a wakeup source"
-Message-ID: <ZvIyI2N4V2rGABvh@csail.mit.edu>
-References: <1726176470-13133-1-git-send-email-ernis@linux.microsoft.com>
- <1726176470-13133-4-git-send-email-ernis@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EK9QwXiMtA2zwgTM8xScoanFL4+8hl4NdfxD6IT4MDB0QXp4JFwY3V6H0ZKpO45MJsV9QP0ARCSEGpuogx5b54O2F724g8OscASZdIRcGbG8YBJYNihQTuLW6hkf3Tma+TQ94vnZgN8l2xnHvlNiPzOdOh78aprSo1ZHJeSFBqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Dk6pALFL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 17AB120C6497; Tue, 24 Sep 2024 11:22:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17AB120C6497
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1727202170;
+	bh=Sp511I3MRZE6mycvGCLM5CjDhuHrm3NCeyezfu9e2+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dk6pALFL+0XgJD6mtcKlYy+XqoazUImW8ZPyXrCT5YyZywaYLlvTmQHtKwubRRrdX
+	 XFhofekAZSJATBqycvP+mI6/Ya8nd5jTS2KvGoH8Ni+b5kd7gk999Y5cB3DchYoBJQ
+	 0ik1rCzIMNu+KuOH17sZ1QvECYIbA6wZK1z/ctlQ=
+Date: Tue, 24 Sep 2024 11:22:50 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] tools: hv: Fix a complier warning in the fcopy uio daemon
+Message-ID: <20240924182250.GA14242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20240910004433.50254-1-decui@microsoft.com>
+ <20240913073058.GA24840@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SA1PR21MB13172712A02F3C9EEB156131BF6D2@SA1PR21MB1317.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,54 +62,84 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1726176470-13133-4-git-send-email-ernis@linux.microsoft.com>
+In-Reply-To: <SA1PR21MB13172712A02F3C9EEB156131BF6D2@SA1PR21MB1317.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-[+linux-pm, Rafael, Len, Pavel]
+On Sat, Sep 21, 2024 at 01:23:09AM +0000, Dexuan Cui wrote:
+> > From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+> > Sent: Friday, September 13, 2024 12:31 AM
+> > To: Dexuan Cui <decui@microsoft.com>
+> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Long Li
+> > <longli@microsoft.com>; Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org>; open list:Hyper-V/Azure CORE AND DRIVERS
+> > <linux-hyperv@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>;
+> > stable@vger.kernel.org
+> > Subject: Re: [PATCH] tools: hv: Fix a complier warning in the fcopy uio
+> > daemon
+> > 
+> > On Tue, Sep 10, 2024 at 12:44:32AM +0000, Dexuan Cui wrote:
+> > > hv_fcopy_uio_daemon.c:436:53: warning: '%s' directive output may be
+> > truncated
+> > > writing up to 14 bytes into a region of size 10 [-Wformat-truncation=]
+> > >   436 |  snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s",
+> > uio_name);
+> > 
+> > Makefile today doesn't have -Wformat-truncation flag enabled, I tried to add
+> > -Wformat-truncation=2 but I don't see any error in this file.
+> > 
+> > Do you mind sharing more details how you get this error ?
+> > 
+> > - Saurabh
+> 
+> This repros in a Ubuntu 20.04 VM:
+> 
+> root@decui-u2004-2024-0920:~/linux/tools/hv# cat /etc/os-release
+> NAME="Ubuntu"
+> VERSION="20.04.6 LTS (Focal Fossa)"
+> ...
+> 
+> root@decui-u2004-2024-0920:~/linux/tools/hv# gcc --version
+> gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+> Copyright (C) 2019 Free Software Foundation, Inc.
+> This is free software; see the source for copying conditions.  There is NO
+> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> 
+> root@decui-u2004-2024-0920:~/linux/tools/hv# make clean; make
+> ...
+> make -f /root/linux/tools/build/Makefile.build dir=. obj=hv_fcopy_uio_daemon
+> make[1]: Entering directory '/root/linux/tools/hv'
+>   CC      hv_fcopy_uio_daemon.o
+> hv_fcopy_uio_daemon.c: In function 'main':
+> hv_fcopy_uio_daemon.c:443:53: warning: '%s' directive output may be truncated writing up to 14 bytes into a region of size 10 [-Wformat-truncation=]
+>   443 |  snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
+>       |                                                     ^~   ~~~~~~~~
+> In file included from /usr/include/stdio.h:867,
+>                  from hv_fcopy_uio_daemon.c:20:
+> /usr/include/x86_64-linux-gnu/bits/stdio2.h:67:10: note: '__builtin___snprintf_chk' output between 6 and 20 bytes into a destination of size 15
+>    67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    68 |        __bos (__s), __fmt, __va_arg_pack ());
+>       |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   CC      vmbus_bufring.o
+>   LD      hv_fcopy_uio_daemon-in.o
+> make[1]: Leaving directory '/root/linux/tools/hv'
+>   LINK    hv_fcopy_uio_daemon
 
-On Thu, Sep 12, 2024 at 02:27:50PM -0700, Erni Sri Satya Vennela wrote:
-> This reverts commit f1210455e78a610c7b316389b31c162c371d888c.
-> 
-> Remove mouse as wakeup source since Suspend-to-Idle feature
-> is disabled.
-> 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> ---
->  drivers/hid/hid-hyperv.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-> index f33485d83d24..b6d0f7db4c93 100644
-> --- a/drivers/hid/hid-hyperv.c
-> +++ b/drivers/hid/hid-hyperv.c
-> @@ -293,9 +293,6 @@ static void mousevsc_on_receive(struct hv_device *device,
->  		memcpy(input_dev->input_buf, input_report->buffer, len);
->  		hid_input_report(input_dev->hid_device, HID_INPUT_REPORT,
->  				 input_dev->input_buf, len, 1);
-> -
-> -		pm_wakeup_hard_event(&input_dev->device->device);
-> -
->  		break;
->  	default:
->  		pr_err("unsupported hid msg type - type %d len %d\n",
-> @@ -502,8 +499,6 @@ static int mousevsc_probe(struct hv_device *device,
->  		goto probe_err2;
->  	}
->  
-> -	device_init_wakeup(&device->device, true);
-> -
->  	input_dev->connected = true;
->  	input_dev->init_complete = true;
->  
-> @@ -526,7 +521,6 @@ static void mousevsc_remove(struct hv_device *dev)
->  {
->  	struct mousevsc_dev *input_dev = hv_get_drvdata(dev);
->  
-> -	device_init_wakeup(&dev->device, false);
->  	vmbus_close(dev->channel);
->  	hid_hw_stop(input_dev->hid_device);
->  	hid_destroy_device(input_dev->hid_device);
-> -- 
-> 2.34.1
-> 
-> 
+Thanks for the details. Looks this is the behaviour of old gcc versions.
+How about fixing it like this :
+
+--- a/tools/hv/hv_fcopy_uio_daemon.c
++++ b/tools/hv/hv_fcopy_uio_daemon.c
+@@ -35,7 +35,7 @@
+ #define WIN8_SRV_MINOR         1
+ #define WIN8_SRV_VERSION       (WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+
+-#define MAX_FOLDER_NAME                15
++#define MAX_FOLDER_NAME                10
+ #define MAX_PATH_LEN           15
+
+
+- Saurabh
+
 
