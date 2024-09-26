@@ -1,58 +1,60 @@
-Return-Path: <linux-hyperv+bounces-3071-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3072-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38732986B7A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 05:45:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00CC7986B99
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 06:01:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA4C7B217AD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 03:45:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B30B21F22F1D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 04:01:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C12D176AA0;
-	Thu, 26 Sep 2024 03:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49E1F1D5ADE;
+	Thu, 26 Sep 2024 04:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KSDhygar"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lz9L3CuL"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FFE917ADFF;
-	Thu, 26 Sep 2024 03:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DF11D5ABA;
+	Thu, 26 Sep 2024 04:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727322310; cv=none; b=uFUUOEndy4AMjcTURc1RVPvjkMvQoW4XiqE0s5tOQSCL2PIjpLbmpY7ZDHcVmEkR73+qLbb4RQh+USV5A1wh9cgOo94m/22COSwxhwTqE247zv6wu9vqUP5kKpPDFaigCFfuYxZJicHfmDQBiB5O4zNefXLGCP5Y7JMByv2jVOE=
+	t=1727323300; cv=none; b=Ku9jIqqElrCGwpLjzUYSpMZWlCzOUaQ2zZjR8jjqII9IqSP794WRN6LS1PEHJUomhHqxQgmk05xAdwiommicSOSFMiixlqsXEZx9HS+tWGnRh6o3r23oBlNUnUQeMY7uRWh5UPeJaddg1tmp1GmeVdobAa1AF2aIpdQPeyw6wXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727322310; c=relaxed/simple;
-	bh=qji11PFodQTOGl0U/FI207nQGwy3hvtRdkGk+gDTKWk=;
+	s=arc-20240116; t=1727323300; c=relaxed/simple;
+	bh=b+pg5MV6i6CAMnb4OiQlvsLGKZN4EuDnpQJEXuXR0BQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hg27w3fA8o+ykyLBdrxmdn3c8SqIIjuCew+FvBABNzwhyk0bTrUX0YnzAaWwUKEMj15X1oI4KGATeyZEJ4cgocYELV8N6EakUUbLuMYsm4H25vibbAHdufvXjM9zsmG/CL4uEz5GV/PQDpS3VA1YXJxBnS75g1a0WNpatT5Mu5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KSDhygar; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTsHWCshrxnJ2yMreyZ+aKgw+GAhykImZU6WKtNu/uIYQBpULV0UU1ywSGNvoUuZSnrlQz11+OiVZyqGpUNnExia7kClqAgt9YFnV8caTJvaq+KpentI/Kx7k1QkICVpQGTuLDjQ/3+J9kg/bhgOX+3Ed0c1Y3GuMfx3951lVPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Lz9L3CuL; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 29D0B20C6B0A; Wed, 25 Sep 2024 20:45:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 29D0B20C6B0A
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 5A42120C6B0D; Wed, 25 Sep 2024 21:01:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5A42120C6B0D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1727322308;
-	bh=DN5YSrMcwxqMpqpqgpFbw4VHtXj52g4zYkkDf2IuhRc=;
+	s=default; t=1727323298;
+	bh=LBBbil0Bs5ohuwul3NCLyRx/1aoBNqmU0JYYGwpBpAM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KSDhygarWPIt79snSww0jYF6WyHhTZpwoa3xCQ0EbmZ9LhBJ8MqixPMjphmP8ziE8
-	 7ekGubcopsjiyS9MDB3iRWpwKMeM2GrdFJ51NqO0waRt33DAOZ7lFfur3jL0grqm85
-	 9eTFo3go+j2oZcGVnf4yjMehKGXaruJbhl5BDQak=
-Date: Wed, 25 Sep 2024 20:45:08 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, jikos@kernel.org, bentiss@kernel.org,
-	dmitry.torokhov@gmail.com, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ernis@microsoft.com, rafael@kernel.org, pavel@ucw.cz,
-	lenb@kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 0/3] Disable Suspend-to-Idle in Hyper-V and Fix
- Hibernation Interruptions
-Message-ID: <20240926034508.GA25516@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1726176470-13133-1-git-send-email-ernis@linux.microsoft.com>
- <ZvIxVn1NKWuJ4u2k@csail.mit.edu>
+	b=Lz9L3CuLYXxNtnbn9SAJwbYe4ziCgBkEaOGYxvRqGwRqVHreByVwvG6RJT9u2dNsS
+	 py2fItihGWQ6j5RYsy/ph/rF/nHppn6QHiYJ1+SI94JcSOPEU94SrvbHmPBj3WZ+Ll
+	 87GIvsEgOHP4IVM2PsfbCnIRUhRwBJd8LQQNlHJY=
+Date: Wed, 25 Sep 2024 21:01:38 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] tools: hv: Fix a complier warning in the fcopy uio daemon
+Message-ID: <20240926040138.GA16982@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20240910004433.50254-1-decui@microsoft.com>
+ <20240913073058.GA24840@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SA1PR21MB13172712A02F3C9EEB156131BF6D2@SA1PR21MB1317.namprd21.prod.outlook.com>
+ <20240924182250.GA14242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,76 +63,96 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZvIxVn1NKWuJ4u2k@csail.mit.edu>
+In-Reply-To: <20240924182250.GA14242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Sep 24, 2024 at 03:26:14AM +0000, Srivatsa S. Bhat wrote:
-> Hi Vennela,
+On Tue, Sep 24, 2024 at 11:22:50AM -0700, Saurabh Singh Sengar wrote:
+> On Sat, Sep 21, 2024 at 01:23:09AM +0000, Dexuan Cui wrote:
+> > > From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+> > > Sent: Friday, September 13, 2024 12:31 AM
+> > > To: Dexuan Cui <decui@microsoft.com>
+> > > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > > <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Long Li
+> > > <longli@microsoft.com>; Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org>; open list:Hyper-V/Azure CORE AND DRIVERS
+> > > <linux-hyperv@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>;
+> > > stable@vger.kernel.org
+> > > Subject: Re: [PATCH] tools: hv: Fix a complier warning in the fcopy uio
+> > > daemon
+> > > 
+> > > On Tue, Sep 10, 2024 at 12:44:32AM +0000, Dexuan Cui wrote:
+> > > > hv_fcopy_uio_daemon.c:436:53: warning: '%s' directive output may be
+> > > truncated
+> > > > writing up to 14 bytes into a region of size 10 [-Wformat-truncation=]
+> > > >   436 |  snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s",
+> > > uio_name);
+> > > 
+> > > Makefile today doesn't have -Wformat-truncation flag enabled, I tried to add
+> > > -Wformat-truncation=2 but I don't see any error in this file.
+> > > 
+> > > Do you mind sharing more details how you get this error ?
+> > > 
+> > > - Saurabh
+> > 
+> > This repros in a Ubuntu 20.04 VM:
+> > 
+> > root@decui-u2004-2024-0920:~/linux/tools/hv# cat /etc/os-release
+> > NAME="Ubuntu"
+> > VERSION="20.04.6 LTS (Focal Fossa)"
+> > ...
+> > 
+> > root@decui-u2004-2024-0920:~/linux/tools/hv# gcc --version
+> > gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+> > Copyright (C) 2019 Free Software Foundation, Inc.
+> > This is free software; see the source for copying conditions.  There is NO
+> > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> > 
+> > root@decui-u2004-2024-0920:~/linux/tools/hv# make clean; make
+> > ...
+> > make -f /root/linux/tools/build/Makefile.build dir=. obj=hv_fcopy_uio_daemon
+> > make[1]: Entering directory '/root/linux/tools/hv'
+> >   CC      hv_fcopy_uio_daemon.o
+> > hv_fcopy_uio_daemon.c: In function 'main':
+> > hv_fcopy_uio_daemon.c:443:53: warning: '%s' directive output may be truncated writing up to 14 bytes into a region of size 10 [-Wformat-truncation=]
+> >   443 |  snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
+> >       |                                                     ^~   ~~~~~~~~
+> > In file included from /usr/include/stdio.h:867,
+> >                  from hv_fcopy_uio_daemon.c:20:
+> > /usr/include/x86_64-linux-gnu/bits/stdio2.h:67:10: note: '__builtin___snprintf_chk' output between 6 and 20 bytes into a destination of size 15
+> >    67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+> >       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >    68 |        __bos (__s), __fmt, __va_arg_pack ());
+> >       |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >   CC      vmbus_bufring.o
+> >   LD      hv_fcopy_uio_daemon-in.o
+> > make[1]: Leaving directory '/root/linux/tools/hv'
+> >   LINK    hv_fcopy_uio_daemon
 > 
-> [+linux-pm, Rafael, Pavel, Len]
+> Thanks for the details. Looks this is the behaviour of old gcc versions.
+> How about fixing it like this :
 > 
-> Let's CC the linux-pm mailing list for discussions related to power
-> management features (such as suspend/resume and hibernation).
+> --- a/tools/hv/hv_fcopy_uio_daemon.c
+> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+> @@ -35,7 +35,7 @@
+>  #define WIN8_SRV_MINOR         1
+>  #define WIN8_SRV_VERSION       (WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
 > 
-> On Thu, Sep 12, 2024 at 02:27:47PM -0700, Erni Sri Satya Vennela wrote:
-> > It has been reported that Hyper-V VM users can unintentionally abort
-> > hibernation by mouse or keyboard movements. To address this issue,
-> > we have decided to remove the wakeup events for the Hyper-V keyboard
-> > and mouse driver.
+> -#define MAX_FOLDER_NAME                15
+> +#define MAX_FOLDER_NAME                10
+>  #define MAX_PATH_LEN           15
 > 
-> >From the description of the problem, it doesn't occur to me that this
-> is specific to Hyper-V. I was wondering if VMs on other hypervisor
-> platforms wouldn't face the same issue? I'd like to recommend
-> exploring how this problem has been solved for other platforms, so
-> that we can reuse the same approach here. (If it turns out that
-> removing keyboard and mouse wakeup events is the way to go, then
-> great; otherwise, we can learn and apply the recommended solution).
 > 
-This is how the keyboard and mouse devices can be disabled manually and
-is the proper way to address this issue.
->echo disabled > /sys/bus/vmbus/drivers/hid_hyperv/$HV_MOUSE/power/wakeup
->echo disabled > 
->/sys/bus/vmbus/drivers/hyperv_keyboard/$HV_KEYBOARD/power/wakeup
->systemctl hibernate
-But based on customer feedback we are totally eliminating them as wakeup
-events.
 
-Initially, they were registered as wakeup events to wakeup from
-Suspend-to-Idle state. Since there is no real user of this operation,
-we are disabling them to ensure they do not interfere with hibernation
-process.
-> > However, this change introduces another problem: 
-> > Suspend-to-Idle brings the system down with no method to wake it back up.
-> > 
-> > Given that there are no real users of Suspend-to-Idle in Hyper-V,
-> > we have decided to disable this feature for VMBus. This results in:
-> > 
-> > $echo freeze > /sys/power/state
-> > > bash: echo: write error: Operation not supported
-> > 
-> > The keyboard and mouse were previously registered as wakeup sources to
-> > interrupt the freeze operation in a VM. Since the freeze operation itself
-> > is no longer supported, we are disabling them as wakeup events.
-> > 
-> > This patchset ensures that the system remains stable and prevents
-> > unintended interruptions during hibernation.
-> > 
-> > Erni Sri Satya Vennela (3):
-> >   Drivers: hv: vmbus: Disable Suspend-to-Idle for VMBus
-> >   Revert "Input: hyperv-keyboard - register as a wakeup source"
-> >   Revert "HID: hyperv: register as a wakeup source"
-> > 
-> >  drivers/hid/hid-hyperv.c              |  6 ------
-> >  drivers/hv/vmbus_drv.c                | 15 ++++++++++++++-
-> >  drivers/input/serio/hyperv-keyboard.c | 12 ------------
-> >  3 files changed, 14 insertions(+), 19 deletions(-)
-> > 
-> > -- 
-> > 2.34.1
-> > 
-> > 
-> 
-> Regards,
-> Srivatsa
-> Microsoft Linux Systems Group
+Had a offline discussion with Dexuan.
+The above suggested approach saves few bytes of userspace memory,
+using standard macros for path and folder length would be
+preferable for better code readability
+
+
+Please add,
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+
+- Saurabh
+
+
 
