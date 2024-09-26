@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3073-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3074-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46E78986BA1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 06:06:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ABFA98719E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 12:34:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9DC39B2262A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 04:06:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0C1F2836B9
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 10:34:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F4313BC02;
-	Thu, 26 Sep 2024 04:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A761AD40E;
+	Thu, 26 Sep 2024 10:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jIwGYDiM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TAKL88GY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A291D5AC4;
-	Thu, 26 Sep 2024 04:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DAD91AD3EF;
+	Thu, 26 Sep 2024 10:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727323579; cv=none; b=VGRzTI3xrOQw8vo6yZia0oj1yt0f6nuDNNyrUj4gsnQGXHk0MHcT/djZF478/2g7Q1PbkIVQCSe6ILUZKINsypfnc+or3tH1g9hGFW9CkA6Wc0tYA6xs2QW3p73EqIrMgnGRwDZEuzIGBTzDaiv7WivIVdqcuQo+3YDXjHFuw4M=
+	t=1727346885; cv=none; b=eETkNrAzvhI1qmnkGPsNCtW2DD5Zurk4LWTMebYW+GkoFA39tXCJbIJl5aUOsEXBEJ6g2AjAVXIVLqci+axS3OW71GnLPZLr8r7v/Q8ps+RCHsDSEy5uKAI0PwCvWK6R3y5AkJ7cNR++8iBy30739npm2IQSZPF1+aZkGmYp9PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727323579; c=relaxed/simple;
-	bh=OLt6j+fHdNfmOsbr3sHVHSyqHBHC5mI9BKcD1/2R1KU=;
+	s=arc-20240116; t=1727346885; c=relaxed/simple;
+	bh=8eeMh/90Pbf93L8V5WKd+a+xGgcpat9mtKyIErEKKYo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s9KyBIxBgrGwp79qeGAvu1u+t+TzYMPuqq9qw6fqQyPZuWnGpQVk+HVp542C1ViokLSzmfIfWX2EhxCbIlWMc7h207kFr54PqqCKbO32o7TUf2v+nuIleIOrjtkpsz7nM7sUjh+SzWuKs9HXQvsFc7kOOUEenuQ/Jb2OoK6OdGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jIwGYDiM; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3kpJewhPMjxa99qDrZUm+qMX/48MPdy7YK+ZsqL/FcKQeBIRoo0swsyZyYHZUXmp//j6C1rTell6D9UoCHoYiQ6rmOAX6xbrBL9SRpHV9wJWs/8pIX3ayUW3WZy0AvNmku3n0dru1o0ztZOpQNuDGrg9TPSyFysAbOuUGDbczE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TAKL88GY; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id B122220C6B10; Wed, 25 Sep 2024 21:06:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B122220C6B10
+	id D717720C77C3; Thu, 26 Sep 2024 03:34:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D717720C77C3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1727323577;
-	bh=OJgbR+pkGqrb2kM1Q3C8N1KvXUJeJPJ/KVkvOBlJaOc=;
+	s=default; t=1727346883;
+	bh=/FjYRxUkGAZHXP1M9clF5rzCvm4POJ/Lj4DkA3ENSl8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jIwGYDiMKUls3uX3A8K0yrNYXjizTdQCIgAP6DOktCfJXDFfATZ5dDmVfF/WDtWAo
-	 OUdkedcEDLVbgBv9KNfOApzbVDKGUdPLU3IhoTrfn9rNieFS5nIchcs7XgmgX29WTk
-	 7A9lezinQFTRajrMzhtwXChePPjzpPcEgplTCPl8=
-Date: Wed, 25 Sep 2024 21:06:17 -0700
+	b=TAKL88GYF+qd8WVF/2sc/ZpljcIkYP9nsIrAnw1b27cjl9tJBBxbi5AARXNm3HFAP
+	 zKV51QSoDsY9tLe0+VUoMDsMeqXx8WfjXUqWodHzOL5YUp/Jha1YWb+n4yBw+qarz7
+	 jR4YByMBGdso+K2ppWkgcqLWBcjEp4xhS9eGLxEg=
+Date: Thu, 26 Sep 2024 03:34:43 -0700
 From: Shradha Gupta <shradhagupta@linux.microsoft.com>
 To: Haiyang Zhang <haiyangz@microsoft.com>
 Cc: Joe Damato <jdamato@fastly.com>,
@@ -54,7 +54,7 @@ Cc: Joe Damato <jdamato@fastly.com>,
 	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
 	open list <linux-kernel@vger.kernel.org>
 Subject: Re: [RFC net-next 1/1] hv_netvsc: Link queues to NAPIs
-Message-ID: <20240926040617.GA18054@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Message-ID: <20240926103443.GA3014@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <20240924234851.42348-1-jdamato@fastly.com>
  <20240924234851.42348-2-jdamato@fastly.com>
  <MW4PR21MB18590C4C1EDFF656E4600D62CA692@MW4PR21MB1859.namprd21.prod.outlook.com>
@@ -173,5 +173,34 @@ On Wed, Sep 25, 2024 at 07:39:03PM +0000, Haiyang Zhang wrote:
 > - Haiyang
 > 
 > 
-Sure, we will review and test and get back. Thanks
+Hi Joe, Haiyang,
+
+I have verified the patch on a VM with netvsc interfaces and the seems
+to be working as expected
+
+CLI output after applying the patch:
+
+[{'id': 0, 'ifindex': 2, 'napi-id': 8193, 'type': 'rx'},
+ {'id': 1, 'ifindex': 2, 'napi-id': 8194, 'type': 'rx'},
+ {'id': 2, 'ifindex': 2, 'napi-id': 8195, 'type': 'rx'},
+ {'id': 3, 'ifindex': 2, 'napi-id': 8196, 'type': 'rx'},
+ {'id': 4, 'ifindex': 2, 'napi-id': 8197, 'type': 'rx'},
+ {'id': 5, 'ifindex': 2, 'napi-id': 8198, 'type': 'rx'},
+ {'id': 6, 'ifindex': 2, 'napi-id': 8199, 'type': 'rx'},
+ {'id': 7, 'ifindex': 2, 'napi-id': 8200, 'type': 'rx'},
+ {'id': 0, 'ifindex': 2, 'napi-id': 8193, 'type': 'tx'},
+ {'id': 1, 'ifindex': 2, 'napi-id': 8194, 'type': 'tx'},
+ {'id': 2, 'ifindex': 2, 'napi-id': 8195, 'type': 'tx'},
+ {'id': 3, 'ifindex': 2, 'napi-id': 8196, 'type': 'tx'},
+ {'id': 4, 'ifindex': 2, 'napi-id': 8197, 'type': 'tx'},
+ {'id': 5, 'ifindex': 2, 'napi-id': 8198, 'type': 'tx'},
+ {'id': 6, 'ifindex': 2, 'napi-id': 8199, 'type': 'tx'},
+ {'id': 7, 'ifindex': 2, 'napi-id': 8200, 'type': 'tx'}]
+
+The code changes also look good.
+
+Tested-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+
+Thanks,
+Shradha.
 
