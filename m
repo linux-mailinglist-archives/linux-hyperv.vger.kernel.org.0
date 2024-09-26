@@ -1,99 +1,63 @@
-Return-Path: <linux-hyperv+bounces-3080-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3081-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBFA39876FC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 17:53:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 441E4987709
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 17:56:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE9D0287298
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 15:53:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D0713B2998C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2024 15:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225E0156F21;
-	Thu, 26 Sep 2024 15:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2155C156C40;
+	Thu, 26 Sep 2024 15:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="qWphXtT2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuc9xgGW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F69614AD25
-	for <linux-hyperv@vger.kernel.org>; Thu, 26 Sep 2024 15:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82C6487B0;
+	Thu, 26 Sep 2024 15:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727365995; cv=none; b=Pqcmj+ODx5Mh9TBrjrG7hsgCQDwDj78ACRISKR5xOpgm8KK+zmcyXGVhHROhT94eSle3uxhQKXrqaGMoZ3VfgmTH8YzTLHeFsGR4tB7q6Ee9nuUQkcUcAgYOrzxmxy9uwEaKuw5+uKG+7Pa3IX69/oCM6l6Zz/BgQ9WLLKmFc2s=
+	t=1727366168; cv=none; b=GS/Wj2iHxWJ7OCAQEGpGl/nF7e9esDK3F2CcSIfTNpQmHkHdfVN4EhT3Do9vaudenXqt2Jk/LkUxHNDgxLcLBcvQ+yQ3wGRx7zKCg6iYv0sB9TVLdNZPtK1P8FJrdJAo1mBuSrhPgbr6X5QdlfFb1gVXCasN51wG7oAntCue/J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727365995; c=relaxed/simple;
-	bh=dMkpt3eJfshJ/927PNu29sfSE/TnyIpXyBbs/vFoz/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qALqYohsSIpo4s4hTY+G8tvvV9V3Dhmj4B0f0cspkQlcQu5nQ2ukqOenwJEhBisWXkCcNsye/r4HNcVjMfrgzGjWW+7R2PCYpxw65tabLM+64gJBb7Av3jPl5cT1z31P74w3zOJbJNJ18C2/vEQAJwf4RvTMInnevDho507FqZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=qWphXtT2; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7e6cbf6cd1dso843139a12.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 26 Sep 2024 08:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1727365993; x=1727970793; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9YSXHdMGosuovMCQyR6u3gKuLGqLw3gw6SLdNY5+OFI=;
-        b=qWphXtT2Xuq84Y8KI34CDJdmpHtQAvrNUlyh2ayC/7HGiMjvaE0fAZRfIGdtCnaj03
-         HT7KxeQIrHuykZay451hOIsduJ0j6Jska904LGkYtYAcBCLqMQuQ2Xq7JRNBHr/cVXrw
-         S/KHsLlMfMgHtZKyngNG/MrK/kMw5qU5BTBcQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727365993; x=1727970793;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9YSXHdMGosuovMCQyR6u3gKuLGqLw3gw6SLdNY5+OFI=;
-        b=wuv5fDr+7RlHfNwsoV8vhq7LE4P+sG1gsDbTycSzcIF8iIS+wxqZVPA1WkLdupHRhj
-         e50uh0XDuQ+jja1VvVe6ED9kiWcQpnDcUWwR1Nk2w2E9oxR96racIm7NGdwR5VimqI82
-         yXpKTnE7+lMIU9t19SNOgXSyJN3BdYXot76nn4IbZpxYLBqpdAyFiPBE6i2kkwvXoC4c
-         RwKy1wV+C68LsNrZTjK717Nf5tjHk7z9PYITh6x9EMrPbh7X6c+lyQwhF8avNeoKBBgj
-         Ap5dS43M59SVaUZi0sa7Mdv8ZZpeFGX6Ib/9ABT0znVl352C6jK0gXfnUXEXJrCycUNP
-         1ggA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUA5DW04q0LJttIo/nKTMioXvRoka3eH+42EQuayPQbhzYSgeVn+wIDWdUWbz5PfOD3Dzli3TkKo9hbjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDPS++CnzavaxYiFZwazokNtJgN/DNwzfAnTkW+RSbUCRBg1Qz
-	/QXclpC4a8Nf1VKcGz4TTczUoP63CvErCileJ2PRraFGdQ9p1fEb5GDSyR5S7mI=
-X-Google-Smtp-Source: AGHT+IGsskeA8ViXBBxKNXvuM85G0Ha7WsrLD4rwvuV3CvlzQZ99huxiVBpyqbfRaYE7mkNV/t3QCQ==
-X-Received: by 2002:a05:6a21:3189:b0:1cf:4ea4:17c with SMTP id adf61e73a8af0-1d4fa69ed5fmr271341637.15.1727365992613;
-        Thu, 26 Sep 2024 08:53:12 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71b264b5e78sm54289b3a.45.2024.09.26.08.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2024 08:53:11 -0700 (PDT)
-Date: Thu, 26 Sep 2024 08:53:08 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	Erni Sri Satya Vennela <ernis@microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
+	s=arc-20240116; t=1727366168; c=relaxed/simple;
+	bh=W3o4UdwDGbWXfuRQZvcQVe1PaIx2GxxUblx4oLUlYbY=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MSAA/FbZrV5NN/MJe2yu8dod9JmbdsW9xT6hHVBoGYnKaBgEtyc/ofLDdpsDFDnBJ0p34xjbd3QGjrJyHGx3VLfrSgFvFzrWUi+sZJy3TtzbnJm4Oi52Gk4JdoJGnoJMmGbVrJ/Xpdthuz0zs43FuTHsvC9gb7ITePOivhH6xVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuc9xgGW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3066EC4CEC5;
+	Thu, 26 Sep 2024 15:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727366167;
+	bh=W3o4UdwDGbWXfuRQZvcQVe1PaIx2GxxUblx4oLUlYbY=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=fuc9xgGWdy0vAlJ4N779kJKQhTv+jb/6fk3eU909QV3HqmfOsxwwO162WtXtFcYzI
+	 li5tNFs9tiQ+qaMvJzKztNGTX7Df5g4UprD+ZhCdS+NNtluXdO80UR22SxCksPQx9Q
+	 7pwwLMlv3vUEksoQyGkHRg5QXu4hN8C9h6iIB7IPjos8BqK9Ch0S2UwW0Fu/dFadM/
+	 qFprV1r2+gk7ixvRiUpikcCMERKo1G2zI9KYoyba9Lc4QN2BmyBplaIrBq0CkObGLq
+	 PVMt3v0CZC0SUFvl0hleBhQdup0qQqc3IMouhrQCReCGBFt0oR0vSQZSbzCH1engxg
+	 k4KPw/9SOUyRg==
+Date: Thu, 26 Sep 2024 16:56:03 +0100
+From: Simon Horman <horms@kernel.org>
+To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
 	open list <linux-kernel@vger.kernel.org>
 Subject: Re: [RFC net-next 1/1] hv_netvsc: Link queues to NAPIs
-Message-ID: <ZvWDZBHdiKLE8S29@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	Erni Sri Satya Vennela <ernis@microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
+Message-ID: <20240926155603.GH4029621@kernel.org>
 References: <20240924234851.42348-1-jdamato@fastly.com>
  <20240924234851.42348-2-jdamato@fastly.com>
- <MW4PR21MB18590C4C1EDFF656E4600D62CA692@MW4PR21MB1859.namprd21.prod.outlook.com>
+ <20240926151024.GE4029621@kernel.org>
+ <ZvWA6BjwVfYXnDcA@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -102,18 +66,48 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW4PR21MB18590C4C1EDFF656E4600D62CA692@MW4PR21MB1859.namprd21.prod.outlook.com>
+In-Reply-To: <ZvWA6BjwVfYXnDcA@LQ3V64L9R2>
 
-On Wed, Sep 25, 2024 at 07:39:03PM +0000, Haiyang Zhang wrote:
+On Thu, Sep 26, 2024 at 08:42:32AM -0700, Joe Damato wrote:
+> On Thu, Sep 26, 2024 at 04:10:24PM +0100, Simon Horman wrote:
+> > On Tue, Sep 24, 2024 at 11:48:51PM +0000, Joe Damato wrote:
+> > > Use netif_queue_set_napi to link queues to NAPI instances so that they
+> > > can be queried with netlink.
+> > > 
+> > > Signed-off-by: Joe Damato <jdamato@fastly.com>
+> > > ---
+> > >  drivers/net/hyperv/netvsc.c       | 11 ++++++++++-
+> > >  drivers/net/hyperv/rndis_filter.c |  9 +++++++--
+> > >  2 files changed, 17 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+> > > index 2b6ec979a62f..ccaa4690dba0 100644
+> > > --- a/drivers/net/hyperv/netvsc.c
+> > > +++ b/drivers/net/hyperv/netvsc.c
+> > > @@ -712,8 +712,11 @@ void netvsc_device_remove(struct hv_device *device)
+> > >  	for (i = 0; i < net_device->num_chn; i++) {
+> > >  		/* See also vmbus_reset_channel_cb(). */
+> > >  		/* only disable enabled NAPI channel */
+> > > -		if (i < ndev->real_num_rx_queues)
+> > > +		if (i < ndev->real_num_rx_queues) {
+> > > +			netif_queue_set_napi(ndev, i, NETDEV_QUEUE_TYPE_TX, NULL);
+> > > +			netif_queue_set_napi(ndev, i, NETDEV_QUEUE_TYPE_RX, NULL);
+> > 
+> > Hi Joe,
+> > 
+> > When you post a non-RFC version of this patch, could you consider
+> > line-wrapping the above to 80 columns, as is still preferred for
+> > Networking code?
+> > 
+> > There is an option to checkpatch that will warn you about this.
 > 
+> Thanks for letting me know.
+> 
+> I run checkpatch.pl --strict and usually it seems to let me know if
+> I am over 80, but maybe there's another option I need?
 
-[...]
+At some point the default changed from 80 to 100.
+So these days --max-line-length=80 is needed to detect this.
 
-> The code change looks fine to me.
-> @Shradha Gupta or @Erni Sri Satya Vennela, Do you have time to test this?
-
-Haiyang, would you like me to include an acked-by or reviewed-by
-from you for this patch when I send it when net-next reopens?
-
-I've added Shradha's Tested-by.
+--strict is also good :)
 
