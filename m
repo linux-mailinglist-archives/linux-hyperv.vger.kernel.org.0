@@ -1,531 +1,178 @@
-Return-Path: <linux-hyperv+bounces-3098-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3099-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64FA398B2C5
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Oct 2024 05:40:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C860598E8F1
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2024 05:54:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D81B41F21ED2
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Oct 2024 03:40:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9EDF1C21F28
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2024 03:54:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A94A1A38EF;
-	Tue,  1 Oct 2024 03:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9EBB2E62C;
+	Thu,  3 Oct 2024 03:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EZaduj+s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHB/4L0P"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50CA81A38DF;
-	Tue,  1 Oct 2024 03:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467FF2110E;
+	Thu,  3 Oct 2024 03:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727754045; cv=none; b=qnYhqMuvpr1RUdVg7NJOXOk3tjEz+N6pg2PlWkXNWcBBjz7wyDmr56NTYAk4ld6DHLVrfmx7Wf/pnxsm0b1LGINey3uH65De6n5OmWFUICnWaAP+D8ZDFo73UCKl4WycnauL5kOCs1GLSd+vrZ0hpIGWSnzNkUoTXlbwbJN9HC0=
+	t=1727927653; cv=none; b=lRha9N+OZjg7KtEA+zsM3TLm1HrI0DvzWFLvqvF82ZUNLA/C7EXf3yzTGKM6f8KdFfgq1i9ivvIXERe8+hARDWhWxy5F42R+28DGivbX2C0FrJgdpuHKFVk7kOedWLrvMolje7J1hLIJQZZl2eewsVoktx/7xLw85mb21BDhIZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727754045; c=relaxed/simple;
-	bh=k9A0gxzgFRCtngASC3hapV+G2cGkOX1qsC/HT4qpSjE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Jv2R9p89XN6QyKwub5ltPDGzeSVo1dFnTrVafUCp2V7y4HOnOkszHC7fhDfU+mSncC2IsDsNnXF1f42HP4uhvoKTUAnUVbvYRTAmwHEBIPZf5d4GSYDH46s9Xi2/ZYosQanGl3YmA44IjqLKKy9At3PCVHhIHIrv7g7Alw1FB58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EZaduj+s; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id D973C20CECA7; Mon, 30 Sep 2024 20:40:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D973C20CECA7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1727754042;
-	bh=gai25jHq+EB3/aUzsTMvHDo5j/QfUDz6/pA1cI3lPEo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EZaduj+soHbbkhCBiPwH4ed2XyVNLGrje2gFjyZ3sF+WKI4wc9Zo5Ot1RWWaehfKN
-	 LM3bCxXDYyPaI6j3JOknrZ/JIeXci+F/Lkbee5dplW3WT1yyRhPpjte14UauXSiSKm
-	 sGCd0TTOcHLlB/H2cq3uokloanW8wIEmMJDHzQI4=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
+	s=arc-20240116; t=1727927653; c=relaxed/simple;
+	bh=QmeSYrrI24PWcddwX8PrLWtm0wkKceIF+Cz20bFHXtc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ks8c/rHnP3OLebSayBGp/bCOkEXL4lVuRHRwb5hxtXP2jPZIAAUMXqRDOCG2RUSut+rN1wGpNnCeDye/6eEmpzuwxPq580nO5MAg/Ygnmh04fBWUzXFe/L4QVFluPywmoTX8FNVYrlQDT0lDEIzXj9bJPJUQ/PdIL3/ht3ZetqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHB/4L0P; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20b6c311f62so4117585ad.0;
+        Wed, 02 Oct 2024 20:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727927651; x=1728532451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hHOtVVpxaSz37zmcbp5H7y6KJdcMIRfAVEwysl7iO1A=;
+        b=BHB/4L0PF9ia5SwMAz2yQwSjcKg5W86YyjRWIOsNYnrSenbzLae1Qr7w5MvN8XUqwZ
+         A9aTLIm01qnfY11cnbKViRxiGKuajG3ylb/uvThVIf4K1/HXu58KzTNmfoufF1Am1Kq/
+         6wXiYnQAtGo1TkPv0R7f4Tx5I2mKv2oX7IKblij59rDz6N7HuR5Q3/8ybbxyCAVexN22
+         SRULjX8sWTaKJwnE9ufPoLGenO4/joGKaWTfYORYghbS5tZeRdmzmDEMiNBUOWr122OG
+         iaH+gp8xPiX9v/h3qPRnRwTTB2n/eJe9Mcg6fA45aaz2Yz95pcCFBKM1/RsAeB0G5/mO
+         LjkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727927651; x=1728532451;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hHOtVVpxaSz37zmcbp5H7y6KJdcMIRfAVEwysl7iO1A=;
+        b=wr7S8tg0f5QDQGd2eA532ztMPPy5SNH8UZvsCdKSi3TFKjwiuRXMBVWQ/PDzZZ19pV
+         ekZdpkk5RLj7kKjG66fVxmkL2bXBR43bgFIqpqKK7MxSWqOWzEB/RUjlzvL7AV8NndFC
+         n8tZXoz6TeNrAZ2BQIcPaIaIHKUYMHGJeC9OkIrPYbgyhonrLvScq9J94LUF3EXuCiko
+         YACpUOIK4HxK+eY/qjAO13QlrWyl1/W9sVbM/8zLqfw2tx3I4pn1g6boQ0CEVJpaNOax
+         F7BdA7/apyg3S2bIw25KUejEpns4QpzlQQ0cjToIoD4XkE9Y9+Fbh9afKeqRLLDTE+sE
+         qY2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUVKJ8x7yfKjfOBnIU9+ZKcre+Av+dvqz7tYDI4syiyM3OEvTac2sw3y4JqAvYW5e2rKSc+2sS+XGLpzQ==@vger.kernel.org, AJvYcCUy8ieDOV5a44Vbs10ErpOBGvfgYTWFd5AwxoVXI/R7sW8CmOsuZC9+F+plNxB4m9AipmalS5NoBjcjSN6a@vger.kernel.org, AJvYcCVLX0w6VER2XI2LpKWWtHk6BobF907V43eCz+AVXX9zQihuCwn5OfJ8TQegxmKN+aSkriZxo4p+@vger.kernel.org, AJvYcCWJCm7uSX5HDpYY2VGlHzYLYWOK53BPmZZLxWDXX6z9HXa2n+1OJmFYBmAbwzE9ht2swid5+wMPh7Gud44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDp7oGoPCyvWu6fUFxzcxychfqSD1RoGSRxjGboQ5VctD+cWCJ
+	1VxfTK8t/Zc3SjdwgqYBOF0wEVSF0lkkme0jrVK8Zcwv9Bh/g/ix
+X-Google-Smtp-Source: AGHT+IFHg+L2rkL479r/ys+rVampY0Tz/cLk/l2GdysFP7KsfE+ZMCPSsA6gvnNI+6jswnDv5pviaw==
+X-Received: by 2002:a17:902:e88f:b0:20b:849d:48fa with SMTP id d9443c01a7336-20bc5a04f8cmr68592895ad.27.1727927651458;
+        Wed, 02 Oct 2024 20:54:11 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beead8dc2sm906115ad.44.2024.10.02.20.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 20:54:11 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	joro@8bytes.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: iommu@lists.linux.dev,
 	netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH net-next] net: mana: Enable debugfs files for MANA device
-Date: Mon, 30 Sep 2024 20:40:41 -0700
-Message-Id: <1727754041-26291-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Status: RO
-Lines: 454
+	linux-scsi@vger.kernel.org
+Subject: [PATCH 0/5] hyper-v: Don't assume cpu_possible_mask is dense
+Date: Wed,  2 Oct 2024 20:53:28 -0700
+Message-Id: <20241003035333.49261-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Implement debugfs in MANA driver to be able to view RX,TX,EQ queue
-specific attributes and dump their gdma queues.
-These dumps can be used by other userspace utilities to improve
-debuggability and troubleshooting
+From: Michael Kelley <mhklinux@outlook.com>
 
-Following files are added in debugfs:
+Code specific to Hyper-V guests currently assumes the cpu_possible_mask
+is "dense" -- i.e., all bit positions 0 thru (nr_cpu_ids - 1) are set,
+with no "holes". Therefore, num_possible_cpus() is assumed to be equal
+to nr_cpu_ids.
 
-/sys/kernel/debug/mana/
-|-------------- 1
-    |--------------- EQs
-    |                 |------- eq0
-    |                 |          |---head
-    |                 |          |---tail
-    |                 |          |---eq_dump
-    |                 |------- eq1
-    |                 .
-    |                 .
-    |
-    |--------------- adapter-MTU
-    |--------------- vport0
-                      |------- RX-0
-                      |          |---cq_budget
-                      |          |---cq_dump
-                      |          |---cq_head
-                      |          |---cq_tail
-                      |          |---rq_head
-                      |          |---rq_nbuf
-                      |          |---rq_tail
-                      |          |---rxq_dump
-                      |------- RX-1
-                      .
-                      .
-                      |------- TX-0
-                      |          |---cq_budget
-                      |          |---cq_dump
-                      |          |---cq_head
-                      |          |---cq_tail
-                      |          |---sq_head
-                      |          |---sq_pend_skb_qlen
-                      |          |---sq_tail
-                      |          |---txq_dump
-                      |------- TX-1
-                      .
-                      .
+Per a separate discussion[1], this assumption is not valid in the
+general case. For example, the function setup_nr_cpu_ids() in
+kernel/smp.c is coded to assume cpu_possible_mask may be sparse,
+and other patches have been made in the past to correctly handle
+the sparseness. See bc75e99983df1efd ("rcu: Correctly handle sparse
+possible cpu") as noted by Mark Rutland.
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- .../net/ethernet/microsoft/mana/gdma_main.c   |  45 +++++++-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 105 +++++++++++++++++-
- include/net/mana/gdma.h                       |   6 +-
- include/net/mana/mana.h                       |   8 ++
- 4 files changed, 161 insertions(+), 3 deletions(-)
+The general case notwithstanding, the configurations that Hyper-V
+provides to guest VMs on x86 and ARM64 hardware, in combination
+with the algorithms currently used by architecture specific code
+to assign Linux CPU numbers, *does* always produce a dense
+cpu_possible_mask. So the invalid assumption is not currently
+causing failures. But in the interest of correctness, and robustness
+against future changes in the code that populates cpu_possible_mask,
+update the Hyper-V code to no longer assume denseness.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index ca4ed58f1206..3541bc5e7a48 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -5,9 +5,12 @@
- #include <linux/pci.h>
- #include <linux/utsname.h>
- #include <linux/version.h>
-+#include <linux/debugfs.h>
- 
- #include <net/mana/mana.h>
- 
-+struct dentry *mana_debugfs_root;
-+
- static u32 mana_gd_r32(struct gdma_context *g, u64 offset)
- {
- 	return readl(g->bar0_va + offset);
-@@ -1516,6 +1519,13 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	gc->bar0_va = bar0_va;
- 	gc->dev = &pdev->dev;
- 
-+	if (gc->is_pf) {
-+		gc->mana_pci_debugfs = debugfs_create_dir("0", mana_debugfs_root);
-+	} else {
-+		gc->mana_pci_debugfs = debugfs_create_dir(pci_slot_name(pdev->slot),
-+							  mana_debugfs_root);
-+	}
-+
- 	err = mana_gd_setup(pdev);
- 	if (err)
- 		goto unmap_bar;
-@@ -1529,6 +1539,13 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- cleanup_gd:
- 	mana_gd_cleanup(pdev);
- unmap_bar:
-+	/*
-+	 * at this point we know that the other debugfs child dir/files
-+	 * are either not yet created or are already cleaned up.
-+	 * The pci debugfs folder clean-up now, will only be cleaning up
-+	 * adapter-MTU file and apc->mana_pci_debugfs folder.
-+	 */
-+	debugfs_remove_recursive(gc->mana_pci_debugfs);
- 	pci_iounmap(pdev, bar0_va);
- free_gc:
- 	pci_set_drvdata(pdev, NULL);
-@@ -1549,6 +1566,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
- 
- 	mana_gd_cleanup(pdev);
- 
-+	debugfs_remove_recursive(gc->mana_pci_debugfs);
-+
- 	pci_iounmap(pdev, gc->bar0_va);
- 
- 	vfree(gc);
-@@ -1600,6 +1619,8 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
- 
- 	mana_gd_cleanup(pdev);
- 
-+	debugfs_remove_recursive(gc->mana_pci_debugfs);
-+
- 	pci_disable_device(pdev);
- }
- 
-@@ -1619,7 +1640,29 @@ static struct pci_driver mana_driver = {
- 	.shutdown	= mana_gd_shutdown,
- };
- 
--module_pci_driver(mana_driver);
-+static int __init mana_driver_init(void)
-+{
-+	int err;
-+
-+	mana_debugfs_root = debugfs_create_dir("mana", NULL);
-+
-+	err = pci_register_driver(&mana_driver);
-+
-+	if (err)
-+		debugfs_remove(mana_debugfs_root);
-+
-+	return err;
-+}
-+
-+static void __exit mana_driver_exit(void)
-+{
-+	debugfs_remove(mana_debugfs_root);
-+
-+	pci_unregister_driver(&mana_driver);
-+}
-+
-+module_init(mana_driver_init);
-+module_exit(mana_driver_exit);
- 
- MODULE_DEVICE_TABLE(pci, mana_id_table);
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index c47266d1c7c2..255f3189f6fa 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -9,6 +9,7 @@
- #include <linux/filter.h>
- #include <linux/mm.h>
- #include <linux/pci.h>
-+#include <linux/debugfs.h>
- 
- #include <net/checksum.h>
- #include <net/ip6_checksum.h>
-@@ -30,6 +31,21 @@ static void mana_adev_idx_free(int idx)
- 	ida_free(&mana_adev_ida, idx);
- }
- 
-+static ssize_t mana_dbg_q_read(struct file *filp, char __user *buf, size_t count,
-+			       loff_t *pos)
-+{
-+	struct gdma_queue *gdma_q = filp->private_data;
-+
-+	return simple_read_from_buffer(buf, count, pos, gdma_q->queue_mem_ptr,
-+				       gdma_q->queue_size);
-+}
-+
-+static const struct file_operations mana_dbg_q_fops = {
-+	.owner  = THIS_MODULE,
-+	.open   = simple_open,
-+	.read   = mana_dbg_q_read,
-+};
-+
- /* Microsoft Azure Network Adapter (MANA) functions */
- 
- static int mana_open(struct net_device *ndev)
-@@ -721,6 +737,13 @@ static const struct net_device_ops mana_devops = {
- 
- static void mana_cleanup_port_context(struct mana_port_context *apc)
- {
-+	/*
-+	 * at this point all dir/files under the vport directory
-+	 * are already cleaned up.
-+	 * We are sure the apc->mana_port_debugfs remove will not
-+	 * cause any freed memory access issues
-+	 */
-+	debugfs_remove(apc->mana_port_debugfs);
- 	kfree(apc->rxqs);
- 	apc->rxqs = NULL;
- }
-@@ -943,6 +966,8 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 	else
- 		gc->adapter_mtu = ETH_FRAME_LEN;
- 
-+	debugfs_create_u16("adapter-MTU", 0400, gc->mana_pci_debugfs, &gc->adapter_mtu);
-+
- 	return 0;
- }
- 
-@@ -1228,6 +1253,8 @@ static void mana_destroy_eq(struct mana_context *ac)
- 	if (!ac->eqs)
- 		return;
- 
-+	debugfs_remove_recursive(ac->mana_eqs_debugfs);
-+
- 	for (i = 0; i < gc->max_num_queues; i++) {
- 		eq = ac->eqs[i].eq;
- 		if (!eq)
-@@ -1240,6 +1267,18 @@ static void mana_destroy_eq(struct mana_context *ac)
- 	ac->eqs = NULL;
- }
- 
-+static void mana_create_eq_debugfs(struct mana_context *ac, int i)
-+{
-+	struct mana_eq eq = ac->eqs[i];
-+	char eqnum[32];
-+
-+	sprintf(eqnum, "eq%d", i);
-+	eq.mana_eq_debugfs = debugfs_create_dir(eqnum, ac->mana_eqs_debugfs);
-+	debugfs_create_u32("head", 0400, eq.mana_eq_debugfs, &eq.eq->head);
-+	debugfs_create_u32("tail", 0400, eq.mana_eq_debugfs, &eq.eq->tail);
-+	debugfs_create_file("eq_dump", 0400, eq.mana_eq_debugfs, eq.eq, &mana_dbg_q_fops);
-+}
-+
- static int mana_create_eq(struct mana_context *ac)
- {
- 	struct gdma_dev *gd = ac->gdma_dev;
-@@ -1260,11 +1299,14 @@ static int mana_create_eq(struct mana_context *ac)
- 	spec.eq.context = ac->eqs;
- 	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
- 
-+	ac->mana_eqs_debugfs = debugfs_create_dir("EQs", gc->mana_pci_debugfs);
-+
- 	for (i = 0; i < gc->max_num_queues; i++) {
- 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
- 		err = mana_gd_create_mana_eq(gd, &spec, &ac->eqs[i].eq);
- 		if (err)
- 			goto out;
-+		mana_create_eq_debugfs(ac, i);
- 	}
- 
- 	return 0;
-@@ -1871,6 +1913,8 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 		return;
- 
- 	for (i = 0; i < apc->num_queues; i++) {
-+		debugfs_remove_recursive(apc->tx_qp[i].mana_tx_debugfs);
-+
- 		napi = &apc->tx_qp[i].tx_cq.napi;
- 		if (apc->tx_qp[i].txq.napi_initialized) {
- 			napi_synchronize(napi);
-@@ -1889,6 +1933,31 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 	apc->tx_qp = NULL;
- }
- 
-+static void mana_create_txq_debugfs(struct mana_port_context *apc, int idx)
-+{
-+	struct mana_tx_qp *tx_qp = &apc->tx_qp[idx];
-+	char qnum[32];
-+
-+	sprintf(qnum, "TX-%d", idx);
-+	tx_qp->mana_tx_debugfs = debugfs_create_dir(qnum, apc->mana_port_debugfs);
-+	debugfs_create_u32("sq_head", 0400, tx_qp->mana_tx_debugfs,
-+			   &tx_qp->txq.gdma_sq->head);
-+	debugfs_create_u32("sq_tail", 0400, tx_qp->mana_tx_debugfs,
-+			   &tx_qp->txq.gdma_sq->tail);
-+	debugfs_create_u32("sq_pend_skb_qlen", 0400, tx_qp->mana_tx_debugfs,
-+			   &tx_qp->txq.pending_skbs.qlen);
-+	debugfs_create_u32("cq_head", 0400, tx_qp->mana_tx_debugfs,
-+			   &tx_qp->tx_cq.gdma_cq->head);
-+	debugfs_create_u32("cq_tail", 0400, tx_qp->mana_tx_debugfs,
-+			   &tx_qp->tx_cq.gdma_cq->tail);
-+	debugfs_create_u32("cq_budget", 0400, tx_qp->mana_tx_debugfs,
-+			   &tx_qp->tx_cq.budget);
-+	debugfs_create_file("txq_dump", 0400, tx_qp->mana_tx_debugfs,
-+			    tx_qp->txq.gdma_sq, &mana_dbg_q_fops);
-+	debugfs_create_file("cq_dump", 0400, tx_qp->mana_tx_debugfs,
-+			    tx_qp->tx_cq.gdma_cq, &mana_dbg_q_fops);
-+}
-+
- static int mana_create_txq(struct mana_port_context *apc,
- 			   struct net_device *net)
- {
-@@ -2000,6 +2069,8 @@ static int mana_create_txq(struct mana_port_context *apc,
- 
- 		gc->cq_table[cq->gdma_id] = cq->gdma_cq;
- 
-+		mana_create_txq_debugfs(apc, i);
-+
- 		netif_napi_add_tx(net, &cq->napi, mana_poll);
- 		napi_enable(&cq->napi);
- 		txq->napi_initialized = true;
-@@ -2027,6 +2098,8 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- 	if (!rxq)
- 		return;
- 
-+	debugfs_remove_recursive(rxq->mana_rx_debugfs);
-+
- 	napi = &rxq->rx_cq.napi;
- 
- 	if (napi_initialized) {
-@@ -2308,6 +2381,28 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 	return NULL;
- }
- 
-+static void mana_create_rxq_debugfs(struct mana_port_context *apc, int idx)
-+{
-+	char qnum[32];
-+	struct mana_rxq *rxq;
-+
-+	rxq = apc->rxqs[idx];
-+
-+	sprintf(qnum, "RX-%d", idx);
-+	rxq->mana_rx_debugfs = debugfs_create_dir(qnum, apc->mana_port_debugfs);
-+	debugfs_create_u32("rq_head", 0400, rxq->mana_rx_debugfs, &rxq->gdma_rq->head);
-+	debugfs_create_u32("rq_tail", 0400, rxq->mana_rx_debugfs, &rxq->gdma_rq->tail);
-+	debugfs_create_u32("rq_nbuf", 0400, rxq->mana_rx_debugfs, &rxq->num_rx_buf);
-+	debugfs_create_u32("cq_head", 0400, rxq->mana_rx_debugfs,
-+			   &rxq->rx_cq.gdma_cq->head);
-+	debugfs_create_u32("cq_tail", 0400, rxq->mana_rx_debugfs,
-+			   &rxq->rx_cq.gdma_cq->tail);
-+	debugfs_create_u32("cq_budget", 0400, rxq->mana_rx_debugfs, &rxq->rx_cq.budget);
-+	debugfs_create_file("rxq_dump", 0400, rxq->mana_rx_debugfs, rxq->gdma_rq, &mana_dbg_q_fops);
-+	debugfs_create_file("cq_dump", 0400, rxq->mana_rx_debugfs, rxq->rx_cq.gdma_cq,
-+			    &mana_dbg_q_fops);
-+}
-+
- static int mana_add_rx_queues(struct mana_port_context *apc,
- 			      struct net_device *ndev)
- {
-@@ -2326,6 +2421,8 @@ static int mana_add_rx_queues(struct mana_port_context *apc,
- 		u64_stats_init(&rxq->stats.syncp);
- 
- 		apc->rxqs[i] = rxq;
-+
-+		mana_create_rxq_debugfs(apc, i);
- 	}
- 
- 	apc->default_rxobj = apc->rxqs[0]->rxobj;
-@@ -2518,14 +2615,19 @@ void mana_query_gf_stats(struct mana_port_context *apc)
- static int mana_init_port(struct net_device *ndev)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
-+	struct gdma_dev *gd = apc->ac->gdma_dev;
-+	struct gdma_context *gc;
- 	u32 max_txq, max_rxq, max_queues;
- 	int port_idx = apc->port_idx;
-+	char vport[32];
- 	int err;
- 
- 	err = mana_init_port_context(apc);
- 	if (err)
- 		return err;
- 
-+	gc = gd->gdma_context;
-+
- 	err = mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
- 				   &apc->indir_table_sz);
- 	if (err) {
-@@ -2542,7 +2644,8 @@ static int mana_init_port(struct net_device *ndev)
- 		apc->num_queues = apc->max_queues;
- 
- 	eth_hw_addr_set(ndev, apc->mac_addr);
--
-+	sprintf(vport, "vport%d", port_idx);
-+	apc->mana_port_debugfs = debugfs_create_dir(vport, gc->mana_pci_debugfs);
- 	return 0;
- 
- reset_apc:
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index de47fa533b15..32afb15e46bc 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -267,7 +267,8 @@ struct gdma_event {
- struct gdma_queue;
- 
- struct mana_eq {
--	struct gdma_queue *eq;
-+	struct gdma_queue	*eq;
-+	struct dentry		*mana_eq_debugfs;
- };
- 
- typedef void gdma_eq_callback(void *context, struct gdma_queue *q,
-@@ -365,6 +366,7 @@ struct gdma_irq_context {
- 
- struct gdma_context {
- 	struct device		*dev;
-+	struct dentry		*mana_pci_debugfs;
- 
- 	/* Per-vPort max number of queues */
- 	unsigned int		max_num_queues;
-@@ -878,5 +880,7 @@ int mana_gd_send_request(struct gdma_context *gc, u32 req_len, const void *req,
- 			 u32 resp_len, void *resp);
- 
- int mana_gd_destroy_dma_region(struct gdma_context *gc, u64 dma_region_handle);
-+void mana_register_debugfs(void);
-+void mana_unregister_debugfs(void);
- 
- #endif /* _GDMA_H */
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index f2a5200d8a0f..5ca4941f15ef 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -350,6 +350,7 @@ struct mana_rxq {
- 	int xdp_rc; /* XDP redirect return code */
- 
- 	struct page_pool *page_pool;
-+	struct dentry *mana_rx_debugfs;
- 
- 	/* MUST BE THE LAST MEMBER:
- 	 * Each receive buffer has an associated mana_recv_buf_oob.
-@@ -363,6 +364,8 @@ struct mana_tx_qp {
- 	struct mana_cq tx_cq;
- 
- 	mana_handle_t tx_object;
-+
-+	struct dentry *mana_tx_debugfs;
- };
- 
- struct mana_ethtool_stats {
-@@ -407,6 +410,7 @@ struct mana_context {
- 	u16 num_ports;
- 
- 	struct mana_eq *eqs;
-+	struct dentry *mana_eqs_debugfs;
- 
- 	struct net_device *ports[MAX_PORTS_IN_MANA_DEV];
- };
-@@ -468,6 +472,9 @@ struct mana_port_context {
- 	bool port_st_save; /* Saved port state */
- 
- 	struct mana_ethtool_stats eth_stats;
-+
-+	/* Debugfs */
-+	struct dentry *mana_port_debugfs;
- };
- 
- netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
-@@ -494,6 +501,7 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues
- void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
- 
- extern const struct ethtool_ops mana_ethtool_ops;
-+extern struct dentry *mana_debugfs_root;
- 
- /* A CQ can be created not associated with any EQ */
- #define GDMA_CQ_NO_EQ  0xffff
+The typical code pattern with the invalid assumption is as follows:
+
+	array = kcalloc(num_possible_cpus(), sizeof(<some struct>),
+			GFP_KERNEL);
+	....
+	index into "array" with smp_processor_id()
+
+In such as case, the array might be indexed by a value beyond the size
+of the array. The correct approach is to allocate the array with size
+"nr_cpu_ids". While this will probably leave unused any array entries
+corresponding to holes in cpu_possible_mask, the holes are assumed to
+be minimal and hence the amount of memory wasted by unused entries is
+minimal.
+
+Removing the assumption in Hyper-V code is done in several patches
+because they touch different kernel subsystems:
+
+Patch 1: Hyper-V x86 initialization of hv_vp_assist_page (there's no
+	 hv_vp_assist_page on ARM64)
+Patch 2: Hyper-V common init of hv_vp_index
+Patch 3: Hyper-V IOMMU driver
+Patch 4: storvsc driver
+Patch 5: netvsc driver
+
+I tested the changes by hacking the construction of cpu_possible_mask
+to include a hole on x86. With a configuration set to demonstrate the
+problem, a Hyper-V guest kernel eventually crashes due to memory
+corruption. After the patches in this series, the crash does not occur.
+
+[1] https://lore.kernel.org/lkml/SN6PR02MB4157210CC36B2593F8572E5ED4692@SN6PR02MB4157.namprd02.prod.outlook.com/
+
+Michael Kelley (5):
+  x86/hyperv: Don't assume cpu_possible_mask is dense
+  Drivers: hv: Don't assume cpu_possible_mask is dense
+  iommu/hyper-v: Don't assume cpu_possible_mask is dense
+  scsi: storvsc: Don't assume cpu_possible_mask is dense
+  hv_netvsc: Don't assume cpu_possible_mask is dense
+
+ arch/x86/hyperv/hv_init.c       |  2 +-
+ drivers/hv/hv_common.c          |  4 ++--
+ drivers/iommu/hyperv-iommu.c    |  4 ++--
+ drivers/net/hyperv/netvsc_drv.c |  2 +-
+ drivers/scsi/storvsc_drv.c      | 13 ++++++-------
+ 5 files changed, 12 insertions(+), 13 deletions(-)
+
 -- 
-2.34.1
+2.25.1
 
 
