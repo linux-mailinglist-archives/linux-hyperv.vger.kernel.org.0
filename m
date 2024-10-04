@@ -1,86 +1,68 @@
-Return-Path: <linux-hyperv+bounces-3119-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3120-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D65B798FEC3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2024 10:15:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 375DA990084
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2024 12:08:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 802CB283EB1
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2024 08:15:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD7A11F21CBC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2024 10:08:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9597F13D248;
-	Fri,  4 Oct 2024 08:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2932314A60F;
+	Fri,  4 Oct 2024 10:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJc8xgmA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eeM1whbH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1167617758;
-	Fri,  4 Oct 2024 08:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FF413A257;
+	Fri,  4 Oct 2024 10:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728029656; cv=none; b=LnLQLDiF3zKvB++8BowzTn+TA+OHtxnIaUo1++YWL2qDbpam9HmFUD+BZ0H6w3TGr5/LRieR+/3lVF0NaewADLpdYQTWXx9J2HlBCC1Ws/LaSlzfL56/L30Jmkh4119s5pc9NZ3jHxdBBbu+VCp7cdY/BLtvh0uAgpBvCcXoPVo=
+	t=1728036477; cv=none; b=eJhrVFqjV8+4fuADlAzJ4psercRsp4P47jr7P4RRpKcGWmAcCg3sau75VggzDW09vxX1c2O013sSZtw0cjVrHi3wlS1tp1/cGF7Zu+Vfqw8VYZmhxNh3xEmNpGRG6nt4FLCjgG7fpo3Aq+0d5Nvk+VwbPA6uOdzZ+dUvYysO04I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728029656; c=relaxed/simple;
-	bh=q4PAR/bsCH8kTxyaCKWzUsqMcHzx79O2jdCM4zIg87M=;
+	s=arc-20240116; t=1728036477; c=relaxed/simple;
+	bh=0ErE4yIzJ4CNSK9JS5t8RilNBwBBL9q+8Xv9BI3Apzo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ryG9bE+7ywKlCw0uYNIV+u2JuUtLPAnki8aBsqK+mTmRh9jPkT1IaBdEVP+x1A4MfZPxJuiKiI8jacsbcRAS35UMej+aYO+FjIyqw2H1+wysxbeuRtlhzRyD64tIWEtRTNKan9cAsQgZAbXZaCdcnN1pzzBX4gQX/FKntn0j3To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XJc8xgmA; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-20b90984971so19579855ad.3;
-        Fri, 04 Oct 2024 01:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728029654; x=1728634454; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DuscQM2ywf/wxvdnQNbAatV0h7OSv8/sdUQy5XOgb0E=;
-        b=XJc8xgmARsqlqjrODG94hcbTFoXzQ86HzvlXDPHxAMr9f2gybemux72+XH/JVCJW4+
-         69HJCIz7DzMHVCWOUFNMeMTxjZ5dMHJQOaxOUBpw6iSNSQhPxnXD25dG5ZLJtdWd4Lfm
-         He+1FfpiMm/6qELk15Vei17mRWMuBotaaZycPvAKbzkcgbl1dYye2Obsnz/8pRCL6r9R
-         ZcddheWAPS9WL4EAdstRh+wXKLFeelTS17Eh1tr/whVAXlX1jiIJEmmxGG8Ug49IzA1n
-         d1HPIR0GDJDIHpewoDECpJKVyUVSohB0UxV6K0S2bikRGkWL0YdDfxtZD2R714H1e5zi
-         BYVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728029654; x=1728634454;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DuscQM2ywf/wxvdnQNbAatV0h7OSv8/sdUQy5XOgb0E=;
-        b=crmWl0bZD8+bRQcyBNnXKIDO04Ut/BKPQ2ViYw4H7dhHg4rw8xk8DzP91/RJweB2s/
-         /WyFlgBidVfMPQ52b1ULydvLmL9OQF1PQdErrI3G86c3Mv6gcx/VfbTt3FCO/buoScVs
-         AnmDPL+Th/14Pn0V+d3wK00+pmOQnZ5bu3Nn2HL7WxHNIp59wfP+OmBciFMqS6+kf4G0
-         bYrzLakaghuyl4u8Vlqv5OO2nAbBOHMVn/eCI299dmmLJ5wzc2GmAjR9QRTTHQLhVlUK
-         FaJSy0/98IZ8ncGQUXq+DJ5RLCmakTTteBr84WDDiTRGX+WmYIWKB/AdDCJYybT9d4LT
-         FVBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUc3eVFsie/wO/5cTrFpFaVqCZ4WTjj+wVnzOAziX2tGHbdqm5BYCt791ruZVb5qFZKOjidzwKuYOz0T7w=@vger.kernel.org, AJvYcCUj9Y5GSWnk0pnSjWrHocghiYLeOXJCH6LDZEjrlUFYzZHUFQgBcBUeNCNjfubaNirrtUk7PIDMO5v7qqg=@vger.kernel.org, AJvYcCWG2bDjQCnWdxF1u5dJpNtiBldVwT3mY/n4oXcttOlDzSir/IGZHYPZiAitaicaf8l0KB1ZKAM7LJ4=@vger.kernel.org, AJvYcCWVuUKZoGtN+lpH/T1W87TD8hBj65tSVU/nT4dCfsFMAn/CG1jNMANW07Ua4nmqb7a22XYV+RHM6TxEcB33@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK7Xyr8/CwWf0xwvnYl/vFCaOV5pT1pCsqXL2MFNR64rz4AdGj
-	YLuJ24JxZGt2k0RmaOceQMdLkqh/8OsjPr8og8plSm2Ip1P8rrcm
-X-Google-Smtp-Source: AGHT+IEXJAN7uexvG8eW9NSUkSEj0cmuMH+7sVFlViKxFTYCfEv4crw0YuaHe/Iz1dI50TQUEJk4Gw==
-X-Received: by 2002:a17:90a:744a:b0:2e0:8bad:6ea4 with SMTP id 98e67ed59e1d1-2e1e631e4abmr2095634a91.29.1728029654178;
-        Fri, 04 Oct 2024 01:14:14 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:1b2:add:2542:c298])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e1e85c99c3sm927256a91.23.2024.10.04.01.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 01:14:13 -0700 (PDT)
-Date: Fri, 4 Oct 2024 01:14:10 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	jikos@kernel.org, bentiss@kernel.org, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ernis@microsoft.com, rafael@kernel.org, pavel@ucw.cz,
-	lenb@kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/3] Revert "Input: hyperv-keyboard - register as a
- wakeup source"
-Message-ID: <Zv-j0qtWXsDz4Hah@google.com>
-References: <1726176470-13133-1-git-send-email-ernis@linux.microsoft.com>
- <1726176470-13133-3-git-send-email-ernis@linux.microsoft.com>
- <ZvIx85NmYB/HzKtI@csail.mit.edu>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGHyIvZ9evasH16Z2IrnECi8sZPrOy7st318QUJZsklEm8w2l5N9bXBdWuvDiKePLB/VbkhWDdXBhga2xhXvSyQKsiUbNQwsI+2CUNSsV/cjRM5BBBDyPzX35vO/K+5d0Dtj1JHsRXfqnS+oAnw3PgBduukc8oRQin74H34/LTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eeM1whbH; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xqlikl0bG4GDsTQjaI8kd8CnGG7Ve6tkOtKZn8x5TY4=; b=eeM1whbHI/rFHiUwezCgI/bZ+R
+	HXNswooL56X6/oGJqMRyOAanoRxmGuhhvrmBk7gNA9x+tYx70Z2pE1AW8+etEkfvv5Va5X82eiI1E
+	J8nmw/BkWyvoqGaKRu876fSGyOVNtlF49WTx4OsAvYUrJ/Xx84PMUtroGsIQGqC5VTciUQgzpzLIj
+	ssVM8ctoBL9geCR4R0Qu8vXFYAJpXFlK9w9FxUrsMNqGgSN04t7npSKv9r8xrMq8x1AKMMo7nFUJz
+	uLj5nHU+e38Q2uP1sjYBAWy1V0zcAccfRLmne+Cd41vJlPV2vBkOuKE69+S3l3rLyQKAqGUWq0G3Y
+	nAC4B0Rg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1swfDr-00000003ofA-1fE6;
+	Fri, 04 Oct 2024 10:07:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9B45A30083E; Fri,  4 Oct 2024 12:07:42 +0200 (CEST)
+Date: Fri, 4 Oct 2024 12:07:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, joro@8bytes.org, will@kernel.org,
+	robin.murphy@arm.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com,
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+	iommu@lists.linux.dev, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 0/5] hyper-v: Don't assume cpu_possible_mask is dense
+Message-ID: <20241004100742.GO18071@noisy.programming.kicks-ass.net>
+References: <20241003035333.49261-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -89,60 +71,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZvIx85NmYB/HzKtI@csail.mit.edu>
+In-Reply-To: <20241003035333.49261-1-mhklinux@outlook.com>
 
-On Tue, Sep 24, 2024 at 03:28:51AM +0000, Srivatsa S. Bhat wrote:
-> [+linux-pm, Rafael, Len, Pavel]
+On Wed, Oct 02, 2024 at 08:53:28PM -0700, mhkelley58@gmail.com wrote:
 > 
-> On Thu, Sep 12, 2024 at 02:27:49PM -0700, Erni Sri Satya Vennela wrote:
-> > This reverts commit 62238f3aadc9bc56da70100e19ec61b9f8d72a5f.
-> > 
-> > Remove keyboard as wakeup source since Suspend-to-Idle feature
-> > is disabled.
-> > 
-> > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> > ---
-> >  drivers/input/serio/hyperv-keyboard.c | 12 ------------
-> >  1 file changed, 12 deletions(-)
-> > 
-> > diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-> > index 31d9dacd2fd1..b42c546636bf 100644
-> > --- a/drivers/input/serio/hyperv-keyboard.c
-> > +++ b/drivers/input/serio/hyperv-keyboard.c
-> > @@ -162,15 +162,6 @@ static void hv_kbd_on_receive(struct hv_device *hv_dev,
-> >  			serio_interrupt(kbd_dev->hv_serio, scan_code, 0);
-> >  		}
-> >  		spin_unlock_irqrestore(&kbd_dev->lock, flags);
-> > -
-> > -		/*
-> > -		 * Only trigger a wakeup on key down, otherwise
-> > -		 * "echo freeze > /sys/power/state" can't really enter the
-> > -		 * state because the Enter-UP can trigger a wakeup at once.
-> > -		 */
-> > -		if (!(info & IS_BREAK))
-> > -			pm_wakeup_hard_event(&hv_dev->device);
-> > -
-> >  		break;
-> >  
-> >  	default:
-> > @@ -356,9 +347,6 @@ static int hv_kbd_probe(struct hv_device *hv_dev,
-> >  		goto err_close_vmbus;
-> >  
-> >  	serio_register_port(kbd_dev->hv_serio);
-> > -
-> > -	device_init_wakeup(&hv_dev->device, true);
+> Michael Kelley (5):
+>   x86/hyperv: Don't assume cpu_possible_mask is dense
+>   Drivers: hv: Don't assume cpu_possible_mask is dense
+>   iommu/hyper-v: Don't assume cpu_possible_mask is dense
+>   scsi: storvsc: Don't assume cpu_possible_mask is dense
+>   hv_netvsc: Don't assume cpu_possible_mask is dense
 
-If you do not want the keyboard to be a wakeup source by default maybe
-change this to:
+Thanks, these look sane.
 
-	device_set_wakeup_capable(&hv_dev->device, true);
-
-and leave the rest of the driver alone?
-
-Same for the HID change.
-
-Thanks.
-
--- 
-Dmitry
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
