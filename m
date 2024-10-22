@@ -1,192 +1,189 @@
-Return-Path: <linux-hyperv+bounces-3176-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3177-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 191D99AB7F8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Oct 2024 22:49:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC989AB80E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Oct 2024 22:57:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B53CC2839EE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Oct 2024 20:49:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 819B12825B4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Oct 2024 20:57:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BEFD1CC16D;
-	Tue, 22 Oct 2024 20:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1A41CCB30;
+	Tue, 22 Oct 2024 20:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJEoon9Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9UOO74p"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B215E126C05;
-	Tue, 22 Oct 2024 20:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F7126C05;
+	Tue, 22 Oct 2024 20:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729630154; cv=none; b=mo2IeuAlQo6oNDhTHQEGUP+U/6sohTNlUkxHthP7vdYg/6oNCEDbkjNzVBMAAcGXKA9sI+cvLGoENpdANVcJgcFSfNiVGOvw6q/K4Cjin6GkZL3qLh8SdPf9Pxak2C6LSur7BKzIgsyeXrSo3Um4dn2n0+Fr44ozyrIxPbmmRjY=
+	t=1729630630; cv=none; b=oB7lLIMHAOMYEFs0LOnbYZozv49nkmMgw1mSOG1R9X/k8TTtdXB8XA63ajBZ1rvN/GNSl1/MeioeM4phJZWxYkEmESABYreehLEAmwIlNAAQcnTpupm9gKf/oJE+mHO13RBVswsq0lpFUfDNigAX8kfk3Hgq6VS9w6OhNsiW32Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729630154; c=relaxed/simple;
-	bh=dittf4YLWlk6FyJunLkXtq1goowtssRJG7mp7ZtbN6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W3eGnkmV88nYfefa1BSPtwMxVypF84pLFo7oLx29/sHk2xuETCRCHgkevL+842eCZLkwT5B6Ee34qzY4S4clDztyzHlni645lklIc5tVjvlnpLppwqg7OchVK/JI8wZAcXDPp37QlKL1zHaVL8S0hm3AWpqQbchgzBifRDVU08E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJEoon9Z; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1729630630; c=relaxed/simple;
+	bh=Z7eCMTu/SeuW9q8xoa7TkU6mNr3MeA+Zi0ZPpXiT0io=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p1BCPywHV7IPDlNEFc8oYHmiLxCAhzQoxFyJpDKaIQhm3gW6kQYmVjXA0neBuT2p0hI9vM/9zud//6CXwn5D0bRBgtAfNDo4MY7T+AbhbGRbWfO3XLH6lgdyLxqOVQDIeZq1GO0ZsR/m1vWbBqEbEHkl3R0c7zWRoi8FMKAJp88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9UOO74p; arc=none smtp.client-ip=209.85.128.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e52582cf8so4294446b3a.2;
-        Tue, 22 Oct 2024 13:49:12 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6e59a9496f9so68965837b3.0;
+        Tue, 22 Oct 2024 13:57:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729630152; x=1730234952; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ffGPoSlqwPV+RaSbIJ/P8DdxGIkGwkezqZ29HBWiZ4=;
-        b=DJEoon9ZpSTp4i3ynI1Ye1Rj2pV98B4iNYXJIOP9/4xB4btedc5uNFLOTc/wkQ87Z9
-         GjxpJgf3OXMe0D0wdm03yJ+Yxov2GOHtKqL8dKUS32J/66TCtSo5+Xrs6TWFq2iV3vqq
-         UMwxawws0FSeD8ZY817YaZ23rI299GIZM4jth/yBltdjPits5VBz9CYNMPg7YPvHOlvl
-         kiFwc30xbUMFah7T2bumaUcfezhjQCX3bKVNo8dPtuIXdqZ5vLTLlkTHBywaVvStQYKw
-         ccyNvhzWWu4yIjEAyOqHTIyPI2OjcBHPS8SVK3XtosMaI/k25FqMWChWGpcZz9pFYxq+
-         g7xg==
+        d=gmail.com; s=20230601; t=1729630628; x=1730235428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=80QHgysMeY/f6ukz7QwpRl7TAlf0WHVhdn71+vzYCdU=;
+        b=k9UOO74pcMoEAcTxCc1EPAnOMBoZqOuwHEz1U2x7S5py5T1k1Kg1JsVS2nPabrFM6G
+         fDBeDlnoTtZNyzmhNYtCufGB8fgBf1ZhkTq9XWuC6yem1Qx7oBUhUQ3co7dtUg4/6PDT
+         WaCApAh9timZ106jLCKHSPBwKUBycaE+LbWa7WiX1mAUwj3OnQq+qMCGE6csi4oTXi+9
+         ehyiLirBnqc04pPwMRF6YW6Um0Fm680taiaQ398xRtBrN1SIy2uMS90zUses27+RJKOB
+         R7efJ8LRV/b8bG/R/V3rzGQXwCRZwJ9tPu0dyJZLyERV4mU4wzrJiUksa16spsHb6B06
+         LX4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729630152; x=1730234952;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1ffGPoSlqwPV+RaSbIJ/P8DdxGIkGwkezqZ29HBWiZ4=;
-        b=F9Bf5aodNsqxLv61Rz0+oxEBqFxEPqPsrcTqHo3VX7JDCA7crN6OUopWNbX2gCeYi2
-         NPJMbVSnolauWJqthpoZoYEL9yLJitVszH+5fUsf4kc7uTNTMc40zq5uFEPX+30eUxbY
-         wWZeGpDsr9bpPBEUsi5stHQnnE4k1wdMVjS+nysx5doOlm9OCqzC3SGdrsdAHxZnbSf9
-         6HvkM+g0omfK9ciLpY9QhS2TTkWvwN86feuwtLUnvTUrQtBLIZReMJOIwUIz1CtCYHk4
-         XyNyR7XH+e4uM0SoliwfnSdABovDlFveo4mweH3B0lqS8b9lSepA3ze58G5G7UHTdlZk
-         08Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUv5tkbOvDmbbo0dIcN0PzjSuWnvKLOOSFV4xPnjBEHpMXGtblCkzCnSUPJpYl0CBL3wo6BEymrTT2+kmJ9@vger.kernel.org, AJvYcCUzH8lXGJuaRgcVimUbyl/rQAhCM5o9s0zBuVaL5ppj1Ho4u8vo3o2YxtkdNgDKdjpVios=@vger.kernel.org, AJvYcCW9Ri2Pz2+NVOq2oO4R/yzGI9LmAFFlEtDcWO98mHq+DZv0Auvha35IKKqG/mdE+CFaHhiwKNm1nC7U47xA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGsC3jBgaUpwo71X+8ifrOdX0dNs780P3Np58wxA2rnudZ4V73
-	o/QD5cerztv+OYMXyrljhQi7BVEuw5bWCscrLP+wXiHop8Rlu9mHydQHMqk2
-X-Google-Smtp-Source: AGHT+IEt6paVVR5iJbEJAuGo6CnfteGATce4ywHLHC1CFvA/2HmuoSJo5fx+ZhAfak0QRGBMpqNw9A==
-X-Received: by 2002:a05:6a00:4610:b0:71e:ed6:1cab with SMTP id d2e1a72fcca58-72030cf05d3mr654027b3a.26.1729630151673;
-        Tue, 22 Oct 2024 13:49:11 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8200:dab8::a86])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec1312e2bsm5133906b3a.42.2024.10.22.13.49.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 13:49:11 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: netdev@vger.kernel.org
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Rosen Penev <rosenp@gmail.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	linux-hyperv@vger.kernel.org (open list:Hyper-V/Azure CORE AND DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_))
-Subject: [PATCH] net: mana: use ethtool string helpers
-Date: Tue, 22 Oct 2024 13:49:08 -0700
-Message-ID: <20241022204908.511021-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.47.0
+        d=1e100.net; s=20230601; t=1729630628; x=1730235428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=80QHgysMeY/f6ukz7QwpRl7TAlf0WHVhdn71+vzYCdU=;
+        b=RI60PUFDYwLkPnxCC40X8K66hW+x5hdsOXiXVHcj+VLU9J7FUPuJSHGbsTX4MEgL2t
+         nOWG+m93Jd2He906mns5yL3qfNtHjO5lpB325VvW2+26Zz6CREFXiL3RAdMOBPYn8zek
+         CquTX4BRWLAEm2IzXoaGucCgwCd7KN07OfDxl1oTaxuOWDD9Q/6SnWrlQt7OoJTpb5se
+         ryqWKe0i6NCiYB2WiJqm2Zb3lTU8DZh58tIC8y+zJpGApf0UyrpFhi3ImrWmmzoSw/dj
+         z1p0PwDntlVRwZQjMtfwRy84X8WgRtFjVaFl7+bbmtthPB63R2aL/94pwawDZmlKMRfo
+         bpcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmD6saTL903Dvqou58a4bQcJakJS0AzRRELjXKqeoWmfATtUCh2gYfV/OS0WJVwS/EidZU9TvGbdOxu7CF@vger.kernel.org, AJvYcCV4zfoh9WpNwKJrvnP+nJdhZ26TdglTo8euMVttEHLIVs+HWvk7V/dR9ucaEdBP1YdvyYI=@vger.kernel.org, AJvYcCVmwbRFzzkMSIxCIAEI6b7hCrggNEWNdblL4coFHRsooIwlY7oXjxo270n8koSVvHeOdltTsMy4OixvdE8t@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWq+zs1s827jTnsBq7AHHb2nekHpXh3KaPPcBmm9oewWpwe+sG
+	6E27vHiQr9I/uP6H0cuVoEm+0sqqhsHjyAPT96zTsZeXXjwMSV//G6cliDJ8GWvVnNuojPr2QTu
+	i4A9pgocwRPoxq6yYOU0FkFujnFpko72U
+X-Google-Smtp-Source: AGHT+IGiXrXinljDlaDVbafCVkh57A7ax5msziLAr4GotnEipHlk6LsDs9JIK3g82KoSJfY4uNtkjSERtDE4RxwvYSQ=
+X-Received: by 2002:a05:690c:c8c:b0:6e3:33af:6b64 with SMTP id
+ 00721157ae682-6e7f0defc01mr3962507b3.14.1729630627698; Tue, 22 Oct 2024
+ 13:57:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241022204908.511021-1-rosenp@gmail.com>
+In-Reply-To: <20241022204908.511021-1-rosenp@gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 22 Oct 2024 13:56:56 -0700
+Message-ID: <CAKxU2N9nQFs_wDbe=S_ywfOFYeX+LWuN8f9y1y2iA5GV4tFDFg@mail.gmail.com>
+Subject: Re: [PATCH] net: mana: use ethtool string helpers
+To: netdev@vger.kernel.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Shradha Gupta <shradhagupta@linux.microsoft.com>, Simon Horman <horms@kernel.org>, 
+	Colin Ian King <colin.i.king@gmail.com>, Erni Sri Satya Vennela <ernis@linux.microsoft.com>, 
+	Ahmed Zaki <ahmed.zaki@intel.com>, 
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The latter is the preferred way to copy ethtool strings.
-
-Avoids manually incrementing the data pointer.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- .../ethernet/microsoft/mana/mana_ethtool.c    | 55 ++++++-------------
- 1 file changed, 18 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 349f11bf8e64..c419626073f5 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -91,53 +91,34 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int num_queues = apc->num_queues;
--	u8 *p = data;
- 	int i;
- 
- 	if (stringset != ETH_SS_STATS)
- 		return;
- 
--	for (i = 0; i < ARRAY_SIZE(mana_eth_stats); i++) {
--		memcpy(p, mana_eth_stats[i].name, ETH_GSTRING_LEN);
--		p += ETH_GSTRING_LEN;
--	}
-+	for (i = 0; i < ARRAY_SIZE(mana_eth_stats); i++)
-+		ethtool_puts(&data, mana_eth_stats[i].name);
- 
- 	for (i = 0; i < num_queues; i++) {
--		sprintf(p, "rx_%d_packets", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "rx_%d_bytes", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "rx_%d_xdp_drop", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "rx_%d_xdp_tx", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "rx_%d_xdp_redirect", i);
--		p += ETH_GSTRING_LEN;
-+		ethtool_sprintf(&data, "rx_%d_packets", i);
-+		ethtool_sprintf(&data, "rx_%d_bytes", i);
-+		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
-+		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
-+		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
- 	}
- 
- 	for (i = 0; i < num_queues; i++) {
--		sprintf(p, "tx_%d_packets", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_bytes", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_xdp_xmit", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_tso_packets", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_tso_bytes", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_tso_inner_packets", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_tso_inner_bytes", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_long_pkt_fmt", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_short_pkt_fmt", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_csum_partial", i);
--		p += ETH_GSTRING_LEN;
--		sprintf(p, "tx_%d_mana_map_err", i);
--		p += ETH_GSTRING_LEN;
-+		ethtool_sprintf(&data, "tx_%d_packets", i);
-+		ethtool_sprintf(&data, "tx_%d_bytes", i);
-+		ethtool_sprintf(&data, "tx_%d_xdp_xmit", i);
-+		ethtool_sprintf(&data, "tx_%d_tso_packets", i);
-+		ethtool_sprintf(&data, "tx_%d_tso_bytes", i);
-+		ethtool_sprintf(&data, "tx_%d_tso_inner_packets", i);
-+		ethtool_sprintf(&data, "tx_%d_tso_inner_bytes", i);
-+		ethtool_sprintf(&data, "tx_%d_long_pkt_fmt", i);
-+		ethtool_sprintf(&data, "tx_%d_short_pkt_fmt", i);
-+		ethtool_sprintf(&data, "tx_%d_csum_partial", i);
-+		ethtool_sprintf(&data, "tx_%d_mana_map_err", i);
- 	}
- }
- 
--- 
-2.47.0
-
+On Tue, Oct 22, 2024 at 1:49=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wrot=
+e:
+>
+> The latter is the preferred way to copy ethtool strings.
+>
+> Avoids manually incrementing the data pointer.
+>
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+forgot to put net-next.
+> ---
+>  .../ethernet/microsoft/mana/mana_ethtool.c    | 55 ++++++-------------
+>  1 file changed, 18 insertions(+), 37 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers=
+/net/ethernet/microsoft/mana/mana_ethtool.c
+> index 349f11bf8e64..c419626073f5 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> @@ -91,53 +91,34 @@ static void mana_get_strings(struct net_device *ndev,=
+ u32 stringset, u8 *data)
+>  {
+>         struct mana_port_context *apc =3D netdev_priv(ndev);
+>         unsigned int num_queues =3D apc->num_queues;
+> -       u8 *p =3D data;
+>         int i;
+>
+>         if (stringset !=3D ETH_SS_STATS)
+>                 return;
+>
+> -       for (i =3D 0; i < ARRAY_SIZE(mana_eth_stats); i++) {
+> -               memcpy(p, mana_eth_stats[i].name, ETH_GSTRING_LEN);
+> -               p +=3D ETH_GSTRING_LEN;
+> -       }
+> +       for (i =3D 0; i < ARRAY_SIZE(mana_eth_stats); i++)
+> +               ethtool_puts(&data, mana_eth_stats[i].name);
+>
+>         for (i =3D 0; i < num_queues; i++) {
+> -               sprintf(p, "rx_%d_packets", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "rx_%d_bytes", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "rx_%d_xdp_drop", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "rx_%d_xdp_tx", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "rx_%d_xdp_redirect", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> +               ethtool_sprintf(&data, "rx_%d_packets", i);
+> +               ethtool_sprintf(&data, "rx_%d_bytes", i);
+> +               ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
+> +               ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
+> +               ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
+>         }
+>
+>         for (i =3D 0; i < num_queues; i++) {
+> -               sprintf(p, "tx_%d_packets", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_bytes", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_xdp_xmit", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_tso_packets", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_tso_bytes", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_tso_inner_packets", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_tso_inner_bytes", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_long_pkt_fmt", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_short_pkt_fmt", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_csum_partial", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> -               sprintf(p, "tx_%d_mana_map_err", i);
+> -               p +=3D ETH_GSTRING_LEN;
+> +               ethtool_sprintf(&data, "tx_%d_packets", i);
+> +               ethtool_sprintf(&data, "tx_%d_bytes", i);
+> +               ethtool_sprintf(&data, "tx_%d_xdp_xmit", i);
+> +               ethtool_sprintf(&data, "tx_%d_tso_packets", i);
+> +               ethtool_sprintf(&data, "tx_%d_tso_bytes", i);
+> +               ethtool_sprintf(&data, "tx_%d_tso_inner_packets", i);
+> +               ethtool_sprintf(&data, "tx_%d_tso_inner_bytes", i);
+> +               ethtool_sprintf(&data, "tx_%d_long_pkt_fmt", i);
+> +               ethtool_sprintf(&data, "tx_%d_short_pkt_fmt", i);
+> +               ethtool_sprintf(&data, "tx_%d_csum_partial", i);
+> +               ethtool_sprintf(&data, "tx_%d_mana_map_err", i);
+>         }
+>  }
+>
+> --
+> 2.47.0
+>
 
