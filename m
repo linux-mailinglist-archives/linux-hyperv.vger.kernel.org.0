@@ -1,48 +1,46 @@
-Return-Path: <linux-hyperv+bounces-3190-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3191-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 300699AE369
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Oct 2024 13:06:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43BF49AF990
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Oct 2024 08:08:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D01871F22AE5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Oct 2024 11:06:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFE451F22F67
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Oct 2024 06:08:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A1CE1CACCE;
-	Thu, 24 Oct 2024 11:05:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7CC190666;
+	Fri, 25 Oct 2024 06:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DDRRYJiM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Q5EopU4x"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3671B6CF1;
-	Thu, 24 Oct 2024 11:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7342618CBFF;
+	Fri, 25 Oct 2024 06:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729767958; cv=none; b=LtBVZ6V4pEix7MQkh9ZUjBhtBnI7Zkn0XCzDmTFbUY2CHVmUoCkZKn8f7mNUaFeU0fNgy2KFCttlvb9nmrrAX6G5SDVXVoeARQB3EHEflxPbHx5uFWQeUaPoRZXYX+PWciGVbFMSBOkvZHravDRsbxxIufSqRuRktrhxOGhTCX8=
+	t=1729836528; cv=none; b=OMELQ+TxtaJpkYwMeIadKel2UOUhZluAGFcMof3hKs17yfuK0+kUtVztRLyQqZirA4NNWN02q1CJr7QeBUTFMqiYzRiIn4zM5h4hc4QHsBbUopZrdUcxrAQDFATl/wvP78sPz1yv8fPdDHrSoIeLRKs1KTtlJmmILUHcQnDkzTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729767958; c=relaxed/simple;
-	bh=gLh242x7zfZsbQK/+qxlTv2wxnqju0Sw4AuaFDzi1hc=;
+	s=arc-20240116; t=1729836528; c=relaxed/simple;
+	bh=X7LTNv42hr0cLBwcmc9BjZV3R9sxwA54LnIt1zXGcEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLfsbBojMjmB/kka4rtf3YwOFqoQQpK4k41WOL5Isp4HmFIAx4eLpM3sHL73lSNr69749n7XBpTItQZDjtdjdEvfTdsXjr5x8Dt+CngmbhDM5sQy0qptHwB7NlYWd3JQbMnaLOZcn0apfKzYruRv8jyqqFXFaErUqFFWEjMWHvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DDRRYJiM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E465C4CEC7;
-	Thu, 24 Oct 2024 11:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729767957;
-	bh=gLh242x7zfZsbQK/+qxlTv2wxnqju0Sw4AuaFDzi1hc=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZ3+2pV1fMD8vNAJIswVAd9NEcK7t4KVqyphPK8WyU7AF4AboRmTaQF8DXjQaSavdr9FQuA2s7DPR3T6JcbruFhoTAKILQdI7zwVUda60hkwwMYb3zm8eLF1sMcZEeEPtB7xw7wodavXpCpy3e6xj1MrWsbXwBMFmGV5bFPHZiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Q5EopU4x; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 05861211A53B; Thu, 24 Oct 2024 23:08:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 05861211A53B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1729836526;
+	bh=UwQh0e2Jag6AWyM6LY3ePC0H4CPiaFhzl+Wf/xOw+zM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DDRRYJiMatmii3PYXsFtihJD+hqfCsnJARX7+VEWij/xoNeRuV2vtJaMq+zruQ9DN
-	 8DMrmKGeTeZLrrAxcFT6nxRgV8+dWnI/sdhALOzniGeSlA54jcHlsLcPLTClODWA/M
-	 6cqox/RVQQ9kPThFZwlDM8j/OiejiU+fDguVscOY+2El4eTJ3LqRHkeMMXFdqgIHea
-	 irHsHQyD6sLQk40gUNKk1MxYRHwLEgAdzehGnNL0MyU6zO0Y1TfBl93S1yzeit+aQE
-	 KPRRS5Kp9M/HFm6cAGSJttsL+z+mgO1rL+9bxcbrfg6MTtNPFAz7vOCx8QOWTLMTBn
-	 mQsMJe9wI6PHw==
-Date: Thu, 24 Oct 2024 12:05:51 +0100
-From: Simon Horman <horms@kernel.org>
+	b=Q5EopU4xpJLUiV8m7P0B8nZgDpWShoRWLGaBOgN6PopUH+7i7ejktOS07jgpLkm/V
+	 2U+CO9vTPjPq0En6Fkv58+WT0pO0p7uFBDzWHCnfJ6xT4BOP/9RPZETbY12eLuyfJo
+	 0+NDYErchzDUsw8o9+2il6erhzGK/4tRLOAGjakQ=
+Date: Thu, 24 Oct 2024 23:08:45 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
 To: Rosen Penev <rosenp@gmail.com>
 Cc: netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -55,7 +53,7 @@ Cc: netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Jesper Dangaard Brouer <hawk@kernel.org>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Simon Horman <horms@kernel.org>,
 	Colin Ian King <colin.i.king@gmail.com>,
 	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
 	Ahmed Zaki <ahmed.zaki@intel.com>,
@@ -63,33 +61,106 @@ Cc: netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
 	open list <linux-kernel@vger.kernel.org>,
 	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
 Subject: Re: [PATCH] net: mana: use ethtool string helpers
-Message-ID: <20241024110551.GE1202098@kernel.org>
+Message-ID: <20241025060845.GA9741@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <20241022204908.511021-1-rosenp@gmail.com>
- <CAKxU2N9nQFs_wDbe=S_ywfOFYeX+LWuN8f9y1y2iA5GV4tFDFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKxU2N9nQFs_wDbe=S_ywfOFYeX+LWuN8f9y1y2iA5GV4tFDFg@mail.gmail.com>
+In-Reply-To: <20241022204908.511021-1-rosenp@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Oct 22, 2024 at 01:56:56PM -0700, Rosen Penev wrote:
-> On Tue, Oct 22, 2024 at 1:49 PM Rosen Penev <rosenp@gmail.com> wrote:
-> >
-> > The latter is the preferred way to copy ethtool strings.
-> >
-> > Avoids manually incrementing the data pointer.
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> forgot to put net-next.
-
-Hi Rosen,
-
-The CI guessed correctly, so I don't think you need to repost just for that.
-
-...
+On Tue, Oct 22, 2024 at 01:49:08PM -0700, Rosen Penev wrote:
+> The latter is the preferred way to copy ethtool strings.
+> 
+> Avoids manually incrementing the data pointer.
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  .../ethernet/microsoft/mana/mana_ethtool.c    | 55 ++++++-------------
+>  1 file changed, 18 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> index 349f11bf8e64..c419626073f5 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> @@ -91,53 +91,34 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+>  {
+>  	struct mana_port_context *apc = netdev_priv(ndev);
+>  	unsigned int num_queues = apc->num_queues;
+> -	u8 *p = data;
+>  	int i;
+>  
+>  	if (stringset != ETH_SS_STATS)
+>  		return;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(mana_eth_stats); i++) {
+> -		memcpy(p, mana_eth_stats[i].name, ETH_GSTRING_LEN);
+> -		p += ETH_GSTRING_LEN;
+> -	}
+> +	for (i = 0; i < ARRAY_SIZE(mana_eth_stats); i++)
+> +		ethtool_puts(&data, mana_eth_stats[i].name);
+>  
+>  	for (i = 0; i < num_queues; i++) {
+> -		sprintf(p, "rx_%d_packets", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "rx_%d_bytes", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "rx_%d_xdp_drop", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "rx_%d_xdp_tx", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "rx_%d_xdp_redirect", i);
+> -		p += ETH_GSTRING_LEN;
+> +		ethtool_sprintf(&data, "rx_%d_packets", i);
+> +		ethtool_sprintf(&data, "rx_%d_bytes", i);
+> +		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
+> +		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
+> +		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
+>  	}
+>  
+>  	for (i = 0; i < num_queues; i++) {
+> -		sprintf(p, "tx_%d_packets", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_bytes", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_xdp_xmit", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_tso_packets", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_tso_bytes", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_tso_inner_packets", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_tso_inner_bytes", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_long_pkt_fmt", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_short_pkt_fmt", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_csum_partial", i);
+> -		p += ETH_GSTRING_LEN;
+> -		sprintf(p, "tx_%d_mana_map_err", i);
+> -		p += ETH_GSTRING_LEN;
+> +		ethtool_sprintf(&data, "tx_%d_packets", i);
+> +		ethtool_sprintf(&data, "tx_%d_bytes", i);
+> +		ethtool_sprintf(&data, "tx_%d_xdp_xmit", i);
+> +		ethtool_sprintf(&data, "tx_%d_tso_packets", i);
+> +		ethtool_sprintf(&data, "tx_%d_tso_bytes", i);
+> +		ethtool_sprintf(&data, "tx_%d_tso_inner_packets", i);
+> +		ethtool_sprintf(&data, "tx_%d_tso_inner_bytes", i);
+> +		ethtool_sprintf(&data, "tx_%d_long_pkt_fmt", i);
+> +		ethtool_sprintf(&data, "tx_%d_short_pkt_fmt", i);
+> +		ethtool_sprintf(&data, "tx_%d_csum_partial", i);
+> +		ethtool_sprintf(&data, "tx_%d_mana_map_err", i);
+>  	}
+>  }
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+>  
+> -- 
+> 2.47.0
 
