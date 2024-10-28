@@ -1,48 +1,49 @@
-Return-Path: <linux-hyperv+bounces-3201-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3200-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4F409B3A37
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Oct 2024 20:12:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 287539B3A34
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Oct 2024 20:12:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6CD161F21C05
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Oct 2024 19:12:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C66D41F227DC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Oct 2024 19:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CC011E1327;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4456F1E0E09;
 	Mon, 28 Oct 2024 19:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ojey8mCB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jpCaZmcT"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1489E1E04B3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87351E04A9;
 	Mon, 28 Oct 2024 19:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730142678; cv=none; b=TpAAXoqRJ/LEFu3ia/e0MDo145O/g07nMejpH+kuUhHJNUkuadTyAdCfKmv5DNSj5quTGeGejhfreKZ0TCjjWalgZCvh9MjwHf5bY7DjMML+JD5efAZZMrBm9B5hPqx1xCfMTOLSMFfFHf1x0mQENGjZwfuOE+aydeXvpNLt5II=
+	t=1730142678; cv=none; b=cNGuXSwY0Mq3NSytON8q4ZH7ZygJ2oZuHHLgOPso0jCfc68H03m92ZANzfc768+nvwYp2vmkU2jezz8nFZylbQ4qO+LXHZp7277MMJXIjBs1HGF6NatFSbwZuVOhGgdVJFP9bTsMEwIZAJYo0LziW/M4RDmFxVZprgzM9D4et7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730142678; c=relaxed/simple;
-	bh=7LdAF0atlIAeFjBKeUA5igpYjoWw7yVXLZJP3z7keko=;
+	bh=ajW4Q6SMvwDmYENqZfeNKPa6n0l/QeIxkirVzPoVvFw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BU2MVFXcbRBe60iTY9brr8xi4e1nP1zU2YvEdStII/mlQ1S732T1wt+Bt6jH4yoy94AC7Pt5sC6Damrk0pLaGcNiHRInWSl8FvnmdHLfRWvlaPtvpAt5hdD8bYF9I51AlQzXqYdme8aDma0cd6lEnyMipuXO2aAU80e+haa0jtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ojey8mCB; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:To:Cc; b=B081DSAFcSYTzUB6kHqpoag076gvI7N1MMMSyNqsZqgNhNSWlG+49etCbzMJ6AOD/KQZYbs3WYjCsX9Ytlc3rvBSjb5/4HwyHxjkyXUlFEcFTjn+88OPGB4pWFolKQlsDK/0/zzzIn7eFY0790y1quYmHZTBpMRKA4qPhvq9Ai8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jpCaZmcT; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3D169211F5ED;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 586DD211F5FE;
 	Mon, 28 Oct 2024 12:11:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3D169211F5ED
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 586DD211F5FE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1730142675;
-	bh=5IWioSIiUCrOJ9tFj6klW/8OTmQbfbizRlqfO9DDr5M=;
+	bh=Q72tolYhUo2oPbCH0Zh5EALhuSyE6L5YOQIDVIuvdRE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ojey8mCBRWpXrGjlmKn9M+N7K2iKvM2oQmqqZKfgrHu0ilrzYoK4Belk+0tYQaVUe
-	 jCNc8NI8jwXcB37RVM/FKlvEDnA5vww9hdVkwrrRKonL5LnnBl6+mVSeTAjF8X+gWM
-	 MggGqcDeY2scjZLeXdNgffWYsar/cRk+GpC7Jsnw=
+	b=jpCaZmcTHkc/L8GQOGYiqPg90/ElVRFlu8U5JRpDUzj/nksKdTaCp1aL91eQDTWAu
+	 ZfbJRxoX7+v0LQCkwp4UJijmjd7NC2TacWi4Fy0QU1CsUacdDpKETzZ1HYX39lkERF
+	 X9P86nCzE7z8m012DxN/AgDVTAzGal450BBo/PnA=
 From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Date: Mon, 28 Oct 2024 19:11:02 +0000
-Subject: [PATCH v2 1/2] jiffies: Define secs_to_jiffies()
+Date: Mon, 28 Oct 2024 19:11:03 +0000
+Subject: [PATCH v2 2/2] drivers: hv: Convert open-coded timeouts to
+ secs_to_jiffies()
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -51,7 +52,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241028-open-coded-timeouts-v2-1-c7294bb845a1@linux.microsoft.com>
+Message-Id: <20241028-open-coded-timeouts-v2-2-c7294bb845a1@linux.microsoft.com>
 References: <20241028-open-coded-timeouts-v2-0-c7294bb845a1@linux.microsoft.com>
 In-Reply-To: <20241028-open-coded-timeouts-v2-0-c7294bb845a1@linux.microsoft.com>
 To: "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -68,14 +69,10 @@ Cc: Michael Kelley <mhklinux@outlook.com>,
  Easwar Hariharan <eahariha@linux.microsoft.com>
 X-Mailer: b4 0.14.1
 
-secs_to_jiffies() is defined in hci_event.c and cannot be reused by
-other call sites. Hoist it into the core code to allow conversion of the
-~1150 usages of msecs_to_jiffies() that either:
-- use a multiplier value of 1000 or equivalently MSEC_PER_SEC, or
-- have timeouts that are denominated in seconds (i.e. end in 000)
-
-This will also allow conversion of yet more sites that use (sec * HZ)
-directly, and improve their readability.
+We have several places where timeouts are open-coded as N (seconds) * HZ,
+but best practice is to use the utility functions from jiffies.h. Convert
+the timeouts to be compliant. This doesn't fix any bugs, it's a simple code
+improvement.
 
 TO: "K. Y. Srinivasan" <kys@microsoft.com>
 TO: Haiyang Zhang <haiyangz@microsoft.com>
@@ -90,39 +87,105 @@ TO: Johan Hedberg <johan.hedberg@gmail.com>
 TO: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
 TO: linux-bluetooth@vger.kernel.org
 TO: linux-kernel@vger.kernel.org
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
+CC: Michael Kelley <mhklinux@outlook.com>
 Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 ---
- include/linux/jiffies.h   | 2 ++
- net/bluetooth/hci_event.c | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/hv/hv_balloon.c  | 9 +++++----
+ drivers/hv/hv_kvp.c      | 4 ++--
+ drivers/hv/hv_snapshot.c | 3 ++-
+ drivers/hv/vmbus_drv.c   | 2 +-
+ 4 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-index 1220f0fbe5bf..e5256bb5f851 100644
---- a/include/linux/jiffies.h
-+++ b/include/linux/jiffies.h
-@@ -526,6 +526,8 @@ static __always_inline unsigned long msecs_to_jiffies(const unsigned int m)
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index c38dcdfcb914..a99112e6f0b8 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -756,7 +756,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 		 * adding succeeded, it is ok to proceed even if the memory was
+ 		 * not onlined in time.
+ 		 */
+-		wait_for_completion_timeout(&dm_device.ol_waitevent, 5 * HZ);
++		wait_for_completion_timeout(&dm_device.ol_waitevent, secs_to_jiffies(5));
+ 		post_status(&dm_device);
  	}
  }
+@@ -1373,7 +1373,8 @@ static int dm_thread_func(void *dm_dev)
+ 	struct hv_dynmem_device *dm = dm_dev;
  
-+#define secs_to_jiffies(_secs) ((_secs) * HZ)
-+
- extern unsigned long __usecs_to_jiffies(const unsigned int u);
- #if !(USEC_PER_SEC % HZ)
- static inline unsigned long _usecs_to_jiffies(const unsigned int u)
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 0bbad90ddd6f..7b35c58bbbeb 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -42,8 +42,6 @@
- #define ZERO_KEY "\x00\x00\x00\x00\x00\x00\x00\x00" \
- 		 "\x00\x00\x00\x00\x00\x00\x00\x00"
+ 	while (!kthread_should_stop()) {
+-		wait_for_completion_interruptible_timeout(&dm_device.config_event, 1 * HZ);
++		wait_for_completion_interruptible_timeout(&dm_device.config_event,
++								secs_to_jiffies(1));
+ 		/*
+ 		 * The host expects us to post information on the memory
+ 		 * pressure every second.
+@@ -1748,7 +1749,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	if (ret)
+ 		goto out;
  
--#define secs_to_jiffies(_secs) msecs_to_jiffies((_secs) * 1000)
--
- /* Handle HCI Event packets */
+-	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
++	t = wait_for_completion_timeout(&dm_device.host_event, secs_to_jiffies(5));
+ 	if (t == 0) {
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+@@ -1806,7 +1807,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	if (ret)
+ 		goto out;
  
- static void *hci_ev_skb_pull(struct hci_dev *hdev, struct sk_buff *skb,
+-	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
++	t = wait_for_completion_timeout(&dm_device.host_event, secs_to_jiffies(5));
+ 	if (t == 0) {
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+index d35b60c06114..29e01247a087 100644
+--- a/drivers/hv/hv_kvp.c
++++ b/drivers/hv/hv_kvp.c
+@@ -655,7 +655,7 @@ void hv_kvp_onchannelcallback(void *context)
+ 		if (host_negotiatied == NEGO_NOT_STARTED) {
+ 			host_negotiatied = NEGO_IN_PROGRESS;
+ 			schedule_delayed_work(&kvp_host_handshake_work,
+-				      HV_UTIL_NEGO_TIMEOUT * HZ);
++						secs_to_jiffies(HV_UTIL_NEGO_TIMEOUT));
+ 		}
+ 		return;
+ 	}
+@@ -724,7 +724,7 @@ void hv_kvp_onchannelcallback(void *context)
+ 		 */
+ 		schedule_work(&kvp_sendkey_work);
+ 		schedule_delayed_work(&kvp_timeout_work,
+-					HV_UTIL_TIMEOUT * HZ);
++				      secs_to_jiffies(HV_UTIL_TIMEOUT));
+ 
+ 		return;
+ 
+diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
+index 0d2184be1691..86d87486ed40 100644
+--- a/drivers/hv/hv_snapshot.c
++++ b/drivers/hv/hv_snapshot.c
+@@ -193,7 +193,8 @@ static void vss_send_op(void)
+ 	vss_transaction.state = HVUTIL_USERSPACE_REQ;
+ 
+ 	schedule_delayed_work(&vss_timeout_work, op == VSS_OP_FREEZE ?
+-			VSS_FREEZE_TIMEOUT * HZ : HV_UTIL_TIMEOUT * HZ);
++				secs_to_jiffies(VSS_FREEZE_TIMEOUT) :
++				secs_to_jiffies(HV_UTIL_TIMEOUT));
+ 
+ 	rc = hvutil_transport_send(hvt, vss_msg, sizeof(*vss_msg), NULL);
+ 	if (rc) {
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 9b15f7daf505..7db30881e83a 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2507,7 +2507,7 @@ static int vmbus_bus_resume(struct device *dev)
+ 	vmbus_request_offers();
+ 
+ 	if (wait_for_completion_timeout(
+-		&vmbus_connection.ready_for_resume_event, 10 * HZ) == 0)
++		&vmbus_connection.ready_for_resume_event, secs_to_jiffies(10)) == 0)
+ 		pr_err("Some vmbus device is missing after suspending?\n");
+ 
+ 	/* Reset the event for the next suspend. */
 
 -- 
 2.34.1
