@@ -1,104 +1,97 @@
-Return-Path: <linux-hyperv+bounces-3207-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3208-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4C0A9B4D41
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Oct 2024 16:13:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE8219B4EEC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Oct 2024 17:09:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6909C2872E2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Oct 2024 15:13:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 59AE6B21834
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Oct 2024 16:09:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD8A9192B74;
-	Tue, 29 Oct 2024 15:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5634B198A07;
+	Tue, 29 Oct 2024 16:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gw2RPu+v"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VA1FDloE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y4Yk+RZ1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B991A4AEE0;
-	Tue, 29 Oct 2024 15:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F7B194A59;
+	Tue, 29 Oct 2024 16:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730214833; cv=none; b=Q2e7wxKjFCEGrqlUG79p6Ynt1QCy5+5SrNedHslCgKrWyPGuowVely12GbvT8ahvm3XmTleIsfUwMFBaqhywTynRzfBPWQ6Qia6lNfi7e/VQQeWVi9W5FG+VKXP/tXtVEWzZQ+3r+1DoQDPS5LiUJsCcQWy5JenmqPY9X8TXIrM=
+	t=1730218141; cv=none; b=F7sDMLbbuYF4e7i1Z16xHOWaXqgZY8WFNR6PDxLVgBeXxLi+u2OYOp1AZWU5qCSrwe4uoo3LDQywZ2pRWiW4zq+2kYiwduV7+uLNk/teWd2eCt3EMTZ+DlqD7pWJWx8xhzeULts1QKfDSPUdV+CPhbzNUJd0ji/PgERWMzvwljs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730214833; c=relaxed/simple;
-	bh=C46h2hkYsxiCvxObmL4cr/5RX40/qGEf8l/UEib9DZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kNfABoED61iKhpuT7jjGJA5sqTqjQBnasIIEQWC6pkJTstafHAauZdPo+5KgpWN7LlOxsBxj3Gye2TwQ3cjnRjHST14Wb/Jw8tt10KE5A5iEGhH8cRiqj3mZ+zqFU6cAG1rMEsLTaqywbl2utBJQH3DB0CYR1ocA9A5FpwwAiVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gw2RPu+v; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730214832; x=1761750832;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C46h2hkYsxiCvxObmL4cr/5RX40/qGEf8l/UEib9DZQ=;
-  b=gw2RPu+vcOhHregiKaYMxnZ+7H7jZtikiVzonGjWOIioK9LsEsNN+0RX
-   9Co6WNArhWLwg5d/5UPsGDh+zOX9NtW6xlB9Bp++bRNOWUEGcLjeItu05
-   mnGFIMi6jgxV1J5fwHkxjUueVSJjqskrc4utNj+H+Ga1Xx0ubkrndpoeS
-   zqDBAl+1+Bpd+3p86OBUY+JzjN9wGAgkuElKFjlfeXcSL7uyoD8+UvMO2
-   1RXO0/dWtXnupD0vgyxToi14evjQ1qBNJ3b9v+mzeDW0O3+ljFqUkzfxQ
-   k709aZ+T6kO7m+U2wcTIdAX7FXdsMYXZV9zgnNEpv4pkJf4W7A5/Wb4Z8
-   A==;
-X-CSE-ConnectionGUID: oqO8J1v+TkO4Z5fKQzCjGA==
-X-CSE-MsgGUID: N+LRM7SaQyyiHYPIAm5GFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11240"; a="17495719"
-X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="17495719"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:13:34 -0700
-X-CSE-ConnectionGUID: 970WKp7vROmWnggcYDfwjg==
-X-CSE-MsgGUID: mXK/hnCeQFmd8+JztOQFJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="82803072"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 29 Oct 2024 08:13:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id DDA7B26B; Tue, 29 Oct 2024 17:13:25 +0200 (EET)
-Date: Tue, 29 Oct 2024 17:13:25 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Gaosheng Cui <cuigaosheng1@huawei.com>, 
-	Michael Roth <michael.roth@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Kai Huang <kai.huang@intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Sean Christopherson <seanjc@google.com>, Xiaoyao Li <xiaoyao.li@intel.com>, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH] x86/mtrr: Rename mtrr_overwrite_state() to
- guest_force_mtrr_state()
-Message-ID: <l7l6ufyjbrfr4ms6quil5myf5bzmvu33sq3phfvpbwldhzn6m2@rzfdrvbe2glf>
-References: <20241015095818.357915-1-kirill.shutemov@linux.intel.com>
- <20241016105048.757081-1-kirill.shutemov@linux.intel.com>
+	s=arc-20240116; t=1730218141; c=relaxed/simple;
+	bh=FJ7ih4wVzVmz7IZ8q1hdSb13yLioBwCb1hNxFl/N67U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=q48HNAnx9AfsqstJ3iznbsZIlwk0CIduWgPwr5JoMqo2EcMQLW5cx2an/S9rkWdLTJ8IEXL384wRZX1SEN6V3egYwXoO2AQaJ2RB3ApPXCeQxVwjRDmRQ7bMDXtSu5ladwBxZvVjUOTkBYt3vONNH6N8Ig2hIAs4Lpu7RG7M4Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VA1FDloE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y4Yk+RZ1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1730218137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jykMmJYhDaJHRipy5cvwqmR/xcPHbnkQh612edkXqpU=;
+	b=VA1FDloEdUAMtvuS3R5YQ0Vkm/izejUl6U7ShPPX0sZJayeBaabNPS/rad/vbk0WBKoQj8
+	TsIUqOPffyc6xpEb6UYpFNzy/Elyj47LWVYvkE+jjqVyGwBFGPhYNjI5ReUmWYBqBq6rCo
+	Z0jAb3Cj/k32/OMF6BE9dOahy52MxTs2yEbaigKFGUd5MIIPmHe4t+Hnxv4BchpwXC5L42
+	sxtW0R9ji6BXiiDryfOeKgM50/bLTExZ3h3/OmWsNxkQA05VKmENhzUPwuoHJi7Yl4ygfO
+	Bwdjy0w/e+7vc5+L7SLpdksezykycncg7c6XDsGxqy3SbFOi1/RWLEnWwFWgFg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1730218137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jykMmJYhDaJHRipy5cvwqmR/xcPHbnkQh612edkXqpU=;
+	b=Y4Yk+RZ1BRbuI+WT4ORr5kW/2pA2soW+mh+UDSs/ApLwQwyqxgd/59Kiar0s4kDLUUtiB8
+	yIjflgoRX9ojPVAA==
+To: Easwar Hariharan <eahariha@linux.microsoft.com>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ linux-hyperv@vger.kernel.org, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+ <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Michael Kelley <mhklinux@outlook.com>, Easwar Hariharan
+ <eahariha@linux.microsoft.com>
+Subject: Re: [PATCH v2 1/2] jiffies: Define secs_to_jiffies()
+In-Reply-To: <20241028-open-coded-timeouts-v2-1-c7294bb845a1@linux.microsoft.com>
+References: <20241028-open-coded-timeouts-v2-0-c7294bb845a1@linux.microsoft.com>
+ <20241028-open-coded-timeouts-v2-1-c7294bb845a1@linux.microsoft.com>
+Date: Tue, 29 Oct 2024 17:08:57 +0100
+Message-ID: <87wmhq28o6.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241016105048.757081-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain
 
-On Wed, Oct 16, 2024 at 01:50:48PM +0300, Kirill A. Shutemov wrote:
-> Rename the helper to better reflect its function.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Suggested-by: Dave Hansen <dave.hansen@intel.com>
+On Mon, Oct 28 2024 at 19:11, Easwar Hariharan wrote:
+> diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+> index 1220f0fbe5bf..e5256bb5f851 100644
+> --- a/include/linux/jiffies.h
+> +++ b/include/linux/jiffies.h
+> @@ -526,6 +526,8 @@ static __always_inline unsigned long msecs_to_jiffies(const unsigned int m)
+>  	}
+>  }
+>  
+> +#define secs_to_jiffies(_secs) ((_secs) * HZ)
 
-KVM patch is Linus' tree.
+Can you please make that a static inline, as there is no need for macro
+magic like in the other conversions, and add a kernel doc comment which
+documents this?
 
-Dave, can you take this one?
+Thanks,
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+        tglx
 
