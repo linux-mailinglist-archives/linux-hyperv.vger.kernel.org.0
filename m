@@ -1,195 +1,202 @@
-Return-Path: <linux-hyperv+bounces-3218-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3219-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78DCC9B6B45
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Oct 2024 18:48:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 353339B6CC0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Oct 2024 20:11:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C7281C21823
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Oct 2024 17:48:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58E3E1C2168D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Oct 2024 19:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 509651CC15C;
-	Wed, 30 Oct 2024 17:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CE431CEEA3;
+	Wed, 30 Oct 2024 19:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UgCdEVzu"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SHsL1Unv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9F419A288;
-	Wed, 30 Oct 2024 17:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730310478; cv=none; b=s7gpJPqTZPiPDu/+fMbYJkdndytM/FAlEYn3wL3oxEv4J3A+jCoMH+raq7Qfi1Lst2Q5PDtfra8XjQKoQ4+JMvmexz5PLTIAKb1LuXBL29bWdEj2pX5RN3n7abiY9mMEzdtuLv0/hKOw4CiO6PxLqG5dCdRKKLzZYhfH3i/M1pI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730310478; c=relaxed/simple;
-	bh=Y412xZzNOO5MY5f54d4tqDx7k+RoU/X0XQaCOxzYaA0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K0Cs8d/1wCr/l3AFSdI8ukiqyj6OMs86Tvg/afmZs67AXuEXBnTTfbFYEZWLCI9gW7bYUjfD1TZsGziAEqhXBSZSZ4KbFvP3p/kSjOyT3HR/4cFJyrcqr/4pW/b30XIoejHacafNNNF1r9ZKOlBhg5WX8cWkNLrD4XVq4TOuNeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UgCdEVzu; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B85E72054B69;
-	Wed, 30 Oct 2024 10:47:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B85E72054B69
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1730310470;
-	bh=bwsyKqQWUa0Kwp+K5MBC5j2XBjYIf72PRYb9FH/rEwY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UgCdEVzurzBU+c8+arct7OHOSd0yrqb5/vHvfhed2xVDqVDS4AomkKuo0NGX43Epj
-	 TK6Fn8unpF00LFLpdszi5GI6gi2r9zrl0tS/xupPDbqZ/gweAA68JB02GhPal18H1b
-	 RNWS9USCx69f4ue8YEpBMHgt2hPJpSsxri4qqVzw=
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Date: Wed, 30 Oct 2024 17:47:36 +0000
-Subject: [PATCH v3 2/2] drivers: hv: Convert open-coded timeouts to
- secs_to_jiffies()
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021080.outbound.protection.outlook.com [52.101.62.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137E11BD9DB;
+	Wed, 30 Oct 2024 19:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730315016; cv=fail; b=tvqoOE2aY78iB/YirqYul3APcESP7c3SYkjpZx5lOgiCoyxrKd54he4Wh6PbRtK+wA9GyWGdCOy5YXXmQHFnYMGS+vFFENWjmncKLMNSCIuWn2lfDUAnxq5j98GEr6yIiGh6aWbLdfBiHQlliLGb3xFi9GyjSupkqK/L7CjX/1I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730315016; c=relaxed/simple;
+	bh=WIuqEaVxG2BY74on+bIDMLScfIfpZFQY0LxGrKMy8R8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=T3o437IVsilm49su8TnUkWRC2Nw8MqS92SbBwPqHmOeO382n0ZQXnE7ceUvhoQNxhJYykt5yNSS2NwQeualpm0C0XbL0hdqUGw5lO1Pmj5AAfNYiBzfTyN1V27Mk+yXObZenS660ob+iaGNTn7m4XGn4yzeCwFUQfygFebnGR+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=SHsL1Unv; arc=fail smtp.client-ip=52.101.62.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C+H4ccrL+Z3NMaHRg3qz+8EAutp1phwaK/TfKnm/J0A7K9AeWQrVak/j+8F1GauwPsu7GP7+NGldLYQEl3qSCH6FQMUpAdvBYWc3xzy4p4fG2QuR6+8rApZLlY4xohYch/beJ7i4uHuUhAyBZqjAyy+FtSk1zeJquiCgmgY6qccm9GLqJscVQVg0bEbbvxd8acx2/cH1+x10CW7UnUsOWEfB9hu+OOuDaijbqi2srm9nKXrAjzsdg9QZXkk4tHyju3NFsWulHafSF53PorLr5H7BNt+aX50B3dXKfUEqlBw6hRrIPuWeckTZXTzJpJ979QAvkjFgR9LwGBYsHJKBrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WIuqEaVxG2BY74on+bIDMLScfIfpZFQY0LxGrKMy8R8=;
+ b=Qp9eP9ZKfSpkzZuOYhx4XHsW4LYmKDQf2Trl5W1k5ZH8bBT2ne/49+tQfPPnz5GnM5kZ2ydLnEdHzAYo+yNhXaGVa9IuMA0/Hml1xS2ORgyYT9sTNPfOLsJj0q8hng6AFAnm0DkzetQnM9NMsC1uiKT59g0vUG7tMgsXra44ZYU/RXhUqLPtWiUuCTbKKf0X6KCwGpr/P4yfm1X3B4JNWnAjK91nvV2E/sRNQc4nk6pthQLIDEIvcEXnFMUtn6j1gU/xph5iqgQieGW45GTiXEaLLlg4i9M2XSFJYQ2DDUHtUwtB8Ti55os308A8HMHynaMB2OVM7WS0nm9DmXhRYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WIuqEaVxG2BY74on+bIDMLScfIfpZFQY0LxGrKMy8R8=;
+ b=SHsL1Unv2rlbHJJHd+pFrslE29jwF+DV1bISkoavDm/k6aEDdAeVkpEKLlm3lfxvfiWo/xd1LqSDFzwLCvVVro/wJddgyNmbHLmkkdGOLCuR0tobTFjRlZQFsQ14nXysACJoWrnJWqDp7l6tfAArFFZqMrgAQXSL+L5J7iUa1ak=
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com (2603:10b6:806:1f0::9)
+ by SN3PEPF00013D79.namprd21.prod.outlook.com (2603:10b6:82c:400:0:4:0:7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.3; Wed, 30 Oct
+ 2024 19:03:32 +0000
+Received: from SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef]) by SA1PR21MB1317.namprd21.prod.outlook.com
+ ([fe80::67ed:774d:42d4:f6ef%4]) with mapi id 15.20.8137.002; Wed, 30 Oct 2024
+ 19:03:31 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>, KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Vitaly
+ Kuznetsov <vkuznets@redhat.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "open list:Hyper-V/Azure CORE AND DRIVERS"
+	<linux-hyperv@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] Drivers: hv: kvp/vss: Avoid accessing a ringbuffer not
+ initialized yet
+Thread-Topic: [PATCH] Drivers: hv: kvp/vss: Avoid accessing a ringbuffer not
+ initialized yet
+Thread-Index: AQHbKlyHss5KWmFug0aMZtYQWKCj3bKfoGAQ
+Date: Wed, 30 Oct 2024 19:03:31 +0000
+Message-ID:
+ <SA1PR21MB131794D6AF620CB201958EFCBF542@SA1PR21MB1317.namprd21.prod.outlook.com>
+References: <20240909164719.41000-1-decui@microsoft.com>
+ <SN6PR02MB4157630C523459A75C83C498D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB4157630C523459A75C83C498D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f2ddb8d8-b0cc-4ed7-8c4d-806213566d4b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-10-30T18:35:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1317:EE_|SN3PEPF00013D79:EE_
+x-ms-office365-filtering-correlation-id: 23664f89-f1dc-4f6f-c1c2-08dcf9158c0a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|10070799003|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?KK9Dg6maNEBEr7EMEoiIbazNNVtA18S7jMb76tPw0Il4Nux3OqJE6I9bhztp?=
+ =?us-ascii?Q?zkceu8eyb3BNPBoWKHYvMtMDC6rUi6weolXzw43o+PLDG51TZpZ5hYqtjUtF?=
+ =?us-ascii?Q?jk3aL6btgtMyFgcwkvIkvs+bPUxEPoVbkcAmZ0Av1z9XkmXQpYCrfG73iIdN?=
+ =?us-ascii?Q?+wwucNXb6ugdyXo5p0cAyb4CG4p57/5epv/UOlTu3wAHGPWMk7arHVnDVPLq?=
+ =?us-ascii?Q?7pkacaw4jAflAkOfoSMt6Pvs4NPAPNNTBe+9j6b9EQjfpCdoCxpFxh8gQh/C?=
+ =?us-ascii?Q?SCsysCtClIklIfkEfDMVIOn1oxb4eTNz+fH9prFpOG0AXbcjlkWpaYICSteA?=
+ =?us-ascii?Q?GdnF26I4Raxly7bMjFR5XeVzxnhmGSMgMKOOaLFQuLm73F22VboRlvBsrv00?=
+ =?us-ascii?Q?OnRDVnDDKDIVX/8dJkT1b/qnu5LzOVF+zXH/Dgq5Nf9hhg0VxrH+tix2+jPX?=
+ =?us-ascii?Q?iwXffjV3vzbQCIBo380iHloKMqNL+e9aZflBohNkIOhk8dV2jJrj0YZFB2FJ?=
+ =?us-ascii?Q?4PzMIodDlWheHoXQQlkiziIcqN7TDxBbAIduTg3DHjU55T1lT3oLTw9YE477?=
+ =?us-ascii?Q?b2qPgGUi8j9KH7QYrYLWtXZCA5GjmdXoRYweUqWx5wdVaVt/mSACy/INTrZ8?=
+ =?us-ascii?Q?gAbnETTmsxD0Lmfr24DuAgrxN7MUFPAX6f0KoLj4OAWjmvRc/Cnn/CGK73LZ?=
+ =?us-ascii?Q?nuHcU4LLxdALOdwfXW9SMO8A5GCPYgWd+JnjEWCw9tb01024Cw/mBPFzc4K4?=
+ =?us-ascii?Q?RQwJH53deO964KoDyywiDVjzBQiv3V6PTGcDmLmetvP+H4f+/nlkoAjwPA/k?=
+ =?us-ascii?Q?d8jixI4aE1ppEjLqwdbQ49nuwwQyMHesVni55SptqK3darNJB/BVRLsiYWKV?=
+ =?us-ascii?Q?kC+o63sc+fZN1P3OGZfQCxAhSHsBKEAm0jGSnC8AdZ521GNrr6bgfDmB9V+x?=
+ =?us-ascii?Q?QH1hHFwnn+SdKwUBeTeZd+7hC5SZHgVSLT8RjojO0z2ig4nzM1dRQZfqYqY3?=
+ =?us-ascii?Q?qxlzn4sDsk8Rpg5F5tkRf/GjC041WvvwwXsI9ys+DqO9ecUbUQ5Oj+hr8DFJ?=
+ =?us-ascii?Q?ahLYIrDaDLUWsNtQDaPbo8a8YjzC3/y8Lirdase8MLEyuyXITas7wUFYBEDp?=
+ =?us-ascii?Q?moT/VNOhV3lDPxJdqNB2JKlvk4S+l1HjkCAhnce7Vh+cmS9Q8BEuhA9Jdmac?=
+ =?us-ascii?Q?Smo5u4mcXJT1WUiM5uGJFiWat5DbLzY6hfuhOLNw6XdVfyvdVNHxx4NE+nvG?=
+ =?us-ascii?Q?YTzGaOPhSp4Xsk/LfltVItnGLG47GHk6ZghVwt970j6Rsd/3mf7xB6kC2Rw3?=
+ =?us-ascii?Q?NHR8BiH7trmSEdGk98CmFuGKBKMispnMERRctacV+INCrqM6IZp1KfDlGSqq?=
+ =?us-ascii?Q?KwxoSfk=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1317.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(10070799003)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?N1Vle94V7bWU61jUQhoEu0rp1ckBocDX3uvlJGJICeZqo8Q1P47xv+mgjhyY?=
+ =?us-ascii?Q?quT9fFWL4F2ksMfK/CD2DWmNVPa1SZJ+Wii+UoYRluG7ssUtvJ6S02QMYH1A?=
+ =?us-ascii?Q?L0PyxC2JpIqOaKOlIWdUqzrIwqHwENxtQnXKm2SFD7O/32sA5Yo/BlRvEH1s?=
+ =?us-ascii?Q?TsBsiAQZLsWdlx78ehMK1l8yw/ynT/+ZgI4D2VozWkEmCyZRcAOssSGzctuq?=
+ =?us-ascii?Q?PebpkRsXeZEUSBGM4MMIaU1CpcXUnvemyAkngBCIbZz+/3HELzwTqXcfscME?=
+ =?us-ascii?Q?TCTkxME48p9CcNXH/jtb7frDB9QwJ83f99mGiwMd6sLL2NMqQ/Z6Juem3195?=
+ =?us-ascii?Q?tzccWALSgPVVqwYewIgH/K7gOeySjbSnGttvSDt0PBAtNGuShqRzgdiN9m/P?=
+ =?us-ascii?Q?MCcnY8B41pA9t22N1tvOUlwFsfRS4kDr6ztUtbmsnksZSObjZLQ5t67LV4rt?=
+ =?us-ascii?Q?p7Udz8VWgjDX99sW10P9M/mmifUPk5NTo8dwLwyJF1peflcPe1Bpobl30U59?=
+ =?us-ascii?Q?xbbCRSWAf3u/Xf2o+0Q0JERT/VWMXPoeASO4R/Q3B/+yKzLWOnmW3rZfaD5J?=
+ =?us-ascii?Q?OJy8LZvCTh72OKjBrxHxDNtiuzNfwJeTA/tojqMUf6yNUMh967EBoqn8L2Ey?=
+ =?us-ascii?Q?muNEU61jLYM8nXdSNnBgv4fAMQKXag+g80lQieBmNuqro2iagjbQv/ZbThjm?=
+ =?us-ascii?Q?00DiqFchMSbuB7AylLsklWoLqHQO0N9JMhckkAlLQPhNP5w+MthN8B+xTrPQ?=
+ =?us-ascii?Q?ZTqq4Z1Z1r8bogZnLZ0PDG3CG4w+ZAk52tkQYEEXbSXvbfDQkjcUNOp/p3jD?=
+ =?us-ascii?Q?l7Of7xoKe3VNXdKHVNMAoBNL6+5fC0GAdab9BYcdKkilIYQRT7A/Ef/IeKaZ?=
+ =?us-ascii?Q?O6gm29l5u2n5rtudV3CbofwBhuLEJL4zuS6DF79WJe2TwGS57KHEWHxMZlNU?=
+ =?us-ascii?Q?Q2L19YdW4I4tQ7oUUW8vv83EhNacGa5JY9YTkXb4Nj5AcYLfDgzWJOcxqUL9?=
+ =?us-ascii?Q?nWu5/JLNx73NbMCicXpCf+5hACMCckuHB18BS1SAn6IPdwo6kczdSGT/NqOV?=
+ =?us-ascii?Q?B0rhJb8YhwN4Vq92J4YVHgzHu0bELPMoLSqR8LzD0qD6O1jFSzAIZQO7aKZ2?=
+ =?us-ascii?Q?torl3drwjBhmiVBhmWe3Sih5b987alkvh6retEjHNacmpyzxj18z8OTa3lDS?=
+ =?us-ascii?Q?CNPJp5zRxOpTiJcGn2Q5zbZSXqXtPIEX6iXNB6PR/qNo78quEmTeex6jC5ND?=
+ =?us-ascii?Q?fQbjGpQREq8s789gi3tMx0drqRsrMfDusF/XZqOj7V3HzNtj6wqi888SN283?=
+ =?us-ascii?Q?umyOWGaMADgB05qHbnOwOqhIjTH4BRgKt1bqria2UNaPizvThKUsta7zarkn?=
+ =?us-ascii?Q?jHPkDzO1tOXKkF5GrZsCI7V7c+ZAS4qK+0q4L6sRzYNKpVdBbvb+WFIPxNWp?=
+ =?us-ascii?Q?SQuJVAtkSbrZIgnU/m4FQ/krzEz1Kw1mctJk2UzuA9ALQjs0yb7WTR9l9+2+?=
+ =?us-ascii?Q?vL1Bd6i+ZHj3U0Wg8y9Bxmg3QXn/mdCcp/Y2BYH5OZZ+2u++HqYSFQrLec3p?=
+ =?us-ascii?Q?1mddfJDw30XQ8Apsklqr/hP200CvU2VNT0KLbYzboCLQFdAvmm5NB7Vmh4ch?=
+ =?us-ascii?Q?bbvouDpRZG8JgepchENlyASfyb1CssmXTpokIy/Op6BG?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241030-open-coded-timeouts-v3-2-9ba123facf88@linux.microsoft.com>
-References: <20241030-open-coded-timeouts-v3-0-9ba123facf88@linux.microsoft.com>
-In-Reply-To: <20241030-open-coded-timeouts-v3-0-9ba123facf88@linux.microsoft.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Geert Uytterhoeven <geert@linux-m68k.org>, 
- Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Praveen Kumar <kumarpraveen@linux.microsoft.com>, 
- Naman Jain <namjain@linux.microsoft.com>
-Cc: Michael Kelley <mhklinux@outlook.com>, 
- Easwar Hariharan <eahariha@linux.microsoft.com>
-X-Mailer: b4 0.14.2
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1317.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23664f89-f1dc-4f6f-c1c2-08dcf9158c0a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2024 19:03:31.8876
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LwafogYfzocMy4odoqsGECF0/0I+0L3g1++86F2/e5Enb/egGVUR/6GYWHHkI7EaHn3A9SwiC+kBDiTOD04Mxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN3PEPF00013D79
 
-We have several places where timeouts are open-coded as N (seconds) * HZ,
-but best practice is to use the utility functions from jiffies.h. Convert
-the timeouts to be compliant. This doesn't fix any bugs, it's a simple code
-improvement.
+> From: Michael Kelley <mhklinux@outlook.com>
+> Sent: Tuesday, October 29, 2024 4:45 PM
+> [...]
+> An alternate approach occurs to me. util_probe() does these three
+> things in order:
+>=20
+> 1) Allocates the receive buffer
+> 2) Calls the util_init() function, which for KVP and VSS creates the char=
+ dev
+> 3) Sets up the VMBus channel, including calling vmbus_open()
+>=20
+> What if the order of #2 and #3 were swapped in util_probe()? I
+> don't immediately see any interdependency between #2 and #3
+> for KVP and VSS, nor for Shutdown and Timesync. With the swap,
+> the VMBus channel would be fully open by the time the /dev entry
+> appears and the user space daemon can do anything.
+>=20
+> I haven't though too deeply about this, so maybe there's a problem
+> somewhere. But if not, it seems a lot cleaner.
+>=20
+> Michael
 
-TO: "K. Y. Srinivasan" <kys@microsoft.com>
-TO: Haiyang Zhang <haiyangz@microsoft.com>
-TO: Wei Liu <wei.liu@kernel.org>
-TO: Dexuan Cui <decui@microsoft.com>
-TO: linux-hyperv@vger.kernel.org
-TO: Anna-Maria Behnsen <anna-maria@linutronix.de>
-TO: Thomas Gleixner <tglx@linutronix.de>
-TO: Geert Uytterhoeven <geert@linux-m68k.org>
-TO: Marcel Holtmann <marcel@holtmann.org>
-TO: Johan Hedberg <johan.hedberg@gmail.com>
-TO: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-TO: linux-bluetooth@vger.kernel.org
-TO: linux-kernel@vger.kernel.org
-CC: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
----
- drivers/hv/hv_balloon.c  | 9 +++++----
- drivers/hv/hv_kvp.c      | 4 ++--
- drivers/hv/hv_snapshot.c | 3 ++-
- drivers/hv/vmbus_drv.c   | 2 +-
- 4 files changed, 10 insertions(+), 8 deletions(-)
+I think #3 depends on #2, e.g. hv_kvp_init() sets the channel's
+preferred max_pkt_size, which is tested later in __vmbus_open().
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index c38dcdfcb914dcc3515be100cba0beb4a3f9b975..a99112e6f0b8534cf5c8c963e343019061bd34f6 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -756,7 +756,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
- 		 * adding succeeded, it is ok to proceed even if the memory was
- 		 * not onlined in time.
- 		 */
--		wait_for_completion_timeout(&dm_device.ol_waitevent, 5 * HZ);
-+		wait_for_completion_timeout(&dm_device.ol_waitevent, secs_to_jiffies(5));
- 		post_status(&dm_device);
- 	}
- }
-@@ -1373,7 +1373,8 @@ static int dm_thread_func(void *dm_dev)
- 	struct hv_dynmem_device *dm = dm_dev;
- 
- 	while (!kthread_should_stop()) {
--		wait_for_completion_interruptible_timeout(&dm_device.config_event, 1 * HZ);
-+		wait_for_completion_interruptible_timeout(&dm_device.config_event,
-+								secs_to_jiffies(1));
- 		/*
- 		 * The host expects us to post information on the memory
- 		 * pressure every second.
-@@ -1748,7 +1749,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	if (ret)
- 		goto out;
- 
--	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
-+	t = wait_for_completion_timeout(&dm_device.host_event, secs_to_jiffies(5));
- 	if (t == 0) {
- 		ret = -ETIMEDOUT;
- 		goto out;
-@@ -1806,7 +1807,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	if (ret)
- 		goto out;
- 
--	t = wait_for_completion_timeout(&dm_device.host_event, 5 * HZ);
-+	t = wait_for_completion_timeout(&dm_device.host_event, secs_to_jiffies(5));
- 	if (t == 0) {
- 		ret = -ETIMEDOUT;
- 		goto out;
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index d35b60c0611486c8c909d2f8f7c730ff913df30d..29e01247a0870fdb9eebd92bdd16fd371450240c 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -655,7 +655,7 @@ void hv_kvp_onchannelcallback(void *context)
- 		if (host_negotiatied == NEGO_NOT_STARTED) {
- 			host_negotiatied = NEGO_IN_PROGRESS;
- 			schedule_delayed_work(&kvp_host_handshake_work,
--				      HV_UTIL_NEGO_TIMEOUT * HZ);
-+						secs_to_jiffies(HV_UTIL_NEGO_TIMEOUT));
- 		}
- 		return;
- 	}
-@@ -724,7 +724,7 @@ void hv_kvp_onchannelcallback(void *context)
- 		 */
- 		schedule_work(&kvp_sendkey_work);
- 		schedule_delayed_work(&kvp_timeout_work,
--					HV_UTIL_TIMEOUT * HZ);
-+				      secs_to_jiffies(HV_UTIL_TIMEOUT));
- 
- 		return;
- 
-diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
-index 0d2184be16912559a8cfa784c762e6418ebd3279..86d87486ed40b3ca9f6674650e5a86a7184e2fa6 100644
---- a/drivers/hv/hv_snapshot.c
-+++ b/drivers/hv/hv_snapshot.c
-@@ -193,7 +193,8 @@ static void vss_send_op(void)
- 	vss_transaction.state = HVUTIL_USERSPACE_REQ;
- 
- 	schedule_delayed_work(&vss_timeout_work, op == VSS_OP_FREEZE ?
--			VSS_FREEZE_TIMEOUT * HZ : HV_UTIL_TIMEOUT * HZ);
-+				secs_to_jiffies(VSS_FREEZE_TIMEOUT) :
-+				secs_to_jiffies(HV_UTIL_TIMEOUT));
- 
- 	rc = hvutil_transport_send(hvt, vss_msg, sizeof(*vss_msg), NULL);
- 	if (rc) {
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 9b15f7daf5059750e17ea3607b52dee967c1c059..7db30881e83ad4b406413641413d68329fc663e2 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2507,7 +2507,7 @@ static int vmbus_bus_resume(struct device *dev)
- 	vmbus_request_offers();
- 
- 	if (wait_for_completion_timeout(
--		&vmbus_connection.ready_for_resume_event, 10 * HZ) == 0)
-+		&vmbus_connection.ready_for_resume_event, secs_to_jiffies(10)) == 0)
- 		pr_err("Some vmbus device is missing after suspending?\n");
- 
- 	/* Reset the event for the next suspend. */
+Another example of dependency is: hv_timesync_init() initializes
+host_ts.lock and adj_time_work, which are used by
+timesync_onchannelcallback() -> adj_guesttime().
+Note: the channel callback can be already running before
+vmbus_open() returns.
 
--- 
-2.34.1
-
+Thanks,
+Dexuan
 
