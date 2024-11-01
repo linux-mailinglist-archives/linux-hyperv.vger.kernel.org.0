@@ -1,62 +1,61 @@
-Return-Path: <linux-hyperv+bounces-3233-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3234-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 603539B9967
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Nov 2024 21:26:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92F529B99E5
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Nov 2024 22:11:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20969281BED
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Nov 2024 20:26:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F39A1F21AF7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Nov 2024 21:11:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045D81D5AB6;
-	Fri,  1 Nov 2024 20:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898391A2643;
+	Fri,  1 Nov 2024 21:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XtTPef96"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LIdNM8u5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023127.outbound.protection.outlook.com [40.93.201.127])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19011034.outbound.protection.outlook.com [52.103.14.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6743F1D130B;
-	Fri,  1 Nov 2024 20:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.127
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE55C1581F8;
+	Fri,  1 Nov 2024 21:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.34
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730492799; cv=fail; b=A/h81pUlntv25CaeVKuRgRYhANvYY1ZTpJjvVcWQ5iqw+beE35Zz8L1LXc+lbGMM8ypYfxS7RA0Y7azXjZazY6BVh1vqHXY3AeWPNRkToNEzImOJuEf7a4ad2XE+cEOS5OxnWCtmCmP2FgcKFQJ/PjmYXw6Q7KKvX+X+lBV10UQ=
+	t=1730495464; cv=fail; b=nV009UmIJHHIidUmOPiQyd6L/sxJNlVlzHt5J0Ho240mJRBVtMJuWjvkhRYpDeSNWcFkAm8MgxEVNn5fyUJhQGuKQZyI+P4w2z3eI5v0wBXWldTrBTH8nvB0sncBmkyfO3cs6k6MbbVDivX9+cFX7Y1ICTxQE4WJ0WyHntv87NU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730492799; c=relaxed/simple;
-	bh=BwLea/tGujNBn82RdZqZ3hR914EUmzO8aFbgxEjf0tI=;
+	s=arc-20240116; t=1730495464; c=relaxed/simple;
+	bh=woUxSv7I3SsO8lYDWUYDSLsOsmM6zMqHRySqgGzd894=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mo86bEy6+9hsXKuzmdm0f3GioO0UMv/g0UdWx070sw0fxp7YbgPriMjwkBGvkL1lAPvuTzywMFIuK6aL5KFPAiK1o0ICb6Bce9UdbBCgmJKmf3FV9BYO8E2zcTr+ad2qT4g3ZthqHDFzgLesfLGsYc3RoRUWoIJyGzgMWQuDypU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=XtTPef96; arc=fail smtp.client-ip=40.93.201.127
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	 Content-Type:MIME-Version; b=fYyrdqmcjVBB16hOZ6sSEBCyeaA+EwyspOzPRReY5MynCo3I8kJZ1akXh/Q6jgjRz9twZbNMeeX0RCirT40Hc1IojPidxpjZqrQRuQlhF+Nze64+D2wYpAcDbn0VwAvBLOKRluTajFPbLnipjjtA4O4Fb2AckfL930TSyb9aPtc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LIdNM8u5; arc=fail smtp.client-ip=52.103.14.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AtlwNkGuEg/O0MC4IBK0l8J6TjA2NjLaVZ/ASoku37hdXSRzRZ6owEOjc1cvOHyPe2TUDEOfXX1v5iUT/HEH3xMaNCfi2gP3Ly/F6ZQ281IKSBj36Gf36yHQej/+qtRjmKBQ12G60dRHsWSx3r+dFC7IKI9XLg7j0Ive4w6hqaYSBn+P0Iz1OoPtm30TRyj0MkY4grcRRLo1FCCaP9DEBWxY8orOMmpCYwWY2uZf70c3kM8AmIcM0Vbo8GwIHWTSzK4KMtIwl2KLAkiYrJG7X8ZatY+vM6V6ZVqnql9RFe0T/PxtCXhycp+hqU4Vc6oHG98fzknJtDriLwuY7LV70g==
+ b=NnvhxRWp6QbHloko2ZBTkITJh8f8zw2Zqijj1Hwipx15YNuKopK4DfIJTfBecTcnjMaRs2SHHpjiq7YjFGU9w713dpXr+fM+VWzFEGEiVHcfPBYnjth+zEQNuZnCSf2/5yJTJ7+x/9BBoCoBwxQ1uN4u7YBX69ZtXRaxIJYZTjlYE0T7K4e/s/88UBmUgN+/wHgmoz0xxRuf/FUyiqdYW6skRDxqiDdovdJWMWre2nXoymj7c5GaZvob2OeyiHUJBKa0JoFuu/iyz8mIPQU6fPg5+S5m2rOkcAAuq7a0P0P6Z4Pqzak4p7q+Mp59Evl50XrxzAN7VyL4+xVmDba7Nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hH/Lwx8vShbnr1ILBIJHBEBZXrYhjjtqqv7AZWnlFAg=;
- b=uJic5sMNbnfhkExut5qXQ46RCgvqpmokPNSxbm1p4D9DPs87ipUEnft/707jR6Ubcni9R3aZ4lMtSzpon2z/Lm8lvv6n7lz+mTfhHvln2ELMbZnmNuXSj/do3O3Fk3Nkj1fTfn0fRlxZCfzV01UndBd30RumyLICipP4jVIoPwQqFYDLP5PZZXwsgdDYXGILHWk+s1Wn6mx+OcPTHWh/pliQf75fktyePV65f0QNFHK8wrVNxKcug8M0cRgjKxwTORW4qRArb6ML1jrDYTKVylvwLsAB4/dJkIWD9OwUwpk7h3ywqmyl0lbuTjqeCXSv7VEhdQ7ZGztdfeK3e4Twhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ bh=12UdhKKr03t3j2AvC8E80IoXaxQ8Qe7z5ai+zzHFUaY=;
+ b=ciR6Qio9breCtWAm/4KKIShy07Jnz2R8+hDRinfzq55FEuo8g3ge0vpiplwxS9SLUxItosqM5uRSXIW7G+API/eqbXiBLOgPTUeQOMvjB3aQfDofCA8aWnCS1iAmnr5blqtzB0H2pQfZzq7DEQiB+H9Ohcn/7OutlvZsWM+DAbYGOtdKdL9d0lVNqJ1rp9ezS6ebYSW4WrQ2wzNJXAV+fOCHHaw9zhbGwUEptWvKRHSi0rXt1KIL0viNCzNpYK3Xt4Vth/LnSUJtHiQzXXQm+tcQDuUmlUuIUJc9gL7qpcfwohyJfOWlzCCG32AVJWkEKmrRBUvhYwH02nOD8X4DQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hH/Lwx8vShbnr1ILBIJHBEBZXrYhjjtqqv7AZWnlFAg=;
- b=XtTPef96Ktru4hGx1JefdQAJR6hCFzSRRqXe6a5bjtEmEPHxmyv3ygkMEU2Ie9d61KQd7/g6He4N1hdO3n4Zv+Rzw9h/bGi75SGXhsrYKiGaOkqSt49syZahWK53vhZ3t2ltekbXO8VqgdWzAn9PO/m3M45FlE0JfC9PjAbhNIs=
-Received: from SA1PR21MB1317.namprd21.prod.outlook.com (2603:10b6:806:1f0::9)
- by SA6PR21MB4509.namprd21.prod.outlook.com (2603:10b6:806:422::5) with
+ bh=12UdhKKr03t3j2AvC8E80IoXaxQ8Qe7z5ai+zzHFUaY=;
+ b=LIdNM8u5ArSS+BSyBilnx8twJ/8EtVhBXSHf1GWR7cC4Dog96q00iLGkdIIN/VCdJfbk9QlodJfDFLJxVXw2PRCQPPb4MGuFeI+dNNxEDs8eSyOxm2y6+pqHtSQ04zLjohQJoRg/eh6Fo0Z/w4L5jwhRSWsnf9USAT4VJA3vxxc+mPpfU52KibhQtMTrrm1Ub8UyeizlRugYbF6I0BAhJ4dBrfpIDBYTbNC9bAOAneJAjvAJhEdh7VJXvuHX98njQVEZvtJAiM+hj04q1GR3xxD4DGHCSiQrAi0KD4nDMTg+I5IUqz9ULkmK0+oE14yMqcwOAVnDHtrF7cvFA3gBpA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SA3PR02MB10083.namprd02.prod.outlook.com (2603:10b6:806:3a0::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.14; Fri, 1 Nov
- 2024 20:26:36 +0000
-Received: from SA1PR21MB1317.namprd21.prod.outlook.com
- ([fe80::67ed:774d:42d4:f6ef]) by SA1PR21MB1317.namprd21.prod.outlook.com
- ([fe80::67ed:774d:42d4:f6ef%4]) with mapi id 15.20.8137.002; Fri, 1 Nov 2024
- 20:26:36 +0000
-From: Dexuan Cui <decui@microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>, KY Srinivasan <kys@microsoft.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.20; Fri, 1 Nov
+ 2024 21:11:00 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8114.015; Fri, 1 Nov 2024
+ 21:11:00 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Dexuan Cui <decui@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Vitaly
  Kuznetsov <vkuznets@redhat.com>, Greg Kroah-Hartman
 	<gregkh@linuxfoundation.org>, "open list:Hyper-V/Azure CORE AND DRIVERS"
@@ -66,90 +65,74 @@ Subject: RE: [PATCH] Drivers: hv: kvp/vss: Avoid accessing a ringbuffer not
  initialized yet
 Thread-Topic: [PATCH] Drivers: hv: kvp/vss: Avoid accessing a ringbuffer not
  initialized yet
-Thread-Index: AQHbKlyHss5KWmFug0aMZtYQWKCj3bKfoGAQgABd3QCAAY9pkIAAGyaAgAEysEA=
-Date: Fri, 1 Nov 2024 20:26:36 +0000
+Thread-Index:
+ AQHbAxLFR0Ovyi2Whk6CD70yxEN1m7KerxPQgAFHmYCAAFK20IABlxyAgAATwVCAAT5NAIAAC46g
+Date: Fri, 1 Nov 2024 21:11:00 +0000
 Message-ID:
- <SA1PR21MB13170389BCF4A5A05FE359EDBF562@SA1PR21MB1317.namprd21.prod.outlook.com>
+ <SN6PR02MB41570A66CB3660C803BB6063D4562@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20240909164719.41000-1-decui@microsoft.com>
  <SN6PR02MB4157630C523459A75C83C498D44B2@SN6PR02MB4157.namprd02.prod.outlook.com>
  <SA1PR21MB131794D6AF620CB201958EFCBF542@SA1PR21MB1317.namprd21.prod.outlook.com>
  <SN6PR02MB4157CDB89A61BA857E6FC0BFD4552@SN6PR02MB4157.namprd02.prod.outlook.com>
  <SA1PR21MB1317A021B6C5D552B38C4368BF562@SA1PR21MB1317.namprd21.prod.outlook.com>
  <SN6PR02MB4157D9B44F3B94E17993BB6DD4562@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SA1PR21MB13170389BCF4A5A05FE359EDBF562@SA1PR21MB1317.namprd21.prod.outlook.com>
 In-Reply-To:
- <SN6PR02MB4157D9B44F3B94E17993BB6DD4562@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SA1PR21MB13170389BCF4A5A05FE359EDBF562@SA1PR21MB1317.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f2ddb8d8-b0cc-4ed7-8c4d-806213566d4b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-10-30T18:35:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1317:EE_|SA6PR21MB4509:EE_
-x-ms-office365-filtering-correlation-id: 9b4b60a5-bf18-4672-4da1-08dcfab37bab
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA3PR02MB10083:EE_
+x-ms-office365-filtering-correlation-id: cbcc57d9-d51e-41ac-ae52-08dcfab9af96
 x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|366016|376014|1800799024|38070700018;
+ BCL:0;ARA:14566002|461199028|15080799006|8060799006|8062599003|19110799003|102099032|440099028|3412199025;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?1h43QqG19qCt5lflsiK7WmV1e9eRU9zgvn/nZ3RByqFiFF1N1plfaHx63ZFw?=
- =?us-ascii?Q?78LXlRRdmXbbbFyUw8WlCtJJ3G++VAts/Jv68cO7marmhkVhHu6lzB37cKP/?=
- =?us-ascii?Q?oFsGckHPoxuvurJuRYL6QhhJ5H6VUAu/w1iNViv0d52qP2oGcZpxkNWBkd+A?=
- =?us-ascii?Q?2yVuDK9ZGdHSbCu4+apj1xbMombLdNNeQMscK8ZcX2j16xfjVqfLZQrBetiL?=
- =?us-ascii?Q?7XUnOEdwVt9NaAIETnk3OVGY6npVAyNeKSMcGn6JJpi7dVwsLt3nsQzaS64w?=
- =?us-ascii?Q?HFGcXE75DupD6ly/1SYKWjqmc5dvPa12Jj1szJ+eZm8Ow0gnJg2Vk7ciK84U?=
- =?us-ascii?Q?OrOPvs7bc7Z/FfHD3mVi+WsnbtXmdtjsLuvHtN+vAQD5cEpSq3w1ZvSMY0x1?=
- =?us-ascii?Q?+AZM3r88Yw1ubwenc89sovTkk6DoUZ9XP2913vduH0mlpo1fby0cFfkOxbNv?=
- =?us-ascii?Q?oB+fC7dgf9hhH/bznFnbxdLpDXIwTbHHyuOQJ8ZTPzgyhUkwvqSyPSBlUQ+n?=
- =?us-ascii?Q?elY3ElOPxpY8xbnjbATxKdDXm2UcDLuXM5A4FPYljiHLlcST1nvHBSD4zZPg?=
- =?us-ascii?Q?+nJ2DfbZi8LMblNlJPESFMu4IBIv6Hca/bwp3hlGtW6rk3fRkCUXuPLCddtc?=
- =?us-ascii?Q?BK5rQ72CzAbEe/P+1bvEtRsvGi19tq7L/I3uSQdTJgofcmB4LT6hEm4KvbFN?=
- =?us-ascii?Q?l2to2s2Z/bQgog5tS9/GlrIFNeW2tWQUFbY0YMRGnyRyMC4yPOfeeX/2I75d?=
- =?us-ascii?Q?oJ9N1EViW78yThw+94b2wZTU98kJQ7I5e1wJqVqwRhfrDARVAJMKquyIbvvo?=
- =?us-ascii?Q?yDXDb1d0O6d8APNQgg3cn+UMzdFrKxouaqoBYcPIRkwRCvK+LOKyEHGPvsg5?=
- =?us-ascii?Q?hgImFWRfUYMApglLcaL4In4eQkjoq8J5y5tald51G38eZp5QN/HdH+taXTTL?=
- =?us-ascii?Q?flOWcU6lLfGZHutvSl9E57WIXDX5GIKRWYVdHS272Tg0qc/RG7ZOufIC00Ue?=
- =?us-ascii?Q?9arDMRxOekee9X2Ia05tGktRJadeO2iDu3VrNzOb3KXuPNVFOvFU50cJW6z6?=
- =?us-ascii?Q?A4MhaGz4hbJ3IE1Xv/nwYiVjjTW9D40CSlrRC1iiC9QJiYLhUTIRzUThVsJM?=
- =?us-ascii?Q?dYcbaYMcOPWaV+9DyxZi3DNzXv/FU/CnqlVQhCXQ4Pjw8tWiiGosIBOJJKlt?=
- =?us-ascii?Q?kgFhr/p8UvuuEuKNK4bq20POB4TKLGSblstcEeaVo3BvrgkZtUdqcJ+er9FH?=
- =?us-ascii?Q?+2MhFBK6liAthXXXSoXNQjnFAqWFHX+/L5J/rCZ/ovzH+x03jPz/ICXp4tzn?=
- =?us-ascii?Q?B8bHHGyuo09BY1pKGKXXecOGt0cq96BRO6EM6po/thmr1DXVsRuVPv8tyrUM?=
- =?us-ascii?Q?WrJpuy0=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1317.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+ =?us-ascii?Q?SyCY65+8Z7xOd5Pd161EvrdWFqfgAD7TBw4RWIjnwD+zrp9nZ35hKWIJma4p?=
+ =?us-ascii?Q?/6xrrLe3iWnUSJh1U2oxnWctaMjCZdYdHtLxl1ZTCWFgOApFlLbdL1SBSV3E?=
+ =?us-ascii?Q?xcneclUAwtvsJpBDD68iQMTDyQOeaOBgqEh8s+3I7x2kqEEzert0ZiQKKweK?=
+ =?us-ascii?Q?uHmVlkOm4dGtfHzzYwqbQvQ+c9oVJVUab+LyEjG3eM/ZPNxGGGv3yKkZiamf?=
+ =?us-ascii?Q?Y/Z82UkkewP1qouNXfTjBozQombffbaVHk4ByNWIx1NgqY8c/a6IeWSc3zgO?=
+ =?us-ascii?Q?8DnztfZ+DmJEZEfywxv+yQ/ZFkYj745kwq4qBBGz3PW0U/uA11DH32ESwMos?=
+ =?us-ascii?Q?B0D6pTuuRYC2eESxsoTxbEKVhLplr5lSDpkfMQPuXbOFuHg2cP8qhjm03EbZ?=
+ =?us-ascii?Q?kgxVRMLxT9sZEK6qC1K7iWHm0dXYJZwubX+ytQOIhvTKlILepdCjnULV5NNS?=
+ =?us-ascii?Q?RjFXNLYbtoO0JwI9ifo8VSKUNU15rxu2JdP5MHG0vQSAdYvpjiVlgCYc1yO8?=
+ =?us-ascii?Q?jbV82mVSezlgCFC9bE4bzri1mWNMdBea2laG9PcOAfOnmt0zZvyzEMtfqGfe?=
+ =?us-ascii?Q?9aLXEz1v+9gxQprf2/beHHYj6qFI4isdUquBeuPJB4sCt6/VdLNIAPWMdN3x?=
+ =?us-ascii?Q?bh+H4XsLuyntlxUyxFi++ciuOHcQxpUgWYNgL5msIkQ7qkI7Xlbq0Q+7x3/7?=
+ =?us-ascii?Q?7I2Huq0TuYPZcKtMUfiMq6QITHGOiiEbIyuF6SJIqnrR0l0FXxrCkkRvEHbr?=
+ =?us-ascii?Q?U6GV8wJXFEp/N5W6LWlKZgGd74vvDCdK1onRcoYyhsQ05hCbqlsZsfDFlqgK?=
+ =?us-ascii?Q?Wd13oqHV+e095uedFMf6fnv0KYNfEfx/k9hu5FO0u3I3m1ucx4hBeo9xy/YY?=
+ =?us-ascii?Q?1lkMGJP06brwF8eaxeOI4TZgL/a/KeWcqM4YCQTrEShhyBkxt3HoLg0lmUbW?=
+ =?us-ascii?Q?0/hWm5O/FvUGTNscQT5PP9nzaTHS7R3mPr3QqCqdWuX8pxWuraHSWro++V7t?=
+ =?us-ascii?Q?hKdB?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VfqzBE8UDZYx3cd7gaD0V8S0KSyRpzCrUpxFhLEJGpBebZbEhy1TVGVY/KqV?=
- =?us-ascii?Q?+J38wnYimoU2HfrLBCz2Exk7SJ1Ar4P4278JbkTEeRiyyv/hKzg0JcSgYrXh?=
- =?us-ascii?Q?BuFzKdGahl5SXeOepqbQjfW+WsLhhVg/YyKZ45enEmB7+KJm/1TH97zOtzXo?=
- =?us-ascii?Q?VuTR/sVcS2ezH2EzmPFsx1YxhPrwSKiO6X78jh7AC1W/O3vK8iD4CNWsoU3c?=
- =?us-ascii?Q?u5C2Lx247j3DgGQ6leAiPIEZzwbPuHr3AdPIDZzQW/u8xBue5RLr0Z9D2WXc?=
- =?us-ascii?Q?G7bp7AbCacpfHJ2FeJAiQfxpzMLwG3enD4a1XVeTwVGkWVX18JQVt5mL9OXb?=
- =?us-ascii?Q?Wq8OWkYDX6Gai6ODwi5zuJB2AGQp7s27zD7VWlkQUlqJAMx72kzgcXaLU0Ud?=
- =?us-ascii?Q?bL80gclPyF4kuN68pbuuHaLkVAJI0rAlxpS0LLCzHD6gkrkVoAYGPQhWhk+8?=
- =?us-ascii?Q?+myuiFeSwNoTHXr7b6ojuf/x8OwHRrAY8gZ48SkrpDF2uUakCzKJSolGRg2R?=
- =?us-ascii?Q?NGt5vfhSSC+4LUa55i29bt2/Mp3qOWiIAaUWZd0Dog0ujK6DSwtsOr2g80Z0?=
- =?us-ascii?Q?/IaUwa0Q48oZYxjmyhJcvq3hIyVQXDw9YuZei/d4Ky46Bnlk4Ux+K1oFPvea?=
- =?us-ascii?Q?Z/wpLY9NIymB2teG3EDqrjZfrC2JuR4joPkBb3cvLGa3wtDtYlKzXmrureEL?=
- =?us-ascii?Q?YSsIhZ0APndQfOTcHeft0Enkw2M3Ei09VqvniZ1cCQwc9pS0ltGhYtQ33V3l?=
- =?us-ascii?Q?vwJhdO/NtLaiaLXN7Ct7+IWJmZhgqwS8jbJzub+T6ekkMy2piZruomXwr/ln?=
- =?us-ascii?Q?xSC/31O8fQsuPlIgcpOMaSKFBgPiMbBfDd1V/K1DJQnGrhC1vQig0HuQS6af?=
- =?us-ascii?Q?1AD2UFEUuvp9CkszaG/JPn6zxscYyGlyYlKwwLbP4YTBN+ymtaCi3IWwSd6H?=
- =?us-ascii?Q?apgXB+/tBYYOfSgUUUR5yhSi6sxuXRMe2PGuo6WlqNyS+5358+5T8TqSM1QN?=
- =?us-ascii?Q?exLIFkXN2gFE1H/TwrY8xRpq0iHSySOU+ByTf6vIxCv79+FV9YeWWCkRrfGz?=
- =?us-ascii?Q?oYQdLqsBy6IGTZkF+HOq1w8801nFZ827noCqV0W81DiXpgpoirl61CcUsVvg?=
- =?us-ascii?Q?M3ehduyjBFe3XX71jsmUnwnO4nqTEcg7gsAHJ/Om/NsyJWQjcAbV0Lx1h+1q?=
- =?us-ascii?Q?Atk2bgBPEPAKebOv4fBpjB4pd8/aNHaTC7ZfSsHhqzUzyQX/I8p+Q6i7zJ1f?=
- =?us-ascii?Q?2KPcgqaRs0g+FGq2CZKCXZTcQMcoGM5hIQErItpS8Imelid+7woMeDb29HK6?=
- =?us-ascii?Q?RebKFdkOAP1a8hoekvEfZpSh+Qok6tJF8N9vhCrJEmaPM+7LYd7MMnVbeTiI?=
- =?us-ascii?Q?KZeosV1rCtg5pd8VkN/iqdhJmb23AJqws+S2Vj/WOx5OHFOUQpT4q3a4hw2Q?=
- =?us-ascii?Q?luBMYSBNXrYFngPX4fn2VLau0KLcCsDSJMtviPGreFgMDOrIayyvrlrwXtIc?=
- =?us-ascii?Q?RuXaPdpROtPESGqte6Cubd89jxWOTwlnkZGtW/cN+5sEfpgoPRMxv0WZJUWG?=
- =?us-ascii?Q?u58M+eoA9jKDdLPbNc9Bm1vPyON6D5Nfg13vQIi0vmAanIcQv4PmimXOYESD?=
- =?us-ascii?Q?Uf4SJxE6Zu7hIpssKRMmpCo=3D?=
+ =?us-ascii?Q?Av+iITcMNP/leDybrTCAuxRtCuoCKTPW85xsidc9mnIp/zN02d5SgDaDBk7t?=
+ =?us-ascii?Q?WvxrPUds6Qx61rc4qX+6EHag3KmkrPHv0o8lsw8jVb0xxv9vaoBhmvyy8pEZ?=
+ =?us-ascii?Q?pt7374nrxsTHN39HM65Dj0ca08Yj1l47RbVxyp8P7O9zJ5P7XJpuPhyqDTlZ?=
+ =?us-ascii?Q?/pqIIlhpm6am6orLEM83FoUzD5TuXFQdbkvATjptdXppgR+uB0QH3mjeCAxL?=
+ =?us-ascii?Q?ehx9KoM7fVVhu8wq2yPh8VOy86hCeumCq4iFhPyCVdVVOh0JlCApMiVVsgLB?=
+ =?us-ascii?Q?p39nRmO7NWeaeXhZJO5jY34yuFBJU2Iv8DdMUcF/EpbIoq/kpNXAQ+ohDsff?=
+ =?us-ascii?Q?WO21nDw9mtIzVTw4ZLIVdPAJhVAejXOh+L3GqwvMvST6ftQ2EYdrcULShHpu?=
+ =?us-ascii?Q?Lv3pVViE69FSp9EkuTxkR//EGmAetcH/L3mZb8h/lTRdiswQwjmlit25EhWT?=
+ =?us-ascii?Q?Tg1FuEcq/4tjuhhYgUESRbf7HS32tajGwKXj+xOF53Y2kUXo5m20EG7XPozK?=
+ =?us-ascii?Q?0juupdsjZUbGdxqGHHY2bwT5NDa1GTu1d4x+IcA2N/QmEmm4+tBzQGvnnnwk?=
+ =?us-ascii?Q?teh8qoC4/gw2TZOhvFNHba//30a3ARQCSXrtTynozGc835KxyUd0A4nCoywj?=
+ =?us-ascii?Q?RMUZfv4D+qTMI3XB8cXRdp/u4+DJ5NCBLFh8VJWrXuoazvdGyRqkta8KKMEE?=
+ =?us-ascii?Q?csfuFskCSNqGetfWzrHRCSA04dmTV5k1JTROYIZr8ftk+k23t4EX3Xvu4biF?=
+ =?us-ascii?Q?ysaooWvWeQZqU/n0P0xBg6eRlTJ1eGaRs2ZJt7lac4aNznJNzosKw15saeNQ?=
+ =?us-ascii?Q?JgmFpNgya0txT2kBe6y8KOZFZN3kwDCyGKbedrB/9ReIT+C6iuA5FgUNLZyH?=
+ =?us-ascii?Q?0WykVJRYL13SPQh/wfgxxpm6v8yrHLCx9y0eIMCWDE9aqXjkvHV/0qRJOOke?=
+ =?us-ascii?Q?0t1MVHvSF1iIErwbse8Q5j279yKOxAQfQYmrOS1lDNIXaTa/ktNH5vx43GsX?=
+ =?us-ascii?Q?5e3Y+eDersmyc87wDvw+b+0T11QYp1VYI3uYHsh3shKHHvi1/p23DeEMoVex?=
+ =?us-ascii?Q?pUFRn5in4Gt6B7exahpNUYYizvK22o3byGenO0T871fZBAUDmYphJLY7jbcI?=
+ =?us-ascii?Q?q1KUonK6IYSdQWbGaZn+/JnNF4igkWEpP/p6hH9S5ApGt4w+EM/NaFJiw6XP?=
+ =?us-ascii?Q?8V4oMmPOE9oY3ETJkPNfZ1qOTSOJg99eocBjdYB6jlfN7+dSbhTSRYbVbTA?=
+ =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -158,73 +141,83 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1317.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b4b60a5-bf18-4672-4da1-08dcfab37bab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2024 20:26:36.0375
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbcc57d9-d51e-41ac-ae52-08dcfab9af96
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2024 21:11:00.1333
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EIJsBxokbb2rQQj/a91DDHQ/5gVaYCTQtTCt1feXrl8k1e7t5lgaF7r8DfL/b0e/19u4QBrpCNmvFKjE5BH7HQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4509
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR02MB10083
 
-> From: Michael Kelley <mhklinux@outlook.com>
-> Sent: Thursday, October 31, 2024 6:39 PM
-> > > From: Michael Kelley <mhklinux@outlook.com>
-> > > Sent: Wednesday, October 30, 2024 5:12 PM
-> > > [...]
-> > > What do you think about this (compile tested only), which splits the
-> > > "init" function into two parts for devices that have char devs? I'm
-> > > trying to avoid adding yet another synchronization point by just
-> > > doing the init operations in the right order -- i.e., don't create th=
-e
-> > > user space /dev entry until the VMBus channel is ready.
-> > >
-> > > Michael
-> >
-> > Thanks, I think this works! This is a better fix.
-
-Michael, will you post a formal patch or want me to do it?
-Either works for me.
-
-> > > +	if (srv->util_init_transport) {
-> > > +		ret =3D srv->util_init_transport();
-> > > +		if (ret) {
-> > > +			ret =3D -ENODEV;
-> > IMO we don't need the line above, since the 'ret' from
-> > srv->util_init_transport()  is already a standard error code.
+From: Dexuan Cui <decui@microsoft.com> Sent: Friday, November 1, 2024 1:27 =
+PM
 >=20
-> I was just now looking at call_driver_probe(), and it behaves
-> slightly differently for ENODEV and ENXIO vs. other error
-> codes. ENODEV and ENXIO don't output a message to the
-> console unless debugging is enabled, while other error codes
-> always output a message to the console. Forcing the error to
-> ENODEV has been there since the util_probe() code came out
-> of staging in year 2011. But I don't really have a preference
-> either way.
+> > From: Michael Kelley <mhklinux@outlook.com>
+> > Sent: Thursday, October 31, 2024 6:39 PM
+> > > > From: Michael Kelley <mhklinux@outlook.com>
+> > > > Sent: Wednesday, October 30, 2024 5:12 PM
+> > > > [...]
+> > > > What do you think about this (compile tested only), which splits th=
+e
+> > > > "init" function into two parts for devices that have char devs? I'm
+> > > > trying to avoid adding yet another synchronization point by just
+> > > > doing the init operations in the right order -- i.e., don't create =
+the
+> > > > user space /dev entry until the VMBus channel is ready.
+> > > >
+> > > > Michael
+> > >
+> > > Thanks, I think this works! This is a better fix.
+>=20
+> Michael, will you post a formal patch or want me to do it?
+> Either works for me.
 
-util_probe() is called by vmbus_probe(), which uses pr_err() to print
-the 'ret'. If the 'ret' is forced to ENODEV, the message in vmbus_probe()
-may be a little misleading since the real error code is hidden,
-especially when srv->util_init_transport() doesn't print any error
-message.
+I can do it. You probably have more pressing issues to keep
+you busy .... :-)
 
-vmbus_probe() is called by call_driver_probe. I guess originally
-KY wanted to use ENODEV to avoid the extra message for the util
-devices in call_driver_probe() in non-debugging mode, but the other
-VSC drivers don't follow this usage.
+>=20
+> > > > +	if (srv->util_init_transport) {
+> > > > +		ret =3D srv->util_init_transport();
+> > > > +		if (ret) {
+> > > > +			ret =3D -ENODEV;
+> > > IMO we don't need the line above, since the 'ret' from
+> > > srv->util_init_transport()  is already a standard error code.
+> >
+> > I was just now looking at call_driver_probe(), and it behaves
+> > slightly differently for ENODEV and ENXIO vs. other error
+> > codes. ENODEV and ENXIO don't output a message to the
+> > console unless debugging is enabled, while other error codes
+> > always output a message to the console. Forcing the error to
+> > ENODEV has been there since the util_probe() code came out
+> > of staging in year 2011. But I don't really have a preference
+> > either way.
+>=20
+> util_probe() is called by vmbus_probe(), which uses pr_err() to print
+> the 'ret'. If the 'ret' is forced to ENODEV, the message in vmbus_probe()
+> may be a little misleading since the real error code is hidden,
+> especially when srv->util_init_transport() doesn't print any error
+> message.
+>=20
+> vmbus_probe() is called by call_driver_probe. I guess originally
+> KY wanted to use ENODEV to avoid the extra message for the util
+> devices in call_driver_probe() in non-debugging mode, but the other
+> VSC drivers don't follow this usage.
+>=20
+> util_probe() can return a non-ENODEV error code anyway, e.g.
+> ENOMEM and whatever error code from vmbus_open(). IMO,
+> srv->util_init and srv->util_init_transport should not be treated
+> specially.
+>=20
+> IMO it's better to not add new code to force the 'ret' to
+> ENODEV, and we'd want to clean up the existing use of ENODEV
+> in util_probe().
+>=20
 
-util_probe() can return a non-ENODEV error code anyway, e.g.
-ENOMEM and whatever error code from vmbus_open(). IMO,
-srv->util_init and srv->util_init_transport should not be treated
-specially.
+Fair enough. I'll do it that way.
 
-IMO it's better to not add new code to force the 'ret' to
-ENODEV, and we'd want to clean up the existing use of ENODEV
-in util_probe().
-=20
-Thanks,
-Dexuan
+Michael
 
