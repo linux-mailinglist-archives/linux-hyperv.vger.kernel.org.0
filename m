@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-3241-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3242-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ED899BA710
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 18:07:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2502B9BA714
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 18:07:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57DD01C219E1
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 17:07:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46C261C218E7
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 17:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F0619AA58;
-	Sun,  3 Nov 2024 17:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD6FF1A01B9;
+	Sun,  3 Nov 2024 17:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MrPXyPkE"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="FKhFlW+f"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FCF18BBBE;
-	Sun,  3 Nov 2024 17:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE17D198A0E;
+	Sun,  3 Nov 2024 17:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730653487; cv=none; b=dYCDO+Zr6pfBthXRTAN/92sJISsITjdQcJwfiOcLe+O+bSwjluo96vKul/Pbjb9n7v8t87XseB0uP93UE+Eox71BJhA2sJNW7g2ldStvhCpiTPTHhhgQCxqy7QxdVDAW009D3TGpHHHYTsw8YplpMU1m/XBXVfPqV5gxDyKx38s=
+	t=1730653488; cv=none; b=MPY0UG7ns3iQl0xTBmd5VponzDAcezsR3dITUJytMX9K6ftxZrP3ICQ3MPTcdIb71+5ugCZNWr60j8zFw2N2KA+RvAFlCZqJK7K6d3R+FfF3JcMta8Qm67AyaZs/6klGdz7xrLH2WSq2bp24Aaxp2EW0Pl+V/WViNBNgCWNdkPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730653487; c=relaxed/simple;
-	bh=nl79rluqUz7qDqQxR9i496RKtXejrl6t02e4QH5qPJI=;
+	s=arc-20240116; t=1730653488; c=relaxed/simple;
+	bh=i1lGRcvBSYaAkRCU3PsefBTXEi2eEGtd/RNZhauMerg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t2A3KPgMISsbmJV3VcdQlDZlx3Jxa9oOK2zM0ZWW/WcUOkp/vaBcmYTX3pQXPtRf+7TnJXYcfKRaHzyGjo4pTurhOqxCSQPhHhkuYXfah4AH2hlqGMlLmVoX1Qh5pr9e8xkL/OJ9eHISiPMj220lRgE57yR3pJlk1X0nLJPGZOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MrPXyPkE; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=kPDqD9yLgTfwBeAoAGE9kZKlsBz2BWZgUZImoCXvro2YjEQH3htWy4qk9/IzylJOdAdGcW2eFQcQ3YD5L9BATKz2LOkqp+88fCxejIgPJBGszhUGFzovRRWBW+qw/r7193EvoEcKs8fYb8MVO1kfvCKzUDbjPpB5BMBdeJhFqws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=FKhFlW+f; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1730653480;
-	bh=nl79rluqUz7qDqQxR9i496RKtXejrl6t02e4QH5qPJI=;
+	s=mail; t=1730653481;
+	bh=i1lGRcvBSYaAkRCU3PsefBTXEi2eEGtd/RNZhauMerg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MrPXyPkEuWuLaArcS1YGVn5YlgOUjnhynRsRbFHftaoVetXelMVaxQkJe+EiL6woE
-	 S+0agGULjab2y5uR+7KKalE5m4IP94H8VkjxsjakcHAZy5VaYR9a0QZZyYQRSiHv+/
-	 ysKDYkOHxRTXhv0Lf2m/q/BbJ0blHSQyXutxkMIo=
+	b=FKhFlW+fXVU9iiG5WHWrfxqIg2MK5RN4rmEJ6qMm9w3609SWSEqzIiyskpf0F3SE/
+	 5Hue+UAKF4NoE2Q53mkBkJ7j/9iT4JRSPm/DM+o1r+XqpuQf548H1TiWzMDARBYT4p
+	 NmQ6pgjd99tSp5B6B0CVtWY1Wv6AMrStXbMf+hV8=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sun, 03 Nov 2024 17:03:38 +0000
-Subject: [PATCH v2 09/10] sysfs: bin_attribute: add const read/write
- callback variants
+Date: Sun, 03 Nov 2024 17:03:39 +0000
+Subject: [PATCH v2 10/10] driver core: Constify attribute arguments of
+ binary attributes
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241103-sysfs-const-bin_attr-v2-9-71110628844c@weissschuh.net>
+Message-Id: <20241103-sysfs-const-bin_attr-v2-10-71110628844c@weissschuh.net>
 References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
 In-Reply-To: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -95,138 +95,67 @@ Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=4652;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=2330;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=nl79rluqUz7qDqQxR9i496RKtXejrl6t02e4QH5qPJI=;
- b=zRu/d/VZWP3doJBfzxqs7giw29YYNYi0iPXD2I6CuiN9W2SIlp8gheE3GiOLS245JLYo+Bia3
- qTMMFVAORK0D7GC1EfyiEnv7178teL6JXj2G6JdQ8X2UySjLYA2oPsa
+ bh=i1lGRcvBSYaAkRCU3PsefBTXEi2eEGtd/RNZhauMerg=;
+ b=wjQlo57jq0Wj7AlLBOYWjC3NLTcXdQ4S/vHvyo3etlKonEvBK3xDMeXVEI2nFeo1fRBiMSJWq
+ 8Dy1FhYi+4pDACqaxOlIcEPw5eL4UaDS9rJJgllbu0x7Wp3mt9dGtys
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-To make it possible to put struct bin_attribute into read-only memory,
-the sysfs core has to stop passing mutable pointers to the read() and
-write() callbacks.
-As there are numerous implementors of these callbacks throughout the
-tree it's not possible to change all of them at once.
-To enable a step-by-step transition, add new variants of the read() and
-write() callbacks which differ only in the constness of the struct
-bin_attribute argument.
-
-As most binary attributes are defined through macros, extend these
-macros to transparently handle both variants of callbacks to minimize
-the churn during the transition.
-As soon as all handlers are switch to the const variant, the non-const
-one can be removed together with the transition machinery.
+As preparation for the constification of struct bin_attribute,
+constify the arguments of the read and write callbacks.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- fs/sysfs/file.c       | 22 +++++++++++++++++-----
- include/linux/sysfs.h | 25 +++++++++++++++++++++++--
- 2 files changed, 40 insertions(+), 7 deletions(-)
+ drivers/base/node.c     | 4 ++--
+ drivers/base/topology.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 6d39696b43069010b0ad0bdaadcf9002cb70c92c..785408861c01c89fc84c787848243a13c1338367 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -91,9 +91,12 @@ static ssize_t sysfs_kf_bin_read(struct kernfs_open_file *of, char *buf,
- 			count = size - pos;
- 	}
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index eb72580288e62727e5b2198a6451cf9c2533225a..3e761633ac75826bedb5dd30b879f7cc1af95ec3 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -27,7 +27,7 @@ static const struct bus_type node_subsys = {
+ };
  
--	if (!battr->read)
-+	if (!battr->read && !battr->read_new)
- 		return -EIO;
+ static inline ssize_t cpumap_read(struct file *file, struct kobject *kobj,
+-				  struct bin_attribute *attr, char *buf,
++				  const struct bin_attribute *attr, char *buf,
+ 				  loff_t off, size_t count)
+ {
+ 	struct device *dev = kobj_to_dev(kobj);
+@@ -48,7 +48,7 @@ static inline ssize_t cpumap_read(struct file *file, struct kobject *kobj,
+ static BIN_ATTR_RO(cpumap, CPUMAP_FILE_MAX_BYTES);
  
-+	if (battr->read_new)
-+		return battr->read_new(of->file, kobj, battr, buf, pos, count);
-+
- 	return battr->read(of->file, kobj, battr, buf, pos, count);
- }
+ static inline ssize_t cpulist_read(struct file *file, struct kobject *kobj,
+-				   struct bin_attribute *attr, char *buf,
++				   const struct bin_attribute *attr, char *buf,
+ 				   loff_t off, size_t count)
+ {
+ 	struct device *dev = kobj_to_dev(kobj);
+diff --git a/drivers/base/topology.c b/drivers/base/topology.c
+index 89f98be5c5b9915b2974e184bf89c4c25c183095..1090751d7f458ce8d2a50e82d65b8ce31e938f15 100644
+--- a/drivers/base/topology.c
++++ b/drivers/base/topology.c
+@@ -23,7 +23,7 @@ static ssize_t name##_show(struct device *dev,				\
  
-@@ -152,9 +155,12 @@ static ssize_t sysfs_kf_bin_write(struct kernfs_open_file *of, char *buf,
- 	if (!count)
- 		return 0;
- 
--	if (!battr->write)
-+	if (!battr->write && !battr->write_new)
- 		return -EIO;
- 
-+	if (battr->write_new)
-+		return battr->write_new(of->file, kobj, battr, buf, pos, count);
-+
- 	return battr->write(of->file, kobj, battr, buf, pos, count);
- }
- 
-@@ -323,13 +329,19 @@ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
- 	const struct kernfs_ops *ops;
- 	struct kernfs_node *kn;
- 
-+	if (battr->read && battr->read_new)
-+		return -EINVAL;
-+
-+	if (battr->write && battr->write_new)
-+		return -EINVAL;
-+
- 	if (battr->mmap)
- 		ops = &sysfs_bin_kfops_mmap;
--	else if (battr->read && battr->write)
-+	else if ((battr->read || battr->read_new) && (battr->write || battr->write_new))
- 		ops = &sysfs_bin_kfops_rw;
--	else if (battr->read)
-+	else if (battr->read || battr->read_new)
- 		ops = &sysfs_bin_kfops_ro;
--	else if (battr->write)
-+	else if (battr->write || battr->write_new)
- 		ops = &sysfs_bin_kfops_wo;
- 	else
- 		ops = &sysfs_file_kfops_empty;
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index d17c473c1ef292875475bf3bdf62d07241c13882..d713a6445a6267145a7014f308df3bb25b8c3287 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -305,8 +305,12 @@ struct bin_attribute {
- 	struct address_space *(*f_mapping)(void);
- 	ssize_t (*read)(struct file *, struct kobject *, struct bin_attribute *,
- 			char *, loff_t, size_t);
-+	ssize_t (*read_new)(struct file *, struct kobject *, const struct bin_attribute *,
-+			    char *, loff_t, size_t);
- 	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
- 			 char *, loff_t, size_t);
-+	ssize_t (*write_new)(struct file *, struct kobject *,
-+			     const struct bin_attribute *, char *, loff_t, size_t);
- 	loff_t (*llseek)(struct file *, struct kobject *, const struct bin_attribute *,
- 			 loff_t, int);
- 	int (*mmap)(struct file *, struct kobject *, const struct bin_attribute *attr,
-@@ -325,11 +329,28 @@ struct bin_attribute {
-  */
- #define sysfs_bin_attr_init(bin_attr) sysfs_attr_init(&(bin_attr)->attr)
- 
-+typedef ssize_t __sysfs_bin_rw_handler_new(struct file *, struct kobject *,
-+					   const struct bin_attribute *, char *, loff_t, size_t);
-+
- /* macros to create static binary attributes easier */
- #define __BIN_ATTR(_name, _mode, _read, _write, _size) {		\
- 	.attr = { .name = __stringify(_name), .mode = _mode },		\
--	.read	= _read,						\
--	.write	= _write,						\
-+	.read = _Generic(_read,						\
-+		__sysfs_bin_rw_handler_new * : NULL,			\
-+		default : _read						\
-+	),								\
-+	.read_new = _Generic(_read,					\
-+		__sysfs_bin_rw_handler_new * : _read,			\
-+		default : NULL						\
-+	),								\
-+	.write = _Generic(_write,					\
-+		__sysfs_bin_rw_handler_new * : NULL,			\
-+		default : _write					\
-+	),								\
-+	.write_new = _Generic(_write,					\
-+		__sysfs_bin_rw_handler_new * : _write,			\
-+		default : NULL						\
-+	),								\
- 	.size	= _size,						\
- }
- 
+ #define define_siblings_read_func(name, mask)					\
+ static ssize_t name##_read(struct file *file, struct kobject *kobj,		\
+-			   struct bin_attribute *attr, char *buf,		\
++			   const struct bin_attribute *attr, char *buf,		\
+ 			   loff_t off, size_t count)				\
+ {										\
+ 	struct device *dev = kobj_to_dev(kobj);                                 \
+@@ -33,7 +33,7 @@ static ssize_t name##_read(struct file *file, struct kobject *kobj,		\
+ }										\
+ 										\
+ static ssize_t name##_list_read(struct file *file, struct kobject *kobj,	\
+-				struct bin_attribute *attr, char *buf,		\
++				const struct bin_attribute *attr, char *buf,	\
+ 				loff_t off, size_t count)			\
+ {										\
+ 	struct device *dev = kobj_to_dev(kobj);					\
 
 -- 
 2.47.0
