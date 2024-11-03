@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-3246-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3247-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 511D59BA724
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 18:07:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 298029BA728
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 18:07:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EDA82814C5
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 17:07:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B9B81C21027
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 17:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60B41AB526;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7641AB6ED;
 	Sun,  3 Nov 2024 17:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NgM/ElQm"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="SyRnyZMY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C56199FD0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9853D19CC02;
 	Sun,  3 Nov 2024 17:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730653489; cv=none; b=Jd07YNsKz6BZsU100rujx0sGwRQIBmeM6fdWXHANY/ZaQqf2o/PFd28qTQLpSCFXtdMRL26nf+HK3MhWHvke9UEuyOezjS6gkjNUBhAN8awoIAp6VTE7s45LDYAIAOQ3jhAakMtXK8tsCbvhm/KjMQN43Nqle1Ru0ehxwn1hUcM=
+	t=1730653489; cv=none; b=LeuKic6DVkcfaREC21J5lYKNCKb9DPt06M8Rb0s7affUDhdkJah8hkGfi82RSVABrE0NqBrxPo12lYwtGHB3uXGHZmNs9S1gazVVgl7OP0yLJDZ236vpJhLcVH03mosfsFdimKxIgc4SZDrRYLV2e/tm+X+aee2KRR2iHUqEQik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730653489; c=relaxed/simple;
-	bh=Knwg+Z2CkMm4IK1d+HsEFrKnqSyqDlXFkrBwo+TwWXc=;
+	bh=GMdVqpFwoDETa/zGkV60zA/YyucohMN7ciiORB0dDFM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rp4hLghj2syI+cVHG5bllgMlckTKA0nfOngs22dqse8cpw2ri0YTg/t9entFpJX+7bey4CEo5eGPB1Du1+EQ6T2IIRtI63829cVLX5s1WolYaPt0+gvkuDJqrGAyIRfDE01HmuOIzZCyrE7Uzf+SXklFs9t85N3pK1hSn8D9T+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NgM/ElQm; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=tqM1IKuO1od+FXY9l7RxefHyL4qSipFHlQ65C1VIKJvJTkBTIKRim+sYmJFBgL6a2yKE70v2k1M6SfZTI1MhDwIn0y0fX68i7rejtbKNEAZ0SIj0d4cFL5Z5Wyg2+f2ieFcbmAHebMNBPSwsMJkpZUqDvpp8QVMa5mOGNhGBloo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=SyRnyZMY; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1730653481;
-	bh=Knwg+Z2CkMm4IK1d+HsEFrKnqSyqDlXFkrBwo+TwWXc=;
+	bh=GMdVqpFwoDETa/zGkV60zA/YyucohMN7ciiORB0dDFM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NgM/ElQmvf59/YWbjDqRbVuMEl0pDjY+ObTO6d8h7LUcSEHYmSbo42n8NiaNsD+YV
-	 W/SF6kIvUGW+OWHAuixbbmiWBTAsGaJ1bUJJ75TWxvkGrAhk2IGeTOWoy2uiVdU/7n
-	 BT8O0X22pGVKUUwyGIBh7YJIs16haYaygPErOxWs=
+	b=SyRnyZMYYiuvS05pAbdP2BNw8Ha3Wp0EjLxI/8VZebe+J32OJzQ0FfngSr11pbc3S
+	 3hLaAVDffCbL3wYrk/f1ofcjd6D+cxYnSPaa7E742CRmKRTph9QuWBX2pSm+y7iW5V
+	 1DVHDyNnW5ZmICuH8Tv9nJe+/D6n4jWkebWhVEBk=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sun, 03 Nov 2024 17:03:36 +0000
-Subject: [PATCH v2 07/10] sysfs: treewide: constify attribute callback of
- bin_attribute::llseek()
+Date: Sun, 03 Nov 2024 17:03:37 +0000
+Subject: [PATCH v2 08/10] sysfs: implement all BIN_ATTR_* macros in terms
+ of __BIN_ATTR()
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241103-sysfs-const-bin_attr-v2-7-71110628844c@weissschuh.net>
+Message-Id: <20241103-sysfs-const-bin_attr-v2-8-71110628844c@weissschuh.net>
 References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
 In-Reply-To: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -95,53 +95,77 @@ Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=1737;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=2547;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Knwg+Z2CkMm4IK1d+HsEFrKnqSyqDlXFkrBwo+TwWXc=;
- b=7BBy1cB2402AMdsGbWDhocbKrbJW2MgG/pXJPZgbbTP5a7oCuUuoE2vbVvQiK5iVSTaOOfRv6
- UmT00qXCNvtDaYwwoMp7tKP4VGZJJQhLqLk6CjFCbnS/F84qc7ejcEm
+ bh=GMdVqpFwoDETa/zGkV60zA/YyucohMN7ciiORB0dDFM=;
+ b=G1PulaFbJ1PZH7AnZk220ddkyci6/SVWNb+Rtvwc4kmmjYqzz3Epr6UCHfWP8qbRyhd/TurKs
+ If4brtJxns8CxxC6suNmBgy57hhP6OtLmxJDPf6RSsE1N5AsLzcns6R
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The llseek() callbacks should not modify the struct
-bin_attribute passed as argument.
-Enforce this by marking the argument as const.
-
-As there are not many callback implementers perform this change
-throughout the tree at once.
+The preparations for the upcoming constification of struct bin_attribute
+requires some logic in the structure definition macros.
+To avoid duplication of that logic in multiple macros, reimplement all
+other macros in terms of __BIN_ATTR().
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/pci/pci-sysfs.c | 2 +-
- include/linux/sysfs.h   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/sysfs.h | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 0ad3427228b12aa95325c6fc00e9686740559238..49bee70f7d375bca056476acd6528d19ead2c419 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -841,7 +841,7 @@ static const struct attribute_group pci_dev_config_attr_group = {
- static __maybe_unused loff_t
- pci_llseek_resource(struct file *filep,
- 		    struct kobject *kobj __always_unused,
--		    struct bin_attribute *attr,
-+		    const struct bin_attribute *attr,
- 		    loff_t offset, int whence)
- {
- 	return fixed_size_llseek(filep, offset, whence, attr->size);
 diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 9fcdc8cd3118f359742bfd8b708d5c3eff511042..cb2a5e277c2384f2e8add8fbf2907e8a819576ec 100644
+index cb2a5e277c2384f2e8add8fbf2907e8a819576ec..d17c473c1ef292875475bf3bdf62d07241c13882 100644
 --- a/include/linux/sysfs.h
 +++ b/include/linux/sysfs.h
-@@ -307,7 +307,7 @@ struct bin_attribute {
- 			char *, loff_t, size_t);
- 	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
- 			 char *, loff_t, size_t);
--	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
-+	loff_t (*llseek)(struct file *, struct kobject *, const struct bin_attribute *,
- 			 loff_t, int);
- 	int (*mmap)(struct file *, struct kobject *, const struct bin_attribute *attr,
- 		    struct vm_area_struct *vma);
+@@ -333,17 +333,11 @@ struct bin_attribute {
+ 	.size	= _size,						\
+ }
+ 
+-#define __BIN_ATTR_RO(_name, _size) {					\
+-	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
+-	.read	= _name##_read,						\
+-	.size	= _size,						\
+-}
++#define __BIN_ATTR_RO(_name, _size)					\
++	__BIN_ATTR(_name, 0444, _name##_read, NULL, _size)
+ 
+-#define __BIN_ATTR_WO(_name, _size) {					\
+-	.attr	= { .name = __stringify(_name), .mode = 0200 },		\
+-	.write	= _name##_write,					\
+-	.size	= _size,						\
+-}
++#define __BIN_ATTR_WO(_name, _size)					\
++	__BIN_ATTR(_name, 0200, NULL, _name##_write, _size)
+ 
+ #define __BIN_ATTR_RW(_name, _size)					\
+ 	__BIN_ATTR(_name, 0644, _name##_read, _name##_write, _size)
+@@ -364,11 +358,8 @@ struct bin_attribute bin_attr_##_name = __BIN_ATTR_WO(_name, _size)
+ struct bin_attribute bin_attr_##_name = __BIN_ATTR_RW(_name, _size)
+ 
+ 
+-#define __BIN_ATTR_ADMIN_RO(_name, _size) {					\
+-	.attr	= { .name = __stringify(_name), .mode = 0400 },		\
+-	.read	= _name##_read,						\
+-	.size	= _size,						\
+-}
++#define __BIN_ATTR_ADMIN_RO(_name, _size)				\
++	__BIN_ATTR(_name, 0400, _name##_read, NULL, _size)
+ 
+ #define __BIN_ATTR_ADMIN_RW(_name, _size)					\
+ 	__BIN_ATTR(_name, 0600, _name##_read, _name##_write, _size)
+@@ -379,10 +370,8 @@ struct bin_attribute bin_attr_##_name = __BIN_ATTR_ADMIN_RO(_name, _size)
+ #define BIN_ATTR_ADMIN_RW(_name, _size)					\
+ struct bin_attribute bin_attr_##_name = __BIN_ATTR_ADMIN_RW(_name, _size)
+ 
+-#define __BIN_ATTR_SIMPLE_RO(_name, _mode) {				\
+-	.attr	= { .name = __stringify(_name), .mode = _mode },	\
+-	.read	= sysfs_bin_attr_simple_read,				\
+-}
++#define __BIN_ATTR_SIMPLE_RO(_name, _mode)				\
++	__BIN_ATTR(_name, _mode, sysfs_bin_attr_simple_read, NULL, 0)
+ 
+ #define BIN_ATTR_SIMPLE_RO(_name)					\
+ struct bin_attribute bin_attr_##_name = __BIN_ATTR_SIMPLE_RO(_name, 0444)
 
 -- 
 2.47.0
