@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-3244-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3245-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D96E89BA71A
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 18:07:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F01029BA720
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 18:07:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DC152815DB
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 17:07:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B29CB21A02
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Nov 2024 17:07:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31CF31A7240;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 727D01AAE02;
 	Sun,  3 Nov 2024 17:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="H75YdV+k"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="V5VfZeBh"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1DF199935;
-	Sun,  3 Nov 2024 17:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D18319939D;
+	Sun,  3 Nov 2024 17:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730653489; cv=none; b=Tqul43Kyy0P9lDf9WQgRe7nJMuvQJhz8Oq656HA6OqSEliDVnK+cYqq5Q8RE1L/2LLMRQRdMwGW7yr5kcpg6EtW/KNrjzlVKNEkIG4tQw79YC+w/SulIO40Pm8lAW50uSW50lzO+aCwQlh9oh1spcfrM6wLlVf5VUemo19Cfokc=
+	t=1730653489; cv=none; b=GwoiXdsapCIVV/XhPQP22sq/5E3c+iE5HShfkhjslqEnaDEpftOUDHAbXQM/98CuHIQCU+3GgML4TPuOWAllOe+BHGE3Cu/NekwV1QKLYUk0ZJfO0BwNO9Vw6b+cvgzmey+Yd1lKWM4xQPDsw2a5yKCseQYe5of9VgI14yT93fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730653489; c=relaxed/simple;
-	bh=zDhPVchfMys7HnsVtwZsrXjRXhl5fZsRZ1XGARPtegE=;
+	bh=8oN+tVBMjVju8UGiuvmEhTX5MjVK0/eJhQB1Q2KrGWg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fkhD6Z5snlp59gJxsgu5SGL+rIMM/uep4HvSXa3WEtd8feDGlBwxYgrjEbfB7FRbAM1leGW2pzusu1K4QI4LvkplQKZntBywpcwDcMWeBSSjLLJrkb7OLLTKSz6MP8TUuds2sU2h9ms9olDFuPdGTgZa8EhsGuEDHUrWF8TW1PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=H75YdV+k; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=Gz8rkwGsLofc//Llcn/5zU/XpiSjo8yqqPpN6UyaUZGGu5v7Vy8D+n6UacgUBCylaRBx9UkeqR67faWTJrsesA6cfwpca3fejB1CzK9jQSy8SZ8MpmjQ3ouUVqu7A8lDD+f4JsvkgttnFGG5XTtMFqUKsFBoG0zqBXAJpDCdRkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=V5VfZeBh; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1730653482;
-	bh=zDhPVchfMys7HnsVtwZsrXjRXhl5fZsRZ1XGARPtegE=;
+	s=mail; t=1730653481;
+	bh=8oN+tVBMjVju8UGiuvmEhTX5MjVK0/eJhQB1Q2KrGWg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H75YdV+k9aKMbCg3vYqkrITc/NSui5xg9ZVSt864cTzcQxw90svfufktDmLA8a2lW
-	 /dbglWlZm61tUtLow1Q3tyjkRdeCmG3i5aMEWTFNazRPqYODgYZJAsPEMnIPlThVwG
-	 y4spMmomoO7OqL8jTcXa0IsoXpoF9GwL6a0t8T0c=
+	b=V5VfZeBhkpEc+BJr7U99hw+VXSO0/H281e2i3OYqzSsy0SGGDBKgbIYwAQQopjk5p
+	 I7JCsIntvCcuTbL2t6kOL8I3VTTsft0tPJFg0d7SRbJHJj1BfvHU9DrPRIY2+deo0n
+	 668eR2kfbt5yn/SgMliSXeyVZwt9yiewus2l4ruQ=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sun, 03 Nov 2024 17:03:33 +0000
-Subject: [PATCH v2 04/10] nvmem: core: calculate bin_attribute size through
- bin_size()
+Date: Sun, 03 Nov 2024 17:03:35 +0000
+Subject: [PATCH v2 06/10] sysfs: treewide: constify attribute callback of
+ bin_attribute::mmap()
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241103-sysfs-const-bin_attr-v2-4-71110628844c@weissschuh.net>
+Message-Id: <20241103-sysfs-const-bin_attr-v2-6-71110628844c@weissschuh.net>
 References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
 In-Reply-To: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -95,54 +95,173 @@ Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=1407;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=7091;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=zDhPVchfMys7HnsVtwZsrXjRXhl5fZsRZ1XGARPtegE=;
- b=LIJoZnee0F8KxWypgifoxx5C03UWzUsfKRD3mTuXEg8GZQDzU4bKngbG7gE6mho+vvHyDPpYb
- T0csHWK0CZAA7NKHFKir+h35XqhjNK7+x/o8Rk9YXpQi/8Q7SU3s9Ua
+ bh=8oN+tVBMjVju8UGiuvmEhTX5MjVK0/eJhQB1Q2KrGWg=;
+ b=R3n6q+Dv0Ia776qfgM6mO9COiJ/hbKbbIydIDRQ3XaMKG9aRvi7HhpKHS1X+wwbHJsRL7kye+
+ ekmDB9xxV8TBGzZeTtNVftVmS4rbHM4mxGMeptcYkAQpdQnmMEfZR2L
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Stop abusing the is_bin_visible() callback to calculate the attribute
-size. Instead use the new, dedicated bin_size() one.
+The mmap() callbacks should not modify the struct
+bin_attribute passed as argument.
+Enforce this by marking the argument as const.
+
+As there are not many callback implementers perform this change
+throughout the tree at once.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/nvmem/core.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/alpha/kernel/pci-sysfs.c          |  6 +++---
+ drivers/misc/ocxl/sysfs.c              |  2 +-
+ drivers/pci/p2pdma.c                   |  2 +-
+ drivers/pci/pci-sysfs.c                | 10 +++++-----
+ drivers/platform/x86/intel/pmt/class.c |  2 +-
+ drivers/uio/uio_hv_generic.c           |  2 +-
+ include/linux/sysfs.h                  |  2 +-
+ 7 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 33ffa2aa4c1152398ec66b8dd7b30384c5346a6e..63370c76394ee9b8d514da074779617cef67c311 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -303,11 +303,19 @@ static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct nvmem_device *nvmem = to_nvmem_device(dev);
- 
--	attr->size = nvmem->size;
--
- 	return nvmem_bin_attr_get_umode(nvmem);
+diff --git a/arch/alpha/kernel/pci-sysfs.c b/arch/alpha/kernel/pci-sysfs.c
+index 5808a66e2a81f7eba9a245fd6a343406a1ade87d..3048758304b57afa01ddeb6558c39bdb48c9a3f6 100644
+--- a/arch/alpha/kernel/pci-sysfs.c
++++ b/arch/alpha/kernel/pci-sysfs.c
+@@ -64,7 +64,7 @@ static int __pci_mmap_fits(struct pci_dev *pdev, int num,
+  * Return: %0 on success, negative error code otherwise
+  */
+ static int pci_mmap_resource(struct kobject *kobj,
+-			     struct bin_attribute *attr,
++			     const struct bin_attribute *attr,
+ 			     struct vm_area_struct *vma, int sparse)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+@@ -93,14 +93,14 @@ static int pci_mmap_resource(struct kobject *kobj,
  }
  
-+static size_t nvmem_bin_attr_size(struct kobject *kobj,
-+				  const struct bin_attribute *attr,
-+				  int i)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct nvmem_device *nvmem = to_nvmem_device(dev);
-+
-+	return nvmem->size;
-+}
-+
- static umode_t nvmem_attr_is_visible(struct kobject *kobj,
- 				     struct attribute *attr, int i)
+ static int pci_mmap_resource_sparse(struct file *filp, struct kobject *kobj,
+-				    struct bin_attribute *attr,
++				    const struct bin_attribute *attr,
+ 				    struct vm_area_struct *vma)
  {
-@@ -383,6 +391,7 @@ static const struct attribute_group nvmem_bin_group = {
- 	.bin_attrs	= nvmem_bin_attributes,
- 	.attrs		= nvmem_attrs,
- 	.is_bin_visible = nvmem_bin_attr_is_visible,
-+	.bin_size	= nvmem_bin_attr_size,
- 	.is_visible	= nvmem_attr_is_visible,
+ 	return pci_mmap_resource(kobj, attr, vma, 1);
+ }
+ 
+ static int pci_mmap_resource_dense(struct file *filp, struct kobject *kobj,
+-				   struct bin_attribute *attr,
++				   const struct bin_attribute *attr,
+ 				   struct vm_area_struct *vma)
+ {
+ 	return pci_mmap_resource(kobj, attr, vma, 0);
+diff --git a/drivers/misc/ocxl/sysfs.c b/drivers/misc/ocxl/sysfs.c
+index 405180d47d9bff0aaa7a736bb3fecfbe318db961..07520d6e6dc55702696b8656440914c379e6e27a 100644
+--- a/drivers/misc/ocxl/sysfs.c
++++ b/drivers/misc/ocxl/sysfs.c
+@@ -125,7 +125,7 @@ static const struct vm_operations_struct global_mmio_vmops = {
+ };
+ 
+ static int global_mmio_mmap(struct file *filp, struct kobject *kobj,
+-			struct bin_attribute *bin_attr,
++			const struct bin_attribute *bin_attr,
+ 			struct vm_area_struct *vma)
+ {
+ 	struct ocxl_afu *afu = to_afu(kobj_to_dev(kobj));
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 4f47a13cb500ff5339cde426b6ccb020fcd74ae7..7abd4f546d3c071f31e622d881f5c5ac3e4de55e 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -90,7 +90,7 @@ static ssize_t published_show(struct device *dev, struct device_attribute *attr,
+ static DEVICE_ATTR_RO(published);
+ 
+ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
+-		struct bin_attribute *attr, struct vm_area_struct *vma)
++		const struct bin_attribute *attr, struct vm_area_struct *vma)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+ 	size_t len = vma->vm_end - vma->vm_start;
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 13912940ed2bb66c0086e5bea9a3cb6417ac14dd..0ad3427228b12aa95325c6fc00e9686740559238 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -910,7 +910,7 @@ static ssize_t pci_write_legacy_io(struct file *filp, struct kobject *kobj,
+  * memory space.
+  */
+ static int pci_mmap_legacy_mem(struct file *filp, struct kobject *kobj,
+-			       struct bin_attribute *attr,
++			       const struct bin_attribute *attr,
+ 			       struct vm_area_struct *vma)
+ {
+ 	struct pci_bus *bus = to_pci_bus(kobj_to_dev(kobj));
+@@ -930,7 +930,7 @@ static int pci_mmap_legacy_mem(struct file *filp, struct kobject *kobj,
+  * memory space. Returns -ENOSYS if the operation isn't supported
+  */
+ static int pci_mmap_legacy_io(struct file *filp, struct kobject *kobj,
+-			      struct bin_attribute *attr,
++			      const struct bin_attribute *attr,
+ 			      struct vm_area_struct *vma)
+ {
+ 	struct pci_bus *bus = to_pci_bus(kobj_to_dev(kobj));
+@@ -1034,7 +1034,7 @@ void pci_remove_legacy_files(struct pci_bus *b)
+  *
+  * Use the regular PCI mapping routines to map a PCI resource into userspace.
+  */
+-static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
++static int pci_mmap_resource(struct kobject *kobj, const struct bin_attribute *attr,
+ 			     struct vm_area_struct *vma, int write_combine)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+@@ -1059,14 +1059,14 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
+ }
+ 
+ static int pci_mmap_resource_uc(struct file *filp, struct kobject *kobj,
+-				struct bin_attribute *attr,
++				const struct bin_attribute *attr,
+ 				struct vm_area_struct *vma)
+ {
+ 	return pci_mmap_resource(kobj, attr, vma, 0);
+ }
+ 
+ static int pci_mmap_resource_wc(struct file *filp, struct kobject *kobj,
+-				struct bin_attribute *attr,
++				const struct bin_attribute *attr,
+ 				struct vm_area_struct *vma)
+ {
+ 	return pci_mmap_resource(kobj, attr, vma, 1);
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index c04bb7f97a4db13268fc5697887951cf8f0f5a25..f9afa23e754b8b68bd59b72d6a72d26503a21f31 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -103,7 +103,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+ 
+ static int
+ intel_pmt_mmap(struct file *filp, struct kobject *kobj,
+-		struct bin_attribute *attr, struct vm_area_struct *vma)
++		const struct bin_attribute *attr, struct vm_area_struct *vma)
+ {
+ 	struct intel_pmt_entry *entry = container_of(attr,
+ 						     struct intel_pmt_entry,
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index 8704095994118c2660f345c504b5ea466d053efb..3976360d0096d6681faf88815cc6277fb76a1d9f 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -135,7 +135,7 @@ static void hv_uio_rescind(struct vmbus_channel *channel)
+  * The ring buffer is allocated as contiguous memory by vmbus_open
+  */
+ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
+-			    struct bin_attribute *attr,
++			    const struct bin_attribute *attr,
+ 			    struct vm_area_struct *vma)
+ {
+ 	struct vmbus_channel *channel
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index d1b22d56198b55ee39fe4c4fc994f5b753641992..9fcdc8cd3118f359742bfd8b708d5c3eff511042 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -309,7 +309,7 @@ struct bin_attribute {
+ 			 char *, loff_t, size_t);
+ 	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
+ 			 loff_t, int);
+-	int (*mmap)(struct file *, struct kobject *, struct bin_attribute *attr,
++	int (*mmap)(struct file *, struct kobject *, const struct bin_attribute *attr,
+ 		    struct vm_area_struct *vma);
  };
  
 
