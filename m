@@ -1,136 +1,128 @@
-Return-Path: <linux-hyperv+bounces-3267-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3268-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A509BE2E4
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Nov 2024 10:42:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBBDE9BF1EA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Nov 2024 16:43:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B2CE1F23261
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Nov 2024 09:42:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F497285729
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Nov 2024 15:43:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEFEA1DB37C;
-	Wed,  6 Nov 2024 09:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A0F0202637;
+	Wed,  6 Nov 2024 15:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YnDm0zCU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgliIiu3"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA5C1DA624
-	for <linux-hyperv@vger.kernel.org>; Wed,  6 Nov 2024 09:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B307B20110E;
+	Wed,  6 Nov 2024 15:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730886135; cv=none; b=Gz8Bv9HVAqffIhgQsbvaBi3XfBYk7fKZpp+W6i0wfOEsdTWrS+L9U51sJW0dEHP77u44z334MXBBld+d5IEmYUaGG2r1HZy59SunZBrYd2Af6g7VGZ2gsM12ZjcHlblFU323qthLklkym6uw/I5I6RPGGwTpcyYhwtfcvYPfyaQ=
+	t=1730907793; cv=none; b=iFu5Kt1yz4wuKWBWDoaPNMdd2PtqzM3MGFtHf9ln8Ijlx5APGyDfqY74huaiZ5pNTXzNWdFPc8h7fal3PnUfOVLiBDvZs9TV+6lHTbKkeTXzSzIi/2Fdh5mRs56z/tFqTzLmtTpjMphS92UbcCmnWSRCiVAnNfuCXOo7gaxnJZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730886135; c=relaxed/simple;
-	bh=eJnazqtfisg5f/3fPRDD9Fy2ZdH6bfCsFKpXlRHSPn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFFiEAFxQhOpDo5roy14GkiOaNq2YFasbtZVAoWLK35Dmb1kH4YvOscN/HYMC+v1BcDO5rk5/7lZQ8OtYHnhsB6N8HuFHse6+OIgpngmsJzT0MsZYgH7cWlGUqWT5xKQOewtQ++CRwOI47Aaqn8v93rwKezt7+QV8Mtpj67sSV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YnDm0zCU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730886132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mTb9RMAx8DKPix4c+Y4T2Jp1EEKIyizogKHRWnrW5Hk=;
-	b=YnDm0zCUBfKR/vaXIM2kEPoLtXIp7DpbyEQPfs2vhbK2Fl7XgDfMzITPjsoXHfYXFxkfmW
-	rbtZGVluqHY8rcQNyRAFiZlGW5qutMdTQ91Iev7WAtLdhUS+sAtrJGtf6/vqse/owv7i5f
-	TJSCDZAQ400km/5FuvemfILqRR/CqNI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-498-nX-pxeqiNbafZz2axYHf1g-1; Wed, 06 Nov 2024 04:42:10 -0500
-X-MC-Unique: nX-pxeqiNbafZz2axYHf1g-1
-X-Mimecast-MFC-AGG-ID: nX-pxeqiNbafZz2axYHf1g
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43157e3521dso43743095e9.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 06 Nov 2024 01:42:10 -0800 (PST)
+	s=arc-20240116; t=1730907793; c=relaxed/simple;
+	bh=MAPHfbJLtZHhnegHWlKCHcZuDm68IfEs5pmSWtKlIVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lOe7FObIkMEmqvwFUTB0ZnCckKEOv+eDeL+sJGHeAZbK5dbcI8N+4qFts7v4zWy9hjeIZJb3c+l9zULhnvrC8ky3EYW2L4tKCWxOy3ou6JQNFGXivrjqKfUrCRivLtJIqBt2IA+bbrlpEpEi58jixJ75ICTR1jXsDWaVgRlHGYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgliIiu3; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-72061bfec2dso6326658b3a.2;
+        Wed, 06 Nov 2024 07:43:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730907791; x=1731512591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xGmuTOkwDF5EWyglbyKZX3cdG70GKqEHWRe2DvKnQV4=;
+        b=fgliIiu3SF5PQusg6jkiR6rh/D9VycQaCtJ4nqUicmSSmtF/+CCv1P02ylOxeXV/8e
+         BIOd8lsyHR2AFRnlGljXL2hGB/eLkH5N4B+jZi8f2UiaCzznZBdzwxVozKAdKi1ha2hT
+         cOR9opGGYSQGCXpVhKNs3i+5GdHdhxRjxMPY4XS1oZhdaYvmY8IHHy6b9Gw5E+O8e5fN
+         ejVeqCae5uuuGzeTNW4X7ae2gzSuWBwvjf89liZYbaLHeG00dGUPKI4vHFt/QARrU33q
+         nKXSq9Q/2/WOaqe0KClyU7rkossdzy4NJUNntLauyNwTEwc5UEJgkPB8YzmVHTTXS1FL
+         z6OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730886129; x=1731490929;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1730907791; x=1731512591;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mTb9RMAx8DKPix4c+Y4T2Jp1EEKIyizogKHRWnrW5Hk=;
-        b=DtmNvygMoBm+6ETV4DjCsGWmQxMN0mPzh214742eGmPYHhmdUrtY6mNcE5el8CsynN
-         b3e0aZxiQG1WxUKLnWk+PN4X/SjOzrAxie6Df4wcoiumUwFBIdbNdlGx+j0zJk18nimU
-         yQv1QiNIJsGXY3by3ieGDBZlvOsIVigsU0+Oyb3K93PoAeXqVlRk0NN/qXeoHt+S+e6R
-         Z3jj2q8b/w2Jbhl1EnmidFW2L0epLrQJ3XZI+7641e0IV4Q3qxx6ghHDCKHRS6rpPjPD
-         G3rn+MlkEnk5ilhYjMsIu7RbhvE5ySefw848Z/CMbc3Eiw6Re3hAAAXYSS4ce1kdGFbv
-         yJjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVT8rYo3kEfrO7YvBQdyCn6Xd8sMAQeVxsZxLJ/CbaVP9IzSIMa2JzvpPNi3VKL5nFNyVTs9fCDa7uAeII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwOipb3k9cmJ3vYOr5zM2C5OKGw+Ys07uXzQXkHqzJNgTPq5Ac
-	ZTzS6ylMe+rWIZdim7VXKEm3B4SENh6WD4o3VVes0UuKbpmi/AiiJGyJK6Z6uXe2FJC71OoEHGg
-	roK7gzehlmeml/oL++n82GOT60V5bvqQBzYUuyHsNsH/pNVHMqg9olWIFvmLjdA==
-X-Received: by 2002:a05:6000:1569:b0:37d:5103:8894 with SMTP id ffacd0b85a97d-381c7aa4a56mr16648304f8f.42.1730886129700;
-        Wed, 06 Nov 2024 01:42:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHhiTlCs5X+WxmoKrn9dj4wmjNiR44pmWH55V8O3pKkQuJK0IIZ3ybymz5MvkgSK1/I1NWjag==
-X-Received: by 2002:a05:6000:1569:b0:37d:5103:8894 with SMTP id ffacd0b85a97d-381c7aa4a56mr16648281f8f.42.1730886129342;
-        Wed, 06 Nov 2024 01:42:09 -0800 (PST)
-Received: from redhat.com ([2a02:14f:178:e74:5fcf:8a69:659d:f2b2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c116a7a6sm18566549f8f.92.2024.11.06.01.42.06
+        bh=xGmuTOkwDF5EWyglbyKZX3cdG70GKqEHWRe2DvKnQV4=;
+        b=kwSXQmcpBxcBKHvmbW+pFRcz8nxTkrmztvoWddF538sjLmEN+ryfElqsUBQMxSJ56p
+         KXgT3PVFlrz/rkWUJzBBpQW2/Nhfguf/qlwYwuqNANocnVq4s64FJriXTK90+3Ah3nqN
+         MvkEphgPPKA5+0Y3YrEFTNBv6fDtqOrmc7451KHLAMb1jE9tYUnwEmBZaT+XsX4PrLAN
+         cyesjGaC++Jz2kVx3CaGvFNd9V8g7wEF9HMqkS1P29FAfVauIaUZkwlYCZeeaJQ6Lzxe
+         Pl7QMWjbramZOe6XmCTzof2YiDRXqJ/wr3Mshc4SfokU/VhQ4Q6/ZbTDqX7usVG+hL1P
+         R7Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWYsRh6FPBfMKarQyUGn563x8UgLs62GRm2qetuDbqGiPc8ntlUiRSmxCE0+1qh1Iby/7OmtZRGxPO513w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz42emC5ZNNjZAB1f1GYzw4z5TVL8DLPt6W5TL/ebVRTwH+RLX
+	5fwQm4nbmlMuArsdU4Jw43b+POSOIvPBNdW0sKLWoYn9WMU2cjCX
+X-Google-Smtp-Source: AGHT+IFlc3Oj7+Z6MEUkJsrzrLppVGEp2sZo+n/ULuOix484rupL6/GH3IpnCJ+NWD0Mf5afKgKeFw==
+X-Received: by 2002:a05:6a21:2d89:b0:1d9:2ba5:912b with SMTP id adf61e73a8af0-1dba54e7e8bmr27251321637.36.1730907790879;
+        Wed, 06 Nov 2024 07:43:10 -0800 (PST)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc2e9203sm12159431b3a.142.2024.11.06.07.43.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 01:42:08 -0800 (PST)
-Date: Wed, 6 Nov 2024 04:42:04 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Hyunwoo Kim <v4bel@theori.io>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefano Garzarella <sgarzare@redhat.com>, jasowang@redhat.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	gregkh@linuxfoundation.org, imv4bel@gmail.com
-Subject: Re: [PATCH v2] hv_sock: Initializing vsk->trans to NULL to prevent a
- dangling pointer
-Message-ID: <20241106044145-mutt-send-email-mst@kernel.org>
-References: <Zys4hCj61V+mQfX2@v4bel-B760M-AORUS-ELITE-AX>
+        Wed, 06 Nov 2024 07:43:10 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	gregkh@linuxfoundation.org,
+	vkuznets@redhat.com
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Drivers: hv: util: Two fixes in util_probe()
+Date: Wed,  6 Nov 2024 07:42:45 -0800
+Message-Id: <20241106154247.2271-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zys4hCj61V+mQfX2@v4bel-B760M-AORUS-ELITE-AX>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 06, 2024 at 04:36:04AM -0500, Hyunwoo Kim wrote:
-> When hvs is released, there is a possibility that vsk->trans may not
-> be initialized to NULL, which could lead to a dangling pointer.
-> This issue is resolved by initializing vsk->trans to NULL.
-> 
-> Fixes: ae0078fcf0a5 ("hv_sock: implements Hyper-V transport for Virtual Sockets (AF_VSOCK)")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hyunwoo Kim <v4bel@theori.io>
+From: Michael Kelley <mhklinux@outlook.com>
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Patch 1 fixes util_probe() to not force the error return value to
+ENODEV when the util_init function fails -- just return the error
+code from util_init so the real error code is displayed in messages.
 
+Patch 2 fixes a more serious race condition between initialization
+of the VMBus channel and initial operations of the user space
+daemons for KVP and VSS. The fix reorders the initialization in
+util_probe() so the race condition can't happen.
 
-> ---
-> v1 -> v2: Add fixes and cc tags
-> ---
->  net/vmw_vsock/hyperv_transport.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-> index e2157e387217..56c232cf5b0f 100644
-> --- a/net/vmw_vsock/hyperv_transport.c
-> +++ b/net/vmw_vsock/hyperv_transport.c
-> @@ -549,6 +549,7 @@ static void hvs_destruct(struct vsock_sock *vsk)
->  		vmbus_hvsock_device_unregister(chan);
->  
->  	kfree(hvs);
-> +	vsk->trans = NULL;
->  }
->  
->  static int hvs_dgram_bind(struct vsock_sock *vsk, struct sockaddr_vm *addr)
-> -- 
-> 2.34.1
+The two fixes are functionally independent, but Patch 2 introduces
+the util_init_transport function that parallels the existing code
+for the util_init function. Doing Patch 1 first avoids an
+inconsistency in the error handling in similar code for these two
+parts of util_probe().
+
+This series is v2 of a single patch first posted by Dexuan Cui
+to fix the race condition.[1] I've taken over the patch per
+discussion with Dexuan.
+
+[1] https://lore.kernel.org/linux-hyperv/20240909164719.41000-1-decui@microsoft.com/
+
+Michael Kelley (2):
+  Drivers: hv: util: Don't force error code to ENODEV in util_probe()
+  Drivers: hv: util: Avoid accessing a ringbuffer not initialized yet
+
+ drivers/hv/hv_kvp.c       |  6 ++++++
+ drivers/hv/hv_snapshot.c  |  6 ++++++
+ drivers/hv/hv_util.c      | 13 ++++++++++---
+ drivers/hv/hyperv_vmbus.h |  2 ++
+ include/linux/hyperv.h    |  1 +
+ 5 files changed, 25 insertions(+), 3 deletions(-)
+
+-- 
+2.25.1
 
 
