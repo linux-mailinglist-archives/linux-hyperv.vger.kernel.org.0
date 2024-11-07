@@ -1,62 +1,50 @@
-Return-Path: <linux-hyperv+bounces-3282-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3283-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF2529C0A5E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2024 16:50:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14C7F9C0BA6
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2024 17:28:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60180B22771
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2024 15:50:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98B01B25015
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2024 16:28:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F872141BE;
-	Thu,  7 Nov 2024 15:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F702170DA;
+	Thu,  7 Nov 2024 16:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgq9DuN9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C126029CF4;
-	Thu,  7 Nov 2024 15:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C832170BD;
+	Thu,  7 Nov 2024 16:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730994649; cv=none; b=Epy+ZvsWI79y3rBmaWsJu6OwssRqOzfLsz18WFruSPUfGg5JnP68PK51MCzh5mz7RHuq9bAA0TUwWCcaiFQLsqc08DGn3vt3lwH5O3x1G8IFPljvKwKba6Bx5MK1CgyhZ4ttU/5wcJ4JiEEVvr81wJ3xajW6A+6nzilYkhUjerQ=
+	t=1730996830; cv=none; b=f+9Kxs+ilEXX4QvtaynQsB1mecl0VxRFh7WguluD6TbAkH2Nto3b9YLyQ9eQWTOzRzGY7XoGTugqQtrqwKUhKwU3VSu1l4BTNcnIAJGn2KsZEjeyW5xvr0+RfSSVg1UB9sMRAJSDewdVYyxLDYSD34Lcqm6j8PMxkNtKIhPq+gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730994649; c=relaxed/simple;
-	bh=o9oRCatZXqdJ9UeL2Tpm/oUaI9r2qvvElx6SkP3OLIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jo5xILaE70s3Oh2ApR4Lc7kYsbDppBrR809ToO8KgXAitJJEs4sZpbI5anzBWRlQqHyuMqcLxYcL87PfkgngjI6ibcEQKREDBHQR7EpfuV5vT8OV+fE630NsXejDMiyssySeMqp4olEJGUSLjwKmNlmy4TuiJEycQjIjvwuHHCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20c803787abso10192205ad.0;
-        Thu, 07 Nov 2024 07:50:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730994647; x=1731599447;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y4g9pTMBWn8NYG8DJqu2aF9WChjDh3es1iM4dJmMreI=;
-        b=vKlWUQWv+b5vEqIfiQ8OpTfq5x3oThAEGeEL1qukxslGtyYq3fCzcb6CWDdYFLYM0S
-         OhhDKZxogOhtPj2TkY/RBa5VZW6QQR3OA4kPq0jfi1wWQ3WAGJq77QTLE2JLC61STzGB
-         Go2T2YNUE+mthY9fMygn+t+WPTpwTWa8/1kv4FxvAW53Ow5GroAg8bzx9DhuonPge/LY
-         PhvRFDBDVnRwAmNq5HvZQYYyhB9B7d14EGmqMouHYd3SdRdKuBHRBrTyvmOcLmGNe6Uz
-         wi0OZxuAgt59x5bX7ZoiI+TRjjUoGN01m8JDi9eBODAcEc0Q2jOuZoDG6pEG5M3yt3qK
-         HReQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3QdtR1NkurVFSF2BRDd9KOHD27CCjrOPW42ixRhW2NcYsd4ZlykC6aT7CzyauA4GJoaGk1ydVTROF@vger.kernel.org, AJvYcCUZnLWZ3NCvgIY2zpg9pJyCbDHV7PXloeKgzPOukJIMTcZNlTt7l9+ftmbei1BOe1rABhzy5dgFM48J1SHa@vger.kernel.org, AJvYcCVNmD1x/+REE/wH4XKfV82FXys/ctC1wx7xesSbBaoI9CVTpxTx+tHFHSiC4YpMLqa4LBS1MPqfsCogGQ==@vger.kernel.org, AJvYcCVU/tAZDBZvmiShZuS/3oKZILjfPT0gyLggIKEmnclDoq9ALWXemwe/RMF5+DNsYS1aZBJT6LVg2VLChJ8r@vger.kernel.org, AJvYcCW/SFWlhvhxaHpvkeKDOch6IviefR/lnxz+ziMQnpvhC2Kzs2zE4GFSgdg5MHfx6cbFULullwXa1tEOJg==@vger.kernel.org, AJvYcCWxK4UXb0KL2zPMzrmmN9yRehERL664nvb+ytwIOOJxTau3Oz5un+Y8+r5smxm4ayIWnJ8uBaurs65t@vger.kernel.org, AJvYcCX33al0KNbbpoPWXzMcPfco5QsDU3nbsAf3EusbqiD92/PB4yah472R14qvM1V/qSHVl0DClPR1U+WMaw==@vger.kernel.org, AJvYcCXNSDoa7iERoi5xNkCp3wZ+EcPaD433RMHsGnB/uAQvbK77iWfcJsCk8PlmwUQIqkYGVjztH7kGrl0CC1ioUENpbtnmXg==@vger.kernel.org, AJvYcCXsR6YGjvb8fYUonymj3DN85JimVuO7AevrxdUl87HWCAzCdEQTDRGCQ4PwZqFlgWFgIMGTa+25tLuc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGpecljfOZn2VUX+afxn+Pd6nn0r2JKofJHORbXpkbpKDB7YKg
-	OVYzhBL38gEut0etLZm07llZTPGhixGcznTJS/HCfetPsW7kPF9U
-X-Google-Smtp-Source: AGHT+IEfW8mc6K7WMilatY4cRGrx/jJrVZ2Go8Ums63B2x6oVuXb+zNT4RZMBtIqDecZElfJ9fn+6w==
-X-Received: by 2002:a17:903:183:b0:210:e760:77e with SMTP id d9443c01a7336-21181184b51mr5235045ad.7.1730994647037;
-        Thu, 07 Nov 2024 07:50:47 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e6c2ecsm13637145ad.252.2024.11.07.07.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 07:50:46 -0800 (PST)
-Date: Fri, 8 Nov 2024 00:50:44 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	s=arc-20240116; t=1730996830; c=relaxed/simple;
+	bh=RaF/yzDkwC/xI3JHS3wDYezLNgto4gJR15z4QCLcIec=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SZxyKhBoI2WFa147IqtftwwHumxbvE8NGplrGaDPb4AsLbR8DH1dlLY8HZlcP94cAzUVWwTKLYIBd1c1CnBkRPmkKV8Xp/Ukt2E/PDCe0Y2mGXizcUc9dU/njwkDu/hu34a55bvUlxkpCyBQWpTZIrFcDCwpRgiEH2s4051cAGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgq9DuN9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3AFC4CECC;
+	Thu,  7 Nov 2024 16:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730996829;
+	bh=RaF/yzDkwC/xI3JHS3wDYezLNgto4gJR15z4QCLcIec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sgq9DuN999fo+gF31O1Sog3B6QwMV6OvcPe7VPqi8sJ1TCzU/W1Ez/tliuLSn6HZv
+	 H6WJr617Z9ho3vOtVhPzMb0TyqS+gb2SI7mq/C0wytQj+BYrK8SHegywRApVWEjefm
+	 VrP+Uq41/kYqyiwmALEKXPYG2sF+9dXoP558MEULT3X9CJ2qlfOgYo5XQQ/akQ/Li+
+	 8PC//m2NPppcQqPE5AwaE9VZUm8GEStHJrNdsbBXQj3zX2/Uw70Eqzdl18ZXk0ykpu
+	 Nv3hNeVLx2kThS8Iy5jvLz2TwdYaK/p8look0JzKdaIO94mqldL4oshBd2UJ53q8QV
+	 LBGXXQk7Ujmww==
+Date: Thu, 7 Nov 2024 10:27:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -101,32 +89,100 @@ Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
 	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] sysfs: introduce callback
- attribute_group::bin_size
-Message-ID: <20241107155044.GA1297107@rocinante>
-References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
- <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
- <20241106200513.GB174958@rocinante>
- <2024110726-hasty-obsolete-3780@gregkh>
+Subject: Re: [PATCH v2 03/10] PCI/sysfs: Calculate bin_attribute size through
+ bin_size()
+Message-ID: <20241107162707.GA1618544@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2024110726-hasty-obsolete-3780@gregkh>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-3-71110628844c@weissschuh.net>
 
-Hello,
-
-[...]
-> > There exist the sysfs_update_groups(), but the BAR resource sysfs objects
-> > are currently, at least not yet, added to any attribute group.
+On Sun, Nov 03, 2024 at 05:03:32PM +0000, Thomas Weißschuh wrote:
+> Stop abusing the is_bin_visible() callback to calculate the attribute
+> size. Instead use the new, dedicated bin_size() one.
 > 
-> then maybe they should be added to one :)
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Yeah. There is work in progress that will take care of some of this.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-	Krzysztof
+Thanks for doing this!
+
+> ---
+>  drivers/pci/pci-sysfs.c | 28 ++++++++++++++++------------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 5d0f4db1cab78674c5e5906f321bf7a57b742983..040f01b2b999175e8d98b05851edc078bbabbe0d 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -818,21 +818,20 @@ static struct bin_attribute *pci_dev_config_attrs[] = {
+>  	NULL,
+>  };
+>  
+> -static umode_t pci_dev_config_attr_is_visible(struct kobject *kobj,
+> -					      struct bin_attribute *a, int n)
+> +static size_t pci_dev_config_attr_bin_size(struct kobject *kobj,
+> +					   const struct bin_attribute *a,
+> +					   int n)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>  
+> -	a->size = PCI_CFG_SPACE_SIZE;
+>  	if (pdev->cfg_size > PCI_CFG_SPACE_SIZE)
+> -		a->size = PCI_CFG_SPACE_EXP_SIZE;
+> -
+> -	return a->attr.mode;
+> +		return PCI_CFG_SPACE_EXP_SIZE;
+> +	return PCI_CFG_SPACE_SIZE;
+>  }
+>  
+>  static const struct attribute_group pci_dev_config_attr_group = {
+>  	.bin_attrs = pci_dev_config_attrs,
+> -	.is_bin_visible = pci_dev_config_attr_is_visible,
+> +	.bin_size = pci_dev_config_attr_bin_size,
+>  };
+>  
+>  /*
+> @@ -1330,21 +1329,26 @@ static umode_t pci_dev_rom_attr_is_visible(struct kobject *kobj,
+>  					   struct bin_attribute *a, int n)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> -	size_t rom_size;
+>  
+>  	/* If the device has a ROM, try to expose it in sysfs. */
+> -	rom_size = pci_resource_len(pdev, PCI_ROM_RESOURCE);
+> -	if (!rom_size)
+> +	if (!pci_resource_end(pdev, PCI_ROM_RESOURCE))
+>  		return 0;
+>  
+> -	a->size = rom_size;
+> -
+>  	return a->attr.mode;
+>  }
+>  
+> +static size_t pci_dev_rom_attr_bin_size(struct kobject *kobj,
+> +					const struct bin_attribute *a, int n)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> +
+> +	return pci_resource_len(pdev, PCI_ROM_RESOURCE);
+> +}
+> +
+>  static const struct attribute_group pci_dev_rom_attr_group = {
+>  	.bin_attrs = pci_dev_rom_attrs,
+>  	.is_bin_visible = pci_dev_rom_attr_is_visible,
+> +	.bin_size = pci_dev_rom_attr_bin_size,
+>  };
+>  
+>  static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
+> 
+> -- 
+> 2.47.0
+> 
 
