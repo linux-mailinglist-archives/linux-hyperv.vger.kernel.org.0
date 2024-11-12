@@ -1,86 +1,109 @@
-Return-Path: <linux-hyperv+bounces-3323-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3324-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0F219C51B5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Nov 2024 10:17:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93CAB9C5B66
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Nov 2024 16:07:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68FF61F21EC9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Nov 2024 09:17:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A8331F26080
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Nov 2024 15:07:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6325620D51A;
-	Tue, 12 Nov 2024 09:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA83C1FCF40;
+	Tue, 12 Nov 2024 15:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvO3SzMZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aEuqZMdG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3523A20D504;
-	Tue, 12 Nov 2024 09:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2508C1FF043
+	for <linux-hyperv@vger.kernel.org>; Tue, 12 Nov 2024 15:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731402981; cv=none; b=Yf0l3CIUa7VYK5dJNWPR471aN1fE1Hn92++E5YLaFVNf5S1xsXN9f9uFq1Du5dcEpnlTjjEA+s+CBLyR1jX+mLYL/UZV/FxOzCPgPkYpy6S7qrLsDdQ8SPRI+DkSzTHqpLRk9Szsn5Dtg72nGmBfAJH74i/B/VhtyRkiU+npAjo=
+	t=1731423852; cv=none; b=GhKDQljyjUY5AbdyazOddqdIQQNTCgpGvxT9Ea3bgFZL5/D2APVIakgk7YKNiK1lIc5q7hpuiI5NczP83vpvnRK5YAgLTKUrXm0v44CnFOSTyIxYrts32M74cqVgektKm40g+zAX5niggj8fOxHJji53YM/LV3hsNGH2v9TgPVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731402981; c=relaxed/simple;
-	bh=rOO3Fcs7OqIJVX10L2UG6uZC2oV6lsTWehBJvcEoESQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sg3j31Fp7SsSqC32vjQx20lp7zxQIUUvTJ2snra4IOLaY0ai5EMbtJxcx57kn7co2xl2RgiOmisyVtvCd54uVIbN3HW7RgNASSyb7SdB5sR1h0CFrHopCtr91vTR/XruXaxIcBFB3sMhG30GFwwJ25SFunhoEAIT72dj52/0H5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvO3SzMZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E7AC4CECD;
-	Tue, 12 Nov 2024 09:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731402980;
-	bh=rOO3Fcs7OqIJVX10L2UG6uZC2oV6lsTWehBJvcEoESQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=AvO3SzMZ1GsVNC/bgf3Ty621g8jszH17qKGayzdvV1scl7jcAsWx6Z4+3ivyOqj/N
-	 H5rb4n8tDCNmV7EgiIxMfxRimgKbsxFhm1mWfk6CcXf5jUbHRDu5/V/TfUZzo0QoSL
-	 w3URroRMtLb8fAFwc9Zs2sExFdLZKvTJYcbMvgksvzwGELja3hx/0ju2GGBrW/vHU5
-	 wKtUKNUQeq1HLzgiJdCqgE0d3xHUE1vy8NLEjKXK/xqQiMbSHCWy9NCmG69G5jLSO4
-	 L17feYdENKnL9Syb1WPL18QQ1dbq7FDjRv1y/mQlUp2EEv5Luz6VEHtKHNCr0oaPK9
-	 171kuZNyhT8gg==
-Date: Tue, 12 Nov 2024 10:16:18 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-cc: Saurabh Singh Sengar <ssengar@linux.microsoft.com>, 
-    Michael Kelley <mhklinux@outlook.com>, 
-    "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-    "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
-    "K. Y. Srinivasan" <kys@microsoft.com>, 
-    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-    Dexuan Cui <decui@microsoft.com>, Benjamin Tissoires <bentiss@kernel.org>, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] HID: hyperv: streamline driver probe to avoid devres
- issues
-In-Reply-To: <877c98x2am.fsf@redhat.com>
-Message-ID: <nycvar.YFH.7.76.2411121016020.20286@cbobk.fhfr.pm>
-References: <20241111131240.35158-1-vkuznets@redhat.com> <SN6PR02MB41577C6B7BF387BEB9114A05D4582@SN6PR02MB4157.namprd02.prod.outlook.com> <20241112060449.GA18117@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <877c98x2am.fsf@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	s=arc-20240116; t=1731423852; c=relaxed/simple;
+	bh=6h5pADxNne9d8m//9uJHWM1499lvxVfSbKp4qax5VKM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=afWBnl37UNXP5/c5cyeSCGiOQR20fyEoj7FeDRjkvcHSavYwNoJRppQSuivBHOIKBwPEqoMegMTlHVJm+qnZLvBAuDuX9ZGb9JfCsaUazu9r28s6l3kMGOVj1CTSB8waYEvSobpXV9eGX9WOv/EpF4C9BVdqZdWmhxZd6sR4OlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aEuqZMdG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731423849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j0W+PnPsRwyZd3T+tjupo+6i4tCF4pLBt+SKLFRqZtg=;
+	b=aEuqZMdGqXTmM0XO2YiaJFablolvqtBvAAN67RcDKFYmwjn4dv9ylhbO+xzh50iJwqUKmP
+	Kr1VG2JoAa+vj9LnIzGvPZnUHGahhINxHAt7OiBHAoAupLzufV679hA2cUQ59Hlv6Z778P
+	WlwwdkKIxIJMUzzIjCVDHylEAsZUaNw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-306-2Qg6Dtf2NSSXIBkdg5BxEQ-1; Tue,
+ 12 Nov 2024 10:04:06 -0500
+X-MC-Unique: 2Qg6Dtf2NSSXIBkdg5BxEQ-1
+X-Mimecast-MFC-AGG-ID: 2Qg6Dtf2NSSXIBkdg5BxEQ
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A8EE1955F09;
+	Tue, 12 Nov 2024 15:04:05 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.225.225])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7BCDF1955F40;
+	Tue, 12 Nov 2024 15:04:02 +0000 (UTC)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: linux-hyperv@vger.kernel.org
+Cc: mhklinux@outlook.com,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] hv/hv_kvp_daemon: Pass NIC name to hv_get_dns_info as well
+Date: Tue, 12 Nov 2024 16:04:01 +0100
+Message-ID: <20241112150401.217094-1-vkuznets@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, 12 Nov 2024, Vitaly Kuznetsov wrote:
+The reference implementation of hv_get_dns_info which is in the tree uses
+/etc/resolv.conf to get DNS servers and this does not require to know which
+NIC is queried. Distro specific implementations, however, may want to
+provide per-NIC, fine grained information. E.g. NetworkManager keeps track
+of DNS servers per connection.
 
-> >> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> >
-> > Tested V2 as well, please feel free to  add,
-> > Tested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> 
-> Thank you!
+Similar to hv_get_dhcp_info, pass NIC name as a parameter to
+hv_get_dns_info script.
 
-Applied to hid.git, thanks!
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index ae57bf69ad4a..296a7a62c54d 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -725,7 +725,7 @@ static void kvp_get_ipconfig_info(char *if_name,
+ 	 * .
+ 	 */
+ 
+-	sprintf(cmd, KVP_SCRIPTS_PATH "%s",  "hv_get_dns_info");
++	sprintf(cmd, KVP_SCRIPTS_PATH "%s %s", "hv_get_dns_info", if_name);
+ 
+ 	/*
+ 	 * Execute the command to gather DNS info.
 -- 
-Jiri Kosina
-SUSE Labs
+2.47.0
 
 
