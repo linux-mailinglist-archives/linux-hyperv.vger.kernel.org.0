@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3330-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3329-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91FB49C6AD0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 09:47:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B05E9C6AD1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 09:47:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5233E281AC4
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B9BBB21C39
 	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 08:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A16818A6B6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40857188708;
 	Wed, 13 Nov 2024 08:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YBupWZZV"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A+7uvjKk"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4651175D38;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C46A5178CE4;
 	Wed, 13 Nov 2024 08:47:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731487635; cv=none; b=atxJFUGVXKr4qPI2iKQvrLHbYcZk7LLcMFKkhyH26KfenQa00+Paf2ZL0crhNOBJeBLPgi+77bvf0gee9KvCaAF6/WZMdsCREO4fpRbrpxou/NU6hDQXloL69xft8iD/+nbQ4A+lN0pplMCbaJR3eYN52JhF6ed+XwP/d5AMmGM=
+	t=1731487635; cv=none; b=FzO211gNGJMMIrL2gCYjJBqPUoZhUcURB2hlZ3UCDsdSQuoTXEZf877mJhqe5+43uM0iFXnMywJ7ZKvv6Za6Cv4kWrq3BRu9cDf2dBHbSOLQeJm/A1QJcHjLjyKDyekKi5OODGDknSlc+6+lSB3jJ0IsUMxWCYIhDkH+I2USv9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731487635; c=relaxed/simple;
-	bh=9gkwvLT3kRLGwDpVsX8CbrVDPvRvZpIYKFGlFbCWxs0=;
+	bh=lHNwEUzDlU2n1USh+lgAETBE6fW7vA/BqbL+yHZ2AT4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iRLjBeJXVRkqud2iZu50/3d78yajWn7L6R0G8YdTgGm6AkJ5bdfGIFb+ZhFKJt6eE1s+/hvW9zr7JYy3gLwoF5oHhgt86fxJcuSTMdRZ05BpDalxgo/ugBV49pu+kOd3B/EsNurLsdqr1tO+cYNuP79ILh3hksBL0+bg9jgbsTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YBupWZZV; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=VoE8leVetLhQTfbWr/pKZsYJ71p8qKXWQJQ9aPxB6TTTeygt5+XQEWeHpvkW/MKSWsTkkxEpgq1emfr/ZY0WI2iDyEKV4q4E/7e4QsjCp+p+76pGzf9FCIjW8Xy51vst0nHG2ionvDEjmBwXhkuovwaFQud0eCM8Wam/3AwJ6Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=A+7uvjKk; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from namjain-Virtual-Machine.corp.microsoft.com (unknown [131.107.147.150])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2724420BEBCE;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5108220BEBD1;
 	Wed, 13 Nov 2024 00:47:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2724420BEBCE
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5108220BEBD1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1731487627;
-	bh=ZlXVzlLlSN6fXb5dSDUPJQ+CQw9zw44yMGq2XrDrxMA=;
+	bh=RIVIKMAGR4u+IiRc8EFSgUII+UDd/pw+fXtdicErCHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YBupWZZVjWpwfAFZ5IFiFnuFDr/0HyeBq7fMfnJEsrUirfya3mANCq5wV/89Drti+
-	 PWmlyJazEBMyPFXQVjbZsZptB+JkKzja9f+siZzJNxON83EVjs9V2D/yg9UKYH/p6d
-	 +M6sFON8wa2eNKqpjga/8FkJMR6AecTBikPN8pns=
+	b=A+7uvjKkJvhZe7pSE/9Rx+F297drfzV6Twz/5olyI9s0TdhqVLNj6FWfOvuA8F8e7
+	 IqUkOHcCh3gPPZ44Xc9EZh3FzJiL9ntyO06aZbY/ae+i4/9nxsBXhyM+YXHeV2cfl2
+	 5pdvzt7uHCY7HHMk15en6j3SGa61pXDzau2KhXfs=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -53,9 +53,9 @@ Cc: linux-hyperv@vger.kernel.org,
 	Easwar Hariharan <eahariha@linux.microsoft.com>,
 	Michael Kelley <mhklinux@outlook.com>,
 	Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Subject: [PATCH v3 1/2] Drivers: hv: vmbus: Wait for boot-time offers during boot and resume
-Date: Wed, 13 Nov 2024 00:46:59 -0800
-Message-Id: <20241113084700.2940-2-namjain@linux.microsoft.com>
+Subject: [PATCH v3 2/2] Drivers: hv: vmbus: Log on missing offers if any
+Date: Wed, 13 Nov 2024 00:47:00 -0800
+Message-Id: <20241113084700.2940-3-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241113084700.2940-1-namjain@linux.microsoft.com>
 References: <20241113084700.2940-1-namjain@linux.microsoft.com>
@@ -67,264 +67,70 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Channel offers are requested during VMBus initialization and resume from
-hibernation. Add support to wait for all boot-time channel offers to
-be delivered and processed before returning from vmbus_request_offers.
+From: John Starks <jostarks@microsoft.com>
 
-This is in analogy to a PCI bus not returning from probe until it has
-scanned all devices on the bus.
+When resuming from hibernation, log any channels that were present
+before hibernation but now are gone.
+In general, the boot-time devices configured for a resuming VM should be
+the same as the devices in the VM at the time of hibernation. It's
+uncommon for the configuration to have been changed such that offers
+are missing. Changing the configuration violates the rules for
+hibernation anyway.
+The cleanup of missing channels is not straight-forward and dependent
+on individual device driver functionality and implementation,
+so it can be added in future with separate changes.
 
-Without this, user mode can race with VMBus initialization and miss
-channel offers. User mode has no way to work around this other than
-sleeping for a while, since there is no way to know when VMBus has
-finished processing boot-time offers.
-
-With this added functionality, remove earlier logic which keeps track
-of count of offered channels post resume from hibernation. Once all
-offers delivered message is received, no further boot-time offers are
-going to be received. Consequently, logic to prevent suspend from
-happening after previous resume had missing offers, is also removed.
-
-Co-developed-by: John Starks <jostarks@microsoft.com>
 Signed-off-by: John Starks <jostarks@microsoft.com>
+Co-developed-by: Naman Jain <namjain@linux.microsoft.com>
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 ---
 Changes since v2:
-* Incorporated Easwar's suggestion to use secs_to_jiffies() as his
-  changes are now merged.
 * Addressed Michael's comments:
-  * Used boot-time offers/channels/devices to maintain consistency
-  * Rephrased CHANNELMSG_ALLOFFERS_DELIVERED handler function comments
-    for better explanation. Thanks for sharing the write-up.
-  * Changed commit msg and other things as per suggestions
+  * Changed commit msg as per suggestions
 * Addressed Dexuan's comments, which came up in offline discussion:
-  * Changed timeout for waiting for all offers delivered msg to 60s instead of 10s.
-    Reason being, the host can experience some servicing events or diagnostics events,
-    which may take a long time and hence may fail to offer all the devices within 10s.
   * Minor additions in commit subject.
 
 Changes since v1:
 * Added Easwar's Reviewed-By tag
-* Addressed Michael's comments:
-  * Added explanation of all offers delivered message in comments
-  * Removed infinite wait for offers logic, and changed it wait once.
-  * Removed sub channel workqueue flush logic
-  * Added comments on why MLX device offer is not expected as part of
-    this essential boot offer list. I refrained from adding too many
-    details on it as it felt like it is beyond the scope of this patch
-    series and may not be relevant to this. However, please let me know if
-    something needs to be added.
 * Addressed Saurabh's comments:
-  * Changed timeout value to 10000 ms instead of 10*10000
-  * Changed commit msg as per suggestions
-  * Added a comment for warning case of wait_for_completion timeout
+  * Added a note for missing channel cleanup in comments and commit msg
 ---
- drivers/hv/channel_mgmt.c | 61 +++++++++++++++++++++++++++++----------
- drivers/hv/connection.c   |  4 +--
- drivers/hv/hyperv_vmbus.h | 14 ++-------
- drivers/hv/vmbus_drv.c    | 16 ----------
- 4 files changed, 51 insertions(+), 44 deletions(-)
+ drivers/hv/vmbus_drv.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 3c6011a48dab..b1a095671e32 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -944,16 +944,6 @@ void vmbus_initiate_unload(bool crash)
- 		vmbus_wait_for_unload();
- }
- 
--static void check_ready_for_resume_event(void)
--{
--	/*
--	 * If all the old primary channels have been fixed up, then it's safe
--	 * to resume.
--	 */
--	if (atomic_dec_and_test(&vmbus_connection.nr_chan_fixup_on_resume))
--		complete(&vmbus_connection.ready_for_resume_event);
--}
--
- static void vmbus_setup_channel_state(struct vmbus_channel *channel,
- 				      struct vmbus_channel_offer_channel *offer)
- {
-@@ -1109,8 +1099,6 @@ static void vmbus_onoffer(struct vmbus_channel_message_header *hdr)
- 
- 		/* Add the channel back to the array of channels. */
- 		vmbus_channel_map_relid(oldchannel);
--		check_ready_for_resume_event();
--
- 		mutex_unlock(&vmbus_connection.channel_mutex);
- 		return;
- 	}
-@@ -1296,13 +1284,28 @@ EXPORT_SYMBOL_GPL(vmbus_hvsock_device_unregister);
- 
- /*
-  * vmbus_onoffers_delivered -
-- * This is invoked when all offers have been delivered.
-+ * The CHANNELMSG_ALLOFFERS_DELIVERED message arrives after all
-+ * boot-time offers are delivered. A boot-time offer is for the primary
-+ * channel for any virtual hardware configured in the VM at the time it boots.
-+ * Boot-time offers include offers for physical devices assigned to the VM
-+ * via Hyper-V's Discrete Device Assignment (DDA) functionality that are
-+ * handled as virtual PCI devices in Linux (e.g., NVMe devices and GPUs).
-+ * Boot-time offers do not include offers for VMBus sub-channels. Because
-+ * devices can be hot-added to the VM after it is booted, additional channel
-+ * offers that aren't boot-time offers can be received at any time after the
-+ * all-offers-delivered message.
-  *
-- * Nothing to do here.
-+ * SR-IOV NIC Virtual Functions (VFs) assigned to a VM are not considered
-+ * to be assigned to the VM at boot-time, and offers for VFs may occur after
-+ * the all-offers-delivered message. VFs are optional accelerators to the
-+ * synthetic VMBus NIC and are effectively hot-added only after the VMBus
-+ * NIC channel is opened (once it knows the guest can support it, via the
-+ * sriov bit in the netvsc protocol).
-  */
- static void vmbus_onoffers_delivered(
- 			struct vmbus_channel_message_header *hdr)
- {
-+	complete(&vmbus_connection.all_offers_delivered_event);
- }
- 
- /*
-@@ -1578,7 +1581,8 @@ void vmbus_onmessage(struct vmbus_channel_message_header *hdr)
- }
- 
- /*
-- * vmbus_request_offers - Send a request to get all our pending offers.
-+ * vmbus_request_offers - Send a request to get all our pending offers
-+ * and wait for all boot-time offers to arrive.
-  */
- int vmbus_request_offers(void)
- {
-@@ -1596,6 +1600,10 @@ int vmbus_request_offers(void)
- 
- 	msg->msgtype = CHANNELMSG_REQUESTOFFERS;
- 
-+	/*
-+	 * This REQUESTOFFERS message will result in the host sending an all
-+	 * offers delivered message after all the boot-time offers are sent.
-+	 */
- 	ret = vmbus_post_msg(msg, sizeof(struct vmbus_channel_message_header),
- 			     true);
- 
-@@ -1607,6 +1615,29 @@ int vmbus_request_offers(void)
- 		goto cleanup;
- 	}
- 
-+	/*
-+	 * Wait for the host to send all boot-time offers.
-+	 * Keeping it as a best-effort mechanism, where a warning is
-+	 * printed if a timeout occurs, and execution is resumed.
-+	 */
-+	if (!wait_for_completion_timeout(
-+		&vmbus_connection.all_offers_delivered_event, secs_to_jiffies(60))) {
-+		pr_warn("timed out waiting for all boot-time offers to be delivered.\n");
-+	}
-+
-+	/*
-+	 * Flush handling of offer messages (which may initiate work on
-+	 * other work queues).
-+	 */
-+	flush_workqueue(vmbus_connection.work_queue);
-+
-+	/*
-+	 * Flush workqueue for processing the incoming offers. Subchannel
-+	 * offers and their processing can happen later, so there is no need to
-+	 * flush that workqueue here.
-+	 */
-+	flush_workqueue(vmbus_connection.handle_primary_chan_wq);
-+
- cleanup:
- 	kfree(msginfo);
- 
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index f001ae880e1d..8351360bba16 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -34,8 +34,8 @@ struct vmbus_connection vmbus_connection = {
- 
- 	.ready_for_suspend_event = COMPLETION_INITIALIZER(
- 				  vmbus_connection.ready_for_suspend_event),
--	.ready_for_resume_event	= COMPLETION_INITIALIZER(
--				  vmbus_connection.ready_for_resume_event),
-+	.all_offers_delivered_event = COMPLETION_INITIALIZER(
-+				  vmbus_connection.all_offers_delivered_event),
- };
- EXPORT_SYMBOL_GPL(vmbus_connection);
- 
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index d2856023d53c..66160995519a 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -287,18 +287,10 @@ struct vmbus_connection {
- 	struct completion ready_for_suspend_event;
- 
- 	/*
--	 * The number of primary channels that should be "fixed up"
--	 * upon resume: these channels are re-offered upon resume, and some
--	 * fields of the channel offers (i.e. child_relid and connection_id)
--	 * can change, so the old offermsg must be fixed up, before the resume
--	 * callbacks of the VSC drivers start to further touch the channels.
-+	 * Completed once the host has offered all boot-time channels.
-+	 * Note that some channels may still be under process on a workqueue.
- 	 */
--	atomic_t nr_chan_fixup_on_resume;
--	/*
--	 * vmbus_bus_resume() waits for "nr_chan_fixup_on_resume" to
--	 * drop to zero.
--	 */
--	struct completion ready_for_resume_event;
-+	struct completion all_offers_delivered_event;
- };
- 
- 
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 9b15f7daf505..bd3fc41dc06b 100644
+index bd3fc41dc06b..08214f28694a 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -2427,11 +2427,6 @@ static int vmbus_bus_suspend(struct device *dev)
- 	if (atomic_read(&vmbus_connection.nr_chan_close_on_suspend) > 0)
- 		wait_for_completion(&vmbus_connection.ready_for_suspend_event);
+@@ -2462,6 +2462,7 @@ static int vmbus_bus_suspend(struct device *dev)
  
--	if (atomic_read(&vmbus_connection.nr_chan_fixup_on_resume) != 0) {
--		pr_err("Can not suspend due to a previous failed resuming\n");
--		return -EBUSY;
--	}
--
- 	mutex_lock(&vmbus_connection.channel_mutex);
+ static int vmbus_bus_resume(struct device *dev)
+ {
++	struct vmbus_channel *channel;
+ 	struct vmbus_channel_msginfo *msginfo;
+ 	size_t msgsize;
+ 	int ret;
+@@ -2494,6 +2495,22 @@ static int vmbus_bus_resume(struct device *dev)
  
- 	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-@@ -2456,17 +2451,12 @@ static int vmbus_bus_suspend(struct device *dev)
- 			pr_err("Sub-channel not deleted!\n");
- 			WARN_ON_ONCE(1);
- 		}
--
--		atomic_inc(&vmbus_connection.nr_chan_fixup_on_resume);
- 	}
- 
- 	mutex_unlock(&vmbus_connection.channel_mutex);
- 
- 	vmbus_initiate_unload(false);
- 
--	/* Reset the event for the next resume. */
--	reinit_completion(&vmbus_connection.ready_for_resume_event);
--
- 	return 0;
- }
- 
-@@ -2502,14 +2492,8 @@ static int vmbus_bus_resume(struct device *dev)
- 	if (ret != 0)
- 		return ret;
- 
--	WARN_ON(atomic_read(&vmbus_connection.nr_chan_fixup_on_resume) == 0);
--
  	vmbus_request_offers();
  
--	if (wait_for_completion_timeout(
--		&vmbus_connection.ready_for_resume_event, 10 * HZ) == 0)
--		pr_err("Some vmbus device is missing after suspending?\n");
--
++	mutex_lock(&vmbus_connection.channel_mutex);
++	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
++		if (channel->offermsg.child_relid != INVALID_RELID)
++			continue;
++
++		/* hvsock channels are not expected to be present. */
++		if (is_hvsock_channel(channel))
++			continue;
++
++		pr_err("channel %pUl/%pUl not present after resume.\n",
++			&channel->offermsg.offer.if_type,
++			&channel->offermsg.offer.if_instance);
++		/* ToDo: Cleanup these channels here */
++	}
++	mutex_unlock(&vmbus_connection.channel_mutex);
++
  	/* Reset the event for the next suspend. */
  	reinit_completion(&vmbus_connection.ready_for_suspend_event);
  
