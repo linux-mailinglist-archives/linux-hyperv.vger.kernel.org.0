@@ -1,279 +1,346 @@
-Return-Path: <linux-hyperv+bounces-3332-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3333-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48C9D9C6AD6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 09:48:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5168A9C774F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 16:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 089CD28210B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 08:48:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11AC8282732
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2024 15:35:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B9718870D;
-	Wed, 13 Nov 2024 08:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3E31FCF78;
+	Wed, 13 Nov 2024 15:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OkEZm9Un"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="U6ClR7YD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41870175D38;
-	Wed, 13 Nov 2024 08:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731487642; cv=none; b=F90w5L6Oo3yJ9+iyXkO30agLFE0r28me9HZNTDMfnaB4YQ6W1Z+S9/8DOYIBJFWBuzeN3lZ97+I/gvUlkSbYV+ZEVeH5my32bNvcbr6XI0clzZ+j4mcAGv26DvWWzJc5UPs3p231SXQoGfGQR3xMmPbHMrlGbVpVR/Od4gY6HJo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731487642; c=relaxed/simple;
-	bh=VZAgZ9kqqoB5/D8VJxtRpit6Ayl9TwWmktGv+iiqCqE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MaP11aMSRErgM3FEFFyQTGotxk+juEtW3APlGUfOuE/N0bpm2ZxpRSBDc8sum8Bua1bbe3SV9cehnw3m8MqLF9Vv1Bp9jISc2jmHSUe2V/N5bEiUIYtbWbCWy7uOvXjDL89411ueW3ORiXC0JRvcy6aw+sWeKToOFGELYPqOeg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OkEZm9Un; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.98.145] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C0CEE20BEBCC;
-	Wed, 13 Nov 2024 00:47:17 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C0CEE20BEBCC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1731487641;
-	bh=SPS+paqcIyB/AfQjvCGpueAi/m4/2CY3K6MBc4wtwOo=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=OkEZm9Unt8DFFP3kp5+/iYNckQ/hawsOHy2X3Aqg6uohl0/at8m6VNLFc1Adq8LXr
-	 HXP38jZ1FsK9PZpCSl6qe8ky5yhfI82wIbbW6tpu2jjRuib23RO1LdJiaSQ5Qrs2rd
-	 gJ4CAeJXuVhY4GpOT3j1eTO8J8y3iBkPinp7czCU=
-Message-ID: <dc5b1aaf-62cc-49ea-9fc7-c07b3afbd714@linux.microsoft.com>
-Date: Wed, 13 Nov 2024 14:17:15 +0530
-Precedence: bulk
-X-Mailing-List: linux-hyperv@vger.kernel.org
-List-Id: <linux-hyperv.vger.kernel.org>
-List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Naman Jain <namjain@linux.microsoft.com>
-Subject: Re: [PATCH v2 2/2] Drivers: hv: vmbus: Log on missing offers
-To: Michael Kelley <mhklinux@outlook.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- John Starks <jostarks@microsoft.com>,
- "jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>,
- Easwar Hariharan <eahariha@linux.microsoft.com>,
- Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02olkn2016.outbound.protection.outlook.com [40.92.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A419218331;
+	Wed, 13 Nov 2024 15:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.44.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731511579; cv=fail; b=IksBgMf2TGc4GK06VTb24eU7vvxHK7yzPcEZyJ7CNl380PG76PnJCxLwlv7oK+bKwCf7+lKMmJtUlL0WZ+XFgc1b2DDjD7cm2BayMmGfVNh+QXtgKYVtTcwqL9v8viwzyFPjr04AJIQqW224Kaz1v0ctgZnyEPhWZ9vkGsm1zmQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731511579; c=relaxed/simple;
+	bh=Fvgm9+bn9ZNhEeSwgjJTwM3oXFaNFAG5VpWbFXD8xKY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=URUduJ6/5XfroWri3EOCzPMmF/NMfLikPOyZa14wGq/uu1LCdzA01XXbgrizXYIHpRn6/2lcoXBJXtIUilEQd03XNJV8D0AbLprlOUpTYCk3esFyqf6b7vQEmr52mSpc4bc5c/x9LxpIa6Of+az6cswO5cJHp6FRRhhQG0D9M+g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=U6ClR7YD; arc=fail smtp.client-ip=40.92.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xXLdIBvJNip4zI2e6AMFWthZU0mvk3mEZ3pNEJlPzFeJ1H5phTgYYISzxiIluMk8LzPoQXh9ScXplHiGojdCf+UB//vs1Bpydaz4Tz5+JKZUFOrSlraoXJqj6a9fCl3xcfDKHsyWl0kdqH6VseOCFqaowHsJVEz27/aKfNHfIbwiGwRlUN60GykNTm9X+PrCkAO7fzYgITu88VysBg2isyo6XwcoR98R3qRo+bZN5hIRqEusx60nlJ1MdDLcIBcsATVoyJxogwhhaQ2Z0IWvSLPh9gK6oUNo/TWj3vaWkctGLiE4AoG8l+iUgFBHU89ZULPa2Y/V4XYqw9m5MFw5xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fvgm9+bn9ZNhEeSwgjJTwM3oXFaNFAG5VpWbFXD8xKY=;
+ b=eKK5K11zSr6YBeJnPTwor47DYKz65wibwV4+A9fJ1qP7F3TVgAF8l6yX/AonymOwv4+ByAcoeG74a5F6+uG3GotIfXHVgJN94d8LeKGroVkE5tT8jrX44lED7UunW0ERHMJnKYrujkRebhaLP7spiQPjj+Zki2RNE7EuU7bbcleHBk2IkMg2T31N1viewPEfn+wZ7rXrLptPdda2c8Xq2FyE4/7/+ARmRD692k73O4eb24W8jj2s2kxhWYUGlQQRFq6f6byPqVSGVoBoP/Bqv6xie54PM0mqWwRGXZW6UBZjM+EETJa2iReF7SgVvye3SDFORsAA6nOaWyaia0HLYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fvgm9+bn9ZNhEeSwgjJTwM3oXFaNFAG5VpWbFXD8xKY=;
+ b=U6ClR7YD9h6cz3xVLnHwJhqeZfmJD4bHeaJtUPct44mABMpUx1xQ3KrtTCiVRgFL6fc7ePGGjlaI+UGcB758SKLgrpXDES2TpVv1r8PckQxbdh8WA8l3/K1PTK6T2+YnXq8wqqaZpPjPgyvPGFcJ1JEUEP8t/DYNo9bPIqZKYWRO+g2qzYtu92QNv9mCgelaNS7AgJpdNzyfJNmJKaer1oOA1/WXp48ln46BCmUFylcb0p9km/MamNutZVIH4/gRbkdhPNgmXpKClIQiT/M1t+Mz++c2DLvgfBobcWvyNwsIuJzq4nNjRtXhZ6JunWbHKBNCBB2LHgL7bU8subTpmw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CH3PR02MB9937.namprd02.prod.outlook.com (2603:10b6:610:196::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.18; Wed, 13 Nov
+ 2024 15:26:14 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8137.027; Wed, 13 Nov 2024
+ 15:26:14 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Starks
+	<jostarks@microsoft.com>, "jacob.pan@linux.microsoft.com"
+	<jacob.pan@linux.microsoft.com>, Easwar Hariharan
+	<eahariha@linux.microsoft.com>, Saurabh Singh Sengar
+	<ssengar@linux.microsoft.com>
+Subject: RE: [PATCH v2 2/2] Drivers: hv: vmbus: Log on missing offers
+Thread-Topic: [PATCH v2 2/2] Drivers: hv: vmbus: Log on missing offers
+Thread-Index:
+ AQHbKdjVc/uD1sxpKEWYetd8Cd2q47KhHRlQgAo/igCABkj7AIABTHiggAILf4CAAG1tUA==
+Date: Wed, 13 Nov 2024 15:26:13 +0000
+Message-ID:
+ <SN6PR02MB41574AC689EB671BA59679C7D45A2@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20241029080147.52749-1-namjain@linux.microsoft.com>
  <20241029080147.52749-3-namjain@linux.microsoft.com>
  <SN6PR02MB4157D7212FE3F0F50FAB0592D4552@SN6PR02MB4157.namprd02.prod.outlook.com>
  <4c9e670b-eb37-4bdb-adcf-a4ebbebcefab@linux.microsoft.com>
  <dc8f4e45-c89e-4e2d-82ac-58dd6e9c9884@linux.microsoft.com>
  <SN6PR02MB4157BB5A5F5EDFAC24D594DED4592@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <dc5b1aaf-62cc-49ea-9fc7-c07b3afbd714@linux.microsoft.com>
+In-Reply-To: <dc5b1aaf-62cc-49ea-9fc7-c07b3afbd714@linux.microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-In-Reply-To: <SN6PR02MB4157BB5A5F5EDFAC24D594DED4592@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH3PR02MB9937:EE_
+x-ms-office365-filtering-correlation-id: 7fd09e67-39b4-4516-0933-08dd03f782a4
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|15080799006|8062599003|19110799003|8060799006|3412199025|56899033|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?KzFwQURhNCtUMzNRQzhWc2JxWUUzQWhtaTFGUnZRVlRBQ2JpRGUvTno5alJL?=
+ =?utf-8?B?TGR3TjRDVWordGRBblhzYmtwaDR0bnBMTzMzV3B0bWJxOTdDRk1KVjhqMlZC?=
+ =?utf-8?B?V2hIS2ZzWEFoN0Y2UExZaXlpT0p0RUUyMzBOK3RTdnVCK0htRFJxOUJySlB0?=
+ =?utf-8?B?RGY5L3VKYlBKeWFSVkF0QWhqZFI5MkdXK0U2emFwbzh3blBVTVBmblhDS2wv?=
+ =?utf-8?B?cDhLWXhIVlI2cllmWmJCeXlHS3V1QVRWbjdIZFVHSmY3Qi9VYzJTRlo4L1Z1?=
+ =?utf-8?B?ZndzajJrcTFCK1dNeEdTRnlMa25ma2I1ai91YmU3ajZ2NVFJVmpIdkt6L1Nt?=
+ =?utf-8?B?MU1rUktDVmhyOTZNMUJBK2Vjd3E5T0JOOWxDZ29zcFZmSytYRzhXN3I4elZx?=
+ =?utf-8?B?QzFOOHo3VHY4Y3V6enhTT0dqWVJEUDYyMVliUjdkd3hxVDRucnpXazArQ3V1?=
+ =?utf-8?B?TEFWWWJzQk53cXI3SHdJSnBiRmNFc2JJNUM1UFhURzVqck1nVDJJWGFjYnZi?=
+ =?utf-8?B?RitWZkd5bERCSjBDM1hjUTd2NTdIeGtzTTlVUm1JdkhNRU1QZnFvRjNWRGRC?=
+ =?utf-8?B?OC9hY1o3RWkwSmFYaCtvcXRUa0k2ZU9oNHJESnZIOVdwN2VudFhOeXpweVFW?=
+ =?utf-8?B?Q2podTgyVmF6QkszdTRYdzk3T2xBS2JuVE1MOVhiaWxUTm9XLzZsSDNyRWRN?=
+ =?utf-8?B?ODlnWlo3dGdhZnJoZENJMm1uTnprM0RTVzFFSGVUQXU2ejBsaWZZcDg2VDE5?=
+ =?utf-8?B?K1dWVTljUlo3ajZyS3o1eHlqdG9hVndZdi95cThvUmtlbDlOc2puQ2I4c2hv?=
+ =?utf-8?B?Yk93b3NJRjlGSldBSTdMS3VxUXZGOENtMWNQenlNTDFqVGkxRElpVGF2OE1n?=
+ =?utf-8?B?cXV4dGszejN0b3QrM01Qa1h2bFpOVnBjcmtxUCtyYUJ0dG5VMWVnRnlZaDBp?=
+ =?utf-8?B?U0lkdEd0VU1EZjl0WjhFaitGTTc0dldadDhaUEJ0aHNnbEduWHQvNHlhNkVT?=
+ =?utf-8?B?Rk9Za2pzNExEKzZqNitsQm9GTGc5ZkhKOWI2b2lCeUVEdXoxMUtSOUtFSVA0?=
+ =?utf-8?B?LzZzY1YxcnJEdUNjaWZXWHNLS1JDLzBmVWJHM0RaeFNjTjlDUmtQQmhGMG93?=
+ =?utf-8?B?WThRZTY0RG9kdm1RelpzaEJBVUU2RVlqRk1CZFg4aERCaFg3M09zRTFVRXJt?=
+ =?utf-8?B?dkNnRU0yWmFhV1JZazJ4d0lLWVFZWkxqVnRDQ3RuelFWSG1GS1RCTTZuTmZ6?=
+ =?utf-8?B?cEpQWmhPRVNueDNKNVpZMVFrQ0xlRi9NMmFFbkt2ZFpndWJyZWNIZ1BjbHY4?=
+ =?utf-8?B?MkxPZXQxZS9ROU1iVmxlajJabCtNYm4xNXhVWXlCbllGM1JQaGVzRlVjdGt2?=
+ =?utf-8?B?ckxJcndUT29BeGc9PQ==?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?NWVUQkQxUnV0T1owbGM4U2poZlBPT0taV1NTbVcvajV0VHNiVkEzRDRPdDJD?=
+ =?utf-8?B?U1o3TFpseDgyekZSV3JKZXFzbkM3aFVCbURqcFVLL1BqNU43alZpS3BuYkpv?=
+ =?utf-8?B?VHU5c2d0RFFKdnFuTFlXYnRSaXBKRmRkaS9tYVJMeHFyNnNIcDlhSjNIWHl5?=
+ =?utf-8?B?clhHWUJ5NTRnRFZlVmk3cENUWldFOUVIT3JMWHkramY2a0l0UTJqdUhCTmNE?=
+ =?utf-8?B?eHlFZ0VORUthbUVFeGg3b3pub20xUW1kbUZXRWs1SmFuQUVoWHYyVFdsb3k4?=
+ =?utf-8?B?clJlaHV1ZEMrZUpxVGZsVFdQNWZyUU9sa1dGNXZyMDBSZzdXSVdQb1dvWThJ?=
+ =?utf-8?B?ZUNiN0w1RUVGSGRnTnVQbE8rTmVraVgyTXZmRzVTbExLQnZSUFZnL01BNUxR?=
+ =?utf-8?B?aXlzZU10VjZVd0lRTmFkeUx5eWJIeTRPOTJ4b1lJT1NzcVdUM2JkTENsS3pL?=
+ =?utf-8?B?eUZjY1I3Z0owYzNxSGlidkUrMlpGMWxwY1JTUldET1M2YkVidVBrM0xKODRq?=
+ =?utf-8?B?eTdyVFZMU1VheWNzU0RhSTF3Znh3Y0M3a3YxRFdsQ2g3TzFBRXNocVNKeXVr?=
+ =?utf-8?B?SW9mUjZYUnhiMk9Kd2ZiWGhlVkc1T2x6WHo5UW9teUJyMC9uUVQzTUlQZ3pY?=
+ =?utf-8?B?anVkWWptVUhsSTRKWkowblJObnpaMHhRNDE4UGV5alB5bXducis0bW9tK0Vt?=
+ =?utf-8?B?c3JlOW94QysxVWk1Ykc2UzVaZEZzVHhYSEowZzc0MmdTS0lQN0NGcW5RbmFJ?=
+ =?utf-8?B?aUpDVmc4V2ZTdWMvbUlTRG1DbHZjTWdxN1pBNUFrblNCa0lDMXVPL2Y2ek1n?=
+ =?utf-8?B?V3ZDYmZtendQWDJ1K2RkUXpIbWwzbmFBZThPT2RrMDNIVGRKRGtNLzdSL3RT?=
+ =?utf-8?B?SFVSdjZSYzgzQTI4b0xDQ2c0QmI0Q1F4dVg2YlRNV1BnN0N5TzFBdWdTVzdF?=
+ =?utf-8?B?dmdtZm1ISGR0eDIyRTRkTi8wWDdVK0QvYTdaTDdzQVR1bGNhSUM0K2hVVU9o?=
+ =?utf-8?B?ZGhXQXQrUEh5M296NkJReWYyU09qVDVYbVZNcEFPT2xmNVN1YmpxMVdBY0hm?=
+ =?utf-8?B?VEZQcitPdnorcnZGNnhsR1g0MVJIWU1XL2pHb2RDaXBPQlpUK2lnK1h6Y0Zv?=
+ =?utf-8?B?aXZxT2NYNTFJWlUzb2xvTEJYT0x2MWE0cm9aeTBvUWJOZjJOVURQbTZLaWNq?=
+ =?utf-8?B?K2lycUJaN3NWMS85Y1JtTEtXYkxjWTlEdGk2a1lGTEVHUmI3QnBKbisrTC92?=
+ =?utf-8?B?aWRYY2k5OTAxTm05bER6TGhJaW5IeWYvYkRZTThINGZGak15bjUzU25IOTNJ?=
+ =?utf-8?B?OVY3N2FXdFpHRkZyZ0k1c3ZnazRXKzl0K3hJMFhDUnBoV2VvMFNCKzJTTEU1?=
+ =?utf-8?B?NWJJZ3Z6ZVZ5ZTlNVzB0aDB1Z2k5K1c0QU9yNFNWZkZucDl0dmw4a01Zb3Rr?=
+ =?utf-8?B?K0t0dEVOTkNFU1hmKzVHdkdGaGEyVmVKMVBTVWJDaG0wa0ZlKzlMSTlsZk9p?=
+ =?utf-8?B?WnFMemErcTdCaXFWcnZmZlpVbnkvdGhoMVZFbkVEVEh3MjFwZndiOXpuMlFs?=
+ =?utf-8?B?emRQcDkwa1VOZXpGdnU3OWEyS0RDWEw3Z2VkOVBya1gwaS9BVkhzRHpLMEM1?=
+ =?utf-8?Q?42yCif+RWuMWmFeuBxEliAFjf+D2Og3TqQO3p6A9yNww=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Precedence: bulk
+X-Mailing-List: linux-hyperv@vger.kernel.org
+List-Id: <linux-hyperv.vger.kernel.org>
+List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fd09e67-39b4-4516-0933-08dd03f782a4
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2024 15:26:13.9958
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR02MB9937
 
-
-
-On 11/12/2024 8:43 AM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Sunday, November 10, 2024 9:44 PM
->>
->> On 11/7/2024 11:14 AM, Naman Jain wrote:
->>>
->>> On 11/1/2024 12:44 AM, Michael Kelley wrote:
->>>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Tuesday, October 29, 2024 1:02 AM
->>>>>
-> 
-> [snip]
-> 
->>>>> @@ -2494,6 +2495,22 @@ static int vmbus_bus_resume(struct device *dev)
->>>>>
->>>>>        vmbus_request_offers();
->>>>>
->>>>> +    mutex_lock(&vmbus_connection.channel_mutex);
->>>>> +    list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
->>>>> +        if (channel->offermsg.child_relid != INVALID_RELID)
->>>>> +            continue;
->>>>> +
->>>>> +        /* hvsock channels are not expected to be present. */
->>>>> +        if (is_hvsock_channel(channel))
->>>>> +            continue;
->>>>> +
->>>>> +        pr_err("channel %pUl/%pUl not present after resume.\n",
->>>>> +            &channel->offermsg.offer.if_type,
->>>>> +            &channel->offermsg.offer.if_instance);
->>>>> +        /* ToDo: Cleanup these channels here */
->>>>> +    }
->>>>> +    mutex_unlock(&vmbus_connection.channel_mutex);
->>>>> +
->>>>
->>>> Dexuan and John have explained how in Azure VMs, there should not be
->>>> any VFs assigned to the VM at the time of hibernation. So the above
->>>> check for missing offers does not trigger an error message due to
->>>> VF offers coming after the all-offers-received message.
->>>>
->>>> But what about the case of a VM running on a local Hyper-V? I'm not
->>>> completely clear, but in that case I don't think any VFs are removed
->>>> before the hibernation, especially for VM-initiated hibernation. It's
->>>
->>> I am not sure about this behavior. I have requested Dexuan offline
->>> for a comment.
->>>
->>>> a reasonable scenario to later resume that same VM, with the same
->>>> VF assigned to the VM. Because of the way current code counts
->>>> the offers, vmbus_bus_resume() waits for the VF to be offered again,
->>>> and all the channels get correct post-resume relids. But the changes
->>>> in this patch set break that scenario. Since vmbus_bus_resume() now
->>>> proceeds before the VF offer arrives, hv_pci_resume() calling
->>>> vmbus_open() could use the pre-hibernation relid for the VF and break
->>>> things. Certainly the "not present after resume" error message would
->>>> be spurious.
->>>>
->>>> Maybe the focus here is Azure, and it's tolerable for the local Hyper-V
->>>> case with a VF to not work pending later fixes. But I thought I'd call
->>>> out the potential issue (assuming my thinking is correct).
->>>>
->>>> Michael
->>>
->>> IIUC, below scenarios can happen based on your comment-
->>>
->>> Case 1:
->>> VF channel offer is received in time before hv_pci_resume() and there
->>> are no problems.
->>>
->>> Case 2:
->>> Resume proceeds just after getting ALLOFFERS_DELIVERED msg and a warning
->>> is printed that this VF channel is not present after resume.
->>> Then two scenarios can happen:
->>>     Case 2.1:
->>>     VF channel offer is received before hv_pci_resume() and things work
->>>     fine. Warning printed is spurious.
->>>     Case 2.2:
->>>     VM channel offer is not received before hv_pci_resume() and relid is
->>>     not yet restored by onoffer. This is a problem. Warning is printed in
->>>     this case for missing offer.
->>>
->>> I think it all depends on whether or not VFs are removed in local
->>> HyperV VMs. I'll try to get this information. Thanks for pointing this
->>> out.
->>>
->>> Regards,
->>> Naman
->>>
->>
->> Hi Michael,
->> I discussed with Dexuan and we tried these scenarios. Here are the
->> observations:
->>
->> For the two ways of host initiated hibernation:
->>
->> #1: Invoke-Hibernate $vm -Device (Uses the guest shutdown component)
->> OR
->> #2: Invoke-Hibernate $vm -ComputerSystem (Uses the RequestStateChange
->> ability)
-> 
-> Question:  What Powershell module provides "Invoke-Hibernate"? It's not
-> present on my Windows 11 system that is running Hyper-V, and I can't
-> find any documentation about it on the web.  Or maybe Invoke-Hibernate
-> is a Powershell *script*?
-
-Powertest is one of the internal packages, which has some commands to
-trigger host-initiated hibernation. I should probably have mentioned
-that in my original comment.
-
-> 
->>
->> #1 does not remove the VF before sending the hibernate message to the VM
->> via hv_utils, but #2 does.
->>
->> With both #1 and #2, during resume, the host offers the vPCI vmbus
->> device before the vmbus_onoffers_delivered() is called. Whether or not
->> VFs are removed doesn't matter here, because during resume the first
->> fresh kernel always requests the VF device, meaning it has become a
->> boot-time device when the 'old' kernel is resuming back. So the issue we
->> are discussing will not happen in practice and the patch won't break
->> things and won't print spurious warnings. If its OK, please let me know,
->> I'll then proceed with v3.
->>
-> 
-> Ah, this is interesting. I'm assuming these are the details:
-> 
-> 1)  VM boots with the intent of resuming from hibernation (though
-> Hyper-V doesn't know about that intent)
-> 2)  Original fresh kernel is loaded and begins initialization
-> 3)  VMBus offers come in for boot-time devices, which excludes SR-IOV VFs.
-> 4)  ALLOFFERS_DELIVERED message comes in
-> 5)  The storvsc driver initializes for the virtual disks on the VM
-> 6)  Kernel initialization code finds and reads the swap space to see if a
-> hibernation image is present. If so, it reads in the hibernation image.
-> 7)  The suspend sequence is initiated (just like during hibernation)
-> to shutdown the VMBus devices and terminate the VMBus connection.
-> 8)  Control is transferred to the previously read-in hibernation image
-> 9)  The hibernation image runs the resume sequence, which
-> initiates a new VMBus connection and requests offers
-> 10) VMBus offers come in for whatever VMBus devices were present
-> when Step 7 initiated the suspend sequence. If a VF device was present
-> at that time, an offer for that VF device will come in and will match up
-> with the VF that was present in the VM at the time of hibernation.
-> 11) ALLOFFERS_DELIVERED message comes in again for the
-> newly initiated VMBus connection.
-> 
-
-3), 4) works differently IMO. There is no request_for_offers, or 
-ALLOFFERS_DELIVERED for fresh kernel. Otherwise on adding the prints in
-kernel, we should have seen these function calls *twice* in one 
-hibernation-resume cycle. But that is not the case.
-
-When the older/original kernel boots up, and requests offers, it gets 
-those VF offers again as part of boot time offers, and then
-ALLOFFERS_DELIVERED msg comes. I'm still trying to figure out how fresh
-kernel requests for VF offers or if it gets those offers automatically
-from the host. I will update my findings so that it can be put up in
-documentation which you mentioned.
-
-> The netvsc driver gets initialized *after* step 4, but we don't know
-> exactly *when* relative to the storvsc driver. The netvsc driver must
-> tell Hyper-V that it can handle an SR-IOV VF, and the VF offer is sent
-> sometime after that. While this netvsc/VF sequence is happening, the
-> storvsc driver is reading the hibernation image from swap (Step 6).
-> 
-
-Maybe this is how fresh kernel gets the offers for VF devices.
-
-> I think the sequence you describe works when reading the
-> hibernation image from swap takes 10's of seconds, or even several
-> minutes in an Azure VM with a remote disk. That gives plenty
-> of time for the VF to get initialized and be fully present when Step 7
-> starts. But there's no *guarantee* that the VF is initialized by then.
-> It's also not clear to me what action by the guest causes Hyper-V to
-> treat the VF as "added to the VM" so that in Step 10 the VF offer is
-> sent before ALLOFFERS_DELIVERED.
-> 
-> The sequence you describe also happens in an Azure VM, even if
-> the VF is removed before hibernation. When the VF offer arrives
-> during Step 10, it doesn't match with any VFs that were in the VM
-> at the time of hibernation. It's treated as a new device, just like it
-> would be if the offer arrived after ALLOFFERS_DELIVERED.
-> 
-> But it seems like there's still the risk of having a fast swap disk
-> and a small hibernation image that can be read in a shorter amount
-> of time than it takes to initialize the VF to the point that Hyper-V
-> treats it as added to the VM. Without knowing what that point is,
-> it's hard to assess the likelihood of that happening. Or maybe there's
-> an interlock I'm not aware of that ensures Step 7 can't proceed
-> while the netvsc/VF sequence is in progress.
-> 
-> So maybe it's best to proceed with this patch, and deal with the
-> risk later when/if it becomes reality. I'm OK if you want to do
-> that. This has been an interesting discussion that I'll try to capture
-> in some high-level documentation about how Linux guests on
-> Hyper-V do hibernation!
-> 
-> Michael
-
-
-
-I have sent v3 with the changes we discussed.
-
-Regards,
-Naman
+RnJvbTogTmFtYW4gSmFpbiA8bmFtamFpbkBsaW51eC5taWNyb3NvZnQuY29tPiBTZW50OiBXZWRu
+ZXNkYXksIE5vdmVtYmVyIDEzLCAyMDI0IDEyOjQ3IEFNDQo+IA0KPiBPbiAxMS8xMi8yMDI0IDg6
+NDMgQU0sIE1pY2hhZWwgS2VsbGV5IHdyb3RlOg0KPiA+IEZyb206IE5hbWFuIEphaW4gPG5hbWph
+aW5AbGludXgubWljcm9zb2Z0LmNvbT4gU2VudDogU3VuZGF5LCBOb3ZlbWJlciAxMCwgMjAyNCA5
+OjQ0IFBNDQo+ID4+DQo+ID4+IE9uIDExLzcvMjAyNCAxMToxNCBBTSwgTmFtYW4gSmFpbiB3cm90
+ZToNCj4gPj4+DQo+ID4+PiBPbiAxMS8xLzIwMjQgMTI6NDQgQU0sIE1pY2hhZWwgS2VsbGV5IHdy
+b3RlOg0KPiA+Pj4+IEZyb206IE5hbWFuIEphaW4gPG5hbWphaW5AbGludXgubWljcm9zb2Z0LmNv
+bT4gU2VudDogVHVlc2RheSwgT2N0b2JlciAyOSwgMjAyNCAxOjAyIEFNDQo+ID4+Pj4+DQo+ID4N
+Cj4gPiBbc25pcF0NCj4gPg0KPiA+Pj4+PiBAQCAtMjQ5NCw2ICsyNDk1LDIyIEBAIHN0YXRpYyBp
+bnQgdm1idXNfYnVzX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4+Pj4+DQo+ID4+Pj4+
+ICDCoMKgwqDCoMKgIHZtYnVzX3JlcXVlc3Rfb2ZmZXJzKCk7DQo+ID4+Pj4+DQo+ID4+Pj4+ICvC
+oMKgwqAgbXV0ZXhfbG9jaygmdm1idXNfY29ubmVjdGlvbi5jaGFubmVsX211dGV4KTsNCj4gPj4+
+Pj4gK8KgwqDCoCBsaXN0X2Zvcl9lYWNoX2VudHJ5KGNoYW5uZWwsICZ2bWJ1c19jb25uZWN0aW9u
+LmNobl9saXN0LCBsaXN0ZW50cnkpIHsNCj4gPj4+Pj4gK8KgwqDCoMKgwqDCoMKgIGlmIChjaGFu
+bmVsLT5vZmZlcm1zZy5jaGlsZF9yZWxpZCAhPSBJTlZBTElEX1JFTElEKQ0KPiA+Pj4+PiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBjb250aW51ZTsNCj4gPj4+Pj4gKw0KPiA+Pj4+PiArwqDCoMKg
+wqDCoMKgwqAgLyogaHZzb2NrIGNoYW5uZWxzIGFyZSBub3QgZXhwZWN0ZWQgdG8gYmUgcHJlc2Vu
+dC4gKi8NCj4gPj4+Pj4gK8KgwqDCoMKgwqDCoMKgIGlmIChpc19odnNvY2tfY2hhbm5lbChjaGFu
+bmVsKSkNCj4gPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29udGludWU7DQo+ID4+Pj4+
+ICsNCj4gPj4+Pj4gK8KgwqDCoMKgwqDCoMKgIHByX2VycigiY2hhbm5lbCAlcFVsLyVwVWwgbm90
+IHByZXNlbnQgYWZ0ZXIgcmVzdW1lLlxuIiwNCj4gPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgJmNoYW5uZWwtPm9mZmVybXNnLm9mZmVyLmlmX3R5cGUsDQo+ID4+Pj4+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgICZjaGFubmVsLT5vZmZlcm1zZy5vZmZlci5pZl9pbnN0YW5jZSk7DQo+ID4+
+Pj4+ICvCoMKgwqDCoMKgwqDCoCAvKiBUb0RvOiBDbGVhbnVwIHRoZXNlIGNoYW5uZWxzIGhlcmUg
+Ki8NCj4gPj4+Pj4gK8KgwqDCoCB9DQo+ID4+Pj4+ICvCoMKgwqAgbXV0ZXhfdW5sb2NrKCZ2bWJ1
+c19jb25uZWN0aW9uLmNoYW5uZWxfbXV0ZXgpOw0KPiA+Pj4+PiArDQo+ID4+Pj4NCj4gPj4+PiBE
+ZXh1YW4gYW5kIEpvaG4gaGF2ZSBleHBsYWluZWQgaG93IGluIEF6dXJlIFZNcywgdGhlcmUgc2hv
+dWxkIG5vdCBiZQ0KPiA+Pj4+IGFueSBWRnMgYXNzaWduZWQgdG8gdGhlIFZNIGF0IHRoZSB0aW1l
+IG9mIGhpYmVybmF0aW9uLiBTbyB0aGUgYWJvdmUNCj4gPj4+PiBjaGVjayBmb3IgbWlzc2luZyBv
+ZmZlcnMgZG9lcyBub3QgdHJpZ2dlciBhbiBlcnJvciBtZXNzYWdlIGR1ZSB0bw0KPiA+Pj4+IFZG
+IG9mZmVycyBjb21pbmcgYWZ0ZXIgdGhlIGFsbC1vZmZlcnMtcmVjZWl2ZWQgbWVzc2FnZS4NCj4g
+Pj4+Pg0KPiA+Pj4+IEJ1dCB3aGF0IGFib3V0IHRoZSBjYXNlIG9mIGEgVk0gcnVubmluZyBvbiBh
+IGxvY2FsIEh5cGVyLVY/IEknbSBub3QNCj4gPj4+PiBjb21wbGV0ZWx5IGNsZWFyLCBidXQgaW4g
+dGhhdCBjYXNlIEkgZG9uJ3QgdGhpbmsgYW55IFZGcyBhcmUgcmVtb3ZlZA0KPiA+Pj4+IGJlZm9y
+ZSB0aGUgaGliZXJuYXRpb24sIGVzcGVjaWFsbHkgZm9yIFZNLWluaXRpYXRlZCBoaWJlcm5hdGlv
+bi4gSXQncw0KPiA+Pj4NCj4gPj4+IEkgYW0gbm90IHN1cmUgYWJvdXQgdGhpcyBiZWhhdmlvci4g
+SSBoYXZlIHJlcXVlc3RlZCBEZXh1YW4gb2ZmbGluZQ0KPiA+Pj4gZm9yIGEgY29tbWVudC4NCj4g
+Pj4+DQo+ID4+Pj4gYSByZWFzb25hYmxlIHNjZW5hcmlvIHRvIGxhdGVyIHJlc3VtZSB0aGF0IHNh
+bWUgVk0sIHdpdGggdGhlIHNhbWUNCj4gPj4+PiBWRiBhc3NpZ25lZCB0byB0aGUgVk0uIEJlY2F1
+c2Ugb2YgdGhlIHdheSBjdXJyZW50IGNvZGUgY291bnRzDQo+ID4+Pj4gdGhlIG9mZmVycywgdm1i
+dXNfYnVzX3Jlc3VtZSgpIHdhaXRzIGZvciB0aGUgVkYgdG8gYmUgb2ZmZXJlZCBhZ2FpbiwNCj4g
+Pj4+PiBhbmQgYWxsIHRoZSBjaGFubmVscyBnZXQgY29ycmVjdCBwb3N0LXJlc3VtZSByZWxpZHMu
+IEJ1dCB0aGUgY2hhbmdlcw0KPiA+Pj4+IGluIHRoaXMgcGF0Y2ggc2V0IGJyZWFrIHRoYXQgc2Nl
+bmFyaW8uIFNpbmNlIHZtYnVzX2J1c19yZXN1bWUoKSBub3cNCj4gPj4+PiBwcm9jZWVkcyBiZWZv
+cmUgdGhlIFZGIG9mZmVyIGFycml2ZXMsIGh2X3BjaV9yZXN1bWUoKSBjYWxsaW5nDQo+ID4+Pj4g
+dm1idXNfb3BlbigpIGNvdWxkIHVzZSB0aGUgcHJlLWhpYmVybmF0aW9uIHJlbGlkIGZvciB0aGUg
+VkYgYW5kIGJyZWFrDQo+ID4+Pj4gdGhpbmdzLiBDZXJ0YWlubHkgdGhlICJub3QgcHJlc2VudCBh
+ZnRlciByZXN1bWUiIGVycm9yIG1lc3NhZ2Ugd291bGQNCj4gPj4+PiBiZSBzcHVyaW91cy4NCj4g
+Pj4+Pg0KPiA+Pj4+IE1heWJlIHRoZSBmb2N1cyBoZXJlIGlzIEF6dXJlLCBhbmQgaXQncyB0b2xl
+cmFibGUgZm9yIHRoZSBsb2NhbCBIeXBlci1WDQo+ID4+Pj4gY2FzZSB3aXRoIGEgVkYgdG8gbm90
+IHdvcmsgcGVuZGluZyBsYXRlciBmaXhlcy4gQnV0IEkgdGhvdWdodCBJJ2QgY2FsbA0KPiA+Pj4+
+IG91dCB0aGUgcG90ZW50aWFsIGlzc3VlIChhc3N1bWluZyBteSB0aGlua2luZyBpcyBjb3JyZWN0
+KS4NCj4gPj4+Pg0KPiA+Pj4+IE1pY2hhZWwNCj4gPj4+DQo+ID4+PiBJSVVDLCBiZWxvdyBzY2Vu
+YXJpb3MgY2FuIGhhcHBlbiBiYXNlZCBvbiB5b3VyIGNvbW1lbnQtDQo+ID4+Pg0KPiA+Pj4gQ2Fz
+ZSAxOg0KPiA+Pj4gVkYgY2hhbm5lbCBvZmZlciBpcyByZWNlaXZlZCBpbiB0aW1lIGJlZm9yZSBo
+dl9wY2lfcmVzdW1lKCkgYW5kIHRoZXJlDQo+ID4+PiBhcmUgbm8gcHJvYmxlbXMuDQo+ID4+Pg0K
+PiA+Pj4gQ2FzZSAyOg0KPiA+Pj4gUmVzdW1lIHByb2NlZWRzIGp1c3QgYWZ0ZXIgZ2V0dGluZyBB
+TExPRkZFUlNfREVMSVZFUkVEIG1zZyBhbmQgYSB3YXJuaW5nDQo+ID4+PiBpcyBwcmludGVkIHRo
+YXQgdGhpcyBWRiBjaGFubmVsIGlzIG5vdCBwcmVzZW50IGFmdGVyIHJlc3VtZS4NCj4gPj4+IFRo
+ZW4gdHdvIHNjZW5hcmlvcyBjYW4gaGFwcGVuOg0KPiA+Pj4gICDCoCBDYXNlIDIuMToNCj4gPj4+
+ICAgwqAgVkYgY2hhbm5lbCBvZmZlciBpcyByZWNlaXZlZCBiZWZvcmUgaHZfcGNpX3Jlc3VtZSgp
+IGFuZCB0aGluZ3Mgd29yaw0KPiA+Pj4gICDCoCBmaW5lLiBXYXJuaW5nIHByaW50ZWQgaXMgc3B1
+cmlvdXMuDQo+ID4+PiAgIMKgIENhc2UgMi4yOg0KPiA+Pj4gICDCoCBWTSBjaGFubmVsIG9mZmVy
+IGlzIG5vdCByZWNlaXZlZCBiZWZvcmUgaHZfcGNpX3Jlc3VtZSgpIGFuZCByZWxpZCBpcw0KPiA+
+Pj4gICDCoCBub3QgeWV0IHJlc3RvcmVkIGJ5IG9ub2ZmZXIuIFRoaXMgaXMgYSBwcm9ibGVtLiBX
+YXJuaW5nIGlzIHByaW50ZWQgaW4NCj4gPj4+ICAgwqAgdGhpcyBjYXNlIGZvciBtaXNzaW5nIG9m
+ZmVyLg0KPiA+Pj4NCj4gPj4+IEkgdGhpbmsgaXQgYWxsIGRlcGVuZHMgb24gd2hldGhlciBvciBu
+b3QgVkZzIGFyZSByZW1vdmVkIGluIGxvY2FsDQo+ID4+PiBIeXBlclYgVk1zLiBJJ2xsIHRyeSB0
+byBnZXQgdGhpcyBpbmZvcm1hdGlvbi4gVGhhbmtzIGZvciBwb2ludGluZyB0aGlzDQo+ID4+PiBv
+dXQuDQo+ID4+Pg0KPiA+Pj4gUmVnYXJkcywNCj4gPj4+IE5hbWFuDQo+ID4+Pg0KPiA+Pg0KPiA+
+PiBIaSBNaWNoYWVsLA0KPiA+PiBJIGRpc2N1c3NlZCB3aXRoIERleHVhbiBhbmQgd2UgdHJpZWQg
+dGhlc2Ugc2NlbmFyaW9zLiBIZXJlIGFyZSB0aGUNCj4gPj4gb2JzZXJ2YXRpb25zOg0KPiA+Pg0K
+PiA+PiBGb3IgdGhlIHR3byB3YXlzIG9mIGhvc3QgaW5pdGlhdGVkIGhpYmVybmF0aW9uOg0KPiA+
+Pg0KPiA+PiAjMTogSW52b2tlLUhpYmVybmF0ZSAkdm0gLURldmljZSAoVXNlcyB0aGUgZ3Vlc3Qg
+c2h1dGRvd24gY29tcG9uZW50KQ0KPiA+PiBPUg0KPiA+PiAjMjogSW52b2tlLUhpYmVybmF0ZSAk
+dm0gLUNvbXB1dGVyU3lzdGVtIChVc2VzIHRoZSBSZXF1ZXN0U3RhdGVDaGFuZ2UNCj4gPj4gYWJp
+bGl0eSkNCj4gPg0KPiA+IFF1ZXN0aW9uOiAgV2hhdCBQb3dlcnNoZWxsIG1vZHVsZSBwcm92aWRl
+cyAiSW52b2tlLUhpYmVybmF0ZSI/IEl0J3Mgbm90DQo+ID4gcHJlc2VudCBvbiBteSBXaW5kb3dz
+IDExIHN5c3RlbSB0aGF0IGlzIHJ1bm5pbmcgSHlwZXItViwgYW5kIEkgY2FuJ3QNCj4gPiBmaW5k
+IGFueSBkb2N1bWVudGF0aW9uIGFib3V0IGl0IG9uIHRoZSB3ZWIuICBPciBtYXliZSBJbnZva2Ut
+SGliZXJuYXRlDQo+ID4gaXMgYSBQb3dlcnNoZWxsICpzY3JpcHQqPw0KPiANCj4gUG93ZXJ0ZXN0
+IGlzIG9uZSBvZiB0aGUgaW50ZXJuYWwgcGFja2FnZXMsIHdoaWNoIGhhcyBzb21lIGNvbW1hbmRz
+IHRvDQo+IHRyaWdnZXIgaG9zdC1pbml0aWF0ZWQgaGliZXJuYXRpb24uIEkgc2hvdWxkIHByb2Jh
+Ymx5IGhhdmUgbWVudGlvbmVkDQo+IHRoYXQgaW4gbXkgb3JpZ2luYWwgY29tbWVudC4NCj4gDQoN
+Ck1ha2VzIHNlbnNlLiBTaW5jZSB0aGVyZSB3YXMgbm8gbWVudGlvbiBvZiBpdCBvbiB0aGUgd2Vi
+LCBJIHdhcw0KcmVhY2hpbmcgdGhlIGNvbmNsdXNpb24gdGhhdCBpdCBtdXN0IGJlIHNvbWV0aGlu
+ZyBpbnRlcm5hbC4gVGhlcmUgYXJlDQpwdWJsaWMgcG9zdGluZ3Mgb24gaG93IHRvIHR3aWRkbGUg
+cG93ZXIgc2V0dGluZ3MgdG8gZG8gaGliZXJuYXRpb24sDQpzbyBob3BlZnVsbHkgSSBjYW4gY3Jl
+YXRlIG15IG93biBlcXVpdmFsZW50Lg0KDQo+ID4NCj4gPj4NCj4gPj4gIzEgZG9lcyBub3QgcmVt
+b3ZlIHRoZSBWRiBiZWZvcmUgc2VuZGluZyB0aGUgaGliZXJuYXRlIG1lc3NhZ2UgdG8gdGhlIFZN
+DQo+ID4+IHZpYSBodl91dGlscywgYnV0ICMyIGRvZXMuDQo+ID4+DQo+ID4+IFdpdGggYm90aCAj
+MSBhbmQgIzIsIGR1cmluZyByZXN1bWUsIHRoZSBob3N0IG9mZmVycyB0aGUgdlBDSSB2bWJ1cw0K
+PiA+PiBkZXZpY2UgYmVmb3JlIHRoZSB2bWJ1c19vbm9mZmVyc19kZWxpdmVyZWQoKSBpcyBjYWxs
+ZWQuIFdoZXRoZXIgb3Igbm90DQo+ID4+IFZGcyBhcmUgcmVtb3ZlZCBkb2Vzbid0IG1hdHRlciBo
+ZXJlLCBiZWNhdXNlIGR1cmluZyByZXN1bWUgdGhlIGZpcnN0DQo+ID4+IGZyZXNoIGtlcm5lbCBh
+bHdheXMgcmVxdWVzdHMgdGhlIFZGIGRldmljZSwgbWVhbmluZyBpdCBoYXMgYmVjb21lIGENCj4g
+Pj4gYm9vdC10aW1lIGRldmljZSB3aGVuIHRoZSAnb2xkJyBrZXJuZWwgaXMgcmVzdW1pbmcgYmFj
+ay4gU28gdGhlIGlzc3VlIHdlDQo+ID4+IGFyZSBkaXNjdXNzaW5nIHdpbGwgbm90IGhhcHBlbiBp
+biBwcmFjdGljZSBhbmQgdGhlIHBhdGNoIHdvbid0IGJyZWFrDQo+ID4+IHRoaW5ncyBhbmQgd29u
+J3QgcHJpbnQgc3B1cmlvdXMgd2FybmluZ3MuIElmIGl0cyBPSywgcGxlYXNlIGxldCBtZSBrbm93
+LA0KPiA+PiBJJ2xsIHRoZW4gcHJvY2VlZCB3aXRoIHYzLg0KPiA+Pg0KPiA+DQo+ID4gQWgsIHRo
+aXMgaXMgaW50ZXJlc3RpbmcuIEknbSBhc3N1bWluZyB0aGVzZSBhcmUgdGhlIGRldGFpbHM6DQo+
+ID4NCj4gPiAxKSAgVk0gYm9vdHMgd2l0aCB0aGUgaW50ZW50IG9mIHJlc3VtaW5nIGZyb20gaGli
+ZXJuYXRpb24gKHRob3VnaA0KPiA+IEh5cGVyLVYgZG9lc24ndCBrbm93IGFib3V0IHRoYXQgaW50
+ZW50KQ0KPiA+IDIpICBPcmlnaW5hbCBmcmVzaCBrZXJuZWwgaXMgbG9hZGVkIGFuZCBiZWdpbnMg
+aW5pdGlhbGl6YXRpb24NCj4gPiAzKSAgVk1CdXMgb2ZmZXJzIGNvbWUgaW4gZm9yIGJvb3QtdGlt
+ZSBkZXZpY2VzLCB3aGljaCBleGNsdWRlcyBTUi1JT1YgVkZzLg0KPiA+IDQpICBBTExPRkZFUlNf
+REVMSVZFUkVEIG1lc3NhZ2UgY29tZXMgaW4NCj4gPiA1KSAgVGhlIHN0b3J2c2MgZHJpdmVyIGlu
+aXRpYWxpemVzIGZvciB0aGUgdmlydHVhbCBkaXNrcyBvbiB0aGUgVk0NCj4gPiA2KSAgS2VybmVs
+IGluaXRpYWxpemF0aW9uIGNvZGUgZmluZHMgYW5kIHJlYWRzIHRoZSBzd2FwIHNwYWNlIHRvIHNl
+ZSBpZiBhDQo+ID4gaGliZXJuYXRpb24gaW1hZ2UgaXMgcHJlc2VudC4gSWYgc28sIGl0IHJlYWRz
+IGluIHRoZSBoaWJlcm5hdGlvbiBpbWFnZS4NCj4gPiA3KSAgVGhlIHN1c3BlbmQgc2VxdWVuY2Ug
+aXMgaW5pdGlhdGVkIChqdXN0IGxpa2UgZHVyaW5nIGhpYmVybmF0aW9uKQ0KPiA+IHRvIHNodXRk
+b3duIHRoZSBWTUJ1cyBkZXZpY2VzIGFuZCB0ZXJtaW5hdGUgdGhlIFZNQnVzIGNvbm5lY3Rpb24u
+DQo+ID4gOCkgIENvbnRyb2wgaXMgdHJhbnNmZXJyZWQgdG8gdGhlIHByZXZpb3VzbHkgcmVhZC1p
+biBoaWJlcm5hdGlvbiBpbWFnZQ0KPiA+IDkpICBUaGUgaGliZXJuYXRpb24gaW1hZ2UgcnVucyB0
+aGUgcmVzdW1lIHNlcXVlbmNlLCB3aGljaA0KPiA+IGluaXRpYXRlcyBhIG5ldyBWTUJ1cyBjb25u
+ZWN0aW9uIGFuZCByZXF1ZXN0cyBvZmZlcnMNCj4gPiAxMCkgVk1CdXMgb2ZmZXJzIGNvbWUgaW4g
+Zm9yIHdoYXRldmVyIFZNQnVzIGRldmljZXMgd2VyZSBwcmVzZW50DQo+ID4gd2hlbiBTdGVwIDcg
+aW5pdGlhdGVkIHRoZSBzdXNwZW5kIHNlcXVlbmNlLiBJZiBhIFZGIGRldmljZSB3YXMgcHJlc2Vu
+dA0KPiA+IGF0IHRoYXQgdGltZSwgYW4gb2ZmZXIgZm9yIHRoYXQgVkYgZGV2aWNlIHdpbGwgY29t
+ZSBpbiBhbmQgd2lsbCBtYXRjaCB1cA0KPiA+IHdpdGggdGhlIFZGIHRoYXQgd2FzIHByZXNlbnQg
+aW4gdGhlIFZNIGF0IHRoZSB0aW1lIG9mIGhpYmVybmF0aW9uLg0KPiA+IDExKSBBTExPRkZFUlNf
+REVMSVZFUkVEIG1lc3NhZ2UgY29tZXMgaW4gYWdhaW4gZm9yIHRoZQ0KPiA+IG5ld2x5IGluaXRp
+YXRlZCBWTUJ1cyBjb25uZWN0aW9uLg0KPiA+DQo+IA0KPiAzKSwgNCkgd29ya3MgZGlmZmVyZW50
+bHkgSU1PLiBUaGVyZSBpcyBubyByZXF1ZXN0X2Zvcl9vZmZlcnMsIG9yDQo+IEFMTE9GRkVSU19E
+RUxJVkVSRUQgZm9yIGZyZXNoIGtlcm5lbC4gT3RoZXJ3aXNlIG9uIGFkZGluZyB0aGUgcHJpbnRz
+IGluDQo+IGtlcm5lbCwgd2Ugc2hvdWxkIGhhdmUgc2VlbiB0aGVzZSBmdW5jdGlvbiBjYWxscyAq
+dHdpY2UqIGluIG9uZQ0KPiBoaWJlcm5hdGlvbi1yZXN1bWUgY3ljbGUuIEJ1dCB0aGF0IGlzIG5v
+dCB0aGUgY2FzZS4NCj4gDQo+IFdoZW4gdGhlIG9sZGVyL29yaWdpbmFsIGtlcm5lbCBib290cyB1
+cCwgYW5kIHJlcXVlc3RzIG9mZmVycywgaXQgZ2V0cw0KPiB0aG9zZSBWRiBvZmZlcnMgYWdhaW4g
+YXMgcGFydCBvZiBib290IHRpbWUgb2ZmZXJzLCBhbmQgdGhlbg0KPiBBTExPRkZFUlNfREVMSVZF
+UkVEIG1zZyBjb21lcy4gSSdtIHN0aWxsIHRyeWluZyB0byBmaWd1cmUgb3V0IGhvdyBmcmVzaA0K
+PiBrZXJuZWwgcmVxdWVzdHMgZm9yIFZGIG9mZmVycyBvciBpZiBpdCBnZXRzIHRob3NlIG9mZmVy
+cyBhdXRvbWF0aWNhbGx5DQo+IGZyb20gdGhlIGhvc3QuIEkgd2lsbCB1cGRhdGUgbXkgZmluZGlu
+Z3Mgc28gdGhhdCBpdCBjYW4gYmUgcHV0IHVwIGluDQo+IGRvY3VtZW50YXRpb24gd2hpY2ggeW91
+IG1lbnRpb25lZC4NCg0KSG1tbS4gSSdtIG5vdCBzdXJlIHdoYXQgbWlnaHQgYmUgaGFwcGVuaW5n
+LiBJJ2xsIGJlIGludGVyZXN0ZWQgaW4NCndoYXQgeW91IGZpbmQuIEkgZG8gaW5kZWVkIHdhbnQg
+dG8gY2FsbCBvdXQgdGhlIGRldGFpbHMgaW4gbXkNCmRvY3VtZW50YXRpb24uIEFuZCBJJ2xsIGFs
+c28gdHJ5IHRvIHJlcHJvIG15c2VsZi4NCg0KTWljaGFlbA0KDQo+IA0KPiA+IFRoZSBuZXR2c2Mg
+ZHJpdmVyIGdldHMgaW5pdGlhbGl6ZWQgKmFmdGVyKiBzdGVwIDQsIGJ1dCB3ZSBkb24ndCBrbm93
+DQo+ID4gZXhhY3RseSAqd2hlbiogcmVsYXRpdmUgdG8gdGhlIHN0b3J2c2MgZHJpdmVyLiBUaGUg
+bmV0dnNjIGRyaXZlciBtdXN0DQo+ID4gdGVsbCBIeXBlci1WIHRoYXQgaXQgY2FuIGhhbmRsZSBh
+biBTUi1JT1YgVkYsIGFuZCB0aGUgVkYgb2ZmZXIgaXMgc2VudA0KPiA+IHNvbWV0aW1lIGFmdGVy
+IHRoYXQuIFdoaWxlIHRoaXMgbmV0dnNjL1ZGIHNlcXVlbmNlIGlzIGhhcHBlbmluZywgdGhlDQo+
+ID4gc3RvcnZzYyBkcml2ZXIgaXMgcmVhZGluZyB0aGUgaGliZXJuYXRpb24gaW1hZ2UgZnJvbSBz
+d2FwIChTdGVwIDYpLg0KPiA+DQo+IA0KPiBNYXliZSB0aGlzIGlzIGhvdyBmcmVzaCBrZXJuZWwg
+Z2V0cyB0aGUgb2ZmZXJzIGZvciBWRiBkZXZpY2VzLg0KPiANCj4gPiBJIHRoaW5rIHRoZSBzZXF1
+ZW5jZSB5b3UgZGVzY3JpYmUgd29ya3Mgd2hlbiByZWFkaW5nIHRoZQ0KPiA+IGhpYmVybmF0aW9u
+IGltYWdlIGZyb20gc3dhcCB0YWtlcyAxMCdzIG9mIHNlY29uZHMsIG9yIGV2ZW4gc2V2ZXJhbA0K
+PiA+IG1pbnV0ZXMgaW4gYW4gQXp1cmUgVk0gd2l0aCBhIHJlbW90ZSBkaXNrLiBUaGF0IGdpdmVz
+IHBsZW50eQ0KPiA+IG9mIHRpbWUgZm9yIHRoZSBWRiB0byBnZXQgaW5pdGlhbGl6ZWQgYW5kIGJl
+IGZ1bGx5IHByZXNlbnQgd2hlbiBTdGVwIDcNCj4gPiBzdGFydHMuIEJ1dCB0aGVyZSdzIG5vICpn
+dWFyYW50ZWUqIHRoYXQgdGhlIFZGIGlzIGluaXRpYWxpemVkIGJ5IHRoZW4uDQo+ID4gSXQncyBh
+bHNvIG5vdCBjbGVhciB0byBtZSB3aGF0IGFjdGlvbiBieSB0aGUgZ3Vlc3QgY2F1c2VzIEh5cGVy
+LVYgdG8NCj4gPiB0cmVhdCB0aGUgVkYgYXMgImFkZGVkIHRvIHRoZSBWTSIgc28gdGhhdCBpbiBT
+dGVwIDEwIHRoZSBWRiBvZmZlciBpcw0KPiA+IHNlbnQgYmVmb3JlIEFMTE9GRkVSU19ERUxJVkVS
+RUQuDQo+ID4NCj4gPiBUaGUgc2VxdWVuY2UgeW91IGRlc2NyaWJlIGFsc28gaGFwcGVucyBpbiBh
+biBBenVyZSBWTSwgZXZlbiBpZg0KPiA+IHRoZSBWRiBpcyByZW1vdmVkIGJlZm9yZSBoaWJlcm5h
+dGlvbi4gV2hlbiB0aGUgVkYgb2ZmZXIgYXJyaXZlcw0KPiA+IGR1cmluZyBTdGVwIDEwLCBpdCBk
+b2Vzbid0IG1hdGNoIHdpdGggYW55IFZGcyB0aGF0IHdlcmUgaW4gdGhlIFZNDQo+ID4gYXQgdGhl
+IHRpbWUgb2YgaGliZXJuYXRpb24uIEl0J3MgdHJlYXRlZCBhcyBhIG5ldyBkZXZpY2UsIGp1c3Qg
+bGlrZSBpdA0KPiA+IHdvdWxkIGJlIGlmIHRoZSBvZmZlciBhcnJpdmVkIGFmdGVyIEFMTE9GRkVS
+U19ERUxJVkVSRUQuDQo+ID4NCj4gPiBCdXQgaXQgc2VlbXMgbGlrZSB0aGVyZSdzIHN0aWxsIHRo
+ZSByaXNrIG9mIGhhdmluZyBhIGZhc3Qgc3dhcCBkaXNrDQo+ID4gYW5kIGEgc21hbGwgaGliZXJu
+YXRpb24gaW1hZ2UgdGhhdCBjYW4gYmUgcmVhZCBpbiBhIHNob3J0ZXIgYW1vdW50DQo+ID4gb2Yg
+dGltZSB0aGFuIGl0IHRha2VzIHRvIGluaXRpYWxpemUgdGhlIFZGIHRvIHRoZSBwb2ludCB0aGF0
+IEh5cGVyLVYNCj4gPiB0cmVhdHMgaXQgYXMgYWRkZWQgdG8gdGhlIFZNLiBXaXRob3V0IGtub3dp
+bmcgd2hhdCB0aGF0IHBvaW50IGlzLA0KPiA+IGl0J3MgaGFyZCB0byBhc3Nlc3MgdGhlIGxpa2Vs
+aWhvb2Qgb2YgdGhhdCBoYXBwZW5pbmcuIE9yIG1heWJlIHRoZXJlJ3MNCj4gPiBhbiBpbnRlcmxv
+Y2sgSSdtIG5vdCBhd2FyZSBvZiB0aGF0IGVuc3VyZXMgU3RlcCA3IGNhbid0IHByb2NlZWQNCj4g
+PiB3aGlsZSB0aGUgbmV0dnNjL1ZGIHNlcXVlbmNlIGlzIGluIHByb2dyZXNzLg0KPiA+DQo+ID4g
+U28gbWF5YmUgaXQncyBiZXN0IHRvIHByb2NlZWQgd2l0aCB0aGlzIHBhdGNoLCBhbmQgZGVhbCB3
+aXRoIHRoZQ0KPiA+IHJpc2sgbGF0ZXIgd2hlbi9pZiBpdCBiZWNvbWVzIHJlYWxpdHkuIEknbSBP
+SyBpZiB5b3Ugd2FudCB0byBkbw0KPiA+IHRoYXQuIFRoaXMgaGFzIGJlZW4gYW4gaW50ZXJlc3Rp
+bmcgZGlzY3Vzc2lvbiB0aGF0IEknbGwgdHJ5IHRvIGNhcHR1cmUNCj4gPiBpbiBzb21lIGhpZ2gt
+bGV2ZWwgZG9jdW1lbnRhdGlvbiBhYm91dCBob3cgTGludXggZ3Vlc3RzIG9uDQo+ID4gSHlwZXIt
+ViBkbyBoaWJlcm5hdGlvbiENCj4gPg0KPiA+IE1pY2hhZWwNCj4gDQo+IA0KPiANCj4gSSBoYXZl
+IHNlbnQgdjMgd2l0aCB0aGUgY2hhbmdlcyB3ZSBkaXNjdXNzZWQuDQo+IA0KPiBSZWdhcmRzLA0K
+PiBOYW1hbg0K
 
