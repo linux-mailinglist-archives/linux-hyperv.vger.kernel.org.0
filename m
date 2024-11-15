@@ -1,103 +1,143 @@
-Return-Path: <linux-hyperv+bounces-3337-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3338-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9EB99C9493
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Nov 2024 22:36:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5E349CDA1D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Nov 2024 08:58:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 658361F23337
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Nov 2024 21:36:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1DA2C283077
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Nov 2024 07:58:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A6E91B0103;
-	Thu, 14 Nov 2024 21:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F56A18893C;
+	Fri, 15 Nov 2024 07:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NQqKMwIs"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZyYcW6mD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72C95487BF;
-	Thu, 14 Nov 2024 21:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E53288DA;
+	Fri, 15 Nov 2024 07:58:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731620157; cv=none; b=RmWVdMeNE4TzbsaeHpf9ys35T+VGDg4M9JaCGMS822AVIMXFO4XuK1vX/b6JkGAwiq8r8CK5bNz4aSa+f8/xJzERIQCBwmS2EyvB8eBx0Cv45MaoO9Vuul8t+iHu3lC+e3yDt57Qqsbbgxb/6MIBBWsYR4GiuqoeJBG6YvDovl8=
+	t=1731657531; cv=none; b=KLscnAV4rMfNS+vgdlL0ZY95EGq1VW3dZlgvJsmtGe+GXlpMzsJYe2kTBRlSDmn7JYwfqsxVaYwzDCmc0Um7B+J8E91IgDf1Fbstlo/HDiZ+2E68gv90HxU1llRBbtdajzkd2Xb6aPx0/ukIYA3fML5l+RO3ujIu+taouXzHLSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731620157; c=relaxed/simple;
-	bh=+e79qdIDhXLlZ9c+P2Dc6YG0KRyU6RDSSxMlbTgd9g8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RjE5n90Q7nyTRSUNa4U0F7khJpCD4QMVdv0DjTHUmfebcftd/2VKQTMv7krcvCThBtqYgQu02dmioc9D7QwCmseFjBO9BjasI2Za7lS6LL991L2oWRbLm/MzRwC4y6rP5SOUsrNrXCt5rMszVYYeFP/xFuz4tRe5S0KYPocAcFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NQqKMwIs; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1731657531; c=relaxed/simple;
+	bh=wIkiy+QteJhjeJ20sh1Xcq3Q2Jh4O4HpvU/DzWtMTJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMdi5AiKwPvGF4uHo5OcaAB6IsOFX5Os7kGv2az1OxBYCPtMse9gH8KADLvz1QFfkkqbnV3juPESer826yjZOlYjG13NshBg5gcoDVrkdbP6oW8mmAFScNAHYcUSPhZGCAIeBOXTlbe22W6FEhN7GKLQRUhLV2yD9LYdxj6Vyy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZyYcW6mD; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.35.166] (c-73-118-245-227.hsd1.wa.comcast.net [73.118.245.227])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B9C9C20C8BA9;
-	Thu, 14 Nov 2024 13:35:54 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B9C9C20C8BA9
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 0A969206BCC9; Thu, 14 Nov 2024 23:58:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A969206BCC9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1731620155;
-	bh=XPm0EAc1K/nvytn2cDBsP3xI8cBGOIMbd0Cl3IWdsjU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=NQqKMwIsblJDQplTM3wYIQkHUxgOW2n632p2zFLlvECKHoCZPlToMzD5erEwPYfpe
-	 0xAcZl2lQraCLw3r4lLsocd3IgabK8u3iSBdob3SxKEh55p874cPox288sd/GyuZhW
-	 Ar0G9QMjSax+jhKvh5SSd5YXIokLKru/kSANZoeY=
-Message-ID: <4743445a-09c4-4f14-b6a7-2e6509077680@linux.microsoft.com>
-Date: Thu, 14 Nov 2024 13:35:53 -0800
+	s=default; t=1731657529;
+	bh=TuB/d6ReaTiRiZwBzzLa3GlP4F720U7qluSCKqYmo8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZyYcW6mD6BAra4UNC3p2uxqb9O7SPfSZg6I7lSLSreg4YRdJdAIlGWSdmsId9e3f1
+	 +ufoa7ZuJhPA1gkLT/pAf+7CujtdmmVHTtX5zc/2dYwkx6Z2RSEiqqkZyH/I6DgErD
+	 8EP1LWKo/1ZCKFJ8g7PYluJjE8WStyuWvZL6/YwM=
+Date: Thu, 14 Nov 2024 23:58:48 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	John Starks <jostarks@microsoft.com>, jacob.pan@linux.microsoft.com,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v3 0/2] Drivers: hv: vmbus: Wait for boot-time offers and
+ log missing offers
+Message-ID: <20241115075848.GA11347@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20241113084700.2940-1-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, mhklinux@outlook.com, decui@microsoft.com,
- catalin.marinas@arm.com, will@kernel.org, luto@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
- daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, arnd@arndb.de, sgarzare@redhat.com,
- jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mukeshrathor@microsoft.com,
- vkuznets@redhat.com, ssengar@linux.microsoft.com, apais@linux.microsoft.com
-Subject: Re: [PATCH v2 4/4] hyperv: Switch from hyperv-tlfs.h to
- hyperv/hvhdk.h
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, iommu@lists.linux.dev,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, virtualization@lists.linux.dev
-References: <1731018746-25914-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1731018746-25914-5-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Language: en-US
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <1731018746-25914-5-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241113084700.2940-1-namjain@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 11/7/2024 2:32 PM, Nuno Das Neves wrote:
-> Switch to using hvhdk.h everywhere in the kernel. This header includes
-> all the new Hyper-V headers in include/hyperv, which form a superset of
-> the definitions found in hyperv-tlfs.h.
+On Wed, Nov 13, 2024 at 12:46:58AM -0800, Naman Jain wrote:
+> After VM requests for channel offers during boot or resume from
+> hibernation, host offers the devices that the VM is configured with and
+> then sends a separate message indicating that all the boot-time channel
+> offers are delivered. Wait for this message to make this boot-time offers
+> request and receipt process synchronous.
 > 
-> This makes it easier to add new Hyper-V interfaces without being
-> restricted to those in the TLFS doc (reflected in hyperv-tlfs.h).
+> Without this, user mode can race with VMBus initialization and miss
+> channel offers. User mode has no way to work around this other than
+> sleeping for a while, since there is no way to know when VMBus has
+> finished processing boot-time offers.
 > 
-> To be more consistent with the original Hyper-V code, the names of some
-> definitions are changed slightly. Update those where needed.
+> This is in analogy to a PCI bus not returning from probe until it has
+> scanned all devices on the bus.
 > 
-> hyperv-tlfs.h is no longer included anywhere - hvhdk.h can serve
-> the same role, but with an easier path for adding new definitions.
+> As part of this implementation, some code cleanup is also done for the
+> logic which becomes redundant due to this change.
+> 
+> Second patch prints the channels which are not offered when resume
+> happens from hibernation to supply more information to the end user.
+> 
+> Changes since v2:
+> https://lore.kernel.org/all/20241029080147.52749-1-namjain@linux.microsoft.com/
+> * Incorporated Easwar's suggestion to use secs_to_jiffies() as his
+>   changes are now merged.
+> * Addressed Michael's comments:
+>   * Used boot-time offers/channels/devices to maintain consistency
+>   * Rephrased CHANNELMSG_ALLOFFERS_DELIVERED handler function comments
+>     for better explanation. Thanks for sharing the write-up.
+>   * Changed commit msg and other things as per suggestions
+> * Addressed Dexuan's comments, which came up in offline discussion:
+>   * Changed timeout for waiting for all offers delivered msg to 60s instead of 10s.
+>     Reason being, the host can experience some servicing events or diagnostics events,
+>     which may take a long time and hence may fail to offer all the devices within 10s.
+>   * Minor additions in commit subject of both patches
+> * Rebased on latest linux-next master tip
+> 
+> Changes since v1:
+> https://lore.kernel.org/all/20241018115811.5530-1-namjain@linux.microsoft.com/
+> * Added Easwar's Reviewed-By tag
+> * Addressed Michael's comments:
+>   * Added explanation of all offers delivered message in comments
+>   * Removed infinite wait for offers logic, and changed it wait once.
+>   * Removed sub channel workqueue flush logic
+>   * Added comments on why MLX device offer is not expected as part of
+>     this essential boot offer list. I refrained from adding too many
+>     details on it as it felt like it is beyond the scope of this patch
+>     series and may not be relevant to this. However, please let me know if
+>     something needs to be added.
+> * Addressed Saurabh's comments:
+>   * Changed timeout value to 10000 ms instead of 10*1000
+>   * Changed commit msg as per suggestions
+>   * Added a comment for warning case of wait_for_completion timeout
+>   * Added a note for missing channel cleanup in comments and commit msg
+> 
+> John Starks (1):
+>   Drivers: hv: vmbus: Log on missing offers if any
+> 
+> Naman Jain (1):
+>   Drivers: hv: vmbus: Wait for boot-time offers during boot and resume
+> 
+>  drivers/hv/channel_mgmt.c | 61 +++++++++++++++++++++++++++++----------
+>  drivers/hv/connection.c   |  4 +--
+>  drivers/hv/hyperv_vmbus.h | 14 ++-------
+>  drivers/hv/vmbus_drv.c    | 31 ++++++++++----------
+>  4 files changed, 67 insertions(+), 43 deletions(-)
+> 
+> 
+> base-commit: 28955f4fa2823e39f1ecfb3a37a364563527afbc
+> -- 
+> 2.34.1
+> 
 
-Michael already mentioned this, I'd also agree that it's better to
-remove hyperv-tlfs.h entirely since it's been superseded.
-
-This looks good to me, I'll wait for v3 addressing the other comments to
-take a look again.
-
-- Easwar
-
-<...>
+The overall series looks good to me. However, I noticed a few checkpatch.pl warnings
+that could be addressed. After fixing them:
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
