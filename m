@@ -1,180 +1,206 @@
-Return-Path: <linux-hyperv+bounces-3353-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3356-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8322A9D8E78
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Nov 2024 23:25:04 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B6099D8F07
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 00:25:20 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2099B168DDA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Nov 2024 22:25:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A54AAB23539
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Nov 2024 23:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59DFF1C3308;
-	Mon, 25 Nov 2024 22:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275BD1CEE82;
+	Mon, 25 Nov 2024 23:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RTDRacyq"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="I/c1RYN4"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA2813C80E;
-	Mon, 25 Nov 2024 22:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655831CD2C;
+	Mon, 25 Nov 2024 23:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732573501; cv=none; b=rrOtDLDX1TA53X+tE8MHyQ1pM//DjOfkW7nQdJZRGLkOXhg6XAdLY4X8eDn5MzRzPQTMm6Xh0b5oU46G/UmWEdZQ3IL1u6Y276z2JTfx662tKPn1glrJb138eSDZSROu7HEfesKRC4LNY+wHTnLhvZnSL4S8qAbO7QehGT/RGUU=
+	t=1732577091; cv=none; b=gdR+LuluhPQvBdlCHbjN/tX2KumMybZKWz4mEzAenXXStSX1a7usufCqkuLqFrj1J905kuc4E0qvf2tlfVXccrQBObzR3kwrH1hWeYaC7LfsBDmqrcKrM/TQkiZN1wLN9+N+FNGbPxXl9bM0t0UPCQS0BkL29za6UfiqAITrW7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732573501; c=relaxed/simple;
-	bh=afqhdH/45pMsF5C8ZM612zCOoV610zVW1Lz3K8pKfLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gv+tMLYp+xoel0ty9KYCYIeih8jCRK1GBs6CVNxPZqXcRYBwbqONc2GlPtT8HamcMoJp5slwx2UYoINa/DbBJ4XED4gAlR8yWNM4BVsfj55d/NNuZ0JtcS3TL1wtmJaQjkaRypXjHdlwKbz8Bg09K6ebsaQCuq5OLhohcxO1ALc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RTDRacyq; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1732577091; c=relaxed/simple;
+	bh=8ET40aUJBPF8KJ8l/GdaeBQwZGILcXnZdbZXTC2/+wo=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=WyM6z7TbGSGmhOAr1EJTNjJ95tejQxMuAGaGTQH0t1tG5ZeEPxEqgkSfARqXXb1n3UmQR8GiYt/97gnqZJV8oeVxMvdBbGAMm5rHFnW75ONgCgno4KgWU0P+Hqv1FQcdVHz2+eEXXrxX2i4xkicDQDKYhsZRPtQsYuzVEWfIdq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=I/c1RYN4; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii. (unknown [131.107.8.116])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 11A8A2054599;
-	Mon, 25 Nov 2024 14:24:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 11A8A2054599
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BC82A2054597;
+	Mon, 25 Nov 2024 15:24:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BC82A2054597
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1732573499;
-	bh=5TkZkgnvEk/iIKsKGYaK6XUWVYU8tjBHTxQq6VwmxwU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RTDRacyqgHH8Q6V079+mz/IsaQ7O2q8gEuB4BkKcRK2x5Y6Qv8LyCMh8e8BWxy7hz
-	 OMPkEw7QkvH7JEBzJeD2TtT6nNFkqj8ZJfOEMl+3Ua4OVes2YOpnY1lqvXVBwXO2rK
-	 TrXfPjnwR1RRtQ6hR3zhr1xebFkCktZQ4RHvqBAs=
-Date: Mon, 25 Nov 2024 14:24:57 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/hyperv: Set X86_FEATURE_TSC_RELIABLE unconditionally
-Message-ID: <20241125222457.GA28630@skinsburskii.>
-References: <173143547242.3415.16207372030310222687.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB41575A98314B82C498A3D312D4592@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20241120005106.GA18115@skinsburskii.>
- <SN6PR02MB4157121B6CD9F5CAAFB39637D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=default; t=1732577087;
+	bh=KKxzMh07QCmMgY5ntlRx+0kcO0k3u6+fBgf1JWSRuQE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=I/c1RYN4dA+qUthGeQv6gh+TFPvdHoVYWtoz34qRQbODr8muisW07fzsKSq76FBqv
+	 1BCkJQS3BlZ9hGDfV01s1HkGv7AmIwADtJFS/+xlNHCCr8+Wp4Mlu9ORXlWtyOGYtw
+	 mTe9Uqf7okrDn8wYD+oN2pLQubME821KC1+zxfm8=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	iommu@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	virtualization@lists.linux.dev
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	mhklinux@outlook.com,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	luto@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	seanjc@google.com,
+	pbonzini@redhat.com,
+	peterz@infradead.org,
+	daniel.lezcano@linaro.org,
+	joro@8bytes.org,
+	robin.murphy@arm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	arnd@arndb.de,
+	sgarzare@redhat.com,
+	jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com,
+	skinsburskii@linux.microsoft.com,
+	mukeshrathor@microsoft.com,
+	vkuznets@redhat.com,
+	ssengar@linux.microsoft.com,
+	apais@linux.microsoft.com,
+	eahariha@linux.microsoft.com,
+	horms@kernel.org
+Subject: [PATCH v3 0/5] Introduce new headers for Hyper-V
+Date: Mon, 25 Nov 2024 15:24:39 -0800
+Message-Id: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157121B6CD9F5CAAFB39637D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Fri, Nov 22, 2024 at 06:33:12PM +0000, Michael Kelley wrote:
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday, November 19, 2024 4:51 PM
-> > 
-> > On Tue, Nov 12, 2024 at 07:48:06PM +0000, Michael Kelley wrote:
-> > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday,
-> > November 12, 2024 10:18 AM
-> > > >
-> > > > Enable X86_FEATURE_TSC_RELIABLE by default as X86_FEATURE_TSC_RELIABLE is
-> > > > independent from invariant TSC and should have never been gated by the
-> > > > HV_ACCESS_TSC_INVARIANT privilege.
-> > >
-> > > I think originally X86_FEATURE_TSC_RELIABLE was gated by the Hyper-V
-> > > TSC Invariant feature because otherwise VM live migration may cause
-> > > the TSC value reported by the RDTSC/RDTSCP instruction in the guest
-> > > to abruptly change frequency and value. In such cases, the TSC isn't
-> > > useable by the kernel or user space.
-> > >
-> > > Enabling the Hyper-V TSC Invariant feature fixes that by using the
-> > > hardware scaling available in more recent processors to automatically
-> > > fixup the TSC value returned by RDTSC/RDTSCP in the guest.
-> > >
-> > > Is there a practical problem that is fixed by always enabling
-> > > X86_FEATURE_TSC_RELIABLE?
-> > >
-> > 
-> > The particular problem is that HV_ACCESS_TSC_INVARIANT is not set for the
-> > nested root, which in turn leads to keeping tsc clocksource watchdog
-> > thread and TSC sycn check timer around.
-> 
-> I have trouble keeping all the different TSC "features" conceptually
-> separate. :-( The TSC frequency not changing (and the value not
-> abruptly jumping?) should already be represented by
-> X86_FEATURE_TSC_CONSTANT.  In the kernel, X86_FEATURE_TSC_RELIABLE
-> effectively only controls whether the TSC clocksource watchdog is
-> enabled, and in spite of the live migration foibles, I don't see a need
-> for that watchdog in a Hyper-V VM. So maybe it's OK to always set
-> X86_FEATURE_TSC_RELIABLE in a Hyper-V VM, as you have
-> proposed.
-> 
-> The "tsc_reliable" flag is also exposed to user space as part of the
-> /proc/cpuinfo "flags" output, so theoretically some user space
-> program could change behavior based on that flag. But that seems
-> a bit far-fetched. I know there are user space programs that check
-> the CPUID INVARIANT_TSC flag to know whether they can use
-> the raw RDTSC instruction output to do start/stop timing. The
-> Hyper-V TSC Invariant feature makes that work correctly, even
-> across live migrations.
-> 
+To support Linux as root partition[1] on Hyper-V many new definitions
+are required.
 
-It sounds to me that if X86_FEATURE_TSC_CONSTANT is available on Hyper-V, then we
-can set X86_FEATURE_TSC_RELIABLE.
-Is it what you are saying?
+The plan going forward is to directly import definitions from
+Hyper-V code without waiting for them to land in the TLFS document.
+This is a quicker and more maintainable way to import definitions,
+and is a step toward the eventual goal of exporting the headers
+directly from Hyper-V for use in Linux.
 
-Stanislav
+This patch series introduces new headers (hvhdk.h, hvgdk.h, etc,
+see patch #3) derived directly from Hyper-V code. hyperv-tlfs.h is
+replaced with hvhdk.h (which includes the other new headers)
+everywhere.
 
-> Michael
-> 
-> > 
-> > But the live migration concern you raised is indeed still out there.
-> > 
-> > Thank you for the input Michael, I'll think more about it.
-> > 
-> > Stanislav
-> > 
-> > > Michael
-> > >
-> > > >
-> > > > To elaborate, the HV_ACCESS_TSC_INVARIANT privilege allows certain types of
-> > > > guests to opt-in to invariant TSC by writing the
-> > > > HV_X64_MSR_TSC_INVARIANT_CONTROL register. Not all guests will have this
-> > > > privilege and the hypervisor will automatically opt-in certain types of
-> > > > guests (e.g. EXO partitions) to invariant TSC, but this functionality is
-> > > > unrelated to the TSC reliability.
-> > > >
-> > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > > > ---
-> > > >  arch/x86/kernel/cpu/mshyperv.c |    6 +++---
-> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > > > index d18078834ded..14412afcc398 100644
-> > > > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > > > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > > > @@ -515,7 +515,7 @@ static void __init ms_hyperv_init_platform(void)
-> > > >  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
-> > > >  #endif
-> > > >  #endif
-> > > > -	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
-> > > > +	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT)
-> > > >  		/*
-> > > >  		 * Writing to synthetic MSR 0x40000118 updates/changes the
-> > > >  		 * guest visible CPUIDs. Setting bit 0 of this MSR  enables
-> > > > @@ -526,8 +526,8 @@ static void __init ms_hyperv_init_platform(void)
-> > > >  		 * is called.
-> > > >  		 */
-> > > >  		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL,
-> > HV_EXPOSE_INVARIANT_TSC);
-> > > > -		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> > > > -	}
-> > > > +
-> > > > +	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> > > >
-> > > >  	/*
-> > > >  	 * Generation 2 instances don't support reading the NMI status from
-> > > >
-> > > >
-> > >
+No functional change is expected.
+
+Summary:
+Patch 1-2: Minor cleanup patches
+Patch 3: Add the new headers (hvhdk.h, etc..) in include/hyperv/
+Patch 4: Switch to the new headers
+Patch 5: Delete hyperv-tlfs.h files
+
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+Changelog:
+v3:
+- Add patch (#5) to delete the hyperv-tlfs.h files, suggested by
+  Michael Kelley and Easwar Hariharan
+- Reword commit message on patch #3 to improve clarity, suggested
+  by Michael Kelley
+- Clarify "Dom0" terminology, suggested by Michael Kelley
+v2:
+- Rework the series to simply use the new headers everywhere,
+  instead of fiddling around to keep hyperv-tlfs.h in some areas,
+  suggested by Michael Kelley and Easwar Hariharan
+- Fix compilation issues with some configs by adding missing
+  definitions and changing some names, thanks to Simon Horman for
+  catching those
+- Add additional definitions to the new headers due to them now being
+  used everywhere
+- Don't remove indirect includes in patch #2, only remove those which
+  truly aren't used, suggested by Michael Kelley
+
+---
+Footnotes:
+[1] Linux as root partition on Hyper-V is sometimes referred to as
+    "Dom0", borrowing the terminology from Xen. Although they are
+    conceptually similar, note that "Hyper-V Dom0" has nothing to do
+    with Xen.
+
+Nuno Das Neves (5):
+  hyperv: Move hv_connection_id to hyperv-tlfs.h
+  hyperv: Clean up unnecessary #includes
+  hyperv: Add new Hyper-V headers in include/hyperv
+  hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h
+  hyperv: Remove the now unused hyperv-tlfs.h files
+
+ MAINTAINERS                          |    8 +-
+ arch/arm64/hyperv/hv_core.c          |    3 +-
+ arch/arm64/hyperv/mshyperv.c         |    4 +-
+ arch/arm64/include/asm/hyperv-tlfs.h |   71 --
+ arch/arm64/include/asm/mshyperv.h    |    7 +-
+ arch/x86/hyperv/hv_apic.c            |    1 -
+ arch/x86/hyperv/hv_init.c            |   21 +-
+ arch/x86/hyperv/hv_proc.c            |    3 +-
+ arch/x86/hyperv/ivm.c                |    1 -
+ arch/x86/hyperv/mmu.c                |    1 -
+ arch/x86/hyperv/nested.c             |    2 +-
+ arch/x86/include/asm/hyperv-tlfs.h   |  811 ----------------
+ arch/x86/include/asm/kvm_host.h      |    3 +-
+ arch/x86/include/asm/mshyperv.h      |    3 +-
+ arch/x86/include/asm/svm.h           |    2 +-
+ arch/x86/kernel/cpu/mshyperv.c       |    2 +-
+ arch/x86/kvm/vmx/hyperv_evmcs.h      |    2 +-
+ arch/x86/kvm/vmx/vmx_onhyperv.h      |    2 +-
+ arch/x86/mm/pat/set_memory.c         |    2 -
+ drivers/clocksource/hyperv_timer.c   |    2 +-
+ drivers/hv/hv_balloon.c              |    4 +-
+ drivers/hv/hv_common.c               |    2 +-
+ drivers/hv/hv_kvp.c                  |    2 +-
+ drivers/hv/hv_snapshot.c             |    2 +-
+ drivers/hv/hyperv_vmbus.h            |    2 +-
+ include/asm-generic/hyperv-tlfs.h    |  874 -----------------
+ include/asm-generic/mshyperv.h       |    7 +-
+ include/clocksource/hyperv_timer.h   |    2 +-
+ include/hyperv/hvgdk.h               |  308 ++++++
+ include/hyperv/hvgdk_ext.h           |   46 +
+ include/hyperv/hvgdk_mini.h          | 1306 ++++++++++++++++++++++++++
+ include/hyperv/hvhdk.h               |  733 +++++++++++++++
+ include/hyperv/hvhdk_mini.h          |  311 ++++++
+ include/linux/hyperv.h               |   11 +-
+ net/vmw_vsock/hyperv_transport.c     |    6 +-
+ 35 files changed, 2748 insertions(+), 1819 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
+ delete mode 100644 arch/x86/include/asm/hyperv-tlfs.h
+ delete mode 100644 include/asm-generic/hyperv-tlfs.h
+ create mode 100644 include/hyperv/hvgdk.h
+ create mode 100644 include/hyperv/hvgdk_ext.h
+ create mode 100644 include/hyperv/hvgdk_mini.h
+ create mode 100644 include/hyperv/hvhdk.h
+ create mode 100644 include/hyperv/hvhdk_mini.h
+
+-- 
+2.34.1
+
 
