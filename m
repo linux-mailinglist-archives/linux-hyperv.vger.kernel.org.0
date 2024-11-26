@@ -1,158 +1,134 @@
-Return-Path: <linux-hyperv+bounces-3362-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3363-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 641EF9D919C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 07:00:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 115269D91A9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 07:11:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2477F28AFC0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 06:00:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C482828352F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 06:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD4616C850;
-	Tue, 26 Nov 2024 06:00:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 823F654782;
+	Tue, 26 Nov 2024 06:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="UUT+0VGQ"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DMbacLy/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2073.outbound.protection.outlook.com [40.92.18.73])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012070.outbound.protection.outlook.com [52.103.14.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA262539A;
-	Tue, 26 Nov 2024 05:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB45B67A;
+	Tue, 26 Nov 2024 06:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732600800; cv=fail; b=WVSEOF3IXXwqnZ3STa67sw/1N5wyp5vHkDtXrOMb2t8dUZDEwU8OILcdiPS5O/cQ4xLxo6sDpP9mrlO1jDLPDFgN637M3Z/ojZaukdQlzPFK5ONCPMeAatWC1cZsllvMtHHo8yYdoI94jzoDAcIDC9+h0gaHrwLwGm72O18XQcs=
+	t=1732601475; cv=fail; b=oKGxKE5IngKCN/UaRMm9YFb3h7IzwjvCkCByFM8dsyNDb203Qau7VNtT0mmZDXUWflnGDL+FsbV+iIEaEcbSwnF62WG2LxPHuDjnZWegNh+V90jSn7wLimwc9pGo4dH3+o5eOmoordzSqrEjQ1ouU8rwLZsrYdAf/9MHg+MlymA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732600800; c=relaxed/simple;
-	bh=qxQv7Z3S7NTKriAkM5GokfYtZJ1VUWQnAwA/oY8ubHU=;
+	s=arc-20240116; t=1732601475; c=relaxed/simple;
+	bh=cDvVgBZ6PHdX4bM5CYkjLtEZruROYX3mQ+rQ7wJDn2o=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GAgsx6BonHdAKiQj6F2kKr8XAV0LG31HqZw5y5zueu36MYTA4qCha9tKoaaEe8M7aRvX1HLxseqQvfB95oFMzjZo4VFGjmz5KW1P+woLhpuRmyHNztB1fu8wk4eMfpW5DFZRTsBdKt5d3jJwUXtdWTAwkQDUVHSqSl0wI+g8J/4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=UUT+0VGQ; arc=fail smtp.client-ip=40.92.18.73
+	 Content-Type:MIME-Version; b=dz19H7G+9OIHgTrx5/EwaU932UNWqN3nAZgz2lkEJ+HmYukfVnIX1tcpd991v7uR7fs/tQKWLKOp8io30HBAPS62l733ZNwdyiugmbOoiGm5M+RQ2grFSK7hciYbBxAdYGTMgv6qC+bJ2BCumq8d6YF0HldLtvSczWhMhhoDftw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DMbacLy/; arc=fail smtp.client-ip=52.103.14.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FKtm5RSAyc8nio12ufFYfIWoT18s+ZxUIbfA0p8F+xYgJ7+jjz6GJi8bY1fBgpAGv1NABIhw2yI/ajB5aSk3O/E5TGM+ahfr92t++uQ6xtGXVL0GkUpblIQf1mb4PO6iJk3oc/HDBz0B5aFxCgaoKX6JrYdIjsVTzCi71PRyGob+xXWWbmbEZdmhpunYqJwh9fWri6CtU40wLBqHCzRaZ7wOYe7hD97bq5QFNiIq+bNklMRSud2YePLcyerFOR5zNBNPnghsytEyaVslV2MhesDgazR/TBo4sdHNGnmZz0ul3ZsK7p6A7btq3S/9MuC6UKDG+gn7bipiW/uVf3aKOQ==
+ b=toUflsZz6IK4S2JAHEsMe1A7rs5M20UcgQ0g1mxoBg51wHt4uLJdVMsTUjmdK5s4p65IIu5FKLCNq8+vNFCRIN4N3mCLEBKYYsZN5slKA1nGhiiKTNXopdsd5xPIbZS4xA4BjR2agUeVf6/9CSrz9I/QR2kXO5nSdUiBQ/p4JtANob4Vk8rDdXFUn2s/B5DaCj7ASenx/ZxqNhxeBG4pSY72du+qDPAvQ5KFutyAtDX4kK9qyqEMICTmBuWhFDm8YJAu2qIrJJD+lN8otYHlUrPIyYV/+jaGlVsgQlms31VCIH4EvduYLSIZiguF7tcAOP18rkjAS9HwFO/rXdbXrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qxQv7Z3S7NTKriAkM5GokfYtZJ1VUWQnAwA/oY8ubHU=;
- b=hIo++iy51+Bb9DDVYvz8i8cymcFCFJsBOKi8RW2/yLuEL28q/Fl68kP9vV5Pfzkej/iZyCU4R76mZfzaqd1d1e2gcYiruFri3Rv2+q/+XeJiUCZh/iI2LXdUmtPLIarcYNPMxmUr3czxuOfhVOrtXQ8bVJpbSvd1/qYw5eWXBY7ySb6ZI39iP2u0GejTTQAlEOXjF/d+0jVlcb6gDH/vMnz83ZjgimlbRfQj5tW9w0SCXS/MVZ7qLTeuSol+cQ/KInV3tJ+2MybQ3ec+tG3YtEiEPPCq9MD/0r0YdZ7xKN+WTO9MrCXfN0wi3xhH112VEhLGCVD8CF21o77aw8gI1A==
+ bh=GvEi4prI50cVh5w+x4vmek596cwOorGDkrc9ogDbpkM=;
+ b=nSLEvcoWgYT5E53Wqn5ianM4+O/84SdlYzv8qCZE6ssMDOWINN3DWyAnwSHTdYLzlOWs6qCckAl8SFlIb/EAr3Hy/pqSvHMaE7xptPZgeH/lUhcq2EG4LYFljds2Ug2IPLpUWrFy6jytIcTbCs14KXElCRxr+bLxBZJNJ/YDGoQBhDpxCgSbRsvcakgzAOBlwj6K16VwWI0ds0ejf2HxGCm8suA3GM5TXy4ZiodbxsCdkAtRt1ifPTaBVn2kxd8VUSGu1ZqfIZGss4Le8ft4FrVBx1jnsXvOb0Eq6DJEddL84JUdSKW8Pwgqm7VFPOVIWUAWd+WXNhggFAg02faa9g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qxQv7Z3S7NTKriAkM5GokfYtZJ1VUWQnAwA/oY8ubHU=;
- b=UUT+0VGQTnxycDrk1Q+ZTkpKwgrki2Kln3uQF599PuyckNhJ7sot3M5I5reuoA7ImULWsVYwKMx88yNrY/5dUxNyxsHoBTyfrZjvOTC2K0qPp27yP7ULR7tdxjFwJtKE0i/AYFhbdljGeDWAeI8LLoYB2zzJSxu4m0WKaoT6GglpALe58/CTaXbcPg7M/h3R5imqmBNOaIrJ1jS0IKQTQSGnAvWySZN7PqkAqlaPE/l/KArz9ODOa7so5aWJA0mAgSxX4uVYn+Y8DCoS4b21lnLp3hTbdJ3u4T5KScJqsgRH/tUDIUtnAU3Wi73DhzaQ2msIIgc5z2Wk/mNxNqps0A==
+ bh=GvEi4prI50cVh5w+x4vmek596cwOorGDkrc9ogDbpkM=;
+ b=DMbacLy/l09kahl3+plTXd/DlNAY/MVnBC0RZsFo0wy/eTuyOH8R04B6+LQEcZMW7weDMxYfQlln6G0nlmvjVWtEssevl7AVc9KPua9ioTPJUUDoICPQ6jaY3Ibk+S9DnkgqFI1y6ITworC3qP5xJQKsc6FzcNj7wi83HlML/PeUt9ohsFMWIGsiIR0DLgKcoH3mNXTaXb97INtjw7+1x8O3xUnbquEl/EGD7nLWHeROD3BNYomrUhw6TrG45qY6nR27Nkpd53dUxIRQ8Pgydg3/80IoBeHhRafiADtlncWZc1cPZRslaD6LmcavRqsVdEnLMEtQc2P2F/rEj1AUXg==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH7PR02MB10038.namprd02.prod.outlook.com (2603:10b6:510:2ec::19) with
+ by SA1PR02MB8447.namprd02.prod.outlook.com (2603:10b6:806:1f6::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.21; Tue, 26 Nov
- 2024 05:59:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.20; Tue, 26 Nov
+ 2024 06:11:11 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%7]) with mapi id 15.20.8182.018; Tue, 26 Nov 2024
- 05:59:54 +0000
+ 06:11:11 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "virtualization@lists.linux.dev"
-	<virtualization@lists.linux.dev>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+CC: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
 	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
-	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
-	"luto@kernel.org" <luto@kernel.org>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
-	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "joro@8bytes.org"
-	<joro@8bytes.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
-	<robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"arnd@arndb.de" <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
-	"jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
-	"muminulrussell@gmail.com" <muminulrussell@gmail.com>,
-	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
-	"mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "ssengar@linux.microsoft.com"
-	<ssengar@linux.microsoft.com>, "apais@linux.microsoft.com"
-	<apais@linux.microsoft.com>, "eahariha@linux.microsoft.com"
-	<eahariha@linux.microsoft.com>, "horms@kernel.org" <horms@kernel.org>
-Subject: RE: [PATCH v3 5/5] hyperv: Remove the now unused hyperv-tlfs.h files
-Thread-Topic: [PATCH v3 5/5] hyperv: Remove the now unused hyperv-tlfs.h files
-Thread-Index: AQHbP5E7zVz9oL6wU0uTUJ+VMFMHp7LJEWeQ
-Date: Tue, 26 Nov 2024 05:59:54 +0000
+	"decui@microsoft.com" <decui@microsoft.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] x86/hyperv: Set X86_FEATURE_TSC_RELIABLE unconditionally
+Thread-Topic: [PATCH] x86/hyperv: Set X86_FEATURE_TSC_RELIABLE unconditionally
+Thread-Index: AQHbNS9UbXwh5KJBoU2oxHpKRgf4mrK0CjPAgAtX/gCABEfyYIAE/TWAgAB/NKA=
+Date: Tue, 26 Nov 2024 06:11:10 +0000
 Message-ID:
- <SN6PR02MB41570E0108D4E3B45571EE9FD42F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157344DE32DF479543CC2CED42F2@SN6PR02MB4157.namprd02.prod.outlook.com>
 References:
- <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1732577084-2122-6-git-send-email-nunodasneves@linux.microsoft.com>
-In-Reply-To:
- <1732577084-2122-6-git-send-email-nunodasneves@linux.microsoft.com>
+ <173143547242.3415.16207372030310222687.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB41575A98314B82C498A3D312D4592@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20241120005106.GA18115@skinsburskii.>
+ <SN6PR02MB4157121B6CD9F5CAAFB39637D4232@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20241125222457.GA28630@skinsburskii.>
+In-Reply-To: <20241125222457.GA28630@skinsburskii.>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB10038:EE_
-x-ms-office365-filtering-correlation-id: 81e8fe5d-0854-487c-4388-08dd0ddf8cc4
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8447:EE_
+x-ms-office365-filtering-correlation-id: ba9215af-d044-467c-a93b-08dd0de11fda
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|19110799003|8060799006|461199028|15080799006|3412199025|440099028|102099032;
+ BCL:0;ARA:14566002|19110799003|8060799006|461199028|8062599003|15080799006|3412199025|440099028|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?WWwbdPZY5QS+WO590DxTUlcWx15jgnG3WFaQ/ikJ7OyXaeQeBgFazUQaRxpG?=
- =?us-ascii?Q?CLFfyEfdHUdsMQsGCHx8SpZVuNHhgjhAhg/w6ZzNNbvHFhg+x4pN/n26ttL3?=
- =?us-ascii?Q?c/s5kgb7xP0EDQm9CVQU0wuW7EtH3cCwW3Z4mSQQ7fHKSu49rWrZ0wXkqCnH?=
- =?us-ascii?Q?tErEh7TwQr2F7gm/eUWfDsWphzFl0ysEappf2GRPSTFsZuSBrzBY04Fp2SsV?=
- =?us-ascii?Q?JL0+KsWsuu8AdS4q+0MGUv+IVUSizjMER/ZNnJ4cZ5HwmjwSa6BcEu9z0kYU?=
- =?us-ascii?Q?CadTT55Z2h8iPT2mUez+VgkGWCUcygTeBRrCud/eiqTLRgCoYYuILJzzqvbl?=
- =?us-ascii?Q?xWXhUHNoKgP1zVsuw1gG2HRKTVu+cxSkU1Izg79R7kp7FrOig683PljOq79b?=
- =?us-ascii?Q?pjDDsWDUHpelXbpHlV1x4DuESBx01Glx/mEorZHU8t5OVF3Om6v3J9WvOx/y?=
- =?us-ascii?Q?aTQM4gPVbFDurwP75saiHnhRvtMSME68fIkczjZAyKiuoKyvzxiELlRUA6P4?=
- =?us-ascii?Q?TWtGUEAeSh3za0zUXabHFO3Ar9RCpEDXCERZF00+JhQjuDz0Dg7PRkgLKmcn?=
- =?us-ascii?Q?81UxDAizSjLwexoHKbEgKU1IfVkKresJX14a1HHMGYmCACZOlTfgjiGSuPyB?=
- =?us-ascii?Q?ceGavc0xmwO7eTmWiV8j2wjE0BNnLxjY5JOvP/eUhIkZCWm4Mu6361Tgyo/j?=
- =?us-ascii?Q?vIWZOdvdCVsa5G7qkOA31WtUTrQjI7wFL+rySBGr5jnSSpLiQvpBq5zVjQTU?=
- =?us-ascii?Q?X+K6xcrOQsIQvxlqnykeab6DLP0NMAH/JB2gyMdA84Rz0Nv0z/PbQCFEXqLr?=
- =?us-ascii?Q?1x7UbfiAFWtx/1PeR5Yb9gHt+E2tcm5jZpgL8fPEkTJZce9ilVJMyP+1rBHn?=
- =?us-ascii?Q?fJB4WnVSjSH80rnZUrlkEECyNf0oRjzEaxpuvbQdk3RvOJP3+d7exFmdNc0F?=
- =?us-ascii?Q?c9546IgHhyRoPEPLJQ6D40BQCmBrN/3Rbgvcma1X92wNRcT0g/KIgmJu0a20?=
- =?us-ascii?Q?vwEnThSKHFKr3mxmcq2ltu7pOA=3D=3D?=
+ =?us-ascii?Q?e6lEXR0mbR2yBac2aEUaK9fgQfHyRqlabiE+opf7Bwr/9UtUuX94eacR6gBQ?=
+ =?us-ascii?Q?e7DI+rQDoVQsG27j7f6o74j9xyv5S4LUZjGs6CpIAn1Ggu4XQw3cVa+nM323?=
+ =?us-ascii?Q?BJ/StO7LTiGjEi+Hn9HIK072WgHyvhHc4tfJX9Ckg3DRCfBDguEXa9fu5wjy?=
+ =?us-ascii?Q?8GBzKbl3AtTdLW+699dwrG00SPNphsGaehll3qV6Op9dOe9WquS8tnlQb2lg?=
+ =?us-ascii?Q?0rm9kH+zyhsaeDNE5GQ7Xro+lA6RMkQWj6+lAziJ9MyFxJXLAL963KE0SRMh?=
+ =?us-ascii?Q?DmV/8IfMcPX4n2Qm1TU9rq730ypnOOmBLXQaXjX6F0NrmSDAIBkkieY0ROKJ?=
+ =?us-ascii?Q?Tjg23JTLEEFoGkXZ1HTmEph6l+452mzQYmnBildV0jqhbPowm9hVdkNQ7c6M?=
+ =?us-ascii?Q?7X1Hvv+F65RY/wMGNB4ReIsdR30c8gS1+lHRqPpZkHFZKiGEdHYcVKtpH/b0?=
+ =?us-ascii?Q?WDN08Tkum5xC7aa+CUgDfxPtt9YFIAGaWQ7wPZs2ukL4DIOTUhY3Vaw0RmeC?=
+ =?us-ascii?Q?4La5Qc5IsicjX7zkDgS4U4aN/Dk58P64OAvjyIcagJNmFUqjFFaE9EAOVjeK?=
+ =?us-ascii?Q?bK4wepGh63F5ia7OfNPUpcT3GhvfBUVRTUwEV2wKa7w2Ni5YfsJmnCRGggS4?=
+ =?us-ascii?Q?fhDOneG7vrFOGTsVsWlbRlisv4GpM9bKZC3fFjDM6ugstoR40q2fbyCHxLji?=
+ =?us-ascii?Q?POGRHKZliwCJXegiS/r81vPbngcuYChqfp7lRaxO7SDAhM179jBBv5dMm9T8?=
+ =?us-ascii?Q?Amy+hzO73P1A2edTS0rAdMDl9pMqoLTkJsYQvz74DzJUwd5Lwg49wefc9NCp?=
+ =?us-ascii?Q?rEyuHZvzIPjHu2k7XqoBzfcSdZef9Fcd4nRibXs/HAJgu/5FzWmnggW1HqQH?=
+ =?us-ascii?Q?Uc4HleI/vG0IE267bOQr8Fw9jZEnJnyobdzLGmspM28fCu8ILEo33kP3S+el?=
+ =?us-ascii?Q?/cEaETpEyK0eNV/cGK17Imu9NMibsjqFcH6/BamEXQ+Z3kr/XSznj4adKGxU?=
+ =?us-ascii?Q?V/7P4hyIT2OFc1lecDuw8lZMSw=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?WGdZhy5Y4upH0/EoZY0i20KCz1AgIqyBCDFnTY3xvjgbNETFYGu+jaMzw5te?=
- =?us-ascii?Q?SPjW3isJDvxTy16gsw6Lnd4ssrqnTj9bQhkVPN7yxMJeQxNynCVL5BWx/G21?=
- =?us-ascii?Q?U1+xAeNgeR7r9CBhJnSGKetiAfalB6qH+CmE1TmCpk9s4IKXIBq6Yltt1SYV?=
- =?us-ascii?Q?yU3JUv/jX9aOQuc0bJ9SQeGAMJjZDHHr1V4tXcyFYwgw231l8J/d08mrADPX?=
- =?us-ascii?Q?PczERWHZrlVb4ntK1Xhwc3jw0KTm/cb3y9PtX8elztd4hdw+EGLOv6CyrNCj?=
- =?us-ascii?Q?5rPlffEE9kS88zZ/l8AcCEfY1Rl2EWIcr90QX27N27YaJiHGXbH4YNxEDBx8?=
- =?us-ascii?Q?WfGlIJJjTn7bZjh/QtMMH2F+DDxNklsguhDG6j9CnrXA6hSf8jUMUK+JmcQM?=
- =?us-ascii?Q?cGIbpQvYQ2pyVrC/UiAAz5qbHQMjB3yHKJMc0FQd6osxekIgSI/L5F5BcSSd?=
- =?us-ascii?Q?6MidbWlbSeEW7n8vflGIRTwIG73ulNFXWG+0og3sf8ZVI4CvxAj+Pjxg70iV?=
- =?us-ascii?Q?C5uJAS0EIPunjld3qhza1AVS7Rp6KRUO7enOe4BGPh0MrWP+wr0Z4TItNnxq?=
- =?us-ascii?Q?xnIhXdDnlm+pIvYwHZOkxjH8Tof1SWoG0xxOXLwEyqBERJwHQIc4Xu9COd/M?=
- =?us-ascii?Q?emEY+aPOgiSUDb7Mvu9j0ijay2JEOBwkX4Z8c3Biml9bQNYJgDIybn6hnGds?=
- =?us-ascii?Q?JU1fPaEXg/VXzrLHoA/5mDvmxSvKl3lNcWm5MTDVJyYLfx8ilOkymu216GyR?=
- =?us-ascii?Q?zCT1w8oLbQch/bjH6R7/ZvwsTmcrCbEUV9BtG2Qy7t6dHAyxO1yElSo0ZbL1?=
- =?us-ascii?Q?2QY5wT65rj9WstTcTVq2muXO/xMJmtI7V8HRmiH8L3ufJmU+cSTQjid6CP/e?=
- =?us-ascii?Q?Pw3Ljyy8Gu7nNFdgSb3VSJDLUkkSY33j+0LkldC39JamHMBHmXHCWkCNqN8E?=
- =?us-ascii?Q?m9bQzFOq4Pb5TMR2rSBTmTm8mLIAbd0PSA0WZkF4uikCQF0FAuZ5ZaWwKVRZ?=
- =?us-ascii?Q?XkyTdOhTXAKzsYCDzMUrQi3RtJ8mVHkAYQowjcUyXqBH7g5XCSEcyRImlUn6?=
- =?us-ascii?Q?xGYLWhwqRVwLZn+R1wD5AEfgjub1oT4zf5XnbWNeiLjT3f0UyxZge9GXSuG6?=
- =?us-ascii?Q?cHHpqI7NjKLko+4TnLW7eRumFOAHxv2M3lAS4g4KbZcMc99SmJM+4qbQuyym?=
- =?us-ascii?Q?eL9e2q6wqK6gBmouCT1CRXJvBpdtFcPARnWsC/NU8M4Vx7009tyr1HCCF1s?=
+ =?us-ascii?Q?BWbf6P1OOHMqzyI2ibxVaKGT/o55bthjHoLql1Rk9r9wevod+lKOTGlDeRKD?=
+ =?us-ascii?Q?aCQ+Po+zmMQBaA5CP4/24uovEj8JhhOrJ043dNEuESIpGfKsdtlYDGsjPkW/?=
+ =?us-ascii?Q?p0unugFgVJDvJOpZCKC22hssXTjQB3uCYBoCOcQZ6y+Fm1wpb3M2UYzqdG7S?=
+ =?us-ascii?Q?LExgJ6+DkvJ4MhznysAaroo3Mh2R2QOzfmTo2NqaErpRE8KGkG/KUKPUAdip?=
+ =?us-ascii?Q?V78yjyaZbh56IszytlDx+4uYMKiwI3D+ZaCoUVHUOlyFAEyLSMZydIx2iWmk?=
+ =?us-ascii?Q?Mdq0MUFru+JRQGdAmlM+EOP8vQ7tWmVhurPpRrNS54RYUnijt+BqsEi9o91J?=
+ =?us-ascii?Q?DmMlXeNDDiLoYXk8Zqt9SfiBa2sl4rG4GOVqnqUFnZEoVUuvbjFqa5XS0fif?=
+ =?us-ascii?Q?df8AHJanuIVlng0cycL2k3COVnXyFOh6qBrDQsl3M6kOmTKzHRIaKyuWPCjf?=
+ =?us-ascii?Q?Rb/i0KDF0yQap6rTwKSCrDE/RIjQQ7Y+9vUwTbsTtXhdJZM/4ToPR+zisIsL?=
+ =?us-ascii?Q?Rd1SMxhkToOJ7DK5omtkkgRaFqdDgI5DJI1+Krpcn04ArroAaDbjIJLEOcM8?=
+ =?us-ascii?Q?/7Qq/fgjFATsL10XELJlKqEl9ytOD6Wd6Sqw8C4VRgycQi+CYz9DI3pBKDHh?=
+ =?us-ascii?Q?1jWEJZb6aN6CCjdhFQinQludWEqokxAD5yeko2dy45ySRX6jRUVaUKGToJaS?=
+ =?us-ascii?Q?2a5YOHRI3kzWq50nExP+0bLT4ypHij8nW23FGkOeo8v1zDi4ObiPGjeC8GRL?=
+ =?us-ascii?Q?4j6CDgG+5u82TLAHf20uYQLLkVQPd7s3LpPN1b0t7SONfcnDI8jkmDxhzBLw?=
+ =?us-ascii?Q?BVJ0DavIZ0A04npPIvYnJoxAetRM9/luKLP30NNyTXeKF8+6L/S3R27AgOXL?=
+ =?us-ascii?Q?ZsaipJuyLPrEDx8u4MAnuI8xGczcof/AAZHqWiC71DY8UY50/ZqCyz6ysNF+?=
+ =?us-ascii?Q?FcOmlKRBAZQp1eV0NNymJQw/Y2/SYbSi0nNVpCOUn3c47Y82c3Oxy9zsKIXj?=
+ =?us-ascii?Q?O4knK+mx49Mjrh8H+3RhsZdJi1vjZIzy1Xfux1+UHGjH3+X3sDpULhI/cwBF?=
+ =?us-ascii?Q?dDv/e/DfsQBjqvTo2EJS9+IJCnQBUR4jDXY6a2ijrI6qQeKOWlc/0SHqsApO?=
+ =?us-ascii?Q?ZMw0cwlaYC4jMSnx1H1iCJXtIgtZnKA/AJVgKKmBwfE0VXOioD5BW+3daynW?=
+ =?us-ascii?Q?JJiuA+3E8HmmRQ2ODNrmpP4LuiiJyNLlD0n6qv0GtvGvFsad2ZdlqylfaU8?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -166,24 +142,102 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81e8fe5d-0854-487c-4388-08dd0ddf8cc4
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba9215af-d044-467c-a93b-08dd0de11fda
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2024 05:59:54.6865
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2024 06:11:10.9418
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB10038
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8447
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Monday, Novem=
-ber 25, 2024 3:25 PM
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Monday=
+, November 25, 2024 2:25 PM
 >=20
-> Remove all hyperv-tlfs.h files. These are no longer included
-> anywhere. hyperv/hvhdk.h serves the same role, but with an easier
-> path for adding new definitions.
+> On Fri, Nov 22, 2024 at 06:33:12PM +0000, Michael Kelley wrote:
+> > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tu=
+esday,
+> November 19, 2024 4:51 PM
+> > >
+> > > On Tue, Nov 12, 2024 at 07:48:06PM +0000, Michael Kelley wrote:
+> > > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent=
+: Tuesday,
+> > > November 12, 2024 10:18 AM
+> > > > >
+> > > > > Enable X86_FEATURE_TSC_RELIABLE by default as X86_FEATURE_TSC_REL=
+IABLE
+> is
+> > > > > independent from invariant TSC and should have never been gated b=
+y the
+> > > > > HV_ACCESS_TSC_INVARIANT privilege.
+> > > >
+> > > > I think originally X86_FEATURE_TSC_RELIABLE was gated by the Hyper-=
+V
+> > > > TSC Invariant feature because otherwise VM live migration may cause
+> > > > the TSC value reported by the RDTSC/RDTSCP instruction in the guest
+> > > > to abruptly change frequency and value. In such cases, the TSC isn'=
+t
+> > > > useable by the kernel or user space.
+> > > >
+> > > > Enabling the Hyper-V TSC Invariant feature fixes that by using the
+> > > > hardware scaling available in more recent processors to automatical=
+ly
+> > > > fixup the TSC value returned by RDTSC/RDTSCP in the guest.
+> > > >
+> > > > Is there a practical problem that is fixed by always enabling
+> > > > X86_FEATURE_TSC_RELIABLE?
+> > > >
+> > >
+> > > The particular problem is that HV_ACCESS_TSC_INVARIANT is not set for=
+ the
+> > > nested root, which in turn leads to keeping tsc clocksource watchdog
+> > > thread and TSC sycn check timer around.
+> >
+> > I have trouble keeping all the different TSC "features" conceptually
+> > separate. :-( The TSC frequency not changing (and the value not
+> > abruptly jumping?) should already be represented by
+> > X86_FEATURE_TSC_CONSTANT.  In the kernel, X86_FEATURE_TSC_RELIABLE
+> > effectively only controls whether the TSC clocksource watchdog is
+> > enabled, and in spite of the live migration foibles, I don't see a need
+> > for that watchdog in a Hyper-V VM. So maybe it's OK to always set
+> > X86_FEATURE_TSC_RELIABLE in a Hyper-V VM, as you have
+> > proposed.
+> >
+> > The "tsc_reliable" flag is also exposed to user space as part of the
+> > /proc/cpuinfo "flags" output, so theoretically some user space
+> > program could change behavior based on that flag. But that seems
+> > a bit far-fetched. I know there are user space programs that check
+> > the CPUID INVARIANT_TSC flag to know whether they can use
+> > the raw RDTSC instruction output to do start/stop timing. The
+> > Hyper-V TSC Invariant feature makes that work correctly, even
+> > across live migrations.
+> >
 >=20
-> Remove the relevant lines in MAINTAINERS.
+> It sounds to me that if X86_FEATURE_TSC_CONSTANT is available
+> on Hyper-V, then we can set X86_FEATURE_TSC_RELIABLE.
+> Is it what you are saying?
 >=20
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+No. Sorry I wasn't clear. X86_FEATURE_TSC_CONSTANT will
+be set only when the Hyper-V TSC Invariant feature is enabled, so
+tying X86_FEATURE_TSC_RELIABLE to that is what happens now.
+
+What I'm suggesting is to take your patch "as is". In other words,
+always enable X86_FEATURE_TSC_RELIABLE. From what I can tell,
+TSC_RELIABLE is only used to disable the TSC watchdog. Since I
+can't see a use for the TSC watchdog in a VM, always setting
+TSC_RELIABLE probably makes sense. TSC_RELIABLE doesn't
+say anything about whether the TSC frequency might change, such
+as across a VM live migration. TSC_CONSTANT is what tells you that
+the frequency won't change.
+
+My caveat is that I don't know the history of TSC_RELIABLE. I
+don't see any documentation on the details of what it is supposed
+to convey, especially in a VM. Maybe someone on the "To:" list
+who knows for sure can confirm what I'm thinking.
+
+Michael
+
+
+
+
 
