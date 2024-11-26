@@ -1,1929 +1,218 @@
-Return-Path: <linux-hyperv+bounces-3359-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3360-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 771D59D8F1C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 00:26:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75DA19D918B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 06:58:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B2EFB25BFF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Nov 2024 23:26:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3083F288937
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 05:58:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2471D5166;
-	Mon, 25 Nov 2024 23:24:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 732CA13AA5D;
+	Tue, 26 Nov 2024 05:58:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="e4xJ88WA"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="feC9fWYW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7641C4A07;
-	Mon, 25 Nov 2024 23:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732577094; cv=none; b=DbAyGKbBmkLhVDcVsNbmy1x6roc21Cr7B6Z+omZkMEBDaQGkbN1gbHcG3OPDZ2AYGADDWbDPly33heXStqedDsNd8oH9DAAEgqtgSW3n6La2Bst11qJD3uJYGfQrbsHpncAZojjWBtvEI6jAo/LRD39pd53UrDD7MuHzWcRv8IE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732577094; c=relaxed/simple;
-	bh=PgCqjdbzTI9mRgy16oWSBJWnI7aiIxt+3fCjfBawlnw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=MYvB09bomGfRdhYhKIhzHjtA2MkSDYxzP0Eu7Tqhp5ngqhMRyvfp/yC6LsN9MFZReG8CoPcNEvBJnt8inBPf9FqTDT8BxsCclvgTWMLBg/R2CfmTFoobMONlRsGIp1HVYP8WrTFlgToQpAynkr8A0P+BA0ZV5F9M2/PKcS0R3A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=e4xJ88WA; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7124B20545A4;
-	Mon, 25 Nov 2024 15:24:48 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7124B20545A4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1732577088;
-	bh=SDlqS7/4qKdtyAKSTHjQjTKX2TNZ2/nbihUgn2OAh+o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e4xJ88WAFD+S10Fq0OSP5xTqSoUhSivtDNAON1unFJMeuUuErxq3nKeFRBqvKUwEF
-	 Kfb3UtdjPi6i/D/czYmSFh6aUDuX0IR17HaN0MhvKyNeoG8Srt/kFOtIT0mAvq8fqi
-	 mC5LE4YQL/jbh2vsZ4ZobppxDk7gBxCC36ViaUyM=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	iommu@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	virtualization@lists.linux.dev
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	mhklinux@outlook.com,
-	decui@microsoft.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	luto@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	daniel.lezcano@linaro.org,
-	joro@8bytes.org,
-	robin.murphy@arm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	arnd@arndb.de,
-	sgarzare@redhat.com,
-	jinankjain@linux.microsoft.com,
-	muminulrussell@gmail.com,
-	skinsburskii@linux.microsoft.com,
-	mukeshrathor@microsoft.com,
-	vkuznets@redhat.com,
-	ssengar@linux.microsoft.com,
-	apais@linux.microsoft.com,
-	eahariha@linux.microsoft.com,
-	horms@kernel.org
-Subject: [PATCH v3 5/5] hyperv: Remove the now unused hyperv-tlfs.h files
-Date: Mon, 25 Nov 2024 15:24:44 -0800
-Message-Id: <1732577084-2122-6-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
-References: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2061.outbound.protection.outlook.com [40.92.18.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B237539A;
+	Tue, 26 Nov 2024 05:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732600687; cv=fail; b=D9OGlUpYt1UIi1iWwVC7KDCaMSzZ3n9XckJOktZCllJXdZivZQHJxElIPUhOlI/+AkpilY8wGF1U8B0fRMykvzHvdIpV5Z0HoEOsadtEZf+RvjdA/suXuthXp5zIdVn/AnmH8RVr8CMTOONrxH04pTRMJ6/38jtCmA1EPPSIti8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732600687; c=relaxed/simple;
+	bh=vEJQD7gnRK0X6oMIojf0rEZryTWP7uC2vA40v45Qroo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MH0MQK5K/mwmzpCcb3GaesLukiTnCu8SlZHNzRNTbTHpSLM16+ORON1mgNb5NxqguAUMXPmgBah4TEzVSuX45sAEX1TnlmpWwn8JftI15iBNm8rj02O/dr2rE2M/+b7p1QFw8t8lLNCYJrGMRNTBjAB2sggXqwASY69eQhn9n2Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=feC9fWYW; arc=fail smtp.client-ip=40.92.18.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i0vaj0UdhIvbzRTIWjBXRaOS/rSbVeY1DjYXoKhSMLeC9oMFOaWpVHZEVNTXGGEnb7tJb0tZnkBpjlwezKU6B0BDpSWx2/Odhn8AAgyc74oRjnVe9TQVwNS5gzxo5jDAIP5rH6n+D/eWA1fL/fuk+KY3wTMBw9REuThcOnQMFiFWtr9G4YD7nm52ifYCuFXZ2wNBYkNPFwDHRvH2qsSXdTZJ2XDhWwwP7kGgIIuMA1AJPLcfCbhv3cSwffFK9bUlyesw1uN0ODYY0UTKsXksvLUu1O6F9rKHL6pfmw0b20KssvrdxY5gaPM2p+moWd4eBtMho3BOFivYXS7ALL0uIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vEJQD7gnRK0X6oMIojf0rEZryTWP7uC2vA40v45Qroo=;
+ b=rq+naTg6+fHS7b+Y6xkYkxmit9rp6MbsV3Exz+XivdqRfEB14FHIhCpXtI7iVOxbOwGwAYmJNtWS81/bau71M7Q2FmpIO9nhG1lp1BX0aTqAhF7+UKFgYhGM/ncqOAd+5Ni1y1fSMZXMBjpMLnF/ANoBGHScbBpG48RV+l1vkYNJY+xTiCMu+Wwd0b7yOG6tbM2mlRFtmP3e+2n91JcQWJk0E3HrsHkfbENaZERuro736mpRsAa3tVmTl1pVTlyJyDG0bZ+O2Xg5W8GEitKEJ1O800E5aQHyCqLtD6XCniUDtv/87OpjoFf7iPndLEzZcXjmeayPpW7acWdPHbqtxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vEJQD7gnRK0X6oMIojf0rEZryTWP7uC2vA40v45Qroo=;
+ b=feC9fWYWkseCXCM5P3yM5fSJ2mDP2vL3PPNMOj7gxCwSlDaNG7y66oSLWfUaorc9eLLaUHSjcpzChraBcrJ8azcxlGhgAuPxBlafNXL2xe6R3Tdrxp8AxTXQrv9/zkY/ciqRjBzj05ShTF9ILg4Sig5erG0fag9Cn7BEtBJlcY/Uj987dG+FC+T6LLvcuc9/OfpTCVzAbhwpIEUez75EmeajmDymeay02V4Td1mydJIF101owiSQA3TIZUnyHGjpaor9TFE+IINtwP/hJ7OAbKd4x2RUEXowf/d+dtdGvpvRXaVsYFzxGEnczbGT62/XBjIkpxd49Iqh2Y5wOZUDMg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH7PR02MB10038.namprd02.prod.outlook.com (2603:10b6:510:2ec::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.21; Tue, 26 Nov
+ 2024 05:57:56 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%7]) with mapi id 15.20.8182.018; Tue, 26 Nov 2024
+ 05:57:56 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "virtualization@lists.linux.dev"
+	<virtualization@lists.linux.dev>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
+	"luto@kernel.org" <luto@kernel.org>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "joro@8bytes.org"
+	<joro@8bytes.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
+	<robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"arnd@arndb.de" <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+	"jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+	"muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+	"mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>, "ssengar@linux.microsoft.com"
+	<ssengar@linux.microsoft.com>, "apais@linux.microsoft.com"
+	<apais@linux.microsoft.com>, "eahariha@linux.microsoft.com"
+	<eahariha@linux.microsoft.com>, "horms@kernel.org" <horms@kernel.org>
+Subject: RE: [PATCH v3 3/5] hyperv: Add new Hyper-V headers in include/hyperv
+Thread-Topic: [PATCH v3 3/5] hyperv: Add new Hyper-V headers in include/hyperv
+Thread-Index: AQHbP5E7/ROxYXFz4E+K2Z49rTwvKbLJELyw
+Date: Tue, 26 Nov 2024 05:57:56 +0000
+Message-ID:
+ <SN6PR02MB415765AAE0196AD2147DFAECD42F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1732577084-2122-4-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To:
+ <1732577084-2122-4-git-send-email-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB10038:EE_
+x-ms-office365-filtering-correlation-id: f582bbbd-5b5e-4c8a-bf0c-08dd0ddf461d
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|19110799003|8060799006|461199028|15080799006|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?mfeu8OCbSE1Y1cQyBAF6Vx29Ycq8+7+5BzQo/JK4JqA9556D3E0HNea0YvE1?=
+ =?us-ascii?Q?nBLE1xzyC8YC2lSXtO7d5cTKPniWqMkc5RsB5eGVUgyNYuEBXqHBCxn1PZqg?=
+ =?us-ascii?Q?kGuPXb0OpMMmuUdD/zYKnQmYeMYo4wFwKeK7zVoBmNECakCclE3QHIlAbVqM?=
+ =?us-ascii?Q?wLF5FVktnJ2Mk+L52jP0ZvZ1tf0QFYeFk1nYlkIOV3EybzyJgBSu/R3u1Zg6?=
+ =?us-ascii?Q?kFXcqZfl6cVWySBOuvHrp+vS6r7o+iUzFDsN8E4N5j/Bnckhu/iLTHEwTPm8?=
+ =?us-ascii?Q?hKdiJQf1Xar2iWE2pCd4ueDJ2uYlypw1opEChLIVw70sC27eGJXGyyqeUQDt?=
+ =?us-ascii?Q?v/Pn62ERWd0/mMeZGKpsSpeBJgCR/I5ksUKDA1wb7ef3zQSa5Bvp1XtEj7Ek?=
+ =?us-ascii?Q?HXBJXN0Ak1NmzXDRhvxzZSRT8lZ9fXYm9ISc3zh72qNQJKkgjLnuviVwTyG3?=
+ =?us-ascii?Q?JMEvTXWAzRthLRCB96jfZfQjfS275DgqwF1rncvSikhFNBj0aaDQVk1vYahh?=
+ =?us-ascii?Q?6D51oPouCwbg6ahQz52ARgA0POmy+wb+23OBk8HG4doQjL8rUmolmDvjxhbV?=
+ =?us-ascii?Q?qMNRC0EcSP2X1Vz4F2Bcf+rk7M5jNv/JJmd4LpFJTgwZmOeuyHGpHoKjYrFP?=
+ =?us-ascii?Q?6XLvUK3ZOYdPfU0J2t5oonG8ppEx+a4ogxWdxxOSrvFKeRd9nAgpmr3FVpbL?=
+ =?us-ascii?Q?8UAmgAkQ/BT+O2YPuKzkhugpy3MOBym14V872FoT4MBA9eJtOIGLdWrDWupX?=
+ =?us-ascii?Q?UW1YnmIzYCA+XvDyNUxklDSRhH/V14lDcs/pBewnjoaQ/jNPsrMxUGLordYS?=
+ =?us-ascii?Q?FxYrEGxFjbgAb8lA6HnHBqcFuzoXoSUhnvnW4sfmXDE3SPPCBfIOZgu09Fln?=
+ =?us-ascii?Q?JONOoBcAYYQ86A76CJoFC2D7CKNvBm7dwApwJBWECzgIR87dCXWuxruMIqAV?=
+ =?us-ascii?Q?/LaVEDPz1QQbceQ1X7kk1o9xWMHrRpENFtGlU8v9qnvZsFrzvwjyMLCmcDih?=
+ =?us-ascii?Q?Es+/74j/5U54LivMxHgNbtvV5g=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?BCSpfi8G3HJXusTIn/mJcx9aMp3NURESwks5sBIub2TdzIwfX18mU9n5c6pG?=
+ =?us-ascii?Q?ynNwXNYzAXiBQuQht9xAQcWC89aw9p6T4wBSa0Mt4kQ5/rhvqE6OXZGIDAnu?=
+ =?us-ascii?Q?2TNF24sXlpp8zgbeVaCGdchHZEyvCHyi9toH0jr779Yxp2MAu44234fTL354?=
+ =?us-ascii?Q?hxxJCG3zXxugpsk+JHZLthq1b83O8wKJzXrjSceUcU6oVj0bhlJ+vT8ZaY41?=
+ =?us-ascii?Q?0HAvAmaUU2Tqg01QZl3Kpw46d1P170UhZMEuTNhISzeAfNJJT1LZoHioOdPZ?=
+ =?us-ascii?Q?gAMp9zsCE786al9t+b/OKaUtqg/y4aUlHrIWYCZYa0T0qF6vkY/YJeKbHix+?=
+ =?us-ascii?Q?iIgN80iO+P5YluaZu2vGe+5t6EBMv3znmMJK7K1mC8LR99Hfuy8AiSl9XMmu?=
+ =?us-ascii?Q?jA5UAnaE5waOQbwyKt8PNjYlaDorrtqW0dW+Sx8aVXeFzBzDA07Y5ukwMzPV?=
+ =?us-ascii?Q?HpOPavqRD37ItTpUrXFePSVCXwM6/JVO4WwrOVwfXqZQNwvflQsEAm7AqeUw?=
+ =?us-ascii?Q?A5Rkyr+LT1E7kv29ukIexGvh1uTZDG1V6om+VIcGV0WVjjFokUJnKWPuNKvV?=
+ =?us-ascii?Q?oPolq1n2nT1vh04zaEuNbZjnZddquyRlg+AECXiUS9UDi1pJRJAgPmRAB3+K?=
+ =?us-ascii?Q?R0gwM0aDtN2JTWHqR4pbuDPF8pjHsB24IYnTUayxwDIb3b3e+YEm6KZCv1A5?=
+ =?us-ascii?Q?cQPNYFeYF9Xg4p5aMXBCE5pp4IXdK34BRTPXKiEPOBODR2WEJxzcaN0B6X8q?=
+ =?us-ascii?Q?1PP3K7ugx67i+n8alPLX+e2vHIFcXtkExyA2NKNmjcIBVh3yNl/ucgVSL+s1?=
+ =?us-ascii?Q?OOLq1f538rUrAaAQRy+EpShTJ6CCUhij+w9f0YrSaGNi+Abz/7wFwUZFg3iV?=
+ =?us-ascii?Q?M48mRlwiRIYdrpYyA8LX2yDXc2S6pyeXhcmO76aguPHyIM40VPKhjCeujH+c?=
+ =?us-ascii?Q?VJGrhmQtR1kbDP2+BUNUYMF222PE3Ze3gixWFHUGYX0ifZPcRHVbnEBqBNyl?=
+ =?us-ascii?Q?nndeI5eBgy2fMLOiqFwBVNY7kDsG7OdkQ6FaHc//C/pU2m+StRHMJvrPj5MA?=
+ =?us-ascii?Q?GOqcXpji5Lycpe0gA2H6qPEyXlc6e1xKTacx8UbJ9Bh+iV9vY5AtkN6X3vX8?=
+ =?us-ascii?Q?ZMOQYcbCFIV1bvCjOoQfv5M+VPjKo/zl3wcNWl3I+sK5iNstAeDyHg/kCYQ3?=
+ =?us-ascii?Q?FU+6mvFNgZdsE7TLw83yRZ2+N+s0V7nA63ptz2olbUpPwGsuVplrwldy/PQ?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f582bbbd-5b5e-4c8a-bf0c-08dd0ddf461d
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2024 05:57:56.1365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB10038
 
-Remove all hyperv-tlfs.h files. These are no longer included
-anywhere. hyperv/hvhdk.h serves the same role, but with an easier
-path for adding new definitions.
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Monday, Novem=
+ber 25, 2024 3:25 PM
+>=20
+> These headers contain definitions for regular Hyper-V guests (as in
+> hyperv-tlfs.h), as well as interfaces for more privileged guests like
+> the root partition (aka Dom0).
+>=20
+> These files are derived from headers exported from Hyper-V, rather than
+> being derived from the TLFS document. (Although, to preserve
+> compatibility with existing Linux code, some definitions are copied
+> directly from hyperv-tlfs.h too).
+>=20
+> The new files follow a naming convention according to their original
+> use:
+> - hdk "host development kit"
+> - gdk "guest development kit"
+> With postfix "_mini" implying userspace-only headers, and "_ext" for
+> extended hypercalls.
+>=20
+> The use of multiple files and their original names is primarily to
+> keep the provenance of exactly where they came from in Hyper-V
+> code, which is helpful for manual maintenance and extension
+> of these definitions. Microsoft maintainers importing new definitions
+> should take care to put them in the right file. However, Linux kernel
+> code that uses any of the definitions need not be aware of the multiple
+> files or assign any meaning to the new names. Linux kernel code should
+> always just include hvhdk.h
+>=20
+> Note the new headers contain both arm64 and x86_64 definitions. Some are
+> guarded by #ifdefs, and some are instead prefixed with the architecture,
+> e.g. hv_x64_*. These conventions are kept from Hyper-V code as another
+> tactic to simplify the process of importing and maintaining the
+> definitions, rather than splitting them up into their own files in
+> arch/x86/ and arch/arm64/.
+>=20
+> These headers are a step toward importing headers directly from Hyper-V
+> in the future, similar to Xen public files in include/xen/interface/.
+>=20
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
-Remove the relevant lines in MAINTAINERS.
-
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
- MAINTAINERS                          |   3 -
- arch/arm64/include/asm/hyperv-tlfs.h |  71 ---
- arch/x86/include/asm/hyperv-tlfs.h   | 811 ------------------------
- include/asm-generic/hyperv-tlfs.h    | 883 ---------------------------
- 4 files changed, 1768 deletions(-)
- delete mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
- delete mode 100644 arch/x86/include/asm/hyperv-tlfs.h
- delete mode 100644 include/asm-generic/hyperv-tlfs.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6ffa65b5a160..b1fb2a008982 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10672,10 +10672,8 @@ F:	Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
- F:	Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst
- F:	Documentation/virt/hyperv
- F:	arch/arm64/hyperv
--F:	arch/arm64/include/asm/hyperv-tlfs.h
- F:	arch/arm64/include/asm/mshyperv.h
- F:	arch/x86/hyperv
--F:	arch/x86/include/asm/hyperv-tlfs.h
- F:	arch/x86/include/asm/mshyperv.h
- F:	arch/x86/include/asm/trace/hyperv.h
- F:	arch/x86/kernel/cpu/mshyperv.c
-@@ -10691,7 +10689,6 @@ F:	drivers/pci/controller/pci-hyperv.c
- F:	drivers/scsi/storvsc_drv.c
- F:	drivers/uio/uio_hv_generic.c
- F:	drivers/video/fbdev/hyperv_fb.c
--F:	include/asm-generic/hyperv-tlfs.h
- F:	include/asm-generic/mshyperv.h
- F:	include/clocksource/hyperv_timer.h
- F:	include/hyperv/hvgdk.h
-diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
-deleted file mode 100644
-index bc30aadedfe9..000000000000
---- a/arch/arm64/include/asm/hyperv-tlfs.h
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--
--/*
-- * This file contains definitions from the Hyper-V Hypervisor Top-Level
-- * Functional Specification (TLFS):
-- * https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
-- *
-- * Copyright (C) 2021, Microsoft, Inc.
-- *
-- * Author : Michael Kelley <mikelley@microsoft.com>
-- */
--
--#ifndef _ASM_HYPERV_TLFS_H
--#define _ASM_HYPERV_TLFS_H
--
--#include <linux/types.h>
--
--/*
-- * All data structures defined in the TLFS that are shared between Hyper-V
-- * and a guest VM use Little Endian byte ordering.  This matches the default
-- * byte ordering of Linux running on ARM64, so no special handling is required.
-- */
--
--/*
-- * Group C Features. See the asm-generic version of hyperv-tlfs.h
-- * for a description of Feature Groups.
-- */
--
--/* Crash MSRs available */
--#define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE	BIT(8)
--
--/* STIMER direct mode is available */
--#define HV_STIMER_DIRECT_MODE_AVAILABLE		BIT(13)
--
--/*
-- * To support arch-generic code calling hv_set/get_register:
-- * - On x86, HV_MSR_ indicates an MSR accessed via rdmsrl/wrmsrl
-- * - On ARM, HV_MSR_ indicates a VP register accessed via hypercall
-- */
--#define HV_MSR_CRASH_P0		(HV_REGISTER_GUEST_CRASH_P0)
--#define HV_MSR_CRASH_P1		(HV_REGISTER_GUEST_CRASH_P1)
--#define HV_MSR_CRASH_P2		(HV_REGISTER_GUEST_CRASH_P2)
--#define HV_MSR_CRASH_P3		(HV_REGISTER_GUEST_CRASH_P3)
--#define HV_MSR_CRASH_P4		(HV_REGISTER_GUEST_CRASH_P4)
--#define HV_MSR_CRASH_CTL	(HV_REGISTER_GUEST_CRASH_CTL)
--
--#define HV_MSR_VP_INDEX		(HV_REGISTER_VP_INDEX)
--#define HV_MSR_TIME_REF_COUNT	(HV_REGISTER_TIME_REF_COUNT)
--#define HV_MSR_REFERENCE_TSC	(HV_REGISTER_REFERENCE_TSC)
--
--#define HV_MSR_SINT0		(HV_REGISTER_SINT0)
--#define HV_MSR_SCONTROL		(HV_REGISTER_SCONTROL)
--#define HV_MSR_SIEFP		(HV_REGISTER_SIEFP)
--#define HV_MSR_SIMP		(HV_REGISTER_SIMP)
--#define HV_MSR_EOM		(HV_REGISTER_EOM)
--
--#define HV_MSR_STIMER0_CONFIG	(HV_REGISTER_STIMER0_CONFIG)
--#define HV_MSR_STIMER0_COUNT	(HV_REGISTER_STIMER0_COUNT)
--
--union hv_msi_entry {
--	u64 as_uint64[2];
--	struct {
--		u64 address;
--		u32 data;
--		u32 reserved;
--	} __packed;
--};
--
--#include <asm-generic/hyperv-tlfs.h>
--
--#endif
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-deleted file mode 100644
-index 3787d26810c1..000000000000
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ /dev/null
-@@ -1,811 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--
--/*
-- * This file contains definitions from Hyper-V Hypervisor Top-Level Functional
-- * Specification (TLFS):
-- * https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
-- */
--
--#ifndef _ASM_X86_HYPERV_TLFS_H
--#define _ASM_X86_HYPERV_TLFS_H
--
--#include <linux/types.h>
--#include <asm/page.h>
--/*
-- * The below CPUID leaves are present if VersionAndFeatures.HypervisorPresent
-- * is set by CPUID(HvCpuIdFunctionVersionAndFeatures).
-- */
--#define HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS	0x40000000
--#define HYPERV_CPUID_INTERFACE			0x40000001
--#define HYPERV_CPUID_VERSION			0x40000002
--#define HYPERV_CPUID_FEATURES			0x40000003
--#define HYPERV_CPUID_ENLIGHTMENT_INFO		0x40000004
--#define HYPERV_CPUID_IMPLEMENT_LIMITS		0x40000005
--#define HYPERV_CPUID_CPU_MANAGEMENT_FEATURES	0x40000007
--#define HYPERV_CPUID_NESTED_FEATURES		0x4000000A
--#define HYPERV_CPUID_ISOLATION_CONFIG		0x4000000C
--
--#define HYPERV_CPUID_VIRT_STACK_INTERFACE	0x40000081
--#define HYPERV_VS_INTERFACE_EAX_SIGNATURE	0x31235356  /* "VS#1" */
--
--#define HYPERV_CPUID_VIRT_STACK_PROPERTIES	0x40000082
--/* Support for the extended IOAPIC RTE format */
--#define HYPERV_VS_PROPERTIES_EAX_EXTENDED_IOAPIC_RTE	BIT(2)
--
--#define HYPERV_HYPERVISOR_PRESENT_BIT		0x80000000
--#define HYPERV_CPUID_MIN			0x40000005
--#define HYPERV_CPUID_MAX			0x4000ffff
--
--/*
-- * Group D Features.  The bit assignments are custom to each architecture.
-- * On x86/x64 these are HYPERV_CPUID_FEATURES.EDX bits.
-- */
--/* The MWAIT instruction is available (per section MONITOR / MWAIT) */
--#define HV_X64_MWAIT_AVAILABLE				BIT(0)
--/* Guest debugging support is available */
--#define HV_X64_GUEST_DEBUGGING_AVAILABLE		BIT(1)
--/* Performance Monitor support is available*/
--#define HV_X64_PERF_MONITOR_AVAILABLE			BIT(2)
--/* Support for physical CPU dynamic partitioning events is available*/
--#define HV_X64_CPU_DYNAMIC_PARTITIONING_AVAILABLE	BIT(3)
--/*
-- * Support for passing hypercall input parameter block via XMM
-- * registers is available
-- */
--#define HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE		BIT(4)
--/* Support for a virtual guest idle state is available */
--#define HV_X64_GUEST_IDLE_STATE_AVAILABLE		BIT(5)
--/* Frequency MSRs available */
--#define HV_FEATURE_FREQUENCY_MSRS_AVAILABLE		BIT(8)
--/* Crash MSR available */
--#define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
--/* Support for debug MSRs available */
--#define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
--/* Support for extended gva ranges for flush hypercalls available */
--#define HV_FEATURE_EXT_GVA_RANGES_FLUSH			BIT(14)
--/*
-- * Support for returning hypercall output block via XMM
-- * registers is available
-- */
--#define HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE		BIT(15)
--/* stimer Direct Mode is available */
--#define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
--
--/*
-- * Implementation recommendations. Indicates which behaviors the hypervisor
-- * recommends the OS implement for optimal performance.
-- * These are HYPERV_CPUID_ENLIGHTMENT_INFO.EAX bits.
-- */
--/*
-- * Recommend using hypercall for address space switches rather
-- * than MOV to CR3 instruction
-- */
--#define HV_X64_AS_SWITCH_RECOMMENDED			BIT(0)
--/* Recommend using hypercall for local TLB flushes rather
-- * than INVLPG or MOV to CR3 instructions */
--#define HV_X64_LOCAL_TLB_FLUSH_RECOMMENDED		BIT(1)
--/*
-- * Recommend using hypercall for remote TLB flushes rather
-- * than inter-processor interrupts
-- */
--#define HV_X64_REMOTE_TLB_FLUSH_RECOMMENDED		BIT(2)
--/*
-- * Recommend using MSRs for accessing APIC registers
-- * EOI, ICR and TPR rather than their memory-mapped counterparts
-- */
--#define HV_X64_APIC_ACCESS_RECOMMENDED			BIT(3)
--/* Recommend using the hypervisor-provided MSR to initiate a system RESET */
--#define HV_X64_SYSTEM_RESET_RECOMMENDED			BIT(4)
--/*
-- * Recommend using relaxed timing for this partition. If used,
-- * the VM should disable any watchdog timeouts that rely on the
-- * timely delivery of external interrupts
-- */
--#define HV_X64_RELAXED_TIMING_RECOMMENDED		BIT(5)
--
--/*
-- * Recommend not using Auto End-Of-Interrupt feature
-- */
--#define HV_DEPRECATING_AEOI_RECOMMENDED			BIT(9)
--
--/*
-- * Recommend using cluster IPI hypercalls.
-- */
--#define HV_X64_CLUSTER_IPI_RECOMMENDED			BIT(10)
--
--/* Recommend using the newer ExProcessorMasks interface */
--#define HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED		BIT(11)
--
--/* Indicates that the hypervisor is nested within a Hyper-V partition. */
--#define HV_X64_HYPERV_NESTED				BIT(12)
--
--/* Recommend using enlightened VMCS */
--#define HV_X64_ENLIGHTENED_VMCS_RECOMMENDED		BIT(14)
--
--/* Use hypercalls for MMIO config space access */
--#define HV_X64_USE_MMIO_HYPERCALLS			BIT(21)
--
--/*
-- * CPU management features identification.
-- * These are HYPERV_CPUID_CPU_MANAGEMENT_FEATURES.EAX bits.
-- */
--#define HV_X64_START_LOGICAL_PROCESSOR			BIT(0)
--#define HV_X64_CREATE_ROOT_VIRTUAL_PROCESSOR		BIT(1)
--#define HV_X64_PERFORMANCE_COUNTER_SYNC			BIT(2)
--#define HV_X64_RESERVED_IDENTITY_BIT			BIT(31)
--
--/*
-- * Virtual processor will never share a physical core with another virtual
-- * processor, except for virtual processors that are reported as sibling SMT
-- * threads.
-- */
--#define HV_X64_NO_NONARCH_CORESHARING			BIT(18)
--
--/* Nested features. These are HYPERV_CPUID_NESTED_FEATURES.EAX bits. */
--#define HV_X64_NESTED_DIRECT_FLUSH			BIT(17)
--#define HV_X64_NESTED_GUEST_MAPPING_FLUSH		BIT(18)
--#define HV_X64_NESTED_MSR_BITMAP			BIT(19)
--
--/* Nested features #2. These are HYPERV_CPUID_NESTED_FEATURES.EBX bits. */
--#define HV_X64_NESTED_EVMCS1_PERF_GLOBAL_CTRL		BIT(0)
--
--/*
-- * This is specific to AMD and specifies that enlightened TLB flush is
-- * supported. If guest opts in to this feature, ASID invalidations only
-- * flushes gva -> hpa mapping entries. To flush the TLB entries derived
-- * from NPT, hypercalls should be used (HvFlushGuestPhysicalAddressSpace
-- * or HvFlushGuestPhysicalAddressList).
-- */
--#define HV_X64_NESTED_ENLIGHTENED_TLB			BIT(22)
--
--/* HYPERV_CPUID_ISOLATION_CONFIG.EAX bits. */
--#define HV_PARAVISOR_PRESENT				BIT(0)
--
--/* HYPERV_CPUID_ISOLATION_CONFIG.EBX bits. */
--#define HV_ISOLATION_TYPE				GENMASK(3, 0)
--#define HV_SHARED_GPA_BOUNDARY_ACTIVE			BIT(5)
--#define HV_SHARED_GPA_BOUNDARY_BITS			GENMASK(11, 6)
--
--enum hv_isolation_type {
--	HV_ISOLATION_TYPE_NONE	= 0,
--	HV_ISOLATION_TYPE_VBS	= 1,
--	HV_ISOLATION_TYPE_SNP	= 2,
--	HV_ISOLATION_TYPE_TDX	= 3
--};
--
--/* Hyper-V specific model specific registers (MSRs) */
--
--/* MSR used to identify the guest OS. */
--#define HV_X64_MSR_GUEST_OS_ID			0x40000000
--
--/* MSR used to setup pages used to communicate with the hypervisor. */
--#define HV_X64_MSR_HYPERCALL			0x40000001
--
--/* MSR used to provide vcpu index */
--#define HV_X64_MSR_VP_INDEX			0x40000002
--
--/* MSR used to reset the guest OS. */
--#define HV_X64_MSR_RESET			0x40000003
--
--/* MSR used to provide vcpu runtime in 100ns units */
--#define HV_X64_MSR_VP_RUNTIME			0x40000010
--
--/* MSR used to read the per-partition time reference counter */
--#define HV_X64_MSR_TIME_REF_COUNT		0x40000020
--
--/* A partition's reference time stamp counter (TSC) page */
--#define HV_X64_MSR_REFERENCE_TSC		0x40000021
--
--/* MSR used to retrieve the TSC frequency */
--#define HV_X64_MSR_TSC_FREQUENCY		0x40000022
--
--/* MSR used to retrieve the local APIC timer frequency */
--#define HV_X64_MSR_APIC_FREQUENCY		0x40000023
--
--/* Define the virtual APIC registers */
--#define HV_X64_MSR_EOI				0x40000070
--#define HV_X64_MSR_ICR				0x40000071
--#define HV_X64_MSR_TPR				0x40000072
--#define HV_X64_MSR_VP_ASSIST_PAGE		0x40000073
--
--/* Define synthetic interrupt controller model specific registers. */
--#define HV_X64_MSR_SCONTROL			0x40000080
--#define HV_X64_MSR_SVERSION			0x40000081
--#define HV_X64_MSR_SIEFP			0x40000082
--#define HV_X64_MSR_SIMP				0x40000083
--#define HV_X64_MSR_EOM				0x40000084
--#define HV_X64_MSR_SINT0			0x40000090
--#define HV_X64_MSR_SINT1			0x40000091
--#define HV_X64_MSR_SINT2			0x40000092
--#define HV_X64_MSR_SINT3			0x40000093
--#define HV_X64_MSR_SINT4			0x40000094
--#define HV_X64_MSR_SINT5			0x40000095
--#define HV_X64_MSR_SINT6			0x40000096
--#define HV_X64_MSR_SINT7			0x40000097
--#define HV_X64_MSR_SINT8			0x40000098
--#define HV_X64_MSR_SINT9			0x40000099
--#define HV_X64_MSR_SINT10			0x4000009A
--#define HV_X64_MSR_SINT11			0x4000009B
--#define HV_X64_MSR_SINT12			0x4000009C
--#define HV_X64_MSR_SINT13			0x4000009D
--#define HV_X64_MSR_SINT14			0x4000009E
--#define HV_X64_MSR_SINT15			0x4000009F
--
--/*
-- * Define synthetic interrupt controller model specific registers for
-- * nested hypervisor.
-- */
--#define HV_X64_MSR_NESTED_SCONTROL		0x40001080
--#define HV_X64_MSR_NESTED_SVERSION		0x40001081
--#define HV_X64_MSR_NESTED_SIEFP			0x40001082
--#define HV_X64_MSR_NESTED_SIMP			0x40001083
--#define HV_X64_MSR_NESTED_EOM			0x40001084
--#define HV_X64_MSR_NESTED_SINT0			0x40001090
--
--/*
-- * Synthetic Timer MSRs. Four timers per vcpu.
-- */
--#define HV_X64_MSR_STIMER0_CONFIG		0x400000B0
--#define HV_X64_MSR_STIMER0_COUNT		0x400000B1
--#define HV_X64_MSR_STIMER1_CONFIG		0x400000B2
--#define HV_X64_MSR_STIMER1_COUNT		0x400000B3
--#define HV_X64_MSR_STIMER2_CONFIG		0x400000B4
--#define HV_X64_MSR_STIMER2_COUNT		0x400000B5
--#define HV_X64_MSR_STIMER3_CONFIG		0x400000B6
--#define HV_X64_MSR_STIMER3_COUNT		0x400000B7
--
--/* Hyper-V guest idle MSR */
--#define HV_X64_MSR_GUEST_IDLE			0x400000F0
--
--/* Hyper-V guest crash notification MSR's */
--#define HV_X64_MSR_CRASH_P0			0x40000100
--#define HV_X64_MSR_CRASH_P1			0x40000101
--#define HV_X64_MSR_CRASH_P2			0x40000102
--#define HV_X64_MSR_CRASH_P3			0x40000103
--#define HV_X64_MSR_CRASH_P4			0x40000104
--#define HV_X64_MSR_CRASH_CTL			0x40000105
--
--/* TSC emulation after migration */
--#define HV_X64_MSR_REENLIGHTENMENT_CONTROL	0x40000106
--#define HV_X64_MSR_TSC_EMULATION_CONTROL	0x40000107
--#define HV_X64_MSR_TSC_EMULATION_STATUS		0x40000108
--
--/* TSC invariant control */
--#define HV_X64_MSR_TSC_INVARIANT_CONTROL	0x40000118
--
--/* HV_X64_MSR_TSC_INVARIANT_CONTROL bits */
--#define HV_EXPOSE_INVARIANT_TSC		BIT_ULL(0)
--
--/*
-- * To support arch-generic code calling hv_set/get_register:
-- * - On x86, HV_MSR_ indicates an MSR accessed via rdmsrl/wrmsrl
-- * - On ARM, HV_MSR_ indicates a VP register accessed via hypercall
-- */
--#define HV_MSR_CRASH_P0		(HV_X64_MSR_CRASH_P0)
--#define HV_MSR_CRASH_P1		(HV_X64_MSR_CRASH_P1)
--#define HV_MSR_CRASH_P2		(HV_X64_MSR_CRASH_P2)
--#define HV_MSR_CRASH_P3		(HV_X64_MSR_CRASH_P3)
--#define HV_MSR_CRASH_P4		(HV_X64_MSR_CRASH_P4)
--#define HV_MSR_CRASH_CTL	(HV_X64_MSR_CRASH_CTL)
--
--#define HV_MSR_VP_INDEX		(HV_X64_MSR_VP_INDEX)
--#define HV_MSR_TIME_REF_COUNT	(HV_X64_MSR_TIME_REF_COUNT)
--#define HV_MSR_REFERENCE_TSC	(HV_X64_MSR_REFERENCE_TSC)
--
--#define HV_MSR_SINT0		(HV_X64_MSR_SINT0)
--#define HV_MSR_SVERSION		(HV_X64_MSR_SVERSION)
--#define HV_MSR_SCONTROL		(HV_X64_MSR_SCONTROL)
--#define HV_MSR_SIEFP		(HV_X64_MSR_SIEFP)
--#define HV_MSR_SIMP		(HV_X64_MSR_SIMP)
--#define HV_MSR_EOM		(HV_X64_MSR_EOM)
--
--#define HV_MSR_NESTED_SCONTROL	(HV_X64_MSR_NESTED_SCONTROL)
--#define HV_MSR_NESTED_SVERSION	(HV_X64_MSR_NESTED_SVERSION)
--#define HV_MSR_NESTED_SIEFP	(HV_X64_MSR_NESTED_SIEFP)
--#define HV_MSR_NESTED_SIMP	(HV_X64_MSR_NESTED_SIMP)
--#define HV_MSR_NESTED_EOM	(HV_X64_MSR_NESTED_EOM)
--#define HV_MSR_NESTED_SINT0	(HV_X64_MSR_NESTED_SINT0)
--
--#define HV_MSR_STIMER0_CONFIG	(HV_X64_MSR_STIMER0_CONFIG)
--#define HV_MSR_STIMER0_COUNT	(HV_X64_MSR_STIMER0_COUNT)
--
--/*
-- * Registers are only accessible via HVCALL_GET_VP_REGISTERS hvcall and
-- * there is not associated MSR address.
-- */
--#define	HV_X64_REGISTER_VSM_VP_STATUS	0x000D0003
--#define	HV_X64_VTL_MASK			GENMASK(3, 0)
--
--/* Hyper-V memory host visibility */
--enum hv_mem_host_visibility {
--	VMBUS_PAGE_NOT_VISIBLE		= 0,
--	VMBUS_PAGE_VISIBLE_READ_ONLY	= 1,
--	VMBUS_PAGE_VISIBLE_READ_WRITE	= 3
--};
--
--/* HvCallModifySparseGpaPageHostVisibility hypercall */
--#define HV_MAX_MODIFY_GPA_REP_COUNT	((PAGE_SIZE / sizeof(u64)) - 2)
--struct hv_gpa_range_for_visibility {
--	u64 partition_id;
--	u32 host_visibility:2;
--	u32 reserved0:30;
--	u32 reserved1;
--	u64 gpa_page_list[HV_MAX_MODIFY_GPA_REP_COUNT];
--} __packed;
--
--/*
-- * Declare the MSR used to setup pages used to communicate with the hypervisor.
-- */
--union hv_x64_msr_hypercall_contents {
--	u64 as_uint64;
--	struct {
--		u64 enable:1;
--		u64 reserved:11;
--		u64 guest_physical_address:52;
--	} __packed;
--};
--
--union hv_vp_assist_msr_contents {
--	u64 as_uint64;
--	struct {
--		u64 enable:1;
--		u64 reserved:11;
--		u64 pfn:52;
--	} __packed;
--};
--
--struct hv_reenlightenment_control {
--	__u64 vector:8;
--	__u64 reserved1:8;
--	__u64 enabled:1;
--	__u64 reserved2:15;
--	__u64 target_vp:32;
--}  __packed;
--
--struct hv_tsc_emulation_control {
--	__u64 enabled:1;
--	__u64 reserved:63;
--} __packed;
--
--struct hv_tsc_emulation_status {
--	__u64 inprogress:1;
--	__u64 reserved:63;
--} __packed;
--
--#define HV_X64_MSR_HYPERCALL_ENABLE		0x00000001
--#define HV_X64_MSR_HYPERCALL_PAGE_ADDRESS_SHIFT	12
--#define HV_X64_MSR_HYPERCALL_PAGE_ADDRESS_MASK	\
--		(~((1ull << HV_X64_MSR_HYPERCALL_PAGE_ADDRESS_SHIFT) - 1))
--
--#define HV_X64_MSR_CRASH_PARAMS		\
--		(1 + (HV_X64_MSR_CRASH_P4 - HV_X64_MSR_CRASH_P0))
--
--#define HV_IPI_LOW_VECTOR	0x10
--#define HV_IPI_HIGH_VECTOR	0xff
--
--#define HV_X64_MSR_VP_ASSIST_PAGE_ENABLE	0x00000001
--#define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT	12
--#define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
--		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
--
--/* Hyper-V Enlightened VMCS version mask in nested features CPUID */
--#define HV_X64_ENLIGHTENED_VMCS_VERSION		0xff
--
--#define HV_X64_MSR_TSC_REFERENCE_ENABLE		0x00000001
--#define HV_X64_MSR_TSC_REFERENCE_ADDRESS_SHIFT	12
--
--/* Number of XMM registers used in hypercall input/output */
--#define HV_HYPERCALL_MAX_XMM_REGISTERS		6
--
--struct hv_nested_enlightenments_control {
--	struct {
--		__u32 directhypercall:1;
--		__u32 reserved:31;
--	} features;
--	struct {
--		__u32 inter_partition_comm:1;
--		__u32 reserved:31;
--	} hypercallControls;
--} __packed;
--
--/* Define virtual processor assist page structure. */
--struct hv_vp_assist_page {
--	__u32 apic_assist;
--	__u32 reserved1;
--	__u32 vtl_entry_reason;
--	__u32 vtl_reserved;
--	__u64 vtl_ret_x64rax;
--	__u64 vtl_ret_x64rcx;
--	struct hv_nested_enlightenments_control nested_control;
--	__u8 enlighten_vmentry;
--	__u8 reserved2[7];
--	__u64 current_nested_vmcs;
--	__u8 synthetic_time_unhalted_timer_expired;
--	__u8 reserved3[7];
--	__u8 virtualization_fault_information[40];
--	__u8 reserved4[8];
--	__u8 intercept_message[256];
--	__u8 vtl_ret_actions[256];
--} __packed;
--
--struct hv_enlightened_vmcs {
--	u32 revision_id;
--	u32 abort;
--
--	u16 host_es_selector;
--	u16 host_cs_selector;
--	u16 host_ss_selector;
--	u16 host_ds_selector;
--	u16 host_fs_selector;
--	u16 host_gs_selector;
--	u16 host_tr_selector;
--
--	u16 padding16_1;
--
--	u64 host_ia32_pat;
--	u64 host_ia32_efer;
--
--	u64 host_cr0;
--	u64 host_cr3;
--	u64 host_cr4;
--
--	u64 host_ia32_sysenter_esp;
--	u64 host_ia32_sysenter_eip;
--	u64 host_rip;
--	u32 host_ia32_sysenter_cs;
--
--	u32 pin_based_vm_exec_control;
--	u32 vm_exit_controls;
--	u32 secondary_vm_exec_control;
--
--	u64 io_bitmap_a;
--	u64 io_bitmap_b;
--	u64 msr_bitmap;
--
--	u16 guest_es_selector;
--	u16 guest_cs_selector;
--	u16 guest_ss_selector;
--	u16 guest_ds_selector;
--	u16 guest_fs_selector;
--	u16 guest_gs_selector;
--	u16 guest_ldtr_selector;
--	u16 guest_tr_selector;
--
--	u32 guest_es_limit;
--	u32 guest_cs_limit;
--	u32 guest_ss_limit;
--	u32 guest_ds_limit;
--	u32 guest_fs_limit;
--	u32 guest_gs_limit;
--	u32 guest_ldtr_limit;
--	u32 guest_tr_limit;
--	u32 guest_gdtr_limit;
--	u32 guest_idtr_limit;
--
--	u32 guest_es_ar_bytes;
--	u32 guest_cs_ar_bytes;
--	u32 guest_ss_ar_bytes;
--	u32 guest_ds_ar_bytes;
--	u32 guest_fs_ar_bytes;
--	u32 guest_gs_ar_bytes;
--	u32 guest_ldtr_ar_bytes;
--	u32 guest_tr_ar_bytes;
--
--	u64 guest_es_base;
--	u64 guest_cs_base;
--	u64 guest_ss_base;
--	u64 guest_ds_base;
--	u64 guest_fs_base;
--	u64 guest_gs_base;
--	u64 guest_ldtr_base;
--	u64 guest_tr_base;
--	u64 guest_gdtr_base;
--	u64 guest_idtr_base;
--
--	u64 padding64_1[3];
--
--	u64 vm_exit_msr_store_addr;
--	u64 vm_exit_msr_load_addr;
--	u64 vm_entry_msr_load_addr;
--
--	u64 cr3_target_value0;
--	u64 cr3_target_value1;
--	u64 cr3_target_value2;
--	u64 cr3_target_value3;
--
--	u32 page_fault_error_code_mask;
--	u32 page_fault_error_code_match;
--
--	u32 cr3_target_count;
--	u32 vm_exit_msr_store_count;
--	u32 vm_exit_msr_load_count;
--	u32 vm_entry_msr_load_count;
--
--	u64 tsc_offset;
--	u64 virtual_apic_page_addr;
--	u64 vmcs_link_pointer;
--
--	u64 guest_ia32_debugctl;
--	u64 guest_ia32_pat;
--	u64 guest_ia32_efer;
--
--	u64 guest_pdptr0;
--	u64 guest_pdptr1;
--	u64 guest_pdptr2;
--	u64 guest_pdptr3;
--
--	u64 guest_pending_dbg_exceptions;
--	u64 guest_sysenter_esp;
--	u64 guest_sysenter_eip;
--
--	u32 guest_activity_state;
--	u32 guest_sysenter_cs;
--
--	u64 cr0_guest_host_mask;
--	u64 cr4_guest_host_mask;
--	u64 cr0_read_shadow;
--	u64 cr4_read_shadow;
--	u64 guest_cr0;
--	u64 guest_cr3;
--	u64 guest_cr4;
--	u64 guest_dr7;
--
--	u64 host_fs_base;
--	u64 host_gs_base;
--	u64 host_tr_base;
--	u64 host_gdtr_base;
--	u64 host_idtr_base;
--	u64 host_rsp;
--
--	u64 ept_pointer;
--
--	u16 virtual_processor_id;
--	u16 padding16_2[3];
--
--	u64 padding64_2[5];
--	u64 guest_physical_address;
--
--	u32 vm_instruction_error;
--	u32 vm_exit_reason;
--	u32 vm_exit_intr_info;
--	u32 vm_exit_intr_error_code;
--	u32 idt_vectoring_info_field;
--	u32 idt_vectoring_error_code;
--	u32 vm_exit_instruction_len;
--	u32 vmx_instruction_info;
--
--	u64 exit_qualification;
--	u64 exit_io_instruction_ecx;
--	u64 exit_io_instruction_esi;
--	u64 exit_io_instruction_edi;
--	u64 exit_io_instruction_eip;
--
--	u64 guest_linear_address;
--	u64 guest_rsp;
--	u64 guest_rflags;
--
--	u32 guest_interruptibility_info;
--	u32 cpu_based_vm_exec_control;
--	u32 exception_bitmap;
--	u32 vm_entry_controls;
--	u32 vm_entry_intr_info_field;
--	u32 vm_entry_exception_error_code;
--	u32 vm_entry_instruction_len;
--	u32 tpr_threshold;
--
--	u64 guest_rip;
--
--	u32 hv_clean_fields;
--	u32 padding32_1;
--	u32 hv_synthetic_controls;
--	struct {
--		u32 nested_flush_hypercall:1;
--		u32 msr_bitmap:1;
--		u32 reserved:30;
--	}  __packed hv_enlightenments_control;
--	u32 hv_vp_id;
--	u32 padding32_2;
--	u64 hv_vm_id;
--	u64 partition_assist_page;
--	u64 padding64_4[4];
--	u64 guest_bndcfgs;
--	u64 guest_ia32_perf_global_ctrl;
--	u64 guest_ia32_s_cet;
--	u64 guest_ssp;
--	u64 guest_ia32_int_ssp_table_addr;
--	u64 guest_ia32_lbr_ctl;
--	u64 padding64_5[2];
--	u64 xss_exit_bitmap;
--	u64 encls_exiting_bitmap;
--	u64 host_ia32_perf_global_ctrl;
--	u64 tsc_multiplier;
--	u64 host_ia32_s_cet;
--	u64 host_ssp;
--	u64 host_ia32_int_ssp_table_addr;
--	u64 padding64_6;
--} __packed;
--
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_NONE			0
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_IO_BITMAP		BIT(0)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_MSR_BITMAP		BIT(1)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2		BIT(2)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP1		BIT(3)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_PROC		BIT(4)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_EVENT		BIT(5)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_ENTRY		BIT(6)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_EXCPN		BIT(7)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CRDR			BIT(8)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_XLAT		BIT(9)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_BASIC		BIT(10)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1		BIT(11)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP2		BIT(12)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_POINTER		BIT(13)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1		BIT(14)
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_ENLIGHTENMENTSCONTROL	BIT(15)
--
--#define HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL			0xFFFF
--
--/*
-- * Note, Hyper-V isn't actually stealing bit 28 from Intel, just abusing it by
-- * pairing it with architecturally impossible exit reasons.  Bit 28 is set only
-- * on SMI exits to a SMI transfer monitor (STM) and if and only if a MTF VM-Exit
-- * is pending.  I.e. it will never be set by hardware for non-SMI exits (there
-- * are only three), nor will it ever be set unless the VMM is an STM.
-- */
--#define HV_VMX_SYNTHETIC_EXIT_REASON_TRAP_AFTER_FLUSH		0x10000031
--
--/*
-- * Hyper-V uses the software reserved 32 bytes in VMCB control area to expose
-- * SVM enlightenments to guests.
-- */
--struct hv_vmcb_enlightenments {
--	struct __packed hv_enlightenments_control {
--		u32 nested_flush_hypercall:1;
--		u32 msr_bitmap:1;
--		u32 enlightened_npt_tlb: 1;
--		u32 reserved:29;
--	} __packed hv_enlightenments_control;
--	u32 hv_vp_id;
--	u64 hv_vm_id;
--	u64 partition_assist_page;
--	u64 reserved;
--} __packed;
--
--/*
-- * Hyper-V uses the software reserved clean bit in VMCB.
-- */
--#define HV_VMCB_NESTED_ENLIGHTENMENTS		31
--
--/* Synthetic VM-Exit */
--#define HV_SVM_EXITCODE_ENL			0xf0000000
--#define HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH	(1)
--
--struct hv_partition_assist_pg {
--	u32 tlb_lock_count;
--};
--
--enum hv_interrupt_type {
--	HV_X64_INTERRUPT_TYPE_FIXED             = 0x0000,
--	HV_X64_INTERRUPT_TYPE_LOWESTPRIORITY    = 0x0001,
--	HV_X64_INTERRUPT_TYPE_SMI               = 0x0002,
--	HV_X64_INTERRUPT_TYPE_REMOTEREAD        = 0x0003,
--	HV_X64_INTERRUPT_TYPE_NMI               = 0x0004,
--	HV_X64_INTERRUPT_TYPE_INIT              = 0x0005,
--	HV_X64_INTERRUPT_TYPE_SIPI              = 0x0006,
--	HV_X64_INTERRUPT_TYPE_EXTINT            = 0x0007,
--	HV_X64_INTERRUPT_TYPE_LOCALINT0         = 0x0008,
--	HV_X64_INTERRUPT_TYPE_LOCALINT1         = 0x0009,
--	HV_X64_INTERRUPT_TYPE_MAXIMUM           = 0x000A,
--};
--
--union hv_msi_address_register {
--	u32 as_uint32;
--	struct {
--		u32 reserved1:2;
--		u32 destination_mode:1;
--		u32 redirection_hint:1;
--		u32 reserved2:8;
--		u32 destination_id:8;
--		u32 msi_base:12;
--	};
--} __packed;
--
--union hv_msi_data_register {
--	u32 as_uint32;
--	struct {
--		u32 vector:8;
--		u32 delivery_mode:3;
--		u32 reserved1:3;
--		u32 level_assert:1;
--		u32 trigger_mode:1;
--		u32 reserved2:16;
--	};
--} __packed;
--
--/* HvRetargetDeviceInterrupt hypercall */
--union hv_msi_entry {
--	u64 as_uint64;
--	struct {
--		union hv_msi_address_register address;
--		union hv_msi_data_register data;
--	} __packed;
--};
--
--struct hv_x64_segment_register {
--	u64 base;
--	u32 limit;
--	u16 selector;
--	union {
--		struct {
--			u16 segment_type : 4;
--			u16 non_system_segment : 1;
--			u16 descriptor_privilege_level : 2;
--			u16 present : 1;
--			u16 reserved : 4;
--			u16 available : 1;
--			u16 _long : 1;
--			u16 _default : 1;
--			u16 granularity : 1;
--		} __packed;
--		u16 attributes;
--	};
--} __packed;
--
--struct hv_x64_table_register {
--	u16 pad[3];
--	u16 limit;
--	u64 base;
--} __packed;
--
--struct hv_init_vp_context {
--	u64 rip;
--	u64 rsp;
--	u64 rflags;
--
--	struct hv_x64_segment_register cs;
--	struct hv_x64_segment_register ds;
--	struct hv_x64_segment_register es;
--	struct hv_x64_segment_register fs;
--	struct hv_x64_segment_register gs;
--	struct hv_x64_segment_register ss;
--	struct hv_x64_segment_register tr;
--	struct hv_x64_segment_register ldtr;
--
--	struct hv_x64_table_register idtr;
--	struct hv_x64_table_register gdtr;
--
--	u64 efer;
--	u64 cr0;
--	u64 cr3;
--	u64 cr4;
--	u64 msr_cr_pat;
--} __packed;
--
--union hv_input_vtl {
--	u8 as_uint8;
--	struct {
--		u8 target_vtl: 4;
--		u8 use_target_vtl: 1;
--		u8 reserved_z: 3;
--	};
--} __packed;
--
--struct hv_enable_vp_vtl {
--	u64				partition_id;
--	u32				vp_index;
--	union hv_input_vtl		target_vtl;
--	u8				mbz0;
--	u16				mbz1;
--	struct hv_init_vp_context	vp_context;
--} __packed;
--
--struct hv_get_vp_from_apic_id_in {
--	u64 partition_id;
--	union hv_input_vtl target_vtl;
--	u8 res[7];
--	u32 apic_ids[];
--} __packed;
--
--#include <asm-generic/hyperv-tlfs.h>
--
--#endif
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-deleted file mode 100644
-index 52274c9aefef..000000000000
---- a/include/asm-generic/hyperv-tlfs.h
-+++ /dev/null
-@@ -1,883 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--
--/*
-- * This file contains definitions from Hyper-V Hypervisor Top-Level Functional
-- * Specification (TLFS):
-- * https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
-- */
--
--#ifndef _ASM_GENERIC_HYPERV_TLFS_H
--#define _ASM_GENERIC_HYPERV_TLFS_H
--
--#include <linux/types.h>
--#include <linux/bits.h>
--#include <linux/time64.h>
--
--/*
-- * While not explicitly listed in the TLFS, Hyper-V always runs with a page size
-- * of 4096. These definitions are used when communicating with Hyper-V using
-- * guest physical pages and guest physical page addresses, since the guest page
-- * size may not be 4096 on all architectures.
-- */
--#define HV_HYP_PAGE_SHIFT      12
--#define HV_HYP_PAGE_SIZE       BIT(HV_HYP_PAGE_SHIFT)
--#define HV_HYP_PAGE_MASK       (~(HV_HYP_PAGE_SIZE - 1))
--
--/*
-- * Hyper-V provides two categories of flags relevant to guest VMs.  The
-- * "Features" category indicates specific functionality that is available
-- * to guests on this particular instance of Hyper-V. The "Features"
-- * are presented in four groups, each of which is 32 bits. The group A
-- * and B definitions are common across architectures and are listed here.
-- * However, not all flags are relevant on all architectures.
-- *
-- * Groups C and D vary across architectures and are listed in the
-- * architecture specific portion of hyperv-tlfs.h. Some of these flags exist
-- * on multiple architectures, but the bit positions are different so they
-- * cannot appear in the generic portion of hyperv-tlfs.h.
-- *
-- * The "Enlightenments" category provides recommendations on whether to use
-- * specific enlightenments that are available. The Enlighenments are a single
-- * group of 32 bits, but they vary across architectures and are listed in
-- * the architecture specific portion of hyperv-tlfs.h.
-- */
--
--/*
-- * Group A Features.
-- */
--
--/* VP Runtime register available */
--#define HV_MSR_VP_RUNTIME_AVAILABLE		BIT(0)
--/* Partition Reference Counter available*/
--#define HV_MSR_TIME_REF_COUNT_AVAILABLE		BIT(1)
--/* Basic SynIC register available */
--#define HV_MSR_SYNIC_AVAILABLE			BIT(2)
--/* Synthetic Timer registers available */
--#define HV_MSR_SYNTIMER_AVAILABLE		BIT(3)
--/* Virtual APIC assist and VP assist page registers available */
--#define HV_MSR_APIC_ACCESS_AVAILABLE		BIT(4)
--/* Hypercall and Guest OS ID registers available*/
--#define HV_MSR_HYPERCALL_AVAILABLE		BIT(5)
--/* Access virtual processor index register available*/
--#define HV_MSR_VP_INDEX_AVAILABLE		BIT(6)
--/* Virtual system reset register available*/
--#define HV_MSR_RESET_AVAILABLE			BIT(7)
--/* Access statistics page registers available */
--#define HV_MSR_STAT_PAGES_AVAILABLE		BIT(8)
--/* Partition reference TSC register is available */
--#define HV_MSR_REFERENCE_TSC_AVAILABLE		BIT(9)
--/* Partition Guest IDLE register is available */
--#define HV_MSR_GUEST_IDLE_AVAILABLE		BIT(10)
--/* Partition local APIC and TSC frequency registers available */
--#define HV_ACCESS_FREQUENCY_MSRS		BIT(11)
--/* AccessReenlightenmentControls privilege */
--#define HV_ACCESS_REENLIGHTENMENT		BIT(13)
--/* AccessTscInvariantControls privilege */
--#define HV_ACCESS_TSC_INVARIANT			BIT(15)
--
--/*
-- * Group B features.
-- */
--#define HV_CREATE_PARTITIONS			BIT(0)
--#define HV_ACCESS_PARTITION_ID			BIT(1)
--#define HV_ACCESS_MEMORY_POOL			BIT(2)
--#define HV_ADJUST_MESSAGE_BUFFERS		BIT(3)
--#define HV_POST_MESSAGES			BIT(4)
--#define HV_SIGNAL_EVENTS			BIT(5)
--#define HV_CREATE_PORT				BIT(6)
--#define HV_CONNECT_PORT				BIT(7)
--#define HV_ACCESS_STATS				BIT(8)
--#define HV_DEBUGGING				BIT(11)
--#define HV_CPU_MANAGEMENT			BIT(12)
--#define HV_ENABLE_EXTENDED_HYPERCALLS		BIT(20)
--#define HV_ISOLATION				BIT(22)
--
--/*
-- * TSC page layout.
-- */
--struct ms_hyperv_tsc_page {
--	volatile u32 tsc_sequence;
--	u32 reserved1;
--	volatile u64 tsc_scale;
--	volatile s64 tsc_offset;
--} __packed;
--
--union hv_reference_tsc_msr {
--	u64 as_uint64;
--	struct {
--		u64 enable:1;
--		u64 reserved:11;
--		u64 pfn:52;
--	} __packed;
--};
--
--/*
-- * The guest OS needs to register the guest ID with the hypervisor.
-- * The guest ID is a 64 bit entity and the structure of this ID is
-- * specified in the Hyper-V specification:
-- *
-- * msdn.microsoft.com/en-us/library/windows/hardware/ff542653%28v=vs.85%29.aspx
-- *
-- * While the current guideline does not specify how Linux guest ID(s)
-- * need to be generated, our plan is to publish the guidelines for
-- * Linux and other guest operating systems that currently are hosted
-- * on Hyper-V. The implementation here conforms to this yet
-- * unpublished guidelines.
-- *
-- *
-- * Bit(s)
-- * 63 - Indicates if the OS is Open Source or not; 1 is Open Source
-- * 62:56 - Os Type; Linux is 0x100
-- * 55:48 - Distro specific identification
-- * 47:16 - Linux kernel version number
-- * 15:0  - Distro specific identification
-- *
-- *
-- */
--
--#define HV_LINUX_VENDOR_ID              0x8100
--
--/*
-- * Crash notification flags.
-- */
--#define HV_CRASH_CTL_CRASH_NOTIFY_MSG		BIT_ULL(62)
--#define HV_CRASH_CTL_CRASH_NOTIFY		BIT_ULL(63)
--
--/* Declare the various hypercall operations. */
--#define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE	0x0002
--#define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST	0x0003
--#define HVCALL_ENABLE_VP_VTL			0x000f
--#define HVCALL_NOTIFY_LONG_SPIN_WAIT		0x0008
--#define HVCALL_SEND_IPI				0x000b
--#define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
--#define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
--#define HVCALL_SEND_IPI_EX			0x0015
--#define HVCALL_GET_PARTITION_ID			0x0046
--#define HVCALL_DEPOSIT_MEMORY			0x0048
--#define HVCALL_CREATE_VP			0x004e
--#define HVCALL_GET_VP_REGISTERS			0x0050
--#define HVCALL_SET_VP_REGISTERS			0x0051
--#define HVCALL_POST_MESSAGE			0x005c
--#define HVCALL_SIGNAL_EVENT			0x005d
--#define HVCALL_POST_DEBUG_DATA			0x0069
--#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
--#define HVCALL_RESET_DEBUG_SESSION		0x006b
--#define HVCALL_ADD_LOGICAL_PROCESSOR		0x0076
--#define HVCALL_MAP_DEVICE_INTERRUPT		0x007c
--#define HVCALL_UNMAP_DEVICE_INTERRUPT		0x007d
--#define HVCALL_RETARGET_INTERRUPT		0x007e
--#define HVCALL_START_VP				0x0099
--#define HVCALL_GET_VP_ID_FROM_APIC_ID		0x009a
--#define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
--#define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
--#define HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY 0x00db
--#define HVCALL_MMIO_READ			0x0106
--#define HVCALL_MMIO_WRITE			0x0107
--
--/* Extended hypercalls */
--#define HV_EXT_CALL_QUERY_CAPABILITIES		0x8001
--#define HV_EXT_CALL_MEMORY_HEAT_HINT		0x8003
--
--#define HV_FLUSH_ALL_PROCESSORS			BIT(0)
--#define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
--#define HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY	BIT(2)
--#define HV_FLUSH_USE_EXTENDED_RANGE_FORMAT	BIT(3)
--
--/* Extended capability bits */
--#define HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT BIT(8)
--
--enum HV_GENERIC_SET_FORMAT {
--	HV_GENERIC_SET_SPARSE_4K,
--	HV_GENERIC_SET_ALL,
--};
--
--#define HV_PARTITION_ID_SELF		((u64)-1)
--#define HV_VP_INDEX_SELF		((u32)-2)
--
--#define HV_HYPERCALL_RESULT_MASK	GENMASK_ULL(15, 0)
--#define HV_HYPERCALL_FAST_BIT		BIT(16)
--#define HV_HYPERCALL_VARHEAD_OFFSET	17
--#define HV_HYPERCALL_VARHEAD_MASK	GENMASK_ULL(26, 17)
--#define HV_HYPERCALL_RSVD0_MASK		GENMASK_ULL(31, 27)
--#define HV_HYPERCALL_NESTED		BIT_ULL(31)
--#define HV_HYPERCALL_REP_COMP_OFFSET	32
--#define HV_HYPERCALL_REP_COMP_1		BIT_ULL(32)
--#define HV_HYPERCALL_REP_COMP_MASK	GENMASK_ULL(43, 32)
--#define HV_HYPERCALL_RSVD1_MASK		GENMASK_ULL(47, 44)
--#define HV_HYPERCALL_REP_START_OFFSET	48
--#define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
--#define HV_HYPERCALL_RSVD2_MASK		GENMASK_ULL(63, 60)
--#define HV_HYPERCALL_RSVD_MASK		(HV_HYPERCALL_RSVD0_MASK | \
--					 HV_HYPERCALL_RSVD1_MASK | \
--					 HV_HYPERCALL_RSVD2_MASK)
--
--/* hypercall status code */
--#define HV_STATUS_SUCCESS			0
--#define HV_STATUS_INVALID_HYPERCALL_CODE	2
--#define HV_STATUS_INVALID_HYPERCALL_INPUT	3
--#define HV_STATUS_INVALID_ALIGNMENT		4
--#define HV_STATUS_INVALID_PARAMETER		5
--#define HV_STATUS_ACCESS_DENIED			6
--#define HV_STATUS_OPERATION_DENIED		8
--#define HV_STATUS_INSUFFICIENT_MEMORY		11
--#define HV_STATUS_INVALID_PORT_ID		17
--#define HV_STATUS_INVALID_CONNECTION_ID		18
--#define HV_STATUS_INSUFFICIENT_BUFFERS		19
--#define HV_STATUS_TIME_OUT                      120
--#define HV_STATUS_VTL_ALREADY_ENABLED		134
--
--/*
-- * The Hyper-V TimeRefCount register and the TSC
-- * page provide a guest VM clock with 100ns tick rate
-- */
--#define HV_CLOCK_HZ (NSEC_PER_SEC/100)
--
--/* Define the number of synthetic interrupt sources. */
--#define HV_SYNIC_SINT_COUNT		(16)
--/* Define the expected SynIC version. */
--#define HV_SYNIC_VERSION_1		(0x1)
--/* Valid SynIC vectors are 16-255. */
--#define HV_SYNIC_FIRST_VALID_VECTOR	(16)
--
--#define HV_SYNIC_CONTROL_ENABLE		(1ULL << 0)
--#define HV_SYNIC_SIMP_ENABLE		(1ULL << 0)
--#define HV_SYNIC_SIEFP_ENABLE		(1ULL << 0)
--#define HV_SYNIC_SINT_MASKED		(1ULL << 16)
--#define HV_SYNIC_SINT_AUTO_EOI		(1ULL << 17)
--#define HV_SYNIC_SINT_VECTOR_MASK	(0xFF)
--
--#define HV_SYNIC_STIMER_COUNT		(4)
--
--/* Define synthetic interrupt controller message constants. */
--#define HV_MESSAGE_SIZE			(256)
--#define HV_MESSAGE_PAYLOAD_BYTE_COUNT	(240)
--#define HV_MESSAGE_PAYLOAD_QWORD_COUNT	(30)
--
--/*
-- * Define hypervisor message types. Some of the message types
-- * are x86/x64 specific, but there's no good way to separate
-- * them out into the arch-specific version of hyperv-tlfs.h
-- * because C doesn't provide a way to extend enum types.
-- * Keeping them all in the arch neutral hyperv-tlfs.h seems
-- * the least messy compromise.
-- */
--enum hv_message_type {
--	HVMSG_NONE			= 0x00000000,
--
--	/* Memory access messages. */
--	HVMSG_UNMAPPED_GPA		= 0x80000000,
--	HVMSG_GPA_INTERCEPT		= 0x80000001,
--
--	/* Timer notification messages. */
--	HVMSG_TIMER_EXPIRED		= 0x80000010,
--
--	/* Error messages. */
--	HVMSG_INVALID_VP_REGISTER_VALUE	= 0x80000020,
--	HVMSG_UNRECOVERABLE_EXCEPTION	= 0x80000021,
--	HVMSG_UNSUPPORTED_FEATURE	= 0x80000022,
--
--	/* Trace buffer complete messages. */
--	HVMSG_EVENTLOG_BUFFERCOMPLETE	= 0x80000040,
--
--	/* Platform-specific processor intercept messages. */
--	HVMSG_X64_IOPORT_INTERCEPT	= 0x80010000,
--	HVMSG_X64_MSR_INTERCEPT		= 0x80010001,
--	HVMSG_X64_CPUID_INTERCEPT	= 0x80010002,
--	HVMSG_X64_EXCEPTION_INTERCEPT	= 0x80010003,
--	HVMSG_X64_APIC_EOI		= 0x80010004,
--	HVMSG_X64_LEGACY_FP_ERROR	= 0x80010005
--};
--
--/* Define synthetic interrupt controller message flags. */
--union hv_message_flags {
--	__u8 asu8;
--	struct {
--		__u8 msg_pending:1;
--		__u8 reserved:7;
--	} __packed;
--};
--
--/* Define port identifier type. */
--union hv_port_id {
--	__u32 asu32;
--	struct {
--		__u32 id:24;
--		__u32 reserved:8;
--	} __packed u;
--};
--
--/* Define synthetic interrupt controller message header. */
--struct hv_message_header {
--	__u32 message_type;
--	__u8 payload_size;
--	union hv_message_flags message_flags;
--	__u8 reserved[2];
--	union {
--		__u64 sender;
--		union hv_port_id port;
--	};
--} __packed;
--
--/* Define synthetic interrupt controller message format. */
--struct hv_message {
--	struct hv_message_header header;
--	union {
--		__u64 payload[HV_MESSAGE_PAYLOAD_QWORD_COUNT];
--	} u;
--} __packed;
--
--/* Define the synthetic interrupt message page layout. */
--struct hv_message_page {
--	struct hv_message sint_message[HV_SYNIC_SINT_COUNT];
--} __packed;
--
--/* Define timer message payload structure. */
--struct hv_timer_message_payload {
--	__u32 timer_index;
--	__u32 reserved;
--	__u64 expiration_time;	/* When the timer expired */
--	__u64 delivery_time;	/* When the message was delivered */
--} __packed;
--
--
--/* Define synthetic interrupt controller flag constants. */
--#define HV_EVENT_FLAGS_COUNT		(256 * 8)
--#define HV_EVENT_FLAGS_LONG_COUNT	(256 / sizeof(unsigned long))
--
--/*
-- * Synthetic timer configuration.
-- */
--union hv_stimer_config {
--	u64 as_uint64;
--	struct {
--		u64 enable:1;
--		u64 periodic:1;
--		u64 lazy:1;
--		u64 auto_enable:1;
--		u64 apic_vector:8;
--		u64 direct_mode:1;
--		u64 reserved_z0:3;
--		u64 sintx:4;
--		u64 reserved_z1:44;
--	} __packed;
--};
--
--
--/* Define the synthetic interrupt controller event flags format. */
--union hv_synic_event_flags {
--	unsigned long flags[HV_EVENT_FLAGS_LONG_COUNT];
--};
--
--/* Define SynIC control register. */
--union hv_synic_scontrol {
--	u64 as_uint64;
--	struct {
--		u64 enable:1;
--		u64 reserved:63;
--	} __packed;
--};
--
--/* Define synthetic interrupt source. */
--union hv_synic_sint {
--	u64 as_uint64;
--	struct {
--		u64 vector:8;
--		u64 reserved1:8;
--		u64 masked:1;
--		u64 auto_eoi:1;
--		u64 polling:1;
--		u64 reserved2:45;
--	} __packed;
--};
--
--/* Define the format of the SIMP register */
--union hv_synic_simp {
--	u64 as_uint64;
--	struct {
--		u64 simp_enabled:1;
--		u64 preserved:11;
--		u64 base_simp_gpa:52;
--	} __packed;
--};
--
--/* Define the format of the SIEFP register */
--union hv_synic_siefp {
--	u64 as_uint64;
--	struct {
--		u64 siefp_enabled:1;
--		u64 preserved:11;
--		u64 base_siefp_gpa:52;
--	} __packed;
--};
--
--struct hv_vpset {
--	u64 format;
--	u64 valid_bank_mask;
--	u64 bank_contents[];
--} __packed;
--
--/* The maximum number of sparse vCPU banks which can be encoded by 'struct hv_vpset' */
--#define HV_MAX_SPARSE_VCPU_BANKS (64)
--/* The number of vCPUs in one sparse bank */
--#define HV_VCPUS_PER_SPARSE_BANK (64)
--
--/* HvCallSendSyntheticClusterIpi hypercall */
--struct hv_send_ipi {
--	u32 vector;
--	u32 reserved;
--	u64 cpu_mask;
--} __packed;
--
--/* HvCallSendSyntheticClusterIpiEx hypercall */
--struct hv_send_ipi_ex {
--	u32 vector;
--	u32 reserved;
--	struct hv_vpset vp_set;
--} __packed;
--
--/* HvFlushGuestPhysicalAddressSpace hypercalls */
--struct hv_guest_mapping_flush {
--	u64 address_space;
--	u64 flags;
--} __packed;
--
--/*
-- *  HV_MAX_FLUSH_PAGES = "additional_pages" + 1. It's limited
-- *  by the bitwidth of "additional_pages" in union hv_gpa_page_range.
-- */
--#define HV_MAX_FLUSH_PAGES (2048)
--#define HV_GPA_PAGE_RANGE_PAGE_SIZE_2MB		0
--#define HV_GPA_PAGE_RANGE_PAGE_SIZE_1GB		1
--
--/* HvFlushGuestPhysicalAddressList, HvExtCallMemoryHeatHint hypercall */
--union hv_gpa_page_range {
--	u64 address_space;
--	struct {
--		u64 additional_pages:11;
--		u64 largepage:1;
--		u64 basepfn:52;
--	} page;
--	struct {
--		u64 reserved:12;
--		u64 page_size:1;
--		u64 reserved1:8;
--		u64 base_large_pfn:43;
--	};
--};
--
--/*
-- * All input flush parameters should be in single page. The max flush
-- * count is equal with how many entries of union hv_gpa_page_range can
-- * be populated into the input parameter page.
-- */
--#define HV_MAX_FLUSH_REP_COUNT ((HV_HYP_PAGE_SIZE - 2 * sizeof(u64)) /	\
--				sizeof(union hv_gpa_page_range))
--
--struct hv_guest_mapping_flush_list {
--	u64 address_space;
--	u64 flags;
--	union hv_gpa_page_range gpa_list[HV_MAX_FLUSH_REP_COUNT];
--};
--
--/* HvFlushVirtualAddressSpace, HvFlushVirtualAddressList hypercalls */
--struct hv_tlb_flush {
--	u64 address_space;
--	u64 flags;
--	u64 processor_mask;
--	u64 gva_list[];
--} __packed;
--
--/* HvFlushVirtualAddressSpaceEx, HvFlushVirtualAddressListEx hypercalls */
--struct hv_tlb_flush_ex {
--	u64 address_space;
--	u64 flags;
--	struct hv_vpset hv_vp_set;
--	u64 gva_list[];
--} __packed;
--
--/* HvGetPartitionId hypercall (output only) */
--struct hv_get_partition_id {
--	u64 partition_id;
--} __packed;
--
--/* HvDepositMemory hypercall */
--struct hv_deposit_memory {
--	u64 partition_id;
--	u64 gpa_page_list[];
--} __packed;
--
--struct hv_proximity_domain_flags {
--	u32 proximity_preferred : 1;
--	u32 reserved : 30;
--	u32 proximity_info_valid : 1;
--} __packed;
--
--struct hv_proximity_domain_info {
--	u32 domain_id;
--	struct hv_proximity_domain_flags flags;
--} __packed;
--
--struct hv_lp_startup_status {
--	u64 hv_status;
--	u64 substatus1;
--	u64 substatus2;
--	u64 substatus3;
--	u64 substatus4;
--	u64 substatus5;
--	u64 substatus6;
--} __packed;
--
--/* HvAddLogicalProcessor hypercall */
--struct hv_input_add_logical_processor {
--	u32 lp_index;
--	u32 apic_id;
--	struct hv_proximity_domain_info proximity_domain_info;
--} __packed;
--
--struct hv_output_add_logical_processor {
--	struct hv_lp_startup_status startup_status;
--} __packed;
--
--enum HV_SUBNODE_TYPE
--{
--    HvSubnodeAny = 0,
--    HvSubnodeSocket = 1,
--    HvSubnodeAmdNode = 2,
--    HvSubnodeL3 = 3,
--    HvSubnodeCount = 4,
--    HvSubnodeInvalid = -1
--};
--
--/* HvCreateVp hypercall */
--struct hv_create_vp {
--	u64 partition_id;
--	u32 vp_index;
--	u8 padding[3];
--	u8 subnode_type;
--	u64 subnode_id;
--	struct hv_proximity_domain_info proximity_domain_info;
--	u64 flags;
--} __packed;
--
--enum hv_interrupt_source {
--	HV_INTERRUPT_SOURCE_MSI = 1, /* MSI and MSI-X */
--	HV_INTERRUPT_SOURCE_IOAPIC,
--};
--
--union hv_ioapic_rte {
--	u64 as_uint64;
--
--	struct {
--		u32 vector:8;
--		u32 delivery_mode:3;
--		u32 destination_mode:1;
--		u32 delivery_status:1;
--		u32 interrupt_polarity:1;
--		u32 remote_irr:1;
--		u32 trigger_mode:1;
--		u32 interrupt_mask:1;
--		u32 reserved1:15;
--
--		u32 reserved2:24;
--		u32 destination_id:8;
--	};
--
--	struct {
--		u32 low_uint32;
--		u32 high_uint32;
--	};
--} __packed;
--
--struct hv_interrupt_entry {
--	u32 source;
--	u32 reserved1;
--	union {
--		union hv_msi_entry msi_entry;
--		union hv_ioapic_rte ioapic_rte;
--	};
--} __packed;
--
--/*
-- * flags for hv_device_interrupt_target.flags
-- */
--#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
--#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
--
--struct hv_device_interrupt_target {
--	u32 vector;
--	u32 flags;
--	union {
--		u64 vp_mask;
--		struct hv_vpset vp_set;
--	};
--} __packed;
--
--struct hv_retarget_device_interrupt {
--	u64 partition_id;		/* use "self" */
--	u64 device_id;
--	struct hv_interrupt_entry int_entry;
--	u64 reserved2;
--	struct hv_device_interrupt_target int_target;
--} __packed __aligned(8);
--
--/*
-- * These Hyper-V registers provide information equivalent to the CPUID
-- * instruction on x86/x64.
-- */
--#define HV_REGISTER_HYPERVISOR_VERSION		0x00000100 /*CPUID 0x40000002 */
--#define HV_REGISTER_FEATURES			0x00000200 /*CPUID 0x40000003 */
--#define HV_REGISTER_ENLIGHTENMENTS		0x00000201 /*CPUID 0x40000004 */
--
--/*
-- * Synthetic register definitions equivalent to MSRs on x86/x64
-- */
--#define HV_REGISTER_GUEST_CRASH_P0	0x00000210
--#define HV_REGISTER_GUEST_CRASH_P1	0x00000211
--#define HV_REGISTER_GUEST_CRASH_P2	0x00000212
--#define HV_REGISTER_GUEST_CRASH_P3	0x00000213
--#define HV_REGISTER_GUEST_CRASH_P4	0x00000214
--#define HV_REGISTER_GUEST_CRASH_CTL	0x00000215
--
--#define HV_REGISTER_GUEST_OS_ID		0x00090002
--#define HV_REGISTER_VP_INDEX		0x00090003
--#define HV_REGISTER_TIME_REF_COUNT	0x00090004
--#define HV_REGISTER_REFERENCE_TSC	0x00090017
--
--#define HV_REGISTER_SINT0		0x000A0000
--#define HV_REGISTER_SCONTROL		0x000A0010
--#define HV_REGISTER_SIEFP		0x000A0012
--#define HV_REGISTER_SIMP		0x000A0013
--#define HV_REGISTER_EOM			0x000A0014
--
--#define HV_REGISTER_STIMER0_CONFIG	0x000B0000
--#define HV_REGISTER_STIMER0_COUNT	0x000B0001
--
--/* HvGetVpRegisters hypercall input with variable size reg name list*/
--struct hv_get_vp_registers_input {
--	struct {
--		u64 partitionid;
--		u32 vpindex;
--		u8  inputvtl;
--		u8  padding[3];
--	} header;
--	struct input {
--		u32 name0;
--		u32 name1;
--	} element[];
--} __packed;
--
--/* HvGetVpRegisters returns an array of these output elements */
--struct hv_get_vp_registers_output {
--	union {
--		struct {
--			u32 a;
--			u32 b;
--			u32 c;
--			u32 d;
--		} as32 __packed;
--		struct {
--			u64 low;
--			u64 high;
--		} as64 __packed;
--	};
--};
--
--/* HvSetVpRegisters hypercall with variable size reg name/value list*/
--struct hv_set_vp_registers_input {
--	struct {
--		u64 partitionid;
--		u32 vpindex;
--		u8  inputvtl;
--		u8  padding[3];
--	} header;
--	struct {
--		u32 name;
--		u32 padding1;
--		u64 padding2;
--		u64 valuelow;
--		u64 valuehigh;
--	} element[];
--} __packed;
--
--enum hv_device_type {
--	HV_DEVICE_TYPE_LOGICAL = 0,
--	HV_DEVICE_TYPE_PCI = 1,
--	HV_DEVICE_TYPE_IOAPIC = 2,
--	HV_DEVICE_TYPE_ACPI = 3,
--};
--
--typedef u16 hv_pci_rid;
--typedef u16 hv_pci_segment;
--typedef u64 hv_logical_device_id;
--union hv_pci_bdf {
--	u16 as_uint16;
--
--	struct {
--		u8 function:3;
--		u8 device:5;
--		u8 bus;
--	};
--} __packed;
--
--union hv_pci_bus_range {
--	u16 as_uint16;
--
--	struct {
--		u8 subordinate_bus;
--		u8 secondary_bus;
--	};
--} __packed;
--
--union hv_device_id {
--	u64 as_uint64;
--
--	struct {
--		u64 reserved0:62;
--		u64 device_type:2;
--	};
--
--	/* HV_DEVICE_TYPE_LOGICAL */
--	struct {
--		u64 id:62;
--		u64 device_type:2;
--	} logical;
--
--	/* HV_DEVICE_TYPE_PCI */
--	struct {
--		union {
--			hv_pci_rid rid;
--			union hv_pci_bdf bdf;
--		};
--
--		hv_pci_segment segment;
--		union hv_pci_bus_range shadow_bus_range;
--
--		u16 phantom_function_bits:2;
--		u16 source_shadow:1;
--
--		u16 rsvdz0:11;
--		u16 device_type:2;
--	} pci;
--
--	/* HV_DEVICE_TYPE_IOAPIC */
--	struct {
--		u8 ioapic_id;
--		u8 rsvdz0;
--		u16 rsvdz1;
--		u16 rsvdz2;
--
--		u16 rsvdz3:14;
--		u16 device_type:2;
--	} ioapic;
--
--	/* HV_DEVICE_TYPE_ACPI */
--	struct {
--		u32 input_mapping_base;
--		u32 input_mapping_count:30;
--		u32 device_type:2;
--	} acpi;
--} __packed;
--
--enum hv_interrupt_trigger_mode {
--	HV_INTERRUPT_TRIGGER_MODE_EDGE = 0,
--	HV_INTERRUPT_TRIGGER_MODE_LEVEL = 1,
--};
--
--struct hv_device_interrupt_descriptor {
--	u32 interrupt_type;
--	u32 trigger_mode;
--	u32 vector_count;
--	u32 reserved;
--	struct hv_device_interrupt_target target;
--} __packed;
--
--struct hv_input_map_device_interrupt {
--	u64 partition_id;
--	u64 device_id;
--	u64 flags;
--	struct hv_interrupt_entry logical_interrupt_entry;
--	struct hv_device_interrupt_descriptor interrupt_descriptor;
--} __packed;
--
--struct hv_output_map_device_interrupt {
--	struct hv_interrupt_entry interrupt_entry;
--} __packed;
--
--struct hv_input_unmap_device_interrupt {
--	u64 partition_id;
--	u64 device_id;
--	struct hv_interrupt_entry interrupt_entry;
--} __packed;
--
--#define HV_SOURCE_SHADOW_NONE               0x0
--#define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
--
--/*
-- * Version info reported by hypervisor
-- */
--union hv_hypervisor_version_info {
--	struct {
--		u32 build_number;
--
--		u32 minor_version : 16;
--		u32 major_version : 16;
--
--		u32 service_pack;
--
--		u32 service_number : 24;
--		u32 service_branch : 8;
--	};
--	struct {
--		u32 eax;
--		u32 ebx;
--		u32 ecx;
--		u32 edx;
--	};
--};
--
--/*
-- * The whole argument should fit in a page to be able to pass to the hypervisor
-- * in one hypercall.
-- */
--#define HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES  \
--	((HV_HYP_PAGE_SIZE - sizeof(struct hv_memory_hint)) / \
--		sizeof(union hv_gpa_page_range))
--
--/* HvExtCallMemoryHeatHint hypercall */
--#define HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD	2
--struct hv_memory_hint {
--	u64 type:2;
--	u64 reserved:62;
--	union hv_gpa_page_range ranges[];
--} __packed;
--
--/* Data structures for HVCALL_MMIO_READ and HVCALL_MMIO_WRITE */
--#define HV_HYPERCALL_MMIO_MAX_DATA_LENGTH 64
--
--struct hv_mmio_read_input {
--	u64 gpa;
--	u32 size;
--	u32 reserved;
--} __packed;
--
--struct hv_mmio_read_output {
--	u8 data[HV_HYPERCALL_MMIO_MAX_DATA_LENGTH];
--} __packed;
--
--struct hv_mmio_write_input {
--	u64 gpa;
--	u32 size;
--	u32 reserved;
--	u8 data[HV_HYPERCALL_MMIO_MAX_DATA_LENGTH];
--} __packed;
--
--/* Define connection identifier type. */
--union hv_connection_id {
--	u32 asu32;
--	struct {
--		u32 id:24;
--		u32 reserved:8;
--	} u;
--};
--
--#endif
--- 
-2.34.1
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
