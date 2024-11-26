@@ -1,196 +1,119 @@
-Return-Path: <linux-hyperv+bounces-3364-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3365-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D70FE9D9B80
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 17:34:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9016B9D9CA0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 18:34:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9831B286AD5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 16:34:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32D3DB2788C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2024 17:29:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D69101D8A10;
-	Tue, 26 Nov 2024 16:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E417A1DB372;
+	Tue, 26 Nov 2024 17:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sUnItZTN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sXLbEnkQ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520DA1D63CA;
-	Tue, 26 Nov 2024 16:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E071DACB4;
+	Tue, 26 Nov 2024 17:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732638841; cv=none; b=OY+LNlhmYn5iFkmf1cEd64AFVclaKayUdUpwPKoDqld/71aOGxx4GugX5bukwAdqAeIW77gJfwGZB0Q3cDFbYgCmOwsdQS1aYBerc3F/vtJTGJbwbG10qx4QI2gp1Wo/47Xa53f9TAtuNnrDGUp2Pw4GXB5yMdmIuwZlukqWmfQ=
+	t=1732642135; cv=none; b=FlHlGmpLTsYImI7Hr59xNPpa/UreAzZx3MrPw4Pz0bSzrrOg4THZx0ZbyUVp3etJ6EDRWBYUbwCvBcsg3nm3KIjvX846xxk54Ruga/QOt7BYmgojNj8l0oUnf5VW6/oLnPJuETh0MiiIWmHHEsvQBTuU4JobJd2utJsUr8Tfchw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732638841; c=relaxed/simple;
-	bh=x+nQwHusXpcnj31rvF2k2BWPkCdcVU2fjxLJ1YARKGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTAFiy/d231U14vorSlbxeP41fqhTUPq4LfiiLDuNCFcQaeQopSVlcI2KYvALRiW3WqSsOXesMglT6fx19YyczKYwyMyKkn8ya2mQNcEZiHF5s7n8SGBwGHQo37OojlK6ORlYqGJ0GSnddsw5xAShnINEOPANNN87SQ6YXM/eQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sUnItZTN; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1732642135; c=relaxed/simple;
+	bh=PlMMIc4AQSbkLcvBzrHB9wgiuJrm21ESzo2se5IDeG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XVm/4ofvj/shJs2rtXNiU2EmrJUcZjRcZyhZYHqH/ddT/qq6Wh459sxxVwXkEpBK+T7u6CeXc9W1bi+Kbc/R3ly4OB3r3GVGxzomUuK/KjDb1eh4SWEb6XlNeYcQ9WIEGODqcoQ1Va7PqBOzVtKuSGYeUj1FtewHMDdz3SCxTp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sXLbEnkQ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 0B48720545A9; Tue, 26 Nov 2024 08:33:54 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0B48720545A9
+Received: from [10.0.0.115] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1A72420545AE;
+	Tue, 26 Nov 2024 09:28:53 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1A72420545AE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1732638834;
-	bh=vzU0D9wWMC/jVMbki8859Mj7Ksvs6U9VGwiazMGudQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sUnItZTNiFwekERdEZYDS58A3ZztX9J9J1mRV89cgZG/+pMpYkD9USPSFj0AqrRDz
-	 6+is2Fzc3oEfuYYFr1eWV2XqXvWIQIJMoptdcemsBxkxn1lfL4jilFLgZNz728aBM9
-	 mU/xI8FtUCX4aM34UjykWXssNgBqpuk7ODDP0ido=
-Date: Tue, 26 Nov 2024 08:33:54 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uio_hv_generic: Add a check for HV_NIC for send, receive
- buffers setup
-Message-ID: <20241126163354.GA5185@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20241125125015.1500-1-namjain@linux.microsoft.com>
+	s=default; t=1732642133;
+	bh=H94+kE6a6Z3TCvsv5IQfa8koOq42a44wDuStW4E/6+8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sXLbEnkQ61nv6hbtZZ2ZQwagIwQ3s57qp+UTpK189JiX/cAYSvAH5zo9QDJA5ey8k
+	 Dwt4CCS4FMIH15sSObKql/pyGsegy+eu+jPnazasSvIj/u/dhKQ5vboJ68gY5vxkaU
+	 Ik00OhGi1r1Ksyj94O5yXx79fuqOSlgwKrm8eO6s=
+Message-ID: <074bacbe-2823-4653-a6fb-a50b7785a027@linux.microsoft.com>
+Date: Tue, 26 Nov 2024 09:28:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241125125015.1500-1-namjain@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/5] hyperv: Remove the now unused hyperv-tlfs.h files
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+ "eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>,
+ "horms@kernel.org" <horms@kernel.org>
+References: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1732577084-2122-6-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41570E0108D4E3B45571EE9FD42F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41570E0108D4E3B45571EE9FD42F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 25, 2024 at 12:50:15PM +0000, Naman Jain wrote:
-> Support for send and receive buffers was added for networking usecases
-> in UIO devices. There is no known usecase of these buffers for devices
-> other than HV_NIC. Add a check for HV_NIC in probe function to avoid
-> memory allocation and GPADL setup which would save 47 MB memory per
-> device type.
-
-Thanks for the patch. How about rephrasing the commit message like this:
-
-Receive and send buffer allocation was originally introduced to support
-DPDK's networking use case. These buffer sizes were further increased to
-meet DPDK performance requirements. However, these large buffers are
-unnecessary for any other UIO use cases.
-
-Restrict the allocation of receive and send buffers only for HV_NIC device
-type, saving 47 MB of memory per device.
-
+On 11/25/2024 9:59 PM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Monday, November 25, 2024 3:25 PM
+>>
+>> Remove all hyperv-tlfs.h files. These are no longer included
+>> anywhere. hyperv/hvhdk.h serves the same role, but with an easier
+>> path for adding new definitions.
+>>
+>> Remove the relevant lines in MAINTAINERS.
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > 
-> While at it, fix some of the syntax related issues in the touched code
-> which are reported by "--strict" option of checkpatch.
-> 
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  drivers/uio/uio_hv_generic.c | 86 ++++++++++++++++++------------------
->  1 file changed, 43 insertions(+), 43 deletions(-)
-> 
-> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-> index 3976360d0096..1b19b5647495 100644
-> --- a/drivers/uio/uio_hv_generic.c
-> +++ b/drivers/uio/uio_hv_generic.c
-> @@ -296,51 +296,51 @@ hv_uio_probe(struct hv_device *dev,
->  	pdata->info.mem[MON_PAGE_MAP].size = PAGE_SIZE;
->  	pdata->info.mem[MON_PAGE_MAP].memtype = UIO_MEM_LOGICAL;
->  
-> -	pdata->recv_buf = vzalloc(RECV_BUFFER_SIZE);
-> -	if (pdata->recv_buf == NULL) {
-> -		ret = -ENOMEM;
-> -		goto fail_free_ring;
-> +	if (channel->device_id == HV_NIC) {
-> +		pdata->recv_buf = vzalloc(RECV_BUFFER_SIZE);
-> +		if (!pdata->recv_buf) {
-> +			ret = -ENOMEM;
-> +			goto fail_free_ring;
-> +		}
-> +
-> +		ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
-> +					    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
-> +		if (ret) {
-> +			if (!pdata->recv_gpadl.decrypted)
-> +				vfree(pdata->recv_buf);
-> +			goto fail_close;
-> +		}
-> +
-> +		/* put Global Physical Address Label in name */
-> +		snprintf(pdata->recv_name, sizeof(pdata->recv_name),
-> +			 "recv:%u", pdata->recv_gpadl.gpadl_handle);
-> +		pdata->info.mem[RECV_BUF_MAP].name = pdata->recv_name;
-> +		pdata->info.mem[RECV_BUF_MAP].addr = (uintptr_t)pdata->recv_buf;
-> +		pdata->info.mem[RECV_BUF_MAP].size = RECV_BUFFER_SIZE;
-> +		pdata->info.mem[RECV_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
-> +
-> +		pdata->send_buf = vzalloc(SEND_BUFFER_SIZE);
-> +		if (!pdata->send_buf) {
-> +			ret = -ENOMEM;
-> +			goto fail_close;
-> +		}
-> +
-> +		ret = vmbus_establish_gpadl(channel, pdata->send_buf,
-> +					    SEND_BUFFER_SIZE, &pdata->send_gpadl);
-> +		if (ret) {
-> +			if (!pdata->send_gpadl.decrypted)
-> +				vfree(pdata->send_buf);
-> +			goto fail_close;
-> +		}
-> +
-> +		snprintf(pdata->send_name, sizeof(pdata->send_name),
-> +			 "send:%u", pdata->send_gpadl.gpadl_handle);
-> +		pdata->info.mem[SEND_BUF_MAP].name = pdata->send_name;
-> +		pdata->info.mem[SEND_BUF_MAP].addr = (uintptr_t)pdata->send_buf;
-> +		pdata->info.mem[SEND_BUF_MAP].size = SEND_BUFFER_SIZE;
-> +		pdata->info.mem[SEND_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
->  	}
->  
-> -	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
-> -				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
-> -	if (ret) {
-> -		if (!pdata->recv_gpadl.decrypted)
-> -			vfree(pdata->recv_buf);
-> -		goto fail_close;
-> -	}
-> -
-> -	/* put Global Physical Address Label in name */
-> -	snprintf(pdata->recv_name, sizeof(pdata->recv_name),
-> -		 "recv:%u", pdata->recv_gpadl.gpadl_handle);
-> -	pdata->info.mem[RECV_BUF_MAP].name = pdata->recv_name;
-> -	pdata->info.mem[RECV_BUF_MAP].addr
-> -		= (uintptr_t)pdata->recv_buf;
-> -	pdata->info.mem[RECV_BUF_MAP].size = RECV_BUFFER_SIZE;
-> -	pdata->info.mem[RECV_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
-> -
-> -	pdata->send_buf = vzalloc(SEND_BUFFER_SIZE);
-> -	if (pdata->send_buf == NULL) {
-> -		ret = -ENOMEM;
-> -		goto fail_close;
-> -	}
-> -
-> -	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
-> -				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
-> -	if (ret) {
-> -		if (!pdata->send_gpadl.decrypted)
-> -			vfree(pdata->send_buf);
-> -		goto fail_close;
-> -	}
-> -
-> -	snprintf(pdata->send_name, sizeof(pdata->send_name),
-> -		 "send:%u", pdata->send_gpadl.gpadl_handle);
-> -	pdata->info.mem[SEND_BUF_MAP].name = pdata->send_name;
-> -	pdata->info.mem[SEND_BUF_MAP].addr
-> -		= (uintptr_t)pdata->send_buf;
-> -	pdata->info.mem[SEND_BUF_MAP].size = SEND_BUFFER_SIZE;
-> -	pdata->info.mem[SEND_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
-> -
->  	pdata->info.priv = pdata;
->  	pdata->device = dev;
->  
-> 
-> base-commit: 85a2dd7d7c8152cb125712a1ecae1d0a6ccac250
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-overall change looks good to me.
-
-- Saurabh
+Thanks for the reviews on this series Michael!
 
