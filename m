@@ -1,96 +1,150 @@
-Return-Path: <linux-hyperv+bounces-3366-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3367-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DD139DA27F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Nov 2024 07:51:13 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 302DE9DACDF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Nov 2024 19:13:51 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8294F1645F1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Nov 2024 18:13:46 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963022010F9;
+	Wed, 27 Nov 2024 18:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hKmUN8nq"
+X-Original-To: linux-hyperv@vger.kernel.org
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D10AC2837DF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Nov 2024 06:51:11 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DA9C13D89D;
-	Wed, 27 Nov 2024 06:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kwKiscaq"
-X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CFC613BAE4;
-	Wed, 27 Nov 2024 06:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AE7200BA1
+	for <linux-hyperv@vger.kernel.org>; Wed, 27 Nov 2024 18:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732690268; cv=none; b=R5oinLT3mjjnXKmaPmFhkXV57gY1kruNKZcaefyE2iVrsHEZNu7DSkMg8+0hxrhi7Rrepr9qnOwT0XjSIcOPIdxsUiJdGzuQT1dpfO+3BITR8mCH77z2tbheCX5yCH8Pyr5/pm0M1AKyjV/1rwAtpTkzwha6u/pGJByul2IZzZo=
+	t=1732731219; cv=none; b=dfMduC1snOzmQZsYiYqzAE3FcgHjoiycVyumZnBSJ550SSawrYuYeisoXRYe3mqGWALJLzgG8mfRfCew/eye/MTwAyQkNRb8FtSlLiYv/Z2rF9EVCzCFNW5FeTY3qIzUDpyP5ET6vyRWkoPgxMx4BzPn/Hbu41icPGrIRbapoBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732690268; c=relaxed/simple;
-	bh=xOouENdGDvIEEU0VIXcVAdXGuhbB2aIZ+2J1DQ0QTHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WE76yZ/MhWNY9vjpN3rEuGS02DVMQWwcYDA07HY4eslhvAsyNf8IWfiP2iNSbLs9Pd/sqAiHpVJMgUYovC7jcEnfOCBBT7diqeDN56Kne1VUiihjdvcldSrdHEwjVT29IBKMtZYuK6C5On9LoExqGCd8oD+9SNCPsYxomEsA264=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kwKiscaq; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.103] (unknown [49.205.255.211])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2403420545BB;
-	Tue, 26 Nov 2024 22:51:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2403420545BB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1732690266;
-	bh=9srNrzuHWrGmuiY0B+CImVL3ghbKkXIAUWnCd92AWdc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kwKiscaq6zQ+TUzpTkSIUqG86p7kbKa6ouRptdKPH2tEfq7xrl3/sTJDzeA1AH5A3
-	 1DC5cT09sKOaA4Q9lh6nQ7w/e6/MnNcTHEIP7Qpr4JugvmVoBgfuU9u1r5Ss5P2QiO
-	 l0sq6xyCQ7aN9SMX1SLTfNOkoPZ8h7Pa09hhSAcY=
-Message-ID: <21faa338-6f61-4ead-9cdc-41a2c354a44a@linux.microsoft.com>
-Date: Wed, 27 Nov 2024 12:21:00 +0530
+	s=arc-20240116; t=1732731219; c=relaxed/simple;
+	bh=uCK/oSvqKJse6UZiS4QNw7GTSY59CPZ6FRheoY3Jwjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H/hP77xxN16tUhHT+7EJYnqK0k8oQNL0vY+J4N3AqeAgpgRbgJoPVKAKyMmShOs/Yj/354ewfvYFVF8mhwMEVx5XuabsSEREDkYvOUGQU9S91APcP1qNuEVG8qDHqDnGv7rmPI32eTgpZccGGYz17llSHknsBYJL0ySXHSJf1aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hKmUN8nq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732731216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bBLKMV5jpNDuJoQl4/1hOw5nZa8O963JZs4hwXdVXR4=;
+	b=hKmUN8nqNoObXm3m3r+kJZI7IIzb8YNdDy6vrglrTJkiHAcQgvXWSkdvM9kTqXE3w+b4o5
+	a00QNLVXYoD4fcAeFqv3LPzM6gLVdW6w4NV/6J9HRKFrFoNuTMK3zpAjfzqKl3E1FqKvFV
+	Pnrd1ADOTV6+0wTGCEOCclBfo8rcIYY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-374-NRDJlUbdOtKuuTsUwaJxTg-1; Wed,
+ 27 Nov 2024 13:13:32 -0500
+X-MC-Unique: NRDJlUbdOtKuuTsUwaJxTg-1
+X-Mimecast-MFC-AGG-ID: NRDJlUbdOtKuuTsUwaJxTg
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4020D1956064;
+	Wed, 27 Nov 2024 18:13:27 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.80.211])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D0435195E480;
+	Wed, 27 Nov 2024 18:13:24 +0000 (UTC)
+From: Cathy Avery <cavery@redhat.com>
+To: kys@microsoft.com,
+	martin.petersen@oracle.com,
+	wei.liu@kernel.org,
+	haiyangz@microsoft.com,
+	decui@microsoft.com,
+	jejb@linux.ibm.com,
+	mhklinux@outlook.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Cc: bhull@redhat.com,
+	emilne@redhat.com,
+	loberman@redhat.com,
+	vkuznets@redhat.com
+Subject: [PATCH v2] scsi: storvsc: Do not flag MAINTENANCE_IN return of SRB_STATUS_DATA_OVERRUN as an error
+Date: Wed, 27 Nov 2024 13:13:24 -0500
+Message-ID: <20241127181324.3318443-1-cavery@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] uio_hv_generic: Add a check for HV_NIC for send, receive
- buffers setup
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241125125015.1500-1-namjain@linux.microsoft.com>
- <20241126163354.GA5185@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <20241126163354.GA5185@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+This patch partially reverts
 
+	commit 812fe6420a6e789db68f18cdb25c5c89f4561334
+	Author: Michael Kelley <mikelley@microsoft.com>
+	Date:   Fri Aug 25 10:21:24 2023 -0700
 
-On 11/26/2024 10:03 PM, Saurabh Singh Sengar wrote:
-> On Mon, Nov 25, 2024 at 12:50:15PM +0000, Naman Jain wrote:
->> Support for send and receive buffers was added for networking usecases
->> in UIO devices. There is no known usecase of these buffers for devices
->> other than HV_NIC. Add a check for HV_NIC in probe function to avoid
->> memory allocation and GPADL setup which would save 47 MB memory per
->> device type.
-> 
-> Thanks for the patch. How about rephrasing the commit message like this:
-> 
-> Receive and send buffer allocation was originally introduced to support
-> DPDK's networking use case. These buffer sizes were further increased to
-> meet DPDK performance requirements. However, these large buffers are
-> unnecessary for any other UIO use cases.
-> 
-> Restrict the allocation of receive and send buffers only for HV_NIC device
-> type, saving 47 MB of memory per device.
+	scsi: storvsc: Handle additional SRB status values
 
+HyperV does not support MAINTENANCE_IN resulting in FC passthrough
+returning the SRB_STATUS_DATA_OVERRUN value. Now that SRB_STATUS_DATA_OVERRUN
+is treated as an error multipath ALUA paths go into a faulty state as multipath
+ALUA submits RTPG commands via MAINTENANCE_IN.
 
-Thanks for the review. I'll rephrase it and push it in a new patch after
-a few days, considering ongoing merge window.
+[    3.215560] hv_storvsc 1d69d403-9692-4460-89f9-a8cbcc0f94f3:
+tag#230 cmd 0xa3 status: scsi 0x0 srb 0x12 hv 0xc0000001
+[    3.215572] scsi 1:0:0:32: alua: rtpg failed, result 458752
 
-Regards,
-Naman
+MAINTENANCE_IN now returns success to avoid the error path as
+is currently done with INQUIRY and MODE_SENSE.
 
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Cathy Avery <cavery@redhat.com>
+---
+Changes since v1:
+- Handle error and logging by returning success as previously
+  done with INQUIRY and MODE_SENSE [Michael Kelley].
+---
+ drivers/scsi/storvsc_drv.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 7ceb982040a5..d0b55c1fa908 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -149,6 +149,8 @@ struct hv_fc_wwn_packet {
+ */
+ static int vmstor_proto_version;
+ 
++static bool hv_dev_is_fc(struct hv_device *hv_dev);
++
+ #define STORVSC_LOGGING_NONE	0
+ #define STORVSC_LOGGING_ERROR	1
+ #define STORVSC_LOGGING_WARN	2
+@@ -1138,6 +1140,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+ 	 * not correctly handle:
+ 	 * INQUIRY command with page code parameter set to 0x80
+ 	 * MODE_SENSE command with cmd[2] == 0x1c
++	 * MAINTENANCE_IN is not supported by HyperV FC passthrough
+ 	 *
+ 	 * Setup srb and scsi status so this won't be fatal.
+ 	 * We do this so we can distinguish truly fatal failues
+@@ -1145,7 +1148,9 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+ 	 */
+ 
+ 	if ((stor_pkt->vm_srb.cdb[0] == INQUIRY) ||
+-	   (stor_pkt->vm_srb.cdb[0] == MODE_SENSE)) {
++	   (stor_pkt->vm_srb.cdb[0] == MODE_SENSE) ||
++	   (stor_pkt->vm_srb.cdb[0] == MAINTENANCE_IN &&
++	   hv_dev_is_fc(device))) {
+ 		vstor_packet->vm_srb.scsi_status = 0;
+ 		vstor_packet->vm_srb.srb_status = SRB_STATUS_SUCCESS;
+ 	}
+-- 
+2.42.0
 
 
