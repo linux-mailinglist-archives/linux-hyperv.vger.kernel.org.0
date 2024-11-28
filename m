@@ -1,122 +1,118 @@
-Return-Path: <linux-hyperv+bounces-3376-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3377-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0C019DB4DD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Nov 2024 10:40:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 952DE9DBCAC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Nov 2024 20:43:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADCC4282DFA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Nov 2024 09:40:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34369B217F7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Nov 2024 19:43:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CD11885BF;
-	Thu, 28 Nov 2024 09:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC751C2450;
+	Thu, 28 Nov 2024 19:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1wEIyvt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cucPuAA5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9F4172767;
-	Thu, 28 Nov 2024 09:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156281C2309
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 Nov 2024 19:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732786792; cv=none; b=F7bl4caOsO/fpC88liYn6fM14GB8Jgbk3CjAkkik0F1W0Fh11aPjmlDEXfrYKKWzcqvGJwFXTqhhWCs1ZPwVxnc327BC+xFundsV7s5bgGm3jE3lm66vc5p7k0Y5Xqkr3PNEDo8QaURyEeOHCmbaj6bhQAdkNl+86QBLIs6N7fM=
+	t=1732822995; cv=none; b=PyAk4XiE+zIzKrR8YD+hB/JzwBwKgkonE119mmfgHQYSolrPRs9bu4W9ntXUYvFp3OyFqNfZ++5q4ZcXDnLJdntTmo/z9WMiULooXgDR5qxHCc+tysBEqEKr0s3KQS325HHQhcyyWQn6cro+7gJlj/fP5Q4xmB3qjaLbZYNs7JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732786792; c=relaxed/simple;
-	bh=gpZawZf4vvEGxMBlzOfTYu8D4Aw3jJQi/uScP72UgNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lQ1cD+Obj7ju3r9obSjL2o8uvoyUrMCp07YzBuwB3HR3jpsXHRQX8R99O7lv7In9Jp9r11/noW7ULxYuBwjWmYG9ymWFzUvnx1ndkclZ8giJYhLMHWGiAeheBkhcsmygo4T4TQXnHXt7b7mWprIGh7ETF/vPneqckjlq4M80mdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1wEIyvt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A836C4CECE;
-	Thu, 28 Nov 2024 09:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732786792;
-	bh=gpZawZf4vvEGxMBlzOfTYu8D4Aw3jJQi/uScP72UgNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1wEIyvt1ljagrlcifMtQvqkJGXCQx9je6FED0s+wIkv5SEOnlVfClAEC/qPvI3yE
-	 NAH9oIxX5E/didBbNGcxOhKLmyqI4e5w4OnfP25B4jYSRNMym4OTlZYAdLq/oyebk/
-	 Yb3AK+EngnuCjRDn8efpvEoG92Dr+Zcsvhxk6k2zrBWq6OWZTYoTvFwkkqOW6VV/8r
-	 qWybU9YocAYz1xF4jOpC6f+ap3yAexTorSOkOG4MFoKI7jfhnBrQWWlBaFn/BpsLE8
-	 pXir1jfGks3qIF3+Y//CYAjA+BlqpUZoIfMUmgskdRpZS1QZGnuLnd4TathvJxMN9v
-	 /CYh21X+ijmzA==
-Date: Thu, 28 Nov 2024 11:39:47 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Long Li <longli@microsoft.com>
-Cc: Parav Pandit <parav@nvidia.com>,
+	s=arc-20240116; t=1732822995; c=relaxed/simple;
+	bh=VaTHl5CWYXaEUg5GJy076IuF06Ppro6TIwGO5pxBuO0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eHoE+7voaXXVDT6wulaSZsrv7EWEmmF4EteI219tFeQ/S2C4NTICtAlr/INOmcV2B9oEAxQcdZtSwfrpA6DTwDhGLPE6u6dzKJPzke3cUlVzhh4orsC2wumFo302P2+YaJzBirmva8uYMst6BgEenh5L/X+2TNmZpQgqSQxV/e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cucPuAA5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732822991;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PGHdr5xe6OO2VfVdzoKzmBYzOtEMeKKpC50tlN0vOu0=;
+	b=cucPuAA5J3ZT0DhSPTcsMERWnp5tvMVYQ6AkWl+S1MtTdbOwMBHK2MOO7Ru7l/tZDqsVbP
+	aEd/XMJGC3ABWfz/bIOPDKXl06uBgz3Mz5HCTBLDWnf5AvRZGhfDntT7weSemV/mnaNvoT
+	5NsiKJISZOQD5nd3KASEYs350lrBXmQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-312-pQL-K4C2OSu2dQbquJMVrw-1; Thu,
+ 28 Nov 2024 14:43:10 -0500
+X-MC-Unique: pQL-K4C2OSu2dQbquJMVrw-1
+X-Mimecast-MFC-AGG-ID: pQL-K4C2OSu2dQbquJMVrw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF1651954197;
+	Thu, 28 Nov 2024 19:43:04 +0000 (UTC)
+Received: from starship.lan (unknown [10.22.88.88])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7ECDB195605A;
+	Thu, 28 Nov 2024 19:43:01 +0000 (UTC)
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: kvm@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
-	Konstantin Taranov <kotaranov@linux.microsoft.com>,
-	Wei Hu <weh@microsoft.com>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
-	"jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	linux-netdev <netdev@vger.kernel.org>,
-	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH rdma-next 1/1] RDMA/mana_ib: Set correct
- device into ib
-Message-ID: <20241128093947.GG1245331@unreal>
-References: <1719311307-7920-1-git-send-email-kotaranov@linux.microsoft.com>
- <20240626054748.GN29266@unreal>
- <PAXPR83MB0559F4678E73B0091A8ADFBBB4D62@PAXPR83MB0559.EURPRD83.prod.outlook.com>
- <20240626121118.GP29266@unreal>
- <CH3PR21MB43989630F6CA822AF3DFB32CCE222@CH3PR21MB4398.namprd21.prod.outlook.com>
- <CY8PR12MB719506ED60DBD124D3784CB6DC2E2@CY8PR12MB7195.namprd12.prod.outlook.com>
- <20241125201036.GK160612@unreal>
- <CH3PR21MB4398E0C57E7B6BC73B1A8F04CE282@CH3PR21MB4398.namprd21.prod.outlook.com>
+	Yury Norov <yury.norov@gmail.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Eric Dumazet <edumazet@google.com>,
+	linux-hyperv@vger.kernel.org,
+	Long Li <longli@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Leon Romanovsky <leon@kernel.org>,
+	netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: mana: Fix memory leak in mana_gd_setup_irqs
+Date: Thu, 28 Nov 2024 14:43:00 -0500
+Message-Id: <20241128194300.87605-1-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH3PR21MB4398E0C57E7B6BC73B1A8F04CE282@CH3PR21MB4398.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Nov 27, 2024 at 07:46:39PM +0000, Long Li wrote:
-> 
-> > > > I think Konstantin's suggestion makes sense, how about we do this
-> > > > (don't need to define netdev_is_slave(dev)):
-> > > >
-> > > > --- a/drivers/infiniband/core/roce_gid_mgmt.c
-> > > > +++ b/drivers/infiniband/core/roce_gid_mgmt.c
-> > > > @@ -161,7 +161,7 @@ is_eth_port_of_netdev_filter(struct ib_device
-> > > > *ib_dev, u32 port,
-> > > >         res = ((rdma_is_upper_dev_rcu(rdma_ndev, cookie) &&
-> > > >                (is_eth_active_slave_of_bonding_rcu(rdma_ndev, real_dev) &
-> > > >                 REQUIRED_BOND_STATES)) ||
-> > > > -              real_dev == rdma_ndev);
-> > > > +              (real_dev == rdma_ndev &&
-> > > > + !netif_is_bond_slave(rdma_ndev)));
-> > > >
-> > > >         rcu_read_unlock();
-> > > >         return res;
-> > > >
-> > > >
-> > > > is_eth_port_of_netdev_filter() should not return true if this netdev
-> > > > is a bonded slave. In this case, only use the address of its bonded master.
-> > > >
-> > > Right. This change makes sense to me.
-> > > I don't have a setup presently to verify it to ensure I didn't miss a corner case.
-> > > Leon,
-> > > Can you or others please test the regression once with the formal patch?
-> > 
-> > Sure, once Long will send the patch, I'll make sure that it is tested.
-> > 
-> > Thanks
-> > 
-> 
-> I posted patches for discussion.
-> https://lore.kernel.org/linux-rdma/1732736619-19941-1-git-send-email-longli@linuxonhyperv.com/T/#t
+Commit 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
+added memory allocation in mana_gd_setup_irqs of 'irqs' but the code
+doesn't free this temporary array in the success path.
 
-Please resend these patches as series with cover letter and don't embed
-extra patch (the one which is not numbered) into the series.
+This was caught by kmemleak.
 
-Thanks
+Fixes: 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> Thank you,
-> Long
-> 
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index e97af7ac2bb2..aba188f9f10f 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1375,6 +1375,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 	gc->max_num_msix = nvec;
+ 	gc->num_msix_usable = nvec;
+ 	cpus_read_unlock();
++	kfree(irqs);
+ 	return 0;
+ 
+ free_irq:
+-- 
+2.26.3
+
 
