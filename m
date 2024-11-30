@@ -1,144 +1,103 @@
-Return-Path: <linux-hyperv+bounces-3379-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3380-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 489919DBE8E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Nov 2024 03:13:35 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC5649DF294
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Nov 2024 19:37:08 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCC14163421
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Nov 2024 02:13:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A9B62811C2
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Nov 2024 18:37:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7501214B08A;
-	Fri, 29 Nov 2024 02:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94A461A254E;
+	Sat, 30 Nov 2024 18:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgvBI4xJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+XmOBBn"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F043922EE4;
-	Fri, 29 Nov 2024 02:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FD6158D87;
+	Sat, 30 Nov 2024 18:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732846410; cv=none; b=s4igcodpUerfko0sJut1YCOmxZaIy3r3PagHiV9T57dXgMDUXBYpw396p/xmgZDG7FZo/3M62p0ZgsY7g259FUe36W1jn7P0GDil7XlnQ2tiVnDr1WmdiUvUglxYTTpgZ4McP+3OU/usL1yElH/egY9UtjpdGBMOJYl46uUvvI8=
+	t=1732991826; cv=none; b=m9iZuUx40qrzaCOcTn3orIXcsDxij4qxIYVJccglf10BwvvKwTUqxIV/rDhyu9cEMO/vBFb3FAnqRZGtB0F5moUczAAhij9c0q4fefP2EK/g1SP3JlUYiRSuR+naiNTReTKy+S6xiQXdJ+8Y++l+kg5QRffUn6ajdCV/7B3pWw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732846410; c=relaxed/simple;
-	bh=tlX6/XQDENq68SPtN7Fe1eSVuzsBAK7YJwk0y5vXzRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SG2uIST8v8tQWZ+a5iKu7fiY9Yo8ruNRvLUGZSVznTPpk65GOJ5mIetcj/QdfU+E2N1mftFzWBGnAhqAWlyP50TOxYkw+sYV5eX9TKoesK8jfOrBYQv9PAudSdJQM9N+FQduegOB0+HDFgcTOwHyfI5z30JbW+NedmXult2CBho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgvBI4xJ; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-720c286bcd6so1177757b3a.3;
-        Thu, 28 Nov 2024 18:13:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732846408; x=1733451208; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5D5xIlc/ZBMWEK/AcW6+gAFQKxMNC/t84nQ8vJYuSU=;
-        b=PgvBI4xJHTJfyZatuXm89e3+yMaTbry/fd75Ii8m6AaSP8iRwmEtwPc/PlrJD0P0Dn
-         0QjKXAAXx/LSJ37bwdrkBN2TNqig0SIy35sTvDi/nke0H+QE3t6gU4kA3b+H/o0KLDUs
-         19e9ftdEWGExloRYzZTDq0q/3AZrTEOhQiV/mzi38IFO/7Rr1EcGomfzBhP82Ydgdaie
-         FCFwURZ96pQjHxZF3KbjKQz5WRue832tYTfkjeQStKq2J7GD260mMqwWKj3TDBBdjSC3
-         VKsj2GUjnoOZF5Viu892RgyvvEIJhOF3LCtwg7vJhaRsZIR7XC+HvQ3rIN/yX2kaVof5
-         A9BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732846408; x=1733451208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I5D5xIlc/ZBMWEK/AcW6+gAFQKxMNC/t84nQ8vJYuSU=;
-        b=AUkfPrFKfU39FBTg42bGa1NOI61FGy3UTSQlAklgE3mv+fq+Cp6EbuzOX2hMOoF4LJ
-         +arUJXDIWOh2kozPKb07cxunCw5dEPZG5W+iG1H995ArJ2ti9BVUkIE8iotwyQZfa4xe
-         IxOdVpGO83KiM8piidRNBhVj0CO3NW8jpA/eotqeMgs5UvAoGCxYr1FSOkC/TS26SYul
-         JMga1OC0MBbzoBNVnvaxMAdZIM6daFMsGlVzZF9+Ol/TjUpYMxusoLZaFLR355ISdrnW
-         04f6dXhevzkkZ0PyDMwXPXqBLpCNcKMs/7O3isNHMrJ4AdErNYeAqOzqxrnCKGti+5rY
-         M7mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0LJ3/aLyFIbiCN/7ztrOdwQ1XrsKka1+E41jouZiDoYqVJaxhMYWmECgTy5tgyLBjAmPcsPwB@vger.kernel.org, AJvYcCVSmg4u8ekQkuOhTn4GjP4r84bwjZ/0i5klI3DL0ZqGeocXvbvPl2QxhlzTDpY8y2QXnxCqmHJwdXCXFeni@vger.kernel.org, AJvYcCVVMFhQF/4hWZJZOv/pa9wocBasaYwq3cYHvknONpwwS/funvFrtye5vI6Gwuzx8wqsjZQ=@vger.kernel.org, AJvYcCXufN+wgEqsRGq3D80p47Npc/S+RZTl9+oe24zynQ8BOVRsmGfBOQEVfxLyel4ajr8v1OPk5fV41RVau1Qr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6VP+MSesCzxEcaiU6/9+B8q1idCYC2pE6RnADsv25t9L2xmej
-	93lbAniZ+TzPYdUMd4oT+mgQKITMgMr6RTcwKjCj4fv8nmUo3QZf
-X-Gm-Gg: ASbGncsHpXMd/s0s1q2nSqEJS9KqhF0VjKftxsZcXb5bPoAxCkJYfn/hILJHBmDzsGj
-	5cgxNeg2HONh6T2F/bo5RhiPWNeBY7lqk6ejXxVm7h2Uw3x/y6NtPbtxe0qI9JQrFQmYFgtY+sY
-	5lDM9wbW1muVu5Dr0P80g4vXvh0WAMr+1cnUsa2pmfRJaes35NbQ9vrhrP+dod0woY8W5IYUy5R
-	0IOGsYdSt17nNhXEQbCUPU8ozuACt3yTMd1wIPNuGSAmw3mPA==
-X-Google-Smtp-Source: AGHT+IGqFTiYoTjvaLKfmNfHn95RvWItWMTQ6GkGXRx6Dzs/7816TwnR2BQ/RSHj0KT2VsnPH5AQoQ==
-X-Received: by 2002:a05:6a00:1d89:b0:725:3bd4:9b96 with SMTP id d2e1a72fcca58-7253bd49d87mr9451378b3a.2.1732846408083;
-        Thu, 28 Nov 2024 18:13:28 -0800 (PST)
-Received: from localhost ([216.228.125.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72541762411sm2380319b3a.20.2024.11.28.18.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 18:13:27 -0800 (PST)
-Date: Thu, 28 Nov 2024 18:13:25 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Eric Dumazet <edumazet@google.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	Long Li <longli@microsoft.com>, Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Leon Romanovsky <leon@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+	s=arc-20240116; t=1732991826; c=relaxed/simple;
+	bh=5CGTaXv3qcM8izuf0G3IuTtdL47UzEnEwiMt4SQGzng=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uCNEOCdgPlvwHXM5ppffZOM0TJJHAIg8EeuZS+kpJ93c/2drN80aZLhCIJi1fjIHvUi8I3wlSJCzfixH1j8AlmODN+4yNML7NT0KvmuYj8KN/JEd+bBz4Sf2haO3Xj0c/Rk8Genli6pxfL+zeEOXczfIwoQA6W8yXeT/cnLBKmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+XmOBBn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DB7C4CECC;
+	Sat, 30 Nov 2024 18:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732991826;
+	bh=5CGTaXv3qcM8izuf0G3IuTtdL47UzEnEwiMt4SQGzng=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d+XmOBBnXCHc8xl+sEgI9y+sZ5RaJrGt+nMaEjJkVWI+Ty3E8L09wNPJyfoLgOBoH
+	 26b4kVnQqfA+A1HDsTVdRTYoZPRt6Rm+hv0DAXA67CBbmA3GoQ7gOXmlFLMTov5fbN
+	 mXNWl6FDYESyMi/HCbpiwBmDgHqZY26Txb9raGcxAnmrWh/SEtndPr39io9ouRqmy4
+	 oJmcTYJungsIFblLM5Vq+xtlGIdT4ZJkCA0U/ottWVndfKk2KLsEBLndE1pVY0g8NE
+	 xLGN/rGljtqhJkbi9C7Y/3O1wdEPGm+3gTp2mYeEtTgLl7sK7Bw8tE4EVi9B5k7ugM
+	 ogPHQGCdM26hg==
+Date: Sat, 30 Nov 2024 10:37:04 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Michael Kelley <mhklinux@outlook.com>, Maxim Levitsky
+ <mlevitsk@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Shradha
+ Gupta <shradhagupta@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Eric
+ Dumazet <edumazet@google.com>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, Long Li <longli@microsoft.com>, "David S.
+ Miller" <davem@davemloft.net>, Leon Romanovsky <leon@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Souradeep
+ Chakrabarti <schakrabarti@linux.microsoft.com>, Dexuan Cui
+ <decui@microsoft.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] net: mana: Fix memory leak in mana_gd_setup_irqs
-Message-ID: <Z0kjRcX1hXYQhw2Q@yury-ThinkPad>
+Message-ID: <20241130103704.7129538f@kernel.org>
+In-Reply-To: <Z0kjRcX1hXYQhw2Q@yury-ThinkPad>
 References: <20241128194300.87605-1-mlevitsk@redhat.com>
- <SN6PR02MB4157DBBACA455AC00A24EA08D4292@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<SN6PR02MB4157DBBACA455AC00A24EA08D4292@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<Z0kjRcX1hXYQhw2Q@yury-ThinkPad>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157DBBACA455AC00A24EA08D4292@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 28, 2024 at 09:49:35PM +0000, Michael Kelley wrote:
-> From: Maxim Levitsky <mlevitsk@redhat.com> Sent: Thursday, November 28, 2024 11:43 AM
+On Thu, 28 Nov 2024 18:13:25 -0800 Yury Norov wrote:
+> > FWIW, there's a related error path leak. If the kcalloc() to populate
+> > gc->irq_contexts fails, the irqs array is not freed. Probably could
+> > extend this patch to fix that leak as well.
 > > 
-> > Commit 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
-> > added memory allocation in mana_gd_setup_irqs of 'irqs' but the code
-> > doesn't free this temporary array in the success path.
-> > 
-> > This was caught by kmemleak.
-> > 
-> > Fixes: 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index e97af7ac2bb2..aba188f9f10f 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > @@ -1375,6 +1375,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> >  	gc->max_num_msix = nvec;
-> >  	gc->num_msix_usable = nvec;
-> >  	cpus_read_unlock();
-> > +	kfree(irqs);
-> >  	return 0;
-> > 
-> >  free_irq:
+> > Michael  
 > 
-> FWIW, there's a related error path leak. If the kcalloc() to populate
-> gc->irq_contexts fails, the irqs array is not freed. Probably could
-> extend this patch to fix that leak as well.
-> 
-> Michael
+> That's why we've got a __free() macro in include/linux/cleanup.h
 
-That's why we've got a __free() macro in include/linux/cleanup.h
+Quoting documentation:
+
+  Using device-managed and cleanup.h constructs
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  Netdev remains skeptical about promises of all "auto-cleanup" APIs,
+  including even ``devm_`` helpers, historically. They are not the preferred
+  style of implementation, merely an acceptable one.
+  
+  Use of ``guard()`` is discouraged within any function longer than 20 lines,
+  ``scoped_guard()`` is considered more readable. Using normal lock/unlock is
+  still (weakly) preferred.
+  
+  Low level cleanup constructs (such as ``__free()``) can be used when building
+  APIs and helpers, especially scoped iterators. However, direct use of
+  ``__free()`` within networking core and drivers is discouraged.
+  Similar guidance applies to declaring variables mid-function.
+  
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#using-device-managed-and-cleanup-h-constructs
 
