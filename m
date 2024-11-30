@@ -1,68 +1,64 @@
-Return-Path: <linux-hyperv+bounces-3380-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3381-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC5649DF294
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Nov 2024 19:37:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 572509DF377
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Nov 2024 23:03:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A9B62811C2
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Nov 2024 18:37:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C171128136C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Nov 2024 22:03:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94A461A254E;
-	Sat, 30 Nov 2024 18:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 236DF1AA7B1;
+	Sat, 30 Nov 2024 22:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+XmOBBn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGCAkHLz"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FD6158D87;
-	Sat, 30 Nov 2024 18:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD461A9B58;
+	Sat, 30 Nov 2024 22:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732991826; cv=none; b=m9iZuUx40qrzaCOcTn3orIXcsDxij4qxIYVJccglf10BwvvKwTUqxIV/rDhyu9cEMO/vBFb3FAnqRZGtB0F5moUczAAhij9c0q4fefP2EK/g1SP3JlUYiRSuR+naiNTReTKy+S6xiQXdJ+8Y++l+kg5QRffUn6ajdCV/7B3pWw8=
+	t=1733004190; cv=none; b=N+3tuAMZNAO6Q+eki6sBtMtoTteTzFC7IIIz5rTOlwZB/9hq60BODymlapsM8Z+Ggo4BJBxMLAdzITL9xJN+rpOX5GHnpioF9xnHo2d4kAsByE+YjSMAR8jxurPFrpoabqUCrrI/zJZgTAD+Jq4PktGhNLWavmS36l4RY6G8dkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732991826; c=relaxed/simple;
-	bh=5CGTaXv3qcM8izuf0G3IuTtdL47UzEnEwiMt4SQGzng=;
+	s=arc-20240116; t=1733004190; c=relaxed/simple;
+	bh=cSG/0QfMLpGgugGMeoqQy4eeYYHrqIdNNTuEdiWAP5I=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uCNEOCdgPlvwHXM5ppffZOM0TJJHAIg8EeuZS+kpJ93c/2drN80aZLhCIJi1fjIHvUi8I3wlSJCzfixH1j8AlmODN+4yNML7NT0KvmuYj8KN/JEd+bBz4Sf2haO3Xj0c/Rk8Genli6pxfL+zeEOXczfIwoQA6W8yXeT/cnLBKmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+XmOBBn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DB7C4CECC;
-	Sat, 30 Nov 2024 18:37:05 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ij4YhsI3bEeMwzGrjTYhoA+w73G/GO/DJ+uAWRPzv4HlTWrj2WdtoG8dkgL6esuvpPKq2gUGJpVB1yXCZwSmOgs7AOEOVLYiBTGwQyqVoSZNLewuBYVpoo4bLZTVPBsvP0X7osWTEQdeGjChUc9PoiUQoJIZZI0DuxBV3szdu58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGCAkHLz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5CF4C4CED3;
+	Sat, 30 Nov 2024 22:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732991826;
-	bh=5CGTaXv3qcM8izuf0G3IuTtdL47UzEnEwiMt4SQGzng=;
+	s=k20201202; t=1733004189;
+	bh=cSG/0QfMLpGgugGMeoqQy4eeYYHrqIdNNTuEdiWAP5I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d+XmOBBnXCHc8xl+sEgI9y+sZ5RaJrGt+nMaEjJkVWI+Ty3E8L09wNPJyfoLgOBoH
-	 26b4kVnQqfA+A1HDsTVdRTYoZPRt6Rm+hv0DAXA67CBbmA3GoQ7gOXmlFLMTov5fbN
-	 mXNWl6FDYESyMi/HCbpiwBmDgHqZY26Txb9raGcxAnmrWh/SEtndPr39io9ouRqmy4
-	 oJmcTYJungsIFblLM5Vq+xtlGIdT4ZJkCA0U/ottWVndfKk2KLsEBLndE1pVY0g8NE
-	 xLGN/rGljtqhJkbi9C7Y/3O1wdEPGm+3gTp2mYeEtTgLl7sK7Bw8tE4EVi9B5k7ugM
-	 ogPHQGCdM26hg==
-Date: Sat, 30 Nov 2024 10:37:04 -0800
+	b=XGCAkHLz5ZE7bU+L+nUBTE0y0OhK/NG1LZg9Y8IgL3INmNXIFelOQTWe1DwnL7rPI
+	 96RS990iYIib072aVevhuqV7G94HejMx3XR84vv8ZodHTN8YOvfe+JSRZc3DpQnBmK
+	 ydFPuecmGEZ2XQ+esSJpPSqyrCZySqWU/h0TSp+U6ErP/ZdWqohcaT/n7YcKWx5hyK
+	 zLjsBWo0SwzXMDAmPAmeAIi09Nzof2FggkhTZB1UeIH5VJ83XOB59mCfljBWz/5RPe
+	 1Y7oNiJhUadFdYFwVgUCp1Zc08L4Wu4yMDLNQ82/+eQinMA/+vo/suBiOj7k033dPY
+	 CBycqzaWSvSCw==
+Date: Sat, 30 Nov 2024 14:03:07 -0800
 From: Jakub Kicinski <kuba@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Michael Kelley <mhklinux@outlook.com>, Maxim Levitsky
- <mlevitsk@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Shradha
- Gupta <shradhagupta@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Haiyang Zhang <haiyangz@microsoft.com>, Konstantin Taranov
- <kotaranov@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Eric
- Dumazet <edumazet@google.com>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, Long Li <longli@microsoft.com>, "David S.
- Miller" <davem@davemloft.net>, Leon Romanovsky <leon@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Souradeep
- Chakrabarti <schakrabarti@linux.microsoft.com>, Dexuan Cui
- <decui@microsoft.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: mana: Fix memory leak in mana_gd_setup_irqs
-Message-ID: <20241130103704.7129538f@kernel.org>
-In-Reply-To: <Z0kjRcX1hXYQhw2Q@yury-ThinkPad>
-References: <20241128194300.87605-1-mlevitsk@redhat.com>
-	<SN6PR02MB4157DBBACA455AC00A24EA08D4292@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<Z0kjRcX1hXYQhw2Q@yury-ThinkPad>
+To: longli@linuxonhyperv.com
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shradha
+ Gupta <shradhagupta@linux.microsoft.com>, Simon Horman <horms@kernel.org>,
+ Konstantin Taranov <kotaranov@microsoft.com>, Souradeep Chakrabarti
+ <schakrabarti@linux.microsoft.com>, Erick Archer
+ <erick.archer@outlook.com>, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Long Li
+ <longli@microsoft.com>
+Subject: Re: [PATCH] hv_netvsc: Set device flags for properly indicating
+ bonding
+Message-ID: <20241130140307.3f0c028c@kernel.org>
+In-Reply-To: <1732736570-19700-1-git-send-email-longli@linuxonhyperv.com>
+References: <1732736570-19700-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,32 +68,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 28 Nov 2024 18:13:25 -0800 Yury Norov wrote:
-> > FWIW, there's a related error path leak. If the kcalloc() to populate
-> > gc->irq_contexts fails, the irqs array is not freed. Probably could
-> > extend this patch to fix that leak as well.
-> > 
-> > Michael  
+On Wed, 27 Nov 2024 11:42:50 -0800 longli@linuxonhyperv.com wrote:
+> hv_netvsc uses a subset of bonding features in that the master always
+> has only one active slave. But it never properly setup those flags.
 > 
-> That's why we've got a __free() macro in include/linux/cleanup.h
+> Other kernel APIs (e.g those in "include/linux/netdevice.h") check for
+> IFF_MASTER, IFF_SLAVE and IFF_BONDING for determing if those are used
+> in a master/slave setup. 
 
-Quoting documentation:
-
-  Using device-managed and cleanup.h constructs
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  Netdev remains skeptical about promises of all "auto-cleanup" APIs,
-  including even ``devm_`` helpers, historically. They are not the preferred
-  style of implementation, merely an acceptable one.
-  
-  Use of ``guard()`` is discouraged within any function longer than 20 lines,
-  ``scoped_guard()`` is considered more readable. Using normal lock/unlock is
-  still (weakly) preferred.
-  
-  Low level cleanup constructs (such as ``__free()``) can be used when building
-  APIs and helpers, especially scoped iterators. However, direct use of
-  ``__free()`` within networking core and drivers is discouraged.
-  Similar guidance applies to declaring variables mid-function.
-  
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#using-device-managed-and-cleanup-h-constructs
+I feel like this has been nacked 10 times already?
+IFF_BONDING means the bonding driver.
+There is more than one driver in the tree providing link aggregation
+and only bonding uses IFF_BONDING. If some user is buggy fix the user.
+-- 
+pw-bot: reject
 
