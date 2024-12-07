@@ -1,57 +1,63 @@
-Return-Path: <linux-hyperv+bounces-3413-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3414-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 504C99E7EAF
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 08:25:34 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E6229E7EB3
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 08:36:28 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF9CC283C1F
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 07:25:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53D45163AC0
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 07:36:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47CC200A0;
-	Sat,  7 Dec 2024 07:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8343170807;
+	Sat,  7 Dec 2024 07:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFORjXkA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hy3jnFxO"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A992C4C79;
-	Sat,  7 Dec 2024 07:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9213398A;
+	Sat,  7 Dec 2024 07:36:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733556330; cv=none; b=mcajTapwyJQGWBCEunEf03+cZx0P8gA9UsQreVE6ycum74qEp7OpIs8ycr67dSpdwcoZ55jRrqBvnH+XgXvn965xDC+wAmN5FEQHdNy0QpdRqI4Rn49G+/s+hEtAAm23f0ttBJBQpLRv97XYSbMl+GMvvHaLbLqiJvf0wzz2wpQ=
+	t=1733556984; cv=none; b=jT7Z0GpKptpZdMcnOqcQxhIxx/JLt5c/r7wig98e2BlpE+6IpJqTQIGXleaczWiRbpSfrOQy6+usmZJoKeBrDCPkxx8dtAe2OMlc9rUVpCFtRqcrcUcZwNOHFE+bo8wxRdh2vJmD4GCfgTnDZZYC4sPewBLTP5hh4FSVuCjR6CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733556330; c=relaxed/simple;
-	bh=5FDHhUoLjzoGXeO4abHanu6sdCUNkeQkPznob9yup9w=;
+	s=arc-20240116; t=1733556984; c=relaxed/simple;
+	bh=iLSvIrLPNNbchuaGZc83iW4IkW+Y9a/O2Ve94PJllHw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FsfXanDE7h09ZMyPYRxFDXRXEYDwCEUJJuAQ7VClQsqIp6z98pwqg7Eq1v2ewS4gOVoIcC6vSQS0AfT0oceYH7k/cGerXP15ZTM8dFaqw6JIaCsxIpfq/QBs67pCg0eLj4mEu58l7CxGgKnVdtNj7fw6SmHJA6rF5tWKGVlEhbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFORjXkA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8691C4CECD;
-	Sat,  7 Dec 2024 07:25:29 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfHbdPDDMRSurDC2KjleA/ljz4Q8mjpHV85ZDQ4ehQ4zovLz10L+41a1zPrN+8p0hfKMqGyqnAGl7bjTfthoqzX0rhg5/+qaVdkYygJ+CsPwScz0GmmDp0inP9KSB9+TuRBAPj0NkzxzYUqdafTa3yynsAfkP+/TDKcFE2nqOuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hy3jnFxO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD36C4CECD;
+	Sat,  7 Dec 2024 07:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733556330;
-	bh=5FDHhUoLjzoGXeO4abHanu6sdCUNkeQkPznob9yup9w=;
+	s=k20201202; t=1733556983;
+	bh=iLSvIrLPNNbchuaGZc83iW4IkW+Y9a/O2Ve94PJllHw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fFORjXkAhiCPSNz+/RkYlnYV18l0t303XthSrfsFwk/l2YjFV6Z/yy3LEQluHCSOB
-	 cQ4UiaGbBABVbdIuiA1zZDeB7z1w1v/LnQkxtFf/y1+UCeUw2i0d3oDOMeCU+1xiKc
-	 KzcBuNwsWWpIk/bWJFjjQZMWcmetTx4YdR5P3w8BVs/h41Q5IluQ0hg2/z2M2OTMhp
-	 0o5rhCeEJIucBZa1QCWO3sI9N2j4lTqSbxSrGCznGFOpsarh9vnwSPXheJqdYPWhgY
-	 Ygxh49iA7G+s/fTG98vbkZ3KiQc3ZoFTFYQ+YBwJrNtQBXcYNCBw0a74mm1fKRHeh6
-	 D1GO1sTHjsMBg==
-Date: Sat, 7 Dec 2024 07:25:28 +0000
+	b=Hy3jnFxOn67Nm3tt98eEl+L6+gQUemFu+mQfWiFPk1oDVJeMkOGNTkwJHlRhBM1Ql
+	 ySciepeIlxYSytJ4h2NPtGNI5xe+Bbhrn4BOOQOwtUvHfEZAoYiJ/5N7uyezWfddMY
+	 spYQRwlko8yNSZ/0sC0V4DnuL8AGbAkDxPbAeCGO98/mxyTjLHk/bZgJnwipSWspAp
+	 6C37EZIPZCzM8LynC67ujfb2JskbefvqILPP3TnWEisjuiz/D7ro/8Fgk1FEcCbrzD
+	 di/ITVdbm5WdlWY5XjvZJ60dAg2ZbZPBBCDzzXQE90+zqKYNFXDnuL++ZAmYpJFi/S
+	 v4jvnhbgPC6Mw==
+Date: Sat, 7 Dec 2024 07:36:22 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Olaf Hering <olaf@aepfle.de>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com
-Subject: Re: [PATCH v1] tools/hv: update route parsing in kvp daemon
-Message-ID: <Z1P4aKCP8qt4FfSF@liuwe-devbox-debian-v2>
-References: <20241202102235.9701-1-olaf@aepfle.de>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	arnd@arndb.de, jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com, skinsburskii@linux.microsoft.com,
+	mukeshrathor@microsoft.com
+Subject: Re: [PATCH 1/2] hyperv: Move hv_current_partition_id to arch-generic
+ code
+Message-ID: <Z1P69tl2qMNH-xmg@liuwe-devbox-debian-v2>
+References: <1733523707-15954-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1733523707-15954-2-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -60,209 +66,167 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241202102235.9701-1-olaf@aepfle.de>
+In-Reply-To: <1733523707-15954-2-git-send-email-nunodasneves@linux.microsoft.com>
 
-On Mon, Dec 02, 2024 at 11:19:55AM +0100, Olaf Hering wrote:
-> After recent changes in the VM network stack, the host fails to
-> display the IP addresses of the VM. As a result the "IP Addresses"
-> column in the "Networking" tab in the Windows Hyper-V Manager is
-> empty. This is caused by a change in the expected output of the
-> "ip route show" command. Previously the gateway address was shown
-> in the third row. Now the gateway addresses might be split into
-> several lines of output. As a result, the string "ra" instead of
-> an IP address is sent to the host.
+On Fri, Dec 06, 2024 at 02:21:46PM -0800, Nuno Das Neves wrote:
+> From: Nuno Das Neves <nudasnev@microsoft.com>
 > 
-> To me more specific, a VM with the wellknown wicked network
-
-me -> be.
-
-Heh, it took me a while to realize that "wicked" is the name of a
-network manager. :-)
-
-> managing tool still shows the expected output in recent openSUSE
-> Tumbleweed snapshots:
+> Make hv_current_partition_id available in both x86_64 and arm64.
+> This feature isn't specific to x86_64 and will be needed by common
+> code.
 > 
-> ip a show dev uplink;ip -4 route show;ip -6 route show
-> 2: uplink: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state ...
->     link/ether 00:15:5d:d0:93:08 brd ff:ff:ff:ff:ff:ff
->     inet 1.2.3.4/22 brd 1.2.3.255 scope global uplink
->        valid_lft forever preferred_lft forever
->     inet6 fe80::215:5dff:fed0:9308/64 scope link proto kernel_ll
->        valid_lft forever preferred_lft forever
-> default via 1.2.3.254 dev uplink proto dhcp
-> 1.2.3.0/22 dev uplink proto kernel scope link src 1.2.3.4
-> fe80::/64 dev uplink proto kernel metric 256 pref medium
-> default via fe80::26fc:4e00:3b:74 dev uplink proto ra metric 1024 exp...
-> default via fe80::6a22:8e00:fb:14f8 dev uplink proto ra metric 1024 e...
-> 
-> A similar VM, but with NetworkManager as network managing tool:
-> 
-> ip a show dev eth0;ip -4 route show;ip -6 route show
-> 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP...
->     link/ether 00:15:5d:d0:93:0b brd ff:ff:ff:ff:ff:ff
->     inet 1.2.3.8/22 brd 1.2.3.255 scope global dynamic noprefixroute ...
->        valid_lft 1022sec preferred_lft 1022sec
->     inet6 fe80::215:5dff:fed0:930b/64 scope link noprefixroute
->        valid_lft forever preferred_lft forever
-> default via 1.2.3.254 dev eth0 proto dhcp src 1.2.3.8 metric 100
-> 1.2.3.0/22 dev eth0 proto kernel scope link src 1.2.3.8 metric 100
-> fe80::/64 dev eth0 proto kernel metric 1024 pref medium
-> default proto ra metric 20100 pref medium
->         nexthop via fe80::6a22:8e00:fb:14f8 dev eth0 weight 1
->         nexthop via fe80::26fc:4e00:3b:74 dev eth0 weight 1
-> 
-> Adjust the route parsing to use a single line for each line of
-> output. Also use a single shell invocation to retrieve both IPv4
-> and IPv6 information. The actual IP addresses are expected after
-> the "via" keyword.
+> While at it, replace the BUG()s with WARN()s. Failing to get the id
+> need not crash the machine (although it is a very bad sign).
 > 
 
-Shradha, can you help review and test this patch? You changed the code in this
-file recently.
+A lot of things have changed since it was introduced. I don't remember
+why I decided to use BUG() instead of WARN() in the first place.
 
-Keep in mind that we want this tool to be useable for different network
-managers.
+If the system can still function without knowing its partition id, then
+can this be removed completely? We can always use the SELF id.
 
 Thanks,
 Wei.
 
-> Signed-off-by: Olaf Hering <olaf@aepfle.de>
+> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
 > ---
->  tools/hv/hv_kvp_daemon.c | 108 ++++++++++++++++++++++++++++++---------
->  1 file changed, 84 insertions(+), 24 deletions(-)
+>  arch/arm64/hyperv/mshyperv.c    |  3 +++
+>  arch/x86/hyperv/hv_init.c       | 25 +------------------------
+>  arch/x86/include/asm/mshyperv.h |  2 --
+>  drivers/hv/hv_common.c          | 23 +++++++++++++++++++++++
+>  include/asm-generic/mshyperv.h  |  2 ++
+>  5 files changed, 29 insertions(+), 26 deletions(-)
 > 
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index ae57bf69ad4a..63b44b191320 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -24,6 +24,7 @@
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index b1a4de4eee29..5050e748d266 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -19,6 +19,9 @@
 >  
->  #include <sys/poll.h>
->  #include <sys/utsname.h>
-> +#include <stdbool.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <unistd.h>
-> @@ -677,6 +678,88 @@ static void kvp_process_ipconfig_file(char *cmd,
->  	pclose(file);
+>  static bool hyperv_initialized;
+>  
+> +u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
+> +EXPORT_SYMBOL_GPL(hv_current_partition_id);
+> +
+>  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>  {
+>  	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 95eada2994e1..950f5ccdb9d9 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -35,7 +35,7 @@
+>  #include <clocksource/hyperv_timer.h>
+>  #include <linux/highmem.h>
+>  
+> -u64 hv_current_partition_id = ~0ull;
+> +u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
+>  EXPORT_SYMBOL_GPL(hv_current_partition_id);
+>  
+>  void *hv_hypercall_pg;
+> @@ -394,24 +394,6 @@ static void __init hv_stimer_setup_percpu_clockev(void)
+>  		old_setup_percpu_clockev();
 >  }
 >  
-> +static bool kvp_verify_ip_address(const void *address_string)
+> -static void __init hv_get_partition_id(void)
+> -{
+> -	struct hv_get_partition_id *output_page;
+> -	u64 status;
+> -	unsigned long flags;
+> -
+> -	local_irq_save(flags);
+> -	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> -	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
+> -	if (!hv_result_success(status)) {
+> -		/* No point in proceeding if this failed */
+> -		pr_err("Failed to get partition ID: %lld\n", status);
+> -		BUG();
+> -	}
+> -	hv_current_partition_id = output_page->partition_id;
+> -	local_irq_restore(flags);
+> -}
+> -
+>  #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>  static u8 __init get_vtl(void)
+>  {
+> @@ -606,11 +588,6 @@ void __init hyperv_init(void)
+>  
+>  	register_syscore_ops(&hv_syscore_ops);
+>  
+> -	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_ACCESS_PARTITION_ID)
+> -		hv_get_partition_id();
+> -
+> -	BUG_ON(hv_root_partition && hv_current_partition_id == ~0ull);
+> -
+>  #ifdef CONFIG_PCI_MSI
+>  	/*
+>  	 * If we're running as root, we want to create our own PCI MSI domain.
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 5f0bc6a6d025..9eeca2a6d047 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -44,8 +44,6 @@ extern bool hyperv_paravisor_present;
+>  
+>  extern void *hv_hypercall_pg;
+>  
+> -extern u64 hv_current_partition_id;
+> -
+>  extern union hv_ghcb * __percpu *hv_ghcb_pg;
+>  
+>  bool hv_isolation_type_snp(void);
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 7a35c82976e0..819bcfd2b149 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -278,11 +278,34 @@ static void hv_kmsg_dump_register(void)
+>  	}
+>  }
+>  
+> +static void __init hv_get_partition_id(void)
 > +{
-> +	char verify_buf[sizeof(struct in6_addr)];
+> +	struct hv_get_partition_id *output_page;
+> +	u64 status;
+> +	unsigned long flags;
 > +
-> +	if (inet_pton(AF_INET, address_string, verify_buf) == 1)
-> +		return true;
-> +	if (inet_pton(AF_INET6, address_string, verify_buf) == 1)
-> +		return true;
-> +	return false;
-> +}
-> +
-> +static void kvp_extract_routes(const char *line, void **output, size_t *remaining)
-> +{
-> +	static const char needle[] = "via ";
-> +	const char *match, *haystack = line;
-> +
-> +	while ((match = strstr(haystack, needle))) {
-> +		const char *address, *next_char;
-> +
-> +		/* Address starts after needle. */
-> +		address = match + strlen(needle);
-> +
-> +		/* The char following address is a space or end of line. */
-> +		next_char = strpbrk(address, " \t\\");
-> +		if (!next_char)
-> +			next_char = address + strlen(address) + 1;
-> +
-> +		/* Enough room for address and semicolon. */
-> +		if (*remaining >= (next_char - address) + 1) {
-> +			memcpy(*output, address, next_char - address);
-> +			/* Terminate string for verification. */
-> +			memcpy(*output + (next_char - address), "", 1);
-> +			if (kvp_verify_ip_address(*output)) {
-> +				/* Advance output buffer. */
-> +				*output += next_char - address;
-> +				*remaining -= next_char - address;
-> +
-> +				/* Each address needs a trailing semicolon. */
-> +				memcpy(*output, ";", 1);
-> +				*output += 1;
-> +				*remaining -= 1;
-> +			}
-> +		}
-> +		haystack = next_char;
-> +	}
-> +}
-> +
-> +static void kvp_get_gateway(void *buffer, size_t buffer_len)
-> +{
-> +	static const char needle[] = "default ";
-> +	FILE *f;
-> +	void *output = buffer;
-> +	char *line = NULL;
-> +	size_t alloc_size = 0, remaining = buffer_len - 1;
-> +	ssize_t num_chars;
-> +
-> +	/* Show route information in a single line, for each address family */
-> +	f = popen("ip --oneline -4 route show;ip --oneline -6 route show", "r");
-> +	if (!f) {
-> +		/* Convert buffer into C-String. */
-> +		memcpy(output, "", 1);
+> +	local_irq_save(flags);
+> +	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
+> +	if (!hv_result_success(status)) {
+> +		local_irq_restore(flags);
+> +		WARN(true, "Failed to get partition ID: %lld\n", status);
 > +		return;
 > +	}
-> +	while ((num_chars = getline(&line, &alloc_size, f)) > 0) {
-> +		/* Skip short lines. */
-> +		if (num_chars <= strlen(needle))
-> +			continue;
-> +		/* Skip lines without default route. */
-> +		if (memcmp(line, needle, strlen(needle)))
-> +			continue;
-> +		/* Remove trailing newline to simplify further parsing. */
-> +		if (line[num_chars - 1] == '\n')
-> +			line[num_chars - 1] = '\0';
-> +		/* Search routes after match. */
-> +		kvp_extract_routes(line + strlen(needle), &output, &remaining);
-> +	}
-> +	/* Convert buffer into C-String. */
-> +	memcpy(output, "", 1);
-> +	free(line);
-> +	pclose(f);
+> +	hv_current_partition_id = output_page->partition_id;
+> +	local_irq_restore(flags);
 > +}
 > +
->  static void kvp_get_ipconfig_info(char *if_name,
->  				 struct hv_kvp_ipaddr_value *buffer)
+>  int __init hv_common_init(void)
 >  {
-> @@ -685,30 +768,7 @@ static void kvp_get_ipconfig_info(char *if_name,
->  	char *p;
->  	FILE *file;
+>  	int i;
+>  	union hv_hypervisor_version_info version;
 >  
-> -	/*
-> -	 * Get the address of default gateway (ipv4).
-> -	 */
-> -	sprintf(cmd, "%s %s", "ip route show dev", if_name);
-> -	strcat(cmd, " | awk '/default/ {print $3 }'");
-> -
-> -	/*
-> -	 * Execute the command to gather gateway info.
-> -	 */
-> -	kvp_process_ipconfig_file(cmd, (char *)buffer->gate_way,
-> -				(MAX_GATEWAY_SIZE * 2), INET_ADDRSTRLEN, 0);
-> -
-> -	/*
-> -	 * Get the address of default gateway (ipv6).
-> -	 */
-> -	sprintf(cmd, "%s %s", "ip -f inet6  route show dev", if_name);
-> -	strcat(cmd, " | awk '/default/ {print $3 }'");
-> -
-> -	/*
-> -	 * Execute the command to gather gateway info (ipv6).
-> -	 */
-> -	kvp_process_ipconfig_file(cmd, (char *)buffer->gate_way,
-> -				(MAX_GATEWAY_SIZE * 2), INET6_ADDRSTRLEN, 1);
-> -
-> +	kvp_get_gateway(buffer->gate_way, sizeof(buffer->gate_way));
+> +	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
+> +		hv_get_partition_id();
+> +
+> +	WARN_ON(hv_root_partition && hv_current_partition_id == HV_PARTITION_ID_SELF);
+> +
+>  	/* Get information about the Hyper-V host version */
+>  	if (!hv_get_hypervisor_version(&version))
+>  		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 8fe7aaab2599..8c4ff6e9aae7 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -60,6 +60,8 @@ struct ms_hyperv_info {
+>  extern struct ms_hyperv_info ms_hyperv;
+>  extern bool hv_nested;
 >  
->  	/*
->  	 * Gather the DNS state.
+> +extern u64 hv_current_partition_id;
+> +
+>  extern void * __percpu *hyperv_pcpu_input_arg;
+>  extern void * __percpu *hyperv_pcpu_output_arg;
+>  
+> -- 
+> 2.34.1
 > 
 
