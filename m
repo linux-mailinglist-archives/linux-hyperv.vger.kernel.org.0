@@ -1,63 +1,59 @@
-Return-Path: <linux-hyperv+bounces-3415-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3416-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0C7B9E7EB5
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 08:36:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19E859E7EBE
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 08:45:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEAA5169013
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 07:36:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2C12188654A
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Dec 2024 07:45:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46D90130AF6;
-	Sat,  7 Dec 2024 07:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B5677111;
+	Sat,  7 Dec 2024 07:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZsL4aZN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZ2g4AfS"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18449381AF;
-	Sat,  7 Dec 2024 07:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1776D22C6E3;
+	Sat,  7 Dec 2024 07:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733557003; cv=none; b=mDpGTtQbu7p22T8FdBFN+lHlu4iZMYf/hFI6AA/XomITlHNpxMZOJRd2C9DLIdmwmhtyV6yPhNzdSvYsONRCTKB+VPgvSYUW1l16wSPowFHAzto0yfr6bE5lNyvQqot023X3seZU3hFbg86hNtRbAKkP+YDb/j+wGY7D/A4k4FU=
+	t=1733557549; cv=none; b=Pkh/t6NlyLa4Gp//n6NlW67kaAZ7NVeCvvZOJs8Se5TEUDuLwG6zRHGxwU3dOQgCdUWXmfVPKl/hS8k68iADHKi5PU+hR8VSVXD1I8stZbT5UfgG5GFF5jRFk1tVTLBKv8wxAKSlYAw+8ZHcRlVIp/YkJCD77oVtF/d4Hb02Lmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733557003; c=relaxed/simple;
-	bh=9TX1vg/RCNPSqIDVVM5Oj3VMUTV+rCQORNzKqYqLZQI=;
+	s=arc-20240116; t=1733557549; c=relaxed/simple;
+	bh=a88x8f60dtnCM+RV3nG2J+MnbK12fsObWZFZLq9PC4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6qti3Wjsa4HF4TcRaLjcXLR3Co8/dJp+G+gl+eJwdqu7DY72dcmZ0CLF8MGJ2EmbEvX2vBQiEw3HuBtgiO/0GfVGIQldXxg1oaeO7HhCW+swcSlvZ8wC2p31JF/VnEYj+1q/ovRSAbN7soe3EAQ3vYV0H4581ezqpRcU8QQA8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZsL4aZN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6EEC4CECD;
-	Sat,  7 Dec 2024 07:36:42 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=BAYzqeLA6ummLCGzoQX913pJtdpo3yYbm+a0ryzMYQthkG39ZmmSGC92sIkISDKSUVOnAKbqRfY57iOk98FdJ6w0xFsaKUA8bGLLV+4lOTP+4ryXSf1NIoqL/3fnpc3OGHKD5pegYKw/ZVsmRgqXJL7B1ZU8Fo3f8B3Q7LDjPsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZ2g4AfS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73680C4CECD;
+	Sat,  7 Dec 2024 07:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733557002;
-	bh=9TX1vg/RCNPSqIDVVM5Oj3VMUTV+rCQORNzKqYqLZQI=;
+	s=k20201202; t=1733557548;
+	bh=a88x8f60dtnCM+RV3nG2J+MnbK12fsObWZFZLq9PC4U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FZsL4aZNcsLObtU/CTsMaLemEfFflFyEBnYTOoFR85zpTuHUuuxn27wNiYjep+oog
-	 aTSN1WoRFWQEKiDg3nkCH0F7v3Wta0pppeM9IpPWwA5S389yAHUzOwtnbFNASgE5+3
-	 +uK0cVQi/xZzdhBu8zPxX7j0B4n9J31TQj6Rt5CJz4dL8zQMU2zuYxZC+Zij0AuCp0
-	 apRJsmTd4Q/r3RzvKeWx7Tl0tEZlQXRunI3qb4yLMcyCbk3UlQx4b//OPbvWPeKqlH
-	 SxglF7ykGTPTsYbcsQM/OC8CdaisQRTLldWEhoflSQUGYN/6HByctPhoKCpBBjPTp6
-	 f9RpD2MEAaFbQ==
-Date: Sat, 7 Dec 2024 07:36:40 +0000
+	b=hZ2g4AfSkamRYfBm83sisoe+XMSSDYlDajh8zKx/BFypHYCISNInttSvwhN/fwWJd
+	 7A8wpjTe1S+WoTHdvpfKyYQMMk10ybFN8HBQ8w4r5iNk1OXKs+4Bn3H3LOwoCa4uqK
+	 LXtVLxZK76bPqg/ORml4ZVDfsPxBEjTL75lc37c7k9+g5Tfjv+xeESFmm8HTMEuLYp
+	 U4GNRnjHClxyQNwQNkZd1f7SvSPG8neE+tUD3Ej+uM+rVtkMVrlAIDmkExSpP094ih
+	 2e1naNjBY9g7UMJ7kZ9V+b3CS/Sply70EQzkmzPWOdHHgsJB9Q96S3WeeXLSAm46O3
+	 JW/NDZosSXGlw==
+Date: Sat, 7 Dec 2024 07:45:47 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	arnd@arndb.de, jinankjain@linux.microsoft.com,
-	muminulrussell@gmail.com, skinsburskii@linux.microsoft.com,
-	mukeshrathor@microsoft.com
-Subject: Re: [PATCH 2/2] hyperv: Move create_vp and deposit_pages hvcalls to
- hv_common.c
-Message-ID: <Z1P7CJ4Inz97feff@liuwe-devbox-debian-v2>
-References: <1733523707-15954-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1733523707-15954-3-git-send-email-nunodasneves@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] tools: hv: Fix a complier warning in the fcopy uio daemon
+Message-ID: <Z1P9KzNG9IHXIRwI@liuwe-devbox-debian-v2>
+References: <20240910004433.50254-1-decui@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -66,14 +62,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1733523707-15954-3-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <20240910004433.50254-1-decui@microsoft.com>
 
-On Fri, Dec 06, 2024 at 02:21:47PM -0800, Nuno Das Neves wrote:
-> From: Nuno Das Neves <nudasnev@microsoft.com>
+On Tue, Sep 10, 2024 at 12:44:32AM +0000, Dexuan Cui wrote:
+> hv_fcopy_uio_daemon.c:436:53: warning: '%s' directive output may be truncated
+> writing up to 14 bytes into a region of size 10 [-Wformat-truncation=]
+>   436 |  snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
 > 
-> These are not specific to x86_64 and will be needed by common code.
+> Also added 'static' for the array 'desc[]'.
 > 
-> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
+> Fixes: 82b0945ce2c2 ("tools: hv: Add new fcopy application based on uio driver")
+> Cc: stable@vger.kernel.org # 6.10+
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Applied to hyperv-fixes. Thanks.
 
