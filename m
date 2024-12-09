@@ -1,100 +1,90 @@
-Return-Path: <linux-hyperv+bounces-3431-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3432-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFE6A9E88A6
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 01:07:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B46C9E88B0
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 01:16:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD2DB163B96
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 00:07:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9842B163F64
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 00:16:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590563224;
-	Mon,  9 Dec 2024 00:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC3E29A0;
+	Mon,  9 Dec 2024 00:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iax8gMl+"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V82cAoKt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EADC28EA;
-	Mon,  9 Dec 2024 00:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828AD46B8
+	for <linux-hyperv@vger.kernel.org>; Mon,  9 Dec 2024 00:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733702843; cv=none; b=eu+6LnSpb3BU4zcM/3Sv7SDHGVOPwwocZoCU4N+If7w285eHkRlQ4ZJpEWKVtSrO7ksnYwGtaT4CxYf5iPzk6/7Cle4HE62sCu0gwlVzGUvY0Now7yVc5PeAXMth0C2YYgBeSdNplYOv8l5sweF9RzRPpC/bqgFsh51Hz3n5+FA=
+	t=1733703384; cv=none; b=ctUanhNlt/EF/f32vB8iwBOzsOB/z/0QrSkRdy/c1UIrLNXW6zU9TpCZO6Spbxi0zocMpPAOQbSd1gDqqOkblrO2PIs6XwrBuazG7KtGxmhXhTeUsDaB57vC/CkXftwPxLI91Al5T6CeZCZ1v0D9MWpd/O9BlV3Eq29nL5tMm90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733702843; c=relaxed/simple;
-	bh=qQNrvfENV3cjN5xREbhZ7VhcAz/yAeIeQ9LRLJN97rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqzSjAP1f+HNIYmxLb/akpz5szyHyd0MOauHQt2gteW+ZN9HrIldFEdMvdltVhhoKQi9tUbtUCQ8iCPaNOAZ2Qdb8/j4CPFfIoD1fHIJ8fjLJ9oNvgvYVWsW0KY6sCR+caBiFOGTuN2lvdwDh5S9CJr2BLBE9BLETp1N+SQl7KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iax8gMl+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E74C4CED2;
-	Mon,  9 Dec 2024 00:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733702842;
-	bh=qQNrvfENV3cjN5xREbhZ7VhcAz/yAeIeQ9LRLJN97rw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iax8gMl+0GT3J8M4iZ9gQyDPrIu27a3sIyltOK6REilnDJPHdyhdVAXaRpTxxtOqB
-	 MuqYjX3mhFXSRTor5pSLAmTNhGqLX3rmQwUsVw1mIIQaMU8vd7TVVaPJGzHmpmf/D0
-	 daiD828J/LIghaf4mumgtHGdKuVOqThvGRQ1PTODlqAUQpPGSsDwLt9knC26SfKG8m
-	 WwmSMezcdQ82gahImT/PW3UM/9cgOCD2+zwAWFB94NzIC+EQ1lBvz5zRGeTOxXjn89
-	 QpSpbyWeYA4tGb+l7kxIZkDNWiRpm9eHgkMBH9Vmty7qgrQhdwOU8rrzaCbGYjrm8x
-	 /E28uEALgWPAg==
-Date: Mon, 9 Dec 2024 00:07:20 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	iommu@lists.linux.dev, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	virtualization@lists.linux.dev, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com,
-	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
-	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
-	daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	sgarzare@redhat.com, jinankjain@linux.microsoft.com,
-	muminulrussell@gmail.com, skinsburskii@linux.microsoft.com,
-	mukeshrathor@microsoft.com, vkuznets@redhat.com,
-	ssengar@linux.microsoft.com, apais@linux.microsoft.com,
-	eahariha@linux.microsoft.com, horms@kernel.org
-Subject: Re: [PATCH v3 1/5] hyperv: Move hv_connection_id to hyperv-tlfs.h
-Message-ID: <Z1Y0uJlVn-86KHE8@liuwe-devbox-debian-v2>
-References: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1732577084-2122-2-git-send-email-nunodasneves@linux.microsoft.com>
+	s=arc-20240116; t=1733703384; c=relaxed/simple;
+	bh=BG0lYi8qENv1S6Z0qBZj8MIboPFVdp43e62P0arKhY8=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=bJ04NElPCFf5fl3AGOORzGWwvgToxEAYreouN2qTIl44pUmF7Ay8F54U24LV2rAAj3g3gGsdYr1itwkk22ZDmzpjjIm+mmNTzHKAceH8ykqlpfeCn4DATeXyl6/Qex0kOZsT/ydZ7CB8JfhX3gUrO4yAoICHGuIlykxjJf78jRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V82cAoKt; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1733703375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wLoj+JdGdda/8Il0iOf2kOpmQkX1BduRIAZEjm01B2U=;
+	b=V82cAoKt1hD1ukhOAYE58fpz5fdSXRVoknNzLepw69DA/bxxd7lgxN2qd5doCcdEym0Hwq
+	zMTBkGaMiSd679CLoUBTg0l0WJvDTDpOa9S5gvgLNtbUADO/qyIGTt+dC1h6Blmfq4Bgqt
+	we++6RBDCA0eRDgCuNeNuVrF8PcgxgM=
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1732577084-2122-2-git-send-email-nunodasneves@linux.microsoft.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [PATCH] hv: hyperv.h: Annotate vmbus_channel_gpadl_header with
+ __counted_by()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <Z1P94CdlCAzDc3d3@liuwe-devbox-debian-v2>
+Date: Mon, 9 Dec 2024 01:16:01 +0100
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ Dexuan Cui <decui@microsoft.com>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <77790477-238D-482F-9431-FA85091685BB@linux.dev>
+References: <20241015101829.94876-2-thorsten.blum@linux.dev>
+ <Z1P94CdlCAzDc3d3@liuwe-devbox-debian-v2>
+To: Wei Liu <wei.liu@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Nov 25, 2024 at 03:24:40PM -0800, Nuno Das Neves wrote:
-> This definition is in the wrong file; it is part of the TLFS doc.
+On 7. Dec 2024, at 08:48, Wei Liu wrote:
+> On Tue, Oct 15, 2024 at 12:18:29PM +0200, Thorsten Blum wrote:
+>> Add the __counted_by compiler attribute to the flexible array member
+>> range to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>> CONFIG_FORTIFY_SOURCE.
+>> 
+>> Compile-tested only.
+>> 
+>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > 
-> Acked-by: Wei Liu <wei.liu@kernel.org>
-> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> Applied to hyperv-fixes. Thanks.
 
-One comment about the ordering of the tags. It is better to organize
-them in the following order:
-
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Acked-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-
-I've made the change for you while applying the patch.
+This should probably not be applied anymore given the kernel test robot
+build warnings. Unless I missed something and this works now?
 
 Thanks,
-Wei.
+Thorsten
 
