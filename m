@@ -1,133 +1,118 @@
-Return-Path: <linux-hyperv+bounces-3441-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3442-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07A849E9DB5
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 18:59:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70B0C9E9E48
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 19:46:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93B46165D54
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 17:59:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FC5D1881EC9
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 18:46:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A9681F2C25;
-	Mon,  9 Dec 2024 17:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219AF154BE2;
+	Mon,  9 Dec 2024 18:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZcUoNWsI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnPxtFV+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4094D1E9B25
-	for <linux-hyperv@vger.kernel.org>; Mon,  9 Dec 2024 17:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F150213B59A
+	for <linux-hyperv@vger.kernel.org>; Mon,  9 Dec 2024 18:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733767093; cv=none; b=Cg2dcrGJvaIU0KieK2Ormeva4zavQAd75Wk3j69UznO2Qb+9b7elpcVrJDzJIOpOBUmJVF+9PHvUdafdUaGCQrW0a0t5dOSqi1l5P0wGNTtRNiki9AzUnjc085dkdEpIkUMorEb5Om/kIYOjjPZpjqQ8ikCMl9tMGKm0toZ7ByE=
+	t=1733770004; cv=none; b=DLcO6/I6vSNv+xvxxF8mI6NY3DynttXbJed0lNnY8elGyfr9QAytIcE40cMOf7aQI+wCPEq/mAmfu7znuTxn9JHXr3g9JsURRrBunIS4crbb0TZF8WISuK0VdHz+lkVqT/65rqyx3+YWOMZODWhUz49kJpqlQuwAzAcMbsIXn0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733767093; c=relaxed/simple;
-	bh=qP2Hlu3N0NgQnWyH9Lx3+uHpafocFuwd0F24K19I0HQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=on3hB0h0fcQ1AEMaGmRXgJ1lDLnUI7MGza6fkAcaapDiygs3MOPqGqBNTa5+Xt/PqBh7Q6dZGuJRvy2rhe5AuG7s0gTOMgkVzSU4sKUJ9vgXNbgjfpNlE1N728oCCWlVzqYQV4Qsr7h+xE2zETUMtUl8Ih+8CXO+XJPR8EaLbiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZcUoNWsI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733767089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RszX/9FzqgwZYqnsZaT6Kv2E583oRNDgfo2kcZMftbw=;
-	b=ZcUoNWsI8S5l6ASsHPkwFQeQ5eHT3GgbRKmMSW3Kb5+TV0eKxJh+mlollJ9UC87WRLZy6e
-	YmUYtnMtUuzwP3buGfjnfhQTj4AXLLf2gF+Gp+Y/dLl9duF4XLhOn9j0y3Ws1DKQ3qqrfy
-	P+2saU38G0uQPyvrSVgbfOmJWesU0/E=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-541-O7c4uoO3Omy0eq5aDjnZsg-1; Mon,
- 09 Dec 2024 12:58:06 -0500
-X-MC-Unique: O7c4uoO3Omy0eq5aDjnZsg-1
-X-Mimecast-MFC-AGG-ID: O7c4uoO3Omy0eq5aDjnZsg
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D8A8D1955F29;
-	Mon,  9 Dec 2024 17:58:03 +0000 (UTC)
-Received: from starship.lan (unknown [10.22.82.46])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3816E195605A;
-	Mon,  9 Dec 2024 17:58:00 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	Dexuan Cui <decui@microsoft.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	Long Li <longli@microsoft.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: [PATCH v2 2/2] net: mana: Fix irq_contexts memory leak in mana_gd_setup_irqs
-Date: Mon,  9 Dec 2024 12:57:51 -0500
-Message-Id: <20241209175751.287738-3-mlevitsk@redhat.com>
-In-Reply-To: <20241209175751.287738-1-mlevitsk@redhat.com>
-References: <20241209175751.287738-1-mlevitsk@redhat.com>
+	s=arc-20240116; t=1733770004; c=relaxed/simple;
+	bh=zan1QbSpSD1tnt1u1x41I+WnjS7tQGknMZz28q6N3Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ffEKgY24violBUxElpDQYVJxzMsOAB9yj8nLtOtc2d1hRv0tZ3NdlIDdokSvk3lz8a9wirhGxP8MeGIIqaHWbR4+096JCvQ0dXhZLS0f1YupeLAK6MevCqFr4vSI36GPODlqzvmp1ZDxeK733AQwSUtYii9x8rSKNjPcnUY119U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnPxtFV+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65EA3C4CED1;
+	Mon,  9 Dec 2024 18:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733770003;
+	bh=zan1QbSpSD1tnt1u1x41I+WnjS7tQGknMZz28q6N3Gg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QnPxtFV+QUr4aFqVBQOlo1dI7cn/1R5C6ZnL2e4/Ruh7Jkf6cdggtexCPF4plPCiK
+	 92cpGgDc+eeRl32THaK1x/fmLDtC8pV7Dtj1589iRd9LWDKHgcGIHSWJ04BJ1EkIwC
+	 oH0Bh0xffa63edDcmpkaAkG5T79hbK3oMU/s0JFSymi8VWlYaeJiJoz49wRRmCwWfo
+	 igOwDzz7xsyPbZMd9uBO3xGKmeuKBzO/nVbKz2LB08TCqABcsQQ0jIS/n9ak08JEwx
+	 X7ZtqCdM3fStmxcL9Go/kL5Pw276tl0PVpCxJ422F9fdOzyu+PNJ715W1SkRA26iMv
+	 Fw+O4pfykTkPA==
+Date: Mon, 9 Dec 2024 18:46:42 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Adrian Vladu <avladu@cloudbasesolutions.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
+	Mathieu Tortuyaux <mtortuyaux@microsoft.com>
+Subject: Re: kernel: fix hv tools build for arm64 when cross-built
+Message-ID: <Z1c7Er37YET8rXzo@liuwe-devbox-debian-v2>
+References: <PR3PR09MB54119DB2FD76977C62D8DD6AB04D2@PR3PR09MB5411.eurprd09.prod.outlook.com>
+ <Z1Y9ZkAt9GPjQsGi@liuwe-devbox-debian-v2>
+ <20241209083035.GA25242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241209083035.GA25242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-gc->irq_contexts is not freeded if one of the later operations
-fail.
+On Mon, Dec 09, 2024 at 12:30:35AM -0800, Saurabh Singh Sengar wrote:
+> On Mon, Dec 09, 2024 at 12:44:22AM +0000, Wei Liu wrote:
+> > On Wed, Oct 23, 2024 at 02:01:12PM +0000, Adrian Vladu wrote:
+> > > Hello,
+> > > 
+> > > While trying to build the LIS daemons for Flatcar Container Linux for
+> > > ARM64 (https://www.flatcar.org/), as we are doing Gentoo based
+> > > cross-building from X64 boxes, there was an error while building those
+> > > daemons, because the cross-compile scenario was not working, as ` ARCH
+> > > := $(shell uname -m 2>/dev/null)` always returns `x86_64`.
+> > > 
+> > > I have a working patch for the Linux kernel here that was already
+> > > applied in the Flatcar context and it works:
+> > > https://github.com/flatcar/scripts/blob/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
+> > > 
+> > > Raw patch link here:
+> > > https://raw.githubusercontent.com/flatcar/scripts/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
+> > > 
+> > > Sorry for the delivery method via github link, but I cannot send
+> > > proper patches from my work email address currently, as the email
+> > > server does not support it.
+> > > 
+> > > Please let me know if I need to send the patch via the recommended way
+> > > or if the patch can be used directly.
+> > > 
+> > > Also, maybe there is a better way to address the cross-compilation
+> > > issue, I just wanted to report the bug and also provide a possible
+> > > fix.
+> > 
+> > Saurabh added the ARCH variable. He's CCed.
+> > 
+> > BTW I think your patch can be simplified by using
+> >   ARCH ?= $(shell uname -m 2>/dev/null)
+> > instead of the ifeq test in your patch.
+> 
+> Agree, this is better way to handle it.
+> 
+> > 
+> > I don't think that's correct. ARCH will be set to the correct value by
+> > Kbuild. 
+> 
+> If we build locally on ARM64, there is a chance that ARCH may not be set,
+> leading to build failures for arm64. IMO we should provide a fallback
+> option for local builds when ARCH is not set.
 
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
-Fixes: 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
----
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+How do you build locally? Even if you build those tools in tools/hv, it
+still uses the Kbuild system, which sets ARCH to the correct value,
+right?
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index aba188f9f10f..6297c0869cd6 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1318,7 +1318,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 				   GFP_KERNEL);
- 	if (!gc->irq_contexts) {
- 		err = -ENOMEM;
--		goto free_irq_vector;
-+		goto free_irq_array;
- 	}
- 
- 	for (i = 0; i < nvec; i++) {
-@@ -1388,8 +1388,9 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 	}
- 
- 	kfree(gc->irq_contexts);
--	kfree(irqs);
- 	gc->irq_contexts = NULL;
-+free_irq_array:
-+	kfree(irqs);
- free_irq_vector:
- 	cpus_read_unlock();
- 	pci_free_irq_vectors(pdev);
--- 
-2.26.3
-
+Thanks,
+Wei.
 
