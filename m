@@ -1,118 +1,105 @@
-Return-Path: <linux-hyperv+bounces-3442-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3443-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70B0C9E9E48
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 19:46:47 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FC5D1881EC9
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 18:46:46 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219AF154BE2;
-	Mon,  9 Dec 2024 18:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnPxtFV+"
-X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A92629E9F4B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 20:19:41 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F150213B59A
-	for <linux-hyperv@vger.kernel.org>; Mon,  9 Dec 2024 18:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C06E6282D55
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 19:19:37 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7FAC194ACC;
+	Mon,  9 Dec 2024 19:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="X79ao65h"
+X-Original-To: linux-hyperv@vger.kernel.org
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42758198A07;
+	Mon,  9 Dec 2024 19:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733770004; cv=none; b=DLcO6/I6vSNv+xvxxF8mI6NY3DynttXbJed0lNnY8elGyfr9QAytIcE40cMOf7aQI+wCPEq/mAmfu7znuTxn9JHXr3g9JsURRrBunIS4crbb0TZF8WISuK0VdHz+lkVqT/65rqyx3+YWOMZODWhUz49kJpqlQuwAzAcMbsIXn0Y=
+	t=1733771967; cv=none; b=Zr/XsA8vC6QbneyJl5VmqL68xya4RL/YR/CnZ+CrpzIt2LPzRAm8VQssV+XWly+o19A9cRQjaUqpUdpPvhyrVpfUMIzrzQddTNTZUgvvoFO5mSQawsP1FQBoG1HmDMLDBduMpgOaCtX/a9f0LaYa/KW2jTgPgcXGr7av6bFbv0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733770004; c=relaxed/simple;
-	bh=zan1QbSpSD1tnt1u1x41I+WnjS7tQGknMZz28q6N3Gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ffEKgY24violBUxElpDQYVJxzMsOAB9yj8nLtOtc2d1hRv0tZ3NdlIDdokSvk3lz8a9wirhGxP8MeGIIqaHWbR4+096JCvQ0dXhZLS0f1YupeLAK6MevCqFr4vSI36GPODlqzvmp1ZDxeK733AQwSUtYii9x8rSKNjPcnUY119U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnPxtFV+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65EA3C4CED1;
-	Mon,  9 Dec 2024 18:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733770003;
-	bh=zan1QbSpSD1tnt1u1x41I+WnjS7tQGknMZz28q6N3Gg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QnPxtFV+QUr4aFqVBQOlo1dI7cn/1R5C6ZnL2e4/Ruh7Jkf6cdggtexCPF4plPCiK
-	 92cpGgDc+eeRl32THaK1x/fmLDtC8pV7Dtj1589iRd9LWDKHgcGIHSWJ04BJ1EkIwC
-	 oH0Bh0xffa63edDcmpkaAkG5T79hbK3oMU/s0JFSymi8VWlYaeJiJoz49wRRmCwWfo
-	 igOwDzz7xsyPbZMd9uBO3xGKmeuKBzO/nVbKz2LB08TCqABcsQQ0jIS/n9ak08JEwx
-	 X7ZtqCdM3fStmxcL9Go/kL5Pw276tl0PVpCxJ422F9fdOzyu+PNJ715W1SkRA26iMv
-	 Fw+O4pfykTkPA==
-Date: Mon, 9 Dec 2024 18:46:42 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Adrian Vladu <avladu@cloudbasesolutions.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
-	Mathieu Tortuyaux <mtortuyaux@microsoft.com>
-Subject: Re: kernel: fix hv tools build for arm64 when cross-built
-Message-ID: <Z1c7Er37YET8rXzo@liuwe-devbox-debian-v2>
-References: <PR3PR09MB54119DB2FD76977C62D8DD6AB04D2@PR3PR09MB5411.eurprd09.prod.outlook.com>
- <Z1Y9ZkAt9GPjQsGi@liuwe-devbox-debian-v2>
- <20241209083035.GA25242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1733771967; c=relaxed/simple;
+	bh=IkU30lh01yasDhhYl5DIZiX1actBPTKkOI868W5M7jM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vs9deMVgYJxxWDIa/0JljpgAlf5mwG0dkgF6z6Z0fhwZLjfXW5qTWDROOFqibZ8m6sD7JvO/BS7gNpghA1SMPblx5YTy6ESiQBokFjiLH8FItg9mT55pjrcjx/cfePutzmzkAVWziiFSTdk8WKmdOq4JoFujQvCuegyxBd1uAKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=X79ao65h; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.115] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A64AF211F951;
+	Mon,  9 Dec 2024 11:19:23 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A64AF211F951
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1733771964;
+	bh=aNTJR2KnZDmn2B9w7QnkiUuDqNvJl6jmEMliRyXtV4c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X79ao65h/u13GLNKxSqyMJ9uUvtBpp3rw2v4gWdlaDngbyQZXN55Xh0ffA4IZXRhV
+	 QT6eYndeymBwoYWDgPYJwOjTDoq9oNVdrDHwkzAldgCCnjvKQkd2EPP2EZ64G6LAZ0
+	 D3aklNFCdRwoxFPP+bj7TYr2I59tP+ffoezRugPw=
+Message-ID: <a76d129c-2956-4bbc-bd14-cb12737b64df@linux.microsoft.com>
+Date: Mon, 9 Dec 2024 11:19:23 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241209083035.GA25242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] hyperv: Move hv_connection_id to hyperv-tlfs.h
+To: Wei Liu <wei.liu@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, iommu@lists.linux.dev,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
+ kys@microsoft.com, haiyangz@microsoft.com, mhklinux@outlook.com,
+ decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
+ luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
+ daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, arnd@arndb.de, sgarzare@redhat.com,
+ jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mukeshrathor@microsoft.com,
+ vkuznets@redhat.com, ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ eahariha@linux.microsoft.com, horms@kernel.org
+References: <1732577084-2122-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1732577084-2122-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <Z1Y0uJlVn-86KHE8@liuwe-devbox-debian-v2>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <Z1Y0uJlVn-86KHE8@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 09, 2024 at 12:30:35AM -0800, Saurabh Singh Sengar wrote:
-> On Mon, Dec 09, 2024 at 12:44:22AM +0000, Wei Liu wrote:
-> > On Wed, Oct 23, 2024 at 02:01:12PM +0000, Adrian Vladu wrote:
-> > > Hello,
-> > > 
-> > > While trying to build the LIS daemons for Flatcar Container Linux for
-> > > ARM64 (https://www.flatcar.org/), as we are doing Gentoo based
-> > > cross-building from X64 boxes, there was an error while building those
-> > > daemons, because the cross-compile scenario was not working, as ` ARCH
-> > > := $(shell uname -m 2>/dev/null)` always returns `x86_64`.
-> > > 
-> > > I have a working patch for the Linux kernel here that was already
-> > > applied in the Flatcar context and it works:
-> > > https://github.com/flatcar/scripts/blob/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
-> > > 
-> > > Raw patch link here:
-> > > https://raw.githubusercontent.com/flatcar/scripts/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
-> > > 
-> > > Sorry for the delivery method via github link, but I cannot send
-> > > proper patches from my work email address currently, as the email
-> > > server does not support it.
-> > > 
-> > > Please let me know if I need to send the patch via the recommended way
-> > > or if the patch can be used directly.
-> > > 
-> > > Also, maybe there is a better way to address the cross-compilation
-> > > issue, I just wanted to report the bug and also provide a possible
-> > > fix.
-> > 
-> > Saurabh added the ARCH variable. He's CCed.
-> > 
-> > BTW I think your patch can be simplified by using
-> >   ARCH ?= $(shell uname -m 2>/dev/null)
-> > instead of the ifeq test in your patch.
+On 12/8/2024 4:07 PM, Wei Liu wrote:
+> On Mon, Nov 25, 2024 at 03:24:40PM -0800, Nuno Das Neves wrote:
+>> This definition is in the wrong file; it is part of the TLFS doc.
+>>
+>> Acked-by: Wei Liu <wei.liu@kernel.org>
+>> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+>> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > 
-> Agree, this is better way to handle it.
+> One comment about the ordering of the tags. It is better to organize
+> them in the following order:
 > 
-> > 
-> > I don't think that's correct. ARCH will be set to the correct value by
-> > Kbuild. 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> Acked-by: Wei Liu <wei.liu@kernel.org>
+> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 > 
-> If we build locally on ARM64, there is a chance that ARCH may not be set,
-> leading to build failures for arm64. IMO we should provide a fallback
-> option for local builds when ARCH is not set.
+> I've made the change for you while applying the patch.
+> 
 
-How do you build locally? Even if you build those tools in tools/hv, it
-still uses the Kbuild system, which sets ARCH to the correct value,
-right?
+Thank you, noted for next time.
 
-Thanks,
-Wei.
+> Thanks,
+> Wei.
+
 
