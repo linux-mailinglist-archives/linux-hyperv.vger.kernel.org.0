@@ -1,55 +1,63 @@
-Return-Path: <linux-hyperv+bounces-3436-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3437-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D65749E8D67
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 09:30:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 796099E9CC8
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 18:16:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E963282437
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 08:30:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1E48282B79
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 17:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B927A12CDAE;
-	Mon,  9 Dec 2024 08:30:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AA0F155303;
+	Mon,  9 Dec 2024 17:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AnBZilL/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BmteNgfG"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34CE822C6E8
-	for <linux-hyperv@vger.kernel.org>; Mon,  9 Dec 2024 08:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F60C14B077;
+	Mon,  9 Dec 2024 17:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733733037; cv=none; b=t7N0GsZzo1ZKKwMG4xCe/KPzLwz5b0Ug9Hw7soDWwlAJQfboIIsr9VZdY1O4V3hd9yGXc/S6hzNkDSimy+cFnufmbFGTUgBfudclHdydbgiVRBvY4qnr18BmJN2DUEt0Is1ak2yCLO4uXKRJL6B2qkhPIEhTGha9nY13Dg68Rf0=
+	t=1733764585; cv=none; b=imBAxXGZftt509KynojesO0PWM3hVI9/09IHoSGsF15XshUbjAB/7+hpgb7OgKfA5m8kBTdRfBSXwf4JViW6Y8117ZrinrGTB7WQJwLYKdXtXy1qoyuz+xP3ns5R6oMRDmvY4t5gY95MbB6FwtmQPq0fI4MyD2nDCtW7zHuTJgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733733037; c=relaxed/simple;
-	bh=REHQVkUt4c7h5fKMg74AV6gAXOe73wcjLViauTvpyYs=;
+	s=arc-20240116; t=1733764585; c=relaxed/simple;
+	bh=2YpxKy6Gwqsp4Tqzs7nDAYWThdPYRCmcyf4sN0mRBrU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLYKTpH7LSBRqA7XacYKXtK+zAfmLtMmolVEsw4cMxBBo2hwwmFqAlclfNJ3wK5s1lsCYJebykA/QWO5Qat/Gc27J7nPofrTKYTBpHGci6DobIcxftooPsHEF9IduODwd46AoRGKIzokye5Pop7MsuCMM/6BeAwXo21BnM5SV1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AnBZilL/; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6lwrukhhz5KdqVyaKf81uwzsDQafA1Eot4NYYvrX1usgm//S4268wp/C4JwVvRRVgFPt2db4TpPrLeEazsXwHpj9in+0erpw0mGDNLzz5Y6x4DHZov7uYk7rP7DIQREHOJJ2/qqxSs+a/kXR/YyIF/tItupwvUkTHyhK9NTRdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BmteNgfG; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id A62EC2053699; Mon,  9 Dec 2024 00:30:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A62EC2053699
+	id 3D4B120C8BA2; Mon,  9 Dec 2024 09:16:23 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3D4B120C8BA2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1733733035;
-	bh=Dqlv2AzoRns1z5CW7pkakxxN4aC20HZPcOSfclM8bLQ=;
+	s=default; t=1733764583;
+	bh=HP4urfWccJ7rG3wZQ3lsLo0/S56sl2aC1BXsm/bKIIs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AnBZilL/R2IYnCCqkU3fg9BSZmNQ50YN4pAqmm99sd1leHrSxiS502+CStefT8Mpk
-	 9deIRhSRxjS07Hhc8FxW0QeiDYnhK6XMv8PQERIxlH0mnQVxsRLMn20SrmOulm0HuH
-	 m6OfaiZUgPf1YBReAXIqWqIsT5cvpdIVe68IaWQs=
-Date: Mon, 9 Dec 2024 00:30:35 -0800
+	b=BmteNgfG/vZtVb8aiWHmqBDwO1kurvQXU84Vv9SI6llKd1t7/wX8aqzP1hiBirWRB
+	 hcKrqEHr7X/As9mPOKrTH3f6Nfd8SRGjQtBlflDdDAqTQMOgSQ3eVjIrURGv7jy8g+
+	 fh2loWyImxtJBPkwo59XZfpNiiinK3URjSxQRZtU=
+Date: Mon, 9 Dec 2024 09:16:23 -0800
 From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Adrian Vladu <avladu@cloudbasesolutions.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
-	Mathieu Tortuyaux <mtortuyaux@microsoft.com>
-Subject: Re: kernel: fix hv tools build for arm64 when cross-built
-Message-ID: <20241209083035.GA25242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <PR3PR09MB54119DB2FD76977C62D8DD6AB04D2@PR3PR09MB5411.eurprd09.prod.outlook.com>
- <Z1Y9ZkAt9GPjQsGi@liuwe-devbox-debian-v2>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"Srivatsa S. Bhat" <srivatsa@csail.mit.edu>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	jikos@kernel.org, bentiss@kernel.org, linux-hyperv@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ernis@microsoft.com, rafael@kernel.org, pavel@ucw.cz,
+	lenb@kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 2/3] Revert "Input: hyperv-keyboard - register as a
+ wakeup source"
+Message-ID: <20241209171623.GA29631@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1726176470-13133-1-git-send-email-ernis@linux.microsoft.com>
+ <1726176470-13133-3-git-send-email-ernis@linux.microsoft.com>
+ <ZvIx85NmYB/HzKtI@csail.mit.edu>
+ <Zv-j0qtWXsDz4Hah@google.com>
+ <20241017134438.GA14386@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20241108104741.GA14651@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -58,92 +66,102 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z1Y9ZkAt9GPjQsGi@liuwe-devbox-debian-v2>
+In-Reply-To: <20241108104741.GA14651@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, Dec 09, 2024 at 12:44:22AM +0000, Wei Liu wrote:
-> On Wed, Oct 23, 2024 at 02:01:12PM +0000, Adrian Vladu wrote:
-> > Hello,
+On Fri, Nov 08, 2024 at 02:47:41AM -0800, Erni Sri Satya Vennela wrote:
+> On Thu, Oct 17, 2024 at 06:44:38AM -0700, Erni Sri Satya Vennela wrote:
+> > On Fri, Oct 04, 2024 at 01:14:10AM -0700, Dmitry Torokhov wrote:
+> > > On Tue, Sep 24, 2024 at 03:28:51AM +0000, Srivatsa S. Bhat wrote:
+> > > > [+linux-pm, Rafael, Len, Pavel]
+> > > > 
+> > > > On Thu, Sep 12, 2024 at 02:27:49PM -0700, Erni Sri Satya Vennela wrote:
+> > > > > This reverts commit 62238f3aadc9bc56da70100e19ec61b9f8d72a5f.
+> > > > > 
+> > > > > Remove keyboard as wakeup source since Suspend-to-Idle feature
+> > > > > is disabled.
+> > > > > 
+> > > > > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> > > > > ---
+> > > > >  drivers/input/serio/hyperv-keyboard.c | 12 ------------
+> > > > >  1 file changed, 12 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+> > > > > index 31d9dacd2fd1..b42c546636bf 100644
+> > > > > --- a/drivers/input/serio/hyperv-keyboard.c
+> > > > > +++ b/drivers/input/serio/hyperv-keyboard.c
+> > > > > @@ -162,15 +162,6 @@ static void hv_kbd_on_receive(struct hv_device *hv_dev,
+> > > > >  			serio_interrupt(kbd_dev->hv_serio, scan_code, 0);
+> > > > >  		}
+> > > > >  		spin_unlock_irqrestore(&kbd_dev->lock, flags);
+> > > > > -
+> > > > > -		/*
+> > > > > -		 * Only trigger a wakeup on key down, otherwise
+> > > > > -		 * "echo freeze > /sys/power/state" can't really enter the
+> > > > > -		 * state because the Enter-UP can trigger a wakeup at once.
+> > > > > -		 */
+> > > > > -		if (!(info & IS_BREAK))
+> > > > > -			pm_wakeup_hard_event(&hv_dev->device);
+> > > > > -
+> > > > >  		break;
+> > > > >  
+> > > > >  	default:
+> > > > > @@ -356,9 +347,6 @@ static int hv_kbd_probe(struct hv_device *hv_dev,
+> > > > >  		goto err_close_vmbus;
+> > > > >  
+> > > > >  	serio_register_port(kbd_dev->hv_serio);
+> > > > > -
+> > > > > -	device_init_wakeup(&hv_dev->device, true);
+> > > 
+> > > If you do not want the keyboard to be a wakeup source by default maybe
+> > > change this to:
+> > > 
+> > > 	device_set_wakeup_capable(&hv_dev->device, true);
+> > > 
+> > > and leave the rest of the driver alone?
+> > > 
+> > > Same for the HID change.
+> > > 
+> > > Thanks.
+> > >
+> > device_set_wakeup_capable() sets the @dev's power.can_wakeup flag and
+> > adds wakeup-related attributes in sysfs.
 > > 
-> > While trying to build the LIS daemons for Flatcar Container Linux for
-> > ARM64 (https://www.flatcar.org/), as we are doing Gentoo based
-> > cross-building from X64 boxes, there was an error while building those
-> > daemons, because the cross-compile scenario was not working, as ` ARCH
-> > := $(shell uname -m 2>/dev/null)` always returns `x86_64`.
+> > Could you please help me understand why explicitly calling this function 
+> > can be helpful in our use case?
 > > 
-> > I have a working patch for the Linux kernel here that was already
-> > applied in the Flatcar context and it works:
-> > https://github.com/flatcar/scripts/blob/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
-> > 
-> > Raw patch link here:
-> > https://raw.githubusercontent.com/flatcar/scripts/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
-> > 
-> > Sorry for the delivery method via github link, but I cannot send
-> > proper patches from my work email address currently, as the email
-> > server does not support it.
-> > 
-> > Please let me know if I need to send the patch via the recommended way
-> > or if the patch can be used directly.
-> > 
-> > Also, maybe there is a better way to address the cross-compilation
-> > issue, I just wanted to report the bug and also provide a possible
-> > fix.
-> 
-> Saurabh added the ARCH variable. He's CCed.
-> 
-> BTW I think your patch can be simplified by using
->   ARCH ?= $(shell uname -m 2>/dev/null)
-> instead of the ifeq test in your patch.
+> > > -- 
+> > > Dmitry
+> Just following up on this patch. Could you please help me understand the
+> reason for the change?
 
-Agree, this is better way to handle it.
 
-> 
-> I don't think that's correct. ARCH will be set to the correct value by
-> Kbuild. 
+Vennela,
 
-If we build locally on ARM64, there is a chance that ARCH may not be set,
-leading to build failures for arm64. IMO we should provide a fallback
-option for local builds when ARCH is not set.
+There is a difference between "wakeup source registration" and "wakeup capable".
+For this there are two flags defined in power management framework:
+ 1. power.wakeup
+ 2. power.can_wakeup
+ 
+More details on these flags can be read here: 
+https://www.kernel.org/doc/html/v6.12/driver-api/pm/devices.html
 
-> 
-> Saurabh and Adrian, can you test the following patch?
-> 
-> Thanks,
-> Wei.
-> 
-> >From e6a1827887617c08172e2d0ee0d60549f5ccad65 Mon Sep 17 00:00:00 2001
-> From: Wei Liu <wei.liu@kernel.org>
-> Date: Mon, 9 Dec 2024 00:32:50 +0000
-> Subject: [PATCH] tools/hv: fix cross-compilation issue in hv tools
-> 
-> The Kbuild system sets ARCH to the correct value.
-> 
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
->  tools/hv/Makefile | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-> index 34ffcec264ab..9008223279df 100644
-> --- a/tools/hv/Makefile
-> +++ b/tools/hv/Makefile
-> @@ -2,7 +2,6 @@
->  # Makefile for Hyper-V tools
->  include ../scripts/Makefile.include
->  
-> -ARCH := $(shell uname -m 2>/dev/null)
->  sbindir ?= /usr/sbin
->  libexecdir ?= /usr/libexec
->  sharedstatedir ?= /var/lib
-> @@ -20,7 +19,7 @@ override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
->  override CFLAGS += -Wno-address-of-packed-member
->  
->  ALL_TARGETS := hv_kvp_daemon hv_vss_daemon
-> -ifneq ($(ARCH), aarch64)
-> +ifneq ($(ARCH), arm64)
+'device_init_wakeup(dev, true)' sets both; ie it registers the device as a wakeup
+source and marks it as wakeup capable too.
 
-My understanding is ARCH could be either aarch64 or arm64.
+In our case, the device is "wakeup capable" but we do not want to
+"register it as a wakeup source". 'device_set_wakeup_capable(dev, true)' is more
+appropriate because this marks the device as wakeup capable but doesn't register
+it as a wakeup source knowingly.
+
+I understand that Dimitry suggests not to revert the entire patch but to replace
+'device_init_wakeup' with 'device_set_wakeup_capable', to mark the device as
+capable of wakeup but knowingly skipping the registering part.
+
+Requesting Dimitry to correct me if there is any misinterpretation.
+
+While fixing this in next version, please fix the kernel bot warings as well
+reported for 1/3 patch of this series.
 
 - Saurabh
-
 
