@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-3451-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3452-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59A489EAA40
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 09:06:11 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF5B69EAA45
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 09:07:59 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31A1D1622F9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 08:06:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD8C92820C3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 08:07:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183EC22F3A1;
-	Tue, 10 Dec 2024 08:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4CDA22A1D5;
+	Tue, 10 Dec 2024 08:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="d+TEUX3i"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dUOTG0G4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0FC22B8DB
-	for <linux-hyperv@vger.kernel.org>; Tue, 10 Dec 2024 08:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCC0194C6A
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Dec 2024 08:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733817957; cv=none; b=DDGjNnwtBqLVdgFdBEcWMZ+Ce9g6IJN/c/daJ0Q3J5YqJy76iIU8p43+QT2OhTVv2g7dm3rIFN42ubdXZsomBs4g4lKQW7AC8iofacZ3BgUEwHb1NrJ99Sk4kbObhMy8cxYDxzolrzZgsifsqonJGX2mTZe4NmqXqki/wt/qLbc=
+	t=1733818076; cv=none; b=OlOokFumoTAMi+gZwHVJvy0Vag7dMjuY5kIrnwhTFPbOLd8T8IOgvYS2vakCzSYezqkf6FY9jzik/F9/kuG5fbbTPoz4hJ/dkVtOGkAIsidnQ0rw1LieBSiOsfB4zoAaOm6cfI4Z6ik01s90ND2lnM/+ygHYlrr4a+3A95d5aWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733817957; c=relaxed/simple;
-	bh=IOhygl+FKrQDF+OJV1Ci8RazGQNlqN/zGEQTRBe0N4E=;
+	s=arc-20240116; t=1733818076; c=relaxed/simple;
+	bh=z6S2mHmsZMC2cxML5OVpEyiNZNzxSnRj5YKZySsDetQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RFPEr6DTb21tq6d1dF3/vjGSamG4ZUXJAZLKAVQgOTOGT5InKqQoeszm65hXjc+3Yz7quYq/yt6pzLIyWccKsZLa2aMFLJXLtIpBCjmOSc/0PUhjLysH0PYo7q6mGl5nCgL/Cyfy6gOh3DpXp9L9dT4vWm90ByekcTpGXL3+HHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=d+TEUX3i; arc=none smtp.client-ip=209.85.167.53
+	 To:Cc:Content-Type; b=kxOT9OhokGKHWWc0L0Iua/zPHAqHymeYX6/339k7o8arnoRkENe39dJYbgIbWYVQjO/j57JHnmAF2LnFPq2c5t9zZt0xj4fbHBEquEF7H2/1+/FHLVUVOmzUGBfANGw2XO8wechGZ/dzXX32PY0mRuyglkOzWO4zBbIMd1ojGo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=dUOTG0G4; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54020b0dcd2so1612011e87.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 10 Dec 2024 00:05:53 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5401c52000dso2121155e87.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 10 Dec 2024 00:07:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1733817952; x=1734422752; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1733818073; x=1734422873; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IOhygl+FKrQDF+OJV1Ci8RazGQNlqN/zGEQTRBe0N4E=;
-        b=d+TEUX3iXRNddpg5iQPgaMcj8mHwck+i2AZ+F5MrhVjZXMGhzWTF0J0oLBz/LaUWdv
-         NgTZKeZX998S44d+KYA0nLsPbDAcmxYbdfVfUS9vWoc3X/QsUunRC3+zJ6mdedCCDEOp
-         JaCRdfiXhKh91zDp+054idE2CCS5/U9iHvbRw=
+        bh=z6S2mHmsZMC2cxML5OVpEyiNZNzxSnRj5YKZySsDetQ=;
+        b=dUOTG0G4TgBx7eMLtRa5LHAZmLm/X/+6qde4CNm1j271k5LS+IxYCYXqOARfFXKxJD
+         N1YAXtTowF2o1460CH4Q5+rsHLWHU7WJSW3R/G1EJi/riF1tG5f2PRfslZYZWc6DSGgW
+         2QQGGhyohShA39uLPNC/7BR4XWgdPyx4R1NuA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733817952; x=1734422752;
+        d=1e100.net; s=20230601; t=1733818073; x=1734422873;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IOhygl+FKrQDF+OJV1Ci8RazGQNlqN/zGEQTRBe0N4E=;
-        b=oINt++6akt1b7+N1xb90Fa00/1bdeTEEBlKHNtqBi7eA5spsmZz0EJ1syNvh+lrSXc
-         tGLaCAP1CE3YY8ZYj2VB6cMMdXkkYebR1ILkVHcMQR5NlMMqNNhQznCMZQxp79O05Tdm
-         88GRxP8fvFuBMCH5UHp9QBaiCRk9y/XaFVjeMU5MXvM74giK0q99pGSE3Ngwng4Ou+WA
-         flNKQqvIznwapVG/ZJUuNfQ+io/qeM2y/0mwal/CnIX0eh8EWstbldHQ1vuLlgCiskbk
-         +ta+BLV8BGrLnXWTbWNo81v+NsN0iuDfOs3iVE79IeDZu7e/knW78QMbCZUNFBeY1vCN
-         TrJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcLeSe/duHf1LMURyMl8V1OxHtaQq0zA4nE/w4UAJjBWbpIcTIos9xCnrFItd/H3XqzTc8/ceQUWxuTh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvoOYeTEizcayBuDkaMGiW6Iy5ncvCEjMe7fgudWOyc9yHB0aG
-	QwptLGneZU2dLUqYQUA1InxcINv3wZzeaGsFVU+p4Zv0B1YpN/9MFSTe3YpFnBWms6LjN3cepNQ
-	B+cJID02gHCzZ7KAATXZyBMZwsO/SicnikuqpFSviRadD8xnEQw==
-X-Gm-Gg: ASbGncvlekq0SGXaNZ/F2LJChfEj3WG7t2lRFUt+6IYKpcZX+O+/ELKSDIdaCqd4Aah
-	KsfVlfLg6GAbnxaWwSRAjgou1eI9p214PjKyE
-X-Google-Smtp-Source: AGHT+IE/jEdQ3iqPepbRLf8U2Vl6GChfTSUlF2241JNXL1N0muD63kwMtycGayQdowjqHgKt46VnhqeKd74xD5OcL4Q=
-X-Received: by 2002:a05:6512:31d2:b0:540:1c67:fc2f with SMTP id
- 2adb3069b0e04-540251eb26fmr733374e87.14.1733817951864; Tue, 10 Dec 2024
- 00:05:51 -0800 (PST)
+        bh=z6S2mHmsZMC2cxML5OVpEyiNZNzxSnRj5YKZySsDetQ=;
+        b=vIgrRXNPqmCvj9dL0q85lkNqKiGeCy8MHHSF5LqDwVY2r9Vyne5vjNGmwlINn8SKuC
+         etsQlKl5NTOjCJ0p1vGSQr5odRgbcp7jPL2DTgPzbKPNcuYvfb5A5hLnxa2DJSOnmEZ3
+         lqtAIi8f6/TIXcizxbwVfFYKpJfh4X5zAEmFuwQepOEDdZcKwqZ0ykR7BJYAAKCajds3
+         /2LKy28cZXjcu5n9l/3M0wzKjXaQswmFgZE4ji9pn5mKFyiE+lFrE0fWHt6TemEWUlHa
+         pPPyaBdwSKHfhDnvg7YpsZLVFHF6JVry2Gf0C3VGnIWo4Wdw3Yk25B5tjnCCWIm1vNxK
+         z57g==
+X-Forwarded-Encrypted: i=1; AJvYcCVG9jzgbIyZmk6SgdxIw7fcggWPdfCgCfAZjFFd++8HllRowjgIizL2X6tM6MThZsXU+EgoE+J6nQ/0Oqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK2SWFmvBuiXiFlhrkx2TR/v6ejg9SY2qDRE/dZddFujEJCk/u
+	Lm/IkD6u5DW4n+zXyEVHf7SZCBsfy57l8YuMFJhxKP2+MwQDg213xl1bdkMrgQZH4maRHmouGFS
+	GgmdXP+U2mvA6rSJ4TjMnjT1HeSMruKOCbWsb
+X-Gm-Gg: ASbGncubhWJNSuaHEGUp+Ka2ZVF4+t687dJgIUxxTRKY2M1O6T2b7hXleaDlj9rXkox
+	WAPP3whsiDev7BsAoCobO0dKJHb5A62SvHmEH
+X-Google-Smtp-Source: AGHT+IFUM00bXrbZPM88kU9gRNDUuamgsxOoWDbEMA49d+kpeyOs51eCsZxCwHrC4xexdtUL809J0fzCQ6i9JAtHGk0=
+X-Received: by 2002:a05:6512:23a1:b0:53e:391c:e983 with SMTP id
+ 2adb3069b0e04-53e391cec2fmr5383699e87.3.1733818073241; Tue, 10 Dec 2024
+ 00:07:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241209175751.287738-1-mlevitsk@redhat.com> <20241209175751.287738-2-mlevitsk@redhat.com>
-In-Reply-To: <20241209175751.287738-2-mlevitsk@redhat.com>
+References: <20241209175751.287738-1-mlevitsk@redhat.com> <20241209175751.287738-3-mlevitsk@redhat.com>
+In-Reply-To: <20241209175751.287738-3-mlevitsk@redhat.com>
 From: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
-Date: Tue, 10 Dec 2024 13:35:41 +0530
-Message-ID: <CAH-L+nNRv9SeEi6Bt2jZLd5UkUAqRVX-XjaL-yP56LWR+g00ig@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] net: mana: Fix memory leak in mana_gd_setup_irqs
+Date: Tue, 10 Dec 2024 13:37:43 +0530
+Message-ID: <CAH-L+nM8v2paYtRoNpcRtFFsiWyuUGBE8r85fDNMpaXcJo=7_g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] net: mana: Fix irq_contexts memory leak in mana_gd_setup_irqs
 To: Maxim Levitsky <mlevitsk@redhat.com>
 Cc: kvm@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
 	Haiyang Zhang <haiyangz@microsoft.com>, 
@@ -85,23 +85,21 @@ Cc: kvm@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
 	Andrew Lunn <andrew+netdev@lunn.ch>, Shradha Gupta <shradhagupta@linux.microsoft.com>, 
 	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, 
 	Eric Dumazet <edumazet@google.com>, Long Li <longli@microsoft.com>, 
-	Yury Norov <yury.norov@gmail.com>
+	Yury Norov <yury.norov@gmail.com>, Michael Kelley <mhklinux@outlook.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000002575e10628e5f37e"
+	boundary="00000000000061dca50628e5fa15"
 
---0000000000002575e10628e5f37e
+--00000000000061dca50628e5fa15
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 11:28=E2=80=AFPM Maxim Levitsky <mlevitsk@redhat.com=
+On Mon, Dec 9, 2024 at 11:29=E2=80=AFPM Maxim Levitsky <mlevitsk@redhat.com=
 > wrote:
 >
-> Commit 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
-> added memory allocation in mana_gd_setup_irqs of 'irqs' but the code
-> doesn't free this temporary array in the success path.
+> gc->irq_contexts is not freeded if one of the later operations
+> fail.
 >
-> This was caught by kmemleak.
->
+> Suggested-by: Michael Kelley <mhklinux@outlook.com>
 > Fixes: 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
 > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 
@@ -113,7 +111,7 @@ Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
 Regards,
 Kalesh A P
 
---0000000000002575e10628e5f37e
+--00000000000061dca50628e5fa15
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -185,14 +183,14 @@ a30CvRuhokNO6Jzh7ZFtjKVMzYas3oo6HXgA+slRszMu4pc+fRPO41FHjeDM76e6P5OnthhnD+NY
 x6xokUN65DN1bn2MkeNs0nQpizDqd0QxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYD
 VQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25h
 bFNpZ24gMiBDQSAyMDIwAgw3wUUJsDUiPdpordMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
-AQkEMSIEIGrQNRUufdsYuw+mKFV1Swj5WDgRA1YezXKMHvSTshB+MBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTIxMDA4MDU1MlowaQYJKoZIhvcNAQkPMVwwWjAL
+AQkEMSIEINdZoc3reemdznR8PIrnCdocsWW1cXx5XnQB3qvKKqbIMBgGCSqGSIb3DQEJAzELBgkq
+hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTIxMDA4MDc1M1owaQYJKoZIhvcNAQkPMVwwWjAL
 BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
-9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQB46aG/c4X7
-c6xgimYXqhEtCPYI01Yn9j2yRFZoSBhvw3KlGFZIgJnGqDR0QN0V4LtbQXdUp6FSlZYZxhvZdemG
-aVOgNZdAKRdromVv/6MIV1vw6O8BU//iJbrGB4usmRhwwPSXnH8Lokengi93yTxS47kci5oY6sOb
-r0E3MbanSC6xDKvclUx4v0NeRoukP2ELKnvwujaZSAYciwrcycTLPqn/Wx9fRsTGb1HATm6+Vqwe
-x5ACy19MyRR6gVpILnIxZ5EVGioig6SXDvPovIMkjd6J3u4Aaj9PRKqfHwFw7Q6C0pbFCG0asacy
-bgPRpV2kfYsTcBWB7gjcxPqorrdi
---0000000000002575e10628e5f37e--
+9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBzFBzQGh8c
+XN42bCiVN7kMjngXqDfNZ3moAZI0OnXYUWYMUOlwCX+2O76iM+lyHGV7g8p5u1gaeNFVfeVPCspL
+aVqWtHzl69dHxHVBMi0h5rxL4JFvORX9Mk/idniUADzuRYZFDgXsU7Z4qASAPQrZ85nNSUJxLaBJ
+6zB9YpA8pkcjEyBmLhDayom/rMJUATTee4MromOH28mzWlS59xWw3qwaasZ8N0zEeplqFyGfjSqW
+pWGeoEzmARaf5MKbNS01k1RL8jL5iGcipYOByAhs3NTKip74mJ5IzyrdvNnQJunuKJXxTSEvBvHD
+ICq2t+Rh/OwKjNV8ZR4aZ4OvMG4C
+--00000000000061dca50628e5fa15--
 
