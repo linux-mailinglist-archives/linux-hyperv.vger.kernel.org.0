@@ -1,204 +1,235 @@
-Return-Path: <linux-hyperv+bounces-3444-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3445-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A40D9EA02C
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 21:20:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE2049EA612
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 03:59:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7742B282A3F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Dec 2024 20:20:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9329B282214
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 02:59:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E409919884B;
-	Mon,  9 Dec 2024 20:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4961A1B0F38;
+	Tue, 10 Dec 2024 02:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NsRSyzOI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rp3IR/PA";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bfOLxq8D"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6BC1547E2;
-	Mon,  9 Dec 2024 20:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733775617; cv=none; b=We+BSuAP+cTzRWmJS7b47EBjwaDOSL5a/kIhEQoSDi+thYVt9ecMIfyGhDml9X1bgnrfWdxUNnpHCGq1MSr0YNAf39DHjT2CRL14TDH1IS7uEwwMM/mygRdfnBmlD7NTekoLwFYKK5XcuCbsOdmpOMws4k6j8u11j20DSU8CZaw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733775617; c=relaxed/simple;
-	bh=jm161Sfr6vj9CpAF+l9YXeEuadaQnEK3Bmxbtti5Crs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2j/egyAnoQnDwD5aGcW4M9udbI6xTkJ1BeWjTlaQPPCqdJpVPIgc/ZqG2DyPwEGZCNUkZprLlf+WOdEZgQp/5hCLsBkTmqxCZu78Q6Xsml0cmO0qWxVrW7cZrDqiIp0+SRT5O7zgwV9AvRz1SAfz4afXHJwTTONAeRdQA4//e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NsRSyzOI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.115] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 453EB20CECB3;
-	Mon,  9 Dec 2024 12:20:15 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 453EB20CECB3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1733775615;
-	bh=R4826thRCnzo9UT2dSVOhBPmXdFNnd0wF4KQbWcTe4g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NsRSyzOIBWUwgsiQFGVRbC3/A2MikFgjENASO0p/8m5UcXCTUulPAsxip75CP4qsf
-	 ctzkCttrkZJZRspRzV/NEZllxMRMKtIgn9G1PLU5Yvlf9XL3FuOo7TSWu7X/hCgnoq
-	 ZKGVcXjSI6PhZ6rMAdjd9f15APVQTFTBH0Y/7p8k=
-Message-ID: <6cf69fbd-b6a0-4e88-85a6-749a4e2dbdaa@linux.microsoft.com>
-Date: Mon, 9 Dec 2024 12:20:14 -0800
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DAD1A2550;
+	Tue, 10 Dec 2024 02:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733799543; cv=fail; b=SWt7wjeyfGV3wiNc+ZBwDGr3he41mIQ5ZOH8v1EwA2uHs+IObUnvVrLmHxWTGf181cp6I1W2yeh1xayZl7DhdZpHYhgKWaU0xWW18mONdRzmibWeM3glUL2mKsM4nw4YBzqtQlY6IC2M3pCu+pPDwexWyEwjzxweyL0QBI7OBiI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733799543; c=relaxed/simple;
+	bh=rzEm+vCNJ/PoIiXWAW9X1ijDX74oSPxLdXcgPg84vxE=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=esbzoLCZ+YLEVA6yllKqg2iIe2vaBYqavqXQfhmqpugXMSS2EMyrpP92Irc30F1YwBjMyKMP2ILSYdgi/Ax3puAww+/GFWgwuKZUgCU2gIHIttjR7SVasUGB6STNDcej3WOuyFfJHlepuEpx2h4xnFPHlyuDIhcQ4eMYQF0RmXg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Rp3IR/PA; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bfOLxq8D; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BA1BuwF005028;
+	Tue, 10 Dec 2024 02:58:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=n68Y1GC0We2RXpdBRP
+	SEZJen+q2B2TcIjJuavu5dNIg=; b=Rp3IR/PAoCkd7LzRquSHlKOzJrOlZEp+J+
+	jZlyrfVNqdS7U1XdrdrjLmDwFKU5Hg6P8mjnkg+2vVBUeDtcijhUY824jlNcymyJ
+	tTgeg3t7sjdAG/EVQs+ksFqhHzl7pqRMrOh+gkiy2/nEBgpnFdda5Gn2hrq33cZ4
+	8fXjOjMom3f8qrCKWCeWJgUpPvTMl6Inz5myLWjITEKEt9I2wpdKbqmdQWPFW2Ed
+	VeZsHLRqbpBx4ac34viVXc5n61IlNzn0TX8kM5AadrlrgXigEFivW6bzc0USuvoJ
+	J3HeXCtUj1gvbVLVsIzThv0Nv/EFNyQZlnBjuQDIGyPQzzCTZKHA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43cdysvpjg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Dec 2024 02:58:31 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BA2ECaR034949;
+	Tue, 10 Dec 2024 02:58:30 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43cctf8bac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Dec 2024 02:58:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=umg3fxgL7MDi4L41xLtdB1X3oSwGxK9sHpEs9HQFZUJgMu7TmuZON7XAscLZMjInTmUWiiC8w3mYUPAv5w2+mPNCXoTcDbQkg20zx4EJ2xS1CwhIov7rEjs/GicILkt9u1SdIBSC9dpq3lAPalac5wOjCJ8JRCkW2TZWVUEioYvUnPmk3LbLtyBSo18DIjqR3x10A5YWB9tD7PSA1twYoJT9P6FtNW0AAV0jEf2Fjmr1li977aMYt3ZAQ/1bjwefekGwUIwTYntwL7WR6kVUDTPk6eD0MPlAeCgCej5iFQD9vdlYr6GNDeY2Toa4jpljMU7n98AEPJs/l3zkhPb9Hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n68Y1GC0We2RXpdBRPSEZJen+q2B2TcIjJuavu5dNIg=;
+ b=W/k8qUDNa8VeQfpYkTCpH/BkdrXk7Yccwlr9mJ2f7XXuniKTu9aHwFGly+mrK1wTG9ZQRJqMNgipiC9aKtj6XVgyiqhUIgeWkgN6tWDAtm3v6P+cf53nPswc4kA6zfNw63LUx53V5OAXgvQZcjKuLuEClR6arG5L/ENUOO6CJX6N1flUtj1k6ucLVW/z+GNm1YrCqQ04EmjlET081C1BF8FDsHPxxT7Z4BhsywMUjdFY5ZBDMgGMwKxK2mr9WsgyjWTVpoMzgpEyMfe4WHaOtNbUO26zHA6ixezoB2roXg2Tt/Op+iDq047mxJPRI+4+VAEDeoNK58F987u84oxzgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n68Y1GC0We2RXpdBRPSEZJen+q2B2TcIjJuavu5dNIg=;
+ b=bfOLxq8DNt/sEY/fXHB2diDhLpCGY2I4iyb+v9060Qdj5OQA95Z5A77PJ9+gZLDpfmxAtyBoQlhQgwxEinGqZQBEZ4iV2g7LswVMx0OoFs1jx6LeKuloQlBhuDcFguJMsCe1NQ4hvCNyBK4hGrhXNsZM6x8RUGJwKtIJ8kOZoEw=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by SJ0PR10MB5566.namprd10.prod.outlook.com (2603:10b6:a03:3d0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Tue, 10 Dec
+ 2024 02:58:27 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%5]) with mapi id 15.20.8230.016; Tue, 10 Dec 2024
+ 02:58:27 +0000
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>,
+        "martin.petersen@oracle.com"
+ <martin.petersen@oracle.com>,
+        "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>,
+        "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org"
+ <linux-scsi@vger.kernel.org>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org"
+ <wei.liu@kernel.org>,
+        "decui@microsoft.com" <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com"
+ <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org"
+ <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com"
+ <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>
+Subject: Re: [PATCH 4/5] scsi: storvsc: Don't assume cpu_possible_mask is dense
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <BN7PR02MB41487D12B5D5AA07FE7236B6D4312@BN7PR02MB4148.namprd02.prod.outlook.com>
+	(Michael Kelley's message of "Fri, 6 Dec 2024 02:58:26 +0000")
+Organization: Oracle Corporation
+Message-ID: <yq15xnsjlc1.fsf@ca-mkp.ca.oracle.com>
+References: <20241003035333.49261-1-mhklinux@outlook.com>
+	<20241003035333.49261-5-mhklinux@outlook.com>
+	<BN7PR02MB41487D12B5D5AA07FE7236B6D4312@BN7PR02MB4148.namprd02.prod.outlook.com>
+Date: Mon, 09 Dec 2024 21:58:24 -0500
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR02CA0025.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::38) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] hyperv: Move some features to common code
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "arnd@arndb.de" <arnd@arndb.de>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>
-References: <1733523707-15954-1-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB41573F55DBAAF124CFD92840D4332@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41573F55DBAAF124CFD92840D4332@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|SJ0PR10MB5566:EE_
+X-MS-Office365-Filtering-Correlation-Id: b9c57c3e-a00c-43d1-94ca-08dd18c68506
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?y64rvUWAXeUNsExox2X4pWBJY8ogXpHV3tjDJJrY/pTyDhFPUjY0ico1/OU9?=
+ =?us-ascii?Q?UjEFpTdq/uOF32a2yi7KxhCFJQgGNN8VxM0NIGqec/+cVmM/1kqIscKgZOMo?=
+ =?us-ascii?Q?BpZqwJy4+9ZI0YVbqlMuFIUOujnsB85VGsb6x7CBm6djib1eUoIJbxLQU94z?=
+ =?us-ascii?Q?0pO+td3I+XByduTsyNogFZq4Cze7H212S4536TKaRKYoDjmwAgFJokCQTFDN?=
+ =?us-ascii?Q?2/DMNKXI07VAFKvMbbQYCXfuIfJNZ2ptW4taF5MKscGScrhLS5/NKHo1lRlS?=
+ =?us-ascii?Q?7FJg8+QiOH8tEU/C5cJFRv9CyP9ocWslALQCYWAqvF3jH3Ct9Ju/uPOTHnAw?=
+ =?us-ascii?Q?RxipP/7+jMnPb7Cn0LAbvKiBEsray81Gk9A9un5gNbsHIt1IDyXAnZJYXFhF?=
+ =?us-ascii?Q?kd996+U+lMJp16uOlbbh8ayYuFFbzg62NYE18TnsNPK0yeqFQysjZCB+X5d3?=
+ =?us-ascii?Q?qM0DdfMa28rXoCg/4EH/LXh40RLDMa9jmCEfwo2VLejoGYxVLjI1kBlQ852L?=
+ =?us-ascii?Q?gKoIsTKiwu13C7Dnso+EQmJu2mcsSMIuykCBgZuTwU3b/hX6WKrVmCnUdeyL?=
+ =?us-ascii?Q?ofvalGQUVhlJEy4ca6amCAKQCqhA+mptZoBPm6n1w0Xc8+13zACw6w76A5n1?=
+ =?us-ascii?Q?q2btlBcqOpEktu2gNYznQIjT9Xviwt5gH/MCH02+QwQvU9DOAPQKxiq3n7mT?=
+ =?us-ascii?Q?opJcyRfNZErxlDqgaOREpxn4HSreBe9QbZ/jr/9f1zcFqa1pUQH8+aS/8WTS?=
+ =?us-ascii?Q?bEWU1RC9BNg7nYfZ79Fp+Pcr2oVqgVqcx/oB3OmcFl/yYr/VwdGJysuFduB6?=
+ =?us-ascii?Q?0r34NbHiZKQ2IzHhV47Y5nQ8txRo9dNEu77KfKpJg0ZAyCc7Ief5ZYOAWoVY?=
+ =?us-ascii?Q?b9UlDoRVg/K0qT4v0JYUS8S3tc13nXM91L9dQ3oBCOdPKNSqZurTIxwLQASp?=
+ =?us-ascii?Q?pNkY/9bYfdNn7HxoECjg61UCxxFbnMGhUDukanmvyTsCjsSja/gxqA2M+peF?=
+ =?us-ascii?Q?acwXfCNMypJ9fCaKZWNGgeNNO56ZtmagaV/4lkPDPQ4kVBHMG6klcJC92U3N?=
+ =?us-ascii?Q?DiOfFFNKQ3++Fqc0qkQQu3Niz6K1vzt9tanFDgCK0NrNG0TM8JD3cax1Skf4?=
+ =?us-ascii?Q?hSBc/mpFOVm0Kp622CoDz+/Zq6LNM+4V6cpQx9SiEhXwu+9r7sPwcqcZwYkr?=
+ =?us-ascii?Q?s8aMD7nNfmnKxEzh28jT9CMjgJq7+6lTLQjKbi3bBbFgQOlnvBwZwnTnA4Ef?=
+ =?us-ascii?Q?MjxDbG68Zv+BZuaPyGHv0uobt2DghSorweq0+l42yaA+9WHzqbpiZIPgm5sU?=
+ =?us-ascii?Q?J3PJiijSEV2eJjEM+MqCZeV8n936brNQg1WM/31XCwlRHQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TrtQgRsmnAyC2UbZcAnv/XCVhRTuelZa3QspssD8bqucN/9k8uLRLXqN43K9?=
+ =?us-ascii?Q?VA4aKfETAgJcBetIDAD7JD9PyRnXm/4o9Y7iuzDm2+SGG56fmIVDrlVgWlQu?=
+ =?us-ascii?Q?wvXJaKLqjYp1+U3Za0XYKsBOD1q6hsptUOy8LpGnnZzSxKI2Vx0VNAi0Y7yI?=
+ =?us-ascii?Q?kl1oM02Ih0EVSlfLNm257vofTl9+xGSZ4Z4TqS/PseejrfLXO25uSN5OlD9x?=
+ =?us-ascii?Q?sX8wvD0lt2doqu8pI+c89IaFwDEWb3IYloSo3dozbl2KphstRlQMTA9ElGma?=
+ =?us-ascii?Q?4bQYV4En3C9nq4ugFyoUDtJIm6SS3uMly4krezlk9kIFlI1adE91VM7KSE0B?=
+ =?us-ascii?Q?Evp0ylTZwjBFSXn/QkPTCdjp4iEVCFtkDTCy1BNQHjO/wHF94JHJi36rpKmQ?=
+ =?us-ascii?Q?/sa8TSTOF1hcab+gdtzYPcaG1HWaUMDh148u14+s0XseJ3uUdJAv+gatZ3dA?=
+ =?us-ascii?Q?zj9DijnvGGR/IiY/V/NdOzB2iWYI0V4Mc2OHIn0OTfjcFqJ3dnVZ1ykAjQ04?=
+ =?us-ascii?Q?ChinEh3H0UzkNGS/gy3iX9n5QOzhFSqjI9jzaSneCVFkT1JSyB7egEj89TvW?=
+ =?us-ascii?Q?5dj2XxBRBYnu/4y99OFBh6j+1Knh9Wy57IiMagoEShT9JtFEHnLHk+jxq8qq?=
+ =?us-ascii?Q?P8x1SHclTTH4Z2L3XI3Jd8ja3PWw2RDWPS5fQMj/kdRsb8yaY6SsvjDM0I66?=
+ =?us-ascii?Q?cuteDgA17y6n8WM0P0qDM7llbglUfUU6KdXubcSBw2VLOEYMRK2ef26uVUHX?=
+ =?us-ascii?Q?sIVTY5J9DdwwA4sdB8LoeiPqVRpIH5gpd96AgKcrN4bSNKxJIToWGKbVj3Kz?=
+ =?us-ascii?Q?XPf+8W0Opy7Yxxxn0MoSHSXFjTCjlVxqlzOlHKNQaCshXyxMTmYGisnBuoPi?=
+ =?us-ascii?Q?ztgTYRcPF/cKYWCgNd2iKqsGERWas58cBseU4VQ3xywSPgzxVsjSi79SfszH?=
+ =?us-ascii?Q?4aYVlMJTLrfknjjSKv2r0dfVclZJ3RkCIzjl5ll4QXxr+nzh2i4MUN61Xf+W?=
+ =?us-ascii?Q?dDTEaCX6ngj30bcVsce+gtuZ8fiWsQ+wWVqMGlMgbet2oof+ARWpdgW4aTmn?=
+ =?us-ascii?Q?ni+2SKn0wbc7Hi6/TwmV6KyJxY292GsjiPjVQfMGTDhDu2bm5CiAPJqCNHoE?=
+ =?us-ascii?Q?d8309VVs/iJAVC3BnUMcwoNeqcBQv8UkM8ylrZXGDE6svs00Ff7xjQ7sKIkO?=
+ =?us-ascii?Q?Z31/iSSamCx3/7Tk/bQYMRWKDZxWRTL9DBKsAwO7aXKYiX+EwjZz3fRfzXG6?=
+ =?us-ascii?Q?yM/2Eqtxh++nFvnwOyumjb5DoM5WYjOKmiS0JUDT5ZzP8yLlYg7SS8L6hj0O?=
+ =?us-ascii?Q?Ms0lV+2aAwJFftXAZlk/wI1jbf05v0VG18fZ5dUAggX2RXZnt0ofhd21F/lG?=
+ =?us-ascii?Q?t2iL7hIKrPY4JdV8egLj2jKnv+ahh18ZN2lsdS/MoGaL1Ijx7PeK4JMI9Po+?=
+ =?us-ascii?Q?DwP+0cDxTsHq0uQ9kFm0GPHYL29FLeURbfekBx1oK1w1+i7dhc2/KWMxK3dV?=
+ =?us-ascii?Q?Mp1Hnlnk891cm01ghCq53+hn9VbnvzCS1gqqdHlm3ylqQm9H6r6o/RzbY6xp?=
+ =?us-ascii?Q?FO1OFDfMITCwPpkg0+YSCRjgGnmo7iH/BntIuPE5EU9B56B02EzDbtwhPdBv?=
+ =?us-ascii?Q?Lw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	zVzraPG8GOUM5HIsl3wMsEdBBg3QvgQdFOMgwMEal0u4C5H98012n1/7PSStSU7+ts4Se9DFS/Myf4eA44ecuU5C+59gJfm6lC8s4CZtqIuFT2+QSpcWZikRhHbOTboCKyVSs88AK8JiU3KW1cyPvuQ2bgMviIMnmvJstBRm2PTN+rUw7bwK6JlDeTI6QkI+oOlS8w9ux5voS84jCLZOvIG/C/5ZSkyx5G33XvRtKX5WJykROsMuUQTtAtShUCh4hScOuhmSEDuEFjF1sRXNqTT0pH0X1MT0dNfRuOjX/90BezzamBNDt2UhfTu7T8zyKuxydnmJhiDVKJJjujej4JNOJ0AnJy8iFAyvJ7KDNqMAJWLyRhLfhTr+8iFWAJZFZj2njCDNTArKIbx3FpeahgMPI6yHOLDA8cyXTHcLYN4XiESya83Fzspl9mp68U9XXAxMLh+tPoTQdfHgaXYW5bKZMKHPVNONmUCFDhW5WGHmgSxarBw+/bSwF/5gvFEYWkt3v6sbTTSiI5gXMeFEfRXI/tliq81oscbT3rLZSnncRFkLXNDSxHrTrTmucNJ/Rgh4FlZLGQUUL/YplKuty6TZX18Ir5o2NPkqqxV9m7o=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9c57c3e-a00c-43d1-94ca-08dd18c68506
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2024 02:58:27.2680
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yjnjXrXjJP+jrMSpRHlx8t74Qzk05zb4Lt7g9LAicTM6rYFxmMxDUpIXLWjE4COS/rLr/getjAxFgFNx4yi7KP4raWPjiav79Ej9edDX2SE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5566
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-09_22,2024-12-09_05,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=864 adultscore=0
+ phishscore=0 malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2411120000 definitions=main-2412100020
+X-Proofpoint-ORIG-GUID: oVUM7_lE5aIkM91shhUVZAUbj4-dW9Yi
+X-Proofpoint-GUID: oVUM7_lE5aIkM91shhUVZAUbj4-dW9Yi
 
-On 12/7/2024 6:59 PM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, December 6, 2024 2:22 PM
->>
->> There are several bits of Hyper-V-related code that today live in
->> arch/x86 but are not really specific to x86_64 and will work on arm64
->> too.
->>
->> Some of these will be needed in the upcoming mshv driver code (for
->> Linux as root partition on Hyper-V).
-> 
-> Previously, Linux as the root partition on Hyper-V was x86 only, which is
-> why the code is currently under arch/x86. So evidently the mshv driver
-> is being expanded to support both x86 and arm64, correct? Assuming
-> that's the case, I have some thoughts about how the source code should
-> be organized and built. It's probably best to get this right to start with so
-> it doesn't need to be changed again.
 
-Yes, we plan on supporting both architectures (eventually). I completely agree
-that it's better to sort out these issues now rather than later.
+Michael,
 
-> 
-> * Patch 2 of this series moves hv_call_deposit_pages() and
->    hv_call_create_vp() to common code, but does not move
->    hv_call_add_logical_proc(). All three are used together, so
->    I'm wondering why hv_call_add_logical_proc() isn't moved.
-> 
+>> Current code allocates the stor_chns array with size
+>> num_possible_cpus(). This code assumes cpu_possible_mask is dense,
+>> which is not true in the general case per [1]. If cpu_possible_mask
+>> is sparse, the array might be indexed by a value beyond the size of
+>> the array.
 
-The only reason is that in our internal tree there's no common or arm64 code
-yet that uses it - there is no reason it can't also become common code!
+Applied to 6.14/scsi-staging, thanks!
 
-> * These three functions were originally put in a separate source
->    code file because of being specific to running in the root partition,
->    and not needed for generic Linux guest support. I think there's
->    value in keeping them in a separate file, rather than merging them
->    into hv_common.c. Maybe just move the entire hv_proc.c file?
-
-Agreed. I think it should be renamed too - this file will eventually
-contain some additional hypercall helper functions, some of which may also be
-shared by the driver code. Something like "hv_call_common.c"?
-
->    And then later, perhaps move the entire irqdomain.c file as well?
-Yes, may as well move it too.
-
->    There's also an interesting question of whether to move them into
->    drivers/hv, or create a new directory virt/hyperv. Hyper-V support
->    started out 15 years ago structured as a driver, hence "drivers/hv".
->    But over the time, the support has become significantly more than
->    just a driver, so "virt/hyperv" might be a better location for
->    non-driver code that had previously been under arch/x86 but is
->    now common to all architectures.
-> 
-I'd be fine with using "virt/hyperv", but I thought "virt" was only for
-KVM.
-
-Another option would be to create subdirectories in "drivers/hv" to
-organize the different modules more cleanly (i.e. when the /dev/mshv
-driver code is introduced).
-
-> * Today, the code for running in the root partition is built along
->    with the rest of the Hyper-V support, and so is present in kernels
->    built for normal Linux guests on Hyper-V. I haven't thought about
->    all the implications, but perhaps there's value in having a CONFIG
->    option to build for the root partition, so that code can be dropped
->    from normal kernels. There's a significant amount of new code still
->    to come for mshv that could be excluded from normal guests in this
->    way. Also, the tests of the hv_root_partition variable could be
->    changed to a function the compiler detects is always "false" in a
->    kernel built without the CONFIG option, in which case it can drop
->    the code for where hv_root_partition is "true".
-> 
-Using hv_root_partition is a good way to do it, since it won't require
-many #ifdefs or moving the existing code around too much.
-
-I can certainly give it a try, and create a separate patch series
-introducing the option. I suppose "CONFIG_HYPERV_ROOT" makes sense as a
-name?
-
-> * The code currently in hv_proc.c is built for x86 only, and validly
->    assumes the page size is 4K. But when the code moves to be
->    common across architectures, that assumption is no longer
->    valid in the general case. Perhaps the intent is that kernels for
->    the root partition should always be built with page size 4K on
->    arm64, but nothing enforces that intent. Personally, I think the code
->    should be made to work with page sizes other than 4K so as to not
->    leave technical debt. But I realize you may have other priorities. If
->    there were a CONFIG option for building for the root partition,
->    that option could be setup to enforce the 4K page size on arm64.
-> 
-That makes sense. I suppose this can be done by selecting PAGE_SIZE_4KB
-under HYPERV in drivers/hv/Kconfig?
-
-I'm not how easy it will be to make the code work with different page
-sizes, since we use alloc_page() and similar in a few places, assuming 4k.
-
-Thanks
-Nuno
-
-> Anyway, thinking through these decisions up front could avoid
-> the need for additional moves later on.
-> 
-> Michael
-> 
->> So this is a good time to move
->> them to hv_common.c.
->>
->> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
->>
->> Nuno Das Neves (2):
->>   hyperv: Move hv_current_partition_id to arch-generic code
->>   hyperv: Move create_vp and deposit_pages hvcalls to hv_common.c
->>
->>  arch/arm64/hyperv/mshyperv.c    |   3 +
->>  arch/x86/hyperv/hv_init.c       |  25 +----
->>  arch/x86/hyperv/hv_proc.c       | 144 ---------------------------
->>  arch/x86/include/asm/mshyperv.h |   4 -
->>  drivers/hv/hv_common.c          | 168 ++++++++++++++++++++++++++++++++
->>  include/asm-generic/mshyperv.h  |   4 +
->>  6 files changed, 176 insertions(+), 172 deletions(-)
->>
->> --
->> 2.34.1
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
 
