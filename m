@@ -1,275 +1,162 @@
-Return-Path: <linux-hyperv+bounces-3454-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3455-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22C599EB6B4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 17:41:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68EF89EB963
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 19:34:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FD9B16653C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 16:41:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E72B9161044
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2024 18:34:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E63234975;
-	Tue, 10 Dec 2024 16:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B02C155757;
+	Tue, 10 Dec 2024 18:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qaAvYq7l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8d0nqoB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09984234960;
-	Tue, 10 Dec 2024 16:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465198634A
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Dec 2024 18:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733848851; cv=none; b=pweoQsT80nT9wadjYq1TqKAi/Jg/MTlvv2FHpb6qJ/uIb3fpuj23yPrnI5kBtIjfr9tD563Y+WbdIQP6Zuhj1whzoQB5XeVDBzTMdnG+XForB6SoHI4cPpHTdoD4ZR6GDX8nfDr/Q5VQZTqhllPM59ejKIGPBJ5iExeQ9jafyY4=
+	t=1733855670; cv=none; b=Xtg6xlXXhKoQ5PZwQrXdJJBirJDbP/Cq7yb5a13x3HH3WR7ilw4R/8sCVeDhIS/DfZG1OivgmIzF9KYdOjjHTlEIjvXz5QCY5VKR4Jeo4g1oHqsb/SBq8CZd7yEKMynhWcidRBz+KXeGLDwPLc4BI/Z7GxS2TXLzZxdHsfq8ZoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733848851; c=relaxed/simple;
-	bh=bNrc3/QIRuMRADX4i6xidePb7Se8rnZoHFgWuntFk6o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oFCpfv8qG8c8jO7gPWUGOy46hsi4Cvj5OLubgtaa4VigQlAnJG2D/0JX00wI6U6zUG600ZXsKVOagBRzOoc08pZJlhMpbNTEtnELf2g/AzNlZM50ryBOpyY1WMFPgZsoQwL3JD0ngSDGwJZ4pQV8ZGPOO2pO8OXU7uc6B34DNhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qaAvYq7l; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.16.84.29] (unknown [131.107.8.93])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 564502047222;
-	Tue, 10 Dec 2024 08:40:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 564502047222
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1733848849;
-	bh=jrmNUEzHaPbfzPastsRVKoN7SSf1AJHpgCYDuVUBkcs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qaAvYq7lyqspuQZ7OkIAAqOTvmA+2X29R4IObrDpeT1/2dvBSeRobjCAh6lzuXTIB
-	 mCRwtak/ZzDJ5+IqnZv+ZWmlbSk5oi8gPenZI/luDYlvBia7HUu+Z7kvfxa3KjhD8E
-	 TnsRBHVn/f7nO8STVaJc0gW220fXwfN8VhaB3pdg=
-Message-ID: <fec1aeb7-ea07-4363-9e6a-50b0c778e855@linux.microsoft.com>
-Date: Tue, 10 Dec 2024 08:40:49 -0800
+	s=arc-20240116; t=1733855670; c=relaxed/simple;
+	bh=iM6n3n15xvAfMAostk2rQffta9gbg7SsBi2o6dvIIYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GaJ11CyZMC6Wu0IW0HTzWMJcm1dk22UsjUF0qpnQpd7xeB3C8d2oAkneBmJ0gz4l7e8PqzBBErdeZ54KhvfwlYUNF1oAj+5wyL0FYgOfsUaGxfcFi/l7AuqF2VAGAjmeoYKNJLCTZleR3o27L3oachE4Wl8jxfWFdsD/MCXLOUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8d0nqoB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AAD3C4CED6;
+	Tue, 10 Dec 2024 18:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733855669;
+	bh=iM6n3n15xvAfMAostk2rQffta9gbg7SsBi2o6dvIIYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a8d0nqoBNdZgwuIW3jVmIDGv7/NtRUCn2UNclBwzAWm1WznykyBQ4xuKuArOz6hFy
+	 k1P7o25FzQtNcIPA9SNHUuuOk1Eg1q8brEvC9jF+pMB24MZjW2JNHkU0xhDkZmbPKv
+	 O4sA+xSu2JN2hgtRJYgnWVgQG77AMo8ORv9pkBKkqecMN25VVKFX3BQb7jf5cm77V9
+	 f30Vs0oz4TSg4QFNpV2uyDPoK3tc3lZc/SV+atRsmPXs5eoSGozmzxECQSmYYO0KC4
+	 LEy/8FVB5gc+n5Hrskb8UghRK6AzI9X8nJyPyua7pxM6wMu5YNHoq1JKQat2zjSehj
+	 jpKLLDXmIE6+g==
+Date: Tue, 10 Dec 2024 18:34:28 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Adrian Vladu <avladu@cloudbasesolutions.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
+	Mathieu Tortuyaux <mtortuyaux@microsoft.com>
+Subject: Re: kernel: fix hv tools build for arm64 when cross-built
+Message-ID: <Z1iJtM3q59PsoKzh@liuwe-devbox-debian-v2>
+References: <PR3PR09MB54119DB2FD76977C62D8DD6AB04D2@PR3PR09MB5411.eurprd09.prod.outlook.com>
+ <Z1Y9ZkAt9GPjQsGi@liuwe-devbox-debian-v2>
+ <20241209083035.GA25242@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <Z1c7Er37YET8rXzo@liuwe-devbox-debian-v2>
+ <20241210033910.GA14466@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] hyperv: Move hv_current_partition_id to arch-generic
- code
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "arnd@arndb.de" <arnd@arndb.de>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>
-References: <1733523707-15954-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1733523707-15954-2-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157E39FBEFB18EB9A695EECD4332@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157E39FBEFB18EB9A695EECD4332@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241210033910.GA14466@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On 12/7/2024 7:01 PM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, December 6, 2024 2:22 PM
->>
->> Make hv_current_partition_id available in both x86_64 and arm64.
->> This feature isn't specific to x86_64 and will be needed by common
->> code.
->>
->> While at it, replace the BUG()s with WARN()s. Failing to get the id
->> need not crash the machine (although it is a very bad sign).
->>
->> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
->> ---
->>  arch/arm64/hyperv/mshyperv.c    |  3 +++
->>  arch/x86/hyperv/hv_init.c       | 25 +------------------------
->>  arch/x86/include/asm/mshyperv.h |  2 --
->>  drivers/hv/hv_common.c          | 23 +++++++++++++++++++++++
->>  include/asm-generic/mshyperv.h  |  2 ++
->>  5 files changed, 29 insertions(+), 26 deletions(-)
->>
->> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
->> index b1a4de4eee29..5050e748d266 100644
->> --- a/arch/arm64/hyperv/mshyperv.c
->> +++ b/arch/arm64/hyperv/mshyperv.c
->> @@ -19,6 +19,9 @@
->>
->>  static bool hyperv_initialized;
->>
->> +u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
->> +EXPORT_SYMBOL_GPL(hv_current_partition_id);
->> +
+On Mon, Dec 09, 2024 at 07:39:10PM -0800, Saurabh Singh Sengar wrote:
+> On Mon, Dec 09, 2024 at 06:46:42PM +0000, Wei Liu wrote:
+> > On Mon, Dec 09, 2024 at 12:30:35AM -0800, Saurabh Singh Sengar wrote:
+> > > On Mon, Dec 09, 2024 at 12:44:22AM +0000, Wei Liu wrote:
+> > > > On Wed, Oct 23, 2024 at 02:01:12PM +0000, Adrian Vladu wrote:
+> > > > > Hello,
+> > > > > 
+> > > > > While trying to build the LIS daemons for Flatcar Container Linux for
+> > > > > ARM64 (https://www.flatcar.org/), as we are doing Gentoo based
+> > > > > cross-building from X64 boxes, there was an error while building those
+> > > > > daemons, because the cross-compile scenario was not working, as ` ARCH
+> > > > > := $(shell uname -m 2>/dev/null)` always returns `x86_64`.
+> > > > > 
+> > > > > I have a working patch for the Linux kernel here that was already
+> > > > > applied in the Flatcar context and it works:
+> > > > > https://github.com/flatcar/scripts/blob/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
+> > > > > 
+> > > > > Raw patch link here:
+> > > > > https://raw.githubusercontent.com/flatcar/scripts/94b1df1b19449eb5aa967fd48ba4c1f4a6d5f415/sdk_container/src/third_party/coreos-overlay/sys-kernel/coreos-sources/files/6.10/z0008-tools-hv-fix-cross-compilation-for-ARM64.patch
+> > > > > 
+> > > > > Sorry for the delivery method via github link, but I cannot send
+> > > > > proper patches from my work email address currently, as the email
+> > > > > server does not support it.
+> > > > > 
+> > > > > Please let me know if I need to send the patch via the recommended way
+> > > > > or if the patch can be used directly.
+> > > > > 
+> > > > > Also, maybe there is a better way to address the cross-compilation
+> > > > > issue, I just wanted to report the bug and also provide a possible
+> > > > > fix.
+> > > > 
+> > > > Saurabh added the ARCH variable. He's CCed.
+> > > > 
+> > > > BTW I think your patch can be simplified by using
+> > > >   ARCH ?= $(shell uname -m 2>/dev/null)
+> > > > instead of the ifeq test in your patch.
+> > > 
+> > > Agree, this is better way to handle it.
+> > > 
+> > > > 
+> > > > I don't think that's correct. ARCH will be set to the correct value by
+> > > > Kbuild. 
+> > > 
+> > > If we build locally on ARM64, there is a chance that ARCH may not be set,
+> > > leading to build failures for arm64. IMO we should provide a fallback
+> > > option for local builds when ARCH is not set.
+> > 
+> > How do you build locally? Even if you build those tools in tools/hv, it
+> > still uses the Kbuild system, which sets ARCH to the correct value,
+> > right?
+> > 
 > 
-> Instead of adding a definition of hv_current_partition_id on
-> the arm64 side, couldn't the definition on the x86 side in
-> hv_init.c be moved to hv_common.c (or maybe somewhere
-> else that is specific to running in the root partition, per my
-> comments in the cover letter), so there is only one definition
-> shared by both architectures?
+> I have tested your patch in ARM64 VM, can see the build failure. Here's the
+> exact details how I tested:
 > 
-Yes, that's a better idea.
+> 
+> azureuser@ARM64-ubunutu24:/work/linux-next$ cd tools/hv/
+> azureuser@ARM64-ubunutu24:/work/linux-next/tools/hv$ make
+> make[1]: Entering directory '/work/linux-next/tools/hv'
+>   CC      hv_kvp_daemon.o
+>   LD      hv_kvp_daemon-in.o
+> make[1]: Leaving directory '/work/linux-next/tools/hv'
+>   LINK    hv_kvp_daemon
+> make[1]: Entering directory '/work/linux-next/tools/hv'
+>   CC      hv_vss_daemon.o
+>   LD      hv_vss_daemon-in.o
+> make[1]: Leaving directory '/work/linux-next/tools/hv'
+>   LINK    hv_vss_daemon
+> make[1]: Entering directory '/work/linux-next/tools/hv'
+>   CC      hv_fcopy_uio_daemon.o
+>   CC      vmbus_bufring.o
+> vmbus_bufring.c:11:10: fatal error: emmintrin.h: No such file or directory
+>    11 | #include <emmintrin.h>
+>       |          ^~~~~~~~~~~~~
 
->>  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->>  {
->>  	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
->> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
->> index 95eada2994e1..950f5ccdb9d9 100644
->> --- a/arch/x86/hyperv/hv_init.c
->> +++ b/arch/x86/hyperv/hv_init.c
->> @@ -35,7 +35,7 @@
->>  #include <clocksource/hyperv_timer.h>
->>  #include <linux/highmem.h>
->>
->> -u64 hv_current_partition_id = ~0ull;
->> +u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
->>  EXPORT_SYMBOL_GPL(hv_current_partition_id);
->>
->>  void *hv_hypercall_pg;
->> @@ -394,24 +394,6 @@ static void __init hv_stimer_setup_percpu_clockev(void)
->>  		old_setup_percpu_clockev();
->>  }
->>
->> -static void __init hv_get_partition_id(void)
->> -{
->> -	struct hv_get_partition_id *output_page;
->> -	u64 status;
->> -	unsigned long flags;
->> -
->> -	local_irq_save(flags);
->> -	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
->> -	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
->> -	if (!hv_result_success(status)) {
->> -		/* No point in proceeding if this failed */
->> -		pr_err("Failed to get partition ID: %lld\n", status);
->> -		BUG();
->> -	}
->> -	hv_current_partition_id = output_page->partition_id;
->> -	local_irq_restore(flags);
->> -}
->> -
->>  #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
->>  static u8 __init get_vtl(void)
->>  {
->> @@ -606,11 +588,6 @@ void __init hyperv_init(void)
->>
->>  	register_syscore_ops(&hv_syscore_ops);
->>
->> -	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_ACCESS_PARTITION_ID)
->> -		hv_get_partition_id();
->> -
->> -	BUG_ON(hv_root_partition && hv_current_partition_id == ~0ull);
->> -
->>  #ifdef CONFIG_PCI_MSI
->>  	/*
->>  	 * If we're running as root, we want to create our own PCI MSI domain.
->> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
->> index 5f0bc6a6d025..9eeca2a6d047 100644
->> --- a/arch/x86/include/asm/mshyperv.h
->> +++ b/arch/x86/include/asm/mshyperv.h
->> @@ -44,8 +44,6 @@ extern bool hyperv_paravisor_present;
->>
->>  extern void *hv_hypercall_pg;
->>
->> -extern u64 hv_current_partition_id;
->> -
->>  extern union hv_ghcb * __percpu *hv_ghcb_pg;
->>
->>  bool hv_isolation_type_snp(void);
->> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
->> index 7a35c82976e0..819bcfd2b149 100644
->> --- a/drivers/hv/hv_common.c
->> +++ b/drivers/hv/hv_common.c
->> @@ -278,11 +278,34 @@ static void hv_kmsg_dump_register(void)
->>  	}
->>  }
->>
->> +static void __init hv_get_partition_id(void)
->> +{
->> +	struct hv_get_partition_id *output_page;
->> +	u64 status;
->> +	unsigned long flags;
->> +
->> +	local_irq_save(flags);
->> +	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
->> +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
->> +	if (!hv_result_success(status)) {
->> +		local_irq_restore(flags);
->> +		WARN(true, "Failed to get partition ID: %lld\n", status);
->> +		return;
->> +	}
->> +	hv_current_partition_id = output_page->partition_id;
->> +	local_irq_restore(flags);
->> +}
->> +
->>  int __init hv_common_init(void)
->>  {
->>  	int i;
->>  	union hv_hypervisor_version_info version;
->>
->> +	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
->> +		hv_get_partition_id();
-> 
-> hv_get_partition_id() uses the hyperv_pcpu_output_arg, and at
-> this point, hyperv_pcpu_output_arg isn't set. That setup
-> is done later in hv_common_init().
-> 
->> +
->> +	WARN_ON(hv_root_partition && hv_current_partition_id == HV_PARTITION_ID_SELF);
->> +
-> 
-> Since the hypercall will fail cleanly if the calling VM doesn't
-> have the HV_ACCESS_PARTITION_ID privilege, could the
-> above be simplified to just this?
-> 
-> 	if (hv_root_partition)
-> 		hv_get_partition_id():
-> 
-> A non-root partition VM doesn't need to get the partition ID, while a
-> root partition should have the privilege. If the hypercall fails, there's
-> already a WARN, so there's no value in doing another WARN. Also if
-> the hypercall succeeds, it presumably returns a specific partitionID, not
-> HV_PARTITION_ID_SELF, so we know we have what we want.
-> 
-> There's already an "if (hv_root_partition)" statement for setting up
-> the hyperv_pcpu_output_arg. The call to hv_get_partition_id() could
-> go under that existing "if" *after* the hyperv_pcpu_output_arg is
-> set. :-)
-> 
-Thank you, that makes sense. I'll make the changes you suggested for v2.
+I see. I create an arm64 VM and reproduce the issue. The ARCH variable
+is not set.
 
-Nuno
+That said, the build breaks because emmintrin.h is not available on
+arm64. It is only needed for _mm_pause().  There is maybe an
+architecture specific header file we can use to make it build.
 
-> Michael
+Thanks,
+Wei.
+
+> compilation terminated.
+> make[1]: *** [/work/linux-next/tools/build/Makefile.build:106: vmbus_bufring.o] Error 1
+> make[1]: Leaving directory '/work/linux-next/tools/hv'
+> make: *** [Makefile:48: hv_fcopy_uio_daemon-in.o] Error 2
+> azureuser@ARM64-ubunutu24:/work/linux-next/tools/hv$ uname -a
+> Linux ARM64-ubunutu24 6.12.0-next-20241128+ #12 SMP Fri Nov 29 14:53:06 UTC 2024 aarch64 aarch64 aarch64 GNU/Linux
 > 
->>  	/* Get information about the Hyper-V host version */
->>  	if (!hv_get_hypervisor_version(&version))
->>  		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->> index 8fe7aaab2599..8c4ff6e9aae7 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -60,6 +60,8 @@ struct ms_hyperv_info {
->>  extern struct ms_hyperv_info ms_hyperv;
->>  extern bool hv_nested;
->>
->> +extern u64 hv_current_partition_id;
->> +
->>  extern void * __percpu *hyperv_pcpu_input_arg;
->>  extern void * __percpu *hyperv_pcpu_output_arg;
->>
->> --
->> 2.34.1
-
+> - Saurabh
 
