@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-3463-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3464-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 573449ED5B3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 20:05:50 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2836D9ED5DE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 20:09:34 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E02A028104C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 19:05:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 188E6169FE7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 19:08:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA8E252AC9;
-	Wed, 11 Dec 2024 18:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF4923E6E1;
+	Wed, 11 Dec 2024 18:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yg2f8cD/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4IDLOUM"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C169252AC2;
-	Wed, 11 Dec 2024 18:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE8723E6DB;
+	Wed, 11 Dec 2024 18:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733943219; cv=none; b=hKHdNiZIL7OTGQi1C2fejsXPHh7uuSGNGsrqZ4OxAOu5SJYtiaxx6QjrMTzE1woiCE/Ru9g981gl9C5K7i2OpLsKD30N0oAjeOqy9Gk2mIBTcndnRzTL8WiuJgbQA5rysfNeE5kLYNKyXJPQy68JQyod6ZbGhOb47ORTNNgliF8=
+	t=1733943253; cv=none; b=GW/rUHhYh4o6ER4aUd04osG2sbTOHrLk+jyClqFMH1RFUBvcfncNE3BIH2Mg+2sy/ZHbRsCasLvfZ076HfnpB4P2672CIoPK4IL1WR+0YL2+/JhB1YqoTL3kvip/fBhgWiJrrEsVhAxmWvqgNd4obidFjCM7RSqVXo7A4hViXqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733943219; c=relaxed/simple;
-	bh=ofsIEy29ubbFNLPNJN3jjLCcavuoGcRjIqL6nJ0peCY=;
+	s=arc-20240116; t=1733943253; c=relaxed/simple;
+	bh=TtuI1pqy9n+a/tKgoZgMFu+nz9QyxSPcEwqU8L9TuaU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NuvpdMWR1FztCI2FHfeda9pYGd9JJ58I1OorGgSWqXSiXgK6IxGgrXNBhK9TYhhZ3KM127b8ju6jRsf0tDVBNE3va8dplxSK2Hqc5MHtg6MuF76nFNa08rEIyRdNYCYPbLq6z3m8crALkkyGhQBEQnffNe4BThyXMV/ULubNo7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yg2f8cD/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D94B8C4CED4;
-	Wed, 11 Dec 2024 18:53:37 +0000 (UTC)
+	 MIME-Version; b=REM6G2NHe6ARS3+aYjexd9tAn8+pi6aRKRPJCKN2+GQ5s5CXb7LGUt7ZImEQatIg+f0C2z2GQwRgtSIe8WSQs2I/gddh/lRLwYR1C+afmoBYYSAuAzKZl38wsKM6QDEE6u43xbAXpOBrg0h6yQ8ayZz+PEqUnDs1rYCADMJsjJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4IDLOUM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE4EC4CEDF;
+	Wed, 11 Dec 2024 18:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733943219;
-	bh=ofsIEy29ubbFNLPNJN3jjLCcavuoGcRjIqL6nJ0peCY=;
+	s=k20201202; t=1733943253;
+	bh=TtuI1pqy9n+a/tKgoZgMFu+nz9QyxSPcEwqU8L9TuaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yg2f8cD/JBSCabqTOjkXf4jHAdpsMn7Q4liRgmPFbH7ObiRRSF+esu4abMubtwsVP
-	 kzyb53l4gOJchfIYlf3eKxEel2Txb6KRRDHqFrmjwNt6TeUMigo6jsETNFicWtAPYG
-	 0roBbFX2qT1NThKhR+JWfFNoxhj9wi2Gm83wIWqI2TX89d2MW0ZiYf+niFti0dX44V
-	 1d+MmM23e6D/pesKmEpX2ydUo+VT4HQTuIB2lIeiiW0y3YSXSg/wsDgQP87Uh6qwsC
-	 Gp6Cz1yjSPdK7izJN/L8VhBf4puVArHvxsRA9lVYpkJah/gRA20TCzWUOajqPG1yev
-	 HGkwwzcAUhETQ==
+	b=P4IDLOUM/GLodg1558reG4Zu/9nT2eUtcJ9JFgNz9zsps7IhN4CdUYjSw16Y/JNyM
+	 y4LVxtGQ9tfBXgcgWDHL/y5IZZD9LmTGh+yOMbG2P5sG35gpjO4bY1VNBd18jtCMl7
+	 g68m+X32qjon/zCcNa7gfjLJbB0K6M6Z122UmGFy5stC8Kwww8FrtF2ShGe5v10lfS
+	 WhOEXaKggzKv5blPRJC5W0MLxoFYjrJ18/4r0ba2+ideqOBXPABpaMVB2nBPMkgqrI
+	 bYJizBEO2uJDY3S9emPqNIS5kbLi1k9IOwPo1sueh+vbwSqU5YK8D68Vqxt3Oo+7CD
+	 hnnkIQ95hr1dA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -56,12 +56,12 @@ Cc: Cathy Avery <cavery@redhat.com>,
 	James.Bottomley@HansenPartnership.com,
 	linux-hyperv@vger.kernel.org,
 	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 11/15] scsi: storvsc: Do not flag MAINTENANCE_IN return of SRB_STATUS_DATA_OVERRUN as an error
-Date: Wed, 11 Dec 2024 13:53:03 -0500
-Message-ID: <20241211185316.3842543-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 09/10] scsi: storvsc: Do not flag MAINTENANCE_IN return of SRB_STATUS_DATA_OVERRUN as an error
+Date: Wed, 11 Dec 2024 13:53:50 -0500
+Message-ID: <20241211185355.3842902-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211185316.3842543-1-sashal@kernel.org>
-References: <20241211185316.3842543-1-sashal@kernel.org>
+In-Reply-To: <20241211185355.3842902-1-sashal@kernel.org>
+References: <20241211185355.3842902-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.119
+X-stable-base: Linux 5.15.173
 Content-Transfer-Encoding: 8bit
 
 From: Cathy Avery <cavery@redhat.com>
@@ -105,10 +105,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 4fad9d85bd6f9..0685cbe7f0eba 100644
+index 4ea119afd9dba..ff1735e3127d0 100644
 --- a/drivers/scsi/storvsc_drv.c
 +++ b/drivers/scsi/storvsc_drv.c
-@@ -149,6 +149,8 @@ struct hv_fc_wwn_packet {
+@@ -155,6 +155,8 @@ static int sense_buffer_size = PRE_WIN8_STORVSC_SENSE_BUFFER_SIZE;
  */
  static int vmstor_proto_version;
  
@@ -117,7 +117,7 @@ index 4fad9d85bd6f9..0685cbe7f0eba 100644
  #define STORVSC_LOGGING_NONE	0
  #define STORVSC_LOGGING_ERROR	1
  #define STORVSC_LOGGING_WARN	2
-@@ -1129,6 +1131,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+@@ -1192,6 +1194,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
  	 * not correctly handle:
  	 * INQUIRY command with page code parameter set to 0x80
  	 * MODE_SENSE command with cmd[2] == 0x1c
@@ -125,7 +125,7 @@ index 4fad9d85bd6f9..0685cbe7f0eba 100644
  	 *
  	 * Setup srb and scsi status so this won't be fatal.
  	 * We do this so we can distinguish truly fatal failues
-@@ -1136,7 +1139,9 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+@@ -1199,7 +1202,9 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
  	 */
  
  	if ((stor_pkt->vm_srb.cdb[0] == INQUIRY) ||
