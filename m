@@ -1,123 +1,142 @@
-Return-Path: <linux-hyperv+bounces-3460-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3461-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD5419ED4C0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 19:34:25 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D12C9ED537
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 19:56:53 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 756231888926
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 18:34:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5D3028578D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 18:56:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5871FF1C5;
-	Wed, 11 Dec 2024 18:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C8F23690B;
+	Wed, 11 Dec 2024 18:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYAAUtxX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ss9pMnxC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDEC24632F;
-	Wed, 11 Dec 2024 18:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549442368F2;
+	Wed, 11 Dec 2024 18:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733942058; cv=none; b=slIpMx71e2YjjpixnRWw2NMQZ0bOHv3jeWBbjVSGe/rpBuDnFBS1zWjj6V4KlOW8gWC2YdPxcjUMpQI7w6doEr9sWFPqNf0ytRM3B+VIwqLYIDH7oLkcHtu4rkEaohlGUiRa8pmRHL+1EQNNjKFUnCz8JoJcLwWHt4HLZRzKcE4=
+	t=1733943102; cv=none; b=AqbxoikqT6/l9eP3/qUwAdbJCrg9mrpT/rvk0SEO+ko22abwqd1iCe1f4tW1rMh5H1SYj1yl1mXEPDIo1ddfTMSTaxksw5LcmOdSR+w2jI2YH3fwFmktQEKeFykvBay61i/hJd5uS4tiUJaAJzmFrc2wDi5LyY9Y65/jGP7IKuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733942058; c=relaxed/simple;
-	bh=/TaoJdfvFhwTAQjfbYZdIm0Vywdm28jJi5S46WIRpCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YdBrxbxx7kHkid/jfVZWUA6WnhUAuWuN6Wzwfk7oXwA3uxD+059YyNoOzW8X4+HY3F24zjRoU6G4Avn0A0zGipanMR6dTbewYOV+RGXKffgVj1M4BYt09u9sNC4YeBLAIBoCsnwcfC8itgtjqoDL7nKYUpNk9+/KldxnDeIE0Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYAAUtxX; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-725f2f79ed9so2925137b3a.2;
-        Wed, 11 Dec 2024 10:34:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733942056; x=1734546856; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rk/fxlEH9BCZY0Alvd/M1BO7urypX5QFhl3cqisfidI=;
-        b=UYAAUtxXcQIA3XfteDCn+FUYIjx/Q5GTcAlrceQRoq9VjS1JQYn5HAyO8MTKqi2VWt
-         Vo2Yx6ZV6K5kBspnrOYXc8RjnkBUqYss+u3rvf3vTPyt0oaEQLsU7DENk+eOsS+mSKWA
-         CKFn1aYdZ+T6LSLz8EEau+vP+kwOOM3Y5COVQxyZF3z2IX/OlOTdVLwFhb4UcOMIUCN9
-         utp+JS/DuVrO11u0Y8S9xvJ4W1EgxItCQ492UjfAz/qZrUYp62Ca4LSqNa3tdC/VQyWa
-         befx4FhWp3hhLnDBrBcGAVDu5qJj3re7X1/27tI+ZI9Q31D8iZTjTv+9N/EHUIFJeUmE
-         zHBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733942056; x=1734546856;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rk/fxlEH9BCZY0Alvd/M1BO7urypX5QFhl3cqisfidI=;
-        b=dgQVhgNP4T4epY4rqz3CZQOaOVkxkkZVVPkbRtytuvEkuhaGL+Xz2EVNyzrM11cKxv
-         9Sy7dFichP5yfSf4cbbtmjXiq2Mn9IXGc6h9DBo/vdq5QUVbidmhl+LJW4WiIF8qfvsK
-         9zzkArNJUvgR5elH51AWyjBNGLTeKivgPXeYWRDylRyva3dM6Ur0ynAgO2yqfo4UVfft
-         wNoUTUmVNXfuLzmzgUJ0DS9ayq6GkXX8g5ZAeDujmsydITNNZPIlnotIhzUHwAldZsZR
-         dLb17Asj9HctHjBZboIfqPUepezsv3LJP/fAd9S7nWQ3lBRrfh9AXlLKtH59YQZq/bYz
-         MXJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfpVfa4lbo5/8YSNdQk+L7jr4YiJoqSLLCeb+m4byXl42ha0jMQtdfzO0/IVzCaPUaF4/II3eQ/br3XsU=@vger.kernel.org, AJvYcCVlVZNVTn2aJyX7pf5EsK6aRxEiUogIibQrfVEqsyhDGfJoLFEldMFE/BVnFfyljwbQ7Zbd+7WHNtGWRDRO@vger.kernel.org, AJvYcCWK7qRKcx93SMrVRwNdUDyIOxV0zFHwV+5Z8sOKbOPnX3iqLjvfvwES/cUSsvVJ04PQkmZAkTAT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb1W0GORmoBwwhnU/OKrGuzk9rNbY1q1HKBEayVlZf8Y25ogWD
-	n7FwbxUkz/pvmUs/F1wvOEpZTDMwnOdV4t4czRZ+MyTSpF8un798
-X-Gm-Gg: ASbGnctaoTdtgix9HQIeDKeTduSs+Kp17T/XjMYrjC0D+0kh6ndF7//cIX2O+j066XU
-	U/jw8sZPvL6j2SDEbjMGoPsxM7CqE5h4qGDBrcgYoips1QYIEYzJISiNUdtHhzLyoy1qOwZGITd
-	GpMSDoxa/Vk3F3TafyLjsK8ayByEyCvzcZOx6fETXuJKq6wAbi9TtyBWEaTF0+RX3s/eWyvCxaW
-	cx8UQNowsfXkBwAApCA474+0Te9baLtWm62y0mYSS8dIGzo//uaFQ==
-X-Google-Smtp-Source: AGHT+IEH5l/T2i1ylcugW4ACfynX26ff/6uP1bdDxE3xa15KOwnDbL1Kdr+JCiIfZIOEb7i2xD8vWA==
-X-Received: by 2002:a05:6a00:1256:b0:71d:f2e3:a878 with SMTP id d2e1a72fcca58-728fa9b762bmr556129b3a.5.1733942055956;
-        Wed, 11 Dec 2024 10:34:15 -0800 (PST)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7282c0f5bb0sm3752892b3a.59.2024.12.11.10.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 10:34:15 -0800 (PST)
-Date: Wed, 11 Dec 2024 10:34:12 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-	Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>, Long Li <longli@microsoft.com>
-Subject: Re: [PATCH v2 0/2] MANA: Fix few memory leaks in mana_gd_setup_irqs
-Message-ID: <Z1nbJFNwFGwE3xbN@yury-ThinkPad>
-References: <20241209175751.287738-1-mlevitsk@redhat.com>
+	s=arc-20240116; t=1733943102; c=relaxed/simple;
+	bh=vMNkWgZTfSLfZctclNGDWLQltRThVFLyCU9o/OptEQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WIT7qwBgnNU1RISc8IBbgeX/OI0ZttUK+LPelaRk+5Lm3uDnZEbRuBvg2kiwGZQB3KPruE5k/4rfEJUu01h2aa8kAt6X7B3r7wffvFdLJIyZwtCQv+qo4RQXY2S4kaoUw4U8R/LtWOx4CmZxA9m50w+5ukUt+LQG9ptC7mucsUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ss9pMnxC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEB8C4CED2;
+	Wed, 11 Dec 2024 18:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733943102;
+	bh=vMNkWgZTfSLfZctclNGDWLQltRThVFLyCU9o/OptEQw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ss9pMnxCAPdEmRmiDCHOGQ7tWPfoA9N8w1iR8wWXpZR7cQIApXGSAA/on6DToBi7g
+	 aAzNTy0fw6ZeOChkv1CHclXzYRLP11vmPhTL6ZpyCl/+nmU0DmcGTegtNJHZ3o1jj7
+	 N/ljSGBjqueIx2roNh1rk1xt7qvs4fR1feyxroJ56+4ATjTUrvfA6wS1ebBZhm1MYX
+	 b/+VsmhZq20SWgMCntZsL4iWkohdQL7WaAmGd+MASp4e2MRdbtyTfeenbkHvF8uuvP
+	 1521z/deFPz9uo2iKFkMgh+hr/7ipEvrUeIMHBIoQHv01z4Uu4CAAjWXwYJdvFk6Xh
+	 IxWio1+aoS4uA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Cathy Avery <cavery@redhat.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Ewan D . Milne" <emilne@redhat.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	James.Bottomley@HansenPartnership.com,
+	linux-hyperv@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 29/36] scsi: storvsc: Do not flag MAINTENANCE_IN return of SRB_STATUS_DATA_OVERRUN as an error
+Date: Wed, 11 Dec 2024 13:49:45 -0500
+Message-ID: <20241211185028.3841047-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241211185028.3841047-1-sashal@kernel.org>
+References: <20241211185028.3841047-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241209175751.287738-1-mlevitsk@redhat.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.4
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 09, 2024 at 12:57:49PM -0500, Maxim Levitsky wrote:
-> Fix 2 minor memory leaks in the mana driver,
-> introduced by commit
-> 
-> 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
+From: Cathy Avery <cavery@redhat.com>
 
-Reviewed-by: Yury Norov <yury.norov@gmail.com>
+[ Upstream commit b1aee7f034615b6824d2c70ddb37ef9fc23493b7 ]
 
-> 
-> Best regards,
-> 	Maxim Levitsky
-> 
-> Maxim Levitsky (2):
->   net: mana: Fix memory leak in mana_gd_setup_irqs
->   net: mana: Fix irq_contexts memory leak in mana_gd_setup_irqs
-> 
->  drivers/net/ethernet/microsoft/mana/gdma_main.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.26.3
-> 
+This partially reverts commit 812fe6420a6e ("scsi: storvsc: Handle
+additional SRB status values").
+
+HyperV does not support MAINTENANCE_IN resulting in FC passthrough
+returning the SRB_STATUS_DATA_OVERRUN value. Now that
+SRB_STATUS_DATA_OVERRUN is treated as an error, multipath ALUA paths go
+into a faulty state as multipath ALUA submits RTPG commands via
+MAINTENANCE_IN.
+
+[    3.215560] hv_storvsc 1d69d403-9692-4460-89f9-a8cbcc0f94f3:
+tag#230 cmd 0xa3 status: scsi 0x0 srb 0x12 hv 0xc0000001
+[    3.215572] scsi 1:0:0:32: alua: rtpg failed, result 458752
+
+Make MAINTENANCE_IN return success to avoid the error path as is
+currently done with INQUIRY and MODE_SENSE.
+
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Cathy Avery <cavery@redhat.com>
+Link: https://lore.kernel.org/r/20241127181324.3318443-1-cavery@redhat.com
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/storvsc_drv.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 7ceb982040a5d..d0b55c1fa908a 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -149,6 +149,8 @@ struct hv_fc_wwn_packet {
+ */
+ static int vmstor_proto_version;
+ 
++static bool hv_dev_is_fc(struct hv_device *hv_dev);
++
+ #define STORVSC_LOGGING_NONE	0
+ #define STORVSC_LOGGING_ERROR	1
+ #define STORVSC_LOGGING_WARN	2
+@@ -1138,6 +1140,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+ 	 * not correctly handle:
+ 	 * INQUIRY command with page code parameter set to 0x80
+ 	 * MODE_SENSE command with cmd[2] == 0x1c
++	 * MAINTENANCE_IN is not supported by HyperV FC passthrough
+ 	 *
+ 	 * Setup srb and scsi status so this won't be fatal.
+ 	 * We do this so we can distinguish truly fatal failues
+@@ -1145,7 +1148,9 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+ 	 */
+ 
+ 	if ((stor_pkt->vm_srb.cdb[0] == INQUIRY) ||
+-	   (stor_pkt->vm_srb.cdb[0] == MODE_SENSE)) {
++	   (stor_pkt->vm_srb.cdb[0] == MODE_SENSE) ||
++	   (stor_pkt->vm_srb.cdb[0] == MAINTENANCE_IN &&
++	   hv_dev_is_fc(device))) {
+ 		vstor_packet->vm_srb.scsi_status = 0;
+ 		vstor_packet->vm_srb.srb_status = SRB_STATUS_SUCCESS;
+ 	}
+-- 
+2.43.0
+
 
