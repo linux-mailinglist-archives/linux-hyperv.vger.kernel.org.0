@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-3461-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3462-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D12C9ED537
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 19:56:53 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACFD29ED583
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 20:02:08 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5D3028578D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 18:56:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC83B169601
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Dec 2024 19:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C8F23690B;
-	Wed, 11 Dec 2024 18:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAD4C237FD8;
+	Wed, 11 Dec 2024 18:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ss9pMnxC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLD7FmFA"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549442368F2;
-	Wed, 11 Dec 2024 18:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B74922969F;
+	Wed, 11 Dec 2024 18:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733943102; cv=none; b=AqbxoikqT6/l9eP3/qUwAdbJCrg9mrpT/rvk0SEO+ko22abwqd1iCe1f4tW1rMh5H1SYj1yl1mXEPDIo1ddfTMSTaxksw5LcmOdSR+w2jI2YH3fwFmktQEKeFykvBay61i/hJd5uS4tiUJaAJzmFrc2wDi5LyY9Y65/jGP7IKuw=
+	t=1733943171; cv=none; b=U5CDnMe1axgNxcQzlCXSzP+X6B2Pi8GXy4idEL+YHEeAB/IRypoNoUlXQ4nbUNtuNIiANzBSMb2febhpiy1zccSw+o7+ENgyDAwEapTLbvLTRiFqF5KC/EZU6KeZEzVgaKpMI/gma0hwv0YWBhgraor/VlglsetsCKqOdo31TkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733943102; c=relaxed/simple;
+	s=arc-20240116; t=1733943171; c=relaxed/simple;
 	bh=vMNkWgZTfSLfZctclNGDWLQltRThVFLyCU9o/OptEQw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WIT7qwBgnNU1RISc8IBbgeX/OI0ZttUK+LPelaRk+5Lm3uDnZEbRuBvg2kiwGZQB3KPruE5k/4rfEJUu01h2aa8kAt6X7B3r7wffvFdLJIyZwtCQv+qo4RQXY2S4kaoUw4U8R/LtWOx4CmZxA9m50w+5ukUt+LQG9ptC7mucsUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ss9pMnxC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEB8C4CED2;
-	Wed, 11 Dec 2024 18:51:40 +0000 (UTC)
+	 MIME-Version; b=MtUQURZOHGN8NsTD3T+J3ZHB2+xFpsRO0taKv9sbHF+ap1KopkPKNQ03Qw9P0oaDAPRQQZ/nwiYfRmx0dp8lxSiPZfi3yuSk6+tXm04096HmVA5vPsg0uTe9VKayojIsxsjE2YDorjFq79hzBbY3jDEW72wAJigSJFcwkAJ2l0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLD7FmFA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF6E2C4CEDF;
+	Wed, 11 Dec 2024 18:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733943102;
+	s=k20201202; t=1733943171;
 	bh=vMNkWgZTfSLfZctclNGDWLQltRThVFLyCU9o/OptEQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ss9pMnxCAPdEmRmiDCHOGQ7tWPfoA9N8w1iR8wWXpZR7cQIApXGSAA/on6DToBi7g
-	 aAzNTy0fw6ZeOChkv1CHclXzYRLP11vmPhTL6ZpyCl/+nmU0DmcGTegtNJHZ3o1jj7
-	 N/ljSGBjqueIx2roNh1rk1xt7qvs4fR1feyxroJ56+4ATjTUrvfA6wS1ebBZhm1MYX
-	 b/+VsmhZq20SWgMCntZsL4iWkohdQL7WaAmGd+MASp4e2MRdbtyTfeenbkHvF8uuvP
-	 1521z/deFPz9uo2iKFkMgh+hr/7ipEvrUeIMHBIoQHv01z4Uu4CAAjWXwYJdvFk6Xh
-	 IxWio1+aoS4uA==
+	b=WLD7FmFA+vNxN0/fVlO/Ed/mDX6mWk0u9j3q+VWkDjH1dvPdFGDRISewzKbhHTFJ8
+	 o6RxYo0Ivhwo7RJeHUt5Y3bUNtVUsMGINU9Lby0A20waYIoxrlfO7tIGc3gdLj/IZf
+	 7zxSpIcE6GV9tFv1vKk9reG6v5Xur5cR6cit4+W2ZHqf4dg1TEUD6wyWEzb+nNPaa6
+	 C1yKJ7QVb+4kH76xzXUWADx5YVplusqh9HcR35j/7oWeBT2/CxX7GIBZYA9a5Y/bCn
+	 hFEKLs9UdVgxkRQppC2aSOyctHbjlVopl1drcy7lhvAd0gZ/Jwo/cTgZSTX+27a4+e
+	 H4JUzZxCc+bkA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -56,12 +56,12 @@ Cc: Cathy Avery <cavery@redhat.com>,
 	James.Bottomley@HansenPartnership.com,
 	linux-hyperv@vger.kernel.org,
 	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 29/36] scsi: storvsc: Do not flag MAINTENANCE_IN return of SRB_STATUS_DATA_OVERRUN as an error
-Date: Wed, 11 Dec 2024 13:49:45 -0500
-Message-ID: <20241211185028.3841047-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 17/23] scsi: storvsc: Do not flag MAINTENANCE_IN return of SRB_STATUS_DATA_OVERRUN as an error
+Date: Wed, 11 Dec 2024 13:51:54 -0500
+Message-ID: <20241211185214.3841978-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211185028.3841047-1-sashal@kernel.org>
-References: <20241211185028.3841047-1-sashal@kernel.org>
+In-Reply-To: <20241211185214.3841978-1-sashal@kernel.org>
+References: <20241211185214.3841978-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.4
+X-stable-base: Linux 6.6.65
 Content-Transfer-Encoding: 8bit
 
 From: Cathy Avery <cavery@redhat.com>
