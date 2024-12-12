@@ -1,99 +1,122 @@
-Return-Path: <linux-hyperv+bounces-3467-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3468-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D580A9EDE79
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2024 05:30:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B135D9EE140
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2024 09:28:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 202C6167FE1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2024 04:30:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D5C2188810E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2024 08:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA781714BF;
-	Thu, 12 Dec 2024 04:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72BD920C495;
+	Thu, 12 Dec 2024 08:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mH88PfDO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N5/y837y"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F17A170A1B;
-	Thu, 12 Dec 2024 04:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9404558BA;
+	Thu, 12 Dec 2024 08:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733977816; cv=none; b=qLvQplXxqQBHQ8LEYHdxQy2FKfb4pPZfqymavBwdberhqK2uYgc0LeK4ItkQdDGCJngD/K+BzcM3qgGaelgEwYSeuGDH+BNMxVUyrzj7iXR+SuAzC+Cz4DgkvWawJsMi2TjsnZIZw7l+KkY0mlG+XllIC5ohaQvMcmwUdjkQ8aM=
+	t=1733992121; cv=none; b=ndG1iaqDemNXFta4PCxfy0rZx/cIBWq1/fhloOTOudMUGqcc11ss/i8oxF9KmIpNSPZf0iuiXLwMihVBVDf3uzrLuemz/vsUCahbcbO6hRoe0z16saMwyDBpcUEkOwr1+cCm5/YBXz/6FRb4fwJ4eCt1m0AZhdvC0Wh98qSdzwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733977816; c=relaxed/simple;
-	bh=w0GaN2svvAl//6VXkTZuXQXE+ogd0LPmILmAZXFMlxM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MX9Frq4E403K6mDlF4Yblj8IW7xhrmaIw4o/uFUBvuWQTJVAV7elK5XcqcR4Vg2PougBXsUq34a5oTtDzVNHFe+uHOMoMDyCYoX5qGOI4WLLCPhNXfPtSwxQEONfwJV7J3eiVA1Twc5Bx9p0NFGr06hP0fhamQ4tysG+4sG/om0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mH88PfDO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5071C4CED0;
-	Thu, 12 Dec 2024 04:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733977815;
-	bh=w0GaN2svvAl//6VXkTZuXQXE+ogd0LPmILmAZXFMlxM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mH88PfDOqyp6h2xinfzwPU3ZRwO4xhmM+/l/vWYDoyz1dDjpjFXLCW14d7to7h0Ho
-	 Ki9MLSz8zFsey+48X9CWlm2hFhBtyGt3Q8qNyyHoK68a1vgvgPJXWKM08dgKKFGjPY
-	 eU9rpzeFXLbu20YZlrTcslXpgPJSI0pvkx4QrJUyn6/GuCbHAb70LXYQIcpEWDkDKY
-	 K+RggOwr2hO8fgEnwx10FtZVUsDzIGTkHU1c4xI2n5OJcO35oSqxh+ziN1UH5gbtTH
-	 ctafaFDlYsiinQPQgs808dQTvEghkfnMaj7UYaxOayOr+z0uL/zAstMXXX+mYUGPkM
-	 8IPaRv1MNt99A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 345F3380A959;
-	Thu, 12 Dec 2024 04:30:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1733992121; c=relaxed/simple;
+	bh=oyi0+49mkb2V9ZQTgaTzcjk3FjXvGKxD1y6nVU4+9RY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=V7Levit66vG9PkiUzDlQvPruNLFv33SPdrxe8rGKz3awuLFjGkL5FdbWGMmMu2Za+M9fFvciki68+GQvNFQqGB3LUWsEeoOG67Kk/9YUZ0Bw7YmGd5/WyJszk4nMCEY48e7Cijay/HzN/iV91IMJiXZeByIwggs8veG18CMCLUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N5/y837y; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5F18720ACD66;
+	Thu, 12 Dec 2024 00:28:39 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F18720ACD66
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1733992119;
+	bh=k4I45kyxnDNzHp98bbNcFbcUeN1YhvrRo8OzgJx/BxU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N5/y837yvlUvwy09IS0zYw5cnCSW5zzYRwKfd0y8+58FVs54Bih77jp1I0NGMHmNg
+	 v/awkANfqxR4gAHHNyCN6KmIthAoslBsmnzZeSd+RadCVdI2vWN8AV52R7eeF3sJvh
+	 owBhWCAAXc9pUfbt4UvoE6Z+Er/jPdgzBZ+XWzT4=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ssengar@microsoft.com,
+	avladu@cloudbasesolutions.com
+Subject: [PATCH] tools: hv: Fix cross-compilation
+Date: Thu, 12 Dec 2024 00:28:34 -0800
+Message-Id: <1733992114-7305-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/2] MANA: Fix few memory leaks in mana_gd_setup_irqs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173397783199.1847197.16469133820148942308.git-patchwork-notify@kernel.org>
-Date: Thu, 12 Dec 2024 04:30:31 +0000
-References: <20241209175751.287738-1-mlevitsk@redhat.com>
-In-Reply-To: <20241209175751.287738-1-mlevitsk@redhat.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, kuba@kernel.org, haiyangz@microsoft.com,
- schakrabarti@linux.microsoft.com, linux-hyperv@vger.kernel.org,
- decui@microsoft.com, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- kotaranov@microsoft.com, leon@kernel.org, kys@microsoft.com,
- wei.liu@kernel.org, andrew+netdev@lunn.ch, shradhagupta@linux.microsoft.com,
- davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
- longli@microsoft.com, yury.norov@gmail.com
 
-Hello:
+Use the native ARCH only incase it is not set, this will allow
+the cross complilation where ARCH is explicitly set. Add few
+info prints as well to know what arch and toolchain is getting
+used to build it.
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Additionally, simplify the check for ARCH so that fcopy daemon
+is build only for x86_64.
 
-On Mon,  9 Dec 2024 12:57:49 -0500 you wrote:
-> Fix 2 minor memory leaks in the mana driver,
-> introduced by commit
-> 
-> 8afefc361209 ("net: mana: Assigning IRQ affinity on HT cores")
-> 
-> Best regards,
-> 	Maxim Levitsky
-> 
-> [...]
+Fixes: 82b0945ce2c2 ("tools: hv: Add new fcopy application based on uio driver")
+Reported-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+Closes: https://lore.kernel.org/linux-hyperv/Z1Y9ZkAt9GPjQsGi@liuwe-devbox-debian-v2/
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ tools/hv/Makefile | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Here is the summary with links:
-  - [v2,1/2] net: mana: Fix memory leak in mana_gd_setup_irqs
-    https://git.kernel.org/netdev/net/c/bb1e3eb57d2c
-  - [v2,2/2] net: mana: Fix irq_contexts memory leak in mana_gd_setup_irqs
-    https://git.kernel.org/netdev/net/c/9a5beb6ca630
-
-You are awesome, thank you!
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index 34ffcec264ab..d29e6be6309b 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for Hyper-V tools
+ include ../scripts/Makefile.include
+ 
+-ARCH := $(shell uname -m 2>/dev/null)
++ARCH ?= $(shell uname -m 2>/dev/null)
+ sbindir ?= /usr/sbin
+ libexecdir ?= /usr/libexec
+ sharedstatedir ?= /var/lib
+@@ -20,18 +20,26 @@ override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+ override CFLAGS += -Wno-address-of-packed-member
+ 
+ ALL_TARGETS := hv_kvp_daemon hv_vss_daemon
+-ifneq ($(ARCH), aarch64)
++ifeq ($(ARCH), x86_64)
+ ALL_TARGETS += hv_fcopy_uio_daemon
+ endif
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
+ 
+-all: $(ALL_PROGRAMS)
++all: info $(ALL_PROGRAMS)
+ 
+ export srctree OUTPUT CC LD CFLAGS
+ include $(srctree)/tools/build/Makefile.include
+ 
++info:
++	@echo "---------------------"
++	@echo "Building for:"
++	@echo "CC $(CC)"
++	@echo "LD $(LD)"
++	@echo "ARCH $(ARCH)"
++	@echo "---------------------"
++
+ HV_KVP_DAEMON_IN := $(OUTPUT)hv_kvp_daemon-in.o
+ $(HV_KVP_DAEMON_IN): FORCE
+ 	$(Q)$(MAKE) $(build)=hv_kvp_daemon
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
 
