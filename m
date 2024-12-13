@@ -1,152 +1,162 @@
-Return-Path: <linux-hyperv+bounces-3476-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3477-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF1D69F1523
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Dec 2024 19:44:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 082B29F1730
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Dec 2024 21:11:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C1637A0F66
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Dec 2024 18:43:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D82F162705
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Dec 2024 20:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464F31E47DD;
-	Fri, 13 Dec 2024 18:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39934191478;
+	Fri, 13 Dec 2024 20:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PWYQ1wgH"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="bUsl9Xks"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A5301EB9F8;
-	Fri, 13 Dec 2024 18:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B33718FDBE;
+	Fri, 13 Dec 2024 20:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734115436; cv=none; b=JHt0U1ppknQaDnC70G4dqz91MeMt74tQoDWRiIMgPkb2TJPvfhCXouFwD55WifZd84G61fPW2n+/mDz0RceD2OigqgOszkQYjHssLRF4FJAoMp33rxG8ZQWLoyqzl4zqC485KXeOaVZYymMEdBxJt4R3JaOyj79eqwJRTv1gZPo=
+	t=1734120386; cv=none; b=WS+EFUZmchgANShzcD4L2qvJryJcKmIQ9MxrIBr4r2NBHT2YFGlEUhOXacA7mCUELDVMtXRZ3T61UtO29j2MdyXHVtLCuwY8tko2YxSmqNEXp96jvvnU90AF64bCrkAabBEqD704RvpZ0VXACMALsoG1SjArYyKvUnxnRMBXwI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734115436; c=relaxed/simple;
-	bh=Q6zLz2bmojhmOJOh/rBq+Fy6cuzFn1bweS5FwE8wyVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=e48j4cTWKoumT+jp0bG6aez7so3K+SNeDm8uaMkRu/qCXa9ulPP9eyxb9rDIqjctP3dl7Xc0y3AvOHl2Ft6dSvqDmE+iPFWGR5JhvxaCDvoj3rSWsf6yorVy57x0spIeIuRvcDG2JL63mDdgMWaydQ7baO5emKTzgFep55w/QwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PWYQ1wgH; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+	s=arc-20240116; t=1734120386; c=relaxed/simple;
+	bh=PpdV+TAyG3tKXdPwl6HN0V9j9NLvFMFR7G1T99bJP4A=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=gTrtVQhc82KU26l8aCjBOtPuQwFWgLz4uoNxHo4JfYV4KdUUYmHphUjTNXtDEqMBl6ZVL5eovbx7i45/koORwm3k1acSG8X47Kp31s5JCA1kuOt1+DB8e0xSfihxxUEunbuFX7sWsnzdERqtB07K2HgPBhYLkiRiAT/gI0fE3WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=bUsl9Xks; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0886620BCAD0;
-	Fri, 13 Dec 2024 10:43:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0886620BCAD0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1734115430;
-	bh=UrDyvgO6ZPT7ZVpI6U07cePW8U77+X2SF48HloIFiXE=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=PWYQ1wgH2P+Q31Mqv3PePoIQfmLJPKWrBXRbTmiA5ewlRfx3iyD+T07PjhoTCv4sU
-	 /0/oPgB+sDnCZBCoCtBYAytUTLo5p4j5luDJpLO3X4VHacOA7m12EMVnva+1fLNJkH
-	 2qaRdVlP1nrV3bQLqujEb9XGEvZB8qIZy5nwpFBE=
-Message-ID: <130fb73d-110e-4aec-9491-371da9d0e338@linux.microsoft.com>
-Date: Fri, 13 Dec 2024 10:43:49 -0800
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id 0CCBF20BCAD0; Fri, 13 Dec 2024 12:06:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0CCBF20BCAD0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1734120384;
+	bh=vJ1S+b1BSe5VAHRIRV0GkW0d4sHaXpM7+ERD6ffAyVE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bUsl9XksWclBwDTryioRbgDJcBWGomCsPSbbY003/uRc8A4dCpW+CVqRwunLyD8PB
+	 +EVjyuA//sWeDmAjX5OqxZIZ7hVVSgF1hgTD2yn6bGQbIIlDFn/rscNSFFmY1+6SxO
+	 VCOabvRZruoaaQ0IawAf86m9DlYMoIKcX61svFoM=
+From: longli@linuxonhyperv.com
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	Long Li <longli@microsoft.com>
+Subject: [Patch net-next v2] hv_netvsc: Set device flags for properly indicating bonding in Hyper-V
+Date: Fri, 13 Dec 2024 12:06:01 -0800
+Message-Id: <1734120361-26599-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] Documentation: hyperv: Add overview of guest VM
- hibernation
-To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, corbet@lwn.net, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20241212231700.6977-1-mhklinux@outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20241212231700.6977-1-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 12/12/2024 3:17 PM, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> Add documentation on how hibernation works in a guest VM on Hyper-V.
-> Describe how VMBus devices and the VMBus itself are hibernated and
-> resumed, along with various limitations.
-> 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->   Documentation/virt/hyperv/hibernation.rst | 312 ++++++++++++++++++++++
->   Documentation/virt/hyperv/index.rst       |   1 +
->   2 files changed, 313 insertions(+)
->   create mode 100644 Documentation/virt/hyperv/hibernation.rst
-> 
-> diff --git a/Documentation/virt/hyperv/hibernation.rst b/Documentation/virt/hyperv/hibernation.rst
-> new file mode 100644
-> index 000000000000..9e177c1f5bae
-> --- /dev/null
-> +++ b/Documentation/virt/hyperv/hibernation.rst
-> @@ -0,0 +1,312 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
+From: Long Li <longli@microsoft.com>
 
----->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8
+On Hyper-V platforms, a slave VF netdev always bonds to Netvsc and remains
+as Netvsc's only active slave as long as the slave device is present. This
+behavior is not user-configurable.
 
-> +Considerations for Guest VM Hibernation
-> +---------------------------------------
-> +Linux guests on Hyper-V can also be hibernated, in which case the
-> +hardware is the virtual hardware provided by Hyper-V to the guest VM.
-> +Only the targeted guest VM is hibernated, while other guest VMs and
-> +the underlying Hyper-V host continue to run normally. While the
-> +underlying Windows Hyper-V and physical hardware on which it is
-> +running might also be hibernated using hibernation functionality in
-> +the Windows host, host hibernation and its impact on guest VMs is not
-> +in scope for this documentation.
-> +
-> +Resuming a hibernated guest VM can be more challenging than with
-> +physical hardware because VMs make it very easy to change the hardware
-> +configuration between the hibernation and resume. Even when the resume
-> +is done on the same VM that hibernated, the memory size might be
-> +changed, or virtual NICs or SCSI controllers might be added or
-> +removed. Virtual PCI devices assigned to the VM might be added or
-> +removed. Most such changes cause the resume steps to fail, though
-> +adding a new virtual NIC, SCSI controller, or vPCI device should work.
-> +
+Other kernel APIs (e.g those in "include/linux/netdevice.h") check for
+IFF_MASTER, IFF_SLAVE and IFF_BONDING for determing if those are used
+in a master/slave bonded setup. RDMA uses those APIs extensively when
+looking for master/slave devices. Netvsc's bonding setup with its slave
+device falls into this category.
 
-Would it be useful mentioning the (likely lethal for the VM) risk
-of copying the hibernated VM to another host (of the same arch) that has
-another set of CPUID bits/features?
+Make hv_netvsc properly indicate bonding with its slave and change the
+API to reflect this bonding setup.
 
----->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8
+Signed-off-by: Long Li <longli@microsoft.com>
+---
 
-> +Key-Value Pair (KVP) Pseudo-Device Anomalies
-> +--------------------------------------------
+Change log
+v2: instead of re-using IFF_BOND, introduce permanent_bond in netdev
 
----->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8
+ drivers/net/hyperv/netvsc_drv.c | 12 ++++++++++++
+ include/linux/netdevice.h       |  8 ++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-
-> +Virtual PCI devices
-> +-------------------
-> +Virtual PCI devices are physical PCI devices that are mapped directly
-
-
----->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8
-
-Appreciated documenting all the intricacies of the hibernation and
-resume paths for various devices, an incredible read! Are there
-any special considerations known to you for the hibernation of
-the devices driven through the Hyper-V UIO?
-
-> +out-of-the-box by local Hyper-V and so requires custom scripting.
-> diff --git a/Documentation/virt/hyperv/index.rst b/Documentation/virt/hyperv/index.rst
-> index 79bc4080329e..c84c40fd61c9 100644
-> --- a/Documentation/virt/hyperv/index.rst
-> +++ b/Documentation/virt/hyperv/index.rst
-> @@ -11,4 +11,5 @@ Hyper-V Enlightenments
->      vmbus
->      clocks
->      vpci
-> +   hibernation
->      coco
-
-Besides these two questions, LGTM.
-
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index d6c4abfc3a28..7867f8e45f86 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2204,6 +2204,10 @@ static int netvsc_vf_join(struct net_device *vf_netdev,
+ 		goto rx_handler_failed;
+ 	}
+ 
++	vf_netdev->permanent_bond = 1;
++	ndev->permanent_bond = 1;
++	ndev->flags |= IFF_MASTER;
++
+ 	ret = netdev_master_upper_dev_link(vf_netdev, ndev,
+ 					   NULL, NULL, NULL);
+ 	if (ret != 0) {
+@@ -2484,7 +2488,15 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+ 
+ 	reinit_completion(&net_device_ctx->vf_add);
+ 	netdev_rx_handler_unregister(vf_netdev);
++
++	/* Unlink the slave device and clear flag */
++	vf_netdev->permanent_bond = 0;
++	ndev->permanent_bond = 0;
++	vf_netdev->flags &= ~IFF_SLAVE;
++	ndev->flags &= ~IFF_MASTER;
++
+ 	netdev_upper_dev_unlink(vf_netdev, ndev);
++
+ 	RCU_INIT_POINTER(net_device_ctx->vf_netdev, NULL);
+ 	dev_put(vf_netdev);
+ 
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index ecc686409161..4531f45d3e83 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -1997,6 +1997,7 @@ enum netdev_reg_state {
+  *	@change_proto_down: device supports setting carrier via IFLA_PROTO_DOWN
+  *	@netns_local: interface can't change network namespaces
+  *	@fcoe_mtu:	device supports maximum FCoE MTU, 2158 bytes
++ *	@permanent_bond: device is permanently bonded to another device
+  *
+  *	@net_notifier_list:	List of per-net netdev notifier block
+  *				that follow this device when it is moved
+@@ -2402,6 +2403,7 @@ struct net_device {
+ 	unsigned long		change_proto_down:1;
+ 	unsigned long		netns_local:1;
+ 	unsigned long		fcoe_mtu:1;
++	unsigned long		permanent_bond:1;
+ 
+ 	struct list_head	net_notifier_list;
+ 
+@@ -5150,12 +5152,14 @@ static inline bool netif_is_macvlan_port(const struct net_device *dev)
+ 
+ static inline bool netif_is_bond_master(const struct net_device *dev)
+ {
+-	return dev->flags & IFF_MASTER && dev->priv_flags & IFF_BONDING;
++	return dev->flags & IFF_MASTER &&
++	       (dev->priv_flags & IFF_BONDING || dev->permanent_bond);
+ }
+ 
+ static inline bool netif_is_bond_slave(const struct net_device *dev)
+ {
+-	return dev->flags & IFF_SLAVE && dev->priv_flags & IFF_BONDING;
++	return dev->flags & IFF_SLAVE &&
++	       (dev->priv_flags & IFF_BONDING || dev->permanent_bond);
+ }
+ 
+ static inline bool netif_supports_nofcs(struct net_device *dev)
 -- 
-Thank you,
-Roman
+2.34.1
 
 
