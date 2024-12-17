@@ -1,75 +1,114 @@
-Return-Path: <linux-hyperv+bounces-3482-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3483-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73B109F40BC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Dec 2024 03:28:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57BD89F4199
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Dec 2024 05:17:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9AB351882675
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Dec 2024 02:28:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72F247A3BD8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Dec 2024 04:17:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351D813D504;
-	Tue, 17 Dec 2024 02:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E25513DDB9;
+	Tue, 17 Dec 2024 04:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnIdWC/b"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PUSjk9Uy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012A170827;
-	Tue, 17 Dec 2024 02:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF27220EB;
+	Tue, 17 Dec 2024 04:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734402505; cv=none; b=FB1TnGZap189vwuscDPYnlISaBVbwJI0eG3dH52TLm1EQyEyF5FT8aIjMQlztm33xpoEEP0CJ4HXO+HbubU4akSqKYSai7dIDO9jOIz1/CJiN9HhQxoFu2XSdUBiXEb07ml2PIPAwxFnGntymbRGT4rRUomNhx/ckYxjKVyctJU=
+	t=1734409037; cv=none; b=uNLeeiXCsCiFSMKhmqKCxUs24T6N5v+Nt8H95rEJWlHz9CprvC+JGU4Yz0UwHYQGnXXYECwcB04+HF0HEbjnM4uvKugKg9B2f1h3iDuFF0rYlnMWJ2xiGrsHjnDN39xfYZ7GxX66rxTC4yR+o3FXkabp3oPHkQV2gWGuNPQIe6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734402505; c=relaxed/simple;
-	bh=Z0kXIoZ7M8uFKYlucGZUMgaTBP+bzRmnCOsN5JMzWq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jg9bGIL44rfXsKxAmVDRz6mQxV0kKuPFb4bBvKnkrMz1PuxDyX9A56vp5nVCPeqKS4GJt9d2UtDOClgnDYuTH9qRA5cUXLQcoRFlvevVsdf879BQAGFK9PSS/ofbU8/JVIR+51k/GGt8eyTbilKChA8Ie/SnKqS0/9fFR27bkcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnIdWC/b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01797C4CED0;
-	Tue, 17 Dec 2024 02:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734402504;
-	bh=Z0kXIoZ7M8uFKYlucGZUMgaTBP+bzRmnCOsN5JMzWq0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BnIdWC/bT2LrZqZ2Gnmx0o8y2CbCH+1NbYgHTwOmp8WoGPxqmSrjpNQ/8lwsSjTY0
-	 jeKxGbXxtOOyu3EOi2qyO93vALZSqBBWYoqGuXZwq04gEaToTOzvhWIrdYdYt7hLFK
-	 kpJHuCiSEAtPPo5yD+DKkkxs3+L44osb92xcWnm6rMq/fRf/gnx76QXmKHxwZesvQE
-	 Ab41XpM2Xgg6y4i6Q3eTRxDZYjq10aa8hhKhn1KAsXKq4pptvjuVZXKcuGsE1xkqmM
-	 svtQwAaOsR48V+NqfhkSOzcbAxbqy6z5Ktrf0pCeueyRmkQTZCQwEYDmwQuhALTUiF
-	 QZzTzT8DCDpkw==
-Date: Mon, 16 Dec 2024 18:28:23 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: longli@linuxonhyperv.com
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Ajay
- Sharma <sharmaajay@microsoft.com>, Konstantin Taranov
- <kotaranov@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Stephen
- Hemminger <stephen@networkplumber.org>, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [Patch net-next v2] hv_netvsc: Set device flags for properly
- indicating bonding in Hyper-V
-Message-ID: <20241216182823.03fb6276@kernel.org>
-In-Reply-To: <20241216180300.23a54f27@kernel.org>
-References: <1734120361-26599-1-git-send-email-longli@linuxonhyperv.com>
-	<20241216180300.23a54f27@kernel.org>
+	s=arc-20240116; t=1734409037; c=relaxed/simple;
+	bh=mv/hJGnHXuS3Iq+PPpUn6L9H1CjyIPwhVsdPxhm7K8s=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=AL4RLoYeWLRFzSIuOwDpnsRFCEs+8/KsbpUfCvcNsaXFvWIDryBtLDtz841NDhFudHDS1QzbIPAKAfT6lDvig0JOMPce97ZQnNYaTh10OVp8JQQhb/sGqC9DgEzFoaXiF7iB3SO4tqYMZOuVFmK4BYxvX7OEhMsXVrbWV7YEjYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PUSjk9Uy; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 5B109204720E; Mon, 16 Dec 2024 20:17:15 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B109204720E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1734409035;
+	bh=+/ViDxWzfryU9ikDOGTZKHRT/qPhCdKFZa62Pz1646k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PUSjk9UycGclagIquLhKwv37mvmqSAZuxsDBszbf6PbEjh536oRfd50GHeMQzcfKk
+	 MpynYyIN2NCLALG831tr6Emg1nUBWgpN+JGCoJHY9sOVWAy78nXVlSKzbBAnDf2X+r
+	 /kyompQLxRPQsCw0f174h5d1Lb+vBDXTR0Wilztc=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	dmitry.torokhov@gmail.com,
+	linux-hyperv@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Subject: [PATCH v4 0/3] Disable Suspend-to-Idle in Hyper-V and Fix Hibernation Interruptions
+Date: Mon, 16 Dec 2024 20:17:06 -0800
+Message-Id: <1734409029-10419-1-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Dec 2024 18:03:00 -0800 Jakub Kicinski wrote:
-> > + *	@permanent_bond: device is permanently bonded to another device  
-> 
-> I think we have been taught a definition of the word "permanent"
-                               ^ 
-                               different
+It has been reported that Hyper-V VM users can unintentionally abort
+hibernation by mouse or keyboard movements. To address this issue,
+we have decided to remove the wakeup events for the Hyper-V keyboard
+and mouse driver. However, this change introduces another problem: 
+Suspend-to-Idle brings the system down with no method to wake it back up.
+
+Given that there are no real users of Suspend-to-Idle in Hyper-V,
+we have decided to disable this feature for VMBus. This results in:
+
+$echo freeze > /sys/power/state
+> bash: echo: write error: Operation not supported
+
+The keyboard and mouse were previously registered as wakeup sources to
+interrupt the freeze operation in a VM. Since the freeze operation itself
+is no longer supported, we are disabling them as wakeup events.
+
+This patchset ensures that the system remains stable and prevents
+unintended interruptions during hibernation.
+---
+Changes in v4:
+* Make keyboard and mouse wakeup capable by adding 
+  device_set_wakeup_capable but not enabling them as wakeup sources.
+  https://lore.kernel.org/lkml/Zv-j0qtWXsDz4Hah@google.com/
+* Remove device_wakeup_init() call in mousevsc_remove()
+v3:https://lore.kernel.org/lkml/1727685708-3524-1-git-send-email-ernis@linux.microsoft.com/
+
+Changes in v3:
+* Add 'Cc: stable@vger.kernel.org' in sign-off area.
+v2:https://lore.kernel.org/lkml/1727683917-31485-1-git-send-email-ernis@linux.microsoft.com/
+
+Changes in v2:
+* Add "#define vmbus_freeze NULL" when CONFIG_PM_SLEEP is not 
+  enabled.
+* Change commit message to clarify that this change is specifc to
+  Hyper-V based VMs.
+v1:https://lore.kernel.org/lkml/1726176470-13133-1-git-send-email-ernis@linux.microsoft.com/
+---
+
+Erni Sri Satya Vennela (3):
+  Drivers: hv: vmbus: Disable Suspend-to-Idle for VMBus
+  Input: hyperv-keyboard - disable as wakeup source
+  HID: hyperv: disable as wakeup source
+
+ drivers/hid/hid-hyperv.c              |  3 +--
+ drivers/hv/vmbus_drv.c                | 16 +++++++++++++++-
+ drivers/input/serio/hyperv-keyboard.c |  2 +-
+ 3 files changed, 17 insertions(+), 4 deletions(-)
+
+-- 
+2.34.1
+
 
