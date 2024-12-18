@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3494-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3495-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D70F9F6F0F
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F10709F6F10
 	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Dec 2024 21:54:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C0B1188BDA6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Dec 2024 20:54:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E66016D0ED
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Dec 2024 20:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93AC1FC0EC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12851FC105;
 	Wed, 18 Dec 2024 20:54:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gxiuyBeo"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mRuzK2nD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71CFB1FAC51;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D531FBE85;
 	Wed, 18 Dec 2024 20:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734555269; cv=none; b=jr3QCAjE5vMJufoW9TgxyqDTGiLfSKQx7lgPHDHlrrFJqxf9mmrOHeJL3xEs1aEu1tRn9C1aI4XwFFAXzsbU2qAYyqt38e04rIGfblPjL+NSbrB7jou2R7D5ChA6rKq8Ev4wIQm9+rSSDiwCMFYILUmVs3F9SF2vZLLZt8NF8G8=
+	t=1734555269; cv=none; b=t7jzTv8j5R+PHtbRCh3Merp/B+u/BAHBvAqY5L9U+p2ARe7gPQTDS8otES1yXT7qRIXzVlGaa5PidAaIB1wF/h1gQRhf9qmT00OdFhcLs0asjfHhxxnqmgD49hbHgAwSTwT3FjCojnORAnE1/W4C7vqXmZYsvHoi2oK299fg910=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734555269; c=relaxed/simple;
-	bh=ZzZ2JnZrtb2YILFB+pA8XMn7AYhsHZXoHmORZCcgv2E=;
+	bh=4Q2Al8os+V3krTFlVXkBKlYcoYCAa2JLfQ4Rk1j7reA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZlLYJZoxy/49lSkoWqGsbLoioJvWBxIP2dG3VInJwRhM//xL6piLoc4DjstWzKbxgMM38KZVTwfZMeiiGQotT4z4nkG1/Ih5Ss5/IiEF5/zpauPI1FyBFLR+QbtD1w6sHM4gsLOdlwvMuJFkaiVcU5GEoyGi1Azdw6pmeHtbc3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gxiuyBeo; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=eaX7N35AnltI/szANYFRXsB6pZIzpZzGrMcvVuiCEIL2UMqb+mkpCRqmp8Cr6oHdmCtVZK/se099KZwlfQYQvTUQyvwGaByECqZIPWIAJbBkba3dVkoEHP7xHftBhI1YI9XEKeB9Ke4mKkJXOBpwRxrWempJhRQE9/UHmNQ7Utw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mRuzK2nD; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2C6D1203FC79;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6CC5E203FC7A;
 	Wed, 18 Dec 2024 12:54:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C6D1203FC79
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6CC5E203FC7A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1734555262;
-	bh=heA/ZhQfNHWsYkvUc/EtILHKIXM4xEYeSsoa0DWJKGU=;
+	bh=fXVhuh/byezRSGvZCk91J8mf7KeTETtRa5rL9vk+Mro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gxiuyBeoObFXF/a5M0MyCBBSFAAAZfRO7XBU8t7CyOOFC9nXSDw3BNu/tCbKEv0Yd
-	 mr/3/xxiK+gfsjPoB++zN2CkxQ2GaPYcWDZbTs4Iw9fLYWgO/TfoW5RmRZUokPE6Xv
-	 M4rQTKCIRhpS9KKLFt8YLlQvw5nDQM6+GUd0rtNs=
+	b=mRuzK2nDnZYl1+mlQSLc8ZGSuWEnVvtzxqfKE3iiURokUOTqkxN/7oYFDf7z4EhVf
+	 u9/icEDO2CL9yR9wFYiNshBwAeAqh/YU5bn/VOWrvPuijZXQbKgDkqTHrXK5NPytPG
+	 XQeCy3A/ctlkfNym+JaJoZ74ea67rPI0ROIOSl1o=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: hpa@zytor.com,
 	kys@microsoft.com,
@@ -62,9 +62,9 @@ Cc: apais@microsoft.com,
 	ssengar@microsoft.com,
 	sunilmut@microsoft.com,
 	vdso@hexbites.dev
-Subject: [PATCH 1/2] hyperv: Fix pointer type for the output of the hypercall in get_vtl(void)
-Date: Wed, 18 Dec 2024 12:54:20 -0800
-Message-Id: <20241218205421.319969-2-romank@linux.microsoft.com>
+Subject: [PATCH 2/2] hyperv: Do not overlap the input and output hypercall areas in get_vtl(void)
+Date: Wed, 18 Dec 2024 12:54:21 -0800
+Message-Id: <20241218205421.319969-3-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241218205421.319969-1-romank@linux.microsoft.com>
 References: <20241218205421.319969-1-romank@linux.microsoft.com>
@@ -76,70 +76,68 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit bc905fa8b633 ("hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h")
-changed the type of the output pointer to `struct hv_register_assoc` from
-`struct hv_get_vp_registers_output`. That leads to an incorrect computation,
-and leaves the system broken.
+The Top-Level Functional Specification for Hyper-V, Section 3.6 [1, 2], disallows
+overlapping of the input and output hypercall areas, and get_vtl(void) does
+overlap them.
 
-Use the correct pointer type for the output of the GetVpRegisters hypercall.
+To fix this, enable allocation of the output hypercall pages when running in
+the VTL mode and use the output hypercall page of the current vCPU for the
+hypercall.
 
-Fixes: bc905fa8b633 ("hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h")
+[1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
+[2] https://github.com/MicrosoftDocs/Virtualization-Documentation/tree/main/tlfs
+
+Fixes: 8387ce06d70b ("x86/hyperv: Set Virtual Trust Level in VMBus init message")
 Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 ---
- arch/x86/hyperv/hv_init.c   | 6 +++---
- include/hyperv/hvgdk_mini.h | 3 ---
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/hyperv/hv_init.c | 2 +-
+ drivers/hv/hv_common.c    | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 3cf2a227d666..c7185c6a290b 100644
+index c7185c6a290b..90c9ea00273e 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
-@@ -416,13 +416,13 @@ static u8 __init get_vtl(void)
- {
- 	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
- 	struct hv_input_get_vp_registers *input;
--	struct hv_register_assoc *output;
-+	struct hv_get_vp_registers_output *output;
- 	unsigned long flags;
- 	u64 ret;
+@@ -422,7 +422,7 @@ static u8 __init get_vtl(void)
  
  	local_irq_save(flags);
  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	output = (struct hv_register_assoc *)input;
-+	output = (struct hv_get_vp_registers_output *)input;
+-	output = (struct hv_get_vp_registers_output *)input;
++	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
  
  	memset(input, 0, struct_size(input, names, 1));
  	input->partition_id = HV_PARTITION_ID_SELF;
-@@ -432,7 +432,7 @@ static u8 __init get_vtl(void)
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index c4fd07d9bf1a..5178beed6ca8 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -340,7 +340,7 @@ int __init hv_common_init(void)
+ 	BUG_ON(!hyperv_pcpu_input_arg);
  
- 	ret = hv_do_hypercall(control, input, output);
- 	if (hv_result_success(ret)) {
--		ret = output->value.reg8 & HV_X64_VTL_MASK;
-+		ret = output->as64.low & HV_X64_VTL_MASK;
- 	} else {
- 		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
- 		BUG();
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index db3d1aaf7330..0b1a10828f33 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -1107,7 +1107,6 @@ union hv_register_value {
- 	union hv_x64_pending_interruption_register pending_interruption;
- };
+ 	/* Allocate the per-CPU state for output arg for root */
+-	if (hv_root_partition) {
++	if (hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE)) {
+ 		hyperv_pcpu_output_arg = alloc_percpu(void *);
+ 		BUG_ON(!hyperv_pcpu_output_arg);
+ 	}
+@@ -435,7 +435,7 @@ int hv_common_cpu_init(unsigned int cpu)
+ 	void **inputarg, **outputarg;
+ 	u64 msr_vp_index;
+ 	gfp_t flags;
+-	int pgcount = hv_root_partition ? 2 : 1;
++	const int pgcount = (hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE)) ? 2 : 1;
+ 	void *mem;
+ 	int ret;
  
--#if defined(CONFIG_ARM64)
- /* HvGetVpRegisters returns an array of these output elements */
- struct hv_get_vp_registers_output {
- 	union {
-@@ -1124,8 +1123,6 @@ struct hv_get_vp_registers_output {
- 	};
- };
+@@ -453,7 +453,7 @@ int hv_common_cpu_init(unsigned int cpu)
+ 		if (!mem)
+ 			return -ENOMEM;
  
--#endif /* CONFIG_ARM64 */
--
- struct hv_register_assoc {
- 	u32 name;			/* enum hv_register_name */
- 	u32 reserved1;
+-		if (hv_root_partition) {
++		if (hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE)) {
+ 			outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
+ 			*outputarg = (char *)mem + HV_HYP_PAGE_SIZE;
+ 		}
 -- 
 2.34.1
 
