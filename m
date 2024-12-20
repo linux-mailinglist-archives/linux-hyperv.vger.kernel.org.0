@@ -1,74 +1,84 @@
-Return-Path: <linux-hyperv+bounces-3514-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3515-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A3639F9A09
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Dec 2024 20:13:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A8889F9CCB
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Dec 2024 23:43:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A9BA167142
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Dec 2024 19:13:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 115E3189443E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Dec 2024 22:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 111201632DD;
-	Fri, 20 Dec 2024 19:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0991C1F0F;
+	Fri, 20 Dec 2024 22:42:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ckcAzYLw"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lWy4qSqp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E30482210D0;
-	Fri, 20 Dec 2024 19:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734722020; cv=none; b=Kz8rA7Tdtp7bsEtoYU8mmfPEehMEdL342Ui/ljhcTjw4O4CGaYQYJee9CQmZNqheOXY3k9crKMiiMEIPM1qVusE+wyfwyNF2vlyPr2bKcbObz5WA2EOmmTL7VcwuA78q4ihPLEhJTx5A4YfBPZGFv2Mk0My0WUGGQ/mdgZyszcQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734722020; c=relaxed/simple;
-	bh=+tawYnLWE4zDBdx9k1eNI3ewrKxXjvECwTJ6hCgPayg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dPOPdMZAVjg8OoF8TxwORM41DxHzkFGtijVuqSK6eyJn4pzzcPr2cnReLOrnopM7zyWYIOOtS8+myD8yYCOqkRwRbtLTCzbxjeR4Sem6Qmp6RmfjRFJUkIHJmehWmf/S/AL0cgh+C0X0eQ414O5LTfDeDVM7rRfbnWccLLpliRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ckcAzYLw; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D7D6B2042982;
-	Fri, 20 Dec 2024 11:13:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D7D6B2042982
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1734722015;
-	bh=yGeF2VGkzlater34YiM2LZbXqVv2HKyEhptGaqHEzXo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ckcAzYLwDaDsK7nUXdN8IMYFT7T+q8yG413E2cprbRkDe5A199BDZyiIPJBHfeeHM
-	 ErrxFtSx0F7P/pl9p2mccHJwZnPU47y3L5oay8kMMWKHwG0Egvzpd+TfX3hMvIafux
-	 7/UR0x2LAeQ3F0LasBwG7V+fP6WLz1x6PA9e8D3Q=
-Message-ID: <eba74adf-4891-46f8-a3ef-e116000dd566@linux.microsoft.com>
-Date: Fri, 20 Dec 2024 11:13:34 -0800
-Precedence: bulk
-X-Mailing-List: linux-hyperv@vger.kernel.org
-List-Id: <linux-hyperv.vger.kernel.org>
-List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] hyperv: Do not overlap the input and output hypercall
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19012052.outbound.protection.outlook.com [52.103.7.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675201A2C11;
+	Fri, 20 Dec 2024 22:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734734574; cv=fail; b=POjtc0bxnK3SyPI8szmFdyVVQh9AhQJKKAFZXl+AOww+3BXqNHptUKrj3a2q3s0qLCZZTeGNV8nRf5p4N83ZUB3BobMtygo2ESGZgQPWxUYur1YRxlt0YV/yjtxSDQI5WcUmkq9k0lC6GhzYrxpf7CCCHHPlC9ibr/MXedZzNQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734734574; c=relaxed/simple;
+	bh=gFQm02LzrvQrnLwqtfMW9TElrg7UjRYRcVxR3HB5zyI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UEM2Lgs9DBMScQa03cXi4sY8sCzH/ijJlpLzEMbIs0nIANjxYxAXdrCdJIrfpyz7xgASnPzFhma1Zj1CSA/qLlXfhpJFbfF69yFSGy6iPomMwRdvrIbQDqMwGiCisiFlWiRn1xNJ3G01oUNtRBwvqMFgTTUE9t80Gs0X2EITEtc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lWy4qSqp; arc=fail smtp.client-ip=52.103.7.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CAiy8Csx00EMHznLXV3fBIDzavO7gnBvGF4iJVNBcsoaL5im+mrUVU6QMjgS6wsxvfcv+wA+/hzlu3ieapotA2qX8y8AdNcOWWfWfYWKKD4CXuj7AXxaj5cnuDGQ+KLJ92FbQqX08CRVWQcwmkDkbPxzkYJ1NDlKbav+XR3/hj4sarvw//dcoCCIDOoCajR1KrWDXYbDsxf3kBa0x8GQgBtyw+iVC5/DZrla9f3RZ/EwMBzHtk2QqxrcrQydqLvoVaz4XpjP30xxAn61pgJqm+s56/IS8D6JKBZTpJru3dCmILZ3D5gV6aGJa69LKJzG8zuxSBnG0aRN5tc+mvePDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gFQm02LzrvQrnLwqtfMW9TElrg7UjRYRcVxR3HB5zyI=;
+ b=IaYX5qXQMYRg9KxhwhLRapRGSY6NxU69p1h1JV4Lqum0ZEo6DWEXZdsfOfCTNZmEbqycqdhxo4SNpMaNOicmqBfYtm+v0jUcTQEctsH32ePCHGBESB8+sxAcw3SqQ5cv86TmKGlo65oDZUtO2GNJo1mGRLPLrwZiudIYbRfzYdAV4KUpysOeM28XZHW1efLlgu142u4j4k11sIoj7ZkSaYfIquU65enwQ1C0/VLMbXf+3IkrtIbZAI+wMMz4Mw/WvzK6tFUBy6aC85ZtxBlh4bOExRcJK4Uy7kn/kP1//9ksQiAKH/nT3R0aqFIcYGk592VECKs7cG5B+wNXiIQRUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gFQm02LzrvQrnLwqtfMW9TElrg7UjRYRcVxR3HB5zyI=;
+ b=lWy4qSqpNid8nrn+IpPVJTz9up4BffZGWsFTWLVbT4LuqxpevTWxug7T2VEXpTVisGdmgLMeRv9oqSU/QM8L3tJWagMXOokicav7IBy8frRlWoVbEpQlJPy4Cs4mmM4iCMv9Yb/H/2DwJgi8oCGgP4Pv6EhqL5dKh11hKGgHadAh2adMc3hzFKrmOVK7o7CSnGYVZr6GxsWzu2E8xTKg/5CxSwSnmEgo9VReGgkGh9Jr+lx+sXKeY1ufgp+3Q1qiZYjBE9pzTr5b1yT63eaerkm6vsykZkqPg85cL4D6aW/b4wg6t7BQyiTS4Oawb269rEzRkUKvYGPqoGgp6bcBzg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM6PR02MB6906.namprd02.prod.outlook.com (2603:10b6:5:257::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Fri, 20 Dec
+ 2024 22:42:50 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
+ 22:42:50 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>
+CC: "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "decui@microsoft.com" <decui@microsoft.com>,
+	"eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "mingo@redhat.com"
+	<mingo@redhat.com>, "nunodasneves@linux.microsoft.com"
+	<nunodasneves@linux.microsoft.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "tiala@microsoft.com" <tiala@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
+	<apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
+	"ssengar@microsoft.com" <ssengar@microsoft.com>, "sunilmut@microsoft.com"
+	<sunilmut@microsoft.com>, "vdso@hexbites.dev" <vdso@hexbites.dev>
+Subject: RE: [PATCH 2/2] hyperv: Do not overlap the input and output hypercall
  areas in get_vtl(void)
-To: Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>
-Cc: "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "tiala@microsoft.com" <tiala@microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
- <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
- "ssengar@microsoft.com" <ssengar@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "vdso@hexbites.dev" <vdso@hexbites.dev>
+Thread-Topic: [PATCH 2/2] hyperv: Do not overlap the input and output
+ hypercall areas in get_vtl(void)
+Thread-Index:
+ AQHbUY8FyS1mz+ZwyUeCSpyj1Xg2I7Ls3DWAgAEFqICAAC/HYIAAKaUAgAAX9gCAATAqAIAALJZQ
+Date: Fri, 20 Dec 2024 22:42:49 +0000
+Message-ID:
+ <SN6PR02MB4157FD829416A7ACA2FF9300D4072@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20241218205421.319969-1-romank@linux.microsoft.com>
  <20241218205421.319969-3-romank@linux.microsoft.com>
  <Z2OIHRF-cJ92IBv2@liuwe-devbox-debian-v2>
@@ -76,132 +86,245 @@ References: <20241218205421.319969-1-romank@linux.microsoft.com>
  <SN6PR02MB4157DD7CE09E39C524775168D4062@SN6PR02MB4157.namprd02.prod.outlook.com>
  <d8c4613a-33b6-4aa6-a3ae-7c888ab2d727@linux.microsoft.com>
  <BN7PR02MB41482EDAA9CD96EF2ECE6532D4072@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <eba74adf-4891-46f8-a3ef-e116000dd566@linux.microsoft.com>
+In-Reply-To: <eba74adf-4891-46f8-a3ef-e116000dd566@linux.microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <BN7PR02MB41482EDAA9CD96EF2ECE6532D4072@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB6906:EE_
+x-ms-office365-filtering-correlation-id: e8b3ba94-9f13-402c-4038-08dd2147a207
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|6072599003|15080799006|8062599003|461199028|19110799003|8060799006|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?ZTh5RkpXU2RZTkpadDFWVjNZWVo2Q2Vkbm81R0lkRUhjWHpxeW8yUFNzcHYr?=
+ =?utf-8?B?eWJBTTFUMDEyY29ncitvT2N6UTh5WjZLZWM4ZldNM2FTWXhPREt4Uy91KzlG?=
+ =?utf-8?B?RXk2a2hFK3VXczk3ZDBuaE54VTJDWU4xc3R5Y0JJU1U0VlJBZFZQSmZ5UXl6?=
+ =?utf-8?B?L1ZwREhuMlRTV0w1am9ybjQzb2ZZM0FVcEE3WmI1aFMwWEgyV3ZxWXFkd1Ez?=
+ =?utf-8?B?S1RVTkh3VGRrYmx5bjRtMzkxeVBOeDl2UnhDQVJlU3FzM2h1c3hiaTRpV2R4?=
+ =?utf-8?B?bys5ZVNOcDFsZW5YN2JIZXJMMklQZmNVY20yVDRVb3E4ZE5YSkhzOEZCeWJI?=
+ =?utf-8?B?dm5iWFVjeUlRR2drc1M3SUZrMjljZFdyU093T2ZuaG1HdFZxZjJOdUd2UEt3?=
+ =?utf-8?B?d1BkbEZtSS9tbEhScnVZdTQzcTZQV1lsQzduZnlINDF5MUw5OGxYWlZma0xX?=
+ =?utf-8?B?UlFnaFFOVXNoaXRnNGR5Yjc2OTJ4QnB1TThESGxvNVRaUWlBK0trMVZqK0h3?=
+ =?utf-8?B?bFR0dWVpcEYwWUtJcTJMSzZXUTFtYStlNkJSNUVYa3U2RVRlR0lBWS9sZjUw?=
+ =?utf-8?B?N3hERHkxSmxKTUNXYWlXcU1QaHZuMGhlL3l6ZW9ZWkxva3hVdG11b0hHUEZC?=
+ =?utf-8?B?T1NybTVKQTI0QkxBdEdpNVkvS1NPb1pZQm9lVHdseW00czcvQS9raVRRaHVk?=
+ =?utf-8?B?S3plUlVNZStST0lDVldsRVdTR2ZyMjg0aFAvVENGSHl0M1ovSFZXeUdUQStl?=
+ =?utf-8?B?NHhidTFVdjVkNnk1clhHNHlUeml6NjlxRDNIVFN5dWVRRERTajQ0ODcyM0JU?=
+ =?utf-8?B?Z284UmNtLy84V1dDZkoxTHNYcEZpOUNSSVdvSE5jR09VV2ZnWmljaEhuSlgr?=
+ =?utf-8?B?Q3FoMFFQY3p1V2UzMDBPc3h1WTlCcm1BcUpNN1hTbFh5S0RVd3IzRGVXT045?=
+ =?utf-8?B?WlhjdW43R1FrZ1VUZ2lBUXpvMjNzdzRBcjJwc1NmTXVJZjV3eSs5ZjNiSWlt?=
+ =?utf-8?B?WXRSNVZsa2ZDSjNFNG9rOEs5Sysrb2JtN3VHUU9uRU1rUHlvN0RpZitCZlRP?=
+ =?utf-8?B?ZnZYSHNHOFlWbEJDaThBT1ZCVzRCTEZVS1ViaGk1T2lCck9qQTM3WFEvZ0RN?=
+ =?utf-8?B?NFNCV2I3TlJSMEExcjdvc245YTQvMGlENG5SWXZFdmZ5TFBZTmdxcEFxcEQ1?=
+ =?utf-8?B?NUlBSTdlMWlsTDFqSFlpZG9jMFMzWEtUdjJLTnVPbEJlWXFQREtTNWx4a25o?=
+ =?utf-8?B?MElYSk54OEZ4cmFFTUhtYXFFL0IzMWlOSjFiSGg5dndPQzhjZHNkQzNudUNE?=
+ =?utf-8?B?Q2dZSXNodkQ4NlJJQWV1eHlKNU5JQkZIWmMrbzJ5Ym5FTWFZaHAyaDVLUmtm?=
+ =?utf-8?Q?LtKWJdMR+7srL6TEq4YOhhSTAEU7VuGQ=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SG1lT0ZqVmxnWlhrUy9ZVFNWUytkVHdxM3BzTDczWU05MEo0WDdCY2tia0hh?=
+ =?utf-8?B?Qmc4ODF6c2Q0UXJmOXptWEpGN3BCbnFCd3Y1eXlpZXZ2d0I2OXk4YzA3bUh0?=
+ =?utf-8?B?QzNaanNMTTI0ZGZOcEdyaFVGR2xLL3h2NDA2azU0UUprRWtuMXVIT21PWUpy?=
+ =?utf-8?B?Q0ZyQUU0OFNEdVZqdk5BK0s1SUNva2tNNmVtTTk0N2w5T1hkWDYwODRKSzFG?=
+ =?utf-8?B?Y0IrWUJsVnZIUDNET3k3K05EaWYrblJqOVFCcTNpT0xMWW9pNHlEK0dvVjJw?=
+ =?utf-8?B?OFladjVBK1JmektvMkkxVDFEMGpIN2c0NlRKUWRmTGtXL3hxWlZ0L2J3aFdj?=
+ =?utf-8?B?dGIvcGloeEg1Yk1aQ0djQmM1NEFBK3VGQWc2MnJMOVltYU5RR3ZEZjlheG9X?=
+ =?utf-8?B?SktYd0tuSjVkbkpxZkNZQTcxSGh5c0dFSDRodFV4eEZ3TVdyZWxoaG5nSGJt?=
+ =?utf-8?B?VzRGRCs3K1ozSUpia0dXblVZWk12bHlMVjNIY0VrdlAyRlg0L2c3a2F4eXRl?=
+ =?utf-8?B?K3pTQ2piWTRqSWlzZ3dCSE4xUmIyRk03ZHlJL2kzNXhyY28rKzE1dnR0NVlV?=
+ =?utf-8?B?RXNraHU4L2VCVkNMMTRuSDlrQzBVZU42R2dha0VqYytTdThSWWF0MUxraFRq?=
+ =?utf-8?B?SkJTMEE0WXpSdjQwOEcydDBxbDZma1V3MC9GOHlHZnRQNlBZL1lURnVpS1hW?=
+ =?utf-8?B?d1lpM2ZucDNPalVyYm5Bcm1zM3hCekl4TjdDL0RLbTh1ZlVmaDh3ZEU4N3FM?=
+ =?utf-8?B?ZVg3VUp5WUtoRHJjWFBLNFQzWkFpUEFVZFkxUldiR1N5cFR0TVFycEdwZElG?=
+ =?utf-8?B?UXBZYTQ3VEpVQXNNTWpzVW9XTm16Y0dTWTdDMzFyazRxeGNEK0FoRUhoN0Ja?=
+ =?utf-8?B?eEJuZU1zV3BXWVVLTHBGcGI2WS9pbHlwRHh3WWxSeVR1Um9vczlDMkNZeXUy?=
+ =?utf-8?B?dlhGYS9EME1yTmlRdHF0S3dZamo3SllubmFzWnVnRWJZUTRiNGpScUd1SjlB?=
+ =?utf-8?B?K1N6SjZDY2ZrclVCNFkzd2V6amFvN0I1M08vV3AvZGp1RFdobzdzUWpoU1Ju?=
+ =?utf-8?B?UFdmU3ZXNjZFSkRWWTIxRytIWHJJWkNDS1VjYlArckZHeXVQRU1HZm5QajhS?=
+ =?utf-8?B?c3JKNk9PV3Rya0lJVUVCV1grWm80ZDVlaDFkOEE2dHRsY1pPN08xMER6TmxL?=
+ =?utf-8?B?VGxMOWtzSEJuYktwc2ZoNHk2V0lXSE5zV0ZFQVJ3MFBoVGZnS2h3YjVSajUz?=
+ =?utf-8?B?NW9UV2x6ME95eW9MdTdjRm9oaStSV0RHTUZxM3p0UHZMR1J2TFlJUEpBUTll?=
+ =?utf-8?B?aDRkWnM1VGhQOTdtVFZ6ZmJqejVqU3RNVUlCVyt2S2hWL01QZTlwaWhYWWc0?=
+ =?utf-8?B?YTYwOG55bVlhNFNNSWdNR0dQLzB4ck9JL2gzd0JXNGVpNVVHc2JDYTczVGpj?=
+ =?utf-8?B?K0d3S1kwQUxMbDNrK1M4YzBkcTl6bHkzbE1WVGVNRk42VHBXdkQrV25wRFB1?=
+ =?utf-8?B?TEJobHlxRXN0VVErV3k4SkNRbzVLVmpST0V0ZXlwS0pvVTZLSXdlWkVPem5P?=
+ =?utf-8?B?RFVaSVhRMkQ0Ui9TbzNTMlk4T0UrQkhQeFZ0NVcwU0NZTlJvL2VRbldNaS9v?=
+ =?utf-8?Q?9WEln6EmezGN+8UegZPJsndxO7oIEAOE+3bu5FT+TKlY=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Precedence: bulk
+X-Mailing-List: linux-hyperv@vger.kernel.org
+List-Id: <linux-hyperv.vger.kernel.org>
+List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8b3ba94-9f13-402c-4038-08dd2147a207
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2024 22:42:50.0633
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6906
 
-
-
-On 12/19/2024 6:01 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Thursday, December 19, 2024 3:39 PM
->>
->> On 12/19/2024 1:37 PM, Michael Kelley wrote:
-
-[...]
-
-> I would agree that the percentage savings is small. VMs often have
-> several hundred MiB to a few GiB of memory per vCPU. Saving a
-> 4K page out of that amount of memory is a small percentage. The
-> thing to guard against, though, is applying that logic in many different
-> places in Linux kernel code. :-)  The Hyper-V support in Linux already
-> has multiple pre-allocated per-vCPU pages, and by being a little bit
-> clever we might be able to avoid another one.
-> 
-
-[...]
-
-We will also need the vCPU assist pages and the context pages for the
-lower VTLs, and the data don't currently occupy the entire pages. Yet
-imho it is prudent to leave some wiggle room instead of painting
-ourselves into the corner. We're not writing the code for MCUs, are
-working under different constraints, and, yes, reaching to use a page as
-that's the hard currency of virtualization imho. The numbers show that
-savings are negligible per-CPU but these savings come at a cost of
-making assumptions what will not happen in the future thus placing a bet
-against what the specification says.
-
-It's not even the hyperv code that is the largest consumer of the per-
-CPU data, not even close. Looking at the `vmlinux`'es `.data..percpu`
-section, there are almost 200 entries, and roughly one quarter is
-pointer-sized so who really knows how much is going to be allocated per-
-CPU. The top ten statically allocated are
-
-nm -rS --size-sort ./vmlinux | grep -vF ffffffff8 | sed 10q
-
-000000000000c000 0000000000008000 d exception_stacks
-0000000000006000 0000000000005000 D cpu_tss_rw
-0000000000002000 0000000000004000 D irq_stack_backing_store
-000000000001b5c0 0000000000003180 d timer_bases
-0000000000017000 0000000000003000 d bts_ctx
-0000000000015520 0000000000001450 D cpu_hw_events
-000000000000b000 0000000000001000 D gdt_page
-0000000000014000 0000000000001000 d entry_stack_storage
-0000000000001000 0000000000001000 D cpu_debug_store
-0000000000021d80 0000000000000c40 D runqueues
-
-on a configuration that is the bare minimum, no fluff. We could invest
-into looking what would be the cost of compiling out `bts_ctx` or
-`cpu_debug_store` instead of adding more if statements and making the
-code look tricky.
-
-> 
-> I agree that a hypercall could produce up to 4 KiB of output in
-> response to up to 4 KiB of input. But the guest controls how much
-> input it passes. Furthermore, for all the hypercalls I'm familiar with,
-> the specification of the hypercall tells the max amount of output it
-> will produce in response to the input. That allows the guest to
-> know how much output space it needs to allocate and provide to
-> the hypercall.
-> 
-
-> I will concede that it's possible to envision a hypercall with a
-> specification that says "May produce up to 4 KiB of output. A header
-> at the beginning of the output says how much output was produced."
-> In that case, the guest indeed must supply a full page of output space.
-> But I don't think we have any such hypercalls now, and adding such a
-> hypercall in the future seems unlikely. Of course, if such a hypercall
-> did get added and Linux used that hypercall, Linux would need to
-> supply a full page for the hypercall output. That page wouldn't
-> necessarily need to be a pre-allocated per-vCPU hypercall output
-> page. Depending on the usage circumstances, that full page might be
-> able to be allocated on-demand.
-> 
-> But assume things proceed as they are today where Linux can limit
-> the amount of hypercall output based on the input. Then I don't
-> see a violation of the contract if Linux limits the output and fits
-> it within a page that is also being shared in a non-overlapping
-> way with any hypercall input. I wouldn't allocate a per-vCPU
-> hypercall output page now for a theoretically possible
-> hypercall that doesn't exist yet.
-
-Given that:
-
-* Using the hypercall output page is plumbed throughout the dom0 code,
-* dom0 and the VTL mode can share code quite naturally,
-* Not using the output page cannot acccount for all cases permitted by
-   the TLFS clause "don't overlap input and output, and don't cross page
-   boundaries",
-* Not using the output page everywhere for consistency requires updating
-   call sites of `hv_do_hypercall`​ and friends, i.e. every place where a
-   hypercall is made needs to incorporate the offset/pointer at which the
-   output should start, or perhaps do some shenanigans with macro's,
-* Not using the output page leads to negligible savings,
-
-it is hard to see for me how to make not using the hypercall output page 
-look as a profitable enginnering endeavor, really comes off as dancing 
-to the perf scare/feature creep tune for peanuts.
-
-In my opinion, we should use the hypercall output page for the VTL mode
-as dom0 does to share code and reduce code churn. Had we used some
-`hv_get_registers` in both​ instead of the specialized for no compelling
-imo practical reason `get_vtl`​ (as it just gets a vCPU register, nothing
-more, nothing less), this code path would've been better tested, and any 
-of this patching would not have been needed.
-
-I'd wait for few days and then would likely prefer to run with Wei's
-permission to send this patch in v2 as-is unless some damning evidence 
-presents itself.
-
-> 
-> Michael
-> 
-
-[...]
-
--- 
-Thank you,
-Roman
-
+RnJvbTogUm9tYW4gS2lzZWwgPHJvbWFua0BsaW51eC5taWNyb3NvZnQuY29tPiBTZW50OiBGcmlk
+YXksIERlY2VtYmVyIDIwLCAyMDI0IDExOjE0IEFNDQo+IA0KPiBPbiAxMi8xOS8yMDI0IDY6MDEg
+UE0sIE1pY2hhZWwgS2VsbGV5IHdyb3RlOg0KPiA+IEZyb206IFJvbWFuIEtpc2VsIDxyb21hbmtA
+bGludXgubWljcm9zb2Z0LmNvbT4gU2VudDogVGh1cnNkYXksIERlY2VtYmVyIDE5LA0KPiAyMDI0
+IDM6MzkgUE0NCj4gPj4NCj4gPj4gT24gMTIvMTkvMjAyNCAxOjM3IFBNLCBNaWNoYWVsIEtlbGxl
+eSB3cm90ZToNCj4gDQo+IFsuLi5dDQo+IA0KPiA+IEkgd291bGQgYWdyZWUgdGhhdCB0aGUgcGVy
+Y2VudGFnZSBzYXZpbmdzIGlzIHNtYWxsLiBWTXMgb2Z0ZW4gaGF2ZQ0KPiA+IHNldmVyYWwgaHVu
+ZHJlZCBNaUIgdG8gYSBmZXcgR2lCIG9mIG1lbW9yeSBwZXIgdkNQVS4gU2F2aW5nIGENCj4gPiA0
+SyBwYWdlIG91dCBvZiB0aGF0IGFtb3VudCBvZiBtZW1vcnkgaXMgYSBzbWFsbCBwZXJjZW50YWdl
+LiBUaGUNCj4gPiB0aGluZyB0byBndWFyZCBhZ2FpbnN0LCB0aG91Z2gsIGlzIGFwcGx5aW5nIHRo
+YXQgbG9naWMgaW4gbWFueSBkaWZmZXJlbnQNCj4gPiBwbGFjZXMgaW4gTGludXgga2VybmVsIGNv
+ZGUuIDotKSAgVGhlIEh5cGVyLVYgc3VwcG9ydCBpbiBMaW51eCBhbHJlYWR5DQo+ID4gaGFzIG11
+bHRpcGxlIHByZS1hbGxvY2F0ZWQgcGVyLXZDUFUgcGFnZXMsIGFuZCBieSBiZWluZyBhIGxpdHRs
+ZSBiaXQNCj4gPiBjbGV2ZXIgd2UgbWlnaHQgYmUgYWJsZSB0byBhdm9pZCBhbm90aGVyIG9uZS4N
+Cj4gPg0KPiANCj4gWy4uLl0NCj4gDQo+IFdlIHdpbGwgYWxzbyBuZWVkIHRoZSB2Q1BVIGFzc2lz
+dCBwYWdlcyBhbmQgdGhlIGNvbnRleHQgcGFnZXMgZm9yIHRoZQ0KPiBsb3dlciBWVExzLCBhbmQg
+dGhlIGRhdGEgZG9uJ3QgY3VycmVudGx5IG9jY3VweSB0aGUgZW50aXJlIHBhZ2VzLiBZZXQNCj4g
+aW1obyBpdCBpcyBwcnVkZW50IHRvIGxlYXZlIHNvbWUgd2lnZ2xlIHJvb20gaW5zdGVhZCBvZiBw
+YWludGluZw0KPiBvdXJzZWx2ZXMgaW50byB0aGUgY29ybmVyLiBXZSdyZSBub3Qgd3JpdGluZyB0
+aGUgY29kZSBmb3IgTUNVcywgYXJlDQo+IHdvcmtpbmcgdW5kZXIgZGlmZmVyZW50IGNvbnN0cmFp
+bnRzLCBhbmQsIHllcywgcmVhY2hpbmcgdG8gdXNlIGEgcGFnZSBhcw0KPiB0aGF0J3MgdGhlIGhh
+cmQgY3VycmVuY3kgb2YgdmlydHVhbGl6YXRpb24gaW1oby4gVGhlIG51bWJlcnMgc2hvdyB0aGF0
+DQo+IHNhdmluZ3MgYXJlIG5lZ2xpZ2libGUgcGVyLUNQVSBidXQgdGhlc2Ugc2F2aW5ncyBjb21l
+IGF0IGEgY29zdCBvZg0KPiBtYWtpbmcgYXNzdW1wdGlvbnMgd2hhdCB3aWxsIG5vdCBoYXBwZW4g
+aW4gdGhlIGZ1dHVyZSB0aHVzIHBsYWNpbmcgYSBiZXQNCj4gYWdhaW5zdCB3aGF0IHRoZSBzcGVj
+aWZpY2F0aW9uIHNheXMuDQoNCkkgd2lsbCBub3Qgb2JqZWN0IHRvIHlvdXIgcHJlZmVycmVkIHBh
+dGggb2YgYWxsb2NhdGluZyB0aGUNCmh5cGVydl9wY3B1X291dHB1dF9hcmcgd2hlbiBDT05GSUdf
+SFlQRVJWX1ZUTF9NT0RFIGlzIHNldC4gRm9yDQptZSwgaXQgaGFzIGJlZW4gYSB3b3J0aHdoaWxl
+IGRpc2N1c3Npb24gdG8gZXhwbG9yZSB0aGUgYWx0ZXJuYXRpdmVzLiBJIGRvLA0KaG93ZXZlciwg
+d2FudCB0byBnZXQgZnVydGhlciBjbGFyaWZpY2F0aW9uIGFib3V0IHRoZSBzcGVjIHJlcXVpcmVt
+ZW50cw0KYW5kIHdoZXRoZXIgb3VyIGN1cnJlbnQgTGludXggY29kZSBpcyBtZWV0aW5nIHRob3Nl
+IHJlcXVpcmVtZW50cy4gTW9yZQ0Kb24gdGhhdCBiZWxvdy4gIEFuZCBhbGxvdyBtZSB0byBjb250
+aW51ZSB0aGUgZGlzY3Vzc2lvbiBhYm91dCBhIGNvdXBsZQ0Kb2YgcG9pbnRzIHlvdSByYWlzZWQu
+DQoNCj4gDQo+IEl0J3Mgbm90IGV2ZW4gdGhlIGh5cGVydiBjb2RlIHRoYXQgaXMgdGhlIGxhcmdl
+c3QgY29uc3VtZXIgb2YgdGhlIHBlci0NCj4gQ1BVIGRhdGEsIG5vdCBldmVuIGNsb3NlLiBMb29r
+aW5nIGF0IHRoZSBgdm1saW51eGAnZXMgYC5kYXRhLi5wZXJjcHVgDQo+IHNlY3Rpb24sIHRoZXJl
+IGFyZSBhbG1vc3QgMjAwIGVudHJpZXMsIGFuZCByb3VnaGx5IG9uZSBxdWFydGVyIGlzDQo+IHBv
+aW50ZXItc2l6ZWQgc28gd2hvIHJlYWxseSBrbm93cyBob3cgbXVjaCBpcyBnb2luZyB0byBiZSBh
+bGxvY2F0ZWQgcGVyLQ0KPiBDUFUuIFRoZSB0b3AgdGVuIHN0YXRpY2FsbHkgYWxsb2NhdGVkIGFy
+ZQ0KPiANCj4gbm0gLXJTIC0tc2l6ZS1zb3J0IC4vdm1saW51eCB8IGdyZXAgLXZGIGZmZmZmZmZm
+OCB8IHNlZCAxMHENCj4gDQo+IDAwMDAwMDAwMDAwMGMwMDAgMDAwMDAwMDAwMDAwODAwMCBkIGV4
+Y2VwdGlvbl9zdGFja3MNCj4gMDAwMDAwMDAwMDAwNjAwMCAwMDAwMDAwMDAwMDA1MDAwIEQgY3B1
+X3Rzc19ydw0KPiAwMDAwMDAwMDAwMDAyMDAwIDAwMDAwMDAwMDAwMDQwMDAgRCBpcnFfc3RhY2tf
+YmFja2luZ19zdG9yZQ0KPiAwMDAwMDAwMDAwMDFiNWMwIDAwMDAwMDAwMDAwMDMxODAgZCB0aW1l
+cl9iYXNlcw0KPiAwMDAwMDAwMDAwMDE3MDAwIDAwMDAwMDAwMDAwMDMwMDAgZCBidHNfY3R4DQo+
+IDAwMDAwMDAwMDAwMTU1MjAgMDAwMDAwMDAwMDAwMTQ1MCBEIGNwdV9od19ldmVudHMNCj4gMDAw
+MDAwMDAwMDAwYjAwMCAwMDAwMDAwMDAwMDAxMDAwIEQgZ2R0X3BhZ2UNCj4gMDAwMDAwMDAwMDAx
+NDAwMCAwMDAwMDAwMDAwMDAxMDAwIGQgZW50cnlfc3RhY2tfc3RvcmFnZQ0KPiAwMDAwMDAwMDAw
+MDAxMDAwIDAwMDAwMDAwMDAwMDEwMDAgRCBjcHVfZGVidWdfc3RvcmUNCj4gMDAwMDAwMDAwMDAy
+MWQ4MCAwMDAwMDAwMDAwMDAwYzQwIEQgcnVucXVldWVzDQo+IA0KPiBvbiBhIGNvbmZpZ3VyYXRp
+b24gdGhhdCBpcyB0aGUgYmFyZSBtaW5pbXVtLCBubyBmbHVmZi4gV2UgY291bGQgaW52ZXN0DQo+
+IGludG8gbG9va2luZyB3aGF0IHdvdWxkIGJlIHRoZSBjb3N0IG9mIGNvbXBpbGluZyBvdXQgYGJ0
+c19jdHhgIG9yDQo+IGBjcHVfZGVidWdfc3RvcmVgIGluc3RlYWQgb2YgYWRkaW5nIG1vcmUgaWYg
+c3RhdGVtZW50cyBhbmQgbWFraW5nIHRoZQ0KPiBjb2RlIGxvb2sgdHJpY2t5Lg0KPiANCj4gPg0K
+PiA+IEkgYWdyZWUgdGhhdCBhIGh5cGVyY2FsbCBjb3VsZCBwcm9kdWNlIHVwIHRvIDQgS2lCIG9m
+IG91dHB1dCBpbg0KPiA+IHJlc3BvbnNlIHRvIHVwIHRvIDQgS2lCIG9mIGlucHV0LiBCdXQgdGhl
+IGd1ZXN0IGNvbnRyb2xzIGhvdyBtdWNoDQo+ID4gaW5wdXQgaXQgcGFzc2VzLiBGdXJ0aGVybW9y
+ZSwgZm9yIGFsbCB0aGUgaHlwZXJjYWxscyBJJ20gZmFtaWxpYXIgd2l0aCwNCj4gPiB0aGUgc3Bl
+Y2lmaWNhdGlvbiBvZiB0aGUgaHlwZXJjYWxsIHRlbGxzIHRoZSBtYXggYW1vdW50IG9mIG91dHB1
+dCBpdA0KPiA+IHdpbGwgcHJvZHVjZSBpbiByZXNwb25zZSB0byB0aGUgaW5wdXQuIFRoYXQgYWxs
+b3dzIHRoZSBndWVzdCB0bw0KPiA+IGtub3cgaG93IG11Y2ggb3V0cHV0IHNwYWNlIGl0IG5lZWRz
+IHRvIGFsbG9jYXRlIGFuZCBwcm92aWRlIHRvDQo+ID4gdGhlIGh5cGVyY2FsbC4NCj4gPg0KPiAN
+Cj4gPiBJIHdpbGwgY29uY2VkZSB0aGF0IGl0J3MgcG9zc2libGUgdG8gZW52aXNpb24gYSBoeXBl
+cmNhbGwgd2l0aCBhDQo+ID4gc3BlY2lmaWNhdGlvbiB0aGF0IHNheXMgIk1heSBwcm9kdWNlIHVw
+IHRvIDQgS2lCIG9mIG91dHB1dC4gQSBoZWFkZXINCj4gPiBhdCB0aGUgYmVnaW5uaW5nIG9mIHRo
+ZSBvdXRwdXQgc2F5cyBob3cgbXVjaCBvdXRwdXQgd2FzIHByb2R1Y2VkLiINCj4gPiBJbiB0aGF0
+IGNhc2UsIHRoZSBndWVzdCBpbmRlZWQgbXVzdCBzdXBwbHkgYSBmdWxsIHBhZ2Ugb2Ygb3V0cHV0
+IHNwYWNlLg0KPiA+IEJ1dCBJIGRvbid0IHRoaW5rIHdlIGhhdmUgYW55IHN1Y2ggaHlwZXJjYWxs
+cyBub3csIGFuZCBhZGRpbmcgc3VjaCBhDQo+ID4gaHlwZXJjYWxsIGluIHRoZSBmdXR1cmUgc2Vl
+bXMgdW5saWtlbHkuIE9mIGNvdXJzZSwgaWYgc3VjaCBhIGh5cGVyY2FsbA0KPiA+IGRpZCBnZXQg
+YWRkZWQgYW5kIExpbnV4IHVzZWQgdGhhdCBoeXBlcmNhbGwsIExpbnV4IHdvdWxkIG5lZWQgdG8N
+Cj4gPiBzdXBwbHkgYSBmdWxsIHBhZ2UgZm9yIHRoZSBoeXBlcmNhbGwgb3V0cHV0LiBUaGF0IHBh
+Z2Ugd291bGRuJ3QNCj4gPiBuZWNlc3NhcmlseSBuZWVkIHRvIGJlIGEgcHJlLWFsbG9jYXRlZCBw
+ZXItdkNQVSBoeXBlcmNhbGwgb3V0cHV0DQo+ID4gcGFnZS4gRGVwZW5kaW5nIG9uIHRoZSB1c2Fn
+ZSBjaXJjdW1zdGFuY2VzLCB0aGF0IGZ1bGwgcGFnZSBtaWdodCBiZQ0KPiA+IGFibGUgdG8gYmUg
+YWxsb2NhdGVkIG9uLWRlbWFuZC4NCj4gPg0KPiA+IEJ1dCBhc3N1bWUgdGhpbmdzIHByb2NlZWQg
+YXMgdGhleSBhcmUgdG9kYXkgd2hlcmUgTGludXggY2FuIGxpbWl0DQo+ID4gdGhlIGFtb3VudCBv
+ZiBoeXBlcmNhbGwgb3V0cHV0IGJhc2VkIG9uIHRoZSBpbnB1dC4gVGhlbiBJIGRvbid0DQo+ID4g
+c2VlIGEgdmlvbGF0aW9uIG9mIHRoZSBjb250cmFjdCBpZiBMaW51eCBsaW1pdHMgdGhlIG91dHB1
+dCBhbmQgZml0cw0KPiA+IGl0IHdpdGhpbiBhIHBhZ2UgdGhhdCBpcyBhbHNvIGJlaW5nIHNoYXJl
+ZCBpbiBhIG5vbi1vdmVybGFwcGluZw0KPiA+IHdheSB3aXRoIGFueSBoeXBlcmNhbGwgaW5wdXQu
+IEkgd291bGRuJ3QgYWxsb2NhdGUgYSBwZXItdkNQVQ0KPiA+IGh5cGVyY2FsbCBvdXRwdXQgcGFn
+ZSBub3cgZm9yIGEgdGhlb3JldGljYWxseSBwb3NzaWJsZQ0KPiA+IGh5cGVyY2FsbCB0aGF0IGRv
+ZXNuJ3QgZXhpc3QgeWV0Lg0KPiANCj4gR2l2ZW4gdGhhdDoNCj4gDQo+ICogVXNpbmcgdGhlIGh5
+cGVyY2FsbCBvdXRwdXQgcGFnZSBpcyBwbHVtYmVkIHRocm91Z2hvdXQgdGhlIGRvbTAgY29kZSwN
+Cg0KSSBzZWUgdGhyZWUgdXNlcyBpbiBjdXJyZW50IHVwc3RyZWFtIGNvZGUuIEFuZCB0aGVuIHRo
+ZXJlIGFyZSBjbG9zZSB0bw0KYSBkb3plbiBtb3JlIHVzZXMgaW4gTnVubydzIHllYXItb2xkIHBh
+dGNoIHNldCBmb3IgL2Rldi9tc2h2IHRoYXQgaGFzbid0DQpiZWVuIGFjY2VwdGVkIHVwc3RyZWFt
+IHlldC4gRG9lcyB0aGF0IHJvdWdobHkgbWF0Y2ggd2hhdCB5b3UgYXJlIHJlZmVycmluZw0KdG8/
+DQoNCj4gKiBkb20wIGFuZCB0aGUgVlRMIG1vZGUgY2FuIHNoYXJlIGNvZGUgcXVpdGUgbmF0dXJh
+bGx5LA0KDQpZZXAuDQoNCj4gKiBOb3QgdXNpbmcgdGhlIG91dHB1dCBwYWdlIGNhbm5vdCBhY2Nj
+b3VudCBmb3IgYWxsIGNhc2VzIHBlcm1pdHRlZCBieQ0KPiAgICB0aGUgVExGUyBjbGF1c2UgImRv
+bid0IG92ZXJsYXAgaW5wdXQgYW5kIG91dHB1dCwgYW5kIGRvbid0IGNyb3NzIHBhZ2UNCj4gICAg
+Ym91bmRhcmllcyIsDQoNClRoaXMgaXMgd2hhdCBJIGRvbuKAmXQgdW5kZXJzdGFuZC4NCg0KPiAq
+IE5vdCB1c2luZyB0aGUgb3V0cHV0IHBhZ2UgZXZlcnl3aGVyZSBmb3IgY29uc2lzdGVuY3kgcmVx
+dWlyZXMgdXBkYXRpbmcNCj4gICAgY2FsbCBzaXRlcyBvZiBgaHZfZG9faHlwZXJjYWxsYOKAiyBh
+bmQgZnJpZW5kcywgaS5lLiBldmVyeSBwbGFjZSB3aGVyZSBhDQo+ICAgIGh5cGVyY2FsbCBpcyBt
+YWRlIG5lZWRzIHRvIGluY29ycG9yYXRlIHRoZSBvZmZzZXQvcG9pbnRlciBhdCB3aGljaCB0aGUN
+Cj4gICAgb3V0cHV0IHNob3VsZCBzdGFydCwgb3IgcGVyaGFwcyBkbyBzb21lIHNoZW5hbmlnYW5z
+IHdpdGggbWFjcm8ncywNCg0KSW4gbXkgbXVzaW5nIGFib3V0IGdldHRpbmcgcmlkIG9mIGh5cGVy
+dl9wY3B1X291dHB1dF9hcmcgZW50aXJlbHksIHRoZQ0KY2FsbCBzaWduYXR1cmUgb2YgaHZfZG9f
+aHlwZXJjYWxsKCkgYW5kIGZyaWVuZHMgd291bGQgcmVtYWluIHVuY2hhbmdlZC4NClRoZXJlIHdv
+dWxkIHN0aWxsIGJlIGEgdmlydHVhbCBhZGRyZXNzIHBhc3NlZCBhcyB0aGUgb3V0cHV0IGFyZ3Vt
+ZW50ICh3aGljaA0KbWlnaHQgYmUgTlVMTCwgYW5kIGlzICpub3QqIHJlcXVpcmVkIHRvIGJlIHBh
+Z2UgYWxpZ25lZCkuIFRoZSBjYWxsZXIgb2YNCmh2X2RvX2h5cGVyY2FsbCgpIG11c3Qgb25seSBl
+bnN1cmUgdGhhdCB0aGUgdmlydHVhbCBhZGRyZXNzIHBvaW50cyB0byBhbg0Kb3V0cHV0IGFyZWEg
+dGhhdCBpcyBsYXJnZSBlbm91Z2ggdG8gY29udGFpbiB0aGUgb3V0cHV0IHdpdGhvdXQgY3Jvc3Np
+bmcgYQ0KcGFnZSBib3VuZGFyeS4gVGhlIGFyZWEgbXVzdCBhbHNvIG5vdCBvdmVybGFwIHdpdGgg
+dGhlIGlucHV0IGFyZWEuIEdpdmVuDQp0aGF0IHdlIGN1cnJlbnRseSBoYXZlIG9ubHkgMyB1c2Vz
+IG9mIGh5cGVydl9wY3B1X291dHB1dF9hcmcgaW4gdXBzdHJlYW0NCmNvZGUsIG9ubHkgdGhvc2Ug
+d291bGQgbmVlZCB0byBiZSB0d2Vha2VkIHRvIHNwbGl0IHRoZSBoeXBlcnZfcGNwdV9pbnB1dF9h
+cmcNCnBhZ2UgaW50byBhbiBpbnB1dCBhbmQgb3V0cHV0IGFyZWEuIEFsbCBvdGhlciBjYWxsZXJz
+IG9mIGh2X2RvX2h5cGVyY2FsbCgpDQp3b3VsZCBiZSB1bmNoYW5nZWQuDQoNCj4gKiBOb3QgdXNp
+bmcgdGhlIG91dHB1dCBwYWdlIGxlYWRzIHRvIG5lZ2xpZ2libGUgc2F2aW5ncywNCj4gDQo+IGl0
+IGlzIGhhcmQgdG8gc2VlIGZvciBtZSBob3cgdG8gbWFrZSBub3QgdXNpbmcgdGhlIGh5cGVyY2Fs
+bCBvdXRwdXQgcGFnZQ0KPiBsb29rIGFzIGEgcHJvZml0YWJsZSBlbmdpbm5lcmluZyBlbmRlYXZv
+ciwgcmVhbGx5IGNvbWVzIG9mZiBhcyBkYW5jaW5nDQo+IHRvIHRoZSBwZXJmIHNjYXJlL2ZlYXR1
+cmUgY3JlZXAgdHVuZSBmb3IgcGVhbnV0cy4NCg0KVGhlcmUgd291bGQgYmUgc29tZSBzaW1wbGlm
+aWNhdGlvbiBpbiBodl9jb21tb25fZnJlZSgpLCBodl9jb21tb25faW5pdCgpLA0KYW5kIGh2X2Nv
+bW1vbl9jcHVfaW5pdCgpIGlmIHRoZXJlIHdhcyBubyBoeXBlcnZfcGNwdV9vdXRwdXRfYXJnLiAg
+Oi0pDQoNCj4gDQo+IEluIG15IG9waW5pb24sIHdlIHNob3VsZCB1c2UgdGhlIGh5cGVyY2FsbCBv
+dXRwdXQgcGFnZSBmb3IgdGhlIFZUTCBtb2RlDQo+IGFzIGRvbTAgZG9lcyB0byBzaGFyZSBjb2Rl
+IGFuZCByZWR1Y2UgY29kZSBjaHVybi4gSGFkIHdlIHVzZWQgc29tZQ0KPiBgaHZfZ2V0X3JlZ2lz
+dGVyc2AgaW4gYm90aOKAiyBpbnN0ZWFkIG9mIHRoZSBzcGVjaWFsaXplZCBmb3Igbm8gY29tcGVs
+bGluZw0KPiBpbW8gcHJhY3RpY2FsIHJlYXNvbiBgZ2V0X3Z0bGDigIsgKGFzIGl0IGp1c3QgZ2V0
+cyBhIHZDUFUgcmVnaXN0ZXIsIG5vdGhpbmcNCj4gbW9yZSwgbm90aGluZyBsZXNzKSwgdGhpcyBj
+b2RlIHBhdGggd291bGQndmUgYmVlbiBiZXR0ZXIgdGVzdGVkLCBhbmQgYW55DQo+IG9mIHRoaXMg
+cGF0Y2hpbmcgd291bGQgbm90IGhhdmUgYmVlbiBuZWVkZWQuDQoNCkZXSVcsIHRoZSBoaXN0b3Jp
+Y2FsIGNvbnRleHQgaXMgdGhhdCBhdCB0aGUgdGltZSBnZXRfdnRsKCkgd2FzIGltcGxlbWVudGVk
+LA0KYWxsIFZQIHJlZ2lzdGVycyB0aGF0IExpbnV4IG5lZWRlZCB0byBhY2Nlc3Mgd2VyZSBhdmFp
+bGFibGUgYXMgc3ludGhldGljDQpNU1JzIG9uIHRoZSB4ODYgc2lkZS4gR29pbmcgYmFjayB0byBp
+dHMgb3JpZ2lucyAxNSB5ZWFycyBhZ28sIHRoZSBMaW51eCBjb2RlDQpmb3IgSHlwZXItViBhbHdh
+eXMganVzdCB1c2VkIHRoZSBzeW50aGV0aWMgTVNScy4gZ2V0X3Z0bCgpIHdhcyB0aGUgZmlyc3Qg
+dGltZQ0KdGhhdCB4ODYgY29kZSBuZWVkZWQgdGhlIEhWQ0FMTF9HRVRfVlBfUkVHSVNURVJTIGh5
+cGVyY2FsbCBiZWNhdXNlDQpIVl9SRUdJU1RFUl9WU01fVlBfU1RBVFVTIGhhcyBubyBzeW50aGV0
+aWMgTVNSIGVxdWl2YWxlbnQuIFRoZXJlIHN0aWxsDQppcyBubyAnaHZfZ2V0X3JlZ2lzdGVycycg
+ZnVuY3Rpb24gaW4gdXBzdHJlYW0gY29kZSBvbiB0aGUgeDg2IHNpZGUuDQpodl9nZXRfdnByZWco
+KSBleGlzdHMgb25seSBvbiB0aGUgYXJtNjQgc2lkZSB3aGVyZSB0aGVyZSBhcmUgbm8gc3ludGhl
+dGljDQpNU1JzIG9yIGVxdWl2YWxlbnQuDQoNCkluIGhpbmRzaWdodCwgaHZfZ2V0X3ZwcmVnKCkg
+Y291bGQgaGF2ZSBiZWVuIGFkZGVkIG9uIHRoZSB4ODYgc2lkZSwgYW5kDQp0aGVuIGdldF92dGwo
+KSBpbXBsZW1lbnRlZCBvbiB0b3Agb2YgdGhhdC4gQW5kIEkgbWFkZSB0aGUgZ2V0X3Z0bCgpIHNp
+dHVhdGlvbg0Kd29yc2UgYnkgZ2l2aW5nIFRpYW55dSBiYWQgYWR2aWNlIGFib3V0IG92ZXJsYXBw
+aW5nIHRoZSBvdXRwdXQgYXJlYSB3aXRoDQp0aGUgaW5wdXQgYXJlYS4gOi0oDQoNCkkgb25jZSBo
+YWQgYSBtYW5hZ2VyIGF0IE1pY3Jvc29mdCB3aG8gc2FpZCAiSGUgcmVzZXJ2ZWQgdGhlIHJpZ2h0
+DQp0byB3YWtlIHVwIHNtYXJ0ZXIgZXZlcnkgZGF5LiIgIEkndmUgaGFkIHRvIGNsYWltIHRoYXQg
+cmlnaHQgYXMgd2VsbA0KZnJvbSB0aW1lLXRvLXRpbWUuIDotKQ0KDQo+IA0KPiBJJ2Qgd2FpdCBm
+b3IgZmV3IGRheXMgYW5kIHRoZW4gd291bGQgbGlrZWx5IHByZWZlciB0byBydW4gd2l0aCBXZWkn
+cw0KPiBwZXJtaXNzaW9uIHRvIHNlbmQgdGhpcyBwYXRjaCBpbiB2MiBhcy1pcyB1bmxlc3Mgc29t
+ZSBkYW1uaW5nIGV2aWRlbmNlDQo+IHByZXNlbnRzIGl0c2VsZi4NCg0KQWdhaW4sIEkgd29uJ3Qg
+b2JqZWN0IHRvIHlvdXIgdGFraW5nIHRoYXQgcGF0aC4NCg0KQnV0IHJlZ2FyZGluZyBjb21wbGlh
+bmNlIHdpdGggdGhlIFRMRlMsIHRha2UgYSBsb29rIGF0IHRoZSBjb2RlIGZvcg0KaHZfcGNpX3Jl
+YWRfbW1pbygpIGFuZCBodl9wY2lfd3JpdGVfbW1pbygpLiAgRG8geW91IHRoaW5rIHRoYXQgY29k
+ZQ0KdmlvbGF0ZXMgdGhlIHNwZWM/ICBJZiBub3QsIHdoYXQgd291bGQgYSB2aW9sYXRpb24gbG9v
+ayBsaWtlIGluIHRoZSBjb250ZXh0DQpvZiB0aGlzIGRpc2N1c3Npb24/ICBJZiBjdXJyZW50IGNv
+ZGUgaXMgaW4gdmlvbGF0aW9uLCB0aGVuIHdlIHNob3VsZCBmaXggdGhhdC4NCg0KTWljaGFlbA0K
 
