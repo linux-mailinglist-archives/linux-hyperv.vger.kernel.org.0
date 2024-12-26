@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-3532-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3533-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4562C9FCE11
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 22:41:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 610199FCE13
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 22:42:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB25E1633AC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 21:41:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 023041882692
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 21:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48FEB13BAD5;
-	Thu, 26 Dec 2024 21:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5988B1494A9;
+	Thu, 26 Dec 2024 21:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aeHfveEV"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ie9hmBHH"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E959C18E1F;
-	Thu, 26 Dec 2024 21:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081EE18E1F;
+	Thu, 26 Dec 2024 21:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735249301; cv=none; b=dgvlXGnI6tDtEu91TlR4BYTz5FK066AZmDODYi6hjQf8RrcHHYxmKUWaFDLITzqpRbJqpCzmMuWxJxTaMX5hgDZ2yqYo+wQ+ls5+UQXoOndPn+UkTOsPQKQooUGJ82qv2TTTz+/Ybw7v9vIYPuwMYAZl+gWhqR4aVo3aFLKmEsk=
+	t=1735249355; cv=none; b=pVk1lfkJ0x/IABLWqRUi9Pscezsw4wVR4idEqGFSApwkcHxDyW1wmYaEJExaeHXE2x6SG5jABaHLWwEH6YAcwx5ksAGwFNYvMHDCRdaRVkVaYBbEuV/+a3hFHTJ76vxUNHF4T0H1rciC6+r1oQREaAJOPeOy5zpH2A2bzfb3mUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735249301; c=relaxed/simple;
-	bh=e3EmRr7IJV1IP0sT64otsAu1C87fbxe5Fi2dpYGmccA=;
+	s=arc-20240116; t=1735249355; c=relaxed/simple;
+	bh=nyV+pvlZLDa5It2SpN+yRLQra7S4AObctepdenZsgG4=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=T+yg5sbPfhvdIIU6Y2mytsNAe1alJb9jTfs3FyHgLgblcO46EJE7oCs0eDWvvwi36B9dr/a8k0iYTnDDnMHaFm6j8THcmyUk6JqqHnTZnR33wVrcwTzEatYv4ZogMd5xWDE1WD07wUFAdncx/beoDAkpD9yjksX+8Ua3wHBUAW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aeHfveEV; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=NqOpttKkGFWZCG3Cuk4Asm1tVxg24AJbs3yagAGAH3B352XenE6hEa3/Enj6rTZF1rBEwPnOeRKA2pxAJ+J/GaFRu8XECSLN8SwmlxGsF2BQtVFvv8kCR0VI8pRSpWHdP7iE3s2UQtp6PcTR8bjREFAJimnmP7dlwr16Y7TJoc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ie9hmBHH; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.224.184] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CD189203EC22;
-	Thu, 26 Dec 2024 13:41:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CD189203EC22
+Received: from [100.65.224.184] (unknown [20.236.11.102])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 21F94203EC22;
+	Thu, 26 Dec 2024 13:42:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 21F94203EC22
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1735249299;
-	bh=F+VQgIycDIekgFXcuq9kl2tCm3dSmojRNZL9SNq2610=;
+	s=default; t=1735249353;
+	bh=n/00/p7bhVrngaTNTDwZd0iXTtgu1g3WWoBl6wBl1XE=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=aeHfveEVJFAtOx/ULOE1Qp2Uv6hliT6qZAKuYadBDLBzqggFbauANMeZMEHKMh8pc
-	 oSgyQT2A4O/z1KwM0mbv7yQDe7d18T6mqVS6j6FcagugM7H6sx8E/RXqw0m4fwB5XV
-	 4RLnf2NEMvhoOICpn1JRvP3tEMaYYoFT1ZITHN+0=
-Message-ID: <721f28b3-5091-47c7-921a-66336f17987c@linux.microsoft.com>
-Date: Thu, 26 Dec 2024 13:41:41 -0800
+	b=ie9hmBHHwRhqayedS8oVdR6sBliA+ytqe35nAmWGnA+C1cz6hynS5SedXljStoiKV
+	 70uIUNTElPCnNok6GIUvryazo5WT0oIFn/D7lHzEIyU5MnXbyo0SMHy8jHJqCexxOq
+	 vHcqbG/r4qLUEbflZKGjXviNsoCbNg6p/3M3ti/U=
+Message-ID: <ded7fedc-b420-46c6-ba33-5c2f1cb4831e@linux.microsoft.com>
+Date: Thu, 26 Dec 2024 13:42:35 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,33 +56,52 @@ Cc: hpa@zytor.com, kys@microsoft.com, bp@alien8.de,
  linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
  eahariha@linux.microsoft.com, apais@microsoft.com, benhill@microsoft.com,
  ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH v3 2/5] hyperv: Fix pointer type for the output of the
- hypercall in get_vtl(void)
+Subject: Re: [PATCH v3 3/5] hyperv: Enable the hypercall output page for the
+ VTL mode
 To: Roman Kisel <romank@linux.microsoft.com>
 References: <20241226213110.899497-1-romank@linux.microsoft.com>
- <20241226213110.899497-3-romank@linux.microsoft.com>
+ <20241226213110.899497-4-romank@linux.microsoft.com>
 From: Easwar Hariharan <eahariha@linux.microsoft.com>
 Content-Language: en-US
-In-Reply-To: <20241226213110.899497-3-romank@linux.microsoft.com>
+In-Reply-To: <20241226213110.899497-4-romank@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 12/26/2024 1:31 PM, Roman Kisel wrote:
-> Commit bc905fa8b633 ("hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h")
-> changed the type of the output pointer to `struct hv_register_assoc` from
-> `struct hv_get_vp_registers_output`. That leads to an incorrect computation,
-> and leaves the system broken.
+> Due to the hypercall page not being allocated in the VTL mode,
+> the code resorts to using a part of the input page.
 > 
-> Use the correct pointer type for the output of the GetVpRegisters hypercall.
+> Allocate the hypercall output page in the VTL mode thus enabling
+> it to use it for output and share code with dom0.
 > 
 > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 > ---
->  arch/x86/hyperv/hv_init.c | 6 +++---
+>  drivers/hv/hv_common.c | 6 +++---
 >  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index c4fd07d9bf1a..5178beed6ca8 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -340,7 +340,7 @@ int __init hv_common_init(void)
+>  	BUG_ON(!hyperv_pcpu_input_arg);
+>  
+>  	/* Allocate the per-CPU state for output arg for root */
+> -	if (hv_root_partition) {
+> +	if (hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE)) {
+>  		hyperv_pcpu_output_arg = alloc_percpu(void *);
+>  		BUG_ON(!hyperv_pcpu_output_arg);
+>  	}
+> @@ -435,7 +435,7 @@ int hv_common_cpu_init(unsigned int cpu)
+>  	void **inputarg, **outputarg;
+>  	u64 msr_vp_index;
+>  	gfp_t flags;
+> -	int pgcount = hv_root_partition ? 2 : 1;
+> +	const int pgcount = (hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE)) ? 2 : 1;
+>  	void *mem;
+>  	int ret;
 
-
-Please add a Fixes tag, you can just reply to this email, tooling would
-probably pick it up. Assuming that:
+Thanks for the const!
 
 Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
