@@ -1,120 +1,144 @@
-Return-Path: <linux-hyperv+bounces-3525-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3526-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 240C99FCDAF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 21:42:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6743C9FCDFD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 22:31:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEEDB162D21
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 20:42:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F12821883392
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2024 21:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D2EF1474B7;
-	Thu, 26 Dec 2024 20:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33950148857;
+	Thu, 26 Dec 2024 21:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kSDd0O7c"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XIfNN0GE"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B8813C689;
-	Thu, 26 Dec 2024 20:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B583A18E1F;
+	Thu, 26 Dec 2024 21:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735245765; cv=none; b=tDm1S5jr04ZzqsRL0CxNn6xPKg0MgwmGqzdDseCog04Zy/t44sdWFbhFGI6XuxN0slvhB/PFmmaIsE2nSKLdgOt8a0/kxeYd4W9+BmmBJF0HvdRVj8Q1uF3qYZ5lczHmitQC3t0eyupxIEgdQ3/4OIRxB2U8cvqpJiMPjUSHH5I=
+	t=1735248674; cv=none; b=K8x31KNW3O/KkPuu1USVPX0RKDdgxUSmysijul1AmWfxpGYdRQ4rKs5SBDgNPP7shSkVe/yvN06qRSccC3RRkM//wEhsX6rhemOzcIT9TN01tx4wwPKqp+Zdfn877BSSPgokInGYWjXOgl/BSI0Y/lFMWRc6lL0626IGWXQZvng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735245765; c=relaxed/simple;
-	bh=rNb8MQUhOfEuJEPqfV2IUeIpwji0HWQ8qPizUuD7VxI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eib0v7/Y3pQ9IXYjKb34ePSlgJqA12pN7t3uhh4Qq0XOF4cOBa1i6rfcRgiIepVSR9Ga6ITZgGuaD3+mlwsVDvhYUAv1oduRZ4NGu0o9fYrpAD+pw1G83byEFr5ASQYrmsAKRwUtjzFS1VOpMs1Q8Kilm24uu2XvRuGVoxs5LP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kSDd0O7c; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1735248674; c=relaxed/simple;
+	bh=eX29/Sm9fXqI6FA2Qt33O3a2AWWqPYlG1m6vnc9dWM0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nn3jB4HTuoEwjVfw2jbLMZ7fmAkvwIwfhTnO3oQYAeXMVPWK8lMEtkHpzhug3YVdEtomdiYxpPBNoIfmCySQGxmte9M/cHUN04xxQ8zVpnAgrshzKPlNcWIwmDyC1M50IMS2HYpRS4rwuhLr2cTkk/fO6MZoiHX6RYbqZTQ+JY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XIfNN0GE; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 58EA2203EC21;
-	Thu, 26 Dec 2024 12:42:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 58EA2203EC21
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E6C32203EC22;
+	Thu, 26 Dec 2024 13:31:11 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6C32203EC22
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1735245763;
-	bh=LtRIFFvRqL1g30a9JMTACtfx5bibE4snxLgPYRDj8D0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kSDd0O7cIkpeH+JlBwLLkrucPFdVIjMTj2o+KmBfEE4bwWtU8Etd4xH7NfMxqOjfn
-	 84yjaGPNjNmIQDWk83NsnU/8R9zPsZC7aoiZaTWJX4flRQHZ/vPTO4r3Jotp8uwwHT
-	 vwYU5aP8gm62Vd43oFSQYF+LYJXA517ginfmXvns=
-Message-ID: <2262a520-5557-45cc-95c0-460ebad30b01@linux.microsoft.com>
-Date: Thu, 26 Dec 2024 12:42:43 -0800
+	s=default; t=1735248672;
+	bh=o6BETkUoWYnwWU5j1F7+3OXJ0y8QY5DnHTvU+H5aiko=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XIfNN0GEogMQxohpZZblPRDPPqvvYeaKoF/aFrJitPTVcPcXubW5xx3qQ7m22GfPU
+	 QZx/prKDx8eUu5Fepz1KisxEpCVI9VUbxJ5TkyLtdC3aBmxim3JxIbe+/dXWvQVyBt
+	 WQRF5IY8RHrRlr/2XzgkPq71B/0ZHXbeM4/POH8k=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: hpa@zytor.com,
+	kys@microsoft.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	eahariha@linux.microsoft.com,
+	haiyangz@microsoft.com,
+	mingo@redhat.com,
+	mhklinux@outlook.com,
+	nunodasneves@linux.microsoft.com,
+	tglx@linutronix.de,
+	tiala@microsoft.com,
+	wei.liu@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	ssengar@microsoft.com,
+	sunilmut@microsoft.com,
+	vdso@hexbites.dev
+Subject: [PATCH v3 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
+Date: Thu, 26 Dec 2024 13:31:05 -0800
+Message-Id: <20241226213110.899497-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] hyperv: Do not overlap the input and output hypercall
- areas in get_vtl(void)
-To: Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>
-Cc: "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "tiala@microsoft.com" <tiala@microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
- <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
- "ssengar@microsoft.com" <ssengar@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "vdso@hexbites.dev" <vdso@hexbites.dev>
-References: <20241218205421.319969-1-romank@linux.microsoft.com>
- <20241218205421.319969-3-romank@linux.microsoft.com>
- <Z2OIHRF-cJ92IBv2@liuwe-devbox-debian-v2>
- <8da58247-87df-4250-820a-758ea8e00bbb@linux.microsoft.com>
- <SN6PR02MB4157DD7CE09E39C524775168D4062@SN6PR02MB4157.namprd02.prod.outlook.com>
- <d8c4613a-33b6-4aa6-a3ae-7c888ab2d727@linux.microsoft.com>
- <BN7PR02MB41482EDAA9CD96EF2ECE6532D4072@BN7PR02MB4148.namprd02.prod.outlook.com>
- <eba74adf-4891-46f8-a3ef-e116000dd566@linux.microsoft.com>
- <SN6PR02MB4157FD829416A7ACA2FF9300D4072@SN6PR02MB4157.namprd02.prod.outlook.com>
- <ff359a3e-a275-4146-8e99-a06fea69b7a9@linux.microsoft.com>
- <SN6PR02MB41570091569D9365185B9F8AD4032@SN6PR02MB4157.namprd02.prod.outlook.com>
- <9c138f4e-9258-4457-b85b-69ae111894fb@linux.microsoft.com>
- <SN6PR02MB4157B98CD34781CC87A9D921D40D2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157B98CD34781CC87A9D921D40D2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+The get_vtl(void) function
+
+* has got one bug when the code started using a wrong pointer type after
+  refactoring, and also
+* the both function in question don't adhere to the requirements of
+  the Hypervisor Top-Level Funactional Specification[1, 2] as the code overlaps
+  the input and output areas for a hypercall.
+
+The first issue leads to a wrong 100% reproducible computation due to reading
+a byte worth of data at a wrong offset. That in turn leads to using a nonsensical
+value ("fortunately", could catch it easily!) for the current VTL when initiating
+VMBus communications. As a repercussion from that, the system wouldn't boot. The
+fix is straightforward: use the correct pointer type.
+
+The second issue doesn't seem to lead to any reproducible breakage just yet. It is
+fixed with using the output hypercall pages allocated per-CPU, and that isn't the
+only or the most obvious choice so let me elaborate why that fix appears to be the
+best one in my opinion out of the options I could conceive of.
+
+The approach chosen for fixing the second issue makes two things shine through:
+
+* these functions just get a vCPU register, no special treatment needs to be
+  involved,
+* VTLs and dom0 can and should share code as both exist to provide services to
+  a guest(s), be that from within the partition or from outside of it.
+
+The projected benefits include replacing the functions in question with a future
+`hv_get_vp_registers` one shared between dom0 and VTLs to allow for a better test
+coverage.
+
+I have validated the fixes by booting the fixed kernel in VTL2 up using OpenVMM and
+OpenHCL[3, 4].
+
+[1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
+[2] https://github.com/MicrosoftDocs/Virtualization-Documentation/tree/main/tlfs
+[3] https://openvmm.dev/guide/user_guide/openhcl.html
+[4] https://github.com/microsoft/OpenVMM
+
+[v3]
+  - Added a fix for hv_vtl_apicid_to_vp_id(),
+  - Split out the patch for enabling the hypercall output page,
+  - Updated the title of the patch series,
+
+[v2]: https://lore.kernel.org/lkml/20241226203050.800524-1-romank@linux.microsoft.com/
+  - Used the suggestions to define an additional structure to improve code readability,
+  - Split out the patch with that definition.
+
+[v1]: https://lore.kernel.org/lkml/20241218205421.319969-1-romank@linux.microsoft.com/
+
+Roman Kisel (5):
+  hyperv: Define struct hv_output_get_vp_registers
+  hyperv: Fix pointer type for the output of the hypercall in
+    get_vtl(void)
+  hyperv: Enable the hypercall output page for the VTL mode
+  hyperv: Do not overlap the hvcall IO areas in get_vtl()
+  hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
+
+ arch/x86/hyperv/hv_init.c   |  6 ++--
+ arch/x86/hyperv/hv_vtl.c    |  2 +-
+ drivers/hv/hv_common.c      |  6 ++--
+ include/hyperv/hvgdk_mini.h | 58 +++++++++++++++++++++++++++++++++++--
+ 4 files changed, 63 insertions(+), 9 deletions(-)
 
 
-
-On 12/26/2024 12:04 PM, Michael Kelley wrote:
-[...]
-
-> 
-> As I was looking at how hypercall input and output arguments are
-> managed in upstream code and in the OHCL-Linux-Kernel repo,
-> I noticed two things:
-> 
-> 1) There's a bug in mshv_vtl_hvcall_call() in the OHCL-Linux-Kernel
-> repo, for which I filed a github issue. [1]
-Appreciated very much!
-
-> 
-> 2) hv_vtl_apicid_to_vp_id() also has the overlapping hypercall input
-> and output spec violation. You might want to fix that occurrence as
-> well in this patch set.
-Let me do that, thank you!
-
-> 
-> Michael
-> 
-> [1] https://github.com/microsoft/OHCL-Linux-Kernel/issues/33
-
+base-commit: 4d4ace979a3066e5c940331571e6c1c3f280d1d3
 -- 
-Thank you,
-Roman
+2.34.1
 
 
