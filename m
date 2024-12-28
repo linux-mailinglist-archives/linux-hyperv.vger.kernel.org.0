@@ -1,77 +1,77 @@
-Return-Path: <linux-hyperv+bounces-3550-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3551-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B6979FDBF3
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Dec 2024 19:51:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B665B9FDBFE
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Dec 2024 19:51:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F61A1882CF0
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Dec 2024 18:51:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B24217A02DA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Dec 2024 18:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD5DF19B5A9;
-	Sat, 28 Dec 2024 18:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39B6A19CC36;
+	Sat, 28 Dec 2024 18:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aL2ObHx2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuKZJaMN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1327119ABD4;
-	Sat, 28 Dec 2024 18:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A34219B586;
+	Sat, 28 Dec 2024 18:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735411805; cv=none; b=XiJUe1M9JimeHWQNYkHukjGRyrLg5Fa6k5Qp+yr8knAOefD4jRHbzweh3ClMqM1B84XNUT2p01jP+ZfwTjTIvJfbJEUTmhCs9JO2JR58x4bnE2SlaNR074iddxArohYJmaj1C2G147moJOVvUX7uNoLNNDeMAPUPBFt3XZLZzpw=
+	t=1735411807; cv=none; b=Ux+v9V9afyQJAo6csLuFgOiBoaqZB/1fa3gfVH9pBejMR1CnwpoA+gCoACmgRc3OGRBwdD/30eZ2lIP+/PgRF4fyiQukMrQ7N1tRj7mHhtfWrlsnGp2FuR31VwnxftrcZbtChPaXAsJZ83maB8CQWNVyQOqv4nGLHftM5a7fKjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735411805; c=relaxed/simple;
-	bh=00KAaZiElDeuSwSawiskbWLQDjpCB7R5sWeWi2JBcew=;
+	s=arc-20240116; t=1735411807; c=relaxed/simple;
+	bh=hMJtabK1vX54uoCs62Uh1uKXB0G3C1rvDyjRxtrbzJ8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xox75NfqjfdF5LDcjjgGe0gudl4DNihB51X26kIzUeBxtjoOZJfLIGc9cYE10A710jzFLLCSuHCkn9OEmG2ErxiVlj5ey8guNxJES6asYJc9Z1tcCFUSbjYfHrTcgk9ejFFcbofG4HaXdgJNaVGw+1Z4b1SsBhwK0aWeC74MSVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aL2ObHx2; arc=none smtp.client-ip=209.85.219.175
+	 MIME-Version; b=o0bk2hnL81C547Hi+cDTdvsSfrLCv55oABgH+or/G6b2lbJ18ohMPCn+QzBz8b2ZG3B6LxzVTyqL7x3HcjmjTWASuaD057Z/+IG5zz2qI1hbMob1H48gUyAzSKnerqeXzID11EGqUwCR6ojprvB66aQObLzCn6f8SfxYGY405hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PuKZJaMN; arc=none smtp.client-ip=209.85.219.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e3a26de697fso8956710276.3;
-        Sat, 28 Dec 2024 10:50:03 -0800 (PST)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso10325159276.3;
+        Sat, 28 Dec 2024 10:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735411803; x=1736016603; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1735411804; x=1736016604; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0bA6qa5mRtLx/JNJepZMf5RGZWm5ti1ameVb2qE56fE=;
-        b=aL2ObHx2oNVLQwq4vzzcqeb7CgxJfKtxhe21VuYUNlYNmZ4B9TWc/12mv62z7tAk0D
-         ZQZad+m2WeRSRDScpOuevkmmf2YaKue0pUCsbHJk2Eh9ErUFaXO+FfORBtUswlgdGj2a
-         nli1y9vdXMmMviur0x+VVe/H1a3YvGdYxE1NOsxW1xerko2XRd+4B5GWFqpr5xrehB/m
-         J8I0dSsFWJ9/cVJVndDYCV+CovuspuTOvoJkPeoXLtSswx2PL+r2g2aG4id/TQitn546
-         qBGceh6QFw7JgThQFNab5PoZA5ew4Jx9g1qUUyPtVCpnQM5EBJHia+hlyEf+kwHun2Ww
-         y5pQ==
+        bh=S9g5yzfm32qCCSZ9hYX8RFrDFECwqUd1W8h8dBnaZOA=;
+        b=PuKZJaMN7FM+htxTzxyU2Jh6Tj90YZj5dk4dLhZ8e64xzWhyoWeZ0dPF92AXKybcEL
+         HC381gJKDAgRrKmOveaDxQZ29tFgQyh5DOSC/8uqHwMOtsYlKryM+dgCO0Gqcah5uK53
+         NN66t1T3M/Muf/jCvJhWT6dLfXOZZIeKDK1KGmDTn5RlqTJqUE2GJcXdx2kd1YBS/NZ5
+         y11MRSF6WmK2ZcMbVzuFlm1uaoLGAX9pgx5v/fq8c2hzhoR+R3oi+T49iN2C/DITMI8X
+         Um830iWdX34tWyYafNK3Z91zsvAYhrl1bbkPz3Hb+N9nE6Oq+LwlfqDPKL4De0lz+jo6
+         5KKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735411803; x=1736016603;
+        d=1e100.net; s=20230601; t=1735411804; x=1736016604;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0bA6qa5mRtLx/JNJepZMf5RGZWm5ti1ameVb2qE56fE=;
-        b=XaiCPctElVabZ+Wn2vyADiE65poDmKZreQqIqA0ySVhR7yZ2qPDXOIGYqotZogbjmE
-         Zvk0Fl2Kug7893wcKfKGuWioso/wWwUta4rWxKPb5e8zkRbLDWrLJH7s73wDkB74f+7y
-         ILtyUrdSg9PCnvz3KydV5mOHPWFdhYJvQ1dI3B88lU5aSsLqvg/ACAA4+jxHvwK/q1b0
-         UelHFXR5dje5u6x3xRywAhyqI/lzTq3JmFGA9cGM8XOnok+6O0lPzzCtTGWyuLVJQeCY
-         xIz45Ay8zQ/SGlK1HOeH6R4ixVzhDNTdIsCNKOMUMzdL5fHQ3FnUYOeFhjW6L0DAQwEs
-         Zl2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUM0zyJvtu93rrgSqQhqnlJaLZq2xO92j5kTnak0AFLJ984BLEQyn4vDVPE+1MTUc+dfvowiS3hxsdRDjgT@vger.kernel.org, AJvYcCUcnmxVTxmN4sE5CLh4LRP2kv1NjcVrFVyuYV8O8SD8Rzaq3j6gpaetTgaVGLX6m/0cnBD/L8tb@vger.kernel.org, AJvYcCVUrxtRb5zOWsI31oiH9KkZTx0XD6j9oUan+QTIxAAD7aH5jiJED4jf3YQTsI3Ug/3ZDoB8luKIhQ/X@vger.kernel.org, AJvYcCXSCJw7yqWHzZdPanqULSvwRJbkOMo9gs5W8UKF1XK0gPCi/kjwqozhbLH91vB1sJxYvzMQTAPHtTI9Hxk=@vger.kernel.org, AJvYcCXds06KnQhPZ+I2iQ5eNPa1EvsmgbT94b0+KRDXGcl6N5rWMP5MMCqGBrdefmbihJGXbrukC3iAEOgTJg==@vger.kernel.org, AJvYcCXfUQRXOWZPY3E3AuPSlwzpPEYdMyGDpxFitUMsmgPl6qZabYY5LJWN1DcnfdAyJX58/FFNNteRd2piUg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP+uBW8v/PwWsCp2vIjcFs/z90sI/ZtIt+WUCoO1qnVZARS3R1
-	WTiZth0pLm6XyFQ43BlhhFOx4TARwlZFZqcX4UJPhvCW78o6nh3medUSgGGiqXs=
-X-Gm-Gg: ASbGncvWXJTis6OcAH9/JjphydM4SKiOkJooHMxgZ0bDndL8vtQRf1ssX0mFU3FyNAN
-	+D+fbbAcP+nm6IVNVwbFgjh9sYO2ZxpfnaCr3Jr6xJSbODxdUxoEnT46W2hY15hkbHZUQegY4Yk
-	7dk0DusZb43wGW4lOIIUJ+UNkBJMaHt0FcW7RIh+VtuvGogcFqetuFXLsjjAljvOkanedG251UN
-	PDCdE/C6Qg8Z4DbGmhoeb6YHsHDMGf3f6I4ibMB4WAB+8GuVzyh7UbjLP8g5ZRcepmRx3mV0UG6
-	X3pG7RkICNmYoNIJ
-X-Google-Smtp-Source: AGHT+IEdltlfo7VoM/K9Hx3CK/leMoimfCHWr7pfYR9wsJX7DjblcCmfKrexz0jlZQgTcU9bnrqr/g==
-X-Received: by 2002:a05:6902:1a48:b0:e49:5f2d:e71d with SMTP id 3f1490d57ef6-e538c267d16mr23706682276.21.1735411803005;
-        Sat, 28 Dec 2024 10:50:03 -0800 (PST)
+        bh=S9g5yzfm32qCCSZ9hYX8RFrDFECwqUd1W8h8dBnaZOA=;
+        b=HMehnsPFmKvwTQAE1Z3mFY7mZPNDj9cAiZ39yPtxAFAM9U3+nFKjBFZeCaF/butfqK
+         YWPpocL+MsDqitGN51tgCd0gHt8mhxLOkbDX9ADA/ew3YjplG0MmIITs5qX0CJ4MpS32
+         eqr6ulDS8njzNQyWs8VWBSuNN2Be/mYID7ds1J96OPzy/Wv7T39Gj9CzTELZ0UIdxrvC
+         /lo4yZ14S8f4XwjcVR50Z9CzwE8/w69NlDyFl8TGtNskV/ROL0IDkL2jhQJwg7waMekv
+         qDUy26HW1DwxdH6rkwZf1yUW+/Uj90OhGRikvDhyC9c3BDKL998Gzmsj0iKawDfAukkz
+         AhrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8MPh1JlRZLLJ6dV1lR6k4MhAiJnlOF/+ATdAA6x49jhVxCD4i2EnSVWGDDx/KrxELjF0JUXyV@vger.kernel.org, AJvYcCUr/AmaZy9FYF37P6XRqyjnubZGkNKhneDkBJQn1ERItxLQ09GK5CtbiO7hlRMsICu6msn46kVZeHgixFFu@vger.kernel.org, AJvYcCW/t4QjK1oJQ24FH6Yzj8ASUze5SjBxvUx5fjpkEPzxxltHxXEb/E14jfGxqt5ym1ocs/dpu/8MXiDL@vger.kernel.org, AJvYcCWnDRDNqVf7t6DU5BJ5Qc5u4lWJ3r5zLap4JTgfV88nFOZ3dY2LwxlwZTEIcRZLxefCAMxIsYxHF+zxbfI=@vger.kernel.org, AJvYcCXBXQpyg6zd4wVz4B6or52CX6i9ntNREp5H4G17UbEGCuv9VdWJWhTONsXcptojD8lR36a5rdRCNcnIyg==@vger.kernel.org, AJvYcCXmYs3iaVPeu+vN8t9StpFo1GRFo95FSCxh/G0EcQaGF/7XCXq9fP6ZuIXD8JBMELfJHl90hI3AaIPL7Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1P2eBpvhVWT4uyg/VljvtOyXT8CfemHR9tmmgEO1Xh6Basg3W
+	+XZUNl/1TQRvlbVXG1DJPq8++DNT5GiDaX5hrQ7k+vnU9IBYXnOgcT0Xthd59iw=
+X-Gm-Gg: ASbGncuYAZ8d7s7yFOKP6wXHVt/qBoqNXzL0+HC0fKdur9EePJZBuOxgmy5FKIukU1q
+	vBDw1ZloYbyeNp3v/enrslFrg5vyB2ACWY+/AxAwOypWGcXrkWW9HInEJAPwGZRpoZGcbpFvSc3
+	rWxeh0C4yvXySXzTbrwgfLVHHY5hQXJt3R1IFu0EMHObjkLoiGLQYy4UlNVar5CnB79cZSekACW
+	H2gWWxcJs2QAkCCDWB1yuOhlI+x16/ayptpnDeT5E5Z355KFaqwYYhL8gMCyI5TZkLfhnReSyIw
+	BDdI6RkN1HkKVIWd
+X-Google-Smtp-Source: AGHT+IFRAv4ES1nGe5GZzQSCr0JvuQEh3E1vBTb1UadMisfKYeWtlE6qWVQlRiPBMv3C59QKs6b8rQ==
+X-Received: by 2002:a25:cc1:0:b0:e53:4d98:7459 with SMTP id 3f1490d57ef6-e538c3cfd9dmr14310782276.40.1735411804331;
+        Sat, 28 Dec 2024 10:50:04 -0800 (PST)
 Received: from localhost (c-24-129-28-254.hsd1.fl.comcast.net. [24.129.28.254])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e537cbeba44sm5051923276.7.2024.12.28.10.50.01
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e537cf73675sm5102193276.51.2024.12.28.10.50.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2024 10:50:02 -0800 (PST)
+        Sat, 28 Dec 2024 10:50:03 -0800 (PST)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org,
@@ -133,9 +133,9 @@ To: linux-kernel@vger.kernel.org,
 	Peter Xu <peterx@redhat.com>,
 	Shrikanth Hegde <sshegde@linux.ibm.com>,
 	Hendrik Brueckner <brueckner@linux.ibm.com>
-Subject: [PATCH 05/14] cpumask: deprecate cpumask_next_wrap()
-Date: Sat, 28 Dec 2024 10:49:37 -0800
-Message-ID: <20241228184949.31582-6-yury.norov@gmail.com>
+Subject: [PATCH 06/14] cpumask: re-introduce cpumask_next{,_and}_wrap()
+Date: Sat, 28 Dec 2024 10:49:38 -0800
+Message-ID: <20241228184949.31582-7-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241228184949.31582-1-yury.norov@gmail.com>
 References: <20241228184949.31582-1-yury.norov@gmail.com>
@@ -147,144 +147,75 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The next patche aligns implementation of cpumask_next_wrap() with the
-generic version in find.h which changes function signature.
+cpumask_next_wrap_old() has two additional parameters, comparing to it's
+analogue in linux/find.h find_next_bit_wrap(). The reason for that is
+historical.
 
-To make the transition smooth, this patch deprecates current
-implementation by adding an _old suffix. The following patches switch
-current users to the new implementation one by one.
+Before 4fe49b3b97c262 ("lib/bitmap: introduce for_each_set_bit_wrap()
+macro"), cpumask_next_wrap() was used to implement for_each_cpu_wrap()
+iterator. Now that the iterator is an alias to generic
+for_each_set_bit_wrap(), the additional parameters aren't used and may
+confuse readers.
 
-No functional changes were intended.
+All existing users call cpumask_next_wrap() in a way that makes it
+possible to turn it to straight and simple alias to find_next_bit_wrap().
+
+In a couple places kernel users opencode missing cpumask_next_and_wrap().
+Add it as well.
 
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- arch/s390/kernel/processor.c        | 2 +-
- drivers/nvme/host/tcp.c             | 2 +-
- drivers/pci/controller/pci-hyperv.c | 2 +-
- drivers/scsi/lpfc/lpfc_init.c       | 2 +-
- include/linux/cpumask.h             | 4 ++--
- kernel/padata.c                     | 2 +-
- lib/cpumask.c                       | 6 +++---
- 7 files changed, 10 insertions(+), 10 deletions(-)
+ include/linux/cpumask.h | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
-index 5ce9a795a0fe..42ca61909030 100644
---- a/arch/s390/kernel/processor.c
-+++ b/arch/s390/kernel/processor.c
-@@ -72,7 +72,7 @@ void notrace stop_machine_yield(const struct cpumask *cpumask)
- 	this_cpu = smp_processor_id();
- 	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
- 		__this_cpu_write(cpu_relax_retry, 0);
--		cpu = cpumask_next_wrap(this_cpu, cpumask, this_cpu, false);
-+		cpu = cpumask_next_wrap_old(this_cpu, cpumask, this_cpu, false);
- 		if (cpu >= nr_cpu_ids)
- 			return;
- 		if (arch_vcpu_is_preempted(cpu))
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 28c76a3e1bd2..054904376c3c 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1578,7 +1578,7 @@ static void nvme_tcp_set_queue_io_cpu(struct nvme_tcp_queue *queue)
- 	if (wq_unbound)
- 		queue->io_cpu = WORK_CPU_UNBOUND;
- 	else
--		queue->io_cpu = cpumask_next_wrap(n - 1, cpu_online_mask, -1, false);
-+		queue->io_cpu = cpumask_next_wrap_old(n - 1, cpu_online_mask, -1, false);
- }
- 
- static void nvme_tcp_tls_done(void *data, int status, key_serial_t pskid)
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index cdd5be16021d..86d1c2be8eb5 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1757,7 +1757,7 @@ static int hv_compose_multi_msi_req_get_cpu(void)
- 
- 	spin_lock_irqsave(&multi_msi_cpu_lock, flags);
- 
--	cpu_next = cpumask_next_wrap(cpu_next, cpu_online_mask, nr_cpu_ids,
-+	cpu_next = cpumask_next_wrap_old(cpu_next, cpu_online_mask, nr_cpu_ids,
- 				     false);
- 	cpu = cpu_next;
- 
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 7f57397d91a9..31622fb0614a 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -12876,7 +12876,7 @@ lpfc_irq_rebalance(struct lpfc_hba *phba, unsigned int cpu, bool offline)
- 
- 	if (offline) {
- 		/* Find next online CPU on original mask */
--		cpu_next = cpumask_next_wrap(cpu, orig_mask, cpu, true);
-+		cpu_next = cpumask_next_wrap_old(cpu, orig_mask, cpu, true);
- 		cpu_select = lpfc_next_online_cpu(orig_mask, cpu_next);
- 
- 		/* Found a valid CPU */
 diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 30042351f15f..b267a4f6a917 100644
+index b267a4f6a917..18c9908d50c4 100644
 --- a/include/linux/cpumask.h
 +++ b/include/linux/cpumask.h
-@@ -296,7 +296,7 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
- 
- #if NR_CPUS == 1
- static __always_inline
--unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
-+unsigned int cpumask_next_wrap_old(int n, const struct cpumask *mask, int start, bool wrap)
- {
- 	cpumask_check(start);
- 	if (n != -1)
-@@ -312,7 +312,7 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, boo
- 	return cpumask_first(mask);
+@@ -284,6 +284,43 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
+ 		small_cpumask_bits, n + 1);
  }
- #else
--unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
-+unsigned int __pure cpumask_next_wrap_old(int n, const struct cpumask *mask, int start, bool wrap);
- #endif
  
++/**
++ * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
++ *			   @n and wrapping around, if needed
++ * @n: the cpu prior to the place to search (i.e. return will be > @n)
++ * @src1p: the first cpumask pointer
++ * @src2p: the second cpumask pointer
++ *
++ * Return: >= nr_cpu_ids if no further cpus set in both.
++ */
++static __always_inline
++unsigned int cpumask_next_and_wrap(int n, const struct cpumask *src1p,
++			      const struct cpumask *src2p)
++{
++	/* -1 is a legal arg here. */
++	if (n != -1)
++		cpumask_check(n);
++	return find_next_and_bit_wrap(cpumask_bits(src1p), cpumask_bits(src2p),
++		small_cpumask_bits, n + 1);
++}
++
++/*
++ * cpumask_next_wrap - get the next cpu in *src, starting from
++ *			   @n and wrapping around, if needed
++ * @n: the cpu prior to the place to search
++ * @src: cpumask pointer
++ *
++ * Return: >= nr_cpu_ids if no further cpus set in both.
++ */
++static __always_inline
++unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
++{
++	/* -1 is a legal arg here. */
++	if (n != -1)
++		cpumask_check(n);
++	return find_next_bit_wrap(cpumask_bits(src), small_cpumask_bits, n + 1);
++}
++
  /**
-diff --git a/kernel/padata.c b/kernel/padata.c
-index d51bbc76b227..454ff2fca40b 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -274,7 +274,7 @@ static struct padata_priv *padata_find_next(struct parallel_data *pd,
- 	if (remove_object) {
- 		list_del_init(&padata->list);
- 		++pd->processed;
--		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, -1, false);
-+		pd->cpu = cpumask_next_wrap_old(cpu, pd->cpumask.pcpu, -1, false);
- 	}
- 
- 	spin_unlock(&reorder->lock);
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index e77ee9d46f71..c9a9b451772a 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -8,7 +8,7 @@
- #include <linux/numa.h>
- 
- /**
-- * cpumask_next_wrap - helper to implement for_each_cpu_wrap
-+ * cpumask_next_wrap_old - helper to implement for_each_cpu_wrap
-  * @n: the cpu prior to the place to search
-  * @mask: the cpumask pointer
-  * @start: the start point of the iteration
-@@ -19,7 +19,7 @@
-  * Note: the @wrap argument is required for the start condition when
-  * we cannot assume @start is set in @mask.
-  */
--unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
-+unsigned int cpumask_next_wrap_old(int n, const struct cpumask *mask, int start, bool wrap)
- {
- 	unsigned int next;
- 
-@@ -37,7 +37,7 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *mask, int start, boo
- 
- 	return next;
- }
--EXPORT_SYMBOL(cpumask_next_wrap);
-+EXPORT_SYMBOL(cpumask_next_wrap_old);
- 
- /* These are not inline because of header tangles. */
- #ifdef CONFIG_CPUMASK_OFFSTACK
+  * for_each_cpu - iterate over every cpu in a mask
+  * @cpu: the (optionally unsigned) integer iterator
 -- 
 2.43.0
 
