@@ -1,205 +1,210 @@
-Return-Path: <linux-hyperv+bounces-3548-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3549-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EA559FD818
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Dec 2024 23:53:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 559E59FDBDF
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Dec 2024 19:50:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB65718823F3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Dec 2024 22:53:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B93673A143D
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Dec 2024 18:49:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C46E156C5E;
-	Fri, 27 Dec 2024 22:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422CA192D95;
+	Sat, 28 Dec 2024 18:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jPSBpZeJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gq/xuTBu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636F113F42F;
-	Fri, 27 Dec 2024 22:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B1478F34;
+	Sat, 28 Dec 2024 18:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735339981; cv=none; b=qj8TJQ0fY6TtCMd7dstYin95sfHe4ixzgJAHT/EYEdM+Z9XZVq9v9c4bn2H4l5YtQZApwuW1LLmDSbLqpIDQ0VfZ+cnxyZ23+atyIEKwzSNZJb1XfV8dDTGDXacgBAftliAjkS8FlEfIxWl+RJzr/VXQMEBoKvvFl8IeCUhq/h4=
+	t=1735411797; cv=none; b=Pe3PFPtIs6Pw29IemAo3ag7xcJWDbdjuCGFrRBitywSZS+M6GVWsyFWfs3ZhdJo0mXBZVbxwWmob/7Ks7kQa6BS3wBXBUnhvhrn0sLMr4pOjMnTRM8MGek9G/Ya9RV6iT4XA4XioJClmzHFR0HpATyk/m238axMLfS5KwElJqUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735339981; c=relaxed/simple;
-	bh=SPvVk9yuZpYBy4J8tDLc2Va0/ymguPSJitWutlGCHXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jiPEUv/5yLzicDHl0UgSy304iOGg/2ndBJAFGkPk1eX/MyMWybqx7Wtpa7/3X0k7N+M5EmSCtjdOaE6fI3yiChCWht2/T1GyMKFxowQtY0DHmvLdBXxfV/Fe9NIVoaalHfxLqVYUXQcRX7UvtL7bKwvAbzAKK0reUuAjh/aupKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jPSBpZeJ; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735339979; x=1766875979;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SPvVk9yuZpYBy4J8tDLc2Va0/ymguPSJitWutlGCHXk=;
-  b=jPSBpZeJEsf5mmXHhv74a+eAylI2ndMc8Ld+KzVCSIjRGzZsKqhit2yd
-   qwmYwcKLyrIegXBIR1rmfndYcPNOGbhccWEJ31OWvEj5p+oVr+lVbA2ZF
-   2gk6p+9Be/rMV2CsA93OknsUoCEzta/kSa2PY1gJNZjUvS0IpQ5cPElBd
-   s2QlbpTIsbWq6eqPgMpbDckLCmwnRhUBSArgTUATKaMggab+VCUfFdcxh
-   Ue7P2W9IzYUHD/uG0gGOvw+QwlA/43xOyg/h/h04zOvjFVPLr930iHxAo
-   qRsStLS6nQwGP81811h+jZxowLU85dUgpLAn2pe7BL8xNiYC0jBVETO/r
-   A==;
-X-CSE-ConnectionGUID: i4k5ula2SIixMvUfHCQIWQ==
-X-CSE-MsgGUID: s6u+CqvrRSOCCQIlZl3Y5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11298"; a="39670206"
-X-IronPort-AV: E=Sophos;i="6.12,269,1728975600"; 
-   d="scan'208";a="39670206"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2024 14:52:59 -0800
-X-CSE-ConnectionGUID: +wLlhhGISHqex8jTIAmxdA==
-X-CSE-MsgGUID: b05W+ofeTYKCF4RLjBcpGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="131217953"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 27 Dec 2024 14:52:54 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tRJCN-0003hg-3B;
-	Fri, 27 Dec 2024 22:52:51 +0000
-Date: Sat, 28 Dec 2024 06:52:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Roman Kisel <romank@linux.microsoft.com>, hpa@zytor.com,
-	kys@microsoft.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	decui@microsoft.com, eahariha@linux.microsoft.com,
-	haiyangz@microsoft.com, mingo@redhat.com, mhklinux@outlook.com,
-	nunodasneves@linux.microsoft.com, tglx@linutronix.de,
-	tiala@microsoft.com, wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, apais@microsoft.com,
-	benhill@microsoft.com, ssengar@microsoft.com,
-	sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH v4 1/5] hyperv: Define struct hv_output_get_vp_registers
-Message-ID: <202412280604.2Fvp7M4m-lkp@intel.com>
-References: <20241227183155.122827-2-romank@linux.microsoft.com>
+	s=arc-20240116; t=1735411797; c=relaxed/simple;
+	bh=1yAI3ZDHyUkDV9UQDHx22Hbwp4ZXby1Wc02tN6J1Y4M=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=MWDQj6D4k513gI7QV7oxevADx80E8TWYfHZVFW4vBOngZJsyIZQfDJpPTWnqpgMwKmzDMq+Wp09sa6t0t6FISWTvcG+v9nOdYBMLQs+WhbQprECnt10pPx1Sb+E7XhEqYHNVbMvMokQM0qdRr51uDJGshBIUdt9npar/h5IqwdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gq/xuTBu; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e53ef7462b6so4633297276.3;
+        Sat, 28 Dec 2024 10:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735411794; x=1736016594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmPTlVzrMWsZV/0UuabLUVbV1EH4j//h4cVfthapkOk=;
+        b=gq/xuTBurrj1cIJFk2EBHB5j3HScOX88aqR54EhRNsU9CKBkCC0euiBrTTjqE8HXCn
+         J76Y3mfQoOhI2X+gX1luJYrJPXNhwlhgOe0JMryVbFI8CgkNk5PUZvWDeFMfAe1srcC5
+         dzNfsJT9iQWQWp9GKCCfFWUm/5U0z/mZaQuG/hyUQ+4yP0AvlDr/B+cA/fAzKwTe0Hdp
+         a75t3NvSWd2sbmG8CHaZ5hFGHUb95Rjlaw82xPEPr91mslpFN8H3t3UI+NBVnAlGzP+B
+         s0apu7wPjdsjnMKb2HXX6nriitYB9RV1igLI6dy6AxeVJW+wOAI4+ncgMQAHPpXiWtO7
+         vLUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735411794; x=1736016594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmPTlVzrMWsZV/0UuabLUVbV1EH4j//h4cVfthapkOk=;
+        b=nu5Fm33A79J69WSTBdY7Ng0EkdSZbz2NlrHGrG9fi7W0JfJdaNh/pKvdopAxcSjwGh
+         vg8RXaBeM76SlbLRYKPYM19kPD0M0aOno7otU5Yntk2Lsrn+mB6FjkNxDCNCNHGqHe3H
+         kpWuSKY/b7VYEK8T25VP6UkhymedjTfMdh+atlaDBWrxsrC10NOt4zr8CizgK4LHEnmB
+         +uvvxT1ay9diQ4s6QiCAmUMPX+At++pmulJ4z6wuzoxmDrhiT7P1YqTbud3X6nz1S58J
+         i86/pH4abwF7VgQ2GKa5XW4RE+5IF7qsImpGk2C4P1+jGKiJqMIPc3/+ZrZj75iJA1Qt
+         fhjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC04k8Xxup8BZfJkaAefS6giGWoiAniwcYaRXbrqM6L3t3Z6eQuY4mzNSCh8BLQu1Ze2hl/ii12US1EA==@vger.kernel.org, AJvYcCVcU0+8XK1sZgYsFa+RZmoJOD0aPR6XcgQFGn6qs3/s4pa91zLirkRppBmYTysO7NHK7U6sgyv8@vger.kernel.org, AJvYcCX1CHzBZYYw1s/6MyGo4m3or5ansdrBh+2mWpZ3JdsvSUuZ4O7xZ+vW3fmqWQuTaEZT4woG0Mw2FyjoYmA=@vger.kernel.org, AJvYcCX8n/qCITBtrw86FAt2+i2s7Q3ufr+W6fMNsalPwg6ZFVn4SfARdiOxvuqwl4JNL+sUDjmeZljbfX13hgIr@vger.kernel.org, AJvYcCXJOmd9bM8lmoh1B1fSuvpeqkv6ATKdXI/gvxVhfxE1rxpjO3/QJvI1yxxUMAaFPidAtn/8/Lz8JBF7mQ==@vger.kernel.org, AJvYcCXh7O5RwqvPbkfIu1inKDniW3FYZRzusynZPyd3ZsGVydwlUlJTeSXLOf9ZHlfD2XGwWMyg54k6Xd0I@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsS1C57ipjEYmauOhS1FTiV5EO5tY3vDwhJqHLPX7uA3W/8Izu
+	yTBrx0sTL1jZOHmX/gLOgRaCOWFaXSn0CKWMV0B7QKSWv2zWalHgIWYgMLaYXD8=
+X-Gm-Gg: ASbGncu2bgunPziC7dwfv0XaZ/+F0zifhWZu1O9IFN4qeoXUSygTtsQeOkQSuoT9Tm/
+	rkriyLMAg7CVWbbX4rhkTRkRmb9Tuag0jt++Cmb5kCmvFCbQsRmfXj23Wm2MbythLGGc54iOj+x
+	b/Q0SpYW7Cq7YdTzsx3vIUzLMFcaoxJCM5jf3tUi5vYkWgA1Kjm0Ymm25Rk7mfNuXjeKTlrnR/7
+	8JUoV7YenQm44LGi5aC9WCLXy/DdU1DdllxCfrA6EkGHoCnUBu8Nm8xVN5M5hEFUsSgCcBLOBB8
+	76nH5fPb7lsj3jaz
+X-Google-Smtp-Source: AGHT+IEkJJFH0m3oTNAbR0yAINMZTww0cO+zE7+Lf9uNhKvuTxiLtpcDAvH2RV2/PHCyo+AVfgp8KA==
+X-Received: by 2002:a05:6902:18c1:b0:e39:8b94:16e6 with SMTP id 3f1490d57ef6-e538c3a2eb7mr19599866276.39.1735411794393;
+        Sat, 28 Dec 2024 10:49:54 -0800 (PST)
+Received: from localhost (c-24-129-28-254.hsd1.fl.comcast.net. [24.129.28.254])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e537cbedbe7sm5061343276.4.2024.12.28.10.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Dec 2024 10:49:53 -0800 (PST)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Rick Lindsley <ricklind@linux.ibm.com>,
+	Nick Child <nnac123@linux.ibm.com>,
+	Thomas Falcon <tlfalcon@linux.ibm.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Matt Wu <wuqiang.matt@bytedance.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kurz <groug@kaod.org>,
+	Peter Xu <peterx@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>
+Subject: [PATCH 00/14] cpumask: cleanup cpumask_next_wrap() implementation and usage
+Date: Sat, 28 Dec 2024 10:49:32 -0800
+Message-ID: <20241228184949.31582-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241227183155.122827-2-romank@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Roman,
+cpumask_next_wrap() is overly complicated, comparing to it's generic
+version find_next_bit_wrap(), not mentioning it duplicates the above.
+It roots to the times when the function was used in the implementation
+of for_each_cpu_wrap() iterator. The function has 2 additional parameters
+that were used to catch loop termination condition for the iterator.
+(Although, only one is needed.)
 
-kernel test robot noticed the following build errors:
+Since 4fe49b3b97c262 ("lib/bitmap: introduce for_each_set_bit_wrap()
+macro"), for_each_cpu_wrap() is wired to corresponding generic
+wrapping bitmap iterator, and additional complexity of
+cpumask_next_wrap() is not needed anymore.
 
-[auto build test ERROR on 26e1b813fcd02984b1cac5f3decdf4b0bb56fe02]
+All existing users call cpumask_next_wrap() in a manner that makes
+it possible to turn it to a straight and simple alias to
+find_next_bit_wrap().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Roman-Kisel/hyperv-Define-struct-hv_output_get_vp_registers/20241228-023454
-base:   26e1b813fcd02984b1cac5f3decdf4b0bb56fe02
-patch link:    https://lore.kernel.org/r/20241227183155.122827-2-romank%40linux.microsoft.com
-patch subject: [PATCH v4 1/5] hyperv: Define struct hv_output_get_vp_registers
-config: arm64-randconfig-001-20241228 (https://download.01.org/0day-ci/archive/20241228/202412280604.2Fvp7M4m-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241228/202412280604.2Fvp7M4m-lkp@intel.com/reproduce)
+This series replaces historical 4-parameter cpumask_next_wrap() with a
+thin 2-parameter wrapper around find_next_bit_wrap().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412280604.2Fvp7M4m-lkp@intel.com/
+Where it's possible to use for_each_cpu_wrap() iterator, the code is
+switched to use it because it's always preferable to use iterators over
+open loops.
 
-All errors (new ones prefixed by >>):
+This series touches various scattered subsystems and To-list for the
+whole series is quite a long. To minimize noise, I send cover-letter and
+key patches #5 and 6 to every person involved. All other patches are sent
+individually to those pointed by scripts/get_maintainers.pl.
 
-   In file included from include/hyperv/hvhdk_mini.h:8,
-                    from include/hyperv/hvhdk.h:10,
-                    from arch/arm64/hyperv/hv_core.c:17:
->> include/hyperv/hvgdk_mini.h:828:40: error: field 'cs' has incomplete type
-     828 |         struct hv_x64_segment_register cs;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:829:40: error: field 'ds' has incomplete type
-     829 |         struct hv_x64_segment_register ds;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:830:40: error: field 'es' has incomplete type
-     830 |         struct hv_x64_segment_register es;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:831:40: error: field 'fs' has incomplete type
-     831 |         struct hv_x64_segment_register fs;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:832:40: error: field 'gs' has incomplete type
-     832 |         struct hv_x64_segment_register gs;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:833:40: error: field 'ss' has incomplete type
-     833 |         struct hv_x64_segment_register ss;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:834:40: error: field 'tr' has incomplete type
-     834 |         struct hv_x64_segment_register tr;
-         |                                        ^~
->> include/hyperv/hvgdk_mini.h:835:40: error: field 'ldtr' has incomplete type
-     835 |         struct hv_x64_segment_register ldtr;
-         |                                        ^~~~
->> include/hyperv/hvgdk_mini.h:837:38: error: field 'idtr' has incomplete type
-     837 |         struct hv_x64_table_register idtr;
-         |                                      ^~~~
->> include/hyperv/hvgdk_mini.h:838:38: error: field 'gdtr' has incomplete type
-     838 |         struct hv_x64_table_register gdtr;
-         |                                      ^~~~
->> include/hyperv/hvhdk.h:78:56: error: field 'es' has incomplete type
-      78 |                         struct hv_x64_segment_register es;
-         |                                                        ^~
->> include/hyperv/hvhdk.h:79:56: error: field 'cs' has incomplete type
-      79 |                         struct hv_x64_segment_register cs;
-         |                                                        ^~
->> include/hyperv/hvhdk.h:80:56: error: field 'ss' has incomplete type
-      80 |                         struct hv_x64_segment_register ss;
-         |                                                        ^~
->> include/hyperv/hvhdk.h:81:56: error: field 'ds' has incomplete type
-      81 |                         struct hv_x64_segment_register ds;
-         |                                                        ^~
->> include/hyperv/hvhdk.h:82:56: error: field 'fs' has incomplete type
-      82 |                         struct hv_x64_segment_register fs;
-         |                                                        ^~
->> include/hyperv/hvhdk.h:83:56: error: field 'gs' has incomplete type
-      83 |                         struct hv_x64_segment_register gs;
-         |                                                        ^~
->> include/hyperv/hvhdk.h:86:48: error: array type has incomplete element type 'struct hv_x64_segment_register'
-      86 |                 struct hv_x64_segment_register segment_registers[6];
-         |                                                ^~~~~~~~~~~~~~~~~
->> include/hyperv/hvhdk.h:95:52: error: field 'pending_interruption' has incomplete type
-      95 |         union hv_x64_pending_interruption_register pending_interruption;
-         |                                                    ^~~~~~~~~~~~~~~~~~~~
->> include/hyperv/hvhdk.h:96:47: error: field 'interrupt_state' has incomplete type
-      96 |         union hv_x64_interrupt_state_register interrupt_state;
-         |                                               ^~~~~~~~~~~~~~~
+I'd like to move the series with my bitmap-for-next branch as a whole.
 
+Yury Norov (14):
+  objpool: rework objpool_pop()
+  virtio_net: simplify virtnet_set_affinity()
+  ibmvnic: simplify ibmvnic_set_queue_affinity()
+  powerpc/xmon: simplify xmon_batch_next_cpu()
+  cpumask: deprecate cpumask_next_wrap()
+  cpumask: re-introduce cpumask_next_wrap()
+  cpumask: use cpumask_next_wrap() where appropriate
+  padata: switch padata_find_next() to using cpumask_next_wrap()
+  s390: switch stop_machine_yield() to using cpumask_next_wrap()
+  nvme-tcp: switch nvme_tcp_set_queue_io_cpu() to using
+    cpumask_next_wrap()
+  scsi: lpfc: switch lpfc_irq_rebalance() to using cpumask_next_wrap()
+  scsi: lpfc: rework lpfc_next_{online,present}_cpu()
+  PCI: hv: switch hv_compose_multi_msi_req_get_cpu() to using
+    cpumask_next_wrap()
+  cpumask: drop cpumask_next_wrap_old()
 
-vim +/cs +828 include/hyperv/hvgdk_mini.h
-
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  822  
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  823  struct hv_init_vp_context {
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  824  	u64 rip;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  825  	u64 rsp;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  826  	u64 rflags;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  827  
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @828  	struct hv_x64_segment_register cs;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @829  	struct hv_x64_segment_register ds;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @830  	struct hv_x64_segment_register es;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @831  	struct hv_x64_segment_register fs;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @832  	struct hv_x64_segment_register gs;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @833  	struct hv_x64_segment_register ss;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @834  	struct hv_x64_segment_register tr;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @835  	struct hv_x64_segment_register ldtr;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  836  
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @837  	struct hv_x64_table_register idtr;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25 @838  	struct hv_x64_table_register gdtr;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  839  
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  840  	u64 efer;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  841  	u64 cr0;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  842  	u64 cr3;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  843  	u64 cr4;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  844  	u64 msr_cr_pat;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  845  } __packed;
-dd4f3a2b21ac14 Nuno Das Neves 2024-11-25  846  
+ arch/powerpc/xmon/xmon.c            |  6 +---
+ arch/s390/kernel/processor.c        |  2 +-
+ drivers/net/ethernet/ibm/ibmvnic.c  | 17 +++++-----
+ drivers/net/virtio_net.c            | 12 +++++---
+ drivers/nvme/host/tcp.c             |  2 +-
+ drivers/pci/controller/pci-hyperv.c |  3 +-
+ drivers/scsi/lpfc/lpfc.h            | 23 +++-----------
+ drivers/scsi/lpfc/lpfc_init.c       |  2 +-
+ include/linux/cpumask.h             | 48 ++++++++++++++++-------------
+ include/linux/objpool.h             |  7 ++---
+ kernel/padata.c                     |  2 +-
+ lib/cpumask.c                       | 37 ++--------------------
+ 12 files changed, 60 insertions(+), 101 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
