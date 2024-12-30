@@ -1,72 +1,79 @@
-Return-Path: <linux-hyperv+bounces-3562-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3563-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76D319FE9A9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Dec 2024 19:10:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 128659FE9C4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Dec 2024 19:17:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA1883A3BF9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Dec 2024 18:10:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 071087A1B3C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Dec 2024 18:17:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87061B4157;
-	Mon, 30 Dec 2024 18:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016FE1ACEC4;
+	Mon, 30 Dec 2024 18:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lXLwhj51"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DQvO2yfd"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3FB1B0410;
-	Mon, 30 Dec 2024 18:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4611B0F2C;
+	Mon, 30 Dec 2024 18:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735582186; cv=none; b=V3zV81pzbHyUOJsUvlFkFD3+lxqjy82J9Wh6zmIpijNgmBBnVY6k/A1OIOsubKhvWxr9FQdCTQ09tiK7uB+V1ltZ61uMaQ8v/WnHG/MS9tZrJIZmRVI1c456UZnFQth6yjBB7K0whft6cOIeQmTQR8HE+4/Zj2uk5EzDpL2AEOk=
+	t=1735582636; cv=none; b=EXJnFh5BSHlSiADhx0rNvfEfdXA61uNAHWhZeoBBjnDIsPg/mRmmXzdz7uim7Tev6GZug5WOJsOwJ/9aIkpr4NmrJY6jZWKCWeiBYEDVVXgBPPRr25cbWQtssuzqTWNAGV1g8+01IhcYA5ZY9qMHb1UZ2L2Ds5ylSAs767pjQkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735582186; c=relaxed/simple;
-	bh=vbNPknnBFyyaONbs72riXQ40KDNtAJSol5gXMtlxeHo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tUPLsi+vwzhbntnAjUCuCC3jpy3MTbzDogcLJ0jRgK2xex3BHyde2nJnC0HoA6hYonKpuNJmhzQXZbz9OaCiahvK0qNuy+AMyraZfIezXdofDuH6ecdHCTvVtXNIBzZIo4hMqp8Y+YNxjQfXQm4H4CCRImmYbOefL8s2XcGFulc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lXLwhj51; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5949B23718AC;
-	Mon, 30 Dec 2024 10:09:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5949B23718AC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1735582184;
-	bh=k2UmY66ftWXp8kYKen18EASwtXppJQxpkXiN3eKJ4Ns=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lXLwhj51YWPGMmZf80FPl80UqBBuSoZLiiKgROcTLU1WyxtJlT9pVi09kLcb20L7c
-	 DlACxz6rSU1i1obrLX56f5Gxn44vqhlokR9zR4x2z/npGSuh/2Mz+LSGJubsB/h4/V
-	 ttAnp6oS5vAhFOX/7hEVz7foade/xbfyOTd5GCbs=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: hpa@zytor.com,
-	kys@microsoft.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	eahariha@linux.microsoft.com,
-	haiyangz@microsoft.com,
-	mingo@redhat.com,
-	mhklinux@outlook.com,
-	nunodasneves@linux.microsoft.com,
-	tglx@linutronix.de,
-	tiala@microsoft.com,
-	wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	ssengar@microsoft.com,
-	sunilmut@microsoft.com,
-	vdso@hexbites.dev
-Subject: [PATCH v5 5/5] hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
-Date: Mon, 30 Dec 2024 10:09:41 -0800
-Message-Id: <20241230180941.244418-6-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241230180941.244418-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1735582636; c=relaxed/simple;
+	bh=8kF+AI1kwqIhDygiTQEjAzd8vPjhv9kVBITQcgU2Pg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWQ8qkbMhVg6UwuW48Nm7ZGV2ORU+xIrBM1Av/PEXWbdaWVPXg6+cNaDaXuZ55FEe3qsfmU8BSmNAFSYeXKFHkhk06OPYdZSKrzYjNQ3G/CYBwFfos1TeQmrjCL9cFkV1Ikt2K+/sVupcdmoB9hLvut/6IYIIJCteuZQmlg916k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DQvO2yfd; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DEAF940E0289;
+	Mon, 30 Dec 2024 18:17:11 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QB5JWtoONOLR; Mon, 30 Dec 2024 18:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1735582627; bh=61zVf3D0dvB6CWLnBwcfVhHxTqTvzy9Ru9CA7mopn1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DQvO2yfdLpBCk/0UwWVyBFylQhdVEmcJbT15zNyMKvVz39GR2X3V2mzEijk/pd3ua
+	 pOHknotuO7fk8zGgefWOvATK2lImNJm+xtGIO76lRsI8RXEXsbF99FTNfaQOcwwGVc
+	 r3IW/hmjc376zGqFx3EcoaBsiBdcXtbVHgzAdNRRBw9ODkHnct/syf/fZE5FZ2n5TT
+	 eOKDeLnxzIoTO/HpiBdQfYS0plV2J1RxSQsdIyYPjkbyOjkRsN+ZfGOZD7gaVfYNNw
+	 eruX4oLArEhXsawNOXsKyFXswzxcUdINaQzQh5r4uxXe7jbHx+Oou57FDiw2lDmPqw
+	 BkpvZZwelsOW6H8Ifb2BZP6whrKB7oBWg0eJNMyE4FpthcVVRk9myZHHh9ikkyUsVF
+	 LgL0hlobQdkoD2B4CkOh2YlJGjaRWM3XtB2PGvtKHkyAwYD8eFg2nsKtbjkpufLBv7
+	 oXTr1dlP42Lm4CFyJBOU9sLAZuG+a3RyXknB6TeTA6RmMyk2JLPsiXGXMlTM2EbLvM
+	 WkUMyoxYMqDS+KBRFcJ/3sy22+1qeBc8n6hSpmboKDNNz1MSwnUoJyLEPDAklTG3p/
+	 x0aRCatDHX4Kc0d7zhqynb5QjzFFa+SareCCGTPbNPGl/YRCge9kVTDLpM0D4OD78d
+	 OPhF7mneUg4FoRPG2uSsP3fc=
+Received: from zn.tnic (pd953008e.dip0.t-ipconnect.de [217.83.0.142])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 932E940E0266;
+	Mon, 30 Dec 2024 18:16:46 +0000 (UTC)
+Date: Mon, 30 Dec 2024 19:16:39 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: hpa@zytor.com, kys@microsoft.com, dave.hansen@linux.intel.com,
+	decui@microsoft.com, eahariha@linux.microsoft.com,
+	haiyangz@microsoft.com, mingo@redhat.com, mhklinux@outlook.com,
+	nunodasneves@linux.microsoft.com, tglx@linutronix.de,
+	tiala@microsoft.com, wei.liu@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
+	ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH v5 0/5] hyperv: Fixes for get_vtl(),
+ hv_vtl_apicid_to_vp_id()
+Message-ID: <20241230181639.GFZ3LjhzlsXSygalx-@fat_crate.local>
 References: <20241230180941.244418-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -74,38 +81,49 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241230180941.244418-1-romank@linux.microsoft.com>
 
-The Top-Level Functional Specification for Hyper-V, Section 3.6 [1, 2],
-disallows overlapping of the input and output hypercall areas, and
-hv_vtl_apicid_to_vp_id() overlaps them.
+On Mon, Dec 30, 2024 at 10:09:36AM -0800, Roman Kisel wrote:
+> [v5]
+>   - In the first patch, removed some arch-specific #ifdef guards to fix the
+>     arm64 build and stick to the direction chosen for the Hyper-V header files.
+>     I could not remove all of them as some interrupt state structures
+>     are defined differently for x64 and arm64 and are found in the same
+>     enclosing `union hv_register_value`.
+> 
+>     No changes to other patches (approved in v4).
 
-Use the output hypercall page of the current vCPU for the hypercall.
+From: Documentation/process/submitting-patches.rst
 
-[1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
-[2] https://github.com/MicrosoftDocs/Virtualization-Documentation/tree/main/tlfs
+Don't get discouraged - or impatient
+------------------------------------
 
-Reported-by: Michael Kelley <mhklinux@outlook.com>
-Closes: https://lore.kernel.org/lkml/SN6PR02MB4157B98CD34781CC87A9D921D40D2@SN6PR02MB4157.namprd02.prod.outlook.com/
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
- arch/x86/hyperv/hv_vtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+After you have submitted your change, be patient and wait.  Reviewers are
+busy people and may not get to your patch right away.
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 04775346369c..4e1b1e3b5658 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -189,7 +189,7 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
- 	input->partition_id = HV_PARTITION_ID_SELF;
- 	input->apic_ids[0] = apic_id;
- 
--	output = (u32 *)input;
-+	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
- 
- 	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
- 	status = hv_do_hypercall(control, input, output);
+Once upon a time, patches used to disappear into the void without comment,
+but the development process works more smoothly than that now.  You should
+receive comments within a week or so; if that does not happen, make sure
+that you have sent your patches to the right place.  Wait for a minimum of
+one week before resubmitting or pinging reviewers - possibly longer during
+busy times like merge windows.
+
+T Dec 18     Roman Kisel ( :8.6K|) [PATCH 0/2] hyperv: Fixes for get_vtl(void)
+T Dec 26     Roman Kisel ( :8.1K|) [PATCH v2 0/3] hyperv: Fixes for get_vtl(void)
+T Dec 26     Roman Kisel ( :8.6K|) [PATCH v3 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
+T Dec 27     Roman Kisel ( :8.8K|) [PATCH v4 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
+T Dec 30     Roman Kisel ( :  84|) [PATCH v5 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
+
+This patchset gets sent almost every day. How about you slow-down and read the
+docs while waiting?
+
+Thx.
+
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
