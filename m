@@ -1,129 +1,155 @@
-Return-Path: <linux-hyperv+bounces-3563-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3564-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 128659FE9C4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Dec 2024 19:17:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 369779FF99F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jan 2025 14:07:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 071087A1B3C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Dec 2024 18:17:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 666C81883738
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jan 2025 13:07:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016FE1ACEC4;
-	Mon, 30 Dec 2024 18:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14691DA5F;
+	Thu,  2 Jan 2025 13:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DQvO2yfd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K7M/zoGX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4611B0F2C;
-	Mon, 30 Dec 2024 18:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53DD51C36;
+	Thu,  2 Jan 2025 13:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735582636; cv=none; b=EXJnFh5BSHlSiADhx0rNvfEfdXA61uNAHWhZeoBBjnDIsPg/mRmmXzdz7uim7Tev6GZug5WOJsOwJ/9aIkpr4NmrJY6jZWKCWeiBYEDVVXgBPPRr25cbWQtssuzqTWNAGV1g8+01IhcYA5ZY9qMHb1UZ2L2Ds5ylSAs767pjQkA=
+	t=1735823243; cv=none; b=G6ei4CZxTraR0fjP20t4tp5YdrPhZvnyHn3O17bzUDlKhYxkElYhSRCnoyiYFczFBoHTF4a+WlrvIGiBHau4SnS7s4FmR7qJSmJFZBD+5H/9RwWmrgbEdrHdu5WVJ4PoqWdWdJwPeKChnZe3dCWZvlPTcIbcCEGUr31LDmY9trg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735582636; c=relaxed/simple;
-	bh=8kF+AI1kwqIhDygiTQEjAzd8vPjhv9kVBITQcgU2Pg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWQ8qkbMhVg6UwuW48Nm7ZGV2ORU+xIrBM1Av/PEXWbdaWVPXg6+cNaDaXuZ55FEe3qsfmU8BSmNAFSYeXKFHkhk06OPYdZSKrzYjNQ3G/CYBwFfos1TeQmrjCL9cFkV1Ikt2K+/sVupcdmoB9hLvut/6IYIIJCteuZQmlg916k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DQvO2yfd; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DEAF940E0289;
-	Mon, 30 Dec 2024 18:17:11 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QB5JWtoONOLR; Mon, 30 Dec 2024 18:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1735582627; bh=61zVf3D0dvB6CWLnBwcfVhHxTqTvzy9Ru9CA7mopn1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DQvO2yfdLpBCk/0UwWVyBFylQhdVEmcJbT15zNyMKvVz39GR2X3V2mzEijk/pd3ua
-	 pOHknotuO7fk8zGgefWOvATK2lImNJm+xtGIO76lRsI8RXEXsbF99FTNfaQOcwwGVc
-	 r3IW/hmjc376zGqFx3EcoaBsiBdcXtbVHgzAdNRRBw9ODkHnct/syf/fZE5FZ2n5TT
-	 eOKDeLnxzIoTO/HpiBdQfYS0plV2J1RxSQsdIyYPjkbyOjkRsN+ZfGOZD7gaVfYNNw
-	 eruX4oLArEhXsawNOXsKyFXswzxcUdINaQzQh5r4uxXe7jbHx+Oou57FDiw2lDmPqw
-	 BkpvZZwelsOW6H8Ifb2BZP6whrKB7oBWg0eJNMyE4FpthcVVRk9myZHHh9ikkyUsVF
-	 LgL0hlobQdkoD2B4CkOh2YlJGjaRWM3XtB2PGvtKHkyAwYD8eFg2nsKtbjkpufLBv7
-	 oXTr1dlP42Lm4CFyJBOU9sLAZuG+a3RyXknB6TeTA6RmMyk2JLPsiXGXMlTM2EbLvM
-	 WkUMyoxYMqDS+KBRFcJ/3sy22+1qeBc8n6hSpmboKDNNz1MSwnUoJyLEPDAklTG3p/
-	 x0aRCatDHX4Kc0d7zhqynb5QjzFFa+SareCCGTPbNPGl/YRCge9kVTDLpM0D4OD78d
-	 OPhF7mneUg4FoRPG2uSsP3fc=
-Received: from zn.tnic (pd953008e.dip0.t-ipconnect.de [217.83.0.142])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 932E940E0266;
-	Mon, 30 Dec 2024 18:16:46 +0000 (UTC)
-Date: Mon, 30 Dec 2024 19:16:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: hpa@zytor.com, kys@microsoft.com, dave.hansen@linux.intel.com,
-	decui@microsoft.com, eahariha@linux.microsoft.com,
-	haiyangz@microsoft.com, mingo@redhat.com, mhklinux@outlook.com,
-	nunodasneves@linux.microsoft.com, tglx@linutronix.de,
-	tiala@microsoft.com, wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
-	ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH v5 0/5] hyperv: Fixes for get_vtl(),
- hv_vtl_apicid_to_vp_id()
-Message-ID: <20241230181639.GFZ3LjhzlsXSygalx-@fat_crate.local>
-References: <20241230180941.244418-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1735823243; c=relaxed/simple;
+	bh=7Whcdj1P5GY/E7HAcQTCJAyBGWc5fPf3XvNPVZ43E2E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MBgdZQAFj4FnjeVnO/flMVmqzu1BlW6d8fr+NVeV4CRaz+oLt22yLu3tuXwvo3huF+rTO/XICtgoRAJvZjXQ57r6CqAjYvYvP1DYCzYTdgnjuiHgxuKC5NrysyNKc+VTWIzfZCwGiHP5/dCjrsjW2jq12s7CWI9qkY7fFtW9ZeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K7M/zoGX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from namjain-hibernation.4uyjgaamrtuunfhsycmekme4ua.xx.internal.cloudapp.net (unknown [20.94.232.156])
+	by linux.microsoft.com (Postfix) with ESMTPSA id AE9572066C27;
+	Thu,  2 Jan 2025 05:07:16 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE9572066C27
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1735823236;
+	bh=Y+4Tr3S47ugC5r73gu79nGWNevgvID/Re9o8ZKorWBI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=K7M/zoGX2ooBuaWRmRj0FrPiXJRdrihMLCoKtBWG7sETitldAyleL0YB9jBfvyVO0
+	 KrFo1wxpfmFW2xuV5etgeL0CyFnLQmJzPdxAUyoe2GBL3oveMMQwmVefhc5ob59+wy
+	 5iEMQvRsm4EyNhSpLdtvozOWufS7S4eVDN9djQKM=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Naman Jain <namjain@linux.microsoft.com>,
+	John Starks <jostarks@microsoft.com>,
+	jacob.pan@linux.microsoft.com,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Subject: [PATCH v5 0/2] Drivers: hv: vmbus: Wait for boot-time offers and log missing offers if any
+Date: Thu,  2 Jan 2025 13:07:09 +0000
+Message-ID: <20250102130712.1661-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241230180941.244418-1-romank@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 30, 2024 at 10:09:36AM -0800, Roman Kisel wrote:
-> [v5]
->   - In the first patch, removed some arch-specific #ifdef guards to fix the
->     arm64 build and stick to the direction chosen for the Hyper-V header files.
->     I could not remove all of them as some interrupt state structures
->     are defined differently for x64 and arm64 and are found in the same
->     enclosing `union hv_register_value`.
-> 
->     No changes to other patches (approved in v4).
+After VM requests for channel offers during boot or resume from
+hibernation, host offers the devices that the VM is configured with and
+then sends a separate message indicating that all the boot-time channel
+offers are delivered. Wait for this message to make this boot-time offers
+request and receipt process synchronous.
 
-From: Documentation/process/submitting-patches.rst
+Without this, user mode can race with VMBus initialization and miss
+channel offers. User mode has no way to work around this other than
+sleeping for a while, since there is no way to know when VMBus has
+finished processing boot-time offers.
 
-Don't get discouraged - or impatient
-------------------------------------
+This is in analogy to a PCI bus not returning from probe until it has
+scanned all devices on the bus.
 
-After you have submitted your change, be patient and wait.  Reviewers are
-busy people and may not get to your patch right away.
+As part of this implementation, some code cleanup is also done for the
+logic which becomes redundant due to this change.
 
-Once upon a time, patches used to disappear into the void without comment,
-but the development process works more smoothly than that now.  You should
-receive comments within a week or so; if that does not happen, make sure
-that you have sent your patches to the right place.  Wait for a minimum of
-one week before resubmitting or pinging reviewers - possibly longer during
-busy times like merge windows.
+Second patch prints the channels which are not offered when resume
+happens from hibernation to supply more information to the end user.
 
-T Dec 18     Roman Kisel ( :8.6K|) [PATCH 0/2] hyperv: Fixes for get_vtl(void)
-T Dec 26     Roman Kisel ( :8.1K|) [PATCH v2 0/3] hyperv: Fixes for get_vtl(void)
-T Dec 26     Roman Kisel ( :8.6K|) [PATCH v3 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
-T Dec 27     Roman Kisel ( :8.8K|) [PATCH v4 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
-T Dec 30     Roman Kisel ( :  84|) [PATCH v5 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
+Changes since v4:
+https://lore.kernel.org/all/20241118070725.3221-1-namjain@linux.microsoft.com/
+Rebased on latest tip and added Michael's Reviewed-by tag.
 
-This patchset gets sent almost every day. How about you slow-down and read the
-docs while waiting?
+Changes since v3:
+https://lore.kernel.org/all/20241113084700.2940-1-namjain@linux.microsoft.com/
+Fixed checkpatch style warnings coming with "--strict" option,
+addressing Saurabh's comments.
+FYI, I kept code style same as earlier for below, to keep consistency
+with other similar fields in the code and because of lack of options
+due to 100 char limit.
+***
+CHECK: Lines should not end with a '('
+FILE: drivers/hv/connection.c:37:
++       .all_offers_delivered_event = COMPLETION_INITIALIZER(
+***
 
-Thx.
+Changes since v2:
+https://lore.kernel.org/all/20241029080147.52749-1-namjain@linux.microsoft.com/
+* Incorporated Easwar's suggestion to use secs_to_jiffies() as his
+  changes are now merged.
+* Addressed Michael's comments:
+  * Used boot-time offers/channels/devices to maintain consistency
+  * Rephrased CHANNELMSG_ALLOFFERS_DELIVERED handler function comments
+    for better explanation. Thanks for sharing the write-up.
+  * Changed commit msg and other things as per suggestions
+* Addressed Dexuan's comments, which came up in offline discussion:
+  * Changed timeout for waiting for all offers delivered msg to 60s instead of 10s.
+    Reason being, the host can experience some servicing events or diagnostics events,
+    which may take a long time and hence may fail to offer all the devices within 10s.
+  * Minor additions in commit subject of both patches
+* Rebased on latest linux-next master tip
 
+Changes since v1:
+https://lore.kernel.org/all/20241018115811.5530-1-namjain@linux.microsoft.com/
+* Added Easwar's Reviewed-By tag
+* Addressed Michael's comments:
+  * Added explanation of all offers delivered message in comments
+  * Removed infinite wait for offers logic, and changed it wait once.
+  * Removed sub channel workqueue flush logic
+  * Added comments on why MLX device offer is not expected as part of
+    this essential boot offer list. I refrained from adding too many
+    details on it as it felt like it is beyond the scope of this patch
+    series and may not be relevant to this. However, please let me know if
+    something needs to be added.
+* Addressed Saurabh's comments:
+  * Changed timeout value to 10000 ms instead of 10*1000
+  * Changed commit msg as per suggestions
+  * Added a comment for warning case of wait_for_completion timeout
+  * Added a note for missing channel cleanup in comments and commit msg
+
+John Starks (1):
+  Drivers: hv: vmbus: Log on missing offers if any
+
+Naman Jain (1):
+  Drivers: hv: vmbus: Wait for boot-time offers during boot and resume
+
+ drivers/hv/channel_mgmt.c | 61 +++++++++++++++++++++++++++++----------
+ drivers/hv/connection.c   |  4 +--
+ drivers/hv/hyperv_vmbus.h | 14 ++-------
+ drivers/hv/vmbus_drv.c    | 31 ++++++++++----------
+ 4 files changed, 67 insertions(+), 43 deletions(-)
+
+
+base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
