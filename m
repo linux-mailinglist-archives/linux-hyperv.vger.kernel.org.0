@@ -1,57 +1,59 @@
-Return-Path: <linux-hyperv+bounces-3567-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3568-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A87B9FFA9A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jan 2025 15:52:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7603DA000D0
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jan 2025 22:39:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49AD8162AA8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jan 2025 14:52:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D8FD162A6E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jan 2025 21:39:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B579A1B0430;
-	Thu,  2 Jan 2025 14:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A02188904;
+	Thu,  2 Jan 2025 21:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kQy+qsm3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qK6dFQaf"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 372A91917D0;
-	Thu,  2 Jan 2025 14:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB35B43173;
+	Thu,  2 Jan 2025 21:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735829569; cv=none; b=jcIf8NealcUcXoJk0hRDJnp9BjH/iOGHcx9cIV3MXKaRAuGgRC0enfPg6UWeTS3DJWgvsnatF3Nbomsx0mxJUMt+n/z61zHMTaJY4uW6uEZWNDknAwGJCBDCRDS02BMjZBLsoCeDInUR/LXNlVB2Z0TrHVSYOWxv/in4lfp1o2Y=
+	t=1735853983; cv=none; b=MMsMCu6aPMlNEu8S224u26c0prBfoDBMZocB4lolLtNXdnOLzxniDekHL/MRmDdPRRbwIIeCNzGs9k+wTK8eF7oO2Q6coAkVktnpyWefyZgS1T2eCX2oGAdmfqvT6YYdTOSPmHAmx4GHWlC+D/cYC0+sxDg4esjq/9gCRkEE85c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735829569; c=relaxed/simple;
-	bh=hmSvYT4hNSwZCGDLOZZiz2C0ylP1YEA7B8i46Ol5DT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k6lFOwJ8Q8m5j3aiCjdb4wof2XIytnUmuu0omAX70r2gfroUKMZ23l48ElmIjxvh46LYm3rw7FTPGNI+MLaLQdXMvOGxrsrABcgdrEd1KOy42YvgFw0HMYpB3rcINz8sTV40RSwUE/Vel1JfiluZmSHurmAUcQqxvAvflJYFRbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kQy+qsm3; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1735853983; c=relaxed/simple;
+	bh=NtWnK8Vpc0HnAvjnHbjLErSS+ykFC3CCfB0k45Z+spE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AgnehBlCyoBTH1wSr5NMbtVDtb7aBcjD1W+ShqrzMRu//j6GXJKA1QkUCg3CyMo3Pti07OZ0OgPP3mP+ZFcb7reXP7WFFIzBFtqYTtG2iOn9z5TGo1M6s3Q2480TCZcoo2xENK07CKmdjxpJ6KiRkB9MXJSlQl+RD0XBgITvk84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qK6dFQaf; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from namjain-hibernation.4uyjgaamrtuunfhsycmekme4ua.xx.internal.cloudapp.net (unknown [20.94.232.156])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D49422066C28;
-	Thu,  2 Jan 2025 06:52:47 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D49422066C28
+Received: from DESKTOP-0403QTC.lan (unknown [20.236.10.163])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E62A02041A87;
+	Thu,  2 Jan 2025 13:39:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E62A02041A87
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1735829567;
-	bh=mxoNnxjfOrAQrS0SDTM25QTJeAJbxT1VvWPNULCuRCM=;
+	s=default; t=1735853981;
+	bh=1v2rM0Ln6+UpaDcZKIVhFpvHGaweAwvDkCDeeXhmWt8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=kQy+qsm3eNa6kuuoE8nedatbAaERwFnVKNCgdT27E3VAdNdTXy8s0EfyVm/Oe9I+7
-	 YgM8Ba4+5gsauF61Z6TTPHS0n6y59hmNlpB2muknQZUmtNRvzX1G0ZlHLIzUPmy8lU
-	 cch1HrxDqjBiza7CbWw/FQrb/rOeqp2zxEGIe3gs=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
+	b=qK6dFQafKgPmxUTUl3WpPKTYw8iCIGczSHxcZ9fFPnl1vrrWjAhNoJ5cdYssMNebo
+	 IcyJ4DLxqpkWYjpDkmHwChPnW67QkHMG6gK1cYFFRcatYt5G7+2HQc4pZnDh4E1Oiv
+	 hf3j4VFxoSKIgePNCYrlROTo8Ba7W+p3oJzrwTQg=
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Subject: [PATCH v2] uio_hv_generic: Add a check for HV_NIC for send, receive buffers setup
-Date: Thu,  2 Jan 2025 14:52:43 +0000
-Message-ID: <20250102145243.2088-1-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>
+Cc: Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Allen Pais <apais@linux.microsoft.com>,
+	Vikram Sethi <vsethi@nvidia.com>,
+	Michael Frohlich <mfrohlich@microsoft.com>
+Subject: [PATCH] hv_balloon: Fallback to generic_online_page() for non-HV hot added mem
+Date: Thu,  2 Jan 2025 13:39:40 -0800
+Message-Id: <20250102213940.413753-1-jacob.pan@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -60,127 +62,53 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Receive and send buffer allocation was originally introduced to support
-DPDK's networking use case. These buffer sizes were further increased to
-meet DPDK performance requirements. However, these large buffers are
-unnecessary for any other UIO use cases.
-Restrict the allocation of receive and send buffers only for HV_NIC device
-type, saving 47 MB of memory per device.
+When device memory blocks are hot-added via add_memory_driver_managed(),
+the HV balloon driver intercepts them but fails to online these memory
+blocks. This could result in device driver initialization failures.
 
-While at it, fix some of the syntax related issues in the touched code
-which are reported by "--strict" option of checkpatch.
+To address this, fall back to the generic online callback for memory
+blocks not added by the HV balloon driver. Similar cases are handled the
+same way in virtio-mem driver.
 
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+Suggested-by: Vikram Sethi <vsethi@nvidia.com>
+Tested-by: Michael Frohlich <mfrohlich@microsoft.com>
+Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
 ---
-Changes since v1:
-https://lore.kernel.org/all/20241125125015.1500-1-namjain@linux.microsoft.com/
-Rephrased commit msg as per Saurabh's suggestion.
----
- drivers/uio/uio_hv_generic.c | 86 ++++++++++++++++++------------------
- 1 file changed, 43 insertions(+), 43 deletions(-)
+ drivers/hv/hv_balloon.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 3976360d0096..1b19b5647495 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -296,51 +296,51 @@ hv_uio_probe(struct hv_device *dev,
- 	pdata->info.mem[MON_PAGE_MAP].size = PAGE_SIZE;
- 	pdata->info.mem[MON_PAGE_MAP].memtype = UIO_MEM_LOGICAL;
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index a99112e6f0b8..c999daf34108 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -766,16 +766,18 @@ static void hv_online_page(struct page *pg, unsigned int order)
+ 	struct hv_hotadd_state *has;
+ 	unsigned long pfn = page_to_pfn(pg);
  
--	pdata->recv_buf = vzalloc(RECV_BUFFER_SIZE);
--	if (pdata->recv_buf == NULL) {
--		ret = -ENOMEM;
--		goto fail_free_ring;
-+	if (channel->device_id == HV_NIC) {
-+		pdata->recv_buf = vzalloc(RECV_BUFFER_SIZE);
-+		if (!pdata->recv_buf) {
-+			ret = -ENOMEM;
-+			goto fail_free_ring;
+-	guard(spinlock_irqsave)(&dm_device.ha_lock);
+-	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+-		/* The page belongs to a different HAS. */
+-		if (pfn < has->start_pfn ||
+-		    (pfn + (1UL << order) > has->end_pfn))
+-			continue;
++	scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
++		list_for_each_entry(has, &dm_device.ha_region_list, list) {
++			/* The page belongs to a different HAS. */
++			if (pfn < has->start_pfn ||
++				(pfn + (1UL << order) > has->end_pfn))
++				continue;
+ 
+-		hv_bring_pgs_online(has, pfn, 1UL << order);
+-		break;
++			hv_bring_pgs_online(has, pfn, 1UL << order);
++			return;
 +		}
-+
-+		ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
-+					    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
-+		if (ret) {
-+			if (!pdata->recv_gpadl.decrypted)
-+				vfree(pdata->recv_buf);
-+			goto fail_close;
-+		}
-+
-+		/* put Global Physical Address Label in name */
-+		snprintf(pdata->recv_name, sizeof(pdata->recv_name),
-+			 "recv:%u", pdata->recv_gpadl.gpadl_handle);
-+		pdata->info.mem[RECV_BUF_MAP].name = pdata->recv_name;
-+		pdata->info.mem[RECV_BUF_MAP].addr = (uintptr_t)pdata->recv_buf;
-+		pdata->info.mem[RECV_BUF_MAP].size = RECV_BUFFER_SIZE;
-+		pdata->info.mem[RECV_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
-+
-+		pdata->send_buf = vzalloc(SEND_BUFFER_SIZE);
-+		if (!pdata->send_buf) {
-+			ret = -ENOMEM;
-+			goto fail_close;
-+		}
-+
-+		ret = vmbus_establish_gpadl(channel, pdata->send_buf,
-+					    SEND_BUFFER_SIZE, &pdata->send_gpadl);
-+		if (ret) {
-+			if (!pdata->send_gpadl.decrypted)
-+				vfree(pdata->send_buf);
-+			goto fail_close;
-+		}
-+
-+		snprintf(pdata->send_name, sizeof(pdata->send_name),
-+			 "send:%u", pdata->send_gpadl.gpadl_handle);
-+		pdata->info.mem[SEND_BUF_MAP].name = pdata->send_name;
-+		pdata->info.mem[SEND_BUF_MAP].addr = (uintptr_t)pdata->send_buf;
-+		pdata->info.mem[SEND_BUF_MAP].size = SEND_BUFFER_SIZE;
-+		pdata->info.mem[SEND_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
  	}
++	generic_online_page(pg, order);
+ }
  
--	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
--				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
--	if (ret) {
--		if (!pdata->recv_gpadl.decrypted)
--			vfree(pdata->recv_buf);
--		goto fail_close;
--	}
--
--	/* put Global Physical Address Label in name */
--	snprintf(pdata->recv_name, sizeof(pdata->recv_name),
--		 "recv:%u", pdata->recv_gpadl.gpadl_handle);
--	pdata->info.mem[RECV_BUF_MAP].name = pdata->recv_name;
--	pdata->info.mem[RECV_BUF_MAP].addr
--		= (uintptr_t)pdata->recv_buf;
--	pdata->info.mem[RECV_BUF_MAP].size = RECV_BUFFER_SIZE;
--	pdata->info.mem[RECV_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
--
--	pdata->send_buf = vzalloc(SEND_BUFFER_SIZE);
--	if (pdata->send_buf == NULL) {
--		ret = -ENOMEM;
--		goto fail_close;
--	}
--
--	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
--				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
--	if (ret) {
--		if (!pdata->send_gpadl.decrypted)
--			vfree(pdata->send_buf);
--		goto fail_close;
--	}
--
--	snprintf(pdata->send_name, sizeof(pdata->send_name),
--		 "send:%u", pdata->send_gpadl.gpadl_handle);
--	pdata->info.mem[SEND_BUF_MAP].name = pdata->send_name;
--	pdata->info.mem[SEND_BUF_MAP].addr
--		= (uintptr_t)pdata->send_buf;
--	pdata->info.mem[SEND_BUF_MAP].size = SEND_BUFFER_SIZE;
--	pdata->info.mem[SEND_BUF_MAP].memtype = UIO_MEM_VIRTUAL;
--
- 	pdata->info.priv = pdata;
- 	pdata->device = dev;
- 
-
-base-commit: 3d6fbc065983fabd3fcfef4d66c9cf8a587f9ddc
+ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
 -- 
-2.43.0
+2.34.1
 
 
