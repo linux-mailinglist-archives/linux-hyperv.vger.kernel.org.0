@@ -1,231 +1,173 @@
-Return-Path: <linux-hyperv+bounces-3594-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBF86A040D4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 14:29:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D973CA04837
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 18:28:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5C99163108
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 13:29:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 801331889428
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 17:28:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3005C1F03C5;
-	Tue,  7 Jan 2025 13:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D2DB1F3D4F;
+	Tue,  7 Jan 2025 17:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OBlsnYR/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bAxTksmm"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444D71F03D5;
-	Tue,  7 Jan 2025 13:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DF70155CB3;
+	Tue,  7 Jan 2025 17:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736256577; cv=none; b=mOKw6PVqA+iieNrsddlh39Tkp9FbCt9EFkGufStTqcs6jsm+tVav4+NLP5bmwzARxQ3vBQWq0FxK1bneBIK9KGpNUHlE0NYI/7ciVws5pUHUQwc5XXxA12IHA0dbr1E7DB2wn2ZH5AEd4onKJzJe9nUaub29r2U4Aq8/vWi6tqo=
+	t=1736270881; cv=none; b=LaZ+b/o8V6XoOYDybD7R5pcsEwLCHrQ6Ne/H5jY3K2QiTWoB1sWTcRGliuxBagf3TGHJiaSARIK+KEmw/HDaXtl8CkkYeyVJbN3Y535XYFIcxeyCH3gzpptOXy6LXbQwwrBbaWqZ6F4FweD8KtkTTO/D2BJa0oEOMIyMEeIebaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736256577; c=relaxed/simple;
-	bh=L+MkuHhCLgD8kGQfSxdeNfO2pfO1WF0R1klzgWW+KGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0JQTSQDKstP20BejQWE2KGlVc+6EWg5Bz9nBw8wE1wbKHgF6uULWjTLAgB6lwJIzYvHMuL0JqbL9E8U8JlNvFbyBnTIFjJY3EAq29e9eQfMJdSNofDk01BWIDMJMJYF0xbNekIXR7xTorHpJRkazd/VfKKoKPswDBf3oetblIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OBlsnYR/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 507BWGNg009731;
-	Tue, 7 Jan 2025 13:28:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=mLgDzv/pVpbzGVF/OSbbOoTsrwb8sA
-	5JJIlfnBc5IRk=; b=OBlsnYR/bBezL2GRdAOvCDpfjTzgBC1YAjcDWKh3genAFF
-	7VmFYGzCQqntDisGxSNct7Weq0zBh7U5qGIkA5VFcOJnoftvLaehKEFWCQfbiAfR
-	Hl5eFKoY3fwyy2nUB/xz6agS+ZhpnxTY7T/PX+63Xv2yU1Kk0y9tcnz2IFIcrbYV
-	NzQeY+t+o8ZjwiyLasSJ3MUgeMRk8A4h2B7dp/wPkINyHfgIfyQ633G927/t2rHM
-	KAh2R9OaibMnsh2VLHw9gByqghhedxAONPnPg+tuNpdgnb/8oi6iqo8T34dO6hVT
-	kuVJh4zs/jK+zKcJflBj0i12SBFp1JxjCTVCM/Nw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 440s0aaygh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 13:28:40 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 507DSdcj025835;
-	Tue, 7 Jan 2025 13:28:39 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 440s0aaygc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 13:28:39 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5079nnbp027946;
-	Tue, 7 Jan 2025 13:28:38 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43yhhk2dgt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 13:28:38 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 507DSY0s27591038
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Jan 2025 13:28:34 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D9D820040;
-	Tue,  7 Jan 2025 13:28:34 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A3C020043;
-	Tue,  7 Jan 2025 13:28:33 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  7 Jan 2025 13:28:33 +0000 (GMT)
-Date: Tue, 7 Jan 2025 14:28:31 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-nvme@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Haren Myneni <haren@linux.ibm.com>,
-        Rick Lindsley <ricklind@linux.ibm.com>,
-        Nick Child <nnac123@linux.ibm.com>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Matt Wu <wuqiang.matt@bytedance.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Greg Kurz <groug@kaod.org>,
-        Peter Xu <peterx@redhat.com>, Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>
-Subject: Re: [PATCH 06/14] cpumask: re-introduce cpumask_next{,_and}_wrap()
-Message-ID: <Z30r/6S8VBU8/Ml5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20241228184949.31582-1-yury.norov@gmail.com>
- <20241228184949.31582-7-yury.norov@gmail.com>
+	s=arc-20240116; t=1736270881; c=relaxed/simple;
+	bh=Tczwen4MS/hBXH2pRi8eio5oBcRmVFsndg9xuTo0M2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JlulS5B96LjHNdVXRsiIs+DEShprNzCynPQPD++a0OR2nRVCwVra53TWpZHk2GwcqFjLFPqs8+oYJfbfDxG5EfCDIGTfyJa0rOh/FN8pyOTv2+L88PB48fOksd36cX3/mwei/06zr6bjxv45av6jncR77zV1/MATwOn3wAcw4Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bAxTksmm; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from DESKTOP-0403QTC. (unknown [20.236.10.163])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BBBB1206AB9F;
+	Tue,  7 Jan 2025 09:27:51 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BBBB1206AB9F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1736270872;
+	bh=ItJf9Tyt4B5A0+O4eNcPVsd7dIPfzCGXkmtnO0omaxA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
+	b=bAxTksmmKLnnPeAMUjDpRBkRjaRnTC+IRkHwPjdm8N+X5uvqPSHZvQP8np7/IJcDP
+	 SmJ+PXQdvLCZL9EqSeEtNIAvc81OMoNJeDkG/GSNr8hMwVRwBFDEa9bu4f4FsahER0
+	 UGLEatintFOItJHiQdbHMu7QTcvVWhFzU4t3bSTA=
+Date: Tue, 7 Jan 2025 09:27:50 -0800
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Dexuan Cui <decui@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Allen Pais
+ <apais@linux.microsoft.com>, Vikram Sethi <vsethi@nvidia.com>, Michael
+ Frohlich <mfrohlich@microsoft.com>, jacob.pan@linux.microsoft.com
+Subject: Re: [PATCH] hv_balloon: Fallback to generic_online_page() for
+ non-HV hot added mem
+Message-ID: <20250107092750.255db61d@DESKTOP-0403QTC.>
+In-Reply-To: <SN6PR02MB4157AE0C00C9EE805A78D8D7D4112@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250102213940.413753-1-jacob.pan@linux.microsoft.com>
+	<SN6PR02MB4157AE0C00C9EE805A78D8D7D4112@SN6PR02MB4157.namprd02.prod.outlook.com>
+Reply-To: jacob.pan@linux.microsoft.com
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241228184949.31582-7-yury.norov@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CvBcdJZ3Px_Fxar3yVlr0JKsNe7bUdCi
-X-Proofpoint-ORIG-GUID: MYFcjTtUWdbqcyxPXpK7_i-p0KcJF5T7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501070109
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Dec 28, 2024 at 10:49:38AM -0800, Yury Norov wrote:
+Hi Michael,
 
-Hi Yury,
+On Tue, 7 Jan 2025 00:39:07 +0000
+Michael Kelley <mhklinux@outlook.com> wrote:
 
-> cpumask_next_wrap_old() has two additional parameters, comparing to it's
-> analogue in linux/find.h find_next_bit_wrap(). The reason for that is
-> historical.
+> From: Jacob Pan <jacob.pan@linux.microsoft.com> Sent: Thursday,
+> January 2, 2025 1:40 PM
+> > 
+> > When device memory blocks are hot-added via
+> > add_memory_driver_managed(), the HV balloon driver intercepts them
+> > but fails to online these memory blocks. This could result in
+> > device driver initialization failures.
+> > 
+> > To address this, fall back to the generic online callback for memory
+> > blocks not added by the HV balloon driver. Similar cases are
+> > handled the same way in virtio-mem driver.  
 > 
-> Before 4fe49b3b97c262 ("lib/bitmap: introduce for_each_set_bit_wrap()
-> macro"), cpumask_next_wrap() was used to implement for_each_cpu_wrap()
-> iterator. Now that the iterator is an alias to generic
-> for_each_set_bit_wrap(), the additional parameters aren't used and may
-> confuse readers.
+> I had a little bit of trouble figuring out what problem this patch is
+> solving. Is this a correct description?
 > 
-> All existing users call cpumask_next_wrap() in a way that makes it
-> possible to turn it to straight and simple alias to find_next_bit_wrap().
+>    The Hyper-V balloon driver installs a custom callback for handling
+> page onlining operations performed by the memory hotplug subsystem.
+> This custom callback is global, and overrides the default callback
+>    (generic_online_page) that Linux otherwise uses. The custom
+> callback properly handles memory that is hot-added by the balloon
+> driver as part of a Hyper-V hot-add region.
 > 
-> In a couple places kernel users opencode missing cpumask_next_and_wrap().
-> Add it as well.
+>    But memory can also be hot-added directly by a device driver for a
+> vPCI device, particularly GPUs. In such a case, the custom callback
+> installed by the balloon driver runs, but won't find the page in its
+> hot-add region list and doesn't online it, which could cause driver
+> initialization failures.
 > 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  include/linux/cpumask.h | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
+>    Fix this by having the balloon custom callback run
+> generic_online_page() when the page isn't part of a Hyper-V hot-add
+> region, thereby doing the default Linux behavior. This allows device
+> driver hot-adds to work properly. Similar cases are handled the same
+> way in the virtio-mem driver.
 > 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index b267a4f6a917..18c9908d50c4 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -284,6 +284,43 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
->  		small_cpumask_bits, n + 1);
->  }
->  
-> +/**
-> + * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
-> + *			   @n and wrapping around, if needed
-> + * @n: the cpu prior to the place to search (i.e. return will be > @n)
-> + * @src1p: the first cpumask pointer
-> + * @src2p: the second cpumask pointer
-> + *
-> + * Return: >= nr_cpu_ids if no further cpus set in both.
-> + */
-> +static __always_inline
-> +unsigned int cpumask_next_and_wrap(int n, const struct cpumask *src1p,
-> +			      const struct cpumask *src2p)
-> +{
-> +	/* -1 is a legal arg here. */
-> +	if (n != -1)
-> +		cpumask_check(n);
-> +	return find_next_and_bit_wrap(cpumask_bits(src1p), cpumask_bits(src2p),
-> +		small_cpumask_bits, n + 1);
-> +}
-> +
-> +/*
-> + * cpumask_next_wrap - get the next cpu in *src, starting from
-> + *			   @n and wrapping around, if needed
+Yes, your description has the complete story. I was also thinking the
+generic code could handle this if the custom callback is not a void
+return type. Then we don't have to duplicate the code in here and
+virtio-mem, perhaps a separate cleanup effort.
 
-Does it mean the search wraps a cpumask and starts from the beginning
-if the bit is not found and returns >= nr_cpu_ids if @n crosses itself?
+> > 
+> > Suggested-by: Vikram Sethi <vsethi@nvidia.com>
+> > Tested-by: Michael Frohlich <mfrohlich@microsoft.com>
+> > Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
+> > ---
+> >  drivers/hv/hv_balloon.c | 18 ++++++++++--------
+> >  1 file changed, 10 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > index a99112e6f0b8..c999daf34108 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -766,16 +766,18 @@ static void hv_online_page(struct page *pg,
+> > unsigned int order)
+> >  	struct hv_hotadd_state *has;
+> >  	unsigned long pfn = page_to_pfn(pg);
+> > 
+> > -	guard(spinlock_irqsave)(&dm_device.ha_lock);
+> > -	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+> > -		/* The page belongs to a different HAS. */
+> > -		if (pfn < has->start_pfn ||
+> > -		    (pfn + (1UL << order) > has->end_pfn))
+> > -			continue;
+> > +	scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+> > +		list_for_each_entry(has,
+> > &dm_device.ha_region_list, list) {
+> > +			/* The page belongs to a different HAS. */
+> > +			if (pfn < has->start_pfn ||
+> > +				(pfn + (1UL << order) >
+> > has->end_pfn))
+> > +				continue;
+> > 
+> > -		hv_bring_pgs_online(has, pfn, 1UL << order);
+> > -		break;
+> > +			hv_bring_pgs_online(has, pfn, 1UL <<
+> > order);
+> > +			return;
+> > +		}
+> >  	}
+> > +	generic_online_page(pg, order);
+> >  }
+> > 
+> >  static int pfn_covered(unsigned long start_pfn, unsigned long
+> > pfn_cnt) --
+> > 2.34.1
+> >   
+> 
+> The code LGTM. I'd suggest updating the commit message along the
+> lines of what I wrote. My descriptions can be a bit wordy, but
+> hopefully they add clarity on the overall picture.
+> 
+> In any case,
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> 
+Will update the commit message in the next version, thanks a lot.
 
-> + * @n: the cpu prior to the place to search
-> + * @src: cpumask pointer
-> + *
-> + * Return: >= nr_cpu_ids if no further cpus set in both.
+Thanks,
 
-It looks like Return is a cpumask_next_and_wrap() comment leftover.
-
-> + */
-> +static __always_inline
-> +unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
-> +{
-> +	/* -1 is a legal arg here. */
-> +	if (n != -1)
-> +		cpumask_check(n);
-> +	return find_next_bit_wrap(cpumask_bits(src), small_cpumask_bits, n + 1);
-> +}
-> +
->  /**
->   * for_each_cpu - iterate over every cpu in a mask
->   * @cpu: the (optionally unsigned) integer iterator
-
-Thanks!
+Jacob
 
