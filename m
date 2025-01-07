@@ -1,173 +1,127 @@
-Return-Path: <linux-hyperv+bounces-3595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3596-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D973CA04837
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 18:28:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FA93A0484A
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 18:29:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 801331889428
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 17:28:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C56B33A6667
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 17:29:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D2DB1F3D4F;
-	Tue,  7 Jan 2025 17:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C922E1F63CB;
+	Tue,  7 Jan 2025 17:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bAxTksmm"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O/bl6gzR"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DF70155CB3;
-	Tue,  7 Jan 2025 17:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F6FD1F429A;
+	Tue,  7 Jan 2025 17:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736270881; cv=none; b=LaZ+b/o8V6XoOYDybD7R5pcsEwLCHrQ6Ne/H5jY3K2QiTWoB1sWTcRGliuxBagf3TGHJiaSARIK+KEmw/HDaXtl8CkkYeyVJbN3Y535XYFIcxeyCH3gzpptOXy6LXbQwwrBbaWqZ6F4FweD8KtkTTO/D2BJa0oEOMIyMEeIebaM=
+	t=1736270936; cv=none; b=ou3nBpPWZ2na4OASOD9l0fO7gMehxd4fDPkreRzQilqSw7IFajaBDK9ic3ZosahAsGhG8/KXeoJCOgVlj+oRRaS4VcNgj3LPcE7HioDGkyfh6IFsqUZfuypgXyZpsLkBI55/NJWEEwvSCa03BMsynCzJjNc8QO8d49tu+5aZOAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736270881; c=relaxed/simple;
-	bh=Tczwen4MS/hBXH2pRi8eio5oBcRmVFsndg9xuTo0M2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JlulS5B96LjHNdVXRsiIs+DEShprNzCynPQPD++a0OR2nRVCwVra53TWpZHk2GwcqFjLFPqs8+oYJfbfDxG5EfCDIGTfyJa0rOh/FN8pyOTv2+L88PB48fOksd36cX3/mwei/06zr6bjxv45av6jncR77zV1/MATwOn3wAcw4Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bAxTksmm; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1736270936; c=relaxed/simple;
+	bh=TisQnCmmSL0Nfk54fDb9nFoo1EhZB2GRxYFF9PdNH/E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o1rkgeKhNJPIW208wUgGIvwJQnjEqfGPbFlmdpFVOBbRDKfeitHn2ueVun1D3/eL8SomPK37lBjHjVFt2zj8tEoLZ/wngVa1ZxR/YmnOsUI8FbAovV4fnX8vAk8xQ1Jh4DI3TbY/YHp8C1X+bmDSyR+oWwxkpv0jZaJWUEHHdMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=O/bl6gzR; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from DESKTOP-0403QTC. (unknown [20.236.10.163])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BBBB1206AB9F;
-	Tue,  7 Jan 2025 09:27:51 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BBBB1206AB9F
+Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E6D8E206AB9F;
+	Tue,  7 Jan 2025 09:28:54 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6D8E206AB9F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1736270872;
-	bh=ItJf9Tyt4B5A0+O4eNcPVsd7dIPfzCGXkmtnO0omaxA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
-	b=bAxTksmmKLnnPeAMUjDpRBkRjaRnTC+IRkHwPjdm8N+X5uvqPSHZvQP8np7/IJcDP
-	 SmJ+PXQdvLCZL9EqSeEtNIAvc81OMoNJeDkG/GSNr8hMwVRwBFDEa9bu4f4FsahER0
-	 UGLEatintFOItJHiQdbHMu7QTcvVWhFzU4t3bSTA=
-Date: Tue, 7 Jan 2025 09:27:50 -0800
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "K. Y.
- Srinivasan" <kys@microsoft.com>, Dexuan Cui <decui@microsoft.com>, Haiyang
- Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Allen Pais
- <apais@linux.microsoft.com>, Vikram Sethi <vsethi@nvidia.com>, Michael
- Frohlich <mfrohlich@microsoft.com>, jacob.pan@linux.microsoft.com
-Subject: Re: [PATCH] hv_balloon: Fallback to generic_online_page() for
- non-HV hot added mem
-Message-ID: <20250107092750.255db61d@DESKTOP-0403QTC.>
-In-Reply-To: <SN6PR02MB4157AE0C00C9EE805A78D8D7D4112@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250102213940.413753-1-jacob.pan@linux.microsoft.com>
-	<SN6PR02MB4157AE0C00C9EE805A78D8D7D4112@SN6PR02MB4157.namprd02.prod.outlook.com>
-Reply-To: jacob.pan@linux.microsoft.com
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=default; t=1736270935;
+	bh=6I+kWiGEEYc47l6CYP9wmZuo3hMSP2dj+LxZQBdvPaE=;
+	h=From:Date:Subject:To:Cc:From;
+	b=O/bl6gzRhfW5wPtxlsVm/wXqymoD+uPkJ6TMZw6QNIXGHHZdKWtsyAGkEheew8Swi
+	 cJsvWMqo8AFDx1koQaR28qefA0recAj01LoEqqLa4V3r/yVqJYk4UKTngQh583poi2
+	 n2eT9fvgek1xzu4cV938dJInqPiOJTdL7jSlz344=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Date: Tue, 07 Jan 2025 17:28:40 +0000
+Subject: [PATCH] scsi: storvsc: Ratelimit warning logs to prevent VM denial
+ of service
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250107-eahariha-ratelimit-storvsc-v1-1-7fc193d1f2b0@linux.microsoft.com>
+X-B4-Tracking: v=1; b=H4sIAEdkfWcC/x3MwQqDMAwA0F+RnBeorcLwV2SHzKVrYGslKSKI/
+ 27x+C7vAGMVNpi6A5Q3MSm5oX90sCTKX0b5NIN3fuidD8iUSCURKlX+yV8qWi262YLvEHkM0Xk
+ an9CCVTnKfufz6zwvAhRLeGwAAAA=
+X-Change-ID: 20241023-eahariha-ratelimit-storvsc-b3fe53f02a58
+To: "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@linux.microsoft.com>, 
+ Long Li <longli@microsoft.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Mitchell Levy <levymitchell0@gmail.com>, 
+ Mitchell Levy <mitchelllevy@linux.microsoft.com>, 
+ linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Vijay Balakrishna <vijayb@linux.microsoft.com>, 
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+X-Mailer: b4 0.14.2
 
-Hi Michael,
+If there's a persistent error in the hypervisor, the scsi warning for
+failed IO can flood the kernel log and max out CPU utilization,
+preventing troubleshooting from the VM side. Ratelimit the warning so
+it doesn't DOS the VM.
 
-On Tue, 7 Jan 2025 00:39:07 +0000
-Michael Kelley <mhklinux@outlook.com> wrote:
+Closes: https://github.com/microsoft/WSL/issues/9173
+Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+---
+If there's a persistent error in the hypervisor, the scsi warning for
+failed IO can overwhelm the kernel log and max out CPU utilization,
+preventing troubleshooting. Ratelimit the warning so it doesn't DOS the
+VM.
 
-> From: Jacob Pan <jacob.pan@linux.microsoft.com> Sent: Thursday,
-> January 2, 2025 1:40 PM
-> > 
-> > When device memory blocks are hot-added via
-> > add_memory_driver_managed(), the HV balloon driver intercepts them
-> > but fails to online these memory blocks. This could result in
-> > device driver initialization failures.
-> > 
-> > To address this, fall back to the generic online callback for memory
-> > blocks not added by the HV balloon driver. Similar cases are
-> > handled the same way in virtio-mem driver.  
-> 
-> I had a little bit of trouble figuring out what problem this patch is
-> solving. Is this a correct description?
-> 
->    The Hyper-V balloon driver installs a custom callback for handling
-> page onlining operations performed by the memory hotplug subsystem.
-> This custom callback is global, and overrides the default callback
->    (generic_online_page) that Linux otherwise uses. The custom
-> callback properly handles memory that is hot-added by the balloon
-> driver as part of a Hyper-V hot-add region.
-> 
->    But memory can also be hot-added directly by a device driver for a
-> vPCI device, particularly GPUs. In such a case, the custom callback
-> installed by the balloon driver runs, but won't find the page in its
-> hot-add region list and doesn't online it, which could cause driver
-> initialization failures.
-> 
->    Fix this by having the balloon custom callback run
-> generic_online_page() when the page isn't part of a Hyper-V hot-add
-> region, thereby doing the default Linux behavior. This allows device
-> driver hot-adds to work properly. Similar cases are handled the same
-> way in the virtio-mem driver.
-> 
-Yes, your description has the complete story. I was also thinking the
-generic code could handle this if the custom callback is not a void
-return type. Then we don't have to duplicate the code in here and
-virtio-mem, perhaps a separate cleanup effort.
+This is not super critical and can be deferred to an 6.14 rc since it
+mostly occurs when there's a problem with the host disk or filesystem.
+---
+ drivers/scsi/storvsc_drv.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> > 
-> > Suggested-by: Vikram Sethi <vsethi@nvidia.com>
-> > Tested-by: Michael Frohlich <mfrohlich@microsoft.com>
-> > Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> > ---
-> >  drivers/hv/hv_balloon.c | 18 ++++++++++--------
-> >  1 file changed, 10 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> > index a99112e6f0b8..c999daf34108 100644
-> > --- a/drivers/hv/hv_balloon.c
-> > +++ b/drivers/hv/hv_balloon.c
-> > @@ -766,16 +766,18 @@ static void hv_online_page(struct page *pg,
-> > unsigned int order)
-> >  	struct hv_hotadd_state *has;
-> >  	unsigned long pfn = page_to_pfn(pg);
-> > 
-> > -	guard(spinlock_irqsave)(&dm_device.ha_lock);
-> > -	list_for_each_entry(has, &dm_device.ha_region_list, list) {
-> > -		/* The page belongs to a different HAS. */
-> > -		if (pfn < has->start_pfn ||
-> > -		    (pfn + (1UL << order) > has->end_pfn))
-> > -			continue;
-> > +	scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
-> > +		list_for_each_entry(has,
-> > &dm_device.ha_region_list, list) {
-> > +			/* The page belongs to a different HAS. */
-> > +			if (pfn < has->start_pfn ||
-> > +				(pfn + (1UL << order) >
-> > has->end_pfn))
-> > +				continue;
-> > 
-> > -		hv_bring_pgs_online(has, pfn, 1UL << order);
-> > -		break;
-> > +			hv_bring_pgs_online(has, pfn, 1UL <<
-> > order);
-> > +			return;
-> > +		}
-> >  	}
-> > +	generic_online_page(pg, order);
-> >  }
-> > 
-> >  static int pfn_covered(unsigned long start_pfn, unsigned long
-> > pfn_cnt) --
-> > 2.34.1
-> >   
-> 
-> The code LGTM. I'd suggest updating the commit message along the
-> lines of what I wrote. My descriptions can be a bit wordy, but
-> hopefully they add clarity on the overall picture.
-> 
-> In any case,
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> 
-Will update the commit message in the next version, thanks a lot.
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 45665d4aca925a10ce4293edf40cebdc4d4997f2..5a101ac06c478aad9b01072e7a6c5af48219f5c8 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -171,6 +171,12 @@ do {								\
+ 		dev_warn(&(dev)->device, fmt, ##__VA_ARGS__);	\
+ } while (0)
+ 
++#define storvsc_log_ratelimited(dev, level, fmt, ...)				\
++do {										\
++	if (do_logging(level))							\
++		dev_warn_ratelimited(&(dev)->device, fmt, ##__VA_ARGS__);	\
++} while (0)
++
+ struct vmscsi_request {
+ 	u16 length;
+ 	u8 srb_status;
+@@ -1176,7 +1182,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+ 		int loglevel = (stor_pkt->vm_srb.cdb[0] == TEST_UNIT_READY) ?
+ 			STORVSC_LOGGING_WARN : STORVSC_LOGGING_ERROR;
+ 
+-		storvsc_log(device, loglevel,
++		storvsc_log_ratelimited(device, loglevel,
+ 			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x hv 0x%x\n",
+ 			scsi_cmd_to_rq(request->cmd)->tag,
+ 			stor_pkt->vm_srb.cdb[0],
 
-Thanks,
+---
+base-commit: 4e16367cfe0ce395f29d0482b78970cce8e1db73
+change-id: 20241023-eahariha-ratelimit-storvsc-b3fe53f02a58
 
-Jacob
+Best regards,
+-- 
+Easwar Hariharan <eahariha@linux.microsoft.com>
+
 
