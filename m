@@ -1,44 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3623-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3624-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66D26A06829
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 23:21:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 082D5A06828
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 23:21:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85F627A2938
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 22:21:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5F76167C2F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 22:21:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EEC62010E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41CE2040A1;
 	Wed,  8 Jan 2025 22:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r0qabAs8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qKXkSIBJ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14C45185B6D;
-	Wed,  8 Jan 2025 22:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0E119D8A3;
+	Wed,  8 Jan 2025 22:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736374901; cv=none; b=u1kPehxdQB66xGf9ndLVH+mRLPps+60jEYfUWczRfKZk7CfKeFvcDn5eoL1MnSkLc04UzeFL79iddA4tNNFibmEs3hAqTdWYoqw7m/0DQkphn6Gi63YMITafzg1Ne5J5gtrzwiqVv5KpfTL0VFFhPB1eb5J9BxxrXEG+keiR5wk=
+	t=1736374901; cv=none; b=kaViurQ+S7Ju36LBb0ORffsDfQZ/j6fT5/b3Yutz5EjLcniudk/DC1PL7xMx28t41fceiSK72mlr8cCY4rL/g0NwvSvslhdVEGzE2yrB4ddTROmaTvUh2+QzWs1zQztm+nf1giCyPQxsWlCMlX9rvUYauBB90CRvuogJidJLoRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736374901; c=relaxed/simple;
-	bh=p+lcqpeJtFGVLpqTJnBHAm/0M6hD+NrBrb1eo9mml3E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BQjCJxzmdAIxBqAI3RPW7MY0Wt4YWKGEOjbCyHSXsCBJ03Jg7beeIFJ2ZRF5a8X8aM25bZWYmMJu16/+bWT5Fb3ZQ7ErFujY7QqxDHXCGNODyh10zurTttepbOGq+HUsE6grO+VCwRHHtn0ODeJ1+nGWFdbVl16Q92EhEKKQbHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r0qabAs8; arc=none smtp.client-ip=13.77.154.182
+	bh=qcafMXV1WerZOL9+iELEnwK79b3MrkBNbG5ndg57gCI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AE07LER3jQHIEC1bxF3rUUTM18ml1PozK7oJBEJblsoWIglR5xFfv265AYfsZqUba9Ip9RxJc0FThjA5VPHjvzskS7SD0qpU9l221HL2DRtspIQa/9o1Eg+X5PawoPWkE6NGCjNJhfxlkb6rgSPnXqfvq4r2YhJAaJXGGzxJW6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qKXkSIBJ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8A0FB203E3A9;
+	by linux.microsoft.com (Postfix) with ESMTPSA id CB96B203E3AC;
 	Wed,  8 Jan 2025 14:21:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A0FB203E3A9
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB96B203E3AC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1736374899;
-	bh=G428qQpbrHztmR3RzWzAj8mtktXXUrlwPARuO1M4Gm8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=r0qabAs8xuCYKiUbZ8iYmsNNuIV0He5YSyNm28ZCr58vvW2P0z5mFYRuwxtNGt6HF
-	 uUb2RJN9i7joT2Lqg3eaEmLusBTekdLqNRYlnm5jae4AKwKdt+svoVtXZ5fNK0eVm+
-	 YGx3QP2Ac5VihNm5q70LYbWMLLCD4/VJ1/h580Qk=
+	s=default; t=1736374900;
+	bh=vwwWa71Zd50P34+bo52kV00/vqPmYY6R52Sz0B4X140=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qKXkSIBJNQYru0xoUE9y20f8XCr+s5p4r4lPYGKEf2WjCw+2EHWicqnW3v6VUzBz4
+	 r+LAHql86rPrRUTPrUuOzveE3/VIkbxfjFyoLtyl+GLhvM/P2Ww6aEhCXS17t+aIJo
+	 FnDnj/dYQrbzBpOgkuBdNTQ2y4Nk595LA3o43NQQ=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: hpa@zytor.com,
 	kys@microsoft.com,
@@ -61,10 +62,12 @@ Cc: apais@microsoft.com,
 	ssengar@microsoft.com,
 	sunilmut@microsoft.com,
 	vdso@hexbites.dev
-Subject: [PATCH v6 0/5] hyperv: Fixes for get_vtl(), hv_vtl_apicid_to_vp_id()
-Date: Wed,  8 Jan 2025 14:21:33 -0800
-Message-Id: <20250108222138.1623703-1-romank@linux.microsoft.com>
+Subject: [PATCH v6 1/5] hyperv: Define struct hv_output_get_vp_registers
+Date: Wed,  8 Jan 2025 14:21:34 -0800
+Message-Id: <20250108222138.1623703-2-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250108222138.1623703-1-romank@linux.microsoft.com>
+References: <20250108222138.1623703-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,94 +76,82 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The get_vtl(void) function
+There is no definition of the output structure for the
+GetVpRegisters hypercall. Hence, using the hypercall
+is not possible when the output value has some structure
+to it. Even getting a datum of a primitive type reads
+as ad-hoc without that definition.
 
-* has got one bug when the code started using a wrong pointer type after
-  refactoring, and also
-* the both function in question don't adhere to the requirements of
-  the Hypervisor Top-Level Funactional Specification[1, 2] as the code overlaps
-  the input and output areas for a hypercall.
+Define struct hv_output_get_vp_registers to enable using
+the GetVpRegisters hypercall. Make provisions for all
+supported architectures. No functional changes.
 
-The first issue leads to a wrong 100% reproducible computation due to reading
-a byte worth of data at a wrong offset. That in turn leads to using a nonsensical
-value ("fortunately", could catch it easily!) for the current VTL when initiating
-VMBus communications. As a repercussion from that, the system wouldn't boot. The
-fix is straightforward: use the correct pointer type.
-
-The second issue doesn't seem to lead to any reproducible breakage just yet. It is
-fixed with using the output hypercall pages allocated per-CPU, and that isn't the
-only or the most obvious choice so let me elaborate why that fix appears to be the
-best one in my opinion out of the options I could conceive of.
-
-The approach chosen for fixing the second issue makes two things shine through:
-
-* these functions just get a vCPU register, no special treatment needs to be
-  involved,
-* VTLs and dom0 can and should share code as both exist to provide services to
-  a guest(s), be that from within the partition or from outside of it.
-
-The projected benefits include replacing the functions in question with a future
-`hv_get_vp_registers` one shared between dom0 and VTLs to allow for a better test
-coverage.
-
-I have validated the fixes by booting the fixed kernel in VTL2 up using OpenVMM and
-OpenHCL[3, 4].
-
-[1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
-[2] https://github.com/MicrosoftDocs/Virtualization-Documentation/tree/main/tlfs
-[3] https://openvmm.dev/guide/user_guide/openhcl.html
-[4] https://github.com/microsoft/OpenVMM
-
-[v6]
-  - Sending v6 a week after v5 to adhere to the requirements of the kernel
-    documentation,
-  - Added all tags the patches received prior to v6,
-  - Fixed the bitfield layout for the ARM64 structures (patch 1),
-  - Hoisted the common condition used in several if statements into
-    a separate function to improve code maintainability (patch 3).
-
-[v5]: https://lore.kernel.org/lkml/20241230180941.244418-1-romank@linux.microsoft.com/
-  - In the first patch, removed some arch-specific #ifdef guards to fix the
-    arm64 build and stick to the direction chosen for the Hyper-V header files.
-    I could not remove all of them as some interrupt state structures
-    are defined differently for x64 and arm64 and are found in the same
-    enclosing `union hv_register_value`.
-
-    No changes to other patches (approved in v4).
-
-[v4]: https://lore.kernel.org/lkml/20241227183155.122827-1-romank@linux.microsoft.com/
-  - Wrapped DECLARE_FLEX_ARRAY into a struct and added one more
-    member as the documentation requires,
-  - Removed superfluous type coercion,
-  - Fixed tags,
-  - Rebased onto the latest hyperv-next branch.
-
-[v3]: https://lore.kernel.org/lkml/20241226213110.899497-1-romank@linux.microsoft.com/
-  - Added a fix for hv_vtl_apicid_to_vp_id(),
-  - Split out the patch for enabling the hypercall output page,
-  - Updated the title of the patch series,
-
-[v2]: https://lore.kernel.org/lkml/20241226203050.800524-1-romank@linux.microsoft.com/
-  - Used the suggestions to define an additional structure to improve code readability,
-  - Split out the patch with that definition.
-
-[v1]: https://lore.kernel.org/lkml/20241218205421.319969-1-romank@linux.microsoft.com/
-
-Roman Kisel (5):
-  hyperv: Define struct hv_output_get_vp_registers
-  hyperv: Fix pointer type in get_vtl(void)
-  hyperv: Enable the hypercall output page for the VTL mode
-  hyperv: Do not overlap the hvcall IO areas in get_vtl()
-  hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
-
- arch/x86/hyperv/hv_init.c   |  6 +++---
- arch/x86/hyperv/hv_vtl.c    |  2 +-
- drivers/hv/hv_common.c      | 11 +++++++---
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+---
  include/hyperv/hvgdk_mini.h | 41 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 53 insertions(+), 7 deletions(-)
+ 1 file changed, 41 insertions(+)
 
-
-base-commit: 26e1b813fcd02984b1cac5f3decdf4b0bb56fe02
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index db3d1aaf7330..4fffca9e16df 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -1068,6 +1068,35 @@ union hv_dispatch_suspend_register {
+ 	} __packed;
+ };
+ 
++union hv_arm64_pending_interruption_register {
++	u64 as_uint64;
++	struct {
++		u64 interruption_pending : 1;
++		u64 interruption_type: 1;
++		u64 reserved : 30;
++		u64 error_code : 32;
++	} __packed;
++};
++
++union hv_arm64_interrupt_state_register {
++	u64 as_uint64;
++	struct {
++		u64 interrupt_shadow : 1;
++		u64 reserved : 63;
++	} __packed;
++};
++
++union hv_arm64_pending_synthetic_exception_event {
++	u64 as_uint64[2];
++	struct {
++		u8 event_pending : 1;
++		u8 event_type : 3;
++		u8 reserved : 4;
++		u8 rsvd[3];
++		u64 context;
++	} __packed;
++};
++
+ union hv_x64_interrupt_state_register {
+ 	u64 as_uint64;
+ 	struct {
+@@ -1103,8 +1132,20 @@ union hv_register_value {
+ 	union hv_explicit_suspend_register explicit_suspend;
+ 	union hv_intercept_suspend_register intercept_suspend;
+ 	union hv_dispatch_suspend_register dispatch_suspend;
++#ifdef CONFIG_ARM64
++	union hv_arm64_interrupt_state_register interrupt_state;
++	union hv_arm64_pending_interruption_register pending_interruption;
++#endif
++#ifdef CONFIG_X86
+ 	union hv_x64_interrupt_state_register interrupt_state;
+ 	union hv_x64_pending_interruption_register pending_interruption;
++#endif
++	union hv_arm64_pending_synthetic_exception_event pending_synthetic_exception_event;
++};
++
++/* NOTE: Linux helper struct - NOT from Hyper-V code. */
++struct hv_output_get_vp_registers {
++	DECLARE_FLEX_ARRAY(union hv_register_value, values);
+ };
+ 
+ #if defined(CONFIG_ARM64)
 -- 
 2.34.1
 
