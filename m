@@ -1,219 +1,164 @@
-Return-Path: <linux-hyperv+bounces-3600-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3601-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7839AA04D36
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 00:11:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2C79A051D9
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 05:06:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71687166FFF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2025 23:11:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD1A27A03FF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 04:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3BF01E4106;
-	Tue,  7 Jan 2025 23:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96DA719CCF5;
+	Wed,  8 Jan 2025 04:06:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HXRD7w6a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyOnGQoN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 428A61A83E1;
-	Tue,  7 Jan 2025 23:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1625020B20;
+	Wed,  8 Jan 2025 04:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736291478; cv=none; b=r6wYYHqX3eKzEb/xHuXOC2Ycj+RJLudzhAT9nfE4ZG48XRBtgFS2M5S/nOj7aFvHERq9l+XyOSM0KSkUjc22atdG/yv/ApxHWtQTbOxcATMtX6tqc8ERxn08j+l3taDAbVa3BN6/eEbKB1pO2eOUjQqEaqME7/7XuEjsqKjBLf8=
+	t=1736309197; cv=none; b=EklphDFyMKUWfAK96Q8Dszi4tuz1tePbrTWndmwF3UrsiThhDZfsA5R4BYedS1p99Dmki/KgpFZxMzwjImmB3kwtlrXmRdZymNk+RdkV1CWFGh3fqfLtKcNeENwVX1wX4cdX9mdMuIQEikVBKDkq3e76OmBsXh6yLff0vxh6V84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736291478; c=relaxed/simple;
-	bh=8OnrM4kRw4Y/ZLArSUQlMXG3Qba2BxeBhoRZ6VOMj3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V3heO+OPUAiyI8p/8J3lX5N7ZurURTjB3kUlIgwIldSAyXnbyqGmK3Z2gQ7IOXGGRw0YTPM2R9Qc5br4EhZafCiCxghxafN64ih6UE4Xp0FnmpyQUo30KKHKohZvs6gsgMSKtXTf/StwUZXTDUUQGHTSgY8kcdEJ9sCsuB5owmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HXRD7w6a; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9B7C4212D510;
-	Tue,  7 Jan 2025 15:11:16 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B7C4212D510
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1736291476;
-	bh=jMBUhb4VXBSYbi9jWqWYCUzGAWjBw+OSrYYEqegkCwk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HXRD7w6aePBRmAprK/JGcws+a8lWyp3TfSrrXauFFoR4ByIsbs1XWTmbGVJpixaeW
-	 eJ0i4JjJ63MGK8LofI1e90nuLRn9QiK+rWPiAjSUb0D0Quv/FweBZtJZ1MvcH8RFKS
-	 Krr3DhP0bLgR5T7E+4bUpZTlMxChqx3d13IdJKsg=
-Message-ID: <17dfb71a-119c-4906-bc22-4f65fb28676b@linux.microsoft.com>
-Date: Tue, 7 Jan 2025 15:11:15 -0800
+	s=arc-20240116; t=1736309197; c=relaxed/simple;
+	bh=H3Ir9Z6YEOKuNI+Bk8J8mNq/UyY9/Wrb45UUaO9p1P8=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7ZARcHOEhniG7rbTLkD5M26pNiwnYodWjYyYEen6QuvLrKxdGn6eTUkjMsnioP2f6kC7KOAWye+aMIWZk3TFodfS9ioymDcdp1YwqDj16UtVxMReANlc8SKQbIE8zdIGUKNqj3IVhyCVozwiY8jVrB9q37O/TfWJwJpBgCixMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyOnGQoN; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2164b662090so212039385ad.1;
+        Tue, 07 Jan 2025 20:06:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736309195; x=1736913995; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONfbWeP0iDQviDfnB2GD4XLWQZBCEfcI8wqguNnYwV8=;
+        b=WyOnGQoNkcVLf4oefFVng0MRKPXoAg/7/T+Qryf7mivO+vrXyM0jbK5CRhnm0BLWK1
+         14vTV9VG3LLyiuKLm2x/hjz57CPFHByPLMIoEbzMeiBS6OyGRbVjDpBKeh0zF7el08MD
+         hrXKCIqtfuJrXgv0cGXK8k6dcAMSzHhE6HFvgk/R9bgNPRHY+Rcp3aY2g7N2gw9Jzy58
+         h/K+muGbn52urpRk1WjbNPoAlNlxQEAuTpv0a9wwrojoTCXkPsZgmG38mJNVJIiOm7gf
+         l9xKcZjICTcyvETFooPd3PTvGSqHSSRw4Rbpkp73ueVAal9AzqzIqw3cy7p4MLwSvu9d
+         TZgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736309195; x=1736913995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ONfbWeP0iDQviDfnB2GD4XLWQZBCEfcI8wqguNnYwV8=;
+        b=w8dmPotWBtueU2KQbkCcv/MZyG1gOPzjdnPuL6pgl7TZc8jlM+Qw4RX0pFnN+EkFFn
+         TA5SG8JhcV02n7VC76v92cxJquDPaZPK8XKt8TojjCNglJvzOiJ+RMjWhzstZ7nD/KRc
+         BC4CX9nXaQkscoZfbL0ZAnrKMKKnXYvA1jrnjXJ98glhUbd6+mz90ZKhftpCxAPQ9f1/
+         5wbeh1HAoXFWvIH0K9bSrn/IUHwSZ0KPWVAbKT7ceHcaM4DKycgjO5YUPZBy1dNEI9wy
+         2h++pGqULtXPDRUhq5eN07zhqlcWn6cWWKDNMDMkPGTwl83RR5QWdG4x4hfQ3ZNZtFcQ
+         zdyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUdVeYZpbdAhpsw3vt2mcGq0Znnxw9arYGmjq58fCQTB015rjSBKLtUGyjQZAIIhrCigtbaQ9fTSY=@vger.kernel.org, AJvYcCWYtASAADt7NaIqOHb+F3O0LcOWHT5Q4dOJ4pcbgg4FnWplv05oJAuVxtYjAsu9J3B6inCYI/fkA/+jsYWQ@vger.kernel.org, AJvYcCXyY9/hKVFunU94Q6sqrWD5rKhVD7czSDeNtUBeFI8sevFyUMU0eOO+x/kbUCdjlsBdoApdSFNfVQdwFwia@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu02UJTDhSw+zb4rDEKA/6nyEYAuq91YaevkNU+FbYRzL2RkeR
+	wqIH/mjiruNGGY2pTLU6uBBF8sliktONN7lmIsL9r/Oe2Ww38mEq
+X-Gm-Gg: ASbGncu6GdHHLwQTRLcHwWQkdOL3bt4GvRb4oy4PEu0V1dOabI5/u7EstlFwopMD82b
+	Hzb5yCNi1J+bK/2zf3l7EJ7Jqn1t28dCj3kbOG4iWJ2uzBXxXF9NQshy4b2lIkuE/9fYH5Sn0K0
+	hMLO+ACkKBBTqBalUuYHRX/YsPC6sFC+vAr96QUVvoslFGMZVKMJh8D+tbR/SyvMAmDOE67YAE0
+	AfIV1CEBiu2e+MUkaTqJk8C7em0HTehwabYZGmkW57sGulyc0ziJqlQ
+X-Google-Smtp-Source: AGHT+IEOOASpxD85SpPsLTkeOZpCqpEWSC//B3nAE3UBolTsjMklHB/Qw7G7kvC4fGdON+ypsLX3FA==
+X-Received: by 2002:a17:902:d50d:b0:216:4c88:d939 with SMTP id d9443c01a7336-21a83fc77cemr19688465ad.38.1736309195035;
+        Tue, 07 Jan 2025 20:06:35 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9f842esm317615005ad.218.2025.01.07.20.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 20:06:34 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 2F983420B892; Wed, 08 Jan 2025 11:06:31 +0700 (WIB)
+Date: Wed, 8 Jan 2025 11:06:31 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, kys@microsoft.com, corbet@lwn.net,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Documentation: hyperv: Add overview of guest VM
+ hibernation
+Message-ID: <Z335xwWRTjyX0u6G@archie.me>
+References: <20250107202047.316025-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] hyperv: Enable the hypercall output page for the
- VTL mode
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: hpa@zytor.com, kys@microsoft.com, bp@alien8.de,
- dave.hansen@linux.intel.com, decui@microsoft.com,
- eahariha@linux.microsoft.com, haiyangz@microsoft.com, mingo@redhat.com,
- mhklinux@outlook.com, nunodasneves@linux.microsoft.com, tglx@linutronix.de,
- tiala@microsoft.com, wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
- benhill@microsoft.com, ssengar@microsoft.com, sunilmut@microsoft.com,
- vdso@hexbites.dev
-References: <20241230180941.244418-1-romank@linux.microsoft.com>
- <20241230180941.244418-4-romank@linux.microsoft.com>
- <20250103192002.GA22059@skinsburskii.>
- <24594814-6b31-4dc9-83c3-2bafbd14e819@linux.microsoft.com>
- <20250106171114.GA18270@skinsburskii.>
- <a1577153-95c0-4791-8f6a-0ec00fae48f7@linux.microsoft.com>
- <20250106193248.GB18346@skinsburskii.>
- <3c90bc0f-be28-4f10-8057-be5e780c5a24@linux.microsoft.com>
- <20250107191848.GA24369@skinsburskii.>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20250107191848.GA24369@skinsburskii.>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="676hDs5ENvvMNeOp"
+Content-Disposition: inline
+In-Reply-To: <20250107202047.316025-1-mhklinux@outlook.com>
 
 
+--676hDs5ENvvMNeOp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 1/7/2025 11:18 AM, Stanislav Kinsburskii wrote:
-> On Mon, Jan 06, 2025 at 01:07:25PM -0800, Roman Kisel wrote:
-> 
+On Tue, Jan 07, 2025 at 12:20:47PM -0800, mhkelley58@gmail.com wrote:
+> +VMBus devices are identified by class and instance GUID. (See section
+> +"VMBus device creation/deletion" in
+> +Documentation/virt/hyperv/vmbus.rst.) Upon resume from hibernation,
+> +the resume functions expect that the devices offered by Hyper-V have
+> +the same class/instance GUIDs as the devices present at the time of
+> +hibernation. Having the same class/instance GUIDs allows the offered
+> +devices to be matched to the primary VMBus channel data structures in
+> +the memory of the now resumed hibernation image. If any devices are
+> +offered that don't match primary VMBus channel data structures that
+> +already exist, they are processed normally as newly added devices. If
+> +primary VMBus channels that exist in the resumed hibernation image are
+> +not matched with a device offered in the resumed VM, the resume
+> +sequence waits for 10 seconds, then proceeds. But the unmatched device
+> +is likely to cause errors in the resumed VM.
 
-[...]
+Did you mean for example, conflicting synthetic NICs?
 
-> My point is that the proposed fix looks more like an Underhill-tailored
-> bandage and doesn't take the needs of other stake holders into
-> consideration.
-The patch takes as much into consideration as present in the hyperv-next
-tree. Working on the open-source project seems to be harder otherwise.
-A bandage, or not, that's a matter of opinion. There's a been a break,
-here's the bandage.
+> +The Linux ends of Hyper-V sockets are forced closed at the time of
+> +hibernation. The guest can't force closing the host end of the socket,
+> +but any host-side actions on the host end will produce an error.
 
-> 
-> What is the urgency in merging of this particular change?
+Nothing can be done on host-side?
 
-The get_vtl function is broken thus blocking any further work on
-upstreaming VTL mode patches, ARM64 and more. That's not an urgent
-urgency where customers are in pain, more like the urgency of needing
-to take the trash out, and until that happens, continuing inhaling the
-fumes.
+> +Virtual PCI devices are physical PCI devices that are mapped directly
+> +into the VM's physical address space so the VM can interact directly
+> +the hardware. vPCI devices include those accessed via what Hyper-V
+"... interact directly with the hardware."
+> +calls "Discrete Device Assignment" (DDA), as well as SR-IOV NIC
+> +Virtual Functions (VF) devices. See Documentation/virt/hyperv/vpci.rst.
+> +
+> <snipped>...
+> +SR-IOV NIC VFs similarly have a VMBus identity as well as a PCI
+> +identity, and overall are processed similarly to DDA devices. A
+> +difference is that VFs are not offered to the VM during initial boot
+> +of the VM. Instead, the VMBus synthetic NIC driver first starts
+> +operating and communicates to Hyper-V that it is prepared to accept a
+> +VF, and then the VF offer is made. However, if the VMBus connection is
+> +unloaded and then re-established without the VM being rebooted (as
+> +happens in Steps 3 and 5 in the Detailed Hibernation Sequence above,
+> +and similarly in the Detailed Resume Sequence), VFs are already part
+                                                  "... that are already ..."
+> +of the VM and are offered to the re-established VMBus connection
+> +without intervention by the synthetic NIC driver.
 
-The urgency of unblocking is to continue work on proposing VTL mode
-patches not to carry lots of out-of-tree code in the fork.
+Thanks.
 
-There might be a future where the Hyper-V code offers an API surface
-covering needs of consumers like dom0 and VTLs whereby they maybe can
-be built as an out-of-tree modules so the opinions wouldn't clash as
-much.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Avoiding using the output hypercall page leads to something like[1]
-and it looks quite complicated although that's the bare bones, lots
-of notes.
+--676hDs5ENvvMNeOp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1]
+-----BEGIN PGP SIGNATURE-----
 
-/*
-  * Fast extended hypercall with 20 bytes of input and 16 bytes of
-  * output for getting a VP register.
-  *
-  * NOTES:
-  *  1. The function is __init only atm, so the XMM context isn't
-  *     used by the user mode.
-  *  2. X86_64 only.
-  *  3. Fast extended hypercalls may use XMM0..XMM6, and XMM is
-  *     architerctural on X86_64 yet the support should be enabled
-  *     in the CR's. Here, need RDX, R8 and XMM0 for input and RDX,
-  *     R8 for output
-  *  4. No provisions for TDX and SEV-SNP for the sake of simplicity
-  *     (the hypervisor cannot see the guest registers in the
-  *     confidential VM), would need to fallback.
-  *  5. The robust implementation would need to check if fast extended
-  *     hypercalls are available by checking the synthehtic CPUID leaves.
-  *     A separate leaf indicates fast output support.
-  *     It _almost_ certainly has to be, unless somehow disabled, hard
-  *     to see why that would be needed.
-  */
-struct hv_u128 {
-	u64 low_part;
-	u64 high_part;
-} __packed;
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ335wwAKCRD2uYlJVVFO
+ozuZAQDRYUwxON4iNNRuBnzFnLzs+GvI5MdP6h3woDe7HC8rTQD+MipWV/qOjA0a
+Lbm9mU+/hLqVJL8TwD4y178PXfV8PgM=
+=Blp1
+-----END PGP SIGNATURE-----
 
-static __init u64 hv_vp_get_register_xfast(u32 reg_name,
-		struct hv_u128 *value)
-{
-	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS |
-					HV_HYPERCALL_FAST_BIT;
-	unsigned long flags;
-	u64 hv_status;
-
-	union {
-		struct hv_get_vp_registers_input input;
-		struct {
-			u64 lo;
-			u64 hi;
-		} __packed as_u128;
-	} hv_input;
-	register u64 rdx asm("rdx");
-	register u64 r8 asm("r8");
-	register u64 r12 asm("r12");
-
-	local_irq_save(flags);
-
-	hv_input.as_u128.lo = hv_input.as_u128.hi = 0;
-	hv_input.input.header.partitionid = HV_PARTITION_ID_SELF;
-	hv_input.input.header.vpindex = HV_VP_INDEX_SELF;
-	hv_input.input.header.inputvtl = 0;
-
-	rdx = hv_input.as_u128.lo;
-	r8 = hv_input.as_u128.hi;
-	r12 = reg_name;
-
-	__asm__ __volatile__(
-			"subq		$16, %%rsp\n"
-			"movups		%%xmm0, 16(%%rsp)\n"
-			"movd		%%r12, %%xmm0\n"
-			CALL_NOSPEC
-			"movups		16(%%rsp), %%xmm0\n"
-			"addq		$16, %%rsp\n"
-			: "=a" (hv_status), ASM_CALL_CONSTRAINT,
-			"+c" (control), "+r" (rdx), "+r" (r8)
-			: THUNK_TARGET(hv_hypercall_pg), "r"(r12)
-			: "cc", "memory", "r9", "r10", "r11");
-
-	if (hv_result_success(hv_status)) {
-		value->low_part = rdx;
-		value->high_part = r8;
-	}
-
-	local_irq_restore(flags);
-	return hv_status;
-}
-
-#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-u8 __init get_vtl(void)
-{
-	struct hv_u128 reg_value;
-	u64 ret = hv_vp_get_register_xfast(HV_REGISTER_VSM_VP_STATUS, &reg_value);
-
-	if (hv_result_success(ret)) {
-		ret = reg_value.low_part & HV_VTL_MASK;
-	} else {
-		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
-		BUG();
-	}
-
-	return ret;
-}
-#endif
-
-> 
-> Thanks,
-> Stas
-
--- 
-Thank you,
-Roman
-
+--676hDs5ENvvMNeOp--
 
