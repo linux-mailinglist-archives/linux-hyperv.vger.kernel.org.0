@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3624-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3625-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 082D5A06828
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 23:21:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3C52A0682B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 23:21:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5F76167C2F
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BF817A2B21
 	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 22:21:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41CE2040A1;
-	Wed,  8 Jan 2025 22:21:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C40220468D;
+	Wed,  8 Jan 2025 22:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qKXkSIBJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KmeTC5Bu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0E119D8A3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CF01A070E;
 	Wed,  8 Jan 2025 22:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736374901; cv=none; b=kaViurQ+S7Ju36LBb0ORffsDfQZ/j6fT5/b3Yutz5EjLcniudk/DC1PL7xMx28t41fceiSK72mlr8cCY4rL/g0NwvSvslhdVEGzE2yrB4ddTROmaTvUh2+QzWs1zQztm+nf1giCyPQxsWlCMlX9rvUYauBB90CRvuogJidJLoRk=
+	t=1736374901; cv=none; b=qhC6+GlTM9xcvXfCpMWpOztKExYuedqd654MOSofj1k4Sg1DGH7GD3gRcTJm5uDdck03j+F1qI6KgnBqEd5c8hPfg55UG9Wb11FxyROPSeKMi7JujHiMSssJe12VzenvnxHPhAddFM/qxOsRlE7OihZ7CsEEqmVm6P9IkM6jn4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736374901; c=relaxed/simple;
-	bh=qcafMXV1WerZOL9+iELEnwK79b3MrkBNbG5ndg57gCI=;
+	bh=eheEiYFZ3ecvWH92ToTltGWJ+i40cLuC3Bo1qct+0Wo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AE07LER3jQHIEC1bxF3rUUTM18ml1PozK7oJBEJblsoWIglR5xFfv265AYfsZqUba9Ip9RxJc0FThjA5VPHjvzskS7SD0qpU9l221HL2DRtspIQa/9o1Eg+X5PawoPWkE6NGCjNJhfxlkb6rgSPnXqfvq4r2YhJAaJXGGzxJW6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qKXkSIBJ; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=fSW2FlZ6k2K+GSdco0642ePzpY6bU3BafboxRTIkPze7xdGagDyrzuFUujFwdjI/mz/gkHaNuMcki8y+VwB9/OfVIlIZSzMgA1BDQR5aN1pn3gssuUOKto8UPst3sqwp7IAc8jEMJge4J5DQThgUU+ZyR1wFQN7jqyLNEmxBwlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KmeTC5Bu; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CB96B203E3AC;
-	Wed,  8 Jan 2025 14:21:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB96B203E3AC
+	by linux.microsoft.com (Postfix) with ESMTPSA id 15BE1203E3AD;
+	Wed,  8 Jan 2025 14:21:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 15BE1203E3AD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1736374900;
-	bh=vwwWa71Zd50P34+bo52kV00/vqPmYY6R52Sz0B4X140=;
+	bh=NNIK9O8tqPQmhbHWuF6fEy3lgReXdhCmNwdOmKsHi4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qKXkSIBJNQYru0xoUE9y20f8XCr+s5p4r4lPYGKEf2WjCw+2EHWicqnW3v6VUzBz4
-	 r+LAHql86rPrRUTPrUuOzveE3/VIkbxfjFyoLtyl+GLhvM/P2Ww6aEhCXS17t+aIJo
-	 FnDnj/dYQrbzBpOgkuBdNTQ2y4Nk595LA3o43NQQ=
+	b=KmeTC5Bu1+peWxH1qSNI3/I7fjGx6I6L+8STPiFruOATe7trPRDIxHphXpiP0pajU
+	 J1zDVQsYiO9N3lS7gQwsdIDUdDGYUJovZRLzxRJwjzU5P+xYX1s0KJdsGs6vFVK11Y
+	 gzQzQR1iV9oE9A9I+WzMTfZhtjTgssidmFWCkZDA=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: hpa@zytor.com,
 	kys@microsoft.com,
@@ -62,9 +62,9 @@ Cc: apais@microsoft.com,
 	ssengar@microsoft.com,
 	sunilmut@microsoft.com,
 	vdso@hexbites.dev
-Subject: [PATCH v6 1/5] hyperv: Define struct hv_output_get_vp_registers
-Date: Wed,  8 Jan 2025 14:21:34 -0800
-Message-Id: <20250108222138.1623703-2-romank@linux.microsoft.com>
+Subject: [PATCH v6 2/5] hyperv: Fix pointer type in get_vtl(void)
+Date: Wed,  8 Jan 2025 14:21:35 -0800
+Message-Id: <20250108222138.1623703-3-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250108222138.1623703-1-romank@linux.microsoft.com>
 References: <20250108222138.1623703-1-romank@linux.microsoft.com>
@@ -76,82 +76,49 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is no definition of the output structure for the
-GetVpRegisters hypercall. Hence, using the hypercall
-is not possible when the output value has some structure
-to it. Even getting a datum of a primitive type reads
-as ad-hoc without that definition.
+Commit bc905fa8b633 ("hyperv: Switch from hyperv-tlfs.h to hyperv/hvhdk.h")
+changed the type of the output pointer to `struct hv_register_assoc` from
+`struct hv_get_vp_registers_output`. That leads to an incorrect computation,
+and leaves the system broken.
 
-Define struct hv_output_get_vp_registers to enable using
-the GetVpRegisters hypercall. Make provisions for all
-supported architectures. No functional changes.
+Use the correct pointer type for the output of the GetVpRegisters hypercall.
 
 Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- include/hyperv/hvgdk_mini.h | 41 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/x86/hyperv/hv_init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index db3d1aaf7330..4fffca9e16df 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -1068,6 +1068,35 @@ union hv_dispatch_suspend_register {
- 	} __packed;
- };
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 9e5e8328df6b..f82d1aefaa8a 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -416,13 +416,13 @@ static u8 __init get_vtl(void)
+ {
+ 	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
+ 	struct hv_input_get_vp_registers *input;
+-	struct hv_register_assoc *output;
++	struct hv_output_get_vp_registers *output;
+ 	unsigned long flags;
+ 	u64 ret;
  
-+union hv_arm64_pending_interruption_register {
-+	u64 as_uint64;
-+	struct {
-+		u64 interruption_pending : 1;
-+		u64 interruption_type: 1;
-+		u64 reserved : 30;
-+		u64 error_code : 32;
-+	} __packed;
-+};
-+
-+union hv_arm64_interrupt_state_register {
-+	u64 as_uint64;
-+	struct {
-+		u64 interrupt_shadow : 1;
-+		u64 reserved : 63;
-+	} __packed;
-+};
-+
-+union hv_arm64_pending_synthetic_exception_event {
-+	u64 as_uint64[2];
-+	struct {
-+		u8 event_pending : 1;
-+		u8 event_type : 3;
-+		u8 reserved : 4;
-+		u8 rsvd[3];
-+		u64 context;
-+	} __packed;
-+};
-+
- union hv_x64_interrupt_state_register {
- 	u64 as_uint64;
- 	struct {
-@@ -1103,8 +1132,20 @@ union hv_register_value {
- 	union hv_explicit_suspend_register explicit_suspend;
- 	union hv_intercept_suspend_register intercept_suspend;
- 	union hv_dispatch_suspend_register dispatch_suspend;
-+#ifdef CONFIG_ARM64
-+	union hv_arm64_interrupt_state_register interrupt_state;
-+	union hv_arm64_pending_interruption_register pending_interruption;
-+#endif
-+#ifdef CONFIG_X86
- 	union hv_x64_interrupt_state_register interrupt_state;
- 	union hv_x64_pending_interruption_register pending_interruption;
-+#endif
-+	union hv_arm64_pending_synthetic_exception_event pending_synthetic_exception_event;
-+};
-+
-+/* NOTE: Linux helper struct - NOT from Hyper-V code. */
-+struct hv_output_get_vp_registers {
-+	DECLARE_FLEX_ARRAY(union hv_register_value, values);
- };
+ 	local_irq_save(flags);
+ 	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+-	output = (struct hv_register_assoc *)input;
++	output = (struct hv_output_get_vp_registers *)input;
  
- #if defined(CONFIG_ARM64)
+ 	memset(input, 0, struct_size(input, names, 1));
+ 	input->partition_id = HV_PARTITION_ID_SELF;
+@@ -432,7 +432,7 @@ static u8 __init get_vtl(void)
+ 
+ 	ret = hv_do_hypercall(control, input, output);
+ 	if (hv_result_success(ret)) {
+-		ret = output->value.reg8 & HV_X64_VTL_MASK;
++		ret = output->values[0].reg8 & HV_X64_VTL_MASK;
+ 	} else {
+ 		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
+ 		BUG();
 -- 
 2.34.1
 
