@@ -1,102 +1,228 @@
-Return-Path: <linux-hyperv+bounces-3617-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3618-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86E13A0645B
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 19:29:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9639A0652D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 20:17:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0F583A6A1E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 18:29:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ECCD3A6787
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jan 2025 19:17:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C32200138;
-	Wed,  8 Jan 2025 18:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20CC51AA1E4;
+	Wed,  8 Jan 2025 19:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mYOvjifL"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VTQS1N17"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82EA315853B;
-	Wed,  8 Jan 2025 18:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E80C86333;
+	Wed,  8 Jan 2025 19:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736360970; cv=none; b=BYwyAm/aWbWt6oXRfnAIgZwVJwLl51Ww22MDudYAHIhe8CDezrtT/A/0JCPmDDIq8ejLNUFIa6OMJwi6mhMts7F7ERoafO4+R1Q6JN3B+TSDMBFsbWoAWa9R5MrDWGN+LcIX7XDP1Pj8Xh4QyDQ+BgIH0fUVk96cRAhDimedFIw=
+	t=1736363832; cv=none; b=ESMAL/p7FE/qL334IyzXJLZTsRlUq92r2BLzEtv+QHT/nYF6DZs5q/KWea+8JgMYLLpafwzG3mmoGvOqI+AtNXqvH7ySKXAE9vg7+tizB4RLUJhxtLS0euRpR0YRoiRyfJvs8XIFXq7zZFqAkbEONKWyw73u+qLTqpkORLhjGNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736360970; c=relaxed/simple;
-	bh=oCxzLWoqtCyQWuL7I1iXSvjWc9RlbCLYYteK6nu/N8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AewS6J+QpXK/UlMtOuYPJpVaKoCHHjRCOczJgByY2pTh0HjPNMoxv/Y4Sq5YM/ia7/2kyUP/oiBZKSRp6xb994Wxms+iC3l9J/bEOVME49nmgWDeO68X8yeHOmsmXwy90lOxx9mdLGmYkvhSwu/obXE/C9a7EjXw0uVTUkrQwEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mYOvjifL; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1736363832; c=relaxed/simple;
+	bh=UCMxhQrb8LyxwmfBY69p6d9Ip/MkSK2afFUTi3tEabw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzsE1dJ+umwJoSXaCX/nKR2Ua+YZnoYCFu3bEkcBmctChgfD4pGyUOeckbAMlnPE+44SX+oDg78Zf/HIUsMux/RuSIz26rGKJu8jNTNytA5NRAm8mTUnFyBzHwsGlO2BLKyxNhsLBF/CVWAzMFfzZw7P0V8BhjJX3aa5lNRu0fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VTQS1N17; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E0695203E3A5;
-	Wed,  8 Jan 2025 10:29:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E0695203E3A5
+Received: from skinsburskii. (c-98-225-44-166.hsd1.wa.comcast.net [98.225.44.166])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8EADC203E3A8;
+	Wed,  8 Jan 2025 11:17:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8EADC203E3A8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1736360968;
-	bh=I5x2oV/2iEO1YfTd2I3H/oL38SZl00DQEaYeTv/rG1o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mYOvjifLHImCvJl+EQ1ZyDpvmdJadQivvLMbsupCDOinycK3v0fi4FlMHGfransSa
-	 AwekNBoYyemI9doI0uLC01mtNFehvlsmV2LBmAGMRDeLkKW9i/25zrdd3R9VI3i6ln
-	 D3z+n4y8lCF8Xne50QMTKG1t5ZU6Nt08uUUCzAxc=
-Message-ID: <c900e377-be7d-4a41-afd9-000d956d9eeb@linux.microsoft.com>
-Date: Wed, 8 Jan 2025 10:29:27 -0800
+	s=default; t=1736363830;
+	bh=oe6OdxudYks4LimCDKVpbUlJsYXW1xpE2YbsJPFqa7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VTQS1N17lFRBHU2xCpRtjUdsVTwQ+BypxS08BokziB3xBiJXciWd0X78smaZfv7MP
+	 sllBxPU6TqDZc2Lqa55oBfE43QXmyuqH0e6oOD5GcYwWUsyD9IqKzAu5+qjT0vBqH+
+	 mIdbv6XXOX7Ke7FPKdK3HcZtklxd3KcQGOA79Cxk=
+Date: Wed, 8 Jan 2025 11:17:07 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: hpa@zytor.com, kys@microsoft.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	eahariha@linux.microsoft.com, haiyangz@microsoft.com,
+	mingo@redhat.com, mhklinux@outlook.com,
+	nunodasneves@linux.microsoft.com, tglx@linutronix.de,
+	tiala@microsoft.com, wei.liu@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
+	ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH v5 3/5] hyperv: Enable the hypercall output page for the
+ VTL mode
+Message-ID: <20250108191707.GA120@skinsburskii.>
+References: <20241230180941.244418-1-romank@linux.microsoft.com>
+ <20241230180941.244418-4-romank@linux.microsoft.com>
+ <20250103192002.GA22059@skinsburskii.>
+ <24594814-6b31-4dc9-83c3-2bafbd14e819@linux.microsoft.com>
+ <20250106171114.GA18270@skinsburskii.>
+ <a1577153-95c0-4791-8f6a-0ec00fae48f7@linux.microsoft.com>
+ <20250106193248.GB18346@skinsburskii.>
+ <3c90bc0f-be28-4f10-8057-be5e780c5a24@linux.microsoft.com>
+ <20250107191848.GA24369@skinsburskii.>
+ <17dfb71a-119c-4906-bc22-4f65fb28676b@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] hyperv: Define struct hv_output_get_vp_registers
-To: Michael Kelley <mhklinux@outlook.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "tiala@microsoft.com" <tiala@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "ssengar@microsoft.com" <ssengar@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "vdso@hexbites.dev" <vdso@hexbites.dev>
-References: <20241230180941.244418-1-romank@linux.microsoft.com>
- <20241230180941.244418-2-romank@linux.microsoft.com>
- <SN6PR02MB4157F8C28BD92F36B27C9032D4102@SN6PR02MB4157.namprd02.prod.outlook.com>
- <7a60c96c-2fc1-411b-ac08-2b69f507af4e@linux.microsoft.com>
- <BN7PR02MB41482C89094DBC3E811C5918D4122@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <BN7PR02MB41482C89094DBC3E811C5918D4122@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <17dfb71a-119c-4906-bc22-4f65fb28676b@linux.microsoft.com>
 
-
-
-On 1/8/2025 10:22 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, January 8, 2025 9:58 AM
->>
->> On 1/6/2025 9:37 AM, Michael Kelley wrote:
->>> From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, December 30,
-
-Thanks Michael and Nuno for your indispensable help! I'll fix the
-the patch as suggested then.
-
+On Tue, Jan 07, 2025 at 03:11:15PM -0800, Roman Kisel wrote:
 > 
-> Michael
+> 
+> On 1/7/2025 11:18 AM, Stanislav Kinsburskii wrote:
+> > On Mon, Jan 06, 2025 at 01:07:25PM -0800, Roman Kisel wrote:
+> > 
+> 
+> [...]
+> 
+> > My point is that the proposed fix looks more like an Underhill-tailored
+> > bandage and doesn't take the needs of other stake holders into
+> > consideration.
+> The patch takes as much into consideration as present in the hyperv-next
+> tree. Working on the open-source project seems to be harder otherwise.
+> A bandage, or not, that's a matter of opinion. There's a been a break,
+> here's the bandage.
+> 
+> > 
+> > What is the urgency in merging of this particular change?
+> 
+> The get_vtl function is broken thus blocking any further work on
+> upstreaming VTL mode patches, ARM64 and more. That's not an urgent
+> urgency where customers are in pain, more like the urgency of needing
+> to take the trash out, and until that happens, continuing inhaling the
+> fumes.
+> 
+> The urgency of unblocking is to continue work on proposing VTL mode
+> patches not to carry lots of out-of-tree code in the fork.
+> 
+> There might be a future where the Hyper-V code offers an API surface
+> covering needs of consumers like dom0 and VTLs whereby they maybe can
+> be built as an out-of-tree modules so the opinions wouldn't clash as
+> much.
+> 
+> Avoiding using the output hypercall page leads to something like[1]
+> and it looks quite complicated although that's the bare bones, lots
+> of notes.
+> 
 
--- 
-Thank you,
-Roman
+How is this related to the original discussion?
+My concern was about the piece allocating of the output page guarded by
+the VTL config option.
 
+Thanks,
+Stas
+
+> [1]
+> 
+> /*
+>  * Fast extended hypercall with 20 bytes of input and 16 bytes of
+>  * output for getting a VP register.
+>  *
+>  * NOTES:
+>  *  1. The function is __init only atm, so the XMM context isn't
+>  *     used by the user mode.
+>  *  2. X86_64 only.
+>  *  3. Fast extended hypercalls may use XMM0..XMM6, and XMM is
+>  *     architerctural on X86_64 yet the support should be enabled
+>  *     in the CR's. Here, need RDX, R8 and XMM0 for input and RDX,
+>  *     R8 for output
+>  *  4. No provisions for TDX and SEV-SNP for the sake of simplicity
+>  *     (the hypervisor cannot see the guest registers in the
+>  *     confidential VM), would need to fallback.
+>  *  5. The robust implementation would need to check if fast extended
+>  *     hypercalls are available by checking the synthehtic CPUID leaves.
+>  *     A separate leaf indicates fast output support.
+>  *     It _almost_ certainly has to be, unless somehow disabled, hard
+>  *     to see why that would be needed.
+>  */
+> struct hv_u128 {
+> 	u64 low_part;
+> 	u64 high_part;
+> } __packed;
+> 
+> static __init u64 hv_vp_get_register_xfast(u32 reg_name,
+> 		struct hv_u128 *value)
+> {
+> 	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS |
+> 					HV_HYPERCALL_FAST_BIT;
+> 	unsigned long flags;
+> 	u64 hv_status;
+> 
+> 	union {
+> 		struct hv_get_vp_registers_input input;
+> 		struct {
+> 			u64 lo;
+> 			u64 hi;
+> 		} __packed as_u128;
+> 	} hv_input;
+> 	register u64 rdx asm("rdx");
+> 	register u64 r8 asm("r8");
+> 	register u64 r12 asm("r12");
+> 
+> 	local_irq_save(flags);
+> 
+> 	hv_input.as_u128.lo = hv_input.as_u128.hi = 0;
+> 	hv_input.input.header.partitionid = HV_PARTITION_ID_SELF;
+> 	hv_input.input.header.vpindex = HV_VP_INDEX_SELF;
+> 	hv_input.input.header.inputvtl = 0;
+> 
+> 	rdx = hv_input.as_u128.lo;
+> 	r8 = hv_input.as_u128.hi;
+> 	r12 = reg_name;
+> 
+> 	__asm__ __volatile__(
+> 			"subq		$16, %%rsp\n"
+> 			"movups		%%xmm0, 16(%%rsp)\n"
+> 			"movd		%%r12, %%xmm0\n"
+> 			CALL_NOSPEC
+> 			"movups		16(%%rsp), %%xmm0\n"
+> 			"addq		$16, %%rsp\n"
+> 			: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> 			"+c" (control), "+r" (rdx), "+r" (r8)
+> 			: THUNK_TARGET(hv_hypercall_pg), "r"(r12)
+> 			: "cc", "memory", "r9", "r10", "r11");
+> 
+> 	if (hv_result_success(hv_status)) {
+> 		value->low_part = rdx;
+> 		value->high_part = r8;
+> 	}
+> 
+> 	local_irq_restore(flags);
+> 	return hv_status;
+> }
+> 
+> #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+> u8 __init get_vtl(void)
+> {
+> 	struct hv_u128 reg_value;
+> 	u64 ret = hv_vp_get_register_xfast(HV_REGISTER_VSM_VP_STATUS, &reg_value);
+> 
+> 	if (hv_result_success(ret)) {
+> 		ret = reg_value.low_part & HV_VTL_MASK;
+> 	} else {
+> 		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
+> 		BUG();
+> 	}
+> 
+> 	return ret;
+> }
+> #endif
+> 
+> > 
+> > Thanks,
+> > Stas
+> 
+> -- 
+> Thank you,
+> Roman
+> 
 
