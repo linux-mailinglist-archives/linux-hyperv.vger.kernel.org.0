@@ -1,94 +1,95 @@
-Return-Path: <linux-hyperv+bounces-3644-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3645-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10169A07C75
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 16:52:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A6BDA07EAF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 18:26:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 267B2188C787
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 15:52:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03B04188D05F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 17:26:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B073521D5BF;
-	Thu,  9 Jan 2025 15:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 379B518C03A;
+	Thu,  9 Jan 2025 17:26:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9BSlQcx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TxoWZZK/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335FF14D6F9;
-	Thu,  9 Jan 2025 15:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D62A6B644;
+	Thu,  9 Jan 2025 17:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736437915; cv=none; b=d9ztAOH0Zjh0rdtneZoSzI5RZMwyxkw3a+pN0Cr0ABmJC3Ho39865ogbb+lkmcGeTvq5Gah6lDuFTbPSv4ylR6yWormBwItXVUkr9vR/maMRRDScB/X/fzncEbbiShMkk0a+hHdiK1EHKwZMWSLEZTvrGwQ461ddE55WVV5QreU=
+	t=1736443560; cv=none; b=fO6lbfhChgP2b23XUOi9QzTE7NZybsFzCGEHYVmm3Gr/Qlk/zVz1+WaYcTrQqqDJkcZgst7rAX/6e7pywq1B7P92kxoAeOG5WhX236C1H7Bpla7dSDY7YvsCH9rJT+jng0CN2k7wWxcl1HkSUhG1XMHyb/OAN8dO4lvO8SwxHjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736437915; c=relaxed/simple;
-	bh=4PNW5U1RCpwSI6ed5qCmkDfjxSB39XjXAAnaje7o+L4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YgSL0Pd1nJaFdW1GYTicH/Ycjm7wc6v4pyxm1j4g2r5erQdKrVE5oZ1LR1g8lyXY1/k4fS1BxUXKDh7bo6FvvhgUXId5cuRly7PLukaUcgfAOCrvM5b6uc2hYuvspIeaWnmbm4XPghEv2r3h9eDCfNT3Gr4OaqAfx1vGvdzM2aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9BSlQcx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E5AC4CED2;
-	Thu,  9 Jan 2025 15:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736437915;
-	bh=4PNW5U1RCpwSI6ed5qCmkDfjxSB39XjXAAnaje7o+L4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F9BSlQcxUU/kvrDz8ezVoOO+s/YBhBI99DBGbLdRbteRKBcsdBNKhfA6NIrkjDYkC
-	 9GtrmQ7VK0dv7qDBCLFFprwhk5flkxmRl+V2FYyKWlDlaQk5dy/y43RuJc1rAObSVE
-	 sl7FszvwCJ3ZWmJ3LwoRXHehBmq48TqQ4/nOFcPMPAGWGxlPfP39p5Evt4580Qxykh
-	 T6IreW5JxdI40u2aiQRRvDdYRS5jpPoTlnD0T3RTnaN10Mg41YwaqUaSESqRhF+j/w
-	 8yWPU7z9RguVCtFoKzz3OeFzncyxzknkL/0P6P7tlQkSO/uCgw6CAfTy6ch0j+etXR
-	 6KWhdTwfzx9bw==
-Date: Thu, 9 Jan 2025 07:51:54 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
-	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-	io-uring@vger.kernel.org, bpf@vger.kernel.org,
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-Message-ID: <20250109155154.GP1306365@frogsfrogsfrogs>
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+	s=arc-20240116; t=1736443560; c=relaxed/simple;
+	bh=oSJMfCh8QD5wBOTnKmVSdm6yxMfWPoCebUWwuh0fIPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSZPS89fJTD8xfRdeRUiiG7pvy043axhpMN8octx0yEEtacNmpq8iloKViYUUPomfL6IxIae5xvUlVeUEvwqgv/GKpAEKU6qxgC4irQkAVXAP4Kkhu0p6JGJdnY3r3Gwl+BF9bBLlbPi0+2n35kdcAqI5uRCaCwYphid+lp3TVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TxoWZZK/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 30D3A203E39C;
+	Thu,  9 Jan 2025 09:25:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 30D3A203E39C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1736443558;
+	bh=Bk0g/Itf3/AUPhA9loelTm60WmlBb0ODZckcENQI22I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TxoWZZK/g5MUAtMEJzezE1AGY9Ur/YIutufi8GQMEwXqlhkB1bcsVimaBG+QYAMIS
+	 Gi2iecwiuURIn+INk3S2lakNh06Ygn09FTXtvPpD8mwLNcbP0jUiedOEsVrzzg0k39
+	 KpAGlv6ZzXrMQno35alyJyHCe7BJwsKyb/FncfuU=
+Message-ID: <2102df2f-117c-4c35-b727-cd9865c0e31d@linux.microsoft.com>
+Date: Thu, 9 Jan 2025 09:25:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/5] hyperv: Define struct hv_output_get_vp_registers
+To: Wei Liu <wei.liu@kernel.org>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: hpa@zytor.com, kys@microsoft.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, decui@microsoft.com,
+ eahariha@linux.microsoft.com, haiyangz@microsoft.com, mingo@redhat.com,
+ mhklinux@outlook.com, tglx@linutronix.de, tiala@microsoft.com,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, ssengar@microsoft.com,
+ sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20250108222138.1623703-1-romank@linux.microsoft.com>
+ <20250108222138.1623703-2-romank@linux.microsoft.com>
+ <d5fb5c9b-a477-4043-8438-aff29dbd96bb@linux.microsoft.com>
+ <Z39jvq4CsBjurJ1v@liuwe-devbox-debian-v2>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <Z39jvq4CsBjurJ1v@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 09, 2025 at 02:16:39PM +0100, Joel Granados wrote:
-> Add the const qualifier to all the ctl_tables in the tree except the
-> ones in ./net dir. The "net" sysctl code is special as it modifies the
-> arrays before passing it on to the registration function.
+
+
+On 1/8/2025 9:50 PM, Wei Liu wrote:
+> On Wed, Jan 08, 2025 at 03:25:22PM -0800, Nuno Das Neves wrote:
+>> On 1/8/2025 2:21 PM, Roman Kisel wrote:
+
+[...]
+
+>>
 > 
-> Constifying ctl_table structs will prevent the modification of
-> proc_handler function pointers as the arrays would reside in .rodata.
-> This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
-> constify the ctl_table argument of proc_handlers") constified all the
-> proc_handlers.
+> I can fix this when I commit the change . This patch will be folded into
+> your old one anyway.
+> 
+Nuno, thank you very much for spotting that! Wei, appreciate that!
+Didn't mean to create more work for you, sorry about that.
 
-Sounds like a good idea,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org> # xfs
+> Thanks,
+> Wei.
 
---D
+-- 
+Thank you,
+Roman
+
 
