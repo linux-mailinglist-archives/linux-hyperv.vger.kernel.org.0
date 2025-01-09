@@ -1,145 +1,125 @@
-Return-Path: <linux-hyperv+bounces-3637-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3638-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C734FA06F24
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 08:35:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A853FA0728E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 11:15:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA9FC160BB3
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 07:35:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 781C91888EDA
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jan 2025 10:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ACF615E97;
-	Thu,  9 Jan 2025 07:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HTxR7A85"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA25F215772;
+	Thu,  9 Jan 2025 10:15:24 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE1308F5E;
-	Thu,  9 Jan 2025 07:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF862040B6;
+	Thu,  9 Jan 2025 10:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736408152; cv=none; b=k/gdBdXsykuKOouGjwV/hj4UkymYPIFAR7jdjC6zWGC5YzQPRX/h2wLzDunbI4FZncQfSnDWyQgfEBcDYMJLtxMg1w58n/ajEWNEjXu1C1e3iL7iAbsOZTi9I5Wyg4EZsTgBk9q/N9xFAN2ASrOHvlrnAyQ+NpjW41qoHWRSnC4=
+	t=1736417724; cv=none; b=S7G/OhwYrrvO53BPL4ClsBXjdGWD2jlLRUQA7wphhEEWEzc5dmyfM8UbDZpuwHgDOCrrBVg0Ag6UgJzw15oHOUTdULkO0RNQDURqYUAjPuVGfoOnpf5cuCQU+VoHOeqEGFj/juPd0v6pFz4RoUoBNvfqwn1MKIqj21vGF0VL15U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736408152; c=relaxed/simple;
-	bh=NNJczAoJ6iMg4JSVikEpcILuAdnfMOMa+TvC5vWjn08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=L2BTyrkHlMEOg74shbBP8uVodG8rvRo86BfL81JHgjPdhjmet/2Ok6/I7qDG/kGff6E9wPFJ+W5vVaX8dAytiFG+BNi1HugdKjATz+Sjv+0lkJ+KuqL3iUZxBAkJRxqQ9zuQlwrhjnPGaXY61cqlUZUpS83VHg4uTkG2XtkPmyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HTxR7A85; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.125] (c-73-225-18-138.hsd1.wa.comcast.net [73.225.18.138])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 03F58203E3B3;
-	Wed,  8 Jan 2025 23:35:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 03F58203E3B3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1736408150;
-	bh=NmGS8xaQZ/+ESHibo7dWgg6NDOT91PqmdmxXxmqTP1U=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=HTxR7A85N8xIDeb8UUYLUReQjewdwQ4C6BcJKyt6LS6fO+sJzr4ryOuAGpypVjiMe
-	 X9ct4M2ChMlwW+PizYrDE1EYocWpbsI5TP0dwjUhhvuYgcEcQsqWAkZ7ZgnDKbYyFt
-	 fwcuQJkls0FnJ6MBTNbpgdEDe6dEFFlD4TCZ8YsQ=
-Message-ID: <ca5dfdbc-4d55-4f5e-921d-452e152454cc@linux.microsoft.com>
-Date: Wed, 8 Jan 2025 23:35:48 -0800
+	s=arc-20240116; t=1736417724; c=relaxed/simple;
+	bh=311/ikchyM8xu+Txmxl7n+xLSLICgYUMKH6CYUynGt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzEeqm5KlLAACZ8aytOWYsPlUWOeigbtASpgEQSXbxC8mPQAuuUH2AvxNSG/zpCRltCQgT8lKXgSZV/MBQQvcy9dWwFbTEeOxewWCtuyvGPdE9sHcRzTEGHvzmD0dQltmhSM7lDX1wbz7xhTsuiDIPfnrelAcRCeU2zGdbrVJX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d3d2a30afcso1089405a12.3;
+        Thu, 09 Jan 2025 02:15:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736417720; x=1737022520;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JDRp8Y48+Qc4viK5TPOssGsm1V9bKxfNVfJifzYZl7Q=;
+        b=hd0cL/LDbRSXqc/LaB3LgD1e02AO443WYztGV9uBtO+WTmyo4L37lwh5gaaCInQAI0
+         n5y7k/prpyIjY1CYXN82QoRQl33AIp5NPw2M3ICSGjL00aqk12qqKtK9p6THQVfDMfZw
+         pjewrvLek24TocitEfUd2iVcU5Pxwa1FkoMMOyPSy+aOU32nZv4z68V/zU25JSJ4KsEX
+         LWmFTpAIqq4j4AT8sPj9Nsv+T2GjTmdknEgmWZhHzhj4wVncr7BIsDrOvj0UqOwWcYYk
+         lI6IySEv8GRdw6UstLJEmV+1/wJt4oBxNf3Kw5G6V721hC0gDUdjajkHHkFqkiZYih9O
+         GeUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX9KNwggfUREEfafe7qpXbmWfemt/hSeNVAy6ZYWy1SrVGs4NNaJ4JkIKSgo4n4snjm4cHa2DlWt4VBps=@vger.kernel.org, AJvYcCV/c2STLKll8L/nzQZ/Os1xrfRS+rxvNKOZsbV5OAjOe3+q+W8aJS3k6hr4yI5lbWbkf5csRJaguLJLsIjh@vger.kernel.org, AJvYcCWCV0o14gWl9ARtl/w998eLJm6Ujs86rRwIetVnc7ROJO9n2De/aeiTH38d8lpYuzab1xwcJqS6@vger.kernel.org
+X-Gm-Message-State: AOJu0YylqUM+TPiE+ZeAdrzFUo5WQqDBUr4C23Bq+TMk/E5X3Z2/bslz
+	sZMBIsqROgokA4o78Bcp71V/G3dg8r+ZdUCTaSFuEVZrcFQe7CV6
+X-Gm-Gg: ASbGncuMVOoJJ8AjdDaMIkrB7U8hafTmX/J0n3ZiHYEVU9UnmLpGwI4ZcnZkFODNhS5
+	p7gakzgTkFNfJ7Mjw4hMGtigFX/5vGpM6JG58+dh0RU1B+jzRpai+XiWtoBHFlBJxHzVxxgb2C8
+	EC/8Tr+WjbVHvQNs9jH3sNvf6nPhCAB6DZR5lAXEAAIqIuzuz/2lyL/KnTeOjxX7S1FmLlAC9ZZ
+	2KsMLVQsU7UEymExPTIPap8lThB9mQBb3bkltTkIzg2ovM=
+X-Google-Smtp-Source: AGHT+IFlrf4GxaUQV5QxSnOq4UImdTGUQj634dbvUjEFoa3RwIk41IIuT3auoj1ux1Aj70DsJwOnUg==
+X-Received: by 2002:a05:6402:51cf:b0:5d1:22c2:6c56 with SMTP id 4fb4d7f45d1cf-5d972e1be28mr5504022a12.17.1736417720392;
+        Thu, 09 Jan 2025 02:15:20 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d99046dd55sm433118a12.54.2025.01.09.02.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 02:15:19 -0800 (PST)
+Date: Thu, 9 Jan 2025 02:15:17 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"saeedm@nvidia.com" <saeedm@nvidia.com>,
+	"tariqt@nvidia.com" <tariqt@nvidia.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Graf <tgraf@suug.ch>, Tejun Heo <tj@kernel.org>,
+	Hao Luo <haoluo@google.com>, Josh Don <joshdon@google.com>,
+	Barret Rhoden <brho@google.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rhashtable: Fix potential deadlock by moving
+ schedule_work outside lock
+Message-ID: <20250109-marigold-bandicoot-of-exercise-8ebede@leitao>
+References: <20241128-scx_lockdep-v1-1-2315b813b36b@debian.org>
+ <Z1rYGzEpMub4Fp6i@gondor.apana.org.au>
+ <Z2aFL3dNLYOcmzH3@gondor.apana.org.au>
+ <20250102-daffy-vanilla-boar-6e1a61@leitao>
+ <SN6PR02MB41572415707F0FA6D9A61247D4132@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Drivers: hv: Allow single instance of hv_util devices
-To: Wei Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>,
- Sonia Sharma <sosha@linux.microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Sonia Sharma <Sonia.Sharma@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <1734738938-21274-1-git-send-email-sosha@linux.microsoft.com>
- <SN6PR02MB41579A7AA47BC6751F57EC72D4082@SN6PR02MB4157.namprd02.prod.outlook.com>
- <Z3yK0Ee3eFLocJDW@liuwe-devbox-debian-v2>
- <CH4PR21MB4613241E591ED702A508C35491112@CH4PR21MB4613.namprd21.prod.outlook.com>
-Content-Language: en-US
-From: Sonia Sharma <sosha@linux.microsoft.com>
-In-Reply-To: <CH4PR21MB4613241E591ED702A508C35491112@CH4PR21MB4613.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41572415707F0FA6D9A61247D4132@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Tue, Jan 7, 2025 at 02:00:48PM +0000, Wei Liu wrote:
->   
-> On Sun, Dec 29, 2024 at 06:02:34PM +0000, Michael Kelley wrote:
->> From: Sonia Sharma <sosha@linux.microsoft.com> Sent: Friday, December 20, 2024 3:56 PM
->> > 
->> 
->> Please include the "linux-hyperv@vger.kernel.org" mailing list
->> when submitting patches related to Hyper-V.
->> 
->> > Harden hv_util type device drivers to allow single
->> > instance of the device be configured at given time.
->> >
-> 
-> Why is this needed? What's the problem that this patch is trying to
-> solve?
-> 
->> 
->> I think the reason for this patch needs more explanation. For several
->> VMBus devices, a well-behaved Hyper-V is expected to offer only one
->> instance of the device in a given VM. Linux guests originally assumed
->> that the Hyper-V host is well-behaved, so the device drivers for many
->> of these devices were written assuming only a single instance. But
->> with the introduction of Confidential Computing (CoCo) VMs, Hyper-V
->> is no longer assumed to be well-behaved. If a compromised & malicious
->> Hyper-V were to offer multiple instances of such a device, the device
->> driver assumption about a single instance would be false, and
->> memory corruption could occur, which has the potential to lead to
->> compromise of the CoCo VM. The intent is to prevent such a scenario.
->> 
->> Note that this problem extends beyond just "util" devices. Hyper-V
->> is expected to offer only a single instance of keyboard, mouse, frame
->> buffer, and balloon devices as well. So this patch should be extended
->> to include them as well (and your new function names containing
->> "hv_util" should be adjusted). Interestingly, the Hyper-V keyboard driver
->> does not assume a single instance, so it should be safe regardless. But
->> the mouse, frame buffer, and balloon drivers are not safe.
->> 
->> With this understanding, there are two ways to approach the problem:
->> 
->> 1) Enforce the expectation that a well-behaved Hyper-V only offers a
->> single instance of these VMBus devices. That's the approach that this
->> patch takes.
->> 
->> 2) Update the device drivers to remove the assumption of a single
->> instance. With this approach, if a compromised & malicious Hyper-V
->> were to offer multiple instances, the extra devices might be bogus, 
->> but memory corruption would not occur and the integrity of the
->> CoCo VM should not be compromised. As mentioned above, such
->> is already the case with the keyboard driver.
->> 
->> I've thought about the tradeoffs for the two approaches, and don't
->> really have a strong opinion either way. In some sense, #2 is the
->> more correct approach as ideally device drivers shouldn't make
->> single instance assumptions. But #1 is an easier fix, and perhaps
->> more robust. Other reviewers might have other reasons to prefer
->> one over the other, and have a stronger viewpoint on the tradeoffs.
->> I would be interested in any such comments. But I'm OK with
->> approach #1 unless someone points out a good reason to
->> prefer #2.
-> 
-> #2 is preferred. It is frowned upon to make assumptions that only one
-> instance of a device will be present.
-> 
-> It perhaps takes more work to check and enforce the invariant (as this
-> patch demonstrates) than to just let the device framework handle
-> multiple instances.
-> 
-> Thanks,
-> Wei.
+Hello Michael,
 
-Thanks Michael and Wei for the review.
+On Thu, Jan 09, 2025 at 03:16:03AM +0000, Michael Kelley wrote:
+> From: Breno Leitao <leitao@debian.org> Sent: Thursday, January 2, 2025 2:16 AM
+> > 
+> > On Sat, Dec 21, 2024 at 05:06:55PM +0800, Herbert Xu wrote:
+> > > On Thu, Dec 12, 2024 at 08:33:31PM +0800, Herbert Xu wrote:
+> > > >
+> > > > The growth check should stay with the atomic_inc.  Something like
+> > > > this should work:
+> > >
+> > > OK I've applied your patch with the atomic_inc move.
+> > 
+> > Sorry, I was on vacation, and I am back now. Let me know if you need
+> > anything further.
+> > 
+> > Thanks for fixing it,
+> > --breno
+> 
+> Breno and Herbert --
+> 
+> This patch seems to break things in linux-next. I'm testing with
+> linux-next20250108 in a VM in the Azure public cloud. The Mellanox mlx5
+> ethernet NIC in the VM is failing to get setup.
 
-The intent of the patch is correctly described by Michael. With that, it seems the consensus is to go with approach #2, so I would then work on a new patch series fixing the assumption of singleton driver wherever needed.
+Thanks for reporting the issue. I started rolling this patch to Meta's
+fleet, and we started seeing a similar problem. Altough not fully
+understood yet.
 
-Thank you,
-Sonia
+I would suggest we revert this patch until we investigate further. I'll
+prepare and send a revert patch shortly.
+
+Sorry for the noise,
+--breno
 
