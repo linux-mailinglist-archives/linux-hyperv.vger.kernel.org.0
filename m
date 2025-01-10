@@ -1,65 +1,56 @@
-Return-Path: <linux-hyperv+bounces-3655-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3656-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22F2EA08CE5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 10:51:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4724A08D5A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 11:07:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0D44168A2A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 09:50:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9838167B96
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 10:07:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C927C1C3BE7;
-	Fri, 10 Jan 2025 09:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EEDF209F53;
+	Fri, 10 Jan 2025 10:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="VgjKryuu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC20320C027;
-	Fri, 10 Jan 2025 09:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BAB1C3BE7;
+	Fri, 10 Jan 2025 10:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736502592; cv=none; b=HEUuClzJEDdv5b6Vu/s3h7aYPL62MPcAK2VxLAeAGsgNISTzL/A7u38lYjcBkVSsamQhkyI3D2SdLlyKeFIA4u42n2gjrx6v9N0+H+K4rxpTdpP7rH7EFIfHRxtDEaPN51oxMyKs0B3rVdqXubiNBJzp9I3DtK+oo5KxhNAXTpA=
+	t=1736503647; cv=none; b=rZqxJnnttJhYPE3i5vhVOzQHrC6Kxfsj5ny3n3oCh8jzbMULuerzBRk/MuY0PjH889uLTL5J/7bbkhIclWB+Zby2OgSfS1gnB0WdDEufbwUbfqdVecrxm1TAfcObwuCUCaZ78rnXnir0ccdSPOwQ0ruGeBGZZ0+2G+7rN2wU0WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736502592; c=relaxed/simple;
-	bh=2rD+lCu2Gp5RFsO0IsVqI/M9iitl+rZhcu3l6huKM7M=;
+	s=arc-20240116; t=1736503647; c=relaxed/simple;
+	bh=dt1AY/EUcI/LkiOeEd99oqFeirD8Z1p51c0VfYI7H9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XoZSxBNG6mT87qt14uRsi5kLJ/9IEEJ/0y9dh5tB7UmwkJpKqJaxgDtByBJUKUok16O2dNZijNeBd0wULvkhnHW9nPe2FKmY5f5qD+IA++aw9Oh42A6r+PBgyU9e0TLhwXF4quUeoFFtMRabXPlIqMC2DIGg3oaIF7yzeJxDSZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf8f0ea963so366878366b.3;
-        Fri, 10 Jan 2025 01:49:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736502588; x=1737107388;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O9n8MeFaOr6RLyTqwOgp/AoCJsw1cQ/SCA7gOp5Rsmo=;
-        b=qRIeUUvDGQSrq7qKIwBm3wmGG/h8qNNDyn5AkxU9bPejT/FLRF4MytyjTptJbB8Ryg
-         6Cg8hy4hOTdU5tUU/pbVjwzzPXZnFc9Mmxn6AiRylA8J+nC66odfOaWAztjdebS5TZtA
-         9hKX3jRXZ5+LwoGTBKBWh59eXz6vYXY2ugsvUfOKJ71JcIEa5xSZZ/AOeHAgg2Tv2m9B
-         IwJGs5AZcRM+VBHjbajJtjZaAIJCm2kzLMKbA7zInaVJe3NC46/pSAze27u6ewOwSqVv
-         o8ibo75EtNDwuC3WGxz9XmZj+jzLu97M574gOohdLBmVi470fGCOUH3mQ0FwGZqTBdmr
-         h2Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNZbT7nRqBm332wU4npUkf+JoLzJ6k+Wq4LyhMazbsXz3iuqyyFg38EEMF3Fe9RIu4J/5GQL28uclLwhg=@vger.kernel.org, AJvYcCXdEus/QCWjEG8b2aLEe/FrMHtH1TAGgHEU8CSf8xhLXo4ttCxIHIABVwyE17YlQSivzPDabkuCti9Fm9t0@vger.kernel.org, AJvYcCXsZsOjs1ETCXbh8bzvZbT++OvSijTpViXjBMPURzSycBy4Ffmng0jlSU5UyRFM9HDaIpzoeBn9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhCfQbiCg+htFaVRXFTxO/EFEXVs/ZEYjs9TMYH7/RdIwZI9AA
-	Hk4y+lESf72e/je9PbvVSJehr+FL0dkivgWylXEDI1vx6ahpXwrm
-X-Gm-Gg: ASbGncu5gvvFSjKbMskP+ClPFR7mW96gw2GpSYFsoVO/sTDqFF9EdLpBOc6s+9tJVIK
-	Y5pkjePaObEWf44VeNwDWdb75y4I3wk9AOPlTzdppddNxPpeisYWOSJXc3JKD0bvPQ8pipg5rNg
-	Up8GwvMRzVhYQyFT6S1U1GFJdd9POOchRZpkEZd2vF1g7TeT5Ii3TywlyP4K3TvF6JSfDUwaq8k
-	Aq4K/LKs/am/CSj2a9BMpCgI8DZIbiQb609H6ePfcqdFNQ=
-X-Google-Smtp-Source: AGHT+IGLLpE9LZcuec5DF8MBVB3WHQBa3y6/+HZVbCelFkKJD4s+nOXEcVsaRHGBXVKE8bk+zhJyEg==
-X-Received: by 2002:a17:907:70c:b0:aa6:7d82:5411 with SMTP id a640c23a62f3a-ab2abc6ca52mr920639766b.40.1736502587200;
-        Fri, 10 Jan 2025 01:49:47 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:7::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c95b1cd5sm151560266b.148.2025.01.10.01.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 01:49:46 -0800 (PST)
-Date: Fri, 10 Jan 2025 01:49:44 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HKBNhF9egbjTScwkH1qCacCc8960RIbP8FQMUmWbm+Ven00vrn6OzlBzqz/gd28Ahq/fQqsh/MQBQI19Mow9QhPk7jVAwCy8p5Nj0KkvIB9hMD3eCDZwbSEP3+gUIZr8o2L9GNKoxFRcZI60qgSmIoT/YZd4kAduRxmRDwnnK54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=VgjKryuu; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=RU5zAhLpyIoTLltM8ke6eZyfJkNfQiidKNNojvVMs/A=; b=VgjKryuu9Xhvkvyn1AHQdUMgL0
+	gI2ZCADj6KTOTd8eyPu5TLWcURpF0bcD1iOJig724a2FZdHwOVmK3K+qXoP1VXV+mXi6iqpcfN0Bj
+	2rHng3zhevYuXw+T7MKzOK35jkMnlpG55SmsLDNL7hm4Z39KlmfnIMvV772LEovnLO1dVGpCHFszG
+	xr9EHXUADB19MzN1rQ84NlsB6RX2R7kXUaoz6ZnmIW+2icLRPQi3GY+CmDH+u4C9QHuhSpUJsUO9v
+	ch1LqAObHMgthiOAKGgOLTYinRRqcdC+TjcE6Or1mJqiPaNA9Ne5UeeLZhTLgKagLoqPYg6fqyQUu
+	qTp3V6ZQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tWBi7-007nyb-09;
+	Fri, 10 Jan 2025 18:07:08 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 10 Jan 2025 18:07:07 +0800
+Date: Fri, 10 Jan 2025 18:07:07 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Breno Leitao <leitao@debian.org>
 Cc: Michael Kelley <mhklinux@outlook.com>,
 	"saeedm@nvidia.com" <saeedm@nvidia.com>,
 	"tariqt@nvidia.com" <tariqt@nvidia.com>,
@@ -72,7 +63,7 @@ Cc: Michael Kelley <mhklinux@outlook.com>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] rhashtable: Fix potential deadlock by moving
  schedule_work outside lock
-Message-ID: <20250110-diligent-woodpecker-of-promotion-3cbcb1@leitao>
+Message-ID: <Z4DxS37yJ2EfI_rS@gondor.apana.org.au>
 References: <20241128-scx_lockdep-v1-1-2315b813b36b@debian.org>
  <Z1rYGzEpMub4Fp6i@gondor.apana.org.au>
  <Z2aFL3dNLYOcmzH3@gondor.apana.org.au>
@@ -80,6 +71,7 @@ References: <20241128-scx_lockdep-v1-1-2315b813b36b@debian.org>
  <SN6PR02MB41572415707F0FA6D9A61247D4132@SN6PR02MB4157.namprd02.prod.outlook.com>
  <20250109-marigold-bandicoot-of-exercise-8ebede@leitao>
  <Z4DoFYQ3ytB-wS3-@gondor.apana.org.au>
+ <20250110-diligent-woodpecker-of-promotion-3cbcb1@leitao>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -88,35 +80,24 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z4DoFYQ3ytB-wS3-@gondor.apana.org.au>
+In-Reply-To: <20250110-diligent-woodpecker-of-promotion-3cbcb1@leitao>
 
-Hello Herbet,
+On Fri, Jan 10, 2025 at 01:49:44AM -0800, Breno Leitao wrote:
+>
+> That is what I though originally as well, but I was not convinced. While
+> reading the code, I understood that, if new_tbl is not NULL, then
+> PTR_ERR(data) will be -ENOENT.
+> 
+> In which case `net_tbl` will not be NULL, and PTR_ERR(data) != -ENOENT?
 
-On Fri, Jan 10, 2025 at 05:27:49PM +0800, Herbert Xu wrote:
+The bug arises when an insertion succeeds.  So new_tbl is NULL.
+The original value of data should have been -ENOENT, however,
+it gets overwritten after rhashtable_insert_one (data is now
+NULL).
 
-> Sorry, I think it was my addition that broke things.  The condition
-> for checking whether an entry is inserted is incorrect, thus resulting
-> in an underflow of the number of entries after entry removal.
-
-That is what I though originally as well, but I was not convinced. While
-reading the code, I understood that, if new_tbl is not NULL, then
-PTR_ERR(data) will be -ENOENT.
-
-In which case `net_tbl` will not be NULL, and PTR_ERR(data) != -ENOENT?
-
-Thanks for solving it.
-
-> Please test this patch:
-
-I don't have an easy reproducer yet, but, I will get this patch in ~50
-hosts and see if any of them misbehave during the weekend.
-
-Misbehaving in my case is strongly associate with messages like the
-following being printed:
-
-	kobject_uevent: unable to create netlink socket!
-
-
-Thanks
---breno
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
