@@ -1,401 +1,218 @@
-Return-Path: <linux-hyperv+bounces-3665-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3666-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C10DA09D15
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 22:19:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 503E5A09D25
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 22:24:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B44F16A5D5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 21:19:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6156E3A88FF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2025 21:24:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B8220897F;
-	Fri, 10 Jan 2025 21:18:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E8620897F;
+	Fri, 10 Jan 2025 21:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKkb3zEE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S1OlE7EV";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="flZBvWTg"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF60C208986;
-	Fri, 10 Jan 2025 21:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736543901; cv=none; b=XUN4tr9EyGs9tCgOuVuOnaHAdVXYJBL1FWqmopOf57eJcU2vVdB4PIzxEPefN7Ygiu4S8D2+JqwLNIu4ftmknxUK+9Wb7EYdlaBY+Zwb3m1n4mINNezXxbDlk49GmseMZnnTFvUA3pk685SoLHeQnSi83LcpGMQ/bnvtWBdvmRM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736543901; c=relaxed/simple;
-	bh=k/cWx3A8tZkBkV0S+P90DTFz/tdSr2r/yFAt+WY2NyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bL4oQGztwQ6ahE10I0vcuIn6ETa4DRx1WwolzpkRQ0RTjWmikR/5csjDcisoIOSfh8FjA/JqHxbL35Z1DjdAYXSWgFWG8ENs/l89ttV0MYLmOEkurW78HJX0tLp7V+4H47puVkOdLdlPZB5n85smatXkrHlxm7G1cZKrHxhsKcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKkb3zEE; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dcdd9a3e54so22404936d6.3;
-        Fri, 10 Jan 2025 13:18:19 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949C51A23B0;
+	Fri, 10 Jan 2025 21:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736544257; cv=fail; b=uBoDgDcc2PpsC63A54lHRQ/7OsonvoBjpHQeGFKnWG22zxO3HqEvhTYenofxcbZQuPAZ5rX5B1zgQy3dXlfqPCM9P0KnVcr2sMJCtcBSvAJ4BZLSkQG6FtH7iidCJxh+dkRv+0BqzPOvVWK6PolMNI77fJZbudLnMB7sHQ7HJqM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736544257; c=relaxed/simple;
+	bh=xxUz0TjaXP6UWlpHBQcQxAA5u74OK/NlYl5Cv8HZ8MI=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=Mbs9nhcb3o3J3T+SQvMLLNQS1gHBNU5w8Pmj2x/dVHPSoAnbaas4Al4xw4FmiTOy7aLXseHJ84aEoXfJ2CLzstvGE8xTiY6RL4iWO+XQovrP6R2rTudQZ44JW/RpXwlY9tm+IhA11B0/9ReXh3rMJhWtqrpVFRDay8Egl3292+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=S1OlE7EV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=flZBvWTg; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50ALDVbv031479;
+	Fri, 10 Jan 2025 21:24:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=mjcUT6rgEBOYcQ35hW
+	JtyABSg6BWQEWzwCJhq1UTs8g=; b=S1OlE7EVHEdOg9wZN/DWn98CYvX4w65Dun
+	/H8i6vwCH48qvbktbs/5X0hkUI7fMRemgOOCGi7TNpX9tRHy7vcC0HGyOUvGUzgr
+	MKCffuNi0iUYRNnkycHsLb2vb8DFrA/tXMhrAwLJJj9C++5RVNdghRdVubT97Sn1
+	DhN1mUiAisVcpzEnNN9DtFyKs5kLnO5oeFQJo2uOv2tvE7OjqJOtBkHsn5ZLx8MG
+	A8zp9ySxablV236bizQEPEvqYAMKXkK19EwXgS8yh7fLzjMkVdirdrIujtIlaA8k
+	ViB4gC3Kkckm/ygbSUZ52OLctySfuS7bIKQS5hhlPdve2tRzdgMA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43xuk0c3hq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 10 Jan 2025 21:24:09 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50AKkYB5011044;
+	Fri, 10 Jan 2025 21:24:07 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43xuecsfvc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 10 Jan 2025 21:24:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dP0T9aQ2giw97VZ0ubKC9+nkTxvAHagOpFxr4/t1W9vi2BahNLNr+laQRrHrznnKgb8J6baQES/mG/jKzbo3IbKXa70A+uUD/uppJcrj8hoN0mxBAAxo/pPYL1The/nV0BFpid2kzdCShr9wCIgpMHryrMwpczp2K2aPpnchzWvACnKXbnf3PABulgTXyqIUanzsGQ7CdhcVLFhKSlUq18gK5Ch3zYivH9gdyh1yaQfGb/PzP5GTQ/LKYZ6dpOxKxtkVSeEOUI4W2Dlv0vKqtrqFDOYNrHKLhexaLMPxei2How+XnhrZMgVRswDd+MFCpwW6M2qpQIb0M8cMqyKEVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mjcUT6rgEBOYcQ35hWJtyABSg6BWQEWzwCJhq1UTs8g=;
+ b=NwMf92n3OxvF+O8n7Ibfmzxputha1tSRUo6pTcn+a8FmRoLxCuvgFOXOztcT6pw5g1m60SeYL/QY9z6QGa/r/2iFtPMPU44b8pbWPNPliznKaLibgOc/ufmTjsFNPmdT3J2rI2Kbo5WmBVhdbSGfD+xtNeI7nrEkOSATXWmVTj3eYyBnfRWCrODo7WGlw9P0zJ50dkhC90Axc6OmIf0wqDXmCZNUM4eEwu6QFEfshS76Pb9ZWnhcXDC6qGHK8jpMAh4p9z7/gimBgJoX2VYNz5mm0F0fTZAmRO2NmYzvBBwdPAzryjH8bI5f6jf4AJ0AQfd2MFZy9Mn3n1pMnAQrpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736543899; x=1737148699; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2AalUMGwKp+1ccsODYGzT5joDKpnUYbuMqzUxVAyxzg=;
-        b=kKkb3zEE5Nfd3+VNARZuNnjcaLaHlvcgaMYuoxtzg4ACT+E/FfBHFvK1TS6zJmOHo3
-         7cr+EseLUGUD4QtKI8QWgUpKL7iZwA+TvmY5VwHijaHRMmhlLP54aDExW/EkSUXReQrL
-         /pLKxSwOkcYAa2hQ/w+lPrqhIwrdzBQH7r/JQnSeEtQxQKIHNg05F97gOD22nX/NHMWs
-         myS0EHmjiPe1PXvuHxfRGUR2TyOtAJdI6VVSHkqHlD9gPz46tmzUlZtdJe+h99AKEr33
-         JizV+GGVRMlYH3J6pIKiCrMw11OxywZEklip0kbfQYV0fXHOVd+0MocQRPuNN0hSar93
-         SyZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736543899; x=1737148699;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2AalUMGwKp+1ccsODYGzT5joDKpnUYbuMqzUxVAyxzg=;
-        b=auNf7UKMhZ8heeTaVHYI+aifN7B2aNWOVku5Zpv8HzR7O5RpH7yI4Ltazxzql2i/+i
-         oD322aRVxRNos/kLZFsqA6GVvA/kJ6SViw1eyw4twtJZN2dSWP3lj/tQlg2cK4tPyAl3
-         1KcqHcdaGCMwaNRm+Lgcu0n5C1cPxbe6ELNFi1ZF0uO/c/90fBQoXInWBdciVmWKPCSs
-         13PZsDCOABcnVoj6uoM+HASEhlgSZ/tpcHE+p35la31AFdkpSN4goThE/vgK8qAUYDta
-         xdyo4Cnh16pxsbtpbyOv4WNe5BB8Xtse2T52nsAVhBViHSZi2Yzwagtozjyq3xfm5SLX
-         joug==
-X-Forwarded-Encrypted: i=1; AJvYcCWhLW+MZH9DnaydWEa05lyfn3uZSoQ8+Dd3haH+pIuC/v1Win2g1wg3oXj5WxJ+85EBpDnVH7cw6RF3ioc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxsh/QQqeH9SCK/UfYgXUIti7Km1hBMwwp0dp5GRUSJ1FeUA0mQ
-	I4/fnxGNTTVTib33CLQlMmQqaewL6KFM1sPeuDsqGghdWjKsGwZXBaagNA==
-X-Gm-Gg: ASbGncsez8oGifS33LKATebuWY24Ou6741PHnM8x/Ww2eWtN0fM8wD12LYMzZjkrlIA
-	z4Km8uuTHdltlrHuhB2PLpImQjvPh39TyGM7dppz//R7M7wmGl42OkyaDGWekv77N2WrJ6Me+Rl
-	7yUbMk8+Hm5PE4zigwD73sAc/B6SgYt4hpzXPn9lOrMUqBkPZByaPT/Ax/nBPHahR12gTOFxeh9
-	dO0Wmf33YbiQBzvsoOuWLHLekcIMOekXk3EH4OJ/n+ZPgHXR4VhZqGjIfU6BSk1irzP3yRpOnmz
-	E7ATSRqDNYqgkkcd+5zftRvhgXJfLwepXiCOamsdIQn+Mpk=
-X-Google-Smtp-Source: AGHT+IEUdtrNWcE/Tny8zs1FI1vRJ1WRD7+omV3fqpiMmhFMXXkD1su5w4vJf2q5eSFNGhvPKlXdAg==
-X-Received: by 2002:a05:6214:20ce:b0:6dd:d24:3072 with SMTP id 6a1803df08f44-6df9b1f453fmr188880686d6.3.1736543898680;
-        Fri, 10 Jan 2025 13:18:18 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dfade89e0csm13142906d6.104.2025.01.10.13.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 13:18:18 -0800 (PST)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id AD49F1200043;
-	Fri, 10 Jan 2025 16:18:17 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Fri, 10 Jan 2025 16:18:17 -0500
-X-ME-Sender: <xms:mY6BZ2mp0Y7Lgp1LlgOpp_7pZ_wcXsU2cj1oZiieuejrOOMfQbYAWA>
-    <xme:mY6BZ92TO7Dry0Xt7lYKVzBuDkWqlj9Qyw6Rg6nBuIlCky02L0gWgNQQDQMd03azp
-    0BJR-eXz1MyLQdJkQ>
-X-ME-Received: <xmr:mY6BZ0rbUn0ZCcPb62HRKuA-P9g_w5Un8vOGzKO3IrKQ5NkjlWwcVeEcB-U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudegkedgudegiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdet
-    heduudejvdektdekfeegvddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
-    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
-    rghmvgdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
-    ephhgrmhiirghmrghhfhhoohiisehlihhnuhigrdhmihgtrhhoshhofhhtrdgtohhmpdhr
-    tghpthhtoheplhhinhhugidqhhihphgvrhhvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepfigvihdrlhhiuheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhih
-    shesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehhrghihigrnhhgiiesmhhitg
-    hrohhsohhfthdrtghomhdprhgtphhtthhopeguvggtuhhisehmihgtrhhoshhofhhtrdgt
-    ohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepsghoqhhunhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:mY6BZ6lGZ2a-PHhJ6ApKH29fW4A91P220djCJkzdXMQXS1oY3MB0Gg>
-    <xmx:mY6BZ02whFH9Ow-MiCnvwFeePL1pvNLkchfnmVoNiZ72iR1Ns_7vTA>
-    <xmx:mY6BZxvbxrlcW2yTu9VzneE5Rp720YNojI9gqoNzy2pqfcZPdPZU6A>
-    <xmx:mY6BZwUeB5wF1GLlNybndrA4pqI_0tyMQBQj4eSc4HNirP2PcZCmqg>
-    <xmx:mY6BZ_0STd9F7_RStKcWSMl7gVOKeum96X4O6LmQCzv7Ii4tA4ELvFLE>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 10 Jan 2025 16:18:17 -0500 (EST)
-Date: Fri, 10 Jan 2025 13:17:12 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/hv: add CPU offlining support
-Message-ID: <Z4GOWBkqX-vx_0sO@boqun-archlinux>
-References: <20250110200507.120452-1-hamzamahfooz@linux.microsoft.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mjcUT6rgEBOYcQ35hWJtyABSg6BWQEWzwCJhq1UTs8g=;
+ b=flZBvWTgkwxu246HRL0sQyCacbQ58pv+9jvxwmOgDmSPiCKTGMUA1TJ7Az5RmU07sr4whNaO2cuOuYtKjMmiQ7/jkfkJhQg1dj2YoTAgGCZ9dQCNC9C4RFx0oiT4j2GQOojx1g30QBN0Gh3UPQ+/lyn1144biXg7y6xIEXoE10I=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by SJ0PR10MB4510.namprd10.prod.outlook.com (2603:10b6:a03:2d6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.12; Fri, 10 Jan
+ 2025 21:24:05 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::5cca:2bcc:cedb:d9bf%6]) with mapi id 15.20.8335.012; Fri, 10 Jan 2025
+ 21:24:05 +0000
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui
+ <decui@microsoft.com>,
+        Long Li <longli@linux.microsoft.com>, Long Li
+ <longli@microsoft.com>,
+        "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen"
+ <martin.petersen@oracle.com>,
+        Mitchell Levy <levymitchell0@gmail.com>,
+        Mitchell Levy <mitchelllevy@linux.microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vijay Balakrishna
+ <vijayb@linux.microsoft.com>
+Subject: Re: [PATCH] scsi: storvsc: Ratelimit warning logs to prevent VM
+ denial of service
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20250107-eahariha-ratelimit-storvsc-v1-1-7fc193d1f2b0@linux.microsoft.com>
+	(Easwar Hariharan's message of "Tue, 07 Jan 2025 17:28:40 +0000")
+Organization: Oracle Corporation
+Message-ID: <yq1bjwe748v.fsf@ca-mkp.ca.oracle.com>
+References: <20250107-eahariha-ratelimit-storvsc-v1-1-7fc193d1f2b0@linux.microsoft.com>
+Date: Fri, 10 Jan 2025 16:24:02 -0500
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P302CA0001.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c2::6) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110200507.120452-1-hamzamahfooz@linux.microsoft.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|SJ0PR10MB4510:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5c8a8c6-08bf-446e-5c9f-08dd31bd1c59
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qSPvgtRuMgiKXgd8GZvJnb+PAIEx17eI1gPJvBVkPyj0+7HikAKi1vG6tHU5?=
+ =?us-ascii?Q?x50Co4QFCDazZqYmNu0ZXZXIdJcrSKpt9sOLtaHZzhbSAWxtwmaTbjGSi2rD?=
+ =?us-ascii?Q?cRBqZe7SPeBrigvUPp22+2UjGBTBbNUSjCvN2rwC4hzVcTUT0gk5st68ASV/?=
+ =?us-ascii?Q?6MTANA+qJwBlGxfQMMzE736Smhl3P+T6hlgMVD+eCGhVrev9YHG1OtHBXFd1?=
+ =?us-ascii?Q?qbc2/uTYneOl6i3BpDcHULM6w68v6ug39Db2RCavZyLhaf+ws4CKNDTVOMki?=
+ =?us-ascii?Q?v2LO0FXTmKjlIARHu9I3+iUzqvTFx3bSI8k8ON1OpffXJnBfZ7KoYE4rSZpa?=
+ =?us-ascii?Q?txpH1ygt4Crmqdt+qLgWa6sT/OD2iH4T3XnL//VbepOrACU2Eq0LUmvraG4S?=
+ =?us-ascii?Q?xenl2mqJRKFzLbfDZsvO0UtI12SJXq0u5QknT4xUxQofw3J99VZ6NoW8Skds?=
+ =?us-ascii?Q?DUqqzeM2JDXnnwygWDrCdw7a56YB+Z9k1fuXwzhzkEbLHxYHLs2BpbeEmvSJ?=
+ =?us-ascii?Q?8YERiW5vMzI8j3IQL1RzJzlmvWwxyDLWaUvLu0dpvHGV9NU21Gp1+j+ebyFl?=
+ =?us-ascii?Q?h6AjmwlRYUR3nA6TEmAvA6OOtYztNm1uNx6Nfrgyn86ZP3p9RN+OmTpToiiL?=
+ =?us-ascii?Q?MssuqBMurTZ3+a4Sqwu0q9NK1YYqQSi2Rr9JePS5/UmiUupe6O2P6Owg6I+5?=
+ =?us-ascii?Q?Rj07Vh22p9xD1BdPXeqMXkjdaKuRkNokDDOLazaun26LIBEvI28w++7DdQ4F?=
+ =?us-ascii?Q?LwBcEA2C8X2INoAVlPFqdGfDxtcrLIckNd4lYC9cmQiRH4JMs5PvdJPPMj8p?=
+ =?us-ascii?Q?kpeZBdKuMtcB1zkj9swDB1KnqYe+pwhpQhJgxa7j1G1V96zHrQyYD9Gd9ndj?=
+ =?us-ascii?Q?0J2oW5B9S5k1B/qrQEBM8TKIRHa0veiIGVrzoSh0Lr3IiHv3g0i0FWxMqg41?=
+ =?us-ascii?Q?/AH4pwBheiw0qiiCPLbeYITP+JM2+LKwZhyCxVkNsL71yYB5IEqOMTDdS5EI?=
+ =?us-ascii?Q?kqU9VkSL9WqXqx6RE1NUeIVo5Dk30c6rpwC0T1chCE3HFezvyPtI7QVww2PG?=
+ =?us-ascii?Q?wHxurvF61bL0vFXsFwoxpviLDyAuAKROsnVRSoCDLPHJTwQUkiJNuRlES8zf?=
+ =?us-ascii?Q?/KAHAG0OBQMkQpnMQ/02u6msuDytmNVzUT22BxKJD1tL4CumPsSL6w3T55iF?=
+ =?us-ascii?Q?Dqrg7ITOv/U5N8DEex0+olBaoEHOiehmhCJh33Xk/3ejmIz8wxEEkictmpA3?=
+ =?us-ascii?Q?esTjwpeNfg82urLdk6kI5VZJsIrR+EJ7HB4+ndzcJbAoaGrLKW2BtTXg8eZU?=
+ =?us-ascii?Q?b5WdxzPYmQ4+glvDeczWGextf2vhPCFBF1DrdNiUCiLmvi1baccmZDNYBzQ3?=
+ =?us-ascii?Q?2K5jFR4vezGcwCGhGG2EJMp5/vwt?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?d1P3YxpEPxI9Nxzvh0Nzq6bXNxhmTjDL6tz/56VrvqAzjpVJmn7c4naCepgO?=
+ =?us-ascii?Q?XFyIMiE1cblhp65RRclJQ1O4LGwfjV3z4L9h7uFrlwSgFPzI0W7MWJ85YOjj?=
+ =?us-ascii?Q?Kxn6kWup0XvNDcFkNQiBep/5bonI/Y71euKKbQJsX/GNWx67eg4kR4q9+ETX?=
+ =?us-ascii?Q?Yrja3+noT9CVO5OU1Bi/SvIcibOAtilIn6fit2llwCSR8uzO0iErQwGmsdr/?=
+ =?us-ascii?Q?/7qzvbvv42lJDT3B/fKFVgnT/ditizo1csA5EwuLgQcfrZ+72CV6CLvIEzES?=
+ =?us-ascii?Q?Am3dv4FTknBMdZi1x1jAFxX/FB/2Fefe31wMS2/Ast77N7mjL0oO7X6cnGmk?=
+ =?us-ascii?Q?4UAp808u+1bJl1OfWSVxVljErDvIYLQvd7aNBn9GOOrsd18PzB1FDVZpOSp/?=
+ =?us-ascii?Q?ON35h1p/8+QzEwKhSCMHYUEYoQA8mpToN14CHD8fejub8aTIHsYWjsLvGKp/?=
+ =?us-ascii?Q?zSkwu3pMTBh64lfpqhQl2lVFfoL7PJaoEYriV/y8pm2exZh4W1jts2ZiXdA4?=
+ =?us-ascii?Q?PnEBHXQhWZZVVba5AOYU1L5C5jpjQ+Mv0Utl75wLm2oInLh1tc1a7D4tWOC9?=
+ =?us-ascii?Q?G60nYAzejy/8HEEthDLsMj1Fe1r+eHKIf/pFUi2WFbHMaDr4orCxuG+BMa6B?=
+ =?us-ascii?Q?HS3zNb3OUPlimlAXcMKCswyEbuCz96bkIUQUNmP+RXIJjo5EWd+gYUxGx/Kf?=
+ =?us-ascii?Q?fWdCt/wErmxaRztwJr1KReI9QOQ5kdgPxpOiyDxuP++fU704Upgsy66kifmk?=
+ =?us-ascii?Q?+y869z+jxK1SiQtfAG0QvWnpvStk+vf5QAtmAb6eAtvZXUkzVuciFDJXvmkd?=
+ =?us-ascii?Q?wJLkbyeyn0N96GiP9+5LSYF4LzMhoZSmratCgDYg3WUB1133VUOsXUUo6/Z0?=
+ =?us-ascii?Q?UWaG79JdYF4GO5q0qB6sfpbTIhPmcUdfoEaiop0YJHZ/uKG5PC7RvR6gLUdr?=
+ =?us-ascii?Q?eBSv9u+oe97jWOKDf16LgaDWoW4C7yInPM7TGph+3jxSlzzgnZakvkQ+ALgO?=
+ =?us-ascii?Q?OFlogRsr/TTDEqTdL/s0o3fyngGhLrJkrUrviziSy+FN42A8JOA3n8hKqZaF?=
+ =?us-ascii?Q?lkFRD5sA6nRMFQEgUZOvcFkPI6y7+zW0SEtVl577uEhDvSWvHoZE3SBJMXMk?=
+ =?us-ascii?Q?Frt+OWKnSEBg6ZastThYdY0fdOb++/R+lIlRXnuf4wZxsFqIMRanbF/npmJQ?=
+ =?us-ascii?Q?ubUbH86pD3T83itPwMynCF5zi5bjGzyIZl7Lkm3oHu0RrZR/6tgW8nrxG2en?=
+ =?us-ascii?Q?qUcn3WlsZA7OSkREJUptp4V+0EsHR+MivUNhN+Ymcp2hL48srioLbe/RRp5p?=
+ =?us-ascii?Q?VJ8A53SDl8v0Te4Uv5yt1jEa7F1rW6cUP44D2lVoIT0UhWjHJwgA3oSgnN2r?=
+ =?us-ascii?Q?7tghC2yeABrKSyNl58kTYPajgwavkVxvOwhdRf9tqRScwxveqO3j3Lvr8nrP?=
+ =?us-ascii?Q?ID6qOYHnrU8vstECp91UOfia6W4fS8zNUh3HqJSwxTxnG2ddKlc6c2B+/frw?=
+ =?us-ascii?Q?gbAcnRwPMATAbeTbe1BcJFTBkfUy38Mb8cwumiA8t1A+0uGm+NnBvzoGp8bt?=
+ =?us-ascii?Q?+ChvNfITamXnJQy2XJ+SF0Urz6yo0nKl0ADLh7CiF19CGA1flsEHMdOvMg5R?=
+ =?us-ascii?Q?fA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	0NJ88TnBdqDpWXFIJuFUD6PqpPHfxQPKp50sdmTPSea/88j6QMxgjW7dCkTIS6rQqwuF5q9Y7XqgW+745mCZjl9W37ybqkqeZbtl2ZVVsyl1yweYbdYG94sxSog1MuWtc5JdNMX2Kb92VmZmd9Uj1+/Sz9aloEEYx16StRzCyJKnro0KtXuznHAGiie7wCRAigeGdIKxa7hcCs5IdCIihTizt208PgmSvXmwlIXirOkXGF0BDe5+Lug7joNcwiAo85sf7tqJnF0jvnwMFXmVbLwKfat69B97CBW6UCPN1kkrgfgW2g4bGZGFcy4TTq61ZRGfuYjmPt7DgkbdXMdnHvBpi9VDY12x3ii+BzNYbe8Dem/FeJ2l3FTsM+Eb8AtCrknpsL/Lh0tZnEXs7J61/xZYliv00d7MghIQ9Pt74mAxRttzYuLPT2T/sQWtgv1B7lZ6XHmBXXaEd/mmBTtHf7TiQEyRftPGhg7Me1NTyH1KjFRuPQBZ57zG3DHLBAfyW8SEwF2Zt7J6iA/i/71bqWNJU2NJXjkKRp1CwZCF1+srGF9Dq6koXTc194VAOb0n+bvhV7p3UMe8G5jqAIqhyaLme2Mj4Ir1G5I31SPMDf4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5c8a8c6-08bf-446e-5c9f-08dd31bd1c59
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2025 21:24:05.1667
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jGiytvHfWQoBQA/k/KknE6cpfBL4Mb62opfYIFw/ZWgHXGyIe12qS2Jqgh+IDg7djX7aTl019Efxk4zlns1pX/B13tYi8Efi3ZaadgB0N+A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4510
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-10_09,2025-01-10_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=770 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501100165
+X-Proofpoint-ORIG-GUID: DYu7tTG8E-u5YKyPt4qrEi_4K98wsdYP
+X-Proofpoint-GUID: DYu7tTG8E-u5YKyPt4qrEi_4K98wsdYP
 
-Hi Hamza,
 
-Thanks for the patch, a few comments below:
+Easwar,
 
-On Fri, Jan 10, 2025 at 03:05:06PM -0500, Hamza Mahfooz wrote:
-> Currently, it is effectively impossible to offline CPUs. Since, most
-> CPUs will have vmbus channels attached to them. So, as made mention of
-> in commit d570aec0f2154 ("Drivers: hv: vmbus: Synchronize
-> init_vp_index() vs. CPU hotplug"), rebind channels associated with CPUs
-> that a user is trying to offline to a new "randomly" selected CPU.
-> 
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-> ---
->  drivers/hv/hv.c        | 57 +++++++++++++++++++++++++++++++-----------
->  drivers/hv/vmbus_drv.c | 51 +++++++++++++++++++++----------------
->  include/linux/hyperv.h |  1 +
->  3 files changed, 73 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 36d9ba097ff5..42270a7a7a19 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -433,13 +433,40 @@ static bool hv_synic_event_pending(void)
->  	return pending;
->  }
->  
-> +static int hv_pick_new_cpu(struct vmbus_channel *channel,
-> +			   unsigned int current_cpu)
-> +{
-> +	int ret = 0;
-> +	int cpu;
-> +
-> +	lockdep_assert_held(&vmbus_connection.channel_mutex);
-> +
-> +	/*
-> +	 * We can't assume that the relevant interrupts will be sent before
-> +	 * the cpu is offlined on older versions of hyperv.
-> +	 */
-> +	if (vmbus_proto_version < VERSION_WIN10_V5_3)
-> +		return -EBUSY;
-> +
-> +	cpus_read_lock();
+> If there's a persistent error in the hypervisor, the scsi warning for
+> failed IO can flood the kernel log and max out CPU utilization,
+> preventing troubleshooting from the VM side. Ratelimit the warning so
+> it doesn't DOS the VM.
 
-hv_pick_new_cpu() is only called inside hv_synic_cleanup(), which is
-only called with cpus_read_lock() held (because it's registered via
-cpuhp_setup_state_nocalls_cpuslocked()). So the cpus_read_lock() is not
-necessary here if I'm not missing anything. Moreover, given
-cpus_read_lock() is a non-recursive read lock, it's actually incorrect
-to re-acquire it here, see:
+Applied to 6.14/scsi-staging, thanks!
 
-	https://docs.kernel.org/locking/lockdep-design.html#recursive-read-locks
-
-for more information.
-
-> +	cpu = cpumask_next(get_random_u32_below(nr_cpu_ids), cpu_online_mask);
-> +
-> +	if (cpu >= nr_cpu_ids || cpu == current_cpu)
-> +		cpu = VMBUS_CONNECT_CPU;
-> +
-> +	ret = vmbus_channel_set_cpu(channel, cpu);
-> +	cpus_read_unlock();
-> +
-> +	return ret;
-> +}
-> +
->  /*
->   * hv_synic_cleanup - Cleanup routine for hv_synic_init().
->   */
->  int hv_synic_cleanup(unsigned int cpu)
->  {
->  	struct vmbus_channel *channel, *sc;
-> -	bool channel_found = false;
-> +	int ret = 0;
->  
->  	if (vmbus_connection.conn_state != CONNECTED)
->  		goto always_cleanup;
-> @@ -456,31 +483,31 @@ int hv_synic_cleanup(unsigned int cpu)
->  
->  	/*
->  	 * Search for channels which are bound to the CPU we're about to
-> -	 * cleanup.  In case we find one and vmbus is still connected, we
-> -	 * fail; this will effectively prevent CPU offlining.
-> -	 *
-> -	 * TODO: Re-bind the channels to different CPUs.
-> +	 * cleanup.
->  	 */
->  	mutex_lock(&vmbus_connection.channel_mutex);
->  	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
->  		if (channel->target_cpu == cpu) {
-> -			channel_found = true;
-> -			break;
-> +			ret = hv_pick_new_cpu(channel, cpu);
-> +
-> +			if (ret) {
-> +				mutex_unlock(&vmbus_connection.channel_mutex);
-> +				return ret;
-> +			}
->  		}
->  		list_for_each_entry(sc, &channel->sc_list, sc_list) {
->  			if (sc->target_cpu == cpu) {
-> -				channel_found = true;
-> -				break;
-> +				ret = hv_pick_new_cpu(channel, cpu);
-> +
-> +				if (ret) {
-> +					mutex_unlock(&vmbus_connection.channel_mutex);
-> +					return ret;
-> +				}
->  			}
->  		}
-> -		if (channel_found)
-> -			break;
->  	}
->  	mutex_unlock(&vmbus_connection.channel_mutex);
->  
-> -	if (channel_found)
-> -		return -EBUSY;
-> -
->  	/*
->  	 * channel_found == false means that any channels that were previously
->  	 * assigned to the CPU have been reassigned elsewhere with a call of
-> @@ -497,5 +524,5 @@ int hv_synic_cleanup(unsigned int cpu)
->  
->  	hv_synic_disable_regs(cpu);
->  
-> -	return 0;
-> +	return ret;
->  }
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 2892b8da20a5..c256e02fa66b 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1611,16 +1611,15 @@ static ssize_t target_cpu_show(struct vmbus_channel *channel, char *buf)
->  {
->  	return sprintf(buf, "%u\n", channel->target_cpu);
->  }
-> -static ssize_t target_cpu_store(struct vmbus_channel *channel,
-
-It'll be nice if you could separate this change into a different patch,
-that is one patch for refactoring target_cpu_store() with
-vmbus_channel_set_cpu() and the other patch to introduce the support of
-cpu offline. Make it easier for reviewing.
-
-> -				const char *buf, size_t count)
-> +
-> +int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu)
->  {
-> -	u32 target_cpu, origin_cpu;
-> -	ssize_t ret = count;
-> +	u32 origin_cpu;
-> +	int ret = 0;
->  
-> -	if (vmbus_proto_version < VERSION_WIN10_V4_1)
-> -		return -EIO;
-> +	lockdep_assert_held(&vmbus_connection.channel_mutex);
-
-Add
-
-	lockdep_assert_cpus_held();
-
-as well?
-
-Regards,
-Boqun
-
->  
-> -	if (sscanf(buf, "%uu", &target_cpu) != 1)
-> +	if (vmbus_proto_version < VERSION_WIN10_V4_1)
->  		return -EIO;
->  
->  	/* Validate target_cpu for the cpumask_test_cpu() operation below. */
-> @@ -1630,22 +1629,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
->  	if (!cpumask_test_cpu(target_cpu, housekeeping_cpumask(HK_TYPE_MANAGED_IRQ)))
->  		return -EINVAL;
->  
-> -	/* No CPUs should come up or down during this. */
-> -	cpus_read_lock();
-> -
-> -	if (!cpu_online(target_cpu)) {
-> -		cpus_read_unlock();
-> +	if (!cpu_online(target_cpu))
->  		return -EINVAL;
-> -	}
->  
->  	/*
-> -	 * Synchronizes target_cpu_store() and channel closure:
-> +	 * Synchronizes vmbus_channel_set_cpu() and channel closure:
->  	 *
->  	 * { Initially: state = CHANNEL_OPENED }
->  	 *
->  	 * CPU1				CPU2
->  	 *
-> -	 * [target_cpu_store()]		[vmbus_disconnect_ring()]
-> +	 * [vmbus_channel_set_cpu()]	[vmbus_disconnect_ring()]
->  	 *
->  	 * LOCK channel_mutex		LOCK channel_mutex
->  	 * LOAD r1 = state		LOAD r2 = state
-> @@ -1660,7 +1654,6 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
->  	 * Note.  The host processes the channel messages "sequentially", in
->  	 * the order in which they are received on a per-partition basis.
->  	 */
-> -	mutex_lock(&vmbus_connection.channel_mutex);
->  
->  	/*
->  	 * Hyper-V will ignore MODIFYCHANNEL messages for "non-open" channels;
-> @@ -1668,17 +1661,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
->  	 */
->  	if (channel->state != CHANNEL_OPENED_STATE) {
->  		ret = -EIO;
-> -		goto cpu_store_unlock;
-> +		goto end;
->  	}
->  
->  	origin_cpu = channel->target_cpu;
->  	if (target_cpu == origin_cpu)
-> -		goto cpu_store_unlock;
-> +		goto end;
->  
->  	if (vmbus_send_modifychannel(channel,
->  				     hv_cpu_number_to_vp_number(target_cpu))) {
->  		ret = -EIO;
-> -		goto cpu_store_unlock;
-> +		goto end;
->  	}
->  
->  	/*
-> @@ -1708,9 +1701,25 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
->  				origin_cpu, target_cpu);
->  	}
->  
-> -cpu_store_unlock:
-> -	mutex_unlock(&vmbus_connection.channel_mutex);
-> +end:
-> +	return ret;
-> +}
-> +
-> +static ssize_t target_cpu_store(struct vmbus_channel *channel,
-> +				const char *buf, size_t count)
-> +{
-> +	ssize_t ret = count;
-> +	u32 target_cpu;
-> +
-> +	if (sscanf(buf, "%uu", &target_cpu) != 1)
-> +		return -EIO;
-> +
-> +	mutex_lock(&vmbus_connection.channel_mutex);
-> +	cpus_read_lock();
-> +	ret = vmbus_channel_set_cpu(channel, target_cpu);
->  	cpus_read_unlock();
-> +	mutex_unlock(&vmbus_connection.channel_mutex);
-> +
->  	return ret;
->  }
->  static VMBUS_CHAN_ATTR(cpu, 0644, target_cpu_show, target_cpu_store);
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 02a226bcf0ed..25e9e982f1b0 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -1670,6 +1670,7 @@ int vmbus_send_tl_connect_request(const guid_t *shv_guest_servie_id,
->  				  const guid_t *shv_host_servie_id);
->  int vmbus_send_modifychannel(struct vmbus_channel *channel, u32 target_vp);
->  void vmbus_set_event(struct vmbus_channel *channel);
-> +int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu);
->  
->  /* Get the start of the ring buffer. */
->  static inline void *
-> -- 
-> 2.47.1
-> 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
 
