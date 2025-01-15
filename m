@@ -1,130 +1,88 @@
-Return-Path: <linux-hyperv+bounces-3683-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3684-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B0BFA117F7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2025 04:41:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75A43A12705
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2025 16:15:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D53A167C54
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2025 03:41:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A784188754D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2025 15:16:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15970155333;
-	Wed, 15 Jan 2025 03:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hfi1tIJz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE8B7580C;
+	Wed, 15 Jan 2025 15:15:53 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869721DA21;
-	Wed, 15 Jan 2025 03:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7863A24A7DB;
+	Wed, 15 Jan 2025 15:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736912467; cv=none; b=OZdchNCwkV9PCjfeON7eWUVU6IZX6xFW9Bwhr8iJte36j0eoz3rXqan0LDyGwf2yjGVBAFB/rmkqX9hFcew59gRx48CqnGNWKsmNbSlaFeP19RZ70NT7g+74rX9+4KaxzjvsOFRiqTTeDc9ByG6scHgQ1dQZV3+ttdSbgKdbqhQ=
+	t=1736954153; cv=none; b=kld3bfm7yyC9YKRaSb0z1OWAwbPhR81AYJ8pI8QkWFo/qXr1TxpudWFLxb/Omm1KluQCg3hahtTdkukqnERN3j8yxKz55IFbfThcXwB0o95spJArO5W3HiSrm4DIIw0B7BqXd2ZP+xx+N7CjBDXUIQpDFLoUPys+f0V5uNWPEzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736912467; c=relaxed/simple;
-	bh=lx1JoZuyAOvH+tAWIwuUhi8eFxOhxcAC6JbtgL/RLvk=;
+	s=arc-20240116; t=1736954153; c=relaxed/simple;
+	bh=n3aedPDU58g9oi8jG7q6qNb6L07RnHv5DCH2ebVvDrM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ksz+t/egkHB6w4nNVEKUh1mw7QiLcQGySaFfozjrnw7w5Cz6oBxahRdQvS3LlHLwOJsw51HJNigebXlwoNV3WqfYE76tx2wwYMqNO0CKl29hx02GwbzZc1FGe+F0n4QZvWOn8DflymYssOn7OnREUGz3Ua68jZQfMdRvAO9nZUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hfi1tIJz; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqV7LdaWHf1vrRlIFft+e6vEQRoFmTinleFhXQWhQ8NY9+PIZjKUaBOWInTPxqkn0+YQn3zUWwOEp7+JQiwz8qEIXWKb8MFyYjIFwzHWgecb4KhUizSXIVPJRL+3rpR/SbOpRUUyi+xFOr4uGCCjdVRPDKElsnx9JQtZG8zG2+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so8887064276.2;
-        Tue, 14 Jan 2025 19:41:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736912464; x=1737517264; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UmTK2k4vF2mqctoCssOfytU8KQ/2i1ya8c1dPxSZwZk=;
-        b=Hfi1tIJzaEvPFCF3le0hG16EY7Fxb+IXk/gRu+vZg4lY2/6XkXEUwOdf7EDudX9O5S
-         l3ZiMs/teaAUbwlHUqIgRLnsKrQlyGRjoZMNHcvHs39tF2qO9yaTvsNpa7pEG/7NbXZu
-         yHRw3ex0rW5dg7uiWnPYawBP6Z2aLBm0W7xeCNgfXrllv8GstTVQ61S1km2knGwH3pL+
-         P2xuL3xDj8rUT32jQIyPJEn8dAZKLF0LDLPDa5T9EwlG3ag9bRmkF/8qZshbPMnJbNiG
-         Yg+vt9KYRiQAOkkPpAiPEtpnxeC4zx9JRDqaM3E4IUPvSgqLZVOrNEd5X9ysJWeF1U4N
-         4D9g==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaec61d0f65so1362698366b.1;
+        Wed, 15 Jan 2025 07:15:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736912464; x=1737517264;
+        d=1e100.net; s=20230601; t=1736954150; x=1737558950;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UmTK2k4vF2mqctoCssOfytU8KQ/2i1ya8c1dPxSZwZk=;
-        b=vKcg/R8sEpuiHKJNYCPAFgiginzJ3OmNrlVW33+LaF4TK0+ykHFKMDWHCQBdvoIDa4
-         4IQNET3FM9biKXtu70I7uCLevdR5RgXkgYLVQn/3fftMezX3W0MXKuReuCTOAzfGRXsU
-         rVDgtyaeZ0kbQjgGxWfzZhaPHzt8JNeBMzjk0gbW15YnisDUZFlAlR8JJrM3+2pimjMw
-         TGK7jFyW4rqq8Z+GmuWsNN8v+wPnTA2S3+NdEnJhLBRzrg5OpNSlU/zlSBufTWYs/vkk
-         V9+tm6wtBYt8j1Uh2yMM80NxaoI4WyKoPKF75UFPNaJfVOtLNcsbfC5Ua77YeaLVUXU2
-         /wCA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8pAq8hhU4/KpZnBa9jssjz1OfsIENEpT4uGJixhiuWrgdbIxy8Q9YFATugmcDtMj9OODiAwfjm+YakDs=@vger.kernel.org, AJvYcCVE/cBO4NuCblNuIAp0te19QAVq2Mh3exPL1kxmDj4/gteUqVT1nzvIA43xhkjMuFnd2AITjIO3qkwcob11@vger.kernel.org, AJvYcCVhyiPIP3p5j2Q0ZrUf7XW66dJagBJs5QWtolJj3aVvoQYlJOcLNT7/JRMV2642GEJKgaNod9Ct@vger.kernel.org, AJvYcCVteOQXqbo5nrtqZKvsWurnqAlEWkNwDdpOAIuGa7zYbdsi5OVJ6kg4oI+iZheNbsxj5pNGqsLIT1w8dQ==@vger.kernel.org, AJvYcCWd9AiKX1Hfg817o4P+AIPGXczWQyGn77IZOEZbREv7iB9cWabU5PQRtD97e4JOqmZtz+Yh6iu/9KwnRg==@vger.kernel.org, AJvYcCXV+z7h/strYjt1ouDU01tF3sN4eh0U3Hime3YrIF8Sfky4EEaKVomWadIpL83CIJwzN3Av8/zEFx3V@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbhxAL0+uFTeFvbJklRveEqLShOylFBsqfz2tf1ZMUuuLNsMNm
-	bv1XxrMLEfMXARXzgWR/7fL6GW5F5+oq4YP29kK1FHU4kbaPt4zA
-X-Gm-Gg: ASbGncvOtNq/6VbtG7ovVdBVU26FTa69d7MnAcWdUUqbJdmCY3ctNEbbo+ZXVggnsZH
-	mTV7eT52Pb1I0TznzBqtp+QnZ6yLbsWCcTAAFTMIt6BROTJGZg78MHaE6k7Yd6lYFXTtNC7DEZX
-	v0prpdhq1Z+8Ze5lka1uP6Lm40NtTxOjvKRsLZ85HrN+9W6+OVuP3yt/zYoO3oW6ttRB2RuwT6E
-	iDWTiqL+Q1gfJbdD2c5o7diouivUgz/0Jhs9kZqdUIp365cIuUd2V2Z
-X-Google-Smtp-Source: AGHT+IGlCnPNZfANCVJooif/vwR9Wcfdn14fNs9Squ/CXSzhwHBTvNfC1cp1ga3/es5eAiOB92QKfQ==
-X-Received: by 2002:a05:690c:45c9:b0:6f6:cad6:6b5a with SMTP id 00721157ae682-6f6cad66c84mr8171767b3.13.1736912464441;
-        Tue, 14 Jan 2025 19:41:04 -0800 (PST)
-Received: from localhost ([2601:347:100:5ea0:e12f:d330:c8d6:a6b7])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f6c93732c9sm1796417b3.103.2025.01.14.19.41.02
+        bh=VxAdtxkE+UEREV6mcvRrNj4o4nik0aOIdra7qRiWZc4=;
+        b=KV2Rf2PzVBpG+xmnig1IF++E6MrB71rpernBz3J+rGyEJ78ceCkFmW4VeuuSir6WyF
+         OTp8Kg8MkI6FEBNZyudjUmzy6QlTgqJFhjzcpn8gv4yLiZA5/G1Vc5eQv+8aBsYSNdc8
+         bWd7Bg29RMQrxtmPjWFNMntLAh8FgxOH0c7vT3WIgdLul0WUlbWB4IyFYzJUym0yVspP
+         g17MMZOeADNoP7qeMo+4f2HRju2tbzIsx0O8PhRdHXYp/rcaWCOPU6iScYqe7bF7jDzg
+         uGi1ZZiP0P/87gTfFTNOnYRBYVzbWi21Y7n9CMckDdP3SZGHOnjrCDCoBBMWC3FO9da+
+         vtgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWSQiRllGvc/VL1706xc+Zh23ErH1mATkF5ojI/7rOvl8CJ1KF1RdcGSpq6HtU+8c1WWj8X1nfsGCaQpR2R@vger.kernel.org, AJvYcCX3RzZ5ByvPVam8vaC1jFVw57ZZC/O0SZZFrWQ79pN+2Dzb09+tORxPYhksBHf060U+7rM5ptKL@vger.kernel.org, AJvYcCXE/jsFShp20JmyxN5jm60k4ns4Fbyve1+jUM6683WOM6uDFZ2/qYcxhvNgKbVxxhhuVi1aNbl6mVIXZK/5@vger.kernel.org, AJvYcCXt8H8LnEQdwUdfedWp8yaPqEIwiAhsNc6CJRVzN8Wy0gOkdcS+5yxaAg4w1d8eoU7XYulGq1Ja2A/nz8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnhZnLmwLnrBcoBzhEIReqRRofOVr3NWmcjxz7GxFRYdOWgKn8
+	nqe0wTP5g1InJl0eKJ0v4BnJCbFGO0mCp4jPB86n97NCFwSTS8E/
+X-Gm-Gg: ASbGncv4uk2D5+SJdBLMrG0HAOeiX7FwBnRe03UrQ4B/vOZNFv2jZkb5IFpJRZLqru/
+	Yujxja28qApa+/ieZgxlgROecAPEmXA1RatzO+TIzUN0MCUAa1R4E64lf2uUJHVh+fPZIpj9ysa
+	OcazGh5VvVSO5F2sg7noF6vjEZRVPwPyJL8P7kfxnAAKKEd/JGPnwVWSVvZ/esQQBei+4WLzWbE
+	1nn7hY4aS0G2DuxcvJuRLq+zMDF3cn5sRI3yrK07NHE2n8=
+X-Google-Smtp-Source: AGHT+IHiSCWa2oGdZdDLuvQ3qdU+v2LX5LzfGe//YSM+4KYGuK3X4yasIQ/H0OgC3CyaYs2W7qOEFA==
+X-Received: by 2002:a17:907:3e24:b0:aac:2298:8960 with SMTP id a640c23a62f3a-ab2ab6fcf7amr2927968666b.35.1736954149465;
+        Wed, 15 Jan 2025 07:15:49 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:9::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5da0aec6e7asm1101432a12.33.2025.01.15.07.15.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 19:41:03 -0800 (PST)
-Date: Tue, 14 Jan 2025 22:41:02 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-crypto@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Rick Lindsley <ricklind@linux.ibm.com>,
-	Nick Child <nnac123@linux.ibm.com>,
-	Thomas Falcon <tlfalcon@linux.ibm.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	James Smart <james.smart@broadcom.com>,
-	Dick Kennedy <dick.kennedy@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Matt Wu <wuqiang.matt@bytedance.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Wed, 15 Jan 2025 07:15:48 -0800 (PST)
+Date: Wed, 15 Jan 2025 07:15:46 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	"saeedm@nvidia.com" <saeedm@nvidia.com>,
+	"tariqt@nvidia.com" <tariqt@nvidia.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Greg Kurz <groug@kaod.org>, Peter Xu <peterx@redhat.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>
-Subject: Re: [PATCH 06/14] cpumask: re-introduce cpumask_next{,_and}_wrap()
-Message-ID: <Z4cuTsHbO6yiuFKA@thinkpad>
-References: <20241228184949.31582-7-yury.norov@gmail.com>
- <20250103174432.GA4182129@bhelgaas>
+	Thomas Graf <tgraf@suug.ch>, Tejun Heo <tj@kernel.org>,
+	Hao Luo <haoluo@google.com>, Josh Don <joshdon@google.com>,
+	Barret Rhoden <brho@google.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: [v3 PATCH] rhashtable: Fix rhashtable_try_insert test
+Message-ID: <20250115-cordial-steadfast-perch-c4dfda@leitao>
+References: <Z1rYGzEpMub4Fp6i@gondor.apana.org.au>
+ <Z2aFL3dNLYOcmzH3@gondor.apana.org.au>
+ <20250102-daffy-vanilla-boar-6e1a61@leitao>
+ <SN6PR02MB41572415707F0FA6D9A61247D4132@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250109-marigold-bandicoot-of-exercise-8ebede@leitao>
+ <Z4DoFYQ3ytB-wS3-@gondor.apana.org.au>
+ <SN6PR02MB41577C2C4EB260F3D2D4F85FD41C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <Z4FXs8vAtitHIJyl@gondor.apana.org.au>
+ <SN6PR02MB41570F1F5F4F579B4E8F0CD3D41C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <Z4XWx5X0doetOJni@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -133,27 +91,108 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250103174432.GA4182129@bhelgaas>
+In-Reply-To: <Z4XWx5X0doetOJni@gondor.apana.org.au>
 
-On Fri, Jan 03, 2025 at 11:44:32AM -0600, Bjorn Helgaas wrote:
-> On Sat, Dec 28, 2024 at 10:49:38AM -0800, Yury Norov wrote:
-> > cpumask_next_wrap_old() has two additional parameters, comparing to it's
-> > analogue in linux/find.h find_next_bit_wrap(). The reason for that is
-> > historical.
+On Tue, Jan 14, 2025 at 11:15:19AM +0800, Herbert Xu wrote:
+> On Fri, Jan 10, 2025 at 06:22:40PM +0000, Michael Kelley wrote:
+> >
+> > This patch passes my tests. I'm doing a narrow test to verify that
+> > the boot failure when opening the Mellanox NIC is no longer occurring.
+> > I also unloaded/reloaded the mlx5 driver a couple of times. For good
+> > measure, I then did a full Linux kernel build, and all is good. My testing
+> > does not broadly verify correct operation of rhashtable except as it
+> > gets exercised implicitly by these basic tests.
 > 
-> s/it's/its/
+> Thanks for testing! The patch needs one more change though as
+> moving the atomic_inc outside of the lock was a bad idea on my
+> part.  This could cause atomic_inc/atomic_dec to be reordered
+> thus resulting in an underflow.
 > 
-> Personally I think cscope/tags/git grep make "find_next_bit_wrap()"
-> enough even without mentioning "linux/find.h".
+> Thanks,
 > 
-> > + * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
-> > + *			   @n and wrapping around, if needed
-> > + * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> ---8<---
+> The test on whether rhashtable_insert_one did an insertion relies
+> on the value returned by rhashtable_lookup_one.  Unfortunately that
+> value is overwritten after rhashtable_insert_one returns.  Fix this
+> by moving the test before data gets overwritten.
 > 
-> Is the return really > @n if it wraps?
+> Simplify the test as only data == NULL matters.
+> 
+> Finally move atomic_inc back within the lock as otherwise it may
+> be reordered with the atomic_dec on the removal side, potentially
+> leading to an underflow.
+> 
+> Reported-by: Michael Kelley <mhklinux@outlook.com>
+> Fixes: e1d3422c95f0 ("rhashtable: Fix potential deadlock by moving schedule_work outside lock")
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-No, this is a copy-paste error. Will fix in v2.
+Reviewed-by: Breno Leitao <leitao@debian.org>
 
-Thanks,
-Yury
+> diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+> index bf956b85455a..0e9a1d4cf89b 100644
+> --- a/lib/rhashtable.c
+> +++ b/lib/rhashtable.c
+> @@ -611,21 +611,23 @@ static void *rhashtable_try_insert(struct rhashtable *ht, const void *key,
+>  			new_tbl = rht_dereference_rcu(tbl->future_tbl, ht);
+>  			data = ERR_PTR(-EAGAIN);
+>  		} else {
+> +			bool inserted;
+> +
+>  			flags = rht_lock(tbl, bkt);
+>  			data = rhashtable_lookup_one(ht, bkt, tbl,
+>  						     hash, key, obj);
+>  			new_tbl = rhashtable_insert_one(ht, bkt, tbl,
+>  							hash, obj, data);
+> +			inserted = data && !new_tbl;
+> +			if (inserted)
+> +				atomic_inc(&ht->nelems);
+>  			if (PTR_ERR(new_tbl) != -EEXIST)
+>  				data = ERR_CAST(new_tbl);
+>  
+>  			rht_unlock(tbl, bkt, flags);
+>  
+> -			if (PTR_ERR(data) == -ENOENT && !new_tbl) {
+> -				atomic_inc(&ht->nelems);
+> -				if (rht_grow_above_75(ht, tbl))
+> -					schedule_work(&ht->run_work);
+> -			}
+> +			if (inserted && rht_grow_above_75(ht, tbl))
+> +				schedule_work(&ht->run_work);
+
+That makes sense, since data could be ERR_PTR(-ENOENT) and ERR_PTR(-EAGAIN), and
+the object being inserted, which means that nelems should be increased.
+
+It was hard to review this patch, basically rhashtable_insert_one()
+returns three type of values, and you are interested in only one case,
+when the obj was inserted.
+
+These are the type of values that is coming from
+rhashtable_insert_one():
+
+  1) NULL: if object was inserted OR if data is NULL
+  2) Non error and !NULL: A new table to look at
+  3) ERR: Definitely not added
+
+I am wondering if we decoupled the first case, and only return NULL iff
+the object was added, it would simplify this logic.
+
+Something like the following (not tested):
+
+	diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+	index 3e555d012ed60..5a0ec71e990ee 100644
+	--- a/lib/rhashtable.c
+	+++ b/lib/rhashtable.c
+	@@ -554,7 +554,7 @@ static struct bucket_table *rhashtable_insert_one(
+			return ERR_PTR(-EEXIST);
+
+		if (PTR_ERR(data) != -EAGAIN && PTR_ERR(data) != -ENOENT)
+	-               return ERR_CAST(data);
+	+               return ERR_PTR(-EINVAL);
+
+		new_tbl = rht_dereference_rcu(tbl->future_tbl, ht);
+		if (new_tbl)
+
+
+Thanks for fixing it,
+--breno
 
