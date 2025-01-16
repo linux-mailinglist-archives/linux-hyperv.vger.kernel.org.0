@@ -1,140 +1,211 @@
-Return-Path: <linux-hyperv+bounces-3694-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39A7DA13962
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 12:48:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93918A13B08
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 14:41:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B32473A55C7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 11:48:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1D94164286
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 13:41:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C0791DE3D8;
-	Thu, 16 Jan 2025 11:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4B831F3D22;
+	Thu, 16 Jan 2025 13:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kLIWNy4z"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jYPn2l7N"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11481DE2C6;
-	Thu, 16 Jan 2025 11:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225816DCE1;
+	Thu, 16 Jan 2025 13:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737028133; cv=none; b=Vi2QOeRV0zCjIKvLnm0DFWVv4/ysj1QYKbFzrMK9TiTBDF3DEUZb0rcp51XSckJKsVz7ivoSpXEElE3n22p+YfQvcw2rmFxfBPZiXmg9e8ZA9TZehUFH2SYvp1UY938VOOD1RyucrmC5VcH0XUGPaa4UiTI3nw91q9xlrf1wJHI=
+	t=1737034912; cv=none; b=iWHCX3Q2Nnce4XwYtL9SM80Yyr81hPZs2YFkQYSBW3js1/JAm9bi7sHWqJ8Jdhs2rhkrrJuhP7E0Dy4SBn4kURRFVUAh71duKOSgcJP1X4OGjR4XEXaQtyBMPMnoc/H/BFAD1pXIyt1KlmJVmq8NSTeNC+p03mPkDA+IoWSr3a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737028133; c=relaxed/simple;
-	bh=Lw4wjAUigKzBAUDQnvuZb4RB/km3WbYe+PynVWIOnQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UeDFC0fkWLsQpNvPsjd1P0EQdZI5u7ZwWyoUSXtE1aOhzv7zGk3cdFQP/9UyT5MGaVcP0KxC0NqC3SRr7Z7FaVwxXfoi/i0QU2sIblYpi9GUaJDLh7Bd1uEaufydzSoepA3w3ZWiSsuZJLvEf3w1hOartIot8oDAeNcqLImu5aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kLIWNy4z; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50G3qjc4005877;
-	Thu, 16 Jan 2025 11:48:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=+xgvNP4z2pVkcvpTDSHfoQCpM3nse3
-	2c8mpx7FXqAvg=; b=kLIWNy4zL5Y5d6PkjnnOJZWv2DFdqKHWq37n0sIxRIML4n
-	q95gw/kzWsc4kTMeY5TfTJqywVtaGJ0WaPQhGUNlKC58mN6lNcqatrjNy+MnVScQ
-	BdEJPadtwpEuh6Vj8GLUFj3bvNZYORcYxg8pTwUtDT9dIn6P7i11ad+/G/6VPRXI
-	pVqjkd5a/kY1JRBlmdDJMIl9WQJGXYLxCWj3uTIUo7BShXRsvQygLAtMVwg0tBhB
-	64w+njncburLeQg3iT/HGhZknNnw4gO2Gz0ZTX3aMYyRzCCm/u8FCRetFTXKqVjH
-	Btc8E4dsTEVzsKG1P24cqsHtWlal27/CjpBB+jQg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 446tkcj2c0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Jan 2025 11:48:31 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50GBia3N022145;
-	Thu, 16 Jan 2025 11:48:30 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 446tkcj2bv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Jan 2025 11:48:30 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50GA62Qb007519;
-	Thu, 16 Jan 2025 11:48:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4443yndmvw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Jan 2025 11:48:28 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50GBmRls58196414
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Jan 2025 11:48:27 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F0C2120049;
-	Thu, 16 Jan 2025 11:48:26 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE68F20040;
-	Thu, 16 Jan 2025 11:48:26 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 16 Jan 2025 11:48:26 +0000 (GMT)
-Date: Thu, 16 Jan 2025 12:48:25 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Michael Kelley <mhklinux@outlook.com>, Breno Leitao <leitao@debian.org>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "tariqt@nvidia.com" <tariqt@nvidia.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, Thomas Graf <tgraf@suug.ch>,
-        Tejun Heo <tj@kernel.org>, Hao Luo <haoluo@google.com>,
-        Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Subject: Re: [v3 PATCH] rhashtable: Fix rhashtable_try_insert test
-Message-ID: <Z4jyCZQOy8JMVu3Q@tuxmaker.boeblingen.de.ibm.com>
-References: <Z1rYGzEpMub4Fp6i@gondor.apana.org.au>
- <Z2aFL3dNLYOcmzH3@gondor.apana.org.au>
- <20250102-daffy-vanilla-boar-6e1a61@leitao>
- <SN6PR02MB41572415707F0FA6D9A61247D4132@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250109-marigold-bandicoot-of-exercise-8ebede@leitao>
- <Z4DoFYQ3ytB-wS3-@gondor.apana.org.au>
- <SN6PR02MB41577C2C4EB260F3D2D4F85FD41C2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <Z4FXs8vAtitHIJyl@gondor.apana.org.au>
- <SN6PR02MB41570F1F5F4F579B4E8F0CD3D41C2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <Z4XWx5X0doetOJni@gondor.apana.org.au>
+	s=arc-20240116; t=1737034912; c=relaxed/simple;
+	bh=dZSQ4sM6EjdQbV0B/bB4NHAPrinVGMw3NkiqLUx0yQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XQxijnslqwdFHDWGh+9Qc+U3XDo1YnPVJza0D8EKJHOmEKwZceseUkaYZPtBJ8ZUysYO1NEfzQKr8qXNY47+xgDm9p8J9nt5WCMLUxU8jVSpCBYVAl2TfNZQDJd6bmW1ivoQSx/h6ofgNkloM0nKsCgmr/OM9WE2e6UNCNroiZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jYPn2l7N; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from hm-sls2.lan (bras-base-toroon4332w-grc-51-184-146-177-43.dsl.bell.ca [184.146.177.43])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D243B203E393;
+	Thu, 16 Jan 2025 05:41:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D243B203E393
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1737034910;
+	bh=9H7HPLjLJvXQjg3wqMJ0Tj4+R9QjGLbBsj8ckraGB7M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jYPn2l7Ny7Ng2SU2DcqqFGbZfDmvN2L3bF2UG7bKR4Wa2E7B775z7KwqMkmz0lD0j
+	 8Nf2FUH53KXEMOI7YegrzIrsT/EmE71RcLyu4K+8YTSIWsnE3S0FFjv2sQMfga2oMP
+	 IgqVKReVhn3/jL2YDXRDVZUHmkk/ScI0HHCp4AXc=
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/2] drivers/hv: introduce vmbus_channel_set_cpu()
+Date: Thu, 16 Jan 2025 08:41:34 -0500
+Message-ID: <20250116134136.66749-1-hamzamahfooz@linux.microsoft.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4XWx5X0doetOJni@gondor.apana.org.au>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hf-R3-h7RehK4HoSkpmbwde3SAJhOX-A
-X-Proofpoint-GUID: Ls7pGjaLPrYOTwLcB5MjMFoEaNuc74Jt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-16_05,2025-01-16_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- impostorscore=0 mlxscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1011
- mlxlogscore=686 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2501160086
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 14, 2025 at 11:15:19AM +0800, Herbert Xu wrote:
+The core functionality in target_cpu_store() is also needed in a
+subsequent patch for automatically changing the CPU when taking
+a CPU offline. As such, factor out the body of target_cpu_store()
+into new function vmbus_channel_set_cpu() that can also be used
+elsewhere.
 
-Hi Herbert,
+No functional change is intended.
 
-> Thanks for testing! The patch needs one more change though as
-> moving the atomic_inc outside of the lock was a bad idea on my
-> part.  This could cause atomic_inc/atomic_dec to be reordered
-> thus resulting in an underflow.
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Michael Kelley <mhklinux@outlook.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+---
+v2: separate vmbus_channel_set_cpu() changes from
+    cpu offlining changes.
 
-I want to confirm that this patch fixes massive strangenesses and
-few crashes observed on s390 systems, in addition to OOMs reported
-by Mikhail Zaslonko earlier.
+v3: address comments from Michael.
+---
+ drivers/hv/vmbus_drv.c | 50 +++++++++++++++++++++++++-----------------
+ include/linux/hyperv.h |  1 +
+ 2 files changed, 31 insertions(+), 20 deletions(-)
 
-> Thanks,
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 2892b8da20a5..0ca0e85e6edd 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1611,16 +1611,16 @@ static ssize_t target_cpu_show(struct vmbus_channel *channel, char *buf)
+ {
+ 	return sprintf(buf, "%u\n", channel->target_cpu);
+ }
+-static ssize_t target_cpu_store(struct vmbus_channel *channel,
+-				const char *buf, size_t count)
++
++int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu)
+ {
+-	u32 target_cpu, origin_cpu;
+-	ssize_t ret = count;
++	u32 origin_cpu;
++	int ret = 0;
+ 
+-	if (vmbus_proto_version < VERSION_WIN10_V4_1)
+-		return -EIO;
++	lockdep_assert_cpus_held();
++	lockdep_assert_held(&vmbus_connection.channel_mutex);
+ 
+-	if (sscanf(buf, "%uu", &target_cpu) != 1)
++	if (vmbus_proto_version < VERSION_WIN10_V4_1)
+ 		return -EIO;
+ 
+ 	/* Validate target_cpu for the cpumask_test_cpu() operation below. */
+@@ -1630,22 +1630,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	if (!cpumask_test_cpu(target_cpu, housekeeping_cpumask(HK_TYPE_MANAGED_IRQ)))
+ 		return -EINVAL;
+ 
+-	/* No CPUs should come up or down during this. */
+-	cpus_read_lock();
+-
+-	if (!cpu_online(target_cpu)) {
+-		cpus_read_unlock();
++	if (!cpu_online(target_cpu))
+ 		return -EINVAL;
+-	}
+ 
+ 	/*
+-	 * Synchronizes target_cpu_store() and channel closure:
++	 * Synchronizes vmbus_channel_set_cpu() and channel closure:
+ 	 *
+ 	 * { Initially: state = CHANNEL_OPENED }
+ 	 *
+ 	 * CPU1				CPU2
+ 	 *
+-	 * [target_cpu_store()]		[vmbus_disconnect_ring()]
++	 * [vmbus_channel_set_cpu()]	[vmbus_disconnect_ring()]
+ 	 *
+ 	 * LOCK channel_mutex		LOCK channel_mutex
+ 	 * LOAD r1 = state		LOAD r2 = state
+@@ -1660,7 +1655,6 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	 * Note.  The host processes the channel messages "sequentially", in
+ 	 * the order in which they are received on a per-partition basis.
+ 	 */
+-	mutex_lock(&vmbus_connection.channel_mutex);
+ 
+ 	/*
+ 	 * Hyper-V will ignore MODIFYCHANNEL messages for "non-open" channels;
+@@ -1668,17 +1662,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	 */
+ 	if (channel->state != CHANNEL_OPENED_STATE) {
+ 		ret = -EIO;
+-		goto cpu_store_unlock;
++		goto end;
+ 	}
+ 
+ 	origin_cpu = channel->target_cpu;
+ 	if (target_cpu == origin_cpu)
+-		goto cpu_store_unlock;
++		goto end;
+ 
+ 	if (vmbus_send_modifychannel(channel,
+ 				     hv_cpu_number_to_vp_number(target_cpu))) {
+ 		ret = -EIO;
+-		goto cpu_store_unlock;
++		goto end;
+ 	}
+ 
+ 	/*
+@@ -1708,9 +1702,25 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 				origin_cpu, target_cpu);
+ 	}
+ 
+-cpu_store_unlock:
++end:
++	return ret;
++}
++
++static ssize_t target_cpu_store(struct vmbus_channel *channel,
++				const char *buf, size_t count)
++{
++	ssize_t ret = count;
++	u32 target_cpu;
++
++	if (sscanf(buf, "%uu", &target_cpu) != 1)
++		return -EIO;
++
++	cpus_read_lock();
++	mutex_lock(&vmbus_connection.channel_mutex);
++	ret = vmbus_channel_set_cpu(channel, target_cpu);
+ 	mutex_unlock(&vmbus_connection.channel_mutex);
+ 	cpus_read_unlock();
++
+ 	return ret;
+ }
+ static VMBUS_CHAN_ATTR(cpu, 0644, target_cpu_show, target_cpu_store);
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 02a226bcf0ed..25e9e982f1b0 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1670,6 +1670,7 @@ int vmbus_send_tl_connect_request(const guid_t *shv_guest_servie_id,
+ 				  const guid_t *shv_host_servie_id);
+ int vmbus_send_modifychannel(struct vmbus_channel *channel, u32 target_vp);
+ void vmbus_set_event(struct vmbus_channel *channel);
++int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu);
+ 
+ /* Get the start of the ring buffer. */
+ static inline void *
+-- 
+2.47.1
 
-Thanks!
 
