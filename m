@@ -1,44 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3703-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3704-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BA20A1451C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 00:08:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0274AA1451E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 00:08:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BABC188B553
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 23:08:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4079E188B476
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 23:08:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139D422BAD8;
-	Thu, 16 Jan 2025 23:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5C9B24169D;
+	Thu, 16 Jan 2025 23:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H3xumzmy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DvjCsPNT"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7895522DF80;
-	Thu, 16 Jan 2025 23:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69362236EA5;
+	Thu, 16 Jan 2025 23:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737068887; cv=none; b=hdIKz5aLM1tSfolZprnU7Y5XUDh64qQdj6uVfOsQ9yGnfCSHhevLwrPb4sKMdZWc9E0EfHulDxP6lYZopiE1T3vv7FNJU1x9nPajs4wlKtDjcj/LHUJzuxDbeQajPhGipvA7oeoyBDc3pGv1UL8451hq5ussrwkEJekJJDiH5ho=
+	t=1737068889; cv=none; b=HA07Uu6mE9zLmS5NTxAwWsu3nv+tWJIyR13e8j05cOzeyk3YYOaLN4tYHxwhRvrTUL/VjZKFfqUdmeHdZt0HbmzSDG8KjAAm/Rc/OXttFGIwDz3GDnH9ysHYSTGT2hE2b7K6A8kZ0TYqMh3r08jN0iOjQMeHCB9jsAP+QSD5LhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737068887; c=relaxed/simple;
-	bh=dZSQ4sM6EjdQbV0B/bB4NHAPrinVGMw3NkiqLUx0yQM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZTZ5Q2MWXs+aQLnWscxcB5JOqZ4VM4j9Tm1p4ebdmOLDZrN79SngmNc93Q1wJg5U+euRDfXIZWnuWaC5R5fdtQT2EMd7p9k/lcPURyan4iW4pR5JcLLylVFnBsIXgT68D79kFi81LiQJSamGTbcW0LFq9efZ61oZxG+nqRagQV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=H3xumzmy; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1737068889; c=relaxed/simple;
+	bh=U5Kf/ympl+smnpRLNyuWvJZnbFjuNH7YNuo24866jKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Td/XvU+XCxAhJi2SIrmzI8JUD7sXRUpt8DV6gNH2ZE4/sJKBsVRD4psfBKUc1sQ2Rk1yX9rp9OPal00zPWS3qiMmOs4XlY1juNvMnlHEAz4/Muebgb3PuomHk6x4J7fVvD4zVGF0AZhbTeY8fJp12JSZ125smSghazgA8lM+PUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DvjCsPNT; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from hm-sls2.lan (bras-base-toroon4332w-grc-51-184-146-177-43.dsl.bell.ca [184.146.177.43])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4DB1820BEBE1;
-	Thu, 16 Jan 2025 15:08:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DB1820BEBE1
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5FA4920BEBFC;
+	Thu, 16 Jan 2025 15:08:05 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5FA4920BEBFC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1737068885;
-	bh=9H7HPLjLJvXQjg3wqMJ0Tj4+R9QjGLbBsj8ckraGB7M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H3xumzmyqWpoVzw2AeLVe9yEg5O0w3yTS9hSs13Yul9Wn2dgGemCfJt0rSqNd5iuf
-	 4XwXbDYuW49yoMP0Z3lSEsmBu08OPT80oPkFYy97NYMQV4AxAsHe7epHIhlQKcpMmx
-	 yCXpMGwT/AnF5+Y+SPDd5iGuEfGzkw0orzjjlokU=
+	s=default; t=1737068886;
+	bh=yTF/82LIvWuCYFP53TAPjjrfrUi9Orx7uAVK1s6EEmk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DvjCsPNTWli5hnynJpFyjwPcNfE0jwpQP6Qg7gUmi8iGPu8+hYVGEu+MQrjLCW63n
+	 rNnsf+I+6cALxPYJ1FNxSP9B5jxiNapUTh3ERIrn5ASk3CQMbQ35ICYVW8ALDnl2sb
+	 UtP+ktBHNfRzo/59PHLBIvp3WLkHa4wK9VaFJm4U=
 From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org
 Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
@@ -49,10 +50,12 @@ Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Dexuan Cui <decui@microsoft.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] drivers/hv: introduce vmbus_channel_set_cpu()
-Date: Thu, 16 Jan 2025 18:07:12 -0500
-Message-ID: <20250116230714.305387-1-hamzamahfooz@linux.microsoft.com>
+Subject: [PATCH v5 2/2] drivers/hv: add CPU offlining support
+Date: Thu, 16 Jan 2025 18:07:13 -0500
+Message-ID: <20250116230714.305387-2-hamzamahfooz@linux.microsoft.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250116230714.305387-1-hamzamahfooz@linux.microsoft.com>
+References: <20250116230714.305387-1-hamzamahfooz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,150 +64,144 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The core functionality in target_cpu_store() is also needed in a
-subsequent patch for automatically changing the CPU when taking
-a CPU offline. As such, factor out the body of target_cpu_store()
-into new function vmbus_channel_set_cpu() that can also be used
-elsewhere.
-
-No functional change is intended.
+Currently, it is tedious to offline CPUs in a Hyper-V VM since CPUs may
+have VMBus channels attached to them that a user would have to manually
+rebind elsewhere. So, as made mention of in
+commit d570aec0f2154 ("Drivers: hv: vmbus: Synchronize init_vp_index()
+vs. CPU hotplug"), rebind channels associated with CPUs that a user is
+trying to offline to a new "randomly" selected CPU.
 
 Cc: Boqun Feng <boqun.feng@gmail.com>
 Cc: Michael Kelley <mhklinux@outlook.com>
 Cc: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
 ---
-v2: separate vmbus_channel_set_cpu() changes from
-    cpu offlining changes.
+v2: remove cpus_read_{un,}lock() from hv_pick_new_cpu() and add
+    lockdep_assert_cpus_held().
 
-v3: address comments from Michael.
+v3: use for_each_cpu_wrap() in hv_pick_new_cpu().
+
+v4: store get_random_u32_below() in start.
+
+v5: style fixes, use target_cpu and set ret to -EBUSY by default.
 ---
- drivers/hv/vmbus_drv.c | 50 +++++++++++++++++++++++++-----------------
- include/linux/hyperv.h |  1 +
- 2 files changed, 31 insertions(+), 20 deletions(-)
+ drivers/hv/hv.c | 72 ++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 51 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 2892b8da20a5..0ca0e85e6edd 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1611,16 +1611,16 @@ static ssize_t target_cpu_show(struct vmbus_channel *channel, char *buf)
- {
- 	return sprintf(buf, "%u\n", channel->target_cpu);
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 36d9ba097ff5..fab0690b5c41 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -433,13 +433,47 @@ static bool hv_synic_event_pending(void)
+ 	return pending;
  }
--static ssize_t target_cpu_store(struct vmbus_channel *channel,
--				const char *buf, size_t count)
-+
-+int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu)
- {
--	u32 target_cpu, origin_cpu;
--	ssize_t ret = count;
-+	u32 origin_cpu;
-+	int ret = 0;
  
--	if (vmbus_proto_version < VERSION_WIN10_V4_1)
--		return -EIO;
++static int hv_pick_new_cpu(struct vmbus_channel *channel)
++{
++	int ret = -EBUSY;
++	int start;
++	int cpu;
++
 +	lockdep_assert_cpus_held();
 +	lockdep_assert_held(&vmbus_connection.channel_mutex);
- 
--	if (sscanf(buf, "%uu", &target_cpu) != 1)
-+	if (vmbus_proto_version < VERSION_WIN10_V4_1)
- 		return -EIO;
- 
- 	/* Validate target_cpu for the cpumask_test_cpu() operation below. */
-@@ -1630,22 +1630,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 	if (!cpumask_test_cpu(target_cpu, housekeeping_cpumask(HK_TYPE_MANAGED_IRQ)))
- 		return -EINVAL;
- 
--	/* No CPUs should come up or down during this. */
--	cpus_read_lock();
--
--	if (!cpu_online(target_cpu)) {
--		cpus_read_unlock();
-+	if (!cpu_online(target_cpu))
- 		return -EINVAL;
--	}
- 
- 	/*
--	 * Synchronizes target_cpu_store() and channel closure:
-+	 * Synchronizes vmbus_channel_set_cpu() and channel closure:
- 	 *
- 	 * { Initially: state = CHANNEL_OPENED }
- 	 *
- 	 * CPU1				CPU2
- 	 *
--	 * [target_cpu_store()]		[vmbus_disconnect_ring()]
-+	 * [vmbus_channel_set_cpu()]	[vmbus_disconnect_ring()]
- 	 *
- 	 * LOCK channel_mutex		LOCK channel_mutex
- 	 * LOAD r1 = state		LOAD r2 = state
-@@ -1660,7 +1655,6 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 	 * Note.  The host processes the channel messages "sequentially", in
- 	 * the order in which they are received on a per-partition basis.
- 	 */
--	mutex_lock(&vmbus_connection.channel_mutex);
- 
- 	/*
- 	 * Hyper-V will ignore MODIFYCHANNEL messages for "non-open" channels;
-@@ -1668,17 +1662,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 	 */
- 	if (channel->state != CHANNEL_OPENED_STATE) {
- 		ret = -EIO;
--		goto cpu_store_unlock;
-+		goto end;
- 	}
- 
- 	origin_cpu = channel->target_cpu;
- 	if (target_cpu == origin_cpu)
--		goto cpu_store_unlock;
-+		goto end;
- 
- 	if (vmbus_send_modifychannel(channel,
- 				     hv_cpu_number_to_vp_number(target_cpu))) {
- 		ret = -EIO;
--		goto cpu_store_unlock;
-+		goto end;
- 	}
- 
- 	/*
-@@ -1708,9 +1702,25 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 				origin_cpu, target_cpu);
- 	}
- 
--cpu_store_unlock:
-+end:
++
++	/*
++	 * We can't assume that the relevant interrupts will be sent before
++	 * the cpu is offlined on older versions of hyperv.
++	 */
++	if (vmbus_proto_version < VERSION_WIN10_V5_3)
++		return -EBUSY;
++
++	start = get_random_u32_below(nr_cpu_ids);
++
++	for_each_cpu_wrap(cpu, cpu_online_mask, start) {
++		if (channel->target_cpu == cpu ||
++		    channel->target_cpu == VMBUS_CONNECT_CPU)
++			continue;
++
++		ret = vmbus_channel_set_cpu(channel, cpu);
++		if (!ret)
++			break;
++	}
++
++	if (ret)
++		ret = vmbus_channel_set_cpu(channel, VMBUS_CONNECT_CPU);
++
 +	return ret;
 +}
 +
-+static ssize_t target_cpu_store(struct vmbus_channel *channel,
-+				const char *buf, size_t count)
-+{
-+	ssize_t ret = count;
-+	u32 target_cpu;
-+
-+	if (sscanf(buf, "%uu", &target_cpu) != 1)
-+		return -EIO;
-+
-+	cpus_read_lock();
-+	mutex_lock(&vmbus_connection.channel_mutex);
-+	ret = vmbus_channel_set_cpu(channel, target_cpu);
- 	mutex_unlock(&vmbus_connection.channel_mutex);
- 	cpus_read_unlock();
-+
- 	return ret;
- }
- static VMBUS_CHAN_ATTR(cpu, 0644, target_cpu_show, target_cpu_store);
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 02a226bcf0ed..25e9e982f1b0 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1670,6 +1670,7 @@ int vmbus_send_tl_connect_request(const guid_t *shv_guest_servie_id,
- 				  const guid_t *shv_host_servie_id);
- int vmbus_send_modifychannel(struct vmbus_channel *channel, u32 target_vp);
- void vmbus_set_event(struct vmbus_channel *channel);
-+int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu);
+ /*
+  * hv_synic_cleanup - Cleanup routine for hv_synic_init().
+  */
+ int hv_synic_cleanup(unsigned int cpu)
+ {
+ 	struct vmbus_channel *channel, *sc;
+-	bool channel_found = false;
++	int ret = 0;
  
- /* Get the start of the ring buffer. */
- static inline void *
+ 	if (vmbus_connection.conn_state != CONNECTED)
+ 		goto always_cleanup;
+@@ -456,38 +490,34 @@ int hv_synic_cleanup(unsigned int cpu)
+ 
+ 	/*
+ 	 * Search for channels which are bound to the CPU we're about to
+-	 * cleanup.  In case we find one and vmbus is still connected, we
+-	 * fail; this will effectively prevent CPU offlining.
+-	 *
+-	 * TODO: Re-bind the channels to different CPUs.
++	 * cleanup.
+ 	 */
+ 	mutex_lock(&vmbus_connection.channel_mutex);
+ 	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
+ 		if (channel->target_cpu == cpu) {
+-			channel_found = true;
+-			break;
++			ret = hv_pick_new_cpu(channel);
++			if (ret) {
++				mutex_unlock(&vmbus_connection.channel_mutex);
++				return ret;
++			}
+ 		}
+ 		list_for_each_entry(sc, &channel->sc_list, sc_list) {
+ 			if (sc->target_cpu == cpu) {
+-				channel_found = true;
+-				break;
++				ret = hv_pick_new_cpu(sc);
++				if (ret) {
++					mutex_unlock(&vmbus_connection.channel_mutex);
++					return ret;
++				}
+ 			}
+ 		}
+-		if (channel_found)
+-			break;
+ 	}
+ 	mutex_unlock(&vmbus_connection.channel_mutex);
+ 
+-	if (channel_found)
+-		return -EBUSY;
+-
+ 	/*
+-	 * channel_found == false means that any channels that were previously
+-	 * assigned to the CPU have been reassigned elsewhere with a call of
+-	 * vmbus_send_modifychannel().  Scan the event flags page looking for
+-	 * bits that are set and waiting with a timeout for vmbus_chan_sched()
+-	 * to process such bits.  If bits are still set after this operation
+-	 * and VMBus is connected, fail the CPU offlining operation.
++	 * Scan the event flags page looking for bits that are set and waiting
++	 * with a timeout for vmbus_chan_sched() to process such bits. If bits
++	 * are still set after this operation and VMBus is connected, fail the
++	 * CPU offlining operation.
+ 	 */
+ 	if (vmbus_proto_version >= VERSION_WIN10_V4_1 && hv_synic_event_pending())
+ 		return -EBUSY;
+@@ -497,5 +527,5 @@ int hv_synic_cleanup(unsigned int cpu)
+ 
+ 	hv_synic_disable_regs(cpu);
+ 
+-	return 0;
++	return ret;
+ }
 -- 
 2.47.1
 
