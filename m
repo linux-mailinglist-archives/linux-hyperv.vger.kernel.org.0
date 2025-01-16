@@ -1,133 +1,211 @@
-Return-Path: <linux-hyperv+bounces-3702-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3703-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B910CA14419
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 22:39:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BA20A1451C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 00:08:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FEBA188D273
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 21:40:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BABC188B553
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 23:08:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA69D1DAC81;
-	Thu, 16 Jan 2025 21:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139D422BAD8;
+	Thu, 16 Jan 2025 23:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QkHQ0Nwk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H3xumzmy"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9A51862;
-	Thu, 16 Jan 2025 21:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7895522DF80;
+	Thu, 16 Jan 2025 23:08:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737063594; cv=none; b=TgjE4LTWSRwvnfvxy3LEMrDrvatob9cd9sImTyB7HZdf1L0Eabqt3Xz+lSxV3A+egkkaCr6f961oADh/HOGlj/5eTac0THgjYlaQLnOEJHQvM+xUqNptS0ghhQOVdsgHCysSSIfrsywgm/vvxWQHspwfUkLXkP9+FGCgJ7e1t7M=
+	t=1737068887; cv=none; b=hdIKz5aLM1tSfolZprnU7Y5XUDh64qQdj6uVfOsQ9yGnfCSHhevLwrPb4sKMdZWc9E0EfHulDxP6lYZopiE1T3vv7FNJU1x9nPajs4wlKtDjcj/LHUJzuxDbeQajPhGipvA7oeoyBDc3pGv1UL8451hq5ussrwkEJekJJDiH5ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737063594; c=relaxed/simple;
-	bh=O5hIhC8hK9dd/FJJFMeziJh5D0L749GqSVaZFzgO0tk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MqWJwiC9OsNCc0Ku8K6neXvwIczub0nUWwapILVu0BoBPpQNs0zVAvBt0YPKnh4uz/b/O3DA23YhT5PLxq/193JJ2e+kj5UQU7wTG0xBV2a+Mdv7HauPpi3VYLOwELzoTd4IkiPfB76r6LOw1U1+MwzLG/Z2bBLswhL0q0YwlnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QkHQ0Nwk; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1737068887; c=relaxed/simple;
+	bh=dZSQ4sM6EjdQbV0B/bB4NHAPrinVGMw3NkiqLUx0yQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZTZ5Q2MWXs+aQLnWscxcB5JOqZ4VM4j9Tm1p4ebdmOLDZrN79SngmNc93Q1wJg5U+euRDfXIZWnuWaC5R5fdtQT2EMd7p9k/lcPURyan4iW4pR5JcLLylVFnBsIXgT68D79kFi81LiQJSamGTbcW0LFq9efZ61oZxG+nqRagQV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=H3xumzmy; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BE6C920BEBE1;
-	Thu, 16 Jan 2025 13:39:52 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BE6C920BEBE1
+Received: from hm-sls2.lan (bras-base-toroon4332w-grc-51-184-146-177-43.dsl.bell.ca [184.146.177.43])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4DB1820BEBE1;
+	Thu, 16 Jan 2025 15:08:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DB1820BEBE1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1737063592;
-	bh=rcGjW2h/I7dfjipmLDUIFNKUPTe4UHw3iyCAskW7/9g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QkHQ0NwkonH8EGfIjyPd1VJ9YS+3jBgZ41brq5uwvVuuftGCIItS2pmSn/4DUm3Qb
-	 2/eWo2Abm8CJ4buXGjP2QqL83Bw/8II4l5XR1XkHQDoGBUNKunZ2YerchxsyN1w9NU
-	 1gNFxkFnH7v49bTnmiwDGaW30UPdQRfGXwNpQAMM=
-Message-ID: <0927ebf9-db17-49f5-a188-e0d486ae4bda@linux.microsoft.com>
-Date: Thu, 16 Jan 2025 13:39:52 -0800
+	s=default; t=1737068885;
+	bh=9H7HPLjLJvXQjg3wqMJ0Tj4+R9QjGLbBsj8ckraGB7M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H3xumzmyqWpoVzw2AeLVe9yEg5O0w3yTS9hSs13Yul9Wn2dgGemCfJt0rSqNd5iuf
+	 4XwXbDYuW49yoMP0Z3lSEsmBu08OPT80oPkFYy97NYMQV4AxAsHe7epHIhlQKcpMmx
+	 yCXpMGwT/AnF5+Y+SPDd5iGuEfGzkw0orzjjlokU=
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/2] drivers/hv: introduce vmbus_channel_set_cpu()
+Date: Thu, 16 Jan 2025 18:07:12 -0500
+Message-ID: <20250116230714.305387-1-hamzamahfooz@linux.microsoft.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] hv_netvsc: Replace one-element array with flexible
- array member
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250116211932.139564-2-thorsten.blum@linux.dev>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20250116211932.139564-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The core functionality in target_cpu_store() is also needed in a
+subsequent patch for automatically changing the CPU when taking
+a CPU offline. As such, factor out the body of target_cpu_store()
+into new function vmbus_channel_set_cpu() that can also be used
+elsewhere.
 
+No functional change is intended.
 
-On 1/16/2025 1:19 PM, Thorsten Blum wrote:
-> Replace the deprecated one-element array with a modern flexible array
-> member in the struct nvsp_1_message_send_receive_buffer_complete.
-> 
-> Use struct_size_t(,,1) instead of sizeof() to maintain the same size.
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Michael Kelley <mhklinux@outlook.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+---
+v2: separate vmbus_channel_set_cpu() changes from
+    cpu offlining changes.
 
-Thanks!
+v3: address comments from Michael.
+---
+ drivers/hv/vmbus_drv.c | 50 +++++++++++++++++++++++++-----------------
+ include/linux/hyperv.h |  1 +
+ 2 files changed, 31 insertions(+), 20 deletions(-)
 
-> 
-> Compile-tested only.
-
-The code change looks good to me now. I'll build a VM with this change
-to clear my conscience (maybe the change triggers a compiler bug,
-however unlikely that sounds) before replying with any tags. Likely next
-Monday, but feel free to beat me to it, or perhaps, someone else will
-tag this as reviewed by them and/or tested by them.
-
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
-> Changes in v2:
-> - Replace sizeof() with struct_size_t(,,1) to maintain the same size
->    after feedback from Roman Kisel (thanks!)
-> - Link to v1: https://lore.kernel.org/r/20250116201635.47870-2-thorsten.blum@linux.dev/
-> ---
->   drivers/net/hyperv/hyperv_net.h | 2 +-
->   drivers/net/hyperv/netvsc.c     | 3 ++-
->   2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-> index e690b95b1bbb..234db693cefa 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -464,7 +464,7 @@ struct nvsp_1_message_send_receive_buffer_complete {
->   	 *  LargeOffset                            SmallOffset
->   	 */
->   
-> -	struct nvsp_1_receive_buffer_section sections[1];
-> +	struct nvsp_1_receive_buffer_section sections[];
->   } __packed;
->   
->   /*
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 9afb08dbc350..d6f5b9ea3109 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -866,7 +866,8 @@ static void netvsc_send_completion(struct net_device *ndev,
->   
->   	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
->   		if (msglen < sizeof(struct nvsp_message_header) +
-> -				sizeof(struct nvsp_1_message_send_receive_buffer_complete)) {
-> +				struct_size_t(struct nvsp_1_message_send_receive_buffer_complete,
-> +					      sections, 1)) {
->   			netdev_err(ndev, "nvsp_msg1 length too small: %u\n",
->   				   msglen);
->   			return;
-
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 2892b8da20a5..0ca0e85e6edd 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1611,16 +1611,16 @@ static ssize_t target_cpu_show(struct vmbus_channel *channel, char *buf)
+ {
+ 	return sprintf(buf, "%u\n", channel->target_cpu);
+ }
+-static ssize_t target_cpu_store(struct vmbus_channel *channel,
+-				const char *buf, size_t count)
++
++int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu)
+ {
+-	u32 target_cpu, origin_cpu;
+-	ssize_t ret = count;
++	u32 origin_cpu;
++	int ret = 0;
+ 
+-	if (vmbus_proto_version < VERSION_WIN10_V4_1)
+-		return -EIO;
++	lockdep_assert_cpus_held();
++	lockdep_assert_held(&vmbus_connection.channel_mutex);
+ 
+-	if (sscanf(buf, "%uu", &target_cpu) != 1)
++	if (vmbus_proto_version < VERSION_WIN10_V4_1)
+ 		return -EIO;
+ 
+ 	/* Validate target_cpu for the cpumask_test_cpu() operation below. */
+@@ -1630,22 +1630,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	if (!cpumask_test_cpu(target_cpu, housekeeping_cpumask(HK_TYPE_MANAGED_IRQ)))
+ 		return -EINVAL;
+ 
+-	/* No CPUs should come up or down during this. */
+-	cpus_read_lock();
+-
+-	if (!cpu_online(target_cpu)) {
+-		cpus_read_unlock();
++	if (!cpu_online(target_cpu))
+ 		return -EINVAL;
+-	}
+ 
+ 	/*
+-	 * Synchronizes target_cpu_store() and channel closure:
++	 * Synchronizes vmbus_channel_set_cpu() and channel closure:
+ 	 *
+ 	 * { Initially: state = CHANNEL_OPENED }
+ 	 *
+ 	 * CPU1				CPU2
+ 	 *
+-	 * [target_cpu_store()]		[vmbus_disconnect_ring()]
++	 * [vmbus_channel_set_cpu()]	[vmbus_disconnect_ring()]
+ 	 *
+ 	 * LOCK channel_mutex		LOCK channel_mutex
+ 	 * LOAD r1 = state		LOAD r2 = state
+@@ -1660,7 +1655,6 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	 * Note.  The host processes the channel messages "sequentially", in
+ 	 * the order in which they are received on a per-partition basis.
+ 	 */
+-	mutex_lock(&vmbus_connection.channel_mutex);
+ 
+ 	/*
+ 	 * Hyper-V will ignore MODIFYCHANNEL messages for "non-open" channels;
+@@ -1668,17 +1662,17 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	 */
+ 	if (channel->state != CHANNEL_OPENED_STATE) {
+ 		ret = -EIO;
+-		goto cpu_store_unlock;
++		goto end;
+ 	}
+ 
+ 	origin_cpu = channel->target_cpu;
+ 	if (target_cpu == origin_cpu)
+-		goto cpu_store_unlock;
++		goto end;
+ 
+ 	if (vmbus_send_modifychannel(channel,
+ 				     hv_cpu_number_to_vp_number(target_cpu))) {
+ 		ret = -EIO;
+-		goto cpu_store_unlock;
++		goto end;
+ 	}
+ 
+ 	/*
+@@ -1708,9 +1702,25 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 				origin_cpu, target_cpu);
+ 	}
+ 
+-cpu_store_unlock:
++end:
++	return ret;
++}
++
++static ssize_t target_cpu_store(struct vmbus_channel *channel,
++				const char *buf, size_t count)
++{
++	ssize_t ret = count;
++	u32 target_cpu;
++
++	if (sscanf(buf, "%uu", &target_cpu) != 1)
++		return -EIO;
++
++	cpus_read_lock();
++	mutex_lock(&vmbus_connection.channel_mutex);
++	ret = vmbus_channel_set_cpu(channel, target_cpu);
+ 	mutex_unlock(&vmbus_connection.channel_mutex);
+ 	cpus_read_unlock();
++
+ 	return ret;
+ }
+ static VMBUS_CHAN_ATTR(cpu, 0644, target_cpu_show, target_cpu_store);
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 02a226bcf0ed..25e9e982f1b0 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1670,6 +1670,7 @@ int vmbus_send_tl_connect_request(const guid_t *shv_guest_servie_id,
+ 				  const guid_t *shv_host_servie_id);
+ int vmbus_send_modifychannel(struct vmbus_channel *channel, u32 target_vp);
+ void vmbus_set_event(struct vmbus_channel *channel);
++int vmbus_channel_set_cpu(struct vmbus_channel *channel, u32 target_cpu);
+ 
+ /* Get the start of the ring buffer. */
+ static inline void *
 -- 
-Thank you,
-Roman
+2.47.1
 
 
