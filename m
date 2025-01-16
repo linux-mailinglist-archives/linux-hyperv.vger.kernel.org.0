@@ -1,61 +1,61 @@
-Return-Path: <linux-hyperv+bounces-3691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3692-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B790A12DE1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2025 22:43:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3336AA132F7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 07:12:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C9B83A55D7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2025 21:43:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B6D71887E2A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2025 06:12:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1B41DB54C;
-	Wed, 15 Jan 2025 21:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC3C18A6D7;
+	Thu, 16 Jan 2025 06:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="d1XjhYql"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N+2qUiwg"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38B1D1D90DF;
-	Wed, 15 Jan 2025 21:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60477082F;
+	Thu, 16 Jan 2025 06:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736977396; cv=none; b=RHfRAg/7FqMxsaE4AQXyrAEPfvv17lPaEpe40JxN7+dW9TDjAFVEn+z8+kypJZ95UO4VrUeb70S1ypn0Nu+KqJ52RNjRmDpqfQMJUcFgax/8AlMne3XZ5/ErM/xJyRf0IAsycrQBngz3S1Q7SyYu7NtCh422yr5FwDWGTY3+Bdg=
+	t=1737007952; cv=none; b=iocfOL5dw3UHkUzYvdAqVVBEHXxhi+rjaRogvxzncsavpxQ2OsOZJcP0uNodtadpbJiZWS9yrcBe+w4yjE5yRr6zAEM4gDL5rG/OfdBdeVbBUK6BcqUwnzLeC97GQLb9CKzh/Cf72LGBdP48qHhu9xODnEmwEHPs6yBpC9FQvS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736977396; c=relaxed/simple;
-	bh=zliBYaX1+SJV3ejOtE7WUmLI9TXmkGVwCuzsY2XmqXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DW4rUXmLkB2PCyzR44o/vsE7ozUIzDEwgY67KRmxFj6PgrTWtg8lBhxwzBCYq/CCdZVWwJqAKVEynwXdMxJG9E6gA5woG7/DXOqSunC/XQI1+y7RqNiPdHdAWK+GNhWS0aDBvAoO6dw2XAXEtaojnVqSTG7dmcHQVWP810DKrfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=d1XjhYql; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1737007952; c=relaxed/simple;
+	bh=wx0L0s5lw2Ue27/s5MAk7zurF3XpZSNpnVARgUq4z5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fh0TmTMOyFpymkOnrdVMLMjA9V6ByCHleCB11+A7A7yuve6uoZVKsJ0yGVmh2K/C14IbwiZWsYaQWIg1bjXvHOiui0MP/dXQvQWt/AVpx9c/gR+mXMLlKrj4grlP7xNdzrAL8eu4umR/2dNuHr7ovJtEFQer0zw7zTrqiNx85Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N+2qUiwg; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from hm-sls2.corp.microsoft.com (bras-base-toroon4332w-grc-60-142-114-100-59.dsl.bell.ca [142.114.100.59])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3A29C2043F3A;
-	Wed, 15 Jan 2025 13:43:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3A29C2043F3A
+Received: from namjain-hibernation.4uyjgaamrtuunfhsycmekme4ua.xx.internal.cloudapp.net (unknown [20.94.232.156])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 222B7203D608;
+	Wed, 15 Jan 2025 22:12:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 222B7203D608
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1736977394;
-	bh=7W6g0D7EEwQGVQYv1brgiZfx1SuP02CAVaq9EcBMw9Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d1XjhYqlhKpL2/Av8ajFsx+/R0GrLrSNKr8q+Jhht5otgSBv4X15hSTqktDkYAsnx
-	 dxdJuJ18mFqlqX9Lkr+cbRXfSz4LWqBWQJE1zOB0sywRmsYpUu7ZV6QaXeW+sFOI1v
-	 aj5PpanlL2zOqBCWG3MyMWGiFA0/FurRLKFpERNY=
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org
-Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
+	s=default; t=1737007950;
+	bh=QukWsI7AClV1k83KOW///qMqhXC/yY5t0dJRKNVQKEs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N+2qUiwgs3URnS1HAGj3lC5OYU9a7S1LXmpHfYaUELPRyyndhD5JeuOimRGHctwy4
+	 TvwrmBjewvzJ8vaS+Mw2z538OtHLtrtBXqeh7YcdHBRykbu83+2fTYH3yASnf8GqFo
+	 xSeivfDy4AlkmlmxdeG+q51o7wcOvFPT819d+kaQ=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
 	Dexuan Cui <decui@microsoft.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] drivers/hv: add CPU offlining support
-Date: Wed, 15 Jan 2025 16:43:05 -0500
-Message-ID: <20250115214306.154853-2-hamzamahfooz@linux.microsoft.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250115214306.154853-1-hamzamahfooz@linux.microsoft.com>
-References: <20250115214306.154853-1-hamzamahfooz@linux.microsoft.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: [PATCH] x86/hyperv/vtl: Stop kernel from probing VTL0 low memory
+Date: Thu, 16 Jan 2025 06:12:24 +0000
+Message-ID: <20250116061224.1701-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,131 +64,35 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, it is tedious to offline CPUs. Since, most CPUs will have
-vmbus channels attached to them that a user would have to manually
-rebind elsewhere. So, as made mention of in
-commit d570aec0f2154 ("Drivers: hv: vmbus: Synchronize init_vp_index()
-vs. CPU hotplug"), rebind channels associated with CPUs that a user is
-trying to offline to a new "randomly" selected CPU.
+For Linux, running in Hyper-V VTL (Virtual Trust Level), kernel in VTL2
+tries to access VTL0 low memory in probe_roms. This memory is not
+described in the e820 map. Initialize probe_roms call to no-ops
+during boot for VTL2 kernel to avoid this. The issue got identified
+in OpenVMM which detects invalid accesses initiated from kernel running
+in VTL2.
 
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Michael Kelley <mhklinux@outlook.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
-v2: remove cpus_read_{un,}lock() from hv_pick_new_cpu() and add
-    lockdep_assert_cpus_held().
+ arch/x86/hyperv/hv_vtl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-v3: use for_each_cpu_wrap() in hv_pick_new_cpu().
----
- drivers/hv/hv.c | 63 +++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 48 insertions(+), 15 deletions(-)
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 4e1b1e3b5658..3f4e20d7b724 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -30,6 +30,7 @@ void __init hv_vtl_init_platform(void)
+ 	x86_platform.realmode_init = x86_init_noop;
+ 	x86_init.irqs.pre_vector_init = x86_init_noop;
+ 	x86_init.timers.timer_init = x86_init_noop;
++	x86_init.resources.probe_roms = x86_init_noop;
+ 
+ 	/* Avoid searching for BIOS MP tables */
+ 	x86_init.mpparse.find_mptable = x86_init_noop;
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 36d9ba097ff5..f120b808258f 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -433,13 +433,46 @@ static bool hv_synic_event_pending(void)
- 	return pending;
- }
- 
-+static int hv_pick_new_cpu(struct vmbus_channel *channel,
-+			   unsigned int current_cpu)
-+{
-+	int ret = 0;
-+	int cpu;
-+
-+	lockdep_assert_cpus_held();
-+	lockdep_assert_held(&vmbus_connection.channel_mutex);
-+
-+	/*
-+	 * We can't assume that the relevant interrupts will be sent before
-+	 * the cpu is offlined on older versions of hyperv.
-+	 */
-+	if (vmbus_proto_version < VERSION_WIN10_V5_3)
-+		return -EBUSY;
-+
-+	for_each_cpu_wrap(cpu, cpu_online_mask,
-+			  get_random_u32_below(nr_cpu_ids)) {
-+		if (cpu == current_cpu || cpu == VMBUS_CONNECT_CPU)
-+			continue;
-+
-+		ret = vmbus_channel_set_cpu(channel, cpu);
-+
-+		if (!ret)
-+			break;
-+	}
-+
-+	if (ret)
-+		ret = vmbus_channel_set_cpu(channel, VMBUS_CONNECT_CPU);
-+
-+	return ret;
-+}
-+
- /*
-  * hv_synic_cleanup - Cleanup routine for hv_synic_init().
-  */
- int hv_synic_cleanup(unsigned int cpu)
- {
- 	struct vmbus_channel *channel, *sc;
--	bool channel_found = false;
-+	int ret = 0;
- 
- 	if (vmbus_connection.conn_state != CONNECTED)
- 		goto always_cleanup;
-@@ -456,31 +489,31 @@ int hv_synic_cleanup(unsigned int cpu)
- 
- 	/*
- 	 * Search for channels which are bound to the CPU we're about to
--	 * cleanup.  In case we find one and vmbus is still connected, we
--	 * fail; this will effectively prevent CPU offlining.
--	 *
--	 * TODO: Re-bind the channels to different CPUs.
-+	 * cleanup.
- 	 */
- 	mutex_lock(&vmbus_connection.channel_mutex);
- 	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
- 		if (channel->target_cpu == cpu) {
--			channel_found = true;
--			break;
-+			ret = hv_pick_new_cpu(channel, cpu);
-+
-+			if (ret) {
-+				mutex_unlock(&vmbus_connection.channel_mutex);
-+				return ret;
-+			}
- 		}
- 		list_for_each_entry(sc, &channel->sc_list, sc_list) {
- 			if (sc->target_cpu == cpu) {
--				channel_found = true;
--				break;
-+				ret = hv_pick_new_cpu(channel, cpu);
-+
-+				if (ret) {
-+					mutex_unlock(&vmbus_connection.channel_mutex);
-+					return ret;
-+				}
- 			}
- 		}
--		if (channel_found)
--			break;
- 	}
- 	mutex_unlock(&vmbus_connection.channel_mutex);
- 
--	if (channel_found)
--		return -EBUSY;
--
- 	/*
- 	 * channel_found == false means that any channels that were previously
- 	 * assigned to the CPU have been reassigned elsewhere with a call of
-@@ -497,5 +530,5 @@ int hv_synic_cleanup(unsigned int cpu)
- 
- 	hv_synic_disable_regs(cpu);
- 
--	return 0;
-+	return ret;
- }
+base-commit: 37136bf5c3a6f6b686d74f41837a6406bec6b7bc
 -- 
-2.47.1
+2.43.0
 
 
