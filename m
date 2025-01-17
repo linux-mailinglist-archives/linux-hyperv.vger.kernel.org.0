@@ -1,106 +1,114 @@
-Return-Path: <linux-hyperv+bounces-3710-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3711-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 303B1A1552C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 18:01:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 907E5A157F8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 20:12:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DA50169D24
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 17:01:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF48716492B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 19:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 378E419CCEC;
-	Fri, 17 Jan 2025 17:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9801A9B23;
+	Fri, 17 Jan 2025 19:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HS4WmeOg"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="THkOS3Bo"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C441925A636;
-	Fri, 17 Jan 2025 17:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51E421A239F;
+	Fri, 17 Jan 2025 19:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737133308; cv=none; b=XbvmIu6vMXAlkLx+MvAOyVv/QJjIY72t3uQRg399m874JXmo8giYonWuozWGtdNtzGfNp8FBAXOOZYTEKaNQHNjvokTBmUd7JiGVn9VpqwQXaLSADGd/V6AzKXYZkEJCk+WU/cMgbibDbNJaFXHHEcQlcmBAMQrBNG/yy7kvLwM=
+	t=1737141095; cv=none; b=Ype/7UQ96hl3kUuzypLsrb6ZPHpzDz55KHtmcKY2BulfKQj1Ju0x/mAISem/9OTwos2idUSU6C1zckdvUwZonksCvBWVDW4YWJEpLBBwrxscHzuZ9WGNRfXwstnFyBfn3c/1k4wx0/lMDpXcvcsvDxE/kryyWRcJoC0vPIgsdts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737133308; c=relaxed/simple;
-	bh=0L/L+VwLhP+2Nz4Sawes6nA9aPBfVtIcEpeDR3mt4zc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AWFaWVeJCRD/TRfgzy9RPazmKEukZswD7cS9bjHlHWDDSm+B/bLOrRKD+uFTtWrSGCsneEGqxogBoTgpQoBvSWj1iOqQ9yUHxMYkvde1Fm7P+GQrZ8jeHsU4uptFCvETt+rM57/RYOF+G+XKkSmqlDUdUyXvdLSBBMkQidSdMHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HS4WmeOg; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1737141095; c=relaxed/simple;
+	bh=/8ei8rbOGK64Vfb0fbQyCL9+KpPjR8G10qKS/soRWD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tfNdMdgcPPCtt+/04C3n+oEykIrvT/IOvzNu34ih994R/7A3qEzGwNd6MJeRKEiYFRFMe6lHMuOlzIX2Oqway/4vduFtQ/CiaKvfDpG9nc7suF9f+WwDcsBLzjkSNuTZu24vhdHe7fFElHdS/7IvNhd23PYfxZv9wawkZoiJWUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=THkOS3Bo; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 11C7820BEBE1;
-	Fri, 17 Jan 2025 09:01:42 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 11C7820BEBE1
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C0BC020591BB;
+	Fri, 17 Jan 2025 11:11:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C0BC020591BB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1737133304;
-	bh=gSmaDm3F5c/wG4BQ++dl12j488dT0JYhFCB3CqlNhg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HS4WmeOgnXuDYcJVkdO+Cau47LBdiWPRTYuWGWzHEfkXDleKE09vZg9dx0ZI/ry8E
-	 gxXP83hYcUsv2Km55FsdW+P2QlIICSYllQpe0YXGgpji50L+GgiM3mEL0ZcAhO38fh
-	 sc3v99rK9cVktCa/ZdF1aVyQglLLMp0sM/9QBgIQ=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: namjain@linux.microsoft.com
-Cc: bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	ssengar@linux.microsoft.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	x86@kernel.org
-Subject: [PATCH] x86/hyperv/vtl: Stop kernel from probing VTL0 low memory
-Date: Fri, 17 Jan 2025 09:01:41 -0800
-Message-Id: <20250117170141.1351283-1-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250116061224.1701-1-namjain@linux.microsoft.com>
-References: <20250116061224.1701-1-namjain@linux.microsoft.com>
+	s=default; t=1737141093;
+	bh=k+LySx4MMjUII9cOznURPNM+w9ida7uqom5MhS8WGmQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=THkOS3BodcFPL6nf6jQJric1wbtXyJn4VMpAH+eWlKuZtkwOL44txVDUZBsWsvj1+
+	 dSEisn+qc7RYeHWwSeWdHk8bUz/6igIcERab1Nt+GExRwpdC/i3tyMrZdhiEMpIdAp
+	 Bv/SWbdlxIosuDm+9PkHvLem2BChuMMRkcwtfFOE=
+Message-ID: <c3e23b3f-d83f-431e-b19d-691fae0041cf@linux.microsoft.com>
+Date: Fri, 17 Jan 2025 11:11:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: storvsc: Set correct data length for sending SCSI
+ command without payload
+To: longli@linuxonhyperv.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ James Bottomley <JBottomley@Odin.com>, linux-hyperv@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>, stable@kernel.org,
+ "benhill@microsoft.com" <benhill@microsoft.com>
+References: <1737071998-4566-1-git-send-email-longli@linuxonhyperv.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <1737071998-4566-1-git-send-email-longli@linuxonhyperv.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> For Linux, running in Hyper-V VTL (Virtual Trust Level), kernel in VTL2
-> tries to access VTL0 low memory in probe_roms. This memory is not
-> described in the e820 map. Initialize probe_roms call to no-ops
-> during boot for VTL2 kernel to avoid this. The issue got identified
-> in OpenVMM which detects invalid accesses initiated from kernel running
-> in VTL2.
-> 
-> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  arch/x86/hyperv/hv_vtl.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index 4e1b1e3b5658..3f4e20d7b724 100644
-> --- a/arch/x86/hyperv/hv_vtl.c
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -30,6 +30,7 @@ void __init hv_vtl_init_platform(void)
->	x86_platform.realmode_init = x86_init_noop;
->	x86_init.irqs.pre_vector_init = x86_init_noop;
->	x86_init.timers.timer_init = x86_init_noop;
-> +	x86_init.resources.probe_roms = x86_init_noop;
->  
->	/* Avoid searching for BIOS MP tables */
->	x86_init.mpparse.find_mptable = x86_init_noop;
-> 
-> base-commit: 37136bf5c3a6f6b686d74f41837a6406bec6b7bc
-> -- 
-> 2.43.0
 
-Thanks, Naman!
+
+On 1/16/2025 3:59 PM, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> In StorVSC, payload->range.len is used to indicate if this SCSI command
+> carries payload. This data is allocated as part of the private driver
+> data by the upper layer and may get passed to lower driver uninitialized.
+> 
+> If a SCSI command doesn't carry payload, the driver may use this value as
+> is for communicating with host, resulting in possible corruption.
+> 
+> Fix this by always initializing this value.
+
+Awesome that you've caught that elusive critter, thank you! :)
 
 Tested-by: Roman Kisel <romank@linux.microsoft.com>
 Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+
+> 
+> Fixes: be0cf6ca301c ("scsi: storvsc: Set the tablesize based on the information given by the host")
+> Cc: stable@kernel.org
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>   drivers/scsi/storvsc_drv.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index 7ceb982040a5..ca5e5c0aeabf 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -1789,6 +1789,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+>   
+>   	length = scsi_bufflen(scmnd);
+>   	payload = (struct vmbus_packet_mpb_array *)&cmd_request->mpb;
+> +	payload->range.len = 0;
+>   	payload_sz = 0;
+>   
+>   	if (scsi_sg_count(scmnd)) {
+
+-- 
+Thank you,
+Roman
+
 
