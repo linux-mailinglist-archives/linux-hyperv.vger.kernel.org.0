@@ -1,69 +1,50 @@
-Return-Path: <linux-hyperv+bounces-3718-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3719-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FC67A158CE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 22:07:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C930A15B4A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2025 04:50:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8007B3A95C7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jan 2025 21:07:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7DDB168FBC
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2025 03:50:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BEC71AF0D3;
-	Fri, 17 Jan 2025 21:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB028137923;
+	Sat, 18 Jan 2025 03:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YQ3aotmH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiqeXDgI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CD41A9B23;
-	Fri, 17 Jan 2025 21:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997B81F95E;
+	Sat, 18 Jan 2025 03:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737148032; cv=none; b=pI2Elwg2z3zevqc1FLFTB4IzLv3FOazckdK5nzonKB5DGwKs9n8gnHnWaQVxHrFA7DuFIwIT7FGtiYsGKuW9Vuyk9joeC+L4LHsmlL95XXRcNPoVvD2ocT10UwjhZx8KAnz407rvtY+MHmj3Grxj8wOoGP0HR40pt9hvinPi8T0=
+	t=1737172226; cv=none; b=cNowQWu7ndUJgJJ7IYt5Zg8hEWGS2vj71kueoXnbVp1Ru00XvDiUfKcFk2N0YoItEPcVsI7/2lc3Wo65lpw1VlG1xSAH+4MAaFQxiB18NNpIYSYKezfvoJL9YYstkd/5FaRm1SR7TevRa6QhtdWqNXC6gzuYYnfihlviIcG9DQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737148032; c=relaxed/simple;
-	bh=NJ9VWFE68QrwwxvuhF/JQq4k4ZBkAfcWzlZGSWLh9lA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FLrBOvYasCb62Z11YnNs186IqSqIqHpg9oJiIzjbNqnrPFCIGH4DAAxHc2hitCvI+GHFv+1CckiBp9kTfZ9WxL5Umj0v40WNeziTjUFwl8QAgyznxxxiFfvradREpf5pVGTocZoMKMs9jkjBhf0dwg3wgWLTuK5+by7MmO49czk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YQ3aotmH; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 13792206BCDD;
-	Fri, 17 Jan 2025 13:07:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13792206BCDD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1737148024;
-	bh=MGGMd4WAVb/r9foiPnnQJH97JAv6RNcmTHqjeuLMXGE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YQ3aotmH865NLerE8vf9WlO/6BVPB6qVYozWkIrKvcbBc/JgKw5VpEHDENFGRuh29
-	 DN9JrucSJ35TVFTbdBQaXd8MD/fc/OnB/43MFGt4EgXE3R9o6SaNsX9Me7GgY7OgFG
-	 rm9mdRwA8n3TmgjVLd1X6QRAVmS8/NDvTFqgkDIQ=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	kys@microsoft.com,
-	mingo@redhat.com,
-	ssengar@linux.microsoft.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	sunilmut@microsoft.com,
-	vdso@hexbites.dev
-Subject: [PATCH hyperv-next 2/2] x86/hyperv: VTL mode callback for restarting the system
-Date: Fri, 17 Jan 2025 13:07:02 -0800
-Message-Id: <20250117210702.1529580-3-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250117210702.1529580-1-romank@linux.microsoft.com>
-References: <20250117210702.1529580-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1737172226; c=relaxed/simple;
+	bh=azCTQUWteNkvbSDmw25Oo2U37v/Fw+cp06WncVB5Hkg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RqzrjpdpWkqMosAJW+P0uhU6xo+jlW/8RVeXyAEdKFCBABdKc/N6i113KkuB1t67Vv+J+iFzSYZLIVljfIYqRRz16lvTn5vYr+jCnPKh8Qq791/oFWarRS+vSQrq461AbNpdP9kkqZfXXx7er59PnaoENTVLMTyWCBA8/qyTZng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiqeXDgI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E051C4CED1;
+	Sat, 18 Jan 2025 03:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737172226;
+	bh=azCTQUWteNkvbSDmw25Oo2U37v/Fw+cp06WncVB5Hkg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=eiqeXDgISdzuCmjOI1oGSAC9UhmVP5cM/Vg2XXU0lrjnb1uQN4G6CeTiQt/P4Ahuz
+	 /uW8SK5G5TRn71l7GbS7dG89E/12npD4k1nXXEiUg8PLz8BsrSTN+pGxMJStzyfpOy
+	 gsmLlW0yQQaKWbAFtjm4gPJPwRS45VoR9nEVyU37TPtml72/uKCc8Dz/mvXp5F+V+p
+	 SJDrRaAmQWyUOKtjRU2teqm04qR9aIR31WNPLNCW/G9HBXaSiH6X/LEX/yPwCT9RZ/
+	 206AoAUXLfwJp6TUnHnKQrNfN7CvVQdHrXZTBHT9S7fzYXpUmbMwrJhXU6F/WXdN6j
+	 KucrcveidRdbg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCE5380AA62;
+	Sat, 18 Jan 2025 03:50:50 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -71,47 +52,45 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] hv_netvsc: Replace one-element array with flexible array
+ member
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173717224924.2330660.9877956855330264065.git-patchwork-notify@kernel.org>
+Date: Sat, 18 Jan 2025 03:50:49 +0000
+References: <20250116211932.139564-2-thorsten.blum@linux.dev>
+In-Reply-To: <20250116211932.139564-2-thorsten.blum@linux.dev>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-hardening@vger.kernel.org, romank@linux.microsoft.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-The kernel runs as a firmware in the VTL mode, and the only way
-to restart on x86 is to triple fault. Thus, one has to always
-supply "reboot=t" on the kernel command line, and missing that
-renders rebooting not working.
+Hello:
 
-Define the machine restart callback to always use the triple
-fault to provide the robust configuration by default.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
- arch/x86/hyperv/hv_vtl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Thu, 16 Jan 2025 22:19:32 +0100 you wrote:
+> Replace the deprecated one-element array with a modern flexible array
+> member in the struct nvsp_1_message_send_receive_buffer_complete.
+> 
+> Use struct_size_t(,,1) instead of sizeof() to maintain the same size.
+> 
+> Compile-tested only.
+> 
+> [...]
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 8931fc186a5f..eb402362d738 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -44,6 +44,12 @@ static void  __noreturn hv_vtl_emergency_restart(void)
- 	}
- }
- 
-+/* The only way to restart is triple fault */
-+static void  __noreturn hv_vtl_restart(char *)
-+{
-+	hv_vtl_emergency_restart();
-+}
-+
- void __init hv_vtl_init_platform(void)
- {
- 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-@@ -269,6 +275,7 @@ int __init hv_vtl_early_init(void)
- 	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
- 
- 	machine_ops.emergency_restart = hv_vtl_emergency_restart;
-+	machine_ops.restart = hv_vtl_restart;
- 
- 	return 0;
- }
+Here is the summary with links:
+  - [v2] hv_netvsc: Replace one-element array with flexible array member
+    https://git.kernel.org/netdev/net-next/c/3df22e751027
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
