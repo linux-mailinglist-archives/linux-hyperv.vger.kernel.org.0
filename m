@@ -1,96 +1,130 @@
-Return-Path: <linux-hyperv+bounces-3719-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3720-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C930A15B4A
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2025 04:50:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99C89A15E03
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2025 17:20:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7DDB168FBC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2025 03:50:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AB961884CCA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2025 16:20:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB028137923;
-	Sat, 18 Jan 2025 03:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1D501A238C;
+	Sat, 18 Jan 2025 16:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiqeXDgI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTMUt138"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997B81F95E;
-	Sat, 18 Jan 2025 03:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFA419F485;
+	Sat, 18 Jan 2025 16:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737172226; cv=none; b=cNowQWu7ndUJgJJ7IYt5Zg8hEWGS2vj71kueoXnbVp1Ru00XvDiUfKcFk2N0YoItEPcVsI7/2lc3Wo65lpw1VlG1xSAH+4MAaFQxiB18NNpIYSYKezfvoJL9YYstkd/5FaRm1SR7TevRa6QhtdWqNXC6gzuYYnfihlviIcG9DQk=
+	t=1737217240; cv=none; b=EQOpd5l1ySZO1YMlBS5XNRSzThzjeHJlL3GhoV86gZRS2rjZlVWQbboM4EtlkKYFPOMlHAbWB1lSPdCXF20cxGA3NIyLoJ5pPoz/Cv573Mp6qTKA45MUC1grY+/4DBW37hAIauEFppgZ7rsYQjsXxh13aBrufUFppJF+fR789hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737172226; c=relaxed/simple;
-	bh=azCTQUWteNkvbSDmw25Oo2U37v/Fw+cp06WncVB5Hkg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=RqzrjpdpWkqMosAJW+P0uhU6xo+jlW/8RVeXyAEdKFCBABdKc/N6i113KkuB1t67Vv+J+iFzSYZLIVljfIYqRRz16lvTn5vYr+jCnPKh8Qq791/oFWarRS+vSQrq461AbNpdP9kkqZfXXx7er59PnaoENTVLMTyWCBA8/qyTZng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiqeXDgI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E051C4CED1;
-	Sat, 18 Jan 2025 03:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737172226;
-	bh=azCTQUWteNkvbSDmw25Oo2U37v/Fw+cp06WncVB5Hkg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eiqeXDgISdzuCmjOI1oGSAC9UhmVP5cM/Vg2XXU0lrjnb1uQN4G6CeTiQt/P4Ahuz
-	 /uW8SK5G5TRn71l7GbS7dG89E/12npD4k1nXXEiUg8PLz8BsrSTN+pGxMJStzyfpOy
-	 gsmLlW0yQQaKWbAFtjm4gPJPwRS45VoR9nEVyU37TPtml72/uKCc8Dz/mvXp5F+V+p
-	 SJDrRaAmQWyUOKtjRU2teqm04qR9aIR31WNPLNCW/G9HBXaSiH6X/LEX/yPwCT9RZ/
-	 206AoAUXLfwJp6TUnHnKQrNfN7CvVQdHrXZTBHT9S7fzYXpUmbMwrJhXU6F/WXdN6j
-	 KucrcveidRdbg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCE5380AA62;
-	Sat, 18 Jan 2025 03:50:50 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1737217240; c=relaxed/simple;
+	bh=E1T9oqD8aJVCIjrPRbuov/XGWcAKXN4X1EoJY6MK4Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUZ+Bs+owN6qruCVn0J8DO+lN0j6zz8MlxXtQR9nAd7v7hEJlZjgcLTAC68+LpPq5w3teaTNYkZ6cICh/JvABnvwLxlPnhsU5EfOD8rQcFukguTit1xMXsM4UOSVCUd3md5GWSOcER+sluBUT/gcuxY5t+WedMCrFV/tWvs0WZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTMUt138; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737217239; x=1768753239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E1T9oqD8aJVCIjrPRbuov/XGWcAKXN4X1EoJY6MK4Lo=;
+  b=hTMUt138pOG4JK31sNECeBmBYWEhVFzUTmsszVnLlD33AWLGygVZ7bCM
+   YDf9OmK3LiN8qt69BIPTthz9gI5NLQ3YeooEm/ll9ywiBQmEQ5lc+SiBk
+   ccdgYOr66frux/HOI6SOLxlZpCrYDu4HYTGyxXu5ybNSV8q/EUyOJtRL3
+   XYDVv21/Mt0vAfCmsWkqGU/BDAi4UK5jP7kEADXT8uncsHomj9LZfATQA
+   hk+h8CC37hEOzBqikQP7e7KrpCNCQxxR3fo9PlZ2R6VHwf+c4kMNO94b5
+   O4+Su+/soKrr+hhGUltg6j5kaQf/uQ5qKq3arLd8S70gjS9oQjX0cbd16
+   g==;
+X-CSE-ConnectionGUID: eRH9XmFtQU+epToKoThO4Q==
+X-CSE-MsgGUID: oGL/JNS6Ssi52g7vG/0Xpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11319"; a="41396066"
+X-IronPort-AV: E=Sophos;i="6.13,215,1732608000"; 
+   d="scan'208";a="41396066"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2025 08:20:38 -0800
+X-CSE-ConnectionGUID: EP1rpWieRcyhDE1ZqeJpzQ==
+X-CSE-MsgGUID: POYbcqp9SPq7LIs2y2kuFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,215,1732608000"; 
+   d="scan'208";a="111069483"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 18 Jan 2025 08:20:35 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tZBYl-000Ubl-2X;
+	Sat, 18 Jan 2025 16:20:31 +0000
+Date: Sun, 19 Jan 2025 00:19:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Roman Kisel <romank@linux.microsoft.com>, bp@alien8.de,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
+	mingo@redhat.com, ssengar@linux.microsoft.com, tglx@linutronix.de,
+	wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	apais@microsoft.com, benhill@microsoft.com, sunilmut@microsoft.com,
+	vdso@hexbites.dev
+Subject: Re: [PATCH hyperv-next 2/2] x86/hyperv: VTL mode callback for
+ restarting the system
+Message-ID: <202501182304.lZJpR7pL-lkp@intel.com>
+References: <20250117210702.1529580-3-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] hv_netvsc: Replace one-element array with flexible array
- member
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173717224924.2330660.9877956855330264065.git-patchwork-notify@kernel.org>
-Date: Sat, 18 Jan 2025 03:50:49 +0000
-References: <20250116211932.139564-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250116211932.139564-2-thorsten.blum@linux.dev>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-hardening@vger.kernel.org, romank@linux.microsoft.com,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250117210702.1529580-3-romank@linux.microsoft.com>
 
-Hello:
+Hi Roman,
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+kernel test robot noticed the following build warnings:
 
-On Thu, 16 Jan 2025 22:19:32 +0100 you wrote:
-> Replace the deprecated one-element array with a modern flexible array
-> member in the struct nvsp_1_message_send_receive_buffer_complete.
-> 
-> Use struct_size_t(,,1) instead of sizeof() to maintain the same size.
-> 
-> Compile-tested only.
-> 
-> [...]
+[auto build test WARNING on 2e03358be78b65d28b66e17aca9e0c8700b0df78]
 
-Here is the summary with links:
-  - [v2] hv_netvsc: Replace one-element array with flexible array member
-    https://git.kernel.org/netdev/net-next/c/3df22e751027
+url:    https://github.com/intel-lab-lkp/linux/commits/Roman-Kisel/x86-hyperv-VTL-mode-emergency-restart-callback/20250118-050923
+base:   2e03358be78b65d28b66e17aca9e0c8700b0df78
+patch link:    https://lore.kernel.org/r/20250117210702.1529580-3-romank%40linux.microsoft.com
+patch subject: [PATCH hyperv-next 2/2] x86/hyperv: VTL mode callback for restarting the system
+config: x86_64-buildonly-randconfig-003-20250118 (https://download.01.org/0day-ci/archive/20250118/202501182304.lZJpR7pL-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250118/202501182304.lZJpR7pL-lkp@intel.com/reproduce)
 
-You are awesome, thank you!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501182304.lZJpR7pL-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> arch/x86/hyperv/hv_vtl.c:48:46: warning: omitting the parameter name in a function definition is a C23 extension [-Wc23-extensions]
+      48 | static void  __noreturn hv_vtl_restart(char *)
+         |                                              ^
+   1 warning generated.
+
+
+vim +48 arch/x86/hyperv/hv_vtl.c
+
+    46	
+    47	/* The only way to restart is triple fault */
+  > 48	static void  __noreturn hv_vtl_restart(char *)
+    49	{
+    50		hv_vtl_emergency_restart();
+    51	}
+    52	
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
