@@ -1,44 +1,44 @@
-Return-Path: <linux-hyperv+bounces-3725-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3727-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85AAFA171B7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2025 18:28:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8986A171B9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2025 18:28:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A521C162632
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2025 17:27:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F72C188A547
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2025 17:27:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA961EE7D6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2A141EEA3B;
 	Mon, 20 Jan 2025 17:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YBlaLAV+"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LSNcLu+f"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 276AD1E3DFC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292F41E9B29;
 	Mon, 20 Jan 2025 17:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737394053; cv=none; b=KMlU/aHDy6ZW0I9WV7RwxO+vtIEvBH+MwdH35QOm/O28+atAo/HBYRoHBxUDbAEc7YQGJxz0knKNcqSsWeSsV+KCB4njWhrKc60HNJ9psUQO4VdaK2PPwYAkV5sdUvlcqlu8yq1RHNh0TCPUCPPglgGSr3dObmGNB9ppX1Aojv8=
+	t=1737394053; cv=none; b=ZFzGjdwEC2p/dfoEhkdfPQ9eA3zSKudCV30iBRvFDa+FU2P8n67K5rBO0lwb6vVAeI+fR+dM3J4WKytlYlQwmnrvXEd2dRjDispDlj9RAnZp5WjrxNWYMsLmyUdQBKZuiFy9S69qdfEo+6GEM5wBUHNsFnx1RGgkDKHt3ldruec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1737394053; c=relaxed/simple;
-	bh=9bw+UBu/tOCWjJ6Fg8uY75GtYdYQK7A9ut5Y49yI7to=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=NxPh34+LxJ3dcrUB1OZOJp5h0IDTyIhsddFe5vESG1IhhCCa7eEYTp5HOTlt393JwyEJQq3EEUK5BvP9HpiaDsukI7hWvUl5WDj7hrwvUy8UAGv4BLMJGBADMPDGM50BDgrTOT3MGlfY202CL9qJ6grpmkLrkzf30ZgH3dV8bVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YBlaLAV+; arc=none smtp.client-ip=13.77.154.182
+	bh=QXz5/Y6hz2MMtJtqke/JlcpxcZwq0xYNx0qtQmUdmXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=DMr2CD9NzsRpXGlQCpM55tP1sXKjQEHF7kMsxc24zb70HqLnJl7f0ieI25bWVmPeXR+n6XsrjxIEk1UcBQYGmr62VaMwnCMDRArQXLbvPiWEWQOW5/XXsxjaCjNxD8dlOMCQQwwHUUlwWtdtAjjEXSMawlAJSS1oppw3BQ8XRR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LSNcLu+f; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D5271205A9C9;
+	by linux.microsoft.com (Postfix) with ESMTPSA id EE6CC205A9CA;
 	Mon, 20 Jan 2025 09:27:25 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D5271205A9C9
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE6CC205A9CA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1737394045;
-	bh=M7twiefFnYi507g6r9hAld0uVIT8tdnuhUU8hD5ipcc=;
+	s=default; t=1737394046;
+	bh=P9wezFJ3hB/T/3jqSgNKGvJNhir6BKvPXhoSRpMtuVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YBlaLAV+DmY3us2prFIBjapX9OGfv4w8adkw8Rt7lDWZVMRiM6xDqKFzByxa1dd2y
-	 HuI+8/Ktwag27zasz1LIJxrusZR1EyI0I4zSxBwb7ebr5loxLYiEaRg0vmnfV08O/I
-	 AWJqrq4py/uNEtRjE1T7xEHBgfgkJnyEHSbJQqQc=
+	b=LSNcLu+f29+aojhq+5gyUQodGrLxH966VD+0QAYl9qRlyBpYkQtVr8Fb5dWR0+Rgr
+	 iIRu3ZyUPi93S2Ep5vRaolu8ZzIXM43iVjEFCIMV0DafPIlIU1BexE4lBGps0+8aDi
+	 p6IwCo6yoyL6WjH0sd0RdaehR5xnMhGMUvGSwdsA=
 From: Konstantin Taranov <kotaranov@linux.microsoft.com>
 To: kotaranov@microsoft.com,
 	shirazsaleem@microsoft.com,
@@ -58,9 +58,9 @@ Cc: linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 03/13] RDMA/mana_ib: helpers to allocate kernel queues
-Date: Mon, 20 Jan 2025 09:27:09 -0800
-Message-Id: <1737394039-28772-4-git-send-email-kotaranov@linux.microsoft.com>
+Subject: [PATCH rdma-next 04/13] RDMA/mana_ib: create kernel-level CQs
+Date: Mon, 20 Jan 2025 09:27:10 -0800
+Message-Id: <1737394039-28772-5-git-send-email-kotaranov@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
 References: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
@@ -72,90 +72,140 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
 From: Konstantin Taranov <kotaranov@microsoft.com>
 
-Introduce helpers to allocate queues for kernel-level use.
+Implement creation of CQs for the kernel.
 
 Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
 Reviewed-by: Shiraz Saleem <shirazsaleem@microsoft.com>
 ---
- drivers/infiniband/hw/mana/main.c             | 23 +++++++++++++++++++
- drivers/infiniband/hw/mana/mana_ib.h          |  3 +++
- .../net/ethernet/microsoft/mana/gdma_main.c   |  1 +
- 3 files changed, 27 insertions(+)
+ drivers/infiniband/hw/mana/cq.c | 80 +++++++++++++++++++++------------
+ 1 file changed, 52 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 45b251b..f2f6bb3 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -240,6 +240,27 @@ void mana_ib_dealloc_ucontext(struct ib_ucontext *ibcontext)
- 		ibdev_dbg(ibdev, "Failed to destroy doorbell page %d\n", ret);
- }
+diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
+index f04a679..d26d82d 100644
+--- a/drivers/infiniband/hw/mana/cq.c
++++ b/drivers/infiniband/hw/mana/cq.c
+@@ -15,42 +15,57 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	struct ib_device *ibdev = ibcq->device;
+ 	struct mana_ib_create_cq ucmd = {};
+ 	struct mana_ib_dev *mdev;
++	struct gdma_context *gc;
+ 	bool is_rnic_cq;
+ 	u32 doorbell;
++	u32 buf_size;
+ 	int err;
  
-+int mana_ib_create_kernel_queue(struct mana_ib_dev *mdev, u32 size, enum gdma_queue_type type,
-+				struct mana_ib_queue *queue)
-+{
-+	struct gdma_context *gc = mdev_to_gc(mdev);
-+	struct gdma_queue_spec spec = {};
-+	int err;
+ 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
++	gc = mdev_to_gc(mdev);
+ 
+ 	cq->comp_vector = attr->comp_vector % ibdev->num_comp_vectors;
+ 	cq->cq_handle = INVALID_MANA_HANDLE;
+ 
+-	if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
+-		return -EINVAL;
++	if (udata) {
++		if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
++			return -EINVAL;
+ 
+-	err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata->inlen));
+-	if (err) {
+-		ibdev_dbg(ibdev,
+-			  "Failed to copy from udata for create cq, %d\n", err);
+-		return err;
+-	}
++		err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata->inlen));
++		if (err) {
++			ibdev_dbg(ibdev, "Failed to copy from udata for create cq, %d\n", err);
++			return err;
++		}
+ 
+-	is_rnic_cq = !!(ucmd.flags & MANA_IB_CREATE_RNIC_CQ);
++		is_rnic_cq = !!(ucmd.flags & MANA_IB_CREATE_RNIC_CQ);
+ 
+-	if (!is_rnic_cq && attr->cqe > mdev->adapter_caps.max_qp_wr) {
+-		ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr->cqe);
+-		return -EINVAL;
+-	}
++		if (!is_rnic_cq && attr->cqe > mdev->adapter_caps.max_qp_wr) {
++			ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr->cqe);
++			return -EINVAL;
++		}
+ 
+-	cq->cqe = attr->cqe;
+-	err = mana_ib_create_queue(mdev, ucmd.buf_addr, cq->cqe * COMP_ENTRY_SIZE, &cq->queue);
+-	if (err) {
+-		ibdev_dbg(ibdev, "Failed to create queue for create cq, %d\n", err);
+-		return err;
+-	}
++		cq->cqe = attr->cqe;
++		err = mana_ib_create_queue(mdev, ucmd.buf_addr, cq->cqe * COMP_ENTRY_SIZE,
++					   &cq->queue);
++		if (err) {
++			ibdev_dbg(ibdev, "Failed to create queue for create cq, %d\n", err);
++			return err;
++		}
+ 
+-	mana_ucontext = rdma_udata_to_drv_context(udata, struct mana_ib_ucontext,
+-						  ibucontext);
+-	doorbell = mana_ucontext->doorbell;
++		mana_ucontext = rdma_udata_to_drv_context(udata, struct mana_ib_ucontext,
++							  ibucontext);
++		doorbell = mana_ucontext->doorbell;
++	} else {
++		is_rnic_cq = true;
++		buf_size = MANA_PAGE_ALIGN(roundup_pow_of_two(attr->cqe * COMP_ENTRY_SIZE));
++		cq->cqe = buf_size / COMP_ENTRY_SIZE;
++		err = mana_ib_create_kernel_queue(mdev, buf_size, GDMA_CQ, &cq->queue);
++		if (err) {
++			ibdev_dbg(ibdev, "Failed to create kernel queue for create cq, %d\n", err);
++			return err;
++		}
++		doorbell = gc->mana_ib.doorbell;
++	}
+ 
+ 	if (is_rnic_cq) {
+ 		err = mana_ib_gd_create_cq(mdev, cq, doorbell);
+@@ -66,11 +81,13 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 		}
+ 	}
+ 
+-	resp.cqid = cq->queue.id;
+-	err = ib_copy_to_udata(udata, &resp, min(sizeof(resp), udata->outlen));
+-	if (err) {
+-		ibdev_dbg(&mdev->ib_dev, "Failed to copy to udata, %d\n", err);
+-		goto err_remove_cq_cb;
++	if (udata) {
++		resp.cqid = cq->queue.id;
++		err = ib_copy_to_udata(udata, &resp, min(sizeof(resp), udata->outlen));
++		if (err) {
++			ibdev_dbg(&mdev->ib_dev, "Failed to copy to udata, %d\n", err);
++			goto err_remove_cq_cb;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -122,7 +139,10 @@ int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq)
+ 		return -EINVAL;
+ 	/* Create CQ table entry */
+ 	WARN_ON(gc->cq_table[cq->queue.id]);
+-	gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
++	if (cq->queue.kmem)
++		gdma_cq = cq->queue.kmem;
++	else
++		gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
+ 	if (!gdma_cq)
+ 		return -ENOMEM;
+ 
+@@ -141,6 +161,10 @@ void mana_ib_remove_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq)
+ 	if (cq->queue.id >= gc->max_num_cqs || cq->queue.id == INVALID_QUEUE_ID)
+ 		return;
+ 
++	if (cq->queue.kmem)
++	/* Then it will be cleaned and removed by the mana */
++		return;
 +
-+	queue->id = INVALID_QUEUE_ID;
-+	queue->gdma_region = GDMA_INVALID_DMA_REGION;
-+	spec.type = type;
-+	spec.monitor_avl_buf = false;
-+	spec.queue_size = size;
-+	err = mana_gd_create_mana_wq_cq(&gc->mana_ib, &spec, &queue->kmem);
-+	if (err)
-+		return err;
-+	/* take ownership into mana_ib from mana */
-+	queue->gdma_region = queue->kmem->mem_info.dma_region_handle;
-+	queue->kmem->mem_info.dma_region_handle = GDMA_INVALID_DMA_REGION;
-+	return 0;
-+}
-+
- int mana_ib_create_queue(struct mana_ib_dev *mdev, u64 addr, u32 size,
- 			 struct mana_ib_queue *queue)
- {
-@@ -279,6 +300,8 @@ void mana_ib_destroy_queue(struct mana_ib_dev *mdev, struct mana_ib_queue *queue
- 	 */
- 	mana_ib_gd_destroy_dma_region(mdev, queue->gdma_region);
- 	ib_umem_release(queue->umem);
-+	if (queue->kmem)
-+		mana_gd_destroy_queue(mdev_to_gc(mdev), queue->kmem);
+ 	kfree(gc->cq_table[cq->queue.id]);
+ 	gc->cq_table[cq->queue.id] = NULL;
  }
- 
- static int
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index b53a5b4..79ebd95 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -52,6 +52,7 @@ struct mana_ib_adapter_caps {
- 
- struct mana_ib_queue {
- 	struct ib_umem *umem;
-+	struct gdma_queue *kmem;
- 	u64 gdma_region;
- 	u64 id;
- };
-@@ -388,6 +389,8 @@ int mana_ib_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev,
- 				  mana_handle_t gdma_region);
- 
-+int mana_ib_create_kernel_queue(struct mana_ib_dev *mdev, u32 size, enum gdma_queue_type type,
-+				struct mana_ib_queue *queue);
- int mana_ib_create_queue(struct mana_ib_dev *mdev, u64 addr, u32 size,
- 			 struct mana_ib_queue *queue);
- void mana_ib_destroy_queue(struct mana_ib_dev *mdev, struct mana_ib_queue *queue);
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index e97af7a..3cb0543 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -867,6 +867,7 @@ free_q:
- 	kfree(queue);
- 	return err;
- }
-+EXPORT_SYMBOL_NS(mana_gd_create_mana_wq_cq, NET_MANA);
- 
- void mana_gd_destroy_queue(struct gdma_context *gc, struct gdma_queue *queue)
- {
 -- 
 2.43.0
 
