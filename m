@@ -1,132 +1,110 @@
-Return-Path: <linux-hyperv+bounces-3722-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3723-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC7A1A15F5C
-	for <lists+linux-hyperv@lfdr.de>; Sun, 19 Jan 2025 01:24:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7CEAA171B0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2025 18:27:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 014753A701C
-	for <lists+linux-hyperv@lfdr.de>; Sun, 19 Jan 2025 00:24:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDBE61888430
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2025 17:27:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D60567D;
-	Sun, 19 Jan 2025 00:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA19F1EE001;
+	Mon, 20 Jan 2025 17:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UWkIwfy9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nBhej7vJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8DFBE49;
-	Sun, 19 Jan 2025 00:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 673FF1E9B20;
+	Mon, 20 Jan 2025 17:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737246265; cv=none; b=Y/YNf7Yjvc+GrK4DTAwtkvfdzAbn1wsyIveBv15hzCt3VR86JcAuB8a9Xx9VqLSWd0ugRDllnze+R3/+xX/qIZkKMHq+lyt8m1PO+7nOUADCU8XMN7rVAOns1liAO/CfBk6scl6RtNMJULDrKcQq5oY2AYRK2A7XaTMw/Z03cxo=
+	t=1737394052; cv=none; b=evmdtpg0fZME35AH5MAiCDSqPlPSdFkPanBvs0mOUhacYDIVnqFHxALmzH+baoI4N8HdM6qMmTAFzpsLc0MCw8APRHx8ysbsOGQrtFOaxu1Q61mKhYhV7x1mKxxwG3RChSFXaPXX8xnY7Coumdknjk28a2xPMqUTPtsGA3aJ7vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737246265; c=relaxed/simple;
-	bh=ZzyMbQA/mXtN2S2xQRWb8l/MC4bJrX6Yf6KOvIeRKwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pdZ2L90Pxxb4Bbu54GRQ46KpqzFla6d3A4Hh3g32OoSKvdbKIUcB16Y8WxC+BmAUterXjwfN4F3wLIZSLBwjXBCxkKzH030u3bKHla2AtpHkmw5Dvub/6u8hO7XoxnA6tmZYyfD6bUJDFrdUA2KULdkQsWce3Va/CRZdVaIBYxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UWkIwfy9; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737246263; x=1768782263;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZzyMbQA/mXtN2S2xQRWb8l/MC4bJrX6Yf6KOvIeRKwU=;
-  b=UWkIwfy9Jn5QPJNyGZ9lmubsu58o/2szdm6LH8AMc+tFhqgkkaLEkVRe
-   /ilUgak0cS7tKKKSPHGppFXhvLjGdPz0177CuLhbMp/yMjLTP5IQP7lDU
-   iQT0VKZ51sSJ3NbQIwDKBEObUqP5UIdn9utSLq3/uEIUqyatFC03abar3
-   3GJI5EHS54YQdXZL8DK6tclNnBdPDZOInUcHf3wsWmDnmL6WwEsjci3Nc
-   LeNv8zyM/pNvkVKNMjdR+USIp1789BNJbk45G9eB3ivDg7ybK08VHVFGO
-   D0Yzhyt1KbrBysZG27rQ7klGHSmndG9wyNWpVeDC8qXuMMfb7rjNxbTt6
-   g==;
-X-CSE-ConnectionGUID: H6vH7H/IR+uixB+KgacyHA==
-X-CSE-MsgGUID: HdGZmWk0S8SNMbItTvBqxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11319"; a="37525774"
-X-IronPort-AV: E=Sophos;i="6.13,216,1732608000"; 
-   d="scan'208";a="37525774"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2025 16:24:23 -0800
-X-CSE-ConnectionGUID: /QefDfIMQ4eGky7kbuSmaA==
-X-CSE-MsgGUID: eigdkbVeRLaotnMtC0CcpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111243452"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 18 Jan 2025 16:24:21 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tZJ6w-000Uxb-1u;
-	Sun, 19 Jan 2025 00:24:18 +0000
-Date: Sun, 19 Jan 2025 08:23:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+	s=arc-20240116; t=1737394052; c=relaxed/simple;
+	bh=wuX56+DQOvYjaNsw98n3j2eXCwZhI+JlSc+nPLNqiz0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=EmeS5PP+mdhQIhM180MbKwpRaNnwVH2RVH7NPFAY2A23bFMRhjTlLxHLJICXFI7D6BSxeJ2C+qH1CQ4LpnHX31r6EZcWdNNgDtx/T2kovHqaxIIASGS9S/A+p5PR4DtD/Jca/gPZCku2LCeKRinI9swUe9CzspojchAHArPYleo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nBhej7vJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 87405205A9C5;
+	Mon, 20 Jan 2025 09:27:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 87405205A9C5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1737394045;
+	bh=VKZbVZap0F5x0srxgVW1qFq2cio6NdADwwKwhGFyOp0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nBhej7vJrFCxrIHHh+5Kvjs5Rj8dAut6DE+na8TTwcohvb8R8tD4gBNpfuS1GfW8i
+	 GRPx7PfyOiJ/douBcPbuEKv3zj/LSgfQZurFoVYx5Uk6o6Q2GO3819FJutlU56j/KD
+	 TIoT6ktEEvUkF+LdBuEhEttn3LYtjHOoXTXwRqoo=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	shirazsaleem@microsoft.com,
+	pabeni@redhat.com,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	edumazet@google.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	decui@microsoft.com,
+	wei.liu@kernel.org,
+	sharmaajay@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] drivers/hv: introduce vmbus_channel_set_cpu()
-Message-ID: <202501190802.DKAgQNvk-lkp@intel.com>
-References: <20250115214306.154853-1-hamzamahfooz@linux.microsoft.com>
+Subject: [PATCH rdma-next 00/13] RDMA/mana_ib: Enable CM for mana_ib
+Date: Mon, 20 Jan 2025 09:27:06 -0800
+Message-Id: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250115214306.154853-1-hamzamahfooz@linux.microsoft.com>
 
-Hi Hamza,
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
-kernel test robot noticed the following build errors:
+This patch series enables GSI QPs and CM on mana_ib. 
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.13-rc7 next-20250117]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Konstantin Taranov (13):
+  RDMA/mana_ib: Allow registration of DMA-mapped memory in PDs
+  RDMA/mana_ib: implement get_dma_mr
+  RDMA/mana_ib: helpers to allocate kernel queues
+  RDMA/mana_ib: create kernel-level CQs
+  RDMA/mana_ib: Create and destroy UD/GSI QP
+  RDMA/mana_ib: UD/GSI QP creation for kernel
+  RDMA/mana_ib: create/destroy AH
+  net/mana: fix warning in the writer of client oob
+  RDMA/mana_ib: UD/GSI work requests
+  RDMA/mana_ib: implement req_notify_cq
+  RDMA/mana_ib: extend mana QP table
+  RDMA/mana_ib: polling of CQs for GSI/UD
+  RDMA/mana_ib: indicate CM support
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hamza-Mahfooz/drivers-hv-add-CPU-offlining-support/20250116-054519
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250115214306.154853-1-hamzamahfooz%40linux.microsoft.com
-patch subject: [PATCH v3 1/2] drivers/hv: introduce vmbus_channel_set_cpu()
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250119/202501190802.DKAgQNvk-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501190802.DKAgQNvk-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   Makefile:60: warning: overriding recipe for target 'emit_tests'
-   ../lib.mk:182: warning: ignoring old recipe for target 'emit_tests'
-   make[1]: *** No targets.  Stop.
->> Makefile:47: *** Cannot find a vmlinux for VMLINUX_BTF at any of "  ../../../../vmlinux /sys/kernel/btf/vmlinux /boot/vmlinux-5.9.0-2-amd64".  Stop.
-   make[1]: *** No targets.  Stop.
-   make[1]: *** No targets.  Stop.
-
-
-vim +47 Makefile
-
-3812b8c5c5d527 Masahiro Yamada 2019-02-22  46  
-3812b8c5c5d527 Masahiro Yamada 2019-02-22 @47  # Do not use make's built-in rules and variables
-3812b8c5c5d527 Masahiro Yamada 2019-02-22  48  # (this increases performance and avoids hard-to-debug behaviour)
-3812b8c5c5d527 Masahiro Yamada 2019-02-22  49  MAKEFLAGS += -rR
-3812b8c5c5d527 Masahiro Yamada 2019-02-22  50  
+ drivers/infiniband/hw/mana/Makefile           |   2 +-
+ drivers/infiniband/hw/mana/ah.c               |  58 +++++
+ drivers/infiniband/hw/mana/cq.c               | 227 ++++++++++++++--
+ drivers/infiniband/hw/mana/device.c           |  18 +-
+ drivers/infiniband/hw/mana/main.c             |  95 ++++++-
+ drivers/infiniband/hw/mana/mana_ib.h          | 157 ++++++++++-
+ drivers/infiniband/hw/mana/mr.c               |  36 +++
+ drivers/infiniband/hw/mana/qp.c               | 245 +++++++++++++++++-
+ drivers/infiniband/hw/mana/shadow_queue.h     | 115 ++++++++
+ drivers/infiniband/hw/mana/wr.c               | 168 ++++++++++++
+ .../net/ethernet/microsoft/mana/gdma_main.c   |   7 +-
+ include/net/mana/gdma.h                       |   6 +
+ 12 files changed, 1096 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/infiniband/hw/mana/ah.c
+ create mode 100644 drivers/infiniband/hw/mana/shadow_queue.h
+ create mode 100644 drivers/infiniband/hw/mana/wr.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
