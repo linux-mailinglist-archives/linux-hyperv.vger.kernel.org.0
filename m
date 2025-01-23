@@ -1,60 +1,60 @@
-Return-Path: <linux-hyperv+bounces-3759-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3760-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B22C8A19E3F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jan 2025 06:53:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90589A19E49
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jan 2025 06:57:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E30401612D5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jan 2025 05:53:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC4EC161C88
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jan 2025 05:57:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FDD1BFE05;
-	Thu, 23 Jan 2025 05:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152051C3BE0;
+	Thu, 23 Jan 2025 05:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Uk4MYI60"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="V/w7kUar"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020138.outbound.protection.outlook.com [52.101.85.138])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11022112.outbound.protection.outlook.com [40.93.200.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC8E1ADC75;
-	Thu, 23 Jan 2025 05:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655641C2DC8;
+	Thu, 23 Jan 2025 05:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.200.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737611586; cv=fail; b=dyzQemcRXsYCBPvF0semZDUFbxOeIDRh9HVES9LGBsHESLSHgbE1iyLGe+VESg7cuQo+jNQRlSbZlXfBBfzFDC29B1UxteiTs4thbrR37CPBmGmYnMA5MeHOQMHtHZoymBuXOytLZmRsbtR0aHTT0v3a8LYNJx5Wozzy7SkhP2c=
+	t=1737611849; cv=fail; b=WCmhEXkHa06uLU9WV4pRH3z/iwTf1x/9rJYo+tMuK7d6cIRs4PGIhtKBA7q9FrcmzVyVG4/vhFmIjiitFwX1KVGN/O0DkLXEXGfWlfUsfLcXARz9rQoVsGENYC2B9bmFSrvrJz4CtPdJwIVl66B1QmZTCH3tW1zSd9IyTvF0nNo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737611586; c=relaxed/simple;
-	bh=7kyXORLxC/L1tmBRhOo7uJvmkI2vHMyfHj+ZIYxoF1A=;
+	s=arc-20240116; t=1737611849; c=relaxed/simple;
+	bh=90dLovg0RfOvnmP9kgC+thbZI9Wt778NErlOdjKkxKI=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WllBxIzQI1VZfQChp9qzAdVuT6hya0f3qapgcreKWQ/Aa6ay1TWlOo3ea2CW3wBGgj3EJU+/r1Mp4+0A0bYV7kLbrNc8i63qpY/LkclBgodiznw5dNbFmsOpT+h1xGpNq+HJAl9V1x7b1gFaYzwELIrQE6v2AITr4OMa8WHz7W8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Uk4MYI60; arc=fail smtp.client-ip=52.101.85.138
+	 Content-Type:MIME-Version; b=DzGYssemYYAD3juN7XKWEZ4vQnWWH8dEc4Y77CnH1oTM4ffk7HJxTGjXQVJHKPuy05zV8Anb7iyeqXRRxCDxTQQXvIySJ96EqjjdHSTSFRs9lgp+pm8OrFlLj17tMu/2shIpl5e22equZBc4iIjNPNdvcc3sHxPtmlm3z/urvP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=V/w7kUar; arc=fail smtp.client-ip=40.93.200.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bwe0DnL17DiF2BVYsZcYuyd4dT22TAZJu/E3U/y3EnPYXDKwtmp6r0mOSSxvcweUYIPKU+Xx5jUKKwffeHv26392rCP2CArDj7Rv3R9Tf7kmRjK3wEv7nNuz/9qvrp7GA0aII+PAUqXFMakTyOY0FTEPGpq9WoaOevPmxjjiGzTYYuPtPa2GJcPgq/wBIk6jIqZvkjPyZjJsMWPrdNoXaeERKYRXIeLvOB7jM2orK3t5aaDdCrJ6rHH+TV6qdbdsW05kPhn17ImdEjn/j4pVcKnLYE9QlHz6hri4JKHYexcudiCqw2kEwjdfGHysGEYxo7NeKDdmV6Mkl/M/zMIniw==
+ b=IYB27ZN/1YNMp62q01MTayGG2f1wM9WLiNo7hw09slrhihwb5V/lI0Kf0jX900EGlPx/ZgbyWGz23SAf0urN80+EIU/eBEyGDtud8r21iIMRhLPGlgzEE6wWQxbiqSL6KMTUz1JIaJvYwBLo3uU3FjN8ZSgtzamFeYD4BjwypPrwN9hk+A5TcPoBcC+WBIysOZGKXrKEfKQvesCBKpnBAer/RN9+nLK2PO/LnD0aHy3hs7FYbvVyNI+L9ijGgiQkl/x5Ifsinv5ToDqswWJaanDM+ybqfX2JyqrABp+AfQkPvUVQX5k7gL8zVG41RuBW2Hxy0i4EUbK0GOTGP9lNZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NV2RfFzyikF67NECTgcjzUDTM/b2hCejrqO21T3dGzE=;
- b=QTPsRAHVF/gQljAHXXXJk3MxTr26TRADJZv+AryRNhAQz7m5VI1/viqJ8sotHOC3NVGLCzF2NVv67+Hb18wqLmpMaHvvU99JdxJ7/gB9rDtGlQFmK+VffNEYdfNO4SqvWiYBG1AGFfZdxDURi2wsLtvO6vVqMqm7ICpmX+ea3YtQL/yMPVLuT9uaE2+SXK43CEB6yC3/asL5vW0F9TlOKehOGGZxCTd8g6Ah662UGM8/KK0IHYVXWbG09tNYWOYFfqqIxaoKFEsUFSHasVQXLYepuFRiRW4sYfL2RR/KFfjFB0vEf+5WVYW6VUppzNkJWW3KFo1x2ss9Wmcif/gzLQ==
+ bh=c+lKhFjBSlAHu2ynHiBd1MAUHaXW6GCCM34OcUN7qK8=;
+ b=zPMtGlgBCjUURVFJ0lZ7StrhITAVnVJvfryO4vA/GHJSOAIL7VuPvcg8BqcwZUKJQd3UtLULXfvN6SqRADzIQoKaPrfo+KyWqdFrDpTemG/hCuM05FTRcvvdy7ZAdccwFh/TzS0yuq5KGgJNNWaq4PlMWkOmP4hNa/B4bcm/SuqxeCrA0iLSDoaVgNG3nJI011r+khTYaT4JFFbZ9OSNaiC3NXEUcL3Gn5qJgew8tOYGwKmnHVXU09oqvvw6gnZ6/pnxIP83ieIbFji0W2xKll6i+igkp8POHzY2wIEuaF2JDnQEgxLtDba8ZxZWhXsUm9l5Z+vYrcXZfeLXTjxEFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NV2RfFzyikF67NECTgcjzUDTM/b2hCejrqO21T3dGzE=;
- b=Uk4MYI60ePa8zLARO9auSGbckIMKOHtt5VFHMzKWTeuEm/xXthP4eo8Lg+6yUDbzun3zUzYShl5wYfh9yCxH9l/ugaelZ4+bDDsBD862qqqFCXbZ0PZQrDbvRvvXgSsT4vIM9AcKqsx5A6y6HspWPJJ7VAGK9R6r8pWL+mcqHUQ=
+ bh=c+lKhFjBSlAHu2ynHiBd1MAUHaXW6GCCM34OcUN7qK8=;
+ b=V/w7kUarxXJ1eeJJPZzurUCWke+PBLQKWtv+/Lc1x5vkJrVE+8blx0QW9eu24SWvk8e0VLiyeshuR3T+lZrgn60V0iJFCzZJDplEw/BPSdDCmse9tNCtEfSoDVIUln5B5hqFF/7+UMhsNpnCieatdoTfl4PKCC5ogLh3YM5xQtY=
 Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by SA0PR21MB1867.namprd21.prod.outlook.com (2603:10b6:806:ef::13) with
+ by SA6PR21MB4462.namprd21.prod.outlook.com (2603:10b6:806:427::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.8; Thu, 23 Jan
- 2025 05:53:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.7; Thu, 23 Jan
+ 2025 05:57:24 +0000
 Received: from SA6PR21MB4231.namprd21.prod.outlook.com
  ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
  ([fe80::5c62:d7c6:4531:3aff%5]) with mapi id 15.20.8398.005; Thu, 23 Jan 2025
- 05:53:02 +0000
+ 05:57:23 +0000
 From: Long Li <longli@microsoft.com>
 To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
 	<kotaranov@microsoft.com>, Shiraz Saleem <shirazsaleem@microsoft.com>,
@@ -69,88 +69,89 @@ CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH rdma-next 07/13] RDMA/mana_ib: create/destroy AH
-Thread-Topic: [PATCH rdma-next 07/13] RDMA/mana_ib: create/destroy AH
-Thread-Index: AQHba2CXw6B8TtYZkUyX362Vsp4/s7Mj31Fw
-Date: Thu, 23 Jan 2025 05:53:01 +0000
+Subject: RE: [PATCH rdma-next 10/13] RDMA/mana_ib: implement req_notify_cq
+Thread-Topic: [PATCH rdma-next 10/13] RDMA/mana_ib: implement req_notify_cq
+Thread-Index: AQHba2CWNdPd4FuRy0GFruIq872sjrMj4H5Q
+Date: Thu, 23 Jan 2025 05:57:23 +0000
 Message-ID:
- <SA6PR21MB42310E90D6E91C458FE77D1BCEE02@SA6PR21MB4231.namprd21.prod.outlook.com>
+ <SA6PR21MB423171435D6B100C175B876FCEE02@SA6PR21MB4231.namprd21.prod.outlook.com>
 References: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
- <1737394039-28772-8-git-send-email-kotaranov@linux.microsoft.com>
-In-Reply-To: <1737394039-28772-8-git-send-email-kotaranov@linux.microsoft.com>
+ <1737394039-28772-11-git-send-email-kotaranov@linux.microsoft.com>
+In-Reply-To:
+ <1737394039-28772-11-git-send-email-kotaranov@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=01c5a870-50cd-4e04-8a37-05860d6093cd;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-01-23T05:52:50Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fe41a8b0-d202-4919-8315-ce12edfc3807;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-01-23T05:57:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
  3, 0, 1;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA0PR21MB1867:EE_
-x-ms-office365-filtering-correlation-id: fedf0899-3abd-4ef3-603c-08dd3b7232bc
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA6PR21MB4462:EE_
+x-ms-office365-filtering-correlation-id: b450070b-26f2-4998-c84d-08dd3b72ce79
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020|38070700018;
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018|921020;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?UmA5YZyfEEf9wUAcJ3GDTdd/Mc3LayzMmFh/Rgzqsws7w/FZbMFsv/YKQb3Q?=
- =?us-ascii?Q?pXxFNucVqUyGLykmCYrSKFe9llKZV59//rap2WKbE/kp2knwXTFatr8TiSiE?=
- =?us-ascii?Q?5zxA2W6vo7dWHc0uFOK5PtKpnKjf8oY/SVlu6pgImDXnpUx/IxNlUK7TnvBJ?=
- =?us-ascii?Q?/9raxIX6mzFrLfSP2nayywucMRoCnkUnsT/CaZN9vnI1y64YLzmmBGvKz+hE?=
- =?us-ascii?Q?ACnMo7YazX/JgrVkN4amEnmsCjAAJkPWfUbyq8pBWwxbMhLiyA8SmseazJOi?=
- =?us-ascii?Q?5uJvL7HbB04w8T/IYyt1pMIg/eh6esgvAnwPjMPoUfxUJhfXLDpDh7kDeKyn?=
- =?us-ascii?Q?OUl5Gsm1ShDtoJPPssvVzxxEgTaVD1g+sGtTxbRKRFDT/t2ehmCzJFyZPhB/?=
- =?us-ascii?Q?kv9FQpH22PJVOZZVapl3VduyVzgEYQhc/fFeFbuIYZiTpWdcogqAiO5VpO4i?=
- =?us-ascii?Q?nRuGIouf07oT1tPiMy72FOu0xByqfilIzxObO2cZQSGLME+jNh687qpaaZci?=
- =?us-ascii?Q?/t36z6zdb4zGAeux/v+OyQHIOCIA1S5X1Y1gvtBmEcYlcZjL4/5feZqVe+56?=
- =?us-ascii?Q?dYgBOWCF7nvIkJwzS3gwRhQGvZNwLoXml00/JzAEubN0TTtYK+ElFEpiBg9j?=
- =?us-ascii?Q?010CejwzSZPTNl+mMAjtcdqLJtpu2RpsE/Pdrs4B9s2ijPH2lS3ZecCGOxK6?=
- =?us-ascii?Q?TPvtc1X6QdvrjE3hGalpghxIks6jI1hYaIE8FfFKkYiB0Otm+LhiB/aJJ++V?=
- =?us-ascii?Q?L0E6VHQ4px5nUU+/TpFBIWfhTTEkLf3Erk7q3fGewecrWsGpr0VSxybpfwRX?=
- =?us-ascii?Q?GQF0Md4sx8e6SqCkAe2h7hCDgs4nJS6ispVYg5aaEfzg+msbr96d0rUjr6J8?=
- =?us-ascii?Q?nXcqKJVrvEKRndXibnq46tK6mceYQmK9uZMZSQ1eA3j/iQm0tJqD6zqwJlTJ?=
- =?us-ascii?Q?OoK3pHaZFsfW6uSfAxeFYICSB04uRFhHrQRC4ZC34oUHDh5i+IqDy5YVfo9q?=
- =?us-ascii?Q?s3cZQKjMJhLBQurY4/Tc5t6+eP0+JIyF2VuFR6Qkq1wvpsCacqOrezcwoxuT?=
- =?us-ascii?Q?Nkuot8XIkKI7cI8nKuAkcOLipU9Q0B8DGE88+0OGWCIhyxkfM8RW4pkYAtoc?=
- =?us-ascii?Q?O9lidgloK8prpFwU4ZEov5k/1KKIGnWY14+JHQinS9TXvR67bTUAmO0hnQLK?=
- =?us-ascii?Q?0WM20lTfn9K3VQfjqS2wmLJ1AJWQDUBcaYCzEKLBM1BOhI3kODPIKFRdD5s0?=
- =?us-ascii?Q?CKiw+jqmTdTfpLGEr9fnHmd28PJ7bBp0VL/bRChHWZOCN1qXHzLX4YPlXZhV?=
- =?us-ascii?Q?Wh/i/6o6E48yOUvDC+p0jCHe4u2OVCTOZoVxXw39tIh6M93m4Ha8lD/c6ZWZ?=
- =?us-ascii?Q?KCzFzSGjlvfaP4MlHgpsLVAULSIEEXKOUeUoSBCFbfyLGB8q6wrD8W5fwB7Q?=
- =?us-ascii?Q?w7kN+w1N2swVyvkiL1+w2UGoZVY3Hpqe/fmsHi4dY7Qe6k4G6VDzZA=3D=3D?=
+ =?us-ascii?Q?PAQd2abtmcHK3n/psy5M2qDSAGitY3zCV+Odey4rUBPOI/w/3K839mKTySVY?=
+ =?us-ascii?Q?LZ5SgmkKLWeMoYVNmmnkD294dbLhic8N5l7t7jjzVRXUtIm7agTeKa5GR4a4?=
+ =?us-ascii?Q?Wqb/U3tJZRwjbHXt/h+L2hZ2psmLiZqyaMPIsl0XKyYG8zXCqKC7mloaJQPy?=
+ =?us-ascii?Q?H0X8+/zEAVJPxQ0a4NZmOcmBj09UlFqAK8Ehhp1D8FneVa9xNBipI8XsoFDh?=
+ =?us-ascii?Q?kYPvzmkHIpiTrJsz6OZpS/77qq594UcNt+/EtyCCsAoMCUjdH1MGYSLUMxNR?=
+ =?us-ascii?Q?ByoZS2wTgzzsfeUzztBLTWkxIcQ/lp9nn9tgguzF3VLLDZcruD7+4qQQwkMU?=
+ =?us-ascii?Q?Zj6utdnvuNYRqH+svXGmU7ydxeiRRQlDWO/vAJA4G2oOEvO+6RupHYBEy1zg?=
+ =?us-ascii?Q?E1zCaa5SQkAoZE5ok3ej8UzIn6xFMc97gDCzcYz0zL7CoCyJKtWwLVk2NoP4?=
+ =?us-ascii?Q?nGo1VbIm6qS7zFJmZ/LiYovxWkYSVEQwQtB5uYXYDi3lOWt5A8bLV1j/7c8Q?=
+ =?us-ascii?Q?JP8nQ4FkNE/KL+N0ITJrM2aRG6D21eN5aTNMFTkfcZQDmh18sq8UfVIfcQnk?=
+ =?us-ascii?Q?re3qfvpxSH2wPQQJktV3lSKSnlXuw1s5vbRAgBIm76KPZXyj2sES0mL81kSE?=
+ =?us-ascii?Q?Bxx6LnsQqgQM0WvZ2Vp+cABvGRCF/sZWCbvgCSIV+o9ysHUO1diBy29uF4cy?=
+ =?us-ascii?Q?HtNDaGXbJiV/POQnqolnrtSHsRn0u0jDyY0PzV6mxFVBpw0Ezn/ZAw+Wr+ih?=
+ =?us-ascii?Q?2DNeaNrckK+Z/YQgBZOH6SxPL9TfXX4cCFF7G27P9OqsiJxlEcp8kEbI9lZL?=
+ =?us-ascii?Q?Oi34CJ64i7gVo8Rs0SVBw0lzgI6c4JwbuE6fsGW97Z3QlWhO5hxK5U2TcE56?=
+ =?us-ascii?Q?U6NoxKEeptvjD4TsAJcL4fPCxg1ZRbau2IpGQ+tWdhKVh1bJ6/k6pgca5ugv?=
+ =?us-ascii?Q?xWIzfGcZBlGVGiRS4JKrs1u0Xd5FUvC071QO5ew8xc9f7kLOBNe2RrjM2U4q?=
+ =?us-ascii?Q?wzbJKI6Q5J3cfiAqt7gjkfxCYQ7ixogX15qWTM/vRguhIMJdVIgnVhBsWZPZ?=
+ =?us-ascii?Q?Om5kWINTHNcJz1dNNJOm3md9qucfU7t7+S+30uf/olYqtwRJDKNBZ4pwjqHG?=
+ =?us-ascii?Q?Xm2ubK0LjRDrGVzwC0ohKDAfHEbWWO4AiDJcPGGl7Wt9OcQeiPwDGXnBS7ud?=
+ =?us-ascii?Q?eBUQ5kPD/ixvNiheFQzaoiolVm84D0dzEYk8Xm23cB4+yqwsV4vNBCyo6B60?=
+ =?us-ascii?Q?nwpVuNms6kD/I+XGPFT11lKHFAhgikH+qFyuR9iL5cA2fdDYjUfJDHkYYBpt?=
+ =?us-ascii?Q?JifVkpbdu5AxQaQ/7a8uEaKSsg9N/0J8cqtkp6U+1eIm6/ixO2XLtI4EJ02A?=
+ =?us-ascii?Q?lXiUqe6RgvS9yG8jBTloIiFbk/Z211V/Mid4dyUssa9TV5NxcI5m5XuLtlyH?=
+ =?us-ascii?Q?lc+CO0WzclV0B6EEdz9+DTw0hWh6EjgN?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020)(38070700018);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?PU9LXp1WFesSDtC7gqpBITneZkZHQ76ez6U5eqSrmGcEM50+u+XmBfHSJYoA?=
- =?us-ascii?Q?qYZb63+WgVuQzHf3qMNQ6pdpq8tG63/yJG5ktLDgSXL3v7DJN1RbcZ87ukiE?=
- =?us-ascii?Q?0501QATIQL2N+NIdov3xl4/jlkmOPnR41RRQtt3zjjxcNfG4VxwHGQIuxQwr?=
- =?us-ascii?Q?HpYR4npnxl3b/vYfgxomuOxA3jeX26+Jfv1w3iTR0fFg9EntTDK/s7Rcwa3q?=
- =?us-ascii?Q?VUqU7SWbk+hmu/muuNE8eUGHIjcQL8ggr2aYtaNUDPu8WHdEsKFhIQzRfThb?=
- =?us-ascii?Q?fIPQ5IUI+9Ylgyk1eJm3N3HBxz6BhuqGFAqzJhCs/mPp9WDaUve3tJsgpnDA?=
- =?us-ascii?Q?2QSyjMri811h+ctPUSz5f6kybaI4M9scyP9hD3BSTDOOJT9UBu2RCqvT33lQ?=
- =?us-ascii?Q?T5kx5O9i7CrdIcuBLabAy5XnzmWbVozuy7wDlZalXqDPFFAOA6n5LT5ZKkT5?=
- =?us-ascii?Q?gJv0NydCKRH0YFQhMyMQGZtWggD2FpQiHoxraNK0LyglVAhetCHRTHB1INPn?=
- =?us-ascii?Q?km7rrkrl6l6n3EL4x6abKcQwjjoeRsy1FuUNKvOtNqh23qBssLSOncdnnaaK?=
- =?us-ascii?Q?JBe73hs+eZ2uC6SiMKjvt85oZlmILJ4YGgtdC4F9O1qkBL3a6Z58gVX4Nbso?=
- =?us-ascii?Q?3v5PeEu+/x4GvN94Uv6JXAwP9GBfBAgzKKQMB30fOuFkDTNR3pOsvq0dYs42?=
- =?us-ascii?Q?XVIrqH39ugXgcCxpeKpretnMHLAgM6bEhU5YCWBs86xTVhOSJSYcub9j4W2y?=
- =?us-ascii?Q?NMd+h3bJ5gIatQ7H2k5PuEguLQkNWbXw11Cr7EbkUzaKhmAwUxDVGC2RZacG?=
- =?us-ascii?Q?gb2kqe41NviCm4jyxIRQNo8kXtojYz2lrqiBAJ1mYKGcjUzw1FahYR2FpVmx?=
- =?us-ascii?Q?gEytmlePhzvjn9CmVf4r1hTreRxBAXWQR45pVW0xWaJfg95yFt4ijQxNeb7N?=
- =?us-ascii?Q?YCv8YeoVV3W8wZEx2KGV50kmjYUdmBpd+qULle6Ae3PyefjlDziK60X9c61M?=
- =?us-ascii?Q?FAGFcyf/xqAsVOE6k3bCfYXGiR6+DQaZwbPzOAJJJ86XW3gAbOfNJvykuSH0?=
- =?us-ascii?Q?Pb3O7pwCagtsD+dacB6D6ipc2Hg2bdQPs46f8PHKtaD+pkSePTbwyzOBvDcI?=
- =?us-ascii?Q?0Mn8yid0NhGMadYyytV600tVh61psstQKqzUXIoymGjELP/KYehkUO0h0vOe?=
- =?us-ascii?Q?75Ha0FJ77iLrAayr2DHBmqMAF/BldSPebSTL77CshU91Yu6Kpqh3dw3rm0Qq?=
- =?us-ascii?Q?jD5qaYre5FApwA29qf23pAuCi9v1P15OIbGWjGJhhVtsKqPhvLw2DsOBK+ol?=
- =?us-ascii?Q?li9EvyWN61icRamHHMvdJD24AMuSAL2ZXKDXRE1hiZi+s+pH/T0scMMeSUQI?=
- =?us-ascii?Q?aLEKYTdun8OJjr7RhBmpdwdubH1uhZQaXhRwwUQpBgoiDOiSKD9jiWXDC6NN?=
- =?us-ascii?Q?vgcDB9VWmoMwUQ1upOu43uKSBerFhIjgqvXv672zMU45viRyjEbt+C4ezmqh?=
- =?us-ascii?Q?CK0l4TyDmb6DOvU7pShik4JUnoF3nXUQgm3KFVCAiQcRnLnsPfmtlg80dtUe?=
- =?us-ascii?Q?qEkgqCGwzfIil/zReerfUJ1dyCGYOlPpI9euzqHI?=
+ =?us-ascii?Q?kh85Xm2nOJWWasrhWPbYF7Uk5LypSWMqRf42d3z9JDRoXdzEiJvyq+L1KyNn?=
+ =?us-ascii?Q?t6luSYuK+oLrhtKWWkr66u8xSKoaUOBJsvU+yncyszWl6x2BGlajLJNczhqy?=
+ =?us-ascii?Q?fbzoaWfOPS/JetxQuvvKOxzH9cSXi4rtjVGGfLhlyjdb1szpugPk2E8IRHmr?=
+ =?us-ascii?Q?DTl0NxM9nYCA0IxHlXrtxHgOoavMss/4M6qnDIwSk9sM3g1u90bc6cnQba2I?=
+ =?us-ascii?Q?vr7LHpWLWe1e6FIbE+W15nPD5lp9UHClSL2YhtvFtULnRVtAea1AQChR/7TW?=
+ =?us-ascii?Q?iRywnW4InwYAtEQCEARQ916OIKQuzbNkVB2sY1BoWxYpXa6EOq2/MYTKcF+a?=
+ =?us-ascii?Q?ACogtqvMSdeCUwQsFJu2RMXshVAW8VGgdAbbl6Ul3/Mzwg7RyrNhQ1qWQzMJ?=
+ =?us-ascii?Q?hrh07MHrfiOZXhxuII0Oc9eb8NBwacqrOYQoYy56pCpDjQt8eiYyP3k5ELMP?=
+ =?us-ascii?Q?q16dlCndWDrBdgFLBc70DwzxSoI72ApPPX2LpB/PSNVq3rfPxmOa+bohWV6m?=
+ =?us-ascii?Q?3fWbUamQ1dYZ4bhg2KleqibyWokYj+HtbBjOCWDXYMXjl4t25kY1W4n6y/nf?=
+ =?us-ascii?Q?C9w6rmvnkDkDqcey2UxGH5fKi++mIANqhWJM7+dQyGekuR6/OgPiZm1+kiuM?=
+ =?us-ascii?Q?JgM8ED9/TrNxVgnxowJJY+R2W2LRpEWMN+esXSKsrCwdiDyIJFgz0mMwCQCU?=
+ =?us-ascii?Q?x2GUxRKdRk2K5iixeDBm1hA5GnJzAD+QTxzkEss4U6Kdy8mFLCOhx7gnBk0r?=
+ =?us-ascii?Q?QyK1aNrmFHbwxvmjgUOg8SkQ7PY21ZmrDvEX6sUsa7RynpVksQb2IvmM1/QX?=
+ =?us-ascii?Q?Som3a4P/okILhf6V2Zt98ggG9imGWNEuxn2BAGehYUS5qdEkrK4Sqp30WXY8?=
+ =?us-ascii?Q?U6x4COVPiEQIg0+dFyzDVmVzzfDCCUU+W4ZfuiSvPevON+74GBsFhLuAWKaB?=
+ =?us-ascii?Q?vd6Iu+mMVzLgSt4y55DIljnl/Yw01Oa+2Gx6t1N9xigZepODCixvnp3r8CDD?=
+ =?us-ascii?Q?nLqCoxphomsr9f9XJwX6/X/5i0s4pg2Wr99Wv/TiS63RcTF2OYXDEx3HFkn5?=
+ =?us-ascii?Q?nj2MLMOiIeL3BhSpy6ivmCfuPrWnApi+gvjZBqCHkvFljAHEieeIc7BpoFoX?=
+ =?us-ascii?Q?zK4OjpGOR1AKPhFDxkdj8O5N90vDwjZay7U8BSYtceBXoJch1Z1vKDp+A/ML?=
+ =?us-ascii?Q?9PD2JEjpW/JnOyEcDKTeT0lMFs3f8/d1cZ8oJfcnwY/OM1PohPwompuOkL6g?=
+ =?us-ascii?Q?R3AN0dNKzMDSUYg3y0FbBoD+xelheMzIaceu8O68YyCODyXaw3gOUt5/rlU9?=
+ =?us-ascii?Q?L0luGVwmhgicIfYRQyIihXhoY13UeCavbcTudWvSwX9zqG8w62dN45Rd96h3?=
+ =?us-ascii?Q?661tiPdP9bduzKyTzrW1MUPQEKLdQR8q6zmFhqIpPHqY1dp7ooBoInE9S6RI?=
+ =?us-ascii?Q?ykdalaa32reGr9IGvHZtZXMkbf2I3Tjbkw52jvKuHJ3C/QQSDVheeWf5u+8b?=
+ =?us-ascii?Q?zMCm+FSiSz0gJXQ3F5r7l11Z8HgEvzQHR5AAiYHmY+6C1M3W7PmHFXaTvO/o?=
+ =?us-ascii?Q?rvfnZTawL5LVqR2vsm/twl1x5/PCGhKTLSF1MCie?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -162,23 +163,20 @@ MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fedf0899-3abd-4ef3-603c-08dd3b7232bc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2025 05:53:01.9919
+X-MS-Exchange-CrossTenant-Network-Message-Id: b450070b-26f2-4998-c84d-08dd3b72ce79
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2025 05:57:23.2809
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NqSTSmVA1eiL7C4LYRvU1v2QTXbDCsXZKpbqo/U+AInR/aI6HP8ViXVh8WBU/zQEXoKwBn3UK6ZDqmxLZK4dgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1867
+X-MS-Exchange-CrossTenant-userprincipalname: zdeJncfFxzCCYA/l8BVcIRZBBaPYPUR5i/QYqUSNOo6qsF/gC497QB/yKTunXIPt5TcQ7sn0FikSRkMfS4g+Gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4462
 
-> Subject: [PATCH rdma-next 07/13] RDMA/mana_ib: create/destroy AH
+> Subject: [PATCH rdma-next 10/13] RDMA/mana_ib: implement req_notify_cq
 >=20
 > From: Konstantin Taranov <kotaranov@microsoft.com>
 >=20
-> Implement create and destroy AH for kernel.
->=20
-> In mana_ib, AV is passed as an sge in WQE.
-> Allocate DMA memory and write an AV there.
+> Arm a CQ when req_notify_cq is called.
 >=20
 > Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
 > Reviewed-by: Shiraz Saleem <shirazsaleem@microsoft.com>
@@ -186,228 +184,73 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1867
 Reviewed-by: Long Li <longli@microsoft.com>
 
 > ---
->  drivers/infiniband/hw/mana/Makefile  |  2 +-
->  drivers/infiniband/hw/mana/ah.c      | 58 ++++++++++++++++++++++++++++
->  drivers/infiniband/hw/mana/device.c  | 13 ++++++-
-> drivers/infiniband/hw/mana/mana_ib.h | 30 ++++++++++++++
->  4 files changed, 101 insertions(+), 2 deletions(-)  create mode 100644
-> drivers/infiniband/hw/mana/ah.c
+>  drivers/infiniband/hw/mana/cq.c                 | 12 ++++++++++++
+>  drivers/infiniband/hw/mana/device.c             |  1 +
+>  drivers/infiniband/hw/mana/mana_ib.h            |  2 ++
+>  drivers/net/ethernet/microsoft/mana/gdma_main.c |  1 +
+>  4 files changed, 16 insertions(+)
 >=20
-> diff --git a/drivers/infiniband/hw/mana/Makefile
-> b/drivers/infiniband/hw/mana/Makefile
-> index 88655fe..6e56f77 100644
-> --- a/drivers/infiniband/hw/mana/Makefile
-> +++ b/drivers/infiniband/hw/mana/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_MANA_INFINIBAND) +=3D mana_ib.o
->=20
-> -mana_ib-y :=3D device.o main.o wq.o qp.o cq.o mr.o
-> +mana_ib-y :=3D device.o main.o wq.o qp.o cq.o mr.o ah.o
-> diff --git a/drivers/infiniband/hw/mana/ah.c b/drivers/infiniband/hw/mana=
-/ah.c
-> new file mode 100644 index 0000000..f56952e
-> --- /dev/null
-> +++ b/drivers/infiniband/hw/mana/ah.c
-> @@ -0,0 +1,58 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2024, Microsoft Corporation. All rights reserved.
-> + */
+> diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana=
+/cq.c
+> index d26d82d..82f1462 100644
+> --- a/drivers/infiniband/hw/mana/cq.c
+> +++ b/drivers/infiniband/hw/mana/cq.c
+> @@ -168,3 +168,15 @@ void mana_ib_remove_cq_cb(struct mana_ib_dev
+> *mdev, struct mana_ib_cq *cq)
+>  	kfree(gc->cq_table[cq->queue.id]);
+>  	gc->cq_table[cq->queue.id] =3D NULL;
+>  }
 > +
-> +#include "mana_ib.h"
+> +int mana_ib_arm_cq(struct ib_cq *ibcq, enum ib_cq_notify_flags flags) {
+> +	struct mana_ib_cq *cq =3D container_of(ibcq, struct mana_ib_cq, ibcq);
+> +	struct gdma_queue *gdma_cq =3D cq->queue.kmem;
 > +
-> +int mana_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *attr=
-,
-> +		      struct ib_udata *udata)
-> +{
-> +	struct mana_ib_dev *mdev =3D container_of(ibah->device, struct
-> mana_ib_dev, ib_dev);
-> +	struct mana_ib_ah *ah =3D container_of(ibah, struct mana_ib_ah, ibah);
-> +	struct rdma_ah_attr *ah_attr =3D attr->ah_attr;
-> +	const struct ib_global_route *grh;
-> +	enum rdma_network_type ntype;
-> +
-> +	if (ah_attr->type !=3D RDMA_AH_ATTR_TYPE_ROCE ||
-> +	    !(rdma_ah_get_ah_flags(ah_attr) & IB_AH_GRH))
+> +	if (!gdma_cq)
 > +		return -EINVAL;
 > +
-> +	if (udata)
-> +		return -EINVAL;
-> +
-> +	ah->av =3D dma_pool_zalloc(mdev->av_pool, GFP_ATOMIC, &ah-
-> >dma_handle);
-> +	if (!ah->av)
-> +		return -ENOMEM;
-> +
-> +	grh =3D rdma_ah_read_grh(ah_attr);
-> +	ntype =3D rdma_gid_attr_network_type(grh->sgid_attr);
-> +
-> +	copy_in_reverse(ah->av->dest_mac, ah_attr->roce.dmac, ETH_ALEN);
-> +	ah->av->udp_src_port =3D rdma_flow_label_to_udp_sport(grh-
-> >flow_label);
-> +	ah->av->hop_limit =3D grh->hop_limit;
-> +	ah->av->dscp =3D (grh->traffic_class >> 2) & 0x3f;
-> +	ah->av->is_ipv6 =3D (ntype =3D=3D RDMA_NETWORK_IPV6);
-> +
-> +	if (ah->av->is_ipv6) {
-> +		copy_in_reverse(ah->av->dest_ip, grh->dgid.raw, 16);
-> +		copy_in_reverse(ah->av->src_ip, grh->sgid_attr->gid.raw, 16);
-> +	} else {
-> +		ah->av->dest_ip[10] =3D 0xFF;
-> +		ah->av->dest_ip[11] =3D 0xFF;
-> +		copy_in_reverse(&ah->av->dest_ip[12], &grh->dgid.raw[12], 4);
-> +		copy_in_reverse(&ah->av->src_ip[12], &grh->sgid_attr-
-> >gid.raw[12], 4);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int mana_ib_destroy_ah(struct ib_ah *ibah, u32 flags) {
-> +	struct mana_ib_dev *mdev =3D container_of(ibah->device, struct
-> mana_ib_dev, ib_dev);
-> +	struct mana_ib_ah *ah =3D container_of(ibah, struct mana_ib_ah, ibah);
-> +
-> +	dma_pool_free(mdev->av_pool, ah->av, ah->dma_handle);
-> +
+> +	mana_gd_ring_cq(gdma_cq, SET_ARM_BIT);
 > +	return 0;
 > +}
 > diff --git a/drivers/infiniband/hw/mana/device.c
 > b/drivers/infiniband/hw/mana/device.c
-> index 215dbce..d534ef1 100644
+> index 1da86c3..63e12c3 100644
 > --- a/drivers/infiniband/hw/mana/device.c
 > +++ b/drivers/infiniband/hw/mana/device.c
-> @@ -19,6 +19,7 @@ static const struct ib_device_ops mana_ib_dev_ops =3D {
->  	.add_gid =3D mana_ib_gd_add_gid,
->  	.alloc_pd =3D mana_ib_alloc_pd,
->  	.alloc_ucontext =3D mana_ib_alloc_ucontext,
-> +	.create_ah =3D mana_ib_create_ah,
->  	.create_cq =3D mana_ib_create_cq,
->  	.create_qp =3D mana_ib_create_qp,
->  	.create_rwq_ind_table =3D mana_ib_create_rwq_ind_table, @@ -27,6
-> +28,7 @@ static const struct ib_device_ops mana_ib_dev_ops =3D {
->  	.dealloc_ucontext =3D mana_ib_dealloc_ucontext,
->  	.del_gid =3D mana_ib_gd_del_gid,
->  	.dereg_mr =3D mana_ib_dereg_mr,
-> +	.destroy_ah =3D mana_ib_destroy_ah,
->  	.destroy_cq =3D mana_ib_destroy_cq,
->  	.destroy_qp =3D mana_ib_destroy_qp,
->  	.destroy_rwq_ind_table =3D mana_ib_destroy_rwq_ind_table, @@ -44,6
-> +46,7 @@ static const struct ib_device_ops mana_ib_dev_ops =3D {
+> @@ -47,6 +47,7 @@ static const struct ib_device_ops mana_ib_dev_ops =3D {
+>  	.query_pkey =3D mana_ib_query_pkey,
 >  	.query_port =3D mana_ib_query_port,
 >  	.reg_user_mr =3D mana_ib_reg_user_mr,
+> +	.req_notify_cq =3D mana_ib_arm_cq,
 >=20
-> +	INIT_RDMA_OBJ_SIZE(ib_ah, mana_ib_ah, ibah),
->  	INIT_RDMA_OBJ_SIZE(ib_cq, mana_ib_cq, ibcq),
->  	INIT_RDMA_OBJ_SIZE(ib_pd, mana_ib_pd, ibpd),
->  	INIT_RDMA_OBJ_SIZE(ib_qp, mana_ib_qp, ibqp), @@ -135,15 +138,22
-> @@ static int mana_ib_probe(struct auxiliary_device *adev,
->  		goto destroy_rnic;
->  	}
->=20
-> +	dev->av_pool =3D dma_pool_create("mana_ib_av", mdev->gdma_context-
-> >dev,
-> +				       MANA_AV_BUFFER_SIZE,
-> MANA_AV_BUFFER_SIZE, 0);
-> +	if (!dev->av_pool)
-> +		goto destroy_rnic;
-> +
->  	ret =3D ib_register_device(&dev->ib_dev, "mana_%d",
->  				 mdev->gdma_context->dev);
->  	if (ret)
-> -		goto destroy_rnic;
-> +		goto deallocate_pool;
->=20
->  	dev_set_drvdata(&adev->dev, dev);
->=20
->  	return 0;
->=20
-> +deallocate_pool:
-> +	dma_pool_destroy(dev->av_pool);
->  destroy_rnic:
->  	xa_destroy(&dev->qp_table_wq);
->  	mana_ib_gd_destroy_rnic_adapter(dev);
-> @@ -161,6 +171,7 @@ static void mana_ib_remove(struct auxiliary_device
-> *adev)
->  	struct mana_ib_dev *dev =3D dev_get_drvdata(&adev->dev);
->=20
->  	ib_unregister_device(&dev->ib_dev);
-> +	dma_pool_destroy(dev->av_pool);
->  	xa_destroy(&dev->qp_table_wq);
->  	mana_ib_gd_destroy_rnic_adapter(dev);
->  	mana_ib_destroy_eqs(dev);
-> diff --git a/drivers/infiniband/hw/mana/mana_ib.h
+>  	INIT_RDMA_OBJ_SIZE(ib_ah, mana_ib_ah, ibah),
+>  	INIT_RDMA_OBJ_SIZE(ib_cq, mana_ib_cq, ibcq), diff --git
+> a/drivers/infiniband/hw/mana/mana_ib.h
 > b/drivers/infiniband/hw/mana/mana_ib.h
-> index 5e470f1..7b079d8 100644
+> index 6265c39..bd34ad6 100644
 > --- a/drivers/infiniband/hw/mana/mana_ib.h
 > +++ b/drivers/infiniband/hw/mana/mana_ib.h
-> @@ -11,6 +11,7 @@
->  #include <rdma/ib_umem.h>
->  #include <rdma/mana-abi.h>
->  #include <rdma/uverbs_ioctl.h>
-> +#include <linux/dmapool.h>
->=20
->  #include <net/mana/mana.h>
->=20
-> @@ -32,6 +33,11 @@
->   */
->  #define MANA_CA_ACK_DELAY	16
->=20
-> +/*
-> + * The buffer used for writing AV
-> + */
-> +#define MANA_AV_BUFFER_SIZE	64
+> @@ -595,4 +595,6 @@ int mana_ib_post_recv(struct ib_qp *ibqp, const struc=
+t
+> ib_recv_wr *wr,
+>  		      const struct ib_recv_wr **bad_wr);  int
+> mana_ib_post_send(struct ib_qp *ibqp, const struct ib_send_wr *wr,
+>  		      const struct ib_send_wr **bad_wr);
 > +
->  struct mana_ib_adapter_caps {
->  	u32 max_sq_id;
->  	u32 max_rq_id;
-> @@ -65,6 +71,7 @@ struct mana_ib_dev {
->  	struct gdma_queue **eqs;
->  	struct xarray qp_table_wq;
->  	struct mana_ib_adapter_caps adapter_caps;
-> +	struct dma_pool *av_pool;
->  };
->=20
->  struct mana_ib_wq {
-> @@ -88,6 +95,25 @@ struct mana_ib_pd {
->  	u32 tx_vp_offset;
->  };
->=20
-> +struct mana_ib_av {
-> +	u8 dest_ip[16];
-> +	u8 dest_mac[ETH_ALEN];
-> +	u16 udp_src_port;
-> +	u8 src_ip[16];
-> +	u32 hop_limit	: 8;
-> +	u32 reserved1	: 12;
-> +	u32 dscp	: 6;
-> +	u32 reserved2	: 5;
-> +	u32 is_ipv6	: 1;
-> +	u32 reserved3	: 32;
-> +};
-> +
-> +struct mana_ib_ah {
-> +	struct ib_ah ibah;
-> +	struct mana_ib_av *av;
-> +	dma_addr_t dma_handle;
-> +};
-> +
->  struct mana_ib_mr {
->  	struct ib_mr ibmr;
->  	struct ib_umem *umem;
-> @@ -532,4 +558,8 @@ int mana_ib_gd_destroy_rc_qp(struct mana_ib_dev
-> *mdev, struct mana_ib_qp *qp);  int mana_ib_gd_create_ud_qp(struct
-> mana_ib_dev *mdev, struct mana_ib_qp *qp,
->  			    struct ib_qp_init_attr *attr, u32 doorbell, u32 type);
-> int mana_ib_gd_destroy_ud_qp(struct mana_ib_dev *mdev, struct mana_ib_qp
-> *qp);
-> +
-> +int mana_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init=
-_attr,
-> +		      struct ib_udata *udata);
-> +int mana_ib_destroy_ah(struct ib_ah *ah, u32 flags);
+> +int mana_ib_arm_cq(struct ib_cq *ibcq, enum ib_cq_notify_flags flags);
 >  #endif
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 409e4e8..823f7e7 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -344,6 +344,7 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8
+> arm_bit)
+>  	mana_gd_ring_doorbell(gc, cq->gdma_dev->doorbell, cq->type, cq->id,
+>  			      head, arm_bit);
+>  }
+> +EXPORT_SYMBOL_NS(mana_gd_ring_cq, NET_MANA);
+>=20
+>  static void mana_gd_process_eqe(struct gdma_queue *eq)  {
 > --
 > 2.43.0
 
