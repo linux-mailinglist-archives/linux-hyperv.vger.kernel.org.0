@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-3788-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3789-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 864E6A21014
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 19:00:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F0F1A2103C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 19:03:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CBCD1887EC8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 17:59:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 142641889F5F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 18:01:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440701F91F8;
-	Tue, 28 Jan 2025 17:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485EB1FBC86;
+	Tue, 28 Jan 2025 17:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSGJVCxv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="saDMK8Az"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1695F1F91F2;
-	Tue, 28 Jan 2025 17:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4061FBC81;
+	Tue, 28 Jan 2025 17:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086871; cv=none; b=QFxDXFV9TCMbX6YrqFmcoS5JfysOxGbzarxnQCCTUuwc2PQf5jFdOaSdqqjYtDusXlLy5GkagJRjYJ/ltaYJVJsv4DbLTif/wsN9TUxuRgww1wRlgptBddDXBVAmKxm2mg80cmXZNxZD5fNnKh4Ox7+buX4Dmj5BpaSNxnpwoFY=
+	t=1738086890; cv=none; b=OFCnFlnEmrk8P+/D+K0G1k8r96RGS5Y0BWqugcJUmV4UcOnP6DJAnESYPioMUQVWTVNmf3edwy8QKuxn0ia98At+zN/s1wpfK0bK0wZAvPFzb+xQFuzpymk48nAR4CZRK2RJOvcp7hfvi/QA7MxKdpgPco+bid0C3s5BSf9sQXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086871; c=relaxed/simple;
-	bh=6qao0JXXyZP44kcHKZCb++yOVgr2jYvsFxsrA5N7CiQ=;
+	s=arc-20240116; t=1738086890; c=relaxed/simple;
+	bh=TGjOYaYwok/GnsXlWrnv8ChOT+PEzg5Uc8rG8IdLxRc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uMtic4ElDwiLcM9UUT2IFQrx4EAn48VtqNtMLtRMMnHu+wvZXRvMDpxYkr2Vd4jGpwDjpKYH+898RPmsnMeVH1KHLakkTDHSNvcl2PqJ18ijLkFRf3rNWAO/SU++KtbdWMMX0oqYNeLbW7OwxOY9nnO4hnVpcSAtwJXz/ULeFE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSGJVCxv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2851C4CED3;
-	Tue, 28 Jan 2025 17:54:28 +0000 (UTC)
+	 MIME-Version; b=d9TKn/zTEkZO98HyFFttozUKz432F5do6kDKiiplRb0EgjGQcCeeztqENCxFBs0FNNDJ7F7WAY+6+pNA1G8RAhhlZITm5Nu90IAbwOBYnZmZk9sVjBj3Grs4x0uu2Cm9zoxlwW77+Sb7LGzxQxl7Sihyy9vVEWoSpPJvbqOJmtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=saDMK8Az; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D466C4CEE5;
+	Tue, 28 Jan 2025 17:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738086870;
-	bh=6qao0JXXyZP44kcHKZCb++yOVgr2jYvsFxsrA5N7CiQ=;
+	s=k20201202; t=1738086890;
+	bh=TGjOYaYwok/GnsXlWrnv8ChOT+PEzg5Uc8rG8IdLxRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rSGJVCxv6fTTAFm/ykEkVeJcaUrmiKVu2dbUW8e7nEf0yd1n6P/0cAjPlyDO1TSCh
-	 JRImimYPbMmIVq4CFNUAHeRfbS2vY+yxZ/PBjTSV8m7FAmwokIuP8gXqKV3l7uTclj
-	 xCU1kkKUq52LEv+sF3NdMbWnt4ZWCrnKcsPHTGLUmEtYdlw+pI0/gl41Thn83LW7GA
-	 g1OnflIxpBx+WsuPPnOkqKeiiFMsaI14GcxJpVxStQL/ZcwyQowBmc/1Uyh2KVaXcT
-	 FLWknrJphuTVM+lekouSbvhRbz10IEYndCJ2LNUwspoK0inO1zyQKETbldtKkH7G03
-	 5oISQ2t6LN7jQ==
+	b=saDMK8AzNJFAiodvdwgoafBK6DWnUTJLKesEWO+taalRcZiFPhRoyxu1B3jO5EF/h
+	 8Xfzeo4LqFU4IB09pxw5YOr/4+nth9Q76FK4oUBiDRuxC32AoMY1peNFnw8Z1WWZgn
+	 aZ7ld1Xb5mRnXKv4OL2eXv4uaGopJmX8B1OXkBj9zB/yQ1kSgg5a4vr3ZbRgdfvNwF
+	 hOXa+l2hnYDBQwpufZnZZtHajaHoWZN/eU7o0WJHHpQld/GHJCj+62YCLx5AHwOMGo
+	 3vM4sciacQqsOLxRZp5ASwIjdqJ/Je451AfK88wibXfkriSJuI0rCj0PZSwxJnqH5v
+	 s84T073xtKedQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -59,12 +59,12 @@ Cc: Roman Kisel <romank@linux.microsoft.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 09/12] hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
-Date: Tue, 28 Jan 2025 12:54:11 -0500
-Message-Id: <20250128175414.1197295-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 08/11] hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
+Date: Tue, 28 Jan 2025 12:54:32 -0500
+Message-Id: <20250128175435.1197457-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250128175414.1197295-1-sashal@kernel.org>
-References: <20250128175414.1197295-1-sashal@kernel.org>
+In-Reply-To: <20250128175435.1197457-1-sashal@kernel.org>
+References: <20250128175435.1197457-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,7 +73,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.11
+X-stable-base: Linux 6.6.74
 Content-Transfer-Encoding: 8bit
 
 From: Roman Kisel <romank@linux.microsoft.com>
@@ -103,7 +103,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 04775346369c5..4e1b1e3b56584 100644
+index c2f78fabc865b..9fc0f54ec8d1e 100644
 --- a/arch/x86/hyperv/hv_vtl.c
 +++ b/arch/x86/hyperv/hv_vtl.c
 @@ -189,7 +189,7 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
