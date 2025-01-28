@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-3787-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3788-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78CB8A20FE9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 18:56:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 864E6A21014
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 19:00:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5731316750F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 17:56:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CBCD1887EC8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 17:59:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FED21F543E;
-	Tue, 28 Jan 2025 17:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440701F91F8;
+	Tue, 28 Jan 2025 17:54:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o39EbA+K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSGJVCxv"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BFB1F5430;
-	Tue, 28 Jan 2025 17:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1695F1F91F2;
+	Tue, 28 Jan 2025 17:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738086847; cv=none; b=eJ6XCRrY7YCeEh0gvRgPnrXLTNFVyS0oHxdNGWl3ouCOZB60MqG0lgTSJIfv1DaHESGqxG494Hom6MtmYBXa6JXIK5IOYMGo0rywBMxvkNxx6OSLlxYPsY1ABikcHCvqWcX4OPWmDek0XlnJwZHrBEDlwIwU5gzxaGlXtfgjqnA=
+	t=1738086871; cv=none; b=QFxDXFV9TCMbX6YrqFmcoS5JfysOxGbzarxnQCCTUuwc2PQf5jFdOaSdqqjYtDusXlLy5GkagJRjYJ/ltaYJVJsv4DbLTif/wsN9TUxuRgww1wRlgptBddDXBVAmKxm2mg80cmXZNxZD5fNnKh4Ox7+buX4Dmj5BpaSNxnpwoFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738086847; c=relaxed/simple;
+	s=arc-20240116; t=1738086871; c=relaxed/simple;
 	bh=6qao0JXXyZP44kcHKZCb++yOVgr2jYvsFxsrA5N7CiQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NMGUdyc2tDWht+tGf4OPdkk/BbfuJE+UvGZYPR1x7OD5EEUgzhIkMngebvlNi5KpFQ8aNftNFXHdeLKlQRJmLVY6SUXRctRKXf8W1svHv23bIH6z5nu1RfRAoJdXaBpSAE7Z3MFCbYbIMbK1tpoo48ytd+oqn4SwRJ9mi/wLayw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o39EbA+K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F09C4CED3;
-	Tue, 28 Jan 2025 17:54:05 +0000 (UTC)
+	 MIME-Version; b=uMtic4ElDwiLcM9UUT2IFQrx4EAn48VtqNtMLtRMMnHu+wvZXRvMDpxYkr2Vd4jGpwDjpKYH+898RPmsnMeVH1KHLakkTDHSNvcl2PqJ18ijLkFRf3rNWAO/SU++KtbdWMMX0oqYNeLbW7OwxOY9nnO4hnVpcSAtwJXz/ULeFE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSGJVCxv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2851C4CED3;
+	Tue, 28 Jan 2025 17:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738086846;
+	s=k20201202; t=1738086870;
 	bh=6qao0JXXyZP44kcHKZCb++yOVgr2jYvsFxsrA5N7CiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o39EbA+KyvLmVqYkB7RQ1S5xlU/gkS9cwaExC52zgzzkul3EZItJTuoeZermtPDaa
-	 6bnngZeg8Thwy5s2WailciBzQ/HTe5yDqUJwxANvONBdeOTpZduD7hjb4xb+z88gFz
-	 mR3k3yIbygnREn7FC8ZtDEf3yZEwZzbuuDR+dwRo3SrlBLoxb4p2TDRhWCsf4iJWDs
-	 2LMDHzhSLaiIh2BQM8M6xqYEZBw+VMlJXSKBZUV7vsQ2NLRbjg+J3fO+NIswcV1noi
-	 Ke8VQYeTbMQScjEaN6KRAGR9DZ/AB9I9SLK/6FWPjutLPEAmJEcl2BAv9moRxUc57F
-	 Tl7mgzTJHhuiQ==
+	b=rSGJVCxv6fTTAFm/ykEkVeJcaUrmiKVu2dbUW8e7nEf0yd1n6P/0cAjPlyDO1TSCh
+	 JRImimYPbMmIVq4CFNUAHeRfbS2vY+yxZ/PBjTSV8m7FAmwokIuP8gXqKV3l7uTclj
+	 xCU1kkKUq52LEv+sF3NdMbWnt4ZWCrnKcsPHTGLUmEtYdlw+pI0/gl41Thn83LW7GA
+	 g1OnflIxpBx+WsuPPnOkqKeiiFMsaI14GcxJpVxStQL/ZcwyQowBmc/1Uyh2KVaXcT
+	 FLWknrJphuTVM+lekouSbvhRbz10IEYndCJ2LNUwspoK0inO1zyQKETbldtKkH7G03
+	 5oISQ2t6LN7jQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -59,12 +59,12 @@ Cc: Roman Kisel <romank@linux.microsoft.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 11/15] hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
-Date: Tue, 28 Jan 2025 12:53:42 -0500
-Message-Id: <20250128175346.1197097-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 09/12] hyperv: Do not overlap the hvcall IO areas in hv_vtl_apicid_to_vp_id()
+Date: Tue, 28 Jan 2025 12:54:11 -0500
+Message-Id: <20250128175414.1197295-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250128175346.1197097-1-sashal@kernel.org>
-References: <20250128175346.1197097-1-sashal@kernel.org>
+In-Reply-To: <20250128175414.1197295-1-sashal@kernel.org>
+References: <20250128175414.1197295-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,7 +73,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13
+X-stable-base: Linux 6.12.11
 Content-Transfer-Encoding: 8bit
 
 From: Roman Kisel <romank@linux.microsoft.com>
