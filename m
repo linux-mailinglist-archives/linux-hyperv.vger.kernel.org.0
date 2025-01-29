@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-3793-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3794-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87FB6A2137F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 22:15:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D557A215BA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 01:45:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBCC8164754
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jan 2025 21:15:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 604FC3A6FB2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 00:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085AD1ACECE;
-	Tue, 28 Jan 2025 21:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B058542A8F;
+	Wed, 29 Jan 2025 00:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WxSWhrwi"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AsHySfKs"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8457A3C14;
-	Tue, 28 Jan 2025 21:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE0C61802B;
+	Wed, 29 Jan 2025 00:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738098944; cv=none; b=CvsD8dftclwMq5wqVXao9zOGYMIQ3dm77SEn8ZtqBRsp2GYzghnVhJjkpZNZ3lcBXHdMLDeENC9uHQWwKfEAW2kyqKWrHEnK/ufmDkjOuA6LZceXvshIB8oBvSBie/xJ/TvsbDILT4QtwdTufqK69Y7ymGhZZMpzzi+t1LXmOK8=
+	t=1738111548; cv=none; b=HXkOGoaSAKzQBZgJLg5Yyc5hiRdVWqOmqZafkHzeUId0bGovWMPHJkQGq3rpMkxHBuxdXXAF7dFJtGxilmn19jmwn3cfUn5KZ7C3VHJWlqP4szAwtKN1CIvQfm4Z9diRB+XkPmghB6oD8v/dimNGhK0I9bj2H/RGtAjZye58pN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738098944; c=relaxed/simple;
-	bh=UEvLk/uh7TKxUr2pFE+gRqreDGzbw4BPWhRCqU3VKOo=;
+	s=arc-20240116; t=1738111548; c=relaxed/simple;
+	bh=VquOpjQsvHYXtiJIRRb/PoV/4uz5bZNRKQYN1Gma/QQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RkTUISr1D6F3n6FdF9PQwzUHeaOzZyg18bliEc3VgQ/EFca6q23GJ79oMhQm1zRiikfxlyoOT2usd0dK3UVe2wDL7u2ZCwob3hlVIh4zYhZOufSorbp3P9adz6f5PLOrOUjIjXr66DAroxd0lefM/ZjNhEgS0VdMH1KPtTPxJgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WxSWhrwi; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=BGNz+EijGQkNF3Pwa07ZPgbJWgt4USCE4fjmWpty1QTqwPYgiPyCEfNxh8Of5FX+rOfWvA5SBIpHqioVNw5b+Mnq2OyvZBmo1jSZCuTTmor5pv36hTwcKcLSPcCHZg8RK2N9Rb8w5yXcln/BvicvsvUr8h6v/xBclfqpHhDcMcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AsHySfKs; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E26E2203718A;
-	Tue, 28 Jan 2025 13:15:42 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E26E2203718A
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B05BA2037194;
+	Tue, 28 Jan 2025 16:45:45 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B05BA2037194
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738098943;
-	bh=/RmO98xeDMMsl1UmOBAPa9d6T82u+QmX8i/YdJeK+uA=;
+	s=default; t=1738111546;
+	bh=eNW3XwGKT8uY68/NIPIEvMVL9MQDtdvOoUBs56294+A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WxSWhrwikpH/vJCIPFqAhiSBnzMuInlftBmKlOPE/HkHsuDKZw380FW+aHW0/nFl2
-	 UpjK/paXrOyG4XwwiV3BNNp9ZeUn0mV4l4ulp3Du1g5LSSw5DjjtIU2DdMz7TDaIrI
-	 30GjNcQwoi2X3qVDgypWhgXbQJ/ejvfoSygmfYkk=
-Message-ID: <4d7bcc3a-4c8e-4757-adae-66be1c5fe921@linux.microsoft.com>
-Date: Tue, 28 Jan 2025 13:15:42 -0800
+	b=AsHySfKs4P0rn+bXmhLBAubuo/hmBVIk34JfhyduufsQSKamabNvy43veGRjtgl/6
+	 vmTZ6cUd7JH0VhJ3hojjKS1MbICggAHmveoItYOApXxoTkf0Y+abjyJrwJRNC4d6hB
+	 AtU8o0HDa5aUvetEhCsbPTa2XqViDV2IYAbNZ2/c=
+Message-ID: <c52ca7db-36a4-471c-8fb6-37a94d637741@linux.microsoft.com>
+Date: Tue, 28 Jan 2025 16:45:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,74 +49,232 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 6.13 11/15] hyperv: Do not overlap the hvcall IO
- areas in hv_vtl_apicid_to_vp_id()
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: Michael Kelley <mhklinux@outlook.com>,
- Easwar Hariharan <eahariha@linux.microsoft.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, kys@microsoft.com, haiyangz@microsoft.com,
- decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, linux-hyperv@vger.kernel.org
-References: <20250128175346.1197097-1-sashal@kernel.org>
- <20250128175346.1197097-11-sashal@kernel.org>
+Subject: Re: [PATCH v2 1/2] hyperv: Move hv_current_partition_id to
+ arch-generic code
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "arnd@arndb.de" <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>
+References: <1737596851-29555-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1737596851-29555-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157042605A22E40767DDC94D4EF2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20250128175346.1197097-11-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157042605A22E40767DDC94D4EF2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Sasha,
+On 1/28/2025 10:45 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, January 22, 2025 5:48 PM
+>>
+>> Move hv_current_partition_id and hv_get_partition_id() to hv_common.c.
+>> These aren't specific to x86_64 and will be needed by common code.
+>>
+>> Set hv_current_partition_id to HV_PARTITION_ID_SELF by default.
+>>
+>> Use a stack variable for the output of the hypercall. This allows moving
+>> the call of hv_get_partition_id() to hv_common_init() before the percpu
+>> pages are initialized.
+>>
+>> Remove the BUG()s. Failing to get the id need not crash the machine.
+>>
+>> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
+>> ---
+>>  arch/x86/hyperv/hv_init.c       | 26 --------------------------
+>>  arch/x86/include/asm/mshyperv.h |  2 --
+>>  drivers/hv/hv_common.c          | 23 +++++++++++++++++++++++
+>>  include/asm-generic/mshyperv.h  |  1 +
+>>  4 files changed, 24 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+>> index 173005e6a95d..6b9f6f9f704d 100644
+>> --- a/arch/x86/hyperv/hv_init.c
+>> +++ b/arch/x86/hyperv/hv_init.c
+>> @@ -34,9 +34,6 @@
+>>  #include <clocksource/hyperv_timer.h>
+>>  #include <linux/highmem.h>
+>>
+>> -u64 hv_current_partition_id = ~0ull;
+>> -EXPORT_SYMBOL_GPL(hv_current_partition_id);
+>> -
+>>  void *hv_hypercall_pg;
+>>  EXPORT_SYMBOL_GPL(hv_hypercall_pg);
+>>
+>> @@ -393,24 +390,6 @@ static void __init hv_stimer_setup_percpu_clockev(void)
+>>  		old_setup_percpu_clockev();
+>>  }
+>>
+>> -static void __init hv_get_partition_id(void)
+>> -{
+>> -	struct hv_get_partition_id *output_page;
+>> -	u64 status;
+>> -	unsigned long flags;
+>> -
+>> -	local_irq_save(flags);
+>> -	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
+>> -	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
+>> -	if (!hv_result_success(status)) {
+>> -		/* No point in proceeding if this failed */
+>> -		pr_err("Failed to get partition ID: %lld\n", status);
+>> -		BUG();
+>> -	}
+>> -	hv_current_partition_id = output_page->partition_id;
+>> -	local_irq_restore(flags);
+>> -}
+>> -
+>>  #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>>  static u8 __init get_vtl(void)
+>>  {
+>> @@ -605,11 +584,6 @@ void __init hyperv_init(void)
+>>
+>>  	register_syscore_ops(&hv_syscore_ops);
+>>
+>> -	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_ACCESS_PARTITION_ID)
+>> -		hv_get_partition_id();
+>> -
+>> -	BUG_ON(hv_root_partition && hv_current_partition_id == ~0ull);
+>> -
+>>  #ifdef CONFIG_PCI_MSI
+>>  	/*
+>>  	 * If we're running as root, we want to create our own PCI MSI domain.
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+>> index f91ab1e75f9f..8d3ada3e8d0d 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -43,8 +43,6 @@ extern bool hyperv_paravisor_present;
+>>
+>>  extern void *hv_hypercall_pg;
+>>
+>> -extern u64 hv_current_partition_id;
+>> -
+>>  extern union hv_ghcb * __percpu *hv_ghcb_pg;
+>>
+>>  bool hv_isolation_type_snp(void);
+>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+>> index af5d1dc451f6..1da19b64ef16 100644
+>> --- a/drivers/hv/hv_common.c
+>> +++ b/drivers/hv/hv_common.c
+>> @@ -31,6 +31,9 @@
+>>  #include <hyperv/hvhdk.h>
+>>  #include <asm/mshyperv.h>
+>>
+>> +u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
+>> +EXPORT_SYMBOL_GPL(hv_current_partition_id);
+>> +
+>>  /*
+>>   * hv_root_partition, ms_hyperv and hv_nested are defined here with other
+>>   * Hyper-V specific globals so they are shared across all architectures and are
+>> @@ -283,6 +286,23 @@ static inline bool hv_output_page_exists(void)
+>>  	return hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
+>>  }
+>>
+>> +static void __init hv_get_partition_id(void)
+>> +{
+>> +	/*
+>> +	 * Note in this case the output can be on the stack because it is just
+>> +	 * a single u64 and hence won't cross a page boundary.
+>> +	 */
+>> +	struct hv_get_partition_id output;
+> 
+> It's unfortunate that the structure name "hv_get_partition_id" is also
+> the name of this function. Could the structure name be changed to
+> follow the pattern of having "output" in the name, like other hypercall
+> parameters? It's not a blocker if it can't be changed. I was just surprised
+> to search for "hv_get_partition_id" and find both uses.
+> 
 
-The patch picked up for the stable tree will need this bit
-"[PATCH v6 3/5] hyperv: Enable the hypercall output page for the VTL  mode"
+hv_output_get_partition_id is really the "correct" name from the Hyper-V code,
+so it makes sense to just change it to that in this patch.
 
-https://lore.kernel.org/linux-hyperv/20250108222138.1623703-4-romank@linux.microsoft.com/
+> Also, see the comment at the beginning of hv_query_ext_cap() regarding
+> using a local stack variable as hypercall input or output. The comment
+> originated here [1]. At that time, I didn't investigate Sunil's assertion any
+> further, and I'm still unsure whether it is really true. But perhaps for
+> consistency and safety we should follow what it says.
+> 
+> [1] https://lore.kernel.org/linux-hyperv/SN4PR2101MB0880DB0606A5A0B72AD244B4C06A9@SN4PR2101MB0880.namprd21.prod.outlook.com/
+> 
+Hmm, from some cursory research it does look like stack variables can't be
+used with virt_to_phys().
 
-On 1/28/2025 9:53 AM, Sasha Levin wrote:
-> From: Roman Kisel <romank@linux.microsoft.com>
-> 
-> [ Upstream commit f285d995743269aa9f893e5e9a1065604137c1f6 ]
-> 
-> The Top-Level Functional Specification for Hyper-V, Section 3.6 [1, 2],
-> disallows overlapping of the input and output hypercall areas, and
-> hv_vtl_apicid_to_vp_id() overlaps them.
-> 
-> Use the output hypercall page of the current vCPU for the hypercall.
-> 
-> [1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
-> [2] https://github.com/MicrosoftDocs/Virtualization-Documentation/tree/main/tlfs
-> 
-> Reported-by: Michael Kelley <mhklinux@outlook.com>
-> Closes: https://lore.kernel.org/lkml/SN6PR02MB4157B98CD34781CC87A9D921D40D2@SN6PR02MB4157.namprd02.prod.outlook.com/
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Link: https://lore.kernel.org/r/20250108222138.1623703-6-romank@linux.microsoft.com
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> Message-ID: <20250108222138.1623703-6-romank@linux.microsoft.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   arch/x86/hyperv/hv_vtl.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index 04775346369c5..4e1b1e3b56584 100644
-> --- a/arch/x86/hyperv/hv_vtl.c
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -189,7 +189,7 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
->   	input->partition_id = HV_PARTITION_ID_SELF;
->   	input->apic_ids[0] = apic_id;
->   
-> -	output = (u32 *)input;
-> +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
->   
->   	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
->   	status = hv_do_hypercall(control, input, output);
+I thought about just using &hv_current_partition directly - I *think* that
+will work - but in the end I think it's just simpler to just move calls so the
+percpu output page can be used as normal. That may save some additional
+back-and-forth as well as explanatory comments in the code.
 
--- 
-Thank you,
-Roman
+I will also add a check for hv_output_page_exists() here, as a precaution in
+case the HV_ACCESS_PARTITION_ID privilege ever becomes decoupled from
+that (as it stands, I believe that permission is only for the root
+partition, but you never know).
+
+>> +	u64 status;
+>> +
+>> +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
+>> +	if (!hv_result_success(status)) {
+>> +		pr_err("Hyper-V: failed to get partition ID: %#lx\n", status);
+>> +		return;
+>> +	}
+>> +	hv_current_partition_id = output.partition_id;
+>> +}
+>> +
+>>  int __init hv_common_init(void)
+>>  {
+>>  	int i;
+>> @@ -298,6 +318,9 @@ int __init hv_common_init(void)
+>>  	if (hv_is_isolation_supported())
+>>  		sysctl_record_panic_msg = 0;
+>>
+>> +	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
+>> +		hv_get_partition_id();
+> 
+> I don't see how this works. On the x86 side, hv_common_init()
+> is called before the guest ID is set and the hypercall page is setup.
+> So the hypercall in hv_get_partition_id() should fail.
+> 
+
+Oh, I tried to get too clever. I will put it back where it was and
+add it on the arm64 side to hyperv_init() after the per-cpu init as
+I mentioned above.
+
+Thanks for the comments,
+Nuno
+
+> Michael
+> 
+>> +
+>>  	/*
+>>  	 * Hyper-V expects to get crash register data or kmsg when
+>>  	 * crash enlightment is available and system crashes. Set
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index a7bbe504e4f3..98100466e0b2 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -58,6 +58,7 @@ struct ms_hyperv_info {
+>>  };
+>>  extern struct ms_hyperv_info ms_hyperv;
+>>  extern bool hv_nested;
+>> +extern u64 hv_current_partition_id;
+>>
+>>  extern void * __percpu *hyperv_pcpu_input_arg;
+>>  extern void * __percpu *hyperv_pcpu_output_arg;
+>> --
+>> 2.34.1
 
 
