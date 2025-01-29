@@ -1,157 +1,148 @@
-Return-Path: <linux-hyperv+bounces-3795-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3796-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E339DA215C1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 01:48:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3284EA21613
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 02:30:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BF401888977
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 00:48:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B545C1886C04
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 01:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9809142A9D;
-	Wed, 29 Jan 2025 00:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663BE188A3B;
+	Wed, 29 Jan 2025 01:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QgTvWEtZ"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ao58C8ig"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11021098.outbound.protection.outlook.com [52.101.57.98])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19013084.outbound.protection.outlook.com [52.103.7.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EB01802B;
-	Wed, 29 Jan 2025 00:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A34B11712;
+	Wed, 29 Jan 2025 01:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738111694; cv=fail; b=SAtvpgL1wph0ng7FFJiuqDOah1ddDagYFPBzCjKhv3IdkpM/Cjlq27HrQ+k4HQw+vJgfUDZ76CNGG7YMrLAFvEsssyhb+3d5H8rxfocxJoCYfmi5eZF6t2CpXP976ug9hQr2nOX2MKfCLIYt1YHEJFMsCYzNTEteM3zSyQjiGFY=
+	t=1738114229; cv=fail; b=o4gPfFWFnyLW2eEZgB863E2uWCRqcRstMjj1ZblFwIIcdaAq4DiX3jYDD62/rjTPgoRTIZettrpiDraGU0enyYRSy5NeWBgRht2W/XMPZQNlnumoifStQzgf2CevmEd3DIr+wqlF0TW09T3ZQfmcb76hQmg5r/hO75T/VeX96wM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738111694; c=relaxed/simple;
-	bh=oWiNcYiV1xbhpzaSpfOb5+kxfnmc5vw/cDJJ97Tl55k=;
+	s=arc-20240116; t=1738114229; c=relaxed/simple;
+	bh=XZtAeCHULrTFMiq11hYYSl2COAA7LvSenlT585oiTIY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uZhMLeEluuN5Fb96HTUD0EiBiko6cPCySQK4yKVOyENVi46fNS+es7J83bxqrrGvulLbIwoMyzlckY581+vpOwv9q6RXlWqGGvu3UMdkygnQflJ+LzfRyQXOZ9z3L2VbO428jiJuoDkypnG9Jlw9J7/nUkVxk47hrJKNFO1I/cI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=QgTvWEtZ; arc=fail smtp.client-ip=52.101.57.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	 Content-Type:MIME-Version; b=fXA4jOiR+6vuchrvx5oc6Scll2b/RKX4WeVTFGFdSiX5dScM0s/iPBpFMSZVyuEdOuAlV97zOXvA21ksAYz1J7RQefFhvm9Xwzdyk5cbUOVItgDWMxyJpAGWDZxP8csPQ2vODEYQySvzy01QLUvtA2Feauc52U0ABvWlzlewLtg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ao58C8ig; arc=fail smtp.client-ip=52.103.7.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AgclMPk44C/3afHUJmIOQ4tu8ABb/9kAyb+2kfSuOwH+910xpOPh3Aa7hWvuVO3ghTsd1ecTQrdjuikDo2cxUZsFRFTq7akwpREQNLU9cCYdkHegtaQix6INMHKxNR9KoPaJURD/0gwWHZOsAmUraZ3BniUYehgv2LrR5iVyHwPNaLLHRum6GDiwCEPccyprqnt2XdwFMk87yq/mrbn5/KpwKTpiofVqKE9raCeSxYPAcKW7ifqQXrZrrwo66RTOO9ynmzShBtK459Tl/wXq+4LhHidi6IPceY1k5DL4l9zN4BV6AMMzKWkbaaafj+OC/MD57eSl+munWQkJGmiX8A==
+ b=EQfcqQwuBbKneAZSLPwBYD70W1tHGdVxRnCE/ufopgYSgExQ7hwgRcgh5FlkH2VDxU5Pe0VoVzjj6HOuXT8QMkGLdTHoHE99ncWgVGo3EqgmLhuI+5rZJ/o1lTYK0uPpWFRYWtPjwKezZ1pahUh/z3L9KCi4mip9IfKr9K8jsgRzY+E4iE0d6GHrqGzhpP3haoUUdwdDjwAhrS+xlb8v4A71bHI6f58a+Q42KtRfvv70rG/UnQY66AwqjC9qfCytyDPz6HfjsvlKwAFQGAnwUR+7Ie+TdYVN/sW9AqOXYh2BzWUq3DZ7SphohkaPh6QMAVqxZjpYySLcYLyNg7WdAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gr6CVjRmCdiv1U1oOcCgBbRXK7af7lyoklaPsx1/oZo=;
- b=KIHWJm7mHj1J5FV8rpcfI2SMMc7x6VwlZxgHuyA8heGJU7kO+aMmV7F9T47G0Cs98nG9wQZJ3gMXEPx2ydOjJxfxuoI1XyNAgzzT1e6Fk/LBZRuEkQV4FXBCvsgVVYwc/orQpnWqqxVTfmd1LiDsX//vE2KsG3QFOBdZYlla6QeFPBPNbrJ+7rOtYQS9d/A05oXMD4TIoIh93yzLA6DP8biGsZIqqGUyRI1YIir/EdTYff29bYTMYqP5ZttPFJpJNcgqTStya0+8YilElzcSlni/VxqXvngj8PY079xiM55D1H+f5zRqRcPzgkAzf00MvTx0+IY2oRvspdo++91LHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ bh=5R0LiB75pLAornVwN8Llu596XUIcxkWVtA8zusbXdag=;
+ b=AKcpJkVTIw4oFNkV0vdTrrlyc2tAvth1RClQdQW+zEE5Q45IOxscXk2e0y7089CM2dJpGs/3NLY8zgUkiZhRn3HWomfVcNk7cTarTN4XqwFRxebNRl1Fa3hLN3twfL6f7lTgYRH4H0CxLuEyPt3cDM46Ei662LLXXRdK/eTt3xfmXSj+ztTewwdv1i5BsaAjWmi/S5+KNIs5HQx5o7v4a3X4hdnPqPEpwJA0d+a40REPTsn2i/D7Ir7u7T6gZDSdLz9smCyEntDRr/OiKO2PU7uQsTS51d1NWZ71Ybl8bcgfx2D4uJoXpJSuAo9w0HSfSySRygMFWNEzUW/c4G9Hkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gr6CVjRmCdiv1U1oOcCgBbRXK7af7lyoklaPsx1/oZo=;
- b=QgTvWEtZBTK4x+M3o3OmtDZsULEdsp9N9FkNfXzueTvJ/2sxvj0kk6RshdeW+xiGTVn5Dpf4FqbMrZnUN8d85WtcXkH0goKidj10Ck+ynHk9U5IVHHOKkF2rwZSbfOC4RaDM2ZT+OpeJbzjEmbm4tnqrwP++irrDya7QqXIKiJM=
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by SA1PR21MB2052.namprd21.prod.outlook.com (2603:10b6:806:1b7::6) with
+ bh=5R0LiB75pLAornVwN8Llu596XUIcxkWVtA8zusbXdag=;
+ b=ao58C8iggOUgCY2T2d+2u8i7DGue8DJfIuabOrjJ8JpW7xWxPogYTMzkN0pvK+vYcMfP04iMEnmpFRNouNN+ryT3VzzWdptAiOdjdedNbchnniYrx7vxnzc6jdleh01O/Y8NcHN7v3hToYtgtlleI9MWzQh2cvn4S9xo2vee0yajYqdfop6NSRthKBqNEmZgyDsqEWrA/p3WplrPHAE2tu2x3lspirREBRVgVRrXDIl3ApFKbNqImk92gd6pnbs6t4jdj4KXg4iT8UXgxiNf9tLARcCYWzwwBSNqso8vTnua/KyAUrthDgDnR+IYKedCw1PrVeAiQ5yFss/vX17IUg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by LV3PR02MB10738.namprd02.prod.outlook.com (2603:10b6:408:28b::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.4; Wed, 29 Jan
- 2025 00:48:09 +0000
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff%5]) with mapi id 15.20.8398.014; Wed, 29 Jan 2025
- 00:48:08 +0000
-From: Long Li <longli@microsoft.com>
-To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Shiraz Saleem <shirazsaleem@microsoft.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Dexuan Cui
-	<decui@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>, "jgg@ziepe.ca"
-	<jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>
-CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH rdma-next 04/13] RDMA/mana_ib: create kernel-level CQs
-Thread-Topic: [PATCH rdma-next 04/13] RDMA/mana_ib: create kernel-level CQs
-Thread-Index: AQHba2CX673w+Di5EEyvbnDtOFQ6ZbMs+BTg
-Date: Wed, 29 Jan 2025 00:48:08 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Wed, 29 Jan
+ 2025 01:30:24 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8377.009; Wed, 29 Jan 2025
+ 01:30:24 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
+	<will@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de"
+	<arnd@arndb.de>, "jinankjain@linux.microsoft.com"
+	<jinankjain@linux.microsoft.com>, "muminulrussell@gmail.com"
+	<muminulrussell@gmail.com>, "skinsburskii@linux.microsoft.com"
+	<skinsburskii@linux.microsoft.com>, "mukeshrathor@microsoft.com"
+	<mukeshrathor@microsoft.com>
+Subject: RE: [PATCH v2 1/2] hyperv: Move hv_current_partition_id to
+ arch-generic code
+Thread-Topic: [PATCH v2 1/2] hyperv: Move hv_current_partition_id to
+ arch-generic code
+Thread-Index: AQHbbTjJcgmEzzZeVk2NkuIdCcR+SrMsgY8AgAByPgCAAAq1oA==
+Date: Wed, 29 Jan 2025 01:30:24 +0000
 Message-ID:
- <SA6PR21MB42314C58980568578F7DF05DCEEE2@SA6PR21MB4231.namprd21.prod.outlook.com>
-References: <1737394039-28772-1-git-send-email-kotaranov@linux.microsoft.com>
- <1737394039-28772-5-git-send-email-kotaranov@linux.microsoft.com>
-In-Reply-To: <1737394039-28772-5-git-send-email-kotaranov@linux.microsoft.com>
+ <SN6PR02MB41571826E243F10A2624FD81D4EE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1737596851-29555-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1737596851-29555-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157042605A22E40767DDC94D4EF2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <c52ca7db-36a4-471c-8fb6-37a94d637741@linux.microsoft.com>
+In-Reply-To: <c52ca7db-36a4-471c-8fb6-37a94d637741@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=355c59fa-14bf-4b57-9972-3209481aba1c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-01-29T00:47:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA1PR21MB2052:EE_
-x-ms-office365-filtering-correlation-id: 8698241f-f26e-4661-5afe-08dd3ffe99a6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10738:EE_
+x-ms-office365-filtering-correlation-id: 2eb38dbc-3326-4a56-6d23-08dd400480f2
 x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014|921020|38070700018;
+ BCL:0;ARA:14566002|8062599003|8060799006|19110799003|15080799006|461199028|440099028|3412199025|10035399004|41001999003|12091999003|4302099013|102099032|1602099012;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?8AL+VdrD366sv0FvVcvAYMZJtV6FYhohk853xlpOmEt8xPjFQ9xWM51n7FuZ?=
- =?us-ascii?Q?nOUjIMLMqmPpvv9H8iadSiH6uWrKpxdqveUdGpLvcldl36uxT/Kw8JUxy9Xc?=
- =?us-ascii?Q?L1P7OH3o4+2i8u6WnLLXNPc00IDn2wwwxEfSuJBPjlHhBvSoavXwfgFBOTx6?=
- =?us-ascii?Q?IJ21VjnoRUYa7x9lW/JSXgbIBmucYxVQqOKjb2ZhATMhk6WJNpYMAMprtEQ2?=
- =?us-ascii?Q?tBvrBy7tneVu4wBow7fv/fZaaA3duBF4ZpqAsUxnvvbzz4CW2gSKp77+ZeeZ?=
- =?us-ascii?Q?jkmRLIQuQypZK7FGbhUY6/BkmYOQPu8P1EelO8n0+rxV281cOIweGQheHLP9?=
- =?us-ascii?Q?dSE7kcmH69M51UrTQwFgfp5xPWFHCYkE72p4/TrgYpBGdJqAbnE2Jz4j2M6T?=
- =?us-ascii?Q?caeUlsGwlaF0NP9q9rohxtq0UUfGgc8hwK6KbsltEz4JeSqE/KpgfViSje87?=
- =?us-ascii?Q?UvHV8BPANC/3KRMWo77FL/Q4yxtwkIAbryar1YCKD3SoQ4areBmYCdY39wa7?=
- =?us-ascii?Q?06ZhdsgPJ2wg2j9E+DFAgaWtHxBfXXGOpeLGafU6tEsuSr8GYx22l4Kvb8kW?=
- =?us-ascii?Q?1wTwWnOrykby3tlfhQFZiU2ty4ZSPTNOLPXcC0/GGgmnpZg9+qt4W4xXHHK1?=
- =?us-ascii?Q?qQDIphbPXhI3qWjfNvb3UXEbncQzfL4IkeeCgO5IUmCL6FrTfDx7VI7osbj1?=
- =?us-ascii?Q?q9K32Hy//HEDrLMuqzgev+gOOAowdh649sNVnnmGFIsEf7pMnPu7PZkZ3pXt?=
- =?us-ascii?Q?V8qhFdSD/KOYUhsiT9xxS+WX/ukz92Zi0goXS/qaYfY1OAxlQVRPg+qKf+SX?=
- =?us-ascii?Q?pHveUsS4o2E05c5ruzaJmPp6wGL0cjRZcRvAr7hm67Ch61Tzy6bPmewmP2Dz?=
- =?us-ascii?Q?RJP7KBHhcwHyqKA4xWryd6fdFhE9Po9MVKDUeMPeienSdJdURC1bye3P4WaD?=
- =?us-ascii?Q?BhegPrBOwg8JUmaD+OUorOMOB9cGZtQSUyQJtb/eyVKmRefQFLZgwvEaCSTs?=
- =?us-ascii?Q?95DDiAamImAEQUcPveuQVHlfhGWKO6Dp7m6vud+2uIZuxsr2COC7pzqag2yA?=
- =?us-ascii?Q?va0AMoWDHxIk7uhNaYTHgxl4PkIiOUy87viWhNc2EybwewLLOR1KTQKY8r6J?=
- =?us-ascii?Q?nsVZ90y6dptkvlOsK5yxw4ntxtkeA9+IV3xVIWVLVvxAug3POz7JeDAKiXn8?=
- =?us-ascii?Q?KzbrsmnOGPWdhVgK9pXnD1a8JCkMFCCwDMAHD+jVJbIuXemhzuaGYpvlGTAB?=
- =?us-ascii?Q?9MFdUmm1VBSVZjFJITK9rRUwZyCusObp2VFCyOrB8JtovwyxU3JKmDLGe21A?=
- =?us-ascii?Q?W9ww62c3YKqti+CTgwwJtJNiH1PcpWVSZbukd3lmfSf1tGu7jh1fyX1BLj9H?=
- =?us-ascii?Q?Sv3t6cxOyH8hBozpenxO7gjQPZvcORU0h2HtXz8l1pJ1OsQpF3i1zAf/ZPZE?=
- =?us-ascii?Q?ojqTS9cJUeIq+9RhYY0BbrZjZtSgO9nG6bQxNhkSYitr+EDo4ybbTQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014)(921020)(38070700018);DIR:OUT;SFP:1102;
+ =?us-ascii?Q?sBPLC1vbi9YGCLcUOf/2VvmsKpVlBgHxdVZi0ZdUf9/MrMJYbWVv1Y1uoT7w?=
+ =?us-ascii?Q?wJFCzFtK0Cg5HDZXaU6WYppAcGaoNL9ed3PAwGToniwC7S4zXX9ThINpwZxD?=
+ =?us-ascii?Q?IFKc+TZaJN1mblIuCBIiZxN6b85j9m4vC/NOrhM8NfaG/bDel/RRDJHGpjqq?=
+ =?us-ascii?Q?ZYw2Ycpab5IX9rWcodHVubDFkYR7IyJPTgBG8J7Dz8/6qLq1FRCvdx7l6ElK?=
+ =?us-ascii?Q?X0/WV5knsYI+M1FDuUVcsi5cD1F9eK5VXDxZXIOcsZc7WAhTORvRw9rxhprG?=
+ =?us-ascii?Q?f73XnAm7O8+nSUeM4dMMEikjJEjU5dxQct8Ux2qhzj1sDjbQF6d4fJs6wlH8?=
+ =?us-ascii?Q?jPuIe7+rXeg5KzICwcorx4rxIA/MiOAzUOKyXq0gXVaV1tw2pkikRdT+grLL?=
+ =?us-ascii?Q?iAI7koTTZF82N/lIxVhe32Otyf7icfU20ebgQC4UI5YSksEAa6UpH58VvjVP?=
+ =?us-ascii?Q?oYtdOyFQnUeQx55KolLuj81j4YpVWBDOTkOiuy3D0JlvawwIGxmit+KdKsRr?=
+ =?us-ascii?Q?tLW6v0YOSQu51iwpuIiFzpPwESN5WaVKtcbtduUeWI25kF5oG9G71/m/PKSi?=
+ =?us-ascii?Q?Yt94f1EVlPKKsihTK0QfQ+UKugUOpTkqclaQbt4WSY89teAEsDjYTF/ppJ1M?=
+ =?us-ascii?Q?OPXvkZkyzUGZw/qVNsTbIZjs4V3wLPqLnqvHUVfygeIJhcjQ8BX3KMXciqQK?=
+ =?us-ascii?Q?bMo82G9GaZth1sXostpVUkq7V8hlDXkT5VGBLqrLfZLVmhTV+GF9YTrsY4ET?=
+ =?us-ascii?Q?GsWVZDl5robmXZ3ZZtsEs7ZBXnudfn0kXlU4yPdivpQN9xwxjLu4q9uR1ijz?=
+ =?us-ascii?Q?aVuIQduR1u0XDmupE7its+50mfBgHeGPnUaUmklPPZG/bnG6fKqqME7VOfsc?=
+ =?us-ascii?Q?7DphcSjZVgnJIYSrlqdQ+AuF50OijPkYuCcGoaWAIW73YyIuaavbt0nmxsYB?=
+ =?us-ascii?Q?j6MyzA0/utAgAqJinhOnMuQUOxWCTzOeHQcj7w9bwMoMD9j4ezwQCaSl4ltc?=
+ =?us-ascii?Q?ZdtsUcgDb9rQ/OomcWRm4ma196rx/wbzVSeYQ1zlJw3Q4eRtb4FMr64A9vbZ?=
+ =?us-ascii?Q?gOPZO1PSwnpVp90rKoE+N5VvKkF2/suEBKWu4EeWvcHxD2AJW2W1j1jO1KNk?=
+ =?us-ascii?Q?sn2u6xIUQ9R1sV9ApACFp20etNkSBVi8E1tILGMpT0r3apW2UnoEeQQ1GhoK?=
+ =?us-ascii?Q?q828TpoNGnodJZZ1FppIfXcj9wpeBJU6MH7ewV+0klyF6jcESydYKvB4CehH?=
+ =?us-ascii?Q?XBvDf5sZuSnQRfg7l8qdTu3Z9/kZZwLoXzRwaOF08g=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?hsX6rfKL/A4PW6Djyt0rci5+zCeGcHSe48clPtqUzr31W/voY3pxWM8kzwaE?=
- =?us-ascii?Q?jwuxJ4VS0EvOGpVPXI/FI9zCR5JpZa5oK5HFIuwjfW+jz+kqAqj/V/6gpXtQ?=
- =?us-ascii?Q?HF5CqR1tE4CNpU9uXLpyU2G1femCT60ukvN6x3SaYSQYTCEcOMMZUJ1b11G7?=
- =?us-ascii?Q?yOjx6V454KMfTbjlUuvTUBBZRwDeFhxOpLrrxM0znN1DbxIA1gU5dqzXM7Xr?=
- =?us-ascii?Q?1TIEFlLGg98Z06sk1i+A0zhtIdJVZWT2rqOD3nWAAbqZT98Y2C9Tb1nOkTIA?=
- =?us-ascii?Q?0tszbCPOsOFV7K1bg2NDoU5afdGVELYjA2A3WOUIdywCdQVllROtF9pfaOsP?=
- =?us-ascii?Q?snlfge2B5DnH++Wk8cZvE+uTknWnmPoBXPaVORfL9+dWv9RdzR5zRI8Zf2RU?=
- =?us-ascii?Q?Q91+LX3PuS8+miodvXi3t6o26WYfvbjApLdyoeBDEez2wMIuQ4yeWigQLnN4?=
- =?us-ascii?Q?qGho0lpMM3n2Apvxqq9aKB2Zh1TPD6xKAS6zHqT8mc50PPEl9TwQhNNk+XS8?=
- =?us-ascii?Q?Sswod/vrHpCzrAoWUS+/gjWBJ8EKfz5l8l8obXHKChgrMBWSIJqUNI1cjpd4?=
- =?us-ascii?Q?X/XM0bwta/iu8jBQuBtIS8XtuqwuiEQkltDzJwwAK83kdMINFrBtDSAXdaT5?=
- =?us-ascii?Q?xjckDctfYa28GgVGaKfqiCkOb+MS8pB98W43XZPg07j7RkQB/TxuaBLopSeL?=
- =?us-ascii?Q?Z1s/+6E/BvfWhJfsR31v35jCKgwnDshHjC7jQ9QK+QIfdtpnVWDl3Grs8CvT?=
- =?us-ascii?Q?M8Hb9Ryw/KsbQQFxrXaYjbioQXKVU2uSyHmGSMSMA0l/X9xWmi4QLXBfT9uH?=
- =?us-ascii?Q?5Ny3eDXuLfy3jrGJowQK2Cy9yfWiG6FaKK+/NeJ/oeKBbX08o8Kym3cEoCu6?=
- =?us-ascii?Q?1jPCDZsaSsRcVJdwamDoA4i03wPwVbueczUOEpV22fiato0BBWc3LkDYuZk8?=
- =?us-ascii?Q?9FQrj1GpHTtL4RB/mVgtRIeRTdxvhgr+FeW/Cit0DNW8KKCyy/bT4Hk5+9PN?=
- =?us-ascii?Q?kETTecRfTZ1ho5k9Je4l7WdHi6SPofo7o3LYox8SKfsEI3nBSbADlvPs0aZK?=
- =?us-ascii?Q?PreGydnOStY19TOsJW+6i7bx0zoTV1nsjpwIaC2ihv9DlHGy+E6mtzMQleQ7?=
- =?us-ascii?Q?vdL+XiwpZQMy/U3GWlXOrVPLc6CNN5VjblzIr3ibzQDKb2s3lPMaz6McNWdf?=
- =?us-ascii?Q?dKoFX7tLZr7EhG0SACdNrwjW7ibhDB9gRWpCorJavjiDFvu3z4Twmcab4hBl?=
- =?us-ascii?Q?Hu+fODu45oBaEcUi3dNvZmB1Hp7segXQ3ZSF0dlr1KINuBuFgYgdbwlm6kSE?=
- =?us-ascii?Q?STMmBZ5YsDq7BErxi8g2uerVD+Qtru8qfB7pdoK36eQGQ5Mw/pTd7k4UWItB?=
- =?us-ascii?Q?NApjTZkk/M/2V1gQCFnZw+ZB2/XI6rz6P1W4gLTytCLPAY8W4aN6kVrezOrG?=
- =?us-ascii?Q?wVoWQUsYTImCZIXOUydY7p1GMTjz9L29z/CvoGcMas8MMwKRel6r2KinBcew?=
- =?us-ascii?Q?uCT0J5k+6N0bDnmX1Czd4sdTg5uEorKn1g1/aNr6QS1QFTRMj8DZdFqt6gVw?=
- =?us-ascii?Q?vRCFcX8q2lSSgB+ZXqFj13X1PuGAs/ttXusDSUTPesPkDYQ/iLPdgUcK5YDW?=
- =?us-ascii?Q?zcV4h17FFgfsBPhE6EKnyAOBLXhp1CJ/UK9HobVm0xDE?=
+ =?us-ascii?Q?IskUqV3BMcUjnIdMSM1XNFKsZzd7/rxWNpsdpDs1/8tVIyxxOESgm0RWc3cN?=
+ =?us-ascii?Q?zGJgvgltB7GsHlar6bYoOEeIzGimJtkM3wu22TCxksZDMsuE1Uq0K9LKIoGx?=
+ =?us-ascii?Q?wx8f2iPeTEozAZarCJnP/2LYRvnGwA5j23bTfCpirjB2ccF8wCr5lRRjAx4e?=
+ =?us-ascii?Q?SaN7juEok5AQKcg1UJ+RXOQgIP7dhjPw4TozYmZs2ICxPSI5W54sqLd4/Ss2?=
+ =?us-ascii?Q?dFAYIMswq2nqEa0WvF1hjmQ7O8hMArmctIwGXsjfzByK/Yh9d0Hce320D3ij?=
+ =?us-ascii?Q?jt+xh1k+mIiIh6qFH52Vn/Yj88/wiJjCqMq3EOowIApIV9zmKTmh/r+/VK3Z?=
+ =?us-ascii?Q?IppNMLjsP2wxKDkuXlmOgtKI3Vb1O1Z2kSCS1tQcF6NNRaQaC8W3C6BvUXOd?=
+ =?us-ascii?Q?OQhofT5atk/RMDhdk0HltRnjE7nHEmaJXiPHe49H2tp0T3mTVjIYz3E87dYp?=
+ =?us-ascii?Q?rtCTyhhRUoElgXTc2FyNvo4dGZm3HQqrUssIb10evcOBzTTGX5TWyjMbHgjZ?=
+ =?us-ascii?Q?VBwT0amViNLu/7+I89U2FGaR4u31LoqRb7t8JD3AO1W/5jygFqFO+BoHVaai?=
+ =?us-ascii?Q?EHmc4FydC+L+wkAMnJC6jwxjgf7df8S7DyK1+qBUD+dWMgMp3BAcAq4ZjeEW?=
+ =?us-ascii?Q?r9YYpxZAKyft1fSq+CB6aLFt0OJ8VJLvtRmiUGmUKsxKZouJtnJ6T72MyED1?=
+ =?us-ascii?Q?ngnbSobCDeMUlJA2G3kYomLmHrAE2TI2welkouL7uuVrvz0n2d2xRcQ/ldBy?=
+ =?us-ascii?Q?3DsI/WpSAhS1+lc+flWyOdowQ1joFHpXKIlDPTuiIA8suat6wHuokztN2Aad?=
+ =?us-ascii?Q?QbjLLCkmTPFwb1eap6yvQGkHpuM6A8qbEGN/BDW7hhp3MGOIPzDObMFK3Vku?=
+ =?us-ascii?Q?CiENF6/zDS85G6iQ02xv+hzcfZMPn+O4x511Rm6yq91oRR2U+7g/iYrb1Gxb?=
+ =?us-ascii?Q?AlQVdvupyUgPqFTy3mzVeyA7zK5dAde9t+bNFVYWzLz+C7AkB8n03xKVWOf+?=
+ =?us-ascii?Q?VCKUqgbcwYAFc29YGaFgvFJ7/lZhCZKPMF424mrdqyHS90/YUtw++gTwUYwb?=
+ =?us-ascii?Q?AwzeZixdV6AvePXjR4GjReirh8fPh0IqpBJIdZMGAUoxtCRpv7n/HEdUv8l8?=
+ =?us-ascii?Q?KE6bXiY8T9/ydmNLyhMbAv+CPtwJH6YMd9Tb9xa75TPKA5I8r4dUj9x11Jgz?=
+ =?us-ascii?Q?2oSMLcDcXd2MH6r3jlfKTJiRlmFXjMUgZzZXcjLprBJAjTPyxwLlWKphcA4?=
+ =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -160,183 +151,156 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8698241f-f26e-4661-5afe-08dd3ffe99a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2025 00:48:08.8041
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2eb38dbc-3326-4a56-6d23-08dd400480f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2025 01:30:24.3792
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lmteia6gPaF7VOiYLzpdr/tfRvdeFUO3gxY5W9UgZ+Rz0tQAbzvvtmk1oAALLp0QUKtcYbyaOIqPPZm5ERIeGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB2052
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10738
 
-> Subject: [PATCH rdma-next 04/13] RDMA/mana_ib: create kernel-level CQs
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, Janu=
+ary 28, 2025 4:46 PM
 >=20
-> From: Konstantin Taranov <kotaranov@microsoft.com>
->=20
-> Implement creation of CQs for the kernel.
->=20
-> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
-> Reviewed-by: Shiraz Saleem <shirazsaleem@microsoft.com>
+> On 1/28/2025 10:45 AM, Michael Kelley wrote:
+> > From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday=
+, January 22, 2025 5:48 PM
+> >>
+> >> Move hv_current_partition_id and hv_get_partition_id() to hv_common.c.
+> >> These aren't specific to x86_64 and will be needed by common code.
+> >>
+> >> Set hv_current_partition_id to HV_PARTITION_ID_SELF by default.
+> >>
+> >> Use a stack variable for the output of the hypercall. This allows movi=
+ng
+> >> the call of hv_get_partition_id() to hv_common_init() before the percp=
+u
+> >> pages are initialized.
+> >>
+> >> Remove the BUG()s. Failing to get the id need not crash the machine.
+> >>
+> >> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
+> >> ---
+> >>  arch/x86/hyperv/hv_init.c       | 26 --------------------------
+> >>  arch/x86/include/asm/mshyperv.h |  2 --
+> >>  drivers/hv/hv_common.c          | 23 +++++++++++++++++++++++
+> >>  include/asm-generic/mshyperv.h  |  1 +
+> >>  4 files changed, 24 insertions(+), 28 deletions(-)
 
-Reviewed-by: Long Li <longli@microsoft.com>
+[snip]
 
-> ---
->  drivers/infiniband/hw/mana/cq.c | 80 +++++++++++++++++++++------------
->  1 file changed, 52 insertions(+), 28 deletions(-)
+> >> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> >> index af5d1dc451f6..1da19b64ef16 100644
+> >> --- a/drivers/hv/hv_common.c
+> >> +++ b/drivers/hv/hv_common.c
+> >> @@ -31,6 +31,9 @@
+> >>  #include <hyperv/hvhdk.h>
+> >>  #include <asm/mshyperv.h>
+> >>
+> >> +u64 hv_current_partition_id =3D HV_PARTITION_ID_SELF;
+> >> +EXPORT_SYMBOL_GPL(hv_current_partition_id);
+> >> +
+> >>  /*
+> >>   * hv_root_partition, ms_hyperv and hv_nested are defined here with o=
+ther
+> >>   * Hyper-V specific globals so they are shared across all architectur=
+es and are
+> >> @@ -283,6 +286,23 @@ static inline bool hv_output_page_exists(void)
+> >>  	return hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
+> >>  }
+> >>
+> >> +static void __init hv_get_partition_id(void)
+> >> +{
+> >> +	/*
+> >> +	 * Note in this case the output can be on the stack because it is ju=
+st
+> >> +	 * a single u64 and hence won't cross a page boundary.
+> >> +	 */
+> >> +	struct hv_get_partition_id output;
+> >
+> > It's unfortunate that the structure name "hv_get_partition_id" is also
+> > the name of this function. Could the structure name be changed to
+> > follow the pattern of having "output" in the name, like other hypercall
+> > parameters? It's not a blocker if it can't be changed. I was just surpr=
+ised
+> > to search for "hv_get_partition_id" and find both uses.
+> >
 >=20
-> diff --git a/drivers/infiniband/hw/mana/cq.c
-> b/drivers/infiniband/hw/mana/cq.c index f04a679..d26d82d 100644
-> --- a/drivers/infiniband/hw/mana/cq.c
-> +++ b/drivers/infiniband/hw/mana/cq.c
-> @@ -15,42 +15,57 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const
-> struct ib_cq_init_attr *attr,
->  	struct ib_device *ibdev =3D ibcq->device;
->  	struct mana_ib_create_cq ucmd =3D {};
->  	struct mana_ib_dev *mdev;
-> +	struct gdma_context *gc;
->  	bool is_rnic_cq;
->  	u32 doorbell;
-> +	u32 buf_size;
->  	int err;
+> hv_output_get_partition_id is really the "correct" name from the Hyper-V =
+code,
+> so it makes sense to just change it to that in this patch.
 >=20
->  	mdev =3D container_of(ibdev, struct mana_ib_dev, ib_dev);
-> +	gc =3D mdev_to_gc(mdev);
+> > Also, see the comment at the beginning of hv_query_ext_cap() regarding
+> > using a local stack variable as hypercall input or output. The comment
+> > originated here [1]. At that time, I didn't investigate Sunil's asserti=
+on any
+> > further, and I'm still unsure whether it is really true. But perhaps fo=
+r
+> > consistency and safety we should follow what it says.
+> >
+> > [1] https://lore.kernel.org/linux-hyperv/SN4PR2101MB0880DB0606A5A0B72AD=
+244B4C06A9@SN4PR2101MB0880.namprd21.prod.outlook.com/
+> >
+> Hmm, from some cursory research it does look like stack variables can't b=
+e
+> used with virt_to_phys().
 >=20
->  	cq->comp_vector =3D attr->comp_vector % ibdev->num_comp_vectors;
->  	cq->cq_handle =3D INVALID_MANA_HANDLE;
+> I thought about just using &hv_current_partition directly - I *think* tha=
+t
+> will work - but in the end I think it's just simpler to just move calls s=
+o the
+> percpu output page can be used as normal. That may save some additional
+> back-and-forth as well as explanatory comments in the code.
 >=20
-> -	if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
-> -		return -EINVAL;
-> +	if (udata) {
-> +		if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
-> +			return -EINVAL;
->=20
-> -	err =3D ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata-
-> >inlen));
-> -	if (err) {
-> -		ibdev_dbg(ibdev,
-> -			  "Failed to copy from udata for create cq, %d\n", err);
-> -		return err;
-> -	}
-> +		err =3D ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd),
-> udata->inlen));
-> +		if (err) {
-> +			ibdev_dbg(ibdev, "Failed to copy from udata for create
-> cq, %d\n", err);
-> +			return err;
-> +		}
->=20
-> -	is_rnic_cq =3D !!(ucmd.flags & MANA_IB_CREATE_RNIC_CQ);
-> +		is_rnic_cq =3D !!(ucmd.flags & MANA_IB_CREATE_RNIC_CQ);
->=20
-> -	if (!is_rnic_cq && attr->cqe > mdev->adapter_caps.max_qp_wr) {
-> -		ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr->cqe);
-> -		return -EINVAL;
-> -	}
-> +		if (!is_rnic_cq && attr->cqe > mdev-
-> >adapter_caps.max_qp_wr) {
-> +			ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr-
-> >cqe);
-> +			return -EINVAL;
-> +		}
->=20
-> -	cq->cqe =3D attr->cqe;
-> -	err =3D mana_ib_create_queue(mdev, ucmd.buf_addr, cq->cqe *
-> COMP_ENTRY_SIZE, &cq->queue);
-> -	if (err) {
-> -		ibdev_dbg(ibdev, "Failed to create queue for create cq, %d\n",
-> err);
-> -		return err;
-> -	}
-> +		cq->cqe =3D attr->cqe;
-> +		err =3D mana_ib_create_queue(mdev, ucmd.buf_addr, cq->cqe *
-> COMP_ENTRY_SIZE,
-> +					   &cq->queue);
-> +		if (err) {
-> +			ibdev_dbg(ibdev, "Failed to create queue for create cq,
-> %d\n", err);
-> +			return err;
-> +		}
->=20
-> -	mana_ucontext =3D rdma_udata_to_drv_context(udata, struct
-> mana_ib_ucontext,
-> -						  ibucontext);
-> -	doorbell =3D mana_ucontext->doorbell;
-> +		mana_ucontext =3D rdma_udata_to_drv_context(udata, struct
-> mana_ib_ucontext,
-> +							  ibucontext);
-> +		doorbell =3D mana_ucontext->doorbell;
-> +	} else {
-> +		is_rnic_cq =3D true;
-> +		buf_size =3D MANA_PAGE_ALIGN(roundup_pow_of_two(attr-
-> >cqe * COMP_ENTRY_SIZE));
-> +		cq->cqe =3D buf_size / COMP_ENTRY_SIZE;
-> +		err =3D mana_ib_create_kernel_queue(mdev, buf_size,
-> GDMA_CQ, &cq->queue);
-> +		if (err) {
-> +			ibdev_dbg(ibdev, "Failed to create kernel queue for
-> create cq, %d\n", err);
-> +			return err;
-> +		}
-> +		doorbell =3D gc->mana_ib.doorbell;
-> +	}
->=20
->  	if (is_rnic_cq) {
->  		err =3D mana_ib_gd_create_cq(mdev, cq, doorbell); @@ -66,11
-> +81,13 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct
-> ib_cq_init_attr *attr,
->  		}
->  	}
->=20
-> -	resp.cqid =3D cq->queue.id;
-> -	err =3D ib_copy_to_udata(udata, &resp, min(sizeof(resp), udata-
-> >outlen));
-> -	if (err) {
-> -		ibdev_dbg(&mdev->ib_dev, "Failed to copy to udata, %d\n",
-> err);
-> -		goto err_remove_cq_cb;
-> +	if (udata) {
-> +		resp.cqid =3D cq->queue.id;
-> +		err =3D ib_copy_to_udata(udata, &resp, min(sizeof(resp),
-> udata->outlen));
-> +		if (err) {
-> +			ibdev_dbg(&mdev->ib_dev, "Failed to copy to udata,
-> %d\n", err);
-> +			goto err_remove_cq_cb;
-> +		}
->  	}
->=20
->  	return 0;
-> @@ -122,7 +139,10 @@ int mana_ib_install_cq_cb(struct mana_ib_dev
-> *mdev, struct mana_ib_cq *cq)
->  		return -EINVAL;
->  	/* Create CQ table entry */
->  	WARN_ON(gc->cq_table[cq->queue.id]);
-> -	gdma_cq =3D kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
-> +	if (cq->queue.kmem)
-> +		gdma_cq =3D cq->queue.kmem;
-> +	else
-> +		gdma_cq =3D kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
->  	if (!gdma_cq)
->  		return -ENOMEM;
->=20
-> @@ -141,6 +161,10 @@ void mana_ib_remove_cq_cb(struct mana_ib_dev
-> *mdev, struct mana_ib_cq *cq)
->  	if (cq->queue.id >=3D gc->max_num_cqs || cq->queue.id =3D=3D
-> INVALID_QUEUE_ID)
->  		return;
->=20
-> +	if (cq->queue.kmem)
-> +	/* Then it will be cleaned and removed by the mana */
-> +		return;
-> +
->  	kfree(gc->cq_table[cq->queue.id]);
->  	gc->cq_table[cq->queue.id] =3D NULL;
->  }
-> --
-> 2.43.0
+> I will also add a check for hv_output_page_exists() here, as a precaution=
+ in
+> case the HV_ACCESS_PARTITION_ID privilege ever becomes decoupled from
+> that (as it stands, I believe that permission is only for the root
+> partition, but you never know).
 
+Or just use the hyperv_pcpu_input_page, even though the use here is
+for output. Then you don't have to worry about whether the output
+page exists.  FWIW, I'm working on a set of changes that encapsulates
+the assignment of the per-cpu hypercall argument pages, and it does
+away with the distinction between the input and output pages. But
+that will come sometime after this patch.
+
+Michael
+
+>=20
+> >> +	u64 status;
+> >> +
+> >> +	status =3D hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
+> >> +	if (!hv_result_success(status)) {
+> >> +		pr_err("Hyper-V: failed to get partition ID: %#lx\n", status);
+> >> +		return;
+> >> +	}
+> >> +	hv_current_partition_id =3D output.partition_id;
+> >> +}
+> >> +
+> >>  int __init hv_common_init(void)
+> >>  {
+> >>  	int i;
+> >> @@ -298,6 +318,9 @@ int __init hv_common_init(void)
+> >>  	if (hv_is_isolation_supported())
+> >>  		sysctl_record_panic_msg =3D 0;
+> >>
+> >> +	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
+> >> +		hv_get_partition_id();
+> >
+> > I don't see how this works. On the x86 side, hv_common_init()
+> > is called before the guest ID is set and the hypercall page is setup.
+> > So the hypercall in hv_get_partition_id() should fail.
+> >
+>=20
+> Oh, I tried to get too clever. I will put it back where it was and
+> add it on the arm64 side to hyperv_init() after the per-cpu init as
+> I mentioned above.
+>=20
+> Thanks for the comments,
+> Nuno
 
