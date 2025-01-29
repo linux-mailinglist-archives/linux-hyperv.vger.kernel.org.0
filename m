@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-3798-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3799-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D236FA21E45
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 15:01:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A186A21E53
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 15:02:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19F451883D24
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 14:01:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4C891889058
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 14:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A38713CFA6;
-	Wed, 29 Jan 2025 14:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35D61195980;
+	Wed, 29 Jan 2025 14:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkcE9Q3i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/x1loR8"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E1C10A1F;
-	Wed, 29 Jan 2025 14:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077A8152160;
+	Wed, 29 Jan 2025 14:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738159267; cv=none; b=FAfu5O8KLFwXBRph3STNAfRRQ0H9bOfdPrqBJBFysGrWHtNv4bwv3TtWf3YjPP9BOkPKoi00ZV7fvU8OufM6+aE7pEAI4xr3qteIGJUhsV/A0HNP1e9SrJKMLhssM0nVlkMAd+5k2INf5GxEdvWgU1ZDGE87bSnamlN/QdKDtg4=
+	t=1738159284; cv=none; b=HRSOXG4WIJLtJ4LT8Q//ldgux8Ua+l3CdD1t0gDfnvT1TvtTOX9yQ6Vm1Z1HK6MGZtp6ba9WVHyvrp0l5Htio+KnWieDp5apJTa+vUpADy9p3nWGnt7SBuXa2aGthaW3sx0e9FrcVNt0/ItPpe1mtYgpF6iNTlgODQBbd+DTVpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738159267; c=relaxed/simple;
+	s=arc-20240116; t=1738159284; c=relaxed/simple;
 	bh=of+qFZwyz1ljoL5PX10TFoOn09zYGwhGgo6csFa5igc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M+37ligiLk1kRy8vdX9XDwvfGBdpx27XEMUvvzf3xxVfW8TBt6XbxZVK5PQgQ4jfQiHuzYoYF1fbxHucU/d6Btb9V9cmyZEe3BZxQXIR1T1Qi26NuONanfm72sJNbg4lm77I86/WlClm3OTOvIqOO3sKWoHbPutAKlhrhuv7Zm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkcE9Q3i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D191DC4CED1;
-	Wed, 29 Jan 2025 14:01:04 +0000 (UTC)
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e5qG2KGTeIYI7zuBDNNKfoxotANVmpG55aq+O3E7XyyZWgzN1U07AhGFnbHd0ASeFo4VBDMQ712nTcuRgENoKl462Jg0cqCmaI67o5PMtDDTQcS/f1u8TD414KqD1nmw6zG6oqbzkt0oR0gIiF1FlEbSx2Gxok6NQ7hwl92S3FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/x1loR8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5E9C4CED1;
+	Wed, 29 Jan 2025 14:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738159266;
+	s=k20201202; t=1738159283;
 	bh=of+qFZwyz1ljoL5PX10TFoOn09zYGwhGgo6csFa5igc=;
 	h=From:To:Cc:Subject:Date:From;
-	b=KkcE9Q3i2xfnWRQAadKA9RKLrt7egweYBBDaHZhhfmWgHUfbN0nU8Dte2U7z0p55Y
-	 MCzeGJHpovDtmZrPZOM5qw14Ag5hYIgUMB722EZUoVqb+jWkVzY2oBG5rbBU9sIZ8W
-	 xI/Vfy+owyo3YgC7e2qUsVhekR/6fEmGYx4+GhrGiT6IFDpTyHQ0sZ3NOiO2mQHBtV
-	 PfBRT7FOpKcF6+hAMZRk5BR73kGa4/VujXdQs9ePaDcdcI3O5W0YhzjUmVapH8pRve
-	 IIbzB4cuZRVXxcIbLOJvzFFk2JBAL5XhhJlyqO6ttbarW9OakQef9KXb2nrA2F2sFG
-	 H16E7clbnl+wQ==
+	b=F/x1loR8qon5Juj/4WYr2kH9hZkvzcQkGFW+XiZM5HYK33MZNqDgUbRKBplvFsDpY
+	 PgbLFAWt8RQbdL+r34hvCcLF45MP+g/ADiPuup+E78lW7RjBsYmU3JJLSRTQHdMphp
+	 dsB0GSyiMlJON4qzu91AwmaJR2TNTlbkNmmooVV9w21N67A1x7HcdPzGbN3ve0NLVm
+	 oBsHrrW3lo9dCOoOJDlzjteU2XJYnQtn6c7OWbIO+SCeaAycIqyO/5ILpOfJOE48+h
+	 PX5tD0K8pTJJvxHy/fDl3Iz0bBrYg4xYweKx/+fVdXt8Yu4pR9H3dq4oB3i9jv133r
+	 1PWTwTeLwqudQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -54,9 +54,9 @@ Cc: Easwar Hariharan <eahariha@linux.microsoft.com>,
 	James.Bottomley@HansenPartnership.com,
 	linux-hyperv@vger.kernel.org,
 	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 1/4] scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
-Date: Wed, 29 Jan 2025 07:57:20 -0500
-Message-Id: <20250129125724.1272534-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 1/4] scsi: storvsc: Ratelimit warning logs to prevent VM denial of service
+Date: Wed, 29 Jan 2025 07:57:38 -0500
+Message-Id: <20250129125741.1272609-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13
+X-stable-base: Linux 6.12.11
 Content-Transfer-Encoding: 8bit
 
 From: Easwar Hariharan <eahariha@linux.microsoft.com>
