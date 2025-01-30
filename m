@@ -1,157 +1,179 @@
-Return-Path: <linux-hyperv+bounces-3802-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3803-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA32BA22626
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 23:22:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E58E7A233E4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Jan 2025 19:37:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36C2B164F0C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jan 2025 22:22:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39607163E9D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Jan 2025 18:37:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2732C1ACEB5;
-	Wed, 29 Jan 2025 22:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA63E1F03D7;
+	Thu, 30 Jan 2025 18:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="iiJ4YwHE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ctxMNYI1";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QzRKKwxi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023123.outbound.protection.outlook.com [40.93.201.123])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7948418DF60;
-	Wed, 29 Jan 2025 22:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDEA187346;
+	Thu, 30 Jan 2025 18:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738189360; cv=fail; b=XThmbXcmJ0gE5nOvztpsOywTR5IrVUb/dcj837ogeRrP//qfVtYSFagsYSE32EfMHphpbdsQaL2bn8R19L+emq7SB3poxf4tT9eWfd5QgU5aUI7XZKnQphGyQFC6yFv8SK8QTvgFdftNuhJ7upOO0i8D9D5sCx6RUD/jq+cYgB4=
+	t=1738262243; cv=fail; b=RXmjwm1zUb2BlG/cDoibwpAYgFgJBtiNw5vm/XP9KzrET1D/hCeR/NzwakdWITffmNJ20l87+u6cZ/PgU7Up/LH1kf7VK0yBZZkRK/EWbUoGaWCsVJvxMMUJ8umKXh+8pLwZPTm4CI3z0WzH5u7kAisDGKuKqDjHSUCxMDE01mw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738189360; c=relaxed/simple;
-	bh=Kn0C+K/PZvMlCPagmNBNMEnSk45FL9Ik7Qt/WtCYm50=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VS5ok8acrHZGlgz1QAkV38yK5BWaM0nTJJN6KLb3ijaW/+AnNaVrSXGdsfhQsVUUokr4om1e27QjScSRq58jFNrfZ3fzVcblXcMckuLyQau+EvyFLpNPKihnUcTMyp+svhR8WOKBPZwcNp+XwO09kiNz9FB8ArpFz3dqUJH/3G0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=iiJ4YwHE; arc=fail smtp.client-ip=40.93.201.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	s=arc-20240116; t=1738262243; c=relaxed/simple;
+	bh=cvaS3Hf2phG8jayoMyXdSokJ/59uF6L6uKRXLNksjVI=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=CBzX5niWsa2EadmT3AMMY2z8KGoPMdiGfwXdr7KngkEObfdyksqgc27P7WcO8nNpUz68o5IZ/hK+NbtR5gv8olF19bnTlaOdQo3KfSCMI10vqFwHgqQp3i/41fTU3s0y6MsTitRVcPmoOdnt4+6BZtbmiNt7Gi7pFgWZIr5JWzQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ctxMNYI1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QzRKKwxi; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UHni6C017548;
+	Thu, 30 Jan 2025 18:37:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=J6pVX6LFjP6kaQag
+	tWnGhyS1kOv9ynY4q3WfFShkhbU=; b=ctxMNYI1SFUNmUwio76YJHTWTdyschtU
+	jz35WCtw1qt+mvqV2yLGbGEFNVTxJGefYjplgf6O2lrG4KijgNY5rgo0m6hUS54+
+	RY00iczVePB9l24Qh49VDVLrf4ntYmnYTvwF9gA2/JFRUtEakC13i1RdkZ9H+C1m
+	aAMGF0bo1/rwzWyH+nIsXKQm1Fs1JNfawmrdvArH+EJ0wZa6H96CosaxYkIrOeCf
+	KDDa3Ts6dm5XuZVZUQQHWPO/PeawXKGV8msHbNhfLxwC3Ou4ZqyXkU7Hfdt2aY7s
+	joXaLFOr4Dqwa8ooyUInx56mhbyqRrLNzr6bc9KwT8CwPpJDTnc4Rw==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44ge5w837d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 18:37:00 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50UHBPRk028275;
+	Thu, 30 Jan 2025 18:36:59 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2045.outbound.protection.outlook.com [104.47.74.45])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44g0vbf4w5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 18:36:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cvH2JFLn16yZD7g2htG3tBNR+ktsV0q7CRaRCV++q3CJTA7hCBqQifJaGZG6oo3ZJUqZcwgxWwiykB4IlNcjMRqotfnQErMp+bMh/CAXk/pIO8nUtvTuazdy0R0p4ikUWYAxyxj/xJnkgXMjo8pLuw59tnxc1p24JmTd57ydv/RYUVeK3Tzh44c6ko4B6jPpiwG8E/sVcvhne3wkDscxwgtpg2g43yNTGHvFKtz+rQlb9A67orChm3hALBncz309UpEDrrPq2isMHEJLyKGn9zuG86vrXO4RtbJKckZWM/C6Bchy0z5jmsUQ6DHKOfKD9myi2yxULnfhcxlnhlt/aw==
+ b=W2VfLfp1JcGMsTXShKSTkckN9zzc3ECb3Dmf87aysbnWmD8FYrutiiI6SVr70ILQ8bFWGVDb1Vq97rBKB2ZXZIzYO1wHPnJx+Fo/60xOkIzq9Epc00ggLOwvU4e/sNfmwNjQwiHSe22s13Y4a1nHZwnM26O1ZqpCJ0ZXyBICgLy75wR04lais2IHrO/UKDhT19n/ZU9Q8HBLATosef7NhqGB9hp+5Ifi5cPTqIRRmLt6RapakkHFTRHhP6NmMgJ4seOyn2XtfpsHL61qOCyHwyLtIHczsauxzTXwtabB/pctYSwsnZ5N5tch+7VzTyfhO0n/lYw9FSCHyhH5LagWZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V/mCL+7At2KmKzfpgPpJ1Asj01oOo9hLVRGItRcmUFI=;
- b=R87S4XkIhDJxohyqDYy6ojCp9hZaIB7q1x/teXPfbMj6RTtqzsGuOtZH7crIiCV4nRcOCbH+O4KivbUbm/8AZLGVin2QczZBgR7+ZVgM9OYjpDP+0SrZvr7T9BXVfdc/tswvTZLogsx66HjYNdRhqwfnBkCFtdcF4gbxZ4tg9vLj0MQwriN+Muqge6K0b8a4kqfJzPyajlzSyYyiY9nQNPdtx1S4ZzrbSBzhsneiQLStgINi4BOlrSQCXTE9CmxxUqai2MpLZX1EJaAnKLJ5Q5psYL4HQdUnEPWxvjyCBPOGVVzQprou/wlleYYD3M8ZV0VY7gBx4m1eKQBXX82BVg==
+ bh=J6pVX6LFjP6kaQagtWnGhyS1kOv9ynY4q3WfFShkhbU=;
+ b=IptvL0wFVceWUBtVWdPVGpTVnfdKiuEuIfrArqHFYpcO8udJQ9VIUyKGi9inXDOrHkFBtFJW4BXOWklPwQ/kIm67UGfNQXtNELH/Y2W5NVGtVzvdUee/k+qRawf+nVdwEIxaBpO8r0bSRxUyr2hzI4Vi7lzMQL38d4+FewxNT6SaFy5QbJw5Nb0HOY+HPAdroj78E/wW6SZa6enQVN6WeN7LvpNCq1kJHEw6ToeZIyqEuf/IGvXHUve8lID+OaYUKFx/sZrjJps60MkXnx3b6o5jpk7l/ym6+SPlt+nVSqLZaLgDpeAzuhCzqE2tZ4FcgLYDR9WXptm/sDW7KpZhYQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V/mCL+7At2KmKzfpgPpJ1Asj01oOo9hLVRGItRcmUFI=;
- b=iiJ4YwHE/GGGNwvZ9F1yaAFKqDEPBXZbImOONTV/lgfPjVIUgx5vB/8lzqZq3VIKklUf2NxUtP8Spcnm4rESV8Nbv/e8tq0PVDM8+K8Xsx+cmGCk5iurcPiPJFnnh+21EMtQo45RSOUWCFIJToqr5G+OSB2LnNF3itNqrQ+HJkk=
-Received: from LV8PR21MB4236.namprd21.prod.outlook.com (2603:10b6:408:263::19)
- by LV3PR21MB4190.namprd21.prod.outlook.com (2603:10b6:408:27a::12) with
+ bh=J6pVX6LFjP6kaQagtWnGhyS1kOv9ynY4q3WfFShkhbU=;
+ b=QzRKKwxiJ0G41m635AQYSe5IWutiXxIJvD/fwCbMt7msRAA/Jc7s4RGhwVg6n2EizzGegDaxxo2NHTA0CTXBiSAujm9D93OzMnrYtJQXG8DxIDNome7JtxMj++cMLdQSaEZ/D9EDYTIWSO7bky40TLNfzpoDN0YwdC3NZbYYAGs=
+Received: from BLAPR10MB5217.namprd10.prod.outlook.com (2603:10b6:208:327::10)
+ by SJ1PR10MB6001.namprd10.prod.outlook.com (2603:10b6:a03:488::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.4; Wed, 29 Jan
- 2025 22:22:35 +0000
-Received: from LV8PR21MB4236.namprd21.prod.outlook.com
- ([fe80::4be9:20ef:887c:1a0c]) by LV8PR21MB4236.namprd21.prod.outlook.com
- ([fe80::4be9:20ef:887c:1a0c%5]) with mapi id 15.20.8422.001; Wed, 29 Jan 2025
- 22:22:35 +0000
-From: Long Li <longli@microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>, "longli@linuxonhyperv.com"
-	<longli@linuxonhyperv.com>
-CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Ajay
- Sharma <sharmaajay@microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Stephen
- Hemminger <stephen@networkplumber.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [Patch net-next v2] hv_netvsc: Set device flags
- for properly indicating bonding in Hyper-V
-Thread-Topic: [EXTERNAL] Re: [Patch net-next v2] hv_netvsc: Set device flags
- for properly indicating bonding in Hyper-V
-Thread-Index: AQHbUCfZ0QtZYURs2ECCYf6zMtqJ27MtTXhA
-Date: Wed, 29 Jan 2025 22:22:35 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Thu, 30 Jan
+ 2025 18:36:55 +0000
+Received: from BLAPR10MB5217.namprd10.prod.outlook.com
+ ([fe80::68fa:11c9:9f82:f7be]) by BLAPR10MB5217.namprd10.prod.outlook.com
+ ([fe80::68fa:11c9:9f82:f7be%7]) with mapi id 15.20.8398.018; Thu, 30 Jan 2025
+ 18:36:55 +0000
+From: Thomas Tai <thomas.tai@oracle.com>
+To: "mhkelley58@gmail.com" <mhkelley58@gmail.com>,
+        "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "decui@microsoft.com" <decui@microsoft.com>,
+        "drawat.floss@gmail.com"
+	<drawat.floss@gmail.com>,
+        "javierm@redhat.com" <javierm@redhat.com>,
+        Helge
+ Deller <deller@gmx.de>, "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@gmail.com" <airlied@gmail.com>,
+        "tzimmermann@suse.de"
+	<tzimmermann@suse.de>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Thomas Tai
+	<thomas.tai@oracle.com>
+Subject: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or executing
+ kexec
+Thread-Topic: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
+ executing kexec
+Thread-Index: AdtzQ0vu6eNj8snBS+OSvfShEIJEjQ==
+Date: Thu, 30 Jan 2025 18:36:54 +0000
 Message-ID:
- <LV8PR21MB4236726636CF9CA5E3EB6BE1CEEE2@LV8PR21MB4236.namprd21.prod.outlook.com>
-References: <1734120361-26599-1-git-send-email-longli@linuxonhyperv.com>
- <20241216180300.23a54f27@kernel.org>
-In-Reply-To: <20241216180300.23a54f27@kernel.org>
+ <BLAPR10MB521793485093FDB448F7B2E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=80e8231f-b06f-4790-a25a-e70929f31f07;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-01-29T02:38:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV8PR21MB4236:EE_|LV3PR21MB4190:EE_
-x-ms-office365-filtering-correlation-id: d5f5d417-cfd3-4081-144d-08dd40b36ec3
+x-ms-traffictypediagnostic: BLAPR10MB5217:EE_|SJ1PR10MB6001:EE_
+x-ms-office365-filtering-correlation-id: bfaac5a7-db21-47ff-2859-08dd415d1230
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|10070799003|376014|7416014|366016|38070700018;
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?TCgAIATPcE1hRxP3phgRtK1Dn4462QfdmngpgqbZqyIgxt/2K3ExjuHz2Z3N?=
- =?us-ascii?Q?jAVaP9HpI7NrOXmn4/FsSEaOs+CCC1xz0auZ/lVFgOzM7LCp30Yvwprdxh8R?=
- =?us-ascii?Q?elOE3toBySXZsqUntZNvZVW2g4840nRULypfYnBnROESM6JxBE6+K63DjvID?=
- =?us-ascii?Q?AaGzLmFNujKLJgUoI/P14eL2RXkqTe7uhk8+ujPSfhMRLE2O2C2dHVezIV7K?=
- =?us-ascii?Q?jgoFQyctzpqb0/OKP2UsfbTlpknG5Bf59Yq5YbZRcXjOWnW9RpqhcJx7NPGw?=
- =?us-ascii?Q?e3NE9j3uycWlkXkrgIK8SOnuoVynVroXTApfIl9XgpNxbq5c1WXEC4LOd35W?=
- =?us-ascii?Q?/uXoCuhAJXyXTHL9rYKbbci8UG9gZzQV/G1OMUrSQIztjphldEgDtpXFc2QE?=
- =?us-ascii?Q?k502J1gwW3arKpkw3KLXpWCXdFVVb0oEe2oaNoIAiaZWlZtknGVzTSo+oMw3?=
- =?us-ascii?Q?rKg4X1QlwAuwG5QQAxfssRxcYqnjLI+p9bO71frKHulEBSndxtAVX7Sbc04w?=
- =?us-ascii?Q?cGuSCItfb6OEWWQriG4UfehaYg1gqWXtQUD3MtKMPzpkulmcm6sMS2DTPetL?=
- =?us-ascii?Q?yTtQndpkgSU/0bchdYhwwnbJOCjuQ0fXb1zmd4aAqjS2/YEJ/28YfKHFSHaX?=
- =?us-ascii?Q?XQKY2B384HQ32LKP8LI0G1mkNxoBNXyvVqBScx90JV3alyQ4UDfd6V7XLVQZ?=
- =?us-ascii?Q?vfN6FBXuRUCsBdNcQ1Sq6nrYWH+OHA3fG6La/5Ugrf3dWhMLt4LGh4A2YUCN?=
- =?us-ascii?Q?bfPfizA9oV9/iDgM4t5mGAzVoNmnfJfSgl4saVAiMLXSeR6LgyR4O424wtEV?=
- =?us-ascii?Q?1eXSZLS69iXLXv+KVE7PcT1IhPMyI5XrahRoUfjhWStkEwBHF/0t4ItgEY5e?=
- =?us-ascii?Q?45C7VyDEiSE6AD6z3mxeGGZSELTrRjf2BM3hu9Q5Aq3axbAezADp2lKrQLSo?=
- =?us-ascii?Q?cGBk8Qnnpw5YwUcHsonh/fLEoStKGMTJoFqOJvs2KXbzOSg4ArQ8YHWIlXmj?=
- =?us-ascii?Q?spj0u/sY/KqG2MmKwM9BFcJCDzpYAG0xYQg+dgwLIeE/JOXd36tni/mCkcYg?=
- =?us-ascii?Q?IYF6ZepNy6/EG91pHCd3NEl1WUV60Zm46XQyEN9fVlAb9yjUn4ACtV/pprJd?=
- =?us-ascii?Q?y5KKbFshV3H1fGcmBSzPa/e0SADDi3xuKzX8E85HO47oVwlkrtrXNV43b0N6?=
- =?us-ascii?Q?UfHT6Ox5ifOPKUrUCpM++YTltWF2dVU4MYj8M4NXbFHl8HNUq7lPIr9dipiv?=
- =?us-ascii?Q?Z3829aeSukXQ+WZ4GfphDGP5/D/LSYcydiye56d2PHOdgtjwSqRwQuKG+VFP?=
- =?us-ascii?Q?/wY1sxeaCzTHeHVghz0NtguST1N1Nq1J05QP2MNTMQM5Pjb4LDD7YhRBznEd?=
- =?us-ascii?Q?qiV4BC90iaKka/RE6lUlzgBCQkgu8srj8Sbh6C5QGobomQkfCC4aIPDHETYO?=
- =?us-ascii?Q?Qm/ErDVtO99Dx/iOnJDYhxHGklcDjygm?=
+ =?us-ascii?Q?wZUeXrAvfcNr9QqfcQ8ZzB8/U6hg5hfXiu3/mmhOezCFxwPZ2L40eQBi1YOI?=
+ =?us-ascii?Q?m4NRVXzowJijZVUipYlxWEMwsdpU9Ha9IeklPlL5OEFjzgX76mEeyEft7YPU?=
+ =?us-ascii?Q?XB6xoGO/WtipFsgNadbUkpNeGvFjG/EtxN2nC3RE8WSIc8qnC7m6EatqsFE2?=
+ =?us-ascii?Q?gM/VJ8WPk5Jg8slRLHuixsK3DbXFZBrh390RuyjPsFpbhB1sbIZqgWmoaLN5?=
+ =?us-ascii?Q?4pv7yokbKFFE0kUxJVogqhh0U7HCaICEAO1HN/ogmEbPV5o0jorP27MKc7f/?=
+ =?us-ascii?Q?qqrIiToQu1TRw5x3bDH7ycSEzS4qKbIyVSWB/sS/7V9EcdPE3/xuZz0BnXhM?=
+ =?us-ascii?Q?bZ41O3EkiHgCjseZSUIwvrigfSyVHQmzPXe2xFD0DfcJ7eckul2GrUSXjdCW?=
+ =?us-ascii?Q?hVD8VQznPz+m/KXEfu3eLn4fc1nzEMA+ACXwEHG30GyvVF23Xl7DwQGWTI11?=
+ =?us-ascii?Q?bWSiVIrZiehoXwfyMdcQMsfe0xwMT8pxe9LiwkMkzd/G9Vr/U7HKuC8Yldkd?=
+ =?us-ascii?Q?Rj4AHx7GTrorxKrJSRTDU5hYKtbQWgEmMvQOqvnkUd0OpAUYFoUveMIKxS3u?=
+ =?us-ascii?Q?tgl+Kbg9hVv2E5Uc/DtusC5eRzRKOU9HrDiYYmNHIisJA7G8Wrb9T8ysp3Y8?=
+ =?us-ascii?Q?X8ACNHvAtMtK+YyqXYixzluOy/YU9bRDSR15Mj0pDOj4hi3nIL8If+Kesc/J?=
+ =?us-ascii?Q?Oi91CtVe/PMUTllp4asLoVis7Lz2IMm0/I1UzLoU7CZjesVlzWKaNzR8qPkn?=
+ =?us-ascii?Q?ADRirv0jSy473rNmhZdTlUmJPNZnZ8bkv4rfaKB3yvR+sBx4B5wd/udLdCpC?=
+ =?us-ascii?Q?2z2eoDJnJt87lPIsGT+Clt6s0ajS3cVOGtCMS7wJT3tsT38rNnBiKFEdjAaw?=
+ =?us-ascii?Q?0O/9fyFm2YRNvw0fcwMcW0G23qbCEY34EeVjTq5VR0tnueoXpOUeI+5mPPU2?=
+ =?us-ascii?Q?5DrGXLGTDW0HpqfIIquPDXKQNFrOF9vXYEuMY4OqjNXnvxAzSupeanpgOJ+q?=
+ =?us-ascii?Q?M2QysDzf5YYMP1hia76dclWO1G15MFGwG0bHSu0UKnophj7xA3vmLl1EB8vT?=
+ =?us-ascii?Q?PGSYg3WjRWG7PtYqYiTVgkhFcfyj2zI/uwjbbYv+qF2I42OlSRHveobeMpRP?=
+ =?us-ascii?Q?kz2GaRhO8U8Noc6SVX3d6wKh6Am+D/gC4kv4hn21t7CRAvEwjS270grjeRJ/?=
+ =?us-ascii?Q?mizCd8U72M7aaMy0jh3ggjA7zpjq67DaNsuOegF5YuCOnzxv4H3vOvwsjdYE?=
+ =?us-ascii?Q?XueC5/pdtselGi8xyY4/8bhHoSopozAbzTt8hfXHpmlujqJg6ktn9iK7zlSC?=
+ =?us-ascii?Q?Cb9yNVdhG2Jc26iUUns79I8UO64rqVtg+RrQU2QB0kQlVV6TuEiDP7VFmOnq?=
+ =?us-ascii?Q?G0fIxS4D3W4ny6IedUr6+UcKXIn0ArADb0RX6SnokJZoEmvqvyFpl3aU/NZF?=
+ =?us-ascii?Q?SJOfWWzrNNwPXjKPibhNJszp57jreNtHtlC4igFwm/qrPjRmxxFs3g=3D=3D?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR21MB4236.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5217.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?beR1NzQQPQyqpDKwEJK5QvQZ5xkekBcjhpvIkiG/fVnMMTiDQ4qk8Z5BDGg6?=
- =?us-ascii?Q?WBdFmGpX5Czsm6rc5S8En7+v5avG/lpDXUBJ4Ruc5u6ZozeCO6Umq5vMyunA?=
- =?us-ascii?Q?eIvirVY7Di2GtsFk7hNANibwHUyxIpG8vNf04jZ2FpIly0e2aCgooUAsmmZg?=
- =?us-ascii?Q?cD2ApliwsTUUxA5JRDD3nBJGtJCm3yRByYI/cJnJ4aaOKZsGnMMFcZZkz8Ll?=
- =?us-ascii?Q?lGFokz/IYMgQdz8lVguvxcoNwSSTXVBLDp7AnvUalI7n3CO1TyBC97XHzh0L?=
- =?us-ascii?Q?MpaxIxdOfLCrGUVz1LUhJgCFjrCAmRLeKoX+xeCiQy82aHXwWDQmozxwVvzc?=
- =?us-ascii?Q?l2cNDk8LbQKgBxBzqZP2lNWCy75pVSgRb6ik1eBTGTHR27I1SLUFXFXb3PYb?=
- =?us-ascii?Q?ysbM7CgmN3vqkKYvHmKn1KDcNACx8z5OEiKgedqt/FAzLFZGhTeZYKNUpMGK?=
- =?us-ascii?Q?q4ar++m9G7zfE/VGB+Qso7Ildl46gaVrfsGOcVuVrUoOh2lTuuPh5lEodjcH?=
- =?us-ascii?Q?RUnnVWo2IehRJupPCnweAyQG0p/CCtzkpacKglKGt10j7TeOye/oj/G5dyxM?=
- =?us-ascii?Q?gngyFMCWxz82aUho+U+6leRZt8zxY7PUCLc5nldNlM5f/ER2KBmx3WsGSnlQ?=
- =?us-ascii?Q?p+Hq4DGI3EVChQxurm5JF2dAN0IaNS2pmFbZWQY4Z77IMD0uNpr7ysli7REz?=
- =?us-ascii?Q?HYlYsGQ0pES0+NVXSnWt631nsZFy1TtkC+At2KeWvir52SPOHOmQ8AFhZlE1?=
- =?us-ascii?Q?eCzm8ntnUVO07VvQEZVvYRL2wU+IVgmBM2+Bm5EPqHEA+fCDFtpuYhs0Ovbj?=
- =?us-ascii?Q?ZF95hKOhEMU481y4FJ1TkE4EMagImLh+OJuvKM54oPCE4fMlsBXb9kKwVeUJ?=
- =?us-ascii?Q?ZjQ73ZccVx2N04LUWK3l0GXa++vLgA0gIq945iJrK7ifWdp1iaId0sKk9ly0?=
- =?us-ascii?Q?rbKNnF4RWn9dt7ZZlUt947t92XQIW5y+7oHDMY7IUS1RvO5mAaDsta+NybWt?=
- =?us-ascii?Q?umnqIS/vDGOFAZs625J6yUyRPevJzbizcFHYZUD8MZPDwjqLOafvh4Dam/6G?=
- =?us-ascii?Q?ZEGNyZzz67zzH3D6GKY9YvuyzJ0GDRrS4b2fDK5TDJkpokFMWZA8kVxJ48Jq?=
- =?us-ascii?Q?/aZ8U+HLDIfIZvB34vboYuJ5ErKKtxQnt9RJ6YBfC5CxI1LhsdABRXG+TiDe?=
- =?us-ascii?Q?tO6mimsO0RXulNc/+nWvEtOwDUG7BDjYhrLd1H5Ml3d/md/XLqZz9x2kRbwB?=
- =?us-ascii?Q?YyKfEZQpZIX0zGiA8yc4qRpcPv1jQGbDGVxpUANWaumZAAuUjRvnVay8f9Nm?=
- =?us-ascii?Q?LF049jUTTWyr3KHaEWoYxTkyGPYSirEYpsKmOyPq4/XzYhw8T2JP30MU1eSa?=
- =?us-ascii?Q?WoPQHBpzXyQgbQxbeNVG1qNKOD8zChdO/aig9G0XPKRn0WWUI+SWJGy0nMDq?=
- =?us-ascii?Q?lYOpCCXZSjeOzlGl7xMuNfIXGa7CiNImAwl2tGfGtNYVUT2ya5SXe/3ZYVVb?=
- =?us-ascii?Q?+OduyaqgP9UO4cS42byULS75NtRYTZILOogRfqfTw8ztyrk2lYnYzc0QkLST?=
- =?us-ascii?Q?0Vf8hrtRtbjmLA4OUjvTNyZrbB3PjwzXkDUURG9mz9RdO7esebahFUnoBAak?=
- =?us-ascii?Q?xymMvD8m5iSqU9ZiZrkZYt79JZteB3qSyHxK2HuzM7zh?=
+ =?us-ascii?Q?3djauXFDYkvWfUoXpcNEwmzubbWKf1ze1NT1ULJ3hPxSUl3ZdGdhu+QDaIKZ?=
+ =?us-ascii?Q?x/Q3vHohT2E6kqJ8XrheXhay13/VjhsRUnNaXMyspK9lm9oUX5CHNBTtYsDc?=
+ =?us-ascii?Q?rwp+rzkva4hGDtYE+WLInvLOBpxR4Nw6LuWzJzrjsEz+D5R8WUkIihB4T9Lt?=
+ =?us-ascii?Q?y/KtOgBT2zvB5j91dTFsKop+0T8lCpNDy3wj4G5bv3fy3lGmyh/0XDTmhsAj?=
+ =?us-ascii?Q?6Fkk+jFMYmnST0SdGWV7FjItq1duE1ZCQeIQnqkvduwkOzV8t2GNGEyEtHlQ?=
+ =?us-ascii?Q?pwFndec8zKUSebnJF9yuX2uipWCRyEcUDw1kjrPomZwGCpidIsrjVSa5rhnY?=
+ =?us-ascii?Q?UfwINkXpYYgwhgAr+acsiJXszhg8R5zkpjbsDgipYCpvXwRwIm79cLseBav/?=
+ =?us-ascii?Q?kNZTsTnGnjXYRZUMbKlIbHWNL+F3xGQpBfGCngPRogn8VoK4VlNoJUFYvgl1?=
+ =?us-ascii?Q?g+D+CNZNACturcqPKps/GcDjx6vBFAOq4009AMSFwdNxvt28/G1vX4Htqo0f?=
+ =?us-ascii?Q?3MYzkmJ5zKmic0/s74SFkmbKIwlJvnuvdLfFvNpomy3KFw/PPHpLk1AeWfgw?=
+ =?us-ascii?Q?5kZIx5aUKtIFxIxZO4zgC1etogKSceAlV/4s01O7Lkuua5zOEMG+rOB+CrJn?=
+ =?us-ascii?Q?hXGp9yYqWcU6Vmp+OdHibx2qRfT58LsDYfbj90n/MO5VIv+050ycL5Y/Ngjb?=
+ =?us-ascii?Q?H90RpcXiijAZ8Hjs0qUMp+d8iJNEqn+9KBSH5i/zvRY6+1B4HYhPoUl/3Kij?=
+ =?us-ascii?Q?dQrjo4NUBOLwfw2/LMMYfRETx9/bZzQDC9ozfDYpW3K/p1MDStwCkiTVeLpM?=
+ =?us-ascii?Q?3Ork7kBDFDxOcywr+31CnvHqtaKMvDHlaVHVBDrfRJw9J5nmvMu3HtlooO2C?=
+ =?us-ascii?Q?HXVtD+Xq0kt2DPyEpClHKIP1tz2itjW1XB5Y/oERsjmh+zBS/zFdTDAkHsxe?=
+ =?us-ascii?Q?Nf3Axod6VM5H+2Bol7oXoJMyYSgAaBO6tf3ChbIal5H600sIgHzraxZjab9/?=
+ =?us-ascii?Q?cBppz/ZTVyvJchXPeek99/AqlAlI7rvHpmhiwnPaVAuOsF4Ug0awh5l9tFXY?=
+ =?us-ascii?Q?d6t1M6WuJH+jxJF1j6LsCN6MbaX7v9dt3Btd6beBBMS/gJRjrg2pa7jAl4bR?=
+ =?us-ascii?Q?KImk845HS3Pbuyzd6D3/+kSiSa/SnG2Z1R9b3zXTOf8dvADJdLUoWpUNTprz?=
+ =?us-ascii?Q?rLMAvaav05YDzVd1z9YNO2EsEDOjVa3rs64Reow/bndk3oSluXU98yMWL50w?=
+ =?us-ascii?Q?vLIDl6tR6fHxgu0qfenUkvTN2xm27rfKBaU3wSdGfJbCOsybdNcPfJeYAlrk?=
+ =?us-ascii?Q?9gXildm5bhwcT+KTbHhvmTvDyBEqYnX+e4XMyj3hc8FEcrAld9Aqyqonas5K?=
+ =?us-ascii?Q?mG4rLsOBtCCo98fJQeyZQPspjpntioQDwOj6ICxFXI+Fjx17ZvdLnA+n1kQc?=
+ =?us-ascii?Q?CYcbOnr6vtDrMp906tKymc7p+cNgcMM/NoNMFj0RIYp86nUDSBvnaSBCWerJ?=
+ =?us-ascii?Q?5ZumS5IZykElAA1uBNU9lVIZq+ICp0YIHx+PcTbIvZVvUUIGnNGkkteimgPU?=
+ =?us-ascii?Q?fgGNSxZk0vIrLVhTnATz5jighTLCzJ4tWH6RVlym?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -160,103 +182,143 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	/9fgoKdenHxO3A/kbVDVMTMRuvYniSVeD6rhm3SjIvVzNnxgqE+5H2PcnLsDekQiwpmXs57J8j95Zb0c72g/rHJIPL5hIr65FRveNewjlmD4LuJ94sIFqvm5jmJ27nnnEn5fxA7/jTrsIy14w5TyISfqJvAUx/8I1VLUsVrL7SClcbCahJUMpWQj1H1qdJartXV1DkOdq+h6GX+uWYGhIY7dfG8QblRFcp+mIgv8EWrgx9RWMj3eHzZWH3B8x+bBB5hRLqS56l1UFa1hXpoJduLBoMQ1bH/VIlsyPJjQhpnUsKjLoE619gJk2tBWuN75qTHiNu56BpSe8VmHQ5VMLQaPi1s8aNyoYIhLHIRm9nlcvumMSG9Y89oNYJnlfECEBbwxliQFiRXgzYXQzb5H3e2U11lH3yEEc86MILQToHbGeaHPUZeVqHNmc5uANrGmR/Fc8ljyIQBz/pmxUe+Pg6b66NUJeM9kNBoi+8ok9bIVO280KIyB/LB4KB7XTaik9Dy/dJDjLHpb9kH9kR5iWpD7lM0vHxSQSGR/k0KV9VN8PjKw8Tx9j/xwts3ayX5HtgSYP1oa4ypKWn+9GF7ft/LglZvdwrhdpz1jKE7WKAM=
+X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR21MB4236.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5f5d417-cfd3-4081-144d-08dd40b36ec3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2025 22:22:35.7810
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5217.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfaac5a7-db21-47ff-2859-08dd415d1230
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2025 18:36:54.8758
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8EYh0m/Rm2NQu6XYNvm53/eefxlnQRHnXVRTWcT3qSe1cyvVUbC937NF53MrrIP9JUrQG4litFJI6c8RWKivhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR21MB4190
+X-MS-Exchange-CrossTenant-userprincipalname: mhHpNCoZruSvmomTD5254DdOG+ykJAXo9BcC/gBrpdxME4I4vt/EgWKVp7X3pSEPHzy8tlBPTSvPDsnQgfL+zA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR10MB6001
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_08,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501300141
+X-Proofpoint-ORIG-GUID: SOCore22ldVxRen_Hx6-mjYOgQFSfW_Z
+X-Proofpoint-GUID: SOCore22ldVxRen_Hx6-mjYOgQFSfW_Z
 
-> Subject: [EXTERNAL] Re: [Patch net-next v2] hv_netvsc: Set device flags f=
-or
-> properly indicating bonding in Hyper-V
->=20
-> On Fri, 13 Dec 2024 12:06:01 -0800 longli@linuxonhyperv.com wrote:
-> > Other kernel APIs (e.g those in "include/linux/netdevice.h") check for
-> > IFF_MASTER, IFF_SLAVE and IFF_BONDING for determing if those are used
-> > in a master/slave bonded setup. RDMA uses those APIs extensively when
-> > looking for master/slave devices. Netvsc's bonding setup with its
-> > slave device falls into this category.
-> >
-> > Make hv_netvsc properly indicate bonding with its slave and change the
-> > API to reflect this bonding setup.
->=20
-> This is severely lacking in terms of safety analysis.
+Hi Michael,
 
-I'm sorry for the late reply.=20
+We see an issue with the mainline kernel on the Azure Gen 2 VM when trying =
+to induce a kernel panic with sysrq commands. The VM would hang with soft l=
+ockup. A similar issue happens when executing kexec on the VM. This issue i=
+s seen only with Gen2 VMs(with UEFI boot). Gen1 VMs with bios boot are fine=
+.
 
-The usage of netif_is_bond_slave() and netif_is_bond_master() are mostly in=
- device drivers that checks for bonding as configured from user-mode. The c=
-heck is consistent with the netvsc bonding (bonding is done in kernel mode =
-without any user-mode configuration). I don't see any security risk if netv=
-sc is bonded and becomes a master device to the bonded slave device. Any th=
-ose checks will return the same value as if the bonding is done from the us=
-er-mode.=20
+git bisect identifies the issue is cased by the commit 20ee2ae8c5899 ("fbde=
+v/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem()" ). However, rev=
+erting the commit would cause the frame buffer not to work on the Gen2 VM.=
+=20
 
-There are two places other than individual device driver that check for bon=
-ded slave/master.
-1. ./net/tls/tls_device.c and ./net/tls/tls_device_fallback.c: it checks fo=
-r sending packets over a netdev for an SKB if that netdev is within the con=
-text of TLS or the netdev is a bonded master. If netvsc uses this bonding f=
-lag, the check will pass for netvsc netdev as if it is the bonded master. T=
-his has the same effect of user-configured bonding devices. Please see poss=
-ible security implications below.
+Do you have any hints on what caused this issue?
 
-2. drivers/infiniband/core/roce_gid_mgmt.c:: it checks of net device for ca=
-ching their addresses for RoCE gid lookup. The code check for master/slave =
-bonded devices and determined which of their addresses should be used in th=
-e GID cache. If netvsc uses this bonding flag, it will be consistent with a=
-ll the checks on identifying the correct addresses (master's, not slave's) =
-for GIDs. This has the same effect of bonding configuration from user-mode.
+To reproduce the issue with kdump:
+- Install mainline kernel on an Azure Gen 2 VM and trigger a kdump
+- echo 1 > /proc/sys/kernel/sysrq
+- echo c > /proc/sysrq-trigger
 
-One possible security problem is that the user-mode can assign different pe=
-rmissions to different netdev (and expose to containers) and that the slave=
- device and netvsc may have different permissions. I want to point out this=
- is an invalid configuration when a slave device doesn't have the same perm=
-ission of its parent netvsc. Because the slave device along can't function =
-in the hyper-v environment when netvsc is present. It must bond to the netv=
-sc for any outgoing/incoming packets to work. If a user wants to configure =
-different permissions, it must assume the kernel will always bond netvsc wi=
-th the slave device and they must use the same permissions (and for assigni=
-ng to containers).
+To reproduce the issue with executing kexec:=20
+- Install mainline kernel on Azure Gen 2 VM and use kexec
+- sudo kexec -l /boot/vmlinuz --initrd=3D/boot/initramfs.img --command-line=
+=3D"$( cat /proc/cmdline )"
+- sudo kexec -e
 
->=20
-> > @@ -2204,6 +2204,10 @@ static int netvsc_vf_join(struct net_device
-> *vf_netdev,
-> >  		goto rx_handler_failed;
-> >  	}
-> >
-> > +	vf_netdev->permanent_bond =3D 1;
-> > +	ndev->permanent_bond =3D 1;
-> > +	ndev->flags |=3D IFF_MASTER;
->=20
-> > @@ -2484,7 +2488,15 @@ static int netvsc_unregister_vf(struct
-> > net_device *vf_netdev)
-> >
-> >  	reinit_completion(&net_device_ctx->vf_add);
-> >  	netdev_rx_handler_unregister(vf_netdev);
-> > +
-> > +	/* Unlink the slave device and clear flag */
-> > +	vf_netdev->permanent_bond =3D 0;
-> > +	ndev->permanent_bond =3D 0;
->=20
-> > + *	@permanent_bond: device is permanently bonded to another device
->=20
-> I think we have been taught a definition of the word "permanent"
+Thank you,
+Thomas
 
-Is it okay that it uses "kernel_bond" here? The reason is that netvsc is do=
-ing unconditional bonding without any user configuration.
-
-IMHO, using IFF_BONDING is the least disruptive way to express this relatio=
-nship without adding new flags, given the behavior of netvsc bonding is ide=
-ntical to that of the bonding driver, but without any configuration from us=
-er-mode.
-
-Thanks,
-Long
+--- soft lockup log---
+[    1.690032] efifb: probing for efifb
+[    1.693989] efifb: framebuffer at 0x40000000, using 3072k, total 3072k
+[    1.700996] efifb: mode is 1024x768x32, linelength=3D4096, pages=3D1
+[    1.706999] efifb: scrolling: redraw
+[    1.710981] efifb: Truecolor: size=3D8:8:8:8, shift=3D24:16:8:0
+[    1.716806] Console: switching to colour frame buffer device 128x48
+[   29.176649] watchdog: BUG: soft lockup - CPU#0 stuck for 26s! [swapper/0=
+:1]
+[   29.176655] Modules linked in:
+[   29.176658] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.13.0+ #1
+[   29.176661] Hardware name: Microsoft Corporation Virtual Machine/Virtual=
+ Machine, BIOS Hyper-V UEFI Release v4.1 03/08/2024
+[   29.176663] RIP: 0010:fast_imageblit.isra.0+0x2de/0x460
+[   29.176669] Code: 07 49 21 f1 41 83 e1 01 46 8b 4c 8c 40 44 89 09 41 89 =
+d1 4c 8d 79 08 41 c0 e9 06 49 21 f1 41 83 e1 03 46 8b 4c 8c 40 45 89 0e <41=
+> 89 d1 4c 8d 71 0c 41 c0 e9 05 49 21 f1 41 83 e1 07 46 8b 4c 8c
+[   29.176671] RSP: 0018:ffffc900000437a8 EFLAGS: 00010246
+[   29.176673] RAX: 0000000000000400 RBX: 0000000000000005 RCX: ffffc900006=
+bb140
+[   29.176674] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8880121=
+46600
+[   29.176675] RBP: 0000000000000080 R08: ffffc900006bb000 R09: 00000000000=
+00000
+[   29.176676] R10: 0000000000000001 R11: ffff888012146580 R12: 00000000000=
+01000
+[   29.176677] R13: ffff88801214658a R14: ffffc900006bb144 R15: ffffc900006=
+bb148
+[   29.176678] FS:  0000000000000000(0000) GS:ffff888026a00000(0000) knlGS:=
+0000000000000000
+[   29.176680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   29.176681] CR2: 00007f8bc160c238 CR3: 000000002ac38002 CR4: 00000000003=
+706b0
+[   29.176683] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000
+[   29.176684] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
+00400
+[   29.176685] Call Trace:
+[   29.176687]  <IRQ>
+[   29.176690]  ? watchdog_timer_fn+0x220/0x2a0
+[   29.176695]  ? __pfx_watchdog_timer_fn+0x10/0x10
+[   29.176697]  ? __hrtimer_run_queues+0x112/0x2b0
+[   29.176702]  ? hrtimer_interrupt+0x108/0x270
+[   29.176704]  ? sched_clock_cpu+0x60/0x1a0
+[   29.176708]  ? __sysvec_hyperv_stimer0+0x32/0x60
+[   29.176712]  ? sysvec_hyperv_stimer0+0x70/0x90
+[   29.176715]  </IRQ>
+[   29.176716]  <TASK>
+[   29.176716]  ? asm_sysvec_hyperv_stimer0+0x1a/0x20
+[   29.176722]  ? fast_imageblit.isra.0+0x2de/0x460
+[   29.176724]  cfb_imageblit+0x433/0x470
+[   29.176726]  bit_putcs+0x291/0x570
+[   29.176731]  ? __pfx_bit_putcs+0x10/0x10
+[   29.176733]  fbcon_putcs+0x139/0x1a0
+[   29.176735]  do_update_region+0xf1/0x110
+[   29.176740]  redraw_screen+0x22f/0x290
+[   29.176743]  do_bind_con_driver.isra.0+0x2ab/0x3d0
+[   29.176745]  do_take_over_console+0x3a/0x50
+[   29.176747]  do_fbcon_takeover+0x5c/0xe0
+[   29.176749]  fbcon_fb_registered+0x4f/0x70
+[   29.176751]  do_register_framebuffer+0x1bc/0x2a0
+[   29.176755]  devm_register_framebuffer+0x28/0x90
+[   29.176757]  efifb_probe+0x544/0x720
+[   29.176760]  platform_probe+0x43/0xb0
+[   29.176763]  really_probe+0xd9/0x390
+[   29.176767]  ? __pfx___device_attach_driver+0x10/0x10
+[   29.176769]  __driver_probe_device+0x78/0x160
+[   29.176771]  driver_probe_device+0x1e/0xa0
+[   29.176773]  __device_attach_driver+0x99/0x130
+[   29.176775]  bus_for_each_drv+0x98/0xf0
+[   29.176777]  __device_attach+0xbc/0x1f0
+[   29.176779]  bus_probe_device+0x8d/0xb0
+[   29.176781]  device_add+0x4f1/0x6e0
+[   29.176785]  platform_device_add+0xfa/0x260
+[   29.176787]  sysfb_init+0x109/0x120
+[   29.176791]  ? __pfx_sysfb_init+0x10/0x10
+[   29.176793]  do_one_initcall+0x5b/0x330
+[   29.176796]  do_initcalls+0xac/0x130
+[   29.176800]  kernel_init_freeable+0x134/0x1e0
+[   29.176802]  ? __pfx_kernel_init+0x10/0x10
+[   29.176806]  kernel_init+0x1a/0x1d0
+[   29.176808]  ret_from_fork+0x34/0x50
+[   29.176813]  ? __pfx_kernel_init+0x10/0x10
+[   29.176815]  ret_from_fork_asm+0x1a/0x30
+[   29.176819]  </TASK>
+[  432.306986] fb0: EFI VGA frame buffer device
 
