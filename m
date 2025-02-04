@@ -1,124 +1,118 @@
-Return-Path: <linux-hyperv+bounces-3829-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3830-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55DACA2664F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Feb 2025 23:03:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66005A26AB3
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Feb 2025 04:35:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B31C1886A11
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Feb 2025 22:03:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC0FB16802F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Feb 2025 03:35:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 777B41FFC79;
-	Mon,  3 Feb 2025 22:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C1FD15853B;
+	Tue,  4 Feb 2025 03:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WPJ2uRMi"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Cc8wLrgd"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE03B1D798E
-	for <linux-hyperv@vger.kernel.org>; Mon,  3 Feb 2025 22:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD44156F3C;
+	Tue,  4 Feb 2025 03:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738620203; cv=none; b=nClqkI79FkYVXZ2D+X7yw7xzIETlz86tsMnUBXtMSxfoJPtM0s6SAJd7vVSdAHx1shmuBF2Ef+h04A3kvZ6Rgaq4vwVpGW213dO3dCy8/eptj747bSV+HLahj+ViqN8zHknBrEOEuN3pIRTTPMdlnEp5egAgUuDPcumrGb73FoU=
+	t=1738640113; cv=none; b=cCV2R+8iPPmw7qz5Bmws5asLAw0CLAGbISHRmv1UBJB6Z8K3SMHtc+cUL/SsV329Lk9wp0X/huHT2x4QV62rStNZcN1k0b2iSkyMwGRaBKVkZdImXAwnYZnEUFKVcLTvUKDGOux5oHsmjg/uC4uvh7bMkP74e5xaA7iNEP7xg4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738620203; c=relaxed/simple;
-	bh=eUs8Te/3qXoZlaU+lsAvePAAnsKpOkJeJh7kJfdkLCY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sIclL+RZ17FLRa+k7oKbCRd6GoI1hiQ0Vux1zc9tT0GsCMaRzNgcK5NY8112dearoPGPadedbp8WDLtxmFaTPV21MssEzxCR23L8boMmnTU7m8YoLd/+c87jU8mnTp2m5gVQ5WnrJtWVELLD9jgwdkeFboighi5WxIeGRzmnPBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WPJ2uRMi; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f03af09e9so599045ad.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 03 Feb 2025 14:03:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738620201; x=1739225001; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aKyU5o4qg4MzJLbHNBTuIVedrQGzcqdvvxUHOUnfSU8=;
-        b=WPJ2uRMiUJgM3bQQsNM0Pkc059XwMwbqMjwDrLf12HbZazcBH6CoADNUnHYoD+jAs9
-         Rz+YAr0JLfqY2XYXrNhfRt+Zossr5jIUb6Pqiw6aXH+Q5UTRDPKLWNQ0OXD9BBEQq9+W
-         qUJS9XK6OoJh9bBXWhk4zGremufxG+KfWicSX5TbiFEgPnT2Th9+MZ8aHV0GKmNvc2Xd
-         Y3N8uuxzAYuG3RuSDRiNs77a9c9f58rwxduJW8XD6iPtSAB7pDPRq9PtkyHsYOFnpOTo
-         piNErgqNgahCjZXwYAzpEpBCIPfZZ79SHj+DC3GIb9SqgrE+dQZdaovkGtBSYGJWqzzQ
-         Lvuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738620201; x=1739225001;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aKyU5o4qg4MzJLbHNBTuIVedrQGzcqdvvxUHOUnfSU8=;
-        b=sA3mBbWCxC9Ery3hBZMb3hFkBHatN7dZ4CUj3fzeCW1f1mPCCtW6U1LwJnGoW537bU
-         f2hwvEqhCC873JVNnPwjsPl9P4JMI+IjE/E1fDF63fesvOSGiKUEDzJbYM38V5BXEM2d
-         8crZ4mtOiLApAxhjfKVmilFN8HcZasJPhuobXfFaev2GEW+xXLoiB+Z2uLC0GrDJBo98
-         Ehd/PU9UWstgifQVEU9UjCN2dBtFMgsZqFi1djftXUfq3tGsmpHvAEBUpeCjLwo0vwhX
-         mgNpQbRZwdKnV1SFqlDa1xrTqY/JDqWi5dh/1LukNfBG1SJlTkehTJ3aXS3cVpSpy5gY
-         U31A==
-X-Forwarded-Encrypted: i=1; AJvYcCWRaJIWjxqZbrz5EOXJYvga21M0F9KzJ2SbToDKmF3OA/ZExWWKhsEURiBAE3wb3BUdUlt9o8JWMKZF7+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDSuP03sUk5sNE/2EzqLVrH0mrnhpte+MTMm5UJZ5z9qmhe7wM
-	DqWbuRTPSIcgOQzyKLMWbYSeSsWnBMjWgns6633DjHkUwYonPwQm/KnlvDkAhIoPbAS0/PqC0Qw
-	ibA==
-X-Google-Smtp-Source: AGHT+IFdBp/YFKt3tvbP89npJlfJHjx2Z4+9Qkgevwe01Rjz28QPVaPLsqR/RKs2uDbYm8l82lXHNvJ4gI0=
-X-Received: from pfbfb39.prod.google.com ([2002:a05:6a00:2da7:b0:728:e945:d2c2])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:acc:b0:71d:f2e3:a878
- with SMTP id d2e1a72fcca58-72fd0bc6c50mr33717772b3a.5.1738620200924; Mon, 03
- Feb 2025 14:03:20 -0800 (PST)
-Date: Mon, 3 Feb 2025 14:03:19 -0800
-In-Reply-To: <855xlra7yh.fsf@amd.com>
+	s=arc-20240116; t=1738640113; c=relaxed/simple;
+	bh=qxIPkeWf/pea4HnHsuYjrpQiLs0+V+J3FwwMGncD2Rs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qbUDnLk+/B6qDi0tGfyFeq6v539h7aubKshZSAd10N/XGYukXr960KzUy2914K1N0hmzk6SWzqCTK2Z88wwaSqGY9LfHkT3+x0ML3F8lNr0zJ0BFrAhwTnsnjUYEz31vW9bjlW2UVwJI1RdQLljZ1iAvNR/Ry8FXTBdFNIbh8zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Cc8wLrgd; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5141NAUk018902;
+	Tue, 4 Feb 2025 03:34:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=wihzaoziYI3Z7TGQVN/bOKuaOiFtZKEycMPNQDPPHJ0=; b=
+	Cc8wLrgdoS3pmkcHTB9KDLI52gVIDzdhT6wH3oG5qpLg7wbGOdRgezwpLkJ85shT
+	qjAjsN5JnO31QJ1hXsEqtm3rpDbVnQGABAQMl2n8kovvjk7+72o8sgjxnEQxfFJc
+	5/TnUTODqNnVOI4gKEVAF7RiTBj8iuRYlko2cAixwaKE5l2zbg4obYA49EuXG+vm
+	5BKefulCiEcxO3f8G/C6bKvbwM4efagLCYPIqrzHeyoePf6RRSChhp6r1b2Mn+F5
+	7L6lbbiM9vi47NRpP2KHJPQn6K33IdUWFk6BcWol8/bjs9yrbEqQAqhu+LrecNJN
+	p6QgdfK+m4fzLrxiGAHnnQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44hh73kufs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 04 Feb 2025 03:34:00 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5140M8e6038975;
+	Tue, 4 Feb 2025 03:33:59 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8e76f14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 04 Feb 2025 03:33:59 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5143Xs6q015172;
+	Tue, 4 Feb 2025 03:33:58 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 44j8e76ex2-4;
+	Tue, 04 Feb 2025 03:33:58 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        James Bottomley <JBottomley@Odin.com>, linux-hyperv@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Kisel <romank@linux.microsoft.com>,
+        Michael Kelley <mhklinux@outlook.com>, longli@linuxonhyperv.com
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Long Li <longli@microsoft.com>, stable@kernel.org
+Subject: Re: [PATCH v2] scsi: storvsc: Set correct data length for sending SCSI command without payload
+Date: Mon,  3 Feb 2025 22:33:07 -0500
+Message-ID: <173863996289.4118719.8857069927274668489.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <1737601642-7759-1-git-send-email-longli@linuxonhyperv.com>
+References: <1737601642-7759-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-2-seanjc@google.com>
- <855xlra7yh.fsf@amd.com>
-Message-ID: <Z6E9JyybI6SUWlcG@google.com>
-Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
- info from CPUID.0x15
-From: Sean Christopherson <seanjc@google.com>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-04_02,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=575
+ phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502040026
+X-Proofpoint-ORIG-GUID: EIAOo9MPQ9f0k6X-xtmte1ScVbfTUsOY
+X-Proofpoint-GUID: EIAOo9MPQ9f0k6X-xtmte1ScVbfTUsOY
 
-On Mon, Feb 03, 2025, Nikunj A Dadhania wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> > Extract retrieval of TSC frequency information from CPUID into standalone
-> > helpers so that TDX guest support and kvmlock can reuse the logic.  Provide
-> 
-> s/kvmlock/kvmclock
-> 
-> > a version that includes the multiplier math as TDX in particular does NOT
-> > want to use native_calibrate_tsc()'s fallback logic that derives the TSC
-> > frequency based on CPUID.0x16 when the core crystal frequency isn't known.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> 
-> ...
-> 
-> > +
-> > +static inline int cpuid_get_tsc_freq(unsigned int *tsc_khz,
-> > +				     unsigned int *crystal_khz)
-> 
-> Should we add this in patch 6/16 where it is being used for the first time ?
+On Wed, 22 Jan 2025 19:07:22 -0800, longli@linuxonhyperv.com wrote:
 
-No strong preference on my end.  I put it here mostly to keep each patch focused
-on a single subsystem where possible, since the series touches so many areas.  I
-also wanted to show the "full" API in a single patch, but I agree that adding a
-helper without a user is generally undesirable.
+> In StorVSC, payload->range.len is used to indicate if this SCSI command
+> carries payload. This data is allocated as part of the private driver
+> data by the upper layer and may get passed to lower driver uninitialized.
+> 
+> For example, the SCSI error handling mid layer may send TEST_UNIT_READY
+> or REQUEST_SENSE while reusing the buffer from a failed command. The
+> private data section may have stale data from the previous command.
+> 
+> [...]
+
+Applied to 6.14/scsi-fixes, thanks!
+
+[1/1] scsi: storvsc: Set correct data length for sending SCSI command without payload
+      https://git.kernel.org/mkp/scsi/c/87c4b5e8a6b6
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
 
