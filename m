@@ -1,68 +1,68 @@
-Return-Path: <linux-hyperv+bounces-3844-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3845-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58A4FA2B3AD
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Feb 2025 22:00:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EDD4A2C4B2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Feb 2025 15:11:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79BA93A4086
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Feb 2025 21:00:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36EAA188E125
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Feb 2025 14:09:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BF01CEAC8;
-	Thu,  6 Feb 2025 21:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC6B1F8AC0;
+	Fri,  7 Feb 2025 14:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Q/BCPyf7"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="O4tR3eMg"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2067.outbound.protection.outlook.com [40.92.19.67])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2097.outbound.protection.outlook.com [40.107.255.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390C3194094;
-	Thu,  6 Feb 2025 21:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE0E1F63F3;
+	Fri,  7 Feb 2025 14:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.97
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738875621; cv=fail; b=ideZkmjfl+fBvzlc/PCoZdGWDIW5aMWS8Rj9lqZfRTe9B8cMiuob7FdgxeYTeXV6S9pdTFttMBQoS3wsxA6PV0frRQXFFnqczf8SAxAwu+uCkM8r4U4kZ2GVM8zlfF9QQC+x1tGv7ESvFtGxXLJTd93rzs/67IWGpNTdTQ5B0Yw=
+	t=1738937187; cv=fail; b=ePDkLWPHN+ZFayr5aTpqKOqFNoOc+ZShmk1DtjDkE19alaICcklvhZ/PNaYQO7J86RzohY29EeMrAg2EAsC5QFtDP20ODpBQKAfUrAJOAPKQjSXvRlx6iY2dsK37s8JeLTWlhNzhBTR4aAAUUANiOnh+zFynz95/9omVgT7Atgg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738875621; c=relaxed/simple;
-	bh=mIk8sf+aInCIpmpbbOEqvgO906wtXXa5kOZA+Hsec+s=;
+	s=arc-20240116; t=1738937187; c=relaxed/simple;
+	bh=qfhPvUphannLAOXaPjBANAlklF+Gp+bE278G+Kmuuhg=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GY5HQ5JUA+KSWnLpqsQfEwqtrAH33n802JDujyvilXB5RQgAqY6Zq0VnCK/HYhS/eHgHIQHODOu9GE65kQ5fLR6InKBcHy5ATzxztPwcJLV+3dg0qOvkt8XhmbMplu1mXPZegEy3Z8aZGyNjZaaMYYZOysvviziGIGYmYkuCOnU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Q/BCPyf7; arc=fail smtp.client-ip=40.92.19.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	 Content-Type:MIME-Version; b=HP+d30P8udLPu3OxAdHcWxXhNd1d/YxtrCfDXNddcUF4rbmxvFIB+UNr863Gsxmmr1U54HAMbV5/ChLWLSr/q3b+J4wXP5N2rDWZsVkardFCR0abWe7GsHuUkSEKNVhHtyCGA7ReUpr4VqY6em2/kft+s7d0jR2aQqEC+IPerIk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=O4tR3eMg; arc=fail smtp.client-ip=40.107.255.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BXGpTNyg7KDKI/uFm+7XpoEfiJh+Ry98+b7YVwniExbzzG9rCPCI91V8jWu7my9jWD7jwYWEiHMCmGNRM3t5Z82CwbCp91zMHlxw+F7XUseqkfecffywJB8I3/GVN+lVEsZhu+0QeqSlP9wu/aNOP/fv+fV0jtBTtTII1tD+QXRDJwgmAn4F8k521gGgW+qD1AlT5fFg96RF2TS4q9JXSjDExpXLSehwKWGBn3DZ2vmS7OP+Z/QcIA5asPNH+XNa4uPuUFl7nOHKRz0ekmI7VdG69YoxGKClrnYeNkCfmJsBvVKHBgFZtdwFCJytSz8hhO5F3Kc1FcrH3uIFRxbvGg==
+ b=wMHhpFnWqYpiw2zLosAA4IxO2g9CUbP9Ca50AzyQXl0H3W0jB0nqreFZmgvAS+MUF69PQboDlVSi81wPebHE+g9jpjEpHMLWoi1rcHLfTmamM6NXTE4aJyZKoa9lHw6KOSX85Y5Y3aV+6OdFa2e+8MKcdhXk4V4R8AZ1m2kYJ4v01JeL4k8QPfTAdr14dO0n695jp/3afxxhi0pWP4XW6ypG4mPDZQltWToTZC6PY32fOeNsSoca4QYUCgtdX7KzjsjQo+Ia3JuoPfy3FP2RXeEgz6r0ULTZHgv01Erk/kkakCWwYCeZxkocmXKohlfd8tfxCKTFywG8d4a4XdfNZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qvNr6ZL7lC+5eClYHTwRgsCiqJ/MVWs2mavz0VJkX4k=;
- b=KLBmPE/jwlSI2faQdKc0LXK5kGX2akkuYt7Q4jUvnf4hUTHMvIH0u99BhQ8KQtaYCFTYiYUPSMoc5G6eAGhoX5/WNWhKj9CmpM8EnJ0Ufofek6u6sM4UsrEIDHI6W1ym2ELMNzxrJF9c8840vixy3hE2ticPh32n2ZCw2M0rJUY1qwC9OG5/BTFAQfIraM9OahPMRQOPiPLcFTbtnJRa5Pxy5isxPIheKDL4mZbzWUTgq2htAWtWYM6cGuCRsxYIWBtHVVJdTl1/oMBFxv4Gvpkt+Rx7XYaOWx+sYvU7ZovMBRsL7wZ+wVEdVq6fxJ4Ai4GOj8BvE6g2PVmA2NRNpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=6U7iBKmP8Saqqb0wHRa+a+6KgVOmuiQ6TNIM+MWZyqE=;
+ b=S31TeJ1pNfSBt0Y+vbtWRSPXPTjoIFEcvCC5fBsY58shMEQnv1iexVf8mi5JbhB20Ymcuik16PRYVgoEnj3XclJ6i47au/D4lPKXho30N45l1r9RJPT6Tp7ZvFYBzTBxIPXoLLIrahcErKZh7tBWhCyM6zuWtPvEnnA3PelT91GtAUZDy1/XJ5pk8rumTGGp9VPg1pA7LsCaIGdqS4qa4igPoXyMydpVTwqkt3A+xjsupzy/wLX1gEVbQVgF/omZu19FZ84705b+1l+z8J7NK2nn6cLfgoccCdOsuZdwLiabIQUiXxQ9Nx2zgOZYxlWkpYEAY3NZsQWVyTxmnNmbnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qvNr6ZL7lC+5eClYHTwRgsCiqJ/MVWs2mavz0VJkX4k=;
- b=Q/BCPyf7EPr5QotSq4FG1SuWYy+seEs992u0BVl8Q2AnCp6t1Scjd0IuHg66Ypcd3WLqCleu0Bz9vGGiHKapLaGbXeq9T0FElZQuKWCRY20+oVaTTFO8FvjS1PKUSGom3A+KeeEe+NHbCY5bX7xSJV6zW/lEoAUrqbWTTxQf6KcEBZRQ5Calsv50PlvQshsV2dy+/9lNDYiUZKWLnMyyq1jzL/Dx4fjs/P9sQvXzGobKtb9JUpV8QiOlwnEy6ndDVN8peMFUbNeby6KgZjhtNDC7uGLwGxcdwTGKTqP1Jubk9W3xL1g/Ei5TP5mAOoJT3B0lR7kQlt0zUID/69btiQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB7422.namprd02.prod.outlook.com (2603:10b6:a03:291::8) with
+ bh=6U7iBKmP8Saqqb0wHRa+a+6KgVOmuiQ6TNIM+MWZyqE=;
+ b=O4tR3eMgYWBTIC5I+nqcCvc42RMAeGDlz41xUfIMUAjkwowvYAhsG5VAbkDQTwhEOW6Mj96E2P2JwvIwq703aLlbZbpy0hpsnZFdi0Rey3ANmnmx0ozNu//fV2O7m7pLo44JQ5UO6zaJqXiqkSbZ1kmmOuqvpoxpdnqNSETi7pM=
+Received: from TYZP153MB0796.APCP153.PROD.OUTLOOK.COM (2603:1096:400:28d::11)
+ by KUYP153MB1119.APCP153.PROD.OUTLOOK.COM (2603:1096:d10:e::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 21:00:16 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
- 21:00:15 +0000
-From: Michael Kelley <mhklinux@outlook.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.5; Fri, 7 Feb
+ 2025 14:06:20 +0000
+Received: from TYZP153MB0796.APCP153.PROD.OUTLOOK.COM
+ ([fe80::a481:ba0d:8985:aa6f]) by TYZP153MB0796.APCP153.PROD.OUTLOOK.COM
+ ([fe80::a481:ba0d:8985:aa6f%5]) with mapi id 15.20.8445.007; Fri, 7 Feb 2025
+ 14:06:20 +0000
+From: Saurabh Singh Sengar <ssengar@microsoft.com>
 To: Michael Kelley <mhklinux@outlook.com>, Thomas Tai <thomas.tai@oracle.com>,
-	"mhkelley58@gmail.com" <mhkelley58@gmail.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "drawat.floss@gmail.com"
-	<drawat.floss@gmail.com>, "javierm@redhat.com" <javierm@redhat.com>, Helge
- Deller <deller@gmx.de>, "daniel@ffwll.ch" <daniel@ffwll.ch>,
-	"airlied@gmail.com" <airlied@gmail.com>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>
+	"mhkelley58@gmail.com" <mhkelley58@gmail.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan
+ Cui <decui@microsoft.com>, "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+	"javierm@redhat.com" <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "airlied@gmail.com" <airlied@gmail.com>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>
 CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
 	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -71,71 +71,93 @@ Subject: RE: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
  executing kexec
 Thread-Topic: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
  executing kexec
-Thread-Index: AdtzQ0vu6eNj8snBS+OSvfShEIJEjQABFnwAAALyBRAAANwVQADJ+eeAAJV+q6A=
-Date: Thu, 6 Feb 2025 21:00:15 +0000
+Thread-Index:
+ AdtzQ0vu6eNj8snBS+OSvfShEIJEjQABFnwAAALyBRAAANwVQADJ+eeAAJV+q6AAJLKdwA==
+Date: Fri, 7 Feb 2025 14:06:19 +0000
 Message-ID:
- <SN6PR02MB41578AC54B7C0B7386B8ED00D4F62@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <TYZP153MB079619B42859CAD4CAEB8771BEF12@TYZP153MB0796.APCP153.PROD.OUTLOOK.COM>
 References:
  <BLAPR10MB521793485093FDB448F7B2E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
  <BLAPR10MB521780F7C93DC013E2E031BDFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
  <SN6PR02MB415732CABA59155898531226D4E92@SN6PR02MB4157.namprd02.prod.outlook.com>
  <BLAPR10MB521743AC3C146116D8F6BCACFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
  <SN6PR02MB415777C53A930259A54E213ED4F52@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB41578AC54B7C0B7386B8ED00D4F62@SN6PR02MB4157.namprd02.prod.outlook.com>
 In-Reply-To:
- <SN6PR02MB415777C53A930259A54E213ED4F52@SN6PR02MB4157.namprd02.prod.outlook.com>
-Accept-Language: en-US
+ <SN6PR02MB41578AC54B7C0B7386B8ED00D4F62@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c2f405a4-4cb7-4a3f-88d0-a72b07b69b33;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-02-07T13:52:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7422:EE_
-x-ms-office365-filtering-correlation-id: b734611c-2c19-44cb-0902-08dd46f14196
+x-ms-traffictypediagnostic: TYZP153MB0796:EE_|KUYP153MB1119:EE_
+x-ms-office365-filtering-correlation-id: 5e3c2e7a-2625-4e8e-3964-08dd47809899
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799003|15080799006|8060799006|461199028|8062599003|440099028|3412199025|41001999003|102099032|1710799026;
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|10070799003|921020|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?4+ixPJqMlMgirMWjD1UkpZ8dy9zeOVy8idbRF0NqmH+icGd42dUuGEXu/YKG?=
- =?us-ascii?Q?/4WZ7+dksnnIWhRWYeQaSKY5E8Mi3sv81l6vx6d//Osu+6/rVbWe5ktgKioX?=
- =?us-ascii?Q?gYbVDfG1dqN/7so3MKETBg7mPBZZX5LRqtoBBVBES5rBJ8Ar21h73fqNIrbx?=
- =?us-ascii?Q?o2uBKTdgL+vta4H07U8qHnrYIHNS9T5v6gS/xDxyoug1zIY8q/CuT/tzOrbG?=
- =?us-ascii?Q?v5Y9ZGdRvPm19JHzip/kqoFjCpPh/qPXduzjTHd90OpWnAZtHT4Zgmmw6De+?=
- =?us-ascii?Q?zE/BzqmoLuI4BTy4k/2LWxr6G6bey/B4iI3E15Rq7AX2WORF6d7QyJq+T5ZI?=
- =?us-ascii?Q?01108pS0V7s/RggQwU6HS+Sp1g6rjmnGCDsecsPkM37jzeTR2b/Lh/fZakCf?=
- =?us-ascii?Q?nP3NVCdvvtCiFo+dVN6LO4o0EvpNAVFjm+QTJgJrhNTk8GioQGR7sXk8G29q?=
- =?us-ascii?Q?kp3hcYLcxH3TAdUW3y9xA+uPEVivbToFUtKWu2lWd67if5eSN3pDlH7Rwjsj?=
- =?us-ascii?Q?j2kFR2CkKTtYX4fT2MaYVB0OP/84F25+7cAVNNPvIbB8RfQuwoCwMuPnrjaE?=
- =?us-ascii?Q?56xj0ZgsAsl0kGbGPYeQgn9nSfAFpudnyBRzf/rZnlQHCU3lyJq5mSioOEZi?=
- =?us-ascii?Q?H6CUE0Eppstb9k8cvjZ2WcElnSOai2zucCM9G93f1hRh64yzr08AUTHA3PS8?=
- =?us-ascii?Q?VwV+HJ9lmAFz3BkIsa7LLVasw9vbd2vMhPdF/5YXKtICoPycDE4M+ZwdsSby?=
- =?us-ascii?Q?8GQ8U+i5DQ1DBOzeaECuSn0NwlC4shWBuI39Phe8MHgcaJkm+I0OlDNqtBax?=
- =?us-ascii?Q?NXXbYSJFtHJw+vxIZFGCxsoo6yuGRO1y5b+NSHRkTXPzoJpCIMQsTd8U8ecB?=
- =?us-ascii?Q?FOuwgIVzTenmCXF92Ec/KttQ/jWLsK/KMRljDzubgcuMzRAxTvvF7F8j+ApS?=
- =?us-ascii?Q?K9sJVeKuOSUViBQwN4N10ArYAkQ19nDE7Crqru8Tif0OjoxLLL06/hawbkf4?=
- =?us-ascii?Q?PfWUu+GlDdFozDdLv+YP/6cn3qV7oHWX0SA7+vCqDMgo6Pb6w9CT1ej89ZFS?=
- =?us-ascii?Q?ojIHR+gYpT9VAXpeBCVTNbTRrTgPVi44Ce0cqS2zQpRCRasjIr8=3D?=
+ =?us-ascii?Q?h6wbc+J+xN7fv7xX6m6XJcaVyYVTgM12G53EzT9HEVmNdI03BWP12x1bpEZw?=
+ =?us-ascii?Q?zNuEpROCA+KLdju2b5U4TiPP1VI8o6T7gRU0WlcD7D5y67cqYbyuvNxj7EH5?=
+ =?us-ascii?Q?83BwzituL1oW8OBoGUATk0gPVFD4H7EWx9AmTt7tHVt1tQKEAPqnflsXWNxz?=
+ =?us-ascii?Q?bRhjl59sS4OK0l1umxKZyT2oaWB9AVpGcDvVKTkhTeTq4CftxzSXq0VC9Aaq?=
+ =?us-ascii?Q?K41967KnPWesrthsdd3y6j8QHP8zKUYhtDe0FFthW2qqrHD2pORjn+OfGMQp?=
+ =?us-ascii?Q?xLKxKqsyZxVEbGYh7Zgx49oMGHX/qn4W+zb3a4tJLUEoPuGLwfDG0YYNekQm?=
+ =?us-ascii?Q?Rg/uG041kOwsxg+axtyETA24+wvo34xnQPth5TMh8qr5tNNCCsmS2VRJaxJi?=
+ =?us-ascii?Q?Ia/pJ7Hb9wwRmVEXGBAt7Osz68WO8aZwOEd0n+NWyNkn5PK+YGGOo5hrEnR6?=
+ =?us-ascii?Q?TqjTkIiFUfjcEW/hTKjC5qg7kY/y2VVMx/mqA3nBAdB9mZG2sZmFr+/7bpbs?=
+ =?us-ascii?Q?Tea5gl2Q2n78Y2I/vWoiOWO304I6rlMxTNc/Dyf1pcgnk5yHaAekyOqldUnM?=
+ =?us-ascii?Q?B1STnAUKT5YdUIRHIU0qQMmqaXWq+I07BBLn2HheUVTXS97S5dnU9KmxYGjV?=
+ =?us-ascii?Q?WVEeDGYC8yDnQcDXCkcMOeykyP0qNphQJ5hXDzImHpMo/gaJHFrwptjajC7P?=
+ =?us-ascii?Q?b/qGMtCAEL1IeUSzpOXoIL4Mj6S6uA35eQuhsEwwtUCN4kwT6Olu0oLIyjH8?=
+ =?us-ascii?Q?TB8DA5p08iBpLk5asI1N9J/zWPJSkua4wI2V2Ti57FASenZoIa1wjgOA3g73?=
+ =?us-ascii?Q?C6x79nzhrsZ7IY/9wa+dSiD55n7ivOmRGuBhIRP5BweGlcYMaFy244n4WTxb?=
+ =?us-ascii?Q?b5JDReUZzMWRq7HxULzfAoyPMdVABk5Z2siQRk6vZgEIyBX4rveeuwogqUy7?=
+ =?us-ascii?Q?4lNcUCvdXr6TM1lBsMtaHfAPD1kr6eVyWFBbmgzrcCbkKFL+RPBpmWehxPaV?=
+ =?us-ascii?Q?XvyNSzOcDW+2CCy67Sc+I8Zh+t5/bVRrr3/NqKRZTFyimHqCaPp8YaSemIlk?=
+ =?us-ascii?Q?Zf9sWHKTogzaURXXlzHzv7P6SQJbcpL+pNxHJ/5xhGmUDK70I5qGqgvtu9ms?=
+ =?us-ascii?Q?qluBMTQXbDqrTk0ij95Bw0HwCgtH5zVEWZiivyNTJbU0xLQTjhQrNVxdnysr?=
+ =?us-ascii?Q?70K9BeIpy5KBFjC/TY4fl0NIdSNQHbimjVIJRGt50BAG+z/7158NKKvdCZos?=
+ =?us-ascii?Q?K1y2OINzl1suoRzy6QRNls9uSjyNsZD9H6N5db5iRidYVTaSQ+SSbcL0a/13?=
+ =?us-ascii?Q?N/R0xQOEz6VsnHq2AIiPcOdebjQmqLthEQW22wjxzUb+IeTgJcTJysK8E3h6?=
+ =?us-ascii?Q?/4FFf7obpYTutbtXI1rlonROXiEBKfhr39E5iV6AjRoMTdVWWS/WAUjzqvMn?=
+ =?us-ascii?Q?0TMLwP6BXBaSFoxyzWsWEQOx0WkYIfU6VqY28+QdQhtb0s+OnlTptg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZP153MB0796.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(10070799003)(921020)(38070700018);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Wv/RRKNEz3vDJNKw4mvf5OqO58QtOzBK5bh9ifwvddyMYVutatXtG9PmTZWy?=
- =?us-ascii?Q?ZzrUUlOnvBW05qot8w/qlk0ZiYkY7d7dCxtvFv/DiYbJgWmWdckPRbZRzdaQ?=
- =?us-ascii?Q?e9lZpGLXmAmRd2C8LAqdzb8R7jM4wOx59hivyywryZfI6y7kMrTt4567x3gC?=
- =?us-ascii?Q?DaySOFM4Y9gbMwaAGUB/BpmJ/0o+BcoJcnHuZlzkJOirX3PH3JxCgM5HytGN?=
- =?us-ascii?Q?moqlgdHv/8lq3CVh6Lfe4Kf+5nYYyzPs+vGsM8NDQeYV3tOU73Zd2ortFpi4?=
- =?us-ascii?Q?HGRQJiUk6fmvAIBQGcDjEzdini+h60duPzwYHO9f/CFw1bDzDcKEmXcV/WZj?=
- =?us-ascii?Q?ZMe2/I00+X7S2a3g3/n5ORrY45HzXVX/GOxxynpsVfo69xG0BdKPq5Knu9QH?=
- =?us-ascii?Q?az0lANX7B3irb8Kb07jSQ1NPaUsl0fFSBec716xXUf8OUb0SxV2jXO3PP8jM?=
- =?us-ascii?Q?yoRjqN0Ic0NYvVyJZTmK/uIcTOA5eWfyFt5AFkFQvut2rF/7UgA6cWbRJEfC?=
- =?us-ascii?Q?rK87+OWRZJXnzE1aZEA1JyhzM1Z/f/v7lrzpVdCMZFJ5UlLZkfGoR7j0Enrc?=
- =?us-ascii?Q?Ydt7drFxvLFBIEjSB/+Blz45y+5Jz2i9dkvBtOCFU7tYeLTN2JgINJZNM6Mj?=
- =?us-ascii?Q?pLAChDPiYES9EC2z3wceJ/AHghing7yx5a01HlQAwIcY3jwLjKWM1xLSZzaR?=
- =?us-ascii?Q?eLs52hD1KVf7Op9Lwh3PCUueboncTWHhi5nTqQquuxaDxpnMrZL8tVvwAZ2p?=
- =?us-ascii?Q?2x9GNUnJdfivK5FR8yddKqMEcu6CpSUzOy2mZ8LBVwMdP1isAXEsVXPLs/qF?=
- =?us-ascii?Q?gHirKIe+Br5ZcWZ/iljifOcprZihGxed7Lwl4o9SSwoY9aDbrjvf3vxs7aDT?=
- =?us-ascii?Q?pEQTReoMeld64Wiu0s2V3CDl4STNp8wiYvgIuPB6yEJcmnmJ/jBxBUBQqXvu?=
- =?us-ascii?Q?IszGdtnVZVC5RtpeylSuUrsVNvyZBYhXEeiKEXVPOKBdFjyqOZBW+YIcW/kw?=
- =?us-ascii?Q?MYsUfNlBPm2kwRFWkwAzGistcuNnbldRrksEJ1HCZmzWUicklQV733oh/TAd?=
- =?us-ascii?Q?hL3IDPA5ScUXdomP34jnXRetPYlS/3gYAADxebA08Vfi9tcxBFHtlIU0kpbk?=
- =?us-ascii?Q?64DxTA1YGq3jNubqDiZnHRILw3OJlqpSOmWL/1UFM2D5zJen+xvBaQy3aZyI?=
- =?us-ascii?Q?5hhu4fSc01l4N6S10qYBunIDU6I7Lfu8qVihOBZxjMWNCVLcgw+BsnaEHvY?=
- =?us-ascii?Q?=3D?=
+ =?us-ascii?Q?bT+9W4ly/JfVq2C7TGhBQOcoByK0qndJCT0jNtDgLP4mcJiiXXBStGrk6FfD?=
+ =?us-ascii?Q?AeJ0MmUbg9GizIsgn9E9SqOzKgjNgWLUaPZTnh+CIWpIZ7v941CM3xKgnQ6K?=
+ =?us-ascii?Q?lr3toqeNRF7Q7etZXJPJ+V/Ze5bI5zUlEU58kUDZ/AkcBtIGkFKBFrGi5iEd?=
+ =?us-ascii?Q?V9MhDix3TEqYinLG7vokeszq8Pb1gkL7fweXiWtcefioPtPzlfuwkz3AAvCM?=
+ =?us-ascii?Q?wHejoSXiRiP8rNd9zjNyRy8GFe1Sv83YzrtnvoKat88sWDYkf7oW8PTTpAEG?=
+ =?us-ascii?Q?WNszHEx/39d2zgR8sTjJ0MMptxvbvoTdZe3nEMKTyUCZX/sdTmWGpY+Qo4SI?=
+ =?us-ascii?Q?gK1Oapp/X/W+axe8gW6XOlQV13FABPoqsJSZCIQYcb96pdRhRXg2hkelaczI?=
+ =?us-ascii?Q?bHlep0Gq4bdB9ajWUP/fwPKEglVSjq2E4m/0UmPW/UTmXp5z64MlSGWPQR9P?=
+ =?us-ascii?Q?sGrbgJ6ep907eBA2Dc93O+SkZXmgHAuA2WCtl5vHhwRuKYCXzx34OhxXzMPS?=
+ =?us-ascii?Q?QELu6QddQV3rePci5D+bc+JQ5pRtfbrQVYGSdO6ODjhxxQf/RQydNZhv8H+b?=
+ =?us-ascii?Q?rlCh4+eboqSkmKSFfP5i9c++iYOqg6ySrGOLXFHXOR6Z1iqRW3PonQDNalaq?=
+ =?us-ascii?Q?IIofKY8vHWjh0d+srNdBEZV1MdzhSzZ1iTg7WGFUQuAnZOWrmEmTB5mktaN9?=
+ =?us-ascii?Q?ItRlgw+HW+Aro9hdMXdSmZdoG39anoMAicHM5/MtDEXaXYeK6xiTDCsxFefK?=
+ =?us-ascii?Q?SP8+c5CT/jN1CFgnsXKjdDs3jIlhMjl9VPyGFigRkVK3ya9M5+zT88mhqDJO?=
+ =?us-ascii?Q?M6DG2rGI/Lc4ZwkMl3Ax0iCE/tnAFvDvkB8t8gZK2OTeDdr4air1r9uK48Nb?=
+ =?us-ascii?Q?LqTvL+v0qcAagVKeHIsxXxDU3kTqtM8JwXQXhXmHqNDAu1yqUbL/dkbULBOv?=
+ =?us-ascii?Q?q+fwfcvSvPIhk1FyCS/gAgCbUPYN1opAGmGqXBi0Zj1YkLS5URH3cGWp1okr?=
+ =?us-ascii?Q?xcUDwm7g/5BCGyVMsTo9EZ+bH+RtaBd0ACmhM4SAGnPhLnEUR2+2DoibPT8i?=
+ =?us-ascii?Q?7LAvQtBdUbtQLjbviysn5unu5JLGKqzxON6zswnDCGNq1ba9tl4TIgAlsnJR?=
+ =?us-ascii?Q?IZtKY74BfYiOMBUq/B5cT1FA/+aofIJvPhYxwVsI+jDKiLp2rnlHJ9J5i7nB?=
+ =?us-ascii?Q?YmZTyKsXaQf+DFeQuc/SPuEzSmrtDVuld958AFhejmdFbLWio1FDHKcvCTfl?=
+ =?us-ascii?Q?UWy+DkI131dv789BgkwEnWROxbI48XdslhURoT2jGJirnpvpa8+3EgoJIUJU?=
+ =?us-ascii?Q?LcEMvmKvsbou7gi0wSxdIfEW1NVwV+tiYlx4g68N5fwxwjbRiks5EeIgGi5P?=
+ =?us-ascii?Q?VGLte5ipNkQNAG3S9PMZfyKn2HovTVPCJvnsPIoRavsRace+9KYwZ34uhWfz?=
+ =?us-ascii?Q?MZh0WEgPVwSCANbf+LH/BMcnSG/UZMnaifS/eVVfRcSZIzKlMQujtx8AJe9y?=
+ =?us-ascii?Q?idSNJKKeM+lJ4wX2C1XW9/lKAat51c/FVhGvBZZcA65JXA3hefqio+jkK5jY?=
+ =?us-ascii?Q?HgP0FjrgR5wKpUKGe/1T1xdUrn2HObqNGZOPzZaz?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -144,172 +166,333 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b734611c-2c19-44cb-0902-08dd46f14196
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2025 21:00:15.7615
+X-MS-Exchange-CrossTenant-AuthSource: TYZP153MB0796.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e3c2e7a-2625-4e8e-3964-08dd47809899
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2025 14:06:19.7816
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7422
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tAxgigQd5e8LPhBHNST4jDF5CdpMv0EN30lVt1nbAZhE5o3bBKM+oWEXMbsXKrcC6xGdd6rQZsoUxlKVEZvC9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUYP153MB1119
 
-From: Michael Kelley <mhklinux@outlook.com>
+Thanks Michael, for the analysis.=20
+
+I have tried the kdump steps on Oracle 9.4, 6.13.0 kernel as well. Although=
+ I couldn't see
+the soft lockup issue I see some other VMBus failures. But I agree the boot=
+up is extremely
+slow, which should be due to same reason.
+
+My system is having newer UEFI version, wondering if the latest UEFI versio=
+n
+(UEFI Release v4.1 08/23/2024) causing this difference in behaviour.
+
+Relevant part of the logs:
+---------------------------------------------------------
+echo 1 > /proc/sys/kernel/sysrq
+echo c > /proc/sysrq-trigger
+[  982.948352] sysrq: Trigger a crash
+[  982.949553] Kernel panic - not syncing: sysrq triggered crash
+[  982.951515] CPU: 31 UID: 0 PID: 6938 Comm: bash Kdump: loaded Not tainte=
+d 6.13.0 #1
+[  982.954115] Hardware name: Microsoft Corporation Virtual Machine/Virtual=
+ Machine, BIOS Hyper-V UEFI Release v4.1 08/23/2024
+[  982.957641] Call Trace:
+[  982.958508]  <TASK>
+[  982.959251]  panic+0x37e/0x3b0
+[  982.960373]  ? _printk+0x64/0x90
+[  982.961452]  sysrq_handle_crash+0x1a/0x20
+[  982.962840]  __handle_sysrq+0x9b/0x190
+[  982.964145]  write_sysrq_trigger+0x5f/0x80
+[  982.965578]  proc_reg_write+0x59/0xb0
+[  982.966905]  vfs_write+0x111/0x470
+[  982.968004]  ? __count_memcg_events+0xbf/0x150
+[  982.969432]  ? count_memcg_events.constprop.0+0x26/0x50
+[  982.971190]  ksys_write+0x6e/0xf0
+[  982.972307]  do_syscall_64+0x62/0x180
+[  982.973438]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  982.975102] RIP: 0033:0x7f3d570fdbd7
+[  982.976421] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f =
+00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48=
+> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+[  982.982893] RSP: 002b:00007fff6d613c48 EFLAGS: 00000246 ORIG_RAX: 000000=
+0000000001
+[  982.985424] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f3d570=
+fdbd7
+[  982.987613] RDX: 0000000000000002 RSI: 000056362a928470 RDI: 00000000000=
+00001
+[  982.989774] RBP: 000056362a928470 R08: 0000000000000000 R09: 00007f3d571=
+b0d40
+[  982.992109] R10: 00007f3d571b0c40 R11: 0000000000000246 R12: 00000000000=
+00002
+[  982.994321] R13: 00007f3d571fa780 R14: 0000000000000002 R15: 00007f3d571=
+f59e0
+[  982.996461]  </TASK>
+[  982.998317] Kernel Offset: 0x10c00000 from 0xffffffff81000000 (relocatio=
+n range: 0xffffffff80000000-0xffffffffbfffffff)
+[    0.000000] Linux version 6.13.0 (lisatest@lisa--505-e0-n0) (gcc (GCC) 1=
+1.5.0 20240719 (Red Hat 11.5.0-2.0.1), GNU ld version 2.35.2-54.0.1.el9) #1=
+ SMP PREEMPT_DYNAMIC Thu Feb  6 10:05:27 UTC 2025
+[    0.000000] Command line: elfcorehdr=3D0xd000000 BOOT_IMAGE=3D(hd0,gpt1)=
+/vmlinuz-6.13.0 ro console=3Dtty0 console=3DttyS0,115200n8 rd.lvm.vg=3Droot=
+vg irqpoll nr_cpus=3D1 reset_devices cgroup_disable=3Dmemory mce=3Doff numa=
+=3Doff udev.children-max=3D2 panic=3D10 acpi_no_memhotplug transparent_huge=
+page=3Dnever nokaslr hest_disable novmcoredd cma=3D0 hugetlb_cma=3D0 iommu=
+=3Doff disable_cpu_apicid=3D0
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] reser=
+ved
+[    0.000000] BIOS-e820: [mem 0x0000000000001000-0x000000000009ffff] usabl=
+e
+[    0.000000] BIOS-e820: [mem 0x00000000000c0000-0x00000000000fffff] reser=
+ved
+[    0.000000] BIOS-e820: [mem 0x000000000d0e00b0-0x000000002cffffff] usabl=
+e
+[    0.000000] BIOS-e820: [mem 0x000000003eead000-0x000000003eeb3fff] reser=
+ved
+[    0.000000] BIOS-e820: [mem 0x000000003ff41000-0x000000003ffc8fff] reser=
+ved
+[    0.000000] BIOS-e820: [mem 0x000000003ffc9000-0x000000003fffafff] ACPI =
+data
+[    0.000000] BIOS-e820: [mem 0x000000003fffb000-0x000000003fffefff] ACPI =
+NVS
+[    0.000000] random: crng init done
+
+<snip>
+
+[    0.928063] Console: switching to colour frame buffer device 128x48
+[   13.391297] fb0: EFI VGA frame buffer device
+
+<snip>
+
+[  590.199511] hv_netvsc 7c1e527c-2980-7c1e-527c-29807c1e527c (unnamed net_=
+device) (uninitialized): VF slot 1 added
+[  595.120270] Console: switching to colour dummy device 80x25
+[  605.203700] hyperv_fb: Time out on waiting vram location ack
+[  605.206161] iounmap: bad address 0000000005f4dac5
+[  605.207740] CPU: 0 UID: 0 PID: 30 Comm: kworker/u4:2 Not tainted 6.13.0 =
+#1
+[  605.209984] Hardware name: Microsoft Corporation Virtual Machine/Virtual=
+ Machine, BIOS Hyper-V UEFI Release v4.1 08/23/2024
+[  605.213869] Workqueue: async async_run_entry_fn
+[  605.215601] Call Trace:
+[  605.216382]  <TASK>
+[  605.217123]  dump_stack_lvl+0x66/0x90
+[  605.218184]  hvfb_putmem+0x32/0x110 [hyperv_fb]
+[  605.219646]  hvfb_probe+0x27f/0x360 [hyperv_fb]
+[  605.221120]  vmbus_probe+0x3d/0xa0 [hv_vmbus]
+[  605.222623]  really_probe+0xd9/0x390
+[  605.223779]  __driver_probe_device+0x78/0x160
+[  605.225213]  driver_probe_device+0x1e/0xa0
+[  605.226591]  __driver_attach_async_helper+0x5e/0xe0
+[  605.228166]  async_run_entry_fn+0x34/0x130
+[  605.229681]  process_one_work+0x187/0x3b0
+[  605.231075]  worker_thread+0x24e/0x360
+[  605.232376]  ? __pfx_worker_thread+0x10/0x10
+[  605.233758]  kthread+0xd3/0x100
+[  605.234805]  ? __pfx_kthread+0x10/0x10
+[  605.236053]  ret_from_fork+0x34/0x50
+[  605.237251]  ? __pfx_kthread+0x10/0x10
+[  605.238519]  ret_from_fork_asm+0x1a/0x30
+[  605.239833]  </TASK>
+[  605.240855] hv_vmbus: probe failed for device 5620e0c7-8062-4dce-aeb7-52=
+0c7ef76171 (-110)
+[  605.243404] hyperv_fb 5620e0c7-8062-4dce-aeb7-520c7ef76171: probe with d=
+river hyperv_fb failed with error -110
+[  605.254672] hv_vmbus: registering driver hv_pci
+
+
+
+
+- Saurabh
+
+> -----Original Message-----
+> From: Michael Kelley <mhklinux@outlook.com>
+> Sent: 07 February 2025 02:30
+> To: Michael Kelley <mhklinux@outlook.com>; Thomas Tai
+> <thomas.tai@oracle.com>; mhkelley58@gmail.com; Haiyang Zhang
+> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+> <decui@microsoft.com>; drawat.floss@gmail.com; javierm@redhat.com;
+> Helge Deller <deller@gmx.de>; daniel@ffwll.ch; airlied@gmail.com;
+> tzimmermann@suse.de
+> Cc: dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
+> Subject: [EXTERNAL] RE: hyper_bf soft lockup on Azure Gen2 VM when taking
+> kdump or executing kexec
 >=20
-> From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January 30, 2025=
- 12:44 PM
+> From: Michael Kelley <mhklinux@outlook.com>
 > >
-> > > -----Original Message-----
-> > > From: Michael Kelley <mhklinux@outlook.com> Sent: Thursday, January 3=
-0, 2025 3:20 PM
+> > From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January 30,
+> > 2025 12:44 PM
 > > >
-> > > From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January 30,
-> > > 2025 10:50 AM
+> > > > -----Original Message-----
+> > > > From: Michael Kelley <mhklinux@outlook.com> Sent: Thursday,
+> > > > January 30, 2025 3:20 PM
 > > > >
-> > > > Sorry for the typo in the subject title. It should have been 'hyper=
-v_fb soft lockup on
-> > > > Azure Gen2 VM when taking kdump or executing kexec'
-> > > >
-> > > > Thomas
-> > > >
+> > > > From: Thomas Tai <thomas.tai@oracle.com> Sent: Thursday, January
+> > > > 30,
+> > > > 2025 10:50 AM
 > > > > >
-> > > > > Hi Michael,
+> > > > > Sorry for the typo in the subject title. It should have been
+> > > > > 'hyperv_fb soft lockup on Azure Gen2 VM when taking kdump or
+> executing kexec'
 > > > > >
-> > > > > We see an issue with the mainline kernel on the Azure Gen 2 VM wh=
-en
-> > > > > trying to induce a kernel panic with sysrq commands. The VM would=
- hang
-> > > > > with soft lockup. A similar issue happens when executing kexec on=
- the VM.
-> > > > > This issue is seen only with Gen2 VMs(with UEFI boot). Gen1 VMs w=
-ith bios
-> > > > > boot are fine.
-> > > > >
-> > > > > git bisect identifies the issue is cased by the commit 20ee2ae8c5=
-899
-> > > > > ("fbdev/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem()"=
- ).
-> > > > > However, reverting the commit would cause the frame buffer not to=
- work
-> > > > > on the Gen2 VM.
-> > > > >
-> > > > > Do you have any hints on what caused this issue?
-> > > > >
-> > > > > To reproduce the issue with kdump:
-> > > > > - Install mainline kernel on an Azure Gen 2 VM and trigger a kdum=
-p
-> > > > > - echo 1 > /proc/sys/kernel/sysrq
-> > > > > - echo c > /proc/sysrq-trigger
-> > > > >
-> > > > > To reproduce the issue with executing kexec:
-> > > > > - Install mainline kernel on Azure Gen 2 VM and use kexec
-> > > > > - sudo kexec -l /boot/vmlinuz --initrd=3D/boot/initramfs.img --co=
-mmand-
-> > > > > line=3D"$( cat /proc/cmdline )"
-> > > > > - sudo kexec -e
-> > > > >
-> > > > > Thank you,
 > > > > > Thomas
+> > > > >
+> > > > > >
+> > > > > > Hi Michael,
+> > > > > >
+> > > > > > We see an issue with the mainline kernel on the Azure Gen 2 VM
+> > > > > > when trying to induce a kernel panic with sysrq commands. The
+> > > > > > VM would hang with soft lockup. A similar issue happens when
+> executing kexec on the VM.
+> > > > > > This issue is seen only with Gen2 VMs(with UEFI boot). Gen1
+> > > > > > VMs with bios boot are fine.
+> > > > > >
+> > > > > > git bisect identifies the issue is cased by the commit
+> > > > > > 20ee2ae8c5899
+> > > > > > ("fbdev/hyperv_fb: Fix logic error for Gen2 VMs in hvfb_getmem(=
+)" ).
+> > > > > > However, reverting the commit would cause the frame buffer not
+> > > > > > to work on the Gen2 VM.
+> > > > > >
+> > > > > > Do you have any hints on what caused this issue?
+> > > > > >
+> > > > > > To reproduce the issue with kdump:
+> > > > > > - Install mainline kernel on an Azure Gen 2 VM and trigger a
+> > > > > > kdump
+> > > > > > - echo 1 > /proc/sys/kernel/sysrq
+> > > > > > - echo c > /proc/sysrq-trigger
+> > > > > >
+> > > > > > To reproduce the issue with executing kexec:
+> > > > > > - Install mainline kernel on Azure Gen 2 VM and use kexec
+> > > > > > - sudo kexec -l /boot/vmlinuz --initrd=3D/boot/initramfs.img
+> > > > > > --command- line=3D"$( cat /proc/cmdline )"
+> > > > > > - sudo kexec -e
+> > > > > >
+> > > > > > Thank you,
+> > > > > > Thomas
+> > > >
+> > > > I will take a look, but it might be early next week before I can do=
+ so.
+> > > >
 > > >
-> > > I will take a look, but it might be early next week before I can do s=
-o.
+> > > Thank you, Michael for your help!
+> > >
+> > > > It looks like your soft lockup log below is from the kdump kernel
+> > > > (or the newly kexec'ed kernel). Can you confirm? Also, this looks l=
+ike a
+> subset of the full log.
+> > >
+> > > Yes, the soft lockup log below is from the kdump kernel.
+> > >
+> > > > Do you have the full serial console log that you could email to
+> > > > me?  Seeing everything might be helpful. Of course, I'll try to
+> > > > repro the problem myself as well.
+> > >
+> > > I have attached the complete bootup and kdump kernel log.
+> > >
+> > > File: bootup_and_kdump.log
+> > > Line 1 ... 984 (bootup log)
+> > > Line 990       (kdump kernel booting up)
+> > > Line 1351      (soft lockup)
+> > >
+> > > Thank you,
+> > > Thomas
 > > >
 > >
-> > Thank you, Michael for your help!
-> >
-> > > It looks like your soft lockup log below is from the kdump kernel (or=
- the newly
-> > > kexec'ed kernel). Can you confirm? Also, this looks like a subset of =
-the full log.
-> >
-> > Yes, the soft lockup log below is from the kdump kernel.
-> >
-> > > Do you have the full serial console log that you could email to me?  =
-Seeing
-> > > everything might be helpful. Of course, I'll try to repro the problem=
- myself
-> > > as well.
-> >
-> > I have attached the complete bootup and kdump kernel log.
-> >
-> > File: bootup_and_kdump.log
-> > Line 1 ... 984 (bootup log)
-> > Line 990       (kdump kernel booting up)
-> > Line 1351      (soft lockup)
-> >
-> > Thank you,
-> > Thomas
+> > I have reproduced the problem in an Azure VM running Oracle Linux
+> > 9.4 with the 6.13.0 kernel. Interestingly, the problem does not occur
+> > in a VM running on a locally installed Hyper-V with Ubuntu 20.04 and
+> > the 6.13.0 kernel. There are several differences in the two
+> > environments:  the version of Hyper-V, the VM configuration, the Linux
+> > distro, and the .config file used to build the 6.13.0 kernel. I'll try
+> > to figure out what make the difference, and then the root cause.
 > >
 >=20
-> I have reproduced the problem in an Azure VM running Oracle Linux
-> 9.4 with the 6.13.0 kernel. Interestingly, the problem does not occur
-> in a VM running on a locally installed Hyper-V with Ubuntu 20.04 and
-> the 6.13.0 kernel. There are several differences in the two
-> environments:  the version of Hyper-V, the VM configuration, the Linux
-> distro, and the .config file used to build the 6.13.0 kernel. I'll try to
-> figure out what make the difference, and then the root cause.
+> This has been a real bear to investigate. :-(  The key observation is tha=
+t with
+> older kernel versions, the efifb driver does *not* try to load when runni=
+ng in
+> the kdump kernel, and everything works.
+> In newer kernels, the efifb driver *does* try to load, and it appears to =
+hang.
+> (Actually, it is causing the VM to run very slowly. More on that in a min=
+ute.)
 >=20
+> I've bisected the kernel again, compensating for the fact that commit
+> 20ee2ae8c5899 is needed to make the Hyper-V frame buffer work. With that
+> compensation, the actual problematic commit is 2bebc3cd4870 (Revert
+> "firmware/sysfb: Clear screen_info state after consuming it").
+> Doing the revert causes screen_info.orig_video_isVGA to retain its value =
+of
+> 0x70 (VIDEO_TYPE_EFI), which the kdump kernel picks up, causing it to loa=
+d
+> the efifb driver.
+>=20
+> Then the question is why the efifb driver doesn't work in the kdump kerne=
+l.
+> Actually, it *does* work in many cases. I built the 6.13.0 kernel on the =
+Oracle
+> Linux 9.4 system, and transferred the kernel image binary and module
+> binaries to an Ubuntu 20.04 VM in Azure. In that VM, the efifb driver is
+> loaded as part of the kdump kernel, and it doesn't cause any problems. Bu=
+t
+> there's an interesting difference. In the Oracle Linux
+> 9.4 VM, the efifb driver finds the framebuffer at 0x40000000, while on th=
+e
+> Ubuntu 20.04 VM, it finds the framebuffer at 0x40900000. This difference =
+is
+> due to differences in how the screen_info variable gets setup in the two =
+VMs.
+>=20
+> When the normal kernel starts in a freshly booted VM, Hyper-V provides th=
+e
+> EFI framebuffer at 0x40000000, and it works. But after the Hyper-V FB dri=
+ver
+> or Hyper-V DRM driver has initialized, Linux has picked a different MMIO
+> address range and told Hyper-V to use the new address range (which often
+> starts at 0x40900000). A kexec does *not* reset Hyper-V's transition to t=
+he
+> new range, so when the efifb driver tries to use the framebuffer at
+> 0x40000000, the accesses trap to Hyper-V and probably fail or timeout (I'=
+m
+> not sure of the details). After the guest does some number of these bad
+> references, Hyper-V considers itself to be under attack from an ill-behav=
+ing
+> guest, and throttles the guest so that it doesn't run for a few seconds. =
+The
+> throttling repeats, and results in extremely slow running in the kdump ke=
+rnel.
+>=20
+> Somehow in the Ubuntu 20.04 VM, the location of the frame buffer as store=
+d
+> in screen_info.lfb_base gets updated to be 0x40900000. I haven't fully
+> debugged how that happens. But with that update, the efifb driver is usin=
+g
+> the updated framebuffer address and it works. On the Oracle Linux 9.4
+> system, that update doesn't appear to happen, and the problem occurs.
+>=20
+> This in an interim update on the problem. I'm still investigating how
+> screen_info.lfb_base is set in the kdump kernel, and why it is different =
+in the
+> Ubuntu 20.04 VM vs. in the Oracle Linux 9.4 VM. Once that is well
+> understood, we can contemplate how to fix the problem. Undoing the revert
+> that is commit 2bebc3cd4870 doesn't seem like the solution since the orig=
+inal
+> code there was reported to cause many other issues.
+> The solution focus will likely be on how to ensure the kdump kernel gets =
+the
+> correct framebuffer address so the efifb driver works, since the framebuf=
+fer
+> address changing is a quirk of Hyper-V behavior.
+>=20
+> If anyone else has insight into what's going on here, please chime in.
+> What I've learned so far is still somewhat tentative.
+>=20
+> Michael
 
-This has been a real bear to investigate. :-(  The key observation
-is that with older kernel versions, the efifb driver does *not* try
-to load when running in the kdump kernel, and everything works.
-In newer kernels, the efifb driver *does* try to load, and it appears
-to hang.  (Actually, it is causing the VM to run very slowly. More on
-that in a minute.)
-
-I've bisected the kernel again, compensating for the fact that commit
-20ee2ae8c5899 is needed to make the Hyper-V frame buffer work. With
-that compensation, the actual problematic commit is 2bebc3cd4870
-(Revert "firmware/sysfb: Clear screen_info state after consuming it").
-Doing the revert causes screen_info.orig_video_isVGA to retain its value
-of 0x70 (VIDEO_TYPE_EFI), which the kdump kernel picks up, causing it
-to load the efifb driver.
-
-Then the question is why the efifb driver doesn't work in the kdump
-kernel. Actually, it *does* work in many cases. I built the 6.13.0 kernel
-on the Oracle Linux 9.4 system, and transferred the kernel image binary
-and module binaries to an Ubuntu 20.04 VM in Azure. In that VM, the
-efifb driver is loaded as part of the kdump kernel, and it doesn't cause
-any problems. But there's an interesting difference. In the Oracle Linux
-9.4 VM, the efifb driver finds the framebuffer at 0x40000000, while on
-the Ubuntu 20.04 VM, it finds the framebuffer at 0x40900000. This
-difference is due to differences in how the screen_info variable gets
-setup in the two VMs.
-
-When the normal kernel starts in a freshly booted VM, Hyper-V provides
-the EFI framebuffer at 0x40000000, and it works. But after the Hyper-V
-FB driver or Hyper-V DRM driver has initialized, Linux has picked a
-different MMIO address range and told Hyper-V to use the new
-address range (which often starts at 0x40900000). A kexec does *not*
-reset Hyper-V's transition to the new range, so when the efifb driver
-tries to use the framebuffer at 0x40000000, the accesses trap to
-Hyper-V and probably fail or timeout (I'm not sure of the details). After
-the guest does some number of these bad references, Hyper-V considers
-itself to be under attack from an ill-behaving guest, and throttles the
-guest so that it doesn't run for a few seconds. The throttling repeats,
-and results in extremely slow running in the kdump kernel.
-
-Somehow in the Ubuntu 20.04 VM, the location of the frame buffer
-as stored in screen_info.lfb_base gets updated to be 0x40900000. I
-haven't fully debugged how that happens. But with that update, the
-efifb driver is using the updated framebuffer address and it works. On
-the Oracle Linux 9.4 system, that update doesn't appear to happen,
-and the problem occurs.
-
-This in an interim update on the problem. I'm still investigating how
-screen_info.lfb_base is set in the kdump kernel, and why it is different
-in the Ubuntu 20.04 VM vs. in the Oracle Linux 9.4 VM. Once that is
-well understood, we can contemplate how to fix the problem. Undoing
-the revert that is commit 2bebc3cd4870 doesn't seem like the solution
-since the original code there was reported to cause many other issues.
-The solution focus will likely be on how to ensure the kdump kernel gets
-the correct framebuffer address so the efifb driver works, since the
-framebuffer address changing is a quirk of Hyper-V behavior.
-
-If anyone else has insight into what's going on here, please chime in.
-What I've learned so far is still somewhat tentative.
-
-Michael
 
