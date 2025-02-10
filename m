@@ -1,109 +1,232 @@
-Return-Path: <linux-hyperv+bounces-3875-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3876-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 218C8A2F23A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Feb 2025 16:56:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20989A2F32D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Feb 2025 17:22:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E64F43A48DC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Feb 2025 15:56:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B081B163716
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Feb 2025 16:22:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96EE9241CA6;
-	Mon, 10 Feb 2025 15:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5D32580FE;
+	Mon, 10 Feb 2025 16:21:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebQ4jtTE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DAweY9oK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D882923645A
-	for <linux-hyperv@vger.kernel.org>; Mon, 10 Feb 2025 15:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06BB2580E2
+	for <linux-hyperv@vger.kernel.org>; Mon, 10 Feb 2025 16:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202969; cv=none; b=IF8n5utUyii7Gv83In/6E6XxyC8HyU5JF0Bhg+Ws8lPaWBIRYVx4jB6xcv65x0bBpIVfU2yGPy3LLftxKQ5AtUY0XbzYXhU9hP12BC+h72/q5QEk0mPWGKZOQW3fpnQKKXE7n2QuxzRUSVqt4Yn/TruUsezJ65ZghrcT9PIvWYY=
+	t=1739204513; cv=none; b=AyMsHyJAPQ+kochP80DLZSl22iCv4Nb59nVH4m/T1ApdlpWwlfRMVBSGYcmesOf7dkxlPrMCqlfoi+O3hOGqV4svp//rFmu6LH34jBs3xyxhVNKP3Fn/QqyJ+TNWcQK/lVCFTYjqPCHnfbBsx4J8MsK8LWE+SPsu8CJ3Q0WBJ+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202969; c=relaxed/simple;
-	bh=JDWViGqshwCrE6Nlfvl8H3oqivCzwTY/iSH5UyaRT0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lakc+3AVUyuNh8FB/nuvjbdF72wuyj+T1PcvEURa6eD7TBccv4shqLvDKMnaSabt2E+EOmY/jn5Uq31Ax/Q9l2qClnNysqD5Y7DVYtrCfpBLXDR6UCydQB5ezdIA4hRahrAAbo93LnXzktpxZusvM7s4K7ipGzRq0LOR/tvIR2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ebQ4jtTE; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1739204513; c=relaxed/simple;
+	bh=F1uW5ma3fdeyn5aBjyxZoVhGgZVM2t/lrZtQqYD9Oew=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=a3rmOvWSpzYcyFjSbhNoQ0AnPiE//ZVOhdZOYTIqvznWOGbks32WWkTeGV7Ovsmryih6Pv1f0ZJPKztakAds6QN0rJprXIkCnIn+e/RmVNSVsBtMFkg0aybv/A933UzFALAuMkZj6HlTvbyu7IYdvPYuZvGaXyYdEpJ2syHlMi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DAweY9oK; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de6c70832bso2997968a12.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 10 Feb 2025 07:56:07 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa34df4995so8863801a91.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 10 Feb 2025 08:21:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739202966; x=1739807766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZLczrhEnX8LtCEBU9Vv2CXoUE7ZoNRAQSyYxfOfEIiA=;
-        b=ebQ4jtTEedXGuxf0z7KNZY78+Xyi6g61dhdjzgq9welP3Vq5GrPu+HRz5YIL43tb4L
-         WxF77ysbVUKW92rjAKEcyVTf/7hzuxjq8KRWB5ZE2ZuDzqEiaCjl1Zic4PZoI824Wnep
-         ZT0m0d1csbiwxW7XNdatsMBvncrLiRDiQc3SrrcpPPd5/EGZ9ZpM5wngC3nCOiFp0sXb
-         QIpBFHXFxNNkIWvZWalf5BdSBJUjqC8685MU1/aGbVFpdEzirBRzE6uM1hT0sthFew0E
-         Sw3KlZ0syRlyjTD44qcxp9LKdaPm6HinLdB7/pv+zILN8XOtGPp7mwTxPwWb62IPfoCV
-         K2XQ==
+        d=google.com; s=20230601; t=1739204511; x=1739809311; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjevNOj/bkd1TGaPwATIjylcH4KclWeK6tRAdAb+PbI=;
+        b=DAweY9oKm0X6V5BdA4qUHKDuaxvppA/vSOTArPmYyUPbk9mZCxiT89ZWbDdoy2cMqx
+         BwsAownN44RLvXis0ZPtfsb0cmzJaLHbLtLOZ/wHER2fBuNk3ls5UiADioGdYE0D4S79
+         Xm8/ANiRbQ+B3/oIhY0mwR/AthzOG/SiXJXS8mjIIoSNsRlYqdg9Lg+G5v0jB4zR59cC
+         z47OX9WOAIf8q0hHMV2hspwIQtikf3TNlBwCOTBiGCbdAL/jbY+ag146lH9FracDeG1I
+         N+Tg1kTJT3okTK5V9bHosN/Ix7kD+KosDADpiUp40zW9KK5oxzcVzhCoTBiuauI2WrZ2
+         Bbkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739202966; x=1739807766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZLczrhEnX8LtCEBU9Vv2CXoUE7ZoNRAQSyYxfOfEIiA=;
-        b=Rq+7DoijZx3OSNDLu2pUwK+1cod17IHmszPz+ifSv3QidFGWZrMcpl+/d9XOTMdUzL
-         Ha5KXODYXKdZqCf4RXdBPe1ZbJERO7IbEqtHg3GaZ5B/BHMmaH1RGexaxaUrAHSVUo1I
-         ygeYKKdqjfpCXz6TaALIKLG6EvlM80grK0NuIvNyJZlr2Nl5zZnq7/fdrx+6VFo15sm7
-         7EN3BNAl19LaKf3S/lyQuUlmOeW75y2G7SycakscZQgNAaMUHTGUnM98T3gvc65AWFoq
-         z5U5/WT3euE3FUpCEQ6XwpObh5u4SD09hNGgRLalEuhCXOmOAxLnn4zMnyqNQ03L4jJn
-         oORw==
-X-Gm-Message-State: AOJu0YyQcebliD10GMgIVaDcM6DneT9tQEPy4HWRkML8VtkHXv9hnFwb
-	yhVqXNVSDTor2uWJKqw1s6If8Q4iYytBS+RFUkPX0pgGLPG+jTxHr+D3KOsGxDWDJPLf7Q5rkk1
-	B93PqXxWKOCJbYeKZF357IreHn0oMJHVypunj
-X-Gm-Gg: ASbGnctyU/0xMrh+QpoYc3qb3Ynls9ApP+u3o/Ns0WxI8QEf+ie6Yfrx3zdovB5gSJO
-	OPyOHwFt1XCe8qUQLQH183qzYONfFyYIF9WSOK0o3mDJngtuc5Vh88sqOmfrnqvRzVK6dNOrX
-X-Google-Smtp-Source: AGHT+IGFWmgDm7hq6A6RaKGSONbcvRkAhKV9Xeb1PjCXX4BOk5HcG3obgtj/7WN8cuWYEGak/5HR9K8/Btxge7jTVsc=
-X-Received: by 2002:a05:6402:26cd:b0:5de:50b4:b71f with SMTP id
- 4fb4d7f45d1cf-5de50b4b863mr12936313a12.12.1739202966081; Mon, 10 Feb 2025
- 07:56:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739204511; x=1739809311;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjevNOj/bkd1TGaPwATIjylcH4KclWeK6tRAdAb+PbI=;
+        b=KwYiN12xjgTHl5+u1+/Uq6JqFc07I0P8WHfBZibR5hDXd9K650O8fKY6GKPmkdoueF
+         k3Q+PljDwVY2DJR60RF4ymnsUww5pNfp+o5G6Y+PTc9ih1fmZlDos8sB6KP8M2GnHQc7
+         qbWMd7lEXGoJHnrzxl6mpeGE+Y+dG8ZI4I05JSqTAUKCGPql2YS20m9tsXHqZNhYudKQ
+         xtv9bmWOwtr53ZErGviwzSrsQ97Sv9OZzLzq9N5IAy+0uAjgbGvj4tZ8ijYuCWydvGYz
+         6xbdEmlyiJHPOJjuaKWe7W3MYu1z2NhftvBdwN/Lmpj5Kr0pZy+xVQCG44g9wzmJp5KQ
+         ZdHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWy0p5s+TdEqHdngkWPCsbRYunKWkQSPvWKQaj3/EB003HPacjcSJ5VG3xyMbFgxPYOK4sOzJIZJs6fOCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjABXbyTLdCVl/5ttCd7RVzkM0vffxOpsKa5GBohSn4nr9ioAt
+	w177RHKGY1LnX7TJ0kbxcJUnqLFWkUqtV/j3BYYr8Pi0s6jCEDqV1wmmDzwE9zKUj6/uIQhnyGp
+	drA==
+X-Google-Smtp-Source: AGHT+IHvA6NXtBXVEFbtZeSWagFJPoake9uFGdSEz34GpfES659xPG5GoxHcGoeeTGEESr/Dcqf76t3tOTs=
+X-Received: from pjbsp15.prod.google.com ([2002:a17:90b:52cf:b0:2ee:53fe:d0fc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4cd1:b0:2fa:b84:b304
+ with SMTP id 98e67ed59e1d1-2fa243db921mr18907344a91.22.1739204511253; Mon, 10
+ Feb 2025 08:21:51 -0800 (PST)
+Date: Mon, 10 Feb 2025 08:21:49 -0800
+In-Reply-To: <SN6PR02MB4157A85EC0B1B2D45CB611FAD4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1739162428-6679-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1739162428-6679-1-git-send-email-shradhagupta@linux.microsoft.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 10 Feb 2025 16:55:54 +0100
-X-Gm-Features: AWEUYZkdqEH-yIxQt2RFVMSzqvty10M-Vo581AAm7JrrOC4vyHrnC1UN4Is4d6A
-Message-ID: <CANn89iJ3cT6BWLmFpdkxn6EeeLTM7rF0pwWGArq1gG8pk8orsg@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next 1/2] net: mana: Allow tso_max_size to go up-to GSO_MAX_SIZE
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Long Li <longli@microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>, 
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, Erick Archer <erick.archer@outlook.com>, 
-	Shradha Gupta <shradhagupta@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-17-seanjc@google.com>
+ <Z6ZBjNdoULymGgxz@google.com> <SN6PR02MB4157A85EC0B1B2D45CB611FAD4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
+Message-ID: <Z6onnUthSBUVAklf@google.com>
+Subject: Re: [PATCH 16/16] x86/kvmclock: Use TSC for sched_clock if it's
+ constant and non-stop
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Nikunj A Dadhania <nikunj@amd.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Feb 10, 2025 at 5:40=E2=80=AFAM Shradha Gupta
-<shradhagupta@linux.microsoft.com> wrote:
->
-> Allow the max aggregated pkt size to go up-to GSO_MAX_SIZE for MANA NIC.
-> This patch only increases the max allowable gso/gro pkt size for MANA
-> devices and does not change the defaults.
-> Following are the perf benefits by increasing the pkt aggregate size from
-> legacy gso_max_size value(64K) to newer one(up-to 511K)
->
-> for i in {1..10}; do netperf -t TCP_RR  -H 10.0.0.5 -p50000 -- -r80000,80=
-000
-> -O MIN_LATENCY,P90_LATENCY,P99_LATENCY,THROUGHPUT|tail -1; done
+On Sat, Feb 08, 2025, Michael Kelley wrote:
+> From: Sean Christopherson <seanjc@google.com> Sent: Friday, February 7, 2025 9:23 AM
+> > 
+> > Dropping a few people/lists whose emails are bouncing.
+> > 
+> > On Fri, Jan 31, 2025, Sean Christopherson wrote:
+> > > @@ -369,6 +369,11 @@ void __init kvmclock_init(void)
+> > >  #ifdef CONFIG_X86_LOCAL_APIC
+> > >  	x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
+> > >  #endif
+> > > +	/*
+> > > +	 * Save/restore "sched" clock state even if kvmclock isn't being used
+> > > +	 * for sched_clock, as kvmclock is still used for wallclock and relies
+> > > +	 * on these hooks to re-enable kvmclock after suspend+resume.
+> > 
+> > This is wrong, wallclock is a different MSR entirely.
+> > 
+> > > +	 */
+> > >  	x86_platform.save_sched_clock_state = kvm_save_sched_clock_state;
+> > >  	x86_platform.restore_sched_clock_state = kvm_restore_sched_clock_state;
+> > 
+> > And usurping sched_clock save/restore is *really* wrong if kvmclock isn't being
+> > used as sched_clock, because when TSC is reset on suspend/hiberation, not doing
+> > tsc_{save,restore}_sched_clock_state() results in time going haywire.
+> > 
+> > Subtly, that issue goes all the way back to patch "x86/paravirt: Don't use a PV
+> > sched_clock in CoCo guests with trusted TSC" because pulling the rug out from
+> > under kvmclock leads to the same problem.
+> > 
+> > The whole PV sched_clock scheme is a disaster.
+> > 
+> > Hyper-V overrides the save/restore callbacks, but _also_ runs the old TSC callbacks,
+> > because Hyper-V doesn't ensure that it's actually using the Hyper-V clock for
+> > sched_clock.  And the code is all kinds of funky, because it tries to keep the
+> > x86 code isolated from the generic HV clock code, but (a) there's already x86 PV
+> > specific code in drivers/clocksource/hyperv_timer.c, and (b) splitting the code
+> > means that Hyper-V overides the sched_clock save/restore hooks even when
+> > PARAVIRT=n, i.e. when HV clock can't possibly be used as sched_clock.
+> 
+> Regarding (a), the one occurrence of x86 PV-specific code hyperv_timer.c is
+> the call to paravirt_set_sched_clock(), and it's under an #ifdef sequence so that
+> it's not built if targeting some other architecture. Or do you see something else
+> that is x86-specific?
+> 
+> Regarding (b), in drivers/hv/Kconfig, CONFIG_HYPERV always selects PARAVIRT.
+> So the #else clause (where PARAVIRT=n) in that #ifdef sequence could arguably
+> have a BUILD_BUG() added. If I recall correctly, other Hyper-V stuff breaks if
+> PARAVIRT is forced to "n". So I don't think there's a current problem with the
+> sched_clock save/restore hooks. i
 
-Was this tested with IPv6 ?
+Oh, there are no build issues, and all of the x86 bits are nicely cordoned off.
+My complaint is essentially that they're _too_ isolated; putting the sched_clock
+save/restore setup in arch/x86/kernel/cpu/mshyperv.c is well-intentioned, but IMO
+it does more harm than good because the split makes it difficult to connect the
+dots to hv_setup_sched_clock() in drivers/clocksource/hyperv_timer.c.
+
+> But I would be good with some restructuring so that setting the sched clock
+> save/restore hooks is more closely tied to the sched clock choice,
+
+Yeah, this is the intent of my ranting.  After the dust settles, the code can
+look like this.
+
+---
+#ifdef CONFIG_GENERIC_SCHED_CLOCK
+static __always_inline void hv_setup_sched_clock(void *sched_clock)
+{
+	/*
+	 * We're on an architecture with generic sched clock (not x86/x64).
+	 * The Hyper-V sched clock read function returns nanoseconds, not
+	 * the normal 100ns units of the Hyper-V synthetic clock.
+	 */
+	sched_clock_register(sched_clock, 64, NSEC_PER_SEC);
+}
+#elif defined CONFIG_PARAVIRT
+static u64 hv_ref_counter_at_suspend;
+/*
+ * Hyper-V clock counter resets during hibernation. Save and restore clock
+ * offset during suspend/resume, while also considering the time passed
+ * before suspend. This is to make sure that sched_clock using hv tsc page
+ * based clocksource, proceeds from where it left off during suspend and
+ * it shows correct time for the timestamps of kernel messages after resume.
+ */
+static void hv_save_sched_clock_state(void)
+{
+	hv_ref_counter_at_suspend = hv_read_reference_counter();
+}
+
+static void hv_restore_sched_clock_state(void)
+{
+	/*
+	 * Adjust the offsets used by hv tsc clocksource to
+	 * account for the time spent before hibernation.
+	 * adjusted value = reference counter (time) at suspend
+	 *                - reference counter (time) now.
+	 */
+	hv_sched_clock_offset -= (hv_ref_counter_at_suspend - hv_read_reference_counter());
+}
+
+static __always_inline void hv_setup_sched_clock(void *sched_clock)
+{
+	/* We're on x86/x64 *and* using PV ops */
+	paravirt_set_sched_clock(sched_clock, hv_save_sched_clock_state,
+				 hv_restore_sched_clock_state);
+}
+#else /* !CONFIG_GENERIC_SCHED_CLOCK && !CONFIG_PARAVIRT */
+static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+#endif /* CONFIG_GENERIC_SCHED_CLOCK */
+---
+
+> as long as the architecture independence of hyperv_timer.c is preserved.
+
+LOL, ah yes, the architecture independence of MSRs and TSC :-D
+
+Teasing aside, the code is firmly x86-only at the moment.  It's selectable only
+by x86:
+
+  config HYPERV_TIMER
+	def_bool HYPERV && X86
+ 
+and since at least commit e39acc37db34 ("clocksource: hyper-v: Provide noinstr
+sched_clock()") there are references to symbols/functions that are provided only
+by x86.
+
+I assume arm64 support is a WIP, but keeping the upstream code arch independent
+isn't very realistic if the code can't be at least compile-tested.  To help
+drive-by contributors like myself, maybe select HYPER_TIMER on arm64 for
+COMPILE_TEST=y builds?
+
+  config HYPERV_TIMER
+	def_bool HYPERV && (X86 || (COMPILE_TEST && ARM64))
+
+I have no plans to touch code outside of CONFIG_PARAVIRT, i.e. outside of code
+that is explicitly x86-only, but something along those lines would help people
+like me understand the goal/intent, and in theory would also help y'all maintain
+the code by detecting breakage.
 
