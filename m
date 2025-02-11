@@ -1,140 +1,121 @@
-Return-Path: <linux-hyperv+bounces-3892-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3893-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A48E8A30E14
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 15:21:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1053A30E93
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 15:40:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22D381661AB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 14:21:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1197A16846B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 14:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB9B5220693;
-	Tue, 11 Feb 2025 14:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74AF12512E9;
+	Tue, 11 Feb 2025 14:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RgFva9OM"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DRFd+IWF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596B026BD81;
-	Tue, 11 Feb 2025 14:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DA72512F4;
+	Tue, 11 Feb 2025 14:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283702; cv=none; b=RGxsxWQupwSggJmHAIXBKMD0H0F9ECvYlJI+5aZRiGByMdBTU1yiZCtW7EpLewYotQw7za7BUvFIunXABtwef/ecfcIVcmYjGcw5NQWnyYKL+mqEIYaQt9LLp2FX4NdxyvCHZoAraE4ZQz7tbTGm8bD9XUTqHmerXiRiFI57WyQ=
+	t=1739284795; cv=none; b=Vud+Esz1mz40VuJ1BzBxlltUKZgJIgjmRE/RpBdEFxD51AJ+xAp6tyDWOAjRS5Y5YeLBoqyPo9O9Ek59hgHu90gNXZzMRsiRgfiu8CBQhClI3UezEkgSPBqyuu6lY48JLQXx7f7IAeksClR4/ndUqB04cCeukqJzZ1mJMY45D2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283702; c=relaxed/simple;
-	bh=4YshOykQygPBx9uY/mWjqVXM/FYn4AgBD8BiH/Jtu0w=;
+	s=arc-20240116; t=1739284795; c=relaxed/simple;
+	bh=irGBFZvISEuw2wpC8vSJ1dQOP9CCFXZdcoJvKrGVMzU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3yYbNoN4IUylAlh4ikiOhc9tATfDq3nFGTVNo0l2OpyCRsF863l2/1gEyWsiuxl7Y7mPeLgQ4ISVnKc8UnCzWWaK7VsH6u3foPmbDEk1k2XNtbaEMpw3cslEWnnXoC8E5P01FuSwgVFKSYeG0NoUTxGe+ijeEJrxokFT9OjUqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RgFva9OM; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id E39672107A9E; Tue, 11 Feb 2025 06:21:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E39672107A9E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739283700;
-	bh=TLqJ9wdS7eZDzRW6bb8bC8nDRew1xQ5RwuLtrAYt6xk=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZkfDQht3HJtNuZ+kw9wsSjdxs+3USnZ1Qe0t1w5G82eVLXC7dmtS5QschZz4LUeTEtAVFzF0m1cYyFChAvx/oGs0r9JYEVLCz3kOEAJcet6zTpjWINkrzM3HfKOSZ6minOz7kR263lx2ItBpyK0IDh6oOf0Txm6ESIxnnnxKpIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DRFd+IWF; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F29FE40E0224;
+	Tue, 11 Feb 2025 14:39:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BL9hIm6yGZuQ; Tue, 11 Feb 2025 14:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739284787; bh=MoLQPIRFF2ToK9+6OuM2hGZjp5T1q9wl8C6INqwMDng=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RgFva9OM28hG7VhnJXq+jdS8w90nMSb/4Zx3EVuGFApeAmI+7yy0o2VXoP+CWWNhf
-	 GX5NZAgp+qpL0u3JdDaw+ErqAmARiglOUFcmg2e3NYkD1W78ZLlnYA0s32hHruFcYf
-	 805obfGrQ5GNd/GTUf+kYQR125oAeqwRvsvm9XhQ=
-Date: Tue, 11 Feb 2025 06:21:40 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	"christophe.jaillet@wanadoo.fr" <christophe.jaillet@wanadoo.fr>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH 1/1] drm/hyperv: Fix address space leak when Hyper-V DRM
- device is removed
-Message-ID: <20250211142140.GA2330@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250210193441.2414-1-mhklinux@outlook.com>
- <20250211033326.GA17799@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB41575726CE86AAB16FF6C365D4FD2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	b=DRFd+IWFE5uOVAGwcy61fj/qecexF/x6y0dBm5TTJhmz0rCYYi9HD4fjWg4bUc5AD
+	 RaursO1ZfrbphRYdloM13lR8JpbQ3oLvf3B9U0RWR6A7wsKDCpf7zObqSW/LefYsGD
+	 mofk9b4zTUI1p0Dm8LVCYKiTQO6opHxlXtvmcLXHpvXK+h0ibfbN6i4en/hBXmxfxg
+	 0pzWUdIiUKDo47yq0cMJHEdHx1r+gFjG26rGUDB47uaL3Aiklj6Ff3VDYqBcdJgWu4
+	 PZmwpbxQz5QqI/modawN5aPQqoU1R4cFpgJAwfBnM1v0+sRhMXgxgEBjr0dgfRmv7i
+	 +ymUCw5jsWZxqLHy7QBa8r5ltbfDdI5maVH27rTjsqRRIYcNdj+2QVZj/IGdfsHJoC
+	 79PtuaPe/amSI3Ng/Uj4RwfdQYq7RTPgLmjMeKZkR2w7cpzzIRoPAbfpHf8/xRVT8Q
+	 QYOSfzJT/cWwewyoir2VSOwmvsZhaa90jzypbbtCv0cRBF94hCumUj0rvkZHfvzsKO
+	 rYQ8duFT6aDEMGpTrDjPWe59lV5O8/wkTUA4cpOGNvcG6EN1K9abvMPmZdwfTTZl7V
+	 eVmi1Cv8ke8wfVlvgW0h91AsbdJpGGK9HtRa58ADZA/WVQePFf3cO8QVyxz698kH5s
+	 yYToDTss4L2jNyGdDV/Lu3i0=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA33A40E01AE;
+	Tue, 11 Feb 2025 14:39:20 +0000 (UTC)
+Date: Tue, 11 Feb 2025 15:39:19 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev,
+	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com,
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 00/16] x86/tsc: Try to wrangle PV clocks vs. TSC
+Message-ID: <20250211143919.GBZ6thF2Ryx-D2YpDz@fat_crate.local>
+References: <20250201021718.699411-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41575726CE86AAB16FF6C365D4FD2@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250201021718.699411-1-seanjc@google.com>
 
-On Tue, Feb 11, 2025 at 03:46:51AM +0000, Michael Kelley wrote:
-> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, February 10, 2025 7:33 PM
-> > 
-> > On Mon, Feb 10, 2025 at 11:34:41AM -0800, mhkelley58@gmail.com wrote:
-> > > From: Michael Kelley <mhklinux@outlook.com>
-> > >
-> > > When a Hyper-V DRM device is probed, the driver allocates MMIO space for
-> > > the vram, and maps it cacheable. If the device removed, or in the error
-> > > path for device probing, the MMIO space is released but no unmap is done.
-> > > Consequently the kernel address space for the mapping is leaked.
-> > >
-> > > Fix this by adding iounmap() calls in the device removal path, and in the
-> > > error path during device probing.
-> > >
-> > > Fixes: f1f63cbb705d ("drm/hyperv: Fix an error handling path in hyperv_vmbus_probe()")
-> > > Fixes: a0ab5abced55 ("drm/hyperv : Removing the restruction of VRAM allocation with PCI bar size")
-> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > > ---
-> > >  drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> > b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> > > index e0953777a206..b491827941f1 100644
-> > > --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> > > +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> > > @@ -156,6 +156,7 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
-> > >  	return 0;
-> > >
-> > >  err_free_mmio:
-> > > +	iounmap(hv->vram);
-> > >  	vmbus_free_mmio(hv->mem->start, hv->fb_size);
-> > >  err_vmbus_close:
-> > >  	vmbus_close(hdev->channel);
-> > > @@ -174,6 +175,7 @@ static void hyperv_vmbus_remove(struct hv_device *hdev)
-> > >  	vmbus_close(hdev->channel);
-> > >  	hv_set_drvdata(hdev, NULL);
-> > >
-> > > +	iounmap(hv->vram);
-> > >  	vmbus_free_mmio(hv->mem->start, hv->fb_size);
-> > >  }
-> > >
-> > > --
-> > > 2.25.1
-> > >
-> > 
-> > Thanks for the fix. May I know how do you find such issues ?
-> 
-> I think it was that I was looking at the Hyper-V FB driver for the
-> vmbus_free_mmio() call sites, and realizing that such call sites
-> should probably also have an associated iounmap(). Then I was
-> looking at the same thing in the Hyper-V DRM driver, and
-> realizing there were no calls to iounmap()!
-> 
-> To confirm, the contents of /proc/vmallocinfo can be filtered
-> for ioremap calls with size 8 MiB (which actually show up as
-> 8 MiB + 4KiB because the address space allocator adds a guard
-> page to each allocation). When doing repeated unbind/bind
-> sequences on the DRM driver, those 8 MiB entries in
-> /proc/vmallocinfo kept accumulating and were never freed.
-> 
-> Michael
+On Fri, Jan 31, 2025 at 06:17:02PM -0800, Sean Christopherson wrote:
+> And if the host provides the core crystal frequency in CPUID.0x15, then KVM
+> guests can use that for the APIC timer period instead of manually
+> calibrating the frequency.
 
-Thank you!
+Hmm, so that part: what's stopping the host from faking the CPUID leaf? I.e.,
+I would think that actually doing the work to calibrate the frequency would be
+more reliable/harder to fake to a guest than the guest simply reading some
+untrusted values from CPUID...
 
-Regards,
-Saurabh
+Or are we saying here: oh well, there are so many ways for a normal guest to
+be lied to so that we simply do the completely different approach and trust
+the HV to be benevolent when we're not dealing with confidential guests which
+have all those other things to keep the HV honest?
+
+Just checking the general thinking here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
