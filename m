@@ -1,136 +1,144 @@
-Return-Path: <linux-hyperv+bounces-3899-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3900-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70B62A3117A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 17:32:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14BE2A312DB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 18:26:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB5991883304
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 16:32:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7986168450
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 17:26:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83153253F03;
-	Tue, 11 Feb 2025 16:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA7BD262D09;
+	Tue, 11 Feb 2025 17:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UwyAKUUt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4h6VTmq5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6994487A5;
-	Tue, 11 Feb 2025 16:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C97A1F940A
+	for <linux-hyperv@vger.kernel.org>; Tue, 11 Feb 2025 17:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291513; cv=none; b=eJOMueWdfte0A6/vrw4cEf0WA/t2KFTL4mHfUrRahkAf+mwwfr+18d8BluuYakVYM85QpBN4/emTbznmlQc9voi/1ZnFhGUpQ3NQqeqaF0RmmKG6V60peZk9txQEvEGQoIrEOctZHWNsGkHYoQtP8OuznjWMurktPO8lICTxZv4=
+	t=1739294751; cv=none; b=ZnnS1qcdJT4yFyMMFtKppAh4oE4WNeQRaYyiKGjjCNy0+ierAvvGOGKXcYM2912B8Xk5sotrwWrgq9geyk7u9wgALdW1ETEr1nNVQyR7Icd8lPaB4SXWlN+uat5PncM4+xGZ1i1Nkz0kOj1LJ4PVMBuIZFDQXfa97zIHb2fOcac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291513; c=relaxed/simple;
-	bh=pehVcrgW3SFfnn6VXusU1IW7wP1uKwpQyMQ/ubP88ks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6VgVrlXpCHHEwCPUdk31Xo4gjS31l7sr9UweVIpQL7Bv6+wG6klH6uM+W6qJLiItaSYHhYyQ4QfbLsUmNvgSGh80Kf3MseOsF+z9P4ugEJ4xxVUImLI3Nl9MLz9H7W6Ldzo8ZcEvy3p8AVl/CMjBfd4MJO1k3H5M9pRguXX5Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=UwyAKUUt; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Kze9YHynH4qYxAJtq69RRqc96/Z65kKEF5K1+McSQLc=; b=UwyAKUUtTUXKhqfY1X8elku9Vv
-	02RwzlqYcuQXHrn7NDqU+oj+cAqkGNZFrO6Id6se5h8JKKXKOwR1rqmP7H3XccoJeOS6Y+BmsNAFQ
-	Wc9MiB8gDDB6htFT1+AiaK50aUHCYIJjMx4UhP1K1HH5hGz2xWROimjb2nPcW8diiuWM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thtAQ-00D7IH-B4; Tue, 11 Feb 2025 17:31:22 +0100
-Date: Tue, 11 Feb 2025 17:31:22 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	michal.swiatkowski@linux.intel.com, mlevitsk@redhat.com,
-	yury.norov@gmail.com, shradhagupta@linux.microsoft.com,
-	kotaranov@microsoft.com, peterz@infradead.org,
-	brett.creeley@amd.com, mhklinux@outlook.com,
-	schakrabarti@linux.microsoft.com, kent.overstreet@linux.dev,
-	longli@microsoft.com, leon@kernel.org, erick.archer@outlook.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: mana: Add debug logs in MANA network driver
-Message-ID: <ab47dc52-3bb3-4b69-b202-b59fe4cb0727@lunn.ch>
-References: <1739267515-31187-1-git-send-email-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1739294751; c=relaxed/simple;
+	bh=yIyg4O5yYiMN7oIJCMQaW69afuHiK1Kltro4y0FMxoU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WtLZf4W5KkjZZzLdRh3MoS8sasbF1TQ9SclesBYk7EKvOrl6+SoFNIkqL8KrPEcbyQYRQPLZs5F+P29nnCljDXP2ma6Pq4a99fDM0kReYhSG8Kt1yGYSTk63x/jJKxdKuol+9zRJmgHEDb4v7yqsJAiDvOlzysZGgVHnwR4A13I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4h6VTmq5; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fa34df4995so12344900a91.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 11 Feb 2025 09:25:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739294748; x=1739899548; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fehn8/FKPdzBZiJ7SaATTiqPDXAlgIYGKuuyWYqseyE=;
+        b=4h6VTmq5YsASoFycDSK8sm3fFCJfqspqCGsBcpvc+KhpNyBFRQJgj+JC4canHcJ2nU
+         o1B6uRMedbeP+teFkRkYRlHIRahMiPhUc1qVXJMfRh0l/Tioav37v9pSpbDKjwlfCwS9
+         myi0XYJrguCke3qGCoJJOPocswp1Zpf+d/hH+EASs6Sr/mb8RJj6zYwo7lCW3s2D6MQp
+         3wRnAQAufckzdkCQbzjvElKcZqP2Cpe3MzAhkew46ktDi+TTAaUFrPILpPh1SgE7/dVX
+         JjN1ns1RXL9HHwvkCl7Bx8UlGnTCTpbAG8mnusbD27ZvUqucCSmOFvey98Q6iNkk2Ivx
+         bwqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739294748; x=1739899548;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fehn8/FKPdzBZiJ7SaATTiqPDXAlgIYGKuuyWYqseyE=;
+        b=o62VbqA6ioy/aF+wCyefbj5XTuggmllFOATZuAYBkbEQzY3vtilXCUjmhms/PxTgsd
+         UddAI+AiHMHuI9zEkiFvQY8EGoVVpmRnlSR5PAWfVXnKq4N4/lEWL+gIM1/G6tMqnWrX
+         /2jfvwwX8I2XvhEtqXO1Y7Sy7ks3Wq3KZk7HYLrc+NDx1CmRcrsZDYrfY5LGcEh4+xIT
+         xdgW9Xv+EDuh1Cg/2FA10lhVix+/Mwo+zTZm0ldkv8otC4cesjSC3sZNxo0qzB8ngJM9
+         JMl8zkg+4+alCyUwppoohrQxE9sYg/FO25CId7ev3OU15SfMG7L4dQTO89KGSzCRIuWo
+         j1CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXB0Ki2AVokWs4aTc61aJN9ntR7qL0C6oE+/2SybiyAkTpUemixKEiDZz53GAV/yzat5u/QeeuLp9OffTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1S+NnHG1zDAn3BDziO7MBtPGj9s8pe3fg2ZCOmsd+IOMhC4xo
+	F88WyIIoUTt8vAjGPyRwLzO2VMNkvzNBWfx8AkrQuHCTkMJk/BspYwnZwsSUPP1yVgXki6MUeqJ
+	8uA==
+X-Google-Smtp-Source: AGHT+IFueIXltnSm3F29jVZndsq5T+j40lmj4UcIsQhmLdRSEShGqUPy9fjOgqE9JAinoOmES588AgdHP5k=
+X-Received: from pjyf5.prod.google.com ([2002:a17:90a:ec85:b0:2fa:1481:81f5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:184d:b0:2ea:4c8d:c7a2
+ with SMTP id 98e67ed59e1d1-2fa243db893mr28913562a91.24.1739294748442; Tue, 11
+ Feb 2025 09:25:48 -0800 (PST)
+Date: Tue, 11 Feb 2025 09:25:47 -0800
+In-Reply-To: <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1739267515-31187-1-git-send-email-ernis@linux.microsoft.com>
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-2-seanjc@google.com>
+ <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
+Message-ID: <Z6uIGwxx9HzZQ-N7@google.com>
+Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
+ info from CPUID.0x15
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Feb 11, 2025 at 01:51:55AM -0800, Erni Sri Satya Vennela wrote:
-> Add debug statements to assist in debugging and monitoring
-> driver behaviour, making it easier to identify potential
-> issues  during development and testing.
+On Tue, Feb 11, 2025, Borislav Petkov wrote:
+> On Fri, Jan 31, 2025 at 06:17:03PM -0800, Sean Christopherson wrote:
+> > Extract retrieval of TSC frequency information from CPUID into standalone
+> > helpers so that TDX guest support and kvmlock can reuse the logic.  Provide
+> > a version that includes the multiplier math as TDX in particular does NOT
+> > want to use native_calibrate_tsc()'s fallback logic that derives the TSC
+> > frequency based on CPUID.0x16 when the core crystal frequency isn't known.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/include/asm/tsc.h | 41 ++++++++++++++++++++++++++++++++++++++
+> >  arch/x86/kernel/tsc.c      | 14 ++-----------
+> >  2 files changed, 43 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
+> > index 94408a784c8e..14a81a66b37c 100644
+> > --- a/arch/x86/include/asm/tsc.h
+> > +++ b/arch/x86/include/asm/tsc.h
 > 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 52 +++++++++++++----
->  .../net/ethernet/microsoft/mana/hw_channel.c  |  6 +-
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 58 +++++++++++++++----
->  3 files changed, 94 insertions(+), 22 deletions(-)
+> Bah, why in the header as inlines?
+
+Because obviously optimizing code that's called once during boot is super
+critical?
+
+> Just leave them in tsc.c and call them...
 > 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index be95336ce089..f9839938f0ab 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -666,8 +666,11 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
->  
->  	gmi = &queue->mem_info;
->  	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
-> -	if (err)
-> +	if (err) {
-> +		dev_err(gc->dev, "GDMA queue type: %d, size: %u, gdma memory allocation err: %d\n",
-> +			spec->type, spec->queue_size, err);
+> > @@ -28,6 +28,47 @@ static inline cycles_t get_cycles(void)
+> >  }
+> >  #define get_cycles get_cycles
+> >  
+> > +static inline int cpuid_get_tsc_info(unsigned int *crystal_khz,
+> > +				     unsigned int *denominator,
+> > +				     unsigned int *numerator)
+> 
+> Can we pls do a
+> 
+> struct cpuid_tsc_info {
+> 	unsigned int denominator;
+> 	unsigned int numerator;
+> 	unsigned int crystal_khz;
+> 	unsigned int tsc_khz;
+> }
+> 
+> and hand that around instead of those I/O pointers?
 
-I would expect a debug statement to use dev_dbg(). Please update your
-commit message.
-
->  		goto free_q;
-> +	}
->  
->  	queue->head = 0;
->  	queue->tail = 0;
-> @@ -688,6 +691,8 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
->  	*queue_ptr = queue;
->  	return 0;
->  out:
-> +	dev_err(gc->dev, "Failed to create queue type %d of size %u, err: %d\n",
-> +		spec->type, spec->queue_size, err);
->  	mana_gd_free_memory(gmi);
->  free_q:
->  	kfree(queue);
-> @@ -763,14 +768,18 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
->  
->  	if (resp.hdr.status ||
->  	    resp.dma_region_handle == GDMA_INVALID_DMA_REGION) {
-> -		dev_err(gc->dev, "Failed to create DMA region: 0x%x\n",
-> -			resp.hdr.status);
->  		err = -EPROTO;
->  		goto out;
->  	}
->  
->  	gmi->dma_region_handle = resp.dma_region_handle;
-> +	dev_dbg(gc->dev, "Created DMA region handle 0x%llx\n",
-> +		gmi->dma_region_handle);
-
-Given all the dev_err() you have added, do this add any value? Is
-there a way out of this function which is not a success and does not
-print an error?
-
-    Andrew
-
----
-pw-bot: cr
+Ah, yeah, that's way better.
 
