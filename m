@@ -1,465 +1,222 @@
-Return-Path: <linux-hyperv+bounces-3891-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3894-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79E4FA307AC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 10:52:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FB12A30EE5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 15:58:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 348923A4366
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 09:52:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40B051613AE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Feb 2025 14:58:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C796D1F1530;
-	Tue, 11 Feb 2025 09:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F267424F5A4;
+	Tue, 11 Feb 2025 14:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cDL272P7"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RBwcfGYw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9SgXniEK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RBwcfGYw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9SgXniEK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF01D1D90CD;
-	Tue, 11 Feb 2025 09:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24519250C0B;
+	Tue, 11 Feb 2025 14:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739267557; cv=none; b=rBGI2yClaB1NUqVotaDVrLj/4dDBmcNBjNbVg27vVpHP5/fkvNoQxH8sTRLbif1Gsf9Qc5zPJGXaereES5xn0+B+FRsPOsEDciHhm++iV60FzNcmhWovYhGKN6vpXrpbcKqeDZBu6I8hEO1sLDDbA9Qso4Rt04APKzy71BNQ8xY=
+	t=1739285895; cv=none; b=rHjGnUinKI8m2hnGAxkrWH9j527Y6uGcZPfeEU5iaKeyYConzyfMT3qH5P7EsJHChSYF56igEg4j/q2pKmM4H+94/Ry6U/lpSpvhMJVDqGVyhBqL9UBAtg73aW5/R2pi3W1FiUspeeISPW7463l0K/tohuX1huVoAEpzsyJ2f4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739267557; c=relaxed/simple;
-	bh=VZjiZNtpP5IMd8/wK+VHsSE4QSg4aS456UZIcf1oOhQ=;
-	h=From:To:Subject:Date:Message-Id; b=SE1UXs3WhKkmBH2COHNU3gwsfLOVKZQngfKmuq5EMM31uWqUbZYbjhMoGaTsnfhIPjQqhK4UiflFINIPNjOoNlotIzMD5XULR/VrW2KJ2UxNAv0NthSu0ahFcUTW/ngWzW+KY2N8UmmyTNTAKCUu5sud79HO5hzDNzovOXrvsqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cDL272P7; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 4D0F52107A9D; Tue, 11 Feb 2025 01:52:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D0F52107A9D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739267555;
-	bh=eX6hHik7B3tlfUunBekW+SxFWAYILIuefRVg2mz9lu0=;
-	h=From:To:Subject:Date:From;
-	b=cDL272P7islw7LaH/Ar9E0KIz1WdgKYDHWfJW+2v5+vfhOxeE+LKewV/4s+scy6mj
-	 lnMA7rhhbITtDQJafrgUMEb18jz6OQ3gTvOjjnaMuCDCRiDhiTYBdNc8jla4Qni8nO
-	 0s+O3Czr7wFxhtI1RscDjuQOE1RL/xuQTcJC9BHM=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	michal.swiatkowski@linux.intel.com,
-	mlevitsk@redhat.com,
-	yury.norov@gmail.com,
-	shradhagupta@linux.microsoft.com,
-	kotaranov@microsoft.com,
-	peterz@infradead.org,
-	ernis@linux.microsoft.com,
-	brett.creeley@amd.com,
-	mhklinux@outlook.com,
-	schakrabarti@linux.microsoft.com,
-	kent.overstreet@linux.dev,
-	longli@microsoft.com,
-	leon@kernel.org,
-	erick.archer@outlook.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: mana: Add debug logs in MANA network driver
-Date: Tue, 11 Feb 2025 01:51:55 -0800
-Message-Id: <1739267515-31187-1-git-send-email-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1739285895; c=relaxed/simple;
+	bh=A+ZxdNHgPEBoJkbpOb1yl7fY7KsM0eon7pme0YqeyFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B32cWs7aNWvILwvsyTIW1LkLin6hm550Gg0NjkEfllnYIiAcumNqP72YcXK20+EXha6KWB+boYzKUtCZZ7eSHdLD/Q5O+ZkoO7223v1DRxAg4OeM0TI/QS+K/aXmtSqig8XB5XtcVO8iqNe/HnewGKu/udgEeBCcVQO2QjP4GXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RBwcfGYw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9SgXniEK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RBwcfGYw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9SgXniEK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 881EB5BD0B;
+	Tue, 11 Feb 2025 07:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739259278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XapZj8fn6hrk1id5K05g62Ja0OL4RYHu3GDtWlZPihY=;
+	b=RBwcfGYw0yV15g9Y38dTYAOL0jreQqZFZcO75ovIfm3fpcjx9uMw68jBiSVACuUwxNOtx3
+	hFlH0S9JZbRMJr/gWlNMpKOdlEmkbdqdVoXkC3sljfk5WMIYP+/+TXCojWgfiiCXaT1rzS
+	K341cQ5mdUt5fLm85GGK72hsEiTQtck=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739259278;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XapZj8fn6hrk1id5K05g62Ja0OL4RYHu3GDtWlZPihY=;
+	b=9SgXniEKHlA9c3nYPYJKLSsJghNvVShM29e9bprznAlP+ahGEqd7Bw8klBuOog1SUhjVfm
+	JvNktnZe06ZbArBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739259278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XapZj8fn6hrk1id5K05g62Ja0OL4RYHu3GDtWlZPihY=;
+	b=RBwcfGYw0yV15g9Y38dTYAOL0jreQqZFZcO75ovIfm3fpcjx9uMw68jBiSVACuUwxNOtx3
+	hFlH0S9JZbRMJr/gWlNMpKOdlEmkbdqdVoXkC3sljfk5WMIYP+/+TXCojWgfiiCXaT1rzS
+	K341cQ5mdUt5fLm85GGK72hsEiTQtck=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739259278;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XapZj8fn6hrk1id5K05g62Ja0OL4RYHu3GDtWlZPihY=;
+	b=9SgXniEKHlA9c3nYPYJKLSsJghNvVShM29e9bprznAlP+ahGEqd7Bw8klBuOog1SUhjVfm
+	JvNktnZe06ZbArBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3ACBD13715;
+	Tue, 11 Feb 2025 07:34:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WjLoDI79qme/QAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 11 Feb 2025 07:34:38 +0000
+Message-ID: <445e33f1-280a-436d-8f9a-c94d16c17efd@suse.de>
+Date: Tue, 11 Feb 2025 08:34:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] drm/hyperv: Fix address space leak when Hyper-V DRM
+ device is removed
+To: mhklinux@outlook.com, drawat.floss@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
+ simona@ffwll.ch, christophe.jaillet@wanadoo.fr, ssengar@linux.microsoft.com,
+ wei.liu@kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org
+References: <20250210193441.2414-1-mhklinux@outlook.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250210193441.2414-1-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[outlook.com,gmail.com,linux.intel.com,kernel.org,ffwll.ch,wanadoo.fr,linux.microsoft.com];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com,wanadoo.fr];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-Add debug statements to assist in debugging and monitoring
-driver behaviour, making it easier to identify potential
-issues  during development and testing.
+Hi
 
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 52 +++++++++++++----
- .../net/ethernet/microsoft/mana/hw_channel.c  |  6 +-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 58 +++++++++++++++----
- 3 files changed, 94 insertions(+), 22 deletions(-)
+Am 10.02.25 um 20:34 schrieb mhkelley58@gmail.com:
+> From: Michael Kelley <mhklinux@outlook.com>
+>
+> When a Hyper-V DRM device is probed, the driver allocates MMIO space for
+> the vram, and maps it cacheable. If the device removed, or in the error
+> path for device probing, the MMIO space is released but no unmap is done.
+> Consequently the kernel address space for the mapping is leaked.
+>
+> Fix this by adding iounmap() calls in the device removal path, and in the
+> error path during device probing.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index be95336ce089..f9839938f0ab 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -666,8 +666,11 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
- 
- 	gmi = &queue->mem_info;
- 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
--	if (err)
-+	if (err) {
-+		dev_err(gc->dev, "GDMA queue type: %d, size: %u, gdma memory allocation err: %d\n",
-+			spec->type, spec->queue_size, err);
- 		goto free_q;
-+	}
- 
- 	queue->head = 0;
- 	queue->tail = 0;
-@@ -688,6 +691,8 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
- 	*queue_ptr = queue;
- 	return 0;
- out:
-+	dev_err(gc->dev, "Failed to create queue type %d of size %u, err: %d\n",
-+		spec->type, spec->queue_size, err);
- 	mana_gd_free_memory(gmi);
- free_q:
- 	kfree(queue);
-@@ -763,14 +768,18 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
- 
- 	if (resp.hdr.status ||
- 	    resp.dma_region_handle == GDMA_INVALID_DMA_REGION) {
--		dev_err(gc->dev, "Failed to create DMA region: 0x%x\n",
--			resp.hdr.status);
- 		err = -EPROTO;
- 		goto out;
- 	}
- 
- 	gmi->dma_region_handle = resp.dma_region_handle;
-+	dev_dbg(gc->dev, "Created DMA region handle 0x%llx\n",
-+		gmi->dma_region_handle);
- out:
-+	if (err)
-+		dev_err(gc->dev,
-+			"Failed to create DMA region of length: %u, page_type: %d, status: 0x%x, err: %d\n",
-+			length, req->gdma_page_type, resp.hdr.status, err);
- 	kfree(req);
- 	return err;
- }
-@@ -793,8 +802,11 @@ int mana_gd_create_mana_eq(struct gdma_dev *gd,
- 
- 	gmi = &queue->mem_info;
- 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
--	if (err)
-+	if (err) {
-+		dev_err(gc->dev, "GDMA queue type: %d, size: %u, gdma memory allocation err: %d\n",
-+			spec->type, spec->queue_size, err);
- 		goto free_q;
-+	}
- 
- 	err = mana_gd_create_dma_region(gd, gmi);
- 	if (err)
-@@ -815,6 +827,8 @@ int mana_gd_create_mana_eq(struct gdma_dev *gd,
- 	*queue_ptr = queue;
- 	return 0;
- out:
-+	dev_err(gc->dev, "Failed to create queue type %d of size: %u, err: %d\n",
-+		spec->type, spec->queue_size, err);
- 	mana_gd_free_memory(gmi);
- free_q:
- 	kfree(queue);
-@@ -841,8 +855,11 @@ int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
- 
- 	gmi = &queue->mem_info;
- 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
--	if (err)
-+	if (err) {
-+		dev_err(gc->dev, "GDMA queue type: %d, size: %u, memory allocation err: %d\n",
-+			spec->type, spec->queue_size, err);
- 		goto free_q;
-+	}
- 
- 	err = mana_gd_create_dma_region(gd, gmi);
- 	if (err)
-@@ -862,6 +879,8 @@ int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
- 	*queue_ptr = queue;
- 	return 0;
- out:
-+	dev_err(gc->dev, "Failed to create queue type %d of size: %u, err: %d\n",
-+		spec->type, spec->queue_size, err);
- 	mana_gd_free_memory(gmi);
- free_q:
- 	kfree(queue);
-@@ -1157,8 +1176,11 @@ int mana_gd_post_and_ring(struct gdma_queue *queue,
- 	int err;
- 
- 	err = mana_gd_post_work_request(queue, wqe_req, wqe_info);
--	if (err)
-+	if (err) {
-+		dev_err(gc->dev, "Failed to post work req from queue type %d of size %u (err=%d)\n",
-+			queue->type, queue->queue_size, err);
- 		return err;
-+	}
- 
- 	mana_gd_wq_ring_doorbell(gc, queue);
- 
-@@ -1435,8 +1457,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
- 
- 	err = mana_gd_setup_irqs(pdev);
--	if (err)
-+	if (err) {
-+		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
- 		return err;
-+	}
- 
- 	err = mana_hwc_create_channel(gc);
- 	if (err)
-@@ -1454,12 +1478,14 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (err)
- 		goto destroy_hwc;
- 
-+	dev_dbg(&pdev->dev, "mana gdma setup successful\n");
- 	return 0;
- 
- destroy_hwc:
- 	mana_hwc_destroy_channel(gc);
- remove_irq:
- 	mana_gd_remove_irqs(pdev);
-+	dev_err(&pdev->dev, "%s failed (error %d)\n", __func__, err);
- 	return err;
- }
- 
-@@ -1470,6 +1496,7 @@ static void mana_gd_cleanup(struct pci_dev *pdev)
- 	mana_hwc_destroy_channel(gc);
- 
- 	mana_gd_remove_irqs(pdev);
-+	dev_dbg(&pdev->dev, "mana gdma cleanup successful\n");
- }
- 
- static bool mana_is_pf(unsigned short dev_id)
-@@ -1488,8 +1515,10 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	BUILD_BUG_ON(2 * MAX_PORTS_IN_MANA_DEV * GDMA_EQE_SIZE > EQ_SIZE);
- 
- 	err = pci_enable_device(pdev);
--	if (err)
-+	if (err) {
-+		dev_err(&pdev->dev, "Failed to enable pci device (err=%d)\n", err);
- 		return -ENXIO;
-+	}
- 
- 	pci_set_master(pdev);
- 
-@@ -1498,9 +1527,10 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto disable_dev;
- 
- 	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
--	if (err)
-+	if (err) {
-+		dev_err(&pdev->dev, "DMA set mask failed: %d\n", err);
- 		goto release_region;
--
-+	}
- 	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
- 
- 	err = -ENOMEM;
-@@ -1575,6 +1605,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
- 
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
-+
-+	dev_dbg(&pdev->dev, "mana gdma remove successful\n");
- }
- 
- /* The 'state' parameter is not used. */
-diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-index a00f915c5188..1ba49602089b 100644
---- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
-+++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -440,7 +440,8 @@ static int mana_hwc_alloc_dma_buf(struct hw_channel_context *hwc, u16 q_depth,
- 	gmi = &dma_buf->mem_info;
- 	err = mana_gd_alloc_memory(gc, buf_size, gmi);
- 	if (err) {
--		dev_err(hwc->dev, "Failed to allocate DMA buffer: %d\n", err);
-+		dev_err(hwc->dev, "Failed to allocate DMA buffer size: %u, err %d\n",
-+			buf_size, err);
- 		goto out;
- 	}
- 
-@@ -529,6 +530,9 @@ static int mana_hwc_create_wq(struct hw_channel_context *hwc,
- out:
- 	if (err)
- 		mana_hwc_destroy_wq(hwc, hwc_wq);
-+
-+	dev_err(hwc->dev, "Failed to create HWC queue size= %u type= %d err= %d\n",
-+		queue_size, q_type, err);
- 	return err;
- }
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index aa1e47233fe5..32e2c5cd7152 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -52,10 +52,12 @@ static int mana_open(struct net_device *ndev)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	int err;
--
- 	err = mana_alloc_queues(ndev);
--	if (err)
-+
-+	if (err) {
-+		netdev_err(ndev, "%s failed to allocate queues: %d\n", __func__, err);
- 		return err;
-+	}
- 
- 	apc->port_is_up = true;
- 
-@@ -64,7 +66,7 @@ static int mana_open(struct net_device *ndev)
- 
- 	netif_carrier_on(ndev);
- 	netif_tx_wake_all_queues(ndev);
--
-+	netdev_dbg(ndev, "%s successful\n", __func__);
- 	return 0;
- }
- 
-@@ -176,6 +178,9 @@ static int mana_map_skb(struct sk_buff *skb, struct mana_port_context *apc,
- 	return 0;
- 
- frag_err:
-+	if (net_ratelimit())
-+		netdev_err(apc->ndev, "Failed to map skb of size %u to DMA\n",
-+			   skb->len);
- 	for (i = sg_i - 1; i >= hsg; i--)
- 		dma_unmap_page(dev, ash->dma_handle[i], ash->size[i],
- 			       DMA_TO_DEVICE);
-@@ -687,6 +692,7 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_qu
- 	return 0;
- 
- error:
-+	netdev_err(mpc->ndev, "Failed to pre-allocate RX buffers for %d queues\n", num_queues);
- 	mana_pre_dealloc_rxbufs(mpc);
- 	return -ENOMEM;
- }
-@@ -1304,8 +1310,10 @@ static int mana_create_eq(struct mana_context *ac)
- 	for (i = 0; i < gc->max_num_queues; i++) {
- 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
- 		err = mana_gd_create_mana_eq(gd, &spec, &ac->eqs[i].eq);
--		if (err)
-+		if (err) {
-+			dev_err(gc->dev, "Failed to create EQ %d : %d\n", i, err);
- 			goto out;
-+		}
- 		mana_create_eq_debugfs(ac, i);
- 	}
- 
-@@ -2080,6 +2088,8 @@ static int mana_create_txq(struct mana_port_context *apc,
- 
- 	return 0;
- out:
-+	netdev_err(net, "Failed to create %d TX queues, %d\n",
-+		   apc->num_queues, err);
- 	mana_destroy_txq(apc);
- 	return err;
- }
-@@ -2415,6 +2425,7 @@ static int mana_add_rx_queues(struct mana_port_context *apc,
- 		rxq = mana_create_rxq(apc, i, &ac->eqs[i], ndev);
- 		if (!rxq) {
- 			err = -ENOMEM;
-+			netdev_err(ndev, "Failed to create rxq %d : %d\n", i, err);
- 			goto out;
- 		}
- 
-@@ -2661,12 +2672,18 @@ int mana_alloc_queues(struct net_device *ndev)
- 	int err;
- 
- 	err = mana_create_vport(apc, ndev);
--	if (err)
-+	if (err) {
-+		netdev_err(ndev, "Failed to create vPort %u : %d\n", apc->port_idx, err);
- 		return err;
-+	}
- 
- 	err = netif_set_real_num_tx_queues(ndev, apc->num_queues);
--	if (err)
-+	if (err) {
-+		netdev_err(ndev,
-+			   "netif_set_real_num_tx_queues () failed for ndev with num_queues %u : %d\n",
-+			   apc->num_queues, err);
- 		goto destroy_vport;
-+	}
- 
- 	err = mana_add_rx_queues(apc, ndev);
- 	if (err)
-@@ -2675,14 +2692,20 @@ int mana_alloc_queues(struct net_device *ndev)
- 	apc->rss_state = apc->num_queues > 1 ? TRI_STATE_TRUE : TRI_STATE_FALSE;
- 
- 	err = netif_set_real_num_rx_queues(ndev, apc->num_queues);
--	if (err)
-+	if (err) {
-+		netdev_err(ndev,
-+			   "netif_set_real_num_rx_queues () failed for ndev with num_queues %u : %d\n",
-+			   apc->num_queues, err);
- 		goto destroy_vport;
-+	}
- 
- 	mana_rss_table_init(apc);
- 
- 	err = mana_config_rss(apc, TRI_STATE_TRUE, true, true);
--	if (err)
-+	if (err) {
-+		netdev_err(ndev, "Failed to configure RSS table: %d\n", err);
- 		goto destroy_vport;
-+	}
- 
- 	if (gd->gdma_context->is_pf) {
- 		err = mana_pf_register_filter(apc);
-@@ -2823,8 +2846,10 @@ int mana_detach(struct net_device *ndev, bool from_close)
- 
- 	if (apc->port_st_save) {
- 		err = mana_dealloc_queues(ndev);
--		if (err)
-+		if (err) {
-+			netdev_err(ndev, "%s failed to deallocate queues: %d\n", __func__, err);
- 			return err;
-+		}
- 	}
- 
- 	if (!from_close) {
-@@ -2968,6 +2993,8 @@ static int add_adev(struct gdma_dev *gd)
- 		goto add_fail;
- 
- 	gd->adev = adev;
-+	dev_dbg(gd->gdma_context->dev,
-+		"Auxiliary device added successfully\n");
- 	return 0;
- 
- add_fail:
-@@ -3009,8 +3036,10 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	}
- 
- 	err = mana_create_eq(ac);
--	if (err)
-+	if (err) {
-+		dev_err(dev, "Failed to create EQs: %d\n", err);
- 		goto out;
-+	}
- 
- 	err = mana_query_device_cfg(ac, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
- 				    MANA_MICRO_VERSION, &num_ports);
-@@ -3066,8 +3095,14 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 
- 	err = add_adev(gd);
- out:
--	if (err)
-+	if (err) {
- 		mana_remove(gd, false);
-+	} else {
-+		dev_dbg(dev, "gd=%p, id=%u, num_ports=%d, type=%u, instance=%u\n",
-+			gd, gd->dev_id.as_uint32, ac->num_ports,
-+			gd->dev_id.type, gd->dev_id.instance);
-+		dev_dbg(dev, "%s succeeded\n", __func__);
-+	}
- 
- 	return err;
- }
-@@ -3129,6 +3164,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 	gd->driver_data = NULL;
- 	gd->gdma_context = NULL;
- 	kfree(ac);
-+	dev_dbg(dev, "%s succeeded\n", __func__);
- }
- 
- struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index)
+Could this driver use devm_ helpers for iomap operations? That should 
+fix the issue automatically.
+
+Best regards
+Thomas
+
+>
+> Fixes: f1f63cbb705d ("drm/hyperv: Fix an error handling path in hyperv_vmbus_probe()")
+> Fixes: a0ab5abced55 ("drm/hyperv : Removing the restruction of VRAM allocation with PCI bar size")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>   drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> index e0953777a206..b491827941f1 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> @@ -156,6 +156,7 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
+>   	return 0;
+>   
+>   err_free_mmio:
+> +	iounmap(hv->vram);
+>   	vmbus_free_mmio(hv->mem->start, hv->fb_size);
+>   err_vmbus_close:
+>   	vmbus_close(hdev->channel);
+> @@ -174,6 +175,7 @@ static void hyperv_vmbus_remove(struct hv_device *hdev)
+>   	vmbus_close(hdev->channel);
+>   	hv_set_drvdata(hdev, NULL);
+>   
+> +	iounmap(hv->vram);
+>   	vmbus_free_mmio(hv->mem->start, hv->fb_size);
+>   }
+>   
+
 -- 
-2.34.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
 
