@@ -1,64 +1,57 @@
-Return-Path: <linux-hyperv+bounces-3929-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3930-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1186FA32DA4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 18:42:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 40E7DA32DF7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 18:54:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E7ED3A3D50
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 17:42:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D080D3A7090
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 17:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D08A525A653;
-	Wed, 12 Feb 2025 17:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C359D25C6FE;
+	Wed, 12 Feb 2025 17:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+RzxopB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GLpuORcJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99021255E5D;
-	Wed, 12 Feb 2025 17:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DEAE2586C6;
+	Wed, 12 Feb 2025 17:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739382125; cv=none; b=ARDGUFPdAwGComw3E56+t5pcBhl4driS9y5250HOccxrDR1neIQIyJV3w8X4TXvN8wbVKa32Rx3grGTdcAOe2mQpD8iwLP69PTQjNMyr/V6QQ/RMNyS2+Gxfm/LyEnn4iOxctBskFb8r//2KHrqgQUL7JsUrdC/ODw3RfDEY39I=
+	t=1739382888; cv=none; b=Z1Yzg9KtsJpITVvt6IZJ/NaHWsZqd6d+m+qRLtk3FKsQKxNn+imIX2qFbwOSVmeBPWl9MBGlXDtp80gJcYp40VJl7cZhJvLbvxdkIiTvMOKR/KpfArjMGPsQf1ziRUieETnFuU+WFcMUyf0TD9XBH9gAyuKs86znBqDvPFH4idI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739382125; c=relaxed/simple;
-	bh=loNBIWe8uSSK8MAm/lf+M/kKR/0mRHHG8PYDOBq+xPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H5wrKrcxRF+MFrSTme/iJkovl0Prhg4F8PMJJUNE2JTvEFTNIt1OLn09oEC407Zc7ucBMYL3UzS4or9bS6uEFdFSzkn4b2/ha5P4sAnPwtYeDUHyRibe/prxO69rS+iy/rm1j7CcoqUWZRdKxEsBk2n81dxgqc3DKQxiwnPpmww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+RzxopB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66E2C4CEE2;
-	Wed, 12 Feb 2025 17:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739382125;
-	bh=loNBIWe8uSSK8MAm/lf+M/kKR/0mRHHG8PYDOBq+xPc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=W+RzxopBTChGcE+WL5peQSt0RWDQzGw0kUNuri+IQ4+lXJu+zU60qp5tNIotiBATK
-	 96RBcAeYiWClh7IBvJYdy14puLeSJyKQirlBYegqIASiHk/iAii68C5UUCZ7RBCxhF
-	 0748nlgv7C2Pgn1+QMfqZBY1pn6nPkKbkNi352w8nmyJbuz3ZEIOfKHZEAwnrEUV8q
-	 Xv8gHr9cysmZVO1KJLOI8QTw+KHKInXTH7ihIL0NFLcW1/lsQnw/JSRiPevZv+FPTv
-	 maOhICE2pw8B796s9kqxur6Ojm+GJ0IXuJ3DyqYrWSN+3AS2toF7Bn6U7wPUz0I9Vd
-	 WaVZSuo95ukRQ==
-Date: Wed, 12 Feb 2025 11:42:03 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
-	catalin.marinas@arm.com, conor+dt@kernel.org,
+	s=arc-20240116; t=1739382888; c=relaxed/simple;
+	bh=x9ISrJ7Gdk2XHi0VniGAHfo5QA2NIH+n8e1czOikANU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K35X4KEbhOZtsyhZwEVut8g/q0XVM442EEP9HVKrEqXOcPbBN5C3mUGZl3rOPaJXgkx2IFC4uuqjNNEzj2CPy6bUdLrhK/Re5FlfPXtwb3gOqEGcm1F0ZQQTAcgmoAEZRIk4usAjkHPmcc9HS1yFTO7iXVBhltlxDCMrtC0RmoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GLpuORcJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id D2206203F3C3; Wed, 12 Feb 2025 09:54:45 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D2206203F3C3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739382885;
+	bh=kCDAn1dUHH9zvvIMxLPjNOSM49m/EMWQnwmPYjynmYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GLpuORcJWKTVR/06dwvY/iaOgWs2sr8tMEw+4AYtj/BoT4n2pF6i/GisM4vjuXvp6
+	 Kydr+Nyu0G94WfGisliIrhLmRlsQGOvklfP0hRCjfSqySX0orATmer+Pj7eGGsauVD
+	 HQrAhuAFgvNGK0pi4x4BdfIf6agw3QyO70bt2Cgc=
+Date: Wed, 12 Feb 2025 09:54:45 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Roman Kisel <romank@linux.microsoft.com>, bp@alien8.de,
 	dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, krzk+dt@kernel.org,
-	kw@linux.com, kys@microsoft.com, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, mingo@redhat.com, robh@kernel.org,
-	ssengar@linux.microsoft.com, tglx@linutronix.de, wei.liu@kernel.org,
-	will@kernel.org, devicetree@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, x86@kernel.org, benhill@microsoft.com,
-	bperkins@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v4 6/6] PCI: hv: Get vPCI MSI IRQ domain from
- DeviceTree
-Message-ID: <20250212174203.GA81135@bhelgaas>
+	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
+	mingo@redhat.com, tglx@linutronix.de, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH hyperv-next 0/2] x86/hyperv: VTL mode reboot fixes
+Message-ID: <20250212175445.GA19243@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250117210702.1529580-1-romank@linux.microsoft.com>
+ <Z6wFnoK-X7i1bd9x@liuwe-devbox-debian-v2>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,250 +60,63 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250212014321.1108840-7-romank@linux.microsoft.com>
+In-Reply-To: <Z6wFnoK-X7i1bd9x@liuwe-devbox-debian-v2>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Feb 11, 2025 at 05:43:21PM -0800, Roman Kisel wrote:
-> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
-> arm64. It won't be able to do that in the VTL mode where only DeviceTree
-> can be used.
+On Wed, Feb 12, 2025 at 02:21:18AM +0000, Wei Liu wrote:
+> On Fri, Jan 17, 2025 at 01:07:00PM -0800, Roman Kisel wrote:
+> > The first patch defines a specialized machine emergency restart
+> > callback not to write to the physical address of 0x472 which is
+> > what the native_machine_emergency_restart() does unconditionally.
+> > 
+> > I first wanted to tweak that function[1], and in the course of
+> > the discussion it looked as the risks of doing that would
+> > outweigh the benefit: the bare-metal systems have likely adopted
+> > that behavior as a standard although I could not find any mentions
+> > of that magic address in the UEFI+ACPI specification.
+> > 
+> > The second patch removes the need to always supply "reboot=t"
+> > to the kernel command line in the OpenHCL bootloader [2]. There is
+> > no other option at the moment; when/if it appears the newly added
+> > callback's code can be adjusted as required.
+> > 
+> > It would be great to apply this to the stable tree if no concerns,
+> > should apply cleanly.
+> > 
+> > [1] https://lore.kernel.org/all/20250109204352.1720337-1-romank@linux.microsoft.com/
+> > [2] https://github.com/microsoft/openvmm/blob/7a9d0e0a00461be6e5f3267af9ea54cc7157c900/openhcl/openhcl_boot/src/main.rs#L139
+> > 
+> > Roman Kisel (2):
+> >   x86/hyperv: VTL mode emergency restart callback
+> >   x86/hyperv: VTL mode callback for restarting the system
 > 
-> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
-> case, too.
+> Saurabh please review these patches. Thanks.
+
+Hi Roman,
+
+Thanks for the patch, few suggestions and queries:
+
+1. Please fix the kernel bot warning
+2. Cc Stable tree is not enough, you need to mention the "Fixes" tag as well
+   for the commit upto where you want this patch to be backported.
+3. In your 2/2 commit, you mention 'triple fault' is the only way to reboot in x86.
+   Is that accurate ? Do you mean to say OpenHCL/VTL here ?
+   If this behaviour is specific to OpenHCl and not VTLs in general, is there a way
+   we can make these changes only for OpenHCL.
+   
+
+- Saurabh
+
 > 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c              | 23 ++++++----
->  drivers/pci/controller/pci-hyperv.c | 69 ++++++++++++++++++++++++++---
->  include/linux/hyperv.h              |  2 +
->  3 files changed, 80 insertions(+), 14 deletions(-)
+> I don't have a strong opinion on them.
 > 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 9d0c2dbd2a69..3f0f9f01b520 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -45,7 +45,8 @@ struct vmbus_dynid {
->  	struct hv_vmbus_device_id id;
->  };
->  
-> -static struct device  *hv_dev;
-> +/* VMBus Root Device */
-> +static struct device  *vmbus_root_device;
->  
->  static int hyperv_cpuhp_online;
->  
-> @@ -80,9 +81,15 @@ static struct resource *fb_mmio;
->  static struct resource *hyperv_mmio;
->  static DEFINE_MUTEX(hyperv_mmio_lock);
->  
-> +struct device *hv_get_vmbus_root_device(void)
-> +{
-> +	return vmbus_root_device;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_get_vmbus_root_device);
-> +
->  static int vmbus_exists(void)
->  {
-> -	if (hv_dev == NULL)
-> +	if (vmbus_root_device == NULL)
->  		return -ENODEV;
->  
->  	return 0;
-> @@ -861,7 +868,7 @@ static int vmbus_dma_configure(struct device *child_device)
->  	 * On x86/x64 coherence is assumed and these calls have no effect.
->  	 */
->  	hv_setup_dma_ops(child_device,
-> -		device_get_dma_attr(hv_dev) == DEV_DMA_COHERENT);
-> +		device_get_dma_attr(vmbus_root_device) == DEV_DMA_COHERENT);
->  	return 0;
->  }
->  
-> @@ -1920,7 +1927,7 @@ int vmbus_device_register(struct hv_device *child_device_obj)
->  		     &child_device_obj->channel->offermsg.offer.if_instance);
->  
->  	child_device_obj->device.bus = &hv_bus;
-> -	child_device_obj->device.parent = hv_dev;
-> +	child_device_obj->device.parent = vmbus_root_device;
->  	child_device_obj->device.release = vmbus_device_release;
->  
->  	child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
-> @@ -2282,7 +2289,7 @@ static int vmbus_acpi_add(struct platform_device *pdev)
->  	struct acpi_device *ancestor;
->  	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
->  
-> -	hv_dev = &device->dev;
-> +	vmbus_root_device = &device->dev;
->  
->  	/*
->  	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
-> @@ -2373,7 +2380,7 @@ static int vmbus_device_add(struct platform_device *pdev)
->  	struct device_node *np = pdev->dev.of_node;
->  	int ret;
->  
-> -	hv_dev = &pdev->dev;
-> +	vmbus_root_device = &pdev->dev;
->  
->  	ret = of_range_parser_init(&parser, np);
->  	if (ret)
-> @@ -2692,7 +2699,7 @@ static int __init hv_acpi_init(void)
->  	if (ret)
->  		return ret;
->  
-> -	if (!hv_dev) {
-> +	if (!vmbus_root_device) {
->  		ret = -ENODEV;
->  		goto cleanup;
->  	}
-> @@ -2723,7 +2730,7 @@ static int __init hv_acpi_init(void)
->  
->  cleanup:
->  	platform_driver_unregister(&vmbus_platform_driver);
-> -	hv_dev = NULL;
-> +	vmbus_root_device = NULL;
->  	return ret;
->  }
->  
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index cdd5be16021d..24725bea9ef1 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -50,6 +50,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/acpi.h>
->  #include <linux/sizes.h>
-> +#include <linux/of_irq.h>
->  #include <asm/mshyperv.h>
->  
->  /*
-> @@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
->  	int ret;
->  
->  	fwspec.fwnode = domain->parent->fwnode;
-> -	fwspec.param_count = 2;
-> -	fwspec.param[0] = hwirq;
-> -	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-> +	if (is_of_node(fwspec.fwnode)) {
-> +		/* SPI lines for OF translations start at offset 32 */
-> +		fwspec.param_count = 3;
-> +		fwspec.param[0] = 0;
-> +		fwspec.param[1] = hwirq - 32;
-> +		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-> +	} else {
-> +		fwspec.param_count = 2;
-> +		fwspec.param[0] = hwirq;
-> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-> +	}
->  
->  	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
->  	if (ret)
-> @@ -887,6 +896,35 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
->  	.activate = hv_pci_vec_irq_domain_activate,
->  };
->  
-> +#ifdef CONFIG_OF
-> +
-> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
-> +{
-> +	struct device_node *parent;
-> +	struct irq_domain *domain;
-> +
-> +	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
-> +	domain = NULL;
-> +	if (parent) {
-> +		domain = irq_find_host(parent);
-> +		of_node_put(parent);
-> +	}
-> +
-> +	/*
-> +	 * `domain == NULL` shouldn't happen.
-> +	 *
-> +	 * If somehow the code does end up in that state, treat this as a configuration
-> +	 * issue rather than a hard error, emit a warning, and let the code proceed.
-> +	 * The NULL parent domain is an acceptable option for the `irq_domain_create_hierarchy`
-> +	 * function called later.
-
-The rest of this file fits in 80 columns; please wrap this to match.
-
-> +	 */
-> +	if (!domain)
-> +		WARN_ONCE(1, "No interrupt-parent found, check the DeviceTree data.\n");
-
-Is there a way to include a hint about what specific part of the
-devicetree to look at, e.g., the node that lacks a parent?
-
-> +	return domain;
-> +}
-> +
-> +#endif
-> +
->  static int hv_pci_irqchip_init(void)
->  {
->  	static struct hv_pci_chip_data *chip_data;
-> @@ -906,10 +944,29 @@ static int hv_pci_irqchip_init(void)
->  	 * IRQ domain once enabled, should not be removed since there is no
->  	 * way to ensure that all the corresponding devices are also gone and
->  	 * no interrupts will be generated.
-> +	 *
-> +	 * In the ACPI case, the parent IRQ domain is supplied by the ACPI
-> +	 * subsystem, and it is the default GSI domain pointing to the GIC.
-> +	 * Neither is available outside of the ACPI subsystem, cannot avoid
-> +	 * the messy ifdef below.
-
-Add a blank line if you intend a new paragraph here.  Otherwise, wrap
-to fill 78 columns or so.
-
-> +	 * There is apparently no such default in the OF subsystem, and
-> +	 * `hv_pci_of_irq_domain_parent` finds the parent IRQ domain that
-> +	 * points to the GIC as well.
-
-And here.
-
-> +	 * None of these two cases reaches for the MSI parent domain.
-
-I don't know what "reaches for the MSI parent domain" means.  Neither
-"searches for"?
-
->  	 */
-> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-> -							  fn, &hv_pci_domain_ops,
-> -							  chip_data);
-> +#ifdef CONFIG_ACPI
-> +	if (!acpi_disabled)
-> +		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-> +			fn, &hv_pci_domain_ops,
-> +			chip_data);
-> +#endif
-> +#if defined(CONFIG_OF)
-> +	if (!hv_msi_gic_irq_domain)
-> +		hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
-> +			hv_pci_of_irq_domain_parent(), 0, HV_PCI_MSI_SPI_NR,
-> +			fn, &hv_pci_domain_ops,
-> +			chip_data);
-> +#endif
-
-I don't know if acpi_irq_create_hierarchy() is helping or hurting
-here.  It obscures the fact that the only difference is the first
-argument to irq_domain_create_hierarchy().  If we could open-code or
-have a helper to figure out that irq_domain "parent" argument for the
-ACPI case, then we'd only have one call of
-irq_domain_create_hierarchy() here and it seems like it might be
-simpler.
-
->  	if (!hv_msi_gic_irq_domain) {
->  		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 4179add2864b..2be4dd83b0e1 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -1333,6 +1333,8 @@ static inline void *hv_get_drvdata(struct hv_device *dev)
->  	return dev_get_drvdata(&dev->device);
->  }
->  
-> +struct device *hv_get_vmbus_root_device(void);
-> +
->  struct hv_ring_buffer_debug_info {
->  	u32 current_interrupt_mask;
->  	u32 current_read_index;
-> -- 
-> 2.43.0
-> 
+> > 
+> >  arch/x86/hyperv/hv_vtl.c | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> > 
+> > 
+> > base-commit: 2e03358be78b65d28b66e17aca9e0c8700b0df78
+> > -- 
+> > 2.34.1
+> > 
 
