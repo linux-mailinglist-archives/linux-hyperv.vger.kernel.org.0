@@ -1,122 +1,114 @@
-Return-Path: <linux-hyperv+bounces-3930-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3931-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40E7DA32DF7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 18:54:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4A82A332EF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 23:55:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D080D3A7090
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 17:54:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFDD77A2FF7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 22:54:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C359D25C6FE;
-	Wed, 12 Feb 2025 17:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2F520AF66;
+	Wed, 12 Feb 2025 22:55:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GLpuORcJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0+oa/YGN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DEAE2586C6;
-	Wed, 12 Feb 2025 17:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC923204587
+	for <linux-hyperv@vger.kernel.org>; Wed, 12 Feb 2025 22:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739382888; cv=none; b=Z1Yzg9KtsJpITVvt6IZJ/NaHWsZqd6d+m+qRLtk3FKsQKxNn+imIX2qFbwOSVmeBPWl9MBGlXDtp80gJcYp40VJl7cZhJvLbvxdkIiTvMOKR/KpfArjMGPsQf1ziRUieETnFuU+WFcMUyf0TD9XBH9gAyuKs86znBqDvPFH4idI=
+	t=1739400944; cv=none; b=jLdzL7WOMsPP9E1r1ryZL9q6UI7aSaM8UCk91jZAUtguaV4KLXhsYt9jcavCQzm+y84ivHZ4ToApeDjVRUQcVPxuGJqycATvImtimwcukXJnSxCm18sBDKO5Zwqs0nWYg3xzG4vsbdgAMmMnw/RajDpMVlRfpGcQTSO7VMBsSjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739382888; c=relaxed/simple;
-	bh=x9ISrJ7Gdk2XHi0VniGAHfo5QA2NIH+n8e1czOikANU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K35X4KEbhOZtsyhZwEVut8g/q0XVM442EEP9HVKrEqXOcPbBN5C3mUGZl3rOPaJXgkx2IFC4uuqjNNEzj2CPy6bUdLrhK/Re5FlfPXtwb3gOqEGcm1F0ZQQTAcgmoAEZRIk4usAjkHPmcc9HS1yFTO7iXVBhltlxDCMrtC0RmoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GLpuORcJ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id D2206203F3C3; Wed, 12 Feb 2025 09:54:45 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D2206203F3C3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739382885;
-	bh=kCDAn1dUHH9zvvIMxLPjNOSM49m/EMWQnwmPYjynmYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GLpuORcJWKTVR/06dwvY/iaOgWs2sr8tMEw+4AYtj/BoT4n2pF6i/GisM4vjuXvp6
-	 Kydr+Nyu0G94WfGisliIrhLmRlsQGOvklfP0hRCjfSqySX0orATmer+Pj7eGGsauVD
-	 HQrAhuAFgvNGK0pi4x4BdfIf6agw3QyO70bt2Cgc=
-Date: Wed, 12 Feb 2025 09:54:45 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Roman Kisel <romank@linux.microsoft.com>, bp@alien8.de,
-	dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-	mingo@redhat.com, tglx@linutronix.de, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH hyperv-next 0/2] x86/hyperv: VTL mode reboot fixes
-Message-ID: <20250212175445.GA19243@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250117210702.1529580-1-romank@linux.microsoft.com>
- <Z6wFnoK-X7i1bd9x@liuwe-devbox-debian-v2>
+	s=arc-20240116; t=1739400944; c=relaxed/simple;
+	bh=M/JEAtm/aKqZQpUcIkbOx1V5MbhNPluJ7A9OR2+JsF8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=O0tj4trzwKlFwT5YsZV3sjHzRY/nfNqk665saiv+a0+h7Bby6xqy+C+fllEjt4km1Jgyu1SYp3Qh0U9Y/6vKgOd9BcgknhKye6Q/n2W/b+mv9ekK3P5DwxNWu6STYhGdK1vg3NkdnbZFx6+2lgBjcEd/gjZJl1k3ARG9kiRo80s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0+oa/YGN; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f022fc6a3so5009055ad.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Feb 2025 14:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739400942; x=1740005742; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G4pJwe4WBZK7j0Qn81lTWodsKOqME7mNPJqkDCUIDvw=;
+        b=0+oa/YGNFhfNfAvc1DakAtTUGsb5fIjUlQ8FgLTRkg4g1oQyavX/X3Goe3VKnShPef
+         sathwRfPc14c/SS/26TodPkSpcyzfl3XYEr9eD3+NKhZ05MA8IpZOeWBer9yGZdhkcZg
+         vYzPXJsuWtL36f/RQOOZ6ZGR0NpUaTqI7oN/qOUKlOn8bvDfB5QLFBFv0wQAHb7EYZZh
+         kMeayyeRT8PqJE3MHyteMkdaI14XvZfIVt0dUvMYtIEAGznLN65J37HiJGuZe3Ih2/nK
+         SaRuIN8GhT2SwQG9cLxEL2bY5wKx/5x8+sumghXwYfj0es1OJMTZcsxVPzpCpT8g64ko
+         5HHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739400942; x=1740005742;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G4pJwe4WBZK7j0Qn81lTWodsKOqME7mNPJqkDCUIDvw=;
+        b=ZF/d/ha1BM2EXoQsYZ7iVz5IkjWCDVrOlb5Ud/mIYNCndNvT9FMtlgM3VwWkUks/yj
+         PW9bR0t5/bPgXfEjLwQLTRy5lymTO6qXiea1ITiDg2CseZyBPUAEiqLhgf4kIWozkFcN
+         LpqRbUvWo8eyBvuk6ClWT87uSFf5iT483aXpFlLMY56yFxKJ8v2XPiWvLGENAiiTkhWW
+         Yx83rB0D7DIcrBzsbwxzIQtT4JnWpHt6thtjWlJAEmd94LdoXE6Mp4/gvfHeHXpa797A
+         3tC/FBWtvjFbF9zfzWLEC4g1xfpt8BUiypfRWf9hTORCNZs6n5r0H86S3m2tIyHcLLXD
+         q33Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUzQ0u9rN7Y6cg4Wpdniu7Am0F3m/PkThU7ODtpweiRkYufrKdw6QfMBbkz2yEAuw+7L6SsE+UDu9FKrsA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYVIeY6edwlI1tKm7uxQ1fsNMSTUa1ebrxS4irSGSAa/9b6fke
+	ElIpiuIodGXWFAr6p9PQX0oWRipNABbqjNovjwogKhYIaxXfbM0R2/yORElyjZbh+MVEM9tjoV+
+	5Jg==
+X-Google-Smtp-Source: AGHT+IFCvprC2FVz2MYwofAu+gOZ+t6GzfO0x6W16EewccF+NjWJufThiJaaDpuXjWvbsRckLewQnEmSOUI=
+X-Received: from plbb4.prod.google.com ([2002:a17:903:c04:b0:21f:14cc:68b0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c94e:b0:220:c2bf:e8ba
+ with SMTP id d9443c01a7336-220d3528cc9mr11030295ad.14.1739400941927; Wed, 12
+ Feb 2025 14:55:41 -0800 (PST)
+Date: Wed, 12 Feb 2025 14:55:36 -0800
+In-Reply-To: <SN6PR02MB4157DBAF1E3BB0E4FFD2C92DD4FC2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6wFnoK-X7i1bd9x@liuwe-devbox-debian-v2>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-17-seanjc@google.com>
+ <Z6ZBjNdoULymGgxz@google.com> <SN6PR02MB4157A85EC0B1B2D45CB611FAD4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <Z6onnUthSBUVAklf@google.com> <SN6PR02MB4157DBAF1E3BB0E4FFD2C92DD4FC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Message-ID: <Z60m6NiOlCmy4-q0@google.com>
+Subject: Re: [PATCH 16/16] x86/kvmclock: Use TSC for sched_clock if it's
+ constant and non-stop
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Nikunj A Dadhania <nikunj@amd.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Feb 12, 2025 at 02:21:18AM +0000, Wei Liu wrote:
-> On Fri, Jan 17, 2025 at 01:07:00PM -0800, Roman Kisel wrote:
-> > The first patch defines a specialized machine emergency restart
-> > callback not to write to the physical address of 0x472 which is
-> > what the native_machine_emergency_restart() does unconditionally.
+On Wed, Feb 12, 2025, Michael Kelley wrote:
+> From: Sean Christopherson <seanjc@google.com> Sent: Monday, February 10, 2025 8:22 AM
+> > On Sat, Feb 08, 2025, Michael Kelley wrote:
+> > > But I would be good with some restructuring so that setting the sched clock
+> > > save/restore hooks is more closely tied to the sched clock choice,
 > > 
-> > I first wanted to tweak that function[1], and in the course of
-> > the discussion it looked as the risks of doing that would
-> > outweigh the benefit: the bare-metal systems have likely adopted
-> > that behavior as a standard although I could not find any mentions
-> > of that magic address in the UEFI+ACPI specification.
-> > 
-> > The second patch removes the need to always supply "reboot=t"
-> > to the kernel command line in the OpenHCL bootloader [2]. There is
-> > no other option at the moment; when/if it appears the newly added
-> > callback's code can be adjusted as required.
-> > 
-> > It would be great to apply this to the stable tree if no concerns,
-> > should apply cleanly.
-> > 
-> > [1] https://lore.kernel.org/all/20250109204352.1720337-1-romank@linux.microsoft.com/
-> > [2] https://github.com/microsoft/openvmm/blob/7a9d0e0a00461be6e5f3267af9ea54cc7157c900/openhcl/openhcl_boot/src/main.rs#L139
-> > 
-> > Roman Kisel (2):
-> >   x86/hyperv: VTL mode emergency restart callback
-> >   x86/hyperv: VTL mode callback for restarting the system
+> > Yeah, this is the intent of my ranting.  After the dust settles, the code can
+> > look like this.
 > 
-> Saurabh please review these patches. Thanks.
+> I'm good with what you are proposing. And if you want, there's no real need
+> for hv_ref_counter_at_suspend and hv_save/restore_sched_clock_state()
+> to be in the #ifdef sequence since the code has no architecture dependencies.
 
-Hi Roman,
-
-Thanks for the patch, few suggestions and queries:
-
-1. Please fix the kernel bot warning
-2. Cc Stable tree is not enough, you need to mention the "Fixes" tag as well
-   for the commit upto where you want this patch to be backported.
-3. In your 2/2 commit, you mention 'triple fault' is the only way to reboot in x86.
-   Is that accurate ? Do you mean to say OpenHCL/VTL here ?
-   If this behaviour is specific to OpenHCl and not VTLs in general, is there a way
-   we can make these changes only for OpenHCL.
-   
-
-- Saurabh
-
-> 
-> I don't have a strong opinion on them.
-> 
-> > 
-> >  arch/x86/hyperv/hv_vtl.c | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> > 
-> > 
-> > base-commit: 2e03358be78b65d28b66e17aca9e0c8700b0df78
-> > -- 
-> > 2.34.1
-> > 
+Right, but because they will be local/static and there are no users outside of
+x86, the compiler will complain about unused variables/functions on other
+architectures.
 
