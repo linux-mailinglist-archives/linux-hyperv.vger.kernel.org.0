@@ -1,58 +1,58 @@
-Return-Path: <linux-hyperv+bounces-3918-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3919-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E56FA31BCC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 03:17:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD6CA31BE5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 03:21:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04D213A7AAF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 02:17:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FF4B1889EA5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Feb 2025 02:21:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 971072AE69;
-	Wed, 12 Feb 2025 02:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61F42AE69;
+	Wed, 12 Feb 2025 02:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKeV1YZ0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTMWDyOA"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1AC271805;
-	Wed, 12 Feb 2025 02:17:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8A71CD1F;
+	Wed, 12 Feb 2025 02:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739326651; cv=none; b=qKRJSS/81+4gBdFXWRk8aTIw3ZH7HHFzOHUGRN473I59RluNr54u6UCjwe1AOJTsRpBjhSRWqBScqzk+8Fu3q9c6Er9D5/8GPcooa0HfjLkjNvAqt7LnYGBT8Zc0MYW94Dud5lMSSeRAXxHIiId/tebhHDmDcmUxGeun6wcgA+w=
+	t=1739326880; cv=none; b=jZTphlKtnQmQncCrTdVtiHJKasLrNRiCgoE3k2a6wdB61qUzjkjHGi2xfeLBcu4QU78WUS5/04bDcIcdjJhRMw8mhEmZBpZoDIPcBjxGEMFk8WCrU9nM0KO4FCpnvseWHLWfGz090yPam/yExhQNqxJvRHcyBsgbegIHctbF8HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739326651; c=relaxed/simple;
-	bh=IfNzFSoFebDHVFD6C3un0hfHjr9AseBn27h5i77Vq+4=;
+	s=arc-20240116; t=1739326880; c=relaxed/simple;
+	bh=IyLvP91pfGYRHCXqlRx/ClwzflNIe5Yh0J8AVLNN12Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pp/kVGDPY1AuAR0Ln9/hWzO/+83xKbJZlvVn2KHGJyp/czzw6Jq18znjh8zdn5ylcAgAEHujDrB91x0F7Ir1K3LjMkSA5BXhsjMAw51sDcpuCYl177R51NlVhH7y+f/+LH4Kxjz5D0K5kVR+oaJuvJ0NFN6FVekkzdB421MX1fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKeV1YZ0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D68C4CEDD;
-	Wed, 12 Feb 2025 02:17:30 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uqg55o8KK9teSGjuOh3/9TIWD11Rp/Mjw6iBw5jeo/0TGOFC+4R4cDmTCKbtejEVzESdhWUHc+hGub4sgHnFCKjTGs0zNndw5OyVOLI3luk0v2BE0zvNRGqjcxtWr4LKCLJp0GAqu7gRWUZd10FH/h21AnZCUsIU/iln7x+fIzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTMWDyOA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99ABEC4CEE4;
+	Wed, 12 Feb 2025 02:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739326650;
-	bh=IfNzFSoFebDHVFD6C3un0hfHjr9AseBn27h5i77Vq+4=;
+	s=k20201202; t=1739326879;
+	bh=IyLvP91pfGYRHCXqlRx/ClwzflNIe5Yh0J8AVLNN12Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gKeV1YZ0Ve18A8Hic9PwaGOUW1qk6t7uDfTSjB62RfdLSvh0qBLZxHSJhB8h451l5
-	 L+yVT0YG4EQTBjNfJqAj6U+K2OswjMnSDo6nXInbmLdvWIxEh9Jhbd72aHwpNpzU2i
-	 J96wlYe5lZUVyg2Vghq+EbHtjLI0r0mzG/QyE8SJLgF6IjykkaX1VqEnyeaPDmfc+V
-	 SrPVSI4F4lq0xA/XPFZae/tvBskaHyy3YJMNRErnmfJT5o/+GeRQ0U5ysS74pBlMvG
-	 qmGuuJZvKPNQ/b4R5L9q8wAkJRQATfh4DGz7kU1Geuj6tPikcodhsUekLimUVxB5IT
-	 wc4MRIx4h+baA==
-Date: Wed, 12 Feb 2025 02:17:29 +0000
+	b=lTMWDyOAyrZVTk0RkOOT1gPJt1AI4FCh107H0lJJ+YKfe9DYu7MtgZZMFdIs8ESso
+	 Rkv66JTBZOZc6fxrTFn5GOSJAWT8ebdmxqQhvjoHRi2m8K0KoRrqLdpzsBYgK6avmY
+	 8v16oFX0lxzGEL+7Ix0lOtJQgdiSo7XU7DWJn15evfvurFOjyiBJgbbW12pLJMzJid
+	 AiKoCNVZ9qtXAm5CVFefyRPCUIIwAmCLE+GKL7oyPMxLvlVY25yPJIpdUwarc1GZXJ
+	 6WML7Tij8w4ZZ/m5qU8gTjIRw9z14NXwCnLtf86vBBLfPLIMTLas43Yvev16eA0fKU
+	 NWPH++9FGpjoA==
+Date: Wed, 12 Feb 2025 02:21:18 +0000
 From: Wei Liu <wei.liu@kernel.org>
 To: Roman Kisel <romank@linux.microsoft.com>
-Cc: namjain@linux.microsoft.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	decui@microsoft.com, haiyangz@microsoft.com, kys@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
+	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
 	mingo@redhat.com, ssengar@linux.microsoft.com, tglx@linutronix.de,
-	wei.liu@kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/hyperv/vtl: Stop kernel from probing VTL0 low memory
-Message-ID: <Z6wEuas8LbRVoBP_@liuwe-devbox-debian-v2>
-References: <20250116061224.1701-1-namjain@linux.microsoft.com>
- <20250117170141.1351283-1-romank@linux.microsoft.com>
+	wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH hyperv-next 0/2] x86/hyperv: VTL mode reboot fixes
+Message-ID: <Z6wFnoK-X7i1bd9x@liuwe-devbox-debian-v2>
+References: <20250117210702.1529580-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,44 +61,45 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250117170141.1351283-1-romank@linux.microsoft.com>
+In-Reply-To: <20250117210702.1529580-1-romank@linux.microsoft.com>
 
-On Fri, Jan 17, 2025 at 09:01:41AM -0800, Roman Kisel wrote:
-> > For Linux, running in Hyper-V VTL (Virtual Trust Level), kernel in VTL2
-> > tries to access VTL0 low memory in probe_roms. This memory is not
-> > described in the e820 map. Initialize probe_roms call to no-ops
-> > during boot for VTL2 kernel to avoid this. The issue got identified
-> > in OpenVMM which detects invalid accesses initiated from kernel running
-> > in VTL2.
-> > 
-> > Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_vtl.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> > index 4e1b1e3b5658..3f4e20d7b724 100644
-> > --- a/arch/x86/hyperv/hv_vtl.c
-> > +++ b/arch/x86/hyperv/hv_vtl.c
-> > @@ -30,6 +30,7 @@ void __init hv_vtl_init_platform(void)
-> >	x86_platform.realmode_init = x86_init_noop;
-> >	x86_init.irqs.pre_vector_init = x86_init_noop;
-> >	x86_init.timers.timer_init = x86_init_noop;
-> > +	x86_init.resources.probe_roms = x86_init_noop;
-> >  
-> >	/* Avoid searching for BIOS MP tables */
-> >	x86_init.mpparse.find_mptable = x86_init_noop;
-> > 
-> > base-commit: 37136bf5c3a6f6b686d74f41837a6406bec6b7bc
-> > -- 
-> > 2.43.0
+On Fri, Jan 17, 2025 at 01:07:00PM -0800, Roman Kisel wrote:
+> The first patch defines a specialized machine emergency restart
+> callback not to write to the physical address of 0x472 which is
+> what the native_machine_emergency_restart() does unconditionally.
 > 
-> Thanks, Naman!
+> I first wanted to tweak that function[1], and in the course of
+> the discussion it looked as the risks of doing that would
+> outweigh the benefit: the bare-metal systems have likely adopted
+> that behavior as a standard although I could not find any mentions
+> of that magic address in the UEFI+ACPI specification.
 > 
-> Tested-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+> The second patch removes the need to always supply "reboot=t"
+> to the kernel command line in the OpenHCL bootloader [2]. There is
+> no other option at the moment; when/if it appears the newly added
+> callback's code can be adjusted as required.
+> 
+> It would be great to apply this to the stable tree if no concerns,
+> should apply cleanly.
+> 
+> [1] https://lore.kernel.org/all/20250109204352.1720337-1-romank@linux.microsoft.com/
+> [2] https://github.com/microsoft/openvmm/blob/7a9d0e0a00461be6e5f3267af9ea54cc7157c900/openhcl/openhcl_boot/src/main.rs#L139
+> 
+> Roman Kisel (2):
+>   x86/hyperv: VTL mode emergency restart callback
+>   x86/hyperv: VTL mode callback for restarting the system
 
-Applied to hyperv-fixes. Thanks.
+Saurabh please review these patches. Thanks.
+
+I don't have a strong opinion on them.
+
+> 
+>  arch/x86/hyperv/hv_vtl.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> 
+> base-commit: 2e03358be78b65d28b66e17aca9e0c8700b0df78
+> -- 
+> 2.34.1
+> 
 
