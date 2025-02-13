@@ -1,135 +1,156 @@
-Return-Path: <linux-hyperv+bounces-3937-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3938-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96061A334C4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Feb 2025 02:35:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D97A33570
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Feb 2025 03:20:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 63F877A23E4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Feb 2025 01:34:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 750651889C43
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Feb 2025 02:20:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23618633F;
-	Thu, 13 Feb 2025 01:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F7711F8EEF;
+	Thu, 13 Feb 2025 02:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ofagyWal"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Mm2wAI7n"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012065.outbound.protection.outlook.com [52.103.14.65])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2116.outbound.protection.outlook.com [40.107.93.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2597FBAC;
-	Thu, 13 Feb 2025 01:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A4C7082D;
+	Thu, 13 Feb 2025 02:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.116
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739410526; cv=fail; b=QZwPa0A8WtSzxunRS/VQCemOWWnL+89fHXggSKX55+TjtOx0xrJH+XTlhsyp+v+4BgxdooW9QBm5/NSlGWj20bsOejzorCeUbjw7yQlwoxWNZdDmnBHAQMMNI/gDo6qjwtfp3zzlYDuxTVBeEe0L2rdzgxMG+6mbrxeNZfo9sD4=
+	t=1739413228; cv=fail; b=Q0qOXEOikaynMqTTsWNgeI+Go6OUaLHzOeB2N8KKMM7HIiR73gsaW97rstkixDOiUJoDX8xS7DWNyN8c2jCxa/1zGfBOFxASk/ixJJ08VFeJrhiN7X6yE1qoiMauwNBwMQdTcLeIyZquiYVnrVqusoNeotrGv+CRCfl2hylWRG0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739410526; c=relaxed/simple;
-	bh=4VPCUMZhQvRkqM+gnplyMCY03AJA2pnTwwYZjUeLTps=;
+	s=arc-20240116; t=1739413228; c=relaxed/simple;
+	bh=4I8dPKQ/9BSeBJeq+CJ5G3Pthk/mV4Q/8wNPxjO/VGU=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=O9N7IFQy9ek2qzS8580z7RAr3jpykIsOLaaeUJV1f4MXbPeFA5PRZRLZfdGV01Q7jZZxlGEWmQD9oBu6eaVJoW1QzxU7+vw1JGsS3D2t7+XFivWK7UUkY5h5nGPEkPMJky/hWu8QGQLfqcJ0xbZdrmhBb8Ujbx/xPUCOqlPOh10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ofagyWal; arc=fail smtp.client-ip=52.103.14.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	 Content-Type:MIME-Version; b=e49OONCEQQcHXHzQwx866eGVOmMc8OEq8lkw8L+pJi//8nzDmK2DFhVXR5yLWg2gBqS9Ycbiez1WLitfZpdFioHnx18c0twvPbGs9RNoXWnxIBUQwdKsNg9XhbBBtoW6KiezXXUZiiU0nYf36Q0GASymg2889dvWj8QZKH3A+Lg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Mm2wAI7n; arc=fail smtp.client-ip=40.107.93.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q1YIIM0uWmx957W5G0o2sb9Vn/XXjGHWXsDA+4rP5+bDcg4muYX6HGI4QLNUiXqcM7H5N7+yUDurh1ykpml9Hz41FE6EVK1vGSTqEnirG9Qn0BqFsxT49q5MLoWWK4Il8ckX5IWFD6+F1HW8qKMn+RHT9ng2YxmihtUnqTqUbThDkGHbY3sTeotb+p5LDFlGqd0mV0Id58xtAH56ZnjweRsCc0Km7MkbGkw8GKkyasyiiFC7LxPWLzef1bqMvgiINYvhbGcdGqsDJHIuvJKAsKOhzfpYqlxTsBTfSE8mBOEN7CcXgpANtZaOBsXfTeX3AO9EfbL2x0S6NE9OP6ZAXA==
+ b=QRLN8EIW0Bfk4zsodcno2VzWEnN9FfJgGBECyEqm/b/chZ1TaYAo4rlQVxqFIeJw0CFX8SSY3RJHsC/pPpjvmiEbflf7ipyQpJERG7BeJBlSEo1nxkjVLio8MKD6eqJyBYP2trZwAI+PoC5F8GZArxWDEgk57ZbAFKOsMDpMkVnXZdf+yD0bRvX72OU6cENTTlwa1kkbkxPyW03oqaNNt20IaVYszwaq9MMCXyqQuj4xWLKsvt7PvJQYhb4xWQOurufr5+fwrgjWvZQTpgw1bd/ygynotWKA8pro4PM4tbkOdkDrzs7Lj4gstZqQ8NW6hV75h4yN1OvXVhUYCDqCoA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k7/PKbdhL77CIanyc9ctveT3XYq/6UA7Gd/N3Rr+Ajk=;
- b=E4HVquxagawlhIcp9HzTVq/h0EpIJIqFGbSNoC2ed7v3IFXaT0OF9nvT/KGoqTpGZmG9UsO9qufjoqEncSXvCqrOd11Oga+IePF9QjyHAsHoXeKqGWUK/d+n/IO5irF0jpwvK7sqERr7N0tAKxbxxa7+8pxU5sHySqM9kqpKeiwLn7ij3pxf4Q7W0v3eiQTIlcDXUzWelQ4sg5dM1xxtSNiGsv3taYbFgwSNl8pyACwpjQPEOrC+eIgq2igoR27LtDO6Bn7Qoegh9M2V+N6kvWieqT6fouluxM51QqDktqyuFcg2IXnGaXGmSuuSjwnClMR8nj3e715Md9VJNK6DyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=4I8dPKQ/9BSeBJeq+CJ5G3Pthk/mV4Q/8wNPxjO/VGU=;
+ b=aZMOQxV8KC0c4wrhwcYYigRxrpOo9W1xF9OTusRJ82R1VfQBW353b/HzjTZE7xbHhmZmLQM9XPZ9KI/+tVA9nlPg5xzZffrteLgSade4P8nn79dRSR+RgNoFrLfrWZXArcCyDYgYvyyBd9wLuaiekvtuBKjzZApsAISPSKgg9vjKpY8CMnRuUhln/Cr4EeRR+lMmsMxAsHFO085fq/Uh32JurMI/eeJqVhuDdN8iE66YvbozsiSlQIDS1qNCuelMQry+/95rxz5FhY/iVSvYz7eLeaQX8OEFH/rxpRug8AtJ602hQYmcUDPP9csm8x+UZ6o6cXLvbShmX58X5Fwuyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k7/PKbdhL77CIanyc9ctveT3XYq/6UA7Gd/N3Rr+Ajk=;
- b=ofagyWalzEJVJRmCMa2mkZl54zWZ9Kh2EQa86lVdEIGo2MTEqt9HmGhe6dsL1zf57gmPI0SjTGk8eYo8r+gZw/UwJuxis/rF+ezD7trPuS2kHbVN6zLQ31OTwcxm/2YYQJH18PkBfd9P6noMKPwt5s3zUljNb0YacywGl7D042qXZ1Uz6cgL9QVzlWLh3oWfM3f9EoHo8XJx9z2k5GX+DyWvLbg7cIxKAwdyx8acS0QROR2HfEEVpOS6w1LntoPywqw8lsj75/S/Bn5RQisfH5oPhuhkzpRiQk5hluoHwBbYbL/LqRdLVz5Ukz1BKYE1NmeJZPuhZC2MNVGE+Q82QA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA1PR02MB8607.namprd02.prod.outlook.com (2603:10b6:806:1fe::9) with
+ bh=4I8dPKQ/9BSeBJeq+CJ5G3Pthk/mV4Q/8wNPxjO/VGU=;
+ b=Mm2wAI7nBXKb/aGXsOXdTB/GcM7edAS42Ptb40qR6GXRc/2UUrHq4xBUzWoPfxCFhVpMnNDdYe3qrI1kgO+SbKcBnkQfgjBEHP+a7leDqFAnIs7Q7gKHkpf63K82mTDAHTgwrKtMFN6QFH/21tx5o0dw/MlFpL3qCgY56jwty0M=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SA6PR21MB4230.namprd21.prod.outlook.com (2603:10b6:806:415::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 01:35:22 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8422.010; Thu, 13 Feb 2025
- 01:35:22 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-CC: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"deller@gmx.de" <deller@gmx.de>, "weh@microsoft.com" <weh@microsoft.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.5; Thu, 13 Feb
+ 2025 02:20:23 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%4]) with mapi id 15.20.8466.004; Thu, 13 Feb 2025
+ 02:20:23 +0000
+From: Long Li <longli@microsoft.com>
+To: Leon Romanovsky <leon@kernel.org>, "longli@linuxonhyperv.com"
+	<longli@linuxonhyperv.com>, Stephen Hemminger <stephen@networkplumber.org>
+CC: Jason Gunthorpe <jgg@ziepe.ca>, Ajay Sharma <sharmaajay@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH 1/1] fbdev: hyperv_fb: iounmap() the correct memory when
- removing a device
-Thread-Topic: [PATCH 1/1] fbdev: hyperv_fb: iounmap() the correct memory when
- removing a device
-Thread-Index: AQHbe03JMSfrBLANP0SDwaGKm7HxS7NAe2OAgAAbBUCAAAt0gIAAH9WAgAOyT7A=
-Date: Thu, 13 Feb 2025 01:35:22 +0000
+Subject: RE: [EXTERNAL] Re: [Patch v2 0/3] IB/core: Fix GID cache for bonded
+ net devices
+Thread-Topic: [EXTERNAL] Re: [Patch v2 0/3] IB/core: Fix GID cache for bonded
+ net devices
+Thread-Index: AQHbetdgKRp079ZsDUmF8noRMO9zmbNEcZXw
+Date: Thu, 13 Feb 2025 02:20:23 +0000
 Message-ID:
- <SN6PR02MB4157C1DF0A0101EEF4CA79E2D4FF2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250209235252.2987-1-mhklinux@outlook.com>
- <20250210124043.GA17819@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB4157B0F36D7B99A5BF01471CD4F22@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250210145825.GA12377@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20250210165221.GA3465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To:
- <20250210165221.GA3465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SA6PR21MB42311935C1955034D9EDFF5ECEFF2@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <1738964178-18836-1-git-send-email-longli@linuxonhyperv.com>
+ <20250209094528.GB17863@unreal>
+In-Reply-To: <20250209094528.GB17863@unreal>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=731106bf-25e9-4181-a21e-4b0f43a64082;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-02-13T01:07:21Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8607:EE_
-x-ms-office365-filtering-correlation-id: 7a0f0f0d-bf2e-4594-97f6-08dd4bceaed4
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA6PR21MB4230:EE_
+x-ms-office365-filtering-correlation-id: 38895db0-def0-4925-00d5-08dd4bd4f8f7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799006|19110799003|461199028|15080799006|8062599003|440099028|3412199025|102099032;
+ BCL:0;ARA:13230040|1800799024|366016|376014|10070799003|7416014|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?2CumjRiO5js1vFyAFE3Ntuf/YVV2M456+GSEqLW6IFdGVDEZY4fvizVOWaKd?=
- =?us-ascii?Q?ZBYRQss7dJYhyLUABfr5szO6MtGIAcyX3B+CtDIwY2yza/Ea0n6HPEVEDays?=
- =?us-ascii?Q?AlVGhcHSlTqOEPjmWXx6Fyu2p90J++28S8mu2pM1s7Cv+tEu309Q0EHoySDt?=
- =?us-ascii?Q?GZmU38yLqHVgzGKE3CwvuNnK0KETrsOzbgNpRgaiecIE1SbwzCO0c+vAoOJX?=
- =?us-ascii?Q?zG61rANzBFxqsevjMa82UL4ZkA1AHHJ8VTIPGlNg3Qqusi1ysq37ttp4kiYV?=
- =?us-ascii?Q?Vf8yMOBVXUy80VxWI5osLkDi3fiqd2h+ipn9/euqB0mDzdPstxyl7xN5bRqS?=
- =?us-ascii?Q?2lLAG3gmoLaeYPnJGbo0qKAUhbmMI9LUSJpCOs6JJdcU1tHJQhhePePck2E3?=
- =?us-ascii?Q?JtxjlP3cxgqS3pOnoSQKyeg7ATd0C3IwVKl2z0Y/ngEuXAzQjUebKthdtx2q?=
- =?us-ascii?Q?jRHkSLV+cAt0lME6g6cYxLRENPNCBq6YpzP4DsCHXQxeP7DaJrGY+1AuYCVm?=
- =?us-ascii?Q?YlWUyKsVQ3XwjBLUypgvwwWBxB6p/+7HBDpmFoOmqTVmLZki1jCroxyJdgHo?=
- =?us-ascii?Q?tRzyk0LwjdsmheoQjiDNpGswubl/Lt0ZaeMrd0zYILIWo6ssTcNjbnDErrMn?=
- =?us-ascii?Q?SnJWONret5Rk9nP9OgdSgj4mCra17XdDGaIgfUCxlJT/aV8yh1lwuP1HAwdG?=
- =?us-ascii?Q?/KC/PmDLLNt/BBaXQo99PuE02nwEuacuojJAjUnGaP5/4VGiPTbdkB0Nowcm?=
- =?us-ascii?Q?c7Y5BINVbSlaiAGOhjH5zS+wG6V1oCmkbW2kQbtm7usLYffnl7z1oqd1A3YG?=
- =?us-ascii?Q?mXQjG88e2X4sLqLtU93ffcJuU7Wqq6ba1D6Vecfn3YUpxQMymLIKM/Ku2seG?=
- =?us-ascii?Q?t2tLzG2prIWmd+8MdTkEqJX+kguHDCIeApf9tod0Mrtn8NZjsSoZ1Xqe4A6S?=
- =?us-ascii?Q?TRgBc2jzN4Mk02k4vKuSzPQWLZiE13m2Zv97nQtnLQfZ0nuZ+SUtwHplTJV4?=
- =?us-ascii?Q?RAnnqQ3P247RtT+r8qpinfMPxRwdhZWpORxBJpRCPI4yl6w=3D?=
+ =?us-ascii?Q?niIhuW5fCXa+9PBu28Ajo7HVVwGGmSV0kadXZ8MbAagyCcFMNhdEhJjfAKUg?=
+ =?us-ascii?Q?ehP7D8O8Xz3mqEPsZHxF2pwIZ/DPPK3HlW34bzG+qOBJZ4WPLtBy1qI8Pwoj?=
+ =?us-ascii?Q?2ZY8nAz6WIcGWT6qeDlZZYEowHLLSFusuA/sqN6ilExaOy3X8UuoaJK1mbVb?=
+ =?us-ascii?Q?XAEadyRyQizILPFqyMNNpq8xXwv7+Pl+lJCxWvWkgr5NgvBSFC19sbrpreoD?=
+ =?us-ascii?Q?+zElCUU3FlqYkTic5d5QK2Yu7I60RsuiRHz9NUITUw/Mu3OzozGhkqakpRep?=
+ =?us-ascii?Q?ZAVTD4dmlxsDATjd7Qaf5nf+jnRTFczGWFaP3Rk0YIW0L7gniRE/cso7jTq9?=
+ =?us-ascii?Q?iA71Sg3m7TqKUrySBmbM7QIoRS1CZmrkLiog0ZrupCAk6yitAVqftaNhDc+z?=
+ =?us-ascii?Q?NygjfDsYmbkxqr6wYj3VcxvuQ/yBkgDgEq/kx+AWZn3dZi0mMxiJZF7v31WX?=
+ =?us-ascii?Q?C74+RR6JnDtqWlcteIesZJr52q62877Dxm7NOlgvzFWnLxsut28UKAXI4IXL?=
+ =?us-ascii?Q?4DcEqS6OaIywNKLNIf9qI1AnWMW37b98wq5OCjuLMW7eaTIjlHZ505oJ4iQz?=
+ =?us-ascii?Q?vQOenFxYrBzX5IQFsOGxbAGRJf+6wjeJTWWZI0aySeCYN+2snzmSABkryTfx?=
+ =?us-ascii?Q?j/YOjwJaabktd3ydRkVD4O7CszFNPzDtHaXvH41OwQr1bOOVkJ7W2nXAopXG?=
+ =?us-ascii?Q?cKTo/tOG4tmSnsrlddr5/K8SvGOcLbXJ7ww7YFekX9fX8wfBr4QH87Y5SSlA?=
+ =?us-ascii?Q?bVAujBbrxLUVQLIi42fOY3Yj5R20fOh9hPrxeuRexJmg3HvAy1/Sw2riVwC7?=
+ =?us-ascii?Q?TtsBHgrS2wvYSZbmq4O0aTGXjsnza7Y7XGMl75hEMIUIpEiDpRpLBxdZpxB0?=
+ =?us-ascii?Q?/wj19E3Yyn9STAZdlQR7sJCQgkAtKiulTjanaduJxfUi73p3GG8uw3JLUQTa?=
+ =?us-ascii?Q?ClVN0oNuBzgaCtOJekwKGmdaFSdAwqTjYFhD44wbkmhKg7BFn4I/ABdPO6x2?=
+ =?us-ascii?Q?dG8TDL2nqovYvy9BEKTymAuPO4z7/QDS1jsBq1NTN1wtH974+LFjS+Ny1y82?=
+ =?us-ascii?Q?3qa/MPoqZQk97ccsgugE8x+CYMl6Zw4CtZGj0Lo7Xe20VZ0GxCEu9kkAQpmM?=
+ =?us-ascii?Q?10rC61WfVB1IlM1b94GNqGCroft7gnYlJhpr5ZW7NbLEciY8Y3ZWHL4JBqal?=
+ =?us-ascii?Q?HE89AiVC6WIJrhsAtSrfSDdC/dSl8FnWXHJRYmexMKfFD1KwvJUmG2eZKwou?=
+ =?us-ascii?Q?naY//+Lq3HqY+SOfgeu4gW/BOE4AU/SY9ZhTPNudGrQcU0zPL2Vp17ZR+yHo?=
+ =?us-ascii?Q?EX1OQbWAfmMFgfgakQE/auO4Dj+8dDZB3STEDbxU5CYAYm6U6rMAE8Yu1QFF?=
+ =?us-ascii?Q?Dx+HTYUoK860ERZ1ZPfaxmZTWID16U6nfKWPAoIDPUVBZNWZKIln0bxC55nt?=
+ =?us-ascii?Q?I2RRQ8CJ6cA65QSi7KHOS74clEy4XLTe?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(10070799003)(7416014)(38070700018);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Z4zMkJ2ocQkpRvJOMGpaKpYSSbGy8tXX2kCYgq75I+b1/RPPVsrD5TetgYfU?=
- =?us-ascii?Q?pUE1ROYAxv7siqa6irz6XwTaa1lDodhG8x8q92ePCC7h+oLdlcx1UGy4rUL/?=
- =?us-ascii?Q?lDC7+Q86vFAjMWaBEvsWE1wRSzDsLmKq/GG6wJukiaY0STRT7zx0wQaDa5US?=
- =?us-ascii?Q?8udPs0UeT2KvCznoNf8dkYkM6UHDnyT1brP5cKoG1cpMv9vLLkwzLrkGBcoz?=
- =?us-ascii?Q?nY0js1LoNkLl7to0komc08KGAWFXfFQfNNVAFVx8MzVwhNSX44ei+/prWzvS?=
- =?us-ascii?Q?KEUIqJTPKuRQmwoaCj+wlkzzGUeJzsDalbSA3InVoOSeLzYCxIm/v0ByhZS+?=
- =?us-ascii?Q?axkxYRlI0kCahozI/N2BvmWpOwD7HaoFCeWQpLhr0fwybNjrgUeiUgsVx2jm?=
- =?us-ascii?Q?RKF2oYZkuOhLackNZRMHdX0CbR+4Y/L3c/hRJOWD5Oi2orZq4A7lWZjQK9TO?=
- =?us-ascii?Q?BlN8lfBw2j8RzrC6oTDrCF8ioPu6+BNCIhiYFblO01LIKFLIQvXNuRZZ14w4?=
- =?us-ascii?Q?4Y2UcxjQ6rCMJpAz6Qw0j9b4S0vkkfsuyUb/KY88I9gT7PI+BdZlAQZvv036?=
- =?us-ascii?Q?V4mEQoCL/6Z6hdB5HW0e+Vii2iSD8aRqdmvScmY0nXexzLbbUjzzzbwYHIEq?=
- =?us-ascii?Q?Rurao52L1xRnWWeRESIMm9bVQyH2J0bK4+mKmzsfCGIa9C5l8FmwEYCg9V7z?=
- =?us-ascii?Q?lNfUvb3QkggmChjQgDCr2g3X+7uQDNT7K28c5ikuugevLByXdeicvXGIbkJI?=
- =?us-ascii?Q?eYoWmYEBlsCSORabwVwPbrTQ0CmAHttJJMpouuHdWZiHt+NjaSCT8B8IKuNl?=
- =?us-ascii?Q?zykw9Byh8AcS14iQfyznJg16kUda8H4vuwJmf7rND2yioPeIs694NL991Bcb?=
- =?us-ascii?Q?6msqluW2KhSDjcpGjRI0QmqDhFK6pDFQ/IPRjVrLkzbxtl377OYBPpP91A8m?=
- =?us-ascii?Q?di+OO2QqW/enhIsabJZQaBAkomxZkiav6LMFqTS5xwH/XI/3Co91bXcXKNGy?=
- =?us-ascii?Q?gpxLo2E3VOavLr7Od7Qjxu8k/hqLo3xB+971LJ4bR9vfN4E6bbwhn7PYSmpx?=
- =?us-ascii?Q?aumjmwlngaCZTgplsxKH2RGBfyRrby05SbKXt2/FJtT7jVYiiqoPme3jkMt2?=
- =?us-ascii?Q?xGYdtJkoiGB4iW6ONqowHSetMPhGvPBBCAu85PmryV0iMynAVWVZuNaIsQmU?=
- =?us-ascii?Q?aF+VvKiHHgT5aB6lp2azTD8roMYVo9e+2kkiZjeL6DZZ+sR4XN6UUdsVPww?=
- =?us-ascii?Q?=3D?=
+ =?us-ascii?Q?ZL1+bfdlbak55ON3dw9Xi3WD7QNuko+U8FzGYrVJSMpwvMx8NlAm/zVB3cXz?=
+ =?us-ascii?Q?K+ZFxtgvbBjWuhgN/Wh5x0L+FWvHe/NXtBXph7h7ao5OUAj9anxoeDfTUiZW?=
+ =?us-ascii?Q?PX4hm4N/Yhm1E6FHXvASVmgveO/5hEvAIufSGdSYwnxDsH8yuGxizUR87Ylf?=
+ =?us-ascii?Q?PYGEHLUINDxnXyBfzxQ8HQrpYJOX/WT24/aKY+a5iupTJpjiVRQGnKN7YtB9?=
+ =?us-ascii?Q?6wbZR2x0wM1yekw0aoBtitmj46rKwtGHpDahiDhrxbaf2wlyuwTa/cNPNCgH?=
+ =?us-ascii?Q?4TKZfUnDK4HG6k2CA/SPuzTdsD/IEAXkC17wCKQWCG5FJP6/T80KBEXF2UdL?=
+ =?us-ascii?Q?ai05Lntc3AaSh8grkaOuS9IoPl8cZEOtuxJ4bUCy9NoMHkh+Yq6Syp1P+qCF?=
+ =?us-ascii?Q?xkb8uRhOOH4iPz5TgR1gdHelPmeiBsW4AMl5UgfqVFhQ79tyf1HFqTMbmM5Q?=
+ =?us-ascii?Q?q6H+nOWE9NPd7nuEnPg65WoJnjCOlnnuPbP6Ink3d/b7nxSsTmf31ShLcxR2?=
+ =?us-ascii?Q?dQIEK4/BvJBDEyOGiZjyvVHlVelHNuLSR/Ofjy48J5hKW8ixEq/rPtcOr8hP?=
+ =?us-ascii?Q?mYLQe8FlVdMon82zQgYgux19zTa3Gkxn1K21PIWjTzvD7iPUOIx9z+p2rk0q?=
+ =?us-ascii?Q?gkJH9s8rnuC5Q69/GQD0/TwGf/xVGF09admk7OSu0PfrcZHF42adtSsad5P6?=
+ =?us-ascii?Q?S41FF5TOyMMWT6qXAgX7C8VapCexLS/SCePWoGQRFW9FLYdg6tQ/RXYrrM8/?=
+ =?us-ascii?Q?Usrz4QUSfhf20YaZFec+AjG8+cY/QqdGZUP+QSxWcfIuNbzYq5Sa9xEfzWjT?=
+ =?us-ascii?Q?m0AlVxRlw+oZ2OznBXM+TukkvtfNOff/3ZfTk+5KMRFYpHXWRWThYnpmRz4m?=
+ =?us-ascii?Q?pV2ck5Y4vEuZ9Hg/2FR4ZCNAKWQSqueTNd+xePDo9Ab9OHaBxh7u+p+QeFaA?=
+ =?us-ascii?Q?dsxo/OQnHXotWrI5Zr3rlo5MaKgwtHgHMVzBEvktW1thRhqeGBHYEZ4Z0rzl?=
+ =?us-ascii?Q?0HO4D+AS5GwXV1nTWH4CTKm4LqKEjnCIU2xNNhvOcm9h6qI6zBJlXhL32OZ8?=
+ =?us-ascii?Q?N5zkvVGaoY/LnjvNykBGX+KDFN7lk//xbIdu3hMl2BnyapdwWE1dsesdNfvg?=
+ =?us-ascii?Q?0gUb/y5gAZUrg1oLILrRbQG5wbKfYg8k6XT+fRg+IZRDNBlqHHHzA0+MIJqT?=
+ =?us-ascii?Q?gyrv0vgOr3xh7ZPqPnHIXdY1KZpEwPUZPuEkbrG1DCUt++vTAEzitRe7xyPp?=
+ =?us-ascii?Q?uf128GxJMG6KGgtIq0Az17SoSdW8N8BYsX3lNyQB2fgnx20grcSmJFxp4tmL?=
+ =?us-ascii?Q?zBAbMS9xfvstB/MFGqDv8kig1hYKSw/oMkvKK4QMr77wObeX42nHopzssTnf?=
+ =?us-ascii?Q?d2zgNgvqnCDpdt3lIWIM5S2foI5ZPRHccF7FDk2TWLn1I4Y/xuzY/Ej47O9G?=
+ =?us-ascii?Q?f9lq9QwRKKObfWVWFuwGw82hnJJqdkvLEWlj7kbZ3x+CY5olg0st7bqxokAo?=
+ =?us-ascii?Q?plMHf4eJ12W1R7CyjMeqOr31sjmt/ETVRRYOtWo6ahBRSaG3Q+DMCVkCH7Hm?=
+ =?us-ascii?Q?jXcCLJ/Xxs1laHwRPUwXyHtiIhrZSY9fJhECCPyJ2gQXtSuYfXTPs7scriLB?=
+ =?us-ascii?Q?2z41liMozrtfBav9EnI3B1dz7CvXGCBcAICWOGsDO84i?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -138,121 +159,83 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a0f0f0d-bf2e-4594-97f6-08dd4bceaed4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2025 01:35:22.4934
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38895db0-def0-4925-00d5-08dd4bd4f8f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2025 02:20:23.8270
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8607
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K7BHyYbPxGicfQl9y0iLVTZ1FlliG/7dmWSPmzL6gI4qS+7uAexs+jm8Zi7eUjd2qu/zHg8UlhAE4M3ygB3rAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4230
 
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, Febr=
-uary 10, 2025 8:52 AM
+> Subject: [EXTERNAL] Re: [Patch v2 0/3] IB/core: Fix GID cache for bonded =
+net
+> devices
 >=20
-[snip]
-> > > >
-> > > > While we are at it, I want to mention that I also observed below WA=
-RN
-> > > > while removing the hyperv_fb, but that needs a separate fix.
-> > > >
-> > > >
-> > > > [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/co=
-re/fb_info.c:70 framebuffer_release+0x2c/0x40
-> > > > < snip >
-> > > > [   44.111289] Call Trace:
-> > > > [   44.111290]  <TASK>
-> > > > [   44.111291]  ? show_regs+0x6c/0x80
-> > > > [   44.111295]  ? __warn+0x8d/0x150
-> > > > [   44.111298]  ? framebuffer_release+0x2c/0x40
-> > > > [   44.111300]  ? report_bug+0x182/0x1b0
-> > > > [   44.111303]  ? handle_bug+0x6e/0xb0
-> > > > [   44.111306]  ? exc_invalid_op+0x18/0x80
-> > > > [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
-> > > > [   44.111311]  ? framebuffer_release+0x2c/0x40
-> > > > [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
-> > > > [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
-> > > > [   44.111323]  device_remove+0x40/0x80
-> > > > [   44.111325]  device_release_driver_internal+0x20b/0x270
-> > > > [   44.111327]  ? bus_find_device+0xb3/0xf0
-> > > >
-> > >
-> > > Thanks for pointing this out. Interestingly, I'm not seeing this WARN
-> > > in my experiments. What base kernel are you testing with? Are you
-> > > testing on a local VM or in Azure? What exactly are you doing
-> > > to create the problem? I've been doing unbind of the driver,
-> > > but maybe you are doing something different.
-> > >
-> > > FWIW, there is yet another issue where after doing two unbind/bind
-> > > cycles of the hyperv_fb driver, there's an error about freeing a
-> > > non-existent resource. I know what that problem is, and it's in
-> > > vmbus_drv.c. I'll be submitting a patch for that as soon as I figure =
-out
-> > > a clean fix.
-> > >
-> > > Michael
+> On Fri, Feb 07, 2025 at 01:36:15PM -0800, longli@linuxonhyperv.com wrote:
+> > From: Long Li <longli@microsoft.com>
 > >
-> > This is on local Hyper-V. Kernel: 6.14.0-rc1-next-20250205+
-> > I run below command to reproduce the above error:
-> > echo "5620e0c7-8062-4dce-aeb7-520c7ef76171" >
-> /sys/bus/vmbus/devices/5620e0c7-8062-4dce-aeb7-520c7ef76171/driver/unbind
+> > When populating GID cache for net devices in a bonded setup, it should
+> > use the master device's address whenever applicable.
 > >
-> > When hvfb_remove is called I can see the refcount for framebuffer is 2 =
-when ,
-> > I expect it to be 1. After unregistering this framebuffer there is stil=
-l 1 refcount
-> > remains, which is the reason for this WARN at the time of framebuffer_r=
-elease.
-> >
-> > I wonder who is registering/using this extra framebuffer. Its not hyper=
-v_drm or
-> > hyperv_fb IIUC.
-> >
-> > - Saurabh
+> > The current code has some incorrect behaviors when dealing with bonded
+> devices:
+> > 1. It adds IP of bonded slave to the GID cache when the device is
+> > already bonded 2. It adds IP of bonded slave to the GID cache when the
+> > device becomes bonded (via NETDEV_CHANGEUPPER notifier) 3. When a
+> bonded slave device is unbonded, it doesn't add its IP to the default tab=
+le in GID
+> cache.
 >=20
-> Here are more details about this WARN:
+> I took a look at the patches and would like to see the reasoning why curr=
+ent
+> behaviour is incorrect and need to be changed. In addition, there is a ne=
+ed to add
+> examples of what is "broken" now and will start to work after the fixes.
 >=20
-> Xorg opens `/dev/fb0`, which increases the framebuffer's reference
-> count, as mentioned above.  As a result, when unbinding the driver,
-> this WARN is expected, indicating that the framebuffer is still in use.
->=20
-> I am open to suggestion what could be the correct behavior in this case.
-> There acan be two possible options:
->=20
->  1. Check the framebuffer reference count and prevent the driver from
->     unbinding/removal.
-> OR
->=20
->  2. Allow the driver to unbind while issuing this WARN. (Current scenario=
-)
->=20
+> Thanks
 
-From looking at things and doing an experiment, I think there's a 3rd
-option, which gets rid of the of the WARN while still allowing the unbind.
 
-The experiment is to boot Linux in a Gen2 Hyper-V guest with both the
-Hyper-V FB and Hyper-V DRM modules removed. In this case, the
-generic EFI framebuffer driver (efifb) should get used. With this driver,
-a program can open /dev/fb0, and while it is open, unbind the efifb
-driver (which is in /sys/bus/platform/drivers/efi-framebuffer).
-Interestingly, there's no WARN generated. But when the hyperv_fb
-driver is loaded and used, the WARN *is* generated, as you observed.
+Thanks for looking. I will work on another set of patches based on feedback=
+ from:
+https://lore.kernel.org/lkml/20250211163735.18d0fd02@hermes.local/
 
-So I looked at the code for efifb.  It does the framebuffer_release()
-call in a function that hyperv_fb doesn't have. Based on the comments
-in efifb.c, we need a similar function to handle the call to
-framebuffer_release().  And the efifb driver also does the iounmap()
-in that same function, which makes we wonder if the hyperv_fb
-driver should do similarly. It will need a little more analysis to
-figure that out.
+I have some questions on the RDMA GID cache code determining GID cache base=
+d on bonded device states. Please see following.
 
-You found the bug.  Do you want to work on fixing the hyperv_fb
-driver? And maybe the Hyper-V DRM driver needs the same fix.
-I haven't looked. Alternatively, if you are busy, I can work on the fix.
-Let me know your preference.
+For an IB device, the RDMA GID cache code (rdma_roce_rescan_device() in dri=
+vers/infiniband/core/roce_gid_mgmt.c) looks at the following devices for it=
+s default GIDs:
+1. This IB device if it is not a bonded slave (if this IB device is a slave=
+ but not bonded, it will be used for default GIDs)
+2. This IB device's bonded master devices
+Please see is_ndev_for_default_gid_filter() as its filtering function
 
-Michael
+And for those devices for this IB device's non-default GIDs:
+1. An upper device to this IB device that is not bonded
+2. An upper device to this IB device that is bonded to this IB device, and =
+this IB device is the current active bonded slave
+3. This IB device if it's not a VLAN type
+See is_eth_port_of_netdev_filter() as its filtering function
+
+To summarize, the GID caching behavior for an IB device which is also a sla=
+ve device, looks like below:
+1. It seems all upper devices (bonded or not) to this IB device will be use=
+d in the GID cache, but only its bonding master is used for the default GID=
+ cache
+2. The IB device will not be used in default GID cache if it's bonded
+3. The IB device will always be used in non-default GID caches. (assuming i=
+t's not VLAN)
+
+My understanding is that the default GID cache will look for bonded master =
+when checking on a slave device and its upper devices. The non-default GID =
+cache just takes this IB device and all its upper devices.
+
+Why the default GID cache needs to check bonded devices?
+
+Thanks,
+Long
 
