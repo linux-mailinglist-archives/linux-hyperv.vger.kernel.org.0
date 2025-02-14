@@ -1,177 +1,163 @@
-Return-Path: <linux-hyperv+bounces-3954-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3955-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B976EA3639A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 17:51:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1355EA3641F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 18:11:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6502171B34
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 16:48:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C50F3A7938
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 17:11:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9E7A267739;
-	Fri, 14 Feb 2025 16:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EB4267F4A;
+	Fri, 14 Feb 2025 17:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IW63B+KZ"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="LRmqiR8I"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4010626738A;
-	Fri, 14 Feb 2025 16:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BB0266EE4
+	for <linux-hyperv@vger.kernel.org>; Fri, 14 Feb 2025 17:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739551654; cv=none; b=qKMuln+igWwa3fXt5TQRGOwjoCA2SVZ+JVUTLmxUKy99Ijx2Y1RIhL91jsMt6VqACXEFXkaHiHXf8obi1nJw2z60L4CbFmU0ZlG5nb5MF5GDQofZttWLt0RAE8kbKb4/18EJYXk135Oqq1aacIY4Da3mjJI4vB2u1MQijcG/Tlg=
+	t=1739553070; cv=none; b=tHLm9kwNgQaZiRfz77k1dCvpeoBFMPjsWIoSxnii8hlXrVK8jQCIfe2/vGcGUNDMkb0gyt+tjWEaZ79eEtaD6EIC1ZJWYnRSsJlZrsXBc9unc853iMpQZmLN+AW88jGxnXd8yNCTahySS6bnuLplP9QJ5IfGjymGY0WgfYYNwjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739551654; c=relaxed/simple;
-	bh=/rhhtehKnzVERc8rGOCCGCco2aFpt2BSW0xXHFau/Ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gc6jvGZxHzzNzRNbtqlU8t24t/liW8Rft2Ivs8m8MbF8nCQuqXjw60DtL1YJOXy5Vd0YwSgJXnJ/yZxZcDLgqewPRRJEnwMy3AxOwkNY/YNUSWEQeecYe6+xIc2acPFTi06W79GK/IWPIfdqVF+cMVS6O6o77DrFLuAXGssqiB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IW63B+KZ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5AB9D203F3FA;
-	Fri, 14 Feb 2025 08:47:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AB9D203F3FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739551652;
-	bh=28IvIq5nHgvTTsS1xkW6rKGY+23JWzsECQOgFfIsF5A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IW63B+KZ14zR7bqnRbpO33qkUJyw4qDrPsbj9UBbRpj0a+6lr+6RXpWIDuKREAgzH
-	 2Qg6HF8nC6RiAuSTMsFtmtMVu1yKOWfbHulTasDK13lhcgOfJ2rZeCJKN1EasDLBka
-	 ovOZ+fKPesWAq+xITmqp5mNqjeWSHCgiRBxJSqaY=
-Message-ID: <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
-Date: Fri, 14 Feb 2025 08:47:32 -0800
+	s=arc-20240116; t=1739553070; c=relaxed/simple;
+	bh=ELy+zrfrHewmzsP5iE3srJfwjuO1/17WeHvmzSm5Cx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PvbklF6kam3yliMNmP/4kMk8/nL2RKCMbxAZpYnv4pBCUQb45oK3CGtYgmU9DKrUeF6lN6h6dGK94GWXqb7toBfPboRpo17h+m+ChcaN3yN18plgoXmIvzz78V/KXisu7R09Qv0UV9JT7UbJvYx3DmT4Ff7RP7w1NFKCnzwNdHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=LRmqiR8I; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220e989edb6so33907465ad.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Feb 2025 09:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1739553067; x=1740157867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a3WJ3Hbul+BcwiKbMsLe5up1foaUcyVA+15YyjU7ZeY=;
+        b=LRmqiR8IKvX6YkCu6yLaOHyT+sYWVnTa9BtSiHFyLHLTVLfZpHZGHTtQZqBXBhys5K
+         /QAVefqvY+Waln576Di2Odh0usLJIrkxUN+IugdcWOboMVkY8M4NoWlPYTTdx4hiyG5e
+         CrvUi1aFsnRPFKX/64tYqi5v73BldjcqsncCKuIibVutcEo4aiYmI/5EimamtgosMqFo
+         t/GZFOS7CCLQ5bwq4ta3VJUHEpFFkeYmUpSJFExge1KGo5dDrp0NivfKDVklysunplR/
+         c2w9QxOZ0OoTZzPGiYsbL0LV85Of4tXOE4XVKVEfO5LIh2JkoqgrsHOTBuF1KSNKDaiB
+         pESA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739553067; x=1740157867;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a3WJ3Hbul+BcwiKbMsLe5up1foaUcyVA+15YyjU7ZeY=;
+        b=ZFQ/TmK7gagx4t4yPGgBh7AYjhMh8kWINhO02WZXjSPg9mrz11MEvtDe8a9EYuzFKU
+         eEudBzrsLCI3mLKmOE5GSjNdLiqlF/YCBz9pLvMS8RLVy6+ARSkpoQxIeu43PjdDN66e
+         /swzJZuk8ecb2uQ+5uchI4ACGNgFc1as2omoke94MSbc74agXV7M/wUT3hAnFhMsnVGt
+         n4w43jxOzmeXFMYAN8i2/PQ4IQjXljBTJz1Z7N4RHIRO7g4SEUJEBHuxvpY17N0ClRte
+         IS99SIYvPrmAf5IdDF4MKicYSfu4jSpwxGL0Woh/gGgbJu6bgJ9YdHLZ4uqzT0E1B4FX
+         QCDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHdnBqpyaDbzQCwPDmqpoU+97qlS+qd+E+q9bgV2hnDpJLFzpdMmT7fA4ktWBZrQwLzQXXnTHJMFSRCB0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOoF4Y9HQ+m/JFHd1EXhK9J52NwXuRsHbCjQSgyWgi6QvGP4S7
+	OMxNAk+Bfn+32WBwE/aC4fr6FmTrRdJE9+oobC2263cwrJHO5jyHWlNlt4IVGmk=
+X-Gm-Gg: ASbGncsJuteNSYPA/jOLRF4F8Rm5auzJR3cf8agiMoQSxNVjrVc6wJIiFGyDxp3tQK0
+	QWzLxdB+eAJq21ShSwEQXM/pCdpVKsfY1vkS6VeUi2ivdgeInK8mUJK8cssROZZsNgzJdXqAUSt
+	7vBCBzpikdtizZbBurI3A84OnvOJIHpelLvIrYXUVM0aALXYwgmCeVlY4Q+Fzno/C/2j0+oVT8/
+	MtzztJZ2FeldUZpc5yOVFyNugJ/wdvN0K4FDB/nELRh1UeivkxJkauJfAOJ+9oMzrydvVZOBRso
+	yGElZtzV1Iizbczhj9pU4lZ7z6T0JGu5RQHyjMHV2kbIoNGn74Xt9UkKaLUUxZoC2Wmj
+X-Google-Smtp-Source: AGHT+IFmUYelpgd2oImgFRIzH4xmfNMtpcgqp/XRqTu33fmCKbF5ZW0INkiDWT/S0JQHXkWBpK/8lg==
+X-Received: by 2002:a17:902:ccd1:b0:21f:542e:dd0a with SMTP id d9443c01a7336-220d2132b27mr132509325ad.41.1739553067141;
+        Fri, 14 Feb 2025 09:11:07 -0800 (PST)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d448sm31250045ad.150.2025.02.14.09.11.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 09:11:06 -0800 (PST)
+Date: Fri, 14 Feb 2025 09:11:04 -0800
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: Re: [RFC PATCH] uio_hv_generic: Fix sysfs creation path for ring
+ buffer
+Message-ID: <20250214091104.01ae4d0a@hermes.local>
+In-Reply-To: <2025021418-cork-rinse-698a@gregkh>
+References: <20250214064351.8994-1-namjain@linux.microsoft.com>
+	<2025021455-tricky-rebalance-4acc@gregkh>
+	<bb1c122e-e1bb-43fb-a71d-dde8f7aa352b@linux.microsoft.com>
+	<2025021418-cork-rinse-698a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-To: Arnd Bergmann <arnd@arndb.de>, bhelgaas@google.com,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Conor Dooley <conor+dt@kernel.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, "H. Peter Anvin" <hpa@zytor.com>,
- krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
- ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
- Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
- devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-2-romank@linux.microsoft.com>
- <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
- <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
- <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Fri, 14 Feb 2025 08:41:57 +0100
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
+> On Fri, Feb 14, 2025 at 12:35:44PM +0530, Naman Jain wrote:
+> > 
+> > 
+> > On 2/14/2025 12:21 PM, Greg Kroah-Hartman wrote:  
+> > > On Fri, Feb 14, 2025 at 12:13:51PM +0530, Naman Jain wrote:  
+> > > > On regular bootup, devices get registered to vmbus first, so when
+> > > > uio_hv_generic driver for a particular device type is probed,
+> > > > the device is already initialized and added, so sysfs creation in
+> > > > uio_hv_generic probe works fine. However, when device is removed
+> > > > and brought back, the channel rescinds and again gets registered
+> > > > to vmbus. However this time, the uio_hv_generic driver is already
+> > > > registered to probe for that device and in this case sysfs creation
+> > > > is tried before the device gets initialized completely. Fix this by
+> > > > deferring sysfs creation till device gets initialized completely.
+> > > > 
+> > > > Problem path:
+> > > > vmbus_device_register
+> > > >      device_register
+> > > >          uio_hv_generic probe
+> > > > 		    sysfs_create_bin_file (fails here)  
+> > > 
+> > > Ick, that's the issue, you shouldn't be manually creating sysfs files.
+> > > Have the driver core do it for you at the proper time, which should make
+> > > your logic much simpler, right?
+> > > 
+> > > Set the default attribute groups instead of manually creating this and
+> > > see if that works out better.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h  
+> > 
+> > Thanks for reviewing Greg. I tried this approach and here are my
+> > observations:
+> > 
+> > What I could create with ATTRIBUTE_GROUPS:
+> > /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/ring
+> > 
+> > The one we have right now:
+> > /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels/6/ring  
+> 
+> What is "channels" and "6" here?  Are they real devices or just a
+> directory name or something else?
+> 
+> > I could not find a way to tweak attributes to create the "ring" under above
+> > path. I could see the variations of sys_create_* which provides a
+> > way to pass kobj and do that, but that is something we are already
+> > using.  
+> 
+> No driver should EVER be pointing to a raw kobject, that's a huge hint
+> that something is really wrong.  Also, if a raw kobject is in a device
+> path in the middle like this, it will not be seen properly from
+> userspace library tools :(
+> 
+> So again, what is creating the "channels" and "6" subdirectories?  All
+> of that shoudl be under full control by the uio device, right?
 
-On 2/14/2025 12:05 AM, Arnd Bergmann wrote:
-> On Fri, Feb 14, 2025, at 00:23, Roman Kisel wrote:
->> On 2/11/2025 10:54 PM, Arnd Bergmann wrote:
-> 
->> index a74600d9f2d7..86f75f44895f 100644
->> --- a/drivers/firmware/smccc/smccc.c
->> +++ b/drivers/firmware/smccc/smccc.c
->> @@ -67,6 +67,30 @@ s32 arm_smccc_get_soc_id_revision(void)
->>    }
->>    EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
->>
->> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
-> 
-> The interface looks good to me.
-
-Great :)
-
-> 
->> +{
->> +	struct arm_smccc_res res = {};
->> +	struct {
->> +		u32 dwords[4]
->> +	} __packed res_uuid;
-> 
-> The structure definition here looks odd because of the
-> unexplained __packed attribute and the nonstandard byteorder.
-> 
-
-Fair points, thank you, will straighten this out!
-
-> The normal uuid_t is defined as an array of 16 bytes,
-> so if you try to represent it in 32-bit words you need to
-> decide between __le32 and __be32 representation.
-> 
->> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
->> +		return false;
->> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
->> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
->> +		return false;
->> +
->> +	res_uuid.dwords[0] = res.a0;
->> +	res_uuid.dwords[1] = res.a1;
->> +	res_uuid.dwords[2] = res.a2;
->> +	res_uuid.dwords[3] = res.a3;
->> +
->> +	return uuid_equal((uuid_t *)&res_uuid, hyp_uuid);
-> 
-> The SMCCC standard defines the four words to be little-endian,
-> so in order to compare them against a uuid byte array, you'd
-> need to declare the array as __le32 and swap the result
-> members with cpu_to_le32().
-> 
-> Alternatively you could pass the four u32 values into the
-> function in place of the uuid.
-> 
-> Since the callers have the same endianess confusion, your
-> implementation ends up working correctly even on big-endian,
-> but I find it harder to follow when you call uuid_equal() on
-> something that is not the actual uuid_t value.
-> 
-
-I'll make sure the implementation is clearer, thanks!
-
->> +
->> +#define ARM_SMCCC_HYP_PRESENT(HYP) 								\
->> +	({															\
->> +		const u32 uuid_as_dwords[4] = {							\
->> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_0,			\
->> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_1,			\
-> 
-> I don't think using a macro is helpful here, it just makes
-> it impossible to grep for ARM_SMCCC_VENDOR_HYP_UID_* values when
-> reading the source.
-> 
-> I would suggest moving the UUID values into a variable next
-> to the caller like
-> 
-> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
->      UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9, 0xca, 0x4b, 0x56, 0x4d, 0x00, 0x3a, 0x74)
-> 
-> and then just pass that into arm_smccc_hyp_present(). (please
-> double-check the endianess of the definition here, I probably
-> got it wrong myself).
-
-Will remove the macro and will use UUID_INIT, appreciate taking the
-time to review the draft and your suggestions on improving it very much!
-
-> 
->       Arnd
-
--- 
-Thank you,
-Roman
-
+The original design of exposing channels was based on what the
+network core does to expose queues. Worth comparing the two
+to see if there is any shared insight.
 
