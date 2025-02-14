@@ -1,80 +1,177 @@
-Return-Path: <linux-hyperv+bounces-3953-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3954-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE8C2A35ADA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 10:53:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B976EA3639A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 17:51:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9705718849C0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 09:53:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6502171B34
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Feb 2025 16:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FFB524A049;
-	Fri, 14 Feb 2025 09:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9E7A267739;
+	Fri, 14 Feb 2025 16:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=growthstack.pl header.i=@growthstack.pl header.b="hHjyMerT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IW63B+KZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.growthstack.pl (mail.growthstack.pl [80.211.128.247])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE72924503E
-	for <linux-hyperv@vger.kernel.org>; Fri, 14 Feb 2025 09:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.211.128.247
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4010626738A;
+	Fri, 14 Feb 2025 16:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526790; cv=none; b=OxWYaf3hOdAFtIWSv84I/zN19JLWYRW1uX4Z1/8KGZ5agFX6jOdX0kT2cTvYla0swpuXzp3Zdfi/HYNojjd6g6q10MGaKCKH+L6uf668dqAEgoXNZr2IxrPoxo8Z83PGrNq1pJVPw9pILxDQxZ7AVUjg/pg+pFzRMxf+uy1xuSM=
+	t=1739551654; cv=none; b=qKMuln+igWwa3fXt5TQRGOwjoCA2SVZ+JVUTLmxUKy99Ijx2Y1RIhL91jsMt6VqACXEFXkaHiHXf8obi1nJw2z60L4CbFmU0ZlG5nb5MF5GDQofZttWLt0RAE8kbKb4/18EJYXk135Oqq1aacIY4Da3mjJI4vB2u1MQijcG/Tlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526790; c=relaxed/simple;
-	bh=iAdz50RWeDqZxR0vOOLPAqptuYckoBmjGygEFCZEYZE=;
-	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=Baa/5Bse3lft6ykSViyff3KAISqknNtsga0OhWrNfEKyMgTBeJo4YczwucTp1mx77KGfj3rapn6PhAA6HQNTgRft3mYqtR4l6HHvm2iK4gpWX+Hya3xc/s/0+OS9QYCeMDK92I9ASlnnYiN4AraUKvu9G7tfRVREo7QW/NowZmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=growthstack.pl; spf=pass smtp.mailfrom=growthstack.pl; dkim=pass (2048-bit key) header.d=growthstack.pl header.i=@growthstack.pl header.b=hHjyMerT; arc=none smtp.client-ip=80.211.128.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=growthstack.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=growthstack.pl
-Received: by mail.growthstack.pl (Postfix, from userid 1002)
-	id EA571830C6; Fri, 14 Feb 2025 10:44:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=growthstack.pl;
-	s=mail; t=1739526281;
-	bh=iAdz50RWeDqZxR0vOOLPAqptuYckoBmjGygEFCZEYZE=;
-	h=Date:From:To:Subject:From;
-	b=hHjyMerTjxMHT/r4ijPGEIRzct79MgQEGheJm7uFmLzKfWVAipeD7spn2R+adXD23
-	 5UgSmojJzexJwE8GHu28Ge6TYSrb2vMMlvlubc3CnCps+w22w5KNcylWjyei5BhpL9
-	 XP3py6qgJtgiYeIKtfX+d6xLlq9PHZVbfZjLQmepYS8vQTFsYOcHPPV1OGqsEt3GBG
-	 u4AW0Ghcq1/K7477CTKo4fYJ9qAfBIpcjAsLokKQaa5/CYjiDzeGa4X8iKK7Misk06
-	 PJJYzBjMfQHZAAV/ASOBiJGNaSeGEB8gElSM7+yrl50SbuLDhyesYsGtQDTs9S4tMm
-	 6A+MmJf9eKsQw==
-Received: by mail.growthstack.pl for <linux-hyperv@vger.kernel.org>; Fri, 14 Feb 2025 09:44:32 GMT
-Message-ID: <20250214101429-0.1.u.1rzl.0.imkbtfllq9@growthstack.pl>
-Date: Fri, 14 Feb 2025 09:44:32 GMT
-From: "Piotr Grotel" <piotr.grotel@growthstack.pl>
-To: <linux-hyperv@vger.kernel.org>
-Subject: =?UTF-8?Q?Wiadomo=C5=9B=C4=87_odno=C5=9Bnie_kredytu?=
-X-Mailer: mail.growthstack.pl
+	s=arc-20240116; t=1739551654; c=relaxed/simple;
+	bh=/rhhtehKnzVERc8rGOCCGCco2aFpt2BSW0xXHFau/Ho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gc6jvGZxHzzNzRNbtqlU8t24t/liW8Rft2Ivs8m8MbF8nCQuqXjw60DtL1YJOXy5Vd0YwSgJXnJ/yZxZcDLgqewPRRJEnwMy3AxOwkNY/YNUSWEQeecYe6+xIc2acPFTi06W79GK/IWPIfdqVF+cMVS6O6o77DrFLuAXGssqiB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IW63B+KZ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5AB9D203F3FA;
+	Fri, 14 Feb 2025 08:47:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AB9D203F3FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739551652;
+	bh=28IvIq5nHgvTTsS1xkW6rKGY+23JWzsECQOgFfIsF5A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IW63B+KZ14zR7bqnRbpO33qkUJyw4qDrPsbj9UBbRpj0a+6lr+6RXpWIDuKREAgzH
+	 2Qg6HF8nC6RiAuSTMsFtmtMVu1yKOWfbHulTasDK13lhcgOfJ2rZeCJKN1EasDLBka
+	 ovOZ+fKPesWAq+xITmqp5mNqjeWSHCgiRBxJSqaY=
+Message-ID: <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
+Date: Fri, 14 Feb 2025 08:47:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
+ hypervisor presence
+To: Arnd Bergmann <arnd@arndb.de>, bhelgaas@google.com,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Conor Dooley <conor+dt@kernel.org>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
+ ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+ Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
+ devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-2-romank@linux.microsoft.com>
+ <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+ <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
+ <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Szanowni Pa=C5=84stwo,
-
-zdajemy sobie spraw=C4=99, =C5=BCe wiele os=C3=B3b boryka si=C4=99 z kred=
-ytami hipotecznymi we frankach szwajcarskich, kt=C3=B3rych warunki mog=C4=
-=85 by=C4=87 niekorzystne.=20
-
-Nasza firma oferuje pomoc w anulowaniu takich um=C3=B3w, co mo=C5=BCe zna=
-cz=C4=85co obni=C5=BCy=C4=87 Pa=C5=84stwa zobowi=C4=85zania finansowe. Of=
-erujemy kompleksow=C4=85 analiz=C4=99 umowy oraz pe=C5=82ne wsparcie na k=
-a=C5=BCdym etapie procesu.=20
-
-Je=C5=9Bli s=C4=85 Pa=C5=84stwo zainteresowani szczeg=C3=B3=C5=82ami lub =
-chcieliby skonsultowa=C4=87 swoj=C4=85 sytuacj=C4=99, zapraszam do kontak=
-tu. Pierwsza konsultacja jest bezp=C5=82atna i niezobowi=C4=85zuj=C4=85ca=
-=2E
 
 
-Pozdrawiam
-Piotr Grotel
+On 2/14/2025 12:05 AM, Arnd Bergmann wrote:
+> On Fri, Feb 14, 2025, at 00:23, Roman Kisel wrote:
+>> On 2/11/2025 10:54 PM, Arnd Bergmann wrote:
+> 
+>> index a74600d9f2d7..86f75f44895f 100644
+>> --- a/drivers/firmware/smccc/smccc.c
+>> +++ b/drivers/firmware/smccc/smccc.c
+>> @@ -67,6 +67,30 @@ s32 arm_smccc_get_soc_id_revision(void)
+>>    }
+>>    EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
+>>
+>> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
+> 
+> The interface looks good to me.
+
+Great :)
+
+> 
+>> +{
+>> +	struct arm_smccc_res res = {};
+>> +	struct {
+>> +		u32 dwords[4]
+>> +	} __packed res_uuid;
+> 
+> The structure definition here looks odd because of the
+> unexplained __packed attribute and the nonstandard byteorder.
+> 
+
+Fair points, thank you, will straighten this out!
+
+> The normal uuid_t is defined as an array of 16 bytes,
+> so if you try to represent it in 32-bit words you need to
+> decide between __le32 and __be32 representation.
+> 
+>> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+>> +		return false;
+>> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+>> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+>> +		return false;
+>> +
+>> +	res_uuid.dwords[0] = res.a0;
+>> +	res_uuid.dwords[1] = res.a1;
+>> +	res_uuid.dwords[2] = res.a2;
+>> +	res_uuid.dwords[3] = res.a3;
+>> +
+>> +	return uuid_equal((uuid_t *)&res_uuid, hyp_uuid);
+> 
+> The SMCCC standard defines the four words to be little-endian,
+> so in order to compare them against a uuid byte array, you'd
+> need to declare the array as __le32 and swap the result
+> members with cpu_to_le32().
+> 
+> Alternatively you could pass the four u32 values into the
+> function in place of the uuid.
+> 
+> Since the callers have the same endianess confusion, your
+> implementation ends up working correctly even on big-endian,
+> but I find it harder to follow when you call uuid_equal() on
+> something that is not the actual uuid_t value.
+> 
+
+I'll make sure the implementation is clearer, thanks!
+
+>> +
+>> +#define ARM_SMCCC_HYP_PRESENT(HYP) 								\
+>> +	({															\
+>> +		const u32 uuid_as_dwords[4] = {							\
+>> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_0,			\
+>> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_1,			\
+> 
+> I don't think using a macro is helpful here, it just makes
+> it impossible to grep for ARM_SMCCC_VENDOR_HYP_UID_* values when
+> reading the source.
+> 
+> I would suggest moving the UUID values into a variable next
+> to the caller like
+> 
+> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
+>      UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9, 0xca, 0x4b, 0x56, 0x4d, 0x00, 0x3a, 0x74)
+> 
+> and then just pass that into arm_smccc_hyp_present(). (please
+> double-check the endianess of the definition here, I probably
+> got it wrong myself).
+
+Will remove the macro and will use UUID_INIT, appreciate taking the
+time to review the draft and your suggestions on improving it very much!
+
+> 
+>       Arnd
+
+-- 
+Thank you,
+Roman
+
 
