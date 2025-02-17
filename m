@@ -1,183 +1,142 @@
-Return-Path: <linux-hyperv+bounces-3960-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3961-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0DCAA37A27
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Feb 2025 04:44:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9936AA37A4A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Feb 2025 05:05:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCA833AF82A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Feb 2025 03:42:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B38216A287
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Feb 2025 04:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9AC51465A1;
-	Mon, 17 Feb 2025 03:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CCB61494D8;
+	Mon, 17 Feb 2025 04:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jATAiQtg"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DjvzWgmd"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D952AE7F;
-	Mon, 17 Feb 2025 03:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6AC1854;
+	Mon, 17 Feb 2025 04:05:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739763767; cv=none; b=IRyIw3gQera43ddJqn1uI4km87qNSnbZ7NJoJMMGtzbCnQFS7PoKOICo7Fw52XdCAR7TxWBx3gABJoadjs5Cs/5sbwfLq4RTKI34kXPsQS++RMW5B64j7PrVyKA3b6jlqS4aETBhvd6nmERf4mkjG/6wggxeVUOCxEWnyLxOB/g=
+	t=1739765140; cv=none; b=QhMQCbvZI/YQOIpg7Js8l5NWmA/WIPK2q/k/JX1tORB1ox0aJ8fwj2z6Ihsja/F6bLYZmRMJOfee+lzZyeSqDVTfwB1hpEVW4WOuRurqyQ2za2rHaYpAzCJ3dTq+HmfWrz1veSvRrm4TFXNPN8380g+R8isfGH/cc8E2N8JZ8Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739763767; c=relaxed/simple;
-	bh=zujV62DkMpIVMkiAMM+ApYb67+LH8P/rftWSpZqt/iQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=VsFU+4fPFw1HM/4ucX37MWlTBR4g5UJcrfLEL+8qGWK6MulhDTs4B8NctvZAAQV0BEvHmRB5u+f+gKS4OWcI+poEYh3vpGmTq6VURp6RDSqOzKJ4JEBsGvRw4rQ3gH2mHmDZpQrScB/wPBDsG4kwHRsRfi829rK93d/6wRu/4NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jATAiQtg; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1739765140; c=relaxed/simple;
+	bh=9K3nguHl+1jJCdiqbFDIzQcHxa0+pfSvN2QnQoQNxLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rh+8Hz9XDqbdMlIXZR7Y9yx8TMWhjWCQCFUT6x+g0Bt0CXrzaFTUu+GeynkBO/TFQEUGo7aCUABrozd6l1y68N6OfqpysQhZRO3OJg0Cqn/I7eZd2GkqpOOnHpBIJVBuY9z+9U7RZsIDszQUmCqBtNulvyjEZWnwXBnWA+CmtUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DjvzWgmd; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 2AA70204E5B1; Sun, 16 Feb 2025 19:42:46 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2AA70204E5B1
+Received: from [192.168.0.104] (unknown [49.205.248.75])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 06F38204E5B3;
+	Sun, 16 Feb 2025 20:05:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06F38204E5B3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739763766;
-	bh=E4uAEFrfRhgKB0Xywuq8TcQy6jcAZto4CnK+poC38ZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jATAiQtg9XgbUAnusuShDiibanojcpsTiXacNetv95Zc15yv/zE4cSohbQKTwhqI8
-	 2BUNMUf0TxAOVAz24ItCeIHji8ibUuKuv8Nd5AmLaMK6Kog8go/Tss4v/cLJiKXr3Z
-	 CpHHkjhPFtSCAtnVbiU5ODnKJA7AWQHDV2IyWJV0=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v3 net-next 2/2] hv_netvsc: Use VF's tso_max_size value when data path is VF
-Date: Sun, 16 Feb 2025 19:42:42 -0800
-Message-Id: <1739763762-28751-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1739763715-28412-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1739763715-28412-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=default; t=1739765138;
+	bh=gA/HN3tyS1xuapEwIbEOfoA3Z+Z8tIxXhpP2X3oxgfc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DjvzWgmdjROhvvsMiM/VY7MPLLCEHohMBfa1AAr8++81W7wr8pjSCVNq6Mk6jaLcG
+	 CTbO8GAxLmGOSNoN94TTFuI6dwHCKmoOO79Tww6xxZi97AuC1FxW42R3k3eA0KJfpc
+	 wnsJ/GB7PfV/P3OHV/ddvL+61bkCY4hERiqrH+/A=
+Message-ID: <e35ecae5-1596-41f6-92f2-62a79d4d31d6@linux.microsoft.com>
+Date: Mon, 17 Feb 2025 09:35:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] uio_hv_generic: Fix sysfs creation path for ring
+ buffer
+To: Stephen Hemminger <stephen@networkplumber.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@kernel.org,
+ Saurabh Sengar <ssengar@linux.microsoft.com>
+References: <20250214064351.8994-1-namjain@linux.microsoft.com>
+ <2025021455-tricky-rebalance-4acc@gregkh>
+ <bb1c122e-e1bb-43fb-a71d-dde8f7aa352b@linux.microsoft.com>
+ <2025021418-cork-rinse-698a@gregkh> <20250214091104.01ae4d0a@hermes.local>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20250214091104.01ae4d0a@hermes.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Azure, increasing VF's gso/gro packet size to up-to GSO_MAX_SIZE
-is not possible without allowing the same for netvsc NIC
-(as the NICs are bonded together). For bonded NICs, the min of the max
-aggregated pkt size of the members is propagated in the stack.
 
-Therefore, we use netif_set_tso_max_size() to set max aggregated pkt size
-to VF's packet size for netvsc too, when the data path is switched over
-to the VF
-Tested on azure env with Accelerated Networking enabled and disabled.
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v2
- * Instead of using 'tcp segment' throughout the patch used more accurate
-   term 'aggregated pkt size'
----
- drivers/net/hyperv/hyperv_net.h   |  2 ++
- drivers/net/hyperv/netvsc_drv.c   | 15 +++++++++++++++
- drivers/net/hyperv/rndis_filter.c | 13 +++++++------
- 3 files changed, 24 insertions(+), 6 deletions(-)
+On 2/14/2025 10:41 PM, Stephen Hemminger wrote:
+> On Fri, 14 Feb 2025 08:41:57 +0100
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+>> On Fri, Feb 14, 2025 at 12:35:44PM +0530, Naman Jain wrote:
+>>>
+>>>
+>>> On 2/14/2025 12:21 PM, Greg Kroah-Hartman wrote:
+>>>> On Fri, Feb 14, 2025 at 12:13:51PM +0530, Naman Jain wrote:
+>>>>> On regular bootup, devices get registered to vmbus first, so when
+>>>>> uio_hv_generic driver for a particular device type is probed,
+>>>>> the device is already initialized and added, so sysfs creation in
+>>>>> uio_hv_generic probe works fine. However, when device is removed
+>>>>> and brought back, the channel rescinds and again gets registered
+>>>>> to vmbus. However this time, the uio_hv_generic driver is already
+>>>>> registered to probe for that device and in this case sysfs creation
+>>>>> is tried before the device gets initialized completely. Fix this by
+>>>>> deferring sysfs creation till device gets initialized completely.
+>>>>>
+>>>>> Problem path:
+>>>>> vmbus_device_register
+>>>>>       device_register
+>>>>>           uio_hv_generic probe
+>>>>> 		    sysfs_create_bin_file (fails here)
+>>>>
+>>>> Ick, that's the issue, you shouldn't be manually creating sysfs files.
+>>>> Have the driver core do it for you at the proper time, which should make
+>>>> your logic much simpler, right?
+>>>>
+>>>> Set the default attribute groups instead of manually creating this and
+>>>> see if that works out better.
+>>>>
+>>>> thanks,
+>>>>
+>>>> greg k-h
+>>>
+>>> Thanks for reviewing Greg. I tried this approach and here are my
+>>> observations:
+>>>
+>>> What I could create with ATTRIBUTE_GROUPS:
+>>> /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/ring
+>>>
+>>> The one we have right now:
+>>> /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels/6/ring
+>>
+>> What is "channels" and "6" here?  Are they real devices or just a
+>> directory name or something else?
+>>
+>>> I could not find a way to tweak attributes to create the "ring" under above
+>>> path. I could see the variations of sys_create_* which provides a
+>>> way to pass kobj and do that, but that is something we are already
+>>> using.
+>>
+>> No driver should EVER be pointing to a raw kobject, that's a huge hint
+>> that something is really wrong.  Also, if a raw kobject is in a device
+>> path in the middle like this, it will not be seen properly from
+>> userspace library tools :(
+>>
+>> So again, what is creating the "channels" and "6" subdirectories?  All
+>> of that shoudl be under full control by the uio device, right?
+> 
+> The original design of exposing channels was based on what the
+> network core does to expose queues. Worth comparing the two
+> to see if there is any shared insight.
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index e690b95b1bbb..def41067ea3f 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -1166,6 +1166,8 @@ struct netvsc_device {
- 	u32 max_chn;
- 	u32 num_chn;
- 
-+	u32 netvsc_gso_max_size;
-+
- 	atomic_t open_chn;
- 	struct work_struct subchan_work;
- 	wait_queue_head_t subchan_open;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index d6c4abfc3a28..cbb517aa59cf 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2461,6 +2461,21 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
- 	} else {
- 		netdev_info(ndev, "Data path switched %s VF: %s\n",
- 			    vf_is_up ? "to" : "from", vf_netdev->name);
-+
-+		/* In Azure, when accelerated networking in enabled, other NICs
-+		 * like MANA, MLX, are configured as a bonded nic with
-+		 * Netvsc(failover) NIC. For bonded NICs, the min of the max
-+		 * pkt aggregate size of the members is propagated in the stack.
-+		 * In order to allow these NICs (MANA/MLX) to use up to
-+		 * GSO_MAX_SIZE gso packet size, we need to allow Netvsc NIC to
-+		 * also support this in the guest.
-+		 * This value is only increased for netvsc NIC when datapath is
-+		 * switched over to the VF
-+		 */
-+		if (vf_is_up)
-+			netif_set_tso_max_size(ndev, vf_netdev->tso_max_size);
-+		else
-+			netif_set_tso_max_size(ndev, netvsc_dev->netvsc_gso_max_size);
- 	}
- 
- 	return NOTIFY_OK;
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index c0ceeef4fcd8..82747dfacd70 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1356,9 +1356,10 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 	struct net_device_context *net_device_ctx = netdev_priv(net);
- 	struct ndis_offload hwcaps;
- 	struct ndis_offload_params offloads;
--	unsigned int gso_max_size = GSO_LEGACY_MAX_SIZE;
- 	int ret;
- 
-+	nvdev->netvsc_gso_max_size = GSO_LEGACY_MAX_SIZE;
-+
- 	/* Find HW offload capabilities */
- 	ret = rndis_query_hwcaps(rndis_device, nvdev, &hwcaps);
- 	if (ret != 0)
-@@ -1390,8 +1391,8 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 			offloads.lso_v2_ipv4 = NDIS_OFFLOAD_PARAMETERS_LSOV2_ENABLED;
- 			net->hw_features |= NETIF_F_TSO;
- 
--			if (hwcaps.lsov2.ip4_maxsz < gso_max_size)
--				gso_max_size = hwcaps.lsov2.ip4_maxsz;
-+			if (hwcaps.lsov2.ip4_maxsz < nvdev->netvsc_gso_max_size)
-+				nvdev->netvsc_gso_max_size = hwcaps.lsov2.ip4_maxsz;
- 		}
- 
- 		if (hwcaps.csum.ip4_txcsum & NDIS_TXCSUM_CAP_UDP4) {
-@@ -1411,8 +1412,8 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 			offloads.lso_v2_ipv6 = NDIS_OFFLOAD_PARAMETERS_LSOV2_ENABLED;
- 			net->hw_features |= NETIF_F_TSO6;
- 
--			if (hwcaps.lsov2.ip6_maxsz < gso_max_size)
--				gso_max_size = hwcaps.lsov2.ip6_maxsz;
-+			if (hwcaps.lsov2.ip6_maxsz < nvdev->netvsc_gso_max_size)
-+				nvdev->netvsc_gso_max_size = hwcaps.lsov2.ip6_maxsz;
- 		}
- 
- 		if (hwcaps.csum.ip6_txcsum & NDIS_TXCSUM_CAP_UDP6) {
-@@ -1438,7 +1439,7 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 	 */
- 	net->features &= ~NETVSC_SUPPORTED_HW_FEATURES | net->hw_features;
- 
--	netif_set_tso_max_size(net, gso_max_size);
-+	netif_set_tso_max_size(net, nvdev->netvsc_gso_max_size);
- 
- 	ret = rndis_filter_set_offload_params(net, nvdev, &offloads);
- 
--- 
-2.34.1
+Thanks Greg and Stephen. I'll try to find it.
 
+Regards,
+Naman
 
