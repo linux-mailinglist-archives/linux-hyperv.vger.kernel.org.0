@@ -1,105 +1,94 @@
-Return-Path: <linux-hyperv+bounces-3978-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3979-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3153A3CFE9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 04:11:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FD32A3DDD5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 16:09:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3A7217D6D4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 03:11:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 234E53B1AC7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 15:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06751E3DD6;
-	Thu, 20 Feb 2025 03:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqC65Rp9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E7A1D5CF5;
+	Thu, 20 Feb 2025 15:07:56 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C475D1E3793;
-	Thu, 20 Feb 2025 03:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EE11CA84;
+	Thu, 20 Feb 2025 15:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740021015; cv=none; b=f1j4bR444lcSww7U8mWjNfZKk0hla4O8qf/Ex4IHMzyZg19YDpgwP//idCKGCScPnwjcWSkgRG9qkaYzwQBdrIZzhHRvIULEiLUEODvxCV3W8MoR84gqLzB6wcurtLsDssNU1YmjzdPOyPyfP17lZK1k8SiEAG1mnztumeuOMXc=
+	t=1740064076; cv=none; b=QkA+qPBcZ5MSngQkcSltAOADDTBB/08s4uJ4Io2SOX31seTHEj/s2mbDEGGOzn47rqAzPT0/9rLMq0dChJhl50ZThQbZ9DbBmBl2JPzTnlHN3ITaqz6k9qshfj8TxICU2YZkmiBhsBvvDIapQhC+S9AktriW/3Ipf1j0op7pDUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740021015; c=relaxed/simple;
-	bh=MD9ImpKOVvcg2zEGkV4nzRzJTxiTyqlpvcL2LMQIukw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=c/0zEFyJ6Z3pwH34MRoj2waAE6LslEF6+0JEdH15i/OqsOn2YItvyAyTPCHWYvEhAaxHCcLmwjo6m7+2k4X+tuozp92z42HxBITQm6LPzn5l2f7MpHcUThL0imdmlpDDBgQxCJkNQDdXrmoegWqLPjHqLoyhe0jEIAnFcR0IfqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqC65Rp9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93496C4CEE2;
-	Thu, 20 Feb 2025 03:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740021015;
-	bh=MD9ImpKOVvcg2zEGkV4nzRzJTxiTyqlpvcL2LMQIukw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oqC65Rp9GX5CH+H8FCMdKXtkXZXED/vgx1joOy+nbIWGTsY7dTGanW/6LD3jWGRYo
-	 l6L4w7HQOIb/BXCsKe+NGe1U1BgAZsLe+V87xoudBvYqOwnuwWUGpEsDvY5CZHY1zi
-	 nGpJ+ic7A9ZxIeEP76CXbVrQIlccc/NZqcmZTseREeT2oGcZfoTwHD1/VEUwviDoMw
-	 pM2avQCTfGT5VKJ2UWo3B/4/O79Sf8TzhRZEuIL1PpvdGGdB6eANEbRw0can8dkVLX
-	 5Y166FIC0RhAHIeHVyC1o/S10fFS2JLjJ2aLGv4SOY3IvoCRdP4xfLlJHWb3hkOTig
-	 cHE0uD2K0EI+w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D0B380AAEC;
-	Thu, 20 Feb 2025 03:10:47 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1740064076; c=relaxed/simple;
+	bh=Q8WEkvwHHessGuvlowsdBEUzNKaTWW8d7YmlvtPhrtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ei7hKKchmIn8eV5uR5pXUEVtbqr1Ckv8fCqVb3koJ3xwbFjfGBz3NXpLWLisZiuXzMjfUft1C/9AukgPBAJx78THkCY2YEtg624TaDx0x0jSAJwx/vYCsg52Zekapdsuy6aK5qbR4RnlSd3j0mnCLw7MP/4CTKcB7aDiRy7N7rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220bfdfb3f4so22970825ad.2;
+        Thu, 20 Feb 2025 07:07:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740064074; x=1740668874;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/zaVPeUyMK9bsx44Th3FOFRswEjNKZoLf+EXZU2SqQY=;
+        b=VyefNNeTpsNmZcBbYpTSQqpuA2k5qMqCh7Nq28FbP/UONWH/2LdMMVZr7UE0libmPe
+         DxeTQjXwb3VQ9+hUm9PgnxZXnb0q/3kEq8c1tPldLTaiMEUWFHodd4d2YCGVWrtWhaam
+         TwFk3FB+JTpO+wEdhMM9VmQEG7rreCIi/cqIS57QK44wHyKlUkJxUizSCRUZJJ7TZsVU
+         7s+m5ohWMV+6eWuhgpTgCdn4DNx/bpbELGIDhtYW48dn9QhsJjY5nfNqrmUvza+61Clg
+         69UoLdywtcHhZwYyGIuJGbKfcveU2IvPohCTztJpMpS3KrPYuXL9bl13IQ+JmK7xqh44
+         b6UA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIDiZnNLpP3H7jUa/pRIpUThGHs83jV932iikFCwx0fSoQlbEVkWos+8pq9+QDv8VhwqyJN0e4wLCDxcSP@vger.kernel.org, AJvYcCVov2uhc84XgMA5cJmL6CwAcHiJ5y6QfqSbeV5DOZm61HXO/1+ZIzli1jtIO849gCPj9BQAnhzFcN4A@vger.kernel.org, AJvYcCVvTfzX3+smEc/p5izCRBBGhH2m7cJ5wzqFyWvx8asSjUx+trOEbJL/GdDAWnN/t1Ztd0ZcVVy1iFIge0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyGxfcdibRD8z54d3IiNv8CkFstLZxknkN9ElDtWmVY/2wdSiQ
+	+0iq0fa1OgRv4qB5Zf6P4DdA+yyQzWDKPmtAwo7cm+9Ud+L8EgFf
+X-Gm-Gg: ASbGnct19Q3D9qPLjCo8fDLys/cFdc9kuXP3yYsZHSSV/jOxWJW72KoFZHsB/ZUesf6
+	wWw+pB4fHR6wiMCJEcxWckqUbtcTyFJ8SVzeF61OGjis6p3F9tiVw4GbO+56x/H6/FUO/EGAYEa
+	rufoew5AYO4g7QOJvrLvOAJRj0i/lm9/YYowQopS2OBl+MbAa0lZDhNzkGeIlBMoRV0OKNCXFJI
+	X9K/jxUBdg/j7CvdOvsmHOXt7D6U0TOPWPUSdHcn0CaxHyHhQd7iMIVeHOxZWbFjsQR7ZKOy0EV
+	AOxIMhPq0a3VGPmO0U1Z+J4KNoWvPhQ75iIclfhi/HlbJk9opQ==
+X-Google-Smtp-Source: AGHT+IFm2Ivs5vcULV4P1VfVqtTlrqG7JCOFqoTsqB+BfueO5ZgT/GH3+gtYQIP4/Fnf/Adpgok60g==
+X-Received: by 2002:a05:6a21:6191:b0:1ee:67ec:2279 with SMTP id adf61e73a8af0-1eed4fb2251mr13720501637.26.1740064074600;
+        Thu, 20 Feb 2025 07:07:54 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7325f063782sm11326728b3a.148.2025.02.20.07.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 07:07:54 -0800 (PST)
+Date: Fri, 21 Feb 2025 00:07:52 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: hv: Correct a comment
+Message-ID: <20250220150510.GD1777078@rocinante>
+References: <20250207190716.89995-1-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] net: mana: Add debug logs in MANA network driver
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174002104600.825980.5206357990869586849.git-patchwork-notify@kernel.org>
-Date: Thu, 20 Feb 2025 03:10:46 +0000
-References: <1739842455-23899-1-git-send-email-ernis@linux.microsoft.com>
-In-Reply-To: <1739842455-23899-1-git-send-email-ernis@linux.microsoft.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- michal.swiatkowski@linux.intel.com, mlevitsk@redhat.com,
- yury.norov@gmail.com, shradhagupta@linux.microsoft.com,
- kotaranov@microsoft.com, peterz@infradead.org, akpm@linux-foundation.org,
- schakrabarti@linux.microsoft.com, kent.overstreet@linux.dev,
- longli@microsoft.com, erick.archer@outlook.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207190716.89995-1-eahariha@linux.microsoft.com>
 
-Hello:
+Hello,
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> The VF driver controls an endpoint attached to the pci-hyperv
+> controller. An invalidation sent by the PF driver in the host would be
+> delivered *to* the endpoint driver by the controller driver.
 
-On Mon, 17 Feb 2025 17:34:15 -0800 you wrote:
-> Add more logs to assist in debugging and monitoring
-> driver behaviour, making it easier to identify potential
-> issues  during development and testing.
-> 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> ---
-> Changes in v2:
-> * Change "debug statements" in commit message to "more logs".
-> * Replace dev_err with dev_dbg in out: label in
->   mana_gd_create_dma_region.
-> * Use dev_err in resp header status check.
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 50 +++++++++++++---
->  .../net/ethernet/microsoft/mana/hw_channel.c  |  6 +-
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 58 +++++++++++++++----
->  3 files changed, 94 insertions(+), 20 deletions(-)
+Applied to controller/hyperv, thank you!
 
-Here is the summary with links:
-  - [v2] net: mana: Add debug logs in MANA network driver
-    https://git.kernel.org/netdev/net-next/c/47dfd7a72257
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+	Krzysztof
 
