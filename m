@@ -1,119 +1,147 @@
-Return-Path: <linux-hyperv+bounces-3997-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3998-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7221EA3E5CA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 21:24:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80A5BA3E715
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 22:57:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 028503BC851
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 20:23:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC20F7A96A1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 21:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 921D62641C3;
-	Thu, 20 Feb 2025 20:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285B821480E;
+	Thu, 20 Feb 2025 21:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qGpZCfGa"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XtGknKWp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9022116F4;
-	Thu, 20 Feb 2025 20:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1387213E8C;
+	Thu, 20 Feb 2025 21:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740082986; cv=none; b=ABalqah1OV0QsTmQyEG/YGdAl0E13n/1K01Ol2lIf7NOzBWsf7rEt0UmCVk+K7bueUR51P+/6oRmMsC5tcntdy86wp4SxDDNECFuqeAkJBTmZz/9zv/0EfRYSw6f5sTHP9Rv68Q2UbJzS6E7BGWCNxWqEkgCwm6O4tpXgFjK+J0=
+	t=1740088642; cv=none; b=NpKQB+rNFp/c9Cowz8y13XPmhu6+I+hlchrrC07EtI51G59XLS3LP9duXQmMrAyoQD8daJeyCPeuR1A2VxSBiG0HZ0DrdjeKv7JKHGxu4zi3H8hORMm/QiijbxQPCj5daSoTFdraxwfAZ0OEVCU8qKAyZZR04JuMK3UdH3eMdxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740082986; c=relaxed/simple;
-	bh=H0sc0Dzoy3F2dNp0PaU0lxzNo4cuwBbWvkCnJDbwqsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=biqgqYYVBvObJrJGDMQB5RW1HaXJYTSsbpntwGcy7RRBjiPxgrYAO8rcTcNnqCJbnTw/ZILYMYa85CdMqctgAqqosBsGbHH336CY+9RePQpl9L2QgpKqr6EPLOEtIHctHnhqzIEvJID8Tx3syk0SYfpf/b9ePA+Z3ObViLUD/go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qGpZCfGa; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740088642; c=relaxed/simple;
+	bh=gMZs+9OrG5fzn9MS/2Mbfn4Nc4iUTMVd0t0TT/zYzk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=If2JwhTP4l/IkJtVnzyvkj39nUQzggganT9s1Puf7T+pDlpa+1us7exqGX9GFZqh03mso1gPRIX5l7UcHpsPkJ9Afd1j8CoX4DfFnziP7I1Bu3jv8Ya7cVURuk8WmBVTSwvx1tmMVAaG0fOKtxC84V+IZlhRlMB+UbslvCJOnzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XtGknKWp; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B1B8B2043DFE;
-	Thu, 20 Feb 2025 12:23:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B1B8B2043DFE
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A2784203E3BD;
+	Thu, 20 Feb 2025 13:57:19 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A2784203E3BD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740082984;
-	bh=V+jj0mO8JyhApYoPayBDHN4fMJAhT0KBvP1icd3eeMc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qGpZCfGa1ZG916s3BipBiLtFXgWJVeEPNMF4SilMqjxi16ZtabQ3LsBkMsjzvFOaZ
-	 2YNCMN1v6EeHEzUCNm9bgSwaH0/5W+XkQWG3f+Dx3qcM7bTsXDPf9lW5Y9nZgXSarm
-	 hAN4/HmrA9cyt7tqmtSAOdtug0pyjorfHUGmWXt8=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	kys@microsoft.com,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	ssengar@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v2 2/2] x86/hyperv: VTL mode callback for restarting the system
-Date: Thu, 20 Feb 2025 12:23:02 -0800
-Message-ID: <20250220202302.2819863-3-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250220202302.2819863-1-romank@linux.microsoft.com>
-References: <20250220202302.2819863-1-romank@linux.microsoft.com>
+	s=default; t=1740088640;
+	bh=hXGH9Z+OdViyLyaeNdj+evSOC05tFiOwgQvPxQsepcw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XtGknKWpWoB+evSUfsY6KBr3Lhb1Ju2CCc638EfX+cLZ0/PDofVE7HCnnownVNu6h
+	 4q03qcOPhOmEu8nMMTIoirXxamdOrA8OY90k3D6HNMHI2nfHmrb2v9C7eVGgeTUR9m
+	 kpqR+22342pJd/TO0Iag2Y5Yo5rxJLEmTX8xeSjk=
+Message-ID: <6e7d0116-82b5-4a39-997e-24143d7d3584@linux.microsoft.com>
+Date: Thu, 20 Feb 2025 13:57:19 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] hyperv: Change hv_root_partition into a function
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
+ <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>
+References: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740076396-15086-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB415703DF0CD1EB3523E3C79AD4C42@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB415703DF0CD1EB3523E3C79AD4C42@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The kernel runs as a firmware in the VTL mode, and the only way
-to restart in the VTL mode on x86 is to triple fault. Thus, one
-has to always supply "reboot=t" on the kernel command line in the
-VTL mode, and missing that renders rebooting not working.
+On 2/20/2025 11:17 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, February 20, 2025 10:33 AM
+>>
+>> Introduce hv_current_partition_type to store the partition type
+>> as an enum.
+>>
+>> Right now this is limited to guest or root partition, but there will
+>> be other kinds in future and the enum is easily extensible.
+>>
+>> Set up hv_current_partition_type early in Hyper-V initialization with
+>> hv_identify_partition_type(). hv_root_partition() just queries this
+>> value, and shouldn't be called before that.
+>>
+>> Making this check into a function sets the stage for adding a config
+>> option to gate the compilation of root partition code. In particular,
+>> hv_root_partition() can be stubbed out always be false if root
+>> partition support isn't desired.
+>>
+>>
+> 
+> [snip]
+>  
+>> +void hv_identify_partition_type(void)
+>> +{
+>> +	/* Assume guest role */
+>> +	hv_current_partition_type = HV_PARTITION_TYPE_GUEST;
+>> +	/*
+>> +	 * Check partition creation and cpu management privileges
+>> +	 *
+>> +	 * Hyper-V should never specify running as root and as a Confidential
+>> +	 * VM. But to protect against a compromised/malicious Hyper-V trying
+>> +	 * to exploit root behavior to expose Confidential VM memory, ignore
+>> +	 * the root partition setting if also a Confidential VM.
+>> +	 */
+>> +	if ((ms_hyperv.priv_high & HV_CREATE_PARTITIONS) &&
+>> +	    (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
+>> +	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+>> +		pr_info("Hyper-V: running as root partition\n");
+>> +		if (IS_ENABLED(CONFIG_MSHV_ROOT))
+> 
+> I'll have to rescind the "Reviewed-by:" that I just gave. There's a patch
+> sequencing problem in that CONFIG_MSHV_ROOT doesn't exist yet.
+> It's added in Patch 3 of the series.  Because it doesn't exist, the
+> IS_ENABLED() will always return 'false', which isn't fatal in the sense
+> of causing a compile error.  But the code won't run in the root partition
+> because hv_current_partition_type isn't set.
+> 
 
-Define the machine restart callback to always use the triple
-fault to provide the robust configuration by default.
+Oops! Thanks for catching that, I'll just move the check from this patch
+to patch 3.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
- arch/x86/hyperv/hv_vtl.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 4421b75ad9a9..582fe820e29c 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -44,6 +44,15 @@ static void  __noreturn hv_vtl_emergency_restart(void)
- 	}
- }
- 
-+/*
-+ * The only way to restart in the VTL mode is to triple fault as the kernel runs
-+ * as firmware.
-+ */
-+static void  __noreturn hv_vtl_restart(char __maybe_unused *cmd)
-+{
-+	hv_vtl_emergency_restart();
-+}
-+
- void __init hv_vtl_init_platform(void)
- {
- 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-@@ -258,6 +267,8 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
- int __init hv_vtl_early_init(void)
- {
- 	machine_ops.emergency_restart = hv_vtl_emergency_restart;
-+	machine_ops.restart = hv_vtl_restart;
-+
- 	/*
- 	 * `boot_cpu_has` returns the runtime feature support,
- 	 * and here is the earliest it can be used.
--- 
-2.43.0
+> Michael
+> 
+>> +			hv_current_partition_type = HV_PARTITION_TYPE_ROOT;
+>> +		else
+>> +			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
+>> +	}
+>> +}
 
 
