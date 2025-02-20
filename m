@@ -1,116 +1,135 @@
-Return-Path: <linux-hyperv+bounces-3983-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3984-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E196A3E132
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 17:46:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C853DA3E3F1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 19:33:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85D8F860997
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 16:41:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EC5A3A85BF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 18:33:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F92B2080CE;
-	Thu, 20 Feb 2025 16:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0910321481A;
+	Thu, 20 Feb 2025 18:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RfNgWwSK"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eREcWoQD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3758A20B812;
-	Thu, 20 Feb 2025 16:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479882135CE;
+	Thu, 20 Feb 2025 18:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069717; cv=none; b=e/ihQzpkQ3R0wdAVeXKJFKzz5kB3lBpJMyVllEWw09dQnQUAiIlGW1JZubumRht4B7y7UJGdTFkBhi0pZd/tWxBwSYCSwr3Zj9AO484JuOEXPPitZfeneeFNlP6b4rOEJLBs4vxW51A7/S7vSyOEmX48GGnFjsKqOUzSfRnwRfI=
+	t=1740076425; cv=none; b=aCc39qOyyGngnVzZ2WB8fqHyMiMvlIgDpSoJF6NXELTxz2Mv6yxxgmeZ7PNzxlY/DHgD725bpCj8qDrXRlL3xfT3G+wk+/mfMpuPlvOrxaV64v3VL9DT/xjq3ZAWskjn0CkoX46VXZaXYlRB8hsxJAbH9nLDSeqYmKY3ef3Tf+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069717; c=relaxed/simple;
-	bh=TYfO4NMFHURGbPNs1cXbVVlPxLhwPSr2YHLvwtMjhy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BfVsm20NTzoP24EQd3M8UGi1T/JHVzvfvHBNCjhRHTUGcBaP313EMYYrk2mNfkEsTBtTqrQ2AZjMF6cnb/wUt8xqLsX6OYd/O0duZMpSkKmiuOenhibsghHmXV94b8vrtpLC7C3OaMMki56/A+8biweE1xROHuk3QibOSXLsziw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RfNgWwSK; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740076425; c=relaxed/simple;
+	bh=y8op8gMJiSWq38zB64ubHfJyTYIQSUa9uSXp5JC6yZc=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=C3tOsVN0F/NIq7JzcX8iJrDkiiGqQ74S4+91bFPQsjdigk13yLwjQ+JLszhsDYJNmPfVU7agH2mThEXZU9P/n8sxv8a/ACAq+D2DmruQI9HXiF/7VImzYoHS8NclO00sD+HLcIdUzu4Iu/PozBRYDhM18Upxsn3SJxeriSEOU3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eREcWoQD; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7A0F8203D5E9;
-	Thu, 20 Feb 2025 08:41:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A0F8203D5E9
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C2CE72059190;
+	Thu, 20 Feb 2025 10:33:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C2CE72059190
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740069715;
-	bh=pNJT56BxP7UvWA0Xz758yN9Ks+B/eGQRDTpNl6/uydA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RfNgWwSKvEiPibsl6QYn1+eHkT30Nn1lw5OPsw1d6PPbcISNOFjUL/xQSqvKSFf8o
-	 yoOIzOPYQSxDpQlLZwzRdyB7IKxJeSJ80SjCCl6Rmtksk16rj7gF1Vbsd9EZG8Perr
-	 ZiNK0h99Ko8rPXUvLfCrhbWuuKMw7GXCc7mIDVdc=
-Message-ID: <13059366-bf72-4e84-ab6c-032b735edaec@linux.microsoft.com>
-Date: Thu, 20 Feb 2025 08:41:55 -0800
+	s=default; t=1740076417;
+	bh=f+ig3Q6VESYArDvAdBr8s45cHmi1z9IqT8I/IrDLwWo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eREcWoQDX0aF/mtm+qMUFXwVTYYhadnAuREcLTeteFsSHPZiqup5cmrOo89zcKYGm
+	 9rBebnUAfAqYA854eWWb4zIGWhwOEEkz5onLG2aJv82kdhW6Lebi0chP7mqOyw9hhM
+	 /W+T9/0l/Ybbqhfq/f4ltH0nPNHV9HMnWVpuPk7o=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	iommu@lists.linux.dev,
+	mhklinux@outlook.com,
+	eahariha@linux.microsoft.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	daniel.lezcano@linaro.org,
+	joro@8bytes.org,
+	robin.murphy@arm.com,
+	arnd@arndb.de,
+	jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com,
+	skinsburskii@linux.microsoft.com,
+	mukeshrathor@microsoft.com
+Subject: [PATCH v2 0/3] Introduce CONFIG_MSHV_ROOT for root partition code
+Date: Thu, 20 Feb 2025 10:33:13 -0800
+Message-Id: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v4 6/6] PCI: hv: Get vPCI MSI IRQ domain from
- DeviceTree
-To: Michael Kelley <mhklinux@outlook.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "kw@linux.com" <kw@linux.com>, "kys@microsoft.com" <kys@microsoft.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "robh@kernel.org" <robh@kernel.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
- <will@kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-7-romank@linux.microsoft.com>
- <SN6PR02MB4157911BEF8664EDE2B62835D4C52@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157911BEF8664EDE2B62835D4C52@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Running in the root partition is a unique and specialized case that
+requires additional code. CONFIG_MSHV_ROOT allows Hyper-V guest kernels
+to exclude this code, which is important since significant additional code
+specific to the root partition is expected to be added over time.
 
+To do this, change hv_root_partition to be a function which is stubbed out
+to return false if CONFIG_MSHV_ROOT=n, and don't compile hv_proc.c at all,
+stubbing out those functions with inline versions.
 
-On 2/19/2025 3:29 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Tuesday, February 11, 2025 5:43 PM
+Store the partition type (guest or root) in an enum hv_current_partition_type,
+which can be extended beyond just guest and root partition.
 
-[...]
+While at it, introduce hv_result_to_errno() to convert Hyper-V status codes
+to regular linux errors. This is useful because the caller of a hypercall
+helper function (such as those in hv_proc.c) usually can't and doesn't
+interpret the Hyper-V status, so it is better to convert it to an error code
+and reduce the possibility of misinterpreting it. This also alows the stubbed
+versions of the hv_proc.c functions to just return a linux error code.
 
->>   }
-> 
-> These changes to rename hv_dev to vmbus_root_device, along with the
-> introduction of hv_get_vmbus_root_device(), seem like a separate
-> patch from the vPCI changes. The rename is definitely needed because
-> "hv_dev" as a symbol is very overloaded. But the rename is "no functional
-> change", and it doesn't touch the pci-hyperv.c file. You don't have a
-> consumer for hv_get_vmbus_root_device() until the vPCI changes, but
-> that seems OK to me to be in the subsequent patch.
-> 
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+Changes in v2:
+* Add patch to convert hypercall statuses to linux error codes [Easwar
+  Hariharan]
+* While at it, split the original patch into two logical pieces, one to change
+  hv_root_partition into a function, and one to introduce MSHV_CONFIG_ROOT
+* Improve the clarity of and add an error message to
+  hv_identify_partition_type() [Easwar Hariharan] [Michael Kelley]
+* Better explain *why* the patches are useful, in the commit messages [Michael
+  Kelley]
+* Add a Kconfig comment explaining why PAGE_SIZE_4KB is needed [Michael Kelley]
+* Minor style and typo fixes
 
-Thanks, will split the NFC out! I've asked the ACPI maintainers if a
-small change in ACPI would be fine to make the functional part of this
-patch more palatable, too.
+Nuno Das Neves (3):
+  hyperv: Convert hypercall statuses to linux error codes
+  hyperv: Change hv_root_partition into a function
+  hyperv: Add CONFIG_MSHV_ROOT to gate root partition support
+
+ arch/arm64/hyperv/mshyperv.c       |  2 +
+ arch/x86/hyperv/hv_init.c          | 10 ++---
+ arch/x86/kernel/cpu/mshyperv.c     | 24 +----------
+ drivers/clocksource/hyperv_timer.c |  4 +-
+ drivers/hv/Kconfig                 | 16 +++++++
+ drivers/hv/Makefile                |  3 +-
+ drivers/hv/hv.c                    | 10 ++---
+ drivers/hv/hv_common.c             | 69 +++++++++++++++++++++++++++---
+ drivers/hv/hv_proc.c               |  6 +--
+ drivers/hv/vmbus_drv.c             |  2 +-
+ drivers/iommu/hyperv-iommu.c       |  4 +-
+ include/asm-generic/mshyperv.h     | 40 ++++++++++++++---
+ 12 files changed, 137 insertions(+), 53 deletions(-)
 
 -- 
-Thank you,
-Roman
+2.34.1
 
 
