@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-3989-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-3990-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55F68A3E478
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 20:01:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41351A3E498
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 20:03:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4879817C597
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 18:58:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2242218836AA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Feb 2025 19:03:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E77B92641F1;
-	Thu, 20 Feb 2025 18:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED96D263F45;
+	Thu, 20 Feb 2025 19:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lUMMvA48"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TpP0wcMZ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81019263898;
-	Thu, 20 Feb 2025 18:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 857FB257D;
+	Thu, 20 Feb 2025 19:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740077799; cv=none; b=H3srRWbb9EzmbGL35PD93wUKv04J9GNQxPH1BhQuQppJpMzV3hTDrkip+fmUmz2sWdjh+kRVfEC5ShxXvcnPY3XlCKRHU7dT2TKIBrI4ikZnDJlbL7ybFI5aLef9L3/h4bhFjM48aE9Q+vd4sk5Z7o8RUAmBswtlTM0/wsHuFIg=
+	t=1740078127; cv=none; b=QpS4irOagzZvfzVWW671nw1wB+pQOSddW6ToLMDA6Qp1PeGMPG35dwKxRRBGrceEBABEWWLpG/J5GnUb/UM+7Na/Pj2pl1IjTmCHg8boZeE1UcnFcXZkkfSiiWfMO/neUR1BcRSpn0d8pW9YFkLkxwBr4U0PTMuKjEelRgOb5hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740077799; c=relaxed/simple;
-	bh=GbolloFT2FOCDbksbZ+RzhZEXPurL+z5bLmVpj7y08o=;
+	s=arc-20240116; t=1740078127; c=relaxed/simple;
+	bh=CFyn5eFkvEhiAg66OMPRKiFTTmzZl2xZuLvL7BXSNZs=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=egecmz/9EklqjUK4dxwJ+9MRyutij4mJaBJK0dR5Wu/XqbyMlV+NM7GoSATBxDLssl9f5E45haWExAtejyk0gkZYmOxtNBCeBiqh5sJs8wVtfWqr5HNNhFPIKOWafy8iUgjG5GBj9yV5bs0x1S/GVQ9Vyi0fmEozDFyhWwVN6O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lUMMvA48; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=knS2zojVzoogpN+NsCza36fz7a1Wfbv8Bo4x6w4dKG/kpAc9POqfRD86ZmmcAk/JnkmWLq6BRFUXR36Oun3qWvBgPPQoI0yRVNUK0jsKVfvrVAwTYeVSYlEJMKClvmYr+botnqnsSNDriEQ+XCkZszUNldRr2DdO6TIBdTDWOHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TpP0wcMZ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from [192.168.35.166] (c-24-22-154-137.hsd1.wa.comcast.net [24.22.154.137])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3FD35203E3A2;
-	Thu, 20 Feb 2025 10:56:37 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3FD35203E3A2
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6C1062059191;
+	Thu, 20 Feb 2025 11:02:05 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6C1062059191
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740077798;
-	bh=x5G2E+vUtbY0uD73lnb0uFLzyVFiAj2xuYirRrBVabo=;
+	s=default; t=1740078126;
+	bh=NeQEm7g/5Ed+D26MEHjj4MWfwDZexQdKcjr1nchYGZU=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=lUMMvA48ESzUkTcMMWbiIOhiwtv/5Arnq9nEGx0Opzkkyf/25jcaIaXOcbLSbB1CI
-	 ZRKu+5PZFWAm1gHdFNiE9YEbERuun9hBsF4ziOTScybHjKQm/XVkGxfVqkKj36Rl+z
-	 ZECAN3e9WjMqh5k0vLnnmZyqpA39OUrA31KrWvJw=
-Message-ID: <db2015a0-63a3-4005-9ad1-9b2f0b57ccb1@linux.microsoft.com>
-Date: Thu, 20 Feb 2025 10:56:37 -0800
+	b=TpP0wcMZCTRtM+c3Z7qG3/PCJYlDhwyoZnyPaR09jH6dl45kzjHXtPjI24GQ/6xsL
+	 QQ6Z3LvqJurk+NGZ/iwfdFvK8c1VsWZKifGI+ToeeNOPjuc0+9o/gWeWO/jWYYOFbz
+	 AmUyVSHXWUn9EwXFquo8gNtmRCwIMvXkrdKz1JpU=
+Message-ID: <e85ddfef-2081-4c8a-96e6-e84a8410ff85@linux.microsoft.com>
+Date: Thu, 20 Feb 2025 11:02:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -59,44 +59,36 @@ Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
  arnd@arndb.de, jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
  skinsburskii@linux.microsoft.com, mukeshrathor@microsoft.com
-Subject: Re: [PATCH v2 2/3] hyperv: Change hv_root_partition into a function
+Subject: Re: [PATCH v2 3/3] hyperv: Add CONFIG_MSHV_ROOT to gate root
+ partition support
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 References: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740076396-15086-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740076396-15086-4-git-send-email-nunodasneves@linux.microsoft.com>
 From: Easwar Hariharan <eahariha@linux.microsoft.com>
 Content-Language: en-US
-In-Reply-To: <1740076396-15086-3-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1740076396-15086-4-git-send-email-nunodasneves@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/20/2025 10:33 AM, Nuno Das Neves wrote:
-> Introduce hv_current_partition_type to store the partition type
-> as an enum.
+> CONFIG_MSHV_ROOT allows kernels built to run as a normal Hyper-V guest
+> to exclude the root partition code, which is expected to grow
+> significantly over time.
 > 
-> Right now this is limited to guest or root partition, but there will
-> be other kinds in future and the enum is easily extensible.
+> This option is a tristate so future driver code can be built as a
+> (m)odule, allowing faster development iteration cycles.
 > 
-> Set up hv_current_partition_type early in Hyper-V initialization with
-> hv_identify_partition_type(). hv_root_partition() just queries this
-> value, and shouldn't be called before that.
-> 
-> Making this check into a function sets the stage for adding a config
-> option to gate the compilation of root partition code. In particular,
-> hv_root_partition() can be stubbed out always be false if root
-> partition support isn't desired.
+> If CONFIG_MSHV_ROOT is disabled, don't compile hv_proc.c, and stub
+> hv_root_partition() to return false unconditionally. This allows the
+> compiler to optimize away root partition code blocks since they will
+> be disabled at compile time.
 > 
 > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  arch/arm64/hyperv/mshyperv.c       |  2 ++
->  arch/x86/hyperv/hv_init.c          | 10 ++++-----
->  arch/x86/kernel/cpu/mshyperv.c     | 24 ++------------------
->  drivers/clocksource/hyperv_timer.c |  4 ++--
->  drivers/hv/hv.c                    | 10 ++++-----
->  drivers/hv/hv_common.c             | 35 +++++++++++++++++++++++++-----
->  drivers/hv/vmbus_drv.c             |  2 +-
->  drivers/iommu/hyperv-iommu.c       |  4 ++--
->  include/asm-generic/mshyperv.h     | 15 +++++++++++--
->  9 files changed, 61 insertions(+), 45 deletions(-)
+>  drivers/hv/Kconfig             | 16 ++++++++++++++++
+>  drivers/hv/Makefile            |  3 ++-
+>  include/asm-generic/mshyperv.h | 24 ++++++++++++++++++++----
+>  3 files changed, 38 insertions(+), 5 deletions(-)
 
 Looks good to me.
 
