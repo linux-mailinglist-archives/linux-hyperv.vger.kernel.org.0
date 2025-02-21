@@ -1,82 +1,183 @@
-Return-Path: <linux-hyperv+bounces-4006-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4007-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3248A3F4E8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2025 14:06:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 069F6A3FE5B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2025 19:11:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02BA24223D3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2025 13:05:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67FDC703580
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2025 18:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8CD920B7E2;
-	Fri, 21 Feb 2025 13:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490EA2512C5;
+	Fri, 21 Feb 2025 18:10:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYW1r8SY"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pX36bqGy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB38150980;
-	Fri, 21 Feb 2025 13:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6027250BFC;
+	Fri, 21 Feb 2025 18:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740143068; cv=none; b=FagXoRFVeLHQwu0bq6l1vi/NJojiqpoHXL0nkgona1H2PFig9LBx5YFV4XsTclvUz33yWTri1KZSM7YyB4AsRtmDhSWJgIrb/uMigZ+TXwnKkteQXtj4/3haTQYn/ANHZJGitMfnJCqfuhbeKJuhX3E8BsmLIMOZgiYOgf/u5ZM=
+	t=1740161406; cv=none; b=FPllPrucTgJL0VNwT10bCFMSOyswg5amMA+aCaouUas8s/mYzm/3+g4sVIAzTaX8almkb4U4u5H+bNWCVfKOe/PxKk08vkJwOMW3aZJyZky4iH/dVBA0etQyZWYDa90384diu5ExMskGkiXj0K/fxaiXHK3SEpXG7TX6Vw2xb+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740143068; c=relaxed/simple;
-	bh=AOTE9050/nKvb/vdg6pehRkE/nL9KFzfRe14a1GPYpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIGQ/8rP3d8lL5nLXFyVaf+XQe8mNqKDk5yz/SkjG8dWrnAaAgLe3CsnI6MEMF/oXZT7NlKnfzAyq/jfLwNXiy4T6vvM1uJ8LnKPN/4n+whN/ozuKx2d0Ap4Hb3ofGFk+30CSW+PEko62Q2DDUeOSFvzdkXbIsGmK6Qb8R6m6Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYW1r8SY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB7EC4CED6;
-	Fri, 21 Feb 2025 13:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740143067;
-	bh=AOTE9050/nKvb/vdg6pehRkE/nL9KFzfRe14a1GPYpQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AYW1r8SYP9IftcppJpxAHbSNcURHNdJ8cSErM5QmWT1BpkbZvcRticV4vorDPwkL5
-	 m1TsEUbhCFXQVW0F/HTDSfH0YAwE51n4uu+dWA1x+pZZPsi9ykl32wFX5Vdsx3W+u2
-	 iO3f6bdG8EI7UPOKKnaqHLMMrmzMmdtuIdoZwJxhHyNtV0QOarCKaAM9gRQLqlqQrW
-	 NdlhPlT+Guy7PVGqLk/iwbxQjq2y/wcnaSuJCddWYI8L2bwFE2rxw8ZkOGKwsafUqT
-	 fI3FkSD9TsdpmkctCuT5cLtnO0GOoZ8L288Evd4k9rEQwPGmXSd7O4z+EeFT3RUijZ
-	 PpJWhcSnVWOmw==
-Date: Fri, 21 Feb 2025 14:04:16 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-	mingo@redhat.com, tglx@linutronix.de, wei.liu@kernel.org,
-	ssengar@linux.microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v2 0/2] x86/hyperv: VTL mode reboot fixes
-Message-ID: <Z7h50PqiXxdfMegl@gmail.com>
-References: <20250220202302.2819863-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1740161406; c=relaxed/simple;
+	bh=pRnZuPrU9M8shnH6T9iQhO7+NmgMgoDkb4KpaM3FRxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PpBnXNiF9HlrzupDB6qVXPxAIGlt21Da+JZ+KGrFi42q/tMrSoyTJAPd/q6MkuqWoz9KBLtMVjyI6TOyFTEx6uEFwadqucqm9t32oicyISH9VVz6jAEoBCyoVjdQVl2jq8pRcRTYLpfx73d0NDBF+Ok2diStCYgZncHrso9PHaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pX36bqGy; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8C1B0204E5BD;
+	Fri, 21 Feb 2025 10:10:03 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C1B0204E5BD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740161404;
+	bh=ctZGnlszNAEiyGeHFSMVBfLyM+0PtIeMkQSIV0dR0u4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pX36bqGypY/zOUYlEK9rRUK1oLe1vm52665jNhuvSz5Sa6UbfPh4/CJHKykrsbUiM
+	 rnsa2fU6iBW0LsdcKXvlWU5d0uU9REHty5Tv6nrMy9+tda4Ka3qgpOGpkTlAyGnkmq
+	 pdVs7lrUaUSWdddlBa8cOmnvn1x5zEKi1bApSdP0=
+Message-ID: <5ae3454f-61e4-4739-816c-20525e2087be@linux.microsoft.com>
+Date: Fri, 21 Feb 2025 10:10:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220202302.2819863-1-romank@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] hyperv: Change hv_root_partition into a function
+To: MUKESH RATHOR <mukeshrathor@microsoft.com>,
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "mhklinux@outlook.com" <mhklinux@outlook.com>,
+ KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
+ <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
+References: <1740076396-15086-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740076396-15086-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <5980eaf9-2e77-d0ec-e39b-b48913c8b72f@microsoft.com>
+ <a29af204-e4a9-4ef2-b5b8-f99f2ac0a836@linux.microsoft.com>
+ <f5366d52-1714-87bc-5fa5-94230f2acca1@microsoft.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <f5366d52-1714-87bc-5fa5-94230f2acca1@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 2/20/2025 2:59 PM, MUKESH RATHOR wrote:
+> 
+> 
+> On 2/20/25 14:56, Easwar Hariharan wrote:
+>  > On 2/20/2025 1:59 PM, MUKESH RATHOR wrote:
+>  >>
+>  >>
+>  >> On 2/20/25 10:33, Nuno Das Neves wrote:
+>  >>   > Introduce hv_current_partition_type to store the partition type
+>  >>   > as an enum.
+>  >>   >
+>  >>   > Right now this is limited to guest or root partition, but there will
+>  >>   > be other kinds in future and the enum is easily extensible.
+>  >>   >
+>  >>   > Set up hv_current_partition_type early in Hyper-V initialization
+> with
+>  >>   > hv_identify_partition_type(). hv_root_partition() just queries this
+>  >>   > value, and shouldn't be called before that.
+>  >>   >
+>  >>   > Making this check into a function sets the stage for adding a config
+>  >>   > option to gate the compilation of root partition code. In
+> particular,
+>  >>   > hv_root_partition() can be stubbed out always be false if root
+>  >>   > partition support isn't desired.
+>  >>   >
+>  >>   > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>  >>   > ---
+>  >>   >   arch/arm64/hyperv/mshyperv.c       |  2 ++
+>  >>   >   arch/x86/hyperv/hv_init.c          | 10 ++++-----
+>  >>   >   arch/x86/kernel/cpu/mshyperv.c     | 24 ++------------------
+>  >>   >   drivers/clocksource/hyperv_timer.c |  4 ++--
+>  >>   >   drivers/hv/hv.c                    | 10 ++++-----
+>  >>   >   drivers/hv/hv_common.c             | 35
+> +++++++++++++++++++++++++-----
+>  >>   >   drivers/hv/vmbus_drv.c             |  2 +-
+>  >>   >   drivers/iommu/hyperv-iommu.c       |  4 ++--
+>  >>   >   include/asm-generic/mshyperv.h     | 15 +++++++++++--
+>  >>   >   9 files changed, 61 insertions(+), 45 deletions(-)
+>  >>   >
+>  >
+>  > <snip>
+>  >
+>  >>   > @@ -34,8 +34,11 @@
+>  >>   >   u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
+>  >>   >   EXPORT_SYMBOL_GPL(hv_current_partition_id);
+>  >>   >
+>  >>   > +enum hv_partition_type hv_current_partition_type;
+>  >>   > +EXPORT_SYMBOL_GPL(hv_current_partition_type);
+>  >>   > +
+>  >>
+>  >> nit: if possible and not too late, can we please use more Unix
+>  >> style naming, eg, hv_curr_ptid and hv_curr_pt_type rather than this
+>  >> long windows style names that causes unnecessary line wraps/splits.
+>  >>
+>  >> Thanks,
+>  >> -Mukesh
+>  >>
+>  >
+>  > Per
+> https://docs.kernel.org/process/coding-style.html#naming
+>  >
+>  > GLOBAL variables (to be used only if you really need them) need to
+> have descriptive names,
+>  > as do global functions. If you have a function that counts the number
+> of active users,
+>  > you should call that count_active_users() or similar, you should not
+> call it cntusr().
+> 
+> Thant's hardly a fair comparison. Suggestion was NOT hvptid.
+> 
+I'm in favor of shortening the names when the abbreviation is common and
+therefore still perfectly clear to anyone reading it - e.g. "curr" is
+a perfectly acceptable abbreviation of "current", in my view.
 
-* Roman Kisel <romank@linux.microsoft.com> wrote:
+I think abbreviating "partition" to "pt" is probably not a good fit for
+global variables. Anyone seeing a variable with the word "partition"
+(and hv_ prefix) can go look up what a Hyper-V partition is if they don't
+know, but "pt" would be completely impenetrable without reading through a
+fair amount of the code that uses it to figure out what it refers to.
 
-> Roman Kisel (2):
->   x86/hyperv: VTL mode emergency restart callback
->   x86/hyperv: VTL mode callback for restarting the system
+I think even slightly longer abbreviations like "part", "ptn", "prt", or
+"prtn" are not good enough unfortunately... the word "partition" just
+doesn't lend itself to abbreviation in an obvious way.
 
-A: These two patch titles verbs.
-...
-...
-B: These two patch titles are missing verbs.
+So, for this patch I'm fine with changing it to "hv_curr_partition_type"
+which saves a few characters.
 
-Like me you prefer B too, right? If so, please add back the missing 
-verbs to the titles. I suggest "Add"/"Introduce", and "Call". Thank you!
+Feel free to post a followup for "hv_curr_partition_id" if you like.
 
-	Ingo
+Note - For the driver code which isn't as exposed to the rest of the
+kernel, I think we can continue to use "pt" or similar to keep the names
+shorter.
+
+Thanks
+Nuno
 
