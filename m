@@ -1,196 +1,197 @@
-Return-Path: <linux-hyperv+bounces-4024-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4025-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A130CA405AE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 06:44:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C714AA40A9D
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 18:27:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06EAB422171
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 05:44:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 927F91796D2
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 17:27:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995761EE00F;
-	Sat, 22 Feb 2025 05:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431901F9F70;
+	Sat, 22 Feb 2025 17:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggntqJcR"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gbpTAgpl"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CCC770E2;
-	Sat, 22 Feb 2025 05:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99048143895;
+	Sat, 22 Feb 2025 17:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740203056; cv=none; b=eXl+93ybzaKRKKbOOY5Rho+D/zVFAyma31r/H+E2uTiuLgoTXf0HqweIy2RserTr2Vw6CjXkg+nN1zSflv4XsgeLTfdrZdv4zj0QKMEhGvhDgTwMdr/MQD6QyUJxJugZxOdpN1oqjoYh/n7xgg+etsXHe7waqfXsH2Gf8l52XRU=
+	t=1740245237; cv=none; b=P4VmYWrn32X9vQw+dL4ntuvOtlV/PHuer3YKAY5HRIsBvMUsYs7xnNNqUU/WODuPe9uplyqIg9sXW8l0hHXiy3H91W+h+IeoXPLhcgym7y/SeCIrU98fNcech9k5K9uD0u36MGokGabjO5xncZukvNVZTNlKl0YxE57Z5GjMznQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740203056; c=relaxed/simple;
-	bh=nkYM4x72HyPUHZHb8VHdX3lyx1EuaOkY2lCZ2Fwejl4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m2/cjec+0M4FPi8Rq1KpLCGxX/kebl/FPsAqNTYdeT8NsPZKMa22+DC7H7t7g6RDI1qg7/z3FZl730xNuNkYphU8r/EOISwqMvuQQAvsyEhDl0i7rSezmTNAOFBTcHmiG2wtXVKGZJPZeq60BNGBJ0RyNJqp6QgGYVo6Y8oYUWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggntqJcR; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-221057b6ac4so54288155ad.2;
-        Fri, 21 Feb 2025 21:44:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740203054; x=1740807854; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JN6tg9jMolK9FtqTyHhvnK6PuO8bN0pSfEHBvSTQ+04=;
-        b=ggntqJcR/mnOE8docqt4SI91ylMcJ4Fvnx2WaOc0UZLOvQQF1w0kNsF/T0+WEEbO0/
-         KWLCK3heI27pAh6NC5JHSCctOIiw/e5Jycu+BNlVHxLYbhmIvBegmwTCU+gKecNWT+Ih
-         IVzsCC3aTE+sX1bd8KdXhtayJwJGlaqaNfcSibLqhhLXD859eW/rdB7ly8Wu8l8aVs6k
-         VBr7QfxsT5JkrxodDesnZGhhueJzEBdH/TxnFIc8YKZadnMPEcjrn5lY4lK55VUIDAIj
-         wFjVkwNFP5ebd4tjrLmewQ2XGcW7DK+lE/kzxZRLQPq616cu1T9xYeEykydb/Jj2Cqav
-         L1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740203054; x=1740807854;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JN6tg9jMolK9FtqTyHhvnK6PuO8bN0pSfEHBvSTQ+04=;
-        b=hOtMU/d3PahM8SE/NrhDvZj8+IIyovWvBHT7ZwwJAsljYFmSjNYSk3yr8HFFAjISs7
-         J8W4QPskeYRVteYJUFwyONN/q3QEmsyu+ae1YMsFfbN1Dx395yS9BRU906TT1C55AdZJ
-         U96c7qJaW3CqWDAwqhejiCfAmzJFgwiiWZKbevZB8qKWZ4zE8E0moNANXYDo5N2izaeU
-         eY5F11nSiWQyRdcKgdVKGzFAX6UUW4yjjG7s7qwYHnKKvS/O7PbzQZzvq2Y4GI2oOO4T
-         C1jQOrKlwt+Vpa7uwcuNZGabnmlJDKpOe4TEzLiAr/wLjBpInwJalXx2FUjpEdrtfeB/
-         Nc2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVekdBH/1+7H3Rh8ZOBgSOk12E0L873zZq8vNAdBSfU7fkOH3ja+8LA3gqsKOlFIz4Wwe9oKEoNvY0h0TP9@vger.kernel.org, AJvYcCW3wkDg7HaiHVKYsY5SarO5UeaZ6YLiHZNDjGfD7ATn4yVghjor7U6NmzNfJAZWDphRwKXJvYCNoCgzp6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz50AGU09GdopFfzhfYqktVmr3LILAjT3WEvJMdKI3vLubIqsQa
-	i0SjwEubIZJdiCbACpmRij23zez77sN8BRfFG1/YUjjfNen5ZjYwYmbr8Q==
-X-Gm-Gg: ASbGnctIvAtp9xSVqvnm5juBh6mlcZWpJaBrB4GrevH8wAgTAr3ouif/7iPfqRJY+ol
-	j4HUreL5UsrF/hjnVnWHM8VhMjOwhGUyODzCGWNAQPT1dWfEW4Jx/TpIVJ9WsDgoENnWFeYVgld
-	SSUC+8sMs9jgP9NNhaL6Zw877oS2pQ1j914gV3so57j+JJ2xj841jeUeTy4O5kSgP7Usm5QrlJT
-	5jHQ42mFoMzcqJpwNYBYym/IHgM1hfJyiJAW7mcBO/0ntJ0k2THrT0cL/ZwH1OK6Ei73HvWgiY1
-	wafSohVrFEyXvr2ighGdpgzFqwEFSDkVWJtMuo/lvg0K+gycXiTVJ4mBz+jSHGE7UGNVrkFDWdg
-	V697T5ecv/YgePUq9gi3zuFo=
-X-Google-Smtp-Source: AGHT+IGvHwEGKp8bifeL0bm86Y95OmaukWAjfaQ8nmw/WGiKd2nKCTPuumT5A8GKXjkriJdOPJ7zsg==
-X-Received: by 2002:a17:902:da8f:b0:220:fe50:5b44 with SMTP id d9443c01a7336-221a1103431mr100803975ad.31.1740203054179;
-        Fri, 21 Feb 2025 21:44:14 -0800 (PST)
-Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5364351sm146183165ad.76.2025.02.21.21.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 21:44:13 -0800 (PST)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: hamzamahfooz@linux.microsoft.com
-Cc: akpm@linux-foundation.org,
-	bhe@redhat.com,
-	decui@microsoft.com,
-	gregkh@linuxfoundation.org,
-	haiyangz@microsoft.com,
-	jani.nikula@intel.com,
-	jfalempe@redhat.com,
-	joel.granados@kernel.org,
-	john.ogness@linutronix.de,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pmladek@suse.com,
-	ryotkkr98@gmail.com,
-	wei.liu@kernel.org
-Subject: Re: [PATCH RFC] panic: call panic handlers before panic_other_cpus_shutdown()
-Date: Sat, 22 Feb 2025 14:44:05 +0900
-Message-Id: <20250222054405.298294-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z7juu2YMiVfYm7ZM@hm-sls2>
-References: <Z7juu2YMiVfYm7ZM@hm-sls2>
+	s=arc-20240116; t=1740245237; c=relaxed/simple;
+	bh=v8Rn8TMSUEc69xZwoTiQJB5VZcQX2AU+VQlc9iwPgRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LHSAKoK/5q0JoDBjVeInAlUjV3/aKULf20yjJWQyAC1+23rpgHGY69lznQnFqsNgO2RTLXS8D+48J3P6S94J2Q6xefGLteo0GXSqpU7Gb6H+EE3wsPFFC6VOhDUAagelHQfm7w1tkzDe/ch0pcs2+bC2/56DwHvfYcy7JuaWdd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gbpTAgpl; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 1C48E205918F; Sat, 22 Feb 2025 09:27:15 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1C48E205918F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740245235;
+	bh=n+fyGzv1lAnZcM4eqUWtPQLqz5c36fi+KNP0fB+Xn1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gbpTAgplvskw1984CnV9jLD9Y2NKhBU2lDiNZA1ca+cnKAYIRELXkMw5xePC2/y4Q
+	 9lnDqr3uVwSQc/GS8tikncFnRvd3gev832HvjHU5eNkazYqprYTjREc75R4GO5aKtC
+	 0aMgiunNm8kNw9QTkGEdnAaUmkPuRWIx+I65bGi4=
+Date: Sat, 22 Feb 2025 09:27:15 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"ssengar@microsoft.com" <ssengar@microsoft.com>
+Subject: Re: [PATCH] fbdev: hyperv_fb: Allow graceful removal of framebuffer
+Message-ID: <20250222172715.GA28061@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1739611240-9512-1-git-send-email-ssengar@linux.microsoft.com>
+ <SN6PR02MB4157813782C1D9E6D1225582D4C52@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR02MB4157813782C1D9E6D1225582D4C52@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Fri, 21 Feb 2025 16:23:07 -0500, Hamza Mahfooz wrote:
->On Fri, Feb 21, 2025 at 11:23:28AM +0900, Ryo Takakura wrote:
->> On Thu, 20 Feb 2025 17:53:00 -0500, Hamza Mahfooz wrote:
->> >Since, the panic handlers may require certain cpus to be online to panic
->> >gracefully, we should call them before turning off SMP. Without this
->> >re-ordering, on Hyper-V hv_panic_vmbus_unload() times out, because the
->> >vmbus channel is bound to VMBUS_CONNECT_CPU and unless the crashing cpu
->> >is the same as VMBUS_CONNECT_CPU, VMBUS_CONNECT_CPU will be offlined by
->> >crash_smp_send_stop() before the vmbus channel can be deconstructed.
->> >
->> >Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
->> >---
->> > kernel/panic.c | 4 ++--
->> > 1 file changed, 2 insertions(+), 2 deletions(-)
->> >
->> >diff --git a/kernel/panic.c b/kernel/panic.c
->> >index fbc59b3b64d0..9712a46dfe27 100644
->> >--- a/kernel/panic.c
->> >+++ b/kernel/panic.c
->> >@@ -372,8 +372,6 @@ void panic(const char *fmt, ...)
->> > 	if (!_crash_kexec_post_notifiers)
->> > 		__crash_kexec(NULL);
->> > 
->> >-	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
->> >-
->> > 	printk_legacy_allow_panic_sync();
->> 
->> I think printk_legacy_allow_panic_sync() is placed after 
->> panic_other_cpus_shutdown() so that it flushes the stored 
->> cpus backtraces as described [0].
->> 
->> > 	/*
->> >@@ -382,6 +380,8 @@ void panic(const char *fmt, ...)
->> > 	 */
->> > 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
->> > 
->> >+	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
->> >+
->> 
->> So maybe panic_other_cpus_shutdown() should be palced after 
->> atomic_notifier_call_chain() along with printk_legacy_allow_panic_sync()
->> like below?
->> 
->> ----- BEGIN -----
->> diff --git a/kernel/panic.c b/kernel/panic.c
->> index d8635d5cecb2..7ac40e85ee27 100644
->> --- a/kernel/panic.c
->> +++ b/kernel/panic.c
->> @@ -372,16 +372,16 @@ void panic(const char *fmt, ...)
->>         if (!_crash_kexec_post_notifiers)
->>                 __crash_kexec(NULL);
->> 
->> -       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
->> -
->> -       printk_legacy_allow_panic_sync();
->> -
->>         /*
->>          * Run any panic handlers, including those that might need to
->>          * add information to the kmsg dump output.
->>          */
->>         atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
->> 
->> +       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
->> +
->> +       printk_legacy_allow_panic_sync();
->> +
->>         panic_print_sys_info(false);
->> 
->>         kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
->> ----- END -----
+On Wed, Feb 19, 2025 at 05:22:36AM +0000, Michael Kelley wrote:
+> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, February 15, 2025 1:21 AM
+> > 
+> > When a Hyper-V framebuffer device is unbind, hyperv_fb driver tries to
+> > release the framebuffer forcefully. If this framebuffer is in use it
+> > produce the following WARN and hence this framebuffer is never released.
+> > 
+> > [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_info.c:70 framebuffer_release+0x2c/0x40
+> > < snip >
+> > [   44.111289] Call Trace:
+> > [   44.111290]  <TASK>
+> > [   44.111291]  ? show_regs+0x6c/0x80
+> > [   44.111295]  ? __warn+0x8d/0x150
+> > [   44.111298]  ? framebuffer_release+0x2c/0x40
+> > [   44.111300]  ? report_bug+0x182/0x1b0
+> > [   44.111303]  ? handle_bug+0x6e/0xb0
+> > [   44.111306]  ? exc_invalid_op+0x18/0x80
+> > [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
+> > [   44.111311]  ? framebuffer_release+0x2c/0x40
+> > [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
+> > [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
+> > [   44.111323]  device_remove+0x40/0x80
+> > [   44.111325]  device_release_driver_internal+0x20b/0x270
+> > [   44.111327]  ? bus_find_device+0xb3/0xf0
+> > 
+> > Fix this by moving the release of framebuffer to fb_ops.fb_destroy function
+> > so that framebuffer framework handles it gracefully
+> 
+> These changes look good for solving the specific problem where
+> the reference count WARN is produced. But there is another
+> problem of the same type that happens when doing unbind
+> of a hyperv_fb device that is in use (i.e., /dev/fb0 is open and
+> mmap'ed by some user space program).
+> 
+> For this additional problem, there are three sub-cases,
+> depending on what memory gets mmap'ed into user space.
+> Two of the three sub-cases have a problem.
+> 
+> 1) When Hyper-V FB uses deferred I/O, the vmalloc dio memory
+> is what get mapped into user space. When hyperv_fb is unbound,
+> the vmalloc dio memory is freed. But the memory doesn't actually
+> get freed if it is still mmap'ed into user space. The deferred I/O
+> mechanism is stopped, but user space can keep writing to the
+> memory even though the pixels don't get copied to the actual
+> framebuffer any longer.  When the user space program terminates
+> (or unmaps the memory), the memory will be freed. So this case
+> is OK, though perhaps a bit dubious.
+> 
+> 2) When Hyper-V FB is in a Gen 1 VM, and the frame buffer size
+> is <= 4 MiB, a normal kernel allocation is used for the
+> memory that is mmap'ed to user space. If this memory
+> is freed when hyperv_fb is unbound, bad things happen
+> because the memory is still being written to via the user space
+> mmap. There are multiple "BUG: Bad page state in process
+> bash  pfn:106c65" errors followed by stack traces.
+> 
+> 3) Similarly in a Gen 1 VM, if the frame buffer size is > 4 MiB,
+> CMA memory is allocated (assuming it is available). This CMA
+> memory gets mapped into user space. When hyperv_fb is
+> unbound, that memory is freed. But CMA complains that the
+> ref count on the pages is not zero. Here's the dmesg output:
+> 
+> [  191.629780] ------------[ cut here ]------------
+> [  191.629784] 200 pages are still in use!
+> [  191.629789] WARNING: CPU: 3 PID: 1115 at mm/page_alloc.c:6757 free_contig_range+0x15e/0x170
+> 
+> Stack trace is: 
+> 
+> [  191.629847]  ? __warn+0x97/0x160
+> [  191.629849]  ? free_contig_range+0x15e/0x170
+> [  191.629849]  ? report_bug+0x1bb/0x1d0
+> [  191.629851]  ? console_unlock+0xdd/0x1e0
+> [  191.629854]  ? handle_bug+0x60/0xa0
+> [  191.629857]  ? exc_invalid_op+0x1d/0x80
+> [  191.629859]  ? asm_exc_invalid_op+0x1f/0x30
+> [  191.629862]  ? free_contig_range+0x15e/0x170
+> [  191.629862]  ? free_contig_range+0x15e/0x170
+> [  191.629863]  cma_release+0xc6/0x150
+> [  191.629865]  dma_free_contiguous+0x34/0x70
+> [  191.629868]  dma_direct_free+0xd3/0x130
+> [  191.629869]  dma_free_attrs+0x6b/0x130
+> [  191.629872]  hvfb_putmem.isra.0+0x99/0xd0 [hyperv_fb]
+> [  191.629874]  hvfb_remove+0x75/0x80 [hyperv_fb]
+> [  191.629876]  vmbus_remove+0x28/0x40 [hv_vmbus]
+> [  191.629883]  device_remove+0x43/0x70
+> [  191.629886]  device_release_driver_internal+0xbd/0x140
+> [  191.629888]  device_driver_detach+0x18/0x20
+> [  191.629890]  unbind_store+0x8f/0xa0
+> [  191.629891]  drv_attr_store+0x25/0x40
+> [  191.629892]  sysfs_kf_write+0x3f/0x50
+> [  191.629894]  kernfs_fop_write_iter+0x142/0x1d0
+> [  191.629896]  vfs_write+0x31b/0x450
+> [  191.629898]  ksys_write+0x6e/0xe0
+> [  191.629899]  __x64_sys_write+0x1e/0x30
+> [  191.629900]  x64_sys_call+0x16bf/0x2150
+> [  191.629903]  do_syscall_64+0x4e/0x110
+> [  191.629904]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> For all three cases, I think the memory freeing and iounmap() operations
+> can be moved to the new hvfb_destroy() function so that the memory
+> is cleaned up only when there aren't any users. While these additional
+> changes could be done as a separate patch, it seems to me like they are all
+> part of the same underlying issue as the reference count problem, and
+> could be combined into this patch.
+> 
+> Michael 
 >
->Ya, that looks fine to me, that's actually how I had it initally, but I
->wasn't sure if it had to go before the panic handlers. So, I erred on
->the side of caution.
 
-I see, sorry that I was only speaking in relation to stored backtraces.
-It seems that printk_legacy_allow_panic_sync() is placed before 
-atomic_notifier_call_chain() so that it can handle flushing before calling
-any panic handlers as described [0].
+Thanks for your review.  
 
-I'm not really familar with the problems associated with panic handlers
-so I hope maybe John and Petr can help on this matter...
+I had considered moving the entire `hvfb_putmem()` function to `destroy`,
+but I was hesitant for two reasons:  
 
-Sincerely,
-Ryo Takakura
+  1. I wasn’t aware of any scenario where this would be useful. However,
+     your explanation has convinced me that it is necessary.  
+  2. `hvfb_release_phymem()` relies on the `hdev` pointer, which requires
+     multiple `container_of` operations to derive it from the `info` pointer.
+     I was unsure if the complexity was justified, but it seems worthwhile now.  
 
->BR,
->Hamza
+I will move `hvfb_putmem()` to the `destroy` function in V2, and I hope this
+will address all the cases you mentioned.
 
-[0] https://lore.kernel.org/lkml/ZeHSgZs9I3Ihvpye@alley/
+- Saurabh
+
+<snip>
 
