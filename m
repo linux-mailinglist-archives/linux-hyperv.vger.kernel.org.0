@@ -1,103 +1,196 @@
-Return-Path: <linux-hyperv+bounces-4023-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4024-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202A5A40515
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 03:32:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A130CA405AE
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 06:44:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB0237033CD
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 02:32:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06EAB422171
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2025 05:44:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA821E7C1E;
-	Sat, 22 Feb 2025 02:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995761EE00F;
+	Sat, 22 Feb 2025 05:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1YVU2h2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggntqJcR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1FC3224;
-	Sat, 22 Feb 2025 02:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CCC770E2;
+	Sat, 22 Feb 2025 05:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740191529; cv=none; b=AxETb3zXVfkv636WUEowjgFglgfQHTZWoMKcJYC6Z7TnXkw+9arwbu1Nv9DdiBsjjKOlmHAVE0e9X2lM79psQFBIZbnscb8T23IrXOZphdrCqGEavbHM8qwYhGXRANLJekUgir+1m77kipqdw7KND5oj9OvOd/ymhDDDaDxpOiM=
+	t=1740203056; cv=none; b=eXl+93ybzaKRKKbOOY5Rho+D/zVFAyma31r/H+E2uTiuLgoTXf0HqweIy2RserTr2Vw6CjXkg+nN1zSflv4XsgeLTfdrZdv4zj0QKMEhGvhDgTwMdr/MQD6QyUJxJugZxOdpN1oqjoYh/n7xgg+etsXHe7waqfXsH2Gf8l52XRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740191529; c=relaxed/simple;
-	bh=FZnMFdDa2eWIl4oFcL24l5BAuNQWfTpFEGTebUgjJk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgBgqEclgpmsTJZbub5q3WWOoWd7DxSB+fNyD/ZX+QweXbiBiUN/Tk8jUG6ex87fZo/Wcx/lo2SvLsOJsmM6iSeeVnsUuanW/0KZ6SEoqL9DQVEV0lWD8uRkTsP7yotwvicpWLRKImHq1LkZgtCG9+NZ3aXj1VmRGDlVZJzB0vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1YVU2h2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F89C4CED6;
-	Sat, 22 Feb 2025 02:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740191528;
-	bh=FZnMFdDa2eWIl4oFcL24l5BAuNQWfTpFEGTebUgjJk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h1YVU2h2yeY3oks9GLiIqAziMoxE84y+9gFwXdo+kGhQdEkbgSefJim69X1+OjmxB
-	 sUl+TKn1d7tnDfsRtl6LqPpN4Zqp5FCE/T1tCHT91DI2AiTUJSqykBnBhxGLOsfpRJ
-	 nHL8Rq0zDyXPQzxne70Hsg50VNNcBJDXXcQrCmocIJK/QeKSWlP4/iL/yyDEnSsOGy
-	 jeR2zK3eXpNSi8hfI+/26IVx3Q4rxYprYdcA+0+chH4C+7rAPJM86cWqwytsMIUF0L
-	 7Cuk393b/czhZL+xrIt2EJL5/a/jZSuA/oT4F6sDau4qKPMwDg7Z2kKUcv2z1n+/0H
-	 PiWAzh7xsQqYg==
-Date: Sat, 22 Feb 2025 02:32:06 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	iommu@lists.linux.dev, mhklinux@outlook.com,
-	eahariha@linux.microsoft.com, mukeshrathor@microsoft.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
-	arnd@arndb.de, jinankjain@linux.microsoft.com,
-	muminulrussell@gmail.com, skinsburskii@linux.microsoft.com
-Subject: Re: [PATCH v2 0/3] Introduce CONFIG_MSHV_ROOT for root partition code
-Message-ID: <Z7k3Jh9O8noNZXGt@liuwe-devbox-debian-v2>
-References: <1740167795-13296-1-git-send-email-nunodasneves@linux.microsoft.com>
+	s=arc-20240116; t=1740203056; c=relaxed/simple;
+	bh=nkYM4x72HyPUHZHb8VHdX3lyx1EuaOkY2lCZ2Fwejl4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m2/cjec+0M4FPi8Rq1KpLCGxX/kebl/FPsAqNTYdeT8NsPZKMa22+DC7H7t7g6RDI1qg7/z3FZl730xNuNkYphU8r/EOISwqMvuQQAvsyEhDl0i7rSezmTNAOFBTcHmiG2wtXVKGZJPZeq60BNGBJ0RyNJqp6QgGYVo6Y8oYUWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggntqJcR; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-221057b6ac4so54288155ad.2;
+        Fri, 21 Feb 2025 21:44:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740203054; x=1740807854; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JN6tg9jMolK9FtqTyHhvnK6PuO8bN0pSfEHBvSTQ+04=;
+        b=ggntqJcR/mnOE8docqt4SI91ylMcJ4Fvnx2WaOc0UZLOvQQF1w0kNsF/T0+WEEbO0/
+         KWLCK3heI27pAh6NC5JHSCctOIiw/e5Jycu+BNlVHxLYbhmIvBegmwTCU+gKecNWT+Ih
+         IVzsCC3aTE+sX1bd8KdXhtayJwJGlaqaNfcSibLqhhLXD859eW/rdB7ly8Wu8l8aVs6k
+         VBr7QfxsT5JkrxodDesnZGhhueJzEBdH/TxnFIc8YKZadnMPEcjrn5lY4lK55VUIDAIj
+         wFjVkwNFP5ebd4tjrLmewQ2XGcW7DK+lE/kzxZRLQPq616cu1T9xYeEykydb/Jj2Cqav
+         L1xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740203054; x=1740807854;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JN6tg9jMolK9FtqTyHhvnK6PuO8bN0pSfEHBvSTQ+04=;
+        b=hOtMU/d3PahM8SE/NrhDvZj8+IIyovWvBHT7ZwwJAsljYFmSjNYSk3yr8HFFAjISs7
+         J8W4QPskeYRVteYJUFwyONN/q3QEmsyu+ae1YMsFfbN1Dx395yS9BRU906TT1C55AdZJ
+         U96c7qJaW3CqWDAwqhejiCfAmzJFgwiiWZKbevZB8qKWZ4zE8E0moNANXYDo5N2izaeU
+         eY5F11nSiWQyRdcKgdVKGzFAX6UUW4yjjG7s7qwYHnKKvS/O7PbzQZzvq2Y4GI2oOO4T
+         C1jQOrKlwt+Vpa7uwcuNZGabnmlJDKpOe4TEzLiAr/wLjBpInwJalXx2FUjpEdrtfeB/
+         Nc2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVekdBH/1+7H3Rh8ZOBgSOk12E0L873zZq8vNAdBSfU7fkOH3ja+8LA3gqsKOlFIz4Wwe9oKEoNvY0h0TP9@vger.kernel.org, AJvYcCW3wkDg7HaiHVKYsY5SarO5UeaZ6YLiHZNDjGfD7ATn4yVghjor7U6NmzNfJAZWDphRwKXJvYCNoCgzp6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz50AGU09GdopFfzhfYqktVmr3LILAjT3WEvJMdKI3vLubIqsQa
+	i0SjwEubIZJdiCbACpmRij23zez77sN8BRfFG1/YUjjfNen5ZjYwYmbr8Q==
+X-Gm-Gg: ASbGnctIvAtp9xSVqvnm5juBh6mlcZWpJaBrB4GrevH8wAgTAr3ouif/7iPfqRJY+ol
+	j4HUreL5UsrF/hjnVnWHM8VhMjOwhGUyODzCGWNAQPT1dWfEW4Jx/TpIVJ9WsDgoENnWFeYVgld
+	SSUC+8sMs9jgP9NNhaL6Zw877oS2pQ1j914gV3so57j+JJ2xj841jeUeTy4O5kSgP7Usm5QrlJT
+	5jHQ42mFoMzcqJpwNYBYym/IHgM1hfJyiJAW7mcBO/0ntJ0k2THrT0cL/ZwH1OK6Ei73HvWgiY1
+	wafSohVrFEyXvr2ighGdpgzFqwEFSDkVWJtMuo/lvg0K+gycXiTVJ4mBz+jSHGE7UGNVrkFDWdg
+	V697T5ecv/YgePUq9gi3zuFo=
+X-Google-Smtp-Source: AGHT+IGvHwEGKp8bifeL0bm86Y95OmaukWAjfaQ8nmw/WGiKd2nKCTPuumT5A8GKXjkriJdOPJ7zsg==
+X-Received: by 2002:a17:902:da8f:b0:220:fe50:5b44 with SMTP id d9443c01a7336-221a1103431mr100803975ad.31.1740203054179;
+        Fri, 21 Feb 2025 21:44:14 -0800 (PST)
+Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5364351sm146183165ad.76.2025.02.21.21.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 21:44:13 -0800 (PST)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: hamzamahfooz@linux.microsoft.com
+Cc: akpm@linux-foundation.org,
+	bhe@redhat.com,
+	decui@microsoft.com,
+	gregkh@linuxfoundation.org,
+	haiyangz@microsoft.com,
+	jani.nikula@intel.com,
+	jfalempe@redhat.com,
+	joel.granados@kernel.org,
+	john.ogness@linutronix.de,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pmladek@suse.com,
+	ryotkkr98@gmail.com,
+	wei.liu@kernel.org
+Subject: Re: [PATCH RFC] panic: call panic handlers before panic_other_cpus_shutdown()
+Date: Sat, 22 Feb 2025 14:44:05 +0900
+Message-Id: <20250222054405.298294-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <Z7juu2YMiVfYm7ZM@hm-sls2>
+References: <Z7juu2YMiVfYm7ZM@hm-sls2>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1740167795-13296-1-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 11:56:32AM -0800, Nuno Das Neves wrote:
-> Running in the root partition is a unique and specialized case that
-> requires additional code. CONFIG_MSHV_ROOT allows Hyper-V guest kernels
-> to exclude this code, which is important since significant additional code
-> specific to the root partition is expected to be added over time.
-> 
-> To do this, change hv_root_partition to be a function which is stubbed out
-> to return false if CONFIG_MSHV_ROOT=n, and don't compile hv_proc.c at all,
-> stubbing out those functions with inline versions.
-> 
-> Store the partition type (guest or root) in an enum hv_curr_partition_type,
-> which can be extended beyond just guest and root partition.
-> 
-> While at it, introduce hv_result_to_errno() to convert Hyper-V status codes
-> to regular linux errors. This is useful because the caller of a hypercall
-> helper function (such as those in hv_proc.c) usually can't and doesn't
-> interpret the Hyper-V status, so it is better to convert it to an error code
-> and reduce the possibility of misinterpreting it. This also alows the stubbed
-> versions of the hv_proc.c functions to just return a linux error code.
-> 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+On Fri, 21 Feb 2025 16:23:07 -0500, Hamza Mahfooz wrote:
+>On Fri, Feb 21, 2025 at 11:23:28AM +0900, Ryo Takakura wrote:
+>> On Thu, 20 Feb 2025 17:53:00 -0500, Hamza Mahfooz wrote:
+>> >Since, the panic handlers may require certain cpus to be online to panic
+>> >gracefully, we should call them before turning off SMP. Without this
+>> >re-ordering, on Hyper-V hv_panic_vmbus_unload() times out, because the
+>> >vmbus channel is bound to VMBUS_CONNECT_CPU and unless the crashing cpu
+>> >is the same as VMBUS_CONNECT_CPU, VMBUS_CONNECT_CPU will be offlined by
+>> >crash_smp_send_stop() before the vmbus channel can be deconstructed.
+>> >
+>> >Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+>> >---
+>> > kernel/panic.c | 4 ++--
+>> > 1 file changed, 2 insertions(+), 2 deletions(-)
+>> >
+>> >diff --git a/kernel/panic.c b/kernel/panic.c
+>> >index fbc59b3b64d0..9712a46dfe27 100644
+>> >--- a/kernel/panic.c
+>> >+++ b/kernel/panic.c
+>> >@@ -372,8 +372,6 @@ void panic(const char *fmt, ...)
+>> > 	if (!_crash_kexec_post_notifiers)
+>> > 		__crash_kexec(NULL);
+>> > 
+>> >-	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+>> >-
+>> > 	printk_legacy_allow_panic_sync();
+>> 
+>> I think printk_legacy_allow_panic_sync() is placed after 
+>> panic_other_cpus_shutdown() so that it flushes the stored 
+>> cpus backtraces as described [0].
+>> 
+>> > 	/*
+>> >@@ -382,6 +380,8 @@ void panic(const char *fmt, ...)
+>> > 	 */
+>> > 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>> > 
+>> >+	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+>> >+
+>> 
+>> So maybe panic_other_cpus_shutdown() should be palced after 
+>> atomic_notifier_call_chain() along with printk_legacy_allow_panic_sync()
+>> like below?
+>> 
+>> ----- BEGIN -----
+>> diff --git a/kernel/panic.c b/kernel/panic.c
+>> index d8635d5cecb2..7ac40e85ee27 100644
+>> --- a/kernel/panic.c
+>> +++ b/kernel/panic.c
+>> @@ -372,16 +372,16 @@ void panic(const char *fmt, ...)
+>>         if (!_crash_kexec_post_notifiers)
+>>                 __crash_kexec(NULL);
+>> 
+>> -       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+>> -
+>> -       printk_legacy_allow_panic_sync();
+>> -
+>>         /*
+>>          * Run any panic handlers, including those that might need to
+>>          * add information to the kmsg dump output.
+>>          */
+>>         atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>> 
+>> +       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+>> +
+>> +       printk_legacy_allow_panic_sync();
+>> +
+>>         panic_print_sys_info(false);
+>> 
+>>         kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
+>> ----- END -----
+>
+>Ya, that looks fine to me, that's actually how I had it initally, but I
+>wasn't sure if it had to go before the panic handlers. So, I erred on
+>the side of caution.
 
-No need to sign this off. :-)
+I see, sorry that I was only speaking in relation to stored backtraces.
+It seems that printk_legacy_allow_panic_sync() is placed before 
+atomic_notifier_call_chain() so that it can handle flushing before calling
+any panic handlers as described [0].
 
-> 
-> Nuno Das Neves (3):
->   hyperv: Convert hypercall statuses to linux error codes
->   hyperv: Change hv_root_partition into a function
->   hyperv: Add CONFIG_MSHV_ROOT to gate root partition support
-> 
+I'm not really familar with the problems associated with panic handlers
+so I hope maybe John and Petr can help on this matter...
 
-Applied to hyperv-next. Thanks.
+Sincerely,
+Ryo Takakura
+
+>BR,
+>Hamza
+
+[0] https://lore.kernel.org/lkml/ZeHSgZs9I3Ihvpye@alley/
 
