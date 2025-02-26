@@ -1,162 +1,192 @@
-Return-Path: <linux-hyperv+bounces-4045-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4046-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE22AA45017
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Feb 2025 23:30:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 229ADA45435
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Feb 2025 04:59:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C50AB171BF7
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Feb 2025 22:28:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 464163A9806
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Feb 2025 03:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 847E821D5A7;
-	Tue, 25 Feb 2025 22:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F1225D537;
+	Wed, 26 Feb 2025 03:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GmOF2vVu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h8E64SGI"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D830F21D3E2;
-	Tue, 25 Feb 2025 22:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D884253F05;
+	Wed, 26 Feb 2025 03:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740522327; cv=none; b=d5Mte+cQAZY9R8EAki3CjTCrtuoOpa1Yupcxn1Ez0SWFzeaxlTAoh8bWoTDGYKoD4cQJ4vBOXde8ItdAGfN1flnFtPO/UCTl0wdL11C7mOx2tA/8JYE4AjGAlAu72oMVbXEbJEzWh5GRVrUHKfdyFZqCb4vEyJFQLVahftbrZQU=
+	t=1740542335; cv=none; b=CtQsyCBGXGM1r9h1bc7Lhz/xau8PWXZnfTZT/dZNcAnfY5rB9j+gkP5fLPklP/6GJCntX7cd7CZGFdUc1MHG7rMOlMZg6/nZ0hIqC7sLdcoayc4FSrnA8mrOJ08VcHjn5KtwIneTzhaeMsuKWuNxvmvZsBYwtXrWiLjpe/mGhwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740522327; c=relaxed/simple;
-	bh=t5XHU8FuzTxYJsQJ0aplVsiqJvj2QQrZy+BDGGLfJeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VYfC3F3K9wMOXY+843JE3lM826/fK5k29FP2oU2FiETg9DhsXFk4z85Bcx5ES/x6OqilSfsBGpak2nfDe2/GNj3OUydrU9WGnEcgWn+xCyQxMaCTUb2lt/h9DxB0Le0boL7cFRHNdB7QDK3axMZMcDmALZcAqKpoxuFcEOeTbyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GmOF2vVu; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740542335; c=relaxed/simple;
+	bh=IOgnrycr1WyDhdThwz2plkVF4tNNBF3gbfroVg94MOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGyf/X/UJ4/+f8BSKfb/x9kJpJ1t7aoJbS0aDSUbRqyeAm4cl9RXzkQGyAettJK3XrlCdIEtLeng3OdYYT3JGxE9pBtSwAhULK8ecOLyavYrMgmtJ357AG0Wrcwsd6+ORQRWSUG8kQg1Adc93+VBSAEIG5T6VVOQE2UHVWH5GPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=h8E64SGI; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1BF1D203CDFE;
-	Tue, 25 Feb 2025 14:25:25 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1BF1D203CDFE
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 1B46E20460A8; Tue, 25 Feb 2025 19:58:53 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B46E20460A8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740522325;
-	bh=4snbY5kKjPs+fqnW4bDVzUWCVcYb+NMujdrOx1UsTIo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GmOF2vVuCkJZ1DfUd1ljj8/fusb2yUMbDy2WmYxFrMMfaTTzbAqkWEUBwLUg55zpF
-	 Eal2Uv7psJ6AMd7GHQIuT0F5bT24oqPS+VN9NVDy5j/15vSuizsFBxdX1p+w7B0n5d
-	 f2jfhVcFODVbMweP0SK+AakuXEGuKdQiYOukQldU=
-Message-ID: <a96f9469-a22e-43e7-825d-f67ef550898f@linux.microsoft.com>
-Date: Tue, 25 Feb 2025 14:25:24 -0800
+	s=default; t=1740542333;
+	bh=yNYyjztGjtuVPk6nvoez8iotd+cHNDaVQ/pzCQ1fHfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h8E64SGIHyZ7T5uwofjtEDo4Iq1vLHvis+riAuwYNAxQKG9QyytbxNa6cgmrHeHhf
+	 GulGYp9LNgQARRep3PiPJt0yIl8BLlCZOEM5LFisdSaEQXMbML6JXdKDCrp3WBJSFM
+	 lKPV2Z9QliBXrIKjHLjNmpbbE6t+l8G3qZXPqGUI=
+Date: Tue, 25 Feb 2025 19:58:53 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"ssengar@microsoft.com" <ssengar@microsoft.com>
+Subject: Re: [PATCH v2] fbdev: hyperv_fb: Allow graceful removal of
+ framebuffer
+Message-ID: <20250226035853.GA19981@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1740473808-9754-1-git-send-email-ssengar@linux.microsoft.com>
+ <SN6PR02MB41574CD095A292D20AD6C84ED4C32@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
- bhelgaas@google.com, Borislav Petkov <bp@alien8.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
- ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
- Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
- devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-2-romank@linux.microsoft.com>
- <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
- <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
- <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
- <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
- <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
- <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41574CD095A292D20AD6C84ED4C32@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+On Tue, Feb 25, 2025 at 04:46:12PM +0000, Michael Kelley wrote:
+> From: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > 
+> > When a Hyper-V framebuffer device is unbind, hyperv_fb driver tries to
+> > release the framebuffer forcefully. If this framebuffer is in use it
+> > produce the following WARN and hence this framebuffer is never released.
+> > 
+> > [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_info.c:70
+> > framebuffer_release+0x2c/0x40
+> > < snip >
+> > [   44.111289] Call Trace:
+> > [   44.111290]  <TASK>
+> > [   44.111291]  ? show_regs+0x6c/0x80
+> > [   44.111295]  ? __warn+0x8d/0x150
+> > [   44.111298]  ? framebuffer_release+0x2c/0x40
+> > [   44.111300]  ? report_bug+0x182/0x1b0
+> > [   44.111303]  ? handle_bug+0x6e/0xb0
+> > [   44.111306]  ? exc_invalid_op+0x18/0x80
+> > [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
+> > [   44.111311]  ? framebuffer_release+0x2c/0x40
+> > [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
+> > [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
+> > [   44.111323]  device_remove+0x40/0x80
+> > [   44.111325]  device_release_driver_internal+0x20b/0x270
+> > [   44.111327]  ? bus_find_device+0xb3/0xf0
+> > 
+> > Fix this by moving the release of framebuffer and assosiated memory
+> > to fb_ops.fb_destroy function, so that framebuffer framework handles
+> > it gracefully.
+> > 
+> > While we fix this, also replace manual registrations/unregistration of
+> > framebuffer with devm_register_framebuffer.
+> > 
+> > Fixes: 68a2d20b79b1 ("drivers/video: add Hyper-V Synthetic Video Frame Buffer
+> > Driver")
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> > V2 : Move hvfb_putmem into destroy()
+> > 
+> >  drivers/video/fbdev/hyperv_fb.c | 28 ++++++++++++++++++++++------
+> >  1 file changed, 22 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> > index 363e4ccfcdb7..89ee49f1c3dc 100644
+> > --- a/drivers/video/fbdev/hyperv_fb.c
+> > +++ b/drivers/video/fbdev/hyperv_fb.c
+> > @@ -282,6 +282,8 @@ static uint screen_depth;
+> >  static uint screen_fb_size;
+> >  static uint dio_fb_size; /* FB size for deferred IO */
+> > 
+> > +static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info);
+> > +
+> >  /* Send message to Hyper-V host */
+> >  static inline int synthvid_send(struct hv_device *hdev,
+> >  				struct synthvid_msg *msg)
+> > @@ -862,6 +864,24 @@ static void hvfb_ops_damage_area(struct fb_info *info, u32 x,
+> > u32 y, u32 width,
+> >  		hvfb_ondemand_refresh_throttle(par, x, y, width, height);
+> >  }
+> > 
+> > +/*
+> > + * fb_ops.fb_destroy is called by the last put_fb_info() call at the end
+> > + * of unregister_framebuffer() or fb_release(). Do any cleanup related to
+> > + * framebuffer here.
+> > + */
+> > +static void hvfb_destroy(struct fb_info *info)
+> > +{
+> > +	struct hv_device *hdev;
+> > +	struct device *dev;
+> > +	void *driver_data = (void *)info;
+> > +
+> > +	dev = container_of(driver_data, struct device, driver_data);
+> 
+> I don't think the above is right. The struct fb_info was allocated
+> with kzalloc() in framebuffer_alloc(). You would use container_of()
+> if fb_info was embedded in a struct device, but that's not the case
+> here. The driver_data field within the struct device is a pointer to the
+> fb_info, but that doesn't help find the struct device.
 
-
-On 2/24/2025 11:24 PM, Arnd Bergmann wrote:
-> On Tue, Feb 25, 2025, at 00:22, Roman Kisel wrote:
->> Hi Arnd,
-
-[...]
-
-> If you want to declare a uuid here, I think you should remove the
-> ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_{0,1,2,3} macros and just
-> have UUID in normal UUID_INIT() notation as we do for
-> other UUIDs.
-
-I'd gladly stick to that provided I have your support of touching
-KVM's code! As the SMCCC document states, there shall be an UUID,
-and in the kernel, there would be
-
-#define ARM_SMCCC_VENDOR_KVM_UID UUID_INIT(.......)
-#define ARM_SMCCC_VENDOR_HYP_UID UUID_INIT(.......)
-
-Hence, the ARM_SMCCC_VENDOR_HYP_UID_*_REG_{0,1,2,3} can be removed as
-you're suggesting.
-
-That looks enticing enough semantically as though we're building layers
-from the SMCCC spec down to the "on-wire format" -- the only part that
-needs "deserializing" the UUID from `struct arm_smccc_res` the
-hypervisor returns.
-
-To add to that, anyone who wishes to implement a hypervisor for arm64
-will have to use some RFC 9562-compliant UUID generating facility. Thus,
-the UUID predates these 4 dwords. Using UUIDs in the kernel code will
-relieve of the chore of figuring out the 4 dwords from the UUID.
-
-Also, for the Gunyah folks will be pretty easy to use this infra:
-define the UUID in the header (1 line), call the new function (1 line),
-done.
+Thanks for catching this. I should have been more careful.
 
 > 
-> If you want to keep the four 32-bit values and pass them into
-> arm_smccc_hyp_present() directly, I think that is also fine,
-> but in that case, I would try to avoid calling it a UUID.
+> What does help is that info->device (not to be confused with info->dev,
+> which is a different struct device) points to the struct device that
+> you need here. That "device" field is set in framebuffer_alloc().
+> So that's an easy fix.
 
-IMO, that approach provides a simplicity where anyone can see if the
-code is wrong from a quick glance: just compare 4 dwords. The fact that
-the 4 dwords form an UUID is bypassed though (as it is in the existing
-code). Somehow feels not spec-accurate imo. Also when I remove the UID
-part from the names, I'm going to have a rather weak justification as
-to why this is a benefit.
-
-Likely, there are two levels of improvement here:
-
-1. Just refactor the common parts out and have
-    `bool arm_smccc_hyp_present(u32 reg0, u32 reg1, u32 reg2, u32 reg2);`
-
-2. Introduce the UUID usage throughout and have a spec-accurate
-    prototype of
-    `bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);`
-
-and would be great to go for the second one :)
+Right, thanks.
 
 > 
-> How are the kvm and hyperv values specified originally?
->>From the SMCCC document it seems like they are meant to be
-> UUIDs, so I would expect them to be in canonical form rather
-> than the smccc return values, but I could not find a document
-> for them.
+> > +	hdev = container_of(dev, struct hv_device, device);
+> > +
+> > +	hvfb_putmem(hdev, info);
+> 
+> Another observation: The interface to hvfb_putmem() is more
+> complicated than it needs to be. The hdev argument could be
+> dropped because it is used only to get the device pointer,
+> which is already stored in info->device. hvfb_release_phymem()
+> would also need to be updated to take a struct device instead of
+> struct hv_device. But if you made those changes, then the
+> container_of() to get the hdev wouldn't be needed either.
 
-For hyperv case, `uuidgen` produced the UUID and that is used.
-Likely the same for kvm.
+Make sense.
 
 > 
->       Arnd
+> A similar simplification could be applied to hvfb_getmem().
+> 
+> Maybe do two patches -- the first to simplify the interfaces,
+> and the second to do this patch but with reduced
+> complexity because of the simpler interfaces.
 
--- 
-Thank you,
-Roman
+Agree, let me do it in V3.
 
+- Saurabh
+
+> 
+> Michael  
+>
+
+<snip> 
 
