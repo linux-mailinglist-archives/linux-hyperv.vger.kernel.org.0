@@ -1,192 +1,264 @@
-Return-Path: <linux-hyperv+bounces-4046-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4047-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 229ADA45435
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Feb 2025 04:59:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38167A454CC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Feb 2025 06:13:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 464163A9806
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Feb 2025 03:58:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 472F53A9266
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Feb 2025 05:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F1225D537;
-	Wed, 26 Feb 2025 03:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 900F321C9EB;
+	Wed, 26 Feb 2025 05:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h8E64SGI"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TBiFlBpi"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D884253F05;
-	Wed, 26 Feb 2025 03:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD15C21ABB4;
+	Wed, 26 Feb 2025 05:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740542335; cv=none; b=CtQsyCBGXGM1r9h1bc7Lhz/xau8PWXZnfTZT/dZNcAnfY5rB9j+gkP5fLPklP/6GJCntX7cd7CZGFdUc1MHG7rMOlMZg6/nZ0hIqC7sLdcoayc4FSrnA8mrOJ08VcHjn5KtwIneTzhaeMsuKWuNxvmvZsBYwtXrWiLjpe/mGhwY=
+	t=1740546828; cv=none; b=djiSh1TxOjU5tvVkOWR3KQsKzvO2X5+DiIf6fMRiBY1pHrBlgSTXXtF75sjr/3QT1PLIq7Q0mkQwgn+eb1xf5ittwWJWaEZrFdjyZwyuBcvoU8A7Avb/d94ydNp/RFUAyszGroJvJ3TgYWRt+bD3hr37iVTZ4m34+RsKbtucYzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740542335; c=relaxed/simple;
-	bh=IOgnrycr1WyDhdThwz2plkVF4tNNBF3gbfroVg94MOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGyf/X/UJ4/+f8BSKfb/x9kJpJ1t7aoJbS0aDSUbRqyeAm4cl9RXzkQGyAettJK3XrlCdIEtLeng3OdYYT3JGxE9pBtSwAhULK8ecOLyavYrMgmtJ357AG0Wrcwsd6+ORQRWSUG8kQg1Adc93+VBSAEIG5T6VVOQE2UHVWH5GPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=h8E64SGI; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740546828; c=relaxed/simple;
+	bh=95VA5pP7sXkxtwvVKHirwBMf5wutktNBo2bDGwl/yfU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iI1+h1+qyQRKvsJ15y4XxUQDE4zdzyLq3xz1EpnQWuhCqEVSe5LqcahPhm+7G2RPV2Yx0NVf4Gc6BnK+pl6jknHA07WhtdDWCQjpM+/hyIOjb7RGkx50YZ87YCdnjLSbPa9MEFRJ6qn4IitUzbynl0NIob0bnClWh8v1o350hUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TBiFlBpi; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 1B46E20460A8; Tue, 25 Feb 2025 19:58:53 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B46E20460A8
+Received: from [10.95.69.26] (unknown [167.220.238.90])
+	by linux.microsoft.com (Postfix) with ESMTPSA id AE2AA206940D;
+	Tue, 25 Feb 2025 21:13:43 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE2AA206940D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740542333;
-	bh=yNYyjztGjtuVPk6nvoez8iotd+cHNDaVQ/pzCQ1fHfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h8E64SGIHyZ7T5uwofjtEDo4Iq1vLHvis+riAuwYNAxQKG9QyytbxNa6cgmrHeHhf
-	 GulGYp9LNgQARRep3PiPJt0yIl8BLlCZOEM5LFisdSaEQXMbML6JXdKDCrp3WBJSFM
-	 lKPV2Z9QliBXrIKjHLjNmpbbE6t+l8G3qZXPqGUI=
-Date: Tue, 25 Feb 2025 19:58:53 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"deller@gmx.de" <deller@gmx.de>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"ssengar@microsoft.com" <ssengar@microsoft.com>
-Subject: Re: [PATCH v2] fbdev: hyperv_fb: Allow graceful removal of
- framebuffer
-Message-ID: <20250226035853.GA19981@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1740473808-9754-1-git-send-email-ssengar@linux.microsoft.com>
- <SN6PR02MB41574CD095A292D20AD6C84ED4C32@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=default; t=1740546826;
+	bh=cKDXjTMY6Z12dq3z1lksi6XbbwedelRkdXpqMEzvSOs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TBiFlBpiu2+fIFcRHSAV8q70WeV6hFO1K8jXW8QqZ/usBsMxX1VHnsgRUevjUUGxX
+	 NMgMv3ws7oXL1GPYP+hhsplC4izHbp/G5djzDil1frv9sZiPIvmWqzgb2zef00whDO
+	 FQoL827McYGD60Whwmh8FreXGuhA+BouVa8O+PHk=
+Message-ID: <541c63d6-8ae6-4a32-8a02-d86eea64827e@linux.microsoft.com>
+Date: Wed, 26 Feb 2025 10:43:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41574CD095A292D20AD6C84ED4C32@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, Long Li <longli@microsoft.com>
+References: <20250225052001.2225-1-namjain@linux.microsoft.com>
+ <2025022504-diagnosis-outsell-684c@gregkh>
+ <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
+ <2025022515-lasso-carrot-4e1d@gregkh>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025022515-lasso-carrot-4e1d@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 04:46:12PM +0000, Michael Kelley wrote:
-> From: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > 
-> > When a Hyper-V framebuffer device is unbind, hyperv_fb driver tries to
-> > release the framebuffer forcefully. If this framebuffer is in use it
-> > produce the following WARN and hence this framebuffer is never released.
-> > 
-> > [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_info.c:70
-> > framebuffer_release+0x2c/0x40
-> > < snip >
-> > [   44.111289] Call Trace:
-> > [   44.111290]  <TASK>
-> > [   44.111291]  ? show_regs+0x6c/0x80
-> > [   44.111295]  ? __warn+0x8d/0x150
-> > [   44.111298]  ? framebuffer_release+0x2c/0x40
-> > [   44.111300]  ? report_bug+0x182/0x1b0
-> > [   44.111303]  ? handle_bug+0x6e/0xb0
-> > [   44.111306]  ? exc_invalid_op+0x18/0x80
-> > [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
-> > [   44.111311]  ? framebuffer_release+0x2c/0x40
-> > [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
-> > [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
-> > [   44.111323]  device_remove+0x40/0x80
-> > [   44.111325]  device_release_driver_internal+0x20b/0x270
-> > [   44.111327]  ? bus_find_device+0xb3/0xf0
-> > 
-> > Fix this by moving the release of framebuffer and assosiated memory
-> > to fb_ops.fb_destroy function, so that framebuffer framework handles
-> > it gracefully.
-> > 
-> > While we fix this, also replace manual registrations/unregistration of
-> > framebuffer with devm_register_framebuffer.
-> > 
-> > Fixes: 68a2d20b79b1 ("drivers/video: add Hyper-V Synthetic Video Frame Buffer
-> > Driver")
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> > V2 : Move hvfb_putmem into destroy()
-> > 
-> >  drivers/video/fbdev/hyperv_fb.c | 28 ++++++++++++++++++++++------
-> >  1 file changed, 22 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-> > index 363e4ccfcdb7..89ee49f1c3dc 100644
-> > --- a/drivers/video/fbdev/hyperv_fb.c
-> > +++ b/drivers/video/fbdev/hyperv_fb.c
-> > @@ -282,6 +282,8 @@ static uint screen_depth;
-> >  static uint screen_fb_size;
-> >  static uint dio_fb_size; /* FB size for deferred IO */
-> > 
-> > +static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info);
-> > +
-> >  /* Send message to Hyper-V host */
-> >  static inline int synthvid_send(struct hv_device *hdev,
-> >  				struct synthvid_msg *msg)
-> > @@ -862,6 +864,24 @@ static void hvfb_ops_damage_area(struct fb_info *info, u32 x,
-> > u32 y, u32 width,
-> >  		hvfb_ondemand_refresh_throttle(par, x, y, width, height);
-> >  }
-> > 
-> > +/*
-> > + * fb_ops.fb_destroy is called by the last put_fb_info() call at the end
-> > + * of unregister_framebuffer() or fb_release(). Do any cleanup related to
-> > + * framebuffer here.
-> > + */
-> > +static void hvfb_destroy(struct fb_info *info)
-> > +{
-> > +	struct hv_device *hdev;
-> > +	struct device *dev;
-> > +	void *driver_data = (void *)info;
-> > +
-> > +	dev = container_of(driver_data, struct device, driver_data);
+
+
+On 2/25/2025 2:09 PM, Greg Kroah-Hartman wrote:
+> On Tue, Feb 25, 2025 at 02:04:43PM +0530, Naman Jain wrote:
+>>
+>>
+>> On 2/25/2025 11:42 AM, Greg Kroah-Hartman wrote:
+>>> On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
+>>>> On regular bootup, devices get registered to vmbus first, so when
+>>>> uio_hv_generic driver for a particular device type is probed,
+>>>> the device is already initialized and added, so sysfs creation in
+>>>> uio_hv_generic probe works fine. However, when device is removed
+>>>> and brought back, the channel rescinds and device again gets
+>>>> registered to vmbus. However this time, the uio_hv_generic driver is
+>>>> already registered to probe for that device and in this case sysfs
+>>>> creation is tried before the device gets initialized completely.
+>>>>
+>>>> Fix this by moving the core logic of sysfs creation for ring buffer,
+>>>> from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
+>>>> attributes for the channels are defined. While doing that, make use
+>>>> of attribute groups and macros, instead of creating sysfs directly,
+>>>> to ensure better error handling and code flow.
+>>>>
+>>>> Problem path:
+>>>> vmbus_device_register
+>>>>       device_register
+>>>>           uio_hv_generic probe
+>>>>                       sysfs_create_bin_file (fails here)
+>>>>           kset_create_and_add (dependency)
+>>>>           vmbus_add_channel_kobj (dependency)
+>>>>
+>>>> Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
+>>>> Cc: stable@kernel.org
+>>>> Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>>> Suggested-by: Michael Kelley <mhklinux@outlook.com>
+>>>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>>>> ---
+>>>> Hi,
+>>>> This is the first patch after initial RFC was posted.
+>>>> https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
+>>>>
+>>>> Changes since RFC patch:
+>>>> * Different approach to solve the problem is proposed (credits to
+>>>>     Michael Kelley).
+>>>> * Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+>>>>     drivers where rest of the sysfs attributes for a VMBus channel
+>>>>     are defined. (addressed Greg's comments)
+>>>> * Used attribute groups instead of sysfs_create* functions, and bundled
+>>>>     ring attribute with other attributes for the channel sysfs.
+>>>>
+>>>> Error logs:
+>>>>
+>>>> [   35.574120] ------------[ cut here ]------------
+>>>> [   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
+>>>> [   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+>>>> [   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+>>>> [   35.574197] Call Trace:
+>>>> [   35.574199]  <TASK>
+>>>> [   35.574200]  ? show_regs+0x69/0x80
+>>>> [   35.574217]  ? __warn+0x8d/0x130
+>>>> [   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+>>>> [   35.574222]  ? report_bug+0x182/0x190
+>>>> [   35.574225]  ? handle_bug+0x5b/0x90
+>>>> [   35.574244]  ? exc_invalid_op+0x19/0x70
+>>>> [   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+>>>> [   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+>>>> [   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+>>>> [   35.574271]  vmbus_probe+0x3b/0x90
+>>>> [   35.574275]  really_probe+0xf4/0x3b0
+>>>> [   35.574279]  __driver_probe_device+0x8a/0x170
+>>>> [   35.574282]  driver_probe_device+0x23/0xc0
+>>>> [   35.574285]  __device_attach_driver+0xb5/0x140
+>>>> [   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+>>>> [   35.574291]  bus_for_each_drv+0x86/0xe0
+>>>> [   35.574294]  __device_attach+0xc1/0x200
+>>>> [   35.574297]  device_initial_probe+0x13/0x20
+>>>> [   35.574315]  bus_probe_device+0x99/0xa0
+>>>> [   35.574318]  device_add+0x647/0x870
+>>>> [   35.574320]  ? hrtimer_init+0x28/0x70
+>>>> [   35.574323]  device_register+0x1b/0x30
+>>>> [   35.574326]  vmbus_device_register+0x83/0x130
+>>>> [   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+>>>> [   35.574331]  process_one_work+0x177/0x340
+>>>> [   35.574348]  worker_thread+0x2b2/0x3c0
+>>>> [   35.574350]  kthread+0xe3/0x1f0
+>>>> [   35.574353]  ? __pfx_worker_thread+0x10/0x10
+>>>> [   35.574356]  ? __pfx_kthread+0x10/0x10
+>>>>
+>>>> ---
+>>>>    drivers/hv/hyperv_vmbus.h    |  4 +++
+>>>>    drivers/hv/vmbus_drv.c       | 62 ++++++++++++++++++++++++++++++++++++
+>>>>    drivers/uio/uio_hv_generic.c | 34 ++------------------
+>>>>    include/linux/hyperv.h       |  3 ++
+>>>>    4 files changed, 72 insertions(+), 31 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+>>>> index 29780f3a7478..e0c7b75e6c7a 100644
+>>>> --- a/drivers/hv/hyperv_vmbus.h
+>>>> +++ b/drivers/hv/hyperv_vmbus.h
+>>>> @@ -477,4 +477,8 @@ static inline int hv_debug_add_dev_dir(struct hv_device *dev)
+>>>>    #endif /* CONFIG_HYPERV_TESTING */
+>>>> +/* Create and remove sysfs entry for memory mapped ring buffers for a channel */
+>>>> +int hv_create_ring_sysfs(struct vmbus_channel *channel);
+>>>> +int hv_remove_ring_sysfs(struct vmbus_channel *channel);
+>>>> +
+>>>>    #endif /* _HYPERV_VMBUS_H */
+>>>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>>>> index 22afebfc28ff..0110643bad3f 100644
+>>>> --- a/drivers/hv/vmbus_drv.c
+>>>> +++ b/drivers/hv/vmbus_drv.c
+>>>> @@ -1802,6 +1802,39 @@ static ssize_t subchannel_id_show(struct vmbus_channel *channel,
+>>>>    }
+>>>>    static VMBUS_CHAN_ATTR_RO(subchannel_id);
+>>>> +/* Functions to create sysfs interface to allow mmap of the ring buffers.
+>>>> + * The ring buffer is allocated as contiguous memory by vmbus_open
+>>>> + */
+>>>> +static int hv_mmap_ring_buffer(struct vmbus_channel *channel, struct vm_area_struct *vma)
+>>>> +{
+>>>> +	void *ring_buffer = page_address(channel->ringbuffer_page);
+>>>> +
+>>>> +	if (channel->state != CHANNEL_OPENED_STATE)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
+>>>> +			       channel->ringbuffer_pagecount << PAGE_SHIFT);
+>>>> +}
+>>>> +
+>>>> +static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
+>>>> +				       const struct bin_attribute *attr,
+>>>> +				       struct vm_area_struct *vma)
+>>>> +{
+>>>> +	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
+>>>> +
+>>>> +	if (!channel->mmap_ring_buffer)
+>>>> +		return -ENODEV;
+>>>> +	return channel->mmap_ring_buffer(channel, vma);
+>>>
+>>> What is preventing mmap_ring_buffer from being set to NULL right after
+>>> checking it and then calling it here?  I see no locks here or where you
+>>> are assigning this variable at all, so what is preventing these types of
+>>> races?
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> Thank you so much for reviewing.
+>> I spent some time to understand if this race condition can happen and it
+>> seems execution flow is pretty sequential, for a particular channel of a
+>> device.
+>>
+>> Unless hv_uio_remove (which makes channel->mmap_ring_buffer NULL) can be
+>> called in parallel to hv_uio_probe (which had set
+>> channel->mmap_ring_buffer to non NULL), I doubt race can happen here.
+>>
+>> Code Flow: (R, W-> Read, Write to channel->mmap_ring_buffer)
+>>
+>> vmbus_device_register
+>>    device_register
+>>      hv_uio_probe
+>> 	  hv_create_ring_sysfs (W to non NULL)
+>>          sysfs_update_group
+>>            vmbus_chan_attr_is_visible (R)
+>>    vmbus_add_channel_kobj
+>>      sysfs_create_group
+>>        vmbus_chan_attr_is_visible  (R)
+>>        hv_mmap_ring_buffer_wrapper (critical section)
+>>
+>> hv_uio_remove
+>>    hv_remove_ring_sysfs (W to NULL)
 > 
-> I don't think the above is right. The struct fb_info was allocated
-> with kzalloc() in framebuffer_alloc(). You would use container_of()
-> if fb_info was embedded in a struct device, but that's not the case
-> here. The driver_data field within the struct device is a pointer to the
-> fb_info, but that doesn't help find the struct device.
-
-Thanks for catching this. I should have been more careful.
-
+> Yes, and right in here someone mmaps the file.
 > 
-> What does help is that info->device (not to be confused with info->dev,
-> which is a different struct device) points to the struct device that
-> you need here. That "device" field is set in framebuffer_alloc().
-> So that's an easy fix.
-
-Right, thanks.
-
+> I think you can race here, no locks at all feels wrong.
 > 
-> > +	hdev = container_of(dev, struct hv_device, device);
-> > +
-> > +	hvfb_putmem(hdev, info);
+> Messing with sysfs groups and files like this is rough, and almost never
+> a good idea, why can't you just do this all at once with the default
+> groups, why is this being added/removed out-of-band?
 > 
-> Another observation: The interface to hvfb_putmem() is more
-> complicated than it needs to be. The hdev argument could be
-> dropped because it is used only to get the device pointer,
-> which is already stored in info->device. hvfb_release_phymem()
-> would also need to be updated to take a struct device instead of
-> struct hv_device. But if you made those changes, then the
-> container_of() to get the hdev wouldn't be needed either.
-
-Make sense.
-
+> thanks,
 > 
-> A similar simplification could be applied to hvfb_getmem().
-> 
-> Maybe do two patches -- the first to simplify the interfaces,
-> and the second to do this patch but with reduced
-> complexity because of the simpler interfaces.
+> greg k-h
 
-Agree, let me do it in V3.
+The decision to avoid creating a "ring" sysfs attribute by default
+likely stems from a specific use case where it wasn't needed for every
+device. By creating it automatically, it keeps the uio_hv_generic
+driver simpler and helps prevent potential race conditions. However, it
+has an added cost of having ring buffer for all the channels, where it
+is not required. I am trying to find if there are any more implications
+of it.
 
-- Saurabh
-
-> 
-> Michael  
->
-
-<snip> 
+Thanks,
+Naman
 
