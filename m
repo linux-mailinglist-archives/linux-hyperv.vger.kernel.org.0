@@ -1,72 +1,72 @@
-Return-Path: <linux-hyperv+bounces-4089-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4090-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 252F8A4722E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 03:21:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D9D9A47232
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 03:21:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FD6B1887785
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 02:20:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE10A3B2939
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 02:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E24151A5BAD;
-	Thu, 27 Feb 2025 02:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7291922D4;
+	Thu, 27 Feb 2025 02:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ncjvrqUj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYBCZS58"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAE21B21AC
-	for <linux-hyperv@vger.kernel.org>; Thu, 27 Feb 2025 02:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C351B6CEC
+	for <linux-hyperv@vger.kernel.org>; Thu, 27 Feb 2025 02:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740622752; cv=none; b=qQHkF8CxumojtbYtBAvVVh8LVBGYRXlZWGy35jT3l4PDf0d29X9ZfAif+25zivoyBpHSiP220dqVP27F9Ps326VBkzwFZGg8MM1eOtWAQZ1r6kRelDBgS3DKVnNwcdQ7N5sOjsFBYfkAbn8MqGRv9HjubrIJinLchkcTUS/IryI=
+	t=1740622754; cv=none; b=rweN16V6iINU7v1DOrxxMrBL/Exk+XHklQlnumS+crYARzj5J1NeSHS1O0pQGO8ArtRvcnfYy1ASZNBAy0DCHt/HYMNrt4XcRAVN9JAe5wh4Du1PS3gNh9MU72vQxnt2G+IGIuiYOT21Bg8oO+850MmWVuB8XSDYt9K7bxz9yOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740622752; c=relaxed/simple;
-	bh=cbbEYbCk5kmrOnFY4+pyu6dZHx8scVaupy5RtKUOy+Q=;
+	s=arc-20240116; t=1740622754; c=relaxed/simple;
+	bh=zouDyKCvgpfKjJTRdNmQrbmUt1upitIlri45/tL/V2s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lFynxlUWw0N+OegXqPba1EtfO2WUp+LZC7bAE1Hbh2iBhVEYTF3JKc6LUDO0RLWtmnLJ/mSh5BxrUTUGc6OecxfVug1/5qVG7jcv40oxOPcrgl+lkPacBUdQSmkwsib/2TyhKXeTD6D5kmuzlWRM/c/XsK1l973jTEgEGvTXqFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ncjvrqUj; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=S+o6c4qcnBLJVUT7IJabirKFA1Me0HAr0U0o0poOYoo77YpoiW/0nHeXBpkjGWfn+ux9C4kyyCGSiw7N8YFowZ6J9yvw13flBsuZCMlHRKCvnEZE8hLjwZmMBnVJ9r8Cfz0lYQSV1iz3pm3rMzV7wt7b+yASy9PnWhUXvHYebX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NYBCZS58; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe8fdfdd94so1107579a91.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 26 Feb 2025 18:19:10 -0800 (PST)
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fe8c5dbdb0so1061061a91.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 26 Feb 2025 18:19:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740622750; x=1741227550; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740622752; x=1741227552; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=HbJ/1jLoPDWkVBe7cDWaMugTDenciqtu5nrTgQ9Zvm0=;
-        b=ncjvrqUjmwekXY/o6eo006FvZWNuLjcP7sMTBFtsvpzy+wYAIYQmiUVOGEesPBXkgk
-         qi8lChh/EZIbByPRtylkt5u29R8AVGqX3i65f/Oe79ryIK1SY4GA82w14jZFUp3IbDDQ
-         8FMOcu35hbdaLFWwFdVarqPuOHJY/s6oIGMvgBAoaUWcOFpD/xONrY2JWODhMmKBGGfY
-         IlBDfDsysZ88OeBO1xK4XmvE8gUYGdBPunuO+cYQNY9cuIo32nmNdCnhzYDIyXGryHzk
-         qIMgsmmfDJB68KhtxLWgHSkwsaZ8VdWlfyjFUU/gzDJDzJxrO0NSDuLzetvZDnhl9jeD
-         9LWg==
+        bh=JV0vL5ay0SjXSCwSvRRqMw5uYQ06F8yr+AS2fSIuB98=;
+        b=NYBCZS58L0f/9PeWx7lqjHczttpcvhByhEy6/htzrG7ZDmbRs4hbvRKAcpiViwVFkp
+         z/ACXB4U3NN5K5CSAcZTmLbUQETJVhXMbu6mKpoBpDewcv9usu16GoOTYsAiaBEUzNOk
+         bW8f5iTVnyfNMEHPxcrkJ24qAJfi9rIocHPwjjklffa3yD7/2WExma/gQ/mT50f/Y4Jk
+         XyZWkX3qHgOMVIYeOay1xgirs2AyZJUmScRp6r+AG+/UpKpXxKGi6VjNKGE3Q/t2OMhC
+         JKXwadCWKCDJ2QXP7DkiIHl0BGP9c4W3B/+pVyY2qBPHf1oYQ9aoieGyGgLdZ8KvT72E
+         ldXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740622750; x=1741227550;
+        d=1e100.net; s=20230601; t=1740622752; x=1741227552;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HbJ/1jLoPDWkVBe7cDWaMugTDenciqtu5nrTgQ9Zvm0=;
-        b=KqgTY3oNou6SnVu8BGiGv8ixJ/pDCPjPPUrJUfAEt9ja8nE75ajmTrUJLDw9zKKJcN
-         23qsSNyMf6uKylXzIFi0mR28yr4re/quOICfVMWpql0UZetgjN45odtZ/2f29yDKjQfy
-         jyGk+xvCEAmV6j8HAoW0HFvPrzsKUubuXq1g9Adl+TiM8EwnuHwX+RIOcHojpH7PJ6bS
-         /2MozouQIdIGyfBRrTothWCeAbUhxJ2UKj6r58toC6ag7HT8aplMT+wOatUlQLKAWsVu
-         l6O391OMKSh8pOl7vZSFsAS31FWWE3CeICNqUDK8KmLK6bfj4tLCZ+F59zGGrVVt+eKM
-         OL0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWcGbVU6Bv7Vmxb28T7j1Y6YZh+x/xR3kHT5UdLz1fg34++NN7FlFeEEmErRFSWk6rmDK215KN42iiMk5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFLnZmGaGTDtpfGYYIwpEJjNjXtEmiWhbj2OlObwZP2oUlZsoi
-	9joD5fCfIAK5TSaWtVViifNqcWDYIJusLUF/JWzaeEX0GY51F+vCpuf4nVttt62Lmm2dJyODjlV
-	DxQ==
-X-Google-Smtp-Source: AGHT+IFmgEsUJJ1z3bRk5Nf8mtm9mdRWiQdO+4qbvCwBd/hyjI3jP5eNnlt+3d6bfd4x/QDsZrTqSfxiFQY=
-X-Received: from pjbsw3.prod.google.com ([2002:a17:90b:2c83:b0:2fa:15aa:4d2b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:56cc:b0:2f1:2fa5:1924
- with SMTP id 98e67ed59e1d1-2fe7e39f2afmr7133368a91.26.1740622749803; Wed, 26
- Feb 2025 18:19:09 -0800 (PST)
+        bh=JV0vL5ay0SjXSCwSvRRqMw5uYQ06F8yr+AS2fSIuB98=;
+        b=M9wC8N1FUPi6m9waynCQkR3lDvxBP0MH/0CQb1G+0dpD+Uzva8d5rs97PRuTo8ovF6
+         BCOQRyP7wUsio8rQxeqWWqBPRvAJOP54FG1UrH8qOrpqgHvQ6yfH1SvqcBGrCWIyd0eS
+         vZK+XCMxiDngGQDX5C8DXLUSsWGQ1543fsarVa4gKc9EoZGK/H6sO1qWERvrW2nwicK/
+         zKGJluoZhQ33UwlZIAg2hRju0oxclkm53LP7lusSjAE635qJK/2lRmr2tchgcm0/3ZVi
+         LiSe0kFni4bho1bbdID1UU4Pg/oOn/jRTpJHBQpaj7wRt7+ELm9KvvP/I+khVvkmMue0
+         pMcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWo1nCn5N7riCXTHy4M1/jH4FyqWJHh6eqmA6+Q1njGoBMDv8uRjQJXSGW+EInlp2KkKi7XYZHSvfCOK+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCMANzfgcLbE64zlhMIKvxHI1DdjoSi4xNqgPsRpewovXzon3E
+	BSrkvuOhAjcRByPjihbgCtPMMdUglbUcpU6OLTTZt91k/rJwxN9O3PW/HrJVWc1Hry4eHkAAQ/q
+	SJQ==
+X-Google-Smtp-Source: AGHT+IEvNph7CiMpObG1u+jVz8JxqMtO0a8+Wef5S19XtPgcpuEdHq4SZt8ZBvsmjyd64opTzInKcYcJX7E=
+X-Received: from pjbsw14.prod.google.com ([2002:a17:90b:2c8e:b0:2fc:11a0:c546])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b48:b0:2fc:9967:acd8
+ with SMTP id 98e67ed59e1d1-2fe7e3b327fmr9422757a91.33.1740622751672; Wed, 26
+ Feb 2025 18:19:11 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Feb 2025 18:18:20 -0800
+Date: Wed, 26 Feb 2025 18:18:21 -0800
 In-Reply-To: <20250227021855.3257188-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -76,9 +76,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250227021855.3257188-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250227021855.3257188-5-seanjc@google.com>
-Subject: [PATCH v2 04/38] x86/sev: Mark TSC as reliable when configuring
- Secure TSC
+Message-ID: <20250227021855.3257188-6-seanjc@google.com>
+Subject: [PATCH v2 05/38] x86/sev: Move check for SNP Secure TSC support to tsc_early_init()
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -95,49 +94,49 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
 	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move the code to mark the TSC as reliable from sme_early_init() to
-snp_secure_tsc_init().  The only reader of TSC_RELIABLE is the aptly
-named check_system_tsc_reliable(), which runs in tsc_init(), i.e.
-after snp_secure_tsc_init().
+Move the check on having a Secure TSC to the common tsc_early_init() so
+that it's obvious that having a Secure TSC is conditional, and to prepare
+for adding TDX to the mix (blindly initializing *both* SNP and TDX TSC
+logic looks especially weird).
 
-This will allow consolidating the handling of TSC_KNOWN_FREQ and
-TSC_RELIABLE when overriding the TSC calibration routine.
+No functional change intended.
 
 Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Reviewed-by: Nikunj A Dadhania <nikunj@amd.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/coco/sev/core.c      | 2 ++
- arch/x86/mm/mem_encrypt_amd.c | 3 ---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/coco/sev/core.c | 3 ---
+ arch/x86/kernel/tsc.c    | 3 ++-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 684cef70edc1..e6ce4ca72465 100644
+index e6ce4ca72465..dab386f782ce 100644
 --- a/arch/x86/coco/sev/core.c
 +++ b/arch/x86/coco/sev/core.c
-@@ -3288,6 +3288,8 @@ void __init snp_secure_tsc_init(void)
+@@ -3284,9 +3284,6 @@ void __init snp_secure_tsc_init(void)
+ {
+ 	unsigned long long tsc_freq_mhz;
+ 
+-	if (!cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+-		return;
+-
+ 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+ 	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+ 
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index d65e85929d3e..6a011cd1ff94 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -1563,7 +1563,8 @@ void __init tsc_early_init(void)
+ 	if (is_early_uv_system())
  		return;
  
- 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-+
- 	rdmsrl(MSR_AMD64_GUEST_TSC_FREQ, tsc_freq_mhz);
- 	snp_tsc_freq_khz = (unsigned long)(tsc_freq_mhz * 1000);
+-	snp_secure_tsc_init();
++	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
++		snp_secure_tsc_init();
  
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index b56c5c073003..774f9677458f 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -541,9 +541,6 @@ void __init sme_early_init(void)
- 	 * kernel mapped.
- 	 */
- 	snp_update_svsm_ca();
--
--	if (sev_status & MSR_AMD64_SNP_SECURE_TSC)
--		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- }
- 
- void __init mem_encrypt_free_decrypted_mem(void)
+ 	if (!determine_cpu_tsc_frequencies(true))
+ 		return;
 -- 
 2.48.1.711.g2feabab25a-goog
 
