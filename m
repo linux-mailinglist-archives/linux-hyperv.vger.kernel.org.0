@@ -1,66 +1,66 @@
-Return-Path: <linux-hyperv+bounces-4129-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4130-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36DB7A47EB2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 14:15:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11510A47ED3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 14:18:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A2E43B3CB7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 13:15:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A03F3B0899
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 13:17:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6A822D4F0;
-	Thu, 27 Feb 2025 13:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C77B22FAC3;
+	Thu, 27 Feb 2025 13:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYFX06Ck"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KQQf0wJ/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0980B270021;
-	Thu, 27 Feb 2025 13:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C6117A305;
+	Thu, 27 Feb 2025 13:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740662133; cv=none; b=avn4AQzTXeFbEAGDS1OiB0lZZuf5TARSVM9zSElgLXoPFGxflKxcfOu9RUaettdgzfIksRf1st+nF8rmG7DVa46nYCVSfRr0Im5DCMGoSDE7G8CqYA3ToZazH/thdCgCj/yg8jyKrdD5iOi9DOi27SkVI5fKWzuIHW1a1ASBzCk=
+	t=1740662257; cv=none; b=mPYgadH+4VFq/1B3NvLBXK6Z0LYhl6wK7s8AJSTTdidISFTN2K+oofG5aVR9Ka5QKD6sfvSMJb36rsOD2U7uI6vy5tjxyufbInIUY/17dhvamTjCyOHduLITez/qIJunB5udsz63Tfh1Yzh0JGYP35KqzOObWQ/vNJcAix0qnbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740662133; c=relaxed/simple;
-	bh=10uz/6GHPznmkoEebLO3Ry9z1Iblsqs6tsAuZLbb6pM=;
+	s=arc-20240116; t=1740662257; c=relaxed/simple;
+	bh=toSHPZ1YVa1gl//0kRiyLUjjHt9nXx8rDY0Mkemm0Mc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dj/Q/nuXyTpyg8Al12leS26dVQWuv8KJMWw6WHVF+oNVTuPvIjUGE8vD+5hAKDrsUDIa7QLWxXj2EBQT7opzFYO4sjf7Dm5DYa+PhTPZO/WDDn3FvTTPG72f9hGj0WGuq8ZrzuO0n/vZ0rQNj7y3u/rYwjfFkvraPUbYUfTLKmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYFX06Ck; arc=none smtp.client-ip=198.175.65.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=u5xZB48f6YgmP/Nc5+rxRM5+iMR0TQ7/MO3SIGzk+reQx4luNgP9b76WcHtJ45Gv9BDlnN5SatbcyLIDiD7tzSc7Sj1TPd/jKnb/Yje+cXexPhykInK3J1w/+JxCZlxT9eyuhiXLGTLfYiCD8AcmHaF9c5R2mZMrlF2MjmmhOyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KQQf0wJ/; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740662131; x=1772198131;
+  t=1740662256; x=1772198256;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=10uz/6GHPznmkoEebLO3Ry9z1Iblsqs6tsAuZLbb6pM=;
-  b=LYFX06CkwC+gqCyG3pnqEIG85r6LcJ44amr7ziTISBfi3LW9L/bRnNWh
-   T3YnJ8Dehcc5HrrwwVnapXBCmdnqi2n+4wXwAeM4Hb21F7NkmZDETjXwa
-   hy/pr5ROdtqXYbplzDyEc6F6vq6bSmWSCqbEEv+pZOOWt3qX/64Qh5WA0
-   hu2Y7h/JgUQKpPOfT+nft/rOLldWaZPdeH2bWQYPRebwSJtaPF+980hKi
-   U1LM9wbrZk0LGJydSvUHK4uJ3dkRbhXUcts5yOprY5k88RURTAWkaww08
-   hnnKCU3peWjioL3ppBxYiwl4fxc/XxF4CI3WD1Xr8BnvI5/AG7UNWhvXu
-   w==;
-X-CSE-ConnectionGUID: 3Mw+YTATRl2dm5Cfr6t4IA==
-X-CSE-MsgGUID: AwuZyFPUSQ2ANaEYzxIneA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52945587"
+   mime-version:in-reply-to;
+  bh=toSHPZ1YVa1gl//0kRiyLUjjHt9nXx8rDY0Mkemm0Mc=;
+  b=KQQf0wJ/MoVgzYrn//vvFyFlDbMGCmtaatMheq1icKYMMl3WBPqWx4to
+   JgkxXQ/iOQu6LXdps7fqgAPUzpGy7XnqEPRhLMxH5WvuactwFDePLEeL4
+   reAzqlZUD4alXZwA1LCJ3A5RHcywkzTkVNuZMagSjXgQbWKtpOmmBuHLW
+   XZePs3hI00g5AXhySiw4YtRNVCqUO+04cfhX9ZDQWGmm8qC/zH7lznF+t
+   j/38W0Rd7nDlDm+AdLz39q32lF3VTycFacLJolB2/tbZSfeLYUwfpap38
+   +TSdilXJVSS/oGRKDpUhUxlzEjngjujMmQ1a9DOq9U56QU64bIGtgmJ9b
+   A==;
+X-CSE-ConnectionGUID: ZmQBd14vTDWxYnDPX2vT5Q==
+X-CSE-MsgGUID: xjNWp1vhSX+U9nBf7XB2HQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41433033"
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="52945587"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 05:15:30 -0800
-X-CSE-ConnectionGUID: YSzANlW6TheqXNJb8PsEYQ==
-X-CSE-MsgGUID: IW3p7XzcS9++CSw8VxGIiQ==
+   d="scan'208";a="41433033"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 05:17:34 -0800
+X-CSE-ConnectionGUID: sGPlddMNR0G8ZteOUDv6gg==
+X-CSE-MsgGUID: QI2K/LkMQjKqVmN4JfZORA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147939679"
+   d="scan'208";a="154208682"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 27 Feb 2025 05:15:24 -0800
+  by orviesa001.jf.intel.com with ESMTP; 27 Feb 2025 05:17:28 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 8582D2D5; Thu, 27 Feb 2025 15:15:23 +0200 (EET)
-Date: Thu, 27 Feb 2025 15:15:23 +0200
+	id AD1B92D5; Thu, 27 Feb 2025 15:17:26 +0200 (EET)
+Date: Thu, 27 Feb 2025 15:17:26 +0200
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Sean Christopherson <seanjc@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
@@ -74,161 +74,61 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	linux-coco@lists.linux.dev, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
 	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org, 
 	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>
-Subject: Re: [PATCH v2 06/38] x86/tdx: Override PV calibration routines with
- CPUID-based calibration
-Message-ID: <buq5hn27q7r5ktb33rxejp7i54s22zqu3vw44bie6vzcouzzdc@btjgkdpoeclw>
+Subject: Re: [PATCH v2 30/38] x86/paravirt: Don't use a PV sched_clock in
+ CoCo guests with trusted TSC
+Message-ID: <okuuhll3ymxlvno46dlimlpnkhg5vcxm2jiaew7uce4f35sps3@xaommgjd447m>
 References: <20250227021855.3257188-1-seanjc@google.com>
- <20250227021855.3257188-7-seanjc@google.com>
+ <20250227021855.3257188-31-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227021855.3257188-7-seanjc@google.com>
+In-Reply-To: <20250227021855.3257188-31-seanjc@google.com>
 
-On Wed, Feb 26, 2025 at 06:18:22PM -0800, Sean Christopherson wrote:
-> When running as a TDX guest, explicitly override the TSC frequency
-> calibration routine with CPUID-based calibration instead of potentially
-> relying on a hypervisor-controlled PV routine.  For TDX guests, CPUID.0x15
-> is always emulated by the TDX-Module, i.e. the information from CPUID is
-> more trustworthy than the information provided by the hypervisor.
+On Wed, Feb 26, 2025 at 06:18:46PM -0800, Sean Christopherson wrote:
+> Silently ignore attempts to switch to a paravirt sched_clock when running
+> as a CoCo guest with trusted TSC.  In hand-wavy theory, a misbehaving
+> hypervisor could attack the guest by manipulating the PV clock to affect
+> guest scheduling in some weird and/or predictable way.  More importantly,
+> reading TSC on such platforms is faster than any PV clock, and sched_clock
+> is all about speed.
 > 
-> To maintain backwards compatibility with TDX guest kernels that use native
-> calibration, and because it's the least awful option, retain
-> native_calibrate_tsc()'s stuffing of the local APIC bus period using the
-> core crystal frequency.  While it's entirely possible for the hypervisor
-> to emulate the APIC timer at a different frequency than the core crystal
-> frequency, the commonly accepted interpretation of Intel's SDM is that APIC
-> timer runs at the core crystal frequency when that latter is enumerated via
-> CPUID:
-> 
->   The APIC timer frequency will be the processor’s bus clock or core
->   crystal clock frequency (when TSC/core crystal clock ratio is enumerated
->   in CPUID leaf 0x15).
-> 
-> If the hypervisor is malicious and deliberately runs the APIC timer at the
-> wrong frequency, nothing would stop the hypervisor from modifying the
-> frequency at any time, i.e. attempting to manually calibrate the frequency
-> out of paranoia would be futile.
-> 
-> Deliberately leave the CPU frequency calibration routine as is, since the
-> TDX-Module doesn't provide any guarantees with respect to CPUID.0x16.
-> 
-> Opportunistically add a comment explaining that CoCo TSC initialization
-> needs to come after hypervisor specific initialization.
-> 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->  arch/x86/coco/tdx/tdx.c    | 30 +++++++++++++++++++++++++++---
->  arch/x86/include/asm/tdx.h |  2 ++
->  arch/x86/kernel/tsc.c      |  8 ++++++++
->  3 files changed, 37 insertions(+), 3 deletions(-)
+>  arch/x86/kernel/paravirt.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> index 32809a06dab4..42cdaa98dc5e 100644
-> --- a/arch/x86/coco/tdx/tdx.c
-> +++ b/arch/x86/coco/tdx/tdx.c
-> @@ -8,6 +8,7 @@
->  #include <linux/export.h>
->  #include <linux/io.h>
->  #include <linux/kexec.h>
-> +#include <asm/apic.h>
->  #include <asm/coco.h>
->  #include <asm/tdx.h>
->  #include <asm/vmx.h>
-> @@ -1063,9 +1064,6 @@ void __init tdx_early_init(void)
->  
->  	setup_force_cpu_cap(X86_FEATURE_TDX_GUEST);
->  
-> -	/* TSC is the only reliable clock in TDX guest */
-> -	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> -
->  	cc_vendor = CC_VENDOR_INTEL;
->  
->  	/* Configure the TD */
-> @@ -1122,3 +1120,29 @@ void __init tdx_early_init(void)
->  
->  	tdx_announce();
->  }
-> +
-> +static unsigned long tdx_get_tsc_khz(void)
-> +{
-> +	struct cpuid_tsc_info info;
-> +
-> +	if (WARN_ON_ONCE(cpuid_get_tsc_freq(&info)))
-> +		return 0;
-> +
-> +	lapic_timer_period = info.crystal_khz * 1000 / HZ;
-> +
-> +	return info.tsc_khz;
-> +}
-> +
-> +void __init tdx_tsc_init(void)
-> +{
-> +	/* TSC is the only reliable clock in TDX guest */
-> +	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> +	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-> +
+> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+> index a3a1359cfc26..c538c608d9fb 100644
+> --- a/arch/x86/kernel/paravirt.c
+> +++ b/arch/x86/kernel/paravirt.c
+> @@ -89,6 +89,15 @@ DEFINE_STATIC_CALL(pv_sched_clock, native_sched_clock);
+>  int __init __paravirt_set_sched_clock(u64 (*func)(void), bool stable,
+>  				      void (*save)(void), void (*restore)(void))
+>  {
 > +	/*
-> +	 * Override the PV calibration routines (if set) with more trustworthy
-> +	 * CPUID-based calibration.  The TDX module emulates CPUID, whereas any
-> +	 * PV information is provided by the hypervisor.
+> +	 * Don't replace TSC with a PV clock when running as a CoCo guest and
+> +	 * the TSC is secure/trusted; PV clocks are emulated by the hypervisor,
+> +	 * which isn't in the guest's TCB.
 > +	 */
-> +	tsc_register_calibration_routines(tdx_get_tsc_khz, NULL);
-> +}
-> diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-> index b4b16dafd55e..621fbdd101e2 100644
-> --- a/arch/x86/include/asm/tdx.h
-> +++ b/arch/x86/include/asm/tdx.h
-> @@ -53,6 +53,7 @@ struct ve_info {
->  #ifdef CONFIG_INTEL_TDX_GUEST
->  
->  void __init tdx_early_init(void);
-> +void __init tdx_tsc_init(void);
->  
->  void tdx_get_ve_info(struct ve_info *ve);
->  
-> @@ -72,6 +73,7 @@ void __init tdx_dump_td_ctls(u64 td_ctls);
->  #else
->  
->  static inline void tdx_early_init(void) { };
-> +static inline void tdx_tsc_init(void) { }
->  static inline void tdx_safe_halt(void) { };
->  
->  static inline bool tdx_early_handle_ve(struct pt_regs *regs) { return false; }
-> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-> index 6a011cd1ff94..472d6c71d3a5 100644
-> --- a/arch/x86/kernel/tsc.c
-> +++ b/arch/x86/kernel/tsc.c
-> @@ -32,6 +32,7 @@
->  #include <asm/topology.h>
->  #include <asm/uv/uv.h>
->  #include <asm/sev.h>
-> +#include <asm/tdx.h>
->  
->  unsigned int __read_mostly cpu_khz;	/* TSC clocks / usec, not used here */
->  EXPORT_SYMBOL(cpu_khz);
-> @@ -1563,8 +1564,15 @@ void __init tsc_early_init(void)
->  	if (is_early_uv_system())
->  		return;
->  
-> +	/*
-> +	 * Do CoCo specific "secure" TSC initialization *after* hypervisor
-> +	 * platform initialization so that the secure variant can override the
-> +	 * hypervisor's PV calibration routine with a more trusted method.
-> +	 */
->  	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
->  		snp_secure_tsc_init();
-> +	else if (boot_cpu_has(X86_FEATURE_TDX_GUEST))
-> +		tdx_tsc_init();
+> +	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC) ||
+> +	    boot_cpu_has(X86_FEATURE_TDX_GUEST))
+> +		return -EPERM;
+> +
 
-Maybe a x86_platform.guest callback for this?
+Looks like a call for generic CC_ATTR_GUEST_SECURE_TSC that would be true
+for TDX and SEV with CC_ATTR_GUEST_SNP_SECURE_TSC.
 
+>  	if (!stable)
+>  		clear_sched_clock_stable();
+>  
+> -- 
+> 2.48.1.711.g2feabab25a-goog
+> 
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
