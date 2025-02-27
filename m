@@ -1,285 +1,225 @@
-Return-Path: <linux-hyperv+bounces-4123-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4124-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B2DFA472F1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 03:34:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDD81A47451
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 05:22:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D0DD188AD3C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 02:32:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C69EB169C2A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 04:22:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B9CE259491;
-	Thu, 27 Feb 2025 02:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A91F21D79A9;
+	Thu, 27 Feb 2025 04:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kInpiMw5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Yj0GNh38"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2122417E5
-	for <linux-hyperv@vger.kernel.org>; Thu, 27 Feb 2025 02:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016581917FB;
+	Thu, 27 Feb 2025 04:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740622811; cv=none; b=A0kq9t6kjEp/nalC80vvnq6l/4nqYASVxePZctiNp0I1ipG9V0fLLevzPotdcau+7XDewyF9mFYRsFwjGMpPRjhVGg6+bTyHaT9ItVJTYzGZCOr4SQ9kG6XMle7bpIpTTPflqi5FAAh3DFVlef3G6dSziyBhtSznpzS+MiVT3dw=
+	t=1740630136; cv=none; b=EbDoSCUxdBZnarveY0fkqeJErvcnM+CIbOiljKLi2Vk/ZXs5CDitPPvZ4INHGdZyLaOmeHyOOUEtbJ325KrtiFMWwttR8bt25e05aXpJ7XD4t7E+CmrM/kmI0c5iw1AiWcl/WDb1pF3efTUIhgCBWBtNh6WNVmaaIOLsWt+NORE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740622811; c=relaxed/simple;
-	bh=hxlTZC8hhB/2jCSFfc8NfglIDRkf8SaM4Ur2KmgRPXU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UtnWH3aYhZf5AGvO+O9B7+3WGhDwNrcfNEPHFMIA3c10i4LdczUDkoVda89KvfkudzLSV14AGTsUOknuMHd7Ilxm4ntF8J3AUf8GbgyYIpH4e5m/7w7xueKI4vh67biym3odRYobrXtYdDCaXYBq6RrVh5qneDw5J1efg5YK31k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kInpiMw5; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1cb0c2cbso1527814a91.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 26 Feb 2025 18:20:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740622809; x=1741227609; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=7QXAixlOaLHnLrPcLZCTebtwCxVmNNMI9kZmebDzK/g=;
-        b=kInpiMw5cFJpmKPKzQWqgAYgEFH7NA5HxAfNs+JX3x7c2qEI6Uk36skqLbrkXzYmFr
-         +FCW/m70MEJIr4OxPaqOyTxBLImJt78g6Yj29Cxf3p6CMNbKr1a2exuVPPjOqmkVVA3u
-         bE7ycJhluAYX2g/2mwoGSt778RLrsjxbfHnkx+BG6/xDYsp4CfXcMpuDcLhPWUUtDzWn
-         LLJXrEMfC7nFwMOa6oSyKtMuKi1U5VcLIVIK+3LlVzBTwTAxMMzalNbG6DFwY2qDrvrj
-         m1aqtvJtyh2cAzFSrndlfPwxuOCZZUNX5TTQZTG5QRHW68SfAJx6WLQ4XnOPDGyYCU+p
-         Prqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740622809; x=1741227609;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7QXAixlOaLHnLrPcLZCTebtwCxVmNNMI9kZmebDzK/g=;
-        b=cs5mEfEEV/SviSTRBlU4OlbJn9UDcMJYx87H1tEsc1+NF2aLx8J+LCxHpiA4fcVQQ/
-         4TWrHK0Ce2ZFgTjtDepSq85x7ZEb39PJ0vgYjF8D5fgdJS0zF6g8/X1Z+qMvmSvOhv84
-         uClZJRJLT6dYjOyaPvpIKLiG3fOmAYc3uZ7/Vh58S8RWtkNkxVNBjOUZ9XDFOJFn4nCI
-         0pX01+ssdQUXRKXn7d1cvxHlX1NNMN391EUCYr99lfxVkT33qp4b0Zj60sAH9cjBNL//
-         zmCwewB3YiAKI9wH1tE7nd1z6sdViIvdHcQpS1BXVv1NY7stJTkcwFLM/VB/W4DVZWcz
-         VpQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ478yg6rc9BkNi5okG96otZEg1N81H97LQBCI/2aKfqUcs9HJu1C0rAqxwIYlT/Wnke4lshiAOWNKgGM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvtqfdepB+t0/R92jDrxxeasvuFzRAJpoMNkl6GyEGHhZgUgdR
-	AXuOJneKEqnvBuaVqSdN6mt0Su9+NoexmOM8j8nI4SUak1Rr30xA6EX7RsF1mZtpTsFh+5x/Ef8
-	RLA==
-X-Google-Smtp-Source: AGHT+IHi4d1QOUfXEPfDRjR4DxqWNosFyXVnkFi4SDlf4Oxmtkdi3La4kP/2IDxMG83GHnzWpK766unKU5E=
-X-Received: from pjz6.prod.google.com ([2002:a17:90b:56c6:b0:2fc:3022:36b8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5688:b0:2ee:d63f:d77
- with SMTP id 98e67ed59e1d1-2fe68adec61mr16362401a91.9.1740622809153; Wed, 26
- Feb 2025 18:20:09 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Feb 2025 18:18:54 -0800
-In-Reply-To: <20250227021855.3257188-1-seanjc@google.com>
+	s=arc-20240116; t=1740630136; c=relaxed/simple;
+	bh=gpsFATY9yk3fNhba6fz7eOHL1vPJpLgJaoKXuFMzBLU=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DXZHT76xeg1RlEWfznp6/iJxETXusAdPrZGUmMNHuwU2xpCf8Z62iLlwtd4d/FpxLgIZovPKFsnqB8VtxMVeq+GkPApJpo/3S+LzH4iq9HIqVk6S4m6i16KiTYn5VWwWj/W7SDcV7n0UvoABFSKHLkcvHO6n53+ZYASliiiIz6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Yj0GNh38; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.224.197] (unknown [20.236.10.163])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4CD29210C333;
+	Wed, 26 Feb 2025 20:22:12 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4CD29210C333
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740630133;
+	bh=U5G5xTY6+fXf4Ew9CkmDffOj4/0p8uXLMYX0nezFcPk=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Yj0GNh38MoHz51PzsW/53YVVftr1/q9O9R0OX96QMbTlzOgN/TjToG0SlG5QOBXA2
+	 dnfYpenjxcQriG18n/BrMF01HbDXo7A183oYUUsx82R3g6VmrX8lQFZL/ROOGT8HIZ
+	 pAPaDYjfFLZ+8F40HCRxjjQmsbECZz1JL16qr4Zs=
+Message-ID: <2889fab1-4836-4a66-aa63-b63d8cc70a69@linux.microsoft.com>
+Date: Wed, 26 Feb 2025 20:22:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227021855.3257188-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250227021855.3257188-39-seanjc@google.com>
-Subject: [PATCH v2 38/38] x86/paravirt: kvmclock: Setup kvmclock early iff
- it's sched_clock
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	John Stultz <jstultz@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org,
+ eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, mhklinux@outlook.com, decui@microsoft.com,
+ catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
+ arnd@arndb.de, jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
+ muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
+ lenb@kernel.org, corbet@lwn.net
+Subject: Re: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Rework the seemingly generic x86_cpuinit_ops.early_percpu_clock_init hook
-into a dedicated PV sched_clock hook, as the only reason the hook exists
-is to allow kvmclock to enable its PV clock on secondary CPUs before the
-kernel tries to reference sched_clock, e.g. when grabbing a timestamp for
-printk.
+On 2/26/2025 3:07 PM, Nuno Das Neves wrote:
+> Introduce hv_result_to_string() for this purpose. This allows
+> hypercall failures to be debugged more easily with dmesg.
+> 
 
-Rearranging the hook doesn't exactly reduce complexity; arguably it does
-the opposite.  But as-is, it's practically impossible to understand *why*
-kvmclock needs to do early configuration.
+Let the commit message stand on its own, i.e. state that hv_result_to_string()
+is introduced to convert hyper-v status codes to string.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/paravirt.h | 10 ++++++++--
- arch/x86/include/asm/x86_init.h |  2 --
- arch/x86/kernel/kvmclock.c      | 13 ++++++-------
- arch/x86/kernel/paravirt.c      | 18 +++++++++++++++++-
- arch/x86/kernel/smpboot.c       |  2 +-
- arch/x86/kernel/x86_init.c      |  1 -
- 6 files changed, 32 insertions(+), 14 deletions(-)
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/hv/hv_common.c         | 65 ++++++++++++++++++++++++++++++++++
+>  drivers/hv/hv_proc.c           | 13 ++++---
+>  include/asm-generic/mshyperv.h |  1 +
+>  3 files changed, 74 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 9804adb4cc56..ce20818688fe 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -740,3 +740,68 @@ void hv_identify_partition_type(void)
+>  			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
+>  	}
+>  }
+> +
+> +const char *hv_result_to_string(u64 hv_status)
+> +{
+> +	switch (hv_result(hv_status)) {
+> +	case HV_STATUS_SUCCESS:
+> +		return "HV_STATUS_SUCCESS";
+> +	case HV_STATUS_INVALID_HYPERCALL_CODE:
+> +		return "HV_STATUS_INVALID_HYPERCALL_CODE";
+> +	case HV_STATUS_INVALID_HYPERCALL_INPUT:
+> +		return "HV_STATUS_INVALID_HYPERCALL_INPUT";
+> +	case HV_STATUS_INVALID_ALIGNMENT:
+> +		return "HV_STATUS_INVALID_ALIGNMENT";
+> +	case HV_STATUS_INVALID_PARAMETER:
+> +		return "HV_STATUS_INVALID_PARAMETER";
+> +	case HV_STATUS_ACCESS_DENIED:
+> +		return "HV_STATUS_ACCESS_DENIED";
+> +	case HV_STATUS_INVALID_PARTITION_STATE:
+> +		return "HV_STATUS_INVALID_PARTITION_STATE";
+> +	case HV_STATUS_OPERATION_DENIED:
+> +		return "HV_STATUS_OPERATION_DENIED";
+> +	case HV_STATUS_UNKNOWN_PROPERTY:
+> +		return "HV_STATUS_UNKNOWN_PROPERTY";
+> +	case HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE:
+> +		return "HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE";
+> +	case HV_STATUS_INSUFFICIENT_MEMORY:
+> +		return "HV_STATUS_INSUFFICIENT_MEMORY";
+> +	case HV_STATUS_INVALID_PARTITION_ID:
+> +		return "HV_STATUS_INVALID_PARTITION_ID";
+> +	case HV_STATUS_INVALID_VP_INDEX:
+> +		return "HV_STATUS_INVALID_VP_INDEX";
+> +	case HV_STATUS_NOT_FOUND:
+> +		return "HV_STATUS_NOT_FOUND";
+> +	case HV_STATUS_INVALID_PORT_ID:
+> +		return "HV_STATUS_INVALID_PORT_ID";
+> +	case HV_STATUS_INVALID_CONNECTION_ID:
+> +		return "HV_STATUS_INVALID_CONNECTION_ID";
+> +	case HV_STATUS_INSUFFICIENT_BUFFERS:
+> +		return "HV_STATUS_INSUFFICIENT_BUFFERS";
+> +	case HV_STATUS_NOT_ACKNOWLEDGED:
+> +		return "HV_STATUS_NOT_ACKNOWLEDGED";
+> +	case HV_STATUS_INVALID_VP_STATE:
+> +		return "HV_STATUS_INVALID_VP_STATE";
+> +	case HV_STATUS_NO_RESOURCES:
+> +		return "HV_STATUS_NO_RESOURCES";
+> +	case HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED:
+> +		return "HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED";
+> +	case HV_STATUS_INVALID_LP_INDEX:
+> +		return "HV_STATUS_INVALID_LP_INDEX";
+> +	case HV_STATUS_INVALID_REGISTER_VALUE:
+> +		return "HV_STATUS_INVALID_REGISTER_VALUE";
+> +	case HV_STATUS_OPERATION_FAILED:
+> +		return "HV_STATUS_OPERATION_FAILED";
+> +	case HV_STATUS_TIME_OUT:
+> +		return "HV_STATUS_TIME_OUT";
+> +	case HV_STATUS_CALL_PENDING:
+> +		return "HV_STATUS_CALL_PENDING";
+> +	case HV_STATUS_VTL_ALREADY_ENABLED:
+> +		return "HV_STATUS_VTL_ALREADY_ENABLED";
+> +	default:
+> +		return "Unknown";
+> +	};
+> +	return "Unknown";
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 5de31b22aa5f..8550262fc710 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -29,13 +29,14 @@ DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
- DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
- 
- int __init __paravirt_set_sched_clock(u64 (*func)(void), bool stable,
--				      void (*save)(void), void (*restore)(void));
-+				      void (*save)(void), void (*restore)(void),
-+				      void (*start_secondary));
- 
- static __always_inline void paravirt_set_sched_clock(u64 (*func)(void),
- 						     void (*save)(void),
- 						     void (*restore)(void))
- {
--	(void)__paravirt_set_sched_clock(func, true, save, restore);
-+	(void)__paravirt_set_sched_clock(func, true, save, restore, NULL);
- }
- 
- static __always_inline u64 paravirt_sched_clock(void)
-@@ -43,6 +44,8 @@ static __always_inline u64 paravirt_sched_clock(void)
- 	return static_call(pv_sched_clock)();
- }
- 
-+void paravirt_sched_clock_start_secondary(void);
-+
- struct static_key;
- extern struct static_key paravirt_steal_enabled;
- extern struct static_key paravirt_steal_rq_enabled;
-@@ -756,6 +759,9 @@ void native_pv_lock_init(void) __init;
- static inline void native_pv_lock_init(void)
- {
- }
-+static inline void paravirt_sched_clock_start_secondary(void)
-+{
-+}
- #endif
- #endif /* !CONFIG_PARAVIRT */
- 
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index 213cf5379a5a..e3456def5aea 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -187,13 +187,11 @@ struct x86_init_ops {
- /**
-  * struct x86_cpuinit_ops - platform specific cpu hotplug setups
-  * @setup_percpu_clockev:	set up the per cpu clock event device
-- * @early_percpu_clock_init:	early init of the per cpu clock event device
-  * @fixup_cpu_id:		fixup function for cpuinfo_x86::topo.pkg_id
-  * @parallel_bringup:		Parallel bringup control
-  */
- struct x86_cpuinit_ops {
- 	void (*setup_percpu_clockev)(void);
--	void (*early_percpu_clock_init)(void);
- 	void (*fixup_cpu_id)(struct cpuinfo_x86 *c, int node);
- 	bool parallel_bringup;
- };
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index 280bb964f30a..11f078b91f22 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -126,12 +126,13 @@ static void kvm_save_sched_clock_state(void)
- 	kvmclock_disable();
- }
- 
--#ifdef CONFIG_SMP
--static void kvm_setup_secondary_clock(void)
-+static void kvm_setup_secondary_sched_clock(void)
- {
-+	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_SMP)))
-+		return;
-+
- 	kvm_register_clock("secondary cpu, sched_clock setup");
- }
--#endif
- 
- static void kvm_restore_sched_clock_state(void)
- {
-@@ -367,7 +368,8 @@ static void __init kvm_sched_clock_init(bool stable)
- {
- 	if (__paravirt_set_sched_clock(kvm_sched_clock_read, stable,
- 				       kvm_save_sched_clock_state,
--				       kvm_restore_sched_clock_state))
-+				       kvm_restore_sched_clock_state,
-+				       kvm_setup_secondary_sched_clock))
- 		return;
- 
- 	kvm_sched_clock_offset = kvm_clock_read();
-@@ -452,9 +454,6 @@ void __init kvmclock_init(void)
- 
- 	x86_platform.get_wallclock = kvm_get_wallclock;
- 	x86_platform.set_wallclock = kvm_set_wallclock;
--#ifdef CONFIG_SMP
--	x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
--#endif
- 	kvm_get_preset_lpj();
- 
- 	clocksource_register_hz(&kvm_clock, NSEC_PER_SEC);
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index c538c608d9fb..f93278ddb1d2 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -86,8 +86,13 @@ static u64 native_steal_clock(int cpu)
- DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
- DEFINE_STATIC_CALL(pv_sched_clock, native_sched_clock);
- 
-+#ifdef CONFIG_SMP
-+static void (*pv_sched_clock_start_secondary)(void) __ro_after_init;
-+#endif
-+
- int __init __paravirt_set_sched_clock(u64 (*func)(void), bool stable,
--				      void (*save)(void), void (*restore)(void))
-+				      void (*save)(void), void (*restore)(void),
-+				      void (*start_secondary))
- {
- 	/*
- 	 * Don't replace TSC with a PV clock when running as a CoCo guest and
-@@ -104,9 +109,20 @@ int __init __paravirt_set_sched_clock(u64 (*func)(void), bool stable,
- 	static_call_update(pv_sched_clock, func);
- 	x86_platform.save_sched_clock_state = save;
- 	x86_platform.restore_sched_clock_state = restore;
-+#ifdef CONFIG_SMP
-+	pv_sched_clock_start_secondary = start_secondary;
-+#endif
- 	return 0;
- }
- 
-+#ifdef CONFIG_SMP
-+void paravirt_sched_clock_start_secondary(void)
-+{
-+	if (pv_sched_clock_start_secondary)
-+		pv_sched_clock_start_secondary();
-+}
-+#endif
-+
- /* These are in entry.S */
- static struct resource reserve_ioports = {
- 	.start = 0,
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index c10850ae6f09..e6fff67dd264 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -278,7 +278,7 @@ static void notrace start_secondary(void *unused)
- 	cpu_init();
- 	fpu__init_cpu();
- 	rcutree_report_cpu_starting(raw_smp_processor_id());
--	x86_cpuinit.early_percpu_clock_init();
-+	paravirt_sched_clock_start_secondary();
- 
- 	ap_starting();
- 
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 0a2bbd674a6d..1d4cf071c74b 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -128,7 +128,6 @@ struct x86_init_ops x86_init __initdata = {
- };
- 
- struct x86_cpuinit_ops x86_cpuinit = {
--	.early_percpu_clock_init	= x86_init_noop,
- 	.setup_percpu_clockev		= setup_secondary_APIC_clock,
- 	.parallel_bringup		= true,
- };
--- 
-2.48.1.711.g2feabab25a-goog
+Unnecessary extra return since the default case already returns "Unknown"
+
+> +}
+> +EXPORT_SYMBOL_GPL(hv_result_to_string);
+> +
+
+Extra line here ^
+
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 2fae18e4f7d2..8fc30f509fa7 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -87,7 +87,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+>  				     page_count, 0, input_page, NULL);
+>  	local_irq_restore(flags);
+>  	if (!hv_result_success(status)) {
+> -		pr_err("Failed to deposit pages: %lld\n", status);
+> +		pr_err("%s: Failed to deposit pages: %s\n", __func__,
+> +		       hv_result_to_string(status));
+>  		ret = hv_result_to_errno(status);
+>  		goto err_free_allocations;
+>  	}
+> @@ -137,8 +138,9 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+>  
+>  		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
+>  			if (!hv_result_success(status)) {
+> -				pr_err("%s: cpu %u apic ID %u, %lld\n", __func__,
+> -				       lp_index, apic_id, status);
+> +				pr_err("%s: cpu %u apic ID %u, %s\n",
+> +				       __func__, lp_index, apic_id,
+> +				       hv_result_to_string(status));
+>  				ret = hv_result_to_errno(status);
+>  			}
+>  			break;
+> @@ -179,8 +181,9 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+>  
+>  		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
+>  			if (!hv_result_success(status)) {
+> -				pr_err("%s: vcpu %u, lp %u, %lld\n", __func__,
+> -				       vp_index, flags, status);
+> +				pr_err("%s: vcpu %u, lp %u, %s\n",
+> +				       __func__, vp_index, flags,
+> +				       hv_result_to_string(status));
+>  				ret = hv_result_to_errno(status);
+>  			}
+>  			break;
+
+There are more convertible instances in arch/x86/hyperv/irqdomain.c and drivers/iommu/hyperv-iommu.c
+
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index b13b0cda4ac8..dc4729dba9ef 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -298,6 +298,7 @@ static inline int cpumask_to_vpset_skip(struct hv_vpset *vpset,
+>  	return __cpumask_to_vpset(vpset, cpus, func);
+>  }
+>  
+> +const char *hv_result_to_string(u64 hv_status);
+>  int hv_result_to_errno(u64 status);
+>  void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+>  bool hv_is_hyperv_initialized(void);
 
 
