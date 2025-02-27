@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-4126-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4127-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A2E2A475A3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 06:58:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4F12A475EC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 07:24:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14A6F188308A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 05:57:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDE933AF234
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 06:24:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBB821519B;
-	Thu, 27 Feb 2025 05:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A864A21773C;
+	Thu, 27 Feb 2025 06:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eQI4y+Ht"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IiiXZxtj"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498AB214A96;
-	Thu, 27 Feb 2025 05:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B787217668;
+	Thu, 27 Feb 2025 06:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740635821; cv=none; b=PFDZtPux8wnMh1V1498x0YZmTO12UDF1kxEGu9aUEnZJ4n8XQLEsi6brDcSMdkW8fXFEKzkwvBIrzFN6PDsO+i0qAuWoybI0BRUor8RNQytRZhE4ZTYp1EpyvtfJaJb5YkdwDjzBddUzwyydr2vYMbTl214P1xXy5qwcOIf/kPs=
+	t=1740637469; cv=none; b=fB0GJfWKCQV7WdfIM4itzCYvfy8kTSVwlmqXUYGSX/zArCP3BU135RuDNDJIpsqBR247SLQMKOhrHsEvDylzF72Cb6BGgzWB0U4UsMfcFhPcNm9HOKqz1zpjae3VekIqj2bLijLBX4cjoPowxcj5gUvpyKDfb8qpeBjAnAgQo5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740635821; c=relaxed/simple;
-	bh=n/7501i6uez9aq/kEbc0SV9ZotnO1lRKSkI807l1+yo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KZcYNRn+fWGwRNEZ8VeeP1R6cB4nyYYFuCFGBsG1no4gY2FTtKG60WuMDKFW0TZWTd2oSTUDWOxicwzMo8JggxhI7QIETix0UiVZz9h0+puK5WHOQ2VPR+wokQy60qmo+u7TOMUsLf4Mrh0+UxPUbRHdVtNr4S1CUcXu47w1iE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eQI4y+Ht; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740637469; c=relaxed/simple;
+	bh=cvVhSyfG3Llv19e36sgi4Oj67qfW0LlBbrAQfDLlM5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L2ROv1+TH//qei2Aicd2jV7q0CxY9+M/+GOmQSZfERrfu9J+ZWSgpLCxVWf1A6YMdUBoEqWPNDXo1WRrdkzKmRPYJV7Kz+Q/8pfiX3vwo7Wo3TtcxEqJJbRgVE7wwC3iLGoYlPLkOO/4oN6Diq04Ymu1b1RHoh5anBg3mZeW+q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IiiXZxtj; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.224.197] (unknown [20.236.11.29])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 91976210C33B;
-	Wed, 26 Feb 2025 21:56:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 91976210C33B
+Received: from [10.95.69.26] (unknown [167.220.238.90])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EA61D210C33B;
+	Wed, 26 Feb 2025 22:24:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA61D210C33B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740635819;
-	bh=W/MkXUhHX7zH6oQ/rHTcpceutPj8HQjNkQ+KPUdG8HE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=eQI4y+Ht6gcca5/C4U2sEvpTwt7K8Tzgnteh+WyGhNwCTshnKA0XUsTDM9eYfZeIh
-	 QjkJYSyHomtHB13FhD0M5CcZVt7UgmmGKqHH++pn/K4lVYxywy06xenvAsZSRgtPnE
-	 PIn+AldosomUdd9VeWpBXVnsKZVDKLcOS1bKbEns=
-Message-ID: <5f3d660d-fe2e-4ac1-94a7-66d6c8ffe579@linux.microsoft.com>
-Date: Wed, 26 Feb 2025 21:56:56 -0800
+	s=default; t=1740637467;
+	bh=oagN7OifPBSXYGb/2XU8XwAwZMchQAyE71yF9nncgIU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IiiXZxtjVndxLKpoGh1PdwQEgGxu6WiGjIvBo4uDdOOuSviTNstdbWkkGPzE8CfaR
+	 fQpkTfrk3OXS95NHomYI/2Oh60iCmBHxdN5ReS5f+8WLxpP9liOsoyi3nY+4IAn8Dk
+	 7N95g+QnY7PNSA2+udhKrcHSVyPpyq5bI8vQTw3U=
+Message-ID: <960501c2-5ab2-4c81-86ac-a4477c0f708a@linux.microsoft.com>
+Date: Thu, 27 Feb 2025 11:54:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,124 +49,172 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org,
- eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, mhklinux@outlook.com, decui@microsoft.com,
- catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
- arnd@arndb.de, jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
- ssengar@linux.microsoft.com, apais@linux.microsoft.com,
- Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
- gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
- muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
- lenb@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH v5 03/10] arm64/hyperv: Add some missing functions to
- arm64
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-4-git-send-email-nunodasneves@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, Long Li <longli@microsoft.com>
+References: <20250225052001.2225-1-namjain@linux.microsoft.com>
+ <2025022504-diagnosis-outsell-684c@gregkh>
+ <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
+ <2025022515-lasso-carrot-4e1d@gregkh>
+ <541c63d6-8ae6-4a32-8a02-d86eea64827e@linux.microsoft.com>
+ <2025022627-deflate-pliable-6da0@gregkh>
+ <0a694947-809d-48b2-9138-d3f6175fe09d@linux.microsoft.com>
+ <2025022643-predict-hedge-8c77@gregkh>
 Content-Language: en-US
-In-Reply-To: <1740611284-27506-4-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025022643-predict-hedge-8c77@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/26/2025 3:07 PM, Nuno Das Neves wrote:
-> These non-nested msr and fast hypercall functions are present in x86,
-> but they must be available in both architetures for the root partition
-
-nit: *architectures*
 
 
-> driver code.
+On 2/26/2025 8:03 PM, Greg Kroah-Hartman wrote:
+> On Wed, Feb 26, 2025 at 05:51:46PM +0530, Naman Jain wrote:
+>>
+>>
+>> On 2/26/2025 3:33 PM, Greg Kroah-Hartman wrote:
+>>> On Wed, Feb 26, 2025 at 10:43:41AM +0530, Naman Jain wrote:
+>>>>
+>>>>
+>>>> On 2/25/2025 2:09 PM, Greg Kroah-Hartman wrote:
+>>>>> On Tue, Feb 25, 2025 at 02:04:43PM +0530, Naman Jain wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2/25/2025 11:42 AM, Greg Kroah-Hartman wrote:
+>>>>>>> On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
+>>>>>>>> On regular bootup, devices get registered to vmbus first, so when
+>>>>>>>> uio_hv_generic driver for a particular device type is probed,
+>>>>>>>> the device is already initialized and added, so sysfs creation in
+>>>>>>>> uio_hv_generic probe works fine. However, when device is removed
+>>>>>>>> and brought back, the channel rescinds and device again gets
+>>>>>>>> registered to vmbus. However this time, the uio_hv_generic driver is
+>>>>>>>> already registered to probe for that device and in this case sysfs
+>>>>>>>> creation is tried before the device gets initialized completely.
+>>>>>>>>
+>>>>>>>> Fix this by moving the core logic of sysfs creation for ring buffer,
+>>>>>>>> from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
+>>>>>>>> attributes for the channels are defined. While doing that, make use
+>>>>>>>> of attribute groups and macros, instead of creating sysfs directly,
+>>>>>>>> to ensure better error handling and code flow.
+>>
+>> <snip>
+>>
+>>>>>>>> +static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
+>>>>>>>> +				       const struct bin_attribute *attr,
+>>>>>>>> +				       struct vm_area_struct *vma)
+>>>>>>>> +{
+>>>>>>>> +	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
+>>>>>>>> +
+>>>>>>>> +	if (!channel->mmap_ring_buffer)
+>>>>>>>> +		return -ENODEV;
+>>>>>>>> +	return channel->mmap_ring_buffer(channel, vma);
+>>>>>>>
+>>>>>>> What is preventing mmap_ring_buffer from being set to NULL right after
+>>>>>>> checking it and then calling it here?  I see no locks here or where you
+>>>>>>> are assigning this variable at all, so what is preventing these types of
+>>>>>>> races?
+>>>>>>>
+>>>>>>> thanks,
+>>>>>>>
+>>>>>>> greg k-h
+>>>>>>
+>>>>>> Thank you so much for reviewing.
+>>>>>> I spent some time to understand if this race condition can happen and it
+>>>>>> seems execution flow is pretty sequential, for a particular channel of a
+>>>>>> device.
+>>>>>>
+>>>>>> Unless hv_uio_remove (which makes channel->mmap_ring_buffer NULL) can be
+>>>>>> called in parallel to hv_uio_probe (which had set
+>>>>>> channel->mmap_ring_buffer to non NULL), I doubt race can happen here.
+>>>>>>
+>>>>>> Code Flow: (R, W-> Read, Write to channel->mmap_ring_buffer)
+>>>>>>
+>>>>>> vmbus_device_register
+>>>>>>      device_register
+>>>>>>        hv_uio_probe
+>>>>>> 	  hv_create_ring_sysfs (W to non NULL)
+>>>>>>            sysfs_update_group
+>>>>>>              vmbus_chan_attr_is_visible (R)
+>>>>>>      vmbus_add_channel_kobj
+>>>>>>        sysfs_create_group
+>>>>>>          vmbus_chan_attr_is_visible  (R)
+>>>>>>          hv_mmap_ring_buffer_wrapper (critical section)
+>>>>>>
+>>>>>> hv_uio_remove
+>>>>>>      hv_remove_ring_sysfs (W to NULL)
+>>>>>
+>>>>> Yes, and right in here someone mmaps the file.
+>>>>>
+>>>>> I think you can race here, no locks at all feels wrong.
+>>>>>
+>>>>> Messing with sysfs groups and files like this is rough, and almost never
+>>>>> a good idea, why can't you just do this all at once with the default
+>>>>> groups, why is this being added/removed out-of-band?
+>>>>>
+>>>>> thanks,
+>>>>>
+>>>>> greg k-h
+>>>>
+>>>> The decision to avoid creating a "ring" sysfs attribute by default
+>>>> likely stems from a specific use case where it wasn't needed for every
+>>>> device. By creating it automatically, it keeps the uio_hv_generic
+>>>> driver simpler and helps prevent potential race conditions. However, it
+>>>> has an added cost of having ring buffer for all the channels, where it
+>>>> is not required. I am trying to find if there are any more implications
+>>>> of it.
+>>>
+>>> You do know about the "is_visable" attribute callback, right?  Why not
+>>> just use that instead of manually mucking around with the
+>>> adding/removing of sysfs attributes at all?  That is what it was
+>>> designed for.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> Hi Greg,
+>> Yes, I am utilizing that in my patch. For differentiating channels of a
+>> uio_hv_generic device, and for *selectively* creating sysfs, we
+>> introduced this field in channel struct "channel->mmap_ring_buffer",
+>> which we were setting only in uio_hv_generic. But, by the time we set
+>> this in uio_hv_generic driver, the sysfs creation has already gone
+>> through and sysfs doesn't get updated dynamically. That's where there
+>> was a need to call sysfs_update_group. I thought the better place to
+>> keep sysfs_update_group would be in vmbus driver, where we are creating
+>> the original sysfs entries, hence I had to add the wrapper functions.
+>> This led us to the race condition we are trying to address now.
+>>
+>>
+>> @@ -1838,6 +1872,10 @@ static umode_t vmbus_chan_attr_is_visible(struct
+>> kobject *kobj,
+>>   	     attr == &chan_attr_monitor_id.attr))
+>>   		return 0;
+>>
+>> +	/* Hide ring attribute if channel's mmap_ring_buffer function is not yet
+>> initialised */
+>> +	if (attr ==  &chan_attr_ring_buffer.attr && !channel->mmap_ring_buffer)
+>> +		return 0;
+>> +
+>>   	return attr->mode;
 > 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> ---
->  arch/arm64/hyperv/hv_core.c       | 17 +++++++++++++++++
->  arch/arm64/include/asm/mshyperv.h | 12 ++++++++++++
->  include/asm-generic/mshyperv.h    |  2 ++
->  3 files changed, 31 insertions(+)
+> Ok, that's good.  BUT you need to change the detection of this to be
+> before the device is set up in the driver.  Why can't you do it in the
+> device creation logic itself instead of after-the-fact when you will
+> ALWAYS race with userspace?
 > 
-> diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
-> index 69004f619c57..e33a9e3c366a 100644
-> --- a/arch/arm64/hyperv/hv_core.c
-> +++ b/arch/arm64/hyperv/hv_core.c
-> @@ -53,6 +53,23 @@ u64 hv_do_fast_hypercall8(u16 code, u64 input)
->  }
->  EXPORT_SYMBOL_GPL(hv_do_fast_hypercall8);
->  
-> +/*
-> + * hv_do_fast_hypercall16 -- Invoke the specified hypercall
-> + * with arguments in registers instead of physical memory.
-> + * Avoids the overhead of virt_to_phys for simple hypercalls.
-> + */
-> +u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
-> +{
-> +	struct arm_smccc_res	res;
-> +	u64			control;
-> +
-> +	control = (u64)code | HV_HYPERCALL_FAST_BIT;
-> +
-> +	arm_smccc_1_1_hvc(HV_FUNC_ID, control, input1, input2, &res);
-> +	return res.a0;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_do_fast_hypercall16);
-> +
+> thanks,
+> 
+> greg k-h
 
-I'd like this to have been in arch/arm64/include/asm/mshyperv.h like its x86
-counterpart, but that's just my personal liking of symmetry. I see why it's here
-with its slow and 8-byte brethren.
+Sure, will check more on this. Thanks.
 
->  /*
->   * Set a single VP register to a 64-bit value.
->   */
-> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-> index 2e2f83bafcfb..2a900ba00622 100644
-> --- a/arch/arm64/include/asm/mshyperv.h
-> +++ b/arch/arm64/include/asm/mshyperv.h
-> @@ -40,6 +40,18 @@ static inline u64 hv_get_msr(unsigned int reg)
->  	return hv_get_vpreg(reg);
->  }
->  
-> +/*
-> + * Nested is not supported on arm64
-> + */
-> +static inline void hv_set_non_nested_msr(unsigned int reg, u64 value)
-> +{
-> +	hv_set_msr(reg, value);
-> +}
-
-empty line preferred here, also reported by checkpatch
-
-> +static inline u64 hv_get_non_nested_msr(unsigned int reg)
-> +{
-> +	return hv_get_msr(reg);
-> +}
-> +
->  /* SMCCC hypercall parameters */
->  #define HV_SMCCC_FUNC_NUMBER	1
->  #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index c020d5d0ec2a..258034dfd829 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -72,6 +72,8 @@ extern void * __percpu *hyperv_pcpu_output_arg;
->  
->  extern u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
->  extern u64 hv_do_fast_hypercall8(u16 control, u64 input8);
-> +extern u64 hv_do_fast_hypercall16(u16 control, u64 input1, u64 input2);
-> +
-
-checkpatch warns against putting externs in header files, and FWIW, if hv_do_fast_hypercall16()
-for arm64 were in arch/arm64/include/asm/mshyperv.h like its x86 counterpart, you probably
-wouldn't need this?
-
->  bool hv_isolation_type_snp(void);
->  bool hv_isolation_type_tdx(void);
->  
+Regards,
+Naman
 
 
