@@ -1,44 +1,45 @@
-Return-Path: <linux-hyperv+bounces-4144-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4142-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C2BEA48ACC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 22:48:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB1D2A48AC7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 22:47:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73C327A6CEA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 21:46:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAABA3AE1CA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Feb 2025 21:47:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3467271834;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03FFA271821;
 	Thu, 27 Feb 2025 21:47:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lOuYeJA3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CPtbNjbY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878831CEAA3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878EE27181C;
 	Thu, 27 Feb 2025 21:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740692852; cv=none; b=t6KRDreC/hNIiP86TRB93Ldhh+3SzOCX0m1vgb2oxs6hYd/hWKzxl5IN+2DUaN4jviGszk4GpFqCrEbiEutdjdhWONMYcCeFmX3meGln6A+VKcxPVcOvNBI+5GNhs3Xogjy1f+wwZEbUEIq2EMGmNJLFC1HOlsHdOIeyuTSBrts=
+	t=1740692851; cv=none; b=BS9vkcrl/KDJ2H+4/ltmM3GNi9oMskpLPSi9WJYs2a9Ir0nxF7+RnUkzkZGm/RhN8k/Z3A7hynHUmqYEBoj24B3YoGUAinFIft+MTzgdW99T8xI91dyzi29YuKCfApaCwUWrkiBhObNmUKa22KsegC37O07GtgB7eVLmRB5f6HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740692852; c=relaxed/simple;
-	bh=9FCDbYrZ+pmLez9tTc/X4RjK/3Ba6W2VlI1SDaCLe6Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bj9KmvAbgJ237bjSdL5hO/QgAwb4S5JAceSX7gHl/5MB1DvGOdet61HMU6GPggbVX53XI5MPsQ/dfC2g4/fqtuiUxW3mhAwIL+HWGZ3lvMNTU7TVhj/p6qmUOJxHd6nxjsngo/aVGgMdYcne0oDws868U75cJbTqWNSTuGGbjeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lOuYeJA3; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740692851; c=relaxed/simple;
+	bh=WySDr8RJ9iCLor9PMBDB1y+NCIU0CrhEp2pDvg0Fxyw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qRVp7/WJiz4t2Rrpr0n2hUW9qhL5aPDKln9NgZVhj89H2ifTc38sGWC+RNvzXAB21ZHMt71NL9NeXvUNRHkLPyynfPEz/NlMfjIsr9vJFQ8RIErv4Tfs1BZPlY0lPVjNt5YiazAfJrgDCWHhSqh2crX+leb9NyQyEukUx/kiaPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CPtbNjbY; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AEEFE210D0F6;
+	by linux.microsoft.com (Postfix) with ESMTPSA id E74CC210EAC2;
 	Thu, 27 Feb 2025 13:47:29 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEEFE210D0F6
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E74CC210EAC2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740692849;
-	bh=rcuQi3g5qOU/R6HpYnilX9s27PZ0U7+hs5GNfw7R11o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lOuYeJA3wBuNFJXaLyLBjKveedBeayr2PRDzbXq9jo3SkrrE4oGh927cZidbIRsq4
-	 yJUDiXl3oIfnYBPrY3FrvY9rYEMSAbRWe+6gFPT0IdnYvW99sLfBzP1PrnjPcJOFFl
-	 F9+/eL65hBUmr+rNlIvPdnZRFoh4iREb6n10tcDU=
+	s=default; t=1740692850;
+	bh=s3v611mj9neOZEEDQBmvrzVPT6h/ZL3vkxwXr7kCv58=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CPtbNjbYUG3bYxCW8gfwP1wQq74PCAZUa65DuX8Trtd2vyGokSj0v1R1J50MrDtEO
+	 B7XHRom2pFp7sEheXbWuuDj/gESJpE7mQcPhod6solvor+LjwBLuDZsD6e17p9CJMq
+	 SN63NDFXZMjXgR84Hg1pTYpHw6RTWjsmg0NZgXuc=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: bp@alien8.de,
 	dave.hansen@linux.intel.com,
@@ -56,10 +57,12 @@ To: bp@alien8.de,
 Cc: apais@microsoft.com,
 	benhill@microsoft.com,
 	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v3 0/2] x86/hyperv: VTL mode reboot fixes
-Date: Thu, 27 Feb 2025 13:47:26 -0800
-Message-ID: <20250227214728.15672-1-romank@linux.microsoft.com>
+Subject: [PATCH hyperv-next v3 1/2] x86/hyperv: Add VTL mode emergency restart callback
+Date: Thu, 27 Feb 2025 13:47:27 -0800
+Message-ID: <20250227214728.15672-2-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250227214728.15672-1-romank@linux.microsoft.com>
+References: <20250227214728.15672-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -68,51 +71,72 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The first patch defines a specialized machine emergency restart
-callback not to write to the physical address of 0x472 which is
-what the native_machine_emergency_restart() does unconditionally.
+By default, X86(-64) systems use the emergecy restart routine
+in the course of which the code unconditionally writes to
+the physical address of 0x472 to indicate the boot mode
+to the firmware (BIOS or UEFI).
 
-I first wanted to tweak that function[1], and in the course of
-the discussion it looked as the risks of doing that would
-outweigh the benefit: the bare-metal systems have likely adopted
-that behavior as a standard although I could not find any mentions
-of that magic address in the UEFI+ACPI specification.
+When the kernel itself runs as a firmware in the VTL mode,
+that write corrupts the memory of the guest upon emergency
+restarting. Preserving the state intact in that situation
+is important for debugging, at least.
 
-The second patch removes the need to always supply "reboot=t"
-to the kernel command line in the OpenHCL bootloader[2]. There is
-no other option at the moment; when/if it appears the newly added
-callback's code can be adjusted as required.
+Define the specialized machine callback to avoid that write
+and use the triple fault to perform emergency restart.
 
-[1] https://lore.kernel.org/all/20250109204352.1720337-1-romank@linux.microsoft.com/
-[2] https://github.com/microsoft/openvmm/blob/7a9d0e0a00461be6e5f3267af9ea54cc7157c900/openhcl/openhcl_boot/src/main.rs#L139
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+---
+ arch/x86/hyperv/hv_vtl.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-[V3]:
-    - Added verbs to the patch titles.
-      ** Thank you, Ingo!**
-
-[V2]: https://lore.kernel.org/linux-hyperv/97010881-4b5e-4fb7-b8b3-b6c9e440e692@linux.microsoft.com/
-    - Fixed the warning from the kernel robot about using C23.
-      ** Thank you, kernel robot!**
-
-    - Tightened up wording in the comments and the commit
-      descriptions.
-      ** Thank you, Saurabh!**
-
-    - Dropped the CC: stable tag as there is no specific commit
-      this patch series fixes.
-      ** Thank you, Saurabh!**
-
-[V1]: https://lore.kernel.org/linux-hyperv/20250117210702.1529580-1-romank@linux.microsoft.com/
-
-Roman Kisel (2):
-  x86/hyperv: Add VTL mode emergency restart callback
-  x86/hyperv: Add VTL mode callback for restarting the system
-
- arch/x86/hyperv/hv_vtl.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-
-base-commit: 3a7f7785eae7cf012af128ca9e383c91e4955354
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 4e1b1e3b5658..4421b75ad9a9 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -12,6 +12,7 @@
+ #include <asm/i8259.h>
+ #include <asm/mshyperv.h>
+ #include <asm/realmode.h>
++#include <asm/reboot.h>
+ #include <../kernel/smpboot.h>
+ 
+ extern struct boot_params boot_params;
+@@ -22,6 +23,27 @@ static bool __init hv_vtl_msi_ext_dest_id(void)
+ 	return true;
+ }
+ 
++/*
++ * The `native_machine_emergency_restart` function from `reboot.c` writes
++ * to the physical address 0x472 to indicate the type of reboot for the
++ * firmware. We cannot have that in VSM as the memory composition might
++ * be more generic, and such write effectively corrupts the memory thus
++ * making diagnostics harder at the very least.
++ */
++static void  __noreturn hv_vtl_emergency_restart(void)
++{
++	/*
++	 * Cause a triple fault and the immediate reset. Here the code does not run
++	 * on the top of any firmware, whereby cannot reach out to its services.
++	 * The inifinite loop is for the improbable case that the triple fault does
++	 * not work and have to preserve the state intact for debugging.
++	 */
++	for (;;) {
++		idt_invalidate();
++		__asm__ __volatile__("int3");
++	}
++}
++
+ void __init hv_vtl_init_platform(void)
+ {
+ 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+@@ -235,6 +257,7 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
+ 
+ int __init hv_vtl_early_init(void)
+ {
++	machine_ops.emergency_restart = hv_vtl_emergency_restart;
+ 	/*
+ 	 * `boot_cpu_has` returns the runtime feature support,
+ 	 * and here is the earliest it can be used.
 -- 
 2.43.0
 
