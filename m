@@ -1,199 +1,197 @@
-Return-Path: <linux-hyperv+bounces-4169-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4170-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE686A4A436
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 21:25:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0CFEA4A46C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 21:55:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8DEC88304C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 20:23:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BAA207A9CB7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 20:54:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C04023F388;
-	Fri, 28 Feb 2025 20:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E688E1B3953;
+	Fri, 28 Feb 2025 20:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AHwXlfxC"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Osq17ceN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DCC23F372;
-	Fri, 28 Feb 2025 20:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740774127; cv=none; b=BEOY/ULgCUl5tVok3ayVxJhiivvgN48Ng+j8LNBiek/OfiQwmwg3Bd3LMRz1OsRelJ5klWuqOjvEG9rc7ffyD30O/Lzos9waJau3nsguC3lmy5dL0xYhNtIr+QLgbAJiLV/jmgBT7u2KZZyWGPoh2vDeoFdCrNhQF+ht/+4bOBM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740774127; c=relaxed/simple;
-	bh=Y/3SElz8iaYCwSjvitdnGgLgPxggp/GvYFsotcJQ/cE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=c8oMfEheqiPv+qt8rWCxfjt+9xPsoqY1ROljywGwjdvBMORJmoHwPVip3bLnm8QPNUJ1wUNcA+tHXGcnKv+ERTD/134iETi1tBxwA/zDgoZwvOQGga8BeeeEtUBLB6OVhz/0Lnoa6n91bM1KaN1CvE4qhp9fKnJBRptA2cvKDPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AHwXlfxC; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.35.166] (c-24-22-154-137.hsd1.wa.comcast.net [24.22.154.137])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C698A210D0EA;
-	Fri, 28 Feb 2025 12:22:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C698A210D0EA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740774125;
-	bh=1+ex/PI1EKCfFK1H+WPecE98rrnjNmYMX0MiAFRCvj8=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=AHwXlfxC/UwT2KDJZxxxubZgc0m3IVcGilsc4NKNEzIU5QifQ07agHrbNmiy942b/
-	 rGO0voh/5Ip81GdgnjtJf1upTMe1spMlPxdqIAknZzNZF4SIv/ruxvWbY+bmOnnn9V
-	 AkU2wGDVWiIRjauUiCOlel9XnD8iCjZ/Xdt+LH3g=
-Message-ID: <9254eaa1-8ff0-4dd6-a443-5f127049bdaa@linux.microsoft.com>
-Date: Fri, 28 Feb 2025 12:22:04 -0800
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010007.outbound.protection.outlook.com [52.103.20.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D46823F38F;
+	Fri, 28 Feb 2025 20:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740776104; cv=fail; b=aTSOdNvxwqF0ZmY75AaejtL+aujVk55sL5MzeYrHz0GqyR64QgXldS9aG2H0SMHNv4nugDGJpszJLMduEaqXNCm7wn/239E9j0Q9NlatNgC/2NreLn6k7sgtst4lNneSQYdtvN3FhWb1DBhmBLLzl/kZuCaFOb8/ormDYKrUU64=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740776104; c=relaxed/simple;
+	bh=a9ctLcfk2Tj3STZ++wgPyITUqBmtWcGnqFLiU5QQd4k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZKRSJyZVg3QTLAmqnwnU/ypGH+ij24VnRu/cwfcW3FPGuRPtdrIDlbOf7dXbpMW45vPkqnXFBLE4eR9TuurHnsXmBJERqReDBCuxqkZ5Xsj40FsIK4J+L0Fsv/MqKysUgECnQJYIYwFddqnRfATXcwwdv4QtBBydxxxElx5X5QI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Osq17ceN; arc=fail smtp.client-ip=52.103.20.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o+0MHuNgV/h/1RE72KawHWwuzfpd8gFhAgKKIxniv4rLPIBY+nxFlnSB+hUMROlEt8g3YJTlscK7gieWjEl2EfxLXi9W4AHLVgXUeZrND4CxIxhacfdsUz2GHpv1yEWTo/Q3Q2BjFT0Mw3ls3AasU6huK4mZrYgIj5lUefVyXHKI/e3vtBLsxBbAVK8Kdtx+dKViSLBX4PSt7F4agd5QrKM+IRGkPLpg0Z9KB2mNDsBtI/hKaie2HxXMGNexmZwUP9jkGbhu3IZOV2l86fo5lqHir7mQxFJgBkGXI/3ICQiiSAdSAbtU+CxkaKglbjxeJK8BObVa9MBFs514uA80SQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=J6nVr3CKyMyh/+Gz1aTGsgWa1GaFzLqaXEZub+Q+CjY=;
+ b=R+jWvHIfdkQELnGVobewAfbmGkDFX0KHAKJPEAewI4taJeZHFBbNqFoh3uPsa0dVWfDFwS124DGTeRJIpjRiKcrZFEFrVB95szv68nqF4kPCKoB82dMKfeBk9PJr8e9UemwYY6ajYiRABXwbr/F4b5P/4dh72npr1qkVe4Ys9UwMNk0AiTWtBVnRAsxo/s2KkI+TWC/6fwqdpLzgbQ3ndsdjUxTFmz73VfdwAaBlxle0pSvOxiBXp7Zck8tpqAG1IhTQl2HIUpLp5/9872rAUMpcTPkZNg6s4n9WXRC4BUe1/TWhj6VI66/l2hv4pznkOLIz5+fVkURWd0fYCITvUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J6nVr3CKyMyh/+Gz1aTGsgWa1GaFzLqaXEZub+Q+CjY=;
+ b=Osq17ceN4Mbu+e5xOw1QOyTJrO7lqPTKKms4idOAmgOfSDY0IcwTVR06R9HtkFJxZ20RNBqRUMPNqms2Tz/cwjEgCpFHAHQTB5TlJ0Dor/usNf81D3t8xn9FYukOYGbxVnDOdZ8n4bM5AyslKBsd5eolanfaM13PdK2Biy0qBDtP9fZlGANw1dTYqeMMCKhFl+VbWDOxYtjXQ42G1lIj8X8iWT+ElegMCWOoGc4UewYpwnksqTTQnUb5A6uS49rcYHdGQ5EoVVVgrKLZZ471FqjQ3YPuFTyopcNmpivQ1QQYS0pl4ptgNcvbXrCUzwTYfBQLK09MP8W7Iw2PHFtqCA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SA3PR02MB9346.namprd02.prod.outlook.com (2603:10b6:806:31c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
+ 2025 20:55:00 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8466.020; Fri, 28 Feb 2025
+ 20:55:00 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
+	<benhill@microsoft.com>, "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+Subject: RE: [PATCH hyperv-next] scsi: storvsc: Don't call the packet status
+ the hypercall status
+Thread-Topic: [PATCH hyperv-next] scsi: storvsc: Don't call the packet status
+ the hypercall status
+Thread-Index: AQHbiW/CBMS6VYjfVkGy2I3sv9oGd7NdL2GA
+Date: Fri, 28 Feb 2025 20:55:00 +0000
+Message-ID:
+ <SN6PR02MB4157749BCF2F3226008575E0D4CC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250227233110.36596-1-romank@linux.microsoft.com>
+In-Reply-To: <20250227233110.36596-1-romank@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA3PR02MB9346:EE_
+x-ms-office365-filtering-correlation-id: 0af0234c-ba4c-403e-4743-08dd583a2a9a
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8060799006|15080799006|19110799003|8062599003|461199028|12121999004|440099028|3412199025|13041999003|102099032|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?v8EFk7ICjzehGB0wOmc51PNO6gqPFCqatetfphtoXag5mW+GRsJ+zrxq7TkC?=
+ =?us-ascii?Q?lDcOLpIIcqzEPa+kBxNC7wAcpn1nWpFUeMHUJd09J8xQny8udTV88H4w0ABY?=
+ =?us-ascii?Q?ZlBltkCAApKgd3kW3idxeg7zfcX0il2t14uHPsugGmgq0O0Hf/rXvGCHDP13?=
+ =?us-ascii?Q?1U06H/tJz4yRgHQS19SzhjpU0BYVw+5lV6TcDNI9rDW3JIidTzB9IZOtma6w?=
+ =?us-ascii?Q?Ccb1vdijRzoAazdz9AF+ygE92gKjrq/XRo0P+dTciRuV3pa1wcjPh+Glw+2p?=
+ =?us-ascii?Q?Vi1DsI97Y2rIUkFLzIgxLXq4zTFbdyWgiUv3pIMhbMCUC9nSF8lAxCViOgE9?=
+ =?us-ascii?Q?dy11sIpEtqpcEelc2oeJB4VsDoYFB6TpgNGizmOIyC8anxPoTc2IVpF2IHpN?=
+ =?us-ascii?Q?erxtCN9SZFVf2UOsIgm0XBQxQBPSZT6MrBSmI+TZ5vceHV1x0tTgaArenK3A?=
+ =?us-ascii?Q?9QbA5ti1kVEaTs0+wW1JcyFIqGFJ3e/N8gWSdgLIWGOY7e9Z3CP8m+pnWb9S?=
+ =?us-ascii?Q?sk/lcvm3Kio1ICIRyFiC7aEusui7sEv99hRjJ+NiOZmBd4cXshXg9uu+CoU4?=
+ =?us-ascii?Q?tTYyvNhjdpwmXIrUR9D/3BgyrxyNZqlgenrGbXCBrdExN/Ey3G+Dpqe18zfv?=
+ =?us-ascii?Q?UyQkgEF7ZbHRjJPx0fbc8lfNJU65XSPVSs8lTw3pJaWlKhw/N7rBST0yVlcM?=
+ =?us-ascii?Q?kSzK/vO8vPiUYGXVB8F6Oum5BnE43zI8yNjt1C/hsn57SEn7hW4wvaIryIFQ?=
+ =?us-ascii?Q?zQNoWDaNTpQbuN6gx8MK4aDkJhLaDoIRKpkuaJ9ub9i7tDe/nkKQ7K/ieEHl?=
+ =?us-ascii?Q?j0qpiLJRX7oEr8rMr5ZYfXCJ6NfOaOo+MpXwpV8nCm6GSK0z+tNDpChG02pv?=
+ =?us-ascii?Q?Ga0xy9fowQPwV7a2E0XK2YmGediOJdA6Bju1APLda1sNyFIIpfZmoFMlLAJ2?=
+ =?us-ascii?Q?ufh8JT8yhDZU6qded6OlNfIpt41jWbHmeKS2bOdXZ+uk0sghMRP3p3s9vrqQ?=
+ =?us-ascii?Q?aXV0b1D2CvlyK50G7MFi8r7NpTDX8Ed63Zj7AA02tC5YevWo3uybcphHpJej?=
+ =?us-ascii?Q?RoOXT5AenvXx5sK2iLQ0MNrtDIVRMML54JN0yYH5HbyIGUE4dByObuTNMhMS?=
+ =?us-ascii?Q?TDCc8cDccLRPglrJ9axj8zZ9uxZF2itJJg=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?bTWoeXZoOxO+rzdCextrvWWLnXrIgR3LJvfi8cckMemFQhU0zsBe0fl59eNG?=
+ =?us-ascii?Q?clt2Eu74+5xehZrTSJ/O0bTvWyeT4wpYGo9mMzb7ismGb3aHqisCNpyoXI1w?=
+ =?us-ascii?Q?tjXN0GX1iPq2T7a9nOGkPCTx5dFlyYsj/kptFoLCeDNqS/SdMbX3wAJgfVyD?=
+ =?us-ascii?Q?k4tLOS0HIUYZX8q6C1/L2FllG2VvhHIuhN5/rqUNYIk24o6ABIyoUevDeRWV?=
+ =?us-ascii?Q?k0GyaTj7usnBP2aVktVZycCgf6QkQsWlArsd2IW5KNZ4ibyTmMxwuwS7Qfv+?=
+ =?us-ascii?Q?pVodpx82QNdM6U5njJ5DxPXaU/TgVReKc5uKBRXqGlhPkglV/WYi3McTivBV?=
+ =?us-ascii?Q?MsbVuYWVlMJWad0uZyeNiKr0O//OX1LoxSVnTW6sK7L33996Nr2xfAt4hgv8?=
+ =?us-ascii?Q?iQ+XuZggOcul3BbOCoCH7XqLYwu0u39jqa0SVWgh4T3A7BiSJgCwvguxVS1y?=
+ =?us-ascii?Q?FpjfIe3PG3iVOXcnMwC54yr8s1eHLOMmjPd2JMnaHunw/0SE0ZdKYAyTGIkx?=
+ =?us-ascii?Q?X+CnVAAenRhMdDAa4GFHEI50b9/R28m7i52HoTKOBaZZjaNDmCcyEOhGtqVH?=
+ =?us-ascii?Q?qPy/yN3Ji883YvFEv9A1FUxO3vBtBsSM6dqb1OvVHLj0nSakwzSoWUXFMGf5?=
+ =?us-ascii?Q?TZhc442cjl8NzoUSZLh47VxXJhVwcADIhj15d9OXleWkGWkKH/nCbXKdMH9T?=
+ =?us-ascii?Q?wefpaHWb9sfDiK/Mdhy82P6RwjbP340y1vC/62eaj/8PhyjcAMQ0P8XXdsh2?=
+ =?us-ascii?Q?j4cHxjXf1C5iJWpwkGHqtkfK38DHIh6G5Kj3sT/R54fv1JjkJWDkQ5uM/5bB?=
+ =?us-ascii?Q?UXkkqpZivIWLqtjIKzFGOyj1gN/ir1hiRQiHrrK5tx32DWKEInLTwLwUawT3?=
+ =?us-ascii?Q?KA54WyhQBr1f04iPAVqLv/yJ2U16fvmPuQCaAwqwxc6mcMVjPgrP1h1mappq?=
+ =?us-ascii?Q?UBDn0RAmFLKjgeSa85CrYxXF5IzE9Fjm0kmFzYec2CfrAtp0Dr0+y4IWRWKK?=
+ =?us-ascii?Q?uRj/lAT9/7gY9yp9qQ8KDMnMNZlebEd3JuXac3xWCa0koDgzH4RTe8XW/CMb?=
+ =?us-ascii?Q?bgldXICRgrJ/ngZpQGGaErUc7I+J79ly2nLJ4N/rK7BUR07k0icbbKAa6tlu?=
+ =?us-ascii?Q?wJ38P/XL8lILGg9VTjvgG37/s43rF/7KXzQK0HMMKTak2GEIjXsJQuVa3L+Y?=
+ =?us-ascii?Q?7nUT6+XJ++BC3+OGc923XSQMIREhe4nJ91El0iCeHY4zcnG021UYKWpUuc0?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com,
- decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
- joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
- jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
- ssengar@linux.microsoft.com, apais@linux.microsoft.com,
- Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
- gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
- muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
- lenb@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
-To: Roman Kisel <romank@linux.microsoft.com>
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
- <74af19c4-639f-4bcc-b667-b5f102bbb312@linux.microsoft.com>
- <8338dd00-3aa4-418f-a547-1c19623358cb@linux.microsoft.com>
- <49a69fe3-fca5-426d-999d-61ee0c8f60f3@linux.microsoft.com>
- <70b62e52-639a-4026-9a52-102d1de46ffd@linux.microsoft.com>
- <212cc582-845d-42b2-89f2-1e9579f752ec@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <212cc582-845d-42b2-89f2-1e9579f752ec@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0af0234c-ba4c-403e-4743-08dd583a2a9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2025 20:55:00.1955
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR02MB9346
 
-On 2/28/2025 9:20 AM, Roman Kisel wrote:
-> 
-> 
-> On 2/27/2025 3:25 PM, Easwar Hariharan wrote:
->> On 2/27/2025 3:08 PM, Roman Kisel wrote:
-> 
-> [...]
-> 
->>> Would be great to learn the details to understand how this function is
->>> going to improve the situation:
->>>
->>> 1. How come the hex error code was useless, what is not matching
->>>     anything in the Linux headers?
->>
->> It doesn't match anything in the Linux headers, but it's an NTSTATUS, not HVSTATUS.
->>
-> 
-> That is what it looks like from the code, I posted the details in the
-> parallel thread.
-> 
-> Here is a fix:
-> https://lore.kernel.org/linux-hyperv/20250227233110.36596-1-romank@linux.microsoft.com/
-> 
-> Also I think the commit description in your patch
-> 
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d2138eab8cde61e0e6f62d0713e45202e8457d6d
-> 
-> conflates the hypervisor (ours runs bare-metal, Type 1) and the VMMs
-> (Virtual Machine Monitors)+VSPs (Virtual Service Providers, e.g StorVSP
-> that implements SCSI) running in the host/root/dom0 partition.
+From: Roman Kisel <romank@linux.microsoft.com> Sent: Thursday, February 27,=
+ 2025 3:31 PM
+>=20
+> The log statement reports the packet status code as the hypercall
+> status code which causes confusion when debugging.
+>=20
+> Fix the name of the datum being logged.
+>=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  drivers/scsi/storvsc_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index a8614e54544e..d7ec79536d9a 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -1183,7 +1183,7 @@ static void storvsc_on_io_completion(struct storvsc=
+_device *stor_device,
+>  			STORVSC_LOGGING_WARN : STORVSC_LOGGING_ERROR;
+>=20
+>  		storvsc_log_ratelimited(device, loglevel,
+> -			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x hv 0x%x\n",
+> +			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x sts 0x%x\n",
+>  			scsi_cmd_to_rq(request->cmd)->tag,
+>  			stor_pkt->vm_srb.cdb[0],
+>  			vstor_packet->vm_srb.scsi_status,
 
-Agreed, that was what I was led to believe, your patch would help with that
-miscommunication, though not in its current form. See my review comment in that
-thread.
+FWIW, I added that last status value labelled "hv" in commit 08f76547f08d. =
+And
+to confirm the discussion on the other thread, it's not a hypercall status =
+-- it's a
+standard Windows NT status returned by the host-side VMBus or storvsp code.
+The "hv" is shorthand for Hyper-V, not hypercall. Perhaps that status is
+interpretable in a Windows guest, but it's not really interpretable in a Li=
+nux
+guest. The hex value would be useful only in the context of a support case
+where someone on the host side could be engaged to help with the
+interpretation.
 
-> 
->> Coming from the PoV of a user, it would be a much more useful message to see:
->>
->> [  249.512760] hv_storvsc fd1d2cbd-ce7c-535c-966b-eb5f811c95f0: tag#683 cmd 0x28 status: scsi 0x2 srb 0x4 hv STATUS_UNSUCCESSFUL
->>
->> than
->>
->> [  249.512760] hv_storvsc fd1d2cbd-ce7c-535c-966b-eb5f811c95f0: tag#683 cmd 0x28 status: scsi 0x2 srb 0x4 hv 0xc0000001
->>
-> 
-> It is likely that the PoV of a user that you've mentioned is actually
-> a PoV of a (kernel) developer.
+I have no strong opinions on the label. Changing it from "hv" to "sts" or
+to "host" works for me.
 
-Actually, no, it's PoV of the WSL users that are having the discussion in
-the linked github issue. FWIW, that issue also occurred in Azure with multiple
-incidents coming into our queue because of the unusable flood of error messages.
-
-> It is hard to imagine that folks running
-> web sites, DB servers, LoBs, LLMs, etc. in Hyper-V VMs care about the
-> lowest software level of the virt stack in the form of the symbolic
-> name or the hex code. They need their VMs to be reliable or suggest
-> what the user may try if a configuration error is suspected.
-> 
-> To make the error log message useful to the user, the message should
-> mention ways of remediation or at least hint what might've gotten
-> wedged. Without that, that's only useful for the people who work with
-> the kernel code proper or the kernel interface to the user land.
-
-There's a step between seeing the issue and fixing it that you're missing,
-i.e. the reporting.
-
-An issue that says "flood of hv_storvsc errors reporting status
-unsuccessful" is better than the same without that status information:
-https://github.com/microsoft/WSL/issues/9173
-
-> 
-> So I'd think that the hex error codes from the hypervisor give the user
-> exactly as much as the error symbolic names do to get the system to the
-> desired state: nothing. 
-I continue to disagree, seeing HV_STATUS_NO_RESOURCES is better than 0x1D,
-because the user may think to look at `top` or `free -h` or similar to see
-what could be killed to improve the situation.
-
-> Even less when the error reported "Unknown" :)
-
-I agree on the uselessness of "Unknown" to the user, except as already mentioned
-below, as a prompt for the code to be updated.
-
-> 
->>> 2. How having "Unknown" in the log can possibly be better?
->>
->> IMHO, seeing "Unknown" in an error report means that there's a new return value
->> that needs to be mapped to errno in hv_status_to_errno() and updated here as well.
->>
-> 
-> It means that to the developer. To the user, it means the developers
-> messed something up and to make matters even worse they didn't leave any
-> breadcrumbs (e.g. the hex code) to see what's wrong to help the user and
-> themselves: there is just that "Unknown" thing in the log.
-
-I think Nuno's compromise addresses this very well, to also print the hex code.
-
-> 
->>> 3. Given that the select hv status codes and the proposed strings have
->>>     1:1 correspondence, and there is the 1:N catch-all case for the
->>>     "Unknown", how's that better?
->>>
->>
->> I didn't really follow this question, but I suppose the answer to Q2 answers this as
->> well. If not, please expand and I'll try to answer.
->>
-> 
-> Sorry about that chunk, hit "Send" without looking the e-mail over
-> another time. Appreciate the discussion very much!
-> 
-> 
->> Thanks,
->> Easwar (he/him)
-> 
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
