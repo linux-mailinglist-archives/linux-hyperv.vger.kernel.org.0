@@ -1,509 +1,397 @@
-Return-Path: <linux-hyperv+bounces-4161-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4162-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B69DCA48DEB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 02:27:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F95DA49843
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 12:24:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 547683A735A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 01:27:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D9A4173E34
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Feb 2025 11:24:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A80B24B34;
-	Fri, 28 Feb 2025 01:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE37025F798;
+	Fri, 28 Feb 2025 11:24:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BIgrT5+S"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RUajs/vt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E602DF42;
-	Fri, 28 Feb 2025 01:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49495849C;
+	Fri, 28 Feb 2025 11:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740706036; cv=none; b=ToNsOz6x6xdpzhhHVCDuu9nirksavkGPAzQgGmYozMYW2Q1iGZGEN7quFn8eNbFPyuHZke1F14hbmnA43zEfxP89zl27tOA3AfLrmK3iX6AvGytn+Ug4gtnNpHgsK0cYorNcEK5gB5Zf+JBg+etlpSQoAZcQtSH5ku4kskIy0RI=
+	t=1740741841; cv=none; b=umf6R+Da+FcK+MzDKnQh7FXWL4qt9B7bdmM5IaneoQOO7OeJhLK5vZda8hyspeYvo3h0NKnlPBgAAD1FykJ6LJWQhLKI7/NLUmeKn6ME/3UbFMde0xns25+8UXs+Bd9Vv1tGzIQTOEb+wzFulFMFPc+0P0BMmR5cBui9WaSPlTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740706036; c=relaxed/simple;
-	bh=DRIZE59qfbLrhjyDe2fdcZWo/OrPyOhFIGVU0MOKC60=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EaNW2M9YfQQ7NnzsQtLxcMACXvxhUxu5Zmr1Tp95P2YhbkZbAb2iM9dyxxSnEz0mv5wFjC3b0jge/cVIRv7Yy/6EkOFRkqFUx1jdCMsq1KLp8jOyHaF+m74Y5oiv+XfaNHFLBoQ6GDR5HWdfMrafS53KvT/1ECb6DpUfwZOjR8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BIgrT5+S; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.35.166] (c-24-22-154-137.hsd1.wa.comcast.net [24.22.154.137])
-	by linux.microsoft.com (Postfix) with ESMTPSA id F02D4210EAC3;
-	Thu, 27 Feb 2025 17:27:12 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F02D4210EAC3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740706033;
-	bh=lr/v4YSSk6nndg6C8G4rlBUxgxXkwSzTgFFFPuEsycA=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=BIgrT5+SvSDsUhI4dSQuzSDtsU2JxYoa+o7oeZyCtJeApFB2GkyENAyE0j90AMgZg
-	 g9PwNRy7A8e7K2aBhaoZ1ULd6xdyB9Zqe6CTlTXCjFQG6lEKHN1TngAlTGuaJ88l5i
-	 UXhIXfRMrROnFNFKl8a91qazyZ/STWGm0DOwxt1Y=
-Message-ID: <4fc076cd-7ac0-4569-909c-9c1abc3ae80c@linux.microsoft.com>
-Date: Thu, 27 Feb 2025 17:27:11 -0800
+	s=arc-20240116; t=1740741841; c=relaxed/simple;
+	bh=hcBMVObYlSy4kfKgZ2QaFVxthR2uOFOjZ0tAFJ/Ueuw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Mn2zdTxZCH8L+2/AYvXyUvfv51KxjL9jSYL/zI6hCo1/5JkQljTq11Czaj8mltPtsi/DGlCtKgREUI1nEyMD1eT25suY7J3olxu19AMh7GpHCY2z3ZFljQs2Bi2BHazZzxDWyRhUldCSr31Ae1Z5qfIPT9bWX+aMLsaDdNYFMvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RUajs/vt; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hcBMVObYlSy4kfKgZ2QaFVxthR2uOFOjZ0tAFJ/Ueuw=; b=RUajs/vt2biYqM9UDHxwh9xDbF
+	iewMUZ54B9iYKsjFjSECIrcOSHa/86TB1yUlcxyB4PIX2/X64AjUZcg9/LMPtn4T0DlMriBYHjpOG
+	CecVudmlW7pi4Cydal5gh513Rm8NbDXC61p0ux3Bw8zjGhi96zwxtbvKwbfHxqOO6CcfzSDtrB3jO
+	lv9+eAHIoJIzhWvkIBfQIYjn2Zmo0KtW3eLt9fxglEjpigqpkS4ZoynsNDMMoA66a5syTwKWj+sxC
+	9GKAM0smKhawtYJ3+e5PsZsZ77TvWoKqZluDFU8oEzo696NxXxoq30iiAuWGNCDtG6hz8vwybrizJ
+	wrRAiIDw==;
+Received: from 54-240-197-236.amazon.com ([54.240.197.236] helo=freeip.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tnyT1-00000001lhq-0SHy;
+	Fri, 28 Feb 2025 11:23:43 +0000
+Message-ID: <5bdb92ab83269b49ad8fbbe8f54df01f6b98ea8f.camel@infradead.org>
+Subject: Re: [PATCH v2 00/38] x86: Try to wrangle PV clocks vs. TSC
+From: David Woodhouse <dwmw2@infradead.org>
+To: Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Juergen Gross <jgross@suse.com>,  "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, Andy
+ Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, John Stultz <jstultz@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org, Tom Lendacky
+	 <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>
+Date: Fri, 28 Feb 2025 11:23:41 +0000
+In-Reply-To: <20250227021855.3257188-1-seanjc@google.com>
+References: <20250227021855.3257188-1-seanjc@google.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-ch88MIQEh5lgQIw/7rP6"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org,
- eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, mhklinux@outlook.com, decui@microsoft.com,
- catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
- arnd@arndb.de, jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
- ssengar@linux.microsoft.com, apais@linux.microsoft.com,
- Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
- gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
- muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
- lenb@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH v5 09/10] hyperv: Add definitions for root partition
- driver to hv headers
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-10-git-send-email-nunodasneves@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <1740611284-27506-10-git-send-email-nunodasneves@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-On 2/26/2025 3:08 PM, Nuno Das Neves wrote:
-> A few additional definitions are required for the mshv driver code
-> (to follow). Introduce those here and clean up a little bit while
-> at it.
-> 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> ---
->  include/hyperv/hvgdk_mini.h |  64 ++++++++++++++++-
->  include/hyperv/hvhdk.h      | 132 ++++++++++++++++++++++++++++++++++--
->  include/hyperv/hvhdk_mini.h |  91 +++++++++++++++++++++++++
->  3 files changed, 280 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-> index 58895883f636..e4a3cca0cbce 100644
-> --- a/include/hyperv/hvgdk_mini.h
-> +++ b/include/hyperv/hvgdk_mini.h
-> @@ -13,7 +13,7 @@ struct hv_u128 {
->  	u64 high_part;
->  } __packed;
->  
 
-<snip>
+--=-ch88MIQEh5lgQIw/7rP6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->  union hv_input_vtl {
->  	u8 as_uint8;
->  	struct {
-> @@ -1325,6 +1344,49 @@ struct hv_retarget_device_interrupt {	 /* HV_INPUT_RETARGET_DEVICE_INTERRUPT */
->  	struct hv_device_interrupt_target int_target;
->  } __packed __aligned(8);
->  
-> +enum hv_intercept_type {
-> +#if defined(CONFIG_X86_64)
+On Wed, 2025-02-26 at 18:18 -0800, Sean Christopherson wrote:
+> This... snowballed a bit.
+>=20
+> The bulk of the changes are in kvmclock and TSC, but pretty much every
+> hypervisor's guest-side code gets touched at some point.=C2=A0 I am reaon=
+sably
+> confident in the correctness of the KVM changes.=C2=A0 For all other hype=
+rvisors,
+> assume it's completely broken until proven otherwise.
+>
+> Note, I deliberately omitted:
+>=20
+> =C2=A0 Alexey Makhalov <alexey.amakhalov@broadcom.com>
+> =C2=A0 jailhouse-dev@googlegroups.com
+>=20
+> from the To/Cc, as those emails bounced on the last version, and I have z=
+ero
+> desire to get 38*2 emails telling me an email couldn't be delivered.
+>=20
+> The primary goal of this series is (or at least was, when I started) to
+> fix flaws with SNP and TDX guests where a PV clock provided by the untrus=
+ted
+> hypervisor is used instead of the secure/trusted TSC that is controlled b=
+y
+> trusted firmware.
+>=20
+> The secondary goal is to draft off of the SNP and TDX changes to slightly
+> modernize running under KVM.=C2=A0 Currently, KVM guests will use TSC for
+> clocksource, but not sched_clock.=C2=A0 And they ignore Intel's CPUID-bas=
+ed TSC
+> and CPU frequency enumeration, even when using the TSC instead of kvmcloc=
+k.
+> And if the host provides the core crystal frequency in CPUID.0x15, then K=
+VM
+> guests can use that for the APIC timer period instead of manually calibra=
+ting
+> the frequency.
+>=20
+> Lots more background on the SNP/TDX motiviation:
+> https://lore.kernel.org/all/20250106124633.1418972-13-nikunj@amd.com
 
-These chosen ifdef's come across kinda arbitrary. The hypervisor code has
-this enabled for both 32-bit and 64-bit x86, but you've chosen x86_64 only.
-I thought that may be because we only intend to support root partition for 64-bit
-platforms, but then, below...
+Looks good; thanks for tackling this.
 
-> +	HV_INTERCEPT_TYPE_X64_IO_PORT			= 0x00000000,
-> +	HV_INTERCEPT_TYPE_X64_MSR			= 0x00000001,
-> +	HV_INTERCEPT_TYPE_X64_CPUID			= 0x00000002,
-> +#endif
-> +	HV_INTERCEPT_TYPE_EXCEPTION			= 0x00000003,
-> +	/* Used to be HV_INTERCEPT_TYPE_REGISTER */
-> +	HV_INTERCEPT_TYPE_RESERVED0			= 0x00000004,
-> +	HV_INTERCEPT_TYPE_MMIO				= 0x00000005,
-> +#if defined(CONFIG_X86_64)
-> +	HV_INTERCEPT_TYPE_X64_GLOBAL_CPUID		= 0x00000006,
-> +	HV_INTERCEPT_TYPE_X64_APIC_SMI			= 0x00000007,
-> +#endif
-> +	HV_INTERCEPT_TYPE_HYPERCALL			= 0x00000008,
-> +#if defined(CONFIG_X86_64)
-> +	HV_INTERCEPT_TYPE_X64_APIC_INIT_SIPI		= 0x00000009,
-> +	HV_INTERCEPT_MC_UPDATE_PATCH_LEVEL_MSR_READ	= 0x0000000A,
-> +	HV_INTERCEPT_TYPE_X64_APIC_WRITE		= 0x0000000B,
-> +	HV_INTERCEPT_TYPE_X64_MSR_INDEX			= 0x0000000C,
-> +#endif
-> +	HV_INTERCEPT_TYPE_MAX,
-> +	HV_INTERCEPT_TYPE_INVALID			= 0xFFFFFFFF,
-> +};
-> +
-> +union hv_intercept_parameters {
-> +	/*  HV_INTERCEPT_PARAMETERS is defined to be an 8-byte field. */
-> +	__u64 as_uint64;
-> +#if defined(CONFIG_X86_64)
-> +	/* HV_INTERCEPT_TYPE_X64_IO_PORT */
-> +	__u16 io_port;
-> +	/* HV_INTERCEPT_TYPE_X64_CPUID */
-> +	__u32 cpuid_index;
-> +	/* HV_INTERCEPT_TYPE_X64_APIC_WRITE */
-> +	__u32 apic_write_mask;
-> +	/* HV_INTERCEPT_TYPE_EXCEPTION */
-> +	__u16 exception_vector;
-> +	/* HV_INTERCEPT_TYPE_X64_MSR_INDEX */
-> +	__u32 msr_index;
-> +#endif
-> +	/* N.B. Other intercept types do not have any parameters. */
-> +};
-> +
->  /* Data structures for HVCALL_MMIO_READ and HVCALL_MMIO_WRITE */
->  #define HV_HYPERCALL_MMIO_MAX_DATA_LENGTH 64
->  
-> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
-> index 64407c2a3809..1b447155c338 100644
-> --- a/include/hyperv/hvhdk.h
-> +++ b/include/hyperv/hvhdk.h
-> @@ -19,11 +19,24 @@
->  
->  #define HV_VP_REGISTER_PAGE_VERSION_1	1u
->  
-> +#define HV_VP_REGISTER_PAGE_MAX_VECTOR_COUNT		7
-> +
-> +union hv_vp_register_page_interrupt_vectors {
-> +	u64 as_uint64;
-> +	struct {
-> +		u8 vector_count;
-> +		u8 vector[HV_VP_REGISTER_PAGE_MAX_VECTOR_COUNT];
-> +	} __packed;
-> +} __packed;
-> +
->  struct hv_vp_register_page {
->  	u16 version;
->  	u8 isvalid;
->  	u8 rsvdz;
->  	u32 dirty;
-> +
-> +#if IS_ENABLED(CONFIG_X86)
-> +
+I think there are still some things from my older series at
+https://lore.kernel.org/all/20240522001817.619072-1-dwmw2@infradead.org/
+which this doesn't address. Specifically, the accuracy and consistency
+of what KVM advertises to the guest as the KVM clock. And as the Xen
+clock, more to the point =E2=80=94 because guests generally *know* that the=
+ KVM
+clock is awful, but expect better of the Xen clock.
 
-...you've chosen to include 32bit here, where the hypervisor code supports both.
+With a sane and consistent TSC, the mul/shift factors that KVM presents
+to the guest in the kvmclock structure should basically *never* change.
+Not even on live update (or live migration between hosts with the same
+host TSC frequency).=20
 
-Confused
+Take live update as the simple case: serializing the QEMU state and
+restarting it immediately, just to update QEMU with the guest
+experiencing only a few milliseconds of steal time.
 
->  	union {
->  		struct {
->  			/* General purpose registers
-> @@ -95,6 +108,22 @@ struct hv_vp_register_page {
->  	union hv_x64_pending_interruption_register pending_interruption;
->  	union hv_x64_interrupt_state_register interrupt_state;
->  	u64 instruction_emulation_hints;
-> +	u64 xfem;
-> +
-> +	/*
-> +	 * Fields from this point are not included in the register page save chunk.
-> +	 * The reserved field is intended to maintain alignment for unsaved fields.
-> +	 */
-> +	u8 reserved1[0x100];
-> +
-> +	/*
-> +	 * Interrupts injected as part of HvCallDispatchVp.
-> +	 */
-> +	union hv_vp_register_page_interrupt_vectors interrupt_vectors;
-> +
-> +#elif IS_ENABLED(CONFIG_ARM64)
-> +	/* Not yet supported in ARM */
-> +#endif
->  } __packed;
->  
->  #define HV_PARTITION_PROCESSOR_FEATURES_BANKS 2
-> @@ -299,10 +328,11 @@ union hv_partition_isolation_properties {
->  #define HV_PARTITION_ISOLATION_HOST_TYPE_RESERVED   0x2
->  
->  /* Note: Exo partition is enabled by default */
-> -#define HV_PARTITION_CREATION_FLAG_EXO_PARTITION                    BIT(8)
-> -#define HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED                    BIT(13)
-> -#define HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED   BIT(19)
-> -#define HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE                   BIT(22)
-> +#define HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED		BIT(4)
-> +#define HV_PARTITION_CREATION_FLAG_EXO_PARTITION			BIT(8)
-> +#define HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED			BIT(13)
-> +#define HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED	BIT(19)
-> +#define HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE			BIT(22)
->  
->  struct hv_input_create_partition {
->  	u64 flags;
-> @@ -349,13 +379,23 @@ struct hv_input_set_partition_property {
->  enum hv_vp_state_page_type {
->  	HV_VP_STATE_PAGE_REGISTERS = 0,
->  	HV_VP_STATE_PAGE_INTERCEPT_MESSAGE = 1,
-> +	HV_VP_STATE_PAGE_GHCB,
->  	HV_VP_STATE_PAGE_COUNT
->  };
->  
->  struct hv_input_map_vp_state_page {
->  	u64 partition_id;
->  	u32 vp_index;
-> -	u32 type; /* enum hv_vp_state_page_type */
-> +	u16 type; /* enum hv_vp_state_page_type */
-> +	union hv_input_vtl input_vtl;
-> +	union {
-> +		u8 as_uint8;
-> +		struct {
-> +			u8 map_location_provided : 1;
-> +			u8 reserved : 7;
-> +		};
-> +	} flags;
-> +	u64 requested_map_location;
->  } __packed;
->  
->  struct hv_output_map_vp_state_page {
-> @@ -365,7 +405,14 @@ struct hv_output_map_vp_state_page {
->  struct hv_input_unmap_vp_state_page {
->  	u64 partition_id;
->  	u32 vp_index;
-> -	u32 type; /* enum hv_vp_state_page_type */
-> +	u16 type; /* enum hv_vp_state_page_type */
-> +	union hv_input_vtl input_vtl;
-> +	u8 reserved0;
-> +} __packed;
-> +
-> +struct hv_x64_apic_eoi_message {
-> +	__u32 vp_index;
-> +	__u32 interrupt_vector;
+The guest TSC has a fixed arithmetic relationship to the host TSC. That
+should *not* change across the live update; not by a single count.=20
+I don't believe the KVM APIs allow userspace to get that right, which
+is resolved by the KVM_VCPU_TSC_SCALE ioctl in patch 7 of that series:
+https://lore.kernel.org/all/20240522001817.619072-8-dwmw2@infradead.org/
 
-Can these be plain u32? Similar below...
+And then the KVM clock should have a fixed arithmetic relationship to
+the guest TSC, which should *also* not change. Not even over live
+migration =E2=80=94 userspace should ensure the guest TSC is as accurate as
+possible given NTP synchronisation between the hosts, and then the KVM
+clock remains a fixed function of the guest TSC (at least, if the guest
+TSC is the same frequency on source and destination). The existing KVM
+API doesn't allow userspace to get *that* right either, which is
+addressed by Jack's patch 3 of the series:
+https://lore.kernel.org/all/20240522001817.619072-4-dwmw2@infradead.org/
 
->  } __packed;
->  
->  struct hv_opaque_intercept_message {
-> @@ -515,6 +562,13 @@ struct hv_synthetic_timers_state {
->  	u64 reserved[5];
->  } __packed;
->  
-> +struct hv_async_completion_message_payload {
-> +	__u64 partition_id;
-> +	__u32 status;
-> +	__u32 completion_count;
-> +	__u64 sub_status;
-> +} __packed;
-> +
->  union hv_input_delete_vp {
->  	u64 as_uint64[2];
->  	struct {
-> @@ -649,6 +703,57 @@ struct hv_input_set_vp_state {
->  	union hv_input_set_vp_state_data data[];
->  } __packed;
->  
-> +union hv_x64_vp_execution_state {
-> +	__u16 as_uint16;
-> +	struct {
-> +		__u16 cpl:2;
-> +		__u16 cr0_pe:1;
-> +		__u16 cr0_am:1;
-> +		__u16 efer_lma:1;
-> +		__u16 debug_active:1;
-> +		__u16 interruption_pending:1;
-> +		__u16 vtl:4;
-> +		__u16 enclave_mode:1;
-> +		__u16 interrupt_shadow:1;
-> +		__u16 virtualization_fault_active:1;
-> +		__u16 reserved:2;
-> +	} __packed;
-> +};
-> +
-> +struct hv_x64_intercept_message_header {
-> +	__u32 vp_index;
-> +	__u8 instruction_length:4;
-> +	__u8 cr8:4; /* Only set for exo partitions */
-> +	__u8 intercept_access_type;
-> +	union hv_x64_vp_execution_state execution_state;
-> +	struct hv_x64_segment_register cs_segment;
-> +	__u64 rip;
-> +	__u64 rflags;
-> +} __packed;
-> +
-> +union hv_x64_memory_access_info {
-> +	__u8 as_uint8;
-> +	struct {
-> +		__u8 gva_valid:1;
-> +		__u8 gva_gpa_valid:1;
-> +		__u8 hypercall_output_pending:1;
-> +		__u8 tlb_locked_no_overlay:1;
-> +		__u8 reserved:4;
-> +	} __packed;
-> +};
-> +
-> +struct hv_x64_memory_intercept_message {
-> +	struct hv_x64_intercept_message_header header;
-> +	__u32 cache_type; /* enum hv_cache_type */
-> +	__u8 instruction_byte_count;
-> +	union hv_x64_memory_access_info memory_access_info;
-> +	__u8 tpr_priority;
-> +	__u8 reserved1;
-> +	__u64 guest_virtual_address;
-> +	__u64 guest_physical_address;
-> +	__u8 instruction_bytes[16];
-> +} __packed;
-> +
->  /*
->   * Dispatch state for the VP communicated by the hypervisor to the
->   * VP-dispatching thread in the root on return from HVCALL_DISPATCH_VP.
-> @@ -716,6 +821,7 @@ static_assert(sizeof(struct hv_vp_signal_pair_scheduler_message) ==
->  #define HV_DISPATCH_VP_FLAG_SKIP_VP_SPEC_FLUSH		0x8
->  #define HV_DISPATCH_VP_FLAG_SKIP_CALLER_SPEC_FLUSH	0x10
->  #define HV_DISPATCH_VP_FLAG_SKIP_CALLER_USER_SPEC_FLUSH	0x20
-> +#define HV_DISPATCH_VP_FLAG_SCAN_INTERRUPT_INJECTION	0x40
->  
->  struct hv_input_dispatch_vp {
->  	u64 partition_id;
-> @@ -730,4 +836,18 @@ struct hv_output_dispatch_vp {
->  	u32 dispatch_event; /* enum hv_vp_dispatch_event */
->  } __packed;
->  
-> +struct hv_input_modify_sparse_spa_page_host_access {
-> +	u32 host_access : 2;
-> +	u32 reserved : 30;
-> +	u32 flags;
-> +	u64 partition_id;
-> +	u64 spa_page_list[];
-> +} __packed;
-> +
-> +/* hv_input_modify_sparse_spa_page_host_access flags */
-> +#define HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_EXCLUSIVE  0x1
-> +#define HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_SHARED     0x2
-> +#define HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE      0x4
-> +#define HV_MODIFY_SPA_PAGE_HOST_ACCESS_HUGE_PAGE       0x8
-> +
->  #endif /* _HV_HVHDK_H */
-> diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-> index f8a39d3e9ce6..42e7876455b5 100644
-> --- a/include/hyperv/hvhdk_mini.h
-> +++ b/include/hyperv/hvhdk_mini.h
-> @@ -36,6 +36,52 @@ enum hv_scheduler_type {
->  	HV_SCHEDULER_TYPE_MAX
->  };
->  
-> +/* HV_STATS_AREA_TYPE */
-> +enum hv_stats_area_type {
-> +	HV_STATS_AREA_SELF = 0,
-> +	HV_STATS_AREA_PARENT = 1,
-> +	HV_STATS_AREA_INTERNAL = 2,
-> +	HV_STATS_AREA_COUNT
-> +};
-> +
-> +enum hv_stats_object_type {
-> +	HV_STATS_OBJECT_HYPERVISOR		= 0x00000001,
-> +	HV_STATS_OBJECT_LOGICAL_PROCESSOR	= 0x00000002,
-> +	HV_STATS_OBJECT_PARTITION		= 0x00010001,
-> +	HV_STATS_OBJECT_VP			= 0x00010002
-> +};
-> +
-> +union hv_stats_object_identity {
-> +	/* hv_stats_hypervisor */
-> +	struct {
-> +		u8 reserved[15];
-> +		u8 stats_area_type;
-> +	} __packed hv;
-> +
-> +	/* hv_stats_logical_processor */
-> +	struct {
-> +		u32 lp_index;
-> +		u8 reserved[11];
-> +		u8 stats_area_type;
-> +	} __packed lp;
-> +
-> +	/* hv_stats_partition */
-> +	struct {
-> +		u64 partition_id;
-> +		u8  reserved[7];
-> +		u8  stats_area_type;
-> +	} __packed partition;
-> +
-> +	/* hv_stats_vp */
-> +	struct {
-> +		u64 partition_id;
-> +		u32 vp_index;
-> +		u16 flags;
-> +		u8  reserved;
-> +		u8  stats_area_type;
-> +	} __packed vp;
-> +};
-> +
->  enum hv_partition_property_code {
->  	/* Privilege properties */
->  	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS			= 0x00010000,
-> @@ -47,19 +93,45 @@ enum hv_partition_property_code {
->  
->  	/* Compatibility properties */
->  	HV_PARTITION_PROPERTY_PROCESSOR_XSAVE_FEATURES		= 0x00060002,
-> +	HV_PARTITION_PROPERTY_XSAVE_STATES                      = 0x00060007,
->  	HV_PARTITION_PROPERTY_MAX_XSAVE_DATA_SIZE		= 0x00060008,
->  	HV_PARTITION_PROPERTY_PROCESSOR_CLOCK_FREQUENCY		= 0x00060009,
->  };
->  
-> +enum hv_snp_status {
-> +	HV_SNP_STATUS_NONE = 0,
-> +	HV_SNP_STATUS_AVAILABLE = 1,
-> +	HV_SNP_STATUS_INCOMPATIBLE = 2,
-> +	HV_SNP_STATUS_PSP_UNAVAILABLE = 3,
-> +	HV_SNP_STATUS_PSP_INIT_FAILED = 4,
-> +	HV_SNP_STATUS_PSP_BAD_FW_VERSION = 5,
-> +	HV_SNP_STATUS_BAD_CONFIGURATION = 6,
-> +	HV_SNP_STATUS_PSP_FW_UPDATE_IN_PROGRESS = 7,
-> +	HV_SNP_STATUS_PSP_RB_INIT_FAILED = 8,
-> +	HV_SNP_STATUS_PSP_PLATFORM_STATUS_FAILED = 9,
-> +	HV_SNP_STATUS_PSP_INIT_LATE_FAILED = 10,
-> +};
-> +
->  enum hv_system_property {
->  	/* Add more values when needed */
->  	HV_SYSTEM_PROPERTY_SCHEDULER_TYPE = 15,
-> +	HV_DYNAMIC_PROCESSOR_FEATURE_PROPERTY = 21,
-> +};
-> +
-> +enum hv_dynamic_processor_feature_property {
-> +	/* Add more values when needed */
-> +	HV_X64_DYNAMIC_PROCESSOR_FEATURE_MAX_ENCRYPTED_PARTITIONS = 13,
-> +	HV_X64_DYNAMIC_PROCESSOR_FEATURE_SNP_STATUS = 16,
->  };
->  
->  struct hv_input_get_system_property {
->  	u32 property_id; /* enum hv_system_property */
->  	union {
->  		u32 as_uint32;
-> +#if IS_ENABLED(CONFIG_X86)
-> +		/* enum hv_dynamic_processor_feature_property */
-> +		u32 hv_processor_feature;
-> +#endif
->  		/* More fields to be filled in when needed */
->  	};
->  } __packed;
-> @@ -67,9 +139,28 @@ struct hv_input_get_system_property {
->  struct hv_output_get_system_property {
->  	union {
->  		u32 scheduler_type; /* enum hv_scheduler_type */
-> +#if IS_ENABLED(CONFIG_X86)
-> +		u64 hv_processor_feature_value;
-> +#endif
->  	};
->  } __packed;
->  
-> +struct hv_input_map_stats_page {
-> +	u32 type; /* enum hv_stats_object_type */
-> +	u32 padding;
-> +	union hv_stats_object_identity identity;
-> +} __packed;
-> +
-> +struct hv_output_map_stats_page {
-> +	u64 map_location;
-> +} __packed;
-> +
-> +struct hv_input_unmap_stats_page {
-> +	u32 type; /* enum hv_stats_object_type */
-> +	u32 padding;
-> +	union hv_stats_object_identity identity;
-> +} __packed;
-> +
->  struct hv_proximity_domain_flags {
->  	u32 proximity_preferred : 1;
->  	u32 reserved : 30;
+The rest of the series is mostly fixing a bunch of places where KVM
+gratuitously recalculates the KVM clock that it advertises to the
+guest, and the fact that it does so *badly* in some cases, with a loss
+of precision that causes errors in the guest. You may already have
+addressed some of those; I'll go over my series and see what still
+applies on top of yours.
 
+>=20
+> v2:
+> =C2=A0- Add struct to hold the TSC CPUID output. [Boris]
+> =C2=A0- Don't pointlessly inline the TSC CPUID helpers. [Boris]
+> =C2=A0- Fix a variable goof in a helper, hopefully for real this time. [D=
+an]
+> =C2=A0- Collect reviews. [Nikunj]
+> =C2=A0- Override the sched_clock save/restore hooks if and only if a PV c=
+lock
+> =C2=A0=C2=A0 is successfully registered.
+> =C2=A0- During resome, restore clocksources before reading persistent tim=
+e.
+> =C2=A0- Clean up more warts created by kvmclock.
+> =C2=A0- Fix more bugs in kvmclock's suspend/resume handling.
+> =C2=A0- Try to harden kvmclock against future bugs.
+>=20
+> v1: https://lore.kernel.org/all/20250201021718.699411-1-seanjc@google.com
+>=20
+> Sean Christopherson (38):
+> =C2=A0 x86/tsc: Add a standalone helpers for getting TSC info from CPUID.=
+0x15
+> =C2=A0 x86/tsc: Add standalone helper for getting CPU frequency from CPUI=
+D
+> =C2=A0 x86/tsc: Add helper to register CPU and TSC freq calibration routi=
+nes
+> =C2=A0 x86/sev: Mark TSC as reliable when configuring Secure TSC
+> =C2=A0 x86/sev: Move check for SNP Secure TSC support to tsc_early_init()
+> =C2=A0 x86/tdx: Override PV calibration routines with CPUID-based calibra=
+tion
+> =C2=A0 x86/acrn: Mark TSC frequency as known when using ACRN for calibrat=
+ion
+> =C2=A0 clocksource: hyper-v: Register sched_clock save/restore iff it's
+> =C2=A0=C2=A0=C2=A0 necessary
+> =C2=A0 clocksource: hyper-v: Drop wrappers to sched_clock save/restore
+> =C2=A0=C2=A0=C2=A0 helpers
+> =C2=A0 clocksource: hyper-v: Don't save/restore TSC offset when using HV
+> =C2=A0=C2=A0=C2=A0 sched_clock
+> =C2=A0 x86/kvmclock: Setup kvmclock for secondary CPUs iff CONFIG_SMP=3Dy
+> =C2=A0 x86/kvm: Don't disable kvmclock on BSP in syscore_suspend()
+> =C2=A0 x86/paravirt: Move handling of unstable PV clocks into
+> =C2=A0=C2=A0=C2=A0 paravirt_set_sched_clock()
+> =C2=A0 x86/kvmclock: Move sched_clock save/restore helpers up in kvmclock=
+.c
+> =C2=A0 x86/xen/time: Nullify x86_platform's sched_clock save/restore hook=
+s
+> =C2=A0 x86/vmware: Nullify save/restore hooks when using VMware's sched_c=
+lock
+> =C2=A0 x86/tsc: WARN if TSC sched_clock save/restore used with PV sched_c=
+lock
+> =C2=A0 x86/paravirt: Pass sched_clock save/restore helpers during
+> =C2=A0=C2=A0=C2=A0 registration
+> =C2=A0 x86/kvmclock: Move kvm_sched_clock_init() down in kvmclock.c
+> =C2=A0 x86/xen/time: Mark xen_setup_vsyscall_time_info() as __init
+> =C2=A0 x86/pvclock: Mark setup helpers and related various as
+> =C2=A0=C2=A0=C2=A0 __init/__ro_after_init
+> =C2=A0 x86/pvclock: WARN if pvclock's valid_flags are overwritten
+> =C2=A0 x86/kvmclock: Refactor handling of PVCLOCK_TSC_STABLE_BIT during
+> =C2=A0=C2=A0=C2=A0 kvmclock_init()
+> =C2=A0 timekeeping: Resume clocksources before reading persistent clock
+> =C2=A0 x86/kvmclock: Hook clocksource.suspend/resume when kvmclock isn't
+> =C2=A0=C2=A0=C2=A0 sched_clock
+> =C2=A0 x86/kvmclock: WARN if wall clock is read while kvmclock is suspend=
+ed
+> =C2=A0 x86/kvmclock: Enable kvmclock on APs during onlining if kvmclock i=
+sn't
+> =C2=A0=C2=A0=C2=A0 sched_clock
+> =C2=A0 x86/paravirt: Mark __paravirt_set_sched_clock() as __init
+> =C2=A0 x86/paravirt: Plumb a return code into __paravirt_set_sched_clock(=
+)
+> =C2=A0 x86/paravirt: Don't use a PV sched_clock in CoCo guests with trust=
+ed
+> =C2=A0=C2=A0=C2=A0 TSC
+> =C2=A0 x86/tsc: Pass KNOWN_FREQ and RELIABLE as params to registration
+> =C2=A0 x86/tsc: Rejects attempts to override TSC calibration with lesser
+> =C2=A0=C2=A0=C2=A0 routine
+> =C2=A0 x86/kvmclock: Mark TSC as reliable when it's constant and nonstop
+> =C2=A0 x86/kvmclock: Get CPU base frequency from CPUID when it's availabl=
+e
+> =C2=A0 x86/kvmclock: Get TSC frequency from CPUID when its available
+> =C2=A0 x86/kvmclock: Stuff local APIC bus period when core crystal freq c=
+omes
+> =C2=A0=C2=A0=C2=A0 from CPUID
+> =C2=A0 x86/kvmclock: Use TSC for sched_clock if it's constant and non-sto=
+p
+> =C2=A0 x86/paravirt: kvmclock: Setup kvmclock early iff it's sched_clock
+>=20
+> =C2=A0arch/x86/coco/sev/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 9 +-
+> =C2=A0arch/x86/coco/tdx/tdx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 27 ++-
+> =C2=A0arch/x86/include/asm/kvm_para.h=C2=A0=C2=A0=C2=A0 |=C2=A0 10 +-
+> =C2=A0arch/x86/include/asm/paravirt.h=C2=A0=C2=A0=C2=A0 |=C2=A0 16 +-
+> =C2=A0arch/x86/include/asm/tdx.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> =C2=A0arch/x86/include/asm/tsc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 20 +++
+> =C2=A0arch/x86/include/asm/x86_init.h=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 -
+> =C2=A0arch/x86/kernel/cpu/acrn.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 5 +-
+> =C2=A0arch/x86/kernel/cpu/mshyperv.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 69 +=
+-------
+> =C2=A0arch/x86/kernel/cpu/vmware.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 11 +-
+> =C2=A0arch/x86/kernel/jailhouse.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 6 +-
+> =C2=A0arch/x86/kernel/kvm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 39 +++--
+> =C2=A0arch/x86/kernel/kvmclock.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 260 +++++++++++++++++++++--------
+> =C2=A0arch/x86/kernel/paravirt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 35 +++-
+> =C2=A0arch/x86/kernel/pvclock.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 9 +-
+> =C2=A0arch/x86/kernel/smpboot.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> =C2=A0arch/x86/kernel/tsc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 141 ++++++++++++----
+> =C2=A0arch/x86/kernel/x86_init.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 1 -
+> =C2=A0arch/x86/mm/mem_encrypt_amd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+=C2=A0 3 -
+> =C2=A0arch/x86/xen/time.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 13 +-
+> =C2=A0drivers/clocksource/hyperv_timer.c |=C2=A0 38 +++--
+> =C2=A0include/clocksource/hyperv_timer.h |=C2=A0=C2=A0 2 -
+> =C2=A0kernel/time/timekeeping.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 9 +-
+> =C2=A023 files changed, 487 insertions(+), 242 deletions(-)
+>=20
+>=20
+> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+
+
+--=-ch88MIQEh5lgQIw/7rP6
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIyODExMjM0
+MVowLwYJKoZIhvcNAQkEMSIEIC87su9K4r1SHa0OCjQ93LVFcaBIMsBzKpdc4Y+aPnTtMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAtMxKM6vArHv+
+VzkUciMZsLpHjtBsO5HOnXVqn+0zHjutEe2agOoND+ynd55zhNJ7WQwbA4LlhNjoA5NR/X0ztW/7
+1QevQMkw+SnTi65myjMRVsY8BezMKPgurV2tsLt7TOs7vfrXvkIPIq/PW6wVPu0ZsIEBcbscR57H
+KSyiGNXkt1NiHkU+inVbUDh7U/CN6Gskoe7SukAhxWC+/cCVOynel/v6E3BLj1tb2Ay2DnZsNxnn
+80L84EAt2JAOyWb573/SOX47jM4WOoIhmu1wpYs9O9gMnGZCQ+j2qi4JWdG5UjwwlTtHWTdn+nBe
++ISy2GfEp8kkZPlcq5yChbx3enBQ6DGe3dmY+ibzGofimh8CklecShvr2LCjt5RJXzEzs1ECQuth
+i9K489RVn4Ynm2cdGEwpF4rTv+AQuA34N7c6Yl2JID6gtZMM6SbHxB2gJtXsj55epstkUc214kli
+3L3FLGw4pJxYBbKS0Gky8oYFO/IlYBTp+68sFLF7JE+V3JBiTLH3zrWGXJc2szi5jRXDeDoK/+Eh
+AE1ZyNOAD4rztAb3ahZZWUwzU4Gqo6Fv5Xl5rpLvFW0ir/DF0JSglvdNEaDhtjGvDivCSx2p3ss9
+zhMKFjy0V3elkOSN7HRqDL7Sm0dLujdZ94ndVsZJWTZmJ3S4T+DySz+1oPtUleAAAAAAAAA=
+
+
+--=-ch88MIQEh5lgQIw/7rP6--
 
