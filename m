@@ -1,62 +1,63 @@
-Return-Path: <linux-hyperv+bounces-4191-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4192-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC787A4ACF6
-	for <lists+linux-hyperv@lfdr.de>; Sat,  1 Mar 2025 18:00:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8EDBA4AE52
+	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 00:16:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF4D83AB0CB
-	for <lists+linux-hyperv@lfdr.de>; Sat,  1 Mar 2025 17:00:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B65A21894E0D
+	for <lists+linux-hyperv@lfdr.de>; Sat,  1 Mar 2025 23:16:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A861DF986;
-	Sat,  1 Mar 2025 17:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC0A1DB148;
+	Sat,  1 Mar 2025 23:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YSz6kUKD"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="D3bKXou4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2131.outbound.protection.outlook.com [40.107.92.131])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11023099.outbound.protection.outlook.com [40.107.201.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE1F23F383;
-	Sat,  1 Mar 2025 17:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857461D6DDA;
+	Sat,  1 Mar 2025 23:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.99
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740848424; cv=fail; b=ctR4tTAL+uFnn61YerAGo1laXkNPa1QpJA8m3YR3PXXsBC0n/jTurt908oRR8dgkRv2zfpOQcBzRl/c0zrQQNoSHz8WfieLwvK9n8ub+FSKTmitu3EQUtZ8RSeu+YX9qtXHpIZUUedS6EHVpBLU7l3h4m2OdhRBpNQt8bCtHVwc=
+	t=1740870972; cv=fail; b=Olh0svonuz+weL/+DDqiMjGhrf9w+grNcwVp5WEhTs4NGr1FBhZbbh9J0ES0POO2qw7OpHyGm8x6FUVvrK2dWe6ODao398a3513F3rZQq2mm05bWEGeB+vVvqpBH3ElJokx8JQoae7+cLq6WDuPVrVS8uV4LKu3P/OTSfb0EO7M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740848424; c=relaxed/simple;
-	bh=R7qPSNgltoutWMHs1OQzKvOrkDqaVXEZco6Ym5YMAEE=;
+	s=arc-20240116; t=1740870972; c=relaxed/simple;
+	bh=8UX3gyFMi8EJFG5Uf31QhxAiX0uPmgnhm6nRN3ogqn4=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aduYexS7sBgwDlpoB+y3MmUyNEBGZ/dbpVhqmZDMRwQtWU4M12wadIxGUlyS5W6dqCs9e2XO4a1I149uEr+RJu8l09p2ReYpJ+eVSPmjPkqQ+kGBPH1Z0wpG/Mmd5DIPw0RoXMfVtfEG0iH2V1bdd5MmJ+fK7qz1LE0tAT0738M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=YSz6kUKD; arc=fail smtp.client-ip=40.107.92.131
+	 Content-Type:MIME-Version; b=S/xTcN6W5JkWWQGs5fHUXGPcQpwQTzgBdpZTYZH7JxFj5Fsvt0K9jqs8HUIQlekz39OG9sNobKpDqwTVMiKPiWy3LMpFMspHVAxWZHQz1g/DmL0CFQrTQkobrVuMOf7IJ2Id2xn/68sSZqx/tjf2n3NZibHxWsMZpgbFSFB6uJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=D3bKXou4; arc=fail smtp.client-ip=40.107.201.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Darh25qrgvIn0aYldYpnuue7Dmotb0cimOimXKibe/eXrT2KJX0L090DGlQ/S0eTGdezlHzf7My300UxlGvh9OUjL+r0Do5muyehT2dniVHAS1cXNBHrPvTWg+AOmldXNgjvHJPj0fWG6qo/N/3ruEzjHyWgiwciUdZM2m9gurCBFDlWluNb0UdTOVK9FATpVffFLn7JrfdBLsJpnVcTnqkzIHybUcT/Xqyf5FdcXNVVdJopK7UoTpA5A7sm1atA3bw4UvE/72XpE9a9t0jHGFK2G6loPj+BmFszfolkgKMaz2Oi88toCjYnbEqECT8Wizs7bAOuV6JbVwOT95aoDg==
+ b=o3IgCnq09/lVLFsIcZrdL7HoSk70O6krYQRvqbWrQF3Gg9Oent5Fu+aXOVG1SjG7bc93x/ZxmMSHuVvwOK2hgh31+vnbpcJn+mrrYP+DFzqNiSjmGl1VRbHKTrJAVIypwuA1KPI1DCg6QucKegwMQxQntVYeCeqMP74X/t1O636veyfnXGGhcxMe7MM1UUND2yMcpZq7H+8zD3BUZczzAF9hKtgdgYNqWi3z0QBYMUYFSy211TZSUBbZZSUh3KXFVhsxyyi37eAzF/SCROZPBcOvPIOBbtFjLIzTnOB02dOpNDmuzcC8Xw6EdxkkpdT5TvlaCOCSAW0hCUMhVn1Ybg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R7qPSNgltoutWMHs1OQzKvOrkDqaVXEZco6Ym5YMAEE=;
- b=RPzhNwrwzFALTHsOu5yjEVuJ5jQYqwPkyaqN/vC/uDQ27UekpXgAbFzWEqkg7Lh/NGeo0WykXtZ0l6xmp0qmid6sRmy31VJ0ocdmbHFJbDLdSmqCMNgomYU7tL9e/gGGSjaYZC+w3yA7Y+TYnDUnDqUo88B8aW1JsHTBKI2zoRmJ/XDWtkfHjY++9y9cdIrBFaDewImYG7LvvGnteNx2PSulFAsm+jTgld1XTwhEQs5PYLnVfPf/8vfPZUWs0ro9PFswQ+HrLca0fovfpUYQldkP9iK31JxKFof1QiLcrNPDF4MYBLppBEvSTmhRozRntN4hithFAL+Scv/iqTQ8/w==
+ bh=8UX3gyFMi8EJFG5Uf31QhxAiX0uPmgnhm6nRN3ogqn4=;
+ b=Bu7ARGL4776gxGDzJqZg6jeWlptZ/PVcbDlZYiIFuMpijO3UukVEM7+N+WfMTGOpX/s+WjxdZxqQ1QG74d31EekeJ4dLzdrR0eiQwANZqb/iFqZb2XWxkmHXm+aqzMuRAqK6SVJa9OBHUTSXB3mQDnIBXgRzV895kulAIRSlEkSUG0wP2CACWhDBlUbIMscOJ5iBXhjsHy+LP+Pi/SkDMAT+L9xUmWtpOph1GMiMUsseVdG8wo5iEXs+C96SxowPE7bIHU2mgZrex/FAJF5lKE2I+bdp6hcey45s9eL5/NV6EfVAH2o9P3iPAYYWbIQ7kHJBJ7DDVR80qFolzMGnjg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R7qPSNgltoutWMHs1OQzKvOrkDqaVXEZco6Ym5YMAEE=;
- b=YSz6kUKD0RuvnutzSSj4sLlijDpjKjq6IRF+ReCY0iM6oLfwCFgPdbu8eFBHDFI2N4nfvpZqAz9v1TZtxkrTC4EauM4WMiaIFpT8G4IQuLLPaIni3ZwWA8AqU4EMgDfbyKBPdbOOQyTPvq818VQiYRGQ2g8mIgcyzIPsVpE1Hjs=
+ bh=8UX3gyFMi8EJFG5Uf31QhxAiX0uPmgnhm6nRN3ogqn4=;
+ b=D3bKXou43eB0bis3OEN3Ov1zVVnD3oofOq0pNsKYcSGwMhI0sv1ym9MKQ5pGuYH40I7E8fwPhcgnQ2SFgbG0NDDr4kR1n7AlKtROhAO464vzpbGPCUVOjV4AAR9eHghi+GekLbc5P1f40R0OTadAa+mM1hs532XfOnrevvdSkWk=
 Received: from MN0PR21MB3437.namprd21.prod.outlook.com (2603:10b6:208:3d2::17)
- by MN0PR21MB3144.namprd21.prod.outlook.com (2603:10b6:208:378::14) with
+ by IA1PR21MB3546.namprd21.prod.outlook.com (2603:10b6:208:3e1::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.12; Sat, 1 Mar
- 2025 17:00:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.4; Sat, 1 Mar
+ 2025 23:16:04 +0000
 Received: from MN0PR21MB3437.namprd21.prod.outlook.com
  ([fe80::19f:96c4:be9a:c684]) by MN0PR21MB3437.namprd21.prod.outlook.com
  ([fe80::19f:96c4:be9a:c684%5]) with mapi id 15.20.8511.012; Sat, 1 Mar 2025
- 17:00:13 +0000
+ 23:16:04 +0000
 From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Yunsheng Lin <yunshenglin0825@gmail.com>, "linux-hyperv@vger.kernel.org"
+To: Haiyang Zhang <haiyangz@microsoft.com>, Yunsheng Lin
+	<yunshenglin0825@gmail.com>, "linux-hyperv@vger.kernel.org"
 	<linux-hyperv@vger.kernel.org>, "akpm@linux-foundation.org"
 	<akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
 CC: Dexuan Cui <decui@microsoft.com>, KY Srinivasan <kys@microsoft.com>, Paul
@@ -71,13 +72,15 @@ Subject: RE: [EXTERNAL] Re: [PATCH] mm: page_frag: Fix refill handling in
  __page_frag_alloc_align()
 Thread-Topic: [EXTERNAL] Re: [PATCH] mm: page_frag: Fix refill handling in
  __page_frag_alloc_align()
-Thread-Index: AQHbik5MH771hPkvl0CS2gCCzDywnrNeTQOAgAAuB/A=
-Date: Sat, 1 Mar 2025 17:00:13 +0000
+Thread-Index: AQHbik5MH771hPkvl0CS2gCCzDywnrNeTQOAgAAuB/CAAGtm4A==
+Date: Sat, 1 Mar 2025 23:16:04 +0000
 Message-ID:
- <MN0PR21MB3437E18AA793762F242BE795CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <MN0PR21MB3437DB9A18F1C354963C5EF3CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
 References: <1740794613-30500-1-git-send-email-haiyangz@microsoft.com>
  <cc3034c6-2589-4e9a-97af-a7879998d7d8@gmail.com>
-In-Reply-To: <cc3034c6-2589-4e9a-97af-a7879998d7d8@gmail.com>
+ <MN0PR21MB3437E18AA793762F242BE795CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
+In-Reply-To:
+ <MN0PR21MB3437E18AA793762F242BE795CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -88,69 +91,69 @@ msip_labels:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR21MB3437:EE_|MN0PR21MB3144:EE_
-x-ms-office365-filtering-correlation-id: de3d366b-efc2-4b01-b07d-08dd58e2886c
+x-ms-traffictypediagnostic: MN0PR21MB3437:EE_|IA1PR21MB3546:EE_
+x-ms-office365-filtering-correlation-id: 3ca38465-0026-45ca-2586-08dd59170a1a
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
  BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?BE95oc8l0dxjR9GRmdC5wiy0HZNALub3a+ZEn+5rUrVtOq9IfnzsO+CoaIjT?=
- =?us-ascii?Q?UuSkbZvVnEnsLuYxQ2DKy188eKWSolcNrZd+Mrcx94DnzqhfPqI5xx4tkii5?=
- =?us-ascii?Q?uQQdO5HpJi6dOMUifxrcrB/CbVA25yWByqWJ8KeI8ayrrAlfPNyaKvCrVjs6?=
- =?us-ascii?Q?kwh/YWjO5Ok77IxeCshRAZn7ggDu/9v/2v93tlpV9GdiPSomQlNhiQeiTQE9?=
- =?us-ascii?Q?sXy/DQ5XM++j6TA7rItCfWxcn7wBnL9e7L4o9q11w0RKucUSrw8P+zSCLX4q?=
- =?us-ascii?Q?X8Qi/fQ5SvDMWmFUBQZXuE55CL3aTgG6DJgtKYfIhTvRS88og3JkDE8ih0ZM?=
- =?us-ascii?Q?q3izP2+oAlTO6FPd/7uDMwoNMsEJ0OjX7nGR0+1X7VtMRedIFN9rGkws43U1?=
- =?us-ascii?Q?UycSXbNcJCyh0ju+KZ0LL5OyYoN/BxOAZrSAWqkY7Im34nb94nIwYmNVk+gR?=
- =?us-ascii?Q?gnILekD/Z0QvQ4j4Xt1bY71snOMWhVFpZYiz0D5B+oLyudqHFnEeh1xRPB26?=
- =?us-ascii?Q?YMor68q+TeiK2naXvMZtwYoIeVUh4TzYSIM4UsN9CIPAbuHMEK20lcgiUVUU?=
- =?us-ascii?Q?GlNubEEXC537B7Oaxrbkj04tKtibXp1LS60SYU9nwM4YmlrqIDLw7hHcv0oO?=
- =?us-ascii?Q?nO1fs4nmm6BM6HzK2w/rgOJUrPoPKDq/Iniv5dLtSAhntvWLNaSFnPnDIIzd?=
- =?us-ascii?Q?0PfiYT6pcCwhAm9vw8/d5U2M3goi7Q4yCv1xmfuHLufCO2ABKDQStTuQhiR6?=
- =?us-ascii?Q?KWCl6M6NdiHNRnGecIOrUWSWBA5zh6o/pRjO4jGqg4NhpkWeLictIPlGCtHo?=
- =?us-ascii?Q?GXbT6WH4mjfX8PUsDvZuyHQjmaqCRI0PbCPIK+t/400OjWuzck7Yg6fV99Zd?=
- =?us-ascii?Q?0hVDDyAdmlmR36R0FzdC4SuJ3AgfPSefVtqFFk9e4BuhlC2ZEv9i4t0i/3RN?=
- =?us-ascii?Q?WyeGO+gr5VgzU9i+ZcN7SoV0RIVnd7d97UICTHfAF7tpsXmJGe5kvjheBLNg?=
- =?us-ascii?Q?UElClTPoOBp6SHsxH6Qfgt+XLHE2J0dYbBaeuh8izRhfmrpfAPGmkN2K6nSt?=
- =?us-ascii?Q?T8HE0mKSpE4hta4m/RIP9YjGODgPSB9yN81tW3BgKPpYmqVpAPFfyoJ1W98v?=
- =?us-ascii?Q?zcrYh+x5nllyiFRH0Ae2pSEQUZonaXGbd2IVFz9xY8LxOXOwTZVueSZtHUpB?=
- =?us-ascii?Q?Jjmul+IGnfbPUbUqqt4JeibKAm4/4a5g7QBbIf/xqb66X7t9T/Y1u2e6tt14?=
- =?us-ascii?Q?sk7lSmXYdZTltPjkPnUnaav7YdZ6nketx9f+eZr1DQH/yRAmUGlMHhr2QYOn?=
- =?us-ascii?Q?8C3teOeH9IlPYz1iyzVjSGtV5Dgyw6dxhxqtX8hvpG/CbR3nkBl7AWseF4Yc?=
- =?us-ascii?Q?hyUbKwoaWw8iV2q5IIj1FS4hV21f?=
+ =?us-ascii?Q?mM4+sCiRIbbPC/RXuiGcEWAUF8LBZu8a0t3x6FPoGfiAf6qedhG5a6HDn2I6?=
+ =?us-ascii?Q?0S5msfn73eOEBTcWa9uTMpdDmQIQs7My+M35hlljo58p18mB1U3g2LyJhG5E?=
+ =?us-ascii?Q?+5v/U/NjFg1Jp1kdZQJPGcc/eACw9ay8AOExGcrOA046wRxgCpxcqo2U0Xaz?=
+ =?us-ascii?Q?DdZlqER5kct3G940+3WKmUo6spxLZX/jcNA7H8hN4FWf1vrDfuvZU+EryDb+?=
+ =?us-ascii?Q?vW9BlwfrcPdSyz4h7+TZNLxNnMsdGxviRaT8lb5NnPIS/K9TenyEnbOYQ2Z4?=
+ =?us-ascii?Q?S2sFS5+/SQy1RR8y1T38hc1W2ACeaM9bdf8lh3ni+z9k5dIWXhWsKkmCMW9T?=
+ =?us-ascii?Q?HzYD9w8QssOh0Uql2rbqKLsqBQLQpQu//f35SiVjCq9WNygNeVNSA3973s+e?=
+ =?us-ascii?Q?OphpVeY89DWKemhuUyubTG9BWrDMp7YCtuPMOclcOy7VAdt947kSau8xTyDN?=
+ =?us-ascii?Q?lkzngI15SBO/n+ouJuRY1PaUR1+VQMtRIecx5DlxBMG4+6NkYZbHEBlVH0/v?=
+ =?us-ascii?Q?wu6l0MmSN9y8wjExKrmf2C7tKqOdqA/paHIqXPebjKIF+6gpLq2UMMA0n6pp?=
+ =?us-ascii?Q?C3y/VbM52bJJtIivCdp7poYXy5Wv/z3TfgSM/4dwjqfXKNmRizNp9YnvOwXw?=
+ =?us-ascii?Q?AsdTEKGC2c8P+wZlWbmaZ3t2vXqIDDOcXWYeKdMkCx+XTmDFe0x9ZCPQl+6u?=
+ =?us-ascii?Q?8K6H2gtxdimdw3FcGsKOvSUJwSTRPU+UuxJMU5ToLEi8BMDq+8oWARE2pFsP?=
+ =?us-ascii?Q?qloIzGXwXoyQYnDxMPdqWffD4d6Dp0wpek1ng48KMPh36HLjEoWuRR3i/JXa?=
+ =?us-ascii?Q?z1FuHx9XbRpPiwJ9D5vLgHELugEemblqy0tqVcvolvd6IhBBEB3kf8U3bHNG?=
+ =?us-ascii?Q?kP4BR5oSUWUwWCYEaLhIPkXZDtSXkXhesvT3Vy+GzbgMNFCHkRj/DDxTy2YY?=
+ =?us-ascii?Q?pCLLndC95E4Y4jm316BFObD4e7zveAxuitH1BxlWB9REppwRjEo57NrWFfap?=
+ =?us-ascii?Q?NlE9Rj77mvi+4ZWU+7bsCptMrTHW/jEpZ5MB+F/XBt2PLZngdnpvfo7n+w7n?=
+ =?us-ascii?Q?KNU78OvROGx8+0t9xmbkv5iXgBCjslikw71AwqWdh+amKgqiYkh5w4AYh0Yz?=
+ =?us-ascii?Q?d03qenhuhN+lzepPIbI8HUQSP0jKmGYoAdici5Hq9q3Uil22Ux4OBpjR/8f0?=
+ =?us-ascii?Q?IVXleR9GnMdwR+alCLV2QkBnhzC3Wu9dPbRUAyf7e3kNv5MkDstOoqS0Qd84?=
+ =?us-ascii?Q?BulvlTxcIHxuMtk0qfiOEl365GTRpoWGRWoMuPT8w5BPGdTuxwhhuDVS7119?=
+ =?us-ascii?Q?DUpO6nveB2snh2Voa+17LMyIQlaZZVVnEGBfeDkLrQxekGkx8WQum/7Pa4Wz?=
+ =?us-ascii?Q?/34Kvw3cMAfqtdUe10Br9XbJIst7?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3437.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0699gwolnfmnuIXJL8gO8Cvf2v1+Q3QXuxNE7z4B5t4edv/RJMFxgc+ZxsCN?=
- =?us-ascii?Q?feA5oG0EK/40xgz/J4DsgHyBhRy97A8AVIuhDHRw3QjSretrI041gxzZfkmS?=
- =?us-ascii?Q?LshhWHQo/+5/pYR/8CXT/ujF18MhGmC23d9P/wjfsBlP6ZLfXlRNizioWOwQ?=
- =?us-ascii?Q?1bZFlfQdEUuIGA7VD31L93Nm4NwWbAmS7XKhfi+dD1v7sL+5sDLiDDyPMH92?=
- =?us-ascii?Q?Fn8IkEgte4S4+ymChKZmUGulKf3QhfPxxKXFhA3ZZ2lTfoSmZVBGBxrj0Js4?=
- =?us-ascii?Q?rkVJv9lJ+crgewdbBxn3U+j+If9gitrawivOF5RNo/6q+JcDRIGC1tvf+Zrw?=
- =?us-ascii?Q?IDm7PtyDmqFLWguRM3/U+oEo6p7O2NvKguWLD2M4ugC/51g2KZPp/E4tndgH?=
- =?us-ascii?Q?eJbPIjaGlcaAncLnTG0bivKYBYPqIGgBoZg7DHaj2M4LEXS70Ci//dUjjgrW?=
- =?us-ascii?Q?X/dh6OK7JeVXMZMpZBqjfvCLEnZVnAy+Y4OrOuZE8WrfejRsC+VoUHkkN4lK?=
- =?us-ascii?Q?wzRkG2G9B4GMQylIUytCqq4IrTtdgaGIuLp/p4K+Wao+NM+mPKTKUxU3uV6n?=
- =?us-ascii?Q?AXgl7ZWvHb1yABBvaJYYp0Ak31PjR3XO0PFVsCcPgINYU25WWTvcSLr6RRXU?=
- =?us-ascii?Q?Sj/qUYmMQUPidU5ur7Pxs8Nc/mX+/DVFebZshl69+zrcfvpsHZosoIr2dIZw?=
- =?us-ascii?Q?zn6H2coj3UEKCCSL1aHoVpKDPDWLhc+PzbKTwV3FuT3yP76ffonWgtGPI1Da?=
- =?us-ascii?Q?XxWrMokgoR28mQQeTW/ESMy+6tZd/Y6ydMRuwRAlizlXqAuxVnz0d311Ej13?=
- =?us-ascii?Q?MtkasY66pKKSe992N/SYf+rdGvxNDwp9m0wvo3j/njmZqKaD9rqmsY2AbMWx?=
- =?us-ascii?Q?2BGEkMrGhjFVSj/O63ic0VvBzV5xfxI+241AlBZw0K3O0i9y3G3TuGk04Ci6?=
- =?us-ascii?Q?/ZXKvDRHWp2kRBbDBdzuXggy/ShAtz5o1RIhbgTCAioJDmspGBi/0nFV9k2n?=
- =?us-ascii?Q?zEUeu8Qc+PqxxJvdznin7SQQBedL4q+KYf8RjPMMsA6YUHmEf3jO/hWVx26M?=
- =?us-ascii?Q?BZ86tN5ippJ5SaF67CM99Tl0Q0znPB/YaKrUFN9RkI7xlPvwrbbOzA7TFO4e?=
- =?us-ascii?Q?FaI2ZBxH8CVB12vcJ+XJcicr9HOJbsITHtx965Styqyo0Yk5kQk2Cw1NoHG9?=
- =?us-ascii?Q?Hd4bJeWHEqIYur2HH5nEigeDINUSlk8nuiPwyIkg3UwrOALb98QTLlpWxsJI?=
- =?us-ascii?Q?/zw/U7oAKTfxSHPJ/CeW9XHEK5furHqSfwI1FEPm9jpr8XyPhoHXkBCE/V90?=
- =?us-ascii?Q?AZ8R0Poa0KsT6Ut/ak81TQL1gWrqVYqX1biMNInPMwss0sY82ynDjMIGxiga?=
- =?us-ascii?Q?cJE46R7w/eUoARfPaHrCgaoHo4HJRBH4d/jkIWTinn3tNU4ydX+FQGMauHpd?=
- =?us-ascii?Q?LmCJb0mRc+PIGKMnQ3+Jz3sRm7RZE9lcmd0CF6rimk0GAqXHdZnY32Yhx48J?=
- =?us-ascii?Q?GTIBOnlNJpIcgQ2OB+Q8w9WH4z0rxE5K0WkBVuTaM8yASglOolFqgxDGQeSR?=
- =?us-ascii?Q?85G3rQyFcIm4oDocD6DFkRF7tpaAGYzuRB0zhDkc?=
+ =?us-ascii?Q?k1pc5QM7nRqTMVDqjaEwz/7dJQyDfRBQ0+OtLWDeBvfpk82M34IrmStS9Env?=
+ =?us-ascii?Q?H1HteB1anUyxNulRQSw8cF9THlMIOVgVfNj3JUwwDE3qG+KmTqKyn70u441P?=
+ =?us-ascii?Q?0PL5GWFqwnW8XSCqu0XFc+CnNZ0lCBs2kSuw28GFTBNunhqxes0BPPQk7pTl?=
+ =?us-ascii?Q?1odbtZeBtYuZxrYJw+fDX4GsPf8JxDwJnGLh8wtXXxXzk/Q5qasKgBg1Nfew?=
+ =?us-ascii?Q?5no0p2Bp4akfLt8JHbWACEaYHoClKWOrvuGUGEjpe3nFMEeh/AjRM6VIr7zy?=
+ =?us-ascii?Q?x80EPB4M16GYsw7XrtVsJr21j9BZNQKP+d951s6DNigM46Uf/unZC4am/9pr?=
+ =?us-ascii?Q?rxLy/y5VRM0pVOBCuVTGN2xeRE/x3YlVPF7Ag3dWrlEP/E8Y3sP6P5n7mDJu?=
+ =?us-ascii?Q?ghbpXsaHHCT+nM5/++xrATyKYK6MQISazrs/kVmLAw3Mcg1+4TK+g/WAJzDe?=
+ =?us-ascii?Q?WAsDEyj7NaUNtXROZk67BpeAAYv3BqMREdF6lK8T6Awaagw67hOupE/knuDA?=
+ =?us-ascii?Q?WaXKkOcwIjbxJ8tXs6svRdvUdGGP+scrKNnrr37C2cLyLIurNitTqeGECkVJ?=
+ =?us-ascii?Q?s3PPLOifBZI1RK26toXFwCINOScuSYfLLz+LeLX89L159LdlF5DTz62Hp/JO?=
+ =?us-ascii?Q?ADbh0xPcYiH83uKxiypcpYQm2UG16IPo5xrWVhsWkoEJoXqMAH3cOr/Fx232?=
+ =?us-ascii?Q?ExJqPHqUCFHb+jxFmr73tp2bRCGToSKvS4XzMzmqzg2KVKqIJ9ACdfRGJ4dH?=
+ =?us-ascii?Q?mm/Yp9sNGQckqfzlAVgk0yU6s0d5lXAb7bCI6EBif+KypJHnU4CIrVXv8y2F?=
+ =?us-ascii?Q?16EzyIK6bUUHsOXODbSBkWSr9Qu++ahBxNbqTsQUWILltEWvKCprBDeV4hlL?=
+ =?us-ascii?Q?YguUqzydWCkgbhWm+C/sFuRz53n9hJ8HB4fTWv/DNcXpWTmhHUQOXt3ob7jc?=
+ =?us-ascii?Q?JOdax3VgvoVbTtj7Acs0IBDbTgZHKGTzI6Tto9gV1oazJlojglseKGIPIxpv?=
+ =?us-ascii?Q?ltAC6PJUzJFumgYb8Ep9WjEaJJuvpE/WJjCMLLGFh/Ss/isoJajZ+kI8idlu?=
+ =?us-ascii?Q?obadCPaliZ+9A9mxWiGfet7XZgtpH8f0yWRrHqKHpLgrf4F/tv9aT6SMv+2P?=
+ =?us-ascii?Q?2TJn6TjluT+KbD/AhakKpwltIbkv+7dofsF7RBSviX0O0RaUDitoMaROrKou?=
+ =?us-ascii?Q?1mFL7OsYo36srqz5ynvmZuTKvJt8qSlWuqERc//74feupFUDMdqe8s03RwOQ?=
+ =?us-ascii?Q?RVEAGOIeXDgHSEQJ6teCVvE0VCO8n26dekfkKVnUo3Q23EzGoYM6T9WwLb+a?=
+ =?us-ascii?Q?Ugd0WcNJG/NuZsDxorRAqu8F+9b9tIftsVdK797kHoyt6O6V2FYfKqmPs+lG?=
+ =?us-ascii?Q?rsaULdc3Qr/z3xwu3PfaZPX+Xpc7jVsBfvzuWAR4cXEJQZqIwLhpBkAsz0St?=
+ =?us-ascii?Q?E6XleMMMYYCCEU5HlDM32oN5nj536v+niGrNgbDjPLjJ818m/y9HVNBvyjXE?=
+ =?us-ascii?Q?z5HVhjlb2txyW98nHG4NUxY0tVzy8q3m1LqwQs3Bg6XitThf3L1YjkG4uhKk?=
+ =?us-ascii?Q?Z9zb7RDIwjqVLOxGkDsk7/aYMGHXywvSocwlmA/R?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -162,88 +165,151 @@ MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3437.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de3d366b-efc2-4b01-b07d-08dd58e2886c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2025 17:00:13.0917
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ca38465-0026-45ca-2586-08dd59170a1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2025 23:16:04.4674
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CNjFpupeGuK9b5Mz3K2/4nbK8qKLdil7KjanKjzqC/Z2/2+6sKF84wihDVvb3hMrq57hTVpvyk+fZ8AHR9R/Rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3144
+X-MS-Exchange-CrossTenant-userprincipalname: 20KpHkXiPvoVAdnxqILP9E53UfKHF0WFExsfF5nU7EBb8WdrLaWqSPT1X8tukyEbbEo+pWcEnZvvLzJN/pjWvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3546
 
 
 
 > -----Original Message-----
-> From: Yunsheng Lin <yunshenglin0825@gmail.com>
-> Sent: Saturday, March 1, 2025 8:50 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>; linux-hyperv@vger.kernel.org;
-> akpm@linux-foundation.org; linux-mm@kvack.org
+> From: Haiyang Zhang <haiyangz@microsoft.com>
+> Sent: Saturday, March 1, 2025 12:00 PM
+> To: Yunsheng Lin <yunshenglin0825@gmail.com>; linux-
+> hyperv@vger.kernel.org; akpm@linux-foundation.org; linux-mm@kvack.org
 > Cc: Dexuan Cui <decui@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
 > Paul Rosswurm <paulros@microsoft.com>; olaf@aepfle.de; vkuznets
 > <vkuznets@redhat.com>; davem@davemloft.net; wei.liu@kernel.org; Long Li
 > <longli@microsoft.com>; linux-kernel@vger.kernel.org;
 > linyunsheng@huawei.com; stable@vger.kernel.org; netdev@vger.kernel.org;
 > Alexander Duyck <alexander.duyck@gmail.com>
-> Subject: [EXTERNAL] Re: [PATCH] mm: page_frag: Fix refill handling in
+> Subject: RE: [EXTERNAL] Re: [PATCH] mm: page_frag: Fix refill handling in
 > __page_frag_alloc_align()
 >
-> +cc netdev ML & Alexander
 >
-> On 3/1/2025 10:03 AM, Haiyang Zhang wrote:
-> > In commit 8218f62c9c9b ("mm: page_frag: use initial zero offset for
-> > page_frag_alloc_align()"), the check for fragsz is moved earlier.
-> > So when the cache is used up, and if the fragsz > PAGE_SIZE, it won't
-> > try to refill, and just return NULL.
-> > I tested it with fragsz:8192, cache-size:32768. After the initial four
-> > successful allocations, it failed, even there is plenty of free memory
-> > in the system.
 >
-> Hi, Haiyang
-> It seems the PAGE_SIZE is 4K for the tested system?
-Yes.
-
-> Which drivers or subsystems are passing the fragsz being bigger than
-> PAGE_SIZE to page_frag_alloc_align() related API?
-For example, our MANA driver when using jumbo frame.
-https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tre=
-e/drivers/net/ethernet/microsoft/mana
-
-> > To fix, revert the refill logic like before: the refill is attempted
-> > before the check & return NULL.
+> > -----Original Message-----
+> > From: Yunsheng Lin <yunshenglin0825@gmail.com>
+> > Sent: Saturday, March 1, 2025 8:50 AM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>; linux-
+> hyperv@vger.kernel.org;
+> > akpm@linux-foundation.org; linux-mm@kvack.org
+> > Cc: Dexuan Cui <decui@microsoft.com>; KY Srinivasan <kys@microsoft.com>=
+;
+> > Paul Rosswurm <paulros@microsoft.com>; olaf@aepfle.de; vkuznets
+> > <vkuznets@redhat.com>; davem@davemloft.net; wei.liu@kernel.org; Long Li
+> > <longli@microsoft.com>; linux-kernel@vger.kernel.org;
+> > linyunsheng@huawei.com; stable@vger.kernel.org; netdev@vger.kernel.org;
+> > Alexander Duyck <alexander.duyck@gmail.com>
+> > Subject: [EXTERNAL] Re: [PATCH] mm: page_frag: Fix refill handling in
+> > __page_frag_alloc_align()
+> >
+> > +cc netdev ML & Alexander
+> >
+> > On 3/1/2025 10:03 AM, Haiyang Zhang wrote:
+> > > In commit 8218f62c9c9b ("mm: page_frag: use initial zero offset for
+> > > page_frag_alloc_align()"), the check for fragsz is moved earlier.
+> > > So when the cache is used up, and if the fragsz > PAGE_SIZE, it won't
+> > > try to refill, and just return NULL.
+> > > I tested it with fragsz:8192, cache-size:32768. After the initial fou=
+r
+> > > successful allocations, it failed, even there is plenty of free memor=
+y
+> > > in the system.
+> >
+> > Hi, Haiyang
+> > It seems the PAGE_SIZE is 4K for the tested system?
+> Yes.
 >
-> page_frag API is not really for allocating memory being bigger than
-> PAGE_SIZE as __page_frag_cache_refill() will not try hard enough to
-> allocate order 3 compound page when calling __alloc_pages() and will
-> fail back to allocate base page as the discussed in below:
+> > Which drivers or subsystems are passing the fragsz being bigger than
+> > PAGE_SIZE to page_frag_alloc_align() related API?
+> For example, our MANA driver when using jumbo frame.
+> https://web.git/.
+> kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnetdev%2Fnet-
+> next.git%2Ftree%2Fdrivers%2Fnet%2Fethernet%2Fmicrosoft%2Fmana&data=3D05%7=
+C02
+> %7Chaiyangz%40microsoft.com%7Cea9cc3de8c904a5c720408dd58e2913a%7C72f988bf=
+8
+> 6f141af91ab2d7cd011db47%7C1%7C0%7C638764452327076527%7CUnknown%7CTWFpbGZs=
+b
+> 3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTW=
+F
+> pbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3D7%2BZ9hBYGudGZUeeF0i4UEa3zjx4Z=
+LFd
+> q5E3qcZxnIWE%3D&reserved=3D0
+>
+> > > To fix, revert the refill logic like before: the refill is attempted
+> > > before the check & return NULL.
+> >
+> > page_frag API is not really for allocating memory being bigger than
+> > PAGE_SIZE as __page_frag_cache_refill() will not try hard enough to
+> > allocate order 3 compound page when calling __alloc_pages() and will
+> > fail back to allocate base page as the discussed in below:
+> >
 > https://lore.ker/
-> nel.org%2Fall%2Fead00fb7-8538-45b3-8322-
+> %2F&data=3D05%7C02%7Chaiyangz%40microsoft.com%7Cea9cc3de8c904a5c720408dd5=
+8e2
+> 913a%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C638764452327105287%7CUn=
+k
+> nown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW=
+4
+> zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3Dg4VAI8DbzUD95q=
+gth
+> vzFV0PYgOIA3%2F%2FI3gmQHzuLwbo%3D&reserved=3D0
+> > nel.org%2Fall%2Fead00fb7-8538-45b3-8322-
+> >
 > 8a41386e7381%40huawei.com%2F&data=3D05%7C02%7Chaiyangz%40microsoft.com%7C=
 d73
+> >
 > d6a0ae65b4a42681c08dd58c8087b%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%=
 7
+> >
 > C638764338396356411%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiO=
 i
+> >
 > IwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%=
 7
-> C&sdata=3DFJ7Ggrxxxv6QzKepUiHmtns1GZC2G2oJMcWSzOuFbsE%3D&reserved=3D0
-We are already aware of this, and have error checking in place for the fail=
-over
-case to "base page".
+> > C&sdata=3DFJ7Ggrxxxv6QzKepUiHmtns1GZC2G2oJMcWSzOuFbsE%3D&reserved=3D0
+> We are already aware of this, and have error checking in place for the
+> failover
+> case to "base page".
+>
+> From the discussion thread above, there are other drivers using
+> page_frag_alloc_align() for over PAGE_SIZE too. If making the page_frag
+> API
+> support only fragsz <=3D PAGE_SIZE is desired, can we create another API?
+> One
+> keeps the existing API semantics (allowing > PAGE_SIZE), the other uses
+> your new code. By the way, it should add an explicit check and fail ALL
+> requests
+> for fragsz > PAGE_SIZE. Currently your code successfully allocates big
+> frags
+> for a few times, then fail. This is not a desired behavior. It's also a
+> breaking change for our MANA driver, which can no longer run Jumbo frames=
+.
+>
+> @Andrew Morton <akpm@linux-foundation.org>
+> And other maintainers, could you please also evaluate the idea above?
+>
 
-From the discussion thread above, there are other drivers using
-page_frag_alloc_align() for over PAGE_SIZE too. If making the page_frag API
-support only fragsz <=3D PAGE_SIZE is desired, can we create another API? O=
-ne
-keeps the existing API semantics (allowing > PAGE_SIZE), the other uses
-your new code. By the way, it should add an explicit check and fail ALL req=
-uests
-for fragsz > PAGE_SIZE. Currently your code successfully allocates big frag=
+And, quote from current doc 6.14.0-rc4:
+"A page fragment is an arbitrary-length arbitrary-offset area of memory
+which resides within a 0 or higher order compound page."
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
+e/Documentation/mm/page_frags.rst
+
+So, it is designed to be *arbitrary-length* within a 0 or higher order
+compound page.
+
+If the commit 8218f62c9c9b ("mm: page_frag: use initial zero offset for
+page_frag_alloc_align()") intended to change the existing API semantics
+to be Page Frag Length <=3D PAGE_SIZE, the document and all breaking driver=
 s
-for a few times, then fail. This is not a desired behavior. It's also a
-breaking change for our MANA driver, which can no longer run Jumbo frames.
-
-@Andrew Morton <akpm@linux-foundation.org>
-And other maintainers, could you please also evaluate the idea above?
+need to be updated.
 
 Thanks,
 - Haiyang
