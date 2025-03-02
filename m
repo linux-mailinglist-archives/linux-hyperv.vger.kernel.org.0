@@ -1,166 +1,236 @@
-Return-Path: <linux-hyperv+bounces-4193-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4194-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B343A4AEBB
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 03:23:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E324A4AF6C
+	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 07:36:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E080C188E822
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 02:23:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DCF216E573
+	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 06:36:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775CC1EF01;
-	Sun,  2 Mar 2025 02:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958B411CA9;
+	Sun,  2 Mar 2025 06:36:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMtthqq7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqB5MsIX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E9B3597E;
-	Sun,  2 Mar 2025 02:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36751876;
+	Sun,  2 Mar 2025 06:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740882192; cv=none; b=AYSXVcpqHmqBqb/nDhD4RA9W3p5n4D+wZr6y0m0arRJ1TQXgBLSrYSXfi/0XJsg7rdpeVgjC3/qqzveal/DkU5EduoSOrs4p8ZA2QaCLL3buwnRyM86EzMUqRwyXRb/aTTGD/uJLxioLimz0bVFVhFl28o/UellvYtxiHOxxabE=
+	t=1740897405; cv=none; b=peM28zYpweluN1nHNOH2QG/JVM4rjkYE8QyypsPJrkpnPlyoYfTSkz4jgzLchJ7YQTuFOgzBsNg+5QnDvClsCJnPdEegguTpis7OufbBst0fW7zryLZzIvJm+ztGBK7uE2ismG54UyZQL7L2W4RDURg2tGNzLvVVycprHWUXhzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740882192; c=relaxed/simple;
-	bh=Ms35D6rpVAm4Wn+iz7v3jU9bT3pFycygdKwhAA7LcRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lbuSYUMh1vZruxOqy5/I62xMNNj/Vl5eL4WfmUU3yFiEL8QkSyI5foTi8cKrBLPCXjeN+iZ5HjJ8PVPUoxO97EyLC4iPbY6hF5RCsnoQHHsx4swjXpqNZ1KPrwHFhX4yG09Ma8LMd1NtXwnDHBuM7FZ7n5DNCLemw9gwruPMpf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMtthqq7; arc=none smtp.client-ip=209.85.214.196
+	s=arc-20240116; t=1740897405; c=relaxed/simple;
+	bh=IUCDtHJxXpP/1YHLV1yE44JHu9HS9K3SjWdER+7D04I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Xf5aRF7sVXC8JlEjKUZRJG4WeuEo9Ikqtp6zw1otRaUTljDJNsBHE+gfS1nLVbfAXzS4img/3YLH4nca8X9wHUZKduiHJ+jSijRTYrjC77fBYfGAdZcLAbwNvA/miJ8Y+AYs+Tj3jTfZPrkIQIpGkhqB3ANvmCf3mYXuK4We7Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WqB5MsIX; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-219f8263ae0so61659455ad.0;
-        Sat, 01 Mar 2025 18:23:10 -0800 (PST)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22356471820so53352585ad.0;
+        Sat, 01 Mar 2025 22:36:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740882190; x=1741486990; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bIgb5oCKHg0d8J0ugu6ecAoU1ogbWalfHnz6Q8BvygU=;
-        b=iMtthqq7phxR3YYoFkGoonSvIJ+zvpHwH5kXEAIjE+GGCuMRAJc3FEnqmz26LmiUN3
-         oQbDbljuMXtv0VlqO5hbmccMaljd2rOOYm2mHmumeqO54s8akCuktuOHsLIeKNT61DB/
-         H6GrZsniQqUMAFUYDEm4kyel3WXQL9QkfQpFneNw+Gu6jimXa/yJHZawsbvAhteBsmwb
-         YfnZYtBp8wOjZckEvA3r8/xjRZMa1OriFQtcisbvxPGBnjgNamoUjfo6Hw36Fp/WBDPc
-         UoRqSNjZ5/O1rCnlLLkGMBuiaGi/Kfr610kKn+GgPYxpWhpzkXo3Wv7NUo0Vx++ujche
-         Othw==
+        d=gmail.com; s=20230601; t=1740897403; x=1741502203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rzMGwPnvoDSEYaK16KRAWfgUItfUZTdq/AQjm2L9eII=;
+        b=WqB5MsIXwyv5QFJBZzN1Wtt4qBFfszNTW6xgJe5ZPqJpplJk4TmIoAj2F7QUP6p+9l
+         9fStNaT3NylyTkvx20T8e1f2gquIq5eYVf/uxJOixssxIszTSkUvwOWqIA5eXomr4jMf
+         9sDJXk63m1hLj3prca3kPXhfF2puwYwM3JsTsckqnUe4NFIv3BO9zyBStjnvEtGkx8MD
+         f6b5Q7H73KvI2dkwZEW5eYoubgYu26HFNpLABRIH11amyGiI65jA2B/2AqnHAXwEsF3G
+         2OJJ2AY1Uh8WlJMkbDPDSIQwz5pF2W9CoS517Xh/Z0p4/bgGhgLwfAwY/ZNBpbcjZq07
+         Z9/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740882190; x=1741486990;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bIgb5oCKHg0d8J0ugu6ecAoU1ogbWalfHnz6Q8BvygU=;
-        b=LkSI6KYRpa6VdGNDtjutnURdxCATtKw7BuaoyqOpSROCNpFAJ3Ja2r5I7vKlPy+O7J
-         0T1sapcacCGL7waKgnSFRCNRnJyVL4rSWnp+rCbF4gqdUobGQqcpIZJ4znJkx8L4xSl+
-         0AKUtU1lT2ZfSFrb/i+5ZHv6PdgK3pgcrdUpoNhYLqsg33JqfPCNoDrFav7hjJIEEXKc
-         ZM5jBHGJd2q/BZ5eTCEkt2lEl2BXpTMT+4y/w62BQXyK2/18VoKpY++kAXtoEUSePK3j
-         hJMB6pkviDjHcZ+RMaSjFH/ztioNpmqb43eVTkQF0wHlGAsZ0tlA2x8exr+bxNtz8WRP
-         wJMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU51lBzm7fGxqqFpLMRBmBufMirNPbI4GGxa8fNLc6LPVxK8a6ggz08tCefElm8bNaBjGCbXSj+@vger.kernel.org, AJvYcCUG/ICcZPB6Yh/lNNNeoNXF34mjXRG06u+WqGcfovRXM0BuwkqiqoWcfWKiYn/LXBPCX+fomm1mx1i17k0=@vger.kernel.org, AJvYcCWswqTJGPR9i9jJTh2XRjS36/CHtzsWZW/2z7lGSTc9jrVTfT0sNk1mAFXNgktv+ph1JInvVgPGrbm2/swU@vger.kernel.org, AJvYcCXoI5BtzhWpZtN090WPIMQd8fbg+gX4nh2a/vy66gkveY2+2FBHJShDRcBwQLU5G6CtJsStsKkQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvxY7ypRO2S36UKKbaoD8HF1CGcIHa+dsqT1EZs+YGUsssZvsb
-	44rplZAmFjQcw60vpjxFt0tGfZHZ4h3tDPEXGsNWb+p72AtYFDX2
-X-Gm-Gg: ASbGncux1RXzrZq+PjoXOTMqvJhXugg5G6JwegoslTKkpc4Ix/tTncFoFkhhMql1IBV
-	Re0TlvYhgYJT8AEDn7mxXL4cWfzpJ+qymbb9NDdDPf2P2nBcbbKNe5/RpSBDL6uE9FYezEhoG2J
-	wsKXPPidk3bqQxO0BSYawOKS+qHTJdqA8hnK6SGaB0C+V9XfA+/ZRlod6vrjkuklUwIiJtHAk3e
-	gFMO00hFxFjnnvX7hW4J2DA5d9I7nA0DZcTKyInWFOgRlLGFC9SLpofphrYwZyYsZJSh+xNx9li
-	LMAnpo6SOU7ttD69Nv9/oW1ntA00FqtCWnwgTUFgHs7ez7FFwguQhJZ/4jFl8RT6Pm/jmpciz/B
-	gX/eGKbD9Z+fQlqdsR1nBoXfm+t7I7h8D
-X-Google-Smtp-Source: AGHT+IF7Tj08QU1/XlQt1s/pvFZTEEH8FOsLcUTfASRUZhpzzuMZ+JW2GadNl6cju1yKvhSSnz94fA==
-X-Received: by 2002:a05:6a21:110:b0:1ee:e655:97ea with SMTP id adf61e73a8af0-1f2f4e4e782mr15784551637.41.1740882189968;
-        Sat, 01 Mar 2025 18:23:09 -0800 (PST)
-Received: from ?IPV6:2409:8a55:301b:e120:3115:39d1:77ff:54d2? ([2409:8a55:301b:e120:3115:39d1:77ff:54d2])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7dedea46sm4862492a12.67.2025.03.01.18.23.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Mar 2025 18:23:09 -0800 (PST)
-Message-ID: <68f83951-881f-49a6-8599-e47956b984fe@gmail.com>
-Date: Sun, 2 Mar 2025 10:22:59 +0800
+        d=1e100.net; s=20230601; t=1740897403; x=1741502203;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rzMGwPnvoDSEYaK16KRAWfgUItfUZTdq/AQjm2L9eII=;
+        b=jihfvmO3lvoesLUB+EP2THmIKhHJk0vY5Q8CbOAyADPh3xCKdfvRr8X7ogGDFZCWUt
+         TOgE+ybSgAFSlgfuOYB2fL36tgygqF3QGJCK4vEcNZ8rf88MZYA8oKNJCWfodz504Nkd
+         HkHePRFPe6POxFOyQXgq17cK3i58XwmKNRe+QGUU7gGY1tZEntbLrBBVDmHNaVv0U0pG
+         xNJLVy9F1iC9okcCeYB/2U0NpZK8ZxwWVlL67XkIXoeccTmqMPbrYkrI4yOTiKBRqBpM
+         vU/MV1XdD5RlG4gZHFNqwvhB4gIQHCHL6CoNrU1aC2Sx5Q3owaKWPShTVUaxA/67/Sou
+         aauw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjhzjHiqkIJk18H6JmfxJKWYm6eKCSpPv+WjayP1umtzV1JOU9RcP0+sGF+E11REHsBDp7hNxmbYhRnwQ=@vger.kernel.org, AJvYcCV8I1r2lHgOAUnP56uYZ0s60bJcgmpyKc6hy+/e/cQ9V/pxwCPmby89Hkm58ttSFiFQ9POgibGcBGop8rcr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3mtbiLVhbtXLHp4YiEd54eH+xERfMw5CWvyor/P3fzIbpdbv3
+	+TzfQWUH3A9Ii5cuGl3JkIG51JI6bIB8HzGbrisLoqNMZlcmvNnq
+X-Gm-Gg: ASbGncudX0DcS1uw7F5iFWfIC3BVXQ5rLbuxpnD+ivKZN/ZMJ5a1SX+dfheRChRfr7X
+	bspo6jr26jXWgwZnT2kfgK73vbdlVY3Z78obXy2+bsFCW4HR3GNdoZJUdrZohJRiCZiRxL6Nc4O
+	vDgGjUlcpjN+87I/hs+fmzgZu1royt+/9Cs1J+Z6sI60uUKzpTVKSZTnOUbHy9WFBdT9b4K01aj
+	FAxWl+Bxje5T1SkerdWLfPHFqGtwoRC34mv7lZUv9bGasneus5HcRMQPbfGZZZaHTFTogPXApAL
+	SP6j4gFt/wzl5rzku+aJ3Uda7/ZGFEQiuZnRGXOaM2lgvVzsQ2VJwzPgw1v5CZjRsMBI2Z2JypT
+	tlm59sq+nVKy4zLWTIkVDk6vjnIjbCS06ahddxTQkag==
+X-Google-Smtp-Source: AGHT+IGkIQOFiqEmXNxzFZzG41J/khfewlbZBC3x8j5mgOuLU5OdWYSntHHWFj3iwpDvjlgDAnZNXA==
+X-Received: by 2002:a17:902:e54e:b0:223:53f2:df0d with SMTP id d9443c01a7336-22368bcef7bmr135603185ad.0.1740897403179;
+        Sat, 01 Mar 2025 22:36:43 -0800 (PST)
+Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c82dfsm56994255ad.114.2025.03.01.22.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Mar 2025 22:36:42 -0800 (PST)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: pmladek@suse.com
+Cc: akpm@linux-foundation.org,
+	bhe@redhat.com,
+	decui@microsoft.com,
+	gregkh@linuxfoundation.org,
+	haiyangz@microsoft.com,
+	hamzamahfooz@linux.microsoft.com,
+	jani.nikula@intel.com,
+	jfalempe@redhat.com,
+	joel.granados@kernel.org,
+	john.ogness@linutronix.de,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ryotkkr98@gmail.com,
+	wei.liu@kernel.org
+Subject: Re: [PATCH RFC] panic: call panic handlers before panic_other_cpus_shutdown()
+Date: Sun,  2 Mar 2025 15:36:38 +0900
+Message-Id: <20250302063638.7096-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <Z784BiUZohADyoOW@pathway.suse.cz>
+References: <Z784BiUZohADyoOW@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH] mm: page_frag: Fix refill handling in
- __page_frag_alloc_align()
-To: Haiyang Zhang <haiyangz@microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-Cc: Dexuan Cui <decui@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
- Paul Rosswurm <paulros@microsoft.com>, "olaf@aepfle.de" <olaf@aepfle.de>,
- vkuznets <vkuznets@redhat.com>, "davem@davemloft.net" <davem@davemloft.net>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linyunsheng@huawei.com" <linyunsheng@huawei.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Alexander Duyck <alexander.duyck@gmail.com>
-References: <1740794613-30500-1-git-send-email-haiyangz@microsoft.com>
- <cc3034c6-2589-4e9a-97af-a7879998d7d8@gmail.com>
- <MN0PR21MB3437E18AA793762F242BE795CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
- <MN0PR21MB3437DB9A18F1C354963C5EF3CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
-Content-Language: en-US
-From: Yunsheng Lin <yunshenglin0825@gmail.com>
-In-Reply-To: <MN0PR21MB3437DB9A18F1C354963C5EF3CACF2@MN0PR21MB3437.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/2/2025 7:16 AM, Haiyang Zhang wrote:
+Hi Petr!
 
-...
+On Wed, 26 Feb 2025 16:49:26 +0100, Petr Mladek wrote:
+>On Sat 2025-02-22 14:44:05, Ryo Takakura wrote:
+>> On Fri, 21 Feb 2025 16:23:07 -0500, Hamza Mahfooz wrote:
+>> >On Fri, Feb 21, 2025 at 11:23:28AM +0900, Ryo Takakura wrote:
+>> >> On Thu, 20 Feb 2025 17:53:00 -0500, Hamza Mahfooz wrote:
+>> >> >Since, the panic handlers may require certain cpus to be online to panic
+>> >> >gracefully, we should call them before turning off SMP. Without this
+>> >> >re-ordering, on Hyper-V hv_panic_vmbus_unload() times out, because the
+>> >> >vmbus channel is bound to VMBUS_CONNECT_CPU and unless the crashing cpu
+>> >> >is the same as VMBUS_CONNECT_CPU, VMBUS_CONNECT_CPU will be offlined by
+>> >> >crash_smp_send_stop() before the vmbus channel can be deconstructed.
+>> >> >
+>> >> So maybe panic_other_cpus_shutdown() should be palced after 
+>> >> atomic_notifier_call_chain() along with printk_legacy_allow_panic_sync()
+>> >> like below?
+>> >> 
+>> >> ----- BEGIN -----
+>> >> diff --git a/kernel/panic.c b/kernel/panic.c
+>> >> index d8635d5cecb2..7ac40e85ee27 100644
+>> >> --- a/kernel/panic.c
+>> >> +++ b/kernel/panic.c
+>> >> @@ -372,16 +372,16 @@ void panic(const char *fmt, ...)
+>> >>         if (!_crash_kexec_post_notifiers)
+>> >>                 __crash_kexec(NULL);
+>> >> 
+>> >> -       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+>> >> -
+>> >> -       printk_legacy_allow_panic_sync();
+>> >> -
+>> >>         /*
+>> >>          * Run any panic handlers, including those that might need to
+>> >>          * add information to the kmsg dump output.
+>> >>          */
+>> >>         atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>> >> 
+>> >> +       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+>> >> +
+>> >> +       printk_legacy_allow_panic_sync();
+>> >> 
+>> >>         panic_print_sys_info(false);
+>> >> 
+>> >>         kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
+>> >> ----- END -----
+>> >
+>> >Ya, that looks fine to me, that's actually how I had it initally, but I
+>> >wasn't sure if it had to go before the panic handlers. So, I erred on
+>> >the side of caution.
+>
+>The ordering (stopping CPUs before allowing printk_legacy loop)
+>is important from the printk POV. So, keep it, please.
 
->> We are already aware of this, and have error checking in place for the
->> failover
->> case to "base page".
->>
->>  From the discussion thread above, there are other drivers using
->> page_frag_alloc_align() for over PAGE_SIZE too. If making the page_frag
->> API
->> support only fragsz <= PAGE_SIZE is desired, can we create another API?
->> One
->> keeps the existing API semantics (allowing > PAGE_SIZE), the other uses
->> your new code. By the way, it should add an explicit check and fail ALL
->> requests
->> for fragsz > PAGE_SIZE. Currently your code successfully allocates big
->> frags
->> for a few times, then fail. This is not a desired behavior. It's also a
->> breaking change for our MANA driver, which can no longer run Jumbo frames.
+Thanks for the check.
 
-It seems there was some memory corruption problem that may caused by
-reuse of the previously allocated frag cache memory by following a
-LARGER allocations before 'using initial zero offset'.
+>> I see, sorry that I was only speaking in relation to stored backtraces.
+>> It seems that printk_legacy_allow_panic_sync() is placed before
+>> atomic_notifier_call_chain() so that it can handle flushing before calling
+>> any panic handlers as described [0].
+>
+>> [0] https://lore.kernel.org/lkml/ZeHSgZs9I3Ihvpye@alley/
+>
+>> I'm not really familar with the problems associated with panic handlers
+>> so I hope maybe John and Petr can help on this matter...
+>
+>Honestly, I do not have much experience with failures of the panic
+>notifiers. But I saw a patchset which tried to add filtering of
+>some problematic ones, see
+>https://lore.kernel.org/lkml/20220108153451.195121-1-gpiccoli@igalia.com/
+>
+>I did not like the way of ad-hoc filtering. The right solution was to
+>fix the problematic notifiers.
+>
+>Anyway, it went out that the situation was not that easy. The notifiers
+>do various things. Some of them just printing extra information. Others
+>stopped or suspended some devices or services. Some should be called
+>before and some after crash_dump.
+>
+>The outcome was a monster-patchset which tried to fix some problematic
+>notifiers and split them into more notifier chains, see
+>https://lore.kernel.org/all/20220427224924.592546-1-gpiccoli@igalia.com/
+>
+>Some of the fixes were accepted but the split has never been done.
 
-https://lore.kernel.org/netdev/b711ca5f-4180-d658-a330-89bd5dcb0acb@gmail.com/T/#m12ebdefb8ee653b281d477d2310218b4ac138cde
+I see. I went through some of the discussions on the thread [0]
+and I can see how complicated the subject is...
 
-'using initial zero offset' seems to just make the API misuse problem
-more obvious.
+>My opinion:
+>
+>1. The best solution would be to make the problematic notifier working
+>   with stopped CPUs. The discussion around [v2] suggests that the author
+>   made it working at least for x86_64, see
+>   https://lore.kernel.org/r/20250221213055.133849-1-hamzamahfooz@linux.microsoft.com
 
->>
->> @Andrew Morton <akpm@linux-foundation.org>
->> And other maintainers, could you please also evaluate the idea above?
->>
-> 
-> And, quote from current doc 6.14.0-rc4:
-> "A page fragment is an arbitrary-length arbitrary-offset area of memory
-> which resides within a 0 or higher order compound page."
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/mm/page_frags.rst
-> 
-> So, it is designed to be *arbitrary-length* within a 0 or higher order
-> compound page.
-> 
-> If the commit 8218f62c9c9b ("mm: page_frag: use initial zero offset for
-> page_frag_alloc_align()") intended to change the existing API semantics
-> to be Page Frag Length <= PAGE_SIZE, the document and all breaking drivers
-> need to be updated.
+I agree. But I also like the below solution as well!
 
-Yes, updating the Documemntation to make it more obvious seems like the
-right thing to do.
+>2. Another good solution might be to do the split of the notifier
+>   chain, for an example, see
+>   https://lore.kernel.org/lkml/Yn0TnsWVxCcdB2yO@alley/
+>
+>   The problematic notifier can be then added into a chain which
+>   is called before stopping CPUs.
 
-> 
-> Thanks,
-> - Haiyang
-> 
+Thanks for sharing this! Such an interesting discussion on what and when 
+should be handled in panic path. I think I have a better picture of panic()
+now :).
 
+>3. In the worst case, you could change the ordering as proposed above.
+>   I am just afraid that it might bring in new problems. There might
+>   be notifiers which were not tested with more running CPUs...
+>
+>
+>In general, the system is in an unpredictable state when panic() is
+>called. Notifiers should not expect that non-panic CPUs will be
+>able to handle any requests.
+>
+>Also it looks like a good idea to stop non-panic CPUs as soon as possible.
+>Otherwise, they might create more harm than good.
+
+I see. I also think that 3. might introduce new problems...
+It goes against the general statements which you pointed out 
+in which case its not really a problem of handler anymore.
+
+Sincerely,
+Ryo Takakura
+
+>Best Regards,
+>Petr
+
+[0] https://lore.kernel.org/lkml/20220427224924.592546-25-gpiccoli@igalia.com/
 
