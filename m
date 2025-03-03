@@ -1,153 +1,200 @@
-Return-Path: <linux-hyperv+bounces-4210-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4211-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39836A4D3FB
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 07:40:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20021A4E1E1
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 15:55:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E4A73AAA67
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 06:39:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACA373BA35F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 14:42:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27A7C1F4703;
-	Tue,  4 Mar 2025 06:40:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D41225D20C;
+	Tue,  4 Mar 2025 14:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ShSP2F4X"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="p3bK6d8D"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5FE1EF390;
-	Tue,  4 Mar 2025 06:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF7D253B6C
+	for <linux-hyperv@vger.kernel.org>; Tue,  4 Mar 2025 14:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741099217; cv=pass; b=Csi4XxXQmqF97zdPVudIBJlbAfIfKVq1RW77mz10MQ4nL0p04CwZXxxoHr1jPFEkfj6I/p3dX8pXdFnW2ffIMZdWpQjKzr+NEbziu3Oy3bV15Nz0zrxwBEXreCCbRMsi6Emy5VD647wKkIrnsb5dIRMSwwPzV8wMurNvT5b2lTQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741099217; c=relaxed/simple;
+	bh=32Qik+C6Gy82VbaZ+W9H7pBMHl/CZaXxobg9NI2Xga4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RYSLkuwirdMCYCBwhxcSeEThPYzmTl5j2wbmBNKUmHpCztgQOo8eYh6W8k1FB06ZZd4vGmJ0IIK5n+kAqY9xL25gRNOGejiOzOy9MLV237ivOBARuajyHefchszRx69eW1ybINQQ3kou9ZXKT9aFkJeP85avyKtgOjYkLMYW+SM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=p3bK6d8D; arc=none smtp.client-ip=209.85.221.48; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; arc=pass smtp.client-ip=160.75.25.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 60A0440CF138
+	for <linux-hyperv@vger.kernel.org>; Tue,  4 Mar 2025 17:40:13 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key, unprotected) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=p3bK6d8D
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dbR3LGVzFwYf
+	for <linux-hyperv@vger.kernel.org>; Tue,  4 Mar 2025 17:38:43 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 16F654275B; Tue,  4 Mar 2025 17:38:32 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=p3bK6d8D
+X-Envelope-From: <linux-kernel+bounces-541609-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=p3bK6d8D
+Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
+	by le2 (Postfix) with ESMTP id 2551E41E09
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:41:27 +0300 (+03)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id CAAF1305F789
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:41:26 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BCC2162C72
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:41:25 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51AD4202F65;
+	Mon,  3 Mar 2025 11:40:24 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43F920296C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741070404; cv=none; b=Jxh4DbnNDgtIN/P9DrtGMaGr7l706/IpVE/bHDTjeXyGaTet9jiOcgEIEk/k9/x3HlRyIAOdShXMGqo37UQPC/PoQ2DvV3zBfWTM8iH9MwFcddaUW5M5QhTvZinsES9jPe1uUihx+XrxtN23wU+Rfm3B88er0LhFZWn5ekqX6Ko=
+	t=1741002021; cv=none; b=Ch2ycr6idfAlIyRguf6XUiHCQMr4cHUOhbegOj8b0TMDNw0PSTIyaupPVHAIuQtsmCD9gtow+zaJHMIqU6TaouIBrs6ldCFMflrhNngtEXK6kFyb5cb5oxRaNH2KsILEi1+sWynL3ZZRT4fczgYqZ25a6vWdZv8w6zOzvgWt6Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741070404; c=relaxed/simple;
-	bh=L6Kn7/pcyX4sixRSMwjPYfWPrrukaks09cKCzVtg2Ko=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oS2xMXRETjDVsmxC0KsHXKZnId+YfcWLOghFYe12Yufuj24wxqm7LNzzogCOR5DUgb4DmwxvGe8qp5jeOXtvjXvpFjU98fF+u8fOZ5B+cdo3Tamd6FWpD4g48Wb4zH99tWKVQiXkDcgd3W1HTOkabWB21F5v4b+KUU/6S6FkpTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=ShSP2F4X; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523MkFcv014013;
-	Mon, 3 Mar 2025 22:39:47 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=IN6vN4UD4bD2YhMl6yv2TFyow
-	tG7VQ1DGZOuXkEAjjU=; b=ShSP2F4XfOkh487S+Hmq8lcGVdoa8yjC2EMxoZFJJ
-	OVCFNeTUrL6RrZ7azqzNHctZUNBtgfK9YH60x1UCYsWPFYP1WS4v2GvY+hv3TthA
-	xFlGiNB0HgilTFwgLFlrdgDctYdh1vn2chEIWu78i6XHhBxM0xQ58zu3nSiynXZ+
-	He5qaARmyLiHcGWU0xMMQCU9k//L7sUpKZ3KgiRfUQIP4TKn8sJpMy+17uD0IIl8
-	70CuRvWhWF1A8MK2Wo+P6gBr06EvbctFmIypXfwYwW2Et4cq6g0QLjpFkEM8zHrD
-	RvnMbfTj4jZwlrSTydkIRiNjuwTPU3IgVXlJ1c3EG/M6g==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 454qcfc89y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 22:39:47 -0800 (PST)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 3 Mar 2025 22:39:45 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 3 Mar 2025 22:39:45 -0800
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id 042693F707B;
-	Mon,  3 Mar 2025 22:39:41 -0800 (PST)
-Date: Tue, 4 Mar 2025 12:09:40 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: <longli@linuxonhyperv.com>
-CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Konstantin Taranov <kotaranov@microsoft.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <linux-rdma@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, Long Li
-	<longli@microsoft.com>
-Subject: Re: [Patch rdma-next] RDMA/mana_ib: handle net event for pointing to
- the current netdev
-Message-ID: <20250304063940.GA2702870@maili.marvell.com>
-References: <1740782519-13485-1-git-send-email-longli@linuxonhyperv.com>
+	s=arc-20240116; t=1741002021; c=relaxed/simple;
+	bh=32Qik+C6Gy82VbaZ+W9H7pBMHl/CZaXxobg9NI2Xga4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kjhAt4eIT/UH82nLxU/wWPzUqb23+l30FrVs2omLN0wkMgxJTd5yXc21OtRffyBVnbJfhwh83rpLFwDkI+edBQHjXbzVVLPVDNHhWja72YRIMuciHAm9UXCB2CdEmKOXFOeVUVHVnvl9zfSrpIuXIma0AyDKZJPfoJIEYRgVhNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=p3bK6d8D; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390ec7c2d40so2724433f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 03:40:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1741002017; x=1741606817; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4NtAA2UHYocmR2KbGMJPhzPhzOIPXF5Y+cD7gkzWW/A=;
+        b=p3bK6d8DrjrhK0/qO2+o0XXclKbDdJbPyaEJqebJFnj6UftGu/Wlp0g0z460UuK8eQ
+         jqP5dZiDvaf13EWZxYf429fumpQf+BuKXNtjjUA1NBj79GysscTVo0cg0j48fqmhX5NV
+         9efVLZPrgc0Lj4xKJGCHbJmoh8/VB/GderaMZxkIzlOfM8yT/xfitEr/NJBqrSttwzsv
+         D2S8SLnciUvPRACHbdtcIkpSchM5xwppp3eKPT9K2p2QOLfBtVwD7D66BHHzvMMQDhR3
+         p5TyUVouF6jIyBsh7KwZIVWxs5mF+hJOLYmeHoxXDNdBYVQ5ilopY0Vx1AvSDV4gvTVv
+         9zZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741002017; x=1741606817;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4NtAA2UHYocmR2KbGMJPhzPhzOIPXF5Y+cD7gkzWW/A=;
+        b=BBfrxdcDTkV7QihRYcOrSea0Jh+mved6IG3uOdLbUwtc7fpnfzjbIoT6ZkwH8RFjE7
+         8bV2KzpRqzGBTl3AqNOiEOrVQiLI/OZCLDM9nhH++o3bMC5ecRVsfZKjuFUQq/JclNY2
+         4cGZX47fJ3GFslIPQNIOeAkHh2vmtGqjNTHpNJxXkEpTkYvUTGxBzxKvR2jK+3MTbHw/
+         y/VPc+LQKrKXwmhzGb6ihCcM3jTrMX0kUf+p1Q6+AAzSHyMn/L1Z2P7/mXUYi2NcIxwA
+         O2LUEzmZKzIBikJ7K7jmQ+TycjEGgmc1GauyZcwSb38Cg+B/T8qAZDf3N6KlkwldAtTa
+         1kqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnNYUjYkq5pTN9FR0FESnWz8s/18hfmlQ5OlUnAcdp4DbU7EksNv3GjIr0xXrL9hWX3VQVDNZLHJLcNiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHSjWN3xuypSQPglmGS/dvGTbcZgWHgLtK6LzjHhz+GYq/EZ6L
+	Lkq9vOMWdFjFtUASMLN/mJmZFHKfUykPbuzPZH26nUttPa3dyNTdWkHhxaAa3pA=
+X-Gm-Gg: ASbGnctyBpKJOeAAjD6bN9BnoK83hFY//qH/j3vhyOAAqQLCdEFzESAZVov767oWVi/
+	2hRyiGM+o9GmUqqQRxReB14nUCSoR/FF5zncg9PpAW6b2rJVpb78148LLB0HOFILT2mAYCCU0AK
+	p1nqtm8gcoBR9DvtF/ZlO6g2EsYoNrir2uvTN9DSrKo7Wvv6PsJiRyCb7nRxCsUiYIkvUDLkx9P
+	yFpy/AA4kPxjgr6z6q889bXu1vSM5sEMJe93aoN1R9gvYTOGyEdASU28brbLh9M++W6CiZFR5ph
+	f6fL6M09HpX5AJFZKQilPBz+7o9jg18mfYugkJv9YYO5G5Jj9A/XQk8juovYj1vDrSvtZq0P
+X-Google-Smtp-Source: AGHT+IFz1lKrp8HJjVJu85QHKOfDHRDkxYAgfR/PMWyeJaGKL7qzodzH7XjGqSVE9eCdgx8AE4rhHQ==
+X-Received: by 2002:a05:6000:144c:b0:391:c3a:b8ae with SMTP id ffacd0b85a97d-3910c3aba7emr2411994f8f.23.1741002017110;
+        Mon, 03 Mar 2025 03:40:17 -0800 (PST)
+Received: from jiri-mlt.client.nvidia.com ([140.209.217.212])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e479596dsm14212516f8f.7.2025.03.03.03.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 03:40:16 -0800 (PST)
+Date: Mon, 3 Mar 2025 12:40:13 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: longli@linuxonhyperv.com
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Shradha Gupta <shradhagupta@linux.microsoft.com>, Simon Horman <horms@kernel.org>, 
+	Konstantin Taranov <kotaranov@microsoft.com>, Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, 
+	Erick Archer <erick.archer@outlook.com>, linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: Re: [PATCH] hv_netvsc: set device master/slave flags on bonding
+Message-ID: <52aig2mkbfggjyar6euotbihowm6erv3wxxg5crimveg3gfjr2@pmlx6omwx2n2>
+References: <1740781513-10090-1-git-send-email-longli@linuxonhyperv.com>
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1740782519-13485-1-git-send-email-longli@linuxonhyperv.com>
-X-Authority-Analysis: v=2.4 cv=VaMNPEp9 c=1 sm=1 tr=0 ts=67c6a033 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=KPitI-3vFcalBia9:21 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=Odnh0R2cAAAA:8 a=yMhMjlubAAAA:8 a=WLnx8VTwFErqAH7yV0kA:9
- a=CjuIK1q_8ugA:10 a=lNAA6UHySJB7qmBR1x20:22
-X-Proofpoint-ORIG-GUID: TP3-lmfRf75I-umk3i7iCl3RY8Wv3Jv6
-X-Proofpoint-GUID: TP3-lmfRf75I-umk3i7iCl3RY8Wv3Jv6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_03,2025-03-03_04,2024-11-22_01
+In-Reply-To: <1740781513-10090-1-git-send-email-longli@linuxonhyperv.com>
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6dbR3LGVzFwYf
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741703933.68429@ffOBgCRXfEsEZ/o3IeIDpA
+X-ITU-MailScanner-SpamCheck: not spam
 
-On 2025-03-01 at 04:11:59, longli@linuxonhyperv.com (longli@linuxonhyperv.com) wrote:
-> From: Long Li <longli@microsoft.com>
+Fri, Feb 28, 2025 at 11:25:13PM +0100, longli@linuxonhyperv.com wrote:
+>From: Long Li <longli@microsoft.com>
 >
-> When running under Hyper-V, the master device to the RDMA device is always
-> bonded to this RDMA device if it's present in the kernel. This is not
-> user-configurable.
+>Currently netvsc only sets the SLAVE flag on VF netdev when it's bonded. It
+>should also set the MASTER flag on itself and clear all those flags when
+>the VF is unbonded.
+
+I don't understand why you need this. Who looks at these flags?
+
+
 >
-> The master device can be unbind/bind from the kernel. During those events,
-> the RDMA device should set to the current netdev to relect the change of
-> master device from those events.
+>Signed-off-by: Long Li <longli@microsoft.com>
+>---
+> drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
 >
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/infiniband/hw/mana/device.c  | 35 ++++++++++++++++++++++++++++
->  drivers/infiniband/hw/mana/mana_ib.h |  1 +
->  2 files changed, 36 insertions(+)
+>diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+>index d6c4abfc3a28..7ac18fede2f3 100644
+>--- a/drivers/net/hyperv/netvsc_drv.c
+>+++ b/drivers/net/hyperv/netvsc_drv.c
+>@@ -2204,6 +2204,7 @@ static int netvsc_vf_join(struct net_device *vf_netdev,
+> 		goto rx_handler_failed;
+> 	}
+> 
+>+	ndev->flags |= IFF_MASTER;
+> 	ret = netdev_master_upper_dev_link(vf_netdev, ndev,
+> 					   NULL, NULL, NULL);
+> 	if (ret != 0) {
+>@@ -2484,7 +2485,12 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+> 
+> 	reinit_completion(&net_device_ctx->vf_add);
+> 	netdev_rx_handler_unregister(vf_netdev);
+>+
+>+	/* Unlink the slave device and clear flag */
+>+	vf_netdev->flags &= ~IFF_SLAVE;
+>+	ndev->flags &= ~IFF_MASTER;
+> 	netdev_upper_dev_unlink(vf_netdev, ndev);
+>+
+> 	RCU_INIT_POINTER(net_device_ctx->vf_netdev, NULL);
+> 	dev_put(vf_netdev);
+> 
+>-- 
+>2.34.1
 >
-> diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-> index 3416a85f8738..3e4f069c2258 100644
-> --- a/drivers/infiniband/hw/mana/device.c
-> +++ b/drivers/infiniband/hw/mana/device.c
-> @@ -51,6 +51,37 @@ static const struct ib_device_ops mana_ib_dev_ops = {
->  			   ib_ind_table),
->  };
 >
-> +static int mana_ib_netdev_event(struct notifier_block *this,
-> +				unsigned long event, void *ptr)
-> +{
-> +	struct mana_ib_dev *dev = container_of(this, struct mana_ib_dev, nb);
-> +	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-> +	struct gdma_context *gc = dev->gdma_dev->gdma_context;
-> +	struct mana_context *mc = gc->mana.driver_data;
-> +	struct net_device *ndev;
-> +
-> +	if (event_dev != mc->ports[0])
-> +		return NOTIFY_DONE;
-> +
-> +	switch (event) {
-> +	case NETDEV_CHANGEUPPER:
-> +		rcu_read_lock();
-> +		ndev = mana_get_primary_netdev_rcu(mc, 0);
-> +		rcu_read_unlock();
-...
-> +
-> +		/*
-> +		 * RDMA core will setup GID based on updated netdev.
-> +		 * It's not possible to race with the core as rtnl lock is being
-> +		 * held.
-> +		 */
-> +		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-rcu_read_unlock() should be here, right ?
-> +
-> +		return NOTIFY_OK;
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
-> +}
-> +
->
+
 
