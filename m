@@ -1,236 +1,143 @@
-Return-Path: <linux-hyperv+bounces-4194-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4195-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E324A4AF6C
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 07:36:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A112A4BF2B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Mar 2025 12:46:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DCF216E573
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Mar 2025 06:36:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F5E03BA6D0
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Mar 2025 11:40:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958B411CA9;
-	Sun,  2 Mar 2025 06:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959FB202C20;
+	Mon,  3 Mar 2025 11:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqB5MsIX"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="p3bK6d8D"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36751876;
-	Sun,  2 Mar 2025 06:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5E7201249
+	for <linux-hyperv@vger.kernel.org>; Mon,  3 Mar 2025 11:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740897405; cv=none; b=peM28zYpweluN1nHNOH2QG/JVM4rjkYE8QyypsPJrkpnPlyoYfTSkz4jgzLchJ7YQTuFOgzBsNg+5QnDvClsCJnPdEegguTpis7OufbBst0fW7zryLZzIvJm+ztGBK7uE2ismG54UyZQL7L2W4RDURg2tGNzLvVVycprHWUXhzg=
+	t=1741002021; cv=none; b=MZL8BUl9cga/JcNo01ba3Ro3CG58I3yb4FbFfEjH5OGhbAu44Bp5r/vSlo5ac5vq5RFGiHTqUAk+2kN3r1TxKUjTE6eg79U0+e5bI/vQAbLlAZCSWzieUuVB0Wxrj5M3jrTsouW3KZhRC4inDyKeLNdNjfXvY4URKjCkHnKEuDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740897405; c=relaxed/simple;
-	bh=IUCDtHJxXpP/1YHLV1yE44JHu9HS9K3SjWdER+7D04I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xf5aRF7sVXC8JlEjKUZRJG4WeuEo9Ikqtp6zw1otRaUTljDJNsBHE+gfS1nLVbfAXzS4img/3YLH4nca8X9wHUZKduiHJ+jSijRTYrjC77fBYfGAdZcLAbwNvA/miJ8Y+AYs+Tj3jTfZPrkIQIpGkhqB3ANvmCf3mYXuK4We7Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WqB5MsIX; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22356471820so53352585ad.0;
-        Sat, 01 Mar 2025 22:36:43 -0800 (PST)
+	s=arc-20240116; t=1741002021; c=relaxed/simple;
+	bh=32Qik+C6Gy82VbaZ+W9H7pBMHl/CZaXxobg9NI2Xga4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kjhAt4eIT/UH82nLxU/wWPzUqb23+l30FrVs2omLN0wkMgxJTd5yXc21OtRffyBVnbJfhwh83rpLFwDkI+edBQHjXbzVVLPVDNHhWja72YRIMuciHAm9UXCB2CdEmKOXFOeVUVHVnvl9zfSrpIuXIma0AyDKZJPfoJIEYRgVhNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=p3bK6d8D; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-439a1e8ba83so40955345e9.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 03 Mar 2025 03:40:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740897403; x=1741502203; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rzMGwPnvoDSEYaK16KRAWfgUItfUZTdq/AQjm2L9eII=;
-        b=WqB5MsIXwyv5QFJBZzN1Wtt4qBFfszNTW6xgJe5ZPqJpplJk4TmIoAj2F7QUP6p+9l
-         9fStNaT3NylyTkvx20T8e1f2gquIq5eYVf/uxJOixssxIszTSkUvwOWqIA5eXomr4jMf
-         9sDJXk63m1hLj3prca3kPXhfF2puwYwM3JsTsckqnUe4NFIv3BO9zyBStjnvEtGkx8MD
-         f6b5Q7H73KvI2dkwZEW5eYoubgYu26HFNpLABRIH11amyGiI65jA2B/2AqnHAXwEsF3G
-         2OJJ2AY1Uh8WlJMkbDPDSIQwz5pF2W9CoS517Xh/Z0p4/bgGhgLwfAwY/ZNBpbcjZq07
-         Z9/A==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1741002017; x=1741606817; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4NtAA2UHYocmR2KbGMJPhzPhzOIPXF5Y+cD7gkzWW/A=;
+        b=p3bK6d8DrjrhK0/qO2+o0XXclKbDdJbPyaEJqebJFnj6UftGu/Wlp0g0z460UuK8eQ
+         jqP5dZiDvaf13EWZxYf429fumpQf+BuKXNtjjUA1NBj79GysscTVo0cg0j48fqmhX5NV
+         9efVLZPrgc0Lj4xKJGCHbJmoh8/VB/GderaMZxkIzlOfM8yT/xfitEr/NJBqrSttwzsv
+         D2S8SLnciUvPRACHbdtcIkpSchM5xwppp3eKPT9K2p2QOLfBtVwD7D66BHHzvMMQDhR3
+         p5TyUVouF6jIyBsh7KwZIVWxs5mF+hJOLYmeHoxXDNdBYVQ5ilopY0Vx1AvSDV4gvTVv
+         9zZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740897403; x=1741502203;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rzMGwPnvoDSEYaK16KRAWfgUItfUZTdq/AQjm2L9eII=;
-        b=jihfvmO3lvoesLUB+EP2THmIKhHJk0vY5Q8CbOAyADPh3xCKdfvRr8X7ogGDFZCWUt
-         TOgE+ybSgAFSlgfuOYB2fL36tgygqF3QGJCK4vEcNZ8rf88MZYA8oKNJCWfodz504Nkd
-         HkHePRFPe6POxFOyQXgq17cK3i58XwmKNRe+QGUU7gGY1tZEntbLrBBVDmHNaVv0U0pG
-         xNJLVy9F1iC9okcCeYB/2U0NpZK8ZxwWVlL67XkIXoeccTmqMPbrYkrI4yOTiKBRqBpM
-         vU/MV1XdD5RlG4gZHFNqwvhB4gIQHCHL6CoNrU1aC2Sx5Q3owaKWPShTVUaxA/67/Sou
-         aauw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjhzjHiqkIJk18H6JmfxJKWYm6eKCSpPv+WjayP1umtzV1JOU9RcP0+sGF+E11REHsBDp7hNxmbYhRnwQ=@vger.kernel.org, AJvYcCV8I1r2lHgOAUnP56uYZ0s60bJcgmpyKc6hy+/e/cQ9V/pxwCPmby89Hkm58ttSFiFQ9POgibGcBGop8rcr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3mtbiLVhbtXLHp4YiEd54eH+xERfMw5CWvyor/P3fzIbpdbv3
-	+TzfQWUH3A9Ii5cuGl3JkIG51JI6bIB8HzGbrisLoqNMZlcmvNnq
-X-Gm-Gg: ASbGncudX0DcS1uw7F5iFWfIC3BVXQ5rLbuxpnD+ivKZN/ZMJ5a1SX+dfheRChRfr7X
-	bspo6jr26jXWgwZnT2kfgK73vbdlVY3Z78obXy2+bsFCW4HR3GNdoZJUdrZohJRiCZiRxL6Nc4O
-	vDgGjUlcpjN+87I/hs+fmzgZu1royt+/9Cs1J+Z6sI60uUKzpTVKSZTnOUbHy9WFBdT9b4K01aj
-	FAxWl+Bxje5T1SkerdWLfPHFqGtwoRC34mv7lZUv9bGasneus5HcRMQPbfGZZZaHTFTogPXApAL
-	SP6j4gFt/wzl5rzku+aJ3Uda7/ZGFEQiuZnRGXOaM2lgvVzsQ2VJwzPgw1v5CZjRsMBI2Z2JypT
-	tlm59sq+nVKy4zLWTIkVDk6vjnIjbCS06ahddxTQkag==
-X-Google-Smtp-Source: AGHT+IGkIQOFiqEmXNxzFZzG41J/khfewlbZBC3x8j5mgOuLU5OdWYSntHHWFj3iwpDvjlgDAnZNXA==
-X-Received: by 2002:a17:902:e54e:b0:223:53f2:df0d with SMTP id d9443c01a7336-22368bcef7bmr135603185ad.0.1740897403179;
-        Sat, 01 Mar 2025 22:36:43 -0800 (PST)
-Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c82dfsm56994255ad.114.2025.03.01.22.36.40
+        d=1e100.net; s=20230601; t=1741002017; x=1741606817;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4NtAA2UHYocmR2KbGMJPhzPhzOIPXF5Y+cD7gkzWW/A=;
+        b=T7oAzbQWpMgPDyBa3m2O34gD4Gcm3E1qypyZnr9UefisXi0Yk7qeMFPZNE/PVnuv2m
+         A5g0k8ZAJibrozdvgZ8W9SgZzvXu6PBkrpUaow5dOGdgVinfCjnc48+XnFpcPQp/hhHE
+         4ZG/ZQFZORVk+RJmKANNQFJfd7Bk4/lr8E1yYhC2FWO4cnel7/CYfxTLvXmVDvEKhKwj
+         AXuLGFrjbUdFLjHTjsYiEM/SVSa2cnsJ4ZP3BPI88Nbu7c41CnQCX0KRAtuD/ZoxmC1w
+         FEK1rVnwm9lj9OW4eZoe+L9HL8Lp7TxAnNAcUE6eoGPVrl43xu1Hc8Vw8tMx2/k3OxwF
+         GWXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgf6rw2M+IUm3Ye/Rzk2JuUm6FAOSNVwSVkiMmbC7p06mhgpG6b5nsHP/IULFVPvlWHmKusq9fSfR/2WU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw61ef+fs9Yt8T8I30gUREzMRDFDPzjvMGqSU8nhd2NF6gHE5b2
+	A1V6v762Q4F/21BZbZ1m1E3jpx6CQluTvZQFVRvYY6CULhKoovrzG+kdmZvUaBw=
+X-Gm-Gg: ASbGncv4vXpVbHigKZ5o7tdDgXEVBTzbRHaVwYIJ4cx3nGUMfGOdz8zVNi0hH+pX2h5
+	qJVq8fKRWx8roqHbQjvuEaIlGa8DKWQLx30VtlqUhGFIlfySHD7OH5qEnh81sbRcBeEQPX1SsgN
+	d2JjnP/ppknNMTc18RIpsBQFUF41GDVJStVYzSEDPyj/Q/WHKB7ZK9/KHrL27m8qYJE3HJJg9l9
+	CsSG7NhiWgXQpszaRdWBiDO7qz+vh1JdJG3PiqDIg9ZouIH8m+NhSwocW8f03u1mZp74YPZcIx1
+	v3NQrh0vM/sBeGAsCyYqt9yOIdiGMbUHkNMG/rDj5cELmljPRut2ZmWoE1If8rlsbBgvPO0h
+X-Google-Smtp-Source: AGHT+IFz1lKrp8HJjVJu85QHKOfDHRDkxYAgfR/PMWyeJaGKL7qzodzH7XjGqSVE9eCdgx8AE4rhHQ==
+X-Received: by 2002:a05:6000:144c:b0:391:c3a:b8ae with SMTP id ffacd0b85a97d-3910c3aba7emr2411994f8f.23.1741002017110;
+        Mon, 03 Mar 2025 03:40:17 -0800 (PST)
+Received: from jiri-mlt.client.nvidia.com ([140.209.217.212])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e479596dsm14212516f8f.7.2025.03.03.03.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Mar 2025 22:36:42 -0800 (PST)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: pmladek@suse.com
-Cc: akpm@linux-foundation.org,
-	bhe@redhat.com,
-	decui@microsoft.com,
-	gregkh@linuxfoundation.org,
-	haiyangz@microsoft.com,
-	hamzamahfooz@linux.microsoft.com,
-	jani.nikula@intel.com,
-	jfalempe@redhat.com,
-	joel.granados@kernel.org,
-	john.ogness@linutronix.de,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ryotkkr98@gmail.com,
-	wei.liu@kernel.org
-Subject: Re: [PATCH RFC] panic: call panic handlers before panic_other_cpus_shutdown()
-Date: Sun,  2 Mar 2025 15:36:38 +0900
-Message-Id: <20250302063638.7096-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z784BiUZohADyoOW@pathway.suse.cz>
-References: <Z784BiUZohADyoOW@pathway.suse.cz>
+        Mon, 03 Mar 2025 03:40:16 -0800 (PST)
+Date: Mon, 3 Mar 2025 12:40:13 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: longli@linuxonhyperv.com
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Shradha Gupta <shradhagupta@linux.microsoft.com>, Simon Horman <horms@kernel.org>, 
+	Konstantin Taranov <kotaranov@microsoft.com>, Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, 
+	Erick Archer <erick.archer@outlook.com>, linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: Re: [PATCH] hv_netvsc: set device master/slave flags on bonding
+Message-ID: <52aig2mkbfggjyar6euotbihowm6erv3wxxg5crimveg3gfjr2@pmlx6omwx2n2>
+References: <1740781513-10090-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1740781513-10090-1-git-send-email-longli@linuxonhyperv.com>
 
-Hi Petr!
+Fri, Feb 28, 2025 at 11:25:13PM +0100, longli@linuxonhyperv.com wrote:
+>From: Long Li <longli@microsoft.com>
+>
+>Currently netvsc only sets the SLAVE flag on VF netdev when it's bonded. It
+>should also set the MASTER flag on itself and clear all those flags when
+>the VF is unbonded.
 
-On Wed, 26 Feb 2025 16:49:26 +0100, Petr Mladek wrote:
->On Sat 2025-02-22 14:44:05, Ryo Takakura wrote:
->> On Fri, 21 Feb 2025 16:23:07 -0500, Hamza Mahfooz wrote:
->> >On Fri, Feb 21, 2025 at 11:23:28AM +0900, Ryo Takakura wrote:
->> >> On Thu, 20 Feb 2025 17:53:00 -0500, Hamza Mahfooz wrote:
->> >> >Since, the panic handlers may require certain cpus to be online to panic
->> >> >gracefully, we should call them before turning off SMP. Without this
->> >> >re-ordering, on Hyper-V hv_panic_vmbus_unload() times out, because the
->> >> >vmbus channel is bound to VMBUS_CONNECT_CPU and unless the crashing cpu
->> >> >is the same as VMBUS_CONNECT_CPU, VMBUS_CONNECT_CPU will be offlined by
->> >> >crash_smp_send_stop() before the vmbus channel can be deconstructed.
->> >> >
->> >> So maybe panic_other_cpus_shutdown() should be palced after 
->> >> atomic_notifier_call_chain() along with printk_legacy_allow_panic_sync()
->> >> like below?
->> >> 
->> >> ----- BEGIN -----
->> >> diff --git a/kernel/panic.c b/kernel/panic.c
->> >> index d8635d5cecb2..7ac40e85ee27 100644
->> >> --- a/kernel/panic.c
->> >> +++ b/kernel/panic.c
->> >> @@ -372,16 +372,16 @@ void panic(const char *fmt, ...)
->> >>         if (!_crash_kexec_post_notifiers)
->> >>                 __crash_kexec(NULL);
->> >> 
->> >> -       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
->> >> -
->> >> -       printk_legacy_allow_panic_sync();
->> >> -
->> >>         /*
->> >>          * Run any panic handlers, including those that might need to
->> >>          * add information to the kmsg dump output.
->> >>          */
->> >>         atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
->> >> 
->> >> +       panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
->> >> +
->> >> +       printk_legacy_allow_panic_sync();
->> >> 
->> >>         panic_print_sys_info(false);
->> >> 
->> >>         kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
->> >> ----- END -----
->> >
->> >Ya, that looks fine to me, that's actually how I had it initally, but I
->> >wasn't sure if it had to go before the panic handlers. So, I erred on
->> >the side of caution.
->
->The ordering (stopping CPUs before allowing printk_legacy loop)
->is important from the printk POV. So, keep it, please.
+I don't understand why you need this. Who looks at these flags?
 
-Thanks for the check.
 
->> I see, sorry that I was only speaking in relation to stored backtraces.
->> It seems that printk_legacy_allow_panic_sync() is placed before
->> atomic_notifier_call_chain() so that it can handle flushing before calling
->> any panic handlers as described [0].
 >
->> [0] https://lore.kernel.org/lkml/ZeHSgZs9I3Ihvpye@alley/
+>Signed-off-by: Long Li <longli@microsoft.com>
+>---
+> drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
 >
->> I'm not really familar with the problems associated with panic handlers
->> so I hope maybe John and Petr can help on this matter...
->
->Honestly, I do not have much experience with failures of the panic
->notifiers. But I saw a patchset which tried to add filtering of
->some problematic ones, see
->https://lore.kernel.org/lkml/20220108153451.195121-1-gpiccoli@igalia.com/
->
->I did not like the way of ad-hoc filtering. The right solution was to
->fix the problematic notifiers.
->
->Anyway, it went out that the situation was not that easy. The notifiers
->do various things. Some of them just printing extra information. Others
->stopped or suspended some devices or services. Some should be called
->before and some after crash_dump.
->
->The outcome was a monster-patchset which tried to fix some problematic
->notifiers and split them into more notifier chains, see
->https://lore.kernel.org/all/20220427224924.592546-1-gpiccoli@igalia.com/
->
->Some of the fixes were accepted but the split has never been done.
-
-I see. I went through some of the discussions on the thread [0]
-and I can see how complicated the subject is...
-
->My opinion:
->
->1. The best solution would be to make the problematic notifier working
->   with stopped CPUs. The discussion around [v2] suggests that the author
->   made it working at least for x86_64, see
->   https://lore.kernel.org/r/20250221213055.133849-1-hamzamahfooz@linux.microsoft.com
-
-I agree. But I also like the below solution as well!
-
->2. Another good solution might be to do the split of the notifier
->   chain, for an example, see
->   https://lore.kernel.org/lkml/Yn0TnsWVxCcdB2yO@alley/
->
->   The problematic notifier can be then added into a chain which
->   is called before stopping CPUs.
-
-Thanks for sharing this! Such an interesting discussion on what and when 
-should be handled in panic path. I think I have a better picture of panic()
-now :).
-
->3. In the worst case, you could change the ordering as proposed above.
->   I am just afraid that it might bring in new problems. There might
->   be notifiers which were not tested with more running CPUs...
+>diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+>index d6c4abfc3a28..7ac18fede2f3 100644
+>--- a/drivers/net/hyperv/netvsc_drv.c
+>+++ b/drivers/net/hyperv/netvsc_drv.c
+>@@ -2204,6 +2204,7 @@ static int netvsc_vf_join(struct net_device *vf_netdev,
+> 		goto rx_handler_failed;
+> 	}
+> 
+>+	ndev->flags |= IFF_MASTER;
+> 	ret = netdev_master_upper_dev_link(vf_netdev, ndev,
+> 					   NULL, NULL, NULL);
+> 	if (ret != 0) {
+>@@ -2484,7 +2485,12 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+> 
+> 	reinit_completion(&net_device_ctx->vf_add);
+> 	netdev_rx_handler_unregister(vf_netdev);
+>+
+>+	/* Unlink the slave device and clear flag */
+>+	vf_netdev->flags &= ~IFF_SLAVE;
+>+	ndev->flags &= ~IFF_MASTER;
+> 	netdev_upper_dev_unlink(vf_netdev, ndev);
+>+
+> 	RCU_INIT_POINTER(net_device_ctx->vf_netdev, NULL);
+> 	dev_put(vf_netdev);
+> 
+>-- 
+>2.34.1
 >
 >
->In general, the system is in an unpredictable state when panic() is
->called. Notifiers should not expect that non-panic CPUs will be
->able to handle any requests.
->
->Also it looks like a good idea to stop non-panic CPUs as soon as possible.
->Otherwise, they might create more harm than good.
-
-I see. I also think that 3. might introduce new problems...
-It goes against the general statements which you pointed out 
-in which case its not really a problem of handler anymore.
-
-Sincerely,
-Ryo Takakura
-
->Best Regards,
->Petr
-
-[0] https://lore.kernel.org/lkml/20220427224924.592546-25-gpiccoli@igalia.com/
 
