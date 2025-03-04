@@ -1,129 +1,241 @@
-Return-Path: <linux-hyperv+bounces-4212-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4213-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CFB8A4EC8D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 19:59:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A3C8A4EBEC
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 19:38:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF4B98E5D38
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 17:59:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3F8E16FCF9
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Mar 2025 18:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C80B264602;
-	Tue,  4 Mar 2025 17:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160F22780EC;
+	Tue,  4 Mar 2025 18:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1AETnw5"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SDgUvDYp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020100.outbound.protection.outlook.com [52.101.46.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2ED278179
-	for <linux-hyperv@vger.kernel.org>; Tue,  4 Mar 2025 17:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741109991; cv=none; b=YISm6gHS8aZc7HMM2Fq1rVhx3vlSKplfJ9k0a1dgjNma+t8hjgJM+wM9qqeeWV02bkoKENL5YfMBYmdQlZnYtDsxGIaj6uXisfbQsFaXbCvxeenlWuwQ30N4wenRD2iLxIoFnVVUBFlfRgGYL+cx3FtgPNAQ/4+X/dXiEeGR8NM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741109991; c=relaxed/simple;
-	bh=i50rufOwf6vwyAuooSNBHw4J8VhV9XZ8F0ZF8cluBGI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EPeLMhTXH5S18Fbk9WKkt5YaZinrEiQAIot/+T++39VAQmGlz2AjiHBA0wJVVhNrHTDsPCYJjuUHKq0blKPmJKYvXJwzMkC1hSYfOkmS4NucPj1JXjdCe1zdKVR+Y80c379iAu4RKBw3oQoAzgHAxkDAjM7K57g3eE/1eqLlRI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1AETnw5; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2233b764fc8so104398495ad.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 04 Mar 2025 09:39:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741109989; x=1741714789; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3FoVeE0Ra2glCU+l7ZrrB58ecOTFnnVt+cs3oYhCA=;
-        b=S1AETnw51w0WuOIgCd7ijY4cpBbnjkCH28O29UXQu3oR8WFMcQgAIGPsI5rVuF82U/
-         M32QftimTnv0VZWK527Xk/qCS7ON3xukIkuPSrw33nclYI9VohbEX2qQ4ZaQCTy0xa3b
-         CAXxmNBg9sG4y2bEeEoIvMDkj2zXcJ8MBqd3tULM7NO/fO2Gwlf51e5Zkkn0oenofbqE
-         mndhv5BXCt0QcgtgL+9XnTImnv1QS2EsX4uj4EuuoElioCnCTzPxqxE64C+RS2MG4zyU
-         /QuY/NkZJaGXbnPYskJ3y13LG5s4pF/OYPaScAya5ZuduK2pR/k3Crku6mo1VJ5oE3VQ
-         Dydw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741109989; x=1741714789;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3FoVeE0Ra2glCU+l7ZrrB58ecOTFnnVt+cs3oYhCA=;
-        b=g2GTee54VeVEEa6MCM7s9G8tcntLucHbj/gWASJeMzO9vdJz9k7+UKkPYCq1s6q0ZA
-         wcF7mdLa3SjWkC/xg1gLb93U2QZtj5fTbxoq0Mt3V4vuGYQhdKder0zrOKh0F1l+qQfM
-         iUbbu+IQAtbX4hgY0XYji0TgfTkDQtZFgqdEZG8Fh19/rWTBIzbQCfkr3TeEZwm0XTz1
-         x1ZcGdZF86xD7rD+l6XS3Vw6159cFtCwuEI7WivUbMViXl4RictoHNZnYGFFSAS36YMa
-         W76B6ZJN5CIjt7YY71DYWKBvwOKawCN/sJyovv29tZq7azNRbjTPqftn1bxn/oMb353P
-         OeOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUf5qecvNO1idOV+YZ1bd6RhDlGzFXt+mDBrbA79elkOz9uC76uKJxWllxjs5qofi6Ctab/n399Tn7FRtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5xNDr++RcMhgu+LoZDWn1v8vaDn+kQeAHMQ4+WHnpDOntqfKP
-	CnxiT5BAWVrrTwkyjWNw+iN5K+6sk38sUDSh2/yM1643D4U4NyJLU4/OYHz24Uyxy7MiggZi0OY
-	OzA==
-X-Google-Smtp-Source: AGHT+IGZddoSY2oyJ60dCyqtZiF8YnS+v36sYEMEslkao7NI/8RRXlf38IKWdXRybiMidO4JcJg+/iNohU8=
-X-Received: from pfbfw3.prod.google.com ([2002:a05:6a00:61c3:b0:730:76c4:7144])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:734b:b0:1ee:d418:f758
- with SMTP id adf61e73a8af0-1f2f4cdb421mr28532451637.17.1741109988705; Tue, 04
- Mar 2025 09:39:48 -0800 (PST)
-Date: Tue, 4 Mar 2025 09:39:47 -0800
-In-Reply-To: <SN6PR02MB41576973AC66F8515F6C81F0D4C82@SN6PR02MB4157.namprd02.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0081FE45C;
+	Tue,  4 Mar 2025 18:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.100
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741112769; cv=fail; b=PftEoaP7QIQtJnXMHBqkCycZ558iBGZOKjawDCXY1HAzyZad6juSg+i2am0mLMQD79aMXPQH7PsVV8hwNVXv9XS9RF3yiWk5vWuqRmlcOUWinBVM8xTYX08OVUq4Mgt9WjXdo9SYjvW+hEppxi9SDLXzeSz8JUC8u/SaM85lOXU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741112769; c=relaxed/simple;
+	bh=5LPL2fg8M2ClTK8Sk4muSnkt8iPA5m3bLvBGZmXBrs0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uJAGwQzliM7bZgotzGwFX5a+YCRBDxQtzvMLoq4rM4Lel0qImDOW6omR+YMQxxmcmdcTomJSV0lLaCjkN34VEFwqB0jLjji4SehOSMR/5dUd4rRomdoPYQv4MhX1HJUQr2EtuEmrtp4vMDsYfCDmwxTIb8ncNPBBi8hLHtpMu+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=SDgUvDYp; arc=fail smtp.client-ip=52.101.46.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bGePU7SzBRPy3PLeXdHwPhlWUVTHPUFW2wFH+h2UyJTcFwVD2QBgl+OBpXn8qOTwbB2xha74n/YBFfLyre+3snY76fBX0c5I0vnXUc2C2z1lD1M48JVvhbqSpxOJbjJFReutJO+NCMDKHkYG7z5GGhlzRvwRc/o/xhS4rt93gqHKlOk3syYf/pYe3reQBEPkDFOc6BqxLIPbiDzFuaLq/J1cNNb9dUlc270SqG2VrUWwyty5DGFLfHuyect13s7S3GCmkW73Lcy/Km9za3htpbuU/Spd5VUyNeJBbio4HAe7s6q6WrWKui4s8HOs1Rijl9ExDptOH4yCmz3AXwtQDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jtwAJ+2+oY+8YsjsPbdvoZu6nLEi+ybqW6ggqUbNgCw=;
+ b=SaSuvropmI12weIo5pGugnAYXBpY0SMpto7/uu+cXHuwD3BhuJG5DptfMyfhio3msvzu/wvJWihD1EpqzE9s5jiTYa0ioNsHWr5QUtKbet3qbsHmw9cPFI03pThpqDnrmjrOyNqbMxyuiWySFtOrKrXJJwMqbi1APwvjXtVZoD/k+G6LHAut/BhNg0/FTGhApzFnMIMcqZtqY3ETPUGqHKTF3L1fkLZzVQNNOI71GTjjzPwJnTRd2TmgEwZBJzsiWhjpOLcbF9URfDJem6DQjxlqfMRDnPvL+i5OOn8sM60ydaeCFSIXTJTHAHuAzT8S53zwYTvo7JyLVx03+EKzjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jtwAJ+2+oY+8YsjsPbdvoZu6nLEi+ybqW6ggqUbNgCw=;
+ b=SDgUvDYpQt8g/mxVgmNKASf+MG0/csIBgLhCHWcuclE8De8M7XBqJdx2s/THii1EBLFyfszU0tVPsMyNhdAZugK8j84V3zTT5/mLs8N6/bpZ513CRRd/0Ie+zGYlA7Sx6aw/wWwPvBNgTD8gmG155sQDHrHPQS9PMMfI4faPYEE=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SA6PR21MB4439.namprd21.prod.outlook.com (2603:10b6:806:428::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.13; Tue, 4 Mar
+ 2025 18:26:04 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%4]) with mapi id 15.20.8511.012; Tue, 4 Mar 2025
+ 18:26:04 +0000
+From: Long Li <longli@microsoft.com>
+To: Ratheesh Kannoth <rkannoth@marvell.com>, "longli@linuxonhyperv.com"
+	<longli@linuxonhyperv.com>
+CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [Patch rdma-next] RDMA/mana_ib: handle net event
+ for pointing to the current netdev
+Thread-Topic: [EXTERNAL] Re: [Patch rdma-next] RDMA/mana_ib: handle net event
+ for pointing to the current netdev
+Thread-Index: AQHbjNA/zhmjkp3O9UuGRnLmVPtXL7NjSSPQ
+Date: Tue, 4 Mar 2025 18:26:03 +0000
+Message-ID:
+ <SA6PR21MB423174BA15D8A909CB2A6950CEC82@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <1740782519-13485-1-git-send-email-longli@linuxonhyperv.com>
+ <20250304063940.GA2702870@maili.marvell.com>
+In-Reply-To: <20250304063940.GA2702870@maili.marvell.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e0cafc18-9a06-4504-97de-274a04cf1e0e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-03-04T18:15:17Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA6PR21MB4439:EE_
+x-ms-office365-filtering-correlation-id: 33bae6f3-fa22-4b65-d921-08dd5b4a05ce
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|10070799003|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?pNLzfBR/7YquYankzf6ej14YBFR/J4wp7EJ2HT4deA1Jj8FH9u2fNR5gt8o9?=
+ =?us-ascii?Q?H3psbLDJbJUL+o6BTyr5EgfSZT59Sq5f2AGYKkXgJPaS0hN4zImA6CDmw/66?=
+ =?us-ascii?Q?+RsY18mD0JIb8RJFNPZYA/xhMkMLa0oW6vStBKC9jD+2PzTX56gwzug73Bfy?=
+ =?us-ascii?Q?4Ls0h8pyrJbSTeOzhfktz5QmOB1W/X/Ly+BajwdZ9vEj1ejStWseejQjLazN?=
+ =?us-ascii?Q?plEQde+r3/w2flhoPnDdnllsgpedpluz/sn650/QLy+w2ZGhrFKLH43APY0q?=
+ =?us-ascii?Q?wUq1yU9WZz3yoa+Pj7renv7IvM78RRPuurydj0VY/t4kwMjlcOyykjRUjmLc?=
+ =?us-ascii?Q?dtCltwLQfSho79A7t8i1wu2dn7HK/yDUdR4byHpfd5QrJtD2M2yAi2fjRoEe?=
+ =?us-ascii?Q?L3AYC1SsXaCYeO3bOUcoLt4y4ID4MpsdLDlgFQtpIjilvFkkvmsva1Jai2/l?=
+ =?us-ascii?Q?tIDnJ1jVEEoIuBY9X8jiQmqyjn8jOz7kyZWx5P52pCveOGNkEe30qUehQWsb?=
+ =?us-ascii?Q?R7hBZkTiiu+T8AasN9H8uZyIisy7rSBzxaRW6LXwUkxAns4nFiydj9DhSXnr?=
+ =?us-ascii?Q?ouKJJC/WISDg4xog8n0p2gCGDgN9qkOYW6IEtEXVD0xZ1w6GfwKwuD3KHINT?=
+ =?us-ascii?Q?8LDKbKgQ2AUzIQ8jdzR7EmSAZt04MYI3LMmnxEyrQmOH7LNn6qAw5KjJGtev?=
+ =?us-ascii?Q?QFyJCaNoDuy7tRayixD5xTuMA/h1a5jusKRAZ5GJIUiot+TM8DDAtt2LToxv?=
+ =?us-ascii?Q?8znwmIRLp2RowRIQcD53qbEWFeRXWi+RFqNHxPo9G8YS+i/SyNFI+sbXtopH?=
+ =?us-ascii?Q?3FsuUid3prbxDmaESyUZkQg80WAOpTtLP0gKrEMy/C8fWXhOb6hnXwhdzObi?=
+ =?us-ascii?Q?Y6kZvUKLzWI4iPyi6k6P0UNGCgINH3F1v2+khlLErIGDvATK/Zkf0J1lCT9y?=
+ =?us-ascii?Q?8XrYlDmaHN+sKmw3J0QNo+/ridMeztSu+Vn/MlqP+BsrlYR+7vFiy81eay+g?=
+ =?us-ascii?Q?8d1AhQQETzT561kk/OZpBClrOIuAtWKLT6FPZr/hcduiUTGXVr3uhMYZnSnV?=
+ =?us-ascii?Q?o9e5pMP2zsQQK380VZzBf71tJkbeQe5QPiHdAy25RlffmucmirzpUQw3OWLR?=
+ =?us-ascii?Q?/bpjgUPD5vaITkN38qVV6SrHlc/JnCxpiXNEYeR9S5vNoi/KEVjbjzmkvCGE?=
+ =?us-ascii?Q?/tIyQPbLpgJqtA3aAjsD4xkZcRAqbFAj81u+7jt94UyjxropaGjY/K67OI5r?=
+ =?us-ascii?Q?GzTzQeBe3y3zWZVDjtmCkXHO0Cymc+nwXe+qSB93qXLOGBJwTHmpJ7dQHjd+?=
+ =?us-ascii?Q?LN2dq3iNB1HMYqlHaBxmjjk9H7CBlu7nU2SNvVYFLjYZggWXKXxD07cyOjIz?=
+ =?us-ascii?Q?pyC7V0QI1PdMII+F16Uz4VgVWgM/hEF5yzL9tZ6KwL15i9UOzJqoYiP6u2Eo?=
+ =?us-ascii?Q?KOLRFb11EJmCZihDayi9v9lCI/rcrnXr?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(10070799003)(376014)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?UkocbT32WGMKC//WUIZaMCPP7In0zk8NXxtXl8yxiMHVuCf2T6Vax6sZCe4g?=
+ =?us-ascii?Q?QK26sD2P1ctdIlQVnE70Rg0SZc1GG/yPELNgGfXsf/vu5X58Al9qq/kYJsLX?=
+ =?us-ascii?Q?m2waRS6OHBcE07fwW4M8EFAmdUfLwAfmCCZvO2ULi/NiulfRaailUn38KeR/?=
+ =?us-ascii?Q?ZhcMre8i0fkQv4MCQ3Dr/ZHLWeUYcCkdFg/TE6frlKqqI6tw+H7P4uCP4Cs+?=
+ =?us-ascii?Q?jAZ7V/Y0h5eKJczUvzMjGjMj78iN6xTtyUUgzl5WYxVcJtrEn7zKhz04/3XH?=
+ =?us-ascii?Q?oRu6CI3UzUXoh009di+UNJvuxAk/+PNnNdelH4iLVG/sXHIeNtEzEA91XUX9?=
+ =?us-ascii?Q?n4zu6S6eu4qlIGz3gdWSh0+cF10pKz8HhGQGy78TrTMkW6G2y67PzH351/oG?=
+ =?us-ascii?Q?29Zgyc0k+nCv0xKw8VnYHIr+FyZeDKOFhuTjDvuwC311/MrJPlKzv851DD+1?=
+ =?us-ascii?Q?uHc8grTgd6012kgOecGIdeI5uHezokfwCh3qXyRrqNRZ/MY6vC/2jsd1isq2?=
+ =?us-ascii?Q?2F34UHFy08t8QW9wL8X1+4Am/keRiR8ruIQjGCRIwNDVTpt5XQ7JpQiMhq2w?=
+ =?us-ascii?Q?hi22naLhCGdaoRYuKuVAPIo9ynFOCPFhO6AlkE0JV7hTaTn8sC6MsA6H5Gy8?=
+ =?us-ascii?Q?rtDQhR79P43KrvPAb2oH0XlWXbBoTSEh6OyzD5tHtlelSztRaeoZOa55Yoj4?=
+ =?us-ascii?Q?G4yPIHiDdGcXqepMghOTxLe2XxjS7pRgm+W4gqADTZll4vwhE2jXJOzhwhKT?=
+ =?us-ascii?Q?Kevkc1yWHoDrR/zU6eGDU39v6Kjp1Gm+L7lDpg8SyPjwIHithVgpaf+SGgwi?=
+ =?us-ascii?Q?N2B4F20zcChXod06r/8K9J3am1RJjPipvJBx/2oqoboMFJKiGbvn9+nis2D0?=
+ =?us-ascii?Q?C0XkRlCewlDLdWOROVwSySpKGL4QGGpkr6meDKbAI6Gy5C9BDhD3hmUebTnr?=
+ =?us-ascii?Q?AGiv0hmpSBXWugH/WBA6wEnGPzydGBGvlCpgt58eEZmNI4gl/7zGKrnoxWx3?=
+ =?us-ascii?Q?89i27AnwJU+n/q6vgdUpWqM8Ka8MHM/Skx4YoxO2+NGJIs/EYLW0bD75sFsJ?=
+ =?us-ascii?Q?CLgzyTU2tEdSTwkNBz8UCyVe1JpLB2HPBxTB+YnedUpvyF9Lsi1RrTby1UIM?=
+ =?us-ascii?Q?jkYvRiw6/bI9jsueKsmohP6Um7ybc3JL0BLKWPYlybW3Uui5qXArrMfZ08Tx?=
+ =?us-ascii?Q?Fmynivr+YZVC+GATo9Wdhqca/jPO5NtqCOuTksNB6iVsMy8XuM7mH2Rt2CVj?=
+ =?us-ascii?Q?9Y1gD3Wu6nQAJCQFnljMescjoNBs2wRYPXk+ZAwYSrMef5axH50kx5DLIvtw?=
+ =?us-ascii?Q?KVxHudAhx/RXUA9c3VnHaEbUoyjbYE15vEC6Yz+ZVU4FChYXquzQ+LbD94em?=
+ =?us-ascii?Q?TtEesL5jd6Rr7AHb0HUrVykes8SIW+3WDGJiOHs+jQVIDuQ5DfbIq7uH9K+0?=
+ =?us-ascii?Q?YHJVDQvW9pd/T7mkV+fg2DiPJ/3x636JrKVrlvJSelCQ6/dVaZcZDxLOMRvz?=
+ =?us-ascii?Q?ljePklDWPS8Uv/1x/6OSvPXVldpur/Oa0Op2pGla4G+w/rSe6gQv0Qx0wzlB?=
+ =?us-ascii?Q?ehhb9oOSDhTeJYHy67S306kxDl0rmX1u25+CZmrpde5hEd/Ahsi3U9rtXqxU?=
+ =?us-ascii?Q?krhyugy2QoFD0S1nQiVGt7jaTYVKlIQA4+BRJX5YfcVe?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227021855.3257188-1-seanjc@google.com> <20250227021855.3257188-9-seanjc@google.com>
- <SN6PR02MB41576973AC66F8515F6C81F0D4C82@SN6PR02MB4157.namprd02.prod.outlook.com>
-Message-ID: <Z8c641D3AuWNXGVB@google.com>
-Subject: Re: [PATCH v2 08/38] clocksource: hyper-v: Register sched_clock
- save/restore iff it's necessary
-From: Sean Christopherson <seanjc@google.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Juergen Gross <jgross@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	John Stultz <jstultz@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Nikunj A Dadhania <nikunj@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33bae6f3-fa22-4b65-d921-08dd5b4a05ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2025 18:26:03.9125
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ACpWZttNJP8x4ZAZQfZpVdeoBoKhFya9mI+f3Hy7kUOAE32mdQP660o9l5X5Xue/+brVjEuiTgs+cEBskGpLcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4439
 
-On Tue, Mar 04, 2025, Michael Kelley wrote:
-> From: Sean Christopherson <seanjc@google.com> Sent: Wednesday, February 26, 2025 6:18 PM
-> > 
-> > Register the Hyper-V timer callbacks or saving/restoring its PV sched_clock
-> 
-> s/or/for/
-> 
-> > if and only if the timer is actually being used for sched_clock.
-> > Currently, Hyper-V overrides the save/restore hooks if the reference TSC
-> > available, whereas the Hyper-V timer code only overrides sched_clock if
-> > the reference TSC is available *and* it's not invariant.  The flaw is
-> > effectively papered over by invoking the "old" save/restore callbacks as
-> > part of save/restore, but that's unnecessary and fragile.
-> 
-> The Hyper-V specific terminology here isn't quite right.  There is a
-> PV "Hyper-V timer", but it is loaded by the guest OS with a specific value
-> and generates an interrupt when that value is reached.  In Linux, it is used
-> for clockevents, but it's not a clocksource and is not used for sched_clock.
-> The correct Hyper-V term is "Hyper-V reference counter" (or "refcounter"
-> for short).  The refcounter behaves like the TSC -- it's a monotonically
-> increasing value that is read-only, and can serve as the sched_clock.
-> 
-> And yes, both the Hyper-V timer and Hyper-V refcounter code is in a
-> source file with a name containing "timer" but not "refcounter". But
-> that seems to be the pattern for many of the drivers in
-> drivers/clocksource. :-)
+> On 2025-03-01 at 04:11:59, longli@linuxonhyperv.com
+> (longli@linuxonhyperv.com) wrote:
+> > From: Long Li <longli@microsoft.com>
+> >
+> > When running under Hyper-V, the master device to the RDMA device is
+> > always bonded to this RDMA device if it's present in the kernel. This
+> > is not user-configurable.
+> >
+> > The master device can be unbind/bind from the kernel. During those
+> > events, the RDMA device should set to the current netdev to relect the
+> > change of master device from those events.
+> >
+> > Signed-off-by: Long Li <longli@microsoft.com>
+> > ---
+> >  drivers/infiniband/hw/mana/device.c  | 35
+> > ++++++++++++++++++++++++++++  drivers/infiniband/hw/mana/mana_ib.h |
+> > 1 +
+> >  2 files changed, 36 insertions(+)
+> >
+> > diff --git a/drivers/infiniband/hw/mana/device.c
+> > b/drivers/infiniband/hw/mana/device.c
+> > index 3416a85f8738..3e4f069c2258 100644
+> > --- a/drivers/infiniband/hw/mana/device.c
+> > +++ b/drivers/infiniband/hw/mana/device.c
+> > @@ -51,6 +51,37 @@ static const struct ib_device_ops mana_ib_dev_ops =
+=3D {
+> >                          ib_ind_table),  };
+> >
+> > +static int mana_ib_netdev_event(struct notifier_block *this,
+> > +                             unsigned long event, void *ptr) {
+> > +     struct mana_ib_dev *dev =3D container_of(this, struct mana_ib_dev=
+, nb);
+> > +     struct net_device *event_dev =3D netdev_notifier_info_to_dev(ptr)=
+;
+> > +     struct gdma_context *gc =3D dev->gdma_dev->gdma_context;
+> > +     struct mana_context *mc =3D gc->mana.driver_data;
+> > +     struct net_device *ndev;
+> > +
+> > +     if (event_dev !=3D mc->ports[0])
+> > +             return NOTIFY_DONE;
+> > +
+> > +     switch (event) {
+> > +     case NETDEV_CHANGEUPPER:
+> > +             rcu_read_lock();
+> > +             ndev =3D mana_get_primary_netdev_rcu(mc, 0);
+> > +             rcu_read_unlock();
+> ...
+> > +
+> > +             /*
+> > +              * RDMA core will setup GID based on updated netdev.
+> > +              * It's not possible to race with the core as rtnl lock i=
+s being
+> > +              * held.
+> > +              */
+> > +             ib_device_set_netdev(&dev->ib_dev, ndev, 1);
+> rcu_read_unlock() should be here, right ?
 
-Heh, wading through misleading naming is basically a right of passage in the kernel.
+It can't.  ib_device_set_netdev() is calling alloc_port_data() and may slee=
+p.
 
-Thanks for the reviews and testing!  I'll fixup all the changelogs.
+I think this locking is okay. This event only comes in when:
+1. the master device has changed to netvsc. In this case ndev is guaranteed=
+ to be valid as this notification is triggered by netvsc.
+2. the master device has changed to itself (the ethernet device parent for =
+the IB device).  In this case, ndev is valid because mana_ib is an auxiliar=
+y device to ndev and it can't unload itself at this time.
+
 
