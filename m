@@ -1,95 +1,91 @@
-Return-Path: <linux-hyperv+bounces-4234-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4235-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFC75A5042D
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 17:10:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D79CA5061E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 18:14:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 035E4174773
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 16:09:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6427816E86C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 17:14:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DE6250BF9;
-	Wed,  5 Mar 2025 16:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0335B1A5B8B;
+	Wed,  5 Mar 2025 17:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqxuMXdw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ust7rjDG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275A8250BE1;
-	Wed,  5 Mar 2025 16:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCE61A3160;
+	Wed,  5 Mar 2025 17:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741190976; cv=none; b=MbOAB+Y8UyGbpe23xRZPsq8SvH18fVcSAqFB4r5Eofu4BxPYTxwnXzpB6tP/vWNUmPuBj5PDoyHjU6EBz6McZRpP/t6wRNcFXtfp8fZrFYUJmH54GTVpR8Udkp35HXpLtt1+OfewqE6XjNEvwcpnlVrLQE5bWzFwhPbnK0/RubY=
+	t=1741194844; cv=none; b=UAJLf1x/J9zOZObWECeim0nhfK7oIDmVU30JSkkkefIAsx9hqzvmdJzYej0np4e9+KDznUi2ds7U1k0mE8wIKkMm0oNfLSKuFZtvkQPwaIflkT6sTStjKeGs5nS1XTYIippBMJDlLSAz2EBjWj2n7I369sAyXtGk67lKww2udtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741190976; c=relaxed/simple;
-	bh=GKmV83MRa5t4NkQJ3esvrmWFVjgUKTVYEu/IX/vnRuE=;
+	s=arc-20240116; t=1741194844; c=relaxed/simple;
+	bh=JG3bEgryVkD89ivJEHDvKdoz5pX+G5di1bV0ReHD08c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7Xea7VQ85j4FQf8Omid1dhnQVOak95lwWUmgWp0IP3T2FNDpTQjQo9kxJEeOm2Rg8DIBxe8IqECk9QtTSa0Aj3DpBh3KbIVCmc25jNDGlhyzW8wpLY+odaCRVX/QwuJ+6FRUSQeKqUL1BOfgIEuujQ1BqiahrRbsDcEstlgTM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqxuMXdw; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=PQ9HkdP/X5q0LuDwdSvwS+l8JJPB1N3WDE0gopQdgDo5Kl7mcfpphb3hPAfLStSnBSNXlxqvF5BNE4TELZQrFBtdH7pQ7cq9KbOlPY+Izp9jsrMwpKzhslG4keaARnOvfpuEW8w1ElW4YFMHpNewQAfadvMhRsNcHTm01s3mz2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ust7rjDG; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2234e4b079cso130383205ad.1;
-        Wed, 05 Mar 2025 08:09:34 -0800 (PST)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22334203781so21833985ad.0;
+        Wed, 05 Mar 2025 09:14:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741190974; x=1741795774; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741194843; x=1741799643; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W3ZvhVCBXJoVmMj/QDYwjnvrQ0tg00IV0Ab5gY5yAEQ=;
-        b=OqxuMXdws3OWw0P7ds8BSRPa+IXzPOrlywOJ5fnHh9XFfwyey7iYNq0pmQi40j3YOg
-         cMHvRwyw9vnKf5nWBnYiv3X58jPnjRlA/hUaJacuD/fDCIke42ZBT8R2oTyk9EwQdVHR
-         C7zGSy9vlHhK9JzWRQETywUlUndgiR8hzmp9Bncrk3uqiB9NhJm0WgRaWEa2lpo4lRG1
-         GRczrWTtBxdy7g7IzAjzLir9heAj6f/mPESiY69znZhG8b40H9tMd95tuSSD2dRZsy4I
-         oRRejS+BdMe1/h0BdHaKV9N7CCslUMMafhNmHf9WaMbAXUw7IeXMXF4Zdh/fZql1JPKa
-         5AWQ==
+        bh=PDY4vgETAYK/Bcf1CBHzUdesUL3jSm/FcT00+a6QmGo=;
+        b=Ust7rjDGoqZx3HCrfajj2gtB9xYBYxbHAFmYrxM0smoVZKk77Q6M0kqoqg95PjJqSG
+         dndICRxP3GlP8LtzHOXhnuth0cIlIi3vSzbZSy6/0/x1VVGfYA0CCQ1p+/YB7yU8/xwN
+         /U4lC5o3wO6zzKONdm5GZZSTZLGo9yVEUK4+uPKrscPqzxhQ5TkQsERYBlQZteh38q6Z
+         9xxMHO+Vc3Z00xYcP/iOUSTKm5CHoBYo6T6CVRVxN8GSf7N+v/+rns76vwQ/Tf3TC6mk
+         h/J5J+jLYxN9NHdJ8+e88nlYAxqim64nnzoRyWjckWS7ujnp7C3ne4B1Ky7ZcT6mmYa/
+         5TEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741190974; x=1741795774;
+        d=1e100.net; s=20230601; t=1741194843; x=1741799643;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W3ZvhVCBXJoVmMj/QDYwjnvrQ0tg00IV0Ab5gY5yAEQ=;
-        b=V4DQBnbMA7lbsnMjGkMeGN9FDFwfiY9+y66qgGZTgNKUWURt3UYrMkrnz+1OYiso1F
-         GRFxYTPYd11G4vKduB/rR675dgCaXcasHeH9KVzpro8CiLrEKFErzMotbbQKQmzTszQj
-         1gtLuKtlHFnWlV/KCJ3hhHmEAdJpSNwYUqayxv4hq5B0/QzOq6I6PJUlaRZuoxyrf/jh
-         e74CUISWav9pl3ugu48MqObrXcZbbBNDFST8vQmj/blx2ovx9A3tI02xHbC3WHDBxyhb
-         wLZXSk4GO/1oykdewwFNd8J/zU8kcw/jv0xgqsX9MAfIi0hZOI5kwC17nIhvNMU8pxmO
-         XLSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFCFGEt2zPXi5VeeQcxZ3UYVwi3KWlM6l2ukecqb/EPTnTli7++seLoy/XS+ITnr99GeA9aj2Q+wqgZgLD@vger.kernel.org, AJvYcCVOcdgU4dArYOur+EnPeCUY6MTvj0Vjo5f+5YT+hbLUrq3Ty11ZiFHEnY5dmO2yJ3KXPBO6fVeJiAkkPpLh@vger.kernel.org, AJvYcCWIey76QEiPHrQR2lziWToNMPtkR1xzvW3yGGFgmLXMdVRcoeQ1JaZbIlMrHQ30CV0I+tw=@vger.kernel.org, AJvYcCXTZTepMbqRvuTAqBGUIr9cMLIlZ9cyMNixdHCz1UNrqrhrwr7flsTSdImA1JfRtnip5mLJmXfS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFLGYplRrJG7d08HxQ2f7tKBBGYrphIN1iFBI9UB1qm0KMTrtG
-	5Prh8E2L6awGZj3WdjK2aYOF7A8hpCWCEwE5XmVU/AWgo0I+3R6v
-X-Gm-Gg: ASbGncvqOViXB9qNXA48o2z9y5eXjg6WLoEFGFrLhpxTePPuXR+tydL+IUDV7f6MnPt
-	9BBINGAoIMqf7+uBm9ICjUn4YmEjrOiwvvEO0eMhzg6SNy1j6ml26QsW/3bStisLG807E8D3J6A
-	gO75hXsgNMT8IGCcpNq1tJkIulPvSs5Z1OLGRkQb3cKwL2nB0iiy8D79o9MAE/bzPykee78N/Nx
-	ThvQCjpBU0Fm2igNfPYFgOmtpCcS6uXAhKILVhQQxacyA8qDUBpyFoaGuqcr9frDWiAVqHborjq
-	mnBYaTOCV6pfoJuDoY/1WslaI+oNZQkfTURDNm1X5GWgluvoddFJHM/zbVIuHz/kqA==
-X-Google-Smtp-Source: AGHT+IECEBns91C5EwHlCoDWNpwg07LFYchP/SxyUo4u1fqpcLi7anWcXaFI4dnLEJw/KAKqFZuNdw==
-X-Received: by 2002:a05:6a00:3ccd:b0:736:5f75:4a44 with SMTP id d2e1a72fcca58-73682cc409dmr5359182b3a.22.1741190972845;
-        Wed, 05 Mar 2025 08:09:32 -0800 (PST)
-Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:2::])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7358603f4a2sm10921810b3a.173.2025.03.05.08.09.31
+        bh=PDY4vgETAYK/Bcf1CBHzUdesUL3jSm/FcT00+a6QmGo=;
+        b=kF2yiS1dZmOD94UqNdARa+aNuSBxF5w1cDVViRDVnUHzBVTYMztLVIW5+vRkdrd21f
+         tQxhurc/umE2fpZ4DCcslwVxc4jJxHJR/Ra9oZPS1b5Pm5pj8UyT8NbE7RA/ZSZ2vnDM
+         7itjug/1dr1sdryNAkINBEdw7zfNkjy/L93OTmOK+whbaSYVMMay4/XAeLF1ovo11s0i
+         w5TdMZky/9AOrRfMOhdEFVexMlJEE0UqA0JB/hAJlsTxC6ka0jHQfPXV6aGaxg1u6Nhu
+         ej7+DMwIEnXhcTA5NlGlAD/i3rrSS5W3uND1Lv0k5rv8wIORcvQ1L3Vn44mbMEVc9g+V
+         RWRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyOOeTZEq9dy8OgFWAtVyltOoTqvgdVj+iNsg4otviKyZgsTTcOCb/KPwuqJ3D4WOH67k=@vger.kernel.org, AJvYcCV+WJdQwg5Jth1Okqp1+Z8LvIvdHroTvLDbyv5+wk4CuYW4DrcC8ZMF+1J8yzXPDXPiy4lFmtIM@vger.kernel.org, AJvYcCVa4mYbey2MNt7WSznsBJDo7A1x9a8AMo3PY6oIBG/cMEdr2ttory/tS5qsVv0Ks4LvExvxkonENo6rQETr@vger.kernel.org, AJvYcCVgnUtXFdBLnghdvW+uEkXdSTCOz0A2qpRiEKOY/I8MzQ3cj+pedWfdeMeLTiqwSGiUtAg9A68XwUP892ng@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSySokwwCx39XppRH3cw4KLy6czK6R66ErcAn0q5VJTkFuIy+l
+	3C4xPuz8fjXvJqnmDCkDufqcFdLo9Jw4DJs+R9ZQEshAuOIv1/Mj
+X-Gm-Gg: ASbGnct3X3iWjfSH1N1nC5iaXj9r8keT9DYKueD8SlilRI6ELxCs/z7v1WbeBCvc012
+	DHbf4MHiXvHVa5LDbxuJb88limDyDYnD/wPWsAlXj2vYE4oTpNDgNymeDfOG7didrY7EvkeCtef
+	CRv7i5efCzO5z3pwsMFmk8ZezaNvNwIkudPKrGXTXuw033ojbKyCp/8455QUYOjG7TOrc27cZsR
+	0HAfifSe3T/Nu4FjTSYUIPO/+bp5q9rJgqiAAV/10ksUwd/lu7SD1WwD32F1GuldPZJi2TD84dL
+	6Raoz1FVqgSlwl8y3gmjSYixiYtpIKiWTOQ+6vzu5WHHFKd0qsDpN8Vt5ZA0sy3Zog==
+X-Google-Smtp-Source: AGHT+IEdZkMPD62CNO9btal/a+oXLs3ROwPZYX/AQSk8n+IbCHpG0Z2D91NOXzOmsZW9ggc8Myd3iw==
+X-Received: by 2002:a05:6a00:26f8:b0:732:6276:b46c with SMTP id d2e1a72fcca58-73693cfa00emr165967b3a.0.1741194842711;
+        Wed, 05 Mar 2025 09:14:02 -0800 (PST)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:1::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7364ba1371asm7133443b3a.5.2025.03.05.09.14.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 08:09:32 -0800 (PST)
-Date: Wed, 5 Mar 2025 08:09:30 -0800
+        Wed, 05 Mar 2025 09:14:02 -0800 (PST)
+Date: Wed, 5 Mar 2025 09:14:00 -0800
 From: Bobby Eshleman <bobbyeshleman@gmail.com>
 To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Jason Wang <jasowang@redhat.com>, davem@davemloft.net,
-	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org,
-	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+	Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+	Stefan Hajnoczi <stefanha@redhat.com>,
 	virtualization@lists.linux-foundation.org,
-	linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-	netdev@vger.kernel.org
+	linux-hyperv@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+	Dexuan Cui <decui@microsoft.com>, Jakub Kicinski <kuba@kernel.org>
 Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-Message-ID: <Z8h3OsmQxL3e48ZJ@devvm6277.cco0.facebook.com>
+Message-ID: <Z8iGWLsQGdTv47je@devvm6277.cco0.facebook.com>
 References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200427142518.uwssa6dtasrp3bfc@steredhat>
- <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
- <20200428160052.o3ihui4262xogyg4@steredhat>
- <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
- <20250305022248-mutt-send-email-mst@kernel.org>
- <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt>
+ <Z8eVanBR7r90FK7m@devvm6277.cco0.facebook.com>
+ <cmkkkyzyo34pspkewbuthotojte4fcjrzqivjxxgi4agpw7bck@ddofpz3g77z7>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -98,48 +94,43 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt>
+In-Reply-To: <cmkkkyzyo34pspkewbuthotojte4fcjrzqivjxxgi4agpw7bck@ddofpz3g77z7>
 
-On Wed, Mar 05, 2025 at 10:30:17AM +0100, Stefano Garzarella wrote:
-> On Wed, Mar 05, 2025 at 02:27:12AM -0500, Michael S. Tsirkin wrote:
-> > On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
-> > > I think it might be a lot of complexity to bring into the picture from
-> > > netdev, and I'm not sure there is a big win since the vsock device could
-> > > also have a vsock->net itself? I think the complexity will come from the
-> > > address translation, which I don't think netdev buys us because there
-> > > would still be all of the work work to support vsock in netfilter?
+On Wed, Mar 05, 2025 at 10:42:58AM +0100, Stefano Garzarella wrote:
+> On Tue, Mar 04, 2025 at 04:06:02PM -0800, Bobby Eshleman wrote:
+> > On Thu, Jan 16, 2020 at 06:24:25PM +0100, Stefano Garzarella wrote:
 > > 
-> > Ugh.
-> > 
-> > Guys, let's remember what vsock is.
-> > 
-> > It's a replacement for the serial device with an interface
-> > that's easier for userspace to consume, as you get
-> > the demultiplexing by the port number.
-> > 
-> > The whole point of vsock is that people do not want
-> > any firewalling, filtering, or management on it.
-> > 
-> > It needs to work with no configuration even if networking is
-> > misconfigured or blocked.
+> > One question: what is the behavior we expect from guest namespaces?  In
+> > v2, you mentioned prototyping a /dev/vsock ioctl() to define the
+> > namespace for the virtio-vsock device. This would mean only one
+> > namespace could use vsock in the guest? Do we want to make sure that our
+> > design makes it possible to support multiple namespaces in the future if
+> > the use case arrives?
 > 
-> I agree with Michael here.
+> Yes, I guess it makes sense that multiple namespaces can communicate with
+> the host and then use the virtio-vsock device!
 > 
-> It's been 5 years and my memory is bad, but using netdev seemed like a mess,
-> especially because in vsock we don't have anything related to
-> IP/Ethernet/ARP, etc.
-> 
-> I see vsock more as AF_UNIX than netdev.
+> IIRC, the main use case here was also nested VMs. So a netns could be used
+> to isolate a nested VM in L1 and it may not need to talk to L0, so the
+> software in the L1 netns can use vsock, but only to talk to L2.
 > 
 
-+1, I also agree with this.
+Oh I see. The ioctl(IOCTL_VM_SOCKETS_ASSIGN_G2H_NETNS) makes sense here
+and seems like the simplest approach. Maybe we don't want multiple
+namespaces for virtio-vsocka then? The problem I see is that then users
+might expect non-colliding port spaces, which means there needs to be
+some kind of port-mapping, which would then require vsock users to pass
+around their port mappings out-of-band...
 
-For reference I added netdev to vsock before [1] to use qdisc and at
-least from the qdisc perspect the juice wasn't worth the squeeze (tldr:
-only pfifo_fast worked because vsock can't recover when other qdiscs silently
-drop packets).
+It sounds like none of our known use cases requires non-colliding ports?
 
-[1] https://lore.kernel.org/all/5a93c5aad99d79f028d349cb7e3c128c65d5d7e2.1660362668.git.bobby.eshleman@bytedance.com/
+> > 
+> > More questions/comments in other parts of this thread.
+> 
+> Sure, I'm happy to help with this effort with discussions/reviews!
+> 
+
+Awesome, thank you!
 
 Best,
 Bobby
