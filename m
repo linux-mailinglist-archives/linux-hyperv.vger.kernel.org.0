@@ -1,60 +1,58 @@
-Return-Path: <linux-hyperv+bounces-4241-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4242-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F17F3A50E81
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 23:23:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D97A50F3C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 23:56:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF000189082C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 22:23:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D1141884AE9
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 22:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489C2266EE8;
-	Wed,  5 Mar 2025 22:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DD17208978;
+	Wed,  5 Mar 2025 22:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="WCm/wayB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maZyxnQm"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE53266B54;
-	Wed,  5 Mar 2025 22:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4CC206F0D;
+	Wed,  5 Mar 2025 22:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741213377; cv=none; b=Cw/CjMsYM9pJxqcEuo2kSdHR82QlxY8aJ4NLEznU1j3QTK0i/PiSZl9FFLTuscSwyEGyI7T3I4zd+toRKdVJIS+d6RfFdtsJE9/CVk7tXFXZbv1y2++7k3YhoRrmVk5EGgrZk104Zjjo5Mx2a8WS8sFAbjTJ2CMR55XIT7bGCKc=
+	t=1741215365; cv=none; b=mUUft4b/sdy+a1DMw7idgmAO+t3ZkWVdez1e4xcazvzyCHnGk4Ee27Dh/7NCpdXCR/qDfG4ulnN/jWDD16oJfX/YJjk3lg4kFjkm6RbE08K/ScL12IP3W2qMLWU87L3pvf0f/rmRH10RQdR7ITbohLd/eeOH9CQoJhB0QwmSTe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741213377; c=relaxed/simple;
-	bh=g5JO3k/TCEN3v+HtlCM2BxWRdcgkrqVfcfjTxgeDdvk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ZWxKrsW6SzUB85Jho5L+H6JAJN3zIAPJCevD8uScKEq2K5lBQO0mFdLDYtnIvROkmdieexDbMF0lI2dJV5Azchlg9ZwTXx96nX1lKwWlKMneqoNFOx/50d14NKXUw8ecz4JWkzDig1MZ5mngqJXE/4fezon3ZgnhvsgxaxAc9TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=WCm/wayB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 55C65210EAEE; Wed,  5 Mar 2025 14:22:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 55C65210EAEE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1741213375;
-	bh=iFYkKTLKsLLpSWd4yx8EhrEWqYD3qaO53+zZwdPz6tg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WCm/wayBFYkyM361wiC8ooftmxFgs21ha2rJaWATJYqutOnIlivhgfzXpWg8EZxG2
-	 POY6neYfi9ck8hXCHU98aqt47qs/9NNlyHwEDvdw+PnloglXe7+oKWI4O4ohGCKDU8
-	 3C/ddHoes0oSsHleCErlBGV5PKvllwTDYljpwlxo=
-From: longli@linuxonhyperv.com
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: [patch rdma-next v4 2/2] RDMA/mana_ib: Handle net event for pointing to the current netdev
-Date: Wed,  5 Mar 2025 14:22:40 -0800
-Message-Id: <1741213360-14567-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1741215365; c=relaxed/simple;
+	bh=yOnBm+2kaZIJl8AlUKOtc2CoToj5nxyG3PWHCosgmcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sIfnYhLarOOasyFbKgOFhE7DTk9uJ5/9+s+cv56GD0UjMChtBc4VRX+oJGYTVtxpXPWsd4dh81iYhSPBL+oMF8FvwC0Fgi5HLAK6E1CFgvDWxkO16HmWQExQmPu6BOyEFBMuZCKTEtsFBtdtU3N7UgfX+XTm8GJr5CMnsqNntrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maZyxnQm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CD7C4CED1;
+	Wed,  5 Mar 2025 22:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741215365;
+	bh=yOnBm+2kaZIJl8AlUKOtc2CoToj5nxyG3PWHCosgmcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=maZyxnQmOtbQRSSUlz/TVIFGYOffQLWuohSqKLHUpj2slasW4u+8tGz9lut/bmtTa
+	 iRO0Z1RIvZvGFiwcpY0okGVp6BdumyxlAUNmEhtZLVCFvZvaKqMVR0hCi34f/ZZvGd
+	 0uMGzXmszqlk3ZBcFnTmLm4fvHWFXf0jm/68pLKw+cpojcgjRpcKcFxoVZ54U/MgVY
+	 AWXVYbAXwyN/C8dwXDq03u7BhWPyluwI4gocMqjp5jzUrYRnxQXMDuvoGuORLnpKCX
+	 hlyRct6TfFksoolUS2q2XbuYWHpCJ1BYTb71yFzKn+qEm9I0TqCSx+uWED6HvB31RM
+	 TKABgeIoFHyHw==
+Date: Wed, 5 Mar 2025 14:56:04 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: longli@linuxonhyperv.com
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Konstantin Taranov <kotaranov@microsoft.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, Long Li
+ <longli@microsoft.com>
+Subject: Re: [patch rdma-next v4 1/2] net: mana: Change the function
+ signature of mana_get_primary_netdev_rcu
+Message-ID: <20250305145604.56855467@kernel.org>
 In-Reply-To: <1741213360-14567-1-git-send-email-longli@linuxonhyperv.com>
 References: <1741213360-14567-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
@@ -62,128 +60,15 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Long Li <longli@microsoft.com>
+On Wed,  5 Mar 2025 14:22:39 -0800 longli@linuxonhyperv.com wrote:
+> +	netdev_hold(ndev, NULL, GFP_ATOMIC);
 
-When running under Hyper-V, the master device to the RDMA device is always
-bonded to this RDMA device. This is not user-configurable.
+=F0=9F=98=85=EF=B8=8F
 
-The master device can be unbind/bind from the kernel. During those events,
-the RDMA device should set to the current netdev to reflect the change of
-master device from those events.
-
-Signed-off-by: Long Li <longli@microsoft.com>
----
-Changes
-v2: Add missing error handling when register_netdevice_notifier() fails.
-v3: Change mana_get_primary_netdev() to return with netdev refcount held.
-v4: use netdev_put().
-
- drivers/infiniband/hw/mana/device.c  | 47 ++++++++++++++++++++++++++--
- drivers/infiniband/hw/mana/mana_ib.h |  1 +
- 2 files changed, 46 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 2b4dd34a41ba..d71e1715aea8 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -51,6 +51,38 @@ static const struct ib_device_ops mana_ib_dev_ops = {
- 			   ib_ind_table),
- };
- 
-+static int mana_ib_netdev_event(struct notifier_block *this,
-+				unsigned long event, void *ptr)
-+{
-+	struct mana_ib_dev *dev = container_of(this, struct mana_ib_dev, nb);
-+	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-+	struct gdma_context *gc = dev->gdma_dev->gdma_context;
-+	struct mana_context *mc = gc->mana.driver_data;
-+	struct net_device *ndev;
-+
-+	/* Only process events from our parent device */
-+	if (event_dev != mc->ports[0])
-+		return NOTIFY_DONE;
-+
-+	switch (event) {
-+	case NETDEV_CHANGEUPPER:
-+		ndev = mana_get_primary_netdev(mc, 0);
-+		/*
-+		 * RDMA core will setup GID based on updated netdev.
-+		 * It's not possible to race with the core as rtnl lock is being
-+		 * held.
-+		 */
-+		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-+
-+		/* mana_get_primary_netdev() returns ndev with refcount held */
-+		netdev_put(ndev, NULL);
-+
-+		return NOTIFY_OK;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
- static int mana_ib_probe(struct auxiliary_device *adev,
- 			 const struct auxiliary_device_id *id)
- {
-@@ -108,17 +140,25 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	}
- 	dev->gdma_dev = &mdev->gdma_context->mana_ib;
- 
-+	dev->nb.notifier_call = mana_ib_netdev_event;
-+	ret = register_netdevice_notifier(&dev->nb);
-+	if (ret) {
-+		ibdev_err(&dev->ib_dev, "Failed to register net notifier, %d",
-+			  ret);
-+		goto deregister_device;
-+	}
-+
- 	ret = mana_ib_gd_query_adapter_caps(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to query device caps, ret %d",
- 			  ret);
--		goto deregister_device;
-+		goto deregister_net_notifier;
- 	}
- 
- 	ret = mana_ib_create_eqs(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to create EQs, ret %d", ret);
--		goto deregister_device;
-+		goto deregister_net_notifier;
- 	}
- 
- 	ret = mana_ib_gd_create_rnic_adapter(dev);
-@@ -147,6 +187,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- destroy_eqs:
- 	mana_ib_destroy_eqs(dev);
-+deregister_net_notifier:
-+	unregister_netdevice_notifier(&dev->nb);
- deregister_device:
- 	mana_gd_deregister_device(dev->gdma_dev);
- free_ib_device:
-@@ -162,6 +204,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- 	xa_destroy(&dev->qp_table_wq);
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- 	mana_ib_destroy_eqs(dev);
-+	unregister_netdevice_notifier(&dev->nb);
- 	mana_gd_deregister_device(dev->gdma_dev);
- 	ib_dealloc_device(&dev->ib_dev);
- }
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index b53a5b4de908..d88187072899 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -64,6 +64,7 @@ struct mana_ib_dev {
- 	struct gdma_queue **eqs;
- 	struct xarray qp_table_wq;
- 	struct mana_ib_adapter_caps adapter_caps;
-+	struct notifier_block nb;
- };
- 
- struct mana_ib_wq {
--- 
-2.34.1
-
+I asked you to use this API for the tracker functionality, obviously.
+Please don't pass NULL in.
 
