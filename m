@@ -1,276 +1,132 @@
-Return-Path: <linux-hyperv+bounces-4223-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4224-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF3ADA4F7A5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 08:06:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 529FAA4F7DF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 08:27:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 557957A0866
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 07:05:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7CC13A784E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 07:27:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D69F11EA7C7;
-	Wed,  5 Mar 2025 07:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E631DED5F;
+	Wed,  5 Mar 2025 07:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="als1ojl5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXAGK283"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28ED61E5B98;
-	Wed,  5 Mar 2025 07:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD4A1C84CC
+	for <linux-hyperv@vger.kernel.org>; Wed,  5 Mar 2025 07:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741158372; cv=none; b=rguvpbCsp9RNT3lBCDj8cFBW4ZavDWaa4ykHHvaAxcnWpUtUHCAiFBQnjdsU9KXJ12r68n6u98eJDxe0U1ApAnCVx0I7oGa1UXv8jEVUkc30RUlZ1wOmGMegdCiAqxN2T+G649z7iDj4RD2AFUIy8S5l306COWdOUK9QsxrIHsE=
+	t=1741159646; cv=none; b=j5sfRMY4ybuQ3iwOmE2QCH77h3iKhz1dmygp6GwvBTmARA6q3QexvPz6JhN7ABGOjrl/WxqtILNxZCtKiMkLEBjmHYZP76PZ8gpLYIjytrv786A99oJBpGdsEU68VowfuFJPeaXup29zSzY9W69ctEohiqE5rqswIV3uKmT7xm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741158372; c=relaxed/simple;
-	bh=FM1e1E0SF3Dgi2OfcdcpnZukmIqVm/iKHC5Vg/fliZc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=iHJw+zwIi+W6jv0k9n+izDENqvU8sKYkTxWtimou9EOkKQX6TS3idDoe+p8Gnh/cEc20GC7F6zK7d8lvsPeZA1YUZuAgO3p25lQxsJx3f8m8qijOYv8TIPBpT4CC8lq6kUHz/fe/+9vxagIG0flaPALFwKEVP7rccpjxHkd3fGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=als1ojl5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.95.69.26] (unknown [167.220.238.90])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BCE532112508;
-	Tue,  4 Mar 2025 23:06:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BCE532112508
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741158370;
-	bh=QyCm+Y8e7E2HICPYm7By9xtYFPVDId/Msyeq0pbfnl4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=als1ojl5ZC1WP927xsSYtyulZlWgHYdlQVT19wwkoMrtNuAi7bNSMsiJ2F4bvPjP/
-	 7fW0naJgvIIzl22WGy91MLOOfMjhuUyi+LNaeRuJYaYPPE+dxjTHC0bOobxMj7SaM5
-	 s9riOAUWgGmvlhcSOY6a3lzHHu/sI0nnj5HBTixM=
-Message-ID: <5709eac1-a828-4ab3-afc2-8f1790d5f61f@linux.microsoft.com>
-Date: Wed, 5 Mar 2025 12:36:06 +0530
+	s=arc-20240116; t=1741159646; c=relaxed/simple;
+	bh=ggBjNt/KlzNhbq7zUAZEYyviD7fOL0zcgpYxjiglnLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p+Ki4Qrt602JwKwET/h97nVmNthZlknnLgX/OT2tRXqCK2DsXeglntDGsf3g84XGi+PEhSxtEGU04SnSQgXls/tt8r7bxc3sHKenX7UBK3c54eISUgf5ZIaQ56QMk8avgQaPxT4I3jjXtjmVKey3Ia0mNJIddORrLJMpa5RdpFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SXAGK283; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741159643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Gqpuh7OkhW6l3/SGFe53202mdgSid6lnY8KI4KHLQM=;
+	b=SXAGK283JmTgrgQ8ZpuC/CwpPU60aTOP1K1i3yMMoP1bckoMODmb9JguuLT90Ifk5EhIcl
+	RfS/j0n+/fdEoE0uw3M7LwZFrjZWDMx08MXXixY3ah/DY3enMQtxVn4fswUxaem5T7DzTF
+	6YO0MuoduWqSBROgSAOve6Sh9eLVHBM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-641-yGPnQg7CNxqhSkgv7jRpZA-1; Wed, 05 Mar 2025 02:27:17 -0500
+X-MC-Unique: yGPnQg7CNxqhSkgv7jRpZA-1
+X-Mimecast-MFC-AGG-ID: yGPnQg7CNxqhSkgv7jRpZA_1741159636
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43bd0586b86so6308145e9.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 04 Mar 2025 23:27:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741159636; x=1741764436;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Gqpuh7OkhW6l3/SGFe53202mdgSid6lnY8KI4KHLQM=;
+        b=MAQjBcM7JJwFYmzb2A5a/sHmVJbS2qu6b76vjdgHjguFKqktRUk8dZ+a1Jk4P0LnCA
+         2kK9krW1FCv2qIcUmaMV8KHwHStDTtSagmpQtXTmugrI6CRU0Bhh4yiFyPfgFNgKyBZn
+         wCmIejxbX7KYAEY1czqZmF47vDGcQRlsg42sTntcZJyh3Z0nQkNKbyGpxi4UtEqfNXMm
+         PZhdMI7BmnbqguHsmgeP+x81NrIscUvuWgPL3dSA+R2hVD6iuPzIr46AUUjAnmSdUi44
+         nJQewn8iEGBFst+4sOfc+e/+Q5ownT9sfOWVMHWxKAGlopXTtMnSrvzLo/NU5muVJDD8
+         JG0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW3OsEiGrUbwn/Q43A5lBGlJus4QInjNYIZXS8gXoMT8wc6t9T8GhJn40j+WUObqMuvvS8GCP64tmseVMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRN+rxLFrEtV8rbKQ77HAjCgLuHRfuDB26s8ZOdvRjBIvOBW8o
+	qIZPEOJADVK3gxoMVEB+egdp+8PX/JeGKadUFX/SU7LUonnV9zCLmL6XxF9PJLM2v1kFn9N+VLc
+	nVcDJaBgc21uM5Am/ZZQZuzBYLP37pWF/R0b/EpnW/Rr6R0cfqjKHgrB8iYWxXA==
+X-Gm-Gg: ASbGnctsYDEGf5kxrYewpTN6+Z1JnM2lNUJJ+8J5PTwYDA4KkDeaAXOCPzREsmoaCeg
+	ryfo4th3XnKexOhfe160bTZ/uZbj8n4F1rZ61X3+2+4zg/kg1hC8CRP/pG6N7pW4uvMP1zZXNIj
+	D03XompNNNzfYWkVl1NB6J681+Z77COQB539nCAyNp4Q6Wz5CtAc9DmLk/MkqHJg3QN9NbyIsLJ
+	Y/0AVe4hVdskxTeUknJp91MOqFbzB7tO5NW2uKpqQekdzCmRylBK6AT2wXh/DCIXWQMcuBmDYjp
+	uBHTjzo2IA==
+X-Received: by 2002:a5d:588c:0:b0:391:1222:b459 with SMTP id ffacd0b85a97d-3911f7bd7b9mr1100777f8f.49.1741159636300;
+        Tue, 04 Mar 2025 23:27:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFSwg2gbLwAPlPAn2L1vg/ffvpbpIN3dglqIqZN8294KCbPeBfUkyQP4He1JGn832GdDHxeA==
+X-Received: by 2002:a5d:588c:0:b0:391:1222:b459 with SMTP id ffacd0b85a97d-3911f7bd7b9mr1100756f8f.49.1741159635943;
+        Tue, 04 Mar 2025 23:27:15 -0800 (PST)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a7b88sm19898221f8f.40.2025.03.04.23.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 23:27:15 -0800 (PST)
+Date: Wed, 5 Mar 2025 02:27:12 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Jason Wang <jasowang@redhat.com>, davem@davemloft.net,
+	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org,
+	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+	netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
+Message-ID: <20250305022248-mutt-send-email-mst@kernel.org>
+References: <20200116172428.311437-1-sgarzare@redhat.com>
+ <20200427142518.uwssa6dtasrp3bfc@steredhat>
+ <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
+ <20200428160052.o3ihui4262xogyg4@steredhat>
+ <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
-From: Naman Jain <namjain@linux.microsoft.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Stephen Hemminger <stephen@networkplumber.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>, Long Li <longli@microsoft.com>
-References: <20250225052001.2225-1-namjain@linux.microsoft.com>
- <2025022504-diagnosis-outsell-684c@gregkh>
- <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
- <2025022515-lasso-carrot-4e1d@gregkh>
- <541c63d6-8ae6-4a32-8a02-d86eea64827e@linux.microsoft.com>
- <2025022627-deflate-pliable-6da0@gregkh>
- <0a694947-809d-48b2-9138-d3f6175fe09d@linux.microsoft.com>
- <2025022643-predict-hedge-8c77@gregkh>
- <960501c2-5ab2-4c81-86ac-a4477c0f708a@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <960501c2-5ab2-4c81-86ac-a4477c0f708a@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
 
+On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
+> I think it might be a lot of complexity to bring into the picture from
+> netdev, and I'm not sure there is a big win since the vsock device could
+> also have a vsock->net itself? I think the complexity will come from the
+> address translation, which I don't think netdev buys us because there
+> would still be all of the work work to support vsock in netfilter?
 
+Ugh.
 
-On 2/27/2025 11:54 AM, Naman Jain wrote:
-> 
-> 
-> On 2/26/2025 8:03 PM, Greg Kroah-Hartman wrote:
->> On Wed, Feb 26, 2025 at 05:51:46PM +0530, Naman Jain wrote:
->>>
->>>
->>> On 2/26/2025 3:33 PM, Greg Kroah-Hartman wrote:
->>>> On Wed, Feb 26, 2025 at 10:43:41AM +0530, Naman Jain wrote:
->>>>>
->>>>>
->>>>> On 2/25/2025 2:09 PM, Greg Kroah-Hartman wrote:
->>>>>> On Tue, Feb 25, 2025 at 02:04:43PM +0530, Naman Jain wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2/25/2025 11:42 AM, Greg Kroah-Hartman wrote:
->>>>>>>> On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
->>>>>>>>> On regular bootup, devices get registered to vmbus first, so when
->>>>>>>>> uio_hv_generic driver for a particular device type is probed,
->>>>>>>>> the device is already initialized and added, so sysfs creation in
->>>>>>>>> uio_hv_generic probe works fine. However, when device is removed
->>>>>>>>> and brought back, the channel rescinds and device again gets
->>>>>>>>> registered to vmbus. However this time, the uio_hv_generic 
->>>>>>>>> driver is
->>>>>>>>> already registered to probe for that device and in this case sysfs
->>>>>>>>> creation is tried before the device gets initialized completely.
->>>>>>>>>
->>>>>>>>> Fix this by moving the core logic of sysfs creation for ring 
->>>>>>>>> buffer,
->>>>>>>>> from uio_hv_generic to HyperV's vmbus driver, where rest of the 
->>>>>>>>> sysfs
->>>>>>>>> attributes for the channels are defined. While doing that, make 
->>>>>>>>> use
->>>>>>>>> of attribute groups and macros, instead of creating sysfs 
->>>>>>>>> directly,
->>>>>>>>> to ensure better error handling and code flow.
->>>
->>> <snip>
->>>
->>>>>>>>> +static int hv_mmap_ring_buffer_wrapper(struct file *filp, 
->>>>>>>>> struct kobject *kobj,
->>>>>>>>> +                       const struct bin_attribute *attr,
->>>>>>>>> +                       struct vm_area_struct *vma)
->>>>>>>>> +{
->>>>>>>>> +    struct vmbus_channel *channel = container_of(kobj, struct 
->>>>>>>>> vmbus_channel, kobj);
->>>>>>>>> +
->>>>>>>>> +    if (!channel->mmap_ring_buffer)
->>>>>>>>> +        return -ENODEV;
->>>>>>>>> +    return channel->mmap_ring_buffer(channel, vma);
->>>>>>>>
->>>>>>>> What is preventing mmap_ring_buffer from being set to NULL right 
->>>>>>>> after
->>>>>>>> checking it and then calling it here?  I see no locks here or 
->>>>>>>> where you
->>>>>>>> are assigning this variable at all, so what is preventing these 
->>>>>>>> types of
->>>>>>>> races?
->>>>>>>>
->>>>>>>> thanks,
->>>>>>>>
->>>>>>>> greg k-h
->>>>>>>
->>>>>>> Thank you so much for reviewing.
->>>>>>> I spent some time to understand if this race condition can happen 
->>>>>>> and it
->>>>>>> seems execution flow is pretty sequential, for a particular 
->>>>>>> channel of a
->>>>>>> device.
->>>>>>>
->>>>>>> Unless hv_uio_remove (which makes channel->mmap_ring_buffer NULL) 
->>>>>>> can be
->>>>>>> called in parallel to hv_uio_probe (which had set
->>>>>>> channel->mmap_ring_buffer to non NULL), I doubt race can happen 
->>>>>>> here.
->>>>>>>
->>>>>>> Code Flow: (R, W-> Read, Write to channel->mmap_ring_buffer)
->>>>>>>
->>>>>>> vmbus_device_register
->>>>>>>      device_register
->>>>>>>        hv_uio_probe
->>>>>>>       hv_create_ring_sysfs (W to non NULL)
->>>>>>>            sysfs_update_group
->>>>>>>              vmbus_chan_attr_is_visible (R)
->>>>>>>      vmbus_add_channel_kobj
->>>>>>>        sysfs_create_group
->>>>>>>          vmbus_chan_attr_is_visible  (R)
->>>>>>>          hv_mmap_ring_buffer_wrapper (critical section)
->>>>>>>
->>>>>>> hv_uio_remove
->>>>>>>      hv_remove_ring_sysfs (W to NULL)
->>>>>>
->>>>>> Yes, and right in here someone mmaps the file.
->>>>>>
->>>>>> I think you can race here, no locks at all feels wrong.
->>>>>>
->>>>>> Messing with sysfs groups and files like this is rough, and almost 
->>>>>> never
->>>>>> a good idea, why can't you just do this all at once with the default
->>>>>> groups, why is this being added/removed out-of-band?
->>>>>>
->>>>>> thanks,
->>>>>>
->>>>>> greg k-h
->>>>>
->>>>> The decision to avoid creating a "ring" sysfs attribute by default
->>>>> likely stems from a specific use case where it wasn't needed for every
->>>>> device. By creating it automatically, it keeps the uio_hv_generic
->>>>> driver simpler and helps prevent potential race conditions. 
->>>>> However, it
->>>>> has an added cost of having ring buffer for all the channels, where it
->>>>> is not required. I am trying to find if there are any more 
->>>>> implications
->>>>> of it.
->>>>
->>>> You do know about the "is_visable" attribute callback, right?  Why not
->>>> just use that instead of manually mucking around with the
->>>> adding/removing of sysfs attributes at all?  That is what it was
->>>> designed for.
->>>>
->>>> thanks,
->>>>
->>>> greg k-h
->>>
->>> Hi Greg,
->>> Yes, I am utilizing that in my patch. For differentiating channels of a
->>> uio_hv_generic device, and for *selectively* creating sysfs, we
->>> introduced this field in channel struct "channel->mmap_ring_buffer",
->>> which we were setting only in uio_hv_generic. But, by the time we set
->>> this in uio_hv_generic driver, the sysfs creation has already gone
->>> through and sysfs doesn't get updated dynamically. That's where there
->>> was a need to call sysfs_update_group. I thought the better place to
->>> keep sysfs_update_group would be in vmbus driver, where we are creating
->>> the original sysfs entries, hence I had to add the wrapper functions.
->>> This led us to the race condition we are trying to address now.
->>>
->>>
->>> @@ -1838,6 +1872,10 @@ static umode_t vmbus_chan_attr_is_visible(struct
->>> kobject *kobj,
->>>            attr == &chan_attr_monitor_id.attr))
->>>           return 0;
->>>
->>> +    /* Hide ring attribute if channel's mmap_ring_buffer function is 
->>> not yet
->>> initialised */
->>> +    if (attr ==  &chan_attr_ring_buffer.attr && !channel- 
->>> >mmap_ring_buffer)
->>> +        return 0;
->>> +
->>>       return attr->mode;
->>
->> Ok, that's good.  BUT you need to change the detection of this to be
->> before the device is set up in the driver.  Why can't you do it in the
->> device creation logic itself instead of after-the-fact when you will
->> ALWAYS race with userspace?
->>
->> thanks,
->>
->> greg k-h
-> 
-> Sure, will check more on this. Thanks.
-> 
-> Regards,
-> Naman
-> 
+Guys, let's remember what vsock is.
 
-Hi Greg,
-I understand this is deviating from the discussions that we have had
-till now, but I wanted to kindly request your opinion on the following
-approach, which came up in one of our internal discussions.
+It's a replacement for the serial device with an interface
+that's easier for userspace to consume, as you get
+the demultiplexing by the port number.
 
-By moving the sysfs creation logic from hv_uio_probe to hv_uio_open, I
-believe we can address this problem. Here are some of the benefits of
-this approach:
+The whole point of vsock is that people do not want
+any firewalling, filtering, or management on it.
 
-* This approach involves minimal changes and provides a localized
-solution.
+It needs to work with no configuration even if networking is
+misconfigured or blocked.
 
-* Since the use-case of ring sysfs is specific to uio_hv_generic and
-DPDK, this will give us the flexibility to modify it based on
-requirements. For example, ring_buffer_bin_attr.size should depend on
-the ring buffer's allocated size, which is easier to manage if the
-current code resides in uio_hv_generic.
+-- 
+MST
 
-* The use-case of DPDK is such that at any given time, either the
-hv_netvsc kernel driver or the userspace (DPDK) will be controlling this
-HV_NIC device. We do not want to expose the ring buffer to userspace
-when hv_netvsc is using the device. This is where the "awareness" of the
-current user comes into play, and we need a way to control the
-visibility of the "ring" sysfs from uio_hv_generic.
-
-
-Alternatively, I could focus on resolving the race condition you
-mentioned and proceed with refining the patch. This approach addresses
-most of the general practice concerns you highlighted.
-
-Regards,
-Naman
 
