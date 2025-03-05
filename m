@@ -1,96 +1,94 @@
-Return-Path: <linux-hyperv+bounces-4237-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4238-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63E77A50A48
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 19:51:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32526A50C5E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 21:19:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 479E07A7742
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 18:50:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78109188FFAD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Mar 2025 20:19:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE6DB2517A6;
-	Wed,  5 Mar 2025 18:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E04254852;
+	Wed,  5 Mar 2025 20:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YdKISRre"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRip9jbF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205E61C84B4
-	for <linux-hyperv@vger.kernel.org>; Wed,  5 Mar 2025 18:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3C4253B5D;
+	Wed,  5 Mar 2025 20:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200656; cv=none; b=FmMepmTd+cqdqMvivCLhvHA4n4gchwBtJBv1OgVHzzfrQum/OlbZDepfh/Zr6sIuqgTDLYlr2iC8//4RXY8xY5m9KbOrODEQcoNe1+LWs4ndHoAH+OkW3cONWCowhe07S86IsqA8pLM6+RouX+tzbvGUj0Snsw6M7JjgYIHuyHw=
+	t=1741205971; cv=none; b=szqyFhTSAFu0P0PIkVHEaf9kJts6AydNZFpTklaYbtJHj4F652c5kZJW40rgEgIJmekYWOZ2IDnOTOxnrvanZExvouIABlNnk3iQt8CgJvVhEB+j/KKol53x3MysvIqYM0NxHa+sJmnMTitH4uKwOmAXdRUWkonOowBiIUewyAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741200656; c=relaxed/simple;
-	bh=QbaAYVsuHtR4sFbwYlItPyeMtj1+0TldiW7il+PRxZc=;
+	s=arc-20240116; t=1741205971; c=relaxed/simple;
+	bh=DFv/aofqC6RxYldakRl4YDuw3IKqapk4Psuo0zdjGi4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxOGZhqfTyPgh2C3Fu6WYQarsUJDcY3Ltxicr32wNIKLLjUML8gWUC66tMNmuC8wUPsG/9xJxD4ngz8CgDmZGCLnX6iC8QQbiQxrPok3RKXy827ESXYMWceQLHsBtxKEAnq0/HBWxUwF/7s7WGE+vBeoqEA1U8jdjgKWoB8VQGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=YdKISRre; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e41e18137bso56188866d6.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Mar 2025 10:50:54 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTa7FzRr/q3tXLf3v618YiZYVay1g5d1hFZHt6YCs+xXrd1gWAFJxd3KWZyOlKivn4sV6xC5hM43Gb7jY32r4Po3D2rnC/oYkf0dctz1cxuKXRVhQ/yjXfnUrACfDHq/cZUgl16DfmSIya8IMgyCLvX/dpa7Oyh+snpamoPuRqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iRip9jbF; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2235189adaeso23947645ad.0;
+        Wed, 05 Mar 2025 12:19:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1741200654; x=1741805454; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741205969; x=1741810769; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7/tB8dYiu5A38nEKy58/W/Pt5oX/QvBFHO/wQ46XSc=;
-        b=YdKISRre2vQzP5L91LnjrMPLlIWIMUyv0FCKNrb8H8ZEwRFG3hWoxi3tw6UQImAN8P
-         dC2T8/fDqHcn71EDd95kew5KAHCLbRwWCmexzmO8KLYbo76tEQX/rL+/kFE13HKznSXJ
-         VPIvClo7wJ+3I28B+lVMxtM19Ei0Rhm8tDZojPF9tqbMc+e8OOrMiHTNSgHxNPlw5Rxr
-         Vy16yI2bw8ut1ptKtqydSYdWwQSjMtnzG3m6YpR914NO6TEEAmife16dDa1QUsA40Exw
-         D+fz4MvGGySafE1nvAuaB1u0tWCggL2iFCW27B0Lh86hakThRBKcKgstH3wz4mk1Bz2X
-         HM/w==
+        bh=ggSYKjNiS8Boto5d0Yt8S4og/EP9GTSZBqieM3le2yU=;
+        b=iRip9jbFBu3WsZpH76L1cMDu76nD6Sd9zbHTgh2qOBlaiz0bw0cIUESYk543utZaUq
+         26+IwHbLkmt0s8hoBkXC31JOkOFnPUYTTDM/KfgdY3pJsBxz7DPzo3JlpquFVz5+mD6G
+         WNAhvbyVB7MAIuugyKSBUk6VxVec69eVBqrfAIS3aIUlhPR00LlFx2zw8cH8311W2OkK
+         WnrMqXJH6nTOzsN3TslQQUHe2EF476teOpKPQZDa8wV9+9t5bdo7YU8dAvJQf5Oe46Ut
+         w5MU9EIijLkJJThv15+Ta56Z0ZPy5PQItAcMKtoue07rg/soL/zDPYDrUREHcABxNEPP
+         dpjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741200654; x=1741805454;
+        d=1e100.net; s=20230601; t=1741205969; x=1741810769;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z7/tB8dYiu5A38nEKy58/W/Pt5oX/QvBFHO/wQ46XSc=;
-        b=LieFG2oMIqbnS16nsioYX9vOtGHuGTBesTFTpgmaxDRaPyZ7026yE559dMXkiDz/1X
-         D34pAv7jE/p79pL8xK52unOaxmjULQdY/nXNozqRt7p3zwY/QhPRc4YZSp5TMgHTZC7t
-         MK2UqRXfnqE+0v8sEnuNVZbZ4mjpF/pI0+SXxrEmYS5EI2bo7+ZUWrUhy+Ew0sCWUuZq
-         ylTR/4uqh9PZXLnYFJpof1RvcaZtd/48F1YBadE4RoB9v6yPBVoDQNuebVHFamNrP9Fb
-         khiDXbLgxb5PCrIXcf0Kd/RQeI/AKzj6RjI1+9VKyiHIK5RZffBFXF9kdWCuDTVrE4gV
-         XQ1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU94dhj8GwaOUHma++O/biGJKD8baH5+nm5DkMkvuJqwRo9rQ5jxtTXhktXoao7zzH4yHMghs4jZy64tSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkjCU0BzA+SJ2pKFYdwW55MsNQ8l/sf8Q93H4ZxRHTpT9VZGA8
-	+/OBZjC4WQw2eQKcMvtoTuhj/NGob+GiZPPjLixnt2CxN305FA0daVx9UbPFrBY=
-X-Gm-Gg: ASbGnctckPIOK2+mSYTazQ3UZlOnuEqQzMVSadiboTS8nwL1eTEujqiD1N0KmABJry8
-	lIRCHLV0VX2LkYaAdP5oYR+oWVWRyE1p30JxVmeianU+gz7T+VX550+BWNLTfIqhefwoqnW6m7q
-	FxBjTT3hEPSB2WMc2uM0udDzBx/Cf2S/EBBpK/czSFR2U6vPsSSzQ6hDe7UMJl9C4SzpT1YCaUu
-	fOwN4mWTxwLiibgNRFwxQOiTVihdEi+V5MxGyO/sCTJrS138jmcMLuMSGqqkhd0AAQfi8dSDiuF
-	5bMnxzfA7gCH5uLO3qlzSlCTOVdF1GOv0KnDQBXq56YS5kkU/t7fVODCjJVNZzKLQlxSKgE2mk1
-	m3Xpohn5uk1jxPaNzAw==
-X-Google-Smtp-Source: AGHT+IHBfk4VjAwwmewmwy7/cD04QxrX3NO7CkQZxs6uiHniAKBSHBOE/omselhSlxfJQQW6JbT7mg==
-X-Received: by 2002:a05:6214:518b:b0:6e6:60f6:56cf with SMTP id 6a1803df08f44-6e8e6cfffa9mr54007756d6.5.1741200653911;
-        Wed, 05 Mar 2025 10:50:53 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8e8f52086sm10432506d6.63.2025.03.05.10.50.53
+        bh=ggSYKjNiS8Boto5d0Yt8S4og/EP9GTSZBqieM3le2yU=;
+        b=ZttuigAv1hvVbMfDuVU8geyWyZWmIVHR0vO6q+q2Z7a3d8QDA4DpJXuCxYAGl+Ont+
+         f60/vidCrjRGOx7VcefWTUSGoBHN7kFwSsWUd6U+ZDvYt9HkcD+DaNaqyHJKB4dRZZyE
+         is9yP9Yf6/dSsXoN3WV6o1krFqnmjK8FEj7vBuZj08ls9dJl0uwDoaUeajjD2SvRcovf
+         trIweyh5lOmZYA0uvqw8WudVTjvPkeYW8q/cTVDAbpCEK3PmU3KEpDBmCCRiOGvyYM4W
+         WumiZ9YYtzJmJVM3PN1zjTadR+qhL7nCmKTfNKZQDtGcYlAwP1dawhGBE1Bm+D/cATqr
+         nefA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0SMJlVRPR/hwwY6QPufe2uwWAcgUdjukzZxaNE1UDkmnp0FuuE/93+1ZkT8Reo/wK/YMMRuaU@vger.kernel.org, AJvYcCWlHaFW6FuhPHGw8zigZvB09zAEQq7ed6g2O8D/8HyaMtwdDuXIP9oCxwiMcZoKLsXCn3A=@vger.kernel.org, AJvYcCXCq7ZxaJYY9nu10QoMdCgYxYv2bLdGj9LSsceyI8HEhwp4iF4769eHNEqUo+sdjimbFxhG6KvdzDOfQwDI@vger.kernel.org, AJvYcCXtYpA7j6X8xTenf9oZHXwYl/pjk/9WYJV68itN5Ey7GkEralGOWdK8beLX85sGt3FjJ3qYAryHcVKwiK8y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHVl1KBdQC6RQiF37FpU4RRn+qC5scrnV+UeV9Pov6uyZtPrG/
+	d0yhV0dHFPK2u6Ag8DnIEk7GUi6/cAlY7JE3ZPx9JFpt/BEoEDpQ
+X-Gm-Gg: ASbGnctTDfOwrPJ2kd0HMh0PazKm/E3gTkmt51SHLmLI5G3G2qS2TcM/tLdJJsrQhnw
+	y7/qiIO+047C3zKspgF8dtL+SNwcY4eC40xzXs8Q5HyqwMKCbknFrXuGcrtMGBlLmohrwT80pG4
+	GwEJ39DVLL34tCSPAUf08f3otEC+QRkizeiwxhYSseJcH9H0AMM5Vziw4AMKdLNSBs5nOXHobMV
+	XSYzlvSLK6lU/bq5J/CdL27bh+rztTxRxfdomiAWPH+jikiWuGYVG4iFxwN/uo3NNOwoaT7y33l
+	DYC2Bkqd/wAqCgt6SMmRk/OfvAUt1vFWyv6l1OE3DB57oL7F8AwsJvvt5rV0N0m/fDY=
+X-Google-Smtp-Source: AGHT+IHr2tihJ0au2ICgSWnpCRu00yBghmKv/sVI+EDCEbOk0rg+rxUiD5JA8UUFm0k+OdDJoEO2eA==
+X-Received: by 2002:a17:903:1aab:b0:223:fb95:b019 with SMTP id d9443c01a7336-224094a3c17mr11459415ad.24.1741205968892;
+        Wed, 05 Mar 2025 12:19:28 -0800 (PST)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:71::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7363fa7f540sm8189030b3a.38.2025.03.05.12.19.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 10:50:53 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tptpU-00000001UT9-2uWT;
-	Wed, 05 Mar 2025 14:50:52 -0400
-Date: Wed, 5 Mar 2025 14:50:52 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: longli@linuxonhyperv.com
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: Re: [patch rdma-next v3 1/2] net: mana: Change the function
- signature of mana_get_primary_netdev_rcu
-Message-ID: <20250305185052.GA354403@ziepe.ca>
-References: <1741132802-26795-1-git-send-email-longli@linuxonhyperv.com>
+        Wed, 05 Mar 2025 12:19:27 -0800 (PST)
+Date: Wed, 5 Mar 2025 12:19:26 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	davem@davemloft.net, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+	Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	virtualization@lists.linux-foundation.org,
+	linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
+Message-ID: <Z8ixzohy9a0b9QZ2@devvm6277.cco0.facebook.com>
+References: <20200116172428.311437-1-sgarzare@redhat.com>
+ <20200116172428.311437-2-sgarzare@redhat.com>
+ <20250305022900-mutt-send-email-mst@kernel.org>
+ <CAGxU2F5C1kTN+z2XLwATvs9pGq0HAvXhKp6NUULos7O3uarjCA@mail.gmail.com>
+ <Z8hzu3+VQKKjlkRN@devvm6277.cco0.facebook.com>
+ <CAGxU2F5EBpC1z7QY1VoPewxgEy3zU7P1nZH48PtOV1BtgN=Eyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -99,34 +97,29 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1741132802-26795-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <CAGxU2F5EBpC1z7QY1VoPewxgEy3zU7P1nZH48PtOV1BtgN=Eyg@mail.gmail.com>
 
-On Tue, Mar 04, 2025 at 04:00:01PM -0800, longli@linuxonhyperv.com wrote:
->  
-> -struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index)
-> +struct net_device *mana_get_primary_netdev(struct mana_context *ac, u32 port_index)
->  {
->  	struct net_device *ndev;
->  
-> -	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
-> -			 "Taking primary netdev without holding the RCU read lock");
->  	if (port_index >= ac->num_ports)
->  		return NULL;
->  
-> +	rcu_read_lock();
-> +
->  	/* When mana is used in netvsc, the upper netdevice should be returned. */
->  	if (ac->ports[port_index]->flags & IFF_SLAVE)
->  		ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
->  	else
->  		ndev = ac->ports[port_index];
->  
-> +	dev_hold(ndev);
-> +	rcu_read_unlock();
+On Wed, Mar 05, 2025 at 05:07:13PM +0100, Stefano Garzarella wrote:
+> On Wed, 5 Mar 2025 at 16:55, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+> >
+> > Do you know of any use cases for guest-side vsock netns?
+> 
+> Yep, as I mentioned in another mail this morning, the use case is
+> nested VMs or containers running in the L1 guests.
+> Users (e.g. Kata) would like to hide the L0<->L1 vsock channel in the
+> container, so anything running there can't talk with the L0 host.
+> 
+> BTW we can do that incrementally if it's too complicated.
+> 
 
-That's much better, yes
+Got it! I will try your solution with /dev/vsock-netns (unless there are
+strong feelings otherwise), and if it becomes hairy maybe I'll omit it
+in the next rev.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+I don't think my earlier concern about port collissions in the G2H
+scenario is worth worrying about without a real use case, that doesn't
+sound expected by any users right now.
 
-Jason
+Thanks,
+Bobby
 
