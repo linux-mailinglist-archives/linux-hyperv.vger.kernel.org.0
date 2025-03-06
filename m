@@ -1,206 +1,232 @@
-Return-Path: <linux-hyperv+bounces-4246-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4247-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23487A5400C
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 02:38:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CC99A540FD
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 04:05:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA62A3AF60B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 01:37:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DC1DF7A3186
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 03:04:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADF2B18F2FB;
-	Thu,  6 Mar 2025 01:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C5CD18DB2C;
+	Thu,  6 Mar 2025 03:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aR4C+v7a"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CnYTBW9m"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazolkn19011025.outbound.protection.outlook.com [52.103.13.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C976A18DB1B
-	for <linux-hyperv@vger.kernel.org>; Thu,  6 Mar 2025 01:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741225064; cv=none; b=EBi1A6MEiIgkxtzkPOT/bYcju7Z2FGLrwD12b0NI4ne1HozMzoL7l2w5vUWJX6jiqlFGNBXKrQUISwqqT7NZ+llnkcAu6M0x9W4CkE3P2NiGN7GJaJGu8wI0eSc3CFy75suiyK2nIJK91H7hQrQOTnNoDnvsDQsgO39Zs1deo44=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741225064; c=relaxed/simple;
-	bh=jt8oE1DDukSHhfGAEncsuyQqx3ir3OOa0dHNqoKOelY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tUd+BZfeyIKZzPs7RndHF9gU0SS6hVflEytKKO2KGU/9oQA7tfy0U3SraSMooz9JabWud07UXNi3exT+R3V6ZmJAtGNpl+ZiWXHEDD7L9u3+TfvQoem6nERAC3IvbfHBv0JtrH2nwnfk4/b4eEGA63jfCHgoS8l2JPCnnnIDzO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aR4C+v7a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741225061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MwJDzSbLHHnbA7u1yktm23jopFFzMjn7g9N2Exf0cfw=;
-	b=aR4C+v7aKOBmBONL2DT+dwqTOx22Z7y0kHlJ8rs/8GaGR37oTS3qRQ/SzzCtMEoVDw8zpk
-	RTDxRqAytniuWMAF6tekPg6bgwfwnTWDQ1qdQVxVXyMC/cLOodTIPTo0pv+Bj2NMe37sG2
-	XA9ZgO3Wl6be5P+skhsxDYzh/1Pb6qw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-eEMAQhg4PeOTzBOtQtPZ8g-1; Wed, 05 Mar 2025 20:37:35 -0500
-X-MC-Unique: eEMAQhg4PeOTzBOtQtPZ8g-1
-X-Mimecast-MFC-AGG-ID: eEMAQhg4PeOTzBOtQtPZ8g_1741225055
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac1dca8720cso16354866b.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Mar 2025 17:37:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741225054; x=1741829854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MwJDzSbLHHnbA7u1yktm23jopFFzMjn7g9N2Exf0cfw=;
-        b=mPfhaRui0iZ3FfYbo/eTodNhJMRwx+rdaE7zjyGVP837XeWUzy3/Fe+SCzpSlpnMCw
-         IU8i8g5now1sq8R/vjjpqcYtwZR3G+AF+o6Phia+GhQIzEGIfcPNBS/jdKbYj6HsE1b4
-         mfG1Rq7EssrhCRzwEj6NHVzVjnXmz5HkJf4DH25LRLMG0nsgOpm7MXGk1ftgdwSdVPBq
-         V8eDDl0AHI8gTeIrZRn1O0cJaFUHNsf1/zvN3wq/ozaY6nxk+RmV+NT+FFmUmy8NjJH6
-         FC61cBhB/T0EzY4pybCuZc5b/jsyh5LWD1BLI7lrvufWLN4IamK8pdLGS7ayCUgOn2MJ
-         9QcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+mo+RFb/KAR6KstO4KCfnJsKcrUtJ9G8IlNEhDWQ3fDza9TJKMYfmlpZX5awPSDArgeiSuBOPEpLezY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvjbyoptXvT2F4iWC3hMtO2sfspTLeb0lIs4HS8kNR6E8TlZPM
-	dSl2dXPojsDjZKDb95XWFOK5QvtpV68twTltYijqPdHYXaClG0W+DdW+nIxU8G+bjXvLXku9M89
-	tioEPdAy47QY9WjmuSBMS0BYO5GmWfkXsy2IZmW8Mv89tsg5PwC6wM0edYnmD1qFXzNCPTwl5wH
-	o61OW2bpW3pW1rwvSlLawDj9n/kMgC1XLWw1ha
-X-Gm-Gg: ASbGncsJjEJ9QUECvjidBG6h5kOoUvUQuANOD6sH98rAutG3dOKxW0UmiPU9bqqdXyN
-	mFBF9L+SLhFCKRysm55CGnaA93sH7HCp32nyFbIjJd9I14vpYbbLGJgdMRYkCzmJk3jTff0xeZw
-	==
-X-Received: by 2002:a17:907:3f97:b0:abf:6225:c91d with SMTP id a640c23a62f3a-ac20db5625bmr437490766b.34.1741225054605;
-        Wed, 05 Mar 2025 17:37:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE9H1qhwvkDgDybNE5sW4VnwbCiQQmLm0SVfn0Ji7BN3QvZ4moN9FmVfiIH9jslgkkvztcXACeXl8wpC1dBMno=
-X-Received: by 2002:a17:907:3f97:b0:abf:6225:c91d with SMTP id
- a640c23a62f3a-ac20db5625bmr437488266b.34.1741225054236; Wed, 05 Mar 2025
- 17:37:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9F911713;
+	Thu,  6 Mar 2025 03:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.13.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741230326; cv=fail; b=OIJoFgolScBzHKBn1/ofKy4r1wCC6Ij0B7wxKfKYIl9sFhBLnHPbmhR4esLbWpLRVTsy0Sl08HrHg80HUY9lO3T0N2NDe8ERBhhuYlWbvotmnzXO/KeGIm5RGz1QJ2WhGqj0dZMiCnwzmPnoUg1vwos4EtGdJDBziBAXcDq+bwc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741230326; c=relaxed/simple;
+	bh=OWo6yKsXodWx5Tw42Lwdb+6op6BP8AoZi40Qe30yCso=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EcLqT5YxfK0tJWCGD2i5eHzjHftr53Mscz/uV6XKxY3ZpCkKWmf1LPaqNzz+mFFzm1w0WO6/wkypw7AEJPju+0YRBYlU1m0t4PiLBe/7Jvt6wzRl0jla58UxMR4KDsEfBQvHJhgT2VWbglnahUJiDU2OIltPpdIaSRXJ/QmS9A4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CnYTBW9m; arc=fail smtp.client-ip=52.103.13.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NpWyxpyVjgN3JGsnSjf0MM8RmBuYysK2mX225RJdP+OqE/9Ry3oHY4uI2L9WIbsoWUKL6ZPuQUmuTfJPutK3A6cepjVJ1q4ML02IqsUEVLkZLIwI91l49g2OM8APMTkt5xRRYlat3wQ2IvD5hLVXx+wsF6cGF/r75ILJon0irFjGeF+W0NWIDuaKkk9o4iRZJilt5uPrKA9kNUwtURbuCSoFkHbfsyptaK2Vz0VANBgZvfjhLiiIshYtkXLIkrjho1u/dkfmo7f3Wep5OdF787AS9ZvYfmRh/UbB8J6q0XJXRWIx5E0JKCzeRnTh1vJPwLkPFnYu+8YSvgIOi8pHVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jeUQn0H1wr1rmAd1KpLCLv47elwB0oV5i7YtzaHsucA=;
+ b=cMGGfGmNMJ7nK0hYM7aD3PDy09sBf4QqXNR/Rv+5scXDjK4FFYoaLaavVdQslRyin2e0rtj9t6iPHl9hFJdXMOpeNRGAXhfurgpzK9yQwnf8rub+N5LCkCZSnp49SGpxKBIY1cIbEAUUM+nLWIOIQ0EB+z8odp3Qogmwjuj7KfuQwZmmTUbzuCN97V+JTR0mZcMTCZI7tAFRIeguPHqgMg/n3+MEHn7wkuxfWkPDl9s+aRDIn7w5I8Op6jXfV2vnGwSCPqWNX5k34NCmuNOG+LIiBnD7rGh11GDXgfhRxV2TpOmV+uD8Be7geWQLv8Gg4msmJidnWnE4c0X7fcjrbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jeUQn0H1wr1rmAd1KpLCLv47elwB0oV5i7YtzaHsucA=;
+ b=CnYTBW9mldFKQwEd03BDwJxd7IKxGdlUicdS25XDO6IwcM46F3YqrMac5+uys2VnwBQPAKKAhSxL31hxrOf9Tfk0f6Qjex+lrW/S5ftcWVfZjYP+kkIEFOuAVhoxnDJrfi1N5REFeYiNPGNuBAVC202WFUFwjKTAQSnQjUqLsCtXGbLfzYy8TnwKZekTCutSrLLLX0L/eP5SZR2I4D+zduo19Fu8reDFJ12Tym0/oPkRspiJDZcQyVrxyRBXFCgCqtGyQzult7LdXM2rZQCvCYcW3iuBBPMQKtKCEhsacgfPx4Gi9AgByLBS3hrD0S9GZlLEx6HWlSkQvvjRYqvzOQ==
+Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
+ by SN4PR0201MB8728.namprd02.prod.outlook.com (2603:10b6:806:1eb::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Thu, 6 Mar
+ 2025 03:05:21 +0000
+Received: from BN7PR02MB4148.namprd02.prod.outlook.com
+ ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
+ ([fe80::1c3a:f677:7a85:4911%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 03:05:21 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "ssengar@microsoft.com" <ssengar@microsoft.com>
+Subject: RE: [PATCH v3 1/2] fbdev: hyperv_fb: Simplify hvfb_putmem
+Thread-Topic: [PATCH v3 1/2] fbdev: hyperv_fb: Simplify hvfb_putmem
+Thread-Index: AQHbisVR7t4ZZxD0rUKMdcBI7zWk5LNlc0AQ
+Date: Thu, 6 Mar 2025 03:05:21 +0000
+Message-ID:
+ <BN7PR02MB414857F75A909C48A153556BD4CA2@BN7PR02MB4148.namprd02.prod.outlook.com>
+References: <1740845791-19977-1-git-send-email-ssengar@linux.microsoft.com>
+ <1740845791-19977-2-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1740845791-19977-2-git-send-email-ssengar@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|SN4PR0201MB8728:EE_
+x-ms-office365-filtering-correlation-id: 02d31508-934e-4092-9f14-08dd5c5bbb69
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8060799006|15080799006|461199028|8062599003|19110799003|102099032|3412199025|440099028|12091999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?NVHdLIhXgP7VdEZ1H0HJUKOAPo44XhX65+KMI+X2zEzXbAcptrmA2wZjH0UP?=
+ =?us-ascii?Q?9AGontfDElvvyCZatPrjesT25RatD3O55zn3ZyqmX/0YAE87+P919DMPUOMn?=
+ =?us-ascii?Q?b7//FuU86Wm9jyzG+7tuZ0TeUZbZwDGwM7i0P7TIGDHsd35282qr+XHBEeYn?=
+ =?us-ascii?Q?Eemy1qQGvr00VTFC6EWsm8OQYhbM5NL/xBwN/iIaNNWUEax99743DG0TwOQI?=
+ =?us-ascii?Q?UGfZ3PYaqd6JmwEHzNQ4jRy/fac0ufndq4QIAJY3HpR3I1LvhVG91D45w4dv?=
+ =?us-ascii?Q?tQxgQsOHbC71ya2yO26lTHM7I+xCnaPjyjha02W7f6xne7zailXU2hsFVI05?=
+ =?us-ascii?Q?x0eq/r2AWXK+Ox66Xwv+i4TKxtOsNmQro/TzflgnJwNhdoRlCFZXPWWt0wBy?=
+ =?us-ascii?Q?SJqIrVtexqDG69QpuHL9NgbS1Rb/KSxpzZMsU+pKOAxHPGuzur53RuwFbuPM?=
+ =?us-ascii?Q?R07PxUvtBRbR8bt/490i4e3oO+v9oJHt1KM4dEchCEiDAcLen8u9Zsh8klyd?=
+ =?us-ascii?Q?AWnwIhYSwwjwvSzcC7OGhTbffjvFBBSMQePnQ1nXvslVTciNLkH1Q7t5/pCL?=
+ =?us-ascii?Q?+28Z/pMHEHHbo6DERT2MfgpHTITV/3Yb4Bx6n5n95+SwjsAslzhpjBDHiU9s?=
+ =?us-ascii?Q?BwtvpzBamMh1UGk3Q7/0j52zvRUTUKITS0zXBgiQS0JsvUqED50GL7VNKTmT?=
+ =?us-ascii?Q?NPICEPT8W17x5RzAywSFChoDy5I+oYJ3VsQivuDtPWYHxJqMnbw+UbSg0snK?=
+ =?us-ascii?Q?IJEPfhw8rXweoTUHueXBSlKJm1r+5/xqkK4Mjro6ifrIhIgEXuYxBj26sZie?=
+ =?us-ascii?Q?5Y/UgO3XaX++zJVEv/f6U10g4gn0+ZMpng2v8QYV+Cq4M38H70n9ZmJZcEzN?=
+ =?us-ascii?Q?+hxcPff4Anr+d7uU6LzXPqCXfl0bLjNjndetKgwrSYejrARvd+CNYrO55oSs?=
+ =?us-ascii?Q?tfjJCifPAO+IwqDiwhD3JRlxM6KRAVRfVV/pXNtGGNL7qpLYG9CXUAuhVIqs?=
+ =?us-ascii?Q?RKuJ3lCH8uiAaPLr0GMbGUk0wPZkKrAxv3wON8P0oqNJl1DscMvO8tt/klnB?=
+ =?us-ascii?Q?3y2XaFL5aTv6pfLaIXnS9848cDYzZQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?YlKTbWziW6CLaaXG/KLoiOhiD3heDnvwPygpvQVKUxWO2sDN4qpV0v5ulVD3?=
+ =?us-ascii?Q?Z+p66DQw2EGvZQtjGVCF+LfAgU3T7IisFeoifWF+2AX3VY4HmHIisvEz4QCO?=
+ =?us-ascii?Q?5+CZdcu1Ak8Cf6WVgEfs14HAnPy58Ey1YxwdqBfqHQLVtB7vhjrXhPEZ7l2V?=
+ =?us-ascii?Q?wFFdPI4iRtqQCoe++GEL+aAQYZwqNu/yRIknpo66EJC62kowhrPk5O+eJqcR?=
+ =?us-ascii?Q?/nEKTaWiR+BbMi0uqz/IR+f6DIFJ3vIPigU7IkNTidEc77MJBHov5tLKtbjK?=
+ =?us-ascii?Q?zwfzIAtrIwv/2BV2chXsP9FWt2JYBkK4h5jwXd3T6DUtFArbjc0T08NtMgNi?=
+ =?us-ascii?Q?Zu5g5HJxATluDpeJyn3SdnvpVJr7bULx0XDAjMYUR+7yuR6hk/1/3ekVUd9n?=
+ =?us-ascii?Q?opiqjhvQXS9MDCtmP7AAJ/YUH0uPG/GjfkhHDRbCXBqi+Bb5cQ8kAQRB/a/A?=
+ =?us-ascii?Q?mFSRa6lbDyZ+QaLVZi2Ik/t0YsbGfxWFwZ5SNTFysAsx3LJcFxbh+UhnmWIB?=
+ =?us-ascii?Q?wh9tfMmgBz/mKZbnSlsShYhoxoc6ISY4s2Lu6Y+15n9xOfm6vtyCgyhmmR3R?=
+ =?us-ascii?Q?fX20O+vmmTXOZ+N5HQkuudLwk8vDeiY6iHaT8AKWGGM14W2WSQyd5JUjQsEj?=
+ =?us-ascii?Q?Nfq8+z5VCRvUVdFQo9BNfrhP7ymjmmv7H6rMC1KOBsVJoIZEFmJBBH4N5my9?=
+ =?us-ascii?Q?tkPVRDwmmJr954GMUP9s+5TRxnxytSEXmQ8BhH5hMkTpLqrsinMVo4Bg7B4C?=
+ =?us-ascii?Q?MRpqQsMFvBk0uyMGjv4G+wmZpNF/mpJuDrWU2+01IJ0KbZ9aExXM1EXwFoXU?=
+ =?us-ascii?Q?Ixk3BiWfDJUCmZGYz6wnknh2tpc1XE/swoS0xh64ENxjTIM9kIBdW82AJAhB?=
+ =?us-ascii?Q?zebg6l7MTpH5TgEyyrk/uVKwnj+0o7xr8TGayFxE1MuH2nrw0Jned1YXXHWI?=
+ =?us-ascii?Q?y6IHst7nX++7LG95WZXiq11iqiWLZhpAzhqgEnVZCpUI9MIcdZs1x+qhaiWL?=
+ =?us-ascii?Q?mXoDDwRor8xjmZmtlZ4uLhqzP6YxhqaJyuXWhJyhesKQatkK32TMr/WBCtar?=
+ =?us-ascii?Q?JhAcBG0g25zy/76hwlo+3iDyouFtCfWhIZtF8CK6ms0xiB7Dah0bXaRP0JY0?=
+ =?us-ascii?Q?doaX28ebOOsCIOzKKtSrOKWHS2hDQoFFhWZ9tp0spxkEEwRuQZ9HwD7kRKL9?=
+ =?us-ascii?Q?MpqgOQhjZIcSCQdPTpwMR3Jo6+wZ40oRDHnQIbF5aBGlGxwGYip5BpWrO1M?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200116172428.311437-1-sgarzare@redhat.com> <20200427142518.uwssa6dtasrp3bfc@steredhat>
- <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com> <20200428160052.o3ihui4262xogyg4@steredhat>
- <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com> <20250305022248-mutt-send-email-mst@kernel.org>
- <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt> <CACGkMEvms=i5z9gVRpnrXXpBnt3KGwM4bfRc46EztzDi4pqOsw@mail.gmail.com>
-In-Reply-To: <CACGkMEvms=i5z9gVRpnrXXpBnt3KGwM4bfRc46EztzDi4pqOsw@mail.gmail.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Thu, 6 Mar 2025 09:36:57 +0800
-X-Gm-Features: AQ5f1JoJEUufAEkLHWWULXhaNHkiqHvkFGZFpeTeSZ026lfQ3NJ0WwfBHHNypzs
-Message-ID: <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, 
-	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org, 
-	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, 
-	Bobby Eshleman <bobbyeshleman@gmail.com>, linux-hyperv@vger.kernel.org, 
-	Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org, 
-	Jason Wang <jasowang@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02d31508-934e-4092-9f14-08dd5c5bbb69
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 03:05:21.2198
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8728
 
-QE tested this series patch with virtio-net regression tests,
-everything works fine.
+From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, March 1,=
+ 2025 8:17 AM
+>=20
+> The device object required in 'hvfb_release_phymem' function
+> for 'dma_free_coherent' can also be obtained from the 'info'
+> pointer, making 'hdev' parameter in 'hvfb_putmem' redundant.
+> Remove the unnecessary 'hdev' argument from 'hvfb_putmem'.
+>=20
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  drivers/video/fbdev/hyperv_fb.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv=
+_fb.c
+> index 363e4ccfcdb7..09fb025477f7 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -952,7 +952,7 @@ static phys_addr_t hvfb_get_phymem(struct hv_device *=
+hdev,
+>  }
+>=20
+>  /* Release contiguous physical memory */
+> -static void hvfb_release_phymem(struct hv_device *hdev,
+> +static void hvfb_release_phymem(struct device *device,
+>  				phys_addr_t paddr, unsigned int size)
+>  {
+>  	unsigned int order =3D get_order(size);
+> @@ -960,7 +960,7 @@ static void hvfb_release_phymem(struct hv_device *hde=
+v,
+>  	if (order <=3D MAX_PAGE_ORDER)
+>  		__free_pages(pfn_to_page(paddr >> PAGE_SHIFT), order);
+>  	else
+> -		dma_free_coherent(&hdev->device,
+> +		dma_free_coherent(device,
+>  				  round_up(size, PAGE_SIZE),
+>  				  phys_to_virt(paddr),
+>  				  paddr);
+> @@ -1074,7 +1074,7 @@ static int hvfb_getmem(struct hv_device *hdev, stru=
+ct fb_info *info)
+>  }
+>=20
+>  /* Release the framebuffer */
+> -static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
+> +static void hvfb_putmem(struct fb_info *info)
+>  {
+>  	struct hvfb_par *par =3D info->par;
+>=20
+> @@ -1083,7 +1083,7 @@ static void hvfb_putmem(struct hv_device *hdev, str=
+uct fb_info *info)
+>  		iounmap(par->mmio_vp);
+>  		vmbus_free_mmio(par->mem->start, screen_fb_size);
+>  	} else {
+> -		hvfb_release_phymem(hdev, info->fix.smem_start,
+> +		hvfb_release_phymem(info->device, info->fix.smem_start,
+>  				    screen_fb_size);
+>  	}
+>=20
+> @@ -1197,7 +1197,7 @@ static int hvfb_probe(struct hv_device *hdev,
+>=20
+>  error:
+>  	fb_deferred_io_cleanup(info);
+> -	hvfb_putmem(hdev, info);
+> +	hvfb_putmem(info);
+>  error2:
+>  	vmbus_close(hdev->channel);
+>  error1:
+> @@ -1226,7 +1226,7 @@ static void hvfb_remove(struct hv_device *hdev)
+>  	vmbus_close(hdev->channel);
+>  	hv_set_drvdata(hdev, NULL);
+>=20
+> -	hvfb_putmem(hdev, info);
+> +	hvfb_putmem(info);
+>  	framebuffer_release(info);
+>  }
+>=20
+> --
+> 2.43.0
 
-Tested-by: Lei Yang <leiyang@redhat.com>
-
-On Thu, Mar 6, 2025 at 8:17=E2=80=AFAM Jason Wang <jasowang@redhat.com> wro=
-te:
->
-> On Wed, Mar 5, 2025 at 5:30=E2=80=AFPM Stefano Garzarella <sgarzare@redha=
-t.com> wrote:
-> >
-> > On Wed, Mar 05, 2025 at 02:27:12AM -0500, Michael S. Tsirkin wrote:
-> > >On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
-> > >> I think it might be a lot of complexity to bring into the picture fr=
-om
-> > >> netdev, and I'm not sure there is a big win since the vsock device c=
-ould
-> > >> also have a vsock->net itself? I think the complexity will come from=
- the
-> > >> address translation, which I don't think netdev buys us because ther=
-e
-> > >> would still be all of the work work to support vsock in netfilter?
-> > >
-> > >Ugh.
-> > >
-> > >Guys, let's remember what vsock is.
-> > >
-> > >It's a replacement for the serial device with an interface
-> > >that's easier for userspace to consume, as you get
-> > >the demultiplexing by the port number.
->
-> Interesting, but at least VSOCKETS said:
->
-> """
-> config VSOCKETS
->         tristate "Virtual Socket protocol"
->         help
->          Virtual Socket Protocol is a socket protocol similar to TCP/IP
->           allowing communication between Virtual Machines and hypervisor
->           or host.
->
->           You should also select one or more hypervisor-specific transpor=
-ts
->           below.
->
->           To compile this driver as a module, choose M here: the module
->           will be called vsock. If unsure, say N.
-> """
->
-> This sounds exactly like networking stuff and spec also said something si=
-milar
->
-> """
-> The virtio socket device is a zero-configuration socket communications
-> device. It facilitates data transfer between the guest and device
-> without using the Ethernet or IP protocols.
-> """
->
-> > >
-> > >The whole point of vsock is that people do not want
-> > >any firewalling, filtering, or management on it.
->
-> We won't get this, these are for ethernet and TCP/IP mostly.
->
-> > >
-> > >It needs to work with no configuration even if networking is
-> > >misconfigured or blocked.
->
-> I don't see any blockers that prevent us from zero configuration, or I
-> miss something?
->
-> >
-> > I agree with Michael here.
-> >
-> > It's been 5 years and my memory is bad, but using netdev seemed like a
-> > mess, especially because in vsock we don't have anything related to
-> > IP/Ethernet/ARP, etc.
->
-> We don't need to bother with that, kernel support protocols other than TC=
-P/IP.
->
-> >
-> > I see vsock more as AF_UNIX than netdev.
->
-> But you have a device in guest that differs from the AF_UNIX.
->
-> >
-> > I put in CC Jakub who was covering network namespace, maybe he has some
-> > advice for us regarding this. Context [1].
-> >
-> > Thanks,
-> > Stefano
-> >
-> > [1] https://lore.kernel.org/netdev/Z8edJjqAqAaV3Vkt@devvm6277.cco0.face=
-book.com/
-> >
->
-> Thanks
->
->
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
 
 
