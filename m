@@ -1,265 +1,179 @@
-Return-Path: <linux-hyperv+bounces-4259-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4260-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D5EBA55674
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 20:23:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 773B9A55681
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 20:24:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A7151898633
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 19:23:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B86F3B3F35
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 19:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6937826B2AF;
-	Thu,  6 Mar 2025 19:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56CA526E16F;
+	Thu,  6 Mar 2025 19:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="aseoHKPT"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="DuHzzPAf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2032.outbound.protection.outlook.com [40.92.41.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DC1A262D;
-	Thu,  6 Mar 2025 19:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741289001; cv=fail; b=Drslww7YNAE115WCvhYkxNA2PgsOzrr2pq/co4zEXmxoKrz0sxg8vUY4T2kYhlfCOw/a075kBU7RtQVoM8541Zzt8Ys89Bfrq5EqV0rzOeK9rvFXax8YN5yRUEHyxZHNUgaoNTlkEsmRHMZ6tLECbA1pQK4w3S1khD4F2J676KM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741289001; c=relaxed/simple;
-	bh=qvPPMZtXg5ylVpacP/ix6rYL20GUoz3BjcDVqnbUbpQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ETSjspDllfiMgShyrBGrcmc30c0GLIAwhgOMmR1sl35yMUkYOX9yQHBpfiQz50A7w7NFUEya+U8A420jIFEmb8qdCwGgCsDe/5+7PFA0WeM34C61zyen5BXZC1MrtinBPpALxkyDZ17lq7HpE8fomRnGu2M015Aac52DUay4PZs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=aseoHKPT; arc=fail smtp.client-ip=40.92.41.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bkIGAD5xaV3jupcIzHGWHezLoDzM8tXkF75dqF04RAoCwSpa6fO3SJVbSR472FCFghHf5eCaUipT1e2Jd9lu+VGfCrgWqp4xEAcjmbifnXZuct5nvbQbpCQeqOgL4rp5VHdCAL5J8FYCEcntOZKN4eA6Fe+uwiYjXM5Q5yGG78moQrHtTIPYrnn4/B3wPNn4m0t+0bzD5uU2ZWoSZEMMHgVczTUTzwNCDQCy+zWw7avn8WI7+QNl0629BGntzrZKdT/iLVGCZzWMkC9jJEO4oqOIy1gtEzrdRuHURuwy+iJ4l0kJYXc1iGXmVcjmLj6q6Up1XwroFEAL8hP/bzxf5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vx4J6Q6VAVkg2JVsE8EDpiA9BoJyxAL58fb2isy9EhI=;
- b=n7MJoaEsx4WWKi2Hd6PV6LPf47Qv3XSrGOo3zOfS3hG5UzyP9zcZTI+KbQ0WfPRHnYlMUjEL4Xl05v3XOkbBPW2lYxKrKtf/Dv0MEs8V0QBI4ToV9VhXONIHXlfrAszGmK7uDYokt3uQEHBGSGvCjkEaCP4QpmuUbObC0QaeXJXQ6aCcCOYxAXoEjUlE4R/wOdh9385H8y6h7x8lZFmpYkiVmhkO++oCMZ/sqip/ShUISUNnCGDC4qVb15pICsTpLsrFf4eMi9X/3ziu0MYQMfkDn3e0EnGVGWr4HnRPeY0zBmOyvXbTKww1JXWlYIXGh+vwiGyCVXGTVAZyH/owRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vx4J6Q6VAVkg2JVsE8EDpiA9BoJyxAL58fb2isy9EhI=;
- b=aseoHKPTxiBeTkrzFEF0Z/+ids5hjB9O+lu5FrD8D4n9av088zdZKnp5QJvI9aI3bO6xmobY+mzdoqJSCDTok2mffqy6PnIzZDoixdrulOhZvlzOI4mnLBpY7kDYNB+kRa0p6ld8l2eC1JOSOxQlG+qi8Hq9n2sZskteZ2qSkUWH9EbUatiPFRl8V2oOK21dKQ8kEgzmIp+dzZ83xHf+QF903lcAHIWNU2N1g0X/UdukoJdFfoXaS9YLWxObo4S/lE5aKTG3jp8253isKjs6WddleYOw351bwF+qzqhe+XJDm61/7oPAOumcy2sTp6jgGynDqzvWk50p1792sZnb3w==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA2PR02MB7803.namprd02.prod.outlook.com (2603:10b6:806:142::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Thu, 6 Mar
- 2025 19:23:16 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 19:23:16 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
-	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-	"joro@8bytes.org" <joro@8bytes.org>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
-	"muminulrussell@gmail.com" <muminulrussell@gmail.com>,
-	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
-	"mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"apais@linux.microsoft.com" <apais@linux.microsoft.com>,
-	"Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
-	"stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "prapal@linux.microsoft.com"
-	<prapal@linux.microsoft.com>, "muislam@microsoft.com"
-	<muislam@microsoft.com>, "anrayabh@linux.microsoft.com"
-	<anrayabh@linux.microsoft.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
-Subject: RE: [PATCH v5 06/10] Drivers/hv: Export some functions for use by
- root partition module
-Thread-Topic: [PATCH v5 06/10] Drivers/hv: Export some functions for use by
- root partition module
-Thread-Index: AQHbiKNtW0Y30QgwXES/BYcc94DkpLNmiCvw
-Date: Thu, 6 Mar 2025 19:23:15 +0000
-Message-ID:
- <SN6PR02MB415706E75693B821FAF0A231D4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-7-git-send-email-nunodasneves@linux.microsoft.com>
-In-Reply-To:
- <1740611284-27506-7-git-send-email-nunodasneves@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA2PR02MB7803:EE_
-x-ms-office365-filtering-correlation-id: 732999b8-5d17-403b-48e4-08dd5ce4584e
-x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799006|461199028|19110799003|12121999004|8062599003|8060799006|41001999003|102099032|440099028|3412199025;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?yuWVpOOn6fmiPxyGpO5RV2yOLcLHNR7e4rcZGULGvxdaoq61tjxm1hdu5Epp?=
- =?us-ascii?Q?0sxO7WT/mn9O9y4UaEhPnJmhs6yoiQpcpLyaFfs3Q9QWAAvEDdXU4Ruhzv+5?=
- =?us-ascii?Q?mosRxYYnuZ44CsyETuvApiV8gAsRzIAjrRsPJhqI5RpvV1+QxRfV63juYg5o?=
- =?us-ascii?Q?FxP1huhds6jPPSndGJvJvcCCQeDvRQSrBokSS8paw3eHNp7A4oRP4hCZvM4M?=
- =?us-ascii?Q?VqsH+PYPU++j6hQYwn2aczS9M/cr+LzTBl7EPc3EF0ZfTEwNrTzraxJdEvPh?=
- =?us-ascii?Q?W4zkgkXhWBw3qlXQhuhC/xd57dTtqZvZowQ+fKIwtS8ATt+2VJmIN+rZOMXF?=
- =?us-ascii?Q?m++ORacEyZtcCJisGkOykmF5mfSjblN//wKXqcMfSRuR/v008ZP1QgvB3rCx?=
- =?us-ascii?Q?YgVj6TT6MDxPO18obe7Xhe/OxxDq/xqZbsYxJPmFUOiKxbtMfNhU3HgwhoAN?=
- =?us-ascii?Q?EmfV5vcwn5tuZD8FRa4xeprhdyzZuzRvduDvRjprncN+jy/lQOqkt1ahCt4E?=
- =?us-ascii?Q?eQF/Xeq6uanP5DluPFrACm13kL6eYaRCElUYWKs8FnPJIfFtLo+3pj2T5TQl?=
- =?us-ascii?Q?qonEQ8psR3LnA7kQP8n7Nvq3eAfBOHKsKc6fSHmwugA1kDy8WImBfBn5nfXL?=
- =?us-ascii?Q?eawAUdwn1rFSdsM1kt95DM3uCIs7JQJgODNPKjjRY8K3y2C8juu8TtOekA1m?=
- =?us-ascii?Q?YHd532sSUhnEaGngWA/njXxLc6WOT/yRWWXPqUtjJi2zEqMztwY2oyrK1rYp?=
- =?us-ascii?Q?oZuvFemr3sVh+YnOX9VkJIv6oVDmohrCeHfG3oBCS+7x2lRoRzC+Moy7dkqp?=
- =?us-ascii?Q?ao+4fceFECQiefpItzDM/oqe3S56s4/GKh0pEbBvHu7c/64mzJpBgl7AdhVv?=
- =?us-ascii?Q?qR2zrr+Yj+BN5DHAnXh15Czs6FpWe9L44+1ApjVrmiVWn4ib21a94lROY/YO?=
- =?us-ascii?Q?6yGzyUruzL2dF/A9Z14aOnPQHjY2cQPtWDOb27tdhHXhFATbR6OZ2TcYnMbW?=
- =?us-ascii?Q?E96t19JaaN9TaL5hWqSch6Q7xaAjPuA92BMioVOMnfPsFF125h4F+kSrD+hB?=
- =?us-ascii?Q?NCPh6NOHpvd6GO+jb80K8uNBXjNjEnivUatFwlJGU0LTWp9HeFE=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?+aKu4c2eqA3ZJyxmQ1YYVpp4P/XzwG/j7kqLopfcka7ZcOtWICGS4HqF6Bn/?=
- =?us-ascii?Q?tBf8JL+PzczCJkP0P5TmmZNOqKzn6HhP1Cm4usRf9XlXKyysXyAcsuF46r/u?=
- =?us-ascii?Q?yD0/DaWYWQtV87txgoirvnBjXMscgPqiKZogAm3dG7w95LGjDZhOBhpEb/o5?=
- =?us-ascii?Q?1rlGVGAqGaGoJWIInVJAFblPACXcEoAwaXk1fzPaG60mDdYodqwVQXdl7QVt?=
- =?us-ascii?Q?85onpP+gfI7pPhvXqbt138QTmm0xKxuOV+x9BancKmWHb7x7iCzJ7mITINGu?=
- =?us-ascii?Q?xl4FfFFxwDZAYKp8cVBN/cp+PMNa2LPSKcGfdi06WSauXBqrpt6CHqVDAVOv?=
- =?us-ascii?Q?gS/oQ/YekozLeUBU79FGoSuImThjn8BksjrG5iJUDB2121ADf2UHPUVYFr7U?=
- =?us-ascii?Q?0uZqHjF9ZGneOQPv33AJtIbhkfonAupgPRLfnLnSBkuK2ESMW/i2bE5QCzqr?=
- =?us-ascii?Q?ZcSn2zi4BlWYndE8VEqSiqDtjQSHN344Zg7+OE5EShHGD122dZ6FfwvjiHpN?=
- =?us-ascii?Q?8oFtIAAC3q52h9qQwSdKRrIBUfyxq7G3cX4Y2/mlyfUajDqSWAqU5Rr4l9Q6?=
- =?us-ascii?Q?nve68qnAFpH4ArSkgXDDGVeZj/XxUIoTaPd6AQ+HdD2e+MDW6oKi7i4SQTZS?=
- =?us-ascii?Q?A+d/EG3vzm/yPrGvAxCNfUppuk9noSC6T6UCXuyxELB7VhUzyEQWihg7/2AN?=
- =?us-ascii?Q?RoC3+ylUMtxgcgEMcJi29etSCXAUHiMLAKUAyuubN2HCnDezTEiZolp/cxRp?=
- =?us-ascii?Q?08BFKFIAy8Yda7NmMpi4FCopZ3t6vdHLgwTqc3bFgLDf0/53VUOQQfXyb8wt?=
- =?us-ascii?Q?TkCQ/xLWobR2XK1CbacTlNqDrskCjnvK20C7rYkWKGoW7PiYGZC4740AKBML?=
- =?us-ascii?Q?vAL2bFI/g2H+Y6up/2JhToivRpanzAIm79dLfabFoI5U/5g6Itk9f5gK6Tfz?=
- =?us-ascii?Q?9S+nA9bgr+Sr+dcg4FDm2tUTyJtWdiy3P9fPsqtOT4h8HOHPowqkH/854OuA?=
- =?us-ascii?Q?M8APVOsXZ4W9c6OTmT2dzZPARpdHaCKZ8d5/Mo2Vb1SZCE44Yxi4UWd4wVEv?=
- =?us-ascii?Q?+f8DgvK77gr/ISZhTOfYd16twNCKfSsG74r5ChmllhyDDSIDojdONN80s8rt?=
- =?us-ascii?Q?dVb2NJvL0HnzoTCsT6+Kk8509lJt4AkAPDxuNHfTFC5AHqDs2nWZRXY1epH4?=
- =?us-ascii?Q?/ozdGR3v8P8X3XMNkMc2/HIAwccJY7vFI0gGn8Mv2v8fCNLdPG9j4mH1jCU?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0301211476;
+	Thu,  6 Mar 2025 19:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741289084; cv=none; b=ZptCuxmCPyCv/L07GeyBewCdZJgx+vFF3wohlT4rwppojeGr/oLOw3Szo8nxfS6KdLPvErvHUxQKdUGWINO7TjrJ1qAS5D9bUTI3bdOx4+FJyQmWW1LhIp9sbRUftq7VV5ddszequD7ylkABrHkEAUzvON7hrLj/QLbyN2gQ0dE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741289084; c=relaxed/simple;
+	bh=nbRLzIOOa7m9nYevtoKhk36VnuLqeUKs5GWulz/zjQo=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=asosVHgk7CH/WzB5b/ParGISO3ojYnN7D1B2c/vV7r0f0dMTh2ulGnWVYhbcrkVHhi3adB4gkIdF0SXGuOO4NSV6gOzbxWyCsVnSOAXDe8+rH6NEKG/WUGFBK9xnnqcbxRvDawIezZJZeY4fKHEiiz8cthIQo9vXEVw0Lm1Qd+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=DuHzzPAf; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id 60D7A210EAE5; Thu,  6 Mar 2025 11:24:42 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 60D7A210EAE5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1741289082;
+	bh=TvbvlMSyhaZWRXp1gG0nGpdUVO19wq4jNvWj6tm9Igs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DuHzzPAfqwDKzkp3CnIWwzIjRsdVYWkQ576huWqZNW9H4rGJryVMRxMZ5Vyvx4moz
+	 UsOJSMVKSqPOmWHVGPA7zxDxK6LaKZc8+h/XgVeh7OXg1pViy2lgbOTj3ufZ1E3bxW
+	 i4ngtLOclpaMkVC/VXUDD2jZNNAbB1Gl1SOQnWjw=
+From: longli@linuxonhyperv.com
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	Long Li <longli@microsoft.com>
+Subject: [patch rdma-next v5 1/2] net: mana: Change the function signature of mana_get_primary_netdev_rcu
+Date: Thu,  6 Mar 2025 11:24:38 -0800
+Message-Id: <1741289079-18744-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 732999b8-5d17-403b-48e4-08dd5ce4584e
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 19:23:15.9832
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR02MB7803
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, Fe=
-bruary 26, 2025 3:08 PM
->=20
+From: Long Li <longli@microsoft.com>
 
-Nit: For the patch Subject line, use prefix "Drivers: hv:" instead of with =
-a slash.
-That's what we usually use and what you have used for other patches in this
-series.
+Change mana_get_primary_netdev_rcu() to mana_get_primary_netdev(), and
+return the ndev with refcount held. The caller is responsible for dropping
+the refcount.
 
-> get_hypervisor_version, hv_call_deposit_pages, hv_call_create_vp,
-> hv_call_deposit_pages, and hv_call_create_vp are all needed in module
-> with CONFIG_MSHV_ROOT=3Dm.
->=20
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Also drop the check for IFF_SLAVE as it is not necessary if the upper
+device is present.
 
-Modulo the nit:
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+Changes
+v4: use netdev_hold()/netdev_put() and remove the check for IFF_SLAVE
+v5: use netdevice_tracker in mana_ib_dev for netdev_hold()/netdev_put()
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+ drivers/infiniband/hw/mana/device.c           |  7 +++---
+ drivers/infiniband/hw/mana/mana_ib.h          |  1 +
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 22 ++++++++++++-------
+ include/net/mana/mana.h                       |  4 +++-
+ 4 files changed, 21 insertions(+), 13 deletions(-)
 
-> ---
->  arch/arm64/hyperv/mshyperv.c   | 1 +
->  arch/x86/kernel/cpu/mshyperv.c | 1 +
->  drivers/hv/hv_common.c         | 1 +
->  drivers/hv/hv_proc.c           | 3 ++-
->  4 files changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index 2265ea5ce5ad..4e27cc29c79e 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -26,6 +26,7 @@ int hv_get_hypervisor_version(union hv_hypervisor_versi=
-on_info
-> *info)
->=20
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
->=20
->  static int __init hyperv_init(void)
->  {
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
-v.c
-> index 2c29dfd6de19..0116d0e96ef9 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -420,6 +420,7 @@ int hv_get_hypervisor_version(union hv_hypervisor_ver=
-sion_info
-> *info)
->=20
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
->=20
->  static void __init ms_hyperv_init_platform(void)
->  {
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index ce20818688fe..252fd66ad4db 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -717,6 +717,7 @@ int hv_result_to_errno(u64 status)
->  	}
->  	return -EIO;
->  }
-> +EXPORT_SYMBOL_GPL(hv_result_to_errno);
->=20
->  void hv_identify_partition_type(void)
->  {
-> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> index 8fc30f509fa7..20c8cee81e2b 100644
-> --- a/drivers/hv/hv_proc.c
-> +++ b/drivers/hv/hv_proc.c
-> @@ -108,6 +108,7 @@ int hv_call_deposit_pages(int node, u64 partition_id,=
- u32 num_pages)
->  	kfree(counts);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(hv_call_deposit_pages);
->=20
->  int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
->  {
-> @@ -194,4 +195,4 @@ int hv_call_create_vp(int node, u64 partition_id, u32=
- vp_index, u32 flags)
->=20
->  	return ret;
->  }
-> -
-> +EXPORT_SYMBOL_GPL(hv_call_create_vp);
-> --
-> 2.34.1
+diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
+index 3416a85f8738..363566095501 100644
+--- a/drivers/infiniband/hw/mana/device.c
++++ b/drivers/infiniband/hw/mana/device.c
+@@ -84,10 +84,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 	dev->ib_dev.num_comp_vectors = mdev->gdma_context->max_num_queues;
+ 	dev->ib_dev.dev.parent = mdev->gdma_context->dev;
+ 
+-	rcu_read_lock(); /* required to get primary netdev */
+-	ndev = mana_get_primary_netdev_rcu(mc, 0);
++	ndev = mana_get_primary_netdev(mc, 0, &dev->dev_tracker);
+ 	if (!ndev) {
+-		rcu_read_unlock();
+ 		ret = -ENODEV;
+ 		ibdev_err(&dev->ib_dev, "Failed to get netdev for IB port 1");
+ 		goto free_ib_device;
+@@ -95,7 +93,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 	ether_addr_copy(mac_addr, ndev->dev_addr);
+ 	addrconf_addr_eui48((u8 *)&dev->ib_dev.node_guid, ndev->dev_addr);
+ 	ret = ib_device_set_netdev(&dev->ib_dev, ndev, 1);
+-	rcu_read_unlock();
++	/* mana_get_primary_netdev() returns ndev with refcount held */
++	netdev_put(ndev, &dev->dev_tracker);
+ 	if (ret) {
+ 		ibdev_err(&dev->ib_dev, "Failed to set ib netdev, ret %d", ret);
+ 		goto free_ib_device;
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index b53a5b4de908..2638688f2505 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -64,6 +64,7 @@ struct mana_ib_dev {
+ 	struct gdma_queue **eqs;
+ 	struct xarray qp_table_wq;
+ 	struct mana_ib_adapter_caps adapter_caps;
++	netdevice_tracker dev_tracker;
+ };
+ 
+ struct mana_ib_wq {
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index aa1e47233fe5..4e870b11f946 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -3131,21 +3131,27 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 	kfree(ac);
+ }
+ 
+-struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index)
++struct net_device *mana_get_primary_netdev(struct mana_context *ac,
++					   u32 port_index,
++					   netdevice_tracker *tracker)
+ {
+ 	struct net_device *ndev;
+ 
+-	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
+-			 "Taking primary netdev without holding the RCU read lock");
+ 	if (port_index >= ac->num_ports)
+ 		return NULL;
+ 
+-	/* When mana is used in netvsc, the upper netdevice should be returned. */
+-	if (ac->ports[port_index]->flags & IFF_SLAVE)
+-		ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
+-	else
++	rcu_read_lock();
++
++	/* If mana is used in netvsc, the upper netdevice should be returned. */
++	ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
++
++	/* If there is no upper device, use the parent Ethernet device */
++	if (!ndev)
+ 		ndev = ac->ports[port_index];
+ 
++	netdev_hold(ndev, tracker, GFP_ATOMIC);
++	rcu_read_unlock();
++
+ 	return ndev;
+ }
+-EXPORT_SYMBOL_NS(mana_get_primary_netdev_rcu, "NET_MANA");
++EXPORT_SYMBOL_NS(mana_get_primary_netdev, "NET_MANA");
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 0d00b24eacaf..0f78065de8fe 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -827,5 +827,7 @@ int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
+ 		   u32 doorbell_pg_id);
+ void mana_uncfg_vport(struct mana_port_context *apc);
+ 
+-struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index);
++struct net_device *mana_get_primary_netdev(struct mana_context *ac,
++					   u32 port_index,
++					   netdevice_tracker *tracker);
+ #endif /* _MANA_H */
+-- 
+2.34.1
 
 
