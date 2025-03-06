@@ -1,268 +1,219 @@
-Return-Path: <linux-hyperv+bounces-4248-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4249-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5F28A54106
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 04:07:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61FF1A544BE
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 09:25:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0937D16C475
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 03:07:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA9D31888DE4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 08:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E171E192B96;
-	Thu,  6 Mar 2025 03:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F1D207DF7;
+	Thu,  6 Mar 2025 08:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="enLIb8M4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dG++pnu/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19010009.outbound.protection.outlook.com [52.103.11.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7872191461;
-	Thu,  6 Mar 2025 03:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741230421; cv=fail; b=JWc3uYvLj1XSpddFf++3Nz+pwOc9kvoJO1zq2stdDQPr4hAt7yUFKAGUx/fZPcKPWjxXgs3gG91QWZFsfrNjoVMWpQoFW58WLZIDPAVUug7x/HulkE5MahEEqHPSLI1/XOrEEb1/4ii7YxqtkgJvtnkuPMsdwedqZWTTZ5h/ee0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741230421; c=relaxed/simple;
-	bh=X89LrUz0/nKPtr4BMhMZ9kbzE0QID1obj1LiSaHpH3w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=M1siJMOaHFOE3xWapsOPuXGq0nW0+a0fjc8OcR1Z3piXLtYEsC9EEHjlhjziLYQRAjgRIkHqcnBLa8HKMfw7rvVM1ya+16ZEvOaH94nGL2kibXWEPOBI2Tu0o5BzgsAmP6ct7ShO0UdTJbJG7b0UZ10OxXkoGgRIlwRwK9+PHYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=enLIb8M4; arc=fail smtp.client-ip=52.103.11.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=onXlMcQTSN/eSdD5Lj7BR7HvNU3rDRqPcxOtuBI85PCc9/UAsTmvGFlpyq6dMH6KTIx/LfKbD82hLNxPeEhTUfvWAclfSdifAxNQUkdsO54/r/0Q4RuqlR2sYyAcVWaiFtRI82Gw9GieB1iLKkyoIAjEbBL5EyJJIqL6fxfT0fBxZrYfhk32XPhhe8lU+OJu8xwR5R1oabqaP6Q1/ejc1PDVL0dFA8CWAetgwpW+V7raodZQ6Wjeav237kWz2qxScBAkkj4+2VOsAR2y1r6OZqTt4YUwn8cjiY17rMuOhVfGqIAZdbcIkUglFryP8LGqzwlfXxVxWk3z6DiOPvoong==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KL7PbFmrzPeDQJB5kU4FNUT1Y7VTHaElZbQbARr5vPs=;
- b=mhbDzN4PlahCVSYz+NwpVWmv5+8xD2xYJ28CrJxQ70xKYmhM5KdDVUzz58vIfQFlCr5xIGAT2wF+F+LXcKls3nvuOZMZsLJj46QnpBAYAG0yDHuzuNYmHv93ZVouV1Qv13HGzcm/thTjrN/q0hWumE/x59aYpobGmGFio0ufYkRiquTVC5oHRv4WATu9CLdCErWFCbraojenyuE2LVtGSRwWw34lEFXR3vJuCDRIlzJB4f5JtqZcTQSP8wpBV2nlA4xUMFPtzaqBc0XU6wcWmUTQ2ZKCLkzHejLK9UXnmhhmktZ2DZOH78q5+lS+hEE3SRvk/6Zfb3DYwri97tMIzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KL7PbFmrzPeDQJB5kU4FNUT1Y7VTHaElZbQbARr5vPs=;
- b=enLIb8M4djFvDww+ASIEDha1uUo3tYhx9mfVVIVmp1qb5vzgkP0rtyoeR4d0jG80ZIHP4iEvFURcuqHkRzzF1qjz/idAGz7xEhqWFCwgIzC6NM1dy9gE2c9SuGOAdLGeEaHO7eoncam1AaR43tXUzm67GuIVV9vIPsaL648azyvdDGm+pMozURPyxIP8zzy6Z68r1E5xTDPXJStXtNQ19i+bLsiSrtQKxxc1srcPSkiP9BV+KNbp4O+6xz6lXkQWoqciZ5uKXcuz0e8D38g/KqfT4slwxDk6PTtuwaR9adq8MlLiR4j8Uxcp406FTDvmn/zyGB6W6DiycrJoVMLbxA==
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
- by SN4PR0201MB8728.namprd02.prod.outlook.com (2603:10b6:806:1eb::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Thu, 6 Mar
- 2025 03:06:56 +0000
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 03:06:55 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>, "kys@microsoft.com"
-	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "ssengar@microsoft.com" <ssengar@microsoft.com>
-Subject: RE: [PATCH v3 2/2] fbdev: hyperv_fb: Allow graceful removal of
- framebuffer
-Thread-Topic: [PATCH v3 2/2] fbdev: hyperv_fb: Allow graceful removal of
- framebuffer
-Thread-Index: AQHbisVRnvCldUULrUOKRdfkOSEc2LNlc7WA
-Date: Thu, 6 Mar 2025 03:06:54 +0000
-Message-ID:
- <BN7PR02MB4148986520E4843A34300436D4CA2@BN7PR02MB4148.namprd02.prod.outlook.com>
-References: <1740845791-19977-1-git-send-email-ssengar@linux.microsoft.com>
- <1740845791-19977-3-git-send-email-ssengar@linux.microsoft.com>
-In-Reply-To: <1740845791-19977-3-git-send-email-ssengar@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|SN4PR0201MB8728:EE_
-x-ms-office365-filtering-correlation-id: 6e278758-faf7-4c8a-1959-08dd5c5bf341
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799006|15080799006|461199028|8062599003|19110799003|102099032|3412199025|440099028;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?YWdv4xnH8kofuo+anFdvy3yIbpW6AUrtrcxRPujuNZt5wfM//7uhJmH2rJbb?=
- =?us-ascii?Q?i/konjgJyoTOi8xNPdusqHZa7iPn5JpT9cGiJEoZNuEiPrL8iqdOgpsRP/Kx?=
- =?us-ascii?Q?SQHMbySYuRYUhuOMUCMeWEQyeLDoaMMxti/VqlQnL/ueg1wO3mPIcr3DE802?=
- =?us-ascii?Q?wTXgmb2lB/TiHO8yddK9ygewazs62qLhLbGCYHjNbCedIXq0weiLuWzzoFWw?=
- =?us-ascii?Q?5b+yvPtsNyZo3wOsbW4avV5bKVuknXcKyI1QqJmc3M8n8vqFQksZ+DGH7GL4?=
- =?us-ascii?Q?m+npOviQK+KYGHmgp1gCHo/i5fuIwy0qAVDgsjLTXfAYSbuqAtyeY80FAA5k?=
- =?us-ascii?Q?NL4YoQfYW9tHNkd6frfCN2bpw7QlvHmTgoz3HF32i4xKEFkjDgk9IXaV0i9y?=
- =?us-ascii?Q?NBL3kk2BFnHwOkaCaGfD+bjWSpYCNgppWI1QgVvDk39I5KZCRbPvUxWndNKm?=
- =?us-ascii?Q?FoW0RQE+AFuWhajrEfrheoCc3jCXYnTSQ6lA2fyIJ4S54YsdOHzypyNXlYOk?=
- =?us-ascii?Q?5PAEeuiUJ+kYogDuBBBX4Mf2Yw8C3PxVteYkglRNg5rgv2wNkt/Gk1idwoms?=
- =?us-ascii?Q?eTgttYUqEaeNEVVuPXE0lOThyck5IYQqe5nWWtVw+kIJOKq+NafZj5YhZJIR?=
- =?us-ascii?Q?xlG+gS0jepS5nXKjVVpb8bY5Pf2WJeAF2qOdXGZuEGS2fJERB25yGWXkjZa2?=
- =?us-ascii?Q?IIjSx0q1aRVfE9ErCNcAhLgHw2InUcLDDGZ+AhbdeBkqHSqjaFTSpfIBT38w?=
- =?us-ascii?Q?OGIDSc2GghjPVn37p+Dvpi0gKTMMVYIttXba9PBlTUbX7neBSQAQ71iCilaX?=
- =?us-ascii?Q?Hl23woxy3ecM9oxYMV2rybr3RapYoDfzOmtn5HugqKXGNS+bz/fVTVcOO6sA?=
- =?us-ascii?Q?INhOcsyr+ynzqzWLrriWslGhMb899W9+BdRjwYSFxZRp6xC/IhtIpzJT9SX2?=
- =?us-ascii?Q?J0ZrrJqm7s9xbZ3ewunehvXBsNMeuMrFMuysz8EYm0nrjd5vVGC8OrLS2c+v?=
- =?us-ascii?Q?1g91E6/duAJUNGrNQkv3PZgNm3R6XOC1w1uMutgEUSM/cWI=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?XcBfSZ/QQEZnx9X5Q8+oM4NbcZAZKxIZAAgp0wGjPTvsLEDbS/yatOJELgiG?=
- =?us-ascii?Q?R/3ddP5C5AZOKYpqULp4hJIx26u5j6TopH7QuWuJnZ5tqfvfdTmPv1Ru3CKG?=
- =?us-ascii?Q?KbFgqG328puhdbZieOMVoN1ULA3YCaQxqN9SZHUgV+ghuS+qvUH0dNjotnnI?=
- =?us-ascii?Q?QfEZDarjtAUUfhcp6aqbY24SoOHO96rLrUZwA5elzyjL7MQaOHOeNVdnLGWo?=
- =?us-ascii?Q?QFbM7ajPNpRGNNM9qCPfsl34IqN3xrgmskypjpklorBnGH7t0/lsDKn/P1QA?=
- =?us-ascii?Q?uHEwdMOkFvgUT3mz+yTtXNiFBYVl5OAcmb6HNxlIx//nqgATQM1sDF+33wtk?=
- =?us-ascii?Q?K+U9zyZe8bJJeQBjGVNmXReOdL3TJnkNrF0xdVAcYB3IjkUj3CagRHCpDBPI?=
- =?us-ascii?Q?Phyh1peo3HAtZQyxqReApMq8/IoLFbfnOa7GawFAR2wrn9xMPv/yARSXMfiB?=
- =?us-ascii?Q?+NEhdN0I/LO8Ew56aSIbqo1lWbKBu6rs4n/vNDrcOeNFvYXVmFXDlLfdkAoZ?=
- =?us-ascii?Q?kx3qxMh29J6xz118+wzuVG2o2vNvQ2yauFxMQ6y6W6d2pq+eaZCZsiR//ZAw?=
- =?us-ascii?Q?xSq8goZL6LrD/m0HSvelqRqavO3FP4zDcIrYPDTRBh1uCpytC9/4Jj8LC1pe?=
- =?us-ascii?Q?3AG4bq5VAFYFUauelrwuWs+80uyr8O3qmV5RnW7H0bBShfTvQyhEuRfdL2BU?=
- =?us-ascii?Q?KPD7JOalhoBdfREuhjrWDdp2/0xeRlmWC0Lk7asxt33bAfrKG7KbWhPth26E?=
- =?us-ascii?Q?9SpRmUuYJlj2eKrkLtD3721XwoJbsE7FlV7z49nlUxgC6HUUYoMR6YCCpdUT?=
- =?us-ascii?Q?ZCZsPoz/dXiZKcwx9z9uJauyc6WAEzzhMH3+qG09SeBRawnO55XN39vRRsHG?=
- =?us-ascii?Q?C+ivjSGOJbyKX+E/vy+2vEb3XQChD7XJ2gF1ivxC5+tzy6jQKRRF3G3BpoDf?=
- =?us-ascii?Q?b9j4fF9U1jTJ0aSUq3k7znCECeybhivzIQiS/bh6lz23rMAXHW6Piq7XARxT?=
- =?us-ascii?Q?2OUJJjKtaZM7bOGBBs3ccFVqvCa+O7prfj6GyaFfxymiew5x8huHWOUj2Wvy?=
- =?us-ascii?Q?V6W6ZXRJqm0LmVHozuwMNYBma+46DQzavvTETRiqQ5zhtTo0qOrQxM2kUrKw?=
- =?us-ascii?Q?2QIAz0SbdVHqxFO99glRUY1LTa2XTmAVOi2yuxsBCi4tuYVYDBpNptQu7UQ0?=
- =?us-ascii?Q?QTRxLXf3LaRwkHBCioa6XFxzjjlqkIejQYQ3JpMuqamEhMq9jMX2JuNlpG0?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377D41FBEB1
+	for <linux-hyperv@vger.kernel.org>; Thu,  6 Mar 2025 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741249404; cv=none; b=J0zXsg2SCHZPq0dhYhxKHH8+R4hSawPMP14nXSNHg+uDNnX8TjaMvCJYfJE+ksME5x7XjufwlrB6HLFtIJg5BYw1pufUpxnZ89R4mIz7aYRXQiCrHe0vAoNfG8Nz4Q8zD0IgPUs9O8YgcO9a4Q0SYidUu5AKryr7iQayDILwKV8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741249404; c=relaxed/simple;
+	bh=LAESgKwjsOolqILQ7EFqXdhdFKselMeHOYpzQPd3EDs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IuzzUWs2q0xBmv2lwUjG9T9dI28Ul8g4CZ25TkoUnSisphdD6Q1bKYseyeA+c0wl/2zIqi+ZDYaRRU8jU4uihudKLChGd+/iyQo3YpQ3P2CP4Ou3/uMd7C7TwqmxRz0oLYaRhhLj2rBRDScMnKygLqv9QOQf/8v4E1s70AVRhPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dG++pnu/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741249400;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p7r18lDDaYnSU7d2JOl6qmtUJzAYao+io6UYl9OANnk=;
+	b=dG++pnu/zC2++ehDgE1RgC0FE0V+zAUyT04mwcMidClFcTRvtm+UgCNb9lYe9rUEgSK2h4
+	b4eqJXlFkVrxmm0NBtHHBHRD6/8JtKBcSnHpb+UkjBOtR7202xRWJtaJXEH9dRLcAiRjna
+	kb7lYehEpjCsVbfaxqpj7/gGJH1VIQQ=
+Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
+ [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-586-jq1L7WkTOOKMQD5yyOZocQ-1; Thu, 06 Mar 2025 03:23:18 -0500
+X-MC-Unique: jq1L7WkTOOKMQD5yyOZocQ-1
+X-Mimecast-MFC-AGG-ID: jq1L7WkTOOKMQD5yyOZocQ_1741249398
+Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-e549c458692so536142276.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 06 Mar 2025 00:23:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741249398; x=1741854198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p7r18lDDaYnSU7d2JOl6qmtUJzAYao+io6UYl9OANnk=;
+        b=qTEOEJKq250BfYwNtqhaffOcJDZLCQQCTryaLN2nxsQ9NPW8XR1NqR2rvPfI/Dg2jx
+         7HI0FSDOSiYZ08ZHNxZjAGmSXdQ8TqHuoUuPcd5pDN70qg7mPyMXoiGbGdgpy7z4TrcM
+         dFCh53vCo+KxaCkEJeMd07kAspQwUf+yZtsKvUB480dEXROtv8wqlRv1cSpQaZHYmA+j
+         x8aqyHun1E4NLUHW3+O8jmZdFJ6DDhcN8Mh+2iveNRUbe2D4Ibu9TZanViTJpVT2wPNl
+         R9Fq8rxJ/OX1dY2Vmui6w8B8IQF88fXduvBQD4daIF5S2OE4zt1YEvvIFRbJ1POfMjy1
+         huOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjQDR/2MLJIUWoW9nYOnGoLJIPXvLQ6ofH9zh5fDzOroTw6vl+u8+uh+7JMtITTk4AmnDk9Y1TCv9Bjd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEMH0AoBTTwXGUvXW9KleEfWIwezR/UBmsvdNH4xwDgK4aviUR
+	pfKIrLmLlOBtbHOfNne7AQV4krhPkiOmLn5jCJV7SvWdkejVdru/deznh1n+E1EmydTdnHXtvUZ
+	6mWJhLS+P+yFW0XKG1SyoIgeXC/CQKujEnVUZLwYprYRb0fGYko0pD0db+ijQwU1sCvU4wL7Sgw
+	jBUuCTRXcmTJDtSONpfqH30jsGZVABDR92CZYQ
+X-Gm-Gg: ASbGnctLj6wM3geDuBut9Xj/HrvHMnzi/48MgVt5oJy//WB4EpikRSBYLXOIpPXdr/8
+	WBOO+ak9R4RJCtsKcVhDRrQJzlRMLXC289eJ5uJpBIVY8sF0sIafA7rbNNKg5j3KST0FqRzE=
+X-Received: by 2002:a25:1ec2:0:b0:e63:474e:c861 with SMTP id 3f1490d57ef6-e634eef0b1fmr718507276.25.1741249398211;
+        Thu, 06 Mar 2025 00:23:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF7nJyNaHwTKfCFf2zsd6PiaEGoXlfFh+yzGhdtdq5/XYd3bHYtIZ0oKB/mltmXYT1qA2ZSl8TLqva2zRpXEPU=
+X-Received: by 2002:a25:1ec2:0:b0:e63:474e:c861 with SMTP id
+ 3f1490d57ef6-e634eef0b1fmr718493276.25.1741249397848; Thu, 06 Mar 2025
+ 00:23:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e278758-faf7-4c8a-1959-08dd5c5bf341
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2025 03:06:54.9308
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8728
+References: <20200116172428.311437-1-sgarzare@redhat.com> <20200427142518.uwssa6dtasrp3bfc@steredhat>
+ <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com> <20200428160052.o3ihui4262xogyg4@steredhat>
+ <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com> <20250305022248-mutt-send-email-mst@kernel.org>
+ <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt>
+ <CACGkMEvms=i5z9gVRpnrXXpBnt3KGwM4bfRc46EztzDi4pqOsw@mail.gmail.com> <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
+In-Reply-To: <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Thu, 6 Mar 2025 09:23:05 +0100
+X-Gm-Features: AQ5f1JohM_t7j7Fpc0COSkCeLVhsbQLpCfbrtS-97yp_c3OjYm5Amp7QVm4NzL8
+Message-ID: <CAGxU2F7_0hXc-0hasa-_p_0z6nGCY6bsF_49ZRRN2mKZEJcziw@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
+To: Lei Yang <leiyang@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, 
+	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org, 
+	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, 
+	Bobby Eshleman <bobbyeshleman@gmail.com>, linux-hyperv@vger.kernel.org, 
+	Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org, 
+	Jason Wang <jasowang@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, March 1,=
- 2025 8:17 AM
->=20
-> When a Hyper-V framebuffer device is unbind, hyperv_fb driver tries to
-> release the framebuffer forcefully. If this framebuffer is in use it
-> produce the following WARN and hence this framebuffer is never released.
->=20
-> [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_=
-info.c:70
-> framebuffer_release+0x2c/0x40
-> < snip >
-> [   44.111289] Call Trace:
-> [   44.111290]  <TASK>
-> [   44.111291]  ? show_regs+0x6c/0x80
-> [   44.111295]  ? __warn+0x8d/0x150
-> [   44.111298]  ? framebuffer_release+0x2c/0x40
-> [   44.111300]  ? report_bug+0x182/0x1b0
-> [   44.111303]  ? handle_bug+0x6e/0xb0
-> [   44.111306]  ? exc_invalid_op+0x18/0x80
-> [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
-> [   44.111311]  ? framebuffer_release+0x2c/0x40
-> [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
-> [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
-> [   44.111323]  device_remove+0x40/0x80
-> [   44.111325]  device_release_driver_internal+0x20b/0x270
-> [   44.111327]  ? bus_find_device+0xb3/0xf0
->=20
-> Fix this by moving the release of framebuffer and assosiated memory
-> to fb_ops.fb_destroy function, so that framebuffer framework handles
-> it gracefully.
->=20
-> While we fix this, also replace manual registrations/unregistration of
-> framebuffer with devm_register_framebuffer.
->=20
-> Fixes: 68a2d20b79b1 ("drivers/video: add Hyper-V Synthetic Video Frame Bu=
-ffer Driver")
->=20
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> ---
-> [V3]
->  - using simplified hvfb_putmem()
->=20
->  drivers/video/fbdev/hyperv_fb.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv=
-_fb.c
-> index 09fb025477f7..76a42379c8df 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -282,6 +282,8 @@ static uint screen_depth;
->  static uint screen_fb_size;
->  static uint dio_fb_size; /* FB size for deferred IO */
->=20
-> +static void hvfb_putmem(struct fb_info *info);
-> +
->  /* Send message to Hyper-V host */
->  static inline int synthvid_send(struct hv_device *hdev,
->  				struct synthvid_msg *msg)
-> @@ -862,6 +864,17 @@ static void hvfb_ops_damage_area(struct fb_info *inf=
-o, u32 x, u32 y, u32 width,
->  		hvfb_ondemand_refresh_throttle(par, x, y, width, height);
->  }
->=20
-> +/*
-> + * fb_ops.fb_destroy is called by the last put_fb_info() call at the end
-> + * of unregister_framebuffer() or fb_release(). Do any cleanup related t=
-o
-> + * framebuffer here.
-> + */
-> +static void hvfb_destroy(struct fb_info *info)
-> +{
-> +	hvfb_putmem(info);
-> +	framebuffer_release(info);
-> +}
-> +
->  /*
->   * TODO: GEN1 codepaths allocate from system or DMA-able memory. Fix the
->   *       driver to use the _SYSMEM_ or _DMAMEM_ helpers in these cases.
-> @@ -877,6 +890,7 @@ static const struct fb_ops hvfb_ops =3D {
->  	.fb_set_par =3D hvfb_set_par,
->  	.fb_setcolreg =3D hvfb_setcolreg,
->  	.fb_blank =3D hvfb_blank,
-> +	.fb_destroy	=3D hvfb_destroy,
->  };
->=20
->  /* Get options from kernel paramenter "video=3D" */
-> @@ -1172,7 +1186,7 @@ static int hvfb_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto error;
->=20
-> -	ret =3D register_framebuffer(info);
-> +	ret =3D devm_register_framebuffer(&hdev->device, info);
->  	if (ret) {
->  		pr_err("Unable to register framebuffer\n");
->  		goto error;
-> @@ -1220,14 +1234,10 @@ static void hvfb_remove(struct hv_device *hdev)
->=20
->  	fb_deferred_io_cleanup(info);
->=20
-> -	unregister_framebuffer(info);
->  	cancel_delayed_work_sync(&par->dwork);
->=20
->  	vmbus_close(hdev->channel);
->  	hv_set_drvdata(hdev, NULL);
-> -
-> -	hvfb_putmem(info);
-> -	framebuffer_release(info);
->  }
->=20
->  static int hvfb_suspend(struct hv_device *hdev)
-> --
-> 2.43.0
+On Thu, 6 Mar 2025 at 02:37, Lei Yang <leiyang@redhat.com> wrote:
+>
+> QE tested this series patch with virtio-net regression tests,
+> everything works fine.
+>
+> Tested-by: Lei Yang <leiyang@redhat.com>
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
+Sorry, but this test doesn't involve virtio-net at all, so what is the
+point on testing it with virtio-net?
+
+Thanks,
+Stefano
+
+>
+> On Thu, Mar 6, 2025 at 8:17=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
+rote:
+> >
+> > On Wed, Mar 5, 2025 at 5:30=E2=80=AFPM Stefano Garzarella <sgarzare@red=
+hat.com> wrote:
+> > >
+> > > On Wed, Mar 05, 2025 at 02:27:12AM -0500, Michael S. Tsirkin wrote:
+> > > >On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
+> > > >> I think it might be a lot of complexity to bring into the picture =
+from
+> > > >> netdev, and I'm not sure there is a big win since the vsock device=
+ could
+> > > >> also have a vsock->net itself? I think the complexity will come fr=
+om the
+> > > >> address translation, which I don't think netdev buys us because th=
+ere
+> > > >> would still be all of the work work to support vsock in netfilter?
+> > > >
+> > > >Ugh.
+> > > >
+> > > >Guys, let's remember what vsock is.
+> > > >
+> > > >It's a replacement for the serial device with an interface
+> > > >that's easier for userspace to consume, as you get
+> > > >the demultiplexing by the port number.
+> >
+> > Interesting, but at least VSOCKETS said:
+> >
+> > """
+> > config VSOCKETS
+> >         tristate "Virtual Socket protocol"
+> >         help
+> >          Virtual Socket Protocol is a socket protocol similar to TCP/IP
+> >           allowing communication between Virtual Machines and hyperviso=
+r
+> >           or host.
+> >
+> >           You should also select one or more hypervisor-specific transp=
+orts
+> >           below.
+> >
+> >           To compile this driver as a module, choose M here: the module
+> >           will be called vsock. If unsure, say N.
+> > """
+> >
+> > This sounds exactly like networking stuff and spec also said something =
+similar
+> >
+> > """
+> > The virtio socket device is a zero-configuration socket communications
+> > device. It facilitates data transfer between the guest and device
+> > without using the Ethernet or IP protocols.
+> > """
+> >
+> > > >
+> > > >The whole point of vsock is that people do not want
+> > > >any firewalling, filtering, or management on it.
+> >
+> > We won't get this, these are for ethernet and TCP/IP mostly.
+> >
+> > > >
+> > > >It needs to work with no configuration even if networking is
+> > > >misconfigured or blocked.
+> >
+> > I don't see any blockers that prevent us from zero configuration, or I
+> > miss something?
+> >
+> > >
+> > > I agree with Michael here.
+> > >
+> > > It's been 5 years and my memory is bad, but using netdev seemed like =
+a
+> > > mess, especially because in vsock we don't have anything related to
+> > > IP/Ethernet/ARP, etc.
+> >
+> > We don't need to bother with that, kernel support protocols other than =
+TCP/IP.
+> >
+> > >
+> > > I see vsock more as AF_UNIX than netdev.
+> >
+> > But you have a device in guest that differs from the AF_UNIX.
+> >
+> > >
+> > > I put in CC Jakub who was covering network namespace, maybe he has so=
+me
+> > > advice for us regarding this. Context [1].
+> > >
+> > > Thanks,
+> > > Stefano
+> > >
+> > > [1] https://lore.kernel.org/netdev/Z8edJjqAqAaV3Vkt@devvm6277.cco0.fa=
+cebook.com/
+> > >
+> >
+> > Thanks
+> >
+> >
+>
 
 
