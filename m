@@ -1,219 +1,143 @@
-Return-Path: <linux-hyperv+bounces-4249-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4250-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61FF1A544BE
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 09:25:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2621BA55320
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 18:32:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA9D31888DE4
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 08:24:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F10C175618
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Mar 2025 17:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F1D207DF7;
-	Thu,  6 Mar 2025 08:23:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6233B255252;
+	Thu,  6 Mar 2025 17:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dG++pnu/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6+jMDYe"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377D41FBEB1
-	for <linux-hyperv@vger.kernel.org>; Thu,  6 Mar 2025 08:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334C319D8B7;
+	Thu,  6 Mar 2025 17:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741249404; cv=none; b=J0zXsg2SCHZPq0dhYhxKHH8+R4hSawPMP14nXSNHg+uDNnX8TjaMvCJYfJE+ksME5x7XjufwlrB6HLFtIJg5BYw1pufUpxnZ89R4mIz7aYRXQiCrHe0vAoNfG8Nz4Q8zD0IgPUs9O8YgcO9a4Q0SYidUu5AKryr7iQayDILwKV8=
+	t=1741282329; cv=none; b=CvPqiQEVZBdAqOf1ODZw53G7VTsaQrUQDCxVltvxxSGb3KUnQjm+mYXsca6hm6pf/3AB1KSUKwyoR9tHF3z/U8QC1nD8mwVVY4cwZS2HHFWvZrnAb5fHUSRbpe7V869lFIkx8YkCrrcttP1c9BsO0yCmIQOkdzMnD1snR4U1Ojw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741249404; c=relaxed/simple;
-	bh=LAESgKwjsOolqILQ7EFqXdhdFKselMeHOYpzQPd3EDs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IuzzUWs2q0xBmv2lwUjG9T9dI28Ul8g4CZ25TkoUnSisphdD6Q1bKYseyeA+c0wl/2zIqi+ZDYaRRU8jU4uihudKLChGd+/iyQo3YpQ3P2CP4Ou3/uMd7C7TwqmxRz0oLYaRhhLj2rBRDScMnKygLqv9QOQf/8v4E1s70AVRhPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dG++pnu/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741249400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p7r18lDDaYnSU7d2JOl6qmtUJzAYao+io6UYl9OANnk=;
-	b=dG++pnu/zC2++ehDgE1RgC0FE0V+zAUyT04mwcMidClFcTRvtm+UgCNb9lYe9rUEgSK2h4
-	b4eqJXlFkVrxmm0NBtHHBHRD6/8JtKBcSnHpb+UkjBOtR7202xRWJtaJXEH9dRLcAiRjna
-	kb7lYehEpjCsVbfaxqpj7/gGJH1VIQQ=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-jq1L7WkTOOKMQD5yyOZocQ-1; Thu, 06 Mar 2025 03:23:18 -0500
-X-MC-Unique: jq1L7WkTOOKMQD5yyOZocQ-1
-X-Mimecast-MFC-AGG-ID: jq1L7WkTOOKMQD5yyOZocQ_1741249398
-Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-e549c458692so536142276.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 06 Mar 2025 00:23:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741249398; x=1741854198;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p7r18lDDaYnSU7d2JOl6qmtUJzAYao+io6UYl9OANnk=;
-        b=qTEOEJKq250BfYwNtqhaffOcJDZLCQQCTryaLN2nxsQ9NPW8XR1NqR2rvPfI/Dg2jx
-         7HI0FSDOSiYZ08ZHNxZjAGmSXdQ8TqHuoUuPcd5pDN70qg7mPyMXoiGbGdgpy7z4TrcM
-         dFCh53vCo+KxaCkEJeMd07kAspQwUf+yZtsKvUB480dEXROtv8wqlRv1cSpQaZHYmA+j
-         x8aqyHun1E4NLUHW3+O8jmZdFJ6DDhcN8Mh+2iveNRUbe2D4Ibu9TZanViTJpVT2wPNl
-         R9Fq8rxJ/OX1dY2Vmui6w8B8IQF88fXduvBQD4daIF5S2OE4zt1YEvvIFRbJ1POfMjy1
-         huOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjQDR/2MLJIUWoW9nYOnGoLJIPXvLQ6ofH9zh5fDzOroTw6vl+u8+uh+7JMtITTk4AmnDk9Y1TCv9Bjd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEMH0AoBTTwXGUvXW9KleEfWIwezR/UBmsvdNH4xwDgK4aviUR
-	pfKIrLmLlOBtbHOfNne7AQV4krhPkiOmLn5jCJV7SvWdkejVdru/deznh1n+E1EmydTdnHXtvUZ
-	6mWJhLS+P+yFW0XKG1SyoIgeXC/CQKujEnVUZLwYprYRb0fGYko0pD0db+ijQwU1sCvU4wL7Sgw
-	jBUuCTRXcmTJDtSONpfqH30jsGZVABDR92CZYQ
-X-Gm-Gg: ASbGnctLj6wM3geDuBut9Xj/HrvHMnzi/48MgVt5oJy//WB4EpikRSBYLXOIpPXdr/8
-	WBOO+ak9R4RJCtsKcVhDRrQJzlRMLXC289eJ5uJpBIVY8sF0sIafA7rbNNKg5j3KST0FqRzE=
-X-Received: by 2002:a25:1ec2:0:b0:e63:474e:c861 with SMTP id 3f1490d57ef6-e634eef0b1fmr718507276.25.1741249398211;
-        Thu, 06 Mar 2025 00:23:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF7nJyNaHwTKfCFf2zsd6PiaEGoXlfFh+yzGhdtdq5/XYd3bHYtIZ0oKB/mltmXYT1qA2ZSl8TLqva2zRpXEPU=
-X-Received: by 2002:a25:1ec2:0:b0:e63:474e:c861 with SMTP id
- 3f1490d57ef6-e634eef0b1fmr718493276.25.1741249397848; Thu, 06 Mar 2025
- 00:23:17 -0800 (PST)
+	s=arc-20240116; t=1741282329; c=relaxed/simple;
+	bh=Pk2ue5j/pk+6zhxGTLAOxyRNOC5jmc+8Ec9aVHb3TOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNBu6ZKxIkxcnWqpxuGOpjXnBxlq1qOAbl4UvwI0XpzA+oWTxzPdhaHPwvO8DdKxt0MP1C5VNs/QO5UQlqfCQRB7cEQ3jyrUniQaA7ueCc1WN/3f4ro+3rIQAT7lFL9o3lOJ39exE/fQ1RlXKWGAZ3cN7ZX0rIjjiV3vfyq2BhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6+jMDYe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254D6C4CEE0;
+	Thu,  6 Mar 2025 17:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741282328;
+	bh=Pk2ue5j/pk+6zhxGTLAOxyRNOC5jmc+8Ec9aVHb3TOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C6+jMDYe1JuTTkwoB6+8AIctO24faWlduIkpVx8m0Q/YtQ2oW6RkY8pSkT3gQpqhj
+	 hsuJqphwB/otmYETcTSRVrcSYLDLMjeVWRkVBYS9gmu/d6e95ue4XA8Tt5EAppu+ch
+	 ooORaobj/7p9zQlknngSLmJgAyi/CrtRfN4obZR/RNuNGVGpV1vh4IqeOH8pWy4Ace
+	 eUYXHWK1Zbd/TgrgiU2BxA1m308egnrUbcnkZAcfUHYZxc7Pe2vnzAWfBI4YoWDyq+
+	 AQ+4LfmsOvPcgY9RaRWnOjX4RCzabvvXyphlZv6onjJDTYyWK/2rv+QRFeukJVvWZB
+	 hJ9ZvwIHb2wpw==
+Date: Thu, 6 Mar 2025 17:32:06 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com,
+	daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
+	arnd@arndb.de, jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com, skinsburskii@linux.microsoft.com,
+	mrathor@linux.microsoft.com, ssengar@linux.microsoft.com,
+	apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
+	stanislav.kinsburskiy@gmail.com, gregkh@linuxfoundation.org,
+	vkuznets@redhat.com, prapal@linux.microsoft.com,
+	muislam@microsoft.com, anrayabh@linux.microsoft.com,
+	rafael@kernel.org, lenb@kernel.org, corbet@lwn.net
+Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
+ expose /dev/mshv to VMMs
+Message-ID: <Z8ncFkwzxi9qJFD3@liuwe-devbox-debian-v2>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
+ <f332b77a-940f-4007-a44a-de64878d5201@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200116172428.311437-1-sgarzare@redhat.com> <20200427142518.uwssa6dtasrp3bfc@steredhat>
- <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com> <20200428160052.o3ihui4262xogyg4@steredhat>
- <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com> <20250305022248-mutt-send-email-mst@kernel.org>
- <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt>
- <CACGkMEvms=i5z9gVRpnrXXpBnt3KGwM4bfRc46EztzDi4pqOsw@mail.gmail.com> <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
-In-Reply-To: <CAPpAL=xsDM4ffe9kpAnvL3AfQrKg9tpbDdbTGgSwecHFf5wSLA@mail.gmail.com>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Thu, 6 Mar 2025 09:23:05 +0100
-X-Gm-Features: AQ5f1JohM_t7j7Fpc0COSkCeLVhsbQLpCfbrtS-97yp_c3OjYm5Amp7QVm4NzL8
-Message-ID: <CAGxU2F7_0hXc-0hasa-_p_0z6nGCY6bsF_49ZRRN2mKZEJcziw@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-To: Lei Yang <leiyang@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, 
-	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org, 
-	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, 
-	Bobby Eshleman <bobbyeshleman@gmail.com>, linux-hyperv@vger.kernel.org, 
-	Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org, 
-	Jason Wang <jasowang@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f332b77a-940f-4007-a44a-de64878d5201@linux.microsoft.com>
 
-On Thu, 6 Mar 2025 at 02:37, Lei Yang <leiyang@redhat.com> wrote:
->
-> QE tested this series patch with virtio-net regression tests,
-> everything works fine.
->
-> Tested-by: Lei Yang <leiyang@redhat.com>
+On Thu, Feb 27, 2025 at 10:50:30AM -0800, Roman Kisel wrote:
+> 
+> 
+> 
+> On 2/26/2025 3:08 PM, Nuno Das Neves wrote:
+> > Provide a set of IOCTLs for creating and managing child partitions when
+> > running as root partition on Hyper-V. The new driver is enabled via
+> > CONFIG_MSHV_ROOT.
+> > 
+> 
+> [...]
+> 
+> 
+> As I understood, the changes fall into these buckets:
+> 
+> 1. Partition management (VPs and memory). Built of the top of fd's which
+>    looks as the right approach. There is ref counting etc.
+> 2. Scheduling. Here, there is the mature KVM and Xen code to find
+>    inspiration in. Xen being the Type 1 hypervisor should likely be
+>    closer to MSHV in my understanding.
 
-Sorry, but this test doesn't involve virtio-net at all, so what is the
-point on testing it with virtio-net?
+Yes and no.
+
+When a hypervisor-based scheduler (either classic or core) is used, the
+scheduling model is the same as Xen. In this model, the hypervisor makes
+the scheduling decisions.
+
+There is a second scheduler model. In that model, the hypervisor
+delegates scheduling to the Linux kernel. The Linux scheduler makes the
+scheduling decisions. It is similar to KVM.
+
+We support both. Which model to use largely depends on the workload and
+the desired behaviors of the system.
+
+This is purely informational in case people wonder why the run vp
+function branches off to two different code paths.
+
+> 3. IOCTL code allocation. Not sure how this is allocated yet given that
+>    the patch series has been through a multi-year review, that must be
+>    settled by now.
+> 4. IOCTLs themselves. The majority just marshals data to the
+>    hypervisor.
+> 
+> Despite the rather large size of the patch, I spot-checked the places
+> where I have the chance to make an informed decision, and could not find
+> anything that'd stand out as suspicious to me. Going to extrapolate that
+> the patch itself should be good enough. Given that this code has been in
+> development and validation for a few years, I'd vote to merge it. That
+> will also enable upstreaming the rest of the VTL mode code that powers
+> Azure Boost (https://github.com/microsoft/OHCL-Linux-Kernel)
+> 
+> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+> 
+
+Thank you for the review.
 
 Thanks,
-Stefano
+Wei.
 
->
-> On Thu, Mar 6, 2025 at 8:17=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
-> >
-> > On Wed, Mar 5, 2025 at 5:30=E2=80=AFPM Stefano Garzarella <sgarzare@red=
-hat.com> wrote:
-> > >
-> > > On Wed, Mar 05, 2025 at 02:27:12AM -0500, Michael S. Tsirkin wrote:
-> > > >On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
-> > > >> I think it might be a lot of complexity to bring into the picture =
-from
-> > > >> netdev, and I'm not sure there is a big win since the vsock device=
- could
-> > > >> also have a vsock->net itself? I think the complexity will come fr=
-om the
-> > > >> address translation, which I don't think netdev buys us because th=
-ere
-> > > >> would still be all of the work work to support vsock in netfilter?
-> > > >
-> > > >Ugh.
-> > > >
-> > > >Guys, let's remember what vsock is.
-> > > >
-> > > >It's a replacement for the serial device with an interface
-> > > >that's easier for userspace to consume, as you get
-> > > >the demultiplexing by the port number.
-> >
-> > Interesting, but at least VSOCKETS said:
-> >
-> > """
-> > config VSOCKETS
-> >         tristate "Virtual Socket protocol"
-> >         help
-> >          Virtual Socket Protocol is a socket protocol similar to TCP/IP
-> >           allowing communication between Virtual Machines and hyperviso=
-r
-> >           or host.
-> >
-> >           You should also select one or more hypervisor-specific transp=
-orts
-> >           below.
-> >
-> >           To compile this driver as a module, choose M here: the module
-> >           will be called vsock. If unsure, say N.
-> > """
-> >
-> > This sounds exactly like networking stuff and spec also said something =
-similar
-> >
-> > """
-> > The virtio socket device is a zero-configuration socket communications
-> > device. It facilitates data transfer between the guest and device
-> > without using the Ethernet or IP protocols.
-> > """
-> >
-> > > >
-> > > >The whole point of vsock is that people do not want
-> > > >any firewalling, filtering, or management on it.
-> >
-> > We won't get this, these are for ethernet and TCP/IP mostly.
-> >
-> > > >
-> > > >It needs to work with no configuration even if networking is
-> > > >misconfigured or blocked.
-> >
-> > I don't see any blockers that prevent us from zero configuration, or I
-> > miss something?
-> >
-> > >
-> > > I agree with Michael here.
-> > >
-> > > It's been 5 years and my memory is bad, but using netdev seemed like =
-a
-> > > mess, especially because in vsock we don't have anything related to
-> > > IP/Ethernet/ARP, etc.
-> >
-> > We don't need to bother with that, kernel support protocols other than =
-TCP/IP.
-> >
-> > >
-> > > I see vsock more as AF_UNIX than netdev.
-> >
-> > But you have a device in guest that differs from the AF_UNIX.
-> >
-> > >
-> > > I put in CC Jakub who was covering network namespace, maybe he has so=
-me
-> > > advice for us regarding this. Context [1].
-> > >
-> > > Thanks,
-> > > Stefano
-> > >
-> > > [1] https://lore.kernel.org/netdev/Z8edJjqAqAaV3Vkt@devvm6277.cco0.fa=
-cebook.com/
-> > >
-> >
-> > Thanks
-> >
-> >
->
-
+> -- 
+> Thank you,
+> Roman
+> 
 
