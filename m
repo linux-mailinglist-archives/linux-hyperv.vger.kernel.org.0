@@ -1,158 +1,223 @@
-Return-Path: <linux-hyperv+bounces-4297-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4298-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 608F1A57E70
-	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Mar 2025 22:12:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13A00A57F02
+	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Mar 2025 22:49:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B426D1892162
-	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Mar 2025 21:12:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6AFC7A4B27
+	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Mar 2025 21:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33E71EDA00;
-	Sat,  8 Mar 2025 21:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016991F5856;
+	Sat,  8 Mar 2025 21:49:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LMSLDj/6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jVdHKRZu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gw+iAH3r"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE151A3177;
-	Sat,  8 Mar 2025 21:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0394549620;
+	Sat,  8 Mar 2025 21:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741468316; cv=none; b=RslGpYclB+b7Z3QYehVlEpVFZlazhQnl0Cyg/qKPQmBM1oNGiENfk/pZBMkJqmADUCaHC7P0mJJuTIqWodE7s0TTgRo+WkCBB0Oecg1R2U9AtLN83Wee3V3wceGoyo81YJ2VzrMnbI8pZXbnhfnKN8tnDMTpxmQiAOQVX4QrBj8=
+	t=1741470556; cv=none; b=dYonMs77+J72zow/jqWrMojVQ8ZJyuWKc/AACkeVnc3zBO/uouOlwjusQsbOUDoVG13a2Lrn6N3Po97u1EfcDQiWi4kLYbHICEzYaz2afT5NrMRfU/LwlUTCp4s6sB6j2D9cIbxNAkRu0KEoYZCbUbdFwXBjAgiuBfNS2HU9Ito=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741468316; c=relaxed/simple;
-	bh=/7+C4C4iku3+3KLHxP+lyMp2LEAUxLeZEbSA4EWH9TM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=WIJ8a39kN88PkaijEBh/RI40ikDAYkYKJdsIiMjS2C/lc3Oq4iuBjAbefc2scdWrk7M/ptz8Bsy0vNA5+7dP0mAs/KGm5YFhMnI1uDKoHyvqJPd7798hX912OIQGRIS344vdDrjMM8TPLb7zBBJXylngfuTGWPry5GqDhOosH1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LMSLDj/6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jVdHKRZu; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.phl.internal (Postfix) with ESMTP id 5993620160A;
-	Sat,  8 Mar 2025 16:11:54 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Sat, 08 Mar 2025 16:11:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741468314;
-	 x=1741475514; bh=C6cJwbVoDRAeuF6ka+Poa5zkvDE5zFIAQzAGXRQkSJc=; b=
-	LMSLDj/6zCFJ3UvyQ1/MypoE1FqzZAjNGpopT2+pL1QmJaKkUV1WihocrQswxNKX
-	zDJO8+UYV/7e2VYvlPckk22mlFoRrOfywd3NTpdgmgp3yf5ilBeS7s21bqLOD9N3
-	z8mnx/ufAe1MCtibKBNzXU3AvqsAgQFWLNZOEyWEKCdS8fcvfXBLhNptNCOZTbiy
-	wlD0hctNLDfawhtRater4q3VUgxv0ROg4aw1mQIUJrjR/XgolGWLcyVCVFPKETNo
-	DBkEnpDwJ7oG9Oa/gHEzeVI5d8k6EO3M8oMj9UxIlH/8REhmUxj8hk2EAJpPZp5l
-	RhhPUesHZshdO/EYMV8EWw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741468314; x=
-	1741475514; bh=C6cJwbVoDRAeuF6ka+Poa5zkvDE5zFIAQzAGXRQkSJc=; b=j
-	VdHKRZuf3U4fb9uunzGPvL6CNmqhjPYTe3rsKqtNKhaY/pZrp2IINPNJY2JWuXZd
-	RY33BATElzY53tfeQxSBqLuTqbpJLnWv5wbK4rVeRDL2HUp6G+xE/MnoH24Q4she
-	Zw0xya7sNy+jy6xa23YkFrJIsewKyZBbM3oBg/sVYzVbSE7jucsBibWRVn8HVC9B
-	6ncXJ7c/BSSn5NFlw7sn4dwhZ2KZKrDp5xBFbLvYp9676I8hKrUapubErrnML8Eu
-	MHXEkU/mAZ+wflm9hMCWuppvIcWS53HsHXjuw99qvf2QyEr8Tbk2JmNRd6xt1Nj+
-	hp2dFCv/g0gkhZrCq7VHA==
-X-ME-Sender: <xms:mbLMZ596wPb40_JXIyPtfloWsKkqrCL8QDEm8QgWDvunyGq4pGVH9w>
-    <xme:mbLMZ9srqTK0BZFWCgSX-KfGSfBS4jByBYE1PxpJSKF8z3zNBeVNfOE6Li8LAWsyN
-    mt5f5VASQmltaFYOjE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudegheelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    gedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghp
-    thhtohepjhhovgihrdhgohhulhihsegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrd
-    hruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepshhuuggvvghprdhhohhllhgr
-    segrrhhmrdgtohhmpdhrtghpthhtohepshhuiihukhhirdhpohhulhhoshgvsegrrhhmrd
-    gtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphht
-    thhopeihuhiivghnghhhuhhisehhuhgrfigvihdrtghomhdprhgtphhtthhopegtohhnoh
-    hrodgutheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:mbLMZ3DGst5K0ncB2CMgLSb0fFckv9GtAIwLMQFO9xM_fVSk6CPhoQ>
-    <xmx:mbLMZ9eJisR2lNOiGIPKNcjrOHGDl2yZroJ90LxetiT4_8C6ww40aA>
-    <xmx:mbLMZ-OeS-fHGEYgpwJpark3S_3tUdUzYdgXahPvkpqbMH8mPMmfbA>
-    <xmx:mbLMZ_k0HUBm-OqkJPuCwRYt895o1R20ovOBLNSpi-Sk8TXTbjUGww>
-    <xmx:mrLMZ2VW74UQPiuOOyAuXJ1EzqtujuTLZeYILoa5kZL7Oq9jb1T0XPOr>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id EE4422220072; Sat,  8 Mar 2025 16:11:52 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1741470556; c=relaxed/simple;
+	bh=ogZX1Fgf0emz5/XgrE7Jdv5XjH7+aPutVc/+AUG8ok4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZck+DK0UCssg75aP1GpIZbM3f/ugABpwKEO+UnuPqm1HDMJZRF9kNMuU3jzvtha02z8V+J6NlZBXsTWYKMT6yYngehsHoWEVxfQQEdvLGi7pT241ApP1Sr8F+w7uiuSUDkd4GpGq0csz9w/g6GkT2OLFXTgDq2xLfpS6bphB8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gw+iAH3r; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741470555; x=1773006555;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ogZX1Fgf0emz5/XgrE7Jdv5XjH7+aPutVc/+AUG8ok4=;
+  b=Gw+iAH3raUMyQy7OAKWtJ8Ka9tZ/Z2KkBf68tcX94RIePeGdUN9njJc3
+   exc02j2jvEPbJ3rozwJiWOlispnIIIxKpKVhAx0uU1qFvPprvCjlx+j4k
+   +NWNkQ7/FZG9GF9tGBUQwUO5btdx4lEeSijg/2LFOVg6DBNs02UMXf4aP
+   JvSeW+yMK0KSYzrdwKnLMG40c2YdQuKJkLPSgdEVShTyEmeBqRtQ2acGp
+   kOK2aiWLfa5XNEXE4idV8/wlrLkBc04Km0JnNwG7DFokfmkxuFDjWEmZ4
+   E23BvIgl3KcPfNrSXHBVgXKSp2aUhoNqUVYVoOn9kL7NEeZkW5SC1IaEU
+   g==;
+X-CSE-ConnectionGUID: sCJ57nLET3+3LYKzuTSg7w==
+X-CSE-MsgGUID: OIvyMOrPTSqmfgSpaCFlrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42638753"
+X-IronPort-AV: E=Sophos;i="6.14,233,1736841600"; 
+   d="scan'208";a="42638753"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2025 13:49:14 -0800
+X-CSE-ConnectionGUID: TZmFUD+/TReB/RTeelOYBQ==
+X-CSE-MsgGUID: L14Hls9FQ+yTxKkK2KpU5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,233,1736841600"; 
+   d="scan'208";a="142863193"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 08 Mar 2025 13:49:11 -0800
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tr22e-0002Mw-0F;
+	Sat, 08 Mar 2025 21:49:08 +0000
+Date: Sun, 9 Mar 2025 05:49:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Terry Junge <linuxhid@cosmicgizmosystems.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Terry Junge <linuxhid@cosmicgizmosystems.com>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Alan Stern <stern@rowland.harvard.edu>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	lvc-project@linuxtesting.org,
+	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] HID: usbhid: Eliminate recurrent out-of-bounds bug in
+ usbhid_parse()
+Message-ID: <202503090701.715nV1DW-lkp@intel.com>
+References: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 08 Mar 2025 22:11:32 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Roman Kisel" <romank@linux.microsoft.com>, bhelgaas@google.com,
- "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Joey Gouly" <joey.gouly@arm.com>,
- krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, "Len Brown" <lenb@kernel.org>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Marc Zyngier" <maz@kernel.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Oliver Upton" <oliver.upton@linux.dev>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Rob Herring" <robh@kernel.org>, ssengar@linux.microsoft.com,
- "Sudeep Holla" <sudeep.holla@arm.com>,
- "Suzuki K Poulose" <suzuki.poulose@arm.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Wei Liu" <wei.liu@kernel.org>,
- "Will Deacon" <will@kernel.org>, "Zenghui Yu" <yuzenghui@huawei.com>,
- devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-Message-Id: <29bb5b7a-b31f-4b32-92c6-e2588a0f965a@app.fastmail.com>
-In-Reply-To: <20250307220304.247725-9-romank@linux.microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-9-romank@linux.microsoft.com>
-Subject: Re: [PATCH hyperv-next v5 08/11] Drivers: hv: vmbus: Get the IRQ number from
- DeviceTree
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
 
-On Fri, Mar 7, 2025, at 23:03, Roman Kisel wrote:
-> 
-> +static int __maybe_unused vmbus_set_irq(struct platform_device *pdev)
+Hi Terry,
 
-Instead of the __maybe_unused annotation here
+kernel test robot noticed the following build warnings:
 
-> 
-> +#ifndef HYPERVISOR_CALLBACK_VECTOR
-> +	ret = vmbus_set_irq(pdev);
-> +	if (ret)
-> +		return ret;
-> +#endif
-> +
+[auto build test WARNING on 58c9bf3363e596d744f56616d407278ef5f97f5a]
 
-you can use 
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Junge/HID-usbhid-Eliminate-recurrent-out-of-bounds-bug-in-usbhid_parse/20250307-130514
+base:   58c9bf3363e596d744f56616d407278ef5f97f5a
+patch link:    https://lore.kernel.org/r/20250307045449.745634-1-linuxhid%40cosmicgizmosystems.com
+patch subject: [PATCH v1] HID: usbhid: Eliminate recurrent out-of-bounds bug in usbhid_parse()
+config: s390-randconfig-r133-20250308 (https://download.01.org/0day-ci/archive/20250309/202503090701.715nV1DW-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce: (https://download.01.org/0day-ci/archive/20250309/202503090701.715nV1DW-lkp@intel.com/reproduce)
 
-       if (!__is_defined(HYPERVISOR_CALLBACK_VECTOR))
-                  ret = vmbus_set_irq(pdev);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503090701.715nV1DW-lkp@intel.com/
 
-and make it a little more readable.
+All warnings (new ones prefixed by >>):
 
-    Arnd
+>> drivers/hid/usbhid/hid-core.c:1055:4: warning: format specifies type 'unsigned char' but the argument has type 'int' [-Wformat]
+                           hdesc->bNumDescriptors - 1);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/hid.h:1239:31: note: expanded from macro 'hid_warn'
+           dev_warn(&(hid)->dev, fmt, ##__VA_ARGS__)
+                                 ~~~    ^~~~~~~~~~~
+   include/linux/dev_printk.h:156:70: note: expanded from macro 'dev_warn'
+           dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+                                                                       ~~~     ^~~~~~~~~~~
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+                   _p_func(dev, fmt, ##__VA_ARGS__);                       \
+                                ~~~    ^~~~~~~~~~~
+   1 warning generated.
+
+
+vim +1055 drivers/hid/usbhid/hid-core.c
+
+   979	
+   980	static int usbhid_parse(struct hid_device *hid)
+   981	{
+   982		struct usb_interface *intf = to_usb_interface(hid->dev.parent);
+   983		struct usb_host_interface *interface = intf->cur_altsetting;
+   984		struct usb_device *dev = interface_to_usbdev (intf);
+   985		struct hid_descriptor *hdesc;
+   986		struct hid_class_descriptor *hcdesc;
+   987		u32 quirks = 0;
+   988		unsigned int rsize = 0;
+   989		char *rdesc;
+   990		int ret;
+   991	
+   992		quirks = hid_lookup_quirk(hid);
+   993	
+   994		if (quirks & HID_QUIRK_IGNORE)
+   995			return -ENODEV;
+   996	
+   997		/* Many keyboards and mice don't like to be polled for reports,
+   998		 * so we will always set the HID_QUIRK_NOGET flag for them. */
+   999		if (interface->desc.bInterfaceSubClass == USB_INTERFACE_SUBCLASS_BOOT) {
+  1000			if (interface->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_KEYBOARD ||
+  1001				interface->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_MOUSE)
+  1002					quirks |= HID_QUIRK_NOGET;
+  1003		}
+  1004	
+  1005		if (usb_get_extra_descriptor(interface, HID_DT_HID, &hdesc) &&
+  1006		    (!interface->desc.bNumEndpoints ||
+  1007		     usb_get_extra_descriptor(&interface->endpoint[0], HID_DT_HID, &hdesc))) {
+  1008			dbg_hid("class descriptor not present\n");
+  1009			return -ENODEV;
+  1010		}
+  1011	
+  1012		if (!hdesc->bNumDescriptors ||
+  1013		    hdesc->bLength != sizeof(*hdesc) +
+  1014				      (hdesc->bNumDescriptors - 1) * sizeof(*hcdesc)) {
+  1015			dbg_hid("hid descriptor invalid, bLen=%hhu bNum=%hhu\n",
+  1016				hdesc->bLength, hdesc->bNumDescriptors);
+  1017			return -EINVAL;
+  1018		}
+  1019	
+  1020		hid->version = le16_to_cpu(hdesc->bcdHID);
+  1021		hid->country = hdesc->bCountryCode;
+  1022	
+  1023		if (hdesc->rpt_desc.bDescriptorType == HID_DT_REPORT)
+  1024			rsize = le16_to_cpu(hdesc->rpt_desc.wDescriptorLength);
+  1025	
+  1026		if (!rsize || rsize > HID_MAX_DESCRIPTOR_SIZE) {
+  1027			dbg_hid("weird size of report descriptor (%u)\n", rsize);
+  1028			return -EINVAL;
+  1029		}
+  1030	
+  1031		rdesc = kmalloc(rsize, GFP_KERNEL);
+  1032		if (!rdesc)
+  1033			return -ENOMEM;
+  1034	
+  1035		hid_set_idle(dev, interface->desc.bInterfaceNumber, 0, 0);
+  1036	
+  1037		ret = hid_get_class_descriptor(dev, interface->desc.bInterfaceNumber,
+  1038				HID_DT_REPORT, rdesc, rsize);
+  1039		if (ret < 0) {
+  1040			dbg_hid("reading report descriptor failed\n");
+  1041			kfree(rdesc);
+  1042			goto err;
+  1043		}
+  1044	
+  1045		ret = hid_parse_report(hid, rdesc, rsize);
+  1046		kfree(rdesc);
+  1047		if (ret) {
+  1048			dbg_hid("parsing report descriptor failed\n");
+  1049			goto err;
+  1050		}
+  1051	
+  1052		if (hdesc->bNumDescriptors > 1)
+  1053			hid_warn(intf,
+  1054				"%hhu unsupported optional hid class descriptors\n",
+> 1055				hdesc->bNumDescriptors - 1);
+  1056	
+  1057		hid->quirks |= quirks;
+  1058	
+  1059		return 0;
+  1060	err:
+  1061		return ret;
+  1062	}
+  1063	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
