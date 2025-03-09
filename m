@@ -1,223 +1,241 @@
-Return-Path: <linux-hyperv+bounces-4298-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4299-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13A00A57F02
-	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Mar 2025 22:49:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FB55A58062
+	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 03:59:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6AFC7A4B27
-	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Mar 2025 21:48:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 800503AEE09
+	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 02:58:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016991F5856;
-	Sat,  8 Mar 2025 21:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B95735964;
+	Sun,  9 Mar 2025 02:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gw+iAH3r"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="ZjSPWoGV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0394549620;
-	Sat,  8 Mar 2025 21:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B67328B6;
+	Sun,  9 Mar 2025 02:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741470556; cv=none; b=dYonMs77+J72zow/jqWrMojVQ8ZJyuWKc/AACkeVnc3zBO/uouOlwjusQsbOUDoVG13a2Lrn6N3Po97u1EfcDQiWi4kLYbHICEzYaz2afT5NrMRfU/LwlUTCp4s6sB6j2D9cIbxNAkRu0KEoYZCbUbdFwXBjAgiuBfNS2HU9Ito=
+	t=1741489142; cv=none; b=H2sIovLieeWc/B8y45hCtOyHkDB6Iq1le2Ide8th6s3iKxEnGrz7f94MPuFaC/H8sQdALzf8SgZebfPWfNGqAWe7+70kSc/QMXNqCY0+5J7Z6XsirbMeG14tsIyFfTioszCherbv0AT6oE0NnlnbRc18iSAsx9VshUGLzg6xEzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741470556; c=relaxed/simple;
-	bh=ogZX1Fgf0emz5/XgrE7Jdv5XjH7+aPutVc/+AUG8ok4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DZck+DK0UCssg75aP1GpIZbM3f/ugABpwKEO+UnuPqm1HDMJZRF9kNMuU3jzvtha02z8V+J6NlZBXsTWYKMT6yYngehsHoWEVxfQQEdvLGi7pT241ApP1Sr8F+w7uiuSUDkd4GpGq0csz9w/g6GkT2OLFXTgDq2xLfpS6bphB8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gw+iAH3r; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741470555; x=1773006555;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ogZX1Fgf0emz5/XgrE7Jdv5XjH7+aPutVc/+AUG8ok4=;
-  b=Gw+iAH3raUMyQy7OAKWtJ8Ka9tZ/Z2KkBf68tcX94RIePeGdUN9njJc3
-   exc02j2jvEPbJ3rozwJiWOlispnIIIxKpKVhAx0uU1qFvPprvCjlx+j4k
-   +NWNkQ7/FZG9GF9tGBUQwUO5btdx4lEeSijg/2LFOVg6DBNs02UMXf4aP
-   JvSeW+yMK0KSYzrdwKnLMG40c2YdQuKJkLPSgdEVShTyEmeBqRtQ2acGp
-   kOK2aiWLfa5XNEXE4idV8/wlrLkBc04Km0JnNwG7DFokfmkxuFDjWEmZ4
-   E23BvIgl3KcPfNrSXHBVgXKSp2aUhoNqUVYVoOn9kL7NEeZkW5SC1IaEU
-   g==;
-X-CSE-ConnectionGUID: sCJ57nLET3+3LYKzuTSg7w==
-X-CSE-MsgGUID: OIvyMOrPTSqmfgSpaCFlrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11367"; a="42638753"
-X-IronPort-AV: E=Sophos;i="6.14,233,1736841600"; 
-   d="scan'208";a="42638753"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2025 13:49:14 -0800
-X-CSE-ConnectionGUID: TZmFUD+/TReB/RTeelOYBQ==
-X-CSE-MsgGUID: L14Hls9FQ+yTxKkK2KpU5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,233,1736841600"; 
-   d="scan'208";a="142863193"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 08 Mar 2025 13:49:11 -0800
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tr22e-0002Mw-0F;
-	Sat, 08 Mar 2025 21:49:08 +0000
-Date: Sun, 9 Mar 2025 05:49:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Junge <linuxhid@cosmicgizmosystems.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Terry Junge <linuxhid@cosmicgizmosystems.com>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Alan Stern <stern@rowland.harvard.edu>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	lvc-project@linuxtesting.org,
-	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v1] HID: usbhid: Eliminate recurrent out-of-bounds bug in
- usbhid_parse()
-Message-ID: <202503090701.715nV1DW-lkp@intel.com>
-References: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
+	s=arc-20240116; t=1741489142; c=relaxed/simple;
+	bh=/YqmdkIusG/eMi12DlFGEFauLN+qccwZw8Ds229EQB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xuqzgzf+EVLLr7zET+h/WNZh3FL9yxQ0A95EhgDfAUrXl2Z1KX32xEAsmzb5PIllTiTgrRypKi7EwkKRmbHcj+lRKkqa/ijXg42TSRnLuadQiBGn56q9A1U0obH2eohNSCh1oAsWke6FUu1yY3oSRwip3JpouEPmAe6W0IOGJK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=ZjSPWoGV; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1741489120; x=1742093920; i=deller@gmx.de;
+	bh=nJBkMsS0v7qRX5aa5e+44c/E2mxBpR2Z9drP3iujy58=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ZjSPWoGVfnFecFQnqiRuoZk3ARKST6TKeOCRDllcrSLVge83Sip/idtcxaUYLfoX
+	 ubGiycKBLcVe4iS6TgCfkVgj4u3tp4kA31vTH//E5K8+gW1bCQrS3J/Yuman0PdhP
+	 TL80WbR3DdwnrjpFr3lBoFPT8i4H8OQTiQzZS/bw9H61dtSZ0VMCLvdhIY8UnG2Xg
+	 tOGxc1rbFX1OZBlwS1UouXJmZClnNuSFRWmFJ+Kgq4JlTDV3RRHrbNccIrZ/RmZnW
+	 IVNB11xgG94MAgWFbVHEHuSyd/0DPjJ56EMDFVWH7T6P9e9brzAGAZgk9Qoyvwb3R
+	 SRUbVS/imUwEHV/q+Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.173] ([109.250.63.121]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3lc9-1trNim3l9n-00GPup; Sun, 09
+ Mar 2025 03:58:39 +0100
+Message-ID: <24668c7d-6333-423e-bd48-28af1431b263@gmx.de>
+Date: Sun, 9 Mar 2025 03:58:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] fbdev: hyperv_fb: Fix hang in kdump kernel when on
+ Hyper-V Gen 2 VMs
+To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, javierm@redhat.com, thomas.tai@oracle.com
+Cc: tzimmermann@suse.de, kasong@redhat.com, dri-devel@lists.freedesktop.org,
+ linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org
+References: <20250218230130.3207-1-mhklinux@outlook.com>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <20250218230130.3207-1-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mjL3hSxydgxv7auKb+SF1HiGYsIAUsuqH4aH6FyBTYujmpsQrlr
+ mVRi1TjTwptv0fzG3qplQmey45gO+xpH2l7vdBQdCxuQq36Uh0Zb7hczbnMI00hkvC8P71L
+ zAEGWlfYgYFxMVAnxECokdx4vBaao1qvoqPk3Ogw8/FpOEIViSc19mK8T/FLXiFIdCZNjLO
+ utPCl0/kTBxN+Y3JygsXQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SVlwpZIM65s=;hImY14q1ReQCkPBo9c3HVJW24Vi
+ bySCSPP22C2nUvsMCaajKmS7Ixn8lCf1z9NhNY57sh5h57LWGdkOTAre915uDf8vkJTImdJps
+ RziLMSvb6H9Ed1xeh0kniBLhqd9V4iNUbOf44e5vRBACzEnEZKXx/RyQjsFjDl2sB3fhnOsOg
+ 8p4sem9b8tesVNGN7QR756mHdCXHyiG4+RKEAinPvCR5payYzLvXsVzmLNwtqLx1yQIUaGP6X
+ 8OHtelwCBxnzSfrmzjLLkbRbY6mpeiAu5x/P3WM8QCyyfUcGxXU3ous33EdXt2vNUf5abJon1
+ qCFnxw1k56rLVn2gvD11kSa7mPaQgxIq+kLZ8uFhzYijzixoI2cM9lqK5XuyxT+ZDyCrTjMhV
+ Ms5j/ELgFb4W1lOxb2U1Rvx1I+n3tjQHEZ6FECK/aug59YYkVkYtS4w+UaBBioeIP/tJm/R9t
+ ZxZKECUD1nY8ap2T0vnzq5eIoM8Bbnesmc9FnuwTdp3nrivyxd8+wNo6QRQvguCFBUtrEvYYG
+ bgN+K9XWkxJsms1O2e8rbsLz42Qz/i9xadErW3Jja0Okycywb6ZlvIaZ8qe4oiyKV51vUS3NE
+ ii0nfdTumZKx5PKJV4vIe3bbxsNyi6hLgLnktHd2fU4dT84tgTiKMsW1DAaXhxPTyDgp7l4ct
+ JeeYpqzTV666IFgsa1Xi6I9kjaXdNQLcisTo8wqS6HxxGfOLdvxBvQhDdn5rfvOvN6rdGZNYn
+ AD0VtqctXP3g0bGkvGAv8MALw4fpmBTb7hLjj09cqGID48Mtgo7FfQNDSa8gyF71BmGwmmjO5
+ ywEKx4kBxP4fDz7ojBFjztWMwZE9QzHq9xuDNM/Ut/ve21+VZ3GphoOg8OK55qG0Khkqj176V
+ Xh3CRwq9C5jPy2qFF7e37FFYnxOvojtiNua+CWsk2SXBfVZjl29Y7SR+hkPeYOimeGySa4YHk
+ oPsGuseex5JPD1mZpAFNUFuAgUTNj38Gh9ZEQVUk++n0DFTQxzfMIgznKcCV7gskjlV/XFJMA
+ xYfFXBuakM5ExaHtfI2HBXzXsnFpf3IV9HFB7aN+Yh7XVRJfmkH9sEeLhpewVSPj6bkzmvvg6
+ iMnB0O2r2RpAErPWwCOoht4dZ25wVoYhlNK4VXlrerpGTk/tuNFFNIDHGUZ/Qzv+J90RkiFG9
+ sw0EYyxp7PKwwXxzwPnC5dg0BDnA576PygDymsHoch/IHNeRY9U7aNj1DxCP8WFhkc+MIwA+l
+ pSZYl1Dx/aDBVHKRkqTgHe/k6T6T0I00ukvxGrNSkClDyRguhhwUtogKh2HYGDsyqWcwcSxSk
+ kvETH+12UG5nZcavO9srgVygPbj7tI46tNi8TTXBVGSBJnuoieYMOuvsZG+m8SLY+KxCQBgJZ
+ A046kIBgGH147jaPBx8F35NqIgc/m49ZsYKB4nNhW8TzAMT0kt3PAGgcpibUepBWYRx0dVcxO
+ fyK9rIw==
 
-Hi Terry,
+On 2/19/25 00:01, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+>
+> Gen 2 Hyper-V VMs boot via EFI and have a standard EFI framebuffer
+> device. When the kdump kernel runs in such a VM, loading the efifb
+> driver may hang because of accessing the framebuffer at the wrong
+> memory address.
+>
+> The scenario occurs when the hyperv_fb driver in the original kernel
+> moves the framebuffer to a different MMIO address because of conflicts
+> with an already-running efifb or simplefb driver. The hyperv_fb driver
+> then informs Hyper-V of the change, which is allowed by the Hyper-V FB
+> VMBus device protocol. However, when the kexec command loads the kdump
+> kernel into crash memory via the kexec_file_load() system call, the
+> system call doesn't know the framebuffer has moved, and it sets up the
+> kdump screen_info using the original framebuffer address. The transition
+> to the kdump kernel does not go through the Hyper-V host, so Hyper-V
+> does not reset the framebuffer address like it would do on a reboot.
+> When efifb tries to run, it accesses a non-existent framebuffer
+> address, which traps to the Hyper-V host. After many such accesses,
+> the Hyper-V host thinks the guest is being malicious, and throttles
+> the guest to the point that it runs very slowly or appears to have hung.
+>
+> When the kdump kernel is loaded into crash memory via the kexec_load()
+> system call, the problem does not occur. In this case, the kexec command
+> builds the screen_info table itself in user space from data returned
+> by the FBIOGET_FSCREENINFO ioctl against /dev/fb0, which gives it the
+> new framebuffer location.
+>
+> This problem was originally reported in 2020 [1], resulting in commit
+> 3cb73bc3fa2a ("hyperv_fb: Update screen_info after removing old
+> framebuffer"). This commit solved the problem by setting orig_video_isVG=
+A
+> to 0, so the kdump kernel was unaware of the EFI framebuffer. The efifb
+> driver did not try to load, and no hang occurred. But in 2024, commit
+> c25a19afb81c ("fbdev/hyperv_fb: Do not clear global screen_info")
+> effectively reverted 3cb73bc3fa2a. Commit c25a19afb81c has no reference
+> to 3cb73bc3fa2a, so perhaps it was done without knowing the implications
+> that were reported with 3cb73bc3fa2a. In any case, as of commit
+> c25a19afb81c, the original problem came back again.
+>
+> Interestingly, the hyperv_drm driver does not have this problem because
+> it never moves the framebuffer. The difference is that the hyperv_drm
+> driver removes any conflicting framebuffers *before* allocating an MMIO
+> address, while the hyperv_fb drivers removes conflicting framebuffers
+> *after* allocating an MMIO address. With the "after" ordering, hyperv_fb
+> may encounter a conflict and move the framebuffer to a different MMIO
+> address. But the conflict is essentially bogus because it is removed
+> a few lines of code later.
+>
+> Rather than fix the problem with the approach from 2020 in commit
+> 3cb73bc3fa2a, instead slightly reorder the steps in hyperv_fb so
+> conflicting framebuffers are removed before allocating an MMIO address.
+> Then the default framebuffer MMIO address should always be available, an=
+d
+> there's never any confusion about which framebuffer address the kdump
+> kernel should use -- it's always the original address provided by
+> the Hyper-V host. This approach is already used by the hyperv_drm
+> driver, and is consistent with the usage guidelines at the head of
+> the module with the function aperture_remove_conflicting_devices().
+>
+> This approach also solves a related minor problem when kexec_load()
+> is used to load the kdump kernel. With current code, unbinding and
+> rebinding the hyperv_fb driver could result in the framebuffer moving
+> back to the default framebuffer address, because on the rebind there
+> are no conflicts. If such a move is done after the kdump kernel is
+> loaded with the new framebuffer address, at kdump time it could again
+> have the wrong address.
+>
+> This problem and fix are described in terms of the kdump kernel, but
+> it can also occur with any kernel started via kexec.
+>
+> See extensive discussion of the problem and solution at [2].
+>
+> [1] https://lore.kernel.org/linux-hyperv/20201014092429.1415040-1-kasong=
+@redhat.com/
+> [2] https://lore.kernel.org/linux-hyperv/BLAPR10MB521793485093FDB448F7B2=
+E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com/
+>
+> Reported-by: Thomas Tai <thomas.tai@oracle.com>
+> Fixes: c25a19afb81c ("fbdev/hyperv_fb: Do not clear global screen_info")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> The "Fixes" tag uses commit c25a19afb81c because that's where the proble=
+m
+> was re-exposed, and how far back a stable backport is needed. But I've
+> taken a completely different, and hopefully better, approach in the
+> solution that isn't related to the code changes in c25a19afb81c.
+>
+>   drivers/video/fbdev/hyperv_fb.c | 20 +++++++++++++-------
+>   1 file changed, 13 insertions(+), 7 deletions(-)
 
-kernel test robot noticed the following build warnings:
+applied to fbdev tree.
 
-[auto build test WARNING on 58c9bf3363e596d744f56616d407278ef5f97f5a]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Junge/HID-usbhid-Eliminate-recurrent-out-of-bounds-bug-in-usbhid_parse/20250307-130514
-base:   58c9bf3363e596d744f56616d407278ef5f97f5a
-patch link:    https://lore.kernel.org/r/20250307045449.745634-1-linuxhid%40cosmicgizmosystems.com
-patch subject: [PATCH v1] HID: usbhid: Eliminate recurrent out-of-bounds bug in usbhid_parse()
-config: s390-randconfig-r133-20250308 (https://download.01.org/0day-ci/archive/20250309/202503090701.715nV1DW-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce: (https://download.01.org/0day-ci/archive/20250309/202503090701.715nV1DW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503090701.715nV1DW-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/hid/usbhid/hid-core.c:1055:4: warning: format specifies type 'unsigned char' but the argument has type 'int' [-Wformat]
-                           hdesc->bNumDescriptors - 1);
-                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/hid.h:1239:31: note: expanded from macro 'hid_warn'
-           dev_warn(&(hid)->dev, fmt, ##__VA_ARGS__)
-                                 ~~~    ^~~~~~~~~~~
-   include/linux/dev_printk.h:156:70: note: expanded from macro 'dev_warn'
-           dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
-                                                                       ~~~     ^~~~~~~~~~~
-   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
-                   _p_func(dev, fmt, ##__VA_ARGS__);                       \
-                                ~~~    ^~~~~~~~~~~
-   1 warning generated.
-
-
-vim +1055 drivers/hid/usbhid/hid-core.c
-
-   979	
-   980	static int usbhid_parse(struct hid_device *hid)
-   981	{
-   982		struct usb_interface *intf = to_usb_interface(hid->dev.parent);
-   983		struct usb_host_interface *interface = intf->cur_altsetting;
-   984		struct usb_device *dev = interface_to_usbdev (intf);
-   985		struct hid_descriptor *hdesc;
-   986		struct hid_class_descriptor *hcdesc;
-   987		u32 quirks = 0;
-   988		unsigned int rsize = 0;
-   989		char *rdesc;
-   990		int ret;
-   991	
-   992		quirks = hid_lookup_quirk(hid);
-   993	
-   994		if (quirks & HID_QUIRK_IGNORE)
-   995			return -ENODEV;
-   996	
-   997		/* Many keyboards and mice don't like to be polled for reports,
-   998		 * so we will always set the HID_QUIRK_NOGET flag for them. */
-   999		if (interface->desc.bInterfaceSubClass == USB_INTERFACE_SUBCLASS_BOOT) {
-  1000			if (interface->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_KEYBOARD ||
-  1001				interface->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_MOUSE)
-  1002					quirks |= HID_QUIRK_NOGET;
-  1003		}
-  1004	
-  1005		if (usb_get_extra_descriptor(interface, HID_DT_HID, &hdesc) &&
-  1006		    (!interface->desc.bNumEndpoints ||
-  1007		     usb_get_extra_descriptor(&interface->endpoint[0], HID_DT_HID, &hdesc))) {
-  1008			dbg_hid("class descriptor not present\n");
-  1009			return -ENODEV;
-  1010		}
-  1011	
-  1012		if (!hdesc->bNumDescriptors ||
-  1013		    hdesc->bLength != sizeof(*hdesc) +
-  1014				      (hdesc->bNumDescriptors - 1) * sizeof(*hcdesc)) {
-  1015			dbg_hid("hid descriptor invalid, bLen=%hhu bNum=%hhu\n",
-  1016				hdesc->bLength, hdesc->bNumDescriptors);
-  1017			return -EINVAL;
-  1018		}
-  1019	
-  1020		hid->version = le16_to_cpu(hdesc->bcdHID);
-  1021		hid->country = hdesc->bCountryCode;
-  1022	
-  1023		if (hdesc->rpt_desc.bDescriptorType == HID_DT_REPORT)
-  1024			rsize = le16_to_cpu(hdesc->rpt_desc.wDescriptorLength);
-  1025	
-  1026		if (!rsize || rsize > HID_MAX_DESCRIPTOR_SIZE) {
-  1027			dbg_hid("weird size of report descriptor (%u)\n", rsize);
-  1028			return -EINVAL;
-  1029		}
-  1030	
-  1031		rdesc = kmalloc(rsize, GFP_KERNEL);
-  1032		if (!rdesc)
-  1033			return -ENOMEM;
-  1034	
-  1035		hid_set_idle(dev, interface->desc.bInterfaceNumber, 0, 0);
-  1036	
-  1037		ret = hid_get_class_descriptor(dev, interface->desc.bInterfaceNumber,
-  1038				HID_DT_REPORT, rdesc, rsize);
-  1039		if (ret < 0) {
-  1040			dbg_hid("reading report descriptor failed\n");
-  1041			kfree(rdesc);
-  1042			goto err;
-  1043		}
-  1044	
-  1045		ret = hid_parse_report(hid, rdesc, rsize);
-  1046		kfree(rdesc);
-  1047		if (ret) {
-  1048			dbg_hid("parsing report descriptor failed\n");
-  1049			goto err;
-  1050		}
-  1051	
-  1052		if (hdesc->bNumDescriptors > 1)
-  1053			hid_warn(intf,
-  1054				"%hhu unsupported optional hid class descriptors\n",
-> 1055				hdesc->bNumDescriptors - 1);
-  1056	
-  1057		hid->quirks |= quirks;
-  1058	
-  1059		return 0;
-  1060	err:
-  1061		return ret;
-  1062	}
-  1063	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks!
+Helge
 
