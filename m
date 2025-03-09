@@ -1,241 +1,190 @@
-Return-Path: <linux-hyperv+bounces-4299-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4300-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FB55A58062
-	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 03:59:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68A0FA58086
+	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 05:10:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 800503AEE09
-	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 02:58:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 942F116BAFB
+	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 04:10:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B95735964;
-	Sun,  9 Mar 2025 02:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72DB76F06B;
+	Sun,  9 Mar 2025 04:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="ZjSPWoGV"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Cu/sfAYl"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19013078.outbound.protection.outlook.com [52.103.7.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B67328B6;
-	Sun,  9 Mar 2025 02:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741489142; cv=none; b=H2sIovLieeWc/B8y45hCtOyHkDB6Iq1le2Ide8th6s3iKxEnGrz7f94MPuFaC/H8sQdALzf8SgZebfPWfNGqAWe7+70kSc/QMXNqCY0+5J7Z6XsirbMeG14tsIyFfTioszCherbv0AT6oE0NnlnbRc18iSAsx9VshUGLzg6xEzY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741489142; c=relaxed/simple;
-	bh=/YqmdkIusG/eMi12DlFGEFauLN+qccwZw8Ds229EQB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xuqzgzf+EVLLr7zET+h/WNZh3FL9yxQ0A95EhgDfAUrXl2Z1KX32xEAsmzb5PIllTiTgrRypKi7EwkKRmbHcj+lRKkqa/ijXg42TSRnLuadQiBGn56q9A1U0obH2eohNSCh1oAsWke6FUu1yY3oSRwip3JpouEPmAe6W0IOGJK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=ZjSPWoGV; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1741489120; x=1742093920; i=deller@gmx.de;
-	bh=nJBkMsS0v7qRX5aa5e+44c/E2mxBpR2Z9drP3iujy58=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ZjSPWoGVfnFecFQnqiRuoZk3ARKST6TKeOCRDllcrSLVge83Sip/idtcxaUYLfoX
-	 ubGiycKBLcVe4iS6TgCfkVgj4u3tp4kA31vTH//E5K8+gW1bCQrS3J/Yuman0PdhP
-	 TL80WbR3DdwnrjpFr3lBoFPT8i4H8OQTiQzZS/bw9H61dtSZ0VMCLvdhIY8UnG2Xg
-	 tOGxc1rbFX1OZBlwS1UouXJmZClnNuSFRWmFJ+Kgq4JlTDV3RRHrbNccIrZ/RmZnW
-	 IVNB11xgG94MAgWFbVHEHuSyd/0DPjJ56EMDFVWH7T6P9e9brzAGAZgk9Qoyvwb3R
-	 SRUbVS/imUwEHV/q+Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.173] ([109.250.63.121]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3lc9-1trNim3l9n-00GPup; Sun, 09
- Mar 2025 03:58:39 +0100
-Message-ID: <24668c7d-6333-423e-bd48-28af1431b263@gmx.de>
-Date: Sun, 9 Mar 2025 03:58:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61144690;
+	Sun,  9 Mar 2025 04:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741493425; cv=fail; b=DPISy1wgV4oe6nQq96TgGylJ/+wx9w/m1jKYmNbP225V64cBE4NmtA6gTJYWOhWcMK2TgjqmxXDNhHH2NbZSs2xDzOnohFY9Id2v74GQh6P3U5OyvIIYtIp/oUCSiatXOpCSGyjrOhoXGotzuhV7g+iqDHO59xZZrEAcZv4OoM4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741493425; c=relaxed/simple;
+	bh=DK5rE9oFngj9geANkP8z7eibXZSuHYCOuKKwy4+75Sg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lGs8ywhUXpy/UE+zLoPEqqfRHYvFPkE0e6BdxrdHJlVA338Hyxf7ZExxCpN9TkVRiJW5rcSgG8O6lfYySlKj/pmDxYQKSwDVdWBTkihiZY7XaCK7NzlY+MLqshqcMiPNkj/Q9uafCVfbuQwf2uczoCsDM4kCFHVCPgnhjxrw0h0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Cu/sfAYl; arc=fail smtp.client-ip=52.103.7.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YplO7cmho4mM2uwNuodAXkdh/tDKQatWOQXAG9OSzfM/XaRiqxNO7r+zwgFFpQy38eX6Cpf1nZ5l1s3GghkmXMq+S6JQTRfJSSlo9sLCmI94FpqDeXgQkId6QID5PbUxPiScOO0ohaDamabyxfpjjAoW84aF+oFZfr69rUWc58HjkoibXgbqKebLCoX25eypAtMEDja81GsnzQ+YyGknmEkUHH4z1j9NpxjKb2Q2kVwCiuBGA7oLfxmOwX5T5iOFP/D0mh2/Mbc9NiOjUnNvO9MgHdlZRTDKETA6dPaYe1e+uXpXSsn+vzGst7r6jUJz1Ep+m9cC/L4ffIMyA4XdyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6VaEYOSlms7XtoMycNkbTHuJffg4otCOuf2besCSdTM=;
+ b=Fk5V7oMDUcwWkeWCSko6jLAQVKozKmhHKfN5ABuvfv0pURKzEA/FGyMPYOROaXKkkWLcUpuS+qeO6GkxQJAXcslnP57GDDDRL9ZBlw32Ayggos8dxQLxovCwcH+ai5Rt+Pt85nlE8fVY9gV6m4EpWsZG8QP07JwfiluAcx6kOvdjBkVscJVQjlf/HE9Ghrrfkpy680TUhKrT4WUxwk1sDSaXBG/1xuxiYLwCOp/IHVNcsx2NiN71ONfrrDhUD58F0hkUsQ87ZGV1x+5KEmVsGwbPhgimG44wEqwJkVT4gUnqy9x+9ZIMznK6JcMud5mdjqLhjheTESj8/mVSpKu6yA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6VaEYOSlms7XtoMycNkbTHuJffg4otCOuf2besCSdTM=;
+ b=Cu/sfAYldMlbUC904Kqe43fUXwLSG75xInOt66+befiY/gLHLphuU4q9TLAplMMvNBNOn/9fbdq3LTFg4GIAk5Ia3LeCrYwvez4L5u2WP1Z8ckPiRsMNmjSZ90oGrycVXx05aNT9pkgFkK1oftteanJpoiEEogzQr0leT3JhwJ4iyY2yzAt+BLSU6+d7gwkgkRQqi7C72+NIbM8ihaKoFLjYOnpklhlVNJNLSVmY+1fTXD8Tb/fWuAxjrOZUWIUQDrMAVY2YTwR17YRpaKxkSNHA8dwm/OX1LrlGuytz+cG+KyYE5TfDlUbVuQAWJVowQkhFxHOO7I/TvEjCbQluuw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CH2PR02MB7000.namprd02.prod.outlook.com (2603:10b6:610:85::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Sun, 9 Mar
+ 2025 04:10:20 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8511.020; Sun, 9 Mar 2025
+ 04:10:20 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Helge Deller <deller@gmx.de>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "javierm@redhat.com"
+	<javierm@redhat.com>, "thomas.tai@oracle.com" <thomas.tai@oracle.com>
+CC: "tzimmermann@suse.de" <tzimmermann@suse.de>, "kasong@redhat.com"
+	<kasong@redhat.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-fbdev@vger.kernel.org"
+	<linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>
+Subject: RE: [PATCH 1/1] fbdev: hyperv_fb: Fix hang in kdump kernel when on
+ Hyper-V Gen 2 VMs
+Thread-Topic: [PATCH 1/1] fbdev: hyperv_fb: Fix hang in kdump kernel when on
+ Hyper-V Gen 2 VMs
+Thread-Index: AQHbglkhrw+MpFO4dkG2MqfhkIrBEbNqOZ0AgAASIhA=
+Date: Sun, 9 Mar 2025 04:10:20 +0000
+Message-ID:
+ <SN6PR02MB4157594508B80319444C6C24D4D72@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250218230130.3207-1-mhklinux@outlook.com>
+ <24668c7d-6333-423e-bd48-28af1431b263@gmx.de>
+In-Reply-To: <24668c7d-6333-423e-bd48-28af1431b263@gmx.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB7000:EE_
+x-ms-office365-filtering-correlation-id: 95cb8266-2d7e-4f44-3c4d-08dd5ec04ea3
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799003|461199028|15080799006|8062599003|8060799006|10035399004|102099032|3412199025|4302099013|440099028|1602099012;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?F1ktvX29GHpC6UGZzMpt8Q1rxnnAvwaNC6+i5dN37TydaWCEJ6Oy1PFsvEBo?=
+ =?us-ascii?Q?uGLkwlGG6PFZ5HGdZV3liJ0WZ1QD1UWGSQPL9CW5z0HZ4ZgdkV55WNUtEKk/?=
+ =?us-ascii?Q?VD9WDwNZ1UyHm39t4ASjpKxawy/nh4Q1I++cieh9Mxtj991FYdH3hUf6+v5m?=
+ =?us-ascii?Q?Qwlsigl3gCyin5E3qepJBAzvtEUDIP4iMhsrnS4nrSoLKHyNNhz/F6kN1cJi?=
+ =?us-ascii?Q?Ir0hG9ouNaEyzmp2d8el4CFUGWpsZisyxw8X+Y6G7xjt4qF/u4UrzBZ/cNIo?=
+ =?us-ascii?Q?JUyI5NmduuC8kLUzODP7jB12bjkDax27wZyKY0+KOdPRqkhpY/vLJHiZ4VXB?=
+ =?us-ascii?Q?dnAcc7lMj6sgBmBLk+XqBSwQYCDC0FEDZaHUiYm+5MVaG7FM1JapJVPAcke6?=
+ =?us-ascii?Q?096z2r+m4NmDujiiZf2/XLv4hGdh75ddZR2wHVnxCqen84QYV5qdgwNtSU7U?=
+ =?us-ascii?Q?b5l/LZNNe5tORobeZC6vpTSNRdjLHG2ySDco+PARQrWQMZeAwyDdcyuY/0Ez?=
+ =?us-ascii?Q?sfjdVZnBIXg3kV8sU8b6QfYrJI6bZEhtu2diQBSJIoNLCIYQVelHOxfJm5vq?=
+ =?us-ascii?Q?/J6xqy4wh44+MDrtYZPYLUCaqsDA0fOAwH4ydVbfK0wDZwEAl5S0hbgrwhUm?=
+ =?us-ascii?Q?UhfNHqas9PUAX3zWDd5q97Syw+a8Ng0xeycPsbSYCKBYE4JSuiYqiRP2CP7e?=
+ =?us-ascii?Q?tOaVxcD5UoMy5gZcOAiWFjhSD9Io1Y9Ot0cl2mbZ9ixqFbxmmqSPJ9uWhYax?=
+ =?us-ascii?Q?QFaFmfVmLeqfI4otYEvUkFQzExPvqg1YmdulxbMUHKW80huf2IplzyR2ME3K?=
+ =?us-ascii?Q?aA0Uwf8DwadJ3+fvwIaUEvQGRb5PHmezk/xDUmsZVFE+E7vTskXmFkLcN+7r?=
+ =?us-ascii?Q?GYhj8Ha35zhMgv/LpJYv7uAjGg7tzhu625RPTNBUBRARkd6xyMBVT9SOrE/6?=
+ =?us-ascii?Q?WZikAcoS+DTuwsFH4j9BAb/kDhsIO93DpVFMLJXhf1YVYse5FkxkCYOUNEOn?=
+ =?us-ascii?Q?LRbN2GHC+/d1J3rsPQY/k4CdUH+eFHIeAGeVMF7aGuxuRdpH7a0tFn0SeVCp?=
+ =?us-ascii?Q?DQ1fMAZg4T1xrlFsXmh1Z2iG6xqv0JeBUqyUvDE2sOZeuW3nCAfjw1ZgfPS5?=
+ =?us-ascii?Q?QD2audQuHolWjtlEJRjP+xUotchxuHxMsmEpbMZn/bj3zvewC2xuDZ4=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?X4XSX8tfvzTJtYynuRtvEe+qGZ1m8ufiXijEhI6LIpLP0vo9aXw48mMvHoiF?=
+ =?us-ascii?Q?ktjc6KQPdYL0tfamNExgT+h+T0Op/otnBmx/ZNiXIbEmpzVtsgdm91c1+VzN?=
+ =?us-ascii?Q?ATXtf2hq0ugXgRtdGb1W0rSFaT9+QiFXMAQJ/63mCULRGFCojr1TGhysPBB0?=
+ =?us-ascii?Q?iIkyZnRZ6L89aNgt+gH6YYIPleu8yh75phiXAyZHvg/7KLVoJZH84sqFtUiS?=
+ =?us-ascii?Q?niiR8iw9bL7FEon+7NwB7jSQ0BUVJ8aEe+IrOCqkUR5IvqKQ8zUi9ztzX4H4?=
+ =?us-ascii?Q?rQ0tORATNRvdlKeb4B2CvKWLQIy4KphqQxK7XuO4aMGYwPjPM8ND4x2XLkWA?=
+ =?us-ascii?Q?MliTnQ4XgZQIcYvgyUghzdfHuMjp3cvIgNF0CsHHAnE1sj8uGjNd9rtT70lx?=
+ =?us-ascii?Q?U6uAdhn1wkGQNYw7L6c5QXaeFo3W5M8+iZVPyUPM5QGgGYSGDVTnaE4mt2tP?=
+ =?us-ascii?Q?WT+XsXJgyn2YEhOSsPsM0MwTpOqopp+JKmzqTikp8A3D2qXyW6r7n6Ong7qK?=
+ =?us-ascii?Q?+QUYwJ9JOB+LZ9r95vqXiiCCjM5eGmhneZteyhk+d8K0si18tyEsU/M8yeDt?=
+ =?us-ascii?Q?KO1Bb4qJ/wLMcInUDuvqa139WP5/pKNtuiKDito4GkaiNCm5oE0i8ewRQ2L3?=
+ =?us-ascii?Q?5BfiO2X2Wx0+8SpJNehA7aZte6lpm2RF544xeKz5by44HwTVvz1jcdsop9fi?=
+ =?us-ascii?Q?vIqemGzG0QDSN7f0vpvBcn0+xYm4vW0DZ82JEwIumxhvQC0f8dZZZ3d4Q5Je?=
+ =?us-ascii?Q?rjH9D98nTwjpNYEQXb+HX+a+pgnUgA87rXWuXbRKBTEtcZjuijitXxIJo0lh?=
+ =?us-ascii?Q?3NIg3f0tMXUfinDs37W4443rNGQmzcOh0QoqMqKg8BL03NLeAFHSxItVQQpG?=
+ =?us-ascii?Q?DDGU3TJkDCDoQ2Rmszodv2/hejQRaPbKHu7wz9OrvqeodfxrhyO/2PszZ3jt?=
+ =?us-ascii?Q?4BSEL0AvWPe01p29w4HZTsrIubTsk2pifviI7qgGS8D0nN3tuxDyrl1jauMO?=
+ =?us-ascii?Q?MZHBISd+OBegJuWqB9qBHUMuos3Ldl0+nooaGLopmLx0xr1o3aFuNF+N4AiI?=
+ =?us-ascii?Q?zfn8PHHOxW6NBHxxlvyJEvrdkuFx0ClFwgH8t7+D6Q0CV71cyvDXSKyJWSTH?=
+ =?us-ascii?Q?I/1rKKClL6QknrF+Qxmi1piy7eNQ7+OxXq5csBnmrmyn3rJqXJ6ejxQfh/sY?=
+ =?us-ascii?Q?yY6aOPj+un9hk5XohCPSv5OeG847mdaJwCeO4S0gg3/9Yhc/TfDHwGIpMlg?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] fbdev: hyperv_fb: Fix hang in kdump kernel when on
- Hyper-V Gen 2 VMs
-To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, javierm@redhat.com, thomas.tai@oracle.com
-Cc: tzimmermann@suse.de, kasong@redhat.com, dri-devel@lists.freedesktop.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-References: <20250218230130.3207-1-mhklinux@outlook.com>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20250218230130.3207-1-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mjL3hSxydgxv7auKb+SF1HiGYsIAUsuqH4aH6FyBTYujmpsQrlr
- mVRi1TjTwptv0fzG3qplQmey45gO+xpH2l7vdBQdCxuQq36Uh0Zb7hczbnMI00hkvC8P71L
- zAEGWlfYgYFxMVAnxECokdx4vBaao1qvoqPk3Ogw8/FpOEIViSc19mK8T/FLXiFIdCZNjLO
- utPCl0/kTBxN+Y3JygsXQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SVlwpZIM65s=;hImY14q1ReQCkPBo9c3HVJW24Vi
- bySCSPP22C2nUvsMCaajKmS7Ixn8lCf1z9NhNY57sh5h57LWGdkOTAre915uDf8vkJTImdJps
- RziLMSvb6H9Ed1xeh0kniBLhqd9V4iNUbOf44e5vRBACzEnEZKXx/RyQjsFjDl2sB3fhnOsOg
- 8p4sem9b8tesVNGN7QR756mHdCXHyiG4+RKEAinPvCR5payYzLvXsVzmLNwtqLx1yQIUaGP6X
- 8OHtelwCBxnzSfrmzjLLkbRbY6mpeiAu5x/P3WM8QCyyfUcGxXU3ous33EdXt2vNUf5abJon1
- qCFnxw1k56rLVn2gvD11kSa7mPaQgxIq+kLZ8uFhzYijzixoI2cM9lqK5XuyxT+ZDyCrTjMhV
- Ms5j/ELgFb4W1lOxb2U1Rvx1I+n3tjQHEZ6FECK/aug59YYkVkYtS4w+UaBBioeIP/tJm/R9t
- ZxZKECUD1nY8ap2T0vnzq5eIoM8Bbnesmc9FnuwTdp3nrivyxd8+wNo6QRQvguCFBUtrEvYYG
- bgN+K9XWkxJsms1O2e8rbsLz42Qz/i9xadErW3Jja0Okycywb6ZlvIaZ8qe4oiyKV51vUS3NE
- ii0nfdTumZKx5PKJV4vIe3bbxsNyi6hLgLnktHd2fU4dT84tgTiKMsW1DAaXhxPTyDgp7l4ct
- JeeYpqzTV666IFgsa1Xi6I9kjaXdNQLcisTo8wqS6HxxGfOLdvxBvQhDdn5rfvOvN6rdGZNYn
- AD0VtqctXP3g0bGkvGAv8MALw4fpmBTb7hLjj09cqGID48Mtgo7FfQNDSa8gyF71BmGwmmjO5
- ywEKx4kBxP4fDz7ojBFjztWMwZE9QzHq9xuDNM/Ut/ve21+VZ3GphoOg8OK55qG0Khkqj176V
- Xh3CRwq9C5jPy2qFF7e37FFYnxOvojtiNua+CWsk2SXBfVZjl29Y7SR+hkPeYOimeGySa4YHk
- oPsGuseex5JPD1mZpAFNUFuAgUTNj38Gh9ZEQVUk++n0DFTQxzfMIgznKcCV7gskjlV/XFJMA
- xYfFXBuakM5ExaHtfI2HBXzXsnFpf3IV9HFB7aN+Yh7XVRJfmkH9sEeLhpewVSPj6bkzmvvg6
- iMnB0O2r2RpAErPWwCOoht4dZ25wVoYhlNK4VXlrerpGTk/tuNFFNIDHGUZ/Qzv+J90RkiFG9
- sw0EYyxp7PKwwXxzwPnC5dg0BDnA576PygDymsHoch/IHNeRY9U7aNj1DxCP8WFhkc+MIwA+l
- pSZYl1Dx/aDBVHKRkqTgHe/k6T6T0I00ukvxGrNSkClDyRguhhwUtogKh2HYGDsyqWcwcSxSk
- kvETH+12UG5nZcavO9srgVygPbj7tI46tNi8TTXBVGSBJnuoieYMOuvsZG+m8SLY+KxCQBgJZ
- A046kIBgGH147jaPBx8F35NqIgc/m49ZsYKB4nNhW8TzAMT0kt3PAGgcpibUepBWYRx0dVcxO
- fyK9rIw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95cb8266-2d7e-4f44-3c4d-08dd5ec04ea3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2025 04:10:20.1918
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB7000
 
-On 2/19/25 00:01, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
->
-> Gen 2 Hyper-V VMs boot via EFI and have a standard EFI framebuffer
-> device. When the kdump kernel runs in such a VM, loading the efifb
-> driver may hang because of accessing the framebuffer at the wrong
-> memory address.
->
-> The scenario occurs when the hyperv_fb driver in the original kernel
-> moves the framebuffer to a different MMIO address because of conflicts
-> with an already-running efifb or simplefb driver. The hyperv_fb driver
-> then informs Hyper-V of the change, which is allowed by the Hyper-V FB
-> VMBus device protocol. However, when the kexec command loads the kdump
-> kernel into crash memory via the kexec_file_load() system call, the
-> system call doesn't know the framebuffer has moved, and it sets up the
-> kdump screen_info using the original framebuffer address. The transition
-> to the kdump kernel does not go through the Hyper-V host, so Hyper-V
-> does not reset the framebuffer address like it would do on a reboot.
-> When efifb tries to run, it accesses a non-existent framebuffer
-> address, which traps to the Hyper-V host. After many such accesses,
-> the Hyper-V host thinks the guest is being malicious, and throttles
-> the guest to the point that it runs very slowly or appears to have hung.
->
-> When the kdump kernel is loaded into crash memory via the kexec_load()
-> system call, the problem does not occur. In this case, the kexec command
-> builds the screen_info table itself in user space from data returned
-> by the FBIOGET_FSCREENINFO ioctl against /dev/fb0, which gives it the
-> new framebuffer location.
->
-> This problem was originally reported in 2020 [1], resulting in commit
-> 3cb73bc3fa2a ("hyperv_fb: Update screen_info after removing old
-> framebuffer"). This commit solved the problem by setting orig_video_isVG=
-A
-> to 0, so the kdump kernel was unaware of the EFI framebuffer. The efifb
-> driver did not try to load, and no hang occurred. But in 2024, commit
-> c25a19afb81c ("fbdev/hyperv_fb: Do not clear global screen_info")
-> effectively reverted 3cb73bc3fa2a. Commit c25a19afb81c has no reference
-> to 3cb73bc3fa2a, so perhaps it was done without knowing the implications
-> that were reported with 3cb73bc3fa2a. In any case, as of commit
-> c25a19afb81c, the original problem came back again.
->
-> Interestingly, the hyperv_drm driver does not have this problem because
-> it never moves the framebuffer. The difference is that the hyperv_drm
-> driver removes any conflicting framebuffers *before* allocating an MMIO
-> address, while the hyperv_fb drivers removes conflicting framebuffers
-> *after* allocating an MMIO address. With the "after" ordering, hyperv_fb
-> may encounter a conflict and move the framebuffer to a different MMIO
-> address. But the conflict is essentially bogus because it is removed
-> a few lines of code later.
->
-> Rather than fix the problem with the approach from 2020 in commit
-> 3cb73bc3fa2a, instead slightly reorder the steps in hyperv_fb so
-> conflicting framebuffers are removed before allocating an MMIO address.
-> Then the default framebuffer MMIO address should always be available, an=
-d
-> there's never any confusion about which framebuffer address the kdump
-> kernel should use -- it's always the original address provided by
-> the Hyper-V host. This approach is already used by the hyperv_drm
-> driver, and is consistent with the usage guidelines at the head of
-> the module with the function aperture_remove_conflicting_devices().
->
-> This approach also solves a related minor problem when kexec_load()
-> is used to load the kdump kernel. With current code, unbinding and
-> rebinding the hyperv_fb driver could result in the framebuffer moving
-> back to the default framebuffer address, because on the rebind there
-> are no conflicts. If such a move is done after the kdump kernel is
-> loaded with the new framebuffer address, at kdump time it could again
-> have the wrong address.
->
-> This problem and fix are described in terms of the kdump kernel, but
-> it can also occur with any kernel started via kexec.
->
-> See extensive discussion of the problem and solution at [2].
->
-> [1] https://lore.kernel.org/linux-hyperv/20201014092429.1415040-1-kasong=
-@redhat.com/
-> [2] https://lore.kernel.org/linux-hyperv/BLAPR10MB521793485093FDB448F7B2=
-E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com/
->
-> Reported-by: Thomas Tai <thomas.tai@oracle.com>
-> Fixes: c25a19afb81c ("fbdev/hyperv_fb: Do not clear global screen_info")
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
-> The "Fixes" tag uses commit c25a19afb81c because that's where the proble=
-m
-> was re-exposed, and how far back a stable backport is needed. But I've
-> taken a completely different, and hopefully better, approach in the
-> solution that isn't related to the code changes in c25a19afb81c.
->
->   drivers/video/fbdev/hyperv_fb.c | 20 +++++++++++++-------
->   1 file changed, 13 insertions(+), 7 deletions(-)
+From: Helge Deller <deller@gmx.de> Sent: Saturday, March 8, 2025 6:59 PM
+>=20
+> On 2/19/25 00:01, mhkelley58@gmail.com wrote:
+> > From: Michael Kelley <mhklinux@outlook.com>
+> >
+[snip]
 
-applied to fbdev tree.
+> >
+> > Reported-by: Thomas Tai <thomas.tai@oracle.com>
+> > Fixes: c25a19afb81c ("fbdev/hyperv_fb: Do not clear global screen_info"=
+)
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> > The "Fixes" tag uses commit c25a19afb81c because that's where the probl=
+em
+> > was re-exposed, and how far back a stable backport is needed. But I've
+> > taken a completely different, and hopefully better, approach in the
+> > solution that isn't related to the code changes in c25a19afb81c.
+> >
+> >   drivers/video/fbdev/hyperv_fb.c | 20 +++++++++++++-------
+> >   1 file changed, 13 insertions(+), 7 deletions(-)
+>=20
+> applied to fbdev tree.
+>=20
 
-Thanks!
-Helge
+Thank you!
+
+Related, I noticed the patch "fbdev: hyperv_fb: iounmap() the correct
+memory when removing a device" is also in the fbdev for-next branch.
+Wei Liu previously applied this patch to the hyperv-fixes tree (see [1])
+and it's already in linux-next. Won't having it also in fbdev produce a
+merge conflict?
+
+Michael
+
+[1] https://lore.kernel.org/linux-hyperv/Z6wHDw8BssJyQHiM@liuwe-devbox-debi=
+an-v2/
 
