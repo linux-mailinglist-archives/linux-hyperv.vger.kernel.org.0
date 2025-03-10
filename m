@@ -1,224 +1,222 @@
-Return-Path: <linux-hyperv+bounces-4365-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4366-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06571A5A660
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 22:46:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 75DAAA5A668
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 22:47:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44A697A42E9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 21:45:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D143F7A4B53
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 21:46:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB071DD525;
-	Mon, 10 Mar 2025 21:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 295A71DD525;
+	Mon, 10 Mar 2025 21:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bFeDZgSg"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PLevEC7A"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020095.outbound.protection.outlook.com [52.101.46.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34954437C;
-	Mon, 10 Mar 2025 21:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.95
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741643172; cv=fail; b=q3/IBQO2aA6Gsy7XFY6aBDSEwukNdq3d7nxsss8rBzwLrToEJ/TODtwnz0o4iohh8eWhjphW/MT74nOsvZYIGHN9GTnUlIl5UQYuI1K9CPNmgnKzskIoTIaCx93K//B9DVpBiRkDLs2JYJd6NWkt28Yw/1Pv2Gdqj3ROdi+dCxI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741643172; c=relaxed/simple;
-	bh=L4/FNvQPbmam0DtLcG+1l2q0ipZmYZevBmctUk8M/pI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NVTHkITCw1/BegShXrDu8Qk+Gm0411RSPiAlKaOq/FMKoh5b+gF29erG17pl7OKm6u9MHU1IBsHgVwF+GOn8xGO4F0Zj9QvmvY+0w3Lw2JP5ti/CTmzAza/7roVK9ifbpr7eOOzF9zGXfBSW9NKCtIEqk/OUBNM4vMgRQcQSroA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=bFeDZgSg; arc=fail smtp.client-ip=52.101.46.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tO3Y2Lc0wNiSmh9Av0/5vrUeaN2qQrdwCs6tDSGSu6cEiPKICdEPOeqLvFfwOfaDCH5BS0j/6tI/wo7aQ5j8RZk3R1+pl7ZUYDcNYe+rVPWZcpCapWDj7FYgg8MLS8ZP78mIJD48+/glMyiIDuOnmP4xZP9P9wZ22o1DnZZUdbT7uiU/V6sAtGbRH6/YSnlkH7OgmV+7GY37q4B5zU5okB38W9Mu0SZcqey7Lmh5OAaptLLkXBG92M3DoAm04eGu6eEp+pMES7hXmmi02oY6Qs9C3wx2YcmXvEp+FiaCi6wwIOWBLX+lRahRjLY5g7B6K2YvZrqmJ/KL+fUhXQnIDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y5Nwyqsxo6CFU+TjT3+7qx881vJnv9/4nOMnQWWg9p4=;
- b=AG4cWKJPMDRxyDdVn+rnuGHa4hsxJe2Xk9lU7TNNGlHHNqT+aWj6gJINeAtZqLAoE0mnIzYle9mST9eFG0Sa9VmDTRsN7KSv5Zd3jswaunKk2MPmAeegqVDWVWEq+acxyMyE2Mj6nllwY1UjkZokFLOd8RFuPuRuO8IBafxdQ6rSxVCP18Yq88lA4C6HIa+GMgC46Xpa5RyD+Mk1AQu9V4VV3owVqbwqxfbdgTBhTrOu+c7GhQ1IZutK5XQ2JKB92lEsBsSz0JkYngF1hZtKOk6tlSqOTrvo5ZQPhDc5JRerbiUdzSMOyDSkLWgv6viKhwhHce/z79QLFUAXsOnKaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y5Nwyqsxo6CFU+TjT3+7qx881vJnv9/4nOMnQWWg9p4=;
- b=bFeDZgSgcXWRyfgP9wkOubZ4e8opI2Ji3H/Tkda6chGB6E4LQBXlxXqVEnxalNGszH8UPla/RbVWOfA1HqDf2v6bLJB6W2voSqbowZeprt+ve4veeCXafblB3Gq/SXAjyrKDO97ilDuHSHaDLbNkesK0zyb6STHZ+VM51sORE7Q=
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by SA6PR21MB4388.namprd21.prod.outlook.com (2603:10b6:806:422::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.21; Mon, 10 Mar
- 2025 21:46:08 +0000
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff%4]) with mapi id 15.20.8534.012; Mon, 10 Mar 2025
- 21:46:08 +0000
-From: Long Li <longli@microsoft.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, "longli@linuxonhyperv.com"
-	<longli@linuxonhyperv.com>
-CC: Leon Romanovsky <leon@kernel.org>, Konstantin Taranov
-	<kotaranov@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib: Handle net
- event for pointing to the current netdev
-Thread-Topic: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib: Handle net
- event for pointing to the current netdev
-Thread-Index: AQHbjtGAHu5I1ObjAEGtSbYSnlR/rrNmhdBggAZnwsA=
-Date: Mon, 10 Mar 2025 21:46:08 +0000
-Message-ID:
- <SA6PR21MB42316CA1E7C6CF083A89ECE4CED62@SA6PR21MB4231.namprd21.prod.outlook.com>
-References: <1741289079-18744-1-git-send-email-longli@linuxonhyperv.com>
- <1741289079-18744-2-git-send-email-longli@linuxonhyperv.com>
- <20250306195354.GG354403@ziepe.ca>
- <SA6PR21MB4231E9B17697BFE4857A7E55CECA2@SA6PR21MB4231.namprd21.prod.outlook.com>
-In-Reply-To:
- <SA6PR21MB4231E9B17697BFE4857A7E55CECA2@SA6PR21MB4231.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3c7ae03-0f2c-4013-b7e7-807bf0e3f508;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-03-06T19:55:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA6PR21MB4388:EE_
-x-ms-office365-filtering-correlation-id: 8f5cf251-7e4f-419d-ca60-08dd601cf7a1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?ZBUrbtXhX1J+ZOcyJyeBpm98IPi7urgzhIgL/nZWH/2dgu03+fh9ECmFVLDm?=
- =?us-ascii?Q?pYMrSoqNvbbsNwxwMfPDBd/JnMRSW9dOQPLsqAOMHtVQPflBQIkfQ8swytav?=
- =?us-ascii?Q?8x+KUK4aCGV920esYQ0DF7gCO5qTrw4kpp8bnnA3XIWCYsdDy2PWl8owuB7r?=
- =?us-ascii?Q?P9j3Niawi5Y4WhXCs4ep5RuM68occWCBn5M/m10Toa+Qyar0fOcQ7eXJv2f8?=
- =?us-ascii?Q?HopbFe7fsUsPXkcQ/Pi7vwKjSr63zux0ZAGbYkQKpYaWeDB7wp2cP/bAZ060?=
- =?us-ascii?Q?PIsY8mnYHlCLfZVwvGtc1ydmcAXlMoejl5+83aq/7lhXJQkCqG7jxyelb1fH?=
- =?us-ascii?Q?IdE99FDpQUnub48sABTwhpnJBjaddVGtlhrEtex7iM3dKBEcWz2li4sta03R?=
- =?us-ascii?Q?rDY5fKaVjTMipOERp9YADc4F8mNaRSF2T2B5HI/sm+wSlVzYTPyUa6JBweqE?=
- =?us-ascii?Q?SC8wjzYVca9rxEhLwVXlJHSZkN7NGNil4GeeoTL5hmhUQDEvns2qbVw35of/?=
- =?us-ascii?Q?6nc9QrNvhSc55bCbe17/xxobZo5y6NqtzyO48OdpGtx4Pbv/8Pv1VlEFEN45?=
- =?us-ascii?Q?0v2WOpf0MLuckM4o7i+fXpaYPTEUj5dS4TYKergR/JBJ0E52PnuzAAxYqsEO?=
- =?us-ascii?Q?1jWO+KOtxV9bBf6fifBI6moeYuey7XLVitv5fIPgqEPEVP7rbX5AxQdN7yeV?=
- =?us-ascii?Q?XFk0dNBj8d86FACWtaIqMfjkUumqay7uwuoWIsqCOKqszL+LolxQ+1hr00eB?=
- =?us-ascii?Q?7JAYk5qRAauZimhbhyRaSi9E8By8XSD0rA1+7aVdcBvQBfERZYKWoZ534Cie?=
- =?us-ascii?Q?QBCYmUdtBHTlnlRk74GGrzM6fv34qFRlI5ao0W8fg/+QGlyJ75D+kVqohBFh?=
- =?us-ascii?Q?Amz2mDvkK8DPlowvSmmqP2f5OPHigvoIqCReQOyJ+yWXDoJtrpHtw9lpjQ26?=
- =?us-ascii?Q?8JioEj0wITdVEXrNYuPrXL5rNirJzefzd/koR9nZ4kVooFgVp9Wa7QAbX8cl?=
- =?us-ascii?Q?H0QZk83zW7eNBuYJszHyuIAE2VFk7NWkoKAaxJspGB0Z728PMznlTOknZNIg?=
- =?us-ascii?Q?M4LeLRsQL153E7ydNx5He2wivfVqqVwiDqLbbVBAW0NMrYyvaL5Ruo7PPcIh?=
- =?us-ascii?Q?2DCbxux2tD9ZmbEcqVVd+pGcitxbQP7/8YbZXlRdPJIryXh37+TesC3QmeMd?=
- =?us-ascii?Q?EldSHH9vVq/BGv4y5NVv9Vl3oQgdgHrOD6q+4fVwgpNq5ePB/Bm/fGGHewnm?=
- =?us-ascii?Q?NASla3dyKP7FAym6zMIv9H3Phq+fQAUcRwPRCbCquqCb86V/UFMApzgsy3f1?=
- =?us-ascii?Q?/9YlEeh9nyRY0omnWHPSiYWWzHOIeL0BUVxEDpLkdvnP2vfTRq76oJZmv/bR?=
- =?us-ascii?Q?FKF4g0SCXCCvTeqlqK3Vj+zsjvk8nA2PdYgFS5Wbn4UomcPiDuf4cW/F3kOU?=
- =?us-ascii?Q?zYqyw4EaTFLCwJIGIwPM7cwyb+lLdf3+?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?nt8hsTQmT0DoTpMAdo7+Jm2JjOgXywbMP3ojBWaMdBahKDE2KWvwZaDEv42o?=
- =?us-ascii?Q?+LxCW/q+Bgwzj+okqi3o4x2CjYeUCAKnvoyfkmH1FW6/VMwINlaO5yy6BMjl?=
- =?us-ascii?Q?N7Ri/HgEy8/PaWQsEkBX6o4OsiuegGUR+KUzP/1luTYOe5RhCgMCDILBWdNU?=
- =?us-ascii?Q?VpQhO8UdnIvkGWNGEbKF/D8dNGppS8mbv0AR8LCpbtm8l0maU+OkdTvB8kPS?=
- =?us-ascii?Q?FUgkzcz84F/pisXNMt5HnFwLUGxT/PF+bAg59pyaQEjQ06EBFF0OHCFBbwBc?=
- =?us-ascii?Q?yMQdWV9RAZWFN6ttE4wvMUMHtlM2HTTkurAKxWq/ES+j/KHyZ57dkBpZL51r?=
- =?us-ascii?Q?+d6qz4Ff11AQD+eRyLcBp+xYRrnF5J6FrlzcjD4V+hxMN1YzdTzpIAKAhSIw?=
- =?us-ascii?Q?fJh6RiN8kpIg3KMetle0c9c3UAci2qibLkn+CGrYQApq3FeiWrtvhgdsxWID?=
- =?us-ascii?Q?N1MQXFJc20lz+HsKsyQIy1aVtYhctiC5MgaJdynDn8D4HyNU62dYVRjtG9Vu?=
- =?us-ascii?Q?lmDjs45PKM3BC2Fg5kSng0ZHmyXrPGxwxewgVKWDR1ufMC3j7CEmbFE39uiD?=
- =?us-ascii?Q?WalIot+i7hisqB43kUuLfIgwOC5O5SIf1WVqyl3pnWILnnatJsRBpEI/bpgG?=
- =?us-ascii?Q?BQXELRAt7YrvnAssaOJ1eJxv3qGankWcYWYxhxHPAkhfVm0IlhUlrOkqfT/t?=
- =?us-ascii?Q?H+BT6o2Kj7MRYAO3rt7wbPEgMZ6YccIMQuW6afD08mIN6AJd84VaZ/hByLbT?=
- =?us-ascii?Q?uYmEzpXyVyIvR2TJrHiPROsKtZL0IzN8bysvpjiufRi4Tcyy5DMAPj0FuHrN?=
- =?us-ascii?Q?Ls+yiqsjE/qBMeyeAJjJ+oTKcsPI2o3vRcHoMngBrRJFwiOTZoyXRiNIF2RH?=
- =?us-ascii?Q?Fj1xyzx4KUg/vRo7luVw+0oOv+ASdxwui3qc51T1/BS4axkrYoL/N+6lMb96?=
- =?us-ascii?Q?HOENUy80vNxwR7W3JJ1AxaJqufgyao8Y1pekY0daX3UPa1Rp0D5KkxdPgl01?=
- =?us-ascii?Q?Z74GKKY+0r61Z26ITk7flBsmlwbaXBS2q49wxAoSd43HXNZXwygD4dDcuw0Q?=
- =?us-ascii?Q?JzlCRmoyUu4jdQn5VSBP6SAr8hFumrpP6OejUQwDTz3llVn9qoq5r0/zyXGp?=
- =?us-ascii?Q?UOmuHN/v2KIrY7u1Pxws9UXibcb4NpKCMdCkAXKhobqV7GH3/qhdNf/WqtX/?=
- =?us-ascii?Q?6bWTZleBISNR8LQPqOP5ZF5UhLaNp6DiDojH91tA0gSIpXpBS3Bw/n9p7+2D?=
- =?us-ascii?Q?lWmkbo47FAeEeqKRrx+3R+7E5FXeMHU8TKOYqAgtanWa/c/NwZlm3K/+1oDu?=
- =?us-ascii?Q?GvdhHfZ4ehfAZFpS6esScTkhRX5e9UTm+4sNeAdhCEPG2Vtcteeh1hOMlsbs?=
- =?us-ascii?Q?Ezhc8Q2OlNFb4mMA9WeHKg+MZXDRXkFl1ZioVxuAMRmfTHqYUpAcOSp05jGt?=
- =?us-ascii?Q?TugNIkKKJIL7ggchcAfO63ZWh7H+ibse53gIK7M8JvG9RtQWgxkEOSdtT46U?=
- =?us-ascii?Q?UB1FsowempZoQlXFRYOsOo50onilnOoBXfuQ9bGtAKZynz30z26ObBKddqfN?=
- =?us-ascii?Q?4gsdliWvUhQKob4nzTrYGevjOcpdRR5JpJkJ/udL?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A0ED4437C;
+	Mon, 10 Mar 2025 21:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741643223; cv=none; b=g+uD3gwFGTmnM0L5blIJVi4CV7iMN7VCMHStmtZdbho9kVjDyNwRscjJzUbw9uCiVxIgDHDY8riMxa1bwlLEo3YtXMOKD361mJ3817zApsIMcl0I7YzkAw8nPYr6TlE3z+08r0Z5pEeCnvWhZLBs3sauLGq7tt1ck1lFcINdCcM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741643223; c=relaxed/simple;
+	bh=dA9v5nwjHnH2LSju91UgbojSTyOeExYFFM/iFQ3lW6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rCZL9DLsNzJgqDDqNk57A/A7MTkkRwZsG7Wa6pnhwHq5+BEi0+r1wAfJp5/O0Y8MdcjEZ0WhCMTWjoBUuEDj5QHv95A9Z7XumwBAjqWM4Gjgq+3yJpfg8jKlQ2xWFNP/mGaxA9M6EK4eD8hOoCWBKEFLHAeYuegcQWVVV+7hMUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PLevEC7A; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1AE9D205492E;
+	Mon, 10 Mar 2025 14:47:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1AE9D205492E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741643220;
+	bh=35SjqWqIW52cDDYKL7wXrX16ndmpcJ/RLK/QVZatMbA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PLevEC7AXcMPAd0pY7CAOea160MnPpKdr7WEv6MrZnGBCpYlCuBzpuETS4KkkO8Au
+	 6Zo8yUuLL7tvFiZAF75VRwZafL0dNuQnj85+7jrnaez8s17wb79rOwVkQjeGVgCUP8
+	 uxdylMSk9Px+9pgIVZ/eniOqvEy2BT6hlmgmmr7w=
+Message-ID: <71a95f7d-d38b-4f4f-b384-9ad4095bd272@linux.microsoft.com>
+Date: Mon, 10 Mar 2025 14:46:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f5cf251-7e4f-419d-ca60-08dd601cf7a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 21:46:08.5989
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QQwhFLEOaZNQ6jHOohOz7gxMJlg4rWRFS6ZexTSn4U9o8R/M9iWuD0FFBf85Yu3MMrWbrREV89zCCpB1K/m90Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4388
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/10] x86: hyperv: Add mshv_handler irq handler and
+ setup function
+To: Michael Kelley <mhklinux@outlook.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
+ <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+ "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
+ "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+ "muislam@microsoft.com" <muislam@microsoft.com>,
+ "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
+ "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
+ <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-9-git-send-email-nunodasneves@linux.microsoft.com>
+ <Z7-nDUe41XHyZ8RJ@skinsburskii.>
+ <7de9b06d-9a32-48b5-beda-2e19b36ae9c9@linux.microsoft.com>
+ <SN6PR02MB41573673D5F786E6C47FC08ED4D52@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41573673D5F786E6C47FC08ED4D52@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> Subject: RE: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib:
-> Handle net event for pointing to the current netdev
->=20
-> > Subject: [EXTERNAL] Re: [patch rdma-next v5 2/2] RDMA/mana_ib: Handle
-> > net event for pointing to the current netdev
-> >
-> > On Thu, Mar 06, 2025 at 11:24:39AM -0800, longli@linuxonhyperv.com
-> wrote:
-> > > +	switch (event) {
-> > > +	case NETDEV_CHANGEUPPER:
-> > > +		ndev =3D mana_get_primary_netdev(mc, 0, &dev->dev_tracker);
-> > > +		/*
-> > > +		 * RDMA core will setup GID based on updated netdev.
-> > > +		 * It's not possible to race with the core as rtnl lock is being
-> > > +		 * held.
-> > > +		 */
-> > > +		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-> > > +
-> > > +		/* mana_get_primary_netdev() returns ndev with refcount
-> held
-> > */
-> > > +		netdev_put(ndev, &dev->dev_tracker);
-> >
-> > ? What is the point of a tracker in dev if it never lasts outside this =
-scope?
-> >
-> > ib_device_set_netdev() already has a tracker built into it.
-> >
-> > Jason
->=20
-> I was asked to use a tracker for netdev_hold()/netdev_put(). But this cod=
-e
-> (and the code in mana_ib_probe() of the 1st patch) is simple enough that
-> everything is done in one scope.
->=20
-> Jakub, do you think it's okay to use NULL as the tracker in both patches?
->=20
-> Long
+On 3/7/2025 9:38 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, February 28, 2025 4:38 PM
+>>
+>> On 2/26/2025 3:43 PM, Stanislav Kinsburskii wrote:
+>>> On Wed, Feb 26, 2025 at 03:08:02PM -0800, Nuno Das Neves wrote:
+>>>> This will handle SYNIC interrupts such as intercepts, doorbells, and
+>>>> scheduling messages intended for the mshv driver.
+>>>>
+>>>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>>>> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+>>>> Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+>>>> ---
+>>>>  arch/x86/kernel/cpu/mshyperv.c | 9 +++++++++
+>>>>  drivers/hv/hv_common.c         | 5 +++++
+>>>>  include/asm-generic/mshyperv.h | 1 +
+>>>>  3 files changed, 15 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+>>>> index 0116d0e96ef9..616e9a5d77b4 100644
+>>>> --- a/arch/x86/kernel/cpu/mshyperv.c
+>>>> +++ b/arch/x86/kernel/cpu/mshyperv.c
+>>>> @@ -107,6 +107,7 @@ void hv_set_msr(unsigned int reg, u64 value)
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(hv_set_msr);
+>>>>
+>>>> +static void (*mshv_handler)(void);
+>>>>  static void (*vmbus_handler)(void);
+>>>>  static void (*hv_stimer0_handler)(void);
+>>>>  static void (*hv_kexec_handler)(void);
+>>>> @@ -117,6 +118,9 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+>>>>  	struct pt_regs *old_regs = set_irq_regs(regs);
+>>>>
+>>>>  	inc_irq_stat(irq_hv_callback_count);
+>>>> +	if (mshv_handler)
+>>>> +		mshv_handler();
+>>>
+>>> Can mshv_handler be defined as a weak symbol doing nothing instead
+>>> of defining it a null pointer?
+>>> This should allow to simplify this code and get rid of
+>>> hv_setup_mshv_handler, which looks redundant.
+>>>
+>> Interesting, I tested this and it does seems to work! It seems like
+>> a good change, thanks.
+> 
+> Just be a bit careful. When CONFIG_HYPERV=n, mshyperv.c still gets
+> built even through none of the other Hyper-V related files do.  There
+> are #ifdef CONFIG_HYPERV in mshyperv.c to eliminate references to
+> Hyper-V files that wouldn't be built. I'd suggest doing a test build with
+> that configuration to make sure it's all clean.
+> 
+Thanks Michael - I don't think it would be an issue since the __weak version
+would be defined in mshyperv.c itself, replacing the function pointer.
 
-Hi,=20
+However, I went and tested this __weak version again with CONFIG_MSHV_ROOT=m
+and it does not actually work. Everything seems ok at first (it compiles,
+can insert the module), but upon starting a guest, the interrupts don't get
+delivered to the root (or rather, they don't get handled by mshv_hander()).
 
-If we don't want to use a tracker, can we take the v4 version of the patch =
-set?
+This seems to match with what the ld docs say - There's an option
+LD_DYNAMIC_LINK to allow __weak symbols to be overridden by the dynamic
+linker, but this is not enabled in the kernel.
 
-Otherwise, please take v5 (this patch) if a tracker is required.
+So I will stick with the current implementation.
 
-Thanks,
-Long
+Nuno
+
+> Michael
+> 
+>>
+>>> Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+>>>
+>>>> +
+>>>>  	if (vmbus_handler)
+>>>>  		vmbus_handler();
+>>>>
+>>>> @@ -126,6 +130,11 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+>>>>  	set_irq_regs(old_regs);
+>>>>  }
+>>>>
+>>>> +void hv_setup_mshv_handler(void (*handler)(void))
+>>>> +{
+>>>> +	mshv_handler = handler;
+>>>> +}
+>>>> +
+>>>>  void hv_setup_vmbus_handler(void (*handler)(void))
+>>>>  {
+>>>>  	vmbus_handler = handler;
+>>>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+>>>> index 2763cb6d3678..f5a07fd9a03b 100644
+>>>> --- a/drivers/hv/hv_common.c
+>>>> +++ b/drivers/hv/hv_common.c
+>>>> @@ -677,6 +677,11 @@ void __weak hv_remove_vmbus_handler(void)
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(hv_remove_vmbus_handler);
+>>>>
+>>>> +void __weak hv_setup_mshv_handler(void (*handler)(void))
+>>>> +{
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(hv_setup_mshv_handler);
+>>>> +
+>>>>  void __weak hv_setup_kexec_handler(void (*handler)(void))
+>>>>  {
+>>>>  }
+>>>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>>>> index 1f46d19a16aa..a05f12e63ccd 100644
+>>>> --- a/include/asm-generic/mshyperv.h
+>>>> +++ b/include/asm-generic/mshyperv.h
+>>>> @@ -208,6 +208,7 @@ void hv_setup_kexec_handler(void (*handler)(void));
+>>>>  void hv_remove_kexec_handler(void);
+>>>>  void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
+>>>>  void hv_remove_crash_handler(void);
+>>>> +void hv_setup_mshv_handler(void (*handler)(void));
+>>>>
+>>>>  extern int vmbus_interrupt;
+>>>>  extern int vmbus_irq;
+>>>> --
+>>>> 2.34.1
+>>>>
+> 
+
 
