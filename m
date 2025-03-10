@@ -1,121 +1,150 @@
-Return-Path: <linux-hyperv+bounces-4368-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4369-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5FBFA5A680
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 22:54:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B8DA5A6C6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 23:12:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 653E918912E0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 21:54:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B99E7A3740
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 22:11:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AAD41E51FA;
-	Mon, 10 Mar 2025 21:54:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2ED21CEEBE;
+	Mon, 10 Mar 2025 22:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="McgzG9DD"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="JQSHsWDP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1B31E1A3B;
-	Mon, 10 Mar 2025 21:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E751DE2CE;
+	Mon, 10 Mar 2025 22:12:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741643658; cv=none; b=BTlIM4lJcytjoZpP/zMupEw0xx+hXAAclc0r+deDaqS3XBTMgYoFKItTkGZxN3MaX/Z0rFJ1qx37AiIJgV8RWqqN2E+DQsh8ZVrrL1LGeM7B8JBt2FU9nBWvx3EFXE/2vabMpmF6ZiwQDsugI6rR3EU+7sY/D/BPqu3gkctFj5Y=
+	t=1741644726; cv=none; b=tfYRjTwjB4m7/DLf5CA4MQwYiVP6fLFmYs969A4XK8cZ0Fy6/Eq0yqmduM4TdKUUVScJFNrE+FjozRHrtq9QAyiHZiJQSQdF8TNogUPcsHJTg9NEzhCmZK7Gf/DVWbJpEYFcCNvucQi1/RfqAqljiHBKvEAQJA8s+mJkJ2U9EnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741643658; c=relaxed/simple;
-	bh=et/pdKFP+xbz0ie0UenwlW3LyYpkTB1+CTlrZCSRz0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yu6TRuZbzGkduJvmZTBAomjvAMEobyzE2ZyYkNcaeUKBxgW2QUIcVPm5Chza4QiJvDItDukqIDQy/i5YSwbE2crCNaY4E7XI0CaZZQOun7WmsD1oD/k0PVDfMyOj7rgloaYOSdzM2GYUbrsnSxEVlrkflu6eG2T9UVPOHLGbQvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=McgzG9DD; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+	s=arc-20240116; t=1741644726; c=relaxed/simple;
+	bh=SKvO+7zXnoNHvTpiQVfIZVEjAhuH9e4b+IWhxYM/mIk=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=PFqdxIpHsG4DTOIG2ZPNmvomCvUlT66zpUbW/nuCFRW67mgSJCHZ+khRXp0CUrDjZSKACCC/9haXof3YPFKLdL+/gi1IMq6Z7Of+5dql3yDVUiA/mw7BwXmrwGR1m4R49mN3IpsCv/NzT+uiil5ZqgVVciFvjRl56wE5Po6FSNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=JQSHsWDP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 15DAD205492D;
-	Mon, 10 Mar 2025 14:54:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 15DAD205492D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741643656;
-	bh=Q/Uol1uipNTEM+J17AFsSpdT73eLsQ4d8Vvzl/nmsl8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=McgzG9DDr6wUujEwBpMK6suD9qJbrij6gjrcnO6q78gHuFDI4Yr4Tspg3OQhzXnvy
-	 ZBcTeYtfuccZ9RLNcrdoJVs3fmZPUyV/lIGeyh9OJnGPJJ8tlNKBYhrfODMjRGfclv
-	 IMuXMlRQZ/ulJ9+Rs7PP9zZSHIssAH1Tc/M/SXWc=
-Message-ID: <28970d64-40b7-408a-a072-c3449d3de08e@linux.microsoft.com>
-Date: Mon, 10 Mar 2025 14:54:15 -0700
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id DC698205492D; Mon, 10 Mar 2025 15:12:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC698205492D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1741644723;
+	bh=asMeEivWZCVDFdinhQ6RmSqwY26km8pyKKRGxicSGAs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JQSHsWDPQZ3LknXNpKFxiTiesnGE5sEDYuWFUe30YokttyuaFCfr9XpsTGvO9YImN
+	 zHXWlrReDZg64w03bcr/HWMLJwwbg+laoTCmzL5q9sidIhvqFaGgetk+L/ymx00tCn
+	 1AZ1tOli1vwNjHjdp5iescLaOSXp5au9x/SiW4VY=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>
+Subject: [Patch v3] uio_hv_generic: Set event for all channels on the device
+Date: Mon, 10 Mar 2025 15:12:01 -0700
+Message-Id: <1741644721-20389-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 01/11] arm64: kvm, smccc: Introduce and use
- API for detectting hypervisor presence
-To: Michael Kelley <mhklinux@outlook.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
- "rafael@kernel.org" <rafael@kernel.org>, "robh@kernel.org"
- <robh@kernel.org>, "ssengar@linux.microsoft.com"
- <ssengar@linux.microsoft.com>, "sudeep.holla@arm.com"
- <sudeep.holla@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
- <will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-2-romank@linux.microsoft.com>
- <BN7PR02MB4148539DEFFF5ABA42AB44D3D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <BN7PR02MB4148539DEFFF5ABA42AB44D3D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+From: Long Li <longli@microsoft.com>
 
+Hyper-V may offer a non latency sensitive device with subchannels without
+monitor bit enabled. The decision is entirely on the Hyper-V host not
+configurable within guest.
 
-On 3/10/2025 2:16 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, March 7, 2025 2:03 PM
->>
-> 
-> In the Subject line,
-> 
-> s/detectting/detecting/
+When a device has subchannels, also signal events for the subchannel
+if its monitor bit is disabled.
 
-[...]
+This patch also removes the memory barrier when monitor bit is enabled
+as it is not necessary. The memory barrier is only needed between
+setting up interrupt mask and calling vmbus_set_event() when monitor
+bit is disabled.
 
-> s/cenrtal/central/
-> 
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+Change log
+v2: Use vmbus_set_event() to avoid additional check on monitored bit
+    Lock vmbus_connection.channel_mutex when going through subchannels
+v3: Add details in commit messsage on the memory barrier.
 
-My bad, will fix! Thanks for spotting that, I'll be sure to have
-the spellchecker on.
+ drivers/uio/uio_hv_generic.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index 3976360d0096..45be2f8baade 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -65,6 +65,16 @@ struct hv_uio_private_data {
+ 	char	send_name[32];
+ };
+ 
++static void set_event(struct vmbus_channel *channel, s32 irq_state)
++{
++	channel->inbound.ring_buffer->interrupt_mask = !irq_state;
++	if (!channel->offermsg.monitor_allocated && irq_state) {
++		/* MB is needed for host to see the interrupt mask first */
++		virt_mb();
++		vmbus_set_event(channel);
++	}
++}
++
+ /*
+  * This is the irqcontrol callback to be registered to uio_info.
+  * It can be used to disable/enable interrupt from user space processes.
+@@ -79,12 +89,15 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
+ {
+ 	struct hv_uio_private_data *pdata = info->priv;
+ 	struct hv_device *dev = pdata->device;
++	struct vmbus_channel *primary, *sc;
+ 
+-	dev->channel->inbound.ring_buffer->interrupt_mask = !irq_state;
+-	virt_mb();
++	primary = dev->channel;
++	set_event(primary, irq_state);
+ 
+-	if (!dev->channel->offermsg.monitor_allocated && irq_state)
+-		vmbus_setevent(dev->channel);
++	mutex_lock(&vmbus_connection.channel_mutex);
++	list_for_each_entry(sc, &primary->sc_list, sc_list)
++		set_event(sc, irq_state);
++	mutex_unlock(&vmbus_connection.channel_mutex);
+ 
+ 	return 0;
+ }
+@@ -95,12 +108,19 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
+ static void hv_uio_channel_cb(void *context)
+ {
+ 	struct vmbus_channel *chan = context;
+-	struct hv_device *hv_dev = chan->device_obj;
+-	struct hv_uio_private_data *pdata = hv_get_drvdata(hv_dev);
++	struct hv_device *hv_dev;
++	struct hv_uio_private_data *pdata;
+ 
+ 	chan->inbound.ring_buffer->interrupt_mask = 1;
+ 	virt_mb();
+ 
++	/*
++	 * The callback may come from a subchannel, in which case look
++	 * for the hv device in the primary channel
++	 */
++	hv_dev = chan->primary_channel ?
++		 chan->primary_channel->device_obj : chan->device_obj;
++	pdata = hv_get_drvdata(hv_dev);
+ 	uio_event_notify(&pdata->info);
+ }
+ 
 -- 
-Thank you,
-Roman
+2.34.1
 
 
