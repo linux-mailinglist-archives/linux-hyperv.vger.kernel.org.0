@@ -1,53 +1,47 @@
-Return-Path: <linux-hyperv+bounces-4345-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4342-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62C0DA59CE9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 18:16:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB1A9A59C08
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 18:08:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B3A116F68E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 17:16:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67220188C0DE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 17:08:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9DE9233733;
-	Mon, 10 Mar 2025 17:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E5A233716;
+	Mon, 10 Mar 2025 17:05:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="dWjxD4eQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ASdtXEiz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3397A22FDE2;
-	Mon, 10 Mar 2025 17:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A553C233703;
+	Mon, 10 Mar 2025 17:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626947; cv=none; b=ahlYWE0OMXNumNDrFUomXt48Pj+rTe1CSP+CcgexgQBwruwG3osisqQcEqrOZhD7KCZSWtWiWwl6A5moqx54MN5p2jchqM25w/OTa/cDVzjFYE5OXqCyspbTdS1r2UBH8hIeEgEZnG9iBvCdF7ODrJ/7KuVE65oISxWf73aMOIs=
+	t=1741626359; cv=none; b=ppsWn3bquSi14YMAsXznb6HZI56yM6PEUubKU6y4YtHn6USt0DH+TJ7RWqVETqgCjMvnyW78ZSwjFIu/PjbAv4jFXWfR9TJYTKBbTjQs2r34/uoCuYG3nPHF4+1TZ00LuSSsOASBVWhR2kn9zxDEsqiZPAHdI8+Z1Vb++5fJiRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626947; c=relaxed/simple;
-	bh=0OCVYF/UAGmF/bg0cdYT6l4Xx+OUMgdepEGS07Yb3NA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=jpO7aMtdWfu/6BLVxkgn7VvF+G9bgu7eekPNGCc9z6+ncZax242S2jsLV/TACINnH1lpEwmk+//DBA85yqxzRHYM5VSTaZi0nYiWhrJE/Mg/thXyKmGro/CbcM3jsY+i/uXrzAuv68v/sA37vM3Z7u4usSxML73S4gLgUKjWX7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=dWjxD4eQ; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=/rk8STxE+umsrTdOZizpHycgtQykDpsqh9BmTH896vM=; b=dWjxD4eQWjlXrG8ZX77eNYor4l
-	JjJhbLJwZThFv/nCP5TmvkSmlYzVDAMxIN2FLDzwrrpaUWalU1HjUsb1cbj0odt8hX32qHjSHmrot
-	THhXfivyU2MifCS1j4ExAwzbL/IwqyIxvcJX8TAlWQ7oeELyngz4wzmIkBD6DaDosI2CpMY6rH3Uw
-	piKRWJTyLaVWqR9nQ+Zd8Bwme2g+birN0r+XRFLvPzS+PMNSuM34ijj7JO+GStMbe9r6aHfQ0l23a
-	l9mHTMzqUCOuOmMxB0Z+vsNwj5n8zNCqILspF7q2BSzNvDmsrGT3e4T02NOzF0NwLWaFmelCgDPJQ
-	drHrl30Q==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1trg5B-00G6mD-0b;
-	Mon, 10 Mar 2025 10:34:25 -0600
-Message-ID: <b419ea3f-50b8-481e-abc6-6eac7ce43021@deltatee.com>
-Date: Mon, 10 Mar 2025 10:34:12 -0600
+	s=arc-20240116; t=1741626359; c=relaxed/simple;
+	bh=Yr8aJ2IZDKlLsVdnrX3O2mRmkiDeU1PvYFcf0WrFd84=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=skt0XEv8uxc4Vy8yXkuImlCa17ouhBhe6ARqrIggCN7RliV0ZPwazYQLGobArPgE4TWRcKWtN2rahTzvtv7kG57zEKmmDSNqOSbTYqNsDeSoC2K1g+9yXFG8Eh5T5TMia7miH5obKItQH4J8N5ze9w711kn8FXoDa7ap+J2GrsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ASdtXEiz; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CA8B82038F32;
+	Mon, 10 Mar 2025 10:05:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA8B82038F32
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741626357;
+	bh=9k2ujwCkxT/pnQt2SpcTPLQF5W45ehk16LpQKOSM9kE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ASdtXEizJBNBlir7Guq6DH/+cVwx7N/FgUmEK+XbPU0pYIqCSwEx1mx/GflRf57tm
+	 MnevelamszmPc2/kut2m5GTFfDoExBbWYXR6coPOMciOGK6Yb1hRgiEuFq0zuoi++a
+	 4wrrUAgnXET7zmFf32p4ObaaELCgZyEhfx4WpkTk=
+Message-ID: <c7f9d861-f617-4064-8c98-2ace06e9c25e@linux.microsoft.com>
+Date: Mon, 10 Mar 2025 10:05:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -55,48 +49,108 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Jon Mason <jdmason@kudzu.us>,
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- ntb@lists.linux.dev, Nishanth Menon <nm@ti.com>,
- Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
-References: <20250309083453.900516105@linutronix.de>
- <20250309084110.394142327@linutronix.de>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20250309084110.394142327@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH hyperv-next v5 07/11] dt-bindings: microsoft,vmbus: Add
+ interrupts and DMA coherence
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
+ decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+ joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+ mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com,
+ oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
+ ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250307220304.247725-1-romank@linux.microsoft.com>
+ <20250307220304.247725-8-romank@linux.microsoft.com>
+ <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, maz@kernel.org, jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com, ntb@lists.linux.dev, nm@ti.com, kristo@kernel.org, ssantosh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, haiyangz@microsoft.com, wei.liu@kernel.org, linux-hyperv@vger.kernel.org, wei.huang2@amd.com, manivannan.sadhasivam@linaro.org, James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [patch 04/10] NTB/msi: Switch MSI descriptor locking to lock
- guard()
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
 
 
-On 2025-03-09 01:41, Thomas Gleixner wrote:
-> Convert the code to use the new guard(msi_descs_lock).
+On 3/10/2025 2:28 AM, Krzysztof Kozlowski wrote:
+> On Fri, Mar 07, 2025 at 02:02:59PM -0800, Roman Kisel wrote:
+>> To boot on ARM64, VMBus requires configuring interrupts. Missing
+>> DMA coherence property is sub-optimal as the VMBus transations are
+>> cache-coherent.
+>>
+>> Add interrupts to be able to boot on ARM64. Add DMA coherence to
+>> avoid doing extra work on maintaining caches on ARM64.
 > 
-> No functional change intended.
+> How do you add it?
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jon Mason <jdmason@kudzu.us>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Allen Hubbe <allenbh@gmail.com>
-> Cc: ntb@lists.linux.dev
 
-Looks really nice to me, thanks.
+I added properties to the node. Should I fix the description, or I am
+misunderstanding the question?
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   .../devicetree/bindings/bus/microsoft,vmbus.yaml          | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+>> index a8d40c766dcd..3ab7d0116626 100644
+>> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+>> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+>> @@ -28,13 +28,16 @@ properties:
+>>   required:
+>>     - compatible
+>>     - ranges
+>> +  - interrupts
+>>     - '#address-cells'
+>>     - '#size-cells'
+>>   
+>> -additionalProperties: false
+>> +additionalProperties: true
+> 
+> This is neither explained in commit msg nor correct.
+> 
+
+Not explained, as there is no good explanation as described below.
+
+> Drop the change. You cannot have device bindings ending with 'true'
+> here - see talks, example-bindings, writing-schema and whatever resource
+> is there.
+> 
+
+Thanks, I'll put more effort into bringing this into a better form!
+If you have time, could you comment on the below?
+
+The Documentation says
+
+   * additionalProperties: true
+     Rare case, used for schemas implementing common set of properties.
+Such schemas are supposed to be referenced by other schemas, which then 
+use 'unevaluatedProperties: false'.  Typically bus or common-part schemas.
+
+This is a bus so I added that line to the YAML, and I saw it in many
+other YAML files. Without that line, there was a warning from the local
+DT validation described in the Documentation about not having pin
+controls which was weird, and adding
+
+"additionalProperties: true"
+
+fixed the warnings (didn't debug much though). As a side note, there was
+a similar warning coming from another YAML during running DT schema
+validation as described in the Documentation so maybe warnings are fine.
+
+> Best regards,
+> Krzysztof
+> 
+
+-- 
+Thank you,
+Roman
 
 
