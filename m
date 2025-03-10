@@ -1,188 +1,256 @@
-Return-Path: <linux-hyperv+bounces-4353-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4354-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88B53A5A1A6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 19:07:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C80E3A5A37A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 19:57:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 346643AE776
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 18:07:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03F0D170213
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 18:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A657233D85;
-	Mon, 10 Mar 2025 18:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB6123315A;
+	Mon, 10 Mar 2025 18:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lkfc7WqT"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="VXNjrw/v"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFB7226D17;
-	Mon, 10 Mar 2025 18:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630031; cv=none; b=iP0mHF20f0PBmh4Cpqe8jsilntUMXpKI9VZE4g7+K/zrTZSdPLlnTdDADgwIbhAt565N6iYGYP+vaTfIEoDr7P8fBv/BZ+E/y9KKG1fsFiDIpwX6L56Ia4E76XfkALEfiJkDYQl+NnO1MWQiAy2TRnnuhCX60nfrYAI8/JB1koQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630031; c=relaxed/simple;
-	bh=CA9EMsdy0ESHhNUh8YAZSmW8LOgcKOF7hv3RuqiayFY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VlvvO4KvSwuNI7wmFqDPJu5PoTsb1MlA7Ieqip+74ReoRp72wv4/xmqbCeQExzUtW5reFkNr9wEVWE3bPSJ5pW5GTqWZbdCTCIoUcrE2P/52IOghPZYfV0FhBGbeiDLx5nqRcqCaNwqYh9l409dNH7X+9oiDed+HAVwNLGopZiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lkfc7WqT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AEB1B2038F50;
-	Mon, 10 Mar 2025 11:07:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEB1B2038F50
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741630029;
-	bh=E13Z4tIU2QebiQ+fHYjb3GAytcpWMD9ZkrlSMteHVzY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lkfc7WqTTy9o/NtCmsNne2YvNu14qrm7uDsjvvXkQk5sfBSt0aW2JUGCLGbi53VQm
-	 x7EtA7dAZvpUOAdKpa+WyJR+DDJq7wyFqIlErDY/ZzM4lWwuea+zOldXaRC8xhF7xm
-	 s2kAl+3x2CXQIATrHNeR52YStsliYwkkKncXNNUo=
-Message-ID: <ba6b906d-04a2-423d-a527-9ef7ab1dccf2@linux.microsoft.com>
-Date: Mon, 10 Mar 2025 11:07:08 -0700
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022100.outbound.protection.outlook.com [40.107.200.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECD5374EA;
+	Mon, 10 Mar 2025 18:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.100
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741633057; cv=fail; b=DfCnrhpPcHXXm7pMg4UZVDjTUCSh8lQLDHrUB4y8x4b6CucYTJs5tIEFthLK5JTx0Zjf9uBbcnrNw1YDAd7J9voRDzcKE9omqBfZH4fOmL/IAtcp+S2qRAXouuCjaTMoRhWmjbFuWHN56S3TkZh+lSQ31CmYqN9zdrtEBvJL0hU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741633057; c=relaxed/simple;
+	bh=xo52ZN8h9hX0oxYfLc7zKaee8iX/Tq8u4Ud9X8pHKyo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=F7o18dT3z6U4ERh4Q6G3J2VHfRV5/6cSiYEZW+aYSC0mvUpI9v9QBlQEDB6sQZsVMKnLlyqHKPTxumJzI8jkzyfygfb/MPdX0RfrPTCPc/Hv/er4PqhI0RDzhHHRlwTr1rPwxFU4R1+3oNlcxPKgnoKulZTVbZ31HTdgN4pla7A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=VXNjrw/v; arc=fail smtp.client-ip=40.107.200.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sjD50ohD8GmKgrmMW61Nb2VlBvOuFv0OAWgyn9xFceu/JfMJt/dd/1nPhUa1pZav9jdXMJx5yXmwD65AWea4lT5QSTm8U0AVH6hPzXj6uAM9zgF7d6u6MEEQz4SQ8rWGWrGiGKHcG0aRYHqJ/KUsMUzUC7fhM7NTzMY3yYc8HVYnUBEP9oz5XcdtfqORbPIVKHdDCDDZetn3XOwgchUmUAxyn2MRVNPeLMjGWoHvX9BQVOY/wMpvkM/wbq5Iq+F0UdmXGCaQXHZ9LD/T/cRoS4/BQLZf0kHcNvJRNeW0MI0SRWxLoKUGsK7g2e6To1HzI32AAHpe+7KCuvfjVJuGTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2fOKcb5B6HWVdibxl5Og0SQDe9TOeQ4EYjUO+VF17yw=;
+ b=V6qCqUwMZrMerIJe7GDv3fDwzG12uGdfAT08/hTDTjhJx4m0CA9OxyFFtJbTQKfYaylrdzpc/YDn0TuWY+WxKnaKB874AAUUephGffMgq1Dxf/Bwaw11rkWWV/C06Y0Kd2+O0wT/EwKQYjFWGN22C7kzt/Hw79ZYNVf0v7F8t10uv93FrVle9I40aTK/LdFqQWdjjxjealCuAqRzoeKdNZpZhcdD9W4Bt/eK6by7uoJqyBecFuI6NEB2d3H+DOnwx5MgtOMVOW4Ftf9oCbDc1ZcCbzdAeDhKsIFZrcErJSINY2FyC82KhPwtJWuf4xmDad/TWmItE8pKVSPc9fUFHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2fOKcb5B6HWVdibxl5Og0SQDe9TOeQ4EYjUO+VF17yw=;
+ b=VXNjrw/vi0gh7SSzHX0EfITAgww108VAsjl48KdGjaGjLckake53Pj7Z4h78/GGt4m46Mr/TV4ccREOWUPP94Wzjedvg87kB7mM/S7QVdr/xX0yM+UMIvokKo5u+WRvkYRTw+I7GPAVblZm4EwdyjrT4ChtnEYjo/xfqS6JSIhU=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SA1PR21MB4035.namprd21.prod.outlook.com (2603:10b6:806:38f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.20; Mon, 10 Mar
+ 2025 18:57:33 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%4]) with mapi id 15.20.8534.012; Mon, 10 Mar 2025
+ 18:57:33 +0000
+From: Long Li <longli@microsoft.com>
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+CC: "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>, KY Srinivasan
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v2] uio_hv_generic: Set event for all channels on the
+ device
+Thread-Topic: [Patch v2] uio_hv_generic: Set event for all channels on the
+ device
+Thread-Index: AQHbkLbABa8gGB7X4UeqrCpzK0MNDLNsnU3QgAAFwYCAABbgoA==
+Date: Mon, 10 Mar 2025 18:57:33 +0000
+Message-ID:
+ <SA6PR21MB4231EDFB5B349A4C59131ABFCED62@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <1740780854-7844-1-git-send-email-longli@linuxonhyperv.com>
+ <20250309054727.GA24737@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SA6PR21MB4231D4A8F6D942B405777BECCED62@SA6PR21MB4231.namprd21.prod.outlook.com>
+ <20250310173123.GA12960@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To:
+ <20250310173123.GA12960@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3c5cb4f3-db8c-462e-95ec-0f874f527e4e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-03-10T18:53:15Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA1PR21MB4035:EE_
+x-ms-office365-filtering-correlation-id: 1358c943-d90b-42c7-f4f5-08dd60056a6b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|366016|1800799024|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?wxOXBvls6VLbIb86Rb7c96xZHoaDeBDoG1zMdnTCA0kCxAhewwv/e6mRBTT6?=
+ =?us-ascii?Q?o5bPcS8OSXWoH0goHlmm3NDX4TIzHgYUt1bEOqvzmedBbBIc3MO6gpUBc706?=
+ =?us-ascii?Q?/ey7xrNRuZ5q82o3DnY0ljCuHRTwpQD6KFAv0nR7lzc6tF3wveigfPgt9Oyt?=
+ =?us-ascii?Q?i2VxcAQZar1OjiIGnxWjATesv+vNzcM6RpY3SxnRmFS3mJ+kdTHMjcQWQF+x?=
+ =?us-ascii?Q?RncxqHXu4O4xBtpvB25EpeK3f8i+5wFfNxVfxZEOtWZqYeKntJpiuQCcRF07?=
+ =?us-ascii?Q?csMfrmaJXs3T7if/dMphdHewlVj63g0Ldfp/y0hkTJXlViWU9Ymtnj1KIHvL?=
+ =?us-ascii?Q?ifLRRR4JQOhCi30BbNfBjMf1Dxrxehv43qJtPpP99skbp7bF1Dtbp8M53oUV?=
+ =?us-ascii?Q?isXp3SXiOQKA4JJ6vcqKbno3WpBD1WURjej1vbiqkVvjU8uAonS2YgvH+pBL?=
+ =?us-ascii?Q?qnQtBN3pVXHVhDQiQO9lU+STRUrXR7ZHAva9KtMBGQloJwOZGTFuoJNwGhoF?=
+ =?us-ascii?Q?/C+f4nTcwjmINUv4u+3iFfEBzO/eokdKwv1Y6SsaTmXHcNADS5kw3ZSaBxT8?=
+ =?us-ascii?Q?CxGbbi19wwwR8v1zO795JFUIiirfDMtb5y0Kp/Ot3HjITLe6y+hz+4poLO9j?=
+ =?us-ascii?Q?FokexWou2WHQicOwFjfYpp9W7fd8sbaxS5tUz+IEqf2xiwBtfqP1l53nC3B/?=
+ =?us-ascii?Q?XqGQleeWNkPLjXVdeGHHWubAJzGiFvIvMJMcAt09LsN9w+cnQAylUfswuufe?=
+ =?us-ascii?Q?ZJcbmZ83gOmP6i9y5c6DZFEh1J17IxzZKGzIJpd0GMHXe6lxE490vhSdxIB/?=
+ =?us-ascii?Q?PRqcLbuEKpRnfiIbio+LM3CaiXLAI+cxsFF1TG3eLzCC0unDXnDx1CA3Sg3T?=
+ =?us-ascii?Q?4lo6+n8FHbYxseojcdbrDBbBH6nkz6UPRRVtTUDwvFQo6fKDe9lC6H3s/rEm?=
+ =?us-ascii?Q?0A68jD2oGWRCZH/YMjIiI7LZJEvkxo0gHfn7Yog/hm7QMtgwOirCbELkXZmr?=
+ =?us-ascii?Q?zGPiD+Zq4+f7jqOINxN0XU1+KwSqhWlEn4RXMXTHtRAtc7husG0QJm19ciQr?=
+ =?us-ascii?Q?5yghxFFRxSg0bZhoPPvgNQTw7cDbJMAME7QVbnjeDaL+eUqCKk//Y0/SY98l?=
+ =?us-ascii?Q?lYCpi7ZR2EMX5BtJrugp3rjccaReMip642DaOeB1mwHFk7AiZ3PGfcBgAr/Z?=
+ =?us-ascii?Q?VE3nbEfhcPLY4ZZA4HZUm69F/8dnHKyCGRR56/aMGMAOLCnM1mJIdmsWIR0n?=
+ =?us-ascii?Q?XnmNGpv6TX+EtwMo2pbe7e0q5K4UJ8mOLcNgH8LJH3OkAI6d1n2FCWT315x1?=
+ =?us-ascii?Q?O4dAFbalmJrOQV4G3khLgapN3/VnwIyj3UoN/0ktOjjCchCu8Tj7L23+OEHH?=
+ =?us-ascii?Q?YgMIcFyVhqKedjsQFzPkiIvWQnvUqxnYvQl58uHavBE5WkdKdfUVOSRN5VNf?=
+ =?us-ascii?Q?hHm0H8sWuCdPIznbTIFFrlvCMymHAZHU?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?hh6P5m8ZkvAENoz7OHFsmIwJg+8FyXLCiYvYoVeLa+UgV29gFqwR47Zcghss?=
+ =?us-ascii?Q?5p2UYFVcWBhedwbwc4x5Y4Ilpmat6l1CzOfhp7LU3ylW3RyLaVr4Na/Z+ae0?=
+ =?us-ascii?Q?dYcnv1blgv1+IdxqSgtbq5vThIeYtP4X3FK9uxBf1WoV1av7rIvfwaSX1vYU?=
+ =?us-ascii?Q?flYvYdRAvm/1i5ys9nQZagC5QudY5yTze+t/fwqMUbavFflPoO6DYGGUPXiF?=
+ =?us-ascii?Q?TNyRRHF/Yg8Y0V6Rd4Trhf8qTYaGdO8GjCl+zg68+lbbzOzbDGvbqwCL7J9H?=
+ =?us-ascii?Q?nZrQx8sy6Ifdx+ekPsJJbKRYFeMEZLavvtbhZxjogmdSRS2fgXjdKTEamaqc?=
+ =?us-ascii?Q?pGZDbBluY2dUTj0RD/80GwD/URCIUBSlq+HrzXzn/IJCzcewnd82esYHD4Do?=
+ =?us-ascii?Q?awAhwfwYbTbLzUEkbg9tTJGVDdop8IX0h2gDuo84zNSXu6cnJVj0TDWriDqa?=
+ =?us-ascii?Q?PK+y7KqCBxfSHIPL5SD2igEG6QvhRG1JubAeBfl/AIwfKeQ7i6BAYJq8nmQ8?=
+ =?us-ascii?Q?b5zyqAOY/Q2NExx/e+39uW0zAht7VmlKDtapgLbt6VAAKxLpZZaqdJ2j2ZbD?=
+ =?us-ascii?Q?hvlU/LqMrQemyEKVS1uvqGlhDGNEEMemvbnrrjWB275NGUVYc0qVXodQZlb8?=
+ =?us-ascii?Q?i5SNDPlX+L9CwSCAjHexfjIUj0sRq4Jb7QMYpIvHY0/PwHDRVWGik4M7hzW+?=
+ =?us-ascii?Q?9aP64CWEt2hIa9HZB9hGSqr5iYaR0DaCXFOIoM0NE8Zwk+8QFi7WQZHZZcKn?=
+ =?us-ascii?Q?wgtPuuZHitqlpAjzq8BI538qYrzaFYRZrriq6z37uftQ1neEZQM9sX58KGFi?=
+ =?us-ascii?Q?MZvGuS0+KD/0g/iqoRxKnawZ0TKkCR8d/W4gT9NKUw0eIS5ofEs9hug+59L9?=
+ =?us-ascii?Q?u/U4LQnsC7MCy3X4BJ/RTcBw7sKBH8/RHi3aK7miev3AMZ7DtYc8AqmvslxQ?=
+ =?us-ascii?Q?jWQZeGjJzDlFYNgoVdRJj4GBpKUlhNRLB+jQzSYVLuS//ilhbqa4JXFnqppC?=
+ =?us-ascii?Q?E6sDdkVqGYYUcrDYSkCWUOGaHojIfdl92OWNvcRTiXspr4pRiDxY+fQ6PwHw?=
+ =?us-ascii?Q?10/N+HI+o7jaNBcVdZ2h5LJBO1FhLTA4ALsuh4I8AFGl3/CK22nOWvRzlYl6?=
+ =?us-ascii?Q?3w7L/SqC5n8EXH1Ed6zujmqhz22f0OG4vnKoRRNeAfZTUBxcDVOGPKwLAqRe?=
+ =?us-ascii?Q?an4YS/awifTvRz0F0Hqi9GsonvpdFyO4VFWDKTec+tgMEDNy2Gq1PQzrtbX7?=
+ =?us-ascii?Q?Sogh2fFWX9QdbIyYUOic+yczeSI5P5YhTmv5MLbRJxnCQzlIfhtul4t085Cv?=
+ =?us-ascii?Q?wa0X5b4JZzzHC9Dn9uf400vMkrc9F2W6F9GuB2WUUmlBzNuHdPyChTm1vHQh?=
+ =?us-ascii?Q?WTpfBs5a5wgCPu+TDGQRoF2RWLAnt1fNDq9VAoBIU6/mMuNmxMUm3DsSIuy9?=
+ =?us-ascii?Q?bsoiyFRo61z58ODInb8AtDayQqDqUrAVJHbUxqt6fbM6QDYJBZzFEeW25qxw?=
+ =?us-ascii?Q?CfQohBgzdBleiOG9I11sHJOHqspiqPey24yYqNYimSFN6kAQXYIokLvdq3R/?=
+ =?us-ascii?Q?av17X7NP6j6wSQGB2VezvCF2+YJN96lknAQOISKV?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 07/11] dt-bindings: microsoft,vmbus: Add
- interrupts and DMA coherence
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
- lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com,
- oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
- ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
- tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
- yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-8-romank@linux.microsoft.com>
- <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
- <c7f9d861-f617-4064-8c98-2ace06e9c25e@linux.microsoft.com>
- <09d4966a-5804-40a4-9c5f-356a954a7704@kernel.org>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <09d4966a-5804-40a4-9c5f-356a954a7704@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1358c943-d90b-42c7-f4f5-08dd60056a6b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 18:57:33.2478
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ycmA5fUEHX1Ww0fApromQ1cb7meduZ4Vnqwik285V0kTygwL4c2Fc2Hfi+18ye2JbqVxiNh8zgp8Mh21yYi6YQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB4035
 
 
 
-On 3/10/2025 10:40 AM, Krzysztof Kozlowski wrote:
-> On 10/03/2025 18:05, Roman Kisel wrote:
->>
->>
->> On 3/10/2025 2:28 AM, Krzysztof Kozlowski wrote:
->>> On Fri, Mar 07, 2025 at 02:02:59PM -0800, Roman Kisel wrote:
->>>> To boot on ARM64, VMBus requires configuring interrupts. Missing
->>>> DMA coherence property is sub-optimal as the VMBus transations are
->>>> cache-coherent.
->>>>
->>>> Add interrupts to be able to boot on ARM64. Add DMA coherence to
->>>> avoid doing extra work on maintaining caches on ARM64.
->>>
->>> How do you add it?
->>>
->>
->> I added properties to the node. Should I fix the description, or I am
->> misunderstanding the question?
-> 
-> I saw interrupts in the schema, but I did not see dma-coherence. I also
-> did not see any DTS patches here, so I don't understand what node you
-> are referring to.
-> 
+> -----Original Message-----
+> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+> Sent: Monday, March 10, 2025 10:31 AM
+> To: Long Li <longli@microsoft.com>
+> Cc: longli@linuxonhyperv.com; KY Srinivasan <kys@microsoft.com>; Haiyang
+> Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
+> <decui@microsoft.com>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
+> linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [Patch v2] uio_hv_generic: Set event for all channels on the=
+ device
+>=20
+> On Mon, Mar 10, 2025 at 05:16:15PM +0000, Long Li wrote:
+> > > Subject: Re: [Patch v2] uio_hv_generic: Set event for all channels
+> > > on the device
+> > >
+> > > On Fri, Feb 28, 2025 at 02:14:14PM -0800, longli@linuxonhyperv.com wr=
+ote:
+> > > > From: Long Li <longli@microsoft.com>
+> > > >
+> > > > Hyper-V may offer a non latency sensitive device with subchannels
+> > > > without monitor bit enabled. The decision is entirely on the
+> > > > Hyper-V host not configurable within guest.
+> > > >
+> > > > When a device has subchannels, also signal events for the
+> > > > subchannel if its monitor bit is disabled.
+> > > >
+> > > > Signed-off-by: Long Li <longli@microsoft.com>
+> > > > ---
+> > > > Change log
+> > > > v2: Use vmbus_set_event() to avoid additional check on monitored bi=
+t
+> > > >     Lock vmbus_connection.channel_mutex when going through
+> > > > subchannels
+> > > >
+> > > >  drivers/uio/uio_hv_generic.c | 32
+> > > > ++++++++++++++++++++++++++------
+> > > >  1 file changed, 26 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/drivers/uio/uio_hv_generic.c
+> > > > b/drivers/uio/uio_hv_generic.c index 3976360d0096..45be2f8baade
+> > > > 100644
+> > > > --- a/drivers/uio/uio_hv_generic.c
+> > > > +++ b/drivers/uio/uio_hv_generic.c
+> > > > @@ -65,6 +65,16 @@ struct hv_uio_private_data {
+> > > >  	char	send_name[32];
+> > > >  };
+> > > >
+> > > > +static void set_event(struct vmbus_channel *channel, s32 irq_state=
+) {
+> > > > +	channel->inbound.ring_buffer->interrupt_mask =3D !irq_state;
+> > > > +	if (!channel->offermsg.monitor_allocated && irq_state) {
+> > > > +		/* MB is needed for host to see the interrupt mask first */
+> > > > +		virt_mb();
+> > >
+> > > Why is memory barrier not getting called for 'faster' channels ?
+> > >
+> > > - Saurabh
+> >
+> > No, the memory barrier is not needed. Even with a barrier, There is no
+> guarantee that all pending IRQs are flushed when hv_uio_irqcontrol() retu=
+rns. If
+> user-mode depends on this guarantee, that user-mode has a bug. This barri=
+er
+> adds unnecessary costs when walking through subchannels.
+> >
+>=20
+> Thanks for the details. However I didn't understand if memory barrier is =
+not
+> required why have it only for 'slow' devices (ie !monitor_allocated) ?
 
-I will refer to talks, example-bindings, writing-schema you've suggested
-to waste your time less. It appears there is some fundamental flaw in my
-understanding of how these YAML files work so much so that I cannot even
-write a commit description that can be understood, for the 5th time in
-the row, sorry about that.
+Because memory barrier is needed between setting interrupt mask and calling=
+ vmbus_set_event().
 
->>
->>>>
->>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->>>> ---
->>>>    .../devicetree/bindings/bus/microsoft,vmbus.yaml          | 8 +++++++-
->>>>    1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->>>> index a8d40c766dcd..3ab7d0116626 100644
->>>> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->>>> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->>>> @@ -28,13 +28,16 @@ properties:
->>>>    required:
->>>>      - compatible
->>>>      - ranges
->>>> +  - interrupts
->>>>      - '#address-cells'
->>>>      - '#size-cells'
->>>>    
->>>> -additionalProperties: false
->>>> +additionalProperties: true
->>>
->>> This is neither explained in commit msg nor correct.
->>>
->>
->> Not explained, as there is no good explanation as described below.
->>
->>> Drop the change. You cannot have device bindings ending with 'true'
->>> here - see talks, example-bindings, writing-schema and whatever resource
->>> is there.
->>>
->>
->> Thanks, I'll put more effort into bringing this into a better form!
->> If you have time, could you comment on the below?
->>
->> The Documentation says
->>
->>     * additionalProperties: true
->>       Rare case, used for schemas implementing common set of properties.
->> Such schemas are supposed to be referenced by other schemas, which then
->> use 'unevaluatedProperties: false'.  Typically bus or common-part schemas.
->>
->> This is a bus so I added that line to the YAML, and I saw it in many
-> 
-> If this is a bus, then where is schema using it for
-> bus-attached-devices? You cannot have bus without devices.
-> 
-> You *must* fulfill that part:
-> "Such schemas are supposed to be referenced by other schemas, which then"
-> 
-> instead of calling it bus...
-> 
+>=20
+> This change also removes the MB for primary channel (if it supports moito=
+r bits), if
+> this is intentional, we should call out this in commit message.
 
-It is modeled as a bus in the kernel:
-https://www.kernel.org/doc/html/latest/virt/hyperv/vmbus.html
+Okay, I'm adding it to the commit message.
 
-> Please upstream bindings for the bus devices and extend the example here
-> with these devices.
-
-The set of synthetic devices that reside on the bus isn't fixed, and
-they don't require description neither in ACPI nor in DT as
-the devices negotiate their MMIO regions through the hyperv driver.
-
-Perhaps, it is not as much bus as expected by the YAML files.
-
-> 
-> Or this is not bus (calling something vmpony does not make it a pony).
-> 
- > > Best regards,
-> Krzysztof
-
--- 
-Thank you,
-Roman
-
+Long
 
