@@ -1,136 +1,125 @@
-Return-Path: <linux-hyperv+bounces-4326-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4327-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B348FA593E6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 13:13:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA17CA594E5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 13:43:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC4203A74F9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 12:12:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5659D7A5BEB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 12:42:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2059E22A819;
-	Mon, 10 Mar 2025 12:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EDF2227B9E;
+	Mon, 10 Mar 2025 12:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Uc2kSMaJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYEfG9IY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3DC22A7E0;
-	Mon, 10 Mar 2025 12:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C7D226D11;
+	Mon, 10 Mar 2025 12:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741608697; cv=none; b=FBMkM1xrxk1cEX3oGM67Hm0i6leNRaPbmm3rymIoNqKYEjJ31Zgpug1FlXqqqFJG2sBlZvEe7SOdPx7lFMHDoq4fHFbZCgFwDRE/oQVIdw3owBoaqW5YcIy+6VdrSOWBDht0EZ0nTNf3ZnGF205HFype8DZLDcU9XthaPy0SaGI=
+	t=1741610486; cv=none; b=t4dS3mdcDc2PO04npzaMWscWumHLjc4P35yEr9wwV9HQx+ZpzSvOZ7iXPzo48fPM2kEvyn8d2d4KGVeJfEqC2Ud/FJ3lPaQi7I+CL5uycWVqtI3W3NVy1o2lTUBGC1HhTjqvTmmZDywvtxcldaNidkFX1qj6Xq0uCaZ0gNt+auM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741608697; c=relaxed/simple;
-	bh=B/Zi8tRRc/t7099IxweCQ9wmr8LBRpEjxc54n0VCEzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHt6UeBru2JrCUHnZyT3FNnyt3RobX7MyTLgCnGeqvuzb47VIq6YmqDNJ4S/rFfw2f7Gyg2SENTXCHJDrMGoZ8zxMeIg6BLutB6arQkbYEunhlk45VB3YABLh8+Cppg0PO5Vwe3LZLpVQjGMlGhK5ogtIf5JGBRCvgAKf3bKIeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Uc2kSMaJ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id BAD8B2111421; Mon, 10 Mar 2025 05:11:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BAD8B2111421
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741608694;
-	bh=wGlVDMVI7jB0uTeQswp0J7PSuFA8+H1jZy79IJtAwJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uc2kSMaJZ2d9mRqMGI9uVePTC1T6zyoq47PuXm1KAkLHEGlSFLadmxyf4t7EhXYgc
-	 qJPXVqjZQYPIo2xrAnGCsPXWyKYE9mxrGdN9iUPi4kEpIJvw3IuVpiQ2eLOYX89j/w
-	 NaqXKPle32JCMKpmqeqjhSGIpPlBxgMUGEnOafQU=
-Date: Mon, 10 Mar 2025 05:11:34 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"stephen@networkplumber.org" <stephen@networkplumber.org>,
-	KY Srinivasan <kys@microsoft.com>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	"olaf@aepfle.de" <olaf@aepfle.de>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"leon@kernel.org" <leon@kernel.org>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"hawk@kernel.org" <hawk@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH net] net: mana: Support holes in device
- list reply msg
-Message-ID: <20250310121134.GA12177@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1741211181-6990-1-git-send-email-haiyangz@microsoft.com>
- <20250307195029.1dc74f8e@kernel.org>
- <MN0PR21MB3437F80F3AD98C82870A9173CAD72@MN0PR21MB3437.namprd21.prod.outlook.com>
+	s=arc-20240116; t=1741610486; c=relaxed/simple;
+	bh=u2hb92Bf5/2pZjEymGfvJqesYHZmbFv63xQHrBpvJ/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lbp7gUFDsoUtxomN4uOXuPPD/gK+CA8N3ej7BAhbyq3QnmX+Eu1F5p/kVPf9N4sABK/Gq7cso+nVRqGN01Hs/H84gH9TE+Sulbl11yBLjtnUkgMIODUkVlGcYN46iyGrpdwzQYP64RQAn/vxOiH6Rn2J61iP45fe5O4lzkCS0AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYEfG9IY; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so3781033a12.1;
+        Mon, 10 Mar 2025 05:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741610483; x=1742215283; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u2hb92Bf5/2pZjEymGfvJqesYHZmbFv63xQHrBpvJ/A=;
+        b=NYEfG9IYonEalasQ9ZEuO9Sm6iR1UT+qGCc6vybQZKwRGbQ1MJeRmLgH2JV2Ho1pTB
+         gfF3b/ZK1jK7o8nJjwTMMKeCSHn7BOqQVH4oBU/6BIo8+5OqHSHTWmwln/uF595P+bph
+         E+n27ZhXj9qpGjQZj2/i3Z1lYAXVdscbHMJIVHqWXxHBB+5XtSjRGCJthsDH0s0TRaE6
+         KqeVVOasS52fLs2HVKBPnArnZmKkXxPkXXYoNrZceBN3ba9jJ6Xw2II+avaSFt+1Vd5h
+         qbTsd9uENAJTEBim6FXsfwqDMm7ASQEaCOwoVKtmv+u2017XP7vfJvh1sCW7/v72bSZD
+         JEdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741610483; x=1742215283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u2hb92Bf5/2pZjEymGfvJqesYHZmbFv63xQHrBpvJ/A=;
+        b=AsMZJbT9oyos9i1MSG3qMA8TSd9SakqD4MH8G1zoqunBupIm2PjxHzTvbRmJ7R1e4W
+         0HXC73ZUXO+AJEyffb+WqHE6X9LMRYPjIaZDC1QdVGv5KQW6bz+542OGpnCXPiS/7Eu6
+         sfZSW8nQ+xYrt8RTj5DsDBR7fhlvbSL/huPuB/i9l87CCVAxmsrRwaYi/lCWkK1GSn1q
+         1LdLbhbiOxMRAz3d66ELBtTK+1VYcg7OkWP7C/xsSxTlyoCVU1iFC+zgyhzeW82Iw5l7
+         kLxJWn5HK/ofuzvYRayI6KoP+5kfotUDoGCQz9o5A4zC7Fz7KeG5iv9zS7wuvfpo5Wk3
+         yjfg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ds+QJIc8pkRmdApUBh9PSLvEGcKtXCqNAZ5m2zj6OWm1GKlIVsgTRwJEylfE9rSl/9J/aqS2oxNkWw==@vger.kernel.org, AJvYcCUW6m28mYCnQ220RRVpfxis23crw/MTJEQHYR6ribD4UaZMXaoUOWIoL5oy3uHdu5GFyXfeLKfmgqG1@vger.kernel.org, AJvYcCUWllh4a99yJ6AGbK+D1zoEMZ3rYfBiJ/B59BUidQZNx4nV2BIoW95J8VYekYjMK+/ZcjDD1z5foAUxtIRu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKteSMDaVH2yVFoc9cMzSFM3FtyC+MbrMM0rkobGSaUw2D3QcE
+	3w7f5DOIUXWMMhaV8wLYo66BIalAsr8Hj7iykPrrJyaHANl6UGHxUvOfnV9BSqJkFJ2rbVry5Bw
+	4vFfCOAQskVU8+WAePERF2yJslSY=
+X-Gm-Gg: ASbGncuNIgcJl3M6kB+MeETJUQvPqTyVsZymsLSrqfc6WCqPzfo4eA+UhVDZy/PahVL
+	XnS3Kuu9skNZYZLi4NLfvQEuL5NJDKH2MjPeJNua8rGWISeSibGTCJqndoXzUNSeeqJ8ppuCaoE
+	rsNfxui+iZW1dZICF+1L9TzBSCRxzZcmFZiSZjUKdtgrwR
+X-Google-Smtp-Source: AGHT+IGbhuSl05kaEcLr4vaNaYcnvbu8eAnHPI3X7260iUe/HNnjduw+l6Z5dyOdVihAIIZ0GFIAt8i2L6PXQgKu7P0=
+X-Received: by 2002:a05:6402:34d6:b0:5e0:8a34:3b5c with SMTP id
+ 4fb4d7f45d1cf-5e614d92d51mr11025464a12.0.1741610482533; Mon, 10 Mar 2025
+ 05:41:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN0PR21MB3437F80F3AD98C82870A9173CAD72@MN0PR21MB3437.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-10-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1740611284-27506-10-git-send-email-nunodasneves@linux.microsoft.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Mon, 10 Mar 2025 20:40:46 +0800
+X-Gm-Features: AQ5f1JpetGYU9QId_nDle89d5pd0l8CdMTUEIA_r5WaM_0vYFhAkX03EaOPPaVA
+Message-ID: <CAMvTesB5dCD5Cx+CE8oPQ35OHC+C=tyXbHQ0BNxSABEFVK53Tg@mail.gmail.com>
+Subject: Re: [PATCH v5 09/10] hyperv: Add definitions for root partition
+ driver to hv headers
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com, 
+	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org, 
+	joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de, 
+	jinankjain@linux.microsoft.com, muminulrussell@gmail.com, 
+	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com, 
+	ssengar@linux.microsoft.com, apais@linux.microsoft.com, 
+	Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com, 
+	gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com, 
+	muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org, 
+	lenb@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 09, 2025 at 10:01:33PM +0000, Haiyang Zhang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Jakub Kicinski <kuba@kernel.org>
-> > Sent: Friday, March 7, 2025 10:50 PM
-> > To: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
-> > <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
-> > <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
-> > olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
-> > wei.liu@kernel.org; edumazet@google.com; pabeni@redhat.com;
-> > leon@kernel.org; Long Li <longli@microsoft.com>;
-> > ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
-> > daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
-> > ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
-> > shradhagupta@linux.microsoft.com; linux-kernel@vger.kernel.org;
-> > stable@vger.kernel.org
-> > Subject: [EXTERNAL] Re: [PATCH net] net: mana: Support holes in device
-> > list reply msg
-> > 
-> > On Wed,  5 Mar 2025 13:46:21 -0800 Haiyang Zhang wrote:
-> > > -	for (i = 0; i < max_num_devs; i++) {
-> > > +	for (i = 0; i < GDMA_DEV_LIST_SIZE &&
-> > > +		found_dev < resp.num_of_devs; i++) {
-> > 
-> > unfortunate mis-indent here, it blend with the code.
-> > checkpatch is right that it should be aligned with opening bracket
-> Will fix it.
-> 
-> > 
-> > >  		dev = resp.devs[i];
-> > >  		dev_type = dev.type;
-> > >
-> > > +		/* Skip empty devices */
-> > > +		if (dev.as_uint32 == 0)
-> > > +			continue;
-> > > +
-> > > +		found_dev++;
-> > > +		dev_info(gc->dev, "Got devidx:%u, type:%u, instance:%u\n", i,
-> > > +			 dev.type, dev.instance);
-> > 
-> > Are you sure you want to print this info message for each device,
-> > each time it's probed? Seems pretty noisy. We generally recommend
-> > printing about _unusual_ things.
-> Ok. I can remove it.
-How about a dev_dbg instead?
-> 
-> Thanks,
-> - Haiyang
+On Thu, Feb 27, 2025 at 7:11=E2=80=AFAM Nuno Das Neves
+<nunodasneves@linux.microsoft.com> wrote:
+>
+> A few additional definitions are required for the mshv driver code
+> (to follow). Introduce those here and clean up a little bit while
+> at it.
+>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+
+It may be better to unify data type u8, u16, u32, u64 or __u8, __u16,
+__u32, __u64 in the hvhdk.h.
+
+Others like good.
+
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+
+--=20
+Thanks
+Tianyu Lan
 
