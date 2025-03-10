@@ -1,157 +1,104 @@
-Return-Path: <linux-hyperv+bounces-4337-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4338-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B35A3A59B7C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 17:50:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10B5EA59BA6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 17:54:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57E4D1888F0A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 16:50:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D361D16EE70
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 16:53:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 350942343C5;
-	Mon, 10 Mar 2025 16:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D1B2309A7;
+	Mon, 10 Mar 2025 16:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="adolExQz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr0BQaNr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76946233D64;
-	Mon, 10 Mar 2025 16:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B061C5D5C;
+	Mon, 10 Mar 2025 16:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741624938; cv=none; b=TugWc3TQ9qRr15FZWa+LA2pVsW44kiMsxIXwKjx+7ucD9qc/Zv2BUjViEyliOMoJfUhI6KZ1RNgengWFlrjuErsh5snvcVDooGiKyBxDfwI+cprwrAAdXUajSgJj1xJyzp6QnZjeXVTFCJbmBhjpHzj8YeGaMQTR2TSAk6AGuKA=
+	t=1741625508; cv=none; b=RI0qz1TJy3OD6Fyt9C/TzuRmPdhsZkz4Qb8gzNY0aS1sQQYAwyavl2qL4xIslYvxLrqXEemdkithbRvdI6R6BwNaAE0Gh5oaUf9KJbBe1T2V6Qe1LsuftFj7oh6jZOzKzfTUoDNZyHC1eK+jOwFWT2tzK9SqHRoM+Umf5XrfxLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741624938; c=relaxed/simple;
-	bh=8rHmoCDx9SLU3IG4xkAenK09evGQcGUPBC/dfid1nr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bBpwTa/HeBaKx0dXaPVC8rtk8EgFiTPKmhHbF6vWha+jg3bmHu1ETLCk1wxhoSDAz6VJs+P4i1TYGzMKY04GdZ3uT4ojXcBIJX9r6WNNols0iCIwphgLu+J4EMyLFH0+2QyLoEuO6uvNhqGDB1PB2h8m1r5nCrbIPk8oVYFfgcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=adolExQz; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 917D62038F31;
-	Mon, 10 Mar 2025 09:42:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 917D62038F31
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741624935;
-	bh=LN1XhlPdMhhUKdLiwgvqjrH33le8Y4pxVH3hP74M9b0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=adolExQzIdiGiIImUNH8PIT6jUYPIx/W+TATHEWLnINgGBwZ6f1UJ6VLPct8eOZG1
-	 QWxNjZnyTJVqsNRH80CF3UdDcU3vx6TIUod2y01uAqFHvYQ2H224pVoGrzHDj5UdK0
-	 NOQoc/qdsXI7/FognyHzoybGrl/nnp4HVU46HlNk=
-Message-ID: <2342dda1-2976-4506-ab68-640739a1bd5b@linux.microsoft.com>
-Date: Mon, 10 Mar 2025 09:42:15 -0700
+	s=arc-20240116; t=1741625508; c=relaxed/simple;
+	bh=PoUNN7Lo//yW65ne6TFDNKbmP3/NLag4OiCQZYZeQLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lOzaVJjRU1riJamkcN68D52KLX4WKL7MIHzvvaS3Wc0lmeVJsB7IBWpeawYyFLXpjBcV7njmta65ZIeJOthOZc28GNqvS0gT63P1rzgwpzWH0LZzhM71q7DRY6tytzxi7xO1gSuJxzdUADxHzPGVWsoD+MbNxRjZC4Q1ySGEZN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr0BQaNr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 493D4C4CEE5;
+	Mon, 10 Mar 2025 16:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741625508;
+	bh=PoUNN7Lo//yW65ne6TFDNKbmP3/NLag4OiCQZYZeQLI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=gr0BQaNrr34Y1LuZdl5pe5rck02H9T15hy6ztzehWq8cXkeUdjXaXpj8O1WHmJ10S
+	 zYYQUowXfFBsGCe4NqNq/PC+23K8gqrfez9SQiImQaGo4+LdyPgyRVfhBWBoMnszEa
+	 BQqV9lOR/ceTYfQ0Mu5oC0gaI1nqVj/uv/YV7wDjBao0HaifA7UFDfk52HeI2nUjKt
+	 Xy/kHW7esHYytG20TNOpTG4JM16WodHAim6AGWUJW3fPL78+QEbRSxn6tc8hheIatX
+	 qg7dAh9JSx8iJ4B1i6I5DWTCeQhwY5YwIhj5HOI+b6i5oH2d/GfLtL74Rm4zmRUKCM
+	 RWUOkgWFIDpcA==
+Date: Mon, 10 Mar 2025 11:51:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+	Wei Huang <wei.huang2@amd.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org
+Subject: Re: [patch 00/10] genirq/msi: Spring cleaning
+Message-ID: <20250310165146.GA553858@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 06/11] arm64, x86: hyperv: Report the VTL
- the system boots in
-To: Wei Liu <wei.liu@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
- lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com,
- oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
- ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
- tglx@linutronix.de, will@kernel.org, yuzenghui@huawei.com,
- devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-7-romank@linux.microsoft.com>
- <Z84yyAqkqJ2ZyAd-@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <Z84yyAqkqJ2ZyAd-@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309083453.900516105@linutronix.de>
 
-
-
-On 3/9/2025 5:31 PM, Wei Liu wrote:
-> On Fri, Mar 07, 2025 at 02:02:58PM -0800, Roman Kisel wrote:
->> The hyperv guest code might run in various Virtual Trust Levels.
->>
->> Report the level when the kernel boots in the non-default (0)
->> one.
->>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> ---
->>   arch/arm64/hyperv/mshyperv.c | 2 ++
->>   arch/x86/hyperv/hv_vtl.c     | 2 +-
->>   2 files changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
->> index a7db03f5413d..3bc16dbee758 100644
->> --- a/arch/arm64/hyperv/mshyperv.c
->> +++ b/arch/arm64/hyperv/mshyperv.c
->> @@ -108,6 +108,8 @@ static int __init hyperv_init(void)
->>   	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
->>   		hv_get_partition_id();
->>   	ms_hyperv.vtl = get_vtl();
->> +	if (ms_hyperv.vtl > 0) /* non default VTL */
+On Sun, Mar 09, 2025 at 09:41:40AM +0100, Thomas Gleixner wrote:
+> While converting the MSI descriptor locking to a lock guard() I stumbled
+> over various abuse of MSI descriptors (again).
 > 
-> "non-default".
+> The following series cleans up the offending code and converts the MSI
+> descriptor locking over to lock guard().
 > 
-
-Thanks, will fix that!
-
->> +		pr_info("Linux runs in Hyper-V Virtual Trust Level %d\n", ms_hyperv.vtl);
->>   
->>   	ms_hyperv_late_init();
->>   
->> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
->> index 4e1b1e3b5658..c21bee7e8ff3 100644
->> --- a/arch/x86/hyperv/hv_vtl.c
->> +++ b/arch/x86/hyperv/hv_vtl.c
->> @@ -24,7 +24,7 @@ static bool __init hv_vtl_msi_ext_dest_id(void)
->>   
->>   void __init hv_vtl_init_platform(void)
->>   {
->> -	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
->> +	pr_info("Linux runs in Hyper-V Virtual Trust Level %d\n", ms_hyperv.vtl);
+> The series applies on Linus tree and is also available from git:
 > 
-> Where isn't there a check for ms_hyperv.vtl > 0 here?
+>     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git irq/msi
 > 
-
-On x86, there is
-
-#ifdef CONFIG_HYPERV_VTL_MODE
-void __init hv_vtl_init_platform(void);
-int __init hv_vtl_early_init(void);
-#else
-static inline void __init hv_vtl_init_platform(void) {}
-static inline int __init hv_vtl_early_init(void) { return 0; }
-#endif
-
-> Please be consistent across different architectures.
+> Thanks,
 > 
+> 	tglx
+> ---
+>  drivers/ntb/msi.c                   |   22 +----
+>  drivers/pci/controller/pci-hyperv.c |   14 ---
+>  drivers/pci/msi/api.c               |    6 -
+>  drivers/pci/msi/msi.c               |   77 ++++++++++++++----
+>  drivers/pci/pci.h                   |    9 ++
+>  drivers/pci/tph.c                   |   44 ----------
+>  drivers/soc/ti/ti_sci_inta_msi.c    |   10 --
+>  drivers/ufs/host/ufs-qcom.c         |   75 +++++++++---------
+>  include/linux/msi.h                 |   12 +-
+>  kernel/irq/msi.c                    |  150 ++++++++++++------------------------
+>  10 files changed, 181 insertions(+), 238 deletions(-)
 
-In the earlier versions of the patch series, I had that piece
-from the above mirrored in the arm64, and there was advice on
-removing the function as it contained just one statement.
-I'll revisit the approach, thanks for your help!
+For the drivers/pci/ parts:
 
->>   
->>   	x86_platform.realmode_reserve = x86_init_noop;
->>   	x86_platform.realmode_init = x86_init_noop;
->> -- 
->> 2.43.0
->>
->>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
--- 
-Thank you,
-Roman
-
+I assume you'll merge this somewhere, let me know if otherwise.
 
