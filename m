@@ -1,73 +1,56 @@
-Return-Path: <linux-hyperv+bounces-4340-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4341-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FBC1A59BB1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 17:54:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBE3A59BBB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 17:55:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F28F5188BDFB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 16:54:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC18D3A598A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 16:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E99230BE2;
-	Mon, 10 Mar 2025 16:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C78216392;
+	Mon, 10 Mar 2025 16:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T90BZrzK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaXbUIoi"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CAA216392;
-	Mon, 10 Mar 2025 16:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDEE1BD9C6;
+	Mon, 10 Mar 2025 16:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741625596; cv=none; b=BdTkF07lo/P+nEycTrsjOAKL088DTE8BdsbtxRRTTBFF+NFhSc7vA/CShJq5mXDq6Kb2D7rwXIDSa6D85KgaDBz/hBWD11blfUgkTztg99dqjffiPB/45Dgo4+R+MFeTIHRTO7Z8UHXuQcSA1JUrINYcOVvXPHxzyD3dl8tOoKQ=
+	t=1741625678; cv=none; b=sTKd5UNbPAvPKfwV8PAVaYqkrrsWenD3Rt9hAUbCU+RiolxTry4iyNOxOsXzHJAJj3qUr43RWGYy4/sItowgS5Gy4btqn3KTS9nkQen1twMbC7GzB0ISCiMiI/uqCDBkDGiixZxxq0bmEW1i7I5aV6TWDZsNSklTef+sOGqoBi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741625596; c=relaxed/simple;
-	bh=1BgaCQUGjQAOFM2D533osL0JWW3ihZoxHt/01NLC7o4=;
+	s=arc-20240116; t=1741625678; c=relaxed/simple;
+	bh=p/WTFwQVZWqzvwsT0pYojOfEwtLBKPo356bGqhDxAII=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pj21qTRPn/AUC2LgaWTeenPX7AF5KQScM0fRw3WXKfGIowYpq/LrITMuidieP1+/rvJ+VZZ1CTg10FXhut6sKAadwYS+6uvypAlXB7qFNQAlKdv5Zr3V0bT/8xurU5BpotCC+G4zHVMIQPkwXxL+OS4uJOe3VnTNeHqtOrpgoDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T90BZrzK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D301C4CEE5;
-	Mon, 10 Mar 2025 16:53:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlhIMdLQg5kOZ5tqshgejq6kgGNQbjHPRbt/DIS5LMBoJim9uSSMNURKJNNt+JIWp8/1X7RMRc7OMU605gL5bVckb4rsgxsJx6Qrrr1TVfC2zMKeIgcHZce1xjimW2rD6lwqkK0D8ddRFP0sMtcIz39gSvOt54zKKvRRW/gwSGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaXbUIoi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54C3C4CEEB;
+	Mon, 10 Mar 2025 16:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741625595;
-	bh=1BgaCQUGjQAOFM2D533osL0JWW3ihZoxHt/01NLC7o4=;
+	s=k20201202; t=1741625678;
+	bh=p/WTFwQVZWqzvwsT0pYojOfEwtLBKPo356bGqhDxAII=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T90BZrzKkMaFjQSN1Wg9F/kJ/P0/1qgdM5YfI/PPzUXluWCl/0lAsIuPt4k3EisEJ
-	 6g5WBqtRXrh0DztHQE16HokVpCRvdv3gXBFYJEc1ns+kyMsYAoTvsHv+1DZtP/RdZK
-	 iuXuFB+zwH89BPHlDjijaLla71syZ8n+Dhhg9qViTmcScJY3zpkZgooDXLykJTZvck
-	 IB/uTUXesE9e/kJZQ8MyRb42iANVgt2fbt2+PwNNAnqiFW7G13vJiylJEqlqXH8H1J
-	 HULez/bKqe48z/oNYxTLZbiVWDg8EQAQ9JvQOhkAgn3WUw6tdm8nLLlLRV8IMJvME5
-	 6IA/VEFHVgVhw==
-Date: Mon, 10 Mar 2025 16:53:13 +0000
+	b=gaXbUIoiQBiyUyqGF58080L7cQWbflH5i2Y05U8RHv6DMnN2QgkWiATjkgwOBdH/x
+	 0FS0cUqrYep3QcXXmqw8w3s11A79/GxSGC1AgM5pldYV3zIfLEh9bILlUAi4TAS1Bz
+	 HXMj/CM8hkYAGgp6iDGOegNByZ9OUoqT1ZWVXSnzrSzQBBfogv0n0BWkSONDhZDGrU
+	 XuMDF25IWDyNRXaTjhVcUlIEAfNkUUaeopoWe+hCtSkg2KN1NuPrCawn45dr20MgHz
+	 7WA2Jm7v8T40byL5ZV3HNO1n7bWUcVec7Z0YCZlVGgvKH9i6GTduUDL5Ry/WGSe8+g
+	 5ACz+RMmm5hKw==
+Date: Mon, 10 Mar 2025 16:54:36 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>, arnd@arndb.de, bhelgaas@google.com,
-	bp@alien8.de, catalin.marinas@arm.com, conor+dt@kernel.org,
-	dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com,
-	krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
-	lenb@kernel.org, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
-	maz@kernel.org, mingo@redhat.com, oliver.upton@linux.dev,
-	rafael@kernel.org, robh@kernel.org, ssengar@linux.microsoft.com,
-	sudeep.holla@arm.com, suzuki.poulose@arm.com, tglx@linutronix.de,
-	will@kernel.org, yuzenghui@huawei.com, devicetree@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v5 06/11] arm64, x86: hyperv: Report the VTL
- the system boots in
-Message-ID: <Z88Y-R7BnXa4Xi3I@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-7-romank@linux.microsoft.com>
- <Z84yyAqkqJ2ZyAd-@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
- <2342dda1-2976-4506-ab68-640739a1bd5b@linux.microsoft.com>
+To: mhklinux@outlook.com
+Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	kys@microsoft.com, jakeo@microsoft.com,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Drivers: hv: vmbus: Don't release fb_mmio
+ resource in vmbus_free_mmio()
+Message-ID: <Z88ZTO88g9I6Nuqy@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250310035208.275764-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,87 +59,45 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2342dda1-2976-4506-ab68-640739a1bd5b@linux.microsoft.com>
+In-Reply-To: <20250310035208.275764-1-mhklinux@outlook.com>
 
-On Mon, Mar 10, 2025 at 09:42:15AM -0700, Roman Kisel wrote:
+On Sun, Mar 09, 2025 at 08:52:08PM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
+> The VMBus driver manages the MMIO space it owns via the hyperv_mmio
+> resource tree. Because the synthetic video framebuffer portion of the
+> MMIO space is initially setup by the Hyper-V host for each guest, the
+> VMBus driver does an early reserve of that portion of MMIO space in the
+> hyperv_mmio resource tree. It saves a pointer to that resource in
+> fb_mmio. When a VMBus driver requests MMIO space and passes "true"
+> for the "fb_overlap_ok" argument, the reserved framebuffer space is
+> used if possible. In that case it's not necessary to do another request
+> against the "shadow" hyperv_mmio resource tree because that resource
+> was already requested in the early reserve steps.
 > 
-> On 3/9/2025 5:31 PM, Wei Liu wrote:
-> > On Fri, Mar 07, 2025 at 02:02:58PM -0800, Roman Kisel wrote:
-> > > The hyperv guest code might run in various Virtual Trust Levels.
-> > > 
-> > > Report the level when the kernel boots in the non-default (0)
-> > > one.
-> > > 
-> > > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > > ---
-> > >   arch/arm64/hyperv/mshyperv.c | 2 ++
-> > >   arch/x86/hyperv/hv_vtl.c     | 2 +-
-> > >   2 files changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> > > index a7db03f5413d..3bc16dbee758 100644
-> > > --- a/arch/arm64/hyperv/mshyperv.c
-> > > +++ b/arch/arm64/hyperv/mshyperv.c
-> > > @@ -108,6 +108,8 @@ static int __init hyperv_init(void)
-> > >   	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
-> > >   		hv_get_partition_id();
-> > >   	ms_hyperv.vtl = get_vtl();
-> > > +	if (ms_hyperv.vtl > 0) /* non default VTL */
-> > 
-> > "non-default".
-> > 
+> However, the vmbus_free_mmio() function currently does no special
+> handling for the fb_mmio resource. When a framebuffer device is
+> removed, or the driver is unbound, the current code for
+> vmbus_free_mmio() releases the reserved resource, leaving fb_mmio
+> pointing to memory that has been freed. If the same or another
+> driver is subsequently bound to the device, vmbus_allocate_mmio()
+> checks against fb_mmio, and potentially gets garbage. Furthermore
+> a second unbind operation produces this "nonexistent resource" error
+> because of the unbalanced behavior between vmbus_allocate_mmio() and
+> vmbus_free_mmio():
 > 
-> Thanks, will fix that!
+> [   55.499643] resource: Trying to free nonexistent
+> 			resource <0x00000000f0000000-0x00000000f07fffff>
 > 
-> > > +		pr_info("Linux runs in Hyper-V Virtual Trust Level %d\n", ms_hyperv.vtl);
-> > >   	ms_hyperv_late_init();
-> > > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> > > index 4e1b1e3b5658..c21bee7e8ff3 100644
-> > > --- a/arch/x86/hyperv/hv_vtl.c
-> > > +++ b/arch/x86/hyperv/hv_vtl.c
-> > > @@ -24,7 +24,7 @@ static bool __init hv_vtl_msi_ext_dest_id(void)
-> > >   void __init hv_vtl_init_platform(void)
-> > >   {
-> > > -	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-> > > +	pr_info("Linux runs in Hyper-V Virtual Trust Level %d\n", ms_hyperv.vtl);
-> > 
-> > Where isn't there a check for ms_hyperv.vtl > 0 here?
-> > 
+> Fix this by adding logic to vmbus_free_mmio() to recognize when
+> MMIO space in the fb_mmio reserved area would be released, and don't
+> release it. This filtering ensures the fb_mmio resource always exists,
+> and makes vmbus_free_mmio() more parallel with vmbus_allocate_mmio().
 > 
-> On x86, there is
-> 
-> #ifdef CONFIG_HYPERV_VTL_MODE
-> void __init hv_vtl_init_platform(void);
-> int __init hv_vtl_early_init(void);
-> #else
-> static inline void __init hv_vtl_init_platform(void) {}
-> static inline int __init hv_vtl_early_init(void) { return 0; }
-> #endif
-> 
-> > Please be consistent across different architectures.
-> > 
-> 
-> In the earlier versions of the patch series, I had that piece
-> from the above mirrored in the arm64, and there was advice on
-> removing the function as it contained just one statement.
-> I'll revisit the approach, thanks for your help!
+> Fixes: be000f93e5d7 ("drivers:hv: Track allocations of children of hv_vmbus in private resource tree")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Tested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
-As long as the output is consistent across different architectures, I'm
-good.
-
-Wei.
-
-> 
-> > >   	x86_platform.realmode_reserve = x86_init_noop;
-> > >   	x86_platform.realmode_init = x86_init_noop;
-> > > -- 
-> > > 2.43.0
-> > > 
-> > > 
-> 
-> -- 
-> Thank you,
-> Roman
-> 
+Applied to hyperv-fixes. Thanks.
 
