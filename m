@@ -1,57 +1,63 @@
-Return-Path: <linux-hyperv+bounces-4321-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4322-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ABDEA58967
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 00:56:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E64EA589A2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 01:22:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3ACE718893B7
-	for <lists+linux-hyperv@lfdr.de>; Sun,  9 Mar 2025 23:57:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BED523AB6F5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 00:22:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4324321ABAD;
-	Sun,  9 Mar 2025 23:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C01BA3D;
+	Mon, 10 Mar 2025 00:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUuWq3Up"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWoq/Wfj"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120FC1CAA6C;
-	Sun,  9 Mar 2025 23:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFF5A923;
+	Mon, 10 Mar 2025 00:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741564609; cv=none; b=UmUX9TLvFFoQD+gKYtaTDFf3aJbiAurDvU/RCA1LlQGfiWWJRKkUJhnJZdAuu6+RbowsBvB5XqaWFv6X8fYiFJ30vUrl92JcKSVjmTIamXwqtHXiHYGZwM6sUwIHuEZOxTWDYZWUvzUHrdLDunLCCy7pAdF2d7a4qZIQygfUwvs=
+	t=1741566131; cv=none; b=REu7xqDZyVvTS0diucu9uhUjtpEwjFVbcMI0ljj2kjcMbbObn9EMj1GdjUYc6qhrcn9glZW10CMPZ1RQAcnHVj5/raQm8uYpCtILddIAk5I/04OT2Bs0yv5ch6eN8iMTUwqZN9RQrs8ElC8jZsdnZ2PwwQ1rJzwzqsyFrM5Vwzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741564609; c=relaxed/simple;
-	bh=LddSs4hgGqDTjpXUGJlPBDoaDhWj28W3bV0A08SN7UU=;
+	s=arc-20240116; t=1741566131; c=relaxed/simple;
+	bh=FYjQC5mh8x+Hka3tJHdCG5/gL2oMN/JPR566i+y+ZE4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=usyKN4U87Y51WyMhekdCLlHXLXD7OrCo393oMFrtFfoj0E7WVy936/JhQmJmtMttA9k4AnU4NA3Rlj7nL9PgFnNv2GebJq7GeWvBtzRcghYDM0faun5eNrHaARYA2uoghWvoPnl5kVlV4zP4DFlvHOwBIt6st2DudC96sJRUvv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUuWq3Up; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50AA5C4CEEC;
-	Sun,  9 Mar 2025 23:56:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqfVugto1lQtB8AeJHzBvE1/0ZxpClVC6Up0wlD5RyEHWqXbxHkKI44NrjRwCZPrxdSR46imI2hxCCsVsNFV67QiFauCyaCDX41Sn21D9fhvhSIii0jVxKFRF0bQVE9envBD6s8sIXy8Uhl7LhKBCm3Ke2GcfAjFA69gtHZnJBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWoq/Wfj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137A5C4CEE3;
+	Mon, 10 Mar 2025 00:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741564608;
-	bh=LddSs4hgGqDTjpXUGJlPBDoaDhWj28W3bV0A08SN7UU=;
+	s=k20201202; t=1741566130;
+	bh=FYjQC5mh8x+Hka3tJHdCG5/gL2oMN/JPR566i+y+ZE4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hUuWq3Up4ke7Bjslgu8Mcc/mNbS27HB7l6si5f+DgUOK9Qt0XXPXhzrRdE6lvo9gm
-	 FagZYvpT3Kvh+Nth3ceMziAUkBR3l2U3qqZipJUEi1jlifYs6XU2XD22WZUmenn8ez
-	 x81IFfvfwk7H8TlW4biiH3tUqxtlDfCT9ldkvdC7F7jfI/QAYyPaU+tnTD81d+BkU+
-	 bmI67q3XECknylAsKJJx+D4aqvgERn4ANq4ZPlRY3sPuxyWld8PefbSc+QPgLMIGvC
-	 P2EW5KHpwiXA8bykNYP6uz1apllP41yxO7OuoqG+ey/mt9O4bGExp68tPpS8mhltTJ
-	 IyUxqIJoADe8g==
-Date: Sun, 9 Mar 2025 23:56:47 +0000
+	b=bWoq/WfjxHOollcBZFzbuS2LL5a2hh3EvGiVEeillSO6nSKlyjiy3r7gD0RujkLBl
+	 qmI/XPB17xvuob1ImnJmfq3/MGZsajC7FhIiXiMA9AmXjJe/mAvgjWMeNz+VYDK/Qc
+	 Ymyuza6kxYy+EAilWgAYeOqNPD3hC8QRfdnsRelOIfnntqygfjkA/ziVDNtgjRvYZ8
+	 W+5fRKSiTE0f9q8m9iysuEdplycCeKvtwyO3dQ6gsvFXfWtqq/v8t6sirzmatiRgOn
+	 J4qKHOGYSu4/JTskx7/UVcrk+1ZiaAhXjJyhSY1C6BUjRPB6gh7vwnddK94aykxRi/
+	 Vj/E2zyA1AUvQ==
+Date: Mon, 10 Mar 2025 00:22:08 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, deller@gmx.de, akpm@linux-foundation.org,
-	linux-hyperv@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	ssengar@microsoft.com, mhklinux@outlook.com
-Subject: Re: [PATCH v3 0/2] fbdev: hyperv_fb: framebuffer release cleanup
-Message-ID: <Z84qv4Fp-A254kTk@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <1740845791-19977-1-git-send-email-ssengar@linux.microsoft.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/7] x86/hyperv: Fix output argument to hypercall that
+ changes page visibility
+Message-ID: <Z84wsC8ADzZusVVY@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250226200612.2062-1-mhklinux@outlook.com>
+ <20250226200612.2062-2-mhklinux@outlook.com>
+ <f6115867-281d-4c97-87d2-3698e6474b7a@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -60,28 +66,52 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1740845791-19977-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <f6115867-281d-4c97-87d2-3698e6474b7a@linux.microsoft.com>
 
-On Sat, Mar 01, 2025 at 08:16:29AM -0800, Saurabh Sengar wrote:
-> This patch series addresses an issue in the unbind path of the hyperv_fb
-> driver, which is resolved in the second patch of this series.
+On Wed, Feb 26, 2025 at 02:59:53PM -0800, Nuno Das Neves wrote:
+> On 2/26/2025 12:06 PM, mhkelley58@gmail.com wrote:
+> > From: Michael Kelley <mhklinux@outlook.com>
+> > 
+> > The hypercall in hv_mark_gpa_visibility() is invoked with an input
+> > argument and an output argument. The output argument ostensibly returns
+> > the number of pages that were processed. But in fact, the hypercall does
+> > not provide any output, so the output argument is spurious.
+> > 
+> > The spurious argument is harmless because Hyper-V ignores it, but in the
+> > interest of correctness and to avoid the potential for future problems,
+> > remove it.
+> > 
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> > I have not provided a "Fixes:" tag because the error causes no impact.
+> > There's no value in backporting the fix.
+> > 
+> >  arch/x86/hyperv/ivm.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> > index dd68d9ad9b22..ec7880271cf9 100644
+> > --- a/arch/x86/hyperv/ivm.c
+> > +++ b/arch/x86/hyperv/ivm.c
+> > @@ -464,7 +464,6 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+> >  			   enum hv_mem_host_visibility visibility)
+> >  {
+> >  	struct hv_gpa_range_for_visibility *input;
+> > -	u16 pages_processed;
+> >  	u64 hv_status;
+> >  	unsigned long flags;
+> >  
+> > @@ -493,7 +492,7 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+> >  	memcpy((void *)input->gpa_page_list, pfn, count * sizeof(*pfn));
+> >  	hv_status = hv_do_rep_hypercall(
+> >  			HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY, count,
+> > -			0, input, &pages_processed);
+> > +			0, input, NULL);
+> >  	local_irq_restore(flags);
+> >  
+> >  	if (hv_result_success(hv_status))
 > 
-> While working on this fix, it was observed that hvfb_putmem() and its
-> child functions could be cleaned up first to simplify the movement of
-> hvfb_putmem(). This cleanup is done in the first patch.
-> 
-> Although hvfb_getmem() could also be cleaned up, it depends on
-> vmbus_allocate_mmio(), which is used by multiple other drivers. Since
-> addressing hvfb_getmem() is independent of this fix, it will be handled
-> in a separate patch series.
-> 
-> [V3]
->  - Add a patch 1 for cleanup of hvfb_putmem()
->  - Use the simplified hvfb_putmem()
-> 
-> Saurabh Sengar (2):
->   fbdev: hyperv_fb: Simplify hvfb_putmem
->   fbdev: hyperv_fb: Allow graceful removal of framebuffer
+> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
 Applied to hyperv-fixes, thanks!
 
