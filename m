@@ -1,115 +1,136 @@
-Return-Path: <linux-hyperv+bounces-4325-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4326-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55D80A58FA2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 10:28:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B348FA593E6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 13:13:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9417016A8DD
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 09:28:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC4203A74F9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 12:12:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7272253E9;
-	Mon, 10 Mar 2025 09:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2059E22A819;
+	Mon, 10 Mar 2025 12:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moRUW5ZQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Uc2kSMaJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485F82253A7;
-	Mon, 10 Mar 2025 09:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3DC22A7E0;
+	Mon, 10 Mar 2025 12:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741598929; cv=none; b=jT9sAHGBtI88I7itggDIKZ6dh/DqlW21K/ebQk1hQKQ+SwSripX9ia6xOgpXgkJNq9FH0qR/zfn1/2ikNdLhumkQt1E9NrOnZGxv76V4RoVlR8PLMvfFVam8yZUpRlsLj7u/6pm/tk/RUa4uo12jKRC1yMBeqZ8kOI0Sdl8sg+k=
+	t=1741608697; cv=none; b=FBMkM1xrxk1cEX3oGM67Hm0i6leNRaPbmm3rymIoNqKYEjJ31Zgpug1FlXqqqFJG2sBlZvEe7SOdPx7lFMHDoq4fHFbZCgFwDRE/oQVIdw3owBoaqW5YcIy+6VdrSOWBDht0EZ0nTNf3ZnGF205HFype8DZLDcU9XthaPy0SaGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741598929; c=relaxed/simple;
-	bh=5mwoTd08jCfdUhN4DoQ/o5bTO+/4KPbpIou7ZLK5CwE=;
+	s=arc-20240116; t=1741608697; c=relaxed/simple;
+	bh=B/Zi8tRRc/t7099IxweCQ9wmr8LBRpEjxc54n0VCEzQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzRqZHjxEwhj8LswIctDdtLWV4r6ogvy2p60FQ08raHR6xqCCSpi2RDJbu6nOMrSBBxufMCO6MhhbzJ9Cr8iU5qn3yAhB3K+/Ddzjl76JU96TqmV9kSBG0RtJXWro40nuc9a1esClJaV7BJ8NO83pGEtnBJiblgmcfK6EJ37jPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moRUW5ZQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3263C4CEE5;
-	Mon, 10 Mar 2025 09:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741598928;
-	bh=5mwoTd08jCfdUhN4DoQ/o5bTO+/4KPbpIou7ZLK5CwE=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHt6UeBru2JrCUHnZyT3FNnyt3RobX7MyTLgCnGeqvuzb47VIq6YmqDNJ4S/rFfw2f7Gyg2SENTXCHJDrMGoZ8zxMeIg6BLutB6arQkbYEunhlk45VB3YABLh8+Cppg0PO5Vwe3LZLpVQjGMlGhK5ogtIf5JGBRCvgAKf3bKIeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Uc2kSMaJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id BAD8B2111421; Mon, 10 Mar 2025 05:11:34 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BAD8B2111421
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741608694;
+	bh=wGlVDMVI7jB0uTeQswp0J7PSuFA8+H1jZy79IJtAwJA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=moRUW5ZQ40mb3/aIpiaUN9HkU77pvem3k8eDxlSM/9lZUaUKukj4CqhZvUe9L77zC
-	 MN+2vbTMTU3+BLE/2ld0UBhKQS5/ba81SV2HVw+ZA3Yz3md1rj9n1oi/rIFpS0ceFQ
-	 /omVZU4PqA9TWL9LfJuqg6P7RCJQ6/BrSt2q3h2CoPNyi/He613YCzZB27Pff6NEjc
-	 YXtecGZz5NtbHWv7fAKwgV9RUZ+ou62yHAHyS6MQV1nL5vhT4TzAPYYIv5ECh/jAne
-	 /yZ6tNsiGfzxvB4H1/ph9rTQtybZmAJtNlXrF3KTZChZqotBBafZrkqj9bmZ4otaFP
-	 DxO9pUqVWT11A==
-Date: Mon, 10 Mar 2025 10:28:44 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, 
-	catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com, 
-	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com, 
-	krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, lenb@kernel.org, 
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, 
-	maz@kernel.org, mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org, 
-	robh@kernel.org, ssengar@linux.microsoft.com, sudeep.holla@arm.com, 
-	suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, 
-	yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com, 
-	bperkins@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v5 07/11] dt-bindings: microsoft,vmbus: Add
- interrupts and DMA coherence
-Message-ID: <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-8-romank@linux.microsoft.com>
+	b=Uc2kSMaJZ2d9mRqMGI9uVePTC1T6zyoq47PuXm1KAkLHEGlSFLadmxyf4t7EhXYgc
+	 qJPXVqjZQYPIo2xrAnGCsPXWyKYE9mxrGdN9iUPi4kEpIJvw3IuVpiQ2eLOYX89j/w
+	 NaqXKPle32JCMKpmqeqjhSGIpPlBxgMUGEnOafQU=
+Date: Mon, 10 Mar 2025 05:11:34 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"stephen@networkplumber.org" <stephen@networkplumber.org>,
+	KY Srinivasan <kys@microsoft.com>,
+	Paul Rosswurm <paulros@microsoft.com>,
+	"olaf@aepfle.de" <olaf@aepfle.de>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"leon@kernel.org" <leon@kernel.org>, Long Li <longli@microsoft.com>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"hawk@kernel.org" <hawk@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH net] net: mana: Support holes in device
+ list reply msg
+Message-ID: <20250310121134.GA12177@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1741211181-6990-1-git-send-email-haiyangz@microsoft.com>
+ <20250307195029.1dc74f8e@kernel.org>
+ <MN0PR21MB3437F80F3AD98C82870A9173CAD72@MN0PR21MB3437.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250307220304.247725-8-romank@linux.microsoft.com>
+In-Reply-To: <MN0PR21MB3437F80F3AD98C82870A9173CAD72@MN0PR21MB3437.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Fri, Mar 07, 2025 at 02:02:59PM -0800, Roman Kisel wrote:
-> To boot on ARM64, VMBus requires configuring interrupts. Missing
-> DMA coherence property is sub-optimal as the VMBus transations are
-> cache-coherent.
+On Sun, Mar 09, 2025 at 10:01:33PM +0000, Haiyang Zhang wrote:
 > 
-> Add interrupts to be able to boot on ARM64. Add DMA coherence to
-> avoid doing extra work on maintaining caches on ARM64.
-
-How do you add it?
-
 > 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  .../devicetree/bindings/bus/microsoft,vmbus.yaml          | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> > -----Original Message-----
+> > From: Jakub Kicinski <kuba@kernel.org>
+> > Sent: Friday, March 7, 2025 10:50 PM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
+> > <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
+> > <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
+> > olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
+> > wei.liu@kernel.org; edumazet@google.com; pabeni@redhat.com;
+> > leon@kernel.org; Long Li <longli@microsoft.com>;
+> > ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
+> > daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
+> > ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
+> > shradhagupta@linux.microsoft.com; linux-kernel@vger.kernel.org;
+> > stable@vger.kernel.org
+> > Subject: [EXTERNAL] Re: [PATCH net] net: mana: Support holes in device
+> > list reply msg
+> > 
+> > On Wed,  5 Mar 2025 13:46:21 -0800 Haiyang Zhang wrote:
+> > > -	for (i = 0; i < max_num_devs; i++) {
+> > > +	for (i = 0; i < GDMA_DEV_LIST_SIZE &&
+> > > +		found_dev < resp.num_of_devs; i++) {
+> > 
+> > unfortunate mis-indent here, it blend with the code.
+> > checkpatch is right that it should be aligned with opening bracket
+> Will fix it.
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> index a8d40c766dcd..3ab7d0116626 100644
-> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> @@ -28,13 +28,16 @@ properties:
->  required:
->    - compatible
->    - ranges
-> +  - interrupts
->    - '#address-cells'
->    - '#size-cells'
->  
-> -additionalProperties: false
-> +additionalProperties: true
-
-This is neither explained in commit msg nor correct.
-
-Drop the change. You cannot have device bindings ending with 'true'
-here - see talks, example-bindings, writing-schema and whatever resource
-is there.
-
-Best regards,
-Krzysztof
-
+> > 
+> > >  		dev = resp.devs[i];
+> > >  		dev_type = dev.type;
+> > >
+> > > +		/* Skip empty devices */
+> > > +		if (dev.as_uint32 == 0)
+> > > +			continue;
+> > > +
+> > > +		found_dev++;
+> > > +		dev_info(gc->dev, "Got devidx:%u, type:%u, instance:%u\n", i,
+> > > +			 dev.type, dev.instance);
+> > 
+> > Are you sure you want to print this info message for each device,
+> > each time it's probed? Seems pretty noisy. We generally recommend
+> > printing about _unusual_ things.
+> Ok. I can remove it.
+How about a dev_dbg instead?
+> 
+> Thanks,
+> - Haiyang
 
