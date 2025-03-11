@@ -1,283 +1,387 @@
-Return-Path: <linux-hyperv+bounces-4406-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4407-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C512A5D08E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 21:13:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02271A5D1B8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 22:27:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DAC957ABBD0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 20:12:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F24B1799E5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 21:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966CD264A6F;
-	Tue, 11 Mar 2025 20:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E566263881;
+	Tue, 11 Mar 2025 21:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bPMjhQFS"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="latzbhgG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xgj+mC5C"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020143.outbound.protection.outlook.com [52.101.85.143])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15DA26462C;
-	Tue, 11 Mar 2025 20:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.143
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741724008; cv=fail; b=BZtz9mnfLrrRnEQco2zHFuwb8GL2GIwAiJwAgdnKuz6S6FOpZiF246LI3KFd3TjS0zEMXVRUk9HDtKL9EM12xBJRGNfmDnEFBZRy5+Hr6tq6x355Dz0k7r3SXl5d9VgOSpmvjYXdj8iPfP64mKpwavjnfT7cdjH/FBPqdCo/n+c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741724008; c=relaxed/simple;
-	bh=LgPH+DyIlSRITmrnlMnG10XrRBzOJ4PmfZNZR0pR3E4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=oc2HIfsrsmVw4XCVQ7R3jG5SWGmC1UQKIrFc1DOunYs9QGKfWkknb40ACvsF+oVF0VyHECYg53Iul4nCa9MUduphQYSwzZuSCJ3g1WX5wco7WvX2q+dPnbeaxTWrqD10Y1f9on2SyQUNGc33YO48pYiljocQM4xFcJD+OokmCRc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=bPMjhQFS; arc=fail smtp.client-ip=52.101.85.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D1Vitpqevki20Kp8kxf+h+5gv2UTUlS5ekAsPqibOsxO/n2QdTnRTuEewdr/D5mjmm5QtXfeb4gooH5fkR7xUladWbi/rGFav9YTQMD3Uejb4mt1SIjuOQSH+ZsTHfRgMM0/+lJQ9fXkS92BalLdJo7uh5wpaaFFQZ1tOd4T0FEpWPTwUhpnDl5XwICleVVibcOAkM2tjAXLfIhsWyRbXf164d6nZMR4lJaGpShhWW6lKpNnukSCtfyojJ1PttubMKz/V4n6GMPn7rR/742IJuzjOjuarZRwylyyogSfWjX3fvvvUXIYODJilBYQzfewCoqGsBRgbytqf8yycreJzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IwfUjudnt9L6qZ9VPPEDvpVZrWWTW5TFNeQ6a60MwIs=;
- b=eNcnJr/a/Ud2A96jhW1YQJ2JNuLbwmyFI0DCNgtR9QJH2Rj9VKt+5KTpfSQxh/LBkTsPUxiVt62nXBicqhMPEXCOoncTHYpZI2h8IEEPKwxyPM0UtSc9nZqJ50fFVKiaOOu0+HSUaGlwbJMpMZMv2HbXfei8bzEgLfeXHgoodGyZbtcOQ7zzxIBk6rXpgYLvXrfkSfJBjqVdoh7GFaiXDDk/XJbazw9BtRxorrdjZen7oYz51qZqnbnfj2pmmVAu6COY8O3PMSkrqhuOoV3S+9DYH/XwmhFFiMtpOxlduUzaehVObDPVXABZx0RWKoxMpOEbyHP0p8ngm29aImNaUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IwfUjudnt9L6qZ9VPPEDvpVZrWWTW5TFNeQ6a60MwIs=;
- b=bPMjhQFSlmBn+hJB21TNvmwRpDA6jdwRMX6NMoIERZ2i4bXb6IbDrJEscjyLi2P+l8b78ls7YEN9zCPA3hT61iixIXRRJ5dqWz7mJ8U3QfTvTC8nXUBVL9IAm1Yn8KHvHH/lOoqhVp/6hmT02IBYgEbL2kp2u0RDq93UtMZtcVw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
- by SJ1PR21MB3576.namprd21.prod.outlook.com (2603:10b6:a03:454::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.8; Tue, 11 Mar
- 2025 20:13:23 +0000
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::5490:14c7:52e2:e12f]) by BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::5490:14c7:52e2:e12f%7]) with mapi id 15.20.8534.018; Tue, 11 Mar 2025
- 20:13:23 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	decui@microsoft.com,
-	stephen@networkplumber.org,
-	kys@microsoft.com,
-	paulros@microsoft.com,
-	olaf@aepfle.de,
-	vkuznets@redhat.com,
-	davem@davemloft.net,
-	wei.liu@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	bpf@vger.kernel.org,
-	ast@kernel.org,
-	hawk@kernel.org,
-	tglx@linutronix.de,
-	shradhagupta@linux.microsoft.com,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH net, v2] net: mana: Support holes in device list reply msg
-Date: Tue, 11 Mar 2025 13:12:54 -0700
-Message-Id: <1741723974-1534-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW2PR16CA0016.namprd16.prod.outlook.com (2603:10b6:907::29)
- To BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100581805A;
+	Tue, 11 Mar 2025 21:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741728417; cv=none; b=N3tutqtO+2ntvg96CWk0UXIOMYksWlWWJbO9X8iwUYNbXJwEioVaDvNse3Zg7CUMJh4M+iHpIURb3qlZOf6BD5+l7VFLlR6TWE648S4uoAGWF9HjrzjQrN5mb9o14eybhbjixfGXagcgsT8b/D5vt7wDcOlSLZOYHKJL2dV3Se8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741728417; c=relaxed/simple;
+	bh=NMbzZZmA1i+JmQhRUzWV1G3eR1b1qBmuVPuMcIPBt6Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Qq34Gqf3/AWBsFNWg4ugQqTVituQ8i5zxiWaIVESW9Mp3dTwBBaQBf+Y1/tah3//bsPSnhBp9jieViOV2YSAi5nRRWd+BoEKZH26+ss3VvTJ8ZJpIQH4/v+tftFJVoKzt8oOo3SsuhjxxXBhZNDrlV7yGBkiylxXxCxFn1IeWt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=latzbhgG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xgj+mC5C; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741728412;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+yVVFBNBZSf8tirkPPgeUJsEVo6IoGMOsQOtRlOY68E=;
+	b=latzbhgGyaICtLvl+JQq9jS2YLNJJoHwDk1my+/neDTO+ZWqOwvhn1iQ7ksiTxQbN5HxvB
+	sAl/HLIicTQ/qzkbaJ0Kf5FzqYe3ie/I8Keic37YViZgRtW+yQwBQ/CIBS7xt+94I5VeiO
+	fxrlLbC+2p4CNImGtS+TBo0JBRUtDbkEhnUB95W5D0jZ2pSVLuCJmHPdNR9YhYYTyLYzjY
+	zdwRq75MgN5loMcbJBHT/ypg50SzpF6/o5mfvd3Ukagg02zFwo2nJm5dzH4VAqvOMBAfAV
+	RN8cHBIQJXK16vuMWC4wBXfUrpFlvec9P8xgzd3HqDAhJbRdZm8VTVfRBCU3JA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741728412;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+yVVFBNBZSf8tirkPPgeUJsEVo6IoGMOsQOtRlOY68E=;
+	b=Xgj+mC5Cv5Uld5sMem/y27pGVgeYKW94jPtPa0eUPyBWJjq8JuhjMGgYiLF6QoWVUp4tM9
+	PBTJ+EVQG73amfCg==
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh
+ Shilimkar <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
+ <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org, Wei Huang
+ <wei.huang2@amd.com>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Dan Williams
+ <dan.j.williams@intel.com>
+Subject: Re: [patch 02/10] genirq/msi: Use lock guards for MSI descriptor
+ locking
+In-Reply-To: <20250311180017.00003fcc@huawei.com>
+References: <20250309083453.900516105@linutronix.de>
+ <20250309084110.267883135@linutronix.de>
+ <20250311180017.00003fcc@huawei.com>
+Date: Tue, 11 Mar 2025 22:26:52 +0100
+Message-ID: <87senjz2ar.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|SJ1PR21MB3576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f64be3f-9354-4c37-70c0-08dd60d92ca2
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|1800799024|52116014|376014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?aJShAhVlBcanItYY8PbVrdLY6EIjyiF4dH39uBtOG7QTLTw6eM3DRMDW57oU?=
- =?us-ascii?Q?N8nywHF4gN2ue+rUnjoQ0F8wjdMpKJ9NpvnmQQW2CG7+aHTtVIGdMYNcrkIe?=
- =?us-ascii?Q?Z4qKPmnj8Ki/OdXi3k7ACddYPrR/8nofq9UU5/w0fs7F2iEubevlfjQUMoIU?=
- =?us-ascii?Q?yjbA4lJNLhNc01Jmw/T2uqxuoEeeb14/yS3X+uiQvUSa0W3+gyzHDyLdAbBA?=
- =?us-ascii?Q?ndmlHcTHB4+nuO8rFWHkzZMOMxOIaVCkX0ZULcccIuwkbtRwTA0S/EFOhnfz?=
- =?us-ascii?Q?jSCehGgWdfUILcJd3VE2d6RHR55Mf0TbUy9myIFG2XgbZQWeYuq9NJ2wXyTz?=
- =?us-ascii?Q?58Jmjdh45lSYD8FjM331ZYhgLx9mKpd09R3GQFjjZpf1xMRhB7JS+2O8i5Ku?=
- =?us-ascii?Q?SpcCyLsYLCbeZB/YXOl+qjjsIrFs0rr8niuJmW1ZB8LlpyNdg0Q81N4Jh5sa?=
- =?us-ascii?Q?ZhPvuTxBWXPtK51zyuhlePh/tigd6vxBf6ooH8LyudD0VxWaTq6EkXPKtpZ2?=
- =?us-ascii?Q?7pHeoGLliinqtdGIRq5SIuYJfcMGxiWcFmM6mgiQbp7vVyl+ldXFWo1xMkC+?=
- =?us-ascii?Q?a7M6Xsi1l5/faV5nnMmiNZR5xYIGJOVTULrBDd5PGBhHz6jZmx0kMchjIJkw?=
- =?us-ascii?Q?RS7cMjQuLpiGXAWlqUsJOkNjI1Wke3r7iYGhPy/wVeUZ8XyeLGb/F8GVf22x?=
- =?us-ascii?Q?YmcXqRQD5GggoojIQP+2R8Z+N9T0GcE6Eb3KoQw3C/s3XpDCklt6rRfAJLR6?=
- =?us-ascii?Q?gluzjJ2m+7QDIyzDEz6XhxMVJYDteyfRVFu8Lo02FRh4kWKDSZjqIleNUZHq?=
- =?us-ascii?Q?yClcTzt6tSk5itQeiugBJJmAITq4GRdoWdkcpfnrGpoC84ok9ErzsXMLQLM6?=
- =?us-ascii?Q?jHVNecZGRlDOnAV6o/YMEkWF6sk0MzL8nQdABdJOHGcgtrGlVvaUWDq4KP9x?=
- =?us-ascii?Q?h0qDUddO1FWvEJKVM+bTV525NSpbqiX7c6yusF5joyUP3Sgm2GmJcxwOV5S8?=
- =?us-ascii?Q?85PiqcUW/ejvK7vT2OCXmrLni23o64jqbBVEdtebxnuNdysla4yYHspflPjC?=
- =?us-ascii?Q?WbsuvXqItLlnH/q9a/gnLv3DLpiiLvzhS6OLqEF4ov03Ow3Wny4OddTLHmeo?=
- =?us-ascii?Q?uLpv2lUc4Yv4fBahu5Axzt8bj+pusQnzHrapd7nybGaAyihalcn3kwq9d+U/?=
- =?us-ascii?Q?IjfS6KFGUjXLLwoXWKMfQq6xePeZJUdROqKYmRS1Wiow1GSBFqZP14v8wIWI?=
- =?us-ascii?Q?+077PPEESE8A7HL3uRnyjcvriB/rKB9e3WOZ2tEpbyLXBHw7yOxeIO/ThANX?=
- =?us-ascii?Q?yHv/fJNKCFAlKVZnWAbShEcci+2XpSKeuO7SH01Sg7lWdecIxuMcoApHAEfu?=
- =?us-ascii?Q?3SM/G23RMabPXiyjRdNP31al1GsW2EAYZCOT6PnMIMZmIJLMcFPij8CYxGV4?=
- =?us-ascii?Q?a1NbBl6ka9nqXiS6v+v+7645Z+QcpW51?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(7416014)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?w9b26j7KeMPGR1pxCg9IpfmoqjEvC5f2nrPEr4zvht2T2jUspqEmLAfxY4Tt?=
- =?us-ascii?Q?JrkvUJz1Bm9tqcpyQsXoLydIosl4l1IIGuHr1rUpFWJoNXj88ugw+2r2xDXH?=
- =?us-ascii?Q?RJ8RcNTELiT3k1bUPbrow7+5JbUfVSQN6QB7Qc+cDehN3neYlYo9jGH5UwJe?=
- =?us-ascii?Q?M5KN82v6dQUYY11zqPlysOnjX/ckmFNrEgb5ZDzKHj92ws7DtWF+JTtLkmRq?=
- =?us-ascii?Q?9uvzczKtLE2ef7UttXnDS8/CrFIkyCtYTJNWzSXjDok1lleSRo3x6qToYtby?=
- =?us-ascii?Q?KQTEbZhHCCD/+IHWLj/W9zqknxE6qkZS7qV2gwEYbcmcHSMtTXb/EUN54o2n?=
- =?us-ascii?Q?qgzwSZdsD8mxkFNBV2FBdo5qEqFj5jJdchTamowPXVCgnH74KYIMu0iuBUdU?=
- =?us-ascii?Q?9YX5+G+Ius6sQ1HRkB8q03OQWz19isCadJP7uSSLrcG9WFEIYKED7fK84ivs?=
- =?us-ascii?Q?sRTLTo2QkuYPhWuUE8cFVoF/BjcupDUM/X0f0zmM0aXd8qjP9vOtlwzP/+1a?=
- =?us-ascii?Q?lGojnvJAa1c/PCiT3jKZdZ0mDI7CzmIQroh056zM04GtJIsl0ulpraRcSGJ3?=
- =?us-ascii?Q?kn5MTdTLRUFeYEDn5xacc8FdPKBieZPBykC5QOVJHUvKSdLbPaXifoyZEvad?=
- =?us-ascii?Q?SpzeOipgKzr4Zl9W2qFrpzR/ubzDmWopTJYC97BGdDfVRo2NDsgJXbdO7WIo?=
- =?us-ascii?Q?qS7uPQNWv3eDh6T/gGJFfbhsc56dg6t6TwG99+oGGWI7UpFWycnkFnPE7O3/?=
- =?us-ascii?Q?9L2HJQQC+WUlEN2aaEe+PiMbnkXksY0VKGm5UMBXXhLtCfFYNBTAQ9UdLjAc?=
- =?us-ascii?Q?gmCYl6fTB54lI7YdnKdNQ/uA5tQzcxLwJx7k1kXEveAEz6RzWWWRJUAZwX9X?=
- =?us-ascii?Q?Gv3mW27CRqO5av4rzhN9uB1tB5F4x5nDkv3h/8+t0ZifqlkLPaZZq2bGpvfr?=
- =?us-ascii?Q?bygi+1FuRKgPEKiQPrDxlYBxCy3CBCs2jvBRPgOsXqRRhxiNYrVH7A/kWVnV?=
- =?us-ascii?Q?Ysyzo6/pJXSkBc/isLSP1n5R4ShPwYQMWc/x17kwjT6UzblDGVFvAae/IqlX?=
- =?us-ascii?Q?aFj2dnQ6Ce8eQWY23zZh72ciFk2iAijkJggv1fmNElVqJbCvpS9aJtv9/T/T?=
- =?us-ascii?Q?rnpXXZA9hCvj45DAXZAoHkivZ/3X7UCtAlF4cSE7GpMZNcFEo9JMi75bZqvK?=
- =?us-ascii?Q?3NMxAVLzokapHe/RkEk2q6G3CXd7ToxqZ+bju8dcKt8f5U2BKThzUqcRYSz4?=
- =?us-ascii?Q?iJBW5xoo7cuL3GSVTD8IYk1L4mzvzYgPImayKiw/AokX7TB20gCJBDsiRmsp?=
- =?us-ascii?Q?NjDM+p3iJAOG6Vv6Hy4y6fLatHBQxM6NRV4xs7fAo4arqN1WsSOHAbnaOm13?=
- =?us-ascii?Q?b5Df2ZkTtJaPLF/U/98DQb8xaQ5WvzVDuATfKNbwi1O1Plr4KAdRYoBQDHQH?=
- =?us-ascii?Q?pozPjowMmidhM8a7F949CT4DWDY2pHJyBmJrJ8TGeZ/VZFp5dYU3AlY9iw0M?=
- =?us-ascii?Q?WHKVVwoI6EmHOutn+tyvY9lSTj/i029dc7UR8J/r6jm0cr44CoDEGPsxoBRp?=
- =?us-ascii?Q?kyGu3FGpcug76j+L/q14tLAlPBCIc0dYN4vU+nGb?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f64be3f-9354-4c37-70c0-08dd60d92ca2
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 20:13:23.3763
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8vE6jDjDFOKe1Ti3S2CeUXfq6BuEE0Ye0sfLGyVepxk45b2qcNB4Sb2oYMhFlpZcoHxtdpiuNyyjQzv9X1qGbw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR21MB3576
+Content-Type: text/plain
 
-According to GDMA protocol, holes (zeros) are allowed at the beginning
-or middle of the gdma_list_devices_resp message. The existing code
-cannot properly handle this, and may miss some devices in the list.
+On Tue, Mar 11 2025 at 18:00, Jonathan Cameron wrote:
+> On Sun,  9 Mar 2025 09:41:44 +0100 (CET)
+> Thomas Gleixner <tglx@linutronix.de> wrote:
 
-To fix, scan the entire list until the num_of_devs are found, or until
-the end of the list.
+>>  
+>> @@ -1037,25 +1032,23 @@ bool msi_create_device_irq_domain(struct
+>>  	if (msi_setup_device_data(dev))
+>
+> Hmm. We might want to make the docs in cleanup.h more nuanced.
+> They specifically say to not mix goto and auto cleanup, but 
+> in the case of scoped_guard() unlikely almost any other case
+> it should be fine.
+>
+>>  		goto free_fwnode;
 
-Cc: stable@vger.kernel.org
-Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Long Li <longli@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@microsoft.com>
+I got rid of the gotos. It requires __free() for the two allocations.
+
+Thanks,
+
+        tglx
 ---
-v2: Fix alignment, extra dmesg.
-
----
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 14 ++++++++++----
- include/net/mana/gdma.h                         | 11 +++++++----
- 2 files changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index c15a5ef4674e..af63d844b3bc 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -134,9 +134,10 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
- 	struct gdma_list_devices_resp resp = {};
- 	struct gdma_general_req req = {};
- 	struct gdma_dev_id dev;
--	u32 i, max_num_devs;
-+	int found_dev = 0;
- 	u16 dev_type;
- 	int err;
-+	u32 i;
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -216,6 +216,8 @@ const volatile void * __must_check_fn(co
  
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_LIST_DEVICES, sizeof(req),
- 			     sizeof(resp));
-@@ -148,12 +149,17 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
- 		return err ? err : -EPROTO;
- 	}
+ #define return_ptr(p)	return no_free_ptr(p)
  
--	max_num_devs = min_t(u32, MAX_NUM_GDMA_DEVICES, resp.num_of_devs);
--
--	for (i = 0; i < max_num_devs; i++) {
-+	for (i = 0; i < GDMA_DEV_LIST_SIZE &&
-+	     found_dev < resp.num_of_devs; i++) {
- 		dev = resp.devs[i];
- 		dev_type = dev.type;
++#define retain_ptr(p)				\
++	__get_and_null(p, NULL)
  
-+		/* Skip empty devices */
-+		if (dev.as_uint32 == 0)
-+			continue;
+ /*
+  * DEFINE_CLASS(name, type, exit, init, init_args...):
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -281,6 +281,8 @@ static inline struct fwnode_handle *irq_
+ 
+ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
+ 
++DEFINE_FREE(irq_domain_free_fwnode, struct fwnode_handle *, if (_T) irq_domain_free_fwnode(_T))
 +
-+		found_dev++;
-+
- 		/* HWC is already detected in mana_hwc_create_channel(). */
- 		if (dev_type == GDMA_DEVICE_HWC)
- 			continue;
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 90f56656b572..62e9d7673862 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -408,8 +408,6 @@ struct gdma_context {
- 	struct gdma_dev		mana_ib;
- };
+ struct irq_domain_chip_generic_info;
  
--#define MAX_NUM_GDMA_DEVICES	4
--
- static inline bool mana_gd_is_mana(struct gdma_dev *gd)
+ /**
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -227,6 +227,9 @@ int msi_setup_device_data(struct device
+ void msi_lock_descs(struct device *dev);
+ void msi_unlock_descs(struct device *dev);
+ 
++DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, msi_lock_descs(_T->lock),
++		    msi_unlock_descs(_T->lock));
++
+ struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
+ 				       enum msi_desc_filter filter);
+ 
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -442,7 +442,6 @@ EXPORT_SYMBOL_GPL(msi_next_desc);
+ unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigned int index)
  {
- 	return gd->dev_id.type == GDMA_DEVICE_MANA;
-@@ -556,11 +554,15 @@ enum {
- #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
- #define GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT BIT(5)
+ 	struct msi_desc *desc;
+-	unsigned int ret = 0;
+ 	bool pcimsi = false;
+ 	struct xarray *xa;
  
-+/* Driver can handle holes (zeros) in the device list */
-+#define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+@@ -456,7 +455,7 @@ unsigned int msi_domain_get_virq(struct
+ 	if (dev_is_pci(dev) && domid == MSI_DEFAULT_DOMAIN)
+ 		pcimsi = to_pci_dev(dev)->msi_enabled;
+ 
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	xa = &dev->msi.data->__domains[domid].store;
+ 	desc = xa_load(xa, pcimsi ? 0 : index);
+ 	if (desc && desc->irq) {
+@@ -465,16 +464,12 @@ unsigned int msi_domain_get_virq(struct
+ 		 * PCI-MSIX and platform MSI use a descriptor per
+ 		 * interrupt.
+ 		 */
+-		if (pcimsi) {
+-			if (index < desc->nvec_used)
+-				ret = desc->irq + index;
+-		} else {
+-			ret = desc->irq;
+-		}
++		if (!pcimsi)
++			return desc->irq;
++		if (index < desc->nvec_used)
++			return desc->irq + index;
+ 	}
+-
+-	msi_unlock_descs(dev);
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(msi_domain_get_virq);
+ 
+@@ -974,9 +969,8 @@ bool msi_create_device_irq_domain(struct
+ 				  void *chip_data)
+ {
+ 	struct irq_domain *domain, *parent = dev->msi.domain;
+-	struct fwnode_handle *fwnode, *fwnalloced = NULL;
+-	struct msi_domain_template *bundle;
+ 	const struct msi_parent_ops *pops;
++	struct fwnode_handle *fwnode;
+ 
+ 	if (!irq_domain_is_msi_parent(parent))
+ 		return false;
+@@ -984,7 +978,8 @@ bool msi_create_device_irq_domain(struct
+ 	if (domid >= MSI_MAX_DEVICE_IRQDOMAINS)
+ 		return false;
+ 
+-	bundle = kmemdup(template, sizeof(*bundle), GFP_KERNEL);
++	struct msi_domain_template *bundle __free(kfree) =
++		bundle = kmemdup(template, sizeof(*bundle), GFP_KERNEL);
+ 	if (!bundle)
+ 		return false;
+ 
+@@ -1007,41 +1002,36 @@ bool msi_create_device_irq_domain(struct
+ 	 * node as they are not guaranteed to have a fwnode. They are never
+ 	 * looked up and always handled in the context of the device.
+ 	 */
+-	if (bundle->info.flags & MSI_FLAG_USE_DEV_FWNODE)
+-		fwnode = dev->fwnode;
++	struct fwnode_handle *fwnode_alloced __free(irq_domain_free_fwnode) = NULL;
 +
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
--	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT)
-+	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
-+	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
++	if (!(bundle->info.flags & MSI_FLAG_USE_DEV_FWNODE))
++		fwnode = fwnode_alloced = irq_domain_alloc_named_fwnode(bundle->name);
+ 	else
+-		fwnode = fwnalloced = irq_domain_alloc_named_fwnode(bundle->name);
++		fwnode = dev->fwnode;
  
- #define GDMA_DRV_CAP_FLAGS2 0
+ 	if (!fwnode)
+-		goto free_bundle;
++		return false;
  
-@@ -621,11 +623,12 @@ struct gdma_query_max_resources_resp {
- }; /* HW DATA */
+ 	if (msi_setup_device_data(dev))
+-		goto free_fwnode;
+-
+-	msi_lock_descs(dev);
++		return false;
  
- /* GDMA_LIST_DEVICES */
-+#define GDMA_DEV_LIST_SIZE 64
- struct gdma_list_devices_resp {
- 	struct gdma_resp_hdr hdr;
- 	u32 num_of_devs;
- 	u32 reserved;
--	struct gdma_dev_id devs[64];
-+	struct gdma_dev_id devs[GDMA_DEV_LIST_SIZE];
- }; /* HW DATA */
++	guard(msi_descs_lock)(dev);
+ 	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid)))
+-		goto fail;
++		return false;
  
- /* GDMA_REGISTER_DEVICE */
--- 
-2.34.1
-
+ 	if (!pops->init_dev_msi_info(dev, parent, parent, &bundle->info))
+-		goto fail;
++		return false;
+ 
+ 	domain = __msi_create_irq_domain(fwnode, &bundle->info, IRQ_DOMAIN_FLAG_MSI_DEVICE, parent);
+ 	if (!domain)
+-		goto fail;
++		return false;
+ 
++	/* @bundle and @fwnode_alloced are now in use. Prevent cleanup */
++	retain_ptr(bundle);
++	retain_ptr(fwnode_alloced);
+ 	domain->dev = dev;
+ 	dev->msi.data->__domains[domid].domain = domain;
+-	msi_unlock_descs(dev);
+ 	return true;
+-
+-fail:
+-	msi_unlock_descs(dev);
+-free_fwnode:
+-	irq_domain_free_fwnode(fwnalloced);
+-free_bundle:
+-	kfree(bundle);
+-	return false;
+ }
+ 
+ /**
+@@ -1055,12 +1045,10 @@ void msi_remove_device_irq_domain(struct
+ 	struct msi_domain_info *info;
+ 	struct irq_domain *domain;
+ 
+-	msi_lock_descs(dev);
+-
++	guard(msi_descs_lock)(dev);
+ 	domain = msi_get_device_domain(dev, domid);
+-
+ 	if (!domain || !irq_domain_is_msi_device(domain))
+-		goto unlock;
++		return;
+ 
+ 	dev->msi.data->__domains[domid].domain = NULL;
+ 	info = domain->host_data;
+@@ -1069,9 +1057,6 @@ void msi_remove_device_irq_domain(struct
+ 	irq_domain_remove(domain);
+ 	irq_domain_free_fwnode(fwnode);
+ 	kfree(container_of(info, struct msi_domain_template, info));
+-
+-unlock:
+-	msi_unlock_descs(dev);
+ }
+ 
+ /**
+@@ -1087,16 +1072,14 @@ bool msi_match_device_irq_domain(struct
+ {
+ 	struct msi_domain_info *info;
+ 	struct irq_domain *domain;
+-	bool ret = false;
+ 
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	domain = msi_get_device_domain(dev, domid);
+ 	if (domain && irq_domain_is_msi_device(domain)) {
+ 		info = domain->host_data;
+-		ret = info->bus_token == bus_token;
++		return info->bus_token == bus_token;
+ 	}
+-	msi_unlock_descs(dev);
+-	return ret;
++	return false;
+ }
+ 
+ static int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+@@ -1346,12 +1329,9 @@ int msi_domain_alloc_irqs_range(struct d
+ 		.last	= last,
+ 		.nirqs	= last + 1 - first,
+ 	};
+-	int ret;
+ 
+-	msi_lock_descs(dev);
+-	ret = msi_domain_alloc_locked(dev, &ctrl);
+-	msi_unlock_descs(dev);
+-	return ret;
++	guard(msi_descs_lock)(dev);
++	return msi_domain_alloc_locked(dev, &ctrl);
+ }
+ EXPORT_SYMBOL_GPL(msi_domain_alloc_irqs_range);
+ 
+@@ -1455,12 +1435,8 @@ struct msi_map msi_domain_alloc_irq_at(s
+ 				       const struct irq_affinity_desc *affdesc,
+ 				       union msi_instance_cookie *icookie)
+ {
+-	struct msi_map map;
+-
+-	msi_lock_descs(dev);
+-	map = __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
+-	msi_unlock_descs(dev);
+-	return map;
++	guard(msi_descs_lock)(dev);
++	return __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
+ }
+ 
+ /**
+@@ -1497,13 +1473,11 @@ int msi_device_domain_alloc_wired(struct
+ 
+ 	icookie.value = ((u64)type << 32) | hwirq;
+ 
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid) != domain))
+ 		map.index = -EINVAL;
+ 	else
+ 		map = __msi_domain_alloc_irq_at(dev, domid, MSI_ANY_INDEX, NULL, &icookie);
+-	msi_unlock_descs(dev);
+-
+ 	return map.index >= 0 ? map.virq : map.index;
+ }
+ 
+@@ -1596,9 +1570,8 @@ static void msi_domain_free_irqs_range_l
+ void msi_domain_free_irqs_range(struct device *dev, unsigned int domid,
+ 				unsigned int first, unsigned int last)
+ {
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	msi_domain_free_irqs_range_locked(dev, domid, first, last);
+-	msi_unlock_descs(dev);
+ }
+ EXPORT_SYMBOL_GPL(msi_domain_free_irqs_all);
+ 
+@@ -1628,9 +1601,8 @@ void msi_domain_free_irqs_all_locked(str
+  */
+ void msi_domain_free_irqs_all(struct device *dev, unsigned int domid)
+ {
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	msi_domain_free_irqs_all_locked(dev, domid);
+-	msi_unlock_descs(dev);
+ }
+ 
+ /**
+@@ -1649,12 +1621,11 @@ void msi_device_domain_free_wired(struct
+ 	if (WARN_ON_ONCE(!dev || !desc || domain->bus_token != DOMAIN_BUS_WIRED_TO_MSI))
+ 		return;
+ 
+-	msi_lock_descs(dev);
+-	if (!WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) != domain)) {
+-		msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
+-						  desc->msi_index);
+-	}
+-	msi_unlock_descs(dev);
++	guard(msi_descs_lock)(dev);
++	if (WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) != domain))
++		return;
++	msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
++					  desc->msi_index);
+ }
+ 
+ /**
 
