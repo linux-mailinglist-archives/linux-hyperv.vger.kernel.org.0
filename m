@@ -1,335 +1,223 @@
-Return-Path: <linux-hyperv+bounces-4376-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4377-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77EBDA5AEA5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 00:42:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0F98A5B580
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 01:55:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A96C81745E5
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Mar 2025 23:42:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A1877A4928
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 00:54:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56EE221DB7;
-	Mon, 10 Mar 2025 23:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCD141DED5A;
+	Tue, 11 Mar 2025 00:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZOh5hLIz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TzH0Z1Eb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012052.outbound.protection.outlook.com [52.103.2.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08921DE3D2;
-	Mon, 10 Mar 2025 23:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741650127; cv=fail; b=iIC4sIbydIgn3rgSOEVGb2OHXAKcUg0I0YN6mKRyF5iZ+Wsx2YvLSfOjW4XQfvA9fFFUMYU5/X98uzDkqJAi6JiDIq0P5hZWlcgwgnWybv6y+72LmmQEK5x0fUSzdzIvVHnuJLMmDMchQN6Hj+af5ic4jQTNs1WBGPvFUn6gucQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741650127; c=relaxed/simple;
-	bh=1fGTfAogzp5qeVqBpzVCoFrnxNxppYxD5aDsHsFp3eU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=j14ZI6kRCGcmVoIC0O+ZF6p+KNORCdhaJ2nN3GN1rNpTTJP2YfBmyb7ndSiWpklLD7N+S9WEKqU6Fn8rMXKet2AA2Bysjc3etoD+Mh4YF19fwvfaxEcCv/uhImOo3sHqHbPNAzfG20Br6eKtEFIX0DACqC2o/aU3OX+CqMbR6Ds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZOh5hLIz; arc=fail smtp.client-ip=52.103.2.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NAi5ILOiBrXogn1VbGqh7XZylrLXTSTSTmXYuEnrZ//BwJpk5IlbMplTDEPztu4V/p120ydAkcUyisY1u+5HTRAFlduK/cIseyLG14beFbwiO6+hj9IuGA6O33rhH2s0qtnzATFM5fIjWfj3iEY8HKr2lAoZlcxJ6z4XQwOGqStnLSqrgSlsAiqb5+uwBefpkIupzpFn+GVup2R5PoednVVkoOYVRYjYDiEGi7/Iso4iQ6z1JuHHVO96IxKl80K0uZImjHrzu7lwci9IziKibV8HYzC0nz+tZLiNsV/+5Y5F9+m7WOzbFQwKq+OcxMb12CgVkFcQtXOKaeU74ORfRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xi6BMJ2S1d8wCSOgoXMUuMKz9nEwODTNYCL65GwQ8Lw=;
- b=seo4QtWAQeelPKHAm1K98IS4ftHRqvI2paI668bpXpassa0NGN2pdsfM835v8thAIUhX4aVBT3D1Gxm5fmuHfftfXB/f1W9q0SLo2LSAsSffGrE40kz/LZk91qjLj6enuBAF/jVZbbGSy6sg09JIzMbnYwXe9p2QBIDg0zLCImsbdDVGZSas4ZqIsdy4zIMQ30ohp5dKLRL14F5AKJgFcFHLDDVfvZ6NGNZHxp9jIK0szw3N4K+kITTsYjU8xzB5nvb2ZJI91o6NubYBcq74oatLA8tm01SIYg47SmdTbjd7wX9amv+UEiUj3qSqi22reuAftA9MV6jb3d1Avis5+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xi6BMJ2S1d8wCSOgoXMUuMKz9nEwODTNYCL65GwQ8Lw=;
- b=ZOh5hLIz5oB4NDdA06QsF3wCG5xRDrkeszXd0OruW55jr+tdo31AkGY/InIRZIKBvfRFBPAr+9ZE+yBpXJ/VRSlRYVyCAhZ0Ak5d4mDlyg4r8DMTUJ5RInhel6nyerxhHyxI65U0EhIyhUEl1rdVHfb/lO/OalbDK8j0cFS3aADB1UqC4xfpeFlTgegtklJuLgKp9dV+Gi5bK7Qt7qlxLiOiCj+ChpTVICqA3hd3oQA46V+vsgzLHTnBzQLLVeaLqPGxPcW/6KbxLqxmvle9p4DDRPkJpzWos+48BtYY3Vv2mHoCYgZZH/R300YnzGnPjO/GzP6LmksiUi5ZpYzOag==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB7439.namprd02.prod.outlook.com (2603:10b6:a03:295::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Mon, 10 Mar
- 2025 23:42:02 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8511.026; Mon, 10 Mar 2025
- 23:42:02 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Roman Kisel <romank@linux.microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "decui@microsoft.com" <decui@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org" <lenb@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>, "maz@kernel.org"
-	<maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "rafael@kernel.org"
-	<rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
-	<will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: RE: [PATCH hyperv-next v5 11/11] PCI: hv: Get vPCI MSI IRQ domain
- from DeviceTree
-Thread-Topic: [PATCH hyperv-next v5 11/11] PCI: hv: Get vPCI MSI IRQ domain
- from DeviceTree
-Thread-Index: AQHbj60+s6/ZI2Ez5UqL6yl7lUAhFrNtCWbw
-Date: Mon, 10 Mar 2025 23:42:02 +0000
-Message-ID:
- <SN6PR02MB4157FB49E2120B206294D439D4D62@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-12-romank@linux.microsoft.com>
-In-Reply-To: <20250307220304.247725-12-romank@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7439:EE_
-x-ms-office365-filtering-correlation-id: c2f3ac24-f2a7-4cd2-68be-08dd602d286e
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799003|15080799006|461199028|8062599003|8060799006|12091999003|41001999003|440099028|102099032|3412199025;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?wVG905riZSPBtfocoeP3UGgYLzt51VgD1ZUneetgWC5vh9rYVOImrUO1UJIH?=
- =?us-ascii?Q?hOYqc//BT5GJaN5+/z/Tsz4PIpYfDHdwfst/iMHmp8PCUEwQla91UMPHBY5x?=
- =?us-ascii?Q?djNzNPVTyzbjn4arxniDbuk/31yFzQ5zHKJYP7+dAnaH38DQ8jHjHO3RrL1z?=
- =?us-ascii?Q?d3pBoCRu1ETAMK9VLv5//dqTxyZR0ZdvKyA5cBm9NynM3h9fmdbqBKKw2DYt?=
- =?us-ascii?Q?gIFP3lbBWf8Z2rPHg2hH8IV15QrejIYaAWPhQMMvMwi5iAKiJCtgAXPWQ47g?=
- =?us-ascii?Q?Wt946Hh6jXwO9OTDGk4Pg5HELgDb53IVGQGc/cEfHUUxaEGJiI9QTBzYCUfd?=
- =?us-ascii?Q?2B+eQG5OTIx1iLmFqAeQ4xRWYYCfjErhk5NQBe7mi5tP6jkL+Q//MLaRQnes?=
- =?us-ascii?Q?EunQCv95CAWW+YRh77CGnraB98529LxSq52F4rLyaqXgyDt324fwFEziRd9V?=
- =?us-ascii?Q?EhokZv2oMJS+UwTF/WTJZQ6ZTg6A0vHnaL5YHqXZc0aNw75sabe5osQ/GEjx?=
- =?us-ascii?Q?URK7Ps9/taWiQ5HA3Y7UkWOS05pS3hJR5DjGQs1Ny4clpEGPdBNVHTRkFOro?=
- =?us-ascii?Q?qdfuxft3EuGsC62/I1/uORmrxZQjcyA7JZNM+x1qaIJ0lRVs/XhrakW3ZV5Y?=
- =?us-ascii?Q?OR6bBp8th80ii8MwlZukImCw858wNVJkLAOs7xeTCzT1TVPWnYnQ4911dqeJ?=
- =?us-ascii?Q?uzmgqy0NOBu2nIdMmM7QVYWIIrDQrO+0QmB35WQBPu/+hzWJ9xEYF5a7uq4J?=
- =?us-ascii?Q?5dT0DlRT/Gsd85v/GhAu1IAM7jap0wWfONE6tUlHxAwo2JLNERYx8kj+kl0B?=
- =?us-ascii?Q?VE9vDKi2pL0frmvCQH1qph7Dwladz2P/uRJvOEVPMCD5m5VCFA3A3LJm85D3?=
- =?us-ascii?Q?3Avx76zhwPbKPoQfPJmptkC2ISJ/X2k9kB8yh7FMi7fwDYcq7MUBcUz/Yh9c?=
- =?us-ascii?Q?fV4IkMiBn5amLZElvrRH9MCdusqvrV1mjXyJO87L+aSjppmUErJdUSfMsm9l?=
- =?us-ascii?Q?Odqq6xd0ut9Wa9RcMq4Gx5gb1CLJ5ECkRfuqId/x9Sc8uA5EIpsK+BpkgVc6?=
- =?us-ascii?Q?FjAtA6nq3OGVG3XF83kp50LxxmCFk/3mXJfs8UH9IzLx4sIuwtk=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?p+c7bCf0nHYQYSokrhIkt2vaeMuvHc6BbYv0pR+RbOqChvYgBZcDhIseGAux?=
- =?us-ascii?Q?/FqW5T46I5K9CX5gnNIghik4b/XfQzpi8BLetCnIAXoodHl8iBaeB2akRjp8?=
- =?us-ascii?Q?zZuxvIyZFazMP7YCneFDAueKYkEQBAfbIemcfkuLjEHNCEilRB6F5JOu/gkE?=
- =?us-ascii?Q?Z4o25jiMl3ptkzcJQVxEFVTiC5kjgfPzozuMZLeWK9oA+sSL1CVc7KyeI6ht?=
- =?us-ascii?Q?5A/C+8QICoBaERy5LPpNRmXvMcYiRPB2sqv5VtUyzKb7CIDWLhlXZT/ib4Yn?=
- =?us-ascii?Q?pyb0Pdc478ZMlDhJNDkF9nNRUuXp6619eu+v049oKVrFTTShFedBLo24UsfY?=
- =?us-ascii?Q?Gf4/UBEkBpgbjLoEj+O2E1LdS4nzKnw8TguFFOE1pCGqaxF8VZe3cvIbjcG3?=
- =?us-ascii?Q?4n1q27ITJg72qtgi6LdlkFbSaMSb9y7IaZVXJBd8NYEeXYzUjhJ7M5Wd4xmJ?=
- =?us-ascii?Q?+RmtoBGPSpWDS95FTFjtr0STOwofp9qcJh2j70PF5D9+lceVRhUYqAAeXdlW?=
- =?us-ascii?Q?3R7HXijJqFQBuP2CMPXDWLzG4dtpDB7n8wVY8V96dEoL1mSvOkWVUQP7RA5/?=
- =?us-ascii?Q?6J2sDKT65fl28mAd/DUxi74LyTFWKxqCClRCa1GTH2IQ4qzCtX9KYKS0I51z?=
- =?us-ascii?Q?MPR1Z90B1sF+uXAA8pGM2vicrRwk6TxlWqKLN6zdfI3gHruf2Z8CNWIO97wy?=
- =?us-ascii?Q?Q3lQH3TGP7mmUf9j9IDNSA6dwDKvH/uLOqjWjFYj6DI+5xpawtH+HifDPZox?=
- =?us-ascii?Q?s+uli79yTUWf6/EwRIUWl1vdZBI0m0cIii7ORQlKgN6wgWJ8rl2Nmx06Jz4J?=
- =?us-ascii?Q?s9bY1/hIyP2/EYdtqRdbKMxqXI3TF1CP/1ey9r9Zxz9UqTSA1asMgTnIHBOE?=
- =?us-ascii?Q?zBmyvmsQ7zbFvyBSYrOWILc/XlCcsmlMTUbXLLdoHwbAxl4H4shEf03DVLCW?=
- =?us-ascii?Q?x2+akkENcU3edmAQKZBvfIW2REj+bGxXVQpmxQ4ugbsBtpnAxlaLqwACGIsH?=
- =?us-ascii?Q?PGvbPycIahb7zY6oJUdW3RREGFUV06aIcCVbUkjEkUWDT0F78HMUCI/EHFQh?=
- =?us-ascii?Q?5ZBe/yRrbg4eAB97L52oRhCpnVMUazdX/wAAh09hQq8v3gDf0vtMNE8F95O0?=
- =?us-ascii?Q?qlsYhsU1G3GXBC/a2hyT4npFzbVPPnOAP3gSjtxsD2dLzFjPTwHsmCYsB+kW?=
- =?us-ascii?Q?IFeQ4XAU/Vp91FgnEMw1c6ECO7o8Mv2iApZM8hElHroOFzXZ7+VbEbDZyvQ?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74979FD
+	for <linux-hyperv@vger.kernel.org>; Tue, 11 Mar 2025 00:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741654513; cv=none; b=My63rm4tzbX3S2ITZ69YwapPPvyiLxtJMApz6Gvf2aBUFJmwGOq0mNS+rikJ8DSq2AaZbiPkdsoy4La/G+Cm1NyirkfQXPWSi6V59E+1pBQgWsW3NYpWpTt+i0BAJhH90rTZU404Iuc/gpXnr/+SdMZuQpTUXI0Ikxpakm4vOFg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741654513; c=relaxed/simple;
+	bh=3fsAIf5wHFxnMvfeS5Vh1clVxlVj7KXR0xGOyiLkYaM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aITVwvn90M2QBI9lM9ggzXnU+d/sQHFQ37iYbZS7hCLCBUr/j/4rX8NfZ1IsHJks7rCaPWhhl9K3OYyDpVOrmCO757ZOg0TpuxRLSMsiFdvhtGCxu0v7NvCIqld1vHhe+hMTp7fA6M3q/A3oCQ54YlfVHcxjAmrsFIXx1N5N5XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TzH0Z1Eb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741654510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O2Py8G36+UkX5eKsf40xMemSQMNbOrMlyvipkmsMT5g=;
+	b=TzH0Z1EbIU+CS/jzg7YROkRVEqgqZ0Cb9GozwEjEp9fKjhzFT9TP92Yz285hBclx6WTWhx
+	d7gQrTUxLOeWwav5Pkp32SMRKZDG8cDgOjePYoJIwmIUEedoSKzGHL7DJ+nPbtUYPeW9NN
+	Aosono+ZmBxdlYfZ40l1HC4r6X3njw8=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-508-rAWd_hUdPO6YYs3Pgo-j0w-1; Mon, 10 Mar 2025 20:55:08 -0400
+X-MC-Unique: rAWd_hUdPO6YYs3Pgo-j0w-1
+X-Mimecast-MFC-AGG-ID: rAWd_hUdPO6YYs3Pgo-j0w_1741654508
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2feded265deso8341692a91.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 10 Mar 2025 17:55:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741654508; x=1742259308;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O2Py8G36+UkX5eKsf40xMemSQMNbOrMlyvipkmsMT5g=;
+        b=i4CPYyrjhuDjyvPncMBkznOZ2BOPYGK3Wrz6AXwzv5aktIdCjcCqKiO1G6hghmEcaK
+         UuvT1HvaQDVNAXdq08vN2qVBFuHwOOD0eMjuHDz5TymsjPJWG0bOeuHMwR+GWIWUxiYz
+         uMQgAJfxcmPeSXAdBKNJ57S6hCfAaPKikiGwEY7DyuP3mNMBSaiH4KyJggOymOlWXPSl
+         HbkgbkNg3mulSQLynMmpDfI/QeQJwzLssSuT/8TkKRSf88OpmF4eNr0j3qRGODlBdx/c
+         Iy6BisLGJPG/UEKRtAIiFdAR51HHj+XywB0pmzzNggF5+sUMUJOLFgz5ano1cHJCl92U
+         apyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQBQie/8DnbjKec1ydsJt8oFiwmtJrY3jrJmr6FvLFNhVIdFILxxXc1lkttrgNhwIAK56ENporKMvKiMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJZwOY4Hq6jFrwZWNDIsTSoq2su9R7E1PBsDuUxcF8i3XD7TQa
+	gt+Ut5bS9fCpkuWh1uehMaqF6Bo8kkXpVgszFCEg06ZSy7O0KUEsGeC9+9R5rL3zpbgCmBf1CpN
+	l8LhT4zAjscyjwl90khqLZXwuBuMJXvpuVSW+9QXFTtZG+MIm+U9uztlFRSrBI3IXtBwHA2e506
+	sjaTfWAAcDVnsUzga4v31lOPnC3tPebtemkjTY
+X-Gm-Gg: ASbGncuuoLbTo3m6JzvrkSPtsG8AjVtutA621FHQB/F2QqG5SS/Fv5PUF7/2Yv+z4T8
+	mwFqttBHTw1rVNtcwYQ3zm6RXnCg4rw+gLTnVIFVX4vU58BTQTf110Sur3s6zWKabDM9mag==
+X-Received: by 2002:a17:90b:4c4a:b0:2f1:3355:4a8f with SMTP id 98e67ed59e1d1-2ff7ce4fe20mr22950037a91.4.1741654507743;
+        Mon, 10 Mar 2025 17:55:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6jfDj1tigsvwvzON4S5anyxLKOZz2BPa8XVtCqvLFOGsgfWbc5iRyHMwx3t03SpVWwyRAyxThSlPN83EQHbE=
+X-Received: by 2002:a17:90b:4c4a:b0:2f1:3355:4a8f with SMTP id
+ 98e67ed59e1d1-2ff7ce4fe20mr22950006a91.4.1741654507280; Mon, 10 Mar 2025
+ 17:55:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2f3ac24-f2a7-4cd2-68be-08dd602d286e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 23:42:02.4498
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7439
+References: <20200116172428.311437-1-sgarzare@redhat.com> <20200427142518.uwssa6dtasrp3bfc@steredhat>
+ <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com> <20200428160052.o3ihui4262xogyg4@steredhat>
+ <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com> <20250305022248-mutt-send-email-mst@kernel.org>
+ <v5c32aounjit7gxtwl4yxo2q2q6yikpb5yv3huxrxgfprxs2gk@b6r3jljvm6mt>
+ <CACGkMEvms=i5z9gVRpnrXXpBnt3KGwM4bfRc46EztzDi4pqOsw@mail.gmail.com> <CAGxU2F7SWG0m0KwODbKsbQipz6WzrRSuE1cUe6mYxZskqkbneQ@mail.gmail.com>
+In-Reply-To: <CAGxU2F7SWG0m0KwODbKsbQipz6WzrRSuE1cUe6mYxZskqkbneQ@mail.gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 11 Mar 2025 08:54:55 +0800
+X-Gm-Features: AQ5f1JqbKGL09EDs4AANVPKPpJR8e6B1lwdfdgUaMoGqSW4HxLXa24nFHlRYtEo
+Message-ID: <CACGkMEtptFWx_v-14e1LM31XH+fOh4U-VO7gZKyqb1J1KM4uag@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Bobby Eshleman <bobbyeshleman@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, 
+	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, 
+	Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, March 7, 2025 =
-2:03 PM
->=20
-> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
-> arm64. It won't be able to do that in the VTL mode where only DeviceTree
-> can be used.
->=20
-> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
-> case, too.
->=20
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 79 ++++++++++++++++++++++++++---
->  1 file changed, 73 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 6084b38bdda1..9740006a8c73 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -50,6 +50,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/acpi.h>
->  #include <linux/sizes.h>
-> +#include <linux/of_irq.h>
->  #include <asm/mshyperv.h>
->=20
->  /*
-> @@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct ir=
-q_domain *domain,
->  	int ret;
->=20
->  	fwspec.fwnode =3D domain->parent->fwnode;
-> -	fwspec.param_count =3D 2;
-> -	fwspec.param[0] =3D hwirq;
-> -	fwspec.param[1] =3D IRQ_TYPE_EDGE_RISING;
-> +	if (is_of_node(fwspec.fwnode)) {
-> +		/* SPI lines for OF translations start at offset 32 */
-> +		fwspec.param_count =3D 3;
-> +		fwspec.param[0] =3D 0;
-> +		fwspec.param[1] =3D hwirq - 32;
-> +		fwspec.param[2] =3D IRQ_TYPE_EDGE_RISING;
-> +	} else {
-> +		fwspec.param_count =3D 2;
-> +		fwspec.param[0] =3D hwirq;
-> +		fwspec.param[1] =3D IRQ_TYPE_EDGE_RISING;
-> +	}
->=20
->  	ret =3D irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
->  	if (ret)
-> @@ -887,10 +896,53 @@ static const struct irq_domain_ops hv_pci_domain_op=
-s =3D {
->  	.activate =3D hv_pci_vec_irq_domain_activate,
->  };
->=20
-> +#ifdef CONFIG_OF
-> +
-> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
-> +{
-> +	struct device_node *parent;
-> +	struct irq_domain *domain;
-> +
-> +	parent =3D of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
-> +	domain =3D NULL;
-> +	if (parent) {
-> +		domain =3D irq_find_host(parent);
-> +		of_node_put(parent);
-> +	}
-> +
-> +	return domain;
-> +}
+On Mon, Mar 10, 2025 at 10:15=E2=80=AFPM Stefano Garzarella <sgarzare@redha=
+t.com> wrote:
+>
+> On Thu, 6 Mar 2025 at 01:17, Jason Wang <jasowang@redhat.com> wrote:
+> >
+> > On Wed, Mar 5, 2025 at 5:30=E2=80=AFPM Stefano Garzarella <sgarzare@red=
+hat.com> wrote:
+> > >
+> > > On Wed, Mar 05, 2025 at 02:27:12AM -0500, Michael S. Tsirkin wrote:
+> > > >On Tue, Mar 04, 2025 at 04:39:02PM -0800, Bobby Eshleman wrote:
+> > > >> I think it might be a lot of complexity to bring into the picture =
+from
+> > > >> netdev, and I'm not sure there is a big win since the vsock device=
+ could
+> > > >> also have a vsock->net itself? I think the complexity will come fr=
+om the
+> > > >> address translation, which I don't think netdev buys us because th=
+ere
+> > > >> would still be all of the work work to support vsock in netfilter?
+> > > >
+> > > >Ugh.
+> > > >
+> > > >Guys, let's remember what vsock is.
+> > > >
+> > > >It's a replacement for the serial device with an interface
+> > > >that's easier for userspace to consume, as you get
+> > > >the demultiplexing by the port number.
+> >
+> > Interesting, but at least VSOCKETS said:
+> >
+> > """
+> > config VSOCKETS
+> >         tristate "Virtual Socket protocol"
+> >         help
+> >          Virtual Socket Protocol is a socket protocol similar to TCP/IP
+> >           allowing communication between Virtual Machines and hyperviso=
+r
+> >           or host.
+> >
+> >           You should also select one or more hypervisor-specific transp=
+orts
+> >           below.
+> >
+> >           To compile this driver as a module, choose M here: the module
+> >           will be called vsock. If unsure, say N.
+> > """
+> >
+> > This sounds exactly like networking stuff and spec also said something =
+similar
+> >
+> > """
+> > The virtio socket device is a zero-configuration socket communications
+> > device. It facilitates data transfer between the guest and device
+> > without using the Ethernet or IP protocols.
+> > """
+> >
+> > > >
+> > > >The whole point of vsock is that people do not want
+> > > >any firewalling, filtering, or management on it.
+> >
+> > We won't get this, these are for ethernet and TCP/IP mostly.
+> >
+> > > >
+> > > >It needs to work with no configuration even if networking is
+> > > >misconfigured or blocked.
+> >
+> > I don't see any blockers that prevent us from zero configuration, or I
+> > miss something?
+> >
+> > >
+> > > I agree with Michael here.
+> > >
+> > > It's been 5 years and my memory is bad, but using netdev seemed like =
+a
+> > > mess, especially because in vsock we don't have anything related to
+> > > IP/Ethernet/ARP, etc.
+> >
+> > We don't need to bother with that, kernel support protocols other than =
+TCP/IP.
+>
+> Do we have an example of any other non-Ethernet device that uses
+> netdev? Just to see what we should do.
 
-You could insert the following and avoid the #ifdef's in hv_pci_irqchip_ini=
-t():
+Yes, I think can device is one example and it should have others.
 
-#else
-static struct irq_domain *hv_pci_of_irq_domain_parent(void) {return NULL;}
+>
+> I'm not completely against the idea, but from what I remember when I
+> looked at it five years ago, it wasn't that easy and straightforward
+> to use.
 
-> +
-> +#endif
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
-> +{
-> +	struct irq_domain *domain;
-> +	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
-> +
-> +	if (acpi_irq_model !=3D ACPI_IRQ_MODEL_GIC)
-> +		return NULL;
-> +	gsi_domain_disp_fn =3D acpi_get_gsi_dispatcher();
-> +	if (!gsi_domain_disp_fn)
-> +		return NULL;
-> +	domain =3D irq_find_matching_fwnode(gsi_domain_disp_fn(0),
-> +				     DOMAIN_BUS_ANY);
-> +
-> +	if (!domain)
-> +		return NULL;
-> +
-> +	return domain;
-> +}
+Can just hook the packets into its own stack, maybe vsock can do the same.
 
-Same here:
+>
+> >
+> > >
+> > > I see vsock more as AF_UNIX than netdev.
+> >
+> > But you have a device in guest that differs from the AF_UNIX.
+>
+> Yes, but the device is simply for carrying messages.
+> Another thing that makes me think of AF_UNIX is the hybrid-vsock
+> developed by Firecracker [1] that we also reused in vhost-user-vsock
+> [2], where the mapping between AF_VSOCK and AF_UNIX is really
+> implemented.
 
-#else
-static struct irq_domain *hv_pci_acpi_irq_domain_parent(void) {return NULL;=
-}
+I see. But the main difference is that vsock can work across the
+boundary of guest and host. This makes it hard to be a 100% socket
+implementation in the guest.
 
-I don't know if it's better or not. Just a suggestion -- keep what you have=
- if
-you prefer.
+Thanks
 
-> +
-> +#endif
-> +
->  static int hv_pci_irqchip_init(void)
->  {
->  	static struct hv_pci_chip_data *chip_data;
->  	struct fwnode_handle *fn =3D NULL;
-> +	struct irq_domain *irq_domain_parent =3D NULL;
->  	int ret =3D -ENOMEM;
->=20
->  	chip_data =3D kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> @@ -907,9 +959,24 @@ static int hv_pci_irqchip_init(void)
->  	 * way to ensure that all the corresponding devices are also gone and
->  	 * no interrupts will be generated.
->  	 */
-> -	hv_msi_gic_irq_domain =3D acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_N=
-R,
-> -							  fn, &hv_pci_domain_ops,
-> -							  chip_data);
-> +#ifdef CONFIG_ACPI
-> +	if (!acpi_disabled)
-> +		irq_domain_parent =3D hv_pci_acpi_irq_domain_parent();
-> +#endif
-> +#if defined(CONFIG_OF)
-> +	if (!irq_domain_parent)
-> +		irq_domain_parent =3D hv_pci_of_irq_domain_parent();
-> +#endif
-> +	if (!irq_domain_parent) {
-> +		WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
-> +		ret =3D -EINVAL;
-> +		goto free_chip;
-> +	}
-> +
-> +	hv_msi_gic_irq_domain =3D irq_domain_create_hierarchy(
-> +		irq_domain_parent, 0, HV_PCI_MSI_SPI_NR,
-> +		fn, &hv_pci_domain_ops,
-> +		chip_data);
->=20
->  	if (!hv_msi_gic_irq_domain) {
->  		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
-> --
-> 2.43.0
->=20
+>
+> Thanks,
+> Stefano
+>
+> [1] https://github.com/firecracker-microvm/firecracker/blob/main/docs/vso=
+ck.md#firecracker-virtio-vsock-design
+> [2] https://github.com/rust-vmm/vhost-device/tree/main/vhost-device-vsock
+>
 
-Overall, I think the code looks right, though I'm not an expert in this are=
-a. I'll
-give my Reviewed-by: once Bjorn's coding suggestions are incorporated.
-
-Michael
 
