@@ -1,149 +1,171 @@
-Return-Path: <linux-hyperv+bounces-4428-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4429-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7487AA5E354
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 19:00:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E8F6A5E368
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 19:05:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC8F53A38DC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 18:00:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7A851896B47
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 18:05:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 013701D63C4;
-	Wed, 12 Mar 2025 18:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40832571DE;
+	Wed, 12 Mar 2025 18:05:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hkfrrJSp"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jYKT7aaV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D6F8635C;
-	Wed, 12 Mar 2025 18:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7357C256C9E;
+	Wed, 12 Mar 2025 18:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741802427; cv=none; b=JV3cdTXI80EZZfxudVg9FB2ciKVHp4bjmrl7S9kaqFQySIo5g3OQ15VbUJ3w3nk2XJ3gE+L8eQFMSCZtuACpbiMk1PS7Dq8kwv2kickuffJq3F8E2ZeYQk5xThl/NrCHihIEiBsvhLr6hx4PdqgHpYdUcVLwG+EhZiibD2WzHCU=
+	t=1741802704; cv=none; b=s6PazNnIEa54gWJi0sH5QWweHMuWx+E29brjn4k/kp4PspGCnMKdQRkyKW4/TxHcbNEB3o0NXB/buJvNZkqLdCQCrzb7KsBsn73PKbYihpHMgK4sDTI4qV5sDCwip4/wEhl6yD6aBVBg8oXg+fxZwx0TRAVJpuypR09J2lkNshs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741802427; c=relaxed/simple;
-	bh=oV1jKXyKCcmGjWlSIr3cbhebDw/eEAZ7VyyVaXDSRPY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9mIOXL7O08Hx9/x69r4/bQeEAfc0z572k4b9AtGD4YlrKqRn45LMPX/3hYk9PIhj/TF42V7rpGqzrCHzpsMw2SVWPYpVb2J05yRw6WgEvYHxUMRzfVjETtBVg6qpXP7QksLpOACEumETvsWHDult7AFdzUJ0R86fN3cWlSQbiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hkfrrJSp; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52CHxlo71652549
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Mar 2025 12:59:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741802387;
-	bh=1gu2hLHkw3oXjZ+lNcFWEL88KOjDXH3qbsIRgSuLXZg=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=hkfrrJSptdQGA2ajD0QInTrYQ0AvrhJbV/4wNXT71IyQVlLn7+gaicisEVPcNXdcj
-	 UpLXeNvJ4rG688hK+jp2dIm51qMfXCLsWxzVR1jad0tn7eR0dak1KDrrLukZWm6/3Y
-	 Sx0jdQ/CfwH5Fjq9k0hhO2WnFXZ4rjl6ho4NLS7g=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52CHxlZ9002568
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 12 Mar 2025 12:59:47 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
- Mar 2025 12:59:46 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 12 Mar 2025 12:59:47 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52CHxk4p048636;
-	Wed, 12 Mar 2025 12:59:46 -0500
-Date: Wed, 12 Mar 2025 12:59:46 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Tero
- Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>, Jon
- Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>, Allen Hubbe
-	<allenbh@gmail.com>,
-        <ntb@lists.linux.dev>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, Haiyang Zhang
-	<haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
-        Wei Huang <wei.huang2@amd.com>,
-        Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>
-Subject: Re: [patch 03/10] soc: ti: ti_sci_inta_msi: Switch MSI descriptor
- locking to guard()
-Message-ID: <20250312175946.mirwklpli45qsqd5@brittle>
-References: <20250309083453.900516105@linutronix.de>
- <20250309084110.330984023@linutronix.de>
+	s=arc-20240116; t=1741802704; c=relaxed/simple;
+	bh=YRkqEDAnEJO9uif9D8gYv3G3QiocUg9KYSfoxRMiepo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dX1QvFhfCwvnePpZDqCpbRNUj7skYFkHrAT5EboN8FIQda7LwZ0mHNamJsJ/p1XOgvPvfTsLKYKc7XSmM+7sN7dJkbOtQNZEVlwrkEEtv3veHiz4xBRl+iCVsPNVJrl09EaxBzJEDWRCeCaS0cMctrzQB2h0DfVXDcRMfDnc9U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jYKT7aaV; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1B63C210B155;
+	Wed, 12 Mar 2025 11:05:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B63C210B155
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741802702;
+	bh=3LuHCHpuveXkpSQUcYt/4aNBi7uFbOG/3oEGn8E8LXY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jYKT7aaV5gspSop8H5hJDvSoYzQZSeYlg64Ifr722u0Nb9Lg5Imcrfh9r7PIfD5lT
+	 6Gx7WdXYzK5Qkk74C6o++r7isZrfq5nwtn1HQ8mbeg+mlVaPIh0Da7Nxn0zjSmQ6i1
+	 ISWSMrdAV6mX4SniwmTsX/jUZuFL1ANTVkqQw/UY=
+Message-ID: <8520ef42-6cb4-4e14-9700-de7ae8a99ae8@linux.microsoft.com>
+Date: Wed, 12 Mar 2025 11:04:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250309084110.330984023@linutronix.de>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/10] x86/mshyperv: Add support for extended Hyper-V
+ features
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
+ <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+ "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
+ "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+ "muislam@microsoft.com" <muislam@microsoft.com>,
+ "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
+ "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
+ <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157CBBC2D186E1944E6773AD4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157CBBC2D186E1944E6773AD4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 09:41-20250309, Thomas Gleixner wrote:
-> Convert the code to use the new guard(msi_descs_lock).
+On 3/6/2025 10:30 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, February 26, 2025 3:08 PM
+>>
+>> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+>>
+>> Extend the "ms_hyperv_info" structure to include a new field,
+>> "ext_features", for capturing extended Hyper-V features.
+>> Update the "ms_hyperv_init_platform" function to retrieve these features
+>> using the cpuid instruction and include them in the informational output.
+>>
+>> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> ---
+>>  arch/x86/kernel/cpu/mshyperv.c | 6 ++++--
+>>  include/asm-generic/mshyperv.h | 1 +
+>>  2 files changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+>> index 4f01f424ea5b..2c29dfd6de19 100644
+>> --- a/arch/x86/kernel/cpu/mshyperv.c
+>> +++ b/arch/x86/kernel/cpu/mshyperv.c
+>> @@ -434,13 +434,15 @@ static void __init ms_hyperv_init_platform(void)
+>>  	 */
+>>  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
+>>  	ms_hyperv.priv_high = cpuid_ebx(HYPERV_CPUID_FEATURES);
+>> +	ms_hyperv.ext_features = cpuid_ecx(HYPERV_CPUID_FEATURES);
+>>  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+>>  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+>>
+>>  	hv_max_functions_eax = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
+>>
+>> -	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, hints 0x%x, misc 0x%x\n",
+>> -		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
+>> +	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, ext 0x%x, hints 0x%x, misc 0x%x\n",
+>> +		ms_hyperv.features, ms_hyperv.priv_high,
+>> +		ms_hyperv.ext_features, ms_hyperv.hints,
+>>  		ms_hyperv.misc_features);
+>>
+>>  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index dc4729dba9ef..c020d5d0ec2a 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -36,6 +36,7 @@ enum hv_partition_type {
+>>  struct ms_hyperv_info {
+>>  	u32 features;
+>>  	u32 priv_high;
+>> +	u32 ext_features;
+>>  	u32 misc_features;
+>>  	u32 hints;
+>>  	u32 nested_features;
+>> --
+>> 2.34.1
 > 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <kristo@kernel.org>
-> Cc: Santosh Shilimkar <ssantosh@kernel.org>
-> ---
->  drivers/soc/ti/ti_sci_inta_msi.c |   10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> --- a/drivers/soc/ti/ti_sci_inta_msi.c
-> +++ b/drivers/soc/ti/ti_sci_inta_msi.c
-> @@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
->  	if (ret)
->  		return ret;
->  
-> -	msi_lock_descs(dev);
-> +	guard(msi_descs_lock)(dev);
->  	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
-> -	if (nvec <= 0) {
-> -		ret = nvec;
-> -		goto unlock;
-> -	}
-> +	if (nvec <= 0)
-> +		return nvec;
->  
->  	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
->  	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
->  	if (ret)
->  		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
-> -unlock:
-> -	msi_unlock_descs(dev);
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
-> 
+> Are any of the extended features available on arm64? This code is obviously x86 specific,
+> so ms_hyperv.ext_features will be zero on arm64. From what I can see, ext_features is
+> referenced only in Patch 10 of this series, and in code that is under #ifdef CONFIG_X86_64,
+> so that should be OK.
 
-Quick test of the series for basic NFS boot (which uses INTR/INTA MSI
-for Ethernet) on TI K3 platforms against linux-next:
-https://gist.github.com/nmenon/26ea6eb530de34808ab04b1958a0b28b
+Just checked - yes ARM64 has features in ECX, but they are different to the x86_64 ones.
+We can add the ARM64 ones when needed.
 
-Tested-by: Nishanth Menon <nm@ti.com>
+Thanks
+Nuno
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+> 
+> The pr_info() line will now be slightly different on x86 and arm64 since arm64 won't have
+> the "ext" field, but I think that's OK too.
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
 
