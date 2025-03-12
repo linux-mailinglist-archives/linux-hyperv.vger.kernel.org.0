@@ -1,238 +1,170 @@
-Return-Path: <linux-hyperv+bounces-4446-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4447-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1049EA5E74D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 23:24:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C72C1A5E770
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 23:29:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F6953B2533
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:24:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 085BA17BF59
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:29:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 696001EF0AD;
-	Wed, 12 Mar 2025 22:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60311F03CD;
+	Wed, 12 Mar 2025 22:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFj1bo98"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from cosmicgizmosystems.com (cosgizsys.com [63.249.102.155])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE5719E96D;
-	Wed, 12 Mar 2025 22:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B9419E96D;
+	Wed, 12 Mar 2025 22:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741818271; cv=none; b=RWI5g5SvrsVK+RRcAYehmR5paF6jqMidBQEcsvb8ifw426qcQda9tf2mrYrSn64t9U4fml1X5UZPkW6O0aaVgq4WT+EpCz9ltLnrFZxCGT9Rm0bJvbtGqAENzaBNFQd2qvHteGfcg5zaDd1SYXJDvhx0G3fjdKILEKVwkVmb01g=
+	t=1741818552; cv=none; b=OinrIyMTU3IuZ1jlZSO1ntPkKC1daybOczKiOWzbNVtLup/6XWugxrH9N27JAUT6lj09jHamoG3Vdv9TzTyMJHjXVz82vnezGg7Hb+m+oAhPlokNE+yfNiIHPatceWJ86LqrcNn5HghU33MpHdRRGgUmL4TkVTQrG4kWq5OqZGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741818271; c=relaxed/simple;
-	bh=aKB6uJLD7Tj/jkqWr7UbVcwzSVHvViuFhCAApt4sCe8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mqfVRRwOOx8OEihvKJTBl8zfz1zzIOgJIdVcSlF4PNxm5FjwZ/Vo16Eb002tlxwBZH9HbpssrenPGFGVr5dt6pmYAkkRo7efwGzpQErq6BsacdK8kEltq48MC7ive6FeCjh8HG0fnYwBuZ42pUpkYsnQCEMkD5BLks+IDv+hgtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
-Received: from terrys-Precision-M4600.hsd1.wa.comcast.net (c-71-63-147-217.hsd1.wa.comcast.net [71.63.147.217])
-	by host11.cruzio.com (Postfix) with ESMTPSA id B6B2428A6324;
-	Wed, 12 Mar 2025 15:24:20 -0700 (PDT)
-From: Terry Junge <linuxhid@cosmicgizmosystems.com>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Terry Junge <linuxhid@cosmicgizmosystems.com>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	lvc-project@linuxtesting.org,
-	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v2] HID: usbhid: Eliminate recurrent out-of-bounds bug in usbhid_parse()
-Date: Wed, 12 Mar 2025 15:23:31 -0700
-Message-ID: <20250312222333.2296363-1-linuxhid@cosmicgizmosystems.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
-References: <20250307045449.745634-1-linuxhid@cosmicgizmosystems.com>
+	s=arc-20240116; t=1741818552; c=relaxed/simple;
+	bh=6PSD8Ihb5wqTIoMhe00VHOCE57HyMwiB7MEagGbuhZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfSDN2V+AhDwl8spPzkdX142x96Qw2e6u2r6clM3eqWc2rjsJo5BS3IZa0ieF7VjybzQxLpCY9NhVE6rUOAbW8BOCwxM2SEYxkdHMMx4XcCwIIk5Zf2IIhX12ZvFwow8G7j0YSgCvtgafubXneHzl/pnaVM+950LYloch/hu4OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFj1bo98; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223fb0f619dso6501435ad.1;
+        Wed, 12 Mar 2025 15:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741818550; x=1742423350; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7Zt5RBTdS4tu9y1ZkvHvMS6PvikbgYBd+xanSqGhaSs=;
+        b=LFj1bo98U5ofV7suHOs88OkZxgEoPC6S5uk1QIxc9pzu1VGMnTEQJIa9pqFlbbheo+
+         Em1bmkLPeUvqKMCAuj3lktGsy41LS8xJ62OlGnX+XcQopyeRtKsVgzBRKsAlXF2Cqw4T
+         uSiE9jCCNd5zqYE2e/u9bAPP+FlglAIBdufsyDnI8a15K15cS3wBWkQ9+Ktcg3FW/qVq
+         NKQ0zVmJDCD0Xs2wjn5kLXxQSvyZCpHDhdStUqrD4XWmXJugMemHmG99qaNq5oRpC4xD
+         k1z0MpMY/ZvavWFw1wXSNS/G3JyD1wdkX+uJpQi1zKDtFAez5jLOtkyOnmXn9SrgmcPJ
+         u9ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741818550; x=1742423350;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Zt5RBTdS4tu9y1ZkvHvMS6PvikbgYBd+xanSqGhaSs=;
+        b=M6REmIARnFB01wHvlC5WqT8nCkLI73to98bpjCn5SS/5gY013NBJ5+ntOyn9SfXBqQ
+         XmvWKYjEO9wmaWsQYPBwYUxJqHmxc6gosR7yvWyoPoJggp4NUzBupbzBj8cFvT+PUrsa
+         yVGZmPAOpmn598HgCZS5IBfm2lhV2HsxizjfgJVOnSJaRzhbZct5INLULu8WgfJdLJBO
+         R8rLEi3LoQ4gEnI79baN67sbKvaW0w5Z07hzM7mnH7x/eRCv8nDEJ+csr5UX0I1WBiRP
+         HdRBn4oFhfH0blQh4vFoafZ66l1JbAMsL5xeZnj98xTHnGHA+UJ4WCShcuyc3qQVrViH
+         myiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOb1ZyfhGJlQh46KJLimc2nFKmCdAKk9+f0dDjXl6dDjqy90pHuhpdLgrNBdvPpbVDOhPn7S4o@vger.kernel.org, AJvYcCV/i046aWP7ZL+eWK4FiK5omCi6DTmbCttUEjtBgw2sAmW+44HTi3cTk74tdsLHsyIwc4YrIzT6Ci0fGTLN@vger.kernel.org, AJvYcCVLqwZhSMWNJ2eB2TaIbB8jjc5Bkil1bsi0rlTMiFwzBfTlMTzyl16aGq8zWla2G3vmUvU=@vger.kernel.org, AJvYcCWGt0N4WZRhVu0x2llfkvwrIVPaZ6xnFd3xIX+SQ5fqrunYWg/ahR49F7Rlo0kSWE6RHbLRNaUTvMq1Mlu6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSAsqp8oGwmY22dRfT/BjW1g2g0yPYRTAFNyQpsw5N12wi80VI
+	DtcH1Xq44l0j2N5KLyo5zgucfo1voP6kfauSg/wrZtrGh+TORd2e
+X-Gm-Gg: ASbGncvscoeLH16Ju9H0DAln/lesHkz32J1wR7UI3upxFTyCIVuay83Z0VUhoI/d1cP
+	DJ9qOz3yMwPG2N7VJyrTNIOkK99+Ba4YiAOwJBya9k2NeHEUN+8pky2RdpbgGuVuaWJlDVJg02N
+	TwMjnFzMUXyBYY95+OHI0eFiUC5PQHCOjVwdUv2rUjlXt7dSfOAxnLpd045dOxLrfVMtnOoWwv7
+	55g4uUbtFTM3ZsDkj5Z1cvqWwCkAUYvm6SfKuDFeB2FTegp+TfGHdqRmkeeG8pwFphcsJBKEXN8
+	/WI4sjE5Ef+3QQlZGR5W+j3939uUqcZ1ftDU8Nmjp9zNOaXX5P4N8HCvz3PuASYLav2EZOdfLK8
+	g
+X-Google-Smtp-Source: AGHT+IG5eB7LsgG76qzryME3xovo7CXpCBzbsMGvNvGwS4V4Ch2lCvncSSjVtCrUYYynhYS0YR2b6g==
+X-Received: by 2002:a05:6a20:160c:b0:1f5:7007:9eb1 with SMTP id adf61e73a8af0-1f58cbc4a43mr14791625637.34.1741818550325;
+        Wed, 12 Mar 2025 15:29:10 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:5::])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea7c87csm46437a12.57.2025.03.12.15.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 15:29:09 -0700 (PDT)
+Date: Wed, 12 Mar 2025 15:29:07 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>, davem@davemloft.net,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org,
+	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+	netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
+Message-ID: <Z9IKs15jhjaaj5px@devvm6277.cco0.facebook.com>
+References: <20200116172428.311437-1-sgarzare@redhat.com>
+ <20200427142518.uwssa6dtasrp3bfc@steredhat>
+ <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
+ <20200428160052.o3ihui4262xogyg4@steredhat>
+ <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
+ <CACGkMEtTgmFVDU+ftDKEvy31JkV9zLLUv25LrEPKQyzgKiQGSQ@mail.gmail.com>
+ <Z89ILjEUU12CuVwk@devvm6277.cco0.facebook.com>
+ <CACGkMEskp720d+UKm_aPUtGZC5NzH+mp_YKoY2NQV6_YBbRz9g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACGkMEskp720d+UKm_aPUtGZC5NzH+mp_YKoY2NQV6_YBbRz9g@mail.gmail.com>
 
-Update struct hid_descriptor to better reflect the mandatory and
-optional parts of the HID Descriptor as per USB HID 1.11 specification.
-Note: the kernel currently does not parse any optional HID class
-descriptors, only the mandatory report descriptor.
+On Tue, Mar 11, 2025 at 08:59:44AM +0800, Jason Wang wrote:
+> On Tue, Mar 11, 2025 at 4:14 AM Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+> >
+> > On Wed, Mar 05, 2025 at 01:46:54PM +0800, Jason Wang wrote:
+> > > On Wed, Mar 5, 2025 at 8:39 AM Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+> > > >
+> > > > On Tue, Apr 28, 2020 at 06:00:52PM +0200, Stefano Garzarella wrote:
+> > > > > On Tue, Apr 28, 2020 at 04:13:22PM +0800, Jason Wang wrote:
+> > > >
+> > > > WRT netdev, do we foresee big gains beyond just leveraging the netdev's
+> > > > namespace?
+> > >
+> > > It's a leverage of the network subsystem (netdevice, steering, uAPI,
+> > > tracing, probably a lot of others), not only its namespace. It can
+> > > avoid duplicating existing mechanisms in a vsock specific way. If we
+> > > manage to do that, namespace support will be a "byproduct".
+> > >
+> > [...]
+> > >
+> > > Yes, it can. I think we need to evaluate both approaches (that's why I
+> > > raise the approach of reusing netdevice). We can hear from others.
+> > >
+> >
+> > I agree it is worth evaluating. If netdev is being considered, then it
+> > is probably also worth considering your suggestion from a few years back
+> > to add these capabilities by building vsock on top of virtio-net [1].
+> >
+> > [1] https://lore.kernel.org/all/2747ac1f-390e-99f9-b24e-f179af79a9da@redhat.com/
+> 
+> Yes. I think having a dedicated netdev might be simpler than reusing
+> the virito-net.
+> 
+> >
+> > Considering that the current vsock protocol will only ever be able to
+> > enjoy a restricted feature set of these other net subsystems due to its
+> > lack of tolerance for packet loss (e.g., no multiqueue steering, no
+> > packet scheduling), I wonder if it would be best to a) wait until a user
+> > requires these capabilities, and b) at that point extend vsock to tolerate
+> > packet loss (add a seqnum)?
+> 
+> Maybe, a question back to this proposal. What's the plan for the
+> userspace? For example, do we expect to extend iproute2 and other and
+> how (e.g having a new vsock dedicated tool)?
+> 
 
-Update all references to member element desc[0] to rpt_desc.
+If we were going to add a seqnum and start bringing in other systems, we
+would probably want to add support into iproute2. For example, when I
+played with qdisc, using ip seemed like the best from the user side.
+The iproute2 changes weren't bad at all[1]. We'd probably need the
+device to carry a new feature bit too.
 
-Add test to verify bLength and bNumDescriptors values are valid.
+That said, all of this still creates the problem of adding new
+system-level ways to disrupt AF_VSOCK users. I think we could offer this
+in a way that is orthogonal to prior vsock, possibly AF_VSOCK2, a
+sockopt, or ioctl to opt-in to using net features... so that we aren't
+violating commitment to existing users that vsock should work regardless
+of network configuration? letting the user that holds the fd of the
+socket make the choice might be the best way to safeguard the contract?
 
-Replace the for loop with direct access to the mandatory HID class
-descriptor member for the report descriptor. This eliminates the
-possibility of getting an out-of-bounds fault.
+[1]:	https://github.com/beshleman/iproute2/commit/55fd8a6c133335cda4ede6f8928eb3cea54534b8
 
-Add a warning message if the HID descriptor contains any unsupported
-optional HID class descriptors.
-
-Reported-by: syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=c52569baf0c843f35495
-Fixes: f043bfc98c19 ("HID: usbhid: fix out-of-bounds bug")
-Cc: stable@vger.kernel.org
-Signed-off-by: Terry Junge <linuxhid@cosmicgizmosystems.com>
----
-v1: Remove unnecessary for loop searching for the report descriptor size.
-v2: Fix compiler warning.
-base-commit: 58c9bf3363e596d744f56616d407278ef5f97f5a
-
-P.S. This is an alternative to the solution proposed by Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Link: https://lore.kernel.org/all/20250131151600.410242-1-n.zhandarovich@fintech.ru/
-
- include/linux/hid.h                 |  3 ++-
- drivers/usb/gadget/function/f_hid.c | 12 ++++++------
- drivers/hid/hid-hyperv.c            |  4 ++--
- drivers/hid/usbhid/hid-core.c       | 25 ++++++++++++++-----------
- 4 files changed, 24 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index cdc0dc13c87f..7abc8c74bdd5 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -738,8 +738,9 @@ struct hid_descriptor {
- 	__le16 bcdHID;
- 	__u8  bCountryCode;
- 	__u8  bNumDescriptors;
-+	struct hid_class_descriptor rpt_desc;
- 
--	struct hid_class_descriptor desc[1];
-+	struct hid_class_descriptor opt_descs[];
- } __attribute__ ((packed));
- 
- #define HID_DEVICE(b, g, ven, prod)					\
-diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-index 740311c4fa24..c7a05f842745 100644
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -144,8 +144,8 @@ static struct hid_descriptor hidg_desc = {
- 	.bcdHID				= cpu_to_le16(0x0101),
- 	.bCountryCode			= 0x00,
- 	.bNumDescriptors		= 0x1,
--	/*.desc[0].bDescriptorType	= DYNAMIC */
--	/*.desc[0].wDescriptorLenght	= DYNAMIC */
-+	/*.rpt_desc.bDescriptorType	= DYNAMIC */
-+	/*.rpt_desc.wDescriptorLength	= DYNAMIC */
- };
- 
- /* Super-Speed Support */
-@@ -939,8 +939,8 @@ static int hidg_setup(struct usb_function *f,
- 			struct hid_descriptor hidg_desc_copy = hidg_desc;
- 
- 			VDBG(cdev, "USB_REQ_GET_DESCRIPTOR: HID\n");
--			hidg_desc_copy.desc[0].bDescriptorType = HID_DT_REPORT;
--			hidg_desc_copy.desc[0].wDescriptorLength =
-+			hidg_desc_copy.rpt_desc.bDescriptorType = HID_DT_REPORT;
-+			hidg_desc_copy.rpt_desc.wDescriptorLength =
- 				cpu_to_le16(hidg->report_desc_length);
- 
- 			length = min_t(unsigned short, length,
-@@ -1210,8 +1210,8 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
- 	 * We can use hidg_desc struct here but we should not relay
- 	 * that its content won't change after returning from this function.
- 	 */
--	hidg_desc.desc[0].bDescriptorType = HID_DT_REPORT;
--	hidg_desc.desc[0].wDescriptorLength =
-+	hidg_desc.rpt_desc.bDescriptorType = HID_DT_REPORT;
-+	hidg_desc.rpt_desc.wDescriptorLength =
- 		cpu_to_le16(hidg->report_desc_length);
- 
- 	hidg_hs_in_ep_desc.bEndpointAddress =
-diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-index 0fb210e40a41..9eafff0b6ea4 100644
---- a/drivers/hid/hid-hyperv.c
-+++ b/drivers/hid/hid-hyperv.c
-@@ -192,7 +192,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
- 		goto cleanup;
- 
- 	input_device->report_desc_size = le16_to_cpu(
--					desc->desc[0].wDescriptorLength);
-+					desc->rpt_desc.wDescriptorLength);
- 	if (input_device->report_desc_size == 0) {
- 		input_device->dev_info_status = -EINVAL;
- 		goto cleanup;
-@@ -210,7 +210,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
- 
- 	memcpy(input_device->report_desc,
- 	       ((unsigned char *)desc) + desc->bLength,
--	       le16_to_cpu(desc->desc[0].wDescriptorLength));
-+	       le16_to_cpu(desc->rpt_desc.wDescriptorLength));
- 
- 	/* Send the ack */
- 	memset(&ack, 0, sizeof(struct mousevsc_prt_msg));
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index a6eb6fe6130d..f8b853180680 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -983,12 +983,11 @@ static int usbhid_parse(struct hid_device *hid)
- 	struct usb_host_interface *interface = intf->cur_altsetting;
- 	struct usb_device *dev = interface_to_usbdev (intf);
- 	struct hid_descriptor *hdesc;
-+	struct hid_class_descriptor *hcdesc;
- 	u32 quirks = 0;
- 	unsigned int rsize = 0;
- 	char *rdesc;
--	int ret, n;
--	int num_descriptors;
--	size_t offset = offsetof(struct hid_descriptor, desc);
-+	int ret;
- 
- 	quirks = hid_lookup_quirk(hid);
- 
-@@ -1010,20 +1009,19 @@ static int usbhid_parse(struct hid_device *hid)
- 		return -ENODEV;
- 	}
- 
--	if (hdesc->bLength < sizeof(struct hid_descriptor)) {
--		dbg_hid("hid descriptor is too short\n");
-+	if (!hdesc->bNumDescriptors ||
-+	    hdesc->bLength != sizeof(*hdesc) +
-+			      (hdesc->bNumDescriptors - 1) * sizeof(*hcdesc)) {
-+		dbg_hid("hid descriptor invalid, bLen=%hhu bNum=%hhu\n",
-+			hdesc->bLength, hdesc->bNumDescriptors);
- 		return -EINVAL;
- 	}
- 
- 	hid->version = le16_to_cpu(hdesc->bcdHID);
- 	hid->country = hdesc->bCountryCode;
- 
--	num_descriptors = min_t(int, hdesc->bNumDescriptors,
--	       (hdesc->bLength - offset) / sizeof(struct hid_class_descriptor));
--
--	for (n = 0; n < num_descriptors; n++)
--		if (hdesc->desc[n].bDescriptorType == HID_DT_REPORT)
--			rsize = le16_to_cpu(hdesc->desc[n].wDescriptorLength);
-+	if (hdesc->rpt_desc.bDescriptorType == HID_DT_REPORT)
-+		rsize = le16_to_cpu(hdesc->rpt_desc.wDescriptorLength);
- 
- 	if (!rsize || rsize > HID_MAX_DESCRIPTOR_SIZE) {
- 		dbg_hid("weird size of report descriptor (%u)\n", rsize);
-@@ -1051,6 +1049,11 @@ static int usbhid_parse(struct hid_device *hid)
- 		goto err;
- 	}
- 
-+	if (hdesc->bNumDescriptors > 1)
-+		hid_warn(intf,
-+			"%u unsupported optional hid class descriptors\n",
-+			(int)(hdesc->bNumDescriptors - 1));
-+
- 	hid->quirks |= quirks;
- 
- 	return 0;
--- 
-2.43.0
-
+Best,
+Bobby
 
