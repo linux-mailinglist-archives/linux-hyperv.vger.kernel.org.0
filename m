@@ -1,170 +1,139 @@
-Return-Path: <linux-hyperv+bounces-4447-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4448-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C72C1A5E770
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 23:29:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9418BA5E7FD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 00:04:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 085BA17BF59
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:29:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 522A0189A65D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 23:04:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60311F03CD;
-	Wed, 12 Mar 2025 22:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 787BF1F12F1;
+	Wed, 12 Mar 2025 23:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFj1bo98"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MlU6q2A8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B9419E96D;
-	Wed, 12 Mar 2025 22:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6E31F0E45
+	for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 23:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741818552; cv=none; b=OinrIyMTU3IuZ1jlZSO1ntPkKC1daybOczKiOWzbNVtLup/6XWugxrH9N27JAUT6lj09jHamoG3Vdv9TzTyMJHjXVz82vnezGg7Hb+m+oAhPlokNE+yfNiIHPatceWJ86LqrcNn5HghU33MpHdRRGgUmL4TkVTQrG4kWq5OqZGE=
+	t=1741820685; cv=none; b=OEp24VDBTzSybxDFEZffBqjjESa9bxcLcM+ZmZTwQLiWgVWqUIzRpNgP1fy5tfk+hYJNbuuNtz3nROzytoBBP3btzhqeB5M9+TtMYlaAKHPgh+qCEj3W7tDcyZNV2tZZHk5ks667JY6n4XBlpW5OlbXOymcByVZJ2v5QcXva70M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741818552; c=relaxed/simple;
-	bh=6PSD8Ihb5wqTIoMhe00VHOCE57HyMwiB7MEagGbuhZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfSDN2V+AhDwl8spPzkdX142x96Qw2e6u2r6clM3eqWc2rjsJo5BS3IZa0ieF7VjybzQxLpCY9NhVE6rUOAbW8BOCwxM2SEYxkdHMMx4XcCwIIk5Zf2IIhX12ZvFwow8G7j0YSgCvtgafubXneHzl/pnaVM+950LYloch/hu4OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFj1bo98; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223fb0f619dso6501435ad.1;
-        Wed, 12 Mar 2025 15:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741818550; x=1742423350; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7Zt5RBTdS4tu9y1ZkvHvMS6PvikbgYBd+xanSqGhaSs=;
-        b=LFj1bo98U5ofV7suHOs88OkZxgEoPC6S5uk1QIxc9pzu1VGMnTEQJIa9pqFlbbheo+
-         Em1bmkLPeUvqKMCAuj3lktGsy41LS8xJ62OlGnX+XcQopyeRtKsVgzBRKsAlXF2Cqw4T
-         uSiE9jCCNd5zqYE2e/u9bAPP+FlglAIBdufsyDnI8a15K15cS3wBWkQ9+Ktcg3FW/qVq
-         NKQ0zVmJDCD0Xs2wjn5kLXxQSvyZCpHDhdStUqrD4XWmXJugMemHmG99qaNq5oRpC4xD
-         k1z0MpMY/ZvavWFw1wXSNS/G3JyD1wdkX+uJpQi1zKDtFAez5jLOtkyOnmXn9SrgmcPJ
-         u9ew==
+	s=arc-20240116; t=1741820685; c=relaxed/simple;
+	bh=d5PEY+yC9Huewb0HnCtpeT52eaIOfYoMMqMSFveNI50=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BvWwKxCQ8afnJdpRsPqh6ZD1LTIanM6bzPVMXDyUAIXNnm/5HPACLc+U3bzxcq+jzqGSL23VlMdo2wyKMok0BXjZ2c097XN6ZbxHVqLYeYl9w9HPz5ngWqH/2rg1kDYt1iRnF4GzrAs0PUq7Eq8G2cdQEHub1NNOzCWPKo5KS2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MlU6q2A8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741820682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d5PEY+yC9Huewb0HnCtpeT52eaIOfYoMMqMSFveNI50=;
+	b=MlU6q2A8a4uCwqBNOlxeDEILGorCOSeWUvxDY+SIWf5LWnKEi1j7LJyx151qsyGUl2RY6t
+	NiR9c+TsFmuceIU6+dGFxR1J9sfo1xk8irhkoqPSbYwLVSnYz1FrJDYI8hqERbUhNU4yNv
+	+8X9qeZ9LqKRd2CvH1K/NA4ervmG4fE=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-160--Nv1wwO6M_u8s9BuG4_Niw-1; Wed, 12 Mar 2025 19:04:41 -0400
+X-MC-Unique: -Nv1wwO6M_u8s9BuG4_Niw-1
+X-Mimecast-MFC-AGG-ID: -Nv1wwO6M_u8s9BuG4_Niw_1741820681
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-6feb1097d64so4946077b3.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 16:04:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741818550; x=1742423350;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Zt5RBTdS4tu9y1ZkvHvMS6PvikbgYBd+xanSqGhaSs=;
-        b=M6REmIARnFB01wHvlC5WqT8nCkLI73to98bpjCn5SS/5gY013NBJ5+ntOyn9SfXBqQ
-         XmvWKYjEO9wmaWsQYPBwYUxJqHmxc6gosR7yvWyoPoJggp4NUzBupbzBj8cFvT+PUrsa
-         yVGZmPAOpmn598HgCZS5IBfm2lhV2HsxizjfgJVOnSJaRzhbZct5INLULu8WgfJdLJBO
-         R8rLEi3LoQ4gEnI79baN67sbKvaW0w5Z07hzM7mnH7x/eRCv8nDEJ+csr5UX0I1WBiRP
-         HdRBn4oFhfH0blQh4vFoafZ66l1JbAMsL5xeZnj98xTHnGHA+UJ4WCShcuyc3qQVrViH
-         myiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOb1ZyfhGJlQh46KJLimc2nFKmCdAKk9+f0dDjXl6dDjqy90pHuhpdLgrNBdvPpbVDOhPn7S4o@vger.kernel.org, AJvYcCV/i046aWP7ZL+eWK4FiK5omCi6DTmbCttUEjtBgw2sAmW+44HTi3cTk74tdsLHsyIwc4YrIzT6Ci0fGTLN@vger.kernel.org, AJvYcCVLqwZhSMWNJ2eB2TaIbB8jjc5Bkil1bsi0rlTMiFwzBfTlMTzyl16aGq8zWla2G3vmUvU=@vger.kernel.org, AJvYcCWGt0N4WZRhVu0x2llfkvwrIVPaZ6xnFd3xIX+SQ5fqrunYWg/ahR49F7Rlo0kSWE6RHbLRNaUTvMq1Mlu6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSAsqp8oGwmY22dRfT/BjW1g2g0yPYRTAFNyQpsw5N12wi80VI
-	DtcH1Xq44l0j2N5KLyo5zgucfo1voP6kfauSg/wrZtrGh+TORd2e
-X-Gm-Gg: ASbGncvscoeLH16Ju9H0DAln/lesHkz32J1wR7UI3upxFTyCIVuay83Z0VUhoI/d1cP
-	DJ9qOz3yMwPG2N7VJyrTNIOkK99+Ba4YiAOwJBya9k2NeHEUN+8pky2RdpbgGuVuaWJlDVJg02N
-	TwMjnFzMUXyBYY95+OHI0eFiUC5PQHCOjVwdUv2rUjlXt7dSfOAxnLpd045dOxLrfVMtnOoWwv7
-	55g4uUbtFTM3ZsDkj5Z1cvqWwCkAUYvm6SfKuDFeB2FTegp+TfGHdqRmkeeG8pwFphcsJBKEXN8
-	/WI4sjE5Ef+3QQlZGR5W+j3939uUqcZ1ftDU8Nmjp9zNOaXX5P4N8HCvz3PuASYLav2EZOdfLK8
-	g
-X-Google-Smtp-Source: AGHT+IG5eB7LsgG76qzryME3xovo7CXpCBzbsMGvNvGwS4V4Ch2lCvncSSjVtCrUYYynhYS0YR2b6g==
-X-Received: by 2002:a05:6a20:160c:b0:1f5:7007:9eb1 with SMTP id adf61e73a8af0-1f58cbc4a43mr14791625637.34.1741818550325;
-        Wed, 12 Mar 2025 15:29:10 -0700 (PDT)
-Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:5::])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea7c87csm46437a12.57.2025.03.12.15.29.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 15:29:09 -0700 (PDT)
-Date: Wed, 12 Mar 2025 15:29:07 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>, davem@davemloft.net,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org,
-	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-	netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-Message-ID: <Z9IKs15jhjaaj5px@devvm6277.cco0.facebook.com>
-References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200427142518.uwssa6dtasrp3bfc@steredhat>
- <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
- <20200428160052.o3ihui4262xogyg4@steredhat>
- <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
- <CACGkMEtTgmFVDU+ftDKEvy31JkV9zLLUv25LrEPKQyzgKiQGSQ@mail.gmail.com>
- <Z89ILjEUU12CuVwk@devvm6277.cco0.facebook.com>
- <CACGkMEskp720d+UKm_aPUtGZC5NzH+mp_YKoY2NQV6_YBbRz9g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1741820681; x=1742425481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d5PEY+yC9Huewb0HnCtpeT52eaIOfYoMMqMSFveNI50=;
+        b=KuJrGU6RzA6NKoJdL2V9k8VDvmr1yJFM7Z3ft8yDBy19K7YsouKQYGfY1c+2TsY4jj
+         WZpyvENs9YuFi2sjx70rTZNZ36DkiWDfcD9pDkKMsHynYCrOiWAp78g3fPnT++41u3hG
+         dd/35M7q63XwYRnHAvZT43gtBH3XKQpvvC2ERLUVP/yrm+Q40P1871+exJ51Enhpp5im
+         qzKOia+DyYFCHrjrlFmcZn7G2is5nMEr0TwXUJAkTNLLMpS5jcgiKVC/T6Pz+IGKt9b0
+         lmo4/cmaxp5+92a2VvXS6hCKeqvBlc1C1vqltUZvKEQLev7DTR5JcaREdALceaM6KTHa
+         LrfA==
+X-Gm-Message-State: AOJu0YzSPOtkQ03DWhiD8bt83iN/HAxaITpGDshTFMMyQv4NT0ewWdN0
+	idvmh2KX2bVlO7I6p8gOWGfGO+I+UuHSYmYqvSiXcQriJALSNr0D3clZmcmefdThTiSelXB+Xse
+	brMumkjm2yhou6a0Tu+mBMv9nqw7cWoSgI+ALLMfGdp0Cj859TsRjzZMfW3lHOB/BczqXHSXNy7
+	FQ+PQ7lBJoZkxFw4id3srWN9ZlHi+ZoyuCugNw
+X-Gm-Gg: ASbGncv7JReWbCv03SfofkS16B6M+Lbq3GG99CPpenEo9tLbCy5Ozp7/KFT3G58SIfA
+	N1NxZhdn7U9iSTP4Gx/6MYQjlIPhkg7pJ+qjHU7lUCKsE1MLbbnW5vz39RVJ82lK3ok1rdvaHd0
+	JvlyOVrLCGMEU=
+X-Received: by 2002:a05:6902:2ec3:b0:e63:65bc:a173 with SMTP id 3f1490d57ef6-e6365bca293mr20489045276.41.1741820680977;
+        Wed, 12 Mar 2025 16:04:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFE29IOsL3if064ONRlZf/bCswPuk7JbIN/+ScTtHA6PhUNFhrt31PPwWl6SfPGyM46nmrjRUH8DQbWz44H/+M=
+X-Received: by 2002:a05:6902:2ec3:b0:e63:65bc:a173 with SMTP id
+ 3f1490d57ef6-e6365bca293mr20489001276.41.1741820680678; Wed, 12 Mar 2025
+ 16:04:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEskp720d+UKm_aPUtGZC5NzH+mp_YKoY2NQV6_YBbRz9g@mail.gmail.com>
+References: <20250312000700.184573-1-npache@redhat.com> <20250312000700.184573-2-npache@redhat.com>
+ <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com>
+In-Reply-To: <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 12 Mar 2025 17:04:14 -0600
+X-Gm-Features: AQ5f1JrCck7ZrLXTjsNL6uP-21nbhhEyl_MT0WXZGBOwpNadq0-oKKZGcnVqKd4
+Message-ID: <CAA1CXcCv20TW+Xgn18E0Jn1rbT003+3gR-KAxxE9GLzh=EHNmQ@mail.gmail.com>
+Subject: Re: [RFC 1/5] meminfo: add a per node counter for balloon drivers
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	virtualization@lists.linux.dev, xen-devel@lists.xenproject.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
+	decui@microsoft.com, jerrin.shaji-george@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de, 
+	gregkh@linuxfoundation.org, mst@redhat.com, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, jgross@suse.com, 
+	sstabellini@kernel.org, oleksandr_tyshchenko@epam.com, 
+	akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	nphamcs@gmail.com, yosry.ahmed@linux.dev, kanchana.p.sridhar@intel.com, 
+	alexander.atanasov@virtuozzo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 08:59:44AM +0800, Jason Wang wrote:
-> On Tue, Mar 11, 2025 at 4:14 AM Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
-> >
-> > On Wed, Mar 05, 2025 at 01:46:54PM +0800, Jason Wang wrote:
-> > > On Wed, Mar 5, 2025 at 8:39 AM Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
-> > > >
-> > > > On Tue, Apr 28, 2020 at 06:00:52PM +0200, Stefano Garzarella wrote:
-> > > > > On Tue, Apr 28, 2020 at 04:13:22PM +0800, Jason Wang wrote:
-> > > >
-> > > > WRT netdev, do we foresee big gains beyond just leveraging the netdev's
-> > > > namespace?
-> > >
-> > > It's a leverage of the network subsystem (netdevice, steering, uAPI,
-> > > tracing, probably a lot of others), not only its namespace. It can
-> > > avoid duplicating existing mechanisms in a vsock specific way. If we
-> > > manage to do that, namespace support will be a "byproduct".
-> > >
-> > [...]
-> > >
-> > > Yes, it can. I think we need to evaluate both approaches (that's why I
-> > > raise the approach of reusing netdevice). We can hear from others.
-> > >
-> >
-> > I agree it is worth evaluating. If netdev is being considered, then it
-> > is probably also worth considering your suggestion from a few years back
-> > to add these capabilities by building vsock on top of virtio-net [1].
-> >
-> > [1] https://lore.kernel.org/all/2747ac1f-390e-99f9-b24e-f179af79a9da@redhat.com/
-> 
-> Yes. I think having a dedicated netdev might be simpler than reusing
-> the virito-net.
-> 
-> >
-> > Considering that the current vsock protocol will only ever be able to
-> > enjoy a restricted feature set of these other net subsystems due to its
-> > lack of tolerance for packet loss (e.g., no multiqueue steering, no
-> > packet scheduling), I wonder if it would be best to a) wait until a user
-> > requires these capabilities, and b) at that point extend vsock to tolerate
-> > packet loss (add a seqnum)?
-> 
-> Maybe, a question back to this proposal. What's the plan for the
-> userspace? For example, do we expect to extend iproute2 and other and
-> how (e.g having a new vsock dedicated tool)?
-> 
+On Wed, Mar 12, 2025 at 4:19=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 12.03.25 01:06, Nico Pache wrote:
+> > Add NR_BALLOON_PAGES counter to track memory used by balloon drivers an=
+d
+> > expose it through /proc/meminfo and other memory reporting interfaces.
+>
+> In balloon_page_enqueue_one(), we perform a
+>
+> __count_vm_event(BALLOON_INFLATE)
+>
+> and in balloon_page_list_dequeue
+>
+> __count_vm_event(BALLOON_DEFLATE);
+>
+>
+> Should we maybe simply do the per-node accounting similarly there?
 
-If we were going to add a seqnum and start bringing in other systems, we
-would probably want to add support into iproute2. For example, when I
-played with qdisc, using ip seemed like the best from the user side.
-The iproute2 changes weren't bad at all[1]. We'd probably need the
-device to carry a new feature bit too.
+I think the issue is that some balloon drivers use the
+balloon_compaction interface while others use their own.
 
-That said, all of this still creates the problem of adding new
-system-level ways to disrupt AF_VSOCK users. I think we could offer this
-in a way that is orthogonal to prior vsock, possibly AF_VSOCK2, a
-sockopt, or ioctl to opt-in to using net features... so that we aren't
-violating commitment to existing users that vsock should work regardless
-of network configuration? letting the user that holds the fd of the
-socket make the choice might be the best way to safeguard the contract?
+This would require unifying all the drivers under a single api which
+may be tricky if they all have different behavior
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
 
-[1]:	https://github.com/beshleman/iproute2/commit/55fd8a6c133335cda4ede6f8928eb3cea54534b8
-
-Best,
-Bobby
 
