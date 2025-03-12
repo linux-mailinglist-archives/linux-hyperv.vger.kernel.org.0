@@ -1,183 +1,229 @@
-Return-Path: <linux-hyperv+bounces-4437-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4438-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9041A5E601
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:04:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F335AA5E603
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:04:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AAC03ADF22
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 21:02:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8DCB17C8D9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 21:03:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545701F0E51;
-	Wed, 12 Mar 2025 20:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183971F1305;
+	Wed, 12 Mar 2025 20:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0vdGSez"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYkrB4xp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DF31EF096
-	for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 20:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1A91E9B32;
+	Wed, 12 Mar 2025 20:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741813046; cv=none; b=fko9tHq3EMc9TyC5RzPfiQbVL9LGkLq3K7EY/HlEyub+wdACLoTkfPHBHlscwC87vuaaK8L4FbQNZfHC6xBqhg/jzO8DChnZHSwd/Bh3q1fJXmDC8wTA4nXsElzaSImRTyPKYOurTffcWEoSqu1HX1l6DEU1GimwE6O3mT4DYD8=
+	t=1741813180; cv=none; b=qpvGSuLFj/NmSpmB72iQA11jsO2MxwGFXyR59c7o4NAJaVi41WJGm81qMIYfmswuaUJUJ0EPGUM6XP3aZo/ed5pFKGW3VHBqMlil9MjQUvzGhSxP1iihzbNXCOkjH95T/YP5WRLk01J2b5cYBuQt1AxibT5RvU9zuDNMSDLpu+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741813046; c=relaxed/simple;
-	bh=hWLmRQlu6su8qwX6geP2oMXctHQ9DhFclCPqDI2P8ks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxyXHRSxqGDwRt7Z+alMQ+lSqPnB/oHCM//fRVGv+25fjySbSbY5v5GrdaN0WmJ50yIx6daQJfSpgjgRPFqUl3iUh7SORMOXnp1lcaykoTV8FkG6UhsXpyVVmJ5Vb8Nuse4fqindJYqA5gR1i3fRRX6OVGnO5X6gGMkLDkR/iM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A0vdGSez; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741813042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=slUJe+JHhJOnq30PEtJv6XBCtRVaMaEHLPY3w2dXjCU=;
-	b=A0vdGSezksR6SG4T9D+Kr+UxQwtZlIKsr0kXpq774s2dvMrsRYNBUaTXVihaw1BTm2aLs3
-	BQ5M2pWGGOs/2b13QUgCrO/uFsp8125SbnXkOcLvLjkGxlTkN79o5aCZvMEKRhNUB+vCJN
-	Ld+DLQT0XyBBNe0JBJ9+ld4FDn8Un5c=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-436-Typl7_O9NVKrjMsh2goUig-1; Wed, 12 Mar 2025 16:57:21 -0400
-X-MC-Unique: Typl7_O9NVKrjMsh2goUig-1
-X-Mimecast-MFC-AGG-ID: Typl7_O9NVKrjMsh2goUig_1741813040
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so1077305e9.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 13:57:20 -0700 (PDT)
+	s=arc-20240116; t=1741813180; c=relaxed/simple;
+	bh=sGE4HOOVVz7WqVzh06w2jhg2dPFxwpHqjhV9mWqBrUo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=az46zY+woIEeQMoP46qGhzOnE2K9DtP2CJPvHDqmdtim0daAmBEjOloIjOdnCcXaI54BHZEyQy7wZ+CRPHJlWLsbacU9YQdVQwKbRF0QcFRVRf/6zelMy2p5BCS+UbNV37tJ8cl8jiAPFC55KgAq732eqjL1j+gPSUDBleEbug8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GYkrB4xp; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2254e0b4b79so7317555ad.2;
+        Wed, 12 Mar 2025 13:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741813178; x=1742417978; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ub4jX9+0jei2hftTvvZhRExenmWl6dTs0WmkODruC4Q=;
+        b=GYkrB4xpEzT9UxPjrNnU8XWxYAN2UxodCUp9mnFJKbyndAO5N2sjDD24Dy9QY0mGbi
+         NeaV0jkcVd+il59avMxwFenGFokHoGEC6Z4/wLs1Lg2bj+NRWtGA5s242DQ2LXzN4+50
+         4AzVNKyH2jZeNA/Zr9wRFGQUqBas7CJMiH/yXtlwfDvp4XJcVFi+IdN1fNT21wgfQtcM
+         sFxl35W+rNy9vwa89Z6Nz1rn/28nsKDrBd/AC7PTYi1wptOvKVAzxKWhOoiqrSrwH3RB
+         LfCULYhWnCugIM0du97csNyRvNrywVl03yeeSTES4QF8g0ByyVC6SpYPoPdUyvYKChTg
+         YP1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741813040; x=1742417840;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=slUJe+JHhJOnq30PEtJv6XBCtRVaMaEHLPY3w2dXjCU=;
-        b=KhsgDtAGyIpiyfz9jLAjQ/R3ITGD6oArLP1apA9nOKKfj6DOWcs6q7YJcBcrxXJXuR
-         +ljzELGpHkINt44sl702W8pAHV/tHvmHROneHiQHwxI+QwfNCIdePH2e5vjzYuxtrHmM
-         vclhcX1D1XaItWKj4m4zRWgs1+YB8Tvotjm0iU2a29mqYgTKjf3nzj57uji6IKWmP2B3
-         lY8/u6PY8g76aJKMoJ30hqPLcvR020phB82q7wCCAM+Fj9FTOqd6tZWseC2W405OdIZN
-         7Dd+GzuyXLMFmemVtn1cJHoFi4cmgdKO7F4AIOXDeQleU/tdDV4GMDxdpjS8NTuN2IZT
-         kpVQ==
-X-Gm-Message-State: AOJu0YwydvuUfpEBHil6CbZ+qYd9KX+qY2JmFhMtSkph9luES0TcwgCf
-	8MezcrW59ClH4BSPgmPzKUySNjg9Pcl3V2NDPb/PrqOPeW9yfvhE6+UGTsoP7h1mDpTjlPJOzo9
-	s4s+785Q6OG7fa293O5CT4wHcEdLtEau/zN5+LDY4ReV60tr/TAeLVw9CE23ggw==
-X-Gm-Gg: ASbGncust8ZyrlqpCzGrcYMpyd3t1IhFArPTDk1vFCR/Gk4qPduEIvzxhY7U/ri0+Zk
-	+DXZkYKZY/dPkrfsJghRh9stxYmo+yPpmxoX4z/I898X/NRpgK25sARPeSC/eXiDUEBm+Z897dX
-	LWr00sXU0VApV3xXF8I+OgQm7xf2uZDi2QK/KTbi0X4K+yXHO2ANepntMPufPo6xuvziS57Pixg
-	R8wSxAylnlnIo4ITOJY+WbfVDez6QpasWV5B56d+r5k3pin1ZqFoEG2yIWlwJMZKqs85deX/gIi
-	AFDbj1ielQ==
-X-Received: by 2002:a05:6000:144d:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39132d9908fmr17334968f8f.40.1741813039721;
-        Wed, 12 Mar 2025 13:57:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3/+BK82Z+aTDjO7POooWoHYU637cwTUeXYPG2W8VKTA2QZ3BgBHzUd7t9xStiQ+fOSVcEVA==
-X-Received: by 2002:a05:6000:144d:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39132d9908fmr17334939f8f.40.1741813039371;
-        Wed, 12 Mar 2025 13:57:19 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfcb8sm22470458f8f.33.2025.03.12.13.57.15
+        d=1e100.net; s=20230601; t=1741813178; x=1742417978;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ub4jX9+0jei2hftTvvZhRExenmWl6dTs0WmkODruC4Q=;
+        b=HRaZFA/DZYvLGJBV94tFcfFMzkT1FYPr+Ygvd58Fqo815saPtvmZdTbg3iFliwoKVz
+         Ww7YI22X1TYHRVD4c7mW4deefCPzDG/8uwv+bcnX7AFYp2nP/lZiLPrrPlmaQ0Fy9cFu
+         SICFBVpKYmbCmb8B0yoH/GFByD36YN/qm0Qm78s7iGQO7LDpE6kOte0UkAaC/ssqSs2p
+         IqC2C+ken1WxVDd3Hw01IEIcrWju3jE253JMCvmz6rlsah9Hi3aLK9qyf7kek0rB52ve
+         RJMZ73igcJlCIZ/pX22D7HtuY4tit0umsQQBYnGLYb/hIPaSdiELGfjvJh/eRxR5R3Ow
+         3y6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW/5M/ZJozdQO5IQXT/xSC9qBsZSo4es/9aq4LD0ktnCa6YbO5T/bPq7v1JJosW1YAggqkUKxlk/FCBTVhx@vger.kernel.org, AJvYcCW50b/5dkj/HrdME53VkWg07LUqjXQ71vQaTKACf5F3zTX2z0h/cfJ2ai1myFg5IIAIjYCa3ZJuGHUpx+5v@vger.kernel.org, AJvYcCXJrxiRgp7hjNga7D94GFFLfIqynhwWjhNyd/qVJuwSxsplmztAaqWsbdvz2HGdvJPPCZ4=@vger.kernel.org, AJvYcCXcYaIPzaQl35IkBQU1TZrCEIh1eT3/7D3a082FJjcdUtVthNZJWyXj+XRruGUsrBfnTha2gNnp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWeWm2KqbRjePmT7H0V3CB5g98a2mf2WYX0BmADkyyEvLlx6xT
+	xRl3Nnzvao2GSYmQAxu7/lrPA9SLBXs2YxfvmDTboFnd9ZM0YYY/dU+nVrjj
+X-Gm-Gg: ASbGncuUqq57HNWmiCw4Wz8LZSLX2/rk0GKVcKBugDVpwR3tMsO8rJXeOaGQdwmPdwr
+	PQlVjBJwGT+o5EAWSOXeb8psIRNOpz9hGxc0FP0lJqeXYUuS0lBFCSCLUeHU5HaDYi/Ht58+GN1
+	0sNVCif8IBx4zWiBnyx/GLNRdfwyfmnFAqgXqs7aT+vZhH2WTqj4ZybiHu/mXsTTnpAFCDnQ7Ru
+	NzVbPvGqVn3C7SJGcsNCYHpxVezg4I/hre9JjNqk55gPeEzF9DjiIsKs3sia6vzpPaiOf5AcCA9
+	HTG5vcxNZc/ie5hCQ1OdcNOZmBL8x1jgCwN6hWoUhQ==
+X-Google-Smtp-Source: AGHT+IEqhB5kSkIfZY/GZuI6Ky/XtS/IfhWT5TgQfFV/WZTAIT3v8fj5RDGB7a85bswkz94fpuya5g==
+X-Received: by 2002:a05:6a00:2d90:b0:736:4b85:ee05 with SMTP id d2e1a72fcca58-736aaa56dc6mr29765479b3a.11.1741813178520;
+        Wed, 12 Mar 2025 13:59:38 -0700 (PDT)
+Received: from localhost ([2a03:2880:2ff:2::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736bc3f40desm9732470b3a.50.2025.03.12.13.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 13:57:17 -0700 (PDT)
-Date: Wed, 12 Mar 2025 16:57:13 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com,
-	jerrin.shaji-george@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de,
-	gregkh@linuxfoundation.org, david@redhat.com, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, jgross@suse.com,
-	sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
-	akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, nphamcs@gmail.com, yosry.ahmed@linux.dev,
-	kanchana.p.sridhar@intel.com, alexander.atanasov@virtuozzo.com
-Subject: Re: [RFC 4/5] vmx_balloon: update the NR_BALLOON_PAGES state
-Message-ID: <20250312165302-mutt-send-email-mst@kernel.org>
-References: <20250312000700.184573-1-npache@redhat.com>
- <20250312000700.184573-5-npache@redhat.com>
- <20250312025607-mutt-send-email-mst@kernel.org>
- <CAA1CXcDjEErb2L85gi+W=1sFn73VHLto09nG6f1vS+10o4PctA@mail.gmail.com>
+        Wed, 12 Mar 2025 13:59:37 -0700 (PDT)
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+Subject: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Date: Wed, 12 Mar 2025 13:59:34 -0700
+Message-Id: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA1CXcDjEErb2L85gi+W=1sFn73VHLto09nG6f1vS+10o4PctA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALb10WcC/x3MwQ6CMAwA0F9ZemZkLUOUk/9hOCxQYDFupiVEJ
+ fy7ges7vA2UJbJCazYQXqPGnKA1VBjo55AmtnGA1gA5ql2FZFfN/dMmXpJaXw/h5smPDV2gMPA
+ WHuPn3B5dYWCOumT5nvmKhx6Pc4gXbMjTtawQfdVYtDoF+QXhu/Awh6Xs8wu6fd//lcXAqqEAA
+ AA=
+X-Change-ID: 20250312-vsock-netns-45da9424f726
+To: Stefano Garzarella <sgarzare@redhat.com>, 
+ Jakub Kicinski <kuba@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Bryan Tan <bryan-bt.tan@broadcom.com>, 
+ Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, virtualization@lists.linux.dev, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hyperv@vger.kernel.org, kvm@vger.kernel.org, 
+ Bobby Eshleman <bobbyeshleman@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Wed, Mar 12, 2025 at 02:11:09PM -0600, Nico Pache wrote:
-> On Wed, Mar 12, 2025 at 12:57 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Tue, Mar 11, 2025 at 06:06:59PM -0600, Nico Pache wrote:
-> > > Update the NR_BALLOON_PAGES counter when pages are added to or
-> > > removed from the VMware balloon.
-> > >
-> > > Signed-off-by: Nico Pache <npache@redhat.com>
-> > > ---
-> > >  drivers/misc/vmw_balloon.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
-> > > index c817d8c21641..2c70b08c6fb3 100644
-> > > --- a/drivers/misc/vmw_balloon.c
-> > > +++ b/drivers/misc/vmw_balloon.c
-> > > @@ -673,6 +673,8 @@ static int vmballoon_alloc_page_list(struct vmballoon *b,
-> > >
-> > >                       vmballoon_stats_page_inc(b, VMW_BALLOON_PAGE_STAT_ALLOC,
-> > >                                                ctl->page_size);
-> > > +                     mod_node_page_state(page_pgdat(page), NR_BALLOON_PAGES,
-> > > +                             vmballoon_page_in_frames(ctl->page_size));
-> >
-> >
-> > same issue as virtio I think - this counts frames not pages.
-> I agree with the viritio issue since PAGE_SIZE can be larger than
-> VIRTIO_BALLOON_PFN_SHIFT, resulting in multiple virtio_balloon pages
-> for each page. I fixed that one, thanks!
-> 
-> For the Vmware one, the code is littered with mentions of counting in
-> 4k or 2M but as far as I can tell from looking at the code it actually
-> operates in PAGE_SIZE or PMD size chunks and this count would be
-> correct.
-> Perhaps I am missing something though.
+Picking up Stefano's v1 [1], this series adds netns support to
+vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
+namespaces, defering that for future implementation and discussion.
 
+Any vsock created with /dev/vhost-vsock is a global vsock, accessible
+from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
+"scoped" vsock, accessible only to sockets in its namespace. If a global
+vsock or scoped vsock share the same CID, the scoped vsock takes
+precedence.
 
-Can't say for sure. This needs an ack from the maintainer.
+If a socket in a namespace connects with a global vsock, the CID becomes
+unavailable to any VMM in that namespace when creating new vsocks. If
+disconnected, the CID becomes available again.
 
-> >
-> > >               }
-> > >
-> > >               if (page) {
-> > > @@ -915,6 +917,8 @@ static void vmballoon_release_page_list(struct list_head *page_list,
-> > >       list_for_each_entry_safe(page, tmp, page_list, lru) {
-> > >               list_del(&page->lru);
-> > >               __free_pages(page, vmballoon_page_order(page_size));
-> > > +             mod_node_page_state(page_pgdat(page), NR_BALLOON_PAGES,
-> > > +                     -vmballoon_page_in_frames(page_size));
-> > >       }
-> > >
-> > >       if (n_pages)
-> > > @@ -1129,7 +1133,6 @@ static void vmballoon_inflate(struct vmballoon *b)
-> > >
-> > >               /* Update the balloon size */
-> > >               atomic64_add(ctl.n_pages * page_in_frames, &b->size);
-> > > -
-> >
-> >
-> > unrelated change
-> Fixed, Thanks for reviewing!
-> >
-> > >               vmballoon_enqueue_page_list(b, &ctl.pages, &ctl.n_pages,
-> > >                                           ctl.page_size);
-> > >
-> > > --
-> > > 2.48.1
-> >
+Testing
+
+QEMU with /dev/vhost-vsock-netns support:
+	https://github.com/beshleman/qemu/tree/vsock-netns
+
+Test: Scoped vsocks isolated by namespace
+
+  host# ip netns add ns1
+  host# ip netns add ns2
+  host# ip netns exec ns1 \
+				  qemu-system-x86_64 \
+					  -m 8G -smp 4 -cpu host -enable-kvm \
+					  -serial mon:stdio \
+					  -drive if=virtio,file=${IMAGE1} \
+					  -device vhost-vsock-pci,netns=on,guest-cid=15
+  host# ip netns exec ns2 \
+				  qemu-system-x86_64 \
+					  -m 8G -smp 4 -cpu host -enable-kvm \
+					  -serial mon:stdio \
+					  -drive if=virtio,file=${IMAGE2} \
+					  -device vhost-vsock-pci,netns=on,guest-cid=15
+
+  host# socat - VSOCK-CONNECT:15:1234
+  2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
+
+  host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+  host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
+
+  vm1# socat - VSOCK-LISTEN:1234
+  foobar1
+  vm2# socat - VSOCK-LISTEN:1234
+  foobar2
+
+Test: Global vsocks accessible to any namespace
+
+  host# qemu-system-x86_64 \
+	  -m 8G -smp 4 -cpu host -enable-kvm \
+	  -serial mon:stdio \
+	  -drive if=virtio,file=${IMAGE2} \
+	  -device vhost-vsock-pci,guest-cid=15,netns=off
+
+  host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+
+  vm# socat - VSOCK-LISTEN:1234
+  foobar
+
+Test: Connecting to global vsock makes CID unavailble to namespace
+
+  host# qemu-system-x86_64 \
+	  -m 8G -smp 4 -cpu host -enable-kvm \
+	  -serial mon:stdio \
+	  -drive if=virtio,file=${IMAGE2} \
+	  -device vhost-vsock-pci,guest-cid=15,netns=off
+
+  vm# socat - VSOCK-LISTEN:1234
+
+  host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+  host# ip netns exec ns1 \
+				  qemu-system-x86_64 \
+					  -m 8G -smp 4 -cpu host -enable-kvm \
+					  -serial mon:stdio \
+					  -drive if=virtio,file=${IMAGE1} \
+					  -device vhost-vsock-pci,netns=on,guest-cid=15
+
+  qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
+
+Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+---
+Changes in v2:
+- only support vhost-vsock namespaces
+- all g2h namespaces retain old behavior, only common API changes
+  impacted by vhost-vsock changes
+- add /dev/vhost-vsock-netns for "opt-in"
+- leave /dev/vhost-vsock to old behavior
+- removed netns module param
+- Link to v1: https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
+
+Changes in v1:
+- added 'netns' module param to vsock.ko to enable the
+  network namespace support (disabled by default)
+- added 'vsock_net_eq()' to check the "net" assigned to a socket
+  only when 'netns' support is enabled
+- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
+
+---
+Stefano Garzarella (3):
+      vsock: add network namespace support
+      vsock/virtio_transport_common: handle netns of received packets
+      vhost/vsock: use netns of process that opens the vhost-vsock-netns device
+
+ drivers/vhost/vsock.c                   | 96 +++++++++++++++++++++++++++------
+ include/linux/miscdevice.h              |  1 +
+ include/linux/virtio_vsock.h            |  2 +
+ include/net/af_vsock.h                  | 10 ++--
+ net/vmw_vsock/af_vsock.c                | 85 +++++++++++++++++++++++------
+ net/vmw_vsock/hyperv_transport.c        |  2 +-
+ net/vmw_vsock/virtio_transport.c        |  5 +-
+ net/vmw_vsock/virtio_transport_common.c | 14 ++++-
+ net/vmw_vsock/vmci_transport.c          |  4 +-
+ net/vmw_vsock/vsock_loopback.c          |  4 +-
+ 10 files changed, 180 insertions(+), 43 deletions(-)
+---
+base-commit: 0ea09cbf8350b70ad44d67a1dcb379008a356034
+change-id: 20250312-vsock-netns-45da9424f726
+
+Best regards,
+-- 
+Bobby Eshleman <bobbyeshleman@gmail.com>
 
 
