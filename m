@@ -1,79 +1,141 @@
-Return-Path: <linux-hyperv+bounces-4412-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4413-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1D62A5D2BF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 23:54:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ACF5A5D375
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 01:07:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B3B33B1ED6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Mar 2025 22:54:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8D86189DEC7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 00:07:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B22D1EE7CB;
-	Tue, 11 Mar 2025 22:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2DF20ED;
+	Wed, 12 Mar 2025 00:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BY4Gt4fM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c8b/YNwO"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D871E832A;
-	Tue, 11 Mar 2025 22:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F953FD4
+	for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 00:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741733654; cv=none; b=aQbkacWtM040SBsPUJULJkzOCbqSYShR1OIPLWqVUu9VMW/Em6t/aVakspe0lsofnIBnmSSliTtmAaVZCeHdBNXjvKeWxDG6ZsFTljoXKIFN+TM1WkgTnVuLnAuTA32m6shi4Q4SMucP7STsDftsT1HVaCOxPIgmwlp8x2kl7Ko=
+	t=1741738058; cv=none; b=GJwQvuX51WD9jUGPUjrQ3WdSs2DqsaTn8hxr7zDBHDEDV0pZj+mBBZTCQdZl8cILynPvfhkO2hmam6flUIEg/fK6A/Y2cnBfrrqP+4Hl8ht+um0d7sqfbbb8dWEgCnkESSDTgTzChhUKG4ObLmUO1JJByf/KEO81LM5y+zTqNlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741733654; c=relaxed/simple;
-	bh=K2Ws8G2BwfOhbzPCCjGplxBpqc2i8mGF0Qamx1ZX4OU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=g7DgVOtf68/hfy4nNKsBk2+QIF9N8JJCj298rpiCfIBzUs+VburgLLgDY+jhCqEItv3muC4Chv8BYK8au3Kf/X+zFUdin5BzmpV+/yxa1WWVF4NKUSbaxua85x2fP6kKCCGEtZi/iL/J2t9H72J8uMA/HFkPB5looXMhDtqaQZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BY4Gt4fM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0259CC4CEE9;
-	Tue, 11 Mar 2025 22:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741733654;
-	bh=K2Ws8G2BwfOhbzPCCjGplxBpqc2i8mGF0Qamx1ZX4OU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=BY4Gt4fMVvQsjk7zP7kv8wx5imn97akJh0EM1ViE9qtehX1wDv1or5D0BsGc+H+SR
-	 130pivb+r+8myv7ieplJeAsRTvRJcx2kilZVZElEwftmmEQHyLkFWXNy2Kk/cC3xzg
-	 nEh26fhMvTQ9zHfGEcueNAQh/Rwb9OFJJk3rn82uE6TWpYFA+l6UwdxAwFwVlOSdIs
-	 pjk5fG+70UCrnepgnHPJ1L6OSySqVSXzGO1esbhyzGRzl8TqjeA57hItyjeosUdPtw
-	 5DZhBe8/WRTReo8QBFvEHkpQc5cwjZawflE5CViCHdJPK1bjU/prz9ppd+YKRJZwR0
-	 Jl5lDMNl/fPmg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71221380DBD2;
-	Tue, 11 Mar 2025 22:54:49 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V fixes for v6.14-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z9CwWweWftt02ZWZ@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <Z9CwWweWftt02ZWZ@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z9CwWweWftt02ZWZ@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20250311
-X-PR-Tracked-Commit-Id: 73fe9073c0cc28056cb9de0c8a516dac070f1d1f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0fed89a961ea851945d23cc35beb59d6e56c0964
-Message-Id: <174173368803.261972.6643664486774360071.pr-tracker-bot@kernel.org>
-Date: Tue, 11 Mar 2025 22:54:48 +0000
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+	s=arc-20240116; t=1741738058; c=relaxed/simple;
+	bh=ahoiaCICAThel6fGzAyXhFBeyWeKIoJcx5Q+1e5zZN4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uV8i4sJqU0wuJ//xD6DqDCM5OZFTrsc7VGB2qp2suNwq/4SDLnvl7AUGr2OkeoGIIk7uohq4ToUjxkh46X/jB72s8FCrZQgwQbz/K55B4g/XeoOhc7OdUFGYbLBGj80tpOjRwBw3bzZGrkc+QEGLU8vccfySt164ppk/c+emj4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c8b/YNwO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741738055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+Jp3d8TwivY0inesFFsBMmfW4NNIDtSVjUkd3EkZcf4=;
+	b=c8b/YNwOHP7J7drlwWoxoirX7EupAtG4LZTPFPSxOnJ3Gd9w5688d/Ng2yGtJ2reHkJBNY
+	XAM9upSqu+yhuiDjAm5XRNpRWNwnZXgxAOmHc43nSYtqqh1kggCeIMUFEt5zwt3hqFM4wJ
+	FWfp/so7rKASrR2EC584eW2VzOWQEt8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-tVpdxDOENfqjZCOHY5FruQ-1; Tue,
+ 11 Mar 2025 20:07:34 -0400
+X-MC-Unique: tVpdxDOENfqjZCOHY5FruQ-1
+X-Mimecast-MFC-AGG-ID: tVpdxDOENfqjZCOHY5FruQ_1741738051
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F07CE195608A;
+	Wed, 12 Mar 2025 00:07:29 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.56])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 20D971956094;
+	Wed, 12 Mar 2025 00:07:20 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	xen-devel@lists.xenproject.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	jerrin.shaji-george@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	mst@redhat.com,
+	david@redhat.com,
+	jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com,
+	eperezma@redhat.com,
+	jgross@suse.com,
+	sstabellini@kernel.org,
+	oleksandr_tyshchenko@epam.com,
+	akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	nphamcs@gmail.com,
+	yosry.ahmed@linux.dev,
+	kanchana.p.sridhar@intel.com,
+	alexander.atanasov@virtuozzo.com
+Subject: [RFC 0/5] track memory used by balloon drivers
+Date: Tue, 11 Mar 2025 18:06:55 -0600
+Message-ID: <20250312000700.184573-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-The pull request you sent on Tue, 11 Mar 2025 21:51:23 +0000:
+This series introduces a way to track memory used by balloon drivers.
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20250311
+Add a NR_BALLOON_PAGES counter to track how many pages are reclaimed by the
+balloon drivers. First add the accounting, then updates the balloon drivers
+(virtio, Hyper-V, VMware, and Xen) to maintain this counter.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0fed89a961ea851945d23cc35beb59d6e56c0964
+This makes the information visible in memory reporting interfaces like
+/proc/meminfo, show_mem, and OOM reporting.
 
-Thank you!
+This provides admins visibility into their VM balloon sizes without
+requiring different virtualization tooling. Furthermore, this information
+is helpful when debugging an OOM inside a VM.
+
+Tested: virtio_balloon, run stress-ng, inflate balloon, oom prints
+Signed-off-by: Nico Pache <npache@redhat.com>
+
+Nico Pache (5):
+  meminfo: add a per node counter for balloon drivers
+  virtio_balloon: update the NR_BALLOON_PAGES state
+  hv_balloon: update the NR_BALLOON_PAGES state
+  vmx_balloon: update the NR_BALLOON_PAGES state
+  xen: balloon: update the NR_BALLOON_PAGES state
+
+ drivers/hv/hv_balloon.c         | 2 ++
+ drivers/misc/vmw_balloon.c      | 5 ++++-
+ drivers/virtio/virtio_balloon.c | 4 ++++
+ drivers/xen/balloon.c           | 4 ++++
+ fs/proc/meminfo.c               | 2 ++
+ include/linux/mmzone.h          | 1 +
+ mm/memcontrol.c                 | 1 +
+ mm/show_mem.c                   | 4 +++-
+ mm/vmstat.c                     | 1 +
+ 9 files changed, 22 insertions(+), 2 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.48.1
+
 
