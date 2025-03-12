@@ -1,47 +1,87 @@
-Return-Path: <linux-hyperv+bounces-4443-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4444-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64F28A5E6A8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:31:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83FDFA5E72E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 23:17:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EB251899E52
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 21:31:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BAE43A9A38
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Mar 2025 22:17:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3FA01F03C4;
-	Wed, 12 Mar 2025 21:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3779F1EFFAC;
+	Wed, 12 Mar 2025 22:17:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jVYXdLGQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fsTVUJjz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CCE1EFFB2;
-	Wed, 12 Mar 2025 21:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A991EFF80
+	for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 22:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741815056; cv=none; b=BjJX/WRXyeVxAhsBYQjJFRjkaQnan3FOZ1SOEzO7V2ak1RqxmjX7TBk0Ghyi/7qGlp7u7FRol/7YWgBkgNBS8b4kJvtTdilSvLWnKkgWfX5t0sY03g/beDoiUw2tZXgJ45yhDJZCw8+mshkcJwmRgd4Wz1K1xWldsntNhCepxiU=
+	t=1741817847; cv=none; b=hwAqb5BljZvSQl/4fOgn7Dh86vd6cFLhBdfJi0j/sMFWv8WPKmRmL6dW6fFj9z6G42sxad1LEiVT3hariML6TXXcToppLfpovuWN55HWJxC3BqjViLmVXCf9MWKvpreFtf71pKcW/EhVFGVvK1XZGXvVbQoktuHZLdav/K9YUu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741815056; c=relaxed/simple;
-	bh=b3SG1qguOMx7tqHsbHfarJaOxpoJiGI0tAHShXJVlrg=;
+	s=arc-20240116; t=1741817847; c=relaxed/simple;
+	bh=4tzBduGpo4HlaH1Lba8OlV8YQVTkSgbFX9CeezO16SY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mchLcKFamnfrP2WQ1XULDUSjEFRFaMKOWV/o+fe9hbqv9Qn+0tt/jtITbuo3YtQ+ZPQpQYcDR2xrTEmqQhbcE8u9MRrXOEWGnDGCPTdHZagLBcgWGeuTDasEWJAsTHql3U36l7MsaE1+yz7qmngkWl9IWvNgMloQ3MiL0C7XGcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jVYXdLGQ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 56DB7210B15D;
-	Wed, 12 Mar 2025 14:30:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 56DB7210B15D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741815054;
-	bh=0jZMHKO18dXTXA4LJuA2uOeEgiBBF4NGlAFfPYSUkIg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jVYXdLGQsYulvVeW8IFJWbnpTdPhO3YkIzVogJSfNX4/5ywy0iqJqge8B5pZ1HaAV
-	 Iv100RzYOsmebNCVxD7ORkWEDunwcz/79GyJiqkQhUDuH+nPFal96SJH1Ki4+uRbVB
-	 jJP64KqnGyiH4Tkhk5Kk5cE7kjlh3hiRNV9MLqM8=
-Message-ID: <3d26e47a-cb42-47f6-a18c-e330ee065a2b@linux.microsoft.com>
-Date: Wed, 12 Mar 2025 14:30:54 -0700
+	 In-Reply-To:Content-Type; b=WnJDmt38qWWsk2tmC4RQ9OWJqcv77bRO/8tU5FO0HwCwYoUrQlZaljckZBvt3Nnzq9x48GZfttWjLQsViolgdGJuLra6R607zJRYpi7rkBN1fK1iKVGkbM1qTKMx1+00iIxy4rSgAV+f/Ve12FNOXna1AmilHTKsuiHna7umUVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fsTVUJjz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741817844;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GjIBl5yndOQdnleTRVmAst04zzkiJlZJAcEZZ6NnjC8=;
+	b=fsTVUJjzDXEHNpUnHCfXnx2R+4HQap2dE0UtmwSsexdxRwUhT8tTzh6sEa/7ARB3KFKn5e
+	RUC0C6zRZhuP6bUvZMbBM6y0J8m916O7LV45JzuuPObffpO2ggR4IoDsVMa3FP+HwPsQCs
+	QvV3F/q1X4LE72M3Uc48qFvVBpENx0Y=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-78-N1PJ8w9QMD6fTcnJcfvHPA-1; Wed, 12 Mar 2025 18:17:22 -0400
+X-MC-Unique: N1PJ8w9QMD6fTcnJcfvHPA-1
+X-Mimecast-MFC-AGG-ID: N1PJ8w9QMD6fTcnJcfvHPA_1741817841
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39143311936so170180f8f.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Mar 2025 15:17:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741817841; x=1742422641;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GjIBl5yndOQdnleTRVmAst04zzkiJlZJAcEZZ6NnjC8=;
+        b=nALWTA0J2Hk9SjgXO5I1di2Sr+tyYTWgOUyw+BO7svfidI9ZpTOVNSM79NhD2Js4it
+         g/s2x2bocIgh1zhbQzfn+J6FiNas1+sDwXDPf2DR8tl1A7ZexSTxL39xFkDdNjOvpfvA
+         e/UQYelLR8xKxq+oLpZnmAMra2sOmt9WaDk2wUsAWWZGs2VV0hSAtAp8uMtf8pU7IA70
+         Zv3N7fI9HT5k4oIKixL2qtWifcsliCDM0iTa1OylZ95IRh8dX5osJx3T5rcoOEJOq5tx
+         50VUxfDJErIRn/EntT2Qtz80LqgS22Punb7RtOoXZmbIQn/WrfAaCz/yQ1QtBu3rgod9
+         c5+A==
+X-Gm-Message-State: AOJu0Yyq9x1/fyr/U+8Ez0R8ESqoQPjfuQNdembwp6WqWttEy7nCRTjW
+	0V+cgUNebRCkHaisE5oTyQbGJgUwKBl1qrg/dEnjjaI4NVtpHLGLXa0KlLJucLJTLsTclamwZ4r
+	EAGNrwgCbxjJQdWzs3I6obuNWdBYVvBD6OqKHhFJOtr46aagAYnpJxibdGPfFHQ==
+X-Gm-Gg: ASbGnct8T2KTlhvnQ25Syb0CdfAPNiMtlqa5iWjK9NgGarsrjyCA6FKoJ6HySRM84Ks
+	Gn7D/gkzNUxeNSeqocCIAHBhuxKSKktKdVCqT7xEVLjmK/XGr0VcHT1Si0NeJtP3sxjDH0/0Dez
+	OSbcHh1caNBrjQp6GXCES0GjZ0Xe7LPPgWo/DOpR4UKViB+zlYltL5t0rpoWGCAwQIr/y8kAwZo
+	H4X/Vb4sbCZwLiUlGgGv68cQW6YqM67rKM1Txs8kPwJ2JHJCxK9PuDRcKa5+19YFMP5ua8yWhpM
+	/yVjNvPgriOC0gfo8whJeZKEEaZmhR/gCYEOGMmvPK1zxTRhIymwL5dPdx3qpAu3LtvNKQnKoVN
+	IwEVgIxkdQK8/Jkzg++Fwyv+jQ3zusqjGwQhw0NTDBds=
+X-Received: by 2002:a05:6000:156d:b0:391:2192:ccd6 with SMTP id ffacd0b85a97d-3926c1cd9e5mr10444704f8f.39.1741817841290;
+        Wed, 12 Mar 2025 15:17:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7ajs+DbkvWkZrtvS3kgtwWoElT+oDfxGjlF1xcQLWnYsT+dOgzewtbm0o82DOv1DRYwzp5A==
+X-Received: by 2002:a05:6000:156d:b0:391:2192:ccd6 with SMTP id ffacd0b85a97d-3926c1cd9e5mr10444674f8f.39.1741817840917;
+        Wed, 12 Mar 2025 15:17:20 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1a:7c00:4ac1:c2c4:4167:8a0f? (p200300d82f1a7c004ac1c2c441678a0f.dip0.t-ipconnect.de. [2003:d8:2f1a:7c00:4ac1:c2c4:4167:8a0f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c4f9d59dsm62270f8f.0.2025.03.12.15.17.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Mar 2025 15:17:20 -0700 (PDT)
+Message-ID: <26e942e3-4e06-4644-b19b-ae0301bf9b2a@redhat.com>
+Date: Wed, 12 Mar 2025 23:17:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,187 +89,123 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for
- arm64
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Michael Kelley <mhklinux@outlook.com>, Arnd Bergmann <arnd@arndb.de>,
- "bhelgaas@google.com" <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Joey Gouly <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- Sudeep Holla <sudeep.holla@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Zenghui Yu <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
- <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-4-romank@linux.microsoft.com>
- <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
- <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
- <119cfb59-d68b-4718-b7cb-90cba67827e8@app.fastmail.com>
- <BN7PR02MB4148FC15ADF0E49327262B92D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
- <caa0d793-3f05-4d7c-88d0-224ec0503cfb@linux.microsoft.com>
- <Z9HvHsGyXDnN38_B@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+Subject: Re: [RFC 4/5] vmx_balloon: update the NR_BALLOON_PAGES state
+To: Nico Pache <npache@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, jerrin.shaji-george@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de,
+ gregkh@linuxfoundation.org, jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
+ eperezma@redhat.com, jgross@suse.com, sstabellini@kernel.org,
+ oleksandr_tyshchenko@epam.com, akpm@linux-foundation.org,
+ hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev,
+ shakeel.butt@linux.dev, muchun.song@linux.dev, nphamcs@gmail.com,
+ yosry.ahmed@linux.dev, kanchana.p.sridhar@intel.com,
+ alexander.atanasov@virtuozzo.com
+References: <20250312000700.184573-1-npache@redhat.com>
+ <20250312000700.184573-5-npache@redhat.com>
+ <20250312025607-mutt-send-email-mst@kernel.org>
+ <CAA1CXcDjEErb2L85gi+W=1sFn73VHLto09nG6f1vS+10o4PctA@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <Z9HvHsGyXDnN38_B@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAA1CXcDjEErb2L85gi+W=1sFn73VHLto09nG6f1vS+10o4PctA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 3/12/2025 1:31 PM, Wei Liu wrote:
-> On Wed, Mar 12, 2025 at 11:33:11AM -0700, Roman Kisel wrote:
+On 12.03.25 21:11, Nico Pache wrote:
+> On Wed, Mar 12, 2025 at 12:57 AM Michael S. Tsirkin <mst@redhat.com> wrote:
 >>
->>
->> On 3/10/2025 3:18 PM, Michael Kelley wrote:
->>> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, March 10, 2025 2:21 PM
->>>>
->>>> On Mon, Mar 10, 2025, at 22:01, Michael Kelley wrote:
->>>>> From: Arnd Bergmann <arnd@arndb.de> Sent: Saturday, March 8, 2025 1:05 PM
->>>>>>>    config HYPERV_VTL_MODE
->>>>>>>    	bool "Enable Linux to boot in VTL context"
->>>>>>> -	depends on X86_64 && HYPERV
->>>>>>> +	depends on (X86_64 || ARM64)
->>>>>>>    	depends on SMP
->>>>>>> +	select OF_EARLY_FLATTREE
->>>>>>> +	select OF
->>>>>>>    	default n
->>>>>>>    	help
->>>>>>
->>>>>> Having the dependency below the top-level Kconfig entry feels a little
->>>>>> counterintuitive. You could flip that back as it was before by doing
->>>>>>
->>>>>>         select HYPERV_VTL_MODE if !ACPI
->>>>>>         depends on ACPI || SMP
->>>>>>
->>>>>> in the HYPERV option, leaving the dependency on HYPERV in
->>>>>> HYPERV_VTL_MODE.
->>>>>
->>>>> I would argue that we don't ever want to implicitly select
->>>>> HYPERV_VTL_MODE because of some other config setting or
->>>>> lack thereof.  VTL mode is enough of a special case that it should
->>>>> only be explicitly selected. If someone omits ACPI, then HYPERV
->>>>> should not be selectable unless HYPERV_VTL_MODE is explicitly
->>>>> selected.
->>>>>
->>>>> The last line of the comment for HYPERV_VTL_MODE says
->>>>> "A kernel built with this option must run at VTL2, and will not run
->>>>> as a normal guest."  In other words, don't choose this unless you
->>>>> 100% know that VTL2 is what you want.
->>>>
->>>> It sounds like the latter is the real problem: enabling a feature
->>>> should never prevent something else from working. Can you describe
->>>> what VTL context is and why it requires an exception to a rather
->>>> fundamental rule here? If you build a kernel that runs on every
->>>> single piece of arm64 hardware and every hypervisor, why can't
->>>> you add HYPERV_VTL_MODE to that as an option?
->>>>
->>
->> In the VTL mode, we're running the kernel as secure firmware inside the
->> guest (one might see VTL2 working as Intel SMM or Secure World on ARM).
->>
->> [...]
->>
+>> On Tue, Mar 11, 2025 at 06:06:59PM -0600, Nico Pache wrote:
+>>> Update the NR_BALLOON_PAGES counter when pages are added to or
+>>> removed from the VMware balloon.
 >>>
->>> Ideally, a Linux kernel image could detect at runtime what VTL it is
->>> running at, and "do the right thing". Unfortunately, on x86 Linux this
->>> has proved difficult (or perhaps impossible) because the amount of
->>> boot-time setup required to ask the question about the current VTL
->>> is significant. The idiosyncrasies and historical baggage of x86 requires
->>> that Linux do some x86-specific initialization steps for VTL > 0
->>> before the question can be asked. Hence the introduction of
->>> CONFIG_HYPERV_VTL_MODE, and the behavior that when it is
->>> selected, the kernel image won't run normally in VTL 0.
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>>   drivers/misc/vmw_balloon.c | 5 ++++-
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
 >>>
->>> I'll go out on a limb and say that I suspect on arm64 a runtime
->>> determination based on querying the VTL *could* be made (though
->>> I'm not the person writing the code). But taking advantage of that
->>> on arm64 produces an undesirable dichotomy with x86.
+>>> diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
+>>> index c817d8c21641..2c70b08c6fb3 100644
+>>> --- a/drivers/misc/vmw_balloon.c
+>>> +++ b/drivers/misc/vmw_balloon.c
+>>> @@ -673,6 +673,8 @@ static int vmballoon_alloc_page_list(struct vmballoon *b,
+>>>
+>>>                        vmballoon_stats_page_inc(b, VMW_BALLOON_PAGE_STAT_ALLOC,
+>>>                                                 ctl->page_size);
+>>> +                     mod_node_page_state(page_pgdat(page), NR_BALLOON_PAGES,
+>>> +                             vmballoon_page_in_frames(ctl->page_size));
 >>
->> On arm64 that is much easier, I agree. On x86 we'd need a kludge of
 >>
->> static void __naked __init __aligned(4096) early_hvcall_pg(void)
->> {
->> 	/*
->> 	 * Fill the early hvcall page with `0xF1` aka `INT1` to catch
->> 	 * programming errors. The hypervisor will overlay the page with
->> 	 * the vendor-specific code sequences to make hypercalls on x86(_64).
->> 	 */
->> 	asm (".skip 4096, 0xf1");
->> }
->>
->> static u8 __init early_hvcall_pg_input[4096] __attribute__((aligned(4096)));
->> static u8 __init early_hvcall_pg_output[4096]
->> __attribute__((aligned(4096)));
->>
->> static void __init early_connect_to_hv(void)
->> {
->> 	union hv_x64_msr_hypercall_contents hypercall_msr;
->> 	u64 guest_id;
->>
->> 	guest_id = hv_generate_guest_id(LINUX_VERSION_CODE);
->> 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
->> 	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->> 	hypercall_msr.enable = 1;
->> 	hypercall_msr.guest_physical_address =
->> __phys_to_pfn(virt_to_phys(early_hvcall_pg));
->> 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->> }
->>
->> or variations thereof.
+>> same issue as virtio I think - this counts frames not pages.
+> I agree with the viritio issue since PAGE_SIZE can be larger than
+> VIRTIO_BALLOON_PFN_SHIFT, resulting in multiple virtio_balloon pages
+> for each page. I fixed that one, thanks!
 > 
-> OT here but what's stopping us from doing this on x86?
-> 
+> For the Vmware one, the code is littered with mentions of counting in
+> 4k or 2M but as far as I can tell from looking at the code it actually
+> operates in PAGE_SIZE or PMD size chunks and this count would be
+> correct.
+> Perhaps I am missing something though.
 
-At the first glance, seems like nothing I think. For the conf scenarios
-like TDX and SEV-SNP, due to the early hvcall I/O pages above allocated
-in BSS, might need to mark the pages as decrypted and zero them out so
-they look like proper BSS section (the page contents are scrambled after
-flipping the page encryption bit iirc).
+vmballoon_page_in_frames() documents to "Return: the number of 4k 
+frames.", because it supports either 4k or 2M chunks IIRC.
 
-> It seems to me there is some value in setting up the hypercall page as
-> early as possible. The same page can be used through the lifetime of the
-> partition. The early input and output pages should be reclaimed.
-> 
+I think the catch is that PAGE_SIZE will in these configs always be 4k. 
+Otherwise things like vmballoon_mark_page_offline() wouldn't work as 
+expected.
 
-Wholeheartedly agree!
-
-> Also, since the hypervisor will insert an overlay page, it makes sense
-> to not allocate a page from Linux at all. When I ported Xen to run as
-> a guest on Hyper-V, I used that approach. The setup worked just fine.
-> 
-> All being said, things work today, so I'm in no hurry to change things.
-> 
-
-I'll try fleshing this out soon-ish if no one beats me to that :)
-
-> Wei.
+So I think this is correct.
 
 -- 
-Thank you,
-Roman
+Cheers,
+
+David / dhildenb
 
 
