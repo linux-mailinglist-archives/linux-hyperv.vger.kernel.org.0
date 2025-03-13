@@ -1,128 +1,91 @@
-Return-Path: <linux-hyperv+bounces-4465-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4466-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 045FBA5EE80
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 09:52:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2E25A5F3BC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 13:05:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEF4A19C0482
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 08:52:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60F2617F233
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 12:04:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C62263886;
-	Thu, 13 Mar 2025 08:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55AAC2676C0;
+	Thu, 13 Mar 2025 12:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLYX9ZYa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hK6mGsH3"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FB7262D11;
-	Thu, 13 Mar 2025 08:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E19267399;
+	Thu, 13 Mar 2025 12:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855950; cv=none; b=LdniIcDzI2qJmS6oSRfSkdamlOyHDcbwFHLxrWPu1mY/AjYAZM+/PGWK+C4ZRRegDkJmnummyc7FNU0u4Y7/z4JgMdedNdz1+cv8qvt6/30ZjnofNCb6ecS4H5kttGU5Vbq1338hTJS/lRBQxjcVR26FYkz/PpRvn/ChCcnS1jY=
+	t=1741867408; cv=none; b=MOGYJ5X8pBcK3oXdRorC8oj1mQw+QoqUw2zTwV5TIwypqJU4Y/lSQ3YxyHiZxTRB9KYE/GJWEAI03Oh4JG4cQQ3gGfxAsfb/1cH84xiX5olxOH+lk347dHUkdo5PFDUuLaPgZuWEXjuWq0QGjO7APotIeYbsljaGX/9zPHTQvz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855950; c=relaxed/simple;
-	bh=bsWJBHENirJ6KNcHjp7ijhAQhuddBcS916UmjLeAtLU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LDPabSD6CsY8XmbGDRoBzZyNHMw6C/9FFnQ483460UAMuqnGMR9wRHRGguglc8be+kXMOZYpQWEmPQdn1HGZWtt1Hft/cMm5KUwysWAgmdFVHCafJxSuatmwM6AmxSBmhshYymsEzYVSglglp0LvsyphvsiDlJa3xnbTLVKDUOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QLYX9ZYa; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224171d6826so15721575ad.3;
-        Thu, 13 Mar 2025 01:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741855948; x=1742460748; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zdZMMUWMDqS7xE5EceDiiL8qINCxcfmqx8XegAbr6Rw=;
-        b=QLYX9ZYaQTgKxSXQesumWHn3KWBmBQq3eizO6/CPT68TB3M3tU7/pCaOajhwM7t5nF
-         5pfhsSE3tnkjS2jVXjqmByLWj/7YShZ9X/Zpq4/fxf6RsDCA0d5UOjEWrmEb+FxPmAkL
-         uRvAzdTq1QlL0lH35EboMTC1/81ajUy8IEmWSbpt5kiciyYTgStZn9aOeHbux1l6yOep
-         cAJ6/aw9MH82dm4kuvF4SHycxRN9O6FNzE9DG7RmQ+Yg2EmhYeAOMnXBRaCYPWSbaVme
-         4OfXW7W6wbGkKkcLp1a2TJcMQENxLfQNaB6clGRFFMzudvLHk8y6uVlebCGNyW2EncKL
-         CGKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741855948; x=1742460748;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zdZMMUWMDqS7xE5EceDiiL8qINCxcfmqx8XegAbr6Rw=;
-        b=uIHjLuVl8XMH6dbGcfQTUGN3YJKCJKg32oheDGZmOf6MufscfVdqYKoHctZe27/VfP
-         8RBm9vBwlTEzVaVgzWmcxdzNDxOq6E3eRc08VNUfazUbJ61zGK10MKp4zeWJJ362soNt
-         84/g96q9V+PPgl7ofuJ9hF1tabRUAdUNcfIaRbV8ZKWMQxvO6fB4RVoK7UICtj+Pjryj
-         PxGvHAu8JcXgalurx3IPxeH7aGPJuqSAK6ZOwMMFsx3fdjo/Ipb5HP0i9fvj7fM1VYHl
-         MDA8HhtzY0xmMPqcqs0FTK0chjdCk3BUq1gUjAJDlfg/VOmTiggtuFX1Q8NQ//q0Hauw
-         TfgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiaXt0vph3r54ZosYedJLcPagEA92YLHMf0F6riCrYdcE3h8elucHzdYaibVVehSjRXMaYMJZeln37YM8J@vger.kernel.org, AJvYcCWAcrSRT4rmS9S7WPv2yX06PJp4Da8UVGsy+ai13MdYrX+mM5GfP0V3Ba1mfIKX/TRNh09PVuDL@vger.kernel.org, AJvYcCWa2C1zWy95aI7Xh9YDqoamHJV5Rbl4Bl4UPILvBeL4rptZYgpTHaaO32l6aLYMze255KQ7Eo86gWMIqPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWA4H9eVXXCcTuSnuMVbZE3G8DB+8vtx1KWr4laNyJVZnsNrr2
-	lxS+6QD439GlMIJ5dd3cALScWqhU7hVB2Ib9gB0SC3AHyyvNevjk9LxlVg==
-X-Gm-Gg: ASbGnctGaFiHOatlJa0x83KR3/p2M0jpHp5AXYMi68VmcYqG0FfrJk2wh5kdu0862hp
-	cMXQqFvjqIeJXULUQU+Tmg/lUvrpMmLlH0il3Av0gppzZ2tedYeNI6hxLzHfWx1zZoo62icfSKh
-	u1jetN+etvt9H6a2Mmck1m1e7b3NbTFyiVP4LUXBO4ANCPCvqb+gw8/ejaUEBCSNAAHbpJNmEJK
-	GKUp4dgINyFJ2PVCr7NbJexiZ7PZwG6Rm9JiYxGoJUeoH6U7U8PsTrdcSTpGCv7tJJ6zJQiWXHe
-	UQcYSl2A3DVnggpfvt7YHks9hhANwU6XhZQUGFyBPJ/vwmIWC0TS2igqf9O3UFx6HycoK+3C/ZI
-	8QpuSwDgT
-X-Google-Smtp-Source: AGHT+IECYqlBbszLR2uQD3fg5Wv8tKjptePMqo8A+cMcx/3XxsKLDtVdhXKWVaCJTOwcFG09ArJudg==
-X-Received: by 2002:a05:6a21:497:b0:1f5:9024:3254 with SMTP id adf61e73a8af0-1f590246bcfmr14767135637.6.1741855947559;
-        Thu, 13 Mar 2025 01:52:27 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:7:211c:30ca:9a22:6176])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56e9fe51asm799597a12.36.2025.03.13.01.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 01:52:27 -0700 (PDT)
-From: Tianyu Lan <ltykernel@gmail.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: Tianyu Lan <tiala@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] x86/Hyperv: Fix check of return value from snp_set_vmsa()
-Date: Thu, 13 Mar 2025 04:52:17 -0400
-Message-Id: <20250313085217.45483-1-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1741867408; c=relaxed/simple;
+	bh=CPtuIJFPbVn0H1c4e5GFM0xMz0llPlIszfF5oAWZMQs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JVzHQ1wSC9/klSk8w62HlArMU8ydlyPMdyntvgV7uYomK3yevpqSxe2Coh7/AhnRy9QnCs/dasZ3Kclb7/W3BEIW33vtYSAeZXhABhfdm0MF0/3qyJ1CExNlRrl55TR9Cd7d7KrVcITeKutnXzplQPO2Qa6zY/yw6+HzI7qOHVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hK6mGsH3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCBDC4CEDD;
+	Thu, 13 Mar 2025 12:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741867407;
+	bh=CPtuIJFPbVn0H1c4e5GFM0xMz0llPlIszfF5oAWZMQs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=hK6mGsH3rg4vRaCqNpeuDMLvnHjtrzA8hEOrVGlDuIMCXElvLAdF+pCTVgk4GzDUD
+	 AlMr/OsZUbPc61VpeBcung5hoDwP3QKeHWTm3aa09PtvYRx4VWif5eqxAhAqhKiZF2
+	 5VuiDyX0VebFTq6FRmcaJBaAvItv1UQa9MwQOZHXGJ9vmM1MEETfmK5LI9hY6+pRQL
+	 UlHzuS3ahTwu2nnXtUNwLzhVSrIIyijRN3D9JykbtQDJXB7zOSql3aTM0e3rGFTsjL
+	 t3dB0FZlzrz3FlRHqVkQ1YX8JPHaV27jawP4V3jCjPV2wvA3NKXNRzFPMRyQrLO/9b
+	 1wMLrMgm8Q4cQ==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>, 
+ Konstantin Taranov <kotaranov@microsoft.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ longli@linuxonhyperv.com
+Cc: linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ Long Li <longli@microsoft.com>
+In-Reply-To: <1741821332-9392-1-git-send-email-longli@linuxonhyperv.com>
+References: <1741821332-9392-1-git-send-email-longli@linuxonhyperv.com>
+Subject: Re: [patch rdma-next v6 1/2] net: mana: Change the function
+ signature of mana_get_primary_netdev_rcu
+Message-Id: <174186740244.531606.4287471152182071574.b4-ty@kernel.org>
+Date: Thu, 13 Mar 2025 08:03:22 -0400
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-37811
 
-From: Tianyu Lan <tiala@microsoft.com>
 
-snp_set_vmsa() returns 0 as success result and so fix it.
+On Wed, 12 Mar 2025 16:15:31 -0700, longli@linuxonhyperv.com wrote:
+> Change mana_get_primary_netdev_rcu() to mana_get_primary_netdev(), and
+> return the ndev with refcount held. The caller is responsible for dropping
+> the refcount.
+> 
+> Also drop the check for IFF_SLAVE as it is not necessary if the upper
+> device is present.
+> 
+> [...]
 
-Cc: stable@vger.kernel.org
-Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
----
- arch/x86/hyperv/ivm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index ec7880271cf9..77bf05f06b9e 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -338,7 +338,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
- 	vmsa->sev_features = sev_status >> 2;
- 
- 	ret = snp_set_vmsa(vmsa, true);
--	if (!ret) {
-+	if (ret) {
- 		pr_err("RMPADJUST(%llx) failed: %llx\n", (u64)vmsa, ret);
- 		free_page((u64)vmsa);
- 		return ret;
+[1/2] net: mana: Change the function signature of mana_get_primary_netdev_rcu
+      https://git.kernel.org/rdma/rdma/c/a8445cfec101c4
+[2/2] RDMA/mana_ib: Handle net event for pointing to the current netdev
+      https://git.kernel.org/rdma/rdma/c/bee35b7161aaae
+
+Best regards,
 -- 
-2.25.1
+Leon Romanovsky <leon@kernel.org>
 
 
