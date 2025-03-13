@@ -1,208 +1,244 @@
-Return-Path: <linux-hyperv+bounces-4485-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4486-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C1B6A5FAD5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 17:09:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB9D2A5FB86
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 17:25:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C85D17F555
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 16:08:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 316573AF64C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 16:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98EC271296;
-	Thu, 13 Mar 2025 16:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10E9269B15;
+	Thu, 13 Mar 2025 16:20:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNVq7oOb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mb9bIIEa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1107627127A;
-	Thu, 13 Mar 2025 16:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24227269895;
+	Thu, 13 Mar 2025 16:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881658; cv=none; b=ngcr3bBRD8kn4ZoOsVw+XbYPvXPts4P4akRUdf4LTVXOLIsnwqFqpOsvc/CoczrK8Fo+Y7xSAYJUUyjTfPW9Dic0Via7+PeftH9/mcwi04nhZds53F7mShlQktDOoZo1hzY3O8YmEdLgqDc5RXddNdiBYqp2yyCV45GpRImvV7Q=
+	t=1741882819; cv=none; b=f4lJ7s9I6RuPoyv2MWLQrFb7txateojZsrJU2XWFzVupctOyDPUk6lc3xzrEqtS4mjSQLFTDlSeZ+plJFUE0lGfqll1/Gqvoq1jVWRwQPpNV/rFFFaRzMBUtHSyl0NArSFfDx6QzLqTKdz/eFCazogAZNQIUzUhxSs0BRLnrJn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881658; c=relaxed/simple;
-	bh=XKJtQZcokXscej3N2IxWQOYBMNaKiqVcS1bZEjhfI90=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YWFcn38+q5Jn51VfIxtL/fNSOFK7e0RBO4V6OBr6QVSWB0HTZ4tKElRXVkOxE9ggEKdP5QsJEjIV2A6GnwzhbVo4OxS+5oZwn6EYOcJcKiOR4KzJb64EMaOX6DIEA/VElR+NtkR8xKZaSh8M1KpEQijaKYoq+9gtTGv2VhBZ3Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNVq7oOb; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1741882819; c=relaxed/simple;
+	bh=MeouaPYUY+Y6+m89zPz2q/9mjsxSalWkhr/0fnbRPfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VtT4A5LQ5Y61LdqKSEUx+7ZVJs4Qjk5AMOXGpITwNWc1CPCD4DcqZpgviBnwBRx9ILTUvHAEVEa6wR2PsKM3C82L3dazf8VTA1DTbUBnk4LEEeqKguFIX1DJlY8Wq1AvoIxG07eamUs0WxAND9mL+euOwZd/JFP+kiZHZt/Weqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mb9bIIEa; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so2001766a12.0;
-        Thu, 13 Mar 2025 09:00:56 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-224100e9a5cso25313475ad.2;
+        Thu, 13 Mar 2025 09:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741881655; x=1742486455; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Qhu1Jf1lhWvYe/Q8L9Li1P5wGlP18gn8uz7AiBpY7E=;
-        b=mNVq7oObMHqYyYYkL2eowfkX6OqG4/aof+Csz9sZWn14CcgZAMKD9JGhet4zNjDby/
-         hlbJj11NoNuZXxln2fuwJ/zwL1jMsEbj2zrOUdwgvanoKQ2If42w8r69ExRq/dUr22Jj
-         TJEw6Hx/4uOcSoXKj6KmKCqMuqZpaNhUYOLyEvk2R0UgesoAXuYIN/qFpWyTUufb+m+9
-         N/3oaprWb2Tb8Syaa3pJva/8tJFDnZLIGL7TVf7msPDebJFhIuHhaCDprdIXQ0og+g+2
-         LxIZt57IqNmVR6Qr9KNuGs9SLeycU2IFBisyoIek1vPuyJJJt0yNnAreZOrJMFuQr9KL
-         9Cdg==
+        d=gmail.com; s=20230601; t=1741882817; x=1742487617; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+FrtSM5QYV3ZSnhILX79ajDFfaROpVELvpAwwKaRM0o=;
+        b=mb9bIIEaGkTqLdecEZZkLnK22Vb/xEmbc8BOugIElBGZhm31JSfnqEFrCMfnrXYpaZ
+         nDJ6rAl2rddF7MEKKwx+L8s36YM9r/hxgDjNSdntXHReru1vFVZYgiMWRJwNal8js8ww
+         IBpyT5ITEfvuGfVzYSg/46Y4w53Hkaa+0mmbT9tQ7qDvWoI75g6ykrb9kPl5siq9gPdl
+         9k1T/IUpUTsMptrZENMXnynBhA8RUko3tG45EPVQo8z0huuL3TVmEEEFyUWNmAUaLnGY
+         fBcsx2eTAoGTJvXr5TP7vwdWJmyyBB1N69cm0zRkB9GgiJw+zFDaLgCuDlyJkNzfR0Z4
+         wEvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741881655; x=1742486455;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1Qhu1Jf1lhWvYe/Q8L9Li1P5wGlP18gn8uz7AiBpY7E=;
-        b=aImnZKoCTiJHOG+lDfYb/IyJo7QFdcIVjbiyypOvfA7vJWz/Guud/x18bKTvH5RqdL
-         tO1K4tDzkYO7MmH2mKOH9V+IZQsbfqILznMrqhGAAZJaRtHdP5bwFgMGJ8xaXLKR4o2l
-         GfaARRnWe1F99QZummSg/lnR46lz5eGTVO3pX6ljCgCIZNMnx+dOrkrzQ1r+34YR2wlz
-         NDJhjK6UprzoVJFyNbZ6F9K6UKxYXD8BMlKbEmLQdNo3YnCdln8xbE+uNKUaTFyrP9ay
-         11EK2yIzk1GPsSEhuqE7jK+0Ygak+wMuXUFr260THMn1ENUOZYtgDS3G4NipQE/7UAk7
-         3mpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9kS1wc9nqt5PMr+QKKVI44Pm9qqyR7zgQzdf78GmMeMVE6tlRzNeCkfJRZn1e+vUMKgSrRhLdcNBjDoYt@vger.kernel.org, AJvYcCVd+1sHfwC7LAY/TIgpe1rczQfIKHF7+29UKR1+tpsJL8X2ChktqBJs8/Wo/EQM09eBg6xvmAiKf0x3@vger.kernel.org, AJvYcCWEuJ1kGZogq+9tDW4gki1juw6HY0wD0b4q+aa9ngbjqWB8DRpeCZUWFJLUOB89rC9mxV5FFpIDh0I4LQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxd2C/1iICOa+cG3Pnnl3vsSZtcVyhbWg23otDGhMf6jIT9Sh7
-	yzE5DZu52k6a0UniWuMxduWIHvTrNnGnj6mqvptkpr4bLfD7zE1CLXGtJ8IVo7H6dB3O5AnrRq1
-	mPBySKjJOyqUS1NVXfgp68nZakIY=
-X-Gm-Gg: ASbGncui0KqhgCpwQ0Ufb5UfYSjDAeF9WpNWoHUzO01oZccY3bMfbU+HCc3J4UQRjsL
-	btTOBrxmJSkO9HsjxA8L4Slum6qkOh5Lnxm8p019p0Kx+nw+PhEK5xQngz8OUzyE5WyLd81e9/s
-	favDqK8UcXYbv8/t6KC6mI8IyUb0MzA2ireaXGALBOlx+5
-X-Google-Smtp-Source: AGHT+IF//s5JFhhMz1vXUsSDxcGZw1gNGBJyGuwueP01uLjPSgBsSzQhu+mR5NorVsyg5kbLscyeEYUe12nwcFZ/Fic=
-X-Received: by 2002:a05:6402:2793:b0:5de:4b81:d3fd with SMTP id
- 4fb4d7f45d1cf-5e5e22b8668mr33542305a12.13.1741881654811; Thu, 13 Mar 2025
- 09:00:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741882817; x=1742487617;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+FrtSM5QYV3ZSnhILX79ajDFfaROpVELvpAwwKaRM0o=;
+        b=BwgRb6rZlHyzKHxYqe29h+dzSkei6j1e4vGAeON/mprlCkKKn/f7NCicZVahPB9tRS
+         p+vJ4i5xJnwW3fIF0NHzB6p+gc8GSW7XSPlrzhJW1utdkEZLbNeT0ZetVY6FL887SlZL
+         NrytPdaqIqNfG7ZVRrAmXJyBgL14cvcDBAz7aUfV/lDmmqyrQNGBwiy/bFrL7DL1ejpI
+         cZPas9VotokPNt3rWxrYD4d937Kw/CEv7c2fTCfkGzsN6bWwfb7wIbfFaDr5sZfm7/kY
+         G8By477AI21PDD2PN+AHzpln8HhP/gADDS9e//mWKXbazKRfJov4JAwJJ6Oy4N4drTWb
+         IPag==
+X-Forwarded-Encrypted: i=1; AJvYcCVEY/M0XfNdbdsLXWXo31TQebt9WilMpu2mb+r0bUF/u/E0MnEIUza8UjVfyp8bhKBrjno=@vger.kernel.org, AJvYcCVtEFSXvSmZiJHEcZj4BcxfkQ6TjU3zjwZgAqYdg05cO60qjFzZVM1p/34mLwQrLMedFQ8Wbr1G@vger.kernel.org, AJvYcCXCtoOVxmJ76CTSp8ymppH6L1jjf+Nmf8+X9bmdvFDLVRM73bl2Cpyboe1K5HTxvfWYetx+XfY5JeeHGfOh@vger.kernel.org, AJvYcCXWCPeOgpCboxHDpl/gCGp9DQgXuS3+FU6ORWmSoRdihEPO2Kw4WK3S8KlFSn1Gdd2C/sYAbAFffDdURkcG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+/f6fhdlYRMQa/soA6ogIpPYKVbBJQj1wnzEfQs8wlP0aMAsG
+	fZLfjkqtVSrSdkSy5rG+Lw2sUbWYjF/H1Ix8Mo/crMw4NiByO9i9
+X-Gm-Gg: ASbGncualwGcwo+D1UskbU5flsSWZLIRhGUFNPIDxIDN9eZTD8Vw9nt1LKLzPwYrBU4
+	TwgcX8HsP1dn+C5/+Eq418S24bzjsh5KMA71cASGuI39jn0QpfQBQOSenNuZS3u0rBVgWKWkL5j
+	9Ut22vcQH5R8J/DadNzfH6ifqIMv89rO1rIIESh/c5kzCiHwaKSn09MoZL5ymR9SBxoylF+IVUV
+	iv+KzRaeOoYIKnV0z8c6Nk9hIY+/Porytv2yuajJuowCQy+S4JKZwo6i4aVZehOyeVnlCyp7kkm
+	NNavgIxJ5y6+aJrxVukYAwOQ5vuuPsbGaslOu4Nl2iS4MqD48FiGNeByTDzQSoykOg==
+X-Google-Smtp-Source: AGHT+IEWJGd9h0feAugm799oiQTdsY9teLTJc2OsgE9nTLRDIkiU9dBSoHavuE6qoQrpZvxOwMlLtg==
+X-Received: by 2002:a17:902:e748:b0:220:d601:a704 with SMTP id d9443c01a7336-225dd84bc8bmr1960855ad.18.1741882817018;
+        Thu, 13 Mar 2025 09:20:17 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:7::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba724asm15226325ad.152.2025.03.13.09.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 09:20:16 -0700 (PDT)
+Date: Thu, 13 Mar 2025 09:20:14 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z9MFvkALRY/k3ITG@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <Z9JC0VoMwAHKjqEX@devvm6277.cco0.facebook.com>
+ <zz5fnulfljo6hyxaveseq3dxfgljfs33m7ncsw6uod6wouaqhl@jzdmg6s7g5dw>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-8-git-send-email-nunodasneves@linux.microsoft.com>
- <CAMvTesAW-9Mo0oY6UUh2anp6DQCSsVCUhBiV2-bKp2VD_N0DYw@mail.gmail.com>
- <5e3e8c30-912c-4fe3-bfac-1ae21242473b@linux.microsoft.com>
- <CAMvTesAPeLBfYVa5TGx-o6p+0g_Q1bn6s+nZK5i7NK8QGyfbTA@mail.gmail.com> <6ba21efb-7065-44d7-9cee-265a0c137f0c@linux.microsoft.com>
-In-Reply-To: <6ba21efb-7065-44d7-9cee-265a0c137f0c@linux.microsoft.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Fri, 14 Mar 2025 00:00:18 +0800
-X-Gm-Features: AQ5f1JoY20sfCYd5hoFXQ7-iNAPjORddneakJM5FpRpMqnWdK9ekAfBUaAWFCjI
-Message-ID: <CAMvTesCUOTAkiGHq2eh9N7MA86-ZFbLTGaypjKHU8fE0cmc1Dg@mail.gmail.com>
-Subject: Re: [PATCH v5 07/10] Drivers: hv: Introduce per-cpu event ring tail
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com, 
-	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com, 
-	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org, 
-	joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de, 
-	jinankjain@linux.microsoft.com, muminulrussell@gmail.com, 
-	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com, 
-	ssengar@linux.microsoft.com, apais@linux.microsoft.com, 
-	Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com, 
-	gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com, 
-	muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org, 
-	lenb@kernel.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <zz5fnulfljo6hyxaveseq3dxfgljfs33m7ncsw6uod6wouaqhl@jzdmg6s7g5dw>
 
-On Thu, Mar 13, 2025 at 11:56=E2=80=AFPM Nuno Das Neves
-<nunodasneves@linux.microsoft.com> wrote:
->
-> On 3/13/2025 12:34 AM, Tianyu Lan wrote:
-> > On Thu, Mar 13, 2025 at 3:45=E2=80=AFAM Nuno Das Neves
-> > <nunodasneves@linux.microsoft.com> wrote:
-> >>
-> >> On 3/10/2025 6:01 AM, Tianyu Lan wrote:
-> >>> On Thu, Feb 27, 2025 at 7:09=E2=80=AFAM Nuno Das Neves
-> >>> <nunodasneves@linux.microsoft.com> wrote:
-> >>>>
-> >>>> Add a pointer hv_synic_eventring_tail to track the tail pointer for =
-the
-> >>>> SynIC event ring buffer for each SINT.
-> >>>>
-> >>>> This will be used by the mshv driver, but must be tracked independen=
-tly
-> >>>> since the driver module could be removed and re-inserted.
-> >>>>
-> >>>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> >>>> Reviewed-by: Wei Liu <wei.liu@kernel.org>
-> >>>
-> >>> It's better to expose a function to check the tail instead of exposin=
-g
-> >>> hv_synic_eventring_tail directly.
-> >>>
-> >> What is the advantage of using a function for this? We need to both se=
-t
-> >> and get the tail.
-> >
-> > We may add lock or check to avoid race conditions and this depends on t=
-he
-> > user case. This is why I want to see how mshv driver uses it.
-> >
-> >>
-> >>> BTW, how does mshv driver use hv_synic_eventring_tail? Which patch
-> >>> uses it in this series?
-> >>>
-> >> This variable stores indices into the synic eventring page (one for ea=
-ch
-> >> SINT, and per-cpu). Each SINT has a ringbuffer of u32 messages. The ta=
-il
-> >> index points to the latest one.
-> >>
-> >> This is only used for doorbell messages today. The message in this cas=
-e is
-> >> a port number which is used to lookup and invoke a callback, which sig=
-nals
-> >> ioeventfd(s), to notify the VMM of a guest MMIO write.
-> >>
-> >> It is used in patch 10.
-> >
-> > I found "extern u8 __percpu **hv_synic_eventring_tail;" in the
-> > drivers/hv/mshv_root.h of patch 10.
-> > I seem to miss the code to use it.
-> >
-> > +int hv_call_unmap_stat_page(enum hv_stats_object_type type,
-> > +                           const union hv_stats_object_identity *ident=
-ity);
-> > +int hv_call_modify_spa_host_access(u64 partition_id, struct page **pag=
-es,
-> > +                                  u64 page_struct_count, u32 host_acce=
-ss,
-> > +                                  u32 flags, u8 acquire);
-> > +
-> > +extern struct mshv_root mshv_root;
-> > +extern enum hv_scheduler_type hv_scheduler_type;
-> > +extern u8 __percpu **hv_synic_eventring_tail;
-> > +
-> > +#endif /* _MSHV_ROOT_H_ */
-> >
->
-> It is used in mshv_synic.c in synic_event_ring_get_queued_port():
->
-> diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
-> new file mode 100644
-> index 000000000000..e7782f92e339
-> --- /dev/null
-> +++ b/drivers/hv/mshv_synic.c
-> @@ -0,0 +1,665 @@
-> <snip>
-> +static u32 synic_event_ring_get_queued_port(u32 sint_index)
-> +{
-> +       struct hv_synic_event_ring_page **event_ring_page;
-> +       volatile struct hv_synic_event_ring *ring;
-> +       struct hv_synic_pages *spages;
-> +       u8 **synic_eventring_tail;
-> +       u32 message;
-> +       u8 tail;
-> +
-> +       spages =3D this_cpu_ptr(mshv_root.synic_pages);
-> +       event_ring_page =3D &spages->synic_event_ring_page;
-> +       synic_eventring_tail =3D (u8 **)this_cpu_ptr(hv_synic_eventring_t=
-ail);
-> +       tail =3D (*synic_eventring_tail)[sint_index];
+On Thu, Mar 13, 2025 at 04:37:16PM +0100, Stefano Garzarella wrote:
+> Hi Bobby,
+> first of all, thank you for starting this work again!
+> 
 
-OK. I got it. Thanks.
+You're welcome, thank you for your work getting it started!
 
---=20
-Thanks
-Tianyu Lan
+> On Wed, Mar 12, 2025 at 07:28:33PM -0700, Bobby Eshleman wrote:
+> > Hey all,
+> > 
+> > Apologies for forgetting the 'net-next' prefix on this one. Should I
+> > resend or no?
+> 
+> I'd say let's do a firts review cycle on this, then you can re-post.
+> Please check also maintainer cced, it looks like someone is missing:
+> https://patchwork.kernel.org/project/netdevbpf/patch/20250312-vsock-netns-v2-1-84bffa1aa97a@gmail.com/
+> 
+
+Duly noted, I'll double-check the ccs next time. sgtm on the re-post!
+
+> > On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
+> > > Picking up Stefano's v1 [1], this series adds netns support to
+> > > vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
+> > > namespaces, defering that for future implementation and discussion.
+> > > 
+> > > Any vsock created with /dev/vhost-vsock is a global vsock, accessible
+> > > from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
+> > > "scoped" vsock, accessible only to sockets in its namespace. If a global
+> > > vsock or scoped vsock share the same CID, the scoped vsock takes
+> > > precedence.
+> 
+> This inside the netns, right?
+> I mean if we are in a netns, and there is a VM A attached to
+> /dev/vhost-vsock-netns witch CID=42 and a VM B attached to /dev/vhost-vsock
+> also with CID=42, this means that VM A will not be accessible in the netns,
+> but it can be accessible outside of the netns,
+> right?
+> 
+
+In this scenario, CID=42 goes to VM A (/dev/vhost-vsock-netns) for any
+socket in its namespace.  For any other namespace, CID=42 will go to VM
+B (/dev/vhost-vsock).
+
+If I understand your setup correctly:
+
+	Namespace 1:
+		VM A - /dev/vhost-vsock-netns, CID=42
+		Process X
+	Namespace 2:
+		VM B - /dev/vhost-vsock, CID=42
+		Process Y
+	Namespace 3:
+		Process Z
+
+In this scenario, taking connect() as an example:
+	Process X connect(CID=42) goes to VM A
+	Process Y connect(CID=42) goes to VM B
+	Process Z connect(CID=42) goes to VM B
+
+If VM A goes away (migration, shutdown, etc...):
+	Process X connect(CID=42) also goes to VM B
+
+> > > 
+> > > If a socket in a namespace connects with a global vsock, the CID becomes
+> > > unavailable to any VMM in that namespace when creating new vsocks. If
+> > > disconnected, the CID becomes available again.
+> 
+> IIUC if an application in the host running in a netns, is connected to a
+> guest attached to /dev/vhost-vsock (e.g. CID=42), a new guest can't be ask
+> for the same CID (42) on /dev/vhost-vsock-netns in the same netns till that
+> connection is active. Is that right?
+> 
+
+Right. Here is the scenario I am trying to avoid:
+
+Step 1: namespace 1, VM A allocated with CID 42 on /dev/vhost-vsock
+Step 2: namespace 2, connect(CID=42) (this is legal, preserves old
+behavior)
+Step 3: namespace 2, VM B allocated with CID 42 on
+/dev/vhost-vsock-netns
+
+After step 3, CID=42 in this current namespace should belong to VM B, but
+the connection from step 2 would be with VM A.
+
+I think we have some options:
+1. disallow the new VM B because the namespace is already active with VM A
+2. try and allow the connection to resume, but just make sure that new
+   connections got o VM B
+3. close the connection from namespace 2, spin up VM B, hope user
+	 manages connection retry
+4. auto-retry connect to the new VM B? (seems like doing too much on the
+   kernel side to me)
+
+I chose option 1 for this rev mostly for the simplicity but definitely
+open to suggestions. I think option 3 is also a simple implementation.
+Option 2 would require adding some concept of "vhost-vsock ns at time of
+connection" to each socket, so the tranport would know which vhost_vsock
+to use for which socket.
+
+> > > 
+> > > Testing
+> > > 
+> > > QEMU with /dev/vhost-vsock-netns support:
+> > > 	https://github.com/beshleman/qemu/tree/vsock-netns
+> 
+> You can also use unmodified QEMU using `vhostfd` parameter of
+> `vhost-vsock-pci` device:
+> 
+> # FD will contain the file descriptor to /dev/vhost-vsock-netns
+> exec {FD}<>/dev/vhost-vsock-netns
+> 
+> # pass FD to the device, this is used for example by libvirt
+> qemu-system-x86_64 -smp 2 -M q35,accel=kvm,memory-backend=mem \
+>   -drive file=fedora.qcow2,format=qcow2,if=virtio \
+>   -object memory-backend-memfd,id=mem,size=512M \
+>   -device vhost-vsock-pci,vhostfd=${FD},guest-cid=42 -nographic
+> 
+
+Very nice, thanks, I didn't realize that!
+
+> That said, I agree we can extend QEMU with `netns` param too.
+> 
+
+I'm open to either. Your solution above is super elegant.
+
+> BTW, I'm traveling, I'll be back next Tuesday and I hope to take a deeper
+> look to the patches.
+> 
+> Thanks,
+> Stefano
+> 
+
+Thanks Stefano! Enjoy the travel.
+
+Best,
+Bobby
 
