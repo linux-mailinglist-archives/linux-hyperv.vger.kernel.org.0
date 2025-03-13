@@ -1,64 +1,64 @@
-Return-Path: <linux-hyperv+bounces-4470-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4472-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D689FA5F535
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 14:04:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 700E5A5F53B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 14:05:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B05D1884DA6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 13:04:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76D0016E52B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 13:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4530D267737;
-	Thu, 13 Mar 2025 13:03:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F71267B71;
+	Thu, 13 Mar 2025 13:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="shj5CAde";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="byiMxgR9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jBCOqsEs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tjt6d8fp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9568C26770C;
-	Thu, 13 Mar 2025 13:03:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C7F267AF2;
+	Thu, 13 Mar 2025 13:03:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741871022; cv=none; b=geSS9zuo4cCw8L4Ba9aOW3RXTFSAg6f9UEPz93mG5ZxJv4XJkrBj0Wr41h3N8ykYwohCp7smNtrRf4zWuPIqhscpUhi30ykXBIvdVA7dT6dCN6ku+suKQK2vd3KgyElwYe4XLDwt9NBm/HmOIei8nFOYZrFSJGHCH1ugrYCIVUg=
+	t=1741871025; cv=none; b=M21eff7Y8O1NpCylBBlbwq44y2TwxPhEecp1lzopW/RD+rcAQXEYzvy60j3uwKcf6vQ0SRpkjuxj+w/Ive64eflSo+urY7nHU/gpi7/bhl/BKY9Dz7QH+4CvjGx9MSuQwuTscZJasYECw0W/ypI75PZRpjdcUW5FE6ci2Sgky2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741871022; c=relaxed/simple;
-	bh=98KRXcGEbIO50H7NCISaJsrQv87mCIk32utux6MRmis=;
+	s=arc-20240116; t=1741871025; c=relaxed/simple;
+	bh=YA+xRKQ1bCPwCGf288P1mFx8wbPz0YHxLW7XpjZA9Ts=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Y0hoa9Ylj53X1ckX8OQwvfAkakh1v4fsfhynxrLGX61IAg5pRnBDvXjLPcGLZHdixUsmTrdpISusVpqZk1vwNesfXcQNgFOlGQeHdd4AMnh7/krYsaMgKB4SoaHKdGARys0KiSUM5xx8ZR+YPEJJoY/U0F1gNaqLCd8gGcj2Gnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=shj5CAde; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=byiMxgR9; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=lAt4zYhpM2Mt9w/CIAh6H4bar81lnaYG5lnCkBFUYZrrZ7MoWNvWIBQpJ8luKr2Of/gTT3b4o0vlRECpQ4dYvdju9OrFiraHe6IPCKml9+oX8vu31+zBZk7A3+35o7gJNXpEf+z+65Uf3c9DnNnahu8TWTFApGZ3uMzQXW3flIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jBCOqsEs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tjt6d8fp; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Message-ID: <20250313130321.442025758@linutronix.de>
+Message-ID: <20250313130321.568379110@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741871018;
+	s=2020; t=1741871021;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=VeVnnwSReah5wOC9Iz7ded+zOeZPkraBXHsDPNXcIs4=;
-	b=shj5CAdewFdh89n7ia0O9o8wc9yKPHi/tldIDoAodBKxyF+cFmiDEmEjtYyMAPgZjYScMI
-	l5cNO6lvwa+TmWNrr+Qsyrf630p24vGKBMnTExIq2Y/T92SWfvXg2xzGgBY+1cGMYLsivY
-	DlZcq4AVeT0feSydUHjIczYk9QZ3X5zE4vfK9Fc2VnZDWzQ2PAj1t8nKypbEiszDEQ356a
-	Fe/V+/OEHJ3wLYHJYTPJt4V2zXoTF1HxXwB2K00o21Dx48t5thojcjBdb3jNb/QVAjuF7P
-	eCUrGrSsp+EBC75dRo/DClUSWmDbo4FXhDbtHGiZi+lTpQjoyUqfqDb3bN1ErQ==
+	 references:references; bh=JAGxU1SGJ7l/lZ3n/Ga0dDjuWkVfIFFiS2EUui8rZ10=;
+	b=jBCOqsEsxbelusapNiCzQLbiVnibMNRVP4P0m03xXCnNAGcxhfGotGn/oKERzj+BT4sLeT
+	PcCaYx7mTe1jPEoz0KiN9644Gn1wfg4bKWQVx6ZmsAb9Tcy+Iv6pjJZKhGF8jrtdZaVlaV
+	eVfbEtv125ieSf5if20k/mlXOndg7Y8tf+2FQHsM7F6yYdsS3IZYmnPJjiNo8huhPBSDDt
+	OtHRMsXE3fQi4ncmOHWhjCHo17b81+gMRGUqQ5WDtIO24iROQ2Om0ZReORUmRyWCXFhOp/
+	osAlJDaoKta/Z84RkgbOs1hiY5SEpg03QIxaFuELBLtMGhs1lRmjJdrsbfcWTg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741871018;
+	s=2020e; t=1741871021;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=VeVnnwSReah5wOC9Iz7ded+zOeZPkraBXHsDPNXcIs4=;
-	b=byiMxgR9qFLezNWz2uxirZ2d+2cD07D0KcxtSE0jlqbSKJ+lcH/sx6VeqWfua+hDn1Tu7X
-	4A/2eBhQq0y7SIAg==
+	 references:references; bh=JAGxU1SGJ7l/lZ3n/Ga0dDjuWkVfIFFiS2EUui8rZ10=;
+	b=Tjt6d8fpY/80LWp3IWDxeLCOK/2i0mfgvBm22dduGxRY3Cj8Ppf02XfF5NlP4O5Jl9kPYS
+	Kb+NbJsIpsmP6YBA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
  Nishanth Menon <nm@ti.com>,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Dhruva Gole <d-gole@ti.com>,
  Tero Kristo <kristo@kernel.org>,
  Santosh Shilimkar <ssantosh@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
  Logan Gunthorpe <logang@deltatee.com>,
  Dave Jiang <dave.jiang@intel.com>,
  Jon Mason <jdmason@kudzu.us>,
@@ -76,7 +76,8 @@ Cc: Marc Zyngier <maz@kernel.org>,
  "Martin K. Petersen" <martin.petersen@oracle.com>,
  linux-scsi@vger.kernel.org,
  Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: [patch V2 01/10] cleanup: Provide retain_ptr()
+Subject: [patch V2 03/10] soc: ti: ti_sci_inta_msi: Switch MSI descriptor
+ locking to guard()
 References: <20250313130212.450198939@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -85,72 +86,48 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 14:03:38 +0100 (CET)
+Date: Thu, 13 Mar 2025 14:03:41 +0100 (CET)
 
-In cases where an allocation is consumed by another function, the
-allocation needs to be retained on success or freed on failure. The code
-pattern is usually:
+Convert the code to use the new guard(msi_descs_lock).
 
-	struct foo *f = kzalloc(sizeof(*f), GFP_KERNEL);
-	struct bar *b;
-
-	,,,
-	// Initialize f
-	...
-	if (ret)
-		goto free;
-        ...
-	bar = bar_create(f);
-	if (!bar) {
-		ret = -ENOMEM;
-	   	goto free;
-	}
-	...
-	return 0;
-free:
-	kfree(f);
-	return ret;
-
-This prevents using __free(kfree) on @f because there is no canonical way
-to tell the cleanup code that the allocation should not be freed.
-
-Abusing no_free_ptr() by force ignoring the return value is not really a
-sensible option either.
-
-Provide an explicit macro retain_ptr(), which NULLs the cleanup
-pointer. That makes it easy to analyze and reason about.
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Nishanth Menon <nm@ti.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Cc: Tero Kristo <kristo@kernel.org>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>
 ---
- include/linux/cleanup.h |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/soc/ti/ti_sci_inta_msi.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -216,6 +216,23 @@ const volatile void * __must_check_fn(co
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
+ 	if (ret)
+ 		return ret;
  
- #define return_ptr(p)	return no_free_ptr(p)
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
+-	if (nvec <= 0) {
+-		ret = nvec;
+-		goto unlock;
+-	}
++	if (nvec <= 0)
++		return nvec;
  
-+/*
-+ * Only for situations where an allocation is handed in to another function
-+ * and consumed by that function on success.
-+ *
-+ *	struct foo *f __free(kfree) = kzalloc(sizeof(*f), GFP_KERNEL);
-+ *
-+ *	setup(f);
-+ *	if (some_condition)
-+ *		return -EINVAL;
-+ *	....
-+ *	ret = bar(f);
-+ *	if (!ret)
-+ *		retain_ptr(f);
-+ *	return ret;
-+ */
-+#define retain_ptr(p)				\
-+	__get_and_null(p, NULL)
- 
- /*
-  * DEFINE_CLASS(name, type, exit, init, init_args...):
+ 	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
+ 	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
+ 	if (ret)
+ 		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
+-unlock:
+-	msi_unlock_descs(dev);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
+
+
 
 
