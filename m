@@ -1,138 +1,168 @@
-Return-Path: <linux-hyperv+bounces-4461-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4462-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06929A5ECD0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 08:21:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E57ACA5ED19
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 08:35:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9158B167D38
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 07:21:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CCDC3ADF90
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 07:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 361D61FC0FA;
-	Thu, 13 Mar 2025 07:20:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66D9A25F996;
+	Thu, 13 Mar 2025 07:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqJo5nOP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aRjHhLxI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619FA1FC0FD
-	for <linux-hyperv@vger.kernel.org>; Thu, 13 Mar 2025 07:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAE413BC3F;
+	Thu, 13 Mar 2025 07:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850450; cv=none; b=Dc4rH5zTwAUK2jjY1SDLra1ll0pclUNwbt3VBy5h/jGevTHVBAqjQtZfkk6bRv4fR/m3+qywuLjssLdfmGK/bLak1uR6t8e/AerN9dXiz1EbwY2M0UX+dyOzlrFgDFdEyq41Bv9AIkjK+ltsqmQNFxgrhPhyHuou2mecm4H8OaY=
+	t=1741851310; cv=none; b=LyaGzSaFaHVj2eW3rMak5nL0zkR/dLRJN24JZudoZx9DUx7kbbVMMOxS16Zf4wNnKPTp8xyys19dXTPGFIAY0gh6G06X7VEI1VwECtCNE4PC9ZGz5s5cRbiQR57XFPN9IoAbMNlKuaVLwXhihdjnxgRYqSWXz42QkAVwjhAS3CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850450; c=relaxed/simple;
-	bh=KtmKrH0Gsv0sBFL6B7nZq6RHI/4HDfiECApPAP1vOr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5u0mf9+UjW/PraN2+rj+K9Lr6qRs3OTiZIUbVxBcbukCtq9zejBUh9IDIPROuBSSw58EWDTbZeoflSjGdOIzkWAlfCTZZscJAjjw685JGzhAV4slS8k7CGiZt1W/rLy6L46u2geoW3wgw7O9P+ZYNyQJMX+xVGMTTP0Jk36Djg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FqJo5nOP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741850447;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o4bfYEIbp/kS2X2cwGn1CJqsR/J4F2IpC4H45RKU2a4=;
-	b=FqJo5nOPWDZvXMnUaMq8yz7DAur3XgvRRlldH1KzVjncJ0fRNlVzjqNZFuXxvAjubh5CLt
-	5jKxjXawWTfdH8AWnvBzqXRPxrEq0ySpYNjo+t4cSIWfVKj7VHmk6qIelpyJAHuOg2rHkT
-	6r9zYLj7QvIxHGSArTietsOR7zVC46A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-357-_SktfWGnM4eQhtzOvM7IHA-1; Thu, 13 Mar 2025 03:20:45 -0400
-X-MC-Unique: _SktfWGnM4eQhtzOvM7IHA-1
-X-Mimecast-MFC-AGG-ID: _SktfWGnM4eQhtzOvM7IHA_1741850444
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d08915f61so2681815e9.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 13 Mar 2025 00:20:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741850444; x=1742455244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1741851310; c=relaxed/simple;
+	bh=EdxGxN+VRDwhAkSIvCST7YEsLLAsc4WQBymWR5igh5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E+Bzq0heDFLEQl94852tNB76BLnXjSDAbcM6duFNqL+MOWFPijhG7lUkEgGTM1JmVxNO6k1ktNC2325KEhCbtJnl5OTOGJQ4MQvADzxc5tDbJac6qcrEE1I4v36O1r6KzqJo16SYdKxw6NgwuWk5tCItihWP+prC4S6FOzDqjo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aRjHhLxI; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so1283047a12.1;
+        Thu, 13 Mar 2025 00:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741851307; x=1742456107; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o4bfYEIbp/kS2X2cwGn1CJqsR/J4F2IpC4H45RKU2a4=;
-        b=qwfg0zCnCpITSRJE664j8sszQ+g4rJ+AqtF7xn1xu5oBEAfpdppVJf0IiFMjL7h4u9
-         2Wx7uQm8ynTJER01Y9cJxZz4Zrhs3lLjYJYfDFV9W5bNv5k8v5xh6R58m08nKaUYLrdM
-         Omdv5tm4ruPvsDGSysma3nprD57TQCPa6TDeVs19fHiIwWsGhrK3H+G17DSzFVvvhXG9
-         QChBDnCd4pe+dxhTBjA5JmTl9V+Lu+VEsmlouHLQYK+R+tSvQjoln8EGRrI+A19DPHKP
-         ahmUyHxvQbFymeiLki2mU4jvjj86ES0tbb/oBvmTV+MRjOq674kjLTrpmQkl4VwMUqIV
-         zSjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbJHOldLAToyTAfDTqp3+w3vcZml1YvtsljaB4xf6MOnlN2hhlgSySjYURH0lKSYA/ITg+aTcrQOwafjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww+k6XgDsvHInT/i3tlOvszyAc2/mhsn4tYhYQe6YC8pKp0Gfa
-	UM10E+zZoizzQmAngoOmqFd4/9iKsoDJz5lT/qyO/gJagIJ5HW4siytTt47760o1pi0BheGzT8C
-	TUc4gzbsqG3U2AhJ3cxrdDjcvGNRQypnPdOMc0ujhsWVanlpdGvRV9VbX95LuZQ==
-X-Gm-Gg: ASbGnct6n75+UPIcMhRIT1SBSBe0Mz+AuSADXnUA/ckHOyHPl0pBl+tMlBJGel2Kfbc
-	jDBdZj7mFAU9p2d86qAl8BKI3QtS5tFTgh6sRx2BgHXuf0LQ513cC1cRbP7VcWbFyFqNFN8SQHA
-	Hyk2XKIukqkegYPgEWJfeQWI2npkg9icURP4FWR93nDJd61YqUcbuXTDrhGIMvqp+6ZYouE5StZ
-	M2cJBzPu6k6tt4EOD4Vh+baau+Kt0pMe8VOM79J0Q65Epo2EFvmXcNqPZHSdHJbE/f7uKVlTSLu
-	XzknZXaQxw==
-X-Received: by 2002:a05:6000:144d:b0:391:2e58:f085 with SMTP id ffacd0b85a97d-39132dab192mr19228467f8f.54.1741850444468;
-        Thu, 13 Mar 2025 00:20:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGdSno6hSKVsk5d06B4EsgagrhEFS5vVdfXL2wu7cQUeZCwJ3oOQpqMw11c+iVNeKk+NLYSpA==
-X-Received: by 2002:a05:6000:144d:b0:391:2e58:f085 with SMTP id ffacd0b85a97d-39132dab192mr19228411f8f.54.1741850444109;
-        Thu, 13 Mar 2025 00:20:44 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d18a2af42sm10316185e9.32.2025.03.13.00.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 00:20:43 -0700 (PDT)
-Date: Thu, 13 Mar 2025 03:20:37 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Nico Pache <npache@redhat.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	jerrin.shaji-george@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de,
-	gregkh@linuxfoundation.org, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, jgross@suse.com,
-	sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
-	akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, nphamcs@gmail.com, yosry.ahmed@linux.dev,
-	kanchana.p.sridhar@intel.com, alexander.atanasov@virtuozzo.com
-Subject: Re: [RFC 1/5] meminfo: add a per node counter for balloon drivers
-Message-ID: <20250313032001-mutt-send-email-mst@kernel.org>
-References: <20250312000700.184573-1-npache@redhat.com>
- <20250312000700.184573-2-npache@redhat.com>
- <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com>
+        bh=YUsrUN0Sa3eMBis7ScutQ4swK59H4nn7rnZNJQLZ63Y=;
+        b=aRjHhLxIyJf/6HTj4bJrNEPoxP+KrM9Vtd90FIA8N1OINusUEJRklZuMueLAJnBj2j
+         /v06sI7x0T4jt8RIs9EALuWpIPfspg85Ev1racAvLlW7r5YwsHJS65nrsckpdX5mRJk8
+         PK6/OII/01fp0O94ci2Iq5gAjIU0aQMsB1noXn7V6KKUNigob5c+/LSbHrn6Kw5g2+cs
+         41fu5H7pu400cYcHqpsC1081HghYBn2OvxLErES5UN0QAZ3epiiJ3D3SrSRctFvlL3eN
+         43ioQjnkZPD3S/I3gIKvhWAh3pZiNGCD7AVzoyY8hF0wbdI+qjPHYW1R3HytZmFuXRIR
+         1Feg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741851307; x=1742456107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YUsrUN0Sa3eMBis7ScutQ4swK59H4nn7rnZNJQLZ63Y=;
+        b=tUgkei0m8aTf7cikGISMv3R9Z/SkNdB8am+ZAwd4/6fp4qRQCoosEwPMj49pLK3Lw8
+         u2UBA4HRS6moFVzeU4KiUaONOB/5hhA+noXZOvTHZhTbbI+6qsVYKojBePQ6KzvYuTqY
+         k96BjSeotHkqyERul4tRrOstQlCwU9GQWoc3OXToS22C5GXqb5wOrClhgRrWzLYNHTF1
+         OwUAsP4FLPyx73Iva7FtOhfiZ7MuyTkrhfShH/oH6lnYPtHXxew9n3Bk7oP8AuqaN32z
+         mKmvZynZHEnNdCSuI9JX3HDkHedIsOXgp4waxSRWKl89gRa9p3s1Os8hCRztJI4pcQn7
+         G9QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFlU6/P726+E3MXCbIsB0xiT2H7LGhVoIKcLgI3zEfPJs+kIkQpe3fLkDPnowLgcj/NjY1BuWug4QQiQ==@vger.kernel.org, AJvYcCV/+3uEQ2/pIHGnDdi+od93T50CKMM3E792Lg5HjxLjLoAynmd9m8X5EM9EoJ4n6xzm50YObqJQDbftS6lX@vger.kernel.org, AJvYcCVHgbvJHnnFWzfIdSyYHIIqlDktsqeIL7gENTZwc9gjcK9SGn183Tg5Um6wyouba+YT6WMB2jxGGX0y@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK31OG/tpUD/M+i80W22/C0lsEKzXO3jbxraaQvOAFI2YVUu6q
+	tnowNeONr3djZkzmgpHyjPE6JoGs9S8OaGJE4aXf4mSY+n1on3RNc3wzEJ95gGARMui4egY0tmG
+	74zy/9JObzfHzvfdklA7TvyBEeP/joZ5exVsCwQ==
+X-Gm-Gg: ASbGncsN+wpYnzlHvkBbvEkGIFCQ0DFGsYgSVwnc1+mYkmbPOsQKcCyFNrQ5k/6hyJm
+	tN+M+h7Ww1ULmlGhLe+aMNG2h+JwahfcznlL2vuzN/IBtp0wUJLrMhkZAHzrfvwRa80deY9hh4e
+	Ij76pd2iQqGTJsYUar6iMuuvI66mMGSs8Zr0qUOshPDER6
+X-Google-Smtp-Source: AGHT+IG0AbFafmJCSVXuCn9+d9aJ6rWGv0lewSciVuUOX99LLiYxCavfe+aGJvWGZ3Z6k5yceyGSjWwk/zr0TjlaX0g=
+X-Received: by 2002:a05:6402:2550:b0:5e5:9c04:777 with SMTP id
+ 4fb4d7f45d1cf-5e814d805b7mr1311903a12.6.1741851306525; Thu, 13 Mar 2025
+ 00:35:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-8-git-send-email-nunodasneves@linux.microsoft.com>
+ <CAMvTesAW-9Mo0oY6UUh2anp6DQCSsVCUhBiV2-bKp2VD_N0DYw@mail.gmail.com> <5e3e8c30-912c-4fe3-bfac-1ae21242473b@linux.microsoft.com>
+In-Reply-To: <5e3e8c30-912c-4fe3-bfac-1ae21242473b@linux.microsoft.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Thu, 13 Mar 2025 15:34:28 +0800
+X-Gm-Features: AQ5f1JpFmeyU-ZXvz0ptwRLZ-nTkXcfB_mlOTr3vDPCyoNGFdLAtzHdNo9-Hw44
+Message-ID: <CAMvTesAPeLBfYVa5TGx-o6p+0g_Q1bn6s+nZK5i7NK8QGyfbTA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/10] Drivers: hv: Introduce per-cpu event ring tail
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com, 
+	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org, 
+	joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de, 
+	jinankjain@linux.microsoft.com, muminulrussell@gmail.com, 
+	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com, 
+	ssengar@linux.microsoft.com, apais@linux.microsoft.com, 
+	Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com, 
+	gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com, 
+	muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org, 
+	lenb@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 11:19:06PM +0100, David Hildenbrand wrote:
-> On 12.03.25 01:06, Nico Pache wrote:
-> > Add NR_BALLOON_PAGES counter to track memory used by balloon drivers and
-> > expose it through /proc/meminfo and other memory reporting interfaces.
-> 
-> In balloon_page_enqueue_one(), we perform a
-> 
-> __count_vm_event(BALLOON_INFLATE)
-> 
-> and in balloon_page_list_dequeue
-> 
-> __count_vm_event(BALLOON_DEFLATE);
-> 
-> 
-> Should we maybe simply do the per-node accounting similarly there?
+On Thu, Mar 13, 2025 at 3:45=E2=80=AFAM Nuno Das Neves
+<nunodasneves@linux.microsoft.com> wrote:
+>
+> On 3/10/2025 6:01 AM, Tianyu Lan wrote:
+> > On Thu, Feb 27, 2025 at 7:09=E2=80=AFAM Nuno Das Neves
+> > <nunodasneves@linux.microsoft.com> wrote:
+> >>
+> >> Add a pointer hv_synic_eventring_tail to track the tail pointer for th=
+e
+> >> SynIC event ring buffer for each SINT.
+> >>
+> >> This will be used by the mshv driver, but must be tracked independentl=
+y
+> >> since the driver module could be removed and re-inserted.
+> >>
+> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> >> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+> >
+> > It's better to expose a function to check the tail instead of exposing
+> > hv_synic_eventring_tail directly.
+> >
+> What is the advantage of using a function for this? We need to both set
+> and get the tail.
 
+We may add lock or check to avoid race conditions and this depends on the
+user case. This is why I want to see how mshv driver uses it.
 
-BTW should virtio mem be tied into this too, in some way? or is it too
-different?
+>
+> > BTW, how does mshv driver use hv_synic_eventring_tail? Which patch
+> > uses it in this series?
+> >
+> This variable stores indices into the synic eventring page (one for each
+> SINT, and per-cpu). Each SINT has a ringbuffer of u32 messages. The tail
+> index points to the latest one.
+>
+> This is only used for doorbell messages today. The message in this case i=
+s
+> a port number which is used to lookup and invoke a callback, which signal=
+s
+> ioeventfd(s), to notify the VMM of a guest MMIO write.
+>
+> It is used in patch 10.
 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
+I found "extern u8 __percpu **hv_synic_eventring_tail;" in the
+drivers/hv/mshv_root.h of patch 10.
+I seem to miss the code to use it.
 
++int hv_call_unmap_stat_page(enum hv_stats_object_type type,
++                           const union hv_stats_object_identity *identity)=
+;
++int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
++                                  u64 page_struct_count, u32 host_access,
++                                  u32 flags, u8 acquire);
++
++extern struct mshv_root mshv_root;
++extern enum hv_scheduler_type hv_scheduler_type;
++extern u8 __percpu **hv_synic_eventring_tail;
++
++#endif /* _MSHV_ROOT_H_ */
+
+--=20
+Thanks
+Tianyu Lan
 
