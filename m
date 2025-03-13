@@ -1,99 +1,136 @@
-Return-Path: <linux-hyperv+bounces-4468-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4469-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E968A5F482
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 13:32:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8CB8A5F522
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 14:03:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E088319C22E8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 12:32:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4E741681CE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 13:03:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32EC267B06;
-	Thu, 13 Mar 2025 12:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A802676F1;
+	Thu, 13 Mar 2025 13:03:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDGhZDs7"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xu9B6jX0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dmm9pipc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70798267AFD;
-	Thu, 13 Mar 2025 12:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB81C1754B;
+	Thu, 13 Mar 2025 13:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741868999; cv=none; b=dv+5lHLU7M0LdsojI+CEmCDL+BuR6PPrEfXKWzVelPuHJS2sihoDFWAnYIUgvmsz8mOpmOg3k/1jYBsa76gGIr6A35/Qch22CVqzr6FP8BSRIvUUT5vZpwxUo5Je9WPN5+oFKsF6Gf9OlAEKlAUatWFU+fwMcpsTgR34vRhoq+M=
+	t=1741871020; cv=none; b=tjhpvw3M12+WS2LdYCkfL0As8LWFGIHaIdUpvNZJhxfwQPAgsGj3ZkZqFCkOpMRMp8yJ7XGr+KFdNG2swk16Bw+/2kHs9HLUomO2qzv7JeSTXBAKpd/40zmd0Ehau378KoX70hzwpJDZWncW1FCxbOrDSoLJVA/PxZ0Zdo6Ttg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741868999; c=relaxed/simple;
-	bh=iCC+RlmGwLC9DGgjtMedAFqXUbdNm/kiYIj6yiU3nu0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DymVD2aYzx9ph00zZ+RVZpkLaPPbAdtCqPdlUGGSifWCeLjUAP+0u/a7peURpUfy0rNTnZEv2rrYnq/EhYcA3c1wZyJXWKysNRm/HkZyWj0dS924/NclDajJI5lDr/dEwiRHMmxkyUR3hA0v5BvQhqh17PrLbbhxUHgzW8CrbQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDGhZDs7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359AAC4CEEA;
-	Thu, 13 Mar 2025 12:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741868999;
-	bh=iCC+RlmGwLC9DGgjtMedAFqXUbdNm/kiYIj6yiU3nu0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oDGhZDs7+uxmQZrAfA5xI0jDxiAGmeaVavbe900sPcVEnBa7njboUIsewPRaWdg6d
-	 QfMXlTfNNFzl7pYNrStthSjM/VtL+o5Tyi35zEJ1U/HMLgFiCW6rJLk4f3Fu/6MFq1
-	 J+kaLON2ciGFf+WJb6dQF0jeMEwafthEEVI5U21H8txvIULz5GAQAj/TZ3WQZrQ4ma
-	 hIqoh7EQsw8I5QlPLOEu3vkUAepyYXuZV7jkbmT5AmG5v/CDqJHa88btR3Z6LUgIBr
-	 6+fFF9yFruhHJOmX/j8IXpeDbNR8nuQx/uXvHbWIwRiUaRID6l48n/iW1dQggnt06d
-	 KGkEkA51dzxUA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0143806651;
-	Thu, 13 Mar 2025 12:30:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1741871020; c=relaxed/simple;
+	bh=itf7yPjVu4MDdvOWYPG+ta0dwjJEz7i5UcsuklyablM=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=hgAOza3XL5qUC48687S9ggWi3gKkxVFCnpTOu+NxhHtUQ2iUxi04fQ2kHBvazg7hQDp8LW5Jy0nP+pdP8vaxjrys73HKNsafbVbFkwQL4Ylq1fSVlnZUNQKE/sced/i4gIrgYFYyFIktUO4fmeF1xglOOsADTEt3SnT4ZJqXUYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xu9B6jX0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dmm9pipc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Message-ID: <20250313130212.450198939@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741871016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=xPY90hzZgcytKWwY72qh7D+Sw/TVwHNJaHMkC6cM7Tk=;
+	b=xu9B6jX0BitUNzaISeFeThEJnp7Seq4R6IOnTZdLDeCbyqddtCIJZ6mZF4NEFznX8REBDg
+	klHluoz+jf3dHBAG1uhG6aU1xKomYyz4oznZnY8I/ppEYJBo4NqALgVg8LtqAzLV53VJ6m
+	Rbbg5wwxU1049pFZfESGAGzaI5EPCw6fWFMSvi9RqCNUVBCodu+oI7icNaRj59Oas8V8rs
+	of/HpIIjdzWftq62usw2x2Pzuj0K7pwMXMgVHcJ6LzHHx4Nrp/93CrD8ytIDMk+J/78weE
+	cR7oJxhjgfWWugEG96AiyfW6JhgPNDJCZzfw+Y2ehCb/uyscj1TAHAe6/7xIBg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741871016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=xPY90hzZgcytKWwY72qh7D+Sw/TVwHNJaHMkC6cM7Tk=;
+	b=dmm9pipcXb6n8F9sdeZ6O1motxtWkyA4tc/Ln7g9jEpLmDYQUomQgAPMieHs1PDkordDEK
+	LtZ/GMy3hhl6RtCw==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Nishanth Menon <nm@ti.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dhruva Gole <d-gole@ti.com>,
+ Tero Kristo <kristo@kernel.org>,
+ Santosh Shilimkar <ssantosh@kernel.org>,
+ Logan Gunthorpe <logang@deltatee.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jon Mason <jdmason@kudzu.us>,
+ Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org,
+ Michael Kelley <mhklinux@outlook.com>,
+ Wei Liu <wei.liu@kernel.org>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ linux-hyperv@vger.kernel.org,
+ Wei Huang <wei.huang2@amd.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ linux-scsi@vger.kernel.org,
+ Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: [patch V2 00/10] genirq/msi: Spring cleaning
+Date: Thu, 13 Mar 2025 14:03:36 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: mana: cleanup mana struct after debugfs_remove()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174186903377.1494261.697056613145771727.git-patchwork-notify@kernel.org>
-Date: Thu, 13 Mar 2025 12:30:33 +0000
-References: <1741688260-28922-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1741688260-28922-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- longli@microsoft.com, schakrabarti@linux.microsoft.com,
- erick.archer@outlook.com, leon@kernel.org, ernis@linux.microsoft.com,
- kotaranov@microsoft.com, peterz@infradead.org, mlevitsk@redhat.com,
- yury.norov@gmail.com, michal.swiatkowski@linux.intel.com, pabeni@redhat.com,
- kuba@kernel.org, edumazet@google.com, andrew+netdev@lunn.ch,
- decui@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
- kys@microsoft.com, shradhagupta@microsoft.com, stable@vger.kernel.org
 
-Hello:
+This is version 2 of the cleanup work. The previous version can be found
+here:
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+   https://lore.kernel.org/all/20250309083453.900516105@linutronix.de
 
-On Tue, 11 Mar 2025 03:17:40 -0700 you wrote:
-> When on a MANA VM hibernation is triggered, as part of hibernate_snapshot(),
-> mana_gd_suspend() and mana_gd_resume() are called. If during this
-> mana_gd_resume(), a failure occurs with HWC creation, mana_port_debugfs
-> pointer does not get reinitialized and ends up pointing to older,
-> cleaned-up dentry.
-> Further in the hibernation path, as part of power_down(), mana_gd_shutdown()
-> is triggered. This call, unaware of the failures in resume, tries to cleanup
-> the already cleaned up  mana_port_debugfs value and hits the following bug:
-> 
-> [...]
+While converting the MSI descriptor locking to a lock guard() I stumbled
+over various abuse of MSI descriptors (again).
 
-Here is the summary with links:
-  - [net] net: mana: cleanup mana struct after debugfs_remove()
-    https://git.kernel.org/netdev/net/c/3e64bb2ae7d9
+The following series cleans up the offending code and converts the MSI
+descriptor locking over to lock guards.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Changes vs. V1:
+
+   - Introduce retain_ptr() to allow using __free() when the allocation is
+     consumed by a called function (on success) and therefore no_free_ptr()
+     can't be used.
+
+   - Rework the PCI/MSI changes to avoid gotos in guard sections
+
+   - Drop patch 1 as it's already applied
+
+   - Collect Reviewed/Tested/Acked-by tags where appropriate
+
+Patches 3,4,6-10 are unmodifed.
+
+The series applies on:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/msi
+
+and is available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git irq/msi
+
+Thanks,
+
+	tglx
+---
+ drivers/ntb/msi.c                   |   22 +---
+ drivers/pci/controller/pci-hyperv.c |   14 ---
+ drivers/pci/msi/api.c               |    6 -
+ drivers/pci/msi/msi.c               |  168 ++++++++++++++++++++++--------------
+ drivers/pci/pci.h                   |    9 +
+ drivers/pci/tph.c                   |   44 ---------
+ drivers/soc/ti/ti_sci_inta_msi.c    |   10 --
+ drivers/ufs/host/ufs-qcom.c         |   75 ++++++++--------
+ include/linux/cleanup.h             |   17 +++
+ include/linux/irqdomain.h           |    2 
+ include/linux/msi.h                 |    7 +
+ kernel/irq/msi.c                    |  125 ++++++++++----------------
+ 12 files changed, 247 insertions(+), 252 deletions(-)
 
 
 
