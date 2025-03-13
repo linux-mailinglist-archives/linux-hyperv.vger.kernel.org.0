@@ -1,152 +1,135 @@
-Return-Path: <linux-hyperv+bounces-4489-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4490-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0245A5FEA0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 18:55:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBC7CA5FFDB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 19:44:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AC6E3BB318
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 17:55:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37B823B64AC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 18:44:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029301E573B;
-	Thu, 13 Mar 2025 17:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1B91F03DA;
+	Thu, 13 Mar 2025 18:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uFZ1UBSP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DaZ5+jSl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnhXIoTk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5356615DBC1;
-	Thu, 13 Mar 2025 17:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1551EFFA9;
+	Thu, 13 Mar 2025 18:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741888516; cv=none; b=AOVUsziZpvXmp0D9MrXWXPX2cM40Dln6vf/ycTmC4xXMLkPVfrYbPqohkgrfA8a56ojSERvTwML9u9L4lxsoJQs1dm+MrcglcwUGdQPWvGgIpTAY27aPIw4d2C/N5I4tlDGEL6uzniQ5zEcy7YF0/K7UgmJD4KuSQtQeAQzmEv4=
+	t=1741891494; cv=none; b=J0uZZRczyQW1BznbWrH3q1nWyz3wZ/xzrD//xZMiT9bDWiJakUKrkP62tG84w8y9T9X1fC1+a5j++85sUHGNlwinNxfgplwXo9YXLnhQYbXBGAJ5pGOO7H+3TkdJ9ILj5sF5ODRLGuIfmIt2bV8RHVO2a0/F1dsZsUYxQ8/hAXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741888516; c=relaxed/simple;
-	bh=Tt71LYU6EhXq+PF34rquse8y+1HkrL6YTObHYDTEgC4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=j7BiZ3nLGQkcK1PPOPZgGbhh70fZUK5S0NwiZ/xzK9Q58bByvXyFegdhCJL6yNOV0rMwBONYzsPo/X8oppKcIxA4DbB6vfP1eqtj6zKjyeJodeF+KrSwghw7G4zLXBjfKDvAQiIH4gNHKV24bMzKynPUvxNSJ31uGr0i6HrIKJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uFZ1UBSP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DaZ5+jSl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741888513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+PI1SXUEUlOflpG5mqedjH0tAMTUnOBBlzLm30n5Uuc=;
-	b=uFZ1UBSPIOZgTqTqDPp+hhu/m7GcOkIt1v3H07rmD4Ul7VL35J6jWDvJIA+deMFrBrOnbr
-	8ynwe7rivWoT25DDOIcKFqTlsUHbHlBmYIb1TLN91juJY9FmyXTCXZr5OEP4FJWRQJRcrF
-	OoZQaJr9kQvLeLhWezSO18uv67r3WIgHGxe4u4mh4hNj0o3F3bh+1vYNFz22NcT7tkTOIl
-	og+qd1C2OI0B6igXtHcKG2JJlrAQdE2Arpkbd1UkgQDpUVePa9LPRdlZs+NCkvxTQmUet3
-	UhOf8ztb+kp+188qw6+Z+WIKy9JFx+dvkdWZgF0blzeIBmRdkZxk5ukei3qmuA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741888513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+PI1SXUEUlOflpG5mqedjH0tAMTUnOBBlzLm30n5Uuc=;
-	b=DaZ5+jSlfrg02yOuP/NlnEIu8fr+/VfyCADOXZFaNyu2YS2F1MFQ+giIy2PvmK5hrryHIc
-	SNt0bHYWB8QiwtCw==
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Nishanth Menon <nm@ti.com>, Dhruva Gole
- <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh Shilimkar
- <ssantosh@kernel.org>, Logan Gunthorpe <logang@deltatee.com>, Dave Jiang
- <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>, Allen Hubbe
- <allenbh@gmail.com>, ntb@lists.linux.dev, Michael Kelley
- <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>, linux-hyperv@vger.kernel.org, Wei Huang
- <wei.huang2@amd.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V2 05/10] PCI/MSI: Switch to MSI descriptor locking to
- guard()
-In-Reply-To: <20250313155015.000037f5@huawei.com>
-References: <20250313130212.450198939@linutronix.de>
- <20250313130321.695027112@linutronix.de>
- <20250313155015.000037f5@huawei.com>
-Date: Thu, 13 Mar 2025 18:55:12 +0100
-Message-ID: <87ldt86cjj.ffs@tglx>
+	s=arc-20240116; t=1741891494; c=relaxed/simple;
+	bh=QlrkRP5I6RTz1lPCtN5zk3M5pm0O9z7QzlqRgomvjQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CCx9XfNv2T5K2aO9a3D222Vcd6VDTIAcUE5rq4+RdmUbX9MXNTFQqO7Mml1FdZp+r6JE2vkNBWre2J9VqZOLsZwCXnifg//g13wygK/3J3jrnrlo5t6O5n4pEfGb98PBl3kZ3CetRqd3A0Oq2dIlNelyWHGH/yykDl+DbFbx1Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnhXIoTk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BF5C4CEFF;
+	Thu, 13 Mar 2025 18:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741891494;
+	bh=QlrkRP5I6RTz1lPCtN5zk3M5pm0O9z7QzlqRgomvjQM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LnhXIoTkCwWwLQy654e32ktSRBBCvIiG9b2hKyu6onBsTkAjERAmziuGX0st7Auqg
+	 SYpt7I+8sO50eeWmFz4B+ezIQL3iphfcwaLQCecNPFG238AST/I6mJjR9Cm7Qhtnsp
+	 uqShKstvAdW4lKiXALVRC54yMBumFkP74kiRY5MvfBxq67fW2SVAaJuVvhRfMffnds
+	 tCwJOnfiTqJ8ELFf0ZhW/7PFSl/BeJpC2wgo7+yoqk6AfscXq/e4I4u82rnPIoWM9t
+	 hph5YEyoLUulJuNAdCm6KiWPYR7vKjMA3MNxqmcbQWjEQ0bEc8Bjy9bsWw3JEjXvpy
+	 LdfYkYUvJQx2A==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso237515266b.3;
+        Thu, 13 Mar 2025 11:44:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjOkqTDsnUMJgKdJWstKbw1msK0smur4UWXJ4qjaVMF4NqqlO3QGrmlIqi+0U4fDg5MysHPacIXTX38g==@vger.kernel.org, AJvYcCV93wDWAOK1LbScokqImL1KqAc1v2nemvom+kF2o+jv8QoG7JVwoUQAkAvyk2AZhh35QjW68UX0+xci@vger.kernel.org, AJvYcCVTjcI4B6vZNbh8NROSoHjmhrnU+HaCubUVatCiuPZvzAzXZosmQOE3p/XPu+PecNrLg6i3X5CbPOT9lJyB@vger.kernel.org, AJvYcCXOcDDi40yOfDEjot8SU+5rIqpA6B+1PR7vfFzqkXVXphd3hUMUmaTiOYNi9hIG7HU41ok+owVQQBifhQ==@vger.kernel.org, AJvYcCXiu1XLk7H6fjObE5SWVJ97tW6yzUuLiyfo9F6BzabzeJZXDu/P9udWa5ZIRwTn+3zh7UGvVWd9Q1OS@vger.kernel.org, AJvYcCXojQGLoiQ8sgeUAcXU7ziiNz6e/pIffPik24AlkH3rz53e/JehjH9GxglH+wRr3VjeA03y9qCqcDYExACT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOxOdNPWU4ByCg2JYJKbufPKRJ+ajAeqNB2KHEtBK76VGH3vso
+	g8DFLAf6e/6Owti2Ylb7/34pHS9g9/Fv9RQ06zP64blttkqdsY0AheQ6cHfjhXsFHxSZQJH1xOR
+	9r4GgainUWYGdXFWkGp/eCy+JKA==
+X-Google-Smtp-Source: AGHT+IE84CwfiOJs5wEvz9/gyK0Vhm2tPQAYrNHeBZsspi51p+XlCkmCog0DPrxtkstcI25d+u0kzAVhA8ECGZ8aCbU=
+X-Received: by 2002:a17:907:9382:b0:ac2:7a3b:31e2 with SMTP id
+ a640c23a62f3a-ac2b9ea186bmr1272361466b.45.1741891492123; Thu, 13 Mar 2025
+ 11:44:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250307220304.247725-1-romank@linux.microsoft.com> <20250307220304.247725-9-romank@linux.microsoft.com>
+In-Reply-To: <20250307220304.247725-9-romank@linux.microsoft.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 13 Mar 2025 13:44:40 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLmS4EEoPkOmaH6F_0XtQu5wkM-WEfxFvjLA=bJroEUVw@mail.gmail.com>
+X-Gm-Features: AQ5f1JoBoOFXWy0RvRDKcw8n2aFR2QulZQgf-P4S7wWE9_vZ-wABCiQ7BInknts
+Message-ID: <CAL_JsqLmS4EEoPkOmaH6F_0XtQu5wkM-WEfxFvjLA=bJroEUVw@mail.gmail.com>
+Subject: Re: [PATCH hyperv-next v5 08/11] Drivers: hv: vmbus: Get the IRQ
+ number from DeviceTree
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
+	conor+dt@kernel.org, dave.hansen@linux.intel.com, decui@microsoft.com, 
+	haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, 
+	kw@linux.com, kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org, 
+	manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org, 
+	mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org, 
+	ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
+	tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, 
+	devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
+	apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com, 
+	sunilmut@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 13 2025 at 15:50, Jonathan Cameron wrote:
->> +	guard(msi_descs_lock)(&dev->dev);
->> +	int ret = __msix_setup_interrupts(dev, entries, nvec, masks);
->> +	if (ret)
->> +		pci_free_msi_irqs(dev);
+On Fri, Mar 7, 2025 at 4:03=E2=80=AFPM Roman Kisel <romank@linux.microsoft.=
+com> wrote:
 >
-> It's not immediately obvious what this is undoing (i.e. where the alloc
-> is).  I think it is at least mostly the pci_msi_setup_msi_irqs in
-> __msix_setup_interrupts
+> The VMBus driver uses ACPI for interrupt assignment on
+> arm64 hence it won't function in the VTL mode where only
+> DeviceTree can be used.
+>
+> Update the VMBus driver to discover interrupt configuration
+> from DT.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 75eb1390b45c..c8474b48dcd2 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -2345,6 +2345,36 @@ static int vmbus_acpi_add(struct platform_device *=
+pdev)
+>  }
+>  #endif
+>
+> +static int __maybe_unused vmbus_set_irq(struct platform_device *pdev)
+> +{
+> +       struct irq_data *data;
+> +       int irq;
+> +       irq_hw_number_t hwirq;
+> +
+> +       irq =3D platform_get_irq(pdev, 0);
+> +       if (irq =3D=3D 0) {
+> +               pr_err("VMBus interrupt mapping failure\n");
+> +               return -EINVAL;
+> +       }
+> +       if (irq < 0) {
+> +               pr_err("VMBus interrupt data can't be read from DeviceTre=
+e, error %d\n", irq);
+> +               return irq;
+> +       }
 
-It's a universal cleanup for all possible error cases.
+I don't think why you couldn't get the interrupt is important. Just
+check for (irq <=3D 0) and be done with it. I'm not even sure if
+returning 0 is possible now. There's a long history to that and
+NO_IRQ.
 
-> Why not handle the error in __msix_setup_interrupts and make that function
-> side effect free.  Does require gotos but in a function that isn't
-> doing any cleanup magic so should be fine.
-
-I had the gotos first and then hated them. But you are right, it's better
-to have them than having the magic clean up at the call site.
-
-I'll fold the delta patch below.
-
-Thanks,
-
-        tglx
----
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -671,19 +671,23 @@ static int __msix_setup_interrupts(struc
- 	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
- 
- 	if (ret)
--		return ret;
-+		goto fail;
- 
- 	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
- 	if (ret)
--		return ret;
-+		goto fail;
- 
- 	/* Check if all MSI entries honor device restrictions */
- 	ret = msi_verify_entries(dev);
- 	if (ret)
--		return ret;
-+		goto fail;
- 
- 	msix_update_entries(dev, entries);
- 	return 0;
-+
-+fail:
-+	pci_free_msi_irqs(dev);
-+	return ret;
- }
- 
- static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-@@ -693,10 +697,7 @@ static int msix_setup_interrupts(struct
- 		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
- 
- 	guard(msi_descs_lock)(&dev->dev);
--	int ret = __msix_setup_interrupts(dev, entries, nvec, masks);
--	if (ret)
--		pci_free_msi_irqs(dev);
--	return ret;
-+	return __msix_setup_interrupts(dev, entries, nvec, masks);
- }
- 
- /**
+Rob
 
