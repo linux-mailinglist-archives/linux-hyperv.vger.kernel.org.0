@@ -1,173 +1,152 @@
-Return-Path: <linux-hyperv+bounces-4488-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4489-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1613A5FDFB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 18:37:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0245A5FEA0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 18:55:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C83857AC25E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 17:36:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AC6E3BB318
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Mar 2025 17:55:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05400155CBD;
-	Thu, 13 Mar 2025 17:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029301E573B;
+	Thu, 13 Mar 2025 17:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eTQ6A8nm"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uFZ1UBSP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DaZ5+jSl"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F84714386D
-	for <linux-hyperv@vger.kernel.org>; Thu, 13 Mar 2025 17:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5356615DBC1;
+	Thu, 13 Mar 2025 17:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887381; cv=none; b=jIP7hMgDnyEdgoW2KJd5P73sZNIj63p6E6xa9Q/qA9cm+zwCW8Q/LmPsn/LoFFPC7a+zFqdFtPD41Iwt58bfkcQiEemKucj59y8XZZlc/vQIHq53Wfmnce2x8attcqm70aCY5F5UbfZyVeWJ1p1lNWr1XlSnVMLAnovWcdODqzs=
+	t=1741888516; cv=none; b=AOVUsziZpvXmp0D9MrXWXPX2cM40Dln6vf/ycTmC4xXMLkPVfrYbPqohkgrfA8a56ojSERvTwML9u9L4lxsoJQs1dm+MrcglcwUGdQPWvGgIpTAY27aPIw4d2C/N5I4tlDGEL6uzniQ5zEcy7YF0/K7UgmJD4KuSQtQeAQzmEv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741887381; c=relaxed/simple;
-	bh=74LdO3L2papOXx6onu8X7dux3CgaxYMbpnbfEZf5vfs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8e1ZBrm0lr3r7Tht3COGBf2tCiQ1XcHIPrdmr+bnFY24iRke0LYS7xLbOyLdVnoxeXVjl7bjX5l8MRk7Gs7nePHiW3B52I2L+06ddv8Y/z/xGOeRQrBDU/uvtGHeWCAg0yiha9xbroVKNdUYqtF7dbYTtSb3HzGTm8WiCsKt/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eTQ6A8nm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741887379;
+	s=arc-20240116; t=1741888516; c=relaxed/simple;
+	bh=Tt71LYU6EhXq+PF34rquse8y+1HkrL6YTObHYDTEgC4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=j7BiZ3nLGQkcK1PPOPZgGbhh70fZUK5S0NwiZ/xzK9Q58bByvXyFegdhCJL6yNOV0rMwBONYzsPo/X8oppKcIxA4DbB6vfP1eqtj6zKjyeJodeF+KrSwghw7G4zLXBjfKDvAQiIH4gNHKV24bMzKynPUvxNSJ31uGr0i6HrIKJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uFZ1UBSP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DaZ5+jSl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741888513;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=74LdO3L2papOXx6onu8X7dux3CgaxYMbpnbfEZf5vfs=;
-	b=eTQ6A8nmI7dVD7E6N4IgfYSqM/PuLRRlGKIyGAvEZ4vecoNWmCkq17DPCdZFAN8HFZCFBw
-	jmSH5Q2IeM8gq0W1h7l6yVZQuJyW6p2MHKekpZ+6NvBsb/pNnNDzk8wTUJ2nWnhH3LVORA
-	LVOK9YMBv1NHxH4jYXmjNDZDFqQvdbo=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-412-wnQlajLyMoa-y3-cxuaf_A-1; Thu, 13 Mar 2025 13:36:17 -0400
-X-MC-Unique: wnQlajLyMoa-y3-cxuaf_A-1
-X-Mimecast-MFC-AGG-ID: wnQlajLyMoa-y3-cxuaf_A_1741887377
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-6f2bdb560ecso20156357b3.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 13 Mar 2025 10:36:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741887377; x=1742492177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=74LdO3L2papOXx6onu8X7dux3CgaxYMbpnbfEZf5vfs=;
-        b=N103/3/jmU3osU1ndn+ouCNZzTJ6bsoI5S96ggd+72jKh0R4nRapxX6g9VDPN/r/Y9
-         oLPI2as9ysDDddUpb1NmZ7jk2UU8/nrHtrfTLZRZpGSIRo43kietBsxlUtorYyH1OiAB
-         9E1f9R5bJQ0UjWhVO5l9eDAPmku76kSGVvyelA08YCbt9Ux9Ut0nSkpA9xt3iFcplSgm
-         jodefSLPKghO2ZQ+Al7t/VEHIFsZVT5VR7dhOgtcGcWvd00JFvrv4q7kEQlhDR2N1OeP
-         8G8sjgWpv0o9xcZ8rVYuuPegKVId76/EGYTelEyR/57xemxI+dNgcxyPjtibF9ueFJBf
-         N5Rw==
-X-Gm-Message-State: AOJu0YzMrKexgbfjUn+y2QQKXPc0Zwe7tFImt99zCCYoCyyYn5Ktt+Ai
-	ZlDOG+AaZchqHDsuUyC8GJrbuJDWT4a/JiN0RxSLRsHUnZYcOeDKEa5RVwqqDp4McM0J7qp92le
-	WsoZwzuA/aAUZ6kMu5DC/RvI73xORubYbrAXc5VkChv0EOLQef9ud0DPsvcMOZWWV1M19OzUJp7
-	yci8ldyuf8RcUSSAgoOc5L7+ab45E1LlHabh7+
-X-Gm-Gg: ASbGncvCtc5bo6cFO2uKLNkLDiALuOCLf5d3DW/ch4cAjnu7DcIFlyCyM4XaXr3YQY2
-	AnNBvjadx6iTTM2lGJeGERekCrrizbrc/0YQIgWWaZBzopc57Q9oHEHnmA9oBRFqaZVEZkZpfpw
-	vMnkNiPiv2VQ==
-X-Received: by 2002:a05:6902:11cc:b0:e5d:d6b8:231d with SMTP id 3f1490d57ef6-e63f3c1ab89mr394112276.46.1741887377144;
-        Thu, 13 Mar 2025 10:36:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IESNapqN0/McTxEgf1yThn7lvo6wBYo3eRd0NunIcEjHGxMwrpjR53TwIJsg0lBT1jUk9YB7r7WxOStKAHssG0=
-X-Received: by 2002:a05:6902:11cc:b0:e5d:d6b8:231d with SMTP id
- 3f1490d57ef6-e63f3c1ab89mr394058276.46.1741887376762; Thu, 13 Mar 2025
- 10:36:16 -0700 (PDT)
+	bh=+PI1SXUEUlOflpG5mqedjH0tAMTUnOBBlzLm30n5Uuc=;
+	b=uFZ1UBSPIOZgTqTqDPp+hhu/m7GcOkIt1v3H07rmD4Ul7VL35J6jWDvJIA+deMFrBrOnbr
+	8ynwe7rivWoT25DDOIcKFqTlsUHbHlBmYIb1TLN91juJY9FmyXTCXZr5OEP4FJWRQJRcrF
+	OoZQaJr9kQvLeLhWezSO18uv67r3WIgHGxe4u4mh4hNj0o3F3bh+1vYNFz22NcT7tkTOIl
+	og+qd1C2OI0B6igXtHcKG2JJlrAQdE2Arpkbd1UkgQDpUVePa9LPRdlZs+NCkvxTQmUet3
+	UhOf8ztb+kp+188qw6+Z+WIKy9JFx+dvkdWZgF0blzeIBmRdkZxk5ukei3qmuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741888513;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PI1SXUEUlOflpG5mqedjH0tAMTUnOBBlzLm30n5Uuc=;
+	b=DaZ5+jSlfrg02yOuP/NlnEIu8fr+/VfyCADOXZFaNyu2YS2F1MFQ+giIy2PvmK5hrryHIc
+	SNt0bHYWB8QiwtCw==
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Nishanth Menon <nm@ti.com>, Dhruva Gole
+ <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh Shilimkar
+ <ssantosh@kernel.org>, Logan Gunthorpe <logang@deltatee.com>, Dave Jiang
+ <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>, Allen Hubbe
+ <allenbh@gmail.com>, ntb@lists.linux.dev, Michael Kelley
+ <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+ <haiyangz@microsoft.com>, linux-hyperv@vger.kernel.org, Wei Huang
+ <wei.huang2@amd.com>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V2 05/10] PCI/MSI: Switch to MSI descriptor locking to
+ guard()
+In-Reply-To: <20250313155015.000037f5@huawei.com>
+References: <20250313130212.450198939@linutronix.de>
+ <20250313130321.695027112@linutronix.de>
+ <20250313155015.000037f5@huawei.com>
+Date: Thu, 13 Mar 2025 18:55:12 +0100
+Message-ID: <87ldt86cjj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312000700.184573-1-npache@redhat.com> <20250312000700.184573-2-npache@redhat.com>
- <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com> <CAA1CXcCv20TW+Xgn18E0Jn1rbT003+3gR-KAxxE9GLzh=EHNmQ@mail.gmail.com>
- <e9570319-a766-40f6-a8ea-8d9af5f03f81@redhat.com>
-In-Reply-To: <e9570319-a766-40f6-a8ea-8d9af5f03f81@redhat.com>
-From: Nico Pache <npache@redhat.com>
-Date: Thu, 13 Mar 2025 11:35:49 -0600
-X-Gm-Features: AQ5f1JrzcM5gNtNPl-Fo_pToh0DelHZYtUioYU9wKMINK1ALGT_dvw_uu_EmSak
-Message-ID: <CAA1CXcBsnbj1toxZNbks+NxrR_R_xuUb76X4ANin551Fi0WROA@mail.gmail.com>
-Subject: Re: [RFC 1/5] meminfo: add a per node counter for balloon drivers
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux.dev, xen-devel@lists.xenproject.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, jerrin.shaji-george@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de, 
-	gregkh@linuxfoundation.org, mst@redhat.com, jasowang@redhat.com, 
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, jgross@suse.com, 
-	sstabellini@kernel.org, oleksandr_tyshchenko@epam.com, 
-	akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org, 
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
-	nphamcs@gmail.com, yosry.ahmed@linux.dev, kanchana.p.sridhar@intel.com, 
-	alexander.atanasov@virtuozzo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Mar 13, 2025 at 2:22=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
+On Thu, Mar 13 2025 at 15:50, Jonathan Cameron wrote:
+>> +	guard(msi_descs_lock)(&dev->dev);
+>> +	int ret = __msix_setup_interrupts(dev, entries, nvec, masks);
+>> +	if (ret)
+>> +		pci_free_msi_irqs(dev);
 >
-> On 13.03.25 00:04, Nico Pache wrote:
-> > On Wed, Mar 12, 2025 at 4:19=E2=80=AFPM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >> On 12.03.25 01:06, Nico Pache wrote:
-> >>> Add NR_BALLOON_PAGES counter to track memory used by balloon drivers =
-and
-> >>> expose it through /proc/meminfo and other memory reporting interfaces=
-.
-> >>
-> >> In balloon_page_enqueue_one(), we perform a
-> >>
-> >> __count_vm_event(BALLOON_INFLATE)
-> >>
-> >> and in balloon_page_list_dequeue
-> >>
-> >> __count_vm_event(BALLOON_DEFLATE);
-> >>
-> >>
-> >> Should we maybe simply do the per-node accounting similarly there?
-> >
-> > I think the issue is that some balloon drivers use the
-> > balloon_compaction interface while others use their own.
-> >
-> > This would require unifying all the drivers under a single api which
-> > may be tricky if they all have different behavior
->
-> Why would that be required? Simply implement it in the balloon
-> compaction logic, and in addition separately in the ones that don't
-> implement it.
+> It's not immediately obvious what this is undoing (i.e. where the alloc
+> is).  I think it is at least mostly the pci_msi_setup_msi_irqs in
+> __msix_setup_interrupts
 
-Ah ok that makes sense!
+It's a universal cleanup for all possible error cases.
 
->
-> That's the same as how we handle PageOffline today.
->
-> In summary, we have
->
-> virtio-balloon: balloon compaction
-> hv-balloon: no balloon compaction
-> xen-balloon: no balloon compaction
-> vmx-balloon: balloon compaction
-> pseries-cmm: balloon compaction
+> Why not handle the error in __msix_setup_interrupts and make that function
+> side effect free.  Does require gotos but in a function that isn't
+> doing any cleanup magic so should be fine.
 
-I'm having a hard time verifying this... it looks like only
-vmx-balloon uses the balloon_compaction balloon_page_list_enqueue
-function that calls balloon_page_enqueue_one.
+I had the gotos first and then hated them. But you are right, it's better
+to have them than having the magic clean up at the call site.
 
->
-> So you'd handle 3 balloon drivers in one go.
->
-> (this series didn't touch pseries-cmm)
-Ah I didn't realize that was a balloon driver. Ill add that one to the todo=
-.
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+I'll fold the delta patch below.
 
+Thanks,
+
+        tglx
+---
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -671,19 +671,23 @@ static int __msix_setup_interrupts(struc
+ 	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
+ 
+ 	if (ret)
+-		return ret;
++		goto fail;
+ 
+ 	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
+ 	if (ret)
+-		return ret;
++		goto fail;
+ 
+ 	/* Check if all MSI entries honor device restrictions */
+ 	ret = msi_verify_entries(dev);
+ 	if (ret)
+-		return ret;
++		goto fail;
+ 
+ 	msix_update_entries(dev, entries);
+ 	return 0;
++
++fail:
++	pci_free_msi_irqs(dev);
++	return ret;
+ }
+ 
+ static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
+@@ -693,10 +697,7 @@ static int msix_setup_interrupts(struct
+ 		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
+ 
+ 	guard(msi_descs_lock)(&dev->dev);
+-	int ret = __msix_setup_interrupts(dev, entries, nvec, masks);
+-	if (ret)
+-		pci_free_msi_irqs(dev);
+-	return ret;
++	return __msix_setup_interrupts(dev, entries, nvec, masks);
+ }
+ 
+ /**
 
