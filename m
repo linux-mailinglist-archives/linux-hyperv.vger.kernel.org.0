@@ -1,166 +1,148 @@
-Return-Path: <linux-hyperv+bounces-4499-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4500-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8F4EA60D9D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 10:43:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC909A6108A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 13:01:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 983327AD08C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 09:42:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7ECBF173629
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 12:01:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8920F1F2C5F;
-	Fri, 14 Mar 2025 09:43:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17B7E1FECCD;
+	Fri, 14 Mar 2025 12:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SBb+uOdG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yat42aFj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E5F1F1312;
-	Fri, 14 Mar 2025 09:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2211FDE3D
+	for <linux-hyperv@vger.kernel.org>; Fri, 14 Mar 2025 12:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741945383; cv=none; b=hjiZsAuDTG87Q9rj18XnRdhdXrE3ZGKZQexoc6EdkULYzc0Wazu3leaEmiiLWDqOPZlwRP+eoqkpP0kSt8tV32bbJ+EbaleAUrr/w1DVyV0fbhE+T5zj1KZY8GHIItH5lhUeJjE35/ywY2JiKAfBFOwSl16wgkU4aKVTV88Utuk=
+	t=1741953673; cv=none; b=s4qP67EnCe4jrbUwfwy0xEXRXsBqZdTsB7+m/axLtSVWuET/cX5ClwQVMzicQ/rOuCTJ6JoPQeI72+FcsOLVz0T2J+vqKoCLdpm4v32HvUXZkeLiHHHFdiJ2cThQHxRrrR0VkRPodVx7ZIIqMQ9l+r48WOnHf9Pv5YtrujP+GbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741945383; c=relaxed/simple;
-	bh=R4mT9q2rzMIVE/drUUY0uzpLhqsl0DONcHAw3C4Taeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=afWgrUsiVkjaKWboiZJIXYczV5Ow6rtPcXNGzbhvkxVDUlTu8FTJaUeUCt9l4WWso3+xCaf1fVHwPVbn/6jKDmFV+pcjwHTDQ/ygV+LnRSIvSpgs+vnVMkyCig3Lwx8DfpfRth2Y0E1PBBQoCkXrOvNOb24RfbqE8gyJla/MNYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SBb+uOdG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cbezX+qBbHUsO5zjEMJT7t6jnT/CGOrWEFqIPazSuTY=; b=SBb+uOdGeuggwnUHr+5j0q0z0c
-	K/HZhYq9r99EMw8McQyqsFapl4Me2BvULr57zR8v8PIq6mwVwCvd3wNPpKmYln8wpVCvcADn8N2gQ
-	1wzft5orDrCCL0UukfFnc1uIV+Nnxvm3I4dyMq7ozNjqmw5OTDkBgJw/hhf3pE4f8dyw2h9kknMNu
-	xYg1LCRvWw8oxTTHYz33rAxHs3WUBHjZw6P3wM2znXKljwa1o5IWcG5vPa+QzuIMGoLmWqfhhCWM3
-	25S/+ocwpe4WjtxfwWQldherP3xlyH6zu9DNPqKFYwFtRC+2Uraha+3Fy8M3woTLMSng6cZIxa0Io
-	5QCSX/5Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt1Ys-0000000FLob-2ycV;
-	Fri, 14 Mar 2025 09:42:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id AD3E9300599; Fri, 14 Mar 2025 10:42:37 +0100 (CET)
-Date: Fri, 14 Mar 2025 10:42:37 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V2 05/10] PCI/MSI: Switch to MSI descriptor locking to
- guard()
-Message-ID: <20250314094237.GX5880@noisy.programming.kicks-ass.net>
-References: <20250313130212.450198939@linutronix.de>
- <20250313130321.695027112@linutronix.de>
- <20250313155015.000037f5@huawei.com>
- <87ldt86cjj.ffs@tglx>
+	s=arc-20240116; t=1741953673; c=relaxed/simple;
+	bh=0EiFoivIfcK0VnjGA6hs9urmXfK68Rj6CImMeyaae+4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=THIKKMo5qHan1ncwB9g91yakdcSQytOTeCrRcG3axvIzFFUEeIHsNQGqngvKATImDaUB2XJaAV4J4ebFZLpEH8HcM7riebCucNu/1APdMjnpsS3cJ9EQfbwuxsOFOD/UedRQTy4w5AtpVpKbEdB534PZv1CdWEj8IJbKRl/kyus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yat42aFj; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6f768e9be1aso30426897b3.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Mar 2025 05:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741953670; x=1742558470; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dwJmXPh0UZn8nk0X5v3R0BkMm6bGB9ygKP2kfBs4kzg=;
+        b=Yat42aFj7MBEGwoS1hxwqKXAcRxLU6lhEOH9b/R1At6TpAi7VLLFObOq31R5oCFPhb
+         pHYTQCme5LXShfXZA2TtaQfOaDugHKnj98QM5IrJCBW2Yv3pIthvkI3XXboURNx5Fl8w
+         wYZUj/3DjlBKdcXfIOHoGUEsIkRtUDBGpkTB5G73bMzfojAR5mSUDSBANE0zNSN2+mnE
+         D34ZUgex8WtogcKesZc61ZmehW1pPff94NRb6SgKJ4xIqisU1BtOn7Dme0WK37fDjy2o
+         vieqM8c2sX+8NO+QivDhxqSU6GeYHOWOpeoNcuHnkqFBMmaomeiiLMom1lQ6p366I+vD
+         Ks0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741953670; x=1742558470;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dwJmXPh0UZn8nk0X5v3R0BkMm6bGB9ygKP2kfBs4kzg=;
+        b=OMkHwJJ/KlwDV/XnsL6uCZIbKXL1MTd3Ezm1gDW7B2+9FEWvecgrZWlXXaP55Fth9J
+         mHsq7QlI14iWqsidt1zYw+sc8DCM0nfyUTnKKuxgzmhBTc42bykOuf48a/irbGDDJRgT
+         +e5CuyTJLdeUyCWvkWA30W4KqFY9utjK1WNlFBYLJ8tT8obDmZ+GA+D5OXowbl1csSQH
+         w7qW+My9gA9mBpMvd0oOCsRQcMuI8fHePiMn22xb1KZfueXiezWab0jAMgMkS3ocPYC/
+         AjWeEHNKm1yAp4cYLlWOFKD19cCIpFKsqyABZwrYucANtaxmgchVKJ7ZftSLJco2BbQr
+         1/Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkf5KK2F1hqlJ66spxVhq3uNhxY0OGPdLJ8vCoZwIWTQyKrTK7w5/NQ+6P8dPIF1lJVIFiSZroEObIHvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws2WxWxBuaSF5nlSGLOdEvNhqwGh0KaR5q2d/RzjuoAZV9WHSM
+	2zgFOf1ibdQZ0QUTdrRuf0WtKhInITczHWaYRWWPPOvMMNM6w4bbz1IDD/HpQZ9eDh9GTGUmEfC
+	I9X5DK8B5t8OyeXGOk8JS3SQXw7g340bCDmBUBQ==
+X-Gm-Gg: ASbGncsesxm6NUITAD+ZZKesfTfyf9Oq3YrgByfNiMzFX5EAZtIVrdxb85tm/DacGPi
+	9Oy6wVfZ10P7ry9WlG6rspi0FincxbJsgTUB3iIIutNDWfoZ1T/3REUnK8l0xxwHl0qRnMYrMHL
+	1XCO0Yh288m7sjZiSpFO7G8TDTtzU=
+X-Google-Smtp-Source: AGHT+IGZZCcwY5/1JbZjTo0RWJ2K/xyqiqYRIB+WoabIYLpe9OvKoQa822klhbBDtTeF2wPU+BJ9g+hqI+KNvuehlJ8=
+X-Received: by 2002:a05:690c:4c0a:b0:6f9:47ad:f5f1 with SMTP id
+ 00721157ae682-6ff4641f8cfmr21140237b3.17.1741953670170; Fri, 14 Mar 2025
+ 05:01:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ldt86cjj.ffs@tglx>
+References: <20250311-mvneta-xdp-meta-v1-0-36cf1c99790e@kernel.org> <20250311-mvneta-xdp-meta-v1-3-36cf1c99790e@kernel.org>
+In-Reply-To: <20250311-mvneta-xdp-meta-v1-3-36cf1c99790e@kernel.org>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Fri, 14 Mar 2025 14:00:33 +0200
+X-Gm-Features: AQ5f1JqD4PpWF9sD-c3WrV8oOlJztNLgYA2GJMvNudQfJQpIo6DpWKsJUUlKuVc
+Message-ID: <CAC_iWjKRLs4POP3TQ0XrXUiBmW0D5qD0JYh=UxqAytXjPvRmGw@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/7] net: netsec: Add metadata support for xdp mode
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Marcin Wojtas <marcin.s.wojtas@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Masahisa Kojima <kojima.masahisa@socionext.com>, Sunil Goutham <sgoutham@marvell.com>, 
+	Geetha sowjanya <gakula@marvell.com>, Subbaraya Sundeep <sbhatta@marvell.com>, 
+	hariprasad <hkelam@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Felix Fietkau <nbd@nbd.name>, 
+	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	Roger Quadros <rogerq@kernel.org>, netdev@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-hyperv@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 13, 2025 at 06:55:12PM +0100, Thomas Gleixner wrote:
-> On Thu, Mar 13 2025 at 15:50, Jonathan Cameron wrote:
-> >> +	guard(msi_descs_lock)(&dev->dev);
-> >> +	int ret = __msix_setup_interrupts(dev, entries, nvec, masks);
-> >> +	if (ret)
-> >> +		pci_free_msi_irqs(dev);
-> >
-> > It's not immediately obvious what this is undoing (i.e. where the alloc
-> > is).  I think it is at least mostly the pci_msi_setup_msi_irqs in
-> > __msix_setup_interrupts
-> 
-> It's a universal cleanup for all possible error cases.
-> 
-> > Why not handle the error in __msix_setup_interrupts and make that function
-> > side effect free.  Does require gotos but in a function that isn't
-> > doing any cleanup magic so should be fine.
-> 
-> I had the gotos first and then hated them. But you are right, it's better
-> to have them than having the magic clean up at the call site.
-> 
-> I'll fold the delta patch below.
-> 
-> Thanks,
-> 
->         tglx
+On Tue, 11 Mar 2025 at 14:19, Lorenzo Bianconi <lorenzo@kernel.org> wrote:
+>
+> Set metadata size building the skb from xdp_buff in netsec driver
+>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -671,19 +671,23 @@ static int __msix_setup_interrupts(struc
->  	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
->  
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	msix_update_entries(dev, entries);
->  	return 0;
-> +
-> +fail:
-> +	pci_free_msi_irqs(dev);
-> +	return ret;
->  }
+>  drivers/net/ethernet/socionext/netsec.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+> index dc99821c6226fbaece65c8ade23899f610b44a9a..ee890de69ffe795dbdcc5331e36be86769f0d9a6 100644
+> --- a/drivers/net/ethernet/socionext/netsec.c
+> +++ b/drivers/net/ethernet/socionext/netsec.c
+> @@ -970,7 +970,7 @@ static int netsec_process_rx(struct netsec_priv *priv, int budget)
+>                 struct netsec_de *de = dring->vaddr + (DESC_SZ * idx);
+>                 struct netsec_desc *desc = &dring->desc[idx];
+>                 struct page *page = virt_to_page(desc->addr);
+> -               u32 xdp_result = NETSEC_XDP_PASS;
+> +               u32 metasize, xdp_result = NETSEC_XDP_PASS;
+>                 struct sk_buff *skb = NULL;
+>                 u16 pkt_len, desc_len;
+>                 dma_addr_t dma_handle;
+> @@ -1019,7 +1019,7 @@ static int netsec_process_rx(struct netsec_priv *priv, int budget)
+>                 prefetch(desc->addr);
+>
+>                 xdp_prepare_buff(&xdp, desc->addr, NETSEC_RXBUF_HEADROOM,
+> -                                pkt_len, false);
+> +                                pkt_len, true);
+>
+>                 if (xdp_prog) {
+>                         xdp_result = netsec_run_xdp(priv, xdp_prog, &xdp);
+> @@ -1048,6 +1048,9 @@ static int netsec_process_rx(struct netsec_priv *priv, int budget)
+>
+>                 skb_reserve(skb, xdp.data - xdp.data_hard_start);
+>                 skb_put(skb, xdp.data_end - xdp.data);
+> +               metasize = xdp.data - xdp.data_meta;
+> +               if (metasize)
+> +                       skb_metadata_set(skb, metasize);
+>                 skb->protocol = eth_type_trans(skb, priv->ndev);
+>
+>                 if (priv->rx_cksum_offload_flag &&
+>
+> --
+> 2.48.1
+>
 
-How about something like:
-
-int __msix_setup_interrupts(struct device *_dev,... )
-{
-	struct device *dev __free(msi_irqs) = _dev;
-
-	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
-	if (ret)
-		return ret;
-
-	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
-	if (ret)
-		return ret;
-
-	/* Check if all MSI entries honor device restrictions */
-	ret = msi_verify_entries(dev);
-	if (ret)
-		return ret;
-
-	retain_ptr(dev);
-	msix_update_entries(dev, entries);
-	return 0;
-}
-
-?
+Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
