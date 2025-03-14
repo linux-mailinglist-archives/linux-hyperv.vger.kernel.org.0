@@ -1,118 +1,100 @@
-Return-Path: <linux-hyperv+bounces-4502-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4503-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19EE9A6184B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 18:42:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 309C9A61A63
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 20:25:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 683A618898EB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 17:42:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D75A17A3F5B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Mar 2025 19:24:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C01F32045B2;
-	Fri, 14 Mar 2025 17:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A086204C3E;
+	Fri, 14 Mar 2025 19:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6pv0Qui"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lcwAW6o9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9162D14375C;
-	Fri, 14 Mar 2025 17:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9FCC1FF1AF;
+	Fri, 14 Mar 2025 19:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974118; cv=none; b=nytsQXcDqiy7PT1kSI1NDZ3eJuoaCqO7dZ3hzgRl43K5HflmkjMXD7oDWDGnEURd37/CwO1J2/HyDRK6xbr/TSi/MXY3BRMVTTDEGphx/ate77f/kQsFT5eA15CBP6Qn0yI1EsEk0DUJ1FKnKyMgQctsmHONrHEnn2+LIX+GGTI=
+	t=1741980342; cv=none; b=Dodr5lIvTlw4GXHVN86dEMd6w4TkvVge6wkCMd4expOdrKEYwJOrVZMtfv0T3nRwXdk0RE+oN7C81HGe/UjgoKWkS9Y5VkamTW/YwqM5+qMAMZQwwLWKvY5vufVq8aVF+ZQvs492orTlnDcBHaJ4Lv0ZFOPzEF4KdLirr080AFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974118; c=relaxed/simple;
-	bh=nPIQa2zqNUwoVtbHR8A/I61uNaClpZ9/aE7Xl1KoV9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XrEncjH0ES88NlRjkzJWoozLKzQADR/d5YEHtCPQbh/MBWsFJzkIJTDB5E6IKtXGKjx5p4c1qS7hZ6/l8NZ+9ZYhXEaXkppiQZ8st9c4VUvMFIaY7EQIGsmhz5kWh8r+gCklVgMRjdTIySTOb9nGaV6aA1/2gVZb+9pdNsqz06k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6pv0Qui; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C51CFC4CEE9;
-	Fri, 14 Mar 2025 17:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741974118;
-	bh=nPIQa2zqNUwoVtbHR8A/I61uNaClpZ9/aE7Xl1KoV9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c6pv0QuiHYPrup6eHKszrLbHgWXLDutEIIZ2foZpIllM11XGA9B0l6nxEHDmXpinT
-	 C8t1I7QFNkOSypjwZXptYBMFk1V/mYFqpuXyxRNBaueKqNQ1poVjdFviw9wVaZv/86
-	 R7Reh/SPAXraeKZWHtrMJpFUxvhREQFmScRtxzMONBtpKIDWUZHc5889QJ8m4aq7UD
-	 cedM6YS6ZYI0Y+O9XJk9sbCwIU8d/EuVulQ2W/5MFRKZZ5x1IsPy3b5iRbDDd7XmI6
-	 7OnMy9Ts6tkgwq4BxkM3O5WTBiNvvEdr3M8Su/VbZaE96RCiNvtnCxcWRu6SZWQ46u
-	 +uBxWspqOPccA==
-Date: Fri, 14 Mar 2025 17:41:56 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Tianyu Lan <ltykernel@gmail.com>
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	Tianyu Lan <tiala@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/Hyperv: Fix check of return value from snp_set_vmsa()
-Message-ID: <Z9RqZPc2nMs-R-RZ@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250313085217.45483-1-ltykernel@gmail.com>
- <SN6PR02MB41577FAB4DD56699D48B8106D4D32@SN6PR02MB4157.namprd02.prod.outlook.com>
- <CAMvTesChp_kSNrJA6oCu8iZ6xFQReckRQU-_EGO7jjBPD_FUJQ@mail.gmail.com>
+	s=arc-20240116; t=1741980342; c=relaxed/simple;
+	bh=NAjBZOcRL9XA+Uu28PqNgr5pcAL0JKdI0XNjmjZA0Jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IdH6NXv9yp9le3QT5n6rBhwklvL1fL1nQHAM2p/1HWxhl710NQH/RaH4nPjjJyLpp9Oxgna4frbSkBl99XflVtGMiEHelnSazmp4vfaDMRzgJ9exnCJEbKIyrsev4WQUzfc58aSstI84YJMaAzIPfB4AGge2TKMYqySEfvxqIDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lcwAW6o9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.107] (76-14-231-56.or.wavecable.com [76.14.231.56])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 068C52033454;
+	Fri, 14 Mar 2025 12:25:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 068C52033454
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741980333;
+	bh=uumL/iMZWLeatJCRzK/5OqmHs1yyifX8CVVlfPUqW88=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lcwAW6o9/himPCT2tEXXsKoXHWO8oRb1H+x24X7ywVm5YDb+pGWilcslz1ctKgD2Q
+	 GFC+AqJBc2u+TzfWQJOXhlLuVrZvFJflC3ZhteSn1bhAyI+98O5uSfCvvTUlOFsxju
+	 DJnw4BKFc9L2OEScqPySBUc6fAC0f5am1INgXf3w=
+Message-ID: <c480e790-0abb-41af-a0cb-e358ff7b671f@linux.microsoft.com>
+Date: Fri, 14 Mar 2025 12:25:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMvTesChp_kSNrJA6oCu8iZ6xFQReckRQU-_EGO7jjBPD_FUJQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
+ expose /dev/mshv to VMMs
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ linux-hyperv@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
+ will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
+ joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
+ jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
+ muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
+ lenb@kernel.org, corbet@lwn.net
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
+ <fcd132af-03e4-496d-ba70-0097e90a83cf@oss.qualcomm.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <fcd132af-03e4-496d-ba70-0097e90a83cf@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 14, 2025 at 09:41:30AM +0800, Tianyu Lan wrote:
-> On Fri, Mar 14, 2025 at 4:20 AM Michael Kelley <mhklinux@outlook.com> wrote:
-> >
-> > From: Tianyu Lan <ltykernel@gmail.com> Sent: Thursday, March 13, 2025 1:52 AM
-> > >
-> > > snp_set_vmsa() returns 0 as success result and so fix it.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
-> > > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> > > ---
-> > >  arch/x86/hyperv/ivm.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> > > index ec7880271cf9..77bf05f06b9e 100644
-> > > --- a/arch/x86/hyperv/ivm.c
-> > > +++ b/arch/x86/hyperv/ivm.c
-> > > @@ -338,7 +338,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
-> > >       vmsa->sev_features = sev_status >> 2;
-> > >
-> > >       ret = snp_set_vmsa(vmsa, true);
-> > > -     if (!ret) {
-> > > +     if (ret) {
-> > >               pr_err("RMPADJUST(%llx) failed: %llx\n", (u64)vmsa, ret);
-> > >               free_page((u64)vmsa);
-> > >               return ret;
-> > > --
-> > > 2.25.1
-> > >
-> >
-> > Yes, with this change the code is now consistent with other call sites for
-> > snp_set_vmsa() and for direct invocation of rmpadjust().
-> >
-> > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+On 3/11/2025 11:01 AM, Jeff Johnson wrote:
+> On 2/26/25 15:08, Nuno Das Neves wrote:
+> ...
+>> +
+>> +MODULE_AUTHOR("Microsoft");
+>> +MODULE_LICENSE("GPL");
+>> +
 > 
-> Thank you for your review, Michael!
+> Since commit 1fffe7a34c89 ("script: modpost: emit a warning when the
+> description is missing"), a module without a MODULE_DESCRIPTION() will
+> result in a warning with make W=1. Please add a MODULE_DESCRIPTION()
+> to avoid this warning.
+> 
+> This is a canned review based upon finding a MODULE_LICENSE without a
+> MODULE_DESCRIPTION.
+> 
+> /jeff
 
-Applied to hyperv-next. Thanks.
+Thanks Jeff. Fixed in v6.
 
-Wei.
+Nuno
 
