@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-4557-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A23FA658BA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 17:47:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBF65A658BE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 17:47:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD6BA189DDAB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 16:44:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CD1A420B73
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 16:45:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537721C6FE6;
-	Mon, 17 Mar 2025 16:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E1D206F21;
+	Mon, 17 Mar 2025 16:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwMz313e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW5NTGWX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274C41C07DA;
-	Mon, 17 Mar 2025 16:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D35D206F1B;
+	Mon, 17 Mar 2025 16:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229546; cv=none; b=giWa4x9mFi53zVFVps6OkYiipdcNbAO7fAHuPg9X/FAmBabqIWQPCme7xp8EUo9gCjA5GPRgsXCb/36GFY0qQ03W55BS3fYMyf+dP6wo998jz6uF99scdheguWshguyuZNopZR2urDWmZOFtHUfaf7yhMjP3hpCtUwqKk7x08Ys=
+	t=1742229552; cv=none; b=S1QL8i7SN/EIgujPmVrMhvf7/R5HGDWK7gUtRwoJz8R1euFbFjF9+B3HF4ptHmKbJEvFp+nlEg45bWnWpJTFJO9xdQDT5dMPhAMyQ77lEGSEzdaWwLBeSyev3FeajGiSnwMJ2QtVsPAbKn3KmGYKg/kIMXOVfnrG4f0CXT/OGs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742229546; c=relaxed/simple;
-	bh=z0/rcr6pKsVrPCadWbOR4vFRtxHFCNxR8+1qfGyjtPI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jxo5sv9bltvrOK3DEEmmaHfC+XorTizoxu6WitDZcxqpcbyW+5r1a42DsRFoQ5a0SFBThoc/6RmWQvBXi21rB8bQzNbL9n7LJ+DfRUirvVCN4jQ1k6vTLuvUAAfElJ2eJjsToK/NAS2/O5OB4FV1ZuGommy3Dbf7TUEgjbDkc5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwMz313e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47496C4CEE3;
-	Mon, 17 Mar 2025 16:39:04 +0000 (UTC)
+	s=arc-20240116; t=1742229552; c=relaxed/simple;
+	bh=hby0KqjpVt/WiDmHp7hjyCPjRh8jJjsN0+fPR4eCDyU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P5DXziRaGTdJP+jhfvkjMUntEKea5YCRI6QT1tZLo/vSdys6v7tTGnRuBNaVP3Vc+iCuJ7cyhn6GZl8GhIgTy2y2p/LiNv+78xl6TFg8ep1rzpa+n5ldLkc0Vdsj3ilfEFXo0zhhzjOEQZfbN+shAXuCZldCi/mdP5J6U8fZ72k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW5NTGWX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED80AC4CEEC;
+	Mon, 17 Mar 2025 16:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742229546;
-	bh=z0/rcr6pKsVrPCadWbOR4vFRtxHFCNxR8+1qfGyjtPI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RwMz313ecKnpVn7ZI0hdMKOhvOeWi0gc813yhza7a4HGJY1gsqCobd1fzPmrSUOGj
-	 prJKUyPxVvpH5krVslIgmT8If+a91ZPmc/pLN7LTGfEbIUTswM/oi3OnO6yfULkGA5
-	 58iYQgOjs0g/o3m0aPm+ytLHWaOBdr+N7zQq1MDBOo57AqoIAP6CAcjzrJtG0uOExN
-	 VMgHYXMxQAo52xaZAg4hbMSFOQbYcTk/jmmI/bKr5i+R4yixN6/VbtH+4Y/ms2KW8p
-	 l/XucbWA75Da/8pwZTD2kZWxosbYhMVR1prhpfLohN6+aJOEcAS8XP0thv9xYxCRff
-	 +NCqXQJ8Ch+AA==
+	s=k20201202; t=1742229551;
+	bh=hby0KqjpVt/WiDmHp7hjyCPjRh8jJjsN0+fPR4eCDyU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dW5NTGWXBrbx11n1wZpkkvJp+0uo+iSt36iuwVqMX+jG0hkK6AMT4wIfByWbFK1dz
+	 hGpoy8loGneSg/3EuJ07T9Fjab5yE6RwGXDiyi4l/tQfgGPs/1x9wKnDuH3iqySl7t
+	 Iy4yswj91Ke2EXuEMyip7ty20GUWsoSebrPoeMpWwX6PnI2yu5IYuCtor+R80wS4cv
+	 6zU+7JP+GdZPihnNTk+aZZCQdX080BdMCQMcEgtcbwISIfVIxPwtjOFarzgETVrEFZ
+	 dLhKPzlkI4F2J/eSVEh4bXwWWqxZAm/A/pJqi5BclPsllufc0xBMWkB02ZoSVJQepv
+	 780CxMtH4gv4g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Naman Jain <namjain@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Roman Kisel <romank@linux.microsoft.com>,
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	kys@microsoft.com,
@@ -57,10 +57,12 @@ Cc: Naman Jain <namjain@linux.microsoft.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 1/8] x86/hyperv/vtl: Stop kernel from probing VTL0 low memory
-Date: Mon, 17 Mar 2025 12:38:55 -0400
-Message-Id: <20250317163902.1893378-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 4/8] x86/hyperv: Fix output argument to hypercall that changes page visibility
+Date: Mon, 17 Mar 2025 12:38:58 -0400
+Message-Id: <20250317163902.1893378-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250317163902.1893378-1-sashal@kernel.org>
+References: <20250317163902.1893378-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,42 +74,50 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.83
 Content-Transfer-Encoding: 8bit
 
-From: Naman Jain <namjain@linux.microsoft.com>
+From: Michael Kelley <mhklinux@outlook.com>
 
-[ Upstream commit 59115e2e25f42924181055ed7cc1d123af7598b7 ]
+[ Upstream commit 09beefefb57bbc3a06d98f319d85db4d719d7bcb ]
 
-For Linux, running in Hyper-V VTL (Virtual Trust Level), kernel in VTL2
-tries to access VTL0 low memory in probe_roms. This memory is not
-described in the e820 map. Initialize probe_roms call to no-ops
-during boot for VTL2 kernel to avoid this. The issue got identified
-in OpenVMM which detects invalid accesses initiated from kernel running
-in VTL2.
+The hypercall in hv_mark_gpa_visibility() is invoked with an input
+argument and an output argument. The output argument ostensibly returns
+the number of pages that were processed. But in fact, the hypercall does
+not provide any output, so the output argument is spurious.
 
-Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-Tested-by: Roman Kisel <romank@linux.microsoft.com>
-Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
-Link: https://lore.kernel.org/r/20250116061224.1701-1-namjain@linux.microsoft.com
+The spurious argument is harmless because Hyper-V ignores it, but in the
+interest of correctness and to avoid the potential for future problems,
+remove it.
+
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Link: https://lore.kernel.org/r/20250226200612.2062-2-mhklinux@outlook.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <20250116061224.1701-1-namjain@linux.microsoft.com>
+Message-ID: <20250226200612.2062-2-mhklinux@outlook.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/hv_vtl.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/hyperv/ivm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index c2f78fabc865b..b12bef0ff7bb6 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -30,6 +30,7 @@ void __init hv_vtl_init_platform(void)
- 	x86_platform.realmode_init = x86_init_noop;
- 	x86_init.irqs.pre_vector_init = x86_init_noop;
- 	x86_init.timers.timer_init = x86_init_noop;
-+	x86_init.resources.probe_roms = x86_init_noop;
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 8c6bf07f7d2b8..e50e43d1d4c87 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -464,7 +464,6 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+ 			   enum hv_mem_host_visibility visibility)
+ {
+ 	struct hv_gpa_range_for_visibility *input;
+-	u16 pages_processed;
+ 	u64 hv_status;
+ 	unsigned long flags;
  
- 	/* Avoid searching for BIOS MP tables */
- 	x86_init.mpparse.find_smp_config = x86_init_noop;
+@@ -493,7 +492,7 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+ 	memcpy((void *)input->gpa_page_list, pfn, count * sizeof(*pfn));
+ 	hv_status = hv_do_rep_hypercall(
+ 			HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY, count,
+-			0, input, &pages_processed);
++			0, input, NULL);
+ 	local_irq_restore(flags);
+ 
+ 	if (hv_result_success(hv_status))
 -- 
 2.39.5
 
