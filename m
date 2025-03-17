@@ -1,70 +1,70 @@
-Return-Path: <linux-hyperv+bounces-4551-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4552-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F5B2A65200
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 14:58:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58834A657F8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 17:26:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0E393A94CB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 13:57:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 590867A90A9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 16:25:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E75A2405F8;
-	Mon, 17 Mar 2025 13:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3307519DFA7;
+	Mon, 17 Mar 2025 16:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="FIWnDAkH"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Zb/b0736"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860182405E7;
-	Mon, 17 Mar 2025 13:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20B4198E60;
+	Mon, 17 Mar 2025 16:26:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219854; cv=none; b=bOvas+iEqZ5mHxASiLlql/aVONA1wsZqHEJ2KYYJZseiVUyJvafzOZObFAnoeZUt3M9OSLn+OKEtKHY1b8NyEhWGTLKtypn++R0oIg6V8pf1QRU3KdcGhJyb5fT1Ov1t2LAmgBXpwaeD3PrUZ+hW1MrjiD6nGcr42NpN2hpCRZE=
+	t=1742228794; cv=none; b=vDxiwDLyq+l7Y4+p9w54u6CaMyNHf48m49EnxaZjfRAY3LGB/dVrp6KrOznK2zWuXhIyKipXHSV41lY8vCjxcJD3PCBN/58oM5kXUy7T63kStf9cK8tioE1bmRUESmzhq8rd8S4C0yobvqJf2tOOCcxXw7+3QUs6P7LH7KPp6qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219854; c=relaxed/simple;
-	bh=CzBFOwFcPXBwBR8+05fF9uzqrUlQe4AP5w+jN4JwL7E=;
+	s=arc-20240116; t=1742228794; c=relaxed/simple;
+	bh=+Ndjy4xmcEbXyhbj74b5WBRBd0mqSMQV+7NKaMwfF0w=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ag7ovQWyTBdZMf3l17sSB0ruAB08w58LVnr+WIe8r6+ojrqC+BNH8k1RIGRxr5QYM2RFSLFtpnNneaXRVLpohJbN+QQ2yX3VSQOObfHftH39ziXZhQo0MCBesPr62qdtX/JJnrF0ee0th8FijuEu0frbZPEDNFxxKTk1hrwp1Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=FIWnDAkH; arc=none smtp.client-ip=198.37.111.173
+	 Content-Type:MIME-Version; b=JWe9iYrWD8VWROwab7WlXSnwx+mPR7062J7VVmo4xQp3nA1x6XAXb1cJ2AKjBnNUBoUcD/pnkK23CoM2htZbUjcm1++yIIo+91JstmJox5yXiibyWHMaBgZX/HkCr/j9UgPVOObFCpsKb3RRpFxq4Fg7StM3tbf1Vm8UayAixhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=Zb/b0736; arc=none smtp.client-ip=198.37.111.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1742219851;
-	bh=CzBFOwFcPXBwBR8+05fF9uzqrUlQe4AP5w+jN4JwL7E=;
+	d=hansenpartnership.com; s=20151216; t=1742228790;
+	bh=+Ndjy4xmcEbXyhbj74b5WBRBd0mqSMQV+7NKaMwfF0w=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=FIWnDAkHlxHlFyn6P/SA6TBcJ55587t7cmLRvtcVrv6Gk8LKuGdIiH+kPiI59zOyT
-	 Yr6zHAuHYKddoWfk3yks3hfS8fx4O69Akheq7Jy3IwooJtsX0Xs4XItZEsFati7imK
-	 cdx9QMI6FvoF1YHfnR87DUiBIIsx0IndQfCqky5E=
+	b=Zb/b0736daXymZaWap1l3aurwmc/9FF73bbGMNHV9DFCCB5Jch9TlatrPBsTcmAxi
+	 C1srhA4D8T6OAx6K3bNyEQlA++AhjiFPFLKi1OZJKi0phx1X/gNmO4BOiMxfIumFxx
+	 XVuEkLWLXWf3aNnBbAf800il9shIJMoGK9hmGfis=
 Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 89EF51C0398;
-	Mon, 17 Mar 2025 09:57:30 -0400 (EDT)
-Message-ID: <4a6efcf37b3cf8812dcfaaa66d4c1760b3e2a95a.camel@HansenPartnership.com>
-Subject: Re: [patch V3 01/10] cleanup: Provide retain_ptr()
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 0F8421C01F4;
+	Mon, 17 Mar 2025 12:26:30 -0400 (EDT)
+Message-ID: <609eeb873fdef6171c71f3beda289d799cb7172c.camel@HansenPartnership.com>
+Subject: Re: [patch V3 09/10] scsi: ufs: qcom: Remove the MSI descriptor
+ abuse
 From: James Bottomley <James.Bottomley@HansenPartnership.com>
 To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Nishanth Menon <nm@ti.com>,
- Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh
- Shilimkar <ssantosh@kernel.org>, Logan Gunthorpe <logang@deltatee.com>,
- Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>, Allen
- Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,  Bjorn Helgaas
- <bhelgaas@google.com>, linux-pci@vger.kernel.org, Michael Kelley
- <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>,  linux-hyperv@vger.kernel.org, Wei Huang
- <wei.huang2@amd.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, "Martin K. Petersen"
- <martin.petersen@oracle.com>,  linux-scsi@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huwei.com>
-Date: Mon, 17 Mar 2025 09:57:29 -0400
-In-Reply-To: <20250317092945.764490535@linutronix.de>
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "Martin K.
+ Petersen" <martin.petersen@oracle.com>,  linux-scsi@vger.kernel.org,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Nishanth Menon
+ <nm@ti.com>, Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, 
+ Santosh Shilimkar <ssantosh@kernel.org>, Logan Gunthorpe
+ <logang@deltatee.com>, Dave Jiang <dave.jiang@intel.com>,  Jon Mason
+ <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Michael
+ Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+ <haiyangz@microsoft.com>, linux-hyperv@vger.kernel.org, Wei Huang
+ <wei.huang2@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Mon, 17 Mar 2025 12:26:29 -0400
+In-Reply-To: <20250317092946.265146293@linutronix.de>
 References: <20250317092919.008573387@linutronix.de>
-	 <20250317092945.764490535@linutronix.de>
+	 <20250317092946.265146293@linutronix.de>
 Autocrypt: addr=James.Bottomley@HansenPartnership.com;
  prefer-encrypt=mutual;
  keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
@@ -86,34 +86,295 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2025-03-17 at 14:29 +0100, Thomas Gleixner wrote:
-[...]
-> +/*
-> + * Only for situations where an allocation is handed in to another
-> function
-> + * and consumed by that function on success.
-> + *
-> + *	struct foo *f __free(kfree) =3D kzalloc(sizeof(*f),
+> The driver abuses the MSI descriptors for internal purposes. Aside of
+> core code and MSI providers nothing has to care about their
+> existence. They have been encapsulated with a lot of effort because
+> this kind of abuse caused all sorts of issues including a
+> maintainability nightmare.
+>=20
+> Rewrite the code so it uses dedicated storage to hand the required
+> information to the interrupt handler.
+>=20
+> No functional change intended.
+>=20
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+>=20
+>=20
+> ---
+> =C2=A0drivers/ufs/host/ufs-qcom.c |=C2=A0=C2=A0 77 ++++++++++++++++++++++=
+-----------
+> -----------
+> =C2=A01 file changed, 40 insertions(+), 37 deletions(-)
+>=20
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -1782,15 +1782,19 @@ static void ufs_qcom_write_msi_msg(struc
+> =C2=A0	ufshcd_mcq_config_esi(hba, msg);
+> =C2=A0}
+> =C2=A0
+> +struct ufs_qcom_irq {
+> +	unsigned int		irq;
+> +	unsigned int		idx;
+> +	struct ufs_hba		*hba;
+> +};
+> +
+> =C2=A0static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
+> =C2=A0{
+> -	struct msi_desc *desc =3D data;
+> -	struct device *dev =3D msi_desc_to_dev(desc);
+> -	struct ufs_hba *hba =3D dev_get_drvdata(dev);
+> -	u32 id =3D desc->msi_index;
+> -	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
+> +	struct ufs_qcom_irq *qi =3D data;
+> +	struct ufs_hba *hba =3D qi->hba;
+> +	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
+> =C2=A0
+> -	ufshcd_mcq_write_cqis(hba, 0x1, id);
+> +	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
+> =C2=A0	ufshcd_mcq_poll_cqe_lock(hba, hwq);
+> =C2=A0
+> =C2=A0	return IRQ_HANDLED;
+> @@ -1799,8 +1803,7 @@ static irqreturn_t ufs_qcom_mcq_esi_hand
+> =C2=A0static int ufs_qcom_config_esi(struct ufs_hba *hba)
+> =C2=A0{
+> =C2=A0	struct ufs_qcom_host *host =3D ufshcd_get_variant(hba);
+> -	struct msi_desc *desc;
+> -	struct msi_desc *failed_desc =3D NULL;
+> +	struct ufs_qcom_irq *qi;
+> =C2=A0	int nr_irqs, ret;
+> =C2=A0
+> =C2=A0	if (host->esi_enabled)
+> @@ -1811,47 +1814,47 @@ static int ufs_qcom_config_esi(struct uf
+> =C2=A0	 * 2. Poll queues do not need ESI.
+> =C2=A0	 */
+> =C2=A0	nr_irqs =3D hba->nr_hw_queues - hba-
+> >nr_queues[HCTX_TYPE_POLL];
+> +	qi =3D devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi),
 > GFP_KERNEL);
-> + *
-> + *	setup(f);
-> + *	if (some_condition)
-> + *		return -EINVAL;
-> + *	....
-> + *	ret =3D bar(f);
-> + *	if (!ret)
-> + *		retain_ptr(f);
-> + *	return ret;
-> + */
-> +#define retain_ptr(p)				\
-> +	__get_and_null(p, NULL)
+> +	if (qi)
 
-This doesn't score very highly on the Rusty API design scale because it
-can be used anywhere return_ptr() should be used.  To force the
-distinction between the two cases at the compiler level, should there
-be a cast to void in the above to prevent using the return value?
+Typo causing logic inversion: should be !qi here (you need a more
+responsive ! key).
+
+> +		return -ENOMEM;
+> +
+> =C2=A0	ret =3D platform_device_msi_init_and_alloc_irqs(hba->dev,
+> nr_irqs,
+> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> ufs_qcom_write_msi_msg);
+> =C2=A0	if (ret) {
+> =C2=A0		dev_err(hba->dev, "Failed to request Platform MSI
+> %d\n", ret);
+> -		return ret;
+> +		goto cleanup;
+> =C2=A0	}
+> =C2=A0
+> -	msi_lock_descs(hba->dev);
+> -	msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
+> -		ret =3D devm_request_irq(hba->dev, desc->irq,
+> -				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ufs_qcom_mcq_esi_handler,
+> -				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IRQF_SHARED, "qcom-mcq-esi",
+> desc);
+> +	for (int idx =3D 0; idx < nr_irqs; idx++) {
+> +		qi[idx].irq =3D msi_get_virq(hba->dev, idx);
+> +		qi[idx].idx =3D idx;
+> +		qi[idx].hba =3D hba;
+> +
+> +		ret =3D devm_request_irq(hba->dev, qi[idx].irq,
+> ufs_qcom_mcq_esi_handler,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IRQF_SHARED, "qcom-mcq-esi",
+> qi + idx);
+> =C2=A0		if (ret) {
+> =C2=A0			dev_err(hba->dev, "%s: Fail to request IRQ
+> for %d, err =3D %d\n",
+> -				__func__, desc->irq, ret);
+> -			failed_desc =3D desc;
+> -			break;
+> +				__func__, qi[idx].irq, ret);
+> +			qi[idx].irq =3D 0;
+> +			goto cleanup;
+> =C2=A0		}
+> =C2=A0	}
+> -	msi_unlock_descs(hba->dev);
+> =C2=A0
+> -	if (ret) {
+> -		/* Rewind */
+> -		msi_lock_descs(hba->dev);
+> -		msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
+> -			if (desc =3D=3D failed_desc)
+> -				break;
+> -			devm_free_irq(hba->dev, desc->irq, hba);
+> -		}
+> -		msi_unlock_descs(hba->dev);
+> -		platform_device_msi_free_irqs_all(hba->dev);
+> -	} else {
+> -		if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D
+> 0 &&
+> -		=C2=A0=C2=A0=C2=A0 host->hw_ver.step =3D=3D 0)
+> -			ufshcd_rmwl(hba, ESI_VEC_MASK,
+> -				=C2=A0=C2=A0=C2=A0 FIELD_PREP(ESI_VEC_MASK,
+> MAX_ESI_VEC - 1),
+> -				=C2=A0=C2=A0=C2=A0 REG_UFS_CFG3);
+> -		ufshcd_mcq_enable_esi(hba);
+> -		host->esi_enabled =3D true;
+> +	if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
+> +	=C2=A0=C2=A0=C2=A0 host->hw_ver.step =3D=3D 0) {
+> +		ufshcd_rmwl(hba, ESI_VEC_MASK,
+> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC -
+> 1),
+> +			=C2=A0=C2=A0=C2=A0 REG_UFS_CFG3);
+> =C2=A0	}
+> -
+> +	ufshcd_mcq_enable_esi(hba);
+> +	host->esi_enabled =3D true;
+> +	return 0;
+> +
+> +cleanup:
+> +	for (int idx =3D 0; qi[idx].irq; idx++)
+> +		devm_free_irq(hba->dev, qi[idx].irq, hba);
+> +	platform_device_msi_free_irqs_all(hba->dev);
+> +	devm_kfree(hba->dev, qi);
+> =C2=A0	return ret;
+> =C2=A0}
+
+This does seem to be exactly the pattern you describe in 1/10, although
+I'm not entirely convinced that something like the below is more
+readable and safe.
 
 Regards,
 
 James
+
+---
+
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 23b9f6efa047..26b0c665c3b7 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -1782,25 +1782,37 @@ static void ufs_qcom_write_msi_msg(struct msi_desc =
+*desc, struct msi_msg *msg)
+ 	ufshcd_mcq_config_esi(hba, msg);
+ }
+=20
++struct ufs_qcom_irq {
++	unsigned int		irq;
++	unsigned int		idx;
++	struct ufs_hba		*hba;
++};
++
+ static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
+ {
+-	struct msi_desc *desc =3D data;
+-	struct device *dev =3D msi_desc_to_dev(desc);
+-	struct ufs_hba *hba =3D dev_get_drvdata(dev);
+-	u32 id =3D desc->msi_index;
+-	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
++	struct ufs_qcom_irq *qi =3D data;
++	struct ufs_hba *hba =3D qi->hba;
++	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
+=20
+-	ufshcd_mcq_write_cqis(hba, 0x1, id);
++	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
+ 	ufshcd_mcq_poll_cqe_lock(hba, hwq);
+=20
+ 	return IRQ_HANDLED;
+ }
+=20
++DEFINE_FREE(ufs_qcom_irq, struct ufs_qcom_irq *,
++	    if (_T) {							\
++		    for (int idx =3D 0; _T[idx].irq; idx++)		\
++			    devm_free_irq(_T[idx].hba->dev, _T[idx].irq, \
++					  _T[idx].hba);			\
++		    platform_device_msi_free_irqs_all(_T[0].hba->dev);	\
++		    devm_kfree(_T[0].hba->dev, _T);			\
++	    })
++
+ static int ufs_qcom_config_esi(struct ufs_hba *hba)
+ {
+ 	struct ufs_qcom_host *host =3D ufshcd_get_variant(hba);
+-	struct msi_desc *desc;
+-	struct msi_desc *failed_desc =3D NULL;
++	struct ufs_qcom_irq *qi __free(ufs_qcom_irq);
+ 	int nr_irqs, ret;
+=20
+ 	if (host->esi_enabled)
+@@ -1811,6 +1823,11 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
+ 	 * 2. Poll queues do not need ESI.
+ 	 */
+ 	nr_irqs =3D hba->nr_hw_queues - hba->nr_queues[HCTX_TYPE_POLL];
++	qi =3D devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi), GFP_KERNEL);
++	if (!qi)
++		return -ENOMEM;
++	qi[0].hba =3D hba;	/* required by __free() */
++
+ 	ret =3D platform_device_msi_init_and_alloc_irqs(hba->dev, nr_irqs,
+ 						      ufs_qcom_write_msi_msg);
+ 	if (ret) {
+@@ -1818,41 +1835,31 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
+ 		return ret;
+ 	}
+=20
+-	msi_lock_descs(hba->dev);
+-	msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
+-		ret =3D devm_request_irq(hba->dev, desc->irq,
+-				       ufs_qcom_mcq_esi_handler,
+-				       IRQF_SHARED, "qcom-mcq-esi", desc);
++	for (int idx =3D 0; idx < nr_irqs; idx++) {
++		qi[idx].irq =3D msi_get_virq(hba->dev, idx);
++		qi[idx].idx =3D idx;
++		qi[idx].hba =3D hba;
++
++		ret =3D devm_request_irq(hba->dev, qi[idx].irq, ufs_qcom_mcq_esi_handler=
+,
++				       IRQF_SHARED, "qcom-mcq-esi", qi + idx);
+ 		if (ret) {
+ 			dev_err(hba->dev, "%s: Fail to request IRQ for %d, err =3D %d\n",
+-				__func__, desc->irq, ret);
+-			failed_desc =3D desc;
+-			break;
++				__func__, qi[idx].irq, ret);
++			qi[idx].irq =3D 0;
++			return ret;
+ 		}
+ 	}
+-	msi_unlock_descs(hba->dev);
++	retain_ptr(qi);
+=20
+-	if (ret) {
+-		/* Rewind */
+-		msi_lock_descs(hba->dev);
+-		msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
+-			if (desc =3D=3D failed_desc)
+-				break;
+-			devm_free_irq(hba->dev, desc->irq, hba);
+-		}
+-		msi_unlock_descs(hba->dev);
+-		platform_device_msi_free_irqs_all(hba->dev);
+-	} else {
+-		if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
+-		    host->hw_ver.step =3D=3D 0)
+-			ufshcd_rmwl(hba, ESI_VEC_MASK,
+-				    FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC - 1),
+-				    REG_UFS_CFG3);
+-		ufshcd_mcq_enable_esi(hba);
+-		host->esi_enabled =3D true;
++	if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
++	    host->hw_ver.step =3D=3D 0) {
++		ufshcd_rmwl(hba, ESI_VEC_MASK,
++			    FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC - 1),
++			    REG_UFS_CFG3);
+ 	}
+-
+-	return ret;
++	ufshcd_mcq_enable_esi(hba);
++	host->esi_enabled =3D true;
++	return 0;
+ }
+=20
+ /*
 
 
