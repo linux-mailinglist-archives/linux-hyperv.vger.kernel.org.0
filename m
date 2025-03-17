@@ -1,124 +1,223 @@
-Return-Path: <linux-hyperv+bounces-4558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4559-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBF65A658BE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 17:47:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2384A659FE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 18:13:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CD1A420B73
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 16:45:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE6521891084
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Mar 2025 17:07:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E1D206F21;
-	Mon, 17 Mar 2025 16:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B318C1ACEAD;
+	Mon, 17 Mar 2025 17:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW5NTGWX"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MU0M1OS/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D35D206F1B;
-	Mon, 17 Mar 2025 16:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3E91AAA1E;
+	Mon, 17 Mar 2025 17:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229552; cv=none; b=S1QL8i7SN/EIgujPmVrMhvf7/R5HGDWK7gUtRwoJz8R1euFbFjF9+B3HF4ptHmKbJEvFp+nlEg45bWnWpJTFJO9xdQDT5dMPhAMyQ77lEGSEzdaWwLBeSyev3FeajGiSnwMJ2QtVsPAbKn3KmGYKg/kIMXOVfnrG4f0CXT/OGs0=
+	t=1742231225; cv=none; b=Oietrk9lBWkm4yi9/m/YASgBp1ABhsNmSu/orC4SCfkjL9Lp21+qK2pkdcjPn7nxdWdljhUT5kiD4kCErdwngbWeguTrf6dnRRg1CW1H0Rrebph5JKoM83nEyxivmmL6XXPMhKlWjbplekrhqNhG9/ndKqsaQUp8KepCESzOMTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742229552; c=relaxed/simple;
-	bh=hby0KqjpVt/WiDmHp7hjyCPjRh8jJjsN0+fPR4eCDyU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P5DXziRaGTdJP+jhfvkjMUntEKea5YCRI6QT1tZLo/vSdys6v7tTGnRuBNaVP3Vc+iCuJ7cyhn6GZl8GhIgTy2y2p/LiNv+78xl6TFg8ep1rzpa+n5ldLkc0Vdsj3ilfEFXo0zhhzjOEQZfbN+shAXuCZldCi/mdP5J6U8fZ72k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW5NTGWX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED80AC4CEEC;
-	Mon, 17 Mar 2025 16:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742229551;
-	bh=hby0KqjpVt/WiDmHp7hjyCPjRh8jJjsN0+fPR4eCDyU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dW5NTGWXBrbx11n1wZpkkvJp+0uo+iSt36iuwVqMX+jG0hkK6AMT4wIfByWbFK1dz
-	 hGpoy8loGneSg/3EuJ07T9Fjab5yE6RwGXDiyi4l/tQfgGPs/1x9wKnDuH3iqySl7t
-	 Iy4yswj91Ke2EXuEMyip7ty20GUWsoSebrPoeMpWwX6PnI2yu5IYuCtor+R80wS4cv
-	 6zU+7JP+GdZPihnNTk+aZZCQdX080BdMCQMcEgtcbwISIfVIxPwtjOFarzgETVrEFZ
-	 dLhKPzlkI4F2J/eSVEh4bXwWWqxZAm/A/pJqi5BclPsllufc0xBMWkB02ZoSVJQepv
-	 780CxMtH4gv4g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 4/8] x86/hyperv: Fix output argument to hypercall that changes page visibility
-Date: Mon, 17 Mar 2025 12:38:58 -0400
-Message-Id: <20250317163902.1893378-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250317163902.1893378-1-sashal@kernel.org>
-References: <20250317163902.1893378-1-sashal@kernel.org>
+	s=arc-20240116; t=1742231225; c=relaxed/simple;
+	bh=7tPScfD9PU8GwL510NRuJpyMhhbfKbW53uXGSxQrROM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pdA3ehNdmt1Q1c8OvLjRoGUJ1iYWnTc1Dx0CH8nEmObYnmaZ/ijrsiS3uFOdaxjDhdUKuHdujxBGl4gANUBKkcok6iXoOqQOMz52KKhmB+u/jPwx+IAg+35va9TPs5O7D2l4/jLXmw5Fewr2evi9GXACOMnmAjVnLBWuA/tLdy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MU0M1OS/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F377E2033444;
+	Mon, 17 Mar 2025 10:07:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F377E2033444
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742231223;
+	bh=pVVBjR0mSZEIXZn2jj+yPFFn+SpqZ/2BXJvya8/hhRQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MU0M1OS/SvjdiBbQjAOJYZVPoksU5Sb1yCAuzxLUPv37SeuxHwFF7pbmInik5NNNf
+	 ujAGpzMt6UzTDHpp2h9YUMIjgxST9XFEazJyWc/ho17h+5D8kAGPqKrOHOkNjLv0Ub
+	 nO3vFYqx3hqhVWLCI6WxBr/n/WIQUkrc9WLiqbi4=
+Message-ID: <9c3f2492-823e-4548-8ad3-6aeb9c86d528@linux.microsoft.com>
+Date: Mon, 17 Mar 2025 10:07:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.83
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 11/11] PCI: hv: Get vPCI MSI IRQ domain
+ from DeviceTree
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
+ mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org,
+ robh@kernel.org, ssengar@linux.microsoft.com, sudeep.holla@arm.com,
+ suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org,
+ will@kernel.org, yuzenghui@huawei.com, devicetree@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+ benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250315184903.GA848938@bhelgaas>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250315184903.GA848938@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Michael Kelley <mhklinux@outlook.com>
 
-[ Upstream commit 09beefefb57bbc3a06d98f319d85db4d719d7bcb ]
 
-The hypercall in hv_mark_gpa_visibility() is invoked with an input
-argument and an output argument. The output argument ostensibly returns
-the number of pages that were processed. But in fact, the hypercall does
-not provide any output, so the output argument is spurious.
+On 3/15/2025 11:49 AM, Bjorn Helgaas wrote:
+> On Fri, Mar 14, 2025 at 05:19:31PM -0700, Roman Kisel wrote:
+>> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
+>> arm64. It won't be able to do that in the VTL mode where only DeviceTree
+>> can be used.
+>>
+>> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
+>> case, too.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Looks good to me; trivial whitespace comment below.
+> 
 
-The spurious argument is harmless because Hyper-V ignores it, but in the
-interest of correctness and to avoid the potential for future problems,
-remove it.
+Thanks a bunch!! I'll fix that the whitespace (and remove the unused
+variable the robot noticed).
 
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Link: https://lore.kernel.org/r/20250226200612.2062-2-mhklinux@outlook.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <20250226200612.2062-2-mhklinux@outlook.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/hyperv/ivm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+>> ---
+>>   drivers/pci/controller/pci-hyperv.c | 73 ++++++++++++++++++++++++++---
+>>   1 file changed, 67 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index 6084b38bdda1..cbff19e8a07c 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -50,6 +50,7 @@
+>>   #include <linux/irqdomain.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/sizes.h>
+>> +#include <linux/of_irq.h>
+>>   #include <asm/mshyperv.h>
+>>   
+>>   /*
+>> @@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
+>>   	int ret;
+>>   
+>>   	fwspec.fwnode = domain->parent->fwnode;
+>> -	fwspec.param_count = 2;
+>> -	fwspec.param[0] = hwirq;
+>> -	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+>> +	if (is_of_node(fwspec.fwnode)) {
+>> +		/* SPI lines for OF translations start at offset 32 */
+>> +		fwspec.param_count = 3;
+>> +		fwspec.param[0] = 0;
+>> +		fwspec.param[1] = hwirq - 32;
+>> +		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+>> +	} else {
+>> +		fwspec.param_count = 2;
+>> +		fwspec.param[0] = hwirq;
+>> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+>> +	}
+>>   
+>>   	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+>>   	if (ret)
+>> @@ -887,10 +896,47 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
+>>   	.activate = hv_pci_vec_irq_domain_activate,
+>>   };
+>>   
+>> +#ifdef CONFIG_OF
+>> +
+>> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
+>> +{
+>> +	struct device_node *parent;
+>> +	struct irq_domain *domain;
+>> +
+>> +	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
+>> +	if (!parent)
+>> +		return NULL;
+>> +	domain = irq_find_host(parent);
+>> +	of_node_put(parent);
+>> +
+>> +	return domain;
+>> +}
+>> +
+>> +#endif
+>> +
+>> +#ifdef CONFIG_ACPI
+>> +
+>> +static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
+>> +{
+>> +	struct irq_domain *domain;
+>> +	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
+>> +
+>> +	if (acpi_irq_model != ACPI_IRQ_MODEL_GIC)
+>> +		return NULL;
+>> +	gsi_domain_disp_fn = acpi_get_gsi_dispatcher();
+>> +	if (!gsi_domain_disp_fn)
+>> +		return NULL;
+>> +	return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
+>> +				     DOMAIN_BUS_ANY);
+>> +}
+>> +
+>> +#endif
+>> +
+>>   static int hv_pci_irqchip_init(void)
+>>   {
+>>   	static struct hv_pci_chip_data *chip_data;
+>>   	struct fwnode_handle *fn = NULL;
+>> +	struct irq_domain *irq_domain_parent = NULL;
+>>   	int ret = -ENOMEM;
+>>   
+>>   	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+>> @@ -907,9 +953,24 @@ static int hv_pci_irqchip_init(void)
+>>   	 * way to ensure that all the corresponding devices are also gone and
+>>   	 * no interrupts will be generated.
+>>   	 */
+>> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+>> -							  fn, &hv_pci_domain_ops,
+>> -							  chip_data);
+>> +#ifdef CONFIG_ACPI
+>> +	if (!acpi_disabled)
+>> +		irq_domain_parent = hv_pci_acpi_irq_domain_parent();
+>> +#endif
+>> +#if defined(CONFIG_OF)
+>> +	if (!irq_domain_parent)
+>> +		irq_domain_parent = hv_pci_of_irq_domain_parent();
+>> +#endif
+>> +	if (!irq_domain_parent) {
+>> +		WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
+>> +		ret = -EINVAL;
+>> +		goto free_chip;
+>> +	}
+>> +
+>> +	hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
+>> +		irq_domain_parent, 0, HV_PCI_MSI_SPI_NR,
+>> +		fn, &hv_pci_domain_ops,
+>> +		chip_data);
+> 
+> This is a different style of indenting the parameters than other
+> similar cases in this file, which line up parameters on subsequent
+> lines under the open parenthesis.
+> 
+>>   	if (!hv_msi_gic_irq_domain) {
+>>   		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+>> -- 
+>> 2.43.0
+>>
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 8c6bf07f7d2b8..e50e43d1d4c87 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -464,7 +464,6 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 			   enum hv_mem_host_visibility visibility)
- {
- 	struct hv_gpa_range_for_visibility *input;
--	u16 pages_processed;
- 	u64 hv_status;
- 	unsigned long flags;
- 
-@@ -493,7 +492,7 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 	memcpy((void *)input->gpa_page_list, pfn, count * sizeof(*pfn));
- 	hv_status = hv_do_rep_hypercall(
- 			HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY, count,
--			0, input, &pages_processed);
-+			0, input, NULL);
- 	local_irq_restore(flags);
- 
- 	if (hv_result_success(hv_status))
 -- 
-2.39.5
+Thank you,
+Roman
 
 
