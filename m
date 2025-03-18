@@ -1,207 +1,395 @@
-Return-Path: <linux-hyperv+bounces-4568-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4569-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E44C4A665F4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 03:05:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95669A66A37
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 07:16:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CE68171929
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 02:05:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E23EA17CD80
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 06:16:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89981865E5;
-	Tue, 18 Mar 2025 02:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2176915573F;
+	Tue, 18 Mar 2025 06:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="p5/+PcWY"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="StuvF/Uu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010004.outbound.protection.outlook.com [52.103.10.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0807EEBD;
-	Tue, 18 Mar 2025 02:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742263515; cv=fail; b=eBWn+cT/HD5YOU5DyDNH4HHKqPpp3QxxVWQ56u+Bn7abnFjOsYr7Op1HOaFPdlpRWz/LGcb2nB2gQcJBHY0r4RrHXU0qgvDGfs610kU9NC7IFGRXMdqOiXbq17Ly9Hexix6RDxQVu1dWYkLcx9WiPfcFrhuSSQwzk8OQRxTbInY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742263515; c=relaxed/simple;
-	bh=vRLyz650EZTCRafO9Z6AP3heDr491czCdxzaCHCix/w=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GUXiTh5QrkkYhjdXdiVteU5XchyTrdQzIXNgwUa25aFI9llUt2jdu8XtO6VgC29Y3R2NvLJ8uFytBbABSh4D9LmuFn2AXo84hFLEKTNJAlRXNF5l2vGMA6fSwQR5k68qQlexeHr5cXnqrCxNHwQFB9oT3wetR9Nttd3T7hbpv/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=p5/+PcWY; arc=fail smtp.client-ip=52.103.10.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qWIgyYvVJEAOQRCHgGZX2nBbY349UgBIiMRCUdEpdP2PcpuAI9HhcfRvlcaaO+SeV6Q6dzsbdGkeRsMO3NuMoMW0GlUTi06LP8xQZYWiTw1mdbB3FFq2xkVGa0zHIrGivFZC72sTPHmaBBNY6D2wOYPMz5LmtiKhTgp/1yE6MdSLOOceLoBK/stGuRCed5ytCSbyGbTlJ/5486Qfu8pzhN9yFBPz5xBW6vCbHFdUUB7FKiYxoxhhaYsy1+6DwRFNrGgB4zSWvHi6HZyCu6vDHrBFsyTmNDWKwOytj9mrOMXMMkEWHRVtYqyavIYEOzjXUWVeyCDLcdtJ7X09Vhrclw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RnhypWCDiz9KdfJ7YC42u6Th1gaMb/mB18o+ITAmjpE=;
- b=EW3rhduh+2utbfDqlR398SphCw+0V6D+K6hOoR7hLaKhFjN9/ZiPV8Vkeqa02igDo0HhSIwIX3e6Mz8AdLww4h+i2us9lfEChCB7a28O6uv/HbERFIjspoqwPzYBhP5CAI7/BAJxozfrfpiFMQla4gCHoRITt7Puc4xuCrBhUwQ7+g090gASMPmR0Kq+UCjfa/WIpTyAqJiihHVe8JsExjNwTFM6ZYMpzclJpCqm/Y1DvuPTJqS/zKBGJAd/jfYhUzz14JxnpKmUA6mmt80xmv81Nw4vpHEsKmYS3X5aYxDUsnXTT/rUpEXgC/mZvtChCFt3zCNpEsR66VqwF6yPXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RnhypWCDiz9KdfJ7YC42u6Th1gaMb/mB18o+ITAmjpE=;
- b=p5/+PcWY7tR1R4NprI8mSGQOm1/oOY45NHUyBZ81/GdidRG6svD2HWofrbg5P/yw2pdYoiYkDmyn76O4IJ+hBmh5aDIwPg6fIojwMQrp8JL4LZ9Q/7cdoYdz4cTVrtCZhNun0lov7tiMyPL+DfZf5i/q6xrVnJwsFUb5c319Yzg4/0+Heg7rQXll1tkH2v18N9U5cBtQMom4sW9GuC4kwSN5zzcJG1SzYRGN54p3Qk1MAZ/CAGAWhT4Nhh+UtCL7HGUrLgfYdhqbMoLj8Ekku+O9RZ/I4ljEZXVoHF9qiZLvmyhfSKyXQzYrjRtWhsw5nR4LUqQiypk+rstgifAMgA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH7PR02MB10158.namprd02.prod.outlook.com (2603:10b6:510:2ef::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
- 2025 02:05:11 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
- 02:05:11 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: fbdev deferred I/O broken in some scenarios
-Thread-Topic: fbdev deferred I/O broken in some scenarios
-Thread-Index: AduXqaeNbacCNH8yTNyrrucfCfcIpQ==
-Date: Tue, 18 Mar 2025 02:05:11 +0000
-Message-ID:
- <SN6PR02MB4157227300E59ACB3B0DABD0D4DE2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB10158:EE_
-x-ms-office365-filtering-correlation-id: 874b5a01-52c3-4d83-3d68-08dd65c150ec
-x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799006|461199028|8062599003|19110799003|8060799006|56899033|102099032|3412199025|440099028|12091999003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?q4YXVgpMeQan2rj7ouqNi+bOvXykylaxjWHJUS6Y9ICMkT2nFD0Cpa2FHOQ0?=
- =?us-ascii?Q?wrTvacjTq1OOtMLAgZNQwdzvSH38plEbXeu99G6y/qPfB4qfcThomVGJcH6M?=
- =?us-ascii?Q?cjxGad4R+NGVDeoc4HXboeVZ79QmMRGrdJUBwwaDtm66+PUHGDMd+6ex5wpM?=
- =?us-ascii?Q?xUMuBZ7JuDppo4CqL5n+Tyzv08SpdH/qc/KZoswFQ47lfg6lnjRXLWL4lmks?=
- =?us-ascii?Q?Rp5hk+r+zfa26+7FAbWlw2GqEaxMlaYuG1uWZSM+8yYdIL9QRJOjyswqBwcQ?=
- =?us-ascii?Q?mI7Kj07OlBzQ7rLOZDtX7CS7+igYIBMY7UVyQ7Wwr1GjFtAf34xFFA3kLbfW?=
- =?us-ascii?Q?1C3pegz8agXd1vveJVzHB5vuCto2hIXXhpdFPwi3vVWn5j8g+sqrSWSlMrbg?=
- =?us-ascii?Q?1mSdbpbZ0cLr27y8egXRjL6fr1Xp8lx/XEGJ/v7ixNPe74bfC1lilHYnRoGe?=
- =?us-ascii?Q?Dyv0QT2CAFxCISP5faFLWLOyHb2PMBvXec9y/Ge5TTjh2nptMkLdj/Zch2xm?=
- =?us-ascii?Q?xjXZCg6IjeZCZ0lljux+cks9TZQRBX5qpY+ILrfgO3hI0/ygULS53qU7g7fE?=
- =?us-ascii?Q?8/8FMjilQVpfUwDCogq+E0tZQl91nESpRTLOXyR26qVUImaLrBKjI+CPijbq?=
- =?us-ascii?Q?Fh3MAF/ZXsjHmVAd9AOIa50d//ZdS6j1yb9hw6caZ/72A5pDeFnXiNCM10cO?=
- =?us-ascii?Q?SbwM3OXdVJOsaojI/hIKMrMtni0WB+Ays4/FCPpR6SdsvJhLwjc6VGrXYXVp?=
- =?us-ascii?Q?QIRXgp0chUSdt/vjDSrAdxi2SRawdO+3AI/AIOIc4V0dawRCtJHLkg3/0188?=
- =?us-ascii?Q?RslDZOBGAeH8AV1GLbNoBpN3Agjo51JkDa0Y7JuGY3G+J1Jtq5zlmkeN6nyO?=
- =?us-ascii?Q?ZBWmzB4iV1HBAY996HbQrAaZnlz8piwHM6CwysgW3WnGBgq8ZacHb2xKxKaj?=
- =?us-ascii?Q?dRLozHrsz0D4Ws2C0zJ2LyKO9MElnPoZkSTqdKeF3NxwglbJk+5hspkLKfOz?=
- =?us-ascii?Q?Jc7jwACRhH25AqOEOh1a51MQ9W5mxpB4QNuStnlS0GSil1MP/T70zw4iqdM5?=
- =?us-ascii?Q?JpuFusrDpmWXiEaFfVTIdzoH+3gRTJqLW0tdyV8JtI3gen40sg/3/a+1pnRS?=
- =?us-ascii?Q?FKfsXSsBQeL7?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?jGX9kZmhw6nnV5irUfnR8iqiHIePZ+98AeLSbCrriEZmMQtykUN8mp2pVOhx?=
- =?us-ascii?Q?WqNmhv+N7p3yEi9CIkidJrDQ0Lrcm1/mlvNhz3oos86hhz5fxBC9UgFQgklf?=
- =?us-ascii?Q?g2xOEkNKrKj2UTXrIrRn3T5X0cGhx/aljx4zi6xdWpibF0FjU4o1eEQFNf2U?=
- =?us-ascii?Q?J7X5Za12y55DOr9b7dh7dj8tc6SdgiN1YHKyUOoAS6LjUafDJZdgMjYcqext?=
- =?us-ascii?Q?j/fUalM9gZCDPRup1r+S9IK1RcEfJY/BDHIwnFuBEv24LKfY8uvyjWJS2V9o?=
- =?us-ascii?Q?5NQWzI7J86nbvuOEy0Zysy5hbt+jvRU6V9KcP82jE5n43zrDqbqhXklajjKl?=
- =?us-ascii?Q?1phZ3EvUOGK2GQCGc+ObT6MC+E7suZU4/ik3a795xjxNijl+45IGmioMob1w?=
- =?us-ascii?Q?LfiLFedXGu8SPaU1JIq4GKRIDsT5UyXOpPTs2NwXami52HFXFDlaZ4dcksIo?=
- =?us-ascii?Q?JcLOe6WUXI4NUygduTsf0ZyQtqQnWO41/zxrJ1MV6t53wYb3arledk93G4aB?=
- =?us-ascii?Q?Smoim/4pnv0qo5t2DLtHGvpVs2ZW7iyNiMOOZe3icYtkM+HZpLMr8nGYBVir?=
- =?us-ascii?Q?UDFAexpYF1IwE3TH43X/Y5xRTMKobXUBQx3R4ZTSMmbFHv2eoppB6ipyCiau?=
- =?us-ascii?Q?sxD6izFUT9mflOusvWXnYSLio07FimKkhzkF1N7DTImXys/szr7AyZuuwziP?=
- =?us-ascii?Q?bdLrjXBnM/63nXuxRJuUm4HifDXwK7/5sFpih9+EOwl8GPhdcaQsXB26noWW?=
- =?us-ascii?Q?8YG0Roxq9kc502BrNxqetbobcfTJTIv/G9c4qC3a5X9W1KxGsAaEdpXMOucv?=
- =?us-ascii?Q?/kv62abp0Ik5aiczxWCKkb3cwMxHC1KVlodalQd8+emTodKR7J31fC68hNDa?=
- =?us-ascii?Q?tWHa5oDjh/WVK7N1lKTRWobJJxV9c80SWttDVjUvU6qaYfZQGSKr5l9vkWSl?=
- =?us-ascii?Q?PBtdmX8F2giPsQG0r8B/YhZqG9frIHQM8l/B8hiZNEEC+BKGHe9s8ai/pklm?=
- =?us-ascii?Q?RMbNzZP9iaBnXdO5ObCyygEZu+ndPUg2mMl06e735sfAFildvmb3Ugso5rHZ?=
- =?us-ascii?Q?UjHOXAvVX/P3GJqYPMFelprq3D5P8R653eMvLeocVPs4zHaDE2vwOPTnEjEQ?=
- =?us-ascii?Q?DOP9IL9F1o7u7S2Xe/PfQcQBdsh4JFGHp1685IJ7CEzwPJHagMdVWli/e68O?=
- =?us-ascii?Q?5VPkALcjm6oYrAu6cCkPFb3yJFcfIllVfIMI828uPDD2j363yGJoSbZMA/4?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3672A154425;
+	Tue, 18 Mar 2025 06:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742278574; cv=none; b=ZWQPXi+Zt6v9A38WC8r4e3pJKdcOS+73IxwnOZA8pR5AS2jfist3IydTimjRwrGvwf+wSgwgfCP5vwipx8dfXkym1ibx9ogAuu0P+Wec3r824D8W1TgnPYYDUqQQwcnI+A12Y4fV25ML+zWPMAqq6nLHOL6cseKCTRlDyrDVV/Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742278574; c=relaxed/simple;
+	bh=+Q2ZlGwKlxKB7sEMXPCQHvJ4ch4o7NSY2i8fUUc9cPo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rk+spc7p3KkArydZwPRMAZs4Mv7IC9mZolUK50DnPVyiWdx4bhs6V9jnihCeEGVsA1kdDnFcExeMHmFoi6uK/7c67VKihGpUdawQKfk2SjjDtmEsTGKZ1DwFMBbvr/FiP5/H1s6wOYQNQgdQWlxSc9KzUxmSlJCp7Ooi/D3CYTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=StuvF/Uu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.203])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4DBDA20DEACD;
+	Mon, 17 Mar 2025 23:16:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DBDA20DEACD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742278571;
+	bh=XJj8rA+80+dzrpdcK/jaSfabwlyumAFVyIGUeOB5G8g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=StuvF/Uuq6cTo+O0GAZpveGyAvSlqcufAiuAHHJ+boGZow8EbxXuImqmzU9XL4QZm
+	 e4O14XaoxlLWMEmIzvTAXG0fO7/JcjdQiNk1YNGsoxhgjdHNLKTAuJj2izp2YnEFCC
+	 8HWexh7uei+kLu7/oTQ9RNTpLTvGvv4oJoQqWaPY=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: [PATCH v2] uio_hv_generic: Fix sysfs creation path for ring buffer
+Date: Tue, 18 Mar 2025 11:45:58 +0530
+Message-Id: <20250318061558.3294-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 874b5a01-52c3-4d83-3d68-08dd65c150ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2025 02:05:11.6687
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB10158
+Content-Transfer-Encoding: 8bit
 
-I've been trying to get mmap() working with the hyperv_fb.c fbdev driver, w=
-hich
-is for Linux guests running on Microsoft's Hyper-V hypervisor. The hyperv_f=
-b driver
-uses fbdev deferred I/O for performance reasons. But it looks to me like fb=
-dev
-deferred I/O is fundamentally broken when the underlying framebuffer memory
-is allocated from kernel memory (alloc_pages or dma_alloc_coherent).
+On regular bootup, devices get registered to vmbus first, so when
+uio_hv_generic driver for a particular device type is probed,
+the device is already initialized and added, so sysfs creation in
+uio_hv_generic probe works fine. However, when device is removed
+and brought back, the channel rescinds and device again gets
+registered to vmbus. However this time, the uio_hv_generic driver is
+already registered to probe for that device and in this case sysfs
+creation is tried before the device gets initialized completely.
 
-The hyperv_fb.c driver may allocate the framebuffer memory in several ways,
-depending on the size of the framebuffer specified by the Hyper-V host and =
-the VM
-"Generation".  For a Generation 2 VM, the framebuffer memory is allocated b=
-y the
-Hyper-V host and is assigned to guest MMIO space. The hyperv_fb driver does=
- a
-vmalloc() allocation for deferred I/O to work against. This combination han=
-dles mmap()
-of /dev/fb<n> correctly and the performance benefits of deferred I/O are su=
-bstantial.
+Fix this by moving the core logic of sysfs creation for ring buffer,
+from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
+attributes for the channels are defined. While doing that, make use
+of attribute groups and macros, instead of creating sysfs directly,
+to ensure better error handling and code flow. While at it, configure
+size of ring sysfs based on ring buffer's actual size and not 2MB default.
 
-But for a Generation 1 VM, the hyperv_fb driver allocates the framebuffer m=
-emory in
-contiguous guest physical memory using alloc_pages() or dma_alloc_coherent(=
-), and
-informs the Hyper-V host of the location. In this case, mmap() with deferre=
-d I/O does
-not work. The mmap() succeeds, and user space updates to the mmap'ed memory=
- are
-correctly reflected to the framebuffer. But when the user space program doe=
-s munmap()
-or terminates, the Linux kernel free lists become scrambled and the kernel =
-eventually
-panics. The problem is that when munmap() is done, the PTEs in the VMA are =
-cleaned
-up, and the corresponding struct page refcounts are decremented. If the ref=
-count goes
-to zero (which it typically will), the page is immediately freed. In this w=
-ay, some or all
-of the framebuffer memory gets erroneously freed. From what I see, the VMA =
-should
-be marked VM_PFNMAP when allocated memory kernel is being used as the
-framebuffer with deferred I/O, but that's not happening. The handling of de=
-ferred I/O
-page faults would also need updating to make this work.
+Problem path:
+vmbus_device_register
+    device_register
+        uio_hv_generic probe
+                    sysfs_create_bin_file (fails here)
+        kset_create_and_add (dependency)
+        vmbus_add_channel_kobj (dependency)
 
-The fbdev deferred I/O support was originally added to the hyperv_fb driver=
- in the
-5.6 kernel, and based on my recent experiments, it has never worked correct=
-ly when
-the framebuffer is allocated from kernel memory. fbdev deferred I/O support=
- for using
-kernel memory as the framebuffer was originally added in commit 37b4837959c=
-b9
-back in 2008 in Linux 2.6.29. But I don't see how it ever worked properly, =
-unless
-changes in generic memory management somehow broke it in the intervening ye=
-ars.
+Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
+Cc: stable@kernel.org
+Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+---
+Hi,
+PFB change logs:
 
-I think I know how to fix all this. But before working on a patch, I wanted=
- to check
-with the fbdev community to see if this might be a known issue and whether =
-there
-is any additional insight someone might offer. Thanks for any comments or h=
-elp.
+Changes since v1:
+https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
+* Fixed race condition in setting channel->mmap_ring_buffer by
+  introducing a new variable for visibility of sysfs (addressed Greg's
+  comments)
+* Used binary attribute fields instead of regular ones for initializing attribute_group.
+* Make size of ring sysfs dynamic based on actual ring buffer's size.
+* Preferred to keep mmap function in uio_hv_generic to give more control over ring's
+  mmap functionality, since this is specific to uio_hv_generic driver.
+* Remove spurious warning during sysfs creation in uio_hv_generic probe.
+* Added comments in a couple of places.
 
-Michael Kelley
+Changes since RFC patch:
+https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
+* Different approach to solve the problem is proposed (credits to
+  Michael Kelley).
+* Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+  drivers where rest of the sysfs attributes for a VMBus channel
+  are defined. (addressed Greg's comments)
+* Used attribute groups instead of sysfs_create* functions, and bundled
+  ring attribute with other attributes for the channel sysfs.  
+
+Error logs:
+
+[   35.574120] ------------[ cut here ]------------
+[   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
+[   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+[   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+[   35.574197] Call Trace:
+[   35.574199]  <TASK>
+[   35.574200]  ? show_regs+0x69/0x80
+[   35.574217]  ? __warn+0x8d/0x130
+[   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574222]  ? report_bug+0x182/0x190
+[   35.574225]  ? handle_bug+0x5b/0x90
+[   35.574244]  ? exc_invalid_op+0x19/0x70
+[   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+[   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+[   35.574271]  vmbus_probe+0x3b/0x90
+[   35.574275]  really_probe+0xf4/0x3b0
+[   35.574279]  __driver_probe_device+0x8a/0x170
+[   35.574282]  driver_probe_device+0x23/0xc0
+[   35.574285]  __device_attach_driver+0xb5/0x140
+[   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+[   35.574291]  bus_for_each_drv+0x86/0xe0
+[   35.574294]  __device_attach+0xc1/0x200
+[   35.574297]  device_initial_probe+0x13/0x20
+[   35.574315]  bus_probe_device+0x99/0xa0
+[   35.574318]  device_add+0x647/0x870
+[   35.574320]  ? hrtimer_init+0x28/0x70
+[   35.574323]  device_register+0x1b/0x30
+[   35.574326]  vmbus_device_register+0x83/0x130
+[   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+[   35.574331]  process_one_work+0x177/0x340
+[   35.574348]  worker_thread+0x2b2/0x3c0
+[   35.574350]  kthread+0xe3/0x1f0
+[   35.574353]  ? __pfx_worker_thread+0x10/0x10
+[   35.574356]  ? __pfx_kthread+0x10/0x10
+
+---
+ drivers/hv/hyperv_vmbus.h    |  6 +++
+ drivers/hv/vmbus_drv.c       | 82 +++++++++++++++++++++++++++++++++++-
+ drivers/uio/uio_hv_generic.c | 33 +++++----------
+ include/linux/hyperv.h       |  6 +++
+ 4 files changed, 104 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 29780f3a7478..0b450e53161e 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -477,4 +477,10 @@ static inline int hv_debug_add_dev_dir(struct hv_device *dev)
+ 
+ #endif /* CONFIG_HYPERV_TESTING */
+ 
++/* Create and remove sysfs entry for memory mapped ring buffers for a channel */
++int hv_create_ring_sysfs(struct vmbus_channel *channel,
++			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
++						    struct vm_area_struct *vma));
++int hv_remove_ring_sysfs(struct vmbus_channel *channel);
++
+ #endif /* _HYPERV_VMBUS_H */
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 8d3cff42bdbb..06ee2924077a 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1802,6 +1802,26 @@ static ssize_t subchannel_id_show(struct vmbus_channel *channel,
+ }
+ static VMBUS_CHAN_ATTR_RO(subchannel_id);
+ 
++static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
++				       const struct bin_attribute *attr,
++				       struct vm_area_struct *vma)
++{
++	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
++
++	/*
++	 * hv_(create|remove)_ring_sysfs implementation ensures that mmap_ring_buffer
++	 * is not NULL.
++	 */
++	return channel->mmap_ring_buffer(channel, vma);
++}
++
++static struct bin_attribute chan_attr_ring_buffer = {
++	.attr = {
++		.name = "ring",
++		.mode = 0600,
++	},
++	.mmap = hv_mmap_ring_buffer_wrapper,
++};
+ static struct attribute *vmbus_chan_attrs[] = {
+ 	&chan_attr_out_mask.attr,
+ 	&chan_attr_in_mask.attr,
+@@ -1821,6 +1841,11 @@ static struct attribute *vmbus_chan_attrs[] = {
+ 	NULL
+ };
+ 
++static struct bin_attribute *vmbus_chan_bin_attrs[] = {
++	&chan_attr_ring_buffer,
++	NULL
++};
++
+ /*
+  * Channel-level attribute_group callback function. Returns the permission for
+  * each attribute, and returns 0 if an attribute is not visible.
+@@ -1841,9 +1866,34 @@ static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
+ 	return attr->mode;
+ }
+ 
++static umode_t vmbus_chan_bin_attr_is_visible(struct kobject *kobj,
++					      const struct bin_attribute *attr, int idx)
++{
++	const struct vmbus_channel *channel =
++		container_of(kobj, struct vmbus_channel, kobj);
++
++	/* Hide ring attribute if channel's ring_sysfs_visible is set to false */
++	if (attr ==  &chan_attr_ring_buffer && !channel->ring_sysfs_visible)
++		return 0;
++
++	return attr->attr.mode;
++}
++
++static size_t vmbus_chan_bin_size(struct kobject *kobj,
++				  const struct bin_attribute *bin_attr, int a)
++{
++	const struct vmbus_channel *channel =
++		container_of(kobj, struct vmbus_channel, kobj);
++
++	return channel->ringbuffer_pagecount << PAGE_SHIFT;
++}
++
+ static const struct attribute_group vmbus_chan_group = {
+ 	.attrs = vmbus_chan_attrs,
+-	.is_visible = vmbus_chan_attr_is_visible
++	.bin_attrs = vmbus_chan_bin_attrs,
++	.is_visible = vmbus_chan_attr_is_visible,
++	.is_bin_visible = vmbus_chan_bin_attr_is_visible,
++	.bin_size = vmbus_chan_bin_size,
+ };
+ 
+ static const struct kobj_type vmbus_chan_ktype = {
+@@ -1851,6 +1901,36 @@ static const struct kobj_type vmbus_chan_ktype = {
+ 	.release = vmbus_chan_release,
+ };
+ 
++/*
++ * hv_create_ring_sysfs - create ring sysfs entry corresponding to ring buffers for a channel
++ */
++int hv_create_ring_sysfs(struct vmbus_channel *channel,
++			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
++						    struct vm_area_struct *vma))
++{
++	struct kobject *kobj = &channel->kobj;
++
++	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
++	channel->ring_sysfs_visible = true;
++	return sysfs_update_group(kobj, &vmbus_chan_group);
++}
++EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
++
++/*
++ * hv_remove_ring_sysfs - remove ring sysfs entry corresponding to ring buffers for a channel
++ */
++int hv_remove_ring_sysfs(struct vmbus_channel *channel)
++{
++	struct kobject *kobj = &channel->kobj;
++	int ret;
++
++	channel->ring_sysfs_visible = false;
++	ret = sysfs_update_group(kobj, &vmbus_chan_group);
++	channel->mmap_ring_buffer = NULL;
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hv_remove_ring_sysfs);
++
+ /*
+  * vmbus_add_channel_kobj - setup a sub-directory under device/channels
+  */
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index 1b19b5647495..a398e93ed382 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -131,15 +131,12 @@ static void hv_uio_rescind(struct vmbus_channel *channel)
+ 	vmbus_device_unregister(channel->device_obj);
+ }
+ 
+-/* Sysfs API to allow mmap of the ring buffers
++/* Function used for mmap of ring buffer sysfs interface.
+  * The ring buffer is allocated as contiguous memory by vmbus_open
+  */
+-static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
+-			    const struct bin_attribute *attr,
+-			    struct vm_area_struct *vma)
++static int
++hv_uio_ring_mmap(struct vmbus_channel *channel, struct vm_area_struct *vma)
+ {
+-	struct vmbus_channel *channel
+-		= container_of(kobj, struct vmbus_channel, kobj);
+ 	void *ring_buffer = page_address(channel->ringbuffer_page);
+ 
+ 	if (channel->state != CHANNEL_OPENED_STATE)
+@@ -149,15 +146,6 @@ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
+ 			       channel->ringbuffer_pagecount << PAGE_SHIFT);
+ }
+ 
+-static const struct bin_attribute ring_buffer_bin_attr = {
+-	.attr = {
+-		.name = "ring",
+-		.mode = 0600,
+-	},
+-	.size = 2 * SZ_2M,
+-	.mmap = hv_uio_ring_mmap,
+-};
+-
+ /* Callback from VMBUS subsystem when new channel created. */
+ static void
+ hv_uio_new_channel(struct vmbus_channel *new_sc)
+@@ -178,8 +166,7 @@ hv_uio_new_channel(struct vmbus_channel *new_sc)
+ 	/* Disable interrupts on sub channel */
+ 	new_sc->inbound.ring_buffer->interrupt_mask = 1;
+ 	set_channel_read_mode(new_sc, HV_CALL_ISR);
+-
+-	ret = sysfs_create_bin_file(&new_sc->kobj, &ring_buffer_bin_attr);
++	ret = hv_create_ring_sysfs(new_sc, hv_uio_ring_mmap);
+ 	if (ret) {
+ 		dev_err(device, "sysfs create ring bin file failed; %d\n", ret);
+ 		vmbus_close(new_sc);
+@@ -350,10 +337,12 @@ hv_uio_probe(struct hv_device *dev,
+ 		goto fail_close;
+ 	}
+ 
+-	ret = sysfs_create_bin_file(&channel->kobj, &ring_buffer_bin_attr);
+-	if (ret)
+-		dev_notice(&dev->device,
+-			   "sysfs create ring bin file failed; %d\n", ret);
++	/*
++	 * This internally calls sysfs_update_group, which returns a non-zero value if it executes
++	 * before sysfs_create_group. This is a false alarm from this use case point of view and
++	 * thus, no need to check the return value and print warning.
++	 */
++	hv_create_ring_sysfs(channel, hv_uio_ring_mmap);
+ 
+ 	hv_set_drvdata(dev, pdata);
+ 
+@@ -375,7 +364,7 @@ hv_uio_remove(struct hv_device *dev)
+ 	if (!pdata)
+ 		return;
+ 
+-	sysfs_remove_bin_file(&dev->channel->kobj, &ring_buffer_bin_attr);
++	hv_remove_ring_sysfs(dev->channel);
+ 	uio_unregister_device(&pdata->info);
+ 	hv_uio_cleanup(dev, pdata);
+ 
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 675959fb97ba..d6ffe01962c2 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1002,6 +1002,12 @@ struct vmbus_channel {
+ 
+ 	/* The max size of a packet on this channel */
+ 	u32 max_pkt_size;
++
++	/* function to mmap ring buffer memory to the channel's sysfs ring attribute */
++	int (*mmap_ring_buffer)(struct vmbus_channel *channel, struct vm_area_struct *vma);
++
++	/* boolean to control visibility of sysfs for ring buffer */
++	bool ring_sysfs_visible;
+ };
+ 
+ #define lock_requestor(channel, flags)					\
+
+base-commit: e94bd4ec45ac156616da285a0bf03056cd7430fc
+-- 
+2.34.1
+
 
