@@ -1,317 +1,178 @@
-Return-Path: <linux-hyperv+bounces-4594-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FFAAA67DFE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 21:25:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 518EEA67F19
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 22:49:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 215E8423BAB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 20:24:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DA8A168639
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 21:49:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4F320B20D;
-	Tue, 18 Mar 2025 20:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2EC1F873E;
+	Tue, 18 Mar 2025 21:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEZ+jD05"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cE3UKyX+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4F017A30D;
-	Tue, 18 Mar 2025 20:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0783E1DEFDA;
+	Tue, 18 Mar 2025 21:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742329459; cv=none; b=SQh1KrTCzHJQw14lzvEyRRKuEXOJTpeH+gPVtkjhFMiPhmHwHoU0VYwUqRpqrcbb4Z3YwAT7h35XBW5xdI2blEAflXxImvHllC2Mr4PgC+ExaFvlISMyoaUKaU6N9Hzkigo1rKxlrtSGfl6H/fjIHc6db2UXLVj4negVa/FZujk=
+	t=1742334571; cv=none; b=avOOSG3limcp5j9UHlShaAgc54+UYUKHD/Gv2FzIyAgKmXH6PP1UHM40UPx8wnaTBnxZaKG4EPcu8UbkQ9WUXCafj103zB2lREfpwqfom0MA2ciqKu9hp6/qDpGrmedfBbft/0y5bK2nx03xyLIPvJ5OZD/u8a73KVWg7mOrobA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742329459; c=relaxed/simple;
-	bh=gDD5uj92n/KTWCwpkdaHT9ddiDTZCOIsEGMAyb98bik=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dQ3QsIxHUNrwAXb1Dy2PkjNS9T9XZaJpWJw1YxJhUgXSgT5EcaONr94DKXneqlTidusipOm2siMyLBBIFpYy6KtyoRhumnZl+E16GibCL2UONpr+aN5glcdFii99trZrBVEWJFh0gBlt7eFzaO9MfHi03zgLqSGGQC5l1ERMOno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEZ+jD05; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE192C4CEDD;
-	Tue, 18 Mar 2025 20:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742329458;
-	bh=gDD5uj92n/KTWCwpkdaHT9ddiDTZCOIsEGMAyb98bik=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lEZ+jD0581UoR31Vg2kaNKEsmWfBiZ4sE3jwW+tiDbk6mmsVWJmKfUPkfSIwZ5dgV
-	 jSCEd5hmr9W6XS7AJ8Iyu6pT084nxk6kklmMMBT7LvewZH/IEPmZSA1tXZwHKkamxJ
-	 BR1yjSjS15EgkwzN4J6fRghD96oHtlNoiagI2fqBJPtqDslnvyqnrpP/Z7B2t1+nkA
-	 kc6RpLLx1H5xyhah/sU7DSmWAmzlFA3cidbdc/YNYOiSSnePx1TEROjnKZrU/Yl452
-	 +ue3WpkN9xbqLjfpUYpgDna8Pw6yHHMOCHO19DgXOUNcc0Ascmeb4y93dXOgNrcLvu
-	 Hxoy7ywAmGxFQ==
-Date: Tue, 18 Mar 2025 15:24:16 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V3 05/10] PCI/MSI: Switch to MSI descriptor locking to
- guard()
-Message-ID: <20250318202416.GA1012281@bhelgaas>
+	s=arc-20240116; t=1742334571; c=relaxed/simple;
+	bh=2HkJ1PLBhckuzMKVjGMsI63fnslGi1fgDibj3H7qz8k=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=mO59ymuyTQoBYKZ5+a1ORokQzKpH4CUyH5eKUWxVfz5tzm9xpZ/bQXbIB0xd1C/DFXbSs+YfqDhwCcu8ubqPZ7ljfeKinoj1os2unYh2fILmaVDAir3Z/vjBiZihx/9OH+EukYu2PA8e9Ueu3Y4zEHJkeutypXdUkqvyajBEzq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cE3UKyX+; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-225d66a4839so1159845ad.1;
+        Tue, 18 Mar 2025 14:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742334569; x=1742939369; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=apFSN+iYdUjJ/ySgc4tYDPoBJZPQHCUTufgccs2slIM=;
+        b=cE3UKyX+fdGfmiCrls+2/PCkqdkWgxVs2lgnD6JtFxAw754EnYUS0iPMhKlNH/1MtA
+         ZXhA9cDWrjUKsTk41H5QB53TVvmPreShNyY0K0r6zitst3g4tLjGNWk34tijgZMYdq9R
+         7fOiDB4OfP6Y0aD23kpWHeeYg99qrXKujGmsJ6S4oc2g0e+ecKXNc8aknruYp9V0yfkm
+         9ah4jLpHRV3qXt4/U5Ct9YaLeLKGP1JoRUEdDWjX2FzGIV9RH5i8SZahkvBsSqz2TFp4
+         9QKXqM0QCBKuD3RMqV8TewrFFdZKWwM0zomG62GMtKZ7C63xH1oqKJ+PknLNf8+xlVIv
+         PlFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742334569; x=1742939369;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=apFSN+iYdUjJ/ySgc4tYDPoBJZPQHCUTufgccs2slIM=;
+        b=caWdTQYjGNBNmkGSZPBeoHKd0yLE9vmS+XZMLTKUXLaKR7n4r/tw38ipU8HcOg4NaI
+         Rp8JVI81GdK8G5mCQrVzu/VuGUSqhJd2ZyYPTS5shPyoW8JW7BNGue9BIJYArswYyH+o
+         99gqmn0A/h+pXgh1FAln3bPyIBXpQIpaF6KDU0BD6kIjgj/wRAP/cH3YneIQyz9RQN8b
+         AEkHBAQdTtIp/nomSdK9XUTvK2DrTDq92UsKlxyuRGvXYy0OtAzjqTkAL0pg1fKoZYM/
+         m9h8kwusBYWNUcoQB+TelRa1AuejklNGllvm2MhpEvvusH+4PYnRD2C1aE8EwA8U8oz7
+         yEOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuRfYu/jQ6FnK5D2u4HI2Ji5DGCCTfGvhIM2MgdQIqFXr+athbKwjWJ92tfpLkwiZWBmpHarAZpV431aI=@vger.kernel.org, AJvYcCWjl1dcEOMxen84qR+Qv038QvlvT+PvSfQRbQJnMJ7DKPtTiR07fmUPFXT5KTbBh788vV6+3sUheIdoFZiO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu+QB6ccezzIW8LDOKrn3thdIDSVLcOA5xHEBQPFdtTxpq31g4
+	OccBmRVCIIK/2tcf84rGSyZxwOCNOHuGG2Y+9eIXEs0RBDYQSL9R
+X-Gm-Gg: ASbGncvS+ePVkHtkmdFsMOAeOB+2DwnDhmULWNPThVloc/L9bN5cKczG7EwKBNt5uAY
+	pvKlSdtXROdU6MTLk/AJD+ZaC8BLytoi7sgFIIjQpStA86z2qkG9zncHcTn+91Wwdwh5gSI+XP/
+	WUXG0ZHWH/5YqxkKLi7H9SuKL0IzNsoGZ58ErwWBaa5SAwtGd+Lowts5e20ISMWfBZWZkGE9imJ
+	9UZw2eBL1ULuY3cUTR9ZvJXBCseBUPte2XGbAuTIxrR6NENoJAtOyM/JfzARch1NfK1pJcRnAMj
+	UK4HPIkJ3jl3RVQo4oJVgFIbPZYfJc+orzFW096twWPzUyG38wI7VsSHkrqWCjCA4h+0eyvwOGL
+	0a+a7U+90d99lS83N9/iizVk=
+X-Google-Smtp-Source: AGHT+IHYwbXImWFFem7kEVrNNUP4SJh431CKrSr061fj5qip32ZxLac/LmwZYzmQ2+HLmwvUs1JSlA==
+X-Received: by 2002:a05:6a20:9f8f:b0:1f3:1e5c:c655 with SMTP id adf61e73a8af0-1fbe0519cbamr578249637.6.1742334569224;
+        Tue, 18 Mar 2025 14:49:29 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea7bd0csm9558743a12.47.2025.03.18.14.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 14:49:28 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] x86/hyperv: Add comments about hv_vpset and var size hypercall input args
+Date: Tue, 18 Mar 2025 14:49:19 -0700
+Message-Id: <20250318214919.958953-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317092946.014189955@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 17, 2025 at 02:29:27PM +0100, Thomas Gleixner wrote:
-> Convert the code to use the new guard(msi_descs_lock).
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
+From: Michael Kelley <mhklinux@outlook.com>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Current code varies in how the size of the variable size input header
+for hypercalls is calculated when the input contains struct hv_vpset.
+Surprisingly, this variation is correct, as different hypercalls make
+different choices for what portion of struct hv_vpset is treated as part
+of the variable size input header. The Hyper-V TLFS is silent on these
+details, but the behavior has been confirmed with Hyper-V developers.
 
-To help connect these together, I might mention "msi_descs_lock"
-specifically in the subject line of the earlier patch:
+To avoid future confusion about these differences, add comments to
+struct hv_vpset, and to hypercall call sites with input that contains
+a struct hv_vpset. The comments describe the overall situation and
+the calculation that should be used at each particular call site.
 
-  genirq/msi: Use lock guards for MSI descriptor locking
+No functional change as only comments are updated.
 
-The msi_capability_init() -> __msi_capability_init() rework is a big
-chunk compared to the rest of this patch.  Same for
-msix_setup_interrupts() -> __msix_setup_interrupts().
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ arch/x86/hyperv/hv_apic.c   | 5 +++++
+ arch/x86/hyperv/mmu.c       | 4 ++++
+ include/hyperv/hvgdk_mini.h | 9 ++++++++-
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-I think I see the point (basically move the body to the new "__"
-functions and put the guard() in the original functions before calling
-the new ones).
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index f022d5f64fb6..6d91ac5f9836 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -145,6 +145,11 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
+ 		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
+ 	}
+ 
++	/*
++	 * For this hypercall, Hyper-V treats the valid_bank_mask field
++	 * of ipi_arg->vp_set as part of the fixed size input header.
++	 * So the variable input header size is equal to nr_bank.
++	 */
+ 	status = hv_do_rep_hypercall(HVCALL_SEND_IPI_EX, 0, nr_bank,
+ 				     ipi_arg, NULL);
+ 
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index 1f7c3082a36d..cfcb60468b01 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -205,6 +205,10 @@ static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
+ 	/*
+ 	 * We can flush not more than max_gvas with one hypercall. Flush the
+ 	 * whole address space if we were asked to do more.
++	 *
++	 * For these hypercalls, Hyper-V treats the valid_bank_mask field
++	 * of flush->hv_vp_set as part of the fixed size input header.
++	 * So the variable input header size is equal to nr_bank.
+ 	 */
+ 	max_gvas =
+ 		(PAGE_SIZE - sizeof(*flush) - nr_bank *
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index 735329859f21..abf0bd76e370 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -205,7 +205,14 @@ union hv_reference_tsc_msr {
+ /* The number of vCPUs in one sparse bank */
+ #define HV_VCPUS_PER_SPARSE_BANK (64)
+ 
+-/* Some of Hyper-V structs do not use hv_vpset where linux uses them */
++/*
++ * Some of Hyper-V structs do not use hv_vpset where linux uses them.
++ *
++ * struct hv_vpset is usually used as part of hypercall input. The portion
++ * that counts as "fixed size input header" vs. "variable size input header"
++ * varies per hypercall. See comments at relevant hypercall call sites as to
++ * how the "valid_bank_mask" field should be accounted.
++ */
+ struct hv_vpset {	 /* HV_VP_SET */
+ 	u64 format;
+ 	u64 valid_bank_mask;
+-- 
+2.25.1
 
-> ---
-> V3: Use__free in __msix_setup_interrupts() - PeterZ
-> V2: Remove the gotos - Jonathan
-> ---
->  drivers/pci/msi/api.c |    6 --
->  drivers/pci/msi/msi.c |  124 +++++++++++++++++++++++++-------------------------
->  2 files changed, 64 insertions(+), 66 deletions(-)
-> 
-> --- a/drivers/pci/msi/api.c
-> +++ b/drivers/pci/msi/api.c
-> @@ -53,10 +53,9 @@ void pci_disable_msi(struct pci_dev *dev
->  	if (!pci_msi_enabled() || !dev || !dev->msi_enabled)
->  		return;
->  
-> -	msi_lock_descs(&dev->dev);
-> +	guard(msi_descs_lock)(&dev->dev);
->  	pci_msi_shutdown(dev);
->  	pci_free_msi_irqs(dev);
-> -	msi_unlock_descs(&dev->dev);
->  }
->  EXPORT_SYMBOL(pci_disable_msi);
->  
-> @@ -196,10 +195,9 @@ void pci_disable_msix(struct pci_dev *de
->  	if (!pci_msi_enabled() || !dev || !dev->msix_enabled)
->  		return;
->  
-> -	msi_lock_descs(&dev->dev);
-> +	guard(msi_descs_lock)(&dev->dev);
->  	pci_msix_shutdown(dev);
->  	pci_free_msi_irqs(dev);
-> -	msi_unlock_descs(&dev->dev);
->  }
->  EXPORT_SYMBOL(pci_disable_msix);
->  
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -336,41 +336,11 @@ static int msi_verify_entries(struct pci
->  	return !entry ? 0 : -EIO;
->  }
->  
-> -/**
-> - * msi_capability_init - configure device's MSI capability structure
-> - * @dev: pointer to the pci_dev data structure of MSI device function
-> - * @nvec: number of interrupts to allocate
-> - * @affd: description of automatic IRQ affinity assignments (may be %NULL)
-> - *
-> - * Setup the MSI capability structure of the device with the requested
-> - * number of interrupts.  A return value of zero indicates the successful
-> - * setup of an entry with the new MSI IRQ.  A negative return value indicates
-> - * an error, and a positive return value indicates the number of interrupts
-> - * which could have been allocated.
-> - */
-> -static int msi_capability_init(struct pci_dev *dev, int nvec,
-> -			       struct irq_affinity *affd)
-> +static int __msi_capability_init(struct pci_dev *dev, int nvec, struct irq_affinity_desc *masks)
->  {
-> -	struct irq_affinity_desc *masks = NULL;
-> +	int ret = msi_setup_msi_desc(dev, nvec, masks);
->  	struct msi_desc *entry, desc;
-> -	int ret;
-> -
-> -	/* Reject multi-MSI early on irq domain enabled architectures */
-> -	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
-> -		return 1;
-> -
-> -	/*
-> -	 * Disable MSI during setup in the hardware, but mark it enabled
-> -	 * so that setup code can evaluate it.
-> -	 */
-> -	pci_msi_set_enable(dev, 0);
-> -	dev->msi_enabled = 1;
-> -
-> -	if (affd)
-> -		masks = irq_create_affinity_masks(nvec, affd);
->  
-> -	msi_lock_descs(&dev->dev);
-> -	ret = msi_setup_msi_desc(dev, nvec, masks);
->  	if (ret)
->  		goto fail;
->  
-> @@ -399,19 +369,48 @@ static int msi_capability_init(struct pc
->  
->  	pcibios_free_irq(dev);
->  	dev->irq = entry->irq;
-> -	goto unlock;
-> -
-> +	return 0;
->  err:
->  	pci_msi_unmask(&desc, msi_multi_mask(&desc));
->  	pci_free_msi_irqs(dev);
->  fail:
->  	dev->msi_enabled = 0;
-> -unlock:
-> -	msi_unlock_descs(&dev->dev);
-> -	kfree(masks);
->  	return ret;
->  }
->  
-> +/**
-> + * msi_capability_init - configure device's MSI capability structure
-> + * @dev: pointer to the pci_dev data structure of MSI device function
-> + * @nvec: number of interrupts to allocate
-> + * @affd: description of automatic IRQ affinity assignments (may be %NULL)
-> + *
-> + * Setup the MSI capability structure of the device with the requested
-> + * number of interrupts.  A return value of zero indicates the successful
-> + * setup of an entry with the new MSI IRQ.  A negative return value indicates
-> + * an error, and a positive return value indicates the number of interrupts
-> + * which could have been allocated.
-> + */
-> +static int msi_capability_init(struct pci_dev *dev, int nvec,
-> +			       struct irq_affinity *affd)
-> +{
-> +	/* Reject multi-MSI early on irq domain enabled architectures */
-> +	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
-> +		return 1;
-> +
-> +	/*
-> +	 * Disable MSI during setup in the hardware, but mark it enabled
-> +	 * so that setup code can evaluate it.
-> +	 */
-> +	pci_msi_set_enable(dev, 0);
-> +	dev->msi_enabled = 1;
-> +
-> +	struct irq_affinity_desc *masks __free(kfree) =
-> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
-> +
-> +	guard(msi_descs_lock)(&dev->dev);
-> +	return __msi_capability_init(dev, nvec, masks);
-> +}
-> +
->  int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
->  			   struct irq_affinity *affd)
->  {
-> @@ -666,38 +665,39 @@ static void msix_mask_all(void __iomem *
->  		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  }
->  
-> -static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> -				 int nvec, struct irq_affinity *affd)
-> -{
-> -	struct irq_affinity_desc *masks = NULL;
-> -	int ret;
-> +DEFINE_FREE(free_msi_irqs, struct pci_dev *, if (_T) pci_free_msi_irqs(_T));
->  
-> -	if (affd)
-> -		masks = irq_create_affinity_masks(nvec, affd);
-> +static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *entries,
-> +				   int nvec, struct irq_affinity_desc *masks)
-> +{
-> +	struct pci_dev *dev __free(free_msi_irqs) = __dev;
->  
-> -	msi_lock_descs(&dev->dev);
-> -	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
-> +	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
-> +	retain_ptr(dev);
->  	msix_update_entries(dev, entries);
-> -	goto out_unlock;
-> +	return 0;
-> +}
->  
-> -out_free:
-> -	pci_free_msi_irqs(dev);
-> -out_unlock:
-> -	msi_unlock_descs(&dev->dev);
-> -	kfree(masks);
-> -	return ret;
-> +static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> +				 int nvec, struct irq_affinity *affd)
-> +{
-> +	struct irq_affinity_desc *masks __free(kfree) =
-> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
-> +
-> +	guard(msi_descs_lock)(&dev->dev);
-> +	return __msix_setup_interrupts(dev, entries, nvec, masks);
->  }
->  
->  /**
-> @@ -871,13 +871,13 @@ void __pci_restore_msix_state(struct pci
->  
->  	write_msg = arch_restore_msi_irqs(dev);
->  
-> -	msi_lock_descs(&dev->dev);
-> -	msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
-> -		if (write_msg)
-> -			__pci_write_msi_msg(entry, &entry->msg);
-> -		pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
-> +	scoped_guard (msi_descs_lock, &dev->dev) {
-> +		msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
-> +			if (write_msg)
-> +				__pci_write_msi_msg(entry, &entry->msg);
-> +			pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
-> +		}
->  	}
-> -	msi_unlock_descs(&dev->dev);
->  
->  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
->  }
-> 
 
