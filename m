@@ -1,86 +1,80 @@
-Return-Path: <linux-hyperv+bounces-4574-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4575-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB00BA670E2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 11:13:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09594A670F3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 11:16:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5FE53AC677
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 10:13:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D562A3AA38C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Mar 2025 10:16:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8468514A4F9;
-	Tue, 18 Mar 2025 10:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 815991E51F9;
+	Tue, 18 Mar 2025 10:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoMk7LnY"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z89p/Lsp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4341FECA7
-	for <linux-hyperv@vger.kernel.org>; Tue, 18 Mar 2025 10:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B92206F1B
+	for <linux-hyperv@vger.kernel.org>; Tue, 18 Mar 2025 10:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742292809; cv=none; b=jRgc2aB3KfecaaHfX79zg6AMj/opCBxQWgBrvnCBwtLKoQSknvw48Dzncd7RudkMyqjNauVikoh1Bn8FFUHmbcvZvwWU9a18vg2h3lmPDch3KaoXl93Bum39p5qP3GxLTcI94/9yRGlg3UtCVbhceQdI52FTDiTrHkov4LPhaSc=
+	t=1742293003; cv=none; b=DdGG4xAe7hRsZim3LohzdTbeAEUBC4fccx7JJDzsPiuRUoPvCj/29bogjHRJPA2WB62/pGU/4FRpJd/2InU/41/0V2LfDYSiYGMlPtYoTB+9suSmYDUMeZnG2KRA5kd+1BRJ1Lkc2hboaGNJwW9OYBzwN6X8cJoC82AQHJm6aww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742292809; c=relaxed/simple;
-	bh=bTXyPUX/nTogcTrzO4w+0DnzKj6GcEsE6zMX5lpp/T8=;
+	s=arc-20240116; t=1742293003; c=relaxed/simple;
+	bh=QqeiQA+ByKTA1tcqUH3rsqKPcPvpI9PiVYVU+jLVsPg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IRRD+Mrb87PAge4goUPB3eYhG3Zzyv5p5qf/YVX/2EFo8/r+eIhQUzxc1Ete6dFS+S80zDUVg7STUI6HLiwao7avma2Zd+wiEItgRCubXrOrohTHQX20Ui9KlSgCBXW11CyH/wLoLSwSWIK3rYNy3DlKB3tckrymFGrHa72OVIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EoMk7LnY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742292806;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bTXyPUX/nTogcTrzO4w+0DnzKj6GcEsE6zMX5lpp/T8=;
-	b=EoMk7LnY6HviS1hDW6XZDFYDt1YdckxHrPa+MYlCKB2n/XRCkj+eDHidbzU61JeNhA7cPo
-	doVOenADe9JZfYwC/n+ngBoW3kxUXMTfwM7dXCd7OMSKwtMwUWOj/T4+Fn0RNrYQiDmuo6
-	li02BtoXfr8xLB4oiEQo7rNBcriPKNI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-387-BtjdBmz1On20biau_QlekQ-1; Tue, 18 Mar 2025 06:13:25 -0400
-X-MC-Unique: BtjdBmz1On20biau_QlekQ-1
-X-Mimecast-MFC-AGG-ID: BtjdBmz1On20biau_QlekQ_1742292804
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so15410935e9.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 18 Mar 2025 03:13:25 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=b/qBQ/V5aYZG0ZCy/YvF3C/moA2vk7NJTiJ+yVIB25sqo9tcSFMYL5gfWXK8mZ6lE/AkoMUtLUO5dUUhBXm42Pri0KYTCSqSQBrUXWGIYPR301e4ZyszJmKoYqEHBBxozOY8cXhbwQPJOuf/4um8UTvFrDtoqVX8vau5CLJ2qYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z89p/Lsp; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3914a5def6bso2874935f8f.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 18 Mar 2025 03:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742292998; x=1742897798; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QqeiQA+ByKTA1tcqUH3rsqKPcPvpI9PiVYVU+jLVsPg=;
+        b=Z89p/LspGn+qb046yFA38CjobPbgQuW/IetMTV/MMik+A0HPI0FAQGukePxdqnnTHo
+         cH2TVx2DkREvtTtLKSrcUOlEiPFRag3Avx4xMx3ZUNak3JNxtzNuvBK6I2WpWMpeCyIV
+         AE9t/ty02jQaAYmB4kji85bFpk6YmM9JFEw3dhNjKWG9tAgNMh0qygeh3I62Du9Ia04t
+         bWK6J5XT4twY2Z9IS0buwp6d6cWyjsSCyOIrVcHkL/dmURbB+M/wqgOl07CA5rVBle7X
+         1fRS0lEr69jlgytIZggKydO44RvVj1uXIzgWS0UvN82bfArfR//cBQMXON1LxG7cxAZB
+         GmlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742292804; x=1742897604;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bTXyPUX/nTogcTrzO4w+0DnzKj6GcEsE6zMX5lpp/T8=;
-        b=EhISKnNoi28rbIOfkJD12HD+DM9Gqip3MyobpI7D7qSAUwRF4t71Vg+x7M3iti6n/t
-         0b54ArdPYFV1fiMuZ/kd/vydHDtnk7gy/7/3gurQaiktI8LvIItOzP7TjESIV7B3Gq/m
-         YwvpM5Q0fmoSvhnIHL4hq8EIDp6diwObSTTmHzdusDmLR3FGrTw6b0nKOUBZhN+ggu4v
-         e2WDpzJmjfKbK5iPsgvi+nvwH4fEcGF7IlwxKWYlG8kL5sRtdtTfj9KnAZct36fUzn1F
-         kE1fB6qlkQCSsLFO/6Lx4UGXxWch6dAa3bGOvJEpnq3Bf05rEbIQ6ypsNMBf7CTWpOHn
-         IcKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVfpu/XEKNHq39PyPfwj+p+p05ijDtus/BxhWSN+wV9kVy22LSaHBTOnXuLwnG1BWyq/2hWl6ou4TVQtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQmGdO9ajbK2KpkVxUFzepe9EB1dWmgIveSpo8a8YMklvtd/t/
-	iOM+p/9IsYGg6A0uLb6H3svubidF1a8mrqda0MNhJlYfd0L+Zbth0KHaczq0Cp42oyUT3Tb6EbI
-	HjFzy8y0zaoDF/rOQnkgvIj3bgRaFe17JaT5X2i24TKCk40ov+AJfmsAUKYBtgw==
-X-Gm-Gg: ASbGnct3//SI/kfx3VH6MWXXF4ImEsLb6A9Sq1y4tgTAwI2ItJD2QhY8RpJWBkrKo6f
-	VzvMVL2VhK4eK0OrYrRq+5AhgSuU10VjWmIiQ4bpXvDg8BAlkIdB/O8aInt1/CXRgRNtiYsYX/M
-	2vBvYTqjSFYfVqaH5nUdqgvIe0TK4KtR0ZG9hiBhYoZU6HSKiz5uqmH7CR2rIQy7LzDAzPCvr4z
-	2G0IjYs/f9Fo2YUK9w1AoEmZnXzE6XnfZVDdKzs2Wws3mOxpOxMr+YXkmuMCeDyBMBDYN33cGBq
-	I/PdQsC4J0vPIOEaPpFCYtYeLQ0LLHgMYdc1qdKxjqR7hA==
-X-Received: by 2002:a05:600c:5112:b0:43c:e70d:4504 with SMTP id 5b1f17b1804b1-43d3b9cd704mr14645065e9.19.1742292804460;
-        Tue, 18 Mar 2025 03:13:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEa2x79C78ENEoyzPPniqeGCkHBce2M9I0jdc1yv0/RSaEENBZYufXun9PO4beIARs4YqnHHQ==
-X-Received: by 2002:a05:600c:5112:b0:43c:e70d:4504 with SMTP id 5b1f17b1804b1-43d3b9cd704mr14644695e9.19.1742292804010;
-        Tue, 18 Mar 2025 03:13:24 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-10-172.dyn.eolo.it. [146.241.10.172])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fe609dasm129105475e9.28.2025.03.18.03.13.21
+        d=1e100.net; s=20230601; t=1742292998; x=1742897798;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QqeiQA+ByKTA1tcqUH3rsqKPcPvpI9PiVYVU+jLVsPg=;
+        b=aY5Xy9L2HcP44gY93jffEcLjx0ndsizFr5xDeqz7TEXmG6il5gmQQR/TMOeGGBUi7q
+         uBEY2qHE+snpUWSN8cKzq8AwAkxwMo6ygt2XTbvuGMUHAm7pUYhSA+D6Ok6sjg+FNcqC
+         oGMC6MHHew9JCCKuhAPBI949Md/adaCWcym98OgRa5fTerrTSW8Pptd//6YLTW750DAu
+         S5hCJJvMcFWGNFV4/tILNQZ/iLNwhC4wbX2yKMjuW2gVR26q5IuXfQ5fJxH7t8cTAbeX
+         gT1o2BzHk9Cj+WerjVLygLl3YjkUEeFVUoGOWebD43IEs9u+NOPaziH6Cdal1GXkIJEL
+         U6HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJlc413fHfuvC2pTbP4CV7HxzLgYEfTm44jP36TbCjXMRromaNmyzuRlVdqQMkHw2szCSKZ2ZbdvnO1dQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAedLK+aJs8jVHGeEKolzOm1j8zRVERK5WHhPbCV0plbqAvxRi
+	oZKd5hQQM3JSeL2T4/VwycRkJfSRfZC1opmhRNyzMh8xn2dszRhkOkEpsmkMQO8=
+X-Gm-Gg: ASbGncuy5BujA9efnsNQC720mtWmRcUll5/G8lzoMtBzDmtPzZrpdz09Kbxkx+sIHDI
+	Ne0+BWtZoUBuJI6y8uMwRYkBxeokkmUdhq1AswhBZjjTOFylPaOmHWsT3bZ3QGdPuYLn8SVMCuG
+	cB0J/V15Y+hMl+ODcXZyBBlrqPd4LQzQN1xEwJ1kSykfrTJdpchD7yk+llR20Cv0EZNw9vwLeJy
+	3nLd1ztcTD++tsdQayJkj4yJf+4VoI3mGa3zaM5f/xuVHSlzsnN15IhmWK/Qs/KLDlHgdVVX/fQ
+	DIoyQGFfjJ3i1zQ9hoits7P4Mwo+LbEacNCp0jrIEpg0dm4JuMieXcwbc9Fk7p1JxoZD5Dbe9cW
+	vrc3WsJpn0Ydn4eESqHLMdfmdejG6WlsjvN/IDuGp2rCIMNoLDpwaRoc/vU6gYKYNP25qTg==
+X-Google-Smtp-Source: AGHT+IGXRsOL/024GSaaTsj0I6bJ+HF/nWMcN9UcSMdGUI6X0OltJ6Kr+lU1tvqI65hxFgJwQnP8+Q==
+X-Received: by 2002:a5d:5f93:0:b0:38f:355b:13e9 with SMTP id ffacd0b85a97d-3971d42ae27mr18927937f8f.15.1742292998087;
+        Tue, 18 Mar 2025 03:16:38 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb318a3dsm17781886f8f.74.2025.03.18.03.16.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Mar 2025 03:13:23 -0700 (PDT)
-Message-ID: <6259af5f-f518-4f88-ada9-31c3425ce6ed@redhat.com>
-Date: Tue, 18 Mar 2025 11:13:20 +0100
+        Tue, 18 Mar 2025 03:16:37 -0700 (PDT)
+Message-ID: <a9f0a22c-2a97-42e7-838e-a210be215e21@suse.com>
+Date: Tue, 18 Mar 2025 11:16:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -88,52 +82,172 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/7] net: xdp: Add missing metadata support for
- some xdp drvs
-To: Lorenzo Bianconi <lorenzo@kernel.org>,
- Marcin Wojtas <marcin.s.wojtas@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Russell King <linux@armlinux.org.uk>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Masahisa Kojima <kojima.masahisa@socionext.com>,
- Sunil Goutham <sgoutham@marvell.com>, Geetha sowjanya <gakula@marvell.com>,
- Subbaraya Sundeep <sbhatta@marvell.com>, hariprasad <hkelam@marvell.com>,
- Bharat Bhushan <bbhushan2@marvell.com>, Felix Fietkau <nbd@nbd.name>,
- Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Siddharth Vadapalli <s-vadapalli@ti.com>,
- Roger Quadros <rogerq@kernel.org>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-omap@vger.kernel.org
-References: <20250311-mvneta-xdp-meta-v1-0-36cf1c99790e@kernel.org>
+Subject: Re: [PATCH v2 4/4] xen: balloon: update the NR_BALLOON_PAGES state
+To: Nico Pache <npache@redhat.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ virtualization@lists.linux.dev
+Cc: alexander.atanasov@virtuozzo.com, muchun.song@linux.dev,
+ roman.gushchin@linux.dev, mhocko@kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
+ akpm@linux-foundation.org, mst@redhat.com, david@redhat.com,
+ yosry.ahmed@linux.dev, hannes@cmpxchg.org, nphamcs@gmail.com,
+ chengming.zhou@linux.dev, kanchana.p.sridhar@intel.com, llong@redhat.com,
+ shakeel.butt@linux.dev
+References: <20250314213757.244258-1-npache@redhat.com>
+ <20250314213757.244258-5-npache@redhat.com>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250311-mvneta-xdp-meta-v1-0-36cf1c99790e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <20250314213757.244258-5-npache@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------6nFuvn90f00fPGQn5quF42xx"
 
-On 3/11/25 1:18 PM, Lorenzo Bianconi wrote:
-> Introduce missing metadata support for some xdp drivers setting metadata
-> size building the skb from xdp_buff.
-> Please note most of the drivers are just compile tested.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------6nFuvn90f00fPGQn5quF42xx
+Content-Type: multipart/mixed; boundary="------------Ymj9dgUiA6mQZpNBIbVIuM35";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Nico Pache <npache@redhat.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ virtualization@lists.linux.dev
+Cc: alexander.atanasov@virtuozzo.com, muchun.song@linux.dev,
+ roman.gushchin@linux.dev, mhocko@kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
+ akpm@linux-foundation.org, mst@redhat.com, david@redhat.com,
+ yosry.ahmed@linux.dev, hannes@cmpxchg.org, nphamcs@gmail.com,
+ chengming.zhou@linux.dev, kanchana.p.sridhar@intel.com, llong@redhat.com,
+ shakeel.butt@linux.dev
+Message-ID: <a9f0a22c-2a97-42e7-838e-a210be215e21@suse.com>
+Subject: Re: [PATCH v2 4/4] xen: balloon: update the NR_BALLOON_PAGES state
+References: <20250314213757.244258-1-npache@redhat.com>
+ <20250314213757.244258-5-npache@redhat.com>
+In-Reply-To: <20250314213757.244258-5-npache@redhat.com>
 
-I'm sorry, but you should at very least report explicitly on per patch
-basis which ones have been compile tested.
+--------------Ymj9dgUiA6mQZpNBIbVIuM35
+Content-Type: multipart/mixed; boundary="------------F0LwjPwAT0UT4XBZzX0cDv8Z"
 
-Even better, please additionally document in each patch why/how the
-current headroom is large enough.
+--------------F0LwjPwAT0UT4XBZzX0cDv8Z
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Thanks,
+T24gMTQuMDMuMjUgMjI6MzcsIE5pY28gUGFjaGUgd3JvdGU6DQo+IFVwZGF0ZSB0aGUgTlJf
+QkFMTE9PTl9QQUdFUyBjb3VudGVyIHdoZW4gcGFnZXMgYXJlIGFkZGVkIHRvIG9yDQo+IHJl
+bW92ZWQgZnJvbSB0aGUgWGVuIGJhbGxvb24uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBOaWNv
+IFBhY2hlIDxucGFjaGVAcmVkaGF0LmNvbT4NCg0KUmV2aWV3ZWQtYnk6IEp1ZXJnZW4gR3Jv
+c3MgPGpncm9zc0BzdXNlLmNvbT4NCg0KDQpKdWVyZ2VuDQo=
+--------------F0LwjPwAT0UT4XBZzX0cDv8Z
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Paolo
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------F0LwjPwAT0UT4XBZzX0cDv8Z--
+
+--------------Ymj9dgUiA6mQZpNBIbVIuM35--
+
+--------------6nFuvn90f00fPGQn5quF42xx
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfZSAQFAwAAAAAACgkQsN6d1ii/Ey/J
+jgf/deb7eb7DEWa4WHP3ywhAnXjAfRO3pIdEA2BDhLdNN1buCZyW9zYsai+acWuHT0fNBKrGEs7g
+wotCH2G8AFUB22/5d0FpTJ2bKxAQ1IJqZi/P7zt9VM511OI5ytOzdiG5T9XP364zFqXO+512r3Ue
+RE28mv9CK6mfPpLuxxhHBKy0HSvkq03ifwL+Kbs0O0wbiyHE2yaPKGVB3MtIP6LpErreDLvqDHuO
+OALFl6UgkVRUbd9VUCaXcwwqZu0rDoUR/3bpdLrRq94ldBtBPVbirTPGH7+ndexmloSK44qnQxlF
+GyUc1Zs34C59ZztRGlXJwEI/WJBQ6h6UoWQFfgGF3g==
+=IGq1
+-----END PGP SIGNATURE-----
+
+--------------6nFuvn90f00fPGQn5quF42xx--
 
