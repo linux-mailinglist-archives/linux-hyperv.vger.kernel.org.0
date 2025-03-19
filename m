@@ -1,269 +1,173 @@
-Return-Path: <linux-hyperv+bounces-4618-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4619-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F94CA68DC6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 14:26:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 54EB9A68DEA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 14:36:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4234D421791
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 13:26:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB9A11734FC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 13:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3425E2571A8;
-	Wed, 19 Mar 2025 13:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB5D255E44;
+	Wed, 19 Mar 2025 13:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/jTHkpf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sWlthcVc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B810256C70
-	for <linux-hyperv@vger.kernel.org>; Wed, 19 Mar 2025 13:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800E6A29;
+	Wed, 19 Mar 2025 13:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742390780; cv=none; b=AVMkEc5Dd0CY21SNWgMASkTwbYS6xAjPT8FkI/9J6tICWxrPDoLFBQA6qDIEzqv9z7nakM/mj0/HPpA68v+YDiNdr060gGvN+p8dMhQ1wX7pM/IxkRl4FWwsX26dmLcxUQJwb7/5lOIjhiaVGCOGt5VYbK57gu42IxVciw0LFhQ=
+	t=1742391364; cv=none; b=f9i1fjJgCwdAYhr0HyNAOWbgGT9JiwISE7hMhVzN8e45dPk95JRQjdt/uhgsXD/Tc2We/N2yoOqoyWwvhaHgQUNCPhUhYWFEZ2dG2B4SkKJm8nYbzbp9woEDtE3qbbPGIluIHXfJn4DGDZYtXhs1ckgEBics2CGmQLG7q69z/zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742390780; c=relaxed/simple;
-	bh=ld5eJNWi/v1i0gmIRHdZaRFv9fDwhRMDqEbIo4PLTEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rx8kmmnuqyqoTOTWjGYthl/5na+Q12LIjwSUBlLuB9aG0SWkAK/ft8rHzHp7Fv8r9GVcfH8C6zw1KZyFGGYnszk4N0Feq7xgJ35AHTqxgSrCU4xgSNxTKLwUlD1JaaciCx+PK6hOUGt8NJdLxF0HHTBEapUys6svvaYvBMj2HsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/jTHkpf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742390777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jaUUXRh1EbOiBGq2k3FaF6z5tXEmrMKUqLsPsZxaMf4=;
-	b=Q/jTHkpfBCZoKa2KR2uxteMWMdChbnFQk+41hnWSn3JIPIZW6Kq6/Lw7hAhsbNTOXFPvEc
-	n9UZFNGC41zh1tc9QSo5PoJDU4sAfYrz1rG1+jjDgF2aNCQgH1kIo1j4bR8nyg2SeVOnTc
-	rabcnqaciwBJ96Qg6YXa9Q+HESOi6cA=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-475-3Rirjd8pNMa3xrBHOuxsnA-1; Wed, 19 Mar 2025 09:26:16 -0400
-X-MC-Unique: 3Rirjd8pNMa3xrBHOuxsnA-1
-X-Mimecast-MFC-AGG-ID: 3Rirjd8pNMa3xrBHOuxsnA_1742390775
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e623fe6aa2so7945722a12.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Mar 2025 06:26:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742390774; x=1742995574;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jaUUXRh1EbOiBGq2k3FaF6z5tXEmrMKUqLsPsZxaMf4=;
-        b=VBsO+fWVw3CojzbEQF1GiYHSiNX8ByHKUXZwqGFx/BVLzYwHXrhnZBp9uJFJ/uhQSs
-         mWnG4HNpdr/s3r/Lyqacf57bKpnZug6I7YGxkEW5/DZN5+rRBat57/SR5nxGdcLbqfeH
-         gkKx1FxFGR0tAmLrsIdr+cS+qmllIc1atFhTO7OzxzLoQMs8ikxIpj8mz/tDf5kdxmPT
-         3NFV82XftEHdLnKP/qGzShydbVO3FWqVI6c2zZRGcgLjrrJNgJjvtCdTMWhTjWnsc+xZ
-         jkXudGs/VOas/3v1Jv7DtUHDXYkDvb8jrEd5/e5Inue479uNTdTBv4BlmLqVKQ6XVXvO
-         5g6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWh1WEkPYHaERM/m1ktbsJrIQDfSQBJkxDXOJC5XJJleH5+JXcY2mCnNqvIRdOFUM2aSjwqmHBWoqDW1Xg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3I0jdoc71oJSsBYb363iLZgrgEH0+In3UYGI+dVO5uIktIx/R
-	TGJB5aVH6ozdJTt404Gc+Y8Dhjgfr4KHJZSdZRYkGksOT8kyqE3dyFoHDwPdk0x3U2p8Wq6nlvx
-	yLoZRYy/6eQVcAeFbE4UohEQgRxVMFI7PTF32pN1c+LC9kAe/7KYatE/IrmwmMdijrHHr1g==
-X-Gm-Gg: ASbGnctHWIAbZFrHlEioMJ4SCfUZYteDBvjlOXqSLBJR0sOv4mDJsKHhaeo7Y8Pzdqk
-	f9j5d4BP6e6CiiEBMLEsX8nF4WrZD/uEYc5+RLolzCOeBHNvzne1SDdwHFCyBSH+UICsFIHmust
-	A3tf6R1X4LntzOVs4FCEI60SIxB7ZZlRgpxuTqRCHS6TizrG9oWlKyolJc4TWTMF4Ean9UoBWgO
-	cH68wGbb5acWB/AFDPoezOKhjaJtyaGznSsJfyKtcfqCMkjHfto/ty4TtOCdB7oUqSfi5007fUd
-	VnPpLAWGRTKC4gJV/Bv6ZCWoiNfV71KRS3Z3X2yrsFXo21vMlEUvvr6tSFnl+A==
-X-Received: by 2002:a05:6402:4302:b0:5e5:827d:bb1c with SMTP id 4fb4d7f45d1cf-5eb80fa41c6mr2676001a12.25.1742390774225;
-        Wed, 19 Mar 2025 06:26:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUtpdb4r2CtbTyHsr8WLwRcIUuXEpJ1mxKBLWGBT+tn/rPN0UQLhFx+xPQA07eNa19/oKOAQ==
-X-Received: by 2002:a05:6402:4302:b0:5e5:827d:bb1c with SMTP id 4fb4d7f45d1cf-5eb80fa41c6mr2675817a12.25.1742390772409;
-        Wed, 19 Mar 2025 06:26:12 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-53.retail.telecomitalia.it. [79.53.30.53])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e81692e583sm9064993a12.16.2025.03.19.06.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 06:26:11 -0700 (PDT)
-Date: Wed, 19 Mar 2025 14:26:04 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
-	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] vsock/virtio_transport_common: handle netns of
- received packets
-Message-ID: <6iepaq4rqd65lhpqfpplzurwkezdyrjolijrz4feqakh3ghbjy@fxoiw5yiyzp3>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <20250312-vsock-netns-v2-2-84bffa1aa97a@gmail.com>
+	s=arc-20240116; t=1742391364; c=relaxed/simple;
+	bh=KypB5mDXEO9iF8yhtBOBbPJHJr71kTyc1WA7BS3oD7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l4KpeVQ7Sgnywm3LEvG2YXoJSyjcPy8Pw6bfnWOHmgtaDvV7lv28vNcsV5K8efPMESiVRw9fM2tQOJZZgb6nDMTJd4yxpI4Y/lQIHsmxudLqlD6DSsENPhuZivmXTTaEfQSt7XqPm6YhCiB3Yobln/fjhqYiEXvSzy4XsKu8PqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sWlthcVc; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.161.209] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6A6532025379;
+	Wed, 19 Mar 2025 06:35:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6A6532025379
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742391362;
+	bh=ttIyDUl9pBvsbeNfa4fnyguAdFPyGWzSRD7Ms92MD0Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sWlthcVcCUCr3BP+Vs2Xq1K6zYqNUveWDSI6SIvEO4b2w7EdtdHS4iyMiDb9zu+4r
+	 dIfIN5fc1SSqrFrmz/XONBuoad9mrMDzHW8ai+TxmQaPz51YNwe8mUa2sVa/WMDiJy
+	 WgYjaQ1AiPhu6Q0WgyMadzIYclJIlWHo+eBHpXxA=
+Message-ID: <2b09fa80-7b2f-4eb2-b059-d16d69ee8f0c@linux.microsoft.com>
+Date: Wed, 19 Mar 2025 19:05:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250312-vsock-netns-v2-2-84bffa1aa97a@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] uio_hv_generic: Fix sysfs creation path for ring
+ buffer
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250318061558.3294-1-namjain@linux.microsoft.com>
+ <2025031859-overwrite-tidy-f8ef@gregkh>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025031859-overwrite-tidy-f8ef@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 12, 2025 at 01:59:36PM -0700, Bobby Eshleman wrote:
->From: Stefano Garzarella <sgarzare@redhat.com>
->
->This patch allows transports that use virtio_transport_common
->to specify the network namespace where a received packet is to
->be delivered.
->
->virtio_transport and vhost_transport, for now, still do not use this
->capability and preserve old behavior.
 
-What about vsock_loopback?
 
->
->Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
->---
->V1 -> V2
-> * use vsock_global_net()
-> * add net to skb->cb
-> * forward port for skb
->---
-> drivers/vhost/vsock.c                   |  1 +
-> include/linux/virtio_vsock.h            |  2 ++
-> net/vmw_vsock/virtio_transport.c        |  1 +
-> net/vmw_vsock/virtio_transport_common.c | 11 ++++++++++-
-> 4 files changed, 14 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
->index 802153e230730bdbfbbb6f4ae263ae99502ef532..02e2a3551205a4398a74a167a82802d950c962f6 100644
->--- a/drivers/vhost/vsock.c
->+++ b/drivers/vhost/vsock.c
->@@ -525,6 +525,7 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
-> 			continue;
-> 		}
->
->+		VIRTIO_VSOCK_SKB_CB(skb)->net = vsock_global_net();
+On 3/18/2025 6:58 PM, Greg Kroah-Hartman wrote:
+> On Tue, Mar 18, 2025 at 11:45:58AM +0530, Naman Jain wrote:
+>> On regular bootup, devices get registered to vmbus first, so when
+>> uio_hv_generic driver for a particular device type is probed,
+>> the device is already initialized and added, so sysfs creation in
+>> uio_hv_generic probe works fine. However, when device is removed
+>> and brought back, the channel rescinds and device again gets
+>> registered to vmbus. However this time, the uio_hv_generic driver is
+>> already registered to probe for that device and in this case sysfs
+>> creation is tried before the device gets initialized completely.
+>>
+>> Fix this by moving the core logic of sysfs creation for ring buffer,
+>> from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
+>> attributes for the channels are defined. While doing that, make use
+>> of attribute groups and macros, instead of creating sysfs directly,
+>> to ensure better error handling and code flow. While at it, configure
+>> size of ring sysfs based on ring buffer's actual size and not 2MB default.
+> 
+> When you say stuff like "while at it..." that's a huge hint that the
+> patch should be broken up into smaller pieces and made a patch series.
+> 
 
-I'd add an helper for that.
+I should have done that. I'll take care of it in next version.
 
-Or, can we avoid that and pass the net parameter to 
-virtio_transport_recv_pkt()?
+>> Problem path:
+>> vmbus_device_register
+>>      device_register
+>>          uio_hv_generic probe
+>>                      sysfs_create_bin_file (fails here)
+> 
+> Why does it fail?
 
-> 		total_len += sizeof(*hdr) + skb->len;
->
-> 		/* Deliver to monitoring devices all received packets */
->diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
->index 0387d64e2c66c69dd7ab0cad58db5cf0682ad424..e51f89559a1d92685027bf83a62c7b05dd9e566d 100644
->--- a/include/linux/virtio_vsock.h
->+++ b/include/linux/virtio_vsock.h
->@@ -12,6 +12,7 @@
-> struct virtio_vsock_skb_cb {
-> 	bool reply;
-> 	bool tap_delivered;
->+	struct net *net;
-> 	u32 offset;
-> };
->
->@@ -148,6 +149,7 @@ struct virtio_vsock_pkt_info {
-> 	u32 remote_cid, remote_port;
-> 	struct vsock_sock *vsk;
-> 	struct msghdr *msg;
->+	struct net *net;
-> 	u32 pkt_len;
-> 	u16 type;
-> 	u16 op;
->diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->index f0e48e6911fc46cba87f7dafeb8dbc21421df254..163ddfc0808529ad6dda7992f9ec48837dd7337c 100644
->--- a/net/vmw_vsock/virtio_transport.c
->+++ b/net/vmw_vsock/virtio_transport.c
->@@ -650,6 +650,7 @@ static void virtio_transport_rx_work(struct work_struct *work)
->
-> 			virtio_vsock_skb_rx_put(skb);
-> 			virtio_transport_deliver_tap_pkt(skb);
->+			VIRTIO_VSOCK_SKB_CB(skb)->net = vsock_global_net();
-> 			virtio_transport_recv_pkt(&virtio_transport, skb);
-> 		}
-> 	} while (!virtqueue_enable_cb(vq));
->diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
->index 256d2a4fe482b3cb938a681b6924be69b2065616..028591a5863b84059b8e8bbafd499cb997a0c863 100644
->--- a/net/vmw_vsock/virtio_transport_common.c
->+++ b/net/vmw_vsock/virtio_transport_common.c
->@@ -314,6 +314,8 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
-> 					 info->flags,
-> 					 zcopy);
->
->+	VIRTIO_VSOCK_SKB_CB(skb)->net = info->net;
->+
-> 	return skb;
-> out:
-> 	kfree_skb(skb);
->@@ -523,6 +525,7 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk)
-> 	struct virtio_vsock_pkt_info info = {
-> 		.op = VIRTIO_VSOCK_OP_CREDIT_UPDATE,
-> 		.vsk = vsk,
->+		.net = sock_net(sk_vsock(vsk)),
-> 	};
->
-> 	return virtio_transport_send_pkt_info(vsk, &info);
->@@ -1061,6 +1064,7 @@ int virtio_transport_connect(struct vsock_sock *vsk)
-> 	struct virtio_vsock_pkt_info info = {
-> 		.op = VIRTIO_VSOCK_OP_REQUEST,
-> 		.vsk = vsk,
->+		.net = sock_net(sk_vsock(vsk)),
-> 	};
->
-> 	return virtio_transport_send_pkt_info(vsk, &info);
->@@ -1076,6 +1080,7 @@ int virtio_transport_shutdown(struct vsock_sock *vsk, int mode)
-> 			 (mode & SEND_SHUTDOWN ?
-> 			  VIRTIO_VSOCK_SHUTDOWN_SEND : 0),
-> 		.vsk = vsk,
->+		.net = sock_net(sk_vsock(vsk)),
-> 	};
->
-> 	return virtio_transport_send_pkt_info(vsk, &info);
->@@ -1102,6 +1107,7 @@ virtio_transport_stream_enqueue(struct vsock_sock *vsk,
-> 		.msg = msg,
-> 		.pkt_len = len,
-> 		.vsk = vsk,
->+		.net = sock_net(sk_vsock(vsk)),
-> 	};
->
-> 	return virtio_transport_send_pkt_info(vsk, &info);
->@@ -1139,6 +1145,7 @@ static int virtio_transport_reset(struct vsock_sock *vsk,
-> 		.op = VIRTIO_VSOCK_OP_RST,
-> 		.reply = !!skb,
-> 		.vsk = vsk,
->+		.net = sock_net(sk_vsock(vsk)),
-> 	};
->
-> 	/* Send RST only if the original pkt is not a RST pkt */
->@@ -1159,6 +1166,7 @@ static int virtio_transport_reset_no_sock(const struct virtio_transport *t,
-> 		.op = VIRTIO_VSOCK_OP_RST,
-> 		.type = le16_to_cpu(hdr->type),
-> 		.reply = true,
->+		.net = VIRTIO_VSOCK_SKB_CB(skb)->net,
-> 	};
-> 	struct sk_buff *reply;
->
->@@ -1476,6 +1484,7 @@ virtio_transport_send_response(struct vsock_sock *vsk,
-> 		.remote_port = le32_to_cpu(hdr->src_port),
-> 		.reply = true,
-> 		.vsk = vsk,
->+		.net = sock_net(sk_vsock(vsk)),
-> 	};
->
-> 	return virtio_transport_send_pkt_info(vsk, &info);
->@@ -1590,7 +1599,7 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
-> 			       struct sk_buff *skb)
-> {
-> 	struct virtio_vsock_hdr *hdr = virtio_vsock_hdr(skb);
->-	struct net *net = vsock_global_net();
->+	struct net *net = VIRTIO_VSOCK_SKB_CB(skb)->net;
-> 	struct sockaddr_vm src, dst;
-> 	struct vsock_sock *vsk;
-> 	struct sock *sk;
->
->-- 
->2.47.1
->
+It fails because device kobj is not yet initialized. Will add more details.
 
+> 
+>>          kset_create_and_add (dependency)
+>>          vmbus_add_channel_kobj (dependency)
+> 
+> I don't understand this "graph", sorry.
+> 
+
+I will revise the commit msg accordingly. Thanks.
+
+>> +/*
+>> + * hv_create_ring_sysfs - create ring sysfs entry corresponding to ring buffers for a channel
+>> + */
+> 
+> Kerneldoc?
+
+Documentation of the ring sysfs is present here -
+Documentation/ABI/stable/sysfs-bus-vmbus
+
+What:           /sys/bus/vmbus/devices/<UUID>/channels/<N>/ring
+Date:           January. 2018
+KernelVersion:  4.16
+Contact:        Stephen Hemminger <sthemmin@microsoft.com>
+Description:    Binary file created by uio_hv_generic for ring buffer
+Users:          Userspace drivers
+
+I should probably change the description, to reflect that it's 
+visibility is controlled by uio_hv_generic, but it's created by hyperV 
+drivers.
+
+Please correct me if I misunderstood your comment.
+
+> 
+>> +int hv_create_ring_sysfs(struct vmbus_channel *channel,
+>> +			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
+>> +						    struct vm_area_struct *vma))
+>> +{
+>> +	struct kobject *kobj = &channel->kobj;
+>> +
+>> +	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
+>> +	channel->ring_sysfs_visible = true;
+>> +	return sysfs_update_group(kobj, &vmbus_chan_group);
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
+> 
+> You just raced userspace and created a file without telling it that it
+> showed up, right?  Something still feels really wrong here.
+> 
+> greg k-h
+
+ From use-case POV, we needed to have uio_hv_generic control the 
+visibility of this ring sysfs node, because the same device (HV_NIC) is 
+used by either hv_netvsc or uio_hv_generic at any given point of time. 
+We didn't want to expose ring buffer through sysfs when hv_netvsc is 
+using it. That's the reason why uio_hv_generic was creating sysfs in the 
+first place.
+
+DPDK, which uses this ring sysfs, checks for its presence for primary 
+channel but for secondary channels, it additionally does mmap() of this 
+ring. That's where it becomes more important, not to expose ring buffer 
+when uio_hv_generic is not bind to the device.
+
+DPDK runs after uio_hv_generic probe is complete, so I am not sure if 
+this race can happen, in practice. I'll try to gather more information 
+around it.
+
+Regards,
+Naman
 
