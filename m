@@ -1,171 +1,135 @@
-Return-Path: <linux-hyperv+bounces-4635-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4636-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EE9EA69A4B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 21:40:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E7E2A69A94
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 22:09:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9761916D4AC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 20:40:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87B55189BB7A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 21:10:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D587207DEA;
-	Wed, 19 Mar 2025 20:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E6D02135DE;
+	Wed, 19 Mar 2025 21:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="J7Cbjijt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXh7tijh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175D61E0DB5;
-	Wed, 19 Mar 2025 20:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A46720C47B
+	for <linux-hyperv@vger.kernel.org>; Wed, 19 Mar 2025 21:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742416826; cv=none; b=EXAYNDmjxJM9d1+mudtBne9juyBKxbB1gwlnzbdNYFPbeuUR2HoFIYm2qNNrq2Gc3U5Itq6jmZQL4Sx23wokiur0d+Ivg8Bk2Snxcv3FdnZBU9b11nT+BsHJlRba4QTXb/+LJAgTuikqXmVtJcfXMX/BIQVvRWquAk5/UOdFOF8=
+	t=1742418592; cv=none; b=qe8mmHb8s8F2fqY6ca9L2XZlarfGQEWGE3mNCUeHm87eCjnPnBAobxluuKqzT8Dfjwj8wDUxB/8MNbMh8ZE4qESCsYw0sViVgKGiuPPizXKcHElxLmWxOzC99FAqaAxkCHry2IrY9GlRqmFK0QCFtCuvYWO537C2TZuxbEigt/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742416826; c=relaxed/simple;
-	bh=E17QJcJcom4/xLJmjdLQU7RbyuFYz2UgVQOxpPLwGPM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BiKTQxlB35U2DsZ6OnZkSteOCWwj5cAUcunoKQBEl3hKElhA1V2/5zwTy35W00GRaT1yWosTdPNENYKxXCOKVx7o9+u+gBLgk9efs0J8W5hzthiXaUlmq4k3cvp0onvx4fwFcVmj/E4FWO4jA23f1B6puuFSSXEAcY5IzIqoWAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=J7Cbjijt; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1742416823;
-	bh=E17QJcJcom4/xLJmjdLQU7RbyuFYz2UgVQOxpPLwGPM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=J7Cbjijt386zshMPZGdBIEPswXh0KPgzISNVtv5VJ5v4JGqXLTFMEuHKyQLOFRuiZ
-	 SGourFCjlS33ZUhZPbWp63QnshG6W05knhFlJs9+sMDu82gKpNNB7r279BDwe+4o8n
-	 OZiPO70oZEeHhPm4/TLRDn6hf+VDNEJ/2/0ifPOg=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id F05361C00DA;
-	Wed, 19 Mar 2025 16:40:22 -0400 (EDT)
-Message-ID: <b64fc052da27c0e77afae1db40c8d3b05277cc86.camel@HansenPartnership.com>
-Subject: Re: [patch V4 13/14] scsi: ufs: qcom: Remove the MSI descriptor
- abuse
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "Martin K.
- Petersen" <martin.petersen@oracle.com>,  linux-scsi@vger.kernel.org,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Nishanth Menon
- <nm@ti.com>, Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, 
- Santosh Shilimkar <ssantosh@kernel.org>, Logan Gunthorpe
- <logang@deltatee.com>, Dave Jiang <dave.jiang@intel.com>,  Jon Mason
- <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
- Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
- linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, Wei Huang
- <wei.huang2@amd.com>, Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Date: Wed, 19 Mar 2025 16:40:22 -0400
-In-Reply-To: <20250319105506.805529593@linutronix.de>
-References: <20250319104921.201434198@linutronix.de>
-	 <20250319105506.805529593@linutronix.de>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
-	AIJCgsEFgIDAQIeAQIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mXBQkbNYS9AAoJEIFK5HwhSFTWEYEH/1YZpV+1uCI2MVz0wTRlnO/3OW/xnyigrw+K4cuO7MToo0tHJb/qL9CBJ2ddG6q+GTnF5kqUe87t7M7rSrIcAkIZMbJmtIbKk0j5EstyYqlE1HzvpmssGpg/8uJBBuWbU35af1ubKCjUs1+974mYXkfLmS0a6h+cG7atVLmyClIc2frd3o0zHF9+E7BaB+HQzT4lheQAXv9KI+63ksnbBpcZnS44t6mi1lzUE65+Am1z+1KJurF2Qbj4AkICzJjJa0bXa9DmFunjPhLbCU160LppaG3OksxuNOTkGCo/tEotDOotZNBYejWaXN2nr9WrH5hDfQ5zLayfKMtLSd33T9u0IUphbWVzIEJvdHRvbWxleSA8amVqYkBrZXJuZWwub3JnPokBVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmAUJGzWEvQAKCRCBSuR8IUhU1gacCAC+QZN+RQd+FOoh5g884HQm8S07ON0/2EMiaXBiL6KQb5yP3w2PKEhug3+uPzugftUfgPEw6emRucrFFpwguhriGhB3pgWJIrTD4JUevrBgjEGOztJpbD73bLLyitSiPQZ6OFVOqIGhdqlc3n0qoNQ45n/w3LMVj6yP43SfBQeQGEdq4yHQxXPs0XQCbmr6Nf2p8mNsIKRYf90fCDmABH1lfZxoGJH/frQOBCJ9bMRNCNy+aFtjd5m8ka5M7gcDvM7TAsKhD5O5qFs4aJHGajF4gCGoWmXZGrISQvrNl9kWUhgsvoPqb2OTTeAQVRuV8C4FQamxzE3MRNH25j6s/qujtCRKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT6JAVQEEwEIAD
-	4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmQUJGzWEvQAKCRCBSuR8IUhU1kyHB/9VIOkf8RapONUdZ+7FgEpDgESE/y3coDeeb8jrtJyeefWCA0sWU8GSc9KMcMoSUetUreB+fukeVTe/f2NcJ87Bkq5jUEWff4qsbqf5PPM+wlD873StFc6mP8koy8bb7QcH3asH9fDFXUz7Oz5ubI0sE8+qD+Pdlk5qmLY5IiZ4D98V239nrKIhDymcuL7VztyWfdFSnbVXmumIpi79Ox536P2aMe3/v+1jAsFQOIjThMo/2xmLkQiyacB2veMcBzBkcair5WC7SBgrz2YsMCbC37X7crDWmCI3xEuwRAeDNpmxhVCb7jEvigNfRWQ4TYQADdC4KsilPfuW8Edk/8tPtCVKYW1lcyBCb3R0b21sZXkgPEpCb3R0b21sZXlAT2Rpbi5jb20+iQEfBDABAgAJBQJXI+B0Ah0gAAoJEIFK5HwhSFTWzkwH+gOg1UG/oB2lc0DF3lAJPloSIDBW38D3rezXTUiJtAhenWrH2Cl/ejznjdTukxOcuR1bV8zxR9Zs9jhUin2tgCCxIbrdvFIoYilMMRKcue1q0IYQHaqjd7ko8BHn9UysuX8qltJFar0BOClIlH95gdKWJbK46mw7bsXeD66N9IhAsOMJt6mSJmUdIOMuKy4dD4X3adegKMmoTRvHOndZQClTZHiYt5ECRPO534Lb/gyKAKQkFiwirsgx11ZSx3zGlw28brco6ohSLMBylna/Pbbn5hII86cjrCXWtQ4mE0Y6ofeFjpmMdfSRUxy6LHYd3fxVq9PoAJTv7vQ6bLTDFNa0KkphbWVzIEJvdHRvbWxleSA8SkJvdHRvbWxleUBQYXJhbGxlbHMuY29tPokBHwQwAQIACQUCVyPgjAIdIAAKCRCBSuR8IUhU1tXiB/9D9OOU8qB
-	CZPxkxB6ofp0j0pbZppRe6iCJ+btWBhSURz25DQzQNu5GVBRQt1Us6v3PPGU1cEWi5WL935nw+1hXPIVB3x8hElvdCO2aU61bMcpFd138AFHMHJ+emboKHblnhuY5+L1OlA1QmPw6wQooCor1h113lZiBZGrPFxjRYbWYVQmVaM6zhkiGgIkzQw/g9v57nAzYuBhFjnVHgmmu6/B0N8z6xD5sSPCZSjYSS38UG9w189S8HVr4eg54jReIEvLPRaxqVEnsoKmLisryyaw3EpqZcYAWoX0Am+58CXq3j5OvrCvbyqQIWFElba3Ka/oT7CnTdo/SUL/jPNobtCxKYW1lcyBCb3R0b21sZXkgPGplamJAaGFuc2VucGFydG5lcnNoaXAuY29tPokBVwQTAQgAQRYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJjg2eQAhsDBQkbNYS9BQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEIFK5HwhSFTWbtAH/087y9vzXYAHMPbjd8etB/I3OEFKteFacXBRBRDKXI9ZqK5F/xvd1fuehwQWl2Y/sivD4cSAP0iM/rFOwv9GLyrr82pD/GV/+1iXt9kjlLY36/1U2qoyAczY+jsS72aZjWwcO7Og8IYTaRzlqif9Zpfj7Q0Q1e9SAefMlakI6dcZTSlZWaaXCefdPBCc7BZ0SFY4kIg0iqKaagdgQomwW61nJZ+woljMjgv3HKOkiJ+rcB/n+/moryd8RnDhNmvYASheazYvUwaF/aMj5rIb/0w5p6IbFax+wGF5RmH2U5NeUlhIkTodUF/P7g/cJf4HCL+RA1KU/xS9o8zrAOeut2+4UgRaZ7bmEwgqhkjOPQMBBwIDBH4GsIgL0yQij5S5ISDZmlR7qDQPcWUxMVx6zVPsAoITdjKFjaDmUATkS+l5zmiCrUBcJ6MBavPiYQ4kqn4/xwaJAbMEGAEIACYCGwIWIQTVYG5zyLRi
-	cb6tmt+BSuR8IUhU1gUCZag0LwUJDwLkSQCBdiAEGRMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCWme25gAKCRDnQslM7pishdi9AQDyOvLYOBkylBqiTlJrMnGCCsWgGZwPpKq3e3s7JQ/xBAEAlx29pPY5z0RLyIDUsjf9mtkSNTaeaQ6TIjDrFa+8XH8JEIFK5HwhSFTWkasH/j7LL9WH9dRfwfTwuMMj1/KGzjU/4KFIu4uKxDaevKpGS7sDx4F56mafCdGD8u4+ri6bJr/3mmuzIdyger0vJdRlTrnpX3ONXvR57p1JHgCljehE1ZB0RCzIk0vKhdt8+CDBQWfKbbKBTmzA7wR68raMQb2D7nQ9d0KXXbtr7Hag29yj92aUAZ/sFoe9RhDOcRUptdYyPKU1JHgJyc0Z7HwNjRSJ4lKJSKP+Px0/XxT3gV3LaDLtHuHa2IujLEAKcPzTr5DOV+xsgA3iSwTYI6H5aEe+ZRv/rA4sdjqRiVpo2d044aCUFUNQ3PiIHPAZR3KK5O64m6+BJMDXBvgSsMy4VgRaZ7clEggqhkjOPQMBBwIDBMfuMuE+PECbOoYjkD0Teno7TDbcgxJNgPV7Y2lQbNBnexMLOEY6/xJzRi1Xm/o9mOyZ+VIj8h4G5V/eWSntNkwDAQgHiQE8BBgBCAAmAhsMFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoNBwFCQ8C4/cACgkQgUrkfCFIVNZs4AgAnIjU1QEPLdpotiy3X01sKUO+hvcT3/Cd6g55sJyKJ5/U0o3f8fdSn6MWPhi1m62zbAxcLJFiTZ3OWNCZAMEvwHrXFb684Ey6yImQ9gm2dG2nVuCzr1+9gIaMSBeZ+4kUJqhdWSJjrNLQG38GbnBuYOJUD+x6oJ2AT10/mQfBVZ3qWDQXr/je2TSf0OIXaWyG6meG5yTqOEv0eaTH22yBb1nbodoZkmlMMb56jzRGZuorhFE06
-	N0Eb0kiGz5cCIrHZoH10dHWoa7/Z+AzfL0caOKjcmsnUPcmcrqmWzJTEibLA81z15GBCrldfQVt+dF7Us2kc0hKUgaWeI8Gv4CzwLkCDQRUdhaZARAApeF9gbNSBBudW8xeMQIiB/CZwK4VOEP7nGHZn3UsWemsvE9lvjbFzbqcIkbUp2V6ExM5tyEgzio2BavLe1ZJGHVaKkL3cKLABoYi/yBLEnogPFzzYfK2fdipm2G+GhLaqfDxtAQ7cqXeo1TCsZLSvjD+kLVV1TvKlaHS8tUCh2oUyR7fTbv6WHi5H8DLyR0Pnbt9E9/Gcs1j11JX+MWJ7jset2FVDsB5U1LM70AjhXiDiQCtNJzKaqKdMei8zazWS50iMKKeo4m/adWBjG/8ld3fQ7/Hcj6Opkh8xPaCnmgDZovYGavw4Am2tjRqE6G6rPQpS0we5I6lSsKNBP/2FhLmI9fnsBnZC1l1NrASRSX1BK0xf4LYB2Ww3fYQmbbApAUBbWZ/1aQoc2ECKbSK9iW0gfZ8rDggfMw8nzpmEEExl0hU6wtJLymyDV+QGoPx5KwYK/6qAUNJQInUYz8z2ERM/HOI09Zu3jiauFBDtouSIraX/2DDvTf7Lfe1+ihARFSlp64kEMAsjKutNBK2u5oj4H7hQ7zD+BvWLHxMgysOtYYtwggweOrM/k3RndsZ/z3nsGqF0ggct1VLuH2eznDksI+KkZ3Bg0WihQyJ7Z9omgaQAyRDFct+jnJsv2Iza+xIvPei+fpbGNAyFvj0e+TsZoQGcC34/ipGwze651UAEQEAAYkBHwQoAQIACQUCVT6BaAIdAwAKCRCBSuR8IUhU1p5QCAC7pgjOM17Hxwqz9mlGELilYqjzNPUoZt5xslcTFGxj/QWNzu0K8gEQPePnc5dTfumzWL077nxhdKYtoqwm2C6fOmXiJBZx6khBfRqctUvN2DlOB6dFf5I+1QT9TRBvceGzw01E4Gi0xjWKAB6OII
-	MAdnPcDVFzaXJdlAAJdjfg/lyJtAyxifflG8NnXJ3elwGqoBso84XBNWWzbc5VKmatzhYLOvXtfzDhu4mNPv/z7S1HTtRguI0NlH5RVBzSvfzybin9hysE3/+r3C0HJ2xiOHzucNAmG03aztzZYDMTbKQW4bQqeD5MJxT68vBYu8MtzfIe41lSLpb/qlwq1qg0iQElBBgBAgAPBQJUdhaZAhsMBQkA7U4AAAoJEIFK5HwhSFTW3YgH/AyJL2rlCvGrkLcas94ND9Pmn0cUlVrPl7wVGcIV+6I4nrw6u49TyqNMmsYam2YpjervJGgbvIbMzoHFCREi6R9XyUsw5w7GCRoWegw2blZYi5A52xe500+/RruG//MKfOtVUotu3N+u7FcXaYAg9gbYeGNZCV70vI+cnFgq0AEJRdjidzfCWVKPjafTo7jHeFxX7Q22kUfWOkMzzhoDbFg0jPhVYNiEXpNyXCwirzvKA7bvFwZPlRkbfihaiXDE7QKIUtQ10i5kw4C9rqDKwx8F0PaWDRF9gGaKd7/IJGHJaac/OcSJ36zxgkNgLsVX5GUroJ2GaZcR7W9Vppj5H+C4UgRkuRyTEwgqhkjOPQMBBwIDBOySomnsW2SkApXv1zUBaD38dFEj0LQeDEMdSE7bm1fnrdjAYt0f/CtbUUiDaPodQk2qeHzOP6wA/2K6rrjwNIWJAT0EGAEIACcDGyAEFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoM/gFCQSxfmUACgkQgUrkfCFIVNZhTgf/VQxtQ5rgu2aoXh2KOH6naGzPKDkYDJ/K7XCJAq3nJYEpYN8G+F8mL/ql0hrihAsHfjmoDOlt+INa3AcG3v0jDZIMEzmcjAlu7g5NcXS3kntcMHgw3dCgE9eYDaKGipUCubdXvBaZWU6AUlTldaB8FE6u7It7+UO+IW4/L+KpLYKs8V5POInu2rqahlm7vgxY5iv4Txz4EvCW2e4dAlG
-	8mT2Eh9SkH+YVOmaKsajgZgrBxA7fWmGoxXswEVxJIFj3vW7yNc0C5HaUdYa5iGOMs4kg2ht4s7yy7NRQuh7BifWjo6BQ6k4S1H+6axZucxhSV1L6zN9d+lr3Xo/vy1unzA==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1742418592; c=relaxed/simple;
+	bh=t0DQSzj76o+q28S/J/Q+aN0pxw+YPVtotQKrAVrAB6Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uFMmR5Ib5gbPFy5JTL8eHgtSFuXfcQDY337qE6JpwgD8dyCawcdd/Ik3/vFD0Dj/9TGX9gL2oxdxR/1GRdxuLrHVonRPWao0Xa/RG/kLh6SWyliOJSoazDL4UPbDcRE+CPlXRzBRXLebMN12pyrlu3yXA1+4JMaPpzDu7CASYLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KXh7tijh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742418589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j7HoSvSm7GM5yXTNBY3sCZv8nsyIwGMkLSsX5gJEiNY=;
+	b=KXh7tijhQ2SyWwxeKP+y7Xt9PN/Oj8yMA88paJ3c3gGz5USuHtS+iBmyI45JsFbcB6lVrN
+	feZqdLpBxsHR9IHY0PwlUoTYsyDAgTCkzQpLBja83fnOTSvQbpdiMnbyGCVegAPDy4zncZ
+	NxS6OJq823GIiNppE4CbxWiN0v/9rHw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-147-nExgAh96NemW7ojHlatWoA-1; Wed, 19 Mar 2025 17:09:48 -0400
+X-MC-Unique: nExgAh96NemW7ojHlatWoA-1
+X-Mimecast-MFC-AGG-ID: nExgAh96NemW7ojHlatWoA_1742418587
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ce245c5acso824835e9.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Mar 2025 14:09:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742418587; x=1743023387;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j7HoSvSm7GM5yXTNBY3sCZv8nsyIwGMkLSsX5gJEiNY=;
+        b=SaWxkM1ieELkRPWXGsDMSmmxPD0u0V3yueZq4yF6MID9Jzkn2YXaod+RQfmaA8ocr5
+         ZEVvW4FqL06yscJtMmApk8jIkhAiPnOMF+mIWPnrc9lv5x5icnTNKC69qX84HavhkcRq
+         BDItqJmXawZSCSuHm2Kj4U4nSrPHgEqN/GrNvtdjCcDZNa9kgVIloMqcLTadi94ruFUA
+         Hvq1H33+IJmpB5PTv+H6J0tCdGiVg7lqk+WOiJX7c+PUfPfDMVThRqpuMZuv1FH6r5pq
+         wfixYkqiJvVYRSdlCAn+qOizMmQYNUpiELtz8vpXFCeBoqBqAk6aWYQv3RzB6LVyMQsl
+         9MDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVd3ED0jRkn5eZ+YYxVoMfVqglw9ZzYtCDxSOIAHsJ4GxLdqmUqqIjR+WnmZcJECAjZpLDf9NesL4nZ8LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywtxjZrSXBr1pW8IeAPvF/g6CseiK0Jm0DIfv478lOWmTrSRGe
+	S9nKNP10ud/4ZFDiWqOMWWIAQTWQ2ok4TOTdaPVJf3CKjVwjiwz47Gsc29ZSwPDL3DX7N1kqzNr
+	+vPy4h1L1uIMd1rqPfK6LfGNj7dlYpq33dvOghqBjC47VBGAfU+2hNkCA98JQHQ==
+X-Gm-Gg: ASbGnctYs3c8z3YUNetIrpCcAvJSlt4kokpzZDuuNW459KQBpKfmaBIWNIrQxgxl/I+
+	xw4fOp7CZMghOuIX9GAWZ1/JlDpEpBwK5NiLoFNe+4XTBX7h0gYNWemQWWXVPLUOkqAVkyL0Bxq
+	Q+kYIV7IiWjC880ssDxEqE3qxFokGt5yTAhvhdMOsDp0Ta3iP38gEpn0ViL2ZV33iVJXnz0y67O
+	0lBOmXK2UXZyO3v+pYgLQBb5GjSxjz1txwpK4S6q8DyFFccv48X9D0vlo0L8lrLQQJ/PiqOBhWy
+	/xx62Hr8RIaM2SaKhVJH5L/eWoafCXXLWZz5gAsQzSx56g==
+X-Received: by 2002:a5d:5f4f:0:b0:38f:231a:635e with SMTP id ffacd0b85a97d-399795c2ademr966966f8f.25.1742418587028;
+        Wed, 19 Mar 2025 14:09:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUNp5m5kg5nT9dIUi3KyGpUUwGQCEZhhXoTguvu2e0VxM6ACwAq8iInQv4AfDuk3Kc6Z9FwQ==
+X-Received: by 2002:a5d:5f4f:0:b0:38f:231a:635e with SMTP id ffacd0b85a97d-399795c2ademr966951f8f.25.1742418586581;
+        Wed, 19 Mar 2025 14:09:46 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-10-172.dyn.eolo.it. [146.241.10.172])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df35ecsm22151312f8f.16.2025.03.19.14.09.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 14:09:46 -0700 (PDT)
+Message-ID: <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
+Date: Wed, 19 Mar 2025 22:09:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] vhost/vsock: use netns of process that opens the
+ vhost-vsock-netns device
+To: Bobby Eshleman <bobbyeshleman@gmail.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>,
+ Vishnu Dasa <vishnu.dasa@broadcom.com>,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, virtualization@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-03-19 at 11:57 +0100, Thomas Gleixner wrote:
-> The driver abuses the MSI descriptors for internal purposes. Aside of
-> core code and MSI providers nothing has to care about their
-> existence. They have been encapsulated with a lot of effort because
-> this kind of abuse caused all sorts of issues including a
-> maintainability nightmare.
->=20
-> Rewrite the code so it uses dedicated storage to hand the required
-> information to the interrupt handler and use a custom cleanup
-> function to simplify the error path.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> ---
-> V4: Fix inverse NULL pointer check and use __free() for error paths -
-> James
-> ---
-> =C2=A0drivers/ufs/host/ufs-qcom.c |=C2=A0=C2=A0 85 ++++++++++++++++++++++=
-++---------
-> -----------
-> =C2=A01 file changed, 48 insertions(+), 37 deletions(-)
->=20
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -1782,25 +1782,38 @@ static void ufs_qcom_write_msi_msg(struc
-> =C2=A0	ufshcd_mcq_config_esi(hba, msg);
-> =C2=A0}
-> =C2=A0
-> +struct ufs_qcom_irq {
-> +	unsigned int		irq;
-> +	unsigned int		idx;
-> +	struct ufs_hba		*hba;
-> +};
-> +
-> =C2=A0static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
-> =C2=A0{
-> -	struct msi_desc *desc =3D data;
-> -	struct device *dev =3D msi_desc_to_dev(desc);
-> -	struct ufs_hba *hba =3D dev_get_drvdata(dev);
-> -	u32 id =3D desc->msi_index;
-> -	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
-> +	struct ufs_qcom_irq *qi =3D data;
-> +	struct ufs_hba *hba =3D qi->hba;
-> +	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
-> =C2=A0
-> -	ufshcd_mcq_write_cqis(hba, 0x1, id);
-> +	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
-> =C2=A0	ufshcd_mcq_poll_cqe_lock(hba, hwq);
-> =C2=A0
-> =C2=A0	return IRQ_HANDLED;
-> =C2=A0}
-> =C2=A0
-> +static void ufs_qcom_irq_free(struct ufs_qcom_irq *uqi)
-> +{
-> +	for (struct ufs_qcom_irq *q =3D uqi; q->irq; q++)
-> +		devm_free_irq(q->hba->dev, q->irq, q->hba);
-> +
-> +	platform_device_msi_free_irqs_all(uqi->hba->dev);
-> +	devm_kfree(uqi->hba->dev, uqi);
-> +}
-> +
-> +DEFINE_FREE(ufs_qcom_irq, struct ufs_qcom_irq *, if (_T)
-> ufs_qcom_irq_free(_T))
+On 3/12/25 9:59 PM, Bobby Eshleman wrote:
+> @@ -753,6 +783,8 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
+>  	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
+>  
+>  	vhost_dev_cleanup(&vsock->dev);
+> +	if (vsock->net)
+> +		put_net(vsock->net);
 
-So if every __free body basically has a condition check and an external
-call, it would be a lot nicer if the macro were coded as something like
+put_net() is a deprecated API, you should use put_net_track() instead.
 
-#define DEFINE_FREE(_name, _type, _cond, _free) \
-	static inline void __free_##_name(void *p) { _type _T =3D
-*(_type *)p; if (_cond(_T)) _free(_T); }
+>  	kfree(vsock->dev.vqs);
+>  	vhost_vsock_free(vsock);
+>  	return 0;
 
-to avoid having to splash the strange _T across the kernel.
+Also series introducing new features should also include the related
+self-tests.
 
-Other than that (which isn't your problem, so you can ignore it), the
-code looks fine but I can't test it.
+Thanks,
 
-Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Paolo
 
 
