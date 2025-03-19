@@ -1,296 +1,373 @@
-Return-Path: <linux-hyperv+bounces-4628-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4629-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CF11A6976D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 19:06:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 367EBA6988F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 20:02:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D41F4171CF3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 18:04:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30A7D1779B9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 19:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9EA205E3B;
-	Wed, 19 Mar 2025 18:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A22C210F45;
+	Wed, 19 Mar 2025 19:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sfta73GW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dvp2WXO0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 697B3202971;
-	Wed, 19 Mar 2025 18:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED7620C48E;
+	Wed, 19 Mar 2025 19:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742407472; cv=none; b=McrqjDaxdcSu7cbZWFaPKy6CaiUwOTMXIIRqLLg5v0xOD4vq6OwPlhk2MMgzjICBw7m8Q4ue68lx+TueyWTkhZGiWCAHW9RclJq2RYQqoJTmKKkCmMJ41nPIVNsK67DLtNHKjVQNp4qVLRPzMluFGwBayoI9SDwD3uIgMJJwd9M=
+	t=1742410854; cv=none; b=ErIAnC3LS0zzata/qGXz88/+U1jN9YZ/4IOBiOzgNRBHUxu9UpzA/Fy27OpsQ+5gKIUpKDOGmU/sTnWL/0qYWtJzh1A7NLIAe4cFTEfDCsLHLWVr0AE3t2neJkibts8xZPvXqmSvw/JmKhllyMFoH54+FmUZ4+Za/m4jeWlhFIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742407472; c=relaxed/simple;
-	bh=9p2UBz/QA8scnm5HX/3m0Mc66hHZZvwC2vmYqUnyn8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=srkTJCk7qRCKnRfLSt7U1bsGNKCy8wPb/maSLo9xtQkwJdtXsGgAyZhUuClAnO0dkfHtenrewh2nG0/6GiLlwLNot2H7BO7U9mfFE3dbEGNEoPx6lBkNvhyq59cm+IE7WgGRDW7iBSdQ8iaS5CYDiiyEVBipPatu4J2oiTfwdyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sfta73GW; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 723342116B2A;
-	Wed, 19 Mar 2025 11:04:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 723342116B2A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742407464;
-	bh=gC8pXVAWUQ2vl5I11MAp+n/V7d6h6Fj9qgoDP/kFvoI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sfta73GWjKfXmrNlFXAyYk/kkVe/NRLYwA4dkqy9LAxtDrmWcsW5VmvpxSozHi8tT
-	 RZt3eXI14NRkqr1tR3scUWpBXcwA1I+Tmj+PAuy1qJUN5BkrEFW4u0tvBkLyrsd5Uf
-	 tyrYDDo+h8c56GoBVQ7JiSgzgYQ2WT9z8myq3e4c=
-Message-ID: <9791bc6b-d8ad-47ee-8c54-7230d044f8d5@linux.microsoft.com>
-Date: Wed, 19 Mar 2025 11:04:22 -0700
+	s=arc-20240116; t=1742410854; c=relaxed/simple;
+	bh=bQ81Fc55GF5vLNCh1KjcH+C7ekGu0HyxorM23JbvqCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RughQXQD9zsIDrysJJWs/kI3B1jcTcCITlEXQELSniJzt+Gvsm7Z/wk8RGgEGikbGPPJacLkg3aainXlio9sOV6bPAugctvXWqtII76xOjh/21chCW0ZlXOVM6QodvwpKxTgPtEzihM8X3DODnrKkfMsxF1MPF9WxQ2robCwHVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dvp2WXO0; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so6314376a91.2;
+        Wed, 19 Mar 2025 12:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742410852; x=1743015652; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=biXjJdX1FFK2ilJDVmzGFQ2LcLuqE/zLttPI8Z+C5Dc=;
+        b=Dvp2WXO0pOBKXaMk9/jCrA50w8ja6VjmXoJgSpKe9lN2D3fk7wJleg19N8qbaAaKEP
+         EHRguW1Qb1HneGa7yf9HqLi5b14+oKcrOucLyDKb819/rWk8UGhqGexclMsRn5l/ORLy
+         ONNeaWgqc74OmvhlkASN1vXcGhCfwuYxKwmiCTUh7dUoimQsqjEF7SPZQLHNzf+iGYwh
+         qPAgPBKORu4y+8fOoPKxwenwF8pwyxWtWWxrikG/ICHUht6wEGhajsZkjrzDMbcuUpcP
+         kJRtTp1pdw7sknF57hLMEL2K5ivlRD1+egoGdE5KUMF1C+iR4Ls9XccHy03xW96xbfAp
+         udEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742410852; x=1743015652;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=biXjJdX1FFK2ilJDVmzGFQ2LcLuqE/zLttPI8Z+C5Dc=;
+        b=Jd0BCy3uIih5HH9v+A3Nj0TmsTao2vB1nQ5dmmQbaojyVjIEWcPByK/mKlNHbJtNVT
+         v553VMg337liwR1uGbtvwypqkMJj6k0j6IdSxw+cJ1dyX1ymjl5wvbnaZ0y3Z53Pv7qY
+         k7V3LrwPshSIYUgPX5VduoCPhDMXZC2MNQsJ9FkcCKUWRMWZ7AQcw38T7Z5t4P0m7ZIL
+         ud1hXpW+hroTFpxWjWshSoGXkZ+PUnL2War7LJg8ZJGIblxGs2bsuTkdUEwsyfOyZzA4
+         0s4SEtKSA8T7bBchGlKNVaqn/0gp92eCcCnJqLueQwC01M+dnl1gIqQdmIYL7OQtI0+y
+         eSpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUirSapKaIv5p3gHYyl+ADOCeccwVXOxqng/lOvQVYtpufuHfafQXO9uPySxci46zYCxhs=@vger.kernel.org, AJvYcCWa2HSddg3NH7/Aj35O9c8w4LdRqv8dCQ7mkG3TUF597lzEMqZfB/1xBdLhdbWAJVT+4YxCygoOjqgmWB0s@vger.kernel.org, AJvYcCWsbRRCvaci5U93FKWFBxqpnR23E6LpeG50r8ojSN/QwnmgVlqa0V4g2u9CjIi/oUnfiA5UxmMY5e6hwK6r@vger.kernel.org, AJvYcCWub422hB/9HLONkUCKnQ6XsnoQmgYzvch77iXjTjmeqGXUyH2Wpu1AYrQGkH5QDvSM2gTbbdIp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjOBiHxA149bKHxx/uzUD7OjGwyQMLj8u/BR0m6tFRhpMWhoAJ
+	fAofJ2DT/i+YhdJGUQn8Y4208TLQmP/UGQ4v06RCFRRhLoC+804S
+X-Gm-Gg: ASbGncuU+6bH1QOAC+ixtY1IbJ8HwbEmk8WYksDOlpX4bzE/Q2/aFsSr2UaqFboPIKr
+	OSKIKrVzh8H8cUVxqNPQC55GW7d9AG6SK0byRXLNlJvVbKZ073DDIP+z9XBj2Qc7kSC5ypYEDEJ
+	77yS1e0EwRu9Oq5H/9sJheeHoTpGv/DWzUsikWLoFTCj6JZhMsbfeQuQYPlNc58ZqktPQFpvqD5
+	IBqK2XAXjvzrqgCZJwNxMPqGgIHePgTvtTSlegfmeHZP3bpV6REjlAFVxHaKjrfjYm7scswWi8v
+	dKwQcc8b4LbQv71P6GvTa2EwWlJk+eahrltrUvqvA0McKwVM4isAARn0BcKEoEIbIA==
+X-Google-Smtp-Source: AGHT+IExM0pI9/JU5Crfnd4d50aC7MIsk6BLw9VYIOpGl+RqOsh+7wpYyCT51g4e/BejE8WXLNDy4g==
+X-Received: by 2002:a17:90b:3c0f:b0:301:1d03:93cd with SMTP id 98e67ed59e1d1-301be201d9dmr6662434a91.24.1742410851540;
+        Wed, 19 Mar 2025 12:00:51 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:1::])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf589fbcsm2030123a91.12.2025.03.19.12.00.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 12:00:50 -0700 (PDT)
+Date: Wed, 19 Mar 2025 12:00:38 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] vsock: add network namespace support
+Message-ID: <Z9sUVs1Tq3SN83MQ@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250312-vsock-netns-v2-1-84bffa1aa97a@gmail.com>
+ <sqvqvlovlxpfo2tlkazugkocwmlhc7iay2kvq7b75bgwk7vhfw@tvgfe5fj3mw6>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
- expose /dev/mshv to VMMs
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
- <arnd@arndb.de>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
- "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
- "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "vkuznets@redhat.com" <vkuznets@redhat.com>,
- "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
- "muislam@microsoft.com" <muislam@microsoft.com>,
- "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
- "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
- <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157BE8AF5A1CDD39CF31124D4DF2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <afd87eba-742f-4b67-9171-fd8486416b7b@linux.microsoft.com>
- <SN6PR02MB41574DE5535222985147134CD4D92@SN6PR02MB4157.namprd02.prod.outlook.com>
- <BN7PR02MB4148D51FFF965676AD155A3ED4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <BN7PR02MB4148D51FFF965676AD155A3ED4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <sqvqvlovlxpfo2tlkazugkocwmlhc7iay2kvq7b75bgwk7vhfw@tvgfe5fj3mw6>
 
-On 3/19/2025 8:26 AM, Michael Kelley wrote:
-> From: Michael Kelley <mhklinux@outlook.com> Sent: Tuesday, March 18, 2025 7:10 PM
->>
->> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, March
->> 18, 2025 5:34 PM
->>>
->>> On 3/17/2025 4:51 PM, Michael Kelley wrote:
->>>> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, February 26, 2025 3:08 PM
+On Wed, Mar 19, 2025 at 02:02:32PM +0100, Stefano Garzarella wrote:
+> On Wed, Mar 12, 2025 at 01:59:35PM -0700, Bobby Eshleman wrote:
+> > From: Stefano Garzarella <sgarzare@redhat.com>
+> > 
+> > This patch adds a check of the "net" assigned to a socket during
+> > the vsock_find_bound_socket() and vsock_find_connected_socket()
+> > to support network namespace, allowing to share the same address
+> > (cid, port) across different network namespaces.
+> > 
+> > This patch preserves old behavior, and does not yet bring up namespace
+> > support fully.
+> > 
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 > 
-> [snip]
+> I'd describe here a bit the new behaviour related to `fallback` that you
+> developed.
 > 
->>>>> +
->>>>> +	region = mshv_partition_region_by_gfn(partition, mem.guest_pfn);
->>>>> +	if (!region)
->>>>> +		return -EINVAL;
->>> <snip>
->>>> +	case MSHV_GPAP_ACCESS_TYPE_ACCESSED:
->>>>> +		hv_type_mask = 1;
->>>>> +		if (args.access_op == MSHV_GPAP_ACCESS_OP_CLEAR) {
->>>>> +			hv_flags.clear_accessed = 1;
->>>>> +			/* not accessed implies not dirty */
->>>>> +			hv_flags.clear_dirty = 1;
->>>>> +		} else { // MSHV_GPAP_ACCESS_OP_SET
->>>>
->>>> Avoid C++ style comments.
->>>>
->>> Ack
->>>
->>>>> +			hv_flags.set_accessed = 1;
->>>>> +		}
->>>>> +		break;
->>>>> +	case MSHV_GPAP_ACCESS_TYPE_DIRTY:
->>>>> +		hv_type_mask = 2;
->>>>> +		if (args.access_op == MSHV_GPAP_ACCESS_OP_CLEAR) {
->>>>> +			hv_flags.clear_dirty = 1;
->>>>> +		} else { // MSHV_GPAP_ACCESS_OP_SET
->>>>
->>>> Same here.
->>>>
->>> Ack
->>>
->>>>> +			hv_flags.set_dirty = 1;
->>>>> +			/* dirty implies accessed */
->>>>> +			hv_flags.set_accessed = 1;
->>>>> +		}
->>>>> +		break;
->>>>> +	}
->>>>> +
->>>>> +	states = vzalloc(states_buf_sz);
->>>>> +	if (!states)
->>>>> +		return -ENOMEM;
->>>>> +
->>>>> +	ret = hv_call_get_gpa_access_states(partition->pt_id, args.page_count,
->>>>> +					    args.gpap_base, hv_flags, &written,
->>>>> +					    states);
->>>>> +	if (ret)
->>>>> +		goto free_return;
->>>>> +
->>>>> +	/*
->>>>> +	 * Overwrite states buffer with bitmap - the bits in hv_type_mask
->>>>> +	 * correspond to bitfields in hv_gpa_page_access_state
->>>>> +	 */
->>>>> +	for (i = 0; i < written; ++i)
->>>>> +		assign_bit(i, (ulong *)states,
->>>>
->>>> Why the cast to ulong *?  I think this argument to assign_bit() is void *, in
->>>> which case the cast wouldn't be needed.
->>>>
->>> It looks like assign_bit() and friends resolve to a set of functions which do
->>> take an unsigned long pointer, e.g.:
->>>
->>> __set_bit() -> generic___set_bit(unsigned long nr, volatile unsigned long *addr)
->>> set_bit() -> arch_set_bit(unsigned int nr, volatile unsigned long *p)
->>> etc...
->>>
->>> So a cast is necessary.
->>
->> Indeed, you are right.  Seems like set_bit() and friends should take a void *.
->> But that's a different kettle of fish.
->>
->>>
->>>> Also, assign_bit() does atomic bit operations. Doing such in a loop like
->>>> here will really hammer the hardware memory bus with atomic
->>>> read-modify-write cycles. Use __assign_bit() instead, which does
->>>> non-atomic operations. You don't need atomic here as no other
->>>> threads are modifying the bit array.
->>>>
->>> I didn't realize it was atomic. I'll change it to __assign_bit().
->>>
->>>>> +			   states[i].as_uint8 & hv_type_mask);
->>>>
->>>> OK, so the starting contents of "states" is an array of bytes. The ending
->>>> contents is an array of bits. This works because every bit in the ending
->>>> bit array is set to either 0 or 1. Overlap occurs on the first iteration
->>>> where the code reads the 0th byte, and writes the 0th bit, which is part of
->>>> the 0th byte. The second iteration reads the 1st byte, and writes the 1st bit,
->>>> which doesn't overlap, and there's no overlap from then on.
->>>>
->>>> Suppose "written" is not a multiple of 8. The last byte of "states" as an
->>>> array of bits will have some bits that have not been set to either 0 or 1 and
->>>> might be leftover garbage from when "states" was an array of bytes. That
->>>> garbage will get copied to user space. Is that OK? Even if user space knows
->>>> enough to ignore those bits, it seems a little dubious to be copying even
->>>> a few bits of garbage to user space.
->>>>
->>>> Some comments might help here.
->>>>
->>> This is a good point. The expectation is indeed that userspace knows which
->>> bits are valid from the returned "written" value, but I agree it's a bit
->>> odd to have some garbage bits in the last byte. How does this look (to be
->>> inserted here directly after the loop):
->>>
->>> +       /* zero the unused bits in the last byte of the returned bitmap */
->>> +       if (written > 0) {
->>> +               u8 last_bits_mask;
->>> +               int last_byte_idx;
->>> +               int bits_rem = written % 8;
->>> +
->>> +               /* bits_rem == 0 when all bits in the last byte were assigned */
->>> +               if (bits_rem > 0) {
->>> +                       /* written > 0 ensures last_byte_idx >= 0 */
->>> +                       last_byte_idx = ((written + 7) / 8) - 1;
->>> +                       /* bits_rem > 0 ensures this masks 1 to 7 bits */
->>> +                       last_bits_mask = (1 << bits_rem) - 1;
->>> +                       states[last_byte_idx].as_uint8 &= last_bits_mask;
->>> +               }
->>> +       }
->>
->> A simpler approach is to "continue" the previous loop.  And if "written"
->> is zero, this additional loop won't do anything either:
->>
->> 	for (i = written; i < ALIGN(written, 8); ++i)
->> 		__clear_bit(i, (ulong *)states);
->>
-> > One further thought here: Could "written" be less than
-> args.page_count at this point? That would require
-> hv_call_get_gpa_access_states() to not fail, but still return
-> a value for written that is less than args.page_count. If that
-> could happen, then the above loop should be:
+> Or we can split this patch in two patches, one with my changes without
+> fallback, and another with fallback as you as author.
 > 
-> 	for (i = written; i < bitmap_buf_sz * 8; ++i)
-> 		__clear_bit(i, (ulong *)states);
+> WDYT?
 > 
-> so that all the uninitialized bits and bytes that will be written
-> back to user space are cleared.
-> Hmmm...now I'm not so sure where the need for "written" came from in
-the first place - in practice "written" will always be equal to
-args.page_count except on error, but in that case there's a goto
-free_return anyway, so the number is never copied to userspace. And
-I checked the userspace code - it doesn't expect a partial result
-either.
 
-So it seems to be redundant, but I don't really want to remove it just
-now.
+I like the idea of splitting it, that way any unforeseen issues in the
+new logic can be isolated to the one patch.
 
-Your suggestion with bitmap_buf_sz * 8 should be fine, and will make it
-straightforward to remove "written" in a future cleanup if that ends up
-looking like a good idea.
-
->>>
->>> The remaining bytes could be memset() to zero but I think it's fine to leave
->>> them.
->>
->> I agree.  The remaining bytes aren't written back to user space anyway
->> since the copy_to_user() uses bitmap_buf_sz.
 > 
-> Maybe I misunderstood what you meant by "remaining bytes".  I think
-> all bits and bytes that are written back to user space should have
-> valid data or zeros so that no garbage is written back.
+> > Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+> > ---
+> > v1 -> v2:
+> > * remove 'netns' module param
+> > * remove vsock_net_eq()
+> > * use vsock_global_net() for "global" namespace
+> > * use fallback logic in socket lookup functions, giving precedence to
+> >  non-global vsock namespaces
+> > 
+> > RFC -> v1
+> > * added 'netns' module param
+> > * added 'vsock_net_eq()' to check the "net" assigned to a socket
+> >  only when 'netns' support is enabled
+> > ---
+> > include/net/af_vsock.h                  |  7 +++--
+> > net/vmw_vsock/af_vsock.c                | 55 ++++++++++++++++++++++++---------
+> > net/vmw_vsock/hyperv_transport.c        |  2 +-
+> > net/vmw_vsock/virtio_transport_common.c |  5 +--
+> > net/vmw_vsock/vmci_transport.c          |  4 +--
+> > 5 files changed, 51 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> > index 9e85424c834353d016a527070dd62e15ff3bfce1..41afbc18648c953da27a93571d408de968aa7668 100644
+> > --- a/include/net/af_vsock.h
+> > +++ b/include/net/af_vsock.h
+> > @@ -213,9 +213,10 @@ void vsock_enqueue_accept(struct sock *listener, struct sock *connected);
+> > void vsock_insert_connected(struct vsock_sock *vsk);
+> > void vsock_remove_bound(struct vsock_sock *vsk);
+> > void vsock_remove_connected(struct vsock_sock *vsk);
+> > -struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr);
+> > +struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr, struct net *net);
+> > struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+> > -					 struct sockaddr_vm *dst);
+> > +					 struct sockaddr_vm *dst,
+> > +					 struct net *net);
+> > void vsock_remove_sock(struct vsock_sock *vsk);
+> > void vsock_for_each_connected_socket(struct vsock_transport *transport,
+> > 				     void (*fn)(struct sock *sk));
+> > @@ -255,4 +256,6 @@ static inline bool vsock_msgzerocopy_allow(const struct vsock_transport *t)
+> > {
+> > 	return t->msgzerocopy_allow && t->msgzerocopy_allow();
+> > }
+> > +
+> > +struct net *vsock_global_net(void);
 > 
-Agreed.
-
-Nuno
-
-> Michael
+> If it just returns null, maybe we can make it inline here.
 > 
->>
->>>
->>>>> +
->>>>> +	args.page_count = written;
->>>>> +
->>>>> +	if (copy_to_user(user_args, &args, sizeof(args))) {
->>>>> +		ret = -EFAULT;
->>>>> +		goto free_return;
->>>>> +	}
->>>>> +	if (copy_to_user((void __user *)args.bitmap_ptr, states, bitmap_buf_sz))
->>>>> +		ret = -EFAULT;
->>>>> +
->>>>> +free_return:
->>>>> +	vfree(states);
->>>>> +	return ret;
->>>>> +}
 
+Roger that.
+
+> > #endif /* __AF_VSOCK_H__ */
+> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > index 7e3db87ae4333cf63327ec105ca99253569bb9fe..d206489bf0a81cf989387c7c8063be91a7c21a7d 100644
+> > --- a/net/vmw_vsock/af_vsock.c
+> > +++ b/net/vmw_vsock/af_vsock.c
+> > @@ -235,37 +235,60 @@ static void __vsock_remove_connected(struct vsock_sock *vsk)
+> > 	sock_put(&vsk->sk);
+> > }
+> > 
+> > -static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr)
+> > +struct net *vsock_global_net(void)
+> > {
+> > +	return NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vsock_global_net);
+> > +
+> > +static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr,
+> > +					      struct net *net)
+> > +{
+> 
+> Please add a comment here to describe what fallback is used for.
+> And I would suggest also something on top of this file to explain a bit
+> how netns are handled in AF_VSOCK.
+> 
+
+sgtm!
+
+> > +	struct sock *fallback = NULL;
+> > 	struct vsock_sock *vsk;
+> > 
+> > 	list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_table) {
+> > -		if (vsock_addr_equals_addr(addr, &vsk->local_addr))
+> > -			return sk_vsock(vsk);
+> > +		if (vsock_addr_equals_addr(addr, &vsk->local_addr)) {
+> > +			if (net_eq(net, sock_net(sk_vsock(vsk))))
+> > +				return sk_vsock(vsk);
+> > 
+> > +			if (net_eq(net, vsock_global_net()))
+> > +				fallback = sk_vsock(vsk);
+> > +		}
+> > 		if (addr->svm_port == vsk->local_addr.svm_port &&
+> > 		    (vsk->local_addr.svm_cid == VMADDR_CID_ANY ||
+> > -		     addr->svm_cid == VMADDR_CID_ANY))
+> > -			return sk_vsock(vsk);
+> > +		     addr->svm_cid == VMADDR_CID_ANY)) {
+> > +			if (net_eq(net, sock_net(sk_vsock(vsk))))
+> > +				return sk_vsock(vsk);
+> > +
+> > +			if (net_eq(net, vsock_global_net()))
+> > +				fallback = sk_vsock(vsk);
+> > +		}
+> > 	}
+> > 
+> > -	return NULL;
+> > +	return fallback;
+> > }
+> > 
+> > static struct sock *__vsock_find_connected_socket(struct sockaddr_vm *src,
+> > -						  struct sockaddr_vm *dst)
+> > +						  struct sockaddr_vm *dst,
+> > +						  struct net *net)
+> > {
+> > +	struct sock *fallback = NULL;
+> > 	struct vsock_sock *vsk;
+> > 
+> > 	list_for_each_entry(vsk, vsock_connected_sockets(src, dst),
+> > 			    connected_table) {
+> > 		if (vsock_addr_equals_addr(src, &vsk->remote_addr) &&
+> > 		    dst->svm_port == vsk->local_addr.svm_port) {
+> > -			return sk_vsock(vsk);
+> > +			if (net_eq(net, sock_net(sk_vsock(vsk))))
+> > +				return sk_vsock(vsk);
+> > +
+> > +			if (net_eq(net, vsock_global_net()))
+> > +				fallback = sk_vsock(vsk);
+> 
+> This pattern seems to be repeated 3 times, can we make a function/macro?
+> 
+
+yep, no problem!
+
+> > 		}
+> > 	}
+> > 
+> > -	return NULL;
+> > +	return fallback;
+> > }
+> > 
+> > static void vsock_insert_unbound(struct vsock_sock *vsk)
+> > @@ -304,12 +327,12 @@ void vsock_remove_connected(struct vsock_sock *vsk)
+> > }
+> > EXPORT_SYMBOL_GPL(vsock_remove_connected);
+> > 
+> > -struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+> > +struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr, struct net *net)
+> > {
+> > 	struct sock *sk;
+> > 
+> > 	spin_lock_bh(&vsock_table_lock);
+> > -	sk = __vsock_find_bound_socket(addr);
+> > +	sk = __vsock_find_bound_socket(addr, net);
+> > 	if (sk)
+> > 		sock_hold(sk);
+> > 
+> > @@ -320,12 +343,13 @@ struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+> > EXPORT_SYMBOL_GPL(vsock_find_bound_socket);
+> > 
+> > struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+> > -					 struct sockaddr_vm *dst)
+> > +					 struct sockaddr_vm *dst,
+> > +					 struct net *net)
+> > {
+> > 	struct sock *sk;
+> > 
+> > 	spin_lock_bh(&vsock_table_lock);
+> > -	sk = __vsock_find_connected_socket(src, dst);
+> > +	sk = __vsock_find_connected_socket(src, dst, net);
+> > 	if (sk)
+> > 		sock_hold(sk);
+> > 
+> > @@ -644,6 +668,7 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> > {
+> > 	static u32 port;
+> > 	struct sockaddr_vm new_addr;
+> > +	struct net *net = sock_net(sk_vsock(vsk));
+> > 
+> > 	if (!port)
+> > 		port = get_random_u32_above(LAST_RESERVED_PORT);
+> > @@ -660,7 +685,7 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> > 
+> > 			new_addr.svm_port = port++;
+> > 
+> > -			if (!__vsock_find_bound_socket(&new_addr)) {
+> > +			if (!__vsock_find_bound_socket(&new_addr, net)) {
+> > 				found = true;
+> > 				break;
+> > 			}
+> > @@ -677,7 +702,7 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> > 			return -EACCES;
+> > 		}
+> > 
+> > -		if (__vsock_find_bound_socket(&new_addr))
+> > +		if (__vsock_find_bound_socket(&new_addr, net))
+> > 			return -EADDRINUSE;
+> > 	}
+> > 
+> > diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+> > index 31342ab502b4fc35feb812d2c94e0e35ded73771..253609898d24f8a484fcfc3296011c6f501a72a8 100644
+> > --- a/net/vmw_vsock/hyperv_transport.c
+> > +++ b/net/vmw_vsock/hyperv_transport.c
+> > @@ -313,7 +313,7 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+> > 		return;
+> > 
+> > 	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
+> > -	sk = vsock_find_bound_socket(&addr);
+> > +	sk = vsock_find_bound_socket(&addr, NULL);
+> > 	if (!sk)
+> > 		return;
+> > 
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index 7f7de6d8809655fe522749fbbc9025df71f071bd..256d2a4fe482b3cb938a681b6924be69b2065616 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -1590,6 +1590,7 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
+> > 			       struct sk_buff *skb)
+> > {
+> > 	struct virtio_vsock_hdr *hdr = virtio_vsock_hdr(skb);
+> > +	struct net *net = vsock_global_net();
+> 
+> Why using vsock_global_net() in virtio and directly NULL in the others
+> transports?
+> 
+
+This was an oversight on my part, I found an unnamed NULL harder to
+reason about, switched to the func, but forgot to switch over the other
+transports.
+
+BTW, I was unsure about just making NULL a macro (e.g.,
+VIRTIO_VSOCK_GLOBAL_NET?) instead of a function. I just used a function
+because A) I noticed in the prior rev that the default net was a
+function instead of some macro to &init_net, and B) the function seemed
+a little more flexible for future changes. What are your thoughts here?
+
+
+Thanks for the review!
+
+Best,
+Bobby
 
