@@ -1,225 +1,171 @@
-Return-Path: <linux-hyperv+bounces-4634-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4635-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3889A69A44
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 21:38:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EE9EA69A4B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 21:40:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D96C3BD108
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 20:37:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9761916D4AC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 20:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E842046B2;
-	Wed, 19 Mar 2025 20:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D587207DEA;
+	Wed, 19 Mar 2025 20:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DT6QvF8a"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="J7Cbjijt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010011.outbound.protection.outlook.com [52.103.10.11])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF61A7046;
-	Wed, 19 Mar 2025 20:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742416685; cv=fail; b=A6Nu+eXJkZpt7E1+va5NMCGb1yXTIzTTVpuMiGjB19p30798cC6j3f3WeMrVeT0Elkj+gfS11+TtA9PUehJmkaIT+a4uVE8oDVwhZBd0O/uEX+0v3I11Mtn0ClRqgTnWv5QLOpv+JqjywHdXO//5HfJ/Rl6cvRvLoaCycObv/Do=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742416685; c=relaxed/simple;
-	bh=aZVMCHMm2lDev3q3b9adWhnhFMlZSdcPeqiyvWmnooY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CQNi0g04KSGnfR+tuFnJ37Zwz3Oqy/SNr3d/XCP8lOuRNQEn/TxtqmXmmDj422YIB7sUHUd0BNbi2f0XnydXdLeUV/zLkZ/SUAj1XSb/1Z7Gpf9EvIm6O7mqhJ5IQmjCi1ho5oFIlZT4iWUUA0nKyO6cVlCxxds2AkBk9kUJj7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DT6QvF8a; arc=fail smtp.client-ip=52.103.10.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Uln6lQwnQLnWpFwK+X/8y9RqAMBKUbx2KTvm+GrZVl2NPdcKimxtuuNqtjbgQeJ/0dBmYLEY9QGttPNmqjjYGIoLjyWpUnd3nibdne94lZmNS1wJZAYuNkeIoQ+yctk6hD6BjO5Jmge+n+j4EhfAKMuErqz4WSfFkCu3SjJ1tmKvvH7HxgqQ2XI12VOxhT08SnoyIsIXAFlX2z2q/m+uyq6Ak5VvPpXaljurOBIFGgVK+jA59lOLCkZ/t7PWLLrMgV4zeR3nm8760SS/bkG3EHeqDaUQIulazekZ06uhcGl6ou+M5elm7qZ13QakLjVM+/NW6mW1b8XCY1lPuN6SVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l3a1IdKvQOUlnK76olcJAHqAdRYnXt2TWsArw5A5/4Y=;
- b=kasGml+w6czmzgXaXELSv2Wuw3stx8zEZ6nzykQ/sGl5w4xLSJkW4jDDxi/LcUF5nz2UwR0Uqsw5egL7TiQ2FH4iiaQ2kzRiFhsiB8ReWDy4gfIzjZhMcBmA2yxPa0IBqu/ciiJxnF7106xSI/AsGCTWBfj4PUL/BCrZ2GtQS5PxjF1SQxIxN/gwAb1Oa3y7aE8tqVIWrTe67WLNvsaDPjVnggdrd1eV5769DrBO4uaywwkWBdc2fFQm/V+CLSkXSFGZL9/TzGU/P4wbCKyQn1KYQMw0wJMBPFOVdWCIP53lWE0xDfrqyOlT8V8IP/QU3ivH18da5cc4+bouFn/7Vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l3a1IdKvQOUlnK76olcJAHqAdRYnXt2TWsArw5A5/4Y=;
- b=DT6QvF8aNgNe9ky6iKSEYu8osfypA/tzCfDnab46RbowzfNOBt6XC1Yj/2k+jjkTN9Of+GPtm+DbbguD2BrHxfVtFvOswq0McquB233cfCLRPGTILFNpDAQhTzuvaWDof/Ba1nOcBsVYLTcGfqassdXQGd1LEUskU5htDN1sRAXviN8x20onz+L/S2cihnzbByQMgRWn6kmCrZUCoaWebEXtamomfYrPTuCOA/7HgRuPFwyCPlmTPs7HJwgUpUw0z/4PxjqQLNfzgtWPwJi3Wy3wUIUzyA+pyfhBh6GTxSc6vUlh8eeNkn/C1DOXXeIYExGFWge5bmmiJjBXnPZGQA==
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
- by SA0PR02MB7419.namprd02.prod.outlook.com (2603:10b6:806:ea::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
- 2025 20:38:02 +0000
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911%4]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
- 20:38:02 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, "linux-fbdev@vger.kernel.org"
-	<linux-fbdev@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: fbdev deferred I/O broken in some scenarios
-Thread-Topic: fbdev deferred I/O broken in some scenarios
-Thread-Index: AduXqaeNbacCNH8yTNyrrucfCfcIpQANa9qAAEuI+tA=
-Date: Wed, 19 Mar 2025 20:38:02 +0000
-Message-ID:
- <BN7PR02MB4148864DDB065271B79FD3E4D4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-References:
- <SN6PR02MB4157227300E59ACB3B0DABD0D4DE2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <a4fa1dbb-4989-4fc2-acbc-055f786e9b48@suse.de>
-In-Reply-To: <a4fa1dbb-4989-4fc2-acbc-055f786e9b48@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|SA0PR02MB7419:EE_
-x-ms-office365-filtering-correlation-id: b59f31f1-54c4-4ecd-7f50-08dd6725f1a5
-x-ms-exchange-slblob-mailprops:
- WaIXnCbdHrPgu9FUvYZ88hunKvKD6srSaZYtcnzA+1vl/i56xdtnYLFRgd6wQQNcl/d8BcGsJerE8eueQvdkkb/bano1hTn0xOreRfj3KKVyDQJE3mS16EjE6XNOT0rDPlxp+0o+QIdB8UqIDgBlZ8X2YTsflGiDuiD9t1l6vw4SVkkjkTAXgirA0Nysn4tc9nAvFqaiRE+1AlkW9lp+zzeJgsFY0HmwyUnWsqs2QAj3lacR2B/ETH3ngailf0WrDaiY+EtlOr+Qmm/EzvyC3DDMmfis3HqeFnSYMlAlKIEHJiIqVTJ2CCyhLsf/691lxBFcShGrrQKO0Iw/B/9Vvys7S3ebaA8pP+phRxOXvVq4GRPM/Ydd2xLannWpP7fr9/NfkFXazUOf956Ddv1UCQ8Kt7Suls5+cjQPg7Q/GtU7qTa5IToyixFoFPeRXHs1Q/tUB1otPk2ZesdkIskr2cZWvLBDefs343SFwb64XVo04Dw77sr99H3g19qKOd+C2VXu5UkZR78a/knNyTbvyaOkAUF8Rrx3UQ5NkdIT9glAjjYRp5gqRfjYHapl8hLMbGqdqb1capc1qz+4gaE3bABPK+qWFyq4Y8IfKN2DrealgVMXWLlbzoOQYBLQ6lB1B4EGnhfr7Xh5aesHovOFpOHT1UnbwiKGTvqjDsnsqvGrinzOiNplI93/+TqUa+PQ5496fBSdgAcFpf7dvYu0ofvPdqlvFXgcXTQmAQuLljTQyupOvRq4mC6W+gjaCq9oOcmjNDVDTDg=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|19110799003|8060799006|15080799006|461199028|440099028|3412199025|12091999003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?ayA5OiFd1CktjNafQYW9lNfUFJ1abkEdkmopfg9jAu3entOcwQA4xyokG/y7?=
- =?us-ascii?Q?cgaT9n7qZc1v0tPtE55Ew+eCmMbD66DRlu5fx0xCXpS7lGy2tXHo+awpLUta?=
- =?us-ascii?Q?c1LTzL/GAb4mbzMW9JHn+8JbC7X9XpWrii+e2vcLqyaUaIjVLCL/EjojxtTE?=
- =?us-ascii?Q?WBGDmcMDhxIEtZ9cqO6ZvoPEtcYGdGAi/Nx1BlA3rLvzHb88xp4e71rOGlkh?=
- =?us-ascii?Q?TJt9HjL1AUHRzxDUJHcdVxT3N1+FRd3LRl9T+z3y3i4lW1nt8pnv58TDIJ0C?=
- =?us-ascii?Q?87QzV/X8Uqd+vNedvb1I6uy0RY8AuqpgpFiWaBRATiGNroDFhW4mgc8y7mcZ?=
- =?us-ascii?Q?gXNj7GUJWhi4dVHMeCL0OBOxiYIdVlSTP4rzzFOmNAuozYrbrOpms+YiDOnf?=
- =?us-ascii?Q?pUE4nrXgSXEPE7yL7nnEITvyuxH+8O2vDgCCzjTQVU2LXKRoZozE098znSUm?=
- =?us-ascii?Q?mp+HhCz+flIcwmmYyW2U8cTb5eWwSAYZp7MJsEOULp8YarJwsq7guKddWDTQ?=
- =?us-ascii?Q?kRhOor44xQ5Wfwq73Hmm15TUCXzfBBugZA/8ArFL/zyKd2cNoVhX5eAzaLt0?=
- =?us-ascii?Q?JJ5msZ3h2HkLsgOqtawR43mBCgU0gYWqhKxEjFm7JKBmefkMnvKxbAebxNAc?=
- =?us-ascii?Q?jS76eX8x4aqxIRrvokP58Uby6AHSV/EgMWO+sUIzeLY4GPNmEmMbcSpkWUo2?=
- =?us-ascii?Q?BgEf3hsqkf/lbh+t/I+Y438fazYyundfLebMFpXQzGMhtlHqPcuvB3+AYRqk?=
- =?us-ascii?Q?j/aU99Z97KxlYPDCH7oKXOKV3Iy1p+CZVNsx9gSAVZuHjF5o5TkaSbkdU+qh?=
- =?us-ascii?Q?UUkSoFe25Z9hWrLsBJbBaDHjsNkVYG7vSRvAA92yINVGwcmbxX16hcZ2tnzZ?=
- =?us-ascii?Q?kU4JQBdY0CMTtJg/XhoeMSN2SIx8aoM79WPme47CK2RZDF8BxfGvAZ3IlOBD?=
- =?us-ascii?Q?9sRqRIWj/FUsVXozFJrxv5vkWlfUouEmZN93ZED5KqwXdqeQ+pCSkamKaBHS?=
- =?us-ascii?Q?1EXznW3acPRmrs1xb5ez8g7QIgSm8wceXWsGSFevg78zaTeiEw9q3UXfHkLt?=
- =?us-ascii?Q?jx+AsvclNU7wsYJnaFSZx8L6AUv2UbWFWH9pKNLzTpgprfaKj1bpvRWXuWbw?=
- =?us-ascii?Q?pUoVDaSGMCBO?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?LL30lG1qO850XpywtpOzH+Gu6O3l69yuKrTA8PEeJMHD/4OkoYGvtRmjeTKE?=
- =?us-ascii?Q?z5cMGVv/j6S3tqOtVb67f4d3vsdzC2TahB3TvYzUPd8Bs0GYVV2q2ykbILrK?=
- =?us-ascii?Q?XBlm9T/QOfdUr1VhMeYUNO2IYy4Fvm93lKiENm909zcmcDy2qR+zlsRV65HN?=
- =?us-ascii?Q?xzhAeqMJ528sQyw+qXOZQeXyTCDebvaF7Gcbo+UiMQstWrBtl5HUH5Gw1mVS?=
- =?us-ascii?Q?Fq9n66C1p25wY9nUSSAtg/1gePRKH8BxxjPUHRCE1CV0j/9StSADgpiOly0Z?=
- =?us-ascii?Q?e+Kc8ehlsEDJDUl3lb8j/NRJUvtwc83lS9tb/aNT4SAQKEC6QyVLyYWLe3aM?=
- =?us-ascii?Q?NHbB7ukhsds7B/RP86Btt++T58nLmpZwq2m7SGmhS9TJnqPTC/vqUuLhY3kl?=
- =?us-ascii?Q?O5/uuirPPjw5tlC4B0zdC05+TdCpJqMYKhhrZ9BtDgntjTA83P5MEgMlXq7P?=
- =?us-ascii?Q?dhAWcJvrrLTDTMGa2calcute5NJzS5ecwlKVDFsulSNkNVwxMd4dbca1yylW?=
- =?us-ascii?Q?YtxosIeL2quMweosMPANrS2ve7ZUT+1z5W0bKXtTGkUVnm0ko3XTGfivxIMy?=
- =?us-ascii?Q?pIm8Js/a12i3TaaneYuSkaz0HAY9Ya7nUYAJPuRwvE1hgkS40HArw3pmcgSm?=
- =?us-ascii?Q?ynFHIohk1valGVD+WiwYzzxN5u1U3+hHh2gRMIps75DeRf4bQ+sncZuWhp54?=
- =?us-ascii?Q?9P7GBgLmgJiWNG7/8xM1810A15PC8IZto6GAB+TGu08/8YHa3xAwoip/kWEe?=
- =?us-ascii?Q?1youBrkphHmAiYUS542mQSB+PsBToTdfEBPUvJHF0Vdy98Ywp9NtgvFxwIOI?=
- =?us-ascii?Q?/JLToChpGMAkthHemYMakKTLzsEjK59j+DocpIp3GRXNuDp2GJHemwEQ8SAY?=
- =?us-ascii?Q?Dl/XCicEVxxT4wfv/cYxxrG9zgUmJh+UMd4G98Hz0erIi2HJMxAX4wiIlgmD?=
- =?us-ascii?Q?UOXOIHd+CUK9eAfyDuYYyfFlxwcfWC+NsolVYzVGt4hb4CoF9xW3lNBB4E++?=
- =?us-ascii?Q?t4uXxnQl9b/U2ZzE9sxUbcgCV9van/Yc2+OqqwBBlH6Ci0nnXmKx8wRfSAju?=
- =?us-ascii?Q?gbFqFO8FMi8lodPuu6FWgGjH2ZiS8KahObFdJWnUo6n1jjL2jPfDUrbfooHh?=
- =?us-ascii?Q?/0vdsFsJi5DzQ94enyJ11VWXTRD7rqi3i92jrwzUcI3Up2NH9VNhO02VrScv?=
- =?us-ascii?Q?WH/+o3WFIOzvuQvXAe3StHU6DK2GqxuGuyvr3aY1fJYIzrDi548CU2IHTGE?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175D61E0DB5;
+	Wed, 19 Mar 2025 20:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742416826; cv=none; b=EXAYNDmjxJM9d1+mudtBne9juyBKxbB1gwlnzbdNYFPbeuUR2HoFIYm2qNNrq2Gc3U5Itq6jmZQL4Sx23wokiur0d+Ivg8Bk2Snxcv3FdnZBU9b11nT+BsHJlRba4QTXb/+LJAgTuikqXmVtJcfXMX/BIQVvRWquAk5/UOdFOF8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742416826; c=relaxed/simple;
+	bh=E17QJcJcom4/xLJmjdLQU7RbyuFYz2UgVQOxpPLwGPM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BiKTQxlB35U2DsZ6OnZkSteOCWwj5cAUcunoKQBEl3hKElhA1V2/5zwTy35W00GRaT1yWosTdPNENYKxXCOKVx7o9+u+gBLgk9efs0J8W5hzthiXaUlmq4k3cvp0onvx4fwFcVmj/E4FWO4jA23f1B6puuFSSXEAcY5IzIqoWAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=J7Cbjijt; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1742416823;
+	bh=E17QJcJcom4/xLJmjdLQU7RbyuFYz2UgVQOxpPLwGPM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=J7Cbjijt386zshMPZGdBIEPswXh0KPgzISNVtv5VJ5v4JGqXLTFMEuHKyQLOFRuiZ
+	 SGourFCjlS33ZUhZPbWp63QnshG6W05knhFlJs9+sMDu82gKpNNB7r279BDwe+4o8n
+	 OZiPO70oZEeHhPm4/TLRDn6hf+VDNEJ/2/0ifPOg=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id F05361C00DA;
+	Wed, 19 Mar 2025 16:40:22 -0400 (EDT)
+Message-ID: <b64fc052da27c0e77afae1db40c8d3b05277cc86.camel@HansenPartnership.com>
+Subject: Re: [patch V4 13/14] scsi: ufs: qcom: Remove the MSI descriptor
+ abuse
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "Martin K.
+ Petersen" <martin.petersen@oracle.com>,  linux-scsi@vger.kernel.org,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Nishanth Menon
+ <nm@ti.com>, Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, 
+ Santosh Shilimkar <ssantosh@kernel.org>, Logan Gunthorpe
+ <logang@deltatee.com>, Dave Jiang <dave.jiang@intel.com>,  Jon Mason
+ <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+ Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+ linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, Wei Huang
+ <wei.huang2@amd.com>, Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Date: Wed, 19 Mar 2025 16:40:22 -0400
+In-Reply-To: <20250319105506.805529593@linutronix.de>
+References: <20250319104921.201434198@linutronix.de>
+	 <20250319105506.805529593@linutronix.de>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b59f31f1-54c4-4ecd-7f50-08dd6725f1a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2025 20:38:02.1872
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR02MB7419
 
-From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Tuesday, March 18, 2025=
- 1:26 AM
+On Wed, 2025-03-19 at 11:57 +0100, Thomas Gleixner wrote:
+> The driver abuses the MSI descriptors for internal purposes. Aside of
+> core code and MSI providers nothing has to care about their
+> existence. They have been encapsulated with a lot of effort because
+> this kind of abuse caused all sorts of issues including a
+> maintainability nightmare.
 >=20
-> Am 18.03.25 um 03:05 schrieb Michael Kelley:
-> > I've been trying to get mmap() working with the hyperv_fb.c fbdev drive=
-r, which
-> > is for Linux guests running on Microsoft's Hyper-V hypervisor. The hype=
-rv_fb driver
-> > uses fbdev deferred I/O for performance reasons. But it looks to me lik=
-e fbdev
-> > deferred I/O is fundamentally broken when the underlying framebuffer me=
-mory
-> > is allocated from kernel memory (alloc_pages or dma_alloc_coherent).
-> >
-> > The hyperv_fb.c driver may allocate the framebuffer memory in several w=
-ays,
-> > depending on the size of the framebuffer specified by the Hyper-V host =
-and the VM
-> > "Generation".  For a Generation 2 VM, the framebuffer memory is allocat=
-ed by the
-> > Hyper-V host and is assigned to guest MMIO space. The hyperv_fb driver =
-does a
-> > vmalloc() allocation for deferred I/O to work against. This combination=
- handles mmap()
-> > of /dev/fb<n> correctly and the performance benefits of deferred I/O ar=
-e substantial.
-> >
-> > But for a Generation 1 VM, the hyperv_fb driver allocates the framebuff=
-er memory in
-> > contiguous guest physical memory using alloc_pages() or dma_alloc_coher=
-ent(), and
-> > informs the Hyper-V host of the location. In this case, mmap() with def=
-erred I/O does
-> > not work. The mmap() succeeds, and user space updates to the mmap'ed me=
-mory are
-> > correctly reflected to the framebuffer. But when the user space program=
- does munmap()
-> > or terminates, the Linux kernel free lists become scrambled and the ker=
-nel eventually
-> > panics. The problem is that when munmap() is done, the PTEs in the VMA =
-are cleaned
-> > up, and the corresponding struct page refcounts are decremented. If the=
- refcount goes
-> > to zero (which it typically will), the page is immediately freed. In th=
-is way, some or all
-> > of the framebuffer memory gets erroneously freed. From what I see, the =
-VMA should
-> > be marked VM_PFNMAP when allocated memory kernel is being used as the
-> > framebuffer with deferred I/O, but that's not happening. The handling o=
-f deferred I/O
-> > page faults would also need updating to make this work.
+> Rewrite the code so it uses dedicated storage to hand the required
+> information to the interrupt handler and use a custom cleanup
+> function to simplify the error path.
 >=20
-> I cannot help much with HyperV, but there's a get_page callback in
-> struct fb_deferred_io. [1] It'll allow you to provide a custom page on
-> each page fault. We use it in DRM to mmap SHMEM-backed pages. [2] Maybe
-> this helps with hyperv_fb as well.
+> No functional change intended.
 >=20
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> ---
+> V4: Fix inverse NULL pointer check and use __free() for error paths -
+> James
+> ---
+> =C2=A0drivers/ufs/host/ufs-qcom.c |=C2=A0=C2=A0 85 ++++++++++++++++++++++=
+++---------
+> -----------
+> =C2=A01 file changed, 48 insertions(+), 37 deletions(-)
+>=20
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -1782,25 +1782,38 @@ static void ufs_qcom_write_msi_msg(struc
+> =C2=A0	ufshcd_mcq_config_esi(hba, msg);
+> =C2=A0}
+> =C2=A0
+> +struct ufs_qcom_irq {
+> +	unsigned int		irq;
+> +	unsigned int		idx;
+> +	struct ufs_hba		*hba;
+> +};
+> +
+> =C2=A0static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
+> =C2=A0{
+> -	struct msi_desc *desc =3D data;
+> -	struct device *dev =3D msi_desc_to_dev(desc);
+> -	struct ufs_hba *hba =3D dev_get_drvdata(dev);
+> -	u32 id =3D desc->msi_index;
+> -	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
+> +	struct ufs_qcom_irq *qi =3D data;
+> +	struct ufs_hba *hba =3D qi->hba;
+> +	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
+> =C2=A0
+> -	ufshcd_mcq_write_cqis(hba, 0x1, id);
+> +	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
+> =C2=A0	ufshcd_mcq_poll_cqe_lock(hba, hwq);
+> =C2=A0
+> =C2=A0	return IRQ_HANDLED;
+> =C2=A0}
+> =C2=A0
+> +static void ufs_qcom_irq_free(struct ufs_qcom_irq *uqi)
+> +{
+> +	for (struct ufs_qcom_irq *q =3D uqi; q->irq; q++)
+> +		devm_free_irq(q->hba->dev, q->irq, q->hba);
+> +
+> +	platform_device_msi_free_irqs_all(uqi->hba->dev);
+> +	devm_kfree(uqi->hba->dev, uqi);
+> +}
+> +
+> +DEFINE_FREE(ufs_qcom_irq, struct ufs_qcom_irq *, if (_T)
+> ufs_qcom_irq_free(_T))
 
-Thanks for your input. See also my reply to Helge.
+So if every __free body basically has a condition check and an external
+call, it would be a lot nicer if the macro were coded as something like
 
-Unfortunately, using a custom get_page() callback doesn't help. In the prob=
-lematic
-case, the standard deferred I/O get_page() function works correctly for get=
-ting the
-struct page.  My current thinking is that the problem is in fb_deferred_io_=
-mmap()
-where the vma needs to have the VM_PFNMAP flag set when the framebuffer
-memory is a direct kernel allocation and not through vmalloc(). And there m=
-ay be
-some implications on the mkwrite function as well, but I'll need to sort th=
-at out
-once I start coding.
+#define DEFINE_FREE(_name, _type, _cond, _free) \
+	static inline void __free_##_name(void *p) { _type _T =3D
+*(_type *)p; if (_cond(_T)) _free(_T); }
 
-For the DRM code using SHMEM-backed pages, do you know where the shared
-memory comes from? Is that ultimately a kernel vmalloc() allocation?
+to avoid having to splash the strange _T across the kernel.
 
-Michael=20
+Other than that (which isn't your problem, so you can ignore it), the
+code looks fine but I can't test it.
+
+Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+
 
