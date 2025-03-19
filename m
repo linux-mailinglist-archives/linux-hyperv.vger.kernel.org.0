@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-4624-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4625-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AD5DA695EF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 18:10:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 40720A695F3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 18:11:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 735AB3BE404
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 17:08:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7209A882423
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 17:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 544031EB5EA;
-	Wed, 19 Mar 2025 17:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 883BD1E5B7E;
+	Wed, 19 Mar 2025 17:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G14mmUJ/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHW4AF82"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB3B1D54D6;
-	Wed, 19 Mar 2025 17:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528021E0DD9;
+	Wed, 19 Mar 2025 17:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742404132; cv=none; b=BJTeW/fZCoIVvV12ejsV+3wKyipRlzMfqMaqHUR1Lhg0k+vvPmN6BcgXQ/wsStu6gAw/CiyIEtMzwZpUv4ftidPZZthi4RCORW2lecbhegZ+PlXgfUWRyfT8owCyifnyKphRJa0KSeAoEb3Ifyumx+3OPSsEbN+bKP3ow3WFuj4=
+	t=1742404150; cv=none; b=A2vcGhDCepMaNMXcysMWKaRQIDLd7cl265JYvlz7oerZjROvfqMu+UlCQ+cp4mNG8XtCP4qYFc5rIACi+CgyF3Qgo+tOg5Ufkr5SjJPSd0lT87kMH52lBQ6o9sIYbFHTg1sip62Rk97EoXpKejfDrIT181D1m1HqXiWhvhGzlh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742404132; c=relaxed/simple;
-	bh=O6TJ8nTFLxfO+EIOy74huVY72QVXAHjgorq6WvP7OZ4=;
+	s=arc-20240116; t=1742404150; c=relaxed/simple;
+	bh=4eZQWN7E6zsNrJUeyWKvlxo7Of2VDaRkDQCQjB3bpw0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=e3a/B6xLf8QiPVUJOo6TK8zW70F3zoVTGs/wmbFdYtR0CUUbUUyp5naTmsbpJZwzZmXvCmMzGPeklAQfKZsio8fI5S3sX/iziY+KfUqd+kuC0wWZCR0poSOSe28ihERo+OuFghk9GufyIkLrElqacHvXVcKMTXmQ/eZi40rORdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G14mmUJ/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F66EC4CEE4;
-	Wed, 19 Mar 2025 17:08:51 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=F4TtpwqiW7Yj7VINm2b0LFGzrqhvMtdqX+NeFNC72Gtvq5f+QRmi83HWsBAn2qw5SXuBs1TqzY5egOiKyNyfPypUcUwHY+LLApDAItbEzbEYsNquvg61M2wFo+QmwkhP5Ntt94muG5RxDOWDZRtsohoVStoNkAE5rPS9KmAFVhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHW4AF82; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF854C4CEE4;
+	Wed, 19 Mar 2025 17:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742404131;
-	bh=O6TJ8nTFLxfO+EIOy74huVY72QVXAHjgorq6WvP7OZ4=;
+	s=k20201202; t=1742404150;
+	bh=4eZQWN7E6zsNrJUeyWKvlxo7Of2VDaRkDQCQjB3bpw0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=G14mmUJ/nChPPHKxQxEumayTysEjDK4VzLIDJwjAV8sswXcJgnv2mSv3zdLkbxPtq
-	 w+O31Fp2lZLQicQcNw3HOa4cNRBcslPyIUfSV2qEPsO1LkIwzqD/hIcUvHCEH2Cub/
-	 /uSWP5l5YwNq7E9E+kY37RC9/P9y/TpBmOZDtcjyH3DU5+QWpfj0E1rieYXu6JMCZv
-	 XKkPi1QU+86pjawweim+MaUUgn9DyWlHXyEDD00Mjxe7QMbny6OYNNOdtLzSE5Wi8Q
-	 tEUY5JaBKSBxjDHXHEwaRj5bkycFzwWGOo7CJHf8xhmBdSXLfN1l5+5t0XNWqFnOoR
-	 sLw7U2gRuowsA==
-Date: Wed, 19 Mar 2025 12:08:48 -0500
+	b=vHW4AF82ElwGhCSx85axsadkgO43hpcyLeFrlQvq6a+fuPYcl8RLqd/F7+4QyibY4
+	 Edg/0QJzGFnm+1xDijZ1DAZ4vySfGVtBaJQ8ML95ri7vOQczN2wvL3xvP8dRTGqZRd
+	 ts4z1XlPLmUMCImhVDGQL/64EbGHwlpq1AP+6+d2WvPQhK9OdpvBGaQ7alIJ00r3n4
+	 7LconlkWvjWmzImmGOTH+drgSWa/enljL8+yWCMj9b6qrqf3V4YYzo2AeKkeuAHJYo
+	 u9Rw9cQDI5V71Ox2A+jsYEouxgykImd7RhjK0q5CUzgvS6ks07CWV6LNZGjVBs+n/j
+	 6niS4iRk8+2WA==
+Date: Wed, 19 Mar 2025 12:09:08 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -63,8 +63,8 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	linux-scsi@vger.kernel.org,
 	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V4 06/14] PCI/MSI: Set pci_dev::msi_enabled late
-Message-ID: <20250319170848.GA1046210@bhelgaas>
+Subject: Re: [patch V4 07/14] PCI/MSI: Use __free() for affinity masks
+Message-ID: <20250319170908.GA1046257@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,66 +73,75 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250319105506.383222333@linutronix.de>
+In-Reply-To: <20250319105506.444764312@linutronix.de>
 
-On Wed, Mar 19, 2025 at 11:56:49AM +0100, Thomas Gleixner wrote:
-> The comment claiming that pci_dev::msi_enabled has to be set across setup
-> is a leftover from ancient code versions. Nothing in the setup code
-> requires the flag to be set anymore.
+On Wed, Mar 19, 2025 at 11:56:50AM +0100, Thomas Gleixner wrote:
+> Let cleanup handle the freeing of the affinity mask. That prepares for
+> switching the MSI descriptor locking to a guard().
 > 
-> Set it in the success path and remove the extra goto label.
+> No functional change.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
-> V4: New patch
+> V4: Split out of the previous combo patch
 > ---
->  drivers/pci/msi/msi.c |   11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
+>  drivers/pci/msi/msi.c |   13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
 > 
 > --- a/drivers/pci/msi/msi.c
 > +++ b/drivers/pci/msi/msi.c
-> @@ -359,12 +359,8 @@ static int msi_capability_init(struct pc
->  	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
->  		return 1;
+> @@ -351,7 +351,6 @@ static int msi_verify_entries(struct pci
+>  static int msi_capability_init(struct pci_dev *dev, int nvec,
+>  			       struct irq_affinity *affd)
+>  {
+> -	struct irq_affinity_desc *masks = NULL;
+>  	struct msi_desc *entry, desc;
+>  	int ret;
 >  
-> -	/*
-> -	 * Disable MSI during setup in the hardware, but mark it enabled
-> -	 * so that setup code can evaluate it.
-> -	 */
-> +	/* Disable MSI during setup in the hardware to erase stale state */
+> @@ -362,8 +361,8 @@ static int msi_capability_init(struct pc
+>  	/* Disable MSI during setup in the hardware to erase stale state */
 >  	pci_msi_set_enable(dev, 0);
-> -	dev->msi_enabled = 1;
 >  
->  	if (affd)
->  		masks = irq_create_affinity_masks(nvec, affd);
-> @@ -372,7 +368,7 @@ static int msi_capability_init(struct pc
+> -	if (affd)
+> -		masks = irq_create_affinity_masks(nvec, affd);
+> +	struct irq_affinity_desc *masks __free(kfree) =
+> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
+>  
 >  	msi_lock_descs(&dev->dev);
 >  	ret = msi_setup_msi_desc(dev, nvec, masks);
->  	if (ret)
-> -		goto fail;
-> +		goto unlock;
->  
->  	/* All MSIs are unmasked by default; mask them all */
->  	entry = msi_first_desc(&dev->dev, MSI_DESC_ALL);
-> @@ -394,6 +390,7 @@ static int msi_capability_init(struct pc
->  		goto err;
->  
->  	/* Set MSI enabled bits	*/
-> +	dev->msi_enabled = 1;
->  	pci_intx_for_msi(dev, 0);
->  	pci_msi_set_enable(dev, 1);
->  
-> @@ -404,8 +401,6 @@ static int msi_capability_init(struct pc
->  err:
->  	pci_msi_unmask(&desc, msi_multi_mask(&desc));
+> @@ -403,7 +402,6 @@ static int msi_capability_init(struct pc
 >  	pci_free_msi_irqs(dev);
-> -fail:
-> -	dev->msi_enabled = 0;
 >  unlock:
 >  	msi_unlock_descs(&dev->dev);
->  	kfree(masks);
+> -	kfree(masks);
+>  	return ret;
+>  }
+>  
+> @@ -664,12 +662,10 @@ static void msix_mask_all(void __iomem *
+>  static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
+>  				 int nvec, struct irq_affinity *affd)
+>  {
+> -	struct irq_affinity_desc *masks = NULL;
+> +	struct irq_affinity_desc *masks __free(kfree) =
+> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
+>  	int ret;
+>  
+> -	if (affd)
+> -		masks = irq_create_affinity_masks(nvec, affd);
+> -
+>  	msi_lock_descs(&dev->dev);
+>  	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
+>  	if (ret)
+> @@ -691,7 +687,6 @@ static int msix_setup_interrupts(struct
+>  	pci_free_msi_irqs(dev);
+>  out_unlock:
+>  	msi_unlock_descs(&dev->dev);
+> -	kfree(masks);
+>  	return ret;
+>  }
+>  
 > 
 
