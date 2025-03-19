@@ -1,158 +1,296 @@
-Return-Path: <linux-hyperv+bounces-4627-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4628-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A80EA695FC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 18:11:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CF11A6976D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 19:06:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6525A8A1434
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 17:09:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D41F4171CF3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 18:04:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC581E5206;
-	Wed, 19 Mar 2025 17:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9EA205E3B;
+	Wed, 19 Mar 2025 18:04:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVMIdqIB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sfta73GW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D7C257D;
-	Wed, 19 Mar 2025 17:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 697B3202971;
+	Wed, 19 Mar 2025 18:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742404176; cv=none; b=J1Swn5yfTMXzlmPoDFqjJO5dtvQx9HLcV8kMTwhuPYpCDOjXj9K1eQmJ3KdcvYUODg0U3vR0t26EYcrlwFn2en5KwgQk2frd+Lg8LlXthR2UYqal7kWSSeWpyPM9cccuKcypQad6skRYXrxn/5vhH8eqcIs/qCAZ29XkpgTpIU0=
+	t=1742407472; cv=none; b=McrqjDaxdcSu7cbZWFaPKy6CaiUwOTMXIIRqLLg5v0xOD4vq6OwPlhk2MMgzjICBw7m8Q4ue68lx+TueyWTkhZGiWCAHW9RclJq2RYQqoJTmKKkCmMJ41nPIVNsK67DLtNHKjVQNp4qVLRPzMluFGwBayoI9SDwD3uIgMJJwd9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742404176; c=relaxed/simple;
-	bh=iKCIiHI9Se7fL/4P3PMyQSCP9PrppXcJWRXpCMClUpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JRv9rMvjtqZZnkovHXLQ49CCHE+FgKvjlJ1Ihzz55pZUAFBuiDmIB0p2i+VjStfzV5lTLwf7no31ckC3yGy9anuTIu1IZmFO115MbJFxG5t0WVYlKqDfYIHqDlA7hOi54gzhp3szQqkRo1Z8fm4KGRljXmCVT03NHjlfKTxpnzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVMIdqIB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1911C4CEE4;
-	Wed, 19 Mar 2025 17:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742404175;
-	bh=iKCIiHI9Se7fL/4P3PMyQSCP9PrppXcJWRXpCMClUpE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eVMIdqIB9UuKhiW0pG8us2LpVUwratI0xxa0yomDDHx41i3mnIX+qZcRuxb6tf+0W
-	 KKNrUnPfUlrateIDY1Hxzk/9q0/3NfikIJGzUZ9fg4gl2sd0BjZeKYd2013vflRrUT
-	 vgjeC/Cj7Euckh3MoZG3D5bLA05/ymgGsaN4Te0lQykVqz6Ng0Yw4rXwFFvFMTikh3
-	 L4kEZhj59cGSUyagtiRiKiNLFtjDPvuG59poj0DM5FCfJ3Wu+aH0lcMlk25syDoBQ5
-	 vFfM9c3CqVvjY4js5dOBoahAOx2IFp3uCxR3GGkD7fLeBlDx7Qg9N1RP8q3upwUiPc
-	 VWTOlwKzEhuuw==
-Date: Wed, 19 Mar 2025 12:09:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	Wei Huang <wei.huang2@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V4 09/14] PCI/MSI: Switch msix_capability_init() to
- guard(msi_desc_lock)
-Message-ID: <20250319170932.GA1046398@bhelgaas>
+	s=arc-20240116; t=1742407472; c=relaxed/simple;
+	bh=9p2UBz/QA8scnm5HX/3m0Mc66hHZZvwC2vmYqUnyn8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=srkTJCk7qRCKnRfLSt7U1bsGNKCy8wPb/maSLo9xtQkwJdtXsGgAyZhUuClAnO0dkfHtenrewh2nG0/6GiLlwLNot2H7BO7U9mfFE3dbEGNEoPx6lBkNvhyq59cm+IE7WgGRDW7iBSdQ8iaS5CYDiiyEVBipPatu4J2oiTfwdyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sfta73GW; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 723342116B2A;
+	Wed, 19 Mar 2025 11:04:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 723342116B2A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742407464;
+	bh=gC8pXVAWUQ2vl5I11MAp+n/V7d6h6Fj9qgoDP/kFvoI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sfta73GWjKfXmrNlFXAyYk/kkVe/NRLYwA4dkqy9LAxtDrmWcsW5VmvpxSozHi8tT
+	 RZt3eXI14NRkqr1tR3scUWpBXcwA1I+Tmj+PAuy1qJUN5BkrEFW4u0tvBkLyrsd5Uf
+	 tyrYDDo+h8c56GoBVQ7JiSgzgYQ2WT9z8myq3e4c=
+Message-ID: <9791bc6b-d8ad-47ee-8c54-7230d044f8d5@linux.microsoft.com>
+Date: Wed, 19 Mar 2025 11:04:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319105506.564105011@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
+ expose /dev/mshv to VMMs
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
+ <arnd@arndb.de>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+ "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
+ "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "vkuznets@redhat.com" <vkuznets@redhat.com>,
+ "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+ "muislam@microsoft.com" <muislam@microsoft.com>,
+ "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
+ "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
+ <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157BE8AF5A1CDD39CF31124D4DF2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <afd87eba-742f-4b67-9171-fd8486416b7b@linux.microsoft.com>
+ <SN6PR02MB41574DE5535222985147134CD4D92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <BN7PR02MB4148D51FFF965676AD155A3ED4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <BN7PR02MB4148D51FFF965676AD155A3ED4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 19, 2025 at 11:56:54AM +0100, Thomas Gleixner wrote:
-> Split the lock protected functionality of msix_capability_init() out into a
-> helper function and use guard(msi_desc_lock) to replace the lock/unlock
-> pair.
+On 3/19/2025 8:26 AM, Michael Kelley wrote:
+> From: Michael Kelley <mhklinux@outlook.com> Sent: Tuesday, March 18, 2025 7:10 PM
+>>
+>> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, March
+>> 18, 2025 5:34 PM
+>>>
+>>> On 3/17/2025 4:51 PM, Michael Kelley wrote:
+>>>> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, February 26, 2025 3:08 PM
 > 
-> Simplify the error path in the helper function by utilizing a custom
-> cleanup to get rid of the remaining gotos.
+> [snip]
 > 
-> No functional change intended.
+>>>>> +
+>>>>> +	region = mshv_partition_region_by_gfn(partition, mem.guest_pfn);
+>>>>> +	if (!region)
+>>>>> +		return -EINVAL;
+>>> <snip>
+>>>> +	case MSHV_GPAP_ACCESS_TYPE_ACCESSED:
+>>>>> +		hv_type_mask = 1;
+>>>>> +		if (args.access_op == MSHV_GPAP_ACCESS_OP_CLEAR) {
+>>>>> +			hv_flags.clear_accessed = 1;
+>>>>> +			/* not accessed implies not dirty */
+>>>>> +			hv_flags.clear_dirty = 1;
+>>>>> +		} else { // MSHV_GPAP_ACCESS_OP_SET
+>>>>
+>>>> Avoid C++ style comments.
+>>>>
+>>> Ack
+>>>
+>>>>> +			hv_flags.set_accessed = 1;
+>>>>> +		}
+>>>>> +		break;
+>>>>> +	case MSHV_GPAP_ACCESS_TYPE_DIRTY:
+>>>>> +		hv_type_mask = 2;
+>>>>> +		if (args.access_op == MSHV_GPAP_ACCESS_OP_CLEAR) {
+>>>>> +			hv_flags.clear_dirty = 1;
+>>>>> +		} else { // MSHV_GPAP_ACCESS_OP_SET
+>>>>
+>>>> Same here.
+>>>>
+>>> Ack
+>>>
+>>>>> +			hv_flags.set_dirty = 1;
+>>>>> +			/* dirty implies accessed */
+>>>>> +			hv_flags.set_accessed = 1;
+>>>>> +		}
+>>>>> +		break;
+>>>>> +	}
+>>>>> +
+>>>>> +	states = vzalloc(states_buf_sz);
+>>>>> +	if (!states)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	ret = hv_call_get_gpa_access_states(partition->pt_id, args.page_count,
+>>>>> +					    args.gpap_base, hv_flags, &written,
+>>>>> +					    states);
+>>>>> +	if (ret)
+>>>>> +		goto free_return;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * Overwrite states buffer with bitmap - the bits in hv_type_mask
+>>>>> +	 * correspond to bitfields in hv_gpa_page_access_state
+>>>>> +	 */
+>>>>> +	for (i = 0; i < written; ++i)
+>>>>> +		assign_bit(i, (ulong *)states,
+>>>>
+>>>> Why the cast to ulong *?  I think this argument to assign_bit() is void *, in
+>>>> which case the cast wouldn't be needed.
+>>>>
+>>> It looks like assign_bit() and friends resolve to a set of functions which do
+>>> take an unsigned long pointer, e.g.:
+>>>
+>>> __set_bit() -> generic___set_bit(unsigned long nr, volatile unsigned long *addr)
+>>> set_bit() -> arch_set_bit(unsigned int nr, volatile unsigned long *p)
+>>> etc...
+>>>
+>>> So a cast is necessary.
+>>
+>> Indeed, you are right.  Seems like set_bit() and friends should take a void *.
+>> But that's a different kettle of fish.
+>>
+>>>
+>>>> Also, assign_bit() does atomic bit operations. Doing such in a loop like
+>>>> here will really hammer the hardware memory bus with atomic
+>>>> read-modify-write cycles. Use __assign_bit() instead, which does
+>>>> non-atomic operations. You don't need atomic here as no other
+>>>> threads are modifying the bit array.
+>>>>
+>>> I didn't realize it was atomic. I'll change it to __assign_bit().
+>>>
+>>>>> +			   states[i].as_uint8 & hv_type_mask);
+>>>>
+>>>> OK, so the starting contents of "states" is an array of bytes. The ending
+>>>> contents is an array of bits. This works because every bit in the ending
+>>>> bit array is set to either 0 or 1. Overlap occurs on the first iteration
+>>>> where the code reads the 0th byte, and writes the 0th bit, which is part of
+>>>> the 0th byte. The second iteration reads the 1st byte, and writes the 1st bit,
+>>>> which doesn't overlap, and there's no overlap from then on.
+>>>>
+>>>> Suppose "written" is not a multiple of 8. The last byte of "states" as an
+>>>> array of bits will have some bits that have not been set to either 0 or 1 and
+>>>> might be leftover garbage from when "states" was an array of bytes. That
+>>>> garbage will get copied to user space. Is that OK? Even if user space knows
+>>>> enough to ignore those bits, it seems a little dubious to be copying even
+>>>> a few bits of garbage to user space.
+>>>>
+>>>> Some comments might help here.
+>>>>
+>>> This is a good point. The expectation is indeed that userspace knows which
+>>> bits are valid from the returned "written" value, but I agree it's a bit
+>>> odd to have some garbage bits in the last byte. How does this look (to be
+>>> inserted here directly after the loop):
+>>>
+>>> +       /* zero the unused bits in the last byte of the returned bitmap */
+>>> +       if (written > 0) {
+>>> +               u8 last_bits_mask;
+>>> +               int last_byte_idx;
+>>> +               int bits_rem = written % 8;
+>>> +
+>>> +               /* bits_rem == 0 when all bits in the last byte were assigned */
+>>> +               if (bits_rem > 0) {
+>>> +                       /* written > 0 ensures last_byte_idx >= 0 */
+>>> +                       last_byte_idx = ((written + 7) / 8) - 1;
+>>> +                       /* bits_rem > 0 ensures this masks 1 to 7 bits */
+>>> +                       last_bits_mask = (1 << bits_rem) - 1;
+>>> +                       states[last_byte_idx].as_uint8 &= last_bits_mask;
+>>> +               }
+>>> +       }
+>>
+>> A simpler approach is to "continue" the previous loop.  And if "written"
+>> is zero, this additional loop won't do anything either:
+>>
+>> 	for (i = written; i < ALIGN(written, 8); ++i)
+>> 		__clear_bit(i, (ulong *)states);
+>>
+> > One further thought here: Could "written" be less than
+> args.page_count at this point? That would require
+> hv_call_get_gpa_access_states() to not fail, but still return
+> a value for written that is less than args.page_count. If that
+> could happen, then the above loop should be:
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 	for (i = written; i < bitmap_buf_sz * 8; ++i)
+> 		__clear_bit(i, (ulong *)states);
+> 
+> so that all the uninitialized bits and bytes that will be written
+> back to user space are cleared.
+> Hmmm...now I'm not so sure where the need for "written" came from in
+the first place - in practice "written" will always be equal to
+args.page_count except on error, but in that case there's a goto
+free_return anyway, so the number is never copied to userspace. And
+I checked the userspace code - it doesn't expect a partial result
+either.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+So it seems to be redundant, but I don't really want to remove it just
+now.
 
-> ---
-> V4: Split out from the previous combo patch
-> ---
->  drivers/pci/msi/msi.c |   36 ++++++++++++++++++++----------------
->  1 file changed, 20 insertions(+), 16 deletions(-)
+Your suggestion with bitmap_buf_sz * 8 should be fine, and will make it
+straightforward to remove "written" in a future cleanup if that ends up
+looking like a good idea.
+
+>>>
+>>> The remaining bytes could be memset() to zero but I think it's fine to leave
+>>> them.
+>>
+>> I agree.  The remaining bytes aren't written back to user space anyway
+>> since the copy_to_user() uses bitmap_buf_sz.
 > 
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -663,35 +663,39 @@ static void msix_mask_all(void __iomem *
->  		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  }
->  
-> -static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> -				 int nvec, struct irq_affinity *affd)
-> +DEFINE_FREE(free_msi_irqs, struct pci_dev *, if (_T) pci_free_msi_irqs(_T));
-> +
-> +static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *entries,
-> +				   int nvec, struct irq_affinity_desc *masks)
->  {
-> -	struct irq_affinity_desc *masks __free(kfree) =
-> -		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
-> -	int ret;
-> +	struct pci_dev *dev __free(free_msi_irqs) = __dev;
->  
-> -	msi_lock_descs(&dev->dev);
-> -	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
-> +	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
-> +	retain_ptr(dev);
->  	msix_update_entries(dev, entries);
-> -	goto out_unlock;
-> +	return 0;
-> +}
-> +
-> +static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> +				 int nvec, struct irq_affinity *affd)
-> +{
-> +	struct irq_affinity_desc *masks __free(kfree) =
-> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
->  
-> -out_free:
-> -	pci_free_msi_irqs(dev);
-> -out_unlock:
-> -	msi_unlock_descs(&dev->dev);
-> -	return ret;
-> +	guard(msi_descs_lock)(&dev->dev);
-> +	return __msix_setup_interrupts(dev, entries, nvec, masks);
->  }
->  
->  /**
+> Maybe I misunderstood what you meant by "remaining bytes".  I think
+> all bits and bytes that are written back to user space should have
+> valid data or zeros so that no garbage is written back.
 > 
+Agreed.
+
+Nuno
+
+> Michael
+> 
+>>
+>>>
+>>>>> +
+>>>>> +	args.page_count = written;
+>>>>> +
+>>>>> +	if (copy_to_user(user_args, &args, sizeof(args))) {
+>>>>> +		ret = -EFAULT;
+>>>>> +		goto free_return;
+>>>>> +	}
+>>>>> +	if (copy_to_user((void __user *)args.bitmap_ptr, states, bitmap_buf_sz))
+>>>>> +		ret = -EFAULT;
+>>>>> +
+>>>>> +free_return:
+>>>>> +	vfree(states);
+>>>>> +	return ret;
+>>>>> +}
+
 
