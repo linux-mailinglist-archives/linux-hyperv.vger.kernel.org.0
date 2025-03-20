@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-4645-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4646-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB24BA6A62F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Mar 2025 13:23:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2B3FA6A637
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Mar 2025 13:23:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DBD91889CC4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Mar 2025 12:23:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC9788A018F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Mar 2025 12:23:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E79D4224228;
-	Thu, 20 Mar 2025 12:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1044B224B08;
+	Thu, 20 Mar 2025 12:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="p/p8SwWs"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Fv1hnl/B"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57525221F39;
-	Thu, 20 Mar 2025 12:22:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1DF2236E4;
+	Thu, 20 Mar 2025 12:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742473347; cv=none; b=fP8ynhXBZWEpeoBFp93m0FX+qFW0P8YmhKKIXXkG8/VN8seMHITulzXHv3u2i/+I+rLnVmyBoKuZX1C4qBYlLtuVTsSJQReJdtBSHMsitnSzX4onL2g5Cn9/WFNWdu5HKem8x8y2tvBHfc43uJBuo2t8ToSB7QgkjoA0NpbZLQs=
+	t=1742473349; cv=none; b=KNMWkxj2H1eozo4WnaEFrB/dzHY/W6NxoeTR7g2hJVGDB2Ahvs9QL0qpsf6EoxXmMpq9ro51j7v118vS/mPbUj3nme1qRYX2PaJq5mnxk86SVsrMPPPYSf2fWPvA/bsytJTd8ZMSZvILzfnxZJ3dp1HBYGtL9CDnpgVmZJ4Pd0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742473347; c=relaxed/simple;
-	bh=4Xlrz8OTPOnn/0Z1PaocUUGP9A0UGMay1iJ4eIfY/iM=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=O29aYg0qQPpXGkeLE3hj3r/YpY5IXaeh2OI/OPh69zCj+vE/p6O5Wq3VjBOOQuZE/HjZYiAR9CPq3NpQwWldcpcJqxWkk584TUcoUQ9xnDHAosv6namp59M55hNbjT0Tr+6OOCpitZbilgWj2RZBMmvPei4IMceAyJLIjHQ6zgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=p/p8SwWs; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1742473349; c=relaxed/simple;
+	bh=aazNratN0oWjwOMuxNbCnK6kCy2vL37vrBIHfF8mJzM=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=OoeC6qaQk5iXUM9yXn3OTlseaUnnfjo2qejpcvgSWYEXALgCLxX4ERdGt77bjStHe2Prpx0dCJMoOTya1MMzmwtTJBYg04LDHU2ZhFGq/3jO2G1DqofI15hNIuL9jvHKpqAzAsbtRtiGbuHs6sQC7arb/+/zYlcPju6TBmtThCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Fv1hnl/B; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id D68A42116B4D; Thu, 20 Mar 2025 05:22:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D68A42116B4D
+	id 2DD1D2116B4E; Thu, 20 Mar 2025 05:22:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2DD1D2116B4E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742473345;
-	bh=Xwxv70u6KUTpUivc/cEfPVEIJqdCmQM54B7jfFV6qdE=;
+	s=default; t=1742473347;
+	bh=6s0mgp4lHlYiXENPZ/aQQnsAe9IPm+594571JdrFWmc=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=p/p8SwWsmZCDFo2MMYaq+sQR56H0RR7SUZLZeXBo0Ta0usOz2s/iBqtUoBxNOMe1T
-	 QTtRiruH2pF8qtZ/ss9bBATRObpTahhF0ahmMGARlcKuKPHThlkCSiyKPiS4LWF71H
-	 XyJXLjD7SyYVHYE/pVK3Hz+N0InWDqaNYlBe9qsw=
+	b=Fv1hnl/BNf5GZRqezgFk66HSIygFUTaDMKiwAXP614qHEFvZKgNPE7LtlrHp/AX2i
+	 4QaehBLvZ0PYuGFMUR0GNezyqeVGG4a7UKcMCDrDa7cq6S+c07GDAm7wXGU2q9wAJr
+	 deZz83cJQc22Y+HjGa7I7lLZOmfgOsEWeS5WAGgM=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -63,9 +63,9 @@ To: kys@microsoft.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org
-Subject: [PATCH 2/3] net: mana: Implement set_link_ksettings in ethtool for speed
-Date: Thu, 20 Mar 2025 05:22:20 -0700
-Message-Id: <1742473341-15262-3-git-send-email-ernis@linux.microsoft.com>
+Subject: [PATCH 3/3] net: mana: Handle unsupported HWC commands
+Date: Thu, 20 Mar 2025 05:22:21 -0700
+Message-Id: <1742473341-15262-4-git-send-email-ernis@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
 References: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
@@ -75,183 +75,70 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-Add support for ethtool_set_link_ksettings for mana.
-Set speed information of the port using ethtool. This
-feature is not supported by all hardware.
-
-Before the change:
-$ethtool -s enP30832s1 speed 100
->netlink error: Operation not supported
-$ethtool enP30832s1
->Settings for enP30832s1:
-        Supported ports: [  ]
-        Supported link modes:   Not reported
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  Not reported
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: Unknown!
-        Duplex: Full
-        Auto-negotiation: off
-        Port: Other
-        PHYAD: 0
-        Transceiver: internal
-        Link detected: yes
-
-After the change:
-$ethtool -s enP30832s1 speed 100
-$ethtool enP30832s1
->Settings for enP30832s1:
-        Supported ports: [  ]
-        Supported link modes:   Not reported
-        Supported pause frame use: No
-        Supports auto-negotiation: No
-        Supported FEC modes: Not reported
-        Advertised link modes:  Not reported
-        Advertised pause frame use: No
-        Advertised auto-negotiation: No
-        Advertised FEC modes: Not reported
-        Speed: 100Mb/s
-        Duplex: Full
-        Auto-negotiation: off
-        Port: Other
-        PHYAD: 0
-        Transceiver: internal
-        Link detected: yes
+If any of the HWC commands are not recognized by the
+underlying hardware, the hardware returns the response
+header status of -1. Log the information using
+netdev_info_once to avoid multiple error logs in dmesg.
 
 Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 39 +++++++++++++++++++
- .../ethernet/microsoft/mana/mana_ethtool.c    | 13 +++++++
- include/net/mana/mana.h                       | 16 ++++++++
- 3 files changed, 68 insertions(+)
+ drivers/net/ethernet/microsoft/mana/hw_channel.c |  4 ++++
+ drivers/net/ethernet/microsoft/mana/mana_en.c    | 11 +++++++++++
+ 2 files changed, 15 insertions(+)
 
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index a00f915c5188..280218895c0e 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -867,6 +867,10 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+ 	}
+ 
+ 	if (ctx->status_code && ctx->status_code != GDMA_STATUS_MORE_ENTRIES) {
++		if (ctx->status_code == -1) {
++			err = -EOPNOTSUPP;
++			goto out;
++		}
+ 		dev_err(hwc->dev, "HWC: Failed hw_channel req: 0x%x\n",
+ 			ctx->status_code);
+ 		err = -EPROTO;
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 5fa8e1e2ff9a..bcc273427423 100644
+index bcc273427423..898d18b220b8 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1203,6 +1203,45 @@ int mana_query_link_cfg(struct mana_port_context *apc)
- 	return err;
- }
+@@ -779,6 +779,9 @@ static int mana_send_request(struct mana_context *ac, void *in_buf,
+ 	err = mana_gd_send_request(gc, in_len, in_buf, out_len,
+ 				   out_buf);
+ 	if (err || resp->status) {
++		if (err == -EOPNOTSUPP)
++			return err;
++
+ 		dev_err(dev, "Failed to send mana message: %d, 0x%x\n",
+ 			err, resp->status);
+ 		return err ? err : -EPROTO;
+@@ -1177,6 +1180,10 @@ int mana_query_link_cfg(struct mana_port_context *apc)
+ 				sizeof(resp));
  
-+int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed)
-+{
-+	struct mana_set_bw_clamp_req req = {};
-+	struct mana_set_bw_clamp_resp resp = {};
-+	struct net_device *ndev = apc->ndev;
-+	int err;
-+
-+	mana_gd_init_req_hdr(&req.hdr, MANA_SET_BW_CLAMP,
-+			     sizeof(req), sizeof(resp));
-+	req.vport = apc->port_handle;
-+	req.link_speed = speed;
-+	req.enable_clamping = TRI_STATE_TRUE;
-+
-+	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
-+				sizeof(resp));
-+
-+	if (err) {
-+		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
-+			   speed, err);
-+		return err;
-+	}
-+
-+	err = mana_verify_resp_hdr(&resp.hdr, MANA_SET_BW_CLAMP,
-+				   sizeof(resp));
-+
-+	if (err || resp.hdr.status) {
-+		netdev_err(ndev, "Failed to set bandwidth clamp: %d, 0x%x\n", err,
-+			   resp.hdr.status);
-+		if (!err)
-+			err = -EPROTO;
-+		return err;
-+	}
-+
-+	if (resp.qos_unconfigured)
-+		netdev_info(ndev, "QoS is unconfigured\n");
-+
-+	return 0;
-+}
-+
- int mana_create_wq_obj(struct mana_port_context *apc,
- 		       mana_handle_t vport,
- 		       u32 wq_type, struct mana_obj_spec *wq_spec,
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 48234a738d26..b29d0fe0a201 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -439,6 +439,18 @@ static int mana_get_link_ksettings(struct net_device *ndev,
- 	return 0;
- }
+ 	if (err) {
++		if (err == -EOPNOTSUPP) {
++			netdev_info_once(ndev, "MANA_QUERY_LINK_CONFIG not supported\n");
++			goto out;
++		}
+ 		netdev_err(ndev, "Failed to query link config: %d\n", err);
+ 		goto out;
+ 	}
+@@ -1220,6 +1227,10 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed)
+ 				sizeof(resp));
  
-+static int mana_set_link_ksettings(struct net_device *ndev,
-+				   const struct ethtool_link_ksettings *cmd)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+	int err;
-+
-+	err = mana_set_bw_clamp(apc, cmd->base.speed);
-+
-+	apc->speed = (err) ? apc->speed : cmd->base.speed;
-+	return 0;
-+}
-+
- const struct ethtool_ops mana_ethtool_ops = {
- 	.get_ethtool_stats	= mana_get_ethtool_stats,
- 	.get_sset_count		= mana_get_sset_count,
-@@ -453,5 +465,6 @@ const struct ethtool_ops mana_ethtool_ops = {
- 	.get_ringparam          = mana_get_ringparam,
- 	.set_ringparam          = mana_set_ringparam,
- 	.get_link_ksettings	= mana_get_link_ksettings,
-+	.set_link_ksettings	= mana_set_link_ksettings,
- 	.get_link		= ethtool_op_get_link,
- };
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 5f039ce99ade..b4c66ce9ee3a 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -500,6 +500,7 @@ void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
- int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
- void mana_query_gf_stats(struct mana_port_context *apc);
- int mana_query_link_cfg(struct mana_port_context *apc);
-+int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed);
- int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
- void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
- 
-@@ -527,6 +528,7 @@ enum mana_command_code {
- 	MANA_CONFIG_VPORT_RX	= 0x20007,
- 	MANA_QUERY_VPORT_CONFIG	= 0x20008,
- 	MANA_QUERY_LINK_CONFIG	= 0x2000A,
-+	MANA_SET_BW_CLAMP	= 0x2000B,
- 
- 	/* Privileged commands for the PF mode */
- 	MANA_REGISTER_FILTER	= 0x28000,
-@@ -548,6 +550,20 @@ struct mana_query_link_config_resp {
- 	u8 reserved[3];
- }; /* HW DATA */
- 
-+/* Set Bandwidth Clamp*/
-+struct mana_set_bw_clamp_req {
-+	struct gdma_req_hdr hdr;
-+	mana_handle_t vport;
-+	enum TRI_STATE enable_clamping;
-+	u32 link_speed;
-+}; /* HW DATA */
-+
-+struct mana_set_bw_clamp_resp {
-+	struct gdma_resp_hdr hdr;
-+	bool qos_unconfigured;
-+	u8 reserved[7];
-+}; /* HW DATA */
-+
- /* Query Device Configuration */
- struct mana_query_device_cfg_req {
- 	struct gdma_req_hdr hdr;
+ 	if (err) {
++		if (err == -EOPNOTSUPP) {
++			netdev_info_once(ndev, "MANA_SET_BW_CLAMP not supported\n");
++			return err;
++		}
+ 		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
+ 			   speed, err);
+ 		return err;
 -- 
 2.34.1
 
