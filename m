@@ -1,300 +1,247 @@
-Return-Path: <linux-hyperv+bounces-4637-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4638-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D553DA69BD1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 23:12:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EE5FA6A0AE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Mar 2025 08:45:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40D084256A3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Mar 2025 22:12:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 822C416A601
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Mar 2025 07:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE957218AA3;
-	Wed, 19 Mar 2025 22:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942091EF38D;
+	Thu, 20 Mar 2025 07:45:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="hthE3dox"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PqlDziOh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="v1Tp57FW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PqlDziOh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="v1Tp57FW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19010002.outbound.protection.outlook.com [52.103.11.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB5D215792;
-	Wed, 19 Mar 2025 22:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742422316; cv=fail; b=plv4UzygNsx8SpdsvyYiTMgS1eBf7qOOXMgWOJbOPUMmlPXShSaRswNpiUMyiVgyMnvrMFdCtwzgq4i/illffOLFt5JdzsCc3g0M6rJE+LyLNc5M864VH33mCWEGwRly2lIFZ8ETBZBIoVWsfzfVnzAXUR5RIjXBCSo6rmkdS8w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742422316; c=relaxed/simple;
-	bh=Kn1a+I9o5gWGBnwjbvINiP8JzYWG+91LuaX1edVJuG4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ti6hg8LOQaMlTZud183c7Qkl7076ZETu+qJfSngZbIBrXkH0lqVlGGXv8GD0N5UachWMlrb9R5lGzJdVFbZQdQunpoy8ysjKOL2hPhgIn24lfDyTu5FTMHHu2I2OJbPLeENz2+x/COVz2w4oNHiP5Yb/5KjxJO038HHlW71QP2A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=hthE3dox; arc=fail smtp.client-ip=52.103.11.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RC9Kvqq4x7xPerd5dbf3bPTog1wY8mR+KCxy/G3IgfGXp7qazpTe4yx0S5qPbVhj1dyRJ0RvzXqdHHGvvLWMHpfDgp6rq7MUK4tpTk/xxUTLNogt5NvntlCRTL7kLEO3VKL7bwwMXlfxo8PrgWubdCGAAmsPbvzMCZjsXg40yxyymctDk+1opb8+lT1sPbbrWMShq2f9R6B4c8ZnO3ITAcQpakFSwJI4pWvw0/P9s2CUGZzZ2UzzrH+iD8oU9e7Xxly4BCabyF8j3QYpMfrNA3ndSY9RV/ZDKXZ2PFb5plmKBdBD6kIfpythVpHYCqKU7rPj1SifhIcEpcHPqS/REw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tQFCOMB/MiULmPkh5Xy/rPPwUgUOby8wHm3uz+yfWkc=;
- b=eNH8T+alDBEzsJC7urgJdOFmT3NSaUtiyg1t2qz9VMQVIdcTAK/7pKZ9oppma2n32ybz9GlMM+B1VsGK48KF9ShgBPTNQooggBcBNMApPJ9GVOAnJFLEvUuG8dKSch6u49RlKkPzU0oeJwIjwB3pDDlYw4FzbqBV16jMkRexMCU/kg54R07Gm4rYRslZpkkH6jgRBWKStHveo5bQRr0HJzRnSkawC2aqBdNHxhBPAT/DxdldbZCIIx+NqTGiI/aAU8SFhVYAbkh+tPaGFdgEId8Vx619PSdkVRbjcuq6CZBtPzfptC7yA7qaztwrQhZkmAZhCFFvakGeNJSCswUGgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tQFCOMB/MiULmPkh5Xy/rPPwUgUOby8wHm3uz+yfWkc=;
- b=hthE3doxrZR9614ReNP46tI0aweiWfuKHZysx47YSed8irq/M42qozIybZgjE67kFs8jQbx6/dK5eunNApxZq3x6teRQ4zJ6lX0OpHrNKmd34dx0bS1aWN8lsATThQfncDRrtQj1j6Pa2NMwejGW62UzTRu6xKAClX07aiJtqfVpyB0eDqJlUhosClrAhvP1mGHFGV9hpt6lXUMAEJ7n3yry/IzD58S9BMW6ZEmzHSUWhC3wj2Z/ot8eeaIf+9Lg9xxVTro7PVFGWS9W6qEs5OzB1ofSh15aVimqSNPJAUBCgvDLrr/3uI1VnJbQuUog21fNPpGzOaN1bLwck5qAeA==
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
- by CH0PR02MB8167.namprd02.prod.outlook.com (2603:10b6:610:10c::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
- 2025 22:11:50 +0000
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911%4]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
- 22:11:50 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Mark Rutland <mark.rutland@arm.com>, Roman Kisel
-	<romank@linux.microsoft.com>
-CC: "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>, "kys@microsoft.com"
-	<kys@microsoft.com>, "lenb@kernel.org" <lenb@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "rafael@kernel.org"
-	<rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
-	<will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: RE: [PATCH hyperv-next v6 02/11] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-Thread-Topic: [PATCH hyperv-next v6 02/11] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-Thread-Index: AQHblUAkoBBQzsRuEEy6HcktK4WqQrN3N46AgAPUpyA=
-Date: Wed, 19 Mar 2025 22:11:50 +0000
-Message-ID:
- <BN7PR02MB414871F1A3D8EF3809391F2FD4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-References: <20250315001931.631210-1-romank@linux.microsoft.com>
- <20250315001931.631210-3-romank@linux.microsoft.com>
- <Z9gJlQgV3hm1kxY0@J2N7QTR9R3.cambridge.arm.com>
-In-Reply-To: <Z9gJlQgV3hm1kxY0@J2N7QTR9R3.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|CH0PR02MB8167:EE_
-x-ms-office365-filtering-correlation-id: 229cfce5-568f-499c-4c76-08dd67330c29
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|8060799006|461199028|15080799006|19110799003|41001999003|3412199025|102099032|440099028;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?GPNdOqi++imkAfkZkUaYXRz9UV5S6znkgcvOZRNEGPuuQ/atYyquKkVkcXgl?=
- =?us-ascii?Q?9c/PqOg6Uar8T7CG3KnOCuN/4P0cxnkXETXbaw1oNH5csn0Oz1hNhpsm6y15?=
- =?us-ascii?Q?D8gHahv0NpucjnJYvvfOH5TS15VLIBAMmyZm9l4872827DYclehrQPkY4A5+?=
- =?us-ascii?Q?5o/rnxCKfsMe3D/vgQHqXM0xq3OMgq6BSgXZj+evEPJImQf8WS+BgeuiLaJh?=
- =?us-ascii?Q?/Tia4qgEh1CnJSlemDNZqxoZ/tDSY5bGKFUzwm/prjiNOnOn6rSbMhEmMapU?=
- =?us-ascii?Q?6vPSFU4E6gTD7Wu5yyseusKRmBh3QGjDbBtxOjRikDwruNCJYXO5Mf+XVNdw?=
- =?us-ascii?Q?uYZItLplpJk0LM+KrfujHexSOj/ufFRPJ2HnoP/RVO019CGVqduI/o1A4JlD?=
- =?us-ascii?Q?xRkPMEIL2WbgEy1fKKq1L4tqHRbmrlwg7k44la9QZEpxauTwGcWXdj6HL1xf?=
- =?us-ascii?Q?9GFlxaU3GZO9wkoHAoUZHcc/JDya0sKSNMkedBzxpummVDKu7apKXDYuM8cC?=
- =?us-ascii?Q?WZfcqCHVCtRRjoNTz5+g1gUWenvAZNrsvj/QhKpc2zyDJERSArkg+9RlsTfr?=
- =?us-ascii?Q?QTTELp5LIPED8beqgQ6cqn53FXoA05JsX15WFTKxazRQZFXKWcNFj0Zg/3td?=
- =?us-ascii?Q?d5YoABI/Cm5fLDoTURJ7hodyD+g9Sgw99cUbrUyKVwsHta6GNsSoWH9OD67b?=
- =?us-ascii?Q?Q1Mpa3Z6cLSfY2vnKq/vr9TDDmAquS6yIKKQx8m8W6GCJ3LmqcWuM7+8J0PF?=
- =?us-ascii?Q?WKeBV1K78n2A4eGfihQpJgeYU0URQwGk5R6hDQCJK1xvnWlNupo11QhWpKgT?=
- =?us-ascii?Q?DjIV0OjHicYYHd754tWUojz2SlGrDLhxIPeiruHp4k/QmuKbMzsxHgdJByc/?=
- =?us-ascii?Q?whG1dqbJNpg/59OHXJyxFJhEHXFnIIEJWEDXflYiEEhO0h3uxxVldR+Ae/3L?=
- =?us-ascii?Q?oaGBb35+ucNE8ULk9Lj2V2U4/OD4lxtwD9l1pEHGUX5qvF6RGe3mhd7waU4K?=
- =?us-ascii?Q?bh8wOFQDVWseJl8PyqT/fG8q57xs6iTSY0x3tq4097xAuKG12TeqdF4DdE2p?=
- =?us-ascii?Q?eN/pwOkqcSGf2KCtlZChvl9oyAMTG8Tcgkn2ZDlOmPjOTvR70myAIYjZrr1H?=
- =?us-ascii?Q?CV16sw9r93gh?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?FrfF+qz+U2b94+727QUO675a2+QZC1MuPWEyOBMc7WjvL3hxqje3G4tEFTC/?=
- =?us-ascii?Q?XdGG4OtH/kuHgmxmzCtWFbZgZc0z7v+Io/Fr+Wp9aJAwtlLeAvOZS5ZarmrK?=
- =?us-ascii?Q?KrI7YByOC84Y4RYJIrVcnZ65tyQwvdlEYHhPncMW3xScfnV7Ysp/bQ1kCmx3?=
- =?us-ascii?Q?EMdycTj1PK0jaEuuQUcm/xWeOH/AXNzCFSZaktEtob8CarrgUWbpgLX2ydWC?=
- =?us-ascii?Q?WHq0UrEto2+Hw3NQ7LKivejGdAfyIgnCagrMDt7wm2BNApzyO71Auczl4YOx?=
- =?us-ascii?Q?2sH1XmtYiY2uGLNhd2GQw006OaeZdk/SMHCoWgM6H1ZsXcXLyfaizj8RMRX0?=
- =?us-ascii?Q?G7E0b9fz/XxARQzKXT30CalN/4lfb407pqJRs6MgJx0OU+lddcdb84KSHhTW?=
- =?us-ascii?Q?4PIgMn+1nsf2YiU4go+Osy7QKG/Qjf8Q9rXGBTCjLqNOroVhizFrrXpZFvoP?=
- =?us-ascii?Q?fe5TvzMi3xlkQ7na+tc5CvivEnBvgawMaIBbEHoRwmcprYLQCof6w8HxSmxm?=
- =?us-ascii?Q?9995TzcbA6AxF6kSsRYSsp7MiWILuwZKZOww5RUfS98qQwR6v5ycrqLXaY1O?=
- =?us-ascii?Q?gxkbh3wmgV5WUU/I5qxCY2JjeCtiHpcqdXExjLZveWuFkIhVh+SXcW2RFdvQ?=
- =?us-ascii?Q?7kdxtxuvXUR9gmbXNRHrfSNzZQDxb8oFZsbsFkIzWlRMKHxFGCq9eff9P3/s?=
- =?us-ascii?Q?6ilQdEud2GJvYEcn6xKxOWbef9QGomA3wqOf6NwwulkTGwm997aWbuAu2FLI?=
- =?us-ascii?Q?RskdUZ594yqzAOeCgdcEDIZrvWmadFnN+OOiCoYtJq4zrpLtRRFqPjP03BDc?=
- =?us-ascii?Q?2h71bbx8SjkC7UgGfdRT0RLvvVuqKxTVzqYWOEVD5rorF9srHfsGSlPXiwlG?=
- =?us-ascii?Q?pZd5+gfh5zJqr+huyom1VGx8klxtn5LdBLmsVT6iN0FpVHBb8mKGKbIF6UBM?=
- =?us-ascii?Q?7AV0RFiMcsgwFHHv9GHBUunkbXpwMpWRMglKZ1YDl9a7i3gvoBJIFw/R1AX5?=
- =?us-ascii?Q?TbWmfIS4OMaYg4kWwUzLmgkVzJwZRRF+1ZB2oBfkDq2k16VVhTfbOmmO5/H7?=
- =?us-ascii?Q?9sHHunYfMRVGLlCh+85rA5lmfAo0QNC8GO9tO/7IYb2DWT8kzb1cdBBCe45l?=
- =?us-ascii?Q?f4xSYjnywM8qNg7HvPzaAf5aUcBng1Xo5CipzvFHFuY85lY4p4OBxktG0bR9?=
- =?us-ascii?Q?9Jr7P5zTnWRgX/bblPZPZMK6r8+1TDcAa4fXg7gAUsI7bNaecm0O1/uHP64?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F651DE2CD
+	for <linux-hyperv@vger.kernel.org>; Thu, 20 Mar 2025 07:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742456729; cv=none; b=eCIJ/f6x4ZXIcsXieLckxKBvNQecRAw8Mih0eI8z/e7hveBNSvNimGPDPDo+5jrXZEQ8hE+WgJWzk2Pz03Ryr0Un2b/B7gKYKk17ETWDz1nWsEzhPTPMa9clFxf5Twe1ZctAE2FtUPsZWK1TVqKePx057RicYuZgviz9ZxVJy2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742456729; c=relaxed/simple;
+	bh=0e6NEfG/qpxKMn42AQkTAVlrM9MZlAIVbusb360JCWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UWRS6I0IaTJmtGJraOOUFTYmNygBt/OeRxLjbnULWfhjZb4LlZ0jFl6JQmAHN5CfKB76GaBrwqR8Mh5YwNQ37Hg8fdgJ0VqYUrFEXKjTQdtfls+AKFkbjYMhVDWdBqaboYVTm9w4wi+WXVRXRu3Sp7ZzjcKa7Cleotv2Gno314o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PqlDziOh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=v1Tp57FW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PqlDziOh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=v1Tp57FW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8456C22017;
+	Thu, 20 Mar 2025 07:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742456725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gA2/H1BeCo6ljHC6Z1zZsBCsoR53L6XI0RJHQvvt4hA=;
+	b=PqlDziOh1FVdzLQJx0UGbSNQlba7R9S3X7sxYRrN7SrswkoYX6e1DR3MdVQoBp2v8kBNyS
+	EblEK7Zotueg7SFwQP5HKMI/zjwGQmfEERF9wjUAYkYs5GttlPo4mK9clD3JwxNSIwOPqC
+	IjVIeEF2+RHtiqZcSRezNRkOqEbd2C4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742456725;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gA2/H1BeCo6ljHC6Z1zZsBCsoR53L6XI0RJHQvvt4hA=;
+	b=v1Tp57FW+X+8pMM3yfCFBPQgIcWXoewHmKk84pb0/EcqJj7cON2QWntpbp8EKIWhTMqoWm
+	0ShvfqN1XovrrzAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PqlDziOh;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=v1Tp57FW
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742456725; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gA2/H1BeCo6ljHC6Z1zZsBCsoR53L6XI0RJHQvvt4hA=;
+	b=PqlDziOh1FVdzLQJx0UGbSNQlba7R9S3X7sxYRrN7SrswkoYX6e1DR3MdVQoBp2v8kBNyS
+	EblEK7Zotueg7SFwQP5HKMI/zjwGQmfEERF9wjUAYkYs5GttlPo4mK9clD3JwxNSIwOPqC
+	IjVIeEF2+RHtiqZcSRezNRkOqEbd2C4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742456725;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gA2/H1BeCo6ljHC6Z1zZsBCsoR53L6XI0RJHQvvt4hA=;
+	b=v1Tp57FW+X+8pMM3yfCFBPQgIcWXoewHmKk84pb0/EcqJj7cON2QWntpbp8EKIWhTMqoWm
+	0ShvfqN1XovrrzAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6288913757;
+	Thu, 20 Mar 2025 07:45:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id x0KZFpXH22cOVAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 20 Mar 2025 07:45:25 +0000
+Message-ID: <a815031b-262d-4f74-b23a-1f9e59aa4c80@suse.de>
+Date: Thu, 20 Mar 2025 08:45:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 229cfce5-568f-499c-4c76-08dd67330c29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2025 22:11:50.1092
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR02MB8167
+User-Agent: Mozilla Thunderbird
+Subject: Re: fbdev deferred I/O broken in some scenarios
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <SN6PR02MB4157227300E59ACB3B0DABD0D4DE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <a4fa1dbb-4989-4fc2-acbc-055f786e9b48@suse.de>
+ <BN7PR02MB4148864DDB065271B79FD3E4D4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <BN7PR02MB4148864DDB065271B79FD3E4D4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 8456C22017
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[outlook.com,vger.kernel.org];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-From: Mark Rutland <mark.rutland@arm.com> Sent: Monday, March 17, 2025 4:38=
- AM
->=20
-> On Fri, Mar 14, 2025 at 05:19:22PM -0700, Roman Kisel wrote:
-> > The arm64 Hyper-V startup path relies on ACPI to detect
-> > running under a Hyper-V compatible hypervisor. That
-> > doesn't work on non-ACPI systems.
-> >
-> > Hoist the ACPI detection logic into a separate function. Then
-> > use the vendor-specific hypervisor service call (implemented
-> > recently in Hyper-V) via SMCCC in the non-ACPI case.
-> >
-> > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> > ---
-> >  arch/arm64/hyperv/mshyperv.c | 43 +++++++++++++++++++++++++++++++-----
-> >  1 file changed, 38 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.=
-c
-> > index 2265ea5ce5ad..c5b03d3af7c5 100644
-> > --- a/arch/arm64/hyperv/mshyperv.c
-> > +++ b/arch/arm64/hyperv/mshyperv.c
-> > @@ -27,6 +27,41 @@ int hv_get_hypervisor_version(union
-> hv_hypervisor_version_info *info)
-> >  	return 0;
-> >  }
-> >
-> > +static bool __init hyperv_detect_via_acpi(void)
-> > +{
-> > +	if (acpi_disabled)
-> > +		return false;
-> > +#if IS_ENABLED(CONFIG_ACPI)
-> > +	/*
-> > +	 * Hypervisor ID is only available in ACPI v6+, and the
-> > +	 * structure layout was extended in v6 to accommodate that
-> > +	 * new field.
-> > +	 *
-> > +	 * At the very minimum, this check makes sure not to read
-> > +	 * past the FADT structure.
-> > +	 *
-> > +	 * It is also needed to catch running in some unknown
-> > +	 * non-Hyper-V environment that has ACPI 5.x or less.
-> > +	 * In such a case, it can't be Hyper-V.
-> > +	 */
-> > +	if (acpi_gbl_FADT.header.revision < 6)
-> > +		return false;
-> > +	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) =
-=3D=3D 0;
-> > +#else
-> > +	return false;
-> > +#endif
-> > +}
-> > +
->=20
-> The 'acpi_disabled' variable doesn't exist for !CONFIG_ACPI, so its use
-> prior to the ifdeffery looks misplaced.
+Hi
 
-FWIW, include/linux/acpi.h has=20
+Am 19.03.25 um 21:38 schrieb Michael Kelley:
+> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Tuesday, March 18, 2025 1:26 AM
+>> Am 18.03.25 um 03:05 schrieb Michael Kelley:
+>>> I've been trying to get mmap() working with the hyperv_fb.c fbdev driver, which
+>>> is for Linux guests running on Microsoft's Hyper-V hypervisor. The hyperv_fb driver
+>>> uses fbdev deferred I/O for performance reasons. But it looks to me like fbdev
+>>> deferred I/O is fundamentally broken when the underlying framebuffer memory
+>>> is allocated from kernel memory (alloc_pages or dma_alloc_coherent).
+>>>
+>>> The hyperv_fb.c driver may allocate the framebuffer memory in several ways,
+>>> depending on the size of the framebuffer specified by the Hyper-V host and the VM
+>>> "Generation".  For a Generation 2 VM, the framebuffer memory is allocated by the
+>>> Hyper-V host and is assigned to guest MMIO space. The hyperv_fb driver does a
+>>> vmalloc() allocation for deferred I/O to work against. This combination handles mmap()
+>>> of /dev/fb<n> correctly and the performance benefits of deferred I/O are substantial.
+>>>
+>>> But for a Generation 1 VM, the hyperv_fb driver allocates the framebuffer memory in
+>>> contiguous guest physical memory using alloc_pages() or dma_alloc_coherent(), and
+>>> informs the Hyper-V host of the location. In this case, mmap() with deferred I/O does
+>>> not work. The mmap() succeeds, and user space updates to the mmap'ed memory are
+>>> correctly reflected to the framebuffer. But when the user space program does munmap()
+>>> or terminates, the Linux kernel free lists become scrambled and the kernel eventually
+>>> panics. The problem is that when munmap() is done, the PTEs in the VMA are cleaned
+>>> up, and the corresponding struct page refcounts are decremented. If the refcount goes
+>>> to zero (which it typically will), the page is immediately freed. In this way, some or all
+>>> of the framebuffer memory gets erroneously freed. From what I see, the VMA should
+>>> be marked VM_PFNMAP when allocated memory kernel is being used as the
+>>> framebuffer with deferred I/O, but that's not happening. The handling of deferred I/O
+>>> page faults would also need updating to make this work.
+>> I cannot help much with HyperV, but there's a get_page callback in
+>> struct fb_deferred_io. [1] It'll allow you to provide a custom page on
+>> each page fault. We use it in DRM to mmap SHMEM-backed pages. [2] Maybe
+>> this helps with hyperv_fb as well.
+>>
+> Thanks for your input. See also my reply to Helge.
+>
+> Unfortunately, using a custom get_page() callback doesn't help. In the problematic
+> case, the standard deferred I/O get_page() function works correctly for getting the
+> struct page.  My current thinking is that the problem is in fb_deferred_io_mmap()
+> where the vma needs to have the VM_PFNMAP flag set when the framebuffer
+> memory is a direct kernel allocation and not through vmalloc(). And there may be
+> some implications on the mkwrite function as well, but I'll need to sort that out
+> once I start coding.
+>
+> For the DRM code using SHMEM-backed pages, do you know where the shared
+> memory comes from? Is that ultimately a kernel vmalloc() allocation?
 
-#define acpi_disabled 1
+I think it's something special, as the regular vmalloc'ed-pages would be 
+handled by fb_defio automatically. In DRM we sometimes also use a 
+separate vmalloc'ed shadow buffer that serves as the fbdev framebuffer. 
+We then sync internally with the physical framebuffer memory. See [1] 
+for the related code. Udlfb does the as well IIRC.
 
-when !CONFIG_ACPI.  But I agree that using a stub is better.
+Best regards
+Thomas
 
-Michael
+[1] 
+https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/drm_fbdev_ttm.c#L201
 
->=20
-> Usual codestyle is to avoid ifdeffery if possible, using IS_ENABLED().
-> Otherwise, use a stub, e.g.
->=20
-> | #ifdef CONFIG_ACPI
-> | static bool __init hyperv_detect_via_acpi(void)
-> | {
-> | 	if (acpi_disabled)
-> | 		return false;
-> |
-> | 	if (acpi_gbl_FADT.header.revision < 6)
-> | 		return false;
-> |
-> | 	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) =
-=3D=3D 0;
-> | }
-> | #else
-> | static inline bool hyperv_detect_via_acpi(void) { return false; }
-> | #endif
->=20
-> Mark.
->=20
-> > +static bool __init hyperv_detect_via_smccc(void)
-> > +{
-> > +	uuid_t hyperv_uuid =3D UUID_INIT(
-> > +		0x4d32ba58, 0x4764, 0xcd24,
-> > +		0x75, 0x6c, 0xef, 0x8e,
-> > +		0x24, 0x70, 0x59, 0x16);
-> > +
-> > +	return arm_smccc_hyp_present(&hyperv_uuid);
-> > +}
-> > +
-> >  static int __init hyperv_init(void)
-> >  {
-> >  	struct hv_get_vp_registers_output	result;
-> > @@ -35,13 +70,11 @@ static int __init hyperv_init(void)
-> >
-> >  	/*
-> >  	 * Allow for a kernel built with CONFIG_HYPERV to be running in
-> > -	 * a non-Hyper-V environment, including on DT instead of ACPI.
-> > +	 * a non-Hyper-V environment.
-> > +	 *
-> >  	 * In such cases, do nothing and return success.
-> >  	 */
-> > -	if (acpi_disabled)
-> > -		return 0;
-> > -
-> > -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
-> > +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
-> >  		return 0;
-> >
-> >  	/* Setup the guest ID */
-> > --
-> > 2.43.0
-> >
+>
+> Michael
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
 
