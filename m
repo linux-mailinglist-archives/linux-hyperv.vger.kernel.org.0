@@ -1,241 +1,227 @@
-Return-Path: <linux-hyperv+bounces-4670-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4671-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C04FA6C3BD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Mar 2025 20:51:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66095A6C3F8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Mar 2025 21:11:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F2617A8604
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Mar 2025 19:50:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D39B63B9573
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Mar 2025 20:11:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32FD230BEF;
-	Fri, 21 Mar 2025 19:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D04661EB9E5;
+	Fri, 21 Mar 2025 20:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O4BoVJ00"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nvSStd5E"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CA21EEA2D
-	for <linux-hyperv@vger.kernel.org>; Fri, 21 Mar 2025 19:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BDD51E7C0B;
+	Fri, 21 Mar 2025 20:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742586593; cv=none; b=gfLdUWsqrv/F7zx8g+uAWMF72aOvv4B3oPUEoLC5GTUPSjX5WMHPjaVoXGBXlhEOQktRWTJ0zP/FBiL9nof5TuGtvU8KO/ediQ1kMk8575XYrR5iRxSu3OZNnmgZiJFnNL/WxKR67qPdKbM2E5xG0WuXIMsaxK+qLwtJNG1cmcQ=
+	t=1742587890; cv=none; b=ctNwEECC6f6ZkxPUvgBk+qwCEs06U6UCvpdPHGIl/Qkc0olXNQIyTqs5MsD8pqp7EUaOX1yQ5Bko6T6vJULWJvgAi4ykB1vpnzfdHEbUqwvulkwvJMe+EhFt3dl8mmjcTLklMGzim1E6lIFr/j1Dkp/QF2EGniXCW58SgoOc8pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742586593; c=relaxed/simple;
-	bh=UFdqBVJRDVk8Hlcf3jTu50jsbpG+mU166GYiFitWazE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIbVjDFk4bitOHHS4YldPE5Zwtp8ChwGUMfdKhbVMCtpgFnk9jZ+/7y/Gi9b3EDP/8QTln7LkseubXR/olrtVexzQ8d9LkCCrrphTs9FLmBsOu7Uej4mWZae8So1woZWmOUztXCoM87LgH6P+3+I8qFX/rSN+Op/Z2LJvPDTNUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O4BoVJ00; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742586589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ReERJAqHieSO06A2On5uvAOfqLYlr/FeJgCmLUNx8kQ=;
-	b=O4BoVJ00Fs+0i/3ynJVBoLhMsI11msoBxLm3IbfwjsUTnZtjkOXXutG0ymCJlEFaNRlPcp
-	Vv/8FqDoFUOeW+MH90yfyXsnPgwPSt6PixYC38JSNMhq8Dxdfp3IIXTgP2i7kOWlYk1Pic
-	yBXOQYJVM+uTM2NrE1heehvz8Txp2zM=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130--vHEi3M6OTqeOKFNwr2MTw-1; Fri, 21 Mar 2025 15:49:48 -0400
-X-MC-Unique: -vHEi3M6OTqeOKFNwr2MTw-1
-X-Mimecast-MFC-AGG-ID: -vHEi3M6OTqeOKFNwr2MTw_1742586587
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff68033070so3501054a91.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Mar 2025 12:49:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742586587; x=1743191387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ReERJAqHieSO06A2On5uvAOfqLYlr/FeJgCmLUNx8kQ=;
-        b=bqFaMKBfMCdJlgU88w3b2gXyJaB2A+A3RZ+vmg3lG3nHpL02d+usFcdS3JYTy713Pt
-         o/eH/yD2bXrC8GuuP0SgFvduGwe54laTBjmx0cFA7ZiKwv3cPEdWs6wLwgRKFKwZVM3u
-         33HT5j+GhfUzwrSLlEX71gYqEjPVGaDGF4lghjw7ByCEgXR80orQBPriw4MgZBlpLAa/
-         zO5wCATITUT72N0hAIoq9qA9p2rWKqhgkUleAEwifkcKigKFY+iW9uflYG1fn6nEuNgB
-         8sboeYLyIzy1h/7FRdZFXBLY3Y8qm3VIsG6X4FcALFg1hDCBrKejIrA7aa0rJ2UBShCb
-         7WVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVe4CeP9/OHGAx7t84vBatIBiXdxOcmise6jc/Z18p6/MZNPUThQVfTszYCi8t4ibtqc8LATe4Fb0hEqa0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKY3w3xoQIlbuxAzs/lKXW22LZaUjNiq7+x6X8M7vnPkBbtmba
-	IqW4HSbAW/PZ2zmx+1K+QiR6oaAFOY1b7Vps1lf8+ycgMU+pxKzxUHzbGPceUA/ktBk3lMI4eAb
-	vV08wTjcaW/4i+EVDIN15i/PYYKszF+QpSwXYlLotCH3g9DPMom/+5uXIJPJbYQ==
-X-Gm-Gg: ASbGncthx0CbayQbKWTFW/tYUynudt7gBiQgcuEWH9Fd/3uXUVA8GO5dXDlUtYsxsOk
-	uNjdBLLnAVL2Hpw7BbzP7Kq6plGStUEo3ULgR2FxE1CvVQjySCwYBPP0S7jrcMSHzqzevW9yVIt
-	bK4+UDmoN9FM+2C203sj6YyBE80MCRW8LRlsJS8trwLZ7UDWIvUID4jLb4vpNWoBv+leWY0Gi0H
-	gnL0j2bltcow7ysWRorMjNcg+Uqr1J5JCXSLUEEsfcXmKDL7wwogfOPzN3Z83VCY5yNpPp/JIL6
-	AmJBrFC1
-X-Received: by 2002:a05:6a21:6182:b0:1f5:55b7:1bb4 with SMTP id adf61e73a8af0-1fe42f2ca16mr8343017637.11.1742586586909;
-        Fri, 21 Mar 2025 12:49:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgaPER9WdLR23YdQNltOTaAZ+YfxNnRQHaimB6OsbRkGfsA5VnV3pJYV1//O3S4oQcK/34rw==
-X-Received: by 2002:a05:6a21:6182:b0:1f5:55b7:1bb4 with SMTP id adf61e73a8af0-1fe42f2ca16mr8342982637.11.1742586586558;
-        Fri, 21 Mar 2025 12:49:46 -0700 (PDT)
-Received: from redhat.com ([195.133.138.172])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a2841c02sm1900123a12.39.2025.03.21.12.49.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 12:49:46 -0700 (PDT)
-Date: Fri, 21 Mar 2025 15:49:38 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
-Message-ID: <20250321154922-mutt-send-email-mst@kernel.org>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+	s=arc-20240116; t=1742587890; c=relaxed/simple;
+	bh=xsq4fMA9KErOYHpGLUUJOLylW+Xto3AugMKGT4drrrk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hv1spOftKL4jFrnviB17lFMMxqKpD5utbYrs9bkfex/bMmKAiZrec0oS2fdJ8orAhST1/ahQF6+3rMwBFwSWqL9s8TtE1uiwTpLb025b7lK5E9HvFytk6YnYRLcr/QSVT0fBI8xaK6V6kiiC6G7VJyPMkSriMENBpVKZfsxtau4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nvSStd5E; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 353462025389;
+	Fri, 21 Mar 2025 13:11:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 353462025389
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742587888;
+	bh=ITpL14RmT7jWiNjR2GtSe0m1zpsnePBZKTOpKhGLiCU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nvSStd5EIPUCS1lGHYZ0GWov/8+OkkDrMUoX+9aDmf6yrWik1ywMI7mldvkqbHeqH
+	 BD+PFvVYsttpY06YF2fI0tZLy2OPKopSoMrBwtFLAqFMr9glMVJxlbaaSnhB4EMn7B
+	 Zxb+lEKFL/oz3QDhZbbZ02k7poz0h5+SF7i/ukzo=
+Message-ID: <bae5bb62-d480-46fd-837c-9267c0a30fae@linux.microsoft.com>
+Date: Fri, 21 Mar 2025 13:11:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/6] Drivers: hv: Use hv_hvcall_*() to set up hypercall
+ arguments
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+ <20250313061911.2491-5-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250313061911.2491-5-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
-> Picking up Stefano's v1 [1], this series adds netns support to
-> vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
-> namespaces, defering that for future implementation and discussion.
+On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> Any vsock created with /dev/vhost-vsock is a global vsock, accessible
-> from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
-> "scoped" vsock, accessible only to sockets in its namespace. If a global
-> vsock or scoped vsock share the same CID, the scoped vsock takes
-> precedence.
+> Update hypercall call sites to use the new hv_hvcall_*() functions
+> to set up hypercall arguments. Since these functions zero the
+> fixed portion of input memory, remove now redundant zero'ing of
+> input fields.
 > 
-> If a socket in a namespace connects with a global vsock, the CID becomes
-> unavailable to any VMM in that namespace when creating new vsocks. If
-> disconnected, the CID becomes available again.
+> hv_post_message() requires additional updates. The payload area is
+> treated as an array to avoid wasting cycles on zero'ing it and
+> then overwriting with memcpy(). To allow treatment as an array,
+> the corresponding payload[] field is updated to have zero size.
+> 
+I'd prefer to leave the payload field as a fixed-sized array.
+Changing it to a flexible array makes it look like that input is
+for a variable-sized or rep hypercall, and it makes the surrounding
+code in hv_post_message() more complex and inscrutable as a result.
 
+I suggest leaving hv_post_message() alone, except for changing
+hyperv_pcpu_input_arg -> hyperv_pcpu_arg, and perhaps a comment
+explaining why hv_hvcall_input() isn't used there.
 
-yea that's a sane way to do it.
-Thanks!
-
-> Testing
-> 
-> QEMU with /dev/vhost-vsock-netns support:
-> 	https://github.com/beshleman/qemu/tree/vsock-netns
-> 
-> Test: Scoped vsocks isolated by namespace
-> 
->   host# ip netns add ns1
->   host# ip netns add ns2
->   host# ip netns exec ns1 \
-> 				  qemu-system-x86_64 \
-> 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> 					  -serial mon:stdio \
-> 					  -drive if=virtio,file=${IMAGE1} \
-> 					  -device vhost-vsock-pci,netns=on,guest-cid=15
->   host# ip netns exec ns2 \
-> 				  qemu-system-x86_64 \
-> 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> 					  -serial mon:stdio \
-> 					  -drive if=virtio,file=${IMAGE2} \
-> 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> 
->   host# socat - VSOCK-CONNECT:15:1234
->   2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
-> 
->   host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
->   host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
-> 
->   vm1# socat - VSOCK-LISTEN:1234
->   foobar1
->   vm2# socat - VSOCK-LISTEN:1234
->   foobar2
-> 
-> Test: Global vsocks accessible to any namespace
-> 
->   host# qemu-system-x86_64 \
-> 	  -m 8G -smp 4 -cpu host -enable-kvm \
-> 	  -serial mon:stdio \
-> 	  -drive if=virtio,file=${IMAGE2} \
-> 	  -device vhost-vsock-pci,guest-cid=15,netns=off
-> 
->   host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> 
->   vm# socat - VSOCK-LISTEN:1234
->   foobar
-> 
-> Test: Connecting to global vsock makes CID unavailble to namespace
-> 
->   host# qemu-system-x86_64 \
-> 	  -m 8G -smp 4 -cpu host -enable-kvm \
-> 	  -serial mon:stdio \
-> 	  -drive if=virtio,file=${IMAGE2} \
-> 	  -device vhost-vsock-pci,guest-cid=15,netns=off
-> 
->   vm# socat - VSOCK-LISTEN:1234
-> 
->   host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
->   host# ip netns exec ns1 \
-> 				  qemu-system-x86_64 \
-> 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> 					  -serial mon:stdio \
-> 					  -drive if=virtio,file=${IMAGE1} \
-> 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> 
->   qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
-> 
-> Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 > ---
-> Changes in v2:
-> - only support vhost-vsock namespaces
-> - all g2h namespaces retain old behavior, only common API changes
->   impacted by vhost-vsock changes
-> - add /dev/vhost-vsock-netns for "opt-in"
-> - leave /dev/vhost-vsock to old behavior
-> - removed netns module param
-> - Link to v1: https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
+>  drivers/hv/hv.c           | 9 ++++++---
+>  drivers/hv/hv_balloon.c   | 4 ++--
+>  drivers/hv/hv_common.c    | 2 +-
+>  drivers/hv/hv_proc.c      | 8 ++++----
+>  drivers/hv/hyperv_vmbus.h | 2 +-
+>  5 files changed, 14 insertions(+), 11 deletions(-)
 > 
-> Changes in v1:
-> - added 'netns' module param to vsock.ko to enable the
->   network namespace support (disabled by default)
-> - added 'vsock_net_eq()' to check the "net" assigned to a socket
->   only when 'netns' support is enabled
-> - Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
-> 
-> ---
-> Stefano Garzarella (3):
->       vsock: add network namespace support
->       vsock/virtio_transport_common: handle netns of received packets
->       vhost/vsock: use netns of process that opens the vhost-vsock-netns device
-> 
->  drivers/vhost/vsock.c                   | 96 +++++++++++++++++++++++++++------
->  include/linux/miscdevice.h              |  1 +
->  include/linux/virtio_vsock.h            |  2 +
->  include/net/af_vsock.h                  | 10 ++--
->  net/vmw_vsock/af_vsock.c                | 85 +++++++++++++++++++++++------
->  net/vmw_vsock/hyperv_transport.c        |  2 +-
->  net/vmw_vsock/virtio_transport.c        |  5 +-
->  net/vmw_vsock/virtio_transport_common.c | 14 ++++-
->  net/vmw_vsock/vmci_transport.c          |  4 +-
->  net/vmw_vsock/vsock_loopback.c          |  4 +-
->  10 files changed, 180 insertions(+), 43 deletions(-)
-> ---
-> base-commit: 0ea09cbf8350b70ad44d67a1dcb379008a356034
-> change-id: 20250312-vsock-netns-45da9424f726
-> 
-> Best regards,
-> -- 
-> Bobby Eshleman <bobbyeshleman@gmail.com>
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index a38f84548bc2..e2dcbc816fc5 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -66,7 +66,8 @@ int hv_post_message(union hv_connection_id connection_id,
+>  	if (hv_isolation_type_tdx() && ms_hyperv.paravisor_present)
+>  		aligned_msg = this_cpu_ptr(hv_context.cpu_context)->post_msg_page;
+>  	else
+> -		aligned_msg = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +		hv_hvcall_in_array(&aligned_msg, sizeof(*aligned_msg),
+> +				   sizeof(aligned_msg->payload[0]));
+>  
+>  	aligned_msg->connectionid = connection_id;
+>  	aligned_msg->reserved = 0;
+> @@ -80,8 +81,10 @@ int hv_post_message(union hv_connection_id connection_id,
+>  						  virt_to_phys(aligned_msg), 0);
+>  		else if (hv_isolation_type_snp())
+>  			status = hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
+> -						   aligned_msg, NULL,
+> -						   sizeof(*aligned_msg));
+> +						   aligned_msg,
+> +						   NULL,
+> +						   struct_size(aligned_msg, payload,
+> +							       HV_MESSAGE_PAYLOAD_QWORD_COUNT));
+
+See my comment above, I'd prefer to leave this function mostly
+alone to maintain readability.
+
+>  		else
+>  			status = HV_STATUS_INVALID_PARAMETER;
+>  	} else {
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index fec2f18679e3..2def8b8794ee 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1582,14 +1582,14 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+>  	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+>  	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+>  	local_irq_save(flags);
+> -	hint = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +
+> +	hv_hvcall_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
+
+We should ensure the returned batch size is large enough for
+"nents".
+
+>  	if (!hint) {
+>  		local_irq_restore(flags);
+>  		return -ENOSPC;
+>  	}
+>  
+>  	hint->heat_type = HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+> -	hint->reserved = 0;
+>  	for_each_sg(sgl, sg, nents, i) {
+>  		union hv_gpa_page_range *range;
+>  
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 9804adb4cc56..a6b1cdfbc8d4 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -293,7 +293,7 @@ void __init hv_get_partition_id(void)
+>  	u64 status, pt_id;
+>  
+>  	local_irq_save(flags);
+> -	output = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	hv_hvcall_inout(NULL, 0, &output, sizeof(*output));
+>  	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
+>  	pt_id = output->partition_id;
+>  	local_irq_restore(flags);
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 2fae18e4f7d2..5c580ee1c23f 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -73,7 +73,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+>  
+>  	local_irq_save(flags);
+>  
+> -	input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	hv_hvcall_in_array(&input_page, sizeof(*input_page),
+> +			   sizeof(input_page->gpa_page_list[0]));
+
+We should ensure the returned batch size is large enough.
+
+>  
+>  	input_page->partition_id = partition_id;
+>  
+> @@ -124,9 +125,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+>  	do {
+>  		local_irq_save(flags);
+>  
+> -		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>  		/* We don't do anything with the output right now */
+> -		output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> +		hv_hvcall_inout(&input, sizeof(*input), &output, sizeof(*output));
+>  
+>  		input->lp_index = lp_index;
+>  		input->apic_id = apic_id;
+> @@ -167,7 +167,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+>  	do {
+>  		local_irq_save(irq_flags);
+>  
+> -		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +		hv_hvcall_in(&input, sizeof(*input));
+>  
+>  		input->partition_id = partition_id;
+>  		input->vp_index = vp_index;
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 29780f3a7478..44b5e8330d9d 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -101,7 +101,7 @@ struct hv_input_post_message {
+>  	u32 reserved;
+>  	u32 message_type;
+>  	u32 payload_size;
+> -	u64 payload[HV_MESSAGE_PAYLOAD_QWORD_COUNT];
+> +	u64 payload[];
+
+See my comment above, I'd prefer to keep this how it is.
+
+>  };
+>  
+>  
+
+Thanks
+Nuno
 
 
