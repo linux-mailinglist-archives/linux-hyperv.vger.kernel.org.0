@@ -1,175 +1,132 @@
-Return-Path: <linux-hyperv+bounces-4672-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4673-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A5D6A6C411
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Mar 2025 21:19:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1924A6C6C9
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Mar 2025 02:04:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDAF13B4813
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Mar 2025 20:18:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E55233B7281
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Mar 2025 01:04:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D09B22DFA6;
-	Fri, 21 Mar 2025 20:19:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B3FDBA53;
+	Sat, 22 Mar 2025 01:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nJQqDG+/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bM2ii8/v"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB141514F6;
-	Fri, 21 Mar 2025 20:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DD03FFD;
+	Sat, 22 Mar 2025 01:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742588341; cv=none; b=uscrw2b1R67AQHmgNbpGava1Orm8Zyaml50ymuRb44Sp8LmMImN6RFCrYz/fX1x32jxZbmjMaPnt6KVG3Fe4Q/TamtkaJ3iB8ji4srvzcvFCZ4K33jn8W7dTobUAQFWmHvnQFjI3f7GSfRcJjwekRm90/3vUN+KZsceL5CdkC8o=
+	t=1742605489; cv=none; b=WIMocauNBQYalgbPc1A1IAR6rW9K0QOVQa1lXYYoe7YVgU2fHxeclLcRAThMIWWlb11aR5bn7cHm4W2Mxl9SlJ3kuM/nKwZhRYc1mW5JzH3ebMCAe+GoQ7R3uKPcqmvTLRpP5UdZV0bgKgFKJwl81xUbwF1kNb92ElZaP98tkf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742588341; c=relaxed/simple;
-	bh=u9h3D5TcVApK93PEhixGg4MPkVduLY519FMbBoFkk0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b+S/G8H2JX7wY88TcBSeL+fqY0JlQ57WhcrWj+r7Eye1ep+ImPRV+Jp/6eO0L63WQ/xo53TuyAagB0p+lorWRu0uoQ6nZZDPCb87AmfVwI5bRyX14aIsx1Ed5VpmbGDRVrMN8ML7E7J5dB2K9G2ygAorNENTFr8dHqwr8GJ00Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nJQqDG+/; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0D28E2025388;
-	Fri, 21 Mar 2025 13:18:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0D28E2025388
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742588339;
-	bh=gcXc9gPVhG3Zqqp66/fZMukytwmnYZmakgzchvvsPRQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nJQqDG+/ZYHaPvuqYHMXwraeNV8cIuprWxRBqEBZxLj9NVi6+twj19R9iw+iLjdwS
-	 I3pPySp+zM3NKeLDxcoANzsm7UlB4V1cidT71KIRyxGGIr2YxlMpgNSi1i9PHgtEHM
-	 IenH318joM24lZGeY71hKyAFyfZVEMkDD+eXqsns=
-Message-ID: <34de36fe-f4f6-4ec3-848d-9191fd1e8b9f@linux.microsoft.com>
-Date: Fri, 21 Mar 2025 13:18:53 -0700
+	s=arc-20240116; t=1742605489; c=relaxed/simple;
+	bh=aHWEoyZwm8s25Ueay7Kinp+YHcLq+mIXDmffZMu7ec4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LKXRfHnbnmEljceZBb2nlOc+qR1DA1Q1t/5QJ2RWrqq/lkLCaRkqq+K+cqUsKIqlJVQeL5+/IskwytAr/YaMy4lDS2PljSxQDKpz/USk4+RUdUI3Bytn44Wk1w+7lQFOagk6TPW9rSwv2gT3KASe2ohXMazeFMC4MBtSmJ5FNXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bM2ii8/v; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-301cda78d48so5006618a91.0;
+        Fri, 21 Mar 2025 18:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742605488; x=1743210288; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c35jq7Zk6VAC2p9swunNZp8j09umIQmd2y6i+B5qS2c=;
+        b=bM2ii8/vJWB0gLrAznOtXHI6euVpy5PmqNvuO5KNr+l362UKUEKmsR8mxSmEElbGhd
+         G/vemuZ/p6zW8XQr3Gu/uHGYkK2I8f9QCBmepI9OpIqpIp5gEWcdnMfG+p4uFiacfWc2
+         Fx1jJOuwu1lLeM23tpavP5lbZn4mAP9CGFNFC8Ek5tY2mdVUGrV9taS/WwgtnMr30JHp
+         QMFDsiwRxFaDJYpUXYzY1UKaNjMaUSdypNC2D2+h3DxlpMJTcbILDh78nuTLlVLpugvC
+         GVXGMHU6zZnLBCk05dPG8gdOObLolcZiXAHJyeUKGa3vjvG7tT42cV5GgllnRDXIT+9c
+         tyzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742605488; x=1743210288;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c35jq7Zk6VAC2p9swunNZp8j09umIQmd2y6i+B5qS2c=;
+        b=b97ukrpPBmGQgiyobWAEeSiI6gtFG5D3aeRhAyUz4H9g2dyL+g8dezhmJDnYZjgkH+
+         IO2TrfcVP9DLn8mAla6UNmHvcMcelrZnqakDrHO3H5CLFV71CGKab77q3dbWfx6iGF4P
+         3nRp7/IFNmojH90KDwlz99jHbDopf8M8TZAow/gpoZKqoS747U1jZpTwOUybCaXwwr+g
+         MjzsAI6UP5i4cW6Fl4SvxABfSBMbhgonsru4gFA1jlkGKyiodNobtT7dvVDScGnZ2zc0
+         blmVFafgj+d/GE7uqhmgB/fsZkI4fevpPs2XsH2vs0MYELbUIA2dfFP+KeR1sTD81kM0
+         oRBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWqSoelCwhqtEC8zu5D0qHFg7AIX3Nau263lnQ1rpev8odoXnCyspgeqb/gtdxrps2y1SvxZCWPVmg0aqb@vger.kernel.org, AJvYcCVmFqtyH0W2i0AAHZk+6SH6tNRNUAHhXZO3RXRvc4/5Zo/0MoE+Jchgwj6i4HXOAHel0hdUWEgCj9/r6NHM@vger.kernel.org, AJvYcCVsa+S9418uOtjMNNvOuELb4J0YxtGbSnrWCriS69Q4TmaAFXOtnEbmWPFmbI1KtNmqghrI13xW@vger.kernel.org, AJvYcCXZbhka5rMRCRZXnnuj7Du0eQdsTyKmdXtq0zESIwAZTs9W0OLvSK3HEPGKqgjAeKlYImc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyAKgIYS6yskE78EAuVgyJThoMay3TCCfDf0HV0qcmLqjUU0PL
+	w8+QUBP9gDGH3P0C7tHwnNvRT2wWai8+oHv8fNDEqD0jWYWVX2f24YFL5YEe
+X-Gm-Gg: ASbGncsveYS/J1rYUvBsHkX1bXxSs6TJhg5ySTGa8phepOLRQzv9dpPWXQ3obSznWS6
+	arHaJgYefw8MXfP0u9ExYDbAWpPZXFxV/x/pbhpipNF8fgEQVoYmPwmT8nTEsQFzZq+B6GI6c09
+	nOwRdJeCY4UO5z2j0hL4vUXkwP5w6vJZ2yqX+IojYHpf/gjqfR6WwidhcyN5GlyS8pfJSfvffMo
+	mTGZMZ8GUl0sAqJkPH1SG+QRMeQDe14gEnLwX7bC+OpWy6iBh/SKOzG+pQ1JXSQzmLmz/UosvQn
+	9Ov3o7GZMqyT5OjUaz87sbmOSwb8A3g9eNKgV8ESm3MsaFQIje6yLCO2D4ftPBrVIQ==
+X-Google-Smtp-Source: AGHT+IGwgm/iem66z0f29AU0aiEjc4aN+XSZ83V3BdggHxqxoQdD5aHTSOOQXyr9ICwMM4Rwy4qg6g==
+X-Received: by 2002:a17:90b:1f86:b0:2ee:c291:765a with SMTP id 98e67ed59e1d1-3030fe83c21mr8500288a91.8.1742605487804;
+        Fri, 21 Mar 2025 18:04:47 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:5::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811b2aefsm24515665ad.109.2025.03.21.18.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 18:04:46 -0700 (PDT)
+Date: Fri, 21 Mar 2025 18:04:44 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z94MrEM/wM3G72pf@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250321154922-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] PCI: hv: Use hv_hvcall_*() to set up hypercall
- arguments
-To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
-Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org
-References: <20250313061911.2491-1-mhklinux@outlook.com>
- <20250313061911.2491-6-mhklinux@outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250313061911.2491-6-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321154922-mutt-send-email-mst@kernel.org>
 
-On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Fri, Mar 21, 2025 at 03:49:38PM -0400, Michael S. Tsirkin wrote:
+> On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
+> > Picking up Stefano's v1 [1], this series adds netns support to
+> > vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
+> > namespaces, defering that for future implementation and discussion.
+> > 
+> > Any vsock created with /dev/vhost-vsock is a global vsock, accessible
+> > from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
+> > "scoped" vsock, accessible only to sockets in its namespace. If a global
+> > vsock or scoped vsock share the same CID, the scoped vsock takes
+> > precedence.
+> > 
+> > If a socket in a namespace connects with a global vsock, the CID becomes
+> > unavailable to any VMM in that namespace when creating new vsocks. If
+> > disconnected, the CID becomes available again.
 > 
-> Update hypercall call sites to use the new hv_hvcall_*() functions
-> to set up hypercall arguments. Since these functions zero the
-> fixed portion of input memory, remove now redundant calls to memset().
 > 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+> yea that's a sane way to do it.
+> Thanks!
 > 
-> Notes:
->     Changes in v2:
->     * In hv_arch_irq_unmask(), added check of the number of computed banks
->       in the hv_vpset against the batch_size. Since an hv_vpset currently
->       represents a maximum of 4096 CPUs, the hv_vpset size does not exceed
->       512 bytes and there should always be sufficent space. But do the
->       check just in case something changes. [Nuno Das Neves]
-> 
->  drivers/pci/controller/pci-hyperv.c | 18 ++++++++----------
->  include/hyperv/hvgdk_mini.h         |  2 +-
->  2 files changed, 9 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index ac27bda5ba26..82ac0e09943b 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -622,7 +622,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  	struct pci_dev *pdev;
->  	unsigned long flags;
->  	u32 var_size = 0;
-> -	int cpu, nr_bank;
-> +	int cpu, nr_bank, batch_size;
->  	u64 res;
->  
->  	dest = irq_data_get_effective_affinity_mask(data);
-> @@ -638,8 +638,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  
->  	local_irq_save(flags);
->  
-> -	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	memset(params, 0, sizeof(*params));
-> +	batch_size = hv_hvcall_in_array(&params, sizeof(*params),
-> +					sizeof(params->int_target.vp_set.bank_contents[0]));
->  	params->partition_id = HV_PARTITION_ID_SELF;
->  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
->  	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
-> @@ -671,7 +671,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
->  		free_cpumask_var(tmp);
->  
-> -		if (nr_bank <= 0) {
-> +		if (nr_bank <= 0 || nr_bank > batch_size) {
->  			res = 1;
->  			goto out;
->  		}
-> @@ -1034,11 +1034,9 @@ static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32
->  
->  	/*
->  	 * Must be called with interrupts disabled so it is safe
-> -	 * to use the per-cpu input argument page.  Use it for
-> -	 * both input and output.
-> +	 * to use the per-cpu argument page.
->  	 */
-> -	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	out = *this_cpu_ptr(hyperv_pcpu_input_arg) + sizeof(*in);
-> +	hv_hvcall_inout(&in, sizeof(*in), &out, sizeof(*out));
->  	in->gpa = gpa;
->  	in->size = size;
->  
-> @@ -1067,9 +1065,9 @@ static void hv_pci_write_mmio(struct device *dev, phys_addr_t gpa, int size, u32
->  
->  	/*
->  	 * Must be called with interrupts disabled so it is safe
-> -	 * to use the per-cpu input argument memory.
-> +	 * to use the per-cpu argument page.
->  	 */
-> -	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	hv_hvcall_in_array(&in, sizeof(*in), sizeof(in->data[0]));
->  	in->gpa = gpa;
->  	in->size = size;
->  	switch (size) {
-> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-> index 70e5d7ee40c8..cb25ac1e3ac5 100644
-> --- a/include/hyperv/hvgdk_mini.h
-> +++ b/include/hyperv/hvgdk_mini.h
-> @@ -1342,7 +1342,7 @@ struct hv_mmio_write_input {
->  	u64 gpa;
->  	u32 size;
->  	u32 reserved;
-> -	u8 data[HV_HYPERCALL_MMIO_MAX_DATA_LENGTH];
-> +	u8 data[];
 
-As with the prior patch, I don't think this is worth changing. The
-code in hv_pci_write_mmio() is more complicated as a result, and
-changing the array means the struct no longer matches the Hyper-V
-struct 1:1.
+Sgtm, thank you!
 
-Thanks
-Nuno
-
->  } __packed;
->  
->  #endif /* _HV_HVGDK_MINI_H */
-
+Best,
+Bobby
 
