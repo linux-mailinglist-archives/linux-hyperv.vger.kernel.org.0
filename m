@@ -1,47 +1,50 @@
-Return-Path: <linux-hyperv+bounces-4695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 264D4A707C0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Mar 2025 18:10:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0FC2A7088E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Mar 2025 18:53:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8573188D7EF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Mar 2025 17:10:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEFDD1892458
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Mar 2025 17:53:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FF7B25F989;
-	Tue, 25 Mar 2025 17:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CB20263F49;
+	Tue, 25 Mar 2025 17:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K2GMMy/U"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Roljvn0n"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94792E339B;
-	Tue, 25 Mar 2025 17:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ECF263F41;
+	Tue, 25 Mar 2025 17:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742922597; cv=none; b=beWo5YcPV/NCNzbmNXrQ+O1W44wK1B3ZTjWz6ciPuAywcbxyudy1JbsCiNN+7IQW6ckufH1AdQNgl4HDO9fQYSrJ2o50Kw0OD/sPIDCH8+ChjJd4DqWf092thX2RknjGSN2Z74z3QKzMKCKFYJoImEyGVAzUr0hJNSlznJg3tE0=
+	t=1742925183; cv=none; b=t5deDKAju96ff8cMItmQyKUNTkY/Qofydq9lF9orxZtfJNZ0TjNnzJ725ZSzZ24O98xDxS0j7k6tdAErOc2p4N0SuMbQdXdlhHdPyyLVsMJV/jo16Ld3hwoFiCLmPS8/05a6QbdM9iO4GoL6pkiAD8nYvaU+r6nkFqiuSH8lrF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742922597; c=relaxed/simple;
-	bh=v/k0ISaq5RYlyl5YrvYc26UUUVRy7HHPNAzlq4Z3UXc=;
+	s=arc-20240116; t=1742925183; c=relaxed/simple;
+	bh=xNJb6LWYNPmCvd7VJLAhvRbFT1B8jChQZx4XS+b8cNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MnEs4ihOFhy8zsdSrk5g7HKOfHsbUzyLe3ZKvG5DCfnM8qjg+G9PudXFdCGGbjAWi+ORLXioUikdZL9Ma1bqEuHTL2hWbiSYAn1tYNrmJmx76cpy8CimGlw/CRzG2SOwDpU0UbWvCjJ4zgY8ybjE5HcB/9rlEgt1Pna4aeI5Qog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K2GMMy/U; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 5BDD2203659C; Tue, 25 Mar 2025 10:09:55 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5BDD2203659C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742922595;
-	bh=TKSCvK+Z+E2nBTbRXLRveMgjlIDGsBl82/XulX1hncc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K2GMMy/UlrBv+TZS3YWLozHje4h1h/PWk7hVSmmEMncBMrMAVK/ksD0z8g6bFQhg8
-	 zL+AvcdBh6YlR8ONiLtalFp8+qReHMizRK/ai6qPTykrijRYgcYr5PyEMbR5SkBbRV
-	 souOcTxF4XlP2qKiyxP4g2tbu/ZcVa354i/yuEsI=
-Date: Tue, 25 Mar 2025 10:09:55 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Andrew Lunn <andrew@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BUTo28fgndkb8tfxUWYgNRjrs/DuAweFzW+tC/xwBBYTQNSAeYe9QPEVXGMN9BCA/2bvGr0W6P15izQbuRquYD95aosVOTubpzFxt533MCFZ4oIOyJ4MDvoi2jq97LJTaYRmpnSn/u6zdMGxRzqlhJnslSQ3p818LJop6nkJrxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Roljvn0n; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=gQ9Qwq29lAHwOvJTHc3u4UBWAudPdoRCH3V7BiUwyHM=; b=Roljvn0nuxDScbFsPXbPUndoAm
+	q95SEliNKHlDjrMy9FzaUg63J2wuEMbemf7txdkuT2J3KY1Tex8DOujgqgDIrTvlmvOS4j9AsLkeN
+	d1wGYcCyTVNazW9JIi+mGBmR8kvI5OJsbBsoLmtWFj4Tvai9mI7kOpWJR6m4uxOvkLtE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tx8S8-0075SN-6L; Tue, 25 Mar 2025 18:52:40 +0100
+Date: Tue, 25 Mar 2025 18:52:40 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
 	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
@@ -54,10 +57,11 @@ Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	linux-rdma@vger.kernel.org
 Subject: Re: [PATCH 2/3] net: mana: Implement set_link_ksettings in ethtool
  for speed
-Message-ID: <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Message-ID: <adaaa2b0-c161-4d4f-8199-921002355d05@lunn.ch>
 References: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
  <1742473341-15262-3-git-send-email-ernis@linux.microsoft.com>
  <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
+ <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -66,47 +70,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On Thu, Mar 20, 2025 at 02:43:34PM +0100, Andrew Lunn wrote:
-> On Thu, Mar 20, 2025 at 05:22:20AM -0700, Erni Sri Satya Vennela wrote:
-> > Add support for ethtool_set_link_ksettings for mana.
-> > Set speed information of the port using ethtool. This
-> > feature is not supported by all hardware.
+> > $ethtool -s enP30832s1 speed -1
 > > 
-> > Before the change:
-> > $ethtool -s enP30832s1 speed 100
-> > >netlink error: Operation not supported
-> > $ethtool enP30832s1
-> > >Settings for enP30832s1:
-> >         Supported ports: [  ]
-> >         Supported link modes:   Not reported
-> 
-> Since there are no link modes, what does this speed actually mean?
-> 
-Initially we planned to support for speed incrementally by 1Mbps, but
-after internal discussion with the host team, we will be supporting 
-only speed which is multiples of 100. The HWC commands 
-MANA_QUERY_LINK_CONFIG and MANA_SET_BW_CLAMP help us to get and
-set the speed in the hardware respectively.
-> > After the change:
-> > $ethtool -s enP30832s1 speed 100
-> 
-> Is 
-> 
-> $ethtool -s enP30832s1 speed 42
-> 
-> permitted? 
-> 
-The user will be allowed to set the speed which are multiples 
-of 100. And the minimum allowed bandwidth is 100Mbps. I will be making
-this change in the next version of this patch.
-> or
-> 
-> $ethtool -s enP30832s1 speed -1
-> 
-This case is handled by the firmware, which throws an error:
-ethtool (-s): invalid value '-1' for parameter 'speed'
-> 	Andrew
+> This case is handled by the firmware, which throws an error:
+> ethtool (-s): invalid value '-1' for parameter 'speed'
+
+So how do i remove the speed limitation i previously installed? -1 is
+SPEED_UNKNOWN which is what you default to.
+
+Using TC would be more natural in this case. The user action is to
+remove the TC filter and that should set it back to unlimited.
+
+	Andrew
 
