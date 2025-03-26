@@ -1,171 +1,190 @@
-Return-Path: <linux-hyperv+bounces-4707-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4708-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED63A70E18
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 01:16:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3829DA719B9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 16:06:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1361A188473D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 00:16:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 045EB19C1A92
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 14:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06AB12E3373;
-	Wed, 26 Mar 2025 00:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7740A1F3BB6;
+	Wed, 26 Mar 2025 14:55:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWjbrOoI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX6aTZbf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C50046BF;
-	Wed, 26 Mar 2025 00:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1471EEA36;
+	Wed, 26 Mar 2025 14:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742947914; cv=none; b=BIE9i47+f94Qr7K2cOuz1zctz1EU71zBocf1qqIKsqgXxSwfiha6arIjKoZoyGQcQRpl8deHC1bAUfri8BvHJObGBAj138KGsmGeU7rJDK9D7uXmQWi8DS4E4sJ2WfXhK01ozip81FQeW5qKau/UO8Q9cmyDqMO7WrmTEV4ARz8=
+	t=1743000928; cv=none; b=ZBnDrQqNqtPVR5d3WT+NObr7pfoX9FG4ABKkemqRLWNGDXlfJ13aFo43zCQWP0TQbiTd1PbL5RWRKp8TBZ/j0U++RZuFBVcm5tnNMwmvtGQAudwMPYjLoKx+t8LgefYBXPBI6dSXkHkKs8ZA+/zI8EW6ttQo/76o8g4lpbOYGys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742947914; c=relaxed/simple;
-	bh=Ds5elK0EiYSgBbG1o5wtpaJmT1vD/nl22PdcXN437WE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mak/FPWX+TefDV2gBa99z4IZxXMN4N1cJoSiJMt8ci12oP2DidNlv3m69jlxQbXrUzVAJ7Ae7+EvbT54sM8kWTVkzg3ZuwWnF8jw3sDXZHSRy3V+BFN59asnxm5qeNh7mn+w8Xq1TSiwbXcOmy3jZz4kdQ6wj0gwQtLGAmVyc7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWjbrOoI; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22580c9ee0aso128083715ad.2;
-        Tue, 25 Mar 2025 17:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742947912; x=1743552712; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CY8eIyZm61ckxiaVzTuPDCRXGNO6HtSN1mJX9W6zGQQ=;
-        b=OWjbrOoIwKJw2PMhyNl8Aed5JtKyt7PpilTzzyAyQy1NYsmBqoOwM5O8ajazIAWDpy
-         Lyf92+Iel+3/zgIAAhpnJ7UI8MwqXNHp1uuGYZHbzzubo9Q7F32tmmrp6TVS6UxIfhW4
-         1jxtpDgnDy6WjjO52onyadpNwcmOFUVopRFMHu/K64ZkZzODleyotFKJnbJQkzczbFe6
-         W+sSPpQNnGVUO6+1IVsygG85yK6jiGP+npE9dOb+lakD0OedIJ7GmvqKjrYTGLudnhke
-         Lk4Zgxf4olyOTl1c4+a7Yg3k2ApHv796wpAM9Lv0o2bY0AWgEdp9E6x6CccpSd2ZoZKb
-         /a5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742947912; x=1743552712;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CY8eIyZm61ckxiaVzTuPDCRXGNO6HtSN1mJX9W6zGQQ=;
-        b=Ji7Vx8Yp2B+yptMbM6GXiU53WRdN4dlFbVgV5zfpYdhajIGP81w1orfmDmHfK/Z9ed
-         D2uamK3yM1Rim9eK/oAhfEfON7N5s/wWPhhhlVBXqWaStxhm/gek9/9f+aKtHS6HDAFj
-         vwAg5c/pAI4NUS4vk8Wy4j51sqXSGyl/Sd9ZUImwj+pUpOQDbSdyawW8wunCw3ZpSoV7
-         Gv2rKyQ5JhonOBwzeZVfAKnB9dCAtohH+4h2UJxskDjtvlYNtHcEi/xUSQ8ylDPxjc5B
-         KAkW5aMvb2JvUuTvENTG/sfwrdhtR3/ptfF3JzTeu/qWxVlXVM1vmIAvkKFbPCArTaMS
-         wbrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDDixAYhmR9Xf50VY6mplwfx4bMSIBVQePY4NMYgzVJKg7DBqTbeGjnuHfUhxaorX8M06xLUn3@vger.kernel.org, AJvYcCVd4KRGVv29IKZCkdWKo5Y0Z58/hV1THo0Nc/gqG0z0M2fy/UCSWtbYIDiefa4woahZe84=@vger.kernel.org, AJvYcCWlho2IIr/FxL3Kp5F6i4P0jIn5OkrTiBnASYGuzoh0NWkDEBMP683kt2yri6HxqoYmnsBCncsA5VmqMyQC@vger.kernel.org, AJvYcCWlkLPzEl5tPxodAyvwpw5B95f8QQwrFyH+O6pGE+orGjKXShhCoypMbGf1TUDvwM5WPjkH0e36Ir4BRRGv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNKsvjoCiGK+qhHkGDbdwyH2A12Sa1OgHmuuUFiayjClIGHnY1
-	qZk5h3WqJBoHPgXM9tEwqidUGjWt3dfWSaunGDXwLGesLFxM55kH
-X-Gm-Gg: ASbGncvKbpBAhQy1FsV0eXD0JTy03T+X71sUtG9eU3CiUIvxtSChIJJZEWi9HInUQ81
-	GBS5XWIK+mVNAY0jEtDvkQ21nYF/seZJUti7ZXDRQw8VO9pfvptBoRhfFQpZJINLh+cEDvXf9KM
-	u1z/EOIxxL5csEfoLgLMCYYcREKHy/OvBfH1Yxawuvoa0MGudr9wLaDBFFX2mwgKdJLwwAZC6q9
-	qFarNzeYHcYr1fZpkXuABb9iJviTZfUkOQDOlLSiD84BOlX2WLXAQrRCGOoSK3Epq1dtLLENe/p
-	0DSh9wxaAcAGZlqmPtzqh0gP7WJmJJFD0CyhLJA4bnMFIHsDjTsZs1gIBQzen/50wg==
-X-Google-Smtp-Source: AGHT+IHxY4Vgr8ATi1uVdyopW2+f/aLhWWNzfk7UHIfMOoRiFLbmaJkjO523spjjVjgNAJSnkFxkQQ==
-X-Received: by 2002:a05:6a21:339a:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-1fe42f995edmr26069754637.20.1742947912351;
-        Tue, 25 Mar 2025 17:11:52 -0700 (PDT)
-Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:8::])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a280e572sm9690206a12.32.2025.03.25.17.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 17:11:51 -0700 (PDT)
-Date: Tue, 25 Mar 2025 17:11:49 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] vhost/vsock: use netns of process that opens the
- vhost-vsock-netns device
-Message-ID: <Z+NGRX7g2CgV9ODM@devvm6277.cco0.facebook.com>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
- <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
- <nwksousz7f4pkzwefvrpbgmmq6bt5kimv4icdkvm7n2nlom6yu@e62c5gdzmamg>
- <Z9yDIl8taTAmG873@devvm6277.cco0.facebook.com>
- <aqkgzoo2yswmb52x72fwmch2k7qh2vzq42rju7l5puxc775jjj@duqqm4h3rmlh>
+	s=arc-20240116; t=1743000928; c=relaxed/simple;
+	bh=2FjJkXZ1Sr7UVOgZLzCfOaayYT0ey4QBq9TK9OK+P/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iny8sHywRy1KDbeDQ8bEOeoLWeS1yRNjap40ktcb3yMCdjkyEfceIfsqdJeUTQgKG49caAwF1cPGvHqOINZLTHf0aqZyZKw7Au8JqWQ4MeTWJiYHGfE10lUYCv63ivspVyEhYd3nhB7vgqgW3XT8D5Mmd9MFksXJBH9qBvaA6Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX6aTZbf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6CA9C4CEE2;
+	Wed, 26 Mar 2025 14:55:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743000927;
+	bh=2FjJkXZ1Sr7UVOgZLzCfOaayYT0ey4QBq9TK9OK+P/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HX6aTZbfmKW3A2e/vn8L0G+6m4LL7IV/4qxaFFkyjSE9WQc2yJgVcmxtQn0yvGNkB
+	 j6/G1HeyjUGGQ+beZvHvcO588uANwt91E4OKcxRzxTXZI5mCXQTIZ2GG9s8mhOZjSp
+	 TS0R+5Y4qCBs+JMfbnbCvadMlrkMaksBOO3waBiF05sW9mCoLUbEcMF8Yx3tUsMpXq
+	 fHw/Kn1InTPrQzu2NX8fmA9qXnwoc+6z/41+WHWS62uemtTQ1oQHUCZj9FZzfLavBp
+	 5C39yp2vgvXV6jaJWKLHkNQxTEJwn3NhnThF88ek5cHtzIAmEj4Zxl7WPMuPhOcEm9
+	 Z//hTubBOrTcw==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c2c754af3cso3523539fac.3;
+        Wed, 26 Mar 2025 07:55:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/nLXbfqNxVE6AKjH4vRNioLbDxaMz94xZdKU7DF6o8QZZx7QJ5OT5LNAnsj5HJfj0DT1mcfO2OZD/7Asw@vger.kernel.org, AJvYcCVBwVumVtKSzzDL3fRQgHJsNyZitgY5rtR7MooIXKcotd/J2MM2zwlANPKYDWd7tDG2pJkuSWqEkkdB@vger.kernel.org, AJvYcCVLM2AEqUVI6S5NEaf4QGYR/jksq1lONKFoboKm6tM38msGE4e/glC1DIjKdEIdOChN8wJvRpT7mAT//Q==@vger.kernel.org, AJvYcCWZE/EOvRFCRUzrabNmjb5ZEUm3KJpMXQzK5uZvlOD4tSgHY0k57YM3XWVseGIHDahL04QAKAcnKdz1@vger.kernel.org, AJvYcCXO77w8RQlvdpbARz9KV2CX/7pEmkYSZyoImlBt6ppwx3eEiFFXyjkYX8rcLxD6uGsMsIuyMtduYoZXNOal@vger.kernel.org, AJvYcCXjeHZ97FWu/c0b7Nyew0lu4N3lIEt7maak/pm5VLy+r/BYjrnTgrn1DvLZoYfygOFokG3uqQaTTFOL4w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHW6hqHItVobhEdS17eTiFOAWMBtIy0LkA/0afBker09U/MIYI
+	NMA45GSvzl7+/vKcjiFF5w0uZho8JHLUCfjKgxby8qW7W73zLfWWZQ88gg7aTTN2f7r3SxcC8er
+	Vsol+BoEQRLRMxkKn4NVTVi3D4pU=
+X-Google-Smtp-Source: AGHT+IEYYA/6LylePhPYpVsBFlVh+o1a/2X6ugf3+5Zk77UyBnBXpaSo0UzJzWGtji5Mqp0Q8hwWmxY8a4Ns27KKFng=
+X-Received: by 2002:a05:6871:5223:b0:2bd:455e:c22e with SMTP id
+ 586e51a60fabf-2c7803002damr12663712fac.19.1743000926945; Wed, 26 Mar 2025
+ 07:55:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqkgzoo2yswmb52x72fwmch2k7qh2vzq42rju7l5puxc775jjj@duqqm4h3rmlh>
+References: <20250315001931.631210-1-romank@linux.microsoft.com> <20250315001931.631210-11-romank@linux.microsoft.com>
+In-Reply-To: <20250315001931.631210-11-romank@linux.microsoft.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 26 Mar 2025 15:55:15 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jr4yQ264W4Fr4uvYbe-kFtKKfam4-v0_OqzzA1JU-y-jScH9oT2tKvFv-0
+Message-ID: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Subject: Re: [PATCH hyperv-next v6 10/11] ACPI: irq: Introduce acpi_get_gsi_dispatcher()
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
+	conor+dt@kernel.org, dan.carpenter@linaro.org, dave.hansen@linux.intel.com, 
+	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, 
+	joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, 
+	lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, 
+	mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com, 
+	oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org, 
+	ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
+	tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, 
+	devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
+	apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com, 
+	sunilmut@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 21, 2025 at 11:02:34AM +0100, Stefano Garzarella wrote:
-> On Thu, Mar 20, 2025 at 02:05:38PM -0700, Bobby Eshleman wrote:
-> > On Thu, Mar 20, 2025 at 10:08:02AM +0100, Stefano Garzarella wrote:
-> > > On Wed, Mar 19, 2025 at 10:09:44PM +0100, Paolo Abeni wrote:
-> > > > On 3/12/25 9:59 PM, Bobby Eshleman wrote:
-> > > > > @@ -753,6 +783,8 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
-> > > > >  	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
-> > > > >
-> > > > >  	vhost_dev_cleanup(&vsock->dev);
-> > > > > +	if (vsock->net)
-> > > > > +		put_net(vsock->net);
-> > > >
-> > > > put_net() is a deprecated API, you should use put_net_track() instead.
-> > > >
-> > > > >  	kfree(vsock->dev.vqs);
-> > > > >  	vhost_vsock_free(vsock);
-> > > > >  	return 0;
-> > > >
-> > > > Also series introducing new features should also include the related
-> > > > self-tests.
-> > > 
-> > > Yes, I was thinking about testing as well, but to test this I think we need
-> > > to run QEMU with Linux in it, is this feasible in self-tests?
-> > > 
-> > > We should start looking at that, because for now I have my own ansible
-> > > script that runs tests (tools/testing/vsock/vsock_test) in nested VMs to
-> > > test both host (vhost-vsock) and guest (virtio-vsock).
-> > > 
-> > 
-> > Maybe as a baseline we could follow the model of
-> > tools/testing/selftests/bpf/vmtest.sh and start by reusing your
-> > vsock_test parameters from your Ansible script?
-> 
-> Yeah, my playbooks are here:
-> https://github.com/stefano-garzarella/ansible-vsock
-> 
-> Note: they are heavily customized on my env, I wrote some notes on how to
-> change various wired path.
-> 
-> > 
-> > I don't mind writing the patches.
-> 
-> That would be great and very much appreciated.
-> Maybe you can do it in a separate series and then here add just the
-> configuration we need.
-> 
-> Thanks,
-> Stefano
-> 
+On Sat, Mar 15, 2025 at 1:19=E2=80=AFAM Roman Kisel <romank@linux.microsoft=
+.com> wrote:
+>
+> Using acpi_irq_create_hierarchy() in the cases where the code
+> also handles OF leads to code duplication as the ACPI subsystem
+> doesn't provide means to compute the IRQ domain parent whereas
+> the OF does.
+>
+> Introduce acpi_get_gsi_dispatcher() so that the drivers relying
+> on both ACPI and OF may use irq_domain_create_hierarchy() in the
+> common code paths.
+>
+> No functional changes.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-Hey Stefano,
+This basically looks OK to me except for a couple of coding style
+related nits below.
 
-I noticed that bpf/vmtest.sh uses images hosted from libbpf's CI/CD. I
-wonder if you have any thoughts on a good repo we may use to pull our
-qcow image(s)? Or a preferred way to host some images, if no repo
-exists?
+> ---
+>  drivers/acpi/irq.c   | 15 +++++++++++++--
+>  include/linux/acpi.h |  5 ++++-
+>  2 files changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+> index 1687483ff319..8eb09e45e5c5 100644
+> --- a/drivers/acpi/irq.c
+> +++ b/drivers/acpi/irq.c
+> @@ -12,7 +12,7 @@
+>
+>  enum acpi_irq_model_id acpi_irq_model;
+>
+> -static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
+> +static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
+>  static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
+>
+>  /**
+> @@ -307,12 +307,23 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
+>   *     for a given GSI
+>   */
+>  void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+> -                              struct fwnode_handle *(*fn)(u32))
 
-Thanks,
-Bobby
+Please retain the indentation here and analogously below.
+
+> +       acpi_gsi_domain_disp_fn fn)
+>  {
+>         acpi_irq_model =3D model;
+>         acpi_get_gsi_domain_id =3D fn;
+>  }
+>
+> +/**
+> + * acpi_get_gsi_dispatcher - Returns dispatcher function that
+> + *                           computes the domain fwnode for a
+> + *                           given GSI.
+> + */
+
+I would format this kerneldoc comment a bit differently:
+
+/*
+ * acpi_get_gsi_dispatcher() - Get the GSI dispatcher function
+ *
+ * Return the dispatcher function that computes the domain fwnode for
+a given GSI.
+ */
+
+> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
+> +{
+> +       return acpi_get_gsi_domain_id;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
+> +
+>  /**
+>   * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
+>   * callback to fallback to arch specified implementation.
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 4e495b29c640..abc51288e867 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, =
+int triggering, int polarity
+>  int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+>  int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+>
+> +typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
+> +
+>  void acpi_set_irq_model(enum acpi_irq_model_id model,
+> -                       struct fwnode_handle *(*)(u32));
+> +       acpi_gsi_domain_disp_fn fn);
+> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
+>  void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+>
+>  struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+> --
+
+With the above addressed, please feel free to add
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+to the patch and route it along with the rest of the series.
+
+Thanks!
 
