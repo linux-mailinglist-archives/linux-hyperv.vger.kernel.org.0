@@ -1,229 +1,182 @@
-Return-Path: <linux-hyperv+bounces-4709-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4710-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72F21A719C4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 16:08:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D070BA71A6C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 16:34:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5FCB19C2161
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 14:58:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DAF037A6F63
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 15:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 544E71F4C9D;
-	Wed, 26 Mar 2025 14:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244941F3FE4;
+	Wed, 26 Mar 2025 15:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MmjyCflb"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h9CXDAO1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5941F418C;
-	Wed, 26 Mar 2025 14:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8431F2369;
+	Wed, 26 Mar 2025 15:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743001020; cv=none; b=f248sew1VfVKGI8b52OZ4WgAWcqAFQjSNVoboS+tsZ+HLmVrLEzgMeh3stj5BEVJTzRgM4zxUDeaRW5Sm/ia5TjH3wud04ZB2izOWSYS4bu0JUMxVNPDDPRVgrzRsgsOhbxvh90ZgHyMN14Qje+BiWXz1VOa2Js4Rcxc2XQ1o+w=
+	t=1743003176; cv=none; b=hUQXm4FDE3TSnkqysZJ6rmZR/N+xmxESqrZqGDOQeqyGSy3GJQvcTSh+3gZGTAscYdXDBtG5uKD7StB8stB+1scZf78j7uvOBdmpFSL2bv0L9+JeEsGT/nI/4f04dbYw/KnqhAT32w/vfgqgCX66hkKqrUx0Xm3vSchqE35Rt48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743001020; c=relaxed/simple;
-	bh=nF2RjFGpG3A65aMAwOnP1USwdp3nJlYReQNJqbqS1So=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lzk5amsCppmKa+TWqwjqDn20XuOxYf4B6moxRGF1A3CcBTVx/8hn2ZwxIOdBdU7P+XlX6v4TR0r00dpN5UCm6NoPik8N6BTvRJoER7b2OzCfdqpe3TiITpxuagzCWQrlRnFE9V15so1CROzGUHES3pYENjpWyuetUIIDQsz91ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MmjyCflb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE3CC4AF0D;
-	Wed, 26 Mar 2025 14:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743001020;
-	bh=nF2RjFGpG3A65aMAwOnP1USwdp3nJlYReQNJqbqS1So=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MmjyCflb+tTlR5MBkQj7dY08iImGGcSdOex2tnRAjv2CwuMydzr+6g+T89hlPyD4T
-	 5lbqYAQY1q4vepYMT/XhJU+lTrqvOgrZmGzGiXtajU4A5oznmqySeZjpuJNR3Q7W/c
-	 2U2gPiGrsFJGXTzlXGKjjC+KX+QA+4YZli8XjIS5v2cXZbLXcPzwTzo/J8qoXDy1wh
-	 6b6w6zSoOQkpRQzMmVs/tly8J3rqdTwfv4skjGW1/KON/IPTMCNxxYNslK00Qlfofy
-	 yGqZAwmI5DoSHSLJz/HeXZfPLBCZzh63fOnqGNF6MKW+cs1HkhqnyVq4TVMetHf2m7
-	 ON5jKJk2k7NaA==
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3fea67e64caso4127299b6e.2;
-        Wed, 26 Mar 2025 07:56:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFQ3IKFkWX9FZbuRA+HWh64MYUMhe6TayEp3Q2WWpyCCCLXd6EJj60WtnFa25d6WxcCrk42h0iz6n7hw==@vger.kernel.org, AJvYcCUsxRevZ+ejpNRUMy8NhazkUQQXgTbXLpePYVqN7gBQZcLdYSKpv01VAmfNnkOQJrcSy5w5Af5CCEhnXw==@vger.kernel.org, AJvYcCVChEJmJTZdTJ5OqfnG2PSewBsm9pmt29xQwaHLQ5G/uTjisE7MM/sLi6wO5qZfra97q3sB4rkUYaWKPoz8@vger.kernel.org, AJvYcCVwp3RZp3ZC+bDwG/eZ94WvUEoDzWYWPYXMblauArX6n+OBt5zT2D66pxyeCHwAiU31Ul2z3SADhQCD@vger.kernel.org, AJvYcCX0cwsyE9ey5CeM7lrkerbPazwYOvn+jmjQpwlbx/6jCg1KnqAG46mr0qIHv/enPRbqucV/ertV7AdXcYde@vger.kernel.org, AJvYcCX7AfwD7WMflOS5l5KkmtgMbEOvlbP6hz1Rgj2v11KbDUuq23ACWVXRAWmbE4B9OUJWU4eDJmu/PyRx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeqkWVbRKpeXJOZCXonAVpF5J+j+a2yN6Pl+ibY/uMpqRAT4Vu
-	SuTCwdau/GXFOhzZZ9+ZGTpKFPDHPerpPFWWr2USjpqDsVyY9ymmRfE0axbSObFfVcRm++aQKPP
-	xUOCSBnEapwrrYSbJz7xdi6D2jOU=
-X-Google-Smtp-Source: AGHT+IGmSAoh/NM65izkDPKUI1Bx1s1CpYOoqqHj8rwk1HayiQb7/ZTrzCWxEZIlAbPgY/gZ5IPT5mW0vY7TUSaamgg=
-X-Received: by 2002:a05:6808:2116:b0:3f9:a187:1f5d with SMTP id
- 5614622812f47-3febf79cf75mr13184095b6e.35.1743001019176; Wed, 26 Mar 2025
- 07:56:59 -0700 (PDT)
+	s=arc-20240116; t=1743003176; c=relaxed/simple;
+	bh=QfFKHtPjhnsVEIyS3XzuUBPioCudwzrqL/GSdI3aKa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MrR3+R4CLs0PFi1jp19GbhXBjZyEif48CJhoGDk2avP0TCepY6sHjgKngSInTbbjmRLWH1VBUrd1zBuEKfEjQFDFluG+SROraYYlaasND8PED7opOLEfB3Y3UCD5JWsrOsTK6VKaaVwTciv45zDo+HKzvWrGCfQFSes9nk2sCa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=h9CXDAO1; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A914B210C320;
+	Wed, 26 Mar 2025 08:32:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A914B210C320
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743003174;
+	bh=5dEhZXpJIQDYjKp44/xRbSpFUSHWMuuE2+/dnL6k/lU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h9CXDAO1ZrAH2QmyDPeZh9D575YKdAtnwcuvQxr+2h+cWYYQEZjW0lE1GdOfjm8h0
+	 WTL8D4VFuAxQbfVPl4CANyl7MImvzKVJrV1UkEJ6ZDQRtMcF1/oXVnUIM04GP/33qq
+	 SoTHHkrgirDlGx5JlRlVXulkrfzJWIihHsu4hJNE=
+Message-ID: <f8ccc874-e153-4b78-8159-9923dfa77fc3@linux.microsoft.com>
+Date: Wed, 26 Mar 2025 08:32:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250315001931.631210-1-romank@linux.microsoft.com> <20250315001931.631210-12-romank@linux.microsoft.com>
-In-Reply-To: <20250315001931.631210-12-romank@linux.microsoft.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 26 Mar 2025 15:56:48 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jNEO2VcwmMXLZaS+Kqg3iBgHcWb65f90HKUADtPuvgqA@mail.gmail.com>
-X-Gm-Features: AQ5f1JraBPSxwGSJAA4KKJZ156j5w2j0joAJRL4jrFqS_Vv7qLwxEV_YVE1Rcsc
-Message-ID: <CAJZ5v0jNEO2VcwmMXLZaS+Kqg3iBgHcWb65f90HKUADtPuvgqA@mail.gmail.com>
-Subject: Re: [PATCH hyperv-next v6 11/11] PCI: hv: Get vPCI MSI IRQ domain
- from DeviceTree
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
-	conor+dt@kernel.org, dan.carpenter@linaro.org, dave.hansen@linux.intel.com, 
-	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, 
-	joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, 
-	lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, 
-	mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com, 
-	oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org, 
-	ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
-	tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, 
-	devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
-	apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com, 
-	sunilmut@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 10/11] ACPI: irq: Introduce
+ acpi_get_gsi_dispatcher()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
+ mingo@redhat.com, oliver.upton@linux.dev, robh@kernel.org,
+ ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-11-romank@linux.microsoft.com>
+ <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 15, 2025 at 1:19=E2=80=AFAM Roman Kisel <romank@linux.microsoft=
-.com> wrote:
->
-> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
-> arm64. It won't be able to do that in the VTL mode where only DeviceTree
-> can be used.
->
-> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
-> case, too.
->
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 73 ++++++++++++++++++++++++++---
->  1 file changed, 67 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 6084b38bdda1..cbff19e8a07c 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -50,6 +50,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/acpi.h>
->  #include <linux/sizes.h>
-> +#include <linux/of_irq.h>
->  #include <asm/mshyperv.h>
->
->  /*
-> @@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct ir=
-q_domain *domain,
->         int ret;
->
->         fwspec.fwnode =3D domain->parent->fwnode;
-> -       fwspec.param_count =3D 2;
-> -       fwspec.param[0] =3D hwirq;
-> -       fwspec.param[1] =3D IRQ_TYPE_EDGE_RISING;
-> +       if (is_of_node(fwspec.fwnode)) {
-> +               /* SPI lines for OF translations start at offset 32 */
-> +               fwspec.param_count =3D 3;
-> +               fwspec.param[0] =3D 0;
-> +               fwspec.param[1] =3D hwirq - 32;
-> +               fwspec.param[2] =3D IRQ_TYPE_EDGE_RISING;
-> +       } else {
-> +               fwspec.param_count =3D 2;
-> +               fwspec.param[0] =3D hwirq;
-> +               fwspec.param[1] =3D IRQ_TYPE_EDGE_RISING;
-> +       }
->
->         ret =3D irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
->         if (ret)
-> @@ -887,10 +896,47 @@ static const struct irq_domain_ops hv_pci_domain_op=
-s =3D {
->         .activate =3D hv_pci_vec_irq_domain_activate,
->  };
->
-> +#ifdef CONFIG_OF
-> +
-> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
-> +{
-> +       struct device_node *parent;
-> +       struct irq_domain *domain;
-> +
-> +       parent =3D of_irq_find_parent(hv_get_vmbus_root_device()->of_node=
-);
-> +       if (!parent)
-> +               return NULL;
-> +       domain =3D irq_find_host(parent);
-> +       of_node_put(parent);
-> +
-> +       return domain;
-> +}
-> +
-> +#endif
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
-> +{
-> +       struct irq_domain *domain;
-> +       acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
-> +
-> +       if (acpi_irq_model !=3D ACPI_IRQ_MODEL_GIC)
-> +               return NULL;
-> +       gsi_domain_disp_fn =3D acpi_get_gsi_dispatcher();
-> +       if (!gsi_domain_disp_fn)
-> +               return NULL;
-> +       return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
-> +                                    DOMAIN_BUS_ANY);
-> +}
-> +
-> +#endif
-> +
->  static int hv_pci_irqchip_init(void)
->  {
->         static struct hv_pci_chip_data *chip_data;
->         struct fwnode_handle *fn =3D NULL;
-> +       struct irq_domain *irq_domain_parent =3D NULL;
->         int ret =3D -ENOMEM;
->
->         chip_data =3D kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> @@ -907,9 +953,24 @@ static int hv_pci_irqchip_init(void)
->          * way to ensure that all the corresponding devices are also gone=
- and
->          * no interrupts will be generated.
->          */
-> -       hv_msi_gic_irq_domain =3D acpi_irq_create_hierarchy(0, HV_PCI_MSI=
-_SPI_NR,
-> -                                                         fn, &hv_pci_dom=
-ain_ops,
-> -                                                         chip_data);
-> +#ifdef CONFIG_ACPI
-> +       if (!acpi_disabled)
-> +               irq_domain_parent =3D hv_pci_acpi_irq_domain_parent();
-> +#endif
-> +#if defined(CONFIG_OF)
 
-Why don't you do
 
-#ifdef CONFIG_OF
+On 3/26/2025 7:55 AM, Rafael J. Wysocki wrote:
+> On Sat, Mar 15, 2025 at 1:19 AM Roman Kisel <romank@linux.microsoft.com> wrote:
+[...]
+> 
+> This basically looks OK to me except for a couple of coding style
+> related nits below.
+> 
 
-here for consistency?
+Appreciate taking time to review this very much! Will squash the nits in
+the next version.
 
-> +       if (!irq_domain_parent)
-> +               irq_domain_parent =3D hv_pci_of_irq_domain_parent();
-> +#endif
-> +       if (!irq_domain_parent) {
-> +               WARN_ONCE(1, "Invalid firmware configuration for VMBus in=
-terrupts\n");
-> +               ret =3D -EINVAL;
-> +               goto free_chip;
-> +       }
-> +
-> +       hv_msi_gic_irq_domain =3D irq_domain_create_hierarchy(
-> +               irq_domain_parent, 0, HV_PCI_MSI_SPI_NR,
-> +               fn, &hv_pci_domain_ops,
-> +               chip_data);
->
->         if (!hv_msi_gic_irq_domain) {
->                 pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domai=
-n\n");
-> --
+>> ---
+>>   drivers/acpi/irq.c   | 15 +++++++++++++--
+>>   include/linux/acpi.h |  5 ++++-
+>>   2 files changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+>> index 1687483ff319..8eb09e45e5c5 100644
+>> --- a/drivers/acpi/irq.c
+>> +++ b/drivers/acpi/irq.c
+>> @@ -12,7 +12,7 @@
+>>
+>>   enum acpi_irq_model_id acpi_irq_model;
+>>
+>> -static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
+>> +static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
+>>   static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
+>>
+>>   /**
+>> @@ -307,12 +307,23 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
+>>    *     for a given GSI
+>>    */
+>>   void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+>> -                              struct fwnode_handle *(*fn)(u32))
+> 
+> Please retain the indentation here and analogously below.
+> 
+>> +       acpi_gsi_domain_disp_fn fn)
+>>   {
+>>          acpi_irq_model = model;
+>>          acpi_get_gsi_domain_id = fn;
+>>   }
+>>
+>> +/**
+>> + * acpi_get_gsi_dispatcher - Returns dispatcher function that
+>> + *                           computes the domain fwnode for a
+>> + *                           given GSI.
+>> + */
+> 
+> I would format this kerneldoc comment a bit differently:
+> 
+> /*
+>   * acpi_get_gsi_dispatcher() - Get the GSI dispatcher function
+>   *
+>   * Return the dispatcher function that computes the domain fwnode for
+> a given GSI.
+>   */
+> 
+>> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
+>> +{
+>> +       return acpi_get_gsi_domain_id;
+>> +}
+>> +EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
+>> +
+>>   /**
+>>    * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
+>>    * callback to fallback to arch specified implementation.
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index 4e495b29c640..abc51288e867 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity
+>>   int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+>>   int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+>>
+>> +typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
+>> +
+>>   void acpi_set_irq_model(enum acpi_irq_model_id model,
+>> -                       struct fwnode_handle *(*)(u32));
+>> +       acpi_gsi_domain_disp_fn fn);
+>> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
+>>   void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+>>
+>>   struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+>> --
+> 
+> With the above addressed, please feel free to add
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> to the patch and route it along with the rest of the series.
+> 
+
+Will do, thanks!
+
+> Thanks!
+
+-- 
+Thank you,
+Roman
+
 
