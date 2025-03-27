@@ -1,125 +1,187 @@
-Return-Path: <linux-hyperv+bounces-4711-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4712-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23E66A71AE3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 16:43:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D49C4A729BE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Mar 2025 06:01:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB97884218D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Mar 2025 15:40:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B62033B4F71
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Mar 2025 05:01:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 734B91FCFEC;
-	Wed, 26 Mar 2025 15:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB9441B6D01;
+	Thu, 27 Mar 2025 05:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QCZ/1a3p"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KfJ4C1Vu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B661F583A;
-	Wed, 26 Mar 2025 15:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5432618EB0;
+	Thu, 27 Mar 2025 05:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743003451; cv=none; b=mb5wpHfIPA4SXVCIBHKF2mKgvRd2GrJrWsL74VkfCPCJHERZDsMZai/ylB5ZffV9Ngd6gRAs7ZgnWIAtAoP7EXFTmUktTAd18+sAYTSa/ZI51bCO6pBwa4X9EDni4nVKnC/wLDwf+8iww7eS1Xlo/x8M7ZjfoMDCBqi9svLvbns=
+	t=1743051703; cv=none; b=Fg6ibIlH+Q4maCym2xlHYwDpW0cGT9nTPsmHvw0UiV8EKKCF6bdprHDEaS/mxI++YYTsTABVqpKAe5Ce8V0Lr1sb0jvBqN8TesMaO0LpcEhyIM+dcsBLpS2hxiBpkUMc4Vc+7f/bIfK9n7hq83QjXvXsu20U5/QFr/fNMMHBNXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743003451; c=relaxed/simple;
-	bh=X7FAEgRsV2xbboJ7QKOztmy6O5MW3v9XOfceR4QGwks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HYVB6x44gE4rKHzJcLxHvMSuDeclHUqkTGg/jvU3+nLvr8vyqHP7p99TFhf5XEokWIkzBXOQxNfKOucxfZtRiVz5VV4EC6sFsZEj8hAE/6iBPrHOaYm+ajIWrTr50hSupHUXteVvbhX7/sExJtTx1DkEUKy97HwLA4qJHFuuq4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QCZ/1a3p; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1743051703; c=relaxed/simple;
+	bh=xYu6biCgRAvV54XDPXKBT2zX4ig7grodlwKFQMpKzuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AvSsM3neFg1MDuU0ffby5biQm6XoivaOXE9oR5WZ30iiIn7CAJa+c2I9LkKPPI5BpJTsVaOn0hUY9aHzPK8a5DkElsP5s2jaYdaJU+41o+vzbBUv8KfRzTdE8QDIWbw/gnhUD3WJ6TMjJdgzD2pKrPOCIqRdKvw6KFeTC9OJBgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KfJ4C1Vu; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 204B22036597;
-	Wed, 26 Mar 2025 08:37:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 204B22036597
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id B3A5C211143F; Wed, 26 Mar 2025 22:01:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B3A5C211143F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743003449;
-	bh=WjzFIgjV9jVjkAChBrIFVJQnAYd6k3ZAKIpA/MaT4yo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QCZ/1a3p+ZIUFWcAhkJvic5IwY8U0ufXEKXOuGNNCfYPOL2C8wZRVb0oHeZ26p7MN
-	 55ghDNm1zZbkc7h9pH8j0WaY5qfjqpwdKTYWPi2UX1+7ck4WlgOZl7f4IIiSvY3N3U
-	 3LSW1a2/cC6In4mf7262M02Vm2HMR/pY2ogrm5bY=
-Message-ID: <83b983a4-064e-4a81-9c58-239b630eb299@linux.microsoft.com>
-Date: Wed, 26 Mar 2025 08:37:28 -0700
+	s=default; t=1743051700;
+	bh=TRzzvHz66Y/kUUMQcpHVIbr9k8vTxUvWBzzSkkTuLw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KfJ4C1Vum9CP9IxbsicYpgcJT+JGr4ohXDEECm+2Lfiu2kJmGX9YXI/FBKq3JAVAp
+	 SBeY9fq7GC+OML/ZFYT1Yun5DEK1yZyZsZpD6RkHs/+xaPNHwzk9glQdFMLKLE3BRG
+	 cHyCaCLoKhemP//Z9NZpwGOVoLj82nyInV84LJHA=
+Date: Wed, 26 Mar 2025 22:01:40 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
+	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+	longli@microsoft.com, ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+	hawk@kernel.org, tglx@linutronix.de, jesse.brandeburg@intel.com,
+	andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net,v2] net: mana: Switch to page pool for jumbo frames
+Message-ID: <20250327050140.GA13258@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v6 11/11] PCI: hv: Get vPCI MSI IRQ domain
- from DeviceTree
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
- dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
- hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
- kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
- mingo@redhat.com, oliver.upton@linux.dev, robh@kernel.org,
- ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
- tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
- yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250315001931.631210-1-romank@linux.microsoft.com>
- <20250315001931.631210-12-romank@linux.microsoft.com>
- <CAJZ5v0jNEO2VcwmMXLZaS+Kqg3iBgHcWb65f90HKUADtPuvgqA@mail.gmail.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <CAJZ5v0jNEO2VcwmMXLZaS+Kqg3iBgHcWb65f90HKUADtPuvgqA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-
-On 3/26/2025 7:56 AM, Rafael J. Wysocki wrote:
-> On Sat, Mar 15, 2025 at 1:19 AM Roman Kisel <romank@linux.microsoft.com> wrote:
-
-[...]
-
->> -                                                         chip_data);
->> +#ifdef CONFIG_ACPI
->> +       if (!acpi_disabled)
->> +               irq_domain_parent = hv_pci_acpi_irq_domain_parent();
->> +#endif
->> +#if defined(CONFIG_OF)
+On Tue, Mar 25, 2025 at 09:32:37AM -0700, Haiyang Zhang wrote:
+> Frag allocators, such as netdev_alloc_frag(), were not designed to
+> work for fragsz > PAGE_SIZE.
 > 
-> Why don't you do
+> So, switch to page pool for jumbo frames instead of using page frag
+> allocators. This driver is using page pool for smaller MTUs already.
 > 
-> #ifdef CONFIG_OF
+> Cc: stable@vger.kernel.org
+> Fixes: 80f6215b450e ("net: mana: Add support for jumbo frame")
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+> v2: updated the commit msg as suggested by Jakub Kicinski.
 > 
-> here for consistency?
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 46 ++++---------------
+>  1 file changed, 9 insertions(+), 37 deletions(-)
 > 
-
-Agree, that'd be easier on the eyes :) Will fix in the next version,
-thanks for the suggestion!
-
->> +       if (!irq_domain_parent)
->> +               irq_domain_parent = hv_pci_of_irq_domain_parent();
->> +#endif
->> +       if (!irq_domain_parent) {
->> +               WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
->> +               ret = -EINVAL;
->> +               goto free_chip;
->> +       }
->> +
->> +       hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
->> +               irq_domain_parent, 0, HV_PCI_MSI_SPI_NR,
->> +               fn, &hv_pci_domain_ops,
->> +               chip_data);
->>
->>          if (!hv_msi_gic_irq_domain) {
->>                  pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
->> --
-
--- 
-Thank you,
-Roman
-
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 9a8171f099b6..4d41f4cca3d8 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -661,30 +661,16 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_qu
+>  	mpc->rxbpre_total = 0;
+>  
+>  	for (i = 0; i < num_rxb; i++) {
+> -		if (mpc->rxbpre_alloc_size > PAGE_SIZE) {
+> -			va = netdev_alloc_frag(mpc->rxbpre_alloc_size);
+> -			if (!va)
+> -				goto error;
+> -
+> -			page = virt_to_head_page(va);
+> -			/* Check if the frag falls back to single page */
+> -			if (compound_order(page) <
+> -			    get_order(mpc->rxbpre_alloc_size)) {
+> -				put_page(page);
+> -				goto error;
+> -			}
+> -		} else {
+> -			page = dev_alloc_page();
+> -			if (!page)
+> -				goto error;
+> +		page = dev_alloc_pages(get_order(mpc->rxbpre_alloc_size));
+> +		if (!page)
+> +			goto error;
+>  
+> -			va = page_to_virt(page);
+> -		}
+> +		va = page_to_virt(page);
+>  
+>  		da = dma_map_single(dev, va + mpc->rxbpre_headroom,
+>  				    mpc->rxbpre_datasize, DMA_FROM_DEVICE);
+>  		if (dma_mapping_error(dev, da)) {
+> -			put_page(virt_to_head_page(va));
+> +			put_page(page);
+>  			goto error;
+>  		}
+>  
+> @@ -1672,7 +1658,7 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+>  }
+>  
+>  static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+> -			     dma_addr_t *da, bool *from_pool, bool is_napi)
+> +			     dma_addr_t *da, bool *from_pool)
+>  {
+>  	struct page *page;
+>  	void *va;
+> @@ -1683,21 +1669,6 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+>  	if (rxq->xdp_save_va) {
+>  		va = rxq->xdp_save_va;
+>  		rxq->xdp_save_va = NULL;
+> -	} else if (rxq->alloc_size > PAGE_SIZE) {
+> -		if (is_napi)
+> -			va = napi_alloc_frag(rxq->alloc_size);
+> -		else
+> -			va = netdev_alloc_frag(rxq->alloc_size);
+> -
+> -		if (!va)
+> -			return NULL;
+> -
+> -		page = virt_to_head_page(va);
+> -		/* Check if the frag falls back to single page */
+> -		if (compound_order(page) < get_order(rxq->alloc_size)) {
+> -			put_page(page);
+> -			return NULL;
+> -		}
+>  	} else {
+>  		page = page_pool_dev_alloc_pages(rxq->page_pool);
+>  		if (!page)
+> @@ -1730,7 +1701,7 @@ static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
+>  	dma_addr_t da;
+>  	void *va;
+>  
+> -	va = mana_get_rxfrag(rxq, dev, &da, &from_pool, true);
+> +	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
+>  	if (!va)
+>  		return;
+>  
+> @@ -2172,7 +2143,7 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
+>  	if (mpc->rxbufs_pre)
+>  		va = mana_get_rxbuf_pre(rxq, &da);
+>  	else
+> -		va = mana_get_rxfrag(rxq, dev, &da, &from_pool, false);
+> +		va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
+>  
+>  	if (!va)
+>  		return -ENOMEM;
+> @@ -2258,6 +2229,7 @@ static int mana_create_page_pool(struct mana_rxq *rxq, struct gdma_context *gc)
+>  	pprm.nid = gc->numa_node;
+>  	pprm.napi = &rxq->rx_cq.napi;
+>  	pprm.netdev = rxq->ndev;
+> +	pprm.order = get_order(rxq->alloc_size);
+>  
+>  	rxq->page_pool = page_pool_create(&pprm);
+>  
+> -- 
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> 2.34.1
 
