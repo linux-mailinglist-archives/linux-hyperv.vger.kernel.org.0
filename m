@@ -1,61 +1,58 @@
-Return-Path: <linux-hyperv+bounces-4712-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4713-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D49C4A729BE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Mar 2025 06:01:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37660A729C5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Mar 2025 06:05:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B62033B4F71
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Mar 2025 05:01:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F6281894C34
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Mar 2025 05:05:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB9441B6D01;
-	Thu, 27 Mar 2025 05:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141061B4151;
+	Thu, 27 Mar 2025 05:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KfJ4C1Vu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ay5uFe/Q"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5432618EB0;
-	Thu, 27 Mar 2025 05:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FB2F3FC3;
+	Thu, 27 Mar 2025 05:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743051703; cv=none; b=Fg6ibIlH+Q4maCym2xlHYwDpW0cGT9nTPsmHvw0UiV8EKKCF6bdprHDEaS/mxI++YYTsTABVqpKAe5Ce8V0Lr1sb0jvBqN8TesMaO0LpcEhyIM+dcsBLpS2hxiBpkUMc4Vc+7f/bIfK9n7hq83QjXvXsu20U5/QFr/fNMMHBNXI=
+	t=1743051937; cv=none; b=i5aOfPSaqc6QcTMkILxotYqB8nsOHAf6b1AMadsaNeZl54ZF4ZljZcOR4qKWQN/Ty9IenwUtGsdr9cmtTbi1sSRH26rmtcIyNi59+b74SW37g1GcAmjEo6ksKvZtZdY94m4OWhzdOVbXPG1qKLYftHyGHZV+wjJm3Dnl0DrJgLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743051703; c=relaxed/simple;
-	bh=xYu6biCgRAvV54XDPXKBT2zX4ig7grodlwKFQMpKzuk=;
+	s=arc-20240116; t=1743051937; c=relaxed/simple;
+	bh=ziw/QGKZkQsUu5UZvBqDkL77NBthm+ZHfIifh234wFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AvSsM3neFg1MDuU0ffby5biQm6XoivaOXE9oR5WZ30iiIn7CAJa+c2I9LkKPPI5BpJTsVaOn0hUY9aHzPK8a5DkElsP5s2jaYdaJU+41o+vzbBUv8KfRzTdE8QDIWbw/gnhUD3WJ6TMjJdgzD2pKrPOCIqRdKvw6KFeTC9OJBgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KfJ4C1Vu; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=QygC4uojLV8cM83EZvMb2GPtGTwaD/vasM7+Wv2a8nn/r7pSHRVc9zdreKj9jGI/sXpsf332jcU7Wm2r7k18jYX3m0993qiKRXtudXMj2KbouZu/rsCJEAYOxIZ/sfJbIHFV+2c58pKri/fBMRmD8L+nRwuM/JFoildfkWMq78s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ay5uFe/Q; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id B3A5C211143F; Wed, 26 Mar 2025 22:01:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B3A5C211143F
+	id 475E4210235E; Wed, 26 Mar 2025 22:05:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 475E4210235E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743051700;
-	bh=TRzzvHz66Y/kUUMQcpHVIbr9k8vTxUvWBzzSkkTuLw0=;
+	s=default; t=1743051935;
+	bh=eY2eKCGkvnw/1wqgt72GCxGv6WXewnBTgsd4F/m4SxE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KfJ4C1Vum9CP9IxbsicYpgcJT+JGr4ohXDEECm+2Lfiu2kJmGX9YXI/FBKq3JAVAp
-	 SBeY9fq7GC+OML/ZFYT1Yun5DEK1yZyZsZpD6RkHs/+xaPNHwzk9glQdFMLKLE3BRG
-	 cHyCaCLoKhemP//Z9NZpwGOVoLj82nyInV84LJHA=
-Date: Wed, 26 Mar 2025 22:01:40 -0700
+	b=ay5uFe/Q1yiKpIv/p4MhaowqS2joX9jMUHaVkbLPRqXXyKeT4TYLH+vZbFD0a0lag
+	 ivA72eFjlo1V95EiF/kgimzq6uh+//qpNJ+gEiXPzLmJqadD80sXfODfoWAtsoqoV0
+	 ifNi5/ZrdRIM3d2nHjUn2+fmbQIoUqYlwnwqD6Vo=
+Date: Wed, 26 Mar 2025 22:05:35 -0700
 From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
-	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-	hawk@kernel.org, tglx@linutronix.de, jesse.brandeburg@intel.com,
-	andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net,v2] net: mana: Switch to page pool for jumbo frames
-Message-ID: <20250327050140.GA13258@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Message-ID: <20250327050535.GB13258@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1742800492-25911-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <Z-GO-VGHMFDIAZ7r@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+ <20250325062408.GA22632@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <Z-LIcNEpsLWSVT3e@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,124 +61,40 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <Z-LIcNEpsLWSVT3e@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Mar 25, 2025 at 09:32:37AM -0700, Haiyang Zhang wrote:
-> Frag allocators, such as netdev_alloc_frag(), were not designed to
-> work for fragsz > PAGE_SIZE.
+On Tue, Mar 25, 2025 at 03:14:56PM +0000, Wei Liu wrote:
+> On Mon, Mar 24, 2025 at 11:24:08PM -0700, Shradha Gupta wrote:
+> [...]
+> > > > @@ -1662,6 +1755,7 @@ void print_usage(char *argv[])
+> > > >  	fprintf(stderr, "Usage: %s [options]\n"
+> > > >  		"Options are:\n"
+> > > >  		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
+> > > > +		"  -d, --debug-enabled    Enable debug logs\n"
+> > > 
+> > > You should specify where the log is written to. The only place that
+> > > tells where it is written to is in syslog.
+> > >
+> > I can add the log location here as well, thanks.
+> >  
+> > > Does systemd has a way to collect logs from a specific daemon? If so,
+> > > we can consider using that facility
+> > 
+> > yeah, using services that can be done. For hv_kvp_daemon, the services
+> > are defined and configured by distro vendors(ex:
+> > rhel:-hypervkvpd.service, ubuntu:-hv-kvp-daemon.service). Using
+> > StandardOutput, StandardError directives(for these services), these logs
+> > can be configured to be visible in journalctl logs as well.
 > 
-> So, switch to page pool for jumbo frames instead of using page frag
-> allocators. This driver is using page pool for smaller MTUs already.
+> Yes, I would rather use systemd's logging facility. That simplifies this
+> patch. You won't need to handle a log file yourself.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 80f6215b450e ("net: mana: Add support for jumbo frame")
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
-> v2: updated the commit msg as suggested by Jakub Kicinski.
-> 
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 46 ++++---------------
->  1 file changed, 9 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 9a8171f099b6..4d41f4cca3d8 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -661,30 +661,16 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_qu
->  	mpc->rxbpre_total = 0;
->  
->  	for (i = 0; i < num_rxb; i++) {
-> -		if (mpc->rxbpre_alloc_size > PAGE_SIZE) {
-> -			va = netdev_alloc_frag(mpc->rxbpre_alloc_size);
-> -			if (!va)
-> -				goto error;
-> -
-> -			page = virt_to_head_page(va);
-> -			/* Check if the frag falls back to single page */
-> -			if (compound_order(page) <
-> -			    get_order(mpc->rxbpre_alloc_size)) {
-> -				put_page(page);
-> -				goto error;
-> -			}
-> -		} else {
-> -			page = dev_alloc_page();
-> -			if (!page)
-> -				goto error;
-> +		page = dev_alloc_pages(get_order(mpc->rxbpre_alloc_size));
-> +		if (!page)
-> +			goto error;
->  
-> -			va = page_to_virt(page);
-> -		}
-> +		va = page_to_virt(page);
->  
->  		da = dma_map_single(dev, va + mpc->rxbpre_headroom,
->  				    mpc->rxbpre_datasize, DMA_FROM_DEVICE);
->  		if (dma_mapping_error(dev, da)) {
-> -			put_page(virt_to_head_page(va));
-> +			put_page(page);
->  			goto error;
->  		}
->  
-> @@ -1672,7 +1658,7 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
->  }
->  
->  static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
-> -			     dma_addr_t *da, bool *from_pool, bool is_napi)
-> +			     dma_addr_t *da, bool *from_pool)
->  {
->  	struct page *page;
->  	void *va;
-> @@ -1683,21 +1669,6 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
->  	if (rxq->xdp_save_va) {
->  		va = rxq->xdp_save_va;
->  		rxq->xdp_save_va = NULL;
-> -	} else if (rxq->alloc_size > PAGE_SIZE) {
-> -		if (is_napi)
-> -			va = napi_alloc_frag(rxq->alloc_size);
-> -		else
-> -			va = netdev_alloc_frag(rxq->alloc_size);
-> -
-> -		if (!va)
-> -			return NULL;
-> -
-> -		page = virt_to_head_page(va);
-> -		/* Check if the frag falls back to single page */
-> -		if (compound_order(page) < get_order(rxq->alloc_size)) {
-> -			put_page(page);
-> -			return NULL;
-> -		}
->  	} else {
->  		page = page_pool_dev_alloc_pages(rxq->page_pool);
->  		if (!page)
-> @@ -1730,7 +1701,7 @@ static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
->  	dma_addr_t da;
->  	void *va;
->  
-> -	va = mana_get_rxfrag(rxq, dev, &da, &from_pool, true);
-> +	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
->  	if (!va)
->  		return;
->  
-> @@ -2172,7 +2143,7 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
->  	if (mpc->rxbufs_pre)
->  		va = mana_get_rxbuf_pre(rxq, &da);
->  	else
-> -		va = mana_get_rxfrag(rxq, dev, &da, &from_pool, false);
-> +		va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
->  
->  	if (!va)
->  		return -ENOMEM;
-> @@ -2258,6 +2229,7 @@ static int mana_create_page_pool(struct mana_rxq *rxq, struct gdma_context *gc)
->  	pprm.nid = gc->numa_node;
->  	pprm.napi = &rxq->rx_cq.napi;
->  	pprm.netdev = rxq->ndev;
-> +	pprm.order = get_order(rxq->alloc_size);
->  
->  	rxq->page_pool = page_pool_create(&pprm);
->  
-> -- 
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> 2.34.1
+> Thanks,
+> Wei.
+Thanks Wei. Summarizing the changes in next version, I will skip the log
+file and add debug log in syslog as LOG_DEBUG. This would be enabled
+with -d(debug-enabled) flag in the the daemon. The Distro vendors can
+modify their service file configuration to redirect/view these logs
+accordingly.
 
