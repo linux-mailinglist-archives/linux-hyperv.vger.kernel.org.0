@@ -1,44 +1,45 @@
-Return-Path: <linux-hyperv+bounces-4715-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4716-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D332A74358
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 06:28:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DA81A7435A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 06:28:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C5A1178FA0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 05:27:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3559C17B430
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 05:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BC81DDC15;
-	Fri, 28 Mar 2025 05:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45612211462;
+	Fri, 28 Mar 2025 05:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IHxKW8M3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iC3UgEL9"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138B028373;
-	Fri, 28 Mar 2025 05:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707B420FAAC;
+	Fri, 28 Mar 2025 05:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743139677; cv=none; b=EWr+pEBWU43CTdsJITfI9sAWNJ6AxZ5/b5ZWbXOLgZuMXFl6uEA4wSgnFQrYy1stH2UnU+NJCdH/Tvkkijogk5FrIgh5KjksJk6uSYqjPp+T4VLmLxTAxwjEf51IIzWkmTBmh6jBtGzYSstsi5MPZ9q3DTWl7xhq2dIY+jBXMi8=
+	t=1743139680; cv=none; b=co6IVh8BuqHejY9kemGxVTUAXIJlem7fqXI77ZBlHf5ZCntwHItFfkND+r4fa85QZ9Wt70pV1Faqnw/x2i1UVgnYZvhaFFPdSsgrB1J0ogU9w+AbXBvpJl/xO6Rs92jVVxj4cN5Z5DpiJfSLUgEFnsNSa9ErWYAtusV9gy3HRCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743139677; c=relaxed/simple;
-	bh=WBme0HkyRRbDQ8Leq+Bd79QqsRz7MTEZD4uciGXbfQQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Czirl+cxcjfuhUcCqMPeF3/E6SLLSxvJVdMZ6xRF732IV/TtooPNmzDsCrRi36z1psjMhS/PFdA2LCw22N8VTPQDuKnnOTbYlkMUS3C3MS9eJmIqjz7/hL51u6XxsxIiHdSy5sYLSgXZG3Q2LyBtL2OSdZCQoqD8Pm4T+/B3QP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IHxKW8M3; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1743139680; c=relaxed/simple;
+	bh=YiPbd0uSmO0e6R9Jw4q4wT5OrOK3epTka5JpcsD2Xd4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Nn9VNkVETHNHDyw5NqfmUzZI43u0Cqz/w4mvjKK2A53PjxALDvSC89Y1BZ7jUyG+hpkdYA2zkrnTrSRchCKtVhBG0e/s8GRu0RdCChXbVGScS/Rl3IpXN7I+B6+K4vl8he4jBwMgauCei4nK+c1KfbLsKRAR4MfzxabIoRBcMzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iC3UgEL9; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.203])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 789272025649;
-	Thu, 27 Mar 2025 22:27:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 789272025649
+	by linux.microsoft.com (Postfix) with ESMTPSA id 13664202564E;
+	Thu, 27 Mar 2025 22:27:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13664202564E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743139674;
-	bh=/2fyyVl7aEx5o80jahY1lO4oF3T0nV2EB9vhYbdzV0Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IHxKW8M3Q3RXYtVWRK5U/MJj/grBs37XoNfaVJalUddmFYUsW37RPPD4AsCLjf6J5
-	 MBnHzeeQCk0UYmtC0SQTIws3aOd6VjcEDPC8RRriYegT1GpIsfyGhvSoJ43rzdogHf
-	 W8z4wZkOA9j7Lte/3NLjaAQthJy7vNmChE06/M0M=
+	s=default; t=1743139678;
+	bh=L9f3mh/VX5p7JyxxCIDOyMePY/M0GQp9G3/qzyqnJZQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iC3UgEL98ZobdDFsZY5p0b5j/FwQ97BaM8wYBnommPnZkLROGrwffjgiUMHPmDwE4
+	 aceQW/HNZ1jRV615xZMbB+dQ2laJM0nEHAy0mNF+Qz1FUuPe/wA+fPW2+BWe+ZXQm5
+	 yQdSa5SDoWGSV68r07fGpHV/lVYLeOue4lFlBIbc=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -52,10 +53,12 @@ Cc: linux-hyperv@vger.kernel.org,
 	Saurabh Sengar <ssengar@linux.microsoft.com>,
 	Michael Kelley <mhklinux@outlook.com>,
 	Naman Jain <namjain@linux.microsoft.com>
-Subject: [PATCH v3 0/2] uio_hv_generic: Fix ring buffer sysfs creation path
-Date: Fri, 28 Mar 2025 10:57:43 +0530
-Message-Id: <20250328052745.1417-1-namjain@linux.microsoft.com>
+Subject: [PATCH v3 1/2] uio_hv_generic: Fix sysfs creation path for ring buffer
+Date: Fri, 28 Mar 2025 10:57:44 +0530
+Message-Id: <20250328052745.1417-2-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250328052745.1417-1-namjain@linux.microsoft.com>
+References: <20250328052745.1417-1-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,95 +67,305 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
-PFB change logs:
+On regular bootup, devices get registered to VMBus first, so when
+uio_hv_generic driver for a particular device type is probed,
+the device is already initialized and added, so sysfs creation in
+uio_hv_generic probe works fine. However, when device is removed
+and brought back, the channel rescinds and device again gets
+registered to VMBus. However this time, the uio_hv_generic driver is
+already registered to probe for that device and in this case sysfs
+creation is tried before the device's kobject gets initialized
+completely.
 
-Changes since v2:
-https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft.com/
-Addressed Greg's comments:
-* Split the original patch into two.
-* Updated the commit message to explain the problem scenario.
-* Added comments for new APIs in the kerneldoc format.
-* Highlighted potential race conditions and explained why sysfs should not be created in the
-  driver probe.
+Fix this by moving the core logic of sysfs creation for ring buffer,
+from uio_hv_generic to HyperV's VMBus driver, where rest of the sysfs
+attributes for the channels are defined. While doing that, make use
+of attribute groups and macros, instead of creating sysfs directly,
+to ensure better error handling and code flow.
 
-* Made minor changes to how the sysfs_update_group return value is handled.
+Problem path:
+vmbus_process_offer (new offer comes for the VMBus device)
+  vmbus_add_channel_work
+    vmbus_device_register
+      |-> device_register
+      |     |...
+      |     |-> hv_uio_probe
+      |           |...
+      |           |-> sysfs_create_bin_file (leads to a warning as
+      |                 primary channel's kobject, which is used to
+      |                 create sysfs is not yet initialized)
+      |-> kset_create_and_add
+      |-> vmbus_add_channel_kobj (initialization of primary channel's
+                                  kobject happens later)
 
-Changes since v1:
-https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
-* Fixed race condition in setting channel->mmap_ring_buffer by
-  introducing a new variable for visibility of sysfs (addressed Greg's
-  comments)
-* Used binary attribute fields instead of regular ones for initializing attribute_group.
-* Make size of ring sysfs dynamic based on actual ring buffer's size.
-* Preferred to keep mmap function in uio_hv_generic to give more control over ring's
-  mmap functionality, since this is specific to uio_hv_generic driver.
-* Remove spurious warning during sysfs creation in uio_hv_generic probe.
-* Added comments in a couple of places.
+Above code flow is sequential and the warning is always reproducible in
+this path.
 
-Changes since RFC patch:
-https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
-* Different approach to solve the problem is proposed (credits to
-  Michael Kelley).
-* Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
-  drivers where rest of the sysfs attributes for a VMBus channel
-  are defined. (addressed Greg's comments)
-* Used attribute groups instead of sysfs_create* functions, and bundled
-  ring attribute with other attributes for the channel sysfs.  
-
-Error logs:
-
-[   35.574120] ------------[ cut here ]------------
-[   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
-[   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
-[   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
-[   35.574197] Call Trace:
-[   35.574199]  <TASK>
-[   35.574200]  ? show_regs+0x69/0x80
-[   35.574217]  ? __warn+0x8d/0x130
-[   35.574220]  ? sysfs_create_bin_file+0x81/0x90
-[   35.574222]  ? report_bug+0x182/0x190
-[   35.574225]  ? handle_bug+0x5b/0x90
-[   35.574244]  ? exc_invalid_op+0x19/0x70
-[   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
-[   35.574252]  ? sysfs_create_bin_file+0x81/0x90
-[   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
-[   35.574271]  vmbus_probe+0x3b/0x90
-[   35.574275]  really_probe+0xf4/0x3b0
-[   35.574279]  __driver_probe_device+0x8a/0x170
-[   35.574282]  driver_probe_device+0x23/0xc0
-[   35.574285]  __device_attach_driver+0xb5/0x140
-[   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
-[   35.574291]  bus_for_each_drv+0x86/0xe0
-[   35.574294]  __device_attach+0xc1/0x200
-[   35.574297]  device_initial_probe+0x13/0x20
-[   35.574315]  bus_probe_device+0x99/0xa0
-[   35.574318]  device_add+0x647/0x870
-[   35.574320]  ? hrtimer_init+0x28/0x70
-[   35.574323]  device_register+0x1b/0x30
-[   35.574326]  vmbus_device_register+0x83/0x130
-[   35.574328]  vmbus_add_channel_work+0x135/0x1a0
-[   35.574331]  process_one_work+0x177/0x340
-[   35.574348]  worker_thread+0x2b2/0x3c0
-[   35.574350]  kthread+0xe3/0x1f0
-[   35.574353]  ? __pfx_worker_thread+0x10/0x10
-[   35.574356]  ? __pfx_kthread+0x10/0x10
-
-Regards,
-Naman
-
-Naman Jain (2):
-  uio_hv_generic: Fix sysfs creation path for ring buffer
-  Drivers: hv: Make the sysfs node size for the ring buffer dynamic
-
+Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
+Cc: stable@kernel.org
+Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+---
  drivers/hv/hyperv_vmbus.h    |   6 ++
- drivers/hv/vmbus_drv.c       | 119 ++++++++++++++++++++++++++++++++++-
- drivers/uio/uio_hv_generic.c |  33 ++++------
+ drivers/hv/vmbus_drv.c       | 110 ++++++++++++++++++++++++++++++++++-
+ drivers/uio/uio_hv_generic.c |  33 +++++------
  include/linux/hyperv.h       |   6 ++
- 4 files changed, 143 insertions(+), 21 deletions(-)
+ 4 files changed, 134 insertions(+), 21 deletions(-)
 
-
-base-commit: db8da9da41bced445077925f8a886c776a47440c
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 29780f3a7478..0b450e53161e 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -477,4 +477,10 @@ static inline int hv_debug_add_dev_dir(struct hv_device *dev)
+ 
+ #endif /* CONFIG_HYPERV_TESTING */
+ 
++/* Create and remove sysfs entry for memory mapped ring buffers for a channel */
++int hv_create_ring_sysfs(struct vmbus_channel *channel,
++			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
++						    struct vm_area_struct *vma));
++int hv_remove_ring_sysfs(struct vmbus_channel *channel);
++
+ #endif /* _HYPERV_VMBUS_H */
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 8d3cff42bdbb..66f1c21050d4 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1802,6 +1802,27 @@ static ssize_t subchannel_id_show(struct vmbus_channel *channel,
+ }
+ static VMBUS_CHAN_ATTR_RO(subchannel_id);
+ 
++static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
++				       const struct bin_attribute *attr,
++				       struct vm_area_struct *vma)
++{
++	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
++
++	/*
++	 * hv_(create|remove)_ring_sysfs implementation ensures that mmap_ring_buffer
++	 * is not NULL.
++	 */
++	return channel->mmap_ring_buffer(channel, vma);
++}
++
++static struct bin_attribute chan_attr_ring_buffer = {
++	.attr = {
++		.name = "ring",
++		.mode = 0600,
++	},
++	.size = 2 * SZ_2M,
++	.mmap = hv_mmap_ring_buffer_wrapper,
++};
+ static struct attribute *vmbus_chan_attrs[] = {
+ 	&chan_attr_out_mask.attr,
+ 	&chan_attr_in_mask.attr,
+@@ -1821,6 +1842,11 @@ static struct attribute *vmbus_chan_attrs[] = {
+ 	NULL
+ };
+ 
++static struct bin_attribute *vmbus_chan_bin_attrs[] = {
++	&chan_attr_ring_buffer,
++	NULL
++};
++
+ /*
+  * Channel-level attribute_group callback function. Returns the permission for
+  * each attribute, and returns 0 if an attribute is not visible.
+@@ -1841,9 +1867,24 @@ static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
+ 	return attr->mode;
+ }
+ 
++static umode_t vmbus_chan_bin_attr_is_visible(struct kobject *kobj,
++					      const struct bin_attribute *attr, int idx)
++{
++	const struct vmbus_channel *channel =
++		container_of(kobj, struct vmbus_channel, kobj);
++
++	/* Hide ring attribute if channel's ring_sysfs_visible is set to false */
++	if (attr ==  &chan_attr_ring_buffer && !channel->ring_sysfs_visible)
++		return 0;
++
++	return attr->attr.mode;
++}
++
+ static const struct attribute_group vmbus_chan_group = {
+ 	.attrs = vmbus_chan_attrs,
+-	.is_visible = vmbus_chan_attr_is_visible
++	.bin_attrs = vmbus_chan_bin_attrs,
++	.is_visible = vmbus_chan_attr_is_visible,
++	.is_bin_visible = vmbus_chan_bin_attr_is_visible,
+ };
+ 
+ static const struct kobj_type vmbus_chan_ktype = {
+@@ -1851,6 +1892,73 @@ static const struct kobj_type vmbus_chan_ktype = {
+ 	.release = vmbus_chan_release,
+ };
+ 
++/**
++ * hv_create_ring_sysfs() - create "ring" sysfs entry corresponding to ring buffers for a channel.
++ * @channel: Pointer to vmbus_channel structure
++ * @hv_mmap_ring_buffer: function pointer for initializing the function to be called on mmap of
++ *                       channel's "ring" sysfs node, which is for the ring buffer of that channel.
++ *                       Function pointer is of below type:
++ *                       int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
++ *                                                  struct vm_area_struct *vma))
++ *                       This has a pointer to the channel and a pointer to vm_area_struct,
++ *                       used for mmap, as arguments.
++ *
++ * Sysfs node for ring buffer of a channel is created along with other fields, however its
++ * visibility is disabled by default. Sysfs creation needs to be controlled when the use-case
++ * is running.
++ * For example, HV_NIC device is used either by uio_hv_generic or hv_netvsc at any given point of
++ * time, and "ring" sysfs is needed only when uio_hv_generic is bound to that device. To avoid
++ * exposing the ring buffer by default, this function is reponsible to enable visibility of
++ * ring for userspace to use.
++ * Note: Race conditions can happen with userspace and it is not encouraged to create new
++ * use-cases for this. This was added to maintain backward compatibility, while solving
++ * one of the race conditions in uio_hv_generic while creating sysfs.
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int hv_create_ring_sysfs(struct vmbus_channel *channel,
++			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
++						    struct vm_area_struct *vma))
++{
++	struct kobject *kobj = &channel->kobj;
++	struct vmbus_channel *primary_channel = channel->primary_channel ?
++		channel->primary_channel : channel;
++
++	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
++	channel->ring_sysfs_visible = true;
++
++	/*
++	 * Skip updating the sysfs group if the primary channel is not yet initialized and sysfs
++	 * group is not yet created. In those cases, the 'ring' will be created later in
++	 * vmbus_device_register() -> vmbus_add_channel_kobj().
++	 */
++	if  (!primary_channel->device_obj->channels_kset)
++		return 0;
++
++	return sysfs_update_group(kobj, &vmbus_chan_group);
++}
++EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
++
++/**
++ * hv_remove_ring_sysfs() - remove ring sysfs entry corresponding to ring buffers for a channel.
++ * @channel: Pointer to vmbus_channel structure
++ *
++ * Hide "ring" sysfs for a channel by changing its is_visible attribute and updating sysfs group.
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int hv_remove_ring_sysfs(struct vmbus_channel *channel)
++{
++	struct kobject *kobj = &channel->kobj;
++	int ret;
++
++	channel->ring_sysfs_visible = false;
++	ret = sysfs_update_group(kobj, &vmbus_chan_group);
++	channel->mmap_ring_buffer = NULL;
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hv_remove_ring_sysfs);
++
+ /*
+  * vmbus_add_channel_kobj - setup a sub-directory under device/channels
+  */
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index 1b19b5647495..f3fe4b77434a 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -131,15 +131,12 @@ static void hv_uio_rescind(struct vmbus_channel *channel)
+ 	vmbus_device_unregister(channel->device_obj);
+ }
+ 
+-/* Sysfs API to allow mmap of the ring buffers
++/* Function used for mmap of ring buffer sysfs interface.
+  * The ring buffer is allocated as contiguous memory by vmbus_open
+  */
+-static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
+-			    const struct bin_attribute *attr,
+-			    struct vm_area_struct *vma)
++static int
++hv_uio_ring_mmap(struct vmbus_channel *channel, struct vm_area_struct *vma)
+ {
+-	struct vmbus_channel *channel
+-		= container_of(kobj, struct vmbus_channel, kobj);
+ 	void *ring_buffer = page_address(channel->ringbuffer_page);
+ 
+ 	if (channel->state != CHANNEL_OPENED_STATE)
+@@ -149,15 +146,6 @@ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
+ 			       channel->ringbuffer_pagecount << PAGE_SHIFT);
+ }
+ 
+-static const struct bin_attribute ring_buffer_bin_attr = {
+-	.attr = {
+-		.name = "ring",
+-		.mode = 0600,
+-	},
+-	.size = 2 * SZ_2M,
+-	.mmap = hv_uio_ring_mmap,
+-};
+-
+ /* Callback from VMBUS subsystem when new channel created. */
+ static void
+ hv_uio_new_channel(struct vmbus_channel *new_sc)
+@@ -178,8 +166,7 @@ hv_uio_new_channel(struct vmbus_channel *new_sc)
+ 	/* Disable interrupts on sub channel */
+ 	new_sc->inbound.ring_buffer->interrupt_mask = 1;
+ 	set_channel_read_mode(new_sc, HV_CALL_ISR);
+-
+-	ret = sysfs_create_bin_file(&new_sc->kobj, &ring_buffer_bin_attr);
++	ret = hv_create_ring_sysfs(new_sc, hv_uio_ring_mmap);
+ 	if (ret) {
+ 		dev_err(device, "sysfs create ring bin file failed; %d\n", ret);
+ 		vmbus_close(new_sc);
+@@ -350,10 +337,16 @@ hv_uio_probe(struct hv_device *dev,
+ 		goto fail_close;
+ 	}
+ 
+-	ret = sysfs_create_bin_file(&channel->kobj, &ring_buffer_bin_attr);
++	/*
++	 * Creating/exposing sysfs in driver probe is not encouraged as it can lead to race
++	 * conditions with userspace. For backward compatibility, "ring" sysfs could not be removed
++	 * or decoupled from uio_hv_generic probe. Userspace programs can make use of inotify
++	 * APIs to make sure that ring is created.
++	 */
++	ret = hv_create_ring_sysfs(channel, hv_uio_ring_mmap);
+ 	if (ret)
+ 		dev_notice(&dev->device,
+-			   "sysfs create ring bin file failed; %d\n", ret);
++			   "sysfs creation for ring bin file failed; %d\n", ret);
+ 
+ 	hv_set_drvdata(dev, pdata);
+ 
+@@ -375,7 +368,7 @@ hv_uio_remove(struct hv_device *dev)
+ 	if (!pdata)
+ 		return;
+ 
+-	sysfs_remove_bin_file(&dev->channel->kobj, &ring_buffer_bin_attr);
++	hv_remove_ring_sysfs(dev->channel);
+ 	uio_unregister_device(&pdata->info);
+ 	hv_uio_cleanup(dev, pdata);
+ 
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 675959fb97ba..d6ffe01962c2 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1002,6 +1002,12 @@ struct vmbus_channel {
+ 
+ 	/* The max size of a packet on this channel */
+ 	u32 max_pkt_size;
++
++	/* function to mmap ring buffer memory to the channel's sysfs ring attribute */
++	int (*mmap_ring_buffer)(struct vmbus_channel *channel, struct vm_area_struct *vma);
++
++	/* boolean to control visibility of sysfs for ring buffer */
++	bool ring_sysfs_visible;
+ };
+ 
+ #define lock_requestor(channel, flags)					\
 -- 
 2.34.1
 
