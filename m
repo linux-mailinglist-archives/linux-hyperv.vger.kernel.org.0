@@ -1,136 +1,101 @@
-Return-Path: <linux-hyperv+bounces-4718-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4719-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEE08A746C8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 11:00:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7557BA74BD1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 14:59:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5D0F7A7A6B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 09:59:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 634021777FD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 13:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FA842135BB;
-	Fri, 28 Mar 2025 10:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA9B21B8F6;
+	Fri, 28 Mar 2025 13:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gRjdAwiz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfs0gsXc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EDF217F32
-	for <linux-hyperv@vger.kernel.org>; Fri, 28 Mar 2025 10:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6251E51FC;
+	Fri, 28 Mar 2025 13:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156019; cv=none; b=sNXPDpguVFPmh/f0Sl8v/Yij1sKLTLWkV9EiozyqH+3y9xrI6W3JuidiZA0IH5mwOtxQiYYfIcVjtYEDGvsa7S0mB37aouKGS4MDNugAdL9WdbVFRGd4gEoHYTPdYkWcZ56DLg25THDuLV6aeN1WwArld9LqTPhe08u/K+7RnR4=
+	t=1743169800; cv=none; b=gHV4mED3qYT/PidC8tEv4MXHe6ZLS/Qbhpith7/hbU5/9DWAraqW48DVrdXNM+L2TdcQy5DInv+WfcusKEDu0cYvgdzuU70AayC94jRloUQFjMKl/+ha7kpgdeuSwyY6YkY3bmleqeF68Q8+Tmpq42Cb+QYBCIcTdgCz393Q+JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156019; c=relaxed/simple;
-	bh=VAxMnppZDd0EsjFlPAHPDvkheirt5PDlBP3XZemzIlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SOjhDIRwGuyy/4MxqR7FOF4qikl+75pV3T1g2/bMZqY8uCA60LxCW/uN2//J09Zatg5uYfLbWJ9c+CYjus4kOPP5jaUugMadWgx59ZiGtA2XIogsue9Ma7ITaD2iJmbpZk1YQfFiqjy3SsFFWD/NA1OFA7n29V97tO8rVdVHdNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gRjdAwiz; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39bf44be22fso839010f8f.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 28 Mar 2025 03:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743156016; x=1743760816; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uMHy4UXVXze7CguX+fTXXYQovkguTPZAbEfyyQdz7+s=;
-        b=gRjdAwizbI2GB3mpJ0tuxllHhWl0gs/tAULTfZ2mfewHdZpDlIOeDma/iytqf1UzxN
-         ocf+uk72V3eRFg4BWf5h9pgVtsojIXJMWaueALkbX53tK3GmFoW6C27xzQSrVGUSkQ3c
-         NdU9FgGqxpTr8LluBHUXTwl6+jIuGlzWW+wB3vW1VHrQU2EhReQhMYiGigPb8Sx9itqp
-         bq4jidTcD/JdMVKxBEiGUsmDFn1yFsAo3mooRgLvXEoM2niY+RO8KYvdnpvV5lpnNGGT
-         KgkJGYqa+sZjGKKH/y+BUhty9ueYFPUr23INntKMp0GkHj0x+7rZ8RKoQ9SgSVKVuDaW
-         sdcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743156016; x=1743760816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uMHy4UXVXze7CguX+fTXXYQovkguTPZAbEfyyQdz7+s=;
-        b=kI4VrMftB65BN6x4rX0cOmyEaO7uMvhR4S1IK3q48ddsJRCX6lZK3VPgPMdndpJgg4
-         5jjlQ0LbDahifJzLl9t4aTdZWVYgHU+G3KAygDyllFSjW5NJ84/+ZGJuBT2uKj3RLNz/
-         4iFd37AECtbt3ZkNBCJMB1kvyZZyV0kbivjxfnAHafHrMFcgAKh+OykdAK5XJg0id4h8
-         Olw6LBGGxJ0+vvIVgFrdksrYi7FSJnHK/EUeXEnhoNiidhuLYqzWExjzcCepolNSG6ct
-         l/KaigQhl/OKuQT8/e+I3EzfKTCRil5evnswtn6LJTDxz6sD00MI8HWCbMWRbh1dbRxW
-         nVuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKwjGLSk3eQBMLRCuUXPHbaUn1WHzAcAcv7R0GFlkP0gJvB8Z6250ProSJ4G0LUBw0pmyFRC6rA3+Ct04=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVcDMKNy/EdDXGiZWDV7sW/MJjw8oghL2IF0D8FmzwXOkrUjDX
-	6f0DgPP0hdhKqOBg2OU2G8PXnh9NrpviyuP7G3lDBmRE4Ezcpduubm3gu2SWDLc=
-X-Gm-Gg: ASbGnctRPDekoGCRir/KY3YLf2H6fPWrJ9/3stVdUur/52VBBVEMbRNikdlfffW+AfL
-	Q4HZrprrh6cZSXRfovIPFh4rNOO8Wh1U/lRColRHeCHSLa/cE1ob/lN5YWAGst/MJeQcvaq9fqU
-	qCpNHFzFftTR+V5dIFqSQaVMNHs//PWOoigh+ImWlDABmhkvEyysBBOv6grhoAY0tZL1JPiRrQM
-	oflxMGfOZx7kJ3unHhh6kewgkUZLD2hkguYCiORpcwcv5gnZx5Y+LM4ypPVC68ylqA2ou6S3FyS
-	whf1SD369j6jO/vBdqYHaQm2IYRmGeuk/KAFRpjbcckSEWsquTr9dpZIGzsz
-X-Google-Smtp-Source: AGHT+IGj9pQvphUGd9QRvl74y+vh1brVfy4aIv4DoMY75sWkzHFUx8Bt1I9v28FP8We3YasMPehrOQ==
-X-Received: by 2002:a05:6000:1fa9:b0:399:71d4:b8 with SMTP id ffacd0b85a97d-39ad17505efmr6306834f8f.23.1743156015550;
-        Fri, 28 Mar 2025 03:00:15 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d8fccfe2fsm22243795e9.22.2025.03.28.03.00.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 03:00:15 -0700 (PDT)
-Date: Fri, 28 Mar 2025 13:00:13 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Nishanth Menon <nm@ti.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V2 09/10] scsi: ufs: qcom: Remove the MSI descriptor abuse
-Message-ID: <f0df759f-42b2-450c-90c6-25953093e244@stanley.mountain>
-References: <20250313130212.450198939@linutronix.de>
- <20250313130321.963504017@linutronix.de>
+	s=arc-20240116; t=1743169800; c=relaxed/simple;
+	bh=C/HNgQvzhzwSU4z9n3OmsK4Y3PL+bnZxFxCh03wYSoI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=HqrzbQXL2ISvzhBns0z2E6L1Q13JfKgbFX+FcKB/WKzNW/EBTBQJ4tmIajQHsurIj/qWUbyju25uGBOizqkh6YIjaZe8lIU7/6qeYwdO6JLKCB0dwQFMJBTLy4JhiwiqaXWIECm//bjqwTBDZ8N3pFAS//98yeTrmodxNk+JJs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfs0gsXc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E433DC4CEE5;
+	Fri, 28 Mar 2025 13:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743169800;
+	bh=C/HNgQvzhzwSU4z9n3OmsK4Y3PL+bnZxFxCh03wYSoI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hfs0gsXcXpmka9qXcE42QLJgacdYBgUs4uLYnnOSg9YeRIwY+WMUcDRpbvoVFoHgy
+	 iI2BcDbSpHr+muZtqouOI32PGmJwxMSBmA+Qe13O/9uJgYrxjzyp5O5fi6kYvQzSAf
+	 ATIyY4VGK6w+5ygbYt+Z1jZUukVG5Awwb9v7kjAWDjLSF5pl1ZjpJoVepeFB/sPeWu
+	 uAplwDNI503p0TBGzG+09RQpy7Fcb1QA1iSPJ8G8q7H+gtvDaR9/SXE4i70cTQmY5f
+	 O+IO6sWZse43D26ins2bMPxLDtuOoBTzho3hYIWqhtbdjSe5DskzMN3rR+3WQncWh5
+	 p0Tjt82p+DvYw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DFE380AA66;
+	Fri, 28 Mar 2025 13:50:37 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313130321.963504017@linutronix.de>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net,v2] net: mana: Switch to page pool for jumbo frames
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174316983630.2839333.18097886988344438965.git-patchwork-notify@kernel.org>
+Date: Fri, 28 Mar 2025 13:50:36 +0000
+References: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
+ stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
+ olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+ longli@microsoft.com, ssengar@linux.microsoft.com,
+ linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
+ shradhagupta@linux.microsoft.com, jesse.brandeburg@intel.com,
+ andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-On Thu, Mar 13, 2025 at 02:03:51PM +0100, Thomas Gleixner wrote:
-> @@ -1799,8 +1803,7 @@ static irqreturn_t ufs_qcom_mcq_esi_hand
->  static int ufs_qcom_config_esi(struct ufs_hba *hba)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> -	struct msi_desc *desc;
-> -	struct msi_desc *failed_desc = NULL;
-> +	struct ufs_qcom_irq *qi;
->  	int nr_irqs, ret;
->  
->  	if (host->esi_enabled)
-> @@ -1811,47 +1814,47 @@ static int ufs_qcom_config_esi(struct uf
->  	 * 2. Poll queues do not need ESI.
->  	 */
->  	nr_irqs = hba->nr_hw_queues - hba->nr_queues[HCTX_TYPE_POLL];
-> +	qi = devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi), GFP_KERNEL);
-> +	if (qi)
+Hello:
 
-This NULL check is reversed.  Missing !.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-regards,
-dan carpenter
+On Tue, 25 Mar 2025 09:32:37 -0700 you wrote:
+> Frag allocators, such as netdev_alloc_frag(), were not designed to
+> work for fragsz > PAGE_SIZE.
+> 
+> So, switch to page pool for jumbo frames instead of using page frag
+> allocators. This driver is using page pool for smaller MTUs already.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 80f6215b450e ("net: mana: Add support for jumbo frame")
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> 
+> [...]
 
-> +		return -ENOMEM;
-> +
->  	ret = platform_device_msi_init_and_alloc_irqs(hba->dev, nr_irqs,
->  						      ufs_qcom_write_msi_msg);
+Here is the summary with links:
+  - [net,v2] net: mana: Switch to page pool for jumbo frames
+    https://git.kernel.org/netdev/net/c/fa37a8849634
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
