@@ -1,101 +1,107 @@
-Return-Path: <linux-hyperv+bounces-4719-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4720-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7557BA74BD1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 14:59:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97C83A74C07
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 15:07:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 634021777FD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 13:53:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20E1D164936
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Mar 2025 14:05:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA9B21B8F6;
-	Fri, 28 Mar 2025 13:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8693E189B8C;
+	Fri, 28 Mar 2025 14:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfs0gsXc"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cuElf3qy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xDRiVtjh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6251E51FC;
-	Fri, 28 Mar 2025 13:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078AF188596;
+	Fri, 28 Mar 2025 14:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169800; cv=none; b=gHV4mED3qYT/PidC8tEv4MXHe6ZLS/Qbhpith7/hbU5/9DWAraqW48DVrdXNM+L2TdcQy5DInv+WfcusKEDu0cYvgdzuU70AayC94jRloUQFjMKl/+ha7kpgdeuSwyY6YkY3bmleqeF68Q8+Tmpq42Cb+QYBCIcTdgCz393Q+JE=
+	t=1743170719; cv=none; b=mmVor3o3HiZaqac6U+pltuZ/UJqJ2rzDbvgChgZWIg1SpDhGCtcEq9AeshmnWOjEJXPk4SfbF8/elk1ewnhmnhHJg+rnSbm7isqBvKEbYPS1MIBu9pNFzj6etrG6tCu1Q2XwxB6ZuJSRt+dAmzA7BNYDdKpj0cyX1Yp8sMjsA4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169800; c=relaxed/simple;
-	bh=C/HNgQvzhzwSU4z9n3OmsK4Y3PL+bnZxFxCh03wYSoI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=HqrzbQXL2ISvzhBns0z2E6L1Q13JfKgbFX+FcKB/WKzNW/EBTBQJ4tmIajQHsurIj/qWUbyju25uGBOizqkh6YIjaZe8lIU7/6qeYwdO6JLKCB0dwQFMJBTLy4JhiwiqaXWIECm//bjqwTBDZ8N3pFAS//98yeTrmodxNk+JJs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfs0gsXc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E433DC4CEE5;
-	Fri, 28 Mar 2025 13:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743169800;
-	bh=C/HNgQvzhzwSU4z9n3OmsK4Y3PL+bnZxFxCh03wYSoI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hfs0gsXcXpmka9qXcE42QLJgacdYBgUs4uLYnnOSg9YeRIwY+WMUcDRpbvoVFoHgy
-	 iI2BcDbSpHr+muZtqouOI32PGmJwxMSBmA+Qe13O/9uJgYrxjzyp5O5fi6kYvQzSAf
-	 ATIyY4VGK6w+5ygbYt+Z1jZUukVG5Awwb9v7kjAWDjLSF5pl1ZjpJoVepeFB/sPeWu
-	 uAplwDNI503p0TBGzG+09RQpy7Fcb1QA1iSPJ8G8q7H+gtvDaR9/SXE4i70cTQmY5f
-	 O+IO6sWZse43D26ins2bMPxLDtuOoBTzho3hYIWqhtbdjSe5DskzMN3rR+3WQncWh5
-	 p0Tjt82p+DvYw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DFE380AA66;
-	Fri, 28 Mar 2025 13:50:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1743170719; c=relaxed/simple;
+	bh=5cWOUCJIB4lTLougmiAzw9dNcnD4w2lCeNgwbw7TZlo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YQYQj+RM8/D3iLSdvVbL17dwI5fFuW1vu4YpKrmy/SjwTd8K2o/kPFU6U80wn4xH4kpvKPB2fSJxlNTua9hx4oSL29Ky0rkRUWFojp/YQZfB74lWYeaT5dQYt7i0laomxPNEKoS0hF/P6NXxG/4mPoA5tYsfgbqVWBlxIHSHbE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cuElf3qy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xDRiVtjh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743170716;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I6YPLumZITzzLekUQIrMxuZMrWTUi05abn63fn/MC7I=;
+	b=cuElf3qyttvW4wTy4V6qJdF5j5h+TM5XurS3EXAepHolGiOyFnpWcic30E36tT4Z/+Gqjd
+	kLXpq9Q3DotesvCWbw/tjgTxdDR+XYIKga+cWXwhQ8G2ZNLWU1e2O25yt4cl1eIl8Gos0i
+	231Oaao887seYBxeYMLMRFpkGDsHl7HVtWVHhzdAEAGkJFfyazP52KCNxcWSHbOcZ/C4lw
+	RZdqMZDdoDd/9/hraP0cCAU/WQBqaiFwC4hiz7Cfj3fllvnAEdqgvoitLrOg9yJvfEVH3Q
+	3g3dB6oB6Rz0VbE6+zQOYqNKZ3NjyBrQVTdrSsEUu80VLNxzl22jTV043eZWpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743170716;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I6YPLumZITzzLekUQIrMxuZMrWTUi05abn63fn/MC7I=;
+	b=xDRiVtjhHlcJcTl1CHzPR82ZJR7hGxj3A1wnsDyEc1fjIarLfVZHyZxJ13IgBYnEhnGD6b
+	IhVV1V4MUT/mmWAQ==
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J.
+ Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Nishanth Menon <nm@ti.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Dhruva Gole <d-gole@ti.com>, Tero Kristo
+ <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Logan
+ Gunthorpe <logang@deltatee.com>, Dave Jiang <dave.jiang@intel.com>, Jon
+ Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>, Wei Liu
+ <wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
+ linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>, Jonathan
+ Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V2 09/10] scsi: ufs: qcom: Remove the MSI descriptor abuse
+In-Reply-To: <f0df759f-42b2-450c-90c6-25953093e244@stanley.mountain>
+References: <20250313130212.450198939@linutronix.de>
+ <20250313130321.963504017@linutronix.de>
+ <f0df759f-42b2-450c-90c6-25953093e244@stanley.mountain>
+Date: Fri, 28 Mar 2025 15:05:15 +0100
+Message-ID: <87tt7dw8ro.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net,v2] net: mana: Switch to page pool for jumbo frames
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174316983630.2839333.18097886988344438965.git-patchwork-notify@kernel.org>
-Date: Fri, 28 Mar 2025 13:50:36 +0000
-References: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1742920357-27263-1-git-send-email-haiyangz@microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
- stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
- olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, jesse.brandeburg@intel.com,
- andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain
 
-Hello:
+On Fri, Mar 28 2025 at 13:00, Dan Carpenter wrote:
+> On Thu, Mar 13, 2025 at 02:03:51PM +0100, Thomas Gleixner wrote:
+>> @@ -1799,8 +1803,7 @@ static irqreturn_t ufs_qcom_mcq_esi_hand
+>>  static int ufs_qcom_config_esi(struct ufs_hba *hba)
+>>  {
+>>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+>> -	struct msi_desc *desc;
+>> -	struct msi_desc *failed_desc = NULL;
+>> +	struct ufs_qcom_irq *qi;
+>>  	int nr_irqs, ret;
+>>  
+>>  	if (host->esi_enabled)
+>> @@ -1811,47 +1814,47 @@ static int ufs_qcom_config_esi(struct uf
+>>  	 * 2. Poll queues do not need ESI.
+>>  	 */
+>>  	nr_irqs = hba->nr_hw_queues - hba->nr_queues[HCTX_TYPE_POLL];
+>> +	qi = devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi), GFP_KERNEL);
+>> +	if (qi)
+>
+> This NULL check is reversed.  Missing !.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 25 Mar 2025 09:32:37 -0700 you wrote:
-> Frag allocators, such as netdev_alloc_frag(), were not designed to
-> work for fragsz > PAGE_SIZE.
-> 
-> So, switch to page pool for jumbo frames instead of using page frag
-> allocators. This driver is using page pool for smaller MTUs already.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 80f6215b450e ("net: mana: Add support for jumbo frame")
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> [...]
-
-Here is the summary with links:
-  - [net,v2] net: mana: Switch to page pool for jumbo frames
-    https://git.kernel.org/netdev/net/c/fa37a8849634
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Duh. I'm sure I've fixed that before.
 
