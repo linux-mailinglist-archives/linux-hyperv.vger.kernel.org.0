@@ -1,132 +1,141 @@
-Return-Path: <linux-hyperv+bounces-4726-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4727-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8AC6A75AA7
-	for <lists+linux-hyperv@lfdr.de>; Sun, 30 Mar 2025 17:35:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B36A75CD8
+	for <lists+linux-hyperv@lfdr.de>; Sun, 30 Mar 2025 23:54:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 798FE1661D0
-	for <lists+linux-hyperv@lfdr.de>; Sun, 30 Mar 2025 15:35:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE5D9168E11
+	for <lists+linux-hyperv@lfdr.de>; Sun, 30 Mar 2025 21:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41521D5CD6;
-	Sun, 30 Mar 2025 15:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 989581E104E;
+	Sun, 30 Mar 2025 21:53:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="T+dc7Vzd"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kA0WqBxt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010015.outbound.protection.outlook.com [52.103.10.15])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012049.outbound.protection.outlook.com [52.103.2.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A8A10785;
-	Sun, 30 Mar 2025 15:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696C91E00B4;
+	Sun, 30 Mar 2025 21:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743348912; cv=fail; b=BGZVOlHNkaDAsIrU8YzMPAQTkGdDrRS1sJsmTWySaPj0LOqJyH7xyRTkglMENqi8o2LK8Tsb2lhVaEcvaJywesXbcS6G5Un2oCQN/JSGLMPkLo3P2VMrDtFKQzL3pdhacZYCAmBKDNzqempVAV+ZZnHlzeazuW4uoxd9HI3aWtU=
+	t=1743371637; cv=fail; b=RamxxQp4tIxLS81W+I5VVY9MGBEE8aOUJKrvz9c8Rt/cD5zHPbZwMVAYaL2hmnGQdIGWxAtG4hIpY+64lAe+nFIW0+mXpgOhovlUVG0/rqFKYs1JJzTVOHGSCbtVwr67peUiGLBZHImwEulB6zMMkUYJKibq7RTAYSFTvss3KQk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743348912; c=relaxed/simple;
-	bh=QtZaDwPN1YNE2oo/CjiIMioeNR7Vq4pq552hdFNBefk=;
+	s=arc-20240116; t=1743371637; c=relaxed/simple;
+	bh=aspQuQ+aJhvXpMtp6IjRMxm3wcLzUbzASxFhWZ+tF00=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CXDCJ9W7o0icZinr0Uo1NspZVza+F6FEZc8GwRejivKsAHFe0pXuH41Ee3mW1cofW0OhbLPuMPnygXG5Tkj1uABCVt0ZRBHkEVeFoR3vsmrbE9kHKVBqWtpmUF9zUttbdxEuoG09JmYhri/7RD5zHUYHBLFCgVwhj9VtQRmB3qE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=T+dc7Vzd; arc=fail smtp.client-ip=52.103.10.15
+	 Content-Type:MIME-Version; b=FRQ/APQrvdDTO53j03Yc82aznhcp4hgcIXfoefOmTUbOY63nrFqeTsrncZeTzJwz20sv1342fjyhQ0jZ0Kl8UmrekCKwy+PiOVVoRi1e7yyNPZJ17zTCZlBz+FUZFA3ObyDm29x3Ogj/iVyp2DKFuYlKK4DQ7JBt2KBmUxJOrO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kA0WqBxt; arc=fail smtp.client-ip=52.103.2.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=de4cvtzx4BWB0nv2mE8PNE4UP5WxN8wWU6fax1ynJEduOIrVEhUBnw3COVq3C8vgT0LFifaPJGRWr7qmi1wf0OnY5Djbb7Wsi0bx68+5czwZiV44JlPlQ2W88fD6QOYemGURWY6WV7xjoCl4tzwFXcJ/WAXJsg75PuODa9FfABFMScQcRG3GtCZylYh9GQZ2J4v9Gz0ep0ydXv7/zHNW+sFHbTx1LlriWT6aMN5Pm+IpUUnmBKnBhFNWXrAcOvlgQnSATeDbyRCkQiNx38Evh6DQ79NMbyG+ZYidh0YHLLzE5jiXjULO5oFDQ+QzJZRuLO7yNbghLTODRCUKgvzmuQ==
+ b=NX0B6e0Y/iPHUZZHhOZAXt4/K3a+p89TvCcNzZyXa42wq7R95jN5XRLDYmL53vKFt2GtNZ7vnJf6MCJzi6ix/MpAXI4fa/5rB5FJntCi58SutrCom49l+1jlvmPyoiGN/krCV8Zn+hIKQEHKcsPTuYdRydw50ufcpJlpJDy460MFKdGijFFmex8/gp43L13wY825BYGWeYvXbMFsUtzWbEBITY7PHZXPzVf3Msy4YCgltu90LoxEZ6T4TqmmyRkABcSm/5qVZhZqCK3EkVWt27tIUH1ec06RkCrON5/dlr4TQIWSVhpTgKnNsNNncVwTbm0d4GXG1deBbShIvzP+1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JphlOmVrX7VwWMO3gK2++7rJsqxqTDDlJxP7PFA9b/A=;
- b=k8pOqCrjxxrh/019qRNzbJhWRNx0lzsIHcqis4bytG5F0Re9zwJhsswXf4DU6SDcRS1ZzcTLbpfKWSvZ6izGY5XQolACunyKjt7L10lErjUOl1ErTVEOKmOUe5ajH8iT7hW1PWQH1+Aeq9aKX14r7TzCUNR30TROQq+dN91pQob5KGWuaIXU6ciBzPlo7IWAc6K5ALOFd5xE3SBummQn2eZnYSU+9S/4A9jq1YcTt8c+KXYtm2Cnqg8fxWvTCjzcFVGz9jlNpd3bShXtVr8b7XugBuNrfXn0TMBRwQB5DdPKGGO9+ennA4zIaIPjs+S6AdEbxmRtej6frbsbVwvn7Q==
+ bh=OGoIa4emq0wt1gdEE7rHOPaRVTngesHmF5MoQVx1adk=;
+ b=ftZiDvJxFYW0oDsjQooqefkaWhDBeRplqUD0AANZK5iHq14g/+6t8Z09twfgyKbuaGVFBVGwkI26IzQpgfon5pF/Rjabppa7Z6mFqSj8fa2TDR4cQbRrQk+S3a+775+8/msOxWUrxhmSehV7+cGXeimicx52Nw6DJp7Ke7/sM+M2A4b+jt/LBaTsqYCaE0pEtA5tx7CB3sgKje5jylihw5LBmakLGowbVopO0aDmzl4XpWDE0p4uR3Rr3ccDQdJ7O1X6Fnh72UyRDi7agi6V8ztAfGChhnziD7GBo7cMOzWuksND/xD++IhBf4zyKbJdUVFkewpSw95QjHoDuqXiQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JphlOmVrX7VwWMO3gK2++7rJsqxqTDDlJxP7PFA9b/A=;
- b=T+dc7VzdamQh+7zrROxsISpQzYSylxcQ8kNcJ4hMOHxP9pGLpw48QWq1dyjyn+JW7ugjoMnwFA14YT0ESV1051Z4w6TQbOR1fpR4e8j+Gqb8M5G4pfHi9aYyP/5spA/+pyZXinkebeVLQzlwnbxoxaB4Hd+mG4gscZJvSDoQ2jPYbFwyTquAzG8MY6rLCN1XwNB7UFmEIDV+/SEOdX7oc3OLTh81wknQrACyizyT0GyneEQWAKeMfSa7mxaHCo++o8lTtlBYBEs4EZVBy2PFtAEQdJmJv/JGUaPfQh2LLs32Y03skGrKeanqtcEdxWySNNLEF055jVELifRRPy51DA==
+ bh=OGoIa4emq0wt1gdEE7rHOPaRVTngesHmF5MoQVx1adk=;
+ b=kA0WqBxtFbYA1lQfRSxvBdCEWWrywR14c5gmifpRB9AiIaVw1P3nX8QoxRNyHnQv0Iyy6imFo2QSZdInl81a49pqZZXUuon3dLhRCR+QuiIKoDc302ZiBz53WYlaiyROgwQ9X4owXE21pl2l/SsAOWKKTggFHO0KSJ9cqnnNVgztSs9ydxBM4RNrCcB9wFxOF0uQgkHDnhA9PC3WdJH72rsiOASN32xjur3d9rzgvlzZkSHCSuN0g2eD+PJytvQww7Z1TAEdqEb3HXxia8u0f8jMP77wcdaPAFPKlFrPAfKeIv6lrU2qR/dKqZbrqp8h9TPYQttVXJDDxR/YuMmfDg==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by BN0PR02MB8301.namprd02.prod.outlook.com (2603:10b6:408:158::10) with
+ by PH0PR02MB7527.namprd02.prod.outlook.com (2603:10b6:510:4e::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Sun, 30 Mar
- 2025 15:35:08 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Sun, 30 Mar
+ 2025 21:53:52 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8534.043; Sun, 30 Mar 2025
- 15:35:08 +0000
+ 21:53:52 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Stephen Hemminger <stephen@networkplumber.org>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@kernel.org" <stable@kernel.org>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>
-Subject: RE: [PATCH v3 1/2] uio_hv_generic: Fix sysfs creation path for ring
- buffer
-Thread-Topic: [PATCH v3 1/2] uio_hv_generic: Fix sysfs creation path for ring
- buffer
-Thread-Index: AQHbn6IrKYXAJchAMkyOzI/FdAL+pLOLz/aQ
-Date: Sun, 30 Mar 2025 15:35:07 +0000
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+CC: "x86@kernel.org" <x86@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v2 4/6] Drivers: hv: Use hv_hvcall_*() to set up hypercall
+ arguments
+Thread-Topic: [PATCH v2 4/6] Drivers: hv: Use hv_hvcall_*() to set up
+ hypercall arguments
+Thread-Index: AQHbk+AV21q88EUTeE6kvPDNj7sy5bN+ExQAgAYmPaA=
+Date: Sun, 30 Mar 2025 21:53:52 +0000
 Message-ID:
- <SN6PR02MB4157C74E0E83E63175278153D4A22@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250328052745.1417-1-namjain@linux.microsoft.com>
- <20250328052745.1417-2-namjain@linux.microsoft.com>
-In-Reply-To: <20250328052745.1417-2-namjain@linux.microsoft.com>
+ <SN6PR02MB4157007B9432826CAF0E42A8D4A22@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+ <20250313061911.2491-5-mhklinux@outlook.com>
+ <bae5bb62-d480-46fd-837c-9267c0a30fae@linux.microsoft.com>
+In-Reply-To: <bae5bb62-d480-46fd-837c-9267c0a30fae@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BN0PR02MB8301:EE_
-x-ms-office365-filtering-correlation-id: 24fa2aec-193b-49b7-861a-08dd6fa0738e
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7527:EE_
+x-ms-office365-filtering-correlation-id: d3825a9b-8a9f-484f-ecc9-08dd6fd55c37
 x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799006|461199028|8062599003|19110799003|8060799006|56899033|102099032|440099028|3412199025|12091999003|41001999003;
+ BCL:0;ARA:14566002|15080799006|12121999004|461199028|19110799003|8062599003|8060799006|102099032|56899033|3412199025|440099028|12091999003|30101999003|41001999003;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?jJ3H8lYQwweFjUr6o9BkRazs82f9SiK/C6UN4vl8EsBM9FVvtvK1okYKJmN2?=
- =?us-ascii?Q?kk3elpEF8VJtvY2Jl2Y1+pPTyP0G8cVS/nhsLkQ/5Od/tiikbgHVlAB4TB1e?=
- =?us-ascii?Q?a+dYy4R+CdFwiz7d+y6dihSVCmW3HGQ/n7VEc81hzhmh9PB+oRwXUfUKySMF?=
- =?us-ascii?Q?Nz1Fze3tAqy1nwa/xMrEiuqhIp/B24fa0hk4MtlaxXhf4TllF9mV9jLkU7YA?=
- =?us-ascii?Q?6jvvWTyZ9S6F1w5AgruoXVNw3ySDVWRy7h4ZvMonECexs1TWVIhE//68mHkD?=
- =?us-ascii?Q?Ecl8i4JcXGlcvV1l5wzF8E9V2tNpsDO6dPltCjCXS3t5KIblOI67mOtpBmx+?=
- =?us-ascii?Q?PLcfjnLruZ/TIRk3HM6ZXbws6yKpFsjzGjtnMt6GYWfmWS4/oTpk6NG+17xF?=
- =?us-ascii?Q?WSlCCB2/NkpjokhIniKasK4HpC5QQ0l/9VHvHKTTq1A1Hhtkis/zELm0iZam?=
- =?us-ascii?Q?CCT+ybdrlbKcPtYeTeX8QFw1ZhjoDVmT7f65vI9r3vwgLHHCTIgoBZGvbgLZ?=
- =?us-ascii?Q?0jm3FfBZJNbjVqoEMRuhWfq7mlMxN1Ht05yFqbBrHiH2YYrf2I0H7clk9s6Q?=
- =?us-ascii?Q?NsspTd/AI0OXg9/afZUdLyPIU4FtSO91L2nBXXzgTG42skPKW3hflz4aOM44?=
- =?us-ascii?Q?87anpxOhsj1RhYiwWcXuhOV1gTa7bvmEltmYM6yVRGabEh/SL3sUXW3Hfhy6?=
- =?us-ascii?Q?khUDzctExchFGebe0oml5fMoq5BSwaIn+wfwXgfY44S8W2g23/vI+mlro7gu?=
- =?us-ascii?Q?oVazN2F5UZcv6SoiuxPkIxAspbpx3ADd64frd9zhpMSKy5f+8F9wfp3PDmOh?=
- =?us-ascii?Q?pn/N9VMmtAo90KPEBqj4nkescLil2bFrzAW9jUyKZ76zZ+6kNxiqtFEq4DWy?=
- =?us-ascii?Q?Y1uxTtAWrWcDzwOgvGRH8T36S3ChrSEvrJY8CxwaJ9HFkg7mmNUcoNtrZSfq?=
- =?us-ascii?Q?EPmFebKVco6UN20FfBQ9id2h4pmWFu4sSPwG00yASrV3ooFccV0OxzhRtASz?=
- =?us-ascii?Q?SKCdse//wLgpnxD/FudD01jqx0mvjCWe65uxAfCX1efVyieM2GguMepEYzO8?=
- =?us-ascii?Q?QO7XY1Kttfqc6eXUM7bd2j6GorZLELxplGmh5QZg6wV3jV2KW1tzvfCdsay5?=
- =?us-ascii?Q?zn1agRsElQqjHDUtn6JdCbgqPtEEmmGjkA=3D=3D?=
+ =?us-ascii?Q?jVTuxOjziXj8/hltyF7kL/TdUGIIKHMpakRotfsAQcAj5WP2hcxYSHedBfrQ?=
+ =?us-ascii?Q?uo2Ff5bu23aXBahYGr89hDBNUdOzA2/QMU8W0cTt8H5KGzEUaMmEWlfWLuJa?=
+ =?us-ascii?Q?nQp00zBjBogBuMCqKpMLJKk2VTWicALiLhUlEqeFk8VywucrihdKzPpY8FrJ?=
+ =?us-ascii?Q?eLNTvpKwczloYrK5TleaGnJdCsNGyFEnRhX4mlfxo8gbTNxHd+N2Orx36LqX?=
+ =?us-ascii?Q?SMBiNC5jSUgwNR8UPH9I5jMeFRaLd58cgRBbZSAZOzzsePouSOcfHuN4lWT6?=
+ =?us-ascii?Q?u6JnZO814jivNZm82ZcNdX+dONDLyMFzM/z49DFQ0njdECMQKa1ivfufCh6d?=
+ =?us-ascii?Q?0wlVtBVYhjnFnwRrka3CSNdIIlGYqsho3A4mgLDGBvtO3Xe8qz+dEe+HnDkz?=
+ =?us-ascii?Q?N5i2nBbLvKpp7wS4PHnOscl5kWReAO8SuaTZ7BmHdDNFOSlT2TuYNTCy7Rwo?=
+ =?us-ascii?Q?svdDDsZ7Wib7AOM26mJR36K2pIcBOHB+kU64stusoyOuu2hMWMWBMsPgF5Jc?=
+ =?us-ascii?Q?N/9E8zK03TeFoGbiRgUrK9YjAIydKK/pW+30++C0gTzKot32hjwBhdD+mn5W?=
+ =?us-ascii?Q?AOebsy2/wMvO1Ig+AYEL0GK9aePdCOtyHMJJcH9053rwqLM0T5x7B8kSwcsX?=
+ =?us-ascii?Q?2WMwDhmhV8sdDNVTxPxbYuROGweDMWSXCzMOBnN0AmMJjGAV8LMtAk2IHBkd?=
+ =?us-ascii?Q?WP7325+t3mxkmlEFs3r4k3EvHaKVBi67jrTSLsppV0iV+y8Myk6KxY0r9vsk?=
+ =?us-ascii?Q?Ub2W8g9Ks0VnoK3THYXHA4qSOrOy60+RjAUAOjbrJLr4GOB/K3TWYH+eUm9b?=
+ =?us-ascii?Q?LXGaewleQXHk7y3NlMiUyOipf4Fde1ujHi90eu+HSevYJRvvrocQyzNfpDq4?=
+ =?us-ascii?Q?DqbKPnLnYu1+FJwxJLOsG53/esfc3dMVJTME+Xjg9ob0ygVpubBZYJwMlBlk?=
+ =?us-ascii?Q?+h+FFs+DJOA0rOVo/FSi0WWFI8v5EJ+GZc5eAqqKwnmnBzZKe4JFsu6ypVuA?=
+ =?us-ascii?Q?n4LdoUACa5TGs8dfDLP3+HcBShNmwX3IdC3m8Je6SJHEW1dP2E0yLxmzFHnX?=
+ =?us-ascii?Q?j7Jk8G26JnqQrfhF4m4plHb7hFsALMKa/x+fme+8j2e0nYTQvzkTnjhU7Ov3?=
+ =?us-ascii?Q?kMqFB80ZeuZn1aLNxwVWkCtDoE0YPUfFkkvZ27igfRAaKkGxSIS13Z1C+BNt?=
+ =?us-ascii?Q?5erPZSlTn1tNTxl1Atu3Kj4dKEX6s45fNo352Q=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?DXiLawCeFmiSs2+sjPYzHIpSAWdEuFrCCY+Om+8FYGsTnUQ6Z/XQZNJhVK+6?=
- =?us-ascii?Q?qGgS1Ak/CTq/IB9MTneN5Q/SW0GSqklM2Done90mPBvEdRHuZIAsKJrgFSc2?=
- =?us-ascii?Q?dSE2rvnN3QBB7LVHAFs02+qHIjHOOoHnlXOvZ4TD4M7sNIHdEhmdAqLGpAK8?=
- =?us-ascii?Q?mjEWisGRW+05sux28Gh2tKQpp9odSWBv7hxaETBi69mEuB0ved35BvOeN0mz?=
- =?us-ascii?Q?a2JrN/YhaIeSBOcN0hpjFEGMYO5WKkmPs6jUlJA+NXr+u517z5dVXKvy+np3?=
- =?us-ascii?Q?lJ+m5Y7lQgGq+YnwkIVyIfVuQpDW8F8zGpqJWuzJJetuGAvA92Ms5j3ABwx0?=
- =?us-ascii?Q?R6wY/bWl8qwCgK0bpkWrfvKLOnPvK0DncSY7Q4wK64TuOQpA5PIvnNkI5jkW?=
- =?us-ascii?Q?CVfLefOTbg3J4h/lQZA6EulJppm9Um6/tQmkx6OS1r/xy6WjPGRt/wVEbvxl?=
- =?us-ascii?Q?8W2am0LBOFd4bo+MQKXWZH9P4dVsPeN1z8XECska9YqvQiMADDDglhB2RKiY?=
- =?us-ascii?Q?GFd/HAfopK7RqGy37bmhwatcr98ZCjPgRIZyr7p8H3n8Jo14XrSHxEjiROkV?=
- =?us-ascii?Q?69ZotX2x4DvLzCLLFoNu58gc6KfsMvxwXwWb2SehZSh1uICI8DpB9OObl8pC?=
- =?us-ascii?Q?ql6FcJgumDVlWsOzhU4spvjaZGIf6J56EuBhJ9kiKxaxTuOVW16mVMD1vT22?=
- =?us-ascii?Q?4tAmR5A+xYQT606IMMv30ZuWGByAtVwy+Kje9sc86CI5otvaFPNnKadTZq7J?=
- =?us-ascii?Q?sWd2NnhJgCgNmVOLRkRwb3IcSJqSWpk1qsqpGIdggzjDPHkWK4jHg0eujm6B?=
- =?us-ascii?Q?mOk7sU81vbrdrlU68cqjg3jGh2RFQGSlFX8yHMXhAxzmRpjHo2EYUGha4X2h?=
- =?us-ascii?Q?7DOTtiPotp6DCduOrrpB3KxYn9/ePrgYxPhhWYoiz4MMEq6fJ9SoK7HnBm4N?=
- =?us-ascii?Q?/Cm8A8aHxf3PpkNGdLkLXD0mw76Kkx0zYSOXfHjoMvRYgl8ZykDly9R2GLkJ?=
- =?us-ascii?Q?eeGrUoshKo6lLe9sMPxVo9eudIrn7J66BlVL72n9QNmYdFxRRAeS1DIbwim0?=
- =?us-ascii?Q?BGHv0whW5bTEfxAkUXjwsDu6tR2nG0T/z8T8dbIlv4XoQGgT310DXLcOxGph?=
- =?us-ascii?Q?Suy2LSgyMcvVdOio18ej9YVk0gKqJYG19hK/sFIoTy7PpSnFZuxt6QyGZBTU?=
- =?us-ascii?Q?52NmsBiN/I4ES9vz+tvFxTbm7RS+L2gSVHF8DGtYwdqWLB3RXFbDMd3O52k?=
+ =?us-ascii?Q?0HR1vulC3xb/jH0mizz04MOiNgz5VUMUNeMFnsm17GHHYs+/P2FL7ySdU9WR?=
+ =?us-ascii?Q?TzZOayo0azSJ6mafH4XySQZutM8IStvoUVYamGvy6nTX0IrWoYEjZ/0uxxIr?=
+ =?us-ascii?Q?D1bpZbXrayZDY2kKOFyKSUZUSynaizURfne+b59qbv8ZSH80gpeeIsuAIskq?=
+ =?us-ascii?Q?autTGPGD2WinEeb6zHBGU7tEL4Tr1fe6BMmoGfbaMhjWAD9Hwx/phDNf32Km?=
+ =?us-ascii?Q?zRbc9R2FsC7e91xzMsXUynhHYkdmvBbztBcDzcsDOYwgWcGY+tBQv66RjrwM?=
+ =?us-ascii?Q?7aZXyr112fn3Wt9hZWwQcVONUDDwrq3dOEo37/XRZTKh94w++ZdhG/xdtrA4?=
+ =?us-ascii?Q?iHphu65Er0cbx0hbDLnBW/hGt5hhIW/fg9QZvjQMC9UXXLT/E0AtmX0bubag?=
+ =?us-ascii?Q?5tfyqGPb6QwGLfU04S851dLIRDy+Nk6nd5fFOEMVm/EAPYaiQZZVmO/sj522?=
+ =?us-ascii?Q?DBR3r9v2IfMHZiVGpClsFMc7UVNk4vDEEwixYn7ocJrelbUoFSPnqQcvWavH?=
+ =?us-ascii?Q?noI0ohJjEy3kXTYGwSHWhHPXfOA1jTIocCc79+DPuT4ZK0oZsjSFLDCC04bn?=
+ =?us-ascii?Q?4lf4P8xqJJPZBt0sGStbySZZNmquUfZhWAqG+HQF+wZPxNzdrkD3BSgwO+Wa?=
+ =?us-ascii?Q?M0p3SJxcoJCxBALnV+lZk13X0MFyI/vhsupP4H8DH/KIPs0kk3ndcm5AFnME?=
+ =?us-ascii?Q?m2zEZSYABrn0aG9Aq1JAnv08E4bJU19IAF9FwxAkKZJ0k3/7i3KTn/3uLWL4?=
+ =?us-ascii?Q?XLppjgHJQMIueLlJfHjPm5p8JWp/mi3ic5ZbmGpGPJ/LQQmy/vKlO/wIkXfa?=
+ =?us-ascii?Q?VHlzPDQAyRxXYXitVisAi1diSso2yGo2jfG0jCIR2jowiFG+Tv2aCbPPbSI7?=
+ =?us-ascii?Q?n9Rt+GbJEFk/LtilWEbw8NtSU8uQxWDqyQgJwcOO7Zgl8ZjxS+jSvX+JZFiU?=
+ =?us-ascii?Q?5/LZmr+aavqb0NufdosS1mTJvNOmTUjrAr8ykzE38hhXvfw1RiOT742BdvW5?=
+ =?us-ascii?Q?44Nhpq6sLj3QJn8RSejyUDE7AZrwzOLjsJHfvAZtv2OMVqN4Tu7zOWkhq8Se?=
+ =?us-ascii?Q?wB9SJcuNYDrrhE0GFFzcIxt2cILpEobR4NM6wdSvJWOXPgS1CcQAjAjqcFdh?=
+ =?us-ascii?Q?FM6l5si09+192nctVXeZooPYy87llNFuAcptXROZbs+ntQ8Wn+RFcVaICxhj?=
+ =?us-ascii?Q?innYWhnOtOv+yJ1XGs/0eysMDzF63H+ujBWHlFxoFz/iSvWnE5eiqpH+Z7U?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -140,140 +149,202 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24fa2aec-193b-49b7-861a-08dd6fa0738e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2025 15:35:08.0207
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3825a9b-8a9f-484f-ecc9-08dd6fd55c37
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2025 21:53:52.2289
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8301
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7527
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, March 27, 20=
-25 10:28 PM
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, March=
+ 21, 2025 1:11 PM
 >=20
-> On regular bootup, devices get registered to VMBus first, so when
-> uio_hv_generic driver for a particular device type is probed,
-> the device is already initialized and added, so sysfs creation in
-> uio_hv_generic probe works fine. However, when device is removed
-> and brought back, the channel rescinds and device again gets
-> registered to VMBus. However this time, the uio_hv_generic driver is
-> already registered to probe for that device and in this case sysfs
-> creation is tried before the device's kobject gets initialized
-> completely.
+> On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> > From: Michael Kelley <mhklinux@outlook.com>
+> >
+> > Update hypercall call sites to use the new hv_hvcall_*() functions
+> > to set up hypercall arguments. Since these functions zero the
+> > fixed portion of input memory, remove now redundant zero'ing of
+> > input fields.
+> >
+> > hv_post_message() requires additional updates. The payload area is
+> > treated as an array to avoid wasting cycles on zero'ing it and
+> > then overwriting with memcpy(). To allow treatment as an array,
+> > the corresponding payload[] field is updated to have zero size.
+> >
+> I'd prefer to leave the payload field as a fixed-sized array.
+> Changing it to a flexible array makes it look like that input is
+> for a variable-sized or rep hypercall, and it makes the surrounding
+> code in hv_post_message() more complex and inscrutable as a result.
 >=20
-> Fix this by moving the core logic of sysfs creation for ring buffer,
-> from uio_hv_generic to HyperV's VMBus driver, where rest of the sysfs
-> attributes for the channels are defined. While doing that, make use
-> of attribute groups and macros, instead of creating sysfs directly,
-> to ensure better error handling and code flow.
+> I suggest leaving hv_post_message() alone, except for changing
+> hyperv_pcpu_input_arg -> hyperv_pcpu_arg, and perhaps a comment
+> explaining why hv_hvcall_input() isn't used there.
 >=20
-> Problem path:
-> vmbus_process_offer (new offer comes for the VMBus device)
->   vmbus_add_channel_work
->     vmbus_device_register
->       |-> device_register
->       |     |...
->       |     |-> hv_uio_probe
->       |           |...
->       |           |-> sysfs_create_bin_file (leads to a warning as
->       |                 primary channel's kobject, which is used to
->       |                 create sysfs is not yet initialized)
->       |-> kset_create_and_add
->       |-> vmbus_add_channel_kobj (initialization of primary channel's
->                                   kobject happens later)
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> >  drivers/hv/hv.c           | 9 ++++++---
+> >  drivers/hv/hv_balloon.c   | 4 ++--
+> >  drivers/hv/hv_common.c    | 2 +-
+> >  drivers/hv/hv_proc.c      | 8 ++++----
+> >  drivers/hv/hyperv_vmbus.h | 2 +-
+> >  5 files changed, 14 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> > index a38f84548bc2..e2dcbc816fc5 100644
+> > --- a/drivers/hv/hv.c
+> > +++ b/drivers/hv/hv.c
+> > @@ -66,7 +66,8 @@ int hv_post_message(union hv_connection_id connection=
+_id,
+> >  	if (hv_isolation_type_tdx() && ms_hyperv.paravisor_present)
+> >  		aligned_msg =3D this_cpu_ptr(hv_context.cpu_context)->post_msg_page;
+> >  	else
+> > -		aligned_msg =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +		hv_hvcall_in_array(&aligned_msg, sizeof(*aligned_msg),
+> > +				   sizeof(aligned_msg->payload[0]));
+> >
+> >  	aligned_msg->connectionid =3D connection_id;
+> >  	aligned_msg->reserved =3D 0;
+> > @@ -80,8 +81,10 @@ int hv_post_message(union hv_connection_id connectio=
+n_id,
+> >  						  virt_to_phys(aligned_msg), 0);
+> >  		else if (hv_isolation_type_snp())
+> >  			status =3D hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
+> > -						   aligned_msg, NULL,
+> > -						   sizeof(*aligned_msg));
+> > +						   aligned_msg,
+> > +						   NULL,
+> > +						   struct_size(aligned_msg, payload,
+> > +						   HV_MESSAGE_PAYLOAD_QWORD_COUNT));
 >=20
-> Above code flow is sequential and the warning is always reproducible in
-> this path.
+> See my comment above, I'd prefer to leave this function mostly
+> alone to maintain readability.
+
+Let me try again to introduce hv_hvcall_*() without changing struct
+hv_input_post_message. If that struct isn't changed, then the
+hv_ghcb_hypercall() arguments don't have to change.
+
+I'd like to reach a point where hyperv_input_arg isn't referenced in any
+open coding -- it should be referenced only internally in the hv_call_*()
+functions and where it is allocated and deallocated. The arguments to
+hv_hvcall_in_array() will be a slightly more complicated to prevent zero'in=
+g
+the entire payload area, but I don't think readability alone is justificati=
+on
+for open-coding the use of hyperv_input_arg.
+
+Other reviewers -- please chime in on whether the "no open coding" goal
+should be kept. I can drop that goal if that's the way folks prefer.
+
 >=20
-> Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for prim=
-ary channel")
-> Cc: stable@kernel.org
-> Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Suggested-by: Michael Kelley <mhklinux@outlook.com>
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  drivers/hv/hyperv_vmbus.h    |   6 ++
->  drivers/hv/vmbus_drv.c       | 110 ++++++++++++++++++++++++++++++++++-
->  drivers/uio/uio_hv_generic.c |  33 +++++------
->  include/linux/hyperv.h       |   6 ++
->  4 files changed, 134 insertions(+), 21 deletions(-)
+> >  		else
+> >  			status =3D HV_STATUS_INVALID_PARAMETER;
+> >  	} else {
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > index fec2f18679e3..2def8b8794ee 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -1582,14 +1582,14 @@ static int hv_free_page_report(struct page_repo=
+rting_dev_info *pr_dev_info,
+> >  	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+> >  	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order)=
+);
+> >  	local_irq_save(flags);
+> > -	hint =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +
+> > +	hv_hvcall_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
 >=20
+> We should ensure the returned batch size is large enough for
+> "nents".
 
-[snip]
+OK, right.  That test would replace the WARN_ON_ONCE() based on nents.
 
-> +/**
-> + * hv_create_ring_sysfs() - create "ring" sysfs entry corresponding to r=
-ing buffers for a channel.
-> + * @channel: Pointer to vmbus_channel structure
-> + * @hv_mmap_ring_buffer: function pointer for initializing the function =
-to be called on mmap of
-> + *                       channel's "ring" sysfs node, which is for the r=
-ing buffer of that channel.
-> + *                       Function pointer is of below type:
-> + *                       int (*hv_mmap_ring_buffer)(struct vmbus_channel=
- *channel,
-> + *                                                  struct vm_area_struc=
-t *vma))
-> + *                       This has a pointer to the channel and a pointer=
- to vm_area_struct,
-> + *                       used for mmap, as arguments.
-> + *
-> + * Sysfs node for ring buffer of a channel is created along with other f=
-ields, however its
-> + * visibility is disabled by default. Sysfs creation needs to be control=
-led when the use-case
-> + * is running.
-> + * For example, HV_NIC device is used either by uio_hv_generic or hv_net=
-vsc at any given point of
-> + * time, and "ring" sysfs is needed only when uio_hv_generic is bound to=
- that device. To avoid
-> + * exposing the ring buffer by default, this function is reponsible to e=
-nable visibility of
-> + * ring for userspace to use.
-> + * Note: Race conditions can happen with userspace and it is not encoura=
-ged to create new
-> + * use-cases for this. This was added to maintain backward compatibility=
-, while solving
-> + * one of the race conditions in uio_hv_generic while creating sysfs.
-> + *
-> + * Returns 0 on success or error code on failure.
-> + */
-> +int hv_create_ring_sysfs(struct vmbus_channel *channel,
-> +			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
-> +						    struct vm_area_struct *vma))
-> +{
-> +	struct kobject *kobj =3D &channel->kobj;
-> +	struct vmbus_channel *primary_channel =3D channel->primary_channel ?
-> +		channel->primary_channel : channel;
-> +
-> +	channel->mmap_ring_buffer =3D hv_mmap_ring_buffer;
-> +	channel->ring_sysfs_visible =3D true;
-> +
-> +	/*
-> +	 * Skip updating the sysfs group if the primary channel is not yet init=
-ialized and sysfs
-> +	 * group is not yet created. In those cases, the 'ring' will be created=
- later in
-> +	 * vmbus_device_register() -> vmbus_add_channel_kobj().
-> +	 */
-> +	if  (!primary_channel->device_obj->channels_kset)
-> +		return 0;
+>=20
+> >  	if (!hint) {
+> >  		local_irq_restore(flags);
+> >  		return -ENOSPC;
+> >  	}
+> >
+> >  	hint->heat_type =3D HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+> > -	hint->reserved =3D 0;
+> >  	for_each_sg(sgl, sg, nents, i) {
+> >  		union hv_gpa_page_range *range;
+> >
+> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> > index 9804adb4cc56..a6b1cdfbc8d4 100644
+> > --- a/drivers/hv/hv_common.c
+> > +++ b/drivers/hv/hv_common.c
+> > @@ -293,7 +293,7 @@ void __init hv_get_partition_id(void)
+> >  	u64 status, pt_id;
+> >
+> >  	local_irq_save(flags);
+> > -	output =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	hv_hvcall_inout(NULL, 0, &output, sizeof(*output));
+> >  	status =3D hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
+> >  	pt_id =3D output->partition_id;
+> >  	local_irq_restore(flags);
+> > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> > index 2fae18e4f7d2..5c580ee1c23f 100644
+> > --- a/drivers/hv/hv_proc.c
+> > +++ b/drivers/hv/hv_proc.c
+> > @@ -73,7 +73,8 @@ int hv_call_deposit_pages(int node, u64 partition_id,=
+ u32 num_pages)
+> >
+> >  	local_irq_save(flags);
+> >
+> > -	input_page =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	hv_hvcall_in_array(&input_page, sizeof(*input_page),
+> > +			   sizeof(input_page->gpa_page_list[0]));
+>=20
+> We should ensure the returned batch size is large enough.
 
-This test doesn't accomplish what you want. It tests if the "channels" dire=
-ctory
-has been created, but not if the numbered subdirectory for this channel has=
- been
-created. sysfs_update_group() operates on the numbered subdirectory and
-could still fail because it hasn't been created yet.
+OK.
 
-My recommendation is to not try to do a test, and just let sysfs_update_gro=
-up()
-fail in that case (and ignore the error).
+>=20
+> >
+> >  	input_page->partition_id =3D partition_id;
+> >
+> > @@ -124,9 +125,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index=
+, u32 apic_id)
+> >  	do {
+> >  		local_irq_save(flags);
+> >
+> > -		input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> >  		/* We don't do anything with the output right now */
+> > -		output =3D *this_cpu_ptr(hyperv_pcpu_output_arg);
+> > +		hv_hvcall_inout(&input, sizeof(*input), &output, sizeof(*output));
+> >
+> >  		input->lp_index =3D lp_index;
+> >  		input->apic_id =3D apic_id;
+> > @@ -167,7 +167,7 @@ int hv_call_create_vp(int node, u64 partition_id, u=
+32 vp_index, u32 flags)
+> >  	do {
+> >  		local_irq_save(irq_flags);
+> >
+> > -		input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +		hv_hvcall_in(&input, sizeof(*input));
+> >
+> >  		input->partition_id =3D partition_id;
+> >  		input->vp_index =3D vp_index;
+> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> > index 29780f3a7478..44b5e8330d9d 100644
+> > --- a/drivers/hv/hyperv_vmbus.h
+> > +++ b/drivers/hv/hyperv_vmbus.h
+> > @@ -101,7 +101,7 @@ struct hv_input_post_message {
+> >  	u32 reserved;
+> >  	u32 message_type;
+> >  	u32 payload_size;
+> > -	u64 payload[HV_MESSAGE_PAYLOAD_QWORD_COUNT];
+> > +	u64 payload[];
+>=20
+> See my comment above, I'd prefer to keep this how it is.
+>=20
+> >  };
+> >
+> >
+>=20
+> Thanks
+> Nuno
 
-Michael
-
-> +
-> +	return sysfs_update_group(kobj, &vmbus_chan_group);
-> +}
-> +EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
 
