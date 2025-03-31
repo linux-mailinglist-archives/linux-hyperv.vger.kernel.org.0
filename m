@@ -1,144 +1,97 @@
-Return-Path: <linux-hyperv+bounces-4737-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4747-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36FB1A761DA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 10:27:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64091A762F1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 11:08:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0C503A6634
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 08:27:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EC9018882D9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 09:08:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0FE11E9905;
-	Mon, 31 Mar 2025 08:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30D061D88A4;
+	Mon, 31 Mar 2025 09:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SuHDQIJy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G0UXm+E5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346F91E7C16;
-	Mon, 31 Mar 2025 08:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FD81D63D8;
+	Mon, 31 Mar 2025 09:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409462; cv=none; b=kS3+kgb4e9rIl8E85ehpa213F4hDwOgcSWdlct77y3Qu9eIFnNbGcur+hyWu7m/QiW3zEWkzFjOFjSsd7XAUE9P3BkwGSYc7on/uDhSKU/QB1q0hKLxVj2Z3+m8jMLyw5s7ZHDw+cWivwh+YtH0nmfcdzIdgJnAccrwCCbLfmYs=
+	t=1743412104; cv=none; b=S5YCb4epuL6iKWl4r3kQo0XAmwuyYItiDtdsrH4G7PUJ/XzRXopLHk5fzdw3jOs6Fbf0F2YUiwTPojqBIBvvViFAOfJi4HZV1TUinAm1MTkZFCC7arN605NVCVCVLHv8xSwos5uHswoES5dqDq55B7Yiy77/+9q4YZYqVrS+B0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409462; c=relaxed/simple;
-	bh=ABSKvHyBIrh6QHK4hlgn4QnqvAzBsraSRqbIPjJ35nM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t0itzJLIqPitCu+aBdlGbHZizteGkkwk69AHy9FPCx8YgrKEhbpIvL0p5OB5ARcVAaFgGib6xfsZESSOkyCQiW014ioFrFY4pO/OgQKxGcyvUW2D+XoEnt9vyz31x7gfU0puM45WWmvPeQi7irdE5vg0TXro5TAdTZHzGGiWme4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SuHDQIJy; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52V8Mp0F3171319
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 31 Mar 2025 01:23:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52V8Mp0F3171319
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743409410;
-	bh=cMFNgaQ/yU5pBBnUjuHrZWgQ7p+gEOsEGfeLMhV/cHU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SuHDQIJy8AzSLC0DrXz1UGsHXHhDsnDQpCgFuieur9l29e7EM1ArYQl7rGjnX8wD+
-	 WkraR40jpmWTpADYisOZ7nbeYq+ByLQ5TLLYH8kKM7DCg5buwGVA5GHhHZVrggSeZ4
-	 p9nifPZWSuSDm1534yUVgXXqF/kvTz/WBhHohMexeK1jikiHydt9HM2bVqx8MyrHLR
-	 c8M6luTBzpzY8I0f63iDe6i8yCHSJXzCnLx3cOikN4ytSEhwdKsNU/oWb2NhlDUBla
-	 mlZbjuvfxWirBhjjqog8XtnbNx9xitJDGMf/rsrr0eINZ0q1eEmyIbBAiN8ijpnMcH
-	 lJXB3Tmz/tP0A==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
-        acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-        seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-Subject: [RFC PATCH v1 15/15] x86/msr: Move the ARGS macros after the MSR read/write APIs
-Date: Mon, 31 Mar 2025 01:22:51 -0700
-Message-ID: <20250331082251.3171276-16-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250331082251.3171276-1-xin@zytor.com>
-References: <20250331082251.3171276-1-xin@zytor.com>
+	s=arc-20240116; t=1743412104; c=relaxed/simple;
+	bh=wj8xpmWgK5yX9tmvccKgarihUFYI3+6qfieaV0vte8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmlVFqFVMIQ+7yRNIuD8oKBcTpT59BeNf9Il2gplybcY5CvXoWYvqU0yCuD/XRf+ubS4g/BthWgFWB3kcmq3dtMReZgZfRlz7wsSanyW0UJow3j9x/Sq4DLpSNGmXl1EKkXX+06zMhp26ixmuVhN4wNKxiJgCDrvEObFqHVA2p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G0UXm+E5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 3F07D211251B; Mon, 31 Mar 2025 02:08:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F07D211251B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743412102;
+	bh=fABQHcWYZ8fxGq7/i5KjcTNIPf7v1OtIahvQKBq53HY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G0UXm+E5pJvBajFQAcgChgjbeLApGtSbrxm9PWAclRtmiFjZyrAzZfd6CDJl13g1m
+	 I76jORF5O8NDRWT/5uzAmJHGD8H2GDyt0Ig6fpcSuPIZrnPaZ7D4/nfUQl/udaVP3R
+	 j+BsyYfKaJaGYkuAQjd3kUS0nwRLhWXkOO3pxoGs=
+Date: Mon, 31 Mar 2025 02:08:22 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"brett.creeley@amd.com" <brett.creeley@amd.com>,
+	"surenb@google.com" <surenb@google.com>,
+	"schakrabarti@linux.microsoft.com" <schakrabarti@linux.microsoft.com>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+	"erick.archer@outlook.com" <erick.archer@outlook.com>,
+	"rosenp@gmail.com" <rosenp@gmail.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [EXTERNAL] Re: [PATCH 2/3] net: mana: Implement
+ set_link_ksettings in ethtool for speed
+Message-ID: <20250331090822.GA22061@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
+ <1742473341-15262-3-git-send-email-ernis@linux.microsoft.com>
+ <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
+ <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <adaaa2b0-c161-4d4f-8199-921002355d05@lunn.ch>
+ <20250325122135.14ffa389@kernel.org>
+ <MN0PR21MB3437DA2C43930B08036BB146CAA72@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <6396c1f7-756d-476a-833e-7ea35ae41da8@lunn.ch>
+ <MN0PR21MB34376199FAFAE4901EF18E75CAA72@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <f2619b80-8d5d-4484-a154-18f902d43d63@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2619b80-8d5d-4484-a154-18f902d43d63@lunn.ch>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Since the ARGS macros are no longer used in the MSR read/write API
-implementation, move them after their definitions.
+Thank you Andrew, Jakub for pointing out all the available options. 
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/include/asm/msr.h | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index fc93c2601853..9b109d1d92aa 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -37,23 +37,6 @@ struct saved_msrs {
- 	struct saved_msr *array;
- };
- 
--/*
-- * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
-- * constraint has different meanings. For i386, "A" means exactly
-- * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
-- * it means rax *or* rdx.
-- */
--#ifdef CONFIG_X86_64
--/* Using 64-bit values saves one instruction clearing the high half of low */
--#define DECLARE_ARGS(val, low, high)	unsigned long low, high
--#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
--#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
--#else
--#define DECLARE_ARGS(val, low, high)	unsigned long long val
--#define EAX_EDX_VAL(val, low, high)	(val)
--#define EAX_EDX_RET(val, low, high)	"=A" (val)
--#endif
--
- /*
-  * Be very careful with includes. This header is prone to include loops.
-  */
-@@ -620,6 +603,23 @@ static __always_inline int wrmsrl_safe(const u32 msr, const u64 val)
- extern int rdmsr_safe_regs(u32 regs[8]);
- extern int wrmsr_safe_regs(u32 regs[8]);
- 
-+/*
-+ * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
-+ * constraint has different meanings. For i386, "A" means exactly
-+ * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
-+ * it means rax *or* rdx.
-+ */
-+#ifdef CONFIG_X86_64
-+/* Using 64-bit values saves one instruction clearing the high half of low */
-+#define DECLARE_ARGS(val, low, high)	unsigned long low, high
-+#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
-+#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
-+#else
-+#define DECLARE_ARGS(val, low, high)	unsigned long long val
-+#define EAX_EDX_VAL(val, low, high)	(val)
-+#define EAX_EDX_RET(val, low, high)	"=A" (val)
-+#endif
-+
- /**
-  * rdtsc() - returns the current TSC without ordering constraints
-  *
--- 
-2.49.0
-
+We are currently investigating their feasibility based on our use case.
+Would update the thread/get in touch, about our findings before sending
+out the next version.
 
