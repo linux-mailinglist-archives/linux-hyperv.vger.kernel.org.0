@@ -1,265 +1,169 @@
-Return-Path: <linux-hyperv+bounces-4730-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4738-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ABB0A75EC4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 08:14:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F35E5A761EA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 10:28:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C15F167805
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 06:14:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 02F047A39E8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Mar 2025 08:27:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D1881AC8;
-	Mon, 31 Mar 2025 06:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 571801EB19B;
+	Mon, 31 Mar 2025 08:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="p6SEC91M"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OnHXAiC9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF3D273F9;
-	Mon, 31 Mar 2025 06:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B73F1E882F;
+	Mon, 31 Mar 2025 08:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743401691; cv=none; b=FoL4qHy/hSWKAZ1HHF+kOPs8Veyguwlg5c5Zn4Ada1oWzOnkc+OzrSQ11quuR2Xeo7h2Re3Y/WyJKgZzncGzCDyv+jpS395NRjVIG6NozCt2UuNYS1Vpa0apNQEn8WaAh0ejXwV5YO7lBPo8v75eaVlv/VbsWBHYJoSxMPhu2D8=
+	t=1743409464; cv=none; b=TWcS+vU4nlhDCZUvwJHbYBGtbkGem2qlqJqBZ5pPgodinJtQe+gZMRlVQpIy5TD+1sC1rmU/YNf630SF7FUtAgCXSGkpB9YoUnud04PkQM8m/+RPtEKWQ8jBGVT37Hcn/br/9kXbxxxD/VlIhz621GtIw3E8rinkP82w3r8i77c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743401691; c=relaxed/simple;
-	bh=OwwpOitkg48CtLBrxIGOwMiIEwZRNT8nD4QL9XiRclk=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=RT78ou/RZ3PqqpBHB5b+6RD7h8MZV0XatGL05dvMKAHxvDq6AHCibD2HlINKxYG3ebInQfVCYwxsiYQMPU3wf8wezx190mS0cIs6pkbcbRQ6hknZQf6UQVbBIMQNFTRApwg7sFTzc5hmTyoYkVUBIpO3hCHZAvW9/PB6ZdEyTsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=p6SEC91M; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id D3184211251D; Sun, 30 Mar 2025 23:14:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3184211251D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743401689;
-	bh=bGKOKa9F8eNWrGg8tv+FBjjf0mVGzQFU1uMT7463nBI=;
+	s=arc-20240116; t=1743409464; c=relaxed/simple;
+	bh=Cby37SG2DpHxgTqq3lgoJ+EC3eGF0uFSXmj9Op+ZdcQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gTlDiOEuWsWWDc/qWPTHGl9B21poBEPKqG4XwLolt3nYXs427QUhhHxCObfHdKChy++uRpy7owlNTmQLj5lc0pFGwFqj0KZoRHAHNHGlJZ0HCetJXwn/i6L9HT79gmC0hSc2bIb2DuJxra2m2Pcnq+2HNOO33xD2JpyTAE3voJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OnHXAiC9; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52V8Mp003171319
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 31 Mar 2025 01:22:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52V8Mp003171319
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743409380;
+	bh=c4mcztnFt3iWZUjta5DXg4eheqI37Lh6HqidwU3OGSY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=p6SEC91M3coGJJg3bR6nVytVawOqy12NKihmtpKK6wSr5/SqnMWM6A3RXqu30mNnW
-	 zjGIhdKQFIyqXJF9pGOcp4hCTD3q/8kEZ1cvHlkNMTPqxkTbqWrUt8CrYVweK/XFFJ
-	 Gt83dm8ViklIsxR67udRtBV7zpgmqtKcgFNYdXe4=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v2] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
-Date: Sun, 30 Mar 2025 23:14:48 -0700
-Message-Id: <1743401688-1573-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	b=OnHXAiC9aSEzd0WpdrjoHSGZ04PCiEeIv62hkaEXPnx8evimLF7vpw0m7zz3VzHAt
+	 hDuVc4dghG43y+jsV+a7Qfx20Ng9DHzGpu8XsE0uIkomgEmFYL/K1tnjvzIxsjKA4M
+	 Jmbxizi87C0PeKt7ohivxxIv0jnlvkyUQ9sNKdDbevgpXy1tk7W9PyoTsHjecZxvs2
+	 aVQVkmqox4yIzWpZCAHpOgStdzq0qcj13XEqjfbZbCPUeEsVftd405OaQn09xyGuCx
+	 rSayuzUgrw2M+BWzbnfHvv62mRW+cXcdQf8/qP5CIkCNwAjzjH0U7W5kYlhj6Xy0BH
+	 xAje3DGcgV+zw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+        acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+        seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+Subject: [RFC PATCH v1 00/15] MSR refactor with new MSR instructions support
+Date: Mon, 31 Mar 2025 01:22:36 -0700
+Message-ID: <20250331082251.3171276-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Allow the KVP daemon to log the KVP updates triggered in the VM
-with a new debug flag(-d).
-When the daemon is started with this flag, it logs updates and debug
-information in syslog with loglevel LOG_DEBUG. This information comes
-in handy for debugging issues where the key-value pairs for certain
-pools show mismatch/incorrect values.
-The distro-vendors can further consume these changes and modify the
-respective service files to redirect the logs to specific files as
-needed.
+Obviously the existing MSR code and the pv_ops MSR access APIs need some
+love: https://lore.kernel.org/lkml/87y1h81ht4.ffs@tglx/
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
- Changes in v2:
- * log the debug logs in syslog(debug) instead of a seperate file that
-   we will have to maintain.
- * fix the commit message to indicate the same.
----
- tools/hv/hv_kvp_daemon.c | 80 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 72 insertions(+), 8 deletions(-)
+hpa has started a discussion about how to refactor it last October:
+https://lore.kernel.org/lkml/7a4de623-ecda-4369-a7ae-0c43ef328177@zytor.com/
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 04ba035d67e9..2ff34c2f6a8d 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -41,6 +41,7 @@
- #include <net/if.h>
- #include <limits.h>
- #include <getopt.h>
-+#include <time.h>
- 
- /*
-  * KVP protocol: The user mode component first registers with the
-@@ -83,6 +84,7 @@ enum {
- };
- 
- static int in_hand_shake;
-+static int debug_enabled;
- 
- static char *os_name = "";
- static char *os_major = "";
-@@ -153,6 +155,16 @@ static void kvp_release_lock(int pool)
- 	}
- }
- 
-+static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
-+{
-+	struct tm tm;
-+	time_t t;
-+
-+	time(&t);
-+	gmtime_r(&t, &tm);
-+	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
-+}
-+
- static void kvp_update_file(int pool)
- {
- 	FILE *filep;
-@@ -183,6 +195,23 @@ static void kvp_update_file(int pool)
- 	kvp_release_lock(pool);
- }
- 
-+static void kvp_dump_initial_pools(int pool)
-+{
-+	char tm_str[50];
-+	int i;
-+
-+	convert_tm_to_string(tm_str, sizeof(tm_str));
-+
-+	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
-+	       pool);
-+
-+	for (i = 0; i < kvp_file_info[pool].num_records; i++)
-+		syslog(LOG_DEBUG, "[%s]: pool: %d, %d/%d key=%s val=%s\n",
-+		       tm_str, pool, i, kvp_file_info[pool].num_records,
-+		       kvp_file_info[pool].records[i].key,
-+		       kvp_file_info[pool].records[i].value);
-+}
-+
- static void kvp_update_mem_state(int pool)
- {
- 	FILE *filep;
-@@ -270,6 +299,8 @@ static int kvp_file_init(void)
- 			return 1;
- 		kvp_file_info[i].num_records = 0;
- 		kvp_update_mem_state(i);
-+		if (debug_enabled)
-+			kvp_dump_initial_pools(i);
- 	}
- 
- 	return 0;
-@@ -321,14 +352,28 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
- static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 				 const __u8 *value, int value_size)
- {
--	int i;
--	int num_records;
- 	struct kvp_record *record;
-+	int num_records;
-+	char tm_str[50];
- 	int num_blocks;
-+	int i;
-+
-+	if (debug_enabled) {
-+		convert_tm_to_string(tm_str, sizeof(tm_str));
-+		syslog(LOG_DEBUG, "[%s]:%s: got a KVP: pool=%d key=%s val=%s",
-+		       tm_str, __func__, pool, key, value);
-+	}
- 
- 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
--		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
-+		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
-+		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
-+		       key, value);
-+
-+		if (debug_enabled)
-+			syslog(LOG_DEBUG, "[%s]:[%s]: Got a too long key or value: pool=%d, key=%s, val=%s",
-+			       tm_str, __func__, pool, key, value);
- 		return 1;
-+	}
- 
- 	/*
- 	 * First update the in-memory state.
-@@ -348,6 +393,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 		 */
- 		memcpy(record[i].value, value, value_size);
- 		kvp_update_file(pool);
-+		if (debug_enabled)
-+			syslog(LOG_DEBUG, "[%s]:%s: updated: pool=%d key=%s val=%s",
-+			       tm_str, __func__, pool, key, value);
- 		return 0;
- 	}
- 
-@@ -359,8 +407,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 		record = realloc(record, sizeof(struct kvp_record) *
- 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
- 
--		if (record == NULL)
-+		if (!record) {
-+			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
- 			return 1;
-+		}
- 		kvp_file_info[pool].num_blocks++;
- 
- 	}
-@@ -368,6 +418,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 	memcpy(record[i].key, key, key_size);
- 	kvp_file_info[pool].records = record;
- 	kvp_file_info[pool].num_records++;
-+
-+	if (debug_enabled)
-+		syslog(LOG_DEBUG, "[%s]:%s: added: pool=%d key=%s val=%s",
-+		       tm_str, __func__, pool, key, value);
-+
- 	kvp_update_file(pool);
- 	return 0;
- }
-@@ -1662,6 +1717,7 @@ void print_usage(char *argv[])
- 	fprintf(stderr, "Usage: %s [options]\n"
- 		"Options are:\n"
- 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
-+		"  -d, --debug-enabled    Enable debug logs(syslog debug by default)\n"
- 		"  -h, --help             print this help\n", argv[0]);
- }
- 
-@@ -1681,12 +1737,13 @@ int main(int argc, char *argv[])
- 	int daemonize = 1, long_index = 0, opt;
- 
- 	static struct option long_options[] = {
--		{"help",	no_argument,	   0,  'h' },
--		{"no-daemon",	no_argument,	   0,  'n' },
--		{0,		0,		   0,  0   }
-+		{"help",		no_argument,	   0,  'h' },
-+		{"no-daemon",		no_argument,	   0,  'n' },
-+		{"debug-enabled",	no_argument,	   0,  'd' },
-+		{0,			0,		   0,  0   }
- 	};
- 
--	while ((opt = getopt_long(argc, argv, "hn", long_options,
-+	while ((opt = getopt_long(argc, argv, "hnd", long_options,
- 				  &long_index)) != -1) {
- 		switch (opt) {
- 		case 'n':
-@@ -1695,6 +1752,9 @@ int main(int argc, char *argv[])
- 		case 'h':
- 			print_usage(argv);
- 			exit(0);
-+		case 'd':
-+			debug_enabled = 1;
-+			break;
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
-@@ -1717,6 +1777,9 @@ int main(int argc, char *argv[])
- 	 */
- 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
- 
-+	if (debug_enabled)
-+		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
-+
- 	if (kvp_file_init()) {
- 		syslog(LOG_ERR, "Failed to initialize the pools");
- 		exit(EXIT_FAILURE);
+The consensus so far is to utilize the alternatives mechanism to eliminate
+the Xen MSR access overhead on native systems and enable new MSR instructions
+based on their availability.
+
+To achieve this, a code refactor is necessary.  Initially, the MSR API usage
+needs to be unified and simplified, which is addressed by patches 1 through 7.
+
+Patches 8 and 9 introduce basic support for immediate form MSR instructions,
+while patch 10 employs the immediate form WRMSRNS in VMX.
+
+Finally, patches 11 to 15 leverage the alternatives mechanism to read and
+write MSR.
+
+
+H. Peter Anvin (Intel) (1):
+  x86/extable: Implement EX_TYPE_FUNC_REWIND
+
+Xin Li (Intel) (14):
+  x86/msr: Replace __wrmsr() with native_wrmsrl()
+  x86/msr: Replace __rdmsr() with native_rdmsrl()
+  x86/msr: Simplify pmu_msr_{read,write}()
+  x86/msr: Let pv_cpu_ops.write_msr{_safe}() take an u64 instead of two
+    u32
+  x86/msr: Replace wrmsr(msr, low, 0) with wrmsrl(msr, value)
+  x86/msr: Remove MSR write APIs that take the MSR value in two u32
+    arguments
+  x86/msr: Remove pmu_msr_{read,write}()
+  x86/cpufeatures: Add a CPU feature bit for MSR immediate form
+    instructions
+  x86/opcode: Add immediate form MSR instructions to x86-opcode-map
+  KVM: VMX: Use WRMSRNS or its immediate form when available
+  x86/msr: Use the alternatives mechanism to write MSR
+  x86/msr: Use the alternatives mechanism to read MSR
+  x86/extable: Add support for the immediate form MSR instructions
+  x86/msr: Move the ARGS macros after the MSR read/write APIs
+
+ arch/x86/coco/sev/core.c                   |   2 +-
+ arch/x86/events/amd/brs.c                  |   4 +-
+ arch/x86/hyperv/hv_apic.c                  |   6 +-
+ arch/x86/hyperv/hv_vtl.c                   |   4 +-
+ arch/x86/hyperv/ivm.c                      |   2 +-
+ arch/x86/include/asm/apic.h                |   4 +-
+ arch/x86/include/asm/asm.h                 |   6 +
+ arch/x86/include/asm/cpufeatures.h         |  19 +-
+ arch/x86/include/asm/extable_fixup_types.h |   1 +
+ arch/x86/include/asm/fred.h                |   2 +-
+ arch/x86/include/asm/mshyperv.h            |   2 +-
+ arch/x86/include/asm/msr-index.h           |   6 +
+ arch/x86/include/asm/msr.h                 | 664 ++++++++++++++++-----
+ arch/x86/include/asm/paravirt.h            |  64 --
+ arch/x86/include/asm/paravirt_types.h      |  11 -
+ arch/x86/include/asm/switch_to.h           |   2 +-
+ arch/x86/kernel/cpu/amd.c                  |   2 +-
+ arch/x86/kernel/cpu/common.c               |  10 +-
+ arch/x86/kernel/cpu/mce/core.c             |   6 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c  |  12 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c     |   2 +-
+ arch/x86/kernel/cpu/scattered.c            |   1 +
+ arch/x86/kernel/cpu/umwait.c               |   4 +-
+ arch/x86/kernel/kvm.c                      |   2 +-
+ arch/x86/kernel/kvmclock.c                 |   2 +-
+ arch/x86/kernel/paravirt.c                 |   4 -
+ arch/x86/kvm/svm/svm.c                     |  15 +-
+ arch/x86/kvm/vmx/vmenter.S                 |  28 +-
+ arch/x86/kvm/vmx/vmx.c                     |   4 +-
+ arch/x86/lib/x86-opcode-map.txt            |   5 +-
+ arch/x86/mm/extable.c                      | 186 ++++--
+ arch/x86/mm/mem_encrypt_identity.c         |   4 +-
+ arch/x86/xen/enlighten_pv.c                | 110 ++--
+ arch/x86/xen/pmu.c                         |  43 +-
+ arch/x86/xen/xen-asm.S                     |  89 +++
+ arch/x86/xen/xen-ops.h                     |  12 +-
+ drivers/ata/pata_cs5535.c                  |  12 +-
+ drivers/ata/pata_cs5536.c                  |   6 +-
+ drivers/cpufreq/acpi-cpufreq.c             |   2 +-
+ drivers/cpufreq/e_powersaver.c             |   2 +-
+ drivers/cpufreq/powernow-k6.c              |   8 +-
+ tools/arch/x86/lib/x86-opcode-map.txt      |   5 +-
+ 42 files changed, 896 insertions(+), 479 deletions(-)
+
+
+base-commit: 8fc8ae1aeed6dc895bf35a4797c6e770574f4612
 -- 
-2.34.1
+2.49.0
 
 
