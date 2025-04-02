@@ -1,159 +1,161 @@
-Return-Path: <linux-hyperv+bounces-4778-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4779-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F97CA79076
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 15:57:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6485A79253
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 17:41:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF5F83B9EDD
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 13:52:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD9FE3B4FCA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 15:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C25823AE95;
-	Wed,  2 Apr 2025 13:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2407E14BFA2;
+	Wed,  2 Apr 2025 15:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chnN6Ra/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OH1LsY4q"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28C9239089
-	for <linux-hyperv@vger.kernel.org>; Wed,  2 Apr 2025 13:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DCE38DE9;
+	Wed,  2 Apr 2025 15:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743601939; cv=none; b=ZVVez/BNIFdMgrtM3TWQPoxeDT1nbifHOcxzQpL4QCHegJ2n6ZQQHkyUeeqG8V7hQPrAK33X7cLrCjDzRg17gKxde++NE63jt0D64oR/1ZJrxqlsxxPWBRaGOCMDjKkmeIXIh9f5FiNi/mP47o9tCm5Ny89SO7cbGJiLb7drr1w=
+	t=1743608474; cv=none; b=PjxDnEaDXMWIHIB/KXiuGO/VgAxs6RGakE3o0HzhbZtZ0hlBxe8NmNMyVWOT5ak0TqZFdSEA60vSmAaiIcMN5KMz5a0U1+yiab9sJL7gSWn4HBopeyi3m5B3rPO/E72/0Td1B/cOimH3OR0Bh5GYpaxNh1At5dhZh83XsDIw+tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743601939; c=relaxed/simple;
-	bh=A6G9thMdXGNij6sKP+YM3dlgxFr0/ZSLvkA5bH/ujFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YxpGOLjX10Jsit/o6QYo8mlrTN+GioQZnirXeYYsju3/GMwmhOqAaixflyoHzkhiyFFoBqTZaVFX4CW3+Hg5YH/QaBCF7oHGS50YUPU0dTxUc7Qs79n4Y5mRtvTFkLhKYCZKuIdAgDdB9IQIkfrVc+VKRzSeWAi0apnh3A8nAb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chnN6Ra/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743601935;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VOgJPmykAObI2jQBeah+5x6J5ky48bfmV5G/uZspF+c=;
-	b=chnN6Ra/eFho3KmkS21PLt78OV0Dp6EQ4fM79yQhOddFsDwwbuoYdToCFI+67UhgSzWXNs
-	TEQT1+8tw/BItPUYdj2mHMRnZz5TVEL0J0xeMI7vCZPChKQGmYrhjjyNA713+7gCS34vvc
-	Opcp0ikTFesbAhDphGDfUuMetcwhXBs=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-374-h1wl5byBOZ2KjWG68B6_9g-1; Wed, 02 Apr 2025 09:52:14 -0400
-X-MC-Unique: h1wl5byBOZ2KjWG68B6_9g-1
-X-Mimecast-MFC-AGG-ID: h1wl5byBOZ2KjWG68B6_9g_1743601933
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7394772635dso97055b3a.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 02 Apr 2025 06:52:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743601933; x=1744206733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VOgJPmykAObI2jQBeah+5x6J5ky48bfmV5G/uZspF+c=;
-        b=rGHNODQEEDM0J5Om3OREcG67pkNMcKoDYVm0QSD4y4Q7oxsn7gVBGU8BkRMcuSKtWe
-         fwsfcBiOWtKoJZKW+FzPL+XPp53KM1kmrB0KVJSkGuxYcZjyyylIxhfPUZ5WS2PSq9ZG
-         C0xj+Ow/Z1284n0UgIPgkylcUP6kAHh1E9aNSTzuk00PcCLXGBBAeLxLJ7KHB1tTHQGD
-         2ymBrTE+tl6ygC5r/25DRMrLVw24qTs+Pi7fSdAf27znFYnDlJSahPjiJfGYhDj/b2Ef
-         PL+RHbpfqeH5aT8mvrypQWUjt+lrm3ElksUUGJFtug+n/YQdT/a9lVGfPamOrpaGZbfF
-         ouig==
-X-Forwarded-Encrypted: i=1; AJvYcCVypeL5+ku6sB8E3hgNnVc1fzb2qfvx99NdHqQqcoE2/UpXQfaBKT5+XVTw+Z78jBZf8R4n5Y5fe+A3fok=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5agwdDTDTyIG/8b3Qn/xuBS50VB/qlpwDL9BXLXPYvsPqQ5yf
-	3Je4LHx/KWlz840S2xJaFB1kstWYS/Ok7xUZDXc1upZXSROBMGUgXkKwoJDUdVp2mx/BKGyeuyZ
-	ZtlKOBc/AyY/CLhzE+BMjV0RxO1XKgeqM4E1LMBCNUfGDzkz2WGITXevK0lu4D+M2AJIHC4wKmu
-	ePkmB9kE3J3Cesia3Gb0OqlkhqOJdwQO30dlLI
-X-Gm-Gg: ASbGncv71CbgsecuKtC0FCgcVmwmpP/M2cooOYChje/+KC8VPkkp8i52UKam2HkL5QZ
-	9aBrVcYqKU50ON1NEm35nBGa26wc7GkojhjjNP9fiuO7iCP0v10uFNoiplkGuRX94Wy+b7FQddK
-	cAyZdj1pltVdQnLknXP4AFreLQQNPa
-X-Received: by 2002:a05:6a00:4606:b0:736:64b7:f104 with SMTP id d2e1a72fcca58-7398034d311mr21220199b3a.5.1743601933108;
-        Wed, 02 Apr 2025 06:52:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG0zGL/a3PY98j5a5/Uh1iZIbTLXGDprDz04ve4TfMxa8U5wSK0yN9qe8umGPmAsIHrQ6w5aWwqZRLDXm7JuF0=
-X-Received: by 2002:a05:6a00:4606:b0:736:64b7:f104 with SMTP id
- d2e1a72fcca58-7398034d311mr21220172b3a.5.1743601932776; Wed, 02 Apr 2025
- 06:52:12 -0700 (PDT)
+	s=arc-20240116; t=1743608474; c=relaxed/simple;
+	bh=Y/O2DK5Lf6ey6Pfej1vFZZLi5jn02o1oRvHXFQ36iCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMtFZ2qzMHrNoUK1pu0vQANDAUhJp2nIHVCvnvrRLV62i5v2K8pT8W9Qe4lDuiKMdvj77DgVh15blIgclSJHLnLRVhKKW/Rdng81+iHr/mUflbJVFIlbjCPYC7UNj7aBoucQ3g018YDZZ+sffRn3MzvUOLVNFrR3s1Uac3zatOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OH1LsY4q; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743608472; x=1775144472;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Y/O2DK5Lf6ey6Pfej1vFZZLi5jn02o1oRvHXFQ36iCQ=;
+  b=OH1LsY4qizQgV0jbTK7Uekah+5OqsBFcRTO2M19ErtZGnF1hgWR+hnUw
+   ntdbTz9l2LCxStga+Tm1fEJjJ3ttHzwSGJvlDqnC60bJt7eDNAPogAx90
+   Kw571iZ/seT2Ys8zPnV/mAG3p+vj7hTjOy7aKnnM5HgqZfK0REhLmsy6e
+   hLGwd8kawgbJ3ajjJzr3Y0txPSXvO7I/n7WLXa7OsbDFxTblXIo0jNNLI
+   w70Ng5w2WkQDz+2a5xPimzlWXea0tZYMeeqjQlrgJMeLa52DEULEBgeEv
+   i/TG3mdySNB5PqWXArlK8psyr5Mnz2yI7VtvTND0Y7sb/bJz2fSMT6s9+
+   Q==;
+X-CSE-ConnectionGUID: XjAhMAGeSRK0Yx3Ua55o9Q==
+X-CSE-MsgGUID: BX3JQgMKQRGEvaDQrVTTSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45106889"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="45106889"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:41:11 -0700
+X-CSE-ConnectionGUID: zHDjNtvDTouroy5OyapFag==
+X-CSE-MsgGUID: S3MiKWOZRGuvNqyyZyUeaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="131603092"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.222.41]) ([10.124.222.41])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 08:41:08 -0700
+Message-ID: <e5770add-9d18-40e1-929d-df7c40f3c7d1@intel.com>
+Date: Wed, 2 Apr 2025 08:41:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402084351.1545536-1-ryasuoka@redhat.com> <dae5089d-e214-4518-b927-5c4149babad8@suse.de>
-In-Reply-To: <dae5089d-e214-4518-b927-5c4149babad8@suse.de>
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Date: Wed, 2 Apr 2025 22:52:01 +0900
-X-Gm-Features: AQ5f1Jpw7m9T_UxVBqa763yKKRkEwQNaxAeOXPrh1fO22sf04fLAjs0UuR6sE_k
-Message-ID: <CAHpthZp5L-iyE=sggm-fjooVsgLcMPpBSyNkfCC5Dj0B=Vy2JQ@mail.gmail.com>
-Subject: Re: [PATCH RFC drm-next 0/1] Add support for drm_panic
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com, 
-	simona@ffwll.ch, drawat.floss@gmail.com, jfalempe@redhat.com, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+ linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+ andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
+ <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 2, 2025 at 6:45=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
-de> wrote:
->
-> Hi
->
-> Am 02.04.25 um 10:43 schrieb Ryosuke Yasuoka:
-> > This patch adds drm_panic support for hyperv-drm driver. This function
-> > works but it's still needed to brush up. Let me hear your opinions.
-> >
-> > Once kernel panic occurs we expect to see a panic screen. However, to
-> > see the screen, I need to close/re-open the graphic console client
-> > window. As the panic screen shows correctly in the small preview
-> > window in Hyper-V manager and debugfs API for drm_panic works correctly=
-,
-> > I think kernel needs to send signal to Hyper-V host that the console
-> > client refreshes, but I have no idea what kind of signal is needed.
-> >
-> > This patch is tested on Hyper-V 2022.
-> >
-> > Ryosuke Yasuoka (1):
-> >    drm/hyperv: Add support for drm_panic
-> >
-> >   drivers/gpu/drm/drm_simple_kms_helper.c     | 26 +++++++++++++
-> >   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 42 ++++++++++++++++++++=
-+
-> >   include/drm/drm_simple_kms_helper.h         | 22 +++++++++++
->
-> No changes to simple_kms_helper please. This is obsolete and should go
-> away. Just put everything into hyperv_drm.
+On 3/31/25 22:53, Xin Li wrote:
+> Per "struct msr" defined in arch/x86/include/asm/shared/msr.h:
+> 
+> struct msr {
+>         union {
+>                 struct {
+>                         u32 l;
+>                         u32 h;
+>                 };
+>                 u64 q;
+>         };
+> };
+> 
+> Probably *msrq() is what we want?
 
-OK. Maybe it will work without any modification in simple_kms_helper if we =
-can
-call the pipe->funcs from draw_panic_plane() like drm_plane_helper_funcs.
-
-Currently, the hyperv_drm is implemented with a simple display pipeline.
-The pipeline control functions are in pipe->funcs and they will call via
-drm_simple_kms_palne_helper_funcs. And these helper functions will
-be called by drm_panic_plane().
-
-Thank you for your comment.
-Ryosuke
-
-> Best regards
-> Thomas
->
-> >   3 files changed, 90 insertions(+)
-> >
-> >
-> > base-commit: cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c
->
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
-
+What would folks think about "wrmsr64()"? It's writing a 64-bit value to
+an MSR and there are a lot of functions in the kernel that are named
+with the argument width in bits.
 
