@@ -1,291 +1,358 @@
-Return-Path: <linux-hyperv+bounces-4767-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4768-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92129A78591
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 02:21:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19F97A786E5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 05:46:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1699188D835
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 00:21:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA62D1887A5B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 03:46:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99252EC2;
-	Wed,  2 Apr 2025 00:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7679522B8A6;
+	Wed,  2 Apr 2025 03:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqwk6oE6"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d7YoxvOk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81EF367;
-	Wed,  2 Apr 2025 00:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E71515D1;
+	Wed,  2 Apr 2025 03:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743553294; cv=none; b=esOoJ+EV+krM0VLxmu/jnDXN1Gz8TPlEtSZUU4T1CyO2ToCSccg6RV/G3giL4psm4uiWky7QUYsg2hPQzNtYmbJYi8UhK6VZfVTX2KD3cOEWE1YNPyrBwKKph/3YFh86GKxTZCI8gyQCYANKvbDgID+xn7ITOp5VE8XdsQkDdBw=
+	t=1743565602; cv=none; b=oYC0XExepBkL6EY+0D7MQ/ZdD2qh6IWdy9YdUxTOik+glUUKZi2wMUWstu79ciI/eURWxiC6sSu3he41C2Bb6TjGZaOwXw3LpHWYJKAWuDOraJfmHNkghfc3HyQnlK65JY4P06/yWkb9GWu3+QxMkq56sB5Ws6/gD72NK/0FuNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743553294; c=relaxed/simple;
-	bh=g/vGnOWj+RLoNXJFxO2hLBeGdbkn6WT69EDQvJ//6Dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lB+5HTf8rAxXV2S4gs+QfD3KiEp5RT0Uur2yDXCCu3gz14h2G0gvdr/V2zWrnCjb+4LAdpgEv9pbXBn14C4hi8uCfUcEedu/u0s1L2ZJdbwlvEBZe23uK5dHXPUOuOE1J9Wx8XdD2dJPQb4UxVBPZTx6WEFNXkaGkN24fTEAqnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kqwk6oE6; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22622ddcc35so48520695ad.2;
-        Tue, 01 Apr 2025 17:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743553292; x=1744158092; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZeLn/wYhVo9FIJa6C3cWnGduVLCV+HiAmOS2o0hOnJo=;
-        b=kqwk6oE6FfnKfTOvqOikqwQCLlNV9oplDwQvx8fowkWk3u606A/rVxAJqkMyER5cuE
-         q1XJopoRCoXrnLd24QcQD5tOk4eV0nIt06S6bnaLXXzFf3Ep6KQLtAUGzXCrXP8z77Nz
-         bM8CbbPxDsrczzxhZ8SBEAnx8EEV3tE7ZyG99RPaKqIZZZQkbEN1Gju+TC6E7QwdV2tI
-         cKCkxeFmvIRQ0crD7VBcd3pUn++uYb/r1K3LF54RrEPlbeSBWQ/DeU7PsWPKnzFj7g5x
-         QGagL+OCLSl7S+xnElzIuMfRH+327hgxxruSDhRVvywCN781f+Jv3coepXlxWunh24Q5
-         TdqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743553292; x=1744158092;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZeLn/wYhVo9FIJa6C3cWnGduVLCV+HiAmOS2o0hOnJo=;
-        b=SnEd1OU2F/j2Qwy4DYjbPIijChrjj0P1TYi4b7C4jU3u4i/Git81XaIs//Eclyb+Ty
-         cvRTwvWUkqyLrkwqvVdx/+qUR1ytW0VXDFvvzj2/YuDezSRG3iItd3crikTNNlHw8mcI
-         fzZ5WuZvOJWii0rSRUQgdVu6ovrCXjt3QN5bIr+xqEuG5rdX7WaPkhZ9q22rxtQlo3q0
-         HWsBmnkj45n/Kg/uC4gqfiWyWwwvYtMmSF+p5uZVxpHuHsc8FN2ywW9vud1AoALBVAaM
-         zWslCg0qV2cwqcAi9/FRX/HNsX2GgiRcE2pEw2nn00/BJqXrZrZVacqVeQFEiPE3TwZb
-         uKiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlMyJW0+0waQwM2Ac0YYXgEtx4ZerGWZMgaUN48ogJgU/sjYDsfLyRPwVdiyU/pTBFiyEvW+9Q1Ir6EFgL@vger.kernel.org, AJvYcCV4cf/60k9Hx9eKQBppXXXFVz7CZHca0Bx+/M/IBtlLkTOro9JOh8tHrM/kRnuUTwI3SH/fmzkcHlSfbTvZ@vger.kernel.org, AJvYcCV5Sj0b+ew1QjtP1pRUagvinwHTXbYUcLnSHcaVpOu2TBsrkYKK0xeUkBV3UbV2MIiGmguJxONu@vger.kernel.org, AJvYcCWVvBdOx98j2xixwa9whKB35luhwiG3+wDe7vrVA2BysvGddKH3O9m1MUfFUduyJES2ZkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhEysvL2XrPvDWbLk+wLxb/nvsFqnFFbsZWQ1fwYJbUaBdfP4E
-	dwvHH0I2J/yIKpOrTGIjgVf2oXdrxmISvRXZ2zaXCHRnMAAbUq7u
-X-Gm-Gg: ASbGncsM785IpFWDrJVZPC2lP/131pt/51PvR6wi90jrvjfWvTx+KVXxTwYz4dwSyWu
-	trJgj4UxEW3PfiFKaG6SVaVyehqz+adEPGvNYOHMRMGFMdIvVKwwyQ1IX5DLvJ3t9R+OIJXdQA/
-	nW2T6TakqMu37WfQUEWTYREqxdpg4AxlpWkjZ+CM0zvLRNlJLs9tNUt1TPaunQDW5PZIPyTh6vp
-	RzhBL110O9JdPWtwGwkVqK+xxreZSgrJboLKleqwz/2YBYxxgadSL22q3zDZmTSwNDKmgdyV+3E
-	5Q2yhY7Bn+AootfRSstG8gXuM0gUgRHP9BtrOzlRYGWW1WqQCNOyK7gPHksn1IDoJuDN/vYtgJN
-	p
-X-Google-Smtp-Source: AGHT+IG+mezWcwSTSWGHMlaSZh1ZMn0L/JmAS44qUO3mIuUAuBB2BnPV9gzUgWR5YRWldZH9Je5K7g==
-X-Received: by 2002:a05:6a00:4b0f:b0:736:6202:3530 with SMTP id d2e1a72fcca58-739c796698dmr774634b3a.22.1743553291831;
-        Tue, 01 Apr 2025 17:21:31 -0700 (PDT)
-Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:5::])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710b453dsm9646252b3a.155.2025.04.01.17.21.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 17:21:30 -0700 (PDT)
-Date: Tue, 1 Apr 2025 17:21:28 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
-Message-ID: <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
- <Z-w47H3qUXZe4seQ@redhat.com>
+	s=arc-20240116; t=1743565602; c=relaxed/simple;
+	bh=itFb7mH56VIHh1MdibQIr63I3OMPQvhBlOjKG1lYYJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XT2NncJzUeCjaJDVm4raPMXE7PWT70xwbH48arEZr49l3ozKa6mCZHYH7dSu8Y1S7x1KNcPp64I81trMkRHhvyBYJOCzOoh0u+fBbg6dNw+kIhEkjSc67V8p+dAp2tBcywpht1RI/7GZmdWcEWC9d4B+da4jq24TRIhCA01wxvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=d7YoxvOk; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5323jYCp4052768
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 1 Apr 2025 20:45:34 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5323jYCp4052768
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743565538;
+	bh=B/0Ul12154gIBLTRQGmDrSHkQipxSmmaRYkawQNhljs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d7YoxvOk9CIKebUmypsUBsbIGJDe0uIJODZYK5DJptXRC7jV6F3X1iHgsxaJq7z/U
+	 nBC47DHx45CFSikk6yorSJmHvn/RCUzlkE0NIfP5y7UNWDRWBv91w7rT+GXmQbAe6z
+	 HCcFPhy4gq4eFfyUGP1oJ31ejuLGzPZzPtgaEGzAY4WeayjxRzdkiEm1K913UJ2qFb
+	 o2q11OGn9+Uc+NNdgOH1HNABy4p6gq8usi/RT27lr00ZcWFGEXHyfLPucBEl+bhIGt
+	 HaLheaydO5A8cmC7yD4/mcLHEGK1M9ACDi53Kn4fWVEbhWUVQAm5iuaES3HqoGE7N5
+	 7tT7gwjoWNc5Q==
+Message-ID: <7a503d55-db41-42da-8133-4a3dbbd36c7e@zytor.com>
+Date: Tue, 1 Apr 2025 20:45:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-w47H3qUXZe4seQ@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+        seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <Z-ubVFyoOzwKhI53@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 08:05:16PM +0100, Daniel P. Berrangé wrote:
-> On Fri, Mar 28, 2025 at 06:03:19PM +0100, Stefano Garzarella wrote:
-> > CCing Daniel
-> > 
-> > On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
-> > > Picking up Stefano's v1 [1], this series adds netns support to
-> > > vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
-> > > namespaces, defering that for future implementation and discussion.
-> > > 
-> > > Any vsock created with /dev/vhost-vsock is a global vsock, accessible
-> > > from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
-> > > "scoped" vsock, accessible only to sockets in its namespace. If a global
-> > > vsock or scoped vsock share the same CID, the scoped vsock takes
-> > > precedence.
-> > > 
-> > > If a socket in a namespace connects with a global vsock, the CID becomes
-> > > unavailable to any VMM in that namespace when creating new vsocks. If
-> > > disconnected, the CID becomes available again.
-> > 
-> > I was talking about this feature with Daniel and he pointed out something
-> > interesting (Daniel please feel free to correct me):
-> > 
-> >     If we have a process in the host that does a listen(AF_VSOCK) in a
-> > namespace, can this receive connections from guests connected to
-> > /dev/vhost-vsock in any namespace?
-> > 
-> >     Should we provide something (e.g. sysctl/sysfs entry) to disable
-> > this behaviour, preventing a process in a namespace from receiving
-> > connections from the global vsock address space (i.e.      /dev/vhost-vsock
-> > VMs)?
+On 4/1/2025 12:52 AM, Ingo Molnar wrote:
 > 
-> I think my concern goes a bit beyond that, to the general conceptual
-> idea of sharing the CID space between the global vsocks and namespace
-> vsocks. So I'm not sure a sysctl would be sufficient...details later
-> below..
+> * H. Peter Anvin <hpa@zytor.com> wrote:
 > 
-> > I understand that by default maybe we should allow this behaviour in order
-> > to not break current applications, but in some cases the user may want to
-> > isolate sockets in a namespace also from being accessed by VMs running in
-> > the global vsock address space.
-> > 
-> > Indeed in this series we have talked mostly about the host -> guest path (as
-> > the direction of the connection), but little about the guest -> host path,
-> > maybe we should explain it better in the cover/commit
-> > descriptions/documentation.
+>> On March 31, 2025 3:17:30 AM PDT, Ingo Molnar <mingo@kernel.org> wrote:
+>>>
+>>> * Xin Li (Intel) <xin@zytor.com> wrote:
+>>>
+>>>> -	__wrmsr      (MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3, val >> 32);
+>>>> +	native_wrmsrl(MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3);
+>>>
+>>> This is an improvement.
+>>>
+>>>> -	__wrmsr      (MSR_IA32_PQR_ASSOC, rmid_p, plr->closid);
+>>>> +	native_wrmsrl(MSR_IA32_PQR_ASSOC, (u64)plr->closid << 32 | rmid_p);
+>>>
+>>>> -	__wrmsr      (MSR_IA32_PQR_ASSOC, rmid_p, closid_p);
+>>>> +	native_wrmsrl(MSR_IA32_PQR_ASSOC, (u64)closid_p << 32 | rmid_p);
+>>>
+>>> This is not an improvement.
+>>>
+>>> Please provide a native_wrmsrl() API variant where natural [rmid_p, closid_p]
+>>> high/lo parameters can be used, without the shift-uglification...
+>>>
+>>> Thanks,
+>>>
+>>> 	Ingo
+>>
+>> Directing this question primarily to Ingo, who is more than anyone
+>> else the namespace consistency guardian:
+>>
+>> On the subject of msr function naming ... *msrl() has always been
+>> misleading. The -l suffix usually means 32 bits; sometimes it means
+>> the C type "long" (which in the kernel is used instead of
+>> size_t/uintptr_t, which might end up being "fun" when 128-bit
+>> architectures appear some time this century), but for a fixed 64-but
+>> type we normally use -q.
 > 
-> > > Testing
-> > > 
-> > > QEMU with /dev/vhost-vsock-netns support:
-> > > 	https://github.com/beshleman/qemu/tree/vsock-netns
-> > > 
-> > > Test: Scoped vsocks isolated by namespace
-> > > 
-> > >  host# ip netns add ns1
-> > >  host# ip netns add ns2
-> > >  host# ip netns exec ns1 \
-> > > 				  qemu-system-x86_64 \
-> > > 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> > > 					  -serial mon:stdio \
-> > > 					  -drive if=virtio,file=${IMAGE1} \
-> > > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> > >  host# ip netns exec ns2 \
-> > > 				  qemu-system-x86_64 \
-> > > 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> > > 					  -serial mon:stdio \
-> > > 					  -drive if=virtio,file=${IMAGE2} \
-> > > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> > > 
-> > >  host# socat - VSOCK-CONNECT:15:1234
-> > >  2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
-> > > 
-> > >  host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> > >  host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
-> > > 
-> > >  vm1# socat - VSOCK-LISTEN:1234
-> > >  foobar1
-> > >  vm2# socat - VSOCK-LISTEN:1234
-> > >  foobar2
-> > > 
-> > > Test: Global vsocks accessible to any namespace
-> > > 
-> > >  host# qemu-system-x86_64 \
-> > > 	  -m 8G -smp 4 -cpu host -enable-kvm \
-> > > 	  -serial mon:stdio \
-> > > 	  -drive if=virtio,file=${IMAGE2} \
-> > > 	  -device vhost-vsock-pci,guest-cid=15,netns=off
-> > > 
-> > >  host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> > > 
-> > >  vm# socat - VSOCK-LISTEN:1234
-> > >  foobar
-> > > 
-> > > Test: Connecting to global vsock makes CID unavailble to namespace
-> > > 
-> > >  host# qemu-system-x86_64 \
-> > > 	  -m 8G -smp 4 -cpu host -enable-kvm \
-> > > 	  -serial mon:stdio \
-> > > 	  -drive if=virtio,file=${IMAGE2} \
-> > > 	  -device vhost-vsock-pci,guest-cid=15,netns=off
-> > > 
-> > >  vm# socat - VSOCK-LISTEN:1234
-> > > 
-> > >  host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> > >  host# ip netns exec ns1 \
-> > > 				  qemu-system-x86_64 \
-> > > 					  -m 8G -smp 4 -cpu host -enable-kvm \
-> > > 					  -serial mon:stdio \
-> > > 					  -drive if=virtio,file=${IMAGE1} \
-> > > 					  -device vhost-vsock-pci,netns=on,guest-cid=15
-> > > 
-> > >  qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
+> Yeah, agreed - that's been bothering me for a while too. :-)
 > 
-> I find it conceptually quite unsettling that the VSOCK CID address
-> space for AF_VSOCK is shared between the host and the namespace.
-> That feels contrary to how namespaces are more commonly used for
-> deterministically isolating resources between the namespace and the
-> host.
+>> Should we rename the *msrl() functions to *msrq() as part of this
+>> overhaul?
 > 
-> Naively I would expect that in a namespace, all VSOCK CIDs are
-> free for use, without having to concern yourself with what CIDs
-> are in use in the host now, or in future.
+> Yeah, that's a good idea, and because talk is cheap I just implemented
+> this in the tip:WIP.x86/msr branch with a couple of other cleanups in
+> this area (see the shortlog & diffstat below), but the churn is high:
 > 
+>    144 files changed, 1034 insertions(+), 1034 deletions(-)
+> 
+> So this can only be done if regenerated and sent to Linus right before
+> an -rc1 I think:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip WIP.x86/msr
 
-True, that would be ideal. I think the definition of backwards
-compatibility we've established includes the notion that any VM may
-reach any namespace and any namespace may reach any VM. IIUC, it sounds
-like you are suggesting this be revised to more strictly adhere to
-namespace semantics?
+Hi Ingo,
 
-I do like Stefano's suggestion to add a sysctl for a "strict" mode,
-Since it offers the best of both worlds, and still tends conservative in
-protecting existing applications... but I agree, the non-strict mode
-vsock would be unique WRT the usual concept of namespaces.
+Is this branch public?
 
-> What happens if we reverse the QEMU order above, to get the
-> following scenario
-> 
->    # Launch VM1 inside the NS
->    host# ip netns exec ns1 \
->   				  qemu-system-x86_64 \
->   					  -m 8G -smp 4 -cpu host -enable-kvm \
->   					  -serial mon:stdio \
->   					  -drive if=virtio,file=${IMAGE1} \
->   					  -device vhost-vsock-pci,netns=on,guest-cid=15
->    # Launch VM2
->    host# qemu-system-x86_64 \
->   	  -m 8G -smp 4 -cpu host -enable-kvm \
->   	  -serial mon:stdio \
->   	  -drive if=virtio,file=${IMAGE2} \
->   	  -device vhost-vsock-pci,guest-cid=15,netns=off
->   
->    vm1# socat - VSOCK-LISTEN:1234
->    vm2# socat - VSOCK-LISTEN:1234
-> 
->    host# socat - VSOCK-CONNECT:15:1234
->      => Presume this connects to "VM2" running outside the NS
-> 
->    host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
-> 
->      => Does this connect to "VM1" inside the NS, or "VM2"
->         outside the NS ?
-> 
+I wanted to rebase on it and then incooperate your review comments, but
+couldn't find the branch.
 
-VM1 inside the NS. Current logic says that whenever two CIDs collide
-(local vs global), always select the one in the local namespace
-(irrespective of creation order).
-
-Adding a sysctl option... it would *never* connect to the global one,
-even if there was no local match but there was a global one.
+Thanks!
+     Xin
 
 > 
+> Thanks,
 > 
-> With regards,
-> Daniel
+> 	Ingo
+> 
+> =======================>
+> Ingo Molnar (18):
+>        x86/msr: Standardize on u64 in <asm/msr.h>
+>        x86/msr: Standardize on u64 in <asm/msr-index.h>
+>        x86/msr: Use u64 in rdmsrl_amd_safe() and wrmsrl_amd_safe()
+>        x86/msr: Use u64 in rdmsrl_safe() and paravirt_read_pmc()
+>        x86/msr: Rename 'rdmsrl()' to 'rdmsrq()'
+>        x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'
+>        x86/msr: Rename 'rdmsrl_safe()' to 'rdmsrq_safe()'
+>        x86/msr: Rename 'wrmsrl_safe()' to 'wrmsrq_safe()'
+>        x86/msr: Rename 'rdmsrl_safe_on_cpu()' to 'rdmsrq_safe_on_cpu()'
+>        x86/msr: Rename 'wrmsrl_safe_on_cpu()' to 'wrmsrq_safe_on_cpu()'
+>        x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu()'
+>        x86/msr: Rename 'wrmsrl_on_cpu()' to 'wrmsrq_on_cpu()'
+>        x86/msr: Rename 'mce_rdmsrl()' to 'mce_rdmsrq()'
+>        x86/msr: Rename 'mce_wrmsrl()' to 'mce_wrmsrq()'
+>        x86/msr: Rename 'rdmsrl_amd_safe()' to 'rdmsrq_amd_safe()'
+>        x86/msr: Rename 'wrmsrl_amd_safe()' to 'wrmsrq_amd_safe()'
+>        x86/msr: Rename 'native_wrmsrl()' to 'native_wrmsrq()'
+>        x86/msr: Rename 'wrmsrl_cstar()' to 'wrmsrq_cstar()'
+> 
+>   arch/x86/coco/sev/core.c                           |   2 +-
+>   arch/x86/events/amd/brs.c                          |   8 +-
+>   arch/x86/events/amd/core.c                         |  12 +--
+>   arch/x86/events/amd/ibs.c                          |  26 ++---
+>   arch/x86/events/amd/lbr.c                          |  20 ++--
+>   arch/x86/events/amd/power.c                        |  10 +-
+>   arch/x86/events/amd/uncore.c                       |  12 +--
+>   arch/x86/events/core.c                             |  42 ++++----
+>   arch/x86/events/intel/core.c                       |  66 ++++++-------
+>   arch/x86/events/intel/cstate.c                     |   2 +-
+>   arch/x86/events/intel/ds.c                         |  10 +-
+>   arch/x86/events/intel/knc.c                        |  16 +--
+>   arch/x86/events/intel/lbr.c                        |  44 ++++-----
+>   arch/x86/events/intel/p4.c                         |  24 ++---
+>   arch/x86/events/intel/p6.c                         |  12 +--
+>   arch/x86/events/intel/pt.c                         |  32 +++---
+>   arch/x86/events/intel/uncore.c                     |   2 +-
+>   arch/x86/events/intel/uncore_discovery.c           |  10 +-
+>   arch/x86/events/intel/uncore_nhmex.c               |  70 ++++++-------
+>   arch/x86/events/intel/uncore_snb.c                 |  42 ++++----
+>   arch/x86/events/intel/uncore_snbep.c               |  50 +++++-----
+>   arch/x86/events/msr.c                              |   2 +-
+>   arch/x86/events/perf_event.h                       |  26 ++---
+>   arch/x86/events/probe.c                            |   2 +-
+>   arch/x86/events/rapl.c                             |   8 +-
+>   arch/x86/events/zhaoxin/core.c                     |  16 +--
+>   arch/x86/hyperv/hv_apic.c                          |   4 +-
+>   arch/x86/hyperv/hv_init.c                          |  66 ++++++-------
+>   arch/x86/hyperv/hv_spinlock.c                      |   6 +-
+>   arch/x86/hyperv/ivm.c                              |   2 +-
+>   arch/x86/include/asm/apic.h                        |   8 +-
+>   arch/x86/include/asm/debugreg.h                    |   4 +-
+>   arch/x86/include/asm/fsgsbase.h                    |   4 +-
+>   arch/x86/include/asm/kvm_host.h                    |   2 +-
+>   arch/x86/include/asm/microcode.h                   |   2 +-
+>   arch/x86/include/asm/msr-index.h                   |  12 +--
+>   arch/x86/include/asm/msr.h                         |  50 +++++-----
+>   arch/x86/include/asm/paravirt.h                    |   8 +-
+>   arch/x86/include/asm/spec-ctrl.h                   |   2 +-
+>   arch/x86/kernel/acpi/cppc.c                        |   8 +-
+>   arch/x86/kernel/amd_nb.c                           |   2 +-
+>   arch/x86/kernel/apic/apic.c                        |  16 +--
+>   arch/x86/kernel/apic/apic_numachip.c               |   6 +-
+>   arch/x86/kernel/cet.c                              |   2 +-
+>   arch/x86/kernel/cpu/amd.c                          |  28 +++---
+>   arch/x86/kernel/cpu/aperfmperf.c                   |  28 +++---
+>   arch/x86/kernel/cpu/bugs.c                         |  24 ++---
+>   arch/x86/kernel/cpu/bus_lock.c                     |  18 ++--
+>   arch/x86/kernel/cpu/common.c                       |  68 ++++++-------
+>   arch/x86/kernel/cpu/feat_ctl.c                     |   4 +-
+>   arch/x86/kernel/cpu/hygon.c                        |   6 +-
+>   arch/x86/kernel/cpu/intel.c                        |  10 +-
+>   arch/x86/kernel/cpu/intel_epb.c                    |  12 +--
+>   arch/x86/kernel/cpu/mce/amd.c                      |  22 ++---
+>   arch/x86/kernel/cpu/mce/core.c                     |  58 +++++------
+>   arch/x86/kernel/cpu/mce/inject.c                   |  32 +++---
+>   arch/x86/kernel/cpu/mce/intel.c                    |  32 +++---
+>   arch/x86/kernel/cpu/mce/internal.h                 |   2 +-
+>   arch/x86/kernel/cpu/microcode/amd.c                |   2 +-
+>   arch/x86/kernel/cpu/microcode/intel.c              |   2 +-
+>   arch/x86/kernel/cpu/mshyperv.c                     |  12 +--
+>   arch/x86/kernel/cpu/resctrl/core.c                 |  10 +-
+>   arch/x86/kernel/cpu/resctrl/monitor.c              |   2 +-
+>   arch/x86/kernel/cpu/resctrl/pseudo_lock.c          |   2 +-
+>   arch/x86/kernel/cpu/resctrl/rdtgroup.c             |   6 +-
+>   arch/x86/kernel/cpu/sgx/main.c                     |   2 +-
+>   arch/x86/kernel/cpu/topology.c                     |   2 +-
+>   arch/x86/kernel/cpu/topology_amd.c                 |   4 +-
+>   arch/x86/kernel/cpu/tsx.c                          |  20 ++--
+>   arch/x86/kernel/cpu/umwait.c                       |   2 +-
+>   arch/x86/kernel/fpu/core.c                         |   2 +-
+>   arch/x86/kernel/fpu/xstate.c                       |  10 +-
+>   arch/x86/kernel/fpu/xstate.h                       |   2 +-
+>   arch/x86/kernel/fred.c                             |  20 ++--
+>   arch/x86/kernel/hpet.c                             |   2 +-
+>   arch/x86/kernel/kvm.c                              |  28 +++---
+>   arch/x86/kernel/kvmclock.c                         |   4 +-
+>   arch/x86/kernel/mmconf-fam10h_64.c                 |   8 +-
+>   arch/x86/kernel/process.c                          |  16 +--
+>   arch/x86/kernel/process_64.c                       |  20 ++--
+>   arch/x86/kernel/reboot_fixups_32.c                 |   2 +-
+>   arch/x86/kernel/shstk.c                            |  18 ++--
+>   arch/x86/kernel/traps.c                            |  10 +-
+>   arch/x86/kernel/tsc.c                              |   2 +-
+>   arch/x86/kernel/tsc_sync.c                         |  14 +--
+>   arch/x86/kvm/svm/avic.c                            |   2 +-
+>   arch/x86/kvm/svm/sev.c                             |   2 +-
+>   arch/x86/kvm/svm/svm.c                             |  16 +--
+>   arch/x86/kvm/vmx/nested.c                          |   4 +-
+>   arch/x86/kvm/vmx/pmu_intel.c                       |   4 +-
+>   arch/x86/kvm/vmx/sgx.c                             |   8 +-
+>   arch/x86/kvm/vmx/vmx.c                             |  66 ++++++-------
+>   arch/x86/kvm/x86.c                                 |  38 ++++----
+>   arch/x86/lib/insn-eval.c                           |   6 +-
+>   arch/x86/lib/msr-smp.c                             |  16 +--
+>   arch/x86/lib/msr.c                                 |   4 +-
+>   arch/x86/mm/pat/memtype.c                          |   4 +-
+>   arch/x86/mm/tlb.c                                  |   2 +-
+>   arch/x86/pci/amd_bus.c                             |  10 +-
+>   arch/x86/platform/olpc/olpc-xo1-rtc.c              |   6 +-
+>   arch/x86/platform/olpc/olpc-xo1-sci.c              |   2 +-
+>   arch/x86/power/cpu.c                               |  26 ++---
+>   arch/x86/realmode/init.c                           |   2 +-
+>   arch/x86/virt/svm/sev.c                            |  20 ++--
+>   arch/x86/xen/suspend.c                             |   6 +-
+>   drivers/acpi/acpi_extlog.c                         |   2 +-
+>   drivers/acpi/acpi_lpit.c                           |   2 +-
+>   drivers/cpufreq/acpi-cpufreq.c                     |   8 +-
+>   drivers/cpufreq/amd-pstate-ut.c                    |   6 +-
+>   drivers/cpufreq/amd-pstate.c                       |  22 ++---
+>   drivers/cpufreq/amd_freq_sensitivity.c             |   2 +-
+>   drivers/cpufreq/e_powersaver.c                     |   6 +-
+>   drivers/cpufreq/intel_pstate.c                     | 108 ++++++++++-----------
+>   drivers/cpufreq/longhaul.c                         |  24 ++---
+>   drivers/cpufreq/powernow-k7.c                      |  14 +--
+>   drivers/crypto/ccp/sev-dev.c                       |   2 +-
+>   drivers/edac/amd64_edac.c                          |   6 +-
+>   drivers/gpu/drm/i915/selftests/librapl.c           |   4 +-
+>   drivers/hwmon/fam15h_power.c                       |   6 +-
+>   drivers/idle/intel_idle.c                          |  34 +++----
+>   drivers/mtd/nand/raw/cs553x_nand.c                 |   6 +-
+>   drivers/platform/x86/intel/ifs/core.c              |   4 +-
+>   drivers/platform/x86/intel/ifs/load.c              |  20 ++--
+>   drivers/platform/x86/intel/ifs/runtest.c           |  16 +--
+>   drivers/platform/x86/intel/pmc/cnp.c               |   6 +-
+>   drivers/platform/x86/intel/pmc/core.c              |   8 +-
+>   .../x86/intel/speed_select_if/isst_if_common.c     |  18 ++--
+>   .../x86/intel/speed_select_if/isst_if_mbox_msr.c   |  14 +--
+>   .../x86/intel/speed_select_if/isst_tpmi_core.c     |   2 +-
+>   drivers/platform/x86/intel/tpmi_power_domains.c    |   4 +-
+>   drivers/platform/x86/intel/turbo_max_3.c           |   4 +-
+>   .../x86/intel/uncore-frequency/uncore-frequency.c  |  10 +-
+>   drivers/platform/x86/intel_ips.c                   |  36 +++----
+>   drivers/powercap/intel_rapl_msr.c                  |   6 +-
+>   .../int340x_thermal/processor_thermal_device.c     |   2 +-
+>   drivers/thermal/intel/intel_hfi.c                  |  14 +--
+>   drivers/thermal/intel/intel_powerclamp.c           |   4 +-
+>   drivers/thermal/intel/intel_tcc_cooling.c          |   4 +-
+>   drivers/thermal/intel/therm_throt.c                |  10 +-
+>   drivers/video/fbdev/geode/gxfb_core.c              |   2 +-
+>   drivers/video/fbdev/geode/lxfb_ops.c               |  22 ++---
+>   drivers/video/fbdev/geode/suspend_gx.c             |  10 +-
+>   drivers/video/fbdev/geode/video_gx.c               |  16 +--
+>   include/hyperv/hvgdk_mini.h                        |   2 +-
+>   144 files changed, 1034 insertions(+), 1034 deletions(-)
 
-Thanks for the review!
-
-Best,
-Bobby
 
