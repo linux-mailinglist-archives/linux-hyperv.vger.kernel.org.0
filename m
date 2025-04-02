@@ -1,185 +1,132 @@
-Return-Path: <linux-hyperv+bounces-4770-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4771-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A1F1A78723
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 06:15:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02EB6A78771
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 06:58:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DC6816D3D1
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 04:15:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5D897A3F5B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 04:57:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE1213E02D;
-	Wed,  2 Apr 2025 04:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7779A230BE5;
+	Wed,  2 Apr 2025 04:58:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CGdh17MM"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KgWEvIDk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010012.outbound.protection.outlook.com [52.103.10.12])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244C1139D;
-	Wed,  2 Apr 2025 04:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743567309; cv=fail; b=c1zsyfs6v7Yy63A0zwEV90+m1+4UVdpb2Z/4Kw279Ispex1drH2VXmbFAktJTWd9ubXDePYOFSto2Oty72JKbqUz71sfBCNbKi+fz0CCwCzWbQRDeSZ1Q6UfVCsJlbtGuChJ/YLK1u3ZEh0yL9+h4U+I2zgGYGcnuUTA036KAC4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743567309; c=relaxed/simple;
-	bh=rQYgSnIGWOcj2lFumnJpI6x4oQ/COt/favCezJEJSbw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lI7ouqAhnwGY3PtrxQipjZYNLz77RYMo+LOZCf35hg5d0WpqkIYQ/YJMRLbimSoCi7/LiFaKo5lphytokRCQ1L4TbEs1eaNKHHLWSUaPCb9lAVln69WHFZ8N9sMenObymKXnbrRTo/5vK1Z34YRI8cvFTnSyQehJLgVxVf+V3ec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CGdh17MM; arc=fail smtp.client-ip=52.103.10.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hDO8Se7AvlTL5cUrZnVfYYBKKdHv6HdrLDJQ7tQeJTIGzNhyNB7anhwsjZ1+JHhQie5v71s0Z4xa7jhr5zgswwaERS/Nza+1/AsLvomZsmJbfgdgQWKx0orP0fmKrsXzQaI0csDzAgNpzf9+Ilz17NntifXmQSaH0JjsJ3yIpasZ4zQW5ftKVvmV93FMlnGw7tFGnOhktjpOhksucxqN/qAqhtEa1Pvi2R5XqtXk1PvqH/ff7iFMXyp8wri9lQofGj/SfT8maRuU9v8aY7U/30hWexAWBtfS49Je0dYzc/K49YFbrMMps2ukC9jHFUacTExhHvPi1Jy/ZEYHyiKygg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=omhMNeyOPbx3tKtysrTde/e+cWflJapAxnO4RShvfd4=;
- b=N9wpvX2DLy+cwQY3de6JyDlZRqVjuQxOTP4IF+FEKI/4wyIq9ysMdwXVIoW2ViiCma0li7MjA5EIQOQw39YWbStLhKjv0gzN+q/+O8rjJTE1zIjYPjHsrerWkiZY1EvTSmQsO0N/q6vvCiiSddCcVT6lmGcsp2ecfgGO3tY+6srNSiCXb7FkvEsYvvNtZ1Ujq9ajuIdWBsnykRTuSx2IeNHQunqFV6wsDpIG1o1b1wbb9URXqu8NdAEGiP9PePLrFR/uKH1hcInNkNm1eJ4d8EFsCvQhqVUwMYJJDCmIFCFGh1YJzghyJQwd4BQil+PdKzCeUqiJwv6FfldmDvwtjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=omhMNeyOPbx3tKtysrTde/e+cWflJapAxnO4RShvfd4=;
- b=CGdh17MMXQayPiCNPcZN+Unh2yTJG8UDNlBzemvh3e5OPbgx4kXEm7+oCfHE+1/YsFL9nz29EzEaJxtmagW+I11s0IBYlAj0M6kzV6MXpcs+DRMHSvbb4Do9i0AKmKKrHWjchM+K++30NnsjBG7jIKhqP/kCwHYOb9/Efbgl+51zy1faL6aNPaCa5bbSPtvuMH4QboeH32sKC+oRbQjzixeK7FEiy2IpY28UW0auspv2rngTx0EwVWszj/SCKITB4vZ7DE2tNlzDMft3NLDabg3U7/4WZqsvK8DEsmCZ/VbfLyG/tz8rKbK5RoYK+SJbZJYVK1Ej350LZ+eEQtLjAw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CO6PR02MB7571.namprd02.prod.outlook.com (2603:10b6:303:a0::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.46; Wed, 2 Apr
- 2025 04:15:05 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8583.041; Wed, 2 Apr 2025
- 04:15:04 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>
-Subject: RE: [PATCH] Drivers: hv: Fix bad pointer dereference in
- hv_get_partition_id
-Thread-Topic: [PATCH] Drivers: hv: Fix bad pointer dereference in
- hv_get_partition_id
-Thread-Index: AQHboywJJwFX1YkkOUaKkdv1CQ4xzLOPxJyw
-Date: Wed, 2 Apr 2025 04:15:04 +0000
-Message-ID:
- <SN6PR02MB41571B9409E6A7B3A27846D3D4AF2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
-In-Reply-To:
- <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB7571:EE_
-x-ms-office365-filtering-correlation-id: 2b0ea524-87e7-44a9-7ebc-08dd719cf229
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799003|8062599003|8060799006|15080799006|461199028|440099028|3412199025|12091999003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?f2DuJOYOd6kJFxyzrBJVOycVYKJc0eytHFtORUduSfQm8Jm5MRuKS0V9lWny?=
- =?us-ascii?Q?bkGxXgWLUTmgBHa+1q5vuyZsX0PZxrVJsVtN4r+G8KPTv55GMuBFD17MdkoV?=
- =?us-ascii?Q?d/ed0OPfD18J+YQiaoIfpdLT8HUt1N4vs9cLh2aMKz9YWhN8nL4/ujxXK50z?=
- =?us-ascii?Q?7DAhF159J+nMp4CQJ27W3L6J5sTyKWz/0oZMg59BEweBKKCCEpNSj2JS0OW3?=
- =?us-ascii?Q?XRMQYrfTEZt3EkS0+OBL4CwnSQNeQuGGSTp9KH+njW6BaLu2u+vHsOMm8E+m?=
- =?us-ascii?Q?ngNljOfywZmpg9j8uZ2RneElSPVDGKwHuEKOvUcfRarQewTwEobQaNN0qy3W?=
- =?us-ascii?Q?Ogx/7deqd3bNxHuJf2NOvis1Wbm4nF/Yc/C/OCHJW5bAdLEpwFrOgMNRxYoc?=
- =?us-ascii?Q?aUBmUf7czwNIlNA4Eos2pZPIbbWVQvZWuWi6nPw+zRYbARM56w5p6hXaVE/n?=
- =?us-ascii?Q?Z1M9Dvc7Ci9eiAW7T8xzxIDZdqyUgqSmXxeVe8WJK2tghc58BT6mDlmf342h?=
- =?us-ascii?Q?kt6/OUVWjQEvAq5kfBVeyyiJJZb4jcznVqsVt5KjYZ+l7RjJH/NQgQVNdN15?=
- =?us-ascii?Q?dECuWY7LHdXfIa82K9pdBKTGBg4O8YGqlzqnZnJdntHgaBr51hbwXUI/ZvrY?=
- =?us-ascii?Q?eE6j5q2abFAsOcsoHtdyx8y9B1GxImemtArm3hheOSJk5t/+8/OJ8nXyHxVM?=
- =?us-ascii?Q?ZNZbShIkE68PWFz1gn0EB9Hem3rDhXcyYSFsTvyYbDOaNvDBPEkN2/KrbtRz?=
- =?us-ascii?Q?DojFiu2L4e9kX9GSTw+sPjEJ5Si+OZ+gJ81vPPj+/NL9lQS3uozq+UpgQbaW?=
- =?us-ascii?Q?dItLjPS0nEkSE2Gwt/k4cJU8Y/m0Yo3djSlfcC0dXRqa8GwtYj9lrOqMQbSM?=
- =?us-ascii?Q?UV9rERMILVehowdY1RitYz+FMMB5yUPhjbrvv4VGjHW035OD2tuivgnH9rvg?=
- =?us-ascii?Q?JkLjnNYo29dOzIcAN/MAm9b38x8IjYy+P+9cxpZ+yag/XXGCI+nn/dEDKA9U?=
- =?us-ascii?Q?iMY0vlo3qf/cwUJoMca0VT6Aa++bniY/2EApFqHdwYWsoyqWwCWWoCs+naTm?=
- =?us-ascii?Q?nGw8Kfz9c12a4/nql1K3Kz8LldQDpMdl1ikcT2MyVQuRbvEdGCM2kYLLXhu2?=
- =?us-ascii?Q?h29RlD+6frxo?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?sM1d+g9bgtwg2UURKQZAaSuWffqzAvk7hS4DRD2Fh26rTASqLOVPWikn1Nu2?=
- =?us-ascii?Q?tWWRw4mTv9fI0XvMOoRzUzlIBsISzKEVoz5aDAs45EgaPaRpZTNooGenA7NK?=
- =?us-ascii?Q?rj7l/jBW7JbuW0wqjeGULFrygeISgiRxC/fSl1XohgTbJCCvLKgz/dIZAg5S?=
- =?us-ascii?Q?w7UsQeTtbRyfRx1DpZxQJQkW7K4lm/NCNTORFDqckGpd/090hWBCZ8SQVaBy?=
- =?us-ascii?Q?u0B0uW/8NAubiYTSJyYGLY0+OJItexuwyeCnayer9rThosVdfTvGFm70ayv+?=
- =?us-ascii?Q?lL33fJtOJZMJYrz0iBzfaiVjE1hPIn6t8cG0RxdnKhB09Q/fdKrThLuDIt24?=
- =?us-ascii?Q?tq83RhJ1G3H3W+YhDGvN7NTkOJ2lzXlktqppzfOZM0W7gIdZEUfl/rXGOjdI?=
- =?us-ascii?Q?YFmPIIGktHgR4RKjZvOTxsV/fpwqDychgrQq2CjUrO4EWxpUJ3C8In9+0iq6?=
- =?us-ascii?Q?jCq0+bY4Jwfe/Y0Z2m+ZwJUTukSYrgUcE0TAITIeOIGKMUtV3lhb1IMFUlqE?=
- =?us-ascii?Q?bjKCiTDInsaSyv/YD/MhnJSnzHMK3RC0F0PxkYPrtZFI+QYS+ws7caV5X5j0?=
- =?us-ascii?Q?NGq+Px+ti9tNKVm+DLQP4CCDzxrWtUzwtqvot18BeyNnrZ7Urzw/ZOrYJxTi?=
- =?us-ascii?Q?VuVjlNWsGX8d2aBLpZ+ACalEPZfyRrKHn+RHoNetSOPTijK7Cmh3kDcP+Ad+?=
- =?us-ascii?Q?JSZoDTQ8rPB8ZLwRR11/g2cPHmBtkjtEI0sXPSsfzmKTUfC1QchdhGUeUHJI?=
- =?us-ascii?Q?qWfOAwqMGI8RwC2iEj9YJVdqKDFxkHL7i52v7Oesbk0cZTJymE/KPbS+TZxY?=
- =?us-ascii?Q?Yy885iSwTweq+huzQj1z9FOwOpMFRnelOSDGRRaLrR9O6978kJxn0KfedDAA?=
- =?us-ascii?Q?RSuMISb5Ph7SGmSwpmzhZprMG6PGwwIsqdgkJt1gccGLxslMDUC3OqfcjVQt?=
- =?us-ascii?Q?JzlnZL37hrcskTmPcQzgGCydUn3qXMMB17ZRhWls9BUm0BKtIRDNwLpzm0gF?=
- =?us-ascii?Q?9xn2zB9MxtWO6CkeLMswAzCoNtYBZGkxH2bmA2EqPpn9VNztmnPTK1lCwifY?=
- =?us-ascii?Q?fCmEXJTO+vF3UEtUk/T7BzWrO8+Aj4VUmZEX32w0Wqh8lT0IADOoY+HIKomq?=
- =?us-ascii?Q?VsK3eJJWLYdtHg0jnQBsJm7MXb5EHhWCuTLnuTVxXxggc08eyxwqqNFe/0xO?=
- =?us-ascii?Q?9M7NGdXlFgXstoy7HuAGBb8wM9t2Nz3sIVoOIPsPzfHVAxk7zSo8jTBEUyA?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD598185B73;
+	Wed,  2 Apr 2025 04:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743569908; cv=none; b=pxarmtwpg6VsLc7JafixOp24g6CjIojKLd/wiwH9EEtnRmRQA5FCG/Mv5xPpiZLM6D0x8ML0iEURun9srktiVgJ+VoCoco8+YNETgWvGctJOKbphkHXVSSsburO8gjKFOcqBXe5zpcUk3p9sO2mzC5/j/xtigeMEF5uFhNKvPC4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743569908; c=relaxed/simple;
+	bh=5UiAmTnqltfwvRyVzGRX8Q7LYriFM9zM4G8+bmQFFPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W2tML5QAONtNVbCDZTY/WZ0/kFgGOy2HddtTWsrFIcn3GweeKIkoQH6WYL6pOacY9ZFMgRccyUEbheXIb8FDd8j047t/8SjTp5B4b66p/351/ciLpra6pz2yAqQcdKpejhZLh/ZiZbd4KeS5G5rKQwIPqf2+Y0MCFR3vNwNyMeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KgWEvIDk; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5324vV334074560
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 1 Apr 2025 21:57:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5324vV334074560
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743569855;
+	bh=dP9zemrGBwQsO7PTwDde7OdOBV5enCnih/h0UjXSaBY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KgWEvIDk0ptJ+2Le7Mljabnd1tBAvTAd/OvynSGx3lkb8s5fLKNxnDaj/u6UOdm7W
+	 +vrd3NNd0O6rV4BrlX3+iTxEb+jQH1rTuOJUcJicRl6Z5aajvTac/lcdNUGieGqjjX
+	 JSlO+qiJtqShYTz1ktaVl5/AEupYKCdX1Vrjn9eBhZPMm+kj1KbCioask+G0OE5dak
+	 XkwL1uVpPyRsdjk5rXoZkjb1lPz4F5EDEJvOXCJXyv6CyddNA3AKO8tKk5NZ4l3PNj
+	 cc4XoBuOZEJzMmYpZNWg/T2fgE69DPZZ1BoWAegBH6U0jZ4x2DVCYEdvlHUn9gNB5t
+	 CzEyh2X4dfeiA==
+Message-ID: <7f76e23e-45a9-4e9d-b792-02da9e6deee5@zytor.com>
+Date: Tue, 1 Apr 2025 21:57:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b0ea524-87e7-44a9-7ebc-08dd719cf229
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2025 04:15:04.7857
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7571
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+        seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com>
+ <7a503d55-db41-42da-8133-4a3dbbd36c7e@zytor.com> <Z-y4pGxgiP55lpOj@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <Z-y4pGxgiP55lpOj@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, Apri=
-l 1, 2025 10:32 AM
->=20
-> 'output' is already a pointer to the output argument, it should be
-> passed directly to hv_do_hypercall() without the '&' operator.
->=20
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> ---
-> This patch is a fixup for:
-> e96204e5e96e hyperv: Move hv_current_partition_id to arch-generic code
->=20
->  drivers/hv/hv_common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index b3b11be11650..a7d7494feaca 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -307,7 +307,7 @@ void __init hv_get_partition_id(void)
->=20
->  	local_irq_save(flags);
->  	output =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	status =3D hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
-> +	status =3D hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output);
->  	pt_id =3D output->partition_id;
->  	local_irq_restore(flags);
->=20
-> --
-> 2.34.1
+On 4/1/2025 9:10 PM, Ingo Molnar wrote:
+> Yeah, I moved it over to:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/msr
 
-I should have caught that when I reviewed the original patch! :-(
+On it now.
 
-Trying again,
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-
+Thanks!
+     Xin
 
