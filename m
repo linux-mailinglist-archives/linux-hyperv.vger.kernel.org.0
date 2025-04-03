@@ -1,255 +1,146 @@
-Return-Path: <linux-hyperv+bounces-4782-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4783-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1EC7A7983E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Apr 2025 00:28:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88EBAA79B1E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Apr 2025 07:10:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BA1F7A35B3
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Apr 2025 22:27:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 460433B688C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Apr 2025 05:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7611A1F55FF;
-	Wed,  2 Apr 2025 22:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A29A199254;
+	Thu,  3 Apr 2025 05:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPlgUkpf"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="V9uVTX4x"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C171F3D56;
-	Wed,  2 Apr 2025 22:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D81418CC08;
+	Thu,  3 Apr 2025 05:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743632907; cv=none; b=R/S++DCCJ61r07WkSoBGhMFtguqi7n6Am65rq+0GzGfXI3Q787Qfw+W0HZFeTkQJO29ihh2+OTmB41yzZiG1bj61dxoJcJOSIYI5NZs+AsOZX9tz+S8PiwBpBMFzJmmtGYpPEt/LYLoX/A1bKdgPZpdY+m6wGzXK0l65n6aRFL8=
+	t=1743657027; cv=none; b=hNwm+BioJTr4GOpkEK7MgRsY5MYL7kSHz/o1x2a38NbOvjeLtHPXI0Ek6k69E2PvZbpJj9dm4Y/IJOHnZfr414mwNzxBhTQyNENCJuhJ2jI6A/H4Ceo6lcps99Z91Fp1DlAbDnN/YoY5eQAvO0qfu036KilcdaqjU6TTTd/tshw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743632907; c=relaxed/simple;
-	bh=0OpwP0nOVkqFr1A9xs6Ac/M4Q6N13WihMhL0PnP1Z6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgyub1TaRQdAOv6KkuNW8qdaUEjnauxfOXoXKol4DBCshcMNuW3filSfoe92p4EdbIEyj87m4kPV27LARLiL1JWNHYhxxIx+66IWzBszmHWRHKNVXqhyFGIsoSDAITj3ni72dw394WTFZVzbEriyDgrLNHzsvjqKJ5zTfNaqVos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPlgUkpf; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-225477548e1so3429735ad.0;
-        Wed, 02 Apr 2025 15:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743632905; x=1744237705; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yXllTqI4s65vesFZcUdhMkK73ncFDlJDEPi3mG19ehk=;
-        b=kPlgUkpf5s0KmjHRRuSeFy0mhRs7HYSXyRi1oyKyaX2CRUi9WezTifltpbW99FRHMU
-         PaqV0aqTIJk7fLqhsaq52gd5VqToqcHZOTjPjI7ZeIRm84j/17pAbure1w8qobVPr1zS
-         uigeKa8NRP6mGZG/nf4Utlvd7NuHlJIMzpHngplNyuSZvgnwQhtNG/ClxSSP16tgbovg
-         5VTTDo7qAPgWstnPNNACYUdu08V0qsZtxPbD6hwMngrRygOeifXxuDdzaKfE0PSuWt2W
-         ip7t84WrEz4IjiEWksYt2EEQIm97F1YQJmeP1zk8XjfVOeKZS1V3AqXTcABbY2qxMmMS
-         /DjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743632905; x=1744237705;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yXllTqI4s65vesFZcUdhMkK73ncFDlJDEPi3mG19ehk=;
-        b=PQjIiCLRxEPoa0u64csTin32cYjeHynLfFC+eC848mUbLVX+tir2sg8yVjqzDfZQdV
-         NmuuoBoiVeQwQcWcWjipuDU3/ibPmy9N7INk1iwqwb/mGo1SwrZYx20NFfT+jmWBrZfa
-         NSl2yUA2rh5Bb9PtFAG93oafzS/1s2Ol0S56vEHRlM7SeYxbiUAn7eI9OmO2XNBkb6yq
-         FzpcfPxw/Ab2lXgNSZ7v0E/YBJSeoz9PHZwMMElSp0/TQNOHP2b7KW1HnnQpR6Wj1vdM
-         nNBX8yxWh4sPmI3D5A0gw03hT664zWe8zRUfaBsvFj67/IbUpNnpTpUr9mHpBNNfmVpf
-         QY4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBep/nlFYXOaAH2C94bI0g4RCZXH9GUA5bE80ToFHoXzCWZGuZw2XrMCb2bIEtwmkjrthasjhnrt2qAS2N@vger.kernel.org, AJvYcCVju1RELelkYqVk+yt/4sDhcjwp7FT4OTmEg/ybR/ovw+MeP3BS14n+26PscmAqXHSYQ2s=@vger.kernel.org, AJvYcCW4QWw379HoFU1COl+npe56JEBWa5HxgIPkAi/OJA4q905rq2k3jt7Sti+Vk2G7ak9Od4/lkDFL@vger.kernel.org, AJvYcCXlG5jPVj6jYRDcpgrbd649IRUtpMLfMAlKCUIIrAShiiJabbGmaBQub3lOjX3mruqo0KokWtVXF8bksSg5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnE7RmNNL2lsUSU7aoi9wfVAPKrB5lgRr8G5bZwd3Mwj2Feo3X
-	YFnBFtfBzmn6wID0hJCc23gvZ9dCc0Cs/99Me83g5YlqEpmS7wfi
-X-Gm-Gg: ASbGncsXhUoWRI24t8thKY4WZNpe15c9i0uaJ14nFX2eiJVtB4hGzzxaCg1tw8gl0Iu
-	EKvlgyLzct+5CuIwvn2dH3t/HAhAYdbjHjrciEFIzu99/reVuKxReR+Ea2T5TI/+D041634H9gT
-	Oo4YBWcAs8aPi1b8Vz1ltZ1PfTUvBASwnmYjUT8ao9vcUgjyOpT9UXtvAzGFgi0lCNHF7o/Syll
-	FZjVscLdLC8ugh26jEsW9OVoJNnwQp/Aucro88DHtWrcETd09umvorehzcwKQ+3G9RCOYgb+Af6
-	Scelz/oAE4RaD5A4paByx77YJQyy3XGBnpTmrKy0l1JOO4TbpBh19iPFTX//2oMQG/Y=
-X-Google-Smtp-Source: AGHT+IEi3/Az0kN6/qk5PEcOPsRQRcT8R3qSFIbNneHvLBHXZk97kL5tuRnk3IdLpKHf2gczG5Szfw==
-X-Received: by 2002:a17:902:ecc3:b0:224:826:277f with SMTP id d9443c01a7336-2292f9db08fmr272480865ad.33.1743632904725;
-        Wed, 02 Apr 2025 15:28:24 -0700 (PDT)
-Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:70::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c015fsm932655ad.56.2025.04.02.15.28.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 15:28:22 -0700 (PDT)
-Date: Wed, 2 Apr 2025 15:28:19 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
-Message-ID: <Z+26A3sslT+w+wOI@devvm6277.cco0.facebook.com>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
- <Z-w47H3qUXZe4seQ@redhat.com>
- <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
- <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
- <Z-0BoF4vkC2IS1W4@redhat.com>
- <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+	s=arc-20240116; t=1743657027; c=relaxed/simple;
+	bh=MTxYIeG6rjC76KiaCXCUAaJgwwxt3fQ9t7T7cB6jvQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uWw4w9UmoLb4AOAcvHCup6+Ei75cX0CZoZQRUhBjiw6i3ThzWMXpmOQLrO6c3SoLAtISqCdYQ/6W7OI/Fou4ZThUvUSLkw9/CDs/kxNT5pNLtH1x2wm/t9OdTSjSI1asZ5BotTq2PEDUV1cMbKfp88+DMusIhQ9LqmzmO5BVuwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=V9uVTX4x; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53359MMx352770
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 2 Apr 2025 22:09:23 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53359MMx352770
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743656967;
+	bh=vsKRR0KcxHt+bY5piLdo+Eui94XS6wGecFObRFyi4AA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V9uVTX4xgBbACAe/f7Zrx5r+z9b4d1DfYgbNIB8wYvA68c1uxe0ihfeMYGbviPIoI
+	 wTMFzQg2Fid5gHaVjQFISDACPHyspg7RzwHijSy6/ZmCrt/DlP4GvTHPiqGcB/4cvd
+	 AXYWHXLY7oKRr3YH+gVlWe8bvGTKcZn6fFapbQodpDHtCHy2EbuxOzLWKaU/ptKGkZ
+	 YqGfSlTUalEu5dyJYTz3tBI0kwslGoJnWU1+IYMdKiUnn8nJQY3z4rbePe1d1wtRq2
+	 Ft7OOFI4h7fGZ1G8M4ScF2LdGFEFm/MkylKdAYsHDEPOzjpBz+P8h/DypI1JQXduc+
+	 RpGH73LFcK3gg==
+Message-ID: <c316a6c6-b97c-48b2-9598-d44e2ec72fbc@zytor.com>
+Date: Wed, 2 Apr 2025 22:09:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <Z-ubVFyoOzwKhI53@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
-> On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
-> > On Wed, Apr 02, 2025 at 10:13:43AM +0200, Stefano Garzarella wrote:
-> > > On Wed, 2 Apr 2025 at 02:21, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
-> > > >
-> > > > I do like Stefano's suggestion to add a sysctl for a "strict" mode,
-> > > > Since it offers the best of both worlds, and still tends conservative in
-> > > > protecting existing applications... but I agree, the non-strict mode
-> > > > vsock would be unique WRT the usual concept of namespaces.
-> > > 
-> > > Maybe we could do the opposite, enable strict mode by default (I think 
-> > > it was similar to what I had tried to do with the kernel module in v1, I 
-> > > was young I know xD)
-> > > And provide a way to disable it for those use cases where the user wants 
-> > > backward compatibility, while paying the cost of less isolation.
-> > 
-> > I think backwards compatible has to be the default behaviour, otherwise
-> > the change has too high risk of breaking existing deployments that are
-> > already using netns and relying on VSOCK being global. Breakage has to
-> > be opt in.
-> > 
-> > > I was thinking two options (not sure if the second one can be done):
-> > > 
-> > >   1. provide a global sysfs/sysctl that disables strict mode, but this
-> > >   then applies to all namespaces
-> > > 
-> > >   2. provide something that allows disabling strict mode by namespace.
-> > >   Maybe when it is created there are options, or something that can be
-> > >   set later.
-> > > 
-> > > 2 would be ideal, but that might be too much, so 1 might be enough. In 
-> > > any case, 2 could also be a next step.
-> > > 
-> > > WDYT?
-> > 
-> > It occured to me that the problem we face with the CID space usage is
-> > somewhat similar to the UID/GID space usage for user namespaces.
-> > 
-> > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
-> > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
-> > 
-> > At the risk of being overkill, is it worth trying a similar kind of
-> > approach for the vsock CID space ?
-> > 
-> > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
-> > of CIDs which are exclusively referencing /dev/vhost-vsock associations
-> > created outside the namespace. Anything not listed would be exclusively
-> > referencing associations created inside the namespace.
-> > 
-> > A more complex variant would be to allow a full remapping of CIDs as is
-> > done with userns, via a /proc/net/vsock_cid_map, which the same three
-> > parameters, so that CID=15 association outside the namespace could be
-> > remapped to CID=9015 inside the namespace, allow the inside namespace
-> > to define its out association for CID=15 without clashing.
-> > 
-> > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
-> > associations created outside namespace, while unmapped CIDs would be
-> > exclusively referencing /dev/vhost-vsock associations inside the
-> > namespace. 
-> > 
-> > A likely benefit of relying on a kernel defined mapping/partition of
-> > the CID space is that apps like QEMU don't need changing, as there's
-> > no need to invent a new /dev/vhost-vsock-netns device node.
-> > 
-> > Both approaches give the desirable security protection whereby the
-> > inside namespace can be prevented from accessing certain CIDs that
-> > were associated outside the namespace.
-> > 
-> > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
-> > file as it is the security control mechanism. If it is write-once then
-> > if the container mgmt app initializes it, nothing later could change
-> > it.
-> > 
-> > A key question is do we need the "first come, first served" behaviour
-> > for CIDs where a CID can be arbitrarily used by outside or inside namespace
-> > according to whatever tries to associate a CID first ?
+On 4/1/2025 12:52 AM, Ingo Molnar wrote:
+>> Should we rename the *msrl() functions to *msrq() as part of this
+>> overhaul?
+> Yeah, that's a good idea, and because talk is cheap I just implemented
+> this in the tip:WIP.x86/msr branch with a couple of other cleanups in
+> this area (see the shortlog & diffstat below), but the churn is high:
 > 
-> I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
-> from being used, this could be solved by disallowing remapping the CID
-> while in use?
-> 
-> The thing I like about this is that users can check
-> /proc/net/vsock_cid_outside to figure out what might be going on,
-> instead of trying to check lsof or ps to figure out if the VMM processes
-> have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
-> 
-> Just to check I am following... I suppose we would have a few typical
-> configurations for /proc/net/vsock_cid_outside. Following uid_map file
-> format of:
-> 	"<local cid start>		<global cid start>		<range size>"
-> 
-> 	1. Identity mapping, current namespace CID is global CID (default
-> 	setting for new namespaces):
-> 
-> 		# empty file
-> 
-> 				OR
-> 
-> 		0    0    4294967295
-> 
-> 	2. Complete isolation from global space (initialized, but no mappings):
-> 
-> 		0    0    0
-> 
-> 	3. Mapping in ranges of global CIDs
-> 
-> 	For example, global CID space starts at 7000, up to 32-bit max:
-> 
-> 		7000    0    4294960295
-> 	
-> 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
-> 	8000-8100) :
-> 
-> 		7000    0       100
-> 		8000    1000    100
-> 
-> 
-> One thing I don't love is that option 3 seems to not be addressing a
-> known use case. It doesn't necessarily hurt to have, but it will add
-> complexity to CID handling that might never get used?
-> 
-> Since options 1/2 could also be represented by a boolean (yes/no
-> "current ns shares CID with global"), I wonder if we could either A)
-> only support the first two options at first, or B) add just
-> /proc/net/vsock_ns_mode at first, which supports only "global" and
-> "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
-> or the full mapping if the need arises?
-> 
-> This could also be how we support Option 2 from Stefano's last email of
-> supporting per-namespace opt-in/opt-out.
-> 
-> Any thoughts on this?
-> 
+>    144 files changed, 1034 insertions(+), 1034 deletions(-)
 
-Stefano,
+Hi Ingo,
 
-Would only supporting 1/2 still support the Kata use case?
+I noticed that you keep the type of MSR index in these patches as
+"unsigned int".
 
-Thanks,
-Bobby
+I'm thinking would it be better to standardize it as "u32"?
+
+Because:
+1) MSR index is placed in ECX to execute MSR instructions, and the
+    high-order 32 bits of RCX are ignored on 64-bit.
+2) MSR index is encoded as a 32-bit immediate in the new immediate form
+    MSR instructions.
+
+Thanks!
+     Xin
 
