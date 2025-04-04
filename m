@@ -1,194 +1,269 @@
-Return-Path: <linux-hyperv+bounces-4794-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4795-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8AECA7B126
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Apr 2025 23:30:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E930A7BD29
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Apr 2025 15:05:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAF503B97F9
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Apr 2025 21:24:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D9AA1797C0
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Apr 2025 13:05:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F6E1EBFF0;
-	Thu,  3 Apr 2025 21:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAB8B1DF97C;
+	Fri,  4 Apr 2025 13:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ed45iG6W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQxXagFN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021132.outbound.protection.outlook.com [52.101.62.132])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9451AA7BF;
-	Thu,  3 Apr 2025 21:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.132
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743715393; cv=fail; b=O723b/kHHgE975v69EZdx26NSlaiIEVRiCtQaIdojUwm6TTEoJpTvPtZRyVuQD4wLE658pn3+BJu3LHbXXAzHwpSUzt3ZZowd5bzbCfYT6pFVg8jr51s7+rvi8nCMB8lcF8P/DCCbI8iZexFaFpgVP7DgblltI9nyLEEOeUlnnI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743715393; c=relaxed/simple;
-	bh=xHL0lsFrC3yk9QxaPvF+/cizwlkD2JO7UTQttzq4MLM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dyE84xgbdoVejm8+hNGvGisiC5fUdkTDzHkrY1r2fZ14+tpTuC72/DsheYlsbANA/zrGyxEryeS6T30O9ID5y9mntZPBW9S3FVFC3SngEFz3WXHo4hli93J9Av1nd92kwzkNDOBLy7jFMBL8c4c5cT/hU1dfCr0kvfJmX4daGbU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Ed45iG6W; arc=fail smtp.client-ip=52.101.62.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qIu611lToOsXLh3IJAZNWlPFXudTnQkhIh7fzxVSGaQwbojwklQp1n6zO4WOfc6si4IxzUDaCq5i5ysatgh+yJvnUrNbmba4bZNS0a3Qh6jTnVCjitSQGgiay4p9lEVdN7+I0/HavBb//1EwpjBDk0nwbzcLtvIDycg6EOko5VpNewtruF+hcKiuslOmWuoc37yvt6ytDq54TkB7JCf+mmy7qPu1SUfLcrf3LsYV3PJtDS6xmbKXw1IiZeUcE92HlblHyhjoQ7O3TpIEtlUVpQvPBsCEJZpmqVVGUmiAzD4pDBcMbIMQ6wvYzf/r5UqYc80gsOp4A60eYkAghYR6Bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GeJkYBd3eZK4xeUd/Ofw9pzkdubHNvaFt1VMAVNkMFc=;
- b=cf3EGmS7ZY6KDGvOqzh7fskxFcGgxrlHqLDccu2sBvIciLBY5IPgMiucfiYxbdLyO4F2W1wjo0/U76g4VwTiRC995YmwMHMqjeagILV9AVeO4abmbgLK2nfmjW35OlgJQiYE54fSGFfSrlq6GWyzvbLpdU33KhHF4KerXxKlTB9XXoITPkQp+55RxKt9rpM7CWl8zF/KaNtHGGcEA47K1cvykHPuDw4mS1W/GucI6L4NEfAtd7sqDL59QnABW6vu40u3J98Uq5R51miWIUCABYKNXdDZOgPig+atgFpRFTuzXmMRDRqnead3Wyn//AW5xPVxUz0UN39krwU2/Z2Vnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GeJkYBd3eZK4xeUd/Ofw9pzkdubHNvaFt1VMAVNkMFc=;
- b=Ed45iG6W4QMmDTNR2ulLYTsGAKcTM0UWt8oraX6ahxII9W2MjIScVZqtRKZdBy/M7XW8iWUTezDPufQ9poEEQ7ddvERAC0bJeC+h+RS7ttZoBrPtoB9mOyvJMdCXySwOyybl9PhAmNYUkduDlRlhuXbW2qMm/FrOhFNSAYTp7+g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1451.namprd21.prod.outlook.com (2603:10b6:5:25c::16)
- by DM4PR21MB3154.namprd21.prod.outlook.com (2603:10b6:8:66::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.9; Thu, 3 Apr 2025 21:23:09 +0000
-Received: from DM6PR21MB1451.namprd21.prod.outlook.com
- ([fe80::7a3a:a395:66:b992]) by DM6PR21MB1451.namprd21.prod.outlook.com
- ([fe80::7a3a:a395:66:b992%4]) with mapi id 15.20.8606.022; Thu, 3 Apr 2025
- 21:23:09 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	decui@microsoft.com,
-	kys@microsoft.com,
-	paulros@microsoft.com,
-	olaf@aepfle.de,
-	vkuznets@redhat.com,
-	davem@davemloft.net,
-	wei.liu@kernel.org,
-	longli@microsoft.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] docs/mm: Specify page frag size is not bigger than PAGE_SIZE
-Date: Thu,  3 Apr 2025 14:21:49 -0700
-Message-Id: <1743715309-318-3-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1743715309-318-1-git-send-email-haiyangz@microsoft.com>
-References: <1743715309-318-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0048.namprd03.prod.outlook.com
- (2603:10b6:303:8e::23) To DM6PR21MB1451.namprd21.prod.outlook.com
- (2603:10b6:5:25c::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD638635C
+	for <linux-hyperv@vger.kernel.org>; Fri,  4 Apr 2025 13:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743771952; cv=none; b=dP+j2MrCwRyGyx51SlXs6Agq95rK29bcuO12m36EQ7tIQ1mWjZmNmwIK4K5wVr9C5acH+O3dVyb61CBGtMEPdIenBG9uFNTIPlWWu0XIlIWkJilSKvMxi8eyg6cKUS3Lulw5fnu+b850e0++y9d37PgtAuJJN/H0lAEYykOK5A4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743771952; c=relaxed/simple;
+	bh=8gq07IhcigH5njXtZLzuj3dWp1qqGBSub6ToQ9wD4+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CyhAV+7KijrFMUzwj7PWtIv9hL/20m0i4Jf2Od08l6I26c79Sfit0DDwu5HPKZuPAunu0HNTQzB06FCZPwPaglcmbMyeBX5G8dbLONQHdUbov8FB70kn24fyhgrJwchOhluagjgrz4jhSHokgSamdXS0kSdYqtLKNE/2q/cN5DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQxXagFN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743771949;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CQXuYQhluzR2Vd5RZiNnapdK22yrUW4+Zg4CW9YDc3c=;
+	b=UQxXagFNoB9hw9HfQw0gmGv5TfzR6WiR2f4VKDBqDT+ZMs3CLMmpheb+7/Qr5F/RpsZ7GH
+	j2HuB62hkYNbis55DP8Yvivs8BmAaspqOtW9CmPUKtOhS311WmyKkrDV1IZ/O6MB8uGyXK
+	7TyGXZN8KcTHc2D0QKwxxdATu34inYU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-FD9FT7NENR2d6eHmrsw9cQ-1; Fri,
+ 04 Apr 2025 09:05:46 -0400
+X-MC-Unique: FD9FT7NENR2d6eHmrsw9cQ-1
+X-Mimecast-MFC-AGG-ID: FD9FT7NENR2d6eHmrsw9cQ_1743771944
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DC455195605E;
+	Fri,  4 Apr 2025 13:05:43 +0000 (UTC)
+Received: from redhat.com (unknown [10.42.28.193])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D5CD619792DC;
+	Fri,  4 Apr 2025 13:05:35 +0000 (UTC)
+Date: Fri, 4 Apr 2025 14:05:32 +0100
+From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z-_ZHIqDsCtQ1zf6@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
+ <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1451:EE_|DM4PR21MB3154:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12eb7694-8344-4544-0517-08dd72f5bb34
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?iGC4KEwLhLPiHcFZ8RKDZbyuAxOHxxXvdM9DnLC73ginRbIn6vEEvK7FKKwf?=
- =?us-ascii?Q?KoF0Fp8GqqcmhIyfw3mAiqT8Qjvoh0PY/dCTS1BlVdiYESn9zkg9/YGiJLhY?=
- =?us-ascii?Q?Mdjhp9WQ6cNlP6WEbmdYttc65rvNY8RsycczJQjvUkEzAlI1uaMre2f4nbsS?=
- =?us-ascii?Q?m61N6SyAGKqzsFfLwyQZLIX6mH0Db/o2bOTsBLCB1pNC3x0XNZAHJv3Z6Pde?=
- =?us-ascii?Q?/hqE0v89p8avHU2lQAboYuKVCg7S9830C9FmyqegMA3CzuumhkVhbV8Es1F1?=
- =?us-ascii?Q?Cjlpe34VRo6t9M2zgXD/mbD22AoPouP9qDsX3Ye/lXblmhiDP6lQwdlocVyh?=
- =?us-ascii?Q?CTtUHTgsQY3D4q/U7KXZVqHS5iRqD50MWR94Jg3yj2Ry/9WJbLelvt4OtzvO?=
- =?us-ascii?Q?2lC6bCUJpTiulEvSo31hhJdMPXyp3yMUYUfGt5TDV6lCVqQVuaP1UGpGTA+t?=
- =?us-ascii?Q?sQTTJXIuX/P6tuMxqfYRLz1JEhp23faZJ5Hc1ECUQ9wDr0hPB1Z7vYgVKItM?=
- =?us-ascii?Q?JoP6oTWipx+J3oNVK3vTRgj6EPK0E9GlPhLcy+nNpD0IfQ6YYGXER1OFi0d+?=
- =?us-ascii?Q?g7iui9cHftYToMzHwXqOlKZNtSbIcQ2kyrlw0z1qrBI6Qm86AmSE0Mq37UZY?=
- =?us-ascii?Q?iSdd9FS0pOLsTX1Ze9jSpCsejNNc33Z5eSeEHcZVje2tsSMuq84aNY8PzpDA?=
- =?us-ascii?Q?zllP1FDMlZDWD0/fmlonEO3ztmfiDFRn9dVayaW96aFTMdS1h57xG+j0z7/b?=
- =?us-ascii?Q?7JL9/w+BIv8RGtut05S5MfAvxhK5aYfdUqoCL9WHjEN9GPifRU9RAEfL0i0W?=
- =?us-ascii?Q?Z+Pklpi4wSciTfUO/8ksIsUSuFGInCPjfmxI6SKFmokgUk1DPO+4/xfnNUCD?=
- =?us-ascii?Q?Cj4cZv6djoSsmEVH+jEqxygA8njZMerpVH9tW9X2cn/sdinpPHF4q2zgl7TG?=
- =?us-ascii?Q?6HnGPhhKVVKVQuwOZdXWvuPB9M1ikjbBOSNCkLl61IURzWZ//H2S2k6Z75ts?=
- =?us-ascii?Q?V75IqsuLnO75CCK/M0xYhvXcFeS0EFsW77ESaw/0ShXPLI516hX92Bfw6XU3?=
- =?us-ascii?Q?aboAmJRUVhxOQsASbx1UDhUj1Ab4phFkAP0f+Bsf/WUKd6QDdm34LL5OeoZ4?=
- =?us-ascii?Q?uHyqKpgm33pgm+DRLO6/eVesJKPbPPwY58YeHjwyDXhESc6FNti4s1hBRq6p?=
- =?us-ascii?Q?MRqsOLksb7WprbDgGGYf0FjweIbiHXGMTrl44KM47gLW2rmvWBDo4VPaIdZJ?=
- =?us-ascii?Q?/nb4j3B17dvaSKw97qxVdZTatUG7uOWM+Bu9GpeqSUMHZg9PRZXEmB7UKtF6?=
- =?us-ascii?Q?Vha9636kcUiN37rkb15Z1jEodL5bx7JIM/xv1BU2Yihe5iMu/XAYTv9p0dV4?=
- =?us-ascii?Q?I666JjANjGWRNJ1IHD6Vpejf8Quf3JBm8Gn1pX86jI7YaaQm1IFLV2xDDD8N?=
- =?us-ascii?Q?h941aSe+/ZlxZaaUAwElZ3RZMKPlznlwnHdzXcDDH5NM7zRJFkpL5g=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1451.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?zcjx2Qup2s1xa4IXYraSJnfQK7gMgElbkHWMT9NfZgRt2uLPDSoj8XxhPA0r?=
- =?us-ascii?Q?7okFAp38sCZzK53IEEypL6DeQvi0HOxl6zZ4nL/uUdvyJzNXpT8xU08C5xpR?=
- =?us-ascii?Q?shEPKNGJZ+1ylQ58f6l+HvQHNEYbMrpF1xldAIuKpjxpxhCWd6OwSJH4CwIg?=
- =?us-ascii?Q?0aqO4Tv+ADFDKL0Pvd+22RFkS4ISs1mnOOhGZPckenyjbNLASzf20M6P1ENs?=
- =?us-ascii?Q?Ah0xI0/EBsmYY7bgiu0XaJeCRvwhE/xCyQxXsu81P03IPHg4O/O1HQpFloHa?=
- =?us-ascii?Q?JxFLU/pl9P/oqBAxU/3whGJngVGa+W8/kKceDNRTz0hBvsaX+3r09FPtEEcT?=
- =?us-ascii?Q?zIDThptTPQYNUOj1dYV4hXeWW96dAC5ewNsJ2rBkFYZzntgvQijKbHbxIDn1?=
- =?us-ascii?Q?XtHJ9kavfcr/Dd7BJoxN2eZ826+2EyTuGWUQAyQu7AfJNAUNfWoAv/QPprST?=
- =?us-ascii?Q?RMeH1hlHyYagxrhnDxxwCw3lqYdfS6+AnK1HGPbJBgXZL2QTKou3kkEVc+gd?=
- =?us-ascii?Q?+41dmZPd/kyllNwy8zQzcuQi5I4HvFPZHXbKMSHMu+YXExCXaoRMnn3fTTlt?=
- =?us-ascii?Q?B07vjYS2UW7mzHy0q9juZtezZY6xi1I4RehHGMf3Itm6vMleXvHO1d8X71PJ?=
- =?us-ascii?Q?ftt2857+i8bMimkWRxYjzmPE41pjfWJ/ddfEedwVDPU2j5m4hHYjaqkgjjbk?=
- =?us-ascii?Q?abrR7gLA2uwNIIozY0p1f1lxnJPeOnHda11tx3+0zZg4pBuLE7HOuB7t3db0?=
- =?us-ascii?Q?hHZHmWMf6xWzwghX74/Esll/m/3wQYAlbt8YDyq+vGW0PwV9oXXkqv2CjOIY?=
- =?us-ascii?Q?x0D50JHNTAGjz8gew2UtpWuZHTRzjj1OzCqPk6tJy0BQ70NI1aGJgTutQz6x?=
- =?us-ascii?Q?WNx5hVztC2ghvoO9PD/VAQCj4x2quZYpBlg2lpEiDU99Nh59RNof5CiXJPg5?=
- =?us-ascii?Q?6SvU047gGYjm8/gk21rw+7i97YOqmtMsLEVYNG6DmQ0kLotdf3LdnACqCuej?=
- =?us-ascii?Q?a980opoCBollvMbx8fb47sAAystUpmtoowA1mBPjoM//gvb//R7m2PSM7yxS?=
- =?us-ascii?Q?zViuVvYtnva1CgifYSH3kFyTsea2xonSVe7/xBQJqFkXq1J1+7zkXxPC6kZW?=
- =?us-ascii?Q?it1QW2W6a+Ixhm77/OBWq+LjKvLi2sOgnBYndL+JhVzD3v2ts4OcHQhanXuW?=
- =?us-ascii?Q?95epNeLxt/XLQ87TaYnbOj+oNznd+mr1as3J8RHzVRGayFrlqkQjUYh+QWqg?=
- =?us-ascii?Q?lUHmUVWE6XFLwFK/hgIk+qr1qml9ZAypDURitriDr1IIsCk06dtHBLIroSsC?=
- =?us-ascii?Q?47MBXXymDVxj/8ZTPc6PBs+tGj7FTFnMed5eZK7FenRuwFpJf0CEUBiwMlLA?=
- =?us-ascii?Q?ZRudLuvDBClA5tl4QyAIk4JIuRA5e2Lzyq3njY48D6VPjFBCAwwUVFHtMN/B?=
- =?us-ascii?Q?oO0osPtqXNh47S71QpT6AmmLe39LlOJ1g+kwGgxVAt5ktvqnHe+alGS8c6Lx?=
- =?us-ascii?Q?Y7UM3yc7LmAZddmhYm+GKvNOMoIqas8SJLOpcFTzfEm2cH5uREL1otjEYpkn?=
- =?us-ascii?Q?0QtUkqRSkcAjTtl/qnzTGk4h07vGAKV4J6Ijwqw1?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12eb7694-8344-4544-0517-08dd72f5bb34
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1451.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 21:23:09.1415
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mBWaS1z07ADDckNak7v3KbL2q8nuxLxQnt6RGjjx5jNogWr8L2fF6/Qx7i6G+EwcoecgN3MraZCkJtMweg2RzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3154
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+User-Agent: Mutt/2.2.13 (2024-03-09)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-The page frag allocator is not designed for fragsz > PAGE_SIZE.
-Specify this in the document.
+On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
+> On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+> > It occured to me that the problem we face with the CID space usage is
+> > somewhat similar to the UID/GID space usage for user namespaces.
+> > 
+> > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+> > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+> > 
+> > At the risk of being overkill, is it worth trying a similar kind of
+> > approach for the vsock CID space ?
+> > 
+> > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+> > of CIDs which are exclusively referencing /dev/vhost-vsock associations
+> > created outside the namespace. Anything not listed would be exclusively
+> > referencing associations created inside the namespace.
+> > 
+> > A more complex variant would be to allow a full remapping of CIDs as is
+> > done with userns, via a /proc/net/vsock_cid_map, which the same three
+> > parameters, so that CID=15 association outside the namespace could be
+> > remapped to CID=9015 inside the namespace, allow the inside namespace
+> > to define its out association for CID=15 without clashing.
+> > 
+> > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+> > associations created outside namespace, while unmapped CIDs would be
+> > exclusively referencing /dev/vhost-vsock associations inside the
+> > namespace. 
+> > 
+> > A likely benefit of relying on a kernel defined mapping/partition of
+> > the CID space is that apps like QEMU don't need changing, as there's
+> > no need to invent a new /dev/vhost-vsock-netns device node.
+> > 
+> > Both approaches give the desirable security protection whereby the
+> > inside namespace can be prevented from accessing certain CIDs that
+> > were associated outside the namespace.
+> > 
+> > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+> > file as it is the security control mechanism. If it is write-once then
+> > if the container mgmt app initializes it, nothing later could change
+> > it.
+> > 
+> > A key question is do we need the "first come, first served" behaviour
+> > for CIDs where a CID can be arbitrarily used by outside or inside namespace
+> > according to whatever tries to associate a CID first ?
+> 
+> I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+> from being used, this could be solved by disallowing remapping the CID
+> while in use?
+> 
+> The thing I like about this is that users can check
+> /proc/net/vsock_cid_outside to figure out what might be going on,
+> instead of trying to check lsof or ps to figure out if the VMM processes
+> have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
+> 
+> Just to check I am following... I suppose we would have a few typical
+> configurations for /proc/net/vsock_cid_outside. Following uid_map file
+> format of:
+> 	"<local cid start>		<global cid start>		<range size>"
+> 
+> 	1. Identity mapping, current namespace CID is global CID (default
+> 	setting for new namespaces):
+> 
+> 		# empty file
+> 
+> 				OR
+> 
+> 		0    0    4294967295
+> 
+> 	2. Complete isolation from global space (initialized, but no mappings):
+> 
+> 		0    0    0
+> 
+> 	3. Mapping in ranges of global CIDs
+> 
+> 	For example, global CID space starts at 7000, up to 32-bit max:
+> 
+> 		7000    0    4294960295
+> 	
+> 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+> 	8000-8100) :
+> 
+> 		7000    0       100
+> 		8000    1000    100
+> 
+> 
+> One thing I don't love is that option 3 seems to not be addressing a
+> known use case. It doesn't necessarily hurt to have, but it will add
+> complexity to CID handling that might never get used?
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Documentation/mm/page_frags.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah, I have the same feeling that full remapping of CIDs is probably
+adding complexity without clear benefit, unless it somehow helps us
+with the nested-virt scenario to disambiguate L0/L1/L2 CID ranges ?
+I've not thought the latter through to any great level of detail
+though
 
-diff --git a/Documentation/mm/page_frags.rst b/Documentation/mm/page_frags.rst
-index 503ca6cdb804..212ecc69dd74 100644
---- a/Documentation/mm/page_frags.rst
-+++ b/Documentation/mm/page_frags.rst
-@@ -2,7 +2,7 @@
- Page fragments
- ==============
- 
--A page fragment is an arbitrary-length arbitrary-offset area of memory
-+A page fragment is a len <= PAGE_SIZE, arbitrary-offset area of memory
- which resides within a 0 or higher order compound page.  Multiple
- fragments within that page are individually refcounted, in the page's
- reference counter.
+> Since options 1/2 could also be represented by a boolean (yes/no
+> "current ns shares CID with global"), I wonder if we could either A)
+> only support the first two options at first, or B) add just
+> /proc/net/vsock_ns_mode at first, which supports only "global" and
+> "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+> or the full mapping if the need arises?
+
+Two options is sufficient if you want to control AF_VSOCK usage
+and /dev/vhost-vsock usage as a pair. If you want to separately
+control them though, it would push for three options - global,
+local, and mixed. By mixed I mean AF_VSOCK in the NS can access
+the global CID from the NS, but the NS can't associate the global
+CID with a guest.
+
+IOW, this breaks down like:
+
+ * CID=N local - aka fully private
+
+     Outside NS: Can associate outside CID=N with a guest.
+                 AF_VSOCK permitted to access outside CID=N
+
+     Inside NS: Can NOT associate outside CID=N with a guest
+                Can associate inside CID=N with a guest
+                AF_VSOCK forbidden to access outside CID=N
+                AF_VSOCK permitted to access inside CID=N
+
+
+ * CID=N mixed - aka partially shared
+
+     Outside NS: Can associate outside CID=N with a guest.
+                 AF_VSOCK permitted to access outside CID=N
+
+     Inside NS: Can NOT associate outside CID=N with a guest
+                AF_VSOCK permitted to access outside CID=N
+                No inside CID=N concept
+
+
+ * CID=N global - aka current historic behaviour
+
+     Outside NS: Can associate outside CID=N with a guest.
+                 AF_VSOCK permitted to access outside CID=N
+
+     Inside NS: Can associate outside CID=N with a guest
+                AF_VSOCK permitted to access outside CID=N
+                No inside CID=N concept
+
+
+I was thinking the 'mixed' mode might be useful if the outside NS wants
+to retain control over setting up the association, but delegate to
+processes in the inside NS for providing individual services to that
+guest.  This means if the outside NS needs to restart the VM, there is
+no race window in which the inside NS can grab the assocaition with the
+CID
+
+As for whether we need to control this per-CID, or a single setting
+applying to all CID.
+
+Consider that the host OS can be running one or more "service VMs" on
+well known CIDs that can be leveraged from other NS, while those other
+NS also run some  "end user VMs" that should be private to the NS.
+
+IOW, the CIDs for the service VMs would need to be using "mixed"
+policy, while the CIDs for the end user VMs would be "local".
+
+With regards,
+Daniel
 -- 
-2.34.1
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
 
 
