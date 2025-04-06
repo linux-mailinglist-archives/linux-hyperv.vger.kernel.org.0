@@ -1,150 +1,260 @@
-Return-Path: <linux-hyperv+bounces-4796-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4797-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FF64A7C7CC
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Apr 2025 08:09:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38464A7CD55
+	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Apr 2025 10:48:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 009BF18999CA
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Apr 2025 06:09:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 187337A3FB1
+	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Apr 2025 08:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA1E013D539;
-	Sat,  5 Apr 2025 06:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E690715746F;
+	Sun,  6 Apr 2025 08:48:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE+t8c9e"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TGDTVr0H"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEA218EB0;
-	Sat,  5 Apr 2025 06:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C2BE219FC;
+	Sun,  6 Apr 2025 08:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743833357; cv=none; b=LgRgZDlzKHeLZDxrqREstpBp+nxeLf9RV6+TdBmnmGzvY9NUF4cXa9OvabMAEpkSAGFJ23YHcmNhLmlG9cYYLk9NHs6n4yXhzoWW427kC947jOM8aUdWfvZcqW+VY8kfbeCc0jOUr177rLffgBQgc6jsWEiz5CWX4zPjmR68CW0=
+	t=1743929296; cv=none; b=aMHzHDGihOxU4UkDAEbcoDovOdMryVPLpRAh51KuQH26Sfuj0jTqGisSyfflV0DXfbonQpZF3ynOSMCdeJSUDOSwVFU0HmyU5JCH/hcF8614Y+mqsyvbxS4vqsLTD0Ok6HegiWC1kZERKuMOJeLpeaBYE0uByh6BZR3wHQK0XDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743833357; c=relaxed/simple;
-	bh=dF9pLRIGVFXU7OmYe2QafFHNXVnLtp+m8FdvydCZAWE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MUQL6FMHjukMUMyyTuokgj1cRGa/jpjI/8tX9NSumoshvVHyIrH/I7B7O7FBb7Y5JAkr7+CsDC8PZsKm+7Xwv2VsPNivB2qkpiiljHr8cAc5Z/Eko/R/+nhIpldFANgBuyeBrBmlafAvOjJZT+9cAhB6hpg2PkE18744NOFyxOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gE+t8c9e; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abec8b750ebso443569766b.0;
-        Fri, 04 Apr 2025 23:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743833354; x=1744438154; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4IrwI6EB2bkScgHThdFCUjtlZpaTDIqzS7IqE4WGkY8=;
-        b=gE+t8c9eAzH/qDIPgHeU2s4bCJBL41kQT4TfCj0CVAoW/NTsbceYyufhqKTkuuxyhS
-         Hl/hCt3mgC+ftqN3UMe7lhc+FSw5Zmsr47AtScgKsrEVYOAPf2607qd0G2NJ+fgDpdbv
-         cjU5XIWnWXJpYFNT3091y/NbVF3JiL+bVZKroL+FHZsi3QTkN0dC+LoD8UkKN3PD40aj
-         eIVrt/q0v56QvrC17ygbhqTYkmpFFzEzhSxPLOgbuMG1w31M0xi1kS5AXNSL4s1mW4Ip
-         9ATv0dYsQSshWgo+ZHcpsd7CvDjhLD/lY6vYcO0cTFEGMYGbWC6c8JgKpNeBy6WsRxxS
-         rvqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743833354; x=1744438154;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4IrwI6EB2bkScgHThdFCUjtlZpaTDIqzS7IqE4WGkY8=;
-        b=i6CaMVOyV1bo8B4pV2nreKgwny1aV8UYgi1D+66ogQszMiPqkO6MjQqiC8fcybscSm
-         HFXZ6JfAxLAM/iYfQKcDfstoFAEiYLK9hJZ/MlEnfA7wJ3eTfn1NRp3YRzwybEQjhcJ8
-         mjJ5KCsGdEGMIwPYrL7x8zLv7ojdcm/JOO6Cw0yGxAf8LttoSy12VzlmBbqj8Y4DBjLz
-         srkFx8DXTR93b+DMveM1hyaFWbbzLY82y+cd8K8lVbM5B+ahY5fOniRAvmu83kumKWFK
-         iBqAyLgjvYcYEfXCKwV1D6XsI/T7Uo/kq8Rgh329i2Gh7rjrArgLvRnd7ukZZr78Myfx
-         R8qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVp6bcb1w/3CSD6Z9CKUzmY8Q8Zro0m9HnbAolVneigZ6eKBo/8tIqxELVF1tKqOkBUHi/rYn0xPpu2smU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqP2jfEimtWBKzYLspeXm02j38wFozymiwOPmQPQLfquzoWX5k
-	2gtN7lYRaj5XF5g0SxnlUt0b+b3ctI2x+9iuK9UgeiafC/zXHpv/o9SFgjfr7NJpB+ce9qefuSh
-	8PXcyGpWZxJPNWs+CwozCvkA8eac=
-X-Gm-Gg: ASbGncsLATmz8j1vkiEPB65620ki/W84ZcQtW1ZCh6z+qcgwd91CL+Mk2SmC9vJQ/kf
-	P77L2X/YKw5KrtvMBqwTa+ubqH5H+3FmfPmVL1aoVPDfuo4tT3NtOt6lHHwmTIKQNMl3qAOkRcd
-	1Ujat9bVl301aj9KlQHn3UUt9Ghrbx
-X-Google-Smtp-Source: AGHT+IGe3T5BfTqPFEa7XmOq9aO0+F4jbOxS4hKhhBF7Sto5DPyKo/X9Ku2MtVPLZWwt6PWDoUdeCIPFPzfaXarPwFo=
-X-Received: by 2002:a17:906:6a22:b0:ac2:d6d1:fe65 with SMTP id
- a640c23a62f3a-ac7e76252aemr147426766b.41.1743833353882; Fri, 04 Apr 2025
- 23:09:13 -0700 (PDT)
+	s=arc-20240116; t=1743929296; c=relaxed/simple;
+	bh=cZogAL37BrditkuA6/iID0XEzaJF/kRmnZNyepXySaQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=AtR45BjqweTjYL2SMCv7tqsjvGA0ulDXcqaiAF1SYvupVTiHDKcIWuAeJRXE4gMIjrxDEdd3x6TEWgvGdtHXggbZIH8BapK5IypNqsVZ/ovvXtWPmtvIGj4QMYlJWb7EmmgSHk5qxPF1dXrc87t0YF1eCZjkTQ9kWTkl9kOWT1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TGDTVr0H; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 627AB2112533; Sun,  6 Apr 2025 01:48:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 627AB2112533
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743929289;
+	bh=wSGP4SJBUnsmhJUgOkT/omo/JNKbUWLMShPZLni6L/c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TGDTVr0Hz/oA1h9jG8IHPffo/IZu5+hU/tW/JAwhed5t0W3JgVP0wmStiPIyGqNMH
+	 BAMoymsQT2+0khy98J9tQa4mabz6WFvsg9HoPfPQSiDrBtus9hWBqpCp1lMDF19F0o
+	 hqsK3Xd12QC3Z85LngR/Ig6/bUGDSD8k7WJSOjkc=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v3] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Date: Sun,  6 Apr 2025 01:48:08 -0700
+Message-Id: <1743929288-7181-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250322164709.500340-1-malayarout91@gmail.com>
-In-Reply-To: <20250322164709.500340-1-malayarout91@gmail.com>
-From: malaya kumar rout <malayarout91@gmail.com>
-Date: Sat, 5 Apr 2025 11:39:02 +0530
-X-Gm-Features: ATxdqUGjrQsoObmnh24CpNlPQs9JEn4cy0SihSDUbMlRf1HrduwqGGJiiO7ohFU
-Message-ID: <CAE2+fR9kaSGz8pfi-vbmeXGXM84ANyBTD2C1VJg6aFSVyVffrA@mail.gmail.com>
-Subject: Re: [PATCH] tools/hv: Memory Leak on realloc
-To: malayarout91@gmail.com
-Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 22, 2025 at 10:17=E2=80=AFPM Malaya Kumar Rout
-<malayarout91@gmail.com> wrote:
->
-> Static analysis for hv_kvp_daemon.c with cppcheck : error:
->
-> hv_kvp_daemon.c:359:3: error: Common realloc mistake:
-> 'record' nulled but not freed upon failure [memleakOnRealloc]
-> record =3D realloc(record, sizeof(struct kvp_record) *
->
-> If realloc() fails, record is now NULL.
-> If we directly assign this NULL to record, the reference to the previousl=
-y allocated memory is lost.
-> This causes a memory leak because the old allocated memory remains but is=
- no longer accessible.
->
-> A temporary pointer was utilized when invoking realloc() to prevent
-> the loss of the original allocation in the event of a failure
->
-> CC: linux-kernel@vger.kernel.org
->     linux-hyperv@vger.kernel.org
-> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
-> ---
->  tools/hv/hv_kvp_daemon.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 04ba035d67e9..6807832209f0 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -356,11 +356,14 @@ static int kvp_key_add_or_modify(int pool, const __=
-u8 *key, int key_size,
->          */
->         if (num_records =3D=3D (ENTRIES_PER_BLOCK * num_blocks)) {
->                 /* Need to allocate a larger array for reg entries. */
-> -               record =3D realloc(record, sizeof(struct kvp_record) *
-> -                        ENTRIES_PER_BLOCK * (num_blocks + 1));
-> -
-> -               if (record =3D=3D NULL)
-> +               struct kvp_record *temp =3D realloc(record, sizeof(struct=
- kvp_record) *
-> +                               ENTRIES_PER_BLOCK * (num_blocks + 1));
-> +               if (!temp) {
-> +                       free(record);
-> +                       record =3D NULL;
->                         return 1;
-> +               }
-> +               record =3D temp;
->                 kvp_file_info[pool].num_blocks++;
->
->         }
-> --
-> 2.43.0
->
+Allow the KVP daemon to log the KVP updates triggered in the VM
+with a new debug flag(-d).
+When the daemon is started with this flag, it logs updates and debug
+information in syslog with loglevel LOG_DEBUG. This information comes
+in handy for debugging issues where the key-value pairs for certain
+pools show mismatch/incorrect values.
+The distro-vendors can further consume these changes and modify the
+respective service files to redirect the logs to specific files as
+needed.
 
-This is a courteous reminder regarding the current patch.
-Any feedback or insights you may have would be greatly appreciated.
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+ Changes in v3:
+ * remove timestamp from raw message
+ * use i+1 instead of i while printing record array
+ * add debug logs in delete operation
+---
+ Changes in v2:
+ * log the debug logs in syslog(debug) instead of a seperate file that
+   we will have to maintain.
+ * fix the commit message to indicate the same.
+---
+ tools/hv/hv_kvp_daemon.c | 71 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 63 insertions(+), 8 deletions(-)
 
-Thanks & Regards,
-Malaya Kumar Rout
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 04ba035d67e9..7a1b7b0a9233 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -83,6 +83,7 @@ enum {
+ };
+ 
+ static int in_hand_shake;
++static int debug_enabled;
+ 
+ static char *os_name = "";
+ static char *os_major = "";
+@@ -183,6 +184,20 @@ static void kvp_update_file(int pool)
+ 	kvp_release_lock(pool);
+ }
+ 
++static void kvp_dump_initial_pools(int pool)
++{
++	int i;
++
++	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
++	       pool);
++
++	for (i = 0; i < kvp_file_info[pool].num_records; i++)
++		syslog(LOG_DEBUG, "pool: %d, %d/%d key=%s val=%s\n",
++		       pool, i + 1, kvp_file_info[pool].num_records,
++		       kvp_file_info[pool].records[i].key,
++		       kvp_file_info[pool].records[i].value);
++}
++
+ static void kvp_update_mem_state(int pool)
+ {
+ 	FILE *filep;
+@@ -270,6 +285,8 @@ static int kvp_file_init(void)
+ 			return 1;
+ 		kvp_file_info[i].num_records = 0;
+ 		kvp_update_mem_state(i);
++		if (debug_enabled)
++			kvp_dump_initial_pools(i);
+ 	}
+ 
+ 	return 0;
+@@ -297,6 +314,9 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ 		 * Found a match; just move the remaining
+ 		 * entries up.
+ 		 */
++		if (debug_enabled)
++			syslog(LOG_DEBUG, "%s: deleting the KVP: pool=%d key=%s val=%s",
++			       __func__, pool, record[i].key, record[i].value);
+ 		if (i == (num_records - 1)) {
+ 			kvp_file_info[pool].num_records--;
+ 			kvp_update_file(pool);
+@@ -315,20 +335,36 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ 		kvp_update_file(pool);
+ 		return 0;
+ 	}
++
++	if (debug_enabled)
++		syslog(LOG_DEBUG, "%s: could not delete KVP: pool=%d key=%s. Record not found",
++		       __func__, pool, key);
++
+ 	return 1;
+ }
+ 
+ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 				 const __u8 *value, int value_size)
+ {
+-	int i;
+-	int num_records;
+ 	struct kvp_record *record;
++	int num_records;
+ 	int num_blocks;
++	int i;
++
++	if (debug_enabled)
++		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
+ 
+ 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+-		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
++		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
++		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
++		       key, value);
++
++		if (debug_enabled)
++			syslog(LOG_DEBUG, "%s: Got a too long key or value: pool=%d, key=%s, val=%s",
++			       __func__, pool, key, value);
+ 		return 1;
++	}
+ 
+ 	/*
+ 	 * First update the in-memory state.
+@@ -348,6 +384,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		 */
+ 		memcpy(record[i].value, value, value_size);
+ 		kvp_update_file(pool);
++		if (debug_enabled)
++			syslog(LOG_DEBUG, "%s: updated: pool=%d key=%s val=%s",
++			       __func__, pool, key, value);
+ 		return 0;
+ 	}
+ 
+@@ -359,8 +398,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		record = realloc(record, sizeof(struct kvp_record) *
+ 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+ 
+-		if (record == NULL)
++		if (!record) {
++			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
+ 			return 1;
++		}
+ 		kvp_file_info[pool].num_blocks++;
+ 
+ 	}
+@@ -368,6 +409,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 	memcpy(record[i].key, key, key_size);
+ 	kvp_file_info[pool].records = record;
+ 	kvp_file_info[pool].num_records++;
++
++	if (debug_enabled)
++		syslog(LOG_DEBUG, "%s: added: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
++
+ 	kvp_update_file(pool);
+ 	return 0;
+ }
+@@ -1662,6 +1708,7 @@ void print_usage(char *argv[])
+ 	fprintf(stderr, "Usage: %s [options]\n"
+ 		"Options are:\n"
+ 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
++		"  -d, --debug-enabled    Enable debug logs(syslog debug by default)\n"
+ 		"  -h, --help             print this help\n", argv[0]);
+ }
+ 
+@@ -1681,12 +1728,13 @@ int main(int argc, char *argv[])
+ 	int daemonize = 1, long_index = 0, opt;
+ 
+ 	static struct option long_options[] = {
+-		{"help",	no_argument,	   0,  'h' },
+-		{"no-daemon",	no_argument,	   0,  'n' },
+-		{0,		0,		   0,  0   }
++		{"help",		no_argument,	   0,  'h' },
++		{"no-daemon",		no_argument,	   0,  'n' },
++		{"debug-enabled",	no_argument,	   0,  'd' },
++		{0,			0,		   0,  0   }
+ 	};
+ 
+-	while ((opt = getopt_long(argc, argv, "hn", long_options,
++	while ((opt = getopt_long(argc, argv, "hnd", long_options,
+ 				  &long_index)) != -1) {
+ 		switch (opt) {
+ 		case 'n':
+@@ -1695,6 +1743,9 @@ int main(int argc, char *argv[])
+ 		case 'h':
+ 			print_usage(argv);
+ 			exit(0);
++		case 'd':
++			debug_enabled = 1;
++			break;
+ 		default:
+ 			print_usage(argv);
+ 			exit(EXIT_FAILURE);
+@@ -1717,6 +1768,9 @@ int main(int argc, char *argv[])
+ 	 */
+ 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
+ 
++	if (debug_enabled)
++		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
++
+ 	if (kvp_file_init()) {
+ 		syslog(LOG_ERR, "Failed to initialize the pools");
+ 		exit(EXIT_FAILURE);
+-- 
+2.34.1
+
 
