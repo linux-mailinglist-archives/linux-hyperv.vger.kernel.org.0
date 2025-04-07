@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-4799-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4800-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE229A7D374
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Apr 2025 07:24:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CAE2A7D39A
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Apr 2025 07:37:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 752F91889FB3
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Apr 2025 05:24:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A23AA3AB85A
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Apr 2025 05:37:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BFAB1A3178;
-	Mon,  7 Apr 2025 05:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2232A224245;
+	Mon,  7 Apr 2025 05:37:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgG5tsHy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7SXHhVP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424DF335BA;
-	Mon,  7 Apr 2025 05:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAACB2236F3;
+	Mon,  7 Apr 2025 05:37:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744003478; cv=none; b=joC4x6AaKILCvYB1cAawMClxUv10I7lF3BIWjjXdcSFZEuKCJFNYUGmQgGBM/mmcl++vj7wHTlyTjxVVh3RPoOFXwRsbw0OEUsRnTXWlr+ilA1vB9V8OObLE+QxmxOZvUTBkAN+wEPJna/AA/G2YqAHxaDPheYN3ir5ciQIGeWM=
+	t=1744004254; cv=none; b=s3gNuWIg1ymNLDnYbSgJVCB+UAHZNVOTqt2WXq8S3XY5+PO74hN2T8YnydgBM1rIDxiAKBctgOlTxbc7tzSE2L8gkRalcv2Mhdxl0BY2BjIMBELjrNoZJYLBTdy6qis/ZyO6a9NGSF0LjUWnDyjm80uAbShZXOvNYNuipo7Kp4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744003478; c=relaxed/simple;
-	bh=NYxOraE5tY452HW4mFZLuhv+m94cgUKS1yX2m1YM3Og=;
+	s=arc-20240116; t=1744004254; c=relaxed/simple;
+	bh=iuAds8JJoa+dbYsSrJ66iR8rQIcqF5nXdx0l7K8tiIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tcrUhfX2MKhUObGzHy7M3w1Ci4Ugbv2fI1N7Hag+sqB/hlZ00Wkk556SHdKVdzskSHd2XY0PP6d51vS8O8Zc3BhL5jNQcavI13Nc5nQH2FKao5f0t1naVdTeGuFODdD+fpcrVCdwfOMKbhQIP/ql7wEZCc0dHgxvSOMyaY6U0to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgG5tsHy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97164C4CEDD;
-	Mon,  7 Apr 2025 05:24:37 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=JquBI9WCZtvNzuaioMI79Wo4UVGMxmAVA9M8Yvz3gRNOY6gE1lL90utWfziOYCkPSt5Lv8hGAh1GYmPLQheTMBoRhdrgoL9lnLZkLFrseCTDrmmoc22nWVTQiAcBmHEnsoI5R74gI3FedCTs+eJvM/qzdozk7H0PFnsWrDl659I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7SXHhVP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850ADC4CEDD;
+	Mon,  7 Apr 2025 05:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744003477;
-	bh=NYxOraE5tY452HW4mFZLuhv+m94cgUKS1yX2m1YM3Og=;
+	s=k20201202; t=1744004253;
+	bh=iuAds8JJoa+dbYsSrJ66iR8rQIcqF5nXdx0l7K8tiIw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WgG5tsHygFfrBSIEk6tPsXidti3vgIP0WCLtSJ44pg4tgfROGKcuXuuKixRIbve1I
-	 uEwp0Kpp27EsVQwe8cL6AR5Vmi1eQOEtC4V3MojCN6Ne8+Q2NF9K/IylJMR+DNmP4l
-	 tqQGBN3KO8lB7aRhG9z2nPbXa4HeJ+NXtJY+gsQlG8ef1cyT77RzWHNqBI23vG6kqj
-	 dWuDadeoNPsLBxLCPn/5JgITDDizM1r5NMuY/V1eolFL6Os8djiCPhvwdm9PUzs/aA
-	 QpufR7W5gUTW0zJDlcLxhbi7+ac9IECSqHkCTuTbiIgAZFsXhxXJAi6ec23/TtOIO+
-	 kKQdrCY2TBZgg==
-Date: Mon, 7 Apr 2025 05:24:36 +0000
+	b=l7SXHhVPZJH1W7ANVSO5S54c7aEMlgNAlUen2nFf80lr2CfCEjci5two0FSDc6n2z
+	 /mwIZGQaRkWkfzKPtymGpEUQDNf5OVE/eB8aZ2Qfc6V1R885oY7LCQkd0WjnkaqIji
+	 o2OGYt+17JThJpbZv+9tAXG51WAuwiUJoOsOUaYUTOhe/BcUIAaan+Al+JSSYbM9+M
+	 NH9+tzr2jXhIYIONK1VhnRvR9eBolMBqTHx5xjAajOo3PAHVqKomqj4DzAGBnuLfZt
+	 PWEMMaHOnVI3svtvo9Z+3YpGFeTOHw6wKQLPXmffqzys2tIfvMw6Pcd5jiPRDVL0IX
+	 oZ0GGezcJGHlA==
+Date: Mon, 7 Apr 2025 05:37:32 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	mhklinux@outlook.com, decui@microsoft.com
-Subject: Re: [PATCH] Drivers: hv: Fix bad pointer dereference in
- hv_get_partition_id
-Message-ID: <Z_NhlDk2YpptYtxe@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
+To: Malaya Kumar Rout <malayarout91@gmail.com>
+Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] tools/hv: Memory Leak on realloc
+Message-ID: <Z_NknPrx26vMuJ-9@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250322164709.500340-1-malayarout91@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -59,37 +59,69 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250322164709.500340-1-malayarout91@gmail.com>
 
-On Tue, Apr 01, 2025 at 10:32:17AM -0700, Nuno Das Neves wrote:
-> 'output' is already a pointer to the output argument, it should be
-> passed directly to hv_do_hypercall() without the '&' operator.
+On Sat, Mar 22, 2025 at 10:16:47PM +0530, Malaya Kumar Rout wrote:
+> Static analysis for hv_kvp_daemon.c with cppcheck : error:
 > 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> hv_kvp_daemon.c:359:3: error: Common realloc mistake:
+> 'record' nulled but not freed upon failure [memleakOnRealloc]
+> record = realloc(record, sizeof(struct kvp_record) *
+> 
+> If realloc() fails, record is now NULL.
+> If we directly assign this NULL to record, the reference to the previously allocated memory is lost.
+> This causes a memory leak because the old allocated memory remains but is no longer accessible.
+> 
+> A temporary pointer was utilized when invoking realloc() to prevent
+> the loss of the original allocation in the event of a failure
 
-Applied to hyperv-fixes. Thanks.
+While this patch finds a problem, it misses the big picture.
 
+If realloc fails, the process quits. It depends on the OS to reclaim the
+memory. Freeing this one instance to prevent a memory leak is not
+sufficient -- there can be already memory allocated prior to a failure.
+
+Unless this program is sufficiently reworked to be resilient against
+OOM, this change itself does not bring much value.
+
+That being said, thank you for writing a patch and went through the
+trouble to submit it.
+
+Thanks,
+Wei.
+
+> 
+> CC: linux-kernel@vger.kernel.org
+>     linux-hyperv@vger.kernel.org
+> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 > ---
-> This patch is a fixup for:
-> e96204e5e96e hyperv: Move hv_current_partition_id to arch-generic code
+>  tools/hv/hv_kvp_daemon.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
->  drivers/hv/hv_common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index b3b11be11650..a7d7494feaca 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -307,7 +307,7 @@ void __init hv_get_partition_id(void)
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index 04ba035d67e9..6807832209f0 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -356,11 +356,14 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+>  	 */
+>  	if (num_records == (ENTRIES_PER_BLOCK * num_blocks)) {
+>  		/* Need to allocate a larger array for reg entries. */
+> -		record = realloc(record, sizeof(struct kvp_record) *
+> -			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+> -
+> -		if (record == NULL)
+> +		struct kvp_record *temp = realloc(record, sizeof(struct kvp_record) *
+> +				ENTRIES_PER_BLOCK * (num_blocks + 1));
+> +		if (!temp) {
+> +			free(record);
+> +			record = NULL;
+>  			return 1;
+> +		}
+> +		record = temp;
+>  		kvp_file_info[pool].num_blocks++;
 >  
->  	local_irq_save(flags);
->  	output = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
-> +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output);
->  	pt_id = output->partition_id;
->  	local_irq_restore(flags);
->  
+>  	}
 > -- 
-> 2.34.1
+> 2.43.0
 > 
 
