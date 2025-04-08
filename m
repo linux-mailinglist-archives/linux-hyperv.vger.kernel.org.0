@@ -1,143 +1,171 @@
-Return-Path: <linux-hyperv+bounces-4816-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4817-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F6CA7F387
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 06:24:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B0A7A7F5A6
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 09:08:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1C983ACD54
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 04:24:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0B4B3B8EA8
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 07:06:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E2B61B0F19;
-	Tue,  8 Apr 2025 04:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2356261361;
+	Tue,  8 Apr 2025 07:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="cLzK2pwU";
-	dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="4jXtGW83"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuNiBJYi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [85.215.255.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7549B198E91
-	for <linux-hyperv@vger.kernel.org>; Tue,  8 Apr 2025 04:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744086265; cv=pass; b=U6BG2npuP960g+p+1DKhxDBzQHCVy7FUwzGdTqpBIPSRL5/UcqzqGkEyatQmCH70XGQNc1JvdmGvMMP0HmlQnprBQibN1P10yoGOtAKwORmb9xQ8Zyspm2vA0m69tAzrc4UDVTotOYtTGL/5mRGOfFTnBm8r2NVtAfMTvKN67Dk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744086265; c=relaxed/simple;
-	bh=w5RwJZ7m5XXuJp7EFh6fCENVkJaa5gkg0Z2MXXFHdvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lrLEwRadNKtyYEVe4AK/QdCwQ9dM+m1ylf/p8uqx1Mxmt5lPLic6r9rQAGDhjWSEyBME+QLvdxbkjIysP/INsT9a7+yFzMZSPRpHrTagvzpdAincMb8oyiwYw44S+wygKsJ0CiqGpAuEolIUDGMdQsvPfRcTsT+M7pMIk55aAWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de; spf=pass smtp.mailfrom=aepfle.de; dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=cLzK2pwU; dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=4jXtGW83; arc=pass smtp.client-ip=85.215.255.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aepfle.de
-ARC-Seal: i=1; a=rsa-sha256; t=1744086073; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=VXwPbrCsLTBHcAjXxycIhklXPk8uwnyWc5WDl8M8VA0e4CQcgeHZ4bliwqcpqTsOJS
-    aMROFIIQ2cV5RsfAHxRJHGEV7YVqetA/5ZVFKZC/tZdZbzVZJ6BtcCrjQ4Khq57xuKSI
-    YlDhfjr+5Ljvzisp3mUfPr/NEObIQDC80Xbk7TT+oevPPgJophn/8qGs+pUTkCTepvEl
-    M2wnEbpab4IWzi++9MBhjlMR0pOz3vIC7AqSMNepalwBiAvsZr05P4pmuy1p+sbOEMI4
-    qKFVsmVdmf/5Joy39uiSaebXzcnhyjsPsrsm/fLHtNUxysWEmVIuL/X2Uj8gr9b4986M
-    1QXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744086073;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=crJkZ+qUuEJuaRsVavYmXqUmXjBavHJMVzb7XFS/MmI=;
-    b=ISTINnUr8yPUq6JB0sMv/1oVkcr30RBIjtiAL6wiWHrvgg3mYi/lV1RF2fmdDGpvtm
-    ZxuBFfKgbyI0rOSUdvuf+20ijCABXD2kYg7k3G68YDvwa5W+ogS6G9lw11dDXDaFLdPe
-    URJB9KjJlby8qPhMrrWcCfKkt55kzJVw+854KzmZsC/0QQYbOvbeKbYp2OLsii7EZyFy
-    fdiOZTiB0ekaT9KK0jeaoj646sqs0qZRetTMl4CLYRSiJL2XiGQ1xDqIMa3dHBao06Xz
-    9WyMFKeNIESUjMqv+ZdYFGyeyzbiRsDC7ysfAbMUjF27Iwj1u5ft64wlsVW1t2rGX3w6
-    G29Q==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744086073;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=crJkZ+qUuEJuaRsVavYmXqUmXjBavHJMVzb7XFS/MmI=;
-    b=cLzK2pwUp80ov1x3ryv/LW8yGHKK6xeQ9/kHpB3/Myv3UBjxGMZXVhSGn5yZGpqFz0
-    OLs9Rmgnhs4rvNEVIK9gGCRE9Ex2UqMHMRXy5rCSfMUd7SK9JGo0eN5ZPSs8LQOr5A8N
-    R3SX/SWdTXo7t6xI3dCr+c2InXD9VwcnTZ55TzE37k4AyMQTJQlktKKC/pKjaCD4jGsN
-    sT3MODv5zstNpNtYXOXrFfdEOOdZeHZxKY5unObrZ3vmWP8AI7tGjNiGUh7/z1uKwFHK
-    RN9fKsRk4DGVlTt9rbTbmN990qJ+JwcPjuzCPSxH/a/3qPxyxr8cGL5+GmTRDPARqpjW
-    azBA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744086073;
-    s=strato-dkim-0003; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=crJkZ+qUuEJuaRsVavYmXqUmXjBavHJMVzb7XFS/MmI=;
-    b=4jXtGW834vPmoaXQ/NLy9aUVA7l2KJfle7f96HcwFCm74qXI7KR5WntHkNBX9PbDu9
-    q78mVca3Fe5lCNzWn1Bw==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OmD4uXd0fmxSoJ8/RK6b07KGriu4yBf+6JptMSdiuOzXC/d"
-Received: from sender
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id D1c4dd1384LCOkS
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 8 Apr 2025 06:21:12 +0200 (CEST)
-Date: Tue, 8 Apr 2025 06:20:57 +0200
-From: Olaf Hering <olaf@aepfle.de>
-To: linux-hyperv@vger.kernel.org
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>
-Subject: Re: [PATCH v1] tools/hv: update route parsing in kvp daemon
-Message-ID: <20250408062057.6f5812d3.olaf@aepfle.de>
-In-Reply-To: <20241202102235.9701-1-olaf@aepfle.de>
-References: <20241202102235.9701-1-olaf@aepfle.de>
-X-Mailer: Claws Mail (olh) 20240408T134401.7adfa8f7 hat ein Softwareproblem, kann man nichts machen.
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E19635979;
+	Tue,  8 Apr 2025 07:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744096007; cv=none; b=I9LyKDYL10YTW235M8J+efPOXq7SYNbHcLGvEVBIwQrYqST+I4QqwoNVCPHVD++m0BiDQVj96ygy4r8GQb1Ymam3FzQVvwiP9c7sA8J/XajVjIku0XmMotmFAz1S+CWd4CWHhiPw3JnZpON8r+dGEzrcMwZjiVwTWqWS43tzlAY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744096007; c=relaxed/simple;
+	bh=b4/HM8+SciHG286LvQnLgT/d3PAh2mnGk8+5TyFZWoU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U6wSqExhdJ2bVMT5SKOA3VbjgrtgNI56C7SgkG5bcKB3OuLmIr0NVk4s1YJhOdVxXohZl33DBuwFlAL00LXN9CFhUQQPSux341Bjr1OMzvuOoT9XmyNuCU99lAhD/hEcXTkFMD2LJ332b5PIFCPndwNCh0nVjbDSl2A/keO0UmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuNiBJYi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4448C4CEE5;
+	Tue,  8 Apr 2025 07:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744096007;
+	bh=b4/HM8+SciHG286LvQnLgT/d3PAh2mnGk8+5TyFZWoU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tuNiBJYibWOt5+vSOcQ+JRLaGgZWDkwaR5g7lNtcFTYc0eXDRKe6tq4CFJoPxKpIt
+	 5zBNMaoK7dfKeOvGjJHcZC3SgfNhwMciKiHLr3Xj3tBZTIQAQriWeFzCef/7bg1+dE
+	 hyqgZvsEdCEEUnc8kb8ixxAmY0ceVaTbQ/FV/etjY5hzXxF4tmwW+1dePcWZiVahGl
+	 0JA6jU7oJiTCnEF5XrUfeiimXLagzfg43mKERJZSQ+zqZhgvK4Qk5R1p1r9X+bNtjt
+	 Kk9dCK73/RxRciBC9MdW/1HCWKw9hR/5lrex479hCJcM2sa/cq97vi7qhYhnbL+BmN
+	 nEcjjtUmDVjOg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u232h-003JRY-F2;
+	Tue, 08 Apr 2025 08:06:43 +0100
+Date: Tue, 08 Apr 2025 08:06:42 +0100
+Message-ID: <86semjku7x.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	conor+dt@kernel.org,
+	dan.carpenter@linaro.org,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	joey.gouly@arm.com,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	mark.rutland@arm.com,
+	mingo@redhat.com,
+	oliver.upton@linux.dev,
+	rafael@kernel.org,
+	robh@kernel.org,
+	rafael.j.wysocki@intel.com,
+	ssengar@linux.microsoft.com,
+	sudeep.holla@arm.com,
+	suzuki.poulose@arm.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	yuzenghui@huawei.com,
+	devicetree@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	x86@kernel.org,
+	apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v7 01/11] arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID
+In-Reply-To: <20250407201336.66913-2-romank@linux.microsoft.com>
+References: <20250407201336.66913-1-romank@linux.microsoft.com>
+	<20250407201336.66913-2-romank@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QJapevxT==4ySCMrXSj.IiG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Content-Transfer-Encoding: 7bit
-
---Sig_/QJapevxT==4ySCMrXSj.IiG
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: romank@linux.microsoft.com, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org, dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org, rafael.j.wysocki@intel.com, ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft
+ .com, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Mon,  2 Dec 2024 11:19:55 +0100 Olaf Hering <olaf@aepfle.de>:
+On Mon, 07 Apr 2025 21:13:26 +0100,
+Roman Kisel <romank@linux.microsoft.com> wrote:
+> 
+> The KVM/arm64 uses SMCCC to detect hypervisor presence. That code is
+> private, and it follows the SMCCC specification. Other existing and
+> emerging hypervisor guest implementations can and should use that
+> standard approach as well.
+> 
+> Factor out a common infrastructure that the guests can use, update KVM
+> to employ the new API. The central notion of the SMCCC method is the
+> UUID of the hypervisor, and the new API follows that.
+> 
+> No functional changes. Validated with a KVM/arm64 guest.
+> 
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  arch/arm64/kvm/hypercalls.c        | 10 +++--
+>  drivers/firmware/smccc/kvm_guest.c | 10 +----
+>  drivers/firmware/smccc/smccc.c     | 17 ++++++++
+>  include/linux/arm-smccc.h          | 64 ++++++++++++++++++++++++++++--
+>  4 files changed, 85 insertions(+), 16 deletions(-)
+>
 
-> After recent changes in the VM network stack, the host fails to
-> display the IP addresses of the VM. As a result the "IP Addresses"
-> column in the "Networking" tab in the Windows Hyper-V Manager is
-> empty.
+[...]
 
-Did anyone had time to address this issue?
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index 67f6fdf2e7cd..4bb38f0e3fe2 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -7,6 +7,11 @@
+>  
+>  #include <linux/args.h>
+>  #include <linux/init.h>
+> +
+> +#ifndef __ASSEMBLER__
+> +#include <linux/uuid.h>
+> +#endif
 
+That's a pretty unusual guard in arm64 land. Looking at the current
+state of the kernel:
 
-Olaf
+$ git grep -w __ASSEMBLER__ arch/arm64/ | wc -l
+2
+$ git grep -w __ASSEMBLY__ arch/arm64/ | wc -l
+122
 
+I'd suggest the later rather than the former.
 
---Sig_/QJapevxT==4ySCMrXSj.IiG
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+	M.
 
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmf0pCkACgkQ86SN7mm1
-DoACRA//cBXW7YJW5yuqs81dzunHGzzyvM5AbCHvhK7AAO2yNEiyjGM56kMmulyv
-3JFwSKqKzsjnmn9pukCVy6wM5qABirwAoz1GG7f+5yt7uS41Kvge98DCRlCCxSaC
-0zgMromn9iO7Ho/5kJNHMOCymCiwjc3QDCIdkwj4K9rrg2kbI7CkcwX9YA71ADx+
-TFmcB5PJacFDMgcKXZsn1ILsgdMH5LeOu28MV3WhMPiLQJwnw+LCBFcuI+gHBLjf
-LKftZ/GHjFlNYWRcUQWsa7C+y2fsn0Z1W/lzu7QiP1WVI+4dezwMDyonqtn/5+wD
-uMGfwGeHhm7NvCN/EpF/0B4e5Xdy2iU0c4Kz7Wg3uIwKZxjzQNCy5lXEK7TYdf0B
-mPJQnyHbCkRX+2H7zYtlXddaK3TskNrF6hFb4Zt4Hcu6a+nNj3s2xlTflzI5k9C5
-gFQ8i/P7QwB5Nicd5DjlKF4aMlCDAcBn8xzQjLmsG9ys7mVHHH8Fiw+Aksqb6t5E
-Quxa7myVeB96Vp3N5Y//WonBRO9t+JwTBRFITvAlmV8KeDxw4PApxaVEoI/u6xD3
-FHKZm88auJRMw1fvnNxewPAGd2qaHbwBlfu0N2CgChJWuX+IJ+wtBgamg8dgYUun
-dWaiQllSo1+bQwtIAFY5bfazuRYMLNuEUTeQB6eftjq1AqVEqts=
-=P8yw
------END PGP SIGNATURE-----
-
---Sig_/QJapevxT==4ySCMrXSj.IiG--
+-- 
+Without deviation from the norm, progress is not possible.
 
