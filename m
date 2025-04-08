@@ -1,136 +1,143 @@
-Return-Path: <linux-hyperv+bounces-4823-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4824-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7E17A813C4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 19:35:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22ED2A814BE
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 20:37:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ACBD3A87D8
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 17:35:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AE388867E8
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Apr 2025 18:36:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F522356CC;
-	Tue,  8 Apr 2025 17:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B877E23E340;
+	Tue,  8 Apr 2025 18:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DGIa7MQr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgWWiGFq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1167222B8D2;
-	Tue,  8 Apr 2025 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4932A256D;
+	Tue,  8 Apr 2025 18:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744133733; cv=none; b=aRBnG9Ei6nLT8ge1dxiRD+6WSlwic5JW9w3BeDTVQgrLd+ZmE6QeMQG0Zfp1Y93PQmeY/QN0KG4wfqt/tPS6z20GrxsRmbhyDuRmJNtC72SmJHD8k66Y0ydw/Zk9HulhTOtJpIXNGOXHDzn3BUyD4a56GZikjCGoW+L3GcYMExk=
+	t=1744137420; cv=none; b=eRapqC1kymjwminaC0AdzveWeKPRyqKIhjl0wMhd6I8T/xOCqqJH50wKUYOyR19kf2kkOVfNeMnSjS6u0L6G1D2G7QhY7SUq55nxWyfG8qDdTmDzLXQm0hDvlLpFi2bMFtrJJSXytG9GCgOE0jYG6mHUk5FxF42SDZ0t5AghINo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744133733; c=relaxed/simple;
-	bh=voU6MwLZqCQnV0FdjD08dZZ9AHYyERMxnrmtBaVaoZ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gyoBIaMRcfwuNKJ8Tz/6DJR/Y8vWGt//kzkV6B9maaOAG/ixieOMulh+I4UsDTmQkbqlvLXju9dJqagOaEJfG4CUepHwNulAdRfKYmWRQquVEyqkdCeSQYRJV/UbUcQUjywPORgRGmHJTYWShbdtE9C0sqA7oqkIP1xQquLaRjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=DGIa7MQr; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 538HYKRg3088620
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 8 Apr 2025 10:34:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 538HYKRg3088620
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744133664;
-	bh=WkvwYM1YWnU4TAJ+J/9Vt8/Lh0xsIqteV787gUNx/Oo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DGIa7MQrPXWSVvRWGj8J9I9uLnNFKLmCzMcxqp9sA7nAoJC1WJHTTBphRx8Kv8ojG
-	 TFKk4S0MJqG1qE6jdToL7U6LViQMYDTnT6XmG6GZ/+eQjdbb1OSynNFMrpEtzEVoKZ
-	 g0KcbVkw9oMHB5iu0Rp5BEfOt7OQlb08CtRaOpdIjsTXVHGAxBTuXCRraYO5P9wS94
-	 8v73kdOA2NdbUZ2X6Zw6P5nUDUF44s5P31zcgszZbitLnPnn1PucZbcA7gNJNvVE5d
-	 daoTYgTnVa8ixFIdolcOCNPBmW+yivuG8gYwjhDdkQiDgWmAvrkZdHD6C59UDRz+ez
-	 9U2wrN1TZ2BKQ==
-Message-ID: <3b91a47c-e453-406a-815d-67c438d73a4d@zytor.com>
-Date: Tue, 8 Apr 2025 10:34:20 -0700
+	s=arc-20240116; t=1744137420; c=relaxed/simple;
+	bh=5k8hs6+JkPpkUdWzR/s42XOTU/MqiCalasShbvGEV1A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=RDmXOuBsGeGEjk8P5IZLKnmrXEtV96V5OGXIFmowczDd/fdfcflZPswhL7Ew1+ALtCPzXA9g/XWQldB7qXjO7gQusWlX+x7gXb0Rr8oFVXD/8F0PvA6Bm6U4ooP8p3l5cDGj4P2Fn2c33m2V+TxK2RVIcgDUDaodWGSociE5JzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgWWiGFq; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c062b1f5so5021455b3a.0;
+        Tue, 08 Apr 2025 11:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744137418; x=1744742218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bEeigtXbuhczioF+6lFvsC87+fhHQtlYev57eI/FUBg=;
+        b=fgWWiGFq+jArqL9ySGeHW0PDeuKXjB2aiytICVWiHiwLJnwqtfjDcD5sWDSKVdOeF8
+         nyKIMsz4IZyZx2nwZBv7p0j31xL64cyS2tkB7LcdW3UX8IWkp2iMzWhYl4uCpSCZMHW/
+         Vcl+KfjKd5OTFSPrEwDWK0utD1so8XLOzL+fp9yyyIK6YdLfQhHoE+UbCPT2FzueISif
+         qHUNVC05H09u467QVxPkttw4PqhByshO3sVmkird7YrwFz6CsxpeZnhOV0o9AMUUsKa1
+         aPbKTI8dXgWxjbjXCtLTeI7xRDdI2dUpIx95LLeyvNTbh6LVSaSVqK5hV/vZE62J/TQZ
+         +pJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744137418; x=1744742218;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bEeigtXbuhczioF+6lFvsC87+fhHQtlYev57eI/FUBg=;
+        b=nhNW3MZJkQfRNcTDGRNPRcDUGnncGwVxb8RNYRsFaoOpnirmYUJuKlObbcXjZVq/LJ
+         +CiBXgWcuCsgIPD94knmFsiwDbJh8BAocHJ91LulsAajGsJ95/3jfGmAVqazM1HqrbvT
+         MdVB9JNljW1Dnuq5vBABXONL6HFOR6AgOu7MaGui3FGZK5F4LObWgGanVnxRLkJ4Z+qn
+         AoqgXXUWdCCuu+po/A5XK58v22/WZeODY7jFsc8ucabHy054nY8yvot+oHlwNouHMgbl
+         LCx4WwBT9I1Ewu+cL82Ul8bqZaSwxPzhrURcwZx5CTeDotxblA6wSLup3qo1mEbghNLm
+         0Csg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTTkVQWIcXS3WYUkey6nJ3jLvd5NVh09qgv67eOLcfsinXAyTVvIrmsYTaeBXrv46QC3w1Ng1poPyV2ZP5@vger.kernel.org, AJvYcCW75bhLc4E0jU9OYGBOKpTEQqam0GV+DXnPdEtRd5k4NqqZzDYTNUMK4cdV7S9RkF+W7jYXd1evKeV7eA==@vger.kernel.org, AJvYcCXssFLQUA6QKhi69pntIRs9DhuafJC3zIdGJUYlgFdBCQhBC6RXQWApfiwNV1yTPkqH8xO3FmQb0EpBGb8g@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCgv9fTS5M5FKHD2ei45wD5YCUx9La5ZQh1ap6sZ4DaYgXZlh5
+	0EYIXPymdApUvpMHeXiArSNIucNqxqs55g0NCVBmYEUb1TIBXgGi
+X-Gm-Gg: ASbGncv4JyVAxPfiPI6dghcgHcRw6iRGLSspvL6Hg4jC5ysUqXKgL/7k0cfBGYZjsKT
+	Qg9BOjQiYZYBN/nd9LwaswhRoCtUlAdRgelJzhDqwGNpoiN2EtweF4MmNnnSqgnuj6eRxm9X+80
+	EAX8AbL8OjPz70GWUhTxDxZ0gujzVIxwhanP4lyZWPiXs5sLCMu7c9Hf50NfCWXPkM5eO4ip7uz
+	pD+1pKWOKBnahdTqIyQSQZbIpQrMa6YSTiNpl4ClRDM4DRV5esUeg5O66TjQQCYp9Hc55Vo8ru4
+	CP9bXsK2u0foz10LcssMLfdukYO2kCBOk36ZM3othWse4DBZCqXl3OGS7zmUusepAEoHM7ak/i8
+	0hUmn4KxpqKfhyjAoWgAj/m5TNmm6c7d/Cw==
+X-Google-Smtp-Source: AGHT+IE3PGvOtJxss8WsloRc6dNnfNCVIij/xjc7LUujufO1C+pBYPdR2U2LJqkutAnOAYB1T4ZWLA==
+X-Received: by 2002:a05:6a00:1152:b0:736:ab21:6f37 with SMTP id d2e1a72fcca58-73bae30912bmr152031b3a.0.1744137418368;
+        Tue, 08 Apr 2025 11:36:58 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d32b2sm10960469b3a.5.2025.04.08.11.36.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 11:36:58 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: jayalk@intworks.biz,
+	simona@ffwll.ch,
+	deller@gmx.de,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	akpm@linux-foundation.org
+Cc: weh@microsoft.com,
+	tzimmermann@suse.de,
+	hch@lst.de,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 0/3] fbdev: Add deferred I/O support for contiguous kernel memory framebuffers
+Date: Tue,  8 Apr 2025 11:36:43 -0700
+Message-Id: <20250408183646.1410-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
- native_wrmsrl()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
- <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com>
- <7a503d55-db41-42da-8133-4a3dbbd36c7e@zytor.com> <Z-y4pGxgiP55lpOj@gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <Z-y4pGxgiP55lpOj@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 4/1/2025 9:10 PM, Ingo Molnar wrote:
-> Yeah, I moved it over to:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/msr
-> 
+From: Michael Kelley <mhklinux@outlook.com>
 
-Hi Ingo,
+Current deferred I/O code works only for framebuffer memory that is
+allocated with vmalloc(). The code assumes that the underlying page
+refcount can be used by the mm subsystem to manage each framebuffer
+page's lifecycle, which is consistent with vmalloc'ed memory, but not
+with contiguous kernel memory from alloc_pages() or similar. When used
+with contiguous kernel memory, current deferred I/O code eventually
+causes the memory free lists to be scrambled, and a kernel panic ensues.
+The problem is seen with the hyperv_fb driver when mmap'ing the
+framebuffer into user space, as that driver uses alloc_pages() for the
+framebuffer in some configurations. This patch set fixes the problem
+by supporting contiguous kernel memory framebuffers with deferred I/O.
 
-Are you going to merge it into tip in this development cycle for the
-v6.16 merge window?
+Patch 1 exports a 'mm' subsystem function needed by Patch 2.
 
-Thanks!
-     Xin
+Patch 2 is the changes to the fbdev deferred I/O code. More details
+are in the commit message of Patch 2.
+
+Patch 3 updates the hyperv_fb driver to use the new functionality
+from Patch 2.
+
+Michael Kelley (3):
+  mm: Export vmf_insert_mixed_mkwrite()
+  fbdev/deferred-io: Support contiguous kernel memory framebuffers
+  fbdev: hyperv_fb: Fix mmap of framebuffers allocated using
+    alloc_pages()
+
+ drivers/video/fbdev/core/fb_defio.c | 126 +++++++++++++++++++++++-----
+ drivers/video/fbdev/hyperv_fb.c     |   1 +
+ include/linux/fb.h                  |   1 +
+ mm/memory.c                         |   1 +
+ 4 files changed, 109 insertions(+), 20 deletions(-)
+
+-- 
+2.25.1
+
 
