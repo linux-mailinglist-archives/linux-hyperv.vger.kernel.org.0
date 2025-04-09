@@ -1,224 +1,116 @@
-Return-Path: <linux-hyperv+bounces-4849-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4850-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42306A82CBE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 18:45:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923D8A82EB3
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 20:30:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8634462A4A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 16:44:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D74A97A6AEA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 18:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B12AD26FDA9;
-	Wed,  9 Apr 2025 16:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB442777FE;
+	Wed,  9 Apr 2025 18:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="X5Bu2HZt"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Oben+jao"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFE6E26FD9C;
-	Wed,  9 Apr 2025 16:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5405E2777EF;
+	Wed,  9 Apr 2025 18:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217046; cv=none; b=l63AJ8ev5NgYViAUJBdtkZImzWSEMlfJkjSU12l0VlKCq0CAsQE8Yhf9NyYqdIGbBQC2lVQT1iGJs5P1ry6jyuenGSlhLLkkRg5lrFvdYoSAuIW2wIBOc5vOtBfhI4loubd8sQt1M5V9ISG1cRfY/JAVqq0OfuCI37MGzqUiNQo=
+	t=1744223403; cv=none; b=MXTn8h6Vn7fC8x6fcLXbyJyMQSTnEHLQySusgf7qk9oym9W/Kvk7utUMugkyj19gLkxtxR9iiFJhZ4DsBA/srqgRLyQjLeVZcBac3N4DdraWKZC1DKLsZRx9rWvNKC5BFNZN6Halr9LUpwBQlC3TM86wL+0vIQSHL1p/SJ4RLbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217046; c=relaxed/simple;
-	bh=vZtj6fjzUV9JwxxnoW0FOLv7WXuJNAO384idCThihp4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CpjBJ97euxF60tY8Mv/bjAS5jVXEo+fi9IIcdiOjTIUJbSKcnT3SGRROLBp2EbgojyjDr27yrM5c9Kv+P766iJEouNBeq5wXRGankaX81KkmvZI8eFS4jxzTZok2z2HyKyoXv777WvBsKU5vQkjnG3rSKQkVyP51Vufvk3rLHlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=X5Bu2HZt; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 07BCC2114D83;
-	Wed,  9 Apr 2025 09:44:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 07BCC2114D83
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744217044;
-	bh=F8xQZLyZb0rzWyPg1F/HaiidpPm+dIKPw5hHkJr+EYQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X5Bu2HZtj9nOBz7XIfNcku0n6btZPRjA06s9/Mki9xsm0FQwB18Awal4/1D7GrMc5
-	 ldY7BlNZAf0jksb4iEe6B9Aq+XAeWwSa7PR9fSZ9DI3m8thgBxhLMO6RUmfi7KXbVY
-	 DvNAmlkKO2GunRKxD34D0+pdQbJF7LnfcPa/sJQc=
-Message-ID: <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
-Date: Wed, 9 Apr 2025 09:44:03 -0700
+	s=arc-20240116; t=1744223403; c=relaxed/simple;
+	bh=5oRObHQr/2zxP1+n4IXBD/4FEd/MdlnQN8xaBIZBnjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nH4CUe/dkCQmWz11Wm4UonA3lcCGLctIkl7t0f2fJlSCGUwA2Iq/WWgkmTUZSJpjG/VmV5qdUF3l8tt1l86ctqozI53g2eGlaTh3RyghghitWiM34EIukBI2e6/k955aciu4dxu0yNAQL30q6J+Q8UVfNxkM095bK6NtjShshU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Oben+jao; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7AC0A40E0200;
+	Wed,  9 Apr 2025 18:29:57 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mC0_SoCKP1kE; Wed,  9 Apr 2025 18:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744223393; bh=+3jdce2oV/wlpTCh9nVzDCQMPe79U9ZqKxnpwEsP4C4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Oben+jaogdG78UROuUb/bpHhWyjgmtmOmtSZdo2t3cwVOYCnVBIQ5aPHSM7JbfA8L
+	 a7il1MtnGehbn1Dbsi95rzTwuV/7/fZ1Qt/cWrp5u2VAuxgG2oLQNhXUn3gqGFBZlg
+	 SlJQxStq41uzYFGCmJXB11wrnm6C5bTgGE7dUvBi3L/bVRf6OUL5pDm57e4FIwZs2g
+	 bxKXkINO/igclxF+tmgtogaa7mhy0CmtrVSErM8WfrnBz6jcs0OZG+5i7nGb+/QAqy
+	 yskMHOTwDJf0UtMMUk+cwEbHtp1KgPnNszpgTdwkgQ/XZqg5h57JD7WTz2CQjmYGkE
+	 XdzttnJ/H4UpRrIbNr1geo2K80Cy8l5QLGqzGf7nQgsrQie6pePjHih9boX9oNY86U
+	 mdQjNqwcyv2fIA5onMgaxzwAtOO+yfeT+VDoJ6Jqr9sNgWXkr81io2DNsJehA/kHu9
+	 HAOpjQzkb4Ng0XCl4mxZu3J3ERcvXNgU3v1xle428jBuyb0Z5nEcmzP6cXzCG1ETwx
+	 lMhOWKkPJQcDVT2Zezl0eZen+E2U+5/zrWMSPj8WPbgUN4D6xdvHQMBBXDMZtcSujk
+	 H4WeGkbHx1iFn0IwMJDWTvVRl1ObxIK+tCIZ/w8BSl1Ck5s8TLKBUUwuFCM+bxHUPR
+	 h9Pu6YFAOfQeJQ8B2d+g6nD4=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B820E40E0244;
+	Wed,  9 Apr 2025 18:29:26 +0000 (UTC)
+Date: Wed, 9 Apr 2025 20:29:17 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bert Karwatzki <spasswolf@web.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org, James.Bottomley@hansenpartnership.com,
+	Jonathan.Cameron@huawei.com, allenbh@gmail.com, d-gole@ti.com,
+	dave.jiang@intel.com, haiyangz@microsoft.com, jdmason@kudzu.us,
+	kristo@kernel.org, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+	logang@deltatee.com, manivannan.sadhasivam@linaro.org,
+	martin.petersen@oracle.com, maz@kernel.org, mhklinux@outlook.com,
+	nm@ti.com, ntb@lists.linux.dev, peterz@infradead.org,
+	ssantosh@kernel.org, wei.huang2@amd.com, wei.liu@kernel.org
+Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
+Message-ID: <20250409182917.GBZ_a8fYnLJHngPM0Z@fat_crate.local>
+References: <20250408120446.3128-1-spasswolf@web.de>
+ <87iknevgfb.ffs@tglx>
+ <87friivfht.ffs@tglx>
+ <f303b266172050f2ec0dc5168b23e0cea9138b01.camel@web.de>
+ <87a58qv0tn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
- to not bounce-buffer
-To: Robin Murphy <robin.murphy@arm.com>, aleksander.lobakin@intel.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
- catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
- dan.j.williams@intel.com, dave.hansen@linux.intel.com, decui@microsoft.com,
- gregkh@linuxfoundation.org, haiyangz@microsoft.com, hch@lst.de,
- hpa@zytor.com, James.Bottomley@HansenPartnership.com,
- Jonathan.Cameron@huawei.com, kys@microsoft.com, leon@kernel.org,
- lukas@wunner.de, luto@kernel.org, m.szyprowski@samsung.com,
- martin.petersen@oracle.com, mingo@redhat.com, peterz@infradead.org,
- quic_zijuhu@quicinc.com, tglx@linutronix.de, wei.liu@kernel.org,
- will@kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20250409000835.285105-1-romank@linux.microsoft.com>
- <20250409000835.285105-6-romank@linux.microsoft.com>
- <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87a58qv0tn.ffs@tglx>
 
+On Tue, Apr 08, 2025 at 10:46:12PM +0200, Thomas Gleixner wrote:
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index 4027abcafe7a..77cc27e45b66 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -680,8 +680,8 @@ static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *ent
+>  	if (ret)
+>  		return ret;
+>  
+> -	retain_ptr(dev);
+>  	msix_update_entries(dev, entries);
+> +	retain_ptr(dev);
+>  	return 0;
 
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-On 4/9/2025 9:03 AM, Robin Murphy wrote:
-> On 2025-04-09 1:08 am, Roman Kisel wrote:
->> Bounce-buffering makes the system spend more time copying
->> I/O data. When the I/O transaction take place between
->> a confidential and a non-confidential endpoints, there is
->> no other way around.
->>
->> Introduce a device bitfield to indicate that the device
->> doesn't need to perform bounce buffering. The capable
->> device may employ it to save on copying data around.
-> 
-> It's not so much about bounce buffering, it's more fundamentally about 
-> whether the device is trusted and able to access private memory at all 
-> or not. And performance is hardly the biggest concern either - if you do 
-> trust a device to operate on confidential data in private memory, then 
-> surely it is crucial to actively *prevent* that data ever getting into 
-> shared SWIOTLB pages where anyone else could also get at it. At worst 
-> that means CoCo VMs might need an *additional* non-shared SWIOTLB to 
-> support trusted devices with addressing limitations (and/or 
-> "swiotlb=force" debugging, potentially).
-
-Thanks, I should've highlighted that facet most certainly!
-
-> 
-> Also whatever we do for this really wants to tie in with the nascent 
-> TDISP stuff as well, since we definitely don't want to end up with more 
-> than one notion of whether a device is in a trusted/locked/private/etc. 
-> vs. unlocked/shared/etc. state with respect to DMA (or indeed anything 
-> else if we can avoid it).
-
-Wouldn't TDISP be per-device as well? In which case, a flag would be
-needed just as being added in this patch.
-
-Although, there must be a difference between a device with TDISP where
-the flag would be the indication of the feature, and this code where the
-driver may flip that back and forth...
-
-Do you feel this is shoehorned in `struct device`? I couldn't find an
-appropriate private (== opaque pointer) part in the structure to store
-that bit (`struct device_private` wouldn't fit the bill) and looked like
-adding it to the struct itself would do no harm. However, my read of the
-room is that folks see that as dubious :)
-
-What would be your opinion on where to store that flag to tie together
-its usage in the Hyper-V SCSI and not bounce-buffering?
-
-> 
-> Thanks,
-> Robin.
-> 
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> ---
->>   arch/x86/mm/mem_encrypt.c  | 3 +++
->>   include/linux/device.h     | 8 ++++++++
->>   include/linux/dma-direct.h | 3 +++
->>   include/linux/swiotlb.h    | 3 +++
->>   4 files changed, 17 insertions(+)
->>
->> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->> index 95bae74fdab2..6349a02a1da3 100644
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -19,6 +19,9 @@
->>   /* Override for DMA direct allocation check - 
->> ARCH_HAS_FORCE_DMA_UNENCRYPTED */
->>   bool force_dma_unencrypted(struct device *dev)
->>   {
->> +    if (dev->use_priv_pages_for_io)
->> +        return false;
->> +
->>       /*
->>        * For SEV, all DMA must be to unencrypted addresses.
->>        */
->> diff --git a/include/linux/device.h b/include/linux/device.h
->> index 80a5b3268986..4aa4a6fd9580 100644
->> --- a/include/linux/device.h
->> +++ b/include/linux/device.h
->> @@ -725,6 +725,8 @@ struct device_physical_location {
->>    * @dma_skip_sync: DMA sync operations can be skipped for coherent 
->> buffers.
->>    * @dma_iommu: Device is using default IOMMU implementation for DMA and
->>    *        doesn't rely on dma_ops structure.
->> + * @use_priv_pages_for_io: Device is using private pages for I/O, no 
->> need to
->> + *        bounce-buffer.
->>    *
->>    * At the lowest level, every device in a Linux system is 
->> represented by an
->>    * instance of struct device. The device structure contains the 
->> information
->> @@ -843,6 +845,7 @@ struct device {
->>   #ifdef CONFIG_IOMMU_DMA
->>       bool            dma_iommu:1;
->>   #endif
->> +    bool            use_priv_pages_for_io:1;
->>   };
->>   /**
->> @@ -1079,6 +1082,11 @@ static inline bool 
->> dev_removable_is_valid(struct device *dev)
->>       return dev->removable != DEVICE_REMOVABLE_NOT_SUPPORTED;
->>   }
->> +static inline bool dev_priv_pages_for_io(struct device *dev)
->> +{
->> +    return dev->use_priv_pages_for_io;
->> +}
->> +
->>   /*
->>    * High level routines for use by the bus drivers
->>    */
->> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
->> index d7e30d4f7503..b096369f847e 100644
->> --- a/include/linux/dma-direct.h
->> +++ b/include/linux/dma-direct.h
->> @@ -94,6 +94,9 @@ static inline dma_addr_t 
->> phys_to_dma_unencrypted(struct device *dev,
->>    */
->>   static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t 
->> paddr)
->>   {
->> +    if (dev_priv_pages_for_io(dev))
->> +        return phys_to_dma_unencrypted(dev, paddr);
->> +
->>       return __sme_set(phys_to_dma_unencrypted(dev, paddr));
->>   }
->> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
->> index 3dae0f592063..35ee10641b42 100644
->> --- a/include/linux/swiotlb.h
->> +++ b/include/linux/swiotlb.h
->> @@ -173,6 +173,9 @@ static inline bool is_swiotlb_force_bounce(struct 
->> device *dev)
->>   {
->>       struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
->> +    if (dev_priv_pages_for_io(dev))
->> +        return false;
->> +
->>       return mem && mem->force_bounce;
->>   }
-> 
+Fixes my machine too.
 
 -- 
-Thank you,
-Roman
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
