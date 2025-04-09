@@ -1,127 +1,72 @@
-Return-Path: <linux-hyperv+bounces-4834-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7A89A819B0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 02:09:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12C1AA822AF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 12:50:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 965DB190113C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 00:09:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92CF63BC7EA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 10:49:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B583542048;
-	Wed,  9 Apr 2025 00:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Of+UYZp2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4673925D8EC;
+	Wed,  9 Apr 2025 10:49:49 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8ABCA930;
-	Wed,  9 Apr 2025 00:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22362459E8;
+	Wed,  9 Apr 2025 10:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744157328; cv=none; b=aPvaSlFG9tW5uzV24nzj/53l/jkQdkFpTL7ehMPpoKc6T4tAn7uVL875cbvpL4rS86CcAL0tbomVuGAy7pCMo5tawFoii3hmymo8vAFWv4+/ce2TnA3BCnhZERRDQ9JBRqTMhR0fyvQ9NiNy8CZ1TWRXjlkPDDVIktzFCrh59fs=
+	t=1744195789; cv=none; b=qXPsQMrpBdGut4pWfgMdzuUL/nK2noRIEqCal3vdN76QiphIN6fCn+VOTHRKGt5qfxom0Fr8mFLVdlenZtSEb4C0W4jmi6dZUARi2bsLS9FbfRsqo7eX63EXHP2/0RCmADHLz/wbcCZ+55oBT3ZzUnAOlHZXA89r7/53sxWGnNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744157328; c=relaxed/simple;
-	bh=ET0ZoDUatD+fIJZqkawbH9nsPAnlPh6a5FaEfcrsqL4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BVZB9eEraRfVVnJbWM41FMXfTKR8vj/o2cV6QJaF7SGJap/1v1HFc+LcpNsih0TM1S53mOKbRwib7ccx7h3Go2pzjXkFOU0bMqaQ34PGojnpWRDhotDrkhqSpV/mHsmQnt32hBvr17uz+IHNAHVW9Kk24V1fZFBOJvCmDxCYiQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Of+UYZp2; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 06D292113E9F;
-	Tue,  8 Apr 2025 17:08:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06D292113E9F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744157320;
-	bh=8ek7c/V4tEPRnWDg9ne0X3d57G2QR4Kt93BNCHQvtsg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Of+UYZp2I4weN3I81NEdoIr6gHMQsX3CjbNKnmmILmhtmUf4OHR93sp3AhZBtJ2pd
-	 p1p+jiVB2MOUPwfNzvia/zk8pDwYavj+M98l9VP+2iQjxvMKZGei/TzEdRpNb6jH7A
-	 QZU2sGxZRVpouYt/yXPi/sDcuyn3Lg+7XMI11FP0=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: aleksander.lobakin@intel.com,
-	andriy.shevchenko@linux.intel.com,
-	arnd@arndb.de,
-	bp@alien8.de,
-	catalin.marinas@arm.com,
-	corbet@lwn.net,
-	dakr@kernel.org,
-	dan.j.williams@intel.com,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	gregkh@linuxfoundation.org,
-	haiyangz@microsoft.com,
-	hch@lst.de,
-	hpa@zytor.com,
-	James.Bottomley@HansenPartnership.com,
-	Jonathan.Cameron@huawei.com,
-	kys@microsoft.com,
-	leon@kernel.org,
-	lukas@wunner.de,
-	luto@kernel.org,
-	m.szyprowski@samsung.com,
-	martin.petersen@oracle.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	quic_zijuhu@quicinc.com,
-	robin.murphy@arm.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	will@kernel.org,
-	iommu@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next 6/6] drivers: SCSI: Do not bounce-bufffer for the confidential VMBus
-Date: Tue,  8 Apr 2025 17:08:35 -0700
-Message-ID: <20250409000835.285105-7-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250409000835.285105-1-romank@linux.microsoft.com>
-References: <20250409000835.285105-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1744195789; c=relaxed/simple;
+	bh=VcXPIsYKRo3MhwBOVsH4CASSunr7jIyXwKdenYydJ3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hufAkVbs26NwpYy22TzqSN+mFzpvEjvRZV3lDXkomX1pqGkFLjYIs/A1jRqKosbRP6QS+ipqg2exXhm0zMyC3SUojXZ4aWyl609H4DE2CNFK51Ju+ohz5Z9QsZP/WSCjVpIiw+gxs8oXb1wxzmcSSJXdUNfM9WfdRXldUicWDyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 91A7968AA6; Wed,  9 Apr 2025 12:49:42 +0200 (CEST)
+Date: Wed, 9 Apr 2025 12:49:42 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: mhklinux@outlook.com
+Cc: jayalk@intworks.biz, simona@ffwll.ch, deller@gmx.de,
+	haiyangz@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, akpm@linux-foundation.org, weh@microsoft.com,
+	tzimmermann@suse.de, hch@lst.de, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm: Export vmf_insert_mixed_mkwrite()
+Message-ID: <20250409104942.GA5572@lst.de>
+References: <20250408183646.1410-1-mhklinux@outlook.com> <20250408183646.1410-2-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408183646.1410-2-mhklinux@outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-The device bit that indicates that the device is capable of I/O
-with private pages lets avoid excessive copying in the Hyper-V
-SCSI driver.
+On Tue, Apr 08, 2025 at 11:36:44AM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Export vmf_insert_mixed_mkwrite() for use by fbdev deferred I/O code,
 
-Set that bit equal to the confidential external memory one to
-not bounce buffer
+But they are using this on dma coherent memory, where you can't legally
+get at the page.  As told last time you need to fix that first before
+hacking around that code.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
- drivers/scsi/storvsc_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+> which can be built as a module. For consistency with the related function
+> vmf_insert_mixed(), export without the GPL qualifier.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index a8614e54544e..f647f8fc2f8f 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -686,6 +686,8 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
- 	struct vmstorage_channel_properties props;
- 	int ret;
- 
-+	dev->use_priv_pages_for_io = new_sc->confidential_external_memory;
-+
- 	stor_device = get_out_stor_device(device);
- 	if (!stor_device)
- 		return;
--- 
-2.43.0
+No.  All advanced new Linux functionality must be _GPL.  Don't try to
+sneak around that.
 
 
