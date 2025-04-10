@@ -1,61 +1,58 @@
-Return-Path: <linux-hyperv+bounces-4863-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4864-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFA56A83B2F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 09:31:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7600EA83B7E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 09:42:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7D073A76DA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 07:26:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6407416EE60
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 07:42:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F162520ADFA;
-	Thu, 10 Apr 2025 07:24:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0506E20127A;
+	Thu, 10 Apr 2025 07:42:36 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F85205AA5;
-	Thu, 10 Apr 2025 07:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB0C1E3DED;
+	Thu, 10 Apr 2025 07:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269843; cv=none; b=NhHkaeejZwTYTJeBQtZu27BIdkQEdyVs+DLGqd9LLTh/yAcNXFDwLxQ50BgPvJV2pKnsIaffg33ev6hjZWULSM+OsTjrq8KNSul4EhWHoqj5uvY6dIsy5e2mCpt9C7M4NM031wGrxwkYb6gYLhoBhyOU6oGlapQ4Wl0UxSW1aTc=
+	t=1744270955; cv=none; b=Iv1FoNEMjsCmwlo2ahdtz0MfekrTLU7jrxN7BBdqew7nzgM99jKCIIiZ/9vKYNsFpBBbEzDpIF66qKso4exJjIZOO5deZZv1myyT3Gm/4rNPz1h3ZyGgTkW/4A9Hf3J/fhdye3B9uAWx1ogdCjkBgI9uAtVR9v75bii/5A3Cmto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269843; c=relaxed/simple;
-	bh=7sEd3Ffa5a1RVgJPuCxl22V8hW6GtHda8gxp+9Ug0ag=;
+	s=arc-20240116; t=1744270955; c=relaxed/simple;
+	bh=85QpR9oFRrRsEnFw64qHfKu5TEkleorKdhp2VUyvkYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fE9WkfmXjm/rX/uOobNndroCgjJzaZgyyJCACxgntUlaqPN1nI0/XVqI4QWu2iG/qpACuH6/yh3UtItQ3yBLK1KBtEkmLTVwfl7H+m5py+ejPYzwTeE9Us8KpbZWiluzMkvIP4kBrj0MWL1LJp3fjmrH+1c5uyLEc0FvEfS+OKw=
+	 Content-Type:Content-Disposition:In-Reply-To; b=IakfVveOTAWScM44giqyf69nrpyrdBN3hbiszSplaVpYnWwJ4kQfQWs8JYVL2LohcqPc6R94wGXJxZCugZ5V93cvdz/SBsq8lbvPj2lRKNyxYXuD/q1qJJbst3Yx68zYn/nv8Afn2DNYFSyHByhGjX8Gco/HQq7zPO4yjU37Blc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 7F56568C4E; Thu, 10 Apr 2025 09:23:54 +0200 (CEST)
-Date: Thu, 10 Apr 2025 09:23:54 +0200
+	id EE92D68B05; Thu, 10 Apr 2025 09:42:28 +0200 (CEST)
+Date: Thu, 10 Apr 2025 09:42:28 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Roman Kisel <romank@linux.microsoft.com>,
-	Robin Murphy <robin.murphy@arm.com>, aleksander.lobakin@intel.com,
-	andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-	catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
-	dave.hansen@linux.intel.com, decui@microsoft.com,
-	gregkh@linuxfoundation.org, haiyangz@microsoft.com, hch@lst.de,
-	hpa@zytor.com, James.Bottomley@hansenpartnership.com,
-	Jonathan.Cameron@huawei.com, kys@microsoft.com, leon@kernel.org,
-	lukas@wunner.de, luto@kernel.org, m.szyprowski@samsung.com,
-	martin.petersen@oracle.com, mingo@redhat.com, peterz@infradead.org,
-	quic_zijuhu@quicinc.com, tglx@linutronix.de, wei.liu@kernel.org,
-	will@kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, bperkins@microsoft.com,
-	sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct
- bitfield to not bounce-buffer
-Message-ID: <20250410072354.GB32563@lst.de>
-References: <20250409000835.285105-1-romank@linux.microsoft.com> <20250409000835.285105-6-romank@linux.microsoft.com> <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com> <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com> <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	"jayalk@intworks.biz" <jayalk@intworks.biz>,
+	"simona@ffwll.ch" <simona@ffwll.ch>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"weh@microsoft.com" <weh@microsoft.com>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/3] mm: Export vmf_insert_mixed_mkwrite()
+Message-ID: <20250410074228.GA680@lst.de>
+References: <20250408183646.1410-1-mhklinux@outlook.com> <20250408183646.1410-2-mhklinux@outlook.com> <20250409104942.GA5572@lst.de> <BN7PR02MB4148597D0495C631F6E3F8C0D4B42@BN7PR02MB4148.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,22 +61,37 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <BN7PR02MB4148597D0495C631F6E3F8C0D4B42@BN7PR02MB4148.namprd02.prod.outlook.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Apr 09, 2025 at 04:30:17PM -0700, Dan Williams wrote:
-> > Thanks, I should've highlighted that facet most certainly!
+On Wed, Apr 09, 2025 at 02:10:26PM +0000, Michael Kelley wrote:
+> Hmmm. What's the reference to "as told last time"? I don't think I've had
+> this conversation before.
+
+Hmm, there was a conversation about deferred I/O, and I remember the
+drm folks even defending their abuse of vmalloc_to_page on dma coherent
+memory against the documentation in the most silly way.  Maybe that was
+a different discussion of the same thing.
+
 > 
-> One would hope that no one is building a modern device with trusted I/O
-> capability, *and* with a swiotlb addressing dependency. However, I agree
-> that a non-shared swiotlb would be needed in such a scenario.
+> For the hyperv_fb driver, the memory in question is allocated with a direct call
+> to alloc_pages(), not via dma_alloc_coherent(). There's no DMA in this scenario.
+> The memory is shared with the Hyper-V host and designated as the memory
+> for the virtual framebuffer device. It is then mapped into user space using the
+> mmap() system call against /dev/fb0. User space writes to the memory are
+> eventually (and I omit the details) picked up by the Hyper-V host and displayed.
 
-Hope is never a good idea when dealing with hardware :(  PCIe already
-requires no addressing limitations, and programming interface specs
-like NVMe double down on that.  But at least one big hyperscaler still
-managed to build such a device.
+Oh, great.
 
-Also even if the periphal device is not addressing limited, the root
-port or interconnect might still be, we've seen quite a lot of that.
+> Is your point that memory dma_alloc_coherent() memory must be treated as
+> a black box, and can't be deconstructed into individual pages? If so, that makes
+> sense to me.
+
+Yes.
+
+> But must the same treatment be applied to memory from
+> alloc_pages()? This is where I need some education.
+
+No, that's just fine.
 
 
