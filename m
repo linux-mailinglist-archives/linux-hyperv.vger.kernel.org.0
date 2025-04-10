@@ -1,313 +1,302 @@
-Return-Path: <linux-hyperv+bounces-4856-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4857-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC310A8348B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 01:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C652A8358E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 03:17:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEE03188BF7A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Apr 2025 23:31:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D1A61B613B2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 01:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D3021D58F;
-	Wed,  9 Apr 2025 23:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60D25198A2F;
+	Thu, 10 Apr 2025 01:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T3mTJZ/A"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LdfDVBIo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19013087.outbound.protection.outlook.com [52.103.7.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF7621D018;
-	Wed,  9 Apr 2025 23:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A7F18B48B;
+	Thu, 10 Apr 2025 01:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744241460; cv=fail; b=TQQu4RD2003i/mxmv86FV1obg27as0rJ9AxotYQhadpn1r5XJ4NLhUDWaljRdtzbESavaEL6TRzzrWtOXuTlraZpBHqvkVkZWi6bAg1WpNN5A22pR3CsPUbHoBtsA7Vb38bsSab32SXc3wB9gieaN7Eb3qyE3dihGWmR4E4UArY=
+	t=1744247780; cv=fail; b=UaML0bFZLE909BFg7ovzhRRAZN3gMEl8I5FpfNenU/p8TpHmLVp9g6wXk26rGDKkuQuAhr30ZkDtId4K2gf6tXUaQQtw0qIPSF/NtznLkDULOCfzVj/ASmji5mRZbEyrkzXD7GLtNK0Ed5AWMnaimS9hByA+XKzuutZRstHMnpA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744241460; c=relaxed/simple;
-	bh=RWSO0WaiBWJJ08hXiesCtbiFB5wLNG0jwruUREHjD9g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oM/TCdFA5DDsSNZO7gpVdxFnPd4JNEj8tzGq1ouLet7pp/mnLT9ni3HTc4BFpg8b5+fK8hBH9AoPrKIDcuYqego2/n2wDYVfdIg2blv9maGOxRV9PqrQwaVyM3dV+9b/uZ0tOztGaXOYqiyF26hGyM3KaigDevvzohuCdGyUqdk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T3mTJZ/A; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744241458; x=1775777458;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=RWSO0WaiBWJJ08hXiesCtbiFB5wLNG0jwruUREHjD9g=;
-  b=T3mTJZ/AOgMdfOys8JLiPDhZ4O3GXBDcGGTmQjp3QCQKYycCKJGqE6ml
-   nKHWhIbVjMTuYJW0olKFGLjdtGUYfqPje2HCRSBGoznvW+y7T6EcPy7iA
-   VhtnWJWdZct3cdIInz0fFz5AI1Dkhdrseh7hxBTTRvcQ2D9kt1RrcFAC9
-   17aMGGqesUUCqTpJSLsUgSG4dojRtWTqCO7GC0Yc9UUh40ku3q+T1AKQD
-   4rrx/B3Ps6Y2V8naR8U0y77065qmVfllXjLAcmlGX4yBCfYMa4vsXRfFL
-   ITm1rkzHjuuGzcYkiT/zUFTRcnvOjodyr+vM7Fz3MtStoFugWMCnCv75v
-   g==;
-X-CSE-ConnectionGUID: hAP2gFxwQuWdi1HLJXfESA==
-X-CSE-MsgGUID: zPumDCqDTluuoP3s+woTUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45865468"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="45865468"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 16:30:57 -0700
-X-CSE-ConnectionGUID: d7+DU2Y1RsOz+n7z/sQDEg==
-X-CSE-MsgGUID: vFkQpDVbT0CMVF761gO/RA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="133932843"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 16:30:57 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 9 Apr 2025 16:30:56 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 9 Apr 2025 16:30:56 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 9 Apr 2025 16:30:55 -0700
+	s=arc-20240116; t=1744247780; c=relaxed/simple;
+	bh=fMGZMkZqAbTj2f77VjkweA0Ni3qZz9aOtsXiich+/5g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oRThYfy35tYMf/teypWf3FjGEV4Ia8TRWyvQd5n+WvF/lFGTokWh/+Lw5adWSMfMoJd9gSJtvU+hbxc7DF+CSKIudqo5L8lgj9zs7TrOs3eXC2qteg79/u9ZRnBD7aZzm0/ZhE9nVljIix7N1cqprUTcLtYjEyi4aKjSITHnIWs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LdfDVBIo; arc=fail smtp.client-ip=52.103.7.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gjE9bo6277re1I0eg6bXHauqaEAnlOCi3hrgfl+cJLgGr42SU23mDJg72Oeih49XdC2HFzJijnyxmbpMF0N+CAkNehQzIg3cxA6LJiaDHKi6EaZxSLHrfLdoW6N2gjug5gcng/mVBUfft+/FFqbX5u0zap4UBBa92x+mzr+0Zx8hvtV+2cuQKUmiYsYcZWmhVoR+wJ0tEg/i/V0V0T8VOZDkEYxYRdUVoXKiT5W9kMbXKOIM56SgAxFIXB8CQP6M0N3VNThDDLMjb8WQr5HTzWsdhIcCgUs4yOVLW97eF6v76a7MEkp2Yj0tjpNOXN/JjLBBeZgl4QKbZad8zeyvnA==
+ b=Gy0GA0FKChiJme8FjuQvLBCN4qGZHFW6BUeSpsAv/ciCLIxvr5mPUDXjEboOktM8H3z42UMSQj8UOQ6R+eDiKFxFxXtAeD6cqBEB7kIale7SdHN0Alc4xr+je2UdkBTULdVCquRJkFI2ZmXv9jpf4VzCpW68Yo1gxLpZhdKrKmw0y7iBTwsbR0DL+TmxIr/SZUgns780vXamtcW8vDfaErALzXsoL8bd0os2TNAah+Yg8nESFeIkjE3rTabig4LthSRNHb5GG/Pdl2V0apvkj7BGhChHStOnTbiB/3sAkGhPbMhT9xspyEpV2LHwBHAXwyD289jujG7whmCjDpbj5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3p16+dPFs7ACQiS570v0vyyhiYEpHQSJgJQ6mtR+siE=;
- b=AAK6XSevD/RZy2tGtUYKKUiU/LjHHC22rvmkg8U49WwyBc2z9D7K+tvk95N3QUiuUs+JnuwRG8a4R7Wt47qz6/UTHhYaEJczDEOzxCbh4oXESpno8REJQDj0LUtSHkXY+4hgCJRoVnUP6Ltpo2o+V+odQSovsdnmg1K71AY4po5u2umB/JmVHU+isOOaJ+x7UgTm5saSVjvgqN4F3mptbGj4oxI3/AOFMQrr6nGGd5pV6Pvs8pKnFEssji774GU9M1flOp5PjLT3ewlLxwIWqqfPKr6BEC9J0bNBcrOBEr7Va55mDh9vBzq/quJ0xPWT0477nfY3qpVTUVBhnhTeLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB7346.namprd11.prod.outlook.com (2603:10b6:610:152::12) with
+ bh=fMGZMkZqAbTj2f77VjkweA0Ni3qZz9aOtsXiich+/5g=;
+ b=HQcmQM95rQ8rrqgCOnWyoRscOYcHkYsImI4WWOH0Nhj8raOnHs/QQn4zmHBAmz14tP2e/QNgb9ykJCtoLml7/yqzZnJzR3oSkwUK67nVtS4QNqbYnJSM6QCU9DBWX+jgwN3OjHm2kldjUtpizYQ+xI9v9D7CVghApEMx2HHNyvYo2qApHvdpybxz7I5Jz4hus27+lOZeRk3r+WTBfdWAoOBL9Av7GPP4H3qRVF7M0NlpBYBbbUmSpVvkoctbhNA4T3pqCzOwJyaw82pm4NGduUMQ9WdQQDgtKsac1YzQkfw07XPqmLijYSmS/EGXs/sjaQa99kPK0xTYyxfUrPUAtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fMGZMkZqAbTj2f77VjkweA0Ni3qZz9aOtsXiich+/5g=;
+ b=LdfDVBIoB8lH3oPtSNhP/ER1xhJFD6ouukywVzG7gNZ2ARIlm+Upl8ieTEdAf13TuugYn4JMCo2VXzPaGB+VIGAdqEdrAfrJ+lRwhSDLirMnVSw0rBsCduF464m1Gj1QEHzpdqU5baDcWmOSRB1cRFODmShMja0MrtKemAzRuM3BiQejB4sOo7A0ZF519pO6ms5vJM37qntLOL9d+TVkFCeOg5bApUzsab7E0gLu4JALWVDyDhp8xZkonPjK3EEIrFGuiV9SwPRGszsbTFI0fWu9S6eXvfFGA42C70AKjGqUkRpooqO1hhJpkBXZhsu/KWAU3Gc9IFOnNFfykBUIwg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CY8PR02MB10188.namprd02.prod.outlook.com (2603:10b6:930:55::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Wed, 9 Apr
- 2025 23:30:23 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
- 23:30:23 +0000
-Date: Wed, 9 Apr 2025 16:30:17 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Roman Kisel <romank@linux.microsoft.com>, Robin Murphy
-	<robin.murphy@arm.com>, <aleksander.lobakin@intel.com>,
-	<andriy.shevchenko@linux.intel.com>, <arnd@arndb.de>, <bp@alien8.de>,
-	<catalin.marinas@arm.com>, <corbet@lwn.net>, <dakr@kernel.org>,
-	<dan.j.williams@intel.com>, <dave.hansen@linux.intel.com>,
-	<decui@microsoft.com>, <gregkh@linuxfoundation.org>,
-	<haiyangz@microsoft.com>, <hch@lst.de>, <hpa@zytor.com>,
-	<James.Bottomley@hansenpartnership.com>, <Jonathan.Cameron@huawei.com>,
-	<kys@microsoft.com>, <leon@kernel.org>, <lukas@wunner.de>, <luto@kernel.org>,
-	<m.szyprowski@samsung.com>, <martin.petersen@oracle.com>, <mingo@redhat.com>,
-	<peterz@infradead.org>, <quic_zijuhu@quicinc.com>, <tglx@linutronix.de>,
-	<wei.liu@kernel.org>, <will@kernel.org>, <iommu@lists.linux.dev>,
-	<linux-arch@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<x86@kernel.org>
-CC: <apais@microsoft.com>, <benhill@microsoft.com>, <bperkins@microsoft.com>,
-	<sunilmut@microsoft.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Thu, 10 Apr
+ 2025 01:16:15 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 01:16:15 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Dan Williams <dan.j.williams@intel.com>, Roman Kisel
+	<romank@linux.microsoft.com>, Robin Murphy <robin.murphy@arm.com>,
+	"aleksander.lobakin@intel.com" <aleksander.lobakin@intel.com>,
+	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	"arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "corbet@lwn.net"
+	<corbet@lwn.net>, "dakr@kernel.org" <dakr@kernel.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"decui@microsoft.com" <decui@microsoft.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "hch@lst.de" <hch@lst.de>, "hpa@zytor.com"
+	<hpa@zytor.com>, "James.Bottomley@hansenpartnership.com"
+	<James.Bottomley@hansenpartnership.com>, "Jonathan.Cameron@huawei.com"
+	<Jonathan.Cameron@huawei.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"leon@kernel.org" <leon@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+	"luto@kernel.org" <luto@kernel.org>, "m.szyprowski@samsung.com"
+	<m.szyprowski@samsung.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "quic_zijuhu@quicinc.com"
+	<quic_zijuhu@quicinc.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
+	<will@kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
+	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
+	"sunilmut@microsoft.com" <sunilmut@microsoft.com>, Suzuki K Poulose
+	<suzuki.poulose@arm.com>, "linux-coco@lists.linux.dev"
 	<linux-coco@lists.linux.dev>
-Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct
+Subject: RE: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
+ to not bounce-buffer
+Thread-Topic: [PATCH hyperv-next 5/6] arch, drivers: Add device struct
  bitfield to not bounce-buffer
-Message-ID: <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
+Thread-Index: AQHbqOPfbMEO/VxdVECSYxt0gRTVfbObf/mAgAALcoCAAHGBgIAAGRsQ
+Date: Thu, 10 Apr 2025 01:16:14 +0000
+Message-ID:
+ <SN6PR02MB4157328CAB1EBD021093DD3FD4B72@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20250409000835.285105-1-romank@linux.microsoft.com>
  <20250409000835.285105-6-romank@linux.microsoft.com>
  <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
  <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
+ <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB10188:EE_
+x-ms-office365-filtering-correlation-id: b87c3ce7-142a-4f6e-7470-08dd77cd4a0d
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|12121999004|19110799003|8060799006|15080799006|8062599003|461199028|3412199025|440099028|102099032|12091999003|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?PwhT/Fia8E1U9ChqRNjhYc0D4Kdv/TKebzYsECN/XuX3OQ90MjMj0s8mQFl0?=
+ =?us-ascii?Q?G2NL4BqhvVf2o9MYBaKXOAwAIo7oZXbvPkifDlBYI4h9wMulaCIy3z++nYzx?=
+ =?us-ascii?Q?W8X+Lk9rFz5mdVw1ipUdQ+Jjp7/I6d32wMo+xGc0Dxmyr5/qLoC1ma3HV7nz?=
+ =?us-ascii?Q?tIZsb+L9e/HW15k2llnGIAcRjpKbzngfG5fGQlQcKB6un15fsiKpfvkidVxy?=
+ =?us-ascii?Q?8fi+Hzxr2efe68oy6199EfPuGnCL63GtYZaFkxfwiVf7kQaQaLBf+ncSVidq?=
+ =?us-ascii?Q?P8DLtHw+Zn4TvuxEdqZ+Kw75JUO8Wu59GlEPXv5Ecv0rktbAPbK7rRXvELZw?=
+ =?us-ascii?Q?BE6pHl7kpIvJj5ADijwvtFmc0gI7bX6G/ltxixINPgxgvtObNAH2FkLZZydD?=
+ =?us-ascii?Q?QGgHPZBA6eatx9UrQIa3B+RcHXKu4toYdE6+TnDOuiEbCfRFSadNyKv85ggx?=
+ =?us-ascii?Q?+WB44LLXB9CwDdiOi3tEdEnvGPtx1HI6jtZZb7cTIQT2cRSqm65OTA8PcjME?=
+ =?us-ascii?Q?gVfOWsJYwW+yuvgoyLccXuuur/+mYQC2QHa1IUeOAxMcIjLwTLxVdAXpDXrX?=
+ =?us-ascii?Q?2zNTCRA+kR4Nizi2kgOp3svmKd6WmtQzvYM9J4XQMiGzQ5x6BOD7a54ym+i3?=
+ =?us-ascii?Q?ZxP/UTAGmCfZjKLOYv5DsUuBXTAMH04iaDQ5hWM7T/Ec/ZIa89BmlyTq0NbL?=
+ =?us-ascii?Q?P2Gf+mZWrumVQeYUl85jKyWLLlfMv/VcOg5LLINoyU71QcHsBaP7o/og/pYr?=
+ =?us-ascii?Q?EZo8SJR1/xbtWJ/YExiQgpwLcP2RhgwpYOk0Ov/lvBiz4G7QJtucOGxygka3?=
+ =?us-ascii?Q?CommPqHfFDic1n/AKACGP7+ryxaOiA0Dvxr4Qo5m3L4nSpUGgBxRTVKvZS+5?=
+ =?us-ascii?Q?9cS4uuAQT8rvncWIvHX+PZxEltWdPtbbPJ07gd/R0qn+3DxUv6GYfPEF+tpH?=
+ =?us-ascii?Q?lJUafXsb7Jhs8i+pCcLgcQfJNq1PyVhkizd9/AHPa7iMSXEq7Wb8p8wwoCOy?=
+ =?us-ascii?Q?WyAuGHZ9+D7S9Lc2krzp9ZNP55+AxtcpJnXYdGb/Y1RCeMxBPw3tlDM9Gi8w?=
+ =?us-ascii?Q?EKwD2ksl2iypypFj3HiTVu9MLg2Et0uXxDWHnawNbELogU0yaMtj7e+4rs02?=
+ =?us-ascii?Q?WTa9AXFCqltytWUhMXj/L8LhP1sSJ6nuzevhBnfA/iFZr5gCVBECpYE=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?A6+vKqkKYS6vsuywgRRj1BjJwmC1LUQzu38UEzsPfdKavvuqBwUIWPHbid3x?=
+ =?us-ascii?Q?Olfk7HGKKzHFmcOBNqgIo9FM52tlMJ6CiNtAt8oVhm/mBvywPAa8aJe4gxvR?=
+ =?us-ascii?Q?/NuAoY6ylNNc75kOcFwDsBuAPdO7k2d/MxTLq7xkL52sDMiykkYcsgWRP86m?=
+ =?us-ascii?Q?a9mRW27nAd6YjyOBhdvdgl4tIIR3KkTnvqSfngG6gtsUzBnfkjXUjU5iYL0j?=
+ =?us-ascii?Q?9ouVI0w6nYl4sdy3tVQ2hLJMMZjT3S034oHkFj6jd7aHsQNeKG40FNU7YGl6?=
+ =?us-ascii?Q?yiocbnqXJTbJx+EV+IqKdPjBuYj5+hh2zx6+3T3hbdTSCTiuiwPhFT5KaLjh?=
+ =?us-ascii?Q?tsltZLHCgF6k1BBS/uHz8Nalp2nJgDTjaZp3m5tP5eQ6nezLilAkd6gk53iV?=
+ =?us-ascii?Q?5NMhJ3YRdzAOmkbLQuXwRsj/nlqMpSKfmNyQDNfQNCh6+z63pYk587/7ppod?=
+ =?us-ascii?Q?1wgdIvZ+snQocc4+qGUy1CdlNCk9SYQLiJ1B+AhHO25Z4BZthUHUv4VwADDC?=
+ =?us-ascii?Q?Zi4AjRVlSLBMqiw32G+0fiFIY0nth1xhx0PFkc3SITWvv8k8v1KlVf7ZtwVh?=
+ =?us-ascii?Q?PZnRoVoOC8qiHAXraBw0Ck1pfBALuBNlr6gNuzYmV7dFbxK1i2KgjxlS52vf?=
+ =?us-ascii?Q?LK+8wOD9T7STg5MgJE9pUGMAuO/OSl2+C76+jIggf88gO2wMjKZlXj3ncj0G?=
+ =?us-ascii?Q?8NDrB7Y5E1hqRdbZfKJYybJXP45qF0lsvAe4fG8g1nOLjSyc+XtA1SD5i89t?=
+ =?us-ascii?Q?Aq418ijrIGGzlHfboQbxUCZxqup3yh+m4qj9d5f9HbDslzVFk7lBvhkc96vj?=
+ =?us-ascii?Q?1XJTmQ9e7acJAoB1ZScQ/IbmfDk6xsKcF3Xn6uiJmsvXpWmstv8X5ny2BXcV?=
+ =?us-ascii?Q?mnPbAlHV69SgcIC8gJrl2pSbMkyt/OQRtTuYGcKahg5gKkTsGkhj/WnMSoPd?=
+ =?us-ascii?Q?nMoNTV36RaTK1CjVe/4lltYWQSebRg171MXm/ucUajIogwk4jwiOBDlkkVvZ?=
+ =?us-ascii?Q?YiswCCbILpkLZD30txSmah9E9aE+esEtnY1JrYxXhvyGAlMeRUi+Cho+RRIT?=
+ =?us-ascii?Q?pWjt+RGl+xPBQSD2d+mTl58Iq42MFU0iYIX2lQDUFMWb+hJrhleU2i4pqqBa?=
+ =?us-ascii?Q?8fXCs5iN2YWw1c48NenljDC67CrPKEkoT1nO51bmLr5w9xI/ZQqpdoggM5NB?=
+ =?us-ascii?Q?22ZWla+xh95VGVweGDZbhKCqQGprMRpVdFLMZG9skIg8Y/OFFka4KQMbKgY?=
+ =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
-X-ClientProxiedBy: MW4P222CA0010.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::15) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB7346:EE_
-X-MS-Office365-Filtering-Correlation-Id: 34bef753-baad-4f25-e357-08dd77be7fe1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?UIBGUgVDfVU/CMjZ270Vmo/zBgqypowOMU3K5Zyq3b/qj6ygA+hkBVrXm28c?=
- =?us-ascii?Q?cE8NmnnBaUkcaaxACUYxJODnahKiTY44RwS+gyd0DsSjvJxPcCr6XHKrNXc6?=
- =?us-ascii?Q?cZMhkQxalnrAQxRxBZ73Jy63YAYGlub3BJVo4Oyhwi/o5j0ZtyX2XNLYMwsB?=
- =?us-ascii?Q?hARNrq2Fm5zXHLqkX4bDadJd1uAkTWQat25RX+9PKusWd77OrP0sjuqRq4cJ?=
- =?us-ascii?Q?deb1zyFY5qwqAGPN3mSA0516xp2NR8clJi8+0en2zDnNLUVZsX5b9AYvZlaM?=
- =?us-ascii?Q?7X/Lrf2GTJnlmKlvZLNYS/6Nm3yA9UFOt/GmeWqk9jhae+cqw61/uCuWbH0u?=
- =?us-ascii?Q?DKoygLzxw8iQ6NJQbx0VPwtKy9XHKnVLJY2grb3qMhsOpOpMpPM1pVVdu8pU?=
- =?us-ascii?Q?BL2GlelDHg2wuhJh/Zs+f/qGbBFuB9guyoi85YQyOvBDEjffcga+oeWh3bSw?=
- =?us-ascii?Q?WvXssU4eV+nJ+w6VA/oZvonZFDjnubGjeuxyUMK1dytRiqzXI9AkCwT4tgG8?=
- =?us-ascii?Q?/UxsJbtjPCYW1n0wDaTKGuBOGfb9V3ROlyNNcqqrB4ZjIN4PurVEhGq4gw8C?=
- =?us-ascii?Q?ZrvQqHpkyLOq3XuXfx/l5eIMFxUr1ILFyZLy0y6wtNB5ygq/4yqBh/fM1QKm?=
- =?us-ascii?Q?d3kxUHcvrceuAmXwOT2stxnYrLjX+Z2s9Z7Wrx2bVRn28koVIBTc+nEm824M?=
- =?us-ascii?Q?YAq5MP8HWHgNLeoWOkCLUMNhLzcxB2EWMevkwKYg9rHEmIv3khreoexkCFdk?=
- =?us-ascii?Q?DoayacO0lW4s+YItNYWfytzlyIZjrlwKGSj7QF7dc25zHmYqibWbi1hTPE6+?=
- =?us-ascii?Q?mz3UG1bbtGaqqoaN0JDyySOkFCloqtNYvdTkw2CPiCwCBXCSG6T1IwDJfAv/?=
- =?us-ascii?Q?tSGdaRRZ1JU+Hac/AdaWyEppXzeKAaLt/N4JouhX4Q/drZ0XFJ2ssZ1aXE+W?=
- =?us-ascii?Q?RbUFb9c6n5xd78XCnvu00T35eS7O0aYnr53CDL+YLR+GQ/nE/LlQqyqKRF63?=
- =?us-ascii?Q?6MeVoEKk1E+qtwcsrGbLBJUhzFXnWapJQGIt/wEh0wJ43rZSexEx3LRHW+me?=
- =?us-ascii?Q?cv0JUH3J3Av1tzNArqgVRxp6068KN8zkZvMuNipQMF6fiV452sda1ja8xn7G?=
- =?us-ascii?Q?bx0PmpHR5+we6e7zqdk6J+KxpvOESENcnc33MF18lfXXoHxAqvUHjnyF8/gw?=
- =?us-ascii?Q?PA9Oy/9d7dTE5hILSF7GWGofzaUvho4O8+ZKC/xmxsJSa+NZLo1Ogh6CId6A?=
- =?us-ascii?Q?ifg3dPUDvRrGfPCe7J0kzeNrsBZYolm1KEW7+orjZ66owkGdd6QaTPFpqhC8?=
- =?us-ascii?Q?UaZzwS0XxFlznsU130NThwVotpZx6NwgWnJV/bqIErYoVJUFJ9OC0mZ4u5s2?=
- =?us-ascii?Q?QjXSjKjcpDPjicCI9yh1BUm37q4Ei5l8JbpRR5zMdgBF31WVmQpaYBQysuA5?=
- =?us-ascii?Q?SzSzesa2vLFw+c3BNoISwueccgxOBAqOMGn1y7phi1/gb5yy8NOELw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lJwOmZkUbEZ2bEkDII0iAyGNThBNXKUvhQ/gjmuOBlplEOJWjZJMXfZKtDCp?=
- =?us-ascii?Q?+t8ZWQAHP8+cuaXDRVvqxzinVYI4FwJsM/Id1FQwD4HnAQEEcA1C+zJpcbco?=
- =?us-ascii?Q?fB3TarXASZpd5mmOJuavBKrblwuxqzQFrYgKU+qUKh6RFivClRl0mkLAtheS?=
- =?us-ascii?Q?t88ReYGfmDLg2YvG/EpXZDECS8nQ57cNYdpuj3dZT3cXYb46B78aVY9xlGwq?=
- =?us-ascii?Q?hnFPQfO8Wz6nqpSA0/bhpOvegWcdMz2ROw1vs/mmYhysKQ5b6OmGrcpIUzDU?=
- =?us-ascii?Q?v8wW2M7ZlnA9kJDQksEl65Ii5vXjQQ9TmD06JxL+yA0qZ+SCKPDnsvrfCVfM?=
- =?us-ascii?Q?PaRWG6LpS+0vuqM6gNfXB84dIOcjZdp3zHX7mGzN9py2mmghQTmfqe1GCmoV?=
- =?us-ascii?Q?LoUY1KsjP2p2AgaKJ5oIkDNRbqeuRxbBabg0sJT50y5PZI87KwJmTqtS1VuF?=
- =?us-ascii?Q?gwbKbkO2qBG6HO8D8bM958CjU/Wp2y5IP8EsqQvKzAKWJb6d3eqxM7wyX3os?=
- =?us-ascii?Q?dkowX81tlngXKbpEFsvrrJw3GUKIAmTVIJLwSn4Knnaog7tS3v2tCIzunyBR?=
- =?us-ascii?Q?bUHfak2EHRQ8ZroSCP7ZNyW+QL6HuqkZyrZQfoAJ4zN9OGqvhXlRASk5Ksoz?=
- =?us-ascii?Q?860rQCQwFX0/hdffkVg5nK/ARbdgEuUwv5ZghZlsHJx+pI5nXoilh0GDjrEC?=
- =?us-ascii?Q?t3vLaWcJdFHU9le++yb6W0rjJx4kJ2IjpdSmPYi7v8vE3TMtF+h5TsGzjyXV?=
- =?us-ascii?Q?uDcDkFKCvShC24uLmHuZzGnB7xGh1NhNQTvj5GKTofvzj5w+CIhMtI9OABOU?=
- =?us-ascii?Q?fEFd8U0YCRZD8f4PtXZi6LIrBW6OPE/AHFSK6Vo54ztjd8kwDZvttBd3VjN4?=
- =?us-ascii?Q?PJgdCFad1cXV3PUjyImLEWqVtStm9FjrRCiuym/vDHiAnB3a6PiM1WwmNKrG?=
- =?us-ascii?Q?mVZpEHOfpku0UuKWUv+Yy7qrf5U2z5RSyPr0loKtPhok132CCo1f5PDuu+EP?=
- =?us-ascii?Q?T+6wzpVAImdJX9CUEzrXLcH5cIMTdU98BRjgRIo8t7BbokINwdncP5VNx0GC?=
- =?us-ascii?Q?GCpy97GB3B7lBYmLMcS6htRedWusRIjJfW0V/2/cyiuOzlPXN779bGPlJPsJ?=
- =?us-ascii?Q?p0jfLQ0gHvAY8BdVUooSDC9sXaQwMre72GhSceLdvk+HvUAQaDBcTOR4rzM6?=
- =?us-ascii?Q?8/Yy5YZO6xOFIkglNoydnvbwWcYmHBtE6Cp1xio4UHp5eaA/YqGSZDNnlLkP?=
- =?us-ascii?Q?lki/PLlmEKjkP42vh6oEJ5YBDDqD/cxFI+nvk7Byg69dRzre3pfobtZ9eACh?=
- =?us-ascii?Q?kBTojaUEEJmKiE3LWixkfjRAevgfQf8ulJNEZILhsQmMvAEfuUlwae0mlX5A?=
- =?us-ascii?Q?jELPrNTDFgHMZppGQDcKdywfJzOuIQAFjrP6j37Xc5GublnfeJ1SYqAm4b0r?=
- =?us-ascii?Q?gmVfwxAodKZN1odlp4gPEiibZUizCT2yxYiRK3r/3KNNgSFxF4RgA0qkoRVM?=
- =?us-ascii?Q?3FfR2MSewgET7f/zMSAGAlMsfHXVjO0yOFojlJ2H10tcMMmWn1RoK/QmXodK?=
- =?us-ascii?Q?skbAVucw/LE7Ve9NFodNqi9Qkjtj8BF1NuiBglUvM0BlNbm6KSBJXu+R7ivq?=
- =?us-ascii?Q?zA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34bef753-baad-4f25-e357-08dd77be7fe1
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 23:30:23.1654
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: b87c3ce7-142a-4f6e-7470-08dd77cd4a0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 01:16:15.0620
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m7rrjYjIQ9P18pUcE4Q8IlhLz2eeSUVU5IVIJlwq2inRlMT4Usi2bpsl2ngJ75lxLZ9NluBgzjO2m5TI1G7z5W9YHndvivBMariCceD+6Cg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7346
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB10188
 
-[ add linux-coco ]
+From: Dan Williams <dan.j.williams@intel.com> Sent: Wednesday, April 9, 202=
+5 4:30 PM
+>=20
+> [ add linux-coco ]
+>=20
+> Roman Kisel wrote:
+> >
+> >
+> > On 4/9/2025 9:03 AM, Robin Murphy wrote:
+> > > On 2025-04-09 1:08 am, Roman Kisel wrote:
+> > >> Bounce-buffering makes the system spend more time copying
+> > >> I/O data. When the I/O transaction take place between
+> > >> a confidential and a non-confidential endpoints, there is
+> > >> no other way around.
+> > >>
+> > >> Introduce a device bitfield to indicate that the device
+> > >> doesn't need to perform bounce buffering. The capable
+> > >> device may employ it to save on copying data around.
+> > >
+> > > It's not so much about bounce buffering, it's more fundamentally abou=
+t
+> > > whether the device is trusted and able to access private memory at al=
+l
+> > > or not. And performance is hardly the biggest concern either - if you=
+ do
+> > > trust a device to operate on confidential data in private memory, the=
+n
+> > > surely it is crucial to actively *prevent* that data ever getting int=
+o
+> > > shared SWIOTLB pages where anyone else could also get at it. At worst
+> > > that means CoCo VMs might need an *additional* non-shared SWIOTLB to
+> > > support trusted devices with addressing limitations (and/or
+> > > "swiotlb=3Dforce" debugging, potentially).
+> >
+> > Thanks, I should've highlighted that facet most certainly!
+>=20
+> One would hope that no one is building a modern device with trusted I/O
+> capability, *and* with a swiotlb addressing dependency. However, I agree
+> that a non-shared swiotlb would be needed in such a scenario.
+>=20
+> Otherwise the policy around "a device should not even be allowed to
+> bounce buffer any private page" is a userspace responsibility to either
+> not load the driver, not release secrets to this CVM, or otherwise make
+> sure the device is only ever bounce buffering private memory that does
+> not contain secrets.
+>=20
+> > > Also whatever we do for this really wants to tie in with the nascent
+> > > TDISP stuff as well, since we definitely don't want to end up with mo=
+re
+> > > than one notion of whether a device is in a trusted/locked/private/et=
+c.
+> > > vs. unlocked/shared/etc. state with respect to DMA (or indeed anythin=
+g
+> > > else if we can avoid it).
+> >
+> > Wouldn't TDISP be per-device as well? In which case, a flag would be
+> > needed just as being added in this patch.
+> >
+> > Although, there must be a difference between a device with TDISP where
+> > the flag would be the indication of the feature, and this code where th=
+e
+> > driver may flip that back and forth...
+> >
+> > Do you feel this is shoehorned in `struct device`? I couldn't find an
+> > appropriate private (=3D=3D opaque pointer) part in the structure to st=
+ore
+> > that bit (`struct device_private` wouldn't fit the bill) and looked lik=
+e
+> > adding it to the struct itself would do no harm. However, my read of th=
+e
+> > room is that folks see that as dubious :)
+> >
+> > What would be your opinion on where to store that flag to tie together
+> > its usage in the Hyper-V SCSI and not bounce-buffering?
+>=20
+> The name and location of a flag bit is not the issue, it is the common
+> expectation of how and when that flag is set.
+>=20
+> tl;dr Linux likely needs a "private_accepted" flag for devices
+>=20
+> Like Christoph said, a driver really has no business opting itself into
+> different DMA addressing domains. For TDISP we are also being careful to
+> make sure that flipping a device from shared to private is a suitably
+> violent event. This is because the Linux DMA layer does not have a
+> concept of allowing a device to have mappings from two different
+> addressing domains simultaneously.
+>=20
+> In the current TDISP proposal, a device starts in shared mode and only
+> after validating all of the launch state of the CVM, device
+> measurements, and a device interface report is it granted access to
+> private memory. Without dumping a bunch of golden measurement data into
+> the kernel that validation can really only be performed by userspace.
+>=20
+> Enter this vmbus proposal that wants to emulate devices with a paravisor
+> that is presumably within the TCB at launch, but the kernel can not
+> really trust that until a "launch state of the CVM + paravisor"
+> attestation event.
+>=20
+> Like PCIe TDISP the capability of this device to access private memory
+> is a property of the bus and the iommu. However, acceptance of the
+> device into private operation is a willful policy action. It needs to
+> validate not only the device provenance and state, but also the Linux
+> DMA layer requirements of not holding shared or swiotlb mappings over
+> the "entry into private mode operation" event.
 
-Roman Kisel wrote:
-> 
-> 
-> On 4/9/2025 9:03 AM, Robin Murphy wrote:
-> > On 2025-04-09 1:08 am, Roman Kisel wrote:
-> >> Bounce-buffering makes the system spend more time copying
-> >> I/O data. When the I/O transaction take place between
-> >> a confidential and a non-confidential endpoints, there is
-> >> no other way around.
-> >>
-> >> Introduce a device bitfield to indicate that the device
-> >> doesn't need to perform bounce buffering. The capable
-> >> device may employ it to save on copying data around.
-> > 
-> > It's not so much about bounce buffering, it's more fundamentally about 
-> > whether the device is trusted and able to access private memory at all 
-> > or not. And performance is hardly the biggest concern either - if you do 
-> > trust a device to operate on confidential data in private memory, then 
-> > surely it is crucial to actively *prevent* that data ever getting into 
-> > shared SWIOTLB pages where anyone else could also get at it. At worst 
-> > that means CoCo VMs might need an *additional* non-shared SWIOTLB to 
-> > support trusted devices with addressing limitations (and/or 
-> > "swiotlb=force" debugging, potentially).
-> 
-> Thanks, I should've highlighted that facet most certainly!
+To flesh this out the swiotlb aspect a bit, once a TDISP device has
+gone private, how does it prevent the DMA layer from ever doing
+bounce buffering through the swiotlb? My understanding is that
+the DMA layer doesn't make any promises to not do bounce buffering.
+Given the vagaries of memory alignment, perhaps add in a virtual
+IOMMU, etc., it seems like a device driver can't necessarily predict
+what DMA operations might result in bounce buffering. Does TDISP
+anticipate needing a formal way to tell the DMA layer "don't bounce
+buffer"? (and return an error instead?) Or would there be a separate
+swiotlb memory pool that is private memory so that bounce buffer
+could be done when necessary and still maintain confidentiality?
 
-One would hope that no one is building a modern device with trusted I/O
-capability, *and* with a swiotlb addressing dependency. However, I agree
-that a non-shared swiotlb would be needed in such a scenario.
+Just wondering if there's any thinking on this topic ...
 
-Otherwise the policy around "a device should not even be allowed to
-bounce buffer any private page" is a userspace responsibility to either
-not load the driver, not release secrets to this CVM, or otherwise make
-sure the device is only ever bounce buffering private memory that does
-not contain secrets.
+Thanks,
 
-> > Also whatever we do for this really wants to tie in with the nascent 
-> > TDISP stuff as well, since we definitely don't want to end up with more 
-> > than one notion of whether a device is in a trusted/locked/private/etc. 
-> > vs. unlocked/shared/etc. state with respect to DMA (or indeed anything 
-> > else if we can avoid it).
-> 
-> Wouldn't TDISP be per-device as well? In which case, a flag would be
-> needed just as being added in this patch.
-> 
-> Although, there must be a difference between a device with TDISP where
-> the flag would be the indication of the feature, and this code where the
-> driver may flip that back and forth...
-> 
-> Do you feel this is shoehorned in `struct device`? I couldn't find an
-> appropriate private (== opaque pointer) part in the structure to store
-> that bit (`struct device_private` wouldn't fit the bill) and looked like
-> adding it to the struct itself would do no harm. However, my read of the
-> room is that folks see that as dubious :)
-> 
-> What would be your opinion on where to store that flag to tie together
-> its usage in the Hyper-V SCSI and not bounce-buffering?
-
-The name and location of a flag bit is not the issue, it is the common
-expectation of how and when that flag is set.
-
-tl;dr Linux likely needs a "private_accepted" flag for devices
-
-Like Christoph said, a driver really has no business opting itself into
-different DMA addressing domains. For TDISP we are also being careful to
-make sure that flipping a device from shared to private is a suitably
-violent event. This is because the Linux DMA layer does not have a
-concept of allowing a device to have mappings from two different
-addressing domains simultaneously.
-
-In the current TDISP proposal, a device starts in shared mode and only
-after validating all of the launch state of the CVM, device
-measurements, and a device interface report is it granted access to
-private memory. Without dumping a bunch of golden measurement data into
-the kernel that validation can really only be performed by userspace.
-
-Enter this vmbus proposal that wants to emulate devices with a paravisor
-that is presumably within the TCB at launch, but the kernel can not
-really trust that until a "launch state of the CVM + paravisor"
-attestation event.
-
-Like PCIe TDISP the capability of this device to access private memory
-is a property of the bus and the iommu. However, acceptance of the
-device into private operation is a willful policy action. It needs to
-validate not only the device provenance and state, but also the Linux
-DMA layer requirements of not holding shared or swiotlb mappings over
-the "entry into private mode operation" event.
-
-All that said, I would advocate to require a userspace driven "device
-accept" event for all devices, not just TDISP, that want to enter
-private operation. Maybe later circle back to figure out if there is a
-lingering need for accepting devices via golden measurement, or other
-means, to skip the userpace round-trip dependency.
-
-A "private_capable" flag might also make sense, but that is really a
-property of a bus that need not be carried necessarily in 'struct
-device'.
-
-So for this confidential vmbus SCSI device to mesh with the mechanisms
-needed for TDISP I would expect it continues to launch in swiotlb mode
-by default. Export an attribute via hv_bus->dev_groups to indicate that
-the device is "private_capable" and then require userspace to twiddle a
-private_accepted flag with some safety for in-flight DMA.
+Michael
 
