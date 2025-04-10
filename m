@@ -1,101 +1,82 @@
-Return-Path: <linux-hyperv+bounces-4865-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4866-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48C6EA84783
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 17:16:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE1DCA84A35
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 18:37:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53D76188DFCA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 15:16:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83C857B6479
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 16:35:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537981E51F1;
-	Thu, 10 Apr 2025 15:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89E6A1EF39A;
+	Thu, 10 Apr 2025 16:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pPUwqlOB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DE5xUXEs"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCBA115B135;
-	Thu, 10 Apr 2025 15:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17E3B1C5D7E
+	for <linux-hyperv@vger.kernel.org>; Thu, 10 Apr 2025 16:34:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744298163; cv=none; b=b/9O2qFhQlunX27UxmWAGstWOTmhtc13LHhV2yyDhDfpMz7BOA9YLnr+we8ZqY9hO2SyqIK7wXg3Y/fC0eeGxJ30dKBr3xoq8R/kwqEuObpBNRU1AOIXZ+Z5fjdCqv95dccKOeZ46GJHiT/hoGI3tmrXhXwhQSgT9fJMerAJhpk=
+	t=1744302877; cv=none; b=ojV9dAfEpnz0trG4Lta7/qtWdZ+0Kvo2jUfU5/m9YArcwsknAs+G4x3urjk9Pjozco4bKORUSVZ2rZzkBJautzRJGENnwnaf2lJUMoNVof443CLgFAjavJoC9ZTpwrYgZj2+7fabh1SkM30GIZps0CskoKFl335KshEKdnhoTFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744298163; c=relaxed/simple;
-	bh=FJiKHY0yXYvYpnwTi6b4QY4wSVLzbkccdNokb8K2uZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=snCZJ9I/aHDcMjrS7VsTzv98j0ny5jfJj0i26N9kmJzfQOTX3vs0RBK7vAN/rqsVeWlH7254WoREOhcNPovxqsiYdmAq5s/mXQGwIgx552W8zHrd7rEGV+cRMUC5MKLOpFG6y9+Yqux9+cF+z1byt3BBSpCZ7yW/Scyh8KaYSo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pPUwqlOB; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1744302877; c=relaxed/simple;
+	bh=GGlwuqZ8KgQv3VuocjO6hityEN9Tl7jKH7yqFq2v2To=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcUOoxMU7nltGWXpMCDqf8/FRa6fo8a3wWaIAgCBO7zYcY9CCNv0Fz2Q792oaC/9slw5uoPE+LcjETyNMg4y7oQPyzDSN4kp5S43HPl0wRCepWs5mO8Yzpe/m5a836rnyU65K0II1NdOr3X5ORbK2ykIUbO6SpSwhVcq11FY0Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DE5xUXEs; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.159.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id EA497203B86C;
-	Thu, 10 Apr 2025 08:16:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA497203B86C
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 8A1C121165A0; Thu, 10 Apr 2025 09:34:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A1C121165A0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744298161;
-	bh=b/USx7FyrAAP0KVFJIR3S9nGQoNXd7rpnvG6sRwEcjk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pPUwqlOBrIErhRnMenQuuETY6McFAU1X0L10gqqB+/k7VCThivMB270N9MVPVqKZv
-	 OKxIXSvIKMZxOqZulERNSc4wZJRTLL80Ml0pDUeMCwWwOhmkq4niN8+MWNU6gCLoNP
-	 iRC71M6wjwxVnS1zZO8WpZAJaxORmPm0mctceOLU=
-Message-ID: <e169cb52-8f2d-4ac5-b667-87c3357c11a7@linux.microsoft.com>
-Date: Thu, 10 Apr 2025 08:16:00 -0700
+	s=default; t=1744302875;
+	bh=uL2MVI8EPlJMTaDpvKWhLTLkSBOdXCTzDhoKO2DCtJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DE5xUXEs7yvxH2kVaaijesLOBexoxlfxU1fWPt5HChNKewQjtms9vJkLkhzsorhtE
+	 djIwLbIkAa5+Y4OFJEVLabhXYBnXBnoX4TUqPQT8KH4V0j2Lua6OMCwGdYC7pDhsh7
+	 F9M39y02FIcGb02vCJx862SWrk6LBjSJRBNPgkQs=
+Date: Thu, 10 Apr 2025 09:34:35 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Olaf Hering <olaf@aepfle.de>
+Cc: linux-hyperv@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v1] tools/hv: update route parsing in kvp daemon
+Message-ID: <20250410163435.GA18846@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20241202102235.9701-1-olaf@aepfle.de>
+ <20250408062057.6f5812d3.olaf@aepfle.de>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
- to not bounce-buffer
-To: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>, aleksander.lobakin@intel.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
- catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
- dan.j.williams@intel.com, dave.hansen@linux.intel.com, decui@microsoft.com,
- gregkh@linuxfoundation.org, haiyangz@microsoft.com, hpa@zytor.com,
- James.Bottomley@HansenPartnership.com, Jonathan.Cameron@huawei.com,
- kys@microsoft.com, leon@kernel.org, lukas@wunner.de, luto@kernel.org,
- m.szyprowski@samsung.com, martin.petersen@oracle.com, mingo@redhat.com,
- peterz@infradead.org, quic_zijuhu@quicinc.com, tglx@linutronix.de,
- wei.liu@kernel.org, will@kernel.org, iommu@lists.linux.dev,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20250409000835.285105-1-romank@linux.microsoft.com>
- <20250409000835.285105-6-romank@linux.microsoft.com>
- <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
- <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
- <20250410072150.GA32563@lst.de>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20250410072150.GA32563@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408062057.6f5812d3.olaf@aepfle.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-
-On 4/10/2025 12:21 AM, Christoph Hellwig wrote:
-> On Wed, Apr 09, 2025 at 09:44:03AM -0700, Roman Kisel wrote:
->> Do you feel this is shoehorned in `struct device`? I couldn't find an
->> appropriate private (== opaque pointer) part in the structure to store
->> that bit (`struct device_private` wouldn't fit the bill) and looked like
->> adding it to the struct itself would do no harm. However, my read of the
->> room is that folks see that as dubious :)
+On Tue, Apr 08, 2025 at 06:20:57AM +0200, Olaf Hering wrote:
+> Mon,  2 Dec 2024 11:19:55 +0100 Olaf Hering <olaf@aepfle.de>:
 > 
-> We'll need per-device information.  But it is much higher level than a
-> need bounce buffer flag.
+> > After recent changes in the VM network stack, the host fails to
+> > display the IP addresses of the VM. As a result the "IP Addresses"
+> > column in the "Networking" tab in the Windows Hyper-V Manager is
+> > empty.
 > 
+> Did anyone had time to address this issue?
+> 
+> 
+> Olaf
+> 
+Hi Olaf,
+Wei's message for a review and quick test, somehow got missed by me.
+Let me get back to you after a few tests with the patch on our envs.
 
-I see, thanks for the explanation!
-
--- 
-Thank you,
-Roman
-
+Thanks,
+Shradha.
 
