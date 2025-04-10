@@ -1,190 +1,176 @@
-Return-Path: <linux-hyperv+bounces-4870-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4871-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7237DA84CE3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 21:24:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 599EBA85018
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Apr 2025 01:25:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 622A37AF703
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 19:22:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61E538A6167
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 23:24:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF06290086;
-	Thu, 10 Apr 2025 19:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AFDC21516E;
+	Thu, 10 Apr 2025 23:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="WHzYBZza"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3u7Ky+9f"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazolkn19010013.outbound.protection.outlook.com [52.103.13.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C882853EF;
-	Thu, 10 Apr 2025 19:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.13.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744312967; cv=fail; b=foKK4NBV6AEIdQqqFYTHFzfjHjBWXWhv1V25haNLOP/mo8xWTfHOJIdY1OTm9wz9Jm7ZGWb1f/3wR7eyCiJ/s+NMVpsdh84kh1MocmqFgRUKV0+bFxfaxV5Qj8R8sGFMcKDQW0un5TDycLwnqx3j/A5DNuPcRgobrKOzfwuP+Ng=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744312967; c=relaxed/simple;
-	bh=/bEa5fxT5nth+aOEJSxpkT4brgwWyB28zbj/VlvoTkk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=d+3RuKEBw7IoYVgFwTfleLE254I2xI0hgM/PRcGxjemjiBTA6KpiOcOxwp5qAaXEZiGKd88mctO5OZTFvbqLMkAlRYL05E9ZMlP7qZ3fyuQ/Hw227tC/W++DdRBU0yXQhH+G4u5Gi3PNu2WV35W5b7Hoo2pD26VXzAVFH/mAp+Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=WHzYBZza; arc=fail smtp.client-ip=52.103.13.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BQs04IYzuBBEUIgEU/KJAeKGslipJfj3o2s+39siloJFsbg0kNF3T25BRs57GeH+ml+hpoHWgKYMdkpxDZjhdgmtyejz8ahtmlQu9ooT8uYaLuqtdlGKQkrrZ3+BFBFeBNt/6DSVvbrui6KeUOTBOqx0ZQKtbUKS1AOb1KPBK2c0b7lOeJLAtGRgLkCR4pB6Y2HUSxU+hpfF/9afNRzlNPCQLeJBWuY2D7K/60wPT0gdQZY7XeeJrolXJudEn7a1TGC1sQSZ0pw6OH/ZxS18xAl+qyJy977DC9tuEtTHbU+q8Pmnb0LxMo8uQ8KnyQwYzI9QVqynsmoYk22oeNFuCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/bEa5fxT5nth+aOEJSxpkT4brgwWyB28zbj/VlvoTkk=;
- b=OzHmsL+noBL2R7BoOeyU7jOmAqUyHJcPxQN0wRoES7tqp4tCsDumpScPaASmM7Lldzu11seimRejOblsYpjDAaNy1xrfUGIqK88W/JtsP70160cUCDQMcR9yneUG2LMSH0Qb6yAuP9nAEX1jP8JdzAwwSuObLQ7YM+B7giQ0f/AiwbUfuReg+OnNG8CrmOKbMRbk0tDmRU35i/e28cAfHNktuCF87WcfhdiaaXJSOK2SKkQlM0gUtOo0AXt8vzVe2gTKDnP3pGIpd84OfOI223eJ0pzyUQgDG+Rx//Ov7t+mcRLTOnlI6djxgris0k9Eysl9DiOOepcSj47fSYZlxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/bEa5fxT5nth+aOEJSxpkT4brgwWyB28zbj/VlvoTkk=;
- b=WHzYBZza3bXcLqgBWMG5QqGGJ8E2IryM2K9XsWzTMnd1IfPBQ+3idxdl7GOYPPUlrUOGgYcaKzAZeOTrzQfmNHKHM9JEGQ7SndU5xzqrZjHdctSewTZpwCxCYHZW7LcXndBSyTM3PrBK58+6CFJwCQahgR++CBZF8eXa/5rcwku6JdLtOQEjr1Ga7ZSb5Bve3OpNNh7Vga5uNAiHT3VbAp04SxAhkvj7l+iFjmEkYCjbN6FRjx/+d01blYbrYXZADiiUZVesQD6/8Fm8ueRQCdqev9IfyDgkMtZEeLRV3B+VCQgKo1uQ4dCi+ezAwa2COT/S7Qu0ODhZrBpcNzbFsQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MW4PR02MB7474.namprd02.prod.outlook.com (2603:10b6:303:75::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 19:22:42 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 19:22:42 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: He Zhe <zhe.he@windriver.com>, "rick.p.edgecombe@intel.com"
-	<rick.p.edgecombe@intel.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, LKML
-	<linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: RE: vmbus CVE-2024-36912 CVE-2024-36913
-Thread-Topic: vmbus CVE-2024-36912 CVE-2024-36913
-Thread-Index: AQHbqeBE1oL0kNw5skqLnwrnBYdwgrOdRv2w
-Date: Thu, 10 Apr 2025 19:22:42 +0000
-Message-ID:
- <SN6PR02MB415791F29F01716CCB1A23FAD4B72@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <ecaa2736-1e5d-48aa-b06c-df78547a721c@windriver.com>
-In-Reply-To: <ecaa2736-1e5d-48aa-b06c-df78547a721c@windriver.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7474:EE_
-x-ms-office365-filtering-correlation-id: 3bf128d0-5435-4e79-9094-08dd786510a4
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|461199028|15080799006|8060799006|19110799003|10035399004|3412199025|440099028|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?8U5cSfu8p/ELqweOt586L7Chf7xGQ2Fpi5jazSmIFzUMkg+ZWREmot5j12N5?=
- =?us-ascii?Q?xZIEnSbtmExnpqnHDr25DwaxnJCpYVKtgRGDAdWaQoLNH9McaC5L6n5p7huo?=
- =?us-ascii?Q?QuUPNtvwUH4xrlPvvN0W06NcWKY7zp3fJzXHhFCBtAwA10TiitB/SGM6wV5p?=
- =?us-ascii?Q?+WnjtQrdqbVB+ShlcEUm30EQ8jSQWqbEUzoOwG3tS4Ues7mFtvR0Co0dJSBk?=
- =?us-ascii?Q?TRsFfAdPhWUdOsOGKndlnWABQAWAXUsBvUzfa5BPv2dRfHGH/oOI6CyGgIIJ?=
- =?us-ascii?Q?yYmiwrwQLLtx/BCS2t8u90uHtFZtKkaKb1o+5ZRflGV9aU6+4bz8rcw1aA1k?=
- =?us-ascii?Q?3f1HlRJg1FaMyTamHrd4rfePi6FrtkcZFPMF0yW8N/L+WtAVhaZ0HONsA65/?=
- =?us-ascii?Q?+3I1wvtpCAGlLQBYvrcWmbkibIM+R7VkhQ93HsP8tAaiqn36CT5MS05Sdgdc?=
- =?us-ascii?Q?+VFTQ7D2zHhSiEdle09vsaozIwLYIrcyIrj5xqxkpXPllVk8SQmV+tC7JAZS?=
- =?us-ascii?Q?8SNErkHz6LlRWb3WLH6zRhFpGIdm1hbBtvJXwRl973nHYzJXPnRw9Jr5AI04?=
- =?us-ascii?Q?fkDSjm+cEbHuI8suQ0IHTxDQv1W02d1CfOlxH21WashPzFQbwV/G39Amn22U?=
- =?us-ascii?Q?/CDTnRnAPRjC+IbFN/TYgFjUQrUsCuUVTmiUj7r13wRnUQJEk1aX7uzrCXX5?=
- =?us-ascii?Q?xh5aapsvjS0WRLIra8UI/RhXRdiIFX6qj7Z4GgmU3GyXSc097/9AGozUy4TB?=
- =?us-ascii?Q?v3FeR1BUg7hH82s6D++17wxZmbWKwMiwHseO5cDFVG6irwFbnxMLzIAYSWBI?=
- =?us-ascii?Q?au0MidJ8cAmC4URFrz7iNXh6i9/EiKAKVXaoCXbJ6/m6lIaDV2kXlkg7LtaW?=
- =?us-ascii?Q?eojBJtNSpq/PPXilwO1slEsKrpjfGuvSF0UOQ2pO9X8Dr4BkC8JDLzKFhbof?=
- =?us-ascii?Q?M+ZNcqDEOvGq4LYBksLvrEwfmcrZ43LcxYm9L/xE/UeA2LRLv0p1JWYKWIEy?=
- =?us-ascii?Q?WQdvp/sJyyTyu1wXulk7ewpdhXLSW6SgKZN3+wr4V+3nreZ+cTijZ3nKA8xF?=
- =?us-ascii?Q?k1xiNJMhmOLanaoxT23z9eF6OyORkQsVbqLrjSg96Ji3k8aOWQVQTsiRplLl?=
- =?us-ascii?Q?8Fzwl4USpcfkMmtcKMW74zWwZAXQZ3P1Jw=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?N5gz3VVqT0fklYqDTCw+cC9zhkA4eNhXnpZjuQSZIYkT97vuMlnl4PwkSwW0?=
- =?us-ascii?Q?1BWsjbf7MqUpJ1naQSipUa/Qt+3ULR7Rp1ErfaQ1gdszTPIhFHoNMMZ2BVmz?=
- =?us-ascii?Q?4z6Star3xlv7dz2+m/3NObqUcFsMztrG4AyB1ygaHWMYgolU/FQGaFwIXDY7?=
- =?us-ascii?Q?rraQ2Sz+nDaKDc+95CJkb/cWby4Y+/1YiG2n92xRPIp4J5bvOJ/DAkxvq4yd?=
- =?us-ascii?Q?u1vYGDVTNrYcudPt6FkzC2Wxf86McIMtqAEkNqPQkrdT/K8gJpEBzL+YJJ7U?=
- =?us-ascii?Q?Wj/epJnChT8UvScgsQRrTVrFdFImwtc4jrN+SEhR9uOdmSwomhYutgCLTsr9?=
- =?us-ascii?Q?CgoKSf1FkyJEv+rymhkMZ+kd7qOAyS0EZHF6LerHokeZTqwXcDh0sDDEptK3?=
- =?us-ascii?Q?K4ITrH95ktKy0V4n+G1IzOM7NWUmBciRuWeGM0U3LxUK54L4qUKW2RW2ZFt9?=
- =?us-ascii?Q?DmupzRSfrgTSjbqLbDH5jkxkkj38UXQJhkY9j0eNCgbTO1fhQ4I0pfGdw3+q?=
- =?us-ascii?Q?7/GnLj+iFCOygBURh0x2fpSbZYYysXU+2Vpf/aa0qF9ka/1yMcirGPP1iA1n?=
- =?us-ascii?Q?ka1njpWWU5ogKfuCu04LW/bRW1wtVpijoCjLro+pwb9vZVC5IB8UkWa/WMra?=
- =?us-ascii?Q?996PLoXQkxMorCODKFhF73LU1MA3XFogIUCp8Xek3toFXnD6lbd0h120RY5A?=
- =?us-ascii?Q?oJI4y60QQIGxa/rZZ3NN+SWOFb2PNUHr6sbeHYGpwSHtrszXv2Uy0OWQGq1z?=
- =?us-ascii?Q?YIeOlzkiZ37md0HaUQtwgoA3E9SJ6rc0v88bKTxlmYmQcC06RFBfQMur51Xb?=
- =?us-ascii?Q?o4SoiIH948ugClmSfYSJw3wtWYWqBO7IF1vA1ZRPowl4zsEC54jJJDIqEf54?=
- =?us-ascii?Q?vAf68DwZG/G2v4S+faoTsuMZWGjxWiQJw+wXNnMBprOKhjleMAwJIa8vogJE?=
- =?us-ascii?Q?3HJ32BLHRBvDuJBZ5n8LnAfque2/FM5CqHWEPUa0Gjwf0/i4a6PcG4N75UNC?=
- =?us-ascii?Q?bqsUbHVuC1pFnfnnUuQvA+X9UO9IVvbnppIqNz2Dr/htpZVNulqKjxJjQ+nS?=
- =?us-ascii?Q?stKe722TiJkfxsF1nZbfMmtmHwEtgb44um8vahyA5wTXpGdkWF7SRgxlkibN?=
- =?us-ascii?Q?lsS6yX/coj7qLwrZ49I52Vn5vDMhYG/+oJQrMcfQB7QWPJleL6CVGtBPtu2G?=
- =?us-ascii?Q?i5GHGFxqC0Lm0+OzNC9lqQUqfLWXpE4Nt+xjCiIJ8r1C3DtAJsRmH8PkYHs?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFEE20DD5C
+	for <linux-hyperv@vger.kernel.org>; Thu, 10 Apr 2025 23:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744327464; cv=none; b=bMON8vRIrkpEuPIzVCynJ1Ocd4RPZNOsaBAtLhYRix4Z+i3wvfM1c+eXiA6IDTPj09zRnoTcGGXGmJyqGE5SIXfpNDFj5JReRs6JB+ZUZRySiZMo2+Js8j1bDDrDyM0Oa8NE7Ble7xv+AT5DMSMGFazWGVcuJESfGKD9jSzyR3c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744327464; c=relaxed/simple;
+	bh=fRu1wIpBkqC/PAC+6Z3ide0GL77+kwaEESC4lKY2HQM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UgXT6jAsq77tfba6N5K7rzTjzMD/8GJkJYM6rT42JBtEgRJmBe+3kj1j0ZxBqY29uk+ty7lDANx8xAgrxRT5uBbDQ4bg5i7d/vVqp9svgf24RMIx6cyvdzk69wtQu+W7udMpT4nUaPGaEFzbtSVdsPLUzpyPqhq5QjNPXAhYv0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3u7Ky+9f; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736c0306242so1617181b3a.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Apr 2025 16:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744327461; x=1744932261; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+8Hj0FhxYq298MEgk+A50ezX9To9apyasGONCk8/EIY=;
+        b=3u7Ky+9frkNfCSvunj3hgyXaCVhwQWpsJbi1kvWmQtcGe+GsRD598bauPycpTprcD6
+         XGD+aPRexvyp8B8N5R+Y40IN+xBJMgfvd2vo8wEWcDIFLVunLWkQCGQTP1OF8+5Of5tY
+         h4gTalndOQUdDo50dGBtpP9O9VAPvw2fFnSmo1ySO1fzEWNakHbU3PYx2wpMv1Ig9YW5
+         v06Qe7baAARVR3deBAk9aM2bEqc2ROzGrDzz6/tvmsLuBFYWsfqD3K2l1WKJX3SnbqDD
+         H7Sxc+25sn/E2kpmCWLuUQi/Iq7M8NHLMtgELvTYk+iLGHNJbb+0cw3ePrc8PkUVEz8J
+         Ij7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744327461; x=1744932261;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+8Hj0FhxYq298MEgk+A50ezX9To9apyasGONCk8/EIY=;
+        b=nD3RPnwFmaFGL0ZuWCcjTrYeJPu6cAw/H15yPRh12vn4kJcfHdP7VLIfmwHyS7/mXP
+         Ixm84Sl0o01ezMNzuOgDyVY0bsmr2bFQjycQeyS5KBiOyJg9SIVNSOhHfWd6pfmJtgXC
+         ryUdomha7UI7yZKpXqREv9nAlg6X+4tb2XD/UVap0nUK1IH9lBy6Ufg0DOnr9nOiXewg
+         Rs7ww6nWoaDzJ+ZqPL8604p7zZVzQgnTYmaCU79JGVhhp0sD57LgD6ZF25vEE4ztCMn1
+         o6dReBQQdc6qBPvewmnEyZG+CD4fmjWpWXO4v8LtAFnrlnBggxgirsuIMr37H7r9uVDQ
+         egrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs9SAo6hVf771pkQVicj2nKYGamiatkUCWAutQ+5eg6tAO2pCrbl4PuYHttThfGwQcq6mt2QtWJcSSxVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZeXHJ6s0J0P/nSLiJrH0EhBnR6pb6PTbhyYHlIxD83Xve4xMy
+	hVFXxbgSTSd3orj82V0QJEXNoEXrXRro0pTIi1uW6yORH6dQohV8wW+zfl1aRAhUJXSPFBkNgnk
+	jAQ==
+X-Google-Smtp-Source: AGHT+IHWYnK2BwFW7Mr5VmhaaxwX1jXjykj9i9MFxC3vV2mlnL+NePMyv0dJBUjVtFSac3MvKiuBJyLqfxA=
+X-Received: from pfbfj37.prod.google.com ([2002:a05:6a00:3a25:b0:730:8b4c:546c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:21c7:b0:736:5c8e:baaa
+ with SMTP id d2e1a72fcca58-73bd119427emr706022b3a.2.1744327460939; Thu, 10
+ Apr 2025 16:24:20 -0700 (PDT)
+Date: Thu, 10 Apr 2025 16:24:19 -0700
+In-Reply-To: <20250331082251.3171276-11-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bf128d0-5435-4e79-9094-08dd786510a4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 19:22:42.2361
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7474
+Mime-Version: 1.0
+References: <20250331082251.3171276-1-xin@zytor.com> <20250331082251.3171276-11-xin@zytor.com>
+Message-ID: <Z_hTI8ywa3rTxFaz@google.com>
+Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
+ when available
+From: Sean Christopherson <seanjc@google.com>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org, 
+	linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, jgross@suse.com, 
+	andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+	alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
+	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com, 
+	haiyangz@microsoft.com, decui@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: He Zhe <zhe.he@windriver.com> Sent: Wednesday, April 9, 2025 11:15 PM
->=20
-> Hello,
->=20
-> I'm investigating if v5.15 and early versions are vulnerable to the follo=
-wing CVEs. Could
-> you please help confirm the following cases?
->=20
-> For CVE-2024-36912, the suggested fix is 211f514ebf1e ("Drivers: hv: vmbu=
-s: Track
-> decrypted status in vmbus_gpadl") according to https://www.cve.org/CVERec=
-ord?id=3DCVE-2024-36912=20
-> It seems 211f514ebf1e is based on d4dccf353db8 ("Drivers: hv: vmbus: Mark=
- vmbus
-> ring buffer visible to host in Isolation VM") which was introduced since =
-v5.16. For v5.15
-> and early versions, vmbus ring buffer hadn't been made visible to host, s=
-o there's no
-> need to backport 211f514ebf1e to those versions, right?
->=20
-> For CVE-2024-36913, the suggested fix is 03f5a999adba ("Drivers: hv: vmbu=
-s: Leak
-> pages if set_memory_encrypted() fails") according to https://www.cve.org/=
-CVERecord?id=3DCVE-2024-36913
-> It seems 03f5a999adba is based on f2f136c05fb6 ("Drivers: hv: vmbus: Add =
-SNP
-> support for VMbus channel initiate message") which was introduced since v=
-5.16. For
-> v5.15 and early verions, monitor pages hadn't been made visible to host, =
-so there's no
-> need to backport 03f5a999adba to those versions, right?
->=20
+On Mon, Mar 31, 2025, Xin Li (Intel) wrote:
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> ---
+>  arch/x86/include/asm/msr-index.h |  6 ++++++
+>  arch/x86/kvm/vmx/vmenter.S       | 28 ++++++++++++++++++++++++----
+>  2 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index e6134ef2263d..04244c3ba374 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -1226,4 +1226,10 @@
+>  						* a #GP
+>  						*/
+>  
+> +/* Instruction opcode for WRMSRNS supported in binutils >= 2.40 */
+> +#define ASM_WRMSRNS		_ASM_BYTES(0x0f,0x01,0xc6)
+> +
+> +/* Instruction opcode for the immediate form RDMSR/WRMSRNS */
+> +#define ASM_WRMSRNS_RAX		_ASM_BYTES(0xc4,0xe7,0x7a,0xf6,0xc0)
+> +
+>  #endif /* _ASM_X86_MSR_INDEX_H */
+> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+> index f6986dee6f8c..9fae43723c44 100644
+> --- a/arch/x86/kvm/vmx/vmenter.S
+> +++ b/arch/x86/kvm/vmx/vmenter.S
+> @@ -64,6 +64,29 @@
+>  	RET
+>  .endm
+>  
+> +/*
+> + * Write EAX to MSR_IA32_SPEC_CTRL.
+> + *
+> + * Choose the best WRMSR instruction based on availability.
+> + *
+> + * Replace with 'wrmsrns' and 'wrmsrns %rax, $MSR_IA32_SPEC_CTRL' once binutils support them.
+> + */
+> +.macro WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
+> +	ALTERNATIVE_2 __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;		\
+> +				  xor %edx, %edx;				\
+> +				  mov %edi, %eax;				\
+> +				  ds wrmsr),					\
+> +		      __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;		\
+> +				  xor %edx, %edx;				\
+> +				  mov %edi, %eax;				\
+> +				  ASM_WRMSRNS),					\
+> +		      X86_FEATURE_WRMSRNS,					\
+> +		      __stringify(xor %_ASM_AX, %_ASM_AX;			\
+> +				  mov %edi, %eax;				\
+> +				  ASM_WRMSRNS_RAX; .long MSR_IA32_SPEC_CTRL),	\
+> +		      X86_FEATURE_MSR_IMM
+> +.endm
 
-I agree with your conclusions. The two CVE's you list are for Confidential =
-Computing
-virtual machines. Support for CoCo VMs (called "Isolation VMs" in commits
-d4dccf353db8 and f2f136c05fb6) on Hyper-V was first added in Linux kernel
-version 5.16. So the fixes for the CVEs don't need to be backported to any
-versions earlier than 5.16.
+This is quite hideous.  I have no objection to optimizing __vmx_vcpu_run(), but
+I would much prefer that a macro like this live in generic code, and that it be
+generic.  It should be easy enough to provide an assembly friendly equivalent to
+__native_wrmsr_constant().
 
-Michael Kelley
 
+> +
+>  .section .noinstr.text, "ax"
+>  
+>  /**
+> @@ -123,10 +146,7 @@ SYM_FUNC_START(__vmx_vcpu_run)
+>  	movl PER_CPU_VAR(x86_spec_ctrl_current), %esi
+>  	cmp %edi, %esi
+>  	je .Lspec_ctrl_done
+> -	mov $MSR_IA32_SPEC_CTRL, %ecx
+> -	xor %edx, %edx
+> -	mov %edi, %eax
+> -	wrmsr
+> +	WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
+>  
+>  .Lspec_ctrl_done:
+>  
+> -- 
+> 2.49.0
+> 
 
