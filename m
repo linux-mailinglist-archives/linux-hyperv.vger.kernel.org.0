@@ -1,97 +1,101 @@
-Return-Path: <linux-hyperv+bounces-4864-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4865-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7600EA83B7E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 09:42:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48C6EA84783
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 17:16:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6407416EE60
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 07:42:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53D76188DFCA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Apr 2025 15:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0506E20127A;
-	Thu, 10 Apr 2025 07:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537981E51F1;
+	Thu, 10 Apr 2025 15:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pPUwqlOB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB0C1E3DED;
-	Thu, 10 Apr 2025 07:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCBA115B135;
+	Thu, 10 Apr 2025 15:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270955; cv=none; b=Iv1FoNEMjsCmwlo2ahdtz0MfekrTLU7jrxN7BBdqew7nzgM99jKCIIiZ/9vKYNsFpBBbEzDpIF66qKso4exJjIZOO5deZZv1myyT3Gm/4rNPz1h3ZyGgTkW/4A9Hf3J/fhdye3B9uAWx1ogdCjkBgI9uAtVR9v75bii/5A3Cmto=
+	t=1744298163; cv=none; b=b/9O2qFhQlunX27UxmWAGstWOTmhtc13LHhV2yyDhDfpMz7BOA9YLnr+we8ZqY9hO2SyqIK7wXg3Y/fC0eeGxJ30dKBr3xoq8R/kwqEuObpBNRU1AOIXZ+Z5fjdCqv95dccKOeZ46GJHiT/hoGI3tmrXhXwhQSgT9fJMerAJhpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270955; c=relaxed/simple;
-	bh=85QpR9oFRrRsEnFw64qHfKu5TEkleorKdhp2VUyvkYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IakfVveOTAWScM44giqyf69nrpyrdBN3hbiszSplaVpYnWwJ4kQfQWs8JYVL2LohcqPc6R94wGXJxZCugZ5V93cvdz/SBsq8lbvPj2lRKNyxYXuD/q1qJJbst3Yx68zYn/nv8Afn2DNYFSyHByhGjX8Gco/HQq7zPO4yjU37Blc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id EE92D68B05; Thu, 10 Apr 2025 09:42:28 +0200 (CEST)
-Date: Thu, 10 Apr 2025 09:42:28 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	"jayalk@intworks.biz" <jayalk@intworks.biz>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	"deller@gmx.de" <deller@gmx.de>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"weh@microsoft.com" <weh@microsoft.com>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/3] mm: Export vmf_insert_mixed_mkwrite()
-Message-ID: <20250410074228.GA680@lst.de>
-References: <20250408183646.1410-1-mhklinux@outlook.com> <20250408183646.1410-2-mhklinux@outlook.com> <20250409104942.GA5572@lst.de> <BN7PR02MB4148597D0495C631F6E3F8C0D4B42@BN7PR02MB4148.namprd02.prod.outlook.com>
+	s=arc-20240116; t=1744298163; c=relaxed/simple;
+	bh=FJiKHY0yXYvYpnwTi6b4QY4wSVLzbkccdNokb8K2uZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=snCZJ9I/aHDcMjrS7VsTzv98j0ny5jfJj0i26N9kmJzfQOTX3vs0RBK7vAN/rqsVeWlH7254WoREOhcNPovxqsiYdmAq5s/mXQGwIgx552W8zHrd7rEGV+cRMUC5MKLOpFG6y9+Yqux9+cF+z1byt3BBSpCZ7yW/Scyh8KaYSo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pPUwqlOB; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.159.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EA497203B86C;
+	Thu, 10 Apr 2025 08:16:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA497203B86C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744298161;
+	bh=b/USx7FyrAAP0KVFJIR3S9nGQoNXd7rpnvG6sRwEcjk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pPUwqlOBrIErhRnMenQuuETY6McFAU1X0L10gqqB+/k7VCThivMB270N9MVPVqKZv
+	 OKxIXSvIKMZxOqZulERNSc4wZJRTLL80Ml0pDUeMCwWwOhmkq4niN8+MWNU6gCLoNP
+	 iRC71M6wjwxVnS1zZO8WpZAJaxORmPm0mctceOLU=
+Message-ID: <e169cb52-8f2d-4ac5-b667-87c3357c11a7@linux.microsoft.com>
+Date: Thu, 10 Apr 2025 08:16:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN7PR02MB4148597D0495C631F6E3F8C0D4B42@BN7PR02MB4148.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
+ to not bounce-buffer
+To: Christoph Hellwig <hch@lst.de>
+Cc: Robin Murphy <robin.murphy@arm.com>, aleksander.lobakin@intel.com,
+ andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+ catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
+ dan.j.williams@intel.com, dave.hansen@linux.intel.com, decui@microsoft.com,
+ gregkh@linuxfoundation.org, haiyangz@microsoft.com, hpa@zytor.com,
+ James.Bottomley@HansenPartnership.com, Jonathan.Cameron@huawei.com,
+ kys@microsoft.com, leon@kernel.org, lukas@wunner.de, luto@kernel.org,
+ m.szyprowski@samsung.com, martin.petersen@oracle.com, mingo@redhat.com,
+ peterz@infradead.org, quic_zijuhu@quicinc.com, tglx@linutronix.de,
+ wei.liu@kernel.org, will@kernel.org, iommu@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20250409000835.285105-1-romank@linux.microsoft.com>
+ <20250409000835.285105-6-romank@linux.microsoft.com>
+ <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
+ <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
+ <20250410072150.GA32563@lst.de>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250410072150.GA32563@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 02:10:26PM +0000, Michael Kelley wrote:
-> Hmmm. What's the reference to "as told last time"? I don't think I've had
-> this conversation before.
 
-Hmm, there was a conversation about deferred I/O, and I remember the
-drm folks even defending their abuse of vmalloc_to_page on dma coherent
-memory against the documentation in the most silly way.  Maybe that was
-a different discussion of the same thing.
 
+On 4/10/2025 12:21 AM, Christoph Hellwig wrote:
+> On Wed, Apr 09, 2025 at 09:44:03AM -0700, Roman Kisel wrote:
+>> Do you feel this is shoehorned in `struct device`? I couldn't find an
+>> appropriate private (== opaque pointer) part in the structure to store
+>> that bit (`struct device_private` wouldn't fit the bill) and looked like
+>> adding it to the struct itself would do no harm. However, my read of the
+>> room is that folks see that as dubious :)
 > 
-> For the hyperv_fb driver, the memory in question is allocated with a direct call
-> to alloc_pages(), not via dma_alloc_coherent(). There's no DMA in this scenario.
-> The memory is shared with the Hyper-V host and designated as the memory
-> for the virtual framebuffer device. It is then mapped into user space using the
-> mmap() system call against /dev/fb0. User space writes to the memory are
-> eventually (and I omit the details) picked up by the Hyper-V host and displayed.
+> We'll need per-device information.  But it is much higher level than a
+> need bounce buffer flag.
+> 
 
-Oh, great.
+I see, thanks for the explanation!
 
-> Is your point that memory dma_alloc_coherent() memory must be treated as
-> a black box, and can't be deconstructed into individual pages? If so, that makes
-> sense to me.
-
-Yes.
-
-> But must the same treatment be applied to memory from
-> alloc_pages()? This is where I need some education.
-
-No, that's just fine.
+-- 
+Thank you,
+Roman
 
 
