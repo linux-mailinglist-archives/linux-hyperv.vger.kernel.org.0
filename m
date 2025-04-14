@@ -1,226 +1,134 @@
-Return-Path: <linux-hyperv+bounces-4909-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4910-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BFFFA88F6B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Apr 2025 00:49:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0170A89036
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Apr 2025 01:43:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45632172499
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 22:49:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6E7F17B598
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 23:43:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84AA214A70;
-	Mon, 14 Apr 2025 22:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4EEF1F542A;
+	Mon, 14 Apr 2025 23:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lPVutIap"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I71bEzD3"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E811FECC3;
-	Mon, 14 Apr 2025 22:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7882419DFB4;
+	Mon, 14 Apr 2025 23:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744670841; cv=none; b=VItHUBNuy0IAZ3rx/ydHjnZBCOLvmtW2JZmKQThUScyvtCdpNEjLBIqdsoiskAZIqBr30MajmffVYFwR5FxsYf+Jv+VfBNpZachnHNo9/E96+1DiK+HQie5wprubhLFmjluve/ygEuIKOCNjSeiYXoCMynMI58hZdC2gB18P/BM=
+	t=1744674210; cv=none; b=banaAUas2z327L+/xulnSYZ9Z+PQHUbf9aOY5SrsITJK44b4EhTPUSKU4fJE01ND0TgA1bZD7XMElqRoVo6eviX3yjCJBMFe1BXKBYjTuQFLujMtOFmRLtG21BctfbPwry2+s3gvnFJmtdgSY7Zzi5+jC6m/FOd+oyrPcB0aL5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744670841; c=relaxed/simple;
-	bh=kNfVG+yZpaLRq1OoCyzPL29BMRStZnd75S1TRZZzGyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NU6syHYwHHw1/WfQVOR6Jhj6djRIYKmLYfZWRdJ/+IXbokhvb5a6NarwKNU5EonAklLTp/Gu9FNdGMBVKGjCgoW/nmHzqKpw2yVpVX+IHVJlfT2TyKmGlhdubPf7aH8MTAII1ib4sGpdNI2hytcfJYBdv9B6+evrqKFYW1YNpSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lPVutIap; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.159.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1B1BE210C436;
-	Mon, 14 Apr 2025 15:47:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B1BE210C436
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744670839;
-	bh=SIS7Ml4VZ/wIhHt29L18904r+oPLJIB7CTsSxudVE84=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lPVutIaptWTHrT7cgcH+ye3PQBmYeR9GPO7Dkc0r17twjSXXl4N0TL32uYTZtmSJw
-	 MSoR+caetSn8mKX3MNIVfyN65CfKmfBY8REgRnSubcXDMD/vNMoPeqm5nfs2U4sGo3
-	 WBuza01bqCW0gRUcgOYszPirGJpdsitB48PEP3d4=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@arndb.de,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	catalin.marinas@arm.com,
-	conor+dt@kernel.org,
-	dan.carpenter@linaro.org,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	joey.gouly@arm.com,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	kys@microsoft.com,
-	lenb@kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	mark.rutland@arm.com,
-	maz@kernel.org,
-	mingo@redhat.com,
-	oliver.upton@linux.dev,
-	rafael@kernel.org,
-	robh@kernel.org,
-	rafael.j.wysocki@intel.com,
-	ssengar@linux.microsoft.com,
-	sudeep.holla@arm.com,
-	suzuki.poulose@arm.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	will@kernel.org,
-	yuzenghui@huawei.com,
-	devicetree@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v8 11/11] PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
-Date: Mon, 14 Apr 2025 15:47:13 -0700
-Message-ID: <20250414224713.1866095-12-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250414224713.1866095-1-romank@linux.microsoft.com>
-References: <20250414224713.1866095-1-romank@linux.microsoft.com>
+	s=arc-20240116; t=1744674210; c=relaxed/simple;
+	bh=mYt0rbUDMBdDTLPdWGuS/Bnh03XJEhDanQRD6dzfsgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Djpwhgo8xWgkj3DAVE+u68LqLpqY3JCfRzvxPoLFvCVqMPoDRukIHqsY8y2jLUq8/Ndxa6wNszsvhv+yf/LEYi6gre9Aj/0aPeJq3MjIiE9ADTIMVu89ibiOCd+/XxUqU5Od3tW9ycEc/aUlhpZgtqiksOh7mKoz3xLx88aQrl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I71bEzD3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DA3C4CEE2;
+	Mon, 14 Apr 2025 23:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744674210;
+	bh=mYt0rbUDMBdDTLPdWGuS/Bnh03XJEhDanQRD6dzfsgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I71bEzD3NRM2S1F1pdsYNi6bANyOji5p+V8DBDIaQJYynC5bdJ0f010MjTzjI7Kh/
+	 VNWuDmkQcmFV+uUEVlruf2t+phFwZ6akclg8AJxeR9uv7OLuWkwa/0JW/UYrzuZYPD
+	 bP/+j4RHpUT0K5kh+R3c6iFU5iDmIJpOP+z+s3QCX0SEkwfLubBWgauR8seemhVGms
+	 kjyfxpBT1w2P+vz1QxKaxX+wY1r+FwPP+HHVdJPH9BQkl+KI19fK4BISx90WKhA6I+
+	 cBxVS2fXHUWJHEIOLLLS0JkPX/ViLlc5i6kic2qCivRHJC+EldLCeIdK28uPucGqZC
+	 5MKEqXtoq5feQ==
+Date: Mon, 14 Apr 2025 16:43:26 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	pawan.kumar.gupta@linux.intel.com, seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org, 
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 6/6] objtool: Validate kCFI calls
+Message-ID: <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.540779611@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414113754.540779611@infradead.org>
 
-The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
-arm64. It won't be able to do that in the VTL mode where only DeviceTree
-can be used.
+On Mon, Apr 14, 2025 at 01:11:46PM +0200, Peter Zijlstra wrote:
+>  SYM_FUNC_START(__efi_call)
+> +	/*
+> +	 * The EFI code doesn't have any CFI :-(
+> +	 */
+> +	ANNOTATE_NOCFI
+>  	pushq %rbp
+>  	movq %rsp, %rbp
+>  	and $~0xf, %rsp
 
-Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
-case, too.
+This looks like an insn annotation but is actually a func annotation.
+ANNOTATE_NOCFI_SYM() would be a lot clearer, for all the asm code.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/controller/pci-hyperv.c | 72 ++++++++++++++++++++++++++---
- 1 file changed, 66 insertions(+), 6 deletions(-)
+Though maybe it's better for ANNOTATE_NOCFI to annotate the call site
+itself (for asm) while ANNOTATE_NOCFI_SYM annotates the entire function
+(in C).  So either there would be two separate annotypes or the
+annotation would get interpreted based on whether it's at the beginning
+of the function.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6084b38bdda1..2d7de07bbf38 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -50,6 +50,7 @@
- #include <linux/irqdomain.h>
- #include <linux/acpi.h>
- #include <linux/sizes.h>
-+#include <linux/of_irq.h>
- #include <asm/mshyperv.h>
- 
- /*
-@@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
- 	int ret;
- 
- 	fwspec.fwnode = domain->parent->fwnode;
--	fwspec.param_count = 2;
--	fwspec.param[0] = hwirq;
--	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	if (is_of_node(fwspec.fwnode)) {
-+		/* SPI lines for OF translations start at offset 32 */
-+		fwspec.param_count = 3;
-+		fwspec.param[0] = 0;
-+		fwspec.param[1] = hwirq - 32;
-+		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-+	} else {
-+		fwspec.param_count = 2;
-+		fwspec.param[0] = hwirq;
-+		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	}
- 
- 	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- 	if (ret)
-@@ -887,10 +896,46 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
- 	.activate = hv_pci_vec_irq_domain_activate,
- };
- 
-+#ifdef CONFIG_OF
-+
-+static struct irq_domain *hv_pci_of_irq_domain_parent(void)
-+{
-+	struct device_node *parent;
-+	struct irq_domain *domain;
-+
-+	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
-+	if (!parent)
-+		return NULL;
-+	domain = irq_find_host(parent);
-+	of_node_put(parent);
-+
-+	return domain;
-+}
-+
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+
-+static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
-+{
-+	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
-+
-+	if (acpi_irq_model != ACPI_IRQ_MODEL_GIC)
-+		return NULL;
-+	gsi_domain_disp_fn = acpi_get_gsi_dispatcher();
-+	if (!gsi_domain_disp_fn)
-+		return NULL;
-+	return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
-+				     DOMAIN_BUS_ANY);
-+}
-+
-+#endif
-+
- static int hv_pci_irqchip_init(void)
- {
- 	static struct hv_pci_chip_data *chip_data;
- 	struct fwnode_handle *fn = NULL;
-+	struct irq_domain *irq_domain_parent = NULL;
- 	int ret = -ENOMEM;
- 
- 	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-@@ -907,9 +952,24 @@ static int hv_pci_irqchip_init(void)
- 	 * way to ensure that all the corresponding devices are also gone and
- 	 * no interrupts will be generated.
- 	 */
--	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
--							  fn, &hv_pci_domain_ops,
--							  chip_data);
-+#ifdef CONFIG_ACPI
-+	if (!acpi_disabled)
-+		irq_domain_parent = hv_pci_acpi_irq_domain_parent();
-+#endif
-+#ifdef CONFIG_OF
-+	if (!irq_domain_parent)
-+		irq_domain_parent = hv_pci_of_irq_domain_parent();
-+#endif
-+	if (!irq_domain_parent) {
-+		WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
-+		ret = -EINVAL;
-+		goto free_chip;
-+	}
-+
-+	hv_msi_gic_irq_domain = irq_domain_create_hierarchy(irq_domain_parent, 0,
-+		HV_PCI_MSI_SPI_NR,
-+		fn, &hv_pci_domain_ops,
-+		chip_data);
- 
- 	if (!hv_msi_gic_irq_domain) {
- 		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+> +++ b/include/linux/objtool.h
+> @@ -185,6 +185,8 @@
+>   */
+>  #define ANNOTATE_REACHABLE(label)	__ASM_ANNOTATE(label, ANNOTYPE_REACHABLE)
+>  
+> +#define ANNOTATE_NOCFI_SYM(sym)		asm(__ASM_ANNOTATE(sym, ANNOTYPE_NOCFI))
+
+This needs a comment like the others.
+
+> @@ -2436,6 +2438,15 @@ static int __annotate_late(struct objtoo
+>  		insn->_jump_table = (void *)1;
+>  		break;
+>  
+> +	case ANNOTYPE_NOCFI:
+> +		sym = insn->sym;
+> +		if (!sym) {
+> +			WARN_INSN(insn, "dodgy NOCFI annotation");
+> +			break;
+
+Return an error?
+
+> @@ -4006,6 +4017,36 @@ static int validate_retpoline(struct obj
+> +	/*
+> +	 * kCFI call sites look like:
+> +	 *
+> +	 *     movl $(-0x12345678), %r10d
+> +	 *     addl -4(%r11), %r10d
+> +	 *     jz 1f
+> +	 *     ud2
+> +	 *  1: cs call __x86_indirect_thunk_r11
+> +	 *
+> +	 * Verify all indirect calls are kCFI adorned by checking for the
+> +	 * UD2. Notably, doing __nocfi calls to regular (cfi) functions is
+> +	 * broken.
+
+This "__nocfi calls" is confusing me.  IIUC, there are two completely
+different meanings for "nocfi":
+
+  - __nocfi: disable the kcfi function entry stuff
+  
+  - ANNOTATE_NOCFI_SYM: Regardless of whether the function is __nocfi,
+    allow it to have non-CFI indirect call sites.
+
+Can we call this ANNOTATE_NOCFI_SAFE or something?
+
 -- 
-2.43.0
-
+Josh
 
