@@ -1,96 +1,122 @@
-Return-Path: <linux-hyperv+bounces-4882-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4888-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1370A87033
-	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Apr 2025 01:11:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17FD1A87F5C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 13:41:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D892E189B4F6
-	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Apr 2025 23:11:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AA201897CB5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 11:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EAF0224B05;
-	Sat, 12 Apr 2025 23:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7552BE7DA;
+	Mon, 14 Apr 2025 11:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lMBig7n3"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bG92G56O"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B68B38385;
-	Sat, 12 Apr 2025 23:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBF529CB4E;
+	Mon, 14 Apr 2025 11:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744499495; cv=none; b=TXPgZ9muWRN+Mm+EKUEy1M+jnFzLdHI3EB1Px7usmziRebLEL1dDI6T+THRhPMgiOiF/BIooaWVVxVMtV8pZZAJieC6FWYe0SzfvnZZPV9qccjCXidEePrYMTc3bdTtmoDloaKqDBuBqRm+3s352k7fTr9HSGjZQFSvBZ33NLrQ=
+	t=1744630782; cv=none; b=oD99ta3U7E14nJO+xUMNES1ar5NAkTjaWbly10rTFbaZfaHyr68k83rSU05i5DHZ6U+3jWXHWbXOm+NBbPZ0jt6SVRgDg9RlqHLOzYpN4WpoiwKsyPJOMfDWkqyqgrV1kGwwaNcr7dC2p1n+3/SrJvYmyis/7/xDzXsX7LyIos4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744499495; c=relaxed/simple;
-	bh=Z8ANyn5BO+4YSxFMj2ZIePI2Es9dy8Hv6toZ4ucWxdY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=oxV3o//yquRg90stwy5WFdPY7nwqVebyJ0TO1q6PLe9ttFBhflg9Q37Jt3dB3ncPBAf/hm/OFIloiJoRHVmgCPgzFaB0fW07aWiRXGUJe9zPyegDrzbOTFNqPn19lndi212o1n2vrj5VzKYurEs20ZOBOwcMV3q246un7E1N5/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=lMBig7n3; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53CNA8tE1265382
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 12 Apr 2025 16:10:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53CNA8tE1265382
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744499412;
-	bh=Z8ANyn5BO+4YSxFMj2ZIePI2Es9dy8Hv6toZ4ucWxdY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=lMBig7n3wyGQ77xYpn5pnxKVN4QM3Vkq6hDZcLvPaFwS2PWF/n09rzmm4i6ZIrSlX
-	 ldJKqqxh7XGdq6n0fK1xSbkbF0eDIoNvUz2LhiGL+7mwgnCfFlBgBbxU3imjGP8GwY
-	 zTU8dvf1jWNkf6+mSxkledPR0XPGAcZA1I9f+5+YiIA5YgCTj3M0isuBNWaO1BHck1
-	 A5Uh/ZdjOxEnzIwdlikBQnfr1jA4LYpMjCETWZHP0OeiOO0PyexivLyItY7m/buoB1
-	 Qlv5YTi1XbrFcCf8wBQrrImS7wL6ntMIDtBYRTjjMB9jzG1ZKHtxezcpa9pVk9CqYV
-	 YnyFnuF53LDCw==
-Date: Sat, 12 Apr 2025 16:10:06 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <seanjc@google.com>
-CC: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
-        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
-        decui@microsoft.com
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_v1_10/15=5D_KVM=3A_VMX=3A_Use_WR?=
- =?US-ASCII?Q?MSRNS_or_its_immediate_form_when_available?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com>
-References: <20250331082251.3171276-1-xin@zytor.com> <20250331082251.3171276-11-xin@zytor.com> <Z_hTI8ywa3rTxFaz@google.com> <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com> <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com>
-Message-ID: <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com>
+	s=arc-20240116; t=1744630782; c=relaxed/simple;
+	bh=6J3jpg6mZS1i6MwpK5znANzetPA7TPZoqiKkCd+kiGs=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Z0HUCFi9UgLQ7CUltVcGTaeR3HtiAigvQeN03a7dleTZOua1VDl94xAesKoNy1YOA9aFhHScg34RftnVgSzfTXAchfEUqDelf0m/1V8cdU7BVazrq9B2rrgU7tCZXrs11D1x889h/9u1sT0gucNRGQfh49a2rAVJh1QeKy9oMyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bG92G56O; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=6J3jpg6mZS1i6MwpK5znANzetPA7TPZoqiKkCd+kiGs=; b=bG92G56OhWUV0ZKtc5qpU+fvvw
+	hkUgSGIXatqQm4Oguw2ZlsCnzCRrNU4q0WRuBWdxEqxrgt2cQcag8yPkAhzNbU+f6rHfAmtKdIM0H
+	BViuvEFjm+ZkIVYkYydg5RbgUaRQZaoHzkMJxfptl+gL2A+U34EW36N7kto23WaM76f9b/yYcB2RU
+	zsXQgG5XcpNzVetyPLw9JN1uvb2zyk/8rvs/msRzAbkhny2t8Z9rC0P08VBEkRDTzUuTzvGdwNWpP
+	oc2x5IM5697z1dGNlZ5ye6BJlTKwSfPBANNfZKJY1aLhCkyE7igOctawyqGzYVcb5nCkAF7o9RZ16
+	LQHcbSrQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4I9u-000000084Gt-0pkr;
+	Mon, 14 Apr 2025 11:39:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 226A8300619; Mon, 14 Apr 2025 13:39:26 +0200 (CEST)
+Message-ID: <20250414111140.586315004@infradead.org>
+User-Agent: quilt/0.66
+Date: Mon, 14 Apr 2025 13:11:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: kys@microsoft.com,
+ haiyangz@microsoft.com,
+ wei.liu@kernel.org,
+ decui@microsoft.com,
+ tglx@linutronix.de,
+ mingo@redhat.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ hpa@zytor.com,
+ peterz@infradead.org,
+ jpoimboe@kernel.org,
+ pawan.kumar.gupta@linux.intel.com,
+ seanjc@google.com,
+ pbonzini@redhat.com,
+ ardb@kernel.org,
+ kees@kernel.org,
+ Arnd Bergmann <arnd@arndb.de>,
+ gregkh@linuxfoundation.org,
+ linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org,
+ linux-efi@vger.kernel.org,
+ samitolvanen@google.com,
+ ojeda@kernel.org
+Subject: [PATCH 0/6] objtool: Detect and warn about indirect calls in __nocfi functions
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On April 11, 2025 9:32:32 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 4/11/2025 2:12 PM, Jim Mattson wrote:
->> Surely, any CPU that has WRMSRNS also supports "Virtualize
->> IA32_SPEC_CTRL," right? Shouldn't we be using that feature rather than
->> swapping host and guest values with some form of WRMSR?
->
->Good question, the simple answer is that they are irrelevant=2E
+Hi!
 
-Also, *in this specific case* IA32_SPEC_CTRL is architecturally nonseriali=
-zing, i=2Ee=2E WRMSR executes as WRMSRNS anyway=2E
+On kCFI (CONFIG_CFI_CLANG=y) builds all indirect calls should have the CFI
+check on (with very few exceptions). Not having the CFI checks undermines the
+protection provided by CFI and will make these sites candidates for people
+wanting to steal your cookies.
+
+Specifically the ABI changes are so that doing indirect calls without the CFI
+magic, to a CFI adorned function is not compatible (although it happens to work
+for some setups, it very much does not for FineIBT).
+
+Rust people tripped over this the other day, since their 'core' happened to
+have some no_sanitize(kcfi) bits in, which promptly exploded when ran with
+FineIBT on.
+
+Since this is very much not a supported model -- on purpose, have objtool
+detect and warn about such constructs.
+
+This effort [1] found all existins [2] non-cfi indirect calls in the kernel.
+
+Notably the KVM fastop emulation stuff -- which reminded me I still had pending
+patches there. Included here since they reduce the amount of fastop call sites,
+and the final patch includes an annotation for that. Although ideally we should
+look at means of doing fastops differently.
+
+KVM has another; the interrupt injection stuff calls the IDT handler directly.
+Is there an alternative? Can we keep a table of Linux functions slighly higher
+up the call stack (asm_\cfunc ?) and add CFI to those?
+
+HyperV hypercall page stuff, which I've previously suggested use direct calls,
+and which I've now converted (after getting properly annoyed with that code).
+
+
+[1] https://lkml.kernel.org/r/20250410154556.GB9003@noisy.programming.kicks-ass.net
+[2] https://lkml.kernel.org/r/20250410194334.GA3248459@google.com
+
+
 
