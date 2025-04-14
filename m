@@ -1,157 +1,129 @@
-Return-Path: <linux-hyperv+bounces-4893-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4894-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F606A88976
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 19:13:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4FB0A88A5B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 19:50:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C3A117B4E5
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 17:13:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 02EBE7AAD69
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 17:48:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7BAE289379;
-	Mon, 14 Apr 2025 17:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DF7D28A1F5;
+	Mon, 14 Apr 2025 17:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMaOgc3P"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OWsAVJsJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295D7289363;
-	Mon, 14 Apr 2025 17:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F34228A1CC;
+	Mon, 14 Apr 2025 17:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744650796; cv=none; b=Dkha649vSZx6G1cRc0M0j6NZYC6vzqvCmFS+/qaqPhJdHmZEDpITF4rXYsK2XJbAQPH5A7CXYxGN3k6KgDDtIPBX42R4JhLqoFUljSIEJFJ0L8Z/lN2Sc5vbf0lBZY0cCvOAQpLaUna1pOr/nKQfr11S4x5FtDQZmaYnWmYEiFo=
+	t=1744652981; cv=none; b=Y61OcmbIIFlS68AJmR490lYlDn6SLm5oCq0VMtlH4/jQdOHcyI7mwS6j0jihBuIGC3nJKIJDzO/Q3WxvIAEEjjU0QIvq47s3f0tN9AMfoXR65SdFcneobc17ksybpDqb83VNfdyh2UiMXidKmWN5QbYXfXCT73ISmFpRN6Fe77k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744650796; c=relaxed/simple;
-	bh=sFTaMFijVk2HZVriqjm0aoHOUR8tYLFf51KFMR53Zes=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
-	 MIME-Version; b=I1DUy43a2I3NF7bEY88nFzuxIUQN1MlNlc1HE0xkYw9y3O2fCcEH4MER/FE6SwF0eM6mI5BwHfofD0klVjBkrw3aM0p0rfQ6tzb3gu2lNvEsHHZ5Gk+Yox/tO+8IMCYQ8iqu/4EJn7V5tiVNKgBmqEquOrvh0M/lVdjmVfi0MuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMaOgc3P; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso31287295e9.3;
-        Mon, 14 Apr 2025 10:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744650793; x=1745255593; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AhLhCv09lRa1OLV+bmnI0sicXwTDVpYEF9Itb4YCx/Y=;
-        b=nMaOgc3PiklhM+d9MWiAlZKVIMZQZT6Zuv3q329TyWGFgsneT+xvnkofiFTJbI5eeg
-         WbFwJ5bqjGqXUBEatndpqvdDF3PeMh0NBb4cNdOtjMSysRmHoVNjZPTGZt4obRcpUdrW
-         +zW74MncDa7dt9c8jpr/sCjbKpbc5bnvVkdnWCJumpy1huga5VlkXWm64HEHAwFRIP04
-         EBuy687pnONPg6iMuPe1VKOEBW9TF9akC3F5pTBvKjF9LXXkAQZTdHmbpIl2eQDf5zeq
-         jTrh9ONS58n9lrOpRAohJyqLWOg2Z7xYnHNQqNNF+RYy/sHPstPa44eIrC85b66E6Hi7
-         8RCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744650793; x=1745255593;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AhLhCv09lRa1OLV+bmnI0sicXwTDVpYEF9Itb4YCx/Y=;
-        b=LpgzYMbDctPEELPzy+O3tx50+LBNoSZrM625VXx+i7/sWZawRc3tGe4gLnbbIy1QWJ
-         jPNdudJQeB48aaZ6N4FE2Kp8gI0F/bA7cHgA6S8vyoMvqBjPRUsIeSYxKBHhAjFOm8av
-         IshXuEvQ+17q/ZjJ7SQiQNQU9ho5nro/kkqxIrC/rQuyeDdYQVG3DoRJCpMMSqOckXJS
-         MMOTqpVq+E0eDG5i2h+HabMjtG7FZK9UR42iPr1wx4Kg2fjZ1nxTNjStSxCuEfGJJfd2
-         cv4gMLbwN8BVACe69Ly/ggxE5KSb54kc5cmwlqQV48df9rDKgXw3BUhjlPCZbj3wG2Xa
-         hmsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2bXY16glnlasVviZBRNs7rhH3BqilJMPBctOkJOqxaxbOGedhiY6lRVz4TeHjNxIqULKcJj1pn4K3Gw==@vger.kernel.org, AJvYcCUJnxaJO405Mmv2grjO3ZNca6FCL81MjvTjrFSRjF6Y364+21+q/avj1sNmdVkcJoXkchbTKp586lrHmGs+@vger.kernel.org, AJvYcCWNuB5d3gRwsGwmOLGIr2NQtOFbwYypozyB5EiuLTfXtDsQ4V5uoLh2l/AErOpOxLQ4goVXRsx93vG/mQizVjnWVg==@vger.kernel.org, AJvYcCX089GhHkpR8DgZ36gCYB7kTm5nFtfWyZxmTRHUyziTT3HXdPaYG57zN2K8v+vXzcT5qH2+qJ5op/hm@vger.kernel.org, AJvYcCXWOCRSq4ayoXe2if1ippPVwtY73gXqF2NeTrTf9l0qAWWxXWQOp6wzEWWCYd+ISR46QdA9@vger.kernel.org, AJvYcCXX8T9cwWgYaF3RUduEGhzVZYayp86CyVE1JdS4IAqQoIM5LEG9dEtZf03MWuq5CcUe2+92y1Qsvvo=@vger.kernel.org, AJvYcCXaUTHpJF+A86OGgtKPZUAm2HWt6yBoWc/6Rx8AoCQgr9FPp8aAJl9OEYb+D28HpahI2AQbPrawTLA3UZCT@vger.kernel.org, AJvYcCXznFYsrzaoQWy6I6/a+Rpe0q04KZOmXudOrcpsOqNBeFmqiTuTmmnsAppNDYXMuQ9VUlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3agagxpEWagA3o+53FldiLAYBp7FKG848P80I4niseUb5PaP9
-	8UN1UsDs581NeliTqVILmgK8GIcQ8se3wGGrH8qUycjT4ht6FWqK
-X-Gm-Gg: ASbGncvinEuaSivMXvGOZhqNrzCY4jhXYIb2sX26eBBgs9otwWnh5ucjnV10drX4GHs
-	iWOj2kq+1BgL5czuFlPfVam5t9tijcNI258JYyby1z9UnZTQcHxzCTUcZk/QgvwclPhTFUqeZsU
-	pT5YzJIazUIdXNCZlOumNtsqheI28h1n6oIEhQCnmxCbUsga7hp83kKelNE8nUCWtlPDLxXjmcd
-	RZfY1tYR5MHLeVBMJGwFzp03zPbMad+hV/mn80cQgtT0srj0HaAZnSXvR7JtgDa7PkqEO/+wYUs
-	0FBq1pjmq20IWkgNF9FvnejuJqECmL0+lJ8vXJZ2/bJbIusjQWxiJ2c8LTujElfQqXsOWIuZ2AA
-	sEdqKYlzrzE1JXaip9R9MTw==
-X-Google-Smtp-Source: AGHT+IFaPusiZQT0QiFcyLJp0TXK65g3+z16rgMNv9l2dKvCZ0RLPJLCBzoBrYTr6CV/HfnsWx9kLw==
-X-Received: by 2002:a05:600c:8519:b0:43d:300f:fa51 with SMTP id 5b1f17b1804b1-43f3a93ebb3mr115773795e9.9.1744650792986;
-        Mon, 14 Apr 2025 10:13:12 -0700 (PDT)
-Received: from ?IPv6:2001:b07:5d29:f42d:74f6:abb7:53c9:817c? ([2001:b07:5d29:f42d:74f6:abb7:53c9:817c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f204c500bsm191180875e9.0.2025.04.14.10.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 10:13:12 -0700 (PDT)
-Message-ID: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
-Subject: Re: [RFC PATCH v1 13/15] x86/msr: Use the alternatives mechanism to
- read MSR
-From: Francesco Lavra <francescolavra.fl@gmail.com>
-To: xin@zytor.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajay.kaher@broadcom.com, 
- alexander.shishkin@linux.intel.com, alexey.amakhalov@broadcom.com, 
- andrew.cooper3@citrix.com, bcm-kernel-feedback-list@broadcom.com, 
- boris.ostrovsky@oracle.com, bp@alien8.de, bpf@vger.kernel.org, 
- dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
- hpa@zytor.com, irogers@google.com, jgross@suse.com, jolsa@kernel.org, 
- kan.liang@linux.intel.com, kvm@vger.kernel.org, kys@microsoft.com, 
- linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org, 
- linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
- llvm@lists.linux.dev,  luto@kernel.org, mark.rutland@arm.com,
- mingo@redhat.com, namhyung@kernel.org,  pbonzini@redhat.com,
- peterz@infradead.org, seanjc@google.com, tglx@linutronix.de, 
- tony.luck@intel.com, virtualization@lists.linux.dev, vkuznets@redhat.com, 
- wei.liu@kernel.org, x86@kernel.org, xen-devel@lists.xenproject.org
-Date: Mon, 14 Apr 2025 19:13:09 +0200
-In-Reply-To: <20250331082251.3171276-14-xin@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1744652981; c=relaxed/simple;
+	bh=pCf6zl5WWMLk499XrU3ze5XCG4TXFPjHsQDAk9yq3ts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eUG3gUgmmVKRdIaXhY7SVMzsoTrHS8Ul+GWVXUcNR2UIKeVM4xeUKY+XNyrtpXVhnNHztj5TTmP8dmj6BvfI1VQQDvMfmgHf2DMA4WKt+Lk1EpbYZs+Yy/sCilIFLX4RM3b3fDA8emKD0Q5ETF1PVC7VLX2m1PX2mz4GEpZ4HPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OWsAVJsJ; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53EHmldx2305377
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 14 Apr 2025 10:48:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53EHmldx2305377
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744652930;
+	bh=pCf6zl5WWMLk499XrU3ze5XCG4TXFPjHsQDAk9yq3ts=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OWsAVJsJQtReNkvBxn4n90Jw5b4hgpiiMsQMj1kLj82PEd0mx8nuHiF2kM8Mvx3Xw
+	 LqxRXhBr5R0xxDPh57nO2hOouAGBLY3AKdZeqNoPCmA97JPCWtZ0UYmnsK+6p053w2
+	 lqlg5oeia/VCC2I4n1QOzlzq2Q+EByucHb13DRq32ZiCSS+Txt0R8+YpBvAIWB7Gct
+	 FuwsCZqp8vL1531axOppQPBxHdE0eB7iOltYssLVQ7RMeDVsVCMmRKTPxkgHRBImAx
+	 dIJ72y7yKeVu96cbY7s+wNxgXc4DZJO3Heom3U0XoQS1v8gYW+MgQaG/x5uDeQr3y+
+	 wlW0XdVD1zBrA==
+Message-ID: <0cad1e0b-2bfd-4258-90cd-8d319bf0e74a@zytor.com>
+Date: Mon, 14 Apr 2025 10:48:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
+ when available
+To: "H. Peter Anvin" <hpa@zytor.com>, Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
+        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
+        decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-11-xin@zytor.com> <Z_hTI8ywa3rTxFaz@google.com>
+ <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com>
+ <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com>
+ <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-03-31 at 8:22, Xin Li (Intel) wrote:
-> diff --git a/arch/x86/xen/xen-asm.S b/arch/x86/xen/xen-asm.S
-> index e672632b1cc0..6e7a9daa03d4 100644
-> --- a/arch/x86/xen/xen-asm.S
-> +++ b/arch/x86/xen/xen-asm.S
-> @@ -399,3 +399,37 @@ SYM_CODE_END(xen_entry_SYSCALL_compat)
->  	RET
->  SYM_FUNC_END(asm_xen_write_msr)
->  EXPORT_SYMBOL_GPL(asm_xen_write_msr)
-> +
-> +/*
-> + * The prototype of the Xen C code:
-> + * 	struct { u64 val, bool done } xen_do_read_msr(u32 msr)
-> + */
-> +SYM_FUNC_START(asm_xen_read_msr)
-> +	ENDBR
-> +	FRAME_BEGIN
-> +	XEN_SAVE_CALLEE_REGS_FOR_MSR
-> +	mov %ecx, %edi		/* MSR number */
-> +	call xen_do_read_msr
-> +	test %dl, %dl		/* %dl=3D1, i.e., ZF=3D0, meaning
-> successfully done */
-> +	XEN_RESTORE_CALLEE_REGS_FOR_MSR
-> +	jnz 2f
-> +
-> +1:	rdmsr
-> +	_ASM_EXTABLE_FUNC_REWIND(1b, -5, FRAME_OFFSET /
-> (BITS_PER_LONG / 8))
-> +	shl $0x20, %rdx
-> +	or %rdx, %rax
-> +	/*
-> +	 * The top of the stack points directly at the return
-> address;
-> +	 * back up by 5 bytes from the return address.
-> +	 */
+On 4/12/2025 4:10 PM, H. Peter Anvin wrote:
+> Also,*in this specific case* IA32_SPEC_CTRL is architecturally nonserializing, i.e. WRMSR executes as WRMSRNS anyway.
 
-This works only if this function has been called directly (e.g. via
-`call asm_xen_write_msr`), but doesn't work with alternative call types
-(like indirect calls). Not sure why one might want to use an indirect
-call to invoke asm_xen_write_msr, but this creates a hidden coupling
-between caller and callee.
-I don't have a suggestion on how to get rid of this coupling, other
-than setting ipdelta in _ASM_EXTABLE_FUNC_REWIND() to 0 and adjusting
-the _ASM_EXTABLE_TYPE entries at the call sites to consider the
-instruction that follows the function call (instead of the call
-instruction) as the faulting instruction (which seems pretty ugly, at
-least because what follows the function call could be an instruction
-that might itself fault). But you may want to make this caveat explicit
-in the comment.
+While the immediate form WRMSRNS could be faster because the MSR index
+is available *much* earlier in the pipeline, right?
 
