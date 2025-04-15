@@ -1,134 +1,82 @@
-Return-Path: <linux-hyperv+bounces-4910-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4911-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0170A89036
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Apr 2025 01:43:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5932A89258
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Apr 2025 04:56:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6E7F17B598
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Apr 2025 23:43:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78D343A4735
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Apr 2025 02:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4EEF1F542A;
-	Mon, 14 Apr 2025 23:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 832686FC5;
+	Tue, 15 Apr 2025 02:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I71bEzD3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RJAwrj0V"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7882419DFB4;
-	Mon, 14 Apr 2025 23:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 212D72DFA41;
+	Tue, 15 Apr 2025 02:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744674210; cv=none; b=banaAUas2z327L+/xulnSYZ9Z+PQHUbf9aOY5SrsITJK44b4EhTPUSKU4fJE01ND0TgA1bZD7XMElqRoVo6eviX3yjCJBMFe1BXKBYjTuQFLujMtOFmRLtG21BctfbPwry2+s3gvnFJmtdgSY7Zzi5+jC6m/FOd+oyrPcB0aL5U=
+	t=1744685765; cv=none; b=CBvHYZZHDLBokJpOtMH24DC6OkIXKAy0+/b4s5M5zv0YMpz42bqrDjgbHOHVRBbV3yZzktaI+Zh8ggX84TA0VFDbla1t58K4YCojkpR99vTXNqg7Yce6fain1I9ktOydA0Bho8K2FCWlq8hF2caVNuakCAp7Mi1vQtchtLjYge4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744674210; c=relaxed/simple;
-	bh=mYt0rbUDMBdDTLPdWGuS/Bnh03XJEhDanQRD6dzfsgA=;
+	s=arc-20240116; t=1744685765; c=relaxed/simple;
+	bh=3h7xkMohyHDFKTkqIfb+HNnnozRIVE2YQSTxT4y6Ibc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Djpwhgo8xWgkj3DAVE+u68LqLpqY3JCfRzvxPoLFvCVqMPoDRukIHqsY8y2jLUq8/Ndxa6wNszsvhv+yf/LEYi6gre9Aj/0aPeJq3MjIiE9ADTIMVu89ibiOCd+/XxUqU5Od3tW9ycEc/aUlhpZgtqiksOh7mKoz3xLx88aQrl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I71bEzD3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DA3C4CEE2;
-	Mon, 14 Apr 2025 23:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744674210;
-	bh=mYt0rbUDMBdDTLPdWGuS/Bnh03XJEhDanQRD6dzfsgA=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mw1nWY9+BO2XDWPFj22FSzH6TgBJrs3o30YuchiQjjj4p3sBHITkcTGRcgvHRgks4ne54BCq2VbqYxOyBH7AelB0ADdXRAdXXHzpJqOLQVDRw6zytqiJqoG5Ulg5tV+eRgi5X6Rn/8n7plyZXoU+VoBNmA/77iwCkiqJuyYw5z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RJAwrj0V; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 9B1EF210C426; Mon, 14 Apr 2025 19:56:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B1EF210C426
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744685763;
+	bh=hyav3wk9oLUGcjWQ+GqZV5VGB7nXpdgblZ8UCyni3Nk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I71bEzD3NRM2S1F1pdsYNi6bANyOji5p+V8DBDIaQJYynC5bdJ0f010MjTzjI7Kh/
-	 VNWuDmkQcmFV+uUEVlruf2t+phFwZ6akclg8AJxeR9uv7OLuWkwa/0JW/UYrzuZYPD
-	 bP/+j4RHpUT0K5kh+R3c6iFU5iDmIJpOP+z+s3QCX0SEkwfLubBWgauR8seemhVGms
-	 kjyfxpBT1w2P+vz1QxKaxX+wY1r+FwPP+HHVdJPH9BQkl+KI19fK4BISx90WKhA6I+
-	 cBxVS2fXHUWJHEIOLLLS0JkPX/ViLlc5i6kic2qCivRHJC+EldLCeIdK28uPucGqZC
-	 5MKEqXtoq5feQ==
-Date: Mon, 14 Apr 2025 16:43:26 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	pawan.kumar.gupta@linux.intel.com, seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org, 
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
-Subject: Re: [PATCH 6/6] objtool: Validate kCFI calls
-Message-ID: <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.540779611@infradead.org>
+	b=RJAwrj0VTZWXngCxF2zVt7ULmC3sliHZOFFHaCWNXKKnSQbyBfZ4+Ur/mXA6i0HMz
+	 OFbYBCYCfE5Z0/zFWlUngNaXhOGhJx+nhg0AqSURdkJwszarBmL3ZNAzI6/1BO9xnR
+	 cI14yfLAAO1kGGybFrsEuNRYWewkOG+U/eGfCMrI=
+Date: Mon, 14 Apr 2025 19:56:03 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Message-ID: <20250415025603.GA4053@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1743929288-7181-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <BL4PR21MB46271A66420D9B03C2947360BFB32@BL4PR21MB4627.namprd21.prod.outlook.com>
+ <BL4PR21MB46274267168AB06EF05CC0D4BFB32@BL4PR21MB4627.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414113754.540779611@infradead.org>
+In-Reply-To: <BL4PR21MB46274267168AB06EF05CC0D4BFB32@BL4PR21MB4627.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, Apr 14, 2025 at 01:11:46PM +0200, Peter Zijlstra wrote:
->  SYM_FUNC_START(__efi_call)
-> +	/*
-> +	 * The EFI code doesn't have any CFI :-(
-> +	 */
-> +	ANNOTATE_NOCFI
->  	pushq %rbp
->  	movq %rsp, %rbp
->  	and $~0xf, %rsp
+On Mon, Apr 14, 2025 at 09:01:26PM +0000, Dexuan Cui wrote:
+> > From: Dexuan Cui
+> > Sent: Monday, April 14, 2025 1:57 PM
+> > > @@ -1681,12 +1728,13 @@ int main(int argc, char *argv[])
+> > >  	static struct option long_options[] = {
+> > > [...]
+> > > +		{"debug-enabled",	no_argument,	   0,  'd' },
+> 
+> If we use --debug, we won't have to touch the 2 lines of
+> "help" and "no-daemon" in the struct option long_options[].
 
-This looks like an insn annotation but is actually a func annotation.
-ANNOTATE_NOCFI_SYM() would be a lot clearer, for all the asm code.
+Thanks Dexuan, no problem, I'll make that change.
 
-Though maybe it's better for ANNOTATE_NOCFI to annotate the call site
-itself (for asm) while ANNOTATE_NOCFI_SYM annotates the entire function
-(in C).  So either there would be two separate annotypes or the
-annotation would get interpreted based on whether it's at the beginning
-of the function.
-
-> +++ b/include/linux/objtool.h
-> @@ -185,6 +185,8 @@
->   */
->  #define ANNOTATE_REACHABLE(label)	__ASM_ANNOTATE(label, ANNOTYPE_REACHABLE)
->  
-> +#define ANNOTATE_NOCFI_SYM(sym)		asm(__ASM_ANNOTATE(sym, ANNOTYPE_NOCFI))
-
-This needs a comment like the others.
-
-> @@ -2436,6 +2438,15 @@ static int __annotate_late(struct objtoo
->  		insn->_jump_table = (void *)1;
->  		break;
->  
-> +	case ANNOTYPE_NOCFI:
-> +		sym = insn->sym;
-> +		if (!sym) {
-> +			WARN_INSN(insn, "dodgy NOCFI annotation");
-> +			break;
-
-Return an error?
-
-> @@ -4006,6 +4017,36 @@ static int validate_retpoline(struct obj
-> +	/*
-> +	 * kCFI call sites look like:
-> +	 *
-> +	 *     movl $(-0x12345678), %r10d
-> +	 *     addl -4(%r11), %r10d
-> +	 *     jz 1f
-> +	 *     ud2
-> +	 *  1: cs call __x86_indirect_thunk_r11
-> +	 *
-> +	 * Verify all indirect calls are kCFI adorned by checking for the
-> +	 * UD2. Notably, doing __nocfi calls to regular (cfi) functions is
-> +	 * broken.
-
-This "__nocfi calls" is confusing me.  IIUC, there are two completely
-different meanings for "nocfi":
-
-  - __nocfi: disable the kcfi function entry stuff
-  
-  - ANNOTATE_NOCFI_SYM: Regardless of whether the function is __nocfi,
-    allow it to have non-CFI indirect call sites.
-
-Can we call this ANNOTATE_NOCFI_SAFE or something?
-
--- 
-Josh
+regards,
+Shradha
 
