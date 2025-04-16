@@ -1,130 +1,115 @@
-Return-Path: <linux-hyperv+bounces-4938-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4939-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 790DEA8B255
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Apr 2025 09:37:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25FD9A8B40D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Apr 2025 10:39:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EB4016F9D5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Apr 2025 07:37:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B47E016D60C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Apr 2025 08:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8BE227E8C;
-	Wed, 16 Apr 2025 07:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D3EF23027D;
+	Wed, 16 Apr 2025 08:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IJrOEVPN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68EC8F7D;
-	Wed, 16 Apr 2025 07:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF2C21D3F4;
+	Wed, 16 Apr 2025 08:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789064; cv=none; b=V0rhhpRneovA7NVk3u80DII5iSJ8i4n7Ha2XANHQApEzzm28qUC+yeS9Mo3c9uEbMULL82XQ48lddczMnR1DSKkBVLssfzI4r07DPEUoKG1PVCx2puKIP/SDHZtyd3gtHaevvZkrW0eGk/IHFwrFJpFA1uio1GkqjyfM+tcdeWI=
+	t=1744792755; cv=none; b=lX0akOkX0LuuStL9RGtiY5ySkCN1e7QqB1wlkhIm6fWqRhUNIWtko7rKWxOWbJ+1oM441vmvI7XRZGTBxpmJtrs0fGZ2c6HJjOKnTa+hOr0uruvXcm0wtJp5nOTLG0spY43NLLaj3m3u1lCcU/0cr/94GUzwp6TKNt7O7Cc3cbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789064; c=relaxed/simple;
-	bh=A2zdC+VzZXUkztMafHM4wvtTwwSA7mHk2q5XfHtZX1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=o9PKP5zDinNBKs/ZNWA7ryhM8TWZBIc9f/wwBbrY4V/0u1wSB/lCTvs/CVYdTbFXCLT9Rsjbi2/yPwrI93x+8W1Mux9ZtSfgg5eZiMmPcenYr6z2/TurvI41E9w+TyvHz59Jeg8VEEWri74Nj/jR2JOsn4uJpGkO+sC3CHMa19o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZctBn03cVz1cyT0;
-	Wed, 16 Apr 2025 15:36:49 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id AAC77180080;
-	Wed, 16 Apr 2025 15:37:38 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 16 Apr 2025 15:37:38 +0800
-Message-ID: <d06a75d7-c503-4aa1-a846-d23ef5c48d3c@huawei.com>
-Date: Wed, 16 Apr 2025 15:37:38 +0800
+	s=arc-20240116; t=1744792755; c=relaxed/simple;
+	bh=Jo7IRF/Ea1yo6H+X+UMDZdtb+HL4j7gjXTkaOwkldUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RkjMX/9q8/r2A348+0Fzmawhc6SR+7KQdvNxfKk9sFQHvQWv5IqtDKKJjPWVXTj0IaX1cPn5+4adD4ZE6Rk40Adb5vo5LfSmrRP+e1Kgs69bEW8MP7biZZaPwBDuBi9VvVCbKxFxzJSciwV0kJ3yUhyANAB5RTEMsNHaq8mc3yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IJrOEVPN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YETO2W6ulsRrHM98mq1KvuhMY9RNq8oCyk4fATPKFl8=; b=IJrOEVPNua8vzJb+7uWns05tw4
+	sztwBjFwY5OyOa7zNXoI1H+oDYIB9a9f5JCHXULahiGfAnaoKB54gZy/9zzs0PSYluelynI1ZvKS8
+	bB0gEnYxdxvf9kwn0QPpjDNQFHhMYWw/pmoS45nMVGLsL492nAFFN/stSfevMwhY1RRy/PEQkBJHB
+	CoueN4gxQoNr1f1WuOpJToedrovo/lpjq81gP/expg90GCmgl3WB4l8oXHbzJQCMkKIfdJZcDunoo
+	jnUQg9SzgNOGwsOrCQUthZINNaAO15BjlO6D6v0yTkqCBeB1ulvI7R8dkkmFLCR59qZ7U4dTBc5DY
+	C/qUPgxw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4yIN-00000009vep-1fDc;
+	Wed, 16 Apr 2025 08:39:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 89D633003C4; Wed, 16 Apr 2025 10:38:59 +0200 (CEST)
+Date: Wed, 16 Apr 2025 10:38:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, seanjc@google.com,
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
+Message-ID: <20250416083859.GH4031@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.172767741@infradead.org>
+ <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
+ <20250415074421.GI5600@noisy.programming.kicks-ass.net>
+ <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm: page_frag: Check fragsz at the beginning of
- __page_frag_alloc_align()
-To: Haiyang Zhang <haiyangz@microsoft.com>, <linux-hyperv@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <corbet@lwn.net>, <linux-mm@kvack.org>,
-	<linux-doc@vger.kernel.org>
-CC: <decui@microsoft.com>, <kys@microsoft.com>, <paulros@microsoft.com>,
-	<olaf@aepfle.de>, <vkuznets@redhat.com>, <davem@davemloft.net>,
-	<wei.liu@kernel.org>, <longli@microsoft.com>, <linux-kernel@vger.kernel.org>
-References: <1743715309-318-1-git-send-email-haiyangz@microsoft.com>
- <1743715309-318-2-git-send-email-haiyangz@microsoft.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <1743715309-318-2-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
 
-On 2025/4/4 5:21, Haiyang Zhang wrote:
-> Frag allocator is not designed for fragsz > PAGE_SIZE. So, check and return
-> the error at the beginning of __page_frag_alloc_align(), instead of
-> succeed for a few times, then fail due to not refilling the cache.
+On Tue, Apr 15, 2025 at 07:39:41AM -0700, Josh Poimboeuf wrote:
+> On Tue, Apr 15, 2025 at 09:44:21AM +0200, Peter Zijlstra wrote:
+> > On Mon, Apr 14, 2025 at 03:36:50PM -0700, Josh Poimboeuf wrote:
+> > > On Mon, Apr 14, 2025 at 01:11:43PM +0200, Peter Zijlstra wrote:
+> > > > Since there is only a single fastop() function, convert the FASTOP
+> > > > stuff from CALL_NOSPEC+RET to JMP_NOSPEC+JMP, avoiding the return
+> > > > thunks and all that jazz.
+> > > > 
+> > > > Specifically FASTOPs rely on the return thunk to preserve EFLAGS,
+> > > > which not all of them can trivially do (call depth tracing suffers
+> > > > here).
+> > > > 
+> > > > Objtool strenuously complains about things, therefore fix up the
+> > > > various problems:
+> > > > 
+> > > >  - indirect call without a .rodata, fails to determine JUMP_TABLE,
+> > > >    add an annotation for this.
+> > > >  - fastop functions fall through, create an exception for this case
+> > > >  - unreachable instruction after fastop_return, save/restore
+> > > 
+> > > I think this breaks unwinding.  Each of the individual fastops inherits
+> > > fastop()'s stack but the ORC doesn't reflect that.
+> > 
+> > I'm not sure I understand. There is only the one location, and we
+> > simply save/restore the state around the one 'call'.
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  mm/page_frag_cache.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> The problem isn't fastop() but rather the tiny functions it "calls".
+> Each of those is marked STT_FUNC so it gets its own ORC data saying the
+> return address is at RSP+8.
 > 
-> diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
-> index d2423f30577e..d6bf022087e7 100644
-> --- a/mm/page_frag_cache.c
-> +++ b/mm/page_frag_cache.c
-> @@ -98,6 +98,15 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
->  	unsigned int size, offset;
->  	struct page *page;
->  
-> +	if (unlikely(fragsz > PAGE_SIZE)) {
-> +		/*
-> +		 * The caller is trying to allocate a fragment
-> +		 * with fragsz > PAGE_SIZE which is not supported
-> +		 * by design. So we simply return NULL here.
-> +		 */
-> +		return NULL;
-> +	}
+> Changing from CALL_NOSPEC+RET to JMP_NOSPEC+JMP means the return address
+> isn't pushed before the branch.  Thus they become part of fastop()
+> rather than separate functions.  RSP+8 is only correct if it happens to
+> have not pushed anything to the stack before the indirect JMP.
 
-The checking is done at below to avoid doing the checking for the
-likely case of cache being enough as the frag API is mostly used
-to allocate small memory.
-
-And it seems my recent refactoring to frag API have made two
-frag API misuse more obvious if I recalled it correctly. If more
-explicit about that for all the codepath is really helpful, perhaps
-VM_BUG_ON() is an option to make it more explicit while avoiding
-the checking as much as possible.
-
-> +
->  	if (unlikely(!encoded_page)) {
->  refill:
->  		page = __page_frag_cache_refill(nc, gfp_mask);
-> @@ -119,19 +128,6 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
->  	size = PAGE_SIZE << encoded_page_decode_order(encoded_page);
->  	offset = __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
->  	if (unlikely(offset + fragsz > size)) {
-> -		if (unlikely(fragsz > PAGE_SIZE)) {
-> -			/*
-> -			 * The caller is trying to allocate a fragment
-> -			 * with fragsz > PAGE_SIZE but the cache isn't big
-> -			 * enough to satisfy the request, this may
-> -			 * happen in low memory conditions.
-> -			 * We don't release the cache page because
-> -			 * it could make memory pressure worse
-> -			 * so we simply return NULL here.
-> -			 */
-> -			return NULL;
-> -		}
-> -
->  		page = encoded_page_decode_page(encoded_page);
->  
->  		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
+Yeah, I finally got there. I'll go cook up something else.
 
