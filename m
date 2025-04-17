@@ -1,143 +1,113 @@
-Return-Path: <linux-hyperv+bounces-4957-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4958-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D9D4A91E32
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 15:38:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B4A5A920F2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 17:11:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B8173AE8B8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 13:38:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 351C33B565E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 15:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5003C24A040;
-	Thu, 17 Apr 2025 13:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1024025332B;
+	Thu, 17 Apr 2025 15:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nEiRdiLc"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="H3yATVk1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4053017E00E
-	for <linux-hyperv@vger.kernel.org>; Thu, 17 Apr 2025 13:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A60C252905
+	for <linux-hyperv@vger.kernel.org>; Thu, 17 Apr 2025 15:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744897125; cv=none; b=f4YPGkD8L06ZnkertaEHnNsGsR9pVS7hqLgyP6P+8vKsn4sYqUzMGLU4woSH9ZiYLiNDVXAUf3fW+XZAJMGWaDoayT7GVmEEqpdnHVoRkg4ojM9SC/2Ci71sr2Yj42rxNvtG9sOZVREb+154T0TvZy62w+7JAx3ylELq6tSr+gc=
+	t=1744902658; cv=none; b=gHY9EWw77peBe6RhMM6C1Up1MTqVPNKzryEzN+MGBCfIa8t1oTim9VEi7TQbcK3Z0FETFn8PGXd8IJp+wNzDF2ZNFDLszIfaTfa1Tp9mjvL8kAQ7ifgj5cU0HV7jyW659oBxb0gk81tskLGHcsYq8M+FltncLNK38bNbd3WLlH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744897125; c=relaxed/simple;
-	bh=TuA6iIcB1pBTWGgkSMVSFyR+JdrhY2OU3rmRcvufNOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pqRm1nO7S4Iuc+E6pBxyPTU2zxokczDUlrD+aIxqrlVPIoDYXTpI8j7uNlRLeS6+IIDP2nSIdj51cn/nkc15MdN1BtG9HszK+xR5wU+zKOtCFRdeIwfDC711fmJCf8spoEHzzbMCmZXseG4m0LuADUYXu5r7hWZ3TY7pooM4OJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nEiRdiLc; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <b1e513f8-2e0d-4b09-aa10-02b7b593d3c9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744897110;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qwWArQ9MRFGh/K/eEnUGpTzjpxS8V4e6gJ+d+OE0Wg4=;
-	b=nEiRdiLcOXl/0JZ4b+MhjzFuKTUxxNRdxzCe3bwodYNkgAoRAzFmzv0T1D76gH31bw08tR
-	5UchRm/hc0tt2THRDjE6P5O+cHTBxb/L5At8yJCxJEXVlBS4wC4kp6TxL0VeLewIrqf2Rv
-	kaPtM3CIlyDDYAXIvfHE3D5Cn2JsKoM=
-Date: Thu, 17 Apr 2025 15:38:26 +0200
+	s=arc-20240116; t=1744902658; c=relaxed/simple;
+	bh=LiZgga9x8uNn0x7WdTDXbakOF44Ru5INCev66F2o+Dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JAsaq5LqmKVBDSY4L296UVe9Upfo5vlF2hb3YynJdvaeZC5HQDGJV0j6sMbUnQafvUAnZol9cvMDpczboQ5XyYN+QcbQrBoKow37ZpLjq2Fkp6gyWUpXQi4qnioaXC/o8JrSuFkQGDLTbJ/fwqqPAeTEgQ+PUI1l9oBBEDRRxWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=H3yATVk1; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224341bbc1dso10350105ad.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 17 Apr 2025 08:10:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1744902655; x=1745507455; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LiZgga9x8uNn0x7WdTDXbakOF44Ru5INCev66F2o+Dc=;
+        b=H3yATVk10aZqoRI+w4nNhDNAcSrm+D72kf09ipil/lhZBQVG98+L9kHkPcmnSnwazQ
+         2l2q7/rcLpNyHl7W14wjQCbWN87G0IAsm+Yej1cduBZyRY+bLzSw3rdEYxijZFieiE5K
+         4p9sZvZQrU1T5YW0n/Phw1rSXkT4kX9Je/Pl622+TtYHoFzbnncoMrFYet2UFNdX7dEZ
+         Kp5GDmv6d0PucyJocp1zYdAefTVH68d510dC+sFSGKo4O3dpzsf/SX5osPX6hm1NRhbn
+         mn8Q/7MwclR7BEHoMAaKF+jTuamIjIVUOtP2h2aefp90oQRbxnCBj4UUds3GxtLFjNgk
+         ZaBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744902655; x=1745507455;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LiZgga9x8uNn0x7WdTDXbakOF44Ru5INCev66F2o+Dc=;
+        b=mbdRHECv6qSl7HWbgP/55DqVqiu9THGPOzdG1Uip++ccT8Kg6WcyjM03pncZ6CrQHp
+         TtKiVoHljpZl5HcYMuRf9cGVTpTojLx85jq6areQtquroRpq66LkjjZnk2Trf8FbHYl9
+         PTUcDomx/iNuysAndggQhy63YfAvqzZK3tTeWJWyEz+6txoYkkWEpb+QQg8toGVR7xJx
+         zdHWsj08u09zjLr3zFt0gDaMvdtKOqeKBI2GNETdj7wktgfebrq/bmT/sIu/cGLmM77E
+         aFdsX7/DCH5LxbT54yZELv5hXtlr3MM9H1Z1AoGlFZ8xdz7P+PRA8Q31LU5Ta9ltTTaT
+         u3Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbbk20Y15pAXU5qojzsTmiziql6PknBUWTXAm/mUm6hqg4CK2ZZ6F8xfEV0V3k8tfZiqfaVUlHLRzQ1Vw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO1Eyg+mr2PtMgeg0VlzQMr/c38LykH5m1sYPKfGRfaNmI2MG1
+	qWJirnB/i+gpnumPW7m9iEO/E/xLa4J1u9zXZHmtUlLB5WA9E+tIekATYWWCX2c=
+X-Gm-Gg: ASbGncvNOuB1tqvEnDRLkgga+9A3qUVY1y1guKwvhyJnECXccUBx+YZG8CGXdfns45+
+	yHUP96w7w3RdwmX0/3gJ7KcMNm1y043SYD6Yj38K4uzYp1JHisIxKb0chPhq57Aw0vfaw20ebiX
+	5jcjHWFgUXMai5/Tf1ZLimdRCWlTpzE3UaqFHvZ09hWEuiwMCw0lhFxq0kPLVXPeC5hGuKLt8g3
+	u4ybZ5aauJ/NN9SZk40W842JdiHlZ5ZnVEWqApgrhVnoqqKweRY1gGUDwO+hoHPOhW5A2Tmu2Yt
+	hlGAMRwUOYGq2cQ5t0qi8lPrdCzVlkBXfPhwl9dXkfiDPABhTqfoC0rhSbsz0CsOOhiLSlsp7iS
+	ESG+hnp9r8jyFDzy2
+X-Google-Smtp-Source: AGHT+IHIP5FBpE6QRyj07ov+jrBL6Cb9idEsBOVjWQ1/IColpF0qdvEnnkroDFpHC82/JIDmUgRLTQ==
+X-Received: by 2002:a17:902:f642:b0:220:c813:dfd1 with SMTP id d9443c01a7336-22c359734c3mr102186955ad.36.1744902655602;
+        Thu, 17 Apr 2025 08:10:55 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c210esm12348763b3a.41.2025.04.17.08.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 08:10:55 -0700 (PDT)
+Date: Thu, 17 Apr 2025 08:10:53 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+ kent.overstreet@linux.dev, brett.creeley@amd.com,
+ schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
+ ssengar@linux.microsoft.com, rosenp@gmail.com, paulros@microsoft.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 2/3] net: mana: Add sched HTB offload support
+Message-ID: <20250417081053.5b563a92@hermes.local>
+In-Reply-To: <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
+References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
+	<1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] net: mana: Add speed support in
- mana_get_link_ksettings
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
- kotaranov@microsoft.com, horms@kernel.org, kent.overstreet@linux.dev,
- brett.creeley@amd.com, schakrabarti@linux.microsoft.com,
- shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
- rosenp@gmail.com, paulros@microsoft.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org
-References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
- <1744876630-26918-2-git-send-email-ernis@linux.microsoft.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <1744876630-26918-2-git-send-email-ernis@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 17.04.25 09:57, Erni Sri Satya Vennela wrote:
-> Add support for speed in mana ethtool get_link_ksettings
-> operation. This feature is not supported by all hardware.
-> 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->   drivers/net/ethernet/microsoft/mana/mana_en.c | 42 +++++++++++++++++++
->   .../ethernet/microsoft/mana/mana_ethtool.c    |  6 +++
->   include/net/mana/mana.h                       | 17 ++++++++
->   3 files changed, 65 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 2bac6be8f6a0..ba550fc7ece0 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1156,6 +1156,48 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
->   	return err;
->   }
->   
-> +int mana_query_link_cfg(struct mana_port_context *apc)
-> +{
-> +	struct net_device *ndev = apc->ndev;
-> +	struct mana_query_link_config_resp resp = {};
-> +	struct mana_query_link_config_req req = {};
-> +	int err;
-> +
-> +	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_LINK_CONFIG,
-> +			     sizeof(req), sizeof(resp));
-> +
-> +	req.vport = apc->port_handle;
-> +
-> +	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
-> +				sizeof(resp));
-> +
-> +	if (err) {
-> +		netdev_err(ndev, "Failed to query link config: %d\n", err);
-> +		goto out;
-> +	}
-> +
-> +	err = mana_verify_resp_hdr(&resp.hdr, MANA_QUERY_LINK_CONFIG,
-> +				   sizeof(resp));
-> +
-> +	if (err || resp.hdr.status) {
-> +		netdev_err(ndev, "Failed to query link config: %d, 0x%x\n", err,
-> +			   resp.hdr.status);
-> +		if (!err)
-> +			err = -EPROTO;
+On Thu, 17 Apr 2025 00:57:09 -0700
+Erni Sri Satya Vennela <ernis@linux.microsoft.com> wrote:
 
-EPROTO means Protocol error. Thus, ENOTSUPP or EPROTONOSUPPORT is better?
+> Introduce support for HTB qdisc offload in the mana ethernet
+> controller. This controller can offload only one HTB leaf.
+> The HTB leaf supports clamping the bandwidth for egress traffic.
+> It uses the function mana_set_bw_clamp(), which internally calls
+> a HWC command to the hardware to set the speed.
 
-Zhu Yanjun
-
-> +		goto out;
-> +	}
-> +
-> +	if (resp.qos_unconfigured) {
-> +		err = -EINVAL;
-> +		goto out;
-> +	}
-> +	apc->speed = resp.link_speed_mbps;
-> +	return 0;
-> +
-> +out:
-> +	return err;
-> +}
-> +
-
+A single leaf is just Token Bucket Filter (TBF).
+Are you just trying to support some vendor config?
 
