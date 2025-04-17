@@ -1,118 +1,135 @@
-Return-Path: <linux-hyperv+bounces-4955-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4956-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B20CFA9188B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 12:00:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6C29A91A2E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 13:12:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 248E95A11D2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 10:00:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F021746236D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Apr 2025 11:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D15722618F;
-	Thu, 17 Apr 2025 10:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70075237168;
+	Thu, 17 Apr 2025 11:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0utEg9jG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SYEN2p5i"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZIADA/NB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8396314900F;
-	Thu, 17 Apr 2025 10:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C20C23645F;
+	Thu, 17 Apr 2025 11:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744884032; cv=none; b=OJgE8I9/pGMZx2Py3lgnq6tNEZw6ry/iODtQ7E4c1WCs/cMQSiUxHheOVErzG9vgXhp8UXui3n6BIcgXHP+UZOw52NY7tL/V2HncUC4tN7ueUCKuefOcxvxcyO8wBUDl3pW7K7dWyj/av/MSWTC5VxOXNdxsVFqplgVXdYI3r9Y=
+	t=1744888345; cv=none; b=S9227j0ssDDFMosFj1z5u3/q2oW9pB/sY8vL4Xsl7GinHmaJt00rrWM4WFCifZjoLgC3A6Lr1uGERavvtv/7vnJigoPhTtozjifZiuSJT1ZhtwbRIZ+DI47ZPZ/m4QJh097o9iHc8zNSCewucGItmiE3EC73j8FSXmhCvCLWDz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744884032; c=relaxed/simple;
-	bh=gBCWhHaYJt7IxdQVoQevVAf1TPYRlg9+br4MdJZH6vk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S1A88m1XTs5HuiTGFPQD1dWtwwOIw4gIPQftUGjC8f7zZSJ3fd95x5AcJ71+ninIkgHPrvrox2aJncdkDrW6NPs0bFxLYQEmz9CxiZdzq6ut+wVaDCEDAk2fgL9kSgTtqZjthmlH1w2rC7Y1FveE2L9eCZCT0xtWS4E7LC5+804=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0utEg9jG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SYEN2p5i; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744884028;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mwp7yIk0XmtP5iY6T5jFpOlt63W6YtGrfCUkWNHR/Lo=;
-	b=0utEg9jGanYt9LWfTQu6fUSd7lDoSNe4CIP6rKc+J2NVQPgMiK3kmc94ldnj7r7K+mPRO3
-	8X/GIxTn7IG/qjO09G0cK37GvQVRuZQMLEueyN1/t365SRzvDKJ25pImZEznDohat4vBDN
-	zIiM5bvOtlBgIjxb7bQfKMDUZdIyHennPnifMM4Byz6YHsYtonWWo7nnXp9hY7q61IHtMg
-	7Lv4bkhoRXy0tFw910ufTLY0/w3ka0bH4BOaaZR4diiH8uvrVtuJFxXkDMf5UBOLSRjker
-	uJZzROHgyNO3VIprf7P1bMbsIBQ1SQxPHEOiv7xjAw0kumCGMA5YrJhefVo4OQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744884028;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mwp7yIk0XmtP5iY6T5jFpOlt63W6YtGrfCUkWNHR/Lo=;
-	b=SYEN2p5iIzUMbGAQpOLql9MqGGmSRePe47QozGCcXB5ZOaC0TgnHEnkj9lY+hrWR3s1OK/
-	1MH4kR48gl33JNBA==
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan
- Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Shradha Gupta
- <shradhagupta@linux.microsoft.com>, Shivamurthy Shastri
- <shivamurthy.shastri@linutronix.de>, Kevin Tian <kevin.tian@intel.com>,
- Long Li <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob
- Herring <robh@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov
- <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
- Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni
- Sri Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
- <peterz@infradead.org>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>
-Cc: Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH 1/2] PCI: hv: enable pci_hyperv to allow dynamic vector
- allocation
-In-Reply-To: <1744817766-3134-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1744817747-2920-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1744817766-3134-1-git-send-email-shradhagupta@linux.microsoft.com>
-Date: Thu, 17 Apr 2025 12:00:28 +0200
-Message-ID: <87cydbrttv.ffs@tglx>
+	s=arc-20240116; t=1744888345; c=relaxed/simple;
+	bh=zKR49UWsXQlKIMA1VnL+BkqgO+3iF8iLPVDDfF2KoTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qJv86Il9HqLtscLyVepF/2S8m/x0VJulXPSa8zvBWZuchr/O4G6UWUyWFznvNE8KjgnwSqRoajoPJpzF2/wy4MpHHYFytP+KKoPa/sfquDczEHSfMFI+RNlieWHMDIr/7cCW3iixL2DS6JcI2oLoGR6XHX/tZxPEdTqhAfK/izs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZIADA/NB; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53HBB0dU3967739
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 17 Apr 2025 04:11:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53HBB0dU3967739
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744888264;
+	bh=zKR49UWsXQlKIMA1VnL+BkqgO+3iF8iLPVDDfF2KoTE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZIADA/NBWFdjMUgJTKpv9M9Wy2YG9IZEPFByL8wYabsxbBoRuZfKRlm/KXHCD1Dct
+	 p+vwf14YsIuc+VHp9bDfack/1J0ZEDi3/LMHCo05xDW9TD4JrJ0GM5fVVA/piqxPhD
+	 UyV8JWSU0hR2PMwkuYuHLcqgii53bDcW9KmA0ITTnJZG4RxQYf1Gr8LMHk+DKpR9xo
+	 v/L3GNQ4ChUSYncpwgOQsPYYlB/v/0qZd/JiW4t/kLzx/6ZLdqruZ97wB6zyl1mziC
+	 tKwEE+12hM3fNBR36tO17t9Oq8pShTsP2t1ihwsRhIESP8RHTn9IcCLiPfhw0jeR7+
+	 9wRv9KyfJmA3A==
+Message-ID: <edbeb41d-3c38-4778-9a7c-255edc7cd5fb@zytor.com>
+Date: Thu, 17 Apr 2025 04:10:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 13/15] x86/msr: Use the alternatives mechanism to
+ read MSR
+To: Francesco Lavra <francescolavra.fl@gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajay.kaher@broadcom.com,
+        alexander.shishkin@linux.intel.com, andrew.cooper3@citrix.com,
+        bcm-kernel-feedback-list@broadcom.com, boris.ostrovsky@oracle.com,
+        bp@alien8.de, bpf@vger.kernel.org, dave.hansen@linux.intel.com,
+        decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+        irogers@google.com, jgross@suse.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, kvm@vger.kernel.org, kys@microsoft.com,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        llvm@lists.linux.dev, luto@kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, pbonzini@redhat.com,
+        peterz@infradead.org, seanjc@google.com, tglx@linutronix.de,
+        tony.luck@intel.com, virtualization@lists.linux.dev,
+        vkuznets@redhat.com, wei.liu@kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16 2025 at 08:36, Shradha Gupta wrote:
-> For supporting dynamic MSI vector allocation by pci controllers, enabling
-> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
-> to prepare the desc is needed. Export pci_msix_prepare_desc() to allow pci
-> controllers like pci-hyperv to support dynamic MSI vector allocation.
-> Also, add the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and use
-> pci_msix_prepare_desc() in pci_hyperv controller
+On 4/14/2025 10:13 AM, Francesco Lavra wrote:
+> This works only if this function has been called directly (e.g. via
+> `call asm_xen_write_msr`), but doesn't work with alternative call types
+> (like indirect calls). Not sure why one might want to use an indirect
+> call to invoke asm_xen_write_msr, but this creates a hidden coupling
+> between caller and callee.
+> I don't have a suggestion on how to get rid of this coupling, other
+> than setting ipdelta in _ASM_EXTABLE_FUNC_REWIND() to 0 and adjusting
+> the _ASM_EXTABLE_TYPE entries at the call sites to consider the
+> instruction that follows the function call (instead of the call
+> instruction) as the faulting instruction (which seems pretty ugly, at
+> least because what follows the function call could be an instruction
+> that might itself fault). But you may want to make this caveat explicit
+> in the comment.
 
-Seems your newline key is broken. Please structure changelogs properly
-in paragraphs:
-
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
-
->  drivers/pci/controller/pci-hyperv.c | 7 +++++--
->  drivers/pci/msi/irqdomain.c         | 5 +++--
->  include/linux/msi.h                 | 2 ++
-
-This wants to be split into a patch which exports
-pci_msix_prepare_desc() and one which enables the functionality in
-PCI/HV.
-
-Thanks,
-
-        tglx
+Good idea, will state that in the comment.
 
