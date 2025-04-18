@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-4968-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4969-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE9DA92EE0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Apr 2025 02:43:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D876A92EE3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Apr 2025 02:43:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F55E4665D9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Apr 2025 00:43:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FBAB1B6348D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Apr 2025 00:43:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DF31481A3;
-	Fri, 18 Apr 2025 00:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B03C7082A;
+	Fri, 18 Apr 2025 00:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="tD/yyzsS"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="iMl3HJCE"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE8D82A1D7;
-	Fri, 18 Apr 2025 00:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07FE140BF5;
+	Fri, 18 Apr 2025 00:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744937002; cv=none; b=Z3TWQJ2ZKa7gVYgK0xqSm0wQmC1GX2u3VnVGm8UNEtGi0ofVjN/OBO6UfiR1aVRVEfu2o7gJIFXBXxYzlGs+fJsmeE2+X9wO3dV385F6dzUGHsvpVOtqQEyhhHOgaobC2Fh+OvuQsmEBUcHMMC1GSuaPstacTTszd2Sa6ZISe3c=
+	t=1744937003; cv=none; b=IJR+GRLr+DL7FdH3sDKNePPXQDU1V91MwgQT6Nbe4PRER5QmxkDWp9qzLxOw6+SMRWSNf155E60ydtGc5l+9krWoXR7y08Y1E1gheLkojyxSlu3q0c1kiTV/SQvTyA7Nl4GI2ny3UqjOuU2Vku7779VWEUFsHBoPhYJIaE3pjiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744937002; c=relaxed/simple;
-	bh=wPsRF+g0CgGHIn8Cu2/Fm5NCeD5ZL4NsGfulFAUvTHg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=hRMva9BpWzSoMhevLrNFU2XkfGSjjifTE7/VjRNN1avk8UDGkWZPaXIfRpYivCVr8EBIUIr7JUC7zJgkg2jGVBaWGkc7REKPoJAaVmVrX+5Gc8kJOOfbGMYiwW1xzDPDei3MogqNsGXVaVH+d2ahwmgwj8vqZCquFvZHAJlhU2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=tD/yyzsS; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1744937003; c=relaxed/simple;
+	bh=ZmeHa/eLY/2hqMCCompH7uxOi3TbVn1s/vd0kwInBNU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qE0VnocBQaxZ8KCwQ11gvmsvlFUK/K8KPEi9pSpsxsFS2kHXu5Q/ic1RJB5tiRFl2/zWiFhCoDDYqmAhUWRomq+k6PR3SQjItl4vNB2aRnnyNJSXxQmJuS9ExqYzBdFmCccezwlCBRQc4Y1w1CjwXtdNlHwrypGNM2huUlxD7NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=iMl3HJCE; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 919042052516; Thu, 17 Apr 2025 17:43:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 919042052516
+	id 9C61B205251C; Thu, 17 Apr 2025 17:43:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9C61B205251C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1744937000;
-	bh=ngeSLap9FR3I8QT9yiNwCoXHVRvVw9uTKGk8eFA6FUY=;
+	s=default; t=1744937001;
+	bh=mNvIVtrs1E3+/vYev9vOXbdbYKPz8ifiqQUnVtJsDDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tD/yyzsSlHwDfXqbv66esrz1SlxSt8JVfxW7bGDLeJ1uzRnpVa45FyQITd39TMS3U
-	 gSjOWs7EECBVH0wICKfaFOMJZRpckqzCUjAcCr+p3GdWzqZp+nbkqI2xP/IEdit5mP
-	 1hvWbkpX4AXNPzVhR8KKyo15y/g8zQxcPC5HAO7U=
+	b=iMl3HJCELH+e0LQIwLEQOrF/pAdWIs+Hq5XC58tSDDgT4rsaydSVZHr3iijyG96G4
+	 Xepbzin2iUEB1aKYyaviVx+jWkXsJHfiL7bqOOS+qHf4rrbYfD1A3jmHbzOvMOeAEL
+	 afZQmH+86ER4B3WPonsbAwpyQu3ZAw8ZJ/eYMelg=
 From: longli@linuxonhyperv.com
 To: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -48,9 +48,9 @@ To: "K. Y. Srinivasan" <kys@microsoft.com>,
 	linux-kernel@vger.kernel.org
 Cc: Long Li <longli@microsoft.com>,
 	stable@vger.kernel.org
-Subject: [PATCH 1/2] Drivers: hv: Allocate interrupt and monitor pages aligned to system page boundary
-Date: Thu, 17 Apr 2025 17:43:16 -0700
-Message-Id: <1744936997-7844-2-git-send-email-longli@linuxonhyperv.com>
+Subject: [PATCH 2/2] uio_hv_generic: Use correct size for interrupt and monitor pages
+Date: Thu, 17 Apr 2025 17:43:17 -0700
+Message-Id: <1744936997-7844-3-git-send-email-longli@linuxonhyperv.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1744936997-7844-1-git-send-email-longli@linuxonhyperv.com>
 References: <1744936997-7844-1-git-send-email-longli@linuxonhyperv.com>
@@ -62,72 +62,36 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
 From: Long Li <longli@microsoft.com>
 
-There are use cases that interrupt and monitor pages are mapped to
-user-mode through UIO, they need to be system page aligned. Some Hyper-V
-allocation APIs introduced earlier broke those requirements.
-
-Fix those APIs by always allocating Hyper-V page at system page boundaries.
+Interrupt and monitor pages should be in Hyper-V page size (4k bytes).
+This can be different to the system page size.
 
 Cc: stable@vger.kernel.org
-Fixes: ca48739e59df ("Drivers: hv: vmbus: Move Hyper-V page allocator to arch neutral code")
+Fixes: 95096f2fbd10 ("uio-hv-generic: new userspace i/o driver for VMBus")
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- drivers/hv/hv_common.c | 29 +++++++----------------------
- 1 file changed, 7 insertions(+), 22 deletions(-)
+ drivers/uio/uio_hv_generic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index a7d7494feaca..f426aaa9b8f9 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -106,41 +106,26 @@ void __init hv_common_free(void)
- }
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index 1b19b5647495..08385b04c4ab 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -287,13 +287,13 @@ hv_uio_probe(struct hv_device *dev,
+ 	pdata->info.mem[INT_PAGE_MAP].name = "int_page";
+ 	pdata->info.mem[INT_PAGE_MAP].addr
+ 		= (uintptr_t)vmbus_connection.int_page;
+-	pdata->info.mem[INT_PAGE_MAP].size = PAGE_SIZE;
++	pdata->info.mem[INT_PAGE_MAP].size = HV_HYP_PAGE_SIZE;
+ 	pdata->info.mem[INT_PAGE_MAP].memtype = UIO_MEM_LOGICAL;
  
- /*
-- * Functions for allocating and freeing memory with size and
-- * alignment HV_HYP_PAGE_SIZE. These functions are needed because
-- * the guest page size may not be the same as the Hyper-V page
-- * size. We depend upon kmalloc() aligning power-of-two size
-- * allocations to the allocation size boundary, so that the
-- * allocated memory appears to Hyper-V as a page of the size
-- * it expects.
-+ * A Hyper-V page can be used by UIO for mapping to user-space, it should
-+ * always be allocated on system page boundaries.
-  */
--
- void *hv_alloc_hyperv_page(void)
- {
--	BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
--
--	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
--		return (void *)__get_free_page(GFP_KERNEL);
--	else
--		return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-+	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
-+	return (void *)__get_free_page(GFP_KERNEL);
- }
- EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+ 	pdata->info.mem[MON_PAGE_MAP].name = "monitor_page";
+ 	pdata->info.mem[MON_PAGE_MAP].addr
+ 		= (uintptr_t)vmbus_connection.monitor_pages[1];
+-	pdata->info.mem[MON_PAGE_MAP].size = PAGE_SIZE;
++	pdata->info.mem[MON_PAGE_MAP].size = HV_HYP_PAGE_SIZE;
+ 	pdata->info.mem[MON_PAGE_MAP].memtype = UIO_MEM_LOGICAL;
  
- void *hv_alloc_hyperv_zeroed_page(void)
- {
--	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
--		return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
--	else
--		return kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-+	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
-+	return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
- }
- EXPORT_SYMBOL_GPL(hv_alloc_hyperv_zeroed_page);
- 
- void hv_free_hyperv_page(void *addr)
- {
--	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
--		free_page((unsigned long)addr);
--	else
--		kfree(addr);
-+	free_page((unsigned long)addr);
- }
- EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
- 
+ 	if (channel->device_id == HV_NIC) {
 -- 
 2.34.1
 
