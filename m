@@ -1,298 +1,370 @@
-Return-Path: <linux-hyperv+bounces-4973-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4974-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81F98A93C76
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Apr 2025 19:58:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14DEDA947CE
+	for <lists+linux-hyperv@lfdr.de>; Sun, 20 Apr 2025 14:22:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB3497AB57B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Apr 2025 17:57:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D91D93B5709
+	for <lists+linux-hyperv@lfdr.de>; Sun, 20 Apr 2025 12:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5633721CC4A;
-	Fri, 18 Apr 2025 17:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11761E3793;
+	Sun, 20 Apr 2025 12:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AW8Puweb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7lBaLOL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F90221C18A;
-	Fri, 18 Apr 2025 17:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5B3204F80
+	for <linux-hyperv@vger.kernel.org>; Sun, 20 Apr 2025 12:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744999085; cv=none; b=rimCCYvVNoK2VuWGI+r0hZAg366bKvuzeQgwMs2jVfaVPgX2tIaOluMuzxH5dIRUA4oxpbtJlJAg9zSOFlYaFutO+lU243s2uet+xcbWltMtHqQiB+QaNMyGblaulKBrdL/FS2P037xkjobaeRzynRjZZ8zcn+9Gd+Ur2ThNwD4=
+	t=1745151641; cv=none; b=sxgIINgXjyarkVuGsmjLkg68XHS1aDJxIdRXp+h4NlS0DixEhTZ2iRRmJYmuHqZlGm6rKWeWcWGoqMuK6E35KOhI9S7nqK9xk4ni6BtD3W0JOwP4oXFTcwK7Scg0ce0qd27chv/dPvPYxV668jIYNrGPmA0m2WHx/hTFVQUMTjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744999085; c=relaxed/simple;
-	bh=+iuicaO2ZLC9As16m3h2Zjp/ZCP3hJ0WL048subJKIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PcTB6+8YbbQBZBACtJxhmzVc+QLZxz8RGbXHtC9pgSwsZyoiv4WUzZ2FNa4duk1tQa0LgP9BJpbQ0oNir/6ejW8hpVb/ILqodNbsCdxjzPX28guA5ueAQEuyBNTfx8FCb+fm9MelsJVCMnbd6uOI/bGBWbSDBiQjdjO6gJHxQww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AW8Puweb; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736c062b1f5so1756664b3a.0;
-        Fri, 18 Apr 2025 10:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744999083; x=1745603883; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SW+tjIRc0AX+aTZhnNtpBaCEsRQ7numGTe8SeYWYC6s=;
-        b=AW8Puweba+P0BsFHYdiG256ZSd5XjK3ojG9O/+sM75KXEkfq/zO9WRyeS0sSzCujiX
-         HIRx3NAalFwn9cKZJj/42fUW7BKmlX5C17K2IhiYcqXfMyNj7g9RPEvKcV1tEIkCm9GX
-         sLbvjAFMFJeOVSj2ZG76PnsGvFJt2Zd7Wc+8lRHXwT0qPBfkZXy6VqSJZOxMeyjB7HA3
-         BJZ1SmAeIErNikLVXnS1dkX0Q9qo+Fxkl5MtvRVnRtgtOOw8riO69fuX/PiUc7nRdynx
-         +3g3lvJfhUZtFXUEpu+W2kESPMHi+izyeCFooyKYFvZnNQg4AQn/huFqlMmHanHsDnzh
-         Ix/w==
+	s=arc-20240116; t=1745151641; c=relaxed/simple;
+	bh=NTzNeMUzrtOBlM8W2SdqzoSPHpuoqpGFKiJlAFUw5t4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Khe5kbhzpTSogvqs8AjgIFYWRFW+fjno2IwB+BqRwJqdm4F+wLprxLcGRSU6n6Ut3OQ7vppO1aVCA80u7TukIhXssXtBa0TGXXa1ZjoXFGZLovCc583Uz8zLAx6Ii/KW6GC2x0HyRfCjmjJGKAPOYxIX43aipMmoukHL5QB2dYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W7lBaLOL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745151638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PVA+hnFYhm0mZbXMkfXZGu1NJd1kB7+txfbwzU2JSfM=;
+	b=W7lBaLOLUMLfysektXc58xVk1Y/vl20AHsUIDMmtF0kOWaXSDAaID68ICLFYkQvicc++79
+	s/v5El5IFQz0eBsgoucE+Sb0adgW6sSFqcvku/i4o4dJKgmFA1Gattz6WqnLLN8sCSUrHR
+	ec6448mbSEik4Z+XWVdnXfmkwGWAmn0=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-526-itYA_pBKNd20kMBYWZZ8cw-1; Sun, 20 Apr 2025 08:20:36 -0400
+X-MC-Unique: itYA_pBKNd20kMBYWZZ8cw-1
+X-Mimecast-MFC-AGG-ID: itYA_pBKNd20kMBYWZZ8cw_1745151636
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2242f3fd213so28046875ad.1
+        for <linux-hyperv@vger.kernel.org>; Sun, 20 Apr 2025 05:20:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744999083; x=1745603883;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SW+tjIRc0AX+aTZhnNtpBaCEsRQ7numGTe8SeYWYC6s=;
-        b=BnMROvqtXLa1P+eZanvELdDBWwZc2kecNy7YUlbQJqEyqKup9PpVLwxEFbx2D+DCP+
-         iuVng3v3vYFYIanMqV06oA62TPQ9ppkNY/tV9pFNWnMcooEJw4jfSw2WdpuwhtQcAUuP
-         hn8L1lfE6JNiK21XJx25hq/RTN9I1v4l+62hQow3IDVVCZDGC6/y89qgk0urQC7JfdPS
-         pZ28BuvO4um57ArPJA9cdTsOfUgcnTby+nBK9Ov0H/Bo5o1t0EOoi90MF/O1DygLjQZ/
-         77R1xX6AM6TpJXArssSjlKz2yWMZ4hE4BKzMnCgK/fsqgLa131brffgTETiemXNTDpTU
-         OKUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVT/h+Mh2kmv4K3nHBNaDA4ZByqNdyxiEWji5wuUuRYilDjn4tn+2x7SV1XMfpkpFY5AYcMU0nS@vger.kernel.org, AJvYcCW6r+xszLW+D7mV0U/8bmc3J3ClJsCRWCXofDNhxHoigRsTuMeR1cbY2x+hbDkMdhzvYlj6MeLPVQ6q/kqx@vger.kernel.org, AJvYcCX2ZuRfvrUqavzTmT4QMIjZgXxctV4O/WsTnJrM0C9Tkp+Ss6uKkdjq5I0HoZmyzYZqvx5EvY4Rvu9Gu9mX@vger.kernel.org, AJvYcCXR4H/6DXWhLnuJldIikS+D4w/rFFjmO3U76RcWiIkcZSCyIEogOx8zSqZRY6VB9xoQLiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtZrS/5rMrjHtfzNFD7dyVH+kRYdvxi/5ZGSvm4unq30qoICzG
-	Bj5bX0av8igWoF+24pbCP8Rg8jnbqfsfG6Xd0e1K6Qz81WslAq/v
-X-Gm-Gg: ASbGncuCLiezIHaGyNph6PdOUGOJi6WT51F0KE+XFuGnLj7EAS1Pxao0lEW0leIsQqR
-	knyj8AOWUkdHAqzm5tdDrDKDX52U7yLlrf/ci/nhBgyI2Ob/ai/SV3imZ/mpG27sGQJMZNAPUFK
-	uY1pGRxj9OZixba+8BlY7RICS9T/mhkUBaxuYHH6aanMVfJDOmyccRLiMQN2Fp6NmRNSMXOsl4X
-	ZXFwxPmKkWTMaqAUj4iMuRW624J0UyHTpn8/lleerM03flh0Ua2GOp+7owtsmVW7Pj2L1wt+1T/
-	mIf5Eprub3TZwAJ1eFjlHR/H1ydyb7GtKBVtBn/kXgMf1h3/3kbwqHq2seUlFFxLonSNT8NH
-X-Google-Smtp-Source: AGHT+IEbgq3jwmjK4u9tvaN1T1FGkQcruTs8eW7QiNt2zXcFuImLwX/xWrVRPy+awAKrid+LehwadA==
-X-Received: by 2002:a05:6a00:a91:b0:737:6d4b:f5f8 with SMTP id d2e1a72fcca58-73dc1568775mr4422634b3a.17.1744999082560;
-        Fri, 18 Apr 2025 10:58:02 -0700 (PDT)
-Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:1::])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e46e3sm1954817b3a.59.2025.04.18.10.58.01
+        d=1e100.net; s=20230601; t=1745151635; x=1745756435;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PVA+hnFYhm0mZbXMkfXZGu1NJd1kB7+txfbwzU2JSfM=;
+        b=H1PtwZ5kjqFtPbTzblFbSURKKsjt46DBN7Q4ANQeL7QuFE4onL1IyEVndqQQ6+GK6f
+         gv/tLzKoK/hCgEUyfWAp36xSxSWwfxSwJeiRWcjoPCupKXtLGsZzLBgubHIde1K7AG9Q
+         SbO3bH0X7TZix9V1iEcIHnf/0efL0qgrPtq2UNDcF7pJzWGe5IyfyrIviwA1YXnrhH7S
+         nQi7jK2B+I7B0AFyPvC1fVc3jwt/ZOScpfG34NjE40DvCUFFRnAnuVHo/jFMgN6RJ8ik
+         0p1Qubi/Eddz/AuQ7cQ1PxpXOWW6It4EYv77HG06AM5Nvyv5LvoEBJ5wOTtx9oYBVk06
+         FIPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyQ+MKnCuCJRmQbMAth5EmmzOCxD7BpiHzSYjgl4WIyKd/rVCqcyTvM01Rwk3f1aN/lCh8bbznIffHzq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXzUclkd4VITjTRvXPy3hXHLUY/KhK9yW8dL6G83x/SR/XWl8d
+	U5/56RE5grXmUSrWG0v7eUO9LNnru+yybDA2J5T67xKr71rU1T/7Ukpj3am/y9o/dOBwxjBu4O+
+	OI1ImslusybIxasqDQZ/4OzkYrl1mB1I+bjsiGQw1Mnip0gjohwYJeV+m4VJ9Zg==
+X-Gm-Gg: ASbGncsQjnJdJJBZpdprYwhBIBT8xFz08/znlzjoODWjHX6FQlZ9PAsn3sUs2DWIGVj
+	tnzjXZjJbNx3d5EiFPtuClI+Ez1zggmMWgsflbthrIyYMn4cnoLT9ErGfa0XQAVsIOS2zz9jimQ
+	bJpDjIa5HUad0Dm8/gl1nlqLGzNSmtXfrb+dG6Vl9vdlqXAB8ctbXDJ67CX1HWs1DIF8QW3kvXe
+	pC150QtAoPJcAzhBIigc3fgLqV4+pqgmuQj7Ja45d/92kmoShFc61wfpL9YgHC6eUc7EocK2gee
+	cz2QlepqBe5T
+X-Received: by 2002:a17:902:f643:b0:21f:7880:8472 with SMTP id d9443c01a7336-22c53607720mr150489285ad.35.1745151635575;
+        Sun, 20 Apr 2025 05:20:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH59HygyrR1b3g9oQn9ho711+vyY8u+CP/T6vo/KmS10uhru55tsapleIueUiYDlFrxaRTpVA==
+X-Received: by 2002:a17:902:f643:b0:21f:7880:8472 with SMTP id d9443c01a7336-22c53607720mr150488965ad.35.1745151635187;
+        Sun, 20 Apr 2025 05:20:35 -0700 (PDT)
+Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ecdc9csm46929035ad.165.2025.04.20.05.20.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 10:58:01 -0700 (PDT)
-Date: Fri, 18 Apr 2025 10:57:52 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
-Message-ID: <aAKSoHQuycz24J5l@devvm6277.cco0.facebook.com>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
- <Z-w47H3qUXZe4seQ@redhat.com>
- <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
- <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
- <Z-0BoF4vkC2IS1W4@redhat.com>
- <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
- <Z-_ZHIqDsCtQ1zf6@redhat.com>
+        Sun, 20 Apr 2025 05:20:34 -0700 (PDT)
+From: Ryosuke Yasuoka <ryasuoka@redhat.com>
+To: drawat.floss@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	jfalempe@redhat.com
+Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH drm-next] drm/hyperv: Replace simple-KMS with regular atomic helpers
+Date: Sun, 20 Apr 2025 21:19:43 +0900
+Message-ID: <20250420121945.573915-1-ryasuoka@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-_ZHIqDsCtQ1zf6@redhat.com>
 
-On Fri, Apr 04, 2025 at 02:05:32PM +0100, Daniel P. Berrangé wrote:
-> On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
-> > On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
-> > > It occured to me that the problem we face with the CID space usage is
-> > > somewhat similar to the UID/GID space usage for user namespaces.
-> > > 
-> > > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
-> > > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
-> > > 
-> > > At the risk of being overkill, is it worth trying a similar kind of
-> > > approach for the vsock CID space ?
-> > > 
-> > > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
-> > > of CIDs which are exclusively referencing /dev/vhost-vsock associations
-> > > created outside the namespace. Anything not listed would be exclusively
-> > > referencing associations created inside the namespace.
-> > > 
-> > > A more complex variant would be to allow a full remapping of CIDs as is
-> > > done with userns, via a /proc/net/vsock_cid_map, which the same three
-> > > parameters, so that CID=15 association outside the namespace could be
-> > > remapped to CID=9015 inside the namespace, allow the inside namespace
-> > > to define its out association for CID=15 without clashing.
-> > > 
-> > > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
-> > > associations created outside namespace, while unmapped CIDs would be
-> > > exclusively referencing /dev/vhost-vsock associations inside the
-> > > namespace. 
-> > > 
-> > > A likely benefit of relying on a kernel defined mapping/partition of
-> > > the CID space is that apps like QEMU don't need changing, as there's
-> > > no need to invent a new /dev/vhost-vsock-netns device node.
-> > > 
-> > > Both approaches give the desirable security protection whereby the
-> > > inside namespace can be prevented from accessing certain CIDs that
-> > > were associated outside the namespace.
-> > > 
-> > > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
-> > > file as it is the security control mechanism. If it is write-once then
-> > > if the container mgmt app initializes it, nothing later could change
-> > > it.
-> > > 
-> > > A key question is do we need the "first come, first served" behaviour
-> > > for CIDs where a CID can be arbitrarily used by outside or inside namespace
-> > > according to whatever tries to associate a CID first ?
-> > 
-> > I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
-> > from being used, this could be solved by disallowing remapping the CID
-> > while in use?
-> > 
-> > The thing I like about this is that users can check
-> > /proc/net/vsock_cid_outside to figure out what might be going on,
-> > instead of trying to check lsof or ps to figure out if the VMM processes
-> > have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
-> > 
-> > Just to check I am following... I suppose we would have a few typical
-> > configurations for /proc/net/vsock_cid_outside. Following uid_map file
-> > format of:
-> > 	"<local cid start>		<global cid start>		<range size>"
-> > 
-> > 	1. Identity mapping, current namespace CID is global CID (default
-> > 	setting for new namespaces):
-> > 
-> > 		# empty file
-> > 
-> > 				OR
-> > 
-> > 		0    0    4294967295
-> > 
-> > 	2. Complete isolation from global space (initialized, but no mappings):
-> > 
-> > 		0    0    0
-> > 
-> > 	3. Mapping in ranges of global CIDs
-> > 
-> > 	For example, global CID space starts at 7000, up to 32-bit max:
-> > 
-> > 		7000    0    4294960295
-> > 	
-> > 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
-> > 	8000-8100) :
-> > 
-> > 		7000    0       100
-> > 		8000    1000    100
-> > 
-> > 
-> > One thing I don't love is that option 3 seems to not be addressing a
-> > known use case. It doesn't necessarily hurt to have, but it will add
-> > complexity to CID handling that might never get used?
-> 
-> Yeah, I have the same feeling that full remapping of CIDs is probably
-> adding complexity without clear benefit, unless it somehow helps us
-> with the nested-virt scenario to disambiguate L0/L1/L2 CID ranges ?
-> I've not thought the latter through to any great level of detail
-> though
-> 
-> > Since options 1/2 could also be represented by a boolean (yes/no
-> > "current ns shares CID with global"), I wonder if we could either A)
-> > only support the first two options at first, or B) add just
-> > /proc/net/vsock_ns_mode at first, which supports only "global" and
-> > "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
-> > or the full mapping if the need arises?
-> 
-> Two options is sufficient if you want to control AF_VSOCK usage
-> and /dev/vhost-vsock usage as a pair. If you want to separately
-> control them though, it would push for three options - global,
-> local, and mixed. By mixed I mean AF_VSOCK in the NS can access
-> the global CID from the NS, but the NS can't associate the global
-> CID with a guest.
-> 
-> IOW, this breaks down like:
-> 
->  * CID=N local - aka fully private
-> 
->      Outside NS: Can associate outside CID=N with a guest.
->                  AF_VSOCK permitted to access outside CID=N
-> 
->      Inside NS: Can NOT associate outside CID=N with a guest
->                 Can associate inside CID=N with a guest
->                 AF_VSOCK forbidden to access outside CID=N
->                 AF_VSOCK permitted to access inside CID=N
-> 
-> 
->  * CID=N mixed - aka partially shared
-> 
->      Outside NS: Can associate outside CID=N with a guest.
->                  AF_VSOCK permitted to access outside CID=N
-> 
->      Inside NS: Can NOT associate outside CID=N with a guest
->                 AF_VSOCK permitted to access outside CID=N
->                 No inside CID=N concept
-> 
-> 
->  * CID=N global - aka current historic behaviour
-> 
->      Outside NS: Can associate outside CID=N with a guest.
->                  AF_VSOCK permitted to access outside CID=N
-> 
->      Inside NS: Can associate outside CID=N with a guest
->                 AF_VSOCK permitted to access outside CID=N
->                 No inside CID=N concept
-> 
-> 
-> I was thinking the 'mixed' mode might be useful if the outside NS wants
-> to retain control over setting up the association, but delegate to
-> processes in the inside NS for providing individual services to that
-> guest.  This means if the outside NS needs to restart the VM, there is
-> no race window in which the inside NS can grab the assocaition with the
-> CID
-> 
-> As for whether we need to control this per-CID, or a single setting
-> applying to all CID.
-> 
-> Consider that the host OS can be running one or more "service VMs" on
-> well known CIDs that can be leveraged from other NS, while those other
-> NS also run some  "end user VMs" that should be private to the NS.
-> 
-> IOW, the CIDs for the service VMs would need to be using "mixed"
-> policy, while the CIDs for the end user VMs would be "local".
-> 
+Drop simple-KMS in favor of regular atomic helpers to make the code more
+modular. The simple-KMS helper mix up plane and CRTC state, so it is
+obsolete and should go away [1]. Since it just split the simple-pipe
+funtions into per-plane and per-CRTC, no functional changes is expected.
 
-I think this sounds pretty flexible, and IMO adding the third mode
-doesn't add much more additional complexity.
+[1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@suse.de/
 
-Going this route, we have:
-- three modes: local, global, mixed
-- at first, no vsock_cid_map (local has no outside CIDs, global and mixed have no inside
-	CIDs, so no cross-mapping needed)
-- only later add a full mapped mode and vsock_cid_map if necessary.
+Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+---
+ drivers/gpu/drm/hyperv/hyperv_drm.h         |   4 +-
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 168 ++++++++++++++++----
+ 2 files changed, 139 insertions(+), 33 deletions(-)
 
-Stefano, any preferences on this vs starting with the restricted
-vsock_cid_map (only supporting "0 0 0" and "0 0 <size>")?
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hyperv/hyperv_drm.h
+index d2d8582b36df..9e776112c03e 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm.h
++++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
+@@ -11,7 +11,9 @@
+ struct hyperv_drm_device {
+ 	/* drm */
+ 	struct drm_device dev;
+-	struct drm_simple_display_pipe pipe;
++	struct drm_plane plane;
++	struct drm_crtc crtc;
++	struct drm_encoder encoder;
+ 	struct drm_connector connector;
+ 
+ 	/* mode */
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index 6c6b57298797..c273c093b491 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/hyperv.h>
+ 
++#include <drm/drm_atomic.h>
+ #include <drm/drm_damage_helper.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_edid.h>
+@@ -15,7 +16,7 @@
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_gem_shmem_helper.h>
+ #include <drm/drm_probe_helper.h>
+-#include <drm/drm_simple_kms_helper.h>
++#include <drm/drm_plane.h>
+ 
+ #include "hyperv_drm.h"
+ 
+@@ -98,12 +99,47 @@ static int hyperv_check_size(struct hyperv_drm_device *hv, int w, int h,
+ 	return 0;
+ }
+ 
+-static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+-			       struct drm_crtc_state *crtc_state,
+-			       struct drm_plane_state *plane_state)
++static const uint32_t hyperv_formats[] = {
++	DRM_FORMAT_XRGB8888,
++};
++
++static const uint64_t hyperv_modifiers[] = {
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID
++};
++
++static enum drm_mode_status
++hyperv_crtc_helper_mode_valid(struct drm_crtc *crtc,
++			      const struct drm_display_mode *mode)
++{
++	return MODE_OK;
++}
++
++static int hyperv_crtc_helper_atomic_check(struct drm_crtc *crtc,
++					   struct drm_atomic_state *state)
+ {
+-	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
++	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
++	int ret;
++
++	if (!crtc_state->enable)
++		goto out;
++
++	ret = drm_atomic_helper_check_crtc_primary_plane(crtc_state);
++	if (ret)
++		return ret;
++
++out:
++	return drm_atomic_add_affected_planes(state, crtc);
++}
++
++static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
++					     struct drm_atomic_state *state)
++{
++	struct hyperv_drm_device *hv = to_hv(crtc->dev);
++	struct drm_plane *plane = &hv->plane;
++	struct drm_plane_state *plane_state = plane->state;
+ 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
++	struct drm_crtc_state *crtc_state = crtc->state;
+ 
+ 	hyperv_hide_hw_ptr(hv->hdev);
+ 	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
+@@ -113,12 +149,48 @@ static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 	hyperv_blit_to_vram_fullscreen(plane_state->fb, &shadow_plane_state->data[0]);
+ }
+ 
+-static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+-			     struct drm_plane_state *plane_state,
+-			     struct drm_crtc_state *crtc_state)
++static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
++					      struct drm_atomic_state *state)
++{ }
++
++static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
++	.mode_valid = hyperv_crtc_helper_mode_valid,
++	.atomic_check = hyperv_crtc_helper_atomic_check,
++	.atomic_enable = hyperv_crtc_helper_atomic_enable,
++	.atomic_disable = hyperv_crtc_helper_atomic_disable,
++};
++
++static const struct drm_crtc_funcs hyperv_crtc_funcs = {
++	.reset = drm_atomic_helper_crtc_reset,
++	.destroy = drm_crtc_cleanup,
++	.set_config = drm_atomic_helper_set_config,
++	.page_flip = drm_atomic_helper_page_flip,
++	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
++};
++
++static int hyperv_plane_atomic_check(struct drm_plane *plane,
++				     struct drm_atomic_state *state)
+ {
+-	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
++	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
++	struct hyperv_drm_device *hv = to_hv(plane->dev);
+ 	struct drm_framebuffer *fb = plane_state->fb;
++	struct drm_crtc *crtc = plane_state->crtc;
++	struct drm_crtc_state *crtc_state = NULL;
++	int ret;
++
++	if (crtc)
++		crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
++
++	ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
++						  DRM_PLANE_NO_SCALING,
++						  DRM_PLANE_NO_SCALING,
++						  false, false);
++	if (ret)
++		return ret;
++
++	if (!plane_state->visible)
++		return 0;
+ 
+ 	if (fb->format->format != DRM_FORMAT_XRGB8888)
+ 		return -EINVAL;
+@@ -132,51 +204,83 @@ static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+ 	return 0;
+ }
+ 
+-static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
+-			       struct drm_plane_state *old_state)
++static void hyperv_plane_atomic_update(struct drm_plane *plane,
++						      struct drm_atomic_state *old_state)
+ {
+-	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
+-	struct drm_plane_state *state = pipe->plane.state;
++	struct drm_plane_state *old_pstate = drm_atomic_get_old_plane_state(old_state, plane);
++	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct drm_plane_state *state = plane->state;
+ 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
+ 	struct drm_rect rect;
+ 
+-	if (drm_atomic_helper_damage_merged(old_state, state, &rect)) {
++	if (drm_atomic_helper_damage_merged(old_pstate, state, &rect)) {
+ 		hyperv_blit_to_vram_rect(state->fb, &shadow_plane_state->data[0], &rect);
+ 		hyperv_update_dirt(hv->hdev, &rect);
+ 	}
+ }
+ 
+-static const struct drm_simple_display_pipe_funcs hyperv_pipe_funcs = {
+-	.enable	= hyperv_pipe_enable,
+-	.check = hyperv_pipe_check,
+-	.update	= hyperv_pipe_update,
+-	DRM_GEM_SIMPLE_DISPLAY_PIPE_SHADOW_PLANE_FUNCS,
++static bool hyperv_format_mod_supported(struct drm_plane *plane,
++					uint32_t format, uint64_t modifier)
++{
++	return modifier == DRM_FORMAT_MOD_LINEAR;
++}
++
++static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
++	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
++	.atomic_check = hyperv_plane_atomic_check,
++	.atomic_update = hyperv_plane_atomic_update,
+ };
+ 
+-static const uint32_t hyperv_formats[] = {
+-	DRM_FORMAT_XRGB8888,
++static const struct drm_plane_funcs hyperv_plane_funcs = {
++	.update_plane		= drm_atomic_helper_update_plane,
++	.disable_plane		= drm_atomic_helper_disable_plane,
++	.destroy		= drm_plane_cleanup,
++	.format_mod_supported   = hyperv_format_mod_supported,
++	DRM_GEM_SHADOW_PLANE_FUNCS,
+ };
+ 
+-static const uint64_t hyperv_modifiers[] = {
+-	DRM_FORMAT_MOD_LINEAR,
+-	DRM_FORMAT_MOD_INVALID
++static const struct drm_encoder_funcs hyperv_drm_simple_encoder_funcs_cleanup = {
++	.destroy = drm_encoder_cleanup,
+ };
+ 
+ static inline int hyperv_pipe_init(struct hyperv_drm_device *hv)
+ {
++	struct drm_device *dev = &hv->dev;
++	struct drm_encoder *encoder = &hv->encoder;
++	struct drm_plane *plane = &hv->plane;
++	struct drm_crtc *crtc = &hv->crtc;
++	struct drm_connector *connector = &hv->connector;
+ 	int ret;
+ 
+-	ret = drm_simple_display_pipe_init(&hv->dev,
+-					   &hv->pipe,
+-					   &hyperv_pipe_funcs,
+-					   hyperv_formats,
+-					   ARRAY_SIZE(hyperv_formats),
+-					   hyperv_modifiers,
+-					   &hv->connector);
++	drm_plane_helper_add(plane, &hyperv_plane_helper_funcs);
++	ret = drm_universal_plane_init(dev, plane, 0,
++				       &hyperv_plane_funcs,
++				       hyperv_formats, ARRAY_SIZE(hyperv_formats),
++				       hyperv_modifiers,
++				       DRM_PLANE_TYPE_PRIMARY, NULL);
++	if (ret)
++		return ret;
++
++	drm_crtc_helper_add(crtc, &hyperv_crtc_helper_funcs);
++	ret = drm_crtc_init_with_planes(dev, crtc, plane, NULL,
++					&hyperv_crtc_funcs, NULL);
++	if (ret)
++		return ret;
++
++	encoder->possible_crtcs = drm_crtc_mask(crtc);
++	ret = drm_encoder_init(dev, encoder,
++			       &hyperv_drm_simple_encoder_funcs_cleanup,
++			       DRM_MODE_ENCODER_NONE, NULL);
++
++	if (ret || !connector)
++		return ret;
++
++	ret = drm_connector_attach_encoder(connector, encoder);
++
+ 	if (ret)
+ 		return ret;
+ 
+-	drm_plane_enable_fb_damage_clips(&hv->pipe.plane);
++	drm_plane_enable_fb_damage_clips(&hv->plane);
+ 
+ 	return 0;
+ }
 
-I'm leaning towards the modes because it covers more use cases and seems
-like a clearer user interface?
+base-commit: b60301774a8fe6c30b14a95104ec099290a2e904
+-- 
+2.49.0
 
-To clarify another aspect... child namespaces must inherit the parent's
-local. So if namespace P sets the mode to local, and then creates a
-child process that then creates namespace C... then C's global and mixed
-modes are implicitly restricted to P's local space?
-
-Thanks,
-Bobby
 
