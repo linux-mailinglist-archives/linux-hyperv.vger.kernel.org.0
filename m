@@ -1,134 +1,101 @@
-Return-Path: <linux-hyperv+bounces-4984-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4985-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD8D4A95414
-	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Apr 2025 18:31:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3AEDA955D1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Apr 2025 20:15:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B909B1892604
-	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Apr 2025 16:31:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 702FF3AF63C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Apr 2025 18:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C0F1CAA92;
-	Mon, 21 Apr 2025 16:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30D271E9B2F;
+	Mon, 21 Apr 2025 18:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2gtsnZC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="U3WelcRf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5795729D0B;
-	Mon, 21 Apr 2025 16:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A804D1E9B18;
+	Mon, 21 Apr 2025 18:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745253100; cv=none; b=Wl33sQlNmK74brGNthTbwH/WziPzBldd3QxdAwL6Hmy8BxMfYOHgUG2cX7kxjvhGKEH5QBHY7pKUGGEwp+QVSu9aR6A4HEFbr+4UVDgyvyq5Bz3W0TWzZHOn0CZKM1g8zwrQY115WZtuenNhBfFw+QDxWIkodDZ6PQorsF/FvAs=
+	t=1745259260; cv=none; b=rEnxmzjOKYkZm94gh3xaiWRujTaM5nprH2/Sv/ZyZeokhlhfOA57Ewy0jMhq/QRfsssQctrYzl8gL+8WoDzekIAmgFHRf+PKrkQ+hSv4xIy1x3Zei/hbSiNltMlGgI3vJ29mJuE/hs23klwQxPdukDQDZZBOX0jw2DIxF7ufOlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745253100; c=relaxed/simple;
-	bh=3lrE0+63AWEPmGxlEgL/uu5jRCeKcE6towtu7BmXinQ=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=f4/NnIwLVZYI9uNsUndG0qcKwCURnxsoy8OAaL3TPSV+Ar56NBKmiiQuE/GbkHFteb8RYnZv0h68Dx/CStnNRkVeJowPIXw8Y3R4gwAhSvmSe4UFk2CBf0OUWMOis9vOjsL+l+y1br3L9xccY3ve0RTCTSltxWQjlhItCtsQQRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2gtsnZC; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so3355584a12.3;
-        Mon, 21 Apr 2025 09:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745253098; x=1745857898; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ClCH8jXA6JW+/hC5t2stoAlBQ8ZgdUL5ZJ20aMzFJZw=;
-        b=J2gtsnZClwgUIqwtTU0s5CygEHRZbhyR+/fA2bsYDOuZTFhHSEQzmoiqYoQbogB+vv
-         Jymi/SR4c0HlylRkb6QAcRqERopkJP0I0mjyXndZAvQK7W0LZpR4bZLl1g8qYnodjMFl
-         vPLqT2DqDcB5pqHm6ARp/ibFGe3Xyrk9FN9Nr5gjSGOQZCuM0/Qqc5nAiSdLs7qcuF4a
-         oyk/xCE1Lh5E8i5/IVS2wv+SwEYf0PkS41qO8fbg5fWsrwMwZzq3ndZ6so3+Q/7JDj74
-         p+BDUAGfGGzG0d6fsE2MaGGUR0Xi/3DpCLm5vppnCLfG3XT5QtvFQALNieHDUVtsF7AI
-         8IZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745253098; x=1745857898;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ClCH8jXA6JW+/hC5t2stoAlBQ8ZgdUL5ZJ20aMzFJZw=;
-        b=EkuwaMzpSu+r/sCl8TgEFhirWM1Rj59PXNQDjghdqHLO5Q742fWUUCLNww7N9M5//k
-         01oRt1tO4mrb7GHYci1nm1HURYAOtJmhfktgYWFyVYwJnc/NtVFORWNWleAyx5g9TiHC
-         PZ0eGSzw/M4Os2cRIKlHSQAVCYmFUFL0wT2mh5e7z3aL8Hxf82qYMS77VGq4Mfi1g6uz
-         zDbJqNP8D4bHPKMIUA/371s5y84xQ0X+A0VumXyEHG7kknyIuAdVtdl0wd5aEWFh57Y2
-         VIQKOpEr1RoylB4YfYPxxX97/5sMt40k75Z8KSNA41pmwJ6Fn4PAINt7nheEZlfYUvYX
-         RwIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtC//auNjSDRCR29Hl/0KktqHqPKQS9HEkItiThDFrnv8RusrgXa3xD79Id6pOvvNopOnG4Lu8vMwPRxBI@vger.kernel.org, AJvYcCWaK8hBzqRygmeGAqYo0+f4BPc0m+nW4M4D7ZRZ6p03HxUs/cPPM8ERmEbPrNonlSku/8iMxY25+5brk74=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRKa+bopo5dN71VA39Cid8nYg0zY3rpFgR8hBs5Z6wjSWYw968
-	hGwwJShDClM/9OLYh2nL1NILmvnup7IGE9WiODcZwXGxzxk3BaOx
-X-Gm-Gg: ASbGncvtnuDvWvhQmvLgpzpE6ZOYbVHyRNyoC1HIbr89s6OWOwwk5mhRV1TvUR5d4n6
-	BFLD/GVjKpcmF0TYbeeIlrytTK8BvFBdrcWtEkppE+ZDuK0tZVrO61QXPoMT3W2jd4gJqmFhIMF
-	OO7GYOxDIloFesCNK7VSt+U4fdGVc5FfOQDH0dhX1d4un77bDiMMToSZG5A1YrzKA8K4TUDKlNj
-	j30P8o3jUKGsHRPwLbbuaBZNqzPy816jXw1cSO8gR/V0tYOShBW+AA7IvBG++8mNZ0o+Y1QXZuM
-	MvVW8z/+li9UdPWwwht/YgdBRS1vuJTvcMvLBb6Skc+0bGDHJcZ1fvSEhAaUBQuEYq+30c4PeeH
-	0CXzR0vwAo7KiemAeHSl2R+ScM74EvQ==
-X-Google-Smtp-Source: AGHT+IGe+ua1jK0NE4n/pHXgK8IkUWJ2fSSgauPCGPzNdgi/gx2ffm6fSKTwsaH6vwLHmxK0tbEsEw==
-X-Received: by 2002:a17:90b:498f:b0:2fe:8282:cb9d with SMTP id 98e67ed59e1d1-3087bbb7085mr18361246a91.28.1745253098532;
-        Mon, 21 Apr 2025 09:31:38 -0700 (PDT)
-Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e224a06sm6790518a91.46.2025.04.21.09.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 09:31:38 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	kys@microsoft.com,
-	nunodasneves@linux.microsoft.com,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: [PATCH 1/1] Drivers: hv: Fix bad ref to hv_synic_eventring_tail when CPU goes offline
-Date: Mon, 21 Apr 2025 09:31:34 -0700
-Message-Id: <20250421163134.2024-1-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+	s=arc-20240116; t=1745259260; c=relaxed/simple;
+	bh=WU7+PH7Aon92/3Ezl8juCWIV0+5fdafHUQuh8yPApZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6QYIkp+Zgy3X1cgO9laLUR4WWw2FOjeQ/NnDvDwsXaV6NsiRFa5kELN/EDa1SoqM/E48/u9OioWbrSW772MNJC81L56Z7ZBc6GAPYXXMSi4Doj08CdO/a6xgFRhq4JgBgFTdHsbGK45MJVcnPKnf6QpHfKQTC1gMUxsMjdhFWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=U3WelcRf; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 13DA1203B867; Mon, 21 Apr 2025 11:14:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13DA1203B867
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745259252;
+	bh=GPITtWCUzrpM+RzwsOn+M9sSZbmXk+2qVYGwk2dgTOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U3WelcRfP+3HM6y55yij5DGCLK+oXqsouZjg849PRjBIINHAE/30U8qeV4J8UstMa
+	 +m4cuHqfTgCfWy2gkCXCXpMjuPoZWuW4daoTLI1xwt3ZVnsmp/b222mRvSXxdLhacY
+	 kulOIeKgnusVMKYOIzrlt3ci3wp9C644FFmngqic=
+Date: Mon, 21 Apr 2025 11:14:12 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	mhklinux@outlook.com, pasha.tatashin@soleen.com,
+	kent.overstreet@linux.dev, brett.creeley@amd.com,
+	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, leon@kernel.org, rosenp@gmail.com,
+	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] net: mana: Add speed support in
+ mana_get_link_ksettings
+Message-ID: <20250421181412.GA5652@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
+ <1745217220-11468-2-git-send-email-ernis@linux.microsoft.com>
+ <c481c8a8-4e0f-4498-89f9-988673a584f6@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c481c8a8-4e0f-4498-89f9-988673a584f6@lunn.ch>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-From: Michael Kelley <mhklinux@outlook.com>
-
-When a CPU goes offline, hv_common_cpu_die() frees the
-hv_synic_eventring_tail memory for the CPU. But in a normal VM (i.e., not
-running in the root partition) the per-CPU memory has not been allocated,
-resulting in a bad memory reference and oops when computing the argument
-to kfree().
-
-Fix this by freeing the memory only when running in the root partition.
-
-Fixes: 04df7ac39943 ("Drivers: hv: Introduce per-cpu event ring tail")
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/hv/hv_common.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index b3b11be11650..8967010db86a 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -566,9 +566,11 @@ int hv_common_cpu_die(unsigned int cpu)
- 	 * originally allocated memory is reused in hv_common_cpu_init().
- 	 */
- 
--	synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
--	kfree(*synic_eventring_tail);
--	*synic_eventring_tail = NULL;
-+	if (hv_root_partition()) {
-+		synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
-+		kfree(*synic_eventring_tail);
-+		*synic_eventring_tail = NULL;
-+	}
- 
- 	return 0;
- }
--- 
-2.25.1
-
+On Mon, Apr 21, 2025 at 02:36:43PM +0200, Andrew Lunn wrote:
+> On Sun, Apr 20, 2025 at 11:33:38PM -0700, Erni Sri Satya Vennela wrote:
+> > Add support for speed in mana ethtool get_link_ksettings
+> > operation. This feature is not supported by all hardware.
+> 
+> This needs a lot more justification. tc(1) will show you the current
+> HTB Qdisc setting. No other MAC driver i know of will show you Qdisc
+> info in ksettings. So why is mana special?
+> 
+> Something your said in an earlier thread might be relevant here. There
+> are two shaper settings involved. The Hypervisor can configure a
+> limit, which the VM has no control over. And then you have this second
+> limit the VM can set, which only has any effect if it is lower than
+> the hypervisor limit.
+> 
+> The hypervisor limit is much more like the value ksettings represents,
+> the media speed, which is impossible to go above, and the machine has
+> no control over. Reporting that limit in ksettings would seem
+> reasonable. But it does not appear your firmware offers that?
+> 
+>     Andrew
+> 
+Yes, that is correct. I will keep the ethtool mana_get_link_ksettings
+unchanged, since the link speed can be reported using tc too. I will
+make this change in the next version of the patch.
+Thankyou for the pointer, Andrew.
+> ---
+> pw-bot: cr
 
