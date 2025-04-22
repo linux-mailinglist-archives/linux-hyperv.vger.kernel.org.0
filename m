@@ -1,775 +1,311 @@
-Return-Path: <linux-hyperv+bounces-5038-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5039-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E245FA96896
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 14:09:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF1E9A96D0B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 15:38:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65E9F7AADE4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 12:08:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24B313A6192
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 13:36:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFFFF202F7B;
-	Tue, 22 Apr 2025 12:09:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36CE277815;
+	Tue, 22 Apr 2025 13:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bO8nXtRj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P1cDfsDF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2135.outbound.protection.outlook.com [40.107.255.135])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8131A317D;
-	Tue, 22 Apr 2025 12:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745323763; cv=fail; b=caaOhos9S///s7x/AARxkWyVMfa60VPwD4+zf8tkwOo7mO5OW9XL+wqkTCvXK7xsneWPdm9I5qmH5TJawFEZ7AyiLFaf4rcM9fI71rFNoKRl/pcF39EHLUrajh0eZYnjjWCGd/X3GqAr87zC3Y1SyVi1CgzHH42KHWba6dcKm6k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745323763; c=relaxed/simple;
-	bh=lP0oURMlsAuUvTWTu/PuGsVjbfyl3tH7K8kCwezmo/s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VibxuI1umYF2tFvf7fjdd6AZXBlKkp77ETJ9pGDLscX0C7cmVE4sLbdP9EXgQhApWGO6iiZudRDgjWyvPMqU/ZE1bh4d+96I1BDlLxlUFmaxQI83kfDv6ZuH3I55GnvKEcFeSIuOVwcrW9ewzSwWY2K9FSuwAeEmEbHrXSQ1/As=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=bO8nXtRj; arc=fail smtp.client-ip=40.107.255.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=trmkFAOvm1Bn/zpoxQLP/hXdLhM9tvC2N675ziTNZp+iLpkKtiwSGpK+dg0jNf5F/jw8DBe/6wHdT3f9ctJZszQ7yd8HK+L0h3IerAZFN2wshsRX33+5rKUajN762EcAQU6f2oBSC4dCpTk50DbIIXucpRJlBRZv9EPTWFxLA0DU30YBC5ejUoLDwlJQx82QblUgJ9oP2qoOg4CvRlyQIfuj43+tCI0meS5fcIVwsHkvacHCwKxSYHmsVgikPYc+Oph1RGqeXt6r3N0mr/Zf7srtBumX3dc1ezXqya2SctB8GMHJXTzTNlgGn5GUCVtdTYmZX2n9DJT9+RPjpGtk/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vUJTovpKi6Vyad9tSmtvQpxhB6X9f0bvaUqOJkCMSHA=;
- b=UfIicA2uDaso+1PvqsAfvSVxVYsmyofe7D1l4Kt2tZ8L0+aS5PcSu2oxiZmGn5RFyU+71doV0JITx+2kts0BfQNdoxHsClvkyiRzBvUN4AVLihU3igBTz6UEgJQU/1a7t/yqWNwAnBD9JPkfgKPspBqbJdznwO+a/5IONsOJpcy9orGlqe8j7CrvUZB1N3HqAJAwG17u3pmtPCB90bHZtBqs91WntSD6uHyteOIGmBZTDJ5BorcCWrR60wNJiZSOv03IbYWfbCRIFrPF6u7+mFnoF6TkfA73juZZgxsK17Ty1vYqccnewAltMpS+mA+ZcbVuJ3KuskA7XpcdUUNr7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUJTovpKi6Vyad9tSmtvQpxhB6X9f0bvaUqOJkCMSHA=;
- b=bO8nXtRjn00BCbU2qVKrfGIeJ64jhNnV1CPslnbq5Mt6BLd1PrmpX68wYUinJPAuM98Ht2iMWnfJD3Xgju4HsEevIJvyJmNO2EUqUGCBWILsh33MtIBcu7YclPDY84fcs+vl3Yic7y/0OICZ7JLFZ5o+HEDwqeB7/2yYCBkyMkE=
-Received: from SI2P153MB0735.APCP153.PROD.OUTLOOK.COM (2603:1096:4:1fa::8) by
- OSQP153MB1232.APCP153.PROD.OUTLOOK.COM (2603:1096:604:373::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.5; Tue, 22 Apr 2025 12:09:16 +0000
-Received: from SI2P153MB0735.APCP153.PROD.OUTLOOK.COM
- ([fe80::34f3:1836:ec0c:986d]) by SI2P153MB0735.APCP153.PROD.OUTLOOK.COM
- ([fe80::34f3:1836:ec0c:986d%5]) with mapi id 15.20.8699.005; Tue, 22 Apr 2025
- 12:09:16 +0000
-From: Shradha Gupta <shradhagupta@microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>, Shradha Gupta
-	<shradhagupta@linux.microsoft.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Gupta, Nipun"
-	<nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Cameron
-	<Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>, Kevin Tian
-	<kevin.tian@intel.com>, Long Li <longli@microsoft.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring
-	<robh@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Dexuan Cui <decui@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, KY Srinivasan
-	<kys@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon Romanovsky
-	<leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni Sri Satya
- Vennela <ernis@linux.microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, Paul Rosswurm
-	<paulros@microsoft.com>
-Subject: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Thread-Topic: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Thread-Index: AQHbs39dFrGbSgPzr02XXH2ybBvOEA==
-Date: Tue, 22 Apr 2025 12:09:15 +0000
-Message-ID:
- <SI2P153MB073566C9F7642DBDAD976812D3BB2@SI2P153MB0735.APCP153.PROD.OUTLOOK.COM>
-References:
- <1744817747-2920-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
- <Z__nPAIE5kdFQRe8@yury>
-In-Reply-To: <Z__nPAIE5kdFQRe8@yury>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ffcfcb79-a04b-4d6e-9139-ef76bb880682;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-22T11:37:38Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2P153MB0735:EE_|OSQP153MB1232:EE_
-x-ms-office365-filtering-correlation-id: df7f1a98-b3a8-4401-1086-08dd81968079
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?8VgkCuuzcJGvV2i9tGEa7dVqGSGWYuswe/R3nH7Oi/wgtTBrpK2k/0j4T+?=
- =?iso-8859-2?Q?Q2J+bIyxdZXcLxM48Yl09pul9wwY6Cf0mETuySh2yfFTUKB67eFeGYOOtq?=
- =?iso-8859-2?Q?hlCZgT5r9HR4TzbOqaSNCrzCWigM2Ov4usgAjpbUyjahW87RNUgE1kqZhw?=
- =?iso-8859-2?Q?FbkGVWOI8irbwY8eCPIQc27QnCvh7PTcMNqIt8dm3Mb2RBXjnAxxqsOlG2?=
- =?iso-8859-2?Q?hkgpHm9Nf9QzgHSYfyHkSLFluXXYopcuMMl79vicuXaXGigCnZjGXXC2Jb?=
- =?iso-8859-2?Q?8fJL887oCE8q1l55At6NPOrbvSIZapbxYgYmE/BJa74dWY/edldNr7Ksqj?=
- =?iso-8859-2?Q?Ltk+ClzE7ox9XX8i/+7GBAeImKFAF+uWRcw3nr/X7s/g47qD6zW2OHlBAO?=
- =?iso-8859-2?Q?NuCmBF5XoxozFeHf7vJZLcE1lCHJ5tkRYUz97WkfA6yciPNoXKERehlccC?=
- =?iso-8859-2?Q?XXC/C/9jOFOTdeVs/zrjoPY8J33qIw7ZpAZf26LSJCWeb4sVi2TMfDu7A2?=
- =?iso-8859-2?Q?2IJD8V8celStGcqAmG0RWaXfs5ANMIhe7/cKWZbAso8T2dOlgdq54mWIqC?=
- =?iso-8859-2?Q?mHncxLvEm3i/IHsbqmRM0ujTB805Lt+vFMFDWrZW1C2gGIaLy+boIB88Dd?=
- =?iso-8859-2?Q?ljeXMJs/HRoAtzT0TUfRPBmXveI4xlciA+LJn6mYOVmgoSkee3o0fMJNfF?=
- =?iso-8859-2?Q?s6LoO1kGIHvDNJ1XH6RdS0o8Hn6TKp6Y+8CM8G4vSQiGW4fJRRXscvwVEv?=
- =?iso-8859-2?Q?L4cgAzthiLqJdDDFPODuzOWv2cTbGpQdFMrEaSi2RZebFx9MbfCIvD7hLq?=
- =?iso-8859-2?Q?jHtJOxmzvmjemW0Fru9XKxRkimIeaRjZuSwSMzLg7oFSJb/HDO+lpYmy36?=
- =?iso-8859-2?Q?VPEUS+fW4aoHucRWPDITgGLNHtmwokLmRT8SOF7juTV3tf7ZQVAVSpbJiV?=
- =?iso-8859-2?Q?8IoEAmHpqp1w0ghhwRBRjgbzAtNBTM1ng2BogWS4SgodeSoVdIEjykiprU?=
- =?iso-8859-2?Q?oda46cRX1tPvBQbHeUGux9GIn5/Y5xdwFjOt3Sqf13IH2lU08fuE5pzv2b?=
- =?iso-8859-2?Q?tap26HwyGPe0dfBYIbnQ4nK8i1rlz5t3vwxRC/XQC9I9V4FLEGgbEjXYZp?=
- =?iso-8859-2?Q?wewH2qZTvUo2FINLdXVSpdQYZv+2lZ8Z8TGV9CEUpdVL2fvcyC6thO7T/B?=
- =?iso-8859-2?Q?SIisheY0Op8E96sQogMcDVzxM/5Pq6OuhybsvGeXYOU6bgQMEa/bC7Ee5Z?=
- =?iso-8859-2?Q?P5cz73+gubpfUMyAD/Z5ln+rVB/V2wKDX5FWDfmosAobCgWShn6M35g88w?=
- =?iso-8859-2?Q?RkHmO8T8LMLxqwRZ4wYALdQq9u7HF4c8Ze/fbyJHC76iKzLWRTY9CGMURk?=
- =?iso-8859-2?Q?6W4UQCXT49ijP9sSKNUmKP7U/Qu0Ov5Lg15n1mpdTZrZQcy/u8K6tCbnjA?=
- =?iso-8859-2?Q?vPgCNrO1YiV1AGVozTYouZrsRgN9Jt7bk1Ok7hOJb0xL0Uc61c9liXXiNE?=
- =?iso-8859-2?Q?FnB9vC5J84C09baew4VBbxz6NsB77WkHJCcJGCaFARAQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2P153MB0735.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(10070799003)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?x4VwW8hgvaVwJFtykXNecy49cqvMTHl2zei31bQMQ+ExH1nf5bGPyRc/yt?=
- =?iso-8859-2?Q?R8/nYJhj5RgAiUjHo89iPAUDQDg2NLNpw1tfu+7jSqa+wtNDmNbvGSA0I5?=
- =?iso-8859-2?Q?jk+XnA7D5Bk9HjQllfTsok8sClw+pQUEwMwifSQAhnfsJi4k6uT4pNlm8W?=
- =?iso-8859-2?Q?gWceWVhk0ogtn9lPLvbNNPl2ZekUHi8ZLYJobjr7Wqq8djmRE1U8eNEHVj?=
- =?iso-8859-2?Q?CowN81oS446dICIAaEuGj0thsSxFbdz1HpOqUk85RhfUoQmC/TSsqNxTdB?=
- =?iso-8859-2?Q?gS/RxPk1PtJG6tgexGe5B7ayMPVza2S0Gd0ec6Ib1vYUm048AwRpP/Neol?=
- =?iso-8859-2?Q?eWf4VMc2pSrCKEtAi+GEmYMNnSjCQM+FoiZp8Ofeg9JD3ICCVlpdr4wFgZ?=
- =?iso-8859-2?Q?hpCJHcwQmPc8WEmgUUCcUlRRzGIiP7l1mdne9AMEDr+JVmw/+L3yCJhMYH?=
- =?iso-8859-2?Q?CK3jybn58ymcr66qLRVRxJsFj4OFr19y31kV8z3oZjjpwEdjLb3epfIKbL?=
- =?iso-8859-2?Q?J7kmoYTYFJNKd0UhnbIA0SCSZZwKwfC/W3SK3TQU+6GoRc4fWl5IfeE7AA?=
- =?iso-8859-2?Q?6wlOrzyWJyBzNvp9VjtK7YOoKcc3o5TCNGrRwx3m7nFIDwYxE1mvby7y/u?=
- =?iso-8859-2?Q?7VRGcy6NZB4B8T9xU2bcTw8UayPgC+rrKrmNv0Z1vatG/byxBp4CgrZxLS?=
- =?iso-8859-2?Q?g33UvX5O4qNAg5ke6WH5FDOeJ/k6vT0HzQqSbtUCBeczUSzK8OzUQ5SCAv?=
- =?iso-8859-2?Q?Q5dtvI1XYKtQPBKk95w/JR7vbjtDnr0lVgPniiIEdqUdq1NN9y7uYfekSB?=
- =?iso-8859-2?Q?ZbPhVzpYGsmKWIZcEMBqTefF71UXAremwGyVQu8/wKmgjUwW/E6aQ0tCYP?=
- =?iso-8859-2?Q?z2GzyFmqgQufiCGxJt/Qrzn8ZlTx/wEXKOub5nAcucu/DHPYOHUCyWVkDM?=
- =?iso-8859-2?Q?1z8HJljTGV81zr8S2H0mrKlCUZqS8bPOEcL0yB3XZj2uqISafoCq1FhkhW?=
- =?iso-8859-2?Q?22Yw2o9d1Xmy/SXGLqt3pkA2/8W2nIJrbcy67cyoBTR0IeLwZ1FF9V1Ilv?=
- =?iso-8859-2?Q?/nYP2uALYMAO+E3YhJsN2mM8I1TbxHcyo2zsbjfs9h1WY5v2Ue8UVBFHiU?=
- =?iso-8859-2?Q?tSdoKntS1hYMIirYum+T+MShy7/LGMs1STsdUwNXT1Vl22OsHL3u78zG3y?=
- =?iso-8859-2?Q?qc9207AmB6U+Xu92DlA4cZlRdnMkkXwcaOEdS5k5XfNbLGopJ86bUHpHTI?=
- =?iso-8859-2?Q?8HVJPnDOkjAYFZApm+4GwzSjPm/ezdM5U1ntY4LJ61zFtKnqFz/C+cei0i?=
- =?iso-8859-2?Q?Rr+VaYDYMehJRWt/UQe/t7iVxfDqdrnmIuR+/BadKJntt+dab97RWI55/M?=
- =?iso-8859-2?Q?6jrGMvay8XlY720ZrEnwbr89yemQwPdO80Z5VmAhqSNjLdU73sanvrtd3T?=
- =?iso-8859-2?Q?OlrLkCBPHkxMEo0Qr0N6Ii3GmyIPW8SRA+jpYx/9uI5aC9wIp7F7HPr44S?=
- =?iso-8859-2?Q?15iCHQ3+esS4MrqhO5QONFkNZiVi7XUd3OaEstYavFyzbOOrA1mHH3Bhuk?=
- =?iso-8859-2?Q?/AKh0x5Iq57+hh38QwIHfJeGm6HiQLKQyZKA9y5rxru9vMDmn4WyIFLA+p?=
- =?iso-8859-2?Q?ctuh5XINFpeN//qaJE09MVqtiNIwu7bX2l?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE15B27815F
+	for <linux-hyperv@vger.kernel.org>; Tue, 22 Apr 2025 13:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745328972; cv=none; b=IzGkacHCEgKmg7+HlAKzi/vyRFsDYwJK0MkTQVDbaCFKGW1wJtt/mon0iMIF8vexnr/5LSwHZJ57RUYVN2fBfZ/4lSAfZ0oPqo/lGeQPNMTUMOFDBzlsVScfOEHWInMJS4c2MhphSK30Ndvj8/RXZU8pBSbrVCiKrbiEq9KH3aM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745328972; c=relaxed/simple;
+	bh=MhJ6N+6JZAFe/JvD8yyHGfBmPBcTg8eAd1GjxfpVjew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GA2kYSnukeS2fDcBfugZTKF2yMpWQ5ZAM/p86Prmgb8Dr3/h6MZyqWk5mcoUQ3kQRwAs0yMxQ0e3PMJ/5sUq9CJ/fRyjKeK4Y3uAqkLYjuBzXkAwD0B1a+gj9n3E5sj+UVru651wZEBZTdwiLLtEo3sx/l2wAiwm7YzILpGh8o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P1cDfsDF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745328969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y4IJdBYSNW9wdRnD2IO79uxHJEEzuWz9Azk+82pxLcg=;
+	b=P1cDfsDFtz/r9ile8hgUYIZIKcKJiv29qRP4AZLfSF2/PFF/Ny+mJQYGRelfbu20LbRk8R
+	Qr41oDQ2Kd5y2fiuCFZj2D2Ejyu5hRrv3TNKRPDVyOJ/inJL2LUNqdmtD+mac3zrpg/eU+
+	xNbkr4/QawgnzD7s5stf+2TEL38RyHg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-596-dgQ2M4_WPBaNC2RD0iOqwQ-1; Tue, 22 Apr 2025 09:36:08 -0400
+X-MC-Unique: dgQ2M4_WPBaNC2RD0iOqwQ-1
+X-Mimecast-MFC-AGG-ID: dgQ2M4_WPBaNC2RD0iOqwQ_1745328967
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac297c7a0c2so332764166b.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 22 Apr 2025 06:36:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745328967; x=1745933767;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4IJdBYSNW9wdRnD2IO79uxHJEEzuWz9Azk+82pxLcg=;
+        b=PPLDY/Iw7V0p1jdguKCJdMpC54w9ELDF9/jCBZnHPK0j5JWDayYBR7MSsZ0x4VwCVQ
+         /lCwYZGjIII8DxjOM33o5t/H/qOweuqsU4USJYakBxzTI91clhkrHQi//ZSj50AbBPgq
+         IHtORnwr8aQt7uhJ/xJgWuqlBQZFbqmsXlj29/m3fQIaR5frQpCf/jNoFf1OPAB99dmh
+         o5RveMyIPglJgJq8y2YSXtXBtf759A5iet9nA1wJmOkyixjPF1Le+Oo3xmkXXSs6rc3B
+         g+6rU/kcUzBY/i9szy5iJZecpQS0zFNJDTRqbVXRpbVH2E6ym2KjsnS6HwAo+jHvL0Aw
+         B1uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFAStJARQUBsMtl2/2GGA98BGKFcDzqVqsihAN2oz+ZH0NJRhxUXVR0TNX72Na9aLoNf7KlxpYmXRxMgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysLaVnF4kr5XTCxw6gwDzNCcJly+KLFT78UHs/ffx4SPXdMw3e
+	qAVqZK5pHtsfEw/8D1mh08qumuYCXYrFChpxPBWD5PLp6fqSgaltsHtGDb3a3X5eojAEG8tPOIj
+	yiubBZsQ6kLtq8Mi74zJd/PznBV3sl95DrMKRklKMxXBSiMPLSGTqGj2P1sllZw==
+X-Gm-Gg: ASbGncvdUToIbYJrpUqjliO6GWUn8h/wGRHwHTB6QOvWb+fbSE+ANG4XgI6X7r1hrgc
+	2zRo8hr2zanXsFzTK2eYjYQ79VmCZ8yrEuDRbCjbuOM9jlq/FOcO508utIXRqQT7l6++CHEfoC2
+	30HzIAVVTfHZrjhqY7aaMKCnPe7qNi5Idy9NhdsaVhsLiIN9fq4EwqWwGeA4NyTL+2qWUQpJtVB
+	JPYKo37S4+7rV7/u7xMzMWQwNg/KJE0G9557nNjOwMnDXLgkstoYc5FA/sNZ9mPR0yryxQhRe19
+	VHKm99zUv3p2RAV7
+X-Received: by 2002:a17:906:794b:b0:acb:6401:1d78 with SMTP id a640c23a62f3a-acb74b3babbmr1327403366b.22.1745328967029;
+        Tue, 22 Apr 2025 06:36:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBkiqCdJcdh4nLSjqfuJ0gy11q1xiL79JrcHiQzXtTr8fDrs+JOgRZWCNY3kyY1iJGy5Dzng==
+X-Received: by 2002:a17:906:794b:b0:acb:6401:1d78 with SMTP id a640c23a62f3a-acb74b3babbmr1327397766b.22.1745328966303;
+        Tue, 22 Apr 2025 06:36:06 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.218.81])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0b302sm654711166b.3.2025.04.22.06.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 06:36:05 -0700 (PDT)
+Date: Tue, 22 Apr 2025 15:35:57 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <shj5e5sweuvhk4onjbnwb3h7m6mx22nnm6kivtchjgbscisrr2@mvuowcp7c33p>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
+ <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+ <Z-_ZHIqDsCtQ1zf6@redhat.com>
+ <aAKSoHQuycz24J5l@devvm6277.cco0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2P153MB0735.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: df7f1a98-b3a8-4401-1086-08dd81968079
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2025 12:09:15.6848
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K29ZOhB7bOKakrg+rQdXak8ReAyGxVGryJlhxWRc9t2UD9nKb9vEb9DhBWqPt2vZI75ZyS7jroHswmsxOsSCRaUjOwoiDr/vCNlqqvxvtyg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQP153MB1232
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAKSoHQuycz24J5l@devvm6277.cco0.facebook.com>
 
-> On Wed, Apr 16, 2025 at 08:36:21AM -0700, Shradha Gupta wrote:
-> > Currently, the MANA driver allocates pci vector statically based on
-> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases
-> > ends up allocating more vectors than it needs.
-> > This is because, by this time we do not have a HW channel and do not
-> > know how many IRQs should be allocated.
-> > To avoid this, we allocate 1 IRQ vector during the creation of HWC and
-> > after getting the value supported by hardware, dynamically add the
-> > remaining vectors.
-> >
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 306 ++++++++++++++----
-> >  include/net/mana/gdma.h                       |   5 +-
-> >  2 files changed, 250 insertions(+), 61 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index 4ffaf7588885..3e3b5854b736 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > @@ -6,6 +6,9 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/utsname.h>
-> >  #include <linux/version.h>
-> > +#include <linux/msi.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/list.h>
-> >
-> >  #include <net/mana/mana.h>
-> >
-> > @@ -80,8 +83,15 @@ static int mana_gd_query_max_resources(struct pci_de=
-v
-> *pdev)
-> >  		return err ? err : -EPROTO;
-> >  	}
-> >
-> > -	if (gc->num_msix_usable > resp.max_msix)
-> > -		gc->num_msix_usable =3D resp.max_msix;
-> > +	if (!pci_msix_can_alloc_dyn(pdev)) {
-> > +		if (gc->num_msix_usable > resp.max_msix)
-> > +			gc->num_msix_usable =3D resp.max_msix;
-> > +	} else {
-> > +		/* If dynamic allocation is enabled we have already allocated
-> > +		 * hwc msi
-> > +		 */
-> > +		gc->num_msix_usable =3D min(resp.max_msix, num_online_cpus()
-> + 1);
-> > +	}
-> >
-> >  	if (gc->num_msix_usable <=3D 1)
-> >  		return -ENOSPC;
-> > @@ -465,9 +475,10 @@ static int mana_gd_register_irq(struct gdma_queue
-> *queue,
-> >  	struct gdma_irq_context *gic;
-> >  	struct gdma_context *gc;
-> >  	unsigned int msi_index;
-> > -	unsigned long flags;
-> > +	struct list_head *pos;
-> > +	unsigned long flags, flag_irq;
-> >  	struct device *dev;
-> > -	int err =3D 0;
-> > +	int err =3D 0, count;
-> >
-> >  	gc =3D gd->gdma_context;
-> >  	dev =3D gc->dev;
-> > @@ -482,7 +493,22 @@ static int mana_gd_register_irq(struct gdma_queue
-> *queue,
-> >  	}
-> >
-> >  	queue->eq.msix_index =3D msi_index;
-> > -	gic =3D &gc->irq_contexts[msi_index];
-> > +
-> > +	/* get the msi_index value from the list*/
-> > +	count =3D 0;
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> > +	list_for_each(pos, &gc->irq_contexts) {
-> > +		if (count =3D=3D msi_index) {
-> > +			gic =3D list_entry(pos, struct gdma_irq_context, gic_list);
-> > +			break;
-> > +		}
-> > +
-> > +		count++;
-> > +	}
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> > +
-> > +	if (!gic)
-> > +		return -1;
-> >
-> >  	spin_lock_irqsave(&gic->lock, flags);
-> >  	list_add_rcu(&queue->entry, &gic->eq_list); @@ -497,8 +523,10 @@
-> > static void mana_gd_deregiser_irq(struct gdma_queue *queue)
-> >  	struct gdma_irq_context *gic;
-> >  	struct gdma_context *gc;
-> >  	unsigned int msix_index;
-> > -	unsigned long flags;
-> > +	struct list_head *pos;
-> > +	unsigned long flags, flag_irq;
-> >  	struct gdma_queue *eq;
-> > +	int count;
-> >
-> >  	gc =3D gd->gdma_context;
-> >
-> > @@ -507,7 +535,22 @@ static void mana_gd_deregiser_irq(struct
-> gdma_queue *queue)
-> >  	if (WARN_ON(msix_index >=3D gc->num_msix_usable))
-> >  		return;
-> >
-> > -	gic =3D &gc->irq_contexts[msix_index];
-> > +	/* get the msi_index value from the list*/
-> > +	count =3D 0;
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> > +	list_for_each(pos, &gc->irq_contexts) {
-> > +		if (count =3D=3D msix_index) {
-> > +			gic =3D list_entry(pos, struct gdma_irq_context, gic_list);
-> > +			break;
-> > +		}
-> > +
-> > +		count++;
-> > +	}
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> > +
-> > +	if (!gic)
-> > +		return;
-> > +
-> >  	spin_lock_irqsave(&gic->lock, flags);
-> >  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
-> >  		if (queue =3D=3D eq) {
-> > @@ -1288,11 +1331,11 @@ void mana_gd_free_res_map(struct
-> gdma_resource *r)
-> >  	r->size =3D 0;
-> >  }
-> >
-> > -static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-> > +static int irq_setup(unsigned int *irqs, unsigned int len, int node,
-> > +int skip_cpu)
-> >  {
-> >  	const struct cpumask *next, *prev =3D cpu_none_mask;
-> >  	cpumask_var_t cpus __free(free_cpumask_var);
-> > -	int cpu, weight;
-> > +	int cpu, weight, i =3D 0;
-> >
-> >  	if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
-> >  		return -ENOMEM;
-> > @@ -1303,9 +1346,21 @@ static int irq_setup(unsigned int *irqs, unsigne=
-d int
-> len, int node)
-> >  		while (weight > 0) {
-> >  			cpumask_andnot(cpus, next, prev);
-> >  			for_each_cpu(cpu, cpus) {
-> > +				/* If the call is made for irqs which are
-> dynamically
-> > +				 * added and the num of vcpus is more or equal
-> to
-> > +				 * allocated msix, we need to skip the first
-> > +				 * set of cpus, since they are already affinitized
->=20
-> Can you replace the 'set of cpus' with a 'sibling group'?
->=20
-> > +				 * to HWC IRQ
-> > +				 */
->=20
-> This comment should not be here. This is a helper function. User may want=
- to skip
-> 1st CPU for whatever reason. Please put the comment in
-> mana_gd_setup_dyn_irqs().
->=20
-> > +				if (skip_cpu && !i) {
-> > +					i =3D 1;
-> > +					goto next_cpumask;
-> > +				}
->=20
-> The 'skip_cpu' variable should be a boolean, and has more a specific name=
-. And
-> you don't need the local 'i' to implement your logic:
->=20
->         			if (unlikely(skip_first_cpu)) {
->                                         skip_first_cpu =3D false;
->         				goto next_sibling;
->         			}
->=20
-> >  				if (len-- =3D=3D 0)
-> >  					goto done;
->=20
-> This check should go before the one you're adding here.
+On Fri, Apr 18, 2025 at 10:57:52AM -0700, Bobby Eshleman wrote:
+>On Fri, Apr 04, 2025 at 02:05:32PM +0100, Daniel P. Berrangé wrote:
+>> On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
+>> > On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+>> > > It occured to me that the problem we face with the CID space usage is
+>> > > somewhat similar to the UID/GID space usage for user namespaces.
+>> > >
+>> > > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+>> > > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+>> > >
+>> > > At the risk of being overkill, is it worth trying a similar kind of
+>> > > approach for the vsock CID space ?
+>> > >
+>> > > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+>> > > of CIDs which are exclusively referencing /dev/vhost-vsock associations
+>> > > created outside the namespace. Anything not listed would be exclusively
+>> > > referencing associations created inside the namespace.
+>> > >
+>> > > A more complex variant would be to allow a full remapping of CIDs as is
+>> > > done with userns, via a /proc/net/vsock_cid_map, which the same three
+>> > > parameters, so that CID=15 association outside the namespace could be
+>> > > remapped to CID=9015 inside the namespace, allow the inside namespace
+>> > > to define its out association for CID=15 without clashing.
+>> > >
+>> > > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+>> > > associations created outside namespace, while unmapped CIDs would be
+>> > > exclusively referencing /dev/vhost-vsock associations inside the
+>> > > namespace.
+>> > >
+>> > > A likely benefit of relying on a kernel defined mapping/partition of
+>> > > the CID space is that apps like QEMU don't need changing, as there's
+>> > > no need to invent a new /dev/vhost-vsock-netns device node.
+>> > >
+>> > > Both approaches give the desirable security protection whereby the
+>> > > inside namespace can be prevented from accessing certain CIDs that
+>> > > were associated outside the namespace.
+>> > >
+>> > > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+>> > > file as it is the security control mechanism. If it is write-once then
+>> > > if the container mgmt app initializes it, nothing later could change
+>> > > it.
+>> > >
+>> > > A key question is do we need the "first come, first served" behaviour
+>> > > for CIDs where a CID can be arbitrarily used by outside or inside namespace
+>> > > according to whatever tries to associate a CID first ?
+>> >
+>> > I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+>> > from being used, this could be solved by disallowing remapping the CID
+>> > while in use?
+>> >
+>> > The thing I like about this is that users can check
+>> > /proc/net/vsock_cid_outside to figure out what might be going on,
+>> > instead of trying to check lsof or ps to figure out if the VMM processes
+>> > have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
+>> >
+>> > Just to check I am following... I suppose we would have a few typical
+>> > configurations for /proc/net/vsock_cid_outside. Following uid_map file
+>> > format of:
+>> > 	"<local cid start>		<global cid start>		<range size>"
+>> >
+>> > 	1. Identity mapping, current namespace CID is global CID (default
+>> > 	setting for new namespaces):
+>> >
+>> > 		# empty file
+>> >
+>> > 				OR
+>> >
+>> > 		0    0    4294967295
+>> >
+>> > 	2. Complete isolation from global space (initialized, but no mappings):
+>> >
+>> > 		0    0    0
+>> >
+>> > 	3. Mapping in ranges of global CIDs
+>> >
+>> > 	For example, global CID space starts at 7000, up to 32-bit max:
+>> >
+>> > 		7000    0    4294960295
+>> > 	
+>> > 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+>> > 	8000-8100) :
+>> >
+>> > 		7000    0       100
+>> > 		8000    1000    100
+>> >
+>> >
+>> > One thing I don't love is that option 3 seems to not be addressing a
+>> > known use case. It doesn't necessarily hurt to have, but it will add
+>> > complexity to CID handling that might never get used?
+>>
+>> Yeah, I have the same feeling that full remapping of CIDs is probably
+>> adding complexity without clear benefit, unless it somehow helps us
+>> with the nested-virt scenario to disambiguate L0/L1/L2 CID ranges ?
+>> I've not thought the latter through to any great level of detail
+>> though
+>>
+>> > Since options 1/2 could also be represented by a boolean (yes/no
+>> > "current ns shares CID with global"), I wonder if we could either A)
+>> > only support the first two options at first, or B) add just
+>> > /proc/net/vsock_ns_mode at first, which supports only "global" and
+>> > "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+>> > or the full mapping if the need arises?
+>>
+>> Two options is sufficient if you want to control AF_VSOCK usage
+>> and /dev/vhost-vsock usage as a pair. If you want to separately
+>> control them though, it would push for three options - global,
+>> local, and mixed. By mixed I mean AF_VSOCK in the NS can access
+>> the global CID from the NS, but the NS can't associate the global
+>> CID with a guest.
+>>
+>> IOW, this breaks down like:
+>>
+>>  * CID=N local - aka fully private
+>>
+>>      Outside NS: Can associate outside CID=N with a guest.
+>>                  AF_VSOCK permitted to access outside CID=N
+>>
+>>      Inside NS: Can NOT associate outside CID=N with a guest
+>>                 Can associate inside CID=N with a guest
+>>                 AF_VSOCK forbidden to access outside CID=N
+>>                 AF_VSOCK permitted to access inside CID=N
+>>
+>>
+>>  * CID=N mixed - aka partially shared
+>>
+>>      Outside NS: Can associate outside CID=N with a guest.
+>>                  AF_VSOCK permitted to access outside CID=N
+>>
+>>      Inside NS: Can NOT associate outside CID=N with a guest
+>>                 AF_VSOCK permitted to access outside CID=N
+>>                 No inside CID=N concept
+>>
+>>
+>>  * CID=N global - aka current historic behaviour
+>>
+>>      Outside NS: Can associate outside CID=N with a guest.
+>>                  AF_VSOCK permitted to access outside CID=N
+>>
+>>      Inside NS: Can associate outside CID=N with a guest
+>>                 AF_VSOCK permitted to access outside CID=N
+>>                 No inside CID=N concept
+>>
+>>
+>> I was thinking the 'mixed' mode might be useful if the outside NS wants
+>> to retain control over setting up the association, but delegate to
+>> processes in the inside NS for providing individual services to that
+>> guest.  This means if the outside NS needs to restart the VM, there is
+>> no race window in which the inside NS can grab the assocaition with the
+>> CID
+>>
+>> As for whether we need to control this per-CID, or a single setting
+>> applying to all CID.
+>>
+>> Consider that the host OS can be running one or more "service VMs" on
+>> well known CIDs that can be leveraged from other NS, while those other
+>> NS also run some  "end user VMs" that should be private to the NS.
+>>
+>> IOW, the CIDs for the service VMs would need to be using "mixed"
+>> policy, while the CIDs for the end user VMs would be "local".
+>>
+>
+>I think this sounds pretty flexible, and IMO adding the third mode
+>doesn't add much more additional complexity.
+>
+>Going this route, we have:
+>- three modes: local, global, mixed
+>- at first, no vsock_cid_map (local has no outside CIDs, global and mixed have no inside
+>	CIDs, so no cross-mapping needed)
+>- only later add a full mapped mode and vsock_cid_map if necessary.
+>
+>Stefano, any preferences on this vs starting with the restricted
+>vsock_cid_map (only supporting "0 0 0" and "0 0 <size>")?
 
-Hi Yury,
-While preparing for the v2 for this patch, I realized that the movement of =
-this 'if(len-- =3D=3D 0)' check
-above 'if(unlikely(skip_first_cpu))' is not needed as we are deliberately t=
-rying to skip 'len--'
-in the iteration where skip_first_cpu is true.
+No preference, I also like this idea.
 
-Regards,
-Shradha=20
+>
+>I'm leaning towards the modes because it covers more use cases and seems
+>like a clearer user interface?
 
->=20
-> > +
-> >  				irq_set_affinity_and_hint(*irqs++,
-> > topology_sibling_cpumask(cpu));
-> > +next_cpumask:
-> >  				cpumask_andnot(cpus, cpus,
-> topology_sibling_cpumask(cpu));
-> >  				--weight;
-> >  			}
-> > @@ -1317,29 +1372,92 @@ static int irq_setup(unsigned int *irqs, unsign=
-ed int
-> len, int node)
-> >  	return 0;
-> >  }
-> >
-> > -static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> > +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
-> >  {
-> >  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> > -	unsigned int max_queues_per_port;
-> >  	struct gdma_irq_context *gic;
-> > -	unsigned int max_irqs, cpu;
-> > -	int start_irq_index =3D 1;
-> > -	int nvec, *irqs, irq;
-> > +	int *irqs, irq, skip_first_cpu =3D 0;
-> > +	unsigned long flags;
-> >  	int err, i =3D 0, j;
-> >
-> >  	cpus_read_lock();
-> > -	max_queues_per_port =3D num_online_cpus();
-> > -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> > -		max_queues_per_port =3D MANA_MAX_NUM_QUEUES;
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> > +	irqs =3D kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> > +	if (!irqs) {
-> > +		err =3D -ENOMEM;
-> > +		goto free_irq_vector;
-> > +	}
-> >
-> > -	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
-> > -	max_irqs =3D max_queues_per_port + 1;
-> > +	for (i =3D 0; i < nvec; i++) {
-> > +		gic =3D kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
-> > +		if (!gic) {
-> > +			err =3D -ENOMEM;
-> > +			goto free_irq;
-> > +		}
-> > +		gic->handler =3D mana_gd_process_eq_events;
-> > +		INIT_LIST_HEAD(&gic->eq_list);
-> > +		spin_lock_init(&gic->lock);
-> >
-> > -	nvec =3D pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
-> > -	if (nvec < 0) {
-> > -		cpus_read_unlock();
-> > -		return nvec;
-> > +		snprintf(gic->name, MANA_IRQ_NAME_SZ,
-> "mana_q%d@pci:%s",
-> > +			 i, pci_name(pdev));
-> > +
-> > +		/* one pci vector is already allocated for HWC */
-> > +		irqs[i] =3D pci_irq_vector(pdev, i + 1);
-> > +		if (irqs[i] < 0) {
-> > +			err =3D irqs[i];
-> > +			goto free_current_gic;
-> > +		}
-> > +
-> > +		err =3D request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
-> > +		if (err)
-> > +			goto free_current_gic;
-> > +
-> > +		list_add_tail(&gic->gic_list, &gc->irq_contexts);
-> > +	}
-> > +
-> > +	if (gc->num_msix_usable <=3D num_online_cpus())
-> > +		skip_first_cpu =3D 1;
-> > +
-> > +	err =3D irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-> > +	if (err)
-> > +		goto free_irq;
-> > +
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> > +	cpus_read_unlock();
-> > +	kfree(irqs);
-> > +	return 0;
-> > +
-> > +free_current_gic:
-> > +	kfree(gic);
-> > +free_irq:
-> > +	for (j =3D i - 1; j >=3D 0; j--) {
-> > +		irq =3D pci_irq_vector(pdev, j + 1);
-> > +		gic =3D list_last_entry(&gc->irq_contexts, struct gdma_irq_context,
-> gic_list);
-> > +		irq_update_affinity_hint(irq, NULL);
-> > +		free_irq(irq, gic);
-> > +		list_del(&gic->gic_list);
-> > +		kfree(gic);
-> >  	}
-> > +	kfree(irqs);
-> > +free_irq_vector:
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> > +	cpus_read_unlock();
-> > +	return err;
-> > +}
-> > +
-> > +static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec) {
-> > +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> > +	struct gdma_irq_context *gic;
-> > +	int start_irq_index =3D 1;
-> > +	unsigned long flags;
-> > +	unsigned int cpu;
-> > +	int *irqs, irq;
-> > +	int err, i =3D 0, j;
-> > +
-> > +	cpus_read_lock();
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> > +
-> >  	if (nvec <=3D num_online_cpus())
-> >  		start_irq_index =3D 0;
-> >
-> > @@ -1349,15 +1467,12 @@ static int mana_gd_setup_irqs(struct pci_dev
-> *pdev)
-> >  		goto free_irq_vector;
-> >  	}
-> >
-> > -	gc->irq_contexts =3D kcalloc(nvec, sizeof(struct gdma_irq_context),
-> > -				   GFP_KERNEL);
-> > -	if (!gc->irq_contexts) {
-> > -		err =3D -ENOMEM;
-> > -		goto free_irq_array;
-> > -	}
-> > -
-> >  	for (i =3D 0; i < nvec; i++) {
-> > -		gic =3D &gc->irq_contexts[i];
-> > +		gic =3D kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
-> > +		if (!gic) {
-> > +			err =3D -ENOMEM;
-> > +			goto free_irq;
-> > +		}
-> >  		gic->handler =3D mana_gd_process_eq_events;
-> >  		INIT_LIST_HEAD(&gic->eq_list);
-> >  		spin_lock_init(&gic->lock);
-> > @@ -1372,22 +1487,14 @@ static int mana_gd_setup_irqs(struct pci_dev
-> *pdev)
-> >  		irq =3D pci_irq_vector(pdev, i);
-> >  		if (irq < 0) {
-> >  			err =3D irq;
-> > -			goto free_irq;
-> > +			goto free_current_gic;
-> >  		}
-> >
-> >  		if (!i) {
-> >  			err =3D request_irq(irq, mana_gd_intr, 0, gic->name, gic);
-> >  			if (err)
-> > -				goto free_irq;
-> > -
-> > -			/* If number of IRQ is one extra than number of online
-> CPUs,
-> > -			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-> > -			 * same CPU.
-> > -			 * Else we will use different CPUs for IRQ0 and IRQ1.
-> > -			 * Also we are using cpumask_local_spread instead of
-> > -			 * cpumask_first for the node, because the node can be
-> > -			 * mem only.
-> > -			 */
-> > +				goto free_current_gic;
-> > +
-> >  			if (start_irq_index) {
-> >  				cpu =3D cpumask_local_spread(i, gc-
-> >numa_node);
-> >  				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-> @@ -1399,36
-> > +1506,104 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> >  			err =3D request_irq(irqs[i - start_irq_index], mana_gd_intr,
-> 0,
-> >  					  gic->name, gic);
-> >  			if (err)
-> > -				goto free_irq;
-> > +				goto free_current_gic;
-> >  		}
-> > +
-> > +		list_add_tail(&gic->gic_list, &gc->irq_contexts);
-> >  	}
-> >
-> > -	err =3D irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
-> > +	err =3D irq_setup(irqs, nvec - start_irq_index, gc->numa_node, 0);
-> >  	if (err)
-> >  		goto free_irq;
-> >
-> > -	gc->max_num_msix =3D nvec;
-> > -	gc->num_msix_usable =3D nvec;
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> >  	cpus_read_unlock();
-> >  	kfree(irqs);
-> >  	return 0;
-> >
-> > +free_current_gic:
-> > +	kfree(gic);
-> >  free_irq:
-> >  	for (j =3D i - 1; j >=3D 0; j--) {
-> >  		irq =3D pci_irq_vector(pdev, j);
-> > -		gic =3D &gc->irq_contexts[j];
-> > -
-> > +		gic =3D list_last_entry(&gc->irq_contexts, struct gdma_irq_context,
-> > +gic_list);
-> >  		irq_update_affinity_hint(irq, NULL);
-> >  		free_irq(irq, gic);
-> > +		list_del(&gic->gic_list);
-> > +		kfree(gic);
-> >  	}
-> > -
-> > -	kfree(gc->irq_contexts);
-> > -	gc->irq_contexts =3D NULL;
-> > -free_irq_array:
-> >  	kfree(irqs);
-> >  free_irq_vector:
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> >  	cpus_read_unlock();
-> > -	pci_free_irq_vectors(pdev);
-> > +	return err;
-> > +}
-> > +
-> > +static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev) {
-> > +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> > +	unsigned int max_irqs, min_irqs;
-> > +	int max_queues_per_port;
-> > +	int nvec, err;
-> > +
-> > +	if (pci_msix_can_alloc_dyn(pdev)) {
-> > +		max_irqs =3D 1;
-> > +		min_irqs =3D 1;
-> > +	} else {
-> > +		max_queues_per_port =3D num_online_cpus();
-> > +		if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> > +			max_queues_per_port =3D MANA_MAX_NUM_QUEUES;
-> > +		/* Need 1 interrupt for the Hardware communication Channel
-> (HWC) */
-> > +		max_irqs =3D max_queues_per_port + 1;
-> > +		min_irqs =3D 2;
-> > +	}
-> > +
-> > +	nvec =3D pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX=
-);
-> > +	if (nvec < 0)
-> > +		return nvec;
-> > +
-> > +	err =3D mana_gd_setup_irqs(pdev, nvec);
-> > +	if (err) {
-> > +		pci_free_irq_vectors(pdev);
-> > +		return err;
-> > +	}
-> > +
-> > +	gc->num_msix_usable =3D nvec;
-> > +	gc->max_num_msix =3D nvec;
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev) {
-> > +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> > +	int max_irqs, i, err =3D 0;
-> > +	struct msi_map irq_map;
-> > +
-> > +	if (!pci_msix_can_alloc_dyn(pdev))
-> > +		/* remain irqs are already allocated with HWC IRQ */
-> > +		return 0;
-> > +
-> > +	/* allocate only remaining IRQs*/
-> > +	max_irqs =3D gc->num_msix_usable - 1;
-> > +
-> > +	for (i =3D 1; i <=3D max_irqs; i++) {
-> > +		irq_map =3D pci_msix_alloc_irq_at(pdev, i, NULL);
-> > +		if (!irq_map.virq) {
-> > +			err =3D irq_map.index;
-> > +			/* caller will handle cleaning up all allocated
-> > +			 * irqs, after HWC is destroyed
-> > +			 */
-> > +			return err;
-> > +		}
-> > +	}
-> > +
-> > +	err =3D mana_gd_setup_dyn_irqs(pdev, max_irqs);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	gc->max_num_msix =3D gc->max_num_msix + max_irqs;
-> > +
-> >  	return err;
-> >  }
-> >
-> > @@ -1436,29 +1611,34 @@ static void mana_gd_remove_irqs(struct pci_dev
-> > *pdev)  {
-> >  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> >  	struct gdma_irq_context *gic;
-> > -	int irq, i;
-> > +	struct list_head *pos, *n;
-> > +	unsigned long flags;
-> > +	int irq, i =3D 0;
-> >
-> >  	if (gc->max_num_msix < 1)
-> >  		return;
-> >
-> > -	for (i =3D 0; i < gc->max_num_msix; i++) {
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> > +	list_for_each_safe(pos, n, &gc->irq_contexts) {
-> >  		irq =3D pci_irq_vector(pdev, i);
-> >  		if (irq < 0)
-> >  			continue;
-> >
-> > -		gic =3D &gc->irq_contexts[i];
-> > +		gic =3D list_entry(pos, struct gdma_irq_context, gic_list);
-> >
-> >  		/* Need to clear the hint before free_irq */
-> >  		irq_update_affinity_hint(irq, NULL);
-> >  		free_irq(irq, gic);
-> > +		list_del(pos);
-> > +		kfree(gic);
-> > +		i++;
-> >  	}
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> >
-> >  	pci_free_irq_vectors(pdev);
-> >
-> >  	gc->max_num_msix =3D 0;
-> >  	gc->num_msix_usable =3D 0;
-> > -	kfree(gc->irq_contexts);
-> > -	gc->irq_contexts =3D NULL;
-> >  }
-> >
-> >  static int mana_gd_setup(struct pci_dev *pdev) @@ -1469,9 +1649,9 @@
-> > static int mana_gd_setup(struct pci_dev *pdev)
-> >  	mana_gd_init_registers(pdev);
-> >  	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
-> >
-> > -	err =3D mana_gd_setup_irqs(pdev);
-> > +	err =3D mana_gd_setup_hwc_irqs(pdev);
-> >  	if (err) {
-> > -		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
-> > +		dev_err(gc->dev, "Failed to setup IRQs for HWC creation: %d\n",
-> > +err);
-> >  		return err;
-> >  	}
-> >
-> > @@ -1487,6 +1667,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
-> >  	if (err)
-> >  		goto destroy_hwc;
-> >
-> > +	err =3D mana_gd_setup_remaining_irqs(pdev);
-> > +	if (err)
-> > +		goto destroy_hwc;
-> > +
-> >  	err =3D mana_gd_detect_devices(pdev);
-> >  	if (err)
-> >  		goto destroy_hwc;
-> > @@ -1563,6 +1747,8 @@ static int mana_gd_probe(struct pci_dev *pdev,
-> const struct pci_device_id *ent)
-> >  	gc->is_pf =3D mana_is_pf(pdev->device);
-> >  	gc->bar0_va =3D bar0_va;
-> >  	gc->dev =3D &pdev->dev;
-> > +	INIT_LIST_HEAD(&gc->irq_contexts);
-> > +	spin_lock_init(&gc->irq_ctxs_lock);
-> >
-> >  	if (gc->is_pf)
-> >  		gc->mana_pci_debugfs =3D debugfs_create_dir("0",
-> mana_debugfs_root);
-> > diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h index
-> > 228603bf03f2..eae38d7302fe 100644
-> > --- a/include/net/mana/gdma.h
-> > +++ b/include/net/mana/gdma.h
-> > @@ -363,6 +363,7 @@ struct gdma_irq_context {
-> >  	spinlock_t lock;
-> >  	struct list_head eq_list;
-> >  	char name[MANA_IRQ_NAME_SZ];
-> > +	struct list_head gic_list;
-> >  };
-> >
-> >  struct gdma_context {
-> > @@ -373,7 +374,9 @@ struct gdma_context {
-> >  	unsigned int		max_num_queues;
-> >  	unsigned int		max_num_msix;
-> >  	unsigned int		num_msix_usable;
-> > -	struct gdma_irq_context	*irq_contexts;
-> > +	struct list_head	irq_contexts;
-> > +	/* Protect the irq_contexts list */
-> > +	spinlock_t		irq_ctxs_lock;
-> >
-> >  	/* L2 MTU */
-> >  	u16 adapter_mtu;
-> > --
-> > 2.34.1
+Sure, go head!
+
+>
+>To clarify another aspect... child namespaces must inherit the parent's
+>local. So if namespace P sets the mode to local, and then creates a
+>child process that then creates namespace C... then C's global and mixed
+>modes are implicitly restricted to P's local space?
+
+I think so, but it's still not clear to me if the mode can be selected 
+per namespace or it's a setting for the entire system, but I think we 
+can discuss this better on a proposal with some code :-)
+
+Thanks,
+Stefano
+
 
