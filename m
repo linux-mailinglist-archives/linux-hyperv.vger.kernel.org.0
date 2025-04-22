@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-5032-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5033-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6926FA963DF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 11:16:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D6875A9640F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 11:21:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36D963BA854
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 09:13:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7DE23A24B8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 09:21:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C002405E7;
-	Tue, 22 Apr 2025 09:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7F11F2BA7;
+	Tue, 22 Apr 2025 09:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZPeuqs2Q"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aTCKesca"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C23B1EFFBF;
-	Tue, 22 Apr 2025 09:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37302E56A;
+	Tue, 22 Apr 2025 09:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313237; cv=none; b=sJGXbxdeKArJJgrV/yT88cXl9SmZRQ3mwOgdXiCRYgSRa0Uh5uWA4kwIaQDP6e05tIoIRdkE3VjdXkBdf2rU2u89uW4a1MSVouBk2QegyRPXZpriAQ46PZHbzTyYf6VEcCfQwM+wEzfqszGWsYplsA7umwHTRd6QvFHJzfl2AHg=
+	t=1745313683; cv=none; b=Fjg7xMPJ4MijZC6lseFjvAvYB0RkvzKOyFUkz08vwT7aeod55fwEvhxXU7QxPAOpv/5OeIeCS4WIq5EP6wbuPMeQgOTxNHDMTXyJ1HP+XqK916AdbbGGLoPP7l5bu5tcdbAZkow1j0PcovUGQEbWPb0bMWqgce+rQQA1DN14F1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313237; c=relaxed/simple;
-	bh=8t87NXRHmH+x11mIfycM4fyvuVR/eKMQUHrwiHhPu78=;
+	s=arc-20240116; t=1745313683; c=relaxed/simple;
+	bh=IJFxtry7hhT8Yr4zEl4gtA++56+FAG+dLifspSiZ+1Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZqRSsyIK2jm7yc24LVHKX8b7QMSP93cmnmSZmjGw0Jb2uyi9tIhq3VynnSgryOhP6EpNYEBScfisyxM1Hn+/7VIrIYk0R/mlV4Hr9QAGzKFxAnIurqXH1nBb3yK+TopRfuhdN9KnD7dx4xjKPg7HpLVEfaE2Fhaf3mQXjxcSQqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZPeuqs2Q; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=ODk8QhY1E3sZBB639IWcBuCUvtaFQsssJtFBJDHnD/PZrVXYAAiI7uOB8evOXcau4Ly2w5pEckwr7f4Am5NAFKmLJtTUn5bCK2p6LCT4YQcLee/xLXS8grhKZ1uXiV3A8TPc2wcpVOJYYwScd2+q+MhrCPM3KR4heoEMhYFc8n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aTCKesca; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Received: from [192.168.7.202] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53M9Clo71988629
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53M9KXTP1995439
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 22 Apr 2025 02:12:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53M9Clo71988629
+	Tue, 22 Apr 2025 02:20:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53M9KXTP1995439
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745313171;
-	bh=5MyMi1dWDpqM4+680ZRWUMemTrM7gOfrACTzG+hcvhU=;
+	s=2025042001; t=1745313638;
+	bh=cLR0wjbhwRTduGhrcmgQgQdpIXcDkWnqVuLKh1m13oQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZPeuqs2QxCZr+2CQbzBLOCpW3Aawds6/1cwg0KOGkN4s7Xzb3PZq6E2KiAUhdSklS
-	 6bmAZ9hG+CfiogKMARVhoVzL3oriBG5dyHPHGBto0/mSKUTbfZ4aFLYUysVlh6JFC/
-	 ZfI2lvkhOZHiUCZh+IkdkYywF31eKyF7de+lHzDs4b9fjhHs57HIRf++LaLMNtLPKY
-	 QczCdjB0+4sEGoXJlmUjHhZjwRqeUafNM/3rfcGnb2CJu8EO98o0Ia9j/fEpQcfhQG
-	 lCV0OoOhQjfirIbZQCPq86OrgvY0dVY0/wQxoL36KQ5giQ3vDEnESbBhySaQesbEM7
-	 0Bz5uP6uYbAzw==
-Message-ID: <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
-Date: Tue, 22 Apr 2025 02:12:46 -0700
+	b=aTCKescadr0sHc1OBNab3mt0WNOdORNOUu7rpBETQ6vGwSMvW5FXLhE2vfj1fe1w6
+	 kxqgtHLh80BykH4vNphE7UVD2umMuSaHZ0X7BB8pQmc61E8lzA//9+HuTE4ROZLaHQ
+	 dQx1WOTNwbk243SjOLe1tpFcPH9y12xx7ogDIZhREF4ji6RETc9TF7kIMeKjF5mIsX
+	 eMDXrP0TRl7JUiIRx2OTEz9i2vbZmrKeMtWUxjkY/XflI7iXlGFVwA24g71d0hbH9Y
+	 ZcmCp02WLH6iMipEkRPpY3a67hmjRhqj5K+CZV5FH7x7JFpmsNnSuIPtKmy58Xt4bk
+	 MKbcDfnoCUCnA==
+Message-ID: <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
+Date: Tue, 22 Apr 2025 02:20:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,8 +56,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
- read PMC
+Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
+ to read MSR
 To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -77,8 +77,8 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com
 References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-7-xin@zytor.com>
- <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
+ <20250422082216.1954310-23-xin@zytor.com>
+ <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -115,62 +115,48 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
+In-Reply-To: <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/22/2025 1:38 AM, Jürgen Groß wrote:
-> On 22.04.25 10:21, Xin Li (Intel) wrote:
+On 4/22/2025 1:59 AM, Jürgen Groß wrote:
+> On 22.04.25 10:22, Xin Li (Intel) wrote:
 >> To eliminate the indirect call overhead introduced by the pv_ops API,
->> use the alternatives mechanism to read PMC:
-> 
-> Which indirect call overhead? The indirect call is patched via the
-> alternative mechanism to a direct one.
-> 
-
-See below.
-
-
+>> utilize the alternatives mechanism to read MSR:
 >>
 >>      1) When built with !CONFIG_XEN_PV, X86_FEATURE_XENPV becomes a
->>         disabled feature, preventing the Xen PMC read code from being
->>         built and ensuring the native code is executed unconditionally.
-> 
-> Without CONFIG_XEN_PV CONFIG_PARAVIRT_XXL is not selected, resulting in
-> native code anyway.
-
-Yes, this is kept in this patch, but in a little different way.
-
-> 
+>>         disabled feature, preventing the Xen code from being built
+>>         and ensuring the native code is executed unconditionally.
 >>
 >>      2) When built with CONFIG_XEN_PV:
 >>
 >>         2.1) If not running on the Xen hypervisor (!X86_FEATURE_XENPV),
 >>              the kernel runtime binary is patched to unconditionally
->>              jump to the native PMC read code.
+>>              jump to the native MSR read code.
 >>
 >>         2.2) If running on the Xen hypervisor (X86_FEATURE_XENPV), the
 >>              kernel runtime binary is patched to unconditionally jump
->>              to the Xen PMC read code.
+>>              to the Xen MSR read code.
 >>
->> Consequently, remove the pv_ops PMC read API.
+>> The alternatives mechanism is also used to choose the new immediate
+>> form MSR read instruction when it's available.
+>>
+>> Consequently, remove the pv_ops MSR read APIs and the Xen callbacks.
 > 
-> I don't see the value of this patch.
+> Same as the comment to patch 5: there is no indirect call overhead after
+> the system has come up.
 > 
-> It adds more #ifdef and code lines without any real gain.
-> 
-> In case the x86 maintainers think it is still worth it, I won't object.
 
-I think we want to totally bypass pv_ops in the case 2.1).
+Please check https://lore.kernel.org/lkml/87y1h81ht4.ffs@tglx/.
 
-Do you mean the indirect call is patched to call native code *directly*
-for 2.1?  I don't know it, can you please elaborate?
+And it's was also mentioned in the previous patch:
 
-AFAIK, Xen PV has been the sole user of pv_ops for nearly 20 years. This
-raises significant doubts about whether pv_ops provides Linux with the
-value of being a well-abstracted "CPU" or "Platform".  And the x86
-maintainers have said that it's a maintenance nightmare.
+https://lore.kernel.org/lkml/20250422082216.1954310-22-xin@zytor.com/
+
+Please let me know what I have missed.
 
 Thanks!
      Xin
+
+
 
