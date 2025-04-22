@@ -1,147 +1,77 @@
-Return-Path: <linux-hyperv+bounces-4991-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-4992-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C0F2A959C5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 01:27:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66D9BA959FE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 02:03:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 049683AB685
-	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Apr 2025 23:27:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D42E16635D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Apr 2025 00:03:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BFC922A7E9;
-	Mon, 21 Apr 2025 23:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4103376;
+	Tue, 22 Apr 2025 00:03:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CRuJz68c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TysWquBb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D829224252;
-	Mon, 21 Apr 2025 23:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84F6DF58;
+	Tue, 22 Apr 2025 00:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745278063; cv=none; b=pYZZGW43fdq3mO6q8l5DnUg/kWnDzGX/SAPkqgD1HZn2wZfrRTAxJov0DlKVMwKFOiuilmAPjRMT3qEzDunb+B9x6jx9TMtdx9Z2HxP0z/MRfBVAmQbJzl10Gedu8NVVjZ//tfRmEG1PBkhwjUk2pJCDaei3k+8qIMrLR4LAd0M=
+	t=1745280231; cv=none; b=nWgUatSQFu1jyvXa7F9aIUwnsNcUQ7u13DTbjRNoUvQvNHxfz1fMZI7ZZl98QlRUsPEoUQz8tKjDFY/CLuJrbD9WNNscWBw3vyLam4MHtjvuTGu4W0SHPA8CqWFS/DStsamCtPRiLat76Z+9qbOLuM5ke4kLRfO44LFA5hbXuLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745278063; c=relaxed/simple;
-	bh=plS0dj7xUaRPgtvF1xd9b6EwHUtv+3iwNa8IBnlG1Uo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZyByOMt9chhsuXDozEqskyOw3sYtETHViwo0P63BfgNd1R8pptTqRjIvHH+bxmmDbROSnDt6a/rV7odcZmBrTjhObReHujRnS5VZyz8JcgKk0KnoorvsbpcShYc36cyBQDs4yLAr1NHe4oFjmYbdZnjyO9pTTyFbzIdx6IHX3+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CRuJz68c; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.97.83] (unknown [20.236.10.66])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7F082203B86E;
-	Mon, 21 Apr 2025 16:27:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7F082203B86E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745278061;
-	bh=rgCwyON/e1COr+m3vQYBYaC1jT0qx4BriodovWWJ2oM=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=CRuJz68c0/VQgI89fv0oIv2W1+wJ6nbRbkUekWMt/Ew3z5Wji+LLNADl8AGPl9Hgj
-	 z2tW+nHV3yRZuoNrIOJWIrRIEuhgCsNwONreCFWQWOGgaZpeQYTAW+pUR10uTUHWjt
-	 ehWsanjMICKHh2ULuzsHzwkly+e6YlVc9Duc81ME=
-Message-ID: <1643d6a8-7d4f-4d6e-aeab-f43963644a1f@linux.microsoft.com>
-Date: Mon, 21 Apr 2025 16:27:40 -0700
+	s=arc-20240116; t=1745280231; c=relaxed/simple;
+	bh=ByXM9NwhLFSE7cwLmMnQdf3Y/z48xuxLc5CpTPHWd8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sj3+tgd43yPgJgg/V8tuhlvqdjQQlyhenED9zgId/Uvp7fAK95dG9t/jlMB5iedRK9nKyodYyregs6D4+Ut4ZwNQwq7Lryq9TYCT3pKh8ftqhmUi5Zwz1nwrmjt5HI8Feim+Z+FBbQ3+WqhUsoRrqh0YUK/Id36iq+pLh0Hm1gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TysWquBb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D231C4CEE4;
+	Tue, 22 Apr 2025 00:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745280231;
+	bh=ByXM9NwhLFSE7cwLmMnQdf3Y/z48xuxLc5CpTPHWd8E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TysWquBb8nGwZpbr/arQtdRMae5KhBFd2ZpyWCcnUHoR3UrCUEoDqU9isnIgRM7h2
+	 hkncZot2SV5UDJXVU6oH1tu2LYMi5xwHGvS2fXYfuX5+AwKn+Au23FYxO28WmvQW2N
+	 NwsTdO+vJYtzk94+26Zbu5Hzjdj9DCbgso5VpuZ8xyiB6pn9C7IAr1Szgr5JgxnjcF
+	 4aDX7EHxoCdCbH2pgLd3Uq502Ill+BA0U3s65jgVcYxr+q9SkBm9L8GSKIWEHFJgla
+	 RMEd14cK5LpxzO0Jtxi9XKbJDn4d29tgLsF77ct9/zWQuLNwIt+FbH3EhYzzI/Kv9V
+	 7iS+UM/9NK5ZQ==
+Date: Mon, 21 Apr 2025 17:03:49 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org, mhklinux@outlook.com,
+ pasha.tatashin@soleen.com, kent.overstreet@linux.dev,
+ brett.creeley@amd.com, schakrabarti@linux.microsoft.com,
+ shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+ rosenp@gmail.com, paulros@microsoft.com, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] net: mana: Add sched HTB offload support
+Message-ID: <20250421170349.003861f2@kernel.org>
+In-Reply-To: <1745217220-11468-3-git-send-email-ernis@linux.microsoft.com>
+References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
+	<1745217220-11468-3-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com, "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
- <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
- hypercall arguments
-To: Michael Kelley <mhklinux@outlook.com>
-References: <20250415180728.1789-1-mhklinux@outlook.com>
- <20250415180728.1789-2-mhklinux@outlook.com>
- <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
- <SN6PR02MB4157FEE08571B84B6CEBFC92D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <SN6PR02MB4157FEE08571B84B6CEBFC92D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/21/2025 2:24 PM, Michael Kelley wrote:
-> From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Monday, April 21, 2025 1:41 PM
->>>
+On Sun, 20 Apr 2025 23:33:39 -0700 Erni Sri Satya Vennela wrote:
+> This controller can offload only one HTB leaf.
 
-<snip>
+This is not a reasonable use case for HTB.
 
->>>
->>
->> This is very cool, thanks for taking the time! I think the function naming
->> could be more intuitive, e.g. hv_setup_*_args(). I'd not block it for that reason,
->> but would be super happy if you would update it. What do you think?
->>
-> 
-> I'm not particularly enamored with my naming scheme, but it was the
-> best I could come up with. My criteria were:
-> 
-> * Keep the length reasonably short to not make line length problems
->    any worse
-> * Distinguish the input args only, input & output args, and array versions
-
-I think the in/inout/array scheme you have does this nicely
-
-> * Use the standard "hv_" prefix for Hyper-V related code
-> 
-> Using "setup" instead of "hvcall" seems like an improvement to me, and
-> it is 1 character shorter.  The "hv" prefix would be there, but they wouldn't
-> refer specifically to hypercalls. I would not add "_args" on the end because
-> that's another 5 characters in length. So we would have:
-> 
-> * hv_setup_in()
-> * hv_setup_inout()
-> * hv_setup_in_array()
-> * hv_setup_inout_array()
-> * hv_setup_in_batch_size() [??]
-> 
-> Or maybe, something like this, or similar, which picks up the "args" string,
-> but not "setup":
-> 
-> * hv_hcargs_in()
-> * hv_hcargs_inout()
-> * hv_hcargs_in_array()
-> * hv_hcargs_inout_array()
-> * hv_hcargs_in_batch_size() [??]
-> 
-> I'm very open to any other ideas because I'm not particularly
-> happy with the hv_hvcall_* approach.
-
-Between the two presented here, I prefer option 1, with the "setup" verb because it tells you
-inline what the function will do. I agree that the "args" is unnecessary because most
-hypercall args are named hv_{input, output}_* and are clearly arguments to hv_do_hypercall()
-and friends.
-
-Since hv_setup*() will normally be followed shortly after by hv_do_hypercall(), I don't
-see a problem with not referring specifically to hypercalls, it should be clear in context.
-
-For hv_hvcall_in_batch_size(), I think it serves a fundamentally different function than the
-other wrappers and doesn't need to follow the "setup" pattern. Instead it could be named 
-hv_get_input_batch_size() for the same length and similarly tell you its purpose inline.
-
-I am continuing to review the rest of the series, sorry for the delay, and thank you for your
-patience!
-
-Thanks,
-Easwar (he/him)
+If your reason not to use the shaper API is that there is no CLI
+for it perhaps you should add one to iproute2.
 
