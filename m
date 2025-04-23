@@ -1,54 +1,47 @@
-Return-Path: <linux-hyperv+bounces-5068-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5069-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 448D0A99698
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 19:28:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54F4FA99728
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 19:52:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31FB01B86105
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 17:28:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D56174A170D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 17:52:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FEB728BA94;
-	Wed, 23 Apr 2025 17:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9519529008D;
+	Wed, 23 Apr 2025 17:51:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FYHpQRl8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sQ39TYqr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523928A1E8;
-	Wed, 23 Apr 2025 17:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAAA2289361;
+	Wed, 23 Apr 2025 17:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745429297; cv=none; b=Bpur7RCzya8T7vlBNPFl4lULzlb3K3q4LaehlImk3DyxCxP9mBG8JJRG+xQtwHhm3e3KVn2MOM+G6hgUMVP853ytdNLKcl/LOvpq2//s9UluYm2upR+kZymui9EqnjUckP9ky43cM69dNp7JaHrhaO0AxDqgMlsAREKVerWyik4=
+	t=1745430661; cv=none; b=N525c/bXIrd/IwD0+Zqy/dZ0Ab6AFjQzBOpRp84NbgCqesw94j4YkVr3tSpZqurvPoLPGVODoU20sEI1L7ruYBOaYl8rukG8KWpjCU+XtQ2cJfpsxQ28VsUTZn2CaVmBQO+kEqdGAnDM2d9a9dn8Eeb7GStHEg+QZMCoa15bp/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745429297; c=relaxed/simple;
-	bh=Wa2nKVy62V+d/qbDEyNIn13+ePN0sTeeuwvCl+4mMK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q1n8LgToSEjBW1RUf4KePU/OXUB5veqoo2RT+2Av52CU7IdgSvl7peRGfZ/FCvcSo7DSIZ8YUJ3xaEt7W7R8q3jhd1kJSonCUrG2OkIVZtLIZPkqBycoxYl49bBZ0CAFBgh97yX8AyhVT2croyGXh8iMK+7ero09RIKR4KMk4xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FYHpQRl8; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53NHRSwP3822273
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 10:27:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53NHRSwP3822273
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745429251;
-	bh=3DNEiH9ClADNNdC4s2AFGq03za4/i0hRtsw7HdWhX8Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FYHpQRl8w+nTjaGGRqdQx9A21dGh6eRp5/7vZcoeVQfJ9FBrAtuE4a8nbQdhPJpY7
-	 C5nTvzzz33F1edToPwWHSeJXgoh6SwIuUPr91pgD6ORF2jN+/5fZh9Ofi3nO2wDCgX
-	 NyB6TneZbcSNhKwI3FWPkvGtSRtfl8YKXephFBr2m8UWFGjBObYHKKsepz0L/aTUGo
-	 jFGXQZIyrJ70pWBdnFXn75qaBkvkid3XPvRU6MU8TH8CRJxSKjrb4b2UYHO+wGQ51t
-	 Z5W8BeQoRoZzPHd5lWutYI7E+jcqOoxDsMyaxvuPKWJE7ftMpslNO0VeQ/i0ZeFCUN
-	 zwJslGTaEkwWw==
-Message-ID: <0e5cf01a-2cc1-46a2-89c1-3bcc502229c8@zytor.com>
-Date: Wed, 23 Apr 2025 10:27:27 -0700
+	s=arc-20240116; t=1745430661; c=relaxed/simple;
+	bh=H6tBuwWjiTa3b3mLuTFDXVmLQC0Vman+596WG65RK38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lryLr/pEcTThbW12QtgkOkFhOnvNRSIXV9ZsLTisQ7Ke91JFSc2Etf2dwCIjWsAC2Zla3iV+q7OzlXvFTlDKI78uePgfotoeEg7zYvEhKWz3u4/8d4y0Q4NYYluLw/cZ1vMyBEN7HJ0WuDaFZ2RSbGdypyIbKEkkQMn/4G3dAF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sQ39TYqr; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.161.193] (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BECB4203B87E;
+	Wed, 23 Apr 2025 10:50:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BECB4203B87E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745430659;
+	bh=f8CH2rF6M32Fr1wA/Z2C1KBnMC6UpjyuKfRuhJo6RnQ=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=sQ39TYqro8mNxCzgFzTVoLBiOwe6FBjtFYnXnVOYwR+TxOSmN6DKe6bwlGNxehSFK
+	 jCUvM4ljgfl3+2bLu20terHXNlptGszeQPOD5W64MZcXi21BueuM3apNfzpBrTEp0W
+	 EzZCarIaNhY1Q+dNMRyM61qeYLNebVuuQqazqQgM=
+Message-ID: <495d5444-b82e-4ec7-9095-d34f0ac8d40c@linux.microsoft.com>
+Date: Wed, 23 Apr 2025 10:50:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,88 +49,54 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
- native_wrmsrq()
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-9-xin@zytor.com>
- <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Subject: Re: [PATCH 1/1] Drivers: hv: Fix bad ref to hv_synic_eventring_tail
+ when CPU goes offline
+To: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, kys@microsoft.com, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org
+References: <20250421163134.2024-1-mhklinux@outlook.com>
 Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250421163134.2024-1-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/23/2025 8:51 AM, Dave Hansen wrote:
-> On 4/22/25 01:21, Xin Li (Intel) wrote:
->>   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
->>   {
->> -	u32 low, high;
->> -
->> -	low  = (u32)(val);
->> -	high = (u32)(val >> 32);
->> -
->> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
->> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
->>   }
+On 4/21/2025 9:31 AM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
-> conversion, it could be sucked into the tree easily before the big
-> __wrmsr()=>native_wrmsrq() conversion.
+> When a CPU goes offline, hv_common_cpu_die() frees the
+> hv_synic_eventring_tail memory for the CPU. But in a normal VM (i.e., not
+> running in the root partition) the per-CPU memory has not been allocated,
+> resulting in a bad memory reference and oops when computing the argument
+> to kfree().
 > 
-> Yeah, you'd have to base the big rename on top of this. But with a
-> series this big, I'd prioritize whatever gets it trimmed down.
+> Fix this by freeing the memory only when running in the root partition.
+> 
+> Fixes: 04df7ac39943 ("Drivers: hv: Introduce per-cpu event ring tail")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/hv/hv_common.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index b3b11be11650..8967010db86a 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -566,9 +566,11 @@ int hv_common_cpu_die(unsigned int cpu)
+>  	 * originally allocated memory is reused in hv_common_cpu_init().
+>  	 */
+>  
+> -	synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
+> -	kfree(*synic_eventring_tail);
+> -	*synic_eventring_tail = NULL;
+> +	if (hv_root_partition()) {
+> +		synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
+> +		kfree(*synic_eventring_tail);
+> +		*synic_eventring_tail = NULL;
+> +	}
+>  
+>  	return 0;
+>  }
 
-Okay, I will focus on cleanup first.
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
