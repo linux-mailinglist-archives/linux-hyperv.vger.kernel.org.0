@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-5055-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5056-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F9C3A98C32
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 16:02:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9827A98C8C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 16:13:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F2D51893B3E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 14:02:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AF7616A173
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 14:13:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309FB279352;
-	Wed, 23 Apr 2025 14:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58D002798EF;
+	Wed, 23 Apr 2025 14:13:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QYFTprDR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BWchryqi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C86278E72;
-	Wed, 23 Apr 2025 14:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BF327933E;
+	Wed, 23 Apr 2025 14:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416946; cv=none; b=YHq49LA45IyYMpAddjRcVtqFz6LdP7lk/0ZAA8MCX6IU7q2ScJLkuKHyKrUNQsBK9kenslMCfqMWwcEyEcGHP/7/8A6TdVA2Fy6DRRgoxsPceR7xZfaYUL2bRPA1odfsUD/qDhvnO10PKaRgBhFvFhPK8IWgY93cj3l5uYQDMw4=
+	t=1745417624; cv=none; b=m9ObI3wF120i2X6RwbVNiTNZ/6unj4LUGJe1nTtXEcrVXA9qFLlwKmgoUCFbwUWFAH252rKH4+6D9+3co7zsSx9NpG0kZ3DLcKHwgYiWlYvRTNDMu8cutFSZyXyUMUeOokOIUAec/LiKI8w2jUamUJU4yNV7zzdoCoygbSI3qGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416946; c=relaxed/simple;
-	bh=Rh21QveOIphht+dSIQL9yWgwVQ+lFz7mjH7vvCHUsvQ=;
+	s=arc-20240116; t=1745417624; c=relaxed/simple;
+	bh=gCdfzP6Rz3QRAiqWb8ICzKaC8k4ViRNpmXNZ7t4kQyU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mYORkS4a0i8F+jTbKO1BvOj7pkUrvEFgG5qQp82M0wezbnJjfO7+5/hgME7RFFsJLf591pHWRbVXoNR0CtnWhro26RooeVrpFobe0kHIadAhzyPAmWk+uIZD93FYGjDfYU8oUFvRxl8JaXiWc+cG14aTUnkwOFfmbnvW+LhFtZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QYFTprDR; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=RwZ0D8Jp2FBQfWk3b6LwZ2iiaoyQwF6vsUuve98rZ0B5HLEdjm2qoF4f4OFSJbUEswMFeF32PgVkh7hkrHMHxxB9GjtkXpXWkrhpXK3PxaTNJiGf7s/0tbFTt2/Rdewe3JbSajPSGU6lpyGI1IkqyESefNRFyR/PVnBbfxLXmkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BWchryqi; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745416944; x=1776952944;
+  t=1745417622; x=1776953622;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Rh21QveOIphht+dSIQL9yWgwVQ+lFz7mjH7vvCHUsvQ=;
-  b=QYFTprDR4Gj2tQ4HZicm73D6gRv8lQPsO7xO4QuaphEWDhlJUN7qtCif
-   pD2L/0IPeAWSsrWehrzghDOP1M2lUxZ494jfmrbxFKoR1NvTIH/BTl57r
-   TYiXJzeVsF2U4Kg+WdJBbEvQJ30m+VbJQf0bMrklpYEgaI/IyiBTWqzy+
-   Y1qV9hpDeLSd+qpiz8QUXVr+dFvrrKysZGLOJ8onIr/tBnmz2QBH5e+ol
-   EWos/BFSbRMZKeoQrgEhLpsE0mJdT6EtoFSl5ECQ21EwGb6nPRkbFCGL1
-   14ebaA2k9JyeDAdcegUglRIhMI3RacjW7Rg+tghIVIc3BLwhsjIOA6nii
-   w==;
-X-CSE-ConnectionGUID: 47Fo6C9hRWymKJ8AlLkzUg==
-X-CSE-MsgGUID: KI5RWqRQQaGckloB+epSXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="34627012"
+  bh=gCdfzP6Rz3QRAiqWb8ICzKaC8k4ViRNpmXNZ7t4kQyU=;
+  b=BWchryqiGU+LaqA2picB1+Ill1U1/AvbA+gqwF/Z8uAxpStlke8XdgU/
+   08lHXyF31QE6qAJR5TKaF/mTWXsA2LI52Z6LxN7Qj7IBO20Obn5jMhWHj
+   j7UrKAUY/zk0/mUL+x2C0nkPhUS60aqY3OzF8oI7adCZE+zKsdtiIuTJQ
+   +Z1ICSedfHxXS9mclfzofkVTUV420maXCnrn6+LmW/+gF6sOs3ohktlkI
+   P/3uDvUQFm9lEJUvH2BdgJ77AXZssPhf5wCaAb19H7PWFjWiNTb8qNiqB
+   ByuAv8qUO4PDbVXIJixN7vNtS0/+Kr7TuIPvzXp1SUi5emPsCkQnDGBle
+   Q==;
+X-CSE-ConnectionGUID: wd4H7PR9RwOHsyvdME9YIA==
+X-CSE-MsgGUID: rS0O/w18QRa3qrBNOyCnpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="50674124"
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="34627012"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:02:23 -0700
-X-CSE-ConnectionGUID: +BYzxiPyRASjJYOad+dLtw==
-X-CSE-MsgGUID: ZC3WqV42RoGpnWQOY47Srg==
+   d="scan'208";a="50674124"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:13:41 -0700
+X-CSE-ConnectionGUID: hN2luxYRRR22QwDVEy73vw==
+X-CSE-MsgGUID: TPuRvEnIRWOtX5fYO79fZg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="155536016"
+   d="scan'208";a="137495477"
 Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.221.81]) ([10.124.221.81])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:02:21 -0700
-Message-ID: <7302e719-3a0f-4a25-84da-eb56fe1bdc19@intel.com>
-Date: Wed, 23 Apr 2025 07:02:19 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:13:39 -0700
+Message-ID: <4caedcaf-793a-4371-a8db-50723dcdbad4@intel.com>
+Date: Wed, 23 Apr 2025 07:13:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,16 +67,16 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
- native_rdmsrq() uses
-To: Xin Li <xin@zytor.com>, Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
- linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+Subject: Re: [RFC PATCH v2 01/34] x86/msr: Move rdtsc{,_ordered}() to
+ <asm/tsc.h>
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
  jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
  namhyung@kernel.org, mark.rutland@arm.com,
@@ -84,11 +84,10 @@ Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
  adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
  ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
  tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
+ seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+ kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
 References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-11-xin@zytor.com> <aAexLqjhKncFyw2V@google.com>
- <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+ <20250422082216.1954310-2-xin@zytor.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -134,16 +133,28 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+In-Reply-To: <20250422082216.1954310-2-xin@zytor.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/23/25 02:27, Xin Li wrote:
-> One reason I chose verbose names is that short names are in use and
-> renaming needs to touch a lot of files (and not fun at all).
+On 4/22/25 01:21, Xin Li (Intel) wrote:
+> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
+> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
+> Consequently, <asm/msr.h> must be included in several source files
+> that previously did not require it.
 
-This series is getting *WAY* too big.
+I know it's mildly obvious but could you please add a problem statement
+to these changelogs, even if it's just one little sentence?
 
-Could you please peel the renaming stuff out and we can get it applied
-independently of the new instruction gunk?
+	For some reason, there are some TSC-related functions in the
+	MSR header even though there is a tsc.h header.
+
+	Relocate rdtsc{,_ordered}() and	subsequently remove the
+	inclusion of <asm/msr.h> in <asm/tsc.h>. Consequently,
+	<asm/msr.h> must be included in several source files that
+	previously did not require it.
+
+But I agree with the concept, so with this fixed:
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
