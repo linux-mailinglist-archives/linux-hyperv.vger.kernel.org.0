@@ -1,116 +1,149 @@
-Return-Path: <linux-hyperv+bounces-5054-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5055-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9416FA98B53
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 15:37:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F9C3A98C32
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 16:02:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CA613BAE05
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 13:37:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F2D51893B3E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 14:02:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81DC1A262D;
-	Wed, 23 Apr 2025 13:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309FB279352;
+	Wed, 23 Apr 2025 14:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nT0JZxbk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QYFTprDR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17DD19FA92
-	for <linux-hyperv@vger.kernel.org>; Wed, 23 Apr 2025 13:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C86278E72;
+	Wed, 23 Apr 2025 14:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415435; cv=none; b=EVzTteY5exM4pkUBElWx28fUrqgqMr2Wz26Mb5SqCbYD+t/HbsAtq4LFcx1aO/PucGtXGNASx3fgbp3LRrh8wgYLkGUEpGd2qF/2qHcavMSEM1zQdm3RAlP2DTVKnCmsTmZ/g5daIA3wuKPWbG6UjCQ1xGwlVJ9wtb7tZTWzURo=
+	t=1745416946; cv=none; b=YHq49LA45IyYMpAddjRcVtqFz6LdP7lk/0ZAA8MCX6IU7q2ScJLkuKHyKrUNQsBK9kenslMCfqMWwcEyEcGHP/7/8A6TdVA2Fy6DRRgoxsPceR7xZfaYUL2bRPA1odfsUD/qDhvnO10PKaRgBhFvFhPK8IWgY93cj3l5uYQDMw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415435; c=relaxed/simple;
-	bh=dXr0vdvJSE4CQmBa2fTuILJV/L6G5HpSxSHQ49PKVqY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PXpLq4EDHWqhEvcevBKFVRuTvClHoAcav68EWGHLWbcMb4f0t/qc6qXBl748FD4Lhuu08ZyHwmNPengRBJQPyq9I6yMjSOnZxl5JOBSZI7SHCRszKVIwY/ofAfLphETfZgxcg2FwdxkAzSESYE+KZhQjCOaKQJeauy4cwALIIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nT0JZxbk; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30828f9af10so13580989a91.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 23 Apr 2025 06:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745415433; x=1746020233; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
-        b=nT0JZxbkLOWuAaq4nDpqtJy0UU3fVSwyW/pnNNBGYtoYR/+veEUbsw1SW7uJkXUY9+
-         O8RFZ5mI3iZ/bhFeyS6mpQMMAXezkdZIzt5lXK/oKDFsuDimPPcn2I6rOaU8XnWilwy4
-         Qflh7jQ/97QLXGCjRrnvUz0MJpppmkyoylDcvcx1GHi73/C77pzsSBWavAJzDCuOl8Vu
-         Bx69HB/Nd+cusCL5TPzdZ2tLrS0aQKRNqjrAQAhL7fNktV8FmsgyGiJ37d7CE0puVmjy
-         sSKyhx/48E0CSccNslHjG8NDhKl65lvTaigTuvvrWJaiU24iVs3SZBs7noSsvJEIf+mE
-         70Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745415433; x=1746020233;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
-        b=bEAnH/zmQkSmpNtXIv4aC+4Ecwi4i3JlfPMbl62sJSjyjzfLz2otxKpZLBILthY+oJ
-         h+FndfLA5VI62DPqUYcARUu3arfdqXIcqK2GT4Agt5f4UCCH4QTygbXITas7yzOAcmCh
-         9SVl3DIoiUGwYbL+CtYk9cjyboZWi2YoFktgevhfJOf3TW6mO51uEkhUgL17TCOM1nU8
-         iWVzvRyRCocEP5SO6w80KsQvrxMtWKkJtOaNJABdMgJEiMBlGr9Lr+AnGO87Oh8Io/r4
-         xVKpNnpGBZcOiAHFRY5nxOeAACzqIuJIi+m7sR92BzbIOPP657hR9ePJeaixb8zzjo71
-         Je9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ5wPOudniRZ+K0R5IGr/zHlhK7XKYa+CC6hdyAynfSXRw3gu6yMn3w3R1Jl950ZxLFqo/DFWLGLTWKzw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymC4m3yilww9YDfTAJVrvFecmjv8tddyGo9ZKwdLjRayDICLSB
-	ieea4Nut++SUsaTZS7rwgWIf8hdfjNsrT1/D/8ApVepB/dkNOIrs1RSRsJ9k9BCCCj3S+K0Q34l
-	p5g==
-X-Google-Smtp-Source: AGHT+IEWS42km52dkYFlmcKZWmN1wttg5SPG3JN+o4kIB9LzXEDLrbHh1gdrPp7a64YZSw75FwPTF5N3xvo=
-X-Received: from pjur12.prod.google.com ([2002:a17:90a:d40c:b0:308:867e:1ced])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2650:b0:2ee:9b2c:3253
- with SMTP id 98e67ed59e1d1-3087bbc9333mr25668631a91.30.1745415432973; Wed, 23
- Apr 2025 06:37:12 -0700 (PDT)
-Date: Wed, 23 Apr 2025 06:37:11 -0700
-In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+	s=arc-20240116; t=1745416946; c=relaxed/simple;
+	bh=Rh21QveOIphht+dSIQL9yWgwVQ+lFz7mjH7vvCHUsvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mYORkS4a0i8F+jTbKO1BvOj7pkUrvEFgG5qQp82M0wezbnJjfO7+5/hgME7RFFsJLf591pHWRbVXoNR0CtnWhro26RooeVrpFobe0kHIadAhzyPAmWk+uIZD93FYGjDfYU8oUFvRxl8JaXiWc+cG14aTUnkwOFfmbnvW+LhFtZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QYFTprDR; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745416944; x=1776952944;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Rh21QveOIphht+dSIQL9yWgwVQ+lFz7mjH7vvCHUsvQ=;
+  b=QYFTprDR4Gj2tQ4HZicm73D6gRv8lQPsO7xO4QuaphEWDhlJUN7qtCif
+   pD2L/0IPeAWSsrWehrzghDOP1M2lUxZ494jfmrbxFKoR1NvTIH/BTl57r
+   TYiXJzeVsF2U4Kg+WdJBbEvQJ30m+VbJQf0bMrklpYEgaI/IyiBTWqzy+
+   Y1qV9hpDeLSd+qpiz8QUXVr+dFvrrKysZGLOJ8onIr/tBnmz2QBH5e+ol
+   EWos/BFSbRMZKeoQrgEhLpsE0mJdT6EtoFSl5ECQ21EwGb6nPRkbFCGL1
+   14ebaA2k9JyeDAdcegUglRIhMI3RacjW7Rg+tghIVIc3BLwhsjIOA6nii
+   w==;
+X-CSE-ConnectionGUID: 47Fo6C9hRWymKJ8AlLkzUg==
+X-CSE-MsgGUID: KI5RWqRQQaGckloB+epSXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="34627012"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="34627012"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:02:23 -0700
+X-CSE-ConnectionGUID: +BYzxiPyRASjJYOad+dLtw==
+X-CSE-MsgGUID: ZC3WqV42RoGpnWQOY47Srg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="155536016"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.221.81]) ([10.124.221.81])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:02:21 -0700
+Message-ID: <7302e719-3a0f-4a25-84da-eb56fe1bdc19@intel.com>
+Date: Wed, 23 Apr 2025 07:02:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-11-xin@zytor.com>
- <aAexLqjhKncFyw2V@google.com> <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
-Message-ID: <aAjtBxzvRgNt4Uzr@google.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
  native_rdmsrq() uses
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
-	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
-	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
-	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+To: Xin Li <xin@zytor.com>, Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+ linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-11-xin@zytor.com> <aAexLqjhKncFyw2V@google.com>
+ <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025, Xin Li wrote:
-> On 4/22/2025 8:09 AM, Sean Christopherson wrote:
-> > I strongly prefer that we find a way to not require such verbose APIs, especially
-> > if KVM ends up using native variants throughout.  Xen PV is supposed to be the
-> > odd one out, yet native code is what suffers.  Blech.
-> 
-> Will try to figure out how to name the APIs.
-> 
+On 4/23/25 02:27, Xin Li wrote:
 > One reason I chose verbose names is that short names are in use and
 > renaming needs to touch a lot of files (and not fun at all).
 
-Yeah, I've looked at modifying rdmsrl() to "return" a value more than once, and
-ran away screaming every time.
+This series is getting *WAY* too big.
 
-But since you're already doing a pile of renames, IMO this is the perfect time to
-do an aggressive cleanup.
+Could you please peel the renaming stuff out and we can get it applied
+independently of the new instruction gunk?
 
