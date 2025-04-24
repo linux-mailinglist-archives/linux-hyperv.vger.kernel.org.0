@@ -1,244 +1,131 @@
-Return-Path: <linux-hyperv+bounces-5095-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5096-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AED0A9B4C9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 18:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19DCBA9B5B1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 19:51:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 595F91BA0BE9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 16:58:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFEA21B88761
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 17:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D110228DEFC;
-	Thu, 24 Apr 2025 16:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48D3828E5EE;
+	Thu, 24 Apr 2025 17:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUw/iDT+"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qmcxq/0p"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9290D28DEE0;
-	Thu, 24 Apr 2025 16:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501E8214226;
+	Thu, 24 Apr 2025 17:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513873; cv=none; b=QrwAKvC0dfGLOx7BQw/xlMUcLKn0hfl8Gdcw+wUF2Rrp+/A0snFM6LTWo8GRh8zA9LXhzm6cgot+YMzzjrVfNkCepIWm+C5fEzevTt8dsevCZd35GhNNJ4m6deD3R0UVZUOrvRddg7YJKOY+Yz/iue+Dbv2FPCL1awoUq/sdt9U=
+	t=1745517083; cv=none; b=KuTkVq6JKBpykfoDfi9+iwQ+s3A/lZFodBAg5rkqYw3SSDuFspcejTVK2yiI4HfA5ZP40P5nojl+I/QqQ1/Xs/4/09aZMQXV2gZlCmMAjSTktdXnA07qxS0a/zIUVwRz1Z56WaM+KTwM+Nwi18mPplffhzh6oKzAzlrZWRowce0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513873; c=relaxed/simple;
-	bh=d79kcU9GfFoXHHLFwRO0mS3MDxIZKtB6Ybwg07CqBHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UkQJnMYMbXQ0n5ivz0p+55HNvAtaiV9lgdiSUdQuSEQdg4GDhORN7HVN1U5pj5pOtL1j02j1ZLe7ALCOLxCNFHM5LRdqlhsbSIDw88zlwQou6Dz3J01nU0DKv1hQjWRGMMToNAYEBiEH0yPjbd9DbkRIbDEF+OTc5UkpjMTIvPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUw/iDT+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA94C4CEE8;
-	Thu, 24 Apr 2025 16:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745513872;
-	bh=d79kcU9GfFoXHHLFwRO0mS3MDxIZKtB6Ybwg07CqBHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nUw/iDT+6gw5mOAM5j6Vw9sQKNjGnCcO2p1tds/nPvQxhm5QqiPeva6vHDs9PQ9h4
-	 QXE/+JHx5hp33jrRTeNto+yvVZlOdnwBVexbS0ps9/BcZu6UB2BURU7jWrCktVt3Yx
-	 vWe5TrzysIRNgwm+Zq9fP1WcPAu4YCQJSuiY5lpjOGRBMXds2/kxSK0dg9TJOgUreR
-	 H95fBBiMKtPoQ7U/Uhv2WpPXHLgqH5eydc9N4p0cpWZm/YIssotgOIeG/9vUMq0f0T
-	 /JOaV1ftzzrlpbq9qJkcazC7BQW7c8AwUEgTxyCdNBx/w0mGJWM9fQGq8FVtdTULzF
-	 MqmPC9KUeSl1Q==
-Date: Thu, 24 Apr 2025 17:57:43 +0100
-From: Simon Horman <horms@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Message-ID: <20250424165743.GJ3042781@horms.kernel.org>
-References: <1744817747-2920-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=arc-20240116; t=1745517083; c=relaxed/simple;
+	bh=gvbYniVbuVocg2kp9+4ascSzdv/YlycfcP4FMoMbya4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uTlPznozpSVQjTnG8cVpKI4wNHFkJy6+udEdqBz0ZJuHdVY4t1OYsXBCYSf9eg0rJHlDfTiSkEoLK1AqxNPQhcT/YrOn7gOCx/FmRnUdPu5Co/sL2OxZpu8TrKr5M/nQnSHq9tTxmTPgJf1YqhJgut/C75N3FwziPQZnLYuGX4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Qmcxq/0p; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OHo0ch1382184
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 10:50:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OHo0ch1382184
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745517004;
+	bh=s//FslW+O7Kn/IezyVBmG0EeFGCYGlqoMCN23p8kepQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qmcxq/0pRXzN/V+n0zvhvv/OoLvqqvKKiVDhNOGC1sz6osmqDDUYrR+tqqy3ga/u7
+	 JZpvT18GGm7u7JMxdWjZSYChBiJHXKChUd2j3U39ORZs5MDVb4G7VtVtmZRcbpeLMt
+	 m3iEcT7ggWGzwceuQ2WNjjW5bkmHSlTac6xC2kFMvWFQzV9xA4ABxyzXK56cpGvVXB
+	 Z2GE+XuHwAbGxdx+vxfyvWePtTx/85Pa22tSKDMjJILyluCkPpeG0HBau04zqCZjI0
+	 PP1ixyRBjfPn514E7EZwguUuURA8RzDzTFyQbM8I27ftfQ+nYl+1piEjuJAyk3NecS
+	 iN/TMRiJOd+JA==
+Message-ID: <ca088501-2fbe-4a32-b191-04f7be6a2713@zytor.com>
+Date: Thu, 24 Apr 2025 10:49:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
+ <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 08:36:21AM -0700, Shradha Gupta wrote:
-> Currently, the MANA driver allocates pci vector statically based on
-> MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> up allocating more vectors than it needs.
-> This is because, by this time we do not have a HW channel and do not know
-> how many IRQs should be allocated.
-> To avoid this, we allocate 1 IRQ vector during the creation of HWC and
-> after getting the value supported by hardware, dynamically add the
-> remaining vectors.
+On 4/24/2025 3:05 AM, Jürgen Groß wrote:
 > 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> May I suggest to get rid of the "emul" parameter of pmu_msr_chk_emulated()?
+> It has no real value, as pmu_msr_chk_emulated() could easily return 
+> false in
+> the cases where it would set *emul to false.
 
-Hi Shradha,
+Good idea!
 
-Some minor nits from my side.
-
-...
-
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-
-...
-
-> @@ -465,9 +475,10 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
->  	struct gdma_irq_context *gic;
->  	struct gdma_context *gc;
->  	unsigned int msi_index;
-> -	unsigned long flags;
-> +	struct list_head *pos;
-> +	unsigned long flags, flag_irq;
->  	struct device *dev;
-> -	int err = 0;
-> +	int err = 0, count;
-
-As this is Networking code, please preserve the arrangement of local
-variables in reverse xmas tree order - longest line to shortest.
-
-Edward Cree's tool can be useful in this area:
-https://github.com/ecree-solarflare/xmastree
-
->  
->  	gc = gd->gdma_context;
->  	dev = gc->dev;
-> @@ -482,7 +493,22 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
->  	}
->  
->  	queue->eq.msix_index = msi_index;
-> -	gic = &gc->irq_contexts[msi_index];
-> +
-> +	/* get the msi_index value from the list*/
-> +	count = 0;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> +	list_for_each(pos, &gc->irq_contexts) {
-> +		if (count == msi_index) {
-> +			gic = list_entry(pos, struct gdma_irq_context, gic_list);
-
-Please consider line wrapping to 80 columns or less, as is still preferred
-in Networking code.
-
-Likewise elsewhere in this patch.
-
-checkpatch.pl --max-line-length=80
-can be helpful here.
-
-> +			break;
-> +		}
-> +
-> +		count++;
-> +	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> +
-> +	if (!gic)
-> +		return -1;
->  
->  	spin_lock_irqsave(&gic->lock, flags);
->  	list_add_rcu(&queue->entry, &gic->eq_list);
-> @@ -497,8 +523,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
->  	struct gdma_irq_context *gic;
->  	struct gdma_context *gc;
->  	unsigned int msix_index;
-> -	unsigned long flags;
-> +	struct list_head *pos;
-> +	unsigned long flags, flag_irq;
->  	struct gdma_queue *eq;
-> +	int count;
-
-Reverse xmas tree here too.
-
->  
->  	gc = gd->gdma_context;
->  
-> @@ -507,7 +535,22 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
->  	if (WARN_ON(msix_index >= gc->num_msix_usable))
->  		return;
->  
-> -	gic = &gc->irq_contexts[msix_index];
-> +	/* get the msi_index value from the list*/
-> +	count = 0;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> +	list_for_each(pos, &gc->irq_contexts) {
-> +		if (count == msix_index) {
-> +			gic = list_entry(pos, struct gdma_irq_context, gic_list);
-> +			break;
-> +		}
-> +
-> +		count++;
-> +	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> +
-
-Does gic need to be initialised to NULL before the list_for_each loop
-to ensure that it is always initialised here?
-
-Flagged by Clang 20.1.2 KCFLAGS=-Wsometimes-uninitialized builds, and Smatch
-
-> +	if (!gic)
-> +		return;
-> +
->  	spin_lock_irqsave(&gic->lock, flags);
->  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
->  		if (queue == eq) {
-
-...
-
-> @@ -1317,29 +1372,92 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
->  	return 0;
->  }
->  
-> -static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
->  {
->  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> -	unsigned int max_queues_per_port;
->  	struct gdma_irq_context *gic;
-> -	unsigned int max_irqs, cpu;
-> -	int start_irq_index = 1;
-> -	int nvec, *irqs, irq;
-> +	int *irqs, irq, skip_first_cpu = 0;
-> +	unsigned long flags;
->  	int err, i = 0, j;
-
-Reverse xmas tree here too.
-
->  
->  	cpus_read_lock();
-> -	max_queues_per_port = num_online_cpus();
-> -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> -		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> +	if (!irqs) {
-> +		err = -ENOMEM;
-> +		goto free_irq_vector;
-> +	}
-
-...
+The function type is a bit of weird but I didn't think of change it.
 
