@@ -1,146 +1,186 @@
-Return-Path: <linux-hyperv+bounces-5076-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5077-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 641D5A99BFE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 01:25:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7906AA9A079
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 07:35:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C160C7AA597
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Apr 2025 23:23:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0FC4443029
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Apr 2025 05:35:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A072701BC;
-	Wed, 23 Apr 2025 23:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082DC193436;
+	Thu, 24 Apr 2025 05:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="g52K7MMR"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Qx17ORxL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8838A223DC9;
-	Wed, 23 Apr 2025 23:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2D91CCEC8;
+	Thu, 24 Apr 2025 05:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745450701; cv=none; b=hyTgH2V/vJuX9QYVG+arQSvJUxwStbr4L1uUukR+Cp+KqaDYyhYG0b2SjEAmv1VsxFzHOSot4fgNC1DkNF3YeVFOH/Cg4xlIRLkpBtfG9Zlf+1/dIfVS6hc+fpIl0YQX1Zq9N+j5JW+KsQ3ibDJcHyJS5jiqZ7Hrfx2/KLEm5Aw=
+	t=1745472941; cv=none; b=Cx2LQEfQcly9weigoMPfflyQZcJovAQe4DNXXmKSPAvt+Gpf1jvVRoFVSEUFbhFQ8agD+NIgzHOz8RSW/IVvoHLWdUX4Ljhac1wUwAaWNl5yEZGhKxerrj83NdOqyGihqV/Co6tyhAz6WwNlmi9oJBNVtluVtnzWw0RMJvgOhCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745450701; c=relaxed/simple;
-	bh=yskBEWSEF6FlJkJi4DwqXGby0psHuBX/9ua/oCniJP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BGfXTY3iZ9Dv287qopTGeAFuZgVIrDc8m82KQ/oiLlfn0gsv9XMT7ucLGil1u6izN/iUiE/2SQ6vB/g9lqm4G5KY2yOtKRKaCx+KvtMQP0O7tE+UqWfofsxkZJycIddgpRuvoWzC9jEjRx3jcprOutLYPcJSPvaBZYthxio3O4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=g52K7MMR; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53NNNmdO016856
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 16:23:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53NNNmdO016856
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745450634;
-	bh=3ZRudBcQfUXdEeUGknvRzjxdjhla7ofQa9vhRPg63Iw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g52K7MMRbWF6yLwDhmY0YU3Om9fpRH0Ut+qyo76sxSZ4NHnyBc98XW5u2s2hVCFUK
-	 PhNe+N15jsjlumb03xkDxJWNBMQ76zGMekkVPvwrCgqXTuVJomLV1T/3YW5TFZ7jZ8
-	 1UmN3Fwk6b31yjBct2QL3ajxMU+0ZhSXqsLtn5qHYLVhfR4vWwV537HB9cU8VSqJHv
-	 6bXyJrePtilh9n0zOlm3jS0UhKtUD+8gXNtFrWLBIVXKpgaPuv0YalLYf+ij4Y2WWd
-	 yrxqlPYGWH/00BTyjqGIOa+LNPKvKGQxRb/Vrh8pulNMK2D75Bck1Sw8zFpVOmUKyD
-	 ftlR5gTTNtHcw==
-Message-ID: <88bcd897-8436-4ebb-ac03-833c8c8045f2@zytor.com>
-Date: Wed, 23 Apr 2025 16:23:47 -0700
+	s=arc-20240116; t=1745472941; c=relaxed/simple;
+	bh=DSIsSktyigwphI8MhYzR/1RBEj7Q4IC0F7mtUCtKuZc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WNh8Kx3DtTITkmTHWGUQmqceagEiSObmwBf0lO7gICbDdw3ZqRDRANHOOyxLc5FMTiAB8ltTgvTnstYuvFDMoq0RZ4aFv6Ji9i56JsoDbcs0Nm/E6boEqnDFXfO/9zxOF3dAH6jZrYz/93ihnRPV/USaxOaHFSf2dEcpV0IGxX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Qx17ORxL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.203])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 39B642113094;
+	Wed, 23 Apr 2025 22:35:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39B642113094
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745472934;
+	bh=oEHmeH4qs0gpT38oTRW75mSTiMBXsXrhw6V4L0kO1L4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Qx17ORxLf0uzFVfZLu0s8vLwEP9dX/no15CfHGD7pxA6vNLVtZctuqwQBjbIIUIa8
+	 BWk4Q3arzqogKE60ej/k7w+wb3PqFq7GTEUOW8csm27iG+lhCY0BFC+ulMLPVahECc
+	 emX6H3YX2QuPZ4IbdTntibd+TB7/Fdp10Bn1/HJU=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation path
+Date: Thu, 24 Apr 2025 11:05:22 +0530
+Message-Id: <20250424053524.1631-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
- native_wrmsrq()
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-9-xin@zytor.com>
- <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/23/2025 8:51 AM, Dave Hansen wrote:
-> On 4/22/25 01:21, Xin Li (Intel) wrote:
->>   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
->>   {
->> -	u32 low, high;
->> -
->> -	low  = (u32)(val);
->> -	high = (u32)(val >> 32);
->> -
->> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
->> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
->>   }
-> 
-> A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
-> conversion, it could be sucked into the tree easily before the big
-> __wrmsr()=>native_wrmsrq() conversion.
+Hi,
+This patch series aims to address the sysfs creation issue for the ring
+buffer by reorganizing the code. Additionally, it updates the ring sysfs
+size to accurately reflect the actual ring buffer size, rather than a
+fixed static value.
 
-Can't reorder the 2 patches, because __wrmsr() takes two u32 arguments
-and the split has to be done explicitly in sev_es_wr_ghcb_msr().
+PFB change logs:
 
-Thanks!
-     Xin
+Changes since v5:
+https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+* Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+  commit msg of both patches.
+* Missed to remove check for "primary_channel->device_obj->channels_kset" in
+  hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+  now. 
+* Changed type for declaring bin_attrs due to changes introduced by
+  commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+  merged recently. Did not use bin_attrs_new since another change is in
+  the queue to change usage of bin_attrs_new to bin_attrs
+  (sysfs: finalize the constification of 'struct bin_attribute').
 
+Changes since v4:
+https://lore.kernel.org/all/20250410060847.82407-1-namjain@linux.microsoft.com/
+* Added Reviewed-By and Tested-By tags from Michael.
+* Fixed syntax by removing extra space (addressed Greg's comment)
+* Rebased to latest linux-next tip
+
+Changes since v3:
+https://lore.kernel.org/all/20250328052745.1417-1-namjain@linux.microsoft.com/
+* Addressed Michael's comments regarding handling of return value of
+sysfs_update_group in uio_hv_generic.
+
+Changes since v2:
+https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft.com/
+Addressed Greg's comments:
+* Split the original patch into two.
+* Updated the commit message to explain the problem scenario.
+* Added comments for new APIs in the kerneldoc format.
+* Highlighted potential race conditions and explained why sysfs should not be created in the
+  driver probe.
+
+* Made minor changes to how the sysfs_update_group return value is handled.
+
+Changes since v1:
+https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
+* Fixed race condition in setting channel->mmap_ring_buffer by
+  introducing a new variable for visibility of sysfs (addressed Greg's
+  comments)
+* Used binary attribute fields instead of regular ones for initializing attribute_group.
+* Make size of ring sysfs dynamic based on actual ring buffer's size.
+* Preferred to keep mmap function in uio_hv_generic to give more control over ring's
+  mmap functionality, since this is specific to uio_hv_generic driver.
+* Remove spurious warning during sysfs creation in uio_hv_generic probe.
+* Added comments in a couple of places.
+
+Changes since RFC patch:
+https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
+* Different approach to solve the problem is proposed (credits to
+  Michael Kelley).
+* Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+  drivers where rest of the sysfs attributes for a VMBus channel
+  are defined. (addressed Greg's comments)
+* Used attribute groups instead of sysfs_create* functions, and bundled
+  ring attribute with other attributes for the channel sysfs.  
+
+Error logs:
+
+[   35.574120] ------------[ cut here ]------------
+[   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
+[   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+[   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+[   35.574197] Call Trace:
+[   35.574199]  <TASK>
+[   35.574200]  ? show_regs+0x69/0x80
+[   35.574217]  ? __warn+0x8d/0x130
+[   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574222]  ? report_bug+0x182/0x190
+[   35.574225]  ? handle_bug+0x5b/0x90
+[   35.574244]  ? exc_invalid_op+0x19/0x70
+[   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+[   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+[   35.574271]  vmbus_probe+0x3b/0x90
+[   35.574275]  really_probe+0xf4/0x3b0
+[   35.574279]  __driver_probe_device+0x8a/0x170
+[   35.574282]  driver_probe_device+0x23/0xc0
+[   35.574285]  __device_attach_driver+0xb5/0x140
+[   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+[   35.574291]  bus_for_each_drv+0x86/0xe0
+[   35.574294]  __device_attach+0xc1/0x200
+[   35.574297]  device_initial_probe+0x13/0x20
+[   35.574315]  bus_probe_device+0x99/0xa0
+[   35.574318]  device_add+0x647/0x870
+[   35.574320]  ? hrtimer_init+0x28/0x70
+[   35.574323]  device_register+0x1b/0x30
+[   35.574326]  vmbus_device_register+0x83/0x130
+[   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+[   35.574331]  process_one_work+0x177/0x340
+[   35.574348]  worker_thread+0x2b2/0x3c0
+[   35.574350]  kthread+0xe3/0x1f0
+[   35.574353]  ? __pfx_worker_thread+0x10/0x10
+[   35.574356]  ? __pfx_kthread+0x10/0x10
+
+
+Naman Jain (2):
+  uio_hv_generic: Fix sysfs creation path for ring buffer
+  Drivers: hv: Make the sysfs node size for the ring buffer dynamic
+
+ drivers/hv/hyperv_vmbus.h    |   6 ++
+ drivers/hv/vmbus_drv.c       | 119 ++++++++++++++++++++++++++++++++++-
+ drivers/uio/uio_hv_generic.c |  39 +++++-------
+ include/linux/hyperv.h       |   6 ++
+ 4 files changed, 147 insertions(+), 23 deletions(-)
+
+
+base-commit: 2c9c612abeb38aab0e87d48496de6fd6daafb00b
+-- 
+2.34.1
 
 
