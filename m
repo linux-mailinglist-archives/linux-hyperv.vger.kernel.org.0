@@ -1,67 +1,57 @@
-Return-Path: <linux-hyperv+bounces-5105-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5106-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27DFAA9BE8C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:23:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEF9EA9BE9A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:26:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F84C467968
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 06:23:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B5223A8466
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 06:25:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C10522CBD8;
-	Fri, 25 Apr 2025 06:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA81722CBF9;
+	Fri, 25 Apr 2025 06:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qlwB+0M2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj/rv79U"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14427228C99;
-	Fri, 25 Apr 2025 06:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7B922CBF3;
+	Fri, 25 Apr 2025 06:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745562213; cv=none; b=Cgq+aFHEeNq4a3IAdj1uSef1GmYZ9GhDaJv1Dm2Q9WoLEokxPQEfRPMOfM1mzw9ICoqfUebKwhpHH0eiDyd6eZh90pU+JYHs5vJV+wnpqOjUIwgDjwSwEPY2swiLy7gm35MEadGloDUx5Gmhvqfc4VZy22uOkzfLpA9AD2ElXeo=
+	t=1745562359; cv=none; b=TobhBolMLQJuVhLLujqyJoi7wq5S62ojfiOVNj+2QrcC9+f3M2HNhD8vzfbdFUjVFVbqL9ID1Ss4CWaH7LAVGyI7xc4Mv8xEFCiYHd86u/F2CmOOi3Z6Oo6TMWJBhYcdQGxXpTMA6GM/nu9DgZ27aRPxz8poz0TaOnnQ8ImoSMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745562213; c=relaxed/simple;
-	bh=QPDGTxFftCHPShU566oWvkBvuos91+NRaQwQRMGkZSk=;
+	s=arc-20240116; t=1745562359; c=relaxed/simple;
+	bh=MWq1Fozs3aOeISRj2OanVUgx7/gTvywwy2fYtgZeD58=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LwoJqDiNQYyPcUE6qGKtc2fa87ZS4q/pivGzkK1uOdiY4aMl8fJByfg8o4QSI6PckTvUGmSOebXHaBRIzct7oM59dRLvINA7c3Q6wxYf1USQIfyGCPL1wYPME6FkNHthrxt+mEt4zkJQQ5f0dhp+/mbXL+Jb1l5FDSse4A3GhDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qlwB+0M2; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 7DFD72020941; Thu, 24 Apr 2025 23:23:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7DFD72020941
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745562205;
-	bh=0ZyJIAePbWouwnT8HJWmkxXWwAJF6mz5d+QFGVvq6as=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZdCLZr/uGor1NC0RkEi7x7tY7ytSwo/H9SNzxN8yIJ+uBOGdyNS0/zNFXtV34hT9iGOb+bkOz/KzjMH5djFwq9GK38IfPbwSaC/H+wZO0Ou8YMXEsXnoRrMYoootN1ppsvDyRzdsbMENN8sTvkMAGvzDHdPyJz+Zdg9DXzDzaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj/rv79U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE95C4CEE4;
+	Fri, 25 Apr 2025 06:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745562359;
+	bh=MWq1Fozs3aOeISRj2OanVUgx7/gTvywwy2fYtgZeD58=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qlwB+0M2w2wroMEcyM8sosAZs4qzf3go9Er6zX85Gb83d4l8dO7sGyp51ErdB5rZr
-	 4YSfSYPRYJp5EyYM+gZ5r/xRufsdo72QAUou8LQ/FcFidbzqsjZx4OCk7tnIA6RHFR
-	 3OmMgJKSIYQLVnL7dAkgQOzNEZ/B1jUJfXAvb8Wk=
-Date: Thu, 24 Apr 2025 23:23:25 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Stephen Hemminger <stephen@networkplumber.org>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, longli@microsoft.com, kotaranov@microsoft.com,
-	kent.overstreet@linux.dev, brett.creeley@amd.com,
-	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com, rosenp@gmail.com,
-	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 2/3] net: mana: Add sched HTB offload support
-Message-ID: <20250425062325.GA21110@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
- <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
- <20250417081053.5b563a92@hermes.local>
- <20250417194727.GB10777@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20250417170052.76e52039@kernel.org>
- <20250418165324.GA29127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20250424093816.GD3042781@horms.kernel.org>
+	b=nj/rv79Uj7sUFpdftr3CqZD3FZJYEyJTFz1wlXihmMPmwIQm9xVj1KBOTXsrhg7X4
+	 CHm2mi6OmwbavzuzY1Sf5pKu3156iCI3mEFpberGCGrj8sJCl7fTEb5YqiR/uIZPnP
+	 aRAsNSJx3FOubKfWwF0F5IoFannkJYY4bC+NtvdzLQWAHxPkDfyfeyZacxAKuDMrgn
+	 5bvCOpshQrQvy7EF4sGyBqxW/HGz7hzVp7siEiPkoRVm19sP5K0mc4i8VA8qwiulrg
+	 2/Hid+pLg1Ci+ExSX2QMsWz8hWwBaG5G2zexIGNcyC73AQk1bzCDiSO/M5QwpL6Erw
+	 rntf3uC9f5EYg==
+Date: Fri, 25 Apr 2025 06:25:57 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: mhklinux@outlook.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, kys@microsoft.com,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] Drivers: hv: Fix bad ref to hv_synic_eventring_tail
+ when CPU goes offline
+Message-ID: <aAsq9RGFUbQUfQnl@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250421163134.2024-1-mhklinux@outlook.com>
+ <495d5444-b82e-4ec7-9095-d34f0ac8d40c@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,52 +60,47 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424093816.GD3042781@horms.kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <495d5444-b82e-4ec7-9095-d34f0ac8d40c@linux.microsoft.com>
 
-On Thu, Apr 24, 2025 at 10:38:16AM +0100, Simon Horman wrote:
-> On Fri, Apr 18, 2025 at 09:53:24AM -0700, Erni Sri Satya Vennela wrote:
-> > On Thu, Apr 17, 2025 at 05:00:52PM -0700, Jakub Kicinski wrote:
-> > > On Thu, 17 Apr 2025 12:47:27 -0700 Erni Sri Satya Vennela wrote:
-> > > > > A single leaf is just Token Bucket Filter (TBF).
-> > > > > Are you just trying to support some vendor config?  
-> > > > TBF does not support hardware offloading.
-> > > 
-> > > Did you take a look at net_shapers? Will it not let you set a global
-> > > config the way you intend?
-> > Yes, Jakub. I have reviewed net-shapers and noted that it is not
-> > integrated into the kernel like tc. I mean there isn't a standard,
-> > general-purpose command for net-shaper in Linux. It is used by other
-> > tools or potentially device-specific drivers that want to leverage the
-> > NIC's hardware shaping capabilities.
+On Wed, Apr 23, 2025 at 10:50:27AM -0700, Nuno Das Neves wrote:
+> On 4/21/2025 9:31 AM, mhkelley58@gmail.com wrote:
+> > From: Michael Kelley <mhklinux@outlook.com>
 > > 
-> > To configure shaping with net-shapers, users would need to execute a
-> > command similar to:
+> > When a CPU goes offline, hv_common_cpu_die() frees the
+> > hv_synic_eventring_tail memory for the CPU. But in a normal VM (i.e., not
+> > running in the root partition) the per-CPU memory has not been allocated,
+> > resulting in a bad memory reference and oops when computing the argument
+> > to kfree().
 > > 
-> > ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/shaper.yaml
-> > --do set --json '{"ifindex":'$IFINDEX', 
-> > 		  "shaper": {"handle": 
-> > 			    {"scope": "node", "id":'$NODEID' },
-> > 		  "bw-max": 2000000}}'
+> > Fix this by freeing the memory only when running in the root partition.
 > > 
-> > Ref: https://lore.kernel.org/all/cover.1722357745.git.pabeni@redhat.com/
+> > Fixes: 04df7ac39943 ("Drivers: hv: Introduce per-cpu event ring tail")
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> >  drivers/hv/hv_common.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
 > > 
-> > Given the simplicity of code implementation and ease of use for users in
-> > writing commands, I opted for tc-htb.
+> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> > index b3b11be11650..8967010db86a 100644
+> > --- a/drivers/hv/hv_common.c
+> > +++ b/drivers/hv/hv_common.c
+> > @@ -566,9 +566,11 @@ int hv_common_cpu_die(unsigned int cpu)
+> >  	 * originally allocated memory is reused in hv_common_cpu_init().
+> >  	 */
+> >  
+> > -	synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
+> > -	kfree(*synic_eventring_tail);
+> > -	*synic_eventring_tail = NULL;
+> > +	if (hv_root_partition()) {
+> > +		synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
+> > +		kfree(*synic_eventring_tail);
+> > +		*synic_eventring_tail = NULL;
+> > +	}
+> >  
+> >  	return 0;
+> >  }
 > 
-> Hi Erni,
-> 
-> As someone who was involved with the design of net-shapers, I think it is
-> reasonable to instead use the Kernel API which appears to have been
-> designed specifically for this purpose: to control HW TX rate limiting.
-> 
-> If tooling isn't intuitive or otherwise doesn't meet user's needs
-> then that is something that can be addressed. But it's not a Kernel issue.
+> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
-Thank you, Simon and Jakub, for helping me understand the advantages of
-using net-shapers over tc-htb. I will work on it and send the next
-version using net-shapers in a few weeks, as I will be on leave for 
-the next two weeks.
-
-- Vennela
+Applied to hyperv-fixes.
 
