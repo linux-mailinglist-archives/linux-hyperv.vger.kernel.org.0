@@ -1,60 +1,67 @@
-Return-Path: <linux-hyperv+bounces-5104-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5105-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 527F4A9BE7D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:16:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27DFAA9BE8C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:23:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 517E7466C9E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 06:16:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F84C467968
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 06:23:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA21D190664;
-	Fri, 25 Apr 2025 06:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C10522CBD8;
+	Fri, 25 Apr 2025 06:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G75Yftl8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qlwB+0M2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812FC29A5;
-	Fri, 25 Apr 2025 06:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14427228C99;
+	Fri, 25 Apr 2025 06:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745561759; cv=none; b=A/SYXKFwkZ2des8H58XU2M7EKMbslHdVfxFu0i4Z2FU2vWOQHhC4HnHNOhdued9gXzDQ5CFpfrkMgURXaz59EQUy7MLHrrSCVUlqFZ7IDTc/qpxZiMGWDXv/OmVfaUubDpSMl0IucuKRs3hjLw4ZQvbB6+MTyRi4y0+eJoR8+qs=
+	t=1745562213; cv=none; b=Cgq+aFHEeNq4a3IAdj1uSef1GmYZ9GhDaJv1Dm2Q9WoLEokxPQEfRPMOfM1mzw9ICoqfUebKwhpHH0eiDyd6eZh90pU+JYHs5vJV+wnpqOjUIwgDjwSwEPY2swiLy7gm35MEadGloDUx5Gmhvqfc4VZy22uOkzfLpA9AD2ElXeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745561759; c=relaxed/simple;
-	bh=n2fFaggUz9PlV9T/N9QPcpRhu1aHC/oRN6LEMhMgK9c=;
+	s=arc-20240116; t=1745562213; c=relaxed/simple;
+	bh=QPDGTxFftCHPShU566oWvkBvuos91+NRaQwQRMGkZSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KKgMVdmR07V9ixuiYJRjAfMdvPHG3vgrJ4w2EaC3sCcLtJ4ipZ61bVae7ghl11zGGSwHYuv8Nl+llS0gxfFynR6AZc0XXmNW9g7fMpmBeAQ3MUpegOqXAqkhrkJ+/DVj+701L8UnS1uOF0N5hnzXD+nPP8ieg9CdtBjAMHFPGjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G75Yftl8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE07C4CEE4;
-	Fri, 25 Apr 2025 06:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745561759;
-	bh=n2fFaggUz9PlV9T/N9QPcpRhu1aHC/oRN6LEMhMgK9c=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwoJqDiNQYyPcUE6qGKtc2fa87ZS4q/pivGzkK1uOdiY4aMl8fJByfg8o4QSI6PckTvUGmSOebXHaBRIzct7oM59dRLvINA7c3Q6wxYf1USQIfyGCPL1wYPME6FkNHthrxt+mEt4zkJQQ5f0dhp+/mbXL+Jb1l5FDSse4A3GhDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qlwB+0M2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 7DFD72020941; Thu, 24 Apr 2025 23:23:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7DFD72020941
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745562205;
+	bh=0ZyJIAePbWouwnT8HJWmkxXWwAJF6mz5d+QFGVvq6as=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G75Yftl8Bia9PnDJT+sNiKj32JQvSq8ujQgQ6sn9L2hgYaEIgM2DqNIhrnF8KCVsd
-	 UJyVu9QxBTxecqNUxfi8k8gzG5mE7P4g4b7yaAY3LvflAsB0WFxVXyTBn8SOKDSpEh
-	 736YpyIW8NBV0dRrSQOvDmrNAtc+JZdKSp+d1FEIwfYobYiw/WRRsF7bcIWI5ATY2G
-	 RTCK5wPRCqnBC5jnK9QgIfhizBHZgzmj5OYpRjufkebf7IKDN1SmBOked5bVK/R+hb
-	 ST4yoyBkY5uYPQ12VBmmP+bf5kkJ6ELcdMQCF/RErvC0lH5pPRcLLJAn7fQoxRQSMW
-	 0RV93FTIp7Beg==
-Date: Fri, 25 Apr 2025 06:15:57 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-	mikelley@microsoft.com, mingo@redhat.com, tglx@linutronix.de,
-	tiala@microsoft.com, wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
-	bperkins@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP ID confusion
- in hv_snp_boot_ap()
-Message-ID: <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250424215746.467281-1-romank@linux.microsoft.com>
+	b=qlwB+0M2w2wroMEcyM8sosAZs4qzf3go9Er6zX85Gb83d4l8dO7sGyp51ErdB5rZr
+	 4YSfSYPRYJp5EyYM+gZ5r/xRufsdo72QAUou8LQ/FcFidbzqsjZx4OCk7tnIA6RHFR
+	 3OmMgJKSIYQLVnL7dAkgQOzNEZ/B1jUJfXAvb8Wk=
+Date: Thu, 24 Apr 2025 23:23:25 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Stephen Hemminger <stephen@networkplumber.org>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, longli@microsoft.com, kotaranov@microsoft.com,
+	kent.overstreet@linux.dev, brett.creeley@amd.com,
+	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, rosenp@gmail.com,
+	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 2/3] net: mana: Add sched HTB offload support
+Message-ID: <20250425062325.GA21110@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
+ <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
+ <20250417081053.5b563a92@hermes.local>
+ <20250417194727.GB10777@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20250417170052.76e52039@kernel.org>
+ <20250418165324.GA29127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20250424093816.GD3042781@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,25 +70,52 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424215746.467281-1-romank@linux.microsoft.com>
+In-Reply-To: <20250424093816.GD3042781@horms.kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, Apr 24, 2025 at 02:57:46PM -0700, Roman Kisel wrote:
-> To start an application processor in SNP-isolated guest, a hypercall
-> is used that takes a virtual processor index. The hv_snp_boot_ap()
-> function uses that START_VP hypercall but passes as VP ID to it what
-> it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
+On Thu, Apr 24, 2025 at 10:38:16AM +0100, Simon Horman wrote:
+> On Fri, Apr 18, 2025 at 09:53:24AM -0700, Erni Sri Satya Vennela wrote:
+> > On Thu, Apr 17, 2025 at 05:00:52PM -0700, Jakub Kicinski wrote:
+> > > On Thu, 17 Apr 2025 12:47:27 -0700 Erni Sri Satya Vennela wrote:
+> > > > > A single leaf is just Token Bucket Filter (TBF).
+> > > > > Are you just trying to support some vendor config?  
+> > > > TBF does not support hardware offloading.
+> > > 
+> > > Did you take a look at net_shapers? Will it not let you set a global
+> > > config the way you intend?
+> > Yes, Jakub. I have reviewed net-shapers and noted that it is not
+> > integrated into the kernel like tc. I mean there isn't a standard,
+> > general-purpose command for net-shaper in Linux. It is used by other
+> > tools or potentially device-specific drivers that want to leverage the
+> > NIC's hardware shaping capabilities.
+> > 
+> > To configure shaping with net-shapers, users would need to execute a
+> > command similar to:
+> > 
+> > ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/shaper.yaml
+> > --do set --json '{"ifindex":'$IFINDEX', 
+> > 		  "shaper": {"handle": 
+> > 			    {"scope": "node", "id":'$NODEID' },
+> > 		  "bw-max": 2000000}}'
+> > 
+> > Ref: https://lore.kernel.org/all/cover.1722357745.git.pabeni@redhat.com/
+> > 
+> > Given the simplicity of code implementation and ease of use for users in
+> > writing commands, I opted for tc-htb.
 > 
-> As those two aren't generally interchangeable, that may lead to hung
-> APs if VP IDs and APIC IDs don't match, e.g. APIC IDs might be sparse
-> whereas VP IDs never are.
+> Hi Erni,
 > 
-> Update the parameter names to avoid confusion as to what the parameter
-> is. Use the APIC ID to VP ID conversion to provide correct input to the
-> hypercall.
+> As someone who was involved with the design of net-shapers, I think it is
+> reasonable to instead use the Kernel API which appears to have been
+> designed specifically for this purpose: to control HW TX rate limiting.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> If tooling isn't intuitive or otherwise doesn't meet user's needs
+> then that is something that can be addressed. But it's not a Kernel issue.
 
-Applied to hyperv-fixes.
+Thank you, Simon and Jakub, for helping me understand the advantages of
+using net-shapers over tc-htb. I will work on it and send the next
+version using net-shapers in a few weeks, as I will be on leave for 
+the next two weeks.
+
+- Vennela
 
