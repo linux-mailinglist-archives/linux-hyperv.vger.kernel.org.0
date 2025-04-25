@@ -1,383 +1,212 @@
-Return-Path: <linux-hyperv+bounces-5127-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5130-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B319EA9C1A1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 10:41:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2873BA9C314
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 11:15:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F314189B7ED
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:40:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3170D17C00C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 09:14:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9215D2512D5;
-	Fri, 25 Apr 2025 08:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 371BC2153C7;
+	Fri, 25 Apr 2025 09:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f0nyTqFF"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JGvMzB3a"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022085.outbound.protection.outlook.com [52.101.126.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9596024BD04;
-	Fri, 25 Apr 2025 08:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570152; cv=none; b=oFvzlDva33YeQs1ZUtDMCmCUyNyPnjQ80Ha6xPqjIM2hKs54r7gvLwY4Vt01DMzHchl4cOgL6CbqCpGY3TzyMrttzmDzKXYKj+CWS3Bl4QtlkdXUD9wSw7b3cikSBAQoYsKhNc2521jn0HfR4dS4QF6sGsP8HGoIBHebDU2ZbFE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570152; c=relaxed/simple;
-	bh=08js4cQ/tImzBbVAnRy9C56aMzYPY9aXKTSZAA+hU0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m53XFDggppMOVUfAIf7Auu4eoiksKorET0Ih0xl7SzfzJ3UB/9pUC5YbExMCBJcE7W1QPW3pnHj9kfGHq0Vq8/vY16FCGhcX2VmfvQxuhBFuTUOOKCZ2/TYeRV68keegMHiM02AGcoYF1GlUJfSJkc9b3BwQJWe8TnIpSNzJzb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=f0nyTqFF; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5c2390085
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 25 Apr 2025 01:35:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5c2390085
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745570118;
-	bh=PGgDVUVp5WEsZGmkrE1cE9ZmxybTvIy441YCsSnZyG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f0nyTqFFxoNNT5zdxXz0wAG2oDnQQHR2TITjrl4/WZHGQrZGNiF1OZYbax0C2iuIx
-	 CH2XXrL5uYNMptan27zhYOojgtxgK72O5RWOTmV95xgIIpIT3kSr62AOOXra9uRF6E
-	 kTbsurThw7Iy4DVFR1xhvN89VcU9gmp1/l4hhWaLt3TSW9XbKcovRa9h+mP/NfqMQv
-	 Pry2fZZ/3lQkv2R/rt1kUSU/HD8Pxr3Y+EPze/8OS2f48IUTb7v1i2RJSfxC9aW9TR
-	 2obaMyl6yz37n/hRq5aMI5eGmJZogK/gHDlJVsHJ/MBZRP2hgoN7z0zm+fw0egbklR
-	 7ZKW0NW9geX6g==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-Subject: [PATCH v3 14/14] x86/msr: Change the function type of native_read_msr_safe()
-Date: Fri, 25 Apr 2025 01:34:37 -0700
-Message-ID: <20250425083442.2390017-15-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425083442.2390017-1-xin@zytor.com>
-References: <20250425083442.2390017-1-xin@zytor.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9EB21638A;
+	Fri, 25 Apr 2025 09:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745572465; cv=fail; b=FDrXNhQsq+rnzDl1JMCUdXmecPITamFehvd2zeG8evm518rUZHZzqM/fzUNcj6gi7Wgo7qcn4l+E6h+aWtRaozHuumKsaPd7CBNOhST4IloHqg/+0euWBdKSoBnDd47p1AODt/rG57lpOifP6f4g6rlIoqqNb1wjIhILihhPtG4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745572465; c=relaxed/simple;
+	bh=W5cgqOMNVq4GGn9r3IFjyjheRS6dByUvRyO38VkT3s0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=M4kXjnqEMmm2zbZEHkP4Qe000H87rh/9xboDT2+EmUTsIYRXka+Sh8q5nahsMn3rMYa1BlCv7jPqiGHc1UP1kc5UFwixSd82q3E3TWkNKOFICuRkQMcE4iQK+AwSRl2GbStEDl8amZeuQiZ3+RrQsDCfVLBQyftuMYUuNVrgiIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=JGvMzB3a; arc=fail smtp.client-ip=52.101.126.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uSIJEVuG2ZNg/CKfDN8+YYg6qDoc1cf/fUcR/C2shwnRAwYY8dOT/qVu29oGxqXO+jv/QOSAMiZdJxJRcbytxBMEYMtBCtgL7ijzPP/08+ELbkvtFOsLUy7EKpTTUiTePRzrXW3UlspSq5ErGq8fXrH3i4Weq+xvY3TOSB3fWEq+L6dcGjsJa/RD3/mLseUojiVMh3hwrX+sKYANLb6sgZ1aikCiD4en9zJ8ZVEycAU4GxGcNmy55DeKisb8RVMqRUcJ3xt2eQmw8y2GffxIQrNdXdVD+VHpu0P4L/7B8kcK20no06Fbh7L3zWHdOe6z+Byp/LYUlt8qVopbe76DhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W5cgqOMNVq4GGn9r3IFjyjheRS6dByUvRyO38VkT3s0=;
+ b=t9cS988hG2fqrlX1INcHFFoiQK5KxL18r/vyv4MvareI5FoK0FJKe6hEWPzSIyIf+NfhzgF4lgSvpp8JCfEKfghz0I4KyzNWZXWz1nQ21tiXXWSSwR9/mCdLbp0eq2zjVzLJgCDFtWe5SPydX9GaqBLex2gwTxdp+axmVlDhAhFPgUwljkOOYZ1mY71Mxjl/mHNUE1jtsGessp+laJU8DgQ/Gx7avxhOb7GnncAeEy4u+yPoo5EozyEjixzJQSTzGruRa3vkS7c4925i/5/ceLDOPlSQcqK6qQKM+fWIcKsdonEIUQzaFVPt20snu8y0e+VPu1bxnJUwmwgwTThXAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W5cgqOMNVq4GGn9r3IFjyjheRS6dByUvRyO38VkT3s0=;
+ b=JGvMzB3aE1TcxU6UuLgDSl/Hucuyj7Ofonr8IHC6At1Dgdh71CYGynjBKw4hz0mRv+Z/B/74jJ3pZEaMvYQwGGPOn+VNlNtUQx7gBQzQZCU7XNYX2YXGOXHvR0ksUIytFWXrh7tj0xai8PtCtRQB4t1Wcj0xpCe3BLVEwQNv94U=
+Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM (2603:1096:d10:36::22)
+ by TYSP153MB1045.APCP153.PROD.OUTLOOK.COM (2603:1096:405:12d::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.12; Fri, 25 Apr
+ 2025 09:14:07 +0000
+Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
+ ([fe80::1d66:c349:800b:f365]) by KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
+ ([fe80::1d66:c349:800b:f365%4]) with mapi id 15.20.8699.010; Fri, 25 Apr 2025
+ 09:14:07 +0000
+From: Saurabh Singh Sengar <ssengar@microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>, Roman Kisel <romank@linux.microsoft.com>
+CC: "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>, KY
+ Srinivasan <kys@microsoft.com>, "mikelley@microsoft.com"
+	<mikelley@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, Tianyu Lan
+	<Tianyu.Lan@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, Allen Pais
+	<apais@microsoft.com>, Ben Hillis <Ben.Hillis@microsoft.com>, Brian Perkins
+	<Brian.Perkins@microsoft.com>, Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP
+ ID confusion in hv_snp_boot_ap()
+Thread-Topic: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and
+ VP ID confusion in hv_snp_boot_ap()
+Thread-Index: AQHbtamOlIwzG2IG/UqbRMBi4sMoobO0DOYw
+Date: Fri, 25 Apr 2025 09:14:06 +0000
+Message-ID:
+ <KUZP153MB1444118E6199CBED8C78E6D4BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+References: <20250424215746.467281-1-romank@linux.microsoft.com>
+ <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+In-Reply-To: <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=67835758-8c73-4c4d-8dcf-4832eefa28b5;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-25T08:29:08Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: KUZP153MB1444:EE_|TYSP153MB1045:EE_
+x-ms-office365-filtering-correlation-id: 21e7f432-ff1c-4883-0d50-08dd83d987aa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?VFhISG5SQlF5VkRBM09RQnJrOFRmeUtpTlF4dUZTbFMrbGV6YTJyWjBNLzhm?=
+ =?utf-8?B?N1B2UDgwYUJiTS9oSmtHajN1UFkwbU5Rb2FMRnVNU015T2k4RnJTMThsTW80?=
+ =?utf-8?B?VkJNLy9DWWpEYlkwaFpIZVRkeUNic1RKcHNBRngzTVp5RXo0dGZISEJiR3Q4?=
+ =?utf-8?B?TitnRTU1NHBpdTRFRzRMRFhJTEp6a1ovTktyeldkU1MvS3ZKQnlmNE1XZXRS?=
+ =?utf-8?B?a0lKbnFhVGY3VUZtd1IweWlJamVndkZHWHUwbitvSmV5TllXZTNvZWx0UmFz?=
+ =?utf-8?B?dHcrS0dveHdvdWpzNEwyczJBQkdrRWxMZjZrSXV3emlNWFd2SXpmY29GVHpF?=
+ =?utf-8?B?SElPcWh4VW9VWE1QS0hnS0RJMkx2am8vNFNuR2Z6VmlnSThzelVibDB4MTVE?=
+ =?utf-8?B?N1Zmdzc4dS9sbmNzQjJmdlNvNWR2T0RNQmRYdE5ESFZ2Q1U0aFNWUUxianJr?=
+ =?utf-8?B?MTg5ZzJxc3Y4OHFrV0ZLRWpYYmkrcDNFRDJzeXJQclBScmZQSytuNlJ1UGxO?=
+ =?utf-8?B?Y0lPaTNzZDdZTTRZOWhXT3o0TEhSN3Z5VCs4SVdXOXJmTVpsSHBhdWJ5Yld1?=
+ =?utf-8?B?ZElLOVRCL1E0cHpsNkRRTGd6S0lsMmwrWTdNSVVqU0hpYnBieldqVXQvU0M4?=
+ =?utf-8?B?Y3dha0dROC9wRGVmdm9CZFUwckRrUnBCRWx5b1h4bGhvYmJwcUxYN0RMbmtt?=
+ =?utf-8?B?aWVwdUxPRTN1eGttY1JsMjcrNjNFaGk4SHV1MVR3TTZTbStCd3N5TFZzS1Jw?=
+ =?utf-8?B?SmFwL2FTZFNwRUtlN2xSbThrcHpNaVpvNldCVzdCM1A5Rlo0b2JjOVJJQnpL?=
+ =?utf-8?B?OUI2eE9abHFsejhvWW5uNjRVNFNCa096VnRmY1daajVCZmRHekpQSjdPWVNl?=
+ =?utf-8?B?aDlvVVJRRHhLQThaWGZ0V1lnS0NQUXZCVkF2QzlPc1NzL0lBNG1Bb3ZiVzBz?=
+ =?utf-8?B?blRQa0g1RTJaRjRWVTZVWnJ1c0NZQ0RML09KMGQ5NjNEVEY0QXN6UnFGTG1j?=
+ =?utf-8?B?QzZpVlRHUFhxVEdCQVI1UW81NmdpY1NDL3NWTEg0bGJ4Rk0xa3ozVHBxZVgx?=
+ =?utf-8?B?MXhUcVlvS1hSdm5VSFRraTFyOGJpNWlSUWx1dGtpRDk2VHB2MVpkMEJsMjRJ?=
+ =?utf-8?B?Y0VDanB2WkVkNTllbEN0bDVwMWtsN3MvZXVkMUQ1bk5sb1pvRDVEZXRIUGZv?=
+ =?utf-8?B?bTRGMVJ4WnFqUlJoYlVmYyt2d0x6eUNqM2lGV0FaSmhsRzZWaWJ0VGsrQjQv?=
+ =?utf-8?B?RmRHb1hHU0MybjlqNEZUSC8yMkxZN2hXSWd4eEpHT1huS0o4UUcyYVd6Y0to?=
+ =?utf-8?B?eERJVGd2WmpQR3ZlT3NGeHg4RUI0K3AvWng2V2VHOEtsdTVBczJhcGFBSnhI?=
+ =?utf-8?B?MHNkM3VBM2VDNGo2ZzhBQm1KWFdyUlZtNEZiR001UFgzMHY1QktlbkM0cndH?=
+ =?utf-8?B?b0t6ZE5QaFpJR3ByOXBaVElLWTAvMHJPMXREQWRUYjNIUVBZd3pidzBRaFlH?=
+ =?utf-8?B?Z2pQb20wWGZ3Qm1oaXBpOXhpSDJ3V0FwOTZBdkNjVUhRanFrdGpqcVQ5MlpE?=
+ =?utf-8?B?Q3BWSXBTc1N3dTlYTE1oRWFyTTlQblBqUkYvV0VMZ1FSSDVMWlBmTGNYTXlm?=
+ =?utf-8?B?cHFrSW9JRGVldm91VG9iSnlhcW5LRVRyeGg1c1NhQXliT0Z6VWRGSHhndXcr?=
+ =?utf-8?B?ZnlzSWZ5bGk4anZXRllvWmR5YnZRV3BxN3JoR0MzYUl5UHZsRlVicjRualhQ?=
+ =?utf-8?B?STJvZFlRemg5Z2s4UnVWdWFLaXlMNDZTYW8xNzd5TnBjZHVwZmZpMkhhWVU2?=
+ =?utf-8?B?RTFha0Q4ZnJTTVpsSEVSL2VseXlHdVdkaW41Qy8zR2sxbVpmL1lOc2ZnUmVs?=
+ =?utf-8?B?MnF0eVlteDdJWHRjMlRTTDg3a202VmlqM0lWcTB4cGNDalUrQ1F1VkxGakRS?=
+ =?utf-8?B?Qko2bHUzajBCa29aZG5uR25ybzY2SFJxTmpIMUtBRFBkdUNDd0ZCMlpWaGF1?=
+ =?utf-8?B?OCtZYUYwckd3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KUZP153MB1444.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?em0rUG1zRlFxMDlUYnV1eFFrcU5Fa3NMR2xqNzNudEMxV25XQkl1SHJXY0ts?=
+ =?utf-8?B?Q3I2SitYM3BKbGw1L3lRakdqVDM5bHlseUZZNlZnLzFDS1V4b3hWQjQ1anEz?=
+ =?utf-8?B?cFpvQnc0bFBFTjVTdk9aNDgxNVYrUDZscldCOWlVaG9RamZRcmZ5ak9pRUpL?=
+ =?utf-8?B?WHZRYmNja25YbUNKNXA1YkNPVDdJUm5aSVdVV1JkbVRRU3pMTUd6U2xMa0py?=
+ =?utf-8?B?a0dYcmlnOE51WU9jakFOcWczV1MyTW9OOGNiOEhldWNIWjhDd3Y2ZUNRUE4y?=
+ =?utf-8?B?ZXZ6aXh1SzdZcWxQVERzV1RTakRtL1V1aDhSY1BidlltWEcwaUp5eGZ2OG5z?=
+ =?utf-8?B?Nm1GR3paeTQ1eHROUkM4ZlNjU1lTZzJPYy9USm1UVE9jb2R6TjZMTjgxQ0x6?=
+ =?utf-8?B?NC8yODRKNVgvMEliZFpCTXZobWFCT3pCZkFrd1NETDBXYkJCaVArLzluN1FX?=
+ =?utf-8?B?WmlLNjdUR0c0dW1hNHp3Rml3WnRGdGg4cVBIMzgvWXNySFVZQkZqODNHeDFG?=
+ =?utf-8?B?bnRIWVZReUlvdE9LZTdZNUlOSm1vSGVqUUkvYUYzaUcyN00rZkYrR1NPd3l5?=
+ =?utf-8?B?WEVGWkM3VVFGekNPbU9XOGExN1RjM2VPY3FHWEFYc1pyTEhSWTBTdDRDdlNl?=
+ =?utf-8?B?QjRzbWdzMUFXOW9WZ29KTlJZOUNEbFRPeDBGQi9Md0lsS0JnNlhRK2FCR3hG?=
+ =?utf-8?B?RTdjWWwwSnJpU1hIT2Q5TzErSkkrdzdldUczb05rM1FaZVNOWWFsREZLQk01?=
+ =?utf-8?B?c2t2UHhYbFFGT0VjcTl6U25PUWFFOUZmekZSbDZEbkpNTkVISEREdzQ2aDhW?=
+ =?utf-8?B?RElqOWtaTEx4UTR1eEQxeFF3S2VvbGNBUkV1KzNFYVE1YUdGNVczTUpjdnly?=
+ =?utf-8?B?bTBQdFIwcjc5amdtVFFDNkxaV0k5RzlrUmtSMFEwZUdROUExRTdtMjcydkI4?=
+ =?utf-8?B?cE84M2xlYU5XOXF5MFg4b2o0Vk5tNDhGeUNIeE45MHFKQVNMWVlIdnNaeFZu?=
+ =?utf-8?B?S3ZMODBTaWt5T2dwb1dQQjBhTWZyOUpVVFJDZ3h0cys2TzRLUVhBQ0lXYkNM?=
+ =?utf-8?B?bXFpcnJmWW51QVM1YnlpcVlTK0cwRmhIdWdYaHI1VjBwcWhsaW5rYlBpSDZY?=
+ =?utf-8?B?VGdMTjVuRGNZWXZFQ2c5L3BDV0wyb3hnUVZVelVleXFma3l5dEoyckVveUNH?=
+ =?utf-8?B?R29rOVltRkJJcUJIRXZDN1R4cEdLcTNVS3U4TE91dFlTSTRGMU9BeFR3Zk5M?=
+ =?utf-8?B?NWVkZVJoK3FWVjFBcXBLSUdQUUlwYVNoL3dlKzc4eUVETVdBSjJ3c3JuSGFC?=
+ =?utf-8?B?eHROR1JheFlTbk01Mm9mZVZlZUJKZElaaDFLcVVYZzdtOHY3TDUxNHVYbzZq?=
+ =?utf-8?B?S21DU1dpNWNLRXRQUFZyL0lBWU50SWpLdEtTR0FrZmpEQVZGSkdVdGJPOC8y?=
+ =?utf-8?B?VDRFT0pVN0k2eVZ0Z0x4M2dSSWpkbzhrRHBaaWdEUGIwRFpXYTNjc1BwREFG?=
+ =?utf-8?B?WFhYVnQrWWVic0h4NWQ3UHp6L2U4VUJVSHhOWUcvVVo1Ny9vRjdXb0NCa0FP?=
+ =?utf-8?B?aHRQRDFMVGN6bEZVd0s0NDlSdnRPMVZwRi9qTGd1WTFIWEs2OTdPYmJ0ckZG?=
+ =?utf-8?B?VFY4cXMzSk00TzBBSkVCY3dKblBLcXJUd0Q2eGdCL1FuSEM2VStrNS9CdlJQ?=
+ =?utf-8?B?a0JYUkF5ajhjczBORitOeU9DaEZmcks2UnRDSzhmNDlEcjNQY0srV1R6d3Bx?=
+ =?utf-8?B?Q0NWc3VmM25SVXJCWnFrSlRyYzluYWNQc2tnUW4vbTZnUzBjNlVxT1hlK0ts?=
+ =?utf-8?B?SHd6cDBsSUJsbHdtT3hWSnhBWDhpZEdFazB6U0trUTlLWHBsSnliUHl2eC9H?=
+ =?utf-8?B?ekw0dURRLzczWjE0T2hWVndhYnlJSENSVnVQMkxhT3pMWGdid3Z0eW1SeEw2?=
+ =?utf-8?B?MktyU3RWL0czOWdpTWxmaGg0b2JBN0s3MzQrd0UrM1JrMHFDUThWQTM0VlFD?=
+ =?utf-8?B?WDhrQ3VobjFieXh0MWxGYTg4ZFBLVGx4MjU1aFFPNndCdU5QU1B0UEdqSldv?=
+ =?utf-8?B?OEpkd2hCenRRRGFiZUNBK1dxM1NKMHBHR1lBVGVCaEIxU3puRE9iQzZQNGJB?=
+ =?utf-8?Q?BNfQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21e7f432-ff1c-4883-0d50-08dd83d987aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2025 09:14:06.3346
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aRWcGBuNp9XKFLvGfNk7BWZntuiNSeHAVATzUpfWM3gPzy0zP3SmwpnSdkH4UJ/vitBX25qwfIBfKt0sN+c5Mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSP153MB1045
 
-Modify the function type of native_read_msr_safe() to:
-
-    int native_read_msr_safe(u32 msr, u64 *val)
-
-This change makes the function return an error code instead of the
-MSR value, aligning it with the type of native_write_msr_safe().
-Consequently, their callers can check the results in the same way.
-
-While at it, convert leftover MSR data type "unsigned int" to u32.
-
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/include/asm/msr.h            | 21 +++++++++++----------
- arch/x86/include/asm/paravirt.h       | 19 ++++++++-----------
- arch/x86/include/asm/paravirt_types.h |  6 +++---
- arch/x86/kvm/svm/svm.c                | 19 +++++++------------
- arch/x86/xen/enlighten_pv.c           | 13 ++++++++-----
- arch/x86/xen/pmu.c                    | 14 ++++++++------
- 6 files changed, 45 insertions(+), 47 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 0392b9596107..e7ee51ccd82e 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -130,18 +130,22 @@ static inline u64 native_read_msr(u32 msr)
- 	return val;
- }
- 
--static inline u64 native_read_msr_safe(u32 msr, int *err)
-+static inline int native_read_msr_safe(u32 msr, u64 *p)
- {
-+	int err;
- 	DECLARE_ARGS(val, low, high);
- 
- 	asm volatile("1: rdmsr ; xor %[err],%[err]\n"
- 		     "2:\n\t"
- 		     _ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_RDMSR_SAFE, %[err])
--		     : [err] "=r" (*err), EAX_EDX_RET(val, low, high)
-+		     : [err] "=r" (err), EAX_EDX_RET(val, low, high)
- 		     : "c" (msr));
- 	if (tracepoint_enabled(read_msr))
--		do_trace_read_msr(msr, EAX_EDX_VAL(val, low, high), *err);
--	return EAX_EDX_VAL(val, low, high);
-+		do_trace_read_msr(msr, EAX_EDX_VAL(val, low, high), err);
-+
-+	*p = EAX_EDX_VAL(val, low, high);
-+
-+	return err;
- }
- 
- /* Can be uninlined because referenced by paravirt */
-@@ -221,8 +225,8 @@ static inline int wrmsrq_safe(u32 msr, u64 val)
- /* rdmsr with exception handling */
- #define rdmsr_safe(msr, low, high)				\
- ({								\
--	int __err;						\
--	u64 __val = native_read_msr_safe((msr), &__err);	\
-+	u64 __val;						\
-+	int __err = native_read_msr_safe((msr), &__val);	\
- 	(*low) = (u32)__val;					\
- 	(*high) = (u32)(__val >> 32);				\
- 	__err;							\
-@@ -230,10 +234,7 @@ static inline int wrmsrq_safe(u32 msr, u64 val)
- 
- static inline int rdmsrq_safe(u32 msr, u64 *p)
- {
--	int err;
--
--	*p = native_read_msr_safe(msr, &err);
--	return err;
-+	return native_read_msr_safe(msr, p);
- }
- 
- static __always_inline u64 rdpmc(int counter)
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index edf23bde367e..03f680d1057a 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -175,7 +175,7 @@ static inline void __write_cr4(unsigned long x)
- 	PVOP_VCALL1(cpu.write_cr4, x);
- }
- 
--static inline u64 paravirt_read_msr(unsigned msr)
-+static inline u64 paravirt_read_msr(u32 msr)
- {
- 	return PVOP_CALL1(u64, cpu.read_msr, msr);
- }
-@@ -185,9 +185,9 @@ static inline void paravirt_write_msr(u32 msr, u64 val)
- 	PVOP_VCALL2(cpu.write_msr, msr, val);
- }
- 
--static inline u64 paravirt_read_msr_safe(unsigned msr, int *err)
-+static inline int paravirt_read_msr_safe(u32 msr, u64 *val)
- {
--	return PVOP_CALL2(u64, cpu.read_msr_safe, msr, err);
-+	return PVOP_CALL2(int, cpu.read_msr_safe, msr, val);
- }
- 
- static inline int paravirt_write_msr_safe(u32 msr, u64 val)
-@@ -225,19 +225,16 @@ static inline int wrmsrq_safe(u32 msr, u64 val)
- /* rdmsr with exception handling */
- #define rdmsr_safe(msr, a, b)				\
- ({							\
--	int _err;					\
--	u64 _l = paravirt_read_msr_safe(msr, &_err);	\
-+	u64 _l;						\
-+	int _err = paravirt_read_msr_safe((msr), &_l);	\
- 	(*a) = (u32)_l;					\
--	(*b) = _l >> 32;				\
-+	(*b) = (u32)(_l >> 32);				\
- 	_err;						\
- })
- 
--static inline int rdmsrq_safe(unsigned msr, u64 *p)
-+static __always_inline int rdmsrq_safe(u32 msr, u64 *p)
- {
--	int err;
--
--	*p = paravirt_read_msr_safe(msr, &err);
--	return err;
-+	return paravirt_read_msr_safe(msr, p);
- }
- 
- static __always_inline u64 rdpmc(int counter)
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index 78777b78da12..b08b9d3122d6 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -91,14 +91,14 @@ struct pv_cpu_ops {
- 		      unsigned int *ecx, unsigned int *edx);
- 
- 	/* Unsafe MSR operations.  These will warn or panic on failure. */
--	u64 (*read_msr)(unsigned int msr);
-+	u64 (*read_msr)(u32 msr);
- 	void (*write_msr)(u32 msr, u64 val);
- 
- 	/*
- 	 * Safe MSR operations.
--	 * read sets err to 0 or -EIO.  write returns 0 or -EIO.
-+	 * Returns 0 or -EIO.
- 	 */
--	u64 (*read_msr_safe)(unsigned int msr, int *err);
-+	int (*read_msr_safe)(u32 msr, u64 *val);
- 	int (*write_msr_safe)(u32 msr, u64 val);
- 
- 	u64 (*read_pmc)(int counter);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 4ef9978dce70..838606f784c9 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -475,15 +475,13 @@ static void svm_inject_exception(struct kvm_vcpu *vcpu)
- 
- static void svm_init_erratum_383(void)
- {
--	int err;
- 	u64 val;
- 
- 	if (!static_cpu_has_bug(X86_BUG_AMD_TLB_MMATCH))
- 		return;
- 
- 	/* Use _safe variants to not break nested virtualization */
--	val = native_read_msr_safe(MSR_AMD64_DC_CFG, &err);
--	if (err)
-+	if (native_read_msr_safe(MSR_AMD64_DC_CFG, &val))
- 		return;
- 
- 	val |= (1ULL << 47);
-@@ -648,13 +646,12 @@ static int svm_enable_virtualization_cpu(void)
- 	 * erratum is present everywhere).
- 	 */
- 	if (cpu_has(&boot_cpu_data, X86_FEATURE_OSVW)) {
--		uint64_t len, status = 0;
-+		u64 len, status = 0;
- 		int err;
- 
--		len = native_read_msr_safe(MSR_AMD64_OSVW_ID_LENGTH, &err);
-+		err = native_read_msr_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
- 		if (!err)
--			status = native_read_msr_safe(MSR_AMD64_OSVW_STATUS,
--						      &err);
-+			err = native_read_msr_safe(MSR_AMD64_OSVW_STATUS, &status);
- 
- 		if (err)
- 			osvw_status = osvw_len = 0;
-@@ -2145,14 +2142,13 @@ static int ac_interception(struct kvm_vcpu *vcpu)
- 
- static bool is_erratum_383(void)
- {
--	int err, i;
-+	int i;
- 	u64 value;
- 
- 	if (!erratum_383_found)
- 		return false;
- 
--	value = native_read_msr_safe(MSR_IA32_MC0_STATUS, &err);
--	if (err)
-+	if (native_read_msr_safe(MSR_IA32_MC0_STATUS, &value))
- 		return false;
- 
- 	/* Bit 62 may or may not be set for this mce */
-@@ -2165,8 +2161,7 @@ static bool is_erratum_383(void)
- 	for (i = 0; i < 6; ++i)
- 		native_write_msr_safe(MSR_IA32_MCx_STATUS(i), 0);
- 
--	value = native_read_msr_safe(MSR_IA32_MCG_STATUS, &err);
--	if (!err) {
-+	if (!native_read_msr_safe(MSR_IA32_MCG_STATUS, &value)) {
- 		value &= ~(1ULL << 2);
- 		native_write_msr_safe(MSR_IA32_MCG_STATUS, value);
- 	}
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index c067d1e8a39c..0b2f5e679026 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1086,7 +1086,7 @@ static void xen_write_cr4(unsigned long cr4)
- 	native_write_cr4(cr4);
- }
- 
--static u64 xen_do_read_msr(unsigned int msr, int *err)
-+static u64 xen_do_read_msr(u32 msr, int *err)
- {
- 	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
- 
-@@ -1094,7 +1094,7 @@ static u64 xen_do_read_msr(unsigned int msr, int *err)
- 		return val;
- 
- 	if (err)
--		val = native_read_msr_safe(msr, err);
-+		*err = native_read_msr_safe(msr, &val);
- 	else
- 		val = native_read_msr(msr);
- 
-@@ -1159,9 +1159,12 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
- 	}
- }
- 
--static u64 xen_read_msr_safe(unsigned int msr, int *err)
-+static int xen_read_msr_safe(u32 msr, u64 *val)
- {
--	return xen_do_read_msr(msr, err);
-+	int err;
-+
-+	*val = xen_do_read_msr(msr, &err);
-+	return err;
- }
- 
- static int xen_write_msr_safe(u32 msr, u64 val)
-@@ -1173,7 +1176,7 @@ static int xen_write_msr_safe(u32 msr, u64 val)
- 	return err;
- }
- 
--static u64 xen_read_msr(unsigned int msr)
-+static u64 xen_read_msr(u32 msr)
- {
- 	int err;
- 
-diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
-index 6bee83018694..3e704094c97c 100644
---- a/arch/x86/xen/pmu.c
-+++ b/arch/x86/xen/pmu.c
-@@ -317,11 +317,12 @@ static u64 xen_amd_read_pmc(int counter)
- 	uint8_t xenpmu_flags = get_xenpmu_flags();
- 
- 	if (!xenpmu_data || !(xenpmu_flags & XENPMU_IRQ_PROCESSING)) {
--		uint32_t msr;
--		int err;
-+		u32 msr;
-+		u64 val;
- 
- 		msr = amd_counters_base + (counter * amd_msr_step);
--		return native_read_msr_safe(msr, &err);
-+		native_read_msr_safe(msr, &val);
-+		return val;
- 	}
- 
- 	ctxt = &xenpmu_data->pmu.c.amd;
-@@ -338,15 +339,16 @@ static u64 xen_intel_read_pmc(int counter)
- 	uint8_t xenpmu_flags = get_xenpmu_flags();
- 
- 	if (!xenpmu_data || !(xenpmu_flags & XENPMU_IRQ_PROCESSING)) {
--		uint32_t msr;
--		int err;
-+		u32 msr;
-+		u64 val;
- 
- 		if (counter & (1 << INTEL_PMC_TYPE_SHIFT))
- 			msr = MSR_CORE_PERF_FIXED_CTR0 + (counter & 0xffff);
- 		else
- 			msr = MSR_IA32_PERFCTR0 + counter;
- 
--		return native_read_msr_safe(msr, &err);
-+		native_read_msr_safe(msr, &val);
-+		return val;
- 	}
- 
- 	ctxt = &xenpmu_data->pmu.c.intel;
--- 
-2.49.0
-
+PiANCj4gT24gVGh1LCBBcHIgMjQsIDIwMjUgYXQgMDI6NTc6NDZQTSAtMDcwMCwgUm9tYW4gS2lz
+ZWwgd3JvdGU6DQo+ID4gVG8gc3RhcnQgYW4gYXBwbGljYXRpb24gcHJvY2Vzc29yIGluIFNOUC1p
+c29sYXRlZCBndWVzdCwgYSBoeXBlcmNhbGwNCj4gPiBpcyB1c2VkIHRoYXQgdGFrZXMgYSB2aXJ0
+dWFsIHByb2Nlc3NvciBpbmRleC4gVGhlIGh2X3NucF9ib290X2FwKCkNCj4gPiBmdW5jdGlvbiB1
+c2VzIHRoYXQgU1RBUlRfVlAgaHlwZXJjYWxsIGJ1dCBwYXNzZXMgYXMgVlAgSUQgdG8gaXQgd2hh
+dA0KPiA+IGl0IHJlY2VpdmVzIGFzIGEgd2FrZXVwX3NlY29uZGFyeV9jcHVfNjQgY2FsbGJhY2s6
+IHRoZSBBUElDIElELg0KPiA+DQo+ID4gQXMgdGhvc2UgdHdvIGFyZW4ndCBnZW5lcmFsbHkgaW50
+ZXJjaGFuZ2VhYmxlLCB0aGF0IG1heSBsZWFkIHRvIGh1bmcNCj4gPiBBUHMgaWYgVlAgSURzIGFu
+ZCBBUElDIElEcyBkb24ndCBtYXRjaCwgZS5nLiBBUElDIElEcyBtaWdodCBiZSBzcGFyc2UNCj4g
+PiB3aGVyZWFzIFZQIElEcyBuZXZlciBhcmUuDQo+ID4NCj4gPiBVcGRhdGUgdGhlIHBhcmFtZXRl
+ciBuYW1lcyB0byBhdm9pZCBjb25mdXNpb24gYXMgdG8gd2hhdCB0aGUgcGFyYW1ldGVyDQo+ID4g
+aXMuIFVzZSB0aGUgQVBJQyBJRCB0byBWUCBJRCBjb252ZXJzaW9uIHRvIHByb3ZpZGUgY29ycmVj
+dCBpbnB1dCB0bw0KPiA+IHRoZSBoeXBlcmNhbGwuDQo+ID4NCj4gPiBDYzogc3RhYmxlQHZnZXIu
+a2VybmVsLm9yZw0KPiA+IEZpeGVzOiA0NDY3NmJiOWQ1NjYgKCJ4ODYvaHlwZXJ2OiBBZGQgc21w
+IHN1cHBvcnQgZm9yIFNFVi1TTlAgZ3Vlc3QiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvbWFuIEtp
+c2VsIDxyb21hbmtAbGludXgubWljcm9zb2Z0LmNvbT4NCj4gDQo+IEFwcGxpZWQgdG8gaHlwZXJ2
+LWZpeGVzLg0KDQpUaGlzIHBhdGNoIHdpbGwgYnJlYWsgdGhlIGJ1aWxkcy4NCg0KUm9tYW4sDQpI
+YXZlIHlvdSB0ZXN0ZWQgdGhpcyBwYXRjaCBvbiB0aGUgbGF0ZXN0IGxpbnV4LW5leHQgPw0KDQpS
+ZWdhcmRzLA0KU2F1cmFiaA0KDQo=
 
