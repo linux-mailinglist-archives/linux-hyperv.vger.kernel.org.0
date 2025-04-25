@@ -1,137 +1,221 @@
-Return-Path: <linux-hyperv+bounces-5112-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5113-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2F5A9BF6A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 09:14:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 781E0A9BF9C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 09:19:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8F707AAA47
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 07:13:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 849833A95A4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 07:16:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3A422FE0F;
-	Fri, 25 Apr 2025 07:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D2122F75F;
+	Fri, 25 Apr 2025 07:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qw+6HPRA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Btoo6R0R"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9362356D9;
-	Fri, 25 Apr 2025 07:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4D81B3930
+	for <linux-hyperv@vger.kernel.org>; Fri, 25 Apr 2025 07:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745565141; cv=none; b=rdEf51y4XLVbSjws7iS//a1rs3UsVytgwaKSdxksWsCMNsl2ehcE8oXdq9JsoZDqaOXPWC1+Z6S7IFwJ6fZTMAwtiXZbHhtFtG0Xgy5lKFy2j/53JcXjZNM7yS4V6mQEYgKBMPdyWaGwRoy2JIcfUQo65iVQBOkcQ1nASDGKCgc=
+	t=1745565342; cv=none; b=j2yp0uiCvx7sED5eYtusSXIy0CB6a0kvPFGTo0SkROc6QdSVNxAVjVUKtJcQ5rGej1+q6FpkzWUCQ6TWqQgfV6ak7f1Rj0vRSYgqQ4A0tn8JMFIDk6aVi/QD5rg9OkWQkhQKXuwRzoPaiKVR/xK4Z6eD8ndb5daqgj42wV3wq/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745565141; c=relaxed/simple;
-	bh=OWCgD4c53AWzLHmGkJc92XOEsxdbIrlrlIzldWXKc9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMEJ03S67yG/8dxLqUPgWwAK44aMYEAu+MiKPOV4SJrRD0yFA4Km8F/oNk6s1QuZoBKlfrOK3nqTAYJIv9ahzCCz2QsD2pWOzRWLBVhaBiXYjvJ/DdO8aKHMZDYQJEUqTfg+SEIj0dmm4VW5GUEhdaaUjMvpIjBMMhH8EzLj0mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Qw+6HPRA; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/gz49BzCJiWld7uM47beLEzscI0nDdN8PKFhZbH8k1o=; b=Qw+6HPRAw2GLZXmgq20QS8wt0C
-	txn/mVTO91ykn5tuFL/uuYfAuUYz48Q+lrxxQKWB2g9D74CKa+ah99c2oA9gm4GaeNVuoBaXtLVTE
-	EIQdRwY5DRRXVVw52ts12pvJLUE9HqBbfk09qveKUwveCLkKx6mpx/Pt92hCzjodDWEFS+AyI99lE
-	XynTiM71ri22QAuhPkA1dOyMyrvoIpydTtDNIbY90QgKhPVFKkLiMxiJwtrCmY2XuUv18oexVkyGa
-	K2Yz5b9lN+AeV19kdukXXE8nn2xl4BF0X2TDbsW+JRVY+YdM++E1hfKHpu8kf3a1t1S5TXUufej/G
-	ZpKgJFCw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u8DE6-0000000BzpF-0oO3;
-	Fri, 25 Apr 2025 07:11:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9C8B63003C4; Fri, 25 Apr 2025 09:11:57 +0200 (CEST)
-Date: Fri, 25 Apr 2025 09:11:57 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, acme@kernel.org,
-	andrew.cooper3@citrix.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-Message-ID: <20250425071157.GI18306@noisy.programming.kicks-ass.net>
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+	s=arc-20240116; t=1745565342; c=relaxed/simple;
+	bh=Z0yNmKrBiTY5ZX2EKRFyzFZhdWxcMonxd/cXfY84SHw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HAFtI6sa9eIRwYgr+gnErb7eT5fHL1jpT9LCyOVbmwdXqwhVPOPEtkkr4mRf7jCn/CyE0eyewAHvUiRD8Owlmhka8xEzjqAzWCWVe4ugX+fFy9QOTPciB4vspn7TeVBe6bG/BdVMUYYZdI+kj+Y7yPah40xTBKpL4wodZh/FAQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Btoo6R0R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745565336;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T7r2z4B/7Mbfi0IDabIkh3LojKAky8fE2btyGmdHAwA=;
+	b=Btoo6R0RtoRTPNV7S+w+7t2W6bpU1Oq0sBdGts3NiOq+UBw8aznwxyVxRD/MeM+igFas7s
+	VOofYhOfrmEKiAWosTMX4U4hDobCw+rBcxwTA/HYkCQjwYT+2HYP1UZktgssyRQtfj31Nj
+	nOit9oCLcs0ez6+17bTaE0m7DYToYFQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-655-ngCky00-ObiExDKA9uWuMw-1; Fri, 25 Apr 2025 03:15:33 -0400
+X-MC-Unique: ngCky00-ObiExDKA9uWuMw-1
+X-Mimecast-MFC-AGG-ID: ngCky00-ObiExDKA9uWuMw_1745565332
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39ef89b862dso953356f8f.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 25 Apr 2025 00:15:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745565332; x=1746170132;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T7r2z4B/7Mbfi0IDabIkh3LojKAky8fE2btyGmdHAwA=;
+        b=cZRCT+r3snSBeoOfzjhaS2e4phXqItFXtknnlTlSCoO4A6FNc+y3bcNBAKx6qBpTxY
+         TVsSCqThlKIPW4KxGuCVly95t46q3NnfvA3Do6FIqVDlwUasyHtbYYyAgHthgdLyG5R9
+         tQ8o8hPd8Bs74xfYDKQQpcrhD1xb/jW3bGFVYbcSrDRc8aAFg2tMVhCFaqjJnLheqmEM
+         N2tSO3vUUp0XRSlgiX/ynM4s66FlIst7soMypavv75V/W11nfQUBt/ZnqtbBDhEuHRfB
+         1u/n261lNE0/RxJAXCI9DfEXisZrtigFfqF2CdwOVxpqQJ0bc2JtiCbEeLpo5cHBuHHs
+         9bUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFC3y/wz0kG6b6IVyUlz03vbSrC17b+pNs9V2GBAQK0/09k+feW3EfpPorNihBmA8bD207KYWDyBHUZdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkjfwDLWudWpPRHaZ9q/54EsSeILZYPbq0NO75jG4cSqadSrOU
+	N9Ao5CgBrco/xDCUqv5ItuApjfUaYKkERr/2vv3kBNc00roqkW3+6A3iz/lJKVCTpyx1gMPqhdP
+	/gwZmEnyoq1uoWN7aCLaTxBA9QKs4EFWX0G9LmpfD6q7Um7QEOcus6/Kt9GYgww==
+X-Gm-Gg: ASbGncuzRKso92Ay3mSAXclU0LbxyHleB2VIUGy/CsF3LM2tkyWkhIvMCpByFa8KXuy
+	cwy4Bv5o8DfR8TyxCxGNy61Q2RZTk+QHNQEtv07rrrkEwUlSeQZKmE8dZDH30LwPwZytFeJassZ
+	3uw1jrgYvejIAnOQ1SBvFBD6YmUfeNq5LPS/8Qvp/bEnNOIhQz1u327w5El4XAiATK8aeWgEOf6
+	C6zhEMQ7fKBzvAaB9P9UyZRvSDnBtLlKzRuabgpn4zylH3unS6MJ88B+LHFlPyUEFeZM1Qw5h4D
+	PQCelXy/1byeBRdtDmwOKom9x0avCkhdC0ICvIObgC8r6mi9K/4nHZ6+UPOcL42bSr+4dA==
+X-Received: by 2002:a05:6000:186c:b0:39f:fcb:3bf6 with SMTP id ffacd0b85a97d-3a074e0dfccmr653955f8f.2.1745565332262;
+        Fri, 25 Apr 2025 00:15:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKjltySyoEEsZUoyQAjvToSkGsH8mjTJtTxmkBO665sLQSkBEEV6kyM0pGb2qhN8WQSJn6fQ==
+X-Received: by 2002:a05:6000:186c:b0:39f:fcb:3bf6 with SMTP id ffacd0b85a97d-3a074e0dfccmr653934f8f.2.1745565331871;
+        Fri, 25 Apr 2025 00:15:31 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca543bsm1492506f8f.34.2025.04.25.00.15.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 00:15:31 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>, drawat.floss@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ jfalempe@redhat.com
+Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
+ atomic helpers
+In-Reply-To: <20250425063234.757344-1-ryasuoka@redhat.com>
+References: <20250425063234.757344-1-ryasuoka@redhat.com>
+Date: Fri, 25 Apr 2025 09:15:29 +0200
+Message-ID: <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xy1v71s9LdcW622N"
-Content-Disposition: inline
-In-Reply-To: <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+Content-Type: text/plain
+
+Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
+
+Hello Ryosuke,
+
+> Drop simple-KMS in favor of regular atomic helpers to make the code more
+> modular. The simple-KMS helper mix up plane and CRTC state, so it is
+> obsolete and should go away [1]. Since it just split the simple-pipe
+> functions into per-plane and per-CRTC, no functional changes is
+> expected.
+>
+> [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@suse.de/
+>
+> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>
 
 
---xy1v71s9LdcW622N
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 11:57:01AM +0200, J=FCrgen Gro=DF wrote:
-> On 22.04.25 10:22, Xin Li (Intel) wrote:
+> -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+> -			       struct drm_crtc_state *crtc_state,
+> -			       struct drm_plane_state *plane_state)
+> +static const uint32_t hyperv_formats[] = {
+> +	DRM_FORMAT_XRGB8888,
+> +};
+> +
+> +static const uint64_t hyperv_modifiers[] = {
+> +	DRM_FORMAT_MOD_LINEAR,
+> +	DRM_FORMAT_MOD_INVALID
+> +};
+> +
 
-> >    This becomes even more silly for trivial instructions like STI/CLI
-> >    or in the worst case paravirt_nop().
->=20
-> This is nonsense.
+I think the kernel u32 and u64 types are preferred ?
 
-What Jurgen says. Someone hasn't done their homework.
+> +static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+> +					     struct drm_atomic_state *state)
+>  {
+> -	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
+> -	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
+> +	struct hyperv_drm_device *hv = to_hv(crtc->dev);
+> +	struct drm_plane *plane = &hv->plane;
+> +	struct drm_plane_state *plane_state = plane->state;
+> +	struct drm_crtc_state *crtc_state = crtc->state;
+>  
+>  	hyperv_hide_hw_ptr(hv->hdev);
+>  	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
+>  				crtc_state->mode.hdisplay,
+>  				crtc_state->mode.vdisplay,
+>  				plane_state->fb->pitches[0]);
+> -	hyperv_blit_to_vram_fullscreen(plane_state->fb, &shadow_plane_state->data[0]);
+>  }
+>  
+> -static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+> -			     struct drm_plane_state *plane_state,
+> -			     struct drm_crtc_state *crtc_state)
+> +static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
+> +					      struct drm_atomic_state *state)
+> +{ }
+> +
 
-static __always_inline void arch_local_irq_disable(void)
-{
-        PVOP_ALT_VCALLEE0(irq.irq_disable, "cli;", ALT_NOT_XEN);
-}
+Why do you need an empty CRTC atomic disable callback? Can you just not
+set it instead?
 
-static __always_inline void arch_local_irq_enable(void)
-{
-        PVOP_ALT_VCALLEE0(irq.irq_enable, "sti;", ALT_NOT_XEN);
-}
+>  
+> -static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
+> -			       struct drm_plane_state *old_state)
+> +static void hyperv_plane_atomic_update(struct drm_plane *plane,
+> +						      struct drm_atomic_state *old_state)
+>  {
+> -	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
+> -	struct drm_plane_state *state = pipe->plane.state;
+> +	struct drm_plane_state *old_pstate = drm_atomic_get_old_plane_state(old_state, plane);
+> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
+> +	struct drm_plane_state *state = plane->state;
 
-That very much patches in STI/CLI directly when not Xen.
+You should never access the plane->state directly, instead the helper
+drm_atomic_get_new_plane_state() should be used. You can also rename
+the old_state paramete to just state, since it will be used to lookup
+both the old and new atomic states.
+
+More info is in the following email from Ville:
+
+https://lore.kernel.org/dri-devel/Yx9pij4LmFHrq81V@intel.com/
+
+>  	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
+>  	struct drm_rect rect;
+>  
+> -	if (drm_atomic_helper_damage_merged(old_state, state, &rect)) {
+> +	if (drm_atomic_helper_damage_merged(old_pstate, state, &rect)) {
+
+I know that most of the simple-KMS drivers do this but since this driver
+enables FB damage clips support, it is better to iterate over the damage 
+areas. For example:
+
+	struct drm_atomic_helper_damage_iter iter;
+        struct drm_rect dst_clip;
+	struct drm_rect damage;
+
+	drm_atomic_helper_damage_iter_init(&iter, old_pstate, state);
+	drm_atomic_for_each_plane_damage(&iter, &damage) {
+		dst_clip = state->dst;
+
+		if (!drm_rect_intersect(&dst_clip, &damage))
+			continue;
+
+                hyperv_blit_to_vram_rect(state->fb, &shadow_plane_state->data[0], &damage);
+                hyperv_update_dirt(hv->hdev, &damage);
+        }
 
 
---xy1v71s9LdcW622N
-Content-Type: application/pgp-signature; name="signature.asc"
+Other than these small comments, the patch looks good to me. So if you take
+into account my suggestions, feel free to add:
 
------BEGIN PGP SIGNATURE-----
+Acked-by: Javier Martinez Canillas <javierm@redhat.com>
 
-iQIzBAABCgAdFiEEv3OU3/byMaA0LqWJdkfhpEvA5LoFAmgLNbQACgkQdkfhpEvA
-5LoeWg/8D6ZI5w51DgwY+CTaX5PthgVGKgELCKDw5kBtAe3UxeF/H12T6L6a4XhK
-iSGZ9nZg17P5b2kv9cfXnslz/BqlOUjFfT+cuY64cIDvGXPqjbEcWxhHp/O7e34u
-L1wOXvlh5ZnWkVUPbeIFgLxCqPqOnGBpsq0LrQwaCxbEzkB5wKqS57h2ooqsrloQ
-V4WBwabMJ/lp704zpEgcqzWhM8zWydjPgfGuCZUTbVlvc4pgAGAwktnRd7ot+D4x
-n9UbVvBHSzW53t3RpsrzcQkVDGirtlcIipDUbPeIyTs+ArR+xfBiEl7QvXz1liAg
-GiJ7aNB/6PybXktHZBkEoRd/3sPBavWiOc1TMriCjWit/pNE+GJjUUozds3kRe/v
-pwMTYEbXlPYsgYv121YZpFaaz1ihVlIpnDj/6aqMTe+KQhAziId4CtU8pfSHYZi3
-EgC+1PUUySs0LV4TkieDsk1zmfG1lDvWNe5UKyuFYKQ/A99Kg3BacBJHc+PrZDMq
-X7MfWZLRG++yhbcBPfHasl6Vg++GagMpoJLKp5zC9QaTUjRdvYm36SR0NvOC+BAt
-NPIq3H7qbBLYR0JBaJrgNSqe+1rPgJooo5PYg1Ozmv4q50Umlai3coKqls3pnTIe
-zwUVnBTjAszAW1zI3BcSrm5Ol912qJXA7AzxV+FRiKDC+kIRaU4=
-=t7cf
------END PGP SIGNATURE-----
+-- 
+Best regards,
 
---xy1v71s9LdcW622N--
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
 
