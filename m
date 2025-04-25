@@ -1,127 +1,168 @@
-Return-Path: <linux-hyperv+bounces-5139-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5140-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C6DEA9C977
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 14:53:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 120CDA9CAD4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 15:50:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C5ED7B7379
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 12:51:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F6711BA5A2C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 13:51:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666452500DE;
-	Fri, 25 Apr 2025 12:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6C0132122;
+	Fri, 25 Apr 2025 13:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WC7YSMHk"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mN0LkFd0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468D224E4A6;
-	Fri, 25 Apr 2025 12:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D7961FF2;
+	Fri, 25 Apr 2025 13:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585577; cv=none; b=bqB3VJi85B0bX2MIgD8RESm5D5EEqgazM7hniPcyPXWASZ+OQr5Ipeax69xzcgtXX4V3QSd8kdDV9c0oj1b+orjf4wewppRNYEx0lnccvwhyE+H7Sq1Ljn6+cQSp3kb7Lo1CffgCr5DJzPzP2IQq/74XDvIdL/llnfRkuDVk4TU=
+	t=1745589047; cv=none; b=n/TPEjsb4hicRZ/qi1qtwsqpGaMP8YF6Gns7wEbUFWR9RRI6HzliYK6/ONuikr6K/s2727g5VdRgDz2Dhv+kFZekJiwtPxFYNW3F318/naC8/X9LqvsXVt25gee+lI3+HwTIdpGvwJvgyGn48o3Kw4jmsEaL8ZTX1SbFfxqQPf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745585577; c=relaxed/simple;
-	bh=S+IO/pqeJx2r5uEpbaBnOD7++pwsoffwNlWOODS3MS0=;
+	s=arc-20240116; t=1745589047; c=relaxed/simple;
+	bh=WxQ5Ou/fI09he56FhDFzuvM5OvovP9p41Kpo80ZlRI4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9FgMAx0db0gHRChGyffV12FW8H77WHSa4yfufImKUPSrOpqOtSSvBardRYUwPBK9E6VNRZgoHnGYTY1CmjFu9V6t3wWkyw/au+tPCUVYqvTRMDlsDdIoV9q4wdLcGwUcxzIQQx3m9pdkVdjZZSlQOF7lxb3ZQ/bXItMktLg0gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WC7YSMHk; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=YdOSypDgMJNC1x2yymFIx4XHrx6Rk8opYLTyV0+6wCagYkS82U7iOLV5VUUZiQK7x64KYAvkiyMfMYh/euiPOTBPu75lWKxbMdJRHSHpv20gHOIJch5BkRK85J2MgMee1a9Nz4LRorPNEKYuTCQ9aqw258qaNWMsYWsDYBZzN0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mN0LkFd0; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=IDYQFrDJHA7L8jf52g4kfnTitAFJx9ur9V0d2b50BLo=; b=WC7YSMHkPF6hShCY786xiHVHDr
-	zbWZEoDWt7bacv4YBSZjyeuzd86Hs+DM9z1RnOCJQ5xBDY8fzsuMOP9nz+hxSYkX8GWF+7Hcfd5GY
-	y9XAgi28oYrUDuf79WmTYUQ4rYSrUCc+ti4P994Grej6mWoEbXrvRT1Znq7C8PiN0wGwEE2TCP7Ta
-	IuyucF2BGfKx+iZgRxhCuCkO9O6vufW91a9tlgB/cQWrA5X6Fgbd7WhC72owqwZ4ziVmITn1Ygvpo
-	g1O3mI6ZWJdPLtdB/AOnAYdH/GQcnroDkK5y+ZyfJ79ZewuBEVt4rRKLKSFqPHLgMvZsVeAKOv3c+
-	Wjij67/A==;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hgYA6FEh3vjzB5qqCTmatdfoxf97Onxqc6wILtW6+qs=; b=mN0LkFd0GR/+ivo3qlMWXNGLgi
+	h9IJb5yyG9G4IoK0Lcj/MhbXl2a516EmM+1/AO/mUId6aN08ZsT9ue6rF4TUb/pPLf22G09xAwg4h
+	Y1yhoxu36dqnKz6Ywv4uPYzbio8Lh14wg9f/yIT41WKIhsWCl5OGHFJFO1isF1WrPlDoOnFKW9q+s
+	tcgVr0e5+ZIBsx7GflmOcxfNjuPxDJaCZf22eamqXu9K0kINXUbXOUidX6jb/NEhvL9Y7t/zuYqMg
+	z4BGNK3sgxIjlm3vI/4LLu+TwfABBUSfEY43J/GHzfqlDg2kmoOZm5vH2jon1Di/5Qz5S8VpeY0I4
+	weqzQKvQ==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u8IXt-0000000C2bD-2jfU;
-	Fri, 25 Apr 2025 12:52:45 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8JRf-0000000EcS2-2PpK;
+	Fri, 25 Apr 2025 13:50:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3849A300073; Fri, 25 Apr 2025 14:52:45 +0200 (CEST)
-Date: Fri, 25 Apr 2025 14:52:45 +0200
+	id EE817300583; Fri, 25 Apr 2025 15:50:22 +0200 (CEST)
+Date: Fri, 25 Apr 2025 15:50:22 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH v3 00/14] MSR code cleanup part one
-Message-ID: <20250425125245.GC22125@noisy.programming.kicks-ass.net>
-References: <20250425083442.2390017-1-xin@zytor.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "x86@kernel.org" <x86@kernel.org>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"kees@kernel.org" <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+	"samitolvanen@google.com" <samitolvanen@google.com>,
+	"ojeda@kernel.org" <ojeda@kernel.org>
+Subject: Re: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
+Message-ID: <20250425135022.GB35881@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.285564821@infradead.org>
+ <SN6PR02MB41576A943191D154521C23C8D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250425083442.2390017-1-xin@zytor.com>
+In-Reply-To: <SN6PR02MB41576A943191D154521C23C8D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Fri, Apr 25, 2025 at 01:34:23AM -0700, Xin Li (Intel) wrote:
-> This patch set is the first part of the patch set:
+On Mon, Apr 21, 2025 at 06:27:57PM +0000, Michael Kelley wrote:
+> From: Peter Zijlstra <peterz@infradead.org> Sent: Monday, April 14, 2025 4:12 AM
+> > 
+> > What used to be a simple few instructions has turned into a giant mess
+> > (for x86_64). Not only does it use static_branch wrong, it mixes it
+> > with dynamic branches for no apparent reason.
+> > 
+> > Notably it uses static_branch through an out-of-line function call,
+> > which completely defeats the purpose, since instead of a simple
+> > JMP/NOP site, you get a CALL+RET+TEST+Jcc sequence in return, which is
+> > absolutely idiotic.
+> > 
+> > Add to that a dynamic test of hyperv_paravisor_present, something
+> > which is set once and never changed.
+> > 
+> > Replace all this idiocy with a single direct function call to the
+> > right hypercall variant.
 > 
->   MSR refactor with new MSR instructions support
+> This did indeed need cleaning after all the CoCo VM and paravisor
+> stuff got added. Thanks for doing it.
 > 
-> @ https://lore.kernel.org/lkml/20250422082216.1954310-1-xin@zytor.com/T/#m5a34be7d4ed55f0baca965cb65452a08e9ad7c8a
+> From looking at the code changes, I believe the 32-bit hypercall paths
+> are unchanged, as they weren't affected the CoCo VM and paravisor
+> additions. Perhaps explicitly state that intent in the commit message.
 > 
+> I've tested this patch set against linux-next-20250411 on normal Hyper-V
+> guests. Basic smoke tests pass, along with taking a panic, and
+> suspend/resume for guest hibernation. But getting into kdump after a
+> panic does not work. See comments in Patch 5 for the likely reason why.
 > 
-> It's getting *WAY* too big, and whether to zap the pv_ops MSR APIs is
-> still under argument.  Dave Hansen suggested to focus on rename stuff
-> first, most of which he acked.
-> 
-> Jürgen Groß also gave his RBs to most of the Xen MSR cleanup patches.
-> 
-> So here comes the first MSR cleanup patch set with version 3.
-> 
-> 
-> This patch series is based on:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/msr
-> 
-> 
-> Xin Li (Intel) (14):
->   x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
->   x86/msr: Remove rdpmc()
->   x86/msr: Rename rdpmcl() to rdpmc()
->   x86/msr: Convert the rdpmc() macro into an always inline function
->   x86/msr: Return u64 consistently in Xen PMC read functions
->   x86/msr: Convert __wrmsr() uses to native_wrmsr{,q}() uses
->   x86/msr: Add the native_rdmsrq() helper
->   x86/msr: Convert __rdmsr() uses to native_rdmsrq() uses
->   x86/xen/msr: Remove calling native_{read,write}_msr{,_safe}() in
->     pmu_msr_{read,write}()
->   x86/xen/msr: Remove pmu_msr_{read,write}()
->   x86/xen/msr: Remove the error pointer argument from set_seg()
->   x86/pvops/msr: refactor pv_cpu_ops.write_msr{,_safe}()
->   x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
->   x86/msr: Change the function type of native_read_msr_safe()
+> I've also tested SNP and TDX VMs with a paravisor, and basic smoke
+> tests pass. But I'm testing in the Azure cloud, and I don't have access to an
+> environment where I can test without a paravisor. So my testing doesn't
+> cover the SNP and TDX specific static call paths. Maybe someone at
+> Microsoft can test that configuration.
 
-These look ok.
+Excellent, thanks!
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+> > +#ifdef CONFIG_X86_64
+> > +u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
+> 
+> Could this get a different name so we don't have the confusion of
+> hv_hypercall_pg vs hv_pg_hypercall?  Some possibilities:
+> 
+> hv_std_hypercall
+> hv_basic_hypercall
+> hv_core_hypercall
+> hv_normal_hypercall
+> hv_simple_hypercall
+
+Sure, I'll throw a dice an pick one ;-)
+
+
+> > @@ -483,14 +484,16 @@ static void __init ms_hyperv_init_platfo
+> >  			ms_hyperv.shared_gpa_boundary =
+> >  				BIT_ULL(ms_hyperv.shared_gpa_boundary_bits);
+> > 
+> > -		hyperv_paravisor_present = !!ms_hyperv.paravisor_present;
+> > -
+> >  		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
+> >  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+> > 
+> > 
+> >  		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
+> >  			static_branch_enable(&isolation_type_snp);
+> > +#if defined(CONFIG_AMD_MEM_ENCRYPT) && defined(CONFIG_HYPERV)
+> > +			if (!ms_hyperv.paravisor_present)
+> > +				static_call_update(hv_hypercall, hv_snp_hypercall);
+> > +#endif
+> 
+> This #ifdef (and one below for TDX) are really ugly. They could be avoided by adding
+> stubs for hv_snp_hypercall() and hv_tdx_hypercall(), and making the hv_hypercall static
+> call exist even when !CONFIG_HYPERV (and for 32-bit builds). Or is there a reason to
+> not do that?
+
+I'll try and make it so.
 
