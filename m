@@ -1,253 +1,178 @@
-Return-Path: <linux-hyperv+bounces-5114-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5117-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B846A9BFBC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 09:29:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F720A9C146
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 10:36:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C51BF3A7AA6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 07:29:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38A274A7927
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:36:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E138A22E3F3;
-	Fri, 25 Apr 2025 07:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A172367BA;
+	Fri, 25 Apr 2025 08:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NUOXr4+1"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OejYNbDT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4039A22D780;
-	Fri, 25 Apr 2025 07:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C842B1F4CBE;
+	Fri, 25 Apr 2025 08:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566161; cv=none; b=Dsf/lIPKkRBrZobdsBptHBexrCVHsmR0mV/Gx2xb141gaJmaQV2gMq11S5AY6ywkNfRFyUNCy16FBhSIDmuMSxTjDceU/z8AVW0Ke51NAQfCHFKoAZG/nSLF3wzlJkx8uUoNGqPmi2iPG8Pn/c2D4sNnku1JlD+VBTgCKtq7QU0=
+	t=1745570140; cv=none; b=aX+JuNQ6QEb3v8JXMmxBrPsHO1c/giOWZpPYZmu6y1CCc8dX9u1tgbH8kHETqHgwAhN9T0oEY/xM/f9oLO3GbOQjcDbQa9P7DdgR25te5PiGvMS/3SVOxu0Xt6iXnA3bkikD+fPiIPKd+QgbZYFuGkD/X3Jtr3e2c8hQl9THXxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566161; c=relaxed/simple;
-	bh=xBItb3t9FZNLQCnPxQGkvWTe+75lqQ0ipGkPcfOlgiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=emg0L1v4KwOKJ8zhzRd0d/LEtIU0uXSiTpPvXm4zXYgVT9hsnFTvBWYZOhs5mko1Ryv5uyFdJyHKjeKyU5FKt7kjOiuAnmi+kop15doeULrL1I8KCXKMDaCJsKqYg+BXgwZHDgVU0A7TDCEPre7bGJ6mG9s+gNkLeyN1iW+eo7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NUOXr4+1; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 9A78B2020946; Fri, 25 Apr 2025 00:29:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A78B2020946
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745566159;
-	bh=QVvD7+tlZg1zStIw62rWix0JvYn/KYyicD6dgHqvLTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NUOXr4+1xFqfHErgi8wSjZeQuiqsCThhe4TBA9fLXUpAV9AV1htnaUYxA2o44+Yjj
-	 gxV+TbbrzeBDeZJpAZ9crDTHa9HZjJnOdMrB4sYtO3PbA7Qsf6jTtgo5ph4kgB5hDa
-	 N5deFhTqDYkHqZnSwDxO6GsUtrX6hypWbAOGvSms=
-Date: Fri, 25 Apr 2025 00:29:19 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Message-ID: <20250425072919.GA4283@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1744817747-2920-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250424165743.GJ3042781@horms.kernel.org>
+	s=arc-20240116; t=1745570140; c=relaxed/simple;
+	bh=liDUQDCfZ7sS2+A9Y4oQMwKEWewLI+4MU2cKShAXLtw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HABkjjfTsWA5Fzwvhvk15wc4eAfc8lfgwLsMIhAOuuNlqM2yFBCK2L8F2Tr9onDH8mtSqXLZwDdUBBZ9Hywg16L1c865VihFaWynfnVn8xi9ZIbzp8dC5BkaTnI11Qf3tSSgj7FJymaRvcJaQcNx8pbw3zQgRdH+NvSRDFuGkBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OejYNbDT; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5O2390085
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Fri, 25 Apr 2025 01:34:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5O2390085
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745570089;
+	bh=A3b4ITZaTfXzMfE8P3NClf2sv8WJ6sa7JySmuA7pbdY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OejYNbDTNY7z9B258k3ak9TmvMyUbUpawFr8lLCTkwYMVfGb8YqhUrp3Z4KHs5fPj
+	 my80ixwryjSADjgtbLLeYGt0L3yHPJEv3Wau8PPmxGKQDdPwP1Xvbht7Gu2n9NaQOW
+	 r9knRf/PcJ8xVurhtr9sRPFMNKKB8w/PmJDV/lYlJLHUotF+ugc+6Wg/XheAMKDeDu
+	 coOtH3LvRC/W3UtUcStNjIBjhI6NBGI5cYFWcYvObfXwETuZisb5epS8DGpWpQdwKV
+	 ZzSnCgUoos8Ps6ZQ2mJ4kAjz3ZUWe34m74SdH0VpP2V6mtcW/fmnQms4X8fzOFGbzo
+	 5n2xdLpTmFqxA==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        dapeng1.mi@linux.intel.com
+Subject: [PATCH v3 00/14] MSR code cleanup part one
+Date: Fri, 25 Apr 2025 01:34:23 -0700
+Message-ID: <20250425083442.2390017-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424165743.GJ3042781@horms.kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 05:57:43PM +0100, Simon Horman wrote:
-> On Wed, Apr 16, 2025 at 08:36:21AM -0700, Shradha Gupta wrote:
-> > Currently, the MANA driver allocates pci vector statically based on
-> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> > up allocating more vectors than it needs.
-> > This is because, by this time we do not have a HW channel and do not know
-> > how many IRQs should be allocated.
-> > To avoid this, we allocate 1 IRQ vector during the creation of HWC and
-> > after getting the value supported by hardware, dynamically add the
-> > remaining vectors.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> Hi Shradha,
-> 
-> Some minor nits from my side.
-> 
-> ...
-> 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> 
-> ...
-> 
-> > @@ -465,9 +475,10 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
-> >  	struct gdma_irq_context *gic;
-> >  	struct gdma_context *gc;
-> >  	unsigned int msi_index;
-> > -	unsigned long flags;
-> > +	struct list_head *pos;
-> > +	unsigned long flags, flag_irq;
-> >  	struct device *dev;
-> > -	int err = 0;
-> > +	int err = 0, count;
-> 
-> As this is Networking code, please preserve the arrangement of local
-> variables in reverse xmas tree order - longest line to shortest.
-> 
-> Edward Cree's tool can be useful in this area:
-> https://github.com/ecree-solarflare/xmastree
-> 
-> >  
-> >  	gc = gd->gdma_context;
-> >  	dev = gc->dev;
-> > @@ -482,7 +493,22 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
-> >  	}
-> >  
-> >  	queue->eq.msix_index = msi_index;
-> > -	gic = &gc->irq_contexts[msi_index];
-> > +
-> > +	/* get the msi_index value from the list*/
-> > +	count = 0;
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> > +	list_for_each(pos, &gc->irq_contexts) {
-> > +		if (count == msi_index) {
-> > +			gic = list_entry(pos, struct gdma_irq_context, gic_list);
-> 
-> Please consider line wrapping to 80 columns or less, as is still preferred
-> in Networking code.
-> 
-> Likewise elsewhere in this patch.
-> 
-> checkpatch.pl --max-line-length=80
-> can be helpful here.
-> 
-> > +			break;
-> > +		}
-> > +
-> > +		count++;
-> > +	}
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> > +
-> > +	if (!gic)
-> > +		return -1;
-> >  
-> >  	spin_lock_irqsave(&gic->lock, flags);
-> >  	list_add_rcu(&queue->entry, &gic->eq_list);
-> > @@ -497,8 +523,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
-> >  	struct gdma_irq_context *gic;
-> >  	struct gdma_context *gc;
-> >  	unsigned int msix_index;
-> > -	unsigned long flags;
-> > +	struct list_head *pos;
-> > +	unsigned long flags, flag_irq;
-> >  	struct gdma_queue *eq;
-> > +	int count;
-> 
-> Reverse xmas tree here too.
-> 
-> >  
-> >  	gc = gd->gdma_context;
-> >  
-> > @@ -507,7 +535,22 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
-> >  	if (WARN_ON(msix_index >= gc->num_msix_usable))
-> >  		return;
-> >  
-> > -	gic = &gc->irq_contexts[msix_index];
-> > +	/* get the msi_index value from the list*/
-> > +	count = 0;
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> > +	list_for_each(pos, &gc->irq_contexts) {
-> > +		if (count == msix_index) {
-> > +			gic = list_entry(pos, struct gdma_irq_context, gic_list);
-> > +			break;
-> > +		}
-> > +
-> > +		count++;
-> > +	}
-> > +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> > +
-> 
-> Does gic need to be initialised to NULL before the list_for_each loop
-> to ensure that it is always initialised here?
-> 
-> Flagged by Clang 20.1.2 KCFLAGS=-Wsometimes-uninitialized builds, and Smatch
-> 
-> > +	if (!gic)
-> > +		return;
-> > +
-> >  	spin_lock_irqsave(&gic->lock, flags);
-> >  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
-> >  		if (queue == eq) {
-> 
-> ...
-> 
-> > @@ -1317,29 +1372,92 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-> >  	return 0;
-> >  }
-> >  
-> > -static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> > +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
-> >  {
-> >  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > -	unsigned int max_queues_per_port;
-> >  	struct gdma_irq_context *gic;
-> > -	unsigned int max_irqs, cpu;
-> > -	int start_irq_index = 1;
-> > -	int nvec, *irqs, irq;
-> > +	int *irqs, irq, skip_first_cpu = 0;
-> > +	unsigned long flags;
-> >  	int err, i = 0, j;
-> 
-> Reverse xmas tree here too.
-> 
-> >  
-> >  	cpus_read_lock();
-> > -	max_queues_per_port = num_online_cpus();
-> > -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> > -		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-> > +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> > +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> > +	if (!irqs) {
-> > +		err = -ENOMEM;
-> > +		goto free_irq_vector;
-> > +	}
-> 
-> ...
+This patch set is the first part of the patch set:
 
-Hi Simon,
+  MSR refactor with new MSR instructions support
 
-Thank you so much for all the comments, I will have them incorporated
-in the next version. :)
+@ https://lore.kernel.org/lkml/20250422082216.1954310-1-xin@zytor.com/T/#m5a34be7d4ed55f0baca965cb65452a08e9ad7c8a
 
-Regards,
-Shradha.
+
+It's getting *WAY* too big, and whether to zap the pv_ops MSR APIs is
+still under argument.  Dave Hansen suggested to focus on rename stuff
+first, most of which he acked.
+
+Jürgen Groß also gave his RBs to most of the Xen MSR cleanup patches.
+
+So here comes the first MSR cleanup patch set with version 3.
+
+
+This patch series is based on:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/msr
+
+
+Xin Li (Intel) (14):
+  x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+  x86/msr: Remove rdpmc()
+  x86/msr: Rename rdpmcl() to rdpmc()
+  x86/msr: Convert the rdpmc() macro into an always inline function
+  x86/msr: Return u64 consistently in Xen PMC read functions
+  x86/msr: Convert __wrmsr() uses to native_wrmsr{,q}() uses
+  x86/msr: Add the native_rdmsrq() helper
+  x86/msr: Convert __rdmsr() uses to native_rdmsrq() uses
+  x86/xen/msr: Remove calling native_{read,write}_msr{,_safe}() in
+    pmu_msr_{read,write}()
+  x86/xen/msr: Remove pmu_msr_{read,write}()
+  x86/xen/msr: Remove the error pointer argument from set_seg()
+  x86/pvops/msr: refactor pv_cpu_ops.write_msr{,_safe}()
+  x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
+  x86/msr: Change the function type of native_read_msr_safe()
+
+ arch/x86/coco/sev/core.c                      |   2 +-
+ arch/x86/events/amd/brs.c                     |   4 +-
+ arch/x86/events/amd/uncore.c                  |   2 +-
+ arch/x86/events/core.c                        |   2 +-
+ arch/x86/events/intel/core.c                  |   4 +-
+ arch/x86/events/intel/ds.c                    |   2 +-
+ arch/x86/events/msr.c                         |   3 +
+ arch/x86/events/perf_event.h                  |   1 +
+ arch/x86/events/probe.c                       |   2 +
+ arch/x86/hyperv/hv_apic.c                     |   6 +-
+ arch/x86/hyperv/hv_vtl.c                      |   4 +-
+ arch/x86/hyperv/ivm.c                         |   3 +-
+ arch/x86/include/asm/apic.h                   |   4 +-
+ arch/x86/include/asm/fred.h                   |   1 +
+ arch/x86/include/asm/microcode.h              |   2 +
+ arch/x86/include/asm/mshyperv.h               |   3 +-
+ arch/x86/include/asm/msr.h                    | 130 +++++-------------
+ arch/x86/include/asm/paravirt.h               |  57 ++++----
+ arch/x86/include/asm/paravirt_types.h         |  10 +-
+ arch/x86/include/asm/suspend_32.h             |   1 +
+ arch/x86/include/asm/suspend_64.h             |   1 +
+ arch/x86/include/asm/switch_to.h              |   4 +-
+ arch/x86/include/asm/tsc.h                    |  76 +++++++++-
+ arch/x86/kernel/cpu/amd.c                     |   2 +-
+ arch/x86/kernel/cpu/common.c                  |  10 +-
+ arch/x86/kernel/cpu/mce/core.c                |   6 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  25 ++--
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        |   2 +-
+ arch/x86/kernel/cpu/umwait.c                  |   4 +-
+ arch/x86/kernel/fpu/xstate.h                  |   1 +
+ arch/x86/kernel/hpet.c                        |   1 +
+ arch/x86/kernel/kvm.c                         |   2 +-
+ arch/x86/kernel/kvmclock.c                    |   2 +-
+ arch/x86/kernel/process_64.c                  |   1 +
+ arch/x86/kernel/trace_clock.c                 |   2 +-
+ arch/x86/kernel/tsc_sync.c                    |   1 +
+ arch/x86/kvm/svm/svm.c                        |  34 ++---
+ arch/x86/kvm/vmx/vmx.c                        |   4 +-
+ arch/x86/lib/kaslr.c                          |   2 +-
+ arch/x86/mm/mem_encrypt_identity.c            |   5 +-
+ arch/x86/realmode/init.c                      |   1 +
+ arch/x86/xen/enlighten_pv.c                   |  58 ++++----
+ arch/x86/xen/pmu.c                            |  69 +++-------
+ arch/x86/xen/xen-ops.h                        |   5 +-
+ drivers/acpi/processor_perflib.c              |   1 +
+ drivers/acpi/processor_throttling.c           |   3 +-
+ drivers/cpufreq/amd-pstate-ut.c               |   2 +
+ drivers/hwmon/hwmon-vid.c                     |   4 +
+ drivers/net/vmxnet3/vmxnet3_drv.c             |   4 +
+ drivers/platform/x86/intel/pmc/cnp.c          |   1 +
+ .../intel/speed_select_if/isst_if_common.c    |   1 +
+ drivers/platform/x86/intel/turbo_max_3.c      |   1 +
+ 52 files changed, 284 insertions(+), 294 deletions(-)
+
+
+base-commit: a5447e92e169dafaf02fd653500105c7186d7128
+-- 
+2.49.0
+
 
