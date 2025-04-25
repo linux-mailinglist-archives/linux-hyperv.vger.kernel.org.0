@@ -1,471 +1,241 @@
-Return-Path: <linux-hyperv+bounces-5153-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5154-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C150A9CF07
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 18:58:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67F4EA9CF65
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 19:19:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5066C3B1C1A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 16:55:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D0DB1BA0526
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 17:19:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DADB719992D;
-	Fri, 25 Apr 2025 16:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 260331F3B96;
+	Fri, 25 Apr 2025 17:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lTvBs5ut"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jU+QCkAX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2015.outbound.protection.outlook.com [40.92.18.15])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2137.outbound.protection.outlook.com [40.107.117.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A542CCC1;
-	Fri, 25 Apr 2025 16:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6233519F11F;
+	Fri, 25 Apr 2025 17:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.137
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745600148; cv=fail; b=apK/zuq5VR0oYtUPr/BBhMk4PCPFOq7hM6fkQ0r/6Rp18R+aOhKo++mRdIpeMkoi2LpeQURUwuSfQmldBFkNBCMBNcqRjCTNR7iBg2w2BGhcNMfDPlAbAq2G923fc7svmR4KVRoGC6kfjc9xmItn8Xs6mqbfE6+u3xgk0mByYeo=
+	t=1745601537; cv=fail; b=hUUCjTqjkKW3d2Yr2oz1OJUVnHhjoh5NjbCXn1V4tHqTOOv1vavufrzYMeASMOEx4flPhhSCTFwPtU2Ro+gD4kJ2kpJFuSFWtoHOVRKyQGFcDrqT+SHU3Q+IcOgLmAxejVVhDwFwbsQ9fPby+VX5aJhByKyL3kXsN7rikTn+9SY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745600148; c=relaxed/simple;
-	bh=iITVv0xW+HDuGDbmQcVYQiNl1BUAVV+TsNI1YPpQJTc=;
+	s=arc-20240116; t=1745601537; c=relaxed/simple;
+	bh=iExCI0UW/ItiJx+H0TRH2m0ycCJfTT/+E3eJp605X6E=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cH4jhWGkoyJ8DPKadTcTsb/jR3VCjxGHjUTpCt155MNyJanEZOlNBos04UUUPoC6ZsJFBhCkQ9YgMGtwjMzJYeBy07YfNNMulojz5IdzElht2eh/YEN/r2XYgflM+4sx/eW95h4kUgu6+QDduquBoQzy/2dFuo5xfl7tCU2b66k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lTvBs5ut; arc=fail smtp.client-ip=40.92.18.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	 Content-Type:MIME-Version; b=u5TXTOlIdLjm5w8NnVkJT6ujbAGWsxjUDnEEgOepwzQ3k6LBfvXWkex6SRWnBxny+lYxMAYUCSWcbo6MowhRqB2UpAUVWOC0knqyR7Jzm03xS0boGTpMohJg6dfN6GqQPhAcijbiGpklt3mRje6ik9NoL1Tt3cicwTk9YZpMjLc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=jU+QCkAX; arc=fail smtp.client-ip=40.107.117.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=crRec37OEmbycY0ZhB0Kwp4KDJX9Uv/qVtjBSpzWEZ59QOiIqX9uei8KueTXXQkYE90TkzSJLPT5Sw+KFNuaKXqnw4PDr7bjCLeNIk4ShwMi9zSeVSGLqT+PC840qbNV/y+ieYKrT9Tugf3+p8TGH+cYkYZ+tgFZiIcI5b+7JL+LLqfy9GSzo6l5uzSXlYdU9t5+rKFUSVhdawm+S+aWbcSx32sELUY4AdWVS86JWojkWoy1GMhsSF3wLhkQveUVJVjtGM07Dm/1Ghm5f7H39L67IIc6v9GnXQJRXr+GfDZLSOO8vY1IQBJ3koUKWZclLOCfDGd0Y5OMFRWxuZ8Jrg==
+ b=bT0ZU2cFt14z02Z/3ATEwo5tHsY5tedNke1Hv0/LHadRf6EXsUsqvvMKtF5+Hj/AgfavfK7Vu5viP67I/IEumSrVYfJsxg9e3v9a8VNJR7WBDlLgi9kOb56nQQK9e4e1vOkL9hFsfM3UUvM82e+X/blKWQu9TMOmEW1PLjA46Dyrm1Sc+gwy+uPR4Ol9lVlja6qYP6AuS6yaSYssZK9JYuYmrKKr7zL2LNRfZi2C/f3d5ZvMNsU2B7ZEytSbnYGSXcSEhBD1Nxw7kAzOnfdbl3kdYFMaQOD2kZzT+gdMMeJhe8Msob2hFJ/+hsdxtFyeWF1zTNSA+w6zEhCp/NTSew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FMBQOUxfvewdfKOBgQy6oXHYgj+I56e4nV5kDrhUEaA=;
- b=wFSiprBP/1i3HpuLy3e1sSKJ2FVX3hOqxI+D6AFLGvDmXPUiV+/ZVefr3Wn4+xRtmRx+rkmtPVMy6m9hW9LtrVy9h7NdKfyRW9vRznxeU1m1T6SqhtBPqOGNk7NkwniStF3JV/7nAddiWx3uGE2vuGBjsTsBbtp40ASirlFI2I8XCuFO6pfZhY8hrgjHmxxmUO+R1nQlM9gJ9FpjmG4CghyF0nxbZaJuRo+NDgvctwDDu9DaG1t3Pf0GvDV7omv+gq6TiSIZaIQzY25dkxhJB2HrDlfgQ4Hul6aDe0SOB2pWRhhl6mZeGzEgB+mTdQrUjIV3P3idiS05gDnR8+p+9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=iExCI0UW/ItiJx+H0TRH2m0ycCJfTT/+E3eJp605X6E=;
+ b=pAYdie+UjX5WGM5ax/7uzvh0P0g3ZaDO0bcZwn/ohEh8GwwJBnQJGtxXO9Uwr6LjeYkO1QI2QLzEdcd4e4meo8s0YaPmZRcaC91EKzpYuGmMxg12CWt5IX1LlM7CJN8qI/X0DwmEw43IoI6kTshOmK44x2FiVojZRNyV6O2PCZVUtbSwNeLkx5Sp72v9ZNCMkkul2cI7OcWvnf5fJmKDzguxQY2zESdym7E2n5z6rPeDtrbxSSFH0efPTfN1x9mzLISjj8iZ7PMAN/y9DMJXemgG3mP4BEL0zloO9+5+716pziXR/uxCGUCiqJ9TkhpQM6Gty4XPuFav3l06DVZEEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FMBQOUxfvewdfKOBgQy6oXHYgj+I56e4nV5kDrhUEaA=;
- b=lTvBs5ut/3CHyWlNXcRXmTr17DNA6Dexm7RNyNyzrX6IprCJuvoooP8/TAtjCKrqKoXeLBiEsAZGDp8UoV/heqLSilNIHSm3yqAtK74hyLexsOAGsOJcXw6VHSnUU9YKFRvMKNlWnffGZR5C6bYybwdA1TdPoG50hU9ujvisF0JmI71OJUjVAqBzsUxqipYPWM1PmFP47Jvnsl+RJvvNyPOJ8THo1Z0iqtGDxzX8rcuN2ax5+kH5BW8XMIQDHcBHTlI58JcWhRI1ON4mQdddInHKgPQfLzZ3yoJIHk4MIGkY07BefT8bzpR6zdvBBy4c8H+XVaEsYAnv1rSHBGFeHA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MW4PR02MB7425.namprd02.prod.outlook.com (2603:10b6:303:7e::21) with
+ bh=iExCI0UW/ItiJx+H0TRH2m0ycCJfTT/+E3eJp605X6E=;
+ b=jU+QCkAXCGnUyloSPyKuzpPrL3ZN9XXJL4mDQYSiwVrRC3WvanWduQzVYNeZbKIE1gPMz+8lWtj/losdJc7roAT2IA1PVA5Vx1QOlf3LTCFN9bMXISIxfKhV+mUjZocOQbF3zeCy/CsTE7aaqmiZt3XDLKsP9SMXO5PQNlke8GQ=
+Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM (2603:1096:d10:36::22)
+ by PUZP153MB0712.APCP153.PROD.OUTLOOK.COM (2603:1096:301:e4::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
- 2025 16:55:42 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Fri, 25 Apr 2025
- 16:55:42 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Roman Kisel <romank@linux.microsoft.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "mikelley@microsoft.com"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.10; Fri, 25 Apr
+ 2025 17:18:47 +0000
+Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
+ ([fe80::1d66:c349:800b:f365]) by KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
+ ([fe80::1d66:c349:800b:f365%4]) with mapi id 15.20.8699.010; Fri, 25 Apr 2025
+ 17:18:40 +0000
+From: Saurabh Singh Sengar <ssengar@microsoft.com>
+To: Roman Kisel <romank@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>
+CC: "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>, KY
+ Srinivasan <kys@microsoft.com>, "mikelley@microsoft.com"
 	<mikelley@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "tiala@microsoft.com"
-	<tiala@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>
-CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: RE: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP ID confusion
- in hv_snp_boot_ap()
-Thread-Topic: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP ID confusion
- in hv_snp_boot_ap()
-Thread-Index: AQHbtWP/lXselMmje0eXkN1PFNQSB7O0dQJQgAAgaoCAAADhQA==
-Date: Fri, 25 Apr 2025 16:55:42 +0000
+	"tglx@linutronix.de" <tglx@linutronix.de>, Tianyu Lan
+	<Tianyu.Lan@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, Allen Pais
+	<apais@microsoft.com>, Ben Hillis <Ben.Hillis@microsoft.com>, Brian Perkins
+	<Brian.Perkins@microsoft.com>, Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP
+ ID confusion in hv_snp_boot_ap()
+Thread-Topic: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and
+ VP ID confusion in hv_snp_boot_ap()
+Thread-Index: AQHbtamOlIwzG2IG/UqbRMBi4sMoobO0DOYwgACKFgCAAAXywA==
+Date: Fri, 25 Apr 2025 17:18:40 +0000
 Message-ID:
- <SN6PR02MB41577E8A06C9F8BA66A8D68AD4842@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
 References: <20250424215746.467281-1-romank@linux.microsoft.com>
- <SN6PR02MB4157E849025C4A6B64933150D4842@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8a235e4f-f4ce-445e-9714-380573033455@linux.microsoft.com>
-In-Reply-To: <8a235e4f-f4ce-445e-9714-380573033455@linux.microsoft.com>
-Accept-Language: en-US
+ <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+ <KUZP153MB1444118E6199CBED8C78E6D4BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <8fa1045a-c3e9-48e0-86fe-ab554d7475c8@linux.microsoft.com>
+In-Reply-To: <8fa1045a-c3e9-48e0-86fe-ab554d7475c8@linux.microsoft.com>
+Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3d49043e-8d19-4f25-95ac-4b1745e0668f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-25T17:04:38Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7425:EE_
-x-ms-office365-filtering-correlation-id: 0593a250-5518-49d0-5478-08dd841a03cc
-x-ms-exchange-slblob-mailprops:
- znQPCv1HvwU46ctkesNAQSdI89rGQphJ1XIFBIpVdNgD/hrPFCv/amjlwhb8Z4s+pEbnyaccfuunt17GGYc3BUvaPq4OtGYroTJUZGOYjgRZXZJmonQQl0U3xLuxOaE3fBb90ytoAs6dqyHStBFpaPzXbyGoRyEWDgCp08/eO98wgjF6b9f5ka++dR8NRqXtsEBv3q5iQARxW9eBV8gOh8t+xsjMQWRzISlEoXeM2KKqVNx+KC+8Y3TcXft1vin4iwftXY3x88qXn/8cIS7BNbajigTZxCWvLhzTe4GFsS4O5MKtbX6CHPRzzkbayoqphS+PELyncMyyYtCO52Jl6mLMgsQ4xzmHVoPpEEvps7bEQYgvWIsSo/lYQdLCsW4lTXrWvGI1t69WpUJHaFt/AVRqztCXj2PrMbdzACg/hdCeD8NEQ96OJo+ONQ0e0nyAt/CM+Ed2AIUTriTi7H25cXCPjNEkTbj0SYZJtj++vKQryFpl7SxakiEHigaP0PEayFP8lS+H7oZimzAZrOkMN71cPo20XLjE0PMGpOEk1oBzjQqqoY3SHWbvzbaz5Ys4gpEsaVmh29AUFXKRnQPQDgPtCZ/ULp9BEIJD9FS8u7tbrMzeydQEOtAzjD7vPGI/0C7wk9A3c5N3wYAQGyQ3UzkyJlAplXSbh06VwVBQgee9iICvZlWNsdhLR/btyqaOIqN2z6T+xpfDeJKcDGdR0gmRU+Cq4QJUxdq43Sf5EiSeJXs/OSailDCwzFN8TuSfG3en2O7F/S4=
+x-ms-traffictypediagnostic: KUZP153MB1444:EE_|PUZP153MB0712:EE_
+x-ms-office365-filtering-correlation-id: fa11f0a3-9117-4459-4089-08dd841d38f7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|461199028|15080799006|12121999004|19110799003|8060799006|102099032|3412199025|440099028|41001999003|12091999003;
+ BCL:0;ARA:13230040|376014|1800799024|10070799003|366016|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?JRdXTDy/JLqa+ZuTmvMsEprrPJvU2c8bf8UTI2cNVf9Q47UctTgCzhjiIFRr?=
- =?us-ascii?Q?foVojJMiuOuU22NmXoRkjSJ6Mue2YopFQ5Iez5tzPWbMqv9/uKH7FGT3LYZe?=
- =?us-ascii?Q?TOnIf9U3N7lEhw7/vSTWgAF6TYq0dkN2ERF3E6LPY+UOSB82g2kCUphUOHzz?=
- =?us-ascii?Q?Wn0oKLFfqeb0Uw1ZMk9VQej60LO0xv4Aw0ysR52TFu6nD3OwTkluqf2azxqh?=
- =?us-ascii?Q?35LBuyHVlxow4KzCBTIO+m0emKheLZiy8fGxgxNZrdEEdO90sBt2KVmacrs6?=
- =?us-ascii?Q?CNb19+uFoKe06mJwyrNIBaO5BD/2fGp8zYDOe0t9qsb/Vlb3QGMaSnEN5urZ?=
- =?us-ascii?Q?G02Mb6Ezylj99b6FB/oIh3WnjbMSx7CSQAy3KMDwRw+SiQBVTxg+rTbradTA?=
- =?us-ascii?Q?0t9YRo2C+uiyyCJXQC1ZKPo/8jS+FU9e9kdHYFwN21h7CehbbLWnpeu7XWnl?=
- =?us-ascii?Q?UmciN9AafJBP6a555nO18Q3ZJzQPYJ+K8Aa5KsiC20oxnQz8ElsPMygm+2Pu?=
- =?us-ascii?Q?QBEYp1hQzYd9za6r9F38BwqHdmao38h5Q2annV0qKIBtuX53dygKzGi+JdTR?=
- =?us-ascii?Q?5nq4fZEe/j0Ajxe6VZYC/vcgAuCepvCU6reC+6Hod7ONvinS7SwLVqb0zZur?=
- =?us-ascii?Q?rn5YlgVTPNgjxezgWUQS+gU5rM/ItANySOpFU4XmYV0Hn1dx2lZaKSB0fKzG?=
- =?us-ascii?Q?Ys26kDjwm0lpBPCx7wx0GjNkUNbtKWRq3tI4S+EB/j8iLXVUbCuicFHkcWe9?=
- =?us-ascii?Q?pFeocMj5vEslTQH8TjO2QIImhPok1rsw8eNY0sR6aq0nDZ5vB06AQgXHDC5h?=
- =?us-ascii?Q?cWJe+l82e4xTQfgrIQyU39ox93beOrbaN7dvUkXjynFYvEEJh7BiSpmwwtf/?=
- =?us-ascii?Q?DI/X93+fGXM6FxpQySLB+Un5GucJqTwirnvr5NbAqSx/xiZyKkus50KTcnME?=
- =?us-ascii?Q?pR14U9DPsryXazanD0HJy1hFUNDHyVItnJsqdSzie44v7/GXC5FX/V5csNE7?=
- =?us-ascii?Q?lberRyFWokC8GVo4eZAIfyfSoBeyc4ZfyX4ezjyrZq94PRjKHXcdzT8cdQXx?=
- =?us-ascii?Q?QgwaDWC3gMV6R+4McbfVXZKQL1vskBC2FmeyIOAkX33UaLBmlJcmVY9g9sRN?=
- =?us-ascii?Q?fSlWze7bjeVlV1kCtT4VS7nIs+AurZvfwI/XkcVDd6l6ZORIH0oBsa8HeC4O?=
- =?us-ascii?Q?pHIU2z1SRbbTJLLx?=
+ =?utf-8?B?eGtXbE5QUXU2Y2VHQ3pJemtOL1ZvOTFMN3Mzczl3N1g1ME1qRDBZUU12V3ZQ?=
+ =?utf-8?B?dlNJU2R4Q2haRm9ScXhZT3lUV3NzVlMvZEhzemQ5Z0JXYTdhNVdwZjJpUmth?=
+ =?utf-8?B?czNBVWtjS1NKNjdWVitBZTFEWU83RlZoYTc5V082cTJRYWsxQXdFTnJaUUFJ?=
+ =?utf-8?B?blA5NkphWkIvYm5sbmwwVzBjMSsvZmdmVTNHdkkvRUZaNmNLY1YzOWpTY3VL?=
+ =?utf-8?B?eWFGK3BDbmo5eXRBS2h3S3VBV3VSOURjYU1rajUrYUdWNTJuZExocW9LNmU4?=
+ =?utf-8?B?M0FKZnlyTWZKM0tLVllPbEdUU001Z3RpN1Y0N3hXaWttUGlXRVNJUXRScE9p?=
+ =?utf-8?B?dW5Qd0tKYmQ3bE5COWZGR25USGRQdlRBdlNBdC9QczZzRWErd0psQWJBclhO?=
+ =?utf-8?B?akd1VFFmK1pqSmVhd3gxVVdsa0tOL3grUndSSHJVRDhKWE5HcGtFNmN5UTlR?=
+ =?utf-8?B?VjhXb0pRNisvNVFMYzU4RnJ1cHlpNjNJOHoxS3JJNGk1ZExmdEl6cFMxVVVD?=
+ =?utf-8?B?RFBqR1Ywd1lBNjB3UjBGK0NnWCtUSHRrUTdTWGdiSXV3TnJoV3REaStJcTdD?=
+ =?utf-8?B?a3ZwV2xXSUNUeUVjbnZLbXE4Z3ZaY1VVQVFtaHBRelQxdlhtbTdtNXBEMThW?=
+ =?utf-8?B?dDY3d09MY3p3Nm9Na3Y1Q0tPSzNndkxrYTlmdXA1WWd2aGxVZW12dkRlano2?=
+ =?utf-8?B?UzNNSDhScytxQ0JyYkVUUkxuYnJKM1J2TlJLVVRBVGFuL3N6MmVsVzVVbjVG?=
+ =?utf-8?B?T0NxcThkUTJOSTQ4eGtGb0M5d0pGR2FlbzdMOFd2bmxhSk5CNXVLSnRVMHRQ?=
+ =?utf-8?B?Z2E2blZjWkZWYk1ZWHpRc2h6amhuZnRqaXlrV1ZBVkdIaEIzM29Fc2RRZjBW?=
+ =?utf-8?B?WGo3OHVVVk93clNGRTRrK0FhNE1ZdWRlSEhxdmpkU0tRRTlMU0pOYVM0S0tG?=
+ =?utf-8?B?d08ydGxhWE5Eb3ZzWS8zYldSVTVsMVVsRExsSHc4TlNYMjhKNXN6cmFBeG5V?=
+ =?utf-8?B?Q2tKUGhWc0txRFdkMTh6Q25lWXZ1dERzT2xoSWFmMmJEUUdGMm85TzRXampn?=
+ =?utf-8?B?Tk5DSTRHd1RvSUNKTUdTNDg2cllPTDV0Wm5kR040UEh5Z2UrRWp6ckRtNlNy?=
+ =?utf-8?B?TXFCSDVwSlEzWUZ0UlFDWEIwdXlYejVFeVhvbW5ET2QyWjA5b2REUUtaKzh4?=
+ =?utf-8?B?dTZpUVRScUhHUHdOUmtyakN2WWNjSFpRZGxWSm1UcStoU2RzbHBvTnh3aVpl?=
+ =?utf-8?B?clE0R0hNYUkyeEVVRmpHZ1duc2ZQVjNISUZ1RDFLWjVsTUlVQnArQUsxRDJp?=
+ =?utf-8?B?Q0toTWlWcEtaRU9hTDMxUHNXOStFM0ZVMmtHUXkwU1NkRTRXeHJobmo1MWlu?=
+ =?utf-8?B?aUZDQXo3aE1jeXFyNzU4UlpZOC9vb2ExRkNOeTAzTyt0WUI1bmZEaFdZRklv?=
+ =?utf-8?B?WUYwWWpPeGlWUGdEaFBSUkpqUXJXVDkreWVJU1RUTVNJc0xVNENCWkpCQ3Yz?=
+ =?utf-8?B?L3hXZDJteExJZGdxWGgwQ29YRlhxbU1ZT2E3aFhHRXBmYnNnWDB0U3puMlVV?=
+ =?utf-8?B?RDVHZDRHTlBXY1RzUGg2bWhkZVp5U3lmRkFIdkVudS9Ub2lOUkhqR2dxMURN?=
+ =?utf-8?B?a3NYSU9aRG5wT2tqME5ycVJzd3A1U3drb2tUc2k4bVR0SkltYTVVanRuMEhT?=
+ =?utf-8?B?ZVEyUnZlQWtxd3pVKzhvMGdMUDRlYVhwYW1MK1A5dXZPcG9ySXUybERicFBS?=
+ =?utf-8?B?UlVWN1VQajgxcXRwSTFRdXQrQ1h2VE8rVmoraGJwZXBUdU1aTVc3M2J0aldT?=
+ =?utf-8?B?ZVArd0NnMllxeVRCbmtqRHppQXYrd0h0U3hQQVVhWmJKeUg1R09jQ0hxSEJV?=
+ =?utf-8?B?WXU0M3dPQ0RHK3NUVzBpU3VGTTRtUGRMTFdnSFNSS0lqUm1kS1E4RXd6WnNr?=
+ =?utf-8?Q?0SzlGOHpxRU=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KUZP153MB1444.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(10070799003)(366016)(38070700018);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?MAud3ocpwxxSRbvRN6p1IjCeYeejcJnVyZkFJe+UGc9Pggf1ZjF1ha3tcBru?=
- =?us-ascii?Q?dLdKQCD3MW+4sEswtunZu+xU4ap2qJvRyE0fJShtMmljN5lrygYPkbaES3pB?=
- =?us-ascii?Q?GnlTYjbqGVk5LqtecnJoHmIxdjUU2TRE6+Ee4pFW3NTDgFcKeR7xM05wSDp2?=
- =?us-ascii?Q?obZvw1+bk1goUSB25YxyBk3/YKZVZDF0i5GA0Xza5kY3mlb8tb0IQkXz51hx?=
- =?us-ascii?Q?ZWLFfhOjNbe/LCQc8ZT0+819O0iyD+HYWzLc48dxVWmRDOvuk+pqCCSDxLkN?=
- =?us-ascii?Q?1HUFknId5mc+lOvXUwIOwelzQ7qa634z4cmsI7Et7bUOpjuB6d5zF4uP/WHg?=
- =?us-ascii?Q?B+MRinTXASXlGL8uCgYva18h1uUkYw3LRRz0AZiKMC8VTcSk2AJDgW6SBc/e?=
- =?us-ascii?Q?QdOB2Z8AG0z0t7Z/DDiVw6WUPtmtz01HC0OY2XFUYJEL27dcTexGX3tyx5G1?=
- =?us-ascii?Q?5yivVwPN9dktSxmg4AyfqLsAIjzsP02hmRWVi7Q1IgAfGbjC9+DQP7yphd0D?=
- =?us-ascii?Q?P6JlaBwFOc9LKWwRVn5SS4I/hBhoO2zLF49ovHUb2ZLSuTq3LpNqkuVqxezP?=
- =?us-ascii?Q?H9eO1f2CyU+8nhu+UAlOXiUeNVB9SJpdx2pFgFUkFOEkyZ89NLdkaVtAJFW/?=
- =?us-ascii?Q?tdyPB8TMdDUmec7s3mj8KqaRq44jYeewvsUhKNYJJaVU6G6X4L6bKOVxMaYy?=
- =?us-ascii?Q?IYm2aIcfjc8a67+89+7ctEnnNfysThtj7J+wGJ7s/YUbxBjFwrB7Z2B3e+Qc?=
- =?us-ascii?Q?Aq8roX2mqhpKI1aydIYNk/9aOcGAEmaim1CtanDQnrI42mdQTxw6mCJAwdOG?=
- =?us-ascii?Q?xvVws6C4WJQHnVMzY7yqK91Aa/gZWDI0rAEeT6M5OZBfBkY1X/fwic698SrW?=
- =?us-ascii?Q?dHzMNOolD+90ur4FXgNyHPw7tqepYx1UWNuhfpqbgi2YHqVOVHrMaAJ3EGye?=
- =?us-ascii?Q?6KE1adPgXGvNJ3nl8mFDwA9aWF7wE/AbuV+Wu+d3qrld/TG2rjtEBR914yt6?=
- =?us-ascii?Q?SUYD3e1P64g8x5HAnogVx+xmGZElPJnZq8C8xTAJtCERaezJoKMBfLTCu7MN?=
- =?us-ascii?Q?oxDhbOuStOUVz2uDXzgoh9iUqIJXNUTFBXr8UaXHj8LBbe8fib9fkXq3DDW3?=
- =?us-ascii?Q?OrbtzFSyvxYHX8gPjhK3J7b/3g9emO/EEQnrAKLBl30btMslyuT4exi6vsbm?=
- =?us-ascii?Q?s+JqTLjLoxiAut1tBTttI1xPowEsLyEOlAoYqZfshL2FyTfkjQzCmU9ByPI?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ =?utf-8?B?THltSE9pbHBWOWlENGNlRS9QNXVjT2dDZFJoNHU0eCt3K0FnZnpHTnZTQ1Jr?=
+ =?utf-8?B?azJ1K05SR3lNSG5OYmFBTUJ1dGxkWHlHdTBEY2RHTkNBaEo4ckgzcXdmYzRB?=
+ =?utf-8?B?dG91SVBQdDdRU0tCT0IxYWZJY3k2Z0FETFJ1NmVwZzdNamQ1bjRaTEJwRGNk?=
+ =?utf-8?B?L2I3T1lNMHIvZUEwL25oYzBlV2tTWk4zR2ZXUkVTME9XcWxKby91MlMzZ3B6?=
+ =?utf-8?B?NVZsa1VWTUNsSm5mc1pDTDJNWkhoUFVWQ0x5UGxBaVVPMmsvMGU2MUhWTW5M?=
+ =?utf-8?B?cmxCY290MEdWUzVzZXdPVWc3VUoyQkV1aWNQbllDN3Z1Ym94eXFTV1pyeGxD?=
+ =?utf-8?B?OEV3aUN4VGRQK2pDVDZZamdWWnpKZ0Z1NHZKcnB6VWJNQVBrTkVSYzNtYUE2?=
+ =?utf-8?B?bDhUU2NObTVxZ1JlYzRVVkFMSHVNUldHU2pQeU0yeXYwaUtBU1lENmo3Sm9k?=
+ =?utf-8?B?RVdUZ0g4dUFncTM1eEtEcy9wc0RjYVBNcmJ5d24wRG9kOTV3VzcxU2wvRUpL?=
+ =?utf-8?B?SjhoNFFWZEVDRis5UUZMOWUya1dlaXErdkl0YVVQUWpibGhZd05GaHBnenVk?=
+ =?utf-8?B?NUE3QnBvUGFZaW9Cbm1nNVVqWDU3c3dwYWJIeE84clI0SUVJRWJleFB3ZDZ2?=
+ =?utf-8?B?K3Q2VWVZMGZCbWQ4cGNGRWJqT213NUNiQjFJemNvSjVscWZKRVhtbUdqR3F3?=
+ =?utf-8?B?OWNPcUVsVnNJTWpzKzdMQ1lTKzRtWUNWYkNpTjNDTWhtK2VZaWZ2dXluZHFL?=
+ =?utf-8?B?NTB0bHlITEZqdFlLS0hrWnFzMVlFOGVUTjF5Lzk3Y1ZzSitCSWJqSWVBRUNj?=
+ =?utf-8?B?cWZYRGZxODNvWk5IRWd0Q08rVGtBUHhNQWVocjRobmI3b3AyV2tTN2VwNUZF?=
+ =?utf-8?B?d3k1ZW1vL09CS3NzVjRBQ0ZNM3dvV0NlMnZNODdKRFZjVGs3MXFDVjNISHpX?=
+ =?utf-8?B?czZqNnN1RUJkRFFxYS8zL0U5dUFKN0h5dGVPRXpNVm1RT0FqSHhvbWlxNDFm?=
+ =?utf-8?B?ZDZsOXZuQkhSVzRvc1FTUkdhWExZMVZJazY1Y0FDUmlVdUN2SXZhYm9aeHUv?=
+ =?utf-8?B?RzN2SmVsZktON3BLdndKMXdVQnJKalp2dTluT1p2U1hUSHZyMHp3ejBLdHRF?=
+ =?utf-8?B?NjJUVVhKSjhLdElEcmc1U0NoLzlUVTU5aHNGVUdNUWF1YmNZbWoyQSt0amQw?=
+ =?utf-8?B?UmIwczFyS0h6MHpWNGl5VHp2d1JsSEwvQ08wa1pSczBGc1NzVUZ2S0cxbS85?=
+ =?utf-8?B?QUtBMUM4VU9nQ1NvTTVCRGpSZlozYjJZZ0dUVjJQV0ZvUWdRWUVCVkEvYmwx?=
+ =?utf-8?B?aHZIY01HTG9KNjloejMvV3RxdTRxQWhQSnM4VWhnZlAvdnU1eWhhWTg3b2hN?=
+ =?utf-8?B?TnpScjdaSVNEVGY5QUd6anNuQW5ic1JKTldyUlpidTd2SHZiVGMxOWloTnp0?=
+ =?utf-8?B?N21CQVhKUXhiR2V0N1ZOUVRNOWp2Q0ZtVU5semFJUGhNMVlDVlMwbU12M0cw?=
+ =?utf-8?B?SnpMVzQ5S093M2x3K2J3R0dWSXBRVS9jVENTejE0VnBVdUY3ZWpnNzl1KzdN?=
+ =?utf-8?B?Sk9mQytQUTBqM1o3TUR0YjFoNmIrSEhHbThpQ2s5OElnQUxsTkRpVUFCV2hC?=
+ =?utf-8?B?MWdlTVptSGlDQ3llK3JaTERnZWNIb3dIUE1ncFRRZzlkZTI2S0RkNFhwR2JR?=
+ =?utf-8?B?bDhuYnpVQTMyYmNtMUd2Q0tkck5sOU15RVprL3E0L1Y3L0JBMGJSdmdNTDRZ?=
+ =?utf-8?B?Wjl1cG55Q1NZZFJEM2dwN3c3UHJ1ZWFYbGNYbHIvZnFaMUVkNnVOcHFBQVo5?=
+ =?utf-8?B?TjREWUdPTkN2UzBWS2d1Sk0vanc0OHpJMFBRVGFMQ1J5anR5WmxJUFJNSkFZ?=
+ =?utf-8?B?L0hTc1pvL2ZuNkhRakUvVUpJQmVRNDRGNHJzSVFXNUpCTG5VdFRMMUdaTzFz?=
+ =?utf-8?B?b2V0anh2RENYTjdCKzZxNHQyM3o1cm1Vb3hQczdBeDBrS2drcFVxalVYaDZq?=
+ =?utf-8?B?ZnZtelZJZ1B2Mnl5UW5YTE5iay9WN202elE4NFE0OVkvRWFsYVlidzA5aWVs?=
+ =?utf-8?B?NEdxUzJQOTF5dUNGOHFlbUp1ZDlqWHlFVWVHR1NqQUU3RGovNmF5R1BJUjhR?=
+ =?utf-8?Q?7knTiR/21EvroWd7eWSeWMnIH?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0593a250-5518-49d0-5478-08dd841a03cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2025 16:55:42.3809
+X-MS-Exchange-CrossTenant-AuthSource: KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa11f0a3-9117-4459-4089-08dd841d38f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2025 17:18:40.0684
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7425
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HVeKv/FX4hLnmw2MCthk/Oj8wyGfnfUv1RZHtDDWdc5yzWd92yMtwAsJ7L+Ll/iVe9xoTSGiX0iaWFgKblP6wA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZP153MB0712
 
-From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, April 25, 2025=
- 9:36 AM
->=20
-> On 4/25/2025 8:12 AM, Michael Kelley wrote:
-> > From: Roman Kisel <romank@linux.microsoft.com> Sent: Thursday, April 24=
-, 2025 2:58 PM
-> >>
-> >> To start an application processor in SNP-isolated guest, a hypercall
-> >> is used that takes a virtual processor index. The hv_snp_boot_ap()
-> >> function uses that START_VP hypercall but passes as VP ID to it what
-> >> it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
-> >>
-> >> As those two aren't generally interchangeable, that may lead to hung
-> >> APs if VP IDs and APIC IDs don't match, e.g. APIC IDs might be sparse
-> >> whereas VP IDs never are.
-> >
-> > I agree that VP IDs (a.k.a. VP indexes) and APIC IDs don't necessary ma=
-tch,
-> > and that APIC IDs might be sparse. But I'm not aware of any statement
-> > in the TLFS about the nature of VP indexes, except that
-> >
-> >     "A virtual processor index must be less than the maximum number of
-> >     virtual processors per partition."
-> >
-> > But that maximum is the Hyper-V implementation maximum, not the
-> > maximum for a particular VM. So the statement does not imply
-> > denseness unless the number of CPUs in the VM is equal to the
-> > Hyper-V implementation max. In other parts of Linux kernel code,
-> > we assume that VP indexes might be sparse as well.
-> >
-> > All that said, this is just a comment about the precise accuracy of
-> > your commit message, and doesn't affect the code.
-> >
->=20
-> I appreciate your help with the precision. I used loose language,
-> agreed, would like to fix that. The patch was applied though but not yet
-> sent to the Linus'es tree as I understand. I'd appreciate guidance on
-> the process! Should I send a v2 nevertheless and explain the situation
-> in the cover letter?
->=20
-> IOW, how do I make this easier for the maintainer(s)?
-
-Wei Liu should give his preferences. But in the past, I think he has
-just replaced a patch that was updated. If that's the case, you can=20
-send a v2 without a lot of additional explanation.
-
->=20
-> >>
-> >> Update the parameter names to avoid confusion as to what the parameter
-> >> is. Use the APIC ID to VP ID conversion to provide correct input to th=
-e
-> >> hypercall.
-> >
-> > Terminology:  The TLFS calls this the "VP Index", not the "VP ID".  In
-> > other Linux code, we also call it the "VP Index".  See the hv_vp_index
-> > array, for example.  The exception is the hypercall itself, which the T=
-LFS
-> > calls HvCallGetVpIndexFromApicId, but which our Linux code calls
-> > HVCALL_GET_VP_ID_FROM_APIC_ID for some unknown reason.
-> >
-> > Could you fix the terminology to be consistent?  And maybe fix the
-> > HVCALL_* string name as well.  I know you are just moving the
-> > existing VTL code, but let's take the opportunity to avoid any
-> > terminology inconsistency.
-> >
->=20
-> I percieved ID as both "index" and "identificator" I guess but maybe
-> "idx" is more like "index". I'll send out a fix for the terminology,
-> thanks for your help!
-
-Yes, please just call it "vp_index", fully spelled out, as that's consisten=
-t
-with other Linux code for Hyper-V.
-
-I briefly got confused because I searched the TLFS for the rules on
-"vpid" or "vp_id", and found no matches. Then I remembered that
-it is really "vp index". As for the connotations my brain assigns, "index"
-is a modest integer suitable for indexing into an array, and the Hyper-V
-VP index fits that description. OTOH, "id" has a much wider potential
-meaning, including something as large as a GUID. Of course, given the
-nature of connotations, other people might have different
-associations. :-)
-
-Michael
-
->=20
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
-> >> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> >> ---
-> >>   arch/x86/hyperv/hv_init.c       | 33 +++++++++++++++++++++++++++++++=
-+
-> >>   arch/x86/hyperv/hv_vtl.c        | 34 +------------------------------=
---
-> >>   arch/x86/hyperv/ivm.c           | 11 +++++++++--
-> >>   arch/x86/include/asm/mshyperv.h |  5 +++--
-> >>   4 files changed, 46 insertions(+), 37 deletions(-)
-> >>
-> >> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> >> index ddeb40930bc8..23422342a091 100644
-> >> --- a/arch/x86/hyperv/hv_init.c
-> >> +++ b/arch/x86/hyperv/hv_init.c
-> >> @@ -706,3 +706,36 @@ bool hv_is_hyperv_initialized(void)
-> >>   	return hypercall_msr.enable;
-> >>   }
-> >>   EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
-> >> +
-> >> +int hv_apicid_to_vp_id(u32 apic_id)
-> >> +{
-> >> +	u64 control;
-> >> +	u64 status;
-> >> +	unsigned long irq_flags;
-> >> +	struct hv_get_vp_from_apic_id_in *input;
-> >> +	u32 *output, ret;
-> >> +
-> >> +	local_irq_save(irq_flags);
-> >> +
-> >> +	input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
-> >> +	memset(input, 0, sizeof(*input));
-> >> +	input->partition_id =3D HV_PARTITION_ID_SELF;
-> >> +	input->apic_ids[0] =3D apic_id;
-> >> +
-> >> +	output =3D *this_cpu_ptr(hyperv_pcpu_output_arg);
-> >> +
-> >> +	control =3D HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
-> >> +	status =3D hv_do_hypercall(control, input, output);
-> >> +	ret =3D output[0];
-> >> +
-> >> +	local_irq_restore(irq_flags);
-> >> +
-> >> +	if (!hv_result_success(status)) {
-> >> +		pr_err("failed to get vp id from apic id %d, status %#llx\n",
-> >> +		       apic_id, status);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(hv_apicid_to_vp_id);
-> >> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> >> index 582fe820e29c..8bc4f0121e5e 100644
-> >> --- a/arch/x86/hyperv/hv_vtl.c
-> >> +++ b/arch/x86/hyperv/hv_vtl.c
-> >> @@ -205,38 +205,6 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_inde=
-x, int
-> cpu, u64 eip_ignored)
-> >>   	return ret;
-> >>   }
-> >>
-> >> -static int hv_vtl_apicid_to_vp_id(u32 apic_id)
-> >> -{
-> >> -	u64 control;
-> >> -	u64 status;
-> >> -	unsigned long irq_flags;
-> >> -	struct hv_get_vp_from_apic_id_in *input;
-> >> -	u32 *output, ret;
-> >> -
-> >> -	local_irq_save(irq_flags);
-> >> -
-> >> -	input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
-> >> -	memset(input, 0, sizeof(*input));
-> >> -	input->partition_id =3D HV_PARTITION_ID_SELF;
-> >> -	input->apic_ids[0] =3D apic_id;
-> >> -
-> >> -	output =3D *this_cpu_ptr(hyperv_pcpu_output_arg);
-> >> -
-> >> -	control =3D HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
-> >> -	status =3D hv_do_hypercall(control, input, output);
-> >> -	ret =3D output[0];
-> >> -
-> >> -	local_irq_restore(irq_flags);
-> >> -
-> >> -	if (!hv_result_success(status)) {
-> >> -		pr_err("failed to get vp id from apic id %d, status %#llx\n",
-> >> -		       apic_id, status);
-> >> -		return -EINVAL;
-> >> -	}
-> >> -
-> >> -	return ret;
-> >> -}
-> >> -
-> >>   static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long sta=
-rt_eip)
-> >>   {
-> >>   	int vp_id, cpu;
-> >> @@ -250,7 +218,7 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid,
-> unsigned
-> >> long start_eip)
-> >>   		return -EINVAL;
-> >>
-> >>   	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
-> >> -	vp_id =3D hv_vtl_apicid_to_vp_id(apicid);
-> >> +	vp_id =3D hv_apicid_to_vp_id(apicid);
-> >>
-> >>   	if (vp_id < 0) {
-> >>   		pr_err("Couldn't find CPU with APIC ID %d\n", apicid);
-> >> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> >> index c0039a90e9e0..e3c32bb0d0cf 100644
-> >> --- a/arch/x86/hyperv/ivm.c
-> >> +++ b/arch/x86/hyperv/ivm.c
-> >> @@ -288,7 +288,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_ar=
-ea
-> *vmsa)
-> >>   		free_page((unsigned long)vmsa);
-> >>   }
-> >>
-> >> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
-> >> +int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip)
-> >>   {
-> >>   	struct sev_es_save_area *vmsa =3D (struct sev_es_save_area *)
-> >>   		__get_free_page(GFP_KERNEL | __GFP_ZERO);
-> >> @@ -297,10 +297,17 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_=
-ip)
-> >>   	u64 ret, retry =3D 5;
-> >>   	struct hv_enable_vp_vtl *start_vp_input;
-> >>   	unsigned long flags;
-> >> +	int vp_id;
-> >>
-> >>   	if (!vmsa)
-> >>   		return -ENOMEM;
-> >>
-> >> +	vp_id =3D hv_apicid_to_vp_id(apic_id);
-> >> +
-> >> +	/* The BSP or an error */
-> >> +	if (vp_id <=3D 0)
-> >
-> > Returning an error on value 0 may be problematic here. Consider
-> > the panic case where a CPU other than the BSP takes a panic and
-> > initiates kdump. If the kdump kernel runs with more than 1 CPU, it
-> > may try to start the CPU that was originally the BSP. To my
-> > knowledge, SEV-SNP guests on Hyper-V don't support kdump at
-> > the moment so this problem is currently theoretical, but let's not
-> > leave a potential future problem by excluding 0 here.
-> >
-> > Also, since I assert that we really don't know anything about the
-> > VP index values, we can't exclude 0.  It may or may not be the
-> > original BSP.
-> >
->=20
-> I believed that the BSP is always 0 yet as long as that's not in TLFS,
-> that's not true, I agree on that. Probably not this function's job to
-> check that the processor shouldn't be attempted to start, will fix!
->=20
-> > Michael
-> >
-> >> +		return -EINVAL;
-> >> +
-> >>   	native_store_gdt(&gdtr);
-> >>
-> >>   	vmsa->gdtr.base =3D gdtr.address;
-> >> @@ -348,7 +355,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip=
-)
-> >>   	start_vp_input =3D (struct hv_enable_vp_vtl *)ap_start_input_arg;
-> >>   	memset(start_vp_input, 0, sizeof(*start_vp_input));
-> >>   	start_vp_input->partition_id =3D -1;
-> >> -	start_vp_input->vp_index =3D cpu;
-> >> +	start_vp_input->vp_index =3D vp_id;
-> >>   	start_vp_input->target_vtl.target_vtl =3D ms_hyperv.vtl;
-> >>   	*(u64 *)&start_vp_input->vp_context =3D __pa(vmsa) | 1;
-> >>
-> >> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/ms=
-hyperv.h
-> >> index 07aadf0e839f..ae62a34bfd1e 100644
-> >> --- a/arch/x86/include/asm/mshyperv.h
-> >> +++ b/arch/x86/include/asm/mshyperv.h
-> >> @@ -268,11 +268,11 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, str=
-uct
-> >> hv_interrupt_entry *entry);
-> >>   #ifdef CONFIG_AMD_MEM_ENCRYPT
-> >>   bool hv_ghcb_negotiate_protocol(void);
-> >>   void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int rea=
-son);
-> >> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
-> >> +int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip);
-> >>   #else
-> >>   static inline bool hv_ghcb_negotiate_protocol(void) { return false; =
-}
-> >>   static inline void hv_ghcb_terminate(unsigned int set, unsigned int =
-reason) {}
-> >> -static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { r=
-eturn 0; }
-> >> +static inline int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip)=
- { return 0; }
-> >>   #endif
-> >>
-> >>   #if defined(CONFIG_AMD_MEM_ENCRYPT) ||
-> defined(CONFIG_INTEL_TDX_GUEST)
-> >> @@ -329,6 +329,7 @@ static inline void hv_set_non_nested_msr(unsigned =
-int reg,
-> >> u64 value) { }
-> >>   static inline u64 hv_get_non_nested_msr(unsigned int reg) { return 0=
-; }
-> >>   #endif /* CONFIG_HYPERV */
-> >>
-> >> +int hv_apicid_to_vp_id(u32 apic_id);
-> >>
-> >>   #ifdef CONFIG_HYPERV_VTL_MODE
-> >>   void __init hv_vtl_init_platform(void);
-> >>
-> >> base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
-> >> --
-> >> 2.43.0
-> >>
-> >
->=20
-> --
-> Thank you,
-> Roman
-
+IA0KPiBPbiA0LzI1LzIwMjUgMjoxNCBBTSwgU2F1cmFiaCBTaW5naCBTZW5nYXIgd3JvdGU6DQo+
+ID4+DQo+ID4+IE9uIFRodSwgQXByIDI0LCAyMDI1IGF0IDAyOjU3OjQ2UE0gLTA3MDAsIFJvbWFu
+IEtpc2VsIHdyb3RlOg0KPiA+Pj4gVG8gc3RhcnQgYW4gYXBwbGljYXRpb24gcHJvY2Vzc29yIGlu
+IFNOUC1pc29sYXRlZCBndWVzdCwgYSBoeXBlcmNhbGwNCj4gPj4+IGlzIHVzZWQgdGhhdCB0YWtl
+cyBhIHZpcnR1YWwgcHJvY2Vzc29yIGluZGV4LiBUaGUgaHZfc25wX2Jvb3RfYXAoKQ0KPiA+Pj4g
+ZnVuY3Rpb24gdXNlcyB0aGF0IFNUQVJUX1ZQIGh5cGVyY2FsbCBidXQgcGFzc2VzIGFzIFZQIElE
+IHRvIGl0IHdoYXQNCj4gPj4+IGl0IHJlY2VpdmVzIGFzIGEgd2FrZXVwX3NlY29uZGFyeV9jcHVf
+NjQgY2FsbGJhY2s6IHRoZSBBUElDIElELg0KPiA+Pj4NCj4gPj4+IEFzIHRob3NlIHR3byBhcmVu
+J3QgZ2VuZXJhbGx5IGludGVyY2hhbmdlYWJsZSwgdGhhdCBtYXkgbGVhZCB0byBodW5nDQo+ID4+
+PiBBUHMgaWYgVlAgSURzIGFuZCBBUElDIElEcyBkb24ndCBtYXRjaCwgZS5nLiBBUElDIElEcyBt
+aWdodCBiZQ0KPiA+Pj4gc3BhcnNlIHdoZXJlYXMgVlAgSURzIG5ldmVyIGFyZS4NCj4gPj4+DQo+
+ID4+PiBVcGRhdGUgdGhlIHBhcmFtZXRlciBuYW1lcyB0byBhdm9pZCBjb25mdXNpb24gYXMgdG8g
+d2hhdCB0aGUNCj4gPj4+IHBhcmFtZXRlciBpcy4gVXNlIHRoZSBBUElDIElEIHRvIFZQIElEIGNv
+bnZlcnNpb24gdG8gcHJvdmlkZSBjb3JyZWN0DQo+ID4+PiBpbnB1dCB0byB0aGUgaHlwZXJjYWxs
+Lg0KPiA+Pj4NCj4gPj4+IENjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+ID4+PiBGaXhlczog
+NDQ2NzZiYjlkNTY2ICgieDg2L2h5cGVydjogQWRkIHNtcCBzdXBwb3J0IGZvciBTRVYtU05QDQo+
+ID4+PiBndWVzdCIpDQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBSb21hbiBLaXNlbCA8cm9tYW5rQGxp
+bnV4Lm1pY3Jvc29mdC5jb20+DQo+ID4+DQo+ID4+IEFwcGxpZWQgdG8gaHlwZXJ2LWZpeGVzLg0K
+PiA+DQo+ID4gVGhpcyBwYXRjaCB3aWxsIGJyZWFrIHRoZSBidWlsZHMuDQo+ID4NCj4gPiBSb21h
+biwNCj4gPiBIYXZlIHlvdSB0ZXN0ZWQgdGhpcyBwYXRjaCBvbiB0aGUgbGF0ZXN0IGxpbnV4LW5l
+eHQgPw0KPiANCj4gVGhhbmtzIGZvciB5b3VyIGhlbHAhIE9ubHkgb24gaHlwZXJ2LW5leHQsIGxv
+b2tpbmcgaG93IHRvIHJlcHJvIGFuZCBmaXggb24NCj4gbGludXgtbmV4dC4gVGhlIGtlcm5lbCBy
+b2JvdCB3YXMgaGFwcHksIG9yIEkgYW0gbWlzc2luZyBzb21lIGNvbnRleHQgYWJvdXQNCj4gaG93
+IHRoZSByb2JvdCB3b3Jrcy4uLg0KPiANCj4gV2hhdCB3YXMgeW91ciBrZXJuZWwgY29uZmlndXJh
+dGlvbiwgb3IganVzdCBhbnl0aGluZyB0aGF0IGVuYWJsZXMgSHlwZXItVj8NCj4gDQo+IEkgdGhv
+dWdodCB0aGUgdGhlIGxpbnV4LW5leHQgdHJlZSB3b3VsZCBiZSBhIHN1YnNldCBvZiBoeXBlci1u
+ZXh0IHNvIHNob3VsZA0KPiB3b3JrLCByZWFsaXppbmcgdGhhdCBoYXZlIHRvIGNoZWNrLCBsaWtl
+bHkgdGhlcmUgbWlnaHQgYmUgY2hhbmdlcyBmcm9tIG90aGVyDQo+IHRyZWVzLg0KPiANCg0KDQpo
+eXBlcnYtZml4ZXMgaXMgYnJva2VuIHRvbywgaGVyZSdzIHRoZSBsb2cgZm9yIHlvdXIgcmVmOg0K
+DQpodHRwczovL2Rhc2hib2FyZC5rZXJuZWxjaS5vcmcvbG9nLXZpZXdlcj9pdGVtSWQ9bWljcm9z
+b2Z0JTNBMjAyNTA0MjUwODU4MzM5MTY3OTAmbz1taWNyb3NvZnQmdHlwZT1idWlsZCZ1cmw9aHR0
+cHMlM0ElMkYlMkZsaXNhbG9nc2IxNTg1MGQzLmJsb2IuY29yZS53aW5kb3dzLm5ldCUyRmxpc2Et
+bG9ncyUyRmRlZmF1bHRfZGVmYXVsdCUyRjIwMjUwNDI1JTJGMjAyNTA0MjUtMDg1MTEwLTM5MyUy
+Rmtlcm5lbF9pbnN0YWxsZXIlMkZidWlsZC5sb2clM0ZzdCUzRDIwMjUtMDQtMjVUMDklMjUzQTA5
+JTI1M0EzNVolMjZzZSUzRDIwMjUtMDUtMDJUMDklMjUzQTA5JTI1M0EzNVolMjZzcCUzRHIlMjZz
+diUzRDIwMjQtMTEtMDQlMjZzciUzRGIlMjZza29pZCUzRDE0YjUzYjFkLWY0ZmMtNDQyZS1hNDM3
+LTQ5ODkzNzZiMTc1NCUyNnNrdGlkJTNENzJmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFk
+YjQ3JTI2c2t0JTNEMjAyNS0wNC0yNVQwOSUyNTNBMDklMjUzQTM1WiUyNnNrZSUzRDIwMjUtMDUt
+MDJUMDklMjUzQTA5JTI1M0EzNVolMjZza3MlM0RiJTI2c2t2JTNEMjAyNC0xMS0wNCUyNnNpZyUz
+RFpIZkE3JTJGQzE3NEtSNkhUOHpoY2hDYjQ3TkUxYWNlcXc4aDBBUHpLeHNJSSUyNTNEDQoNClRo
+ZSBodl9zbnBfYm9vdF9hcCgpIGZ1bmN0aW9uIGluIGFyY2gveDg2L2h5cGVydi9pdm0uYyBjdXJy
+ZW50bHkgZmFpbHMgdG8gY29tcGlsZS4NCkl0IGxvb2tzIGxpa2UgdGhlIGZ1bmN0aW9uJ3MgYXJn
+dW1lbnQgd2FzIGNoYW5nZWQgZnJvbSAnY3B1JyB0byAnYXBpY19pZCcsIGJ1dCBpbnRlcm5hbA0K
+cmVmZXJlbmNlcyB0byBjcHUgd2VyZSBub3QgdXBkYXRlZCBhY2NvcmRpbmdseS4NCg0KVGhpcyBt
+aWdodCBoYXZlIGdvbmUgdW5ub3RpY2VkIGR1cmluZyB5b3VyIHRlc3RpbmcgaWYgQ09ORklHX0FN
+RF9NRU1fRU5DUllQVA0Kd2FzIGRpc2FibGVkLCBpbiB3aGljaCBjYXNlIHRoaXMgZnVuY3Rpb24g
+d291bGRuJ3QgaGF2ZSBiZWVuIGNvbXBpbGVkLg0KDQpSZWdhcmRzLA0KU2F1cmFiaA0K
 
