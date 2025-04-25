@@ -1,392 +1,310 @@
-Return-Path: <linux-hyperv+bounces-5108-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5109-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3688A9BEAE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:33:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B01CA9BEE1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 08:52:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 418943BADF4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 06:32:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 693E64A3E96
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 06:52:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D787A22AE59;
-	Fri, 25 Apr 2025 06:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 532CF1F3B89;
+	Fri, 25 Apr 2025 06:52:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gI5KQpLF"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fnqWZbK2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6247D197A76
-	for <linux-hyperv@vger.kernel.org>; Fri, 25 Apr 2025 06:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D925A22B8B1
+	for <linux-hyperv@vger.kernel.org>; Fri, 25 Apr 2025 06:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745562789; cv=none; b=ZjD5++RoaVqmdLFqnmTBHLrIEOLL7lC7DIpQflGauUwkIaNRnj8+Nt4qwbF1QNOtkntOLq1AAa1cmMQrCV1fat1NBNrZiG/Qj+aTAgVX3F/pj2o9jSASL49fpQhTYQl15YXt2DgGqV2S4oJEoqDLmdZ5Wg/vmsuOeof3+YzWk+s=
+	t=1745563925; cv=none; b=sh0Zjv29ewKZmG4V/UiEAUsBhj4PevMhpxG77L3hNaDw6a32cIv/HXYGx0Us7+pUnuVy3DSG08Xba+i+RT1pAw+PiPsymVctHkY6OSvbgmk3sng5a+Epn0vd/+pyq/YaMerWVeHiNcv6a3Q+ohF5AeuQwlmoX8+bhO9AY+7MPfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745562789; c=relaxed/simple;
-	bh=56tCywcZKP0beJQf8hFoLiJGx5c54ZdK/gUAtsVWx6o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ueupxL/EmsjBngOGeXHHi9+pDk+5wiohxc4avVMwgfSB63UWL0aeLuaRnVcBw81m7C4zrzbaQb8aWz741xTCQ+KvfZ4jpFn+4MWAn/bY+MVAWeXmE//ma648SwEeq974HUJjVp6fN89Ej8m0mQFXmFZNp9A6aCWaE+WRwTiZr9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gI5KQpLF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745562785;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d285x5hlvi/CsClG0dx/mghTairCHhYodtu6zCS6z7I=;
-	b=gI5KQpLF3sEj6VQF3Avblm6K6D0SRoizeuKZr+9BVkz0/H/US4gVGrk6/A88VS+phBxaaV
-	9eb7o5cD4fX5r6EDBu7yjgB7xYFdd62UD0hrVEYLKF7/5s2YGM0ul8DiaQNAxHQLj/UxTs
-	MTD4fb33FamhtW0u3tKMMAP3yql4IDE=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-9fBO04J1OrSh-tnbjqLDcQ-1; Fri, 25 Apr 2025 02:33:04 -0400
-X-MC-Unique: 9fBO04J1OrSh-tnbjqLDcQ-1
-X-Mimecast-MFC-AGG-ID: 9fBO04J1OrSh-tnbjqLDcQ_1745562783
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-739525d4d7bso1493007b3a.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 24 Apr 2025 23:33:03 -0700 (PDT)
+	s=arc-20240116; t=1745563925; c=relaxed/simple;
+	bh=0MiSnhd6LKI51whYJ6+YCfOKtkOaJi9qq1W8mhQmh9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D+wlA+Jfee+1UyfGqVEwO2xoIjOmo2DtGJzDgL2Yrq3J9NepaP8geZnvaGY1JkkTk1lCnTq984svZ43EbL0//LULedO9WEHyWafmQcD82bU40MfvMi/FG43Hmw0CFLT59MtgiIHPBFd6vxiz27suruPlYYiGR2MfAzoY/LByxE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fnqWZbK2; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so2444684a12.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 24 Apr 2025 23:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745563921; x=1746168721; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0MiSnhd6LKI51whYJ6+YCfOKtkOaJi9qq1W8mhQmh9U=;
+        b=fnqWZbK2i0YmxcoOG0zwYb2a+Njrm2KAMK3IjjE1hPI9ahskxAWKUBtirzYV6c+1Mt
+         jxWOh6pW767U7EP6Po6NN5DiXU1Z1Nowi7LrxATJMxITfv1slAYE2ND/SpU4nZ54BNtX
+         Lx8mHhZiVSap73rMiTrKIBz15BtR/zpl0Okzwhpgrys1yPYT86foBDxeyla6u+WiWv3o
+         qPPL74heDQIiUk2hIQqSy+2LushrU49hnuQUHqtArTw56zf5n3jC3yFha72iYsnYR5rE
+         UqKeN2QipdaeFdsC+Z/cXLpzmNk9VpjiHhVCeRYiAYM82uWkWRec2fKNCwyAGDtJR1Td
+         IEKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745562783; x=1746167583;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d285x5hlvi/CsClG0dx/mghTairCHhYodtu6zCS6z7I=;
-        b=E1a14wiom0/9BoM488yqKS18igzW0Ih62CcUNY0O8ZD/np1jydECJACH8yJPph+uVM
-         XJUKPw514DhMqJOT/Pn1WAzG4iMd+t6x9N2gstUT+/o+5tczyMI1AyWaXn2FPsQZYMs4
-         e4hYydHuyvggktoF2PSdUPO1KXrbynTIn5Zwh+dMDlUT3lkfYYbNUNQl0N5j1dRVKtLm
-         R8B8ozN7ndfl46TwVZUcTIMUMAXdIuj5MSIeEhDJh4YmaS/K89EXsyD3gs4LtWn37gP3
-         bx6Bp5fpwPomGn02zSHseJK2cUqjUu1BNkiUxlGJIcRP24xMOVb6FYcPwh0e97aJE/iO
-         DWag==
-X-Forwarded-Encrypted: i=1; AJvYcCXC739aOvVWrz9VBVIkXGPCZZaWz5jlw7C49+OA1Yh9dOq7qbPdQ/gjxsLIBDfA9r7xym0ej4NQVJ8jdsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMDyb8OZOT4A2uLqSsOJ4ZaAOtjLooD7xUdpdWf1mNAo813Wu1
-	Z5SSZWA+FxwXuXQCmHUNdIDffdal7jITib6iAL8qjN+3eAUvVOqF9EWXCPxzOlw+Iy1LZd1VPhf
-	ljmch+O3cblKjrC4PANS4JCIkWhzPObpk6DYS+HnPldMGi8GZBy75eU6vhPYStw==
-X-Gm-Gg: ASbGncvIE74Cxje9ldTn/pzRV88msyf9RBtXHlX8oYM0zPZSGu2bBeYGpIeGscQjpe5
-	FRtmgBOg+XCadvWJGtNzdc6hFpUx+e+XgHyCQTnw9kUVYH08Vz/uwRhkwyIEN+757ROgYYuU7uT
-	wF1Nhvz3MRdxlGZkNSGmR8lPn9MXksgb8pYDRY17lIvzkjYiUiGffnPg+Q9ICgjmxZKI/xtlI8K
-	T02HZSTjfjB/TU72Cq9mnvZmz19dKXwJ1xwvoRr9NWWEHwfFajrjvnr5ujn8xC+VOxnAzqK/lSo
-	Xh0lfZjAv8M/
-X-Received: by 2002:a05:6a20:3d8d:b0:1f5:8de8:3b1a with SMTP id adf61e73a8af0-2045b6e73dfmr1500688637.13.1745562782831;
-        Thu, 24 Apr 2025 23:33:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHF5L5iQamY7B+V8Yg2guhT+fTSVr2uNb9/ZqVN6Z1cZ1CgRQloJBDOC8O5wm3k/XZJI+f1Gw==
-X-Received: by 2002:a05:6a20:3d8d:b0:1f5:8de8:3b1a with SMTP id adf61e73a8af0-2045b6e73dfmr1500658637.13.1745562782456;
-        Thu, 24 Apr 2025 23:33:02 -0700 (PDT)
-Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597f5csm2211261a12.43.2025.04.24.23.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 23:33:01 -0700 (PDT)
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-To: drawat.floss@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jfalempe@redhat.com
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular atomic helpers
-Date: Fri, 25 Apr 2025 15:32:32 +0900
-Message-ID: <20250425063234.757344-1-ryasuoka@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1745563921; x=1746168721;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0MiSnhd6LKI51whYJ6+YCfOKtkOaJi9qq1W8mhQmh9U=;
+        b=mHprJPT9RWUE+pupM2HYYkLj0eE//h/XKtzLMTu+uLmmNgVw/W8CG59tQ6tUWYyqj6
+         koWuo0LkC01yjtgQ6uXTzc5r+WGJB7GrF0q9gjD+a76LJyHCZKEv+9cLL9T0iCwNkiNr
+         H6qvd4Mtd+zicVqouZZWgRBSCpp18PFeXlNDVspTLT/x4CO1BR//aN96FwngqRnVmwX/
+         Eb95FPKngbY4ceAe2gkNmHqpqSZIBQHjrQNg2qoht6JFSerF+i3XEmHyuHB4IvXSeDyV
+         ggC7yt/2gkQbDghdglmmqNY7u0iZhsAdv3cxxtDKzKUZmwlmmXMg6INjQZXskg+gal4p
+         GXzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWii8AgHgmbFq0gjzAhGUiUoBdu2ighHsQGH4qwFIAJDnYbkUWg1q5a9hBnvIlzOg8Ysk2p0FVxKqDgPb0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL3gmN7+97yyRLvIBc0tQYN+4TZ1a842pCdG6W6P6Kr+uia9VN
+	nU2813XP/FiQc5HjumsEPgyDYysmKJUZFK1o+R+iRQhE9EMlVXRxahKRKRscE3o=
+X-Gm-Gg: ASbGncvmdMGe1rxS3xUB24kwfCd69HPtTo1+dEg6WUeD3Q64xKyOD7cHnEvqBEE3TeC
+	lnNY9mY1p3kX5xrSPfyC+OHqMcxLIvsaqA2J6vCUAjDtZQkp4j6hS9hF2rGJBAnnOp9rcHfHr/+
+	jHlTNsYXWTxH4DO/0G2UghUPufXLDG6r4zjqG936VZ6NgKhAfmdZEnVU11feeLPaYFpI7O07Fj5
+	0S0+YP09LI7AlGOQXy04E+iel4o+ArZkHaItQktlmrCGd4fsINHIKl70V9RddO9/GN5wnn+vCNh
+	lnWTtsUfjFc7YXKRUOZ+kpOTfXli9CUQY8+mSJns+KLFzQfAZmf1wAlEyz/wj2XR2GJtc2ee/hg
+	Du+73+t0W7wtpMbcYClT34dtNG099bZ/Kztidv9N6tX8LVuMyK7qB8lUWN3igMncaKw==
+X-Google-Smtp-Source: AGHT+IH6tRnHb03g3T3b9xd39ZFziT14G1AusaxT67r9u6w2KcJuEH4Jv4x/SdvY9ic/HmRGz4GAmQ==
+X-Received: by 2002:a17:907:1c18:b0:aca:a162:8707 with SMTP id a640c23a62f3a-ace71025d83mr100133966b.7.1745563921096;
+        Thu, 24 Apr 2025 23:52:01 -0700 (PDT)
+Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f703831b5csm794913a12.65.2025.04.24.23.51.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 23:52:00 -0700 (PDT)
+Message-ID: <0825ae04-6545-424d-ad01-3a5fda36ad86@suse.com>
+Date: Fri, 25 Apr 2025 08:51:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+To: "H. Peter Anvin" <hpa@zytor.com>, Xin Li <xin@zytor.com>,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+ linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
+ <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+ <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
+ <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+ <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
+ <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
+ <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------T4ZWz9eXqhqS8XTZKkH4szjE"
 
-Drop simple-KMS in favor of regular atomic helpers to make the code more
-modular. The simple-KMS helper mix up plane and CRTC state, so it is
-obsolete and should go away [1]. Since it just split the simple-pipe
-functions into per-plane and per-CRTC, no functional changes is
-expected.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------T4ZWz9eXqhqS8XTZKkH4szjE
+Content-Type: multipart/mixed; boundary="------------aDhkvWpyJ2mqrcVlzpHJ5Lh0";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: "H. Peter Anvin" <hpa@zytor.com>, Xin Li <xin@zytor.com>,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+ linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+Message-ID: <0825ae04-6545-424d-ad01-3a5fda36ad86@suse.com>
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
+ <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+ <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
+ <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+ <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
+ <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
+ <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
+In-Reply-To: <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
 
-[1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@suse.de/
+--------------aDhkvWpyJ2mqrcVlzpHJ5Lh0
+Content-Type: multipart/mixed; boundary="------------zlSHc0vaMFKhZ0dLG0JUBad0"
 
-Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+--------------zlSHc0vaMFKhZ0dLG0JUBad0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
----
-v2:
-- Remove hyperv_crtc_helper_mode_valid
-- Remove hyperv_format_mod_supported
-- Call helper_add after {plane,crtc}_init
-- Move drm_plane_enable_fb_damage_clips to a place close to plane init
-- Move hyperv_conn_init() into hyperv_pipe_init
-- Remove hyperv_blit_to_vram_fullscreen
-- Remove format check
-- Replace hyperv_crtc_helper_atomic_check to drm_crtc_helper_atomic_check
+T24gMjUuMDQuMjUgMDM6MTUsIEguIFBldGVyIEFudmluIHdyb3RlOg0KPiBPbiA0LzI0LzI1
+IDAxOjE0LCBKw7xyZ2VuIEdyb8OfIHdyb3RlOg0KPj4+DQo+Pj4gQWN0dWFsbHksIHRoYXQg
+aXMgaG93IHdlIGdldCB0aGlzIHBhdGNoIHdpdGggdGhlIGV4aXN0aW5nIGFsdGVybmF0aXZl
+cw0KPj4+IGluZnJhc3RydWN0dXJlLsKgIEFuZCB3ZSB0b29rIGEgc3RlcCBmdXJ0aGVyIHRv
+IGFsc28gcmVtb3ZlIHRoZSBwdl9vcHMNCj4+PiBNU1IgQVBJcy4uLg0KPj4NCj4+IEFuZCB0
+aGlzIGlzIHdoYXQgSSdtIHF1ZXN0aW9uaW5nLiBJTUhPIHRoaXMgYXBwcm9hY2ggaXMgYWRk
+aW5nIG1vcmUNCj4+IGNvZGUgYnkgcmVtb3ZpbmcgdGhlIHB2X29wcyBNU1JfQVBJcyBqdXN0
+IGJlY2F1c2UgInB2X29wcyBpcyBiYWQiLiBBbmQNCj4+IEkgYmVsaWV2ZSBtb3N0IHJlZnVz
+YWwgb2YgcHZfb3BzIGlzIGJhc2VkIG9uIG5vIGxvbmdlciB2YWxpZCByZWFzb25pbmcuDQo+
+Pg0KPiANCj4gcHZvcHMgYXJlIGEgaGVhZGFjaGUgYmVjYXVzZSBpdCBpcyBlZmZlY3RpdmVs
+eSBhIHNlY29uZGFyeSBhbHRlcm5hdGl2ZXMgDQo+IGluZnJhc3RydWN0dXJlIHRoYXQgaXMg
+aW5jb21wYXRpYmxlIHdpdGggdGhlIGFsdGVybmF0aXZlcyBvbmUuLi4NCg0KSHU/IEhvdyBj
+YW4gdGhhdCBiZSwgYXMgcHZfb3BzIGlzIHVzaW5nIG9ubHkgYWx0ZXJuYXRpdmVzIGluZnJh
+c3RydWN0dXJlDQpmb3IgZG9pbmcgdGhlIHBhdGNoaW5nPw0KDQpJJ2Qgc2F5IHRvZGF5IHB2
+X29wcyBpcyBhIGNvbnZlbmllbmNlIHdyYXBwZXIgYXJvdW5kIGFsdGVybmF0aXZlcy4NCg0K
+PiANCj4+PiBJdCBsb29rcyB0byBtZSB0aGF0IHlvdSB3YW50IHRvIGFkZCBhIG5ldyBmYWNp
+bGl0eSB0byB0aGUgYWx0ZXJuYXRpdmVzDQo+Pj4gaW5mcmFzdHJ1Y3R1cmUgZmlyc3Q/DQo+
+Pg0KPj4gV2h5IHdvdWxkIHdlIG5lZWQgYSBuZXcgZmFjaWxpdHkgaW4gdGhlIGFsdGVybmF0
+aXZlcyBpbmZyYXN0cnVjdHVyZT8NCj4gDQo+IEknbSBub3Qgc3VyZSB3aGF0IFhpbiBtZWFu
+cyB3aXRoICJmYWNpbGl0eSIsIGJ1dCBhIGtleSBtb3RpdmF0aW9uIGZvciB0aGlzIGlzIHRv
+Og0KPiANCj4gYS4gQXZvaWQgdXNpbmcgdGhlIHB2b3BzIGZvciBNU1JzIHdoZW4gb24gdGhl
+IG9ubHkgcmVtYWluaW5nIHVzZXIgdGhlcmVvZiAoWGVuKSANCj4gaXMgb25seSB1c2luZyBp
+dCBmb3IgYSB2ZXJ5IHNtYWxsIHN1YnNldCBvZiBNU1JzIGFuZCBmb3IgdGhlIHJlc3QgaXQg
+aXMganVzdCANCj4gb3ZlcmhlYWQsIGV2ZW4gZm9yIFhlbjsNCj4gDQo+IGIuIEJlaW5nIGFi
+bGUgdG8gZG8gd3Jtc3JucyBpbW1lZGlhdGUvd3Jtc3Jucy93cm1zciBhbmQgcmRtc3IgaW1t
+ZWRpYXRlL3JkbXNyIA0KPiBhbHRlcm5hdGl2ZXMuDQo+IA0KPiBPZiB0aGVzZSwgKGIpIGlz
+IGJ5IGZhciB0aGUgYmlnZ2VzdCBtb3RpdmF0aW9uLiBUaGUgYXJjaGl0ZWN0dXJhbCBkaXJl
+Y3Rpb24gZm9yIA0KPiBzdXBlcnZpc29yIHN0YXRlcyBpcyB0byBhdm9pZCBhZCBob2MgYW5k
+IFhTQVZFUyBJU0EgYW5kIGluc3RlYWQgdXNlIE1TUnMuIFRoZSANCj4gaW1tZWRpYXRlIGZv
+cm1zIGFyZSBleHBlY3RlZCB0byBiZSBzaWduaWZpY2FudGx5IGZhc3RlciwgYmVjYXVzZSB0
+aGV5IG1ha2UgdGhlIA0KPiBNU1IgaW5kZXggYXZhaWxhYmxlIGF0IHRoZSB2ZXJ5IGJlZ2lu
+bmluZyBvZiB0aGUgcGlwZWxpbmUgaW5zdGVhZCBvZiBhdCBhIA0KPiByZWxhdGl2ZWx5IGxh
+dGUgc3RhZ2UuDQoNCkkgdW5kZXJzdGFuZCB0aGUgbW90aXZhdGlvbiBmb3IgYiksIGJ1dCBJ
+IHRoaW5rIHRoaXMgY291bGQgYmUgYWNoaWV2ZWQgd2l0aG91dA0KYSkgcmF0aGVyIGVhc2ls
+eS4gQW5kIEkgY29udGludWUgdG8gYmVsaWV2ZSB0aGF0IHlvdXIgcmVhc29uaW5nIGZvciBh
+KSBpcyBiYXNlZA0Kb24gb2xkIGZhY3RzLiBCdXQgbWF5IGJlIEknbSBqdXN0IG5vdCB1bmRl
+cnN0YW5kaW5nIHlvdXIgY29uY2VybnMgd2l0aCB0b2RheSdzDQpwdl9vcHMgaW1wbGVtZW50
+YXRpb24uDQoNCg0KSnVlcmdlbg0K
+--------------zlSHc0vaMFKhZ0dLG0JUBad0
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-v1:
-https://lore.kernel.org/all/20250420121945.573915-1-ryasuoka@redhat.com/
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
- drivers/gpu/drm/hyperv/hyperv_drm.h         |   4 +-
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 159 +++++++++++++-------
- 2 files changed, 107 insertions(+), 56 deletions(-)
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hyperv/hyperv_drm.h
-index d2d8582b36df..9e776112c03e 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm.h
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
-@@ -11,7 +11,9 @@
- struct hyperv_drm_device {
- 	/* drm */
- 	struct drm_device dev;
--	struct drm_simple_display_pipe pipe;
-+	struct drm_plane plane;
-+	struct drm_crtc crtc;
-+	struct drm_encoder encoder;
- 	struct drm_connector connector;
- 
- 	/* mode */
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 6c6b57298797..374f8464f5bc 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -5,6 +5,8 @@
- 
- #include <linux/hyperv.h>
- 
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_crtc_helper.h>
- #include <drm/drm_damage_helper.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_edid.h>
-@@ -15,7 +17,7 @@
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_gem_shmem_helper.h>
- #include <drm/drm_probe_helper.h>
--#include <drm/drm_simple_kms_helper.h>
-+#include <drm/drm_plane.h>
- 
- #include "hyperv_drm.h"
- 
-@@ -38,18 +40,6 @@ static int hyperv_blit_to_vram_rect(struct drm_framebuffer *fb,
- 	return 0;
- }
- 
--static int hyperv_blit_to_vram_fullscreen(struct drm_framebuffer *fb,
--					  const struct iosys_map *map)
--{
--	struct drm_rect fullscreen = {
--		.x1 = 0,
--		.x2 = fb->width,
--		.y1 = 0,
--		.y2 = fb->height,
--	};
--	return hyperv_blit_to_vram_rect(fb, map, &fullscreen);
--}
--
- static int hyperv_connector_get_modes(struct drm_connector *connector)
- {
- 	struct hyperv_drm_device *hv = to_hv(connector->dev);
-@@ -98,30 +88,71 @@ static int hyperv_check_size(struct hyperv_drm_device *hv, int w, int h,
- 	return 0;
- }
- 
--static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
--			       struct drm_crtc_state *crtc_state,
--			       struct drm_plane_state *plane_state)
-+static const uint32_t hyperv_formats[] = {
-+	DRM_FORMAT_XRGB8888,
-+};
-+
-+static const uint64_t hyperv_modifiers[] = {
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID
-+};
-+
-+static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
-+					     struct drm_atomic_state *state)
- {
--	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
--	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-+	struct hyperv_drm_device *hv = to_hv(crtc->dev);
-+	struct drm_plane *plane = &hv->plane;
-+	struct drm_plane_state *plane_state = plane->state;
-+	struct drm_crtc_state *crtc_state = crtc->state;
- 
- 	hyperv_hide_hw_ptr(hv->hdev);
- 	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
- 				crtc_state->mode.hdisplay,
- 				crtc_state->mode.vdisplay,
- 				plane_state->fb->pitches[0]);
--	hyperv_blit_to_vram_fullscreen(plane_state->fb, &shadow_plane_state->data[0]);
- }
- 
--static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
--			     struct drm_plane_state *plane_state,
--			     struct drm_crtc_state *crtc_state)
-+static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
-+					      struct drm_atomic_state *state)
-+{ }
-+
-+static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
-+	.atomic_check = drm_crtc_helper_atomic_check,
-+	.atomic_enable = hyperv_crtc_helper_atomic_enable,
-+	.atomic_disable = hyperv_crtc_helper_atomic_disable,
-+};
-+
-+static const struct drm_crtc_funcs hyperv_crtc_funcs = {
-+	.reset = drm_atomic_helper_crtc_reset,
-+	.destroy = drm_crtc_cleanup,
-+	.set_config = drm_atomic_helper_set_config,
-+	.page_flip = drm_atomic_helper_page_flip,
-+	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
-+};
-+
-+static int hyperv_plane_atomic_check(struct drm_plane *plane,
-+				     struct drm_atomic_state *state)
- {
--	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
-+	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct hyperv_drm_device *hv = to_hv(plane->dev);
- 	struct drm_framebuffer *fb = plane_state->fb;
-+	struct drm_crtc *crtc = plane_state->crtc;
-+	struct drm_crtc_state *crtc_state = NULL;
-+	int ret;
- 
--	if (fb->format->format != DRM_FORMAT_XRGB8888)
--		return -EINVAL;
-+	if (crtc)
-+		crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
-+
-+	ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
-+						  DRM_PLANE_NO_SCALING,
-+						  DRM_PLANE_NO_SCALING,
-+						  false, false);
-+	if (ret)
-+		return ret;
-+
-+	if (!plane_state->visible)
-+		return 0;
- 
- 	if (fb->pitches[0] * fb->height > hv->fb_size) {
- 		drm_err(&hv->dev, "fb size requested by %s for %dX%d (pitch %d) greater than %ld\n",
-@@ -132,53 +163,77 @@ static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
- 	return 0;
- }
- 
--static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
--			       struct drm_plane_state *old_state)
-+static void hyperv_plane_atomic_update(struct drm_plane *plane,
-+						      struct drm_atomic_state *old_state)
- {
--	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
--	struct drm_plane_state *state = pipe->plane.state;
-+	struct drm_plane_state *old_pstate = drm_atomic_get_old_plane_state(old_state, plane);
-+	struct hyperv_drm_device *hv = to_hv(plane->dev);
-+	struct drm_plane_state *state = plane->state;
- 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
- 	struct drm_rect rect;
- 
--	if (drm_atomic_helper_damage_merged(old_state, state, &rect)) {
-+	if (drm_atomic_helper_damage_merged(old_pstate, state, &rect)) {
- 		hyperv_blit_to_vram_rect(state->fb, &shadow_plane_state->data[0], &rect);
- 		hyperv_update_dirt(hv->hdev, &rect);
- 	}
- }
- 
--static const struct drm_simple_display_pipe_funcs hyperv_pipe_funcs = {
--	.enable	= hyperv_pipe_enable,
--	.check = hyperv_pipe_check,
--	.update	= hyperv_pipe_update,
--	DRM_GEM_SIMPLE_DISPLAY_PIPE_SHADOW_PLANE_FUNCS,
-+static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
-+	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
-+	.atomic_check = hyperv_plane_atomic_check,
-+	.atomic_update = hyperv_plane_atomic_update,
- };
- 
--static const uint32_t hyperv_formats[] = {
--	DRM_FORMAT_XRGB8888,
-+static const struct drm_plane_funcs hyperv_plane_funcs = {
-+	.update_plane		= drm_atomic_helper_update_plane,
-+	.disable_plane		= drm_atomic_helper_disable_plane,
-+	.destroy		= drm_plane_cleanup,
-+	DRM_GEM_SHADOW_PLANE_FUNCS,
- };
- 
--static const uint64_t hyperv_modifiers[] = {
--	DRM_FORMAT_MOD_LINEAR,
--	DRM_FORMAT_MOD_INVALID
-+static const struct drm_encoder_funcs hyperv_drm_simple_encoder_funcs_cleanup = {
-+	.destroy = drm_encoder_cleanup,
- };
- 
- static inline int hyperv_pipe_init(struct hyperv_drm_device *hv)
- {
-+	struct drm_device *dev = &hv->dev;
-+	struct drm_encoder *encoder = &hv->encoder;
-+	struct drm_plane *plane = &hv->plane;
-+	struct drm_crtc *crtc = &hv->crtc;
-+	struct drm_connector *connector = &hv->connector;
- 	int ret;
- 
--	ret = drm_simple_display_pipe_init(&hv->dev,
--					   &hv->pipe,
--					   &hyperv_pipe_funcs,
--					   hyperv_formats,
--					   ARRAY_SIZE(hyperv_formats),
--					   hyperv_modifiers,
--					   &hv->connector);
-+	ret = drm_universal_plane_init(dev, plane, 0,
-+				       &hyperv_plane_funcs,
-+				       hyperv_formats, ARRAY_SIZE(hyperv_formats),
-+				       hyperv_modifiers,
-+				       DRM_PLANE_TYPE_PRIMARY, NULL);
-+	if (ret)
-+		return ret;
-+	drm_plane_helper_add(plane, &hyperv_plane_helper_funcs);
-+	drm_plane_enable_fb_damage_clips(plane);
-+
-+	ret = drm_crtc_init_with_planes(dev, crtc, plane, NULL,
-+					&hyperv_crtc_funcs, NULL);
- 	if (ret)
- 		return ret;
-+	drm_crtc_helper_add(crtc, &hyperv_crtc_helper_funcs);
- 
--	drm_plane_enable_fb_damage_clips(&hv->pipe.plane);
-+	encoder->possible_crtcs = drm_crtc_mask(crtc);
-+	ret = drm_encoder_init(dev, encoder,
-+			       &hyperv_drm_simple_encoder_funcs_cleanup,
-+			       DRM_MODE_ENCODER_NONE, NULL);
-+	if (ret)
-+		return ret;
- 
--	return 0;
-+	ret = hyperv_conn_init(hv);
-+	if (ret) {
-+		drm_err(dev, "Failed to initialized connector.\n");
-+		return ret;
-+	}
-+
-+	return drm_connector_attach_encoder(connector, encoder);
- }
- 
- static enum drm_mode_status
-@@ -221,12 +276,6 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv)
- 
- 	dev->mode_config.funcs = &hyperv_mode_config_funcs;
- 
--	ret = hyperv_conn_init(hv);
--	if (ret) {
--		drm_err(dev, "Failed to initialized connector.\n");
--		return ret;
--	}
--
- 	ret = hyperv_pipe_init(hv);
- 	if (ret) {
- 		drm_err(dev, "Failed to initialized pipe.\n");
+--------------zlSHc0vaMFKhZ0dLG0JUBad0--
 
-base-commit: b60301774a8fe6c30b14a95104ec099290a2e904
--- 
-2.49.0
+--------------aDhkvWpyJ2mqrcVlzpHJ5Lh0--
 
+--------------T4ZWz9eXqhqS8XTZKkH4szjE
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgLMQ4FAwAAAAAACgkQsN6d1ii/Ey8v
+GAf8CiwnPQUGDuLTROoGEGEZYhZNiIuP6NpPgDIjznR04WHQqCKmSKzSJU9bRnXelOjMGbYovqK5
+H/4ovrb5WrWiSib6UbfpZkkgEJi/2YSoXppYhG4sNDnhRSUrFBREETgpfTokr0tYEvX/ZZYrx+nV
+RVCKKt9kWmHh3+v0+SzR5AfexZ5c13gqdsYhMKlYu49q82NdjjrwXF6F/WHahWchlhxv2LElrYO+
+K7zm4YOjDOn3F04XKVSHqBfQsO5J6ZKHLbow+YnWjYIo5B4GlUGkd6xRmxrTXd7cvqwGxJ9urozi
+pw9xdCBracc183w0319kUg4l8bsZ35Ynel8AymEH+w==
+=pOyC
+-----END PGP SIGNATURE-----
+
+--------------T4ZWz9eXqhqS8XTZKkH4szjE--
 
