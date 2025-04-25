@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-5134-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5135-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF346A9C646
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 12:54:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 932F4A9C64B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 12:55:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DA074A6689
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 10:54:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C7BE1BA3430
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Apr 2025 10:55:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EBC12417E4;
-	Fri, 25 Apr 2025 10:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 385E624293C;
+	Fri, 25 Apr 2025 10:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bC/2qPEe"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PBl4NX38"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A1E20C00D;
-	Fri, 25 Apr 2025 10:53:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E8623F291;
+	Fri, 25 Apr 2025 10:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745578440; cv=none; b=otahyHSF2TTVQdibUxFXo390h/sYPWK3ny0Rg+qjq4FZSQKp+4ctEMt1VnAr+z5mLT0uBtyk+sl1GRGWL9erQeBXDXLJZXIRx77uI+r03oGEpMgNrYTwMzcR7zhpeIwlKZ2zbykZ1m9/s6jQDPBjWMkZnOlHv9HnsBlSyFgK4cA=
+	t=1745578463; cv=none; b=Td5NMK+WM8T8pC6L9drG1cm+laowe+dwz2DBXyIQfVwy6i/b65fi7Cu3pD1EoKXJR+BrE11RTP7Q40w2nQ6zrZJfQqQjyb8xB6vaH7N8u/Gf/bfDRibV7tLP6wddjNazOlghQcI4xvkicVMFmRviSdVDJ6tChjJAPTO53pC7IUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745578440; c=relaxed/simple;
-	bh=2AZkdIkyg21yJJX6xmtAvk29MUvdsF3Y1TBzUwl65p4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=cJ7p8zINljdOaKRfYob8UL2Fh3E0xD8BYkHNW4cBVOC75TRbBEtPLCJ8JBD6nBFcGaKS8oupei7Mu//2vvFXOEXKsfZ6QN6EDbRqL6GIaUt7r6fYE+kGogG9NhUTOWj9sFZwEJiGpCRWQH9bCxMnuakgkyutRO6lOwlVwpHoyD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bC/2qPEe; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1745578463; c=relaxed/simple;
+	bh=xm/l0LBXRRC3O+XjK4qdRF0SDIkwF7Yuz+CMVMni0+E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=gT2+OJzBd7VNNt+mbfleOTrES8EaPzONWWY+3N6kz79+0SkH1JHrLwKc+SZohYhAlod3wW+LU5WOnOEMvRoziNPvDQGKpaG/tG21a0fnj+xc+hBa7x9LkSmLoCqAdSphFaA4UcR7bYWeyCCrx71iSTHinhJfzfBTXX2lrSeqhpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PBl4NX38; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 2654E2020957; Fri, 25 Apr 2025 03:53:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2654E2020957
+	id 5A42B2020957; Fri, 25 Apr 2025 03:54:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5A42B2020957
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745578439;
-	bh=wjWgDPCnELNadsZ7+gw9v/eGHhdmMPk6cFIpWvfy7OE=;
+	s=default; t=1745578461;
+	bh=Q1I1rZep87fjsOhFJmwl3GYR2qXH5ffLe7tbt73M3+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bC/2qPEe6+Tm+Q0Qq71Tmak2ma2YmEeuJ2BoikloFa6HQfH7WF6rzmG3PJHjDx7KV
-	 IQZVFj0kBErTLevPX0lZF0VFHLh1m9Y8ykEnp5HY39FkS/Kp/FWVaXq09IivEhuV1M
-	 0MK/tciHh7AV5fuP6TOXGQjyUhUJfxveDDBe53yA=
+	b=PBl4NX38aGWJEZIBAbWLLX82b6xYx74arlGwbYrsu4r2sLrfwhz9kw4NfIow2gEGh
+	 hnIgzrIdDV41f4d0RGtiJBwHYjOy57YVErcUko8U7Lrm5Fid46II907cdbl6DogX7x
+	 bggjIc6fZNctz14qf7Z81+pAPgFJSRuy3g6iHl+M=
 From: Shradha Gupta <shradhagupta@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-pci@vger.kernel.org,
@@ -75,9 +75,9 @@ To: linux-hyperv@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	Paul Rosswurm <paulros@microsoft.com>
 Cc: Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic MSI-X alloc
-Date: Fri, 25 Apr 2025 03:53:57 -0700
-Message-Id: <1745578437-14878-1-git-send-email-shradhagupta@linux.microsoft.com>
+Subject: [PATCH v2 2/3] PCI: hv: Allow dynamic MSI-X vector allocation
+Date: Fri, 25 Apr 2025 03:54:19 -0700
+Message-Id: <1745578459-15084-1-git-send-email-shradhagupta@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
 References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
@@ -87,54 +87,60 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
-the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
-to prepare the desc is also needed.
-
-Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
-MSI-X vector allocation.
+Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
+by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
+pci_msix_prepare_desc() to prepare the descriptors.
 
 Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/pci/msi/irqdomain.c | 5 +++--
- include/linux/msi.h         | 2 ++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ Changes in v2:
+ * split the patch to keep changes in PCI and pci_hyperv controller
+   seperate
+ * replace strings "pci vectors" by "MSI-X vectors"
+---
+ drivers/pci/controller/pci-hyperv.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-index d7ba8795d60f..43129aa6d6c7 100644
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
- 	pci_msix_unmask(irq_data_get_msi_desc(data));
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ac27bda5ba26..f2fa6bdb6bb8 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+ 	return cfg->vector;
  }
  
--static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
--				  struct msi_desc *desc)
-+void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-+			   struct msi_desc *desc)
- {
- 	/* Don't fiddle with preallocated MSI descriptors */
- 	if (!desc->pci.mask_base)
- 		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
- }
-+EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
+-#define hv_msi_prepare		pci_msi_prepare
++#define hv_msi_prepare			pci_msi_prepare
++#define hv_msix_prepare_desc		pci_msix_prepare_desc
  
- static const struct msi_domain_template pci_msix_template = {
- 	.chip = {
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 86e42742fd0f..d5864d5e75c2 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -691,6 +691,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
- 					     struct irq_domain *parent);
- u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
- struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
-+void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-+			   struct msi_desc *desc);
- #else /* CONFIG_PCI_MSI */
- static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
- {
+ /**
+  * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
+@@ -727,6 +728,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+ #define FLOW_HANDLER		NULL
+ #define FLOW_NAME		NULL
+ #define hv_msi_prepare		NULL
++#define hv_msix_prepare_desc	NULL
+ 
+ struct hv_pci_chip_data {
+ 	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+@@ -2063,6 +2065,7 @@ static struct irq_chip hv_msi_irq_chip = {
+ static struct msi_domain_ops hv_msi_ops = {
+ 	.msi_prepare	= hv_msi_prepare,
+ 	.msi_free	= hv_msi_free,
++	.prepare_desc	= hv_msix_prepare_desc,
+ };
+ 
+ /**
+@@ -2084,7 +2087,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+ 	hbus->msi_info.ops = &hv_msi_ops;
+ 	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+ 		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+-		MSI_FLAG_PCI_MSIX);
++		MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN);
+ 	hbus->msi_info.handler = FLOW_HANDLER;
+ 	hbus->msi_info.handler_name = FLOW_NAME;
+ 	hbus->msi_info.data = hbus;
 -- 
 2.34.1
 
