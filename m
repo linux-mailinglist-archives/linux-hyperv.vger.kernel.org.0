@@ -1,335 +1,177 @@
-Return-Path: <linux-hyperv+bounces-5165-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5166-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79BAAA9DEE6
-	for <lists+linux-hyperv@lfdr.de>; Sun, 27 Apr 2025 05:59:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34D97A9E06A
+	for <lists+linux-hyperv@lfdr.de>; Sun, 27 Apr 2025 09:29:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01E097A5290
-	for <lists+linux-hyperv@lfdr.de>; Sun, 27 Apr 2025 03:57:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C9BC17E7ED
+	for <lists+linux-hyperv@lfdr.de>; Sun, 27 Apr 2025 07:29:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF6920296E;
-	Sun, 27 Apr 2025 03:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E4BD2459D2;
+	Sun, 27 Apr 2025 07:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="biQAIitS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Is+oWpTV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010012.outbound.protection.outlook.com [52.103.10.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE0D79E1;
-	Sun, 27 Apr 2025 03:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745726339; cv=fail; b=M4l14yr4oa09xCTBPHwlClqf478MeiU0tdnlhCLwv4AD5GgGTCdXXPNwXfjXUMFPEM98z9lrlr/BRy69xKaNNp3iQwEWR+KKNcKc4GzLrHrho/6BMph6yWXhbaCKRGzoYX7VPDw3pLxvz+DvlQWBYe1AahxbHNzIw2I4yk1K7Io=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745726339; c=relaxed/simple;
-	bh=ZcNHnO24Ls4N8/7WKcIR2gnv2goCpjoWhc9p9X1GWnI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RE4sJymRVypuoo4fkRdpFv8+8JoB1zHaN1X/mIJm2fHuZ3s6uKcVYz30fIZaLTety+J+MQumNNqd2u4mG3Io8cuM+HRi6R2W0vlbb4f3Hv9hJa8x3LdM8qiWNZiBSmQ4kamIodciPYCuGAikVsBGOln8dEoowfvlcqfXFE74NsE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=biQAIitS; arc=fail smtp.client-ip=52.103.10.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dAcETD6r7hp/hHbJuAUpC6YgF3ZkYmgP5/g4eIZ42g7kCUhfXOgvOw3JukwKSx1qmcFEReHzB5j61lY0qUA/gV0ZuEWr7XwBpZX6Ggk9/5oCBkQ755RvpRSdXKtanAp0oMvxPn5m0N5/VgV90FPhv0x7dsDf2J6lC4Yh1cGtthGT6J+ZjYtubSF0EDsTRojKgeK3TGW3MAZcOm7Q31lLL3TTG6PnaGY3l9U0NdWVj7sQCx2zVTFwE+PkfWFzG/FyqyagEm2/G5HwhO67dUg0NY/D2Bm2Q6RoAZUfHvvwYvvOlA1OXrpHH+63sBiZH6Sc48pbYa7CNkPdiCJgh5GcsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+aDJUGQEcVjvfSeHApRe74F+3m0E7Z5ZN6H7P0GhtNI=;
- b=uiiiTMI5WnyIZ/551dYSLRZdmq045NOUtzXr0P4+66jheS83LqgJlHsqoDPtc073i8wZ/mPbe7qd/t2RgcahrtRlddkhjbsR5mpXiLdZ40kyxwmAC7bkjFyP6qOm7LxubBluAqmUnRvjkQU16Ow/94+FehvHhA7WaFv9ZOMhwZdBCL7oF2cs/XC8GVSHJ5/bWj3GvXKFtlj2kbmyA+SXfFZJZ+kxyvTCt9sDByKnRd2lSgtn/uvokse63d+AH7bUTaLOL0ihVgUDSJPNASLmjqbtIGdaQCSzR+PawJ4yQUbBATKWZpaCmV3GYdXbIHYu+Mp1uU0kzW7oEaXMzeP3+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+aDJUGQEcVjvfSeHApRe74F+3m0E7Z5ZN6H7P0GhtNI=;
- b=biQAIitS/yAcjgGP8/8mkcbzp2TJHPiiPAXma7ROAenrKlNYUlJ5r/4RLqlO9Anc7PJwimp6SOSb3iqwQWnNG/HC72UfsPw/CvsMYkfuy71nSK742Fi7MJHNiIYXoWsa9N6+RrtN3j9RYBWHGi0rxlqpSlBHoUndLs8AmvSJhaBFNwCZxXexPf2Rg9gaFTQa+fjrKL5qr0CeDtfC7xwAFWTS9vQIlszWjsresvTs/N8ycv4Cucr6CnDivY5mQOqx0YKHsb+L76yS8jkhFxlmCeENCnnR2WoVYmbZIwYNUNsof5ILJ1VQOen2EuuD/kOzb6hRuvVaafkgHS00haaH6A==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA0PR02MB7145.namprd02.prod.outlook.com (2603:10b6:806:e2::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.10; Sun, 27 Apr
- 2025 03:58:54 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Sun, 27 Apr 2025
- 03:58:54 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Michael Kelley <mhklinux@outlook.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: "x86@kernel.org" <x86@kernel.org>, "kys@microsoft.com"
-	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "ardb@kernel.org" <ardb@kernel.org>, "kees@kernel.org"
-	<kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-efi@vger.kernel.org"
-	<linux-efi@vger.kernel.org>, "samitolvanen@google.com"
-	<samitolvanen@google.com>, "ojeda@kernel.org" <ojeda@kernel.org>
-Subject: RE: [PATCH 5/6] x86_64,hyperv: Use direct call to hypercall-page
-Thread-Topic: [PATCH 5/6] x86_64,hyperv: Use direct call to hypercall-page
-Thread-Index: AQHbrTIaLjXb7HTpjEywClCcZeg3ibOudLWAgAYGqoCAAAXRAIACceLQ
-Date: Sun, 27 Apr 2025 03:58:54 +0000
-Message-ID:
- <SN6PR02MB4157194E753702D204C20D09D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.435282530@infradead.org>
- <SN6PR02MB41575B92CD3027FE0FBFB9F3D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250425140355.GC35881@noisy.programming.kicks-ass.net>
- <SN6PR02MB41577A6B0E5898B68E2CD3C9D4842@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To:
- <SN6PR02MB41577A6B0E5898B68E2CD3C9D4842@SN6PR02MB4157.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA0PR02MB7145:EE_
-x-ms-office365-filtering-correlation-id: 2ac82002-0f8c-44dc-434a-08dd853fd410
-x-ms-exchange-slblob-mailprops:
- EgT5Wr3QDKyfA/kqhNtxhLoDzMvzACCoWPJDUsdTyeWzXukxEvV3mTUPttxp31gSXvJVEm3wb4a3WH3k/x9vDDr2e48mlNkzVxpAC8oyyp3kFPJfNMZWOGYJ1FQ7kkcRGSs94dpq+igIgfw08FhYXJ0jI9rxb3rGHnLqSnNqtQhUqk35BRFYJmdzY8374XMkzzdwt8LlZ/d3WtvWADtTtMQyb5NzdBaeItzoMb7Gdoqa4CEfZv2uTZWROLnyr0ExPM3WfGv8l7661Z42bKeZNfNTMX6SDYtwdlX0NwYuuzrUp80f2tfy01nKvbwTDHlfJLvskk+X/eUd8eb6LwTSbSoGTViY4Bn1wn4qy8mej3sSXpdjubViV02KggMlFeBnKoyXX1TGjYlkkhgoTrrWbby0ngNXtNfN8Cbyun234Mk2Q1/olMZkOurpZ7ikMzZkuEHB+56xxCosbs+IHdGIqDBmzWN0S4wPj7EbyXceSiD7OSaxpVFLtL8ltrYLNkS14ZrtVWgWmEqWZ4Dj6Wkz2YjKk0gVEYkMpJpV2TQy1aabXkid2LpbiU/G+l+NOYUUokLsewtKbG8XFRaif0EuaNWLPaFJ0UFiqZYMIIUo/kikZTJacVPALmgJQtEbUecSJdc3kvc8VaV4tG17XmNciE46uuJneaQEiuix3WGjLqPZJB+sixjsrsUomIYi3Wc2MY1NAGFJKEsdH3hSS1zz7klqAFI6p466hHOEClk/UCY=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799006|15080799006|8062599003|19110799003|461199028|440099028|3412199025|41001999003|102099032|1710799026;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?uO5Rhcx+AQVfqqkdWVbaHvJCYJicVS8reQEwUewGRCK09rQpMTbxBf4CDfVq?=
- =?us-ascii?Q?HcdqMAWkEUs5eNJJAfoJVJdHnPVMXdLE9Vuhq6b3WdKV6n9/tGTiy6ltOO7V?=
- =?us-ascii?Q?VkPfkj3LuaGo63mjkyTu5EGYLR7SpzgKGwka4pY3L7CL16TrKbVMy1PbcWMg?=
- =?us-ascii?Q?A2hDFh26TG3c3eOs+4E+PMFBz2qAW65mJ8i6fk9K8QNuUDuZskgr9gkZTfUP?=
- =?us-ascii?Q?SeXMuPys9VjlU/dAT4Yi+PaUHRkzXC/yJzWvyUPs2kahme7tHeXnEeSRb3CX?=
- =?us-ascii?Q?IYCcZiqR6g6qPQrzHAs4JmHnfq+JGsDxtlMur+WyP5Rq2cvpkraglEd2FqZF?=
- =?us-ascii?Q?CQW5/BJw13da1jgD7SnWeAylgbnK/bEpCmLmPTkyoy9DXqdvGVpBM69TlETL?=
- =?us-ascii?Q?IDIqJDAylYpWYcavoEgb956IOF/9R3TKyvxEP5H7Krak/DBcru4sFe6pe4l4?=
- =?us-ascii?Q?3TTnNwhB6y/83ctkvKSVl69wqXnKuTVWoRoaxIzrsv7wt8vqKfzYO68gr9Fc?=
- =?us-ascii?Q?dwp32Z3kW2taGqfVxJkEea6m8Lc+IaSBMtsCyoyyQMXv2mdK3ZsDo+ZSczxK?=
- =?us-ascii?Q?Oh1GpLn5fgzeqb2vZv5KjDxpQhYSFbLR4QQI/p+bpRHpULJY89if76KvQrMj?=
- =?us-ascii?Q?a3YHSIstP7neRR4vYhp8uktOE/1NdkhRb8q6S78vmrwpM2p8jfkqnUy+5GoI?=
- =?us-ascii?Q?PjD6V0WZu+C61UlRLl9qbmu0uAwcWy/PUQE/MuNqaIUBVZLA4tm2YLaCgePQ?=
- =?us-ascii?Q?r2K0xK1xYkMzxj30CsF1t6sTpHn6fIPevqWhhx/cYrDkhwL+Gun+LaTeGqVn?=
- =?us-ascii?Q?jhlcH8pYlpi6XC0YuDybtF6lOpqChTzFBI6aysMxV9GTa4+GCMwfVCCu8t8L?=
- =?us-ascii?Q?HaXEH+f0al/6nPkM+hwe1QJ7lP7jp9Wl5vhKablXI0FYNHKBPl9GOYx04pAW?=
- =?us-ascii?Q?v32hA5kr85PiUamhKNT38XhCHNXrYjHlNN9WNp7fBXV4m/zb69ldZh2v46y2?=
- =?us-ascii?Q?HFsfXGUwU+TsUb0l7d1mwK/ac6n7EiHRXLqHUWt0q98/SXwxl1gpC39/gyRi?=
- =?us-ascii?Q?6+FURl139FwgCKcavTs0WOogU1P401/AYb13rK1ZXYb6QI/+mjpAA6vjsHqg?=
- =?us-ascii?Q?xxzm7/lG2nEL/7zgMjjGrfQ1beomQOBGvg=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0wrgpkJhwKpReTxPaDU2ojjqDcKZiJUHJRxs2seKmkCqLv2jKZR8bPHghWYq?=
- =?us-ascii?Q?Hh8kP96BZ5orCiO5aVubX/BJ7Q29l90B5LepNlrVXfyLykhroLqYxj0cc6fg?=
- =?us-ascii?Q?SAcp8K34RHYd0CpYizvuK/yyMWdJHd+bMwhLZaehtcMBaI0hNAbL7DDYLUAm?=
- =?us-ascii?Q?+ouyV0BPemPoNx3ICXae1B5Eys+AH6/DlfX6OMXebp0tWne7uI3WC84whLfd?=
- =?us-ascii?Q?1EGLwkFtnyknCqo68nh9eNfPXx6z05icJcAZSF1TQrz46bY2FKg+kJ4mfu7F?=
- =?us-ascii?Q?zNjQxHbgcUB6GWt3zFp+Aa/9y/df9ANKgERuypMaXxLcvZPLpnu9GlRWNMwN?=
- =?us-ascii?Q?pIYs04TtFnDl8cWYqvSzg35n0GTcO628n0cYa3yZhbkFdIYtsKUk9YSfsqY+?=
- =?us-ascii?Q?4OiUSIri08XPIrqVEMC2l/Ts0d/6Sa6EYrWOjEy5OBCAd2BdNcgyerBxZ8F/?=
- =?us-ascii?Q?brEcQoCeC3d7Q0u9MhbP+HGZFdDMg7uDFR9OSyV4a2HItsvno4XwxmoP2Udd?=
- =?us-ascii?Q?De3mBuBlON4TMXsKs99dyfclYzZtM+8CHCsuuXgMkDswZXhBT+4EyapJrgSO?=
- =?us-ascii?Q?kSnV3HoCoNRv0VlAn0Wps8flgbnWf6jrvoyehGek4LSIc6xiFMOkTcy9dqt4?=
- =?us-ascii?Q?MbGoO5yfWoj2u3K9TamGHxL5PdHj/kfl1lQU2ntPe+2MfrWEC94pogi3eGtP?=
- =?us-ascii?Q?rDv9LKCx/9JMI8YFpSPMZbRXkf7vXoaxwQLgKzEtr6zk+wm0wsWU13J+R4TB?=
- =?us-ascii?Q?/LJOth/WQUP8aKzftEkDBMXeSNVlHMN+H2OF9VoIWAWr+tr/viluiSk5c/j/?=
- =?us-ascii?Q?0gXz8RfMNbsVqZAOzt2hTUykMHZAZlxB5191RCCsrkBaD5K07nrKT3Xx1Z1+?=
- =?us-ascii?Q?FyxspqzXDGaG9zeI9OEWwlAUG4YwhtazBRr0zjNz17i4NgjnYRNRTE9LpFG5?=
- =?us-ascii?Q?UPN32Y1F1+vWTIOtvZlJlvI9xU7/JiPbep8CkRczI9FvY3TC1f8V+uwqG4Fl?=
- =?us-ascii?Q?F1gYA/zciNRwPWQrftFjfx3PgUAZM4CIF/7JFZ26Wn4xyt67Gi0ipBxjzmLv?=
- =?us-ascii?Q?oYqfz3C+2A1FVwWcufVp+DbV2XtmU+732w/LE+wVYjHGjIqa1NT2t8FcWo7L?=
- =?us-ascii?Q?KpPmFeDNEwXfv8I5xfPUVR86qxbEMcabyTv1BoyARIVfKP54poRxfbLt79Tj?=
- =?us-ascii?Q?iweaV9WajqF7LZYBekCEyWcWUkvzgyfqBpQH1cTXW1Tu4UhDzHjPUKhkOr4?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE8B7081F
+	for <linux-hyperv@vger.kernel.org>; Sun, 27 Apr 2025 07:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745738971; cv=none; b=RDj2tFSNn3kAUX/q5NTu9bNOx7lvqEtoKH+Zow0CeN6JhzodQ7BTX9fOCChk0Iox1iUTZOojPbxihtUGetJZFrK+dGuL5FjhTVlZRfkx4SwD3OcgnupGHj4tk4EHbTpU6iaWd6kOnHV2JnyRUPN7f8urcwe7u+GaKNCEVqcQN6s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745738971; c=relaxed/simple;
+	bh=YmIdSq43KeqVX2RY3EWr0cE19/g+nxXYj6wkj+8bK7M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=izDGZX7MeJ8CMfofk3btF3xI8DGdNpBIBxL0yzjcR8cW+q5//eFfyl+yipEl6ElGVvvhnnyg6COz5/yZO73UjpIti7SQRLZ9Dtcnl7fwuU0X7YrFATchsFGHftL0UFGJB6locfPPf+iRoar7+gFDTFxjekep3IAO05kuVBPjPYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Is+oWpTV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745738967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wcGQpFTguItVa6CDu+q0byxuNxLDL/Np928mwDKp2zQ=;
+	b=Is+oWpTV6S7/aK/v/Ng3NVe5/7DfH8YuLnihzo7J5jXqu4OB6r8Z5/yAQ88foLmlx6iVeW
+	jJL2GN05tCzxgI0SVK0g/WFmiCUy1X09+ZeOoqUcBDh5JQLB+bTtaYi5NS36tSlziIYd4j
+	uMB1DSsn5unJ7x37W63KhwRcsxrChVo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-_9kuWgeHPhmboenfbAvFSg-1; Sun, 27 Apr 2025 03:29:25 -0400
+X-MC-Unique: _9kuWgeHPhmboenfbAvFSg-1
+X-Mimecast-MFC-AGG-ID: _9kuWgeHPhmboenfbAvFSg_1745738964
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so22052955e9.1
+        for <linux-hyperv@vger.kernel.org>; Sun, 27 Apr 2025 00:29:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745738964; x=1746343764;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wcGQpFTguItVa6CDu+q0byxuNxLDL/Np928mwDKp2zQ=;
+        b=jDM5S5zQ7mZzKCpPuop3d/IUvLHNYVhse3rILv30V0ZZ2uKs5XO37nxn1xl1G0WDkB
+         hVS0oceu0SnIWl86nEt80UjJSE0ObMccttIJ9FmIn6x2Gyw3G83XOFcN+Pqc+1fmgVt3
+         O3FpMhnGyHID1e2+d3gUWmq8/zbEAMtVThM7UmZ1dNzJZueWfUhpukvSAXon0PBj+hom
+         paFBKeQK77dXHkmzd7ZBMW3mEUpzedUDO15w6IUiOdUH2UnI6bENOSAkfd02F+m5Jqj0
+         2aeQjOnPmhsNN9xVn1NNoqQ653Tx9jORgAYE2owvKnn8+EKuc48Ce55x9hrj9w6jm8vR
+         Krsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVgcZ9BS7zM38qE0b9bGZyRMSgyhkT4DNTWMwf8x8UJUCFt7ap+fZH70zJKTQd+X9xi8LRfANlamkKvNb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD5zb2UyoTwjdJqf2+ds0HW7MVU/FEe6rTZQHAj12hp/VAL4sv
+	o+tuftwRq/cysrj1wmmawIkz+2dhOUFFkVelhoDNV2fHHz1Pwt6ZxxE22uoW2kRbJ3Ii9xSjZ6f
+	ZxxsMC6K7BbcqJhqks5a7tCJIkvzLwEa0kSp4sqVY7Bd5s/6rIDQ06AK0S+dS/w==
+X-Gm-Gg: ASbGncv1w0prpdi5lfMJZnRa5VcrRFK4moZFmOWtwuL1j/3DI5v52tT5zo76Hz7Y+/N
+	MULbftLN15j2zaouo3HI6FaGD3EeNB6jh9ymUvX+PqwrcQ7K9ZvCNs8mxId47BMC+9TBAXpNZf0
+	2d+J8Ua8lBWnm46mRGxvyDtVKd2dtfp18Qf1FzJDGIwN0fZKuB6SU5DjitPwzbGayTYzp8n+JcJ
+	9/yzSNgytznC6mmnbkl366Mp67kn/pn/7W8YaiKmOZacqlZmj4hMC1dEZDpvEy0pDEI+kkxoz7m
+	jEYW4I4pZdKQlpbllocQdMOmaOvMQW6z7Zm+N7hM+RUqBNGImp2nwfW+tF9G2MWbOMLZ7Q==
+X-Received: by 2002:a05:600c:1e84:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-440a66b7b68mr66727235e9.29.1745738963927;
+        Sun, 27 Apr 2025 00:29:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHimZlDfyKX+dV1RunsI8DPPpzKCieKScXo5Xcy7H8gXFHsd947YK1+IzF4ivCFxFOjPMb/Zw==
+X-Received: by 2002:a05:600c:1e84:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-440a66b7b68mr66727125e9.29.1745738963562;
+        Sun, 27 Apr 2025 00:29:23 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d0a7802sm102831515e9.1.2025.04.27.00.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 00:29:22 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Cc: drawat.floss@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+ simona@ffwll.ch, jfalempe@redhat.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
+ atomic helpers
+In-Reply-To: <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
+References: <20250425063234.757344-1-ryasuoka@redhat.com>
+ <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
+ <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
+Date: Sun, 27 Apr 2025 09:29:20 +0200
+Message-ID: <87selugizz.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac82002-0f8c-44dc-434a-08dd853fd410
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2025 03:58:54.3212
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR02MB7145
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Michael Kelley <mhklinux@outlook.com> Sent: Friday, April 25, 2025 7:=
-32 AM
->=20
-> From: Peter Zijlstra <peterz@infradead.org> Sent: Friday, April 25, 2025 =
-7:04 AM
-> >
-> > On Mon, Apr 21, 2025 at 06:28:42PM +0000, Michael Kelley wrote:
-> >
-> > > >  #ifdef CONFIG_X86_64
-> > > > +static u64 __hv_hyperfail(u64 control, u64 param1, u64 param2)
-> > > > +{
-> > > > +	return U64_MAX;
-> > > > +}
-> > > > +
-> > > > +DEFINE_STATIC_CALL(__hv_hypercall, __hv_hyperfail);
-> > > > +
-> > > >  u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
-> > > >  {
-> > > >  	u64 hv_status;
-> > > >
-> > > > +	asm volatile ("call " STATIC_CALL_TRAMP_STR(__hv_hypercall)
-> > > >  		      : "=3Da" (hv_status), ASM_CALL_CONSTRAINT,
-> > > >  		        "+c" (control), "+d" (param1)
-> > > > +		      : "r" (__r8)
-> > > >  		      : "cc", "memory", "r9", "r10", "r11");
-> > > >
-> > > >  	return hv_status;
-> > > >  }
-> > > > +
-> > > > +typedef u64 (*hv_hypercall_f)(u64 control, u64 param1, u64 param2)=
-;
-> > > > +
-> > > > +static inline void hv_set_hypercall_pg(void *ptr)
-> > > > +{
-> > > > +	hv_hypercall_pg =3D ptr;
-> > > > +
-> > > > +	if (!ptr)
-> > > > +		ptr =3D &__hv_hyperfail;
-> > > > +	static_call_update(__hv_hypercall, (hv_hypercall_f)ptr);
-> > > > +}
-> >
-> > ^ kept for reference, as I try and explain how static_call() works
-> > below.
-> >
-> > > > -skip_hypercall_pg_init:
-> > > > -	/*
-> > > > -	 * Some versions of Hyper-V that provide IBT in guest VMs have a =
-bug
-> > > > -	 * in that there's no ENDBR64 instruction at the entry to the
-> > > > -	 * hypercall page. Because hypercalls are invoked via an indirect=
- call
-> > > > -	 * to the hypercall page, all hypercall attempts fail when IBT is
-> > > > -	 * enabled, and Linux panics. For such buggy versions, disable IB=
-T.
-> > > > -	 *
-> > > > -	 * Fixed versions of Hyper-V always provide ENDBR64 on the hyperc=
-all
-> > > > -	 * page, so if future Linux kernel versions enable IBT for 32-bit
-> > > > -	 * builds, additional hypercall page hackery will be required her=
-e
-> > > > -	 * to provide an ENDBR32.
-> > > > -	 */
-> > > > -#ifdef CONFIG_X86_KERNEL_IBT
-> > > > -	if (cpu_feature_enabled(X86_FEATURE_IBT) &&
-> > > > -	    *(u32 *)hv_hypercall_pg !=3D gen_endbr()) {
-> > > > -		setup_clear_cpu_cap(X86_FEATURE_IBT);
-> > > > -		pr_warn("Disabling IBT because of Hyper-V bug\n");
-> > > > -	}
-> > > > -#endif
-> > >
-> > > With this patch set, it's nice to see IBT working in a Hyper-V guest!
-> > > I had previously tested IBT with some hackery to the hypercall page
-> > > to add the missing ENDBR64, and didn't see any problems. Same
-> > > after these changes -- no complaints from IBT.
-> >
-> > No indirect calls left, no IBT complaints ;-)
-> >
-> > > > +	hv_set_hypercall_pg(hv_hypercall_pg);
-> > > >
-> > > > +skip_hypercall_pg_init:
-> > > >  	/*
-> > > >  	 * hyperv_init() is called before LAPIC is initialized: see
-> > > >  	 * apic_intr_mode_init() -> x86_platform.apic_post_init() and
-> > > > @@ -658,7 +658,7 @@ void hyperv_cleanup(void)
-> > > >  	 * let hypercall operations fail safely rather than
-> > > >  	 * panic the kernel for using invalid hypercall page
-> > > >  	 */
-> > > > -	hv_hypercall_pg =3D NULL;
-> > > > +	hv_set_hypercall_pg(NULL);
-> > >
-> > > This causes a hang getting into the kdump kernel after a panic.
-> > > hyperv_cleanup() is called after native_machine_crash_shutdown()
-> > > has done crash_smp_send_stop() on all the other CPUs. I don't know
-> > > the details of how static_call_update() works,
-> >
-> > Right, so let me try and explain this :-)
-> >
-> > So we get the compiler to emit direct calls (CALL/JMP) to symbols
-> > prefixed with "__SCT__", in this case from asm, but more usually by
-> > means of the static_call() macro mess.
-> >
-> > Meanwhile DEFINE_STATIC_CALL() ensures such a symbol actually exists.
-> > This symbol is a little trampoline that redirects to the actual
-> > target function given to DEFINE_STATIC_CALL() -- __hv_hyperfail() in th=
-e
-> > above case.
-> >
-> > Then objtool runs through the resulting object file and stores the
-> > location of every call to these __STC__ prefixed symbols in a custom
-> > section.
-> >
-> > This enables static_call init (boot time) to go through the section and
-> > rewrite all the trampoline calls to direct calls to the target.
-> > Subsequent static_call_update() calls will again rewrite the direct cal=
-l
-> > to point elsewhere.
-> >
-> > So very much how static_branch() does a NOP/JMP rewrite to toggle
-> > branches, static_call() rewrites (direct) call targets.
-> >
-> > > but it's easy to imagine that
-> > > it wouldn't work when the kernel is in such a state.
-> > >
-> > > The original code setting hv_hypercall_pg to NULL is just tidiness.
-> > > Other CPUs are stopped and can't be making hypercalls, and this CPU
-> > > shouldn't be making hypercalls either, so setting it to NULL more
-> > > cleanly catches some erroneous hypercall (vs. accessing the hypercall
-> > > page after Hyper-V has been told to reset it).
-> >
-> > So if you look at (retained above) hv_set_hypercall_pg(), when given
-> > NULL, the call target is set to __hv_hyperfail(), which does an
-> > unconditional U64_MAX return.
-> >
-> > Combined with the fact that the thing *should* not be doing hypercalls
-> > anymore at this point, something is iffy.
-> >
-> > I can easily remove it, but it *should* be equivalent to before, where
-> > it dynamicall checked for hv_hypercall_pg being NULL.
->=20
-> I agree that setting the call target to __hv_hyperfail() should be good.
-> But my theory is that static_call_update() is hanging when trying to
-> do the rewrite, because of the state of the other CPUs. I don't think
-> control is ever returning from static_call_update() when invoked
-> through hyperv_cleanup(). Wouldn't static_call_update() need to park
-> the other CPUs temporarily and/or flush instruction caches to make
-> everything consistent?
->=20
-> But that's just my theory. I'll run a few more experiments to confirm
-> if control ever returns from static_call_update() in this case.
->=20
+Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
 
-Indeed, control never returns from static_call_update(). Prior to
-hyperv_cleanup() running, crash_smp_send_stop() has been called to
-stop all the other CPUs, and it does not update cpu_online_mask to
-reflect the other CPUs being stopped.
+Hello Ryosuke,
 
-static_call_update() runs this call sequence:
+> Hi Javier,
+>
+> On Fri, Apr 25, 2025 at 4:15=E2=80=AFPM Javier Martinez Canillas
+> <javierm@redhat.com> wrote:
+>>
+>> Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
+>>
+>> Hello Ryosuke,
+>>
+>> > Drop simple-KMS in favor of regular atomic helpers to make the code mo=
+re
+>> > modular. The simple-KMS helper mix up plane and CRTC state, so it is
+>> > obsolete and should go away [1]. Since it just split the simple-pipe
+>> > functions into per-plane and per-CRTC, no functional changes is
+>> > expected.
+>> >
+>> > [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@=
+suse.de/
+>> >
+>> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>> >
+>>
+>>
+>>
+>> > -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+>> > -                            struct drm_crtc_state *crtc_state,
+>> > -                            struct drm_plane_state *plane_state)
+>> > +static const uint32_t hyperv_formats[] =3D {
+>> > +     DRM_FORMAT_XRGB8888,
+>> > +};
+>> > +
+>> > +static const uint64_t hyperv_modifiers[] =3D {
+>> > +     DRM_FORMAT_MOD_LINEAR,
+>> > +     DRM_FORMAT_MOD_INVALID
+>> > +};
+>> > +
+>>
+>> I think the kernel u32 and u64 types are preferred ?
+>
+> I'm not sure if I should fix this in this patch because I did not add the=
+se
+> variables. IMO, we need to split the commit if we fix them.
+>
 
-arch_static_call_transform()
-__static_call_transform()
-smp_text_poke_single()
-smp_text_poke_batch_finish()
-smp_text_poke_sync_each_cpu()
+Right, I got confused for how the diff showed the changes. But I agree with
+you that should be a separate patch since the variables already exist.
 
-smp_text_poke_sync_each_cpu() sends an IPI to each CPU in
-cpu_online_mask, and of course the other CPUs never respond, so
-it waits forever.
+[...]
 
-Michael
+>>
+>> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+>
+> Thank you for your review and comment. I'll fix them and add your ack.
+>
+
+Thanks!
+
+> Best regards,
+> Ryosuke
+>
+
+--=20
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
 
