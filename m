@@ -1,140 +1,123 @@
-Return-Path: <linux-hyperv+bounces-5191-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5192-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4A9FA9EB7A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 11:07:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 363D1A9F08C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 14:23:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25BB9189554F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 09:07:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9EB6189DE95
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 12:23:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C019255233;
-	Mon, 28 Apr 2025 09:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342D9268699;
+	Mon, 28 Apr 2025 12:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qCnlABXX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pkhNkodw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NFq8vrNV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17D4619C54B;
-	Mon, 28 Apr 2025 09:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D69263F49;
+	Mon, 28 Apr 2025 12:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745831248; cv=none; b=HJYO32/+J82hmjTJRvX+zKfLBPLc863w2juD71bEzPzvRvsONyo5untAfWeSIKnKZN8xiDeQo5GxgjGn+xSiPg0vBCRWs0C1EURjEPsFoTlVuh62qCMvOk2Df3FdEHroDeFx1grk+EBqNE3MtT7Q98xbIp25cx3lu2D+FzLI9+k=
+	t=1745842982; cv=none; b=erwAzm0dI0OCtgk7/4a/7cu1Tdv+vQMA4K8N2mfjoM4rLeHf1vFOkybAzY6LpAKcgpsgaKaFlmf4vq+MBHZeRG9ZwEI2MxnLtv2zYs+NvVojg2Psi+HYeWH/EY+bkGraycBswMKoUW/wZX+C4hYbELsK6vN7imbwURrq+0a+2/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745831248; c=relaxed/simple;
-	bh=yRVAPAAZndLJ1UH7zj0G8F+LglBBr19xipI83x+4VV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OSHaKiaGPkIUQZVPB4ja+nzUmz0N8drPzg4TKDJCdioyvw243UQsvKiuWWNIPHDHTs18m9FS7jyVnVoxQF3g0yLKn2RCGQaOIOp+YYbFV3q+YYvIYEH4QX9/OIrcP9PANd9vXoCbsQhVkt4xwexA7d1cdw0t4NoypLMmEMT9eDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qCnlABXX; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.95.65.22] (unknown [167.220.238.22])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 14036204E7CE;
-	Mon, 28 Apr 2025 02:07:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14036204E7CE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745831246;
-	bh=5UtZ1Z4W6v48GiXx23x6Kspz0f+QWcBoQc3srB0Rl44=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qCnlABXXsCvuBb5bZV67XHvF1mvkJoUgunNdhUJ+SRZ91DnddXMLJymOChQVRsKAx
-	 wCNt/wDD7I9x8gTR63Gys/AK/9UYrQB8Aq6nyx6khFprUyE06loslCec51igclY3y4
-	 eikdHdKvHdxbsHxrKub6OZdk8RyTVqwlnYv67Dew=
-Message-ID: <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
-Date: Mon, 28 Apr 2025 14:37:22 +0530
+	s=arc-20240116; t=1745842982; c=relaxed/simple;
+	bh=qu645lgNZlFFzG0htqALVnBK1i71+x8/vctlUfK0K+M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KEV5rDtGylNZadt3kTzkz+JJ/tHEO6LKH4vpa1+ftqIvgAS0XTlpSxIfMTHKSVK9ib8YDzTYiS5UDfh5AzgaesCSky/rvlwhazD55b6wmV/v9ePWBUNPPQihbmT2pxxyET8nH4eCDswiiN1wwwU0EKpuYOg9HolaFztTnmXZjm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pkhNkodw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NFq8vrNV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745842978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9eqbeYenCoXA19FMuRWvc/t4gtyyENrf27sMY4k0b4s=;
+	b=pkhNkodwO4KW67rRMrgKHj8goQcEjLfSkdCc5rgJ+k/ImFFmmRMDNJEZ3fG2y/3RgjJAG8
+	A5IX/fR4cVAZmRogZ1ZH+O+vTWtRJcxBBsHVk8Kd3GrgFndTXJagY9PJsbDoJxNVAOgEpm
+	yXeq4NSQ2euBkVK/y44Gefnsd1LozszWF1YDpok/kKW5+sbejD/Bof/FVk5YAN4nKknOEr
+	1RP0cTuahcxrFMijTXukp7M2R6pDrO4zco/0B6GtpxoxBjE220VdpEBg8rTKiTpvARujQm
+	0aDDIpBbal5EMqSzNvWLWukfGCJ/pfW2muskJQhZhvvRMEgTFg2YZbxY92M5Lg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745842978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9eqbeYenCoXA19FMuRWvc/t4gtyyENrf27sMY4k0b4s=;
+	b=NFq8vrNVQP+PQ/rGE0c7BJnVMM38KGRo7gMhYmSerEMU6XlRBeoXKuwgnzHdckRs5fHmGR
+	ol0CKgEM1LjXlTAQ==
+To: Bjorn Helgaas <helgaas@kernel.org>, Shradha Gupta
+ <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury
+ Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan
+ Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
+ <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring
+ <robh@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+ <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
+ Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni
+ Sri Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
+ <peterz@infradead.org>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>, Shradha
+ Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic
+ MSI-X alloc
+In-Reply-To: <20250425163748.GA546623@bhelgaas>
+References: <20250425163748.GA546623@bhelgaas>
+Date: Mon, 28 Apr 2025 14:22:57 +0200
+Message-ID: <87ldrkqxum.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Stephen Hemminger <stephen@networkplumber.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
- <2025042501-accuracy-uncombed-cb99@gregkh>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <2025042501-accuracy-uncombed-cb99@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+
+On Fri, Apr 25 2025 at 11:37, Bjorn Helgaas wrote:
+
+Subject prefix wants to be PCI/MSI
+
+  git log --format=oneline path/to/file
+
+gives you a pretty decent hint
 
 
 
-On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
-> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
->> Hi,
->> This patch series aims to address the sysfs creation issue for the ring
->> buffer by reorganizing the code. Additionally, it updates the ring sysfs
->> size to accurately reflect the actual ring buffer size, rather than a
->> fixed static value.
->>
->> PFB change logs:
->>
->> Changes since v5:
->> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
->> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
->>    commit msg of both patches.
->> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
->>    hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
->>    now.
->> * Changed type for declaring bin_attrs due to changes introduced by
->>    commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
->>    merged recently. Did not use bin_attrs_new since another change is in
->>    the queue to change usage of bin_attrs_new to bin_attrs
->>    (sysfs: finalize the constification of 'struct bin_attribute').
-> 
-> Please fix up to apply cleanly without build warnings:
-> 
-> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->   1893 |         .bin_attrs = vmbus_chan_bin_attrs,
->        |                      ^~~~~~~~~~~~~~~~~~~~
-> 1 error generated.
+> On Fri, Apr 25, 2025 at 03:53:57AM -0700, Shradha Gupta wrote:
+>> For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
+>> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
+>> to prepare the desc is also needed.
 
-Hi Greg,
-I tried reproducing this error but could not see it. Should I rebase the 
-change to some other tree or use some specific config option, gcc 
-version, compilation flag etc.?
+Please write things out: ... to prepare the MSI descriptor ....
 
-I tried the following:
-* Rebased to latest linux-next tip with below base commit:
-393d0c54cae31317deaa9043320c5fd9454deabc
-* Regular compilation with gcc: make -j8
-* extra flags:
-   make -j8  EXTRA_CFLAGS="-Wall -O2"
-   make -j8 
-EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers -Werror"
-* Tried gcc 11.4, 13.3
-* Tried clang/LLVM with version 18.1.3 : make LLVM=1
+This is not twitter.
 
+>> Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
+>> MSI-X vector allocation.
+>> 
+>> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+>> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 
+> Thanks for the update and for splitting this from the hv driver
+> update.  Will watch for Thomas's ack here.
 
-BTW I had to edit the type for bin_attrs as this change got merged recently:
-9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+Other than that:
 
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 576b8b3c60af..f418aae4f113 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -107,7 +107,7 @@ struct attribute_group {
-                                             int);
-         struct attribute        **attrs;
-         union {
--               struct bin_attribute            **bin_attrs;
-+               const struct bin_attribute      *const *bin_attrs;
-                 const struct bin_attribute      *const *bin_attrs_new;
-         };
-  };
-
-
-Regards,
-Naman
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
