@@ -1,149 +1,140 @@
-Return-Path: <linux-hyperv+bounces-5190-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5191-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5017A9E7BC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 07:23:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4A9FA9EB7A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 11:07:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20D607A6A27
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 05:21:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25BB9189554F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Apr 2025 09:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0BC81A5BBA;
-	Mon, 28 Apr 2025 05:22:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C019255233;
+	Mon, 28 Apr 2025 09:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LQF4LCPc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qCnlABXX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B86211C;
-	Mon, 28 Apr 2025 05:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17D4619C54B;
+	Mon, 28 Apr 2025 09:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745817774; cv=none; b=ZOiU5ecO1FdIQWUP3UeMXmKvP1KzDxLm90aVSN0TZEQ/D/m1ol4A6CSdzZn8U7ADq1EwCjVtMlJrqirHDtvCJgDOliprO17CjPzw5LcNFREj4Gidq1jCZzy+2aKEwKTJ+qt70tM/DVwSZjs0qiTKAXEoIguoEmkW9mz57B40SLc=
+	t=1745831248; cv=none; b=HJYO32/+J82hmjTJRvX+zKfLBPLc863w2juD71bEzPzvRvsONyo5untAfWeSIKnKZN8xiDeQo5GxgjGn+xSiPg0vBCRWs0C1EURjEPsFoTlVuh62qCMvOk2Df3FdEHroDeFx1grk+EBqNE3MtT7Q98xbIp25cx3lu2D+FzLI9+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745817774; c=relaxed/simple;
-	bh=jtSfhfb2ioHRWbZWT+63t8YNhpIBQ0ZhuuyyvWSeItU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irSXyeqWFYq7Xginagk2wMLXinOoWTyhtoHVzLVUa1SNR5utabb3zCwKdA0e1HC3ROfKKkclY2w2BsJJLzxw2ZJZwfBpbXbkhQaZxdkXHc9hdNNLpEL3jQvWe6OEv75FRt9dApo9M/4zBZt7PTyg5n1LDbu2BPBc3Rx3VgpC7vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LQF4LCPc; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1745831248; c=relaxed/simple;
+	bh=yRVAPAAZndLJ1UH7zj0G8F+LglBBr19xipI83x+4VV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OSHaKiaGPkIUQZVPB4ja+nzUmz0N8drPzg4TKDJCdioyvw243UQsvKiuWWNIPHDHTs18m9FS7jyVnVoxQF3g0yLKn2RCGQaOIOp+YYbFV3q+YYvIYEH4QX9/OIrcP9PANd9vXoCbsQhVkt4xwexA7d1cdw0t4NoypLMmEMT9eDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qCnlABXX; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 76598204E7CD; Sun, 27 Apr 2025 22:22:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76598204E7CD
+Received: from [10.95.65.22] (unknown [167.220.238.22])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 14036204E7CE;
+	Mon, 28 Apr 2025 02:07:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14036204E7CE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745817772;
-	bh=D2m/5uVeF+LrzPXcvVJrndC9Z3eMXkYAhDUqE9KBCms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LQF4LCPcjReWNzV+bzz1eNshSYLiTWAb4Bv7KVnG7soq9x3lFuOzujz6HJzvw2Lap
-	 2Q6CS1WFf4WY5QuuzXjaH9h/WUC1HhQ7ldCXjmqql8bA/UJrywf+EyqyF+dA63w1I7
-	 VWUpC+XWaUvlyyIrfpHHFEjak/SlPV8R+rGK+124=
-Date: Sun, 27 Apr 2025 22:22:52 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic
- MSI-X alloc
-Message-ID: <20250428052252.GA31705@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745578437-14878-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250425163748.GA546623@bhelgaas>
+	s=default; t=1745831246;
+	bh=5UtZ1Z4W6v48GiXx23x6Kspz0f+QWcBoQc3srB0Rl44=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qCnlABXXsCvuBb5bZV67XHvF1mvkJoUgunNdhUJ+SRZ91DnddXMLJymOChQVRsKAx
+	 wCNt/wDD7I9x8gTR63Gys/AK/9UYrQB8Aq6nyx6khFprUyE06loslCec51igclY3y4
+	 eikdHdKvHdxbsHxrKub6OZdk8RyTVqwlnYv67Dew=
+Message-ID: <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+Date: Mon, 28 Apr 2025 14:37:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425163748.GA546623@bhelgaas>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250424053524.1631-1-namjain@linux.microsoft.com>
+ <2025042501-accuracy-uncombed-cb99@gregkh>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025042501-accuracy-uncombed-cb99@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 11:37:48AM -0500, Bjorn Helgaas wrote:
-> On Fri, Apr 25, 2025 at 03:53:57AM -0700, Shradha Gupta wrote:
-> > For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
-> > the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
-> > to prepare the desc is also needed.
-> > 
-> > Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
-> > MSI-X vector allocation.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> Thanks for the update and for splitting this from the hv driver
-> update.  Will watch for Thomas's ack here.
-> 
-> For future postings, you might consider limiting the "To:" line to
-> people you expect to actually act on the patch, and moving the rest to
-> "Cc:".
 
-Thanks Bjorn, Noted.
+
+On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
+> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
+>> Hi,
+>> This patch series aims to address the sysfs creation issue for the ring
+>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
+>> size to accurately reflect the actual ring buffer size, rather than a
+>> fixed static value.
+>>
+>> PFB change logs:
+>>
+>> Changes since v5:
+>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+>>    commit msg of both patches.
+>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
+>>    hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+>>    now.
+>> * Changed type for declaring bin_attrs due to changes introduced by
+>>    commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+>>    merged recently. Did not use bin_attrs_new since another change is in
+>>    the queue to change usage of bin_attrs_new to bin_attrs
+>>    (sysfs: finalize the constification of 'struct bin_attribute').
 > 
-> > ---
-> >  drivers/pci/msi/irqdomain.c | 5 +++--
-> >  include/linux/msi.h         | 2 ++
-> >  2 files changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-> > index d7ba8795d60f..43129aa6d6c7 100644
-> > --- a/drivers/pci/msi/irqdomain.c
-> > +++ b/drivers/pci/msi/irqdomain.c
-> > @@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
-> >  	pci_msix_unmask(irq_data_get_msi_desc(data));
-> >  }
-> >  
-> > -static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> > -				  struct msi_desc *desc)
-> > +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> > +			   struct msi_desc *desc)
-> >  {
-> >  	/* Don't fiddle with preallocated MSI descriptors */
-> >  	if (!desc->pci.mask_base)
-> >  		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
-> >  }
-> > +EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
-> >  
-> >  static const struct msi_domain_template pci_msix_template = {
-> >  	.chip = {
-> > diff --git a/include/linux/msi.h b/include/linux/msi.h
-> > index 86e42742fd0f..d5864d5e75c2 100644
-> > --- a/include/linux/msi.h
-> > +++ b/include/linux/msi.h
-> > @@ -691,6 +691,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
-> >  					     struct irq_domain *parent);
-> >  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
-> >  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
-> > +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> > +			   struct msi_desc *desc);
-> >  #else /* CONFIG_PCI_MSI */
-> >  static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
-> >  {
-> > -- 
-> > 2.34.1
-> > 
+> Please fix up to apply cleanly without build warnings:
+> 
+> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>   1893 |         .bin_attrs = vmbus_chan_bin_attrs,
+>        |                      ^~~~~~~~~~~~~~~~~~~~
+> 1 error generated.
+
+Hi Greg,
+I tried reproducing this error but could not see it. Should I rebase the 
+change to some other tree or use some specific config option, gcc 
+version, compilation flag etc.?
+
+I tried the following:
+* Rebased to latest linux-next tip with below base commit:
+393d0c54cae31317deaa9043320c5fd9454deabc
+* Regular compilation with gcc: make -j8
+* extra flags:
+   make -j8  EXTRA_CFLAGS="-Wall -O2"
+   make -j8 
+EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers -Werror"
+* Tried gcc 11.4, 13.3
+* Tried clang/LLVM with version 18.1.3 : make LLVM=1
+
+
+
+BTW I had to edit the type for bin_attrs as this change got merged recently:
+9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 576b8b3c60af..f418aae4f113 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -107,7 +107,7 @@ struct attribute_group {
+                                             int);
+         struct attribute        **attrs;
+         union {
+-               struct bin_attribute            **bin_attrs;
++               const struct bin_attribute      *const *bin_attrs;
+                 const struct bin_attribute      *const *bin_attrs_new;
+         };
+  };
+
+
+Regards,
+Naman
 
