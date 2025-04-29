@@ -1,250 +1,303 @@
-Return-Path: <linux-hyperv+bounces-5228-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5229-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24880AA15DD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 19:32:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C382AA1C44
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 22:36:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C9571895420
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 17:28:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 850B93ADF0F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 20:35:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398C124E4A9;
-	Tue, 29 Apr 2025 17:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898DD25F789;
+	Tue, 29 Apr 2025 20:36:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dl5+1MRV"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="u3WR3hR7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazolkn19012054.outbound.protection.outlook.com [52.103.20.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6B124A047;
-	Tue, 29 Apr 2025 17:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947687; cv=none; b=Lya/z+p2Mc/kSt4iTO807Tfd7avahWjl2yOC0MDenTS32/ilsaBrgALAU9g0hClDWFmM8Ep5ZzqMI0k+29KC+1PTXNMBzoMcBYP7jybdbfxtAurs62AAgqCiYRAt+HsrZAxsC64ebnj/ZBgHBc6k51HkC2kyQ+kl6aKaP4cUyAw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947687; c=relaxed/simple;
-	bh=PVYVePB1lbPvKBWI8S6NDXuosqAzYQbVsfIh1jwWuVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sHqfE4g0jqTWml/auAgjmvHzh43eo6mH2vkxi8Ioki2/vmXRMjjAQAK0cFZpvA85XiI4hPSk5jiexPKDqONtZ4BJaxqnIHmQGBQAh7v8VOFhqjmxKW3mBrmGqXUzLNFPx7MvwoGJ0uZCkLaO0JIgOCavdCo/RJzI1CfdRM99Oyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dl5+1MRV; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53THR949509822
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 29 Apr 2025 10:27:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53THR949509822
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745947632;
-	bh=bi2Aevh2QzYHJjU5ZT4PV0lJuEojRhQww5I9NeYJf50=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dl5+1MRV352QgdzCN55c3h5YzJsglVUunIeznoTZvR86tIRDHDduoKYAilNdy8UVy
-	 OEGai/Yt9OZDvSPgIzIhkxcj5ShG9kvXTjGlJ2zesdY1/FbO18R7e2/VTEIl7GKjaO
-	 xK07wa+p3OMX38teq7q76S09I4+Yz7Pt2REmAngLro9casDIXZcpeegj2EJx1I2ig2
-	 0/6ceuNx+bbiqR41148AXDkYgIeIfISQrjLKScf+66Hnx0A5RHGDmj07zcwLcWBYtD
-	 nuOvbzvclQP9Rcm7KE8EOSlR4rY0H6lR8tUdU/bUWP3YHocv+vO11bc0h3sHbn5MNb
-	 tpVmjIEc6McWQ==
-Message-ID: <7df3c16b-9353-4f30-a13b-1f0eb8563e69@zytor.com>
-Date: Tue, 29 Apr 2025 10:27:09 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D0522170A;
+	Tue, 29 Apr 2025 20:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745958967; cv=fail; b=VbbrdEM1+L0ZJrfSzLEWJMYl3Y6cQwOnpusn6N/GYSIkuJH41Ftsf0gHJfpDEwhrapCC/iO0ufav7n55EIoBTKs0ij4ZWsGtxBNn3YTnjiCP/YvloVwIFmiv8yTQ/3NZ8F28n5Y8ldUUYHPKK6ja0yT/EpI6pgbUs2fv/xoGCTc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745958967; c=relaxed/simple;
+	bh=v4yWQUGu/yLW/7S1RCfaexBphJzXygTMPgMVobUal6k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YUrkQCPwPgWEFUIxe66n/0/p3FUUZCX9suuGF18AqaQefY0G5vTrLUo0pITfbvpTV37YZSJdsLQvJT3Ap9H7UFi4jPPnYSiz+SFwMS9Vqdz+EoZcKqa6HlH7aWho23D3DG6+UVXDSFXj0ZdealDRQmwDpUok/kyXt4cUOWJRlXw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=u3WR3hR7; arc=fail smtp.client-ip=52.103.20.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BiAlhFImtekmhaAFOGgrbTRxPvTaF2oA2+1zdFxJh+vpEPWYk9ayb5KyXuStAFn3DHRaDNzWY2Kt17+l8lig8xsFCe4R3bCE1Gqn4JVuQbAK1cu4qvk5cj+hCZPdC0Pt24LcTmHQewAYUQEfLIOGCKEdKKVnyDJaUJBh58EDoJXHjKyyQ24FxiFww7rpdVGfBrkwgPTpvpcD67x4oslk1Diu775HZACmel7SdNU2Ngp8Ybk7Nrqsv7oRrYZnt3ax6MnodhsRu3xfMGO1bthYbR7nAc5e0i1W9LllMqZw2H+l/UuxdCdeJSFvY9SWoYXLF8T/ykl1Fkdsp1d8zUKMWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NiU09rNoKHwDI3YlHs62boc7BZsmoT7YoV7mpDpM+4c=;
+ b=ZgNya2HgoG3I8e9gLLRXpR2HkENDtnRf7fW2sxGx3hruHyq2lPKzp/ZiwsGeCg2SigUfBRkSqhH6eTqB0IQ5QfW4FGCRvvLAG75nIKKHajZXAInetdmQEa9U/kWxIxxB3jRA/UyHsmcNiQM2bNCFxcmY+WPco9RWnOwc2R5KA9UYve/jDd/EW9xq1dNRysS8RiOj/EcT7rAOrY7sD1WENwAHpKYC2o68VgICqVhHxONB5hIJKLug9NPfzv1R/djX5mkMYk8gG5lwe0XAzPD780oOIbi9Q3pxAmJgIhGtw6sAVL9R783VwsdDJxVx0T3FTbQ87bXSz3uCJRdfWBluQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NiU09rNoKHwDI3YlHs62boc7BZsmoT7YoV7mpDpM+4c=;
+ b=u3WR3hR7mmhZZLO+SCzjzLIo8vZj4cVpxYpyZWsYbLRJHHKQO5M/v1QTczIzpVv3Cido0rsg1NM+6xTIgEtavGg0U4thrqhIm+CleAAK3uvUQ1KLkA30Hh7NCciq0BVeFBkLwNBGhGy3aKYpBznGHnkAle60qay8TfHlCDTm1aRARmq0XkmXQIdg9kJh38gv8hwhdUdyesCo1TAlI/TfgxQ8DHTAcj9a58F1Zk1QcUsY85vJwzRSv8ie3RGJHhmi8hywW9jZfl40EgmSEQTg9WU0I+nscmkKk39COn5jrEPE4slHZk2R9OrArSED3wib3FULzdgLdWrqBB+ScJL86A==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM6PR02MB6651.namprd02.prod.outlook.com (2603:10b6:5:21b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.18; Tue, 29 Apr
+ 2025 20:36:03 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Tue, 29 Apr 2025
+ 20:36:03 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: "x86@kernel.org" <x86@kernel.org>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
+	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "ardb@kernel.org" <ardb@kernel.org>, "kees@kernel.org"
+	<kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-efi@vger.kernel.org"
+	<linux-efi@vger.kernel.org>, "samitolvanen@google.com"
+	<samitolvanen@google.com>, "ojeda@kernel.org" <ojeda@kernel.org>
+Subject: RE: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
+Thread-Topic: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
+Thread-Index: AQHbrTI1ClyCxqrVskO/s3zyhfdzdbOuXWeQgAx8BwCAAFfBcA==
+Date: Tue, 29 Apr 2025 20:36:03 +0000
+Message-ID:
+ <SN6PR02MB4157DF6CA5F5597A0A4F78F8D4802@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.285564821@infradead.org>
+ <SN6PR02MB41576A943191D154521C23C8D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250429151808.GJ4198@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250429151808.GJ4198@noisy.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB6651:EE_
+x-ms-office365-filtering-correlation-id: e101ef67-ca72-4bff-229e-08dd875d75c2
+x-ms-exchange-slblob-mailprops:
+ AZnQBsB9XmpI8tRyoOXaSUmOkLVCBKas4A9rYUkY9CkpH1Ny2Ti6Pf4/9wvY+HrqI/7revzCB+H/2Y+m6zAb9oWlB3pNx/ADsRKvuE/VV8fFAu8/dO8GdP3d982h61jWN3iQi9Z3ldDweWaDiSJC+ZRc6cRbF1IRd/kcgaRPR9d1IIPOZsTm5sBYjNia6R5jc8meO2apdz0YVuF81aaUjkYokHfB3If/vJci9rk/AMkaq+3sPKy/X9prjyY1cJ3iA/pzJXZR8R3dFcEJqLQ966CbaJdg0EsqSu1eVvhXHC/G2KaNnWvCV+5yjsfOcew9IgHJeww/hfFer4lx+3w4OaAUKYqRZSvCWXSmQqYFy9286rv+24yhNXtg4iWvUH7pJsUH1N4JjkjCrG9eoVvCJm9nyabxfx28g88Rlys1agnX35I5OdknAehYwKz61SqP25cdt1KDVrsQVYQnbzhpkvl1OedzSHzvBdmQOJ/6vPro68R/91bXw3FATudVCunqH4DYu3ekpLOcH2udu8i6/6tAZtvSwTaeLNX+xwVzQMTZsKbbN+FkDW7ipOgAdLvIFEEEZ3ZxE/+lDf5AE3TKSqMMbaTJzetMlVxcNf5eyCb3pyECBmTc/hFdU8znK+B46VEsu4qoN74b33+NEQlAu3fSYBcsOhRWRNo3JdEolejxwd/15OXbP1PBFGioc2nSCujabElYKrUEjbeI7JmgjoyBZwtiF8lLfl8OB693idQuKA7mABX4G3V+vpSh4ef28mREmc769DE=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|461199028|19110799003|8060799006|15080799006|3412199025|440099028|41001999003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ECSxiHJkSIDyzGVYPNHdeEXsuA0ApYHNnY1ractmNbgyo2UG1DcBaL+fdf4k?=
+ =?us-ascii?Q?pzPT5rYSK/oct27evRkK6hYauRoRns1ap2sR73PEYMs3A/l/W7HSu9bLGwbD?=
+ =?us-ascii?Q?v4x/TJs1mmyyFx7J/sUZpSGn2J1d446MM4z8u2XCj3q5aoJ0/pajODEbA7Ou?=
+ =?us-ascii?Q?i8Vu+akXzgHCTqUTntylJU7VXsNWKUJPF6IsEVsJOzDsO753TZMbsqOvuJDg?=
+ =?us-ascii?Q?MkIIxGf5kZkhQsOMduipvN5lYkh2o/bPye+83zVudvEU/e+yPCBRH0zTRjWo?=
+ =?us-ascii?Q?7UzPSqdfAaGEsZnO7T1218lQt8WFzSQ3/po6YeROsaS4ZM6Xr5G8l4ylluWg?=
+ =?us-ascii?Q?McD1vwF6C7zkdNh1ilUflzJGtHqTvkibg7+W3ekZuXAdzq/XsVq3v9CtxsBo?=
+ =?us-ascii?Q?RYx35kXU8/SV8I6AHonvnki3N8HPhswyS6i7Oh4uyoy3cj9sVkIffxiKrYEz?=
+ =?us-ascii?Q?BeTfX6Yjel35MYjwHUBe+AjsekFa9d4u1M2WNxwntvE/1uGnk3uxoTYoGwvI?=
+ =?us-ascii?Q?lH8qZUpzw5Xw9cSnnx7bESLP4uLUIMqziaFpkuyOxdhyGHpPzrLVTDOylZTr?=
+ =?us-ascii?Q?lk1leU0cbkafb8yn1M1KFwZdnV2a1v34gvDFlebMqj39MANTyVleGO7yE7pi?=
+ =?us-ascii?Q?fcfq3ybgp1JNXlcP3ZqrcYEoZthbfiy9cRfd17oe9cm6bDoMq3DkC4kWpeax?=
+ =?us-ascii?Q?4uA9yx0caOLIwHmDgHo7DkHcA66n55g/DWbxPZfgkx0eVIh3k4x8q0Bgxai2?=
+ =?us-ascii?Q?3bny6k8afq7zH35t78BWK0yDLgfiI0A+N0hkvrI4M4m7vs8y7wSUfsibZbpj?=
+ =?us-ascii?Q?dXDbgJYt+uN8N3v9/9YsBM85JlyU7G2omL9A9JCLgQaQYrEFklReXIlupfXh?=
+ =?us-ascii?Q?XmGqpvUpCGvRE/gftFA1Jj7dnjUDFweD01Jw1rcf4Fns+UJmBj+Vd/M2f7/I?=
+ =?us-ascii?Q?Pon9/5vjP/AJ7wOIuhlsr/lbVJJTf2KKT4uGCyJX6JfPo6mjv3PzHJOFRjAY?=
+ =?us-ascii?Q?ahgBfE0fbK18axOld3JZ22PgjfMPnYp+zTbGg+TzzgzggtwnmjxawylxdooF?=
+ =?us-ascii?Q?8xAlMkoG9Q62m5EVTU7DwcQkqJRQGUirIQjUjPLoZp98GTgcPdsOnVFQ1oIp?=
+ =?us-ascii?Q?R7hooE/0jIAK?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?CRFPnv1pIWaDeoCcIY8BFjBUSBpQGDNDDNS/6E8U7Mj20SCnxn/pRD/wHXUv?=
+ =?us-ascii?Q?2LxQS256OLjuXtbpVyq+UP4VuT0/runbE/D7uFOkU3QVU07K2DOKLIxQf1hQ?=
+ =?us-ascii?Q?ZrdvjbrkXSan8YNsFanYkDAnPKBJgdt6X9d887SDnl5tQ5E3PzjbDTd9gtsd?=
+ =?us-ascii?Q?8PQ/p+l4OMZxf+6/dvJ/x5ri0Qkc/TjPsrkCYzoeDcbppzzK8JPTYITJKpk2?=
+ =?us-ascii?Q?yjgwF0dvoiuB6uUT5iINtZAhT6X4onxAYuToz4h93LsNZt0ZiY63yRUEDhZZ?=
+ =?us-ascii?Q?4qjpcYpClLB4uwoE0nZYIN7JvWiiATAUVwHnARurJaFxJkKvvQ7ILB4MUqmI?=
+ =?us-ascii?Q?vRVDxUClHEKZRJdb/xL5Jk1JSbpdbZIHmPKpjGl/MBk+szzWxzEm1mJdBa0O?=
+ =?us-ascii?Q?65+T3hXTdkSv8SUOPaij11jTpJUsom4kzNVx+uePb2h5l2/U8vd+WR8cyfgo?=
+ =?us-ascii?Q?/sYZ9QsQL8WQ5boOhiuebuzg6GYbJfiEMM0xV9LfNdptZ2vx0sMRpwpD7cHz?=
+ =?us-ascii?Q?hNsKNPSPd4IH82jwsX47An4g8lXlVYQDQYgpDty7eUggwl0aObiyCOtBk1Pu?=
+ =?us-ascii?Q?F538xfUtN0BoLpNN3obIKxawYvvLiyQHcsYqipY2Iqqatm5ZCMo+X+1KKEmL?=
+ =?us-ascii?Q?lXEQ/nwzWfPfWRSxqzp12Rg0I0PGkt72xGz2I265bi/XL6N8DOXjVh7YWCyp?=
+ =?us-ascii?Q?355bMY6guu3BXpBBw9ARHKON6ZlQicdkeVjN1ePbtLFIvMZ+GzUzyoVUyquA?=
+ =?us-ascii?Q?fcP2035zwkRUXNS81eNSsNQQU6aqHPlWSxemdqKWY+Pb2MuT1q4+QgEGL/4q?=
+ =?us-ascii?Q?HuH0+CHiyEtpfPrJpi561JSoXAJuxUw2TTywtpvhe5fOR7EcppnQbU4THvqt?=
+ =?us-ascii?Q?X+oklTlhGpWPnMguqUANTZJp2msg0sIFfJl9vy+gHkawxAbIucNvdnS/0DvW?=
+ =?us-ascii?Q?zHZADNTLFmp4Btv1tmmgbCIgTH9EXHflll5hP/bNaxu/y16X0y9Fzwcjm1MS?=
+ =?us-ascii?Q?aew6quxNAPxZ1Ud+J1COiBifO/srPGOflBSkueqIWszr9g4uJ3KUPr2Hixgh?=
+ =?us-ascii?Q?wljHPoKkSIA1/fiVst+CCKQ4l3f5UgCJanibM6p9FSjw307yB0AttxYMCh5u?=
+ =?us-ascii?Q?MXm9hqNZzzfb8MTai2UE4p6XZvcp8aiB5ieGIKyy/egdtDdRWQc10kU4Rw1O?=
+ =?us-ascii?Q?uS4HphBojzhGiDmQaYlVcPJeDRIdo34OhRoNo4fR2n8Fa9/KjvfRacggfyI?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-2-xin@zytor.com>
- <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e101ef67-ca72-4bff-229e-08dd875d75c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2025 20:36:03.3468
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6651
 
-On 4/29/2025 2:45 AM, Ilpo Järvinen wrote:
-> On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
-> 
->> For some reason, there are some TSC-related functions in the MSR
->> header even though there is a tsc.h header.
->>
->> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
->> to <asm/tsc.h> and to eventually eliminate the inclusion of
->> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
->> reference definitions from <asm/msr.h>.
->>
->> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
->> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
->> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> ---
->>
->> Change in v4:
->> *) Add missing includes in a different patch (Ilpo Järvinen).
->> *) Add all necessary direct inclusions for msr.h (Ilpo Järvinen).
->>
->> Change in v3:
->> * Add a problem statement to the changelog (Dave Hansen).
->> ---
->>   arch/x86/events/msr.c                                         | 3 +++
->>   arch/x86/events/perf_event.h                                  | 1 +
->>   arch/x86/events/probe.c                                       | 2 ++
-> 
-> Under arch/x86/events/ a few files seem to be missing the include?
-> 
->>   arch/x86/hyperv/ivm.c                                         | 1 +
-> 
-> Also under hyperv/ not all files are covered but I'm a bit hesitant to
-> suggest a change there since I'm not sure if they (hypervisors) do
-> something special w.r.t. msr.
-> 
->>   arch/x86/include/asm/fred.h                                   | 1 +
->>   arch/x86/include/asm/microcode.h                              | 2 ++
->>   arch/x86/include/asm/mshyperv.h                               | 1 +
->>   arch/x86/include/asm/msr.h                                    | 1 +
->>   arch/x86/include/asm/suspend_32.h                             | 1 +
->>   arch/x86/include/asm/suspend_64.h                             | 1 +
->>   arch/x86/include/asm/switch_to.h                              | 2 ++
-> 
-> arch/x86/kernel/acpi/ ?
-> acrh/x86/kernel/cet.c ?
-> ...
-> 
-> There seem to be quite many under arch/x86/ that still don't have it, I
-> didn't list them all as there were so many after this point.
-> 
-> But that's up to x86 maintainers how throughout they want you to be.
-> 
-> This command may be helpful to exclude the files which already have the
-> include so you can focus on the ones that may still be missing it:
-> 
-> git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
-> 
->>   arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
->>   arch/x86/kernel/fpu/xstate.h                                  | 1 +
->>   arch/x86/kernel/hpet.c                                        | 1 +
->>   arch/x86/kernel/process_64.c                                  | 1 +
->>   arch/x86/kernel/trace_clock.c                                 | 2 +-
->>   arch/x86/kernel/tsc_sync.c                                    | 1 +
->>   arch/x86/lib/kaslr.c                                          | 2 +-
->>   arch/x86/mm/mem_encrypt_identity.c                            | 1 +
->>   arch/x86/realmode/init.c                                      | 1 +
->>   drivers/acpi/acpi_extlog.c                                    | 1 +
->>   drivers/acpi/processor_perflib.c                              | 1 +
->>   drivers/acpi/processor_throttling.c                           | 3 ++-
->>   drivers/char/agp/nvidia-agp.c                                 | 1 +
->>   drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
->>   drivers/crypto/ccp/sev-dev.c                                  | 1 +
->>   drivers/edac/amd64_edac.c                                     | 1 +
->>   drivers/edac/ie31200_edac.c                                   | 1 +
->>   drivers/edac/mce_amd.c                                        | 1 +
->>   drivers/hwmon/hwmon-vid.c                                     | 4 ++++
->>   drivers/idle/intel_idle.c                                     | 1 +
->>   drivers/misc/cs5535-mfgpt.c                                   | 1 +
->>   drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
->>   drivers/platform/x86/intel/ifs/core.c                         | 1 +
->>   drivers/platform/x86/intel/ifs/load.c                         | 1 +
->>   drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
->>   drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
->>   drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
->>   drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
->>   drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
->>   drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
->>   .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
->>   drivers/powercap/intel_rapl_common.c                          | 1 +
->>   drivers/powercap/intel_rapl_msr.c                             | 1 +
->>   .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
->>   drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
->>   drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
->>   drivers/video/fbdev/geode/display_gx.c                        | 1 +
->>   drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
->>   drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
-> 
-> Under drivers/ this looked pretty complete. Nice work.
-> 
-> Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
+From: Peter Zijlstra <peterz@infradead.org> Sent: Tuesday, April 29, 2025 8=
+:18 AM
+>=20
+> On Mon, Apr 21, 2025 at 06:27:57PM +0000, Michael Kelley wrote:
+>=20
+> > > @@ -483,14 +484,16 @@ static void __init ms_hyperv_init_platfo
+> > >  			ms_hyperv.shared_gpa_boundary =3D
+> > >  				BIT_ULL(ms_hyperv.shared_gpa_boundary_bits);
+> > >
+> > > -		hyperv_paravisor_present =3D !!ms_hyperv.paravisor_present;
+> > > -
+> > >  		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
+> > >  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+> > >
+> > >
+> > >  		if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_SNP) {
+> > >  			static_branch_enable(&isolation_type_snp);
+> > > +#if defined(CONFIG_AMD_MEM_ENCRYPT) && defined(CONFIG_HYPERV)
+> > > +			if (!ms_hyperv.paravisor_present)
+> > > +				static_call_update(hv_hypercall, hv_snp_hypercall);
+> > > +#endif
+> >
+> > This #ifdef (and one below for TDX) are really ugly. They could be avoi=
+ded by adding
+> > stubs for hv_snp_hypercall() and hv_tdx_hypercall(), and making the hv_=
+hypercall static
+> > call exist even when !CONFIG_HYPERV (and for 32-bit builds). Or is ther=
+e a reason to
+> > not do that?
+> >
+> > >  		} else if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_TDX) {
+> > >  			static_branch_enable(&isolation_type_tdx);
+> > >
+> > > @@ -498,6 +501,9 @@ static void __init ms_hyperv_init_platfo
+> > >  			ms_hyperv.hints &=3D ~HV_X64_APIC_ACCESS_RECOMMENDED;
+> > >
+> > >  			if (!ms_hyperv.paravisor_present) {
+> > > +#if defined(CONFIG_INTEL_TDX_GUEST) && defined(CONFIG_HYPERV)
+> > > +				static_call_update(hv_hypercall, hv_tdx_hypercall);
+> > > +#endif
+> > >  				/*
+> > >  				 * Mark the Hyper-V TSC page feature as disabled
+> > >  				 * in a TDX VM without paravisor so that the
+> > >
+> > >
+>=20
+> I've ended up with the below.. I thought it a waste to make all that
+> stuff available to 32bit and !HYPERV.
+>=20
+>=20
+> --- a/arch/x86/hyperv/ivm.c
+> +++ b/arch/x86/hyperv/ivm.c
+> @@ -392,6 +392,7 @@ u64 hv_snp_hypercall(u64 control, u64 pa
+>  #else
+>  static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
+>  static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
+> +u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2) {}
+>  #endif /* CONFIG_AMD_MEM_ENCRYPT */
+>=20
+>  #ifdef CONFIG_INTEL_TDX_GUEST
+> @@ -441,6 +442,7 @@ u64 hv_tdx_hypercall(u64 control, u64 pa
+>  #else
+>  static inline void hv_tdx_msr_write(u64 msr, u64 value) {}
+>  static inline void hv_tdx_msr_read(u64 msr, u64 *value) {}
+> +u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2) {}
+>  #endif /* CONFIG_INTEL_TDX_GUEST */
+>=20
+>  #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -39,6 +39,10 @@ static inline unsigned char hv_get_nmi_r
+>  	return 0;
+>  }
+>=20
+> +extern u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
+> +extern u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2);
+> +extern u64 hv_std_hypercall(u64 control, u64 param1, u64 param2);
+> +
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  extern void *hv_hypercall_pg;
+>=20
+> @@ -48,10 +52,6 @@ bool hv_isolation_type_snp(void);
+>  bool hv_isolation_type_tdx(void);
+>=20
+>  #ifdef CONFIG_X86_64
+> -extern u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
+> -extern u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2);
+> -extern u64 hv_std_hypercall(u64 control, u64 param1, u64 param2);
+> -
+>  DECLARE_STATIC_CALL(hv_hypercall, hv_std_hypercall);
+>  #endif
+>=20
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -287,9 +287,14 @@ static void __init x86_setup_ops_for_tsc
+>  #ifdef CONFIG_X86_64
+>  DEFINE_STATIC_CALL(hv_hypercall, hv_std_hypercall);
+>  EXPORT_STATIC_CALL_TRAMP_GPL(hv_hypercall);
+> +#define hypercall_update(hc) static_call_update(hv_hypercall, hc)
+>  #endif
+>  #endif /* CONFIG_HYPERV */
+>=20
+> +#ifndef hypercall_update
+> +#define hypercall_update(hc) (void)hc
+> +#endif
+> +
+>  static uint32_t  __init ms_hyperv_platform(void)
+>  {
+>  	u32 eax;
+> @@ -490,10 +495,8 @@ static void __init ms_hyperv_init_platfo
+>=20
+>  		if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_SNP) {
+>  			static_branch_enable(&isolation_type_snp);
+> -#if defined(CONFIG_AMD_MEM_ENCRYPT) && defined(CONFIG_HYPERV)
+>  			if (!ms_hyperv.paravisor_present)
+> -				static_call_update(hv_hypercall, hv_snp_hypercall);
+> -#endif
+> +				hypercall_update(hv_snp_hypercall);
+>  		} else if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_TDX) {
+>  			static_branch_enable(&isolation_type_tdx);
+>=20
+> @@ -501,9 +504,7 @@ static void __init ms_hyperv_init_platfo
+>  			ms_hyperv.hints &=3D ~HV_X64_APIC_ACCESS_RECOMMENDED;
+>=20
+>  			if (!ms_hyperv.paravisor_present) {
+> -#if defined(CONFIG_INTEL_TDX_GUEST) && defined(CONFIG_HYPERV)
+> -				static_call_update(hv_hypercall, hv_tdx_hypercall);
+> -#endif
+> +				hypercall_update(hv_tdx_hypercall);
+>  				/*
+>  				 * Mark the Hyper-V TSC page feature as disabled
+>  				 * in a TDX VM without paravisor so that the
 
-Thanks a lot!
+Yes, that's a reasonable improvement that I can live with. This source code=
+ file
+is certainly not a model for avoiding ugly #ifdef's, but your new approach =
+avoids
+adding to the problem quite so egregiously.
 
-
-> 
-> I also noticed these files might not need to include msr.h:
-> 
-> drivers/cpufreq/elanfreq.c
-> drivers/cpufreq/sc520_freq.c
-> drivers/accel/habanalabs/common/habanalabs_ioctl.c
-> 
-> ...so if you want, you may consider optionally adding a cleanup patch to
-> remove the include from them.
-> 
->> --- a/drivers/video/fbdev/geode/gxfb_core.c
->> +++ b/drivers/video/fbdev/geode/gxfb_core.c
->> @@ -30,6 +30,7 @@
->>   #include <linux/cs5535.h>
->>   
->>   #include <asm/olpc.h>
->> +#include <asm/msr.h>
-> 
-> In wrong order.
->>   
->>   #include "gxfb.h"
-> 
-
-I am more than happy to send v4A to address all your comments.
+Michael
 
