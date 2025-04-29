@@ -1,133 +1,227 @@
-Return-Path: <linux-hyperv+bounces-5218-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5219-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58AD8AA0638
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 10:52:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA710AA07A5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 11:46:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CC233BC9D3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 08:51:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 563151A827A3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Apr 2025 09:46:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F266529C340;
-	Tue, 29 Apr 2025 08:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDDED2BE11E;
+	Tue, 29 Apr 2025 09:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cgjw/DkY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhEkgs3Z"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C1E9296D05;
-	Tue, 29 Apr 2025 08:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78132750ED;
+	Tue, 29 Apr 2025 09:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916686; cv=none; b=k3rF/+/BbdtIYxAmWDaxmMjFX7+J9vK5cOMjD2m9du5ht/b9zADQItDL3XXBXv1w+/7EVso7GDE3qkkd6L+5Q75w35ZENM9mSj2gQEgidapgGO/eu5nOik5Aqvcn6balSwGYs67gTHY3F7OCOMuq/qCY1pxaHQEch6Jf5VjZHVk=
+	t=1745919968; cv=none; b=a1/Y7er53mi0bVLoxAyX8YQdD9DnKoavjyp8hUvCSVVMkG8mUUuugUszd6HZQF/bfJLqeMl7eThf7FVkL9cc29fImiSyJVZsWZ5hfIv2umcrepRnROHJJ1J/ZbKsLd+ioxUd48QAViGSs4x5ZQ8oFcVnhA4kuAC2D3JFevcodM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916686; c=relaxed/simple;
-	bh=i/zN+eLtunYqB8Jo8o4ZtByDNbSfXn6uTc2DKMgPDy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TaAVX2F6QANt9Ad88eKir1Yk9KdmAIZ84Avy6sBcbHYKEkrFhw+ElAr/EvQxRR6GK1Pq44gorIKACdKK1OZH1X0+kGFYgs9kDlqThGRW/qnvpSSa2XTHMJ0bukTf0YCP3f65+QnC7NEwbKdw2lUbj5N6m7S+10g/xPWNQ1ofwRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cgjw/DkY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id E3B2320BCAD1; Tue, 29 Apr 2025 01:51:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3B2320BCAD1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745916684;
-	bh=bH/gRq3HkYAXOdTEm1wWVnhs8e9j9zydL0IGXdJm9z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cgjw/DkYa5RLPVsfa6JDQm+dTp5wS2msU1njQGR9PFHfHPdRXRN/MfFd7Cdtsqceo
-	 51OTUVgym3hohVal4H1IaQ9w9ihTFNs5egVT7EOIdvMsRPX0H3Beyoe3k6dpDz5hyG
-	 fLNGYYUCi3uj3ZLKjhLc5V89rUxB75dSa7hMu7+w=
-Date: Tue, 29 Apr 2025 01:51:24 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
- required
-Message-ID: <20250429085124.GC10839@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
- <aA-Evojnzt2z0RdH@yury>
+	s=arc-20240116; t=1745919968; c=relaxed/simple;
+	bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Emgtv/gMe8St7UkcENtZv3YP4C3bsW6bZP0FKsGeS9U1BnqUjnJNZbnZpBbPYaqf5kryfkN+/tEaJYtwi4K+j+U/qRm+KlwPYB0QDqUiQEgBYfYiwi91+Wkmi/tUOtgTIFRj6nyQpWbf5tTKZhqvDps63zrbTXyaR88wDjjZJ/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhEkgs3Z; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745919967; x=1777455967;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
+  b=KhEkgs3ZllIg5zGgsQX8fqOMXknpgK69caY27Orl6Lxtw7NSWSLkG1w4
+   g2DW8+YFG9+XROlrqXraqLm0YeKWEEPWfiozJNYG7NTjY9Ybfsx3fLYkC
+   y8vtWOJIfBcuRSbazfZUYhXJKkjZZzmLz+muojM6CKnLobXStCbTRw9bt
+   bVEcs9nbLpqe00aqkAN6nG2rckC7k2KlnNzn8lwvKgBJHm7fasoExIpQ2
+   Jpakh/f/zv4EkmnPEU3vWprM8wNHG6yIZRy3Hb/xzhlHzWUISTWFmsr4c
+   /lOfdyDSIpXKM0elxe1+HRCwKDWNyXDlQ7xWGHaMQuoIH+jRXpCTKCWob
+   Q==;
+X-CSE-ConnectionGUID: Z6lDBEttR7i/lsUKBkcN2Q==
+X-CSE-MsgGUID: JtsTc6SLS9m+bLDZyPwX+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="35143891"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="35143891"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:46:06 -0700
+X-CSE-ConnectionGUID: chXqGONbRG+KNhUajc2ULw==
+X-CSE-MsgGUID: 8lVzqi8rRgSKGWTaNKThpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="133495412"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:45:52 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 29 Apr 2025 12:45:49 +0300 (EEST)
+To: "Xin Li (Intel)" <xin@zytor.com>
+cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
+    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
+    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
+    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
+    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
+    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+    dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
+In-Reply-To: <20250427092027.1598740-2-xin@zytor.com>
+Message-ID: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
+References: <20250427092027.1598740-1-xin@zytor.com> <20250427092027.1598740-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA-Evojnzt2z0RdH@yury>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/mixed; BOUNDARY="8323328-666243473-1745919726=:938"
+Content-ID: <1b5519eb-241d-dec5-af5a-fc9378cf96ec@linux.intel.com>
 
-On Mon, Apr 28, 2025 at 09:38:06AM -0400, Yury Norov wrote:
-> On Fri, Apr 25, 2025 at 03:54:38AM -0700, Shradha Gupta wrote:
-> > Currently, the MANA driver allocates MSI-X vectors statically based on
-> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> > up allocating more vectors than it needs. This is because, by this time
-> > we do not have a HW channel and do not know how many IRQs should be
-> > allocated.
-> > 
-> > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-> > after getting the value supported by hardware, dynamically add the
-> > remaining MSI-X vectors.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Changes in v2:
-> >  * Use string 'MSI-X vectors' instead of 'pci vectors'
-> >  * make skip-cpu a bool instead of int
-> >  * rearrange the comment arout skip_cpu variable appropriately
-> >  * update the capability bit for driver indicating dynamic IRQ allocation
-> >  * enforced max line length to 80
-> >  * enforced RCT convention
-> >  * initialized gic to NULL, for when there is a possibility of gic
-> >    not being populated correctly
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 323 ++++++++++++++----
-> >  include/net/mana/gdma.h                       |  11 +-
-> >  2 files changed, 269 insertions(+), 65 deletions(-)
-> 
-> To me, this patch looks too big, and it doesn't look like it does
-> exactly one thing.
-> 
-> Can you split it to a few small more reviewable chunks? For example,
-> I authored irq_setup() helper. If you split its rework and make it
-> a small preparation patch, I'll be able to add my review tag.
-> 
-> Thanks,
-> Yury
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thank you for the comments Yury. I think I can split this patch into the 
-irq_setup() preparation patch and other functionalities. Would also
-investigate if these other functionalities can also be split, before sending
-out the next version.
+--8323328-666243473-1745919726=:938
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <6ad7f337-7709-3cca-3ccd-80f11d3e8d38@linux.intel.com>
 
-Regards,
-Shradha.
+On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
+
+> For some reason, there are some TSC-related functions in the MSR
+> header even though there is a tsc.h header.
+>=20
+> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
+> to <asm/tsc.h> and to eventually eliminate the inclusion of
+> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
+> reference definitions from <asm/msr.h>.
+>=20
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>=20
+> Change in v4:
+> *) Add missing includes in a different patch (Ilpo J=E4rvinen).
+> *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
+>=20
+> Change in v3:
+> * Add a problem statement to the changelog (Dave Hansen).
+> ---
+>  arch/x86/events/msr.c                                         | 3 +++
+>  arch/x86/events/perf_event.h                                  | 1 +
+>  arch/x86/events/probe.c                                       | 2 ++
+
+Under arch/x86/events/ a few files seem to be missing the include?
+
+>  arch/x86/hyperv/ivm.c                                         | 1 +
+
+Also under hyperv/ not all files are covered but I'm a bit hesitant to=20
+suggest a change there since I'm not sure if they (hypervisors) do=20
+something special w.r.t. msr.
+
+>  arch/x86/include/asm/fred.h                                   | 1 +
+>  arch/x86/include/asm/microcode.h                              | 2 ++
+>  arch/x86/include/asm/mshyperv.h                               | 1 +
+>  arch/x86/include/asm/msr.h                                    | 1 +
+>  arch/x86/include/asm/suspend_32.h                             | 1 +
+>  arch/x86/include/asm/suspend_64.h                             | 1 +
+>  arch/x86/include/asm/switch_to.h                              | 2 ++
+
+arch/x86/kernel/acpi/ ?
+acrh/x86/kernel/cet.c ?
+=2E..
+
+There seem to be quite many under arch/x86/ that still don't have it, I=20
+didn't list them all as there were so many after this point.
+
+But that's up to x86 maintainers how throughout they want you to be.
+
+This command may be helpful to exclude the files which already have the=20
+include so you can focus on the ones that may still be missing it:
+
+git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
+
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
+>  arch/x86/kernel/fpu/xstate.h                                  | 1 +
+>  arch/x86/kernel/hpet.c                                        | 1 +
+>  arch/x86/kernel/process_64.c                                  | 1 +
+>  arch/x86/kernel/trace_clock.c                                 | 2 +-
+>  arch/x86/kernel/tsc_sync.c                                    | 1 +
+>  arch/x86/lib/kaslr.c                                          | 2 +-
+>  arch/x86/mm/mem_encrypt_identity.c                            | 1 +
+>  arch/x86/realmode/init.c                                      | 1 +
+>  drivers/acpi/acpi_extlog.c                                    | 1 +
+>  drivers/acpi/processor_perflib.c                              | 1 +
+>  drivers/acpi/processor_throttling.c                           | 3 ++-
+>  drivers/char/agp/nvidia-agp.c                                 | 1 +
+>  drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
+>  drivers/crypto/ccp/sev-dev.c                                  | 1 +
+>  drivers/edac/amd64_edac.c                                     | 1 +
+>  drivers/edac/ie31200_edac.c                                   | 1 +
+>  drivers/edac/mce_amd.c                                        | 1 +
+>  drivers/hwmon/hwmon-vid.c                                     | 4 ++++
+>  drivers/idle/intel_idle.c                                     | 1 +
+>  drivers/misc/cs5535-mfgpt.c                                   | 1 +
+>  drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
+>  drivers/platform/x86/intel/ifs/core.c                         | 1 +
+>  drivers/platform/x86/intel/ifs/load.c                         | 1 +
+>  drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
+>  drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
+>  drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
+>  .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
+>  drivers/powercap/intel_rapl_common.c                          | 1 +
+>  drivers/powercap/intel_rapl_msr.c                             | 1 +
+>  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
+>  drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
+>  drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
+>  drivers/video/fbdev/geode/display_gx.c                        | 1 +
+>  drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
+>  drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
+
+Under drivers/ this looked pretty complete. Nice work.
+
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
+
+I also noticed these files might not need to include msr.h:
+
+drivers/cpufreq/elanfreq.c
+drivers/cpufreq/sc520_freq.c
+drivers/accel/habanalabs/common/habanalabs_ioctl.c
+
+=2E..so if you want, you may consider optionally adding a cleanup patch to=
+=20
+remove the include from them.
+
+> --- a/drivers/video/fbdev/geode/gxfb_core.c
+> +++ b/drivers/video/fbdev/geode/gxfb_core.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/cs5535.h>
+> =20
+>  #include <asm/olpc.h>
+> +#include <asm/msr.h>
+
+In wrong order.
+> =20
+>  #include "gxfb.h"
+
+--
+ i.
+--8323328-666243473-1745919726=:938--
 
