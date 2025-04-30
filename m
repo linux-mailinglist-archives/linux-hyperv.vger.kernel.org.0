@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-5233-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5234-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB53EAA45B4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 10:42:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 13609AA46A1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 11:15:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CD5B4E3C44
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 08:42:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEA8A173308
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 09:14:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B872165ED;
-	Wed, 30 Apr 2025 08:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9165C223322;
+	Wed, 30 Apr 2025 09:13:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RJT6OmDA"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AB7yHzHZ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56719213E85;
-	Wed, 30 Apr 2025 08:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFEC222563;
+	Wed, 30 Apr 2025 09:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002530; cv=none; b=inDGjJeOW0iuFqDkoRJjAtUPOzMU4XjN0bT44DEkvw+nM48O6s/LuZXFIdwXTvK6Mi49J8K7xr17CHD82cyzjIZIbBJRDI2eWql6X2cOmRTZkQ+o1ZxLEbfMjGsZxSpsrboE9BlqsekuBeZAe1CUFbLVOeQdpcaAGkJEbN2f6IY=
+	t=1746004400; cv=none; b=gI1YKG0OrWg59wWn1OEURo4jueaBSTrLdPw9lOTTZl9yEE0MFKohuLUaUTahRGngc76o1Hk4+RuvGKnGlqVjv7VWMP3/7QT32rXDZTIgZ7s/znWeVsdQ1TlPwsWFiy4JukO8G0Lag/5KPfZbkj7TI3SrMnmTmM5svexlTDnUgiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002530; c=relaxed/simple;
-	bh=opIdtlH9FxubqDCmTmFXZCwSpsZlw8Xv63oX88tUBpI=;
+	s=arc-20240116; t=1746004400; c=relaxed/simple;
+	bh=d2DDZC70gbpscPgbWYbwQPfzHaJwMRuO8UuuTeGXlnc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aryEQfYEQh31biNJ/NJEkuP44U6yyLLWcgphbERSlc4KDGZH7p2mSAoXaZzfNqV0K235mgtkO54Jh7vD4k+yzmtvyrEtiTdhmC5h6Tr5Mnbcdj1eYwNsAxek4qzNtnYdWKTxTEpSuaQzneMNLaiPnEm6he8b7wo1zHcwEumMFo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RJT6OmDA; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=AIhv4hR7OcNBRJuQz4A+VJMW3ST7lKZ/P5Q/Wpt5Th8ePBkZyXWhZ/elRvpU0glPDoSUm11Wo9qkUchz3gUcvkeE6fMmHLjUyLgIYG+eLCL4Nx0XOGtTaTfOEOQgFf+IH5ocqrrUMPRzNsUIcAiOwk0CWmsTiCECJuCDLmkJBGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AB7yHzHZ; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Received: from [192.168.7.202] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53U8f73s812541
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53U9CK8G823665
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 30 Apr 2025 01:41:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53U8f73s812541
+	Wed, 30 Apr 2025 02:12:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53U9CK8G823665
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746002472;
-	bh=2/QHRN+D8/djEoWuIZIlllhMwAZHSg2wUWQdlu6s4Ik=;
+	s=2025042001; t=1746004344;
+	bh=/7rTi9HvZ6onJSTdYqzzgTETKP8TAGe+/d/qRha+9aU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RJT6OmDAoNn/cc5MacwB1vC5wQ1M64qGWRanjOVN66rVpkGlXaLeGE7PE7eD7mISD
-	 /dIdmza3K+wfDZyQexgmDwpxPQNN4+/Fbw41fhxlT3K0uT/PJjyGzdwaAn+yyr9k0A
-	 CWJPVsS03uahIX8JX2uLwg3Z3hye2BZ7LId8jWJUQAdh/it1N65JzEiy3LsHYL9aJT
-	 C68Y5ccPbfaA9gH+J9F27HnzlVWkht45bvdBotMjohzZpoa3XaE99KXAA3Fc4+U100
-	 OtHQ9EQb/i6ZeoBsZ7v43PfIbFra7Pd1cFeKQ0RpDx0DYLCFE4fbEUVwSoFN8jeJCO
-	 fS0vj6MT1+Cdw==
-Message-ID: <c16677bd-ee63-4032-8825-7d2789dd7555@zytor.com>
-Date: Wed, 30 Apr 2025 01:41:06 -0700
+	b=AB7yHzHZAPzuuD3gLAO5sc0iXVQ+0GQF0XcAMrHLP5xDswXkqmewyho4mFI+++jqF
+	 MUjpki2/cVxD8OLc2l7OexLkzHfkljDGVxdNMg55yJJaHHq61lYWVxCqkbcDlKPQUA
+	 zSYweN1JtJ7V8wjKay/kfLYDENnpupYxIHInm8F/XdaI7EVCrqyb+ID3uZvWWl1lZ6
+	 JjsGcIx5lBkgRJaxum2F+bKJHQvcOpilyvKrFHCwoCu7yRPQ3Cx+lli3hqR1yJzAxL
+	 76HNJqHr0UMhGU5BXc72W6NjFJ4FPu6zOuAmJG9uLPuSgV47tgyG8sly9PeO8s0Rh4
+	 x5a/U6REmH0ZA==
+Message-ID: <d5b7edab-1872-45ff-8f2e-bcb34f6bdc23@zytor.com>
+Date: Wed, 30 Apr 2025 02:12:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -57,28 +57,55 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
+To: Michael Kelley <mhklinux@outlook.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "irogers@google.com" <irogers@google.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "ajay.kaher@broadcom.com" <ajay.kaher@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com"
+ <bcm-kernel-feedback-list@broadcom.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "luto@kernel.org"
+ <luto@kernel.org>,
+        "boris.ostrovsky@oracle.com"
+ <boris.ostrovsky@oracle.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "decui@microsoft.com" <decui@microsoft.com>,
+        "dapeng1.mi@linux.intel.com" <dapeng1.mi@linux.intel.com>
 References: <20250427092027.1598740-1-xin@zytor.com>
  <20250427092027.1598740-2-xin@zytor.com>
  <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
+ <SN6PR02MB4157EA2E3B827141588DA310D4832@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -115,42 +142,27 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
+In-Reply-To: <SN6PR02MB4157EA2E3B827141588DA310D4832@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/29/2025 2:45 AM, Ilpo Järvinen wrote:
->>   arch/x86/events/msr.c                                         | 3 +++
->>   arch/x86/events/perf_event.h                                  | 1 +
->>   arch/x86/events/probe.c                                       | 2 ++
-> Under arch/x86/events/ a few files seem to be missing the include?
+On 4/29/2025 9:20 PM, Michael Kelley wrote:
+>> Also under hyperv/ not all files are covered but I'm a bit hesitant to
+>> suggest a change there since I'm not sure if they (hypervisors) do
+>> something special w.r.t. msr.
+> I've worked on the Hyper-V code in Linux for 8 years or so, first as
+> a Microsoft employee, and more recently as a retiree. 🙂 I'm not
+> aware of anything special w.r.t. MSR access for Hyper-V guests.
+> All the normal Linux code for accessing MSRs just works. Hyper-V
+> *does* provide a set of synthetic MSRs that are unique to
+> Hyper-V, but they are also accessed using normal Linux code. Of
+> course, at runtime the access to these synthetic MSRs always
+> traps to the hypervisor.
+> 
+> I'm planning to apply Xin Li's patch set and make sure nothing
+> breaks for Hyper-V guests, and particularly when running as an
+> SEV-SNP or TDX guest. Hopefully I can do that by early next week
+> at the latest.
 
-
-Most C files in arch/x86/events/ include arch/x86/events/perf_event.h,
-thus they don't need to include <asm/msr.h> directly once
-arch/x86/events/perf_event.h includes <asm/msr.h>, and this patch does
-that.
-
-
-The following files include arch/x86/events/intel/uncore.h which 
-includes arch/x86/events/perf_event.h, thus no change needed:
-     arch/x86/events/intel/uncore.c
-     arch/x86/events/intel/uncore_discovery.c
-     arch/x86/events/intel/uncore_nhmex.c
-     arch/x86/events/intel/uncore_snb.c
-     arch/x86/events/intel/uncore_snbep.c
-
-The following 2 files don't include arch/x86/events/perf_event.h so they
-include <asm/msr.h> directly with this patch:
-     arch/x86/events/msr.c
-     arch/x86/events/probe.c
-
-arch/x86/events/amd/uncore.c doesn't include
-arch/x86/events/perf_event.h but includes <asm/msr.h> already.
-
-
-So we are good in this directory, but it should be a separate patch with
-the above explanation then.
-
-
+Hi Michael, I appreciate it!
 
