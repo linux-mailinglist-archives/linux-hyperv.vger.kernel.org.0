@@ -1,146 +1,146 @@
-Return-Path: <linux-hyperv+bounces-5250-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5251-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ECDFAA4E71
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 16:25:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 183F3AA4FEA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 17:15:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8759169105
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 14:25:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBE023BA28D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Apr 2025 15:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F216F25D549;
-	Wed, 30 Apr 2025 14:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06B11C173C;
+	Wed, 30 Apr 2025 15:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="G1ewDVEd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mUkVmkxJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6C521ABC6;
-	Wed, 30 Apr 2025 14:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7081525A355;
+	Wed, 30 Apr 2025 15:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746023103; cv=none; b=IPgMKpISL5Yfm7hI54xHYv4wJAjTWKd2hmvVXIsr5Vk7qREpBuxrO5+qWM22EM4SuxCQlRPeRrcEAzUkMBaIvN7o9NQ2taco3Tk8gnIfbuQRBHLmL/YuVVcRbQijw3KiE+iwZB+pzPKSaZQvEpzi6uQnsa7cmliGZte4zWn8fvY=
+	t=1746026125; cv=none; b=P2j0LhvbZjE+U0UEZjhX1KHPR34mqE3ixYrAcDY/LoS3/gkmSJB/T4Mx3CmCucKIwGOCb8J7iWBIs2JuwF5O77wLJdGCJLo27r4HlOTLP7af8cixc6JZvvIpFX15DhGQjSlcP9RowuSVJ6U9KH8KaWvZPUbncRaDbG7W4GOCmHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746023103; c=relaxed/simple;
-	bh=rjMvhhoHC1X7+lw3l2dB4rGD+6HMJz3GsS5ASyow71I=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=I0i1LuueXFVgdy2vc2anFJ0gnz7XJyx1o3WUBDhp6wTG8bnS3+8iBDw3BWuu+qYXYJoBtzKqMjP6nQJVN16bnDDtJ7sIjarrY3znJ52uh5hYL+auVSHUghHlasK2nrIXp8qDO4dQdCXOcDUPpDQokUEWwkXd56uAWfr4n265iS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=G1ewDVEd; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53UEOI5X931491
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 30 Apr 2025 07:24:18 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53UEOI5X931491
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746023059;
-	bh=pQL8GxGCP0lOqhjZgQIjgeXZK6YREx5vQoMNpPTLrHU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=G1ewDVEdQC6La4J5R7kMKwnkqVpNGebEjVhRdP8CbyAj4JzpaV+0lhKWzQgviR5Jz
-	 DnHGbQYWM0DUzo52eq8rHyuiP6ugp8H+u4HqECJ8ihkukboZW7TMa7IIrDAplGBmdO
-	 PnYBtM1FotSDGP0Bwmd3LQeqCgtZ+/DRE8sWb1QLo6aQbwVT8vaa4jQ32stDbGr9Pv
-	 oxP6dsv+CWX+tLfnoiF9XpDI0hZpikUo9GVld07MAjzYS/EGIUqWvWp07qhZNwt/Wg
-	 jHQIj1zz1GDMcwQqmZxnpwFKTpI2+0AEGA4hhTodBLWJXHWfh1l0J23ON/EjuigJld
-	 JJ/nQMjAp4l8g==
-Date: Wed, 30 Apr 2025 07:24:15 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-CC: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, seanjc@google.com,
-        pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
-        jpoimboe@kernel.org, peterz@infradead.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-        samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_00/13=5D_objtool=3A_Detect_and_wa?=
- =?US-ASCII?Q?rn_about_indirect_calls_in_=5F=5Fnocfi_functions?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250430110734.392235199@infradead.org>
-References: <20250430110734.392235199@infradead.org>
-Message-ID: <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+	s=arc-20240116; t=1746026125; c=relaxed/simple;
+	bh=jubYPsJzd+H1RTCRdZIk+1nms8xnduYNChhUwp+FvVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kDVxeUJCMwnReXlQroz1itsokvM0WZQ3juCG3yGXTA8/G8B6mbULnkHigqeUx0cl5/oLc3eg5BA45bI9DuFuHUbgGR8LM1kWV3/EKmoPiQORGT57oyzElixBgFUxrJ2GjiNA0CjvAySoF9e33StPc1rN2v9JS7vWEQ8fGYt3BE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mUkVmkxJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CF48C204E7ED;
+	Wed, 30 Apr 2025 08:15:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF48C204E7ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746026118;
+	bh=/aktgTobyPAcbV95qdvhU8MApa9HEEMHftbIxEqr9ho=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mUkVmkxJTAGRbCxoIVBT7p/2uea4l4yxlym03yNjdLpbUEZCvFsuSZVSXMG//aXxJ
+	 xzfq18AkYXiqv70frdVzYQFWB4W5bCLS9W7RQ3/XqmVnTgr7MWnkCFn/TSvhOOAtZg
+	 TDkhTZUAmW3Qs7BoqNyiegR4GyAsYHzxlNcv6Va0=
+Message-ID: <50dd72d6-6e12-4b0e-954d-5b7e57fd02fb@linux.microsoft.com>
+Date: Wed, 30 Apr 2025 08:15:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v3] x86/hyperv: Fix APIC ID and VP index
+ confusion in hv_snp_boot_ap()
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
+ "mikelley@microsoft.com" <mikelley@microsoft.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "tiala@microsoft.com" <tiala@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <20250428182705.132755-1-romank@linux.microsoft.com>
+ <SN6PR02MB4157F5E0375016711820D2FBD4832@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157F5E0375016711820D2FBD4832@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On April 30, 2025 4:07:34 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
-rote:
->Hi!
->
->On kCFI (CONFIG_CFI_CLANG=3Dy) builds all indirect calls should have the =
-CFI
->check on (with very few exceptions)=2E Not having the CFI checks undermin=
-es the
->protection provided by CFI and will make these sites candidates for peopl=
-e
->wanting to steal your cookies=2E
->
->Specifically the ABI changes are so that doing indirect calls without the=
- CFI
->magic, to a CFI adorned function is not compatible (although it happens t=
-o work
->for some setups, it very much does not for FineIBT)=2E
->
->Rust people tripped over this the other day, since their 'core' happened =
-to
->have some no_sanitize(kcfi) bits in, which promptly exploded when ran wit=
-h
->FineIBT on=2E
->
->Since this is very much not a supported model -- on purpose, have objtool
->detect and warn about such constructs=2E
->
->This effort [1] found all existing [2] non-cfi indirect calls in the kern=
-el=2E
->
->Notably the KVM fastop emulation stuff -- which I've completely rewritten=
- for
->this version -- the generated code doesn't look horrific, but is slightly=
- more
->verbose=2E I'm running on the assumption that instruction emulation is no=
-t super
->performance critical these days of zero VM-exit VMs etc=2E
->
->KVM has another; the VMX interrupt injection stuff calls the IDT handler
->directly=2E  Is there an alternative? Can we keep a table of Linux functi=
-ons
->slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
->
->HyperV hypercall page stuff, which I've previously suggested use direct c=
-alls,
->and which I've now converted (after getting properly annoyed with that co=
-de)=2E
->
->Also available at:
->
->  git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/peterz/queue=2Egit x8=
-6/core
->
->Changes since v1:
->
-> - complete rewrite of the fastop stuff
-> - HyperV tweaks (Michael)
-> - objtool changes (Josh)
->
->
->[1] https://lkml=2Ekernel=2Eorg/r/20250410154556=2EGB9003@noisy=2Eprogram=
-ming=2Ekicks-ass=2Enet
->[2] https://lkml=2Ekernel=2Eorg/r/20250410194334=2EGA3248459@google=2Ecom
->
 
-We do have a table of handlers higher up in the stack in the form of the d=
-ispatch tables for FRED=2E They don't in general even need the assembly ent=
-ry stubs, either=2E
+
+On 4/29/2025 8:42 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, April 28, 2025 11:27 AM
+>>
+>> To start an application processor in SNP-isolated guest, a hypercall
+>> is used that takes a virtual processor index. The hv_snp_boot_ap()
+>> function uses that START_VP hypercall but passes as VP index to it
+>> what it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
+>>
+>> As those two aren't generally interchangeable, that may lead to hung
+>> APs if the VP index and the APIC ID don't match up.
+>>
+>> Update the parameter names to avoid confusion as to what the parameter
+>> is. Use the APIC ID to the VP index conversion to provide the correct
+>> input to the hypercall.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>> [V3]
+>> 	- Removed the misleading comment about the APIC ID and VP indices.
+>> 	- Removed the not sufficiently founded if statement that was added
+>> 	  to the previous version of the patch to avoid the O(n) time complexity.
+>> 	  I'll follow up with a separate patch to address that as that pattern
+>> 	  has crept into other places in the code in the AP wakeup path.
+>> 	- Fixed the logging message to use the "VP index" terminology
+>> 	  consistently.
+>>      ** Thank you, Michael! **
+>>
+>> [V2]
+>> 	https://lore.kernel.org/linux-hyperv/20250425213512.1837061-1-romank@linux.microsoft.com/
+>>      - Fixed the terminology in the patch and other code to use
+>>        the term "VP index" consistently
+>>      ** Thank you, Michael! **
+>>
+>>      - Missed not enabling the SNP-SEV options in the local testing,
+>>        and sent a patch that breaks the build.
+>>      ** Thank you, Saurabh! **
+>>
+>>      - Added comments and getting the Linux kernel CPU number from
+>>        the available data.
+>>
+>> [V1]
+>>      https://lore.kernel.org/linux-hyperv/20250424215746.467281-1-romank@linux.microsoft.com/
+>> ---
+>>   arch/x86/hyperv/hv_init.c       | 33 +++++++++++++++++++++++++
+>>   arch/x86/hyperv/hv_vtl.c        | 44 +++++----------------------------
+>>   arch/x86/hyperv/ivm.c           | 22 +++++++++++++++--
+>>   arch/x86/include/asm/mshyperv.h |  6 +++--
+>>   include/hyperv/hvgdk_mini.h     |  2 +-
+>>   5 files changed, 64 insertions(+), 43 deletions(-)
+> 
+> Thanks for fixing the terminology, in addition to fixing the bug that is your original
+> purpose for the patch.
+
+Thanks for your support and feedback :)
+
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
+-- 
+Thank you,
+Roman
+
 
