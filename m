@@ -1,156 +1,155 @@
-Return-Path: <linux-hyperv+bounces-5279-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5280-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5827AA59B9
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 04:36:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A77F8AA5A8B
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 07:28:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3756F1B67A58
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 02:36:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 040824C63EF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 05:28:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 346FB22E00A;
-	Thu,  1 May 2025 02:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4994C262813;
+	Thu,  1 May 2025 05:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="N+51PcA7"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dGkjM88O"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2077.outbound.protection.outlook.com [40.92.18.77])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2070.outbound.protection.outlook.com [40.92.46.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D5B182B7;
-	Thu,  1 May 2025 02:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6A725A35E;
+	Thu,  1 May 2025 05:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746066992; cv=fail; b=oP285dI6YfHfQHO086kvstBpwLiyRHXXEbpFZpi5ii24U55q73+HZrkgK/3Df/hY+oCI7jm9xjmtRPnB0O/oo6FSIOwyWZQMMopjmf/KDwNGIo4MQ2i49ycrmUJgJjqQJJ4GB0SjCwJlN3lcXb2c6SqR5tp1Syjq+VqJci9HafE=
+	t=1746077278; cv=fail; b=cbwsYCIWu7oUblXwkoT+eEMh3zwB5XWXDLwKtwFy08mXu+rSPmat82Hdg0m3CUie7RsODlvAtM6gR3qaVVmrgbzbipWrR3P7OUhVepNsTvBvJv3L9h1z7uJGUVOQFMp+qgv8SIssdkQZAfjaQVFym4/JXbpKmVCTBuBvkVjwDhg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746066992; c=relaxed/simple;
-	bh=Y8SOh+ZgYDhXYT1cskhGkDXiP12qcl8DgwdxWRHWrxw=;
+	s=arc-20240116; t=1746077278; c=relaxed/simple;
+	bh=thoBZYox6aBbaI2YyaHmQRGTVRmNstBhmyvXlx8zxeU=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VMjoBt8ouZUt1b7XailJbzPfXaXlup7lD55qj9/uWfp8iD6HL97UsIHUdDsJAV24dxAuJUqczboAHv8PAz1OaWe4afnIHdXNRC5kNrWCGU/4GBR44y9fJ8VIOAk79NVpjwBZZOE2iXYRq3me6SlQD06R0KLhj3h0qXTLpU2pW7I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=N+51PcA7; arc=fail smtp.client-ip=40.92.18.77
+	 Content-Type:MIME-Version; b=r+QYleEnIxqGnxxjsexTx46KLzQU9CMX/0qSpicSC7lyN+lZFS2+rCPcKGESTK5WcxRIGuWK7JhGf2aV5h8vMUn6xxadfF5KwnOq8Zz55UIHForWqMqOtpCzb2wCdfmQNvZFY0cvYUTxHLVuzD6Ez/jedkDRccNpgjK8JLymUjY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dGkjM88O; arc=fail smtp.client-ip=40.92.46.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uq1G9+r7/w5eKI3PjocAih8p4+OYnv0Ur6tZ1HXLsEBsRxw7H2mJs6UzwzV5sXE+uuZMX4qnk6Wejcoe7w36aBpeHY09+e8m9WD1VElIGNhieu670mJCQQiLPr201MUDn08fQJNq8DhtuHgdsuO+te0WsKQL+w3EcOlVHHrp2b7s+ajHA40cRpatwlcXt3faP3T/iE2Q0uDZ4Wa2nqtIjBx7laKTRhtVSjQEr3+ok1nszWvQEG9ua5GNMPcD4wFJJsZihJQ5Hm9oylreGds5jeNg28twgKy1zDDLalpqVIs995DM2qp67Uqofk7k2tJ9fm9F4J6cb/WvZKbUsQhNbg==
+ b=Almb1skZ1X8yUBJJXT6oQf2VIqmv+Y7KaThWfBBQmjVOgcFkjEahpxFhMX8JzobYOizOFJTUrGeJln5EMFuvEokYKm/nbejDP2BzJL9dQCG7lXFoVfWW+BhIhNB8WY48D+n3BoTbiBkYI4HH47TNItG+hA+A8xtV/S5KsnfegcsvR85R1HwDJEdI01Vw5K69tdgYIqAImzg2wpNmynecA4uaZfWD4uZ9Wu6J5PqpXQXaizU4EAlVgqbADds8wttu6bg308UaH/1VBJxjlXugXDlYj7lSyte0najjjgFBy7Jzm6idiuesqhH+AruMdlyPswQnXrOKUHEg6OOeNL42Ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y8SOh+ZgYDhXYT1cskhGkDXiP12qcl8DgwdxWRHWrxw=;
- b=nuuvJ7NWpxAxzxjZq6IUSX6KYjFDdeLrNL8b3xvI3vaj+ipFP+OD0YBTIe2CjbinMG0dD5Mt6n3GQnPCXy9QhDAKRy9IH7R9YPTVak/oX+z+2gHCDeh5ogfPVzOPQTkuEhdxSO0jzpTIYXF9mbXENg5vOd3QFPSjECmraJYXx/N5VlqO0ZvdAb3JKYl69k29w5Nv9BgjclM5T3IP6S1AZrDhXoKHC2wlflRaxdSJX/ElpIafkR4dfIMpTq1XnD5JG4Q/my+QMd9E/2SF27Ccr1Rkor8UGc5Pp3TOfQ+xMqnDDmL+MBMJM67ttpDgnitnFc+/+l4FbseATP0dK/No/w==
+ bh=Wyp9X6JMReWdrBG3KWYfMXKF8KztrRDpNbuaR2osKig=;
+ b=V/eA8k5xqlyoeVMV2ZtlxSnJ6+zCN2MmznFUGt381HZL2S8djAydmntG5jI03n2Q2U2M5x5ULvUxdJo8uY+wNipSXqTCk0d8JFYMdzS3nXMSF+nzSOc9O+Lb2DGgiZ2jr3S2rGqiE5It72MmPv/aLR8AATUkzBRfBd+HSbRwCDAirxfI1NgH1o4OD5gYVmEbxgpDdtzhYxKv++2yjWZdkHnk0nLti5H9TJMP/0Ul1O15oPpDiuy4TRz7N4HrOLdBK20HKifDN71o2ngxCW3FilDJyIeZa+0o2ipPE7wDFwxZ1rDfnwM/Y1YaOtt0tJWfeCJOr2v5TMMTN1Pu5inQbA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y8SOh+ZgYDhXYT1cskhGkDXiP12qcl8DgwdxWRHWrxw=;
- b=N+51PcA7Sj9PiEu0ae7tMjVzlzBxp/PP4SMSdndnmK3Vyjngt5q0ovEUt7ehe45XiKtPx1NyYypUjzZyRwGewcihN6k9NStOAG9gnpLewe0g3vQfRVeg6SQhpNqOlD9CEFM+kEFplkPF3yBH7AjfZg+SJbEIue0NZqXMZQUT7DRvYOqIKG+Izb4uWdNB8UyIWcfsnmdgzZL4yzCZx2wx0dSfQUvbMGTovM13UbvlTk8PMLlxHh+HGFfF+Y+KF6fUNLrNWGbAgiVJTM/furcBhbh1vvjykYTPkT+xdUk601jFWoikZZaTYN/WCG03W9w8lLm1oQL1RLfOerwqP9pN7g==
+ bh=Wyp9X6JMReWdrBG3KWYfMXKF8KztrRDpNbuaR2osKig=;
+ b=dGkjM88OVU6Nccyhl6ELBdOLNB8ifE/SnBNosCjPMDI+18h2rx9FG6fH162AL6/6DPadNYFcyilaXHpHHkJnP6aHXpAc00gDHtcUcLCx0G1P2DO+CNMFyQaS25ufIdhpht/GPRG5jli8cA0PdRYBDBreBsB5IpNBrYImi6OR+J96mB2KQRM6udyb87eUjeKTLXIc6DPxCqdnqhh+aGXFBLDz8GrqNCcFQtaKHxmt2ujXtiBC3IqYZlKrZ1/0rhl2S9SUs5iY5+ebk2X8Ms0K5AcNDeeHKrlbIIzz+vQ5OjNZJ8ER4MGWLJDKoH17WyEPcJty4E10jLpdNzSsnFXHrQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7350.namprd02.prod.outlook.com (2603:10b6:510:1a::15) with
+ by PH7PR02MB8978.namprd02.prod.outlook.com (2603:10b6:510:1fa::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 1 May
- 2025 02:36:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Thu, 1 May
+ 2025 05:27:50 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Thu, 1 May 2025
- 02:36:26 +0000
+ 05:27:50 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Peter Zijlstra <peterz@infradead.org>, "x86@kernel.org" <x86@kernel.org>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
-	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"hpa@zytor.com" <hpa@zytor.com>, "seanjc@google.com" <seanjc@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "ardb@kernel.org"
-	<ardb@kernel.org>, "kees@kernel.org" <kees@kernel.org>, Arnd Bergmann
-	<arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-	"samitolvanen@google.com" <samitolvanen@google.com>, "ojeda@kernel.org"
-	<ojeda@kernel.org>
-Subject: RE: [PATCH v2 12/13] x86_64,hyperv: Use direct call to hypercall-page
-Thread-Topic: [PATCH v2 12/13] x86_64,hyperv: Use direct call to
- hypercall-page
-Thread-Index: AQHbucN9umotaZatx0OeVn5Dg618mrO9B6fQ
-Date: Thu, 1 May 2025 02:36:26 +0000
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nipun Gupta
+	<nipun.gupta@amd.com>, Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Jonathan Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long
+ Li <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn
+ Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Dexuan Cui <decui@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
+ Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni Sri
+ Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
+	<peterz@infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, Paul Rosswurm
+	<paulros@microsoft.com>
+CC: Shradha Gupta <shradhagupta@microsoft.com>
+Subject: RE: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
+ required
+Thread-Topic: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
+ required
+Thread-Index: AQHbtdCa+2CaoQUHl0GxlQrhegIb5rO319gQ
+Date: Thu, 1 May 2025 05:27:49 +0000
 Message-ID:
- <SN6PR02MB41577ED2C4E29F25B82548D7D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250430110734.392235199@infradead.org>
- <20250430112350.335273952@infradead.org>
-In-Reply-To: <20250430112350.335273952@infradead.org>
+ <SN6PR02MB4157FF2CA8E37298FC634491D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To:
+ <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7350:EE_
-x-ms-office365-filtering-correlation-id: 249bd7fb-330b-496c-2e34-08dd8858f88e
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB8978:EE_
+x-ms-office365-filtering-correlation-id: c26a5839-d9bc-4c29-fe9c-08dd8870e9ee
 x-ms-exchange-slblob-mailprops:
- EgT5Wr3QDKyfA/kqhNtxhLoDzMvzACConmAriXbH6QNV6wCiQSOYIwCm8diSDijArey8jy07vniP73ZjsrFm9MmRQi+7txRvSVQMIrlkyuBj9TQtoyxLrYmB9G7Np0lcFX838rZtBhdRiuVa2qrItvydBYAag+rICakIAD3R1PH5vA09omer23OqnY06PEol5MzsnXAPzFO5AyTkuatdJBpZa00qbNLtqw3pNTdJgOuzmIBRtmK21OddoVfkHipuVFTr4L+mp2HMssL9kBtp40I/mlZcSbLZHFsc/wNyMWBZTRjFC+Y1WXCMptlSDX8u/VKz/JarKfszlmG/47h/0l/Qt1P7LxRtKk4rRwzWs21V5gTBCxdvdgSSmP6FHpACMSTFDssY+DaMHsAUBSGjO5ZZ7Bq5Zwh9cuXvLhzR83X+ZQxhaesqlf0F7WPTnTQTPzN0S3iT3cJ1SRV75FqQykw7+yopi+UIV1G/jddwz4/HqFn5QHbIqrpFgZ6g2Fp24U5P/MmpVgHcaVa7x+Txap869Kitaqbr6I0xMUzo+ahtjWIv76tR9Fa1z3wnpk7vqe3MqRyEhPWIEXF0AnqD+Fou9YzgYDYWqv/JJt4TslH7Mciwd7vFmPQ1/08VHxE74/xzBppSPqUviG4UbK9wRecOYVGGHnr857b9hkKPn94Q7Rav5ryHmjaqdEWTzfRoEct6rY8qN9kOr4abIXDl5s436p5bm2KvdluW7uQOrI8=
+ 0wLWl8rLpvv/dfWT6unGWbRi7AvTEDs/65T7t36xaDyEsNbveHIWoBqBuAi4cHApQnJDlcdk3wRhg2Y0UsnyCYFTIABMYHo+svcu5Jtx3h2HFZOio83acxlj8Kir0QgpIxl+xktQ/QAlBBJDoMgfMVTBk7kKkid++u9BFgJKb8PEv6yMr5Dz7ioZS9tjkxcl2QU6VdviVeuZnM4+5M9FtMcPqc+QAMrXw/nDaZDOtJErRUcqt2Vi1CP/5tjTxlZZaK9clah3K+kSS/6uj+ej5HHk0lPLfCVM15KKUFgVwb9G5WlpZGYZLW5oFbceiFznxz8w4c7VF5jL8xCi2EcFmyIGRfheYrnwwR4muUTHAzueFlTeEHFHA9EDzGFyopTfctgPVhPH/PckMqVCJuawig6RLZ5vBJ2J9V8PPyrbpe5g+9oggU/2T5ws7HHn2fnmv0W//BgNYxfQ0w3NSy1YkKBW/Rahz0O13lpVgUUY+xSrN1hFJcdn5qLsqyBgCHWXfrETLcC28JyuZSESGcGXfGN0XqJtjMVvdtSxH8dsj8aDpGkgVR0wyLZcdS0feZQepWMT9ujaR66QjbZR0YPuxMesH351IV5le2YIWuFCjH8097Cd1/XpsPCAIHIE4SmUx85WbRTxjeOdw+NpBqkCq43t2Gt0YaOIY1gRG8oV/jCa1H65fgWH2MhGERvet8UlufFxuAH/t9rzVHzH7CrVUCBuDYT4ewUMW+mggw66S8y03XDu6wwv8e14enoDzCmk5YbEp5rCsdE=
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|461199028|19110799003|8060799006|15080799006|3412199025|440099028|41001999003|102099032;
+ BCL:0;ARA:14566002|8062599003|19110799003|15080799006|461199028|8060799006|3412199025|440099028|12091999003|41001999003|102099032;
 x-microsoft-antispam-message-info:
- =?utf-8?B?RXFVZnJxamRGOWxJRDF1azBQUG9CQmZVZGRRZzJCNzNXa1RwSHNQZGg0S05r?=
- =?utf-8?B?ZW1INjF5cC9UekdVd2x6QjdZd1BoVzVwaTZxY3lYOEVHWTFOOXFiSWJkVU1a?=
- =?utf-8?B?UXM4NjU4ODNDVHJYQ2VCRXNlL2NYUWg0Wm5NTVZQUkovb04yWE1hRGMwM0Qw?=
- =?utf-8?B?S1lScDNhelJ4WlVqWENNbTNhMmF3WVNXd3d4OTc3bm12d1orREJQMHJwS3FJ?=
- =?utf-8?B?Q0JmOVRSUUhxNDdiOU1wNXNYeXpQVTVPQ1NSdFo5RGFVMkFjZ3dLZHpTQlRx?=
- =?utf-8?B?RUpyWXpHeFlHZ0V4RkVOa2RmNnhXd2N3Z0RLV2dUZStQZnNSeEtNZFRiay9C?=
- =?utf-8?B?N1lPRlV5Q3diWVlSc0huVWU4bWtPUkNnUXQxYkV4aGNJSHduSUpmTFlFeW5O?=
- =?utf-8?B?blhvbW9nUUdwSzIyenJBcFJmYzBybWV5Z0RyMlB4Um9FNjJobXZLRk9xODhz?=
- =?utf-8?B?Q0YwbXgyTm1SSmRrRk85dXY3dHgrNDU5UUVObVJwNGpNaWpmbTB1TjFwZUpv?=
- =?utf-8?B?OWNLQnpMaDE2cWdKVWs1MTdxOThUeDhyeHNJbDVSL3RPU3l5a1czMytNakkr?=
- =?utf-8?B?KytlMFlrVzdlUEdjcTV2TFRIa1lCOHQwS2Y2TTFHSmhXN2xaSUVjRW5FbXpR?=
- =?utf-8?B?TUFPdm9xaFlYTnZ3eE01bFZvc1RRa2M5aitEb0phUGJNUHNWK2R6SHB4N28x?=
- =?utf-8?B?ODZlS2taQVU2ajlsL3JtdHhJSnJVOWsrVjNUd1ZMdWlFVUsvaU5mODhZYmZ5?=
- =?utf-8?B?WCtSeGVSVXE5bVFHZkwwOXlQMWlpQUdJNGlndVdvdE15M0FFUzdtaU5ZVzRI?=
- =?utf-8?B?ZUlhMjJtMFY5SWIyd3FpVU15ZG4zQW9PdjRmUjlwanpaVGVHa1V0N3dkWWtF?=
- =?utf-8?B?OTBudXA2N2ZFNmZhMkZBVlp6QUlNeHd3N3VaUWxKQlEvUWRkQmd2WWdrTmVs?=
- =?utf-8?B?ZUhqMlFMZmZjeTI1WWNEN2h6VnFWUDRsek5UVnVFaVhRK3BjVmdVMDZ3Vlk2?=
- =?utf-8?B?QTdvbVAzRHpIK25aTmVRemcvSDk4Y3Bkai9aZWFNUk5tOUhnSXJQNnAwZ0M3?=
- =?utf-8?B?T3ZJY0lUbDRrLzNoaE1HYklWYzRNY3FwZjRCWEJBRnFGWjFyNW8vaTN0ejU2?=
- =?utf-8?B?c3J1cUVxbEc3dGwyVXZROXM1OXdWNXRITkY0bmUxN1craUNJSDZyM0VlZ0hG?=
- =?utf-8?B?aGU2bjIwSnFBY1VodkJJWG9CVEUvL1ZjV2sxMEViRHdkSHlvbXgvT1VmQ3hP?=
- =?utf-8?B?SGZvTDBFTHc5bUNvdVZXMmQzQWhtdFZhT1hhWVRkclpNeWxDMExBcXFjRTZ2?=
- =?utf-8?B?RTR4a0YrMjVuN1VaellkVjVIWmw4M3pkTTJNS0REZE43dHQ5a2Ntdk9DUnRy?=
- =?utf-8?B?YXd0ZytMOGQ0SEpRZi9yTGJTdldmMkNzZGxTdjY3b2grOGxDblBxbnhBWXZv?=
- =?utf-8?B?SHI5VGlydDVlZitZWlo5amVISGRwL0QzWjBKWUtmbjNRMzVYZno2dy9Dc1o3?=
- =?utf-8?Q?aF3p/o=3D?=
+ =?iso-8859-2?Q?j5xEy3AReovSMS6QWzYEQeuiHbkuB+ycogtHSRpdomBKZte7L2eGJhb4ed?=
+ =?iso-8859-2?Q?AdNcmOEplgMbuyYB4hF/smBJagFnzH8bIzTBrcVW5RZ578xM7OGSDTiOoH?=
+ =?iso-8859-2?Q?SR/0tdOG4jlkjCji+dcgGmXGUxIxbYJAuYpl0BgWHE7X6BbRX/+S/7rocN?=
+ =?iso-8859-2?Q?M5P3GJbri4KoWYrY0XoG/oMpVvdOqpLJnetZ2Niwy0URhGTBlhK7pSvfHa?=
+ =?iso-8859-2?Q?Q5xDMFEBEIrD781G/KnpKJOtwLnuv62ULyvpHXgCEWDL6rcUXbwomIJgiH?=
+ =?iso-8859-2?Q?lAs1l6ofcFRCCTRkrmLp4VINaSHxuPlJrc91sHiyz0OHJbt9Sal4HBQJxJ?=
+ =?iso-8859-2?Q?7vKE2kMMmCGZKldfzr3s+mui/nok8zZQxEKTxR9iGyPeh87tUR601eGpwa?=
+ =?iso-8859-2?Q?KM+qxS5ASdnNQuH/P6YW2WyK0AyWLCecDF/SdLjCRRG4azUlpr5VKy2aUd?=
+ =?iso-8859-2?Q?is8FFEsk0aJ/60m0im6RhXpbLPAtHKZHvQnwA9/LSB7AiSPQD/iEiaVB9U?=
+ =?iso-8859-2?Q?+Lw1vO8kj4dHzACv3KAb+9e61jhHjXHZvmwwQRZNGknn7FaYUb3su+SROJ?=
+ =?iso-8859-2?Q?Ey5t5aJO4+9zezIQkkQE3R9696W52M6tFwqxHpto5TXbWsI3kxgOvRt94F?=
+ =?iso-8859-2?Q?I2D3oRKksTaHgj4KolZ7uzrw0cy9kDw6VY5O8cSTAQWq12RoYTQa/mbJgd?=
+ =?iso-8859-2?Q?diLtAYsdUk56mTXBGzhTeLCYoD5s1i/P3nBxxZIhTd4AulcUJc0z3xLHzx?=
+ =?iso-8859-2?Q?PgRjRK5sF8kxL3zpYDHUI9vS7vwvmtDQEWV/8iJicqGX7kFScsjLUrc6DQ?=
+ =?iso-8859-2?Q?ZwKjVobwvn9RnjQXxxXhtfA0Mkz5S7lMAHlT+84gY16P7i56x+XHH9a7I8?=
+ =?iso-8859-2?Q?ejkLT6OqtGfBCPtkuGr20yfWIxJW2K3yq/Ni8sXE29+3beH0+4i4arKmeX?=
+ =?iso-8859-2?Q?BzWPdEhlG+e0mQoXHV/2gCYrejqExO4MXqwGgFc+G0EST5SWyH8tUELA+N?=
+ =?iso-8859-2?Q?x5F37JQSCGjnAJ80f+8/bI5ElfuPff8P5TZnO4bgmf9JnVrGhbGDctAGgF?=
+ =?iso-8859-2?Q?GKhaopTZCPgZMSKGHCHG/S1We42TfIKYoV0/o58zZWJvW3oyTdTm+fe7A+?=
+ =?iso-8859-2?Q?bcxMkP1v07z5pomR6vPH5V3o3Sxdct1IfBpCM55fCOy6H/hfcMasYoniSU?=
+ =?iso-8859-2?Q?8tpYDinXs3BLEw=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WVFWZVF4eURPcW1DWjJVTnkxSEQ2MFk2MXk4L2RYam9pbDhXbVFEV2krbmsz?=
- =?utf-8?B?MlN2aGRSZ3huY0U0OUtDblpBR1BON0k3NDFYajdWclQyTkJOdmhvVXV4T044?=
- =?utf-8?B?Mm04eDE5V1hha0Yzd3NoZkRzSGxyVWY0eDJmUC9sQUxOektuZ3lBTG9GWHJ0?=
- =?utf-8?B?dU90blJiV0cyVVIwL3lnZkVKck5FQmRqR09LQ2loQkh0QWxMZ09YNzlPTkVi?=
- =?utf-8?B?cklKdytaN2RMWStGUGUzOTlpdi92RFVvNldYODQ4V093ODRLY1FjaytVQlVJ?=
- =?utf-8?B?Zm9RL3hyWUlGRVhCb2J0Y3RRbnNnSGFvZDFBcU42MUxKeWJPZzZXOVJ3enJ5?=
- =?utf-8?B?VEcxSGRKRzJia2VySVpCSTdIMXRhTXNpMkNubjVnQlVLQzVBSENoZlNPcDVw?=
- =?utf-8?B?MVMxUWNEVVUrUkdCQXNpOHRyZ0NTOXo2WkdDRVVlRUpVTjEySlV4WFlrRDVN?=
- =?utf-8?B?cjRwWVJ2TnpFZGEraU5pbldMWnQ1YWt0a2pRR2hIQ2lLcVNBYm95TWVLa2Yx?=
- =?utf-8?B?eUpyWnNPTDFZUkFaSG4rUlJkYXBhSGJwQmlqc3VmaUdiQnpkb2FVV1NBckNM?=
- =?utf-8?B?NWo0aTlFTUpvVkNneTRROUtnamFSV0JSaThaak5PTE56L3dVSEd6LzhLN2ZP?=
- =?utf-8?B?cm1vYzd1dkE4b00zNUNEbGdnVndYQlNnT1lkUzdwME5tM0QyL05mK0F1dnRD?=
- =?utf-8?B?bGNENmpOR1hCWGZtWXBLeUk4TFZoNGtZN2ZUTEQxY2RNQUczMDNjamplR2xs?=
- =?utf-8?B?d2krVk5tcXpWQjdHRmJCcHJZRHdoK1FMQzlSb1RpU3FDNHFtdFVWK1RCdisw?=
- =?utf-8?B?emhoZmNPT0pxczlScVNBN245MTdWKzl6YXEwMm5IQTU5bmM3dGFiVWN0L0Zt?=
- =?utf-8?B?dXIwVSsreXNSTnk3OXV2TEZuRDdIQzZnVzZmTXU1YUN6L2JBbW1vaUZxM05X?=
- =?utf-8?B?bFpIbGZhZm8xZEVLbVZ0TS9jUGhSZGs2Um5XTTNnQXBpZERteWljelFRb0x1?=
- =?utf-8?B?SlVFQ1dvQ2d6Vm1UdDFZR3NyVDFoTUJ3Qm15elVTNTZMS3ZSTFZoeGpKZEtk?=
- =?utf-8?B?UlM1S01aMXZseUJLZHJhU2I0bnhvOTZDY3JQaEtHblRVQlROV2k0ZStoRlBo?=
- =?utf-8?B?NklLbXZrK1dpaytiU0xWOGw3d0lVZWd0YXhkQVR2TWRRVzlIL09nV01xQmFh?=
- =?utf-8?B?VFU0SzhDcE5OajJvMDZ6emhSbHdGRk9XRVFmR2JONWFtcENscjM3ZUdOWUc1?=
- =?utf-8?B?c1YrQ3JkY0FROEhqNnJwMmJBM0xvNUswTHR5U0xwaEEycFI1QkQxVGk5ejU5?=
- =?utf-8?B?aWkydys2b2R1a2ZNZE1tQSs1aFR5Y1RkZjluZ0dGZkRyS0ZJQmRuUFVXbTU0?=
- =?utf-8?B?NWlNODdLMGREbTdkMmhQTXJ6cWtCeitYckYvMk1zeFoycGs4cHJKTjlOSDVF?=
- =?utf-8?B?dVg5K1IwYzJIaXVpQi8ycHJpbkJRcy9ia1BWek1Rb1hmVTlaRFRtRFB4a3ov?=
- =?utf-8?B?eVlha1puYzVmYWZybVlEaFg1ZzJFdmtlbmZoL3FHZXl5NTE1eGpBVkN1cXQ2?=
- =?utf-8?B?YkV6YStuYkhwTzFNNk9yNTZOTTdaeHdZclByRnhIN25leS84VURkUWFPQUFr?=
- =?utf-8?Q?PsTPaVFPuJ9fXHyOWBjSzAbIaeOTlX+/Dw1Wc1zl2geA=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ =?iso-8859-2?Q?xnBV24Z/sZgOJmbnOSDG3rVYTFFwgcP/8njKuWfzHbVN1tXZl0c2hZgaKF?=
+ =?iso-8859-2?Q?n9m6U7M54UjKyY4GpH55ZeNV3LIiZPVepFpnaOxvAsdgkzAhBKgOALbQEi?=
+ =?iso-8859-2?Q?ST6XRl423GiTJZVqVLXne2fB+CgNYW7aMqHKICn8C47XN1OP77UNq76Ot6?=
+ =?iso-8859-2?Q?cD5FElhSoRPZ4ZWb4ypqh6OBSo8n6dJB/IfgW65FzMC2Zp2VAxw71nPyMq?=
+ =?iso-8859-2?Q?mO6tfEnT/GdlhwoSwnwr/puxWTbDGl+aSVa0Nnx6ujGcey9fyX1oM8ppfe?=
+ =?iso-8859-2?Q?CcLR1HC8K9RjMAtQSq7alXbUhw56QfWtf7NNosbgJEdk+vD63Au/BnX5bC?=
+ =?iso-8859-2?Q?ScJqdLCqMCGZ6IGneR7vMqUFidVN25WDMlwM2N9Cc/Rx7GSrFPqbrSbvY5?=
+ =?iso-8859-2?Q?cZ3l201Undm9EBPALqtKU0eBtzDb2DyYC/m/VpJ19BiL378lZGqKIO4yuN?=
+ =?iso-8859-2?Q?k03NxWKmTpWLNqvStFGULVp7lhjr7g1/kTzUxLZotq9pkVVKmfswnQIlqW?=
+ =?iso-8859-2?Q?vPCHV5hr1gDyZqaw7ppCzLW9FG1e6oHDeb2nnmxnj1EfZUp1NOXcm3CmQB?=
+ =?iso-8859-2?Q?gTzYuzSSg45K/A2JU3DokxZBzVKIdh/mlZZMcVliT0wQmffwvgTKmaRTyB?=
+ =?iso-8859-2?Q?qrXSBslNSEHTUgaCo9ONyqgNEs4XPJEua07q1X2aiGYjKAViB3Mf7z0cIc?=
+ =?iso-8859-2?Q?MABY8vP8iBhANX6BELGadj86xqJ7UQRpx8VvIhD8kadt+FFVJ9DUn01PQH?=
+ =?iso-8859-2?Q?CH7VtFRYifJnktalgWVxCFWO0TSbsQLZfA9Ps7eMMoWd43J0UXBvDAOM5y?=
+ =?iso-8859-2?Q?sedXwRE9YOtcAm85zytJ7N9h5q+xTuX373rN66bJ7XyhDrxcgxcGDpxaHZ?=
+ =?iso-8859-2?Q?Gteg0GEX5phVky8Q4UjXgfbz9NOP6OySFhtRY4ThETnf+zyyjpYX3w4X+L?=
+ =?iso-8859-2?Q?qqSAAjZPpuCBsu7xRpYnaSIi3Tlb4p0PkbgJ4b0ZctSZklTnFlj5bd/k8y?=
+ =?iso-8859-2?Q?NQ94X5iAZm7LruQMxYgkHV/ZoK3exTK8DEM1K/HqQ/hya+wiiw0PgRliXt?=
+ =?iso-8859-2?Q?76hcy1Id0V9WAHwVAtLMctPbnXeDIchkdHiEoxPscZUc+FT7DQWmREkHHA?=
+ =?iso-8859-2?Q?D6PjJhzfMJl5eL6bCJlAVE08sOSWak2UlKaL6uIOjAd/KHPjGraeYk5BVG?=
+ =?iso-8859-2?Q?/sZJZrl6bsi8R2RaoKN0i4golU4+TvlnYs6q95Y2bQ/6SWNKFd8LRGyvVn?=
+ =?iso-8859-2?Q?BBP2eMtoYGfPVBHw9Ig9Osy6VauJf7uNYcjCtmN6M=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -161,95 +160,648 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 249bd7fb-330b-496c-2e34-08dd8858f88e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2025 02:36:26.4647
+X-MS-Exchange-CrossTenant-Network-Message-Id: c26a5839-d9bc-4c29-fe9c-08dd8870e9ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2025 05:27:49.8700
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7350
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB8978
 
-RnJvbTogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPiBTZW50OiBXZWRuZXNk
-YXksIEFwcmlsIDMwLCAyMDI1IDQ6MDggQU0NCj4gDQo+IEluc3RlYWQgb2YgdXNpbmcgYW4gaW5k
-aXJlY3QgY2FsbCB0byB0aGUgaHlwZXJjYWxsIHBhZ2UsIHVzZSBhIGRpcmVjdA0KPiBjYWxsIGlu
-c3RlYWQuIFRoaXMgYXZvaWRzIGFsbCBDRkkgcHJvYmxlbXMsIGluY2x1ZGluZyB0aGUgb25lIHdo
-ZXJlDQo+IHRoZSBoeXBlcmNhbGwgcGFnZSBkb2Vzbid0IGhhdmUgSUJUIG9uLg0KPiANCj4gU2ln
-bmVkLW9mZi1ieTogUGV0ZXIgWmlqbHN0cmEgKEludGVsKSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+
-DQo+IC0tLQ0KPiAgYXJjaC94ODYvaHlwZXJ2L2h2X2luaXQuYyB8ICAgNjAgKysrKysrKysrKysr
-KysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMw
-IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPiANCj4gLS0tIGEvYXJjaC94ODYvaHlw
-ZXJ2L2h2X2luaXQuYw0KPiArKysgYi9hcmNoL3g4Ni9oeXBlcnYvaHZfaW5pdC5jDQo+IEBAIC0z
-NywyMyArMzcsNDEgQEANCj4gIHZvaWQgKmh2X2h5cGVyY2FsbF9wZzsNCj4gDQo+ICAjaWZkZWYg
-Q09ORklHX1g4Nl82NA0KPiArc3RhdGljIHU2NCBfX2h2X2h5cGVyZmFpbCh1NjQgY29udHJvbCwg
-dTY0IHBhcmFtMSwgdTY0IHBhcmFtMikNCj4gK3sNCj4gKwlyZXR1cm4gVTY0X01BWDsNCj4gK30N
-Cj4gKw0KPiArREVGSU5FX1NUQVRJQ19DQUxMKF9faHZfaHlwZXJjYWxsLCBfX2h2X2h5cGVyZmFp
-bCk7DQo+ICsNCj4gIHU2NCBodl9zdGRfaHlwZXJjYWxsKHU2NCBjb250cm9sLCB1NjQgcGFyYW0x
-LCB1NjQgcGFyYW0yKQ0KPiAgew0KPiAgCXU2NCBodl9zdGF0dXM7DQo+IA0KPiAtCWlmICghaHZf
-aHlwZXJjYWxsX3BnKQ0KPiAtCQlyZXR1cm4gVTY0X01BWDsNCj4gLQ0KPiAgCXJlZ2lzdGVyIHU2
-NCBfX3I4IGFzbSgicjgiKSA9IHBhcmFtMjsNCj4gLQlhc20gdm9sYXRpbGUgKENBTExfTk9TUEVD
-DQo+ICsJYXNtIHZvbGF0aWxlICgiY2FsbCAiIFNUQVRJQ19DQUxMX1RSQU1QX1NUUihfX2h2X2h5
-cGVyY2FsbCkNCj4gIAkJICAgICAgOiAiPWEiIChodl9zdGF0dXMpLCBBU01fQ0FMTF9DT05TVFJB
-SU5ULA0KPiAgCQkgICAgICAgICIrYyIgKGNvbnRyb2wpLCAiK2QiIChwYXJhbTEpLCAiK3IiIChf
-X3I4KQ0KPiAtCQkgICAgICA6IFRIVU5LX1RBUkdFVChodl9oeXBlcmNhbGxfcGcpDQo+IC0JCSAg
-ICAgIDogImNjIiwgIm1lbW9yeSIsICJyOSIsICJyMTAiLCAicjExIik7DQo+ICsJCSAgICAgIDog
-OiAiY2MiLCAibWVtb3J5IiwgInI5IiwgInIxMCIsICJyMTEiKTsNCj4gDQo+ICAJcmV0dXJuIGh2
-X3N0YXR1czsNCj4gIH0NCj4gKw0KPiArdHlwZWRlZiB1NjQgKCpodl9oeXBlcmNhbGxfZikodTY0
-IGNvbnRyb2wsIHU2NCBwYXJhbTEsIHU2NCBwYXJhbTIpOw0KPiArDQo+ICtzdGF0aWMgaW5saW5l
-IHZvaWQgaHZfc2V0X2h5cGVyY2FsbF9wZyh2b2lkICpwdHIpDQo+ICt7DQo+ICsJaHZfaHlwZXJj
-YWxsX3BnID0gcHRyOw0KPiArDQo+ICsJaWYgKCFwdHIpDQo+ICsJCXB0ciA9ICZfX2h2X2h5cGVy
-ZmFpbDsNCj4gKwlzdGF0aWNfY2FsbF91cGRhdGUoX19odl9oeXBlcmNhbGwsIChodl9oeXBlcmNh
-bGxfZilwdHIpOw0KPiArfQ0KPiAgI2Vsc2UNCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBodl9zZXRf
-aHlwZXJjYWxsX3BnKHZvaWQgKnB0cikNCj4gK3sNCj4gKwlodl9oeXBlcmNhbGxfcGcgPSBwdHI7
-DQo+ICt9DQo+ICBFWFBPUlRfU1lNQk9MX0dQTChodl9oeXBlcmNhbGxfcGcpOw0KPiAgI2VuZGlm
-DQo+IA0KPiBAQCAtMzQ4LDcgKzM2Niw3IEBAIHN0YXRpYyBpbnQgaHZfc3VzcGVuZCh2b2lkKQ0K
-PiAgCSAqIHBvaW50ZXIgaXMgcmVzdG9yZWQgb24gcmVzdW1lLg0KPiAgCSAqLw0KPiAgCWh2X2h5
-cGVyY2FsbF9wZ19zYXZlZCA9IGh2X2h5cGVyY2FsbF9wZzsNCj4gLQlodl9oeXBlcmNhbGxfcGcg
-PSBOVUxMOw0KPiArCWh2X3NldF9oeXBlcmNhbGxfcGcoTlVMTCk7DQo+IA0KPiAgCS8qIERpc2Fi
-bGUgdGhlIGh5cGVyY2FsbCBwYWdlIGluIHRoZSBoeXBlcnZpc29yICovDQo+ICAJcmRtc3JsKEhW
-X1g2NF9NU1JfSFlQRVJDQUxMLCBoeXBlcmNhbGxfbXNyLmFzX3VpbnQ2NCk7DQo+IEBAIC0zNzQs
-NyArMzkyLDcgQEAgc3RhdGljIHZvaWQgaHZfcmVzdW1lKHZvaWQpDQo+ICAJCXZtYWxsb2NfdG9f
-cGZuKGh2X2h5cGVyY2FsbF9wZ19zYXZlZCk7DQo+ICAJd3Jtc3JsKEhWX1g2NF9NU1JfSFlQRVJD
-QUxMLCBoeXBlcmNhbGxfbXNyLmFzX3VpbnQ2NCk7DQo+IA0KPiAtCWh2X2h5cGVyY2FsbF9wZyA9
-IGh2X2h5cGVyY2FsbF9wZ19zYXZlZDsNCj4gKwlodl9zZXRfaHlwZXJjYWxsX3BnKGh2X2h5cGVy
-Y2FsbF9wZ19zYXZlZCk7DQo+ICAJaHZfaHlwZXJjYWxsX3BnX3NhdmVkID0gTlVMTDsNCj4gDQo+
-ICAJLyoNCj4gQEAgLTUyOCw4ICs1NDYsOCBAQCB2b2lkIF9faW5pdCBoeXBlcnZfaW5pdCh2b2lk
-KQ0KPiAgCWlmIChodl9pc29sYXRpb25fdHlwZV90ZHgoKSAmJiAhbXNfaHlwZXJ2LnBhcmF2aXNv
-cl9wcmVzZW50KQ0KPiAgCQlnb3RvIHNraXBfaHlwZXJjYWxsX3BnX2luaXQ7DQo+IA0KPiAtCWh2
-X2h5cGVyY2FsbF9wZyA9IF9fdm1hbGxvY19ub2RlX3JhbmdlKFBBR0VfU0laRSwgMSwgVk1BTExP
-Q19TVEFSVCwNCj4gLQkJCVZNQUxMT0NfRU5ELCBHRlBfS0VSTkVMLCBQQUdFX0tFUk5FTF9ST1gs
-DQo+ICsJaHZfaHlwZXJjYWxsX3BnID0gX192bWFsbG9jX25vZGVfcmFuZ2UoUEFHRV9TSVpFLCAx
-LCBNT0RVTEVTX1ZBRERSLA0KPiArCQkJTU9EVUxFU19FTkQsIEdGUF9LRVJORUwsIFBBR0VfS0VS
-TkVMX1JPWCwNCg0KQ3VyaW9zaXR5IHF1ZXN0aW9uICh3aGljaCBJIGZvcmdvdCBhc2sgYWJvdXQg
-aW4gdjEpOiAgSXMgdGhpcyBjaGFuZ2Ugc28gdGhhdCB0aGUNCmh5cGVyY2FsbCBwYWdlIGtlcm5l
-bCBhZGRyZXNzIGlzICJjbG9zZSBlbm91Z2giIGZvciB0aGUgZGlyZWN0IGNhbGwgdG8gd29yayBm
-cm9tDQpidWlsdC1pbiBjb2RlIGFuZCBmcm9tIG1vZHVsZSBjb2RlPyAgT3IgaXMgdGhlcmUgc29t
-ZSBvdGhlciByZWFzb24/DQoNCj4gIAkJCVZNX0ZMVVNIX1JFU0VUX1BFUk1TLCBOVU1BX05PX05P
-REUsDQo+ICAJCQlfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCkpOw0KPiAgCWlmIChodl9oeXBl
-cmNhbGxfcGcgPT0gTlVMTCkNCj4gQEAgLTU2NywyNyArNTg1LDkgQEAgdm9pZCBfX2luaXQgaHlw
-ZXJ2X2luaXQodm9pZCkNCj4gIAkJd3Jtc3JsKEhWX1g2NF9NU1JfSFlQRVJDQUxMLCBoeXBlcmNh
-bGxfbXNyLmFzX3VpbnQ2NCk7DQo+ICAJfQ0KPiANCj4gLXNraXBfaHlwZXJjYWxsX3BnX2luaXQ6
-DQo+IC0JLyoNCj4gLQkgKiBTb21lIHZlcnNpb25zIG9mIEh5cGVyLVYgdGhhdCBwcm92aWRlIElC
-VCBpbiBndWVzdCBWTXMgaGF2ZSBhIGJ1Zw0KPiAtCSAqIGluIHRoYXQgdGhlcmUncyBubyBFTkRC
-UjY0IGluc3RydWN0aW9uIGF0IHRoZSBlbnRyeSB0byB0aGUNCj4gLQkgKiBoeXBlcmNhbGwgcGFn
-ZS4gQmVjYXVzZSBoeXBlcmNhbGxzIGFyZSBpbnZva2VkIHZpYSBhbiBpbmRpcmVjdCBjYWxsDQo+
-IC0JICogdG8gdGhlIGh5cGVyY2FsbCBwYWdlLCBhbGwgaHlwZXJjYWxsIGF0dGVtcHRzIGZhaWwg
-d2hlbiBJQlQgaXMNCj4gLQkgKiBlbmFibGVkLCBhbmQgTGludXggcGFuaWNzLiBGb3Igc3VjaCBi
-dWdneSB2ZXJzaW9ucywgZGlzYWJsZSBJQlQuDQo+IC0JICoNCj4gLQkgKiBGaXhlZCB2ZXJzaW9u
-cyBvZiBIeXBlci1WIGFsd2F5cyBwcm92aWRlIEVOREJSNjQgb24gdGhlIGh5cGVyY2FsbA0KPiAt
-CSAqIHBhZ2UsIHNvIGlmIGZ1dHVyZSBMaW51eCBrZXJuZWwgdmVyc2lvbnMgZW5hYmxlIElCVCBm
-b3IgMzItYml0DQo+IC0JICogYnVpbGRzLCBhZGRpdGlvbmFsIGh5cGVyY2FsbCBwYWdlIGhhY2tl
-cnkgd2lsbCBiZSByZXF1aXJlZCBoZXJlDQo+IC0JICogdG8gcHJvdmlkZSBhbiBFTkRCUjMyLg0K
-PiAtCSAqLw0KPiAtI2lmZGVmIENPTkZJR19YODZfS0VSTkVMX0lCVA0KPiAtCWlmIChjcHVfZmVh
-dHVyZV9lbmFibGVkKFg4Nl9GRUFUVVJFX0lCVCkgJiYNCj4gLQkgICAgKih1MzIgKilodl9oeXBl
-cmNhbGxfcGcgIT0gZ2VuX2VuZGJyKCkpIHsNCj4gLQkJc2V0dXBfY2xlYXJfY3B1X2NhcChYODZf
-RkVBVFVSRV9JQlQpOw0KPiAtCQlwcl93YXJuKCJEaXNhYmxpbmcgSUJUIGJlY2F1c2Ugb2YgSHlw
-ZXItViBidWdcbiIpOw0KPiAtCX0NCj4gLSNlbmRpZg0KDQpOaXQ6IFdpdGggdGhpcyBJQlQgY29k
-ZSByZW1vdmVkLCB0aGUgI2luY2x1ZGUgPGFzbS9pYnQuaD4gYXQgdGhlIHRvcA0Kb2YgdGhpcyBz
-b3VyY2UgY29kZSBmaWxlIHNob3VsZCBiZSByZW1vdmVkLg0KDQo+ICsJaHZfc2V0X2h5cGVyY2Fs
-bF9wZyhodl9oeXBlcmNhbGxfcGcpOw0KPiANCj4gK3NraXBfaHlwZXJjYWxsX3BnX2luaXQ6DQo+
-ICAJLyoNCj4gIAkgKiBoeXBlcnZfaW5pdCgpIGlzIGNhbGxlZCBiZWZvcmUgTEFQSUMgaXMgaW5p
-dGlhbGl6ZWQ6IHNlZQ0KPiAgCSAqIGFwaWNfaW50cl9tb2RlX2luaXQoKSAtPiB4ODZfcGxhdGZv
-cm0uYXBpY19wb3N0X2luaXQoKSBhbmQNCj4gDQo+IA0KDQpUaGUgbml0IG5vdHdpdGhzdGFuZGlu
-ZywNCg0KUmV2aWV3ZWQtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaGtsaW51eEBvdXRsb29rLmNvbT4N
-Cg==
+From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, April =
+25, 2025 3:55 AM
+>=20
+> Currently, the MANA driver allocates MSI-X vectors statically based on
+> MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
+> up allocating more vectors than it needs. This is because, by this time
+> we do not have a HW channel and do not know how many IRQs should be
+> allocated.
+>=20
+> To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
+> after getting the value supported by hardware, dynamically add the
+> remaining MSI-X vectors.
+
+I have a top-level thought about the data structures used to manage a
+dynamic number of MSI-X vectors. The current code allocates a fixed size
+array of struct gdma_irq_context, with one entry in the array for each
+MSI-X vector. To find the entry for a particular msi_index, the code can
+just index into the array, which is nice and simple.
+
+The new code uses a linked list of struct gdma_irq_context entries, with
+one entry in the list for each MSI-X vector.  In the dynamic case, you can
+start with one entry in the list, and then add to the list however many
+additional entries the hardware will support.
+
+But this additional linked list adds significant complexity to the code
+because it must be linearly searched to find the entry for a particular
+msi_index, and there's the messiness of putting entries onto the list
+and taking them off.  A spin lock is required.  Etc., etc.
+
+Here's an intermediate approach that would be simpler. Allocate a fixed
+size array of pointers to struct gdma_irq_context. The fixed size is the
+maximum number of possible MSI-X vectors for the device, which I
+think is MANA_MAX_NUM_QUEUES, or 64 (correct me if I'm wrong
+about that). Allocate a new struct gdma_irq_context when needed,
+but store the address in the array rather than adding it onto a list.
+Code can then directly index into the array to access the entry.
+
+Some entries in the array will be unused (and "wasted") if the device
+uses fewer MSI-X vector, but each unused entry is only 8 bytes. The
+max space unused is fewer than 512 bytes (assuming 64 entries in
+the array), which is neglible in the grand scheme of things. With the
+simpler code, and not having the additional list entry embedded in
+each struct gmda_irq_context, you'll get some of that space back
+anyway.
+
+Maybe there's a reason for the list that I missed in my initial
+review of the code. But if not, it sure seems like the code could
+be simpler, and having some unused 8 bytes entries in the array
+is worth the tradeoff for the simplicity.
+
+Michael
+
+>=20
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  Changes in v2:
+>  * Use string 'MSI-X vectors' instead of 'pci vectors'
+>  * make skip-cpu a bool instead of int
+>  * rearrange the comment arout skip_cpu variable appropriately
+>  * update the capability bit for driver indicating dynamic IRQ allocation
+>  * enforced max line length to 80
+>  * enforced RCT convention
+>  * initialized gic to NULL, for when there is a possibility of gic
+>    not being populated correctly
+> ---
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 323 ++++++++++++++----
+>  include/net/mana/gdma.h                       |  11 +-
+>  2 files changed, 269 insertions(+), 65 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 4ffaf7588885..753b0208e574 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -6,6 +6,9 @@
+>  #include <linux/pci.h>
+>  #include <linux/utsname.h>
+>  #include <linux/version.h>
+> +#include <linux/msi.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/list.h>
+>=20
+>  #include <net/mana/mana.h>
+>=20
+> @@ -80,8 +83,15 @@ static int mana_gd_query_max_resources(struct pci_dev =
+*pdev)
+>  		return err ? err : -EPROTO;
+>  	}
+>=20
+> -	if (gc->num_msix_usable > resp.max_msix)
+> -		gc->num_msix_usable =3D resp.max_msix;
+> +	if (!pci_msix_can_alloc_dyn(pdev)) {
+> +		if (gc->num_msix_usable > resp.max_msix)
+> +			gc->num_msix_usable =3D resp.max_msix;
+> +	} else {
+> +		/* If dynamic allocation is enabled we have already allocated
+> +		 * hwc msi
+> +		 */
+> +		gc->num_msix_usable =3D min(resp.max_msix, num_online_cpus() + 1);
+> +	}
+>=20
+>  	if (gc->num_msix_usable <=3D 1)
+>  		return -ENOSPC;
+> @@ -462,12 +472,13 @@ static int mana_gd_register_irq(struct gdma_queue *=
+queue,
+>  				const struct gdma_queue_spec *spec)
+>  {
+>  	struct gdma_dev *gd =3D queue->gdma_dev;
+> -	struct gdma_irq_context *gic;
+> +	struct gdma_irq_context *gic =3D NULL;
+> +	unsigned long flags, flag_irq;
+>  	struct gdma_context *gc;
+>  	unsigned int msi_index;
+> -	unsigned long flags;
+> +	struct list_head *pos;
+>  	struct device *dev;
+> -	int err =3D 0;
+> +	int err =3D 0, count;
+>=20
+>  	gc =3D gd->gdma_context;
+>  	dev =3D gc->dev;
+> @@ -482,7 +493,23 @@ static int mana_gd_register_irq(struct gdma_queue *q=
+ueue,
+>  	}
+>=20
+>  	queue->eq.msix_index =3D msi_index;
+> -	gic =3D &gc->irq_contexts[msi_index];
+> +
+> +	/* get the msi_index value from the list*/
+> +	count =3D 0;
+> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
+> +	list_for_each(pos, &gc->irq_contexts) {
+> +		if (count =3D=3D msi_index) {
+> +			gic =3D list_entry(pos, struct gdma_irq_context,
+> +					 gic_list);
+> +			break;
+> +		}
+> +
+> +		count++;
+> +	}
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
+> +
+> +	if (!gic)
+> +		return -1;
+>=20
+>  	spin_lock_irqsave(&gic->lock, flags);
+>  	list_add_rcu(&queue->entry, &gic->eq_list);
+> @@ -494,11 +521,13 @@ static int mana_gd_register_irq(struct gdma_queue *=
+queue,
+>  static void mana_gd_deregiser_irq(struct gdma_queue *queue)
+>  {
+>  	struct gdma_dev *gd =3D queue->gdma_dev;
+> -	struct gdma_irq_context *gic;
+> +	struct gdma_irq_context *gic =3D NULL;
+> +	unsigned long flags, flag_irq;
+>  	struct gdma_context *gc;
+>  	unsigned int msix_index;
+> -	unsigned long flags;
+> +	struct list_head *pos;
+>  	struct gdma_queue *eq;
+> +	int count;
+>=20
+>  	gc =3D gd->gdma_context;
+>=20
+> @@ -507,7 +536,23 @@ static void mana_gd_deregiser_irq(struct gdma_queue
+> *queue)
+>  	if (WARN_ON(msix_index >=3D gc->num_msix_usable))
+>  		return;
+>=20
+> -	gic =3D &gc->irq_contexts[msix_index];
+> +	/* get the msi_index value from the list*/
+> +	count =3D 0;
+> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
+> +	list_for_each(pos, &gc->irq_contexts) {
+> +		if (count =3D=3D msix_index) {
+> +			gic =3D list_entry(pos, struct gdma_irq_context,
+> +					 gic_list);
+> +			break;
+> +		}
+> +
+> +		count++;
+> +	}
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
+> +
+> +	if (!gic)
+> +		return;
+> +
+>  	spin_lock_irqsave(&gic->lock, flags);
+>  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
+>  		if (queue =3D=3D eq) {
+> @@ -1288,7 +1333,8 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+>  	r->size =3D 0;
+>  }
+>=20
+> -static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+> +static int irq_setup(unsigned int *irqs, unsigned int len, int node,
+> +		     bool skip_first_cpu)
+>  {
+>  	const struct cpumask *next, *prev =3D cpu_none_mask;
+>  	cpumask_var_t cpus __free(free_cpumask_var);
+> @@ -1303,9 +1349,20 @@ static int irq_setup(unsigned int *irqs, unsigned =
+int len, int
+> node)
+>  		while (weight > 0) {
+>  			cpumask_andnot(cpus, next, prev);
+>  			for_each_cpu(cpu, cpus) {
+> +				/*
+> +				 * if the CPU sibling set is to be skipped we
+> +				 * just move on to the next CPUs without len--
+> +				 */
+> +				if (unlikely(skip_first_cpu)) {
+> +					skip_first_cpu =3D false;
+> +					goto next_cpumask;
+> +				}
+> +
+>  				if (len-- =3D=3D 0)
+>  					goto done;
+> +
+>  				irq_set_affinity_and_hint(*irqs++,
+> topology_sibling_cpumask(cpu));
+> +next_cpumask:
+>  				cpumask_andnot(cpus, cpus,
+> topology_sibling_cpumask(cpu));
+>  				--weight;
+>  			}
+> @@ -1317,29 +1374,99 @@ static int irq_setup(unsigned int *irqs, unsigned=
+ int len, int
+> node)
+>  	return 0;
+>  }
+>=20
+> -static int mana_gd_setup_irqs(struct pci_dev *pdev)
+> +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
+>  {
+>  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+> -	unsigned int max_queues_per_port;
+>  	struct gdma_irq_context *gic;
+> -	unsigned int max_irqs, cpu;
+> -	int start_irq_index =3D 1;
+> -	int nvec, *irqs, irq;
+> +	bool skip_first_cpu =3D false;
+> +	unsigned long flags;
+>  	int err, i =3D 0, j;
+> +	int *irqs, irq;
+>=20
+>  	cpus_read_lock();
+> -	max_queues_per_port =3D num_online_cpus();
+> -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
+> -		max_queues_per_port =3D MANA_MAX_NUM_QUEUES;
+> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
+> +	irqs =3D kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
+> +	if (!irqs) {
+> +		err =3D -ENOMEM;
+> +		goto free_irq_vector;
+> +	}
+>=20
+> -	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
+> -	max_irqs =3D max_queues_per_port + 1;
+> +	for (i =3D 0; i < nvec; i++) {
+> +		gic =3D kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
+> +		if (!gic) {
+> +			err =3D -ENOMEM;
+> +			goto free_irq;
+> +		}
+> +		gic->handler =3D mana_gd_process_eq_events;
+> +		INIT_LIST_HEAD(&gic->eq_list);
+> +		spin_lock_init(&gic->lock);
+>=20
+> -	nvec =3D pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
+> -	if (nvec < 0) {
+> -		cpus_read_unlock();
+> -		return nvec;
+> +		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
+> +			 i, pci_name(pdev));
+> +
+> +		/* one pci vector is already allocated for HWC */
+> +		irqs[i] =3D pci_irq_vector(pdev, i + 1);
+> +		if (irqs[i] < 0) {
+> +			err =3D irqs[i];
+> +			goto free_current_gic;
+> +		}
+> +
+> +		err =3D request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
+> +		if (err)
+> +			goto free_current_gic;
+> +
+> +		list_add_tail(&gic->gic_list, &gc->irq_contexts);
+>  	}
+> +
+> +	/*
+> +	 * When calling irq_setup() for dynamically added IRQs, if number of
+> +	 * IRQs is more than or equal to allocated MSI-X, we need to skip the
+> +	 * first CPU sibling group since they are already affinitized to HWC IR=
+Q
+> +	 */
+> +	if (gc->num_msix_usable <=3D num_online_cpus())
+> +		skip_first_cpu =3D true;
+> +
+> +	err =3D irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
+> +	if (err)
+> +		goto free_irq;
+> +
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
+> +	cpus_read_unlock();
+> +	kfree(irqs);
+> +	return 0;
+> +
+> +free_current_gic:
+> +	kfree(gic);
+> +free_irq:
+> +	for (j =3D i - 1; j >=3D 0; j--) {
+> +		irq =3D pci_irq_vector(pdev, j + 1);
+> +		gic =3D list_last_entry(&gc->irq_contexts,
+> +				      struct gdma_irq_context, gic_list);
+> +		irq_update_affinity_hint(irq, NULL);
+> +		free_irq(irq, gic);
+> +		list_del(&gic->gic_list);
+> +		kfree(gic);
+> +	}
+> +	kfree(irqs);
+> +free_irq_vector:
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
+> +	cpus_read_unlock();
+> +	return err;
+> +}
+> +
+> +static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
+> +{
+> +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+> +	struct gdma_irq_context *gic;
+> +	int start_irq_index =3D 1;
+> +	unsigned long flags;
+> +	unsigned int cpu;
+> +	int *irqs, irq;
+> +	int err, i =3D 0, j;
+> +
+> +	cpus_read_lock();
+> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
+> +
+>  	if (nvec <=3D num_online_cpus())
+>  		start_irq_index =3D 0;
+>=20
+> @@ -1349,15 +1476,12 @@ static int mana_gd_setup_irqs(struct pci_dev *pde=
+v)
+>  		goto free_irq_vector;
+>  	}
+>=20
+> -	gc->irq_contexts =3D kcalloc(nvec, sizeof(struct gdma_irq_context),
+> -				   GFP_KERNEL);
+> -	if (!gc->irq_contexts) {
+> -		err =3D -ENOMEM;
+> -		goto free_irq_array;
+> -	}
+> -
+>  	for (i =3D 0; i < nvec; i++) {
+> -		gic =3D &gc->irq_contexts[i];
+> +		gic =3D kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
+> +		if (!gic) {
+> +			err =3D -ENOMEM;
+> +			goto free_irq;
+> +		}
+>  		gic->handler =3D mana_gd_process_eq_events;
+>  		INIT_LIST_HEAD(&gic->eq_list);
+>  		spin_lock_init(&gic->lock);
+> @@ -1372,22 +1496,14 @@ static int mana_gd_setup_irqs(struct pci_dev *pde=
+v)
+>  		irq =3D pci_irq_vector(pdev, i);
+>  		if (irq < 0) {
+>  			err =3D irq;
+> -			goto free_irq;
+> +			goto free_current_gic;
+>  		}
+>=20
+>  		if (!i) {
+>  			err =3D request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+>  			if (err)
+> -				goto free_irq;
+> -
+> -			/* If number of IRQ is one extra than number of online CPUs,
+> -			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
+> -			 * same CPU.
+> -			 * Else we will use different CPUs for IRQ0 and IRQ1.
+> -			 * Also we are using cpumask_local_spread instead of
+> -			 * cpumask_first for the node, because the node can be
+> -			 * mem only.
+> -			 */
+> +				goto free_current_gic;
+> +
+>  			if (start_irq_index) {
+>  				cpu =3D cpumask_local_spread(i, gc->numa_node);
+>  				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+> @@ -1396,39 +1512,108 @@ static int mana_gd_setup_irqs(struct pci_dev *pd=
+ev)
+>  			}
+>  		} else {
+>  			irqs[i - start_irq_index] =3D irq;
+> -			err =3D request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
+> -					  gic->name, gic);
+> +			err =3D request_irq(irqs[i - start_irq_index],
+> +					  mana_gd_intr, 0, gic->name, gic);
+>  			if (err)
+> -				goto free_irq;
+> +				goto free_current_gic;
+>  		}
+> +
+> +		list_add_tail(&gic->gic_list, &gc->irq_contexts);
+>  	}
+>=20
+> -	err =3D irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
+> +	err =3D irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
+>  	if (err)
+>  		goto free_irq;
+>=20
+> -	gc->max_num_msix =3D nvec;
+> -	gc->num_msix_usable =3D nvec;
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
+>  	cpus_read_unlock();
+>  	kfree(irqs);
+>  	return 0;
+>=20
+> +free_current_gic:
+> +	kfree(gic);
+>  free_irq:
+>  	for (j =3D i - 1; j >=3D 0; j--) {
+>  		irq =3D pci_irq_vector(pdev, j);
+> -		gic =3D &gc->irq_contexts[j];
+> -
+> +		gic =3D list_last_entry(&gc->irq_contexts,
+> +				      struct gdma_irq_context, gic_list);
+>  		irq_update_affinity_hint(irq, NULL);
+>  		free_irq(irq, gic);
+> +		list_del(&gic->gic_list);
+> +		kfree(gic);
+>  	}
+> -
+> -	kfree(gc->irq_contexts);
+> -	gc->irq_contexts =3D NULL;
+> -free_irq_array:
+>  	kfree(irqs);
+>  free_irq_vector:
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
+>  	cpus_read_unlock();
+> -	pci_free_irq_vectors(pdev);
+> +	return err;
+> +}
+> +
+> +static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
+> +{
+> +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+> +	unsigned int max_irqs, min_irqs;
+> +	int max_queues_per_port;
+> +	int nvec, err;
+> +
+> +	if (pci_msix_can_alloc_dyn(pdev)) {
+> +		max_irqs =3D 1;
+> +		min_irqs =3D 1;
+> +	} else {
+> +		max_queues_per_port =3D num_online_cpus();
+> +		if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
+> +			max_queues_per_port =3D MANA_MAX_NUM_QUEUES;
+> +		/* Need 1 interrupt for HWC */
+> +		max_irqs =3D max_queues_per_port + 1;
+> +		min_irqs =3D 2;
+> +	}
+> +
+> +	nvec =3D pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
+> +	if (nvec < 0)
+> +		return nvec;
+> +
+> +	err =3D mana_gd_setup_irqs(pdev, nvec);
+> +	if (err) {
+> +		pci_free_irq_vectors(pdev);
+> +		return err;
+> +	}
+> +
+> +	gc->num_msix_usable =3D nvec;
+> +	gc->max_num_msix =3D nvec;
+> +
+> +	return err;
+> +}
+> +
+> +static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
+> +{
+> +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+> +	int max_irqs, i, err =3D 0;
+> +	struct msi_map irq_map;
+> +
+> +	if (!pci_msix_can_alloc_dyn(pdev))
+> +		/* remain irqs are already allocated with HWC IRQ */
+> +		return 0;
+> +
+> +	/* allocate only remaining IRQs*/
+> +	max_irqs =3D gc->num_msix_usable - 1;
+> +
+> +	for (i =3D 1; i <=3D max_irqs; i++) {
+> +		irq_map =3D pci_msix_alloc_irq_at(pdev, i, NULL);
+> +		if (!irq_map.virq) {
+> +			err =3D irq_map.index;
+> +			/* caller will handle cleaning up all allocated
+> +			 * irqs, after HWC is destroyed
+> +			 */
+> +			return err;
+> +		}
+> +	}
+> +
+> +	err =3D mana_gd_setup_dyn_irqs(pdev, max_irqs);
+> +	if (err)
+> +		return err;
+> +
+> +	gc->max_num_msix =3D gc->max_num_msix + max_irqs;
+> +
+>  	return err;
+>  }
+>=20
+> @@ -1436,29 +1621,34 @@ static void mana_gd_remove_irqs(struct pci_dev *p=
+dev)
+>  {
+>  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+>  	struct gdma_irq_context *gic;
+> -	int irq, i;
+> +	struct list_head *pos, *n;
+> +	unsigned long flags;
+> +	int irq, i =3D 0;
+>=20
+>  	if (gc->max_num_msix < 1)
+>  		return;
+>=20
+> -	for (i =3D 0; i < gc->max_num_msix; i++) {
+> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
+> +	list_for_each_safe(pos, n, &gc->irq_contexts) {
+>  		irq =3D pci_irq_vector(pdev, i);
+>  		if (irq < 0)
+>  			continue;
+>=20
+> -		gic =3D &gc->irq_contexts[i];
+> +		gic =3D list_entry(pos, struct gdma_irq_context, gic_list);
+>=20
+>  		/* Need to clear the hint before free_irq */
+>  		irq_update_affinity_hint(irq, NULL);
+>  		free_irq(irq, gic);
+> +		list_del(pos);
+> +		kfree(gic);
+> +		i++;
+>  	}
+> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
+>=20
+>  	pci_free_irq_vectors(pdev);
+>=20
+>  	gc->max_num_msix =3D 0;
+>  	gc->num_msix_usable =3D 0;
+> -	kfree(gc->irq_contexts);
+> -	gc->irq_contexts =3D NULL;
+>  }
+>=20
+>  static int mana_gd_setup(struct pci_dev *pdev)
+> @@ -1469,9 +1659,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
+>  	mana_gd_init_registers(pdev);
+>  	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
+>=20
+> -	err =3D mana_gd_setup_irqs(pdev);
+> +	err =3D mana_gd_setup_hwc_irqs(pdev);
+>  	if (err) {
+> -		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
+> +		dev_err(gc->dev, "Failed to setup IRQs for HWC creation: %d\n",
+> +			err);
+>  		return err;
+>  	}
+>=20
+> @@ -1487,6 +1678,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
+>  	if (err)
+>  		goto destroy_hwc;
+>=20
+> +	err =3D mana_gd_setup_remaining_irqs(pdev);
+> +	if (err)
+> +		goto destroy_hwc;
+> +
+>  	err =3D mana_gd_detect_devices(pdev);
+>  	if (err)
+>  		goto destroy_hwc;
+> @@ -1563,6 +1758,8 @@ static int mana_gd_probe(struct pci_dev *pdev, cons=
+t struct
+> pci_device_id *ent)
+>  	gc->is_pf =3D mana_is_pf(pdev->device);
+>  	gc->bar0_va =3D bar0_va;
+>  	gc->dev =3D &pdev->dev;
+> +	INIT_LIST_HEAD(&gc->irq_contexts);
+> +	spin_lock_init(&gc->irq_ctxs_lock);
+>=20
+>  	if (gc->is_pf)
+>  		gc->mana_pci_debugfs =3D debugfs_create_dir("0", mana_debugfs_root);
+> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+> index 228603bf03f2..6ef4785c63b4 100644
+> --- a/include/net/mana/gdma.h
+> +++ b/include/net/mana/gdma.h
+> @@ -363,6 +363,7 @@ struct gdma_irq_context {
+>  	spinlock_t lock;
+>  	struct list_head eq_list;
+>  	char name[MANA_IRQ_NAME_SZ];
+> +	struct list_head gic_list;
+>  };
+>=20
+>  struct gdma_context {
+> @@ -373,7 +374,9 @@ struct gdma_context {
+>  	unsigned int		max_num_queues;
+>  	unsigned int		max_num_msix;
+>  	unsigned int		num_msix_usable;
+> -	struct gdma_irq_context	*irq_contexts;
+> +	struct list_head	irq_contexts;
+> +	/* Protect the irq_contexts list */
+> +	spinlock_t		irq_ctxs_lock;
+>=20
+>  	/* L2 MTU */
+>  	u16 adapter_mtu;
+> @@ -558,12 +561,16 @@ enum {
+>  /* Driver can handle holes (zeros) in the device list */
+>  #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+>=20
+> +/* Driver supports dynamic MSI-X vector allocation */
+> +#define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
+> +
+>  #define GDMA_DRV_CAP_FLAGS1 \
+>  	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+>  	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+>  	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+>  	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+> -	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
+> +	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
+> +	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT)
+>=20
+>  #define GDMA_DRV_CAP_FLAGS2 0
+>=20
+> --
+> 2.34.1
+>=20
+
 
