@@ -1,143 +1,236 @@
-Return-Path: <linux-hyperv+bounces-5288-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5289-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99FECAA612B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 18:05:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923FBAA62CC
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 20:30:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95BBC3BDFB2
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 16:04:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 114754A6F83
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 18:30:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04971F76CA;
-	Thu,  1 May 2025 16:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2892E221292;
+	Thu,  1 May 2025 18:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mo1kf4i1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k+yQ/pA9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B140918DB16;
-	Thu,  1 May 2025 16:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBE220C014
+	for <linux-hyperv@vger.kernel.org>; Thu,  1 May 2025 18:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746115505; cv=none; b=iyf4/V7MJBR51biOmxOFhJdMT34JhdYYZlF6lJTejbP1vUzVgDfggktQ8zOhmlWof1sjLgg7dUbfG18Lkb6GqDoPymnN30aE8jere8UCLrJbGCYu8G0ZESc4ChgKgjSPAsSaGtOIZNr+Ih4/ceYXFBp9arP/0B5HSmzOcEn+JDU=
+	t=1746124222; cv=none; b=CLuK2V7majKquXNkrphL0TgGc48XdC9oVs60Ei15DA/N+Nx/tBcBb4yg9f2i2cM7TiBohaC/MzUbdQs3uRXs+65s/QwgD//qXxrrGGjOsVJMN21BcOgLNo0gZFeqlZbc+8JWqo4Y1CdsQJ8cgC/BcWktSqEpbnOpq3tNCu3HfSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746115505; c=relaxed/simple;
-	bh=8BDYSJgOsetPEaZe8GSxclMAWayBzqeDqICNc6GpC/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cn1uhA2VfDdysxOT2jZ2wIme8vByXD9qMRxf8C3t6zm7jVcbpt4Rq9KzqDlsS9pjsnUm0bP2V2qQlHMjL5EAUjP4VjTvsZQZxyVJ8ct95H2KYtSsXv+EjpvtGhfgABbLSZElZYcB8IuGQ7rApFDPQr0OBR96HPLxlyWXP1VJql4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mo1kf4i1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987F7C4CEED;
-	Thu,  1 May 2025 16:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746115505;
-	bh=8BDYSJgOsetPEaZe8GSxclMAWayBzqeDqICNc6GpC/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mo1kf4i17jsK39aokxedABFnzeKNY7lnqvVtmszGjmVFr/G/srsNESQ1s3vbEcftu
-	 n3m+vbxDQjJ/j4Osb+3/j015YdY9CINPMEu/oSWzJ9oss0y2sDsHb0f9mLHtyIM3m1
-	 K2Qxph663bCO2oXba5Uveoh64zJILioaZ0trCZUE=
-Date: Thu, 1 May 2025 18:05:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-Message-ID: <2025050154-skyward-snagged-973d@gregkh>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
- <2025042501-accuracy-uncombed-cb99@gregkh>
- <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+	s=arc-20240116; t=1746124222; c=relaxed/simple;
+	bh=Y4tGBMBLGc/YKCq/GVPyHhKavhO0yq27W/ghOX4mpvg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=F7RaHvuQCVcN+h6QvZiRU+7oFyXtiSjWYnOHNgr/jskZbv1CupyBf7gNSNrbdExcK+z0wcqn5029vTpgbqXRhb6ZO26rCyCdBVz6dbgh39CUVNQK4EfRE07s6NTuA/6iNxbwpz9ml8m+9Kic+hMOCrY2b5H08D+kfgJe87ixpo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k+yQ/pA9; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so1057791b3a.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 01 May 2025 11:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746124219; x=1746729019; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qb2qgdFL1uGhH3LnsFjHt03Akcbc42TOdjKut1BadxU=;
+        b=k+yQ/pA9DoUR668FfbsxZTszZj/lmIG5WDw5R2RkQqUG5afv6Tgllfl5LkUSB13x70
+         tGin2B/Aa6Y0mY0nVwLUYF5If8q9i3lMXPTeteMV3XbLEtBdw00fiQwDY60nhN2os5ff
+         yOKY2v9J4Za1QenEAUZdh5eVOR9RIPQWbyxBNblUOaP8T2XtGlUsIF8zEP+SNPldS1j8
+         GzDwoRCtQJdYxouF8TVtJ9HuLsr8slrGy8SixfgTR9uizwfNp+zloCE7ZXoH8ne7mdkl
+         Jov1wphLgOZ4LAulWljkvl44FNqFKeQ8i7kqc4fnIyOQxday9hQnUXNgONFWeFgfpini
+         U8gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746124219; x=1746729019;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qb2qgdFL1uGhH3LnsFjHt03Akcbc42TOdjKut1BadxU=;
+        b=rBJl/b/HjI8z1lhNopbBi2Y3MOZNipnZcej9RTPzw2OtNb6+ZKvEPZkafa7LU2nVD0
+         Hr0bzR2Un70tt1nRKOHvhuybQBYh8PGe576wri9Sr0lHXjwR4X03rDxHouy3jWFGlde3
+         HApfoMBE+aSZcnw4V14nv5Ed/BCe8Z0bHVf8InlRLhdiAQKbgrmELGU45pBmdOzyX1av
+         Oc9yE2flCtkNKNAGFLy5DAXgs0IO6vagqvpfnWkJKoRhkkN0FldvwTFV/tL/43nfzJP2
+         9Q/aBW0rnI0zNB5cYVOiWJI5BzCv5u136/ZNGdG7QDdxtCYN2U0SrR5dhpcr32RGiakv
+         f+cA==
+X-Forwarded-Encrypted: i=1; AJvYcCXcDXxA4n/gQyqPb55PY/907SmTIJz3rbWy1SNIysH9qEhQjpljIWMWcHSqhogUoSCwAYR3d4TxdtIFO5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxKKk75zH0kxJhEyaG3Od8xbSCz0hAP4ltq/oJQILanHx6pVGa
+	mStfMoTXZMOfYp4KGci6jl0312VM41meC8c3OWdJdhPo7jUOgYrlu4fDb0dSV3FM3LEJ/Uqk6uf
+	EiQ==
+X-Google-Smtp-Source: AGHT+IE+acSB6pP/XFrGYreSGEpMxcpIN4zf03F9AG6mxlsdNLC5ZdXiyh+Le4rdLnsVm76Q4eWXdPS7fMA=
+X-Received: from pfbdu11.prod.google.com ([2002:a05:6a00:2b4b:b0:730:90b2:dab])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4fd1:b0:736:32d2:aa82
+ with SMTP id d2e1a72fcca58-7404927067fmr4682617b3a.23.1746124219442; Thu, 01
+ May 2025 11:30:19 -0700 (PDT)
+Date: Thu, 1 May 2025 11:30:18 -0700
+In-Reply-To: <20250501153844.GD4356@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+Mime-Version: 1.0
+References: <20250430110734.392235199@infradead.org> <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+ <20250430190600.GQ4439@noisy.programming.kicks-ass.net> <20250501103038.GB4356@noisy.programming.kicks-ass.net>
+ <20250501153844.GD4356@noisy.programming.kicks-ass.net>
+Message-ID: <aBO9uoLnxCSD0UwT@google.com>
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
+ __nocfi functions
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org, 
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
+	jpoimboe@kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
-> 
-> 
-> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
-> > On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
-> > > Hi,
-> > > This patch series aims to address the sysfs creation issue for the ring
-> > > buffer by reorganizing the code. Additionally, it updates the ring sysfs
-> > > size to accurately reflect the actual ring buffer size, rather than a
-> > > fixed static value.
+On Thu, May 01, 2025, Peter Zijlstra wrote:
+> On Thu, May 01, 2025 at 12:30:38PM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 30, 2025 at 09:06:00PM +0200, Peter Zijlstra wrote:
+> > > On Wed, Apr 30, 2025 at 07:24:15AM -0700, H. Peter Anvin wrote:
 > > > 
-> > > PFB change logs:
+> > > > >KVM has another; the VMX interrupt injection stuff calls the IDT handler
+> > > > >directly.  Is there an alternative? Can we keep a table of Linux functions
+> > > > >slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
 > > > 
-> > > Changes since v5:
-> > > https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
-> > > * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
-> > >    commit msg of both patches.
-> > > * Missed to remove check for "primary_channel->device_obj->channels_kset" in
-> > >    hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
-> > >    now.
-> > > * Changed type for declaring bin_attrs due to changes introduced by
-> > >    commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
-> > >    merged recently. Did not use bin_attrs_new since another change is in
-> > >    the queue to change usage of bin_attrs_new to bin_attrs
-> > >    (sysfs: finalize the constification of 'struct bin_attribute').
+> > > > We do have a table of handlers higher up in the stack in the form of
+> > > > the dispatch tables for FRED. They don't in general even need the
+> > > > assembly entry stubs, either.
+> > > 
+> > > Oh, right. I'll go have a look at those.
 > > 
-> > Please fix up to apply cleanly without build warnings:
+> > Right, so perhaps the easiest way around this is to setup the FRED entry
+> > tables unconditionally, have VMX mandate CONFIG_FRED and then have it
+> > always use the FRED entry points.
 > > 
-> > drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-> >   1893 |         .bin_attrs = vmbus_chan_bin_attrs,
-> >        |                      ^~~~~~~~~~~~~~~~~~~~
-> > 1 error generated.
+> > Let me see how ugly that gets.
 > 
-> Hi Greg,
-> I tried reproducing this error but could not see it. Should I rebase the
-> change to some other tree or use some specific config option, gcc version,
-> compilation flag etc.?
-> 
-> I tried the following:
-> * Rebased to latest linux-next tip with below base commit:
-> 393d0c54cae31317deaa9043320c5fd9454deabc
-> * Regular compilation with gcc: make -j8
-> * extra flags:
->   make -j8  EXTRA_CFLAGS="-Wall -O2"
->   make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
-> -Werror"
-> * Tried gcc 11.4, 13.3
-> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
+> Something like so... except this is broken. Its reporting spurious
+> interrupts on vector 0x00, so something is buggered passing that vector
+> along.
 
-I tried this against my char-misc-linus branch (which is pretty much
-just 6.15.0-rc4 plus some iio patches), and it fails with that error
-above.
+Uh, aren't you making this way more complex than it needs to be?  IIUC, KVM never
+uses the FRED hardware entry points, i.e. the FRED entry tables don't need to be
+in place because they'll never be used.  The only bits of code KVM needs is the
+__fred_entry_from_kvm() glue.
 
-> BTW I had to edit the type for bin_attrs as this change got merged recently:
-> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
-> 
-> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-> index 576b8b3c60af..f418aae4f113 100644
-> --- a/include/linux/sysfs.h
-> +++ b/include/linux/sysfs.h
-> @@ -107,7 +107,7 @@ struct attribute_group {
->                                             int);
->         struct attribute        **attrs;
->         union {
-> -               struct bin_attribute            **bin_attrs;
-> +               const struct bin_attribute      *const *bin_attrs;
->                 const struct bin_attribute      *const *bin_attrs_new;
->         };
->  };
+Lightly tested, but this combo works for IRQs and NMIs on non-FRED hardware.
 
-That commit is not in my char-misc branches, that's coming from
-somewhere else.
+--
+From 664468143109ab7c525c0babeba62195fa4c657e Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Thu, 1 May 2025 11:20:29 -0700
+Subject: [PATCH 1/2] x86/fred: Play nice with invoking
+ asm_fred_entry_from_kvm() on non-FRED hardware
 
-thanks,
+Modify asm_fred_entry_from_kvm() to allow it to be invoked by KVM even
+when FRED isn't fully enabled, e.g. when running with CONFIG_X86_FRED=y
+on non-FRED hardware.  This will allow forcing KVM to always use the FRED
+entry points for 64-bit kernels, which in turn will eliminate a rather
+gross non-CFI indirect call that KVM uses to trampoline IRQs by doing IDT
+lookups.
 
-greg k-h
+When FRED isn't enabled, simply skip ERETS and restore RBP and RSP from
+the stack frame prior to doing a "regular" RET back to KVM (in quotes
+because of all the RET mitigation horrors).
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/entry/entry_64_fred.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+index 29c5c32c16c3..7aff2f0a285f 100644
+--- a/arch/x86/entry/entry_64_fred.S
++++ b/arch/x86/entry/entry_64_fred.S
+@@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+ 	movq %rsp, %rdi				/* %rdi -> pt_regs */
+ 	call __fred_entry_from_kvm		/* Call the C entry point */
+ 	POP_REGS
+-	ERETS
++
++	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
+ 1:
+ 	/*
+ 	 * Objtool doesn't understand what ERETS does, this hint tells it that
+@@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+ 	 * isn't strictly needed, but it's the simplest form.
+ 	 */
+ 	UNWIND_HINT_RESTORE
+-	pop %rbp
++	leave
+ 	RET
+ 
+ SYM_FUNC_END(asm_fred_entry_from_kvm)
+
+base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
+-- 
+2.49.0.906.g1f30a19c02-goog
+
+From c50fb5a8a46058bbcfdcac0a100c2aa0f7f68f1c Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Thu, 1 May 2025 11:10:39 -0700
+Subject: [PATCH 2/2] x86/fred: KVM: VMX: Always use FRED for IRQ+NMI when
+ CONFIG_X86_FRED=y
+
+Now that FRED provides C-code entry points for handling IRQ and NMI exits,
+use the FRED infrastructure for forwarding all such events even if FRED
+isn't supported in hardware.  Avoiding the non-FRED assembly trampolines
+into the IDT handlers for IRQs eliminates the associated non-CFI indirect
+call (KVM performs a CALL by doing a lookup on the IDT using the IRQ
+vector).
+
+Force FRED for 64-bit kernels if KVM_INTEL is enabled, as the benefits of
+eliminating the IRQ trampoline usage far outwieghts the code overhead for
+FRED.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/Kconfig   | 1 +
+ arch/x86/kvm/vmx/vmx.c | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 2eeffcec5382..712a2ff28ce4 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -95,6 +95,7 @@ config KVM_SW_PROTECTED_VM
+ config KVM_INTEL
+ 	tristate "KVM for Intel (and compatible) processors support"
+ 	depends on KVM && IA32_FEAT_CTL
++	select X86_FRED if X86_64
+ 	select KVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
+ 	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
+ 	help
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index ef2d7208dd20..2ea89985107d 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6995,7 +6995,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
+ 		return;
+ 
+ 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+-	if (cpu_feature_enabled(X86_FEATURE_FRED))
++	if (IS_ENABLED(CONFIG_X86_FRED))
+ 		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
+ 	else
+ 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+@@ -7268,7 +7268,7 @@ noinstr void vmx_handle_nmi(struct kvm_vcpu *vcpu)
+ 		return;
+ 
+ 	kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+-	if (cpu_feature_enabled(X86_FEATURE_FRED))
++	if (IS_ENABLED(CONFIG_X86_FRED))
+ 		fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
+ 	else
+ 		vmx_do_nmi_irqoff();
+-- 
+2.49.0.906.g1f30a19c02-goog
 
