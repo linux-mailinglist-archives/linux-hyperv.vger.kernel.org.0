@@ -1,807 +1,1790 @@
-Return-Path: <linux-hyperv+bounces-5280-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5281-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A77F8AA5A8B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 07:28:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C09F5AA5A9C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 07:44:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 040824C63EF
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 05:28:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2D54176D89
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 May 2025 05:44:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4994C262813;
-	Thu,  1 May 2025 05:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D212690C4;
+	Thu,  1 May 2025 05:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dGkjM88O"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IUJUV+Md"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2070.outbound.protection.outlook.com [40.92.46.70])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6A725A35E;
-	Thu,  1 May 2025 05:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746077278; cv=fail; b=cbwsYCIWu7oUblXwkoT+eEMh3zwB5XWXDLwKtwFy08mXu+rSPmat82Hdg0m3CUie7RsODlvAtM6gR3qaVVmrgbzbipWrR3P7OUhVepNsTvBvJv3L9h1z7uJGUVOQFMp+qgv8SIssdkQZAfjaQVFym4/JXbpKmVCTBuBvkVjwDhg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746077278; c=relaxed/simple;
-	bh=thoBZYox6aBbaI2YyaHmQRGTVRmNstBhmyvXlx8zxeU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=r+QYleEnIxqGnxxjsexTx46KLzQU9CMX/0qSpicSC7lyN+lZFS2+rCPcKGESTK5WcxRIGuWK7JhGf2aV5h8vMUn6xxadfF5KwnOq8Zz55UIHForWqMqOtpCzb2wCdfmQNvZFY0cvYUTxHLVuzD6Ez/jedkDRccNpgjK8JLymUjY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dGkjM88O; arc=fail smtp.client-ip=40.92.46.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Almb1skZ1X8yUBJJXT6oQf2VIqmv+Y7KaThWfBBQmjVOgcFkjEahpxFhMX8JzobYOizOFJTUrGeJln5EMFuvEokYKm/nbejDP2BzJL9dQCG7lXFoVfWW+BhIhNB8WY48D+n3BoTbiBkYI4HH47TNItG+hA+A8xtV/S5KsnfegcsvR85R1HwDJEdI01Vw5K69tdgYIqAImzg2wpNmynecA4uaZfWD4uZ9Wu6J5PqpXQXaizU4EAlVgqbADds8wttu6bg308UaH/1VBJxjlXugXDlYj7lSyte0najjjgFBy7Jzm6idiuesqhH+AruMdlyPswQnXrOKUHEg6OOeNL42Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wyp9X6JMReWdrBG3KWYfMXKF8KztrRDpNbuaR2osKig=;
- b=V/eA8k5xqlyoeVMV2ZtlxSnJ6+zCN2MmznFUGt381HZL2S8djAydmntG5jI03n2Q2U2M5x5ULvUxdJo8uY+wNipSXqTCk0d8JFYMdzS3nXMSF+nzSOc9O+Lb2DGgiZ2jr3S2rGqiE5It72MmPv/aLR8AATUkzBRfBd+HSbRwCDAirxfI1NgH1o4OD5gYVmEbxgpDdtzhYxKv++2yjWZdkHnk0nLti5H9TJMP/0Ul1O15oPpDiuy4TRz7N4HrOLdBK20HKifDN71o2ngxCW3FilDJyIeZa+0o2ipPE7wDFwxZ1rDfnwM/Y1YaOtt0tJWfeCJOr2v5TMMTN1Pu5inQbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wyp9X6JMReWdrBG3KWYfMXKF8KztrRDpNbuaR2osKig=;
- b=dGkjM88OVU6Nccyhl6ELBdOLNB8ifE/SnBNosCjPMDI+18h2rx9FG6fH162AL6/6DPadNYFcyilaXHpHHkJnP6aHXpAc00gDHtcUcLCx0G1P2DO+CNMFyQaS25ufIdhpht/GPRG5jli8cA0PdRYBDBreBsB5IpNBrYImi6OR+J96mB2KQRM6udyb87eUjeKTLXIc6DPxCqdnqhh+aGXFBLDz8GrqNCcFQtaKHxmt2ujXtiBC3IqYZlKrZ1/0rhl2S9SUs5iY5+ebk2X8Ms0K5AcNDeeHKrlbIIzz+vQ5OjNZJ8ER4MGWLJDKoH17WyEPcJty4E10jLpdNzSsnFXHrQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH7PR02MB8978.namprd02.prod.outlook.com (2603:10b6:510:1fa::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Thu, 1 May
- 2025 05:27:50 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Thu, 1 May 2025
- 05:27:50 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nipun Gupta
-	<nipun.gupta@amd.com>, Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Jonathan Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria
- Behnsen <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long
- Li <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn
- Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Dexuan Cui <decui@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, "K. Y.
- Srinivasan" <kys@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Konstantin
- Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
- Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni Sri
- Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
-	<peterz@infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, Paul Rosswurm
-	<paulros@microsoft.com>
-CC: Shradha Gupta <shradhagupta@microsoft.com>
-Subject: RE: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
- required
-Thread-Topic: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
- required
-Thread-Index: AQHbtdCa+2CaoQUHl0GxlQrhegIb5rO319gQ
-Date: Thu, 1 May 2025 05:27:49 +0000
-Message-ID:
- <SN6PR02MB4157FF2CA8E37298FC634491D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To:
- <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB8978:EE_
-x-ms-office365-filtering-correlation-id: c26a5839-d9bc-4c29-fe9c-08dd8870e9ee
-x-ms-exchange-slblob-mailprops:
- 0wLWl8rLpvv/dfWT6unGWbRi7AvTEDs/65T7t36xaDyEsNbveHIWoBqBuAi4cHApQnJDlcdk3wRhg2Y0UsnyCYFTIABMYHo+svcu5Jtx3h2HFZOio83acxlj8Kir0QgpIxl+xktQ/QAlBBJDoMgfMVTBk7kKkid++u9BFgJKb8PEv6yMr5Dz7ioZS9tjkxcl2QU6VdviVeuZnM4+5M9FtMcPqc+QAMrXw/nDaZDOtJErRUcqt2Vi1CP/5tjTxlZZaK9clah3K+kSS/6uj+ej5HHk0lPLfCVM15KKUFgVwb9G5WlpZGYZLW5oFbceiFznxz8w4c7VF5jL8xCi2EcFmyIGRfheYrnwwR4muUTHAzueFlTeEHFHA9EDzGFyopTfctgPVhPH/PckMqVCJuawig6RLZ5vBJ2J9V8PPyrbpe5g+9oggU/2T5ws7HHn2fnmv0W//BgNYxfQ0w3NSy1YkKBW/Rahz0O13lpVgUUY+xSrN1hFJcdn5qLsqyBgCHWXfrETLcC28JyuZSESGcGXfGN0XqJtjMVvdtSxH8dsj8aDpGkgVR0wyLZcdS0feZQepWMT9ujaR66QjbZR0YPuxMesH351IV5le2YIWuFCjH8097Cd1/XpsPCAIHIE4SmUx85WbRTxjeOdw+NpBqkCq43t2Gt0YaOIY1gRG8oV/jCa1H65fgWH2MhGERvet8UlufFxuAH/t9rzVHzH7CrVUCBuDYT4ewUMW+mggw66S8y03XDu6wwv8e14enoDzCmk5YbEp5rCsdE=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|19110799003|15080799006|461199028|8060799006|3412199025|440099028|12091999003|41001999003|102099032;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?j5xEy3AReovSMS6QWzYEQeuiHbkuB+ycogtHSRpdomBKZte7L2eGJhb4ed?=
- =?iso-8859-2?Q?AdNcmOEplgMbuyYB4hF/smBJagFnzH8bIzTBrcVW5RZ578xM7OGSDTiOoH?=
- =?iso-8859-2?Q?SR/0tdOG4jlkjCji+dcgGmXGUxIxbYJAuYpl0BgWHE7X6BbRX/+S/7rocN?=
- =?iso-8859-2?Q?M5P3GJbri4KoWYrY0XoG/oMpVvdOqpLJnetZ2Niwy0URhGTBlhK7pSvfHa?=
- =?iso-8859-2?Q?Q5xDMFEBEIrD781G/KnpKJOtwLnuv62ULyvpHXgCEWDL6rcUXbwomIJgiH?=
- =?iso-8859-2?Q?lAs1l6ofcFRCCTRkrmLp4VINaSHxuPlJrc91sHiyz0OHJbt9Sal4HBQJxJ?=
- =?iso-8859-2?Q?7vKE2kMMmCGZKldfzr3s+mui/nok8zZQxEKTxR9iGyPeh87tUR601eGpwa?=
- =?iso-8859-2?Q?KM+qxS5ASdnNQuH/P6YW2WyK0AyWLCecDF/SdLjCRRG4azUlpr5VKy2aUd?=
- =?iso-8859-2?Q?is8FFEsk0aJ/60m0im6RhXpbLPAtHKZHvQnwA9/LSB7AiSPQD/iEiaVB9U?=
- =?iso-8859-2?Q?+Lw1vO8kj4dHzACv3KAb+9e61jhHjXHZvmwwQRZNGknn7FaYUb3su+SROJ?=
- =?iso-8859-2?Q?Ey5t5aJO4+9zezIQkkQE3R9696W52M6tFwqxHpto5TXbWsI3kxgOvRt94F?=
- =?iso-8859-2?Q?I2D3oRKksTaHgj4KolZ7uzrw0cy9kDw6VY5O8cSTAQWq12RoYTQa/mbJgd?=
- =?iso-8859-2?Q?diLtAYsdUk56mTXBGzhTeLCYoD5s1i/P3nBxxZIhTd4AulcUJc0z3xLHzx?=
- =?iso-8859-2?Q?PgRjRK5sF8kxL3zpYDHUI9vS7vwvmtDQEWV/8iJicqGX7kFScsjLUrc6DQ?=
- =?iso-8859-2?Q?ZwKjVobwvn9RnjQXxxXhtfA0Mkz5S7lMAHlT+84gY16P7i56x+XHH9a7I8?=
- =?iso-8859-2?Q?ejkLT6OqtGfBCPtkuGr20yfWIxJW2K3yq/Ni8sXE29+3beH0+4i4arKmeX?=
- =?iso-8859-2?Q?BzWPdEhlG+e0mQoXHV/2gCYrejqExO4MXqwGgFc+G0EST5SWyH8tUELA+N?=
- =?iso-8859-2?Q?x5F37JQSCGjnAJ80f+8/bI5ElfuPff8P5TZnO4bgmf9JnVrGhbGDctAGgF?=
- =?iso-8859-2?Q?GKhaopTZCPgZMSKGHCHG/S1We42TfIKYoV0/o58zZWJvW3oyTdTm+fe7A+?=
- =?iso-8859-2?Q?bcxMkP1v07z5pomR6vPH5V3o3Sxdct1IfBpCM55fCOy6H/hfcMasYoniSU?=
- =?iso-8859-2?Q?8tpYDinXs3BLEw=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?xnBV24Z/sZgOJmbnOSDG3rVYTFFwgcP/8njKuWfzHbVN1tXZl0c2hZgaKF?=
- =?iso-8859-2?Q?n9m6U7M54UjKyY4GpH55ZeNV3LIiZPVepFpnaOxvAsdgkzAhBKgOALbQEi?=
- =?iso-8859-2?Q?ST6XRl423GiTJZVqVLXne2fB+CgNYW7aMqHKICn8C47XN1OP77UNq76Ot6?=
- =?iso-8859-2?Q?cD5FElhSoRPZ4ZWb4ypqh6OBSo8n6dJB/IfgW65FzMC2Zp2VAxw71nPyMq?=
- =?iso-8859-2?Q?mO6tfEnT/GdlhwoSwnwr/puxWTbDGl+aSVa0Nnx6ujGcey9fyX1oM8ppfe?=
- =?iso-8859-2?Q?CcLR1HC8K9RjMAtQSq7alXbUhw56QfWtf7NNosbgJEdk+vD63Au/BnX5bC?=
- =?iso-8859-2?Q?ScJqdLCqMCGZ6IGneR7vMqUFidVN25WDMlwM2N9Cc/Rx7GSrFPqbrSbvY5?=
- =?iso-8859-2?Q?cZ3l201Undm9EBPALqtKU0eBtzDb2DyYC/m/VpJ19BiL378lZGqKIO4yuN?=
- =?iso-8859-2?Q?k03NxWKmTpWLNqvStFGULVp7lhjr7g1/kTzUxLZotq9pkVVKmfswnQIlqW?=
- =?iso-8859-2?Q?vPCHV5hr1gDyZqaw7ppCzLW9FG1e6oHDeb2nnmxnj1EfZUp1NOXcm3CmQB?=
- =?iso-8859-2?Q?gTzYuzSSg45K/A2JU3DokxZBzVKIdh/mlZZMcVliT0wQmffwvgTKmaRTyB?=
- =?iso-8859-2?Q?qrXSBslNSEHTUgaCo9ONyqgNEs4XPJEua07q1X2aiGYjKAViB3Mf7z0cIc?=
- =?iso-8859-2?Q?MABY8vP8iBhANX6BELGadj86xqJ7UQRpx8VvIhD8kadt+FFVJ9DUn01PQH?=
- =?iso-8859-2?Q?CH7VtFRYifJnktalgWVxCFWO0TSbsQLZfA9Ps7eMMoWd43J0UXBvDAOM5y?=
- =?iso-8859-2?Q?sedXwRE9YOtcAm85zytJ7N9h5q+xTuX373rN66bJ7XyhDrxcgxcGDpxaHZ?=
- =?iso-8859-2?Q?Gteg0GEX5phVky8Q4UjXgfbz9NOP6OySFhtRY4ThETnf+zyyjpYX3w4X+L?=
- =?iso-8859-2?Q?qqSAAjZPpuCBsu7xRpYnaSIi3Tlb4p0PkbgJ4b0ZctSZklTnFlj5bd/k8y?=
- =?iso-8859-2?Q?NQ94X5iAZm7LruQMxYgkHV/ZoK3exTK8DEM1K/HqQ/hya+wiiw0PgRliXt?=
- =?iso-8859-2?Q?76hcy1Id0V9WAHwVAtLMctPbnXeDIchkdHiEoxPscZUc+FT7DQWmREkHHA?=
- =?iso-8859-2?Q?D6PjJhzfMJl5eL6bCJlAVE08sOSWak2UlKaL6uIOjAd/KHPjGraeYk5BVG?=
- =?iso-8859-2?Q?/sZJZrl6bsi8R2RaoKN0i4golU4+TvlnYs6q95Y2bQ/6SWNKFd8LRGyvVn?=
- =?iso-8859-2?Q?BBP2eMtoYGfPVBHw9Ig9Osy6VauJf7uNYcjCtmN6M=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587C31537C8;
+	Thu,  1 May 2025 05:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746078237; cv=none; b=R6e4FYUZwv6xMdbhSPFT9fxdXZvWqi6e+4EmCSmj2GhJ0dfo/XY2UTTeijfPjEpNRlIQ5EBXO59jmkNnN9mCidzTy8xwphDMin3dosSow+bAmK2vkTF4fRgTOzbRN4t1ptJ6vkO3MiPt2ifvtZNnxRqztWF/lXLFhDI8MDrfm3Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746078237; c=relaxed/simple;
+	bh=/JLhChbia0o2/r4lWhmDLY0qvyv1bWUrWd+adXfS/SY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EjUnUIXhCo2fbuVNKUneBNl7OkBjumsmp+mMmwRIV9FbTTZ5IxqydYMigWOF51T0byiD/D7HvFYW9uMG935vwRLs1ZqRRIZho78ec4378nQiYKs/5CMvk4Z1O0Bt4Kj4ydl0vUgIE8/ibqgM7eWW7b8YWlfozl7mq4lQPA0r160=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=IUJUV+Md; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5415gf9Y1245658
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 30 Apr 2025 22:42:45 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5415gf9Y1245658
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746078168;
+	bh=ID53P6glTV3Qvu7uT3RgHnhRE2lpb6o+W8jMZwlWtkw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IUJUV+MdHEwURcEnpH/eI0iuI0Lc+eYenYN6HTufTcOgmCYV40c0bS/BaQfmv8I3Z
+	 cnCCZbRUMK1HMYPuzJ8QBZxInRpB+LASWB0yIGR3JgoEJgKY2s1Oq/oSpEI2pUutJY
+	 /RYrJiNUuYYzcyFiOyu9aNm+elgZjSqK6GYBgrpK5IDUh/2dS0IbKw+Hr//qegqnbw
+	 kN2mi/oUibngc99YJMU7zb8jwDTBAdzIrnZap3kzvAyK9+vBW5OuweoUHA0Q3dJvdF
+	 HifkwUpM4AHO8Z8u3cprxY4hRBEfs+1jps12fYrNFjJ79yngYTDJxOOUyUSTxvEAGE
+	 QdXOqpu1JUFvw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v4A 01/15] x86/msr: Add missing includes of <asm/msr.h>
+Date: Wed, 30 Apr 2025 22:42:41 -0700
+Message-ID: <20250501054241.1245648-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
+References: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c26a5839-d9bc-4c29-fe9c-08dd8870e9ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2025 05:27:49.8700
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB8978
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, April =
-25, 2025 3:55 AM
->=20
-> Currently, the MANA driver allocates MSI-X vectors statically based on
-> MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> up allocating more vectors than it needs. This is because, by this time
-> we do not have a HW channel and do not know how many IRQs should be
-> allocated.
->=20
-> To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-> after getting the value supported by hardware, dynamically add the
-> remaining MSI-X vectors.
+For some reason, there are some TSC-related functions in the MSR
+header even though there is a tsc.h header.
 
-I have a top-level thought about the data structures used to manage a
-dynamic number of MSI-X vectors. The current code allocates a fixed size
-array of struct gdma_irq_context, with one entry in the array for each
-MSI-X vector. To find the entry for a particular msi_index, the code can
-just index into the array, which is nice and simple.
+To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
+to <asm/tsc.h> and to eventually eliminate the inclusion of
+<asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
+reference definitions from <asm/msr.h>.
 
-The new code uses a linked list of struct gdma_irq_context entries, with
-one entry in the list for each MSI-X vector.  In the dynamic case, you can
-start with one entry in the list, and then add to the list however many
-additional entries the hardware will support.
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-But this additional linked list adds significant complexity to the code
-because it must be linearly searched to find the entry for a particular
-msi_index, and there's the messiness of putting entries onto the list
-and taking them off.  A spin lock is required.  Etc., etc.
+Change in v4A:
+*) Use "git grep -l -e $PATTERN | grep -v -f <(git grep -l -e 'asm/msr\.h')"
+   to ensure ALL required *direct* inclusion of <asm/msr.h> (Ilpo Järvinen).
 
-Here's an intermediate approach that would be simpler. Allocate a fixed
-size array of pointers to struct gdma_irq_context. The fixed size is the
-maximum number of possible MSI-X vectors for the device, which I
-think is MANA_MAX_NUM_QUEUES, or 64 (correct me if I'm wrong
-about that). Allocate a new struct gdma_irq_context when needed,
-but store the address in the array rather than adding it onto a list.
-Code can then directly index into the array to access the entry.
+Change in v4:
+*) Add missing includes in a different patch (Ilpo Järvinen).
+*) Add all necessary direct inclusions for msr.h (Ilpo Järvinen).
 
-Some entries in the array will be unused (and "wasted") if the device
-uses fewer MSI-X vector, but each unused entry is only 8 bytes. The
-max space unused is fewer than 512 bytes (assuming 64 entries in
-the array), which is neglible in the grand scheme of things. With the
-simpler code, and not having the additional list entry embedded in
-each struct gmda_irq_context, you'll get some of that space back
-anyway.
+Change in v3:
+* Add a problem statement to the changelog (Dave Hansen).
+---
+ arch/x86/coco/sev/core.c                                    | 1 +
+ arch/x86/events/amd/core.c                                  | 1 +
+ arch/x86/events/amd/ibs.c                                   | 1 +
+ arch/x86/events/amd/iommu.c                                 | 2 ++
+ arch/x86/events/amd/lbr.c                                   | 1 +
+ arch/x86/events/amd/power.c                                 | 1 +
+ arch/x86/events/core.c                                      | 1 +
+ arch/x86/events/intel/bts.c                                 | 1 +
+ arch/x86/events/intel/core.c                                | 1 +
+ arch/x86/events/intel/cstate.c                              | 1 +
+ arch/x86/events/intel/ds.c                                  | 1 +
+ arch/x86/events/intel/knc.c                                 | 1 +
+ arch/x86/events/intel/p4.c                                  | 1 +
+ arch/x86/events/intel/p6.c                                  | 1 +
+ arch/x86/events/intel/pt.c                                  | 1 +
+ arch/x86/events/intel/uncore.c                              | 1 +
+ arch/x86/events/intel/uncore_discovery.c                    | 1 +
+ arch/x86/events/intel/uncore_nhmex.c                        | 1 +
+ arch/x86/events/intel/uncore_snb.c                          | 1 +
+ arch/x86/events/intel/uncore_snbep.c                        | 1 +
+ arch/x86/events/msr.c                                       | 2 ++
+ arch/x86/events/perf_event.h                                | 1 +
+ arch/x86/events/probe.c                                     | 2 ++
+ arch/x86/events/rapl.c                                      | 1 +
+ arch/x86/events/utils.c                                     | 1 +
+ arch/x86/events/zhaoxin/core.c                              | 1 +
+ arch/x86/hyperv/hv_apic.c                                   | 1 +
+ arch/x86/hyperv/hv_init.c                                   | 1 +
+ arch/x86/hyperv/hv_spinlock.c                               | 1 +
+ arch/x86/hyperv/hv_vtl.c                                    | 1 +
+ arch/x86/hyperv/ivm.c                                       | 1 +
+ arch/x86/include/asm/fred.h                                 | 1 +
+ arch/x86/include/asm/kvm_host.h                             | 1 +
+ arch/x86/include/asm/microcode.h                            | 2 ++
+ arch/x86/include/asm/mshyperv.h                             | 1 +
+ arch/x86/include/asm/msr.h                                  | 1 +
+ arch/x86/include/asm/resctrl.h                              | 2 ++
+ arch/x86/include/asm/suspend_32.h                           | 1 +
+ arch/x86/include/asm/suspend_64.h                           | 1 +
+ arch/x86/include/asm/switch_to.h                            | 2 ++
+ arch/x86/kernel/acpi/sleep.c                                | 1 +
+ arch/x86/kernel/amd_nb.c                                    | 1 +
+ arch/x86/kernel/apic/apic.c                                 | 1 +
+ arch/x86/kernel/apic/apic_numachip.c                        | 1 +
+ arch/x86/kernel/cet.c                                       | 1 +
+ arch/x86/kernel/cpu/amd.c                                   | 1 +
+ arch/x86/kernel/cpu/aperfmperf.c                            | 1 +
+ arch/x86/kernel/cpu/bus_lock.c                              | 1 +
+ arch/x86/kernel/cpu/feat_ctl.c                              | 1 +
+ arch/x86/kernel/cpu/hygon.c                                 | 1 +
+ arch/x86/kernel/cpu/mce/inject.c                            | 1 +
+ arch/x86/kernel/cpu/microcode/core.c                        | 1 +
+ arch/x86/kernel/cpu/mshyperv.c                              | 1 +
+ arch/x86/kernel/cpu/resctrl/core.c                          | 1 +
+ arch/x86/kernel/cpu/resctrl/monitor.c                       | 1 +
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c                   | 1 +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c                      | 1 +
+ arch/x86/kernel/cpu/sgx/main.c                              | 1 +
+ arch/x86/kernel/cpu/topology.c                              | 1 +
+ arch/x86/kernel/cpu/topology_amd.c                          | 1 +
+ arch/x86/kernel/cpu/tsx.c                                   | 1 +
+ arch/x86/kernel/cpu/zhaoxin.c                               | 1 +
+ arch/x86/kernel/fpu/core.c                                  | 1 +
+ arch/x86/kernel/fpu/xstate.c                                | 1 +
+ arch/x86/kernel/fpu/xstate.h                                | 1 +
+ arch/x86/kernel/fred.c                                      | 1 +
+ arch/x86/kernel/hpet.c                                      | 1 +
+ arch/x86/kernel/kvm.c                                       | 1 +
+ arch/x86/kernel/paravirt.c                                  | 1 +
+ arch/x86/kernel/process.c                                   | 1 +
+ arch/x86/kernel/process_64.c                                | 1 +
+ arch/x86/kernel/trace_clock.c                               | 2 +-
+ arch/x86/kernel/traps.c                                     | 1 +
+ arch/x86/kernel/tsc.c                                       | 1 +
+ arch/x86/kernel/tsc_sync.c                                  | 1 +
+ arch/x86/kvm/svm/avic.c                                     | 1 +
+ arch/x86/kvm/svm/sev.c                                      | 1 +
+ arch/x86/kvm/svm/svm.c                                      | 1 +
+ arch/x86/kvm/vmx/nested.c                                   | 1 +
+ arch/x86/kvm/vmx/pmu_intel.c                                | 1 +
+ arch/x86/kvm/vmx/sgx.c                                      | 1 +
+ arch/x86/kvm/vmx/vmx.c                                      | 1 +
+ arch/x86/lib/insn-eval.c                                    | 1 +
+ arch/x86/lib/kaslr.c                                        | 2 +-
+ arch/x86/mm/mem_encrypt_identity.c                          | 1 +
+ arch/x86/mm/tlb.c                                           | 1 +
+ arch/x86/pci/amd_bus.c                                      | 1 +
+ arch/x86/pci/mmconfig-shared.c                              | 3 ++-
+ arch/x86/power/cpu.c                                        | 1 +
+ arch/x86/realmode/init.c                                    | 1 +
+ arch/x86/virt/svm/sev.c                                     | 1 +
+ arch/x86/xen/enlighten_pv.c                                 | 1 +
+ arch/x86/xen/pmu.c                                          | 1 +
+ arch/x86/xen/suspend.c                                      | 1 +
+ drivers/accel/habanalabs/common/habanalabs_ioctl.c          | 2 --
+ drivers/acpi/acpi_extlog.c                                  | 1 +
+ drivers/acpi/processor_perflib.c                            | 1 +
+ drivers/acpi/processor_throttling.c                         | 6 +++++-
+ drivers/char/agp/nvidia-agp.c                               | 1 +
+ drivers/cpufreq/amd-pstate-ut.c                             | 2 ++
+ drivers/cpufreq/elanfreq.c                                  | 1 -
+ drivers/cpufreq/sc520_freq.c                                | 1 -
+ drivers/crypto/ccp/sev-dev.c                                | 1 +
+ drivers/edac/amd64_edac.c                                   | 1 +
+ drivers/edac/ie31200_edac.c                                 | 1 +
+ drivers/edac/mce_amd.c                                      | 1 +
+ drivers/hwmon/hwmon-vid.c                                   | 4 ++++
+ drivers/idle/intel_idle.c                                   | 1 +
+ drivers/misc/cs5535-mfgpt.c                                 | 1 +
+ drivers/net/vmxnet3/vmxnet3_drv.c                           | 4 ++++
+ drivers/platform/x86/intel/ifs/core.c                       | 1 +
+ drivers/platform/x86/intel/ifs/load.c                       | 1 +
+ drivers/platform/x86/intel/ifs/runtest.c                    | 1 +
+ drivers/platform/x86/intel/pmc/cnp.c                        | 1 +
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
+ .../platform/x86/intel/speed_select_if/isst_if_mbox_msr.c   | 1 +
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 1 +
+ drivers/platform/x86/intel/turbo_max_3.c                    | 1 +
+ .../platform/x86/intel/uncore-frequency/uncore-frequency.c  | 1 +
+ drivers/powercap/intel_rapl_common.c                        | 1 +
+ drivers/powercap/intel_rapl_msr.c                           | 1 +
+ .../intel/int340x_thermal/processor_thermal_device.c        | 1 +
+ drivers/thermal/intel/intel_tcc_cooling.c                   | 1 +
+ drivers/thermal/intel/x86_pkg_temp_thermal.c                | 1 +
+ drivers/video/fbdev/geode/display_gx.c                      | 1 +
+ drivers/video/fbdev/geode/gxfb_core.c                       | 1 +
+ drivers/video/fbdev/geode/lxfb_ops.c                        | 1 +
+ 127 files changed, 142 insertions(+), 8 deletions(-)
 
-Maybe there's a reason for the list that I missed in my initial
-review of the code. But if not, it sure seems like the code could
-be simpler, and having some unused 8 bytes entries in the array
-is worth the tradeoff for the simplicity.
-
-Michael
-
->=20
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  Changes in v2:
->  * Use string 'MSI-X vectors' instead of 'pci vectors'
->  * make skip-cpu a bool instead of int
->  * rearrange the comment arout skip_cpu variable appropriately
->  * update the capability bit for driver indicating dynamic IRQ allocation
->  * enforced max line length to 80
->  * enforced RCT convention
->  * initialized gic to NULL, for when there is a possibility of gic
->    not being populated correctly
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 323 ++++++++++++++----
->  include/net/mana/gdma.h                       |  11 +-
->  2 files changed, 269 insertions(+), 65 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 4ffaf7588885..753b0208e574 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -6,6 +6,9 @@
->  #include <linux/pci.h>
->  #include <linux/utsname.h>
->  #include <linux/version.h>
-> +#include <linux/msi.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/list.h>
->=20
->  #include <net/mana/mana.h>
->=20
-> @@ -80,8 +83,15 @@ static int mana_gd_query_max_resources(struct pci_dev =
-*pdev)
->  		return err ? err : -EPROTO;
->  	}
->=20
-> -	if (gc->num_msix_usable > resp.max_msix)
-> -		gc->num_msix_usable =3D resp.max_msix;
-> +	if (!pci_msix_can_alloc_dyn(pdev)) {
-> +		if (gc->num_msix_usable > resp.max_msix)
-> +			gc->num_msix_usable =3D resp.max_msix;
-> +	} else {
-> +		/* If dynamic allocation is enabled we have already allocated
-> +		 * hwc msi
-> +		 */
-> +		gc->num_msix_usable =3D min(resp.max_msix, num_online_cpus() + 1);
-> +	}
->=20
->  	if (gc->num_msix_usable <=3D 1)
->  		return -ENOSPC;
-> @@ -462,12 +472,13 @@ static int mana_gd_register_irq(struct gdma_queue *=
-queue,
->  				const struct gdma_queue_spec *spec)
->  {
->  	struct gdma_dev *gd =3D queue->gdma_dev;
-> -	struct gdma_irq_context *gic;
-> +	struct gdma_irq_context *gic =3D NULL;
-> +	unsigned long flags, flag_irq;
->  	struct gdma_context *gc;
->  	unsigned int msi_index;
-> -	unsigned long flags;
-> +	struct list_head *pos;
->  	struct device *dev;
-> -	int err =3D 0;
-> +	int err =3D 0, count;
->=20
->  	gc =3D gd->gdma_context;
->  	dev =3D gc->dev;
-> @@ -482,7 +493,23 @@ static int mana_gd_register_irq(struct gdma_queue *q=
-ueue,
->  	}
->=20
->  	queue->eq.msix_index =3D msi_index;
-> -	gic =3D &gc->irq_contexts[msi_index];
-> +
-> +	/* get the msi_index value from the list*/
-> +	count =3D 0;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> +	list_for_each(pos, &gc->irq_contexts) {
-> +		if (count =3D=3D msi_index) {
-> +			gic =3D list_entry(pos, struct gdma_irq_context,
-> +					 gic_list);
-> +			break;
-> +		}
-> +
-> +		count++;
-> +	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> +
-> +	if (!gic)
-> +		return -1;
->=20
->  	spin_lock_irqsave(&gic->lock, flags);
->  	list_add_rcu(&queue->entry, &gic->eq_list);
-> @@ -494,11 +521,13 @@ static int mana_gd_register_irq(struct gdma_queue *=
-queue,
->  static void mana_gd_deregiser_irq(struct gdma_queue *queue)
->  {
->  	struct gdma_dev *gd =3D queue->gdma_dev;
-> -	struct gdma_irq_context *gic;
-> +	struct gdma_irq_context *gic =3D NULL;
-> +	unsigned long flags, flag_irq;
->  	struct gdma_context *gc;
->  	unsigned int msix_index;
-> -	unsigned long flags;
-> +	struct list_head *pos;
->  	struct gdma_queue *eq;
-> +	int count;
->=20
->  	gc =3D gd->gdma_context;
->=20
-> @@ -507,7 +536,23 @@ static void mana_gd_deregiser_irq(struct gdma_queue
-> *queue)
->  	if (WARN_ON(msix_index >=3D gc->num_msix_usable))
->  		return;
->=20
-> -	gic =3D &gc->irq_contexts[msix_index];
-> +	/* get the msi_index value from the list*/
-> +	count =3D 0;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
-> +	list_for_each(pos, &gc->irq_contexts) {
-> +		if (count =3D=3D msix_index) {
-> +			gic =3D list_entry(pos, struct gdma_irq_context,
-> +					 gic_list);
-> +			break;
-> +		}
-> +
-> +		count++;
-> +	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-> +
-> +	if (!gic)
-> +		return;
-> +
->  	spin_lock_irqsave(&gic->lock, flags);
->  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
->  		if (queue =3D=3D eq) {
-> @@ -1288,7 +1333,8 @@ void mana_gd_free_res_map(struct gdma_resource *r)
->  	r->size =3D 0;
->  }
->=20
-> -static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-> +static int irq_setup(unsigned int *irqs, unsigned int len, int node,
-> +		     bool skip_first_cpu)
->  {
->  	const struct cpumask *next, *prev =3D cpu_none_mask;
->  	cpumask_var_t cpus __free(free_cpumask_var);
-> @@ -1303,9 +1349,20 @@ static int irq_setup(unsigned int *irqs, unsigned =
-int len, int
-> node)
->  		while (weight > 0) {
->  			cpumask_andnot(cpus, next, prev);
->  			for_each_cpu(cpu, cpus) {
-> +				/*
-> +				 * if the CPU sibling set is to be skipped we
-> +				 * just move on to the next CPUs without len--
-> +				 */
-> +				if (unlikely(skip_first_cpu)) {
-> +					skip_first_cpu =3D false;
-> +					goto next_cpumask;
-> +				}
-> +
->  				if (len-- =3D=3D 0)
->  					goto done;
-> +
->  				irq_set_affinity_and_hint(*irqs++,
-> topology_sibling_cpumask(cpu));
-> +next_cpumask:
->  				cpumask_andnot(cpus, cpus,
-> topology_sibling_cpumask(cpu));
->  				--weight;
->  			}
-> @@ -1317,29 +1374,99 @@ static int irq_setup(unsigned int *irqs, unsigned=
- int len, int
-> node)
->  	return 0;
->  }
->=20
-> -static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
->  {
->  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> -	unsigned int max_queues_per_port;
->  	struct gdma_irq_context *gic;
-> -	unsigned int max_irqs, cpu;
-> -	int start_irq_index =3D 1;
-> -	int nvec, *irqs, irq;
-> +	bool skip_first_cpu =3D false;
-> +	unsigned long flags;
->  	int err, i =3D 0, j;
-> +	int *irqs, irq;
->=20
->  	cpus_read_lock();
-> -	max_queues_per_port =3D num_online_cpus();
-> -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> -		max_queues_per_port =3D MANA_MAX_NUM_QUEUES;
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> +	irqs =3D kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> +	if (!irqs) {
-> +		err =3D -ENOMEM;
-> +		goto free_irq_vector;
-> +	}
->=20
-> -	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
-> -	max_irqs =3D max_queues_per_port + 1;
-> +	for (i =3D 0; i < nvec; i++) {
-> +		gic =3D kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
-> +		if (!gic) {
-> +			err =3D -ENOMEM;
-> +			goto free_irq;
-> +		}
-> +		gic->handler =3D mana_gd_process_eq_events;
-> +		INIT_LIST_HEAD(&gic->eq_list);
-> +		spin_lock_init(&gic->lock);
->=20
-> -	nvec =3D pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
-> -	if (nvec < 0) {
-> -		cpus_read_unlock();
-> -		return nvec;
-> +		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
-> +			 i, pci_name(pdev));
-> +
-> +		/* one pci vector is already allocated for HWC */
-> +		irqs[i] =3D pci_irq_vector(pdev, i + 1);
-> +		if (irqs[i] < 0) {
-> +			err =3D irqs[i];
-> +			goto free_current_gic;
-> +		}
-> +
-> +		err =3D request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
-> +		if (err)
-> +			goto free_current_gic;
-> +
-> +		list_add_tail(&gic->gic_list, &gc->irq_contexts);
->  	}
-> +
-> +	/*
-> +	 * When calling irq_setup() for dynamically added IRQs, if number of
-> +	 * IRQs is more than or equal to allocated MSI-X, we need to skip the
-> +	 * first CPU sibling group since they are already affinitized to HWC IR=
-Q
-> +	 */
-> +	if (gc->num_msix_usable <=3D num_online_cpus())
-> +		skip_first_cpu =3D true;
-> +
-> +	err =3D irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-> +	if (err)
-> +		goto free_irq;
-> +
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> +	cpus_read_unlock();
-> +	kfree(irqs);
-> +	return 0;
-> +
-> +free_current_gic:
-> +	kfree(gic);
-> +free_irq:
-> +	for (j =3D i - 1; j >=3D 0; j--) {
-> +		irq =3D pci_irq_vector(pdev, j + 1);
-> +		gic =3D list_last_entry(&gc->irq_contexts,
-> +				      struct gdma_irq_context, gic_list);
-> +		irq_update_affinity_hint(irq, NULL);
-> +		free_irq(irq, gic);
-> +		list_del(&gic->gic_list);
-> +		kfree(gic);
-> +	}
-> +	kfree(irqs);
-> +free_irq_vector:
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
-> +	cpus_read_unlock();
-> +	return err;
-> +}
-> +
-> +static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
-> +{
-> +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> +	struct gdma_irq_context *gic;
-> +	int start_irq_index =3D 1;
-> +	unsigned long flags;
-> +	unsigned int cpu;
-> +	int *irqs, irq;
-> +	int err, i =3D 0, j;
-> +
-> +	cpus_read_lock();
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> +
->  	if (nvec <=3D num_online_cpus())
->  		start_irq_index =3D 0;
->=20
-> @@ -1349,15 +1476,12 @@ static int mana_gd_setup_irqs(struct pci_dev *pde=
-v)
->  		goto free_irq_vector;
->  	}
->=20
-> -	gc->irq_contexts =3D kcalloc(nvec, sizeof(struct gdma_irq_context),
-> -				   GFP_KERNEL);
-> -	if (!gc->irq_contexts) {
-> -		err =3D -ENOMEM;
-> -		goto free_irq_array;
-> -	}
-> -
->  	for (i =3D 0; i < nvec; i++) {
-> -		gic =3D &gc->irq_contexts[i];
-> +		gic =3D kcalloc(1, sizeof(struct gdma_irq_context), GFP_KERNEL);
-> +		if (!gic) {
-> +			err =3D -ENOMEM;
-> +			goto free_irq;
-> +		}
->  		gic->handler =3D mana_gd_process_eq_events;
->  		INIT_LIST_HEAD(&gic->eq_list);
->  		spin_lock_init(&gic->lock);
-> @@ -1372,22 +1496,14 @@ static int mana_gd_setup_irqs(struct pci_dev *pde=
-v)
->  		irq =3D pci_irq_vector(pdev, i);
->  		if (irq < 0) {
->  			err =3D irq;
-> -			goto free_irq;
-> +			goto free_current_gic;
->  		}
->=20
->  		if (!i) {
->  			err =3D request_irq(irq, mana_gd_intr, 0, gic->name, gic);
->  			if (err)
-> -				goto free_irq;
-> -
-> -			/* If number of IRQ is one extra than number of online CPUs,
-> -			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-> -			 * same CPU.
-> -			 * Else we will use different CPUs for IRQ0 and IRQ1.
-> -			 * Also we are using cpumask_local_spread instead of
-> -			 * cpumask_first for the node, because the node can be
-> -			 * mem only.
-> -			 */
-> +				goto free_current_gic;
-> +
->  			if (start_irq_index) {
->  				cpu =3D cpumask_local_spread(i, gc->numa_node);
->  				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
-> @@ -1396,39 +1512,108 @@ static int mana_gd_setup_irqs(struct pci_dev *pd=
-ev)
->  			}
->  		} else {
->  			irqs[i - start_irq_index] =3D irq;
-> -			err =3D request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
-> -					  gic->name, gic);
-> +			err =3D request_irq(irqs[i - start_irq_index],
-> +					  mana_gd_intr, 0, gic->name, gic);
->  			if (err)
-> -				goto free_irq;
-> +				goto free_current_gic;
->  		}
-> +
-> +		list_add_tail(&gic->gic_list, &gc->irq_contexts);
->  	}
->=20
-> -	err =3D irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
-> +	err =3D irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
->  	if (err)
->  		goto free_irq;
->=20
-> -	gc->max_num_msix =3D nvec;
-> -	gc->num_msix_usable =3D nvec;
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
->  	cpus_read_unlock();
->  	kfree(irqs);
->  	return 0;
->=20
-> +free_current_gic:
-> +	kfree(gic);
->  free_irq:
->  	for (j =3D i - 1; j >=3D 0; j--) {
->  		irq =3D pci_irq_vector(pdev, j);
-> -		gic =3D &gc->irq_contexts[j];
-> -
-> +		gic =3D list_last_entry(&gc->irq_contexts,
-> +				      struct gdma_irq_context, gic_list);
->  		irq_update_affinity_hint(irq, NULL);
->  		free_irq(irq, gic);
-> +		list_del(&gic->gic_list);
-> +		kfree(gic);
->  	}
-> -
-> -	kfree(gc->irq_contexts);
-> -	gc->irq_contexts =3D NULL;
-> -free_irq_array:
->  	kfree(irqs);
->  free_irq_vector:
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
->  	cpus_read_unlock();
-> -	pci_free_irq_vectors(pdev);
-> +	return err;
-> +}
-> +
-> +static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
-> +{
-> +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> +	unsigned int max_irqs, min_irqs;
-> +	int max_queues_per_port;
-> +	int nvec, err;
-> +
-> +	if (pci_msix_can_alloc_dyn(pdev)) {
-> +		max_irqs =3D 1;
-> +		min_irqs =3D 1;
-> +	} else {
-> +		max_queues_per_port =3D num_online_cpus();
-> +		if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> +			max_queues_per_port =3D MANA_MAX_NUM_QUEUES;
-> +		/* Need 1 interrupt for HWC */
-> +		max_irqs =3D max_queues_per_port + 1;
-> +		min_irqs =3D 2;
-> +	}
-> +
-> +	nvec =3D pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
-> +	if (nvec < 0)
-> +		return nvec;
-> +
-> +	err =3D mana_gd_setup_irqs(pdev, nvec);
-> +	if (err) {
-> +		pci_free_irq_vectors(pdev);
-> +		return err;
-> +	}
-> +
-> +	gc->num_msix_usable =3D nvec;
-> +	gc->max_num_msix =3D nvec;
-> +
-> +	return err;
-> +}
-> +
-> +static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
-> +{
-> +	struct gdma_context *gc =3D pci_get_drvdata(pdev);
-> +	int max_irqs, i, err =3D 0;
-> +	struct msi_map irq_map;
-> +
-> +	if (!pci_msix_can_alloc_dyn(pdev))
-> +		/* remain irqs are already allocated with HWC IRQ */
-> +		return 0;
-> +
-> +	/* allocate only remaining IRQs*/
-> +	max_irqs =3D gc->num_msix_usable - 1;
-> +
-> +	for (i =3D 1; i <=3D max_irqs; i++) {
-> +		irq_map =3D pci_msix_alloc_irq_at(pdev, i, NULL);
-> +		if (!irq_map.virq) {
-> +			err =3D irq_map.index;
-> +			/* caller will handle cleaning up all allocated
-> +			 * irqs, after HWC is destroyed
-> +			 */
-> +			return err;
-> +		}
-> +	}
-> +
-> +	err =3D mana_gd_setup_dyn_irqs(pdev, max_irqs);
-> +	if (err)
-> +		return err;
-> +
-> +	gc->max_num_msix =3D gc->max_num_msix + max_irqs;
-> +
->  	return err;
->  }
->=20
-> @@ -1436,29 +1621,34 @@ static void mana_gd_remove_irqs(struct pci_dev *p=
-dev)
->  {
->  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
->  	struct gdma_irq_context *gic;
-> -	int irq, i;
-> +	struct list_head *pos, *n;
-> +	unsigned long flags;
-> +	int irq, i =3D 0;
->=20
->  	if (gc->max_num_msix < 1)
->  		return;
->=20
-> -	for (i =3D 0; i < gc->max_num_msix; i++) {
-> +	spin_lock_irqsave(&gc->irq_ctxs_lock, flags);
-> +	list_for_each_safe(pos, n, &gc->irq_contexts) {
->  		irq =3D pci_irq_vector(pdev, i);
->  		if (irq < 0)
->  			continue;
->=20
-> -		gic =3D &gc->irq_contexts[i];
-> +		gic =3D list_entry(pos, struct gdma_irq_context, gic_list);
->=20
->  		/* Need to clear the hint before free_irq */
->  		irq_update_affinity_hint(irq, NULL);
->  		free_irq(irq, gic);
-> +		list_del(pos);
-> +		kfree(gic);
-> +		i++;
->  	}
-> +	spin_unlock_irqrestore(&gc->irq_ctxs_lock, flags);
->=20
->  	pci_free_irq_vectors(pdev);
->=20
->  	gc->max_num_msix =3D 0;
->  	gc->num_msix_usable =3D 0;
-> -	kfree(gc->irq_contexts);
-> -	gc->irq_contexts =3D NULL;
->  }
->=20
->  static int mana_gd_setup(struct pci_dev *pdev)
-> @@ -1469,9 +1659,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
->  	mana_gd_init_registers(pdev);
->  	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
->=20
-> -	err =3D mana_gd_setup_irqs(pdev);
-> +	err =3D mana_gd_setup_hwc_irqs(pdev);
->  	if (err) {
-> -		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
-> +		dev_err(gc->dev, "Failed to setup IRQs for HWC creation: %d\n",
-> +			err);
->  		return err;
->  	}
->=20
-> @@ -1487,6 +1678,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
->  	if (err)
->  		goto destroy_hwc;
->=20
-> +	err =3D mana_gd_setup_remaining_irqs(pdev);
-> +	if (err)
-> +		goto destroy_hwc;
-> +
->  	err =3D mana_gd_detect_devices(pdev);
->  	if (err)
->  		goto destroy_hwc;
-> @@ -1563,6 +1758,8 @@ static int mana_gd_probe(struct pci_dev *pdev, cons=
-t struct
-> pci_device_id *ent)
->  	gc->is_pf =3D mana_is_pf(pdev->device);
->  	gc->bar0_va =3D bar0_va;
->  	gc->dev =3D &pdev->dev;
-> +	INIT_LIST_HEAD(&gc->irq_contexts);
-> +	spin_lock_init(&gc->irq_ctxs_lock);
->=20
->  	if (gc->is_pf)
->  		gc->mana_pci_debugfs =3D debugfs_create_dir("0", mana_debugfs_root);
-> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-> index 228603bf03f2..6ef4785c63b4 100644
-> --- a/include/net/mana/gdma.h
-> +++ b/include/net/mana/gdma.h
-> @@ -363,6 +363,7 @@ struct gdma_irq_context {
->  	spinlock_t lock;
->  	struct list_head eq_list;
->  	char name[MANA_IRQ_NAME_SZ];
-> +	struct list_head gic_list;
->  };
->=20
->  struct gdma_context {
-> @@ -373,7 +374,9 @@ struct gdma_context {
->  	unsigned int		max_num_queues;
->  	unsigned int		max_num_msix;
->  	unsigned int		num_msix_usable;
-> -	struct gdma_irq_context	*irq_contexts;
-> +	struct list_head	irq_contexts;
-> +	/* Protect the irq_contexts list */
-> +	spinlock_t		irq_ctxs_lock;
->=20
->  	/* L2 MTU */
->  	u16 adapter_mtu;
-> @@ -558,12 +561,16 @@ enum {
->  /* Driver can handle holes (zeros) in the device list */
->  #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
->=20
-> +/* Driver supports dynamic MSI-X vector allocation */
-> +#define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
-> +
->  #define GDMA_DRV_CAP_FLAGS1 \
->  	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
->  	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
->  	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
->  	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
-> -	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-> +	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-> +	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT)
->=20
->  #define GDMA_DRV_CAP_FLAGS2 0
->=20
-> --
-> 2.34.1
->=20
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index b18a33fe8dd3..85b16a0ee417 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -43,6 +43,7 @@
+ #include <asm/apic.h>
+ #include <asm/cpuid.h>
+ #include <asm/cmdline.h>
++#include <asm/msr.h>
+ 
+ #define DR7_RESET_VALUE        0x400
+ 
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index cb62b6d12691..79e8453dd051 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -9,6 +9,7 @@
+ #include <linux/jiffies.h>
+ #include <asm/apicdef.h>
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ #include <asm/nmi.h>
+ 
+ #include "../perf_event.h"
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 82fa755d1b12..20877927b021 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -15,6 +15,7 @@
+ #include <linux/sched/clock.h>
+ 
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
+index f8228d8243f7..a721da9987dd 100644
+--- a/arch/x86/events/amd/iommu.c
++++ b/arch/x86/events/amd/iommu.c
+@@ -16,6 +16,8 @@
+ #include <linux/slab.h>
+ #include <linux/amd-iommu.h>
+ 
++#include <asm/msr.h>
++
+ #include "../perf_event.h"
+ #include "iommu.h"
+ 
+diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+index 198851985bb7..d24da377df77 100644
+--- a/arch/x86/events/amd/lbr.c
++++ b/arch/x86/events/amd/lbr.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/perf_event.h>
++#include <asm/msr.h>
+ #include <asm/perf_event.h>
+ 
+ #include "../perf_event.h"
+diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
+index 598a727d823a..dad42790cf7d 100644
+--- a/arch/x86/events/amd/power.c
++++ b/arch/x86/events/amd/power.c
+@@ -11,6 +11,7 @@
+ #include <linux/slab.h>
+ #include <linux/perf_event.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ #include "../perf_event.h"
+ 
+ /* Event code: LSB 8 bits, passed in attr->config any other bit is reserved. */
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 85b55c1dc162..32ff97a6a4ac 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -32,6 +32,7 @@
+ 
+ #include <asm/apic.h>
+ #include <asm/stacktrace.h>
++#include <asm/msr.h>
+ #include <asm/nmi.h>
+ #include <asm/smp.h>
+ #include <asm/alternative.h>
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index a95e6c91c4d7..ca9f57437d8b 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/sizes.h>
+ #include <asm/perf_event.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 394fa83b537b..52d7fb5b0329 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -23,6 +23,7 @@
+ #include <asm/intel_pt.h>
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 56b1c391ccc7..ec753e39b007 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -111,6 +111,7 @@
+ #include <linux/nospec.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ #include "../perf_event.h"
+ #include "../probe.h"
+ 
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 410a8975d1b9..7ba945d3eacc 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -10,6 +10,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/insn.h>
+ #include <asm/io.h>
++#include <asm/msr.h>
+ #include <asm/timer.h>
+ 
+ #include "../perf_event.h"
+diff --git a/arch/x86/events/intel/knc.c b/arch/x86/events/intel/knc.c
+index 425f6e6eed89..38904a558128 100644
+--- a/arch/x86/events/intel/knc.c
++++ b/arch/x86/events/intel/knc.c
+@@ -5,6 +5,7 @@
+ #include <linux/types.h>
+ 
+ #include <asm/hardirq.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
+index 24d811a9608a..aa5202126752 100644
+--- a/arch/x86/events/intel/p4.c
++++ b/arch/x86/events/intel/p4.c
+@@ -13,6 +13,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/hardirq.h>
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
+index 35917a776bec..6e41de355bd8 100644
+--- a/arch/x86/events/intel/p6.c
++++ b/arch/x86/events/intel/p6.c
+@@ -3,6 +3,7 @@
+ #include <linux/types.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index d579f1092357..f37cce231266 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -24,6 +24,7 @@
+ #include <asm/io.h>
+ #include <asm/intel_pt.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ #include "pt.h"
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index d6070529c58e..c24d21932c91 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -3,6 +3,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ #include "uncore.h"
+ #include "uncore_discovery.h"
+ 
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index 4fc3eec325f6..18a3022f26a0 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -5,6 +5,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <asm/msr.h>
+ #include "uncore.h"
+ #include "uncore_discovery.h"
+ 
+diff --git a/arch/x86/events/intel/uncore_nhmex.c b/arch/x86/events/intel/uncore_nhmex.c
+index bef9c782c781..8962e7cb21e3 100644
+--- a/arch/x86/events/intel/uncore_nhmex.c
++++ b/arch/x86/events/intel/uncore_nhmex.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Nehalem-EX/Westmere-EX uncore support */
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ #include "uncore.h"
+ 
+ /* NHM-EX event control */
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index afc8ef02a7a9..a1a96833e30e 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Nehalem/SandBridge/Haswell/Broadwell/Skylake uncore support */
++#include <asm/msr.h>
+ #include "uncore.h"
+ #include "uncore_discovery.h"
+ 
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index dd53dd87cdec..500913ead670 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* SandyBridge-EP/IvyTown uncore support */
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ #include "uncore.h"
+ #include "uncore_discovery.h"
+ 
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 8970ecef87c5..7f5007a4752a 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -3,6 +3,8 @@
+ #include <linux/sysfs.h>
+ #include <linux/nospec.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
++
+ #include "probe.h"
+ 
+ enum perf_msr_id {
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index a5166fa9339b..a8d4e82e3589 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -17,6 +17,7 @@
+ #include <asm/fpu/xstate.h>
+ #include <asm/intel_ds.h>
+ #include <asm/cpu.h>
++#include <asm/msr.h>
+ 
+ /* To enable MSR tracing please use the generic trace points. */
+ 
+diff --git a/arch/x86/events/probe.c b/arch/x86/events/probe.c
+index fda35cf25528..bb719d0d3f0b 100644
+--- a/arch/x86/events/probe.c
++++ b/arch/x86/events/probe.c
+@@ -2,6 +2,8 @@
+ #include <linux/export.h>
+ #include <linux/types.h>
+ #include <linux/bits.h>
++
++#include <asm/msr.h>
+ #include "probe.h"
+ 
+ static umode_t
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 7ff52c23d7a1..defd86137f12 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -65,6 +65,7 @@
+ #include <linux/nospec.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ #include "perf_event.h"
+ #include "probe.h"
+ 
+diff --git a/arch/x86/events/utils.c b/arch/x86/events/utils.c
+index dab4ed199227..77fd00b3305e 100644
+--- a/arch/x86/events/utils.c
++++ b/arch/x86/events/utils.c
+@@ -2,6 +2,7 @@
+ #include <asm/insn.h>
+ #include <linux/mm.h>
+ 
++#include <asm/msr.h>
+ #include "perf_event.h"
+ 
+ static int decode_branch_type(struct insn *insn)
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index e299364eb889..91443aba4c7d 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -15,6 +15,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/hardirq.h>
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ 
+ #include "../perf_event.h"
+ 
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index c450e67cb0a4..a079a1427091 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -28,6 +28,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/mshyperv.h>
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ 
+ #include <asm/trace/hyperv.h>
+ 
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index ed89867b6fd0..5d27194a2efa 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -21,6 +21,7 @@
+ #include <asm/hypervisor.h>
+ #include <hyperv/hvhdk.h>
+ #include <asm/mshyperv.h>
++#include <asm/msr.h>
+ #include <asm/idtentry.h>
+ #include <asm/set_memory.h>
+ #include <linux/kexec.h>
+diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+index 626f6d4d6253..81b006601370 100644
+--- a/arch/x86/hyperv/hv_spinlock.c
++++ b/arch/x86/hyperv/hv_spinlock.c
+@@ -15,6 +15,7 @@
+ #include <asm/mshyperv.h>
+ #include <asm/paravirt.h>
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ 
+ static bool hv_pvspin __initdata = true;
+ 
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 13242ed8ff16..079b276e5f30 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -11,6 +11,7 @@
+ #include <asm/desc.h>
+ #include <asm/i8259.h>
+ #include <asm/mshyperv.h>
++#include <asm/msr.h>
+ #include <asm/realmode.h>
+ #include <asm/reboot.h>
+ #include <../kernel/smpboot.h>
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 1b8a2415183b..8209de792388 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -22,6 +22,7 @@
+ #include <asm/realmode.h>
+ #include <asm/e820/api.h>
+ #include <asm/desc.h>
++#include <asm/msr.h>
+ #include <uapi/asm/vmx.h>
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
+index 2a29e5216881..12b34d5b2953 100644
+--- a/arch/x86/include/asm/fred.h
++++ b/arch/x86/include/asm/fred.h
+@@ -9,6 +9,7 @@
+ #include <linux/const.h>
+ 
+ #include <asm/asm.h>
++#include <asm/msr.h>
+ #include <asm/trapnr.h>
+ 
+ /*
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9af20b3c0f1d..f1b5f7eceda0 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -34,6 +34,7 @@
+ #include <asm/desc.h>
+ #include <asm/mtrr.h>
+ #include <asm/msr-index.h>
++#include <asm/msr.h>
+ #include <asm/asm.h>
+ #include <asm/kvm_page_track.h>
+ #include <asm/kvm_vcpu_regs.h>
+diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
+index 263ea3dd0001..107a1aaa211b 100644
+--- a/arch/x86/include/asm/microcode.h
++++ b/arch/x86/include/asm/microcode.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_MICROCODE_H
+ #define _ASM_X86_MICROCODE_H
+ 
++#include <asm/msr.h>
++
+ struct cpu_signature {
+ 	unsigned int sig;
+ 	unsigned int pf;
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index bab5ccfc60a7..15d00dace70f 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -8,6 +8,7 @@
+ #include <linux/io.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/paravirt.h>
++#include <asm/msr.h>
+ #include <hyperv/hvhdk.h>
+ 
+ /*
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index 2ccc78ebc3d7..72a9ebc99078 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -12,6 +12,7 @@
+ #include <uapi/asm/msr.h>
+ #include <asm/shared/msr.h>
+ 
++#include <linux/types.h>
+ #include <linux/percpu.h>
+ 
+ struct msr_info {
+diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
+index 011bf67a1866..bd6afe805cf6 100644
+--- a/arch/x86/include/asm/resctrl.h
++++ b/arch/x86/include/asm/resctrl.h
+@@ -9,6 +9,8 @@
+ #include <linux/resctrl_types.h>
+ #include <linux/sched.h>
+ 
++#include <asm/msr.h>
++
+ /*
+  * This value can never be a valid CLOSID, and is used when mapping a
+  * (closid, rmid) pair to an index and back. On x86 only the RMID is
+diff --git a/arch/x86/include/asm/suspend_32.h b/arch/x86/include/asm/suspend_32.h
+index d8416b3bf832..e8e5aab06255 100644
+--- a/arch/x86/include/asm/suspend_32.h
++++ b/arch/x86/include/asm/suspend_32.h
+@@ -9,6 +9,7 @@
+ 
+ #include <asm/desc.h>
+ #include <asm/fpu/api.h>
++#include <asm/msr.h>
+ 
+ /* image of the saved processor state */
+ struct saved_context {
+diff --git a/arch/x86/include/asm/suspend_64.h b/arch/x86/include/asm/suspend_64.h
+index 54df06687d83..b512f9665f78 100644
+--- a/arch/x86/include/asm/suspend_64.h
++++ b/arch/x86/include/asm/suspend_64.h
+@@ -9,6 +9,7 @@
+ 
+ #include <asm/desc.h>
+ #include <asm/fpu/api.h>
++#include <asm/msr.h>
+ 
+ /*
+  * Image of the saved processor state, used by the low level ACPI suspend to
+diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
+index 75248546403d..4f21df7af715 100644
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -52,6 +52,8 @@ do {									\
+ } while (0)
+ 
+ #ifdef CONFIG_X86_32
++#include <asm/msr.h>
++
+ static inline void refresh_sysenter_cs(struct thread_struct *thread)
+ {
+ 	/* Only happens when SEP is enabled, no need to test "SEP"arately: */
+diff --git a/arch/x86/kernel/acpi/sleep.c b/arch/x86/kernel/acpi/sleep.c
+index 6dfecb27b846..91fa262f0e30 100644
+--- a/arch/x86/kernel/acpi/sleep.c
++++ b/arch/x86/kernel/acpi/sleep.c
+@@ -16,6 +16,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/realmode.h>
+ #include <asm/hypervisor.h>
++#include <asm/msr.h>
+ #include <asm/smp.h>
+ 
+ #include <linux/ftrace.h>
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index dc389ca052b7..4973a10d74f5 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -14,6 +14,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/pci_ids.h>
+ #include <asm/amd_nb.h>
++#include <asm/msr.h>
+ 
+ static u32 *flush_words;
+ 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index a05871c85183..d73ba5a7b623 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -59,6 +59,7 @@
+ #include <asm/time.h>
+ #include <asm/smp.h>
+ #include <asm/mce.h>
++#include <asm/msr.h>
+ #include <asm/tsc.h>
+ #include <asm/hypervisor.h>
+ #include <asm/cpu_device_id.h>
+diff --git a/arch/x86/kernel/apic/apic_numachip.c b/arch/x86/kernel/apic/apic_numachip.c
+index fcfef701c17a..e272bc7fdc8e 100644
+--- a/arch/x86/kernel/apic/apic_numachip.c
++++ b/arch/x86/kernel/apic/apic_numachip.c
+@@ -14,6 +14,7 @@
+ #include <linux/init.h>
+ #include <linux/pgtable.h>
+ 
++#include <asm/msr.h>
+ #include <asm/numachip/numachip.h>
+ #include <asm/numachip/numachip_csr.h>
+ 
+diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
+index d897aadd1d44..99444409c026 100644
+--- a/arch/x86/kernel/cet.c
++++ b/arch/x86/kernel/cet.c
+@@ -2,6 +2,7 @@
+ 
+ #include <linux/ptrace.h>
+ #include <asm/bugs.h>
++#include <asm/msr.h>
+ #include <asm/traps.h>
+ 
+ enum cp_error_code {
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 0bbe79862aa6..3bca79feb23f 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -21,6 +21,7 @@
+ #include <asm/delay.h>
+ #include <asm/debugreg.h>
+ #include <asm/resctrl.h>
++#include <asm/msr.h>
+ #include <asm/sev.h>
+ 
+ #ifdef CONFIG_X86_64
+diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
+index e99892aad628..a315b0627dfb 100644
+--- a/arch/x86/kernel/cpu/aperfmperf.c
++++ b/arch/x86/kernel/cpu/aperfmperf.c
+@@ -20,6 +20,7 @@
+ #include <asm/cpu.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #include "cpu.h"
+ 
+diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+index a18d0f2ea832..981f8b1f0792 100644
+--- a/arch/x86/kernel/cpu/bus_lock.c
++++ b/arch/x86/kernel/cpu/bus_lock.c
+@@ -10,6 +10,7 @@
+ #include <asm/cmdline.h>
+ #include <asm/traps.h>
+ #include <asm/cpu.h>
++#include <asm/msr.h>
+ 
+ enum split_lock_detect_state {
+ 	sld_off = 0,
+diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
+index 441174844e01..d69757246bde 100644
+--- a/arch/x86/kernel/cpu/feat_ctl.c
++++ b/arch/x86/kernel/cpu/feat_ctl.c
+@@ -4,6 +4,7 @@
+ #include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+ #include <asm/msr-index.h>
++#include <asm/msr.h>
+ #include <asm/processor.h>
+ #include <asm/vmx.h>
+ 
+diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
+index 21541e310c2c..2154f12766fb 100644
+--- a/arch/x86/kernel/cpu/hygon.c
++++ b/arch/x86/kernel/cpu/hygon.c
+@@ -15,6 +15,7 @@
+ #include <asm/cacheinfo.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/delay.h>
++#include <asm/msr.h>
+ 
+ #include "cpu.h"
+ 
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 338aeee95bd2..e13f533e31e6 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -28,6 +28,7 @@
+ #include <asm/apic.h>
+ #include <asm/irq_vectors.h>
+ #include <asm/mce.h>
++#include <asm/msr.h>
+ #include <asm/nmi.h>
+ #include <asm/smp.h>
+ 
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index b3658d11e7b6..793e2927d0fa 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -37,6 +37,7 @@
+ #include <asm/perf_event.h>
+ #include <asm/processor.h>
+ #include <asm/cmdline.h>
++#include <asm/msr.h>
+ #include <asm/setup.h>
+ 
+ #include "internal.h"
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index b924befe8d6e..c78f860419d6 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -30,6 +30,7 @@
+ #include <asm/reboot.h>
+ #include <asm/nmi.h>
+ #include <clocksource/hyperv_timer.h>
++#include <asm/msr.h>
+ #include <asm/numa.h>
+ #include <asm/svm.h>
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 280d6900726b..d987b11c168c 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -22,6 +22,7 @@
+ #include <linux/cpuhotplug.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ #include <asm/resctrl.h>
+ #include "internal.h"
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index f73a74945ffa..591b0b44d260 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -23,6 +23,7 @@
+ #include <linux/slab.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ #include <asm/resctrl.h>
+ 
+ #include "internal.h"
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 2a82eb6a0376..26c354bdea07 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -25,6 +25,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/resctrl.h>
+ #include <asm/perf_event.h>
++#include <asm/msr.h>
+ 
+ #include "../../events/perf_event.h" /* For X86_CONFIG() */
+ #include "internal.h"
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 26f4d820ee6e..9acd7f320ce3 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -28,6 +28,7 @@
+ 
+ #include <uapi/linux/magic.h>
+ 
++#include <asm/msr.h>
+ #include <asm/resctrl.h>
+ #include "internal.h"
+ 
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index 40967d8f995a..6722b2fc82cf 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/sysfs.h>
+ #include <linux/vmalloc.h>
++#include <asm/msr.h>
+ #include <asm/sgx.h>
+ #include "driver.h"
+ #include "encl.h"
+diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
+index 6e1885dece0f..e35ccdc84910 100644
+--- a/arch/x86/kernel/cpu/topology.c
++++ b/arch/x86/kernel/cpu/topology.c
+@@ -30,6 +30,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/io_apic.h>
+ #include <asm/mpspec.h>
++#include <asm/msr.h>
+ #include <asm/smp.h>
+ 
+ #include "cpu.h"
+diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
+index 535dcf511096..f78d38510027 100644
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -3,6 +3,7 @@
+ 
+ #include <asm/apic.h>
+ #include <asm/memtype.h>
++#include <asm/msr.h>
+ #include <asm/processor.h>
+ 
+ #include "cpu.h"
+diff --git a/arch/x86/kernel/cpu/tsx.c b/arch/x86/kernel/cpu/tsx.c
+index b0a9c9e9d029..49782724a943 100644
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -12,6 +12,7 @@
+ 
+ #include <asm/cmdline.h>
+ #include <asm/cpu.h>
++#include <asm/msr.h>
+ 
+ #include "cpu.h"
+ 
+diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+index 90eba7eb5335..89b1c8a70fe8 100644
+--- a/arch/x86/kernel/cpu/zhaoxin.c
++++ b/arch/x86/kernel/cpu/zhaoxin.c
+@@ -4,6 +4,7 @@
+ 
+ #include <asm/cpu.h>
+ #include <asm/cpufeature.h>
++#include <asm/msr.h>
+ 
+ #include "cpu.h"
+ 
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 985dfffe28c1..e92d27324d9a 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -11,6 +11,7 @@
+ #include <asm/fpu/sched.h>
+ #include <asm/fpu/signal.h>
+ #include <asm/fpu/types.h>
++#include <asm/msr.h>
+ #include <asm/traps.h>
+ #include <asm/irq_regs.h>
+ 
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 2bd87b788630..86d690afb63c 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -21,6 +21,7 @@
+ #include <asm/fpu/xcr.h>
+ 
+ #include <asm/cpuid.h>
++#include <asm/msr.h>
+ #include <asm/tlbflush.h>
+ #include <asm/prctl.h>
+ #include <asm/elf.h>
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index 5e5d35027f13..f705bd355ea2 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -5,6 +5,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/fpu/xcr.h>
++#include <asm/msr.h>
+ 
+ #ifdef CONFIG_X86_64
+ DECLARE_PER_CPU(u64, xfd_state);
+diff --git a/arch/x86/kernel/fred.c b/arch/x86/kernel/fred.c
+index 10b0169f3fc1..816187da3a47 100644
+--- a/arch/x86/kernel/fred.c
++++ b/arch/x86/kernel/fred.c
+@@ -3,6 +3,7 @@
+ 
+ #include <asm/desc.h>
+ #include <asm/fred.h>
++#include <asm/msr.h>
+ #include <asm/tlbflush.h>
+ #include <asm/traps.h>
+ 
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index cc5d12232216..c9982a7c9536 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -12,6 +12,7 @@
+ #include <asm/hpet.h>
+ #include <asm/time.h>
+ #include <asm/mwait.h>
++#include <asm/msr.h>
+ 
+ #undef  pr_fmt
+ #define pr_fmt(fmt) "hpet: " fmt
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 44a45df7200a..27f7192e1c61 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -40,6 +40,7 @@
+ #include <asm/mtrr.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/msr.h>
+ #include <asm/ptrace.h>
+ #include <asm/reboot.h>
+ #include <asm/svm.h>
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 1ccd05d8999f..015bf298434f 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -33,6 +33,7 @@
+ #include <asm/tlb.h>
+ #include <asm/io_bitmap.h>
+ #include <asm/gsseg.h>
++#include <asm/msr.h>
+ 
+ /* stub always returning 0. */
+ DEFINE_ASM_FUNC(paravirt_ret0, "xor %eax,%eax", .entry.text);
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index c168f99b5f0b..bd50249cff50 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -52,6 +52,7 @@
+ #include <asm/unwind.h>
+ #include <asm/tdx.h>
+ #include <asm/mmu_context.h>
++#include <asm/msr.h>
+ #include <asm/shstk.h>
+ 
+ #include "process.h"
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 24e1ccf22912..cfa9c031de91 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -57,6 +57,7 @@
+ #include <asm/unistd.h>
+ #include <asm/fsgsbase.h>
+ #include <asm/fred.h>
++#include <asm/msr.h>
+ #ifdef CONFIG_IA32_EMULATION
+ /* Not included via unistd.h */
+ #include <asm/unistd_32_ia32.h>
+diff --git a/arch/x86/kernel/trace_clock.c b/arch/x86/kernel/trace_clock.c
+index b8e7abe00b06..708d61743d15 100644
+--- a/arch/x86/kernel/trace_clock.c
++++ b/arch/x86/kernel/trace_clock.c
+@@ -4,7 +4,7 @@
+  */
+ #include <asm/trace_clock.h>
+ #include <asm/barrier.h>
+-#include <asm/msr.h>
++#include <asm/tsc.h>
+ 
+ /*
+  * trace_clock_x86_tsc(): A clock that is just the cycle counter.
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 823410aaf429..ca43eb5a02a3 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -68,6 +68,7 @@
+ #include <asm/vdso.h>
+ #include <asm/tdx.h>
+ #include <asm/cfi.h>
++#include <asm/msr.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 160fef71b9a3..5d3a764ba77c 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -29,6 +29,7 @@
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/i8259.h>
++#include <asm/msr.h>
+ #include <asm/topology.h>
+ #include <asm/uv/uv.h>
+ #include <asm/sev.h>
+diff --git a/arch/x86/kernel/tsc_sync.c b/arch/x86/kernel/tsc_sync.c
+index f1c7a86dbf49..ec3aa340d351 100644
+--- a/arch/x86/kernel/tsc_sync.c
++++ b/arch/x86/kernel/tsc_sync.c
+@@ -21,6 +21,7 @@
+ #include <linux/kernel.h>
+ #include <linux/smp.h>
+ #include <linux/nmi.h>
++#include <asm/msr.h>
+ #include <asm/tsc.h>
+ 
+ struct tsc_adjust {
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 51842100f6d2..5f99762fb2f7 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -20,6 +20,7 @@
+ #include <linux/kvm_host.h>
+ 
+ #include <asm/irq_remapping.h>
++#include <asm/msr.h>
+ 
+ #include "trace.h"
+ #include "lapic.h"
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index a4aabd666665..4b607cc377c9 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -26,6 +26,7 @@
+ #include <asm/fpu/xcr.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/debugreg.h>
++#include <asm/msr.h>
+ #include <asm/sev.h>
+ 
+ #include "mmu.h"
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 67657b3a36ce..c23f620989ed 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -31,6 +31,7 @@
+ #include <linux/string_choices.h>
+ 
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ #include <asm/perf_event.h>
+ #include <asm/tlbflush.h>
+ #include <asm/desc.h>
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index a7fea622e204..d268224227f0 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -6,6 +6,7 @@
+ 
+ #include <asm/debugreg.h>
+ #include <asm/mmu_context.h>
++#include <asm/msr.h>
+ 
+ #include "x86.h"
+ #include "cpuid.h"
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 5e0bb821c7bc..231a9633359c 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -13,6 +13,7 @@
+ #include <linux/types.h>
+ #include <linux/kvm_host.h>
+ #include <linux/perf_event.h>
++#include <asm/msr.h>
+ #include <asm/perf_event.h>
+ #include "x86.h"
+ #include "cpuid.h"
+diff --git a/arch/x86/kvm/vmx/sgx.c b/arch/x86/kvm/vmx/sgx.c
+index 949864259ee6..df1d0cf76947 100644
+--- a/arch/x86/kvm/vmx/sgx.c
++++ b/arch/x86/kvm/vmx/sgx.c
+@@ -2,6 +2,7 @@
+ /*  Copyright(c) 2021 Intel Corporation. */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <asm/msr.h>
+ #include <asm/sgx.h>
+ 
+ #include "x86.h"
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index cd0d6c1fcf9c..d8412cfdb18e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -46,6 +46,7 @@
+ #include <asm/perf_event.h>
+ #include <asm/mmu_context.h>
+ #include <asm/mshyperv.h>
++#include <asm/msr.h>
+ #include <asm/mwait.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/vmx.h>
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index da5af3cc25b1..dbe0fbf0037f 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -13,6 +13,7 @@
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
+ #include <asm/ldt.h>
++#include <asm/msr.h>
+ #include <asm/vm86.h>
+ 
+ #undef pr_fmt
+diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
+index a58f451a7dd3..b5893928d55c 100644
+--- a/arch/x86/lib/kaslr.c
++++ b/arch/x86/lib/kaslr.c
+@@ -8,7 +8,7 @@
+  */
+ #include <asm/asm.h>
+ #include <asm/kaslr.h>
+-#include <asm/msr.h>
++#include <asm/tsc.h>
+ #include <asm/archrandom.h>
+ #include <asm/e820/api.h>
+ #include <asm/shared/io.h>
+diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+index 5eecdd92da10..afda349db35b 100644
+--- a/arch/x86/mm/mem_encrypt_identity.c
++++ b/arch/x86/mm/mem_encrypt_identity.c
+@@ -44,6 +44,7 @@
+ #include <asm/sections.h>
+ #include <asm/coco.h>
+ #include <asm/sev.h>
++#include <asm/msr.h>
+ 
+ #include "mm_internal.h"
+ 
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index b1d521201e0b..6a9befef9fb8 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -19,6 +19,7 @@
+ #include <asm/cache.h>
+ #include <asm/cacheflush.h>
+ #include <asm/apic.h>
++#include <asm/msr.h>
+ #include <asm/perf_event.h>
+ #include <asm/tlb.h>
+ 
+diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
+index 6158f652a7cd..5154915bf50f 100644
+--- a/arch/x86/pci/amd_bus.c
++++ b/arch/x86/pci/amd_bus.c
+@@ -6,6 +6,7 @@
+ #include <linux/range.h>
+ 
+ #include <asm/amd_nb.h>
++#include <asm/msr.h>
+ #include <asm/pci_x86.h>
+ 
+ #include <asm/pci-direct.h>
+diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+index 39255f0eb14d..1f4522325920 100644
+--- a/arch/x86/pci/mmconfig-shared.c
++++ b/arch/x86/pci/mmconfig-shared.c
+@@ -22,9 +22,10 @@
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
+ #include <linux/rculist.h>
++#include <asm/acpi.h>
+ #include <asm/e820/api.h>
++#include <asm/msr.h>
+ #include <asm/pci_x86.h>
+-#include <asm/acpi.h>
+ 
+ /* Indicate if the ECAM resources have been placed into the resource table */
+ static bool pci_mmcfg_running_state;
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index d5a7b3bc2453..916441f5e85c 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -27,6 +27,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/microcode.h>
++#include <asm/msr.h>
+ #include <asm/fred.h>
+ 
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 263787b4800c..ed5c63c0b4e5 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -9,6 +9,7 @@
+ #include <asm/realmode.h>
+ #include <asm/tlbflush.h>
+ #include <asm/crash.h>
++#include <asm/msr.h>
+ #include <asm/sev.h>
+ 
+ struct real_mode_header *real_mode_header;
+diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
+index 334177c89df0..76926f75e9bf 100644
+--- a/arch/x86/virt/svm/sev.c
++++ b/arch/x86/virt/svm/sev.c
+@@ -30,6 +30,7 @@
+ #include <asm/cpuid.h>
+ #include <asm/cmdline.h>
+ #include <asm/iommu.h>
++#include <asm/msr.h>
+ 
+ /*
+  * The RMP entry information as returned by the RMPREAD instruction.
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 846b5737d320..8ddd9e535f99 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -61,6 +61,7 @@
+ #include <asm/processor.h>
+ #include <asm/proto.h>
+ #include <asm/msr-index.h>
++#include <asm/msr.h>
+ #include <asm/traps.h>
+ #include <asm/setup.h>
+ #include <asm/desc.h>
+diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+index f06987b0efc3..3cb566d4aaad 100644
+--- a/arch/x86/xen/pmu.c
++++ b/arch/x86/xen/pmu.c
+@@ -2,6 +2,7 @@
+ #include <linux/types.h>
+ #include <linux/interrupt.h>
+ 
++#include <asm/msr.h>
+ #include <asm/xen/hypercall.h>
+ #include <xen/xen.h>
+ #include <xen/page.h>
+diff --git a/arch/x86/xen/suspend.c b/arch/x86/xen/suspend.c
+index 7bb3ac2d5ac8..ba2f17e64321 100644
+--- a/arch/x86/xen/suspend.c
++++ b/arch/x86/xen/suspend.c
+@@ -13,6 +13,7 @@
+ #include <asm/xen/hypercall.h>
+ #include <asm/xen/page.h>
+ #include <asm/fixmap.h>
++#include <asm/msr.h>
+ 
+ #include "xen-ops.h"
+ 
+diff --git a/drivers/accel/habanalabs/common/habanalabs_ioctl.c b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+index 8729a0c57d78..dc80ca921d90 100644
+--- a/drivers/accel/habanalabs/common/habanalabs_ioctl.c
++++ b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+@@ -17,8 +17,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/vmalloc.h>
+ 
+-#include <asm/msr.h>
+-
+ /* make sure there is space for all the signed info */
+ static_assert(sizeof(struct cpucp_info) <= SEC_DEV_INFO_BUF_SZ);
+ 
+diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+index 8465822b6672..f6b9562779de 100644
+--- a/drivers/acpi/acpi_extlog.c
++++ b/drivers/acpi/acpi_extlog.c
+@@ -15,6 +15,7 @@
+ #include <acpi/ghes.h>
+ #include <asm/cpu.h>
+ #include <asm/mce.h>
++#include <asm/msr.h>
+ 
+ #include "apei/apei-internal.h"
+ #include <ras/ras_event.h>
+diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
+index 53996f1a2d80..64b8d1e19594 100644
+--- a/drivers/acpi/processor_perflib.c
++++ b/drivers/acpi/processor_perflib.c
+@@ -20,6 +20,7 @@
+ #include <acpi/processor.h>
+ #ifdef CONFIG_X86
+ #include <asm/cpufeature.h>
++#include <asm/msr.h>
+ #endif
+ 
+ #define ACPI_PROCESSOR_FILE_PERFORMANCE	"performance"
+diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
+index 00d045e5f524..ecd7fe256153 100644
+--- a/drivers/acpi/processor_throttling.c
++++ b/drivers/acpi/processor_throttling.c
+@@ -18,9 +18,13 @@
+ #include <linux/sched.h>
+ #include <linux/cpufreq.h>
+ #include <linux/acpi.h>
++#include <linux/uaccess.h>
+ #include <acpi/processor.h>
+ #include <asm/io.h>
+-#include <linux/uaccess.h>
++#include <asm/asm.h>
++#ifdef CONFIG_X86
++#include <asm/msr.h>
++#endif
+ 
+ /* ignore_tpc:
+  *  0 -> acpi processor driver doesn't ignore _TPC values
+diff --git a/drivers/char/agp/nvidia-agp.c b/drivers/char/agp/nvidia-agp.c
+index e424360fb4a1..4787391bb6b4 100644
+--- a/drivers/char/agp/nvidia-agp.c
++++ b/drivers/char/agp/nvidia-agp.c
+@@ -11,6 +11,7 @@
+ #include <linux/page-flags.h>
+ #include <linux/mm.h>
+ #include <linux/jiffies.h>
++#include <asm/msr.h>
+ #include "agp.h"
+ 
+ /* NVIDIA registers */
+diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
+index 707fa81c749f..c8d031b297d2 100644
+--- a/drivers/cpufreq/amd-pstate-ut.c
++++ b/drivers/cpufreq/amd-pstate-ut.c
+@@ -31,6 +31,8 @@
+ 
+ #include <acpi/cppc_acpi.h>
+ 
++#include <asm/msr.h>
++
+ #include "amd-pstate.h"
+ 
+ 
+diff --git a/drivers/cpufreq/elanfreq.c b/drivers/cpufreq/elanfreq.c
+index 36494b855e41..fc5a58088b35 100644
+--- a/drivers/cpufreq/elanfreq.c
++++ b/drivers/cpufreq/elanfreq.c
+@@ -21,7 +21,6 @@
+ #include <linux/cpufreq.h>
+ 
+ #include <asm/cpu_device_id.h>
+-#include <asm/msr.h>
+ #include <linux/timex.h>
+ #include <linux/io.h>
+ 
+diff --git a/drivers/cpufreq/sc520_freq.c b/drivers/cpufreq/sc520_freq.c
+index 103d2519dff7..b360f03a116f 100644
+--- a/drivers/cpufreq/sc520_freq.c
++++ b/drivers/cpufreq/sc520_freq.c
+@@ -21,7 +21,6 @@
+ #include <linux/io.h>
+ 
+ #include <asm/cpu_device_id.h>
+-#include <asm/msr.h>
+ 
+ #define MMCR_BASE	0xfffef000	/* The default base address */
+ #define OFFS_CPUCTL	0x2   /* CPU Control Register */
+diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+index bb8a25ef5b43..ec8b37a7f40c 100644
+--- a/drivers/crypto/ccp/sev-dev.c
++++ b/drivers/crypto/ccp/sev-dev.c
+@@ -33,6 +33,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/e820/types.h>
+ #include <asm/sev.h>
++#include <asm/msr.h>
+ 
+ #include "psp-dev.h"
+ #include "sev-dev.h"
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index db758aa900b0..622385218735 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -4,6 +4,7 @@
+ #include "amd64_edac.h"
+ #include <asm/amd_nb.h>
+ #include <asm/amd_node.h>
++#include <asm/msr.h>
+ 
+ static struct edac_pci_ctl_info *pci_ctl;
+ 
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index 204834149579..5ddd83dc94ba 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -52,6 +52,7 @@
+ 
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <asm/mce.h>
++#include <asm/msr.h>
+ #include "edac_module.h"
+ 
+ #define EDAC_MOD_STR "ie31200_edac"
+diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
+index 50d74d3bf0f5..af3c12284a1e 100644
+--- a/drivers/edac/mce_amd.c
++++ b/drivers/edac/mce_amd.c
+@@ -3,6 +3,7 @@
+ #include <linux/slab.h>
+ 
+ #include <asm/cpu.h>
++#include <asm/msr.h>
+ 
+ #include "mce_amd.h"
+ 
+diff --git a/drivers/hwmon/hwmon-vid.c b/drivers/hwmon/hwmon-vid.c
+index 6d1175a51832..2df4956296ed 100644
+--- a/drivers/hwmon/hwmon-vid.c
++++ b/drivers/hwmon/hwmon-vid.c
+@@ -15,6 +15,10 @@
+ #include <linux/kernel.h>
+ #include <linux/hwmon-vid.h>
+ 
++#ifdef CONFIG_X86
++#include <asm/msr.h>
++#endif
++
+ /*
+  * Common code for decoding VID pins.
+  *
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index 517b28a85560..6a1712b50c7f 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -56,6 +56,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/mwait.h>
+ #include <asm/spec-ctrl.h>
++#include <asm/msr.h>
+ #include <asm/tsc.h>
+ #include <asm/fpu/api.h>
+ #include <asm/smp.h>
+diff --git a/drivers/misc/cs5535-mfgpt.c b/drivers/misc/cs5535-mfgpt.c
+index 18fc1aaa5cdd..2b6778d8d166 100644
+--- a/drivers/misc/cs5535-mfgpt.c
++++ b/drivers/misc/cs5535-mfgpt.c
+@@ -16,6 +16,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/cs5535.h>
+ #include <linux/slab.h>
++#include <asm/msr.h>
+ 
+ #define DRV_NAME "cs5535-mfgpt"
+ 
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 3df6aabc7e33..7edd0b5e0e77 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -27,6 +27,10 @@
+ #include <linux/module.h>
+ #include <net/ip6_checksum.h>
+ 
++#ifdef CONFIG_X86
++#include <asm/msr.h>
++#endif
++
+ #include "vmxnet3_int.h"
+ #include "vmxnet3_xdp.h"
+ 
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index c4328a7ae083..b73e582128c9 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -8,6 +8,7 @@
+ #include <linux/slab.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ 
+ #include "ifs.h"
+ 
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index 0289391eccde..50f1fdf7dfed 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -5,6 +5,7 @@
+ #include <linux/sizes.h>
+ #include <asm/cpu.h>
+ #include <asm/microcode.h>
++#include <asm/msr.h>
+ 
+ #include "ifs.h"
+ 
+diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+index 6b6ed7be461a..dfc119d7354d 100644
+--- a/drivers/platform/x86/intel/ifs/runtest.c
++++ b/drivers/platform/x86/intel/ifs/runtest.c
+@@ -7,6 +7,7 @@
+ #include <linux/nmi.h>
+ #include <linux/slab.h>
+ #include <linux/stop_machine.h>
++#include <asm/msr.h>
+ 
+ #include "ifs.h"
+ 
+diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+index 547bdf1ab02d..efea4e1ba52b 100644
+--- a/drivers/platform/x86/intel/pmc/cnp.c
++++ b/drivers/platform/x86/intel/pmc/cnp.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/smp.h>
+ #include <linux/suspend.h>
++#include <asm/msr.h>
+ #include "core.h"
+ 
+ /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 44dcd165b4c0..8a5713593811 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -21,6 +21,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #include "isst_if_common.h"
+ 
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
+index 78989f649aea..22745b217c6f 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
+@@ -18,6 +18,7 @@
+ #include <uapi/linux/isst_if.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #include "isst_if_common.h"
+ 
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index 0b8ef0cfaf80..4d30d5360c8f 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
++#include <asm/msr.h>
+ #include <uapi/linux/isst_if.h>
+ 
+ #include "isst_tpmi_core.h"
+diff --git a/drivers/platform/x86/intel/turbo_max_3.c b/drivers/platform/x86/intel/turbo_max_3.c
+index 7e538bbd5b50..b5af3e91ba04 100644
+--- a/drivers/platform/x86/intel/turbo_max_3.c
++++ b/drivers/platform/x86/intel/turbo_max_3.c
+@@ -17,6 +17,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #define MSR_OC_MAILBOX			0x150
+ #define MSR_OC_MAILBOX_CMD_OFFSET	32
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index 6f873765d2d1..96f854c21bb5 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -21,6 +21,7 @@
+ #include <linux/suspend.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #include "uncore-frequency-common.h"
+ 
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index 5ab3feb29686..e3be40adc0d7 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -28,6 +28,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+ #include <asm/iosf_mbi.h>
++#include <asm/msr.h>
+ 
+ /* bitmasks for RAPL MSRs, used by primitive access functions */
+ #define ENERGY_STATUS_MASK      0xffffffff
+diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_rapl_msr.c
+index 6d5853db17ad..8ad2115d65f6 100644
+--- a/drivers/powercap/intel_rapl_msr.c
++++ b/drivers/powercap/intel_rapl_msr.c
+@@ -24,6 +24,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ /* Local defines */
+ #define MSR_PLATFORM_POWER_LIMIT	0x0000065C
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+index b0249468b844..57cf46f69669 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/thermal.h>
++#include <asm/msr.h>
+ #include "int340x_thermal_zone.h"
+ #include "processor_thermal_device.h"
+ #include "../intel_soc_dts_iosf.h"
+diff --git a/drivers/thermal/intel/intel_tcc_cooling.c b/drivers/thermal/intel/intel_tcc_cooling.c
+index 0394897e83cf..f352ecafbedf 100644
+--- a/drivers/thermal/intel/intel_tcc_cooling.c
++++ b/drivers/thermal/intel/intel_tcc_cooling.c
+@@ -11,6 +11,7 @@
+ #include <linux/module.h>
+ #include <linux/thermal.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ 
+ #define TCC_PROGRAMMABLE	BIT(30)
+ #define TCC_LOCKED		BIT(31)
+diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+index 496abf8e55e0..4894a26b1e4e 100644
+--- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
++++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+@@ -20,6 +20,7 @@
+ #include <linux/debugfs.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
+ 
+ #include "thermal_interrupt.h"
+ 
+diff --git a/drivers/video/fbdev/geode/display_gx.c b/drivers/video/fbdev/geode/display_gx.c
+index b5f25dffd274..099322cefce0 100644
+--- a/drivers/video/fbdev/geode/display_gx.c
++++ b/drivers/video/fbdev/geode/display_gx.c
+@@ -13,6 +13,7 @@
+ #include <asm/io.h>
+ #include <asm/div64.h>
+ #include <asm/delay.h>
++#include <asm/msr.h>
+ #include <linux/cs5535.h>
+ 
+ #include "gxfb.h"
+diff --git a/drivers/video/fbdev/geode/gxfb_core.c b/drivers/video/fbdev/geode/gxfb_core.c
+index 2b27d6540805..8d69be7c9d31 100644
+--- a/drivers/video/fbdev/geode/gxfb_core.c
++++ b/drivers/video/fbdev/geode/gxfb_core.c
+@@ -29,6 +29,7 @@
+ #include <linux/pci.h>
+ #include <linux/cs5535.h>
+ 
++#include <asm/msr.h>
+ #include <asm/olpc.h>
+ 
+ #include "gxfb.h"
+diff --git a/drivers/video/fbdev/geode/lxfb_ops.c b/drivers/video/fbdev/geode/lxfb_ops.c
+index a27531b5de11..2e33da9849b0 100644
+--- a/drivers/video/fbdev/geode/lxfb_ops.c
++++ b/drivers/video/fbdev/geode/lxfb_ops.c
+@@ -11,6 +11,7 @@
+ #include <linux/delay.h>
+ #include <linux/cs5535.h>
+ 
++#include <asm/msr.h>
+ #include "lxfb.h"
+ 
+ /* TODO
+-- 
+2.49.0
 
 
