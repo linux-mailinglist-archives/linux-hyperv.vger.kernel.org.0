@@ -1,142 +1,181 @@
-Return-Path: <linux-hyperv+bounces-5302-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5303-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC0D0AA6A9A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 08:13:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29AEAAA6A9E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 08:13:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CF6A1BC0617
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 06:13:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0DA59854F2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 06:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A7419DF41;
-	Fri,  2 May 2025 06:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A70719DF41;
+	Fri,  2 May 2025 06:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SzpDLkNg"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MqWs1mdg"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AEF4C6C;
-	Fri,  2 May 2025 06:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2922819049A;
+	Fri,  2 May 2025 06:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746166410; cv=none; b=b1Uoe8FGT0lYScS0XX1hwDa9ju2ajQog9Ffd9tGiW5UIO9ViUfm7N3YyZwvXCzIwFKHHu8vJNSPYexGmZ2j/VLcFPkG36472SbILHXKqDU8/Y5MOK4Yxr/NTH04y/L1YPHsFQK+WhgY6mp860lOVdi3fUWTcVtN7DPz1qqpehT8=
+	t=1746166432; cv=none; b=FU2Ozbow1A9zzCDV333lYzHKP2dLH3uXxwIqX5Zk22gHzl02o911DIJVABvHcm6uHljRyEHDCAFml4Ryut2FTVmr22+CydkjNLMBVcH/Ju6KP6an9E2IyUavXlv7XVpczq61vvfxD1MM6aarXNVy38rTuunFGY/JRHKJ3IVS2lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746166410; c=relaxed/simple;
-	bh=iuRPynWNspiLCrv5o0TZawp9NxxaaX3vf1nNZ7+ykM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GSRFIc6poIZ37UkbqtxkWk4Vw/fuL8pmSfMJc7vZTBipbVyb3NHkzLWaxZqMHHV1GzqTGTO9olrvXQScqegoneHDuRsWPA1f2Baj8JUWxMwP9KMMiHbWUHpAKnQ1HWn6IMUrx4hgUuIL5JN27PPeSFNl/v8xtN7zRzqXidfR5lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SzpDLkNg; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5426CqxU1789768
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 1 May 2025 23:12:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5426CqxU1789768
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746166375;
-	bh=+Zv9cQk+z9fAinewPJ/ZzGEn0L1B+MFr/2S7teyfsbU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SzpDLkNgz/zeY6FwID+iYLUU+9gU7MCiwyCKWuiv4/Lnp/AtsoF6l+Y871ImKJ3iG
-	 VyedzKMuFs3O6d3GNJzCnDkSXilsB+MLwfv3bBH+Cx08hdlo0cdG7WPWlzHlRG/nsp
-	 Ensgq/BrNJpCPn7BKj6zCZPO4bBNTxlbmNuKZWMMN6zPa8zZj5T15HuYBo8xfADlf7
-	 UhkAdoJwCsyiZ1DF9FHEMSvFzoJNiw6FQg0vipftdBqI8DFH0cRFfvJZMb2fzNXLUG
-	 XXEVmpm6/TjWmx/WMO4vqlWz6i48E03bzwHOy6plc4T8aEwYlZhAYjmBL3c2ir62L/
-	 zB45qRNOb61Sg==
-Message-ID: <eac239fe-a420-4bc7-a792-207df9f847d3@zytor.com>
-Date: Thu, 1 May 2025 23:12:52 -0700
+	s=arc-20240116; t=1746166432; c=relaxed/simple;
+	bh=6ZLlYGzmq13or1lm9jpBzjipyLf3Lppk5/QB84twvnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EfcQlTZFg6oiuGevq30H/zA4Rdb6qoY84G5Cvu94lIKYDtf0UP+idGoXjEpBZPIuNoQnIkIwNNICnxx0k6p1ybsHo3KiNjckNsZXkyfaKfIa4rQop1RD8rnhgJcolhnqxq1Ftz7wUfa2iVfwhIodvwiNNJSz5UUitObipP13REU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MqWs1mdg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40733C4CEE4;
+	Fri,  2 May 2025 06:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746166431;
+	bh=6ZLlYGzmq13or1lm9jpBzjipyLf3Lppk5/QB84twvnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MqWs1mdgKu0Uf3CIcAOAxnMnOI+32KP1XsLedGT2Se0q2fMRazw/Onp4Y1BBJVZ7y
+	 6dJD5mEgt5xt9OuVY1tO2F8eZLKGQjupJpUT+wHvCQD4g5zqX7RrHrvImn1APZsQk9
+	 KOLs0qv+gekDonNnfse65IV4ucQpx0sOLy18rZYM=
+Date: Fri, 2 May 2025 08:13:48 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stephen Hemminger <stephen@networkplumber.org>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+Message-ID: <2025050228-proud-deduce-a73c@gregkh>
+References: <20250424053524.1631-1-namjain@linux.microsoft.com>
+ <2025042501-accuracy-uncombed-cb99@gregkh>
+ <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+ <2025050154-skyward-snagged-973d@gregkh>
+ <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
- __nocfi functions
-To: Sean Christopherson <seanjc@google.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
-        kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-        samitolvanen@google.com, ojeda@kernel.org
-References: <20250430110734.392235199@infradead.org>
- <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
- <20250501103038.GB4356@noisy.programming.kicks-ass.net>
- <20250501153844.GD4356@noisy.programming.kicks-ass.net>
- <aBO9uoLnxCSD0UwT@google.com>
- <EB1786D7-C7FE-4517-A207-C5F63AC0F911@zytor.com>
- <aBPEr3DF4w9sbUdc@google.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aBPEr3DF4w9sbUdc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
 
-On 5/1/2025 11:59 AM, Sean Christopherson wrote:
->> Ok maybe I'm being dense, but what is left other than simply calling
->> __fred_entry_from_kvm() as a normal C function?
->>
->> I'm on the go so there might be something in the code I'm missing, but on the
->> surface...?
-> I'm sure it's doable, though I'd be more than a little nervous about diverging
-> from what FRED=y does, e.g. in case code somewhere expects the stack to look
-> exactly like a real FRED event.
+On Fri, May 02, 2025 at 11:31:03AM +0530, Naman Jain wrote:
+> 
+> 
+> On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
+> > On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
+> > > 
+> > > 
+> > > On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
+> > > > On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
+> > > > > Hi,
+> > > > > This patch series aims to address the sysfs creation issue for the ring
+> > > > > buffer by reorganizing the code. Additionally, it updates the ring sysfs
+> > > > > size to accurately reflect the actual ring buffer size, rather than a
+> > > > > fixed static value.
+> > > > > 
+> > > > > PFB change logs:
+> > > > > 
+> > > > > Changes since v5:
+> > > > > https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+> > > > > * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+> > > > >     commit msg of both patches.
+> > > > > * Missed to remove check for "primary_channel->device_obj->channels_kset" in
+> > > > >     hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+> > > > >     now.
+> > > > > * Changed type for declaring bin_attrs due to changes introduced by
+> > > > >     commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+> > > > >     merged recently. Did not use bin_attrs_new since another change is in
+> > > > >     the queue to change usage of bin_attrs_new to bin_attrs
+> > > > >     (sysfs: finalize the constification of 'struct bin_attribute').
+> > > > 
+> > > > Please fix up to apply cleanly without build warnings:
+> > > > 
+> > > > drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+> > > >    1893 |         .bin_attrs = vmbus_chan_bin_attrs,
+> > > >         |                      ^~~~~~~~~~~~~~~~~~~~
+> > > > 1 error generated.
+> > > 
+> > > Hi Greg,
+> > > I tried reproducing this error but could not see it. Should I rebase the
+> > > change to some other tree or use some specific config option, gcc version,
+> > > compilation flag etc.?
+> > > 
+> > > I tried the following:
+> > > * Rebased to latest linux-next tip with below base commit:
+> > > 393d0c54cae31317deaa9043320c5fd9454deabc
+> > > * Regular compilation with gcc: make -j8
+> > > * extra flags:
+> > >    make -j8  EXTRA_CFLAGS="-Wall -O2"
+> > >    make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
+> > > -Werror"
+> > > * Tried gcc 11.4, 13.3
+> > > * Tried clang/LLVM with version 18.1.3 : make LLVM=1
+> > 
+> > I tried this against my char-misc-linus branch (which is pretty much
+> > just 6.15.0-rc4 plus some iio patches), and it fails with that error
+> > above.
+> > 
+> > > BTW I had to edit the type for bin_attrs as this change got merged recently:
+> > > 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+> > > 
+> > > diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> > > index 576b8b3c60af..f418aae4f113 100644
+> > > --- a/include/linux/sysfs.h
+> > > +++ b/include/linux/sysfs.h
+> > > @@ -107,7 +107,7 @@ struct attribute_group {
+> > >                                              int);
+> > >          struct attribute        **attrs;
+> > >          union {
+> > > -               struct bin_attribute            **bin_attrs;
+> > > +               const struct bin_attribute      *const *bin_attrs;
+> > >                  const struct bin_attribute      *const *bin_attrs_new;
+> > >          };
+> > >   };
+> > 
+> > That commit is not in my char-misc branches, that's coming from
+> > somewhere else.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Hi Greg,
+> 
+> I can send a patch based on char-misc/6.15.0-rc4 which does not have this
+> patch, but I am worried that it will cause compilation issues when your
+> branch is merged with linux-next since this change is already there in
+> linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
 
-__fred_entry_from_kvm() accepts a pt_regs structure pointer, with event
-type and vector in FRED stack frame.  They are set up in the assembly.
+Yes, because you want this fix in 6.15-final, right?
 
-> And since we'd still need the assembly to support FRED=y, I don't see any point
-> in adding more code when it's trivially easy to have asm_fred_entry_from_kvm()
-> skip ERETS.
+> Here are more details of that patch:
+> 
+> """
+> sysfs: constify attribute_group::bin_attrs
+> All users of this field have been migrated to bin_attrs_new.
+> It can now be constified.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Link: https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> """
 
-Yeah, your change seems minimized to me.
+I know that patch, I will deal with that in linux-next when needed, you
+shouldn't be worrying about it.  I'm more concerned as to why your patch
+was not being tested against Linus's tree if you expected it to be in
+the latest release and backported everywhere as it you asked it to be.
 
+thanks,
 
-
-
-
+greg k-h
 
