@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-5318-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5319-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2F72AA78CF
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 19:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D297AA7902
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 20:01:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94EA81BA6313
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 17:51:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECF9E1897D79
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 18:01:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40F72609D0;
-	Fri,  2 May 2025 17:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950F0238141;
+	Fri,  2 May 2025 18:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f2DvQ9MW"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CAJaBviD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4590B42A87;
-	Fri,  2 May 2025 17:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEBC3D6F;
+	Fri,  2 May 2025 18:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746208264; cv=none; b=ii7v7Y/7ZXI+ekUFGY93kSUnH3EtMwHK0BQOYkoG7UMWOuOoPIOCcvrZpsL/AZl5NacXPTpmaRtil87xDT0+2mJrnPm8mv4XZxYEwRlnojwAHJLcyHwCP9vkWhCwi5Xq4ogBYkWq5Ph7yAqCJpGJo/7tt+P35nrWjXVU2SyaI4U=
+	t=1746208900; cv=none; b=rxXK3y80Z3AkHi0zxuqwdHDXRualK+wIRwsxhxnIozWAH4UC1/PmqR5Cu7Q3bBZCKT6wnxpFkcKZ9BArJgWEIONxgxubLtfxKL2vuRnUxO82yJ3m2cvntzQnrPUcpEeXqCmktsekS7VqFkG7yS84bfCPoAKWf1WPxi+1ps/amIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746208264; c=relaxed/simple;
-	bh=drM8O3toaDkU9WbF5hourjHUHTWTN+EOTGXaXdM7ew0=;
+	s=arc-20240116; t=1746208900; c=relaxed/simple;
+	bh=bVi2uLJgadMIDrlKX2yiVqiyC/JIX88QVjfioOah/5Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fTtbVi0q9SuXtCOTWC2oCnNpK2ShXOle7UTawFpb9+m/g2Qn5bORJ8MFeFBJ01Yd+hU5jmYjGBNDDgMZC5I1sHDLSIf3jG6u2ELwMvx9YQFYT/CNJThU+L+TgoQSDmv92oyFQqvuIIAnhl3y0D3C9JtvOMNlfDVqu2DKnRzFXX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=f2DvQ9MW; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=MrDZzRByDXHe+5Hab8W6sy5p6auTh3UjhbDnWW8hXImmm04MUBHCaD4ra6cRgOKrtPyp2d64FUPwUziOs2H2YlZIacOHEavqzve56Z6Ukplw68wpmc1PItLOkQGe0mbtxOufmaULTF5hKYP8TRyC49jWXt85qF5zE0JjgO+UgQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=CAJaBviD; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Received: from [192.168.7.202] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542Ho3nX2101973
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542I0lLB2105252
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 2 May 2025 10:50:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542Ho3nX2101973
+	Fri, 2 May 2025 11:00:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542I0lLB2105252
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746208207;
-	bh=LzR4L+NzvxhTrQ0qnGzytLxrMo2x9HNW2SUoBs+4hnk=;
+	s=2025042001; t=1746208851;
+	bh=hT0wLy4M/v5r4X1GaFGl658jjbwFpHKBOET/YkmHGHo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f2DvQ9MW8Z0JHknIhUmlaIPnE6PHfIIPe0rpr7QJUvAXpKBCT+qAa2LT23C9nwyHn
-	 /1a1mWwt981CwHC7LEhukO1K0m1bgC3vouAUx32YzUdMpcsCtQbd/jw/0r9+oZFhHH
-	 zWNmyzJlWsf15/gfOAQCHW/PstZJwBaw5PzyA2AIZsvRshoRiosxrgxL3BGNy8GnvI
-	 j1N92z82OgALfPhLkgXq737LFNKZtz9B4b6V3qkfZIO+IB2Ra6RgpyueZDDglkuTjG
-	 iaLXdZxYtCOMzwCegp0RoTN30GI8VbyzguvhXK2x0MgYmhv6FrtA1j3wSshxLcp5ca
-	 a3YLWxbyYWbZw==
-Message-ID: <a2bdcbaf-2a00-4b12-84e9-14c40610d599@zytor.com>
-Date: Fri, 2 May 2025 10:50:02 -0700
+	b=CAJaBviDhg9dcDsmvqA7VZfyDyiseEFTi17BVGAsmrhSXWlwiI3sYKkn5aE2mwhbP
+	 bgZAZCKk7pLOdVIAGKVBRNa+jDTPSLoC/S4MqW+rGSD/V4WtV8+NS0S15CsAopcW/D
+	 17kzdds9fMZzZC5qWrbmIdApNBkD8vV6qwWs5V7taNjREQAvzbGbXtMwRqqeGWDmv1
+	 xWQCz/zWDImzXOdooMewYA4YdpZtEtQmtoEmaUnapfwXICzNPcQLl4pKTBi4Mr75n/
+	 VvCXK2e99oq/VMAeMrTNHzml4+e9V0yqLoSG6KEbpqN8YhN5gnNNj/Afn1DJ5XrLTD
+	 OXrUGFJVQ0RAQ==
+Message-ID: <4b896294-66a3-4f4b-84f2-ec67dbaa9a6e@zytor.com>
+Date: Fri, 2 May 2025 11:00:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,29 +56,28 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4A 01/15] x86/msr: Add missing includes of <asm/msr.h>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        mingo@redhat.com
-Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
         virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
         linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, acme@kernel.org, jgross@suse.com,
-        andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
         bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
         pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
         luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
- <20250501054241.1245648-1-xin@zytor.com>
- <a34d7955-aa31-7bef-52cf-65dc4bb7a5c1@linux.intel.com>
+        dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+References: <20250427092027.1598740-1-xin@zytor.com>
+ <20250427092027.1598740-3-xin@zytor.com> <aBSHyo-pu7K_CfpI@gmail.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -115,102 +114,42 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <a34d7955-aa31-7bef-52cf-65dc4bb7a5c1@linux.intel.com>
+In-Reply-To: <aBSHyo-pu7K_CfpI@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 5/2/2025 6:13 AM, Ilpo Järvinen wrote:
->> diff --git a/arch/x86/kernel/trace_clock.c b/arch/x86/kernel/trace_clock.c
->> index b8e7abe00b06..708d61743d15 100644
->> --- a/arch/x86/kernel/trace_clock.c
->> +++ b/arch/x86/kernel/trace_clock.c
->> @@ -4,7 +4,7 @@
->>    */
->>   #include <asm/trace_clock.h>
->>   #include <asm/barrier.h>
->> -#include <asm/msr.h>
->> +#include <asm/tsc.h>
-> Does this change belong to this patch?
+On 5/2/2025 1:52 AM, Ingo Molnar wrote:
 > 
-> It might even cause a build failure until the second patch which moves
-> the tsc related things to the other file (unless there's indirect include
-> path to asm/msr.h).
-
-Ah, you're right as I have separated the relocation of rdtsc_ordered()
-into a following patch.
-
+> * Xin Li (Intel) <xin@zytor.com> wrote:
 > 
->> diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
->> index a58f451a7dd3..b5893928d55c 100644
->> --- a/arch/x86/lib/kaslr.c
->> +++ b/arch/x86/lib/kaslr.c
->> @@ -8,7 +8,7 @@
->>    */
->>   #include <asm/asm.h>
->>   #include <asm/kaslr.h>
->> -#include <asm/msr.h>
->> +#include <asm/tsc.h>
-> Same thing here.
+>> For some reason, there are some TSC-related functions in the MSR
+>> header even though there is a tsc.h header.
+>>
+>> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
+>> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
+>>
+>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+>> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
->>   #include <asm/archrandom.h>
->>   #include <asm/e820/api.h>
->>   #include <asm/shared/io.h>
->> diff --git a/drivers/accel/habanalabs/common/habanalabs_ioctl.c b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
->> index 8729a0c57d78..dc80ca921d90 100644
->> --- a/drivers/accel/habanalabs/common/habanalabs_ioctl.c
->> +++ b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
->> @@ -17,8 +17,6 @@
->>   #include <linux/uaccess.h>
->>   #include <linux/vmalloc.h>
+>> --- a/arch/x86/include/asm/tsc.h
+>> +++ b/arch/x86/include/asm/tsc.h
+>> @@ -7,7 +7,81 @@
 >>   
+>>   #include <asm/cpufeature.h>
+>>   #include <asm/processor.h>
 >> -#include <asm/msr.h>
->> -
-> I suggested making a separate patch out of these removals. Currently you
-> do them without any clear warning in the changelog which only talks about
-> adding asm/msr.h.
->
-
-I didn't want to add an extra patch to the v4 series, but I really
-should have mentioned the removal at least.
-
-
->> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
->> index 00d045e5f524..ecd7fe256153 100644
->> --- a/drivers/acpi/processor_throttling.c
->> +++ b/drivers/acpi/processor_throttling.c
->> @@ -18,9 +18,13 @@
->>   #include <linux/sched.h>
->>   #include <linux/cpufreq.h>
->>   #include <linux/acpi.h>
->> +#include <linux/uaccess.h>
->>   #include <acpi/processor.h>
->>   #include <asm/io.h>
->> -#include <linux/uaccess.h>
->> +#include <asm/asm.h>
-> ???
-
-Damn me!
-
-Not to find an excuse but I guess I got somewhat tired when doing it.
-
 > 
->> +#ifdef CONFIG_X86
->> +#include <asm/msr.h>
->> +#endif
+> Note that in the tip:x86/msr commit I've applied today I've
+> intentionally delayed the removal of this header dependency, to reduce
+> the probability of breaking -next today or in the near future.
 > 
-> I really appreciate you took the effort to do this change the correct
-> way! 🙂
+> We can remove that now superfluous header dependency in a future patch.
+> 
 
-Same here for pushing it the right direction!
+This is truly a brilliant decision!
 
-
-Hi Ingo,
-
-Since you *wisely* didn't remove msr.h from tsc.h, maybe you could just
-zap this patch and I will send an afterwards patch set to replace this
-patch?
-
-Apology for the noise.
+Especially regarding the issues Ilpo identified.
 
 Thanks!
      Xin
