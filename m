@@ -1,193 +1,196 @@
-Return-Path: <linux-hyperv+bounces-5304-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5305-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2238BAA6AAA
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 08:17:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AEF5AA6BFC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 09:49:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A68159875FA
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 06:17:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F2FF18828FC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 07:48:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B67D621D3D4;
-	Fri,  2 May 2025 06:17:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E5625634;
+	Fri,  2 May 2025 07:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a2beh/TT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GicwYtZp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 296BE1B5EB5;
-	Fri,  2 May 2025 06:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3988C20C02D;
+	Fri,  2 May 2025 07:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746166674; cv=none; b=tnkJbutGzgVMMBQ69JnULB54Rg/WKxB2uQiDvWvVJzb+LH1OI8MOn/tV9PnN72OKeHKD4qPCm7W9DyHkiKqHX12ucr+eHa3iHFaf7WjFTlxbxI98Ae7ScKCMx1MpWYnHwiqpcEK9gwY8nTgaCwXytpl7PWIxGdjYQkpZg18pn10=
+	t=1746172102; cv=none; b=uRo+ACx4htS0HvJF2fDYLX8StQ1EZ/Ds/3M+RzpsLS+htJ2kYZnYLFUZbYROgvWaA3T1iajG7By4exyOfP+e5havefrsLY/5o+L4aeXT2P3a0t14jO0y0yiUc9Ck6IM0erYsr7kfya9ysQ/zO/NpdU1huOR8QikclDFy46pAVi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746166674; c=relaxed/simple;
-	bh=rsEUTqd8xsK6TWEmgVEJdPQiJEmzwCazjM3sx4RcdKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FbJgCzrH6tD+K8/G1dzwe+FsTFfqfj+PtEJZKxryADVU0fryd3cc42/Ajq/V8rUrQ6EUILMKfxUn/cdzPGnJF/PjdqQwrJDBUcpGy390CbVJrxpLAF3ORUoKqdQuQUNACxVtotePem2NNiDr3wMsolPjThNvZs/AGhcjfNglVnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=a2beh/TT; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1746172102; c=relaxed/simple;
+	bh=5zHfjx3LCpBnQnbGMYJn0PwjO0OHGGcGVS3yle+/AtY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r3m0RSVUuzDHRxk0cv3BDgP6GoIZe6scOaI2aLJdQnpGRs5zycTg4656qGrqTI9b4qX54YwaviXMTvMC/CotXulaqGXqwJR6Zz0kgSQyoac1sfayQiC17jqR51wBInabesXHSPl88luHkp6u75yBo99xwZngJFFrrM2qAwe81KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GicwYtZp; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.193.170] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 14C9B2020950;
-	Thu,  1 May 2025 23:17:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14C9B2020950
+Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.139])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9FD332111565;
+	Fri,  2 May 2025 00:48:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FD332111565
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746166672;
-	bh=AIs11BV7qh3/KZL3dBV10hCv5+2WoDIfLVxf4Jls7kw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a2beh/TTPCQklRtzXhKXinVAJGx/AE2VN4U+ieMGMgKp/VI+Mhi7KDULrlJrVkLL9
-	 leFcLrVQDgi/d05wFAY51mJbqR2OOonqmpeA3meS25hZ4pnSHxglN/HoYcbzk2/XmK
-	 QN0aFBN0w3x+B8rtGJDiEsXa8eu/SWh3gSoGq7wE=
-Message-ID: <e752e64a-1ac6-4c96-91ec-f5797f97aa24@linux.microsoft.com>
-Date: Fri, 2 May 2025 11:47:47 +0530
+	s=default; t=1746172100;
+	bh=AM3bNHyzqOUx4GEbmWQutBtcba47mLTjpsHqzXYUL1k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GicwYtZph1ke0NlDJkXUPvLloDS2qT1VjaqVoz3jzca5MsX0xaqTSQp9WqwiB3v82
+	 AuXpXA3dvVOEB+p2eAFRpz+wS7BofAxmedkfk/wMg1dFyhqo0zA5yyJuIM0teR9Y+5
+	 LtRUkZaRwz1nYKd22qJkKQLCYoNoWH/zbqstp2yA=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: [PATCH v7 0/2] uio_hv_generic: Fix ring buffer sysfs creation path
+Date: Fri,  2 May 2025 13:18:09 +0530
+Message-Id: <20250502074811.2022-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Stephen Hemminger <stephen@networkplumber.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
- <2025042501-accuracy-uncombed-cb99@gregkh>
- <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
- <2025050154-skyward-snagged-973d@gregkh>
- <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
- <2025050228-proud-deduce-a73c@gregkh>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <2025050228-proud-deduce-a73c@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Hi,
+This patch series aims to address the sysfs creation issue for the ring
+buffer by reorganizing the code. Additionally, it updates the ring sysfs
+size to accurately reflect the actual ring buffer size, rather than a
+fixed static value.
+
+PFB change logs:
+
+Changes since v6:
+https://lore.kernel.org/all/20250424053524.1631-1-namjain@linux.microsoft.com/
+* Rebased to 6.15-rc4 tip where [1] is not present to fix compilation
+  issue on 6.15-rc4 and to enable porting of the fix to previous kernel
+  versions where patch [1] is not present. (addressed Greg's comments)
+* Note: continued to use bin_attrs and not bin_attrs_new so that the fix
+  can be ported to older kernels where bin_attrs_new was not introduced.
+
+[1]: commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+
+Changes since v5:
+https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+* Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+  commit msg of both patches.
+* Missed to remove check for "primary_channel->device_obj->channels_kset" in
+  hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+  now. 
+* Changed type for declaring bin_attrs due to changes introduced by
+  commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+  merged recently. Did not use bin_attrs_new since another change is in
+  the queue to change usage of bin_attrs_new to bin_attrs
+  (sysfs: finalize the constification of 'struct bin_attribute').
+
+Changes since v4:
+https://lore.kernel.org/all/20250410060847.82407-1-namjain@linux.microsoft.com/
+* Added Reviewed-By and Tested-By tags from Michael.
+* Fixed syntax by removing extra space (addressed Greg's comment)
+* Rebased to latest linux-next tip
+
+Changes since v3:
+https://lore.kernel.org/all/20250328052745.1417-1-namjain@linux.microsoft.com/
+* Addressed Michael's comments regarding handling of return value of
+sysfs_update_group in uio_hv_generic.
+
+Changes since v2:
+https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft.com/
+Addressed Greg's comments:
+* Split the original patch into two.
+* Updated the commit message to explain the problem scenario.
+* Added comments for new APIs in the kerneldoc format.
+* Highlighted potential race conditions and explained why sysfs should not be created in the
+  driver probe.
+
+* Made minor changes to how the sysfs_update_group return value is handled.
+
+Changes since v1:
+https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
+* Fixed race condition in setting channel->mmap_ring_buffer by
+  introducing a new variable for visibility of sysfs (addressed Greg's
+  comments)
+* Used binary attribute fields instead of regular ones for initializing attribute_group.
+* Make size of ring sysfs dynamic based on actual ring buffer's size.
+* Preferred to keep mmap function in uio_hv_generic to give more control over ring's
+  mmap functionality, since this is specific to uio_hv_generic driver.
+* Remove spurious warning during sysfs creation in uio_hv_generic probe.
+* Added comments in a couple of places.
+
+Changes since RFC patch:
+https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
+* Different approach to solve the problem is proposed (credits to
+  Michael Kelley).
+* Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+  drivers where rest of the sysfs attributes for a VMBus channel
+  are defined. (addressed Greg's comments)
+* Used attribute groups instead of sysfs_create* functions, and bundled
+  ring attribute with other attributes for the channel sysfs.  
+
+Error logs:
+
+[   35.574120] ------------[ cut here ]------------
+[   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
+[   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+[   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+[   35.574197] Call Trace:
+[   35.574199]  <TASK>
+[   35.574200]  ? show_regs+0x69/0x80
+[   35.574217]  ? __warn+0x8d/0x130
+[   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574222]  ? report_bug+0x182/0x190
+[   35.574225]  ? handle_bug+0x5b/0x90
+[   35.574244]  ? exc_invalid_op+0x19/0x70
+[   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+[   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+[   35.574271]  vmbus_probe+0x3b/0x90
+[   35.574275]  really_probe+0xf4/0x3b0
+[   35.574279]  __driver_probe_device+0x8a/0x170
+[   35.574282]  driver_probe_device+0x23/0xc0
+[   35.574285]  __device_attach_driver+0xb5/0x140
+[   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+[   35.574291]  bus_for_each_drv+0x86/0xe0
+[   35.574294]  __device_attach+0xc1/0x200
+[   35.574297]  device_initial_probe+0x13/0x20
+[   35.574315]  bus_probe_device+0x99/0xa0
+[   35.574318]  device_add+0x647/0x870
+[   35.574320]  ? hrtimer_init+0x28/0x70
+[   35.574323]  device_register+0x1b/0x30
+[   35.574326]  vmbus_device_register+0x83/0x130
+[   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+[   35.574331]  process_one_work+0x177/0x340
+[   35.574348]  worker_thread+0x2b2/0x3c0
+[   35.574350]  kthread+0xe3/0x1f0
+[   35.574353]  ? __pfx_worker_thread+0x10/0x10
+[   35.574356]  ? __pfx_kthread+0x10/0x10
 
 
-On 5/2/2025 11:43 AM, Greg Kroah-Hartman wrote:
-> On Fri, May 02, 2025 at 11:31:03AM +0530, Naman Jain wrote:
->>
->>
->> On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
->>> On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
->>>>
->>>>
->>>> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
->>>>> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
->>>>>> Hi,
->>>>>> This patch series aims to address the sysfs creation issue for the ring
->>>>>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
->>>>>> size to accurately reflect the actual ring buffer size, rather than a
->>>>>> fixed static value.
->>>>>>
->>>>>> PFB change logs:
->>>>>>
->>>>>> Changes since v5:
->>>>>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
->>>>>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
->>>>>>      commit msg of both patches.
->>>>>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
->>>>>>      hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
->>>>>>      now.
->>>>>> * Changed type for declaring bin_attrs due to changes introduced by
->>>>>>      commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
->>>>>>      merged recently. Did not use bin_attrs_new since another change is in
->>>>>>      the queue to change usage of bin_attrs_new to bin_attrs
->>>>>>      (sysfs: finalize the constification of 'struct bin_attribute').
->>>>>
->>>>> Please fix up to apply cleanly without build warnings:
->>>>>
->>>>> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->>>>>     1893 |         .bin_attrs = vmbus_chan_bin_attrs,
->>>>>          |                      ^~~~~~~~~~~~~~~~~~~~
->>>>> 1 error generated.
->>>>
->>>> Hi Greg,
->>>> I tried reproducing this error but could not see it. Should I rebase the
->>>> change to some other tree or use some specific config option, gcc version,
->>>> compilation flag etc.?
->>>>
->>>> I tried the following:
->>>> * Rebased to latest linux-next tip with below base commit:
->>>> 393d0c54cae31317deaa9043320c5fd9454deabc
->>>> * Regular compilation with gcc: make -j8
->>>> * extra flags:
->>>>     make -j8  EXTRA_CFLAGS="-Wall -O2"
->>>>     make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
->>>> -Werror"
->>>> * Tried gcc 11.4, 13.3
->>>> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
->>>
->>> I tried this against my char-misc-linus branch (which is pretty much
->>> just 6.15.0-rc4 plus some iio patches), and it fails with that error
->>> above.
->>>
->>>> BTW I had to edit the type for bin_attrs as this change got merged recently:
->>>> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
->>>>
->>>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
->>>> index 576b8b3c60af..f418aae4f113 100644
->>>> --- a/include/linux/sysfs.h
->>>> +++ b/include/linux/sysfs.h
->>>> @@ -107,7 +107,7 @@ struct attribute_group {
->>>>                                               int);
->>>>           struct attribute        **attrs;
->>>>           union {
->>>> -               struct bin_attribute            **bin_attrs;
->>>> +               const struct bin_attribute      *const *bin_attrs;
->>>>                   const struct bin_attribute      *const *bin_attrs_new;
->>>>           };
->>>>    };
->>>
->>> That commit is not in my char-misc branches, that's coming from
->>> somewhere else.
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->> Hi Greg,
->>
->> I can send a patch based on char-misc/6.15.0-rc4 which does not have this
->> patch, but I am worried that it will cause compilation issues when your
->> branch is merged with linux-next since this change is already there in
->> linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
-> 
-> Yes, because you want this fix in 6.15-final, right?
-> 
->> Here are more details of that patch:
->>
->> """
->> sysfs: constify attribute_group::bin_attrs
->> All users of this field have been migrated to bin_attrs_new.
->> It can now be constified.
->>
->> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
->> Link: https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
->> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>
->> """
-> 
-> I know that patch, I will deal with that in linux-next when needed, you
-> shouldn't be worrying about it.  I'm more concerned as to why your patch
-> was not being tested against Linus's tree if you expected it to be in
-> the latest release and backported everywhere as it you asked it to be.
-> 
-> thanks,
-> 
-> greg k-h
+Naman Jain (2):
+  uio_hv_generic: Fix sysfs creation path for ring buffer
+  Drivers: hv: Make the sysfs node size for the ring buffer dynamic
 
-Sure, thanks. I'll rebase it to 6.15.0-rc4 and send the next version.
+ drivers/hv/hyperv_vmbus.h    |   6 ++
+ drivers/hv/vmbus_drv.c       | 109 ++++++++++++++++++++++++++++++++++-
+ drivers/uio/uio_hv_generic.c |  39 ++++++-------
+ include/linux/hyperv.h       |   6 ++
+ 4 files changed, 137 insertions(+), 23 deletions(-)
 
-Regards,
-Naman
+
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.34.1
+
 
