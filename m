@@ -1,175 +1,190 @@
-Return-Path: <linux-hyperv+bounces-5300-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5301-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3DF9AA6A61
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 08:01:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB6FCAA6A88
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 08:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9691C1BA6710
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 06:01:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 794D2168C50
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 06:09:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170EB1465A1;
-	Fri,  2 May 2025 06:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 204E41F30DD;
+	Fri,  2 May 2025 06:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ESYZ4B3F"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AiVEFlUu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E237083A;
-	Fri,  2 May 2025 06:01:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279C31E51E3;
+	Fri,  2 May 2025 06:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746165671; cv=none; b=UNg6y0jsJxoFaqLkfm9wjdatzASlYUi23IDNr4BH/x8xma7vFEBaiCChUkXxS3J8fL11qdCrApQdOJqT0icuiQkfkMsmXzrU1PUz3cyn9pq4BV2zXFpTyB+lRFY38q1QFh2cdRulGTl/W2o8DIqOC7TNFqCn5euYCq1tW6uatcs=
+	t=1746166092; cv=none; b=Mu7S7ernV6ip37iU5KZ5t9o1kEg/0bGLMOydjeVZLqEjtXKdVQ0V7medHtGYEzV1hxuXvX2nOdXlNKTCZLLklXK2JQdZ/bJcNCyn2w4kooG5JwnGEEwMaBIdl80VLN6dR9kDpdy/u54CJD1eTZqxIpECYCO7dtCZMFjDbPd8gVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746165671; c=relaxed/simple;
-	bh=AVxBl5tihGLUMFHt3lxk0q44vNka5p+fcSzp6TxyzLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qFYbaw5eYTsfDa8VfXmGLFTkEVx4S3vxKeeNeqnMj2eqG4hbbCSjj8N9Isyd2h614zhx2GR033Mc9HzKjhdxxKYO5EfZSJR/0MFD+Sz+SVJZLfLeZJ8JfLGHA4nWQT3L1a9W04Ty8A16/ga25pX96+e2SHCH/Gji822iDNPgcNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ESYZ4B3F; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1746166092; c=relaxed/simple;
+	bh=Vx2THve1rmsHzjpjDKRkcdp0KoxQt1d23ap0dGDJAX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X5V2fI9jIUoDSI1cSx/LCAaFDbH26DF5lmja4l7HfM9WrfRX+aEx8VaiEEMFghxqzvkglnCiH+lXPeNvbLSQY9JUDe3cYlHvlmL2nayTBMY7GvNhkBPm6UxtRitexvTddlt83kuljimMueOhjVz0szZwTMECGIulaTjkWPsOsuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AiVEFlUu; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.193.170] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 42434211159B;
-	Thu,  1 May 2025 23:01:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42434211159B
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 789102020964; Thu,  1 May 2025 23:08:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 789102020964
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746165668;
-	bh=n6KFWWoXYHxscjPof2OutrHwg+xGPVvT7uzE7cJP4LU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ESYZ4B3Fcg3Ko2lR5YdEo+mqD7tWwDu0FDc4cb8270QuBWO7kKB5QfUmcdX2YPrKb
-	 ufdjCvBIHn+keFgdpmDDKJMvDVYMD6rjCCkiargQqN/+r2pfG6LfA1IHnzZtXp2809
-	 a7gX0PvtbE2Z7BjkSYkzePiQSW2uiwTrAFZGz3Jg=
-Message-ID: <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
-Date: Fri, 2 May 2025 11:31:03 +0530
+	s=default; t=1746166089;
+	bh=9+r69ZddY1UZkHR3/FwhIdCjqmNBZaadDjUSZVoYSAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AiVEFlUu8IfyCCGNVGXAeB65x7LTHiBsP3cyaB05BdyktmMQdrW7BvdxLv00u1I+K
+	 r1g0rPMQqAsJ3B7qyaA52zhAQgAZXeGda+rIgFQ4eUeNd7kZJ40alPQW5JDCrpituU
+	 tCG1qe5CmLcW70KOfqLSp6O8Dh//y+Ae1fadP70w=
+Date: Thu, 1 May 2025 23:08:09 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy?ski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
+ required
+Message-ID: <20250502060809.GA10704@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <SN6PR02MB4157FF2CA8E37298FC634491D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250501142354.GA6208@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB4157EAC71A53E152EE684A4DD4822@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Stephen Hemminger <stephen@networkplumber.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
- <2025042501-accuracy-uncombed-cb99@gregkh>
- <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
- <2025050154-skyward-snagged-973d@gregkh>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <2025050154-skyward-snagged-973d@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157EAC71A53E152EE684A4DD4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-
-On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
-> On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
->>
->>
->> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
->>> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
->>>> Hi,
->>>> This patch series aims to address the sysfs creation issue for the ring
->>>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
->>>> size to accurately reflect the actual ring buffer size, rather than a
->>>> fixed static value.
->>>>
->>>> PFB change logs:
->>>>
->>>> Changes since v5:
->>>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
->>>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
->>>>     commit msg of both patches.
->>>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
->>>>     hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
->>>>     now.
->>>> * Changed type for declaring bin_attrs due to changes introduced by
->>>>     commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
->>>>     merged recently. Did not use bin_attrs_new since another change is in
->>>>     the queue to change usage of bin_attrs_new to bin_attrs
->>>>     (sysfs: finalize the constification of 'struct bin_attribute').
->>>
->>> Please fix up to apply cleanly without build warnings:
->>>
->>> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->>>    1893 |         .bin_attrs = vmbus_chan_bin_attrs,
->>>         |                      ^~~~~~~~~~~~~~~~~~~~
->>> 1 error generated.
->>
->> Hi Greg,
->> I tried reproducing this error but could not see it. Should I rebase the
->> change to some other tree or use some specific config option, gcc version,
->> compilation flag etc.?
->>
->> I tried the following:
->> * Rebased to latest linux-next tip with below base commit:
->> 393d0c54cae31317deaa9043320c5fd9454deabc
->> * Regular compilation with gcc: make -j8
->> * extra flags:
->>    make -j8  EXTRA_CFLAGS="-Wall -O2"
->>    make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
->> -Werror"
->> * Tried gcc 11.4, 13.3
->> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
+On Thu, May 01, 2025 at 03:56:48PM +0000, Michael Kelley wrote:
+> From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Thursday, May 1, 2025 7:24 AM
+> > 
+> > On Thu, May 01, 2025 at 05:27:49AM +0000, Michael Kelley wrote:
+> > > From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, April 25,
+> > 2025 3:55 AM
+> > > >
+> > > > Currently, the MANA driver allocates MSI-X vectors statically based on
+> > > > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
+> > > > up allocating more vectors than it needs. This is because, by this time
+> > > > we do not have a HW channel and do not know how many IRQs should be
+> > > > allocated.
+> > > >
+> > > > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
+> > > > after getting the value supported by hardware, dynamically add the
+> > > > remaining MSI-X vectors.
+> > >
+> > > I have a top-level thought about the data structures used to manage a
+> > > dynamic number of MSI-X vectors. The current code allocates a fixed size
+> > > array of struct gdma_irq_context, with one entry in the array for each
+> > > MSI-X vector. To find the entry for a particular msi_index, the code can
+> > > just index into the array, which is nice and simple.
+> > >
+> > > The new code uses a linked list of struct gdma_irq_context entries, with
+> > > one entry in the list for each MSI-X vector.  In the dynamic case, you can
+> > > start with one entry in the list, and then add to the list however many
+> > > additional entries the hardware will support.
+> > >
+> > > But this additional linked list adds significant complexity to the code
+> > > because it must be linearly searched to find the entry for a particular
+> > > msi_index, and there's the messiness of putting entries onto the list
+> > > and taking them off.  A spin lock is required.  Etc., etc.
+> > >
+> > > Here's an intermediate approach that would be simpler. Allocate a fixed
+> > > size array of pointers to struct gdma_irq_context. The fixed size is the
+> > > maximum number of possible MSI-X vectors for the device, which I
+> > > think is MANA_MAX_NUM_QUEUES, or 64 (correct me if I'm wrong
+> > > about that). Allocate a new struct gdma_irq_context when needed,
+> > > but store the address in the array rather than adding it onto a list.
+> > > Code can then directly index into the array to access the entry.
+> > >
+> > > Some entries in the array will be unused (and "wasted") if the device
+> > > uses fewer MSI-X vector, but each unused entry is only 8 bytes. The
+> > > max space unused is fewer than 512 bytes (assuming 64 entries in
+> > > the array), which is neglible in the grand scheme of things. With the
+> > > simpler code, and not having the additional list entry embedded in
+> > > each struct gmda_irq_context, you'll get some of that space back
+> > > anyway.
+> > >
+> > > Maybe there's a reason for the list that I missed in my initial
+> > > review of the code. But if not, it sure seems like the code could
+> > > be simpler, and having some unused 8 bytes entries in the array
+> > > is worth the tradeoff for the simplicity.
+> > >
+> > > Michael
+> > 
+> > Hey  Michael,
+> > 
+> > Thanks for your inputs. We did think of this approach and in fact that
+> > was how this patch was implemented(fixed size array) in the v1 of our
+> > internal reviews.
+> > 
+> > However, it came up in those reviews that we want to move away
+> > from the 64(MANA_MAX_NUM_QUEUES) as a hard limit for some new
+> > requirements, atleast for the dynamic IRQ allocation path. And now the
+> > new limit for all hardening purposes would be num_online_cpus().
+> > 
+> > Using this limit and the fixed array size approach creates problems,
+> > especially in machines with high number of vCPUs. It would lead to
+> > quite a bit of memory/resource wastage.
+> > 
+> > Hence, we decided to go ahead with this design.
+> > 
+> > Regards,
+> > Shradha.
 > 
-> I tried this against my char-misc-linus branch (which is pretty much
-> just 6.15.0-rc4 plus some iio patches), and it fails with that error
-> above.
+> One other thought:  Did you look at using an xarray? See
+> https://www.kernel.org/doc/html/latest/core-api/xarray.html.
+> It has most of or all the properties you need to deal with
+> a variable number of entries, while handling all the locking
+> automatically. Entries can be accessed with just a simple
+> index value.
 > 
->> BTW I had to edit the type for bin_attrs as this change got merged recently:
->> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
->>
->> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
->> index 576b8b3c60af..f418aae4f113 100644
->> --- a/include/linux/sysfs.h
->> +++ b/include/linux/sysfs.h
->> @@ -107,7 +107,7 @@ struct attribute_group {
->>                                              int);
->>          struct attribute        **attrs;
->>          union {
->> -               struct bin_attribute            **bin_attrs;
->> +               const struct bin_attribute      *const *bin_attrs;
->>                  const struct bin_attribute      *const *bin_attrs_new;
->>          };
->>   };
+> I don't have first-hand experience writing code using xarrays,
+> so I can't be sure that it would simplify things for MANA IRQ
+> allocation, but it seems to be a very appropriate abstraction
+> for this use case.
 > 
-> That commit is not in my char-misc branches, that's coming from
-> somewhere else.
-> 
-> thanks,
-> 
-> greg k-h
+> Michael
+>
+Thanks Michael,
 
-Hi Greg,
-
-I can send a patch based on char-misc/6.15.0-rc4 which does not have 
-this patch, but I am worried that it will cause compilation issues when 
-your branch is merged with linux-next since this change is already there 
-in linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
-
-Here are more details of that patch:
-
-"""
-sysfs: constify attribute_group::bin_attrs
-All users of this field have been migrated to bin_attrs_new.
-It can now be constified.
-
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Link: 
-https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-"""
+This does look promising for our usecase. I will try it with this patch,
+update the thread and then send out the next version as required.
 
 Regards,
-Naman
+Shradha.
 
