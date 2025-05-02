@@ -1,54 +1,47 @@
-Return-Path: <linux-hyperv+bounces-5299-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5300-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BD43AA6A5A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 07:49:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3DF9AA6A61
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 08:01:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CBC2986085
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 05:49:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9691C1BA6710
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 06:01:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 221AF1A83E8;
-	Fri,  2 May 2025 05:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170EB1465A1;
+	Fri,  2 May 2025 06:01:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QNHgla/6"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ESYZ4B3F"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508CDBA3F;
-	Fri,  2 May 2025 05:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E237083A;
+	Fri,  2 May 2025 06:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746164959; cv=none; b=sNh7tRf05/t0YssUX2d1zNp7dL7u6mlT2O0Kt58GyzZtBu7Py70Jyz9/AXtuBnlvUorvxnyxSomnTPAXOxM/k7F4nwrvTg7cFb/Nma46vHg7I/BHYXBMaXHQ6/rmdl7s+zGe4fu846UBXCGC88eYT0pGBB1dVgYs7CdpaSO1yAU=
+	t=1746165671; cv=none; b=UNg6y0jsJxoFaqLkfm9wjdatzASlYUi23IDNr4BH/x8xma7vFEBaiCChUkXxS3J8fL11qdCrApQdOJqT0icuiQkfkMsmXzrU1PUz3cyn9pq4BV2zXFpTyB+lRFY38q1QFh2cdRulGTl/W2o8DIqOC7TNFqCn5euYCq1tW6uatcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746164959; c=relaxed/simple;
-	bh=xHuDiwaHi25BWrOdJavtW7Xs+O7UjhjxqydntQpALqY=;
+	s=arc-20240116; t=1746165671; c=relaxed/simple;
+	bh=AVxBl5tihGLUMFHt3lxk0q44vNka5p+fcSzp6TxyzLk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aPcf9CVhF9UmDFI0mp4MZYQ0Dso0CDGKm2NQ4y+QcwYBX6AaiJL0MZrCaAc6kEHonB1oOwaz3M90ju1qoPwmNQ+//unNkvAwZ/nU/1noSz6SAHiHhLoKksOcPj5Ai4/jjOD4Mi9+VHdEcMCcx/oLAvWQ2NDcUbUE8eaOu7JT0qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QNHgla/6; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5425mgEN1781141
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 1 May 2025 22:48:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5425mgEN1781141
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746164924;
-	bh=UPrgXeeHDSbppfXKlFI7+ZZbVFJc1sBHvqfJ3YIqx60=;
+	 In-Reply-To:Content-Type; b=qFYbaw5eYTsfDa8VfXmGLFTkEVx4S3vxKeeNeqnMj2eqG4hbbCSjj8N9Isyd2h614zhx2GR033Mc9HzKjhdxxKYO5EfZSJR/0MFD+Sz+SVJZLfLeZJ8JfLGHA4nWQT3L1a9W04Ty8A16/ga25pX96+e2SHCH/Gji822iDNPgcNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ESYZ4B3F; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.193.170] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 42434211159B;
+	Thu,  1 May 2025 23:01:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42434211159B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746165668;
+	bh=n6KFWWoXYHxscjPof2OutrHwg+xGPVvT7uzE7cJP4LU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QNHgla/6mBMJgp4DmEzvjI9pcvfVN1AMs4cpGZJq2JBUfGbHcB9acot2g/bgQGktc
-	 18qpb94Jy2r+RT5E9zUkpFLLsrV3Z3/i70nJ+Dh+WTpdCsZ+bEy40c+lxFidRpCSKD
-	 RcNA8Yg9dvgJ978NzgkgtdYqjKvXlHNKEHrVnYOa67p79PEEX6vGALYMxlIAEfKghW
-	 DM/OlDNVra5aggOOi76AhTcuZIvUMePIFwDClF/1v0o7EYk0G9wmAHQxo6AnUG/EYb
-	 N2BN2I0wrrK0Y3lw9W0AkaAWkLlIQJsN4PZ7YC6a5LaCim78ZaBem0nJZCSNIaQFsC
-	 CJOJPI+IHLuOQ==
-Message-ID: <9b112e40-d281-422c-b862-3c073b3c7239@zytor.com>
-Date: Thu, 1 May 2025 22:48:42 -0700
+	b=ESYZ4B3Fcg3Ko2lR5YdEo+mqD7tWwDu0FDc4cb8270QuBWO7kKB5QfUmcdX2YPrKb
+	 ufdjCvBIHn+keFgdpmDDKJMvDVYMD6rjCCkiargQqN/+r2pfG6LfA1IHnzZtXp2809
+	 a7gX0PvtbE2Z7BjkSYkzePiQSW2uiwTrAFZGz3Jg=
+Message-ID: <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
+Date: Fri, 2 May 2025 11:31:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,127 +49,127 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
- __nocfi functions
-To: Sean Christopherson <seanjc@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
-        kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-        samitolvanen@google.com, ojeda@kernel.org
-References: <20250430110734.392235199@infradead.org>
- <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
- <20250501103038.GB4356@noisy.programming.kicks-ass.net>
- <20250501153844.GD4356@noisy.programming.kicks-ass.net>
- <aBO9uoLnxCSD0UwT@google.com>
+Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250424053524.1631-1-namjain@linux.microsoft.com>
+ <2025042501-accuracy-uncombed-cb99@gregkh>
+ <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+ <2025050154-skyward-snagged-973d@gregkh>
 Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aBO9uoLnxCSD0UwT@google.com>
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025050154-skyward-snagged-973d@gregkh>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/1/2025 11:30 AM, Sean Christopherson wrote:
->  From c50fb5a8a46058bbcfdcac0a100c2aa0f7f68f1c Mon Sep 17 00:00:00 2001
-> From: Sean Christopherson<seanjc@google.com>
-> Date: Thu, 1 May 2025 11:10:39 -0700
-> Subject: [PATCH 2/2] x86/fred: KVM: VMX: Always use FRED for IRQ+NMI when
->   CONFIG_X86_FRED=y
+
+
+On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
+> On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
+>>
+>>
+>> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
+>>> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
+>>>> Hi,
+>>>> This patch series aims to address the sysfs creation issue for the ring
+>>>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
+>>>> size to accurately reflect the actual ring buffer size, rather than a
+>>>> fixed static value.
+>>>>
+>>>> PFB change logs:
+>>>>
+>>>> Changes since v5:
+>>>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+>>>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+>>>>     commit msg of both patches.
+>>>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
+>>>>     hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+>>>>     now.
+>>>> * Changed type for declaring bin_attrs due to changes introduced by
+>>>>     commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+>>>>     merged recently. Did not use bin_attrs_new since another change is in
+>>>>     the queue to change usage of bin_attrs_new to bin_attrs
+>>>>     (sysfs: finalize the constification of 'struct bin_attribute').
+>>>
+>>> Please fix up to apply cleanly without build warnings:
+>>>
+>>> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>>>    1893 |         .bin_attrs = vmbus_chan_bin_attrs,
+>>>         |                      ^~~~~~~~~~~~~~~~~~~~
+>>> 1 error generated.
+>>
+>> Hi Greg,
+>> I tried reproducing this error but could not see it. Should I rebase the
+>> change to some other tree or use some specific config option, gcc version,
+>> compilation flag etc.?
+>>
+>> I tried the following:
+>> * Rebased to latest linux-next tip with below base commit:
+>> 393d0c54cae31317deaa9043320c5fd9454deabc
+>> * Regular compilation with gcc: make -j8
+>> * extra flags:
+>>    make -j8  EXTRA_CFLAGS="-Wall -O2"
+>>    make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
+>> -Werror"
+>> * Tried gcc 11.4, 13.3
+>> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
 > 
-> Now that FRED provides C-code entry points for handling IRQ and NMI exits,
-> use the FRED infrastructure for forwarding all such events even if FRED
-> isn't supported in hardware.  Avoiding the non-FRED assembly trampolines
-> into the IDT handlers for IRQs eliminates the associated non-CFI indirect
-> call (KVM performs a CALL by doing a lookup on the IDT using the IRQ
-> vector).
+> I tried this against my char-misc-linus branch (which is pretty much
+> just 6.15.0-rc4 plus some iio patches), and it fails with that error
+> above.
 > 
-> Force FRED for 64-bit kernels if KVM_INTEL is enabled, as the benefits of
-> eliminating the IRQ trampoline usage far outwieghts the code overhead for
-> FRED.
+>> BTW I had to edit the type for bin_attrs as this change got merged recently:
+>> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+>>
+>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+>> index 576b8b3c60af..f418aae4f113 100644
+>> --- a/include/linux/sysfs.h
+>> +++ b/include/linux/sysfs.h
+>> @@ -107,7 +107,7 @@ struct attribute_group {
+>>                                              int);
+>>          struct attribute        **attrs;
+>>          union {
+>> -               struct bin_attribute            **bin_attrs;
+>> +               const struct bin_attribute      *const *bin_attrs;
+>>                  const struct bin_attribute      *const *bin_attrs_new;
+>>          };
+>>   };
 > 
-> Suggested-by: Peter Zijlstra<peterz@infradead.org>
-> Signed-off-by: Sean Christopherson<seanjc@google.com>
-> ---
->   arch/x86/kvm/Kconfig   | 1 +
->   arch/x86/kvm/vmx/vmx.c | 4 ++--
->   2 files changed, 3 insertions(+), 2 deletions(-)
+> That commit is not in my char-misc branches, that's coming from
+> somewhere else.
 > 
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index 2eeffcec5382..712a2ff28ce4 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -95,6 +95,7 @@ config KVM_SW_PROTECTED_VM
->   config KVM_INTEL
->   	tristate "KVM for Intel (and compatible) processors support"
->   	depends on KVM && IA32_FEAT_CTL
-> +	select X86_FRED if X86_64
+> thanks,
+> 
+> greg k-h
 
-I LOVE this change, but not sure if everyone is happy with it.
+Hi Greg,
 
->   	select KVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
->   	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
->   	help
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ef2d7208dd20..2ea89985107d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6995,7 +6995,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
->   		return;
->   
->   	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
-> -	if (cpu_feature_enabled(X86_FEATURE_FRED))
-> +	if (IS_ENABLED(CONFIG_X86_FRED))
+I can send a patch based on char-misc/6.15.0-rc4 which does not have 
+this patch, but I am worried that it will cause compilation issues when 
+your branch is merged with linux-next since this change is already there 
+in linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
 
-"if (IS_ENABLED(CONFIG_X86_64))"?
+Here are more details of that patch:
 
->   		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
->   	else
->   		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
-> @@ -7268,7 +7268,7 @@ noinstr void vmx_handle_nmi(struct kvm_vcpu *vcpu)
->   		return;
->   
->   	kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
-> -	if (cpu_feature_enabled(X86_FEATURE_FRED))
-> +	if (IS_ENABLED(CONFIG_X86_FRED))
+"""
+sysfs: constify attribute_group::bin_attrs
+All users of this field have been migrated to bin_attrs_new.
+It can now be constified.
 
-Ditto.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: 
+https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+"""
+
+Regards,
+Naman
 
