@@ -1,173 +1,153 @@
-Return-Path: <linux-hyperv+bounces-5321-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5322-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 814C3AA7926
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 20:10:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC845AA7A5F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 21:44:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D88914C3783
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 18:10:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 744D49A75AF
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 May 2025 19:44:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE547267B78;
-	Fri,  2 May 2025 18:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A9611F3FED;
+	Fri,  2 May 2025 19:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ik1PM2pU"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hXlnQTzu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A04342A87;
-	Fri,  2 May 2025 18:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A251F2BAD;
+	Fri,  2 May 2025 19:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746209422; cv=none; b=dZVLpDk76MBLh0Y9538xO/s7EchN8drZWbme7de1lrtIOwoFostyl5TNUAU5HB9r72hGQs8CYT/LgkXxHlgcMGBlo+Q6b0CWY/3I6hEmwhOsCYNAENukaYkkMTOql43BCAOWEKzYZAV10BK1+mdwY2n6NjJuFN/9+zJEW2ZwJ7k=
+	t=1746215070; cv=none; b=rEVsmKRRRCQBQHU8Z9j2my0/cSZfcdfmxXDEvIxso0ujbzaMW8iRD6tKWCkcw+2sv1jYswVEqcru8lDYpbBmTatboVnQTrwvGT5hAOen0KvsjTMXR/f/MDa/Lho1qA8PrGlLF+POh7P5kxe5wDXqKzOnspfK3wrQKXVKdU1qzWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746209422; c=relaxed/simple;
-	bh=1wXTTHb5bXBrdK2EgccYQYFHa4IE2A2pICCNASrvymc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=euZt8aldPEb5N55H7c294NmxxViMoxWJ6UOWTkaftKyTYLaHxL31j7yWohnBw8U9U4ZvtZuoDwY+aOsxa9uSLCRgqaIuJZr2RF/DcwSsWTsnmx5NjXR5+si++hnEEsgxm7Af6169i78ef80yDXFiNG6IGa80VgeW3TGbouIfNKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Ik1PM2pU; arc=none smtp.client-ip=198.137.202.136
+	s=arc-20240116; t=1746215070; c=relaxed/simple;
+	bh=n+L5wdWKfMSnWgjpxdKD9mYdVp2ikqZ5Yl7stiWg6xg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=B+HZFWySXfWWe/SNufWuTFI4yGlbqcP0Ej7eN53shWf6ArYMKybUAO540HZsk+rNtYAKcG23TYhp/QbM0LwcTO60KRT3VAW+0kAs2H/KbaRtdt3fyD2BU+7jjVbsd9ArwNQxoJuSNUPGr/QwPhr48Pyd8cTG6O1sTrZNOS1OxA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hXlnQTzu; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
+Received: from [127.0.0.1] ([76.133.66.138])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542I9URm2109765
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542JhQjh2150495
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 2 May 2025 11:09:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542I9URm2109765
+	Fri, 2 May 2025 12:43:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542JhQjh2150495
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746209374;
-	bh=vq/A29GwC24q+yBRNQofOThRodhc2pHOhalxWP8yF44=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ik1PM2pUOLDwsjM0pqh49zNwLFsJWsVvCOj193iIxEYzWbmWmPkLOpNjbPdzrjX3v
-	 011IuXpNubhbptoPBokYY/dElyxPQHBCRBjU3Lulkb2yxO4epZ6XSk5+/VuLkmyTKm
-	 0Ud2Zan/4XorBw9nLxr1az3pZ8UdL1JipoDA4C6q89BQQ1lor7RIvGuJ3g6OnfiFiz
-	 CnEXvlTclGzLsYNkl8D2WwBsbJipZUTOsHbneDfOJuaejckEKDSBWeybOIBPjijOO0
-	 KGDNLUtdX+eqbIB7ygYhUbhkhUiAb06+5ytRj+5jyUF4CBn/8fUyg6Mi66qsYtwZ4H
-	 VoszEMjA20uGw==
-Message-ID: <2cbb468c-188e-4e6b-9b17-b60a66208c7a@zytor.com>
-Date: Fri, 2 May 2025 11:09:29 -0700
+	s=2025042001; t=1746215008;
+	bh=ZqLXxzNJv0IHqSG9SsLfGERgXXTrSiEhUW5FOYYelTg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hXlnQTzulXtKiJv1Lq04GAWzGF/0q4TfVKQJTch09TMCik6jf/8YdVqA77Ps8sd25
+	 QX5VLVzqgNsl8Q7tJ/7P4VMTaU4KPlYk/zktKDIoM1I9Fyau9p1HZQZcY2pbEW/q+I
+	 Hrxb+YOhhwHl49hLEBYFb9Y+caY17+IRSFyp2ZARE6p8jGafT8Gm2CCQb367j+1uaK
+	 o2hyqIBGWTUzPdeWKhV0Hy8YOmYk5Zqio4UbkvzM/zuTwf7JNTt3fwtQcqarSo1jrX
+	 +pBune/c9bJzdacTU00rRG5QZkwPze2HEkF2Vy037KbBFp54+9MCfbfhNp6N9c87Qu
+	 Qq3ksCCBwRmaA==
+Date: Fri, 02 May 2025 12:43:23 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+        jpoimboe@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_00/13=5D_objtool=3A_Detect_and_wa?=
+ =?US-ASCII?Q?rn_about_indirect_calls_in_=5F=5Fnocfi_functions?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9b112e40-d281-422c-b862-3c073b3c7239@zytor.com>
+References: <20250430110734.392235199@infradead.org> <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com> <20250430190600.GQ4439@noisy.programming.kicks-ass.net> <20250501103038.GB4356@noisy.programming.kicks-ass.net> <20250501153844.GD4356@noisy.programming.kicks-ass.net> <aBO9uoLnxCSD0UwT@google.com> <9b112e40-d281-422c-b862-3c073b3c7239@zytor.com>
+Message-ID: <80783990-FEF8-4F40-810E-5B89D9801E84@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-3-xin@zytor.com> <aBR8EoYkxaFHwZN2@gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aBR8EoYkxaFHwZN2@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 5/2/2025 1:02 AM, Ingo Molnar wrote:
-> 
-> * Xin Li (Intel) <xin@zytor.com> wrote:
-> 
->> index 94408a784c8e..13335a130edf 100644
->> --- a/arch/x86/include/asm/tsc.h
->> +++ b/arch/x86/include/asm/tsc.h
->> @@ -7,7 +7,81 @@
->>   
->>   #include <asm/cpufeature.h>
->>   #include <asm/processor.h>
->> -#include <asm/msr.h>
->> +
->> +/*
->> + * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
->> + * constraint has different meanings. For i386, "A" means exactly
->> + * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
->> + * it means rax *or* rdx.
->> + */
->> +#ifdef CONFIG_X86_64
->> +/* Using 64-bit values saves one instruction clearing the high half of low */
->> +#define DECLARE_ARGS(val, low, high)	unsigned long low, high
->> +#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
->> +#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
->> +#else
->> +#define DECLARE_ARGS(val, low, high)	u64 val
->> +#define EAX_EDX_VAL(val, low, high)	(val)
->> +#define EAX_EDX_RET(val, low, high)	"=A" (val)
->> +#endif
-> 
-> Meh, this patch creates a duplicate copy of DECLARE_ARGS() et al in
-> <asm/tsc.h> now:
-> 
->   arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
->   arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) u64 val
->   arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
->   arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
->   arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
->   arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
->   arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) u64 val
->   arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
->   arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
->   arch/x86/include/asm/tsc.h:#undef DECLARE_ARGS
-> 
-> Which was both an undeclared change, bloats the code, causes various
-> problems, and is totally unnecessary to boot.
-> 
-> Please don't do that ...
+On May 1, 2025 10:48:42 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
+>On 5/1/2025 11:30 AM, Sean Christopherson wrote:
+>>  From c50fb5a8a46058bbcfdcac0a100c2aa0f7f68f1c Mon Sep 17 00:00:00 2001
+>> From: Sean Christopherson<seanjc@google=2Ecom>
+>> Date: Thu, 1 May 2025 11:10:39 -0700
+>> Subject: [PATCH 2/2] x86/fred: KVM: VMX: Always use FRED for IRQ+NMI wh=
+en
+>>   CONFIG_X86_FRED=3Dy
+>>=20
+>> Now that FRED provides C-code entry points for handling IRQ and NMI exi=
+ts,
+>> use the FRED infrastructure for forwarding all such events even if FRED
+>> isn't supported in hardware=2E  Avoiding the non-FRED assembly trampoli=
+nes
+>> into the IDT handlers for IRQs eliminates the associated non-CFI indire=
+ct
+>> call (KVM performs a CALL by doing a lookup on the IDT using the IRQ
+>> vector)=2E
+>>=20
+>> Force FRED for 64-bit kernels if KVM_INTEL is enabled, as the benefits =
+of
+>> eliminating the IRQ trampoline usage far outwieghts the code overhead f=
+or
+>> FRED=2E
+>>=20
+>> Suggested-by: Peter Zijlstra<peterz@infradead=2Eorg>
+>> Signed-off-by: Sean Christopherson<seanjc@google=2Ecom>
+>> ---
+>>   arch/x86/kvm/Kconfig   | 1 +
+>>   arch/x86/kvm/vmx/vmx=2Ec | 4 ++--
+>>   2 files changed, 3 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+>> index 2eeffcec5382=2E=2E712a2ff28ce4 100644
+>> --- a/arch/x86/kvm/Kconfig
+>> +++ b/arch/x86/kvm/Kconfig
+>> @@ -95,6 +95,7 @@ config KVM_SW_PROTECTED_VM
+>>   config KVM_INTEL
+>>   	tristate "KVM for Intel (and compatible) processors support"
+>>   	depends on KVM && IA32_FEAT_CTL
+>> +	select X86_FRED if X86_64
+>
+>I LOVE this change, but not sure if everyone is happy with it=2E
+>
+>>   	select KVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
+>>   	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
+>>   	help
+>> diff --git a/arch/x86/kvm/vmx/vmx=2Ec b/arch/x86/kvm/vmx/vmx=2Ec
+>> index ef2d7208dd20=2E=2E2ea89985107d 100644
+>> --- a/arch/x86/kvm/vmx/vmx=2Ec
+>> +++ b/arch/x86/kvm/vmx/vmx=2Ec
+>> @@ -6995,7 +6995,7 @@ static void handle_external_interrupt_irqoff(stru=
+ct kvm_vcpu *vcpu,
+>>   		return;
+>>     	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+>> -	if (cpu_feature_enabled(X86_FEATURE_FRED))
+>> +	if (IS_ENABLED(CONFIG_X86_FRED))
+>
+>"if (IS_ENABLED(CONFIG_X86_64))"?
+>
+>>   		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
+>>   	else
+>>   		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + ve=
+ctor));
+>> @@ -7268,7 +7268,7 @@ noinstr void vmx_handle_nmi(struct kvm_vcpu *vcpu=
+)
+>>   		return;
+>>     	kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+>> -	if (cpu_feature_enabled(X86_FEATURE_FRED))
+>> +	if (IS_ENABLED(CONFIG_X86_FRED))
+>
+>Ditto=2E
 
-Learned!
-
-Especially that every change needs to explicitly called out.
+I don't think anyone will have a problem with compiling it in=2E=2E=2E it =
+is such a small amount of code=2E
 
