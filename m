@@ -1,139 +1,113 @@
-Return-Path: <linux-hyperv+bounces-5339-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5340-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51C19AA8245
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 May 2025 21:12:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28510AA82C8
+	for <lists+linux-hyperv@lfdr.de>; Sat,  3 May 2025 22:33:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 377D91B6232C
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 May 2025 19:12:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9491846051B
+	for <lists+linux-hyperv@lfdr.de>; Sat,  3 May 2025 20:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACEF281538;
-	Sat,  3 May 2025 19:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA661A841C;
+	Sat,  3 May 2025 20:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aZO5uDaW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ7YSeyc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A887280CE7;
-	Sat,  3 May 2025 19:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7C01CD0C;
+	Sat,  3 May 2025 20:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746299422; cv=none; b=XnDtHqvsDjKRFXxXRK8wL7h5LHMwN3LCDQUJrp5aMdh1tmwBrpfooZqHGPTiSeQNnbiIOMfzsD8gt2jtVBkuhww3hE9iKdQ4WccV4S/wPkiiRDPr/wcfaZMzB9yX8k9Obcn/etsdz3gj0JT1wdU8hUljMBaKipvmEayFjJ+hC9k=
+	t=1746304402; cv=none; b=B9PqjWlsnOr9R7AJ9CPUptaayf4LTf31jp/fdhISdiX2IpRSu/oXuss6nYhTAF++ciiEJYvsOQZTDTlpyin3AgPDy1jbi0RRQf7dZyVVXFm/002q0YaEkpBRbGKs7me4TbNd+EdRBBrKXBvxtZbkI72rCEqHeSl3yPxaFGdIL8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746299422; c=relaxed/simple;
-	bh=ETQow3I3jVQQbfoDkbZ6LD9Df4riH/sjwHO2fajMiE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=LKIehVKFQZ53rhzP9rGhvJAnpPewrsW39L8UXTuz/hqHcEEn7/VUnOrn7eIxrrEmb+q2AfrrckLuEGg5U4p4lg7ZdfUdwIdCtHsh8OVzqAQ2DSfEuVo/PwEUODe2gc/NqrRDkPND+Amr6rBWOrOl5yb8BUUEpbfFyZCctscMgEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aZO5uDaW; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746299420; x=1777835420;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=ETQow3I3jVQQbfoDkbZ6LD9Df4riH/sjwHO2fajMiE0=;
-  b=aZO5uDaWGvdggdlPNJFlXva1la+oZ+B1/6k3mpn3mrlzNG/Rv4yd6OVX
-   CRHu5wF2mDlYDu1vlVKK7ptgxOEEtxHuyqUbMUtLRXiTSWyiuruEnM534
-   nkI09cQFtVJpFtBSLr0FS919g8orUgJH0FPlwMl2eemyZxoFJoXgVS1PR
-   UxZHw7+kAJjThbO0kyFMbThP1J3i6QxNBrrc00PcyscxWfzzQupPErY+y
-   DYxtT+h1Q5KR/PaF6jPY0GSZib39GJVo4lsKFb2rGddzKEK5G4Qgjrhsk
-   REHZCWjuTFGWyUNVGdR0f9rQWQVCu4eMWRymC196DPqjfhUwZCSVHYUeF
-   A==;
-X-CSE-ConnectionGUID: J4F2she8Tf+h4phYEaiVcQ==
-X-CSE-MsgGUID: 9MM4zJbWSNCN2ORaTZ8iMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11422"; a="48095666"
-X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
-   d="scan'208";a="48095666"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2025 12:10:17 -0700
-X-CSE-ConnectionGUID: Cg2HYCxrS3K8KM6RbaS3ew==
-X-CSE-MsgGUID: AOkYwIMJRhiXoovjmJrE9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
-   d="scan'208";a="140046125"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa004.fm.intel.com with ESMTP; 03 May 2025 12:10:16 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: x86@kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org ,
-	linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: [PATCH v3 13/13] x86/hyperv/vtl: Use the wakeup mailbox to boot secondary CPUs
-Date: Sat,  3 May 2025 12:15:15 -0700
-Message-Id: <20250503191515.24041-14-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+	s=arc-20240116; t=1746304402; c=relaxed/simple;
+	bh=lzIwPmqPMdz3XojcJkKNZG+joQBPqTC3+fqltwxxtFQ=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=D+aF0nKrzZfOnkagcepyYW9eTUKLXx1o4uZ0ltRGn+1iBgJsWoUe8p9LO6pO2AalFpLuyCjlf5bjcqE88NB7b/EkmHNV1LkBMgzcvkAQDbJDYHoQxzf0HSXCQMoOW0hQw9yGV4qgKWREbO0c7x9YcgII37LtaX06LLHw20AdfYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ7YSeyc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A15BC4CEE3;
+	Sat,  3 May 2025 20:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746304401;
+	bh=lzIwPmqPMdz3XojcJkKNZG+joQBPqTC3+fqltwxxtFQ=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=vQ7YSeycPSASlx4k6K6opncdc46F2A6XnMD8LkzQ8Qn8O5iGgrJ8IpAH87+kUlPwx
+	 /zBmQ5JQzrWoPKSKgj935gVZVLdNCo3Au4HBhVtfCGKWFi/HpLuK6MJlb4b4KpAKVm
+	 yLZW1j4gRYNUOlWC0IL0+u7ee40wKdAvmHzZaO2BOY6/1f8ia9pQWhc7traWGLhibv
+	 E9mwYR8R03GvBVDJ6uqc0PH4SzRxFH9M71zOTYuaFK9TpkK7206ZcrQEsh4LZPVlag
+	 viOSBDMfMjlxFj0k29M9jlatfoU1/AS1blG1L7YQ+05JWE/lEeK9ZPbtIQx+nqDZNK
+	 4jXC06ppAY2cQ==
+Date: Sat, 03 May 2025 15:33:19 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ Ricardo Neri <ricardo.neri@intel.com>, 
+ "Ravi V. Shankar" <ravi.v.shankar@intel.com>, Wei Liu <wei.liu@kernel.org>, 
+ linux-acpi@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org, 
+ x86@kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, 
+ Michael Kelley <mhklinux@outlook.com>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
+Message-Id: <174630439938.1202156.1298422301463941407.robh@kernel.org>
+Subject: Re: [PATCH v3 04/13] dt-bindings: x86: Add CPU bindings for x86
 
-The hypervisor is an untrusted entity for TDX guests. It cannot be used
-to boot secondary CPUs. The function hv_vtl_wakeup_secondary_cpu() cannot
-be used.
 
-Instead, the virtual firmware boots the secondary CPUs and places them in
-a state to transfer control to the kernel using the wakeup mailbox.
+On Sat, 03 May 2025 12:15:06 -0700, Ricardo Neri wrote:
+> Add bindings for CPUs in x86 architecture. Start by defining the `reg` and
+> `enable-method` properties and their relationship to x86 APIC ID and the
+> available mechanisms to boot secondary CPUs.
+> 
+> Start defining bindings for Intel processors. Bindings for other vendors
+> can be added later as needed.
+> 
+> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> ---
+>  .../devicetree/bindings/x86/cpus.yaml         | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/x86/cpus.yaml
+> 
 
-The kernel updates the APIC callback wakeup_secondary_cpu_64() to use
-the mailbox if detected early during boot (enumerated via either an ACPI
-table or a DeviceTree node).
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-Changes since v2:
- - Unconditionally use the wakeup mailbox in a TDX confidential VM.
-   (Michael).
- - Edited the commit message for clarity.
+yamllint warnings/errors:
 
-Changes since v1:
- - None
----
- arch/x86/hyperv/hv_vtl.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/x86/cpus.example.dtb: cpus: cpu@0: 'cache-level' is a required property
+	from schema $id: http://devicetree.org/schemas/cpus.yaml#
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index cd48bedd21f0..30a5a0c156c1 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -299,7 +299,15 @@ int __init hv_vtl_early_init(void)
- 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
- 			  "Please add 'noxsave' to the kernel command line.\n");
- 
--	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
-+	/*
-+	 * TDX confidential VMs do not trust the hypervisor and cannot use it to
-+	 * boot secondary CPUs. Instead, they will be booted using the wakeup
-+	 * mailbox if detected during boot. See setup_arch().
-+	 *
-+	 * There is no paravisor present if we are here.
-+	 */
-+	if (!hv_isolation_type_tdx())
-+		apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
- 
- 	return 0;
- }
--- 
-2.43.0
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
