@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-5351-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5352-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93DB1AAB276
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 06:22:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B8C9AAB700
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 08:02:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DF903A2029
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 04:15:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9638501E32
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 05:59:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E32BC337592;
-	Tue,  6 May 2025 00:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC52024467E;
+	Tue,  6 May 2025 00:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a37VC0Xm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swhuWzAO"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D682D7ACE;
-	Mon,  5 May 2025 22:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A479322DA19;
+	Mon,  5 May 2025 23:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485718; cv=none; b=YNqqV9Rhpk5g9auvbiPPJ7LALjP1OHfux+4HSZs+yS7hS3LMR0yh8jgV2+mvT1jW633bWZewk6p6ZA5amCPs6UjVxr36WooCVJngRj9H0DFJ35zEPYKcQ15EwUXuDtQkGkWEfqq/acLY1c1YDehIiJK8u3+M3wSjIx2xFxgCEL0=
+	t=1746486339; cv=none; b=E5YpuCgVm0ObSu+y69McP1d5U5fOQODTZ8N7ViAzdJTUb1BmFX1zoiWYTtDSf6f4gt2tEhFZqQKXInSbbEK2QFImk3pYjGkPwmD1tGlRHN1TBt56jwjuQifIV0CelPS9tGnAqz7hbh/mGQgcA6w66zzL8hI5Kz6L9EnInMnxpWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485718; c=relaxed/simple;
-	bh=UXvFLmfs8bghKD7VvTkhQY/+NiuR/G8Dw2o10m91Zjk=;
+	s=arc-20240116; t=1746486339; c=relaxed/simple;
+	bh=2u6Eh01D/YCrOniXldfPNcHZoJwjvrn7z0cgzVPU55s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XZzsRV1R9Wp6kYXm0eawoAw8SFdWACIt5mbIo+7iooWdSwS4aZsSH4cTImtSBfwdCt366s4xVsJwshLPCZb2Jeaf+Ijp+vt+1PWaZWglKf5phF/eazvgf8Hd1prlpnx1oibk3bKG9THTDTBFvJgc8YpgUyPo4ecn8mpxJRrqRr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a37VC0Xm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03AF2C4CEEE;
-	Mon,  5 May 2025 22:55:14 +0000 (UTC)
+	 MIME-Version; b=P7KQcF0TtSUNr7zak3P9SjX2nWTk4wAn4bbYMf59PES9VkvTP1tbvwcvT1fPx6+M2WPyb/VzBQOmHWW29Gpqk97GbqL5w9GOHR1bd+ERwFBra2jQ9S/11l9so09BykvNowlpMSR+KSXbEkJSHdeJpR3jgN7Oj5IcI3c5PPyKsMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swhuWzAO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475A7C4CEE4;
+	Mon,  5 May 2025 23:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485717;
-	bh=UXvFLmfs8bghKD7VvTkhQY/+NiuR/G8Dw2o10m91Zjk=;
+	s=k20201202; t=1746486339;
+	bh=2u6Eh01D/YCrOniXldfPNcHZoJwjvrn7z0cgzVPU55s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a37VC0XmD75qWICE+gq3kV+q2tynHCkXYCa9++RXMK+K+Z57WkMQuCtRGKFDEX+bz
-	 S/3zdlf4wEdHzJtuj611x0CduMlQSduwPzGvXiQnUO45jZn82ZxH0bb2Jr2ffVYIUj
-	 2auNjxosrjKYvvNT1JPsi3N+vxf92S1/bZR+8I5T3+7i1FEWtDKRvYrIygJj+V9vl4
-	 QlLOT98irQ4hMMkFSmZDY1RJcg6VWzbS9SyEcD3wv0RD67DmOEjkuLHNqRqy/u/P1L
-	 TKeOQIwB4oun6g82OoeR1WVSwyrI9McvP8Z0zAvqtH544W58fz5TNya5hleMhDrTUB
-	 bwMYaP2oIRGVw==
+	b=swhuWzAODz8/zkePAJ0cIGhU85Ogf3zrKzbRL98vI5KMmWyYJOByqFlsOia+GmheT
+	 759VDM2Ys/mct6ej7bw/bTCWlBufl1SGr9Bqum6BCThWjxufnyWCZvFH+Srky42kZK
+	 D5rVN3BnVCLyTRXsHJU6czuTrtSAN7gYogl/oY8PeqLJeXM1WEXoBdEKduRr1Pg1eo
+	 Ki9FzeSzYSoB7K/sAIu/HC/Wno6L6pTQzI2//lR3LNtf/cxTHoMosD5nAP1v319PYn
+	 ux1u1IKLCzqYzMQrrx/oKMtMKqZ2zFh9IitXDrPQU2uCeh/JOXFdy/p8s5h32S7PwF
+	 twYo6dwc3H5Yw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -64,12 +64,12 @@ Cc: Konstantin Taranov <kotaranov@microsoft.com>,
 	ernis@linux.microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 440/486] net/mana: fix warning in the writer of client oob
-Date: Mon,  5 May 2025 18:38:36 -0400
-Message-Id: <20250505223922.2682012-440-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 267/294] net/mana: fix warning in the writer of client oob
+Date: Mon,  5 May 2025 18:56:07 -0400
+Message-Id: <20250505225634.2688578-267-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
 From: Konstantin Taranov <kotaranov@microsoft.com>
@@ -98,10 +98,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 36802e0a8b570..9bac4083d8a09 100644
+index ae014e21eb605..9ed965d61e355 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1044,7 +1044,7 @@ static u32 mana_gd_write_client_oob(const struct gdma_wqe_request *wqe_req,
+@@ -1036,7 +1036,7 @@ static u32 mana_gd_write_client_oob(const struct gdma_wqe_request *wqe_req,
  	header->inline_oob_size_div4 = client_oob_size / sizeof(u32);
  
  	if (oob_in_sgl) {
