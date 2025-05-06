@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-5356-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5357-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ECACAAB8CF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 08:42:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64BFDAAB90C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 08:48:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BAC11891FA6
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 06:36:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3996E3B7B64
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 06:35:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B0332A6E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842B732A6EB;
 	Tue,  6 May 2025 03:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="XBd81uXB"
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="o3s59huh"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34CAC34FB1A;
-	Tue,  6 May 2025 00:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53370297A7A;
+	Tue,  6 May 2025 00:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746493009; cv=none; b=kVNKQbumyKm6a10woWlsx2j2GrC3B3fvBckNxArKsEWO75LGUbJVaNlocb4dvae0pMG2eKrqNGliKXCO017mDNBH+7/YJI8Vs0pFgV6T5p8KHVmPcwhJPiVcfZ6Z6hvlPmmdhkM5a6H9DHALG6khcPlJzjpbcUtC2kS5E1wwCHI=
+	t=1746493009; cv=none; b=lSy3psvvPEBg99KIrSpC4IckV7SewaMnI15q9KY6Laf9OMynrhiIA/QTLpyykoeatYwT0hTLa25hhrKMCpKSpGXuDSnKPzJ54fzLrAut4Kx5ucCk7ILJDuYengGSYidYqNOWQM8txxTceUHXrkHkLiWb/B/5X0jSnTUamVeqQ/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746493009; c=relaxed/simple;
-	bh=+1GkP85qI28LngPRsSnKVGf3zYfY0BfHkC9fcaE0ldc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=UFnXRMzbN3iRTzq1Y8kNGNv2zR1w8ta3UBT3sfiaRjLugkm1YnOl256OrA3a1TdbOXY6mJcrqwxKtNcOTuXeZ84dg4CmE3jZMZZMYdUJXpTk5NGa0FSyRAVxedpDepmx4/fUmLyNIY1P+6d00vT9AfhBuV1R+I9l1NbnpOQpozk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=XBd81uXB; arc=none smtp.client-ip=13.77.154.182
+	bh=wrgaENVci0P+r4viKopRMHVU9QIEi4adrnMipn6O+sU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=cvb25TLFMAJP9/KLSPNXbrpfAgkfEfugNYaNIQF4CHAkBTdB8VcBP5zm1gZg88pWTxT7mvBi+esOKl4qNgQHz+hAs9DqEbEBa0E+HnZ1V4VVe0CyrmuqvHxmRejBxxpqH55+u4+M6r6ylMOQYI9FpfaJ1Z+H/uQ5Flofuj5Stcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=o3s59huh; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id DA8CD2115DC6; Mon,  5 May 2025 17:56:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DA8CD2115DC6
+	id 044D3204E7F7; Mon,  5 May 2025 17:56:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 044D3204E7F7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1746493006;
-	bh=U5Gq4AetPfFX7oMakCEVyoFLthNpyCTSJ5kkn3ju7TI=;
+	s=default; t=1746493008;
+	bh=8jbp63pflYYMxnViW5Z1+xVgB+8SXsI21hIdEexRN78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XBd81uXBcvQA/vmrNcbJMawuyF5dVb/mBt4m2oltAllu9BBKfmbbjVypBX0HwSM8+
-	 CXFwkmWZptHknHXVP7DzJvC/3GCE7BAbLjX1k153X/HE6qjf1CwVqQHLci2fJZw2xx
-	 OAfvhCuYDAb1mS8REeqKNDFxRHGIKDT9RzwJODcY=
+	b=o3s59huhmwiOwbGcGSxJkJ3L3wW6IEAmRnuOOKBiFcWgW3yuESzfYFfEfoX5YOpqt
+	 jbn8uvkof160BuFuu36iBc8+y1T+3U6fexz0vJ8SAGpStizXSOTxFK7vKEMKJlrOID
+	 7pTJoLr8mIfHd42ti6eec1oD4pA8ncFbCmaiHSzo=
 From: longli@linuxonhyperv.com
 To: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -46,11 +46,10 @@ To: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Long Li <longli@microsoft.com>,
-	stable@vger.kernel.org
-Subject: [Patch v3 3/5] uio_hv_generic: Align ring size to system page
-Date: Mon,  5 May 2025 17:56:35 -0700
-Message-Id: <1746492997-4599-4-git-send-email-longli@linuxonhyperv.com>
+Cc: Long Li <longli@microsoft.com>
+Subject: [Patch v3 4/5] Drivers: hv: Use kzalloc for panic page allocation
+Date: Mon,  5 May 2025 17:56:36 -0700
+Message-Id: <1746492997-4599-5-git-send-email-longli@linuxonhyperv.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1746492997-4599-1-git-send-email-longli@linuxonhyperv.com>
 References: <1746492997-4599-1-git-send-email-longli@linuxonhyperv.com>
@@ -62,30 +61,45 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
 From: Long Li <longli@microsoft.com>
 
-Following the ring header, the ring data should align to system page
-boundary. Adjust the size if necessary.
+To prepare for removal of hv_alloc_* and hv_free* functions, use
+kzalloc/kfree directly for panic reporting page.
 
-Cc: stable@vger.kernel.org
-Fixes: 95096f2fbd10 ("uio-hv-generic: new userspace i/o driver for VMBus")
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- drivers/uio/uio_hv_generic.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hv/hv_common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 08385b04c4ab..cb2e7e0e1540 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -256,6 +256,9 @@ hv_uio_probe(struct hv_device *dev,
- 	if (!ring_size)
- 		ring_size = SZ_2M;
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index a7d7494feaca..a5a6250b1a12 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -272,7 +272,7 @@ static void hv_kmsg_dump_unregister(void)
+ 	atomic_notifier_chain_unregister(&panic_notifier_list,
+ 					 &hyperv_panic_report_block);
  
-+	/* Adjust ring size if necessary to have it page aligned */
-+	ring_size = VMBUS_RING_SIZE(ring_size);
-+
- 	pdata = devm_kzalloc(&dev->device, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
- 		return -ENOMEM;
+-	hv_free_hyperv_page(hv_panic_page);
++	kfree(hv_panic_page);
+ 	hv_panic_page = NULL;
+ }
+ 
+@@ -280,7 +280,7 @@ static void hv_kmsg_dump_register(void)
+ {
+ 	int ret;
+ 
+-	hv_panic_page = hv_alloc_hyperv_zeroed_page();
++	hv_panic_page = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+ 	if (!hv_panic_page) {
+ 		pr_err("Hyper-V: panic message page memory allocation failed\n");
+ 		return;
+@@ -289,7 +289,7 @@ static void hv_kmsg_dump_register(void)
+ 	ret = kmsg_dump_register(&hv_kmsg_dumper);
+ 	if (ret) {
+ 		pr_err("Hyper-V: kmsg dump register error 0x%x\n", ret);
+-		hv_free_hyperv_page(hv_panic_page);
++		kfree(hv_panic_page);
+ 		hv_panic_page = NULL;
+ 	}
+ }
 -- 
 2.34.1
 
