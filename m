@@ -1,144 +1,308 @@
-Return-Path: <linux-hyperv+bounces-5392-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5393-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62622AACC2C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 19:26:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE3DFAACC68
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 19:43:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 852661C03FAA
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 17:26:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D07C93AE4A5
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 17:42:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCDCC27F73D;
-	Tue,  6 May 2025 17:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 497492857D1;
+	Tue,  6 May 2025 17:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmI38z2P"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gAl0lZq/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90AA1DE2D6;
-	Tue,  6 May 2025 17:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A262284B50;
+	Tue,  6 May 2025 17:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746552374; cv=none; b=EkC38BRsqImN/rHlbyqtYFXlGf/8d8QCDmyaWtC5OSIM1CPnhnHJQO5Caqzmtuz/dTPfp5nokrA10VvznEV/gEcNdX/iSo+Crke8Bdwrinv2aHls+8fhS8i6KewCmVwHjWqJ6rVfRGqn3IQHXvOXKr9sG1Hc2TH23qmFjWgUtMI=
+	t=1746553373; cv=none; b=MHHi8e9sPXAa4CLLME8OA640T9RdBlExhFjBRlfSi0OgDScKluZG07z7P9D87x47r1fHdbUF3WID/jqqcdIYP7pRe6dHG60zg9bJhGygs6VyJ1xMRAI5Y2uy+DoWxT8ZVtIGOu6z1mEUHOjSF4MFtyczOJFC/bx5YdYWueHvcTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746552374; c=relaxed/simple;
-	bh=UMFkBWv7qRD8bW9aXzn0NDPBLTJV6Ud3ZL7mJrUPeqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qwaynqDl+o4yz1djnc3xkcZ5Qm2907hMhxmhRoh9qBEMxetsqwdV7Ri1du85ArT0nvE60yc8T2C3DO/Tr+vf6ZLxb64+vT9LD09kXRktAiW+AMiKQd/QZGMuruHpIoie0bU3nXHlmhmigfRzXNGjwEHRrvo2R+FzeJi7N3ykVPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmI38z2P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDEBC4CEF5;
-	Tue,  6 May 2025 17:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746552374;
-	bh=UMFkBWv7qRD8bW9aXzn0NDPBLTJV6Ud3ZL7mJrUPeqo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WmI38z2PFndQwKFr24GsvaYfg0l51lIK2c80s42vZEV93IZtiDGmFCeoeUHJhkqjT
-	 rq/cINc1Ku7YS7Lsna7B6EEs3WRnaTg4ADxYxZ8fcOqIPFub9mRvOOEJX8ngAmPxnT
-	 nd4mFMC+DOqUUzzpUNQFAN7nRo0vrvrGKwpRfiBw7nezujWEmAfc8ChvXWg+c9f6zB
-	 Dd7ptMrrxbUOb0J6APajMsGKkSUNGPt56tRpt2hIGhImzE2s5AlB4oz3yqymt/uZHm
-	 GaReDoenNdzj+D0eLnFri44Pjx/19GhfYMVoDFbDYnGaF4FyiuM/6BwBc+VQRk1cvn
-	 dKDLthWmDrmvA==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-604ad0347f5so1399603eaf.2;
-        Tue, 06 May 2025 10:26:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUabmKbCieebhg65h2HZO6pXZqb7EE7qDdMHPkFvwRAlBMuNAtOnLuSbEZSprSfsmoTvgmlXjIH+X8psg==@vger.kernel.org, AJvYcCUp7j6293hCuvAc7TOMqTAd8GWQj01xb1hTCsspweTc21f8mm2MxZLknEBVW7DJsoBPqAl7WhonxB9C@vger.kernel.org, AJvYcCUvCM3lgxEE8sifMCaUUgOA0JgyFgNZIAzKdfGIFuGBRxuou+JHs+lrsh/CU1NbQiteHIdok+CMu5+cBhc4@vger.kernel.org, AJvYcCVlZuigAdEe77Ook/5SdOuw7SZ5ViUek7a6Qb9Maw1xg1kxbdmPu6ik7K/SMmKWTYUzqwO2c2ElSk5nvTS3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPkTxCrbp1RaHJ/PXJsbTX/C6AJIZzl84fhLqWxCeTnKLmj9H2
-	voZvGuupVcI4ESrEjUT65PaCZ+XXEPdRTqVDhC0EiwnXcGcGlkuNbphB8ll8wLaT83SmocZdRVx
-	Nj9BVecSDpmHBhtTXp4R8J7/bSn4=
-X-Google-Smtp-Source: AGHT+IFkmlMTEuWESqaLnJeY5ohB2LfqsG10ssB1VE80OUaJLJaw48V3A3/jUfrqL8UR0k470ufguSdRn5ahDVoR12A=
-X-Received: by 2002:a05:6870:56aa:b0:2c2:4e19:1cdf with SMTP id
- 586e51a60fabf-2db5c07fc1fmr84473fac.25.1746552373247; Tue, 06 May 2025
- 10:26:13 -0700 (PDT)
+	s=arc-20240116; t=1746553373; c=relaxed/simple;
+	bh=HvdzPO/NagMxcVsSHHnQ9b2WeZMi4QABYpk7jv5+jZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7f0qTatk50kYF8GtUkD5hHvkiYd594rGFotRxucDKiW5ttzxu4LASOOzgjyx7ieF6stvkPP5QOp0PoXnDx5Z9Gkda366MSiyxHm4YGlFGGr8HW17iEFeLjD/nldG+Fqs2rGF67/Rk4pXCLvMu259aID1x0vkanVjQ0er0sNg/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gAl0lZq/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CACA5208A7B7;
+	Tue,  6 May 2025 10:42:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CACA5208A7B7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746553370;
+	bh=gJzQ8lgSsQKD+MoKB/+9RH0kC2W6lO+dEXl0fWswRv4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gAl0lZq/zVL/yMVkh/ltRF50nngrUgyeVochNhV+Fpaf0W4K8in/mCOYzN5waHZ5i
+	 //kGwyLhy9u0LBtjbljXeMKu1G1nNhHo5wvZQI6DWETzlrKKvA050Gl9XLY3JiboI4
+	 g3aJoWYxdyJs+N3zSLIVcyDCNXaa73RFYf6dmAZc=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	kys@microsoft.com,
+	mikelley@microsoft.com,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	tiala@microsoft.com,
+	wei.liu@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v4] x86/hyperv: Fix CPU number and VP index confusion in hv_snp_boot_ap()
+Date: Tue,  6 May 2025 10:42:49 -0700
+Message-ID: <20250506174249.11496-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-4-ricardo.neri-calderon@linux.intel.com>
- <CAJZ5v0h_QcH72COEU-cnHUMfXj2grHv1EoLuBJnxm7_AeRteWw@mail.gmail.com> <20250506053726.GF25533@ranerica-svr.sc.intel.com>
-In-Reply-To: <20250506053726.GF25533@ranerica-svr.sc.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 6 May 2025 19:26:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gctkVZUs1SrzQtezmfMuMfbrAJ4+DTLgaQB=pMc8_hvg@mail.gmail.com>
-X-Gm-Features: ATxdqUF-7NBHDlWjglj-HucJrGpkm_viZYiT0uvxHH2Buc_c3FoPAXf1SFixwh8
-Message-ID: <CAJZ5v0gctkVZUs1SrzQtezmfMuMfbrAJ4+DTLgaQB=pMc8_hvg@mail.gmail.com>
-Subject: Re: [PATCH v3 03/13] x86/acpi: Move acpi_wakeup_cpu() and helpers to smpboot.c
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
-	linux-hyperv@vger.kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
-	Ricardo Neri <ricardo.neri@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 6, 2025 at 7:32=E2=80=AFAM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> On Mon, May 05, 2025 at 12:03:13PM +0200, Rafael J. Wysocki wrote:
-> > On Sat, May 3, 2025 at 9:10=E2=80=AFPM Ricardo Neri
-> > <ricardo.neri-calderon@linux.intel.com> wrote:
-> > >
-> > > The bootstrap processor uses acpi_wakeup_cpu() to indicate to firmwar=
-e that
-> > > it wants to boot a secondary CPU using a mailbox as described in the
-> > > Multiprocessor Wakeup Structure of the ACPI specification.
-> > >
-> > > The wakeup mailbox does not strictly require support from ACPI.
-> >
-> > Well, except that it is defined by the ACPI specification.
->
-> That is true.
->
-> >
-> > > The platform firmware can implement a mailbox compatible in structure=
- and
-> > > operation and enumerate it using other mechanisms such a DeviceTree g=
-raph.
-> >
-> > So is there a specification defining this mechanism?
-> >
-> > It is generally not sufficient to put the code and DT bindings
-> > unilaterally into the OS and expect the firmware to follow suit.
-> >
->
-> This mechanism is described in the section 4.3.5 of the Intel TDX
-> Virtual Firmware Design Guide [1], but it refeers to the ACPI
-> specification for the interface.
+To start an application processor in SNP-isolated guest, a hypercall
+is used that takes a virtual processor index. The hv_snp_boot_ap()
+function uses that START_VP hypercall but passes the CPU number to it
+instead of the VP index.
 
-Yes, it does.
+As those two aren't generally interchangeable, that may lead to hung
+APs if the VP index and the APIC ID don't match up.
 
-> > > Move the code used to setup and use the mailbox out of the ACPI
-> > > directory to use it when support for ACPI is not available or needed.
-> >
-> > I think that the code implementing interfaces defined by the ACPI
-> > specification is not generic and so it should not be built when the
-> > kernel is configured without ACPI support.
->
-> Support for ACPI would not be used on systems describing hardware using
-> a DeviceTree graph. My goal is to have a common interface that both
-> DT and ACPI can use. I think what is missing is that common interface.
+Use the APIC ID to the VP index conversion to provide the correct
+input to the hypercall.
 
-I get the general idea. :-)
+Cc: stable@vger.kernel.org
+Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+---
+When merging this change to other trees
+2d2d4d8bb00 ("arch/x86: Provide the CPU number in the wakeup AP callback")
+is needed.
 
-> Would it be preferred to have a separate implementation that is
-> functionally equivalent?
+[V4]
+    - Rebased on the latest hyperv-next branch, and updated the
+      title and the commit message as some changes were superceeded
+      by 2d2d4d8bb00 ("arch/x86: Provide the CPU number in the wakeup AP callback").
+    ** Thank you, Wei! **
 
-Functionally equivalent on the OS side, that is.
+[V3]
+    https://lore.kernel.org/linux-hyperv/20250428182705.132755-1-romank@linux.microsoft.com/
+    - Removed the misleading comment about the APIC ID and VP indices.
+    - Removed the not sufficiently founded if statement that was added
+      to the previous version of the patch to avoid the O(n) time complexity.
+      I'll follow up with a separate patch to address that as that pattern
+       has crept into other places in the code in the AP wakeup path.
+      Fixed the logging message to use the "VP index" terminology
+      consistently.
+    ** Thank you, Michael! **
 
-It would be better, but honestly I'm not sure if this is going to be
-sufficient to eliminate the dependency on the ACPI spec.  It is just
-as you want the firmware to implement this tiny bit of the ACPI spec
-even though it is not implementing the rest of it.
+[V2]
+    https://lore.kernel.org/linux-hyperv/20250425213512.1837061-1-romank@linux.microsoft.com/
+    - Fixed the terminology in the patch and other code to use
+      the term "VP index" consistently
+    ** Thank you, Michael! **
 
-> [1]. https://cdrdv2-public.intel.com/733585/tdx-virtual-firmware-design-g=
-uide-rev-004-20231206.pdf
+    - Missed not enabling the SNP-SEV options in the local testing,
+      and sent a patch that breaks the build.
+    ** Thank you, Saurabh! **
+
+    - Added comments and getting the Linux kernel CPU number from
+      the available data.
+
+[V1]
+    https://lore.kernel.org/linux-hyperv/20250424215746.467281-1-romank@linux.microsoft.com/
+---
+ arch/x86/hyperv/hv_init.c       | 33 +++++++++++++++++++++++++
+ arch/x86/hyperv/hv_vtl.c        | 44 +++++----------------------------
+ arch/x86/hyperv/ivm.c           |  8 +++++-
+ arch/x86/include/asm/mshyperv.h |  2 ++
+ include/hyperv/hvgdk_mini.h     |  2 +-
+ 5 files changed, 49 insertions(+), 40 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3b569291dfed..9a8fc144e195 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -672,3 +672,36 @@ bool hv_is_hyperv_initialized(void)
+ 	return hypercall_msr.enable;
+ }
+ EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
++
++int hv_apicid_to_vp_index(u32 apic_id)
++{
++	u64 control;
++	u64 status;
++	unsigned long irq_flags;
++	struct hv_get_vp_from_apic_id_in *input;
++	u32 *output, ret;
++
++	local_irq_save(irq_flags);
++
++	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
++	memset(input, 0, sizeof(*input));
++	input->partition_id = HV_PARTITION_ID_SELF;
++	input->apic_ids[0] = apic_id;
++
++	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
++
++	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_INDEX_FROM_APIC_ID;
++	status = hv_do_hypercall(control, input, output);
++	ret = output[0];
++
++	local_irq_restore(irq_flags);
++
++	if (!hv_result_success(status)) {
++		pr_err("failed to get vp index from apic id %d, status %#llx\n",
++		       apic_id, status);
++		return -EINVAL;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hv_apicid_to_vp_index);
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index cc8c6817f704..3d149a2ca4c8 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -211,55 +211,23 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, int cpu, u64 eip_ignored)
+ 	return ret;
+ }
+ 
+-static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+-{
+-	u64 control;
+-	u64 status;
+-	unsigned long irq_flags;
+-	struct hv_get_vp_from_apic_id_in *input;
+-	u32 *output, ret;
+-
+-	local_irq_save(irq_flags);
+-
+-	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+-	memset(input, 0, sizeof(*input));
+-	input->partition_id = HV_PARTITION_ID_SELF;
+-	input->apic_ids[0] = apic_id;
+-
+-	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+-
+-	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
+-	status = hv_do_hypercall(control, input, output);
+-	ret = output[0];
+-
+-	local_irq_restore(irq_flags);
+-
+-	if (!hv_result_success(status)) {
+-		pr_err("failed to get vp id from apic id %d, status %#llx\n",
+-		       apic_id, status);
+-		return -EINVAL;
+-	}
+-
+-	return ret;
+-}
+-
+ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, unsigned int cpu)
+ {
+-	int vp_id;
++	int vp_index;
+ 
+ 	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
+-	vp_id = hv_vtl_apicid_to_vp_id(apicid);
++	vp_index = hv_apicid_to_vp_index(apicid);
+ 
+-	if (vp_id < 0) {
++	if (vp_index < 0) {
+ 		pr_err("Couldn't find CPU with APIC ID %d\n", apicid);
+ 		return -EINVAL;
+ 	}
+-	if (vp_id > ms_hyperv.max_vp_index) {
+-		pr_err("Invalid CPU id %d for APIC ID %d\n", vp_id, apicid);
++	if (vp_index > ms_hyperv.max_vp_index) {
++		pr_err("Invalid CPU id %d for APIC ID %d\n", vp_index, apicid);
+ 		return -EINVAL;
+ 	}
+ 
+-	return hv_vtl_bringup_vcpu(vp_id, cpu, start_eip);
++	return hv_vtl_bringup_vcpu(vp_index, cpu, start_eip);
+ }
+ 
+ int __init hv_vtl_early_init(void)
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 30aa76974a3a..71918817129e 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -297,10 +297,16 @@ int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
+ 	u64 ret, retry = 5;
+ 	struct hv_enable_vp_vtl *start_vp_input;
+ 	unsigned long flags;
++	int vp_index;
+ 
+ 	if (!vmsa)
+ 		return -ENOMEM;
+ 
++	/* Find the Hyper-V VP index which might be not the same as APIC ID */
++	vp_index = hv_apicid_to_vp_index(apic_id);
++	if (vp_index < 0 || vp_index > ms_hyperv.max_vp_index)
++		return -EINVAL;
++
+ 	native_store_gdt(&gdtr);
+ 
+ 	vmsa->gdtr.base = gdtr.address;
+@@ -348,7 +354,7 @@ int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
+ 	start_vp_input = (struct hv_enable_vp_vtl *)ap_start_input_arg;
+ 	memset(start_vp_input, 0, sizeof(*start_vp_input));
+ 	start_vp_input->partition_id = -1;
+-	start_vp_input->vp_index = cpu;
++	start_vp_input->vp_index = vp_index;
+ 	start_vp_input->target_vtl.target_vtl = ms_hyperv.vtl;
+ 	*(u64 *)&start_vp_input->vp_context = __pa(vmsa) | 1;
+ 
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 3bfc066aeccc..5ec92e3e2e37 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -307,6 +307,7 @@ static __always_inline u64 hv_raw_get_msr(unsigned int reg)
+ {
+ 	return __rdmsr(reg);
+ }
++int hv_apicid_to_vp_index(u32 apic_id);
+ 
+ #else /* CONFIG_HYPERV */
+ static inline void hyperv_init(void) {}
+@@ -328,6 +329,7 @@ static inline void hv_set_msr(unsigned int reg, u64 value) { }
+ static inline u64 hv_get_msr(unsigned int reg) { return 0; }
+ static inline void hv_set_non_nested_msr(unsigned int reg, u64 value) { }
+ static inline u64 hv_get_non_nested_msr(unsigned int reg) { return 0; }
++static inline int hv_apicid_to_vp_index(u32 apic_id) { return -EINVAL; }
+ #endif /* CONFIG_HYPERV */
+ 
+ 
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index cf0923dc727d..2d431b53f587 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -475,7 +475,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+ #define HVCALL_CREATE_PORT				0x0095
+ #define HVCALL_CONNECT_PORT				0x0096
+ #define HVCALL_START_VP					0x0099
+-#define HVCALL_GET_VP_ID_FROM_APIC_ID			0x009a
++#define HVCALL_GET_VP_INDEX_FROM_APIC_ID			0x009a
+ #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
+ #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
+ #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
+
+base-commit: 1b019573c9662c17a33419367a217abe1f5e8060
+-- 
+2.43.0
+
 
