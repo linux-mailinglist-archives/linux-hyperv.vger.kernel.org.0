@@ -1,99 +1,79 @@
-Return-Path: <linux-hyperv+bounces-5378-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5379-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDD93AABF25
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 11:21:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D53DAABF2E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 11:22:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0085522185
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 09:20:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1103F52246D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 09:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50D99264A9E;
-	Tue,  6 May 2025 09:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kriZpqdh";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kriZpqdh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6D626FDAD;
+	Tue,  6 May 2025 09:20:44 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715F624A04F
-	for <linux-hyperv@vger.kernel.org>; Tue,  6 May 2025 09:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A520F26FA5D
+	for <linux-hyperv@vger.kernel.org>; Tue,  6 May 2025 09:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523233; cv=none; b=lY7J92LHbmm1d0TiSNba8aw34zkxOYUFyrZ4fsQJDJGPccKTfoQ50cKB2Ses2S4tWWxsrJ6Otx9jHh/AD2vnBPy+FdGN2iSPv6IURpkFEf+u2D58NEqI0gVMsFGd3J8FkzabG4s/gA5PX7T+dMPVCpl8viAxnbXTGqUIck0jDg4=
+	t=1746523244; cv=none; b=D4bIhZ658NFtPZ5YAciBLm7Cfu7c97RepTfwyE3L1dXj36zJ/VsIEZ+wWIsr6MDkT3X3JiChNhcT5pVZu70nlHTb46acJKdjIVO9XmmM0L5BODunaE33UxjBY9ojTOa/rVXKljXi0KwmqqcIwh0zCSdoQX4ncEchb7W3nhvQrpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523233; c=relaxed/simple;
-	bh=ux1z0JCif5I2LLQ4PLNWZ9wDQp7Ekq9j/K7Xj7ZgSZo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qam+kto1ruy4c6/ce/Y31BjJpri38gwj469Z7MnefTFUPqpYTN0UWj07s7vjEOtDoFxddDAU4PKpU1M3g4YZm28YKWsYSMyU/v2TJCHFAPEa59frdY6E5EV2/KqFzEDEI01mDFg3t5qZOMLxHrcoviVwn66O9KASf5tkxvLe2kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kriZpqdh; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kriZpqdh; arc=none smtp.client-ip=195.135.223.131
+	s=arc-20240116; t=1746523244; c=relaxed/simple;
+	bh=4vDBTuxbpXs5OX9PuySbqXDrfoKponl4p3dkWrOXQDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FEyOQG7jc6C/wW7tZ9iRMb3Hz0bag83Rg137oPaBp8Cj+Z7cBe6gyQr26S+L+q9UHDzKEdASCLlpK1ygu9TluqA5nx6scT6XuqG6cZLBAVI9j8EL9o1EzDVyTDTEVVFYRbYHskKvEi9MMz7wJSn1MajR283QS0HCE2enuNHBc3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3906C1F395;
-	Tue,  6 May 2025 09:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746523223; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=SOSwn+O7fzFgeK18tfEQyq0imvcETcUg8KBVasQSn4w=;
-	b=kriZpqdhOLBPPcruOud6UNmVzlEUq2xRjIwz8bZZFAG+0IQ5YwsePmFs/IObVQ5uX+3Bte
-	GWUV+IhgDAcRFRchqFV+riec8rrlg/N9toymI+5EMWGjsxZHeP5YYMLN1WlStdR21cnlWk
-	LAaqaoRE1YHJp6Eh3MpIfn/2a8tqxB8=
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F06B01F391;
+	Tue,  6 May 2025 09:20:40 +0000 (UTC)
 Authentication-Results: smtp-out2.suse.de;
 	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746523223; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=SOSwn+O7fzFgeK18tfEQyq0imvcETcUg8KBVasQSn4w=;
-	b=kriZpqdhOLBPPcruOud6UNmVzlEUq2xRjIwz8bZZFAG+0IQ5YwsePmFs/IObVQ5uX+3Bte
-	GWUV+IhgDAcRFRchqFV+riec8rrlg/N9toymI+5EMWGjsxZHeP5YYMLN1WlStdR21cnlWk
-	LAaqaoRE1YHJp6Eh3MpIfn/2a8tqxB8=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 67499137CF;
-	Tue,  6 May 2025 09:20:22 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 49800137CF;
+	Tue,  6 May 2025 09:20:40 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aNu9F1bUGWgBbAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 06 May 2025 09:20:22 +0000
+	id zH5wEGjUGWggbAAAD6G6ig
+	(envelope-from <jgross@suse.com>); Tue, 06 May 2025 09:20:40 +0000
 From: Juergen Gross <jgross@suse.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
-	linux-coco@lists.linux.dev,
-	kvm@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev
+	kvm@vger.kernel.org
 Cc: xin@zytor.com,
 	Juergen Gross <jgross@suse.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>,
 	Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
 	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
 	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel@lists.xenproject.org,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Subject: [PATCH 0/6] x86/msr: let paravirt inline rdmsr/wrmsr instructions
-Date: Tue,  6 May 2025 11:20:09 +0200
-Message-ID: <20250506092015.1849-1-jgross@suse.com>
+	xen-devel@lists.xenproject.org
+Subject: [PATCH 3/6] x86/msr: minimize usage of native_*() msr access functions
+Date: Tue,  6 May 2025 11:20:12 +0200
+Message-ID: <20250506092015.1849-4-jgross@suse.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250506092015.1849-1-jgross@suse.com>
+References: <20250506092015.1849-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -101,79 +81,149 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
 X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Score: -4.00
 X-Spam-Flag: NO
+X-Rspamd-Queue-Id: F06B01F391
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-When building a kernel with CONFIG_PARAVIRT_XXL the paravirt
-infrastructure will always use functions for reading or writing MSRs,
-even when running on bare metal.
+In order to prepare for some MSR access function reorg work, switch
+most users of native_{read|write}_msr[_safe]() to the more generic
+rdmsr*()/wrmsr*() variants.
 
-Switch to inline RDMSR/WRMSR instructions in this case, reducing the
-paravirt overhead.
+For now this will have some intermediate performance impact with
+paravirtualization configured when running on bare metal, but this
+is a prereq change for the planned direct inlining of the rdmsr/wrmsr
+instructions with this configuration.
 
-In order to make this less intrusive, some further reorganization of
-the MSR access helpers is done in the first 4 patches.
+The main reason for this switch is the planned move of the MSR trace
+function invocation from the native_*() functions to the generic
+rdmsr*()/wrmsr*() variants. Without this switch the users of the
+native_*() functions would lose the related tracing entries.
 
-This series has been tested to work with Xen PV and on bare metal.
+Note that the Xen related MSR access functions will not be switched,
+as these will be handled after the move of the trace hooks.
 
-There has been another approach by Xin Li, which used dedicated #ifdef
-and removing the MSR related paravirt hooks instead of just modifying
-the paravirt code generation.
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ arch/x86/hyperv/ivm.c      |  2 +-
+ arch/x86/kernel/kvmclock.c |  2 +-
+ arch/x86/kvm/svm/svm.c     | 16 ++++++++--------
+ arch/x86/xen/pmu.c         |  4 ++--
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-Please note that I haven't included the use of WRMSRNS or the
-immediate forms of WRMSR and RDMSR, because I wanted to get some
-feedback on my approach first. Enhancing paravirt for those cases
-is not very complicated, as the main base is already prepared for
-that enhancement.
-
-This series is based on the x86/msr branch of the tip tree.
-
-Juergen Gross (6):
-  coco/tdx: Rename MSR access helpers
-  x86/kvm: Rename the KVM private read_msr() function
-  x86/msr: minimize usage of native_*() msr access functions
-  x86/msr: Move MSR trace calls one function level up
-  x86/paravirt: Switch MSR access pv_ops functions to instruction
-    interfaces
-  x86/msr: reduce number of low level MSR access helpers
-
- arch/x86/coco/tdx/tdx.c                   |   8 +-
- arch/x86/hyperv/ivm.c                     |   2 +-
- arch/x86/include/asm/kvm_host.h           |   2 +-
- arch/x86/include/asm/msr.h                | 116 ++++++++++-------
- arch/x86/include/asm/paravirt.h           | 152 ++++++++++++++--------
- arch/x86/include/asm/paravirt_types.h     |  13 +-
- arch/x86/include/asm/qspinlock_paravirt.h |   5 +-
- arch/x86/kernel/kvmclock.c                |   2 +-
- arch/x86/kernel/paravirt.c                |  26 +++-
- arch/x86/kvm/svm/svm.c                    |  16 +--
- arch/x86/kvm/vmx/vmx.c                    |   4 +-
- arch/x86/xen/enlighten_pv.c               |  60 ++++++---
- arch/x86/xen/pmu.c                        |   4 +-
- 13 files changed, 262 insertions(+), 148 deletions(-)
-
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 09a165a3c41e..fe177a6be581 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -319,7 +319,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
+ 	asm volatile("movl %%ds, %%eax;" : "=a" (vmsa->ds.selector));
+ 	hv_populate_vmcb_seg(vmsa->ds, vmsa->gdtr.base);
+ 
+-	vmsa->efer = native_read_msr(MSR_EFER);
++	rdmsrq(MSR_EFER, vmsa->efer);
+ 
+ 	vmsa->cr4 = native_read_cr4();
+ 	vmsa->cr3 = __native_read_cr3();
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index ca0a49eeac4a..b6cd45cce5fe 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -196,7 +196,7 @@ static void kvm_setup_secondary_clock(void)
+ void kvmclock_disable(void)
+ {
+ 	if (msr_kvm_system_time)
+-		native_write_msr(msr_kvm_system_time, 0);
++		wrmsrq(msr_kvm_system_time, 0);
+ }
+ 
+ static void __init kvmclock_init_mem(void)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 4c2a843780bf..3f0eed84f82a 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -482,12 +482,12 @@ static void svm_init_erratum_383(void)
+ 		return;
+ 
+ 	/* Use _safe variants to not break nested virtualization */
+-	if (native_read_msr_safe(MSR_AMD64_DC_CFG, &val))
++	if (rdmsrq_safe(MSR_AMD64_DC_CFG, &val))
+ 		return;
+ 
+ 	val |= (1ULL << 47);
+ 
+-	native_write_msr_safe(MSR_AMD64_DC_CFG, val);
++	wrmsrq_safe(MSR_AMD64_DC_CFG, val);
+ 
+ 	erratum_383_found = true;
+ }
+@@ -650,9 +650,9 @@ static int svm_enable_virtualization_cpu(void)
+ 		u64 len, status = 0;
+ 		int err;
+ 
+-		err = native_read_msr_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
++		err = rdmsrq_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
+ 		if (!err)
+-			err = native_read_msr_safe(MSR_AMD64_OSVW_STATUS, &status);
++			err = rdmsrq_safe(MSR_AMD64_OSVW_STATUS, &status);
+ 
+ 		if (err)
+ 			osvw_status = osvw_len = 0;
+@@ -2149,7 +2149,7 @@ static bool is_erratum_383(void)
+ 	if (!erratum_383_found)
+ 		return false;
+ 
+-	if (native_read_msr_safe(MSR_IA32_MC0_STATUS, &value))
++	if (rdmsrq_safe(MSR_IA32_MC0_STATUS, &value))
+ 		return false;
+ 
+ 	/* Bit 62 may or may not be set for this mce */
+@@ -2160,11 +2160,11 @@ static bool is_erratum_383(void)
+ 
+ 	/* Clear MCi_STATUS registers */
+ 	for (i = 0; i < 6; ++i)
+-		native_write_msr_safe(MSR_IA32_MCx_STATUS(i), 0);
++		wrmsrq_safe(MSR_IA32_MCx_STATUS(i), 0);
+ 
+-	if (!native_read_msr_safe(MSR_IA32_MCG_STATUS, &value)) {
++	if (!rdmsrq_safe(MSR_IA32_MCG_STATUS, &value)) {
+ 		value &= ~(1ULL << 2);
+-		native_write_msr_safe(MSR_IA32_MCG_STATUS, value);
++		wrmsrq_safe(MSR_IA32_MCG_STATUS, value);
+ 	}
+ 
+ 	/* Flush tlb to evict multi-match entries */
+diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+index 8f89ce0b67e3..d49a3bdc448b 100644
+--- a/arch/x86/xen/pmu.c
++++ b/arch/x86/xen/pmu.c
+@@ -323,7 +323,7 @@ static u64 xen_amd_read_pmc(int counter)
+ 		u64 val;
+ 
+ 		msr = amd_counters_base + (counter * amd_msr_step);
+-		native_read_msr_safe(msr, &val);
++		rdmsrq_safe(msr, &val);
+ 		return val;
+ 	}
+ 
+@@ -349,7 +349,7 @@ static u64 xen_intel_read_pmc(int counter)
+ 		else
+ 			msr = MSR_IA32_PERFCTR0 + counter;
+ 
+-		native_read_msr_safe(msr, &val);
++		rdmsrq_safe(msr, &val);
+ 		return val;
+ 	}
+ 
 -- 
 2.43.0
 
