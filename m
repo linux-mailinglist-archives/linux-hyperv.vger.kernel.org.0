@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-5390-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5391-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84678AAC9CB
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 17:47:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5A1CAACA05
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 17:50:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 411EF7B1D02
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 15:45:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2E0717AAB5
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 15:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272C3283FE1;
-	Tue,  6 May 2025 15:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 344222857D7;
+	Tue,  6 May 2025 15:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MB7yFrPj"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BuQun0hu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D69525B69F;
-	Tue,  6 May 2025 15:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D6B284B55;
+	Tue,  6 May 2025 15:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546408; cv=none; b=QCTrtJrZ2FRdySPqJJqrpT1u5lLZTAU6i+O8FH6diwOUiUuPCEsR5fpIiJZzFE5Tth+N7Q5ta6C7Xy6o+QXh3mvgNWvnejnx6eH9OIHQ9G+xQFErCK/DB+TT9MRkFVdgkRZcUdo/ys1jm0qCufGdiKbN1a1aNPLLz/HL+14rM9g=
+	t=1746546534; cv=none; b=ncrOLrBsgMD/zywzIKgcMP0nysliDwcB6hIwlBV5ftpF2T+pzwAReRbAfZPsudnnx/kaMswHzXPxJMjJR3bggkJKghEz42piJNRP2nhYpI6ennh2T00cXO/HnuijS64jatmfaElXBb8eOdg7Dvjj1BZ35kBj9+qr5XxcAo+zJCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546408; c=relaxed/simple;
-	bh=XaGt/wgvCVS+f4R0x+QN06JYj9JPXLkLe3hpPcXtxqM=;
+	s=arc-20240116; t=1746546534; c=relaxed/simple;
+	bh=b8K8VPEKo2vFno2FOkQSXnOl2aV8WRJi5ElUQaEXxrg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8PfMYaU2sX4VBIt5H2tn3+29UN+IgwBRR6+xO46C2E3A+XbjrsbBzQd/yTWAqj5+cXOj6BRM73ROJCTLmOyKGCXYW6Aw5xekJnbnDNCa0LGT4r454VU5ir6l+at1nMcr9MnylI+78nP5kG1oSqxVNAX3oCMn1x0ptimfQ/pMMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MB7yFrPj; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=sbn94ewpGag3VvNIke4z2whm0pa72XGGLK0Wxu7/EU0ruI4NfeZbwu63rIuiB1x192Y8QkQspve+P5VMAEw9tB3eaBLFKGlqMNAXRy/pZf7OI+eJyFWgXirwwE4uDL0+qkCv/+w17+3n6ZpXlgUA0s+M+Sz8e6Hm/u1JjHRPojw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BuQun0hu; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id EE09A2115DCE;
-	Tue,  6 May 2025 08:46:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE09A2115DCE
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2CBF62115DCE;
+	Tue,  6 May 2025 08:48:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CBF62115DCE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746546405;
-	bh=o03gSEDectcJtbA60ZihPtdHX0CvqvofYZ/7BrhHloY=;
+	s=default; t=1746546532;
+	bh=XV5pxCSYJfDbAu7U85JaaVEZsdoplkYxyVj9/rXktcA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MB7yFrPjCO3DI086vQye8gYGPsGkGbL2SCT3TheA4RJKlFU/axYH+FgBZIO3y6BT7
-	 gunsAQ1pQDdvxIlrXLzJUrmNmu2usjpvi2XrhUm25f5XXTuHqtmSW2Q/k47GfROhQ6
-	 C/3CtxvoxL9D812S69vDpegalwY5gZ+xHUqygMw4=
-Message-ID: <7f9212eb-f8c1-4f7b-a268-e7e4161fa1a9@linux.microsoft.com>
-Date: Tue, 6 May 2025 08:46:44 -0700
+	b=BuQun0hu9dClUEbfjnUfDSAQolyrHQJvzJC05eWENJSqvrATHxp1lKr8jJRio46vB
+	 Y2v4wRTGIW1ann6Vn8v5wOom3gqwerlRUaApLy5k0MPeApLpJ5Jhj1fng/jjDihqUO
+	 SqklYJU/lXBH5qbE6PdhGnLJcOCAyVrDHdH5WIOg=
+Message-ID: <2d548dd4-ec29-4414-8450-5aa7a8ce98e0@linux.microsoft.com>
+Date: Tue, 6 May 2025 08:48:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,51 +49,51 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v3] x86/hyperv: Fix APIC ID and VP index
- confusion in hv_snp_boot_ap()
-To: Wei Liu <wei.liu@kernel.org>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
- haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
- mikelley@microsoft.com, mingo@redhat.com, tglx@linutronix.de,
- tiala@microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
- benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-References: <20250428182705.132755-1-romank@linux.microsoft.com>
- <aBmsIjIfgCv5G3Lj@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Naman Jain <namjain@linux.microsoft.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
 Content-Language: en-US
 From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <aBmsIjIfgCv5G3Lj@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+In-Reply-To: <20250506084937.624680-1-namjain@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/5/2025 11:28 PM, Wei Liu wrote:
-> On Mon, Apr 28, 2025 at 11:27:05AM -0700, Roman Kisel wrote:
->> To start an application processor in SNP-isolated guest, a hypercall
->> is used that takes a virtual processor index. The hv_snp_boot_ap()
->> function uses that START_VP hypercall but passes as VP index to it
->> what it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
->>
->> As those two aren't generally interchangeable, that may lead to hung
->> APs if the VP index and the APIC ID don't match up.
->>
->> Update the parameter names to avoid confusion as to what the parameter
->> is. Use the APIC ID to the VP index conversion to provide the correct
->> input to the hypercall.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+On 5/6/2025 1:49 AM, Naman Jain wrote:
+> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+> Expose devices and support IOCTLs for features like VTL creation,
+> VTL0 memory management, context switch, making hypercalls,
+> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+> messages and channel events in VTL2 etc.
 > 
-> Unfortunately this patch fails to apply. Please send a new version based
-> on the latest hyperv-next.
+> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> ---
 > 
+> OpenVMM : https://openvmm.dev/guide/
+> 
+> ---
 
-Will do, thanks a lot for letting me know!!
+[...]
 
-> Thanks,
-> Wei.
+> 
+> base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+
+LGTM.
+Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
 
 -- 
 Thank you,
