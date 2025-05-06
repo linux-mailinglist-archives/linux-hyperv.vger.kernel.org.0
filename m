@@ -1,79 +1,100 @@
-Return-Path: <linux-hyperv+bounces-5379-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5380-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D53DAABF2E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 11:22:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 507FDAAC52D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 15:07:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1103F52246D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 09:21:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFD781709E1
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 May 2025 13:07:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6D626FDAD;
-	Tue,  6 May 2025 09:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9B7B15E5DC;
+	Tue,  6 May 2025 13:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENqc5qgB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A520F26FA5D
-	for <linux-hyperv@vger.kernel.org>; Tue,  6 May 2025 09:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C92E19D8A2;
+	Tue,  6 May 2025 13:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523244; cv=none; b=D4bIhZ658NFtPZ5YAciBLm7Cfu7c97RepTfwyE3L1dXj36zJ/VsIEZ+wWIsr6MDkT3X3JiChNhcT5pVZu70nlHTb46acJKdjIVO9XmmM0L5BODunaE33UxjBY9ojTOa/rVXKljXi0KwmqqcIwh0zCSdoQX4ncEchb7W3nhvQrpk=
+	t=1746536836; cv=none; b=fi5pK/o36NpDHPwpq79ySSoDmdytKyxrfc38fPcBmGmLFcBjCgd6huqBwdhLzMYvSzxF55pAW8IiJDZM5/ZsCdTqfxqTVh51WeHwzU+QQSVZ1Za8/a4V68EtYHtts9oDkIQ5i3X5RYXQcjUJFGO+s4jYwmUuJclVnyCrc3R+P5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523244; c=relaxed/simple;
-	bh=4vDBTuxbpXs5OX9PuySbqXDrfoKponl4p3dkWrOXQDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FEyOQG7jc6C/wW7tZ9iRMb3Hz0bag83Rg137oPaBp8Cj+Z7cBe6gyQr26S+L+q9UHDzKEdASCLlpK1ygu9TluqA5nx6scT6XuqG6cZLBAVI9j8EL9o1EzDVyTDTEVVFYRbYHskKvEi9MMz7wJSn1MajR283QS0HCE2enuNHBc3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F06B01F391;
-	Tue,  6 May 2025 09:20:40 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 49800137CF;
-	Tue,  6 May 2025 09:20:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zH5wEGjUGWggbAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 06 May 2025 09:20:40 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1746536836; c=relaxed/simple;
+	bh=NCd+Rk0yON50PatoW3j+aYa0Qo8Di3yglY7VIjKW1d8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j7TiC5VylH8Ig4bDjcBkGD6N+X/VXxNqNZJa1KPcULbFRogJc197CNYSKhAdgA/P2l0QvArt5nOXlBa4EzrdaZZ/gLa7SwR+nOYWvpxyenPl85FXlyD5FXYBdDnNpH5tA9SHHJOjsg7gtHw/G9oSk9yqQVqtqcaOSi+qPdVuWHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENqc5qgB; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-306bf444ba2so4825733a91.1;
+        Tue, 06 May 2025 06:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746536834; x=1747141634; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1u/gSHkUGxurEllHGf8Eqr+47fxtPXp1Q0ArordZZzE=;
+        b=ENqc5qgB+n6AqeJS737omwKLnulmh+MY6I7S9v8DonSvmLHVHR2af+kAaw5IZtXkQ4
+         a7PjhTZfZbnYpWFRsqENd1kLmyEBruuH5RuwuvSD6+bx0SYmdJymj1YeCk+pa7tvLYJU
+         oQIm0Ev1UOrGdBxS6Sowq73/0ssXwNcP5SBMVdTb3S0QK03f5nZrkkpNdE1c49U4pJTM
+         twxGc/MUVIeL0tY6K4jZZ7gWFb8DL3XJI2ZE4Mv4xjcRNyveBPFh7R1GCBr1gTZXU+7b
+         NYmQZQx/K5ESoGVIIlt70252oiJfWetqlSPWWcnVxznDwzFN4WIh1UgyB7IKlv3q4npc
+         yB2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746536834; x=1747141634;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1u/gSHkUGxurEllHGf8Eqr+47fxtPXp1Q0ArordZZzE=;
+        b=gx/b3NF5e88eJdVUGAdH4sHKUC38nLpTZZkRx4gxdJktBYW8SxDsf5ybJSgxMTx+Cy
+         NxKAVu3uGLWNid8TRa3xMUanjQDScrA4GJW7JQw1LBLno0z4wW5A0fpJN4x/vMu2WC38
+         c+AR0iWXplMBWKNPYoAEiwYwPs1mFfNtCUAOmbEPP4F0VwWbm1LogFEPvz4PydSIm6v1
+         SrnGPWHNGc3YrqDR+LmLwzIAEez+iQkwAck1loc6Uwyo5RDmW+LWWqHRD7b22Z4mL2nQ
+         pw8FxuLR0ojP8S3MkayOUxHHQGhMLXBcN5un868GL8pncLu5IrkG3BpZFe/1QBl748W2
+         nEfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUezqF+dbz9IGIEsfqrEX+Cra3NokIsOi5zFbQolwIUTMHzfPmk4KqdAm5rh6Wppa4Dp0J/ERmJ9+G97K0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXmv6Aacl5z8GPPjPHuV/bDSJ7nWAPo2ORtSjfKTaoP2uuTrb7
+	ci+J45B4FvIdoP1XBrdk0y0V3N4tlevGq9TZq+H5iCFOaVqlP2cj
+X-Gm-Gg: ASbGncvSxV42z/VBNYU7bPXCc4k3rGfQIwdtKU6mfm34ZlVsjn3+++dY7ghwjDY0PqZ
+	sPN0V6mR2tzsr1r/eMECI7y3AXrTyue37oY/qtOb1yMsFwdpeiFa3NBo4R7DsQTWrI/jcIKSk4R
+	4l+MvFdXzJ2wwg8wuRhb+ArZsi5vAvXatD77YDm4E8AmIKI07eKfaQaNH3jo6yiM1U9WE2zaFMm
+	eXmiTsIOd1nM1YNodQSvnVIcx6dTEOr8t4f6lwNTcxF1T+8JyBYOGro0+vo2I8RcODLE46BLLNo
+	zSn3sjrUQy7WaIki5xaAORmywUzhEVGHLd9JVWt7qIgCOkldrpxeDVwIpGZC+JSSBxMUE6aBkI6
+	iuwjrcw==
+X-Google-Smtp-Source: AGHT+IHEqVfFifBebpMW30BgR0iUSPAb3OzZDObVxdbKOEg2EcflomXArPA4PI9g/Pj+GdEEFHYs0g==
+X-Received: by 2002:a17:90b:586e:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-30a61a43f5dmr14754917a91.31.1746536834422;
+        Tue, 06 May 2025 06:07:14 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:72:2835:d413:5ee2:7e6a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e15229384sm72628275ad.206.2025.05.06.06.07.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 06:07:14 -0700 (PDT)
+From: Tianyu Lan <ltykernel@gmail.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
 	x86@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: xin@zytor.com,
-	Juergen Gross <jgross@suse.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH 3/6] x86/msr: minimize usage of native_*() msr access functions
-Date: Tue,  6 May 2025 11:20:12 +0200
-Message-ID: <20250506092015.1849-4-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250506092015.1849-1-jgross@suse.com>
-References: <20250506092015.1849-1-jgross@suse.com>
+	hpa@zytor.com,
+	Neeraj.Upadhyay@amd.com,
+	kvijayab@amd.com,
+	yuehaibing@huawei.com,
+	peterz@infradead.org,
+	jpoimboe@kernel.org,
+	jacob.jun.pan@linux.intel.com,
+	tiala@microsoft.com
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/6] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+Date: Tue,  6 May 2025 09:07:05 -0400
+Message-Id: <20250506130712.156583-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -81,150 +102,49 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: F06B01F391
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-In order to prepare for some MSR access function reorg work, switch
-most users of native_{read|write}_msr[_safe]() to the more generic
-rdmsr*()/wrmsr*() variants.
+From: Tianyu Lan <tiala@microsoft.com>
 
-For now this will have some intermediate performance impact with
-paravirtualization configured when running on bare metal, but this
-is a prereq change for the planned direct inlining of the rdmsr/wrmsr
-instructions with this configuration.
+Secure AVIC is a new hardware feature in the AMD64
+architecture to allow SEV-SNP guests to prevent the
+hypervisor from generating unexpected interrupts to
+a vCPU or otherwise violate architectural assumptions
+around APIC behavior.
 
-The main reason for this switch is the planned move of the MSR trace
-function invocation from the native_*() functions to the generic
-rdmsr*()/wrmsr*() variants. Without this switch the users of the
-native_*() functions would lose the related tracing entries.
+Each vCPU has a guest-allocated APIC backing page of
+size 4K, which maintains APIC state for that vCPU.
+APIC backing page's ALLOWED_IRR field indicates the
+interrupt vectors which the guest allows the hypervisor
+to send.
 
-Note that the Xen related MSR access functions will not be switched,
-as these will be handled after the move of the trace hooks.
+This patchset is to enable the feature for Hyper-V
+platform. Patch "Expose x2apic_savic_update_vector()"
+is to expose new fucntion and device driver and arch
+code may update AVIC backing page ALLOWED_IRR field to
+allow Hyper-V inject associated vector.
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/hyperv/ivm.c      |  2 +-
- arch/x86/kernel/kvmclock.c |  2 +-
- arch/x86/kvm/svm/svm.c     | 16 ++++++++--------
- arch/x86/xen/pmu.c         |  4 ++--
- 4 files changed, 12 insertions(+), 12 deletions(-)
+This patchset is based on the AMD patchset "AMD: Add
+Secure AVIC Guest Support"
+https://lkml.org/lkml/2025/4/17/585
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 09a165a3c41e..fe177a6be581 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -319,7 +319,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
- 	asm volatile("movl %%ds, %%eax;" : "=a" (vmsa->ds.selector));
- 	hv_populate_vmcb_seg(vmsa->ds, vmsa->gdtr.base);
- 
--	vmsa->efer = native_read_msr(MSR_EFER);
-+	rdmsrq(MSR_EFER, vmsa->efer);
- 
- 	vmsa->cr4 = native_read_cr4();
- 	vmsa->cr3 = __native_read_cr3();
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index ca0a49eeac4a..b6cd45cce5fe 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -196,7 +196,7 @@ static void kvm_setup_secondary_clock(void)
- void kvmclock_disable(void)
- {
- 	if (msr_kvm_system_time)
--		native_write_msr(msr_kvm_system_time, 0);
-+		wrmsrq(msr_kvm_system_time, 0);
- }
- 
- static void __init kvmclock_init_mem(void)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 4c2a843780bf..3f0eed84f82a 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -482,12 +482,12 @@ static void svm_init_erratum_383(void)
- 		return;
- 
- 	/* Use _safe variants to not break nested virtualization */
--	if (native_read_msr_safe(MSR_AMD64_DC_CFG, &val))
-+	if (rdmsrq_safe(MSR_AMD64_DC_CFG, &val))
- 		return;
- 
- 	val |= (1ULL << 47);
- 
--	native_write_msr_safe(MSR_AMD64_DC_CFG, val);
-+	wrmsrq_safe(MSR_AMD64_DC_CFG, val);
- 
- 	erratum_383_found = true;
- }
-@@ -650,9 +650,9 @@ static int svm_enable_virtualization_cpu(void)
- 		u64 len, status = 0;
- 		int err;
- 
--		err = native_read_msr_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
-+		err = rdmsrq_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
- 		if (!err)
--			err = native_read_msr_safe(MSR_AMD64_OSVW_STATUS, &status);
-+			err = rdmsrq_safe(MSR_AMD64_OSVW_STATUS, &status);
- 
- 		if (err)
- 			osvw_status = osvw_len = 0;
-@@ -2149,7 +2149,7 @@ static bool is_erratum_383(void)
- 	if (!erratum_383_found)
- 		return false;
- 
--	if (native_read_msr_safe(MSR_IA32_MC0_STATUS, &value))
-+	if (rdmsrq_safe(MSR_IA32_MC0_STATUS, &value))
- 		return false;
- 
- 	/* Bit 62 may or may not be set for this mce */
-@@ -2160,11 +2160,11 @@ static bool is_erratum_383(void)
- 
- 	/* Clear MCi_STATUS registers */
- 	for (i = 0; i < 6; ++i)
--		native_write_msr_safe(MSR_IA32_MCx_STATUS(i), 0);
-+		wrmsrq_safe(MSR_IA32_MCx_STATUS(i), 0);
- 
--	if (!native_read_msr_safe(MSR_IA32_MCG_STATUS, &value)) {
-+	if (!rdmsrq_safe(MSR_IA32_MCG_STATUS, &value)) {
- 		value &= ~(1ULL << 2);
--		native_write_msr_safe(MSR_IA32_MCG_STATUS, value);
-+		wrmsrq_safe(MSR_IA32_MCG_STATUS, value);
- 	}
- 
- 	/* Flush tlb to evict multi-match entries */
-diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
-index 8f89ce0b67e3..d49a3bdc448b 100644
---- a/arch/x86/xen/pmu.c
-+++ b/arch/x86/xen/pmu.c
-@@ -323,7 +323,7 @@ static u64 xen_amd_read_pmc(int counter)
- 		u64 val;
- 
- 		msr = amd_counters_base + (counter * amd_msr_step);
--		native_read_msr_safe(msr, &val);
-+		rdmsrq_safe(msr, &val);
- 		return val;
- 	}
- 
-@@ -349,7 +349,7 @@ static u64 xen_intel_read_pmc(int counter)
- 		else
- 			msr = MSR_IA32_PERFCTR0 + counter;
- 
--		native_read_msr_safe(msr, &val);
-+		rdmsrq_safe(msr, &val);
- 		return val;
- 	}
- 
+Tianyu Lan (6):
+  x86/Hyper-V: Not use hv apic driver when Secure AVIC is available
+  x86/x2apic-savic: Expose x2apic_savic_update_vector()
+  drivers/hv: Allow vmbus message synic interrupt injected from Hyper-V
+  x86/Hyper-V: Allow Hyper-V to inject Hyper-V vectors
+  x86/Hyper-V: Not use auto-eoi when Secure AVIC is available
+  x86/x2apic-savic: Not set APIC backing page if Secure AVIC is not
+    enabled.
+
+ arch/x86/hyperv/hv_apic.c           |  3 +++
+ arch/x86/hyperv/hv_init.c           | 12 ++++++++++++
+ arch/x86/include/asm/apic.h         |  9 +++++++++
+ arch/x86/kernel/apic/x2apic_savic.c | 13 ++++++++++++-
+ arch/x86/kernel/cpu/mshyperv.c      |  3 +++
+ drivers/hv/hv.c                     |  2 ++
+ 6 files changed, 41 insertions(+), 1 deletion(-)
+
 -- 
-2.43.0
+2.25.1
 
 
