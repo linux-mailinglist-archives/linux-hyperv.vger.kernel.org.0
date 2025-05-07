@@ -1,155 +1,195 @@
-Return-Path: <linux-hyperv+bounces-5421-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5422-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9CB7AAED19
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 22:31:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 646C6AAEF13
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 May 2025 01:11:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67DD47BD461
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 20:30:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F9EE1BC4434
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 23:12:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB2628ECC7;
-	Wed,  7 May 2025 20:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87449291174;
+	Wed,  7 May 2025 23:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gsnrGs29"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lr6U282C"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40001C5F30;
-	Wed,  7 May 2025 20:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC871ACEC8;
+	Wed,  7 May 2025 23:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746649899; cv=none; b=Q4bMNOhTYAP+78R0lkrTACNgr3TLgl+hXjBnyNq7gzJVJXSem4u/Kbpc8yHJg/zeVrZseWm6huSxPHmtOc7IXEk8oh7pQEdphTdNlybPjeaTkUwgLSe6ajQnkSL6fXO4koqjTbWC7+wSylOQC6ybwX6euB1keb+F8l/vkn/Lt40=
+	t=1746659502; cv=none; b=ZxpOYfRKouaSOFcFrN/lo0XCbdmDi3QASX8QumjjDVDWWhMxYVaJt5n5EkMvM3TpHP/25ecpnY8IRtS0V3+JwEfs6Y+VSdYrkCK2GR2s7NP5g3eYAW/CuP3yUZ28fmrnMrSlrd69bXPkYQukjQQV2UpfWN14kaVo7811vr8LyTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746649899; c=relaxed/simple;
-	bh=WoPemwi0V2QyJH6Yf1Kh8i/XajixcA6gmolA/9zzlik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jd3NMGhUPzGD2ruFXnn6jG9LhumA+S6NIyFQ3xa7EEb1R1pXHdHdMH7mRiBglyKurcTveUx0HDbAxh7Og67jUPw4/PRJfdggyVurea8GI9B2xTpskz9lR8kmMQ9aVHq9iXz9dHKzTL6aS/JwfZE2hHoI04oFNIjEQVGu7TaDljg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gsnrGs29; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 117D52119CB5;
-	Wed,  7 May 2025 13:31:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 117D52119CB5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746649897;
-	bh=NvLvN0qjxq/EbxkWcOBLlauj5fOlNuy9CoKl0TZCL+s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gsnrGs295/1l+r7Hpnhdg2pOgqM155CA2/hQQbKK86IECm3kkK7vDqllX0HF0YNHJ
-	 GbAh5iLyK91e2azjX+jnp8pBynMRvuqH0QErfbKTGreSRCUVyl23iJ9Vc5jc0KUq3H
-	 jRBWYhQECrvZwVY4ZFUZYpy/HAW3doKLNQpn3xA8=
-Message-ID: <29edc00e-9797-4f4a-83b3-0b4158c94a16@linux.microsoft.com>
-Date: Wed, 7 May 2025 13:31:36 -0700
+	s=arc-20240116; t=1746659502; c=relaxed/simple;
+	bh=RGS6xqwf+eAFdkFQCJRyKL1JWrMRM7+MAR2zJd5Lnyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nuyjMIMXHIUZysZ0Qxym8/omqBmgiNLX4qXUvv6z8ey0zF7hU3QS1f4D6ZaaN+EEHa+CsF6NkpASes7cOF6B/l90orNgYtXvwwscZCvzR+CGvtYALSNbMQwYEaKbl2s/L9ZvRC4c1FqSO7wzeviQcRlhUgI8CHvaKYV38pMBj5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lr6U282C; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746659502; x=1778195502;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RGS6xqwf+eAFdkFQCJRyKL1JWrMRM7+MAR2zJd5Lnyw=;
+  b=Lr6U282Cl5q18ymFBHgPqR/bb2ExnxDV+pjgkWlMyhJ+ESQ49vzmfTAo
+   ApXLQ9H1OXu5qbWaRA5kWOKzsjfWNtyCvInSWonCdBhHzCkjFConu/SVk
+   BSJqa32Pwmsf0AjI2hoA0WqX3a3smOeCsBqd8SMPLhe5IEXZAXEZsuXKv
+   z1cCNDc47OXvlUJq1+1Xn2dgAK8Jt6C+BccHHwNL6ohye+C1QyRs/qhWE
+   9mFsHQAU/JQ7rcANSf+9vrSLlUc5hQVyNWjsY/tD35oTfdgZ3pIP1Q4CV
+   Syg36cG5hMXe8mPIClsoax4IzqSNiIE+79NctEcd5H3o/1oDxSp7NMea+
+   A==;
+X-CSE-ConnectionGUID: 9cGpP0jrS+KNldGkpP5KhQ==
+X-CSE-MsgGUID: 2IoEb77HRE6Ryy6YmEVCsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52073731"
+X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
+   d="scan'208";a="52073731"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 16:11:40 -0700
+X-CSE-ConnectionGUID: n53kvqjfRue9GsXfCUf8fg==
+X-CSE-MsgGUID: A89NqrmXRgahO1BXhRqWfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
+   d="scan'208";a="136042291"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 16:11:38 -0700
+Date: Wed, 7 May 2025 16:16:45 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 04/13] dt-bindings: x86: Add CPU bindings for x86
+Message-ID: <20250507231644.GB28763@ranerica-svr.sc.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
+ <20250504-happy-spoonbill-of-radiance-3b9fec@kuoka>
+ <20250506045235.GB25533@ranerica-svr.sc.intel.com>
+ <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
-To: Naman Jain <namjain@linux.microsoft.com>,
- Saurabh Singh Sengar <ssengar@microsoft.com>,
- KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc: Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <20250506084937.624680-1-namjain@linux.microsoft.com>
- <KUZP153MB1444BE7FD66EA9CA9B4B9A97BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <be04a26f-866d-43e6-9a0b-15b91405503e@linux.microsoft.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <be04a26f-866d-43e6-9a0b-15b91405503e@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-
-
-On 5/7/2025 4:21 AM, Naman Jain wrote:
+On Tue, May 06, 2025 at 09:25:59AM +0200, Krzysztof Kozlowski wrote:
+> On Mon, May 05, 2025 at 09:52:35PM GMT, Ricardo Neri wrote:
+> > On Sun, May 04, 2025 at 06:45:59PM +0200, Krzysztof Kozlowski wrote:
+> > > On Sat, May 03, 2025 at 12:15:06PM GMT, Ricardo Neri wrote:
+> > > > Add bindings for CPUs in x86 architecture. Start by defining the `reg` and
+> > > 
+> > > What for?
+> > 
+> > Thank you for your quick feedback, Krzysztof!
+> > 
+> > Do you mean for what reason I want to start bindings for x86 CPUs? Or only
 > 
-> 
+> Yes. For which devices, what purpose.
 
-[...]
-
-> <snip>
-> 
->>> +        return -EINVAL;
->>> +    if (copy_from_user(payload, (void __user *)message.payload_ptr,
->>> +               message.payload_size))
->>> +        return -EFAULT;
->>> +
->>> +    return hv_post_message((union
->>
->> This function definition is in separate file which can be build as 
->> independent module, this will cause
->> problem while linking . Try building with CONFIG_HYPERV=m and check.
->>
->> - Saurabh
-> 
-> Thanks for reviewing Saurabh. As CONFIG_HYPERV can be set to 'm'
-> and CONFIG_MSHV_VTL depends on it, changing CONFIG_MSHV_VTL to tristate
-> and a few tweaks in Makefile will fix this issue. This will ensure that
-> mshv_vtl is also built as a module when hyperv is built as a module.
-> 
-> I'll take care of this in next version.
-
-Let me ask for a clarification. How would the system boot if
-CONFIG_HYPERV is set to m? The arch parts are going to be still
-compiled-in, correct? Otherwise I don't see how that would
-initialize.
-
-I am thinking who would load Hyper-V modules on the system
-that requires Hyper-V here. It is understandable that
-distro's build Hyper-V as a module. That way, they don't have to load
-anything when there is no Hyper-V. Here, it is Hyper-V in and out, what
-do we need to fix?
+Sure, I could expand on this.
 
 > 
-> here is the diff for reference:
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 57dcfcb69b88..c7f21b483377 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -73,7 +73,7 @@ config MSHV_ROOT
->            If unsure, say N.
+> > the `reg` property? If the former, it is to add an enable-method property to
+> > x86 CPUs. If the latter, is to show the relationship between APIC and `reg`.
+> > 
+> > > 
+> > > > `enable-method` properties and their relationship to x86 APIC ID and the
+> > > > available mechanisms to boot secondary CPUs.
+> > > > 
+> > > > Start defining bindings for Intel processors. Bindings for other vendors
+> > > > can be added later as needed.
+> > > > 
+> > > > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > > > ---
+> > > 
+> > > Not really tested so only limited review follows.
+> > 
+> > Sorry, I ran make dt_binding_check but only on this schema. I missed the
+> > reported error.
+> > 
+> > > 
+> > > >  .../devicetree/bindings/x86/cpus.yaml         | 80 +++++++++++++++++++
+> > > >  1 file changed, 80 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/x86/cpus.yaml
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/x86/cpus.yaml b/Documentation/devicetree/bindings/x86/cpus.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..108b3ad64aea
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/x86/cpus.yaml
+> > > > @@ -0,0 +1,80 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/x86/cpus.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: x86 CPUs
+> > > > +
+> > > > +maintainers:
+> > > > +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > > > +
+> > > > +description: |
+> > > > +  Description of x86 CPUs in a system through the "cpus" node.
+> > > > +
+> > > > +  Detailed information about the CPU architecture can be found in the Intel
+> > > > +  Software Developer's Manual:
+> > > > +    https://intel.com/sdm
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - intel,x86
+> > > 
+> > > That's architecture, not a CPU. CPUs are like 80286, 80386, so that's
+> > > not even specific instruction set. I don't get what you need it for.
+> > 
+> > Am I to understand the the `compatible` property is not needed if the
+> > bindings apply to any x86 CPU?
 > 
->   config MSHV_VTL
-> -       bool "Microsoft Hyper-V VTL driver"
-> +       tristate "Microsoft Hyper-V VTL driver"
->          depends on HYPERV && X86_64
->          depends on TRANSPARENT_HUGEPAGE
->          depends on OF
-> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> index 5e785dae08cc..c53a0df746b7 100644
-> --- a/drivers/hv/Makefile
-> +++ b/drivers/hv/Makefile
-> @@ -15,9 +15,11 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)    += hv_debugfs.o
->   hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
->   mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
->                 mshv_root_hv_call.o mshv_portid_table.o
-> +mshv_vtl-y := mshv_vtl_main.o
+> Every device needs compatible. Its meaning is explained:
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#compatible
 > 
->   # Code that must be built-in
->   obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
-> -obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o mshv_common.o
-> -
-> -mshv_vtl-y := mshv_vtl_main.o mshv_common.o
-> +obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
-> +ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
-> +    obj-y += mshv_common.o
-> +endif
+> If you add here a device representing CPU, then look at existing
+> bindings for CPUs how they do it.
 > 
-> Regards,
-> Naman
+> It again feels like you add DT for platform which is not a real thing.
 
--- 
-Thank you,
-Roman
+That is correct. I struggle to enumerate specific CPUs because the `intel,
+wakeup-mailbox` enable method is implemented in the platform firmware and
+is not tied to a given processor model as required by the rules of the
+`compatible` property.
 
+> If you use DT, you do not get different rules, therefore read all
+> standard guides and tutorials (there were many, quite comprehensive).
+
+I went through various materials. Perhaps I needed to understand the rules
+better.
+
+I realize now the DeviceTree is about describing hardware not firmware and
+DT bindings are a suitable vehicle for this.
+
+Thanks for the time you spent reviewing this patchset!
+
+BR,
+Ricardo
 
