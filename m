@@ -1,227 +1,107 @@
-Return-Path: <linux-hyperv+bounces-5413-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5414-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9596AAE6C1
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 18:33:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FC38AAE765
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 19:07:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7A041889141
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 16:29:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5A2A7AEADA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 May 2025 17:06:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF87D28B509;
-	Wed,  7 May 2025 16:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492E828C006;
+	Wed,  7 May 2025 17:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEU8Fffk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r+9GXfG8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD84201266;
-	Wed,  7 May 2025 16:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3EA7289361;
+	Wed,  7 May 2025 17:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635364; cv=none; b=UeMqpmbTzOl/S8ZmgGHQXPi7YoKE/yo/pj16bYhZSumwVda9Kko5c6aBplgz0LXM5akZ6hVn5jyvYi8mYkDT2EorSypjwiIv7NdmF9omjq4KkXIliErkaOwaC7sh2SKuih9lJw/ZW25bHokmyi8BTaawZEBI9IVHJT9HMSt+L0c=
+	t=1746637649; cv=none; b=P6xgpl1VUFR6f8TFBERSDAM909OW+s8LHCqTFtFl3N83VQCaBfzDTjT0IjbB5OizANBwJQ9Y/4T3MQLdO6U9y5KrIyIq1qmNiMYBoftFqFVf33MI6pZY46o/EGoJkyHzX07by11X4dAvGzEsXdMloUZYv4u2XrmPveeFKRFl0Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635364; c=relaxed/simple;
-	bh=LjPYYfMdxis7ITOMKVHr/CAOCVAW0IbwVEhXnZ55sxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aiCkSymYBwhEpBRdf16jS2CuWuJxfLBU4nTniqmkTJa8W4h5hUkZY8lXdwetz9YRQFl9sPiK53RjBnk/QPRg/bs7dNKVMaDe86nLw7gF30XPdxXX7vjRowxH/M6sbFu3NCJPNklEmCZ4BUzgVnIeEKhPrSM2Hxrp6cTqhED5ZCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEU8Fffk; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746635363; x=1778171363;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LjPYYfMdxis7ITOMKVHr/CAOCVAW0IbwVEhXnZ55sxo=;
-  b=gEU8FffkmbhHbSNC5TcWOrtyETQHVIzGyNrkiJwr5CTFH9ASAHEPMckD
-   cSDvJJL3H0sy6REDaoP1dT21KyUaOlrV1feQ1YtlfOI+r4x0Q1HtpesGo
-   e5HdZPrnIQZ7lvoDauDEYYC7VpqWv+YX5e1kn9zDp9A7WLrpAJ1muIV5u
-   T6xZjCBks4bq870OZ/1AN72LAm0nctVhnMXvpzIxjGSy5dikg/F9+uASf
-   H1L0l4XsDXDU9rfCRUhI5r8n2zLmrBnj83fCBg99T9FCDkiPY23/JB5o5
-   WetBkqCacPHyuZ/cVqFGbcBpZUyrBF4TlAXlymkumYqGY/cQZkqUqlDK2
-   A==;
-X-CSE-ConnectionGUID: 7PHRl6zrRW6VOl20qfxf1A==
-X-CSE-MsgGUID: uTFjb2zaTAyKoF4cJDaQFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48536568"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="48536568"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 09:29:22 -0700
-X-CSE-ConnectionGUID: /qLkKdV/RSK4Bax55Pv+ug==
-X-CSE-MsgGUID: q2i/ICsATHi57GGk/T2P3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="141201293"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 07 May 2025 09:29:16 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uChdx-0008AL-1P;
-	Wed, 07 May 2025 16:29:13 +0000
-Date: Thu, 8 May 2025 00:28:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector
- dynamically
-Message-ID: <202505080049.7AvfzOGc-lkp@intel.com>
-References: <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=arc-20240116; t=1746637649; c=relaxed/simple;
+	bh=ZAeBIInxRDk0JjceYJ5nfLOCipMU/kiZnDbJqxCcXA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tk8XwpUGxCCvL9NOKCD0tenKW+TO1IDZ+/QJlIdiPX2/r03o/VeLWdskgQH7alJ90/WzyyIvifrMH0qgCfF4IlDai7bEBmV408O/4iU6LP2BPJFZvT5CHCV3+YeeKEUJmkmyDe51lbbmL7HFl07V5fiRk+GFdUHFnPyo8uQirks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r+9GXfG8; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F18A121199CC;
+	Wed,  7 May 2025 10:07:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F18A121199CC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746637647;
+	bh=dJhcMfKRu4+UGyqD7ovmVZwM69P8Veulgfr2jLnleuo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r+9GXfG8FhrdPPXfg1bReS5N0GwmGU0A9GInvcMi9GqLfOrTkQGkLZdutP/pe3JOb
+	 HwKEGOcUureqf8NLxyWuQ/CcWQSzkzr6jYzkYn/gLFXYG8MJOxKNVVSFcCZa3T29Up
+	 mdxh06iUb33SYSzx+WgNPaNFGCi34dm7fSL74lnw=
+Message-ID: <3b0c3732-ccf6-4133-b55c-4177532ebecb@linux.microsoft.com>
+Date: Wed, 7 May 2025 10:07:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1744817781-3243-1-git-send-email-shradhagupta@linux.microsoft.com>
-
-Hi Shradha,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.15-rc5 next-20250507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Shradha-Gupta/PCI-hv-enable-pci_hyperv-to-allow-dynamic-vector-allocation/20250416-233828
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/1744817781-3243-1-git-send-email-shradhagupta%40linux.microsoft.com
-patch subject: [PATCH 2/2] net: mana: Allow MANA driver to allocate PCI vector dynamically
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250508/202505080049.7AvfzOGc-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505080049.7AvfzOGc-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505080049.7AvfzOGc-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/net/ethernet/microsoft/mana/gdma_main.c:500:2: warning: variable 'gic' is used uninitialized whenever 'for' loop exits because its condition is false [-Wsometimes-uninitialized]
-     500 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:510:7: note: uninitialized use occurs here
-     510 |         if (!gic)
-         |              ^~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:500:2: note: remove the condition if it is always true
-     500 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:475:30: note: initialize the variable 'gic' to silence this warning
-     475 |         struct gdma_irq_context *gic;
-         |                                     ^
-         |                                      = NULL
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:541:2: warning: variable 'gic' is used uninitialized whenever 'for' loop exits because its condition is false [-Wsometimes-uninitialized]
-     541 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:551:7: note: uninitialized use occurs here
-     551 |         if (!gic)
-         |              ^~~
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:541:2: note: remove the condition if it is always true
-     541 |         list_for_each(pos, &gc->irq_contexts) {
-         |         ^
-   include/linux/list.h:687:27: note: expanded from macro 'list_for_each'
-     687 |         for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-         |                                  ^
-   drivers/net/ethernet/microsoft/mana/gdma_main.c:523:30: note: initialize the variable 'gic' to silence this warning
-     523 |         struct gdma_irq_context *gic;
-         |                                     ^
-         |                                      = NULL
-   2 warnings generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
+ wakeup AP callback
+To: Wei Liu <wei.liu@kernel.org>
+Cc: ardb@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+ decui@microsoft.com, dimitri.sivanich@hpe.com, haiyangz@microsoft.com,
+ hpa@zytor.com, imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com,
+ jgross@suse.com, justin.ernst@hpe.com, kprateek.nayak@amd.com,
+ kyle.meyer@hpe.com, kys@microsoft.com, lenb@kernel.org, mingo@redhat.com,
+ nikunj@amd.com, papaluri@amd.com, perry.yuan@amd.com, peterz@infradead.org,
+ rafael@kernel.org, russ.anderson@hpe.com, steve.wahl@hpe.com,
+ tglx@linutronix.de, thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
+ tony.luck@intel.com, xin@zytor.com, yuehaibing@huawei.com,
+ linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+ benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250430204720.108962-1-romank@linux.microsoft.com>
+ <aBl62kTEAnR790KF@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+ <aBr8cNXD630JbIxP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aBr8cNXD630JbIxP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-vim +500 drivers/net/ethernet/microsoft/mana/gdma_main.c
 
-   470	
-   471	static int mana_gd_register_irq(struct gdma_queue *queue,
-   472					const struct gdma_queue_spec *spec)
-   473	{
-   474		struct gdma_dev *gd = queue->gdma_dev;
-   475		struct gdma_irq_context *gic;
-   476		struct gdma_context *gc;
-   477		unsigned int msi_index;
-   478		struct list_head *pos;
-   479		unsigned long flags, flag_irq;
-   480		struct device *dev;
-   481		int err = 0, count;
-   482	
-   483		gc = gd->gdma_context;
-   484		dev = gc->dev;
-   485		msi_index = spec->eq.msix_index;
-   486	
-   487		if (msi_index >= gc->num_msix_usable) {
-   488			err = -ENOSPC;
-   489			dev_err(dev, "Register IRQ err:%d, msi:%u nMSI:%u",
-   490				err, msi_index, gc->num_msix_usable);
-   491	
-   492			return err;
-   493		}
-   494	
-   495		queue->eq.msix_index = msi_index;
-   496	
-   497		/* get the msi_index value from the list*/
-   498		count = 0;
-   499		spin_lock_irqsave(&gc->irq_ctxs_lock, flag_irq);
- > 500		list_for_each(pos, &gc->irq_contexts) {
-   501			if (count == msi_index) {
-   502				gic = list_entry(pos, struct gdma_irq_context, gic_list);
-   503				break;
-   504			}
-   505	
-   506			count++;
-   507		}
-   508		spin_unlock_irqrestore(&gc->irq_ctxs_lock, flag_irq);
-   509	
-   510		if (!gic)
-   511			return -1;
-   512	
-   513		spin_lock_irqsave(&gic->lock, flags);
-   514		list_add_rcu(&queue->entry, &gic->eq_list);
-   515		spin_unlock_irqrestore(&gic->lock, flags);
-   516	
-   517		return 0;
-   518	}
-   519	
+On 5/6/2025 11:23 PM, Wei Liu wrote:
+> On Tue, May 06, 2025 at 02:58:34AM +0000, Wei Liu wrote:
+>> On Wed, Apr 30, 2025 at 01:47:20PM -0700, Roman Kisel wrote:
+>>> When starting APs, confidential guests and paravisor guests
+>>> need to know the CPU number, and the pattern of using the linear
+>>> search has emerged in several places. With N processors that leads
+>>> to the O(N^2) time complexity.
+>>>
+>>> Provide the CPU number in the AP wake up callback so that one can
+>>> get the CPU number in constant time.
+>>>
+>>> Suggested-by: Michael Kelley <mhklinux@outlook.com>
+>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>>> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+>>
+>> Queued to hyperv-next. Thanks.
+> 
+> This patch broke linux-next. I have dropped it. Please change
+> numachip_wakeup_secondary.
+> 
+
+Thanks for your help! Working on that.
+
+> Wei.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thank you,
+Roman
+
 
