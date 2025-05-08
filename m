@@ -1,155 +1,159 @@
-Return-Path: <linux-hyperv+bounces-5435-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5436-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08F93AB0219
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 May 2025 20:04:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 970BCAB0241
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 May 2025 20:13:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA8CD461909
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 May 2025 18:04:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD9461C4007A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 May 2025 18:14:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B839281523;
-	Thu,  8 May 2025 18:03:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FE32874FE;
+	Thu,  8 May 2025 18:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZN6x7GW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="T3jLATy5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BC3207DEE;
-	Thu,  8 May 2025 18:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303A52874EB;
+	Thu,  8 May 2025 18:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746727410; cv=none; b=rE5WIr74PF9VghaYNgukHSGKwu55ilXN4TPkbLgl1xZPB1AeEfpYdxUpNvsQQRqWgk+w+t7D2ah5hd2uTm4RPOIApC3tkSDeCSS52z24jZBarAINCuJtqT5XWu6FSVJO269wPA3BWipDYYsIl0ANsRaSdcvnSAl4ZfXXXKYJM88=
+	t=1746728016; cv=none; b=fJx/VjlUrTZVpBySjecAaiKrJ2K2a+CCwokfxawF/Pbca0hSvJrEYmKZjrowe22rtitbfVH6dvJomaJR9BDlky/6/fucehEdHqUEzQ506i9TSAj2lmbDjXHBWBPoJnOMvpGSkLhB1xWgHmxkAHm3eyiCE4dM8YWczin0J1kBrN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746727410; c=relaxed/simple;
-	bh=keNapksh6o7sIDke7Z7TY0yJwQBMCFVXVOlG6PCsX8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lg5S5UHdPNa68V5sjgvUTLSAh79eEV5EuoAOkOJZE2d+BpSAZj9TYGtsLG6hP1psunIqjEGkTqbS7OreXUwfXiVfyWg78SPiilpmCWvuPF4x1l2si7SWN8jZL5jOsXZJJz1p/nr6gQMAk2b8eUyA12eKPhGuEUlqC/HC3CtjnLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZN6x7GW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C632C4CEE7;
-	Thu,  8 May 2025 18:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746727409;
-	bh=keNapksh6o7sIDke7Z7TY0yJwQBMCFVXVOlG6PCsX8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TZN6x7GWWTzQbQCFq27jKoBQEr5dYYcaOwLq8Faw33FpF4uA0vwXo/hzu+h9CNfWF
-	 XIGZD3oEPOjE21RmipQuoZ2aCKvwuXyX+SLeVKvBGe4oyVB3m+HtfD9LI2R1VSG9kz
-	 s86ZnChSIdG6c4XMJhjv6phGHTxELsMiWMbNvHO2RZ076ujIvJ5pRX8RZMRCmqa4ZY
-	 8xN+UXImo4E6aQ2dDpLFzyg1n2K6XAWG/1+/YCl8RUaMHuaDy5dyvQFgF50V2fG79Y
-	 SSn1XzwFrBmG05N9KdgDqdMacTINtBnWO1SeUlJU4fuGW3tKxNFswwrWbU5k7D+wTv
-	 IBXKfObQioO9w==
-Date: Thu, 8 May 2025 18:03:28 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
-	Naman Jain <namjain@linux.microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
-Message-ID: <aBzx8HDwKakGG1tR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250506084937.624680-1-namjain@linux.microsoft.com>
- <KUZP153MB1444858108BDF4B42B81C2A0BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
+	s=arc-20240116; t=1746728016; c=relaxed/simple;
+	bh=7YNxL1Vm89Ly6NfdTnBUxIowWrliUwR2DRgb+MJjmrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LdGs/0Bu3/IgIviWhr+jMkVSK7xAP91G7EzwEptTp7cJ3vOkXBDjSYDBUtEo5u+zsos7ctbuxzXN9kAqHuGDRlcA8qlJv9LBgNDngfj9PKh4oUjQyLe8ZTiB121icfAlKuYHr0zBCgu+vR57rYOYMk/KZCplMt88BL1R0MPHMC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=T3jLATy5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A1790209846A;
+	Thu,  8 May 2025 11:13:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A1790209846A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746728013;
+	bh=LO/oU31zQKuZfvDv0dRtOXlLNZ7bEkZUhWrRkKEMaKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=T3jLATy5Kr4R+l+iK6j0Iu/2R+WKgl56UrzjK/gv7IYcJVlPswenenA+T9uT/4heJ
+	 oHEH8osYF+vn+GvUUVPPoTjl3rMNdO4Q3ckRQEVzhxPfPBztqFb349jUE5M7IdcHJ/
+	 2lOkAkozHsEubravHQF9lk8GnZSYVEuhks5mtfsE=
+Message-ID: <2cd63d5d-21af-408b-869a-b38118f4cad6@linux.microsoft.com>
+Date: Thu, 8 May 2025 11:13:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
+ Naman Jain <namjain@linux.microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
+ <KUZP153MB1444BE7FD66EA9CA9B4B9A97BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <be04a26f-866d-43e6-9a0b-15b91405503e@linux.microsoft.com>
+ <29edc00e-9797-4f4a-83b3-0b4158c94a16@linux.microsoft.com>
+ <KUZP153MB14448028621F8148D5129D9FBE8BA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <1edea7f4-5ad2-4103-8eb5-9d5d9f0c7b0d@linux.microsoft.com>
+ <aBztdK82ZQQvnWsh@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aBztdK82ZQQvnWsh@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 12:20:36PM -0700, Roman Kisel wrote:
-> 
-> 
-> On 5/7/2025 6:02 AM, Saurabh Singh Sengar wrote:
-> > 
-> [..]
-> 
-> > > +	}
-> > > +
-> > > +	local_irq_save(flags);
-> > > +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > > +	out = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> > > +
-> > > +	if (copy_from_user(in, (void __user *)hvcall.input_ptr,
-> > > hvcall.input_size)) {
-> > 
-> > Here is an issue related to usage of user copy functions when interrupt are disabled.
-> > It was reported by Michael K here:
-> > https://github.com/microsoft/OHCL-Linux-Kernel/issues/33
-> 
-> From the practical point of view, that memory will be touched by the
-> user mode by virtue of Rust requiring initialization so the a possible
-> page fault would be resolved before the IOCTL. OpenHCL runs without swap
-> so the the memory will not be paged out to require page faults to be
-> brought in back.
-> 
-> I do agree that might be turned into a footgun by the user land if
-> they malloc a page w/o prefaulting (so it's just a VA range, not backed
-> with the physical page), and then send its address straight over here
-> right after w/o writing any data to it. Perhaps likelier with the output
-> data. Anyway, yes, relying on the user land doing sane things isn't
-> the best approach to the kernel programming.
 
-Yep. We don't rely on user land software doing sane things to maintain
-correctness in kernel, so this needs to be fixed.
 
-Thanks,
-Wei.
+On 5/8/2025 10:44 AM, Wei Liu wrote:
+> On Thu, May 08, 2025 at 08:44:14AM -0700, Roman Kisel wrote:
+[...]
+>>
+>> You seem to know for whom it is broken, would be great to share this
+>> knowledge. When CONFIG_MSHV_VTL is set to "m", OpenHCL will break down
+>> without additional work. So why do we need to be able to build that
+>> as a module, to let someone build the firmware that doesn't work?
+>>
+>> So far the request comes off as absurd to me.
+>>
+> 
+> I don't think this is an absurd request.
+> 
+> While obviously Microsoft will only build the code as builtin, there are
+> bots that do randconfig build tests but never run the resulting binary.
+
+Thanks, Wei, for the thorough explanation!
 
 > 
-> If we're inclined to fix this, I'd encourage to take an approach that
-> works for the confidential VMs as well so we don't have to fix that
-> again when start upstreaming what we have for SNP and TDX. The
-> allocation *must* be visible to the hypervisor in the confidential
-> scenarios.
+> Thanks,
+> Wei.
 > 
-> Or, maybe we could avoid the allocations by reading the first byte
-> of the user land buffer to "pre-fault" the page outside of the
-> scope that disables interrupts. Why allocate if we can avoid that?
-> Could set up also the SMP remote calls to run this on the desired
-> CPU.
-> 
-> Summarizing for the case you want to change this:
-> 
-> 1. Keep interrupts disabled when reading/writing to/from the Hyper-V
->    driver allocated input and output pages.
-> 2. If you decide to allocate separate pages, make sure they are
->    visible to the hypervisor in the confidential scenarios. I know
->    we're not talking SNP and TDX here just yet but it would be
->    a waste of time imho to build something here and scrape that
->    later. The issues with allocations are:
->        a) If allocating on-demand, we might fail the hypercall
->           because of OOM. That's certainly bad as the whole VM
->           will break down.
->        b) If allocating for the whole lifetime of the VM,
->           let us remember that we avoid using hypercalls
->           due to their runtime cost. We'll be keeping around
->           2 pages per CPU for the few times we need them.
-> 3. Consider reading a byte from the user land buffers to make the page
->    fault happen outside of disabling interrupts. There is no
->    outswap (maybe could have disabling swap in Kconfig) so the page
->    will stay in the memory.
-> 
-> If you're not changing this, feel free to keep my "Reviewed-by".
-> 
-> > 
-> > - Saurabh
-> 
-> -- 
-> Thank you,
-> Roman
-> 
+>>>
+>>> - Saurabh
+>>>
+>>>>
+>>>>>
+>>>>> here is the diff for reference:
+>>>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig index
+>>>>> 57dcfcb69b88..c7f21b483377 100644
+>>>>> --- a/drivers/hv/Kconfig
+>>>>> +++ b/drivers/hv/Kconfig
+>>>>> @@ -73,7 +73,7 @@ config MSHV_ROOT
+>>>>>              If unsure, say N.
+>>>>>
+>>>>>     config MSHV_VTL
+>>>>> -       bool "Microsoft Hyper-V VTL driver"
+>>>>> +       tristate "Microsoft Hyper-V VTL driver"
+>>>>>            depends on HYPERV && X86_64
+>>>>>            depends on TRANSPARENT_HUGEPAGE
+>>>>>            depends on OF
+>>>>> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile index
+>>>>> 5e785dae08cc..c53a0df746b7 100644
+>>>>> --- a/drivers/hv/Makefile
+>>>>> +++ b/drivers/hv/Makefile
+>>>>> @@ -15,9 +15,11 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)    +=
+>>>>> hv_debugfs.o
+>>>>>     hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+>>>>>     mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o
+>>>>> mshv_irq.o \
+>>>>>                   mshv_root_hv_call.o mshv_portid_table.o
+>>>>> +mshv_vtl-y := mshv_vtl_main.o
+>>>>>
+>>>>>     # Code that must be built-in
+>>>>>     obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o -obj-$(subst
+>>>>> m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o mshv_common.o
+>>>>> -
+>>>>> -mshv_vtl-y := mshv_vtl_main.o mshv_common.o
+>>>>> +obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o ifneq
+>>>>> +($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
+>>>>> +    obj-y += mshv_common.o
+>>>>> +endif
+>>>>>
+>>>>> Regards,
+>>>>> Naman
+>>>>
+>>>> --
+>>>> Thank you,
+>>>> Roman
+>>>
+>>
+>> -- 
+>> Thank you,
+>> Roman
+>>
+
+-- 
+Thank you,
+Roman
+
 
