@@ -1,213 +1,254 @@
-Return-Path: <linux-hyperv+bounces-5482-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5483-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CB4EAB482F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 May 2025 02:07:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA78AB493C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 May 2025 04:08:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4ED6465EF4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 May 2025 00:07:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DD35861F29
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 May 2025 02:07:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06BD614B06C;
-	Tue, 13 May 2025 00:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2F31A072C;
+	Tue, 13 May 2025 02:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fg7peFFw"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="SDNbHFVp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19010003.outbound.protection.outlook.com [52.103.11.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3776632C8B;
-	Tue, 13 May 2025 00:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747094788; cv=none; b=XFd4rjZF3NNaJn7H0XfwkFdHUPnJarYZlW9hvuiNNnJuUpCojlZIH64ACPndR551/IrYzM5R5e3YMlyez0JUY05bsI4DRVyKVmof3ihH6Mr00s5j+TopxbWPguTCB3Ibzm0yb6Km1fpHiWBrIj0PNxmO/+yaC4HsMmK6Zd0ea7E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747094788; c=relaxed/simple;
-	bh=/3/6voPULjYvpgG6Nnc+zAtZr66zlGPAla6ugxce3l4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e5N99biuNJy4YJlrnolLY1f4FR+mahvrlXpyKe0bVxS67vjgVhomcNnrdi7xWmbmVgIXZGnzyq7qPzKNMy9LGh/D00wlTTMKjNf0rN7PxV8r4i5Zqg9ORDIn/9SzfpthTsnJr/ECpMXt3auSzyvMevCl5k9Tb6rx5APE83OXRGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fg7peFFw; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e16234307so53407175ad.0;
-        Mon, 12 May 2025 17:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747094786; x=1747699586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nB0R2WkOeQvPRFxPtqwr6m021by5PVJe9qR5v1cbNws=;
-        b=Fg7peFFwmYvaeyhB0M6uVUetz9ad98+dY/FOYNSdaKQGhR1QSD+5OVs+BlxV6JgE4n
-         6U6t/sjjJVgphZT2xvcmJ/SxYiXwQxhSZp0td8t3oqGppjuJ93a6yzYr06usnAChJCqp
-         ic9qjygN/5eCWVPSvR3UVttTLn2nS5Ex1NNSbs9qj0FiCuoRx07cOuawC5nWt+Ft8w0+
-         VfYA/6ZmPkeA6+RGP2aQbb7xfrTZ1Z8oDs6O/X8zBc/nQgCjKBRlJEF04ueBXNetG8MH
-         jWc27i6OTaH9cAXDnOVocLbBWojROzeyR6yTvi7jJkF+Ql7oQ7BgP9NqahUMN9Xq8ee4
-         spuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747094786; x=1747699586;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nB0R2WkOeQvPRFxPtqwr6m021by5PVJe9qR5v1cbNws=;
-        b=Lu38cYCJUnx/26MGS69LKA+dfQS6XByE8JPZsiMHAlaWCP1VP5IlE+Ce8pcLU3/g9o
-         EOT5y+B1P7Sq1t1fJxN26BgvyJPhMqF0IClSayCSW+dDBbBuQeCJ4Zkiy26Qyho+dk1f
-         t60H5BERLMEfapHLYjAjnQFqWWgPTk+WZtdwS7uH9amFHbpew4i7zY4X360RL4zsc5M7
-         HnhM9wU6g5pOIAupN0thvjZgq+VK3IJVOw1Kr7nPk8KU152pu0UWsbvYG5AIRzO2JBZa
-         AAXH/GZIeqxbc6WPCxdu0AaZHCVhmyAZLOHxOVxNMUfBiCVkEm7OxDguzfPaOyEMKRii
-         vamQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+MG+GmtGFPeHgFmp3qMtvWwESJu4e4GhKiqTnC9Pgv+9U+R2E7cj/fJSmPL4sahsNRRF+cMPw@vger.kernel.org, AJvYcCVZgPWOALjR0Ti1uA95INX1wvsdWqcrSsFdmD5QamDIKuCErY/tmkBT0PdYfiKSVDkbXLpKR4cnNYTDbmA=@vger.kernel.org, AJvYcCWwxIKU/UvHNvt91qqeTCJge2fR/6TTgWpRtWMwhNXb3lOfHL9UGrvSduZ0S5quBP5TQf7AGMQQ@vger.kernel.org, AJvYcCXDCAAT4vy7Xj66rjl3QHkgLhwNLL4+WerppIHvnAV0HozizCGTeHUM4/CbmiUGfwDrCblmY8IoWfGgJw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQTHwBJCU4ratFWBKgfDkLDDkvXE4+bW8r2+yxaf+V/vdTzboJ
-	jrs0ZmyCJSLg+7pfVi/GonnISxqVE8WsuFpKDvEXIbEW7iIoMTbI
-X-Gm-Gg: ASbGnct5OGHPX54DVzwn5hh1aO4GXmoXVCZoBNmLLU+gBp4oU0BodbQQEkRRXffbtHW
-	05Bo5I1NnLRN2jJyTjdJX8wVdfwycEDvKiDtPqaB5I0VUbcZvC1ASKlF8YmAkB2GgXN00eOaaaM
-	5lN2sUJ69yCBLnP9aERIk0rXGIZZ2RzWAglHWQbeHO79pLOxahJyWbTd9st/qsaDd7rAdhFB4bO
-	825+xtvbP+C5Az2wtXTwSb4aIVpzJS/C2EZq+y/hPYy/95KncBqOXg/FrHnqW+/6INMV8yCrRhL
-	Wg34ol/YtE2/ulboAWZw4m9lx29dtnGsOkWfpghQxJJVue+ihvf7APYFuEMcJcEt7lWWyykMxJk
-	6q+6BWiKboZL0O9SWP1MrgkO2D1xm8g==
-X-Google-Smtp-Source: AGHT+IFLg2j6NqWasFKsMRIuMsAX6kcU4vbM8vVlA7iOsqIK1jE+GZgWt0et1u12KP0vgp5Tktg5eg==
-X-Received: by 2002:a17:902:ce8a:b0:215:ba2b:cd55 with SMTP id d9443c01a7336-2317cac7646mr19127295ad.2.1747094786386;
-        Mon, 12 May 2025 17:06:26 -0700 (PDT)
-Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b491sm68470665ad.184.2025.05.12.17.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 17:06:26 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH net 5/5] Drivers: hv: vmbus: Remove vmbus_sendpacket_pagebuffer()
-Date: Mon, 12 May 2025 17:06:04 -0700
-Message-Id: <20250513000604.1396-6-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250513000604.1396-1-mhklinux@outlook.com>
-References: <20250513000604.1396-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76663D984;
+	Tue, 13 May 2025 02:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747102070; cv=fail; b=in0LgqBNgq79hENvkX9NTWG+iDvrE2uSyDuWINcs4Uig/u8tKZ+wOTq8EZXM9jNvbW3GNwN59kniTZW8RsbG5PnvyJ5pY6uAU4g+IkNtrurE1KjV4ZIz0nuJE7vmeLAoviQIIoSm+LWEmxq3kjfeUEG+n2KbsAysoMjTTWYs7aI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747102070; c=relaxed/simple;
+	bh=/oyw7Hy1h12/a14FfwK+NX4TDgFMlav+WGNCGoo9hiE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AG6SrX8C94CP0phKAjtuEF086YHuwkHioHmuARaLQzSK/plBNHgglhJnHl6s6rTzmX2THLyQd7kfp37/GcNetbzzLCKtUuk2i2m1iA3bNU5FIwL87bk8P76rmoE2Ehu58KD0ND1+7k9YMqAbnjsecct1OcE2rHii4r0bPdLo6kU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=SDNbHFVp; arc=fail smtp.client-ip=52.103.11.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bn+sxmIQJypjyT119HcgeryuAbVjXd3k68Dplmmy7YtolVa4Z95u9Qib7zLxQQfFBBFovfh1M4T13nciAdaS7FIS1uZqIYKLF8KNn868tvcRZJ5j0UYzEP41LAaQEZat1PHWd381ey5zRMP6RPo9+A7Distqn8q2CgmJxdlTPujRmo40e5UhQKuMVtQJ4nLIeQ344xqFcgSBFF/4+k9K9CK5SVry0PodMjMpYF8qDNHYFfYmk9NFKy4wb5JT2y/9dAhgongjUb/FldzYqCadEmIEb42QFXRDOQHto7tLWy0/LxIlKkD71F3W9D75I2upjp4SwK2ovdqDXRfImt/iaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i1vI6pSbYM1m4HEOmKLKQrCTJCH6NFIFMHQM/Pyi3Mo=;
+ b=T6iglQ/RFZCE43szyeKGvrYWIUboWlsmzoFrC/jc7VToyscKyW+HzpWNsN8PMxphVpqpmr3oMpwvtG4/HC9W8SEW8D26wVbYLXffZaXtw2/2Pd3M/DKR3Z0BV0wZh0T/Q1AjVINzEqskdm9MEj9ny7OoJNErWxn6M6Ggt1vnGheE71ayhaB78kd3oni+yrjK9zCbj3yrwUSKr8r+oLj1k63Zv+C2bA5rm2d+oxTfpA0JoXtp0FQXT/a59hJqA+O1YReP2dCQPY/2p/D/seXKAlgQ/8UroQwYn7G+9+4IvXxyIMNJFiHDDPdbsWOi/30NT44jBhOZgJpNZ366B3pZwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i1vI6pSbYM1m4HEOmKLKQrCTJCH6NFIFMHQM/Pyi3Mo=;
+ b=SDNbHFVpqzuldJVwBQ8tR8heGScvLuARNqshNQVApSHumhvB61DBAHqo++/5CLADdKlMk0yEr1LifNIFJY26uSyysjD4a/LrQAbIug8mIJzNSY1b6gGj0AOpVCmruN6cHwIHPPxjQIhxk8kYFCPgJubQxVTmsXzYzbGSo43KevGNonWoHZnSPs0HK/3z3Nooob+90yYOW+x+prwINVva/MIzWqMcwCYf9rDL6D5rC12zWPLz2BESPi5XEn+mfBvus4sy9NOYCh0Oe8EfjVnNiVfMzbfuCXP3Z9fazM46eBtda9gfVDhB4O9ZiYK8sM2oO8BFveplEt5LhY+5JjVxxw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by BL3PR02MB8068.namprd02.prod.outlook.com (2603:10b6:208:35b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Tue, 13 May
+ 2025 02:07:46 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 02:07:45 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Michael Kelley <mhklinux@outlook.com>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH][next] PCI: hv: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Thread-Topic: [PATCH][next] PCI: hv: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Thread-Index: AQHbtgJUCHBVQ2nlJkec17kVDKNMEbO3nz/ggBhLkbA=
+Date: Tue, 13 May 2025 02:07:45 +0000
+Message-ID:
+ <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <aAu8qsMQlbgH82iN@kspp>
+ <SN6PR02MB41574AAF7B468757A9F9ED79D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB41574AAF7B468757A9F9ED79D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BL3PR02MB8068:EE_
+x-ms-office365-filtering-correlation-id: 09d1bf6a-bfa2-495b-cf0f-08dd91c2f3d0
+x-ms-exchange-slblob-mailprops:
+ 7J/vb0KDx3hRy7lV+CYJkolW21Iq60BX2lyfHPZCa+dnx6EyElhP95jFjRk8buPLL81FzSCXkO7eYK4vIOxNWgfx0/V+XsSmF5uL+kKD8ZNfnSyxvBok0QYzYkdFDEzbTnIqeyftlpXs1a5fdKPhRhT7VGqCAveJmReGSAUsSISbqDtHqDwiGVopwRR7yzfW4Oo100MKSJ1wMkHwxzd1JhLYfdtA6Q7tdeEFSZb9C/KyKV4uoGOTviBB0cbqHE9N0lpNLLzkz5rxwJJHwnp/tMmbmt2yQjECmlcEIVv3fEJlKZHZoIO8QAPBPNgghPbpNZkEUdw3n1IMovwZ0fn7avszxnnbh7HRK6QRdyHBwbmkDHWrfpsPOgyly5bNQ2OCjyAGRaJfG8RXM1UTOSALOQDoGPFWSsIyL3L7S3P98GmUkVc5h+BsVhLPsNcOuGTNgJah0Zky0VVvJKhJEA0uG96Rs/EEdvExSCLHyw8kZofne8diCYHLbIzg2vq66vjtzjJ/lT0toexJpnfvC0IONTXsTtkmiv+Bo/51U43t6OZros5fkOIuq6DcVSjmne/Othexrh8SDKpImizYIKnLbVCncigijdqhJwpFQIKYIeuaiZhXQqU4jUpHeEC1nY3uzmOl1tkqEIlDvsfgy/376W0vTdTIfT3uL0HTn7HKuzvS1su5wtubV8B0jjPEGhG4W68fSxPI32jlUCpDzrX8Zcq99ek6XMFMfjEt9kGvnC9sbrA70ccOQAYQUWbNUJmDq/CpupC2wBLb7XuH8IaVeayQmKL2KM4zpwweJErvGL4=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799006|461199028|15080799009|8060799009|8062599006|440099028|3412199025|102099032|1710799026;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?7rP78nA0xlBZ1/LWV8csnfeMyLTBx1E6Kr5PSJ8EHyfu2Kcz+a+mr2gOVp?=
+ =?iso-8859-2?Q?0txMpmSLXZJLXLrpcPYieWBa8FTV6u73cFE5scC11FHOpKb9vO0NyHajer?=
+ =?iso-8859-2?Q?pgr37NB6YmSRIMy/e6QNwENFXIRsjHu8EDGpiAso8se98OV+WRhBu2du+S?=
+ =?iso-8859-2?Q?DUMJIYdlgF3RhjrRk1Fit9r4En1XlJA7xQ0kmWaLbQs61I2hDeKwKmaRIZ?=
+ =?iso-8859-2?Q?nLrdN8nXPxcs3qTlA8uwEI4NZENCY0lXEg0m3N8x4ZkebOGr3/wEk8Ic02?=
+ =?iso-8859-2?Q?4C+Yqs2Vkrp2d49i0ANF9SgPWAs6SjmRS0bj8JJ9N6434BI3IkIKh1pftx?=
+ =?iso-8859-2?Q?yMGDTDKZK00KHPCB6d0UZWk9aSZ2vp0oRMiAy+CZ+MrKEsTKX37410f+S3?=
+ =?iso-8859-2?Q?9lkC1VIjlk97PF4WJ18wiIIvw5EABT9donZTu0xDk5rIsBP6zINlVMNo1u?=
+ =?iso-8859-2?Q?38PPQ7/aw1ZTKj2E3ahQpTjlv8S8dG1btE9EyzbVSqgC7ucF1KF7sBp952?=
+ =?iso-8859-2?Q?CyMzlfrADQedQ4bBqPkqFDjv1kuL5kqt9gDy7ZGAjtQkLC8RpB/tjtCAdq?=
+ =?iso-8859-2?Q?cebSMTEQ6GYynEOmzxs4f6scZE5QDXhpATETmrb77g/FuxTNn3hp/6bUnf?=
+ =?iso-8859-2?Q?sZu1LBCtdv72ES4GEaZ5u1DoS/5q3oCDVv4rg/tnfmKuF9UWUIZ2/9XE8o?=
+ =?iso-8859-2?Q?YaAzg2d177TtiXEBev1yi8uuvjSq5FeHH86v5TlNO8h//DZqzskhD4oVwt?=
+ =?iso-8859-2?Q?CExHtUM8et6M/ZGyU4+MU8VXCnehw/RTuhbF9FmziktjBAcoIx4dl51AiA?=
+ =?iso-8859-2?Q?NCK46rfB98/2aaasQKMF4/XMSa5rN3Mugm4BtfhCOT2L/mxdNm7/IQ0kvM?=
+ =?iso-8859-2?Q?EKCLMvMhfzj4SDc+QonEG/4M4vSakVJ0Yx3bnRl9X+WEs4hBgpSRDywQqU?=
+ =?iso-8859-2?Q?jxq+QukG7l7WUeuGotY/GeNJaieKHB9d0zFjKCRRjTptc5zHmDMSmWlleW?=
+ =?iso-8859-2?Q?g9gKT5jOp2/0qF6nPkHDSEzFxf+mKRl9wWLt3+yEx7Tzz3M5DKr6Yp1Vbr?=
+ =?iso-8859-2?Q?xsfQzmcPROCUzTTGzXzMX7TImofN5BRjNvDGihSZ1HkXOSBo20pXbiPYpL?=
+ =?iso-8859-2?Q?X5sMR+kdAyE1aFj2uIgfrGVpiQhE8=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?JS732sDHY53hcIswiEfzxrzS7KECya0HnVWXzFCJ2qip4OYr9HH0tODBOq?=
+ =?iso-8859-2?Q?8q+dK59geE9nkfIinnS9Vkt3RUm8WuxDdxBmpTnsH0iQMWv4voDx3MnELq?=
+ =?iso-8859-2?Q?8ggtBsDAMDarA9ITw4WgYXdA3q5p2D/QwpDYGFdx2uhZmgYxsl/2ci7Ogc?=
+ =?iso-8859-2?Q?EBhcsz0x78rIK022534QyM5DObDnvxazHt12lCR/DlslcEMXkvuYcNchBz?=
+ =?iso-8859-2?Q?sz0WVYOTgYRiMWRYGCaMysohSEPKy7sKS2Zk50OK1YFvHlmHecv7AG/5W1?=
+ =?iso-8859-2?Q?LiLQHgIF9lIVSlZ1JHraQ8hgdijjqevcsMzefFgpGaBysa7KsKvNNH6huA?=
+ =?iso-8859-2?Q?C0PBOejwh94TWdLVrv/KWaErzjTsRC3zGP/r8WnTyqStyBXzWFfU2CKhKe?=
+ =?iso-8859-2?Q?hO+3hP5zJJpEsNJZ1rj4jTus0rEcUOfXdS8ogkA0vw1NqqolGACxRRL+2A?=
+ =?iso-8859-2?Q?ExGYdeLQ2octkpCmpNxmldQI3g84ztHBcsU/iLZR0BNFwMm1qBV/JLNVJi?=
+ =?iso-8859-2?Q?AEzUStKIuIBx7vVdRvt/FFByz5eHZYf2trgcdtnJzKtQEKUf/M8LrFNDVB?=
+ =?iso-8859-2?Q?3iyjiqOiVlkwxZWvJ35QASOjkCY/pFp4nO3xXmnpKnyqMTuvMVQtSwHQD+?=
+ =?iso-8859-2?Q?qYPkHo/J0ovhC3uMcfEU3Tde7tXV1nJa6p/433/ubo6vK0UCi24I67ZOqW?=
+ =?iso-8859-2?Q?mnvYkJrCgyVrXFHGBXTuFgx6zL7F9fQNngmePG4CriOVPdax7/xhmRmKew?=
+ =?iso-8859-2?Q?evI2xrwZ4ZaZ+HpOku3Vh71z4oQIvpMZ/4rD+4/wE/8KETijfHMb2PJX30?=
+ =?iso-8859-2?Q?w1nbiGp2X37syjzN5FelBHixizRlumOSDAOZHzL16PDN9ikjBH2/2uJOyC?=
+ =?iso-8859-2?Q?nKx54XVPMyJXCY1nyge8z02yz7DkkCIFfoc+JyPCsJcTEdG6eOqBqiO1SA?=
+ =?iso-8859-2?Q?8VHaFGYRGNW2IbiMfAQgDCsd1Ny9l3dIbVfuNm4l8oi/NURm70UcqD6CNr?=
+ =?iso-8859-2?Q?pMsgFY8Hb+4cYNBjdRI+i46KaJ66pUK/fyNpLJpJgJDYDj1vMsB9st8IwO?=
+ =?iso-8859-2?Q?N+C76TUbeKw2w1+C9yeI8Mdrar08Z41dntVs8OlwR0oA8FHPRqp/gWykQC?=
+ =?iso-8859-2?Q?ICXzIBoQ4MRDLNgJzFvmpni9hopQgW68fBv5/nB+N/NV+/9BbyUHtnZ4Eu?=
+ =?iso-8859-2?Q?wrAPlJclEctHiV7vX1h6Ru3czne+4dQgpFapvcJCFbZA7fSGl3phSqNZt9?=
+ =?iso-8859-2?Q?YbzBq70M2AG80nzhiP8YAIWiw8dmPfgU3CfpSCnyM=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09d1bf6a-bfa2-495b-cf0f-08dd91c2f3d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2025 02:07:45.6079
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR02MB8068
 
-From: Michael Kelley <mhklinux@outlook.com>
+From: Michael Kelley <mhklinux@outlook.com> Sent: Sunday, April 27, 2025 8:=
+22 AM
+>=20
+> From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Friday, April 25,=
+ 2025 9:48
+> AM
+> >
+> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > getting ready to enable it, globally.
+> >
+> > Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
+> > of a flexible structure where the size of the flexible-array member
+> > is known at compile-time, and refactor the rest of the code,
+> > accordingly.
+> >
+> > So, with these changes, fix the following warnings:
+> >
+> > drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+> > drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+> > drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+> > drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+> > drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+> > drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+> > drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure contain=
+ing a flexible
+> > array member is not at the end of another structure [-Wflex-array-membe=
+r-not-at-end]
+>=20
+> I'm supportive of cleaning up these warnings. I've worked with the pci-hy=
+perv.c
+> code a fair amount over the years, but never had looked closely at the on=
+-stack
+> structs that are causing the warnings. The current code is a bit unusual =
+and
+> perhaps unnecessarily obtuse.
+>=20
+> Rather than the approach you've taken below, I tried removing the flex ar=
+ray
+> entirely from struct pci_packet. In all cases except one, it was used onl=
+y to
+> locate the end of struct pci_packet, which is the beginning of the follow=
+-on
+> message. Locating that follow-on message can easily be done by just refer=
+encing
+> the "buf" field in the on-stack structs, or as (pkt + 1) in the dynamical=
+ly allocated
+> case. In both cases, there's no need for the flex array. In the one excep=
+tion, a
+> couple of minor tweaks avoids the need for the flex array as well.
+>=20
+> So here's an alternate approach to solving the problem. This approach is
+> 14 insertions and 15 deletions, so it's a lot less change than your appro=
+ach.
+> I still don't understand why the on-stack struct are declared as (for exa=
+mple):
+>=20
+> 	struct {
+> 		struct pci_packet pkt;
+> 		char buf[sizeof(struct pci_read_block)];
+> 	} pkt;
+>=20
+> instead of just:
+>=20
+> 	struct {
+> 		struct pci_packet pkt;
+> 		struct pci_read_block msg;
+> 	} pkt;
+>=20
+> but that's a topic for another time.  Anyway, here's my proposed diff, wh=
+ich I've
+> compiled and smoke-tested in a VM in the Azure cloud:
+>=20
 
-With the netvsc driver changed to use vmbus_sendpacket_mpb_desc()
-instead of vmbus_sendpacket_pagebuffer(), the latter has no remaining
-callers. Remove it.
+Gustavo -- Are you waiting for me to submit a patch with my alternate propo=
+sal?
+I had not seen any follow up, so wanted to make sure we have clarity on who
+has the next action. Thx.
 
-Cc: <stable@vger.kernel.org> # 6.1.x
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/hv/channel.c   | 59 ------------------------------------------
- include/linux/hyperv.h |  7 -----
- 2 files changed, 66 deletions(-)
-
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 4ffd5eaa7817..35f26fa1ffe7 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -1076,65 +1076,6 @@ int vmbus_sendpacket(struct vmbus_channel *channel, void *buffer,
- }
- EXPORT_SYMBOL(vmbus_sendpacket);
- 
--/*
-- * vmbus_sendpacket_pagebuffer - Send a range of single-page buffer
-- * packets using a GPADL Direct packet type. This interface allows you
-- * to control notifying the host. This will be useful for sending
-- * batched data. Also the sender can control the send flags
-- * explicitly.
-- */
--int vmbus_sendpacket_pagebuffer(struct vmbus_channel *channel,
--				struct hv_page_buffer pagebuffers[],
--				u32 pagecount, void *buffer, u32 bufferlen,
--				u64 requestid)
--{
--	int i;
--	struct vmbus_channel_packet_page_buffer desc;
--	u32 descsize;
--	u32 packetlen;
--	u32 packetlen_aligned;
--	struct kvec bufferlist[3];
--	u64 aligned_data = 0;
--
--	if (pagecount > MAX_PAGE_BUFFER_COUNT)
--		return -EINVAL;
--
--	/*
--	 * Adjust the size down since vmbus_channel_packet_page_buffer is the
--	 * largest size we support
--	 */
--	descsize = sizeof(struct vmbus_channel_packet_page_buffer) -
--			  ((MAX_PAGE_BUFFER_COUNT - pagecount) *
--			  sizeof(struct hv_page_buffer));
--	packetlen = descsize + bufferlen;
--	packetlen_aligned = ALIGN(packetlen, sizeof(u64));
--
--	/* Setup the descriptor */
--	desc.type = VM_PKT_DATA_USING_GPA_DIRECT;
--	desc.flags = VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED;
--	desc.dataoffset8 = descsize >> 3; /* in 8-bytes granularity */
--	desc.length8 = (u16)(packetlen_aligned >> 3);
--	desc.transactionid = VMBUS_RQST_ERROR; /* will be updated in hv_ringbuffer_write() */
--	desc.reserved = 0;
--	desc.rangecount = pagecount;
--
--	for (i = 0; i < pagecount; i++) {
--		desc.range[i].len = pagebuffers[i].len;
--		desc.range[i].offset = pagebuffers[i].offset;
--		desc.range[i].pfn	 = pagebuffers[i].pfn;
--	}
--
--	bufferlist[0].iov_base = &desc;
--	bufferlist[0].iov_len = descsize;
--	bufferlist[1].iov_base = buffer;
--	bufferlist[1].iov_len = bufferlen;
--	bufferlist[2].iov_base = &aligned_data;
--	bufferlist[2].iov_len = (packetlen_aligned - packetlen);
--
--	return hv_ringbuffer_write(channel, bufferlist, 3, requestid, NULL);
--}
--EXPORT_SYMBOL_GPL(vmbus_sendpacket_pagebuffer);
--
- /*
-  * vmbus_sendpacket_mpb_desc - Send one or more multi-page buffer packets
-  * using a GPADL Direct packet type.
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index d6ffe01962c2..b52ac40d5830 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1167,13 +1167,6 @@ extern int vmbus_sendpacket(struct vmbus_channel *channel,
- 				  enum vmbus_packet_type type,
- 				  u32 flags);
- 
--extern int vmbus_sendpacket_pagebuffer(struct vmbus_channel *channel,
--					    struct hv_page_buffer pagebuffers[],
--					    u32 pagecount,
--					    void *buffer,
--					    u32 bufferlen,
--					    u64 requestid);
--
- extern int vmbus_sendpacket_mpb_desc(struct vmbus_channel *channel,
- 				     struct vmbus_packet_mpb_array *mpb,
- 				     u32 desc_size,
--- 
-2.25.1
-
+Michael
 
