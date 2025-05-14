@@ -1,77 +1,77 @@
-Return-Path: <linux-hyperv+bounces-5513-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5514-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4282AB7201
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 18:55:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 063B4AB7259
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 19:07:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 638731B6860E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 16:55:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F093C7A5AFA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 17:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5535C27EC7D;
-	Wed, 14 May 2025 16:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4C12749E3;
+	Wed, 14 May 2025 17:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3aAeVA1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKWwWNZw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F18827E7DE;
-	Wed, 14 May 2025 16:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7452D111BF;
+	Wed, 14 May 2025 17:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747241706; cv=none; b=cIzlmmq/dh+0UKd0NzHfhaAYP2uTW1CGbL4WMvvdBq+c5ODNkPdsP3wijGCc4ab3GsiVzT8rgHDugU3RJ/qA/apQsdpg8uT0hFZJLnQbx4aSTUye1MJENMiQh1fryXHDMEWJi8Sqjj9HQ5xbw8TU8QaEN5QBorAkKjbB06WgigI=
+	t=1747242471; cv=none; b=fYJ0L40hvD90ppq8Fw0BpFUVDDeRaiRoco5sKnl2QzWoNbp09HfNAhr8Wyfjzj8PZPohbBPKLaFmtxxB65cfWX64SxEoD8tMt96zRzqqFVSiTWR1w5/3oaXesAveYubDSZRbRRSwAJkP2nKNZRScbQ66ytWaEBm9JNqCaKcenAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747241706; c=relaxed/simple;
-	bh=WpM+JcX1WaS+PU+QHS2OAq0l+8B1CNymhsJ8V9SwXuQ=;
+	s=arc-20240116; t=1747242471; c=relaxed/simple;
+	bh=XdLg2pIG+mxLLkXPdM5zsckyRBZH2qPAfwgOgXwOm2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q1Jm0uqMDZkBlW8hC4yEBuu9/rNnP3cKg+DLuVvCFCADblT995gGs8F/T1Qnjv5HuD1X0SXtR5AVf+mjK57oEHTiZm+1JJnnB9O8DMYP3DDc1Knb9Ux5JNkECE+NQObJP1PrmEWLiMAPWrOMfV5n7k3QMm/sdnbPFGBQBcDam58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3aAeVA1; arc=none smtp.client-ip=209.85.216.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSeMYfbKBHL3j56po5w1e6u6rtajwQZKIuGP2obI109zZiJBX/kczZJSM0//NzSQeVW2zdsIk5AOmTYScQvc/duXF/rTXZcvtn6eBedJC6zkZE7mJp4nW4IOOaQ3tEcTnJYkEQzvh9qtc6aVvwKyO6NmcMsVA7SyxJgiqgh1O3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKWwWNZw; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30ac24ede15so108444a91.2;
-        Wed, 14 May 2025 09:55:04 -0700 (PDT)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73972a54919so94497b3a.3;
+        Wed, 14 May 2025 10:07:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747241704; x=1747846504; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747242470; x=1747847270; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EjAaU38K+dPIUQCxORagYj2WJCZrV6ZUCkrYlp3GHFQ=;
-        b=l3aAeVA1EgjsmyGwltWSNL1BqkG4d3LT/CIzo0YP+CO8SUO/NGeSAUcJNo5wOr83Vs
-         fo/9GDcXZASfKEqXpBKArxjVdUGioFFi4AOlsNdCKUGxavwi3ClJAd8SEM8SwHWkSZZJ
-         sm94o8tupVu7OCa/yjN72Q6XxEy2KvgL0GOnrqaj5wFca5dswPmCxwAlj9aOlGod4oRY
-         ndnVLJyYtPZvmLKdydEWKCGnfXNTCWHErckHPNcvVevSkcMdPvVJUaCjLd0M4USSMG2r
-         VyAkERDXbsJ9Muuropig9YKUYkwqn+vK7IGp1/MQEkb1mDbySKSBZg4w502L4Viph5/G
-         9Rog==
+        bh=dJoA+PJtmWf5ud2q/BLeac3jyop0iaZrCK1z2Pwqxh0=;
+        b=cKWwWNZwybLtZpb2NOlqoUnZTU49DHPLsCkW+uDmVBiYVzMZfF8pstmCu7/4qqKgnZ
+         diZnJL4q0mUGniS2QcoU8VVxI96Hnf1MuL2ZxYnP03zmVbLIhRnseDZQ3W6caEeGjHix
+         iY9finlPFtUdpADzHj/SgPM8xeqXV9LNDSzgm6BrRM4XTQpr/5r2KxPU6eM2wQ8/NuYH
+         or2bHlDGHJZbS8ZXp8Tygo9iwFLF99HA+qvIDMCThN5xLE/YVo4RzxlSE7islLW5ZV5i
+         vdmG3QBdNV/+02Wkh0jP/L3Djo2J8m1f4zb8ZMRvNIJK6Hen2FA8WytNT/BY6d3ryWF5
+         jyxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747241704; x=1747846504;
+        d=1e100.net; s=20230601; t=1747242470; x=1747847270;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EjAaU38K+dPIUQCxORagYj2WJCZrV6ZUCkrYlp3GHFQ=;
-        b=ZDrydHs0bL2cDFC9i+g80d7aXcuRriosvON7NHK24iw9G0uZIZhEnnXRHsDi6cipBi
-         PS+TDvPfl7Wt64ChLNc0uSn/oH83riwBEbHteb6xo/uIj4K1U4PBOblmckQNnwFza44k
-         kOTUxCrY3S1D58jWCjDIRbJ4mZnzcSHTW4LDg59ld1kFUvXtGHp9fMq+2j2xr0IxSN4T
-         P3ssQILLOLywf5Nf7lO1VmsjbUHZCyOgF5FKSU1DjT6vpkqHIg5RvfumscDFp2OhCKyc
-         5rTkRygk3NeuJrdNJIoJOCiWcE960nzdjXgc3SJqhry3V6eTDugcq+OpQC3vgvgqXcv1
-         GSsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMBEUEU5JMni1mifUX/lpqrSYCyc8OEhj/3s+U0uILfnDBkzFcjSCJVtngR8IxXPhcAJE4Z8VEQoO5@vger.kernel.org, AJvYcCVCbEMc85LzQHVvhtuqXh+TRI1luvmJc3zxu0QQFWkshyYhWXBZdI3vLkNblcA8t0NDh5npgW1x4HOhuSgK@vger.kernel.org, AJvYcCVTiRW3j0ZJwRHw9A3rznds/ww/24rAwxUVE0rE6T40o3IQjZf1GcooD7A8p1z9HAZt69uECJSBGFJ3J/w=@vger.kernel.org, AJvYcCXLGTNDcrMF/Silf2OP8ddFDarbPfT+drOaCRwgn4Zs7J1I3+uPU8vNDi/tL8NcDvpPte/poIp61m4bYQ==@vger.kernel.org, AJvYcCXNhVtknHK+Zpt5dGse5FOlyJRsP9cV5bEZlx4F9IKe2AYlGHlvN1zyM2gNSAxdtXvC3V2NyF4T@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN03Gp18zUbHRgHXSzgZg7jh9PQ5fT+Hr+R+1kWe/KeHLuVPNg
-	/B9zM07m7otXxP9YrcXGRItXFfKZ2rSI1kdEh+GFn86ScMxbaVsB
-X-Gm-Gg: ASbGnctROFI2Bgfypa9fPb2iraRft88D1R4tYU6s5kddXHY8HG31FkjqfOh15c3EwTO
-	gWtFDOG6bqP0EElX+qqFsnU8EsTpz++2h5v390NZEeOU8fchM5TlnkgrdGzyRcnmBya8lXtNHom
-	vZIAEsu6mazZnYfTLJqyrfxrETXh9JK0XdUgkx6JjoaXoPoKQ6HH+g5CjP27VQ2WhfK7XmB1Rpf
-	i5vVL15quXTd01WWK/0CRGk8f1Td1qiujpqqLtm4CIO+gWRGn+aYIm6PVA4XiZezCRAusZOAW4o
-	8Mt3WI5He1qKVJf95rgdqCLWoJIZyIpx8jessBPWHuQ1FrkAORwRrWFXQV1d4Q==
-X-Google-Smtp-Source: AGHT+IFtxVrOsaJi6T2aUz0enn/7PlvuksPoRElJWxF7qFDWdeSdmcwqmG9VKuv/S86z9Q30urH4ug==
-X-Received: by 2002:a17:90b:38c4:b0:2fe:b174:31fe with SMTP id 98e67ed59e1d1-30e2e583d63mr6563988a91.2.1747241703525;
-        Wed, 14 May 2025 09:55:03 -0700 (PDT)
+        bh=dJoA+PJtmWf5ud2q/BLeac3jyop0iaZrCK1z2Pwqxh0=;
+        b=McEDIWaJ0Bhzf6595tS66tCO1fslnRShop1h3XfFNgtix4vLVHtHGSoUvGkHtgw9xX
+         ztHz3BoXAWjCRNTAAU5S0n88snWxYRXiKGLMWdZUH/f4cWl/YJ4XXgLcCudYbKxaKXFs
+         f4XYZ7HQgyQA9RqUPf8YUG87eqcmLdcHXTGYbBEsLVIGXK884LvwK+VklxhAllbTMno6
+         2I7ZaPCabSERQ3GRC1UvAVXasOuE7BjapN/jil4iWnETqQjpCsn6yuoNyrhgXVdewaQT
+         669LnlsFBl1+39Bn2qxhgkiOoKSyNYVmc1emzMYwYZ1h/Y6P21+Ygg6m3kj+lu7fSEcm
+         uVTw==
+X-Forwarded-Encrypted: i=1; AJvYcCU03dEt5WA+dXYkHokxzOVjkmBTw1EvP63EA0kKqCBm4POgOS0eQ1gRWgHtNHy+P8QmK4LQ6zplK4ji@vger.kernel.org, AJvYcCUNNRURmj/DUMXSVrpVrfdJvKrQP4/SRvYw7SPs1c8tzoLJ6Sm6YKvaxkbp8ENpqxDtsU7YAe+q5Q1hCLr5@vger.kernel.org, AJvYcCVGVDfovy8cstCEJW0u+a/NseARNzCjsS0jtoTZgGtsxIrRvvnI2Sa0bPUhCggSyvi2z99V3SRbpLx4hQ==@vger.kernel.org, AJvYcCWDthco1jpFUmZlaQDoe3G0iF8j8RYefr39kLI9udX8ipOZdYrF0l5kiQvU6/cwN6/+Vmb0kNyU6ebsKn0=@vger.kernel.org, AJvYcCWqpjnAj99Cc5lm3N5nsaEmrTo5z4Hd+/8/QoWUte7WFGmmcRJ+SuR7UCh5MBIociONQR8jgGXW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1K2DzfAU/HhzAOa9adYkpHUAYBm0uInEwCF4259ftLwlQ0QKH
+	tBgCD1twALlku29Dl+1XtFVxikEO/haT8IqvhS1UYSe1a1FlGSQW
+X-Gm-Gg: ASbGncszIQhHoMgeQRKkCPbPzoye89BOOvJWHtCXjQLwaxr0Be2kKIOid1puwm6h90i
+	cVcrhPh4FxcnYh2hL9hVVv10s6r87UqPu9wNL33EUSJTV5qUocqoh4adK/RTTpeqzQC0ssjkG/J
+	W3JwwGBqjd7XoxCNOFmGug2hGwDZzApUec8BA4uuGYUv1cniP1ouN75GNZA5TpO83KJlUIh+0vG
+	fFsDz3x8nWXS/yPyRUbAUW9kk2Gqc9ZpQqWF6nyi4aOJR18sTOJCfqYHZ7RfmAYPDQrpfgA5Fup
+	9zzqBhnenE6/egGPo7QsOQoeZmgxUrMSDqNmf6/cfqquTGhL09o=
+X-Google-Smtp-Source: AGHT+IE8yKn2sT46UJJvS6Ice8X9bYuvWD23vsV/OkjkW84qmgH4nvxXynVSLJtxqPpkMU4yfMQMVQ==
+X-Received: by 2002:a05:6a00:17a3:b0:73d:fa54:afb9 with SMTP id d2e1a72fcca58-74289290036mr5560234b3a.7.1747242469517;
+        Wed, 14 May 2025 10:07:49 -0700 (PDT)
 Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401872sm1830197a91.6.2025.05.14.09.55.02
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0f14csm10071804b3a.107.2025.05.14.10.07.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 09:55:02 -0700 (PDT)
-Date: Wed, 14 May 2025 12:55:00 -0400
+        Wed, 14 May 2025 10:07:48 -0700 (PDT)
+Date: Wed, 14 May 2025 13:07:47 -0400
 From: Yury Norov <yury.norov@gmail.com>
 To: Michael Kelley <mhklinux@outlook.com>
 Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
@@ -103,12 +103,11 @@ Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
 	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
 	Paul Rosswurm <paulros@microsoft.com>,
 	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v3 3/4] net: mana: Allow irq_setup() to skip cpus for
- affinity
-Message-ID: <aCTK5PjV1n1EYOpi@yury>
+Subject: Re: [PATCH v3 4/4] net: mana: Allocate MSI-X vectors dynamically
+Message-ID: <aCTN4yfHBsJGXvnB@yury>
 References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1746785625-4753-1-git-send-email-shradhagupta@linux.microsoft.com>
- <SN6PR02MB41577E2FAA79E2803C3384B0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <1746785637-4881-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <SN6PR02MB4157AD1A0BA2C0C9237FEAA3D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -117,116 +116,49 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41577E2FAA79E2803C3384B0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157AD1A0BA2C0C9237FEAA3D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Wed, May 14, 2025 at 04:53:34AM +0000, Michael Kelley wrote:
-> > -static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-> > +static int irq_setup(unsigned int *irqs, unsigned int len, int node,
-> > +		     bool skip_first_cpu)
-> >  {
-> >  	const struct cpumask *next, *prev = cpu_none_mask;
-> >  	cpumask_var_t cpus __free(free_cpumask_var);
-> > @@ -1303,9 +1304,20 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-> >  		while (weight > 0) {
-> >  			cpumask_andnot(cpus, next, prev);
-> >  			for_each_cpu(cpu, cpus) {
-> > +				/*
-> > +				 * if the CPU sibling set is to be skipped we
-> > +				 * just move on to the next CPUs without len--
-> > +				 */
-> > +				if (unlikely(skip_first_cpu)) {
-> > +					skip_first_cpu = false;
-> > +					goto next_cpumask;
-> > +				}
-> > +
-> >  				if (len-- == 0)
-> >  					goto done;
-> > +
-> >  				irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
-> > +next_cpumask:
-> >  				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
-> >  				--weight;
-> >  			}
+On Wed, May 14, 2025 at 05:04:03AM +0000, Michael Kelley wrote:
+> From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, May 9, 2025 3:14 AM
+> > 
+> > Currently, the MANA driver allocates MSI-X vectors statically based on
+> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
+> > up allocating more vectors than it needs. This is because, by this time
+> > we do not have a HW channel and do not know how many IRQs should be
+> > allocated.
+> > 
+> > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
+> > after getting the value supported by hardware, dynamically add the
+> > remaining MSI-X vectors.
 > 
-> With a little bit of reordering of the code, you could avoid the need for the "next_cpumask"
-> label and goto statement.  "continue" is usually cleaner than a "goto". Here's what I'm thinking:
+> After this patch is applied, there are two functions for setting up IRQs:
+> 1. mana_gd_setup_dyn_irqs()
+> 2. mana_gd_setup_irqs()
 > 
-> 		for_each_cpu(cpu, cpus) {
-> 			cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
-> 			--weight;
-
-cpumask_andnot() is O(N), and before it was conditional on 'len == 0',
-so we didn't do that on the very last step. Your version has to do that.
-Don't know how important that is for real workloads. Shradha maybe can
-measure it...
-
+> #1 is about 78 lines of code and comments, while #2 is about 103 lines of
+> code and comments. But the two functions have a lot of commonality,
+> and that amount of commonality raises a red flag for me.
 > 
-> 			If (unlikely(skip_first_cpu)) {
-> 				skip_first_cpu = false;
-> 				continue;
-> 			}
+> Have you looked at parameterizing things so a single function can serve
+> both purposes? I haven't worked through all the details, but at first
+> glance it looks very feasible, and without introducing unreasonable
+> messiness. Saving 70 to 80 lines of fairly duplicative code is worth a bit
+> of effort.
 > 
-> 			If (len-- == 0)
-> 				goto done;
+> I have some other comments on the code. But if those two functions can
+> be combined, I'd rather re-review the result before adding comments that
+> may become irrelevant due to the restructuring.
 > 
-> 			irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
-> 		}
-> 
-> I wish there were some comments in irq_setup() explaining the overall intention of
-> the algorithm. I can see how the goal is to first assign CPUs that are local to the current
-> NUMA node, and then expand outward to CPUs that are further away. And you want
-> to *not* assign both siblings in a hyper-threaded core.
+> Michael
 
-I wrote this function, so let me step in.
+On previous iteration I already mentioned that this patch is too big,
+doesn't do exactly one thing and should be split to become a reviewable 
+change. Shradha split-out the irq_setup() piece, and your review proves
+that splitting helps to reviewability.
 
-The intention is described in the corresponding commit message:
-
-  Souradeep investigated that the driver performs faster if IRQs are
-  spread on CPUs with the following heuristics:
-  
-  1. No more than one IRQ per CPU, if possible;
-  2. NUMA locality is the second priority;
-  3. Sibling dislocality is the last priority.
-  
-  Let's consider this topology:
-  
-  Node            0               1
-  Core        0       1       2       3
-  CPU       0   1   2   3   4   5   6   7
-  
-  The most performant IRQ distribution based on the above topology
-  and heuristics may look like this:
-  
-  IRQ     Nodes   Cores   CPUs
-  0       1       0       0-1
-  1       1       1       2-3
-  2       1       0       0-1
-  3       1       1       2-3
-  4       2       2       4-5
-  5       2       3       6-7
-  6       2       2       4-5
-  7       2       3       6-7
-
-> But I can't figure out what
-> "weight" is trying to accomplish. Maybe this was discussed when the code first
-> went in, but I can't remember now. :-(
-
-The weight here is to implement the heuristic discovered by Souradeep:
-NUMA locality is preferred over sibling dislocality. 
-
-The outer for_each() loop resets the weight to the actual number of
-CPUs in the hop. Then inner for_each() loop decrements it by the
-number of sibling groups (cores) while assigning first IRQ to each
-group. 
-
-Now, because NUMA locality is more important, we should walk the
-same set of siblings and assign 2nd IRQ, and it's implemented by the
-medium while() loop. So, we do like this unless the number of IRQs
-assigned on this hop will not become equal to number of CPUs in the
-hop (weight == 0). Then we switch to the next hop and do the same
-thing.
-
-Hope that helps.
+The rest of the change is still a mess. I agree that the functions you
+mention likely duplicate each other. But overall, this patch bomb is
+above my ability to review. Fortunately, I don't have to.
 
 Thanks,
 Yury
