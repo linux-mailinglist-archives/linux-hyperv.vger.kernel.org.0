@@ -1,61 +1,64 @@
-Return-Path: <linux-hyperv+bounces-5504-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5505-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4800BAB67B8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 11:38:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66529AB6BA6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 14:44:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85E9D1B65D47
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 09:38:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5B541B679F1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 May 2025 12:44:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A62322CBC1;
-	Wed, 14 May 2025 09:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42170278157;
+	Wed, 14 May 2025 12:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBYxh0W3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXLNPOWS"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEB22ACCE;
-	Wed, 14 May 2025 09:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062E7276024;
+	Wed, 14 May 2025 12:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215477; cv=none; b=YSPiGqLT6OzUx8NWPDStDgKdnH43pehOZqC9q7CMwQ2tblHfah6Sx/wiyzzqkE1ZocnkptpE+mYivvpo5XJN7kgqoNGDhsY2/nzIexLR+/rcdOS/idDvAxYi97bOJPd21AMIXYX+4DuVRxd6+ykUZfrTKsg91JK6pL0HvY4EGuo=
+	t=1747226643; cv=none; b=rND89FGYlfQwXrcRG3jGeTdnZNJf1IoibSH6o8wxPO7uPq7Rh8zmcgDqtFFzo+U0HQX4iFyPGyb95HBgAQBhD5nAqMbiA/N7CoXxDjpc7ujPGMqFsaAESmH3aBx/kieoXSQv3NA44EMGpsKn7y1UadPq8n16S2j85EXpn98f/8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215477; c=relaxed/simple;
-	bh=NurdwnwGbSV9JUS/xzW5xcSfhaak9b3QqCAV7BzFooA=;
+	s=arc-20240116; t=1747226643; c=relaxed/simple;
+	bh=LaaTtL18gYkBpKfIHtsydTFx7f5yvQp0LLx6M5Yb+oE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgQvUFNWaIknILT3HxuLtcnu3ILxmaGjPOpKs5MeRHoxan4gp3da0GmzLW4whyPLHAEd13aFd2/0LVCDngW17Zxz2sM3zxBQRm98xmhWa/KCEwfL8IyfelB7vX+cSJ7XKcbESsDpJ+jyAf1EOb7AZNZQ6vT1BAFX5rK7ccAQLJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBYxh0W3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D65DC4CEEB;
-	Wed, 14 May 2025 09:37:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ht2u0HMmj4bhaLVvxzq3laA+pxUxerCPQ74UT4ILSe60adr9BF+zuCG16gYWi/Va0WwVVmAHIdDNryc9sUcQjzex53ioG+VIUdGZAKjj/4g701qnpb+Gx8TB5prqzi+x8Hy7ZX9/1m+jK8L8A5o8mefjPzqidHzyJ0hq4T+9Wkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXLNPOWS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A097FC4CEE9;
+	Wed, 14 May 2025 12:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747215476;
-	bh=NurdwnwGbSV9JUS/xzW5xcSfhaak9b3QqCAV7BzFooA=;
+	s=k20201202; t=1747226642;
+	bh=LaaTtL18gYkBpKfIHtsydTFx7f5yvQp0LLx6M5Yb+oE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cBYxh0W3tiCiq6Ri/9ZWOL4LFwslxGL8iDU9kKOrVza7U2egvvwsWSjfZWtRhBKED
-	 FeuiIqGeiawtU/chMWX+08IyuhK++0NZwI3O7MjcVwqr897AnF6Wcvpx3Hl1BUZ/9R
-	 h2U7T8YKt8C+WqrpqxAbRA+LM1ls9BXOf+fy8dS0nEV7XM8VMREff6m9gypZraKL/M
-	 /UTXYGUwa3sKzXofDq74PbH+7ZUlQrlYVZVYjJUXOASDGVXvnm+k8BU0TuCiT45UWx
-	 tT85cjVrBLNx4n3EhKiRCyFRykqQ6rFY44JxUiy0tqbgjOdItiSugScA/JFqPMxISb
-	 K1EDDzvY81d8A==
-Date: Wed, 14 May 2025 10:37:51 +0100
+	b=oXLNPOWSAhm109xi76EG+tT1v3fLCNJ5/mYufcpeH8SRgSgX7WAuTF4QjmQEpFY6M
+	 YjDHc7+XIIviZ9Fx2tK1tLEHmGjesKHFgnd2G0kYg11hM0i5hPmJbuanwA0w/ZIyIC
+	 d9zhTuNpCR1Iu5brbAXQzxJUDzyv1i4Y6CB1Tngx7NlQtwJrImsLLXVmW56RCUY1O0
+	 NzSh2vdv1EZRjE3JJzP0JddOzN0zCDo0yI+NqXFdWkgev9dr7NQJOUM4JZK8RKDmbU
+	 1tFSHeDtFFIpoDU5KdwlYUaQ2oKcLV+hM6qp4dz1QaZeQZ1iaK+D379YfwLmOHKARs
+	 vLFbl4boVh4+g==
+Date: Wed, 14 May 2025 13:43:55 +0100
 From: Simon Horman <horms@kernel.org>
-To: mhklinux@outlook.com
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net 2/5] hv_netvsc: Use vmbus_sendpacket_mpb_desc() to
- send VMBus messages
-Message-ID: <20250514093751.GF3339421@horms.kernel.org>
-References: <20250513000604.1396-1-mhklinux@outlook.com>
- <20250513000604.1396-3-mhklinux@outlook.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
+	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+	longli@microsoft.com, ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+	hawk@kernel.org, tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next,v3] net: mana: Add handler for hardware
+ servicing events
+Message-ID: <20250514124355.GK3339421@horms.kernel.org>
+References: <1747079874-9445-1-git-send-email-haiyangz@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,59 +67,16 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250513000604.1396-3-mhklinux@outlook.com>
+In-Reply-To: <1747079874-9445-1-git-send-email-haiyangz@microsoft.com>
 
-On Mon, May 12, 2025 at 05:06:01PM -0700, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Mon, May 12, 2025 at 12:57:54PM -0700, Haiyang Zhang wrote:
+> To collaborate with hardware servicing events, upon receiving the special
+> EQE notification from the HW channel, remove the devices on this bus.
+> Then, after a waiting period based on the device specs, rescan the parent
+> bus to recover the devices.
 > 
-> netvsc currently uses vmbus_sendpacket_pagebuffer() to send VMBus
-> messages. This function creates a series of GPA ranges, each of which
-> contains a single PFN. However, if the rndis header in the VMBus
-> message crosses a page boundary, the netvsc protocol with the host
-> requires that both PFNs for the rndis header must be in a single "GPA
-> range" data structure, which isn't possible with
-> vmbus_sendpacket_pagebuffer(). As the first step in fixing this, add a
-> new function netvsc_build_mpb_array() to build a VMBus message with
-> multiple GPA ranges, each of which may contain multiple PFNs. Use
-> vmbus_sendpacket_mpb_desc() to send this VMBus message to the host.
-> 
-> There's no functional change since higher levels of netvsc don't
-> maintain or propagate knowledge of contiguous PFNs. Based on its
-> input, netvsc_build_mpb_array() still produces a separate GPA range
-> for each PFN and the behavior is the same as with
-> vmbus_sendpacket_pagebuffer(). But the groundwork is laid for a
-> subsequent patch to provide the necessary grouping.
-> 
-> Cc: <stable@vger.kernel.org> # 6.1.x
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->  drivers/net/hyperv/netvsc.c | 50 +++++++++++++++++++++++++++++++++----
->  1 file changed, 45 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index d6f5b9ea3109..6d1705f87682 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -1055,6 +1055,42 @@ static int netvsc_dma_map(struct hv_device *hv_dev,
->  	return 0;
->  }
->  
-> +/* Build an "array" of mpb entries describing the data to be transferred
-> + * over VMBus. After the desc header fields, each "array" entry is variable
-> + * size, and each entry starts after the end of the previous entry. The
-> + * "offset" and "len" fields for each entry imply the size of the entry.
-> + *
-> + * The pfns are in HV_HYP_PAGE_SIZE, because all communication with Hyper-V
-> + * uses that granularity, even if the system page size of the guest is larger.
-> + * Each entry in the input "pb" array must describe a contiguous range of
-> + * guest physical memory so that the pfns are sequential if the range crosses
-> + * a page boundary. The offset field must be < HV_HYP_PAGE_SIZE.
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-Hi Michael,
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Is there a guarantee that this constraint is met. And moreover, is there a
-guarantee that all of the entries will fit in desc? I am slightly concerned
-that there may be an overrun lurking here.
-
-...
 
