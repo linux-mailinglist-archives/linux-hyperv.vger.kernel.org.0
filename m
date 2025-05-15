@@ -1,91 +1,84 @@
-Return-Path: <linux-hyperv+bounces-5521-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5522-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F09E5AB7C78
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 05:48:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2441AB7CBB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 06:49:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB0007A18DC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 03:47:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93E451BA3580
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 04:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABDDF1A315E;
-	Thu, 15 May 2025 03:48:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889461EA7DE;
+	Thu, 15 May 2025 04:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkXeM763"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DNEwPbI2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9A81361;
-	Thu, 15 May 2025 03:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7B172D052;
+	Thu, 15 May 2025 04:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747280914; cv=none; b=KX3rRJMYFTCQXX0FgSJVYhzGrXzkV0KIiaZRcMj+OLK0KqpyFa7o75wKtJ5jLJrDmmdO405qZ39riUBQ5OIWo1s6fHdaW0N5fzZqGbdeZlSZBoFmwJJmi5u6LlhebvP+UTv5HySLjilml26CsZnkTRfbF/u8oF2oC3g4fHK3w14=
+	t=1747284585; cv=none; b=ssPi9kbuEx3H3ZZChmHK1w3jlfu7An5NiHiFs0TkX0xDj5Q471Cwd/xwG77FvWD7r0+mhanN/CM1mi4OcWAZva3Zx/PFXESXbvoAjin2fi5PK7dljYfswEKxZG7x/ZW3HjrNsZCqKWIE6TCYCLr8L0W1pqrh6SsLkpqzy9uW09M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747280914; c=relaxed/simple;
-	bh=VfW3scZAPCqRyh80P4VN1dFpLkyTS0bTtFRLyXSNsas=;
+	s=arc-20240116; t=1747284585; c=relaxed/simple;
+	bh=5ex2XPtCgcZjj6nBV/479N8/kyNeH+50ZY5udqoyUbQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iNKaJc2yOICZz9ViLKqX83vuE9h1O6cWZJfOtizIt/HQOAOj9dVbuQ0QBBJ0klng7Lu3TKzzBk1snWqxeuK+EWiXqhhiOw9ugTujiOCnw/9f/dD8U4YhqQpbuSFJRp9SI6MeB1hjGOGb/JOEiiI9+ZQk9osOOBsyGbZtKMGaRuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkXeM763; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747280913; x=1778816913;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VfW3scZAPCqRyh80P4VN1dFpLkyTS0bTtFRLyXSNsas=;
-  b=lkXeM763AN4F9fji6G5+ZAtkAFbc0O8dPB8BsT346sA0nOgkrlSYhXRP
-   Sk5Rj5FKzrejPW0jMEyO3rwpceXdjxt1YIilmJynvEKerWgLUb6a2xG5i
-   dgP3pdko7FG1EKvSImOp6khpJgUgbfXi60re85JVYaBV8zE274nNeFTI2
-   G8WOs0fDroqumIhGZBIXRHyVqy1jgDmDIl5aot9z7KwGcs8fHHg3GQ1ZS
-   fVrfnwtJssih+9fiQaqE6OyUtHsz9J2R2Lo2zdeZrB6ANnUFSlq95TDH7
-   Jp8IojhRAmKkHHnj+SvM0fAFMAbPXM8Xl/lzj+zi2vq8U3fgLN8JVJX6Q
-   g==;
-X-CSE-ConnectionGUID: XmuYQTK7TpWQgGG2YRsJwQ==
-X-CSE-MsgGUID: U2dJAY/0R2iHnDqvDhxvzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49341189"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="49341189"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:48:32 -0700
-X-CSE-ConnectionGUID: Wm4JfG3aQGqgXz4C5GJRJQ==
-X-CSE-MsgGUID: e93CM5oCSzG07R6DcYt8IA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="139235585"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:48:31 -0700
-Date: Wed, 14 May 2025 20:53:38 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=SDsnjrUf/OiF4S2+TghuexuRLICvqBXjw4npFg6S3+iqgi72hP0/qL1SqNxYJbGkX3R8GDwwrtLqWxCxFi8rWP2Jjqeln/MaCbbdohWD4i1wIcyPIXmILutie2ns1Qwrsl1Kz6yxFT9oautCi5Zkj8splkupzYcuYsicykQkl4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DNEwPbI2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 2A4BC201DB00; Wed, 14 May 2025 21:49:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A4BC201DB00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747284582;
+	bh=G229l3a/ssTXJb4AFEMQgw5XAvni2xdA/B6L+u0ij/Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DNEwPbI2HDYRbGnrTs3VLTI6m2Dtj+1S4NtqIJGi2K7Vatc+1c6T/OxlhzimDljRo
+	 xFvRPzcwt5TOtvzC1wza3XpC3Rom5zbHsJXGUCWTEq10A85UxUyKGkXXJaFQPbvkOB
+	 gijQh5tXDg5LDYcgYVjdAn6YOcb0xyLir7ZPmbBc=
+Date: Wed, 14 May 2025 21:49:42 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250515035338.GA4955@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
- <20250504-original-leopard-of-vigor-5702ef@kuoka>
- <20250506051610.GC25533@ranerica-svr.sc.intel.com>
- <20250506-pompous-meaty-crane-97efce@kuoka>
- <20250507032339.GA27243@ranerica-svr.sc.intel.com>
- <20250512153224.GA3377771-robh@kernel.org>
- <20250513221456.GA2794@ranerica-svr.sc.intel.com>
- <20250514154248.GA2375202-robh@kernel.org>
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v3 3/4] net: mana: Allow irq_setup() to skip cpus for
+ affinity
+Message-ID: <20250515044942.GA5681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1746785625-4753-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <SN6PR02MB41577E2FAA79E2803C3384B0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aCTK5PjV1n1EYOpi@yury>
+ <SN6PR02MB4157AA971E41FE92B1878F9DD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -94,73 +87,142 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514154248.GA2375202-robh@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <SN6PR02MB4157AA971E41FE92B1878F9DD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
-> On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
-> > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
-> > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
-> > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
-> > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
-> > > > > > > If this is a device, then compatibles specific to devices. You do not
-> > > > > > > get different rules than all other bindings... or this does not have to
-> > > > > > > be binding at all. Why standard reserved-memory does not work for here?
-> > > > > > > 
-> > > > > > > Why do you need compatible in the first place?
-> > > > > > 
-> > > > > > Are you suggesting something like this?
-> > > > > > 
-> > > > > > reserved-memory {
-> > > > > > 	# address-cells = <2>;
-> > > > > > 	# size-cells = <1>;
-> > > > > > 
-> > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
-> > > > > > 		reg = < 0x0 0xfff000 0x1000>
-> > > > > > 	}
-> > > > > > 
-> > > > > > and then reference to the reserved memory using the wakeup_mailbox
-> > > > > > phandle?
-> > > > > 
-> > > > > Yes just like every other, typical reserved memory block.
-> > > > 
-> > > > Thanks! I will take this approach and drop this patch.
-> > > 
-> > > If there is nothing else to this other than the reserved region, then 
-> > > don't do this. Keep it like you had. There's no need for 2 nodes.
+On Wed, May 14, 2025 at 05:26:45PM +0000, Michael Kelley wrote:
+> From: Yury Norov <yury.norov@gmail.com> Sent: Wednesday, May 14, 2025 9:55 AM
 > > 
-> > Thank you for your feedback!
+> > On Wed, May 14, 2025 at 04:53:34AM +0000, Michael Kelley wrote:
+> > > > -static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+> > > > +static int irq_setup(unsigned int *irqs, unsigned int len, int node,
+> > > > +		     bool skip_first_cpu)
+> > > >  {
+> > > >  	const struct cpumask *next, *prev = cpu_none_mask;
+> > > >  	cpumask_var_t cpus __free(free_cpumask_var);
+> > > > @@ -1303,9 +1304,20 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+> > > >  		while (weight > 0) {
+> > > >  			cpumask_andnot(cpus, next, prev);
+> > > >  			for_each_cpu(cpu, cpus) {
+> > > > +				/*
+> > > > +				 * if the CPU sibling set is to be skipped we
+> > > > +				 * just move on to the next CPUs without len--
+> > > > +				 */
+> > > > +				if (unlikely(skip_first_cpu)) {
+> > > > +					skip_first_cpu = false;
+> > > > +					goto next_cpumask;
+> > > > +				}
+> > > > +
+> > > >  				if (len-- == 0)
+> > > >  					goto done;
+> > > > +
+> > > >  				irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
+> > > > +next_cpumask:
+> > > >  				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
+> > > >  				--weight;
+> > > >  			}
+> > >
+> > > With a little bit of reordering of the code, you could avoid the need for the "next_cpumask"
+> > > label and goto statement.  "continue" is usually cleaner than a "goto". Here's what I'm thinking:
+> > >
+> > > 		for_each_cpu(cpu, cpus) {
+> > > 			cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
+> > > 			--weight;
 > > 
-> > I was planning to use one reserved-memory node and inside of it a child
-> > node to with a `reg` property to specify the location and size of the
-> > mailbox. I would reference to that subnode from the kernel code.
-> > 
-> > IIUC, the reserved-memory node is only the container and the actual memory
-> > regions are expressed as child nodes.
-> > 
-> > I had it like that before, but with a `compatible` property that I did not
-> > need.
-> > 
-> > Am I missing anything?
+> > cpumask_andnot() is O(N), and before it was conditional on 'len == 0',
+> > so we didn't do that on the very last step. Your version has to do that.
+> > Don't know how important that is for real workloads. Shradha maybe can
+> > measure it...
 > 
-> Without a compatible, how do you identify which reserved region is the 
-> wakeup mailbox?
+> Yes, there's one extra invocation of cpumask_andnot(). But if the
+> VM has a small number of CPUs, that extra invocation is negligible.
+> If the VM has a large number of CPUs, we're already executing
+> cpumask_andnot() many times, so one extra time is also negligible.
+> And this whole thing is done only at device initialization time, so
+> it's not a hot path.
+>
 
-I thought using a phandle to the wakeup_mailbox. Then I realized that the
-device nodes using the mailbox would be CPUs. They would need a `memory-
-region` property. This does not look right to me.
+Hi Michael, Yury,
 
-> Before you say node name, those are supposed to be 
-> generic though we failed to enforce anything for /reserved-memory child 
-> nodes.
+That's right, the overhead is negligible. Tested with some common
+workloads. I will change this in the next version.
 
-I see. Thanks for preventing me from doing this.
-
-Then the `compatible` property seems the way to go after all.
-
-This what motivated this patch in the first place. On further analysis,
-IIUC, defining bindings and schema is not needed, IMO, since the mailbox
-is already defined in the ACPI spec. No need to redefine.
-
-Ricardo
+Shradha.
+ 
+> > 
+> > >
+> > > 			If (unlikely(skip_first_cpu)) {
+> > > 				skip_first_cpu = false;
+> > > 				continue;
+> > > 			}
+> > >
+> > > 			If (len-- == 0)
+> > > 				goto done;
+> > >
+> > > 			irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
+> > > 		}
+> > >
+> > > I wish there were some comments in irq_setup() explaining the overall intention of
+> > > the algorithm. I can see how the goal is to first assign CPUs that are local to the current
+> > > NUMA node, and then expand outward to CPUs that are further away. And you want
+> > > to *not* assign both siblings in a hyper-threaded core.
+> > 
+> > I wrote this function, so let me step in.
+> > 
+> > The intention is described in the corresponding commit message:
+> > 
+> >   Souradeep investigated that the driver performs faster if IRQs are
+> >   spread on CPUs with the following heuristics:
+> > 
+> >   1. No more than one IRQ per CPU, if possible;
+> >   2. NUMA locality is the second priority;
+> >   3. Sibling dislocality is the last priority.
+> > 
+> >   Let's consider this topology:
+> > 
+> >   Node            0               1
+> >   Core        0       1       2       3
+> >   CPU       0   1   2   3   4   5   6   7
+> > 
+> >   The most performant IRQ distribution based on the above topology
+> >   and heuristics may look like this:
+> > 
+> >   IRQ     Nodes   Cores   CPUs
+> >   0       1       0       0-1
+> >   1       1       1       2-3
+> >   2       1       0       0-1
+> >   3       1       1       2-3
+> >   4       2       2       4-5
+> >   5       2       3       6-7
+> >   6       2       2       4-5
+> >   7       2       3       6-7
+> > 
+> > > But I can't figure out what
+> > > "weight" is trying to accomplish. Maybe this was discussed when the code first
+> > > went in, but I can't remember now. :-(
+> > 
+> > The weight here is to implement the heuristic discovered by Souradeep:
+> > NUMA locality is preferred over sibling dislocality.
+> > 
+> > The outer for_each() loop resets the weight to the actual number of
+> > CPUs in the hop. Then inner for_each() loop decrements it by the
+> > number of sibling groups (cores) while assigning first IRQ to each
+> > group.
+> > 
+> > Now, because NUMA locality is more important, we should walk the
+> > same set of siblings and assign 2nd IRQ, and it's implemented by the
+> > medium while() loop. So, we do like this unless the number of IRQs
+> > assigned on this hop will not become equal to number of CPUs in the
+> > hop (weight == 0). Then we switch to the next hop and do the same
+> > thing.
+> > 
+> > Hope that helps.
+> 
+> Yes, that helps! So the key to understanding "weight" is that
+> NUMA locality is preferred over sibling dislocality.
+> 
+> This is a great summary!  All or most of it should go as a
+> comment describing the function and what it is trying to do.
+> 
+> Michael
 
