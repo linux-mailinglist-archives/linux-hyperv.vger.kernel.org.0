@@ -1,111 +1,166 @@
-Return-Path: <linux-hyperv+bounces-5520-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5521-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4019AB7BDA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 05:00:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F09E5AB7C78
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 05:48:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B9941BA709A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 03:00:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB0007A18DC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 May 2025 03:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C4D28DF32;
-	Thu, 15 May 2025 02:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABDDF1A315E;
+	Thu, 15 May 2025 03:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9DTHpJm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkXeM763"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D60D4B1E64;
-	Thu, 15 May 2025 02:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9A81361;
+	Thu, 15 May 2025 03:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747277998; cv=none; b=A5SdNU1bNL5PS3Cwp/KUEV4EmkVOevQGGIPd9t7zS0dtFVCdglruOQOoz1WLSN9WWsBNQPvxmjgzjlc6crswGQcozTV08yMQzeXAK/B2Hn6FGmpaRwLzJP9AOL6HU8moMXn0HgknApsiycrXyqPYpf4LIu7Dyb5dK+YcnETIO6w=
+	t=1747280914; cv=none; b=KX3rRJMYFTCQXX0FgSJVYhzGrXzkV0KIiaZRcMj+OLK0KqpyFa7o75wKtJ5jLJrDmmdO405qZ39riUBQ5OIWo1s6fHdaW0N5fzZqGbdeZlSZBoFmwJJmi5u6LlhebvP+UTv5HySLjilml26CsZnkTRfbF/u8oF2oC3g4fHK3w14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747277998; c=relaxed/simple;
-	bh=PDLb/Z5CFapT4NGFtLlJZRiFyM6zo5sw4RC5O3pCj60=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=PvinJE3pEvDX3g7cjqYWxqfPlr4opROMMdOgJx30KbE38PL9X/FxBQRgixIz0R0btBOOuzA2faBbHnElSGx4kM/Mduv4qwkIYAVewZsZahDboWuiGuI5K9Si56RndU9LjTL2k8N4ym93QS2xrSQxXRk57tM07GmOpRE+XaASifY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9DTHpJm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC5FC4CEEB;
-	Thu, 15 May 2025 02:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747277997;
-	bh=PDLb/Z5CFapT4NGFtLlJZRiFyM6zo5sw4RC5O3pCj60=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=V9DTHpJmS1XdJOo7dTi7f7SBsTBdKs7B7n75z+ENLeHSUtQZgNpTNstGghGQUFP5K
-	 sWDX1QeIPCL9RWephFXnPsWqPZ2JXEKoTi6gkya1Agy7KlfNvH6CjWbUI6idmhT8Ao
-	 2gD7tm/ix4SJJCBsiQkG0P8Fho4t7vIuDwjf66CYz3rZn00jFZxeh6qx4FnMsNIQ85
-	 AsOk6n3MPNmp8Jnp/gGJmhMdGD8xpxhTNnlZMDYINBb/+vSC4yFdatZlLpiDf4IAdB
-	 +TWT8lBJIK/8/evfnk/91ncMR9Mab5VL1VrNCpguRFRuXO8Yi3QHw07bfGLhaUe93g
-	 ncZtNbubpVCGA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D20380AA66;
-	Thu, 15 May 2025 03:00:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1747280914; c=relaxed/simple;
+	bh=VfW3scZAPCqRyh80P4VN1dFpLkyTS0bTtFRLyXSNsas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iNKaJc2yOICZz9ViLKqX83vuE9h1O6cWZJfOtizIt/HQOAOj9dVbuQ0QBBJ0klng7Lu3TKzzBk1snWqxeuK+EWiXqhhiOw9ugTujiOCnw/9f/dD8U4YhqQpbuSFJRp9SI6MeB1hjGOGb/JOEiiI9+ZQk9osOOBsyGbZtKMGaRuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkXeM763; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747280913; x=1778816913;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VfW3scZAPCqRyh80P4VN1dFpLkyTS0bTtFRLyXSNsas=;
+  b=lkXeM763AN4F9fji6G5+ZAtkAFbc0O8dPB8BsT346sA0nOgkrlSYhXRP
+   Sk5Rj5FKzrejPW0jMEyO3rwpceXdjxt1YIilmJynvEKerWgLUb6a2xG5i
+   dgP3pdko7FG1EKvSImOp6khpJgUgbfXi60re85JVYaBV8zE274nNeFTI2
+   G8WOs0fDroqumIhGZBIXRHyVqy1jgDmDIl5aot9z7KwGcs8fHHg3GQ1ZS
+   fVrfnwtJssih+9fiQaqE6OyUtHsz9J2R2Lo2zdeZrB6ANnUFSlq95TDH7
+   Jp8IojhRAmKkHHnj+SvM0fAFMAbPXM8Xl/lzj+zi2vq8U3fgLN8JVJX6Q
+   g==;
+X-CSE-ConnectionGUID: XmuYQTK7TpWQgGG2YRsJwQ==
+X-CSE-MsgGUID: U2dJAY/0R2iHnDqvDhxvzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49341189"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="49341189"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:48:32 -0700
+X-CSE-ConnectionGUID: Wm4JfG3aQGqgXz4C5GJRJQ==
+X-CSE-MsgGUID: e93CM5oCSzG07R6DcYt8IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="139235585"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:48:31 -0700
+Date: Wed, 14 May 2025 20:53:38 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
+ for Intel processors
+Message-ID: <20250515035338.GA4955@ranerica-svr.sc.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
+ <20250504-original-leopard-of-vigor-5702ef@kuoka>
+ <20250506051610.GC25533@ranerica-svr.sc.intel.com>
+ <20250506-pompous-meaty-crane-97efce@kuoka>
+ <20250507032339.GA27243@ranerica-svr.sc.intel.com>
+ <20250512153224.GA3377771-robh@kernel.org>
+ <20250513221456.GA2794@ranerica-svr.sc.intel.com>
+ <20250514154248.GA2375202-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/5] hv_netvsc: Fix error "nvsp_rndis_pkt_complete error
- status: 2"
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174727803505.2590892.12386533199392905169.git-patchwork-notify@kernel.org>
-Date: Thu, 15 May 2025 03:00:35 +0000
-References: <20250513000604.1396-1-mhklinux@outlook.com>
-In-Reply-To: <20250513000604.1396-1-mhklinux@outlook.com>
-To: Michael Kelley <mhkelley58@gmail.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514154248.GA2375202-robh@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Hello:
-
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 12 May 2025 17:05:59 -0700 you wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
+> On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
+> > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
+> > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
+> > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
+> > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
+> > > > > > > If this is a device, then compatibles specific to devices. You do not
+> > > > > > > get different rules than all other bindings... or this does not have to
+> > > > > > > be binding at all. Why standard reserved-memory does not work for here?
+> > > > > > > 
+> > > > > > > Why do you need compatible in the first place?
+> > > > > > 
+> > > > > > Are you suggesting something like this?
+> > > > > > 
+> > > > > > reserved-memory {
+> > > > > > 	# address-cells = <2>;
+> > > > > > 	# size-cells = <1>;
+> > > > > > 
+> > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
+> > > > > > 		reg = < 0x0 0xfff000 0x1000>
+> > > > > > 	}
+> > > > > > 
+> > > > > > and then reference to the reserved memory using the wakeup_mailbox
+> > > > > > phandle?
+> > > > > 
+> > > > > Yes just like every other, typical reserved memory block.
+> > > > 
+> > > > Thanks! I will take this approach and drop this patch.
+> > > 
+> > > If there is nothing else to this other than the reserved region, then 
+> > > don't do this. Keep it like you had. There's no need for 2 nodes.
+> > 
+> > Thank you for your feedback!
+> > 
+> > I was planning to use one reserved-memory node and inside of it a child
+> > node to with a `reg` property to specify the location and size of the
+> > mailbox. I would reference to that subnode from the kernel code.
+> > 
+> > IIUC, the reserved-memory node is only the container and the actual memory
+> > regions are expressed as child nodes.
+> > 
+> > I had it like that before, but with a `compatible` property that I did not
+> > need.
+> > 
+> > Am I missing anything?
 > 
-> Starting with commit dca5161f9bd0 in the 6.3 kernel, the Linux driver
-> for Hyper-V synthetic networking (netvsc) occasionally reports
-> "nvsp_rndis_pkt_complete error status: 2".[1] This error indicates
-> that Hyper-V has rejected a network packet transmit request from the
-> guest, and the outgoing network packet is dropped. Higher level
-> network protocols presumably recover and resend the packet so there is
-> no functional error, but performance is slightly impacted. Commit
-> dca5161f9bd0 is not the cause of the error -- it only added reporting
-> of an error that was already happening without any notice. The error
-> has presumably been present since the netvsc driver was originally
-> introduced into Linux.
-> 
-> [...]
+> Without a compatible, how do you identify which reserved region is the 
+> wakeup mailbox?
 
-Here is the summary with links:
-  - [net,1/5] Drivers: hv: Allow vmbus_sendpacket_mpb_desc() to create multiple ranges
-    https://git.kernel.org/netdev/net/c/380b75d30786
-  - [net,2/5] hv_netvsc: Use vmbus_sendpacket_mpb_desc() to send VMBus messages
-    https://git.kernel.org/netdev/net/c/4f98616b855c
-  - [net,3/5] hv_netvsc: Preserve contiguous PFN grouping in the page buffer array
-    https://git.kernel.org/netdev/net/c/41a6328b2c55
-  - [net,4/5] hv_netvsc: Remove rmsg_pgcnt
-    https://git.kernel.org/netdev/net/c/5bbc644bbf4e
-  - [net,5/5] Drivers: hv: vmbus: Remove vmbus_sendpacket_pagebuffer()
-    https://git.kernel.org/netdev/net/c/45a442fe369e
+I thought using a phandle to the wakeup_mailbox. Then I realized that the
+device nodes using the mailbox would be CPUs. They would need a `memory-
+region` property. This does not look right to me.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> Before you say node name, those are supposed to be 
+> generic though we failed to enforce anything for /reserved-memory child 
+> nodes.
 
+I see. Thanks for preventing me from doing this.
 
+Then the `compatible` property seems the way to go after all.
+
+This what motivated this patch in the first place. On further analysis,
+IIUC, defining bindings and schema is not needed, IMO, since the mailbox
+is already defined in the ACPI spec. No need to redefine.
+
+Ricardo
 
