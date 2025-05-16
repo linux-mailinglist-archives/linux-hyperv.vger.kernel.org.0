@@ -1,150 +1,142 @@
-Return-Path: <linux-hyperv+bounces-5533-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5534-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B21A0ABA051
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 May 2025 17:54:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B946AABA084
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 May 2025 18:00:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96B311BA6FC1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 May 2025 15:54:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F25677B0869
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 May 2025 15:58:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0D71632DD;
-	Fri, 16 May 2025 15:54:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4387C1DF756;
+	Fri, 16 May 2025 15:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkfnpN2P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSrrW3t8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA41386359;
-	Fri, 16 May 2025 15:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FB41DF247;
+	Fri, 16 May 2025 15:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747410852; cv=none; b=POHZU3Qr1iADquDerVW3tBRctXt3nQS9Vi8BaetFvmhZeBQrqaX4p1KeZmG86kPRp3sQ3btJdoSvJ/cOtqoZ+7KqEtCGmGDDtymdoeCUOV5J/5v95nBSkefVFJP0TJzO0tjKeQqbdOsR1wUg45zqoixuteVw4ljeQgsCpSXhWGY=
+	t=1747411140; cv=none; b=tFs7aBluy1R2vta640FhwtNIUQh6moei0vy62KD0bDZYfHd5Hb9R7kTUiOV0fmra1+GS4bHBwEb6r5nMkF+vwhhAi5UTIan6DT9vFVxCukB9Oa1dOaUAGtjmCQdtDUcod+0VGJYmhO3XGShEGdpCYys8eZ/I/7PNGzHd9/TTIBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747410852; c=relaxed/simple;
-	bh=D4iYYT0X40KZcO9JmEZKyAItgljn44Gvvk7FEmk9F7E=;
+	s=arc-20240116; t=1747411140; c=relaxed/simple;
+	bh=krG3ZQ/kFm6Nmu9+FVKfHwTUMG9LfWCQ5Jk5oi6Ls7s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gtfUQWblrmX+N+r8ulkMs308IOP+C4HrPKZ22VOlX6InvDyAadCd+nc/ihqTyJqrF4UGmzfJZmIPROg7GL3cl2kPHrbTXlVjPYU1wMoBYyE+qZ+YHoU0V5rID3nkVF07EXaDlr4ZdLaHx8rON8mt0o5Sc/oxekjmi5oBGVqsLBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkfnpN2P; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=AFSnncQZ7KW+knMTO/cmUl+qPdsRa0GhEbEvZ3ss0Fd5wRX3JqA14cpsJfR3/cK2rVForOhdgBHxFtWx3w3cgHuDTXStFuB31gsjcS3CRI3OQ/BwZiK2hQZrObd/6RBjLLQxRbPLNdmwq27LE1FR0eL5ujl6VDalw2xVOEBHB9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VSrrW3t8; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231ecd4f2a5so5918435ad.0;
-        Fri, 16 May 2025 08:54:10 -0700 (PDT)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b074d908e56so1480630a12.2;
+        Fri, 16 May 2025 08:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747410850; x=1748015650; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747411138; x=1748015938; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jnwing6EPkTIf4TgTw+aRTggKpgaJ9sx4x1j/r+rC2U=;
-        b=fkfnpN2PeUWKYO7O/WuOQchnX7EFdpX1MpdxZ1fEfxQP11dQQWjLQniqOE5GowtqhF
-         Ndj3GyAiznzFmgnUR3RyXQD9WMiQNQNCaavDjWckZ6y2g+j6ZfdRYSomrPa22xDzJHTi
-         Lbv/KSIrZMQjetBC/zPzSr/B/mi8YDMtx39B7sf8mm96yJw9q23wWSX/aMCukBDm0sNI
-         TbtEg3fsFWhEqE11MQz9cgjHZQTJXF6DIZqAMHQsMl9t/gwOWUhO2q3eqpFqqH1Bgf/n
-         VIGQOwjrGZHSr7UxlnZkc2/PUu/f0Hgiyyx0rNAJdK1I01yXn8lVyLZMQLl3kgaEWAm4
-         JmoQ==
+        bh=TsoEPEmI5AxdSVlymUHhTpkf03lOfLnTmC2m6qhHMYY=;
+        b=VSrrW3t8B0edHgaciKM9vc6oWg51qQXfOyEP890MiUYwjsz2csQOO+BzkZvIlfEd3T
+         Vfo0khFKU9PEa2XWK2p43+l2Nn7L8kqjzFHYcxtlwzCI3+vIAOqujrfF9usPcUKkuc8Z
+         L/7A6tQW59TL2DN4W5Ys+iAgpTUTpVLIBm4xYQgfAVANmVdVIy57QdTpZ8PWJGCB9jNJ
+         PZPQcPJDhEdGE3VJj17fzHui7pjTTQOHjljxM8nYD9aBOZy06NiSmcLJNJIzBY+i6It/
+         LqZfv/oloGn0Kc+sP5SeqDkuZ2FYRnuWP9h+tPFq/SbRgZvjPQTal38XdYGLWiN1r2s3
+         1o9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747410850; x=1748015650;
+        d=1e100.net; s=20230601; t=1747411138; x=1748015938;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jnwing6EPkTIf4TgTw+aRTggKpgaJ9sx4x1j/r+rC2U=;
-        b=aQA+850i4dL43hQ3mdWSyWNBJbAcl/4JqSxkwAXQ7mU0OEFD/IsdYDY78yngoiZTx3
-         B31d9LivF1wStfqJjwHhKl1eOOHBQxcexDGoXdWChgeDr95ptLNanMRD3h98Yc/cfqlY
-         JZ8BYMZzOXFc6hN/3n7xGz3cLoGAlY1r38t37klObPtG66XPAA0dH08IVITmydYunDdG
-         Vh64Qhx3DMf1ey1tWIXR6IT+2CzPpukpRYw6JVi3Joy6jatLNB0VUH0WwMFJvIBfxc57
-         kJMqriEFn0i4RZeu0PxM/Qn4DdTgORcK8CgW4pmhPmmjHTQOpq+8+J5JH8HEuxo952pM
-         4UGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUe8QG0WjjEJ3c9+h6q1vEpCbo4REkFbVJyLCXCdvZOcnPpzXtoh+VO6UptDFhA4iQxgvGa1aqMXT4xxfQ=@vger.kernel.org, AJvYcCVTYCHz02a6tlsC4TLdUz0NmbyWD4pmPb1wE+B+CLQYKjGJuVO5d0kNM0h6xWQEl0oDaqStS2lu/VDOOIGi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyae1G3atuAsbySW5N08NJRmGf5TtzAr+gTpHdSSwoODeoEesMM
-	/XwXKDh4cpjJi6OfQ/JXA4YAgSoZ+H67Zpal4wEqaUnfLAcGVgeJVe4lBspNNcnM3oie+ZHCEQl
-	98GqUVOSZePwCidwyIVCOgySosG8jVZg=
-X-Gm-Gg: ASbGncuvHuft4QMpZVnQ0Sqa6SH8GpOfz4yYVuIzI02jPv7BbBBai4GRerxD7BEeMvE
-	UMhngvvLf+uGZ5Jbu8ZbCz6YiYb084pjs2Ah8T22CLUy96LK39Su/FnE2kgbSAyFiQKer0Ybqe2
-	iBczO7VHQi6Gt1eS3DLZ84FfjoWIDA+BBslqcx1zDTDLv7kToYlYA=
-X-Google-Smtp-Source: AGHT+IH56Ikf/9K4NnW9SrqyUdDE3HTfAb8ndmxtarVhQeYv/CxYSytZQcpkOIliYyjxJ7hpHtVS89/nDBbpWZq9ZQo=
-X-Received: by 2002:a17:902:c411:b0:231:d072:1ecf with SMTP id
- d9443c01a7336-231de3429b6mr45930805ad.29.1747410850000; Fri, 16 May 2025
- 08:54:10 -0700 (PDT)
+        bh=TsoEPEmI5AxdSVlymUHhTpkf03lOfLnTmC2m6qhHMYY=;
+        b=joFiWJ0jOYXpt4tlnmd7/Mt35IYGJB4WSKqFCa0XqsPFsslbFXmatvuPZI+R6OZdDI
+         EfDGNuo3h6axkDo8jayHhPX3GCdOsLs7z2p+/1tO6VXmBleY0/4vXwuB4qCzzsIbXau0
+         EyaaB8ybWoh2Eq+LZOiP4sK6bQc2XbJvBgKAz44uReHDqLebhw0CYbp5XjDPj0Fg7LR7
+         kIbgD2jPTfrax5r13w5P+z7SX3qM+E2LLkeScPKgYv9ZUeYQFyT3On5+qwWfodSP9jnF
+         pec1G2rsWj2MEcS5op3aW9gGbqtwJstI9mjdM4eeZmxjfOKIRloogl+ed/t/L5S+OlQ4
+         dGpA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Js4LJwqRJ/smR27Wh9aXLAjfTBYoyWKeykRqC9g1/p+meh2Y7zj+phVuD14a6RwAkL7q3XV3+MfvuYQ=@vger.kernel.org, AJvYcCV614BM7J6cGZ2Qr04gwblqjGM+Ywk/QgTMYEOscZmbz8BNi8oD2YI5V0Vs3wJNXaKICfTe+uJ+rTjZfMZ5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW9i/66R2mEq3+MCVlr4x6OqgEc0oYMucnD59nAxaaaKRvfepe
+	0f2O8u3itxOg5J4jQwdZquZZSIYk0Qqn4S5K6XicfRVIXRBazpLi7hRUdALpH7SHg3BEj0OpiYH
+	HolKtR/0uY3zBaaU+7QFYBF3I8PWvhpZrZJKlj8U=
+X-Gm-Gg: ASbGncu3aCdAJkvpXeEVfoQyzdk5p+a79h3N76Mdl4rcPeWRxMCfkB6hUkiiNFcUdbg
+	TKBlfW1eTLlo/SjGthbvjZTpRrxpyr/MYpN3HrQNVLVbU2thPKhZ188Mjsx2wFMYc1oW2RkCc2g
+	/K5D7pLukDSzJflZW8a3Ah/8pEBBc2Xo1THpMsVYCqKYkhmNcHJJY=
+X-Google-Smtp-Source: AGHT+IGX2ZYc0fawgiD3hSuSC1/mCQUoY3YG7H0jn6I9liC4deGrhqTA3gLS8yyKS30ECavj0xZHIwAYl0v9wMd6fYw=
+X-Received: by 2002:a17:902:fc46:b0:231:c2ea:f0c0 with SMTP id
+ d9443c01a7336-231de37016cmr41010465ad.42.1747411137831; Fri, 16 May 2025
+ 08:58:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506130712.156583-1-ltykernel@gmail.com> <20250506130712.156583-6-ltykernel@gmail.com>
- <SN6PR02MB41578854FF8D79504DB847A0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB41578854FF8D79504DB847A0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250506130712.156583-1-ltykernel@gmail.com> <20250506130712.156583-7-ltykernel@gmail.com>
+ <d1dbeac3-42d1-4ca7-a8cf-8d3b27176a98@amd.com>
+In-Reply-To: <d1dbeac3-42d1-4ca7-a8cf-8d3b27176a98@amd.com>
 From: Tianyu Lan <ltykernel@gmail.com>
-Date: Fri, 16 May 2025 23:53:32 +0800
-X-Gm-Features: AX0GCFsxaFmWm5CjNF2sgAAeEQ2eTh1C6qMtfa02LOx3G50qDNd4zteBHJ0Nr5w
-Message-ID: <CAMvTesAmvVCQn47ZV+k9r0qNape_5zcCJ_Fwj+kXNi-Rby_U7A@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/6] x86/Hyper-V: Not use auto-eoi when Secure AVIC is available
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, 
-	"yuehaibing@huawei.com" <yuehaibing@huawei.com>, "kvijayab@amd.com" <kvijayab@amd.com>, 
-	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
-	"tiala@microsoft.com" <tiala@microsoft.com>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date: Fri, 16 May 2025 23:58:21 +0800
+X-Gm-Features: AX0GCFuBT4Y90vrthBeuKR-2VOmNlQJ7eh4EcZ9fq2VFohQNha0_DwTC-NScPe4
+Message-ID: <CAMvTesA4A+ErFf+RoDJGrHVfkXOTgeZ0qw_5CRT47UbLJ-2Z0g@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/6] x86/x2apic-savic: Not set APIC backing page if
+ Secure AVIC is not enabled.
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	yuehaibing@huawei.com, jacob.jun.pan@linux.intel.com, jpoimboe@kernel.org, 
+	tiala@microsoft.com, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 12:54=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
-om> wrote:
+On Wed, May 7, 2025 at 12:03=E2=80=AFPM Neeraj Upadhyay <Neeraj.Upadhyay@am=
+d.com> wrote:
 >
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, May 6, 2025 6:07 AM
+>
+>
+> On 5/6/2025 6:37 PM, Tianyu Lan wrote:
+> > From: Tianyu Lan <tiala@microsoft.com>
 > >
->
-> For the patch Subject, use:
->
-> x86/hyperv: Don't use auto-EOI when Secure AVIC is available
->
-> > Hyper-V doesn't support auto-eoi with Secure AVIC.
-> > So Enable HV_DEPRECATING_AEOI_RECOMMENDED flag
->
-> s/Enable/enable/
-> > to force to write eoi register after handling interrupt.
->
-> "to force writing the EOI register after handling an interrupt."
->
+> > When Secure AVIC is not enabled, init_apic_page()
+> > should return directly.
 > >
 > > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
 > > ---
-> >  arch/x86/kernel/cpu/mshyperv.c | 3 +++
+> >  arch/x86/kernel/apic/x2apic_savic.c | 3 +++
 > >  1 file changed, 3 insertions(+)
 > >
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyp=
-erv.c
-> > index 3e2533954675..fbe45b5e9790 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -463,6 +463,9 @@ static void __init ms_hyperv_init_platform(void)
+> > diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic=
+/x2apic_savic.c
+> > index 0dd7e39931b0..fb09c0f9e276 100644
+> > --- a/arch/x86/kernel/apic/x2apic_savic.c
+> > +++ b/arch/x86/kernel/apic/x2apic_savic.c
+> > @@ -333,6 +333,9 @@ static void init_apic_page(void)
+> >  {
+> >       u32 apic_id;
 > >
-> >       hv_identify_partition_type();
-> >
-> > +     if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
-> > +             ms_hyperv.hints |=3D HV_DEPRECATING_AEOI_RECOMMENDED;
+> > +     if (!cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
+> > +             return;
 > > +
+> >       /*
 >
-> Shouldn't Hyper-V already be setting this flag if it is offering Secure A=
-VIC
-> to guests? I guess it doesn't hurt to do this in the Linux code, but it s=
-eems
-> like it should be Hyper-V's responsibility.
+> Why is this change needed? init_apic_page() is only called from Secure AV=
+IC driver's
+> setup() callback. savic_probe() already does this check. So, if this chec=
+k fails during
+> savic_probe(), Secure AVIC apic driver won't be selected as apic driver a=
+nd it's setup
+> callback will never get invoked.
 >
+>
+Hi Neeraj:
+       Thanks for your review. Agree. Will remove it.
 
-OK. I will double check from OpenHCL side.
 
-
-
---=20
+--
 Thanks
 Tianyu Lan
 
