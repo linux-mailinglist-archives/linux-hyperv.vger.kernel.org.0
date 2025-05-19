@@ -1,319 +1,168 @@
-Return-Path: <linux-hyperv+bounces-5555-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5556-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C00A4ABC461
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 18:23:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AB95ABC4FC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 18:55:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C948716AF21
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 16:22:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93F087A24D2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 16:53:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F68288C36;
-	Mon, 19 May 2025 16:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB7A286406;
+	Mon, 19 May 2025 16:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ekM4tRZ/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P7L81j2k"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023119.outbound.protection.outlook.com [40.93.201.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9607F2857FA;
-	Mon, 19 May 2025 16:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.119
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671653; cv=fail; b=kOPjNi7He6vOnx/ZvottyYcClnihielAR+VV1JvdND+7fkatGHhIkVZQGuAbpRdSkoO6OtQe0FCaFWQ96t6Z8dPF1Hwc/LnEE4ta9e7hZglSssvKCymqHQ/p6roq+MdC4uql0uYunmpJUxoXXTRVbXJnMINE7lRyVAPxI1N6kvI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671653; c=relaxed/simple;
-	bh=bc+w6ysQMAb3BIvvoi5yPh4zFNgIImXv0ePcO4KJTxc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CwgnVF2Wg5LmJVz9LHVB4EY398Fi9oVd77jvJocXvGuKVL90yaOs9ojtUHIWSswVCYXn4DhJpmnOoboXnTEjgwXz+KdOKgQRhXm8KcQWt3DO4Z+10mz/pFNjvfZK9DLZebFK1+rH2W86V0VPdaZQCoIhKZwXYmx+QA4Ke3dMPLs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=ekM4tRZ/; arc=fail smtp.client-ip=40.93.201.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GQtE3vlESWi7x02NFK4e1bPvI8xiZpuxlVnGab5Kh5BxY0BGyHvbFzWUv6EL/e0Q1LpSS8aO2WUjAakvExKEhJMOR+Y8CTwtVOkQxoNfqcNgjm3N87szP1nkgPzicF/Yyo/AY3e9r3sIsu5MtbeL0t+H274FiuTyRpVyNS+9CEXYJopPRUQ8VIAuxyQEfkQ/x4R9oRgIDS2ZqcvM9Q0wkAL9fXm6+AbEQ9Rm9/H8KV6prjksQ43szBM/2UZ4NHKk+MzxbvUdsUzJG/zW8rl0t/OA4kmb39yiNHWKTw1UddGymQ8m9OQ34cmraDNsPaf392ia/pyH8Rl6ms/iUTH7pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AZKSOEItx/FkOFKw+vSxnlUSNTuHSmuvtKIe+vaU+jg=;
- b=jsEMj2Y3i4DAPOJNU6ZQnjsuiqX91Qs4NQSWQptVPIhrHHLicu70hYiCzvfUH0eHFpYr8hXf84qUwYEb5njsiedoVdO7/qHwA2KPLRAuKg6PDEDU93QJSN0QTCk3jNfUDe4isbYm+WS8rDLse+u5jQ8EQGjVL1hoof3UL6Nhdw5Y2jCVRKxO8C7qLxv/3ryWc5ba4uQIwJBYy3NksHoJgi45sbWokcGuWRzl9E4uX3ApeEHc1Ssa2mziPdYM8EWFTuhIgqpqkYIZVDlnvw7yob7ftPINYoee/4I0uBKiqCZ9QVuNdz5jgQS2VRy0BOXRwRvckftTLQwElE271gxLvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AZKSOEItx/FkOFKw+vSxnlUSNTuHSmuvtKIe+vaU+jg=;
- b=ekM4tRZ/po4vRHJHdkCTLTg15pwyzNm9cIntJz3GcdEsT6K9F7T/26bowiHiSnDjlJc/+O9LGTzav1chcyFAJ64TjOToba6e8fSF/IGVGPaVet8Uq1gWGEZ4iNcFPabuhahWEwgv18ZxNWfpa+1gp349+Ou09pkbBdS0CU/oTD0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
- by CH4PR21MB4265.namprd21.prod.outlook.com (2603:10b6:610:22a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.16; Mon, 19 May
- 2025 16:20:47 +0000
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::2c5a:1a34:2c8d:48ef]) by BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::2c5a:1a34:2c8d:48ef%7]) with mapi id 15.20.8769.013; Mon, 19 May 2025
- 16:20:47 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	decui@microsoft.com,
-	stephen@networkplumber.org,
-	kys@microsoft.com,
-	paulros@microsoft.com,
-	olaf@aepfle.de,
-	vkuznets@redhat.com,
-	davem@davemloft.net,
-	wei.liu@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	bpf@vger.kernel.org,
-	ast@kernel.org,
-	hawk@kernel.org,
-	tglx@linutronix.de,
-	shradhagupta@linux.microsoft.com,
-	andrew+netdev@lunn.ch,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next,v2] net: mana: Add support for Multi Vports on Bare metal
-Date: Mon, 19 May 2025 09:20:36 -0700
-Message-Id: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0287.namprd03.prod.outlook.com
- (2603:10b6:303:b5::22) To BY5PR21MB1443.namprd21.prod.outlook.com
- (2603:10b6:a03:21f::18)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DACB28313B;
+	Mon, 19 May 2025 16:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747673697; cv=none; b=T9a83Y8sEhY3MuHKwgWo1yjScx9Tuz/zRtzf6Gy6T1V4q+4ViPkoa3sc37bd8EXDineXK7vLKyhBzo0JpDdz/LyMNGECsXPvSIUQvkDVae6N5GXLQyt9xx9s9zRrL8bmZKu9tv3fzIfIPEuTcm5tEZ8JFcdUg1OBbwSUsqF1WJ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747673697; c=relaxed/simple;
+	bh=bW+o8oCViCCYXcAqVtY/0UB3qmmBvGj7Uz+FyS2bPSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmoODVSTbSWHTSj1COX/EIpuLoni7dFbaNa0SJKs0m6otLd0XsgSiJIRQ/WlNSZlVRX+PzkrY84jM2cmGsO4CymoyyrmLAHq20LGgZCON/BE3jX96uEo3o0VdNprx3TNGM7938Kr4hHYcdae95JsbFUJbpI7eQ7SevfSWK9fKKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=P7L81j2k; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 039812067864; Mon, 19 May 2025 09:54:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 039812067864
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747673695;
+	bh=wg6hvFqkqMq7BInGeV8wn3GSM9YWzn8YzNDbZ6ZxWFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P7L81j2kqiuVsDt0TAWtSv/U5ulAeQg6gOh08uzjdHgtJAOiPqYoDh2Aw2/qhJ3Dn
+	 4sgBCfookyA6OQNNJ/6NSR2l4ujeDjSZgAhgm8MSiVEfDzxk/TJLjFCRnpEumkTZX8
+	 Twb8s27sufQ4Go3mdGcrcax0JfCNhiMKQHBvaW8Q=
+Date: Mon, 19 May 2025 09:54:54 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
+	"javierm@redhat.com" <javierm@redhat.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH 1/1] Drivers: hv: Always select CONFIG_SYSFB
+ for Hyper-V guests
+Message-ID: <20250519165454.GA11708@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250516235820.15356-1-mhklinux@outlook.com>
+ <KUZP153MB144472E667B0C1A421B49285BE92A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250517161407.GA30678@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|CH4PR21MB4265:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6af27893-4ba7-44db-fe94-08dd96f11ce1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?u/3Bn0JTY8dbdX5Q5EGlItdwb5D5Oh6xY/zEOeWZ11IPgFKX/Zieq7F6YrBK?=
- =?us-ascii?Q?MHA5q0lXX4rDCHy4CsHNNE0ypthzFN98l688+kL5rdWPqVoLcBG21F2SZf7a?=
- =?us-ascii?Q?+UFNIy2QAxPt+AxRMf7biSFVmNQZpAcs8q9t9+ysTYFZC5I63pVfO5aS9uGe?=
- =?us-ascii?Q?KXq9D6xVpJscTc20JdJSV+VWuI0PFRDQ734PxM7we6mrz0QEiF0BbkPXtsD7?=
- =?us-ascii?Q?jOVNvEq2pjBxjsvMWJZE84e4QNSycgrzLBVfjXg0E4ypKci0dy20KOPR1T7+?=
- =?us-ascii?Q?rcLSytiV2SLQg2ebX5eS9bIy7tY4kIIXHBVY+5Er6t48wpu3ZMIw3saWPibu?=
- =?us-ascii?Q?4o7tAjRSUnGkEvlK+rFo5rZDgczEXFJI7pEKEORwefXgQEsrATm5NV1I+dJr?=
- =?us-ascii?Q?YIiw9mbn2mmt/jUPjY6G8SQaahYjG8y2pEgbNb9Qp0a6av6gpW94phA3YKmS?=
- =?us-ascii?Q?gdqiPJUqZPlZKLZFjIKkn2Om+m8yyIl/rrhvwKpArXbmgVso03k2IJR3+vJd?=
- =?us-ascii?Q?5svJZiyHkmI+0G1UQ+af77JAT82KPvG+/QXGcJAkUfVJgZGjYa7ZewzQp6IF?=
- =?us-ascii?Q?v5voWteuycrhGJMv58SNTRZniP/QjnXT4qisRoMzsmsHMA3sD8IwXbMDPswt?=
- =?us-ascii?Q?zxGCoBVgmSEDtqVaTVTSu1N/JIvMGFj648xhqYAc1aX5Br3b0Caq7gyEy9Pd?=
- =?us-ascii?Q?c+NrtVrD1aycByOT4vMQSey526FC+SSJomA8dE0KMlkIR/9UzwfW3l8joEiP?=
- =?us-ascii?Q?jpxXfvtHWm1XyKW66WigruDfVxZa5IzGNrD9PNsOlH6RrfEks6SwRzbn6Qj2?=
- =?us-ascii?Q?2KOzQiTD8T21NPupefQBXRizIgraNj4+A816fxzSIGPqJ8I4VwBEtfbj6NvK?=
- =?us-ascii?Q?v8teK8a1Kjgl/kSuEKI1sx6ZjdfnDguLk3DiIxoDt3JMjaSipfmJYyPVNHiD?=
- =?us-ascii?Q?2Awea7HBQ6jvzSOXrFdNQhYe9L18zF9dvOdf51sbG9lOYG0apg9ODt8bp2hg?=
- =?us-ascii?Q?lixJkt4ALw2YGARRNP3tYyCp8h/Mu3NLYeeUe+BHqi1Xlq++8KzsUnN6KFkp?=
- =?us-ascii?Q?1kRGY2iS8Gsmsf15eUjySzQiZqkXzt2hwPBYpHOuUUAoo18q/37qfH5wNqc4?=
- =?us-ascii?Q?ldh8cy5S/bXlv+/mVcJ0kXtVL9WffdMtQn4MvMYd4EsFBI+gqHwfSLT2zA2q?=
- =?us-ascii?Q?922+gfk2Ima6/h8ya17H2nkBloQIsBFXSc/GugItW2BE2WceOWw1mjdbD5IO?=
- =?us-ascii?Q?fdAv9H7HxeaT2oOMKHki7AtqXUy8dINouM7SkY1mPnYIFWGhIDv1PG/u6dCo?=
- =?us-ascii?Q?MuoXCE2AyiL7Ad9hM2NMPEWky65xDdK79PMNM0cFofArA+aOPY8g1XKrSe3w?=
- =?us-ascii?Q?7b2WCWzchqOkELFt6gMuEhu9MHUQy12rTDBzVoCpjW//EIEhGMzdagP1cEp8?=
- =?us-ascii?Q?IC+cJXtWC6lW6rAGK5ZRdLqE3bONQIizgqvFYKYgOA062YRzM2rshA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?emnRnw8a4EuunRFDdaSOouhED6D88BWShR/KH+BQxCZcpzxfTYc67mRqH7l6?=
- =?us-ascii?Q?Lb+BsyGvJ6aw+DbSzXBDb7CGR/1KMCR2Qvf6w/NDp7VH08RX+G6xtrx+1ArZ?=
- =?us-ascii?Q?kf/D/D/+xfHQ+KSjX/7Q/k5PXI/N9x7eJhJXuJoZQ2g4E3VNDuexsMRXWtHT?=
- =?us-ascii?Q?OdzcVlduM7vUXOW/8yOVg9P56qACXwPF+KVwI0A4DUktFDcltb19fzqIdg0m?=
- =?us-ascii?Q?N0x9xNAGDvlz+NOooI6j09ENlRouw/y7HdrhlCQ2DqjQvmjcjHDSXgvwoSfu?=
- =?us-ascii?Q?ZLFibr5x0ueKpBNa/RiEXoTi/W1abwRGLRLDGCUntQbp8R+lnzi9V7X7usus?=
- =?us-ascii?Q?QjkRWjXt/juL/b0UoMUflzXFguLKefJZNpoNGOC0RdpNWLBBmt9WuXE8Npqk?=
- =?us-ascii?Q?q3s8lmKOWMHc09TvBebAJrW0/0LvzA7mtXmvei6soWrKvKtw5BKy2i4W+ns4?=
- =?us-ascii?Q?CuXtnvAFagiBiMiCEc1E35EmbmsZDXklI0WMBG+zAlQ1YDs5b0jEpLbSZrGZ?=
- =?us-ascii?Q?bWCnks8I840lTc7Ueh0a4cLQzl5V/fDWPH5nquAf5zmjppi5ZNQhANKb0zyw?=
- =?us-ascii?Q?o88NsME4/NHVhbmzG2yL2bJDXdWUHvu6qpt8/9uSvgaEP/pJ/DRFkuZAc0yR?=
- =?us-ascii?Q?pr2vFkVJCyvOrb/dFTTDht+vpXKt0JMOy9g4AQjKPHx1ES2sOcwfUhPgXjW5?=
- =?us-ascii?Q?AwjxXci52PcN7gnMhVFQkroIG0vmR2Ip1BOIPzBwFKEkzeXXIng7x648zycf?=
- =?us-ascii?Q?3KLWjyHdn2ErMx9gWtms6zqAvJJ0z33P8/Y0gxcCscWjZYgiNGeBv+/7Cx9v?=
- =?us-ascii?Q?E9+4Lsng/FfJdXz9KziEKQ3kYrQ246wr+BuGd14weaZ33gvtTi8Y+ehlr3SN?=
- =?us-ascii?Q?D2DrD0t7C6OhCijY1peCZojsLYrHjuiPns79+HPlbiGS6BLiswSlRS5WO8l8?=
- =?us-ascii?Q?vuMm4/TZtrewjU5jCstZtuHNFeHWFf+QVWNTqqDjJ0RtpVWiRo0S4FMoxhai?=
- =?us-ascii?Q?jCCYOLIQVQ7wv884ARdYbBW3m74IAAR5G2wihG6YlOLKa4xXKfjgPs2Zo5m6?=
- =?us-ascii?Q?fnoZpu9bcUN7NFHQIBrfxCZ9+4+LI7a5PEU6gE0e2pxeLXnKJiQ2MFGFb+El?=
- =?us-ascii?Q?df5PeMGvi3Ceu/JvwSJH/eJrOenFOQJHmt9Ha78Qmg6kTQlzphtiKYL4cOZn?=
- =?us-ascii?Q?TwVjKAnjFmgwFzI2F5cQNNOXZUGk9YyNd6r32SyDzlhKgmd85gJXGdJIoXiu?=
- =?us-ascii?Q?3eHOiACN5ODAR3PAqdSGGedgNUczSjRwgX+6VhplU/5dECFUn61iw7Z42uvp?=
- =?us-ascii?Q?crAqp2jiwU0m8NdvDkALjUyOXDdeC/FhjGb0/LV+HYaIaSQ2Te89Tp8FOGDO?=
- =?us-ascii?Q?air9LOVUrM29hPnSnfl2aNi+jYF2QX2z37xzsIV5mI8oi8MsgRGYvRAmW4cY?=
- =?us-ascii?Q?B9an89HzdLr+uHn+PaYZ3xJAqndUtrVzeq6tdJX6LBGmPMVoPXlBd0bBjQmd?=
- =?us-ascii?Q?LedBMtjh7dCQG20Eler6WleEiCHGTOnaEatb5ivKedC6oqT0DMc5sLqKSfWZ?=
- =?us-ascii?Q?97Kuo4oliCYA2g9oQLntmjjypOFaj25mI7vrXXhX?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6af27893-4ba7-44db-fe94-08dd96f11ce1
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2025 16:20:47.6018
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Hb1YgeFt4UlFBXwciIUURkWoOBds5DZeGOhX5H2zdvq+9vrjHJuYnR/VNTrOaIGHVqzPCW5lyszYqeuKjBetMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR21MB4265
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-To support Multi Vports on Bare metal, increase the device config response
-version. And, skip the register HW vport, and register filter steps, when
-the Bare metal hostmode is set.
+On Sat, May 17, 2025 at 06:47:22PM +0000, Michael Kelley wrote:
+> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, May 17, 2025 9:14 AM
+> > 
+> > On Sat, May 17, 2025 at 01:34:20PM +0000, Michael Kelley wrote:
+> > > From: Saurabh Singh Sengar <ssengar@microsoft.com> Sent: Friday, May 16, 2025 9:38 PM
+> > > >
+> > > > > From: Michael Kelley <mhklinux@outlook.com>
+> > > > >
+> > > > > The Hyper-V host provides guest VMs with a range of MMIO addresses that
+> > > > > guest VMBus drivers can use. The VMBus driver in Linux manages that MMIO
+> > > > > space, and allocates portions to drivers upon request. As part of managing
+> > > > > that MMIO space in a Generation 2 VM, the VMBus driver must reserve the
+> > > > > portion of the MMIO space that Hyper-V has designated for the synthetic
+> > > > > frame buffer, and not allocate this space to VMBus drivers other than graphics
+> > > > > framebuffer drivers. The synthetic frame buffer MMIO area is described by
+> > > > > the screen_info data structure that is passed to the Linux kernel at boot time,
+> > > > > so the VMBus driver must access screen_info for Generation 2 VMs. (In
+> > > > > Generation 1 VMs, the framebuffer MMIO space is communicated to the
+> > > > > guest via a PCI pseudo-device, and access to screen_info is not needed.)
+> > > > >
+> > > > > In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info") the
+> > > > > VMBus driver's access to screen_info is restricted to when CONFIG_SYSFB is
+> > > > > enabled. CONFIG_SYSFB is typically enabled in kernels built for Hyper-V by
+> > > > > virtue of having at least one of CONFIG_FB_EFI, CONFIG_FB_VESA, or
+> > > > > CONFIG_SYSFB_SIMPLEFB enabled, so the restriction doesn't usually affect
+> > > > > anything. But it's valid to have none of these enabled, in which case
+> > > > > CONFIG_SYSFB is not enabled, and the VMBus driver is unable to properly
+> > > > > reserve the framebuffer MMIO space for graphics framebuffer drivers. The
+> > > > > framebuffer MMIO space may be assigned to some other VMBus driver, with
+> > > > > undefined results. As an example, if a VM is using a PCI pass-thru NVMe
+> > > > > controller to host the OS disk, the PCI NVMe controller is probed before any
+> > > > > graphic devices, and the NVMe controller is assigned a portion of the
+> > > > > framebuffer MMIO space.
+> > > > > Hyper-V reports an error to Linux during the probe, and the OS disk fails to
+> > > > > get setup. Then Linux fails to boot in the VM.
+> > > > >
+> > > > > Fix this by having CONFIG_HYPERV always select SYSFB. Then the VMBus
+> > > > > driver in a Gen 2 VM can always reserve the MMIO space for the graphics
+> > > > > framebuffer driver, and prevent the undefined behavior.
+> > > >
+> > > > One question: Shouldn't the SYSFB be selected by actual graphics framebuffer driver
+> > > > which is expected to use it. With this patch this option will be enabled irrespective
+> > > > if there is any user for it or not, wondering if we can better optimize it for such systems.
+> > > >
+> > >
+> > > That approach doesn't work. For a cloud-based server, it might make
+> > > sense to build a kernel image without either of the Hyper-V graphics
+> > > framebuffer drivers (DRM_HYPERV or HYPERV_FB) since in that case the
+> > > Linux console is the serial console. But the problem could still occur
+> > > where a PCI pass-thru NVMe controller tries to use the MMIO space
+> > > that Hyper-V intends for the framebuffer. That problem is directly tied
+> > > to CONFIG_SYSFB because it's the VMBus driver that must treat the
+> > > framebuffer MMIO space as special. The absence or presence of a
+> > > framebuffer driver isn't the key factor, though we've been (incorrectly)
+> > > relying on the presence of a framebuffer driver to set CONFIG_SYSFB.
+> > >
+> > 
+> > Thank you for the clarification. I was concerned because SYSFB is not currently
+> > enabled in the OpenHCL kernel, and our goal is to keep the OpenHCL configuration
+> > as minimal as possible. I haven't yet looked into the details to determine
+> > whether this might have any impact on the kernel binary size or runtime memory
+> > usage. I trust this won't affect negatively.
+> > 
+> > OpenHCL Config Ref:
+> > https://github.com/microsoft/OHCL-Linux-Kernel/blob/product/hcl-main/6.12/Microsoft/hcl-x64.config
+> > 
+> 
+> Good point.
+> 
+> The OpenHCL code tree has commit a07b50d80ab6 that restricts the
+> screen_info to being available only when CONFIG_SYSFB is enabled.
+> But since OpenHCL in VTL2 gets its firmware info via OF instead of ACPI,
+> I'm unsure what the Hyper-V host tells it about available MMIO space,
+> and whether that space includes MMIO space for a framebuffer. If it
+> doesn't, then OpenHCL won't have the problem I describe above, and
+> it won't need CONFIG_SYSFB. This patch could be modified to do
+> 
+> select SYSFB if !HYPERV_VTL_MODE
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
-v2:
-  Updated comments as suggested by ALOK TIWARI.
-  Fixed the version check.
+I am worried that this is not very scalable, there could be more such
+Hyper-V systems in future.
 
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
- include/net/mana/mana.h                       |  4 +++-
- 2 files changed, 19 insertions(+), 9 deletions(-)
+> 
+> Can you find out what MMIO space Hyper-V provides to VTL2 via OF?
+> It would make sense if no framebuffer is provided. And maybe
+> screen_info itself is not set up when VTL2 is loaded, which would
+> also make adding CONFIG_SYSFB pointless for VTL2.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 2bac6be8f6a0..9c58d9e0bbb5 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -921,7 +921,7 @@ static void mana_pf_deregister_filter(struct mana_port_context *apc)
- 
- static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 				 u32 proto_minor_ver, u32 proto_micro_ver,
--				 u16 *max_num_vports)
-+				 u16 *max_num_vports, u8 *bm_hostmode)
- {
- 	struct gdma_context *gc = ac->gdma_dev->gdma_context;
- 	struct mana_query_device_cfg_resp resp = {};
-@@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
- 			     sizeof(req), sizeof(resp));
- 
--	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
-+	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
- 
- 	req.proto_major_ver = proto_major_ver;
- 	req.proto_minor_ver = proto_minor_ver;
-@@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 
- 	*max_num_vports = resp.max_num_vports;
- 
--	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
-+	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
- 		gc->adapter_mtu = resp.adapter_mtu;
- 	else
- 		gc->adapter_mtu = ETH_FRAME_LEN;
- 
-+	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
-+		*bm_hostmode = resp.bm_hostmode;
-+	else
-+		*bm_hostmode = 0;
-+
- 	debugfs_create_u16("adapter-MTU", 0400, gc->mana_pci_debugfs, &gc->adapter_mtu);
- 
- 	return 0;
-@@ -2441,7 +2446,7 @@ static void mana_destroy_vport(struct mana_port_context *apc)
- 	mana_destroy_txq(apc);
- 	mana_uncfg_vport(apc);
- 
--	if (gd->gdma_context->is_pf)
-+	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode)
- 		mana_pf_deregister_hw_vport(apc);
- }
- 
-@@ -2453,7 +2458,7 @@ static int mana_create_vport(struct mana_port_context *apc,
- 
- 	apc->default_rxobj = INVALID_MANA_HANDLE;
- 
--	if (gd->gdma_context->is_pf) {
-+	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode) {
- 		err = mana_pf_register_hw_vport(apc);
- 		if (err)
- 			return err;
-@@ -2689,7 +2694,7 @@ int mana_alloc_queues(struct net_device *ndev)
- 		goto destroy_vport;
- 	}
- 
--	if (gd->gdma_context->is_pf) {
-+	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode) {
- 		err = mana_pf_register_filter(apc);
- 		if (err)
- 			goto destroy_vport;
-@@ -2751,7 +2756,7 @@ static int mana_dealloc_queues(struct net_device *ndev)
- 
- 	mana_chn_setxdp(apc, NULL);
- 
--	if (gd->gdma_context->is_pf)
-+	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode)
- 		mana_pf_deregister_filter(apc);
- 
- 	/* No packet can be transmitted now since apc->port_is_up is false.
-@@ -2998,6 +3003,7 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	struct gdma_context *gc = gd->gdma_context;
- 	struct mana_context *ac = gd->driver_data;
- 	struct device *dev = gc->dev;
-+	u8 bm_hostmode = 0;
- 	u16 num_ports = 0;
- 	int err;
- 	int i;
-@@ -3026,10 +3032,12 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	}
- 
- 	err = mana_query_device_cfg(ac, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
--				    MANA_MICRO_VERSION, &num_ports);
-+				    MANA_MICRO_VERSION, &num_ports, &bm_hostmode);
- 	if (err)
- 		goto out;
- 
-+	ac->bm_hostmode = bm_hostmode;
-+
- 	if (!resuming) {
- 		ac->num_ports = num_ports;
- 	} else {
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 0f78065de8fe..38238c1d00bf 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -408,6 +408,7 @@ struct mana_context {
- 	struct gdma_dev *gdma_dev;
- 
- 	u16 num_ports;
-+	u8 bm_hostmode;
- 
- 	struct mana_eq *eqs;
- 	struct dentry *mana_eqs_debugfs;
-@@ -557,7 +558,8 @@ struct mana_query_device_cfg_resp {
- 	u64 pf_cap_flags4;
- 
- 	u16 max_num_vports;
--	u16 reserved;
-+	u8 bm_hostmode; /* response v3: Bare Metal Host Mode */
-+	u8 reserved;
- 	u32 max_num_eqs;
- 
- 	/* response v2: */
--- 
-2.34.1
+I can only see below address range passed for MMIO to VMBus driver:
+ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
 
+I don't think we have any use of scrren_info or framebuffer in OpenHCL.
+
+- Saurabh
 
