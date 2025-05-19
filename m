@@ -1,65 +1,92 @@
-Return-Path: <linux-hyperv+bounces-5556-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5557-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AB95ABC4FC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 18:55:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3129ABC5E7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 19:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93F087A24D2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 16:53:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A9E8161CD2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 May 2025 17:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB7A286406;
-	Mon, 19 May 2025 16:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F8C8210F65;
+	Mon, 19 May 2025 17:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P7L81j2k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2vW3R9q"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DACB28313B;
-	Mon, 19 May 2025 16:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C56189F3B;
+	Mon, 19 May 2025 17:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673697; cv=none; b=T9a83Y8sEhY3MuHKwgWo1yjScx9Tuz/zRtzf6Gy6T1V4q+4ViPkoa3sc37bd8EXDineXK7vLKyhBzo0JpDdz/LyMNGECsXPvSIUQvkDVae6N5GXLQyt9xx9s9zRrL8bmZKu9tv3fzIfIPEuTcm5tEZ8JFcdUg1OBbwSUsqF1WJ4=
+	t=1747677066; cv=none; b=o/h6M5nnZsC/WD9pALvm4wWWrr4JOhTbqSRnL+/iOTJ5rUi+c8QUE/BT3Ckj9fl0h6naXqXEJtxxOp6XC0pv0inRjT//2TbUiVr7IFo6sOq7eWeL3Xc5S13gJJKWUz27Qlhp8vHuXhn0/pQV6za5dZOLjcB8fK4tZpQJgIOEkfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673697; c=relaxed/simple;
-	bh=bW+o8oCViCCYXcAqVtY/0UB3qmmBvGj7Uz+FyS2bPSk=;
+	s=arc-20240116; t=1747677066; c=relaxed/simple;
+	bh=nKa4bHZyPQdUF/i6uNjxZLF1LDuKJHocPAQdDgqVICc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NmoODVSTbSWHTSj1COX/EIpuLoni7dFbaNa0SJKs0m6otLd0XsgSiJIRQ/WlNSZlVRX+PzkrY84jM2cmGsO4CymoyyrmLAHq20LGgZCON/BE3jX96uEo3o0VdNprx3TNGM7938Kr4hHYcdae95JsbFUJbpI7eQ7SevfSWK9fKKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=P7L81j2k; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 039812067864; Mon, 19 May 2025 09:54:55 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 039812067864
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747673695;
-	bh=wg6hvFqkqMq7BInGeV8wn3GSM9YWzn8YzNDbZ6ZxWFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P7L81j2kqiuVsDt0TAWtSv/U5ulAeQg6gOh08uzjdHgtJAOiPqYoDh2Aw2/qhJ3Dn
-	 4sgBCfookyA6OQNNJ/6NSR2l4ujeDjSZgAhgm8MSiVEfDzxk/TJLjFCRnpEumkTZX8
-	 Twb8s27sufQ4Go3mdGcrcax0JfCNhiMKQHBvaW8Q=
-Date: Mon, 19 May 2025 09:54:54 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZNSgLhrsXEVntGTzEGeWtI1+olX9L2WR1vhG6SFRfxii6y3yAPjSTMkaiWrD406YPQwBgK0fe2KixXuMMxNsPqjJMX6tiomxgFTlmgHM68ixmMttp3ld179bmxg9tulbrse8ZWiF39VAhil0MKiRDyb1+GBHrTjJromPjxEgkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c2vW3R9q; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747677064; x=1779213064;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nKa4bHZyPQdUF/i6uNjxZLF1LDuKJHocPAQdDgqVICc=;
+  b=c2vW3R9q3OVSmv9NpuNm7etcX9c5Qg/YrfWQqdZcJVT5TT3QN3I2wiFZ
+   9NCD9ZqauKYP654TNDkPCAMI6OApe0WPAVf5z3uceDEBOZRmU5LmmYEkb
+   Tr3XGvV6Qp9qRoSmMvK+1VbmbAesLs3csPHwpQ98kakBSMAdk3oaKSOmW
+   I62/Q9QI94F1SUAtMGnVTycAIooq5jhKKnjxgnNxlrNcHFqYs9XiDCQVt
+   sx+vR1j6fBQ798y8H8nUVpJaN5Haj6RoFCnVTy8+eSdGsjfcj7uV/8p+3
+   9+i32vT8iGDJAG/eDyIDQ4TJJzwvF/T0OynYtSgu/bHX4i7g32F0aC2hY
+   Q==;
+X-CSE-ConnectionGUID: RBbbY0eRRQyuyz7V38bRiQ==
+X-CSE-MsgGUID: uetXqAtRTkay86FK0Q0I8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49493458"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="49493458"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:51:03 -0700
+X-CSE-ConnectionGUID: glWSRu+/T1+fFYiMbL4DLA==
+X-CSE-MsgGUID: FwYFkZhNQ1+Ss/Cy0nueLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="170471752"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:51:03 -0700
+Date: Mon, 19 May 2025 10:56:06 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
-	"javierm@redhat.com" <javierm@redhat.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [EXTERNAL] [PATCH 1/1] Drivers: hv: Always select CONFIG_SYSFB
- for Hyper-V guests
-Message-ID: <20250519165454.GA11708@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250516235820.15356-1-mhklinux@outlook.com>
- <KUZP153MB144472E667B0C1A421B49285BE92A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250517161407.GA30678@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
+ for Intel processors
+Message-ID: <20250519175606.GA9693@ranerica-svr.sc.intel.com>
+References: <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
+ <20250504-original-leopard-of-vigor-5702ef@kuoka>
+ <20250506051610.GC25533@ranerica-svr.sc.intel.com>
+ <20250506-pompous-meaty-crane-97efce@kuoka>
+ <20250507032339.GA27243@ranerica-svr.sc.intel.com>
+ <20250512153224.GA3377771-robh@kernel.org>
+ <20250513221456.GA2794@ranerica-svr.sc.intel.com>
+ <20250514154248.GA2375202-robh@kernel.org>
+ <20250515035338.GA4955@ranerica-svr.sc.intel.com>
+ <20250519152937.GA2227051-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -68,101 +95,100 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250519152937.GA2227051-robh@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Sat, May 17, 2025 at 06:47:22PM +0000, Michael Kelley wrote:
-> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, May 17, 2025 9:14 AM
+On Mon, May 19, 2025 at 10:29:37AM -0500, Rob Herring wrote:
+> On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
+> > On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
+> > > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
+> > > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
+> > > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
+> > > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
+> > > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
+> > > > > > > > > If this is a device, then compatibles specific to devices. You do not
+> > > > > > > > > get different rules than all other bindings... or this does not have to
+> > > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
+> > > > > > > > > 
+> > > > > > > > > Why do you need compatible in the first place?
+> > > > > > > > 
+> > > > > > > > Are you suggesting something like this?
+> > > > > > > > 
+> > > > > > > > reserved-memory {
+> > > > > > > > 	# address-cells = <2>;
+> > > > > > > > 	# size-cells = <1>;
+> > > > > > > > 
+> > > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
+> > > > > > > > 		reg = < 0x0 0xfff000 0x1000>
+> > > > > > > > 	}
+> > > > > > > > 
+> > > > > > > > and then reference to the reserved memory using the wakeup_mailbox
+> > > > > > > > phandle?
+> > > > > > > 
+> > > > > > > Yes just like every other, typical reserved memory block.
+> > > > > > 
+> > > > > > Thanks! I will take this approach and drop this patch.
+> > > > > 
+> > > > > If there is nothing else to this other than the reserved region, then 
+> > > > > don't do this. Keep it like you had. There's no need for 2 nodes.
+> > > > 
+> > > > Thank you for your feedback!
+> > > > 
+> > > > I was planning to use one reserved-memory node and inside of it a child
+> > > > node to with a `reg` property to specify the location and size of the
+> > > > mailbox. I would reference to that subnode from the kernel code.
+> > > > 
+> > > > IIUC, the reserved-memory node is only the container and the actual memory
+> > > > regions are expressed as child nodes.
+> > > > 
+> > > > I had it like that before, but with a `compatible` property that I did not
+> > > > need.
+> > > > 
+> > > > Am I missing anything?
+> > > 
+> > > Without a compatible, how do you identify which reserved region is the 
+> > > wakeup mailbox?
 > > 
-> > On Sat, May 17, 2025 at 01:34:20PM +0000, Michael Kelley wrote:
-> > > From: Saurabh Singh Sengar <ssengar@microsoft.com> Sent: Friday, May 16, 2025 9:38 PM
-> > > >
-> > > > > From: Michael Kelley <mhklinux@outlook.com>
-> > > > >
-> > > > > The Hyper-V host provides guest VMs with a range of MMIO addresses that
-> > > > > guest VMBus drivers can use. The VMBus driver in Linux manages that MMIO
-> > > > > space, and allocates portions to drivers upon request. As part of managing
-> > > > > that MMIO space in a Generation 2 VM, the VMBus driver must reserve the
-> > > > > portion of the MMIO space that Hyper-V has designated for the synthetic
-> > > > > frame buffer, and not allocate this space to VMBus drivers other than graphics
-> > > > > framebuffer drivers. The synthetic frame buffer MMIO area is described by
-> > > > > the screen_info data structure that is passed to the Linux kernel at boot time,
-> > > > > so the VMBus driver must access screen_info for Generation 2 VMs. (In
-> > > > > Generation 1 VMs, the framebuffer MMIO space is communicated to the
-> > > > > guest via a PCI pseudo-device, and access to screen_info is not needed.)
-> > > > >
-> > > > > In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info") the
-> > > > > VMBus driver's access to screen_info is restricted to when CONFIG_SYSFB is
-> > > > > enabled. CONFIG_SYSFB is typically enabled in kernels built for Hyper-V by
-> > > > > virtue of having at least one of CONFIG_FB_EFI, CONFIG_FB_VESA, or
-> > > > > CONFIG_SYSFB_SIMPLEFB enabled, so the restriction doesn't usually affect
-> > > > > anything. But it's valid to have none of these enabled, in which case
-> > > > > CONFIG_SYSFB is not enabled, and the VMBus driver is unable to properly
-> > > > > reserve the framebuffer MMIO space for graphics framebuffer drivers. The
-> > > > > framebuffer MMIO space may be assigned to some other VMBus driver, with
-> > > > > undefined results. As an example, if a VM is using a PCI pass-thru NVMe
-> > > > > controller to host the OS disk, the PCI NVMe controller is probed before any
-> > > > > graphic devices, and the NVMe controller is assigned a portion of the
-> > > > > framebuffer MMIO space.
-> > > > > Hyper-V reports an error to Linux during the probe, and the OS disk fails to
-> > > > > get setup. Then Linux fails to boot in the VM.
-> > > > >
-> > > > > Fix this by having CONFIG_HYPERV always select SYSFB. Then the VMBus
-> > > > > driver in a Gen 2 VM can always reserve the MMIO space for the graphics
-> > > > > framebuffer driver, and prevent the undefined behavior.
-> > > >
-> > > > One question: Shouldn't the SYSFB be selected by actual graphics framebuffer driver
-> > > > which is expected to use it. With this patch this option will be enabled irrespective
-> > > > if there is any user for it or not, wondering if we can better optimize it for such systems.
-> > > >
-> > >
-> > > That approach doesn't work. For a cloud-based server, it might make
-> > > sense to build a kernel image without either of the Hyper-V graphics
-> > > framebuffer drivers (DRM_HYPERV or HYPERV_FB) since in that case the
-> > > Linux console is the serial console. But the problem could still occur
-> > > where a PCI pass-thru NVMe controller tries to use the MMIO space
-> > > that Hyper-V intends for the framebuffer. That problem is directly tied
-> > > to CONFIG_SYSFB because it's the VMBus driver that must treat the
-> > > framebuffer MMIO space as special. The absence or presence of a
-> > > framebuffer driver isn't the key factor, though we've been (incorrectly)
-> > > relying on the presence of a framebuffer driver to set CONFIG_SYSFB.
-> > >
-> > 
-> > Thank you for the clarification. I was concerned because SYSFB is not currently
-> > enabled in the OpenHCL kernel, and our goal is to keep the OpenHCL configuration
-> > as minimal as possible. I haven't yet looked into the details to determine
-> > whether this might have any impact on the kernel binary size or runtime memory
-> > usage. I trust this won't affect negatively.
-> > 
-> > OpenHCL Config Ref:
-> > https://github.com/microsoft/OHCL-Linux-Kernel/blob/product/hcl-main/6.12/Microsoft/hcl-x64.config
-> > 
+> > I thought using a phandle to the wakeup_mailbox. Then I realized that the
+> > device nodes using the mailbox would be CPUs. They would need a `memory-
+> > region` property. This does not look right to me.
 > 
-> Good point.
-> 
-> The OpenHCL code tree has commit a07b50d80ab6 that restricts the
-> screen_info to being available only when CONFIG_SYSFB is enabled.
-> But since OpenHCL in VTL2 gets its firmware info via OF instead of ACPI,
-> I'm unsure what the Hyper-V host tells it about available MMIO space,
-> and whether that space includes MMIO space for a framebuffer. If it
-> doesn't, then OpenHCL won't have the problem I describe above, and
-> it won't need CONFIG_SYSFB. This patch could be modified to do
-> 
-> select SYSFB if !HYPERV_VTL_MODE
+> That doesn't really make sense unless it's a memory region per CPU.
 
-I am worried that this is not very scalable, there could be more such
-Hyper-V systems in future.
+Agreed.
 
 > 
-> Can you find out what MMIO space Hyper-V provides to VTL2 via OF?
-> It would make sense if no framebuffer is provided. And maybe
-> screen_info itself is not set up when VTL2 is loaded, which would
-> also make adding CONFIG_SYSFB pointless for VTL2.
+> 
+> > > Before you say node name, those are supposed to be 
+> > > generic though we failed to enforce anything for /reserved-memory child 
+> > > nodes.
+> > 
+> > I see. Thanks for preventing me from doing this.
+> > 
+> > Then the `compatible` property seems the way to go after all.
+> > 
+> > This what motivated this patch in the first place. On further analysis,
+> > IIUC, defining bindings and schema is not needed, IMO, since the mailbox
+> > is already defined in the ACPI spec. No need to redefine.
+> 
+> You lost me...
+> 
+> You don't need to redefine the layout of the memory region as that's 
+> defined already somewhere,
 
-I can only see below address range passed for MMIO to VMBus driver:
-ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
+Great!
 
-I don't think we have any use of scrren_info or framebuffer in OpenHCL.
+> but you do need to define where it is for DT. 
+> And for that, you need a compatible. Do you know where it is in this 
+> case?
 
-- Saurabh
+The compatible is not defined anywhere yet. Is a DT schema needed to
+document it? If yes, I am usure what to put in the description. We tried
+to not redefine the mailbox and refer to the ACPI spec. That was a NAK
+from Krzysztof [1].
+
+Thanks and BR,
+Ricardo
+
+[1]. https://lore.kernel.org/r/624e1985-7dd2-4abe-a918-78cb43556967@kernel.org
 
