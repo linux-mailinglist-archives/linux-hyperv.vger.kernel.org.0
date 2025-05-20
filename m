@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-5560-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5561-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 854C7ABCC4A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 03:32:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF103ABCC49
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 03:32:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 310A53A88CF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 01:31:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D95F1883B01
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 01:32:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E662550B2;
-	Tue, 20 May 2025 01:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75292253F35;
+	Tue, 20 May 2025 01:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="JYFahXKc"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="sOtKBDtT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2052.outbound.protection.outlook.com [40.92.19.52])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2026.outbound.protection.outlook.com [40.92.19.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D32254862;
-	Tue, 20 May 2025 01:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF25136327;
+	Tue, 20 May 2025 01:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.26
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747704639; cv=fail; b=dq0Qsvl341Ldgjp9NdlQ6i0X1fpzL2ypjxeOFYRTTd2c8IysBpEFcnKRxl8A//O5CxShTqeXBcDvFBAwisutuxpusuSw+yoITwZ2UxNBZuc+hTHanFp3vl0VYhU2WopzNY/cIgvBseMh25osQVuHakH9AsiRQaKFZCmqn/5hPec=
+	t=1747704717; cv=fail; b=FLeA1xaSEyX41Unu3IEUvMJH7l5pNgY3gslqb62bjA3HFJrP6rZHkUj0GAeKr/GmJDbCCrfPRpOrQJhvFAJngE/r7lez/Hvp4nBMhsS9mmjKePSCF/GurYsA2Ygw98zpoqWQmeEX+lFmSszzubyHjspirlsfR1kf0DUBUdAQ+mY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747704639; c=relaxed/simple;
-	bh=UCAfhhllTKdvfUw1+29i/Tm8IZVXm5v9ff1y8FGjATc=;
+	s=arc-20240116; t=1747704717; c=relaxed/simple;
+	bh=odwH7l04xPZIJHMHFvqkJClK99z3vTxrvUsKhc53Xp4=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fuvT0D2wEgxj0lryxFLh5znfRDRWi+AnqyMYXiNAH7JokdBa6/sYb0dey1nrdp9YE4QOS+ZXEUyF5ogXRaWZrj8F5Jl5TFrtTq16FpzFl8EyEQOH8sPr5fwTXsS2Xcuv7YNM1mXKVe9lUwvSeNjzzpH6XzuZ0jGS9c7/nOyF554=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=JYFahXKc; arc=fail smtp.client-ip=40.92.19.52
+	 Content-Type:MIME-Version; b=f9YurX0uvfuwg6cSulCd85idj9JBCoraxvBmJHO5ck1ERbRI56bN828xC+S7aVLMHdIEGzvy32NsmxpzHpUJBEGPvYHDyIrng5xX6H7xXReEZL90WnFPFdb/6/1A91C/gzUk27ZDVVvwq426swBGtbaSYmdQCRtKkGSXxn0wqKc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=sOtKBDtT; arc=fail smtp.client-ip=40.92.19.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=llBcw2lGO9flBbIvvf1ajqJfzwslBMk3HiSQQDqp6aXikACGtDSYLiug9yF7cEtE1foyMOhaL/At2PIdXQWZiSKoU1RwPjCFsy+KJGNfdf6mg1weQykPjFSZQ6ozn7UHaJ89rQarxvovyaArbRe+BTimOyv3SiOdmARXuY8GHUOb8ygEGtvKHd39940hMsZQhikA8Y1zKoc2aT4nhr66t32a06vut4XfnjpBLRGLUoYSHf8S5S5U2Mwxxa8ELv0XMD8TJFSb45bfZTXCoOoVVeG+q8PSrVUumyMZIobOETDjg87EDQBG4MfENK4LOWHeMbZZYS8n97m/dD+VdguuwA==
+ b=eifpRQ9FFkbAi9/k/vuMcenOETTYHdBbrf9mLfvRoi/RnfIKd80+XBSiQ6YQ13NKZFQY3aBcdphapT+hraxdR3oQA0hIMlnZ0O7Vl6q9302rnotjCa8ze9DkAArzcxeypOLm1SnBtoTXbqDYS4CvwKWqD6x/hqAIWobbD4ijczwSezqJqH+MSOGyunbbHMboZiXase4y6Ur5DqnkLFaISaGNu00wS+oQX8HAITBnrJpduudFosbwhcZSRNmsy+PKt+KX98Dg9z4sB1VYAq8KFC/uMpOAFjOul81cVnqx2Sx39zo44FwZUBAefVxWDoyJVzyEn0drGpuraRaLx2IeaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0qPlNTVLqRHc6K8nWyyWb22comJgPsfBL1KcbYrpoK0=;
- b=qwJtyJ8Rr+ixCZr/KTLAAHaAV7+GHidfX1KiZpUqPgfKUtQrKKpS2gEaaVf2KN7MtuKfXGUtsTvsPjQR+QzDv0twkadjfZc5PkmeMkPduubmEoO2N+7ekkAILgacxCSXuD2jfh5Ds6mz89f4L7FrUgDaGKDAZR5kUAiYEjhXaH+0pGBX2NrIuKeBCbXA5naOepHXBx4Yb8SjlHDwjAyxjZ+uNZI32dXOkf9/Ky4LCJSAORbyHu3/gEPocWcso7eZ764rrfWx7ItxoNlZ4FGQHV4ADTHNAhZvtNREgSIW+3FSPPXE3uvXl9giIo99Cssd8Bupg9NG6OE+sfPX1T01WA==
+ bh=vzPNJvqm59vMSF7tAoeei6O89sqgifDHZSCtQAmSczE=;
+ b=CFEUADqFcrRPkZr8FL5ccbDfNw5zIRhXaLkI/BvemyQuZYONG7QeDXsdK1eAblV+hYu5ORDEmhsVFBUPuJgg8/0XUvtvMsByPnE1ILNhw0Rn5MsJraUETZ8mhi5FrrlyUCH2ySnKUBYN1XlnR9gPu9HDOvkdJWlZI+84l6t/0HzvIsUGCY9+4SbkRy3kLHyYiXHXarcb0R7RDCdQuCd56Wlk5YWSYMgGPeA629P73DbykvycP107hE1K5ijt//MRB6utiMWKWQQ66MtkjrURuiaR6lOsr4D1PNMPT83xyc8qpcFD82uSKulyatLMKyoKBR0I8D0PMczrl/6S2QS0Ew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0qPlNTVLqRHc6K8nWyyWb22comJgPsfBL1KcbYrpoK0=;
- b=JYFahXKcVoInB8UyptPtmsRq+8F8a48QEwtQJSx6HlKaPfTHyqCz7J3yNH/rPoqhtEX7H4+F4Nla5lJ5BBd+Q3JR3gs2rYSLauY5ywJ4sC0Poo0RYREGS/wWdMzg7O0jFOiAotBq3MmgoV72/MjUFIAODqUAo/r8HHC90mPF9m3VQM3oft1ytcSIzHB0mPulO/XzNEHOENx7gRntK2QmamO2UnAzI1+q0t3Gy+9sdOqNDOo/M4qyFuhjOpY0hfb30qGj1eTojYobFOjgZDrcBVPdIhqnRSFMWumKYL98MNRjFLircU2Ofyct7XofyH5jYBg06vqwL2GX8gBhnnBiIg==
+ bh=vzPNJvqm59vMSF7tAoeei6O89sqgifDHZSCtQAmSczE=;
+ b=sOtKBDtTPFMqhg4Vsxu8eHfN/qQ0vYe8GdIeN2rtYuqvOzWRHB81xjT6pFsP1LTl9zMjy1IMZ7XAZByWgLux2jSpOLOFDQ0nWxofe7QcZZ3SdATPHX9idvDG13O0NhosbpksjNtC9Igxymy+S2gyFFFy68J6gfCWXJ/w5Rl5521U3+CBjdCz50ITwX8r4vfFILnb3K++Lrz3P9nGa9Z6UwrJR3hhNndUhFOmJwpSwPiSyPiHzcfEh09R2S/46edBHvITtjajI27d1g/W+9u9BnDPTB+IPtbbHuV4cUi23sKiyveMV7O3ajLMhp7o/idKvLYW14A2d5jKP+ZrAA5CTQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by MN2PR02MB6735.namprd02.prod.outlook.com (2603:10b6:208:1d7::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.16; Tue, 20 May
- 2025 01:30:34 +0000
+ 2025 01:31:53 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8722.027; Tue, 20 May 2025
- 01:30:34 +0000
+ 01:31:53 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, "x86@kernel.org"
 	<x86@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -67,74 +67,71 @@ CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Saurabh Sengar
 	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
 	Ricardo Neri <ricardo.neri@intel.com>
-Subject: RE: [PATCH v3 09/13] x86/realmode: Make the location of the
- trampoline configurable
-Thread-Topic: [PATCH v3 09/13] x86/realmode: Make the location of the
- trampoline configurable
-Thread-Index: AQHbvF8B167Wsf+rMkSCm0MmFE/4aLPa0xQg
-Date: Tue, 20 May 2025 01:30:33 +0000
+Subject: RE: [PATCH v3 10/13] x86/hyperv/vtl: Setup the 64-bit trampoline for
+ TDX guests
+Thread-Topic: [PATCH v3 10/13] x86/hyperv/vtl: Setup the 64-bit trampoline for
+ TDX guests
+Thread-Index: AQHbvF8Bj8ddcpulH0C1TkRUpTojIbPa1OyA
+Date: Tue, 20 May 2025 01:31:53 +0000
 Message-ID:
- <SN6PR02MB4157B62D4DAB55DBFDB72315D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB415740783351D43FDBFFE9CCD49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-10-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-10-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-11-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <20250503191515.24041-11-ricardo.neri-calderon@linux.intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN2PR02MB6735:EE_
-x-ms-office365-filtering-correlation-id: 9c7da805-d9e6-46fa-1760-08dd973dea7a
+x-ms-office365-filtering-correlation-id: d777e359-9846-456a-73e3-08dd973e19c7
 x-ms-exchange-slblob-mailprops:
- Z68gl6A5j28Dg8hDNbkP9M7l+NSvtbXKZ1t6tqR8fkA+hM6LaU//1DXxz6AHs0CxSHtwAo4sV/lq4iqaGr6p9g+YDKlSyH6YjhHF+lagkieK3D+dFZOaaiXV6GtksVA5qNcAxeUYtEsWj0oC868wGbbUfeYdaerOyeMt5dg5ZpogHPWp/sxGd4Id7JYvQUIxLSj+/X2sK/0uu3HgRMZeKUWuWE+r5LaQ6/VlVg6Emh7Ej0DkmpgTx0duJ//dV3LEKndRu8x2r28KJnCGXfDphFkM92WZJbcS0gjuVs7WKAAyq1jOqOGjOMboq0HJ4FKPe98iLR7V7yCZAzG47mOgopxluDwM4NqnhSDeKNADVmNDQo82NuXMTfvxo6lQ1C9+ZIPdE+h/eHDilWXbK5LRRoTPNJjpBxalTcRyrb4PenZ7FYoJeWYt5+S/IKn2ckxCeHADWJeqj+l2zRU5bIcCu4uHPWuFH2/UdNCnVZ62BCdQhW6ECMC9C350mceWoI/n3c2LnrEV7VKJ+wKCXTew5n/K4b7Eeu1qP9RV8jKHW0iVtoVmNuu6N2/vMw0xatcAvJr4kh8I46V1DgFFV274MihA7LXJwEEMDyeG/g3C4v2fETSVt3Jp+7Ng9wx93UWR2qZWvTLvpaaZHIJDi49Y50x7JQFWns4n7YJ2MrZfxFqNYfynU7/awegRFTQix2LUdKFFRMVm+yy7NFEsLpkVtykZLeAimOTTfaNcInNrvvPI1XkExesqsMRnUd3a7A4GN7xNyZe1zcHXgwValjqR1Rf8REaQJBlmNPcv9WsJ31aEIuzhSQHeFSHnrT+Htwnd
+ znQPCv1HvwVu6ov8hlKZu5ytU8AWxKlxFEWWI5kjZBMDrsmtOPkGeSykdaTnDNakDwn1AUr0i6O4oSZiLyd7qKYERgRUX6BL/kicOBiu5mk+0qeoSnSFzGH2+DOggJ1O7QVbYCGHKU01HUbDEOGA4ZkemBQFdNJzUjoldpC1jKNob6snwqg4EscgKttOJPzm7C/CbyXDwOH9ZoDABIpO+rEB1xk8hQz0FxaBIbNQu2L+HSu10OrG8MxO8cEa1g0iE5nphmsyWYY/eJ+6PAm2xpy6oD2kP8yhD/oWpx9Tx7rTjJP7Q60GLJXCQ86u3T/6yqJHF2piZKkwehiXLw6H9p1uUi4B/sfdSmVb537jYPZjlRPpq37kvUM52V6gx/wHi/g0PxRyZQjB+cUdJfGC7S3r49E6pUDXVIJP2FiNoBp3gfN2fBf68wk0jlS9C/5wZN5qHOz/21xOX4Ckox3itHWpdOgOC8LKbW0WSS1eJt9MKcbFgZZueVWmiVrnMyZJ0SeBgrC6EbOEW8cxZPoxdSwFWK7w8nL0zXWMJnCVmgFnVI26fL0iBkbyRjI3EevI65v2FuQx89SeKAYdO+dQqaBt38KklvhgvSA2a3nbnrxfcpFV0qHNU8DvoSF80kIE0VtmPqf71jJ3vQQpq8kqGl7sGEA80s5loRR+r1qotAP2YbozQLvH5MALN2mAvCBP8xqoWKzHAOUX7sfH6woaml3VnbjGp8a8zXz5IS30AcT5WEXw6o0VIKxmirav2CHWs41rx0VXia4=
 x-microsoft-antispam:
- BCL:0;ARA:14566002|41001999006|8062599006|19110799006|15080799009|8060799009|461199028|3412199025|4302099013|440099028|10035399007|102099032|1602099012;
+ BCL:0;ARA:14566002|8062599006|12121999007|19110799006|15080799009|8060799009|461199028|3412199025|440099028|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?zH0IQpCaODDExoNpsBWxeHFTTYJxI5+owBQdX1ETOWYXY7m9EKwTadn2hHpk?=
- =?us-ascii?Q?PKntco4sbMM4IOJntJZ/cmE7Y+yaC73qyE1t90/IuHiW5P8rjZtpdjPMnw0C?=
- =?us-ascii?Q?pxg49nc/+pfSI6qWUR/MUYNF/IqDCxsfatw/hTEHRd3Zrc78SA5t8dFIoDyp?=
- =?us-ascii?Q?aLQYJE3blu2STzKy38MDCM3xiH5kFQnXlYPQNrhb9/u0gZts78DcI2gSJSiP?=
- =?us-ascii?Q?xUcJVqAdTDAvPhMAtq1jqY6f8uUX6l4f2w2WSEifflyGipKGZKNypReb7P3J?=
- =?us-ascii?Q?uOl9LWI7oYhEsiUWn1YjXTHtD8dLwypeHVJ+NlUyX3MH5JtwyJMA1mv2kIDt?=
- =?us-ascii?Q?lliwnHvWP7WSc4lGb6XRtRWitjE3BaY2dd+8K6btGyEJpO0OVnRJJMMos6dv?=
- =?us-ascii?Q?P++ftEYjVcbZ//YWgj/5FaF0wjaxZuuS11C1gWkz2ZZAj92G+EVYUf2HKret?=
- =?us-ascii?Q?utK8ejz7V3W9FRpn0D2c5a58d5QUAtCpCwq6cU9eEcxiGzvfVarCWzXnksHs?=
- =?us-ascii?Q?+Yhcx8k9HYNzAiktvFjk72kA2IgGYGyc6Y3irv8G4BNDRO2QcPfmwh96nflt?=
- =?us-ascii?Q?qzCFpTRNUmXXUlt702Ca13uL/CoR1KYBdGFwsgslZVnUYZwbAjGtu2cFcdRK?=
- =?us-ascii?Q?brPlOU1vpdoTzWWELvbn6M8yfMauK6heXqPcRQuQKpa379DPQ8kdNN6N9gGA?=
- =?us-ascii?Q?dI8htPISCjtDDch8QTRFerg/PzgKUeZbAAJZbtuyqzGnjPOYvpKyNc7DfeQ+?=
- =?us-ascii?Q?d2qzC0xIvcB+pi2Ux7uWkuLAcwcsexOVE8RhQxO/hDShc+S9TbgO5iz0+b4K?=
- =?us-ascii?Q?7SuzLE8Rn0PZqtkITwQBQQpS1xY0nEP9pSfjEPvSEVL0f+3tXfpRH6FLgJCk?=
- =?us-ascii?Q?Z1/jHqEQD26Sp89k/3C2Rii9oXT3E50858a/afbbhEbG13I6lsxMeLtBF+nd?=
- =?us-ascii?Q?GCuZ81xE5dRwvSZ6Py5SaZhMJJ/oPsN014fAOF/i56zct5FMfG8hOllWp+g3?=
- =?us-ascii?Q?SodcDcWGbQsQn00sdUKBnPtqaLh1vJ78UL5uu3ZA8M94dCOtE+MhyFFPScF+?=
- =?us-ascii?Q?1TuJxj8x11VyomyxryR9IdLTFh2Hvr+mE5R4AsZ54zQmYfgpgKZHvNiRqoL3?=
- =?us-ascii?Q?VV0KsZD5OzEKhDZdc5HNoegZ/cEsw6PjJ2n5HWuS8im0MyxqCXm9/1mluTxS?=
- =?us-ascii?Q?F64qHmDej9sQrsIBGkdgd71BEaBep6o6df/Kodbt18c7RFv8UYV64RhCORM?=
- =?us-ascii?Q?=3D?=
+ =?us-ascii?Q?1MzN5bJGE1uqrmRFnAJaKCE/tC0btItNaj2METui67XXf1WNy5HbmfB9pPPd?=
+ =?us-ascii?Q?4U4jbK4RMd6MSZ6QTsN66zB2DpAUA/nCzNFsZBpFV++fmaSpT+pPgLLA6KMd?=
+ =?us-ascii?Q?s6cf7oCufXF0QtfkUoZxpV/dt+FYiim3cG2ciZlQwjhNgW70FhSBQkPYn4+F?=
+ =?us-ascii?Q?Sr0JHc4G7jHXAh2NWivnM7zi0W6wycp1R2IR+s/ckf7VG/RJuYr6DYHu3qw6?=
+ =?us-ascii?Q?f0eS71P7AwvjXDgurQe5/ugEpv02+xu24Oq34dX5gceNJ5DeH/Ml+HHDZktI?=
+ =?us-ascii?Q?sKvty6rVva81hEM4kRtObQs7AyWsOxTZAqxIh+EyQfwzTPo4pPScgj50cH9w?=
+ =?us-ascii?Q?Z+eLvSfFbuuNhBPW2CbBuPToMKLBbmJI7dgihUEQ44OFsg3RCZF9OSUSCLmo?=
+ =?us-ascii?Q?ByuyYhgySczVMzQS4uAT2z40CKMxAq8diqGfwNpFzAMyNxElwfnKzNewg0vE?=
+ =?us-ascii?Q?VbcYebNijEYeIEG+kq+Q9ZRwEhDrwiS75QC50004AJ0ge879kCHQctDpEpK9?=
+ =?us-ascii?Q?fg7xDaqdkMXFmIfqMD5qP3f2dgDUodJR/1LsQNTrNbJIbeYsjaF6i/JdiGYw?=
+ =?us-ascii?Q?QhOa5eREw9RpjkZlZTqufrvlJlJlODx5INRIS21E8ZamwnOI2Cj+OZo6ZrWX?=
+ =?us-ascii?Q?pCEmBsn63Q0jX63cZL1PEg0Is0zmd8/ShZQSo2DxLNXwhAkqCmQoYMxng4Uw?=
+ =?us-ascii?Q?9oLVKMZS5Rv86j2Zjb5965w3jE7uSUXK97UNdPx9TMs/3FAY1HVxM+z2KCKE?=
+ =?us-ascii?Q?FKnyubX30WTDl6KaxDaVm+aug34+Rhw5c4cqv4UgthHgVm1nYwiUV5tBwWaL?=
+ =?us-ascii?Q?cNjvONpOxEZ7WDv/cWZX6Y3A2Gqw0B9g15/aa93R6OjkoJfw6vLZbOv6AyVk?=
+ =?us-ascii?Q?fIE1JMl4Jp5P4M9ROOf5u2y1jid/DBRAwcmMhxDjH843+4JKuUrLMMUokPmN?=
+ =?us-ascii?Q?L5szY+e8QYDRA+Y8v6KpnEuhQ4DZQQ2AOsiJocXdeG0K4wNbp7P4nkKPVlDt?=
+ =?us-ascii?Q?oropO4R0n5b/bI0j9CrM3GCQrirp+y1fczERafBL9PjgXIZZG/Ga77Rs+IK3?=
+ =?us-ascii?Q?KE59jm+GosCoVb+0gma680FQkFb9/tvroO+ljdsxKOWbD4HNwVo=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Axeh2VF+caz4DEPWVKMetlcpKdOljLXRNr4cvOfCmBfDZOJcDqp14tJQns3N?=
- =?us-ascii?Q?QOV89DrHQuCvwf05iqujqY2lyzjWNasyHV22WLPq3XcOlAuZCyyFA05xkClE?=
- =?us-ascii?Q?JR80xDXKz8aDSsBkLUvNBwi52Q6fEjmpu/8XhmtfGZhY9PuoLrohDTetpAQ8?=
- =?us-ascii?Q?fmLskl+xqfHbUjnW3nv/LWEZ/rRZrGSlTawNPkbT8dQRmWU0cI1pLrRrrQEc?=
- =?us-ascii?Q?xr7+Nb5u61swlyjL4JxA/mB0zx+xZWMZFSb9Cjcgt+yzPBCTmJJLLrRodbpV?=
- =?us-ascii?Q?WWyVLMFwfXAehNooVsBFzCsGFMicGgAWYH7HL+xjePPfXmyVxkQAnlkZ1P5Y?=
- =?us-ascii?Q?1Sls+ZtyMKUoHq5x6nwEZcCYSnpwG1j1cYXiSvFL+eql88N9VdKx9kaVbN5P?=
- =?us-ascii?Q?uFn/ZVgi4uKvuznWOSXAUKs+ROXnkSV0czSHI+P3J8h5/yrudThTp5IwTm58?=
- =?us-ascii?Q?kJpiQdqI+XA5nlwhKwheUhcZuNJRrUTeSq4FPxXKnIwh45dFnaD6TvM9agj0?=
- =?us-ascii?Q?Dg57IKITryf2FEQwylM6Ob+Zo5C5Onde9VY9nG/moXHWUadaYShAD7Js4sEf?=
- =?us-ascii?Q?6wSjdVP2DBBlMH9A5kJn9bEOkXyXXLCjsH1fBGmntBUMcipb8QE0NEscpMvO?=
- =?us-ascii?Q?h1gTHjelicSTy5KuuCl841ljJFcOoqyLmis+jU+UXG9yCAiJuWQ8GKIO+DUX?=
- =?us-ascii?Q?khxCjMsSvv1qHtYhzrYVXU+rof10bNi0AS1Rx6zLG99pg9Isi3xPYl4rlshT?=
- =?us-ascii?Q?hK5NhO3HbjO+MX7ecyBR/+hoH6+M5DimukcmHJOwsHAZ8E2ep/OpQnMVr5Xb?=
- =?us-ascii?Q?kZog4cm3SDR3IE2kq6OLVIbZF0utMoQi4QQaKY0h0+5871I/gyZEZvJHdBHm?=
- =?us-ascii?Q?LxP6Jyn85sHmHT+d7Sig+0Ml5kSNM6ADhx0umuTTRupyf8Ttvj5PC7nKcOlp?=
- =?us-ascii?Q?2t181cnQm1GY0DkTJ3cAqphUqGgQUlykIFUOJTAUt6UuHQFgGuyBTpmKKejP?=
- =?us-ascii?Q?Oj3Ks8RJvxBC+3Xxqt9bHj9U4j2+sF0PNUQ3mYgKHDnW1TqtUkN7ZSExLtkD?=
- =?us-ascii?Q?R8u5pK+xXeg7tq6ii/ndNxSsC3nHlfPCKuMpgZl/Ns7Fh9UmoK8uBxnfT926?=
- =?us-ascii?Q?FSgmiLt+Rq/ipIxgBH9VfnHR3Zu+UgT4M9RI6cml0ly7rQcJa8XY50M22dlz?=
- =?us-ascii?Q?Hgvl2/3s14xlzNnmkJK1RWFXhYiEyV+GI7ROyrHKDHKJ5jaSmuBC4t37x8w?=
+ =?us-ascii?Q?LbPofZtvv9C6N52Yrhr4nykJEHgN1TzgX2T1lfsvvA9Rn7sbdURwGFMOa7Kt?=
+ =?us-ascii?Q?gmOpkvG1e8xqw04UNapN2SxLGujH94rmvdK/GJG70qDJq1DMByG1v+WfJv+k?=
+ =?us-ascii?Q?DYZF3ZWuxCzgNpKs4dYIxx27wzX329SEp5z26O4dyMZS52rnJw5gBrW1B6od?=
+ =?us-ascii?Q?smiQ4GbF3U7dWKFXcC1Q6yG6hbDbh2llDuX0XFVmPFuqU0edkvLYs6AnbiKv?=
+ =?us-ascii?Q?Hcsk+YJY2iYIvEpepTd4IqmGh0PCeb7y6GLdgv7amQkr2fpvAZ6d75/0ZLB7?=
+ =?us-ascii?Q?tJzNGpZpGeXvgHPQoFmukTHk3FAmuLZPUPLn2P+7F5yMfuEcupcnIn16AvDb?=
+ =?us-ascii?Q?1kBq3Re+OgoVwfW4VLjozdyWlMAMQg0T61119s1/0bBKjoza1zXkM8MnP10l?=
+ =?us-ascii?Q?BbedSYZg7QjWCwKDp3cLnsZmc1m5vF8kGl74BsEp3UgLmWUw8t8/h/G9xqIG?=
+ =?us-ascii?Q?63BLWJHJy0zqnBUWBKOIlA4h9RZzVIrzyfv7yIIWsQRpYBmpOv4bUn4TO3zX?=
+ =?us-ascii?Q?GLRt1Hq0ojYvpjQ53QrQyh6ndkKOi7SWUcVhD5nHbFrKErc6KmeS4WMZDXgp?=
+ =?us-ascii?Q?PMFmqyV7HMORfoWltNgfO/a4gasvWv4rBaMfx3RBwa5eZiWYx3oDMUdqh9NE?=
+ =?us-ascii?Q?5sHPjS2D2qJyTlXx8ti2DF8QEx2EYOZw+qbB/iyAzl5kasWDMFpgN6nsFU0j?=
+ =?us-ascii?Q?7hwMVUHUKCTX6civxmxiaTxUHn7VR/arAEAg6CqjN2LFfsBAaW2lzMTJQBqo?=
+ =?us-ascii?Q?xgNxQuFEdTBjVTt6zWhhpCvjs1rzMTza6Wk4WxXK0no6et81roZ7KTkbFhs+?=
+ =?us-ascii?Q?nisphvasWnT1EE5Kt+XTQ+qDo/eLRHEOVbCBdW6NxLS5bgeOq00d5fSS8H3r?=
+ =?us-ascii?Q?xomo8tpdkImAL/ZYbe39mVZYVodTYUDLSJlFlPNLF1pqYGFwDtsW2j711rkl?=
+ =?us-ascii?Q?9mXfJfzjZL0o+Svutwld80LYpHDdBWZzagIcUiLIKqvzoncSo99D67v1l95r?=
+ =?us-ascii?Q?ygqxMIkQxuZJIdXXjjeJ/rc7kLWORkqTDPDiLANpb7AI7Qw7G3xfnuoVvjhS?=
+ =?us-ascii?Q?ib4xSAzACGQaFxv8R+XLezb51EezyHv1aMpqkHogLQussftIVV27EmwCcxgX?=
+ =?us-ascii?Q?iqvoGTrBcij29nOOqzCb2YboizZn0iPxv34Tt/kav5wORrUzB7D2Bp9AUvmu?=
+ =?us-ascii?Q?oHax1FDW78hN8gpqpqLB7zMVtOYOiemtA+0IJNiKLjOjMSFm3UnLVT1sFdE?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -148,8 +145,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c7da805-d9e6-46fa-1760-08dd973dea7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 01:30:33.8677
+X-MS-Exchange-CrossTenant-Network-Message-Id: d777e359-9846-456a-73e3-08dd973e19c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 01:31:53.2238
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -158,117 +155,69 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6735
 
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com> Sent: Saturday, =
 May 3, 2025 12:15 PM
+
 >=20
 > From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 >=20
-> x86 CPUs boot in real mode. This mode uses 20-bit memory addresses (16-bi=
-t
-> registers plus 4-bit segment selectors). This implies that the trampoline
-> must reside under the 1MB memory boundary.
+> The hypervisor is an untrusted entity for TDX guests. It cannot be used
+> to boot secondary CPUs - neither via hypercalls not the INIT assert,
+> de-assert plus Start-Up IPI messages.
 >=20
-> There are platforms in which the firmware boots the secondary CPUs,
-> switches them to long mode and transfers control to the kernel. An exampl=
+> Instead, the platform virtual firmware boots the secondary CPUs and
+> puts them in a state to transfer control to the kernel. This mechanism us=
+es
+> the wakeup mailbox described in the Multiprocessor Wakeup Structure of th=
 e
-> of such mechanism is the ACPI Multiprocessor Wakeup Structure.
+> ACPI specification. The entry point to the kernel is trampoline_start64.
 >=20
-> In this scenario there is no restriction to locate the trampoline under 1=
-MB
-> memory. Moreover, certain platforms (for example, Hyper-V VTL guests) may
-> not have memory available for allocation under 1MB.
+> Allocate and setup the trampoline using the default x86_platform callback=
+s.
 >=20
-> Add a new member to struct x86_init_resources to specify the upper bound
-> for the location of the trampoline memory. Keep the default upper bound o=
-f
-> 1MB to conserve the current behavior.
+> The platform firmware configures the secondary CPUs in long mode. It is n=
+o
+> longer necessary to locate the trampoline under 1MB memory. After handoff
+> from firmware, the trampoline code switches briefly to 32-bit addressing
+> mode, which has an addressing limit of 4GB. Set the upper bound of the
+> trampoline memory accordingly.
 >=20
-> Originally-by: Thomas Gleixner <tglx@linutronix.de>
 > Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 > ---
 > Changes since v2:
->  - Edited the commit message for clarity.
->  - Minor tweaks to comments.
->  - Removed the option to not reserve the first 1MB of memory as it is
->    not needed.
+>  - Added a note regarding there is no need to check for a present
+>    paravisor.
+>  - Edited commit message for clarity.
 >=20
 > Changes since v1:
->  - Added this patch using code that Thomas suggested:
->    https://lore.kernel.org/lkml/87a5ho2q6x.ffs@tglx/
+>  - Dropped the function hv_reserve_real_mode(). Instead, used the new
+>    members realmode_limit and reserve_bios members of x86_init to
+>    set the upper bound of the trampoline memory. (Thomas)
 > ---
->  arch/x86/include/asm/x86_init.h | 3 +++
->  arch/x86/kernel/x86_init.c      | 3 +++
->  arch/x86/realmode/init.c        | 7 +++----
->  3 files changed, 9 insertions(+), 4 deletions(-)
+>  arch/x86/hyperv/hv_vtl.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_i=
-nit.h
-> index 36698cc9fb44..e770ce507a87 100644
-> --- a/arch/x86/include/asm/x86_init.h
-> +++ b/arch/x86/include/asm/x86_init.h
-> @@ -31,12 +31,15 @@ struct x86_init_mpparse {
->   *				platform
->   * @memory_setup:		platform specific memory setup
->   * @dmi_setup:			platform specific DMI setup
-> + * @realmode_limit:		platform specific address limit for the real mode t=
-rampoline
-> + *				(default 1M)
->   */
->  struct x86_init_resources {
->  	void (*probe_roms)(void);
->  	void (*reserve_resources)(void);
->  	char *(*memory_setup)(void);
->  	void (*dmi_setup)(void);
-> +	unsigned long realmode_limit;
->  };
->=20
->  /**
-> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-> index 0a2bbd674a6d..a25fd7282811 100644
-> --- a/arch/x86/kernel/x86_init.c
-> +++ b/arch/x86/kernel/x86_init.c
-> @@ -9,6 +9,7 @@
->  #include <linux/export.h>
->  #include <linux/pci.h>
->  #include <linux/acpi.h>
-> +#include <linux/sizes.h>
->=20
->  #include <asm/acpi.h>
->  #include <asm/bios_ebda.h>
-> @@ -69,6 +70,8 @@ struct x86_init_ops x86_init __initdata =3D {
->  		.reserve_resources	=3D reserve_standard_io_resources,
->  		.memory_setup		=3D e820__memory_setup_default,
->  		.dmi_setup		=3D dmi_setup,
-> +		/* Has to be under 1M so we can execute real-mode AP code. */
-> +		.realmode_limit		=3D SZ_1M,
->  	},
->=20
->  	.mpparse =3D {
-> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> index ed5c63c0b4e5..01155f995b2b 100644
-> --- a/arch/x86/realmode/init.c
-> +++ b/arch/x86/realmode/init.c
-> @@ -46,7 +46,7 @@ void load_trampoline_pgtable(void)
->=20
->  void __init reserve_real_mode(void)
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> index 6bd183ee484f..8b497c8292d3 100644
+> --- a/arch/x86/hyperv/hv_vtl.c
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -58,9 +58,14 @@ void __init hv_vtl_init_platform(void)
 >  {
-> -	phys_addr_t mem;
-> +	phys_addr_t mem, limit =3D x86_init.resources.realmode_limit;
->  	size_t size =3D real_mode_size_needed();
+>  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
 >=20
->  	if (!size)
-> @@ -54,10 +54,9 @@ void __init reserve_real_mode(void)
->=20
->  	WARN_ON(slab_is_available());
->=20
-> -	/* Has to be under 1M so we can execute real-mode AP code. */
-> -	mem =3D memblock_phys_alloc_range(size, PAGE_SIZE, 0, 1<<20);
-> +	mem =3D memblock_phys_alloc_range(size, PAGE_SIZE, 0, limit);
->  	if (!mem)
-> -		pr_info("No sub-1M memory is available for the trampoline\n");
-> +		pr_info("No memory below %pa for the real-mode trampoline\n", &limit);
->  	else
->  		set_real_mode_mem(mem);
->=20
+> -	x86_platform.realmode_reserve =3D x86_init_noop;
+> -	x86_platform.realmode_init =3D x86_init_noop;
+> -	real_mode_header =3D &hv_vtl_real_mode_header;
+> +	/* There is no paravisor present if we are here. */
+> +	if (hv_isolation_type_tdx()) {
+> +		x86_init.resources.realmode_limit =3D SZ_4G;
+> +	} else {
+> +		x86_platform.realmode_reserve =3D x86_init_noop;
+> +		x86_platform.realmode_init =3D x86_init_noop;
+> +		real_mode_header =3D &hv_vtl_real_mode_header;
+> +	}
+>  	x86_init.irqs.pre_vector_init =3D x86_init_noop;
+>  	x86_init.timers.timer_init =3D x86_init_noop;
+>  	x86_init.resources.probe_roms =3D x86_init_noop;
 > --
 > 2.43.0
 
