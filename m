@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-5563-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5564-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A94BABCC54
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 03:34:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43ED2ABCC5E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 03:35:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02EA13AD40E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 01:33:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAC713A4A2A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 May 2025 01:34:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AAE4253F31;
-	Tue, 20 May 2025 01:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D3D253F35;
+	Tue, 20 May 2025 01:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="SztRjr29"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Jdx4qLPf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19012040.outbound.protection.outlook.com [52.103.7.40])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010010.outbound.protection.outlook.com [52.103.20.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F5BAD4B;
-	Tue, 20 May 2025 01:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0908AD4B;
+	Tue, 20 May 2025 01:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747704843; cv=fail; b=X67xh2pKfuRDphDxHlyHaXpaPJQqo5IEa6gvvgNa8EdCs/Iz34wYdafGEKteHzh8Fu9u1ga4s012YHl+D3kOvTnlv1/l7EqmmaugaIgCpYNvCaMuTIntWtZ+CINz+GKJwlb3sw1Jj3+UUmZfaQJFiKHzh1sWSjiVch1FmPEWuho=
+	t=1747704908; cv=fail; b=gzDi0tsXEcJ0qVUqF7fFRB+gnCcgpVM8VJ9BF1tm17FD6ywFhap/s/h8JBAxEkFh3E+Sd7suyLPESKsBZTd4icLSXcwBkyRnvT/gsb9xhM/xkJ0VRNbBu61OwdTGrZMesWM0209WWEtOD7dLVOPA5SHzjaVTmep1jHZtoah1qHo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747704843; c=relaxed/simple;
-	bh=uCUPf9xyPT07/aXygID8jHvIKfB3OuFfCw7TI1/eI38=;
+	s=arc-20240116; t=1747704908; c=relaxed/simple;
+	bh=Jwhq9S/TVgBYRdJO84Cr7pKsrGJHWwpGxPieoFi26FM=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=C8b+2bTlc8ezDRL1f99cp4hYoPgkPSFXTbgfD+a6mm2c1k9r16ez0kt4WxtvF01UJ1pBSE4+FtWo4kVic8F4/kYvX3cg/rMEcrwxPiHcph2rWIJ/gdtlBNrbeXvSBNfSvcXDirh0V66k1t5uxuRFqz0+goCVXwVuGitpUYt5aEQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=SztRjr29; arc=fail smtp.client-ip=52.103.7.40
+	 Content-Type:MIME-Version; b=fgBbkMMIrRhznkeIG8kmKT6dkFbsXjjkI4hkviPMREWUwLvlHV1FG8poAEstIbvpRNmuc0azEwKAArbEfIS6KX1VdsSqO/f/dBZRZz6vku1B2vo4IW2RmWu8MM35bMOBFznXFSQ+hPv73Y+HdHnCMHd1ZjweQR3wrAYMzmYr3gA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Jdx4qLPf; arc=fail smtp.client-ip=52.103.20.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I3iv810AFAKjy3n2U9d2IqHoktQL+SkRcF1e2wuy/FHaEHoUwDcgpQprgVOPi6o/7AYcNQxHazoCn5yCtQ+D3c1JfMskD7yBiOUKiJMB9I+U+MJI0LjySlZa+P79vdl0Uw7vADxd5GbfB+xOWgZYcYQOWp0/vAeRaz6r4DfplLXXlhi+tBeX/ws+AUmHNo3M1NfwlWjz68dHSqXkc0H5aAhsthnq2qJ1I9TKoIRtlBPsQ+2ygCYldlzcsBSzC2fMPJw225AzP58RkdFgxPWl1MWOT/5ZUmUcoEULzUAu+wUAj/8mtOBUsy/lcl0gc9c3OT+GiM7oiNcqKUCHt7v9AA==
+ b=crU9YUhuyujGLV7xziks4MPCYlrnzgvrDerINIM2/XS7MEuxw/vACPWfXMqLgOm9xy1gm5tyfFR+68YO8aqdqnsgm26zqMjyj6jIH36vVAsXOOWe4JUyWCEbKD1JALhp3KEijlRMelHwFb7PeIKxUfnFt5N12O+DxPo8Ra/XZ2aveqhcRcPDIuvToRhwjP3EegSHtIidoobdRNoJFfvhtExFuBEHM2I0l/zKqyVGOEGGIhy7d9jQ/0VQPJTdrjLq6NC2LY5ETNiSLLvNLi6jVeYh+oa9F6pvaQkE92KPIXVe8n25D9H3cCgEzgkuqDVSFpwwuQTKK8zGEBHHNGRlMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YmS/9OUtezbRu5qzAZ/LcB5xuZuEKsFvuh6lsvC7YWc=;
- b=HL++r3ediAp/hc/1jaGK1oo79aZN2/AyUuegujFc1b0XYOX5NRb7RS9ENoQUlAifNaENCenRK3dINjbmTnd23Wt2uQCsLT9Nht+OxqtnElFuBdO5dKvRXZ60VdAeb/OwqtvZDMAsa6ysyEiDC4UNaO3fjK5xnkTA6ajeEXU/D2FRMEK88kcLhoGxJ1UdJYJyUkWN3XHf7C//xw8LMWNkD6Sgq2riCCaRKjhBBcZCwAHQ6XNSuLcBEr/3lvLyAeyWBl+abondcISZ6ZalDdm+xDGQ0j+EYH45HahEGM3M8S1LtcSYStgCsXYWuZv1SyMHn4RUHJUlpc+qtN3BHAaPxA==
+ bh=saTKPlsqd7Se3tjozBZJaAQhNDonJtdwHBY9qI8eYEE=;
+ b=YSmXee5Z5VR7D+N+0By0FaFtxPAotuvWKEjRycm2QaOJ2RvjFvEy70FwNVQDxase3txd9oLOazWk3bE43LolyLXJwwEXViZcirtDt94xM3YF4mlp06mg4oRKez1j8jcJYbyS+ILW8DaOyVnag/4VBT/08njrtJvYTblVfe3v5ewq+q5sa29+jci9EBIjktyxS4kQlofUZ/aSxlQ4tyqMSnp600v92FESokRg+lqLYO/MV96jSo+9OcWPzi6sGqFgoxCADYmwAQssxm9NxBNraeJgEqA/KvEwKSuzTtlIcPS9iITy5UttybjRdiNKi7ub/YR1Lhj+Lz3VSMhukQ3csQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YmS/9OUtezbRu5qzAZ/LcB5xuZuEKsFvuh6lsvC7YWc=;
- b=SztRjr29sRwxF06VPEjflViSKaoCuIISfvhlBFFu1X1Paa2YQz83bCsQPApEw0V92AT0SM+QuWakqkxQjkw7FB+SifDBmN/9asl7r7unt+KZZR6USYdY1OknWg8u+2hE1Y0PaogRncGw+51M7G+K140a9zBVl/mmefL39xjiNvhyq8/dXkKw72mKZWo+qEQz/8PKUzQh1KvDGPEDw8VTJtF/Br4EACqR0vMmj4VQePGveV7UjgfXx1ukgvxoEw8guWa5V6XzXiYTz8717I7HevHPDz2nei0mg/3Gmd1HyD4A0pzJTNtjac98/VJ5Axi+3Qw1jdnxrD0jiD7aJ2U3Cg==
+ bh=saTKPlsqd7Se3tjozBZJaAQhNDonJtdwHBY9qI8eYEE=;
+ b=Jdx4qLPfsvyA3VJfm56OvSRXzD5NMZRIPDPmiZ1d7xUyzdYEnaTDSbwhmzhcwexE++EV7PXu0XeZ/0E+EhSw3fLeOhcPGwMZYBPrFsesQjRAH9Vs0l0JwAVX3Ion8WMqzkqcmIxTFc1teIigBbqLyf7kvU4VronFo+yETmqtHkeceo3hnJlqFK5tL4E3000VMPsKpu96WIVkyBN1CitgwpNo5RNYSR1+xvyfLBy0iGhijVSxVGfCE1ZE705x8jkV488YeBKAFVN/5wWEM7XnO8vSjDdN7nhdggV14Jzfd+IIFPuGJQxtWOS8JgvuMUiLjOgsuci9lxgsOaSO9wsYGA==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by BY5PR02MB7044.namprd02.prod.outlook.com (2603:10b6:a03:232::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.16; Tue, 20 May
- 2025 01:33:58 +0000
+ 2025 01:35:03 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8722.027; Tue, 20 May 2025
- 01:33:58 +0000
+ 01:35:03 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, "x86@kernel.org"
 	<x86@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -67,71 +67,72 @@ CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Saurabh Sengar
 	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
 	Ricardo Neri <ricardo.neri@intel.com>
-Subject: RE: [PATCH v3 12/13] x86/hyperv/vtl: Mark the wakeup mailbox page as
- private
-Thread-Topic: [PATCH v3 12/13] x86/hyperv/vtl: Mark the wakeup mailbox page as
- private
-Thread-Index: AQHbvF8D+XvM94WOtk2/+Ku78EZ3zrPa1Xdw
-Date: Tue, 20 May 2025 01:33:58 +0000
+Subject: RE: [PATCH v3 13/13] x86/hyperv/vtl: Use the wakeup mailbox to boot
+ secondary CPUs
+Thread-Topic: [PATCH v3 13/13] x86/hyperv/vtl: Use the wakeup mailbox to boot
+ secondary CPUs
+Thread-Index: AQHbvF8Dz567Ty+PMEadp9diz7En47Pa1clQ
+Date: Tue, 20 May 2025 01:35:02 +0000
 Message-ID:
- <SN6PR02MB4157721C6C8CE7425534A869D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157F93812247213DFA922ECD49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-13-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-13-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-14-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <20250503191515.24041-14-ricardo.neri-calderon@linux.intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BY5PR02MB7044:EE_
-x-ms-office365-filtering-correlation-id: 44f6d882-aeea-482b-9134-08dd973e6452
+x-ms-office365-filtering-correlation-id: 27e47666-2a76-4150-259c-08dd973e8ae1
 x-ms-exchange-slblob-mailprops:
- Vs63Iqe4sQlVobdhjoRt/HQUSkoYJhJh8Kgow2v1Hrit5393buZXmG7cUiBYwaszg/DrUTWt6ssGqaATQeOwJ+1fG9C6aA5uyrpKMFudHDr7J5lG3FLpva9PZ5lP3FFQxt5PGMC1QKrh+DKTUVIMj0slA95xGnkVlqv3l1HcoyMAj61vTQC/y59OtHXk9Ya+0tAxmX9PM37K51q/kG217RfIIdVnPw29+GvJFFcVfa3wWkx006mB4ToMELPaOwyNzH/jIyfZM6KOWo9sWcua1JAv94LmDmiM2m8sV9MYPpMvf0UsBQYoiCq1jXn+eJ2SPjlW1h7mO/iIw90s5oYMdd0VRCc1kLJl6JIn0P7HlzjpP4qkFeWB0qINWXVLSsKGYBVfZny+LWgwPJSXUwGBMNg2mnCCS/iXc8ZwlxVAV4BA/VUEJT5Sen5b626J68PfnE60K39HmqXdDhJnqVM+xIW7+C+3/Z3Tf80a7qL8bKM02OlTTcn9ij204VdCvBwY719Nm99N7ob3XKWcgI1wP4mQAhbl9OxwYGMJLogqcWmr+NX0n+GBDcdmP9oa1y3Ah7o/KLJxezApiXJOecyl+w2aOA8uYAr4UAjwNVH6ZIhqRjOmOLEt8keBNcMbnOuAcOtZVMSSAK/AmgFtr7hXQjmRCAyiTTpFXI0v12DBCtq96gMpHy0Y4w7dRZS82eijSKxqpjTa9iAdf0hHVFF214rvL8eeaUlGDZ2BKRcAKA8=
+ Vs63Iqe4sQlVobdhjoRt/HQUSkoYJhJhIjBQpSR8Kc0oy9Xb6zl/PHnLS87DNiVrOnxk0kUcqb2+BmDdNoEvfAVfrV0Tb5OtgeXzi7FHEMknpROzxdPDHdlEuQpsHydeVTgz27+ALnx5szb3RAsF5G+BwnVQkjyHsGWI2xqLnEqBhr+3s6eTAwdMCrTERRIvi0ibadcZ2yex2uOmSNu4kcwD3VvtBJmw+UgofIW7bcotLsfyMu/QpOh4G2SGn+hZqBk/59mL2WtFifcj5eoN/ERYtKUFtAyfTUjiaZb6KSF128zODW/yW7KAlmVeKcLvwAaYoVTU4QqS9JDaS0c89Nk6UuYs5dYkJOfmB0P1IBkulW0BnLe8QxB4xxPkbC74GYWsGgWGjNsPxoJKz+NPk3sAWGIJy8KFGzqvkjVn342xwoZCs+VeEr+eEmp8vdG1vYTNmkr4YThNHRCCh1RDOOCME4l1DiYjSYtSusyCgumVuesnYh8ytGaRkxtrZuPdd2nPSQ31l74gqElTlytOg9+zw8k2JfzfNaRvbXUvEF2eaK5QQRkVaVVxHC9TpaGqQzACirQawWOosBoPjxH9S4a9aRh0UCMgoXClR0e9iOetnPlQwz8cv+JW/xzyAGMzhyjqOVxEOeW8ETl7lbaF7kZu3685wB6I2fbwn43CnjSILj8G8IgqcDRxPMZjCWkpxDQWLrYlveLkYnp9Ez4TbEE8V10qtDMkgqGYylkCvfw=
 x-microsoft-antispam:
- BCL:0;ARA:14566002|41001999006|8060799009|461199028|19110799006|15080799009|8062599006|102099032|3412199025|440099028;
+ BCL:0;ARA:14566002|41001999006|8060799009|461199028|19110799006|12121999007|15080799009|8062599006|102099032|3412199025|440099028;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?90cnBay703vZB7zQiSwcnOH+/XaJ0MWWw2Y1JL37t5GOFLRd/s6nMQVANXRS?=
- =?us-ascii?Q?s5oIJsYIle4gEaBnXswjOSPA/s8Cm5Soc6u0/QSare1dUY0mKaO2IVPqNjbD?=
- =?us-ascii?Q?0vKiciQBXxCH/X3QILYGfI1xDZani+wvTu3cQEfTrZC1pzHodoV2Fi51UCHQ?=
- =?us-ascii?Q?RQrPPfoqrji2paI+ta4qdKAOukiSScBy9bOhIYnsEWaDoK67yFU9WYpKE8S1?=
- =?us-ascii?Q?EL5tsia+ZyxNVqSHZroykAlBDDNLIlB37Bpw3R+zclqw8wH+jitGo+o+8aBc?=
- =?us-ascii?Q?Te/+FI7wX7eAaOpS6i3G+PXQDeknG5TJwtcPdkZudjU3tM2jkg/4oNUvITmW?=
- =?us-ascii?Q?RmsohcZCOBI1N+cjcwDoAzVclDlwGk9qaBH+D7XmpFN1HYT3gNJ1mR133vJ1?=
- =?us-ascii?Q?xNeJde2szFlWiQqO++hX78Nnv5ASRrWHsHx547zxtxQerVe2XBthAZwfLtmV?=
- =?us-ascii?Q?ubf9z7XS2mCm7vFA+6ZSnlWNRUGYw+b5I/jFnicAet2GD1KTCvS3wIX60016?=
- =?us-ascii?Q?RnWC2DZ4SXYBc3h2lHnE0yTOWyuDWOPWrMn8xdu8OYMTNNL1hiW1ro65uFxb?=
- =?us-ascii?Q?u7yrcbFg4lkihgvTisHel7+0luypve8MkBK8bufPBCC5VOlk+Knqr7bO7yKN?=
- =?us-ascii?Q?+6ZxhJf9Q/eJfF+6Y7aLPljRYLRWHaMybjtL9K6NgF+4Ppzm7Z+o6RXOq9MY?=
- =?us-ascii?Q?RVIzbN6mdgVNh7kjv6ZdRaHyNSXAoZ9am85wYlvrT9G2tWJX0iZPpJeCZzVv?=
- =?us-ascii?Q?H4zEAnBpM59O7EI7vkc29fucyI+PU+BaG0zEMHmtycKskksByJg0bvjft3r9?=
- =?us-ascii?Q?zirUgziebNoupXyoxovkrAjLXVGGDJTaSv8eyzW8qwoszreRJ2IUlYwtc2w3?=
- =?us-ascii?Q?LpxlQgz+JdOS4+6mxHb631y5YptBTj2wwbjFu2/3mBeHj/7ZGLyqZVfRzXAi?=
- =?us-ascii?Q?Ad+mN3EEC/WPtC6yoniCxgMWwu6ZVwbuVEJq8vAK2TlSrVlAYi/Ja8Usn6p/?=
- =?us-ascii?Q?Jc3q7psjR1A2COMS9BnxunLqD5JNO3muqGxCmdlKnXi4Urc6JOsB5oAV0wQ8?=
- =?us-ascii?Q?7G05oqFhpDksQqXKLOOIZyfbBl+YfOuQmJgQy+OIk7AOofqg1h4=3D?=
+ =?us-ascii?Q?fl0LUaS7h/1Xq+JlAinkII9AcHMcrp2M52VYgFUbx6qSGbWXn3wNKotHOqrd?=
+ =?us-ascii?Q?Yu7dl5fSM4lZIJuczNcGmVl1+GnWfy5udxoVartVeTT1aoYVQxMHMsjF9R2x?=
+ =?us-ascii?Q?Gp93nppXz/dE+ATSaQVLITnAYrlmhjXqk9ZQzuL1wOnD3mnGmjIt4SkTsdkm?=
+ =?us-ascii?Q?xlmwjFspN1qW7JTLQxv9aTylYUEYHjHPH6ET6HKjlwjNB1DsYchzlgPRNqMb?=
+ =?us-ascii?Q?YPblHnOeKh/ZHtow6AqEhpCLTNnk0OcOvqzffDApdEvjCeSJI59l/zgORtCz?=
+ =?us-ascii?Q?n9ehyrPtkBgi0kNHS+cL9IprgfCj/eJ7VDRHB7xYkxeIgvpjWaZ7QEvNwzbs?=
+ =?us-ascii?Q?6OBwOxDjdGbw+XUD0V6e6F9swWxkSYyHfO9GQb5MtS863govoc1CstMPZj82?=
+ =?us-ascii?Q?pyq+jOekF7S/1yaSbyvGALoPvG3tbeilNjL4dGbc2Srydmzj4XH8TZr6S6bi?=
+ =?us-ascii?Q?Knri8//oLZa2O7sqdYVkU1Cg4dLhO8wYadknshAulzH4XqHwuo7Ol+zO8B/3?=
+ =?us-ascii?Q?16SyT5LqNpTEFXbUxvLp+HmxXlAC1WPlgrwuJEK0F16NdvurIPCtm/YAEaYq?=
+ =?us-ascii?Q?J6Lko19b2VHkKObLZEqUjghOb7rOogcn/qWfHqQIU/aUNXnObKJaQsC5/Qtb?=
+ =?us-ascii?Q?itrLQcx+F8syYpzb6il17HjzO/Ms5ydctazSOSrOWi7Vp5M34KgHWlq4fhve?=
+ =?us-ascii?Q?AAcFWhd+n8wp8+KEQ/227K2JjO9PvFCQoBgLwfti7vvmS34xC5xnKzVX6NE0?=
+ =?us-ascii?Q?2pFtt/p4VggXYYbFxtZSxeN4tKSx1ekU3t5/kmkvOBdRXeWWokbQsEoaVUTa?=
+ =?us-ascii?Q?Sxhmd7PDcVGERmm0WSFTTP+gJo94xEMg/Ysd314kW7BOEcv/AjrscVneNhCz?=
+ =?us-ascii?Q?xHRy1pb146cRivnCvPHBvJjUwOB0uIsrfHweWCQPzRvpTQk/HsYwj4pbCazT?=
+ =?us-ascii?Q?51jDcKrVNb1ocWPg53bUTwAyVMvI3Sop9lUCzW15iFBPeB2NoEL4y7yVoY0j?=
+ =?us-ascii?Q?tuXZFjLMznAQOdFon2yp488mUVniVAT/YKEFRgPyNkADJ4X8F0lKGDbbmF3j?=
+ =?us-ascii?Q?JIXlwe7KXc8FQiavvPp7IVkf2TcD60WJUEuQKVSRELLdAVYDVGfGcWXbA5gK?=
+ =?us-ascii?Q?epA+pNOEbvSt1dA+J4gymGyQzV284YppQQ=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ghw9nRidfp1zFCZpQuOUoN9UeMsMev64KvrNomwu99Rtla+T+o88Cda6CppD?=
- =?us-ascii?Q?OBAPzD8904pMB8R3IE555zacQDSSWjoSuZFBgFFd3qMgg5K+mOhjCEOHKcL1?=
- =?us-ascii?Q?HJ7GKdjYNuqbJ8DhPY0zwNva8IsGcXa+/JwEC7+QsUPPj5+yMoIMg2sT6+1y?=
- =?us-ascii?Q?i/ylX0lGRpBQYSABrfj3wn4NxiIxnjQK6vo6cVhXoI4m8rFdmQqVYDGJO5pw?=
- =?us-ascii?Q?5Fbg7+ZwV6YS4UZCpr7bvIxeS3YcrvDrOL276pV6sK579AYIEFQTaYAwiWHl?=
- =?us-ascii?Q?pnhRQZ9LSw7/Ufnj3fzY70equsg2TDDT7xEFxk5aWTaTyBlvT+Wd95oVCzct?=
- =?us-ascii?Q?UyfHNSTmkM3xVNkI0GlUlRz+jrF5aQNzxdZc1LHsdE1sO+KX2wHdTQQg9iMq?=
- =?us-ascii?Q?un3K0wJG9LxT92W7L9IvaPeQ+5i+cVX2i4MJL6z8W+2v+0EPQ4RCBxivwruq?=
- =?us-ascii?Q?vvOtcvysVAnCFAwbznemThhDdeqMcaXJJKZvlOzU6rfjo43LkRMZH+46jV9U?=
- =?us-ascii?Q?9HMPJOywjGIMTrpXLGjxdCYWVS/9qbw5FncAca75c6+AoI5RziN/r7k7Fg7k?=
- =?us-ascii?Q?Jo9H2aN9HQk4z8EjQrzCGhvQmInJlQv/mVurFbuFwLQbmoyOIML63Hzyo5Q7?=
- =?us-ascii?Q?PM0onCEJiAUCdJmebzcgHJ5GfC+X2ht0v8kryQHbMAhtwRvKUohJM4yyiDLK?=
- =?us-ascii?Q?HjPhV3oOQVWOEf6I4DaC+i6DhYf9yD7QpH15xcLo3bPpSt3QuFsHNTeLenGH?=
- =?us-ascii?Q?e6iGiG78n9RQSrp0mYXwMKNr//idhnDEA8eEuq3IL0M+nGGWFAt5il2/hA2l?=
- =?us-ascii?Q?RO25hReq64c1wVFSh698wJKoZWU717NGTpcHQDQ5JXtOJuuJBH4SSBOypmKI?=
- =?us-ascii?Q?7WOrS/o8JqR2Gu/h54nbCBj3ylbA4Ed3YWd5VLpZyo5HLUSKsvX1toOTVj6I?=
- =?us-ascii?Q?giYsI/ysDcPiNwjSVfwZ6z97Ek6mIIYArQyx4QQ0U188j0aHTIxtG7Z1e0wn?=
- =?us-ascii?Q?/L5AYMhbHjN0WxyNxPyZEOM124zcX8BDAkXAlc77HmszhTdI0aBMoMx8aELh?=
- =?us-ascii?Q?fC9uZe+bqrfKsvEpSoqu4em6fzHZEbRhXTiTGdkiQhHl57azDVbNS32EDFmz?=
- =?us-ascii?Q?m107ZP1NNMCGG6f+tG+Q6BP+avs8vnHg+3eP3O1yJE3+Pgz2/TfNYWMF9uHL?=
- =?us-ascii?Q?DiIvyQ2S1zRzeCGvmt6Q4M7/Rgsx/1DXFWLHb3E2S9jDQqt2/JyvmLDHnN4?=
+ =?us-ascii?Q?VR1ac+sk7eDCoY2jinmBhyPUf2VxcMZyujvIoTeFKOxaPaHI/nuIFWZR9UTZ?=
+ =?us-ascii?Q?RKRAcwdPNjGCGjlFd7Nftg5knVqV+2nrEVBgNI8FtRJgFQUA83uDkeeLhzAI?=
+ =?us-ascii?Q?UgzyOIc/MtRWuMCly83Bal7HKwu80adRAdcMIQESZRbZcyDCVEJZfUw889aX?=
+ =?us-ascii?Q?Db8VOnDmswpslLJXirDOmmL+hCj/bZTzqrE5z/zvX9CZcwY1tXQspnfrvUM9?=
+ =?us-ascii?Q?qvKEp25WMBS3fYVth/EJa/cxb2fNjwFgYs4PbxjEJBatfIhjOUA/TRQhLfIt?=
+ =?us-ascii?Q?VxMSJWsVjOTQDvJEJmBoURMbl+3+nFktqvbvAsoF8QMN59u2hqRDwE0bRxVg?=
+ =?us-ascii?Q?EDpeMGD6UtdwgevI+gSew8WZxm0/dLTD2zakZSnXaAJHn7NbbVCM2REdXiyV?=
+ =?us-ascii?Q?vWdBv8ASU21bkWHzIFkRsTi633r8wo0Eyvg06vs2XWv3+Pt7xCsge8Thsq8h?=
+ =?us-ascii?Q?dDuMUZzsVDFO06NQiO6rQHoHE/MxD02pz3W9E1D6kgJKXuF0/qQYWbkqBhoy?=
+ =?us-ascii?Q?EOfPtuMrQm0eCOQCTFJ9hAFxHyzRrSUq+YCjqQjgLL6052ekZAyznkcbfMDO?=
+ =?us-ascii?Q?olcx+x8MWOqlEE1VSJ9ryGONU+HuitMEGnc94Kjn1Khz3zWBwR+kO61rIF0c?=
+ =?us-ascii?Q?lZeB2o0S4Rr+p19+fvN0lTr1BhjtSNrpQvxHBHoYZ7IBfg3kHs/MNk0fthsy?=
+ =?us-ascii?Q?1kQ+CqD5/xTiOS437K5kXG/fTrVwyRp8FBF8FYrJYZEb2dof712RPJlWqBv6?=
+ =?us-ascii?Q?pJzuLy6zuDv+4kliPcrV41sEgK3GE2fJqqrD+1fZB1j8c7Km1syMKD+r/qLU?=
+ =?us-ascii?Q?owDGgvEwja6giOzEoOlXJPLplHJI0S6XxXEnkVqUk1UFjhD3I6wSLd6Qj2BB?=
+ =?us-ascii?Q?eLLIa9E6DzLwIfgIF8OoDo2kSGWbHySD1D6inzyt5GcTMhCzthHhkxKx49Iu?=
+ =?us-ascii?Q?xPMNQC6/EhtdwOw0ueD8uPe1spzX8Y592KQ6JQbh2g7Dv2QzymiZiBp3/7tt?=
+ =?us-ascii?Q?83Y9Vnu0rYWxszex++4rNotYk/HhXDWMGU1H3ropCKjUFTfPlYqjYs4J24c8?=
+ =?us-ascii?Q?m6etvPH/9mBAhjaMg4F79n34YVVH808+vQf2xcTRfAZVd3zczyrwYwaP4kG2?=
+ =?us-ascii?Q?FeQB0ZdJuq1BY1IXybimQrEl0sXf/r8Zpvee65jM/Z2mspzNjwumYXKu+zbN?=
+ =?us-ascii?Q?PhtWGjhUwG9gxnoN5XhOrtkLWb9KKBwiC7NNmpu/0Srv6sJKVmbuAneUzzQ?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -145,8 +146,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44f6d882-aeea-482b-9134-08dd973e6452
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 01:33:58.2884
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27e47666-2a76-4150-259c-08dd973e8ae1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 01:35:02.9670
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -156,69 +157,57 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB7044
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com> Sent: Saturday, =
 May 3, 2025 12:15 PM
 >=20
-> From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> The hypervisor is an untrusted entity for TDX guests. It cannot be used
+> to boot secondary CPUs. The function hv_vtl_wakeup_secondary_cpu() cannot
+> be used.
 >=20
-> The current code maps MMIO devices as shared (decrypted) by default in a
-> confidential computing VM.
+> Instead, the virtual firmware boots the secondary CPUs and places them in
+> a state to transfer control to the kernel using the wakeup mailbox.
 >=20
-> In a TDX environment, secondary CPUs are booted using the Multiprocessor
-> Wakeup Structure defined in the ACPI specification. The virtual firmware
-> and the operating system function in the guest context, without
-> intervention from the VMM. Map the physical memory of the mailbox as
-> private. Use the is_private_mmio() callback.
+> The kernel updates the APIC callback wakeup_secondary_cpu_64() to use
+> the mailbox if detected early during boot (enumerated via either an ACPI
+> table or a DeviceTree node).
 >=20
-> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 > ---
 > Changes since v2:
->  - Use the new helper function get_mp_wakeup_mailbox_paddr().
+>  - Unconditionally use the wakeup mailbox in a TDX confidential VM.
+>    (Michael).
 >  - Edited the commit message for clarity.
 >=20
 > Changes since v1:
->  - Added the helper function within_page() to improve readability
->  - Override the is_private_mmio() callback when detecting a TDX
->    environment. The address of the mailbox is checked in
->    hv_is_private_mmio_tdx().
+>  - None
 > ---
->  arch/x86/hyperv/hv_vtl.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  arch/x86/hyperv/hv_vtl.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >=20
 > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index 8b497c8292d3..cd48bedd21f0 100644
+> index cd48bedd21f0..30a5a0c156c1 100644
 > --- a/arch/x86/hyperv/hv_vtl.c
 > +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -54,6 +54,18 @@ static void  __noreturn hv_vtl_restart(char __maybe_un=
-used *cmd)
->  	hv_vtl_emergency_restart();
->  }
+> @@ -299,7 +299,15 @@ int __init hv_vtl_early_init(void)
+>  		panic("XSAVE has to be disabled as it is not supported by this module.=
+\n"
+>  			  "Please add 'noxsave' to the kernel command line.\n");
 >=20
-> +static inline bool within_page(u64 addr, u64 start)
-> +{
-> +	return addr >=3D start && addr < (start + PAGE_SIZE);
-> +}
-> +
-> +static bool hv_vtl_is_private_mmio_tdx(u64 addr)
-> +{
-> +	u64 mb_addr =3D get_mp_wakeup_mailbox_paddr();
-> +
-> +	return mb_addr && within_page(addr, mb_addr);
-> +}
-> +
->  void __init hv_vtl_init_platform(void)
->  {
->  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-> @@ -61,6 +73,8 @@ void __init hv_vtl_init_platform(void)
->  	/* There is no paravisor present if we are here. */
->  	if (hv_isolation_type_tdx()) {
->  		x86_init.resources.realmode_limit =3D SZ_4G;
-> +		x86_platform.hyper.is_private_mmio =3D hv_vtl_is_private_mmio_tdx;
-> +
->  	} else {
->  		x86_platform.realmode_reserve =3D x86_init_noop;
->  		x86_platform.realmode_init =3D x86_init_noop;
+> -	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_c=
+pu);
+> +	/*
+> +	 * TDX confidential VMs do not trust the hypervisor and cannot use it t=
+o
+> +	 * boot secondary CPUs. Instead, they will be booted using the wakeup
+> +	 * mailbox if detected during boot. See setup_arch().
+> +	 *
+> +	 * There is no paravisor present if we are here.
+> +	 */
+> +	if (!hv_isolation_type_tdx())
+> +		apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_=
+cpu);
+>=20
+>  	return 0;
+>  }
 > --
 > 2.43.0
 
 Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-
 
