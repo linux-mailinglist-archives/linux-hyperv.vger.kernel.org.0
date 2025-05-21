@@ -1,109 +1,156 @@
-Return-Path: <linux-hyperv+bounces-5598-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5599-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2072ABF035
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 11:41:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70490ABF17B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 12:25:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8B4818958EA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 09:41:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30E1C16CAE6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 10:25:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8CF25393D;
-	Wed, 21 May 2025 09:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950A925C802;
+	Wed, 21 May 2025 10:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="KUiYpN7i"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eWeJQa6e"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o55.zoho.com (sender4-of-o55.zoho.com [136.143.188.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9424A250BED;
-	Wed, 21 May 2025 09:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820483; cv=pass; b=Wb7bMzC0Bbuu/WOwOOkvo8F20aHpg0mQddHI8LE6sMx3bA67kTOnbEOcEwgA5WOO8QXb8GtJkJO4e6RP/PBaENAyIDuqTRSxnqJl/PN5zUeFKnbWyCSX5PVVbNI05/KwW5dlYLbUbwgY5XjHRP4Ldqtt2Xb19PuRpb9tS/uqMcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820483; c=relaxed/simple;
-	bh=HBGeSWhlI0uxxSho24nYevRne57eTZnoS1c8gCFYqn8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nngdl4smx+NnoXNO60tc/8dplARViX+Y420anmsWSsETMzRO+yZVz+MkQw+ioqS1jsFfiNQYHGUgdex76cPC2wOABJ0IW+uDbz0tD0CYPp9qcR3j/XLw2JaYUNxKO6euScWn6NG2/KXEoqF05Ze2lgQe1crt8l+f5n09VyypBxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=fail (0-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=KUiYpN7i reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1747820471; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=agGqAnt3Bc9RFcPTZ0KKHJHUmsmpZfMgKqzqAUcrECb5obxwgVb4Eg8EABux6BLm3kt52wE0XntHtQDdU1iSzogSSCeYjhpKOkRBzUx66aH6pUBQPHvesJOPoxIs+rvwg8Nrzt6LM3FDyKnwInsr6Jq/UJJUxTZRpWQCZURHUGo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747820471; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=DTWiBkBhS2QuL+xSXWqqij2r9yFJ6qW2raK9TVRAI7Q=; 
-	b=NA+0SSKzhL9H0xgLq7m+ZKOSusHuzXi2EB7JslWSlK36AsgggbtPNTD25HiigbM63Ez6gLXU9DSv9zcTYPUchGwrmIpQpOcWyyxUsQ0CtR0eLryZI/T43yXf0m9sKupKxEqUaFGgcPbG5R27/+3sx4+U44Ps38whkT2amcz5FcQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747820471;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=DTWiBkBhS2QuL+xSXWqqij2r9yFJ6qW2raK9TVRAI7Q=;
-	b=KUiYpN7i0A9FIjwGvhL8E7tX6SSRdDxx2GwrqhIEkpVVvT113SBHU/KC81lxu7Cf
-	ABLN4oRMA1v8jKXMi5RhjNFU4vhWmW4Y9mX5dcuji9S3pde8taQSeCdkBXm5C8jenie
-	j0sodbh9w1XMZm/1e96MJJ8TOLn/fWN+W/gR41P0=
-Received: by mx.zohomail.com with SMTPS id 1747820468781754.4226643973292;
-	Wed, 21 May 2025 02:41:08 -0700 (PDT)
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>
-Cc: anirudh@anirudhrb.com,
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E55625C814;
+	Wed, 21 May 2025 10:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747823109; cv=none; b=lW9HozleZIcCy1IaapBOVuQfRwJPYCphXcQRK13eY2+mTiAGTdf6XQ35vg6mxBPLgo0LFM+D+Ru1H4lXKfucOBfW8PFnzoRspdKMYR1rbFDf4j3XvaAFj8Mx4dKQXjDbo0A5SSzXENcWc0zDdyi16yx+am+0I8GSZ/8TQJ9gozw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747823109; c=relaxed/simple;
+	bh=5HlH8MNJv3syXIN/vHnN2vVQp8Ri0Bh049wtA3tHBCE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=F1jFZlYmdjy/1hQJTJuTKU0si8mkmh+UabbGCCZsu+SDqdO5uKMgUZAaziTniLc8dG+bEYfl+4OOcpy12+dK2514KTrUfo3JunB3K7S+/r08oW3eK9JeGX4Adu0goKfKVLU2FJ6+4zTyDmKZHc3hLxXPN1MQ2vZbjpiqp3NrEaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eWeJQa6e; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id C8E8C206832E; Wed, 21 May 2025 03:25:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C8E8C206832E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747823106;
+	bh=QR4U2caREfe4Ci0S/IeCgwAGch4AUN3kUS6ReAl1HII=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eWeJQa6ex5RvTfbojYleEB1LCyZwvno5vXiEyXQi32dqUJu2w3hOass/vOFcuQ845
+	 byn7nsXClFZKcu9Me+QeA2wBWBk9sjRvBlwpzz5Pp1mgHqtjYRwPBH5J5TQ/WhIjFl
+	 gnoMDBCZt1cafttyeupHhDqUm91PSgNEJ3DLnBSQ=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	hawk@kernel.org,
+	john.fastabend@gmail.com,
+	sdf@fomichev.me,
+	kuniyu@amazon.com,
+	ahmed.zaki@intel.com,
+	aleksander.lobakin@intel.com,
 	linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] firmware: smccc: support both conduits for getting hyp UUID
-Date: Wed, 21 May 2025 09:40:48 +0000
-Message-Id: <20250521094049.960056-1-anirudh@anirudhrb.com>
-X-Mailer: git-send-email 2.34.1
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: ssengar@microsoft.com,
+	stable@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: [PATCH net,v2] hv_netvsc: fix potential deadlock in netvsc_vf_setxdp()
+Date: Wed, 21 May 2025 03:25:03 -0700
+Message-Id: <1747823103-3420-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+The MANA driver's probe registers netdevice via the following call chain:
 
-When Linux is running as the root partition under Microsoft Hypervisor
-(MSHV) a.k.a Hyper-V, smc is used as the conduit for smc calls.
+mana_probe()
+  register_netdev()
+    register_netdevice()
 
-Extend arm_smccc_hypervisor_has_uuid() to support this usecase. Use
-arm_smccc_1_1_invoke to retrieve and use the appropriate conduit instead
-of supporting only hvc.
+register_netdevice() calls notifier callback for netvsc driver,
+holding the netdev mutex via netdev_lock_ops().
 
-Boot tested on MSHV guest, MSHV root & KVM guest.
+Further this netvsc notifier callback end up attempting to acquire the
+same lock again in dev_xdp_propagate() leading to deadlock.
 
-Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+netvsc_netdev_event()
+  netvsc_vf_setxdp()
+    dev_xdp_propagate()
+
+This deadlock was not observed so far because net_shaper_ops was never set,
+and thus the lock was effectively a no-op in this case. Fix this by using
+netif_xdp_propagate() instead of dev_xdp_propagate() to avoid recursive
+locking in this path.
+
+Also, clean up the unregistration path by removing the unnecessary call to
+netvsc_vf_setxdp(), since unregister_netdevice_many_notify() already
+performs this cleanup via dev_xdp_uninstall().
+
+Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
+Cc: stable@vger.kernel.org
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Tested-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/firmware/smccc/smccc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+[V2]
+ - Modified commit message
 
-diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
-index cd65b434dc6e..bdee057db2fd 100644
---- a/drivers/firmware/smccc/smccc.c
-+++ b/drivers/firmware/smccc/smccc.c
-@@ -72,10 +72,7 @@ bool arm_smccc_hypervisor_has_uuid(const uuid_t *hyp_uuid)
- 	struct arm_smccc_res res = {};
- 	uuid_t uuid;
+ drivers/net/hyperv/netvsc_bpf.c | 2 +-
+ drivers/net/hyperv/netvsc_drv.c | 2 --
+ net/core/dev.c                  | 1 +
+ 3 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
+index e01c5997a551..1dd3755d9e6d 100644
+--- a/drivers/net/hyperv/netvsc_bpf.c
++++ b/drivers/net/hyperv/netvsc_bpf.c
+@@ -183,7 +183,7 @@ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+ 	xdp.command = XDP_SETUP_PROG;
+ 	xdp.prog = prog;
  
--	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
--		return false;
+-	ret = dev_xdp_propagate(vf_netdev, &xdp);
++	ret = netif_xdp_propagate(vf_netdev, &xdp);
+ 
+ 	if (ret && prog)
+ 		bpf_prog_put(prog);
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index d8b169ac0343..ee3aaf9c10e6 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2462,8 +2462,6 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+ 
+ 	netdev_info(ndev, "VF unregistering: %s\n", vf_netdev->name);
+ 
+-	netvsc_vf_setxdp(vf_netdev, NULL);
 -
--	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
-+	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
- 	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
- 		return false;
+ 	reinit_completion(&net_device_ctx->vf_add);
+ 	netdev_rx_handler_unregister(vf_netdev);
+ 	netdev_upper_dev_unlink(vf_netdev, ndev);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index fccf2167b235..8c6c9d7fba26 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -9953,6 +9953,7 @@ int netif_xdp_propagate(struct net_device *dev, struct netdev_bpf *bpf)
  
+ 	return dev->netdev_ops->ndo_bpf(dev, bpf);
+ }
++EXPORT_SYMBOL_GPL(netif_xdp_propagate);
+ 
+ u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode)
+ {
 -- 
-2.34.1
+2.43.0
 
 
