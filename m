@@ -1,107 +1,248 @@
-Return-Path: <linux-hyperv+bounces-5594-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E8FFABEB2E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 07:18:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EDEA0ABEBA1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 08:03:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CE453AD3E2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 05:18:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CB0C3B62F5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 May 2025 06:03:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE5522DA17;
-	Wed, 21 May 2025 05:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C24322FDEE;
+	Wed, 21 May 2025 06:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgLmllFK"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V0bsnRlC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425341A5B85;
-	Wed, 21 May 2025 05:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFF6C635;
+	Wed, 21 May 2025 06:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747804697; cv=none; b=PcLhupM+bXFWp+COW4I8ygZiU5AeZCBMgCpp/TZTGSWW4qFubLTs9kh7iqHyksLhdp+656kh/RCpQjLbJHFn4FF5QK0+aQmTVVHLStMUL9v5cYGy6IwK8dBDvBRW5Ct2ZJAqyJaKCnQMhizmIbQfKfAygo/DSLLII9ktB5M3Z+Y=
+	t=1747807418; cv=none; b=pP5WvWR+p5CTF7WoGy3owA/1Eur43c0DgqWdVZC90u1FI/iltRBz0x+e7gN7cn4VjF9J2VpXRjF1kRVinVIKns0QvYaFf1Y5YjtBttJYs9XEbNHZaQES6dhQ13EFnjC++DcNuD1CBdwwBrOSyXWUA0tyLegL7kLqG/ztdnVZNJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747804697; c=relaxed/simple;
-	bh=u7/3KY1Kz6KkAfhTKudlFFJOir6E8UHZ7GaPRxnGVG0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=STEQVYShTCUat/lFDOWX5pXy0pH7zXc4G/ifE3591082TLvwjZ3rvSo/NFCwDmqqcx/asQAiLuUNLr236/AtPc2iqxgY3bULAvm3FnMOe8H802/TRzdLVXuVGpn8S130QRFkAKaA8rhBketzFLsv0h5wspz5o7OyYqBw8ry9jRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgLmllFK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85763C4CEE4;
-	Wed, 21 May 2025 05:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747804695;
-	bh=u7/3KY1Kz6KkAfhTKudlFFJOir6E8UHZ7GaPRxnGVG0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=EgLmllFK8fwvA9p9id9HO7R4iI6aKQsfDw/X/h2+hfPmpkQ4DxvO881/tl+XpcCJC
-	 5oQFMAy3BrZh7rbm2O7tXqo70WumhO6wz3lSF/pIcmWHDahcv04G7RVxIAqRu6ZRzy
-	 BpDwShIP2aI5p40uo2K/YjKCMk4xjVe051SnhFz58o6blPfFVcx8jNTp8Y9LLln2nO
-	 SD/q1UOiIcM8zkEg6kY9MJBgaBL/tbj9Y6SdzEe3Mi8iGLrVxlnVueP7SM/LQXqAsn
-	 fw5T9KMJ7HjPfWWxACu/HIAdhc/hnY4EyLwE2uXwdONaICh7Iq84FBAhHkuR7NljEV
-	 uupqc0PXuoqjw==
-Date: Tue, 20 May 2025 22:18:10 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, ahmed.zaki@intel.com,
- aleksander.lobakin@intel.com, alex.aring@gmail.com, andrew+netdev@lunn.ch,
- ardb@kernel.org, christophe.leroy@csgroup.eu, cratiu@nvidia.com,
- d.bogdanov@yadro.com, davem@davemloft.net, decui@microsoft.com,
- dianders@chromium.org, ebiggers@google.com, edumazet@google.com,
- fercerpav@gmail.com, gmazyland@gmail.com, grundler@chromium.org,
- haiyangz@microsoft.com, hayeswang@realtek.com, hch@lst.de, horms@kernel.org,
- idosch@nvidia.com, jiri@resnulli.us, jv@jvosburgh.net, kch@nvidia.com,
- kys@microsoft.com, leiyang@redhat.com, linux-hardening@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-wpan@vger.kernel.org, linux@treblig.org,
- martin.petersen@oracle.com, mgurtovoy@nvidia.com,
- michael.christie@oracle.com, mingzhe.zou@easystack.cn,
- miquel.raynal@bootlin.com, mlombard@redhat.com, netdev@vger.kernel.org,
- pabeni@redhat.com, phahn-oss@avm.de, sagi@grimberg.me, sam@mendozajonas.com,
- sdf@fomichev.me, shaw.leon@gmail.com, stefan@datenfreihafen.org,
- target-devel@vger.kernel.org, viro@zeniv.linux.org.uk, wei.liu@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/7=5D_net=3A_Convert_dev=5Fset=5Fm?=
- =?US-ASCII?Q?ac=5Faddress=28=29_to_struct_sockaddr=5Fstorage?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250520200929.1b9ae5ec@kernel.org>
-References: <20250520222452.work.063-kees@kernel.org> <20250521001931.7761-1-kuniyu@amazon.com> <202505201741.AFA146E7F6@keescook> <20250520200929.1b9ae5ec@kernel.org>
-Message-ID: <935B5950-190B-47D8-BF45-1CBAE904DB71@kernel.org>
+	s=arc-20240116; t=1747807418; c=relaxed/simple;
+	bh=QK3njKG/0BPVJQprt5Z4zyXuv7xQp6rnKPun6StTOiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U3qetquuAmaXwMUH1hy4syMHqLBIwxffhYZdSiWQ3gdqdzSDBMsJ8IPionF6q2dU5qy37QR/wYEA0J7zoXCmg2yPSih2PqLOOcI1Rfn3WgWq8HtZ2lBeVvst1bhHuOlYP2IKz86TgIs9SzLyfq90skmebRBqZ+41miLXMJonVqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=V0bsnRlC; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.200.157] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 68640201DB2F;
+	Tue, 20 May 2025 23:03:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 68640201DB2F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747807416;
+	bh=Vglw4a5MLslZzzTaaiqC7F52o34O3a4ot8yuZt55b9o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V0bsnRlCOwraVxoNsrL8hwXzSrIVWlQL1jK60tKoT2yHWdQ8X97rttAoE7/BfX/Dc
+	 3h44RZ9XY981oTOVBFWWgM2Hf3RnDekzHxsGWubFeCV8/5QlRo8MiT6bDzxJl7cZL1
+	 r2QBHLIZ/u5DuRA6iKxm7re59TLD+k3XJm3/TH/Q=
+Message-ID: <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
+Date: Wed, 21 May 2025 11:33:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] Drivers: hv: Introduce mshv_vtl driver
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org
+References: <20250519045642.50609-1-namjain@linux.microsoft.com>
+ <20250519045642.50609-3-namjain@linux.microsoft.com>
+ <aCzQMuwQZ1Lkk7eH@skinsburskii.>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <aCzQMuwQZ1Lkk7eH@skinsburskii.>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On May 20, 2025 8:09:29 PM PDT, Jakub Kicinski <kuba@kernel=2Eorg> wrote:
->On Tue, 20 May 2025 17:42:32 -0700 Kees Cook wrote:
->> Ah yes, I can include that in the next version if you want? I was tryin=
-g
->> to find a stopping point since everything kind of touches everything =
-=2E=2E=2E
->
->Looks like the build considers -Wincompatible-pointer-types to always
->imply -Werror or some such? We explicitly disable CONFIG_WERROR in our
->CI, but we still get:
->
->drivers/net/macvlan=2Ec:1302:34: error: incompatible pointer types passin=
-g 'struct sockaddr *' to parameter of type 'struct __kernel_sockaddr_storag=
-e *' [-Werror,-Wincompatible-pointer-types]
-> 1302 |                 dev_set_mac_address(port->dev, &sa, NULL);
->      |                                                ^~~
->
->on this series :(
+On 5/21/2025 12:25 AM, Stanislav Kinsburskii wrote:
+> On Mon, May 19, 2025 at 10:26:42AM +0530, Naman Jain wrote:
+>> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+>> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+>> Expose devices and support IOCTLs for features like VTL creation,
+>> VTL0 memory management, context switch, making hypercalls,
+>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+>> messages and channel events in VTL2 etc.
+>>
+>> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+>> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+>> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   drivers/hv/Kconfig          |   20 +
+>>   drivers/hv/Makefile         |    7 +-
+>>   drivers/hv/mshv_vtl.h       |   52 +
+>>   drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
+>>   include/hyperv/hvgdk_mini.h |   81 ++
+>>   include/hyperv/hvhdk.h      |    1 +
+>>   include/uapi/linux/mshv.h   |   82 ++
+>>   7 files changed, 2025 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/hv/mshv_vtl.h
+>>   create mode 100644 drivers/hv/mshv_vtl_main.c
+>>
+>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+>> index eefa0b559b73..21cee5564d70 100644
+>> --- a/drivers/hv/Kconfig
+>> +++ b/drivers/hv/Kconfig
+>> @@ -72,4 +72,24 @@ config MSHV_ROOT
+>>   
+>>   	  If unsure, say N.
+>>   
+>> +config MSHV_VTL
+>> +	tristate "Microsoft Hyper-V VTL driver"
+>> +	depends on HYPERV && X86_64
+>> +	depends on TRANSPARENT_HUGEPAGE
+> 
+> Why does it depend on TRANSPARENT_HUGEPAGE?
+> 
 
-I'll get this fixed and add dev_set_mac_address_user() for v3=2E=2E=2E
+Thanks for reviewing. This config is required for below functions which
+are used for mshv_vtl_low device.
+
+vm_fault_t mshv_vtl_low_huge_fault ->
+* vmf_insert_pfn_pmd
+* vmf_insert_pfn_pud
 
 
---=20
-Kees Cook
+> <snip>
+> 
+>> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+>> index 1be7f6a02304..cc11000e39f4 100644
+>> --- a/include/hyperv/hvgdk_mini.h
+>> +++ b/include/hyperv/hvgdk_mini.h
+>> @@ -882,6 +882,23 @@ struct hv_get_vp_from_apic_id_in {
+>>   	u32 apic_ids[];
+>>   } __packed;
+>>   
+>> +union hv_register_vsm_partition_config {
+>> +	__u64 as_u64;
+> 
+> Please, follow the file pattern: as_u64 -> as_uint64
+> 
+>> +	struct {
+>> +		__u64 enable_vtl_protection : 1;
+> 
+> Ditto: __u64 -> u64
+> 
+>> +		__u64 default_vtl_protection_mask : 4;
+>> +		__u64 zero_memory_on_reset : 1;
+>> +		__u64 deny_lower_vtl_startup : 1;
+>> +		__u64 intercept_acceptance : 1;
+>> +		__u64 intercept_enable_vtl_protection : 1;
+>> +		__u64 intercept_vp_startup : 1;
+>> +		__u64 intercept_cpuid_unimplemented : 1;
+>> +		__u64 intercept_unrecoverable_exception : 1;
+>> +		__u64 intercept_page : 1;
+>> +		__u64 mbz : 51;
+>> +	};
+>> +};
+>> +
+>    
+>>   /*
+>> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+>> index b4067ada02cf..9b890126e8e8 100644
+>> --- a/include/hyperv/hvhdk.h
+>> +++ b/include/hyperv/hvhdk.h
+>> @@ -479,6 +479,7 @@ struct hv_connection_info {
+>>   #define HV_EVENT_FLAGS_COUNT		(256 * 8)
+>>   #define HV_EVENT_FLAGS_BYTE_COUNT	(256)
+>>   #define HV_EVENT_FLAGS32_COUNT		(256 / sizeof(u32))
+>> +#define HV_EVENT_FLAGS_LONG_COUNT	(HV_EVENT_FLAGS_BYTE_COUNT / sizeof(__u64))
+> 
+> Ditto
+> 
+>>   
+>>   /* linux side we create long version of flags to use long bit ops on flags */
+>>   #define HV_EVENT_FLAGS_UL_COUNT		(256 / sizeof(ulong))
+>> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+>> index 876bfe4e4227..a8c39b08b39a 100644
+>> --- a/include/uapi/linux/mshv.h
+>> +++ b/include/uapi/linux/mshv.h
+>> @@ -288,4 +288,86 @@ struct mshv_get_set_vp_state {
+>>    * #define MSHV_ROOT_HVCALL			_IOWR(MSHV_IOCTL, 0x07, struct mshv_root_hvcall)
+>>    */
+>>   
+>> +/* Structure definitions, macros and IOCTLs for mshv_vtl */
+>> +
+>> +#define MSHV_CAP_CORE_API_STABLE        0x0
+>> +#define MSHV_CAP_REGISTER_PAGE          0x1
+>> +#define MSHV_CAP_VTL_RETURN_ACTION      0x2
+>> +#define MSHV_CAP_DR6_SHARED             0x3
+>> +#define MSHV_MAX_RUN_MSG_SIZE                256
+>> +
+>> +#define MSHV_VP_MAX_REGISTERS   128
+>> +
+>> +struct mshv_vp_registers {
+>> +	__u32 count;	/* at most MSHV_VP_MAX_REGISTERS */
+> 
+> Same here: __u{32,64} -> u{32,64}.
+> 
+> Please, address everywhere.
+> 
+
+I'll take care of all of these in my next patch.
+
+> <snip>
+> 
+>> +
+>> +/* vtl device */
+>> +#define MSHV_CREATE_VTL			_IOR(MSHV_IOCTL, 0x1D, char)
+>> +#define MSHV_VTL_ADD_VTL0_MEMORY	_IOW(MSHV_IOCTL, 0x21, struct mshv_vtl_ram_disposition)
+>> +#define MSHV_VTL_SET_POLL_FILE		_IOW(MSHV_IOCTL, 0x25, struct mshv_vtl_set_poll_file)
+>> +#define MSHV_VTL_RETURN_TO_LOWER_VTL	_IO(MSHV_IOCTL, 0x27)
+>> +#define MSHV_GET_VP_REGISTERS		_IOWR(MSHV_IOCTL, 0x05, struct mshv_vp_registers)
+>> +#define MSHV_SET_VP_REGISTERS		_IOW(MSHV_IOCTL, 0x06, struct mshv_vp_registers)
+>> +
+>> +/* VMBus device IOCTLs */
+>> +#define MSHV_SINT_SIGNAL_EVENT    _IOW(MSHV_IOCTL, 0x22, struct mshv_vtl_signal_event)
+>> +#define MSHV_SINT_POST_MESSAGE    _IOW(MSHV_IOCTL, 0x23, struct mshv_vtl_sint_post_msg)
+>> +#define MSHV_SINT_SET_EVENTFD     _IOW(MSHV_IOCTL, 0x24, struct mshv_vtl_set_eventfd)
+>> +#define MSHV_SINT_PAUSE_MESSAGE_STREAM     _IOW(MSHV_IOCTL, 0x25, struct mshv_sint_mask)
+>> +
+>> +/* hv_hvcall device */
+>> +#define MSHV_HVCALL_SETUP        _IOW(MSHV_IOCTL, 0x1E, struct mshv_vtl_hvcall_setup)
+>> +#define MSHV_HVCALL              _IOWR(MSHV_IOCTL, 0x1F, struct mshv_vtl_hvcall)
+> 
+> How many of these ioctls are actually used by the mshv root driver?
+> Should those which are VTl-specific be named as such (like MSHV_VTL_SET_POLL_FILE)?
+> Another option would be to keep all the names generic.
+> 
+> Thanks,
+> Stanislav
+
+None of the IOCTLs in mshv_vtl section, introduced in this patch is used
+by mshv_root driver. Since IOCTLs of mshv_root does not have MSHV_ROOT
+prefix, I am OK with removing MSHV_VTL_* prefix from these IOCTL names.
+You can let me know if you want me to prefix them with MSHV_VTL.
+
+Thanks again for reviewing.
+
+Regards,
+Naman
+
+> 
+>>   #endif
+>> -- 
+>> 2.34.1
+>>
+
 
