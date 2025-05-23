@@ -1,76 +1,78 @@
-Return-Path: <linux-hyperv+bounces-5645-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5646-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F199BAC274E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 18:15:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50701AC274C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 18:15:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50EB57B9E63
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 16:14:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B52771BA595E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 16:16:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90EE4293457;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01AB296D13;
 	Fri, 23 May 2025 16:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp6jWiUr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLMaqmBQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B89C2DCBE0;
-	Fri, 23 May 2025 16:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34787225D7;
+	Fri, 23 May 2025 16:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016945; cv=none; b=B3YAQLRfKWCbeCcQpIB4extO+iHN6nRk/NSKtzjo6hCpXDpKCtU9O3ZqwHkja3d/U0Njyolx+WE07i8iMt7pVV23oif7hddyZefezQwro/KvsJzC1Hfu5DsAKTOuHjyqe4pa2WISEscdsx8kcd+bU9dP0fFE49DbMkk4UqgHRTo=
+	t=1748016945; cv=none; b=T75JEoOu4vMQmWP1jXiATs+QPzqmgHtUfUaaGD0SDBqdl/tZk6nnG5mPuACh1+C0MHcy2egRKXk3RVOiciH5EFQZ7ZP5Hhjo1Jt0yDGcmIK2w4K0g1humN30Za2PK2wRzPODRmJB+gfxwLMzHeruk39sVX2YxCDUfCcLf4ILapo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748016945; c=relaxed/simple;
-	bh=3wdedpDzqcbxUVOIt3ElR+2fnWpQvTv0IrlmfOx2kaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GQtnq3gIihHctbmzpkX3+UME2YBJEyDaGczSSSicGLFVbvnO4HJytf0bXTO84ohHyWMnD6qT5dMqOXkMYe1cCo9pLi3+2YXyL5QJVll+pdZah4g7RA+rwchKMQECvCDb/B7oa3nS03HHjDzls5XtThL1FDFTIvP9GATVmKhUjso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cp6jWiUr; arc=none smtp.client-ip=209.85.216.46
+	bh=fDObmogM+dfq6hZJ4xJNyjAocz1Nh6uxvjdVqYWVN1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uwdEcSdxJ6kFJAC5qGZkHuk/xF4TH5ByNNtUA9nFDfHj9vaRvgPJ/qEv6yCdjFUrh/WGSP8HD7/cToyeqNxmIMFNMRFVDbEbdaH3QwVpqM5RO326DO5NtwnabO0GjkYXe5QlhcRtSqOFW4thnXkZsYQxkLhlHCs0jI96vwxCdls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BLMaqmBQ; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-31107f4833fso99876a91.0;
-        Fri, 23 May 2025 09:15:42 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30820167b47so147926a91.0;
+        Fri, 23 May 2025 09:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748016942; x=1748621742; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ls243XxE58XUFIhUPSeMMfbElJjdBNkZybvfZFLuLmk=;
-        b=cp6jWiUrrNqK6HG/b9Cm6J6fqw5N3ontxA+uNk3AsEwBRhBAkX3yWS1csvtPAK4zRG
-         tlz6xbR6HM44580YF5P2bMGxMY8dLXqFbBd8wCv9gkOjZFdRSKmZgp8DlWMZaq2DIZ+t
-         QVQD6fHWwSy3iiiCJqd+mU5YzqoG1OUvvdRJmQjhjpk/UEYTVhopoYtlQ+U5ueGyprPA
-         MgQoKKib387v+pGpytdqGQcY8OpZ7tWunQMLcsQN7NT2T+bHd3a8VXd0Ybf5DaRi3L7Q
-         ISs6fRP9/wjaaIfoH5AjpsKXWIA163Z9Li/Nz8I4eZndNd/0K5eZMRQy4IkWoF/QEHt4
-         oYcg==
+        d=gmail.com; s=20230601; t=1748016943; x=1748621743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6Ci3isxxhsp5k7AjuUnYW4WXxlffmz+Qa/1SXSaaPCI=;
+        b=BLMaqmBQivR3vehb4LPODls7Rx6Vjt/6vAJB2417+68he/0kVHL13V2gB5zAGzNl20
+         k5t957AQ/fKHhf89ihAawrwblWOkvptgVbYmllNbwp4qGeCWcNtfIvViDHS9ZbYZLlqy
+         pAiTIFbUIiXtYxYZ0wdI3TP3tjY78oWtUEnzCWcDneoqjWODdYIhegnLK9PXmDeJZ2D7
+         459BMi5nZkBtg+nb/wkwWuRgOAcRhoewct2Mz9dktbj9+Rpy+SM+9mXPlXTIvG1KMxG6
+         dhVahLL0VaKBvZ+8pndRan3/PfIkMaoo13rf/TfJq+KDVji1lSk3LEeYZR31UYMuE3oq
+         XfNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748016942; x=1748621742;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ls243XxE58XUFIhUPSeMMfbElJjdBNkZybvfZFLuLmk=;
-        b=SeDggmMH0Gq4klHGrFYvM6XjJ/eaUBwPqa2Yhst4buWHat2oQmOUCa4ZW0vR4pPfJL
-         MuC2LyLDsD3XoLhzffGizJGWvg3kXQHh+tlueBqtNzODNsQGClG4VhFqUguNlqMJKWQC
-         MzvyTRVVSH1nGI6O5vaiZfoLcuo9men0y2tk6Myi0tkI3O0j06xsBaKDno1aqey+nIvx
-         Pu7mi2kAy/sofYaeD+SLjKcyWq/hmpw/H6Yds1yjVhLoykEe8bmRTBnYWt3oJMV1Jh5p
-         72RW8OxYyJL7XRJ78aslHqzl9ASGWB7mAvOteP6E1RAiGtEisA+rA6JVIH3zng7IyyEF
-         wNJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9C5InxSMLCHU0E6y4MZTpTmEtK4khPdTNEsXVPuCFcUx7jiK7hE9K6E2AbX+mzltTaSqWFn/WCdNCEcz8@vger.kernel.org, AJvYcCVKncHhsr1NtFFz8PFpXhm9JEd0i6oqTtZ6YF5tnvhRdLuRY6tURQ85zL1xRSGTiBd9jvlkZkcbb3vrVfDT@vger.kernel.org, AJvYcCX4iw9njlMiWhLNp6i44OvkQNxW3zjKFGl8z0bXXJMJyOdX8ZkkZsJs4jYpZLD+tV7bW6g5rextmwnqdw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqKy01WD7eeUlCv3d/KuXUY84v4R+O/CFOhD542XTqjajBwO+0
-	I1J3T9kSw5khK2jp7iB0mpP0tIpmibrlKMU2LZmGSACns979dN5Ejih4
-X-Gm-Gg: ASbGncuhynXkh6kLqm+lXZUKlcNEf3bwHJziUq/yz8M78ncY7ml2dlXYU8PG/R08I9p
-	9pnHtU2PP1JWYvgWD6bEmdPvNYQjJpEyNyerSz4W7+eV7/rJ62l7w3bM49naztDgCz+bI8VlfDR
-	etW8uIAORiAMYXPqhIjfEPJvTdJLq7pT81LVYlx5K1An7bVjPDwRrXeq8DkkTDCzi63ghElVTBa
-	ULJGAYfXXFTgCmqqcSSfJjFLv7VoLjMumM9fUaEqCtOQ99DP/VSuB7NwPRToCgjzF/EKhV8vFVx
-	R7uuhzgN0xLuv51AdwWg36G/wSyLBOZhmPeBJA8tS7Sl1dM3VjkJw2mN6rKhL7RQKahnmEjvQ61
-	xI9YKNtmF3lDsa0J9SIJ9nV9v+IwVuw==
-X-Google-Smtp-Source: AGHT+IFm/aBR27COrCfUEG1WEEW/VaW4o7v7eFIsjnnSJARIe9dfY945CATNH/PdlGnGpUKKevkX5Q==
-X-Received: by 2002:a17:90b:54d0:b0:305:2d68:8d57 with SMTP id 98e67ed59e1d1-30e830ca02bmr37165622a91.5.1748016942269;
-        Fri, 23 May 2025 09:15:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748016943; x=1748621743;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6Ci3isxxhsp5k7AjuUnYW4WXxlffmz+Qa/1SXSaaPCI=;
+        b=YfddyV1QeHXlQtLCxKkLaPdfSCMWVzJxQS9KncUid5qhf/O1qLR7P3uaNiwj97ErQa
+         s10kA13SGgCYZ/A64059kol+RlTsLTzYrMJ8vk6OKl+9brGmAkDyyYS78I1ERdHPiGfk
+         mI6mO1vQnN/XIIF6EI2c0KQAPZNriXjs92CpHQ3jiSvNHIhJdABiZl1rhplHcmcARL6O
+         4UfY9ejMn4yvHNI642PPh97FetztLotjp8x8I3TKiyoYvw1DUDlnUZA3qgrSc/UDTyQZ
+         2dcYBrrgCkar4eTeyoDdVDkrcDkIDB0BCr3LgjjeFQLv3dl1apS4VrD/XQ3fVRqdXQ49
+         GE0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2Z0qSth2KxW2sejGfXfPgCjPKUBK3aKq4jbIJX+X57bkHFpBDaS54cSxaTDMl8s9LLQm1EGRyHrPurnaV@vger.kernel.org, AJvYcCWSppcEZbQY/qPumSzSfL46P3zdwdqlxDa27iCEqA1nReAPONZ8/KHYIZx40Y8pFedi/uUTi9GjfQtqNw==@vger.kernel.org, AJvYcCX97712fV7nREKw4zUdfBC++mvJXlh9/WqXbwDniOZWpBxi/PPgZh/BDk9HzZTsQzJen937anlkNwd+v+MB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS+mCJTPRnu4HWHjmW32Cu2f495BqWa/AxB6RArKbwillWpha3
+	7SKJxJQNYxJaSe4/E7jF8ur5UfsD99Ys6q/bmkWP4Lcju3G1MQMhaO9M
+X-Gm-Gg: ASbGnct2vQz7KvZN+MLb5RCX+OV/IBjQvyFeQHWAwWw6CAJFj3NUbucG3FFZttrNEg6
+	ilaYheIKI3tVw6cpg3z3v8VFat9K3Il3N2rRxH/QwOf41FcP3sp45KGGmtNIUgwheitJOS2AcLh
+	ueK9w5V8DM3imnRUs4m4KRovVm9O1F9v1lckWs4BdXXNA+aX1UtTQn81ElE3HBPmDXvMEXIgQGG
+	TTe3iZEsN4yHsUzNTeOWJQDb1ZICjVJUBpZMzMZ5OotQkdTnAtZhHgq0SMecZ5xQT++XjpcVxMV
+	5ETRQck3dVyUbdx+RJC0c/YIig6fLuZEDyO6UjSjqgQkOcZIpAT2/kA3RGt3i3kP0hcWYw6QfDD
+	RsuJbQBbrDGU0OWiGDMQDSOS6cuExTZ2uSiiC6G33
+X-Google-Smtp-Source: AGHT+IE8pcy7Z2wW7SrWmR8EeORXq3Lf3Mz2nUIbKMce/zPJlwY6YhtwhHMP/X+hsVmxnhhRfKeaCQ==
+X-Received: by 2002:a17:90b:3889:b0:2ff:5267:e7da with SMTP id 98e67ed59e1d1-3110ac9b71fmr132826a91.3.1748016943353;
+        Fri, 23 May 2025 09:15:43 -0700 (PDT)
 Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d46ffsm7526565a91.25.2025.05.23.09.15.41
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d46ffsm7526565a91.25.2025.05.23.09.15.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:15:42 -0700 (PDT)
+        Fri, 23 May 2025 09:15:43 -0700 (PDT)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: simona@ffwll.ch,
@@ -88,10 +90,12 @@ Cc: weh@microsoft.com,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH v3 0/4] fbdev: Add deferred I/O support for contiguous kernel memory framebuffers
-Date: Fri, 23 May 2025 09:15:18 -0700
-Message-Id: <20250523161522.409504-1-mhklinux@outlook.com>
+Subject: [PATCH v3 1/4] mm: Export vmf_insert_mixed_mkwrite()
+Date: Fri, 23 May 2025 09:15:19 -0700
+Message-Id: <20250523161522.409504-2-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250523161522.409504-1-mhklinux@outlook.com>
+References: <20250523161522.409504-1-mhklinux@outlook.com>
 Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -99,46 +103,36 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-Current deferred I/O code works only for framebuffer memory that is
-allocated with vmalloc(). The code assumes that the underlying page
-refcount can be used by the mm subsystem to manage each framebuffer
-page's lifecycle, which is consistent with vmalloc'ed memory, but not
-with contiguous kernel memory from alloc_pages() or similar. When used
-with contiguous kernel memory, current deferred I/O code eventually
-causes the memory free lists to be scrambled, and a kernel panic ensues.
-The problem is seen with the hyperv_fb driver when mmap'ing the
-framebuffer into user space, as that driver uses alloc_pages() for the
-framebuffer in some configurations. This patch set fixes the problem
-by supporting contiguous kernel memory framebuffers with deferred I/O.
+Export vmf_insert_mixed_mkwrite() for use by fbdev deferred I/O code,
+which can be built as a module.
 
-Patch 1 exports a 'mm' subsystem function needed by Patch 3.
+Commit cd1e0dac3a3e ("mm: unexport vmf_insert_mixed_mkwrite") is
+effectively reverted.
 
-Pathc 2 defines the FBINFO_KMEMFB flag for use by Patches 3 and 4.
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+Changes in v2:
+* Exported as GPL symbol [Christoph Hellwig]
 
-Patch 3 is the changes to the fbdev deferred I/O code. More details
-are in the commit message of Patch 3.
+ mm/memory.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch 4 updates the hyperv_fb driver to use the new functionality
-from Patch 3.
-
-Michael Kelley (4):
-  mm: Export vmf_insert_mixed_mkwrite()
-  fbdev: Add flag indicating framebuffer is allocated from kernel memory
-  fbdev/deferred-io: Support contiguous kernel memory framebuffers
-  fbdev: hyperv_fb: Fix mmap of framebuffers allocated using
-    alloc_pages()
-
- drivers/video/fbdev/core/fb_defio.c | 128 +++++++++++++++++++++++-----
- drivers/video/fbdev/hyperv_fb.c     |   1 +
- include/linux/fb.h                  |   1 +
- mm/memory.c                         |   1 +
- 4 files changed, 111 insertions(+), 20 deletions(-)
-
+diff --git a/mm/memory.c b/mm/memory.c
+index 5cb48f262ab0..58ba40a676c9 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2688,6 +2688,7 @@ vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+ {
+ 	return __vm_insert_mixed(vma, addr, pfn, true);
+ }
++EXPORT_SYMBOL_GPL(vmf_insert_mixed_mkwrite);
+ 
+ /*
+  * maps a range of physical memory into the requested pages. the old
 -- 
 2.25.1
 
