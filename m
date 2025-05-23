@@ -1,73 +1,61 @@
-Return-Path: <linux-hyperv+bounces-5642-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5643-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68BC1AC21CE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 13:14:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B869AC22F0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 14:48:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29741505694
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 11:14:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 519D9A2533A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 12:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3E822B5AC;
-	Fri, 23 May 2025 11:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393CD10A1F;
+	Fri, 23 May 2025 12:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VTm6YpXt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E0BEV1Pi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CCA229B1C;
-	Fri, 23 May 2025 11:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED161FDD;
+	Fri, 23 May 2025 12:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747998864; cv=none; b=JIFGfssbAQc8MypDOeyiXbqVcuBwDgfPUjUVX0xgEF8oENHaHNPmPy0iXtyZBahSq4gLW4VHDlVnCQ/XQZiArLXczrEWwut5ETTYMlTvt+D2jJyhlPRIeaNydRpRlrFHttLj8LdoKzSUGFKiG68VpFHjY5rvq2eu3X/Lfpg/ng4=
+	t=1748004506; cv=none; b=hIcM2YlzYg50E2qVitW0OGUwSL5MxsJB2iQGcmuU8rUW8Ue0xnhrs9UoCQjqGBXY1dXpuQtRf0kxbd+evFBCllBnDFdGWLpLIuHLrIQIDMEuari7PCRBr03E1PSAUfMTh7u5yQQyISP5QbjGkbV3Uwk0kKE0oSENoCgPGKW9LnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747998864; c=relaxed/simple;
-	bh=fQM36qxJEofH550SYEql58cMFaL0cbMQSEGt5673CDE=;
+	s=arc-20240116; t=1748004506; c=relaxed/simple;
+	bh=ep7ttSMYmIC7dSCZw6rB4THOYgYU0W+j3ONAkquPmvs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sriaRVd5IdO/W1mQ3F7C8H0WSN8xBLyrZLdFZiA/3pdQM6B/dSWr6u1mT1hZ4rGAPyISYgcKUte+JVXZiG5aIfbctmWyFfht5wCgttPb79Qwv3ASzFgq0orKbJqMt01Iz97X19K3S7auhW1bM5PgKYKo9EdTHHU2b15CPvFNK/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VTm6YpXt; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qFE8tg2hkqL/QDMRDxBmyrXVviTv054S7EmAHGK1Cu8=; b=VTm6YpXt+rg+boo/Y2XlDLHfjF
-	uTUdFDuv7CRduVt0vgcpt1H3qXyWcKOUKwBJyBzjyRnEO9SE7JRpGZOhTfBBSEBXLgYIEYKbXlZDB
-	tpsVGBoReZXjDVnjHYqsbdp3l9lenZI0uN4sGBmjoTHFC/oSTcCk06BRBBvKukbRvtHnIoQOohxFp
-	AAk2xVkEy/ZUzR6Fa5IR24TYqZXrrQUCbpTsXVqK4NnKuLMx7BbaRzGqb7TLhfaz4cV5tvbk6Bwys
-	vuAtkKS5Ar3GY61i/vpDcdclGEPpTbtP7i+0lOv6wFveWet/d/4Gtx0J7aORLDJMVameaAuX32RZ0
-	m/g+9Shg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uIQLx-00000007VFJ-22r2;
-	Fri, 23 May 2025 11:14:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 10E13300583; Fri, 23 May 2025 13:14:17 +0200 (CEST)
-Date: Fri, 23 May 2025 13:14:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Shuah Khan <shuah@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 00/13] KVM: Make irqfd registration globally unique
-Message-ID: <20250523111416.GJ39944@noisy.programming.kicks-ass.net>
-References: <20250522235223.3178519-1-seanjc@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LA/oOHh/Z9f6iiQJB7iI4LRn7gTtaPG6DtVEiQ9iYdTmfwwXGfAmvqoI8aXjpTOhZZWnrk8utRq9sBcmzh92qnTGDHa1Yd8m5z5IVgzJH1mlkcl2etIBer9g4q1GCxVTtsebKnngA8ycw8Xsr6k9ihUJknpK5Vi4dsR4JJbE4FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=E0BEV1Pi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 2B704206834F; Fri, 23 May 2025 05:48:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2B704206834F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748004504;
+	bh=TK3pq8zeypwsvsAQp4lD9eQ6MH7Hnc9VhxYCb1JrU/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E0BEV1PiOKtEampixS2HTrQxuD6/TbQearDIPrcet4PyKtxbMC1/Q71ZYdfiTYVsH
+	 moQRlxSHrYNO1KOo90RlnK3/DUbIJDZSuqyoA8rV+E3rS0NoL7tqL/q/1azAgm5xA2
+	 jbfWowHxhBACmuy0yY8YgnAdfNdE4lhyN/FnXj8M=
+Date: Fri, 23 May 2025 05:48:24 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	john.fastabend@gmail.com, sdf@fomichev.me, kuniyu@amazon.com,
+	ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	ssengar@microsoft.com, stable@vger.kernel.org
+Subject: Re: [PATCH net,v2] hv_netvsc: fix potential deadlock in
+ netvsc_vf_setxdp()
+Message-ID: <20250523124824.GA4946@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1747823103-3420-1-git-send-email-ssengar@linux.microsoft.com>
+ <20250522151346.57390f40@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,12 +64,43 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250522235223.3178519-1-seanjc@google.com>
+In-Reply-To: <20250522151346.57390f40@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, May 22, 2025 at 04:52:10PM -0700, Sean Christopherson wrote:
->   sched/wait: Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority()
->   sched/wait: Add a waitqueue helper for fully exclusive priority
->     waiters
+On Thu, May 22, 2025 at 03:13:46PM -0700, Jakub Kicinski wrote:
+> On Wed, 21 May 2025 03:25:03 -0700 Saurabh Sengar wrote:
+> > The MANA driver's probe registers netdevice via the following call chain:
+> > 
+> > mana_probe()
+> >   register_netdev()
+> >     register_netdevice()
+> > 
+> > register_netdevice() calls notifier callback for netvsc driver,
+> > holding the netdev mutex via netdev_lock_ops().
+> > 
+> > Further this netvsc notifier callback end up attempting to acquire the
+> > same lock again in dev_xdp_propagate() leading to deadlock.
+> > 
+> > netvsc_netdev_event()
+> >   netvsc_vf_setxdp()
+> >     dev_xdp_propagate()
+> > 
+> > This deadlock was not observed so far because net_shaper_ops was never set,
+> 
+> The lock is on the VF, I think you meant to say that no device you use
+> in Azure is ops locked?
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+That's right.
+
+> 
+> There's also the call to netvsc_register_vf() on probe path, please
+> fix or explain why it doesn't need locking in the commit message.
+
+On rethinking I realize you were referring to the netvsc_probe() path not
+mana_probe(). Since this lock is effectively a no-op, it doesn't really
+matter whether it's there or not.
+
+However, I think we can revisit this when we add ops for any of the VFs.
+
+- Saurabh
 
