@@ -1,78 +1,78 @@
-Return-Path: <linux-hyperv+bounces-5646-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5647-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50701AC274C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 18:15:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD324AC2752
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 18:16:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B52771BA595E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 16:16:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6438A17B45A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 16:16:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01AB296D13;
-	Fri, 23 May 2025 16:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D078B296FB9;
+	Fri, 23 May 2025 16:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLMaqmBQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpoufZkw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34787225D7;
-	Fri, 23 May 2025 16:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2151F0E37;
+	Fri, 23 May 2025 16:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748016945; cv=none; b=T75JEoOu4vMQmWP1jXiATs+QPzqmgHtUfUaaGD0SDBqdl/tZk6nnG5mPuACh1+C0MHcy2egRKXk3RVOiciH5EFQZ7ZP5Hhjo1Jt0yDGcmIK2w4K0g1humN30Za2PK2wRzPODRmJB+gfxwLMzHeruk39sVX2YxCDUfCcLf4ILapo=
+	t=1748016946; cv=none; b=eoVcsb+e71KmrUnik8ojfeDbG5Uf2EQH5UTHZHjpXVenJH2OW647CQva32XnjLgjv70+fji6Ns120NH04y9sNMhL5t7Seb1liKdT/EdpBROD0zmDkJ7UZwhTJr+bTLUhPk1b63tJl/tZbvir92K/2tdZRWQW6JJjvewxt2OXBG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748016945; c=relaxed/simple;
-	bh=fDObmogM+dfq6hZJ4xJNyjAocz1Nh6uxvjdVqYWVN1E=;
+	s=arc-20240116; t=1748016946; c=relaxed/simple;
+	bh=hz0JB9pzXQpSDr6pAMFPj1hF1BZKOfjGC0sQ6kmOQIs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uwdEcSdxJ6kFJAC5qGZkHuk/xF4TH5ByNNtUA9nFDfHj9vaRvgPJ/qEv6yCdjFUrh/WGSP8HD7/cToyeqNxmIMFNMRFVDbEbdaH3QwVpqM5RO326DO5NtwnabO0GjkYXe5QlhcRtSqOFW4thnXkZsYQxkLhlHCs0jI96vwxCdls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BLMaqmBQ; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=fwqL3P46HSgsyJTvYVHryasHf7+Y311tanhjXUEBNP6Scq9njZ3GhZVaKWVkad/I9F+0HSC6lF1RoJW9OTbZOBPHauPv5q5DRdKOd6SFLsnV6oN+R1nQwT9H9JvEhTXWiJF2yeF3Z6gcloJrYwQzxFolj/EDudRajwtRVlFqaI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LpoufZkw; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30820167b47so147926a91.0;
-        Fri, 23 May 2025 09:15:43 -0700 (PDT)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so115259a91.3;
+        Fri, 23 May 2025 09:15:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748016943; x=1748621743; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748016944; x=1748621744; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=6Ci3isxxhsp5k7AjuUnYW4WXxlffmz+Qa/1SXSaaPCI=;
-        b=BLMaqmBQivR3vehb4LPODls7Rx6Vjt/6vAJB2417+68he/0kVHL13V2gB5zAGzNl20
-         k5t957AQ/fKHhf89ihAawrwblWOkvptgVbYmllNbwp4qGeCWcNtfIvViDHS9ZbYZLlqy
-         pAiTIFbUIiXtYxYZ0wdI3TP3tjY78oWtUEnzCWcDneoqjWODdYIhegnLK9PXmDeJZ2D7
-         459BMi5nZkBtg+nb/wkwWuRgOAcRhoewct2Mz9dktbj9+Rpy+SM+9mXPlXTIvG1KMxG6
-         dhVahLL0VaKBvZ+8pndRan3/PfIkMaoo13rf/TfJq+KDVji1lSk3LEeYZR31UYMuE3oq
-         XfNg==
+        bh=fcO9TXDJbv0PnpLhAYEgKHbgViS8WVoRG/IIez/PTTM=;
+        b=LpoufZkwN19VCywWq9GHD9nNqlitZwRXJqamadrGJvNhd+6Ky8MYfEU4yLGhHhteyE
+         1pc9UWwjRT0xznLWBANzfyB7tv3YHMnT9Zf2JsGFCDLj0D1hp1IXp/HHTNqYPFE2NI4w
+         9S5PnrKjG6T+ViM+ev18HH9r79No43bdwsb5cwQPYd6a9H1RVPlCfxVrlG9B7DQHt9OS
+         WomxwLGmW7yJoMiTH1x6BGAW3NsC5Y/0th/OB64Ct7/e+/mnJFIwaWpkziFsoJ0PULIC
+         JGiAuZrHHZ8Wc7VcksmotMK6H6oisauAaGO8HHnIOZqneZM/119zCI2xy/mWPf5rWscE
+         FBEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748016943; x=1748621743;
+        d=1e100.net; s=20230601; t=1748016944; x=1748621744;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6Ci3isxxhsp5k7AjuUnYW4WXxlffmz+Qa/1SXSaaPCI=;
-        b=YfddyV1QeHXlQtLCxKkLaPdfSCMWVzJxQS9KncUid5qhf/O1qLR7P3uaNiwj97ErQa
-         s10kA13SGgCYZ/A64059kol+RlTsLTzYrMJ8vk6OKl+9brGmAkDyyYS78I1ERdHPiGfk
-         mI6mO1vQnN/XIIF6EI2c0KQAPZNriXjs92CpHQ3jiSvNHIhJdABiZl1rhplHcmcARL6O
-         4UfY9ejMn4yvHNI642PPh97FetztLotjp8x8I3TKiyoYvw1DUDlnUZA3qgrSc/UDTyQZ
-         2dcYBrrgCkar4eTeyoDdVDkrcDkIDB0BCr3LgjjeFQLv3dl1apS4VrD/XQ3fVRqdXQ49
-         GE0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Z0qSth2KxW2sejGfXfPgCjPKUBK3aKq4jbIJX+X57bkHFpBDaS54cSxaTDMl8s9LLQm1EGRyHrPurnaV@vger.kernel.org, AJvYcCWSppcEZbQY/qPumSzSfL46P3zdwdqlxDa27iCEqA1nReAPONZ8/KHYIZx40Y8pFedi/uUTi9GjfQtqNw==@vger.kernel.org, AJvYcCX97712fV7nREKw4zUdfBC++mvJXlh9/WqXbwDniOZWpBxi/PPgZh/BDk9HzZTsQzJen937anlkNwd+v+MB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS+mCJTPRnu4HWHjmW32Cu2f495BqWa/AxB6RArKbwillWpha3
-	7SKJxJQNYxJaSe4/E7jF8ur5UfsD99Ys6q/bmkWP4Lcju3G1MQMhaO9M
-X-Gm-Gg: ASbGnct2vQz7KvZN+MLb5RCX+OV/IBjQvyFeQHWAwWw6CAJFj3NUbucG3FFZttrNEg6
-	ilaYheIKI3tVw6cpg3z3v8VFat9K3Il3N2rRxH/QwOf41FcP3sp45KGGmtNIUgwheitJOS2AcLh
-	ueK9w5V8DM3imnRUs4m4KRovVm9O1F9v1lckWs4BdXXNA+aX1UtTQn81ElE3HBPmDXvMEXIgQGG
-	TTe3iZEsN4yHsUzNTeOWJQDb1ZICjVJUBpZMzMZ5OotQkdTnAtZhHgq0SMecZ5xQT++XjpcVxMV
-	5ETRQck3dVyUbdx+RJC0c/YIig6fLuZEDyO6UjSjqgQkOcZIpAT2/kA3RGt3i3kP0hcWYw6QfDD
-	RsuJbQBbrDGU0OWiGDMQDSOS6cuExTZ2uSiiC6G33
-X-Google-Smtp-Source: AGHT+IE8pcy7Z2wW7SrWmR8EeORXq3Lf3Mz2nUIbKMce/zPJlwY6YhtwhHMP/X+hsVmxnhhRfKeaCQ==
-X-Received: by 2002:a17:90b:3889:b0:2ff:5267:e7da with SMTP id 98e67ed59e1d1-3110ac9b71fmr132826a91.3.1748016943353;
-        Fri, 23 May 2025 09:15:43 -0700 (PDT)
+        bh=fcO9TXDJbv0PnpLhAYEgKHbgViS8WVoRG/IIez/PTTM=;
+        b=DxDJ4rf0PdxyrHaZVPD7UUX50Q0/c6XAHdeVyrDmL8AM5kPSgf4tMENxx8wdgxw1rE
+         ReIFQKs9aPFf3qeLxkEc42m7nR6HD4DLD0yGdQ3MeLCEtGr2GpS3sIJC27QdDFlrt5fF
+         keIOBJpe5wjlbHW8li/dsqtScbCmc1OSavnz9C9rXy/36KJm46DNmgZbZVbLvIyTXfs1
+         TZGhs7ZruYkqPnv0+vq+P+dij/bkyRqTxYpgcUTi6BdBFi5KNktZdiaZl4OqMmJtYq3q
+         rUY9pMsRkChY/CIFXnoXCGoBSTB12JG4PiZh/WSM8TZipFMrdLWduJAg62MhzMWSlqTX
+         ALbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVr+MtDsMxTuLS5e6k7fWCSmkypSAArjhGq1Lbv/CnkUnb1dKXjlUqjMGfkYqvwDcLAnbmu19ETXzZmpryz@vger.kernel.org, AJvYcCWF262j+WK4Vw/d2AnH1CjtbvGX6pQqDaXGvjeATWudnLE0he/MSodNFiWGHYdk80V5SyXFir1RTRTVRQ==@vger.kernel.org, AJvYcCXnhOZX2VioUW+N/zQbvKUxWC0rPMh9TijOXVPPlqaG7e0mQVEv9fKnZmV9zCNHpZpjsB0NKAWognaca+0f@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpkMCflZ41FbC2CtCm8MBLoB93LX2d0MTzFURuwLRv6MAZbD1s
+	4FIMWVvtIRXqg4FyLwC5lLJB6+4FkRIjHIwU+FsrURN3HnVBDnnZPP8R
+X-Gm-Gg: ASbGnctdTXjCN0vJNl4qzP4HvVUmElQTDENnZDeut4ladVqi0AJMf5h7GIxDDU2aerr
+	XLQzPCoJC6ry3F4kXzkZbfLpxz/x5iIzOsL08rXY6HHCEsTdEDX0S1LQXQDQDrKoYeSwclrAKlk
+	Cnz0iGPFBAtgMvZAHref5Rh7nobIFHgVdp372yWQOL35Ujf//1njojQ8vURfOgkjuXS9hbTnOok
+	n1tLj8rxkFw+gp4sZinHgEVYzQmWfQvYYCLzTwmSsVInETGKgrMIrtfdYfXObe0h+e0YDzwIx5a
+	ZcDBZvHqXwarvYZ88eG03bg/sKQ6opeQawgCQB867jg8hCj0uh6hNwmOZsL6iNVRaYrNsgdTr7h
+	r+l+vzkfltRjV3jHJBFZVeTOYYY4bZEVmRO+wkc4q
+X-Google-Smtp-Source: AGHT+IEBtJgfUd9PfG81gZCPku8xlj3yj9p8H5N/t60M0ZS5vpK6dBsg3ehnSMHrskKHTMOTXKcvtw==
+X-Received: by 2002:a17:90b:48ce:b0:2ee:d371:3227 with SMTP id 98e67ed59e1d1-30e7d53fedcmr53004820a91.17.1748016944385;
+        Fri, 23 May 2025 09:15:44 -0700 (PDT)
 Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d46ffsm7526565a91.25.2025.05.23.09.15.42
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d46ffsm7526565a91.25.2025.05.23.09.15.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 09:15:43 -0700 (PDT)
+        Fri, 23 May 2025 09:15:44 -0700 (PDT)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: simona@ffwll.ch,
@@ -90,9 +90,9 @@ Cc: weh@microsoft.com,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH v3 1/4] mm: Export vmf_insert_mixed_mkwrite()
-Date: Fri, 23 May 2025 09:15:19 -0700
-Message-Id: <20250523161522.409504-2-mhklinux@outlook.com>
+Subject: [PATCH v3 2/4] fbdev: Add flag indicating framebuffer is allocated from kernel memory
+Date: Fri, 23 May 2025 09:15:20 -0700
+Message-Id: <20250523161522.409504-3-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250523161522.409504-1-mhklinux@outlook.com>
 References: <20250523161522.409504-1-mhklinux@outlook.com>
@@ -107,32 +107,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-Export vmf_insert_mixed_mkwrite() for use by fbdev deferred I/O code,
-which can be built as a module.
-
-Commit cd1e0dac3a3e ("mm: unexport vmf_insert_mixed_mkwrite") is
-effectively reverted.
+Add a flag that fbdev drivers can set to indicate that the framebuffer
+memory comes from alloc_pages() or similar as opposed to vmalloc()
+memory. The flag is to be used by fbdev deferred I/O.
 
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
-Changes in v2:
-* Exported as GPL symbol [Christoph Hellwig]
+Changes in v3:
+* This patch is new in v3. The definition of FBINFO_KMEMFB
+  was previously combined into the next patch of the series.
+  [Helge Deller]
 
- mm/memory.c | 1 +
+ include/linux/fb.h | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 5cb48f262ab0..58ba40a676c9 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2688,6 +2688,7 @@ vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
- {
- 	return __vm_insert_mixed(vma, addr, pfn, true);
- }
-+EXPORT_SYMBOL_GPL(vmf_insert_mixed_mkwrite);
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 05cc251035da..a1121116eef0 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -396,6 +396,7 @@ struct fb_tile_ops {
  
- /*
-  * maps a range of physical memory into the requested pages. the old
+ /* hints */
+ #define FBINFO_VIRTFB		0x0004 /* FB is System RAM, not device. */
++#define FBINFO_KMEMFB		0x0008 /* FB is allocated in contig kernel mem */
+ #define FBINFO_PARTIAL_PAN_OK	0x0040 /* otw use pan only for double-buffering */
+ #define FBINFO_READS_FAST	0x0080 /* soft-copy faster than rendering */
+ 
 -- 
 2.25.1
 
