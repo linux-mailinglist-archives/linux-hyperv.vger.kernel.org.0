@@ -1,65 +1,65 @@
-Return-Path: <linux-hyperv+bounces-5654-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5655-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 134E2AC287E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 19:22:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E32FBAC288A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 19:23:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78F9A3BD28C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 17:21:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBCFE1885F95
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 May 2025 17:24:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7264298249;
-	Fri, 23 May 2025 17:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D28297B75;
+	Fri, 23 May 2025 17:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjFpapf/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pw1OVOqw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27315297A4E;
-	Fri, 23 May 2025 17:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60EB22A1CD;
+	Fri, 23 May 2025 17:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748020913; cv=none; b=tJLZqkbUX3sVjlCOLotIgIUVQNSj+I7RBg4J7pbAZ3ahVdGPp899FzwCGooR/M146NSPDtm7m1mOEbiwJOf8xEcTb/oOAsn4l2e5iVtjBQ0FVtJuRhORzg7eKMG3YqSVtps7qTzkGjqoAXZH5gnpUz/rsIxTZKXJU1ZnNns6uJg=
+	t=1748021023; cv=none; b=baoPQ/ZvytG3IEYM29EkeMzZJUtyc5UQoESw/x82iFkkNykU0Ndk/94YIPT9EUi/uzRVdHYEe6SaLAuAXSQGLPlZBRSHDgCMmA0rpG7mEP8IgZwjzzJNfOqHxVCad2ar8apn9qzX5IqpEWDl6ixehueShiKoQb0HBC1Oq5iGhwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748020913; c=relaxed/simple;
-	bh=l68jmxlSRibiW9YCMsKtE4fFV3SCeLUF2uAmWkZSsgw=;
+	s=arc-20240116; t=1748021023; c=relaxed/simple;
+	bh=y1PN1cnM4TdTcrh8DOHDnezU+5RqY867GeMqEoCFWLI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ES5IfYRabI1anyeYqfIjuAbD8mNn3TxHyUvElnUJ8P5FBKVgL+T3zfl7l2LDUEAINqQzhdmx/oai22yOw1ovETxxw7OunPqRCXkqvKYLL4DA34vk2EXI6StKcECAnSHUDTVkDQnIiIocm6K7ecNtlwfB0ioW5K54FZqG3W/ldwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjFpapf/; arc=none smtp.client-ip=192.198.163.8
+	 In-Reply-To:Content-Type; b=KvMVYMRRh2hFFKjplRyVmJ1ICnRy4/3INCnNB9egwWkSyYmfAvTzehzYj5slLJyLLlsAxuTVlT/mkvMshVKUR9YuaOdy4qCb7Apuv6KCwGEdXYuMJHDugEUCYzwho6njSFPDPvWqjCsw5QF8rgIVfIUoMrhYFbQBh12Ivl4nL0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pw1OVOqw; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748020912; x=1779556912;
+  t=1748021022; x=1779557022;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=l68jmxlSRibiW9YCMsKtE4fFV3SCeLUF2uAmWkZSsgw=;
-  b=UjFpapf/NRYraAYFNdNPj54QzZ/77zUCGuKZPMgqJO4Q+NuVtfUs9XRi
-   0+0/oevPUazy6WQFJChQ2SM0Hvq4IXJS9BVsAEuX5c0z6W7wrssCKRFFD
-   zgmnp4tdawT+1NAxa4ZS4NfqRqkbIO/eLWCM6mTNylRqx22ykoY3Wi3pD
-   SURao45jA+C6Ndlak2mpGAdSWf8LRz45owCf6eltasyvcIwV/oRKnfltV
-   IYATDl1OJHIvnQz8M1oxOkTYr1AV+cf7UqWurGn8T+ru7tMCBrDAMNqmr
-   +qJ/nuGsF2Rr4AeKZRYgF7einZLhnKOQ78tzVy1dNGyI4gNIKWW3pso7R
-   A==;
-X-CSE-ConnectionGUID: oCyUp601R/2GEcRYrKPN1Q==
-X-CSE-MsgGUID: tkxrFlvKRtyQ9NjoucAT7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="67645740"
+  bh=y1PN1cnM4TdTcrh8DOHDnezU+5RqY867GeMqEoCFWLI=;
+  b=Pw1OVOqwu+S2SacywGF48o6vl3vBzHozVHn+SnIDSpolYWeruLscX4VJ
+   x7ip4diKlH3JOq0t0SBlFaQdi/JmvGxtQmk8nxMCdA+LsxC5w3UxrB4Kc
+   2Onk6dNfSzpCuRMZ1DrqoyG9NlAokJu84Cbxpevjk9p8eT3azxOKBKQY9
+   7UgA4HRvnu387wL385ePazTXm3C51/dPDtZj4iQhiR9Btr2DrZe55QdUd
+   U5rjljLOZGmpznEZAvXZgctFeoZ9pbET6onhpRdFiC3dhVhboZ/9qQ1Fs
+   2dDovuTOhvWtxv2HjZhQTCENdSo3rl+gPiKK2+i6FiGNu9xlM2oXvtBXK
+   Q==;
+X-CSE-ConnectionGUID: D9ubyC/0SqCFVMZ8lY32FQ==
+X-CSE-MsgGUID: enEvAgF7RX+98JXyi9fCGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49202549"
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="67645740"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:21:51 -0700
-X-CSE-ConnectionGUID: rJYYQspgSYmGZixLrpvNHg==
-X-CSE-MsgGUID: 8DdUHlMURVuaqg5AK/pTKQ==
+   d="scan'208";a="49202549"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:23:41 -0700
+X-CSE-ConnectionGUID: n3YprIrCTvi2+c5lKrRh5w==
+X-CSE-MsgGUID: NjtfXbe7RfOC0hDStA/1BA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="142246844"
+   d="scan'208";a="141782487"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.147]) ([10.125.109.147])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:21:50 -0700
-Message-ID: <fd29d8b6-f605-4954-83b3-71f0132cf6f2@intel.com>
-Date: Fri, 23 May 2025 10:21:50 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:23:42 -0700
+Message-ID: <6d798978-753b-4236-a24d-51c9a414f64b@intel.com>
+Date: Fri, 23 May 2025 10:23:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,15 +67,14 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] x86/mm: Avoid repeated this_cpu_*() ops in
- switch_mm_irqs_off()
+Subject: Re: [PATCH 3/3] x86/mm: Clarify should_flush_tlb() ordering
 To: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
 Cc: linux-kernel@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
  wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
  mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
  luto@kernel.org, linux-hyperv@vger.kernel.org
 References: <20250520105542.283166629@infradead.org>
- <20250520110632.168981626@infradead.org>
+ <20250520110632.280908218@infradead.org>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -121,16 +120,22 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250520110632.168981626@infradead.org>
+In-Reply-To: <20250520110632.280908218@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/20/25 03:55, Peter Zijlstra wrote:
-> Aside from generating slightly better code for not having to use %fs
-> prefixed ops, the real purpose is to clarify code by switching some to
-> smp_store_release() later on.
+> The ordering in should_flush_tlb() is entirely non-obvious and is only
+> correct because x86 is TSO. Clarify the situation by replacing two
+> WRITE_ONCE()s with smp_store_release(), which on x86 is cosmetic.
 > 
-> Notably, this_cpu_{read,write}() imply {READ,WRITE}_ONCE().
+> Additionally, clarify the comment on should_flush_tlb().
+
+Thanks for clarifying the ordering in those comments. It's much
+appreciated by us mere mortals!
+
+Oh, and there are a few we's that snuck into the comments. But whoever
+applies this can fix them up.
 
 Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
