@@ -1,209 +1,214 @@
-Return-Path: <linux-hyperv+bounces-5658-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5659-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 682F1AC3048
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 May 2025 17:51:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34EBFAC383D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 05:37:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 61F367AEE83
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 May 2025 15:50:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8E543B281C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 03:36:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94E781EB18A;
-	Sat, 24 May 2025 15:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66431192B81;
+	Mon, 26 May 2025 03:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxoH+Qpq"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rG+8xNaa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8825B25776;
-	Sat, 24 May 2025 15:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748101907; cv=none; b=GZo7HkZ2GONnrW+A0JofbGVvTA7jeGKL2gepYjta7TQamXVGylt1mS12CQ0AvHKFq8gNgAzjUuI4ikYFG5RnDB6THzNLUK7KiMFTBQgiLak3HIgOUo6v6l3hJL92cyuMWajq4tPD4dVHEbHokCqE/qRYQNKmKPRnzFPA6YG51dA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748101907; c=relaxed/simple;
-	bh=+ucDhazGPC9Jvva6Fi6SHN5ahyqoS/gM+jfdi9hKwl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q58/xiTIeegUGln7EFTw/RbJg/mRCgdNdi8gFxjhT9EG1KEPeUTmVY22dU7kSTX4QjwqzrBzM8yrkzUEUWvHMopctjqDPwAuhFJZqdE+81D5EaZgeMLXRzAwZ9r6tQ2R+LOZ+b+A69xVGYpCHf9TFcRdsd1Rn1EIzOxpPEtN+cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxoH+Qpq; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748101906; x=1779637906;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+ucDhazGPC9Jvva6Fi6SHN5ahyqoS/gM+jfdi9hKwl0=;
-  b=fxoH+QpqBNI9TinK/Yw4e94Y9MEOzb1nE4dBTb8TdMLYzTdphV2E1KEr
-   Djp9cXXXhKrjGDa82n3yB6TBFR6GkyY09uCE4XWoYTmrJWIcVx6cjawzV
-   LdbTno908lCiv3pd2Z5iTIxLo1dsLC8KhS+ZTaCK9MZqui3LQyZy6VjSU
-   MxQdO9FZTbG7Y6EgBONPTi3CCjKnTPPGd2hx4XMMmCUwpGzMYLti4L84Q
-   XwzuJu8133+3TtYpiTNftQe9ATFcDNST8xGzBkeJdJf8GTSjqix47t4Ej
-   Mu+q0Z/kd9tRrhd/6ab1tyOPMpSV0jaI0r9FbHnafNDMt3ICQgpZSMflD
-   Q==;
-X-CSE-ConnectionGUID: Dpgrq0jBTECZAS3RGH8duA==
-X-CSE-MsgGUID: I3MjJ/NERdCD3Iezv6ih8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11443"; a="52758862"
-X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
-   d="scan'208";a="52758862"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 08:51:45 -0700
-X-CSE-ConnectionGUID: /nFUagFnQQCHiiDQc4YJ9A==
-X-CSE-MsgGUID: hhjk9CTzSkaju1yIfPj27w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,311,1739865600"; 
-   d="scan'208";a="141658419"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2025 08:51:44 -0700
-Date: Sat, 24 May 2025 08:56:50 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250524155650.GA16942@ranerica-svr.sc.intel.com>
-References: <20250504-original-leopard-of-vigor-5702ef@kuoka>
- <20250506051610.GC25533@ranerica-svr.sc.intel.com>
- <20250506-pompous-meaty-crane-97efce@kuoka>
- <20250507032339.GA27243@ranerica-svr.sc.intel.com>
- <20250512153224.GA3377771-robh@kernel.org>
- <20250513221456.GA2794@ranerica-svr.sc.intel.com>
- <20250514154248.GA2375202-robh@kernel.org>
- <20250515035338.GA4955@ranerica-svr.sc.intel.com>
- <20250519152937.GA2227051-robh@kernel.org>
- <20250519175606.GA9693@ranerica-svr.sc.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9948195811;
+	Mon, 26 May 2025 03:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748230615; cv=fail; b=BduhRSKNFXB4gvM2pCS2hnntZBCsGqdVsif0tbhgC8yxcJ9zM5PjhtQ07K5PugKTab1lThtuR9+VyduxCgcvhzpqbA27mh1tIX/7AeQKKrY5iKBbPa8Texen2rf8+qgvzx02nWOQYZ1tCt/dZbmvFW/W2V0e6ZHFwYkGe3btsLE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748230615; c=relaxed/simple;
+	bh=gBikVCO8qyAuPJ8AQNllBoODkE5DywT1gzjCfjVBVVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cCfSm3rZbmGg01ATdVAruQdF40at+8xLjuWP6na34tn+VDqtaTpebHyyWAbS6U9a7dzSTcSF81N2K9nqvarZ2Nwfv8DCNDJV8mIvm+Cfk3e1jD3vf0zfb07MJLUJiAYKndskJRu5gzPEiHmQlG6H9+6dcQi8fANAbKoRDnKTW+w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rG+8xNaa; arc=fail smtp.client-ip=40.107.236.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cyOutsl0JWDdUi3VF7Fbf6XYNd983YSiFIUvcFbSIxsKWZ4E6PtF+PVkPMa+ox7yk8Af/jYb3/UIcjv7IPJJJQfpjEaGN8z3GwksmThm2mDxJEnchROPa2UJ5JY4XZpWum38F2Vhc+r/fb52x97T84egFUubcPHej6YBun/lkC8WGqFMi3fzIJuW/set3BJapPWeOatbCEyfy2CBc+lTUF3mEydLN9kUsyJurUXCmRY+k0X4GNeb5ry6D6UrZ6PRfBqOanMSfmqJPiMY77UfMBfBPn7EuTHhxEhJ+l5oPjInk4t7lW4OxcQNT6N3O0sUypGc0vrPIeShI1ESgu9Leg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AcW/L6v+m+CrfjHxmtlsRoH+9g7AQSR4jQVgl1NCXok=;
+ b=YWI93GBpJHbad4AzFVb6m92G5KJiIgT/GGpN4+agPRR/zGkGHnZfCvsLblFJcStwqyqcLQLv7Q2vgDDWjbjXW12wGI4oR0ER3zgmpimtKDw+BQFUECeaUA4wqRxhvOjzRrYnTGQkEQz+8Pg0U/tl0zrosiCL6QiMoEJBQp6o/3FE4khYJlvWkVDaVPW4Ag2mGcPAe44i06tnikyagiOqGVRLWIazAD0Vfpjla9hCErNEBLDc44T6VsBFZhor4dJZnRBGrdguCJQRowXe/FvBJ1+s6SebKKQ4yeCnPgfrwKhwNZrBVBiEZxfB6QEJEQMNytCfkVcus3Y4IVR9zuhffA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AcW/L6v+m+CrfjHxmtlsRoH+9g7AQSR4jQVgl1NCXok=;
+ b=rG+8xNaa9F+5+WBOHbfSXgrc2X6ucBKfObO64gzRjAaLgcg5FEHYT82PL2sjILB1KLX9iS+JkPN5zxYguN6RWEy6PGe3h9Xk6ruVUktZ5d8g/WeBJtS2BLWAi1G40SbRM5nW4Mz6Bqk0pUGjUGFaYMGbb4OFTPjS+aMlshLEyyA=
+Received: from MW4P222CA0008.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::13)
+ by BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 26 May
+ 2025 03:36:48 +0000
+Received: from SJ1PEPF00001CE7.namprd03.prod.outlook.com
+ (2603:10b6:303:114:cafe::91) by MW4P222CA0008.outlook.office365.com
+ (2603:10b6:303:114::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Mon,
+ 26 May 2025 03:36:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE7.mail.protection.outlook.com (10.167.242.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Mon, 26 May 2025 03:36:47 +0000
+Received: from [10.85.47.107] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 25 May
+ 2025 22:36:36 -0500
+Message-ID: <432193cf-e4bd-4cfb-a146-25b19c02d78e@amd.com>
+Date: Mon, 26 May 2025 09:06:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519175606.GA9693@ranerica-svr.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 13/13] KVM: selftests: Add a KVM_IRQFD test to verify
+ uniqueness requirements
+To: Sean Christopherson <seanjc@google.com>
+CC: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar
+	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, "Shuah
+ Khan" <shuah@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+	<oliver.upton@linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+	<kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>, "K Prateek
+ Nayak" <kprateek.nayak@amd.com>, David Matlack <dmatlack@google.com>
+References: <20250522235223.3178519-1-seanjc@google.com>
+ <20250522235223.3178519-14-seanjc@google.com>
+ <2c52daad-0b64-48a9-8e73-d1aba977993b@amd.com> <aDB-2lcq4jJm9-OV@google.com>
+Content-Language: en-US
+From: Sairaj Kodilkar <sarunkod@amd.com>
+In-Reply-To: <aDB-2lcq4jJm9-OV@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE7:EE_|BL3PR12MB9049:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93188829-a743-42d1-a849-08dd9c068b78
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a0EralROS043WjhCbHFOZ2lydDZJaGFDRUdGR3JxZVVwT3FYbTZJOUdvZGhZ?=
+ =?utf-8?B?YktPQXg5Zy9EMXcwMzFHaFNFOVBPc0UxUHBiUFlIeThjRmVaSW5IbDNKekpI?=
+ =?utf-8?B?bWFnbTR5VXZ6WEVoTUFRcWN2alVDbHlKRU9BRzA4bEU2Qlp5aXZZcVl4cTgx?=
+ =?utf-8?B?UHFqYm9Wbkx6ak9oWGpMRldMbmxsdy9OQ3ZxWVN6cTFSK2dmdy9pMFlHYVU5?=
+ =?utf-8?B?MnNUWHZRRFNYNXRhR3o4blBQbksxM1FkN2dqL0hjdHhpRE9oTkRwRmFKY1Na?=
+ =?utf-8?B?bUN6NG04UlBxM0tZczJqSEVOZ0FSNW44NFNLTWZMTDFCbERJQklhWnVvalFK?=
+ =?utf-8?B?RDJsOXMxL2txVWl5cGJqdFU1OEwwSGU2eGtWaVNweWdJWVRscWFsNDQyNFdL?=
+ =?utf-8?B?QTZBYW5Fd1RyY3pENHYzNmJsME0xOU5XOGovNmNkWmlkaDRIME5ncEFJQ0Fh?=
+ =?utf-8?B?N2MwT2JydW15VWFOQ255VGxxNXhiM2FxSnFFRzl6dVo3UEo4bGRnS3ZzbnFq?=
+ =?utf-8?B?SERiUGZpQnJndmRmbGc3eko5aFFhNGozUUI3d1U4TkorOHlpSFp3USs1NnZU?=
+ =?utf-8?B?TjNJTnVTYVhlR0dnRWQzODlNQWQxTk4vWTgvVjI5Vm5pTnJEam5mOHdBWVdK?=
+ =?utf-8?B?akE4MlVqRzM5R2UxTUZMSjFZbVA2T2hWQ1VHVHVkaC9mWWlldXFEdCs3NTk5?=
+ =?utf-8?B?Mkd4Z21aSXViUG92ZHJaUkZxeHlteFcyNnRiTEZEd2F6QWhURS9ESkNFbmlB?=
+ =?utf-8?B?N2FZT0tnTmZkdzU0eDFoSzhHbS8ydHJsWmRTN3FWdGlOVUhVa09ydSt5N3Fm?=
+ =?utf-8?B?UjIvZnpVYkluSVVUdENzMzE2ZGdtd1I5WHZ1bmIxSGNtRzhLaElWc1JWZjFt?=
+ =?utf-8?B?VW14b3dOVDMxU1B2bnQ3d0RBam5mcWwwUzdCRkZjWFJHUk1tTEN6aE9TTFhI?=
+ =?utf-8?B?OVUvUzg2d2N1QjZGdjI0QkxFMzZDTEZOanYxQWdJcURDT3J4bnFZVkxhajht?=
+ =?utf-8?B?dEF0cEs4SUhyRVNyVTErZzRqRS91ZXU2d2pDd3B4L0tJN2VBMEV6cDlidGJX?=
+ =?utf-8?B?NkhxQnM3dDAyQnNpVDhqTVM3Ly9QS25NMWtUa3IvbE0vM2pVMmlrOHFPampn?=
+ =?utf-8?B?LythNmVYUDN4ajFQWmdjbXpMbzdDUW1mUWpJb0E2aGdTc2dLZkNTdXU2MlBD?=
+ =?utf-8?B?TnFLakZzWUlROWJNWDRXL3Rsb0dDYWhzcTFIQ0pPakp6VEVkWWNub1A0dFpP?=
+ =?utf-8?B?MTRKSk1LRkYvYnJYb2gvTjRDbkx3ZFRqL3BtdUtoeUZmcFh2ZHBRMlJWSkRF?=
+ =?utf-8?B?R0xVOEVEU1crVEJlV0ZzVlFTcWtCQmt0NWpHdnp6S2JmN3hacmgvMG5jOS9E?=
+ =?utf-8?B?RWg3ZjhNMy9CRjhCS1Z4VGppKzdoYzdjbVhJREJ5ZGZobUFGTUtPVEFWZVUv?=
+ =?utf-8?B?OVhySWhOVzBORXdmajJxK25TWE5JWnlxb05IRUVkcGt3RElRek1ycStzbFFG?=
+ =?utf-8?B?NkFkTi8zb29TYUd1bGVWdXdtTENaQUFKOHpka0JSaUF0NVZZU2ZwVE9OM2M4?=
+ =?utf-8?B?UGVRWHdTWE5KNis4STd1Mm9pU0FjUU9MUnBPT3l0cnpPTTRLaGY1dXZEL0Qx?=
+ =?utf-8?B?czNURXVwUkFKS0JoMzFOalo5VzVNU3VYVHFtQnFSVkxzbGdicndNbU03dDla?=
+ =?utf-8?B?TnRReVQ3eFM2dysxNThZWUgwZU9YUWRKNjFRb3RMMFNLdWdqUDFGcDAyS0VN?=
+ =?utf-8?B?NldMbW5sWXNwb1JGYmxmd2lBUS9SRUZTNDdiT0l5MWtpc3YxaDFIdUdnQTFM?=
+ =?utf-8?B?dmFtWEtaVEhtdUxjMjFCZU5rSXpCMFBUREJQdytINW5BN3dWT1NhT3FrQnMr?=
+ =?utf-8?B?dGgvQThnVmJsd1VnVnIzRy83NlQ1bUdDWStmaVRoczk2WnhXSk9HZVFVcGQ4?=
+ =?utf-8?B?WFhOL3FiZUxsck5KZ2lObjZTNXlIcWM3ajgzd3IzU1pUVmNqeVpzTUduYm16?=
+ =?utf-8?B?bnNhWnJORGlUcVRZNGNuV21vbEFqYkl2Y2huT2dxTkwyYWIvbmQ3VktodCtF?=
+ =?utf-8?Q?nSkLAd?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 03:36:47.8886
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93188829-a743-42d1-a849-08dd9c068b78
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE7.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB9049
 
-On Mon, May 19, 2025 at 10:56:06AM -0700, Ricardo Neri wrote:
-> On Mon, May 19, 2025 at 10:29:37AM -0500, Rob Herring wrote:
-> > On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
-> > > On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
-> > > > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
-> > > > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
-> > > > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
-> > > > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
-> > > > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
-> > > > > > > > > > If this is a device, then compatibles specific to devices. You do not
-> > > > > > > > > > get different rules than all other bindings... or this does not have to
-> > > > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
-> > > > > > > > > > 
-> > > > > > > > > > Why do you need compatible in the first place?
-> > > > > > > > > 
-> > > > > > > > > Are you suggesting something like this?
-> > > > > > > > > 
-> > > > > > > > > reserved-memory {
-> > > > > > > > > 	# address-cells = <2>;
-> > > > > > > > > 	# size-cells = <1>;
-> > > > > > > > > 
-> > > > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
-> > > > > > > > > 		reg = < 0x0 0xfff000 0x1000>
-> > > > > > > > > 	}
-> > > > > > > > > 
-> > > > > > > > > and then reference to the reserved memory using the wakeup_mailbox
-> > > > > > > > > phandle?
-> > > > > > > > 
-> > > > > > > > Yes just like every other, typical reserved memory block.
-> > > > > > > 
-> > > > > > > Thanks! I will take this approach and drop this patch.
-> > > > > > 
-> > > > > > If there is nothing else to this other than the reserved region, then 
-> > > > > > don't do this. Keep it like you had. There's no need for 2 nodes.
-> > > > > 
-> > > > > Thank you for your feedback!
-> > > > > 
-> > > > > I was planning to use one reserved-memory node and inside of it a child
-> > > > > node to with a `reg` property to specify the location and size of the
-> > > > > mailbox. I would reference to that subnode from the kernel code.
-> > > > > 
-> > > > > IIUC, the reserved-memory node is only the container and the actual memory
-> > > > > regions are expressed as child nodes.
-> > > > > 
-> > > > > I had it like that before, but with a `compatible` property that I did not
-> > > > > need.
-> > > > > 
-> > > > > Am I missing anything?
-> > > > 
-> > > > Without a compatible, how do you identify which reserved region is the 
-> > > > wakeup mailbox?
-> > > 
-> > > I thought using a phandle to the wakeup_mailbox. Then I realized that the
-> > > device nodes using the mailbox would be CPUs. They would need a `memory-
-> > > region` property. This does not look right to me.
-> > 
-> > That doesn't really make sense unless it's a memory region per CPU.
+
+
+On 5/23/2025 8:03 PM, Sean Christopherson wrote:
+> On Fri, May 23, 2025, Sairaj Kodilkar wrote:
+>> On 5/23/2025 5:22 AM, Sean Christopherson wrote:
+>>
+>>> +
+>>> +int main(int argc, char *argv[])
+>>> +{
+>>> +	pthread_t racing_thread;
+>>> +	int r, i;
+>>> +
+>>> +	/* Create "full" VMs, as KVM_IRQFD requires an in-kernel IRQ chip. */
+>>> +	vm1 = vm_create(1);
+>>> +	vm2 = vm_create(1);
+>>> +
+>>> +	WRITE_ONCE(__eventfd, kvm_new_eventfd());
+>>> +
+>>> +	kvm_irqfd(vm1, 10, __eventfd, 0);
+>>> +
+>>> +	r = __kvm_irqfd(vm1, 11, __eventfd, 0);
+>>> +	TEST_ASSERT(r && errno == EBUSY,
+>>> +		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
+>>> +
+>>> +	r = __kvm_irqfd(vm2, 12, __eventfd, 0);
+>>> +	TEST_ASSERT(r && errno == EBUSY,
+>>> +		    "Wanted EBUSY, r = %d, errno = %d", r, errno);
+>>> +
+>>> +	kvm_irqfd(vm1, 11, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+>>> +	kvm_irqfd(vm1, 12, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+>>> +	kvm_irqfd(vm1, 13, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+>>> +	kvm_irqfd(vm1, 14, READ_ONCE(__eventfd), KVM_IRQFD_FLAG_DEASSIGN);
+>>
+>> Hi Sean,
+>> I dont see any allocation for the GSI 13 and 14..
+>> Is there any reason for the deassigning these two GSIs ?
 > 
-> Agreed.
-> 
-> > 
-> > 
-> > > > Before you say node name, those are supposed to be 
-> > > > generic though we failed to enforce anything for /reserved-memory child 
-> > > > nodes.
-> > > 
-> > > I see. Thanks for preventing me from doing this.
-> > > 
-> > > Then the `compatible` property seems the way to go after all.
-> > > 
-> > > This what motivated this patch in the first place. On further analysis,
-> > > IIUC, defining bindings and schema is not needed, IMO, since the mailbox
-> > > is already defined in the ACPI spec. No need to redefine.
-> > 
-> > You lost me...
-> > 
-> > You don't need to redefine the layout of the memory region as that's 
-> > defined already somewhere,
-> 
-> Great!
-> 
-> > but you do need to define where it is for DT. 
-> > And for that, you need a compatible. Do you know where it is in this 
-> > case?
-> 
-> The compatible is not defined anywhere yet. Is a DT schema needed to
-> document it? If yes, I am usure what to put in the description. We tried
-> to not redefine the mailbox and refer to the ACPI spec. That was a NAK
-> from Krzysztof [1].
-> 
-> [1]. https://lore.kernel.org/r/624e1985-7dd2-4abe-a918-78cb43556967@kernel.org
+> Yes, KVM's rather bizarre ABI is that DEASSIGN is allowed even if the VM doesn't
+> have a corresponding assigned irqfd.  The reason I added these early DEASSIGN
+> calls is so that there will be an easier-to-debug failure if KVM's behavior
+> changes (the racing threads part of the test abuses KVM's ABI).  I didn't add a
+> comment because the helpers already have comments, but looking at this again, I
+> agree that main() needs a better comment.
 
-In summary, documenting the `compatible` property for the mailbox is
-necessary. There is no need to redefine the malbox on a schema but
-referring to the ACPI spec is not acceptable.
+Makes sense, thanks for the explanation.
 
-What about referring in the schema to the Intel TDX Virtual Firmware Design
-Guide[2]? It describes how firmware should implement the mailbox the section
-4.3.5.
+Thanks
+Sairaj Kodilkar
 
-A mailbox with compatible = "intel,wakeup-mailbox" is implemented after the
-guide that Intel published.
-
-Rob, Krzysztof, would that be acceptable?
-
-Thanks and BR,
-Ricardo
-
-[2]. https://www.intel.com/content/www/us/en/content-details/733585/intel-tdx-virtual-firmware-design-guide.html
 
