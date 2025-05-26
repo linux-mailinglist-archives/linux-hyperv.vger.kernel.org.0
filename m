@@ -1,102 +1,77 @@
-Return-Path: <linux-hyperv+bounces-5662-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5663-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B1A3AC3C4A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 11:02:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34D65AC42BF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 18:02:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14CF41891987
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 09:02:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E504B3ABE2B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 16:01:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A92B31DFE12;
-	Mon, 26 May 2025 09:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D97B21420A;
+	Mon, 26 May 2025 16:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GWiLm0J5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VQcTQFFF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1390C1F03DE
-	for <linux-hyperv@vger.kernel.org>; Mon, 26 May 2025 09:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC98211A0C;
+	Mon, 26 May 2025 16:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250130; cv=none; b=t3Qvs1dLfEZhH2W3eLcWr2qILS2FPPY4F9lBKmCboa2e1Y7RKZ7wYxF3kkj4jY/VjM4VjLRXhbu1nP2hmURprR7p+motF9EO8iMwmn6OyftjjynLfPBkzwbrTJimKHvBXnQjSER4erPHkP1crcCI/FwIahgXSRh7H/znazgEAIg=
+	t=1748275330; cv=none; b=fG071xaBuDWC8srlBwMZio7+5QQh3NukjRVCLz7vJRJfw8YfPuDX3ZgbP8qFbWoAdzm0XzbybYnOoiOZLTDH1d06HrbBnCeMZuobUxjSfP0yT6kXbUfjD6UVGw7Ssq7SWWQVwp9kFLW9RdwunQRdc/WgCWcTUymru/0RCVPErsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250130; c=relaxed/simple;
-	bh=ZWoEjjeEptPnbRRuBqE27xtL0VYN5ov9J5JNbJVkCuY=;
+	s=arc-20240116; t=1748275330; c=relaxed/simple;
+	bh=eV1epbg80l6Ne/TEKOgw8HRG8mB4eIwJFkbx2Y9b4n4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=la+WTfJTzecA+/7cOfjB96Urc0GGBJrZOYV+Jr2fvj2+/xFzHy18ZCS0Mf/x/j7OTMufecZA3O9ieOHyOi7vczmKIt1ISXjJemrvGPc5H+DcfkY0PbGyZfP0qXcUSqWV9U1jc0JtFyKeN7vVYAksg6hFkwybTHEdlxsGldjSsAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GWiLm0J5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748250125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+BhiDXyikhO1cftzHYfIEafnStrf4kEMf7dwcV0MPQY=;
-	b=GWiLm0J5Sj+4n3GlVl4zgTHrXeeXiZ/yXA6X9Zp1qYR3Hi8AhMQf3a/2xAfQvnoji1f9EX
-	f4dvJc4aZE+vgLbHl18qOy8FUYlWGwpuZD0UG91v9O1YRraGKOfFVGoLFMsMC2XWS5C/OB
-	IOnxewo5N0oXW4jU5Nxkzi6dLHO3ixE=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-397-m4GlXuQTPcCnBJoyzqzT2w-1; Mon, 26 May 2025 05:01:58 -0400
-X-MC-Unique: m4GlXuQTPcCnBJoyzqzT2w-1
-X-Mimecast-MFC-AGG-ID: m4GlXuQTPcCnBJoyzqzT2w_1748250117
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-73e0094706bso2778052b3a.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 26 May 2025 02:01:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748250117; x=1748854917;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+BhiDXyikhO1cftzHYfIEafnStrf4kEMf7dwcV0MPQY=;
-        b=W1GH8lGIGy+UfcNqLHeHRVFzWZ2IDmP3ROPoMu6BsJuNW9Lv6CLBH3jpFimah2YSCx
-         wkq9nb8ENWvnRovnyeDva7KgS+mIErwYyqQpKGrZEwiPWx2NGYPaJBvldyUEBIQl5rj8
-         vqiVzmSXf7R120X9JqIjR1KBkgYsCjBqzqB0qY2eHlwZBRrYHbXeakBjs8txTOWh4DvT
-         b4FD6btf0xY7KeJTECo4oS5ZbTU0zAThLiLa8f7oz2JLnOTVmsjGOI4J7r5OFnRkC2Zo
-         l/9d6E20kh/iJktJc9E/dm9i69Tldp5hl7gvFgSBzrydKJgqff96rMpCk8PR4eRr33nC
-         ShxA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4EQZ7Q01QaE/ZdLMikTIsy42sY+nywqrZpuETYCZlv9Y1SrR9WRPNyVXL+u2SbJ4Xk6R2F70ULuqNvB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMbVhkPKg32LCXDsDQnFqj+xvktXl3DBX50WZvTs6383KCtisq
-	AN9ylOq4lzRyFxa+GN7yZs08RFzb0WrG5FmInL0qUh4LqCU+q7owNpFKZ1TZyHNV8f4y4S96Vt4
-	8bAOZivPti51lcj+baHdtNlkZjlDiGMas/g/SbBy2z/2ftbsD6HhWDrY45sISRXXDYA==
-X-Gm-Gg: ASbGncv10//av3ToL5Mh07WoBBmpVssaUez2X1MtrzpOUAdrN3By0YY6fawRcbwbVs5
-	oK6CLz7qPeEyzs8aLhoBM0vifTJhUTnrPkh5lo1mdQkhauMan3n+IPtYCgEmFJlycRJPAaGWFrd
-	npZJI6Jml2Bx61vMPNjqy5Di2uzAYepcU2KUI+wvgoTIfo6acaNBk5ZMxgoXttkw/U2E81VF4d6
-	XelCathgU/YrEWL8R75RWdesDOe1/KmqsT5t+9N0Ab9tQ9Z7aEzYw1pfvzVl4b5BZEiGO51nYvv
-	7kWpldEqawr+
-X-Received: by 2002:a05:6a00:21c2:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-745fde9f3b7mr12076480b3a.10.1748250117049;
-        Mon, 26 May 2025 02:01:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFODFO9ppwsV5E+FFuQuGGeBW483IYeVBee2OXT2Zb9+eI8FLSHDED6cuwUZJgQFPu/emkBcQ==
-X-Received: by 2002:a05:6a00:21c2:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-745fde9f3b7mr12076460b3a.10.1748250116707;
-        Mon, 26 May 2025 02:01:56 -0700 (PDT)
-Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9878b53sm16575092b3a.152.2025.05.26.02.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 02:01:56 -0700 (PDT)
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-To: drawat.floss@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jfalempe@redhat.com
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	 MIME-Version; b=RGoCcEjDxugkznaqLO556iOvbLAdFd52J6u2u/2G0teRD6GtEklnOr7KaQoYD0O+S8k7wJRm8RycxzNEcVUIMH37UqD5l2n7EXwAY0Y2PL4GaYI+NtZdNlCpS/NGFuklI369VcfOQsEqjA/9yCy4mzUrQ3Wrc0wxjxV5aT/SSJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VQcTQFFF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C86E42068336;
+	Mon, 26 May 2025 09:02:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C86E42068336
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748275323;
+	bh=xbVnkPRVpMtVn5Z4ZBr7rm8h5rSjIm70f4DaBrWVIqs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VQcTQFFFHvc4iuNUgmNMyC6xui2eGdu15QhEiNHf2/v1oaOuK59MkaUzqoMHl0NsA
+	 l+kQojT+RkIdLTERp5TMFTTcXS02VU1NFRqKvpdrnTHvh02Z/4eGtJu7dT5HZMSNCS
+	 fVkdhIj8m1XE5j0GwcxLq7OpaiSuGWePJ51f2cdg=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: mhklinux@outlook.com
+Cc: apais@microsoft.com,
+	arnd@arndb.de,
+	benhill@microsoft.com,
+	bp@alien8.de,
+	bperkins@microsoft.com,
+	catalin.marinas@arm.com,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	kys@microsoft.com,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH RFC drm-misc-next v2 1/1] drm/hyperv: Add support for drm_panic
-Date: Mon, 26 May 2025 18:01:05 +0900
-Message-ID: <20250526090117.80593-2-ryasuoka@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250526090117.80593-1-ryasuoka@redhat.com>
-References: <20250526090117.80593-1-ryasuoka@redhat.com>
+	mingo@redhat.com,
+	romank@linux.microsoft.com,
+	sunilmut@microsoft.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	x86@kernel.org
+Subject: RE: [PATCH hyperv-next v2 1/4] Documentation: hyperv: Confidential VMBus
+Date: Mon, 26 May 2025 09:02:01 -0700
+Message-ID: <20250526160201.2535-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <SN6PR02MB4157DC69BA25D889CD838D04D49DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <SN6PR02MB4157DC69BA25D889CD838D04D49DA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -105,73 +80,140 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add drm_panic module for hyperv drm so that panic screen can be
-displayed on panic.
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Sunday, May 11, 2025 4:08 PM
+>> 
+>> Define what the confidential VMBus is and describe what advantages
+>> it offers on the capable hardware.
+>> 
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>  Documentation/virt/hyperv/vmbus.rst | 41 +++++++++++++++++++++++++++++
+>>  1 file changed, 41 insertions(+)
+>> 
+>> diff --git a/Documentation/virt/hyperv/vmbus.rst
+>> b/Documentation/virt/hyperv/vmbus.rst
+>> index 1dcef6a7fda3..ca2b948e5070 100644
+>> --- a/Documentation/virt/hyperv/vmbus.rst
+>> +++ b/Documentation/virt/hyperv/vmbus.rst
+>> @@ -324,3 +324,44 @@ rescinded, neither Hyper-V nor Linux retains any state about
+>>  its previous existence. Such a device might be re-added later,
+>>  in which case it is treated as an entirely new device. See
+>>  vmbus_onoffer_rescind().
+>> +
+>> +Confidential VMBus
+>> +------------------
+>> +
+>> +The confidential VMBus provides the control and data planes where
+>> +the guest doesn't talk to either the hypervisor or the host. Instead,
+>> +it relies on the trusted paravisor. The hardware (SNP or TDX) encrypts
+>> +the guest memory and the register state also measuring the paravisor
+>> +image via using the platform security processor to ensure trusted and
+>> +confidential computing.
+>> +
+>> +To support confidential communication with the paravisor, a VMBus client
+>> +will first attempt to use regular, non-isolated mechanisms for communication.
+>> +To do this, it must:
+>> +
+>> +* Configure the paravisor SIMP with an encrypted page. The paravisor SIMP is
+>> +  configured by setting the relevant MSR directly, without using GHCB or tdcall.
+>> +
+>> +* Enable SINT 2 on both the paravisor and hypervisor, without setting the proxy
+>> +  flag on the paravisor SINT. Enable interrupts on the paravisor SynIC.
+>> +
+>> +* Configure both the paravisor and hypervisor event flags page.
+>> +  Both pages will need to be scanned when VMBus receives a channel interrupt.
+>> +
+>> +* Send messages to the paravisor by calling HvPostMessage directly, without using
+>> +  GHCB or tdcall.
+>> +
+>> +* Set the EOM MSR directly in the paravisor, without using GHCB or tdcall.
+>> +
+>> +If sending the InitiateContact message using non-isolated HvPostMessage fails,
+>> +the client must fall back to using the hypervisor synic, by using the GHCB/tdcall
+>> +as appropriate.
+>> +
+>> +To fall back, the client will have to reconfigure the following:
+>> +
+>> +* Configure the hypervisor SIMP with a host-visible page.
+>> +  Since the hypervisor SIMP is not used when in confidential mode,
+>> +  this can be done up front, or only when needed, whichever makes sense for
+>> +  the particular implementation.
+>> +
+>> +* Set the proxy flag on SINT 2 for the paravisor.
+>
+>I'm assuming there's no public documentation available for how Confidential
+>VMBus works. If so, then this documentation needs to take a higher-level
+>approach and explain the basic concepts. You've provided some nitty-gritty
+>details about how to detect and enable Confidential VMBus, but I think that
+>level of detail would be better as comments in the code.
+>
+>Here's an example of what I envision, with several embedded questions that
+>need further explanation. Confidential VMBus is completely new to me, so
+>I don't know the answers to the questions. I also think this documentation
+>would be better added to the CoCo VM topic instead of the VMBus topic, as
+>Confidential VMBus is an extension/enhancement to CoCo VMs that doesn't
+>apply to normal VMs.
+>
+>------------------------------------------
+>
+>Confidential VMBus is an extension of Confidential Computing (CoCo) VMs
+>(a.k.a. "Isolated" VMs in Hyper-V terminology). Without Confidential VMBus,
+>guest VMBus device drivers (the "VSC"s in VMBus terminology) communicate
+>with VMBus servers (the VSPs) running on the Hyper-V host. The
+>communication must be through memory that has been decrypted so the
+>host can access it. With Confidential VMBus, one or more of the VSPs reside
+>in the trusted paravisor layer in the guest VM. Since the paravisor layer also
+>operates in encrypted memory, the memory used for communication with
+>such VSPs does not need to be decrypted and thereby exposed to the
+>Hyper-V host. The paravisor is responsible for communicating securely
+>with the Hyper-V host as necessary.  [Does the paravisor do this in a way
+>that is better than what the guest can do? This question seems to be core to
+>the value prop for Confidential VMBus. I'm not really clear on the value
+>prop.]
+>
+>A guest that is running with a paravisor must determine at runtime if
+>Confidential VMBus is supported by the current paravisor. It does so by first
+>trying to establish a Confidential VMBus connection with the paravisor using
+>standard mechanisms where the memory remains encrypted. If this succeeds,
+>then the guest can proceed to use Confidential VMBus. If it fails, then the
+>guest must fallback to establishing a non-Confidential VMBus connection with
+>the Hyper-V host.
+>
+>Confidential VMBus is a characteristic of the VMBus connection as a whole,
+>and of each VMBus channel that is created. When a Confidential VMBus
+>connection is established, the paravisor provides the guest the message-passing
+>path that is used for VMBus device creation and deletion, and it provides a
+>per-CPU synthetic interrupt controller (SynIC) just like the SyncIC that is
+>offered by the Hyper-V host. Each VMBus device that is offered to the guest
+>indicates the degree to which it participates in Confidential VMBus. The offer
+>indicates if the device uses encrypted ring buffers, and if the device uses
+>encrypted memory for DMA that is done outside the ring buffer. [Are these
+>two settings independent? Could there be a device that has one set, and the
+>other cleared? I'm having trouble understanding what such a mixed state
+>would mean.] These settings may be different for different devices using
+>the same Confidential VMBus connection.
+>
+>Because some devices on a Confidential VMBus may require decrypted ring
+>buffers and DMA transfers, the guest must interact with two SynICs -- the
+>one provided by the paravisor and the one provided by the Hyper-V host
+>when Confidential VMBus is not offered. Interrupts are always signaled by
+>the paravisor SynIC, but the guest must check for messages and for channel
+>interrupts on both SynICs.  [This requires some further explanation that I
+>don't understand. What governs when a message arrives via the paravisor
+>SynIC vs. the hypervisor SynIC, and when a VMBus channel indicates an
+>interrupt in the paravisor SynIC event page vs. the hypervisor SynIC event
+>page? And from looking at the code, it appears that the RelIDs assigned
+>to channels are guaranteed to be unique within the guest VM, and not
+>per-SynIC, but it would be good to confirm that.]
+>
+>[There are probably a few other topics to add a well.]
 
-Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
----
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 36 +++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Michael,
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index f7d2e973f79e..945b9482bcb3 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -17,6 +17,7 @@
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_gem_shmem_helper.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/drm_panic.h>
- #include <drm/drm_plane.h>
- 
- #include "hyperv_drm.h"
-@@ -181,10 +182,45 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
- 	}
- }
- 
-+static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
-+					   struct drm_scanout_buffer *sb)
-+{
-+	struct hyperv_drm_device *hv = to_hv(plane->dev);
-+	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
-+
-+	if (plane->state && plane->state->fb) {
-+		sb->format = plane->state->fb->format;
-+		sb->width = plane->state->fb->width;
-+		sb->height = plane->state->fb->height;
-+		sb->pitch[0] = plane->state->fb->pitches[0];
-+		sb->map[0] = map;
-+		return 0;
-+	}
-+	return -ENODEV;
-+}
-+
-+static void hyperv_plane_panic_flush(struct drm_plane *plane)
-+{
-+	struct hyperv_drm_device *hv = to_hv(plane->dev);
-+	struct drm_rect rect;
-+
-+	if (!plane->state || !plane->state->fb)
-+		return;
-+
-+	rect.x1 = 0;
-+	rect.y1 = 0;
-+	rect.x2 = plane->state->fb->width;
-+	rect.y2 = plane->state->fb->height;
-+
-+	hyperv_update_dirt(hv->hdev, &rect);
-+}
-+
- static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
- 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
- 	.atomic_check = hyperv_plane_atomic_check,
- 	.atomic_update = hyperv_plane_atomic_update,
-+	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
-+	.panic_flush = hyperv_plane_panic_flush,
- };
- 
- static const struct drm_plane_funcs hyperv_plane_funcs = {
--- 
-2.49.0
+Appreciate your help very much! I'll fill the gaps you've pointed out in
+this patch and other ones.
 
+--
+Thank you,
+Roman
 
