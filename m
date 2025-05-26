@@ -1,82 +1,84 @@
-Return-Path: <linux-hyperv+bounces-5661-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5662-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78B98AC3C44
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 11:02:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B1A3AC3C4A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 11:02:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42304175548
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 09:02:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14CF41891987
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 May 2025 09:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4261F03F3;
-	Mon, 26 May 2025 09:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A92B31DFE12;
+	Mon, 26 May 2025 09:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iyVr5SJO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GWiLm0J5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE8B1DE3DC
-	for <linux-hyperv@vger.kernel.org>; Mon, 26 May 2025 09:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1390C1F03DE
+	for <linux-hyperv@vger.kernel.org>; Mon, 26 May 2025 09:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250119; cv=none; b=RiOK1C/aYVmH+HlbNOYzU+mECQLBT2uSZfA7vNeqXucNh/Te9jJNbw9EZwHD7x2G/RfS+CSNY8d0n/wMe0QsMQRt5kRgL3nCNkYc8Ew5BZgyAEjIUgf/KwD6m4VqAGVWQ3KlwARJHZuJYq4wdo38wu1p9uhupVnDkcY0T9Hj+Rw=
+	t=1748250130; cv=none; b=t3Qvs1dLfEZhH2W3eLcWr2qILS2FPPY4F9lBKmCboa2e1Y7RKZ7wYxF3kkj4jY/VjM4VjLRXhbu1nP2hmURprR7p+motF9EO8iMwmn6OyftjjynLfPBkzwbrTJimKHvBXnQjSER4erPHkP1crcCI/FwIahgXSRh7H/znazgEAIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250119; c=relaxed/simple;
-	bh=nmXboQQCUu01/xiEDjIBc+fgApQJh0IAbcu4AwvDqfk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZBfLXHaZ9RUaIzdycS3KFY+KwPS6qZsnt2Dd97emeQCpQqQ/2ADlebhekvGnQFBrhaZCrkPC2RDKyiSS81ac/xC63ZO8xeeNO9LMC68Eqi33gNjnyZv3CRP2uUlbKKNWuZ+6FpV4CanxXWW68gXdqFVP+v862iEK4bX96NCuPq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iyVr5SJO; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1748250130; c=relaxed/simple;
+	bh=ZWoEjjeEptPnbRRuBqE27xtL0VYN5ov9J5JNbJVkCuY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=la+WTfJTzecA+/7cOfjB96Urc0GGBJrZOYV+Jr2fvj2+/xFzHy18ZCS0Mf/x/j7OTMufecZA3O9ieOHyOi7vczmKIt1ISXjJemrvGPc5H+DcfkY0PbGyZfP0qXcUSqWV9U1jc0JtFyKeN7vVYAksg6hFkwybTHEdlxsGldjSsAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GWiLm0J5; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748250113;
+	s=mimecast20190719; t=1748250125;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=XpqFq1Cn/q29H6M8GbCwazfqpbC4oULqm059siADfdQ=;
-	b=iyVr5SJOd6PvKN7lka0JZp0GCp2wUxcOheV5kcHN/LYFNi0XbWdKlkGEVzwiWvaXqyKgtL
-	zNP+QPjERv7XNVjc/YZ2zQFKh6bGzfKwC7JSQ1NHwADTkaBV8QHQoUNKYDboDTd4GnFDRn
-	vpmQ8ROLD7iVK8GHMcEFJ9hKVKTf6Zo=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+BhiDXyikhO1cftzHYfIEafnStrf4kEMf7dwcV0MPQY=;
+	b=GWiLm0J5Sj+4n3GlVl4zgTHrXeeXiZ/yXA6X9Zp1qYR3Hi8AhMQf3a/2xAfQvnoji1f9EX
+	f4dvJc4aZE+vgLbHl18qOy8FUYlWGwpuZD0UG91v9O1YRraGKOfFVGoLFMsMC2XWS5C/OB
+	IOnxewo5N0oXW4jU5Nxkzi6dLHO3ixE=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-ZcK9gTerNqigOUaOpfJ-pg-1; Mon, 26 May 2025 05:01:50 -0400
-X-MC-Unique: ZcK9gTerNqigOUaOpfJ-pg-1
-X-Mimecast-MFC-AGG-ID: ZcK9gTerNqigOUaOpfJ-pg_1748250109
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7391d68617cso2307615b3a.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 26 May 2025 02:01:50 -0700 (PDT)
+ us-mta-397-m4GlXuQTPcCnBJoyzqzT2w-1; Mon, 26 May 2025 05:01:58 -0400
+X-MC-Unique: m4GlXuQTPcCnBJoyzqzT2w-1
+X-Mimecast-MFC-AGG-ID: m4GlXuQTPcCnBJoyzqzT2w_1748250117
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-73e0094706bso2778052b3a.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 26 May 2025 02:01:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748250109; x=1748854909;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XpqFq1Cn/q29H6M8GbCwazfqpbC4oULqm059siADfdQ=;
-        b=JK3D4F5FJ5qnR7RMYUZdRkWjTPl1Qw9t2ImJMYYrwvwX5OTMUzcVyLz5Kivm5XgOzV
-         HZvjLb6U3CWSMuKbNp+l/PWmNJMpaXhgS06uS1aDKk8l4j+qaHca8So4PH/ubtYM5F9R
-         omjWPDEOiDhrMQN9SRw6Bt4GCxVGxHPcH6TdVYna768fIVjMhYTIQFevp07vXBLikyFz
-         HlYq9+rqACFRKJ9DjuRYiC3gdVdjsXvFlSmskZsnwgD7aS4g+4HQ9JHH/C498A98ngvU
-         UEwVOJk926J9LNcIOhIVByTKSfchX0lZiISac4Gml0o1izXgcci2xQjstMzzqKWF2Lku
-         34ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVOMrQEN02U2wxiWgX2ZuHrYJEizyOvrK/VTYlrMTxMIqe9VyMLY2c94M/XWhCRmdYXsUMmLsCPMcjc1fE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb7Rq2aQKa3Ctb/e6uiqgFt3ABIbMyarI5OK/AIok99p+nXONX
-	Ai+n5qErAfG/Hopj9ajUmQt67EqW5zWr1Kvl3yIgh0lsuwdWYBVJeZF6Vfef05/m6zksCZ7NSdh
-	JCdPjOvWMg5Yfz6GwIafyjgidfN0JYu95CtjsSRZLG/iWpdMmEigakCvh3r9CN6PCbQ==
-X-Gm-Gg: ASbGncsnVR8ZL5WKeBDQSCKH/nSYIFTmYXyzJLzUBMx2TpmcWuvVhLG4ReMYqMyPbAI
-	JazqiVdyDY816E0SNhf4zo2ZyMnhcHH1erE5o0Bu+CiLOZUa12+5dE3EMhHlEkoFL5PYkzGQD4T
-	GNmFTWsPL07ghorux31MoY7nUgejJL3ChGXpGkp2zHfTYdPoGfzdqBFSUojqGDEUsDmFXUu1ecF
-	NUK6FlyfESps75B2aoOTeyRFnI3BiNT0FhW3ZxKYS360SeyJxu4YUAAwJBv640T29tEYBnQ1gJ8
-	LVNzTtxKtwt9
-X-Received: by 2002:a05:6a21:3390:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2188b6edb8amr12702084637.16.1748250109589;
-        Mon, 26 May 2025 02:01:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEg0OYyfVBPgdKD2DLb50UwcWBJCWgjQ/A2N0sS7L7e5vajyw7pe8MKb0ud18NgI98tWZxDgQ==
-X-Received: by 2002:a05:6a21:3390:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2188b6edb8amr12702050637.16.1748250109169;
-        Mon, 26 May 2025 02:01:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748250117; x=1748854917;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+BhiDXyikhO1cftzHYfIEafnStrf4kEMf7dwcV0MPQY=;
+        b=W1GH8lGIGy+UfcNqLHeHRVFzWZ2IDmP3ROPoMu6BsJuNW9Lv6CLBH3jpFimah2YSCx
+         wkq9nb8ENWvnRovnyeDva7KgS+mIErwYyqQpKGrZEwiPWx2NGYPaJBvldyUEBIQl5rj8
+         vqiVzmSXf7R120X9JqIjR1KBkgYsCjBqzqB0qY2eHlwZBRrYHbXeakBjs8txTOWh4DvT
+         b4FD6btf0xY7KeJTECo4oS5ZbTU0zAThLiLa8f7oz2JLnOTVmsjGOI4J7r5OFnRkC2Zo
+         l/9d6E20kh/iJktJc9E/dm9i69Tldp5hl7gvFgSBzrydKJgqff96rMpCk8PR4eRr33nC
+         ShxA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4EQZ7Q01QaE/ZdLMikTIsy42sY+nywqrZpuETYCZlv9Y1SrR9WRPNyVXL+u2SbJ4Xk6R2F70ULuqNvB8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMbVhkPKg32LCXDsDQnFqj+xvktXl3DBX50WZvTs6383KCtisq
+	AN9ylOq4lzRyFxa+GN7yZs08RFzb0WrG5FmInL0qUh4LqCU+q7owNpFKZ1TZyHNV8f4y4S96Vt4
+	8bAOZivPti51lcj+baHdtNlkZjlDiGMas/g/SbBy2z/2ftbsD6HhWDrY45sISRXXDYA==
+X-Gm-Gg: ASbGncv10//av3ToL5Mh07WoBBmpVssaUez2X1MtrzpOUAdrN3By0YY6fawRcbwbVs5
+	oK6CLz7qPeEyzs8aLhoBM0vifTJhUTnrPkh5lo1mdQkhauMan3n+IPtYCgEmFJlycRJPAaGWFrd
+	npZJI6Jml2Bx61vMPNjqy5Di2uzAYepcU2KUI+wvgoTIfo6acaNBk5ZMxgoXttkw/U2E81VF4d6
+	XelCathgU/YrEWL8R75RWdesDOe1/KmqsT5t+9N0Ab9tQ9Z7aEzYw1pfvzVl4b5BZEiGO51nYvv
+	7kWpldEqawr+
+X-Received: by 2002:a05:6a00:21c2:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-745fde9f3b7mr12076480b3a.10.1748250117049;
+        Mon, 26 May 2025 02:01:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFODFO9ppwsV5E+FFuQuGGeBW483IYeVBee2OXT2Zb9+eI8FLSHDED6cuwUZJgQFPu/emkBcQ==
+X-Received: by 2002:a05:6a00:21c2:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-745fde9f3b7mr12076460b3a.10.1748250116707;
+        Mon, 26 May 2025 02:01:56 -0700 (PDT)
 Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9878b53sm16575092b3a.152.2025.05.26.02.01.46
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9878b53sm16575092b3a.152.2025.05.26.02.01.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 02:01:48 -0700 (PDT)
+        Mon, 26 May 2025 02:01:56 -0700 (PDT)
 From: Ryosuke Yasuoka <ryasuoka@redhat.com>
 To: drawat.floss@gmail.com,
 	maarten.lankhorst@linux.intel.com,
@@ -89,10 +91,12 @@ Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH RFC drm-misc-next v2 0/1] Add support for drm_panic
-Date: Mon, 26 May 2025 18:01:04 +0900
-Message-ID: <20250526090117.80593-1-ryasuoka@redhat.com>
+Subject: [PATCH RFC drm-misc-next v2 1/1] drm/hyperv: Add support for drm_panic
+Date: Mon, 26 May 2025 18:01:05 +0900
+Message-ID: <20250526090117.80593-2-ryasuoka@redhat.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250526090117.80593-1-ryasuoka@redhat.com>
+References: <20250526090117.80593-1-ryasuoka@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -101,36 +105,72 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds drm_panic support for hyperv-drm driver. This function
-works but it's still needed to brush up. Let me hear your opinions.
+Add drm_panic module for hyperv drm so that panic screen can be
+displayed on panic.
 
-Once kernel panic occurs we expect to see a panic screen. However, to
-see the screen, I need to close/re-open the graphic console client
-window. As the panic screen shows correctly in the small preview
-window in Hyper-V manager and debugfs API for drm_panic works correctly,
-I think kernel needs to send signal to Hyper-V host that the console
-client refreshes, but I have no idea what kind of signal is needed.
-
-This patch is tested on Hyper-V 2022.
-
-v2:
-- Re-write codes with regular atomic helper. The driver was implemented
-  with simple KMS. So replace it with regular atomic helper in [1],
-  implement this feature on it.
-
-[1] https://lore.kernel.org/all/20250427101825.812766-1-ryasuoka@redhat.com/
-
-v1:
-https://lore.kernel.org/lkml/20250402084351.1545536-1-ryasuoka@redhat.com/
-
-Ryosuke Yasuoka (1):
-  drm/hyperv: Add support for drm_panic
-
+Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+---
  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 36 +++++++++++++++++++++
  1 file changed, 36 insertions(+)
 
-
-base-commit: c06cb85ad1412c6ff34792b028b2f89495761398
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index f7d2e973f79e..945b9482bcb3 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -17,6 +17,7 @@
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_gem_shmem_helper.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_panic.h>
+ #include <drm/drm_plane.h>
+ 
+ #include "hyperv_drm.h"
+@@ -181,10 +182,45 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
+ 	}
+ }
+ 
++static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
++					   struct drm_scanout_buffer *sb)
++{
++	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
++
++	if (plane->state && plane->state->fb) {
++		sb->format = plane->state->fb->format;
++		sb->width = plane->state->fb->width;
++		sb->height = plane->state->fb->height;
++		sb->pitch[0] = plane->state->fb->pitches[0];
++		sb->map[0] = map;
++		return 0;
++	}
++	return -ENODEV;
++}
++
++static void hyperv_plane_panic_flush(struct drm_plane *plane)
++{
++	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct drm_rect rect;
++
++	if (!plane->state || !plane->state->fb)
++		return;
++
++	rect.x1 = 0;
++	rect.y1 = 0;
++	rect.x2 = plane->state->fb->width;
++	rect.y2 = plane->state->fb->height;
++
++	hyperv_update_dirt(hv->hdev, &rect);
++}
++
+ static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
+ 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+ 	.atomic_check = hyperv_plane_atomic_check,
+ 	.atomic_update = hyperv_plane_atomic_update,
++	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
++	.panic_flush = hyperv_plane_panic_flush,
+ };
+ 
+ static const struct drm_plane_funcs hyperv_plane_funcs = {
 -- 
 2.49.0
 
