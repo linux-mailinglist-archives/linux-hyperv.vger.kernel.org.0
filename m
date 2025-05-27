@@ -1,200 +1,345 @@
-Return-Path: <linux-hyperv+bounces-5675-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5676-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB3ECAC5A6E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 21:10:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8598AC5C5C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 23:43:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A74D24A064E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 19:10:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7414116C276
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 21:43:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8EB280A57;
-	Tue, 27 May 2025 19:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87A622147FB;
+	Tue, 27 May 2025 21:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWdgfvR5"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Tmh43fxQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020099.outbound.protection.outlook.com [52.101.61.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538A027B505;
-	Tue, 27 May 2025 19:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373020; cv=none; b=ofMx14tUGX4aJB3YYbWiUDu1+t66aFJVba/eIRq6I5tSkp5K8Cii7JbPGPSR7fH3D688q7PHn+Yt6UZEt955iZ3d2yYignvbVVMQjSshBaeD/SZt60obls9Gx+A2XupLVvfVZ0WIT9lX8MMt0aPnILcX1wMZXAI1KXXDauMyQys=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373020; c=relaxed/simple;
-	bh=jvIursIm7xirFrAF6+nx9NHgILyAFssbM2BZDvh0Xjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYuUvwldZ/46zBbCNVtEEwQ5XKvrjeeubd01sjbyCwT84XFu1nDFZcI5eAHHtmJx5xk4MC830iDfhGOC0WtMM7jxr/QQIw23i+p4QxXd2zP+CjffuPMj+S0iqCWZuE2f/D4VItwejZEOsQIio3Uv4H972cltN5YVy9B8xjuxYgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWdgfvR5; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2301ac32320so31379325ad.1;
-        Tue, 27 May 2025 12:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748373018; x=1748977818; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hQ4L0D20ndsCdzFmLfAE6nfeaO8SPFx82dBJgoFLkBI=;
-        b=jWdgfvR5bDIKMrvCDma9xTvwfEcYD1nrh/b298vgoOKEaIORbI99Blx36EqxziHRho
-         A6cFzeNFDKQ50eQO98d0aO/z3mvJRBC2VMy3NOmkK3prkdnpfoP0RfNmmn6LAGwKMrBj
-         yJCAX1kysRZ6HpZHs8nKP0OyZ6OTWtwH8RkNpoH0x30MsfNaAgr5SG+a+vnLsnmK5si6
-         L6BtNppYBJgA+4yATkf/orU3jgr4w6PqXTPmUBMUUlnfDcYvBiLtWseyM/Nx+WVnNtL/
-         vSu3R27a3Bk9sITlh0H5YOP/hfm3H9+aRU1MpDxEHjGgiMsCEWkYZm7hKYn3jItkYmlp
-         6+eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748373018; x=1748977818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hQ4L0D20ndsCdzFmLfAE6nfeaO8SPFx82dBJgoFLkBI=;
-        b=VnHEe0UD/wPkyrwnGdjLNxID+EFazgM9VziTZAo6NsTmKnVxBfxFu1nkG1QOV4v0qN
-         XPk5XFnjBBDdUhMHLpy0KhxXIrODr6cJ2r8FydNF0ra85pPIRoIMwiX+pKG5krrIKPYY
-         d1BtHWrO7H29FqER9YpPgoM4OuQwTu2wopO+QA6tj8qcssInH9TmCEJczvJYLmadEr0x
-         uwCdVgYtzJfBNuoDz1XEHn5QXMC/n83vDfuJnPVcBMUOUD4h+X9fjiHEwri2GL1icJCT
-         oqniQb+NLLcqXsPA8lA3VaJdu9sAf0E8KCDFpVXts/TMRN6EbGKzHownGKIOgSaV7SIe
-         VgYw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1TUDJSSO2YaHkLf2jBW9dNJWa50sv1ESloOpfwP3pIPo5scsJuF13EOFR/pLt1c4yyGlx2HIam6Xo8Q==@vger.kernel.org, AJvYcCUOO/NFLfoA8sMwOj1jLhDfN/lDhyw2v3h0cXzD2vDxNHYi+qF0qk2DxHX7RLpOT9Q34cuX1QggMF20XiE=@vger.kernel.org, AJvYcCVQucvKsZOOL2rEIIxqzdu+cOInP+HwHLN9dMTdfgUwerObUGXiGbdcuuwSIx19HF1MLLr0KnzaEM+9TnXX@vger.kernel.org, AJvYcCWeG9qj4IuL592mcZ7kdXB7r+lrb+bSA+OLr37rGUhYZgFxy84lMqTBEtUDXVXG7J0dKW3e94ke@vger.kernel.org, AJvYcCXAw8On3T9KO4aYHm7sLFcGE75dAzsKZX9QLgaSKcdHz5sKrG8XHulKA2roqyKZbgDTRGtNeEFTge4O@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL1e8TtYXBRgHGlQ+tfzyMsKxGvfI0y9SW49ago5V6oFuZ+gtA
-	O71gAlQ4VmGpQLf7mZFzt+SKaYEdRseMblh1hTBjRaMIloelgY2EpMb/DvlGXw==
-X-Gm-Gg: ASbGncsE7ZZqmFnV2puCCa7t7ejJ4RJq9zzk/iuzhlIqSf/2/60f4CwUtWHJk+vJQcN
-	EPuv3q/aZ5bgDRIyrqlikQ80v3JRkUFxPh4VUJ9PeNR/DNnONDKd9fHcfQ+E/OoMJx2Qw9Hvqcc
-	lJ9sDhySUT+VJEZlu4FBGBGOLMkW/KCWaBs6VpE3zYwjXIhzsttPHmKxMPZCJEp/W8cAHAjYlzU
-	qbhrhexAoO4cO1T62XAMWyajjZHrA/zbeFAU0sIqHI2tf1p9bwyMa46GF1KY4/WU3hqCApOSE9f
-	8a/Aqd50LTwkjNsZko+CHhDhOjM5hbYhIzMv2W5UdPi8ONNaWcA=
-X-Google-Smtp-Source: AGHT+IE4iGM8B7MNpxVPekqnTow+ybSs+QzOfae2nsSVmSU48C6P19U5szUtP3FoDqyqAr63lEfoCg==
-X-Received: by 2002:a17:903:2593:b0:234:9374:cfae with SMTP id d9443c01a7336-2349374d00dmr57470505ad.19.1748373018305;
-        Tue, 27 May 2025 12:10:18 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234a1681ca4sm14031415ad.46.2025.05.27.12.10.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 12:10:17 -0700 (PDT)
-Date: Tue, 27 May 2025 15:10:15 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 3/5] net: mana: explain irq_setup() algorithm
-Message-ID: <aDYOFzQrfDFcti-u@yury>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C482C1ACEAC;
+	Tue, 27 May 2025 21:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.99
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748382222; cv=fail; b=cSD0EyCJouGU0AjU9NwnzzJgnISXVW6CjVsqshyE7sYLzX5OFsC949p8glqd5At+LKlQ6T+MwUXepcw5TUpPBlgTx8Cnr9bb1jI57cE3cUFJlWqcUTBUtrDJxC2qrhIzw4O9kslbkLjJHZ3Epk3ERKV5mF6lx+ULLneamQefZc0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748382222; c=relaxed/simple;
+	bh=f8VK67e4BcQW2yIVhiPqTVje5WOnKHbb3YgsJYhvXdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=soquUbz+cUzeSCI52bFvWFKfzXkSMuk5WPtcFg45w/KwoquFr9QRAOMGFEVIt0M2pRHiDGAb37gOhzDH9VqQjQadUykU1FuOZCj4uDRHytBoPREyz16B38Slp6PHpWOCXnoewQ9O+zuDkD1y0CrKr3dD/AqY2eXCWY3KCrRbiww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Tmh43fxQ; arc=fail smtp.client-ip=52.101.61.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nEnX2XZwr6kde0Y/lT01JurI0rqs/YPwSRqTt8YxcV+B4H4iXzU0/wN8z7JGf4kaWmANvLiav32jTAIt4zbyg/R/tjmbrpM10In+NQ5ixjc4B8wfJG/IxSG+8Tp5gt0z/P08yMN02ptuTjAHxWPVYfmkU/Q41y2ulR69Wmdx+RKVzIjKw653PwPZ6BO3Azl4Do7T30XlL+I1X9eSJO7rsjggrhhTEAqX2BSwkqtTVlrsDKwZCgA3b1aWDCJAWvyZnnDuZ8A+2aHj48zYWgus6wgzrhsDzJdW7Y+VOmwxY/iposRAu8T12r7KPBlvsHUw78re7DHD0eB41rW/qW129w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LEVJy38ZhR1vIrKiCt4/w60bcbF60LsE0SdQYNHt1d4=;
+ b=aB9+/kKXBVWTBQG2gufHHZAhR3uHxfnji6ebD+sxFtukaUqpRZNbagZygDmS70Jh284xH71rkXTAo9fK9gDVjfW/RXnMilss5bbUb/jhciBnLPauwW6zxN3X+EGTc9jl69GfEYcNu78jMWtERWfqKtcKrzD9iHheXDZTOog95h9ftY9rfngwbzbVqik3PKOp/54SZ8nP76O216ssP6BC5PdhOvLVs9I3si5odM31I91YlDcSX+U1f6VZGPz+Qrns8nPq+ehGwF6wRONH7R6wAy5ljbkmNqWqLUShQ/vCfUeBACKeM36p7cHYOEFhB9bP+p3iZDq/G1DuiAxEFbIAnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LEVJy38ZhR1vIrKiCt4/w60bcbF60LsE0SdQYNHt1d4=;
+ b=Tmh43fxQ07UM/0WXc3MVg0H7YVFGzPak8hRG/eOHKERUtUUAGkjQj/a9CZ0yPiAHemXXH8sRkzFmAqSLO2ZN/GRI6GVLyv7eu95p/dRNJFT0DD5apCNEIZ7OpSMYWu7NlhJtVM9Zzcq/n9vp50lEtsUkZ9N7KuZIHpvKs+EcPqk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from MN0PR21MB3606.namprd21.prod.outlook.com (2603:10b6:208:3d1::17)
+ by BL1PR21MB3043.namprd21.prod.outlook.com (2603:10b6:208:387::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.6; Tue, 27 May
+ 2025 21:43:36 +0000
+Received: from MN0PR21MB3606.namprd21.prod.outlook.com
+ ([fe80::5120:641f:e060:2dc4]) by MN0PR21MB3606.namprd21.prod.outlook.com
+ ([fe80::5120:641f:e060:2dc4%4]) with mapi id 15.20.8769.001; Tue, 27 May 2025
+ 21:43:36 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	stephen@networkplumber.org,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next,v6] net: mana: Add handler for hardware servicing events
+Date: Tue, 27 May 2025 14:42:46 -0700
+Message-Id: <1748382166-1886-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0190.namprd03.prod.outlook.com
+ (2603:10b6:303:b8::15) To MN0PR21MB3606.namprd21.prod.outlook.com
+ (2603:10b6:208:3d1::17)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR21MB3606:EE_|BL1PR21MB3043:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b0f2dbf-a0fd-4ea4-a7e0-08dd9d6788d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|376014|7416014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?uav/7sCx3Vy+2kZwVUK5Z72gMSAFFU87mF5etmF9ytPmjb9RG0fPT/a3WFnY?=
+ =?us-ascii?Q?MuY3C51DOW8S6DmsxZA24SWTXwY9+c8W/b9EU/Eim4ty6T5ldkOEUwqZgQ7n?=
+ =?us-ascii?Q?O79lVV3+yNrlDexqBvhVxyVoMMNFLJwG0bxWQ41fSTFSsHgWcaI4mIoow6RQ?=
+ =?us-ascii?Q?Y8D/XpNw1e42D5Xp2EiV3O1cn9rGv6I/V3/YfBAdzlr2sd/MfCY31HU4jvYc?=
+ =?us-ascii?Q?LDJq52i6zUbpuO4BqmNoJVlhOQnm5TNdybahqHEufGHPg+0/Q9rqKAHVHcCX?=
+ =?us-ascii?Q?gjn5FKNvL3985gdBVQCN/NmvMNSsBPEDp/ihZ57gnGDXn9BvhjU5rzMlBswt?=
+ =?us-ascii?Q?UBVRJDnrkf1BBnRYhynCTZxL0qpodNObH2GIY02fhhSMJ5+Zk26dJzmkkQYk?=
+ =?us-ascii?Q?3Bfk1uqC+95A0AkXaayuKYGV/YRXXvrrJcwPzCnSAiQAFrY+xMLJPS0HNiz1?=
+ =?us-ascii?Q?E8ux7jH+vpO5G7h1d70E8m5kjudwsfehG+54gp6K5Zz8AhAhA5O62Qdtnrd9?=
+ =?us-ascii?Q?Q5u0Ip/0G4rBTYiTia3k9cAVRuFpG5A3ao7uh0Hp5OEkB/be241F+UvVwRHw?=
+ =?us-ascii?Q?u7PamfM3myzXBqM8ZVFVDxb/dQIdmtvdXQzXDUimg8Spk3pFwprGFByvwJce?=
+ =?us-ascii?Q?1QROorhOPxO35rKRLbJN5/QySDO9qaQpNJbYS0NkLq3OtrfgeTHc/2EHRKwv?=
+ =?us-ascii?Q?qyzYznS2527nCHsqmZGYcWM/zlKUdtGGMikaf7OA1x72jnY9uM0xXeLm24//?=
+ =?us-ascii?Q?V59JX1Pk4obAftFRY1S4xR501rNEEsSR6b2cwKjVsQ0pETPTqJxn6/3yOE7m?=
+ =?us-ascii?Q?D78cNeLUWL/uSuzc+EZRd2JRamjmtkGKQHBx3Ngb9qW0Y6ieubN+AG8SXu/m?=
+ =?us-ascii?Q?IT2F/fLItFKmxiPVpOVdS8w8ti2HByVpciNPm31k9qS74lF61h/YEXRzQa/O?=
+ =?us-ascii?Q?JolYEhdsjHRFF8d5oTraevTPrN6O26OOkw2NmrZghpdn4ShG66kvbE3XnGPf?=
+ =?us-ascii?Q?9ZYjcEZeoEFnqTqne4MQU23DH7Xr2IEXuhxC0D97gENSdP+RAQ0HshPbAFoU?=
+ =?us-ascii?Q?Kv1dBgV6FNWhdQ/Q47+phS2ez3jx4aXwQvtWkZfao/ihOcE9HbsdH5+GsoDd?=
+ =?us-ascii?Q?bx6eHRTtM6EVMcDD+zWIYHpJvUSv6ggUL1NAN1iE0svspeZ16eQfJ12pWb1b?=
+ =?us-ascii?Q?ECSpCc8AbvR7DYQkyyc6tHFCGYtt4MOSt6BjJgYNbJfChD6NcbhEzaeZD/bv?=
+ =?us-ascii?Q?yGdIfvEPhVKL9ANot7RTP118fCAspAz94CdmCBHQYXoIshaaUTZpRUE8NG6Q?=
+ =?us-ascii?Q?FipDE6rfNACY0xhQH1CwKi2Jr9/7eg+4FLtTF/SvIjg56ymXWmCRZ9X+r9vt?=
+ =?us-ascii?Q?fJRJKELBz0aBnHLYWlDYZcghUIa/HEdPpZ2A4O5gdeQL0aplInrGCHhqsQaY?=
+ =?us-ascii?Q?KgF8BnKbtrTAr69hQzA/9lATcJXvCNE88bHHcBcMIbXAfbBAafGIPQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3606.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oo2EVoHSm0/Hq8K1BB2iV/rD3XxDfwVXz0Pj3jdBJYIKNCZ6pnua3pBPpSko?=
+ =?us-ascii?Q?301iEmTuIVfq8VT9BQrqLg5oYhFKu8W+rwwDUy5nhyWp43bviykZvJzMjrTt?=
+ =?us-ascii?Q?9XDjIWcF9L/Vyu81JIGDR/IWlQtGpizxUUHT+E7oxLFyPuxELCKZBzwpX2QC?=
+ =?us-ascii?Q?OJbhaST5IW9m22nOY/zmch3y6q7x8daaMmc1/VVvAJ4FyN+5Zxw+BIAQZcLT?=
+ =?us-ascii?Q?Pte4CQBxGk53plB+rJ1ceqEFNcK5agVlbE4AnmIlMrRIUo4H3yGohd0H8FLo?=
+ =?us-ascii?Q?XjDdM/WmarurweUv0+nr1dR+rqxwnb2Hc2rlfueaiM+Ot2cmZz1UXb4HQcv+?=
+ =?us-ascii?Q?DVQ7ABv2PVc1FyHRxbKrSPe+hDEjngh1nTUS2UcZKy6kVwdae2WEAT2fON0q?=
+ =?us-ascii?Q?y/Pcep91oXpKsqc3RXouu5E5u5Un2Cdw+zxcWopUkMKc7Db/VQyw4acOqmOV?=
+ =?us-ascii?Q?dUpFc621mKzEu1KmYQRszr+3VaqhWuJMstvjhzvwmenSm/27t6wRK8Qcqooz?=
+ =?us-ascii?Q?yzsEbjv2C1mWgoMRI0QiH3oST65Nv/ooYs5lkl7J2ffiaCMshAuf2fzCuG0S?=
+ =?us-ascii?Q?5iVuctTZkn0jdPmMXtaSalbwKkxW6pwWZFgtX+cIuabRoJj1EEvG3De2fWRp?=
+ =?us-ascii?Q?bmy6I+pVteMHiEi8RS1MRXRpfGzSllPrjOuGcyjhszNA0VKqN/uE/5wvMmbE?=
+ =?us-ascii?Q?oyGcgl4UXPfHTBqtMbr77wjiT4uFOmfz+er1IrHxKBFflrhzODe24MbLkAvp?=
+ =?us-ascii?Q?qTcL9DXANlKyYXEzpUi5BvpxNU1EZr6xGD21G+8OeWoAcENH3togXtCAvJZJ?=
+ =?us-ascii?Q?9PCCJeLLnLnSMiqbUBhUoEL+GQVuCqUycVCHvnyTfl90iAWj4NDQiyil6rbk?=
+ =?us-ascii?Q?abbnPWq9U7DTjzaGaLwPOP7EZnIsX1uw38+w2J/s3H/GksQBT3uEILWn58S8?=
+ =?us-ascii?Q?7NAWxV5ijpzrfHg0sMn5Ac774rJGCiOGyJl61LkrKgwazZYyY8t3M/oNW/Vq?=
+ =?us-ascii?Q?iEAwBdY75kcCSOvqBOazCuTQvGG/zS4LBUnZMjFaND4hbB2cJjadBL5n/Yzq?=
+ =?us-ascii?Q?+4oOamZkKZmc8rCG497cC8O7/ABkyCY1GrDEoa133XubVBGCzrH+BBqRK4hI?=
+ =?us-ascii?Q?xp17y1CWNxATnX621BpW2L10UuzakSdb4QG2RBcVbq4H7yYFtmBuHlZs7+Ea?=
+ =?us-ascii?Q?BwpfPLh3ccDV5clA6GZU384j44k0HovBuhPUFGcCtwwHBFuBC7jjZJpH1YSn?=
+ =?us-ascii?Q?V9jvWXHPkpmaaMdkOsGIbnKF07g0b8uNHeWVlZw9D16De+TAQFp0l5SOM4dE?=
+ =?us-ascii?Q?qg1/lw24jxfit0yPtVm7y+POe3WRyYJIT7j4jZtmNMeqirmozqRVW0+2szOj?=
+ =?us-ascii?Q?2ugcRCuY1+8qBVdzeNdmtL5oRHxAsCN94Sj89UbJBtakEPa5gdVUAIUom3ji?=
+ =?us-ascii?Q?xrUEhxr6SpHkGhJ1PSJU+mmHVGS9NcKg+E12RN5YxlG28RI9MrJSoruvp2iF?=
+ =?us-ascii?Q?7xHGn3XHAbcMsxCYsGSH7qoNpsOk3cvhDqAZ8OORSZbXYGdGW/wjsWOxki4O?=
+ =?us-ascii?Q?IApxAqF38o7u9s+46yW8sqJCu0lGnHHdOGn3epb/?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b0f2dbf-a0fd-4ea4-a7e0-08dd9d6788d0
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3606.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 21:43:36.6758
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v8qRowfqynfB6Ipe+eKJnPVGhclxD9a5tD3sKAKAfI1CsedTTI0rNDjrCIuQwws5X2Rxz2Vc+vT+3giGS9FjAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3043
 
-So now git will think that you're the author of the patch.
+To collaborate with hardware servicing events, upon receiving the special
+EQE notification from the HW channel, remove the devices on this bus.
+Then, after a waiting period based on the device specs, rescan the parent
+bus to recover the devices.
 
-If author and sender are different people, the first line in commit
-message body should state that. In this case, it should be:
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v6:
+Not acquiring module refcnt as suggested by Paolo Abeni.
 
-From: Yury Norov <yury.norov@gmail.com>
+v5:
+Get refcnt of the pdev struct to avoid removal before running the work
+as suggested by Jakub Kicinski.
 
-Please consider this one example
+v4:
+Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
+be multiple cases of this reset request.
 
-https://patchew.org/linux/20250326-fixed-type-genmasks-v8-0-24afed16ca00@wanadoo.fr/20250326-fixed-type-genmasks-v8-6-24afed16ca00@wanadoo.fr/
+v3:
+Updated for checkpatch warnings as suggested by Simon Horman.
 
-Thanks,
-Yury
+v2:
+Added dev_dbg for service type as suggested by Shradha Gupta.
+Added driver cap bit.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 67 +++++++++++++++++++
+ include/net/mana/gdma.h                       | 10 ++-
+ 2 files changed, 75 insertions(+), 2 deletions(-)
 
-On Tue, May 27, 2025 at 08:58:25AM -0700, Shradha Gupta wrote:
-> Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
-> added the irq_setup() function that distributes IRQs on CPUs according
-> to a tricky heuristic. The corresponding commit message explains the
-> heuristic.
-> 
-> Duplicate it in the source code to make available for readers without
-> digging git in history. Also, add more detailed explanation about how
-> the heuristics is implemented.
-> 
-> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 4ffaf7588885..f9e8d4d1ba3a 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
->  	r->size = 0;
->  }
->  
-> +/*
-> + * Spread on CPUs with the following heuristics:
-> + *
-> + * 1. No more than one IRQ per CPU, if possible;
-> + * 2. NUMA locality is the second priority;
-> + * 3. Sibling dislocality is the last priority.
-> + *
-> + * Let's consider this topology:
-> + *
-> + * Node            0               1
-> + * Core        0       1       2       3
-> + * CPU       0   1   2   3   4   5   6   7
-> + *
-> + * The most performant IRQ distribution based on the above topology
-> + * and heuristics may look like this:
-> + *
-> + * IRQ     Nodes   Cores   CPUs
-> + * 0       1       0       0-1
-> + * 1       1       1       2-3
-> + * 2       1       0       0-1
-> + * 3       1       1       2-3
-> + * 4       2       2       4-5
-> + * 5       2       3       6-7
-> + * 6       2       2       4-5
-> + * 7       2       3       6-7
-> + *
-> + * The heuristics is implemented as follows.
-> + *
-> + * The outer for_each() loop resets the 'weight' to the actual number
-> + * of CPUs in the hop. Then inner for_each() loop decrements it by the
-> + * number of sibling groups (cores) while assigning first set of IRQs
-> + * to each group. IRQs 0 and 1 above are distributed this way.
-> + *
-> + * Now, because NUMA locality is more important, we should walk the
-> + * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
-> + * implemented by the medium while() loop. We do like this unless the
-> + * number of IRQs assigned on this hop will not become equal to number
-> + * of CPUs in the hop (weight == 0). Then we switch to the next hop and
-> + * do the same thing.
-> + */
-> +
->  static int irq_setup(unsigned int *irqs, unsigned int len, int node)
->  {
->  	const struct cpumask *next, *prev = cpu_none_mask;
-> -- 
-> 2.34.1
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 4ffaf7588885..999cf7f88d5d 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -352,11 +352,58 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+ }
+ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
++#define MANA_SERVICE_PERIOD 10
++
++struct mana_serv_work {
++	struct work_struct serv_work;
++	struct pci_dev *pdev;
++};
++
++static void mana_serv_func(struct work_struct *w)
++{
++	struct mana_serv_work *mns_wk;
++	struct pci_bus *bus, *parent;
++	struct pci_dev *pdev;
++
++	mns_wk = container_of(w, struct mana_serv_work, serv_work);
++	pdev = mns_wk->pdev;
++
++	pci_lock_rescan_remove();
++
++	if (!pdev)
++		goto out;
++
++	bus = pdev->bus;
++	if (!bus) {
++		dev_err(&pdev->dev, "MANA service: no bus\n");
++		goto out;
++	}
++
++	parent = bus->parent;
++	if (!parent) {
++		dev_err(&pdev->dev, "MANA service: no parent bus\n");
++		goto out;
++	}
++
++	pci_stop_and_remove_bus_device(bus->self);
++
++	msleep(MANA_SERVICE_PERIOD * 1000);
++
++	pci_rescan_bus(parent);
++
++out:
++	pci_unlock_rescan_remove();
++
++	pci_dev_put(pdev);
++	kfree(mns_wk);
++}
++
+ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ {
+ 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
+ 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
+ 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
++	struct mana_serv_work *mns_wk;
+ 	union gdma_eqe_info eqe_info;
+ 	enum gdma_eqe_type type;
+ 	struct gdma_event event;
+@@ -400,6 +447,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		eq->eq.callback(eq->eq.context, eq, &event);
+ 		break;
+ 
++	case GDMA_EQE_HWC_FPGA_RECONFIG:
++		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
++
++		if (gc->in_service) {
++			dev_info(gc->dev, "Already in service\n");
++			break;
++		}
++
++		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
++		if (!mns_wk)
++			break;
++
++		dev_info(gc->dev, "Start MANA service type:%d\n", type);
++		gc->in_service = true;
++		mns_wk->pdev = to_pci_dev(gc->dev);
++		pci_dev_get(mns_wk->pdev);
++		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
++		schedule_work(&mns_wk->serv_work);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 228603bf03f2..150ab3610869 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -58,7 +58,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+-	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+ };
+@@ -388,6 +388,8 @@ struct gdma_context {
+ 	u32			test_event_eq_id;
+ 
+ 	bool			is_pf;
++	bool			in_service;
++
+ 	phys_addr_t		bar0_pa;
+ 	void __iomem		*bar0_va;
+ 	void __iomem		*shm_base;
+@@ -558,12 +560,16 @@ enum {
+ /* Driver can handle holes (zeros) in the device list */
+ #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+ 
++/* Driver can self reset on FPGA Reconfig EQE notification */
++#define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+ 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+ 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
++	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+-- 
+2.34.1
+
 
