@@ -1,85 +1,86 @@
-Return-Path: <linux-hyperv+bounces-5666-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5667-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A942AC49EE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 10:12:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51AF2AC4B8C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 11:29:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D811917AA05
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 08:12:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E91753BD3D7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 09:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 161BB248F47;
-	Tue, 27 May 2025 08:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14199253F23;
+	Tue, 27 May 2025 09:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ivVl5llu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T09SUzSy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769E8188715
-	for <linux-hyperv@vger.kernel.org>; Tue, 27 May 2025 08:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A05C253B4C
+	for <linux-hyperv@vger.kernel.org>; Tue, 27 May 2025 09:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748333519; cv=none; b=KRh9d0Pr7fHNiy54T717RC//nzZQRQuvmvrYLR8p1xF/g/MMbiuU+QIDv43rnhQC3C/8aneaDpaAj58K5ZBOwxjtkWNzerzG+2KUhJveTpzaJXCnUCV5sCbW4vjX/ejOt1eV6nJWFcAzZRFPaIBIfcIbJIIs5ia0YPYtBhX69rU=
+	t=1748338142; cv=none; b=nS3G4uOxa3x6oFaWb28R4eCo7aE9c1fyNI6Wn57NmhpLx5e5PLBQ8+CiguwdkTZF6e5JbO2TGAmIFUVr+TNpqML5fFiXsCudHUhrPhYUwe7fYGFC9JbcxQHWBmz8nLS1QUwV9o3/suqJc1X0B0z+gCWKMLmZU6qrWYwpWLld52I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748333519; c=relaxed/simple;
-	bh=M0Z25TQaMMnFn5IurMQklTpt99v4cvYnHAu/IuqEobk=;
+	s=arc-20240116; t=1748338142; c=relaxed/simple;
+	bh=jYEhg75W17+LrrRp5ozft0smLaCDvCUlIDdgZkc8Maw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Loqm5PXJe2Z9U2VB4FZxXcux08PuL7itNrJOLEMT59U5rG41H7bMZcvEeMgGgaZu7OHXM5YpsfbdkvI4cCxQz0JuHfKVQRWAfF39MlIfUpDcyEumfNk4MP2Fnp3I+saogXuCTz8N0wguG0R7aIquNaj0FGiBLCRZS/2nXTibs2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ivVl5llu; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=CUDQhpXg7btu8vqNGwA+mxmp4ySZ33O9/hsr/c/t1woWoGIYjDz6wV7lSXLaxfkWYT9nleaSQRVcJpoGh5v7n0bJFVaSDb6uSMGbTYcm9/+hvnzKynjDrQ5vAVoR8MjemE9xc6Jg/bIJcnJHieQFKEN4RFMlXX/Mvua4y82/sBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T09SUzSy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748333515;
+	s=mimecast20190719; t=1748338138;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Uc8SBIaKuW9hd4Ztl1l2JfCcfjBxitXGrH2FjSYGyBI=;
-	b=ivVl5llu4DBwRCGO/v62wKHTpLkR7kCUspjWqEZDX90bcPDQlREBOZxj6zK/sUEu/Hdv7x
-	M/NHh2FYdIISFj+Mw1ymCWoTHKfbNd0+pjUHVeoDU/WstdVOggRm7T6Xg0fkAEHY87d8bP
-	kOt5RgrMuKnX8LkWA2AYEaxeArSAves=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=d2VX9MfL1HCTriT+S3B9Z1XwLwg3XDZQ+O6lDXv3bE4=;
+	b=T09SUzSy2NC7IgyCNSVLSnyMEgMWIuWhcB5+wygbep231lGB+GPBn8In9BcS+QTeuJwUU7
+	esa+ZfZF5cYi5FYouLJbx6KqUjBEgbCHxQ7wT6+b9wad/nQggEIBL+QH25lASCCpFrz0vu
+	2RZkEq1EmRSz9r4BrqWTiuOPUc499BI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-53-Q-_dSc75M-qFPuJCLj8a_g-1; Tue, 27 May 2025 04:11:53 -0400
-X-MC-Unique: Q-_dSc75M-qFPuJCLj8a_g-1
-X-Mimecast-MFC-AGG-ID: Q-_dSc75M-qFPuJCLj8a_g_1748333512
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso22798505e9.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 27 May 2025 01:11:53 -0700 (PDT)
+ us-mta-70-nFAvT57jNlurBv5OhuZrfQ-1; Tue, 27 May 2025 05:28:54 -0400
+X-MC-Unique: nFAvT57jNlurBv5OhuZrfQ-1
+X-Mimecast-MFC-AGG-ID: nFAvT57jNlurBv5OhuZrfQ_1748338133
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so14282805e9.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 27 May 2025 02:28:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748333512; x=1748938312;
+        d=1e100.net; s=20230601; t=1748338133; x=1748942933;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uc8SBIaKuW9hd4Ztl1l2JfCcfjBxitXGrH2FjSYGyBI=;
-        b=uCqVX6MDt8A4atGyVb+SUzW/53TWO4xS+gpWWJ1oYvdv0/peEGFXiNTwnqezuE5nI7
-         HRhKnOvXV9NgPYJmZ3hV7eq2SgoY8hHeoHm7eCc1n0Sh1CO2IMoR1LsKZ3xKkslDSjjR
-         dROOhXxCltFpvZD49n9SY25b7Jt9CBodH4UjqlQfiKuhFKUGi+xZzAchSD702qHg+bOr
-         mT6DW6SNjvAmGbgKnjBL7KYSyVlTYCq5ObfNdhPAq3S5u5cAVkZKTuSM/UrMhi4GFU7G
-         NIsDd5g63iM7WAOe9WTPaaICrY/kBUuS2DpO1HMgII4eUtwpKguO7UDLx45tU8i5VmxZ
-         NHvg==
-X-Gm-Message-State: AOJu0YxfsF07fzbnHgi0w6N3Mj/afj26jkhoFVMSrwTAcDgJWHJXJpiE
-	GIFcbq1unS+b7NVwvnTN3/zULnphe+alxIyubaTE7pYURQ1HkGTI80MYTT0tcOuwtWwdWv/6tff
-	r2lPc2xDXVaA1NMRCbB6deSpZPTKURDUMEvrEXY7mfFpIyKVrKDKIH/usQ3cMUg7LNQ==
-X-Gm-Gg: ASbGncsUOmLyYxU1oz5cdNrBkwWE60DKjCjeGP47OdL+BHHxoQn84z0cFgAEoBlN7Jr
-	HuWfTyLG79QMJFJSLOS0NlUYnHkhGB1jRCwRacqblTnM29wcRfmBLiDUoZNld7KLlPmcw6URtTy
-	lRcdqSNtljmdIgvCNRQ/duvDi5F8LJqCRerBieOqqCR01dXrmzYblemL8hYofbMF2iEZs3MGtzK
-	KyX+K6b+++V21WjkC0pqAt89W4LMa8enbVtlo38UR26GzBKfXzleimXccVdxNJRoADYYo4mN+7c
-	PP12ffM6DeCBM/QBLHaKSKj51RLnwBLcD94eS5khzrCazCd9ohU=
-X-Received: by 2002:a05:600c:64c5:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-44c935dbb26mr120963405e9.30.1748333512423;
-        Tue, 27 May 2025 01:11:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYAtk9413NqBo2PajYHvgPjwcpaG+eT7N4Q6fyVV+Lil0t7i7dtNFpt991DzyOflFbKn4oJA==
-X-Received: by 2002:a05:600c:64c5:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-44c935dbb26mr120963055e9.30.1748333511996;
-        Tue, 27 May 2025 01:11:51 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7d975f4sm258858665e9.39.2025.05.27.01.11.50
+        bh=d2VX9MfL1HCTriT+S3B9Z1XwLwg3XDZQ+O6lDXv3bE4=;
+        b=kOYXh+pRTZ3C7LQ2081lZhU0Wqs8CCFPaw1Ni+1CvafqWRseCYr3X2L211KmInuFpP
+         acwmtX67717Usf4+h/eb9HuQS7g1cpyWqGBtfwteQ/NimClof4fPhyBAgbkwWm9/Ap2K
+         cmzMZ8/7gw3UORg5IeG06uCoO4rNjR5cr5CnYbcioZ+tGJtzrbVNjDymXnYKZqcSj1P8
+         IS0mlscdb4oqhJKcuyVWPb8OL4vydW9oQIFPno4XDVeDnShYknHD5bGn9CSDAmoSBSFb
+         7ePpRy87IWxwmk9VIsUiVtpwxrPElLGsgJygehEUn0PpoxstvBOtkqpdjIgJyVDmwdgQ
+         lI8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXp/WeXXLWR2Bi/nFek05GAud5/FUJ/hFOI34DxQxPVW8s/OuhF98GIF+kKJKbRZZGMe6pp4lKILDQ8R2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIXvc0jBX8Lt0WdSqvLNFaNUPUtP8LMJFSfr1xY6xhJ+2Xaqtj
+	FxuBm24/6rJjNCvTJERDsJg9Oq/EiaAf8O440pwM7uJ4exzDdQsyicq5iYFyv+NdRXiZv7AX9qQ
+	irdWVLmnnTzVvRYN+pwVS9P29YV3Q341gm9jOsGIc1y9+r8FINqrOwSrCPUGONLFMYA==
+X-Gm-Gg: ASbGncucyMY308vygWzVVbkN6+24xaxbfIUAD3HDs8TgwKtOMVRWWpHoXiyj9VwLGWb
+	4yw/Q01Sy3A6XebNJThzYCU8AWIhOwfUgw3RjK5XF+qogRbQPrn8qCEqB4j/Es3ZHzpR9GIyb8X
+	+XM24JXC7NGuu7CZPf5vP2Vtogqoxd8ICwYNHzeleUlOqOwplK4v0ruaJGDWI0LfbL2XqgLcWXP
+	U4+hVrC0Uf8kxk8eyGWZYu4FvEolF4meKPfkjumalXUfdfpq+nfBpOc+XB/Jvz6Ee3GxraYZqrg
+	8ag7JCMw1l/UHSqs924=
+X-Received: by 2002:a05:600c:1d0a:b0:43d:186d:a4bf with SMTP id 5b1f17b1804b1-44c77bf3aa2mr98283875e9.0.1748338133532;
+        Tue, 27 May 2025 02:28:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFW/XvOutq354S3u3kVQy6maNZpndfNYmmZuqtvnQwyMkFCqY+qleAw2OpAQBAisEp90oBu4Q==
+X-Received: by 2002:a05:600c:1d0a:b0:43d:186d:a4bf with SMTP id 5b1f17b1804b1-44c77bf3aa2mr98283485e9.0.1748338133127;
+        Tue, 27 May 2025 02:28:53 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2728:e810::f39? ([2a0d:3344:2728:e810::f39])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4e4c4739csm290454f8f.0.2025.05.27.02.28.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 01:11:50 -0700 (PDT)
-Message-ID: <8bfce982-b22a-4ef3-b79e-5e22a3364c5a@redhat.com>
-Date: Tue, 27 May 2025 10:11:49 +0200
+        Tue, 27 May 2025 02:28:52 -0700 (PDT)
+Message-ID: <ea6b8065-76e4-45c8-a51f-858abab4d639@redhat.com>
+Date: Tue, 27 May 2025 11:28:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -87,91 +88,58 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC drm-misc-next v2 1/1] drm/hyperv: Add support for
- drm_panic
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>, drawat.floss@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250526090117.80593-1-ryasuoka@redhat.com>
- <20250526090117.80593-2-ryasuoka@redhat.com>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <20250526090117.80593-2-ryasuoka@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH net-next,v5] net: mana: Add handler for hardware servicing
+ events
+To: Haiyang Zhang <haiyangz@microsoft.com>, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
+ paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+ davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+ kuba@kernel.org, leon@kernel.org, longli@microsoft.com,
+ ssengar@linux.microsoft.com, linux-rdma@vger.kernel.org,
+ daniel@iogearbox.net, john.fastabend@gmail.com, bpf@vger.kernel.org,
+ ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
+ shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
+ kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
+References: <1747873343-3118-1-git-send-email-haiyangz@microsoft.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <1747873343-3118-1-git-send-email-haiyangz@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/05/2025 11:01, Ryosuke Yasuoka wrote:
-> Add drm_panic module for hyperv drm so that panic screen can be
-> displayed on panic.
+On 5/22/25 2:22 AM, Haiyang Zhang wrote:
+> @@ -400,6 +448,33 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+>  		eq->eq.callback(eq->eq.context, eq, &event);
+>  		break;
+>  
+> +	case GDMA_EQE_HWC_FPGA_RECONFIG:
+> +		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
+> +
+> +		if (gc->in_service) {
+> +			dev_info(gc->dev, "Already in service\n");
+> +			break;
+> +		}
+> +
+> +		if (!try_module_get(THIS_MODULE)) {
+> +			dev_info(gc->dev, "Module is unloading\n");
+> +			break;
+> +		}
+> +
+> +		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
+> +		if (!mns_wk) {
+> +			module_put(THIS_MODULE);
+> +			break;
+> +		}
+> +
+> +		dev_info(gc->dev, "Start MANA service type:%d\n", type);
+> +		gc->in_service = true;
+> +		mns_wk->pdev = to_pci_dev(gc->dev);
+> +		pci_dev_get(mns_wk->pdev);
 
-Thanks, it looks good to me.
+Acquiring both the device and the module reference is confusing and
+likely unnecessary. pci_dev_get() should suffice.
 
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
-> 
-> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
-> ---
->   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 36 +++++++++++++++++++++
->   1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> index f7d2e973f79e..945b9482bcb3 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> @@ -17,6 +17,7 @@
->   #include <drm/drm_gem_framebuffer_helper.h>
->   #include <drm/drm_gem_shmem_helper.h>
->   #include <drm/drm_probe_helper.h>
-> +#include <drm/drm_panic.h>
->   #include <drm/drm_plane.h>
->   
->   #include "hyperv_drm.h"
-> @@ -181,10 +182,45 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
->   	}
->   }
->   
-> +static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
-> +					   struct drm_scanout_buffer *sb)
-> +{
-> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
-> +	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
-> +
-> +	if (plane->state && plane->state->fb) {
-> +		sb->format = plane->state->fb->format;
-> +		sb->width = plane->state->fb->width;
-> +		sb->height = plane->state->fb->height;
-> +		sb->pitch[0] = plane->state->fb->pitches[0];
-> +		sb->map[0] = map;
-> +		return 0;
-> +	}
-> +	return -ENODEV;
-> +}
-> +
-> +static void hyperv_plane_panic_flush(struct drm_plane *plane)
-> +{
-> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
-> +	struct drm_rect rect;
-> +
-> +	if (!plane->state || !plane->state->fb)
-> +		return;
-> +
-> +	rect.x1 = 0;
-> +	rect.y1 = 0;
-> +	rect.x2 = plane->state->fb->width;
-> +	rect.y2 = plane->state->fb->height;
-> +
-> +	hyperv_update_dirt(hv->hdev, &rect);
-> +}
-> +
->   static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
->   	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
->   	.atomic_check = hyperv_plane_atomic_check,
->   	.atomic_update = hyperv_plane_atomic_update,
-> +	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
-> +	.panic_flush = hyperv_plane_panic_flush,
->   };
->   
->   static const struct drm_plane_funcs hyperv_plane_funcs = {
+/P
 
 
