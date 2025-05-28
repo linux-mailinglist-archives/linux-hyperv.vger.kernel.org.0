@@ -1,345 +1,232 @@
-Return-Path: <linux-hyperv+bounces-5676-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5677-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8598AC5C5C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 23:43:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37DE3AC61E6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 May 2025 08:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7414116C276
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 May 2025 21:43:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4292E9E6130
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 May 2025 06:27:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87A622147FB;
-	Tue, 27 May 2025 21:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B48422A1CB;
+	Wed, 28 May 2025 06:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Tmh43fxQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i4e/Q6mf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020099.outbound.protection.outlook.com [52.101.61.99])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C482C1ACEAC;
-	Tue, 27 May 2025 21:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.99
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748382222; cv=fail; b=cSD0EyCJouGU0AjU9NwnzzJgnISXVW6CjVsqshyE7sYLzX5OFsC949p8glqd5At+LKlQ6T+MwUXepcw5TUpPBlgTx8Cnr9bb1jI57cE3cUFJlWqcUTBUtrDJxC2qrhIzw4O9kslbkLjJHZ3Epk3ERKV5mF6lx+ULLneamQefZc0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748382222; c=relaxed/simple;
-	bh=f8VK67e4BcQW2yIVhiPqTVje5WOnKHbb3YgsJYhvXdQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=soquUbz+cUzeSCI52bFvWFKfzXkSMuk5WPtcFg45w/KwoquFr9QRAOMGFEVIt0M2pRHiDGAb37gOhzDH9VqQjQadUykU1FuOZCj4uDRHytBoPREyz16B38Slp6PHpWOCXnoewQ9O+zuDkD1y0CrKr3dD/AqY2eXCWY3KCrRbiww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Tmh43fxQ; arc=fail smtp.client-ip=52.101.61.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nEnX2XZwr6kde0Y/lT01JurI0rqs/YPwSRqTt8YxcV+B4H4iXzU0/wN8z7JGf4kaWmANvLiav32jTAIt4zbyg/R/tjmbrpM10In+NQ5ixjc4B8wfJG/IxSG+8Tp5gt0z/P08yMN02ptuTjAHxWPVYfmkU/Q41y2ulR69Wmdx+RKVzIjKw653PwPZ6BO3Azl4Do7T30XlL+I1X9eSJO7rsjggrhhTEAqX2BSwkqtTVlrsDKwZCgA3b1aWDCJAWvyZnnDuZ8A+2aHj48zYWgus6wgzrhsDzJdW7Y+VOmwxY/iposRAu8T12r7KPBlvsHUw78re7DHD0eB41rW/qW129w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LEVJy38ZhR1vIrKiCt4/w60bcbF60LsE0SdQYNHt1d4=;
- b=aB9+/kKXBVWTBQG2gufHHZAhR3uHxfnji6ebD+sxFtukaUqpRZNbagZygDmS70Jh284xH71rkXTAo9fK9gDVjfW/RXnMilss5bbUb/jhciBnLPauwW6zxN3X+EGTc9jl69GfEYcNu78jMWtERWfqKtcKrzD9iHheXDZTOog95h9ftY9rfngwbzbVqik3PKOp/54SZ8nP76O216ssP6BC5PdhOvLVs9I3si5odM31I91YlDcSX+U1f6VZGPz+Qrns8nPq+ehGwF6wRONH7R6wAy5ljbkmNqWqLUShQ/vCfUeBACKeM36p7cHYOEFhB9bP+p3iZDq/G1DuiAxEFbIAnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LEVJy38ZhR1vIrKiCt4/w60bcbF60LsE0SdQYNHt1d4=;
- b=Tmh43fxQ07UM/0WXc3MVg0H7YVFGzPak8hRG/eOHKERUtUUAGkjQj/a9CZ0yPiAHemXXH8sRkzFmAqSLO2ZN/GRI6GVLyv7eu95p/dRNJFT0DD5apCNEIZ7OpSMYWu7NlhJtVM9Zzcq/n9vp50lEtsUkZ9N7KuZIHpvKs+EcPqk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from MN0PR21MB3606.namprd21.prod.outlook.com (2603:10b6:208:3d1::17)
- by BL1PR21MB3043.namprd21.prod.outlook.com (2603:10b6:208:387::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.6; Tue, 27 May
- 2025 21:43:36 +0000
-Received: from MN0PR21MB3606.namprd21.prod.outlook.com
- ([fe80::5120:641f:e060:2dc4]) by MN0PR21MB3606.namprd21.prod.outlook.com
- ([fe80::5120:641f:e060:2dc4%4]) with mapi id 15.20.8769.001; Tue, 27 May 2025
- 21:43:36 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	decui@microsoft.com,
-	stephen@networkplumber.org,
-	kys@microsoft.com,
-	paulros@microsoft.com,
-	olaf@aepfle.de,
-	vkuznets@redhat.com,
-	davem@davemloft.net,
-	wei.liu@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	bpf@vger.kernel.org,
-	ast@kernel.org,
-	hawk@kernel.org,
-	tglx@linutronix.de,
-	shradhagupta@linux.microsoft.com,
-	andrew+netdev@lunn.ch,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next,v6] net: mana: Add handler for hardware servicing events
-Date: Tue, 27 May 2025 14:42:46 -0700
-Message-Id: <1748382166-1886-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0190.namprd03.prod.outlook.com
- (2603:10b6:303:b8::15) To MN0PR21MB3606.namprd21.prod.outlook.com
- (2603:10b6:208:3d1::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97CB1FE461
+	for <linux-hyperv@vger.kernel.org>; Wed, 28 May 2025 06:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748413660; cv=none; b=PaIUcErciZcj492+EohbOR5cNV2nAH5/e8e5R7eV5UWKVRaIl6F8XuAAk69uF0AvWOVm59ao+GYpd/kUHray962gxkwl/hWytFkbor7H5xrAwMjRnBsF3nvKwVF5XxQRMCrVYk2Tk4iaY/yFe+19Pl1qLSQNycGjWuLQLI+EU9I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748413660; c=relaxed/simple;
+	bh=f1WOn5bnj2UiZh1qSh/Jp9KeecmIWyjy1z5A+Z1c9OQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QbFSAatHQo856AsfEKojY0lDvPeeqMMERXzTCI/BSQRMp9Z7hzF0ZgDG41eMHVvMUF0IWV3eica0Hnn99bIrhfbCb8MePMAiLH0+CJBySsdHucdxLvvo61aYTgCekaAyTY/BRvs/nVZijClqNxFIiD5BShTTpzJQ/a7o78o16B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i4e/Q6mf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748413657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CvTHk+O/1QSNVGu8SxpKsRTrNLnlauH5F8Emt0iiKkY=;
+	b=i4e/Q6mf6cBSIZd+P2kNNAmIW/gNiZl+NOdEDAS+KqySDwegqrigrMR9zLmMRWvJopWEY2
+	XZ2dPpuwSqArvgnaZVgAnPJ6AgQ4hqj+X9Ekhz1XXsweXyEy1IXTRLpEnOEmmgtuBb3d9j
+	uzV3gD0Jz1XC54uXsLdxdU62ixSUkD0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-96-Gc3H8z5DPxGF_lw6C74cKQ-1; Wed, 28 May 2025 02:27:35 -0400
+X-MC-Unique: Gc3H8z5DPxGF_lw6C74cKQ-1
+X-Mimecast-MFC-AGG-ID: Gc3H8z5DPxGF_lw6C74cKQ_1748413654
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442d472cf7fso33963865e9.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 27 May 2025 23:27:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748413654; x=1749018454;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CvTHk+O/1QSNVGu8SxpKsRTrNLnlauH5F8Emt0iiKkY=;
+        b=F/fm1h3h7VhHTBQvspkvhMrrJkfQbZSh2KqugJVX4VqMemISFQ3vKsSYg0HNL9AwDQ
+         lhBWc9XXfByK6zT/P39dLttkr7DeDyx4+Xpz108zJVLModmGtZgM9VfjCpgnToSpUtDM
+         bRK7fT/YjOvs+xiphxSD+YIghimS3uaUFxo2Rt2BZn6c8mvN8UrNR1LQxkdupxWDg77z
+         NgC6TtVl85qJEk8kg/TPvQu3byJnkpy+R658TAyL32n+JKD0SRl8QIYkaHsdHLtRd6dD
+         9LEreyDSDfNmNyWw/dpUs11r+pTuS+uPsVe58rABPG90rRcIZPo6phvgS9s0QPkV5LmX
+         2ruw==
+X-Gm-Message-State: AOJu0Ywscs0eYQybT4mSTpqTIJEJO6tjHeQh5z31/cvlbfQAKoO/cLNv
+	RjMVbtmCd53/QhaPngpbJ6xgtSsH47Dbm4HxilnTUcx4JazNPSbIXBIOOoi6JzzUFV6JBCikTWC
+	SGcYyqz8Eob92O7TtKCbIlArsbI/HqhEOnebFOl9MN7hiBgFVgmiTlc95qbmdYO/7wg==
+X-Gm-Gg: ASbGncsepywhkBwkp1esYQ1NY0ZVoI0xmEloKbkxm9ctDq3wu4XPwZjyx4yJgAWNMtt
+	geDRhFLCr/FnJ80AWJ6YOSvK0CwdcXOzxTSE320da7OCN35FWJFn7jpxm4mfAaD44PaFsKVt5yB
+	JGw4qVGxIG+kwOeR0byn21hikiWjSvUiAmTDYbIM2PL6lmAmW18m2q4WnyqMVh5YenBbBBL4adW
+	nXfskzIZTqhcNjP4bzJEMCz1MKhSag9XWtP6Fjm6ntPcz27F7GdC3AtUDM25ko65L+MWLi/YBkC
+	Yz9IFeq7FIpJgg1Diervjy8lvTQaTA2tTNFKL1ahlcfm3pHUYGYPovLkb2Q=
+X-Received: by 2002:a05:6000:250f:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a4ea9a16ddmr675510f8f.10.1748413654187;
+        Tue, 27 May 2025 23:27:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG3ksxKXCaZGLNbvzK9nMv3YAIr7uCKvT4NZXCaUrz8CA2YqI+qp5uV65PPS+UexzqChEwaNw==
+X-Received: by 2002:a05:6000:250f:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a4ea9a16ddmr675469f8f.10.1748413653728;
+        Tue, 27 May 2025 23:27:33 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac7ea29sm573113f8f.37.2025.05.27.23.27.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 23:27:33 -0700 (PDT)
+Message-ID: <648d56af-ed86-4d45-8e7a-944d1563117c@redhat.com>
+Date: Wed, 28 May 2025 08:27:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR21MB3606:EE_|BL1PR21MB3043:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b0f2dbf-a0fd-4ea4-a7e0-08dd9d6788d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|7416014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uav/7sCx3Vy+2kZwVUK5Z72gMSAFFU87mF5etmF9ytPmjb9RG0fPT/a3WFnY?=
- =?us-ascii?Q?MuY3C51DOW8S6DmsxZA24SWTXwY9+c8W/b9EU/Eim4ty6T5ldkOEUwqZgQ7n?=
- =?us-ascii?Q?O79lVV3+yNrlDexqBvhVxyVoMMNFLJwG0bxWQ41fSTFSsHgWcaI4mIoow6RQ?=
- =?us-ascii?Q?Y8D/XpNw1e42D5Xp2EiV3O1cn9rGv6I/V3/YfBAdzlr2sd/MfCY31HU4jvYc?=
- =?us-ascii?Q?LDJq52i6zUbpuO4BqmNoJVlhOQnm5TNdybahqHEufGHPg+0/Q9rqKAHVHcCX?=
- =?us-ascii?Q?gjn5FKNvL3985gdBVQCN/NmvMNSsBPEDp/ihZ57gnGDXn9BvhjU5rzMlBswt?=
- =?us-ascii?Q?UBVRJDnrkf1BBnRYhynCTZxL0qpodNObH2GIY02fhhSMJ5+Zk26dJzmkkQYk?=
- =?us-ascii?Q?3Bfk1uqC+95A0AkXaayuKYGV/YRXXvrrJcwPzCnSAiQAFrY+xMLJPS0HNiz1?=
- =?us-ascii?Q?E8ux7jH+vpO5G7h1d70E8m5kjudwsfehG+54gp6K5Zz8AhAhA5O62Qdtnrd9?=
- =?us-ascii?Q?Q5u0Ip/0G4rBTYiTia3k9cAVRuFpG5A3ao7uh0Hp5OEkB/be241F+UvVwRHw?=
- =?us-ascii?Q?u7PamfM3myzXBqM8ZVFVDxb/dQIdmtvdXQzXDUimg8Spk3pFwprGFByvwJce?=
- =?us-ascii?Q?1QROorhOPxO35rKRLbJN5/QySDO9qaQpNJbYS0NkLq3OtrfgeTHc/2EHRKwv?=
- =?us-ascii?Q?qyzYznS2527nCHsqmZGYcWM/zlKUdtGGMikaf7OA1x72jnY9uM0xXeLm24//?=
- =?us-ascii?Q?V59JX1Pk4obAftFRY1S4xR501rNEEsSR6b2cwKjVsQ0pETPTqJxn6/3yOE7m?=
- =?us-ascii?Q?D78cNeLUWL/uSuzc+EZRd2JRamjmtkGKQHBx3Ngb9qW0Y6ieubN+AG8SXu/m?=
- =?us-ascii?Q?IT2F/fLItFKmxiPVpOVdS8w8ti2HByVpciNPm31k9qS74lF61h/YEXRzQa/O?=
- =?us-ascii?Q?JolYEhdsjHRFF8d5oTraevTPrN6O26OOkw2NmrZghpdn4ShG66kvbE3XnGPf?=
- =?us-ascii?Q?9ZYjcEZeoEFnqTqne4MQU23DH7Xr2IEXuhxC0D97gENSdP+RAQ0HshPbAFoU?=
- =?us-ascii?Q?Kv1dBgV6FNWhdQ/Q47+phS2ez3jx4aXwQvtWkZfao/ihOcE9HbsdH5+GsoDd?=
- =?us-ascii?Q?bx6eHRTtM6EVMcDD+zWIYHpJvUSv6ggUL1NAN1iE0svspeZ16eQfJ12pWb1b?=
- =?us-ascii?Q?ECSpCc8AbvR7DYQkyyc6tHFCGYtt4MOSt6BjJgYNbJfChD6NcbhEzaeZD/bv?=
- =?us-ascii?Q?yGdIfvEPhVKL9ANot7RTP118fCAspAz94CdmCBHQYXoIshaaUTZpRUE8NG6Q?=
- =?us-ascii?Q?FipDE6rfNACY0xhQH1CwKi2Jr9/7eg+4FLtTF/SvIjg56ymXWmCRZ9X+r9vt?=
- =?us-ascii?Q?fJRJKELBz0aBnHLYWlDYZcghUIa/HEdPpZ2A4O5gdeQL0aplInrGCHhqsQaY?=
- =?us-ascii?Q?KgF8BnKbtrTAr69hQzA/9lATcJXvCNE88bHHcBcMIbXAfbBAafGIPQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3606.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oo2EVoHSm0/Hq8K1BB2iV/rD3XxDfwVXz0Pj3jdBJYIKNCZ6pnua3pBPpSko?=
- =?us-ascii?Q?301iEmTuIVfq8VT9BQrqLg5oYhFKu8W+rwwDUy5nhyWp43bviykZvJzMjrTt?=
- =?us-ascii?Q?9XDjIWcF9L/Vyu81JIGDR/IWlQtGpizxUUHT+E7oxLFyPuxELCKZBzwpX2QC?=
- =?us-ascii?Q?OJbhaST5IW9m22nOY/zmch3y6q7x8daaMmc1/VVvAJ4FyN+5Zxw+BIAQZcLT?=
- =?us-ascii?Q?Pte4CQBxGk53plB+rJ1ceqEFNcK5agVlbE4AnmIlMrRIUo4H3yGohd0H8FLo?=
- =?us-ascii?Q?XjDdM/WmarurweUv0+nr1dR+rqxwnb2Hc2rlfueaiM+Ot2cmZz1UXb4HQcv+?=
- =?us-ascii?Q?DVQ7ABv2PVc1FyHRxbKrSPe+hDEjngh1nTUS2UcZKy6kVwdae2WEAT2fON0q?=
- =?us-ascii?Q?y/Pcep91oXpKsqc3RXouu5E5u5Un2Cdw+zxcWopUkMKc7Db/VQyw4acOqmOV?=
- =?us-ascii?Q?dUpFc621mKzEu1KmYQRszr+3VaqhWuJMstvjhzvwmenSm/27t6wRK8Qcqooz?=
- =?us-ascii?Q?yzsEbjv2C1mWgoMRI0QiH3oST65Nv/ooYs5lkl7J2ffiaCMshAuf2fzCuG0S?=
- =?us-ascii?Q?5iVuctTZkn0jdPmMXtaSalbwKkxW6pwWZFgtX+cIuabRoJj1EEvG3De2fWRp?=
- =?us-ascii?Q?bmy6I+pVteMHiEi8RS1MRXRpfGzSllPrjOuGcyjhszNA0VKqN/uE/5wvMmbE?=
- =?us-ascii?Q?oyGcgl4UXPfHTBqtMbr77wjiT4uFOmfz+er1IrHxKBFflrhzODe24MbLkAvp?=
- =?us-ascii?Q?qTcL9DXANlKyYXEzpUi5BvpxNU1EZr6xGD21G+8OeWoAcENH3togXtCAvJZJ?=
- =?us-ascii?Q?9PCCJeLLnLnSMiqbUBhUoEL+GQVuCqUycVCHvnyTfl90iAWj4NDQiyil6rbk?=
- =?us-ascii?Q?abbnPWq9U7DTjzaGaLwPOP7EZnIsX1uw38+w2J/s3H/GksQBT3uEILWn58S8?=
- =?us-ascii?Q?7NAWxV5ijpzrfHg0sMn5Ac774rJGCiOGyJl61LkrKgwazZYyY8t3M/oNW/Vq?=
- =?us-ascii?Q?iEAwBdY75kcCSOvqBOazCuTQvGG/zS4LBUnZMjFaND4hbB2cJjadBL5n/Yzq?=
- =?us-ascii?Q?+4oOamZkKZmc8rCG497cC8O7/ABkyCY1GrDEoa133XubVBGCzrH+BBqRK4hI?=
- =?us-ascii?Q?xp17y1CWNxATnX621BpW2L10UuzakSdb4QG2RBcVbq4H7yYFtmBuHlZs7+Ea?=
- =?us-ascii?Q?BwpfPLh3ccDV5clA6GZU384j44k0HovBuhPUFGcCtwwHBFuBC7jjZJpH1YSn?=
- =?us-ascii?Q?V9jvWXHPkpmaaMdkOsGIbnKF07g0b8uNHeWVlZw9D16De+TAQFp0l5SOM4dE?=
- =?us-ascii?Q?qg1/lw24jxfit0yPtVm7y+POe3WRyYJIT7j4jZtmNMeqirmozqRVW0+2szOj?=
- =?us-ascii?Q?2ugcRCuY1+8qBVdzeNdmtL5oRHxAsCN94Sj89UbJBtakEPa5gdVUAIUom3ji?=
- =?us-ascii?Q?xrUEhxr6SpHkGhJ1PSJU+mmHVGS9NcKg+E12RN5YxlG28RI9MrJSoruvp2iF?=
- =?us-ascii?Q?7xHGn3XHAbcMsxCYsGSH7qoNpsOk3cvhDqAZ8OORSZbXYGdGW/wjsWOxki4O?=
- =?us-ascii?Q?IApxAqF38o7u9s+46yW8sqJCu0lGnHHdOGn3epb/?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b0f2dbf-a0fd-4ea4-a7e0-08dd9d6788d0
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3606.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 21:43:36.6758
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v8qRowfqynfB6Ipe+eKJnPVGhclxD9a5tD3sKAKAfI1CsedTTI0rNDjrCIuQwws5X2Rxz2Vc+vT+3giGS9FjAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3043
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
+ Multi Vports on Bare metal
+To: Haiyang Zhang <haiyangz@microsoft.com>, Simon Horman <horms@kernel.org>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ "stephen@networkplumber.org" <stephen@networkplumber.org>,
+ KY Srinivasan <kys@microsoft.com>, Paul Rosswurm <paulros@microsoft.com>,
+ "olaf@aepfle.de" <olaf@aepfle.de>, "vkuznets@redhat.com"
+ <vkuznets@redhat.com>, "davem@davemloft.net" <davem@davemloft.net>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "leon@kernel.org" <leon@kernel.org>,
+ Long Li <longli@microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ "daniel@iogearbox.net" <daniel@iogearbox.net>,
+ "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>, "ast@kernel.org"
+ <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ Konstantin Taranov <kotaranov@microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
+ <20250521140231.GW365796@horms.kernel.org>
+ <MN0PR21MB34373B1A0162D8452018ABAACA9EA@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <20250522120229.GX365796@horms.kernel.org>
+ <5470f2d2-d3cb-4451-b8e8-5ee768ed9741@redhat.com>
+ <MN0PR21MB3437196CFAF4574776862F6ACA99A@MN0PR21MB3437.namprd21.prod.outlook.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <MN0PR21MB3437196CFAF4574776862F6ACA99A@MN0PR21MB3437.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-To collaborate with hardware servicing events, upon receiving the special
-EQE notification from the HW channel, remove the devices on this bus.
-Then, after a waiting period based on the device specs, rescan the parent
-bus to recover the devices.
+On 5/22/25 4:51 PM, Haiyang Zhang wrote:
+>> -----Original Message-----
+>> From: Paolo Abeni <pabeni@redhat.com>
+>> Sent: Thursday, May 22, 2025 9:44 AM
+>> To: Simon Horman <horms@kernel.org>; Haiyang Zhang
+>> <haiyangz@microsoft.com>
+> 
+>>>>>>  static int mana_query_device_cfg(struct mana_context *ac, u32
+>>>>> proto_major_ver,
+>>>>>>  				 u32 proto_minor_ver, u32 proto_micro_ver,
+>>>>>> -				 u16 *max_num_vports)
+>>>>>> +				 u16 *max_num_vports, u8 *bm_hostmode)
+>>>>>>  {
+>>>>>>  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+>>>>>>  	struct mana_query_device_cfg_resp resp = {};
+>>>>>> @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct
+>> mana_context
+>>>>> *ac, u32 proto_major_ver,
+>>>>>>  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
+>>>>>>  			     sizeof(req), sizeof(resp));
+>>>>>>
+>>>>>> -	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
+>>>>>> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
+>>>>>>
+>>>>>>  	req.proto_major_ver = proto_major_ver;
+>>>>>>  	req.proto_minor_ver = proto_minor_ver;
+>>>>>
+>>>>>> @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct
+>>>>> mana_context *ac, u32 proto_major_ver,
+>>>>>>
+>>>>>>  	*max_num_vports = resp.max_num_vports;
+>>>>>>
+>>>>>> -	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
+>>>>>> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
+>>>>>>  		gc->adapter_mtu = resp.adapter_mtu;
+>>>>>>  	else
+>>>>>>  		gc->adapter_mtu = ETH_FRAME_LEN;
+>>>>>>
+>>>>>> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
+>>>>>> +		*bm_hostmode = resp.bm_hostmode;
+>>>>>> +	else
+>>>>>> +		*bm_hostmode = 0;
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> Perhaps not strictly related to this patch, but I see
+>>>>> that mana_verify_resp_hdr() is called a few lines above.
+>>>>> And that verifies a minimum msg_version. But I do not see
+>>>>> any verification of the maximum msg_version supported by the code.
+>>>>>
+>>>>> I am concerned about a hypothetical scenario where, say the as yet
+>> unknown
+>>>>> version 5 is sent as the version, and the above behaviour is used,
+>> while
+>>>>> not being correct.
+>>>>>
+>>>>> Could you shed some light on this?
+>>>>>
+>>>>
+>>>> In driver, we specify the expected reply msg version is v3 here:
+>>>> req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
+>>>>
+>>>> If the HW side is upgraded, it won't send reply msg version higher
+>>>> than expected, which may break the driver.
+>>>
+>>> Thanks,
+>>>
+>>> If I understand things correctly the HW side will honour the
+>>> req.hdr.resp.msg_version and thus the SW won't receive anything
+>>> it doesn't expect. Is that right?
+>>
+>> @Haiyang, if Simon's interpretation is correct, please change the
+>> version checking in the driver from:
+>>
+>> 	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
+>>
+>> to
+>> 	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V3)
+>>
+>> As the current code is misleading.
+> 
+> Simon:
+> Yes, you are right. So newer HW can support older driver, and vice
+> versa.
+> 
+> Paolo:
+> The MANA protocol doesn't remove any existing fields during upgrades.
+> 
+> So (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3) will continue
+> to work in the future. If we change it to 
+> (resp.hdr.response.msg_version == GDMA_MESSAGE_V3), 
+> we will have to remember to update it to something like:
+> (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3 &&
+>  resp.hdr.response.msg_version <= GDMA_MESSAGE_V5), 
+> if the version is upgraded to v5 in the future. And keep on updating
+> the checks on existing fields every time when the version is
+> upgraded.
+> 
+> So, can I keep the ">=" condition, to avoid future bug if anyone
+> forget to update checks on all existing fields?
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v6:
-Not acquiring module refcnt as suggested by Paolo Abeni.
+Ok, thanks for the clarification. fine by me.
 
-v5:
-Get refcnt of the pdev struct to avoid removal before running the work
-as suggested by Jakub Kicinski.
-
-v4:
-Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
-be multiple cases of this reset request.
-
-v3:
-Updated for checkpatch warnings as suggested by Simon Horman.
-
-v2:
-Added dev_dbg for service type as suggested by Shradha Gupta.
-Added driver cap bit.
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 67 +++++++++++++++++++
- include/net/mana/gdma.h                       | 10 ++-
- 2 files changed, 75 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 4ffaf7588885..999cf7f88d5d 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -352,11 +352,58 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
- }
- EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
- 
-+#define MANA_SERVICE_PERIOD 10
-+
-+struct mana_serv_work {
-+	struct work_struct serv_work;
-+	struct pci_dev *pdev;
-+};
-+
-+static void mana_serv_func(struct work_struct *w)
-+{
-+	struct mana_serv_work *mns_wk;
-+	struct pci_bus *bus, *parent;
-+	struct pci_dev *pdev;
-+
-+	mns_wk = container_of(w, struct mana_serv_work, serv_work);
-+	pdev = mns_wk->pdev;
-+
-+	pci_lock_rescan_remove();
-+
-+	if (!pdev)
-+		goto out;
-+
-+	bus = pdev->bus;
-+	if (!bus) {
-+		dev_err(&pdev->dev, "MANA service: no bus\n");
-+		goto out;
-+	}
-+
-+	parent = bus->parent;
-+	if (!parent) {
-+		dev_err(&pdev->dev, "MANA service: no parent bus\n");
-+		goto out;
-+	}
-+
-+	pci_stop_and_remove_bus_device(bus->self);
-+
-+	msleep(MANA_SERVICE_PERIOD * 1000);
-+
-+	pci_rescan_bus(parent);
-+
-+out:
-+	pci_unlock_rescan_remove();
-+
-+	pci_dev_put(pdev);
-+	kfree(mns_wk);
-+}
-+
- static void mana_gd_process_eqe(struct gdma_queue *eq)
- {
- 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
- 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
- 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
-+	struct mana_serv_work *mns_wk;
- 	union gdma_eqe_info eqe_info;
- 	enum gdma_eqe_type type;
- 	struct gdma_event event;
-@@ -400,6 +447,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
- 		eq->eq.callback(eq->eq.context, eq, &event);
- 		break;
- 
-+	case GDMA_EQE_HWC_FPGA_RECONFIG:
-+		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
-+
-+		if (gc->in_service) {
-+			dev_info(gc->dev, "Already in service\n");
-+			break;
-+		}
-+
-+		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
-+		if (!mns_wk)
-+			break;
-+
-+		dev_info(gc->dev, "Start MANA service type:%d\n", type);
-+		gc->in_service = true;
-+		mns_wk->pdev = to_pci_dev(gc->dev);
-+		pci_dev_get(mns_wk->pdev);
-+		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
-+		schedule_work(&mns_wk->serv_work);
-+		break;
-+
- 	default:
- 		break;
- 	}
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 228603bf03f2..150ab3610869 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -58,7 +58,7 @@ enum gdma_eqe_type {
- 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
- 	GDMA_EQE_HWC_INIT_DATA		= 130,
- 	GDMA_EQE_HWC_INIT_DONE		= 131,
--	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
-+	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
- 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
- 	GDMA_EQE_RNIC_QP_FATAL		= 176,
- };
-@@ -388,6 +388,8 @@ struct gdma_context {
- 	u32			test_event_eq_id;
- 
- 	bool			is_pf;
-+	bool			in_service;
-+
- 	phys_addr_t		bar0_pa;
- 	void __iomem		*bar0_va;
- 	void __iomem		*shm_base;
-@@ -558,12 +560,16 @@ enum {
- /* Driver can handle holes (zeros) in the device list */
- #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
- 
-+/* Driver can self reset on FPGA Reconfig EQE notification */
-+#define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
-+
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
- 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
--	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-+	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-+	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
--- 
-2.34.1
+/P
 
 
