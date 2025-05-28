@@ -1,102 +1,96 @@
-Return-Path: <linux-hyperv+bounces-5678-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5679-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A1BFAC6219
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 May 2025 08:40:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ED67AC6345
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 May 2025 09:45:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9452B7AB85C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 May 2025 06:38:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A9E0B7A5F37
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 May 2025 07:43:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4D5243376;
-	Wed, 28 May 2025 06:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5BF62459D8;
+	Wed, 28 May 2025 07:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG+tGgO7"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LsgC/GyR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B0D1F1507;
-	Wed, 28 May 2025 06:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5B719B3EC;
+	Wed, 28 May 2025 07:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414394; cv=none; b=LkSuJW/NHE2XSofv0lwclFHmcT+OLc7pjeZ8PqcxJ8P1T9t5d/LA9b2ct7H8SXc0/m+DaIH4AcBvPt7QY4PMLZQtVBlvZNE7mRweILsepFzCsnBraW5HLAfbyk+iMX7FkS0C70c0DWTaH/pzqPauWodGVgLnJJZm1R2wmeOhmS0=
+	t=1748418313; cv=none; b=h5JdJEiZl9TdDR7s+Zy9TJiF3Bbtndlay09kwKYmG6Gk+P2I5Ci4u9h1xZIVqTBqDA5tgYOmD8hvlz+tp/zxpfcFFq/hRMn2QPz4ZJ2J0octJdJi0YQZBSOlpj612uqrODuJ2qCiMBxyH1fgfXr/BTgLSHDuhMLQU9XXDvhtl3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414394; c=relaxed/simple;
-	bh=6kzdFimLYbbRrahrMQogfiYEoFCwuFBfTY0KaSQMewI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pw82rP/MCnUel3y6MI2Ah/cCszXsFNQszSLFS0YYSbFibo3sW1J9yXTIQAGI+Ua92NjTwlNpHTBZJLfpB2VgXhcPg7B0K3qOGnQyjPeuYpwnFwXP8y2wYdF3uDrtlcHdG6yU0aT9EK4EvvBHUJYfxP9dnKtGWJKfAeFFY5d6IQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG+tGgO7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241BDC4CEE7;
-	Wed, 28 May 2025 06:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748414394;
-	bh=6kzdFimLYbbRrahrMQogfiYEoFCwuFBfTY0KaSQMewI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MG+tGgO7sqNV/yoBBf6BNGKaSykvoPPK/2rnCDFcR2diBn0X1IFuoJwDrfXzT9g6m
-	 ZCyr7FLMKDa+SncilWAC5M8bbDHwWl6KgXt/558Lu3TSKMRyW8SsHiqT3oOt0jfMy6
-	 G5DDDN3onCt2A7zHa+ys2XnIbNanZDCZFxTFLdgbQdIiyOgBAMHTvdk2QPViesvU5X
-	 F5RN72EAP4PGtSDlqSEfueV1AqZ9J3ec1XYzk1m2Im9R++WC012/q7hy86TgnZTuXR
-	 5f5d/R7MVAMRW21LPoH4rM3CP/I8eE3pGuNIU+F9xqj0hoC1giT5Tglum4xVdeaPsK
-	 QIintSI4oQ5Bw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D6039F1DE4;
-	Wed, 28 May 2025 06:40:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1748418313; c=relaxed/simple;
+	bh=iafivI8V/MTAg4QPelROK6ZjF73rLhrtzNbr40jE06Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9Sv/yLhJbCvFuxCARs75HcJ4smRtmmtmSSDqiYIp3ApoF5qsox0IDZDwk14D17eZRBeqAW3ujNHmCPq8rYR8XYjvS4Atrh856Apesj66lmqpxyhqKYxbXiLhQmq1dBWYXgaBUflryVQjJgeIJ0Z77gOxKqsRYi+kDkpVHnfack=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LsgC/GyR; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iafivI8V/MTAg4QPelROK6ZjF73rLhrtzNbr40jE06Q=; b=LsgC/GyR5rTERHl0o7UzTubCfZ
+	AJh7GZltqv7gxIf2314J6nKbqBoaTeQhbu6/bPN7yAzvTtCaqAH3Uq5SxT7OUamehRbcZCXpn7KBM
+	D2NwnVgTmQSEqrPC02BXOilRVb4cUMw5qz12MS4FDMZcOEVU85lACRniDOt4uzVFCsooqqwSmwAw4
+	dhxUoNrSvFoEvCsD5A+TCba/7u5qCsm7wBu2SCJio0AMODUc2ftmiQ5pA4uvrD1drrKLnfZzdVkP8
+	S47F5d+REC77oIN8pLOiENDsJVYxGk4In1LZXRTlkYbYFLDsSJoE+0qFMilT1q6u6/VthQckhRsIq
+	TiUi/m3A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKBT6-0000000DMJR-0nhG;
+	Wed, 28 May 2025 07:44:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 60707300472; Wed, 28 May 2025 09:44:52 +0200 (CEST)
+Date: Wed, 28 May 2025 09:44:52 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org, xin@zytor.com
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
+ in __nocfi functions
+Message-ID: <20250528074452.GU39944@noisy.programming.kicks-ass.net>
+References: <20250501103038.GB4356@noisy.programming.kicks-ass.net>
+ <20250501153844.GD4356@noisy.programming.kicks-ass.net>
+ <aBO9uoLnxCSD0UwT@google.com>
+ <20250502084007.GS4198@noisy.programming.kicks-ass.net>
+ <aBUiwLV4ZY2HdRbz@google.com>
+ <20250503095023.GE4198@noisy.programming.kicks-ass.net>
+ <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
+ <20250506073100.GG4198@noisy.programming.kicks-ass.net>
+ <20250506133234.GH4356@noisy.programming.kicks-ass.net>
+ <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next,v2] net: mana: Add support for Multi Vports on Bare
- metal
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174841442825.1926848.6843941704832885467.git-patchwork-notify@kernel.org>
-Date: Wed, 28 May 2025 06:40:28 +0000
-References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
- stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
- olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
- kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
 
-Hello:
+On Tue, May 06, 2025 at 12:18:49PM -0700, Josh Poimboeuf wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+> Weird, I'm not seeing that.
 
-On Mon, 19 May 2025 09:20:36 -0700 you wrote:
-> To support Multi Vports on Bare metal, increase the device config response
-> version. And, skip the register HW vport, and register filter steps, when
-> the Bare metal hostmode is set.
-> 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
-> v2:
->   Updated comments as suggested by ALOK TIWARI.
->   Fixed the version check.
-> 
-> [...]
+I Ate'nt Crazeh...
 
-Here is the summary with links:
-  - [net-next,v2] net: mana: Add support for Multi Vports on Bare metal
-    https://git.kernel.org/netdev/net-next/c/290e5d3c49f6
+https://lore.kernel.org/all/202505280410.2qfTQCRt-lkp@intel.com/T/#u
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+I'll go poke at it, see if today is the day I can figure out WTF
+happens.
 
