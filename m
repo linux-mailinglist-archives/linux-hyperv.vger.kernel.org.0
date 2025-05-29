@@ -1,77 +1,75 @@
-Return-Path: <linux-hyperv+bounces-5694-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49EE1AC7E7B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 May 2025 15:15:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5072AC7E7E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 May 2025 15:16:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7FBD4E7C94
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 May 2025 13:15:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E15153A621B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 May 2025 13:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499B21DE8AD;
-	Thu, 29 May 2025 13:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 652C62222C0;
+	Thu, 29 May 2025 13:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="isufujcA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCNZ1FAy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937D4647;
-	Thu, 29 May 2025 13:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CC9647;
+	Thu, 29 May 2025 13:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748524525; cv=none; b=L9NbPNKAypb+HqKV9dC7Bz2Jsqee2ntvNXnXTD8KN+y5IAqDgx+4XCWV8WjhRNQAhZ4ipkwg2UgReFE3gTepGFipwLehoa2pWalXaJr/3SbRBChQxfoUi6KnPwbZqjo09dv1cnxRETLIAjvs5cqxmxV/xDg6DwRVc8UoO2aE9TQ=
+	t=1748524597; cv=none; b=hpu+7/UmjPV4YoHuHpSPV0Q4pscXmpS/+XGmelQnuNWoF9kz2bzI6uLP1uaU16VVrXZoe4D5So6rEHXiu9XbXwTd8tv/LeM75lj5/3pgyGLDnxJtl8WF4jXkrPMq+kiNp9Z87Bfuzx4Y5XGbHClG+Acnd0p1J/DYYz/H/tsYQ8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748524525; c=relaxed/simple;
-	bh=+aU5coUTqdWc4L2KpPHN9OKmnhKhXyOVMxJInCN/ebk=;
+	s=arc-20240116; t=1748524597; c=relaxed/simple;
+	bh=xkKd2cHk1cf4Qy841VN5k/WKdVh7gnj+gaE9jytpkNk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EN8T/+tu6tK1s6v2zfyRcBPeSU7yInYJG80VntWGM4HRO6tQCX4WKlc/Q0eGpFEYcFcm2bixZ3FH7WZwWBVG0GFWjdXugZ4DUQ8ptdF/dJdTi18vPbHs6WymvxNWNk7vQIM7AW7pbAvLxZoKngiZ9UYTtrUPaie6WaiX07Qn8pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=isufujcA; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id E6D682078611; Thu, 29 May 2025 06:15:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6D682078611
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748524522;
-	bh=Ezqk5Ddjq2iKkVzyKUvJjsCMCcife5igRAcu3O9LX2A=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=ayS6K1xhX/Zv8pBTXg5vSRGLv5suUO9c2eZ86fSM0TuNM7Q7Wq0czmzIyhA4ro+5my1AqbAEsNZq29ZJB4LWquAWz3w0Smmt5NteS752VHBg+bnidxUg2Rav3PWyQl9PdIPCenIHGoOfRaacJj+hQsLpyzF9vzf5NUxxqw4k5hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCNZ1FAy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E6D1C4CEE7;
+	Thu, 29 May 2025 13:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748524596;
+	bh=xkKd2cHk1cf4Qy841VN5k/WKdVh7gnj+gaE9jytpkNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=isufujcARZKa+Tr14FliUe/xB/VXxC27m1DAqmnuRWKLOm2Ltgy1mZ0cGbFwcGGyU
-	 CeK09cu9hOkaT2ru0eM9004OXeAe/E755bELXTHgo3EFO2Gpf2v+4BBDo8U0+On3rq
-	 MZl0wrfeUcVcIg9nivDlyfHFM9TTy7SiFqLxk7Yk=
-Date: Thu, 29 May 2025 06:15:22 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
+	b=VCNZ1FAy8MUohtLLaV44gqwnrFik752j5osN5fjTHMGtT9qHFSEAi83KPe3RpUshN
+	 nqfFRZzwJz1Je65+SS6T6hflk5GngvPcSWDOhxQaUjM6LvaezVxef8FWH6Bd8slDoL
+	 0nuvceJWfXPXcLKfQj98TB0Bp+LdpO2mNpQjzHh/bRHTXrvX8DV10atLopNj3EJGvd
+	 /+7pJSL9tKH2tzRk8AzeP7jTNKjJvCUBPUygGPZK4HCjZwxi8C9OjXZSNMoQjnnv1w
+	 YoYvENXwjznj2VL1hs2ktvaCX1adX1VPwZPokaDZz8pKQNMEgizqTsuDtjeIaj4JiE
+	 ol3UYYZDaangQ==
+Date: Thu, 29 May 2025 08:16:34 -0500
+From: Rob Herring <robh@kernel.org>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 3/5] net: mana: explain irq_setup() algorithm
-Message-ID: <20250529131522.GA27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
- <aDYOFzQrfDFcti-u@yury>
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
+ for Intel processors
+Message-ID: <20250529131634.GA2784667-robh@kernel.org>
+References: <20250506051610.GC25533@ranerica-svr.sc.intel.com>
+ <20250506-pompous-meaty-crane-97efce@kuoka>
+ <20250507032339.GA27243@ranerica-svr.sc.intel.com>
+ <20250512153224.GA3377771-robh@kernel.org>
+ <20250513221456.GA2794@ranerica-svr.sc.intel.com>
+ <20250514154248.GA2375202-robh@kernel.org>
+ <20250515035338.GA4955@ranerica-svr.sc.intel.com>
+ <20250519152937.GA2227051-robh@kernel.org>
+ <20250519175606.GA9693@ranerica-svr.sc.intel.com>
+ <20250524155650.GA16942@ranerica-svr.sc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -80,97 +78,121 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aDYOFzQrfDFcti-u@yury>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250524155650.GA16942@ranerica-svr.sc.intel.com>
 
-On Tue, May 27, 2025 at 03:10:15PM -0400, Yury Norov wrote:
-> So now git will think that you're the author of the patch.
+On Sat, May 24, 2025 at 08:56:50AM -0700, Ricardo Neri wrote:
+> On Mon, May 19, 2025 at 10:56:06AM -0700, Ricardo Neri wrote:
+> > On Mon, May 19, 2025 at 10:29:37AM -0500, Rob Herring wrote:
+> > > On Wed, May 14, 2025 at 08:53:38PM -0700, Ricardo Neri wrote:
+> > > > On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
+> > > > > On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
+> > > > > > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
+> > > > > > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
+> > > > > > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
+> > > > > > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
+> > > > > > > > > > > If this is a device, then compatibles specific to devices. You do not
+> > > > > > > > > > > get different rules than all other bindings... or this does not have to
+> > > > > > > > > > > be binding at all. Why standard reserved-memory does not work for here?
+> > > > > > > > > > > 
+> > > > > > > > > > > Why do you need compatible in the first place?
+> > > > > > > > > > 
+> > > > > > > > > > Are you suggesting something like this?
+> > > > > > > > > > 
+> > > > > > > > > > reserved-memory {
+> > > > > > > > > > 	# address-cells = <2>;
+> > > > > > > > > > 	# size-cells = <1>;
+> > > > > > > > > > 
+> > > > > > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
+> > > > > > > > > > 		reg = < 0x0 0xfff000 0x1000>
+> > > > > > > > > > 	}
+> > > > > > > > > > 
+> > > > > > > > > > and then reference to the reserved memory using the wakeup_mailbox
+> > > > > > > > > > phandle?
+> > > > > > > > > 
+> > > > > > > > > Yes just like every other, typical reserved memory block.
+> > > > > > > > 
+> > > > > > > > Thanks! I will take this approach and drop this patch.
+> > > > > > > 
+> > > > > > > If there is nothing else to this other than the reserved region, then 
+> > > > > > > don't do this. Keep it like you had. There's no need for 2 nodes.
+> > > > > > 
+> > > > > > Thank you for your feedback!
+> > > > > > 
+> > > > > > I was planning to use one reserved-memory node and inside of it a child
+> > > > > > node to with a `reg` property to specify the location and size of the
+> > > > > > mailbox. I would reference to that subnode from the kernel code.
+> > > > > > 
+> > > > > > IIUC, the reserved-memory node is only the container and the actual memory
+> > > > > > regions are expressed as child nodes.
+> > > > > > 
+> > > > > > I had it like that before, but with a `compatible` property that I did not
+> > > > > > need.
+> > > > > > 
+> > > > > > Am I missing anything?
+> > > > > 
+> > > > > Without a compatible, how do you identify which reserved region is the 
+> > > > > wakeup mailbox?
+> > > > 
+> > > > I thought using a phandle to the wakeup_mailbox. Then I realized that the
+> > > > device nodes using the mailbox would be CPUs. They would need a `memory-
+> > > > region` property. This does not look right to me.
+> > > 
+> > > That doesn't really make sense unless it's a memory region per CPU.
+> > 
+> > Agreed.
+> > 
+> > > 
+> > > 
+> > > > > Before you say node name, those are supposed to be 
+> > > > > generic though we failed to enforce anything for /reserved-memory child 
+> > > > > nodes.
+> > > > 
+> > > > I see. Thanks for preventing me from doing this.
+> > > > 
+> > > > Then the `compatible` property seems the way to go after all.
+> > > > 
+> > > > This what motivated this patch in the first place. On further analysis,
+> > > > IIUC, defining bindings and schema is not needed, IMO, since the mailbox
+> > > > is already defined in the ACPI spec. No need to redefine.
+> > > 
+> > > You lost me...
+> > > 
+> > > You don't need to redefine the layout of the memory region as that's 
+> > > defined already somewhere,
+> > 
+> > Great!
+> > 
+> > > but you do need to define where it is for DT. 
+> > > And for that, you need a compatible. Do you know where it is in this 
+> > > case?
+> > 
+> > The compatible is not defined anywhere yet. Is a DT schema needed to
+> > document it? If yes, I am usure what to put in the description. We tried
+> > to not redefine the mailbox and refer to the ACPI spec. That was a NAK
+> > from Krzysztof [1].
+> > 
+> > [1]. https://lore.kernel.org/r/624e1985-7dd2-4abe-a918-78cb43556967@kernel.org
 > 
-> If author and sender are different people, the first line in commit
-> message body should state that. In this case, it should be:
-> 
-> From: Yury Norov <yury.norov@gmail.com>
-> 
-> Please consider this one example
-> 
-> https://patchew.org/linux/20250326-fixed-type-genmasks-v8-0-24afed16ca00@wanadoo.fr/20250326-fixed-type-genmasks-v8-6-24afed16ca00@wanadoo.fr/
-> 
-> Thanks,
-> Yury
->
+> In summary, documenting the `compatible` property for the mailbox is
+> necessary. There is no need to redefine the malbox on a schema but
+> referring to the ACPI spec is not acceptable.
 
-Understood, Thank you Yury. I'll make this change in the next version
+There's the whole "DT bindings in ACPI systems" where ACPI tables 
+contain compatibles and DT properties which I think is what 
+Krzysztof was objecting to (and I do too). But this is a DT based system 
+that implements a mailbox region defined in an ACPI spec. That is 
+perfectly fine to refer to.
 
-Regards,
-Shradha. 
-> On Tue, May 27, 2025 at 08:58:25AM -0700, Shradha Gupta wrote:
-> > Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
-> > added the irq_setup() function that distributes IRQs on CPUs according
-> > to a tricky heuristic. The corresponding commit message explains the
-> > heuristic.
-> > 
-> > Duplicate it in the source code to make available for readers without
-> > digging git in history. Also, add more detailed explanation about how
-> > the heuristics is implemented.
-> > 
-> > Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index 4ffaf7588885..f9e8d4d1ba3a 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > @@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
-> >  	r->size = 0;
-> >  }
-> >  
-> > +/*
-> > + * Spread on CPUs with the following heuristics:
-> > + *
-> > + * 1. No more than one IRQ per CPU, if possible;
-> > + * 2. NUMA locality is the second priority;
-> > + * 3. Sibling dislocality is the last priority.
-> > + *
-> > + * Let's consider this topology:
-> > + *
-> > + * Node            0               1
-> > + * Core        0       1       2       3
-> > + * CPU       0   1   2   3   4   5   6   7
-> > + *
-> > + * The most performant IRQ distribution based on the above topology
-> > + * and heuristics may look like this:
-> > + *
-> > + * IRQ     Nodes   Cores   CPUs
-> > + * 0       1       0       0-1
-> > + * 1       1       1       2-3
-> > + * 2       1       0       0-1
-> > + * 3       1       1       2-3
-> > + * 4       2       2       4-5
-> > + * 5       2       3       6-7
-> > + * 6       2       2       4-5
-> > + * 7       2       3       6-7
-> > + *
-> > + * The heuristics is implemented as follows.
-> > + *
-> > + * The outer for_each() loop resets the 'weight' to the actual number
-> > + * of CPUs in the hop. Then inner for_each() loop decrements it by the
-> > + * number of sibling groups (cores) while assigning first set of IRQs
-> > + * to each group. IRQs 0 and 1 above are distributed this way.
-> > + *
-> > + * Now, because NUMA locality is more important, we should walk the
-> > + * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
-> > + * implemented by the medium while() loop. We do like this unless the
-> > + * number of IRQs assigned on this hop will not become equal to number
-> > + * of CPUs in the hop (weight == 0). Then we switch to the next hop and
-> > + * do the same thing.
-> > + */
-> > +
-> >  static int irq_setup(unsigned int *irqs, unsigned int len, int node)
-> >  {
-> >  	const struct cpumask *next, *prev = cpu_none_mask;
-> > -- 
-> > 2.34.1
+> 
+> What about referring in the schema to the Intel TDX Virtual Firmware Design
+> Guide[2]? It describes how firmware should implement the mailbox the section
+> 4.3.5.
+> 
+> A mailbox with compatible = "intel,wakeup-mailbox" is implemented after the
+> guide that Intel published.
+
+Use whatever you think best describes the programming model of the 
+region.
+
+Rob
 
