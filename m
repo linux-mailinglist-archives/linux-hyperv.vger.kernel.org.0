@@ -1,291 +1,403 @@
-Return-Path: <linux-hyperv+bounces-5761-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5762-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD3E8ACDA9A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 11:11:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72902ACDAA6
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 11:13:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 292587AA34C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 09:10:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3332116D5AF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 09:13:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 635D728C844;
-	Wed,  4 Jun 2025 09:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E3A28C843;
+	Wed,  4 Jun 2025 09:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9IKNrBU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+RHsfe+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBEB28A1F1
-	for <linux-hyperv@vger.kernel.org>; Wed,  4 Jun 2025 09:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76A728C5C0;
+	Wed,  4 Jun 2025 09:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749028271; cv=none; b=lxAmnBsfGUrBZzdavJasx/Yw3TTZS5qHQfdIQg49mOvpCdW/L3/YWlU8BQRM21e6jT8jzMk1iTkFVMPRCVLABH3QT0DtMFKI3ojRIYDrY2mcr4i89Nbn1+3X7dY2xZA0J12bJDF3jsAQcTqnyXnm76t6Alge2W45HI1Y2JFuPk0=
+	t=1749028388; cv=none; b=FDx02G+SxbI5Muw7erqymaMpe3CWHjHKj/vbflMgBxFHPb53M5cwdgjvNnQbnQhot+7Ars8plTJAEp/0npDkD+YwXdxD7vvlSxmNhTV03pBd3y+XDC080j3wWCyRrLABhZo3P3EHkz4iQk2pa6SNMrM1COuHrTbz6rNAyPh+I8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749028271; c=relaxed/simple;
-	bh=spYDiOcng4ILQVWVlDPzfdbym7DybbFmVjx1dh2S4zc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M1e7qukOn4HeTz/A6KMqiXRaHZQx/QMJryati1mUBsGQVjxXa11N7C05ekmtRK6SbGeoRnsjLzB2GY15sNewpJ8J8ad+KI6CfkLt9cY3eXrMbqV+GfB5POnw3HWP8O7Opp476PbEwfvoJUtLLElwQBvaGN4tcFe4p8bVXkswU8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9IKNrBU; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235e1d710d8so5944825ad.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 04 Jun 2025 02:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749028269; x=1749633069; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W8ku4T+OD0xT237A86iNX8WAPjdtmRoRfxA5+iN6PIc=;
-        b=D9IKNrBUCW4o4KHvBh8BiULVU+2tDkC/0PNaz8SaIhfhcti6gYh2uvffGMktdO6FPg
-         OV+X5JzkvaVnTX8bquog476fldp7mdFzNOHpoKdPBSX6G3y+Ojnl2nSo6KK09gTZp4pg
-         yUeM1xdNcnqRkfYXvFxkb1XK7fD6sv/gBxwMYYyHJKsb6dmSPsweJrjW+R5kYR4/i5cm
-         WSI+YIHQsCMVzGt2QIVJymEE0dCRZsZJEyZdUzugLvBXVRdKHIi/LN+qg109+2kCeGU2
-         fh28BjaUN/6NdqNKpu4U2i1GUsLfe+Qh5ReWWixHHPZG7mTpTOqJNiLYfvh7oBtsMQ37
-         b0Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749028269; x=1749633069;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W8ku4T+OD0xT237A86iNX8WAPjdtmRoRfxA5+iN6PIc=;
-        b=umsffihCqPZ9z4UZfJvL3SiF/d5rXtX06weke+BUam/xHa24xtQ9uYC3loyPIWV2lt
-         bq4cANMjlR6P6F5VoWMSetFZuxj3imciz0OPGmuyYG038PcgivFsgHObevLj5NJ0vZFG
-         gV6j/9ux0rH8yINooZrUeHaEmBy5TfB+FqsJ6Dx1PoZKeVtMX92QFIJRzNetxSNbaVRk
-         olxR4Y5UY7+b2owT4SI9m2zniiS4S9Fze9z8dsB/5MTTQwykL6fjqr2XXRe7hBVSe+gq
-         om6vi8OqHkZHP+MfxR4frJsTasDR+zm3CDl9Ozj6mDPi6RYie4Hc2eWcyf05fNuwxwN7
-         /sdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMQyHPBUq0DoVtIxfongqHURDu6gZW2XGzy74QsISX65f4P1JcFyddfRmlpPgPXB60zZ0sYmmsZFGdVbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxqEYekxx+tV2BxjCP0/nwBuEAVqf2Whx2gkZ8BuHIHPjafCpA
-	fZ9elBjDFRSdtNFbbAv9C57MuyLbC72iBS+y+Pn8/GhPuul7aitIdyDE
-X-Gm-Gg: ASbGnctOkJZOjWslArluLHD/IWHcmHiKMCC+IuDNOe7GuzzU2HA/I33xgEYk8TuiwKN
-	ZoMU5TOIAiwIBpbXJKECIstn5STRp1AXjBcL46uqkLR95bdQmqlAt3v3hDFC2PqH4sowEiMHZOL
-	K92SVvz1BxTkZMoNO4hDpThWMuZIeWnpl5GuGzLMIyJ0b6WT9B6sRKsfX3VvEfcpDp16BQ13+nm
-	546VmpheVP2FeJ4xeZkNcJDxISrCq08jyVPB0p4Mb0gfVS/vw9ZMa7YNfemw4dmHf0YPX037GPs
-	P8bcMkxUCa0cx8hs47/R/2VEQ7UzcjL3kwYner339YPRN8JhtdkSvRSkNeHuEflbPdVLYxdcKJW
-	4MDspYlT0200Hv3bFAdP5lD2kSAyMdBZ3zYSH0LBR
-X-Google-Smtp-Source: AGHT+IHC8yOuYEXvtPUaRyMyYPSKBzx/wxVorymqHM1knaDYbvUW1hDFGNPrtnhyQwL9xvuFwDrLRQ==
-X-Received: by 2002:a17:902:e851:b0:234:d7b2:2ab2 with SMTP id d9443c01a7336-235e1195fe1mr24663355ad.8.1749028268557;
-        Wed, 04 Jun 2025 02:11:08 -0700 (PDT)
-Received: from ?IPV6:2400:4051:8da4:6b00:7185:1667:de1c:feec? ([2400:4051:8da4:6b00:7185:1667:de1c:feec])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc889csm99925625ad.15.2025.06.04.02.11.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 02:11:08 -0700 (PDT)
-Message-ID: <72f78577-ec5e-43a3-9378-a77e003b05a6@gmail.com>
-Date: Wed, 4 Jun 2025 18:10:36 +0900
+	s=arc-20240116; t=1749028388; c=relaxed/simple;
+	bh=jOlUvjiUZ6Qp7SBB71J457pTPV06zNA+KwXta7F1JT4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rskUtrgNEFTYofQNw87cCW+YkSXUk7wRVrfI7ESplwUJ/g3ARkCIjV5m+EZ6yw8HW/lgUdnJ2cARDb6l2CH1VTsZZarCITRYwaZJRR7N1oUqu11lRN0/3R+Gmpez6V5PHpu5st6vLfHqj1tRfawmMbDkl8s1yxpyeff0UAl7u/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+RHsfe+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA8EC4CEE7;
+	Wed,  4 Jun 2025 09:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749028386;
+	bh=jOlUvjiUZ6Qp7SBB71J457pTPV06zNA+KwXta7F1JT4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=e+RHsfe+HhDnVHzof5uuvv1xO898sGvxPXbSu1RwOlFW1xaa577IAvcnzazwsitle
+	 5594IGDwlW0XnYpk74yrrthH7lT7KfY8plU9MvimoNzJrwQSWHAaRO/LsTdCd54fSL
+	 DXvfaQ9FWJOLxO3MgqikyxcdaJU0/uzeWQgfCMvANY+ivbQLLAgaxqeRGyW+mM3tQ3
+	 lCvm9tz9A0z57tWwJvFchmyMFDxATfvPvub8vVhreOahUzY+xwLzPYIYWTQGWUCe2+
+	 wKvVAaNjxfcdpGBH+HTcRkuQTWV8Flp4SknIMzAjFqo9KxBMbzBESpFwcHklxGjIhT
+	 zOXdJt/4Dt24w==
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6021e3daeabso3187025eaf.3;
+        Wed, 04 Jun 2025 02:13:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdCBmwrCr9Ht+E3HqxFHQc1iPg7c+UdA4q5OP1l/pgT53jUZX0+Uqe+y6P2yxpmoxI/bIKcC7hKgsXU4JS@vger.kernel.org, AJvYcCUuaMa93YI30UVWEFdvaWzyxtJ9eKF4vPLiF69B5clEQDiQHF0RQeCTh80jbNDTCwOTuvChfHH/QEsI6Vks@vger.kernel.org, AJvYcCVGdpPGYWSGD2knttzEwhCkW96G2c2X1LaPjDLMsEl/rPYxC1J9cKL/8H21hf+8eleg8wYd6unlpLW8@vger.kernel.org, AJvYcCXcfGdTLYUNiyPBYFAy+pVguXyivm9xq7s2n/X25dkRUT55VJHBvVZo0cEA0WV8NGuuwvIbjZGFRCOLHQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcJAZt69qeosgvA+TLrQIOJN8my740VPhhyyZH44X/2ibK9+TO
+	d6OXBQDB8VYsYm1Yml6kRzpbycZQnXGfZuLksagsqxe0n7dzHSe/Km55qNVzbNaeQK+5c/7jKGe
+	e8ht61pLoxe0tNqOcCkiiFxypfTLhdeY=
+X-Google-Smtp-Source: AGHT+IHWDMNiqpKa4YBUr7paa4XPPKHTiCCyQucMUft8ByRknx//SSgHEhOGHFnFc61mVzchJpTMOOrdj+kGJmt9zP0=
+X-Received: by 2002:a05:6820:991:b0:60e:d4e3:da3e with SMTP id
+ 006d021491bc7-60f0c5b958amr935497eaf.0.1749028385643; Wed, 04 Jun 2025
+ 02:13:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] hv_fcopy_uio_daemon: Fix file copy failure between
- Windows host and Linux guest
-To: Naman Jain <namjain@linux.microsoft.com>, eahariha@linux.microsoft.com
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, linux-hyperv@vger.kernel.org,
- ssengar@linux.microsoft.com
-References: <e174e3b0-6b62-4996-9854-39c84e10a317@linux.microsoft.com>
- <20250603234300.1997-1-yasuenag@gmail.com>
- <20250603234300.1997-2-yasuenag@gmail.com>
- <581033c2-4ff4-44c8-a33c-02da3461fb51@linux.microsoft.com>
-Content-Language: en-US
-From: Yasumasa Suenaga <yasuenag@gmail.com>
-In-Reply-To: <581033c2-4ff4-44c8-a33c-02da3461fb51@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com> <20250603-rneri-wakeup-mailbox-v4-2-d533272b7232@linux.intel.com>
+In-Reply-To: <20250603-rneri-wakeup-mailbox-v4-2-d533272b7232@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 4 Jun 2025 11:12:53 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0geZAnLRkeunW06JKE1gyDcd15EGzqJ_A-cZHO_koJVAw@mail.gmail.com>
+X-Gm-Features: AX0GCFtzw8yWInMnx9TjamQXx8dhh5wnfF2kqpxjQE7DIB_tehmbdmWq4jT-oac
+Message-ID: <CAJZ5v0geZAnLRkeunW06JKE1gyDcd15EGzqJ_A-cZHO_koJVAw@mail.gmail.com>
+Subject: Re: [PATCH v4 02/10] x86/acpi: Move acpi_wakeup_cpu() and helpers to smpwakeup.c
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Saurabh Sengar <ssengar@linux.microsoft.com>, 
+	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>, Ricardo Neri <ricardo.neri@intel.com>, 
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Naman,
-Sorry for bothering you, but I have some questions:
+On Wed, Jun 4, 2025 at 2:18=E2=80=AFAM Ricardo Neri
+<ricardo.neri-calderon@linux.intel.com> wrote:
+>
+> The bootstrap processor uses acpi_wakeup_cpu() to indicate to firmware th=
+at
+> it wants to boot a secondary CPU using a mailbox as described in the
+> Multiprocessor Wakeup Structure of the ACPI specification.
+>
+> The platform firmware may implement the mailbox as described in the ACPI
+> specification but enumerate it using a DeviceTree graph. An example of
+> this is OpenHCL paravisor.
+>
+> Move the code used to setup and use the mailbox for CPU wakeup out of the
+> ACPI directory into a new smpwakeup.c file that both ACPI and DeviceTree
+> can use.
+>
+> No functional changes are intended.
+>
+> Co-developed-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> ---
+> Changes since v3:
+>  - Create a new file smpwakeup.c instead of relocating it to smpboot.c.
+>    (Rafael)
+>
+> Changes since v2:
+>  - Only move to smpboot.c the portions of the code that configure and
+>    use the mailbox. This also resolved the compile warnings about unused
+>    functions that Michael Kelley reported.
+>  - Edited the commit message for clarity.
+>
+> Changes since v1:
+>  - None.
+> ---
+>  arch/x86/Kconfig                   |  7 ++++
+>  arch/x86/kernel/Makefile           |  1 +
+>  arch/x86/kernel/acpi/madt_wakeup.c | 76 --------------------------------=
+--
+>  arch/x86/kernel/smpwakeup.c        | 83 ++++++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 91 insertions(+), 76 deletions(-)
+>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index cb0f4af31789..82147edb355a 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1113,6 +1113,13 @@ config X86_LOCAL_APIC
+>         depends on X86_64 || SMP || X86_UP_APIC || PCI_MSI
+>         select IRQ_DOMAIN_HIERARCHY
+>
+> +config X86_MAILBOX_WAKEUP
+> +       def_bool y
+> +       depends on OF || ACPI_MADT_WAKEUP
 
+At this point the dependency on OF is premature.  IMV it should be
+added in a later patch.
 
-> 1. Create a new patch file for every new version and then send it.
-> Currently it seems you are manually editing the same patch file in the
-> subject and sending it, so each patch version is showing up in the same
-> thread.
-
-I've committed changes with "git amend" and created formatted patch with "git format-patch",
-then I sent all of *.patch files via "git send-email".
-Do you mean I should commit to fix commits reviewers and send cover letter and incremental
-patches only? I couldn't find about it from the guide.
-I checked linux-hyperv list, all of patches have been sent in each version AFAICS.
-
-
-> 3. Keep a minimum of 1-2 weeks gap between successive patch versions to
-> give time to people to review your changes.
-
-Does it include changes of commit message too?
-
-
-> 4. In the commit msg of v3, it is still not very clear what problem, you
-> are trying to fix here. Do you mean to say that fcopy does not work on
-> Linux? Or you are assuming it won't work and fixing some generic
-> problem?
-> Fcopy is supposed to work fine on Linux VM on HyperV with windows host. If there are some errors, please share in cover letter/comments
-> in the patch along with steps of execution.
-
-I have a problem on my PC:
-
-   Host: Windows 11 Pro (24H2 build 26100.4202)
-   Guest: Fedora 42
-     - kernel-6.14.4-300.fc42.x86_64
-     - hypervfcopyd-6.10-1.fc42.x86_64
-
-How to reproduce: run Copy-VMFile commandlet on Host:
-
-Following log is in Japanese because my PC is set to Japanese, sorry.
-But it says fcopy could not transfer file (test.ps1) to /tmp/ on Linux guest because it already exists.
-I confirmed /tmp/test.ps1 does not exist of course.
-
-```
-> Copy-VMFile
-
-cmdlet Copy-VMFile at command pipeline position 1
-Supply values for the following parameters:
-Name[0]: Fedora42
-Name[1]:
-SourcePath: test.ps1
-DestinationPath: /tmp/
-FileSource: Host
-Copy-VMFile: ゲストへのファイルのコピーを開始できませんでした。
-
-ソース ファイル 'C:\test\test.ps1' をゲストの宛先 '/tmp/' にコピーできませんでした。
-
-'Fedora42' はゲスト: ファイルがあります。 (0x80070050) へのファイルのコピーを開始できませんでした。(仮想マシン ID 9BFDF23D-CCAA-4748-A770-6D654E09A133)
-
-'Fedora42' は、コピー元ファイル 'C:\test\test.ps1' をゲスト上のコピー先 '/tmp/' にコピーできませんでした: ファイルがあります。 (0x80070050)。(仮想マシン ID 9BFDF23D-CCAA-4748-A770-6D654E09A133)
-```
-
-I got following fcopy log from journald - it is strange because "/tmp/test.ps1" should be shown here.
-```
-6月 04 17:48:24 fc42 HV_UIO_FCOPY[1080]: File: / exists
-```
-
-As I wrote in commit message, wchar_t is 32 bit in Linux. I confirmed it with "sizeof(wchar_t)".
-However fcopyd handles it as 16 bit value (__u16), thus I think this is a bug in fcopy, and
-I think it would also not work on other environments.
-
-Actually it works fine with my patch to handle values as 16 bit.
-
-
-Thanks,
-
-Yasumasa
-
-
-On 2025/06/04 15:19, Naman Jain wrote:
-> 
-> 
-> On 6/4/2025 5:13 AM, yasuenag@gmail.com wrote:
->> From: Yasumasa Suenaga <yasuenag@gmail.com>
->>
->> Handle file copy request from the host (e.g. Copy-VMFile commandlet)
->> correctly.
->> Store file path and name as __u16 arrays in struct hv_start_fcopy.
->> Convert directly to UTF-8 string without casting to wchar_t* in fcopyd.
->>
->> Fix string conversion failure caused by wchar_t size difference between
->> Linux (32bit) and Windows (16bit). Convert each character to char
->> if the value is less than 0x80 instead of using wcstombs() call.
->>
->> Add new check to snprintf() call for target path creation to handle
->> length differences between PATH_MAX (Linux) and W_MAX_PATH (Windows).
->>
->> Signed-off-by: Yasumasa Suenaga <yasuenag@gmail.com>
->> ---
->>   tools/hv/hv_fcopy_uio_daemon.c | 37 ++++++++++++++--------------------
->>   1 file changed, 15 insertions(+), 22 deletions(-)
->>
->> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
->> index 0198321d1..86702f39e 100644
->> --- a/tools/hv/hv_fcopy_uio_daemon.c
->> +++ b/tools/hv/hv_fcopy_uio_daemon.c
->> @@ -62,8 +62,11 @@ static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
->>       filesize = 0;
->>       p = path_name;
->> -    snprintf(target_fname, sizeof(target_fname), "%s/%s",
->> -         path_name, file_name);
->> +    if (snprintf(target_fname, sizeof(target_fname), "%s/%s",
->> +             path_name, file_name) >= sizeof(target_fname)) {
->> +        /* target file name is too long */
->> +        goto done;
->> +    }
->>       /*
->>        * Check to see if the path is already in place; if not,
->> @@ -273,6 +276,8 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
->>       while (len < dest_size) {
->>           if (src[len] < 0x80)
->>               dest[len++] = (char)(*src++);
->> +        else if (src[len] == '0')
->> +            break;
->>           else
->>               dest[len++] = 'X';
->>       }
->> @@ -282,27 +287,15 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
->>   static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
->>   {
->> -    setlocale(LC_ALL, "en_US.utf8");
->> -    size_t file_size, path_size;
->> -    char *file_name, *path_name;
->> -    char *in_file_name = (char *)smsg_in->file_name;
->> -    char *in_path_name = (char *)smsg_in->path_name;
->> -
->> -    file_size = wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) + 1;
->> -    path_size = wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) + 1;
->> -
->> -    file_name = (char *)malloc(file_size * sizeof(char));
->> -    path_name = (char *)malloc(path_size * sizeof(char));
->> -
->> -    if (!file_name || !path_name) {
->> -        free(file_name);
->> -        free(path_name);
->> -        syslog(LOG_ERR, "Can't allocate memory for file name and/or path name");
->> -        return HV_E_FAIL;
->> -    }
->> +    /*
->> +     * file_name and path_name should have same length with appropriate
->> +     * member of hv_start_fcopy.
->> +     */
->> +    char file_name[W_MAX_PATH], path_name[W_MAX_PATH];
->> -    wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
->> -    wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
->> +    setlocale(LC_ALL, "en_US.utf8");
->> +    wcstoutf8(file_name, smsg_in->file_name, W_MAX_PATH - 1);
->> +    wcstoutf8(path_name, smsg_in->path_name, W_MAX_PATH - 1);
->>       return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
->>   }
-> 
-> Hi,
-> I understand this is your first patch for upstreaming. Here are a few
-> things you should consider:
-> 1. Create a new patch file for every new version and then send it.
-> Currently it seems you are manually editing the same patch file in the
-> subject and sending it, so each patch version is showing up in the same
-> thread.
-> 2. Read, re-read, absorb the information in the link that Easwar also
-> mentioned:
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-> 3. Keep a minimum of 1-2 weeks gap between successive patch versions to
-> give time to people to review your changes.
-> 4. In the commit msg of v3, it is still not very clear what problem, you
-> are trying to fix here. Do you mean to say that fcopy does not work on
-> Linux? Or you are assuming it won't work and fixing some generic
-> problem?
-> Fcopy is supposed to work fine on Linux VM on HyperV with windows host. If there are some errors, please share in cover letter/comments
-> in the patch along with steps of execution.
-> 
-> 5. If its a fix, we should have a proper Fixes tag with the commit you
-> are fixing.
-> 6. Have a look at existing conversations at lore to get to know common
-> practices with single patch, multi patch, cover letters etc.
-> https://lore.kernel.org/linux-hyperv/?q=linux-hyperv
-> 
-> Regards,
-> Naman
-> 
-> 
-
+> +       depends on X86_64
+> +       depends on SMP
+> +       depends on X86_LOCAL_APIC
+> +
+>  config ACPI_MADT_WAKEUP
+>         def_bool y
+>         depends on X86_64
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 99a783fd4691..8f078af42a71 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -94,6 +94,7 @@ apm-y                         :=3D apm_32.o
+>  obj-$(CONFIG_APM)              +=3D apm.o
+>  obj-$(CONFIG_SMP)              +=3D smp.o
+>  obj-$(CONFIG_SMP)              +=3D smpboot.o
+> +obj-$(CONFIG_X86_MAILBOX_WAKEUP) +=3D smpwakeup.o
+>  obj-$(CONFIG_X86_TSC)          +=3D tsc_sync.o
+>  obj-$(CONFIG_SMP)              +=3D setup_percpu.o
+>  obj-$(CONFIG_X86_MPPARSE)      +=3D mpparse.o
+> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/ma=
+dt_wakeup.c
+> index 4033c804307a..a7e0158269b0 100644
+> --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> @@ -2,12 +2,10 @@
+>  #include <linux/acpi.h>
+>  #include <linux/cpu.h>
+>  #include <linux/delay.h>
+> -#include <linux/io.h>
+>  #include <linux/kexec.h>
+>  #include <linux/memblock.h>
+>  #include <linux/pgtable.h>
+>  #include <linux/sched/hotplug.h>
+> -#include <asm/apic.h>
+>  #include <asm/barrier.h>
+>  #include <asm/init.h>
+>  #include <asm/intel_pt.h>
+> @@ -15,12 +13,6 @@
+>  #include <asm/processor.h>
+>  #include <asm/reboot.h>
+>
+> -/* Physical address of the Multiprocessor Wakeup Structure mailbox */
+> -static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+> -
+> -/* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+> -static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
+> -
+>  static u64 acpi_mp_pgd __ro_after_init;
+>  static u64 acpi_mp_reset_vector_paddr __ro_after_init;
+>
+> @@ -127,63 +119,6 @@ static int __init acpi_mp_setup_reset(u64 reset_vect=
+or)
+>         return 0;
+>  }
+>
+> -static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+> -{
+> -       if (!acpi_mp_wake_mailbox_paddr) {
+> -               pr_warn_once("No MADT mailbox: cannot bringup secondary C=
+PUs. Booting with kexec?\n");
+> -               return -EOPNOTSUPP;
+> -       }
+> -
+> -       /*
+> -        * Remap mailbox memory only for the first call to acpi_wakeup_cp=
+u().
+> -        *
+> -        * Wakeup of secondary CPUs is fully serialized in the core code.
+> -        * No need to protect acpi_mp_wake_mailbox from concurrent access=
+es.
+> -        */
+> -       if (!acpi_mp_wake_mailbox) {
+> -               acpi_mp_wake_mailbox =3D memremap(acpi_mp_wake_mailbox_pa=
+ddr,
+> -                                               sizeof(*acpi_mp_wake_mail=
+box),
+> -                                               MEMREMAP_WB);
+> -       }
+> -
+> -       /*
+> -        * Mailbox memory is shared between the firmware and OS. Firmware=
+ will
+> -        * listen on mailbox command address, and once it receives the wa=
+keup
+> -        * command, the CPU associated with the given apicid will be boot=
+ed.
+> -        *
+> -        * The value of 'apic_id' and 'wakeup_vector' must be visible to =
+the
+> -        * firmware before the wakeup command is visible.  smp_store_rele=
+ase()
+> -        * ensures ordering and visibility.
+> -        */
+> -       acpi_mp_wake_mailbox->apic_id       =3D apicid;
+> -       acpi_mp_wake_mailbox->wakeup_vector =3D start_ip;
+> -       smp_store_release(&acpi_mp_wake_mailbox->command,
+> -                         ACPI_MP_WAKE_COMMAND_WAKEUP);
+> -
+> -       /*
+> -        * Wait for the CPU to wake up.
+> -        *
+> -        * The CPU being woken up is essentially in a spin loop waiting t=
+o be
+> -        * woken up. It should not take long for it wake up and acknowled=
+ge by
+> -        * zeroing out ->command.
+> -        *
+> -        * ACPI specification doesn't provide any guidance on how long ke=
+rnel
+> -        * has to wait for a wake up acknowledgment. It also doesn't prov=
+ide
+> -        * a way to cancel a wake up request if it takes too long.
+> -        *
+> -        * In TDX environment, the VMM has control over how long it takes=
+ to
+> -        * wake up secondary. It can postpone scheduling secondary vCPU
+> -        * indefinitely. Giving up on wake up request and reporting error=
+ opens
+> -        * possible attack vector for VMM: it can wake up a secondary CPU=
+ when
+> -        * kernel doesn't expect it. Wait until positive result of the wa=
+ke up
+> -        * request.
+> -        */
+> -       while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> -               cpu_relax();
+> -
+> -       return 0;
+> -}
+> -
+>  static void acpi_mp_disable_offlining(struct acpi_madt_multiproc_wakeup =
+*mp_wake)
+>  {
+>         cpu_hotplug_disable_offlining();
+> @@ -246,14 +181,3 @@ int __init acpi_parse_mp_wake(union acpi_subtable_he=
+aders *header,
+>
+>         return 0;
+>  }
+> -
+> -void __init acpi_setup_mp_wakeup_mailbox(u64 mailbox_paddr)
+> -{
+> -       acpi_mp_wake_mailbox_paddr =3D mailbox_paddr;
+> -       apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+> -}
+> -
+> -struct acpi_madt_multiproc_wakeup_mailbox *acpi_get_mp_wakeup_mailbox(vo=
+id)
+> -{
+> -       return acpi_mp_wake_mailbox;
+> -}
+> diff --git a/arch/x86/kernel/smpwakeup.c b/arch/x86/kernel/smpwakeup.c
+> new file mode 100644
+> index 000000000000..e34ffbfffaf5
+> --- /dev/null
+> +++ b/arch/x86/kernel/smpwakeup.c
+> @@ -0,0 +1,83 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/io.h>
+> +#include <linux/printk.h>
+> +#include <linux/types.h>
+> +#include <asm/apic.h>
+> +#include <asm/barrier.h>
+> +#include <asm/processor.h>
+> +
+> +/* Physical address of the Multiprocessor Wakeup Structure mailbox */
+> +static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+> +
+> +/* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+> +static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
+> +
+> +static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+> +{
+> +       if (!acpi_mp_wake_mailbox_paddr) {
+> +               pr_warn_once("No MADT mailbox: cannot bringup secondary C=
+PUs. Booting with kexec?\n");
+> +               return -EOPNOTSUPP;
+> +       }
+> +
+> +       /*
+> +        * Remap mailbox memory only for the first call to acpi_wakeup_cp=
+u().
+> +        *
+> +        * Wakeup of secondary CPUs is fully serialized in the core code.
+> +        * No need to protect acpi_mp_wake_mailbox from concurrent access=
+es.
+> +        */
+> +       if (!acpi_mp_wake_mailbox) {
+> +               acpi_mp_wake_mailbox =3D memremap(acpi_mp_wake_mailbox_pa=
+ddr,
+> +                                               sizeof(*acpi_mp_wake_mail=
+box),
+> +                                               MEMREMAP_WB);
+> +       }
+> +
+> +       /*
+> +        * Mailbox memory is shared between the firmware and OS. Firmware=
+ will
+> +        * listen on mailbox command address, and once it receives the wa=
+keup
+> +        * command, the CPU associated with the given apicid will be boot=
+ed.
+> +        *
+> +        * The value of 'apic_id' and 'wakeup_vector' must be visible to =
+the
+> +        * firmware before the wakeup command is visible.  smp_store_rele=
+ase()
+> +        * ensures ordering and visibility.
+> +        */
+> +       acpi_mp_wake_mailbox->apic_id       =3D apicid;
+> +       acpi_mp_wake_mailbox->wakeup_vector =3D start_ip;
+> +       smp_store_release(&acpi_mp_wake_mailbox->command,
+> +                         ACPI_MP_WAKE_COMMAND_WAKEUP);
+> +
+> +       /*
+> +        * Wait for the CPU to wake up.
+> +        *
+> +        * The CPU being woken up is essentially in a spin loop waiting t=
+o be
+> +        * woken up. It should not take long for it wake up and acknowled=
+ge by
+> +        * zeroing out ->command.
+> +        *
+> +        * ACPI specification doesn't provide any guidance on how long ke=
+rnel
+> +        * has to wait for a wake up acknowledgment. It also doesn't prov=
+ide
+> +        * a way to cancel a wake up request if it takes too long.
+> +        *
+> +        * In TDX environment, the VMM has control over how long it takes=
+ to
+> +        * wake up secondary. It can postpone scheduling secondary vCPU
+> +        * indefinitely. Giving up on wake up request and reporting error=
+ opens
+> +        * possible attack vector for VMM: it can wake up a secondary CPU=
+ when
+> +        * kernel doesn't expect it. Wait until positive result of the wa=
+ke up
+> +        * request.
+> +        */
+> +       while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> +               cpu_relax();
+> +
+> +       return 0;
+> +}
+> +
+> +void __init acpi_setup_mp_wakeup_mailbox(u64 mailbox_paddr)
+> +{
+> +       acpi_mp_wake_mailbox_paddr =3D mailbox_paddr;
+> +       apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+> +}
+> +
+> +struct acpi_madt_multiproc_wakeup_mailbox *acpi_get_mp_wakeup_mailbox(vo=
+id)
+> +{
+> +       return acpi_mp_wake_mailbox;
+> +}
+>
+> --
+> 2.43.0
+>
 
