@@ -1,95 +1,80 @@
-Return-Path: <linux-hyperv+bounces-5760-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5761-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C434ACD964
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 10:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD3E8ACDA9A
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 11:11:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40D9A7A275F
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 08:11:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 292587AA34C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 09:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C63528A723;
-	Wed,  4 Jun 2025 08:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 635D728C844;
+	Wed,  4 Jun 2025 09:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QhfMbTe3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hsNOwS8i";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QhfMbTe3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hsNOwS8i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9IKNrBU"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786F81A2C04
-	for <linux-hyperv@vger.kernel.org>; Wed,  4 Jun 2025 08:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBEB28A1F1
+	for <linux-hyperv@vger.kernel.org>; Wed,  4 Jun 2025 09:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749024770; cv=none; b=JB8HLOPeo5LGFqX8wWOQj3pBP4hp6Djh8h14pEpmgEFg6AEUGuXcWbBThQwSrXxtm+2adb7gf/M+TJ9lZpjj7vgwb5hVCN2w7dSpzBxapNw34geRFv8FQaMcdDwwUGCy8wUrgLsmnQ7Awqd3iOp05BD4TH+tXVwCITCXTlAC/6U=
+	t=1749028271; cv=none; b=lxAmnBsfGUrBZzdavJasx/Yw3TTZS5qHQfdIQg49mOvpCdW/L3/YWlU8BQRM21e6jT8jzMk1iTkFVMPRCVLABH3QT0DtMFKI3ojRIYDrY2mcr4i89Nbn1+3X7dY2xZA0J12bJDF3jsAQcTqnyXnm76t6Alge2W45HI1Y2JFuPk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749024770; c=relaxed/simple;
-	bh=bayr7l71aJK8xCvnToyVAKFE87Idmum4Q2rTzSbXuJo=;
+	s=arc-20240116; t=1749028271; c=relaxed/simple;
+	bh=spYDiOcng4ILQVWVlDPzfdbym7DybbFmVjx1dh2S4zc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jtsWGFzzJ8m1YrHSE6KaVa2f/nnnpxt2t5U4/KCY3xg/UG6qP6rSk24OjdsaxLiaVsIjBaaOBIn0SCBUot9fqiP34kmBr074KtaJ913WhDD7C6yxwvGrU+wXJ/oAb+AtTHVyLoVCcMUTIlm4z/sJ28T4a7urdQaOJvWPWtRV2CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QhfMbTe3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hsNOwS8i; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QhfMbTe3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hsNOwS8i; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7986D2020C;
-	Wed,  4 Jun 2025 08:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749024766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=QhfMbTe30Rwek73ksQG2t0gY1NtsBG8m+qkcNnNTfWvX8whcx8B3oyxMCH5ZL59fkJGPBk
-	ucBf8lyjTJj1FewA1QiLLMUppdRpocTtP3CiBBpwKHVqG3VrORPqJHjIfNytF0rnpVpqPE
-	v/x/IMMxjzyiRSl7DrEI0pp0FIhaJeA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749024766;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=hsNOwS8iLZwX6U7w8jV8ZtZg89TtoXPhFlxG+oQabjN/05IplQmo/iOjgfAClBbtKnIAgX
-	q/MdGtILqg9SsJCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749024766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=QhfMbTe30Rwek73ksQG2t0gY1NtsBG8m+qkcNnNTfWvX8whcx8B3oyxMCH5ZL59fkJGPBk
-	ucBf8lyjTJj1FewA1QiLLMUppdRpocTtP3CiBBpwKHVqG3VrORPqJHjIfNytF0rnpVpqPE
-	v/x/IMMxjzyiRSl7DrEI0pp0FIhaJeA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749024766;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GehkjeXbUaVabMARjI8MzX+XYRRUc1ZTqrpmk77LOr8=;
-	b=hsNOwS8iLZwX6U7w8jV8ZtZg89TtoXPhFlxG+oQabjN/05IplQmo/iOjgfAClBbtKnIAgX
-	q/MdGtILqg9SsJCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1652E13A63;
-	Wed,  4 Jun 2025 08:12:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qthLBP7/P2hhdgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 04 Jun 2025 08:12:46 +0000
-Message-ID: <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
-Date: Wed, 4 Jun 2025 10:12:45 +0200
+	 In-Reply-To:Content-Type; b=M1e7qukOn4HeTz/A6KMqiXRaHZQx/QMJryati1mUBsGQVjxXa11N7C05ekmtRK6SbGeoRnsjLzB2GY15sNewpJ8J8ad+KI6CfkLt9cY3eXrMbqV+GfB5POnw3HWP8O7Opp476PbEwfvoJUtLLElwQBvaGN4tcFe4p8bVXkswU8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9IKNrBU; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235e1d710d8so5944825ad.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 04 Jun 2025 02:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749028269; x=1749633069; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W8ku4T+OD0xT237A86iNX8WAPjdtmRoRfxA5+iN6PIc=;
+        b=D9IKNrBUCW4o4KHvBh8BiULVU+2tDkC/0PNaz8SaIhfhcti6gYh2uvffGMktdO6FPg
+         OV+X5JzkvaVnTX8bquog476fldp7mdFzNOHpoKdPBSX6G3y+Ojnl2nSo6KK09gTZp4pg
+         yUeM1xdNcnqRkfYXvFxkb1XK7fD6sv/gBxwMYYyHJKsb6dmSPsweJrjW+R5kYR4/i5cm
+         WSI+YIHQsCMVzGt2QIVJymEE0dCRZsZJEyZdUzugLvBXVRdKHIi/LN+qg109+2kCeGU2
+         fh28BjaUN/6NdqNKpu4U2i1GUsLfe+Qh5ReWWixHHPZG7mTpTOqJNiLYfvh7oBtsMQ37
+         b0Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749028269; x=1749633069;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W8ku4T+OD0xT237A86iNX8WAPjdtmRoRfxA5+iN6PIc=;
+        b=umsffihCqPZ9z4UZfJvL3SiF/d5rXtX06weke+BUam/xHa24xtQ9uYC3loyPIWV2lt
+         bq4cANMjlR6P6F5VoWMSetFZuxj3imciz0OPGmuyYG038PcgivFsgHObevLj5NJ0vZFG
+         gV6j/9ux0rH8yINooZrUeHaEmBy5TfB+FqsJ6Dx1PoZKeVtMX92QFIJRzNetxSNbaVRk
+         olxR4Y5UY7+b2owT4SI9m2zniiS4S9Fze9z8dsB/5MTTQwykL6fjqr2XXRe7hBVSe+gq
+         om6vi8OqHkZHP+MfxR4frJsTasDR+zm3CDl9Ozj6mDPi6RYie4Hc2eWcyf05fNuwxwN7
+         /sdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMQyHPBUq0DoVtIxfongqHURDu6gZW2XGzy74QsISX65f4P1JcFyddfRmlpPgPXB60zZ0sYmmsZFGdVbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxqEYekxx+tV2BxjCP0/nwBuEAVqf2Whx2gkZ8BuHIHPjafCpA
+	fZ9elBjDFRSdtNFbbAv9C57MuyLbC72iBS+y+Pn8/GhPuul7aitIdyDE
+X-Gm-Gg: ASbGnctOkJZOjWslArluLHD/IWHcmHiKMCC+IuDNOe7GuzzU2HA/I33xgEYk8TuiwKN
+	ZoMU5TOIAiwIBpbXJKECIstn5STRp1AXjBcL46uqkLR95bdQmqlAt3v3hDFC2PqH4sowEiMHZOL
+	K92SVvz1BxTkZMoNO4hDpThWMuZIeWnpl5GuGzLMIyJ0b6WT9B6sRKsfX3VvEfcpDp16BQ13+nm
+	546VmpheVP2FeJ4xeZkNcJDxISrCq08jyVPB0p4Mb0gfVS/vw9ZMa7YNfemw4dmHf0YPX037GPs
+	P8bcMkxUCa0cx8hs47/R/2VEQ7UzcjL3kwYner339YPRN8JhtdkSvRSkNeHuEflbPdVLYxdcKJW
+	4MDspYlT0200Hv3bFAdP5lD2kSAyMdBZ3zYSH0LBR
+X-Google-Smtp-Source: AGHT+IHC8yOuYEXvtPUaRyMyYPSKBzx/wxVorymqHM1knaDYbvUW1hDFGNPrtnhyQwL9xvuFwDrLRQ==
+X-Received: by 2002:a17:902:e851:b0:234:d7b2:2ab2 with SMTP id d9443c01a7336-235e1195fe1mr24663355ad.8.1749028268557;
+        Wed, 04 Jun 2025 02:11:08 -0700 (PDT)
+Received: from ?IPV6:2400:4051:8da4:6b00:7185:1667:de1c:feec? ([2400:4051:8da4:6b00:7185:1667:de1c:feec])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc889csm99925625ad.15.2025.06.04.02.11.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 02:11:08 -0700 (PDT)
+Message-ID: <72f78577-ec5e-43a3-9378-a77e003b05a6@gmail.com>
+Date: Wed, 4 Jun 2025 18:10:36 +0900
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -97,166 +82,210 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
- memory framebuffers
-To: Michael Kelley <mhklinux@outlook.com>,
- David Hildenbrand <david@redhat.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
- "deller@gmx.de" <deller@gmx.de>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20250523161522.409504-1-mhklinux@outlook.com>
- <20250523161522.409504-4-mhklinux@outlook.com>
- <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
- <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
- <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH v3 1/1] hv_fcopy_uio_daemon: Fix file copy failure between
+ Windows host and Linux guest
+To: Naman Jain <namjain@linux.microsoft.com>, eahariha@linux.microsoft.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, linux-hyperv@vger.kernel.org,
+ ssengar@linux.microsoft.com
+References: <e174e3b0-6b62-4996-9854-39c84e10a317@linux.microsoft.com>
+ <20250603234300.1997-1-yasuenag@gmail.com>
+ <20250603234300.1997-2-yasuenag@gmail.com>
+ <581033c2-4ff4-44c8-a33c-02da3461fb51@linux.microsoft.com>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Yasumasa Suenaga <yasuenag@gmail.com>
+In-Reply-To: <581033c2-4ff4-44c8-a33c-02da3461fb51@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.950];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_TO(0.00)[outlook.com,redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-Hi
+Hi Naman,
+Sorry for bothering you, but I have some questions:
 
-Am 03.06.25 um 19:50 schrieb Michael Kelley:
-> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Monday, June 2, 2025 11:25 PM
->> Hi
+
+> 1. Create a new patch file for every new version and then send it.
+> Currently it seems you are manually editing the same patch file in the
+> subject and sending it, so each patch version is showing up in the same
+> thread.
+
+I've committed changes with "git amend" and created formatted patch with "git format-patch",
+then I sent all of *.patch files via "git send-email".
+Do you mean I should commit to fix commits reviewers and send cover letter and incremental
+patches only? I couldn't find about it from the guide.
+I checked linux-hyperv list, all of patches have been sent in each version AFAICS.
+
+
+> 3. Keep a minimum of 1-2 weeks gap between successive patch versions to
+> give time to people to review your changes.
+
+Does it include changes of commit message too?
+
+
+> 4. In the commit msg of v3, it is still not very clear what problem, you
+> are trying to fix here. Do you mean to say that fcopy does not work on
+> Linux? Or you are assuming it won't work and fixing some generic
+> problem?
+> Fcopy is supposed to work fine on Linux VM on HyperV with windows host. If there are some errors, please share in cover letter/comments
+> in the patch along with steps of execution.
+
+I have a problem on my PC:
+
+   Host: Windows 11 Pro (24H2 build 26100.4202)
+   Guest: Fedora 42
+     - kernel-6.14.4-300.fc42.x86_64
+     - hypervfcopyd-6.10-1.fc42.x86_64
+
+How to reproduce: run Copy-VMFile commandlet on Host:
+
+Following log is in Japanese because my PC is set to Japanese, sorry.
+But it says fcopy could not transfer file (test.ps1) to /tmp/ on Linux guest because it already exists.
+I confirmed /tmp/test.ps1 does not exist of course.
+
+```
+> Copy-VMFile
+
+cmdlet Copy-VMFile at command pipeline position 1
+Supply values for the following parameters:
+Name[0]: Fedora42
+Name[1]:
+SourcePath: test.ps1
+DestinationPath: /tmp/
+FileSource: Host
+Copy-VMFile: ゲストへのファイルのコピーを開始できませんでした。
+
+ソース ファイル 'C:\test\test.ps1' をゲストの宛先 '/tmp/' にコピーできませんでした。
+
+'Fedora42' はゲスト: ファイルがあります。 (0x80070050) へのファイルのコピーを開始できませんでした。(仮想マシン ID 9BFDF23D-CCAA-4748-A770-6D654E09A133)
+
+'Fedora42' は、コピー元ファイル 'C:\test\test.ps1' をゲスト上のコピー先 '/tmp/' にコピーできませんでした: ファイルがあります。 (0x80070050)。(仮想マシン ID 9BFDF23D-CCAA-4748-A770-6D654E09A133)
+```
+
+I got following fcopy log from journald - it is strange because "/tmp/test.ps1" should be shown here.
+```
+6月 04 17:48:24 fc42 HV_UIO_FCOPY[1080]: File: / exists
+```
+
+As I wrote in commit message, wchar_t is 32 bit in Linux. I confirmed it with "sizeof(wchar_t)".
+However fcopyd handles it as 16 bit value (__u16), thus I think this is a bug in fcopy, and
+I think it would also not work on other environments.
+
+Actually it works fine with my patch to handle values as 16 bit.
+
+
+Thanks,
+
+Yasumasa
+
+
+On 2025/06/04 15:19, Naman Jain wrote:
+> 
+> 
+> On 6/4/2025 5:13 AM, yasuenag@gmail.com wrote:
+>> From: Yasumasa Suenaga <yasuenag@gmail.com>
 >>
->> Am 03.06.25 um 03:49 schrieb Michael Kelley:
->> [...]
->>>> Will the VMA have VM_PFNMAP or VM_MIXEDMAP set? PFN_SPECIAL is a
->>>> horrible hack.
->>>>
->>>> In another thread, you mention that you use PFN_SPECIAL to bypass the
->>>> check in vm_mixed_ok(), so VM_MIXEDMAP is likely not set?
->>> The VMA has VM_PFNMAP set, not VM_MIXEDMAP.  It seemed like
->>> VM_MIXEDMAP is somewhat of a superset of VM_PFNMAP, but maybe that's
->>> a wrong impression. vm_mixed_ok() does a thorough job of validating the
->>> use of __vm_insert_mixed(), and since what I did was allowed, I thought
->>> perhaps it was OK. Your feedback has set me straight, and that's what I
->>> needed. :-)
->>>
->>> But the whole approach is moot with Alistair Popple's patch set that
->>> eliminates pfn_t. Is there an existing mm API that will do mkwrite on a
->>> special PTE in a VM_PFNMAP VMA? I didn't see one, but maybe I missed
->>> it. If there's not one, I'll take a crack at adding it in the next version of my
->>> patch set.
->> What is the motivation behind this work? The driver or fbdev as a whole
->> does not have much of a future anyway.
+>> Handle file copy request from the host (e.g. Copy-VMFile commandlet)
+>> correctly.
+>> Store file path and name as __u16 arrays in struct hv_start_fcopy.
+>> Convert directly to UTF-8 string without casting to wchar_t* in fcopyd.
 >>
->> I'd like to suggest removing hyperv_fb entirely in favor of hypervdrm?
+>> Fix string conversion failure caused by wchar_t size difference between
+>> Linux (32bit) and Windows (16bit). Convert each character to char
+>> if the value is less than 0x80 instead of using wcstombs() call.
 >>
-> Yes, I think that's the longer term direction. A couple months ago I had an
-> email conversation with Saurabh Sengar from the Microsoft Linux team where
-> he raised this idea. I think the Microsoft folks will need to drive the deprecation
-> process, as they need to coordinate with the distro vendors who publish
-> images for running on local Hyper-V and in the Azure cloud. And my
-> understanding is that the Linux kernel process would want the driver to
-> be available but marked "deprecated" for a year or so before it actually
-> goes away.
-
-We (DRM upstream) recently considered moving some fbdev drivers to 
-drivers/staging or marking them with !DRM if a DRM driver is available. 
-Hyverv_fb would be a candidate.
-
-At least at SUSE, we ship hypervdrm instead of hyperv_fb. This works 
-well on the various generations of the hyperv system. Much of our 
-userspace would not be able to use hyperv_fb anyway.
-
->
-> I do have some concerns about the maturity of the hyperv_drm driver
-> "around the edges". For example, somebody just recently submitted a
-> patch to flush output on panic. I have less familiarity hyperv_drm vs.
-> hyperv_fb, so some of my concern is probably due to that. We might
-> need to do review of hyperv_drm and see if there's anything else to
-> deal with before hyperv_fb goes away.
-
-The panic output is a feature that we recently added to the kernel. It 
-allows a DRM driver to display a final error message in the case of a 
-kernel panic (think of blue screens on Windows). Drivers require a 
-minimum of support to make it work. That's what the hypervdrm patches 
-were about.
-
-Best regards
-Thomas
-
->
-> This all got started when I was looking at a problem with hyperv_fb,
-> and I found several other related problems, some of which also existed
-> in hyperv_drm. You've seen several small'ish fixes from me and Saurabh
-> as a result, and this issue with mmap()'ing /dev/fb0 is the last one of that
-> set. This fix is definitely a bit bigger, but it's the right fix. On the flip side,
-> if we really get on a path to deprecate hyperv_fb, there are hack fixes for
-> the mmap problem that are smaller and contained to hyperv_fb. I would
-> be OK with a hack fix in that case.
->
-> Michael
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+>> Add new check to snprintf() call for target path creation to handle
+>> length differences between PATH_MAX (Linux) and W_MAX_PATH (Windows).
+>>
+>> Signed-off-by: Yasumasa Suenaga <yasuenag@gmail.com>
+>> ---
+>>   tools/hv/hv_fcopy_uio_daemon.c | 37 ++++++++++++++--------------------
+>>   1 file changed, 15 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
+>> index 0198321d1..86702f39e 100644
+>> --- a/tools/hv/hv_fcopy_uio_daemon.c
+>> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+>> @@ -62,8 +62,11 @@ static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
+>>       filesize = 0;
+>>       p = path_name;
+>> -    snprintf(target_fname, sizeof(target_fname), "%s/%s",
+>> -         path_name, file_name);
+>> +    if (snprintf(target_fname, sizeof(target_fname), "%s/%s",
+>> +             path_name, file_name) >= sizeof(target_fname)) {
+>> +        /* target file name is too long */
+>> +        goto done;
+>> +    }
+>>       /*
+>>        * Check to see if the path is already in place; if not,
+>> @@ -273,6 +276,8 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
+>>       while (len < dest_size) {
+>>           if (src[len] < 0x80)
+>>               dest[len++] = (char)(*src++);
+>> +        else if (src[len] == '0')
+>> +            break;
+>>           else
+>>               dest[len++] = 'X';
+>>       }
+>> @@ -282,27 +287,15 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
+>>   static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
+>>   {
+>> -    setlocale(LC_ALL, "en_US.utf8");
+>> -    size_t file_size, path_size;
+>> -    char *file_name, *path_name;
+>> -    char *in_file_name = (char *)smsg_in->file_name;
+>> -    char *in_path_name = (char *)smsg_in->path_name;
+>> -
+>> -    file_size = wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) + 1;
+>> -    path_size = wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) + 1;
+>> -
+>> -    file_name = (char *)malloc(file_size * sizeof(char));
+>> -    path_name = (char *)malloc(path_size * sizeof(char));
+>> -
+>> -    if (!file_name || !path_name) {
+>> -        free(file_name);
+>> -        free(path_name);
+>> -        syslog(LOG_ERR, "Can't allocate memory for file name and/or path name");
+>> -        return HV_E_FAIL;
+>> -    }
+>> +    /*
+>> +     * file_name and path_name should have same length with appropriate
+>> +     * member of hv_start_fcopy.
+>> +     */
+>> +    char file_name[W_MAX_PATH], path_name[W_MAX_PATH];
+>> -    wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
+>> -    wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
+>> +    setlocale(LC_ALL, "en_US.utf8");
+>> +    wcstoutf8(file_name, smsg_in->file_name, W_MAX_PATH - 1);
+>> +    wcstoutf8(path_name, smsg_in->path_name, W_MAX_PATH - 1);
+>>       return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
+>>   }
+> 
+> Hi,
+> I understand this is your first patch for upstreaming. Here are a few
+> things you should consider:
+> 1. Create a new patch file for every new version and then send it.
+> Currently it seems you are manually editing the same patch file in the
+> subject and sending it, so each patch version is showing up in the same
+> thread.
+> 2. Read, re-read, absorb the information in the link that Easwar also
+> mentioned:
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+> 3. Keep a minimum of 1-2 weeks gap between successive patch versions to
+> give time to people to review your changes.
+> 4. In the commit msg of v3, it is still not very clear what problem, you
+> are trying to fix here. Do you mean to say that fcopy does not work on
+> Linux? Or you are assuming it won't work and fixing some generic
+> problem?
+> Fcopy is supposed to work fine on Linux VM on HyperV with windows host. If there are some errors, please share in cover letter/comments
+> in the patch along with steps of execution.
+> 
+> 5. If its a fix, we should have a proper Fixes tag with the commit you
+> are fixing.
+> 6. Have a look at existing conversations at lore to get to know common
+> practices with single patch, multi patch, cover letters etc.
+> https://lore.kernel.org/linux-hyperv/?q=linux-hyperv
+> 
+> Regards,
+> Naman
+> 
+> 
 
 
