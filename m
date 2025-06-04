@@ -1,34 +1,34 @@
-Return-Path: <linux-hyperv+bounces-5734-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5735-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB72BACD098
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 02:18:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 693D5ACD099
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 02:18:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 66FF5176BD9
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 00:18:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F76217664D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 00:18:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C1F572624;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C13A78F3A;
 	Wed,  4 Jun 2025 00:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBp4DTF8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EBgQv1dU"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B341BC5C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BB71F5F6;
 	Wed,  4 Jun 2025 00:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748996287; cv=none; b=kYljDw/LNa+l5h9nAs7+qqEG4C+J8ckStA37KYlOmw/6iO+epIZoNLD566qOsEKrdO5OniaN8/7fB+yFTrb9iiObcF5Wme5qV43nTxXeiIzMXNw1X+IIjow4NyoEoCAwVfzIMC185UtDF97LD9q0d9pO5huQLjNbvslD/vESN7E=
+	t=1748996287; cv=none; b=uRZ+8DvB8HxpoOVPsg0HVGIL8eXyr0mILPWtn96gz3yxYCMYLGandoBFY3fbitNVlxIFwIdGGACNzl8B7vLWbAtqdkQ4Rx4xwFDppQkOK93ilPwewFiH9dIx2nAmq6iV5VIR/Jk3glhuHmCDhdKfGmV4PW0x7+I2K2bh4anCmus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748996287; c=relaxed/simple;
-	bh=NWTFVdsTu15JID3vMZXamOvuYlBjkvLIfQE8cTt7NKg=;
+	bh=PUVIKq1UhmNARwP0ctBdFVOtRbG0LlOJlEurpP6Xx3E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iW41UwodfQn+FcQTnzwFBHcQXhxsM5icu4xCCjgcf2E+PgZ0GxrdsQn9S/ppmyOIJASM/0lGdqphROvmF2yw95HWU2zajySwVs26p3xrZrKPNYzW16Ge4QTuquJG+TDWXmc6zEsGRzsn99T9rene8jQEi7kkF0UH/EnZF1S5fE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBp4DTF8; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:To:Cc; b=PSx9iltcquB2KArONJXdTdMmAsnBXYibbG7K/DMcLxWsYohUhReFbGnk0ZbD91UqqdHbhqL0zFYtLQQ0CuEjzxv5IZpaLWNE312alGnBm8mdWy6CdsKhbtQg/ECN+DYQzaC71DH/a4yyRvg4hurGD69L0bOjhC1MNF7iS8Le0PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EBgQv1dU; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,32 +36,32 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1748996286; x=1780532286;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=NWTFVdsTu15JID3vMZXamOvuYlBjkvLIfQE8cTt7NKg=;
-  b=nBp4DTF8zvNwzJiP+1/a7ecP/O/bAxoMaF6VX3Z2VBuuAIaXWgaKgE1p
-   wfEb3Fz97p+fmavB7asGrgbV59/WLWLNTu2849hAlWcqegIur9/b1Kjj2
-   WW2GOfc57FI3bAQsYbyC7EuEztgbxyZEKU6XTioFUGAzvyoRShHDPg+iD
-   7MSfDg2BQhuPANhgw4DiQY236nANwxF7F0m6pfShjqzKrsr6zOHkwyOOv
-   GdFk9YzF/5raGsch19/NY2v88a/TlTyhYNZusnvZWVLCia0vy77i2rErB
-   G5R4EpBlBiWvfaCifY6kJDIV0IW0ghRzv0049MH3vVbZa6haZszcJi5Dv
+  bh=PUVIKq1UhmNARwP0ctBdFVOtRbG0LlOJlEurpP6Xx3E=;
+  b=EBgQv1dUlHE2CZlhHxNg25hSEZKgiqCIcxfIET8r3fTOa6tXaVdFVD/p
+   HhrPR6rFgd7qO8Ogqr1Xa2vNA88rVckdvXAQq6V1A8ppSkuQpEGgsdGFk
+   yTlD2tYeSxjyzA54rAbTpz8sOIm6C2cHcqVxGc3lCm/SiH+nY8w7+e6Ww
+   FINvemgpBnmMs0xMwgVCY4HIY79ar+EpetCWiEi8pZKoRXs+j127r9MVj
+   P3dLeB2+mizSwSg58zQEjQQTWLCmfJQYUv2m8qvssqO7UTfiuyJ7+4qUM
+   ZFMMA1X5b0AiGlaD/oEb7LCye0OTW92ma4axqKXojyST3m2UJDJIHpx+2
    g==;
-X-CSE-ConnectionGUID: XTn8HViyQ2uEtSFW6gZFHg==
-X-CSE-MsgGUID: i3wW5Ai0Q32zmb/7s3MXJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62112953"
+X-CSE-ConnectionGUID: t5oLCuGHQvymGiRa0nXYrg==
+X-CSE-MsgGUID: cVe64yC8QiuSOW4LGKmEUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62112958"
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="62112953"
+   d="scan'208";a="62112958"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:18:02 -0700
-X-CSE-ConnectionGUID: FytyVrbJSn6EQTC47ZrZ3A==
-X-CSE-MsgGUID: 3aQpAMD1TWSq/JeozQXYyw==
+X-CSE-ConnectionGUID: /ko6f3r6TCCDd6JYel0ZPQ==
+X-CSE-MsgGUID: Ob0sN+IXQnGj7OFjfya1kw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="149904467"
+   d="scan'208";a="149904471"
 Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
   by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:18:01 -0700
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Date: Tue, 03 Jun 2025 17:15:17 -0700
-Subject: [PATCH v4 05/10] x86/hyperv/vtl: Set real_mode_header in
- hv_vtl_init_platform()
+Date: Tue, 03 Jun 2025 17:15:18 -0700
+Subject: [PATCH v4 06/10] x86/realmode: Make the location of the trampoline
+ configurable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250603-rneri-wakeup-mailbox-v4-5-d533272b7232@linux.intel.com>
+Message-Id: <20250603-rneri-wakeup-mailbox-v4-6-d533272b7232@linux.intel.com>
 References: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
 In-Reply-To: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
 To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -90,29 +90,34 @@ Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
  Thomas Gleixner <tglx@linutronix.de>, 
  Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748996287; l=1988;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748996287; l=3871;
  i=ricardo.neri-calderon@linux.intel.com; s=20250602;
- h=from:subject:message-id; bh=NksHFVn/eI0Fawofj7b00BEZiD32GqG4d/7RPbAEdi8=;
- b=MN+Qd6iKIzbJOTMiDJkH7medS+yCAXXXI1B2TzD3+vzND9xt24W4AWRTAtiLpb3eCFprENtUf
- 4lqo5BemmKJB3tL5Egmg24JdKGJDMEGcPaiHzQcQcuj3VN/cpby/Ab8
+ h=from:subject:message-id; bh=oG+sUwuixbImCg84nwDCAdPZ8WWhaG4+2hWqfX0US3g=;
+ b=6eMJvAFiFCJGbc0qNGLUaFhNrRZ537Mn+HoUALex7amHrbkkOhLfHPAywBIjS6kzLkQYMT0jY
+ XBqXoCRR2AnCVn3FCfciuLvuP43P7P9T+0SO2dXQMdq96vH/dBOBlwx
 X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
  pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
 
 From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 
-Hyper-V VTL clears x86_platform.realmode_{init(), reserve()} in
-hv_vtl_platform_init() whereas it sets real_mode_header later in
-hv_vtl_early_init(). There is no need to deal with the real mode memory
-in two places: x86_platform.realmode_init() is invoked much later via an
-early_initcall.
+x86 CPUs boot in real mode. This mode uses 20-bit memory addresses (16-bit
+registers plus 4-bit segment selectors). This implies that the trampoline
+must reside under the 1MB memory boundary.
 
-Set real_mode_header in hv_vtl_init_platform() to keep all code dealing
-with memory for the real mode trampoline in one place. Besides making the
-code more readable, it prepares it for a subsequent changeset in which the
-behavior needs to change to support Hyper-V VTL guests in TDX environment.
+There are platforms in which the firmware boots the secondary CPUs,
+switches them to long mode and transfers control to the kernel. An example
+of such mechanism is the ACPI Multiprocessor Wakeup Structure.
+
+In this scenario there is no restriction to locate the trampoline under 1MB
+memory. Moreover, certain platforms (for example, Hyper-V VTL guests) may
+not have memory available for allocation under 1MB.
+
+Add a new member to struct x86_init_resources to specify the upper bound
+for the location of the trampoline memory. Keep the default upper bound of
+1MB to conserve the current behavior.
 
 Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
@@ -121,33 +126,86 @@ Changes since v3:
 
 Changes since v2:
  - Edited the commit message for clarity.
+ - Minor tweaks to comments.
+ - Removed the option to not reserve the first 1MB of memory as it is
+   not needed.
 
 Changes since v1:
- - Introduced this patch.
+ - Added this patch using code that Thomas suggested:
+   https://lore.kernel.org/lkml/87a5ho2q6x.ffs@tglx/
 ---
- arch/x86/hyperv/hv_vtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/x86_init.h | 3 +++
+ arch/x86/kernel/x86_init.c      | 3 +++
+ arch/x86/realmode/init.c        | 7 +++----
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 4580936dcb03..6bd183ee484f 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -60,6 +60,7 @@ void __init hv_vtl_init_platform(void)
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 36698cc9fb44..e770ce507a87 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -31,12 +31,15 @@ struct x86_init_mpparse {
+  *				platform
+  * @memory_setup:		platform specific memory setup
+  * @dmi_setup:			platform specific DMI setup
++ * @realmode_limit:		platform specific address limit for the real mode trampoline
++ *				(default 1M)
+  */
+ struct x86_init_resources {
+ 	void (*probe_roms)(void);
+ 	void (*reserve_resources)(void);
+ 	char *(*memory_setup)(void);
+ 	void (*dmi_setup)(void);
++	unsigned long realmode_limit;
+ };
  
- 	x86_platform.realmode_reserve = x86_init_noop;
- 	x86_platform.realmode_init = x86_init_noop;
-+	real_mode_header = &hv_vtl_real_mode_header;
- 	x86_init.irqs.pre_vector_init = x86_init_noop;
- 	x86_init.timers.timer_init = x86_init_noop;
- 	x86_init.resources.probe_roms = x86_init_noop;
-@@ -279,7 +280,6 @@ int __init hv_vtl_early_init(void)
- 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
- 			  "Please add 'noxsave' to the kernel command line.\n");
+ /**
+diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+index 0a2bbd674a6d..a25fd7282811 100644
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -9,6 +9,7 @@
+ #include <linux/export.h>
+ #include <linux/pci.h>
+ #include <linux/acpi.h>
++#include <linux/sizes.h>
  
--	real_mode_header = &hv_vtl_real_mode_header;
- 	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
+ #include <asm/acpi.h>
+ #include <asm/bios_ebda.h>
+@@ -69,6 +70,8 @@ struct x86_init_ops x86_init __initdata = {
+ 		.reserve_resources	= reserve_standard_io_resources,
+ 		.memory_setup		= e820__memory_setup_default,
+ 		.dmi_setup		= dmi_setup,
++		/* Has to be under 1M so we can execute real-mode AP code. */
++		.realmode_limit		= SZ_1M,
+ 	},
  
- 	return 0;
+ 	.mpparse = {
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index ed5c63c0b4e5..01155f995b2b 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -46,7 +46,7 @@ void load_trampoline_pgtable(void)
+ 
+ void __init reserve_real_mode(void)
+ {
+-	phys_addr_t mem;
++	phys_addr_t mem, limit = x86_init.resources.realmode_limit;
+ 	size_t size = real_mode_size_needed();
+ 
+ 	if (!size)
+@@ -54,10 +54,9 @@ void __init reserve_real_mode(void)
+ 
+ 	WARN_ON(slab_is_available());
+ 
+-	/* Has to be under 1M so we can execute real-mode AP code. */
+-	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, 1<<20);
++	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, limit);
+ 	if (!mem)
+-		pr_info("No sub-1M memory is available for the trampoline\n");
++		pr_info("No memory below %pa for the real-mode trampoline\n", &limit);
+ 	else
+ 		set_real_mode_mem(mem);
+ 
 
 -- 
 2.43.0
