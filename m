@@ -1,185 +1,254 @@
-Return-Path: <linux-hyperv+bounces-5728-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5729-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EB07ACD059
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 01:43:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEA89ACD084
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 02:18:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC0051897E24
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Jun 2025 23:43:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53CCC3A4D6D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Jun 2025 00:17:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D703B19D8AC;
-	Tue,  3 Jun 2025 23:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D87F53A7;
+	Wed,  4 Jun 2025 00:18:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7BXUzXJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="beBKg9uf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF89155C82
-	for <linux-hyperv@vger.kernel.org>; Tue,  3 Jun 2025 23:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7A5A29;
+	Wed,  4 Jun 2025 00:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748994200; cv=none; b=t7M+6iBINylgvHzmcbSZEK6ojNhHLsMwCKBxs3GD/CqOup1YclxeJ0YY3Eog5Obq+XbouKyuZusT3i/3El9s0qYdLGoFRDeCJPXTst5O5VOhdPgJ2B0csu/pW/iq4uHiDAn9AJbp33PmmfcONhW0KkCU42VDtGKdF4kiVYMpMW4=
+	t=1748996283; cv=none; b=HVTnxI25xiiaQ7Ge4LBrvly05lgfp/00us7m2UnEUsTemd03JVl0kE6qZwwVpE2IzxEz7W9q9JBhfEUEPv5A893OWJSblZKxVssz7EyT8usIE/KqXMimAncPveBvtrjFt7/pF63afIakBAx+rMVsLPAks1CyXwEpRitLAmOPkb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748994200; c=relaxed/simple;
-	bh=FSyjhM8QjXhvPZV+lB7p7/FLcRQqvcjbi4ve5jq80DQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mw5Zot+a+CMU2VRmCY+GyQV05MgHKcygwYNwUW2yLhd1PFVAEOl3BCOS+Wk4SK9I5ftp69Kju49q+FJHqZ6EeXxGD/fnsK2pxTzdeQBuC33lyANaHgWJQl21fQEJEqQXWqAj/GxTFoxOsrOH0xTnALWP1bxBECbS6W/axlPdsMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f7BXUzXJ; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso4803096b3a.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 Jun 2025 16:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748994196; x=1749598996; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MUZz9Z8zg59FyOi7Yn7eVvVDS9lOnGBnKfxhzl8nXoM=;
-        b=f7BXUzXJ6LnsIh4I4chd5AC/uMkJiIcZhnJi+w0RzhZh4mVCv+S44F1mtrlHdb4rZ/
-         /WY/d2QfH6fAPTgQbFoOBEJGRwY2Nj8En4pHkwlFpQVoPRArFqYho5Mng185bvL2fKHf
-         hufulHbD7DkxySXj1jrm609JKtksKAKJwc4ak7dOodRORtIipXW42CgEsZey12rwSoZM
-         dOdFKLpKaVD5Hb7R331vN8sqI4406B4SVvHaYeYJs80MCHeZp2ZZ+jTgVLIQ8/XEh0PV
-         3kcWTSRgSxIR76WD5SRtIbIBoGZx31I2e4lwgTnEf8uSoLkCIMiY5fe6POJxPoSgFOH4
-         z0HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748994196; x=1749598996;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MUZz9Z8zg59FyOi7Yn7eVvVDS9lOnGBnKfxhzl8nXoM=;
-        b=QgjkRvyF0WjkCglJaGfJSIITVwWn6WnlyNF0U2t3nbO78rkvMPyKn8Y8Yq4A7U2iMj
-         vhar0GNf1PtyEyX6W32CSxWk8oyv6jGe3LWEorosHCt/27A14j1nplp/4S0Qp8BJCZzz
-         z2evMLmxPL/Ed8gVjYoHZjggqXfgutzrthYGpSW6Z7d6EpHsbCk8/rgW9FMrUa1G33o2
-         vHtRiKSeD85oLcCNt2NDkMZAh1TBCtteo66hd8akSuTFprPuTw11K/tyWP6OUF9407Iy
-         KGWPfi/XWim8SvnV1vNboUkzFTEHiRPcYFiEKfJMMZLYs1509/RGr05R45A5I3oiri5s
-         Am4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV2c7MiMMwMZoDw05tCAqLkjplds9BdaSPFInuqJwmiEGy2Hm5hsclyQOppLYcml0wQvq88Q4OApebSp+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGhmNH3EhckkmrqCzcc2v+dFv8hcdl0eIcGeTaT+JGCMu1jATD
-	oDTtKFIqWMX7uPBSfjeSxjpUK+3pkmN265PWyJMa8MYq9g2s4LtnO8bK
-X-Gm-Gg: ASbGncul9rq4Hvm1lfbJQFj2ReYPxfYt2bkroppnzeFqzZXpen8JWOdptc1Cd2L3M32
-	ep1SJrMOY68u0ruUnwSZaeaWSs0SC8pgTL3AwsSir5nGSqwwr/G0DKGSMwT4VwuiBfL9ylPLx9b
-	lKy7M8Dw+5BkYQm8eWaujUK8HsmfJV5cvlwPvCuilAzT1I3jnuL0LpZ2iDoChDWtreEQUcfAD33
-	SmeAZ6VpNyaxfe8nJKAOhdp4fPv19BefQ1C66xoF8NOqrRBCf1weCeYv51ySHDi1Pq57pWuiN5v
-	Xy5dBudIfm7sjzHQY25RNMq8lXhYXD2tbCeysvNCASO/TCdktbtpa5ZHeBkNRdh8189/Fv+sVjF
-	qoXgF2QJLpDf5CQg+OnlCZO9BTohQ+3+0Xxns
-X-Google-Smtp-Source: AGHT+IFl8/EB/xCqu2ZDmyUh0pYTqZS36tbHVH/HQWqy8jKBLVhLuot0Cfte38eOjiPSX1cW0hPTng==
-X-Received: by 2002:a05:6a21:3a82:b0:21a:de8e:44b4 with SMTP id adf61e73a8af0-21d22c29d80mr820112637.16.1748994196438;
-        Tue, 03 Jun 2025 16:43:16 -0700 (PDT)
-Received: from fc42.mshome.net (p4149050-ipxg13701funabasi.chiba.ocn.ne.jp. [180.47.146.50])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb029f0sm7615938a12.15.2025.06.03.16.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 16:43:16 -0700 (PDT)
-From: yasuenag@gmail.com
-To: eahariha@linux.microsoft.com
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	ssengar@linux.microsoft.com,
-	Yasumasa Suenaga <yasuenag@gmail.com>
-Subject: [PATCH v3 1/1] hv_fcopy_uio_daemon: Fix file copy failure between Windows host and Linux guest
-Date: Wed,  4 Jun 2025 08:43:00 +0900
-Message-ID: <20250603234300.1997-2-yasuenag@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250603234300.1997-1-yasuenag@gmail.com>
-References: <e174e3b0-6b62-4996-9854-39c84e10a317@linux.microsoft.com>
- <20250603234300.1997-1-yasuenag@gmail.com>
+	s=arc-20240116; t=1748996283; c=relaxed/simple;
+	bh=O/vMOZcR0tnjdbpegifYRfMSh/No4AOBo99GZLFpxQ4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CHgGNMdXITx9yqPU/c7RbM1PjJGAyPAFmtoqIAj2DNZtCTbbQmvkHuTPYOQe0JKoSoxujPEaLqG6u9kqM9/yn5zmdvuXncYK5sYFNP/9e2po49I8bR0uEAJuZID4B5WEE4x3p4Ux7ieANcQVts5K4E7LFkAF4P3DJj5KoX0i62A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=beBKg9uf; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748996282; x=1780532282;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=O/vMOZcR0tnjdbpegifYRfMSh/No4AOBo99GZLFpxQ4=;
+  b=beBKg9ufC0XM2dV+vmwJ14HtDn8HHCX/0uNPy1o1//Akb5G0sLuitBWk
+   tW27YHyNbkJb6EOabUYCxff20jXhfvAL7GGs50xpA5cSnLfss+xZ5kAYd
+   MAJnR27OIBrHhB1wLM/8e7pnPTLFjeWt889sRyMiVPZi0cXAzxLoztiLi
+   7wzbOPQw0E2Bi/AfujgUFMKKMGxDBkPtowDjyawExC8BvkiQNm2bhacqk
+   qNeDWq1QOrYU+Nv3LbMlynjkDiqcaCAK3URCzgxgcxQw520miw7KQPiCv
+   usVnCwoimfpswPrQKaRsP7a5K8xQAo5im+R8JNDutxLhVVhYjYb41ayxi
+   A==;
+X-CSE-ConnectionGUID: U6kAn5TgQi2LFrBHlTXMGg==
+X-CSE-MsgGUID: jAZqJag5SIm1FanNR1MZnw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62112922"
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="62112922"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:18:01 -0700
+X-CSE-ConnectionGUID: F4vC8Mt9RwemLFuTACOjlg==
+X-CSE-MsgGUID: eTLiMzQuQrmNlI6iFmOaaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="149904448"
+Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 17:18:00 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH v4 00/10] x86/hyperv/hv_vtl: Use a wakeup mailbox to boot
+ secondary CPUs
+Date: Tue, 03 Jun 2025 17:15:12 -0700
+Message-Id: <20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABCQP2gC/0WNQQ6CMBAAv2J6dpu2UEVP/sN4qGUrG0tLFlASw
+ t9tuHicw8ysYkQmHMX1sArGD42UU4H6eBC+c+mFQG1hYZSx6qQMcCoCfN0b5wF6R/GZF6hMgwH
+ PplFVEEUdGAMte/b+KBw49zB1jO4fs6rSF221laZWtQYNTN5xm+V+8C62yDndIqV5kZQmjNLnX
+ mzbD4kFpvm1AAAA
+To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Saurabh Sengar <ssengar@linux.microsoft.com>, 
+ Chris Oo <cho@microsoft.com>, 
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+ linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
+ Ricardo Neri <ricardo.neri@intel.com>, 
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+ Yunhong Jiang <yunhong.jiang@linux.intel.com>, 
+ Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748996287; l=7354;
+ i=ricardo.neri-calderon@linux.intel.com; s=20250602;
+ h=from:subject:message-id; bh=O/vMOZcR0tnjdbpegifYRfMSh/No4AOBo99GZLFpxQ4=;
+ b=cgf2plzV0fTbI3sE/dwoXYTSe1WIua7IB3h8DUqe9VajVhFJSMslh2ljplfAmY5HjC5sJSRuA
+ LLFlPnwWGXMAKWZygNGqoYAK8t/pnsuSBDYlK64QalKdYBsmMyVThqQ
+X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
+ pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
 
-From: Yasumasa Suenaga <yasuenag@gmail.com>
+Hi,
 
-Handle file copy request from the host (e.g. Copy-VMFile commandlet)
-correctly.
-Store file path and name as __u16 arrays in struct hv_start_fcopy.
-Convert directly to UTF-8 string without casting to wchar_t* in fcopyd.
+Here is a new version of this series. Many thanks to Rob, Rafael,
+Krzysztof, and Michael for your feedback. Previous versions can be found in
+1], [2], and [3].
 
-Fix string conversion failure caused by wchar_t size difference between
-Linux (32bit) and Windows (16bit). Convert each character to char
-if the value is less than 0x80 instead of using wcstombs() call.
+The biggest changes in this version are in the DeviceTree bindings and
+their relationship with ACPI as well as relocating the ACPI wakeup code to
+a new common file that both DeviceTree- and ACPI-based system can use. See
+the changelog for details.
 
-Add new check to snprintf() call for target path creation to handle
-length differences between PATH_MAX (Linux) and W_MAX_PATH (Windows).
+If the DeviceTree bindings look good, then the patches should be ready for
+review by the x86, ACPI, and Hyper-V maintainers.
 
-Signed-off-by: Yasumasa Suenaga <yasuenag@gmail.com>
+Thanks in advance for your feedback!
+
+...
+
+This patchset adds functionality to use a wakeup mailbox to boot secondary
+CPUs in Hyper-V VTL level 2 TDX guests with virtual firmware that describes
+hardware using a DeviceTree graph. Although this is the target use case,
+the use of the mailbox depends solely on it being enumerated in the
+DeviceTree.
+
+On x86 platforms, secondary CPUs are typically booted using INIT assert,
+de-assert followed by Start-Up IPI messages. Virtual machines can also make
+hypercalls to bring up secondary CPUs to a desired execution state. These
+two mechanisms require support from the hypervisor. Confidential computing
+VMs in a TDX environment cannot use this mechanism because the hypervisor
+is considered an untrusted entity.
+
+Linux already supports the ACPI Multiprocessor Wakeup Structure in which
+the guest platform firmware boots the secondary CPUs and transfers control
+to the kernel using a mailbox. This mechanism does not need involvement
+of the VMM. It can be used in a Hyper-V VTL level 2 TDX guest.
+
+Currently, this mechanism can only be used on x86 platforms with firmware
+that supports ACPI. There are platforms that use DeviceTree (e.g., OpenHCL
+[4]) instead of ACPI to describe the hardware.
+
+Provided that the wakeup mailbox enumerated in a DeviceTree-based platform
+firmware is implemented as described in the ACPI specification, the kernel
+can used common code for both DeviceTree and ACPI systems. The DeviceTree
+firmware does not need to use any ACPI table to publish the mailbox.
+
+This patcheset is structured as follows:
+
+   * Relocate portions of the code handling the ACPI Multiprocessor Wakeup
+     Structure code to a common location. (patches 1, 2)
+   * Define DeviceTree bindings to enumerate a mailbox as described in
+     the ACPI specification. (patch 3)
+   * Find and setup the wakeup mailbox if found in the DeviceTree graph.
+     (patch 4)
+   * Prepare Hyper-V VTL2 TDX guests to use the Wakeup Mailbox to boot
+     secondary CPUs when available. (patches 5-10)
+
+I have tested this patchset on a Hyper-V host with VTL2 OpenHCL, QEMU, and
+physical hardware.
+
+Thanks and BR,
+Ricardo
+
+Changes since v3:
+  - Added Reviewed-by: tags from Michael Kelley. Thanks!
+  - Relocated the common wakeup code from acpi/madt_wakeup.c to a new
+    smpwakeup.c to be used in DeviceTree- and ACPI-based systems.
+  - Dropped the x86 CPU bindings as they are not a good fit to document
+    firmware features.
+  - Dropped the code that parsed and validated of the `enable-method`
+    property for cpu@N nodes in x86. Instead, unconditionally parse and use
+    the wakeup mailbox when found.
+  - Updated the wakeup mailbox schema to avoid redefing the structure and
+    operation of the mailbox. Instead, refer to the ACPI specification.
+    Also clarified that the enumeration of the mailbox is done separately.
+  - Prefixed helper functions of wakeup code with acpi_.
+
+Changes since v2:
+  - Only move out of the acpi directory acpi_wakeup_cpu() and its
+    accessory variables. Use helper functions to access the mailbox as
+    needed. This also fixed the warnings about unused code with CONFIG_
+    ACPI=n that Michael reported.
+  - Major rework of the DeviceTree bindings and schema. Now there is a
+    reserved-memory binding for the mailbox as well as a new x86 CPU
+    bindings. Both have `compatible` properties.
+  - Rework of the code parsing the DeviceTree bindings for the mailbox.
+    Now configuring the mailbox depends solely on its enumeration in the
+    DeviceTree and not on Hyper-V VTL2 TDX guest.
+  - Do not make reserving the first 1MB of memory optional. It is not
+    needed and may introduce bugs.
+  - Prepare Hyper-V VTL2 guests to unconditionally use the mailbox in TDX
+    environments. If the mailbox is not available, booting secondary CPUs
+    will fail gracefully.
+
+Changes since v1:
+  - Fix the cover letter's summary phrase.
+  - Fix the DT binding document to pass validation.
+  - Change the DT binding document to be ACPI independent.
+  - Move ACPI-only functions into the #ifdef CONFIG_ACPI.
+  - Change dtb_parse_mp_wake() to return mailbox physical address.
+  - Rework the hv_is_private_mmio_tdx().
+  - Remove unrelated real mode change from the patch that marks mailbox
+    page private.
+  - Check hv_isolation_type_tdx() instead of wakeup_mailbox_addr in
+    hv_vtl_init_platform() because wakeup_mailbox_addr is not parsed yet.
+  - Add memory range support to reserve_real_mode.
+  - Remove realmode_reserve callback and use the memory range.
+  - Move setting the real_mode_header to hv_vtl_init_platform.
+  - Update comments and commit messages.
+  - Minor style changes.
+
+[1]. https://lore.kernel.org/r/20240806221237.1634126-1-yunhong.jiang@linux.intel.com
+[2]. https://lore.kernel.org/r/20240823232327.2408869-1-yunhong.jiang@linux.intel.com
+[3]. https://lore.kernel.org/r/20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com
+[4]. https://openvmm.dev/guide/user_guide/openhcl.html
+--
+2.43.0
+
 ---
- tools/hv/hv_fcopy_uio_daemon.c | 37 ++++++++++++++--------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+Ricardo Neri (6):
+      x86/acpi: Add a helper functions to setup and access the wakeup mailbox
+      x86/acpi: Move acpi_wakeup_cpu() and helpers to smpwakeup.c
+      dt-bindings: reserved-memory: Wakeup Mailbox for Intel processors
+      x86/dt: Parse the Wakeup Mailbox for Intel processors
+      x86/smpwakeup: Add a helper get the address of the wakeup mailbox
+      x86/hyperv/vtl: Use the wakeup mailbox to boot secondary CPUs
 
-diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
-index 0198321d1..86702f39e 100644
---- a/tools/hv/hv_fcopy_uio_daemon.c
-+++ b/tools/hv/hv_fcopy_uio_daemon.c
-@@ -62,8 +62,11 @@ static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
- 
- 	filesize = 0;
- 	p = path_name;
--	snprintf(target_fname, sizeof(target_fname), "%s/%s",
--		 path_name, file_name);
-+	if (snprintf(target_fname, sizeof(target_fname), "%s/%s",
-+		     path_name, file_name) >= sizeof(target_fname)) {
-+		/* target file name is too long */
-+		goto done;
-+	}
- 
- 	/*
- 	 * Check to see if the path is already in place; if not,
-@@ -273,6 +276,8 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
- 	while (len < dest_size) {
- 		if (src[len] < 0x80)
- 			dest[len++] = (char)(*src++);
-+		else if (src[len] == '0')
-+			break;
- 		else
- 			dest[len++] = 'X';
- 	}
-@@ -282,27 +287,15 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
- 
- static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
- {
--	setlocale(LC_ALL, "en_US.utf8");
--	size_t file_size, path_size;
--	char *file_name, *path_name;
--	char *in_file_name = (char *)smsg_in->file_name;
--	char *in_path_name = (char *)smsg_in->path_name;
--
--	file_size = wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) + 1;
--	path_size = wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) + 1;
--
--	file_name = (char *)malloc(file_size * sizeof(char));
--	path_name = (char *)malloc(path_size * sizeof(char));
--
--	if (!file_name || !path_name) {
--		free(file_name);
--		free(path_name);
--		syslog(LOG_ERR, "Can't allocate memory for file name and/or path name");
--		return HV_E_FAIL;
--	}
-+	/*
-+	 * file_name and path_name should have same length with appropriate
-+	 * member of hv_start_fcopy.
-+	 */
-+	char file_name[W_MAX_PATH], path_name[W_MAX_PATH];
- 
--	wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
--	wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
-+	setlocale(LC_ALL, "en_US.utf8");
-+	wcstoutf8(file_name, smsg_in->file_name, W_MAX_PATH - 1);
-+	wcstoutf8(path_name, smsg_in->path_name, W_MAX_PATH - 1);
- 
- 	return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
- }
+Yunhong Jiang (4):
+      x86/hyperv/vtl: Set real_mode_header in hv_vtl_init_platform()
+      x86/realmode: Make the location of the trampoline configurable
+      x86/hyperv/vtl: Setup the 64-bit trampoline for TDX guests
+      x86/hyperv/vtl: Mark the wakeup mailbox page as private
+
+ .../reserved-memory/intel,wakeup-mailbox.yaml      | 48 ++++++++++++
+ arch/x86/Kconfig                                   |  7 ++
+ arch/x86/hyperv/hv_vtl.c                           | 35 ++++++++-
+ arch/x86/include/asm/smp.h                         |  4 +
+ arch/x86/include/asm/x86_init.h                    |  3 +
+ arch/x86/kernel/Makefile                           |  1 +
+ arch/x86/kernel/acpi/madt_wakeup.c                 | 76 ++-----------------
+ arch/x86/kernel/devicetree.c                       | 47 ++++++++++++
+ arch/x86/kernel/smpwakeup.c                        | 88 ++++++++++++++++++++++
+ arch/x86/kernel/x86_init.c                         |  3 +
+ arch/x86/realmode/init.c                           |  7 +-
+ 11 files changed, 240 insertions(+), 79 deletions(-)
+---
+base-commit: 8858e8099446963ee6a0fb9f00f361dda52f04d5
+change-id: 20250602-rneri-wakeup-mailbox-328efe72803f
+
+Best regards,
 -- 
-2.49.0
+Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
 
