@@ -1,185 +1,240 @@
-Return-Path: <linux-hyperv+bounces-5794-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5795-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C92DAACF542
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 19:19:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2A9FACF589
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 19:39:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 254061882CDC
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:20:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0ED8B1887A11
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:39:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6734F1EB5CE;
-	Thu,  5 Jun 2025 17:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2EF3276049;
+	Thu,  5 Jun 2025 17:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aud9rPAn"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="D7xP9PoJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2064.outbound.protection.outlook.com [40.92.20.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3618E8633A;
-	Thu,  5 Jun 2025 17:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749143985; cv=none; b=D6yyxXfALH4Fxe6feJf+eVee94B1OgeHFjdJlJ+TBJC/L7vqBzi3Op5Cr0yAb/O3zPvcb+fTRiZgmnIH9yPRC3n2LIlVse6JzmWLzeCsdbrN1tSNp+AvH5EI8eyqkEZdVqqnic/TzI4VG+u/qYTPK+hkUh/T5EvV2rDYazVZ6Zg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749143985; c=relaxed/simple;
-	bh=ftjIODcJElgKCE4DU8BhMhWX2Y6yrqizED7saqK8bXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwCGWzTVjjZMU3sa6Rumgv0xBxmISKFkGEJszTQapIEsbgjrj6csRcHy684ZJePZSw+4APAsG8xQUG83vO6m/2JrgQxiH6mbE2Id7Dg0S1Se7EycAB6Zj9wRLq4ASF/uXGnQcggINYvBpPUsTHXsZ5E3NDLaw4f7mfIqjPJkAs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aud9rPAn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D0AC4CEE7;
-	Thu,  5 Jun 2025 17:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749143984;
-	bh=ftjIODcJElgKCE4DU8BhMhWX2Y6yrqizED7saqK8bXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aud9rPAnhm+5tgBEVIxf/CkuHsaLbcHonC6VLFjKIMGWx0eVNruJ9yB5qBB3E+6cU
-	 dwIxG3BLYiCLdQKRU5CSjtLgz5SxzaIAUBLhCgYVxzHOorLuKTlVGY2QOuCIrIVNrS
-	 vHhSyThu6wSK7HuwcG1imc9Cw7VdnRBqvl646fCPCzY/Fk3PPq1p+PdQx4zwIO3ZbY
-	 wgeJCjyFJ3/Fa5DdI4NZZ0+AqqDqwCh0EzENmnApr694VvXGiWJG0xncKiSda33UuR
-	 ayBzsxgaXcdY/GSDlEL/P5DpbN0Pw16OJRtMY2e7t0KEBM41jl8gF/2UnFCfkxqCON
-	 A/6m/oA9iOGpQ==
-Date: Thu, 5 Jun 2025 10:19:41 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, pbonzini@redhat.com, 
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org, samitolvanen@google.com, 
-	ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <4z4fhaqesjlevwiugiqpnxdths5qkkj7vd4q3wgdosu4p24ppl@nb6c2gybuwe5>
-References: <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
- <20250506073100.GG4198@noisy.programming.kicks-ass.net>
- <20250506133234.GH4356@noisy.programming.kicks-ass.net>
- <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
- <20250528074452.GU39944@noisy.programming.kicks-ass.net>
- <20250528163035.GH31726@noisy.programming.kicks-ass.net>
- <20250528163557.GI31726@noisy.programming.kicks-ass.net>
- <20250529093017.GJ31726@noisy.programming.kicks-ass.net>
- <fp5amaygv37wxr6bglagljr325rsagllbabb62ow44kl3mznb6@gzk6nuukjgwv>
- <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF008149C7B;
+	Thu,  5 Jun 2025 17:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749145142; cv=fail; b=l22aKskB3VwTVTiP25mEYEPZlrwgK8BhjXDtUu/DiCfK4jk3983aEGXdh5w+xrc6sjuyB1oRcC/4NezYu7LgyvVgdM79L56kBZ4zBz/o3iCUiitn8UII5uPIibNM6GmDKdEC9FpaH5k/3C7rlYz8msfyM26AxmcEkP4rElWckms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749145142; c=relaxed/simple;
+	bh=+dmW7qfaRT9003apR1Q0yKrxAps9XZ6ku0K4R6f99mU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZgSS+HSGq7ot4QQevNAWMzVU0UBlfpCod6wg9QbBcvcx6eMtzRi2yp8L2AvKffywktXGOBEqbvEDF4517uid21CVsWG3yQ13QvGezut+uLfNTmpiloJwqxFp6Jh0+7v2lp8ZkOnZZIEScRf+CZdWi6GxxySdwbxlGQ438Sm+Zfw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=D7xP9PoJ; arc=fail smtp.client-ip=40.92.20.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Dlrvd+KyINaFZyiW3+Zi/t/MRTN1iQXpkfEZNzzWS6Cp6vLfm9OymH2aMlW3YEeQ+RDuNz9s2fjivndIBmtNCjRlnTEPBTMjFvRJryF4/KCVvUhHqMck6nsb+MzuZjhCjJgP0fZA6ixWuwrPdf9jUnTTyxMmP8akgAcJAoLnAe/nW3n930A4FgzY/qCeuX9M8CFKBwu2JH61lcsSk3gZHaHNogI8ABwWckTx35dOSLL7TKy3xC6obb89ZZSSaJHcAOKZmMX+3/SXAqLU7eBDpmSNjohZhIeqYfU7ed5tB5bIeDVIWcAWTVc/vkAQGYUQ+T3trLcoteTIYo7kXm4+Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+dmW7qfaRT9003apR1Q0yKrxAps9XZ6ku0K4R6f99mU=;
+ b=Q2kAPP3XNPaZNsJ2Mfw6hrJ3KDthWi9SNhP0qx2VgMY/oMD+c0rQrbXzAS4LEiiC0cFPemOtJgdlB/6+fnsJIsOOx8tHGQk7izqc6GQG2iPebC2y0YnTrCp49L0Dz94v+vOetwjPlF1FRot4D/aM5yYYZoGjU/8pWreY4tr0LZmE1olKd8HKqZndF3EqpzeJTseCj6PbuYRj5Whi4vJLxr20+8S213I59sJqnkITGcWkP/QlpxTBlgWLHlBRZrJZM+vcxtQ7GYk5v2giq5vF7nFfHz1+A0w+zMtwVsN5HF9F62XQcIHkxbopLbAmTG2CtPfohHqRJwbjEqVjWdADZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+dmW7qfaRT9003apR1Q0yKrxAps9XZ6ku0K4R6f99mU=;
+ b=D7xP9PoJNDckhPwfpj/n2iy+kYqch6/EhzgYOpiH8UOPxI7XwSMkzhdOw+l/jqhxOLiP/LrzHxdCo9dH1zwuf+qY7PVQz80H5uwxdWf/Cnwt/zMe/jMY4amB5wPpc3XfPzRMjaHxTzgp8K4GYx+UFnaWc71WPp+d676nEAG8EvW5Gchd9KYeK4KQRdInotti/kkrg0pdT+9wS/4WMkKFlQY9b2fPBk0TRwn7lQMaC6TssJMOL2DX1JGuqS5KNJwWEvPrds+mVzZyBUGXVphhzB8P6FYAr4kR4DO5wmxzLXWgoVv+wEHf4jMFPg/uS1uJEuBFgWLtwZl5uHiOSGByyg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by MN6PR02MB10728.namprd02.prod.outlook.com (2603:10b6:208:4f8::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.17; Thu, 5 Jun
+ 2025 17:38:57 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8813.016; Thu, 5 Jun 2025
+ 17:38:57 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter
+	<simona.vetter@ffwll.ch>
+CC: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
+	"deller@gmx.de" <deller@gmx.de>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "weh@microsoft.com" <weh@microsoft.com>,
+	"hch@lst.de" <hch@lst.de>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-fbdev@vger.kernel.org"
+	<linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: RE: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+Thread-Topic: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+Thread-Index:
+ AQHby/4dA8oNLnhKakm3U+ZOuvHFDrPvrtEAgAEJQeCAAFCFAIAAuDlwgAD4GoCAAG28AIAAbZyQgAEy0YCAAB38UA==
+Date: Thu, 5 Jun 2025 17:38:57 +0000
+Message-ID:
+ <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250523161522.409504-1-mhklinux@outlook.com>
+ <20250523161522.409504-4-mhklinux@outlook.com>
+ <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
+ <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
+ <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
+ <aEBcCjMWZJgbsRas@phenom.ffwll.local>
+ <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
+In-Reply-To: <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN6PR02MB10728:EE_
+x-ms-office365-filtering-correlation-id: 7570987c-c0e0-4b12-73bd-08dda457d99e
+x-ms-exchange-slblob-mailprops:
+ Z68gl6A5j2+3oou7nEu68O8SUMcwyYgVqvScVLTWrmPvIdxFwEibVrZXrqENYM4vQ8JkTeBLmVTAgnbphmiabHpYGEhC+BPYU5Ep1wxcy7910Aw7qZyUA0Jjdj18gQR2cIADeG/sWB3rmBOvLHTo16R/ILMqogOjuiGh0LZHg70LtmP6boW22nVh9PXma6Sou1B77F4lp0IBRdp0RVu3SI5FSoYUAlEv567XlunI9lxMLbwGBkQXWzhTH+H1GPGAQKcWsutQhRlphoaHWu0gtIx7r3jwNQSY+D5tLnxiRicZ75l+b6M1pM6JiGzdq8zul6eRrWdRqe8Mqksumv1rHKauAXL6bbw1p0nArafpA/AXfarBaWjGvXqohl9AitGaPomtnY8S3ThJKs1gpK2Dy56Mvby3bGKM80khKtDGULqynea4VW6KOTdbbsABuDuSc6w+0o0ZkAK2SsarP7Pav4evjeVIVXeWXc2l/6EDtnf/rG8xcg2jxIqqYY6CwzK2GOMK+3x6ctQcDLu2Z3az/bfOUZ9YGAAeVrJp8B1GxMajC4VEqDYoK5Os8HIR+BfllWZkg1ZMYTJG4bV6vD5k8AumWlUBfI2nQKuSjxXbipMVTFhACpuzkCQbnu/W2TwA3TOEcIOX0wkwN47hFM3PWcBGrE8xnk/qnRq5c37CsFte+otyIeEkyuYaxPktwIwMAOTWJgJG/n9FglG7DZqYXq5rKOujMLMdRIhVQpU3eLlrwJr2G3wUiR5gH0y4uaPa7/mAS8ui5TGvNqEmk0u4re0gtueD5Em2jpwkXF23PGu0GN5T/ZcPXrTPqV3HSSlJ
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|41001999006|19110799006|15080799009|8060799009|8062599006|1602099012|102099032|440099028|4302099013|3412199025|10035399007;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?AqEFkvYIF0wZhks6f3g9MRLtem6IpzkaKlJGjFwWeJMk34ccVC8ACBlgd58A?=
+ =?us-ascii?Q?DmYxV5yVTBkiYVRuR79VrCY0//OAyGXHlxco+dYk+tS9jybz5iLPjIUAtrnu?=
+ =?us-ascii?Q?tl0ozYgxMsQD14vBc3y/B6kTBafrOs7ZOIWBsFJ1HmRqKDh5zcNAZDwuY+Mf?=
+ =?us-ascii?Q?2iRVw+plPrmUaW9m6qvOXX73/OC717uldTK4vgs3VtjIwVpnY8n7E6MlUdEz?=
+ =?us-ascii?Q?Fp4CRWzTTiYykL3dFD0UK+jEpzOW9dCTj1lc/ChyWijM469JG2o0O4CNYM48?=
+ =?us-ascii?Q?JLu9RG6p7bbsMrHGVADBZtirclaUU6gxMFkdg1PAlgzXZ45bDIDl5UV+9n/p?=
+ =?us-ascii?Q?yktb8oMFdX98hhxOBKBADgAQOXab8SWldUL4ldXdFnKeUV3NZpzIrENFXNNJ?=
+ =?us-ascii?Q?Rfn6dI1hmOlmT25h7gVgQyCw3hvHzwBPBTwNtU9LypVPWMauziITibQjaE4q?=
+ =?us-ascii?Q?i5K/qaLpMVOWYjok3WL6Mc01JxVRqNQtGcO0KJDoacLBm+n/XKK2OYqpElcM?=
+ =?us-ascii?Q?RrN7ZOGj7IT40XUqKx8OC2srWk7QAmvTW4V3jU7KzQwMdO4cRDwABrYI+t4B?=
+ =?us-ascii?Q?CjqCi+hflLz9e6/VhInioXhN0FlG3l79Ju8UhrmncPlZ/FMgguTkl7i6u1jD?=
+ =?us-ascii?Q?H36L5wpznjnYmpqJUXvvdSnA86TyA39zMEhsY+r2qfRDndPPzYb+b96QB0IW?=
+ =?us-ascii?Q?MyMsternfi/EYvzTws+8aG/jY1bvIR8GWylMMV0+oc2YUuOkhi3vTfSF15+b?=
+ =?us-ascii?Q?FvN153xxGkcFi3R88VMvOhKS51id0jK3jyoG6+3w5G7aveoMrd7IVMhpPgoK?=
+ =?us-ascii?Q?WslLxQx/ut8W07JxZmWyDVPRd/QDZeT1PTvNRkwkBd9JPwjEt+BicEKdakO4?=
+ =?us-ascii?Q?0mzlQNEPEbe+TP+PENC4KBYffS2HFl1Bplj+C8egJfYTOBs9FqAnRKjQlYfR?=
+ =?us-ascii?Q?+HoJ0l/Jslb95aogypuE1UnYJxHzMCs2obbSJl0P6532l0DENfQSuFLwKnNu?=
+ =?us-ascii?Q?iQQgKVWgQmq7qmFUltF3kpEcg3jyuye/moD2lyb5Mu+sSLoQ3H4doavylOs2?=
+ =?us-ascii?Q?hUPsbjO3I5NVkKnpCn/hYJc9nkDo5qLRMtsp09WbdzWOs+zR+NtzeI0aa485?=
+ =?us-ascii?Q?E37GYyjIiuNQVTscPzYnHP/5zEfXswkNauEaXdd3rhoDEnZCO0NtVsYeM4lI?=
+ =?us-ascii?Q?Uzo+Kf67CyvSvKAWKdv7/HPFl5XFjkye+TFPNHTUBC7Ew/PgNPtAPthnX0qB?=
+ =?us-ascii?Q?Y5Rm6XrkkMWnuN1B732feeXuHWjOjMR9DoVGJbFGTw=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?y9gRyck5KMv3PnHIc2w63LVrEVzTFlrKN10Ydy1Spdu+D5SWpdTzf7f6NLb5?=
+ =?us-ascii?Q?NKVG80EJ0RLBvucJHf5Y0zMNEuxrf5Cf0Md7b9udGKfDRdM9OsNDA7XlGolk?=
+ =?us-ascii?Q?Lfv6ABcIxZlEbeil/oHW/HSk6zo01ma5OwPFq9kO8kW3iqnk7h2e3rexhiEy?=
+ =?us-ascii?Q?bLNNlrj6hSgcMU/x3PtAw4rdrNt8flAuPFyhtJbdIyzNuPOf2r/NFJ0pqQi7?=
+ =?us-ascii?Q?gZv0qm6b71UAWPqas/ZJF+99s7CyWQ6MUbWQ+91LiEhpf3Ayln37D4k0FVgm?=
+ =?us-ascii?Q?dgUGlFImaTMznJAawpD54FkVi6xQ2h2kFt/1s2hZlVstiShyQBX4Q3OdGLSk?=
+ =?us-ascii?Q?mBqw692EeBkngegqdYaqMup55dJo1RNuuyA5gJrLCvIHtVlVwp4VhslJVHmU?=
+ =?us-ascii?Q?/5vN1sWW8A7BYyrGF/SUdtBQJGNerW/u6Y/nHjaUAONhvsb0b5OGDN7c3n2o?=
+ =?us-ascii?Q?5E+w9S9aUNhPjS9tfpDw2/M045hy/QVI1yFjP89K+NVRS6f2GgImghJDnYT6?=
+ =?us-ascii?Q?qChn7aV4qSO8dnggYcuRqHWGKOWBG+v3JCemlmvJJxaz0dMt1HVPFB/8XeBB?=
+ =?us-ascii?Q?OPTaL7CduupEzBe5W2fo1qiuLoaVre3jMlvALsxXlNcvPuXhLu92oMfe7/Fj?=
+ =?us-ascii?Q?JC3fpWTpqX+AEcRdtlYD7/cwaYKsTAYKFgW0iC8KpGEk01+WHHAh+TK7NHRQ?=
+ =?us-ascii?Q?GsR875NaWsHdEJbCE7EKyl3rN+WAcLVKqLgHlQtynBZH93fK4vPeujyv7oqV?=
+ =?us-ascii?Q?usEDWOjadW1iVQrxWjAKKxuGqrlOoJQOrQRZ1yauiZ6FCc8AVhragYpz+t5G?=
+ =?us-ascii?Q?b+Ewj0aSjBpZ/YSUlTvzZXX6Rr4RupTBmX46F7TGyaGOsRmnOBOpkPy2PX3O?=
+ =?us-ascii?Q?tCfcgzzBhbi/5chVSUbAJ2COFyBmqouzyjdbRxbUHt61aBY3n/5LQncGw3Rn?=
+ =?us-ascii?Q?hI5+cy3ZtKKXRU9tSSoWebwlixidwNNQk96X2LALEvvJLKJHNT/VlB0iYfrM?=
+ =?us-ascii?Q?7BqLUwKBbBVR9Fi3BkFyEnM47RvOcoW08B34jzc/HIwDGLaHb7L5zbc6KVe5?=
+ =?us-ascii?Q?fdP/Z2ez6QQVol1kn4Ed25ZQniK8oChGgqHeAWqPNeOtn/pJtiggs+xFDYz4?=
+ =?us-ascii?Q?ZlTG1Up6fVDp67kPjIglfb6sVY0oymlkscFtVd+tk4ntg8Q46svZpJuDcXrG?=
+ =?us-ascii?Q?x8E4wtHLL6G/TIsSMxXYBALyJ73foPfnYZosoHf+NA0Ddc86D4dBHFLr8oA?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7570987c-c0e0-4b12-73bd-08dda457d99e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2025 17:38:57.6155
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR02MB10728
 
-On Tue, Jun 03, 2025 at 09:29:45AM -0700, Josh Poimboeuf wrote:
-> On Mon, Jun 02, 2025 at 10:43:42PM -0700, Josh Poimboeuf wrote:
-> > On Thu, May 29, 2025 at 11:30:17AM +0200, Peter Zijlstra wrote:
-> > > > > So the sequence of fail is:
-> > > > > 
-> > > > > 	push %rbp
-> > > > > 	mov %rsp, %rbp	# cfa.base = BP
-> > > > > 
-> > > > > 	SAVE
-> > > 
-> > > 	sub    $0x40,%rsp
-> > > 	and    $0xffffffffffffffc0,%rsp
-> > > 
-> > > This hits the 'older GCC, drap with frame pointer' case in OP_SRC_AND.
-> > > Which means we then hard rely on the frame pointer to get things right.
-> > > 
-> > > However, per all the PUSH/POP_REGS nonsense, BP can get clobbered.
-> > > Specifically the code between the CALL and POP %rbp below are up in the
-> > > air. I don't think it can currently unwind properly there.
-> > 
-> > RBP is callee saved, so there's no need to pop it or any of the other
-> > callee-saved regs.  If they were to change, that would break C ABI
-> > pretty badly.  Maybe add a skip_callee=1 arg to POP_REGS?
-> 
-> This compiles for me:
+From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, June 5, 2025 =
+8:36 AM
+>=20
+> Hi
+>=20
+> Am 04.06.25 um 23:43 schrieb Michael Kelley:
+> [...]
+> > Nonetheless, there's an underlying issue. A main cause of the differenc=
+e
+> > is the number of messages to Hyper-V to update dirty regions. With
+> > hyperv_fb using deferred I/O, the messages are limited 20/second, so
+> > the total number of messages to Hyper-V is about 480. But hyperv_drm
+> > appears to send 3 messages to Hyper-V for each line of output, or a tot=
+al of
+> > about 3,000,000 messages (~90K/second). That's a lot of additional load
+> > on the Hyper-V host, and it adds the 10 seconds of additional elapsed
+> > time seen in the guest. There also this ugly output in dmesg because th=
+e
+> > ring buffer for sending messages to the Hyper-V host gets full -- Hyper=
+-V
+> > doesn't always keep up, at least not on my local laptop where I'm
+> > testing:
+> >
+> > [12574.327615] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12574.327684] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12574.327760] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12574.327841] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12597.016128] hyperv_sendpacket: 6211 callbacks suppressed
+> > [12597.016133] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12597.016172] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12597.016220] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> > [12597.016267] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> *ERROR* Unable to send packet via vmbus; error -11
+> >
+> > hyperv_drm could be fixed to not output the ugly messages, but there's
+> > still the underlying issue of overrunning the ring buffer, and excessiv=
+ely
+> > hammering on the host. If we could get hyperv_drm doing deferred I/O, I
+> > would feel much better about going full-on with deprecating hyperv_fb.
+>=20
+> I try to address the problem with the patches at
+>=20
+> https://lore.kernel.org/dri-devel/20250605152637.98493-1-tzimmermann@suse=
+.de/
+>=20
+> Testing and feedback is much appreciated.
+>=20
 
-That last patch had a pretty heinous bug: it didn't adjust the stack
-accordingly when it skipped the callee-saved pops.
+Nice!
 
-But actually there's no need to pop *any* regs there.
+I ran the same test case with your patches, and everything works well. The
+hyperv_drm numbers are now pretty much the same as the hyperv_fb
+numbers for both elapsed time and system CPU time -- within a few percent.
+For hyperv_drm, there's no longer a gap in the elapsed time and system
+CPU time. No errors due to the guest-to-host ring buffer being full. Total
+messages to Hyper-V for hyperv_drm are now a few hundred instead of 3M.
+The hyperv_drm message count is still a little higher than for hyperv_fb,
+presumably because the simulated vblank rate in hyperv_drm is higher than
+the 20 Hz rate used by hyperv_fb deferred I/O. But the overall numbers are
+small enough that the difference is in the noise. Question: what is the def=
+ault
+value for the simulated vblank rate? Just curious ...
 
-asm_fred_entry_from_kvm() uses C function ABI, so changes to
-callee-saved regs aren't allowed, and changes to caller-saved regs would
-have no effect.
-
-How about something like this?
-
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index d83236b96f22..e680afbf65b6 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -99,7 +99,7 @@ For 32-bit we have the following conventions - kernel is built with
- 	.endif
- .endm
- 
--.macro CLEAR_REGS clear_bp=1
-+.macro CLEAR_REGS clear_callee=1
- 	/*
- 	 * Sanitize registers of values that a speculation attack might
- 	 * otherwise want to exploit. The lower registers are likely clobbered
-@@ -113,20 +113,19 @@ For 32-bit we have the following conventions - kernel is built with
- 	xorl	%r9d,  %r9d	/* nospec r9  */
- 	xorl	%r10d, %r10d	/* nospec r10 */
- 	xorl	%r11d, %r11d	/* nospec r11 */
-+	.if \clear_callee
- 	xorl	%ebx,  %ebx	/* nospec rbx */
--	.if \clear_bp
- 	xorl	%ebp,  %ebp	/* nospec rbp */
--	.endif
- 	xorl	%r12d, %r12d	/* nospec r12 */
- 	xorl	%r13d, %r13d	/* nospec r13 */
- 	xorl	%r14d, %r14d	/* nospec r14 */
- 	xorl	%r15d, %r15d	/* nospec r15 */
--
-+	.endif
- .endm
- 
--.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_bp=1 unwind_hint=1
-+.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_callee=1 unwind_hint=1
- 	PUSH_REGS rdx=\rdx, rcx=\rcx, rax=\rax, save_ret=\save_ret unwind_hint=\unwind_hint
--	CLEAR_REGS clear_bp=\clear_bp
-+	CLEAR_REGS clear_callee=\clear_callee
- .endm
- 
- .macro POP_REGS pop_rdi=1
-diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-index 29c5c32c16c3..5d1eef193b79 100644
---- a/arch/x86/entry/entry_64_fred.S
-+++ b/arch/x86/entry/entry_64_fred.S
-@@ -112,11 +112,12 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	push %rax				/* Return RIP */
- 	push $0					/* Error code, 0 for IRQ/NMI */
- 
--	PUSH_AND_CLEAR_REGS clear_bp=0 unwind_hint=0
-+	PUSH_AND_CLEAR_REGS clear_callee=0 unwind_hint=0
- 	movq %rsp, %rdi				/* %rdi -> pt_regs */
- 	call __fred_entry_from_kvm		/* Call the C entry point */
--	POP_REGS
--	ERETS
-+	addq $C_PTREGS_SIZE, %rsp
-+
-+	ALTERNATIVE "mov %rbp, %rsp", __stringify(ERETS), X86_FEATURE_FRED
- 1:
- 	/*
- 	 * Objtool doesn't understand what ERETS does, this hint tells it that
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index ad4ea6fb3b6c..d4f9bfdc24a7 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -94,6 +94,7 @@ static void __used common(void)
- 
- 	BLANK();
- 	DEFINE(PTREGS_SIZE, sizeof(struct pt_regs));
-+	OFFSET(C_PTREGS_SIZE, pt_regs, orig_ax);
- 
- 	/* TLB state for the entry code */
- 	OFFSET(TLB_STATE_user_pcid_flush_mask, tlb_state, user_pcid_flush_mask);
+Michael
 
