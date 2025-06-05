@@ -1,203 +1,83 @@
-Return-Path: <linux-hyperv+bounces-5791-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5792-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6B8FACF31A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:30:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B28DFACF31E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:34:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19F533A9E26
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 15:30:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B6A917327D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 15:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1779D179A7;
-	Thu,  5 Jun 2025 15:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DpfIyMpt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J3CCjzUS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W2WK5XIz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kcBUrlVB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1ABF18A6B0;
+	Thu,  5 Jun 2025 15:33:57 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A51DD2FB
-	for <linux-hyperv@vger.kernel.org>; Thu,  5 Jun 2025 15:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7061EEE0;
+	Thu,  5 Jun 2025 15:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749137447; cv=none; b=WEsRvXycl7Ksac8rihOsJ4xQM8IerxJGHm1wqfwcNlq/wzxfN9vfv5plZXLtc2OEwb3tZcDjtA5R/cfcUNDYRDs0+FoRruwwG+z7/NMbjVP3Jh/bCseBfviWwhObR80UI2FH0T9jDN4GWpM3eNLuAhbCz3Gk4L43ssvB05eX7k0=
+	t=1749137637; cv=none; b=LiBsD9LMe7nvEZfrvMrDbaasxGeNg6wXGf9RkUwZV0zqqlK2xJn17ILEqXMavlgxlt5vg+Dxl+lJPXJQ+sIUwKuKciPnSGlQJmv+vW+qCfLXr2SmfISFc0RiUii2sHSvxlfMM3cJ57FT9SKKXyfAKAOlbUrKJKjCHZDJC9gsLTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749137447; c=relaxed/simple;
-	bh=/j497qWqUjVprNkpeR/iJ4DeSnlsiDvdynNlL2s3V1A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UkdsMlfeiUHhgoaBe293PU8Y0adWY7UTKcpHDg6+nWgGAEh7MgpxarYxQZgIO+dA7NuqWaJksysUgLvVBltsPq7gACAKndZPOzvbGxZfiDCKfT0Ug5UTRWUuvDZorczGpMThcDXT1nMbZP600n/1hOP4vFvDQdKjkA0zAqD2U5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DpfIyMpt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J3CCjzUS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W2WK5XIz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kcBUrlVB; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F09DE33775;
-	Thu,  5 Jun 2025 15:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749137420; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWZYf/4Hp4po+YB+KpUBSXdQFsIqSWkSI0Twjkm0c10=;
-	b=DpfIyMptzj1CViu0SpRLDE4DXbsTW5Ng1Mimhe/0Ql4f2t7gAWxK8TJ0nN6cKpYMknCghO
-	u97qqIMz7avbs5KUxkQErEz5cRslaGEPfCIQqiZFhc/sRCgCLIy4EkgKrIt2hTMrARB5jV
-	MCUvFzlbB9zygXC6Ly06s66fa1SZFlI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749137420;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWZYf/4Hp4po+YB+KpUBSXdQFsIqSWkSI0Twjkm0c10=;
-	b=J3CCjzUSn9nulESTF2+XIXA/hgbkRnFaZC6jMpGzl1GihGBfUVgD8gjt4xyWQIzATR5o/1
-	QwT4d3EypGy58kBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749137419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWZYf/4Hp4po+YB+KpUBSXdQFsIqSWkSI0Twjkm0c10=;
-	b=W2WK5XIzycyrSzYU+Rkomw3+1kQIGywLGtnhydI08Y2JA1Md2jj3kChtxjxXUhr6YuZsfa
-	llsB4oXCQXcYySGlWwIW6mCawamFg0F09Rh5T0wvJu4UZnJ4cUepRexDZOfkiQqxOkrn1R
-	xx86uevk2RO0/RNA1z5FCODgt6u+qR4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749137419;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWZYf/4Hp4po+YB+KpUBSXdQFsIqSWkSI0Twjkm0c10=;
-	b=kcBUrlVBQdp+MN5pVAyJHRL6Gj8hr31WwYctFAfR4QRlQgzsSFc/hwV8bnyXJjOV3aoHaF
-	IUnY/MuYjCc5ixAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8ADCD1373E;
-	Thu,  5 Jun 2025 15:30:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aHVwIAu4QWj3XwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 05 Jun 2025 15:30:19 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: mhklinux@outlook.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	drawat.floss@gmail.com,
-	javierm@redhat.com,
-	kraxel@redhat.com,
-	louis.chauvet@bootlin.com,
-	hamohammed.sa@gmail.com,
-	melissa.srw@gmail.com,
-	fvogt@suse.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 6/6] drm/fb-helper: Synchronize dirty worker with vblank
-Date: Thu,  5 Jun 2025 17:24:44 +0200
-Message-ID: <20250605152637.98493-7-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605152637.98493-1-tzimmermann@suse.de>
-References: <20250605152637.98493-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1749137637; c=relaxed/simple;
+	bh=c+F3x1rCTk6FaytU2UJg5KYZcmVP4m/I3g0v8y6tLss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BApXRwW5YL/dTNTGAvjLwq+kD7H8l647uSPZ+BBIYE8Okn0OHeAioMni5SVDmfz3P5zDDJGvznLcV09lFbmTmeIpngzYb2ZlVWA9JByYidt7dbfg2DAOAdB0AcnkFLdS02kcqibM3G83v4LbrV2EnQCC8d1d5TTkLo6X8EUl/Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF7F51688;
+	Thu,  5 Jun 2025 08:33:36 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F280C3F5A1;
+	Thu,  5 Jun 2025 08:33:52 -0700 (PDT)
+Date: Thu, 5 Jun 2025 16:33:50 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firmware: smccc: support both conduits for getting hyp
+ UUID
+Message-ID: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
+References: <20250521094049.960056-1-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,redhat.com,bootlin.com,suse.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	R_RATELIMIT(0.00)[to_ip_from(RLgb6padn6wcu17bxtda1k7h6p)];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.30
+In-Reply-To: <20250521094049.960056-1-anirudh@anirudhrb.com>
 
-Before updating the display from the console's shadow buffer, the dirty
-worker now waits for a vblank. This allows several screen updates to pile
-up and acts as a rate limiter. If a DRM master is present, it could
-interfere with the vblank. Don't wait in this case.
+(sorry for the delay, found the patch in the spam 🙁)
 
-v3:
-	* add back helper->lock
-	* acquire DRM master status while waiting for vblank
-v2:
-	* don't hold helper->lock while waiting for vblank
+On Wed, May 21, 2025 at 09:40:48AM +0000, Anirudh Rayabharam wrote:
+> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> 
+> When Linux is running as the root partition under Microsoft Hypervisor
+> (MSHV) a.k.a Hyper-V, smc is used as the conduit for smc calls.
+> 
+> Extend arm_smccc_hypervisor_has_uuid() to support this usecase. Use
+> arm_smccc_1_1_invoke to retrieve and use the appropriate conduit instead
+> of supporting only hvc.
+> 
+> Boot tested on MSHV guest, MSHV root & KVM guest.
+>
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/gpu/drm/drm_fb_helper.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 937c3939e502..e0b780634a84 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -364,9 +364,29 @@ static void drm_fb_helper_fb_dirty(struct drm_fb_helper *helper)
- 	struct drm_device *dev = helper->dev;
- 	struct drm_clip_rect *clip = &helper->damage_clip;
- 	struct drm_clip_rect clip_copy;
-+	struct drm_crtc *crtc;
- 	unsigned long flags;
- 	int ret;
- 
-+	/*
-+	 * Rate-limit update frequency to vblank. If there's a DRM master
-+	 * present, it could interfere while we're waiting for the vblank
-+	 * event. Don't wait in this case.
-+	 */
-+	mutex_lock(&helper->lock);
-+	if (!drm_master_internal_acquire(helper->dev)) {
-+		goto unlock;
-+	}
-+	crtc = helper->client.modesets[0].crtc;
-+	ret = drm_crtc_vblank_get(crtc);
-+	if (!ret) {
-+		drm_crtc_wait_one_vblank(crtc);
-+		drm_crtc_vblank_put(crtc);
-+	}
-+	drm_master_internal_release(helper->dev);
-+unlock:
-+	mutex_unlock(&helper->lock);
-+
- 	if (drm_WARN_ON_ONCE(dev, !helper->funcs->fb_dirty))
- 		return;
- 
+Are they any dependent patches or series using this ? Do you plan to
+route it via KVM tree if there are any dependency. Or else I can push
+it through (arm-)soc tree. Let me know.
+
 -- 
-2.49.0
-
+Regards,
+Sudeep
 
