@@ -1,46 +1,96 @@
-Return-Path: <linux-hyperv+bounces-5780-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5781-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A8E1ACE9D0
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 08:09:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17BCDACEB54
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 09:56:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1BC97A6962
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 06:08:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCD68171FAF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 07:56:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4796B1E51EA;
-	Thu,  5 Jun 2025 06:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F38CD1FF7C8;
+	Thu,  5 Jun 2025 07:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UPIYNxzi"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YP7M7FMa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+eB6TNeq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YP7M7FMa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+eB6TNeq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A9CD1FC8;
-	Thu,  5 Jun 2025 06:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C202E2045B6
+	for <linux-hyperv@vger.kernel.org>; Thu,  5 Jun 2025 07:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749103776; cv=none; b=gaGytrRfiqZM500YoyRMh/2alehV485YoPWLPXHhk7UEbtAuRbhnl33/Us6mP0b6OITCIs6/LSo1QE2vMruUOmtlsqCvzqswF9Zztyf2KEsHkswhaXJnxOeL0w16h48ZaJNAXv7Rb6wVnhTvuwieR2TnQnkc6zKmIW5tCtHQE6E=
+	t=1749110161; cv=none; b=rxSUJ2dXD489KdNQTdMl4hoxEoQL5fAawteunzSIV/MzTm5ZhuP48RvCmKFYZNSFAZkw2OrWYiEZM+vHLrz0QV4dpTjRhV1NMCDJH8j4JzbSOoTuIYnlKorbEKkkdazcDSGRvqCVMdidMAoUoBeEBFwHUz3P9bbsj1CBi7+3ZXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749103776; c=relaxed/simple;
-	bh=O84wJObH89CUpgkwkPADWcvnXK7hHeg8rak4mox67q4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=P2IYWTVeDs66PoamFX08Ue/TXB9PpkZHHqQ+PNJFhHR9y2mnx/McUuF29TBZ8t7NrpNF9nkNfVURB7MREYxp7cDNeTeaP4YEwURGD84mudst1ZVmXCKWucEOTdF9mhS6obvS8cRzX12cK97JBkmWD+NHOALaLZ/6t7JrDjYGrqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UPIYNxzi; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.64.1.134] (unknown [40.65.108.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A9BD0201FF4E;
-	Wed,  4 Jun 2025 23:09:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A9BD0201FF4E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749103773;
-	bh=arEF/2LdOdCfNP5R12P7zhBgPfTao/upFbApLg+9CFw=;
-	h=Date:To:Cc:From:Subject:From;
-	b=UPIYNxzitA7Tyg6oV7jSLomnxLkewK0LYNmWB5L1vLFiQns5uL7IDDNPKkpQ2Ncej
-	 /1CMyeG6bIQ/cDEG+9HY9EAwmTKPPrGYt65FKwtvB2D3kwS6Euxy/usrJjKDqXOb97
-	 1oEbEg3gcRr7DpfDv5mJN6+Idr/lN7MeB3Vene2I=
-Message-ID: <6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com>
-Date: Wed, 4 Jun 2025 23:09:31 -0700
+	s=arc-20240116; t=1749110161; c=relaxed/simple;
+	bh=WGdqmRYcIgONgeM3AK7BWmHnn1rBwXkLahoXEQlU0zc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y8C0iTtlXeIzfccm+MMk8GKOSRPMXsmKx/6X7ONrNPnZ/q0i+23yvcj6ZDyYfXwZkrb2RiqKRWGVf1vmYiIdY+9JbnEXmg84v/C+1Yfistt4bkS9eUnc5AnVkeoiYUknzwrrR7pQcvMTnpD6NI+jW1+6Xx1FmjwdQQFCktLX7l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YP7M7FMa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+eB6TNeq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YP7M7FMa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+eB6TNeq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id ABFDD34684;
+	Thu,  5 Jun 2025 07:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749110151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HRd1tEzrVLQHewuIHSVriPCfBV3nNE1DWbs6tm2ALa8=;
+	b=YP7M7FMa74q59tNGP33U+XFVji+IEYwZmnMR6xahitF1Vndpw/jc2T3fWYWl8S027eW+3p
+	UYOOL0IRbGlqtzyh0OxRqtTsLkmNHb8ubYANvFBvaWCFVWvUoFq9GQmLEtzM2RVSHV9YlV
+	E2He5tgYvn14cR0IzwwTj/Rbszcqa+M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749110151;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HRd1tEzrVLQHewuIHSVriPCfBV3nNE1DWbs6tm2ALa8=;
+	b=+eB6TNeqZt1/hkbo2PiIRhFrk3iql/AqJneqJ7lA4JvUiytR9pVHgaWVMX6uxomtf8b1ib
+	E2ZGRmXiSM2yxQDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=YP7M7FMa;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+eB6TNeq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749110151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HRd1tEzrVLQHewuIHSVriPCfBV3nNE1DWbs6tm2ALa8=;
+	b=YP7M7FMa74q59tNGP33U+XFVji+IEYwZmnMR6xahitF1Vndpw/jc2T3fWYWl8S027eW+3p
+	UYOOL0IRbGlqtzyh0OxRqtTsLkmNHb8ubYANvFBvaWCFVWvUoFq9GQmLEtzM2RVSHV9YlV
+	E2He5tgYvn14cR0IzwwTj/Rbszcqa+M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749110151;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HRd1tEzrVLQHewuIHSVriPCfBV3nNE1DWbs6tm2ALa8=;
+	b=+eB6TNeqZt1/hkbo2PiIRhFrk3iql/AqJneqJ7lA4JvUiytR9pVHgaWVMX6uxomtf8b1ib
+	E2ZGRmXiSM2yxQDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 43E681373E;
+	Thu,  5 Jun 2025 07:55:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id t3UmD4dNQWgYNwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 05 Jun 2025 07:55:51 +0000
+Message-ID: <d7a426b2-a66d-4d65-a9d5-c967b850dad6@suse.de>
+Date: Thu, 5 Jun 2025 09:55:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -48,122 +98,250 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+To: Michael Kelley <mhklinux@outlook.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, "deller@gmx.de" <deller@gmx.de>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20250523161522.409504-1-mhklinux@outlook.com>
+ <20250523161522.409504-4-mhklinux@outlook.com>
+ <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
+ <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
+ <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
+ <aEBcCjMWZJgbsRas@phenom.ffwll.local>
+ <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Language: en-US
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, ssengar@microsoft.com
-Cc: romank@linux.microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@kernel.org, apais@microsoft.com
-From: Hardik Garg <hargar@linux.microsoft.com>
-Subject: [PATCH v3] vmbus: retrieve connection-id from DeviceTree
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[outlook.com,ffwll.ch];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org,lst.de,lists.freedesktop.org,vger.kernel.org,kvack.org];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,suse.com:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: ABFDD34684
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-The connection-id determines which hypervisor communication channel the
-guest should use to talk to the VMBus host. This patch adds support to
-read this value from the DeviceTree where it exists as a property under
-the vmbus node with the compatible ID "microsoft,message-connection-id".
-The property name follows the format <vendor>,<field> where
-"vendor": "microsoft" and "field": "message-connection-id"
+Hi
 
-Reading from DeviceTree allows platforms to specify their preferred
-communication channel, making it more flexible. If the property is
-not found in the DeviceTree, use the default connection ID
-(VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
-based on protocol version).
+Am 04.06.25 um 23:43 schrieb Michael Kelley:
+> From: Simona Vetter <simona.vetter@ffwll.ch> Sent: Wednesday, June 4, 2025 7:46 AM
+>> On Wed, Jun 04, 2025 at 10:12:45AM +0200, Thomas Zimmermann wrote:
+>>> Hi
+>>>
+>>> Am 03.06.25 um 19:50 schrieb Michael Kelley:
+>>>> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Monday, June 2, 2025 11:25 PM
+>>>>> Hi
+>>>>>
+>>>>> Am 03.06.25 um 03:49 schrieb Michael Kelley:
+>>>>> [...]
+>>>>> What is the motivation behind this work? The driver or fbdev as a whole
+>>>>> does not have much of a future anyway.
+>>>>>
+>>>>> I'd like to suggest removing hyperv_fb entirely in favor of hypervdrm?
+>>>>>
+>>>> Yes, I think that's the longer term direction. A couple months ago I had an
+>>>> email conversation with Saurabh Sengar from the Microsoft Linux team where
+>>>> he raised this idea. I think the Microsoft folks will need to drive the deprecation
+>>>> process, as they need to coordinate with the distro vendors who publish
+>>>> images for running on local Hyper-V and in the Azure cloud. And my
+>>>> understanding is that the Linux kernel process would want the driver to
+>>>> be available but marked "deprecated" for a year or so before it actually
+>>>> goes away.
+>>> We (DRM upstream) recently considered moving some fbdev drivers to
+>>> drivers/staging or marking them with !DRM if a DRM driver is available.
+>>> Hyverv_fb would be a candidate.
+>>>
+>>> At least at SUSE, we ship hypervdrm instead of hyperv_fb. This works well on
+>>> the various generations of the hyperv system. Much of our userspace would
+>>> not be able to use hyperv_fb anyway.
+> Good to know.  Red Hat has made the switch as well. The Ubuntu images
+> in Azure have both hyperv_fb and hyperv_drm. I don't know what other
+> distros have done.
+>
+>> Yeah investing into fbdev drivers, especially when some mm surgery seems
+>> needed, does not sound like a good idea to me overall.
+>>
+>>>> I do have some concerns about the maturity of the hyperv_drm driver
+>>>> "around the edges". For example, somebody just recently submitted a
+>>>> patch to flush output on panic. I have less familiarity hyperv_drm vs.
+>>>> hyperv_fb, so some of my concern is probably due to that. We might
+>>>> need to do review of hyperv_drm and see if there's anything else to
+>>>> deal with before hyperv_fb goes away.
+>>> The panic output is a feature that we recently added to the kernel. It
+>>> allows a DRM driver to display a final error message in the case of a kernel
+>>> panic (think of blue screens on Windows). Drivers require a minimum of
+>>> support to make it work. That's what the hypervdrm patches were about.
+>> I'm also happy to help with any other issues and shortfalls of drm vs
+>> fbdev. There are some, but I thought it was mostly around some of the low
+>> bit color formats that really old devices want, and not anything that
+>> hyperv would need.
+> You've set me up perfectly to raise an issue. :-)  I'm still relatively new
+> to the hyperv_drm driver and DRM in general, compared with hyperv_fb.
+> One capability in fbdev is deferred I/O, which is what this entire patch
+> series is about. The hyperv_drm driver doesn't currently use anything
+> similar to deferred I/O like hyperv_fb. I don't know if that's because
+> hyperv_drm doesn't make use of what DRM has to offer, or if DRM doesn't
+> have a deferred I/O framework like fbdev. Do you know what the situation
+> is? Or could you point me to an example of doing deferred I/O with DRM
+> that hyperv_drm should be following?
 
-Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
----
-v3:
-- Added documentation for the new property in DeviceTree bindings
+Fbdev deferred I/O is a workaround for the fact that fbdev does not 
+require a flush operation on its I/O buffers. Writing to an mmaped 
+buffer is expected to go to hardware immediately. On devices where this 
+is not the case, deferred I/O tracks written pages and writes them back 
+to hardware at intervals.
 
-v2: 
-https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com/
+For DRM, there's the MODE_DIRTYFB ioctl [1] that all userspace has to 
+call after writing to mmap'ed buffers. So regular DRM doesn't need 
+deferred I/O as userspace triggers writeback explicitly.
 
-v1: 
-https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com/
----
-  .../devicetree/bindings/bus/microsoft,vmbus.yaml    |  8 ++++++++
-  drivers/hv/connection.c                             |  6 ++++--
-  drivers/hv/vmbus_drv.c                              | 13 +++++++++++++
-  3 files changed, 25 insertions(+), 2 deletions(-)
+[1] 
+https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/drm_ioctl.c#L686
 
-diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml 
-b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-index 0bea4f5287ce..729ca6defec6 100644
---- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-+++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-@@ -17,6 +17,14 @@ properties:
-    compatible:
-      const: microsoft,vmbus
+>
+> I ran a quick performance test comparing hyperv_drm with hyperv_fb.
+> The test does "cat" of a big text file in the Hyper-V graphics console. The
+> file has 1024 * 1024 lines, each with 64 characters, so total file size is
+> 64 MiB.
+>
+> With hyperv_fb the test completes in 24 seconds elapsed time, with
+> 24 seconds of system CPU time. With hyperv_drm, it takes 34 seconds
+> elapsed time, but with about the same 24 seconds of system CPU time.
+> Overall this difference isn't huge, and probably isn't that noticeable
+> when doing human-scale work (i.e., 'dmesg' outputting several
+> hundred lines in 0.19 seconds vs. my test doing 1M lines) on the Hyper-V
+> graphics console. To me, the console doesn't feel slow with hyperv_drm
+> compared to hyperv_fb, which is good.
 
-+  microsoft,message-connection-id:
-+    description:
-+      VMBus message connection ID to be used for communication between 
-host and
-+      guest. If not specified, defaults to 
-VMBUS_MESSAGE_CONNECTION_ID_4 for
-+      protocol version VERSION_WIN10_V5 and above, or 
-VMBUS_MESSAGE_CONNECTION_ID
-+      for older versions.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-    ranges: true
+DRM consoles are technically an fbdev device that operates on a DRM 
+device. Both, DRM and fbdev, have some differences that can make this 
+problematic. I'm not surprised that there are issues.
 
-    '#address-cells':
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index be490c598785..e0f38d799d06 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -99,12 +99,14 @@ int vmbus_negotiate_version(struct 
-vmbus_channel_msginfo *msginfo, u32 version)
-      if (version >= VERSION_WIN10_V5) {
-          msg->msg_sint = VMBUS_MESSAGE_SINT;
-          msg->msg_vtl = ms_hyperv.vtl;
--        vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID_4;
-      } else {
-          msg->interrupt_page = virt_to_phys(vmbus_connection.int_page);
--        vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID;
-      }
+>
+> Nonetheless, there's an underlying issue. A main cause of the difference
+> is the number of messages to Hyper-V to update dirty regions. With
+> hyperv_fb using deferred I/O, the messages are limited 20/second, so
+> the total number of messages to Hyper-V is about 480. But hyperv_drm
+> appears to send 3 messages to Hyper-V for each line of output, or a total of
+> about 3,000,000 messages (~90K/second). That's a lot of additional load
+> on the Hyper-V host, and it adds the 10 seconds of additional elapsed
+> time seen in the guest. There also this ugly output in dmesg because the
+> ring buffer for sending messages to the Hyper-V host gets full -- Hyper-V
+> doesn't always keep up, at least not on my local laptop where I'm
+> testing:
+>
+> [12574.327615] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12574.327684] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12574.327760] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12574.327841] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12597.016128] hyperv_sendpacket: 6211 callbacks suppressed
+> [12597.016133] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12597.016172] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12597.016220] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+> [12597.016267] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] *ERROR* Unable to send packet via vmbus; error -11
+>
+> hyperv_drm could be fixed to not output the ugly messages, but there's
+> still the underlying issue of overrunning the ring buffer, and excessively
+> hammering on the host. If we could get hyperv_drm doing deferred I/O, I
+> would feel much better about going full-on with deprecating hyperv_fb.
 
-+    /* Set default connection ID if not provided via DeviceTree */
-+    if (!vmbus_connection.msg_conn_id)
-+        vmbus_connection.msg_conn_id = (version >= VERSION_WIN10_V5) ?
-+            VMBUS_MESSAGE_CONNECTION_ID_4 : VMBUS_MESSAGE_CONNECTION_ID;
-      /*
-       * shared_gpa_boundary is zero in non-SNP VMs, so it's safe to always
-       * bitwise OR it
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index c236081d0a87..d14d286671cc 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2541,10 +2541,23 @@ static int vmbus_device_add(struct 
-platform_device *pdev)
-      struct of_range range;
-      struct of_range_parser parser;
-      struct device_node *np = pdev->dev.of_node;
-+    unsigned int conn_id;
-      int ret;
+Thanks for debugging this. A number of things are playing into this.
 
-      vmbus_root_device = &pdev->dev;
+- DRM performs display output along vblank IRQs. For example, if the 
+display runs with 60 Hz there should be no more than 60 display updates 
+per second. From what I can tell, there's no IRQ support in hypervdrm 
+(or HyperV in general?). Without IRQ support, drivers output to hardware 
+ASAP, which can result in large numbers of buffer updates per second. 
+I've heard about this problem in other context [2] and you're likely 
+seeing a similar issue.
 
-+    /*
-+     * Read connection ID from DeviceTree. The property name follows the
-+     * format <vendor>,<field> where:
-+     * - vendor: "microsoft"
-+     * - field: "message-connection-id"
-+     */
-+    ret = of_property_read_u32(np, "microsoft,message-connection-id", 
-&conn_id);
-+    if (!ret) {
-+        pr_info("VMBus message connection ID: %u\n", conn_id);
-+        vmbus_connection.msg_conn_id = conn_id;
-+    }
-+
-      ret = of_range_parser_init(&parser, np);
-      if (ret)
-          return ret;
+- DRM's console also needs better support for vblank interrupts. It 
+currently sends out updates ASAP as well.
+
+Both points are not much of a problem on most desktop and server 
+systems, but can be an be an issue with virtualization.
+
+[2] https://bugzilla.suse.com/show_bug.cgi?id=1189174
+
+Best regards
+Thomas
+
+>
+> Michael
+>
+
 -- 
-2.40.4
-
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
 
