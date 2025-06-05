@@ -1,93 +1,93 @@
-Return-Path: <linux-hyperv+bounces-5788-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5789-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EF40ACF30F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:30:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A1C5ACF313
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:30:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10F9D3A99DA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 15:30:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 693A61893E02
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 15:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 254CC19F11B;
-	Thu,  5 Jun 2025 15:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F862139D1B;
+	Thu,  5 Jun 2025 15:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zS8Rhan5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GOpy4Uu4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zS8Rhan5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GOpy4Uu4"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RLEXE/wG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IC+wXith";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RLEXE/wG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IC+wXith"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD611DEFDA
-	for <linux-hyperv@vger.kernel.org>; Thu,  5 Jun 2025 15:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8580CD2FB
+	for <linux-hyperv@vger.kernel.org>; Thu,  5 Jun 2025 15:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749137428; cv=none; b=BfoKM1QGWvgLfxoM2Wka+iv+cFfAlQM+I2IuT6/B5WXgZf1E2xIMgLYTAQ/SaPOHlZ1fHr5Zf9SOP2dhstTQaE9ZXIeOWQ3VquXGAhelErQvGpsEc5PGhC5J3jZatsAxxJ/f0UMp/VQZ5FXtbHzDhm1SA4RC9j1a2SCyM9TUI+4=
+	t=1749137434; cv=none; b=jDb2ERfQUySuqM4awh+pLB6NNjnyrmFiL9T4yytwQYPDPE2ILAZ27rLV2LLV/l6WBFIxWvCLJkeZkoP35Gx3PNkxjBGNuj24HlWBHmRmrsxDX4xKcP444hsy8wrEnft5zE8QlhmBDo06yLkxohzmJK0fvBknZENaHbOELCsGjr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749137428; c=relaxed/simple;
-	bh=48FCoH6W3Uhq2P90Ccw+5GD5I6CeD0nrser4utYmy2s=;
+	s=arc-20240116; t=1749137434; c=relaxed/simple;
+	bh=E24pcjGkVXFp2kx27yQRJJxz95WSapQRt2SKq3cGbjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IyN3OmKT4tINRfLsBr/F087/NEU74K/ycj7UJzqV5v9vQRkVtIQVJF/lDOFx5zVxF8goumE6D4DDgtWQawciMZkapo4cqDmFRpkvH8cmm79BeoEeXGp6cvCKtrAJg8YmQTEmealXJXoNK5mr0j/NLmLC3BOqyAOkfd8GqUCgP0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zS8Rhan5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GOpy4Uu4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zS8Rhan5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GOpy4Uu4; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=bJP8oJJXxomsodd4g95MwJj54vxPFDj/Xt3wTdkoEGccUyBbaU4RwgaDCeHfG97SZIr5wo+4QRjrfhkxlTwCChRVml5Ne9X9oWlHUSNDZM8uIhcT0d9mJzu9M6ho8vDntGpaoLcsUBIxWgN7bCqvdAY5bPc85KJy86jxAQRKqPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RLEXE/wG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IC+wXith; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RLEXE/wG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IC+wXith; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9884C1F791;
-	Thu,  5 Jun 2025 15:30:18 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 14EB833750;
+	Thu,  5 Jun 2025 15:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749137418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1749137419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UZt91+xBCK3ThE9eVIulfp4mGyzElXr3w5Qr8Fqo2+U=;
-	b=zS8Rhan5EdlFDYBaPilXZO2Fh+r7ZJHROL/IYwEVbJYz7MRtCELoSNgKIySd5uquIJ5aXv
-	Uv4fNWtTG1AtIhJOIVjJNsNedk+yTIkkkk449BYJk/OpPM76mqIDMEmY0HC0HolEZuJHiv
-	YBuNqKAAtPdyG2NoAd7JCyog5qrekAk=
+	bh=6nO6naUWWgIkz+0okOJRPU8dLIUvsMwaGAwslI8u71Y=;
+	b=RLEXE/wGybtfcAANdNb7Qu2uiFYd9ZNGOhw4VxGThbXI6EhWficOMEnV1FA0wOAvi6RsQJ
+	rELKx2TIWCrku2qUh4jBXfyhO+TggSwZgDKrD1hwd1xUEy3X3R0jjZw2V1k78wQwo/GMMq
+	yNE17ca/deUOoQEiEhXIQQfr9rEJiHA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749137418;
+	s=susede2_ed25519; t=1749137419;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UZt91+xBCK3ThE9eVIulfp4mGyzElXr3w5Qr8Fqo2+U=;
-	b=GOpy4Uu43HY109iBipMwObL7GMqBD54gNTWb+zm/uH0dj2Y2axWdVK/Vj7VwCophoVrEQr
-	q05otgFw7xUZ7qAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zS8Rhan5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GOpy4Uu4
+	bh=6nO6naUWWgIkz+0okOJRPU8dLIUvsMwaGAwslI8u71Y=;
+	b=IC+wXithYPlw8sao7+hqpBdqgJlBgJcNCfioDeFK6pUPaEnBJrUALbWC9atcY4RZmFl72m
+	1HnlT/qMAINklgAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="RLEXE/wG";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=IC+wXith
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749137418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1749137419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UZt91+xBCK3ThE9eVIulfp4mGyzElXr3w5Qr8Fqo2+U=;
-	b=zS8Rhan5EdlFDYBaPilXZO2Fh+r7ZJHROL/IYwEVbJYz7MRtCELoSNgKIySd5uquIJ5aXv
-	Uv4fNWtTG1AtIhJOIVjJNsNedk+yTIkkkk449BYJk/OpPM76mqIDMEmY0HC0HolEZuJHiv
-	YBuNqKAAtPdyG2NoAd7JCyog5qrekAk=
+	bh=6nO6naUWWgIkz+0okOJRPU8dLIUvsMwaGAwslI8u71Y=;
+	b=RLEXE/wGybtfcAANdNb7Qu2uiFYd9ZNGOhw4VxGThbXI6EhWficOMEnV1FA0wOAvi6RsQJ
+	rELKx2TIWCrku2qUh4jBXfyhO+TggSwZgDKrD1hwd1xUEy3X3R0jjZw2V1k78wQwo/GMMq
+	yNE17ca/deUOoQEiEhXIQQfr9rEJiHA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749137418;
+	s=susede2_ed25519; t=1749137419;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UZt91+xBCK3ThE9eVIulfp4mGyzElXr3w5Qr8Fqo2+U=;
-	b=GOpy4Uu43HY109iBipMwObL7GMqBD54gNTWb+zm/uH0dj2Y2axWdVK/Vj7VwCophoVrEQr
-	q05otgFw7xUZ7qAA==
+	bh=6nO6naUWWgIkz+0okOJRPU8dLIUvsMwaGAwslI8u71Y=;
+	b=IC+wXithYPlw8sao7+hqpBdqgJlBgJcNCfioDeFK6pUPaEnBJrUALbWC9atcY4RZmFl72m
+	1HnlT/qMAINklgAw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3193B139CB;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9F8FC1373E;
 	Thu,  5 Jun 2025 15:30:18 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ILPCCgq4QWj3XwAAD6G6ig
+	id eKWPJQq4QWj3XwAAD6G6ig
 	(envelope-from <tzimmermann@suse.de>); Thu, 05 Jun 2025 15:30:18 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: mhklinux@outlook.com,
@@ -106,9 +106,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-hyperv@vger.kernel.org,
 	virtualization@lists.linux.dev,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 3/6] drm/simpledrm: Use vblank timer
-Date: Thu,  5 Jun 2025 17:24:41 +0200
-Message-ID: <20250605152637.98493-4-tzimmermann@suse.de>
+Subject: [PATCH 4/6] drm/bochs: Use vblank timer
+Date: Thu,  5 Jun 2025 17:24:42 +0200
+Message-ID: <20250605152637.98493-5-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250605152637.98493-1-tzimmermann@suse.de>
 References: <20250605152637.98493-1-tzimmermann@suse.de>
@@ -129,79 +129,71 @@ X-Spamd-Result: default: False [-1.51 / 50.00];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	FREEMAIL_TO(0.00)[outlook.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,redhat.com,bootlin.com,suse.com];
 	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	R_RATELIMIT(0.00)[to_ip_from(RL4xcm599wuy3aaiwfjdd1c6ky)];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
 	RCVD_TLS_ALL(0.00)[];
 	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL4xcm599wuy3aaiwfjdd1c6ky)];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com]
 X-Spam-Level: 
 X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 9884C1F791
+X-Rspamd-Queue-Id: 14EB833750
 X-Rspamd-Action: no action
 X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Score: -1.51
 
-Simpledrm hardware does not provide vblank interrupts. Use a vblank
-timer to simulate the inerrup tin software. Rate-limits the display's
-update frequency to the display-mode settings.
+Bochs' virtual hardware does not provide vblank interrupts. Use a
+vblank timer to simulate the interrupt in software. Rate-limits the
+display's update frequency to the display-mode settings. Avoids
+excessive CPU overhead with compositors that do not rate-limit their
+output.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- drivers/gpu/drm/sysfb/simpledrm.c | 81 +++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+ drivers/gpu/drm/tiny/bochs.c | 68 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-diff --git a/drivers/gpu/drm/sysfb/simpledrm.c b/drivers/gpu/drm/sysfb/simpledrm.c
-index a1c3119330de..b9766129f564 100644
---- a/drivers/gpu/drm/sysfb/simpledrm.c
-+++ b/drivers/gpu/drm/sysfb/simpledrm.c
-@@ -26,6 +26,8 @@
- #include <drm/drm_managed.h>
- #include <drm/drm_modeset_helper_vtables.h>
+diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
+index 8706763af8fb..dbc6a15c1a58 100644
+--- a/drivers/gpu/drm/tiny/bochs.c
++++ b/drivers/gpu/drm/tiny/bochs.c
+@@ -21,6 +21,8 @@
+ #include <drm/drm_module.h>
+ #include <drm/drm_plane_helper.h>
  #include <drm/drm_probe_helper.h>
 +#include <drm/drm_vblank.h>
 +#include <drm/drm_vblank_timer.h>
  
- #include "drm_sysfb_helper.h"
+ #include <video/vga.h>
  
-@@ -229,11 +231,17 @@ struct simpledrm_device {
- 	/* modesetting */
- 	u32 formats[DRM_SYSFB_PLANE_NFORMATS(1)];
+@@ -95,6 +97,7 @@ struct bochs_device {
+ 
+ 	/* drm */
  	struct drm_plane primary_plane;
 +	struct drm_vblank_timer vtimer;
  	struct drm_crtc crtc;
  	struct drm_encoder encoder;
  	struct drm_connector connector;
- };
+@@ -501,12 +504,35 @@ static int bochs_crtc_helper_atomic_check(struct drm_crtc *crtc,
+ 	return drm_atomic_helper_check_crtc_primary_plane(crtc_state);
+ }
  
-+static struct simpledrm_device *to_simpledrm_device(struct drm_device *dev)
-+{
-+	return container_of(to_drm_sysfb_device(dev), struct simpledrm_device, sysfb);
-+}
-+
- /*
-  * Hardware
-  */
-@@ -564,13 +572,79 @@ static const struct drm_plane_funcs simpledrm_primary_plane_funcs = {
- 	.destroy = drm_plane_cleanup,
- };
- 
-+static void simpledrm_crtc_helper_atomic_flush(struct drm_crtc *crtc,
-+					       struct drm_atomic_state *state)
++static void bochs_crtc_helper_atomic_flush(struct drm_crtc *crtc,
++					   struct drm_atomic_state *state)
 +{
 +	struct drm_device *dev = crtc->dev;
 +	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
@@ -222,81 +214,96 @@ index a1c3119330de..b9766129f564 100644
 +	spin_unlock_irq(&dev->event_lock);
 +}
 +
-+static void simpledrm_crtc_helper_atomic_enable(struct drm_crtc *crtc,
-+						struct drm_atomic_state *state)
-+{
+ static void bochs_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+ 					    struct drm_atomic_state *state)
+ {
+ 	struct bochs_device *bochs = to_bochs_device(crtc->dev);
+ 
+ 	bochs_hw_blank(bochs, false);
 +	drm_crtc_vblank_on(crtc);
-+}
-+
-+static void simpledrm_crtc_helper_atomic_disable(struct drm_crtc *crtc,
-+						 struct drm_atomic_state *state)
-+{
+ }
+ 
+ static void bochs_crtc_helper_atomic_disable(struct drm_crtc *crtc,
+@@ -514,16 +540,44 @@ static void bochs_crtc_helper_atomic_disable(struct drm_crtc *crtc,
+ {
+ 	struct bochs_device *bochs = to_bochs_device(crtc->dev);
+ 
 +	drm_crtc_vblank_off(crtc);
-+}
-+
- static const struct drm_crtc_helper_funcs simpledrm_crtc_helper_funcs = {
- 	DRM_SYSFB_CRTC_HELPER_FUNCS,
-+	.atomic_flush = simpledrm_crtc_helper_atomic_flush,
-+	.atomic_enable = simpledrm_crtc_helper_atomic_enable,
-+	.atomic_disable = simpledrm_crtc_helper_atomic_disable,
+ 	bochs_hw_blank(bochs, true);
+ }
+ 
+ static const struct drm_crtc_helper_funcs bochs_crtc_helper_funcs = {
+ 	.mode_set_nofb = bochs_crtc_helper_mode_set_nofb,
+ 	.atomic_check = bochs_crtc_helper_atomic_check,
++	.atomic_flush = bochs_crtc_helper_atomic_flush,
+ 	.atomic_enable = bochs_crtc_helper_atomic_enable,
+ 	.atomic_disable = bochs_crtc_helper_atomic_disable,
  };
  
-+static int simpledrm_crtc_enable_vblank(struct drm_crtc *crtc)
++static int bochs_crtc_enable_vblank(struct drm_crtc *crtc)
 +{
-+	struct simpledrm_device *sdev = to_simpledrm_device(crtc->dev);
++	struct bochs_device *bochs = to_bochs_device(crtc->dev);
 +
-+	drm_vblank_timer_start(&sdev->vtimer);
++	drm_vblank_timer_start(&bochs->vtimer);
 +
 +	return 0;
 +}
 +
-+static void simpledrm_crtc_disable_vblank(struct drm_crtc *crtc)
++static void bochs_crtc_disable_vblank(struct drm_crtc *crtc)
 +{
-+	struct simpledrm_device *sdev = to_simpledrm_device(crtc->dev);
++	struct bochs_device *bochs = to_bochs_device(crtc->dev);
 +
-+	drm_vblank_timer_cancel(&sdev->vtimer);
++	drm_vblank_timer_cancel(&bochs->vtimer);
 +}
 +
-+static bool simpledrm_crtc_get_vblank_timestamp(struct drm_crtc *crtc,
-+						int *max_error, ktime_t *vblank_time,
-+						bool in_vblank_irq)
++static bool bochs_crtc_get_vblank_timestamp(struct drm_crtc *crtc,
++					    int *max_error, ktime_t *vblank_time,
++					    bool in_vblank_irq)
 +{
-+	struct simpledrm_device *sdev = to_simpledrm_device(crtc->dev);
++	struct bochs_device *bochs = to_bochs_device(crtc->dev);
 +
-+	return drm_vblank_timer_get_vblank_timestamp(&sdev->vtimer, max_error,
++	return drm_vblank_timer_get_vblank_timestamp(&bochs->vtimer, max_error,
 +						     vblank_time, in_vblank_irq);
 +}
 +
- static const struct drm_crtc_funcs simpledrm_crtc_funcs = {
- 	DRM_SYSFB_CRTC_FUNCS,
+ static const struct drm_crtc_funcs bochs_crtc_funcs = {
+ 	.reset = drm_atomic_helper_crtc_reset,
  	.destroy = drm_crtc_cleanup,
-+	.enable_vblank = simpledrm_crtc_enable_vblank,
-+	.disable_vblank = simpledrm_crtc_disable_vblank,
-+	.get_vblank_timestamp = simpledrm_crtc_get_vblank_timestamp,
+@@ -531,6 +585,9 @@ static const struct drm_crtc_funcs bochs_crtc_funcs = {
+ 	.page_flip = drm_atomic_helper_page_flip,
+ 	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
++	.enable_vblank = bochs_crtc_enable_vblank,
++	.disable_vblank = bochs_crtc_disable_vblank,
++	.get_vblank_timestamp = bochs_crtc_get_vblank_timestamp,
  };
  
- static const struct drm_encoder_funcs simpledrm_encoder_funcs = {
-@@ -611,6 +685,7 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
+ static const struct drm_encoder_funcs bochs_encoder_funcs = {
+@@ -602,6 +659,7 @@ static int bochs_kms_init(struct bochs_device *bochs)
  	struct drm_crtc *crtc;
- 	struct drm_encoder *encoder;
  	struct drm_connector *connector;
+ 	struct drm_encoder *encoder;
 +	struct drm_vblank_timer *vtimer;
- 	unsigned long max_width, max_height;
- 	size_t nformats;
  	int ret;
-@@ -812,6 +887,12 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
- 	if (ret)
- 		return ERR_PTR(ret);
+ 
+ 	ret = drmm_mode_config_init(dev);
+@@ -651,6 +709,16 @@ static int bochs_kms_init(struct bochs_device *bochs)
+ 	drm_connector_attach_edid_property(connector);
+ 	drm_connector_attach_encoder(connector, encoder);
  
 +	/* Vertical blanking */
 +
-+	vtimer = &sdev->vtimer;
-+	drmm_vblank_timer_init(vtimer, crtc, NULL);
-+	drm_vblank_init(dev, 1);
++	ret = drm_vblank_init(dev, 1);
++	if (ret)
++		return ret;
++	vtimer = &bochs->vtimer;
++	ret = drmm_vblank_timer_init(vtimer, crtc, NULL);
++	if (ret)
++		return ret;
 +
  	drm_mode_config_reset(dev);
  
- 	return sdev;
+ 	return 0;
 -- 
 2.49.0
 
