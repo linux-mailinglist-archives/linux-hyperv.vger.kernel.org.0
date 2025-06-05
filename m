@@ -1,186 +1,198 @@
-Return-Path: <linux-hyperv+bounces-5784-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5787-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA2FEACF220
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 16:37:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B54A9ACF30D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:30:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6F4E3B04F4
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 14:34:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E08973A9EB2
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 15:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C7B198A2F;
-	Thu,  5 Jun 2025 14:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6D731DF267;
+	Thu,  5 Jun 2025 15:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVVyD0JJ"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vZK5dBTT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D4EFIBzl";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LCkm+fOB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yZ+rBqhT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA35192B81;
-	Thu,  5 Jun 2025 14:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B0318A6B0
+	for <linux-hyperv@vger.kernel.org>; Thu,  5 Jun 2025 15:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749134068; cv=none; b=nOSCNfEK4JEbh9BUYXLO9P1iGPojZp+axffjczEjclDUPTr77SdlWnqvpjBR0RVucWnf3ivoAN88Clgs7e9+gDK1YsvJEVJ08Fb6yk8yH4fJ20rdgMVq7u8KPd9XsHlvbNinPslAw8Xri+99M3ldC4604y2maH6UdBgfPlCDsFU=
+	t=1749137427; cv=none; b=u9JlNkktwhGx8XB4KsGhrQ015q/meY8cMDJ4e2YNcR+XJduOp31pPnPFSvkimXtOHJ9gYQvlqh5UBUL/XAMYVbcY6qEl0Zgozlf2wEGLwom6vlwUWzqQX9PXhPYR/LyNQkzKw/QcJcUlCO1tBC9WYPxHqLymTyyPfwHddxl8VGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749134068; c=relaxed/simple;
-	bh=AquVpugqfTpDN5OnPZ7ing+SKPkefdN5dcXWX2z9viU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=blYlowCeJ7n40MbIxKKr45mT3CvK5jRkpdzrNwL3BVuLc5oXdamQDS0AyBSqrYg4xPHlX3F9DkpN6qv8NhbxGjQ/5OpadxnrU8FtsFTeyq225P+cH2lnSdmI5fvoNZuC1vzww2DrV2rQOwgE5SmyAvu7dk8LMCLEr1+rAjJPS9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVVyD0JJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976B9C4CEEB;
-	Thu,  5 Jun 2025 14:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749134068;
-	bh=AquVpugqfTpDN5OnPZ7ing+SKPkefdN5dcXWX2z9viU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rVVyD0JJQOk7yQ4SmWacrM763xpPFnyPSX+QaWQsQcQxqrzlsV6nkfA731b25PsMd
-	 f3PR/anqaHSaWKncDHgeRF5wz+PDgubPdnhc4GxZQOajacTzaEMFzjsvAxj/tfKsEr
-	 2cWVU6hhzwqFcOV40KpWiPt7F4+gu1Ep+SHgEnYqZ8Nzz3TvEAR87hBXohAyriuc4P
-	 Pd5X1v6S1HG7wvT1dzitAzWOgwftdZSYjqkvhSvug8Dns4n1nzaAdTyqxf2tXl+zBG
-	 6uH+hoyjSENyynbaQ6LrATfM06QnpeyK6Zid5OM6CqHPCm3zrAlDyRoIbH0xuEj9cO
-	 aXUfT+QRPGcBA==
-Message-ID: <19df7e9a-d5a9-42e2-a29e-3ab57311a685@kernel.org>
-Date: Thu, 5 Jun 2025 16:34:24 +0200
+	s=arc-20240116; t=1749137427; c=relaxed/simple;
+	bh=dLe2MGKxvS0qrn68ShqcrOnv3+zv/XaR0pv71ouYuPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C7lbQibE2Bf2PBElP0g+dUkpamxoLtQxOMzDol66uAnTfKMJHcrv5o+uUOZj9IWo9j1hJkigH17tKjg4WmVE36t0+iC1pDEIMod1eF09EtykHNh5pEPuicPt4rav0LNfBmCOrV2rswaHvWlBVIbAKR9ZiYc7251rRHo95lNMaAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vZK5dBTT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D4EFIBzl; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LCkm+fOB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yZ+rBqhT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4791033726;
+	Thu,  5 Jun 2025 15:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749137418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=OwxD+v6u8AtxBhJlMnDqsFaDzVaudFmsu93T5JIw3I8=;
+	b=vZK5dBTTUU8j8itCFuow9DaoNSXj2gbHrQkRKllcnusfeC1gITQSurexrtUo3W/zZqlYzS
+	zplRjTCLEMPGm+KpoJIHkj/5VIE1UV99UrvQHWtoGyV4PkiyNYBzdW6WtNn0sPTyfIZIOB
+	bgmEbPn9QWHtjYPEqu6fBJ/y/RQn4QA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749137418;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=OwxD+v6u8AtxBhJlMnDqsFaDzVaudFmsu93T5JIw3I8=;
+	b=D4EFIBzl1aXKBIK7nKfkYG7i4poZEwQk36TIqgWCHrCyluXZk+Vdep0CkxnB31jC717kTb
+	0uU6O5EqyOiNVKBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LCkm+fOB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=yZ+rBqhT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749137417; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=OwxD+v6u8AtxBhJlMnDqsFaDzVaudFmsu93T5JIw3I8=;
+	b=LCkm+fOB69X/vAOyg/87w+X/dQbGljPIJ3q956zo70syZ5H4ii2c9XEBJ203xptSVUXNNH
+	Tj6PzknWA9bD6cRQFL0nXqWDN8b8MiESNVmp5zseBwlOW6TBAtMqdCYnAHjMGPMVQJvvbd
+	gkBTYy2XOXK4nCL73H+f3EqqaBXmmdM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749137417;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=OwxD+v6u8AtxBhJlMnDqsFaDzVaudFmsu93T5JIw3I8=;
+	b=yZ+rBqhT0pTuaF/PFpir1qDqlrsyJsdSs9yMZE1C7Y1z8BAvONyoVDxBR2bsrWOpuDmVO6
+	9y9m0358D/NGOtCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D66941373E;
+	Thu,  5 Jun 2025 15:30:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Fj8JMwi4QWj3XwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 05 Jun 2025 15:30:16 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: mhklinux@outlook.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	drawat.floss@gmail.com,
+	javierm@redhat.com,
+	kraxel@redhat.com,
+	louis.chauvet@bootlin.com,
+	hamohammed.sa@gmail.com,
+	melissa.srw@gmail.com,
+	fvogt@suse.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [RFC PATCH 0/6] drm: Add vblank timers for devices without interrupts
+Date: Thu,  5 Jun 2025 17:24:38 +0200
+Message-ID: <20250605152637.98493-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] vmbus: retrieve connection-id from DeviceTree
-To: Hardik Garg <hargar@linux.microsoft.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- ssengar@microsoft.com
-Cc: romank@linux.microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@kernel.org, apais@microsoft.com
-References: <6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 4791033726
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[outlook.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,redhat.com,bootlin.com,suse.com];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kde.org:url,suse.com:url,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	TAGGED_RCPT(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL4xcm599wuy3aaiwfjdd1c6ky)];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com]
+X-Spam-Score: -1.51
+X-Spam-Level: 
 
-On 05/06/2025 08:09, Hardik Garg wrote:
-> The connection-id determines which hypervisor communication channel the
-> guest should use to talk to the VMBus host. This patch adds support to
-> read this value from the DeviceTree where it exists as a property under
-> the vmbus node with the compatible ID "microsoft,message-connection-id".
-> The property name follows the format <vendor>,<field> where
-> "vendor": "microsoft" and "field": "message-connection-id"
-> 
-> Reading from DeviceTree allows platforms to specify their preferred
-> communication channel, making it more flexible. If the property is
-> not found in the DeviceTree, use the default connection ID
-> (VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
-> based on protocol version).
-> 
-> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
-> ---
-> v3:
-> - Added documentation for the new property in DeviceTree bindings
+Compositors often depend on vblanks to limit their display-update
+rate. Without, they see vblank events ASAP, which creates high CPU
+overhead. This is especially a problem with virtual devices with fast
+framebuffer access.
 
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
+The series moves vkms' vblank timer to DRM and converts a number of
+drivers. The final patch rate-limits the output of DRM's framebuffer
+console to vblank intervals. It has been taken from [1]. It reduces
+the time for doing
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+  time find /usr/src/linux
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
+from 24s to 20s with the patched bochs driver. Apparently the system
+is spending less CPU overhead on display updates.
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
+This is an RFC patchset to see if the approach is feasible. It's been
+motivated by a recent discussion about hypervdrm [2] and other long-
+standing bug reports. [3][4]
 
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
+[1] https://patchwork.freedesktop.org/series/66442/
+[2] https://lore.kernel.org/dri-devel/20250523161522.409504-1-mhklinux@outlook.com/T/#ma2ebb52b60bfb0325879349377738fadcd7cb7ef
+[3] https://bugzilla.suse.com/show_bug.cgi?id=1189174
+[4] https://invent.kde.org/plasma/kwin/-/merge_requests/1229#note_284606
 
-> 
-> v2: 
-> https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com/
-> 
-> v1: 
-> https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com/
-> ---
->   .../devicetree/bindings/bus/microsoft,vmbus.yaml    |  8 ++++++++
->   drivers/hv/connection.c                             |  6 ++++--
->   drivers/hv/vmbus_drv.c                              | 13 +++++++++++++
->   3 files changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml 
-> b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> index 0bea4f5287ce..729ca6defec6 100644
-> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> @@ -17,6 +17,14 @@ properties:
->     compatible:
->       const: microsoft,vmbus
-> 
-> +  microsoft,message-connection-id:
-> +    description:
-> +      VMBus message connection ID to be used for communication between 
-> host and
+Thomas Zimmermann (6):
+  drm/vblank: Add vblank timer
+  drm/vkms: Use vblank timer
+  drm/simpledrm: Use vblank timer
+  drm/bochs: Use vblank timer
+  drm/hypervdrm: Use vblank timer
+  drm/fb-helper: Synchronize dirty worker with vblank
 
+ drivers/gpu/drm/Makefile                    |   3 +-
+ drivers/gpu/drm/drm_fb_helper.c             |  20 ++++
+ drivers/gpu/drm/drm_vblank_timer.c          | 100 ++++++++++++++++++++
+ drivers/gpu/drm/hyperv/hyperv_drm.h         |   4 +
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  70 ++++++++++++++
+ drivers/gpu/drm/sysfb/simpledrm.c           |  81 ++++++++++++++++
+ drivers/gpu/drm/tiny/bochs.c                |  68 +++++++++++++
+ drivers/gpu/drm/vkms/vkms_crtc.c            |  49 +++-------
+ drivers/gpu/drm/vkms/vkms_drv.h             |   6 +-
+ include/drm/drm_vblank_timer.h              |  26 +++++
+ 10 files changed, 386 insertions(+), 41 deletions(-)
+ create mode 100644 drivers/gpu/drm/drm_vblank_timer.c
+ create mode 100644 include/drm/drm_vblank_timer.h
 
-Malformed email patch. Don't use Microsoft tools to send emails... They
-don't work outside of Microsoft. :/
+-- 
+2.49.0
 
-Best regards,
-Krzysztof
 
