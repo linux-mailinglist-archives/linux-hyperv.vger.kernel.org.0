@@ -1,82 +1,120 @@
-Return-Path: <linux-hyperv+bounces-5795-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5796-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2A9FACF589
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 19:39:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C60DCACFD36
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Jun 2025 09:05:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0ED8B1887A11
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Jun 2025 17:39:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D786189556C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Jun 2025 07:05:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2EF3276049;
-	Thu,  5 Jun 2025 17:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F22727C857;
+	Fri,  6 Jun 2025 07:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="D7xP9PoJ"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mso8S6Go";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LxrEBdxm";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mso8S6Go";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LxrEBdxm"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2064.outbound.protection.outlook.com [40.92.20.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF008149C7B;
-	Thu,  5 Jun 2025 17:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749145142; cv=fail; b=l22aKskB3VwTVTiP25mEYEPZlrwgK8BhjXDtUu/DiCfK4jk3983aEGXdh5w+xrc6sjuyB1oRcC/4NezYu7LgyvVgdM79L56kBZ4zBz/o3iCUiitn8UII5uPIibNM6GmDKdEC9FpaH5k/3C7rlYz8msfyM26AxmcEkP4rElWckms=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749145142; c=relaxed/simple;
-	bh=+dmW7qfaRT9003apR1Q0yKrxAps9XZ6ku0K4R6f99mU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZgSS+HSGq7ot4QQevNAWMzVU0UBlfpCod6wg9QbBcvcx6eMtzRi2yp8L2AvKffywktXGOBEqbvEDF4517uid21CVsWG3yQ13QvGezut+uLfNTmpiloJwqxFp6Jh0+7v2lp8ZkOnZZIEScRf+CZdWi6GxxySdwbxlGQ438Sm+Zfw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=D7xP9PoJ; arc=fail smtp.client-ip=40.92.20.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dlrvd+KyINaFZyiW3+Zi/t/MRTN1iQXpkfEZNzzWS6Cp6vLfm9OymH2aMlW3YEeQ+RDuNz9s2fjivndIBmtNCjRlnTEPBTMjFvRJryF4/KCVvUhHqMck6nsb+MzuZjhCjJgP0fZA6ixWuwrPdf9jUnTTyxMmP8akgAcJAoLnAe/nW3n930A4FgzY/qCeuX9M8CFKBwu2JH61lcsSk3gZHaHNogI8ABwWckTx35dOSLL7TKy3xC6obb89ZZSSaJHcAOKZmMX+3/SXAqLU7eBDpmSNjohZhIeqYfU7ed5tB5bIeDVIWcAWTVc/vkAQGYUQ+T3trLcoteTIYo7kXm4+Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+dmW7qfaRT9003apR1Q0yKrxAps9XZ6ku0K4R6f99mU=;
- b=Q2kAPP3XNPaZNsJ2Mfw6hrJ3KDthWi9SNhP0qx2VgMY/oMD+c0rQrbXzAS4LEiiC0cFPemOtJgdlB/6+fnsJIsOOx8tHGQk7izqc6GQG2iPebC2y0YnTrCp49L0Dz94v+vOetwjPlF1FRot4D/aM5yYYZoGjU/8pWreY4tr0LZmE1olKd8HKqZndF3EqpzeJTseCj6PbuYRj5Whi4vJLxr20+8S213I59sJqnkITGcWkP/QlpxTBlgWLHlBRZrJZM+vcxtQ7GYk5v2giq5vF7nFfHz1+A0w+zMtwVsN5HF9F62XQcIHkxbopLbAmTG2CtPfohHqRJwbjEqVjWdADZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+dmW7qfaRT9003apR1Q0yKrxAps9XZ6ku0K4R6f99mU=;
- b=D7xP9PoJNDckhPwfpj/n2iy+kYqch6/EhzgYOpiH8UOPxI7XwSMkzhdOw+l/jqhxOLiP/LrzHxdCo9dH1zwuf+qY7PVQz80H5uwxdWf/Cnwt/zMe/jMY4amB5wPpc3XfPzRMjaHxTzgp8K4GYx+UFnaWc71WPp+d676nEAG8EvW5Gchd9KYeK4KQRdInotti/kkrg0pdT+9wS/4WMkKFlQY9b2fPBk0TRwn7lQMaC6TssJMOL2DX1JGuqS5KNJwWEvPrds+mVzZyBUGXVphhzB8P6FYAr4kR4DO5wmxzLXWgoVv+wEHf4jMFPg/uS1uJEuBFgWLtwZl5uHiOSGByyg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MN6PR02MB10728.namprd02.prod.outlook.com (2603:10b6:208:4f8::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.17; Thu, 5 Jun
- 2025 17:38:57 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8813.016; Thu, 5 Jun 2025
- 17:38:57 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter
-	<simona.vetter@ffwll.ch>
-CC: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
-	"deller@gmx.de" <deller@gmx.de>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "weh@microsoft.com" <weh@microsoft.com>,
-	"hch@lst.de" <hch@lst.de>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-fbdev@vger.kernel.org"
-	<linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: RE: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785BB1BF58
+	for <linux-hyperv@vger.kernel.org>; Fri,  6 Jun 2025 07:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749193510; cv=none; b=ufDnts10Iuue/b1RL9Xwiq/Dl5GMQ0vGMWJ0xR7agXNl2ROA72wAq1Fs/m4flWCkyHfqO4sRLF7VIHMfOI+iXc+tjr4zsT78yZCB9l5RYKfzwRde6ZLUORQPiitPJoeuWeqrWVKAwCIGe8Jz9tqR3zhmFbOuYfR2UEYz4769ogI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749193510; c=relaxed/simple;
+	bh=tC//mIrfAJjU7WfUsuOw9mvVsuwgq7xskNKiRRyR8bA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PcFYcMzMZLlUCmehi1CVVZiQmhpKsvVMcz5QhZ+2KFdNNjmBE6U3DTJDZpqjCnXRPeidDAwdIcf8bFrrxbGOKvQsuWdI1ZRrdrF7pF/zvXaAwLJC5qDUJAg4iAnBUmJLmwmqfGVQ+IMc8LWKzNbQnFDyV09xbQgEgN0WxihpNC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mso8S6Go; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LxrEBdxm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mso8S6Go; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LxrEBdxm; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 783AD33698;
+	Fri,  6 Jun 2025 07:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749193505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=mso8S6Gok2dLZQNjeDNICwcHsC3OUwLXGktjoEbiTOTMMsspYjQkqrJKoA0N5Tpmv/P3Op
+	JySGQIyDsI3kq32H2jfxO1WekPZPExkTY+4eEV78qXN7+9smu1dDBSnn+C67v2Sa5EG+pm
+	QEF4Xh5D9EvYcs5liWaPQGi5HAeSGRg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749193505;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=LxrEBdxm55dQcTQCMKtS/h7h44wFx3HhWJoLzUqd6GtWwYuelIfi/qgsitS5hjye5jchSk
+	l/fgatD5LeIVyHBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mso8S6Go;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=LxrEBdxm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749193505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=mso8S6Gok2dLZQNjeDNICwcHsC3OUwLXGktjoEbiTOTMMsspYjQkqrJKoA0N5Tpmv/P3Op
+	JySGQIyDsI3kq32H2jfxO1WekPZPExkTY+4eEV78qXN7+9smu1dDBSnn+C67v2Sa5EG+pm
+	QEF4Xh5D9EvYcs5liWaPQGi5HAeSGRg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749193505;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=LxrEBdxm55dQcTQCMKtS/h7h44wFx3HhWJoLzUqd6GtWwYuelIfi/qgsitS5hjye5jchSk
+	l/fgatD5LeIVyHBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0DF481336F;
+	Fri,  6 Jun 2025 07:05:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zKnSASGTQmhoaAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 06 Jun 2025 07:05:05 +0000
+Message-ID: <575e098d-ef9f-4431-bef9-bfc8070a0dfd@suse.de>
+Date: Fri, 6 Jun 2025 09:05:04 +0200
+Precedence: bulk
+X-Mailing-List: linux-hyperv@vger.kernel.org
+List-Id: <linux-hyperv.vger.kernel.org>
+List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
  memory framebuffers
-Thread-Topic: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
- memory framebuffers
-Thread-Index:
- AQHby/4dA8oNLnhKakm3U+ZOuvHFDrPvrtEAgAEJQeCAAFCFAIAAuDlwgAD4GoCAAG28AIAAbZyQgAEy0YCAAB38UA==
-Date: Thu, 5 Jun 2025 17:38:57 +0000
-Message-ID:
- <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+To: Michael Kelley <mhklinux@outlook.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, "deller@gmx.de" <deller@gmx.de>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
 References: <20250523161522.409504-1-mhklinux@outlook.com>
  <20250523161522.409504-4-mhklinux@outlook.com>
  <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
@@ -87,154 +125,121 @@ References: <20250523161522.409504-1-mhklinux@outlook.com>
  <aEBcCjMWZJgbsRas@phenom.ffwll.local>
  <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
  <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
-In-Reply-To: <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
-Accept-Language: en-US
+ <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN6PR02MB10728:EE_
-x-ms-office365-filtering-correlation-id: 7570987c-c0e0-4b12-73bd-08dda457d99e
-x-ms-exchange-slblob-mailprops:
- Z68gl6A5j2+3oou7nEu68O8SUMcwyYgVqvScVLTWrmPvIdxFwEibVrZXrqENYM4vQ8JkTeBLmVTAgnbphmiabHpYGEhC+BPYU5Ep1wxcy7910Aw7qZyUA0Jjdj18gQR2cIADeG/sWB3rmBOvLHTo16R/ILMqogOjuiGh0LZHg70LtmP6boW22nVh9PXma6Sou1B77F4lp0IBRdp0RVu3SI5FSoYUAlEv567XlunI9lxMLbwGBkQXWzhTH+H1GPGAQKcWsutQhRlphoaHWu0gtIx7r3jwNQSY+D5tLnxiRicZ75l+b6M1pM6JiGzdq8zul6eRrWdRqe8Mqksumv1rHKauAXL6bbw1p0nArafpA/AXfarBaWjGvXqohl9AitGaPomtnY8S3ThJKs1gpK2Dy56Mvby3bGKM80khKtDGULqynea4VW6KOTdbbsABuDuSc6w+0o0ZkAK2SsarP7Pav4evjeVIVXeWXc2l/6EDtnf/rG8xcg2jxIqqYY6CwzK2GOMK+3x6ctQcDLu2Z3az/bfOUZ9YGAAeVrJp8B1GxMajC4VEqDYoK5Os8HIR+BfllWZkg1ZMYTJG4bV6vD5k8AumWlUBfI2nQKuSjxXbipMVTFhACpuzkCQbnu/W2TwA3TOEcIOX0wkwN47hFM3PWcBGrE8xnk/qnRq5c37CsFte+otyIeEkyuYaxPktwIwMAOTWJgJG/n9FglG7DZqYXq5rKOujMLMdRIhVQpU3eLlrwJr2G3wUiR5gH0y4uaPa7/mAS8ui5TGvNqEmk0u4re0gtueD5Em2jpwkXF23PGu0GN5T/ZcPXrTPqV3HSSlJ
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|41001999006|19110799006|15080799009|8060799009|8062599006|1602099012|102099032|440099028|4302099013|3412199025|10035399007;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?AqEFkvYIF0wZhks6f3g9MRLtem6IpzkaKlJGjFwWeJMk34ccVC8ACBlgd58A?=
- =?us-ascii?Q?DmYxV5yVTBkiYVRuR79VrCY0//OAyGXHlxco+dYk+tS9jybz5iLPjIUAtrnu?=
- =?us-ascii?Q?tl0ozYgxMsQD14vBc3y/B6kTBafrOs7ZOIWBsFJ1HmRqKDh5zcNAZDwuY+Mf?=
- =?us-ascii?Q?2iRVw+plPrmUaW9m6qvOXX73/OC717uldTK4vgs3VtjIwVpnY8n7E6MlUdEz?=
- =?us-ascii?Q?Fp4CRWzTTiYykL3dFD0UK+jEpzOW9dCTj1lc/ChyWijM469JG2o0O4CNYM48?=
- =?us-ascii?Q?JLu9RG6p7bbsMrHGVADBZtirclaUU6gxMFkdg1PAlgzXZ45bDIDl5UV+9n/p?=
- =?us-ascii?Q?yktb8oMFdX98hhxOBKBADgAQOXab8SWldUL4ldXdFnKeUV3NZpzIrENFXNNJ?=
- =?us-ascii?Q?Rfn6dI1hmOlmT25h7gVgQyCw3hvHzwBPBTwNtU9LypVPWMauziITibQjaE4q?=
- =?us-ascii?Q?i5K/qaLpMVOWYjok3WL6Mc01JxVRqNQtGcO0KJDoacLBm+n/XKK2OYqpElcM?=
- =?us-ascii?Q?RrN7ZOGj7IT40XUqKx8OC2srWk7QAmvTW4V3jU7KzQwMdO4cRDwABrYI+t4B?=
- =?us-ascii?Q?CjqCi+hflLz9e6/VhInioXhN0FlG3l79Ju8UhrmncPlZ/FMgguTkl7i6u1jD?=
- =?us-ascii?Q?H36L5wpznjnYmpqJUXvvdSnA86TyA39zMEhsY+r2qfRDndPPzYb+b96QB0IW?=
- =?us-ascii?Q?MyMsternfi/EYvzTws+8aG/jY1bvIR8GWylMMV0+oc2YUuOkhi3vTfSF15+b?=
- =?us-ascii?Q?FvN153xxGkcFi3R88VMvOhKS51id0jK3jyoG6+3w5G7aveoMrd7IVMhpPgoK?=
- =?us-ascii?Q?WslLxQx/ut8W07JxZmWyDVPRd/QDZeT1PTvNRkwkBd9JPwjEt+BicEKdakO4?=
- =?us-ascii?Q?0mzlQNEPEbe+TP+PENC4KBYffS2HFl1Bplj+C8egJfYTOBs9FqAnRKjQlYfR?=
- =?us-ascii?Q?+HoJ0l/Jslb95aogypuE1UnYJxHzMCs2obbSJl0P6532l0DENfQSuFLwKnNu?=
- =?us-ascii?Q?iQQgKVWgQmq7qmFUltF3kpEcg3jyuye/moD2lyb5Mu+sSLoQ3H4doavylOs2?=
- =?us-ascii?Q?hUPsbjO3I5NVkKnpCn/hYJc9nkDo5qLRMtsp09WbdzWOs+zR+NtzeI0aa485?=
- =?us-ascii?Q?E37GYyjIiuNQVTscPzYnHP/5zEfXswkNauEaXdd3rhoDEnZCO0NtVsYeM4lI?=
- =?us-ascii?Q?Uzo+Kf67CyvSvKAWKdv7/HPFl5XFjkye+TFPNHTUBC7Ew/PgNPtAPthnX0qB?=
- =?us-ascii?Q?Y5Rm6XrkkMWnuN1B732feeXuHWjOjMR9DoVGJbFGTw=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?y9gRyck5KMv3PnHIc2w63LVrEVzTFlrKN10Ydy1Spdu+D5SWpdTzf7f6NLb5?=
- =?us-ascii?Q?NKVG80EJ0RLBvucJHf5Y0zMNEuxrf5Cf0Md7b9udGKfDRdM9OsNDA7XlGolk?=
- =?us-ascii?Q?Lfv6ABcIxZlEbeil/oHW/HSk6zo01ma5OwPFq9kO8kW3iqnk7h2e3rexhiEy?=
- =?us-ascii?Q?bLNNlrj6hSgcMU/x3PtAw4rdrNt8flAuPFyhtJbdIyzNuPOf2r/NFJ0pqQi7?=
- =?us-ascii?Q?gZv0qm6b71UAWPqas/ZJF+99s7CyWQ6MUbWQ+91LiEhpf3Ayln37D4k0FVgm?=
- =?us-ascii?Q?dgUGlFImaTMznJAawpD54FkVi6xQ2h2kFt/1s2hZlVstiShyQBX4Q3OdGLSk?=
- =?us-ascii?Q?mBqw692EeBkngegqdYaqMup55dJo1RNuuyA5gJrLCvIHtVlVwp4VhslJVHmU?=
- =?us-ascii?Q?/5vN1sWW8A7BYyrGF/SUdtBQJGNerW/u6Y/nHjaUAONhvsb0b5OGDN7c3n2o?=
- =?us-ascii?Q?5E+w9S9aUNhPjS9tfpDw2/M045hy/QVI1yFjP89K+NVRS6f2GgImghJDnYT6?=
- =?us-ascii?Q?qChn7aV4qSO8dnggYcuRqHWGKOWBG+v3JCemlmvJJxaz0dMt1HVPFB/8XeBB?=
- =?us-ascii?Q?OPTaL7CduupEzBe5W2fo1qiuLoaVre3jMlvALsxXlNcvPuXhLu92oMfe7/Fj?=
- =?us-ascii?Q?JC3fpWTpqX+AEcRdtlYD7/cwaYKsTAYKFgW0iC8KpGEk01+WHHAh+TK7NHRQ?=
- =?us-ascii?Q?GsR875NaWsHdEJbCE7EKyl3rN+WAcLVKqLgHlQtynBZH93fK4vPeujyv7oqV?=
- =?us-ascii?Q?usEDWOjadW1iVQrxWjAKKxuGqrlOoJQOrQRZ1yauiZ6FCc8AVhragYpz+t5G?=
- =?us-ascii?Q?b+Ewj0aSjBpZ/YSUlTvzZXX6Rr4RupTBmX46F7TGyaGOsRmnOBOpkPy2PX3O?=
- =?us-ascii?Q?tCfcgzzBhbi/5chVSUbAJ2COFyBmqouzyjdbRxbUHt61aBY3n/5LQncGw3Rn?=
- =?us-ascii?Q?hI5+cy3ZtKKXRU9tSSoWebwlixidwNNQk96X2LALEvvJLKJHNT/VlB0iYfrM?=
- =?us-ascii?Q?7BqLUwKBbBVR9Fi3BkFyEnM47RvOcoW08B34jzc/HIwDGLaHb7L5zbc6KVe5?=
- =?us-ascii?Q?fdP/Z2ez6QQVol1kn4Ed25ZQniK8oChGgqHeAWqPNeOtn/pJtiggs+xFDYz4?=
- =?us-ascii?Q?ZlTG1Up6fVDp67kPjIglfb6sVY0oymlkscFtVd+tk4ntg8Q46svZpJuDcXrG?=
- =?us-ascii?Q?x8E4wtHLL6G/TIsSMxXYBALyJ73foPfnYZosoHf+NA0Ddc86D4dBHFLr8oA?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Precedence: bulk
-X-Mailing-List: linux-hyperv@vger.kernel.org
-List-Id: <linux-hyperv.vger.kernel.org>
-List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7570987c-c0e0-4b12-73bd-08dda457d99e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2025 17:38:57.6155
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR02MB10728
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 783AD33698
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-6.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[outlook.com,ffwll.ch];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
+	FREEMAIL_CC(0.00)[redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org,lst.de,lists.freedesktop.org,vger.kernel.org,kvack.org];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -6.51
+X-Spam-Level: 
 
-From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, June 5, 2025 =
-8:36 AM
->=20
-> Hi
->=20
-> Am 04.06.25 um 23:43 schrieb Michael Kelley:
-> [...]
-> > Nonetheless, there's an underlying issue. A main cause of the differenc=
-e
-> > is the number of messages to Hyper-V to update dirty regions. With
-> > hyperv_fb using deferred I/O, the messages are limited 20/second, so
-> > the total number of messages to Hyper-V is about 480. But hyperv_drm
-> > appears to send 3 messages to Hyper-V for each line of output, or a tot=
-al of
-> > about 3,000,000 messages (~90K/second). That's a lot of additional load
-> > on the Hyper-V host, and it adds the 10 seconds of additional elapsed
-> > time seen in the guest. There also this ugly output in dmesg because th=
-e
-> > ring buffer for sending messages to the Hyper-V host gets full -- Hyper=
--V
-> > doesn't always keep up, at least not on my local laptop where I'm
-> > testing:
-> >
-> > [12574.327615] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12574.327684] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12574.327760] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12574.327841] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12597.016128] hyperv_sendpacket: 6211 callbacks suppressed
-> > [12597.016133] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12597.016172] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12597.016220] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> > [12597.016267] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
-> *ERROR* Unable to send packet via vmbus; error -11
-> >
-> > hyperv_drm could be fixed to not output the ugly messages, but there's
-> > still the underlying issue of overrunning the ring buffer, and excessiv=
-ely
-> > hammering on the host. If we could get hyperv_drm doing deferred I/O, I
-> > would feel much better about going full-on with deprecating hyperv_fb.
->=20
-> I try to address the problem with the patches at
->=20
-> https://lore.kernel.org/dri-devel/20250605152637.98493-1-tzimmermann@suse=
-.de/
->=20
-> Testing and feedback is much appreciated.
->=20
+Hi
 
-Nice!
+Am 05.06.25 um 19:38 schrieb Michael Kelley:
+[...]
+>> I try to address the problem with the patches at
+>>
+>> https://lore.kernel.org/dri-devel/20250605152637.98493-1-tzimmermann@suse.de/
+>>
+>> Testing and feedback is much appreciated.
+>>
+> Nice!
+>
+> I ran the same test case with your patches, and everything works well. The
+> hyperv_drm numbers are now pretty much the same as the hyperv_fb
+> numbers for both elapsed time and system CPU time -- within a few percent.
+> For hyperv_drm, there's no longer a gap in the elapsed time and system
+> CPU time. No errors due to the guest-to-host ring buffer being full. Total
+> messages to Hyper-V for hyperv_drm are now a few hundred instead of 3M.
 
-I ran the same test case with your patches, and everything works well. The
-hyperv_drm numbers are now pretty much the same as the hyperv_fb
-numbers for both elapsed time and system CPU time -- within a few percent.
-For hyperv_drm, there's no longer a gap in the elapsed time and system
-CPU time. No errors due to the guest-to-host ring buffer being full. Total
-messages to Hyper-V for hyperv_drm are now a few hundred instead of 3M.
-The hyperv_drm message count is still a little higher than for hyperv_fb,
-presumably because the simulated vblank rate in hyperv_drm is higher than
-the 20 Hz rate used by hyperv_fb deferred I/O. But the overall numbers are
-small enough that the difference is in the noise. Question: what is the def=
-ault
-value for the simulated vblank rate? Just curious ...
+Sounds great. Credit also goes to the vkms devs, which already have the 
+software vblank in their driver.
 
-Michael
+This might need better support for cases where display updates take 
+exceptionally long, but I can see this being merged as a DRM feature.
+
+> The hyperv_drm message count is still a little higher than for hyperv_fb,
+> presumably because the simulated vblank rate in hyperv_drm is higher than
+> the 20 Hz rate used by hyperv_fb deferred I/O. But the overall numbers are
+> small enough that the difference is in the noise. Question: what is the default
+> value for the simulated vblank rate? Just curious ...
+
+As with a hardware interrupt, the vblank rate comes from the programmed 
+display mode, so most likely 60 Hz. The difference in the update 
+frequency could explain the remaining differences to hyperv_fb.
+
+Best regards
+Thomas
+
+>
+> Michael
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
 
