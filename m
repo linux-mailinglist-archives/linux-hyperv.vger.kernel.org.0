@@ -1,114 +1,402 @@
-Return-Path: <linux-hyperv+bounces-5823-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5824-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEB36AD3D8E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 17:40:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1634AD3D87
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 17:39:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13A423A9739
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 15:33:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5394416233A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 15:36:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2042D1DF754;
-	Tue, 10 Jun 2025 15:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16844189F39;
+	Tue, 10 Jun 2025 15:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r22VQRuR"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KUrmNtZL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="y3lj1sqs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VxUT/P0W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eYnjU2tj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24C517C21E;
-	Tue, 10 Jun 2025 15:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81C4231856
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Jun 2025 15:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569638; cv=none; b=LS2N1p61em3hgsb5dwab1iG7JdS0y4i7GccsUdQPT7fFP+JGlWfqe1wVnHxli4dGgxVn0TnQ7lEp5FXNl2pBpi7w9Sbv0Df1Skmsd0dIL9qRNPIpMSj83UG9zrJZNY7kXPVbfAFj3OxG4PUODUp3lqC8Aef+aKQPHIKfv6W10vU=
+	t=1749569797; cv=none; b=k7CXGPmJK+AV82V3lbAGKgi1K8NPzW8MdHhRI5qNXHAY1Ry30aXv0OB+ZEjkNgKVLf6lh4/F62+oa4cA5tvlyLGxU880PwgaqjStl4inQIt26bygyv6h0lzJlA/Ugy4Kv91AhSPuIGjaWa52/xXT5zoJaFrQ1Bp5RoyMULDaKy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569638; c=relaxed/simple;
-	bh=Z0tZqVZm0c0pdMekdv7cs5FM5cbYEF/ngEMiVAIKcok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rOhLwU38LY6q5YBW2zoghz1ZHql9jQ2Nwr9lvqzg+oyomHj9b1z7UbrGasCpfTy5w7FiyrDQ4EFI62xrM4IuwerUcEXVECSgsrM42AzVuxmXO9E5xiEVGuGO8PDgi6E3VHp/eJ6Hf3RV7bN0umyNGzhbhJ//QxZEUlE0TsuNzbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r22VQRuR; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 184C72113A7A;
-	Tue, 10 Jun 2025 08:33:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 184C72113A7A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749569636;
-	bh=EXF5QOvj3gLvyZ3xIYnh29AFDo83SVY+Soxt4pZHHNQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r22VQRuRofvzYBhMQxeZbt4tOnDGGJJjNls5cYs0WMTmVuha6Njl+ivrnjfGOidqb
-	 LglGuAydHfvm88OFygB5nrlVYtVzDJkSCFCF296b15Sn2o7weVqv/Xn+ZA/v84gxmN
-	 f+YjrFtQuscToufIVhPFlUSoXrlZuqR8128DNlrY=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@kernel.org
-Cc: arnd@arndb.de,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhklinux@outlook.com,
-	nunodasneves@linux.microsoft.com,
-	romank@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	wei.liu@kernel.org
-Subject: [PATCH] hv: add CONFIG_EFI dependency
-Date: Tue, 10 Jun 2025 08:33:54 -0700
-Message-ID: <20250610153354.2780-1-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250610091810.2638058-1-arnd@kernel.org>
-References: <20250610091810.2638058-1-arnd@kernel.org>
+	s=arc-20240116; t=1749569797; c=relaxed/simple;
+	bh=nXx95NlhJaiHLux/OiIqSKKVLTxOrW1AVIPGp3GbvHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lhUdK3qdG2XgInzTs4t6FXS256Oxdab2jYAu5mAUGpO2he8HmvUClpbRd4P/ceHyS3oMwnV6u3IyMrshvRNdJ4pBn41ydt1ZC9ywLGIWv4G77T6gxXvScIu52igmAKlJjOXS7Fl4UO9XAJkDCTZGSqMmWQMokeI+LjEVkuvxjvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KUrmNtZL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=y3lj1sqs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VxUT/P0W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eYnjU2tj; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D22B6210F3;
+	Tue, 10 Jun 2025 15:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749569793; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hQeVmqzuDx8T11tzAp4//+RKapBPir1cG8RoUEQn4Q4=;
+	b=KUrmNtZLWBz9Za3YMByEyT2yKdEb9kOzUoCPqNlZS11CoNFloUaYwZ8ayMx6SnWQ+yGCSV
+	iHU5YQMTf1em+qCn5bpI3yUEggH4jSg0y0/r9tXo6Cb8vq8cGTuZCcBpKjakdgcxjy1dcR
+	uuzfEYf2AAupjg8TrHNz1V/0/Qw0oO8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749569793;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hQeVmqzuDx8T11tzAp4//+RKapBPir1cG8RoUEQn4Q4=;
+	b=y3lj1sqsDqRkNEtsKC41JvhuK4aDZaxw3cvpfJjZ75AgYQ+49Sz9QCO7Rj8FaSqpR6mZhn
+	GfgZMD/3cJQXxXDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="VxUT/P0W";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eYnjU2tj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749569792; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hQeVmqzuDx8T11tzAp4//+RKapBPir1cG8RoUEQn4Q4=;
+	b=VxUT/P0W1ZH44FMzQtyjwCKM0g6PG+Uljd5Y49f43N2YhhgrCp5dkxbg5RPEcHP93t17wx
+	PAqEx+6ZDLcQhoL8uH7YF6prGx5VG1xWmdB2yHZAyd/Jp+PmtNkVhmUSphybwTAftemShu
+	Inq55CxI0s+S4xpDB/3yS1v2jQvNJZ8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749569792;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hQeVmqzuDx8T11tzAp4//+RKapBPir1cG8RoUEQn4Q4=;
+	b=eYnjU2tjuUELLGYgMcsFCoSKutSJLdjYpvi33BPxaDPbv7sw6ZbXeH8a5B4FEyFqmG3kl+
+	TPfL0ubHD/8KDTCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 685CB13964;
+	Tue, 10 Jun 2025 15:36:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id M7QfGABRSGihUQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 10 Jun 2025 15:36:32 +0000
+Message-ID: <48f5a294-ab53-4cad-bb92-e1a90ee41fd0@suse.de>
+Date: Tue, 10 Jun 2025 17:36:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] drm/vblank: Add vblank timer
+To: Louis Chauvet <louis.chauvet@bootlin.com>, mhklinux@outlook.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
+ simona@ffwll.ch, drawat.floss@gmail.com, javierm@redhat.com,
+ kraxel@redhat.com, hamohammed.sa@gmail.com, melissa.srw@gmail.com,
+ fvogt@suse.com
+Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20250605152637.98493-1-tzimmermann@suse.de>
+ <20250605152637.98493-2-tzimmermann@suse.de>
+ <b6b43b7f-f3bd-442a-9174-97d3ada0f695@bootlin.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <b6b43b7f-f3bd-442a-9174-97d3ada0f695@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[bootlin.com,outlook.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,redhat.com,suse.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: D22B6210F3
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.01
 
-> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
+Hi
+
+Am 06.06.25 um 10:43 schrieb Louis Chauvet:
 >
-> ld.lld-21: error: undefined symbol: screen_info
-> >>> referenced by sysfb.c
-> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
-> >>> referenced by sysfb.c
 >
-> The problem is that sysfb works on the global 'screen_info' structure, which
-> is provided by the firmware interface, either the generic EFI code or the
-> x86 BIOS startup.
+> Le 05/06/2025 à 17:24, Thomas Zimmermann a écrit :
+>> The vblank timer simulates a vblank interrupt for hardware without
+>> support. Rate-limits the display update frequency.
+>>
+>> DRM drivers for hardware without vblank support apply display updates
+>> ASAP. A vblank event informs DRM clients of the completed update.
+>>
+>> Userspace compositors immediately schedule the next update, which
+>> creates significant load on virtualization outputs. Display updates
+>> are usually fast on virtualization outputs, as their framebuffers are
+>> in regular system memory and there's no hardware vblank interrupt to
+>> throttle the update rate.
+>>
+>> The vblank timer is a HR timer that signals the vblank in software.
+>> It limits the update frequency of a DRM driver similar to a hardware
+>> vblank interrupt. The timer is not synchronized to the actual vblank
+>> interval of the display.
+>>
+>> The code has been adopted from vkms, which added the funtionality
+>> in commit 3a0709928b17 ("drm/vkms: Add vblank events simulated by
+>> hrtimers").
+>>
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 >
-> Assuming that HV always boots Linux using UEFI, the dependency also makes
-> logical sense, since otherwise it is impossible to boot a guest.
+> Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+
+Thanks for looking through the series. I'll add the tags when I prepare 
+the next iteration, but the interfaces will change quite a bit. You may 
+want to take another look at the series then.
+
+Best regards
+Thomas
+
+>
+>> ---
+>>   drivers/gpu/drm/Makefile           |   3 +-
+>>   drivers/gpu/drm/drm_vblank_timer.c | 100 +++++++++++++++++++++++++++++
+>>   include/drm/drm_vblank_timer.h     |  26 ++++++++
+>>   3 files changed, 128 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/gpu/drm/drm_vblank_timer.c
+>>   create mode 100644 include/drm/drm_vblank_timer.h
+>>
+>> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+>> index b5d5561bbe5f..6722e2d1aa7e 100644
+>> --- a/drivers/gpu/drm/Makefile
+>> +++ b/drivers/gpu/drm/Makefile
+>> @@ -146,7 +146,8 @@ drm_kms_helper-y := \
+>>       drm_plane_helper.o \
+>>       drm_probe_helper.o \
+>>       drm_self_refresh_helper.o \
+>> -    drm_simple_kms_helper.o
+>> +    drm_simple_kms_helper.o \
+>> +    drm_vblank_timer.o
+>>   drm_kms_helper-$(CONFIG_DRM_PANEL_BRIDGE) += bridge/panel.o
+>>   drm_kms_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fb_helper.o
+>>   obj-$(CONFIG_DRM_KMS_HELPER) += drm_kms_helper.o
+>> diff --git a/drivers/gpu/drm/drm_vblank_timer.c 
+>> b/drivers/gpu/drm/drm_vblank_timer.c
+>> new file mode 100644
+>> index 000000000000..be46d3135c8e
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/drm_vblank_timer.c
+>> @@ -0,0 +1,100 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +
+>> +#include <linux/hrtimer.h>
+>> +
+>> +#include <drm/drm_crtc.h>
+>> +#include <drm/drm_managed.h>
+>> +#include <drm/drm_print.h>
+>> +#include <drm/drm_vblank.h>
+>> +#include <drm/drm_vblank_timer.h>
+>> +
+>> +static enum hrtimer_restart drm_vblank_timer_function(struct hrtimer 
+>> *timer)
+>> +{
+>> +    struct drm_vblank_timer *vtimer = container_of(timer, struct 
+>> drm_vblank_timer, timer);
+>> +    struct drm_crtc *crtc = vtimer->crtc;
+>> +    struct drm_device *dev = crtc->dev;
+>> +    u64 ret_overrun;
+>> +    bool succ;
+>> +
+>> +    ret_overrun = hrtimer_forward_now(&vtimer->timer, 
+>> vtimer->period_ns);
+>> +    if (ret_overrun != 1)
+>> +        drm_warn(dev, "vblank timer overrun\n");
+>> +
+>> +    if (vtimer->crtc_handle_vblank)
+>> +        succ = vtimer->crtc_handle_vblank(crtc);
+>> +    else
+>> +        succ = drm_crtc_handle_vblank(crtc);
+>> +    if (!succ)
+>> +        return HRTIMER_NORESTART;
+>> +
+>> +    return HRTIMER_RESTART;
+>> +}
+>> +
+>> +static void drmm_vblank_timer_release(struct drm_device *dev, void 
+>> *res)
+>> +{
+>> +    struct drm_vblank_timer *vtimer = res;
+>> +
+>> +    hrtimer_cancel(&vtimer->timer);
+>> +}
+>> +
+>> +int drmm_vblank_timer_init(struct drm_vblank_timer *vtimer, struct 
+>> drm_crtc *crtc,
+>> +               bool (*crtc_handle_vblank)(struct drm_crtc *crtc))
+>> +{
+>> +    struct hrtimer *timer = &vtimer->timer;
+>> +
+>> +    vtimer->crtc = crtc;
+>> +    vtimer->crtc_handle_vblank = crtc_handle_vblank;
+>> +
+>> +    hrtimer_setup(timer, drm_vblank_timer_function, CLOCK_MONOTONIC, 
+>> HRTIMER_MODE_REL);
+>> +
+>> +    return drmm_add_action_or_reset(crtc->dev, 
+>> drmm_vblank_timer_release, vtimer);
+>> +}
+>> +EXPORT_SYMBOL(drmm_vblank_timer_init);
+>> +
+>> +void drm_vblank_timer_start(struct drm_vblank_timer *vtimer)
+>> +{
+>> +    struct drm_crtc *crtc = vtimer->crtc;
+>> +    struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
+>> +
+>> +    drm_calc_timestamping_constants(crtc, &crtc->mode);
+>> +
+>> +    vtimer->period_ns = ktime_set(0, vblank->framedur_ns);
+>> +    hrtimer_start(&vtimer->timer, vtimer->period_ns, HRTIMER_MODE_REL);
+>> +}
+>> +EXPORT_SYMBOL(drm_vblank_timer_start);
+>> +
+>> +void drm_vblank_timer_cancel(struct drm_vblank_timer *vtimer)
+>> +{
+>> +    hrtimer_cancel(&vtimer->timer);
+>> +}
+>> +EXPORT_SYMBOL(drm_vblank_timer_cancel);
+>> +
+>> +bool drm_vblank_timer_get_vblank_timestamp(struct drm_vblank_timer 
+>> *vtimer,
+>> +                       int *max_error, ktime_t *vblank_time,
+>> +                       bool in_vblank_irq)
+>> +{
+>> +    struct drm_crtc *crtc = vtimer->crtc;
+>> +    struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
+>> +
+>> +    if (!READ_ONCE(vblank->enabled)) {
+>> +        *vblank_time = ktime_get();
+>> +        return true;
+>> +    }
+>> +
+>> +    *vblank_time = READ_ONCE(vtimer->timer.node.expires);
+>> +
+>> +    if (WARN_ON(*vblank_time == vblank->time))
+>> +        return true;
+>> +
+>> +    /*
+>> +     * To prevent races we roll the hrtimer forward before we do any
+>> +     * interrupt processing - this is how real hw works (the 
+>> interrupt is
+>> +     * only generated after all the vblank registers are updated) 
+>> and what
+>> +     * the vblank core expects. Therefore we need to always correct the
+>> +     * timestampe by one frame.
+>> +     */
+>> +    *vblank_time -= vtimer->period_ns;
+>> +
+>> +    return true;
+>> +}
+>> +EXPORT_SYMBOL(drm_vblank_timer_get_vblank_timestamp);
+>> diff --git a/include/drm/drm_vblank_timer.h 
+>> b/include/drm/drm_vblank_timer.h
+>> new file mode 100644
+>> index 000000000000..0b827ff1f59c
+>> --- /dev/null
+>> +++ b/include/drm/drm_vblank_timer.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ */
+>> +
+>> +#ifndef _DRM_VBLANK_TIMER_H_
+>> +#define _DRM_VBLANK_TIMER_H_
+>> +
+>> +#include <linux/hrtimer_types.h>
+>> +#include <linux/types.h>
+>> +
+>> +struct drm_crtc;
+>> +
+>> +struct drm_vblank_timer {
+>> +    struct drm_crtc *crtc;
+>> +    bool (*crtc_handle_vblank)(struct drm_crtc *crtc);
+>> +    ktime_t period_ns;
+>> +    struct hrtimer timer;
+>> +};
+>> +
+>> +int drmm_vblank_timer_init(struct drm_vblank_timer *vtimer, struct 
+>> drm_crtc *crtc,
+>> +               bool (*handle_vblank)(struct drm_crtc *crtc));
+>> +void drm_vblank_timer_start(struct drm_vblank_timer *vtimer);
+>> +void drm_vblank_timer_cancel(struct drm_vblank_timer *vtimer);
+>> +bool drm_vblank_timer_get_vblank_timestamp(struct drm_vblank_timer 
+>> *vtimer,
+>> +                       int *max_error, ktime_t *vblank_time,
+>> +                       bool in_vblank_irq);
+>> +
+>> +#endif
 >
 
-Hyper-V as of recent can boot off DeviceTree with the direct kernel boot, no UEFI
-is required (examples would be OpenVMM and the OpenHCL paravisor on arm64).
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Being no expert in Kconfig unfortunately... If another solution is possible to
-find given the timing constraints (link errors can't wait iiuc) that would be
-great :)
-
-Could something like "select EFI if SYSFB" work?
-
-> Fixes: 96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/hv/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 8622d0733723..07db5e9a00f9 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -6,6 +6,7 @@ config HYPERV
->  	tristate "Microsoft Hyper-V client drivers"
->  	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
->  		|| (ARM64 && !CPU_BIG_ENDIAN && HAVE_ARM_SMCCC_DISCOVERY)
-> +	depends on EFI
->  	select PARAVIRT
->  	select X86_HV_CALLBACK_VECTOR if X86
->  	select OF_EARLY_FLATTREE if OF
-> --
-> 2.39.5
 
