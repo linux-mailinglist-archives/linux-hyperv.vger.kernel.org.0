@@ -1,185 +1,107 @@
-Return-Path: <linux-hyperv+bounces-5825-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5826-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71FEDAD3DCF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 17:47:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AFEBAD3E4A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 18:07:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 799251892FC9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 15:46:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D72863A6254
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 16:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC96F199EAD;
-	Tue, 10 Jun 2025 15:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D399023717C;
+	Tue, 10 Jun 2025 16:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="EvKFBZKA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dzYY7pX7"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O51AOjvt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043E47D098;
-	Tue, 10 Jun 2025 15:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A6412CDAE;
+	Tue, 10 Jun 2025 16:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570378; cv=none; b=hy+s8Zh/7hKsy68MZ+vBKR2HmoSRKqFyhwMzP8UQNHr03YW97j7VchaZN8NjfOZ6pzcI0ClB1njUZnkO/VDof/vV6g5yuqa5Q8reFU2Msa3J/t4jL/k/zaztzs6YJFV8zC5zi1PxLU1AN7A/+DE5UCYCm5ug2e2YI3K1Mb26sJg=
+	t=1749571620; cv=none; b=ozyb1MEezWlqBW99Te8Gv0w1lZ8wLH2nwgep2hhoYhfbU8uM8PARXvu9aj+j3vctBZspkGbJ4Ll5+0M1ZEjX+1LsNIoYgozvNRhVtSBH59oyZD5ZIbjcaltIQ+99zvaHnK+mjyEFDzlxoq2usvADgJpW6Fwsg2uUNBrc7fZVpX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570378; c=relaxed/simple;
-	bh=/w+J3Jyg+r+gCZOFLX3yqRPy0i117VGuFdXqxa9PPFM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=VBWim91kfeId9ugkTLj+Zzeqz1tL7ITVupG1W7ETAOXkFGIoLrG8Q5ObNPRXuDsch2VYfoJ3GaclEIjd2q2XjtioeerErmsyiB7CmHcPIxp0kkQW0uMpcVrA50hEjEAUgrBcXE2UzkA83PS05XqghVLT1fSjb07Q5U1utKvQaFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=EvKFBZKA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dzYY7pX7; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 13FF6138037E;
-	Tue, 10 Jun 2025 11:46:15 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 10 Jun 2025 11:46:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749570375;
-	 x=1749656775; bh=sWQd/cEpHYbeMdzEp6MUu3/KzvU4FMthc1pbkqdosho=; b=
-	EvKFBZKAplwtJlh5g9Mpb3dq4hCEJt6Jjbk2nMN0PsXZWvZEF+2qXl+JqSkgubR0
-	2upi3k0HJpIl4W1HpShG0aejROcTdYn/r5O4ssIf1hRUuHOA669859KNki5a/3u5
-	aR9jlTxh9jXqE3su2dFNWSr7LExal/iETVj0D/Q1fRZFXoyPRXwJNluNJa0ViDiF
-	nJKWciPx9Sz6ZSkxcUgVSf5NnAKDMWpVEosQhZuel+5wQ+r9cyqlLwK1QqbH4ZrO
-	X8ioJJPLM64ww5AnXM2DtcKO+1A19H2FOYl5EqfW+QyR9NrB3hICP78oLhJNS66C
-	OkhBhudQ4aiWAfhcD02bwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749570375; x=
-	1749656775; bh=sWQd/cEpHYbeMdzEp6MUu3/KzvU4FMthc1pbkqdosho=; b=d
-	zYY7pX7gyFK+TkIa1ysxtpLD8g5DEQBxL7z6lGc7BFTU2GL3pJoCR+vRUpJPi5Fj
-	GKVbugocUrBc9dFqevN6Zb2ynrsP5/pDw/e+bByHckm7jRlMbdKgXJ6xp5/Iy7wj
-	0Lp1c06aaoqQwr7UTf3/tQg+vp5MyqWi6gsfBcRjenjhw1zvPbVODdnONPJZaRVz
-	rcAQw1iJVSizU3CmyRZ9zKZMgVFR459vTCu5cN2b5lcunXHo+ALmUlR4T/TXjGxT
-	c94rp0adhyp6kB91Zz3gnqNQRv3R7nf2f/PKfW33di20xRB0Je32zc/Q7z+A18FR
-	GD43vNqbPRFzy1fYKnBMA==
-X-ME-Sender: <xms:RlNIaB-TX9etE2s4t33juPXJPJR3hjUDUKsuRiNzw9aw8LDhw9Amrg>
-    <xme:RlNIaFuaaVw0W-TEU-XXCdg7d28u4yHdgAZwh0joF5RWqq7xQCkklLzuzNdvfgeYd
-    _5bXSakyAlXdk4ghK4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdelgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    uddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopeifvghirdhlihhusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehnuhhnohgurghsnhgvvhgvsheslhhinhhugidrmhhitghrohhsohhfthdrtghomhdprh
-    gtphhtthhopehrohhmrghnkheslhhinhhugidrmhhitghrohhsohhfthdrtghomhdprhgt
-    phhtthhopehsshgvnhhgrghrsehlihhnuhigrdhmihgtrhhoshhofhhtrdgtohhmpdhrtg
-    hpthhtohepuggvtghuihesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehhrghi
-    higrnhhgiiesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehkhihssehmihgtrh
-    hoshhofhhtrdgtohhmpdhrtghpthhtohepmhhhkhhlihhnuhigsehouhhtlhhoohhkrdgt
-    ohhm
-X-ME-Proxy: <xmx:RlNIaPDS6Gb2fiYaUPdCqmutr2DjEsat7F9y0Pv_HJl69-abk1Jrzw>
-    <xmx:RlNIaFfcyNghJBMuS3ggojuxVvv5RwpNSNSLdoQCtTR99VTYMLr9AA>
-    <xmx:RlNIaGO_85FF_gvM69SeBk-Oh4HRLoCVo89PfgrBGx23kEntDWs7yg>
-    <xmx:RlNIaHkL5uwMkFsoFk1KO7px8fnGOb746MVCpe7uJhSrt4XYYlhm5A>
-    <xmx:R1NIaMyIrkATadJCdtrFGFa80cz0M6HDP863PdBs_3UOIqjmAWjLFDDD>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C72ED700061; Tue, 10 Jun 2025 11:46:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1749571620; c=relaxed/simple;
+	bh=EF6+Ekp5LFOn/Da+vUOZnyB0ssktivNlZp8mV3L4hrs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SNn37Q9CcYn+YMWFj0ZkJe72W+Rj6n4k9OQdSvK4JKTw/tXJI9RvhgVuyKudBzRn35HaJiROjjqWf/Bsn1brocccfE6I4J9YTsuadfeY9VfwEM75JRx8+nf3i2UCH786yTU15tDicC9Anf0P6z8vdYywqGJ6Xw6fjU2sLLXxkC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=O51AOjvt; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C0A4D21175A4;
+	Tue, 10 Jun 2025 09:06:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C0A4D21175A4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749571618;
+	bh=EF6+Ekp5LFOn/Da+vUOZnyB0ssktivNlZp8mV3L4hrs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=O51AOjvtxzIfvKmh7tEijTRnn/KFclGPxRlbGJi/7DMCm2/914JouuKmN2ZR3p7pj
+	 zQhrDQVXBPTWDBLH/QVuZVmMdcurziTUwQge77GOf7nBMJAlWrHcVXcJ2//OLJ3yDR
+	 5X3Zj1w9sseHk+6K9ekaKxn4eKmglkCxmTcTHg3k=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: sudeep.holla@arm.com
+Cc: anirudh@anirudhrb.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lpieralisi@kernel.org,
+	mark.rutland@arm.com
+Subject: Re: [PATCH] firmware: smccc: support both conduits for getting hyp UUID
+Date: Tue, 10 Jun 2025 09:06:48 -0700
+Message-ID: <20250610160656.11984-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
+References: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tc9e620b0a09597a4
-Date: Tue, 10 Jun 2025 17:45:54 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Roman Kisel" <romank@linux.microsoft.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Michael Kelley" <mhklinux@outlook.com>,
- nunodasneves@linux.microsoft.com,
- "Saurabh Singh Sengar" <ssengar@linux.microsoft.com>,
- "Wei Liu" <wei.liu@kernel.org>
-Message-Id: <df1261e1-25d4-43ae-88c4-4f5d75370aee@app.fastmail.com>
-In-Reply-To: <20250610153354.2780-1-romank@linux.microsoft.com>
-References: <20250610091810.2638058-1-arnd@kernel.org>
- <20250610153354.2780-1-romank@linux.microsoft.com>
-Subject: Re: [PATCH] hv: add CONFIG_EFI dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025, at 17:33, Roman Kisel wrote:
->> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
+> (sorry for the delay, found the patch in the spam 🙁)
+
+"b4" shows the the mail server used for the patch submission
+doesn't pass the DKIM check, so finding the patch in the spam seems
+expected :) Thanks for your help!
+
+>
+> On Wed, May 21, 2025 at 09:40:48AM +0000, Anirudh Rayabharam wrote:
+>> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 >>
->> ld.lld-21: error: undefined symbol: screen_info
->> >>> referenced by sysfb.c
->> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
->> >>> referenced by sysfb.c
+>> When Linux is running as the root partition under Microsoft Hypervisor
+>> (MSHV) a.k.a Hyper-V, smc is used as the conduit for smc calls.
 >>
->> The problem is that sysfb works on the global 'screen_info' structure, which
->> is provided by the firmware interface, either the generic EFI code or the
->> x86 BIOS startup.
+>> Extend arm_smccc_hypervisor_has_uuid() to support this usecase. Use
+>> arm_smccc_1_1_invoke to retrieve and use the appropriate conduit instead
+>> of supporting only hvc.
 >>
->> Assuming that HV always boots Linux using UEFI, the dependency also makes
->> logical sense, since otherwise it is impossible to boot a guest.
+>> Boot tested on MSHV guest, MSHV root & KVM guest.
 >>
 >
-> Hyper-V as of recent can boot off DeviceTree with the direct kernel 
-> boot, no UEFI
-> is required (examples would be OpenVMM and the OpenHCL paravisor on 
-> arm64).
-
-I was aware of hyperv no longer needing ACPI, but devicetree and UEFI
-are orthogonal concepts, and I had expected that even the devicetree
-based version would still get booted using a tiny UEFI implementation
-even if the kernel doesn't need that. Do you know what type of bootloader
-is actually used in the examples you mentioned? Does the hypervisor
-just start the kernel at the native entry point without a bootloader
-in this case?
-
-> Being no expert in Kconfig unfortunately... If another solution is possible to
-> find given the timing constraints (link errors can't wait iiuc) that would be
-> great :)
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 >
-> Could something like "select EFI if SYSFB" work?
+> Are they any dependent patches or series using this ? Do you plan to
+> route it via KVM tree if there are any dependency. Or else I can push
+> it through (arm-)soc tree. Let me know.
 
-You probably mean the reverse here:
+Anirudh had been OOF for some time and would be for another
+week iiuc so I thought I'd reply.
 
-      select SYSFB if EFI && !HYPERV_VTL_MODE
+The patch this depends on is 13423063c7cb
+("arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID"),
+and this patch has already been pulled into the Linus'es tree.
 
-I think that should work, as long as the change from the 96959283a58d
-("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests") patch
-is not required in the cases where the guest has no bootloader.
+As for routing, (arm-)soc should be good it appears as the change
+is contained within the firmware drivers path. Although I'd trust more to your,
+Arnd's or Wei's opinion than mine!
 
-Possibly this would also work
-
-     select SYSFB if X86 && !HYPERV_VTL_MODE
-
-in case only the x86 host requires the sysfb hack, but arm can
-rely on PCI device probing instead.
-
-Or perhaps this version
-
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -19,6 +19,7 @@ config HYPERV_VTL_MODE
-        bool "Enable Linux to boot in VTL context"
-        depends on (X86_64 || ARM64) && HYPERV
-        depends on SMP
-+       depends on !EFI
-        default n
-        help
-          Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
-
-if the VTL mode is never used with a boot loader in the guest.
-
-     Arnd
+>
+> --
+> Regards,
+> Sudeep
 
