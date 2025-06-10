@@ -1,155 +1,114 @@
-Return-Path: <linux-hyperv+bounces-5822-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5823-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73907AD3BB7
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 16:52:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEB36AD3D8E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 17:40:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16916176FB1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 14:52:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13A423A9739
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 15:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCDFB22A4CC;
-	Tue, 10 Jun 2025 14:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2042D1DF754;
+	Tue, 10 Jun 2025 15:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b="pG8MvdLj"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r22VQRuR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from borehabit.cfd (ip160.ip-51-81-179.us [51.81.179.160])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605BE229B1C
-	for <linux-hyperv@vger.kernel.org>; Tue, 10 Jun 2025 14:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.179.160
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24C517C21E;
+	Tue, 10 Jun 2025 15:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567111; cv=none; b=uV1qL+daXxEiFGK3p8QNIVa7+e2x5PFuzepUzyAq0FqQTJEZotdJh/kkCb9M9K9cS8OI1mn4pbifJgNtlsblE+F2LGHcg40XAw5sRUDyow/p/4nNcvzVcuZgEZvq2/QOLJxH5q4X8J4cR9BIk5MlGZlYx50rNtORZ7/i12AnLus=
+	t=1749569638; cv=none; b=LS2N1p61em3hgsb5dwab1iG7JdS0y4i7GccsUdQPT7fFP+JGlWfqe1wVnHxli4dGgxVn0TnQ7lEp5FXNl2pBpi7w9Sbv0Df1Skmsd0dIL9qRNPIpMSj83UG9zrJZNY7kXPVbfAFj3OxG4PUODUp3lqC8Aef+aKQPHIKfv6W10vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567111; c=relaxed/simple;
-	bh=j/qZ6nCFDOcbnwIbag40JF9HDzOLw0n9TJz9U1mz3X8=;
-	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=nKZGEl98/mzrsOj0BljLM3jt5N9yw3JqrZEOIRxURfTlQPdDKFovvFQwNRpFHfLxLk75hRO+renCeuAZM6Srx/jsdM+99vmzP0sfJYp3wmTbJkX97XG/e2Kq/rUWc4vsuUjriRRBqBPM1gmoOrkcdL54YuC4stZ7XicWh1h/9z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd; spf=pass smtp.mailfrom=borehabit.cfd; dkim=pass (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b=pG8MvdLj; arc=none smtp.client-ip=51.81.179.160
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=borehabit.cfd
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=borehabit.cfd; s=mail; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Reply-To:From:Date:Subject:To:Sender:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CFYjPvEUim5mD5QwWelE+Axpgk7p2gwnF2M5gpb++Rg=; b=pG8MvdLjFKeE3m0cIPNQdAXmu+
-	zEX10ost0qqU6ydOKBYDJ7IEvHMKgaOAqqnIAa8Lcbk/rHJ8vaHKmUyJeKfrwdo5KLJtptas/5bTX
-	d6T0VgW+iuupIghuTY+zTfeXGxzI7P4vLUSE20Rq9Ogzp4EVliODhKt4uOEIMHjs7sXs=;
-Received: from admin by borehabit.cfd with local (Exim 4.90_1)
-	(envelope-from <support@borehabit.cfd>)
-	id 1uP0KL-000SFc-9D
-	for linux-hyperv@vger.kernel.org; Tue, 10 Jun 2025 21:51:49 +0700
-To: linux-hyperv@vger.kernel.org
-Subject: WTS Available laptops and Memory
-Date: Tue, 10 Jun 2025 14:51:49 +0000
-From: Exceptional One PC <support@borehabit.cfd>
-Reply-To: info@exceptionalonepc.com
-Message-ID: <f59c273ef556053207a15080ff3f7b1f@borehabit.cfd>
+	s=arc-20240116; t=1749569638; c=relaxed/simple;
+	bh=Z0tZqVZm0c0pdMekdv7cs5FM5cbYEF/ngEMiVAIKcok=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rOhLwU38LY6q5YBW2zoghz1ZHql9jQ2Nwr9lvqzg+oyomHj9b1z7UbrGasCpfTy5w7FiyrDQ4EFI62xrM4IuwerUcEXVECSgsrM42AzVuxmXO9E5xiEVGuGO8PDgi6E3VHp/eJ6Hf3RV7bN0umyNGzhbhJ//QxZEUlE0TsuNzbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r22VQRuR; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 184C72113A7A;
+	Tue, 10 Jun 2025 08:33:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 184C72113A7A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749569636;
+	bh=EXF5QOvj3gLvyZ3xIYnh29AFDo83SVY+Soxt4pZHHNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r22VQRuRofvzYBhMQxeZbt4tOnDGGJJjNls5cYs0WMTmVuha6Njl+ivrnjfGOidqb
+	 LglGuAydHfvm88OFygB5nrlVYtVzDJkSCFCF296b15Sn2o7weVqv/Xn+ZA/v84gxmN
+	 f+YjrFtQuscToufIVhPFlUSoXrlZuqR8128DNlrY=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@kernel.org
+Cc: arnd@arndb.de,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mhklinux@outlook.com,
+	nunodasneves@linux.microsoft.com,
+	romank@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	wei.liu@kernel.org
+Subject: [PATCH] hv: add CONFIG_EFI dependency
+Date: Tue, 10 Jun 2025 08:33:54 -0700
+Message-ID: <20250610153354.2780-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250610091810.2638058-1-arnd@kernel.org>
+References: <20250610091810.2638058-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
+>
+> ld.lld-21: error: undefined symbol: screen_info
+> >>> referenced by sysfb.c
+> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
+> >>> referenced by sysfb.c
+>
+> The problem is that sysfb works on the global 'screen_info' structure, which
+> is provided by the firmware interface, either the generic EFI code or the
+> x86 BIOS startup.
+>
+> Assuming that HV always boots Linux using UEFI, the dependency also makes
+> logical sense, since otherwise it is impossible to boot a guest.
+>
 
-Looking for a buyer to move any of the following Items located in USA.
+Hyper-V as of recent can boot off DeviceTree with the direct kernel boot, no UEFI
+is required (examples would be OpenVMM and the OpenHCL paravisor on arm64).
 
+Being no expert in Kconfig unfortunately... If another solution is possible to
+find given the timing constraints (link errors can't wait iiuc) that would be
+great :)
 
-Used MICRON SSD 7300 PRO 3.84TB 
-U.2 HTFDHBE3T8TDF SSD 2.5" NVMe 3480GB
-Quantity 400, price $100 EACH 
+Could something like "select EFI if SYSFB" work?
 
-
- 005052112 _ 7.68TB HDD -$200 PER w/ caddies refurbished 
- Quantity 76, price $100
-
-
-
-Brand New CISCO C9300-48UXM-E
-Available 5
-$2000 EACH
-
-
-Brand New C9200L-48T-4X-E
-$1,200 EACH
-QTY4
-
-HP 1040G3 Elite Book Folio Processor :- Intel Core i5
-◻Processor :- Intel Core i5
-◻Generation :- 6th
-◻RAM :- 16GB
-◻Storage :- 256G SSD
-◻Display :- 14 inch" Touch Screen 
-QTY 340 $90 EA
-
-
-
-SK HYNIX 16GB 2RX4 PC4 - 2133P-RAO-10
-HMA42GR7AFR4N-TF TD AB 1526
-QTY560 $20 EA
-
-
-Xeon Gold 6442Y (60M Cache, 2.60 GHz)	
- PK8071305120500	 
- QTY670 700 each 
-
-
-SAMSUNG 64GB 4DRX4 PC4-2666V-LD2-12-MAO
-M386A8K40BM2-CTD60 S
-QTY 320 $42 each
-
-
-
-Brand New CISCO C9300-48UXM-E
-Available 5
-$2500 EACH
-
-
-Core i3-1315U (10M Cache, up to 4.50 GHz)	
- FJ8071505258601
-QTY50  $80 EA
-
-Intel Xeon Gold 5418Y Processors
-QTY28 $780 each
-
-
-Brand New C9200L-48T-4X-E  
-$1000 EACH
-QTY4
-
-
-Brand New Gigabyte NVIDIA GeForce RTX 5090 AORUS
-MASTER OC Graphics Card GPU 32GB GDDR7
-QTY50 $1,300
-
-
- Brand New N9K-C93108TC-FX-24 Nexus
-9300-FX w/ 24p 100M/1/10GT & 6p 40/100G
-Available 4
-$3000 each
-
-
-
-Brand New NVIDIA GeForce RTX 4090 Founders
-Edition 24GB - QTY: 56 - $700 each
-
-
-
-
-Charles Lawson
-Exceptional One PC
-3645 Central Ave, Riverside
-CA 92506, United States
-www.exceptionalonepc.com
-info@exceptionalonepc.com
-Office: (951)-556-3104
-
+> Fixes: 96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/hv/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 8622d0733723..07db5e9a00f9 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -6,6 +6,7 @@ config HYPERV
+>  	tristate "Microsoft Hyper-V client drivers"
+>  	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+>  		|| (ARM64 && !CPU_BIG_ENDIAN && HAVE_ARM_SMCCC_DISCOVERY)
+> +	depends on EFI
+>  	select PARAVIRT
+>  	select X86_HV_CALLBACK_VECTOR if X86
+>  	select OF_EARLY_FLATTREE if OF
+> --
+> 2.39.5
 
