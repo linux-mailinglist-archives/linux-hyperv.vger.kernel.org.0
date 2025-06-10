@@ -1,164 +1,137 @@
-Return-Path: <linux-hyperv+bounces-5831-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5832-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAFCAAD4226
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 20:45:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83A1DAD422B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 20:46:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0AFA17D694
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 18:45:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BFE7189FA55
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 18:46:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4E3246326;
-	Tue, 10 Jun 2025 18:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09ADF244691;
+	Tue, 10 Jun 2025 18:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MFQJ/Sqd"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="GNRc0ogv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11021135.outbound.protection.outlook.com [52.101.57.135])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azolkn19011033.outbound.protection.outlook.com [52.103.12.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F8B13790B;
-	Tue, 10 Jun 2025 18:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0D72144A2;
+	Tue, 10 Jun 2025 18:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581128; cv=fail; b=YFXduR0Pi4lo0rCXDRq5LLn/9sY7Qq6qhzR1yLw7L0aQ4Sgy522AOE+AiwfhT1nNg371DHq7JF8wjf2TyghzHXWbRnPOcE3WhFLl5v30Ae0H1g/SW+nCWxisKpEWqEslJVOX+JhEI2t8Q5RVvceAD4eY+bGFso9Lmml/jiayENA=
+	t=1749581141; cv=fail; b=c1PrmGCtNMfJHec2KQtS8zu4iGs2LWFTw3WWZDhQ+yHKs49N70odGMFnfcHkXc7oTSCqE7LE4sIHLDRBMpqvZ8kFNpOUQ/xBBz2Dc0lSNDPSICPGRa32Mwuem+8T+IG4FQ/t0a05rgjb3G3VXwkIYywDpPHHhH+W9p/aGvURxe8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581128; c=relaxed/simple;
-	bh=E8yKD16HUthNJ8ai8a2zNd5pzC2YLHHaEgm9SXG1ILk=;
+	s=arc-20240116; t=1749581141; c=relaxed/simple;
+	bh=Zsz6MTqXmBYeebKFgJNC5KtnqIcl7LxguRdwqKF6JNY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ab3D4e6WMVVdaPwpwI8jrsV4zeOmCEIOfe/rjbB1Yfw6/N77HXZJd6rVl9O6nRbXGCYG6SzorgJoiKtlD4iyJb9Ld2/qC4TKi0NA6+AJXPLNvj+ifydlQVm03YOtW2cQyxmM2ddXqOVhmvFWgxtV354TwyA48atWpMBpeBq7LY0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=MFQJ/Sqd; arc=fail smtp.client-ip=52.101.57.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	 Content-Type:MIME-Version; b=rL5JvDN6MAjDpvV0JOCOCei+7WiXjO8aXkhbSHz8C74QwVH6d4chwr0MXtdfK+BTOakoR0aCwc3APAKt/vmZQ7lBrsOovNcx764nuELmiFYFUaDBj3c/aGvQ2tEKaSh3eQef/xsoIh1zWm/CKz4OCcz/TEzDWT4IKQIbWoYy+yM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=GNRc0ogv; arc=fail smtp.client-ip=52.103.12.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FcG5rOI0riVANrd5o68LoZEy54j/P/d+wJMp6H50iMiXN9vUlApSvQa3bldC1neifHJ3YUFz63g/WGIoBIF6+dhq9SQ1G7hrHLPeXY+AREjp+aVwCzazFlTRXsqSAx0ynM/+Edt64fTifnhvD0wl/+oIudso/REHJpETXopxVzJGlTcVgpqjusy0gUObOMExqoxY0IH2Df6cEVcrGXoTSdB6A2aODqx8RvJzFNcg8dFV7vSax6VywoUqMBagEws44GJqgIO4vIV1Q/HTAvZJx7lHGqjHoMhqBaQtgopkLnYi5WvFcAGbyJKJaslXS2R98buGpYrUZTvP5N+JEbKPnQ==
+ b=O9gT3vvlcx7MhMbZOCiXZXfNSD9DHuKf9AtH02lkKvEd5hY3k6DY9U3CRktVhWKirDKGpfkvUOWgo/Mr5Zexvbsi0Vb5+MAKYW/vEc6HmKXbEVmTL56MJTf++oOCVvhLf2q2UvKWSrkqZHf/lxtWXFr7XnTjKvMGASFs6oCVWTu2ccii7gwuiQbxiyCEJG2iPCK+K0pZJiNMBZ0bAH1DlUR9iUtJxTkroPBawuTbhgsH502KNRxscIzdZpEkwEf6sZthYJQg/3uOc7P6QIOH43CPfwOtjTEYEUOBJMJOngjaPEInjaDu/2ECUmBY8Gj8Erygqf1CAsi1DIF18jo72A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E8yKD16HUthNJ8ai8a2zNd5pzC2YLHHaEgm9SXG1ILk=;
- b=Vq3klLXLBLbxCNxBiE1D16jxklPwVD1GB52Hum9zD4/G7QZOVvXmOQrPsOWS0mGJ5Ti2sGeJW5VMglg0vSyGYNyYxmng2srusvspYitOz7Io8SNiyaXtk+VT/tx13KE+/Vcd2nae97GUbISiHO51/VSFbmqLG/3Z+ugiTLbSO+yvzGBaU81AIJmy3d5wVKY8FfNA4ZcwKKqgoReucA4hzmsYmJqzxjltab3GStPCALSIZjMiviwL1SlJS30ZryvPsFjGI+YmyjH7tllu2t7XwLc58ZFjMmSk6CDkmjv1ZCEdVfLa1VngL/yKuT0XiguhIGH7K1hmvKzvlIiV4alKnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ bh=uaKRFNsrxNiM0WbTuOhtXwXvQexP0LD2NHwlLsY9jWc=;
+ b=kUCtfBbj+MV9MMu+Np6gevpIZBF6KWMheAVS6w1Ejqd1QFkO0Ve3QTCZGFC1+QJzHWTjNoxfZjlRy05e6Y5NWcwNCFX9oRY3UGCRuJ0I7zZGvTE+aefSy/kw6W+Rq/OC//MzaKgLPcy4JMBV9i1JwQbXFYfbMliGWgBBcQEsGRacQ5WbnulQT8CB9Rv3Z0JqZfJmH61vvJmTWSn33gZcdzJLrlhUfrgkH/1WbS0dNnXYehkNmevDAqhjBqDchM4dkIO8/+VWBnkzyJl0+S1IaCqIP11iGLTFT5GVbIEQGMdx0o8LScYdu3sf7h7y+2USxBxKPM86MPrmw3Bx5A8uVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E8yKD16HUthNJ8ai8a2zNd5pzC2YLHHaEgm9SXG1ILk=;
- b=MFQJ/SqdU5CPF5c45Z3Nc2T6O7Pf1en/SweCj5DnfViP+wrql0KZ/NFpk2ndEI3iuA+Ixf3DQA25aEVabWZqk4cDNXQWHJD+a6PEtI5w/liRRHzNWOTBFTVXV6zTvsdHMnbtdjoXXEiyZsCMDgIShj6P9Qsi8Df3DhWQ3a4LIrw=
-Received: from SN6PR2101MB0943.namprd21.prod.outlook.com (2603:10b6:805:f::12)
- by SA6PR21MB4439.namprd21.prod.outlook.com (2603:10b6:806:428::16) with
+ bh=uaKRFNsrxNiM0WbTuOhtXwXvQexP0LD2NHwlLsY9jWc=;
+ b=GNRc0ogvzP96Op/YlNiGTMuzE7l2Dbrn3PmjCUYp1eDhwtjwjSTgDk0TswhaIFntAWS5pQZQCxgik19AqfpZx1vwP0/rKDfOvutatgUE6NUGQ+v0kDWA0EHvI9Pe23L/QoAaxl80HFmTaoltNZBx+7mEpB50Tae4vc6ERczLjbu3By4zS7tMTJwT7YN9xPf0qdqCwLex0+vJO512g9I+a7aRmGSxKdIUV5gfnOYnkhRQNZpY5FgcC0QYNMfShPAFSdO1uMxeFcjtjFyK5GVZQOMhiFSfdB08Ri+IMov3gRBYj2/XK2hHOkKynaLLJ/ArbPGQ+QfuwS4WwyvBo4gA/w==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CY8PR02MB9596.namprd02.prod.outlook.com (2603:10b6:930:6c::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.7; Tue, 10 Jun
- 2025 18:45:23 +0000
-Received: from SN6PR2101MB0943.namprd21.prod.outlook.com
- ([fe80::c112:335:8240:6ecf]) by SN6PR2101MB0943.namprd21.prod.outlook.com
- ([fe80::c112:335:8240:6ecf%6]) with mapi id 15.20.8835.015; Tue, 10 Jun 2025
- 18:45:17 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC: Dexuan Cui <decui@microsoft.com>, "stephen@networkplumber.org"
-	<stephen@networkplumber.org>, KY Srinivasan <kys@microsoft.com>, Paul
- Rosswurm <paulros@microsoft.com>, "olaf@aepfle.de" <olaf@aepfle.de>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "leon@kernel.org"
-	<leon@kernel.org>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "john.fastabend@gmail.com"
-	<john.fastabend@gmail.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "shradhagupta@linux.microsoft.com"
-	<shradhagupta@linux.microsoft.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, Konstantin Taranov <kotaranov@microsoft.com>,
-	"horms@kernel.org" <horms@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next,v6] net: mana: Add handler for hardware servicing
- events
-Thread-Topic: [PATCH net-next,v6] net: mana: Add handler for hardware
- servicing events
-Thread-Index: AQHb2UwBnA3Q8Y0HEkWRvFDfxb79+bP8vLXA
-Date: Tue, 10 Jun 2025 18:45:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.27; Tue, 10 Jun
+ 2025 18:45:37 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8813.016; Tue, 10 Jun 2025
+ 18:45:36 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Michael Kelley <mhklinux@outlook.com>, Arnd Bergmann <arnd@arndb.de>,
+	Roman Kisel <romank@linux.microsoft.com>, Arnd Bergmann <arnd@kernel.org>
+CC: Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "nunodasneves@linux.microsoft.com"
+	<nunodasneves@linux.microsoft.com>, Saurabh Singh Sengar
+	<ssengar@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Subject: RE: [PATCH] hv: add CONFIG_EFI dependency
+Thread-Topic: [PATCH] hv: add CONFIG_EFI dependency
+Thread-Index: AQHb2eia04zHIDnue0WZOFD8f2qY5rP8hlQAgAADWgCAAAFzcIAAKcLw
+Date: Tue, 10 Jun 2025 18:45:36 +0000
 Message-ID:
- <SN6PR2101MB09435086F05835B226855B6FCA6AA@SN6PR2101MB0943.namprd21.prod.outlook.com>
-References: <1749479764-5992-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1749479764-5992-1-git-send-email-haiyangz@microsoft.com>
+ <SN6PR02MB4157D3A61C5DB1357267D712D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250610091810.2638058-1-arnd@kernel.org>
+ <20250610153354.2780-1-romank@linux.microsoft.com>
+ <df1261e1-25d4-43ae-88c4-4f5d75370aee@app.fastmail.com>
+ <SN6PR02MB4157CE643DEB6CE4B0AEFC00D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB4157CE643DEB6CE4B0AEFC00D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1850e4b7-7068-444c-9f4c-432202184677;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-06-10T18:44:09Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR2101MB0943:EE_|SA6PR21MB4439:EE_
-x-ms-office365-filtering-correlation-id: beffc6f7-05fb-4fcc-a3f9-08dda84ef19d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB9596:EE_
+x-ms-office365-filtering-correlation-id: aeb6e2e1-819b-4943-4863-08dda84efd6b
+x-ms-exchange-slblob-mailprops:
+ /UmSaZDmfYDUdQrXdfZM8z4VcKytxXRHGF7V5Kodw6uiq52/cK8pwfRzLFICn5blQImeVomO0sFxL0Pn5iyRLxS86za7Kf6g0dTpLd66yAFI9yvGb3WPWjQQSlv+q47PNzRa3ml6o3ltaORu2JLTxEc8XQ+C5TYRTSiriZ9tP083/C9XdOM0djwAsKJ8nA8Sduj7/aUW0Gw259CE6HvfYpw06k/zucZ2lDffbEZjxzkJVXGdqBUVPuLdKGPT2SLrloFNaP04WHJclMpUfTAO5Q+pFcv5kfU+MT14Z/0FaS+WR4Dq+5J/wqNnnDq72JghaQBlIxzC53HgUGGtafCWaOLqZXOdzeyuCwb56Bf+aNZ7bEewM8w+1zjT1ikTKYG9nKba43frGv9DM6ytBpgmexau4hZvSP3tPl4aeHgsRj+wVDLGfa3Ev5hJNdhSn16RXq91lzaHKKnVRew4BKltb2zBd83kuoSY9hBxfQbMMCwsnGl/vf/ugdMIR3Hn6QESPfKuzl/1cpjBk0nlkFUwdqE5Cg+nOd4mwexIX6jWsOU1aoXe9YXXdhgDRkZu4YHLf7qFjppWLCvg0wIfwpJFdOUgGREUbBKuX8Q++oT5tBn9nf4ASrVN3zAn75D5nWvTFdszFEh+Hd76ZvIxJbWBclq0PLz1IEEFpeTtVQh8pqRA72HUAr0b5Wg8tdYfD3Q/l2X0J8P7VUdeCDGu/+ZNWSEk/ys2hHCNPR5mHSJP2r0On4NIDa1rPP93v5LOTGjOLIpNvGiIaaWWC7CjJ1U9q9gNEggjRXN+VTokDCLNciytdaPLOCDQjdmyTfU9j/3Sd5HdG8syU4AVblG+YTaIEQ==
 x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|7416014|7053199007|38070700018;
+ BCL:0;ARA:14566002|15080799009|19110799006|8062599006|8060799009|461199028|4302099013|3412199025|440099028|10035399007|102099032|1602099012|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?ArZB9o/M6ynswW1FgzVolLi8p+LBTSlpBfQ9uFBA2mbKOWCo8Pg8fPzhxS/v?=
- =?us-ascii?Q?0azzRhhP4iju+3MWm7zzPhHnP7fmqa/qS8kcfrq1q5nHXQ4JALRiWHGZcPJr?=
- =?us-ascii?Q?orv3FEl75ScrMhuzj2T3L+HLoXbal94MIGA25weB1+yUSxOCdynaII6cAzNn?=
- =?us-ascii?Q?Airix1yo28x5On6kCyjVECzfvcHmfMN9t/a50+YZD8lXdNkh/vqbnsyHMfjq?=
- =?us-ascii?Q?6i3Z/RbO+aTYTUg334PMYbIsKPiPkP/qICekjcohFFFwEJXwXv/zTG4ys8F3?=
- =?us-ascii?Q?+jxv92kzOUw83JJVGxZUUPrTLKJuz6PHaX3meoP5Y+vl660sStBI+9UBqRPg?=
- =?us-ascii?Q?h7Ja91prDySYEwCntmtlfCkRQEuxL8te+rec5fREAAizNigzGv1W8yDXRgMw?=
- =?us-ascii?Q?504tnXBtgkUQDY5bXA8KJO33KWtRe6UAjq6phFHREFDX336VDRPWMghk9omf?=
- =?us-ascii?Q?tNIXxg5OJISTH9K6Ts83XXXzRohNz/m6oRRkbcqL4+/KYxza7tmzn9vw9iBS?=
- =?us-ascii?Q?f3nQG5FFllnJmkTbSFZ4MzLbGzYqaQfBYwN/60111PA040Y/CbHEsNdVPE5a?=
- =?us-ascii?Q?F8hV/XsZTWq8J5BYMSl7QQkzoC/m17UEX2+l1aByuodlDr6wXCC5PT+LHQQq?=
- =?us-ascii?Q?zCZYhKjnR4Pn0gjXoPuh3mpeyk+VSkZ1CPDFH+qqmCtW8yKK+gWUObpg2Bl4?=
- =?us-ascii?Q?09V1l3bvf+JVFRCwG22jV27PstTJC4IGF8BPmArO8MTv2DBjqXD3uYcDdrXK?=
- =?us-ascii?Q?gUcjYX/kPvoM4BJ6F9ORagnrzC9HiH0h89wkbXYEojLld94vZ02OqfEweUIu?=
- =?us-ascii?Q?X6FWFADGk/Ks+7aaAl+5RqZNu72up4Do8UlDrG7pkF0C1UXA1XUfPZvCf57L?=
- =?us-ascii?Q?5FRE4UzVplYMhBvUloj6P4mRmW+fseyTB0VyAKjwd+2dR36nTqyo7KGj7oOc?=
- =?us-ascii?Q?zo+UjztgwH8eJ7gHtGRvBCMpuLg+AaCUUfiOBqsP/o2Z6WF4WG5bPkKA+CVM?=
- =?us-ascii?Q?VY24okPkmKDnij97Sm4YaHSKRWOCylHUUd0h05oFDw7OpQTyKgwphncefCOG?=
- =?us-ascii?Q?Fzye6nRVK8MPMqberN9Q3975zaElzNCe/WMqSeIadIxeeYaBRmgUDrFsoYFl?=
- =?us-ascii?Q?d+XW5uLwAt1NPDyGn4BkVhRt4Id6H0TZn0zr89DCBMSOyAGAXsmJnOHtQMi3?=
- =?us-ascii?Q?lRnFekkx/yhWkWJe7OOFehYBrwT44mS/IqlgCWlZ9rDjPeY5M43+t/F5ny3Y?=
- =?us-ascii?Q?LiGV5d4PiINcpLrJmUSJG1skYsAMmUN4RcPOckPdVfhVyuzP36NxJnViDg00?=
- =?us-ascii?Q?DNKkf9cluYuZj9OuxiDhNSE09PZPyO+mSskhPcbmhcC1CgL9vxbGG5bpY/Og?=
- =?us-ascii?Q?bOFw0TJ/hZQYKWjbqCSqgMaxbPCZWSQR77TUgbBw3uRZCoQ7U3hUDMFAyIH7?=
- =?us-ascii?Q?EGbDd0lqw/vWVm0n+sdnDoQtvFuxLnUH24cyE+Lej/0uooUQCq0jgQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB0943.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014)(7053199007)(38070700018);DIR:OUT;SFP:1102;
+ =?us-ascii?Q?J/hb44lEMtF1mt0GFzIb1LUI/hr2HgpQy8OkNcpYTpQ4qz8eWuVRulnBqdgo?=
+ =?us-ascii?Q?8Jy8lXyS0UuTxQmTUOPrwERHywalUG4v0lswnQpsfCMcKJWmYZz6+6cw57co?=
+ =?us-ascii?Q?8/j0B/CmhU0WOhAcYYHfdOWm+3ffVaftquM0ibZX1B+66ooWv/sO2YLt2DOk?=
+ =?us-ascii?Q?oinReS2hENptl5Uyb/Z/YNsmRh6KUfBEigBc4/MWuTue558MiL1y0yh0olrT?=
+ =?us-ascii?Q?ig0s0s11IKzkUUl2IqsKohkPStBn+7hpiD6hq98H6ZgsN3DpKY4ukB4FqKow?=
+ =?us-ascii?Q?bs7QPaXUsp3E8wImBEZWqXtn4QuWxcwLYmngtzobKVbC4vn5aY4HXetykemw?=
+ =?us-ascii?Q?fNbipSRGnkQ3LaBR5Kp/ard9WojN0D2rO/xcCUiZbpq/JYuUSFgKK9yYk9DK?=
+ =?us-ascii?Q?aNeHlWR/LcAk9dSRrKzYoMZXFr+B7Ubx1U5scVr4K3iiuCY1jWGlIY+RVR6d?=
+ =?us-ascii?Q?+ytrc2d2aIJ5BkTc5JgHiabGfyxPn8iX6WUVN53eC3QbaXUc/TN+kEVKOngV?=
+ =?us-ascii?Q?gZBu6Qi6Qnbr+Ds/O4X9eildBmSapTFohuJAwlkYvvP4rdjQHI7bw/OURirq?=
+ =?us-ascii?Q?iXpM46Ska9Og3sl3p7ER0uUB2RPEABBp5pHNHjTV/7udfhzC8O7aZRFu8aNX?=
+ =?us-ascii?Q?H4tOPU/DZwn2hK/9a9keHGfmZzZyG9u1Ew5wkqNbzmAFdZM+jvz3wRV6TnuL?=
+ =?us-ascii?Q?QS9HBvPY2pLx63zUNc9pFB3nUKWYTqfXh+XWFazLLLN0ed+tL/4cGEGQeWa1?=
+ =?us-ascii?Q?XexdT3Dl/v9qAHeaCyAlqUi6k0XMkLufWHggYL1HynGSntyT1fZo9Nkc6jhc?=
+ =?us-ascii?Q?FgmiYuSUWl49kwiUbPdIBepLa6UBIjfXcNyUzQ4T39UpcCPqz8B7ccDQ8mwB?=
+ =?us-ascii?Q?70vkQ21RVOegsDilb8klGGylg1yC3lD5t5F3pGiotF+zxK+fa1kIfhecNsiP?=
+ =?us-ascii?Q?PtVyv3euqw1X9+DDVRakqHV1dgAsz7SO4fQh4O2jDL89JMaWkWNgcQLW0Nal?=
+ =?us-ascii?Q?Wa9WR/Oygq5kUbq+Zota1z3RcjRp1+lziSS9Ujel5XIO5dB4Y1se5QzfEPz7?=
+ =?us-ascii?Q?M6PuWHCvulYRgQfSWuqdw7Gd84mB/FLDxEQGJYCCwYYS8HSU9A4WqgvFPXl7?=
+ =?us-ascii?Q?miLLKkOElg9vr4WFzBlu/Tz2FceHEFlUjqZF0lUAihkdPQMYaMd4KI9iVomF?=
+ =?us-ascii?Q?kXWrsMyIQ8jD8yEnfA6PAkzyWB6oVAvmSBLcCvYpPVMmza58QmkjSM7u+pMa?=
+ =?us-ascii?Q?vWSkUUbwWFB5gxf7PBbqNLQk35PFZANq3CV9LW94GA=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?N4dpdZ3G3+tJaVzZ6IJVyxrf5nTwr9gM/5/irKrX2Clis/nieaPTiGSLJ7nj?=
- =?us-ascii?Q?FWdFXpGDJWZJ32giPjrHlmGjDxfYXJ3mDtQsexFcmZ/EXnmZgMFp7Z3hm1lX?=
- =?us-ascii?Q?wKD3EfLyx0PoEfVzvOuTUxx2nKeQ0MRFSPnBiIqFpZ2PD//53TpLJqWPLQOz?=
- =?us-ascii?Q?3X7YamyxIjiaKN5F+ddGQDPWWkiTEtpR1k3wlb3RXeHtmErVzK2D6NTfu84u?=
- =?us-ascii?Q?uC63BSomDbulLUb2UTUP5SIjglKhHS+zbHWqWdPGuP/gayWyVCbSKZnIeE+Q?=
- =?us-ascii?Q?+mU6nF9WmuUuPfmWoTM9sx3C3v/WA181S8g/+vyvNf5naJ5fUAZhpYWcWldb?=
- =?us-ascii?Q?cTzv/MYHN78OeBk9aU0gp/dXPd3etCw0RycE0BZEGBSElpIVKABWyoHU437D?=
- =?us-ascii?Q?S6BaqkIQctUks+bygM5HXi9/Cm/wziYK6a06RKoHfchP6I4FdrtsjLPlX6tE?=
- =?us-ascii?Q?TAjlvuVQgqbgiWTJ3tK5Hz5nHF3zgq3yU7RAQgNOsxXn5M9BXwb1HgQLT4Yn?=
- =?us-ascii?Q?x2r2rDe0mwfH3rwH99dUBrWI/5PQsE56irRi0LHhVD70Nm1kw26Jafh7WnoI?=
- =?us-ascii?Q?nLaPUrforpWv2GtKsxqL2ZqUmyC4oPgbqCiH9y00SFyhon+0SDisv2Q7cUN8?=
- =?us-ascii?Q?ItNAFQKk1JxoDRd4a0TwhODvwLVlqUrH+acBiZ9EA6N2t2i6/rKuQr/vkAMy?=
- =?us-ascii?Q?fRp+W3D+iucM010TyBydqWbCE+0E0LcqpBoiQo4hiczBFC1FOhQrRCXNZhdm?=
- =?us-ascii?Q?g76QqZVvHOW1iCTbsng9bUAW9VwxMuCxif6kf+w5FcNwwdKRv56UFv4L2w+/?=
- =?us-ascii?Q?YWCMFMpx3uAwn2Na7Yp7I7jEgJ2Fvot1hAsBwgiuL0Pm5IJBAwG4FtZR+I72?=
- =?us-ascii?Q?yLLZ6Ya8cCBD2/HrD0roqy2PkvjH1iP21cqejxDfOgfYupqEWy0gCcnZpwKT?=
- =?us-ascii?Q?IH1onyPdCZKpYvFjwXMbtT0NIToljp5QwtKMrgN97Ovlo5wSVrLB9uejiEEv?=
- =?us-ascii?Q?HFKfdxDQQKc9H0fMg0QveJtYFUiptSDylajTNUPvf7enKqjYglicu0sAvVzP?=
- =?us-ascii?Q?oVRhdsG2Ou4ugsVc1o53I5w+EtGbBF7Zz03iIi/3e8uPyPuvN6jde6/tDM9Y?=
- =?us-ascii?Q?Nql0bqfaceN1IUbSRjGvGrWAT0hA1NZd6zoU7e5W7dlFsU0N7XFxL3NTRoeY?=
- =?us-ascii?Q?00XhL05nQJ/NUXrM03LP5UbvhdRCb3hPWoKWBjxMht0MNGfpVoEqFKbpm6u+?=
- =?us-ascii?Q?wHxTxBe6m7u/i319Kl/O++tLA/+dnm0GS9/s3YzulxUKJwScvj2FHbXwTZEN?=
- =?us-ascii?Q?oR04zRdrIBooYL8LEsa8t31YuA1qhLvcdKQYhK82maS4OyHk79FpqP6F0BHR?=
- =?us-ascii?Q?W+bfh6EvKdGXW7zFK+3b65sNWI3ECRDCHO6um0q2h0ab+ybW+8hm0mHEIW1A?=
- =?us-ascii?Q?kMXm+cfB+ftbpdV1twMMC3tBwulK8treNGseq9lpTGzEN0EERi2Cqsiy5CkH?=
- =?us-ascii?Q?DDLADntuBrQsYQsXzS9FKAm1XlVw9d6yHvMpMcDaaXlp89e5sNI4FQzbN1BR?=
- =?us-ascii?Q?GYWEOepP1LMNApLhjZAtzn4CDmuX6SIjNh3TjewX?=
+ =?us-ascii?Q?whBZsSTreJFCCJ689HdtvULVdaHH116u+IDboLfhnFOj4YXS3Fq1cd6OczV4?=
+ =?us-ascii?Q?BSFsoHSDkrqzPJ8B4v7ywcC8k+q7Vct9Me/eIVIbH9Pd2Fk4yU8jziR0APg9?=
+ =?us-ascii?Q?7VsSh8AIv2jFOmA6cWNyPKHtXVkDhiy46aYwgjckGnGq8iIj/Ibr5s65hgYh?=
+ =?us-ascii?Q?RPbcmPna3FXtolhekb1hYOBixubMpALm/kFFwr5FoxXwWGaCZSy6dcYI3Xg2?=
+ =?us-ascii?Q?tyAVXl8IB/RBRkYyZLyuK2yhZKDwCGaupMTx82QQSkt5ANDjr8NuNYuOeAwU?=
+ =?us-ascii?Q?Bdtw2r2PDtW054Ol7vdw+4Y2KxAKye9DeYpPPvJ0KF75n8wDjbJMW7sIH6ZG?=
+ =?us-ascii?Q?1hZCV5E2nhK2NxB/cu4bspsTH8UiXU0MTq4XE+/nEMUdGiU1LgJTq+rXe66k?=
+ =?us-ascii?Q?++xnY+rhPdB09H/yui6kkWkS4LZqEVPN01VrBAkElH8+tRuhu6YKZLS/4GQH?=
+ =?us-ascii?Q?EiXnaX4wxOICGl7uuwyO4ayIPD02j1iZdmmFCI7UxL9H81e9Fs8/SNTmadh8?=
+ =?us-ascii?Q?d1D+m60GihOzTLlQUKIY8E0Es70TIG7oOZyCM2M+c1waI531vbZGAP0UG6ip?=
+ =?us-ascii?Q?WnCGwVZK5RKgSCRkakjIvv71SMsr0EW/H0Gl3hOAnaqsNev+2vRzYvaul82t?=
+ =?us-ascii?Q?WJr71+3cj4oTewUZ3j2vPQuUAt117jMulI+bNd8UvvBiSbxBxvbFtxU7UQVy?=
+ =?us-ascii?Q?aPTely8gQMsmO9rR/ixRom2xMZwHWVd48lJKDcnbP8YgzIt7NTIVCJjCYZX3?=
+ =?us-ascii?Q?OP3oTAuNSEXLl83a6Kb5je7dLRwPpP79HYPVdIS9a/bOFUtk0f5W5G6BGvcy?=
+ =?us-ascii?Q?YA7zEGaLe8wHXHLOeG7uPR3tSMz1A969aE6GAbojD5dmDNWydWcQ8H8DoOVA?=
+ =?us-ascii?Q?vQn/cL9OrxkqQqQkrL7TCQX60O47b1NOWzv7uw8buSBfoQPu2pN6lZolHTDN?=
+ =?us-ascii?Q?RtYy7+RSbV7Vr3RI8SWSUrI7ccHrOqtES2fKtNKeXT9Bcv2wUXdjpXH0g1TC?=
+ =?us-ascii?Q?CQ0keR/X4iqVjb71xtKP56S/DnOerknt+Duze6CuOGOjs0SxscyBqMJlRzQ3?=
+ =?us-ascii?Q?ZwoPem9KdL+j/wSwHbL2NQLTGgg6VuEl+x2X66WgYf/Nf7eXhob2jeRxttdV?=
+ =?us-ascii?Q?3g6r7dgwoLIjAWB348R25X1rutpw++psuXqNXbhoVLmZ+lh6PgJdZQtiBBWh?=
+ =?us-ascii?Q?BYLbSJZ4Kss9WZFIuGDXKl96//DPvrTF/QxSjw=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -167,43 +140,168 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB0943.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: beffc6f7-05fb-4fcc-a3f9-08dda84ef19d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2025 18:45:17.0468
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: aeb6e2e1-819b-4943-4863-08dda84efd6b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2025 18:45:36.8470
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RslmRvJd8n7OuQEIAWKUWXgDbJRRkL+bkgU4aat+2htR+X9fJXJ5zW0Kemegu8Um32w12/b77WD0+RiU9tQHvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4439
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB9596
 
-
-
-> -----Original Message-----
-> From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang Zhang
-> Sent: Monday, June 9, 2025 10:36 AM
-> To: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>; Dexuan Cui
-> <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
-> <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
-> olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
-> wei.liu@kernel.org; edumazet@google.com; kuba@kernel.org;
-> pabeni@redhat.com; leon@kernel.org; Long Li <longli@microsoft.com>;
-> ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
-> daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
-> ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
-> shradhagupta@linux.microsoft.com; andrew+netdev@lunn.ch; Konstantin
-> Taranov <kotaranov@microsoft.com>; horms@kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH net-next,v6] net: mana: Add handler for hardware servicin=
-g events
+From: Michael Kelley <mhklinux@outlook.com> Sent: Tuesday, June 10, 2025 9:=
+17 AM
 >=20
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Tuesday, June 10, 2025 8:46 AM
+> >
+> > On Tue, Jun 10, 2025, at 17:33, Roman Kisel wrote:
+> > >> Selecting SYSFB causes a link failure on arm64 kernels with EFI disa=
+bled:
+> > >>
+> > >> ld.lld-21: error: undefined symbol: screen_info
+> > >> >>> referenced by sysfb.c
+> > >> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in arc=
+hive vmlinux.a
+> > >> >>> referenced by sysfb.c
+> > >>
+> > >> The problem is that sysfb works on the global 'screen_info' structur=
+e, which
+> > >> is provided by the firmware interface, either the generic EFI code o=
+r the
+> > >> x86 BIOS startup.
+> > >>
+> > >> Assuming that HV always boots Linux using UEFI, the dependency also =
+makes
+> > >> logical sense, since otherwise it is impossible to boot a guest.
+>=20
+> This problem was flagged by the kernel test robot over the weekend [1], a=
+nd I
+> Had been thinking about the best solution.
+>=20
+> Just curious -- do you have real builds that have CONFIG_HYPERV=3Dy (or =
+=3Dm)
+> and CONFIG_EFI=3Dn? I had expected that to be a somewhat nonsense config,
+> but maybe not.
+>=20
+> Hyper-V supports what it calls "Generation 1" and "Generation 2" guest VM=
+s.
+> Generation 1 guests boot from BIOS, while Generation 2 guests boot from U=
+EFI.
+> x86/x64 can be either generation, while ARM64 is Generation 2 only. Furth=
+ermore,
+> the VTL2 paravisor is supported only in Generation 2 VMs. But I'm not cle=
+ar on
+> what dependencies on EFI the VTL2 paravisor might have, if any. Roman -- =
+are
+> VTL2 paravisors built with CONFIG_EFI=3Dn?
+>=20
+> > >>
+> > >
+> > > Hyper-V as of recent can boot off DeviceTree with the direct kernel  =
+boot, no UEFI
+> > > is required (examples would be OpenVMM and the OpenHCL paravisor on a=
+rm64).
+> >
+> > I was aware of hyperv no longer needing ACPI, but devicetree and UEFI
+> > are orthogonal concepts, and I had expected that even the devicetree
+> > based version would still get booted using a tiny UEFI implementation
+> > even if the kernel doesn't need that. Do you know what type of bootload=
+er
+> > is actually used in the examples you mentioned? Does the hypervisor
+> > just start the kernel at the native entry point without a bootloader
+> > in this case?
+>=20
+> Need Roman to clarify this.
+>=20
+> >
+> > > Being no expert in Kconfig unfortunately... If another solution is po=
+ssible to
+> > > find given the timing constraints (link errors can't wait iiuc) that =
+would be
+> > > great :)
+> > >
+> > > Could something like "select EFI if SYSFB" work?
+> >
+> > You probably mean the reverse here:
+> >
+> >       select SYSFB if EFI && !HYPERV_VTL_MODE
+>=20
+> Yes, this is one approach I was thinking about. However, this problem
+> exposed the somewhat broader topic that at least for ARM64 normal
+> VMs, CONFIG_HYPERV really does have a dependency on EFI, and that
+> dependency isn't expressed anywhere. For x86/x64, I want to run some
+> experiments to be sure a Generation 1 VM really will build and boot
+> with CONFIG_EFI=3Dn. Then if we can do so, I'd rather add the correct
+> broader dependency on EFI than embedding the dependency just in
+> the SYSFB selection.
 
-Rebased it, and sent out v7.
+I've built and tested x86/x64 Generation 1 VMs with CONFIG_EFI=3Dn,
+and I don't see any problems. No build-time EFI dependencies have
+accidently crept into the Gen1 code paths over the years. Since
+Roman has confirmed that VTL2 images do not use EFI, we could
+express CONFIG_HYPERV's broader dependency on EFI as:
 
-Thanks,
-- Haiyang
+     depends on EFI if ARM64 && !HYPERV_VTL_MODE
 
+which would allow building an image without EFI for an x86/x64
+Generation 1 VM. The newly added "select SYSFB" entry would do the
+right thing and stay unchanged.
+
+An alternate viewpoint is that we've always built Hyper-V x86/x64
+guest images to be portable between Generation 1 or Generation 2
+VMs, and that allowing x86/x64 images with CONFIG_EFI=3Dn for Gen 1
+VMs only isn't necessary. In that case we could just add
+
+   depends on EFI if !HYPERV_VTL_MODE
+
+I lean slightly toward the first of the two, and not requiring EFI on
+x86/x64 if someone really wanted to build an image that only runs
+on Gen 1 VMs. But the downside is that someone who built such an
+image might be surprised it won't run on a Gen 2 VM. Anyone at
+Microsoft want to weigh in on the choice?
+
+Michael
+
+>=20
+> >
+> > I think that should work, as long as the change from the 96959283a58d
+> > ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests") patch
+> > is not required in the cases where the guest has no bootloader.
+>=20
+> Yes, I think this is true.
+>=20
+> >
+> > Possibly this would also work
+> >
+> >      select SYSFB if X86 && !HYPERV_VTL_MODE
+> >
+> > in case only the x86 host requires the sysfb hack, but arm can
+> > rely on PCI device probing instead.
+>=20
+> This doesn't work. Regular ARM64 guests require the sysfb hack
+> as well.
+>=20
+> >
+> > Or perhaps this version
+> >
+> > --- a/drivers/hv/Kconfig
+> > +++ b/drivers/hv/Kconfig
+> > @@ -19,6 +19,7 @@ config HYPERV_VTL_MODE
+> >         bool "Enable Linux to boot in VTL context"
+> >         depends on (X86_64 || ARM64) && HYPERV
+> >         depends on SMP
+> > +       depends on !EFI
+> >         default n
+> >         help
+> >           Virtual Secure Mode (VSM) is a set of hypervisor capabilities=
+ and
+> >
+> > if the VTL mode is never used with a boot loader in the guest.
+> >
+> >      Arnd
+>=20
+> [1] https://lore.kernel.org/lkml/202506080820.1wmkQufc-lkp@intel.com/
 
