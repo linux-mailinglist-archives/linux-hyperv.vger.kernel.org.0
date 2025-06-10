@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-5837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5838-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41511AD470D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 01:52:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FFB6AD470B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 01:52:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1D583A63A9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 23:51:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7236189C358
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jun 2025 23:52:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 356D828C01A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4971D28C025;
 	Tue, 10 Jun 2025 23:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KzWyrNuu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P0+Z0f4B"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B98EB286D62;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B987B2868AC;
 	Tue, 10 Jun 2025 23:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749599531; cv=none; b=GpM625+Pg0N/FgZXT1YhC0h5vK0BVUlQBB1kRXEyQ5xexk9HewkjyZ7vSFxGTUsw63G0LRnY9BfQxI30NVhSreBbycoTt/tlZAVp/Jpw1thY3CLQi0nUblVuruHynU2rCG7cFph/enLjXY5CY326eWGsoepy3Rypw9aSzshuCyI=
+	t=1749599531; cv=none; b=CBqYI/fY7HUzhAGbbaRqXcKCBv4FeX0kM9unpe4h4JsBbNcsQyfE6RiMKnPgW5OglZv2aq1OgY9irBcZrrQp30e9Z6/QA4UHQVfZezC/kVPP9ZSBYyHvo0q9WLDjrBYbpH4F/qC8us21N7tWLtZlQBUaVMXRp2+c0CSmhWayHRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749599531; c=relaxed/simple;
-	bh=VSAoBkrfh7e7VdGQnVWBbdS5pUsP4tk/wK6xLVyS/s4=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=W0DOlvlK8+roYYv5Mq/6R7b7eidpQjmpcO1LE6BMH03D5FRvq6yi/bjV4mZx0vTTn8Ihzf5sVaAj4HEZN5H3AE8a0X2GnGhWlZmuIjuqugN1lbt+7mWwpfSDyUQ/uVmY4bQ3jLDk5yp1Hf67kIfFqNMOyVWX3PYPFEF9VpAFYtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KzWyrNuu; arc=none smtp.client-ip=13.77.154.182
+	bh=37HPHA9RfOtlboXAsLA3xyjUIs+4gv/UlcQmD0ikOZI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=CNzJRyLOMbZ7gK8UtkV8KrELO2V58F/WnzPvGgDu/d3NxfjIZWuYQ0Al8r4qitzrkJRi6RqQw7EmJqa8DUjcb0TxyUP6gjZUYty4RM/lMC79wBiDjdmuRUSNNi38oLSg+BeU5RY0wMr3KpGXEa/0Un3VNLUuYQ+cQBfjG3Zomvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=P0+Z0f4B; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 44FA32115183; Tue, 10 Jun 2025 16:52:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 44FA32115183
+	id 53E3E2078616; Tue, 10 Jun 2025 16:52:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 53E3E2078616
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1749599529;
-	bh=VK/ALiX0Q/HSDJU7bgnAP14qLnrVV2Yfc9+uMRERrAA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KzWyrNuuZHz8lCacQh64UQN+lnwou7QcYZQkjZkH1iCRFUY5F7vkGg46xrdAoilR3
-	 wcF4LMmNt48BUSxcEGuCB92Fz9r/0hjLdaCcV8Gd+bv5g7+tzRV0IpNceeYqF+vZkx
-	 ve/QsVCo4K0k6ni69gNM4LMc1MGY3PVCfQjeH6I8=
+	bh=puB6cQFE/rhFTMv5Zzq0obpGjYzCvE7tXTvZDEqP3mA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=P0+Z0f4BKYWK/KShVT6OLBOzCiYr/h6meeLZkwn4DDq55vb5NYJWA3EY+zs+CFuak
+	 hYOn+YkHhCvZkEj3mTZK7nHjaLpFt42zgQ0Zkyg2FDSteIySCpVJz1/H2sc3jCGC7v
+	 MkT40l/z1WnTDuczGpq4nhCmhCg7gIaudSF+ljqo=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -65,48 +65,43 @@ Cc: kys@microsoft.com,
 	mrathor@linux.microsoft.com,
 	x86@kernel.org,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH 0/4] Nested virtualization fixes for root partition
-Date: Tue, 10 Jun 2025 16:52:02 -0700
-Message-Id: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+Date: Tue, 10 Jun 2025 16:52:03 -0700
+Message-Id: <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-Fixes for running as nested root partition on the Microsoft Hypervisor.
+From: Mukesh Rathor <mrathor@linux.microsoft.com>
 
-The first patch prevents the vmbus driver being registered on baremetal, since
-there's no vmbus in this scenario.
+init_hv_pci_drv() is not relevant for root partition on baremetal as there
+is no vmbus. On nested (with a Windows L1 root), vmbus is present.
 
-The second patch changes vmbus to make hypercalls to the L0 hypervisor instead
-of the L1. This is needed because L0 hypervisor, not the L1, is the one hosting
-the Windows root partition with the VMM that provides vmbus.
+Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The 3rd and 4th patches fix interrupt unmasking on nested. In this scenario,
-the L1 (nested) hypervisor does the interrupt mapping to root partition cores.
-The vectors just need to be mapped with MAP_DEVICE_INTERRUPT instead of
-affinitized with RETARGET_INTERRUPT.
-
-Mukesh Rathor (1):
-  PCI: hv: Do not do vmbus initialization on baremetal
-
-Nuno Das Neves (1):
-  Drivers: hv: Use nested hypercall for post message and signal event
-
-Stanislav Kinsburskii (2):
-  x86: hyperv: Expose hv_map_msi_interrupt function
-  PCI: hv: Use the correct hypercall for unmasking interrupts on nested
-
- arch/arm64/include/asm/mshyperv.h   | 10 ++++++
- arch/x86/hyperv/irqdomain.c         | 47 +++++++++++++++++++++--------
- arch/x86/include/asm/mshyperv.h     |  2 ++
- drivers/hv/connection.c             |  3 ++
- drivers/hv/hv.c                     |  3 ++
- drivers/pci/controller/pci-hyperv.c | 21 +++++++++++--
- 6 files changed, 71 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index b4f29ee75848..4d25754dfe2f 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
+ 	if (!hv_is_hyperv_initialized())
+ 		return -ENODEV;
+ 
++	if (hv_root_partition() && !hv_nested)
++		return -ENODEV;
++
+ 	ret = hv_pci_irqchip_init();
+ 	if (ret)
+ 		return ret;
 -- 
 2.34.1
 
