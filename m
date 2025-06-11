@@ -1,144 +1,153 @@
-Return-Path: <linux-hyperv+bounces-5882-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5883-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76FD5AD63A8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 01:10:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1D53AD63C6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 01:18:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50AFA1889B95
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 23:10:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7961B179A53
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 23:18:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395C224DCE7;
-	Wed, 11 Jun 2025 23:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC6F2C0322;
+	Wed, 11 Jun 2025 23:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="eNjhHKqV"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="uDOYp/l7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012010.outbound.protection.outlook.com [52.103.14.10])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2035.outbound.protection.outlook.com [40.92.42.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97022248F5F;
-	Wed, 11 Jun 2025 23:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132F519D890;
+	Wed, 11 Jun 2025 23:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683266; cv=fail; b=I5iIkBo5fcAkRFrZIk248SlGI6/H4sW3/vcnZCCm8sLifvb5vpVWFGB9EIRqP0yDU+FM+MZv/AOvx0GqHrOkKZsWRBeSzmD3eUH0ZDebZD1NywPV/Rt6ok7PKapOUc8U8lLPnGU9pyRENeAzjayowMUEDyiZk/1TQL4IK2OlM+g=
+	t=1749683888; cv=fail; b=EANkIqprhS2p1lHNHEkBLpM//lJlFB7b4P1AWM1WYJZtakX/sMPS+y5joM/olqeegG8lgg+EVNT/Lc0ApQ/RjmeAZGhAqfZ2I17kT5Z+1iH/KvhFwaxC5s194/3I3aQNCbvMhr2T+GAqaM494l0sobjgFukUkc4rqIDoJ5mI7qk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683266; c=relaxed/simple;
-	bh=jInEFBS8QB9F9n7zSSqbnkQIH6UdgkX3DmA6LW3+g1A=;
+	s=arc-20240116; t=1749683888; c=relaxed/simple;
+	bh=i07YXafGM+D2rVqESTDkkWRAyEq1oE/cEH2CTVZX+go=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HN4eaI9M6Ua7/5oxr5NPE2S8/aH846A1MUmEuiPTDIFLK0khn6cSBPUlyJpKkbDF6jPQDiaR69TSbpnIeucPAPSKMSKUXaSPMY7IEctkDzkPN1Am2pJF2loG5wDc6nsL2C1EeeQ2djCqH3Q6KOYumrvWbck4XGYjFsI7KocnDP4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=eNjhHKqV; arc=fail smtp.client-ip=52.103.14.10
+	 Content-Type:MIME-Version; b=cmXT9ADzcSTZl8vc741CCSX2DsCAwi+ZdXp9zM2TL6Tb3XD+l55ji84rgxZSESH3XrUtpZyQYdESHlBsrUPUm+9dc5P+hrhCfYisutfbT0LPVfj0zgfrHU3PgGP03xirZIaai+C7JGrj24BT1NYcMjfhyVVKrtYBjLbCwdm+U0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=uDOYp/l7; arc=fail smtp.client-ip=40.92.42.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nCAggcBKLyfYOuNeesWzxepky9BMmp6v9le6dGrB+H8mcRvYAdn2JmoOI5z4wOSbQEDnfmZleNJqiCn9T3UvMqH967vOhp623JnvRS6apImrp0JSpY7Lk5PjmFmg8j+9fucbGak7djG+kFyeJXI4s6zvwT1GGgqrdIqu+9Ae6pe8lk8T5y9kzNjTXqbXEk1bQ+aENlwFgr127gAZrQlCJ04La57PpfMIuUZ72yT+PXXMcGGJ8GiS6hMB4WEW6gKGURBbW9/l1TS9CBqCWpUqpIgYA9nnOVxHBDNlm3jjGY/8Aul8jPZBUAN6hJPi6jVg+JrQzxymz2zleUxcSDB5lw==
+ b=eRQBpwmxHNCDeLIkRMD0vi51qvGhgBwYnHvye0ak9EvWLtp3cw9k62H7gU1XHlWfpOlMjV7vQL7evcqG+HB5GzEETY6K44OnPfl2C+RMCDskInBH1nFsypuTcUKkZf8wYfcDmwrmN6pNc1BvSPbVrfjpyRWvVLhw5RUpDm/VRzZE5vBOg1vi4wI8a13bbIY4ItKJGvGAMaQ025o9nzhXetsnjNP/rv6czWSrj0vbVbnJfQx2oOCBbZ9sBLeBQHyHtkJX9s92k2ZCNUdKjY77XFDY6VFJwmQg8B8UYOgkIUVBqskU09YASYxtT5D98PKcjh0GJMu57ZPAUw56U/Fpbg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e+hSlwPv+nMXubnDV3WeC8rb5i4ZitEMQi484XkxoBs=;
- b=GVfZj67oUYprduqDZ3c6Q65DMMQkOi+fDK1CCyqkoiQ3sC83gjWjq3mAjmCPPz/Ln4IjMYEloDHAlNaGWW37+fMYxeR6y1PIVhAFuXg3qnlWZvy5YXGxafVrOh3r8kpvH45zUxm5iaty9haF1pj3SOA7P8iHKYoUgcoitbMcNC9U9TIGWMB3+IfVvgDfPlREG6HyFMYzrmf+cbTwMQPx0nHh8evvVX7RPAsjhZmGwvpQnuBvOUgKQkZ+sj8T6zzxdCXit7z0/RqzeLlY8lvul4Y5doIr4TDMOxLzG/nk5svQ68TpNT9PwdJZxEH/vtmRyvbqC3l6Fp/SevtsHWEjWA==
+ bh=i07YXafGM+D2rVqESTDkkWRAyEq1oE/cEH2CTVZX+go=;
+ b=wRT5tgS5ebpGN3wfr7FZ0x20LjS0foLzAH3MRBO2Vl0iPEdSUgISwCT7TogDEofWKdjyoDQ/faqy9kMIIHzpMAVtksqiVOwE2IhWh4vC3doTavSpTnua5RP9d3WKRRqLOHurNwRqraQdZJKYkQfHdRyoJnISs49HrT87tE96uRdD4L8i1EihXN96uOxoSui5Vl0YD2NLyeWv69QbMkm07K8ooDk7CCNZYUu8ahMpkLsWfi39g2beIR6ix6NExdINwVkg6StH7JehH99RutTHvoFyswryHCH0XQia1+SNSKDa4gWmGULLUh29qFmwH4TqtBaR6eGgdZderksY7o/OLQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e+hSlwPv+nMXubnDV3WeC8rb5i4ZitEMQi484XkxoBs=;
- b=eNjhHKqVsJ1zuz/Y6Lq2OkSbhQtfbgqiC2TAg+aHWnSE+2LD4O7eCP49iJ8PNWelHIVOSTWhk3Iayz9HVm56r7lajDsMLOoTw/15b+CyCdN3rymfTcUpEOj+RTc7pgZSm2oL4DrPC9HX1/QH7o8AYigEvhrGGcgLF3iI+l5IECxuNoOj2WauUTAtY6Ass5kIlqGoNENXus5uPgy3W4+ReWzTFtsDfPhJrJYuT86FKsvx8tv/8tJzNVMCyu5gLNFr+3Ga8zAEN8qPfEeMP6w4y0C22gWgxql8r+7e69fFQ62i5ACj87NPep7EjlkQu2PfEyHU9QcyI9Ze7aikBlM6Bw==
+ bh=i07YXafGM+D2rVqESTDkkWRAyEq1oE/cEH2CTVZX+go=;
+ b=uDOYp/l7EK1cmm3NdAXnRJj36lyH0Eu1yS8OYK5wcbexhRebohXROLmMMpLxaIqLevzV2aGbzc+3yUf+OuWKZVbT0zrwJAcDhOmfbh/Jw1QiHvpd0pV8VfRuhFl6sDcj+5kujg38YCPXCSsJ3QCQ9IlWYNmeZVX8msYh7H4LXzi760hP/jFBoAtNQEwVcD8vpVV9JN3UdW7Ji+/NhkhJ4KzYgdG0ZnZjW81uWr6vrg5sxD0FrbuTQCUaJNBpnjtNJ52/kiKSJWT/2baztOJvRZfVmgETFP2tmDCs9uFrLUsB0yUg8r7hYIFCOZ0ltBB5VeyQnBOCry9co+oiG14Cfw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB8488.namprd02.prod.outlook.com (2603:10b6:510:105::22) with
+ by CH2PR02MB6553.namprd02.prod.outlook.com (2603:10b6:610:34::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 11 Jun
- 2025 23:07:40 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.22; Wed, 11 Jun
+ 2025 23:18:02 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 23:07:40 +0000
+ 23:18:02 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
-	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "jinankjain@linux.microsoft.com"
-	<jinankjain@linux.microsoft.com>, "skinsburskii@linux.microsoft.com"
-	<skinsburskii@linux.microsoft.com>, "mrathor@linux.microsoft.com"
-	<mrathor@linux.microsoft.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH 4/4] PCI: hv: Use the correct hypercall for unmasking
- interrupts on nested
-Thread-Topic: [PATCH 4/4] PCI: hv: Use the correct hypercall for unmasking
- interrupts on nested
-Thread-Index: AQHb2mKviDH/rIOH3Uy8jPuHbgJWT7P+khsA
-Date: Wed, 11 Jun 2025 23:07:40 +0000
+To: Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter
+	<simona.vetter@ffwll.ch>
+CC: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
+	"deller@gmx.de" <deller@gmx.de>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "weh@microsoft.com" <weh@microsoft.com>,
+	"hch@lst.de" <hch@lst.de>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-fbdev@vger.kernel.org"
+	<linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: RE: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+Thread-Topic: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+Thread-Index:
+ AQHby/4dA8oNLnhKakm3U+ZOuvHFDrPvrtEAgAEJQeCAAFCFAIAAuDlwgAD4GoCAAG28AIAAbZyQgAEy0YCAAB38UIAJ0FOA
+Date: Wed, 11 Jun 2025 23:18:02 +0000
 Message-ID:
- <SN6PR02MB4157BAE54D3BBD4CD8065722D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-5-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41579713B557A32674252865D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250523161522.409504-1-mhklinux@outlook.com>
+ <20250523161522.409504-4-mhklinux@outlook.com>
+ <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
+ <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
+ <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
+ <aEBcCjMWZJgbsRas@phenom.ffwll.local>
+ <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
+ <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 In-Reply-To:
- <1749599526-19963-5-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8488:EE_
-x-ms-office365-filtering-correlation-id: 52f0c832-c252-449d-e584-08dda93cc3cd
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB6553:EE_
+x-ms-office365-filtering-correlation-id: 8daafcc1-e114-4c4f-5805-08dda93e36a1
+x-ms-exchange-slblob-mailprops:
+ iS5pQZgsAQCkRkOLrFZHmAr0JELdoGfPtujHw4I6FbTXLsgE7Haj1PKxl2u6EE+EEg4wTPDgqqTchmctohFwqqOCSGgI+QaTj7iRXjJ0Xku6ErpLClUW2QFI5ZhmbO/In8oHIrOMJJO8eqKycyIhXIS5O+HwACWwxHO+QtMajI01B7q0XVa7gHcSTa/CtFGBvBxb7dykaIZuFHa6GmKIIfYPns0PnCI26u6DBHvV+BAvDF3OlpTBNJ8ZKHywXvywa0YK22QX7a3fHgRT18JWDvl5ML2tuwZHUnFduyxmND+ee1BTM/TFPl/AD4xbED4bE1MdoJIRASBqX3kwtGZN4N5Ny4d2hXxUztzojU88z9hjsShmE9qFwAHLq9SWz/KO+smY701zsh4sy41vuF0JkqWQawa0UuBOUCd8e3RYYk9pMoes5Y82X7EyfvMRGNCZx40TOxKtSpqebXRsAPDZE7vDbFUcly1LGAxZzN+waKAN1+QHVx+zMexTILF2nZDPX3mxTqIaW5EfTn3RISPQnWhrLWsO9oeGkT2dlt8BKj0Q3ST6UjU42aPgL0NVM8ez0FcuusRzEaeG6j+XIgzd0/MzGIPuaPmS2yDHnLepVKxcQi235jKfa5WIaMsNjkhJSaucUoUDDzH8T1GFUIe6LNy+MQGHSfY8HPHuTM/j/lz2VIE0qoE8u98o05zJJjUCPy3O5YfEOZemaq/AIC1fX/gPqpekO9mp1dquRJ5SbulZV9n4bm6oJvwtW+CA4eDXIiS7wGg15Xovsa1FeKkg0Wn3jnTullu6lzaw01my4O+Ngd2ojVt/4BthannSvxbP
 x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799006|461199028|8060799009|15080799009|8062599006|3412199025|440099028|102099032;
+ BCL:0;ARA:14566002|461199028|15080799009|19110799006|41001999006|8062599006|8060799009|1602099012|52005399003|3412199025|4302099013|440099028|10035399007|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?ubYfJ/BVU9MvDpghAHcmVO6+EJpgAa7ZMtO3v2OohfRbUKKUtst8nBJsXr3z?=
- =?us-ascii?Q?bUsD0TozcBube5s8ePsNzcw0FanHW0pvl4ZmY5MpBaU4VG0g1VcwQgedO2hQ?=
- =?us-ascii?Q?jE6zMTAd2+h08C+xjkTV6ErA6zBoSgTA6haszA9A69wmbmKyGYsfY2IXstlL?=
- =?us-ascii?Q?aaXs6iAx0Ojm5OSliKgJ/ujCln1PGvq8+PQE5IKDjI4mTb01ec5lqpjIHpo3?=
- =?us-ascii?Q?6Inl1Nr/LTfWFb2UxQDjNWicG5ybsLI0HH9InSoAbKMHQg/4RdRVE41Cyilf?=
- =?us-ascii?Q?6eT+f31iWI7BPHpV62ZJZ3NvsZdzShROCLe5Y0lkAk9p6OWJYthJnz2buFvZ?=
- =?us-ascii?Q?MKIQEpPX0ri8bp+hlc67kLWB2wgomy4AnL7UCHdXjPhsgYlqFLtICRYTUVeJ?=
- =?us-ascii?Q?7/SYu69eqhHuPTU7Qcaw+GphBqVIpinzHgpVJFN5mCy6yX8sctc0NMHmUVwJ?=
- =?us-ascii?Q?eRg+GDFG6vxcM+epvFnYV6lQBlQnDUcFFb7xEtV4BBdljlulc7+HqoR1cZXD?=
- =?us-ascii?Q?xQ35NKaUVV6UsbM0T01nM+W2ci6vbnV8ezjaM/vfNX8WZVrgzqMLI08PupOA?=
- =?us-ascii?Q?xEjNSaoNJ1DnIReDIiqiasfTPsuulgNeahaUkK9hM9Yak2oA2q+qpIhtYSn7?=
- =?us-ascii?Q?9FBu2CQO1T58W1iNU/GZaVuOCR09NpVenqcnilCLscFqkZxeRaLwEjeTVvrt?=
- =?us-ascii?Q?4Z+vBHKzQvTfWDLOd9j2JKe/yPhPxiIU7OgnrLxUmYuv8YVpkO3OAiLBgAOf?=
- =?us-ascii?Q?9r7Yme8UzhYxdmS0ZC9XpjIrwIJoKo1PiKvdgiAbEMVqZhYV5d/w0bhlV3Y2?=
- =?us-ascii?Q?GAxjZlWayXEd7O3riKpbAUj9NLJj12HdOSJoZuS84SgeIWKtoQWtzp2+s+C4?=
- =?us-ascii?Q?Pvt26Fb+hM4xBUMwAY3xJ6HuMR+EOupc2WlX5biAeBe7k/881HCtoL0ekS+C?=
- =?us-ascii?Q?k7p6NCbfiZt/6Jgp7vZcfbkRgf6JquukrvGnym+N8n6hwDpeGgzXtwr2zQob?=
- =?us-ascii?Q?Nz/qAfX2rIvVt45o1X9KqFQSEpV2vddV57sc/rvGkvDQUB+iNWlDoG+ruFx4?=
- =?us-ascii?Q?nCEmc9bASYLANVhEdN47S7xwGAELtw=3D=3D?=
+ =?us-ascii?Q?f7cQcZWn4SkSC+CJK6H8BbC22uQSZtRs0FRbc0fxHXnegNcULK+Wj+i0BdJE?=
+ =?us-ascii?Q?dxhHgBq5RHZMDsMbbPWQAnsaZ1z+tYRza+VHO8rYWh7hA1o5K4BvTiOffH8s?=
+ =?us-ascii?Q?A6q7x/V8nxXdloWtwEFVEqT2FMue3hisgXEA3I+NyDTD/b6XCDjeWvMe5GKI?=
+ =?us-ascii?Q?Hzlz7W4SWZU4uHhtMBlZGOJF7Kw/SUf3A7Ldy0YNnjJvle2ux00zNCqWYMwQ?=
+ =?us-ascii?Q?1Zs4pnIOvbQRjEALhKgpqYA482cuqUGUB0524VBav43dynKMe09s8gZdLPXT?=
+ =?us-ascii?Q?8PrUIagQ9I54UjNXP4eaLjx3DJnjLsDYTrWGdowUVd7SezAx8tM5Iqw1j2kG?=
+ =?us-ascii?Q?XQyUnSbzCxsmjSeib4qkYNX9U8rFbTrGIjbZ4PJf6HP2jbw78fGW+BfgeoUX?=
+ =?us-ascii?Q?JAuTHlsEGE7Snrn2/Nn1XXu+d1XRnuaxvbUhxOfxybRwI805jRDxku4W4tnN?=
+ =?us-ascii?Q?ixTlUdq5U9DtCSF6D+Eu4YFs7wXDC+/bR2OsO2jHsBLi7JI29KXe6lNgqlzx?=
+ =?us-ascii?Q?jLkdg43zQ4sSJGh0mdd1LLOSrfmuGkL975oKKM9qKhwIiLE1SvZ4mYa3mpe4?=
+ =?us-ascii?Q?EJd8OC9eFdMREQ7cT7Yt25abS1eFSYdk+BuSaQ+E83NoNLijbD+tzMPHD4oV?=
+ =?us-ascii?Q?OYJBIKXCtM+wCD+3QvDi11t1J6cAbq1P8jVADjVF1B0jGpGs+qo3ru0DvTo8?=
+ =?us-ascii?Q?/KNlAeK24CECtdY/W2OGO9GxI80hhkrkcljT77/NWUExRqNwOAK9zF0fINfT?=
+ =?us-ascii?Q?3z7QgsHv1wUQIoZO3iOM+L9CNBBejPVVjI60uQ06Gz9cVuWJl9AyFNcG6zTc?=
+ =?us-ascii?Q?bRwMEU1bjEkMKeLRT31aR64Glq8b8pzzUEt83/nxq0o6jwIhBNGQRUvWm9Qb?=
+ =?us-ascii?Q?ossVHDP1jfpsCD0Fuj4avmI6+nX/Cf4dodDJyD+nskukpVTif9gbi4E7Tm/W?=
+ =?us-ascii?Q?wQngh1i4Dqzn6iBcuoYymJUk/aXa9Dl1i+/P/1dcsYI0mXF2jZG3Jd8rE6fM?=
+ =?us-ascii?Q?EiYf584UWA6vyNXBf5vceok9Tlu9NU39nBqDNgnJh0m/MNt6veEXqWN8HthT?=
+ =?us-ascii?Q?MIUXBuK1QWO6EqobEyrsh/0HMlZrOnLo+hyRy/tbob2oQwArljiTQd/3O2RS?=
+ =?us-ascii?Q?VXQ+doKkFue+iDFmE4WZaq6c4GDze2xT9rpCQF5GBfx++RUSyLbA1At+q5A3?=
+ =?us-ascii?Q?Ml+c4Q+UCfiYkTme8rDP3RweKfCW3G8uN/+960TGqu5ipZ04M4XhegVYZaiE?=
+ =?us-ascii?Q?hobuVwWqS+PZQFMErRXQsjNUbQHk5xEk2prA/vBWJgDnsZQxe0v6n2oH415O?=
+ =?us-ascii?Q?dki3fCA0hac0YVFkHIr3yQ0n?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?4TScLCB7kC1/3Xi8rQ2aA3zIe7e5ottFfPzr3Subr6PBXL9FjwrRV/UpLaJh?=
- =?us-ascii?Q?/JQS6TxWgWtQA0zkOKWAHppEiscaPaZ7PgYe8TzAI3H0e0FsvndXKFU/zEQk?=
- =?us-ascii?Q?8AtSLm7QfFcv6P16pPq2wrdNHWMXHZ675QSNGoYRVAkjLVwfypbLAQGMAgw7?=
- =?us-ascii?Q?hcyKrT385cAM8KFj5jJ56DgAkFgZYw+65qaB7USR/OMSJG/nrhRh0Qp6jyUE?=
- =?us-ascii?Q?7ZRpBZv99pujp/brjSqcJCGU4Gy1EJC1dhpsOD3gR3Sh9xWVoPdKn5U0M8I4?=
- =?us-ascii?Q?AytjujNgxg9f0ZGPAzeMshgtsbKUJen07p5DKOlOFyJqboroPNAIjvJ3TgZb?=
- =?us-ascii?Q?mT6UcWhyOtbpGtK/kU2K9sJxeiQEBJt8WwlAK3ftr0dEAAbjNW3ueG+Ec1Tp?=
- =?us-ascii?Q?sa3+z1XVURIS2QYglPvkjj9aJy9OX2ExX0NEUQy/vhjH3SBdIi9cT7IxHHHi?=
- =?us-ascii?Q?NWXKBsQZlzQ7CAtnzdHvukk9D1nCskyqbeIYqu34pL3d1gIlYguilyGMfBxf?=
- =?us-ascii?Q?lq5RFv2FeeDdct+QDOfoMB2Zkjyiz/zaE9eh0CK3D4I4500mEexJFsqopODz?=
- =?us-ascii?Q?etNL/eQuFF0YvU6G9VnlLueyCE2Cdi289cOvjVXHjf+bz0rWdTHDZkt/pQwY?=
- =?us-ascii?Q?NhkT71x6HinBi3v09MWWcY91eQq5dAxtXmlpy38RYBegvQfkpFaA60xskghp?=
- =?us-ascii?Q?vSDfSh6Dy9jExnwCuJhNeZBs/ou1rvTlA6X+eiyoiZ3YaJCXCpxtuWuOz+4+?=
- =?us-ascii?Q?K2yd7JgScfo+LrsvWzzZAQRVyeEtYfCGUiqMJ8r4P3yptJrNJK0jQFqTSD7k?=
- =?us-ascii?Q?hbjlgrPcvZ7NKochFjduxNPtz839hISyaPa31oaOMdZGTKf858Z1IIpemqlr?=
- =?us-ascii?Q?MG0OKzvxp5a83qwCE0VoZkVuuzwjWLouA6Neo/G5iDyuAdpkHMKRyQawCuhm?=
- =?us-ascii?Q?ZCKopRYnww2lPFEdO+8PvmytQbHpVkZdG9yHdANFXysbkMBaILeTwBqZXvy4?=
- =?us-ascii?Q?gRn267jfOzYfKpDwC7assfv40B5HhjKX8WL/zRqGczERb/3Egi5YPokdTF8p?=
- =?us-ascii?Q?wdcaufRyao/gXSVha5IMJn1abU/WJUEYu1AlRV9BSYPHWJw7nFDkDLYVgTTY?=
- =?us-ascii?Q?+7F7UcjeBbYdxGO0GyEtRUn67RZ8RfsidwrVE/KkvFVUUFq+UY1WSqH+aVug?=
- =?us-ascii?Q?ZD4wa0lxaJ8y6ltqmxh8LhAKwfhK212V830O1ifP+gX2mpJMm4I0O3ccg2A?=
+ =?us-ascii?Q?YQxefKfgQ/lJHRoT+t8O2PssOm9mLq5rBZbWTT30zpoX9f3zGwHvis42sJDO?=
+ =?us-ascii?Q?rowHQXVdDNNBVzRnsiIt2Wr9UnKup5wU9hG7QqDxca8s/n9mwfBSL7a7+Cgm?=
+ =?us-ascii?Q?1GdT4jTqGwuEdcrEsh0ZVrdDkE0k9qvtTNSI+T87hlWwbd44BcBGH889qHQx?=
+ =?us-ascii?Q?EqGIEqmIQz8mFHCJkmcvNpSxpAAfvDsHVwKmQln/1t/am19SO6mEoduBEnra?=
+ =?us-ascii?Q?94qr7jnw3VFvDd+hK/7bVOp2xfEFEVRUpDCxCZpR+orvxX5coVrlZoNWwggd?=
+ =?us-ascii?Q?lfTA/Pd4Uasq168bHpfOkr5QDalrbqpWWiZpYvpoYM2TDjWfsZcHmiaW54pq?=
+ =?us-ascii?Q?rhWF9pnEeXTffJPmwMoAj2RrduwPCidY9gvvoRdeo96T6FfnUHDI/EizQbTy?=
+ =?us-ascii?Q?PL0bpeYctECi6RcjGgIlAMSKmrNWHYrjB1NOXG5ctMY4+H4jXWm+r38wJGnp?=
+ =?us-ascii?Q?g8lt3ZmME0hX1vLpw+Uc2H2fZ/N8VdblXRCvdbq7BE3mxFB7mnM79e0kgCq+?=
+ =?us-ascii?Q?p1VQw9wMlf670M6AJx/0YH/7vLp7psWrT6Ff3foqR17IsN/QJplnPgqEAlms?=
+ =?us-ascii?Q?K/ELAs8cHzRIPxnxIDaKNgbSqa1ltSkJrZpUk2e19+Ht+bHLwc5lSogEbHk9?=
+ =?us-ascii?Q?Q5OOL3U3xd5gkEBy7ncym4zphGJfNHuGcZhabybmutWeE0S8+Snq8Ts0/ldG?=
+ =?us-ascii?Q?VTUKwQGWFkVKfnjtOvfJlYU6yHRmmdhhArsDKfoc+ToSAaVozZZmXvONOZX2?=
+ =?us-ascii?Q?0UBG/vsgTyk9ypGW42ZytcYSe6tkj579DHXxF3Ed9cm2AJWm2BmjQRYTJnmp?=
+ =?us-ascii?Q?iKKjJfWrs0qWEcAySJygqN9K2tnfU7Zqq+BCD2yvKtbqLEa2xWByvny6qgnM?=
+ =?us-ascii?Q?J5KW8v1hbpT8kuWRvqPFvCvVCTNJ8XGwEErbMpADAnn/2kyQ3f2Xtzg3I3ai?=
+ =?us-ascii?Q?2q/dBUHW7iPH+wlYmsFyaE91YmBedpxS9zxxOOv4aCK157gsi+AQ6ToqeiPS?=
+ =?us-ascii?Q?SLNhcyTWIsWWzn5oT+9x9MHPSEUKqN5rE7iisoWuKwQXh4miNTelu8xOjZxL?=
+ =?us-ascii?Q?T3U178oAKulQuRbKXV3wCTH/OVLXFc8n8nCIvPyJmrb4EVevgIHD9QNm+2xb?=
+ =?us-ascii?Q?sORj74OOqpDB+oiwGS5Ymv4dwN6HrfHxqgy03z/3XZIDu5Q5Xp8yc32i2YDp?=
+ =?us-ascii?Q?vrmF/dLEejqKxFQEBXhbiA6Ceibd34cKMQtZhq+ZoWJM0ndXaqSOK5Gm14M?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -152,91 +161,107 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52f0c832-c252-449d-e584-08dda93cc3cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 23:07:40.4511
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8daafcc1-e114-4c4f-5805-08dda93e36a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 23:18:02.5508
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8488
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6553
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June=
- 10, 2025 4:52 PM
+From: Michael Kelley Sent: Thursday, June 5, 2025 10:39 AM
 >=20
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, June 5, 202=
+5
+> 8:36 AM
+> >
+> > Hi
+> >
+> > Am 04.06.25 um 23:43 schrieb Michael Kelley:
+> > [...]
+> > > Nonetheless, there's an underlying issue. A main cause of the differe=
+nce
+> > > is the number of messages to Hyper-V to update dirty regions. With
+> > > hyperv_fb using deferred I/O, the messages are limited 20/second, so
+> > > the total number of messages to Hyper-V is about 480. But hyperv_drm
+> > > appears to send 3 messages to Hyper-V for each line of output, or a t=
+otal of
+> > > about 3,000,000 messages (~90K/second). That's a lot of additional lo=
+ad
+> > > on the Hyper-V host, and it adds the 10 seconds of additional elapsed
+> > > time seen in the guest. There also this ugly output in dmesg because =
+the
+> > > ring buffer for sending messages to the Hyper-V host gets full -- Hyp=
+er-V
+> > > doesn't always keep up, at least not on my local laptop where I'm
+> > > testing:
+> > >
+> > > [12574.327615] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12574.327684] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12574.327760] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12574.327841] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12597.016128] hyperv_sendpacket: 6211 callbacks suppressed
+> > > [12597.016133] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12597.016172] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12597.016220] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > > [12597.016267] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm]
+> > *ERROR* Unable to send packet via vmbus; error -11
+> > >
+> > > hyperv_drm could be fixed to not output the ugly messages, but there'=
+s
+> > > still the underlying issue of overrunning the ring buffer, and excess=
+ively
+> > > hammering on the host. If we could get hyperv_drm doing deferred I/O,=
+ I
+> > > would feel much better about going full-on with deprecating hyperv_fb=
+.
+> >
+> > I try to address the problem with the patches at
+> >
+> > https://lore.kernel.org/dri-devel/20250605152637.98493-1-
+> tzimmermann@suse.de/
+> >
+> > Testing and feedback is much appreciated.
+> >
 >=20
-> Running as nested root on MSHV imposes a different requirement
-> for the pci-hyperv controller.
+> Nice!
 >=20
-> In this setup, the interrupt will first come to the L1 (nested) hyperviso=
-r,
-> which will deliver it to the appropriate root CPU. Instead of issuing the
-> RETARGET hypercall, we should issue the MAP_DEVICE_INTERRUPT
-> hypercall to L1 to complete the setup.
+> I ran the same test case with your patches, and everything works well. Th=
+e
+> hyperv_drm numbers are now pretty much the same as the hyperv_fb
+> numbers for both elapsed time and system CPU time -- within a few percent=
+.
+> For hyperv_drm, there's no longer a gap in the elapsed time and system
+> CPU time. No errors due to the guest-to-host ring buffer being full. Tota=
+l
+> messages to Hyper-V for hyperv_drm are now a few hundred instead of 3M.
+> The hyperv_drm message count is still a little higher than for hyperv_fb,
+> presumably because the simulated vblank rate in hyperv_drm is higher than
+> the 20 Hz rate used by hyperv_fb deferred I/O. But the overall numbers ar=
+e
+> small enough that the difference is in the noise. Question: what is the d=
+efault
+> value for the simulated vblank rate? Just curious ...
 >=20
-> Rename hv_arch_irq_unmask() to hv_irq_retarget_interrupt().
->=20
-> Co-developed-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 4d25754dfe2f..0f491c802fb9 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -600,7 +600,7 @@ static unsigned int hv_msi_get_int_vector(struct irq_=
-data *data)
->  #define hv_msi_prepare		pci_msi_prepare
->=20
->  /**
-> - * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
-> + * hv_irq_retarget_interrupt() - "Unmask" the IRQ by setting its current
->   * affinity.
->   * @data:	Describes the IRQ
->   *
-> @@ -609,7 +609,7 @@ static unsigned int hv_msi_get_int_vector(struct irq_=
-data *data)
->   * is built out of this PCI bus's instance GUID and the function
->   * number of the device.
->   */
-> -static void hv_arch_irq_unmask(struct irq_data *data)
-> +static void hv_irq_retarget_interrupt(struct irq_data *data)
->  {
->  	struct msi_desc *msi_desc =3D irq_data_get_msi_desc(data);
->  	struct hv_retarget_device_interrupt *params;
-> @@ -714,6 +714,20 @@ static void hv_arch_irq_unmask(struct irq_data *data=
-)
->  		dev_err(&hbus->hdev->device,
->  			"%s() failed: %#llx", __func__, res);
->  }
-> +
-> +static void hv_arch_irq_unmask(struct irq_data *data)
-> +{
-> +	if (hv_nested && hv_root_partition())
 
-Based on Patch 1 of this series, this driver is not loaded for the root
-partition in the non-nested case. So testing hv_nested is redundant.
+FYI, I'm seeing this message occasionally when running with your simulated
+vblank code and hyperv_drm:
 
-> +		/*
-> +		 * In case of the nested root partition, the nested hypervisor
-> +		 * is taking care of interrupt remapping and thus the
-> +		 * MAP_DEVICE_INTERRUPT hypercall is required instead of
-> +		 * RETARGET_INTERRUPT.
-> +		 */
-> +		(void)hv_map_msi_interrupt(data, NULL);
-> +	else
-> +		hv_irq_retarget_interrupt(data);
-> +}
->  #elif defined(CONFIG_ARM64)
->  /*
->   * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leavi=
-ng a bit
-> --
-> 2.34.1
+[90920.128278] hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] vblan=
+k timer overrun
 
+"Occasionally" is about a dozen occurrences over the last day or so. I can'=
+t
+yet correlate to any particular activity in the VM. The graphics console ha=
+s
+not been very busy.
+
+Michael
 
