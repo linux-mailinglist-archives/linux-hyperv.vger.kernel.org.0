@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-5854-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5855-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6105AD513E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 12:14:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E30E4AD513F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 12:14:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10C7B3A9A57
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 10:13:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A73417EA8A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 10:13:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DAF0268FF2;
-	Wed, 11 Jun 2025 10:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28E9269819;
+	Wed, 11 Jun 2025 10:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iuzIOM/t"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MUDrcCi6"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 107242620CD;
-	Wed, 11 Jun 2025 10:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7308726981F;
+	Wed, 11 Jun 2025 10:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749636322; cv=none; b=bHp6y0BuBRd4qjNT+TzHa3EiKP/KoVrsiAGPi4AW5qHYcbbH6bJnmXe63lIdgbS7nays7IyQiaVCOiVIZAdImlCluv0g3fkOdxscJoM/Vfs6l0vS+T1IHWhnwc5jtiSDOAOnpRmzRn4/swkeP5f9lpWYYYQ+a6tWl+wmcqjkKNY=
+	t=1749636331; cv=none; b=sCpwJL45qySQQ9JyDwjBp/5BJudatGgJBh2+rF/ZYEmPp1Ry5sZK+79REQAwleG8bN+twGDW+isOBqDSHoIjMsnjdAXN94mJo4ZVE2ei1gUOOyzzxfGzvZFP2uJhl8qPq+jtjb8v2ybynzx9ZIju5Dj4EvPOmSSF1IzKtuK0uig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749636322; c=relaxed/simple;
-	bh=38ZBvdXOLrzJgtqJkRCDNiM4ZdoCEhHLLDJ5f2K3jX8=;
+	s=arc-20240116; t=1749636331; c=relaxed/simple;
+	bh=c3MGgcLuHBuTy5Q5AZf2oL6RPIsAHX6On6VI129UPU4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K2bdUxN+M6xKd3iuPt9TVazNFJoF4LLHo67xxErKm7h3L+lfMm5JSpO+Dg7yuPBp7YPwtFQSZq/DURiQYc2lDaTVnZBnf+EUZ7LEAd8uImDcg4nePcK5zqPTGBmTtUASuUfSY1nA4uhcrMrdOlVQzty4jb5OnByM8pgSJX1gBAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iuzIOM/t; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=s03nNfEf+Ss1G68wtTgaJZlNbG5ZkbS9Olb9QwXuE0xE+4XofxW7nahlEChXWAASE7Pg186Q2ipr5TPL74EvlT6GaUbjV5BqokPVIszRxqKapWHZC4xCb4t9zw2uDd0TidcahBPMVosHMSQFIP5h7pwkeCC/RR8ON0BzeLMcPKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MUDrcCi6; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from DESKTOP-RSFL4TU.corp.microsoft.com (unknown [167.220.238.139])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7D6B2211518C;
-	Wed, 11 Jun 2025 03:05:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D6B2211518C
+	by linux.microsoft.com (Postfix) with ESMTPSA id 101962115191;
+	Wed, 11 Jun 2025 03:05:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 101962115191
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749636320;
-	bh=Mav1jj1rRpepm5NujOv1uuKDku5hJQrIu6Weg9MHajQ=;
+	s=default; t=1749636330;
+	bh=hhmJV4jbmsjCIZBbXFBUFq8i/eFYROTAil7BVAImEWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iuzIOM/tXq0yUP09daxvsIQKc5nPJ+EkkReuauCtVDyPkoYY8CnDgSxQaFIsIiX7I
-	 AWCB8wjHMbapE3EJRD6a/KizXBcmjvfjLv2UWIJZf/AGvVV47V/T3m4BymJkpwNsMU
-	 OxCVco43RjK5nKqpjEQwnSw4dQudltqkH/YBd5eA=
+	b=MUDrcCi6ooE6MB1oBNeBYNvilQ7A1HtQve3poCeOqHpzhl9Hy8dsp+dL403S4lzpo
+	 mFjSiQ9y2GQ3aG59vvCqo+ShJDDg3G945P3ZQgK77D47vv5gzX162y0GWmZYQx59kC
+	 deXXCWds5JhOAVS8LTPiRpPEd1j2+lNZZMAUNzgo=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -79,9 +79,9 @@ Cc: linux-hyperv@vger.kernel.org,
 	kvm@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 1/6] Drivers: hv: Fix warnings for missing export.h header inclusion
-Date: Wed, 11 Jun 2025 15:34:54 +0530
-Message-Id: <20250611100459.92900-2-namjain@linux.microsoft.com>
+Subject: [PATCH 2/6] x86/hyperv: Fix warnings for missing export.h header inclusion
+Date: Wed, 11 Jun 2025 15:34:55 +0530
+Message-Id: <20250611100459.92900-3-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250611100459.92900-1-namjain@linux.microsoft.com>
 References: <20250611100459.92900-1-namjain@linux.microsoft.com>
@@ -100,86 +100,60 @@ is missing
 
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
- drivers/hv/channel.c           | 1 +
- drivers/hv/channel_mgmt.c      | 1 +
- drivers/hv/hv_proc.c           | 1 +
- drivers/hv/mshv_common.c       | 1 +
- drivers/hv/mshv_root_hv_call.c | 1 +
- drivers/hv/ring_buffer.c       | 1 +
- 6 files changed, 6 insertions(+)
+ arch/x86/hyperv/hv_init.c   | 1 +
+ arch/x86/hyperv/irqdomain.c | 1 +
+ arch/x86/hyperv/ivm.c       | 1 +
+ arch/x86/hyperv/nested.c    | 1 +
+ 4 files changed, 4 insertions(+)
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 35f26fa1ffe7..7c7c66e0dc3f 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -18,6 +18,7 @@
- #include <linux/uio.h>
- #include <linux/interrupt.h>
- #include <linux/set_memory.h>
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3d1d3547095a..afdbda2dd7b7 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -34,6 +34,7 @@
+ #include <linux/syscore_ops.h>
+ #include <clocksource/hyperv_timer.h>
+ #include <linux/highmem.h>
 +#include <linux/export.h>
- #include <asm/page.h>
+ 
+ void *hv_hypercall_pg;
+ EXPORT_SYMBOL_GPL(hv_hypercall_pg);
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index 31f0d29cbc5e..f7627bc8fe49 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/pci.h>
+ #include <linux/irq.h>
++#include <linux/export.h>
  #include <asm/mshyperv.h>
  
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 6e084c207414..65dd299e2944 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -20,6 +20,7 @@
- #include <linux/delay.h>
+ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index e93a2f488ff7..ade6c665c97e 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -10,6 +10,7 @@
+ #include <linux/types.h>
+ #include <linux/slab.h>
  #include <linux/cpu.h>
- #include <linux/hyperv.h>
 +#include <linux/export.h>
- #include <asm/mshyperv.h>
- #include <linux/sched/isolation.h>
+ #include <asm/svm.h>
+ #include <asm/sev.h>
+ #include <asm/io.h>
+diff --git a/arch/x86/hyperv/nested.c b/arch/x86/hyperv/nested.c
+index 1083dc8646f9..8ccbb7c4fc27 100644
+--- a/arch/x86/hyperv/nested.c
++++ b/arch/x86/hyperv/nested.c
+@@ -11,6 +11,7 @@
  
-diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-index 7d7ecb6f6137..fbb4eb3901bb 100644
---- a/drivers/hv/hv_proc.c
-+++ b/drivers/hv/hv_proc.c
-@@ -6,6 +6,7 @@
- #include <linux/slab.h>
- #include <linux/cpuhotplug.h>
- #include <linux/minmax.h>
+ 
+ #include <linux/types.h>
 +#include <linux/export.h>
+ #include <hyperv/hvhdk.h>
  #include <asm/mshyperv.h>
- 
- /*
-diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-index 2575e6d7a71f..6f227a8a5af7 100644
---- a/drivers/hv/mshv_common.c
-+++ b/drivers/hv/mshv_common.c
-@@ -13,6 +13,7 @@
- #include <linux/mm.h>
- #include <asm/mshyperv.h>
- #include <linux/resume_user_mode.h>
-+#include <linux/export.h>
- 
- #include "mshv.h"
- 
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index a222a16107f6..c9c274f29c3c 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/mm.h>
-+#include <linux/export.h>
- #include <asm/mshyperv.h>
- 
- #include "mshv_root.h"
-diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-index 3c9b02471760..23ce1fb70de1 100644
---- a/drivers/hv/ring_buffer.c
-+++ b/drivers/hv/ring_buffer.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/prefetch.h>
- #include <linux/io.h>
-+#include <linux/export.h>
- #include <asm/mshyperv.h>
- 
- #include "hyperv_vmbus.h"
+ #include <asm/tlbflush.h>
 -- 
 2.34.1
 
