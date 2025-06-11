@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-5880-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5881-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CB4FAD639C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 01:09:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 432E5AD63A6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 01:10:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B8957A6317
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 23:07:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D58DE18880A0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 23:09:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 785D02F4302;
-	Wed, 11 Jun 2025 23:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F652F4333;
+	Wed, 11 Jun 2025 23:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="boFumQk/"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kuptzlr5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazolkn19010016.outbound.protection.outlook.com [52.103.2.16])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012015.outbound.protection.outlook.com [52.103.14.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874F62F4300;
-	Wed, 11 Jun 2025 23:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD20E2F4305;
+	Wed, 11 Jun 2025 23:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683217; cv=fail; b=krpf5M0Wn9qbICiw8KacBwe3jrxQXnDUHRqOB0EoOlKl1NKO6IxWcgcQ/YPdBpQ8BBNr3iAOfIgkav93xKNpYSXJq/54aqV7EroNZ9uShSmlhNqFtpF560ZEZseEVjFUpdEuJ+JuKEDe6bTBOgWS13jF4d1ORKfnV1B9ku4jUD8=
+	t=1749683253; cv=fail; b=QBvUnomu6YBwyZJ6/M1EMCxtDcVR7EwlTBV0SRkxKhEms6nNmeer34HwuiygxzX7OpKim+Q55tDVZ9ASw0BgK88/j7qfPTBj7/6d3kYTa9J4Ja7GSjTOCRiYwMmmiH6DBnpm4Vf0gkx5kdIq9r5D5xuAFCLjxFRyJwZ92xkIlu8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683217; c=relaxed/simple;
-	bh=Kgc/UoDLr4vlc0nWbSO2SqJAYjB5cZmpUh2jWCpaoX8=;
+	s=arc-20240116; t=1749683253; c=relaxed/simple;
+	bh=KrVibL55EUwjSODgtm7xZNpFN+z2VKbPRqYqYMttvkY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y5Fq+ue2jNI1BWC7jUx19GKswLGY4fy2gDWWJsp2a6GL8hi45R7q4w/0hZga0QWybfJci02idTW+ROfxEX0dm/hHk2m++iE6Tt9uhaVZRM9fowotqFalB+a8TV23K/zSjPAvjsYXP5eSXYPaQgIU+ntRKgUoK/EByEvnreh9l9s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=boFumQk/; arc=fail smtp.client-ip=52.103.2.16
+	 Content-Type:MIME-Version; b=Ijtch6eQAG0Tb1usVQLpBv+P12smkA2c47CT75iVfANPCxd0TkoDTBNSEBJnjQ+CWhjnQS4dC0FKlxzk7Yqt5pVgXyw4vN1Aj3h7nFVShXthfDRUkfZU9q4LtdI7sJEO9POSajKIyvuQq1DK3viw1bevX0k9IV4C1RsFWLC63hg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kuptzlr5; arc=fail smtp.client-ip=52.103.14.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xpslg0nE6J2j7wc665sahJGVzrbPIeDWT+Yo4WCjEJ5315SOSZfSAwwimp2vVA+KQXi7cYM5zv5YoMyd4Ed4uBrVBYhpFG0fQgiNIQ/Nogj2KYvKPPpvJE6oUAeVMwZST/KTLfbT2BGWbpTRX5qeSbRCUbMcGAwIqGY1qJ4GQ2TmOLUEPZgo6HdzIQFsBEKO0D4VAqlfJwWClX7hjqtXlJyMMGjNT0c18qi4z8DejXfazAeXjiFRMuh5OxYQChuAxSqSE88vEV3aPkpdEtrNpHxzArUndZkq8n0s0HqazQ3pcuno41G9cInZWF5c4rkGHxHUtYM3Ag2gObUR32L5Fw==
+ b=TOidWUdQ7fKbrItsl7UtMbaXJ63L4884wWLMu+dpCdvZrIHkqu0EtXMgrAxPf8oj5M69Tx/z08YSiqiEi8d0bZHRgN60AmrVPR5IcEBTS+gDEye3hSJI+lve3nEo4s36tlAz1wfbqRzS6znl179+uxKXV9vZjlFUvfz63pMbDxpkMQbamARvDZqjJqqHOqF1TZbAA6DOzH+e3pJPspm3Y2DowHEOnuDOMYwKQsp0SI579fAGvVJBc9qwNsK8fvgsA0rMa10b/dIbwa8grq6VakGhFgCprHt0v+SBDp/Ts9XxNhHTm/4sJ1I41JswVfJ1t6wQLkjDZDPB98kOMVqT3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hNhLbNqr8rImvxMiXanvdmmAZV30VJ7soySP2ZAGCGI=;
- b=M0gOIUJOU3lFrW4jWO2JB1jniU7diXVFwaLjnpOUzmOzUepKs86G2hxKfGT6vvl2YeV6ESMaOyEE0R6QzxvZOkqdb7h3o63Onjm9pTR//WYPJ9ne/iEbYhtcl7dMsvHSClZGj2yJ/RXkSPicEGbeoRrDCS3Sd+Fkw4eakoFh7PEeo9Bhc2s5B1295JtiHZEDEn/XVpcBf8GPTkDDGdVYsSa2uB+PfXJx8XTiVAAewDA/JiciTHafOW4WYb2cMA0H4WzC6mMPDCEvv+H/cnPvY0lKaDLJrpE84NMF53Cm4KQpiM4KXEMl2plc28p8FSwIVn+ETw5JjNm8XBMYFn07HA==
+ bh=E/CnbLLHdSN6H5kR0cXOC+lSBWFo6Qcry67hJvjomvY=;
+ b=Ac1C82fF5NVJPFW80CbERYXiWcoyJsx71NKGfBxmUe/0Q8XA4lvNQ/pzhthjNS/AoZwrQLWcxaCCNYfYqe40v4Nuvgawv7UVG0N+SB+HsotOANZruAKcedkzl7SZ3gM6spPGLljoKnREdAmTAZuHanfd56E5Ny/AryrVNVQc817MAM0xPtQXIlM+SbwadmYZVdb217yFTLhoNCKuVnDK8tw0H7YAej0ZnbgUsBNPrit91stqU8WRPpuuP7DCcKjAx2WXubsMgQkYUO29w/EQ7etBOF2Wj52NSc8hgTzdgFFPAjbe0thIWF8Nb5D5yudTkw30hE5byX4APU++nRlR4Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hNhLbNqr8rImvxMiXanvdmmAZV30VJ7soySP2ZAGCGI=;
- b=boFumQk/55akP/9uE7IuMzeT0wuenHRR94BqiNdiDcs2P9MvPtzMJTWHCGvZtLdhwZx62mybLY9C25/t5+OEaBLBwJRVeKoQv1sAo57RYy2FRMSR8CkfJkjnoQPTPg2rs3qzRFyC4TRQsCJdXjhXlODZy/j8MvAGszpz9bMuOTrhWUKWNp4m5bTcHpSI3NWOHMqeYMlExuoXSjQuyZtlxgcV6fgPIPjyC4l6InndkOT2B+QV9qj60GDXi/pqQq6Ux0L1YVmNyvbDR06S0da3HV1VxoBc8H5Asnxfio8m12LfdKTVImKipaPQ2sJ/CXOJI3341NYa6FX6d5dmOJsWIg==
+ bh=E/CnbLLHdSN6H5kR0cXOC+lSBWFo6Qcry67hJvjomvY=;
+ b=kuptzlr50mOloOzAPCaSJxH+P6N8ayTcHhkNzarqSpw1IEWDsC0OPPmrY7L02R9uVX5QnxDWs0fqIs/pUJAaR6yMWoB5IuQKcAtP6u0fLumQGVXSKNHBuFtwYIH3FEE0feMr4hZRbdI+8rD9MC9VpNzof7dvFBQPplg40cFyl1A1eoO7SQUyYG3qWMBL7c3kBY5gp7fo93QrO42hb9dekY+oimVZpRc0InximaFw0MbSt0YCrgvJID8tv9yJqetfiMSwyp32KnynLVRH33qGf++iOBZDj095RNlxbQ4E0djdoBgBpXBA6UC4pxpQ6dEteN6js/Qy09ADfcNq1GbabQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by PH0PR02MB8488.namprd02.prod.outlook.com (2603:10b6:510:105::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 11 Jun
- 2025 23:06:51 +0000
+ 2025 23:07:28 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 23:06:51 +0000
+ 23:07:28 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
@@ -69,77 +69,74 @@ CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
 	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
 	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
 	<hpa@zytor.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
 	"bhelgaas@google.com" <bhelgaas@google.com>, "jinankjain@linux.microsoft.com"
 	<jinankjain@linux.microsoft.com>, "skinsburskii@linux.microsoft.com"
 	<skinsburskii@linux.microsoft.com>, "mrathor@linux.microsoft.com"
 	<mrathor@linux.microsoft.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH 2/4] Drivers: hv: Use nested hypercall for post message
- and signal event
-Thread-Topic: [PATCH 2/4] Drivers: hv: Use nested hypercall for post message
- and signal event
-Thread-Index: AQHb2mKvSADQTAZvpUO5ZBh/YnZlk7P9YE0w
-Date: Wed, 11 Jun 2025 23:06:51 +0000
+Subject: RE: [PATCH 3/4] x86: hyperv: Expose hv_map_msi_interrupt function
+Thread-Topic: [PATCH 3/4] x86: hyperv: Expose hv_map_msi_interrupt function
+Thread-Index: AQHb2mKvyYZ7kcH90E2KtA5yDTBR/7P9bWcQ
+Date: Wed, 11 Jun 2025 23:07:28 +0000
 Message-ID:
- <SN6PR02MB4157ECC740A762C9C3B9EA6AD475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157639630F8AD2D8FD8F52FD475A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References:
  <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-4-git-send-email-nunodasneves@linux.microsoft.com>
 In-Reply-To:
- <1749599526-19963-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-4-git-send-email-nunodasneves@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8488:EE_
-x-ms-office365-filtering-correlation-id: 0f831739-5ea2-4b3f-f0ab-08dda93ca666
+x-ms-office365-filtering-correlation-id: 7b5759e7-59bd-4a8c-906c-08dda93cbc8c
 x-microsoft-antispam:
  BCL:0;ARA:14566002|19110799006|461199028|41001999006|8060799009|15080799009|8062599006|3412199025|440099028|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?+59DYkQuWz0Ht9g2C9ZVdlsgSzVdVYQ193IaHAv1yfupSDXtErEMVpn4i/Ny?=
- =?us-ascii?Q?zAmwo8dF70ufdy3VCaWCYdPa28mQo3/lLhb7nc8GbWMqQgXwoD/uknpVFrtd?=
- =?us-ascii?Q?HerSctxAUott2HEMG164SHtbQDzE9wrNWjT0ZXzZ651efl1W46H7A7m4OCVD?=
- =?us-ascii?Q?xIbAa6TiVzAB37/9gJGUlR1FybUVRXvSW2w0TcNaxaACG6KRUodShpVnwnk8?=
- =?us-ascii?Q?0Fd3q+H11695b+B/bIbMUn2gEkovOsRlp7Eho0NcHycWvjXtmkrk6mYA1rVC?=
- =?us-ascii?Q?KsoUo6hqxzsBjjQHhLN3+Lhpd9XZj5M/YmdW0cnVnw3YK1nDztv6kgcS5sa7?=
- =?us-ascii?Q?yvHaF8WPzb5fe3FvRpcYCz5JkBbbu9hTcsvyylAlw10KhRSwT/Nz8LzzxEd/?=
- =?us-ascii?Q?E0f72AJrSbcsmPbzrvtKOliWiLxzeXUvmxJJJSzCwa/QTgcLpknWXNCYcwkP?=
- =?us-ascii?Q?Xp0riG5heWQBbVeQ30gAuxUyXif/FhLZqRwThpISo62vaQAtlLwOG/ey5Vcz?=
- =?us-ascii?Q?6jnTpiuFt3HPt6i4zpxZzaQtkfLcf8V3Kkt45gt6q/LfxeLEXh1ae4Kr8m8P?=
- =?us-ascii?Q?kuLkshA1+0ot5JHBvYv8MdwbjttKBlmiXHFQrEvBwIZ6CREg1F4ocsYOaIKz?=
- =?us-ascii?Q?BNTTUucU9OFOW1fPJPXLeU++NNYkaM7O8IKtpWOh11l/mx9T7nFXe+/67vOu?=
- =?us-ascii?Q?nDaZtJeCpcDr+taGFVRe+J5quZt3np8Ci700ytqacqq4vL6mdpCwJBLcuyu4?=
- =?us-ascii?Q?V05HM00iM6paEPD3gREjcAX+4BOA9IBiCF0E8sAV/BaaqPGX3UHnhbFz9DUT?=
- =?us-ascii?Q?pCIk2z128P8PM6kYEIe57FUJwAMuSBezdYZGgJ/HMfoY+wSLNEU/G4j7ba7u?=
- =?us-ascii?Q?rcfMnTqo/PY5HPKIgeOLF4AU3iKGxOxO8INKHfMtDH/PF9f4dTOVfGPEAhuu?=
- =?us-ascii?Q?h67fo4llw2x1eAIqSlHVc5NR/bEVgvvuG2O/4zyxKkairxC9gX30R1XTZ6hY?=
- =?us-ascii?Q?GimlCXUocJrHN/jxwXoArLwcf9XBUuqv+zl6sZ0ReP3uGh7NKumB58Qy8pQI?=
- =?us-ascii?Q?3H39PngWjqwoWLn6taNo7vHk3DN2WNe6Joz5GWcUoHo5jyn+SEs=3D?=
+ =?us-ascii?Q?/m3TJALpldQjq29ShbWHrkpfPfSdeT4K7Qfn0XKQuTRBmQAmPermgS6nSTqH?=
+ =?us-ascii?Q?c0p8chYRY2IM4O/1dyNa1CqaJMYdsiGb2igUQaSvAJxZl8rlVIq3shbZroq/?=
+ =?us-ascii?Q?/dPFEHHjAIJdQmXxlXooVEcZ/6wTsKB/2u0fgp4YER1Ff3Lr5N5WRU6jTZ7l?=
+ =?us-ascii?Q?yWrXsM0dghEl+e16S6Fp5KJCNpts2BRQtColt4BFcKrpxzkJY0+zzmVidQhf?=
+ =?us-ascii?Q?RQ8z96Y+6d1txq4vbWWwR5FBQr+PUMlZpd46JUI0qeo8gZPgVx4kFekxhk71?=
+ =?us-ascii?Q?QhKATBE9TX16cP4nYSwcAIcv+xe0Rfm8J0F46Pk/pN2s0ztM6QRzwgsDApLC?=
+ =?us-ascii?Q?Ok6aoE2lLYmGC6MQJTqXLTGUqFpxuOb7Ej2iX13+wP1BcKdZELGijQ/9koyH?=
+ =?us-ascii?Q?eDiJM3XM4gA27KBf6yPzQngfLxxCHQFFrnG33pksHlY/RapTWMz2WV3sRnI+?=
+ =?us-ascii?Q?K8g5jfcifEX3rPg/6/uWtwbJ9r+hFWLDQ2AzQc3DMKNzhZEJpoR6MOzL7Ztm?=
+ =?us-ascii?Q?PGQ6AxCC5IgKsTYpUyNdydHGpR1z+v7nP1cEOabzGxR/DU2J2RPBXrB7TF2W?=
+ =?us-ascii?Q?Q2WCuDYBEC3qo9hh6QoL108EMeVyJ/grHMAyHm8ObtP1fFxHLiZJaRNZ64O6?=
+ =?us-ascii?Q?YZdCwLa3X4gUWXRdWcXXuPHL6EA+Fd3CgwzNgp/eE/bUOiK6JuPuO/w23NUi?=
+ =?us-ascii?Q?LpFDlRqjPnXRh4vqxyvLE/AQ5wXS8U+3Q8119LUdkM7iKs/6BshYUzxSimhh?=
+ =?us-ascii?Q?62yN/rnRFXV3ahkiey/nylTMjSJFyWQdtCRbcZwbM0oKGxYMxy1Mstrzc0db?=
+ =?us-ascii?Q?3vTkhBZ7QT8uyJF2mtM2FT2ektj4+g6RwpNjZ05uBYllhSFLwyx4SqcTP0H3?=
+ =?us-ascii?Q?/kpHWNRj+NFGqmTo02aU4og8VE7rMwE41W4v9NTIgpi9KSXsotkfZ60BiuUU?=
+ =?us-ascii?Q?1/OP6SziKd+1DzrGL4dU7wi2xCVsMRcBPBRlpy2yRlO5eWrzBU1hicWXR0lN?=
+ =?us-ascii?Q?cXoLsPTyra9Ltqo90LMIYs4bJfRF9qV0m8w6BgzKGljRb8xDvsgl48tZnYTL?=
+ =?us-ascii?Q?nt9ptfTs8V21Jgi8fVt0+5Ww627FB8joNQS4/BnjIpaLZwzkVcc=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?+C8WIZIW2OYvLHwoK553PGkhpiIGaIR+raRhZaLDILg0GGLSfalcBgpKyaqJ?=
- =?us-ascii?Q?HSrApuo5G3ySqEsvkxSNIujlQY2q7/4s04YJjGkgfZnnSYRZh52viyKyHesG?=
- =?us-ascii?Q?qCC3FGuktK2RM8m5CfWLZ6ikZOv4anh2H9aZH3dnDHMk++wdsfP/EUuyBUFC?=
- =?us-ascii?Q?r6Y3lI0+Wh1IS360MIFhqzuGhraUyLkhQBNK4iebnoXq8U4Syx2gpNjo1wem?=
- =?us-ascii?Q?k1mZYPcaBfGFMjBymHZ28mkBVLm9cb3+q2zM/HYAAk4BK7maL+sD0RaoxRti?=
- =?us-ascii?Q?dUi+4Xlbt98Q/dkEq4PlKsK8J9W7wyJtSYA3ahY/5HtTUwUEGFpgp6tZ3WxK?=
- =?us-ascii?Q?78ltok82jy0bB+gXBlaL7EMXaorD+8dKzPdEUljLl+X/53MqsQ6u+lQX0wDo?=
- =?us-ascii?Q?HTz8DG8KA4inD/huT03i0/TYbiXPRceo8Pr3JGm0cGULBoz48YNr9ZdJ+8cE?=
- =?us-ascii?Q?3KCtjmWcwxo9eh4XA6KokgxXkVf+Tpol4MmcIjKQQey0qsY8H7440gQZ8g34?=
- =?us-ascii?Q?BpL3aNYuPytkFY6z5m/xLcf4RijZFfqCQefzr4TxxixiKqMcODEcfAYnsKdj?=
- =?us-ascii?Q?o1a6zPmODJJ5GPLQUOo6vF/kIpLkINwaJeZgBSM36y1idNXmLeS94S4uM5iu?=
- =?us-ascii?Q?pZop8sIxRYDUmftfYBJxbaySNzUH8BWZZRJZmcbdnjNSoboLyW9us/UpdKxp?=
- =?us-ascii?Q?o2bm4reGIacAxmbHg+JS0YEsqV4xR0iWPLjtmxOeeMgggW8Yp2O4z554kGGP?=
- =?us-ascii?Q?t4QC/g1IsEiADIBsD5pZ/Js0i5k0IIhlzN+J6zoyTPBnGitYsA4mANT0HvV2?=
- =?us-ascii?Q?T3Wv/fW/GOeV9dNY/58841q4f4YsTneP6k+Ykz/HBRK1pSYMlVkvOY5xaU1s?=
- =?us-ascii?Q?w8rfnF6vPBdpzNOPmatgIIJudG/KhZ8ODcGh5/ogDsdVWNlnoNxeHNpt4oVS?=
- =?us-ascii?Q?4C/ENWj/QnVeOcuEDtG8kj9GO6jQ+GF+TuIQUWDXZueAPQl/AR2psju1koU5?=
- =?us-ascii?Q?1HmiU+Fd8lIYeyjKTGL6Z1eq2HNwyYioh3XD3v/+PoSvo+btayv9ihXtz/Qk?=
- =?us-ascii?Q?3BM+7kPYac232l31f4ZvRKCWouoqnAbZrYQqZvbfIAv1b0ihwvFQN8GsnQWx?=
- =?us-ascii?Q?BoorY1bAuv8Z+h63OV2hFwXJkIi4IreYZGn0GlmtVqONv12rVtm0HJhdHHtu?=
- =?us-ascii?Q?ZNG0QSNcUpFeGujBpxgS0i+XnlA8sOWgEtEV+9wYsv2Col8sBW5RDNPONp0?=
+ =?us-ascii?Q?jfBxmzNmQGDguwnzOOrxcxIU9VXCXsYiGuFXV30fv5wnvwNuwou5oSRcIYBl?=
+ =?us-ascii?Q?CPhSUtna3zm0BtXwU1bRCKlyRJmt1wWvVqJZ64CnFuFuobXqiwQ657DaDDSG?=
+ =?us-ascii?Q?nPgQbM+nSEQdKbbOCqKa8HQZqlBP3dtYBZh36G3hnya7z+77Cp1i5aB0oNKl?=
+ =?us-ascii?Q?yKCISNXVwsz8VAfwMj0E0dApNlt7vVCbGdj1H5YrAINL3Zvot3ABrj71ShYP?=
+ =?us-ascii?Q?GlwSNiGb7+dXB8JhD5jy/dfCvVFC4zpfnYkG8aPEXvQrguRsjpTb+AHteDkZ?=
+ =?us-ascii?Q?V2XSInxD08tqTqxcnuK/DElIQaed7WbToDHjflP9b2/gGqvoWFt52XWzkOIu?=
+ =?us-ascii?Q?DS2DPhvFvrOHnsiSFJ+To/OKJx7ql8NtPwvxqlRQJrwuuZdH7+h5dy1BIcdY?=
+ =?us-ascii?Q?+zGWJNNutrZ8PwEn20oSeHWHRytIa9UVdkEdGWqLOXmuYkJDQM3M1/BDiO9K?=
+ =?us-ascii?Q?nr3acirGWy7S+UGMKrvelNbmSb2TIaJFhm8stv6kFWcs+drSLkHJN3WcNDOX?=
+ =?us-ascii?Q?NmSU3HG/YXQjtJqhWX3umBHLyrkxiM4HTtbOQ6GeoV9nE009iKuKD338AgZB?=
+ =?us-ascii?Q?/I1q7onNSpZulWQO9pSNYw5M71wn5xzu1+uavkBO2tkBNiXxxNgVhuIj+SyQ?=
+ =?us-ascii?Q?UbEL64UcOGAA79S5IY9FnTWDWTTnQm4AwzRks08PSOO6Ed04JZ0SzY+neZ4V?=
+ =?us-ascii?Q?r9YEIXhQG+X8KhdLrmWrUzxY++W+WlPIBud9XgEaDc20vNxlgzE8RxFrn99q?=
+ =?us-ascii?Q?z7WNvZK1EoL1OH29xXFvjGnir7boMOaf/4Qvu604X8IEPzTXDuiPhIA+6ILP?=
+ =?us-ascii?Q?qrsAv2UgAoR78MUkQ/eK3LpYtw/CZv3pMIpvURXckIBvduR+6wZC9W6B02Qb?=
+ =?us-ascii?Q?VxJhLw4/Hx5/UaV9bFkWn206RazBAjZEDumI7iBL1AXjpgTbQdCO+FSWC/Zg?=
+ =?us-ascii?Q?kj+yhiYp9YvmaFr6yzTI6xNPnNR8YvJ+PU8T5CnYhcR9vR/xHN5+iAB0EK41?=
+ =?us-ascii?Q?00jbNBvtKrad25OtKkuJD0KJ2+YE9Bg+54kf27k/onJdiPIkffTEWzY2C2/N?=
+ =?us-ascii?Q?onLz2lnnLlD29ELef7pMA5ULTqkJi1g92GPNuYANJh2wcpySNrMFnhjJewdi?=
+ =?us-ascii?Q?aEHH5Kw5IpNzOMGDsnxt/imMeNNMs1exy7OZXvL+S0CIwEPRisfWnGVN7C0k?=
+ =?us-ascii?Q?g3glnGpmt4dLlnsOC5J3n5temSHFB+4rsZag/CLm2zacU00q9DAqZFI3XJI?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -153,8 +150,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f831739-5ea2-4b3f-f0ab-08dda93ca666
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 23:06:51.1346
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b5759e7-59bd-4a8c-906c-08dda93cbc8c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 23:07:28.2326
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -164,116 +161,173 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8488
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June=
  10, 2025 4:52 PM
 >=20
-> When running nested, these hypercalls must be sent to the L0 hypervisor
-> or vmbus will fail.
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 
-s/vmbus/VMBus/
+The preferred patch Subject prefix is "x86/hyperv:"
 
 >=20
-> Add ARM64 stubs for the nested hypercall helpers to not break
-> compilation (nested is still only supported in x86).
+> This patch moves a part of currently internal logic into the
+> hv_map_msi_interrupt function and makes it globally available helper
+> function, which will be used to map PCI interrupts in case of root
+> partition.
+
+Avoid "this patch" in commit messages.  Suggest:
+
+Create a helper function hv_map_msi_interrupt() that contains some
+logic that is currently internal to irqdomain.c. Make the helper function
+globally available so it can be used to map PCI interrupts when running
+in the root partition.
+
 >=20
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  arch/arm64/include/asm/mshyperv.h | 10 ++++++++++
->  drivers/hv/connection.c           |  3 +++
->  drivers/hv/hv.c                   |  3 +++
->  3 files changed, 16 insertions(+)
+>  arch/x86/hyperv/irqdomain.c     | 47 ++++++++++++++++++++++++---------
+>  arch/x86/include/asm/mshyperv.h |  2 ++
+>  2 files changed, 36 insertions(+), 13 deletions(-)
 >=20
-> diff --git a/arch/arm64/include/asm/mshyperv.h
-> b/arch/arm64/include/asm/mshyperv.h
-> index b721d3134ab6..893d6a2e8dab 100644
-> --- a/arch/arm64/include/asm/mshyperv.h
-> +++ b/arch/arm64/include/asm/mshyperv.h
-> @@ -53,6 +53,16 @@ static inline u64 hv_get_non_nested_msr(unsigned int r=
-eg)
->  	return hv_get_msr(reg);
+> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+> index 31f0d29cbc5e..82f3bafb93d6 100644
+> --- a/arch/x86/hyperv/irqdomain.c
+> +++ b/arch/x86/hyperv/irqdomain.c
+> @@ -169,13 +169,40 @@ static union hv_device_id hv_build_pci_dev_id(struc=
+t pci_dev *dev)
+>  	return dev_id;
 >  }
 >=20
-> +static inline u64 hv_do_nested_hypercall(u64 control, void *input, void =
-*output)
-> +{
-> +	return U64_MAX;
-> +}
-> +
-> +static inline u64 hv_do_fast_nested_hypercall8(u64 control, u64 input1)
-> +{
-> +	return U64_MAX;
-> +}
+> -static int hv_map_msi_interrupt(struct pci_dev *dev, int cpu, int vector=
+,
+> -				struct hv_interrupt_entry *entry)
+> +/**
+> + * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
+> + * @data:      Describes the IRQ
+> + * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
+> + *
+> + * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hyper=
+call.
+> + */
+> +int hv_map_msi_interrupt(struct irq_data *data,
+> +			 struct hv_interrupt_entry *out_entry)
+>  {
+> -	union hv_device_id device_id =3D hv_build_pci_dev_id(dev);
+> +	struct msi_desc *msidesc;
+> +	struct pci_dev *dev;
+> +	union hv_device_id device_id;
+> +	struct hv_interrupt_entry dummy;
+> +	struct irq_cfg *cfg =3D irqd_cfg(data);
+> +	const cpumask_t *affinity;
+> +	int cpu;
+> +	u64 res;
+>=20
+> -	return hv_map_interrupt(device_id, false, cpu, vector, entry);
+> +	msidesc =3D irq_data_get_msi_desc(data);
+> +	dev =3D msi_desc_to_pci_dev(msidesc);
+> +	device_id =3D hv_build_pci_dev_id(dev);
+> +	affinity =3D irq_data_get_effective_affinity_mask(data);
+> +	cpu =3D cpumask_first_and(affinity, cpu_online_mask);
 
-I think the definitions of hv_do_nested_hypercall() and
-hv_do_fast_nested_hypercall8() are architecture independent. All
-they do is add the HV_HYPERCALL_NESTED flag, which when
-implemented for ARM64, will presumably be the same flag as
-currently defined for x86.  As such, couldn't the definitions of
-hv_do_nested_hypercall() and hv_do_fast_nested_hypercall8()
-be moved to asm-generic/mshyperv.h? Then stubs would not
-be needed for ARM64. These two functions would never be
-called on ARM64 because hv_nested is never true on ARM64
-(at least for now), but the code would compile. And if either
-function was erroneously called on ARM64, presumably
-Hyper-V would return an error because HV_HYPERCALL_NESTED
-is set.
+Is the cpus_read_lock held at this point? I'm not sure what the
+overall calling sequence looks like. If it is not held, the CPU that
+is selected could go offline before hv_map_interrupt() is called.
+This computation of the target CPU is the same as in the code
+before this patch, but that existing code looks like it has the
+same problem.
 
 > +
->  /* SMCCC hypercall parameters */
->  #define HV_SMCCC_FUNC_NUMBER	1
->  #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index be490c598785..992022bc770c 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -518,6 +518,9 @@ void vmbus_set_event(struct vmbus_channel *channel)
->  					 channel->sig_event, 0);
->  		else
->  			WARN_ON_ONCE(1);
-> +	} else if (hv_nested) {
-> +		hv_do_fast_nested_hypercall8(HVCALL_SIGNAL_EVENT,
-> +					     channel->sig_event);
->  	} else {
->  		hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
+> +	res =3D hv_map_interrupt(device_id, false, cpu, cfg->vector,
+> +			       out_entry ? out_entry : &dummy);
+> +	if (!hv_result_success(res))
+> +		pr_err("%s: failed to map interrupt: %s",
+> +		       __func__, hv_result_to_string(res));
+
+hv_map_interrupt() already outputs a message if the hypercall
+fails. Is another message needed here?
+
+> +
+> +	return hv_result_to_errno(res);
+
+The error handling is rather messed up. First hv_map_interrupt()
+sometimes returns a Linux errno (not negated), and sometimes a
+hypercall result. The errno is EINVAL, which has value "22", which is
+the same as hypercall result HV_STATUS_ACKNOWLEDGED. And
+the hypercall result returned from hv_map_interrupt() is just
+the result code, not the full 64-bit status, as hv_map_interrupt()
+has already done hv_result(status). Hence the "res" input arg to
+hv_result_to_errno() isn't really the correct input. For example,
+if the hypercall returns U64_MAX, that won't be caught by
+hv_result_to_errno() since the value has been truncated to
+32 bits. Fixing all this will require some unscrambling.
+
+>  }
+> +EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
+>=20
+>  static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, st=
+ruct msi_msg *msg)
+>  {
+> @@ -190,10 +217,8 @@ static void hv_irq_compose_msi_msg(struct irq_data *=
+data, struct msi_msg *msg)
+>  {
+>  	struct msi_desc *msidesc;
+>  	struct pci_dev *dev;
+> -	struct hv_interrupt_entry out_entry, *stored_entry;
+> +	struct hv_interrupt_entry *stored_entry;
+>  	struct irq_cfg *cfg =3D irqd_cfg(data);
+> -	const cpumask_t *affinity;
+> -	int cpu;
+>  	u64 status;
+>=20
+>  	msidesc =3D irq_data_get_msi_desc(data);
+> @@ -204,9 +229,6 @@ static void hv_irq_compose_msi_msg(struct irq_data *d=
+ata, struct msi_msg *msg)
+>  		return;
 >  	}
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 308c8f279df8..99b73e779bf0 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -84,6 +84,9 @@ int hv_post_message(union hv_connection_id connection_i=
-d,
->  						   sizeof(*aligned_msg));
->  		else
->  			status =3D HV_STATUS_INVALID_PARAMETER;
-> +	} else if (hv_nested) {
-> +		status =3D hv_do_nested_hypercall(HVCALL_POST_MESSAGE,
-> +						aligned_msg, NULL);
->  	} else {
->  		status =3D hv_do_hypercall(HVCALL_POST_MESSAGE,
->  					 aligned_msg, NULL);
+>=20
+> -	affinity =3D irq_data_get_effective_affinity_mask(data);
+> -	cpu =3D cpumask_first_and(affinity, cpu_online_mask);
+> -
+>  	if (data->chip_data) {
+>  		/*
+>  		 * This interrupt is already mapped. Let's unmap first.
+> @@ -235,15 +257,14 @@ static void hv_irq_compose_msi_msg(struct irq_data =
+*data, struct msi_msg *msg)
+>  		return;
+>  	}
+>=20
+> -	status =3D hv_map_msi_interrupt(dev, cpu, cfg->vector, &out_entry);
+> +	status =3D hv_map_msi_interrupt(data, stored_entry);
+>  	if (status !=3D HV_STATUS_SUCCESS) {
 
-Are HVCALL_SIGNAL_EVENT and HVCALL_POST_MESSAGE the only two
-hypercalls that are ever expected to need a "nested" version? I'm
-wondering if the function hv_do_nested_hypercall() and
-hv_do_fast_nested_hypercall8() could be dropped entirely, and just
-pass the first argument to hv_do_hypercall() or hv_do_fast_hypercall8()
-as <hypercall_name> | HV_HYPERCALL_NESTED. For only two cases, a
-little bit of open coding might be preferable to the overhead of defining
-functions just to wrap the or'ing of HV_HYPERCALL_NESTED.=20
+hv_map_msi_interrupt() returns an errno, so testing for HV_STATUS_SUCCESS
+is bogus.
 
-The code above could then look like:
+>  		kfree(stored_entry);
+>  		return;
+>  	}
+>=20
+> -	*stored_entry =3D out_entry;
+>  	data->chip_data =3D stored_entry;
+> -	entry_to_msi_msg(&out_entry, msg);
+> +	entry_to_msi_msg(data->chip_data, msg);
+>=20
+>  	return;
+>  }
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
+erv.h
+> index 5ec92e3e2e37..843121465ddd 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -261,6 +261,8 @@ static inline void hv_apic_init(void) {}
+>=20
+>  struct irq_domain *hv_create_pci_msi_domain(void);
+>=20
+> +int hv_map_msi_interrupt(struct irq_data *data,
+> +			 struct hv_interrupt_entry *out_entry);
+>  int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vec=
+tor,
+>  		struct hv_interrupt_entry *entry);
+>  int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *=
+entry);
+> --
+> 2.34.1
 
-	} else {
-		u64 control =3D HVCALL_POST_MESSAGE;
-
-		control |=3D hv_nested ? HV_HYPERCALL_NESTED : 0;
-		status =3D hv_do_hypercall(control, aligned_msg, NULL);
-	}
-
-Again, ARM64 is implicitly handled because hv_nested is never set.
-
-This is just a suggestion. It's motivated by the fact that we already have
-three flavors of hypercall for HVCALL_SIGNAL_EVENT and
-HVCALL_POST_MESSAGE, and I was looking for a way to avoid adding
-a fourth flavor. But it's a marginal win, and if you prefer to keep the
-inline functions, I'm OK with that.
-
-Michael
 
