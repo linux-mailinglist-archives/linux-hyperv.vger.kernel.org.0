@@ -1,61 +1,80 @@
-Return-Path: <linux-hyperv+bounces-5860-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5861-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC2D1AD5364
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 13:14:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE650AD5392
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 13:16:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77EF61C2372D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 11:07:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 146651888844
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 11:12:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B7D276054;
-	Wed, 11 Jun 2025 11:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D282F2E611D;
+	Wed, 11 Jun 2025 11:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UMo9AtHj"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rlhglbRt"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C3C2528F3;
-	Wed, 11 Jun 2025 11:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B992E6106;
+	Wed, 11 Jun 2025 11:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749639834; cv=none; b=OCf88kY1uvjOItNSlw40x4iEZmiUctBHWAQpo615fXOwgXjsz057dSxsqrfJhZKgpnznIcfSsyVqmKAXD/gdNlTS2lKo8CPVPJsIdEGLq7weqKEQcH+sQFN/i3nxxoMoSUioqR+OM7tviov9ITKacpIVAgZvAZ6lzK9MxGN2TsA=
+	t=1749640359; cv=none; b=A2xwUOwgHKSWRy+DGUPS3UwDl19IvL6Q5Zq9KPM2R2c6JCnS58qIvbGpazxERVSRktkIfMj6bvtIDI+zRRQgGRW4ewArulBdgKfIEW9lI381+WrBZHZ0Vn/6j4VHbjfZi22DGtgmxvFxpjpb5gBaiU6ceZtbKe8RmCI+OtbnML8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749639834; c=relaxed/simple;
-	bh=nTdr2YuMMa9V0HwwyZrdkmee+oPqvCIbhsYJD8YpNCc=;
+	s=arc-20240116; t=1749640359; c=relaxed/simple;
+	bh=wOLHNC3mM1hvT6HYztFKZ2PDx4KcHzQ0D5Kk5tU14B4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSj3prEMYR8K8+nFYjtilP8gq5HTBp98aH0b5vuUZe7NqTYQvBu+cbleeeLS4OIECzfUNM/e7C9FpiHvP2EufjXLlJWR79k1766tB2B9S4UBQYLLQ91CH47aDpp582XwVt8OKf9vA9YLV9mqeD/5lzq1I9EU+s8ztWfQWP56134=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UMo9AtHj; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMrYtLGuqYL6Dh/wznWfwEwAqG55qOkyKSupuoh3REf9NAsaTWpCqBgOcPoO2xCjFGFIseHg2eARy5W1h5N9nnBFYKAMu6tfn7vlyuA+/mZSebiRI7WkovgD4KEclIDtlCzi4ljFJ0CGiYTbF9tvHrdn/3lzIZunSnGKR86qnbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rlhglbRt; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id BDB112115190; Wed, 11 Jun 2025 04:03:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BDB112115190
+	id 9DA822115190; Wed, 11 Jun 2025 04:12:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9DA822115190
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749639832;
-	bh=2AMfXxOQB+XCP0ckN4VqEkyDLcKkN5LJc6Z0NVpoSTA=;
+	s=default; t=1749640355;
+	bh=qWcwbrk1B9AwSLw+kibnueNoD1DZ6goIu7GiCM6Qlu0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UMo9AtHji3Jd8ZjOC5cnzWJLB4OJdOfQAfsk66I39FJiMYpPLiOKcWXa0LwjlPy+X
-	 sOOjO6FrPsD81XWVT4M/cu8CQQ6hjbgSdqgUQf9k0Uh9mL5X9DExAn4euEY0Qw47lV
-	 YXQFTRjrR7EpqTzhblnZzn5YUM1oc995+nz1Lb0M=
-Date: Wed, 11 Jun 2025 04:03:52 -0700
+	b=rlhglbRtbt0Hbe+n51t1Jn72RUoWF3RpnwuZftUvtNku2mGleh3PsB7Ete2wnwVQX
+	 totONy0JEUXLVQ9Ik1KKGghpirw600tO8i8259mmKIVjMKnnA4WPgd/mExswV1pxYR
+	 18e7gfJe3yFADKmvYLOa41ksZ4zFzNef8IiwfWCA=
+Date: Wed, 11 Jun 2025 04:12:35 -0700
 From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	kotaranov@microsoft.com, longli@microsoft.com, horms@kernel.org,
-	shirazsaleem@microsoft.com, leon@kernel.org,
-	shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
-	rosenp@gmail.com, sdf@fomichev.me, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next 1/4] net: mana: Fix potential deadlocks in mana
- napi ops
-Message-ID: <20250611110352.GA31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
- <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/6] Fix warning for missing export.h in Hyper-V drivers
+Message-ID: <20250611111235.GB31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250611100459.92900-1-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,68 +83,55 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
+In-Reply-To: <20250611100459.92900-1-namjain@linux.microsoft.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Jun 11, 2025 at 01:46:13AM -0700, Erni Sri Satya Vennela wrote:
-> When net_shaper_ops are enabled for MANA, netdev_ops_lock
-> becomes active.
+On Wed, Jun 11, 2025 at 03:34:53PM +0530, Naman Jain wrote:
+> When the kernel is compiled with W=1 option, a warning is reported
+> if a .c file exports a symbol but does not include export.h header
+> file. This warning was added in below patch, which merged recently:
+> commit a934a57a42f6 ("scripts/misc-check: check missing #include <linux/export.h> when W=1")
 > 
-> The netvsc sets up MANA VF via following call chain:
+> Fix this issue in Hyper-V drivers. This does not bring any
+> functional changes.
 > 
-> netvsc_vf_setup()
->         dev_change_flags()
-> 		...
->          __dev_open() OR __dev_close()
+> The one in drivers/hv/vmbus_drv.c is going to be fixed with 
+> https://lore.kernel.org/all/20250611072704.83199-2-namjain@linux.microsoft.com/
+> so it is not included in this series.
 > 
-> dev_change_flags() holds the netdev mutex via netdev_lock_ops.
+> Naman Jain (6):
+>   Drivers: hv: Fix warnings for missing export.h header inclusion
+>   x86/hyperv: Fix warnings for missing export.h header inclusion
+>   KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
+>   clocksource: hyper-v: Fix warnings for missing export.h header
+>     inclusion
+>   PCI: hv: Fix warnings for missing export.h header inclusion
+>   net: mana: Fix warnings for missing export.h header inclusion
 > 
-> During this process, mana_create_txq() and mana_create_rxq()
-> invoke netif_napi_add_tx(), netif_napi_add_weight(), and napi_enable(),
-> all of which attempt to acquire the same lock,
-> leading to a potential deadlock.
+>  arch/x86/hyperv/hv_init.c                       | 1 +
+>  arch/x86/hyperv/irqdomain.c                     | 1 +
+>  arch/x86/hyperv/ivm.c                           | 1 +
+>  arch/x86/hyperv/nested.c                        | 1 +
+>  arch/x86/kvm/hyperv.c                           | 1 +
+>  arch/x86/kvm/kvm_onhyperv.c                     | 1 +
+>  drivers/clocksource/hyperv_timer.c              | 1 +
+>  drivers/hv/channel.c                            | 1 +
+>  drivers/hv/channel_mgmt.c                       | 1 +
+>  drivers/hv/hv_proc.c                            | 1 +
+>  drivers/hv/mshv_common.c                        | 1 +
+>  drivers/hv/mshv_root_hv_call.c                  | 1 +
+>  drivers/hv/ring_buffer.c                        | 1 +
+>  drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
+>  drivers/net/ethernet/microsoft/mana/mana_en.c   | 1 +
+>  drivers/pci/controller/pci-hyperv-intf.c        | 1 +
+>  16 files changed, 16 insertions(+)
+> 
+> 
+> base-commit: 475c850a7fdd0915b856173186d5922899d65686
+> -- 
+> 2.34.1
+>
 
-commit message could be better oriented.
-
-> 
-> Similarly, mana_destroy_txq() and mana_destroy_rxq() call
-> netif_napi_disable() and netif_napi_del(), which also contend
-> for the same lock.
-> 
-> Switch to the _locked variants of these APIs to avoid deadlocks
-> when the netdev_ops_lock is held.
-> 
-> Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 39 ++++++++++++++-----
->  1 file changed, 30 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index ccd2885c939e..3c879d8a39e3 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1911,8 +1911,13 @@ static void mana_destroy_txq(struct mana_port_context *apc)
->  		napi = &apc->tx_qp[i].tx_cq.napi;
->  		if (apc->tx_qp[i].txq.napi_initialized) {
->  			napi_synchronize(napi);
-> -			napi_disable(napi);
-> -			netif_napi_del(napi);
-> +			if (netdev_need_ops_lock(napi->dev)) {
-> +				napi_disable_locked(napi);
-> +				netif_napi_del_locked(napi);
-> +			} else {
-> +				napi_disable(napi);
-> +				netif_napi_del(napi);
-> +			}
-
-Instead of using if-else, we can used netdev_lock_ops(), followed by *_locked api-s.
-Same for rest of the patch.
-
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-
-- Saurabh
-
+For the series,
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com> 
 
