@@ -1,147 +1,151 @@
-Return-Path: <linux-hyperv+bounces-5864-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5865-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13A02AD561A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 14:55:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDCB4AD5640
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 15:00:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E25A3A63C0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 12:55:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 558A31BC332C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 12:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038F1283FE8;
-	Wed, 11 Jun 2025 12:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC4D28313F;
+	Wed, 11 Jun 2025 12:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PAl+gLGd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AR569d5I"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66958283141;
-	Wed, 11 Jun 2025 12:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034BB281357
+	for <linux-hyperv@vger.kernel.org>; Wed, 11 Jun 2025 12:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646517; cv=none; b=uj6ezA6LJk088KdhiSf2Pevzjh7b3j2/F6HIdz4pzAHU34RILAoV1KbKgVLnmuWDyJ3tLuR5lNCepqlOQ/FZHPJxPWl6LRptMsoQpIuRc4mFz2SHNZ7mfIyvm8jfGEjNhQdcw0+f+Xdri4/12bk2FDzJXkCuaRjmhFCMNrbSvjs=
+	t=1749646742; cv=none; b=hKF0g1KRcVankv9K0ghrpNopVv61pz5eg2ult0nQVfoIYpMahRvA7OT8zHsivn6M3kDK4A/T0i1ExYu53zKegfDp4ZwZ2krbQgQgirgq45Hzz3cQwziOUHI0Dbi6P+khLBZBwVEEH359cKJiOibr1MDae4AaJGB6U1LtxXf5elE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646517; c=relaxed/simple;
-	bh=QkhZi3FU1sey8L3Wa1mNnXtLz2q7e9LWK29b8Qyi1lM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqF5X9rPFu63RGQmb6aYJrfNU9src6Fz/7iYYcSHU7uaBYXSmv6Ud8CK1y28LjSzX8tMSivK3kMLJn65ujF0glk3Mpn+El8+5f0twSl3Wx2ax2Tj1ULN49aQ8DNIEfLNzJrB4LgHuCtSrWh8+M8uZa0YhAh5QXRMc2tTNoC4NMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PAl+gLGd; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id EE46C211518E; Wed, 11 Jun 2025 05:55:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE46C211518E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749646509;
-	bh=Ri1hYdHfAQj4ltRI0jgAUTpeJneNKRaFwaxSP5kdq+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PAl+gLGd6fFsNagRHPk9zMpkXGnli0J7ihpPQgTIjCdhKYquI5MoY/V/4kjL+B7Vz
-	 hZnOCuCNpf7iCZc2gxjzlDfOE620JhDc0Fz7/PKjVGBO3lAUGmKOXjyeLelIyG0Sgx
-	 5XVHatwQdWSMjY0/zP0mKyWlRGy8j6bnjFog1nEE=
-Date: Wed, 11 Jun 2025 05:55:09 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	kotaranov@microsoft.com, longli@microsoft.com, horms@kernel.org,
-	shirazsaleem@microsoft.com, leon@kernel.org,
-	shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
-	rosenp@gmail.com, sdf@fomichev.me, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next 1/4] net: mana: Fix potential deadlocks in mana
- napi ops
-Message-ID: <20250611125509.GA22813@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
- <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
- <20250611110352.GA31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1749646742; c=relaxed/simple;
+	bh=a2tnsV+oorpD96ckvy193k53s6Jk34v+Ogifp++7l3o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NlseKxAbxBs7IU99YfQZ6xn01ZM5x93k54kQDYtNKX6gZD5248C/REJpx46ugNp+OtgKoSegqx3Y8koTczWuL2+YQPxGtnxlAN4Opcjzc3cQgob0YmEpxnnxwLPZhTPoRLG4VkCPM8KTrM9Vx3Vc36L0Pmgm7tzDsJq5z/kEWJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AR569d5I; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310e7c24158so6354493a91.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 11 Jun 2025 05:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749646738; x=1750251538; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7qyDxfambCUeuVJ579d13LTUju7h5fRgxZwQlTMLrA=;
+        b=AR569d5ILcR68f7Pxq+LwHL6RLFU05NqwYpOdaJ+Qe3OQXO+ptf3U/4rAxU3AN00o1
+         CO1NogIZTZJUC3zY+9FP7OHtWuWFe3Z3Z5a44yoSr19Ykjfuxlgn9wrvtH9uK5yxE8iB
+         dUQCSybEc1Q4m2JgIPQQiRQxqpmsXh1VQvlI127wfVbYjVoN6Gz/cxuhGk8oPeawHQZj
+         KGfj/ckfORUQQUiT4MjphLHHjexsBpzDuNOawuiWmjowG8sWlhgD6mX6zuyLYqArNDhm
+         dnkZS1xSKCxBd4UhDZyBYLVODaztffrV0Fzvvj+cix5CEEbGynwKCWljB3UZDItqmbj8
+         vi9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749646738; x=1750251538;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7qyDxfambCUeuVJ579d13LTUju7h5fRgxZwQlTMLrA=;
+        b=vOtkFGXe83CO+HyFVOgAUH4TJiVBhdrKmiuf0lRYDwQz9cresQ+KVYTgGySsRLt5Vd
+         gftnbvY/oFVAlJcHWao5Asu4tuekTZJvFkSVzaoFlN3RpWDbDPB00LfCxlNx7m5IDDPW
+         jp04j+VHMxj2Dn1gYena2dJlVqcwCUsYM54w4yIWETQlqCuBU1kYHnay6ZPnX9Q3gxVp
+         lhYF1R4lfS9mqKVVQXZ2dSKGq3fxXoifgiL3NjXPJ3np8XkBEzXB01B4hWhZ7Mi23+Kw
+         vcd2qj3Mka5kRslYqdRrwLHB02AVhh+UEnGWU58F4GeXy3Cy4Rbyb30tMJfqGpP+VuAR
+         M2cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/CREac1Be6rkYGpnMvOuqjDV03xE9OcRzNUvUVKzd+KVL2tgvZ4Cld+hhpSYy9uJ4aesIGuX3bEmn+g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeBIIDTuRMRvzwVxqlVRUwO3g8ByOXNBb1vvxSZtw0C3f3DyQQ
+	n0n9Jn2XJXJp/FFPQZvsooqk6LM++YCR8AXk59Xx7awM6eLVBNiRgA6BvOEPuDA9mLMZIoPIQXw
+	ejtAAtA==
+X-Google-Smtp-Source: AGHT+IFdzlhprq4olNF24x13BTaUWLzAfJB7XPYxrgkrprbcAns4rzVG+UdGiB00+0oVMZb22058wK4h5o8=
+X-Received: from pjg4.prod.google.com ([2002:a17:90b:3f44:b0:311:2058:21e7])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:540c:b0:311:df4b:4b93
+ with SMTP id 98e67ed59e1d1-313b1ea41c8mr3910557a91.7.1749646738303; Wed, 11
+ Jun 2025 05:58:58 -0700 (PDT)
+Date: Wed, 11 Jun 2025 05:58:56 -0700
+In-Reply-To: <20250611100459.92900-4-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611110352.GA31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Mime-Version: 1.0
+References: <20250611100459.92900-1-namjain@linux.microsoft.com> <20250611100459.92900-4-namjain@linux.microsoft.com>
+Message-ID: <aEl9kO81-kp0hhw0@google.com>
+Subject: Re: [PATCH 3/6] KVM: x86: hyper-v: Fix warnings for missing export.h
+ header inclusion
+From: Sean Christopherson <seanjc@google.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Konstantin Taranov <kotaranov@microsoft.com>, 
+	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>, 
+	Shiraz Saleem <shirazsaleem@microsoft.com>, 
+	Shradha Gupta <shradhagupta@linux.microsoft.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Erni Sri Satya Vennela <ernis@linux.microsoft.com>, 
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Jun 11, 2025 at 04:03:52AM -0700, Saurabh Singh Sengar wrote:
-> On Wed, Jun 11, 2025 at 01:46:13AM -0700, Erni Sri Satya Vennela wrote:
-> > When net_shaper_ops are enabled for MANA, netdev_ops_lock
-> > becomes active.
-> > 
-> > The netvsc sets up MANA VF via following call chain:
-> > 
-> > netvsc_vf_setup()
-> >         dev_change_flags()
-> > 		...
-> >          __dev_open() OR __dev_close()
-> > 
-> > dev_change_flags() holds the netdev mutex via netdev_lock_ops.
-> > 
-> > During this process, mana_create_txq() and mana_create_rxq()
-> > invoke netif_napi_add_tx(), netif_napi_add_weight(), and napi_enable(),
-> > all of which attempt to acquire the same lock,
-> > leading to a potential deadlock.
+On Wed, Jun 11, 2025, Naman Jain wrote:
+> Fix below warning in Hyper-V drivers
+
+KVM is quite obviously not a Hyper-V driver.
+
+> that comes when kernel is compiled with W=1 option. Include export.h in
+> driver files to fix it.  * warning: EXPORT_SYMBOL() is used, but #include
+> <linux/export.h> is missing
+
+NAK.  I agree with Heiko[*], this is absurd.  And if the W=1 change isn't reverted
+for some reason, I'd rather "fix" all of KVM in one shot, not update random files
+just because of their name.
+
+Sorry.
+
+[*] https://lore.kernel.org/all/20250611075533.8102A57-hca@linux.ibm.com
+
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> ---
+>  arch/x86/kvm/hyperv.c       | 1 +
+>  arch/x86/kvm/kvm_onhyperv.c | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> commit message could be better oriented.
-> 
-> > 
-> > Similarly, mana_destroy_txq() and mana_destroy_rxq() call
-> > netif_napi_disable() and netif_napi_del(), which also contend
-> > for the same lock.
-> > 
-> > Switch to the _locked variants of these APIs to avoid deadlocks
-> > when the netdev_ops_lock is held.
-> > 
-> > Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
-> > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > ---
-> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 39 ++++++++++++++-----
-> >  1 file changed, 30 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index ccd2885c939e..3c879d8a39e3 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > @@ -1911,8 +1911,13 @@ static void mana_destroy_txq(struct mana_port_context *apc)
-> >  		napi = &apc->tx_qp[i].tx_cq.napi;
-> >  		if (apc->tx_qp[i].txq.napi_initialized) {
-> >  			napi_synchronize(napi);
-> > -			napi_disable(napi);
-> > -			netif_napi_del(napi);
-> > +			if (netdev_need_ops_lock(napi->dev)) {
-> > +				napi_disable_locked(napi);
-> > +				netif_napi_del_locked(napi);
-> > +			} else {
-> > +				napi_disable(napi);
-> > +				netif_napi_del(napi);
-> > +			}
-> 
-> Instead of using if-else, we can used netdev_lock_ops(), followed by *_locked api-s.
-> Same for rest of the patch.
-> 
-
-I later realized that what we actually need is:
-
-  if (!netdev_need_ops_lock(napi->dev))
-	netdev_lock(dev);
-
-not
-
-  if (netdev_need_ops_lock(napi->dev))
-        netdev_lock(dev);
-
-Hence, netdev_lock_ops() is not appropriate. Instead, netdev_lock_ops_to_full()
-seems to be a better choice.
-
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> 
-> - Saurabh
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 24f0318c50d7..09f9de4555dd 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/sched/cputime.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/eventfd.h>
+> +#include <linux/export.h>
+>  
+>  #include <asm/apicdef.h>
+>  #include <asm/mshyperv.h>
+> diff --git a/arch/x86/kvm/kvm_onhyperv.c b/arch/x86/kvm/kvm_onhyperv.c
+> index ded0bd688c65..ba45f8364187 100644
+> --- a/arch/x86/kvm/kvm_onhyperv.c
+> +++ b/arch/x86/kvm/kvm_onhyperv.c
+> @@ -5,6 +5,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/kvm_host.h>
+> +#include <linux/export.h>
+>  #include <asm/mshyperv.h>
+>  
+>  #include "hyperv.h"
+> -- 
+> 2.34.1
 > 
 
