@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-5849-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5850-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DD69AD4EBC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 10:46:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 216BBAD4ECC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 10:48:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C1C21778EF
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42C163A894F
 	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jun 2025 08:46:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6195E23F43C;
-	Wed, 11 Jun 2025 08:46:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3567824635E;
+	Wed, 11 Jun 2025 08:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="f5kdgpoE"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AxT/4B9U"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD2D62D543C;
-	Wed, 11 Jun 2025 08:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C112417C3;
+	Wed, 11 Jun 2025 08:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631597; cv=none; b=KGD1mwea/5Fv4VQQ+I8CBw6f2wk3Lx663E7kaOzes14HVEZCaJ9yxL3dutdUyV2QCnQB8zpgmNQikMprmswkqGlYmDXBxsXvGVV9LGOHR/EdEPp90qR5r9rI+sekVIluGmqsgVoX2zDj0RiT2r2VbXfk8DG3ApPHgwZJN9wNbxs=
+	t=1749631599; cv=none; b=FWcRbLOj8+7q55kVEs2ySKt7xwF5L7OzN+1Z14WMSBev47Hutu3iYIResPbsgYEd0yjXgXaT7gg+4Xy7jQFC/gbbFrZU1RXeMiX9KWVwmpwgQPyJYnDtTjR1gWE2RGF9qdjrEGO+ue+hVuWm3NtAe6yfGz/r883cOSFUE7bc34I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631597; c=relaxed/simple;
-	bh=g2DXMg5rmDnhugpiHMmf1QfeOmclMqtPIujzWBitXX8=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=LayuUdDlQ8pM/s+7cU0w1q7GhFnkBalTkDhwlq4vaKCsVkHdqqqw/U7MoZBfaMxcTfjTgeHNrvVeUJprPUAvDwWKumiMNK6fHkxTOIwhANwG2+svPgbfjh+MmEgN5HBu9cCMX915ct++WbzjVyfv7mBgfpaVF7saAXue4eJXEmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=f5kdgpoE; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1749631599; c=relaxed/simple;
+	bh=FKunBQHcsmHIGlOmqC1puDrj393kDj4B94DCGzikn+k=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=pTwsqBi/rYkYyJZLsvzFKdzSJ2/SXf4rxwMvO/PgiKmkeSAdVEk7WdlUL8WSFAodtegBSDG+wYIzVfjzOY3Dz71Lw9R1vNm/nFGB2BMZo2DFc0WrQmVjarQrVpbX9KXYAv0yGGWEHw7WAZhZeB7x2LhOh6TzcXtGHYbPnMH4yTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AxT/4B9U; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 832F22115189; Wed, 11 Jun 2025 01:46:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 832F22115189
+	id 10021203EE33; Wed, 11 Jun 2025 01:46:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 10021203EE33
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749631595;
-	bh=r+GqLCuBE+ClBIUMKxQZzaAOal17+iAyuCgNMG8+Nm0=;
+	s=default; t=1749631597;
+	bh=eRtznUqeONE6kFm2AmSsVuxXMNuSUpILwuYIBSGdDR8=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=f5kdgpoEK3sZJT0i3w+IW0E99j79V2CPaRqZXhQndQH38n1bdsQrTfXaB/pHbFzvP
-	 he0ZO8kEn1vSm0LaMm+Cld4Qw1mvbgu0HQ2G1kTiAgo+BiEcJzO8qk9c5IW29JRbXa
-	 78/rwrfx36XOg2ZY+d+Eq10kI5mQQXXAgD14F5OA=
+	b=AxT/4B9UdFL0guo5/yvMZ2beDMiRImYrHl9s0ZGOEQMj700VjdXqp7imVZb1WRI4a
+	 YUwieIzqB3GjjcBphH1r9svTmAQAiA0pErDMmwddj8+WFITRwu7Qr2QGrJH0EycHKG
+	 eKH0Xzt94z2v7xUFiwVaMDKxHloK3N/4HTzHogN0=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -62,9 +62,9 @@ To: kys@microsoft.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org
-Subject: [PATCH net-next 1/4] net: mana: Fix potential deadlocks in mana napi ops
-Date: Wed, 11 Jun 2025 01:46:13 -0700
-Message-Id: <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
+Subject: [PATCH net-next 2/4] net: mana: Add support for net_shaper_ops
+Date: Wed, 11 Jun 2025 01:46:14 -0700
+Message-Id: <1749631576-2517-3-git-send-email-ernis@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
 References: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
@@ -74,115 +74,327 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-When net_shaper_ops are enabled for MANA, netdev_ops_lock
-becomes active.
+Introduce support for net_shaper_ops in the MANA driver,
+enabling configuration of rate limiting on the MANA NIC.
 
-The netvsc sets up MANA VF via following call chain:
+To apply rate limiting, the driver issues a HWC command via
+mana_set_bw_clamp() and updates the corresponding shaper object
+in the net_shaper cache. If an error occurs during this process,
+the driver restores the previous speed by querying the current link
+configuration using mana_query_link_cfg().
 
-netvsc_vf_setup()
-        dev_change_flags()
-		...
-         __dev_open() OR __dev_close()
+The minimum supported bandwidth is 100 Mbps, and only values that are
+exact multiples of 100 Mbps are allowed. Any other values are rejected.
 
-dev_change_flags() holds the netdev mutex via netdev_lock_ops.
+To remove a shaper, the driver resets the bandwidth to the maximum
+supported by the SKU using mana_set_bw_clamp() and clears the
+associated cache entry. If an error occurs during this process,
+the shaper details are retained.
 
-During this process, mana_create_txq() and mana_create_rxq()
-invoke netif_napi_add_tx(), netif_napi_add_weight(), and napi_enable(),
-all of which attempt to acquire the same lock,
-leading to a potential deadlock.
+On the hardware that does not support these APIs, the net-shaper
+calls to set speed would fail.
 
-Similarly, mana_destroy_txq() and mana_destroy_rxq() call
-netif_napi_disable() and netif_napi_del(), which also contend
-for the same lock.
+Set the speed:
+./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/net_shaper.yaml \
+ --do set --json '{"ifindex":'$IFINDEX',
+		   "handle":{"scope": "netdev", "id":'$ID' },
+		   "bw-max": 200000000 }'
 
-Switch to the _locked variants of these APIs to avoid deadlocks
-when the netdev_ops_lock is held.
+Get the shaper details:
+./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/net_shaper.yaml \
+ --do get --json '{"ifindex":'$IFINDEX',
+		      "handle":{"scope": "netdev", "id":'$ID' }}'
 
-Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
+> {'bw-max': 200000000,
+> 'handle': {'scope': 'netdev'},
+> 'ifindex': $IFINDEX,
+> 'metric': 'bps'}
+
+Delete the shaper object:
+./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/net_shaper.yaml \
+ --do delete --json '{"ifindex":'$IFINDEX',
+		      "handle":{"scope": "netdev","id":'$ID' }}'
+
 Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 39 ++++++++++++++-----
- 1 file changed, 30 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 155 ++++++++++++++++++
+ include/net/mana/mana.h                       |  40 +++++
+ 2 files changed, 195 insertions(+)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ccd2885c939e..3c879d8a39e3 100644
+index 3c879d8a39e3..b704dbc5e344 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1911,8 +1911,13 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 		napi = &apc->tx_qp[i].tx_cq.napi;
- 		if (apc->tx_qp[i].txq.napi_initialized) {
- 			napi_synchronize(napi);
--			napi_disable(napi);
--			netif_napi_del(napi);
-+			if (netdev_need_ops_lock(napi->dev)) {
-+				napi_disable_locked(napi);
-+				netif_napi_del_locked(napi);
-+			} else {
-+				napi_disable(napi);
-+				netif_napi_del(napi);
-+			}
- 			apc->tx_qp[i].txq.napi_initialized = false;
- 		}
- 		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-@@ -2064,8 +2069,14 @@ static int mana_create_txq(struct mana_port_context *apc,
+@@ -719,6 +719,78 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
+ 	return err;
+ }
  
- 		mana_create_txq_debugfs(apc, i);
++static int mana_shaper_set(struct net_shaper_binding *binding,
++			   const struct net_shaper *shaper,
++			   struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(binding->netdev);
++	u32 old_speed, rate;
++	int err;
++
++	if (shaper->handle.scope != NET_SHAPER_SCOPE_NETDEV) {
++		NL_SET_ERR_MSG_MOD(extack, "net shaper scope should be netdev");
++		return -EINVAL;
++	}
++
++	if (apc->handle.id && shaper->handle.id != apc->handle.id) {
++		NL_SET_ERR_MSG_MOD(extack, "Cannot create multiple shapers");
++		return -EOPNOTSUPP;
++	}
++
++	if (!shaper->bw_max || (shaper->bw_max % 100000000)) {
++		NL_SET_ERR_MSG_MOD(extack, "Please use multiples of 100Mbps for bandwidth");
++		return -EINVAL;
++	}
++
++	rate = div_u64(shaper->bw_max, 1000); /* Convert bps to Kbps */
++	rate = div_u64(rate, 1000);	      /* Convert Kbps to Mbps */
++
++	/* Get current speed */
++	err = mana_query_link_cfg(apc);
++	old_speed = (err) ? SPEED_UNKNOWN : apc->speed;
++
++	if (!err) {
++		err = mana_set_bw_clamp(apc, rate, TRI_STATE_TRUE);
++		apc->speed = (err) ? old_speed : rate;
++		apc->handle = (err) ? apc->handle : shaper->handle;
++	}
++
++	return err;
++}
++
++static int mana_shaper_del(struct net_shaper_binding *binding,
++			   const struct net_shaper_handle *handle,
++			   struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(binding->netdev);
++	int err;
++
++	err = mana_set_bw_clamp(apc, 0, TRI_STATE_FALSE);
++
++	if (!err) {
++		/* Reset mana port context parameters */
++		apc->handle.id = 0;
++		apc->handle.scope = NET_SHAPER_SCOPE_UNSPEC;
++		apc->speed = 0;
++	}
++
++	return err;
++}
++
++static void mana_shaper_cap(struct net_shaper_binding *binding,
++			    enum net_shaper_scope scope,
++			    unsigned long *flags)
++{
++	*flags = BIT(NET_SHAPER_A_CAPS_SUPPORT_BW_MAX) |
++		 BIT(NET_SHAPER_A_CAPS_SUPPORT_METRIC_BPS);
++}
++
++static const struct net_shaper_ops mana_shaper_ops = {
++	.set = mana_shaper_set,
++	.delete = mana_shaper_del,
++	.capabilities = mana_shaper_cap,
++};
++
+ static const struct net_device_ops mana_devops = {
+ 	.ndo_open		= mana_open,
+ 	.ndo_stop		= mana_close,
+@@ -729,6 +801,7 @@ static const struct net_device_ops mana_devops = {
+ 	.ndo_bpf		= mana_bpf,
+ 	.ndo_xdp_xmit		= mana_xdp_xmit,
+ 	.ndo_change_mtu		= mana_change_mtu,
++	.net_shaper_ops         = &mana_shaper_ops,
+ };
  
--		netif_napi_add_tx(net, &cq->napi, mana_poll);
--		napi_enable(&cq->napi);
-+		if (netdev_need_ops_lock(net)) {
-+			set_bit(NAPI_STATE_NO_BUSY_POLL, &cq->napi.state);
-+			netif_napi_add_locked(net, &cq->napi, mana_poll);
-+			napi_enable_locked(&cq->napi);
-+		} else {
-+			netif_napi_add_tx(net, &cq->napi, mana_poll);
-+			napi_enable(&cq->napi);
-+		}
- 		txq->napi_initialized = true;
+ static void mana_cleanup_port_context(struct mana_port_context *apc)
+@@ -1161,6 +1234,86 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	return err;
+ }
  
- 		mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
-@@ -2101,9 +2112,13 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- 	if (napi_initialized) {
- 		napi_synchronize(napi);
- 
--		napi_disable(napi);
--
--		netif_napi_del(napi);
-+		if (netdev_need_ops_lock(napi->dev)) {
-+			napi_disable_locked(napi);
-+			netif_napi_del_locked(napi);
-+		} else {
-+			napi_disable(napi);
-+			netif_napi_del(napi);
-+		}
++int mana_query_link_cfg(struct mana_port_context *apc)
++{
++	struct net_device *ndev = apc->ndev;
++	struct mana_query_link_config_resp resp = {};
++	struct mana_query_link_config_req req = {};
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_LINK_CONFIG,
++			     sizeof(req), sizeof(resp));
++
++	req.vport = apc->port_handle;
++	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
++
++	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
++				sizeof(resp));
++
++	if (err) {
++		netdev_err(ndev, "Failed to query link config: %d\n", err);
++		return err;
++	}
++
++	err = mana_verify_resp_hdr(&resp.hdr, MANA_QUERY_LINK_CONFIG,
++				   sizeof(resp));
++
++	if (err || resp.hdr.status) {
++		netdev_err(ndev, "Failed to query link config: %d, 0x%x\n", err,
++			   resp.hdr.status);
++		if (!err)
++			err = -EOPNOTSUPP;
++		return err;
++	}
++
++	if (resp.qos_unconfigured) {
++		err = -EINVAL;
++		return err;
++	}
++	apc->speed = resp.link_speed_mbps;
++	return 0;
++}
++
++int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
++		      int enable_clamping)
++{
++	struct mana_set_bw_clamp_resp resp = {};
++	struct mana_set_bw_clamp_req req = {};
++	struct net_device *ndev = apc->ndev;
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_SET_BW_CLAMP,
++			     sizeof(req), sizeof(resp));
++	req.vport = apc->port_handle;
++	req.link_speed_mbps = speed;
++	req.enable_clamping = enable_clamping;
++
++	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
++				sizeof(resp));
++
++	if (err) {
++		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
++			   speed, err);
++		return err;
++	}
++
++	err = mana_verify_resp_hdr(&resp.hdr, MANA_SET_BW_CLAMP,
++				   sizeof(resp));
++
++	if (err || resp.hdr.status) {
++		netdev_err(ndev, "Failed to set bandwidth clamp: %d, 0x%x\n", err,
++			   resp.hdr.status);
++		if (!err)
++			err = -EOPNOTSUPP;
++		return err;
++	}
++
++	if (resp.qos_unconfigured) {
++		netdev_err(ndev, "QoS is unconfigured\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ int mana_create_wq_obj(struct mana_port_context *apc,
+ 		       mana_handle_t vport,
+ 		       u32 wq_type, struct mana_obj_spec *wq_spec,
+@@ -2939,6 +3092,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 		goto free_indir;
  	}
- 	xdp_rxq_info_unreg(&rxq->xdp_rxq);
  
-@@ -2354,14 +2369,20 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
++	debugfs_create_u32("current_speed", 0400, apc->mana_port_debugfs, &apc->speed);
++
+ 	return 0;
  
- 	gc->cq_table[cq->gdma_id] = cq->gdma_cq;
+ free_indir:
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 9abb66461211..0df84e51d541 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -5,6 +5,7 @@
+ #define _MANA_H
  
--	netif_napi_add_weight(ndev, &cq->napi, mana_poll, 1);
-+	if (netdev_need_ops_lock(ndev))
-+		netif_napi_add_weight_locked(ndev, &cq->napi, mana_poll, 1);
-+	else
-+		netif_napi_add_weight(ndev, &cq->napi, mana_poll, 1);
+ #include <net/xdp.h>
++#include <net/net_shaper.h>
  
- 	WARN_ON(xdp_rxq_info_reg(&rxq->xdp_rxq, ndev, rxq_idx,
- 				 cq->napi.napi_id));
- 	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
- 					   rxq->page_pool));
+ #include "gdma.h"
+ #include "hw_channel.h"
+@@ -467,7 +468,12 @@ struct mana_port_context {
+ 	struct mutex vport_mutex;
+ 	int vport_use_count;
  
--	napi_enable(&cq->napi);
-+	if (netdev_need_ops_lock(ndev))
-+		napi_enable_locked(&cq->napi);
-+	else
-+		napi_enable(&cq->napi);
++	/* Net shaper handle*/
++	struct net_shaper_handle handle;
++
+ 	u16 port_idx;
++	/* Currently configured speed (mbps) */
++	u32 speed;
  
- 	mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
- out:
+ 	bool port_is_up;
+ 	bool port_st_save; /* Saved port state */
+@@ -501,6 +507,9 @@ struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
+ void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
+ int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
+ void mana_query_gf_stats(struct mana_port_context *apc);
++int mana_query_link_cfg(struct mana_port_context *apc);
++int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
++		      int enable_clamping);
+ int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
+ void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
+ 
+@@ -527,6 +536,8 @@ enum mana_command_code {
+ 	MANA_FENCE_RQ		= 0x20006,
+ 	MANA_CONFIG_VPORT_RX	= 0x20007,
+ 	MANA_QUERY_VPORT_CONFIG	= 0x20008,
++	MANA_QUERY_LINK_CONFIG	= 0x2000A,
++	MANA_SET_BW_CLAMP	= 0x2000B,
+ 
+ 	/* Privileged commands for the PF mode */
+ 	MANA_REGISTER_FILTER	= 0x28000,
+@@ -535,6 +546,35 @@ enum mana_command_code {
+ 	MANA_DEREGISTER_HW_PORT	= 0x28004,
+ };
+ 
++/* Query Link Configuration*/
++struct mana_query_link_config_req {
++	struct gdma_req_hdr hdr;
++	mana_handle_t vport;
++}; /* HW DATA */
++
++struct mana_query_link_config_resp {
++	struct gdma_resp_hdr hdr;
++	u32 qos_speed_mbps;
++	u8 qos_unconfigured;
++	u8 reserved1[3];
++	u32 link_speed_mbps;
++	u8 reserved2[4];
++}; /* HW DATA */
++
++/* Set Bandwidth Clamp*/
++struct mana_set_bw_clamp_req {
++	struct gdma_req_hdr hdr;
++	mana_handle_t vport;
++	enum TRI_STATE enable_clamping;
++	u32 link_speed_mbps;
++}; /* HW DATA */
++
++struct mana_set_bw_clamp_resp {
++	struct gdma_resp_hdr hdr;
++	u8 qos_unconfigured;
++	u8 reserved[7];
++}; /* HW DATA */
++
+ /* Query Device Configuration */
+ struct mana_query_device_cfg_req {
+ 	struct gdma_req_hdr hdr;
 -- 
 2.34.1
 
