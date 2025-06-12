@@ -1,124 +1,160 @@
-Return-Path: <linux-hyperv+bounces-5888-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5889-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 386F2AD6CE7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 12:01:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38B81AD775D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 18:03:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBEED188331A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 09:59:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D9C41891C64
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 15:56:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7ED722FF4C;
-	Thu, 12 Jun 2025 09:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F6F1A8F79;
+	Thu, 12 Jun 2025 15:54:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tDJJkjCS"
+	dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="C9VUNhos";
+	dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="a1/eMsGN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2BB222D9ED;
-	Thu, 12 Jun 2025 09:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749722298; cv=none; b=rg74puPt14FCE24/z0GzDuCAKw0b/4fPSyWc1lkfP6Qv0XN4Pn6RUxkW7AliBMwnjCNkauDS62OOrf3/tXXUz3VHekWEvD1HHZ2cPm9SGGJ4r6JINlrw0PTOxwt+60Oi1dgzirNJyod8pqNeYdb3Qj08kNYZecOw0R+U8Zq0Z5c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749722298; c=relaxed/simple;
-	bh=5lm3CROQoCKhao5Ca1yh00q3aQ56aGBHBbVoD/37i5w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aep6nx+HiXaeP7DVpy+gRxz8M311au0h4TdiEQ4Q2vyWinogz1umqlybWn27+my1Z05PYxFjmqSJylBmeXFZ2dU2EAv3+YGb4ZF7kBCxnFaqz/d5Y4QthUkbBLbkTjj4rJBtSjik9dEzdlMWlrK9b0ZA0McCUqair4WVf6NRvwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tDJJkjCS; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.224.160] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 91B9A201C768;
-	Thu, 12 Jun 2025 02:57:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 91B9A201C768
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749722295;
-	bh=eV3A+ddBcibHRVaqFJxwXvFIGtWcCdCwh7KjLBme/sQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tDJJkjCSRPy1hYNPAJtUISF1WSrCFZjdUEcEOdGWKAqv01iv5hJcEcllquwSVNAjF
-	 q6us+/HaBIBYi1tNhaYqZ9/ZpX81sTqUj9rNVlp0pkdgFUWydBJs/cT+uNCqPNoGR6
-	 7cUs3sg09Mbn3wLax4jFUWttwF/QfkOeeZy88ftA=
-Message-ID: <42abc705-bdb5-4be0-9fe7-b49d0a0d9507@linux.microsoft.com>
-Date: Thu, 12 Jun 2025 15:27:55 +0530
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235B727144B
+	for <linux-hyperv@vger.kernel.org>; Thu, 12 Jun 2025 15:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749743671; cv=pass; b=EGpSatbZy8oTh4m9qyeYVV2w8o5ySNtqL0MSGsIgOjSSeouap9Ypv0ICYvP/dHSJ8qoQKFASgUUtkL7k5wE7JWBzpodMneQah+N2PdY4lzcvtvWtF1756pU9X/5oBc+AfcK1vLT3HkTuKTfxQIJFceJag6b3+3QdsCItd8kMKDI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749743671; c=relaxed/simple;
+	bh=7Nlg84WHwJgJnpPFzxqfu3W87BGgKlCFcn5OCVFMXxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ci5YtyF7fFhVpWtobLbMOPbhz6Okl4gPg8NWpWaDYHnecJUvQ9yKQzKmNLAJVodmEecEdyPyykVWsqJ7wH+7/285Nk2RVdsoFtW810GajkEnH2r/krdYAtMRnB57r5AQ3ovWPMxsSriYsTHr/5J2Hjr47Pc56oza3kBJKnJjhPg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de; spf=pass smtp.mailfrom=aepfle.de; dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=C9VUNhos; dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=a1/eMsGN; arc=pass smtp.client-ip=81.169.146.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aepfle.de
+ARC-Seal: i=1; a=rsa-sha256; t=1749743656; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=bovAuyK5Je2QLvtzFORhbLzTdE8/tJlu/tj9AUiNcupHrrn6/y0YF6S1tHDDQ2wiU8
+    m/t5PMYzOTPNAqa3efltBy5twyc9ATwKx1D/DSo4vvvw3vPwep4F0TWEbIR5p2QSbUwF
+    /motlzV+1r9JKMx5mrudEiW4YASCxMKaiNaVQW4Y3jgqKsW6ALU7NDP+bf7YK3o7K8Wi
+    xFXcDFyZ0ZY16gcPzleSNRhOYB545h1LHbXGWCKuArUryMdo+1GNAizvibAUbno3Ut2d
+    TdGakFtEOcjRMSAbZqMdLvK8LwjKVjNfCSZODqufGoUD4FpGCRd3cXinSqGyVUuZyXrg
+    AQDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1749743656;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=mRp2xRCABkQqy3JfZR2A2FiBfA5bwd4N2p9eE8hlvSE=;
+    b=GeQhf4Ug/YMouMey1djukKhzS+RGibRQO+oZhBryeoCo3bylGiJhkycr2kryVNcuds
+    s2z3m7pePzjxuHvTzjBov8iMx4oiP0OmPnEf4bwQB8n2QLet/hCU1M9j6wL6I9zlxjpZ
+    jDz61Kgmqu9+9zPa808C/Ayd1ZDPEM/A/qKh/rM+gKECrK8vQPdzA73xBsfY+LPogaRB
+    rd4IijxcdH94MutJg22847j6e601+tdl2VPv3mpUFPwHFPfftLpkQJjGPzsObUC3e1MU
+    GmLlW4ZLOMHtGFILM3pIJG6rlAcqy1RanBdtu9GVkQbHB3bZCxEJX/NJV7bpo2gEVpkF
+    Rmdw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1749743656;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=mRp2xRCABkQqy3JfZR2A2FiBfA5bwd4N2p9eE8hlvSE=;
+    b=C9VUNhosF0nbRVJXBzBd3G7fH9KdTLTdXQQSoHu+IshgF9S3iV01lTq2dQP29kBr3p
+    Z+dRZ7IbegJj0mtPPRqc3FCFXxc69dnp3EElx0xJmtmJqbBb2p3f3loSqk6Kn82H2AXq
+    IXrJCHQBIgS3676HBaUgziw1L7doKhSYNXBgJNj+B+Ue/Ww1T/n40gukr7UTNQLJrq1n
+    d5qI0kMJjuscBUh9j0DkUTVwWi2b4llFRz+NdcUOz91yU5DEdVP2v2h/2r5l7k+t/oiC
+    BiRcYK7biH+JsTmEc+LE4h0pldAMYcAzGsjUxslETtdSobBdDprvKNXVN2C8McOYVemr
+    zfOA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1749743656;
+    s=strato-dkim-0003; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=mRp2xRCABkQqy3JfZR2A2FiBfA5bwd4N2p9eE8hlvSE=;
+    b=a1/eMsGN4k2CAOrc58fckvAXSvRA51W4KcHp1MNqmXXHw7l/Stal/bglAaXS0+Bf5s
+    DGCIh1rofdQTMpcuJfBA==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OmD4uXd0fmzGoJ8rBK6cWAVfDMmnI2IZ8kj8s0jE6n+P5L1"
+Received: from sender
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id D1c4dd15CFsFW8s
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Thu, 12 Jun 2025 17:54:15 +0200 (CEST)
+Date: Thu, 12 Jun 2025 17:54:01 +0200
+From: Olaf Hering <olaf@aepfle.de>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Naman Jain <namjain@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v4] hv/hv_kvp_daemon: Enable debug logs for
+ hv_kvp_daemon
+Message-ID: <20250612175318.3a794cf2.olaf@aepfle.de>
+In-Reply-To: <1744715978-8185-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1744715978-8185-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: Claws Mail (olh) 20250514T101025.84a10d9e hat ein Softwareproblem, kann man nichts machen.
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86: Fix build warnings about export.h
-To: Zhenghan Cheng <chengzhenghan@uniontech.com>,
- herbert@gondor.apana.org.au, davem@davemloft.net, peterz@infradead.org,
- acme@kernel.org, namhyung@kernel.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- rafael@kernel.org, jgross@suse.com, Jason@zx2c4.com, mhiramat@kernel.org,
- ebiggers@kernel.org, masahiroy@kernel.org
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, lenb@kernel.org,
- ajay.kaher@broadcom.com, alexey.makhalov@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, ppaalanen@gmail.com,
- boris.ostrovsky@oracle.com, nathan@kernel.org, nicolas@fjasle.eu,
- ilpo.jarvinen@linux.intel.com, usamaarif642@gmail.com, ubizjat@gmail.com,
- dyoung@redhat.com, myrrhperiwinkle@qtmlabs.xyz, guoweikang.kernel@gmail.com,
- graf@amazon.com, chao.gao@intel.com, chang.seok.bae@intel.com,
- sohil.mehta@intel.com, vigbalas@amd.com, aruna.ramakrishna@oracle.com,
- zhangkunbo@huawei.com, fvdl@google.com, gatlin.newhouse@gmail.com,
- snovitoll@gmail.com, bjohannesmeyer@gmail.com, glider@google.com,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- shivankg@amd.com, peterx@redhat.com, dan.j.williams@intel.com,
- dave.jiang@intel.com, kevin.brodsky@arm.com, willy@infradead.org,
- linux@treblig.org, Neeraj.Upadhyay@amd.com, wangyuli@uniontech.com,
- linux-crypto@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-kbuild@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
- Zhenghan Cheng <your_email@example.com>
-References: <20250612093021.7187-1-chengzhenghan@uniontech.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <20250612093021.7187-1-chengzhenghan@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: multipart/signed; boundary="Sig_/SX8CYt=Y+L__R2XGsF6qkcc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Content-Transfer-Encoding: 7bit
 
+--Sig_/SX8CYt=Y+L__R2XGsF6qkcc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Tue, 15 Apr 2025 04:19:38 -0700 Shradha Gupta <shradhagupta@linux.microsoft=
+.com>:
+
+>  static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+> +	if (debug)
+> +		syslog(LOG_DEBUG, "%s: got a KVP: pool=3D%d key=3D%s val=3D%s",
+> +		       __func__, pool, key, value);
+> =20
+>  	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+> -		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
+> +		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
+> +		syslog(LOG_ERR, "%s: Too long key or value: key=3D%s, val=3D%s",
+> +		       __func__, key, value);
+> +
+> +		if (debug)
+> +			syslog(LOG_DEBUG, "%s: Too long key or value: pool=3D%d, key=3D%s, va=
+l=3D%s",
+> +			       __func__, pool, key, value);
+>  		return 1;
+> +	}
+
+I think this is logging three times in case of an error.
+Maybe move the debug case after the size check, and change the LOG_ERR case=
+ to show all details just once?
 
 
-On 6/12/2025 3:00 PM, Zhenghan Cheng wrote:
-> After commit a934a57a42f64a4 ("scripts/misc-check:
-> check missing #include <linux/export.h> when W=1")
-> and commit 7d95680d64ac8e836c ("scripts/misc-check:
-> check unnecessary #include <linux/export.h> when W=1"),
-> we get some build warnings with W=1,such as:
-> 
-> arch/x86/coco/sev/core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> arch/x86/crypto/aria_aesni_avx2_glue.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> arch/x86/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> arch/x86/kvm/hyperv.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> arch/x86/events/intel/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
-> arch/x86/events/zhaoxin/core.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
-> arch/x86/kernel/crash.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
-> arch/x86/kernel/devicetree.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
-> 
-> so fix these build warnings for x86.
-> 
-> Signed-off-by: "Zhenghan Cheng" <chengzhenghan@uniontech.com>
-> Suggested-by: "Huacai Chen" <chenhuacai@loongson.cn>
-> 
+Olaf
 
+--Sig_/SX8CYt=Y+L__R2XGsF6qkcc
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
 
-Thanks for sharing.
+-----BEGIN PGP SIGNATURE-----
 
-FYI, I sent a patch to fix these warnings in Hyper-V related drivers
-here:
-https://lore.kernel.org/all/20250611100459.92900-1-namjain@linux.microsoft.com/
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmhK+BkACgkQ86SN7mm1
+DoAA3g/+KAWUGZu4tOY6pAMr9uHaGWbJkWR+HD6BW3bC22NJY3MWrnghkQk/6A6O
+cCLevwYBSJGn4O+cF04S+rX7o8P+8rQKZ1nUxEKNvOwTnDvgV7YuP6+bfRHRYNhN
+tEf30DjRy7EwdP0TsHd5HOc9bpqKBeuTv6ES4QsvaYU/a+rTeF54vM+BSFNBDkWR
+i/y/T5JYD38cMEPosRYiJG7lYkI/T6qLt5XGUB5ugzBxfTvfIB0511t4U6RfSJuP
+ml8VPp9gb3WD2mS9qcO0Pj29CQriAzOp1njzLa67kgMNPN/oQtUyJxqYvBzx4Z8P
+eDdDy8lhUWC6Q06dS7ivM1RLJNlD55rfcZZOV9oua1r7YpB5KSBhXXrsgBBgxOk2
+DdvCmXuAVFFPmUkQEWwjOmXFgNPnShC4vaa5FsuKxs8gDJ6dwgVx7NvwLZD3Oj9K
+E5SbThMJ2TjzTSmGvRC4qy8mgmYLiLyxqyjSkpZq8D/C1zWIYeQdMF5FE6rZP4t8
+3SLd+r1947L9mISoHkLL4tHOIk5wRuZyOpy59MtXjUmiBYYkuloizk6MQ6WyfCwo
+UB0VqL6vWUB9CueBrCCJaWCy5BSn9hktQd1ko1UGLDv8qHuXwDynSFsGIrsCfmvU
+qDKwncGLZVwSB9uH6T+6/8WrwZlcG119+KPFYO7sfIGwC9b8xao=
+=K4Lx
+-----END PGP SIGNATURE-----
 
-Some of the files are common to the ones in your patch.
-
-Regards,
-Naman
-
-
+--Sig_/SX8CYt=Y+L__R2XGsF6qkcc--
 
