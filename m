@@ -1,148 +1,103 @@
-Return-Path: <linux-hyperv+bounces-5884-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5885-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA7ADAD669D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 06:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA291AD67A7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 08:11:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 764183A2DC8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 04:05:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 838063ACFDE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Jun 2025 06:10:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44C691DF970;
-	Thu, 12 Jun 2025 04:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986F51EE03B;
+	Thu, 12 Jun 2025 06:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ndRNcXpT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Joy80Sg4"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DDF31CD215;
-	Thu, 12 Jun 2025 04:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14CE41DFE20;
+	Thu, 12 Jun 2025 06:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749701065; cv=none; b=P81CBr8lGorlV0Gdhk1LesAxyuQwOU32Eeu7Er4r8VdO/kqFRt7hY8Yf/TZMR/Pfmv3IUmnyALY0VLJwrso1FoKRTpYiaiIB/8wycCW4rzFuI80CmPBrMEgQEsE5wP4/kFYPmaww658IDvV2zWUFJASfImxqXzk+lz626ivZb0c=
+	t=1749708657; cv=none; b=eoItsJhRBHCUul7+lbyZdQ9z0fGDPDKodvZ9eLBo0n/01efb7C/8WgeDgTN1djbcLhxDula2/QNi2ybsx0FSNlhs8/Wg/ix0A7EE0e6YTbIHlm5Cu0tahw6zYDQl5w0KKCqtEIxVM/DYGUUNQoLMXhWEn9+Cz7trvbsnY1P13P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749701065; c=relaxed/simple;
-	bh=xKb9o3o0Pi6obermwftLLvTLAPVUA0XdFF0PKpcd6Hg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XlutbEcKOpNkq/Vwg+DM0PmGr+GgydKBEe0Kg2U53nvIPe/qAVKX6YFRIqQSfyp03co8PRU+o8jYQunnTm3LgqGAE/qG7elu8oT4x+FwxVLOao0rOESokrkalE2z7sYfAzzNy8C6p22WzKuz7oxQR8gJFp7POttsNFnivIb534A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ndRNcXpT; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1749708657; c=relaxed/simple;
+	bh=H9PA9PCo638QQZPWDPbj0Ba1bybAEdQxDFbiE72JlkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPssS/SxQpOP/YlsMQ1fm1H+55V7Sn2QfjATn78tY7ZQ67nhNu0hI8D1Zx4Ys+qAcXzLbzdR5Xk6MJXRoDqRNKdcG6QrQKoiw2QSy6zpIdh+Sr35fUZVgIXH1FhqITdcU5/P2YBVSIne8z2dew26ZoAfQ7vFaeOcsOPlru9NvVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Joy80Sg4; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.224.160] (unknown [4.194.122.136])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9E734201C751;
-	Wed, 11 Jun 2025 21:04:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E734201C751
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 76086201C75A; Wed, 11 Jun 2025 23:10:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76086201C75A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749701062;
-	bh=hZxHlFKTBoWfN8DHCEcobl8Oo+xVuthLLtzu+mVgeVg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ndRNcXpTBHVObj5m7WQoqXHz/EYR70Qu93sBwuIDmQKLNZuWZWE/KAjGQWeEDwetN
-	 0/XSIIwxjZ9vCcOnGUDoI2e8T0q+CheoUIMUz/JLawaeWJPR1x5yfmGLyGxNkiGLXI
-	 qs75fC4J2K24CeMcQM1jjXSXp1iTLATqMe3Kq978=
-Message-ID: <426e8d83-1cc9-4812-b1c5-488d252350ec@linux.microsoft.com>
-Date: Thu, 12 Jun 2025 09:34:09 +0530
+	s=default; t=1749708655;
+	bh=HN++Rtd2kvEZX5dTxYCxgeHtSgU5q6eX3FDdzeIu4N0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Joy80Sg4iBtXAMbefgcBZB2I+MjPH66brawgypplOEsp1AczKCZB8ggW7gQR+TJ8K
+	 aXx/jPCBna4WI8HhmRdmW7OAyRvVS/QMan46Eh0xvbsyLy9+0vHWyjkYR7xhoOtX0q
+	 B3fiNpxGp6smskSMSw+52pUtmsW2y6xzPFNHhRuk=
+Date: Wed, 11 Jun 2025 23:10:55 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250612061055.GA20126@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250611085416.2e09b8cd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] KVM: x86: hyper-v: Fix warnings for missing export.h
- header inclusion
-To: Sean Christopherson <seanjc@google.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Paolo Bonzini <pbonzini@redhat.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Konstantin Taranov <kotaranov@microsoft.com>,
- Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
- Shiraz Saleem <shirazsaleem@microsoft.com>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Maxim Levitsky <mlevitsk@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
- Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
- <20250611100459.92900-4-namjain@linux.microsoft.com>
- <aEl9kO81-kp0hhw0@google.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <aEl9kO81-kp0hhw0@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611085416.2e09b8cd@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-
-On 6/11/2025 6:28 PM, Sean Christopherson wrote:
-> On Wed, Jun 11, 2025, Naman Jain wrote:
->> Fix below warning in Hyper-V drivers
+On Wed, Jun 11, 2025 at 08:54:16AM -0700, Jakub Kicinski wrote:
+> On Wed, 11 Jun 2025 07:09:44 -0700 Shradha Gupta wrote:
+> > Changes in v6
+> >  * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion
 > 
-> KVM is quite obviously not a Hyper-V driver.
-> 
->> that comes when kernel is compiled with W=1 option. Include export.h in
->> driver files to fix it.  * warning: EXPORT_SYMBOL() is used, but #include
->> <linux/export.h> is missing
-> 
-> NAK.  I agree with Heiko[*], this is absurd.  And if the W=1 change isn't reverted
-> for some reason, I'd rather "fix" all of KVM in one shot, not update random files
-> just because of their name.
-> 
-> Sorry.
-> 
-> [*] https://lore.kernel.org/all/20250611075533.8102A57-hca@linux.ibm.com
-> 
+> I meant a branch, basically apply the patches on the v6.16-rc1 tag
+> and push it out to GitHub, kernel.org or somewhere else public.
+> Then we can pull it in and maintain the stable commit IDs.
+> No need to repost the patches, FWIW, just share the branch here
+> once you pushed it out..
 
-Sure, thanks for reviewing.
+Oh, understood. Thanks for the clarity. Here is a github repo branch
+with the changes on v6.16-rc1 tag
+https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc1
 
-Regards,
-Naman
+Would this suffice?
 
->> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->> ---
->>   arch/x86/kvm/hyperv.c       | 1 +
->>   arch/x86/kvm/kvm_onhyperv.c | 1 +
->>   2 files changed, 2 insertions(+)
->>
->> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
->> index 24f0318c50d7..09f9de4555dd 100644
->> --- a/arch/x86/kvm/hyperv.c
->> +++ b/arch/x86/kvm/hyperv.c
->> @@ -33,6 +33,7 @@
->>   #include <linux/sched/cputime.h>
->>   #include <linux/spinlock.h>
->>   #include <linux/eventfd.h>
->> +#include <linux/export.h>
->>   
->>   #include <asm/apicdef.h>
->>   #include <asm/mshyperv.h>
->> diff --git a/arch/x86/kvm/kvm_onhyperv.c b/arch/x86/kvm/kvm_onhyperv.c
->> index ded0bd688c65..ba45f8364187 100644
->> --- a/arch/x86/kvm/kvm_onhyperv.c
->> +++ b/arch/x86/kvm/kvm_onhyperv.c
->> @@ -5,6 +5,7 @@
->>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>   
->>   #include <linux/kvm_host.h>
->> +#include <linux/export.h>
->>   #include <asm/mshyperv.h>
->>   
->>   #include "hyperv.h"
->> -- 
->> 2.34.1
->>
-
+regards,
+Shradha.
 
