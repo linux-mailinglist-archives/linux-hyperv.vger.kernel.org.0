@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-5901-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5902-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE90CAD8A35
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 13:20:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58EA6AD8A3B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 13:20:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD2E8189BF08
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 11:20:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 824487AB21D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 11:19:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EFBA2D5C79;
-	Fri, 13 Jun 2025 11:20:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3458B2D662A;
+	Fri, 13 Jun 2025 11:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nmZYjc+2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rcj58bYi"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD43E1DF258;
-	Fri, 13 Jun 2025 11:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60E52D540C;
+	Fri, 13 Jun 2025 11:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749813631; cv=none; b=LwEEaEqexKTSwUINe1KIrZ9rhyy+y6cP9iM4KG9vXuGIhCp9WDF+cs+oQHkY9A03OM8ui8y2Vv7Diz4zu+oQOqWYJIY+GnYEpmwrvSOKPmFWc7mvp39hnFLH1JZFYeygRz/L7jkQ9WA12Dsz43NMdi6mhQhzDx8r7cm/QFeEEmU=
+	t=1749813632; cv=none; b=E3eSyEw6Fr9op1bX5wNQHIRFbQ5yTzmpIU0h5PL2jVugRJGdC6nGn0PHkmDKMEwyCabQ3nT3bN9q2LmeT9GqptxxNk2s+4j1zwoMRXaRnMwqDFiUFNsa1LaLtWKBs6ioyqPmfP+7PdG9zjjt3kNfHhteZL7RtECYvxrjfqjXvVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749813631; c=relaxed/simple;
-	bh=YFL0KvvYSxPtW6cWPQRbh9UKr+0LsCtTqDFE29TqjiM=;
-	h=From:To:Subject:Date:Message-Id; b=aU16USjymsp/iZTZTcbSpGkJIyX7jPa3N2OmnUREqLgkHCgBvAVJkCEafT+xSvGv1z540IoRtO1aZrBt6Fugoo9DTn1w36VY/TD7lj7acehbU3YnpXinyjVe1ZKp3HEiDcYMa+swFbb8lbavBsjFxlVa/shNCdlCqqBhbWE4RzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nmZYjc+2; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1749813632; c=relaxed/simple;
+	bh=T8M8l/OSfqF6LAD2opiryZllIbiWH12cgjvJos95K/A=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=YYOxnP05Q1jpux4uYBBqSAeKcXO4PyhSxKaA7w8ljI28DLZccLckYnaz7I9k4FOwDGdceBH4ZGrSBi4dPn6oHcPNHt+Su+YkObEdDJ4eCoxgbxOAw/m0zwKfSrkfMNKyGvqaZooqU/FC38qMU3J18edGd1BHx+XkYrxt4HveziM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rcj58bYi; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 35C52203EE35; Fri, 13 Jun 2025 04:20:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 35C52203EE35
+	id 43663201C775; Fri, 13 Jun 2025 04:20:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 43663201C775
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749813629;
-	bh=3a1gAuEbwTI+8JwlIvaZK19uNGJ1iK1P1/Xir104Ikk=;
-	h=From:To:Subject:Date:From;
-	b=nmZYjc+2xeMeGixVvs92OpjPM90ypwqEHxdSYk4oiImjXfNqhgJm6F1u4g5X+kv9m
-	 OLYZwyCyIj9yX2//xGO8II41QHSKN1cZE/Pv1hom8/8bmkR7xy6rBBIcU4AXQZsh+p
-	 sj2qbDM1NfebhSXqsAEIChEoY97JTos2rhCTlX/Q=
+	s=default; t=1749813630;
+	bh=cP2o3EuJ+p3R1t0enkJckW1hpdqJe16ROT2UBloMEak=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=rcj58bYikfHixGsadDstumxnYOpQ2cczgQ3tPbZwypPNycE6iiYQASD14+rtR5Wxq
+	 1INnpJ4W3DvFB4MjF9rkd6z4E3lQJlUfrhTkPAkViR8/nDALW7FoN/fnnsuUZaYGVJ
+	 fCtUEwxNuq+aG/kxvnMEMUBJs4AfjzPvpf5xXjIY=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -63,64 +63,121 @@ To: kys@microsoft.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org
-Subject: [PATCH net-next v2 0/4] Support bandwidth clamping in mana using net shapers
-Date: Fri, 13 Jun 2025 04:20:23 -0700
-Message-Id: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
+Subject: [PATCH net-next v2 1/4] net: mana: Fix potential deadlocks in mana napi ops
+Date: Fri, 13 Jun 2025 04:20:24 -0700
+Message-Id: <1749813627-8377-2-git-send-email-ernis@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
+References: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-This patchset introduces hardware-backed bandwidth rate limiting
-for MANA NICs via the net_shaper_ops interface, enabling efficient and
-fine-grained traffic shaping directly on the device.
+When net_shaper_ops are enabled for MANA, netdev_ops_lock
+becomes active.
 
-Previously, MANA lacked a mechanism for user-configurable bandwidth
-control. With this addition, users can now configure shaping parameters,
-allowing better traffic management and performance isolation.
+MANA VF setup/teardown by netvsc follows this call chain:
 
-The implementation includes the net_shaper_ops callbacks in the MANA
-driver and supports one shaper per vport. Add shaping support via
-mana_set_bw_clamp(), allowing the configuration of bandwidth rates
-in 100 Mbps increments (minimum 100 Mbps). The driver validates input
-and rejects unsupported values. On failure, it restores the previous
-configuration which is queried using mana_query_link_cfg() or
-retains the current state.
+netvsc_vf_setup()
+        dev_change_flags()
+		...
+         __dev_open() OR __dev_close()
 
-To prevent potential deadlocks introduced by net_shaper_ops, switch to
-_locked variants of NAPI APIs when netdevops_lock is held during
-VF setup and teardown.
+dev_change_flags() holds the netdev mutex via netdev_lock_ops.
 
-Also, Add support for ethtool get_link_ksettings to report the maximum
-link speed supported by the SKU in mbps.
+Meanwhile, mana_create_txq() and mana_create_rxq() in mana_open()
+path call NAPI APIs (netif_napi_add_tx(), netif_napi_add_weight(),
+napi_enable()), which also try to acquire the same lock, risking
+deadlock.
 
-These APIs when invoked on hardware that are older or that do
-not support these APIs, the speed would be reported as UNKNOWN and
-the net-shaper calls to set speed would fail.
+Similarly in the teardown path (mana_close()), netif_napi_disable()
+and netif_napi_del(), contend for the same lock.
+
+Switch to the _locked variants of these APIs to avoid deadlocks
+when the netdev_ops_lock is held.
+
+Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
 ---
 Changes in v2:
-* Rebase to latest net-next branch.
-* Edit commit message in 
-  "net: mana: Fix potential deadlocks in mana napi ops".
-* Use netdev_lock_ops_to_full() instead of explicit if..else statements
-  for napi APIs.
-* Define GDMA_STATUS_CMD_UNSUPPORTED for unsupported HWC status code.
+* Use netdev_lock_ops_to_full() instead of if...else statements for napi
+  APIs.
+* Edit commit message.
 ---
-Erni Sri Satya Vennela (4):
-  net: mana: Fix potential deadlocks in mana napi ops
-  net: mana: Add support for net_shaper_ops
-  net: mana: Add speed support in mana_get_link_ksettings
-  net: mana: Handle unsupported HWC commands
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 30 +++++++++++++------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
- .../net/ethernet/microsoft/mana/hw_channel.c  |   4 +
- drivers/net/ethernet/microsoft/mana/mana_en.c | 197 +++++++++++++++++-
- .../ethernet/microsoft/mana/mana_ethtool.c    |   6 +
- include/net/mana/gdma.h                       |   1 +
- include/net/mana/mana.h                       |  42 ++++
- 5 files changed, 241 insertions(+), 9 deletions(-)
-
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index e68b8190bb7a..ca5e9c3d374b 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1912,8 +1912,11 @@ static void mana_destroy_txq(struct mana_port_context *apc)
+ 		napi = &apc->tx_qp[i].tx_cq.napi;
+ 		if (apc->tx_qp[i].txq.napi_initialized) {
+ 			napi_synchronize(napi);
+-			napi_disable(napi);
+-			netif_napi_del(napi);
++			netdev_lock_ops_to_full(napi->dev);
++			napi_disable_locked(napi);
++			netif_napi_del_locked(napi);
++			netdev_unlock_full_to_ops(napi->dev);
+ 			apc->tx_qp[i].txq.napi_initialized = false;
+ 		}
+ 		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
+@@ -2065,8 +2068,11 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 
+ 		mana_create_txq_debugfs(apc, i);
+ 
+-		netif_napi_add_tx(net, &cq->napi, mana_poll);
+-		napi_enable(&cq->napi);
++		set_bit(NAPI_STATE_NO_BUSY_POLL, &cq->napi.state);
++		netdev_lock_ops_to_full(net);
++		netif_napi_add_locked(net, &cq->napi, mana_poll);
++		napi_enable_locked(&cq->napi);
++		netdev_unlock_full_to_ops(net);
+ 		txq->napi_initialized = true;
+ 
+ 		mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
+@@ -2102,9 +2108,11 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
+ 	if (napi_initialized) {
+ 		napi_synchronize(napi);
+ 
+-		napi_disable(napi);
+-
+-		netif_napi_del(napi);
++		netdev_lock_ops_to_full(napi->dev);
++		napi_disable_locked(napi);
++		netif_napi_del_locked(napi);
++		netdev_unlock_full_to_ops(napi->dev);
+ 	}
+ 	xdp_rxq_info_unreg(&rxq->xdp_rxq);
+ 
+@@ -2355,14 +2363,18 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 
+ 	gc->cq_table[cq->gdma_id] = cq->gdma_cq;
+ 
+-	netif_napi_add_weight(ndev, &cq->napi, mana_poll, 1);
++	netdev_lock_ops_to_full(ndev);
++	netif_napi_add_weight_locked(ndev, &cq->napi, mana_poll, 1);
++	netdev_unlock_full_to_ops(ndev);
+ 
+ 	WARN_ON(xdp_rxq_info_reg(&rxq->xdp_rxq, ndev, rxq_idx,
+ 				 cq->napi.napi_id));
+ 	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
+ 					   rxq->page_pool));
+ 
+-	napi_enable(&cq->napi);
++	netdev_lock_ops_to_full(ndev);
++	napi_enable_locked(&cq->napi);
++	netdev_unlock_full_to_ops(ndev);
+ 
+ 	mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
+ out:
 -- 
 2.34.1
 
