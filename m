@@ -1,158 +1,262 @@
-Return-Path: <linux-hyperv+bounces-5907-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5908-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51014AD9290
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 18:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57AF2AD935A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 19:00:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3BF31884387
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 16:08:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 551111892511
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Jun 2025 17:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 554B120E030;
-	Fri, 13 Jun 2025 16:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CD61E991B;
+	Fri, 13 Jun 2025 17:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="n8vJJkcX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JfZsfLrc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lBOWq48e"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7A32E11D2;
-	Fri, 13 Jun 2025 16:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05642E11B3;
+	Fri, 13 Jun 2025 17:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830856; cv=none; b=jPJlx7r3ppF76IGLLmr+CcWDPd/RH/kH/UDUdTHDRbpP4hD8dkqZmeuy4RQLSwlMB9sAdpnLRw1uhHj7T3+6CjK0SKwRTsx5CP4SbrYHDqkqEiPzvbX+K1Puo5Mk4cVStFKpVU0jJxeN8xLG4+Tx01nzvDRsdJH4V6zGLijlI7A=
+	t=1749834054; cv=none; b=VFWnf5YgeiZZonszRlvi2pgA1wvFKAr1a8DDHQnnZXggjRr3XmxTuyXGGlcW+1gd2aCo0oq2+eL8Ku99bF0XgAZKMuY1Sr78zEpCtNQ6q1B1aEPjFADLBYUN3CcUOhjOuWikmtNLOM68YeU90TPmJk72e4E2GV7JMBb+gzNYVOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830856; c=relaxed/simple;
-	bh=MNz8gwHFXSriklMe/8KoYKMqq4hYPlrQVKa1bvbLYLk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=sb0ZivXZ31GGwvATUqe9W6lbB8SpHpiTgT2O+aBc0obrMzSrMojwPnugd0y/sOzh35zo8+5waCq4v8xbJK5bAlWMR2vtGbhtQ0Fr3SqVGH0ogBvVfekhSYs93WJV6ffIFsK843o8jeS7MJpRUd1SSI5zd/l7gJAWsiIgb2JzH3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=n8vJJkcX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JfZsfLrc; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 89A5B1380394;
-	Fri, 13 Jun 2025 12:07:32 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 13 Jun 2025 12:07:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749830852;
-	 x=1749917252; bh=V20vyYK7C1e227OIfs4VLw6bkef6iatlvuFGlABdYfg=; b=
-	n8vJJkcXcxEe3xviJVzSsGYutA63lu2pc/ll6HtDgvk0zU9wS4jznBbIEyrrJBlh
-	64eeHIrhUxlEf6BmPgH1xR2iaAisTOvp7exZSgxo4I5PvPLqPOm3sDPjR0X4Gmlt
-	lMKAa3F7/GSJkyxMVDITMlGJQuOymNUheSO6tCnUkgtU7HiVVOjtSLv+yirUfnWl
-	e6KEUcto/rB3TJZKSCxjG9NiRk2rzZ/UqcYkcCRN3afOy8F0cKSLEoqnZd8qivUU
-	OVSdWYSUFAr/QppvaPus96Ay+nfYuZh1sS7b6DMiDhXRXCetBFyWxjd5y9+vmVnK
-	Rkx6TXd2rutkk5ujt4JdnQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749830852; x=
-	1749917252; bh=V20vyYK7C1e227OIfs4VLw6bkef6iatlvuFGlABdYfg=; b=J
-	fZsfLrc9CVCpIUpxcWUKPRrK+BhAzGqUnC3+7m58WzGAl590mvj50nnXp5QD6/8W
-	zlmL0kMpsny8oc9RCM1vEFH5UHek9tX4JwIx+X4AwLPmUXYrTkKp0g+iSWPRlaFK
-	Rlji7cFCcMy7DKWRazjyuBpdiFKGpZJf33ZXfgsRPWzuwF5Nxl8yOs37R9FvDkzj
-	heLoimlSUXPSdsNcKsM2iUCoBWJiRWf3Jzu794HN0JFDHu67islyveQAE4U7IaxU
-	UxJex7bwkFL8I08mMIRU1y07wePtjwRZYXKfMmuZ3Z5QzEurmNljnHxWnEGt+kfA
-	aD0egE44Q/bWeQaD73FmQ==
-X-ME-Sender: <xms:xExMaKmL0Pz8M-QTbuPYe5k6f4xl_QmCLCW8n0nFajUhucrBNtwCqQ>
-    <xme:xExMaB1pB5j4hJaeXVMBhWXmWbOpA4mi9ONsNasS7kTi0AtzbxJtE-YVxTcnEOoxF
-    5_DkqZETCJXb_GsfUY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    uddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopeifvghirdhlihhusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehnuhhnohgurghsnhgvvhgvsheslhhinhhugidrmhhitghrohhsohhfthdrtghomhdprh
-    gtphhtthhopehrohhmrghnkheslhhinhhugidrmhhitghrohhsohhfthdrtghomhdprhgt
-    phhtthhopehsshgvnhhgrghrsehlihhnuhigrdhmihgtrhhoshhofhhtrdgtohhmpdhrtg
-    hpthhtohepuggvtghuihesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehhrghi
-    higrnhhgiiesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehkhihssehmihgtrh
-    hoshhofhhtrdgtohhmpdhrtghpthhtohepmhhhkhhlihhnuhigsehouhhtlhhoohhkrdgt
-    ohhm
-X-ME-Proxy: <xmx:xExMaIontGdfZJ2E60J50iATydKwvQBRScjxGXA7SOZmpshLpHdl9w>
-    <xmx:xExMaOk9VmcqGGTBs7fJRTHHpq3AJuQ5rPlKIK8hywqJQnzYrNhimA>
-    <xmx:xExMaI12Z9jhrcy8S9DQ421FYlNdDuifusbFFB2tJaT1LA1r7LUcTQ>
-    <xmx:xExMaFvEcinH4Tf9WnEt22AnMGBsKpPCu0e9U-DDsTma7UuUHKwjsA>
-    <xmx:xExMaJ8DL5TUJkEI1xZeVfnvSPmeI1qRK743zOvUAItWrsComRXf7zvT>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2A520700065; Fri, 13 Jun 2025 12:07:32 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1749834054; c=relaxed/simple;
+	bh=KX7jK6qf6Ts4XzWAWHyDvYIzeWB/bWHJ2NGXsH7w4ew=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=AqaiJxUKAqlEBUQEfpyZKI0TZlvMM5+RDuEqQudVgoPMn4aYHZBvPJDDiyVBcXaoAuqZBo4CYUo3X0j+b9q5kueY4ZAflt4eFsQweaRKuYgilnxLzxx176TXA3ye5tchz8/opcUMJTKBrfAjTdk6hhy0vk/cRZAvfttEUgrZYbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lBOWq48e; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 1FFA221175A7; Fri, 13 Jun 2025 10:00:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FFA221175A7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749834046;
+	bh=8UhqfepXfhCvXH0+pdx3UWMlC1815qt8SHGEMAi8/AU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lBOWq48eaQ46TlT8vkleg6fGvOgaY1k1pdulzf6epLjPtwWbIUtRnBKCD3cMdqX8u
+	 ZrltlAa6Aial2EOaquS6kFYEJ/bhposC7A18s8Ko/Wf+t+w71RKp+fXHxumb1bQAgs
+	 tE359RaFP5w2vPnWyWUgAPyzLn13FnfPgX+URoN8=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	stephen@networkplumber.org,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next,v8] net: mana: Add handler for hardware servicing events
+Date: Fri, 13 Jun 2025 10:00:34 -0700
+Message-Id: <1749834034-18498-1-git-send-email-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: Tc9e620b0a09597a4
-Date: Fri, 13 Jun 2025 18:06:53 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Michael Kelley" <mhklinux@outlook.com>,
- "Roman Kisel" <romank@linux.microsoft.com>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
- "Saurabh Singh Sengar" <ssengar@linux.microsoft.com>,
- "Wei Liu" <wei.liu@kernel.org>
-Message-Id: <c449d792-fcdc-4b08-a76e-519c0a64525d@app.fastmail.com>
-In-Reply-To: 
- <SN6PR02MB4157D600219C00D33D00C3B4D477A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250610091810.2638058-1-arnd@kernel.org>
- <20250610153354.2780-1-romank@linux.microsoft.com>
- <df1261e1-25d4-43ae-88c4-4f5d75370aee@app.fastmail.com>
- <SN6PR02MB4157CE643DEB6CE4B0AEFC00D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB4157D3A61C5DB1357267D712D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB4157D600219C00D33D00C3B4D477A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Subject: Re: [PATCH] hv: add CONFIG_EFI dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025, at 17:50, Michael Kelley wrote:
-> From: Michael Kelley <mhklinux@outlook.com> Sent: Tuesday, June 10, 
->
-> There are other ways to express the HYPERV dependency on EFI that is
-> conditional. But if the condition includes HYPERV_VTL_MODE (which
-> it needs to), then there's a dependency loop because
-> HYPERV_VTL_MODE depends on HYPERV. So that doesn't work
-> either.
->
-> To solve the immediate problem, we'll just have to do
->
->     select SYSFB if EFI && !HYPERV_VTL_MODE
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Right. Technically, you could do
+To collaborate with hardware servicing events, upon receiving the special
+EQE notification from the HW channel, remove the devices on this bus.
+Then, after a waiting period based on the device specs, rescan the parent
+bus to recover the devices.
 
-    select HYPERV_VTL_MODE if !EFI
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v8:
+Tested rmmod as suggested by Jakub Kicinski, and found it's necessary to
+add back: acquiring module refcnt.
 
-but that makes no sense from a usability point of view.
+v7:
+rebased.
 
-> Separately, if we want to express the broader dependency of
-> HYPERV on EFI (at least for ARM64), then the dependency of
-> HYPERV_VTL_MODE on HYPERV will need to go away. Three
-> months back I had suggested not creating that dependency [1],
-> but the eventual decision was to add it. [2, and follow discussion]
-> We would need to revisit that discussion.
->
-> Arnd -- if you'd prefer that I submit the patch, let me know.
-> I created the original problem and can clean up the mess. :-)
+v6:
+Not acquiring module refcnt as suggested by Paolo Abeni.
 
-Yes, please do, I trust you will come up with a better patch
-description than I would.
+v5:
+Get refcnt of the pdev struct to avoid removal before running the work
+as suggested by Jakub Kicinski.
 
-      Arnd
+v4:
+Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
+be multiple cases of this reset request.
+
+v3:
+Updated for checkpatch warnings as suggested by Simon Horman.
+
+v2:
+Added dev_dbg for service type as suggested by Shradha Gupta.
+Added driver cap bit.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 75 +++++++++++++++++++
+ include/net/mana/gdma.h                       | 10 ++-
+ 2 files changed, 83 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c6..069b7a871b78 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -352,11 +352,59 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+ }
+ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
++#define MANA_SERVICE_PERIOD 10
++
++struct mana_serv_work {
++	struct work_struct serv_work;
++	struct pci_dev *pdev;
++};
++
++static void mana_serv_func(struct work_struct *w)
++{
++	struct mana_serv_work *mns_wk;
++	struct pci_bus *bus, *parent;
++	struct pci_dev *pdev;
++
++	mns_wk = container_of(w, struct mana_serv_work, serv_work);
++	pdev = mns_wk->pdev;
++
++	pci_lock_rescan_remove();
++
++	if (!pdev)
++		goto out;
++
++	bus = pdev->bus;
++	if (!bus) {
++		dev_err(&pdev->dev, "MANA service: no bus\n");
++		goto out;
++	}
++
++	parent = bus->parent;
++	if (!parent) {
++		dev_err(&pdev->dev, "MANA service: no parent bus\n");
++		goto out;
++	}
++
++	pci_stop_and_remove_bus_device(bus->self);
++
++	msleep(MANA_SERVICE_PERIOD * 1000);
++
++	pci_rescan_bus(parent);
++
++out:
++	pci_unlock_rescan_remove();
++
++	pci_dev_put(pdev);
++	kfree(mns_wk);
++	module_put(THIS_MODULE);
++}
++
+ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ {
+ 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
+ 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
+ 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
++	struct mana_serv_work *mns_wk;
+ 	union gdma_eqe_info eqe_info;
+ 	enum gdma_eqe_type type;
+ 	struct gdma_event event;
+@@ -401,6 +449,33 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		eq->eq.callback(eq->eq.context, eq, &event);
+ 		break;
+ 
++	case GDMA_EQE_HWC_FPGA_RECONFIG:
++		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
++
++		if (gc->in_service) {
++			dev_info(gc->dev, "Already in service\n");
++			break;
++		}
++
++		if (!try_module_get(THIS_MODULE)) {
++			dev_info(gc->dev, "Module is unloading\n");
++			break;
++		}
++
++		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
++		if (!mns_wk) {
++			module_put(THIS_MODULE);
++			break;
++		}
++
++		dev_info(gc->dev, "Start MANA service type:%d\n", type);
++		gc->in_service = true;
++		mns_wk->pdev = to_pci_dev(gc->dev);
++		pci_dev_get(mns_wk->pdev);
++		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
++		schedule_work(&mns_wk->serv_work);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 3ce56a816425..bfae59202669 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -58,7 +58,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+-	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ 	GDMA_EQE_HWC_SOC_SERVICE	= 134,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+@@ -403,6 +403,8 @@ struct gdma_context {
+ 	u32			test_event_eq_id;
+ 
+ 	bool			is_pf;
++	bool			in_service;
++
+ 	phys_addr_t		bar0_pa;
+ 	void __iomem		*bar0_va;
+ 	void __iomem		*shm_base;
+@@ -578,12 +580,16 @@ enum {
+ /* Driver can handle holes (zeros) in the device list */
+ #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+ 
++/* Driver can self reset on FPGA Reconfig EQE notification */
++#define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+ 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+ 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
++	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+-- 
+2.34.1
+
 
