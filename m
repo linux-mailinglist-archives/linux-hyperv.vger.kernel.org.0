@@ -1,112 +1,111 @@
-Return-Path: <linux-hyperv+bounces-5917-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5918-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74213AD9F9B
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Jun 2025 22:04:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9A15ADA47D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Jun 2025 01:04:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7625518940ED
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Jun 2025 20:04:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 770F816BFBC
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Jun 2025 23:04:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF09328D83F;
-	Sat, 14 Jun 2025 20:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qm5OZsH8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AC081DED5D;
+	Sun, 15 Jun 2025 23:04:49 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7781BD9C1;
-	Sat, 14 Jun 2025 20:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DD3194A67
+	for <linux-hyperv@vger.kernel.org>; Sun, 15 Jun 2025 23:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749931437; cv=none; b=RTS1y44Z9h602TuX+Ti5amuacrgHA48F12zayx674QfjJOjM+3zuHnIQo1Dp+u4Upm34/8jN5RQzJD/PN6wafowdwP8eMnbKyYZjmGkgyjJmNNWRGIXB0xpwzfqtHx32elLLm+quBkR/KAvh5UoiunDttVLkcEH/RJu0rpQozrY=
+	t=1750028689; cv=none; b=mUpirJK1380r4LAe0CRaCa8JJw6r9IZSb8TGCOOn4HZTPTlNk4Pw52GIBfwrs3Ny9nvlBxg8WeyGB84HKGaMyNoHo7oKKDl86I7slIxwVkSB+YbnDDlhP2zmYuPAnggHZ/6ipH0U2SD5Lf8lL1+q28fLj9sapDZuRyKRf8Ey2ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749931437; c=relaxed/simple;
-	bh=GY6P7k8VV8sKiyvFkCJ3MKhvnmt5LFjeYWjC+1yHv8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UWBhy/d9C2y1Oj57/Hrd1aCMb7ARCOOAr1fZTSI9pd/HBNIcDq0ym5yjqCeL0EDHxoB9Yg7U0xku2ahywVLdVskrxsqtMft3frygiW6hFa07MZ+oSYSywN1xxX41oBzhhI0L1rBnDKD5ykCe76hDD1qjxDyNbBnReUv2o9MqgJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qm5OZsH8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 116F9C4CEEB;
-	Sat, 14 Jun 2025 20:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749931436;
-	bh=GY6P7k8VV8sKiyvFkCJ3MKhvnmt5LFjeYWjC+1yHv8g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qm5OZsH8s0jsEfRN5uVRuCXGjnpau1FUAQmhyucQC+DFTmHQqr8/YF4ptrGjelMDA
-	 /EE2G7srKOlnK+wnbVccHikGz6V5zTlpTfk0pBSDhZuifFL9lVh03K2lmInSPdFK3U
-	 7/CiK9qg3x4CiGF9n0QVkl3HRJWbEJvay7fB+2Qy3qUe8fjGhfEuFi5cu3AUUkE3Dt
-	 urm79lUmDlhMnTqIqcca3iG1v9q7trzzxm8zsaAHjKiRj2z1S5nqyscDQUkQqFlwO0
-	 ohQlYDzfE0td0gHvLO+D/OKGjsqWFU6CGoox5zHbSJOvEYCV34FaEoI/IYKr5URJoF
-	 obqhc8l07Tc6A==
-Date: Sat, 14 Jun 2025 13:03:54 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
- kotaranov@microsoft.com, horms@kernel.org, shirazsaleem@microsoft.com,
- leon@kernel.org, shradhagupta@linux.microsoft.com,
- schakrabarti@linux.microsoft.com, gerhard@engleder-embedded.com,
- rosenp@gmail.com, sdf@fomichev.me, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/4] Support bandwidth clamping in mana
- using net shapers
-Message-ID: <20250614130354.0a53214e@kernel.org>
-In-Reply-To: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
-References: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1750028689; c=relaxed/simple;
+	bh=1xr681e8ZwQbQdV9t6ultXIwjJoT79zb2m305uN+1fs=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IE2JP6cxpx5Dp1F0y1KZkvlvqgwxRyXyAn/UKuLAka/Z3SPmNx4WGXZmACXXkhLW8HFIjxlYk0cS5oQcW2OpBvyHGrrdB69SE707qR0RnivJq/p1nHkSGVBzaR9QNkTqJDEdxoVulrMC4D/NlvLVwrHPvUsF86IspPWGkpILQ2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
+Received: from [2a02:578:851f:1502:391e:c5f5:10e2:b9a3] (helo=deadeye)
+	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1uQwP7-001p3N-1n
+	for linux-hyperv@vger.kernel.org;
+	Sun, 15 Jun 2025 23:04:44 +0000
+Received: from ben by deadeye with local (Exim 4.98.2)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1uQwP5-000000016Wy-1vp2
+	for linux-hyperv@vger.kernel.org;
+	Mon, 16 Jun 2025 01:04:43 +0200
+Date: Mon, 16 Jun 2025 01:04:43 +0200
+From: Ben Hutchings <benh@debian.org>
+To: linux-hyperv@vger.kernel.org
+Subject: [PATCH 0/2] tools/hv: Improve the sample hv_get_dhcp_info script
+Message-ID: <aE9Ri42HK2L1YOn3@decadent.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1vjZWrq8g8h6eUt2"
+Content-Disposition: inline
+X-SA-Exim-Connect-IP: 2a02:578:851f:1502:391e:c5f5:10e2:b9a3
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 
-On Fri, 13 Jun 2025 04:20:23 -0700 Erni Sri Satya Vennela wrote:
-> This patchset introduces hardware-backed bandwidth rate limiting
-> for MANA NICs via the net_shaper_ops interface, enabling efficient and
-> fine-grained traffic shaping directly on the device.
-> 
-> Previously, MANA lacked a mechanism for user-configurable bandwidth
-> control. With this addition, users can now configure shaping parameters,
-> allowing better traffic management and performance isolation.
-> 
-> The implementation includes the net_shaper_ops callbacks in the MANA
-> driver and supports one shaper per vport. Add shaping support via
-> mana_set_bw_clamp(), allowing the configuration of bandwidth rates
-> in 100 Mbps increments (minimum 100 Mbps). The driver validates input
-> and rejects unsupported values. On failure, it restores the previous
-> configuration which is queried using mana_query_link_cfg() or
-> retains the current state.
-> 
-> To prevent potential deadlocks introduced by net_shaper_ops, switch to
-> _locked variants of NAPI APIs when netdevops_lock is held during
-> VF setup and teardown.
-> 
-> Also, Add support for ethtool get_link_ksettings to report the maximum
-> link speed supported by the SKU in mbps.
-> 
-> These APIs when invoked on hardware that are older or that do
-> not support these APIs, the speed would be reported as UNKNOWN and
-> the net-shaper calls to set speed would fail.
 
-Failed to apply patch:
-Applying: net: mana: Fix potential deadlocks in mana napi ops
-error: patch fragment without header at line 23: @@ -2102,9 +2108,11 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
-error: could not build fake ancestor
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-Patch failed at 0001 net: mana: Fix potential deadlocks in mana napi ops
+--1vjZWrq8g8h6eUt2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-please rebase
--- 
-pw-bot: cr
+The sample hv_get_dhcp_info script was originally supposed to be
+replaced by downstream distributions, but:
+
+- Network Manager and systemd-networkd are used across many
+  distributions
+- Debian's ifupdown is not only used in Debian derivatives but also
+  Alpine and Void Linux
+
+This adds support for all of those.
+
+The check for DHCP in network-scripts configuration files was
+also quite lax.  This makes the regex a bit more strict.
+
+Ben.
+
+Ben Hutchings (2):
+  tools/hv: Make the sample hv_get_dhcp_info script more useful
+  tools/hv: Make network-scripts DHCP status check more specific
+
+ tools/hv/hv_get_dhcp_info.sh | 87 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 75 insertions(+), 12 deletions(-)
+
+
+--1vjZWrq8g8h6eUt2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmhPUYUACgkQ57/I7JWG
+EQlfbw/8CrfSf5XxqvV07FaN+bcNTJEFWsUhIc0G4gw6OJi7n5tRyj0+EZoAmac9
+BCtvD7ug+WghNeQkFRCyvjobGRWoCFo9zyFVRvrcYaea8hny8xe7S2AVNepY0N/D
+iaTxDHqgDDbGaxdZ423nLHgqJB1FDWJ1UZkEOE+yQTYG97ciXr/PTZo8XBAJb/tL
+JPnBmlW0a0+E5Ra+l/VQMj7C+ASYKnHwvhFvxBeLHU3ppSJCahz3KC0BuKrvUTBv
+g9o49pN0mrLl0jN3YSdg/aSfpMjbpZqymoEH3KHRKhQKOeF6XB7kAXcUx6QZIvPK
+U+DBFICOb2nYa9jmhYEaRtQbyRd7cJeDyDIg6fcCh6cYAmZIrFJSjZO5FrozY9+Y
+VcJYelHAyrrF1os3QFgCBVSdnMJZsxfAvvyK+MzJSJQ17dgkibS+FCddK4P/lOfv
+IrE7ZT6H2kxRqZz8hO0yZnMbYqFOc7tQmln3YI5/1B2qd9KAjR/f1IfrX5kCfa0u
+Sy/4Ap4r1WJ//liKX8Gi5MrV/3qQFEIm/0I2I7e9QYJMaEDjDT2Z7IHxOq5Z610h
+dlPnmT+sqBS2ZL5JBoyDdDmaSKpNkHz6Gk9akLztOOqEaLMtPTQxhrCfu9Iqu9ak
+TX2e6JJGRDqoWZ4ZZx92RzQ+UZuAwy8RpjXZgr495XY2c1gFEqM=
+=klih
+-----END PGP SIGNATURE-----
+
+--1vjZWrq8g8h6eUt2--
 
