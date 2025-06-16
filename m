@@ -1,111 +1,138 @@
-Return-Path: <linux-hyperv+bounces-5921-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5922-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8D36ADB595
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Jun 2025 17:36:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4267EADBA88
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Jun 2025 22:06:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1553B7AD850
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Jun 2025 15:31:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 417863B199E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Jun 2025 20:06:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9FF2652B6;
-	Mon, 16 Jun 2025 15:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4320B1F4C98;
+	Mon, 16 Jun 2025 20:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="L5r5Sqk7"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MwygWuha"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB282676F3;
-	Mon, 16 Jun 2025 15:32:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987E71F5847;
+	Mon, 16 Jun 2025 20:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750087969; cv=none; b=eT+2a4hhtwlL+vf4MqoxDVQV2LQNLzyOfA1qRvnYXjBN4ZGj4zwFg0KmRPLpP+L4PScmPneF7AP7Nd/xZUOf8bUTbI7Mlzdga4fTxWAd0ovTFe+xbhywrZH2/75CWeNMv3RG1lQHZXjTc9J29tRJYl4A2PDkmElTwKlN3hEQono=
+	t=1750104385; cv=none; b=UFUc5H/LfImWO2h/7t59yiIjLWqCiM1Vz67hu9sFa1pB3HraBwBuS3h1esXivFwYC+Xahw8SJPm8rKt3/zHR8StguRaC4lQtvsT/3mj2/ZZfnfDhlAEm39C1QL965pbI7GmibPv5tH299Zz+y52kHxpAe7ikmd1z3vUXzLqS8Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750087969; c=relaxed/simple;
-	bh=5bDrO8l5JTUQ/0A+AsMqyeLX6KEFEC59MT2EY3ySsGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LwxO1SBgwIAIJK50f16UIIMcVIe5JgojK1ClPkp7hBu0I2W0NX2RcZMWQ8BPQVo6VpavPkAm0m2jeWEQtlum6lqwsY4KxUex6eIgSWMBICVvvyqQEFLkbaTGUdyNUNrlDSflNdGNjCniL2vlfJdKvU01bbfjvoVpXo6jQTmMh0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=L5r5Sqk7; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1750104385; c=relaxed/simple;
+	bh=DxKYfW2Y3BQiZFIE+AMWe+NyrlGjHl/jlQm63dGeKuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMB7E08JIyZZXakdDLGdci7ItBoRFNfTEY2Y6E/dU9bYWL6WOi8Nk16NqPMicWW7ONcJ0v55nNpzLQsMotM+Sj6QmqR9z+uYncRp5Fydch31ZFfmRRXYoDGmZ4A3aXTyXW5gSacroSaHt79H7MxF+7OzqjANr3tMajKZHwEBl1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MwygWuha; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 61F8C21176C4; Mon, 16 Jun 2025 08:32:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 61F8C21176C4
+Received: from [100.65.1.24] (unknown [20.236.11.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A030C21176C6;
+	Mon, 16 Jun 2025 13:06:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A030C21176C6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750087962;
-	bh=rhCl/uIDccRxuHm7p7vGNDxXrJwG78AgR0V8kl4GkVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L5r5Sqk7EL10qA9Shyceo+mnNV2S/l1gibd6X17xn67cbHy4J2zZbtBY5q+FyBKz4
-	 W1Y9q5En/imJ+0FYpDr1xW4O/OC2iA0BlMJrDXpGJUkAcDlVSt/+Zi3jgWNE8DIpVW
-	 KD+jj+sqm8h0GnzgY0UY5jVfFcpQ5hLfrDjjt5Qk=
-Date: Mon, 16 Jun 2025 08:32:42 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: longli@microsoft.com
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [Patch net-next v2] net: mana: Record doorbell physical address
- in PF mode
-Message-ID: <20250616153242.GB23702@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1749836765-28886-1-git-send-email-longli@linuxonhyperv.com>
+	s=default; t=1750104381;
+	bh=RWf4U2IMgfXaKMSLGJUCrHvubnG0tLPF0JXW2PD8mi0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MwygWuhajk7TGYV1hsriMnPH/Z615YS+VR6NW/7XY+ka4XNr/WLH2QUZibl6KRgys
+	 duta2oQez2pfYwZQIs/JdGdS7BHRSYlkI3IaA2ECLv+a5lZnTkfKCJiuOuMTv1PfU1
+	 VHKF/NIqb+R7AbxYyEWJNa2pTcbblAVqovZtzrig=
+Message-ID: <38127f1a-3761-48c7-8e95-1f677d6bd7b3@linux.microsoft.com>
+Date: Mon, 16 Jun 2025 13:06:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1749836765-28886-1-git-send-email-longli@linuxonhyperv.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 10:46:05AM -0700, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
+On 6/11/2025 4:06 PM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
+>>
+>> From: Mukesh Rathor <mrathor@linux.microsoft.com>
 > 
-> MANA supports RDMA in PF mode. The driver should record the doorbell
-> physical address when in PF mode.
+> The patch Subject line is confusing to me. Perhaps this better captures
+> the intent:
 > 
-> The doorbell physical address is used by the RDMA driver to map
-> doorbell pages of the device to user-mode applications through RDMA
-> verbs interface. In the past, they have been mapped to user-mode while
-> the device is in VF mode. With the support for PF mode implemented,
-> also expose those pages in PF mode.
+>  "PCI: hv: Don't load the driver for the root partition on a bare-metal hypervisor"
 > 
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
-> Changes
-> v2: add more details in commit message on how the doorbell physical address is used
-> 
->  drivers/net/ethernet/microsoft/mana/gdma_main.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 3504507477c6..52cf7112762c 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -31,6 +31,9 @@ static void mana_gd_init_pf_regs(struct pci_dev *pdev)
->  	gc->db_page_base = gc->bar0_va +
->  				mana_gd_r64(gc, GDMA_PF_REG_DB_PAGE_OFF);
->  
-> +	gc->phys_db_page_base = gc->bar0_pa +
-> +				mana_gd_r64(gc, GDMA_PF_REG_DB_PAGE_OFF);
-> +
->  	sriov_base_off = mana_gd_r64(gc, GDMA_SRIOV_REG_CFG_BASE_OFF);
->  
->  	sriov_base_va = gc->bar0_va + sriov_base_off;
-> -- 
-> 2.25.1
 
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Thanks, that does make more sense.
+
+>>
+>> init_hv_pci_drv() is not relevant for root partition on baremetal as there
+>> is no vmbus. On nested (with a Windows L1 root), vmbus is present.
+> 
+> This needs more precision. init_hv_pci_drv() isn't what is
+> "not relevant". It's the entire driver that doesn't need to be loaded
+> because the root partition on a bare-metal hypervisor doesn't use
+> VMBus. It's only when the root partition is running on a nested
+> hypervisor that it uses VMBus, and hence may need the Hyper-V
+> PCI driver to be loaded.
+> 
+
+I'll update it so it is clearer, thanks.
+
+>>
+>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> ---
+>>  drivers/pci/controller/pci-hyperv.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index b4f29ee75848..4d25754dfe2f 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
+>>  	if (!hv_is_hyperv_initialized())
+>>  		return -ENODEV;
+>>
+>> +	if (hv_root_partition() && !hv_nested)
+>> +		return -ENODEV;
+>> +
+>>  	ret = hv_pci_irqchip_init();
+>>  	if (ret)
+>>  		return ret;
+>> --
+>> 2.34.1
 
 
