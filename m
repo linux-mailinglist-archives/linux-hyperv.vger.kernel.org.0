@@ -1,160 +1,162 @@
-Return-Path: <linux-hyperv+bounces-5936-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5937-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81A9DADD187
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jun 2025 17:32:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20D74ADD43B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jun 2025 18:08:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA5A8189704D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jun 2025 15:32:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A7341942D44
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jun 2025 15:58:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C91112E9737;
-	Tue, 17 Jun 2025 15:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52B452DFF2B;
+	Tue, 17 Jun 2025 15:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="I2WGwzfF"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="adZxpdz9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023111.outbound.protection.outlook.com [40.93.201.111])
+Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11021119.outbound.protection.outlook.com [40.93.199.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D5A2ECD0A;
-	Tue, 17 Jun 2025 15:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B942F234A;
+	Tue, 17 Jun 2025 15:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.199.119
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750174325; cv=fail; b=m3SuRAAoWA7fvQNYaBvzKGwH/pXYB9QiOey74BSdf3wwVAmi2phJV77Cp3KcQcqHld+WEZ+yfP4BqqM4CbXsSZC0abllpByutgKJsXnMVFerQUNAfIl11Gk7jYckm/gSFURM5ME0YmtmMxc9htgti8gwboVn6tdeDbwGHbwD2c0=
+	t=1750175695; cv=fail; b=E9A37hZYHL9kXvRVYYuCgqi4e0iTwajc7mfOV6uieDpFVugPiWcDJPKCypcjpo7NNCxZNPeG3CxebZ3SVSj/fTt4RDuaMr+njtoVgBaSvbgsJwsOH7BW5DwO99z5RV1JeFb7zipoeu0y0h9O2yujFXqhpw+yYkkud26uEa5Vz2k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750174325; c=relaxed/simple;
-	bh=XYvS83oYAG3seyXg3uilXJ0GfimPNMbR52Zn3D/qdrQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PZWBy9e2IWlwsH+jLhWILyXhESTg16rYGt7whkj0+qNHxP+KOO0MQCao7p2odXXgIQ+gdHVVFjObpZCJSI1VoKGBlm7lcrkDxbSh2sg0/ar8/lc4t0OTciqglxmh96/Kx1jLZA9QzbWFSrmSjPN6QSBJrymHA/X9QY/POVx1Bp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=I2WGwzfF; arc=fail smtp.client-ip=40.93.201.111
+	s=arc-20240116; t=1750175695; c=relaxed/simple;
+	bh=1w5xGHlouqvbCHA1pByANf0BbMKoQMlF0muA1GISNPY=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tHa4VaonNLl5jV29E6kgnH6L6locPwdDbe3KQ3AO3e8ws8j9kshJoWYRYlNEIM88il5IYLNzRXS2Q7HQep4NK/rHhqEDLgKkraJycZ1tTEJjO+kXZUwxOHWX5aj+1pzzxGO+WzMdhNfmL8LmbpeZeA8kOwKAA/17jk+F5hCFl5Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=adZxpdz9; arc=fail smtp.client-ip=40.93.199.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Hpk1lfz1YzrhtxMYrbafIM0hPHUc4tRKvTPLfSUjs6W8Seai4bS+26pOfDH9MZHyWuQYbAvO2BS10HsfFvFjjsTnKKsxPYZMCHllXC7bbKlCPcRdq89a8N4t5sRAvZ5Agny+XItE6nrYhhzT3xQiD0RIuLdK2Tgb7i4hzUyXmiY3n+S8hJyefFXn0F8v9RIf+c+z0RMgexZDVqsk0Pp0lY28eBinq1l4NkybS49ENFxk8B5z3eVO8bZxqEyXH4Z6uz8s8ii92i5SSduDBepMLMzqos+zeddLXfiEMy9tXHn8/n24PsBkkb3ZD8EfywOenO1z2Y4g2J8TO2U+jUmO6g==
+ b=Ks5/LSGsXAvo5mdFFQPqHvnptEmau7Sep66oe8PQCrSHWNix3GOBA5k69brwMYzSvk2IanoiIy9DCb8qnfp8/LsC3+NCPSA8HdX/jw5FO5FxUMp4TwuImNZeV9swaVEUnfZQxG1/RM9VsWniVIjsF2ceH5K43pfh3A7IuvdTpOfG9tomL/AO+Jbg1PS1sCO/IzJotm6sgLEZIrbEadrDYgIeXu1Gvm+P6Q1Zuc3gin9g+qr07btPTHa8j99el/IU9flvea3E95FtHUFoDON0AbyhhS/bf858ZdhXxQcDiP+DSYKtt9FtL+vHA8QmCdSQ73aVp1bGV4BHHObYKuPQkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XYvS83oYAG3seyXg3uilXJ0GfimPNMbR52Zn3D/qdrQ=;
- b=EFtzZyU4SICqV3GZQy1Nzjk3ov7AVU041cAivPzD0chGPXxdkeyyThvGVUAdC+jDcXZ0RhNuEd/1HSdkHm/SeE4wyYcRVB+F43Zu3VHkbS3ki6n1yie4DlRHx8H81y/SpShVtQeDWwDzqSfaheh6s37rXGzQij5GE0HZHJCLBzKlzCl1JYmF7vbhw8HlD4tpQJbas66YI28SHhp/Wl7hQ9oerp8gGaFE86xxOKWT/XeiPBHb84CGbHvpKTMS6GX+YPBrLiZ5gWcm6OsV2pNi2UoxkDvz1yuWQ08lOxjamQlSQyl3M4mpOjHAv1fEBb7z33ESzZvlG6E7691B4i5UXA==
+ bh=U8G9mD8BPdKNIjowEnopKzxsO+IxzE+1xDei1yuQ72M=;
+ b=cobtHKJ7NuZ4SGDQUeRciQzUhp+mK5rRB6kmgXCS2/uwwVw6enxyvRw3mFwoQ9wqUHZLcA7SjJEdR3qJdPQzA/f5BNw8ITyzFun+kM7kYqYuPgeACr3WR6Y1pR7APChuhFtnj0wEzHEf9lYXbTMQyTGji8+YaIymcohcbsn1u57c0S4YK3xjZAaCujIhAexgb+y2MgKJSAA66BsSc00Lgr0GAQozr1W124L51Vcd6Ui6Rpmz0ofQkZhNFjqz//LsYC4OxyevkpbJSsTulCc2uhKV2V96Gd6vhVg2W8EOeqjm/wOT635/Vk/fSg0qKwMgAv4/tm2F7YgzANZ25aIGIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XYvS83oYAG3seyXg3uilXJ0GfimPNMbR52Zn3D/qdrQ=;
- b=I2WGwzfFzqQEh8MHH5SfV7KMrPK01iZbDyt0xPc4XVFOdH+jRCrWOjy0x7lAF7tUphadz7uZXwAH699cKyq+A6MfODLO6TL8ynaNmsm9SleHvL4SCrc2Am2Di7/J/bQx+Z6TXaCVewv3j0EOY+F98Gtr5HFbmE4I7Yj9YMupwZw=
-Received: from SN6PR2101MB0943.namprd21.prod.outlook.com (2603:10b6:805:f::12)
- by SA6PR21MB4412.namprd21.prod.outlook.com (2603:10b6:806:422::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.6; Tue, 17 Jun
- 2025 15:31:56 +0000
-Received: from SN6PR2101MB0943.namprd21.prod.outlook.com
- ([fe80::c112:335:8240:6ecf]) by SN6PR2101MB0943.namprd21.prod.outlook.com
- ([fe80::c112:335:8240:6ecf%6]) with mapi id 15.20.8880.004; Tue, 17 Jun 2025
- 15:31:50 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>, Dexuan Cui
-	<decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, KY Srinivasan
-	<kys@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Souradeep Chakrabarti
-	<schakrabarti@linux.microsoft.com>, Erni Sri Satya Vennela
-	<ernis@linux.microsoft.com>, Long Li <longli@microsoft.com>, Dipayaan Roy
-	<dipayanroy@linux.microsoft.com>, Shiraz Saleem <shirazsaleem@microsoft.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Rosswurm
-	<paulros@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>
-Subject: RE: [PATCH net-next] net: mana: Set tx_packets to post gso processing
- packet count
-Thread-Topic: [PATCH net-next] net: mana: Set tx_packets to post gso
- processing packet count
-Thread-Index: AQHb33uylD82leaymEmBsNhs3CnzjrQHenEw
-Date: Tue, 17 Jun 2025 15:31:50 +0000
+ bh=U8G9mD8BPdKNIjowEnopKzxsO+IxzE+1xDei1yuQ72M=;
+ b=adZxpdz9B/GLVl6xCzoXlJigT0lPRWs0fGy0lFgR5G435bTnjpBScjaAB1sCJhj54GnkYsmC/536Y9JBiKMFnLBRCy19uFuZ3G6hOlotBQDrYtRo9XgKrXagmGLmBSSDH2oUSzp6H02DRARG2BX4DpY7FdgWN01AxBo3xCdjONs=
+Received: from DS7PR21MB3102.namprd21.prod.outlook.com (2603:10b6:8:76::17) by
+ DS7PR21MB3428.namprd21.prod.outlook.com (2603:10b6:8:93::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.17; Tue, 17 Jun 2025 15:54:47 +0000
+Received: from DS7PR21MB3102.namprd21.prod.outlook.com
+ ([fe80::b029:2ac5:d92c:504f]) by DS7PR21MB3102.namprd21.prod.outlook.com
+ ([fe80::b029:2ac5:d92c:504f%3]) with mapi id 15.20.8880.004; Tue, 17 Jun 2025
+ 15:54:47 +0000
+From: Long Li <longli@microsoft.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>, "horms@kernel.org"
+	<horms@kernel.org>, Shiraz Saleem <shirazsaleem@microsoft.com>,
+	"leon@kernel.org" <leon@kernel.org>, "shradhagupta@linux.microsoft.com"
+	<shradhagupta@linux.microsoft.com>, "schakrabarti@linux.microsoft.com"
+	<schakrabarti@linux.microsoft.com>, "gerhard@engleder-embedded.com"
+	<gerhard@engleder-embedded.com>, "rosenp@gmail.com" <rosenp@gmail.com>,
+	"sdf@fomichev.me" <sdf@fomichev.me>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>
+Subject: RE: [EXTERNAL] [PATCH net-next v3 3/4] net: mana: Add speed support
+ in mana_get_link_ksettings
+Thread-Topic: [EXTERNAL] [PATCH net-next v3 3/4] net: mana: Add speed support
+ in mana_get_link_ksettings
+Thread-Index: AQHb31fuhL95mOtqekCQtB34Vu5SILQHgXcg
+Date: Tue, 17 Jun 2025 15:54:47 +0000
 Message-ID:
- <SN6PR2101MB0943F7B2345EFD61E3EBDF41CA73A@SN6PR2101MB0943.namprd21.prod.outlook.com>
-References:
- <1750160021-24589-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To:
- <1750160021-24589-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <DS7PR21MB31024C9BF35A681628CC1DB5CE73A@DS7PR21MB3102.namprd21.prod.outlook.com>
+References: <1750144656-2021-1-git-send-email-ernis@linux.microsoft.com>
+ <1750144656-2021-4-git-send-email-ernis@linux.microsoft.com>
+In-Reply-To: <1750144656-2021-4-git-send-email-ernis@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1e5d2ae4-d312-4282-94c9-fae123fa986f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-06-17T15:30:06Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=75c59bb2-d076-4c11-81cb-e186013c36a1;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-06-17T15:54:15Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
  3, 0, 1;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR2101MB0943:EE_|SA6PR21MB4412:EE_
-x-ms-office365-filtering-correlation-id: 47ea12ec-9a2b-4353-79dd-08ddadb4148c
+x-ms-traffictypediagnostic: DS7PR21MB3102:EE_|DS7PR21MB3428:EE_
+x-ms-office365-filtering-correlation-id: 3d5c5b2e-c4d2-4767-7a29-08ddadb7495b
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|921020|38070700018;
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018|921020;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?aovlH1pHXbphknPUgxLl7DhdU5gxUqPQf190QhJL47AcZJCOT7TYdhjC5RgN?=
- =?us-ascii?Q?bHFfbZ8tlz972mJHlIcE4Lo5ifIkVL8EkmWlEZVSiwt1EXq0kUQGkf/Az1f/?=
- =?us-ascii?Q?69bwCsEPu6blOD1b4Wx9AY2GBxUlst1ixhuxkHeKQHxKBngrL+1+BbqpiVsM?=
- =?us-ascii?Q?hpAaxdtzEg31z8Si5/2cNxCPmr0jeWTtLV8c+12o043aoovP5ZPSDkmwKGEd?=
- =?us-ascii?Q?LYkTztmcApKuJTTAy9TzS18tirJUIhlYqC3GWVGocfWeLmv0AungkoUG6yMj?=
- =?us-ascii?Q?RbGrlVLKWdvKWH1G4hxZT9la7uO4eIxZ6vdR9IzfX3eZZiHrTcFJpVVImAXV?=
- =?us-ascii?Q?xZPZNAVLrKUM42MEMAYKJUFIlmEQP8gRWWPs+XbZgq0kRm9mrCA2Hqs0QAyx?=
- =?us-ascii?Q?/wsfVOpy9IzCw69wsy+cX698LqvJRvVH33huzgY416FvoCD2QbBD7Q1jE8uW?=
- =?us-ascii?Q?WpfblY1RzEVrbtSX3QppJwXnrmObd7aqeBG+cf7gSatZPL+vayLFrP2XmqNd?=
- =?us-ascii?Q?VqIE1s00oXqLKJvVG6VIeYvzu99DaHWDFS+Lp9vMQnnLw/wOdwo5qqmjr2NB?=
- =?us-ascii?Q?B3XSI3i1f/SbPr2NNY1PU9x7MCn6NL04oUJFbg2izEunA3+M9wPVVOoTMW52?=
- =?us-ascii?Q?cj1Xe0KyrRrz6DzxRur3h0zQjjrlVTqg415n1zZKVJqg5IPTO8IyXjbzaR6Q?=
- =?us-ascii?Q?xoxNjzQgiBiSH5Gy/HBqxesDB+E3pDB/c1Ko7NA+SiutkmkIbeYSrRxXRX1U?=
- =?us-ascii?Q?mWl1ToVR0WLelbjtHk0QBSsZWso5EPmhf2oHmTx3Nmn64/d8cC3Xot6k1P+B?=
- =?us-ascii?Q?7l4o3lyMOJf05mwxfxTKLNUYlE+l3k0cT281xAEdjlwd2iv8S7PLH5mH9FcG?=
- =?us-ascii?Q?SY2yh+SKaJwliOj3aOucqRtQBzmq96UrIo/UjkUvZgdTqHKskJPBsQTFrqoP?=
- =?us-ascii?Q?YmEXVYkBTVHI9Dq/DRzjZJvTxeHRlDOv9HbzYuiGbUvGTc4XkwUsl9EMWDJS?=
- =?us-ascii?Q?26vXYWFwm9u3m1OND+ZFHyDn0rsic39nqxhe+jaf/lH6iJM/MBK5J+hic5wo?=
- =?us-ascii?Q?jDEHWwFM3mwTsExTApAC6iJ9CdveTok6EvkceZJw1aDHgyvVFbgGEu4qBCmg?=
- =?us-ascii?Q?NDLTT3PHWK+RrLvnnqOZ0kCIeSA5xvjvYdh3ku8pa0gM3xxxEgIyK6ztLt4O?=
- =?us-ascii?Q?fLpUIanSF3zuFlryMMudHFuta1cQmZQUlcta28o6yuyVTo3tBpi0HddzGcAJ?=
- =?us-ascii?Q?cDmc7w1mYHkUVttiBH9zKW+jLrN5zlBNTwEbaLJA3AM6kflQEeEMUtvKVh0A?=
- =?us-ascii?Q?fHbM63eK/DuZoIakkC1tvKQgMtSj0QieUEFeXtRn/uVWGosbjR1zF5p4f5om?=
- =?us-ascii?Q?lPYrTk5TduoKS1ZLsvVBHqH7JRQgm+aDLFDC2a/GBOqJSW6mWwTsMAJ6Du1t?=
- =?us-ascii?Q?sBfkeTsQM8HZ5b28a5QCE+mzkuJUknfxAN7gSx6/penkl6WZ+FtYgLF1tP0F?=
- =?us-ascii?Q?CSdIFtkUFsRzn20=3D?=
+ =?us-ascii?Q?EMBw2zKdqT1XSc1gVxDsoWsM7gGcCt3+v2EqZkXIiGIiSubcjN7FH3lrzXdC?=
+ =?us-ascii?Q?XSpGrPDy33h6BTKpg4zG3SqWqN0GKm0ZquofVe1OgrNQviyxmiG7TsBtIekY?=
+ =?us-ascii?Q?W3Pv3x7BFMhV8tbhNHWADTYYzNgxrLQy+gpomNYylFa+th2GMLXsjsUhf4M7?=
+ =?us-ascii?Q?j0IB9GlrzXKw8tEi6mSGSUcnuMowaaoHBIvGaSGV7NUA57slC2wSRfqoUcqP?=
+ =?us-ascii?Q?RDaQ0qXPaF4zzktfVYfkAG+jfg9YIFvAJKfhfl+jYOAxble76xiySqDdlcNv?=
+ =?us-ascii?Q?UlYWn0D1leeF2H3QGGWG+WWUAYjUg9MenWIzO2yVHc5yr5/+5P6XsrS4BbKR?=
+ =?us-ascii?Q?ZaUOBzBZme6O6NtRbspJKm54+2BaZBRTGF/4L7TeEldQWa2ZBvYoWaTX6vNu?=
+ =?us-ascii?Q?sKSIkR0seNt08nCTJKXnGnv5Vrv4l43OD4Acrr3S9yrzxX3AJbE4AEqK5+st?=
+ =?us-ascii?Q?k2F0WMtFL+G2RcrXVN6+VQUtinkIc5OZoiLe/f92+Rnzjjp4fwYpZO0uEa5C?=
+ =?us-ascii?Q?2gim7//0o7/QmrJow5UUJjepFodAt/WQOwj+wlMN9XVwZqTwJVn8bB5v2ro8?=
+ =?us-ascii?Q?RKqi3wGdJ5ZwcJ0khssuE0+FdxyR7yZQKJGxiGX91ISE4VqMuPIJSFFgmHPc?=
+ =?us-ascii?Q?s15Q2lEnsPxTghqez7SvnCXUy8Kgy+cJvH10IO6bAJSojPl8sbRHzBSs9w38?=
+ =?us-ascii?Q?ERo8aCXIVzs0wrFyaAq6KIcXvJc2SaN7H+/bWcW+/24uN7lGDHYxikpluiyO?=
+ =?us-ascii?Q?eXm4kCmhUhw9+o0j2DzRwZ6bRQvjsI27FtpSNHL2mNtvWVOJlagSuBcsl6gh?=
+ =?us-ascii?Q?1/Ci/Ck7ctycfMcCwoPGAA3NJHXR18F16IKFBYm8zszzCH5xF7K9BRfEQT+X?=
+ =?us-ascii?Q?IR1M1I5owLNOyQ/E/EjpC/yBVn/be1KyVRWdrZZpdI7s9454Fq87WGY3hmE9?=
+ =?us-ascii?Q?0QPlKP8Ui84dBJa/Cf8o5ytL9gy983xph8sHaptUo2plSRYbsVo62BV2zz8x?=
+ =?us-ascii?Q?6iNU61CFstdM5o/n8LFFnkKpAJX0iJnG+WA8fpiRPSXYwb49ytEJeur6KXSt?=
+ =?us-ascii?Q?sSV7zzy96JLbkVmA06DakLTrhvqi8NzWQeTGgIWbYHA+JzfOdNTbx2HjFE62?=
+ =?us-ascii?Q?VajI6EdUZp+JHg3POZLeyljClirN3h0Cc7kHsoAVYIAzD1c903UmOiRTCsth?=
+ =?us-ascii?Q?/vb48bwTcrgAJ409xn6ukfQflOgZCYUyOA2b6aFzxITHzJ2PrRSFZo6vxtVe?=
+ =?us-ascii?Q?4qHNCLz1rTtDC4xDnZ4DiHER1/qeq61W2U+18gmbyRhpHMo7jGKBW+lsFlu7?=
+ =?us-ascii?Q?5ji6gzhXaEkDJWPOLX3dooldwwuuPsOggtsu3j9/tSVVgfedOxOLXvrvbqBc?=
+ =?us-ascii?Q?0cApwXEu9YyFpqlSoXV0UUuO0Tgew9YF5p0Th3N2A4N1hx+TvgGXC5Nahsa0?=
+ =?us-ascii?Q?YFwowB2JHdVvO1SQoxYyqATr6uoD+w/MzO86K0u3dcYKLsWRB/+YyrgJwap/?=
+ =?us-ascii?Q?lQf+Nrd+DngaCbw=3D?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB0943.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(921020)(38070700018);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR21MB3102.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VcnRSET8nCrbNYFbc1BPfB4HwEJ2pPUZFesSUwfteh3VBOYFGmMtqY6EmGlW?=
- =?us-ascii?Q?jIaRi3oJDH5YYsQhZQmkAya0Y/+EEzORGyM3EM8EX5cjaR8XX9mU8h7Zj0dr?=
- =?us-ascii?Q?hD/CbG+K/nhq0mBPDZ/WHWFvY26ZcEuoqy6FLB6wzUbSbdyBbXqWNT8lI2bU?=
- =?us-ascii?Q?6x7gB1D2t7TUHNu6AkhfWJir3MkLoU020OgOULGut63aF4Lti9OwTmIrRrfv?=
- =?us-ascii?Q?L1Jv6VPezAVRuyMmtNT9Nb/vsG+2UOiyzF+7LvV8pNbnaacHxUmPyX8LkfZO?=
- =?us-ascii?Q?9cDV5Vgn9uC0il26e2av/NdkAlH2Ih7UFbFvhQOUSymqBXYV2d4QIwKwNzxO?=
- =?us-ascii?Q?HsgWeecW/u+pxln1Ul+exoua+5UiujBfgC5Vsi50FshnKNuEorr4ln38Y4sN?=
- =?us-ascii?Q?NKvbIAqvwcrqdg8w5HPpEABFNRan8Df2qjR+F+TQowE2sh/+TgDWuNH2gy3v?=
- =?us-ascii?Q?qrXIms9OAHUb9occukVy38jKwizqtTZgNOjZrz3wg9QEqL9jdZVc2wGq/nPl?=
- =?us-ascii?Q?yhwzwECvPdoKyZUGCcS59NMQPIKmiYWZERKmvKRRjsliHgh4ZbIHi6Q+Zuc7?=
- =?us-ascii?Q?plUzSCCEdA3+GHfQJ3bAku1IkTHstzFWOM1MaKLP2KlMIS/ypJo3HesWSRRf?=
- =?us-ascii?Q?o9k7wMJRiI1RjOheSfadbv2cHcy6ockAaNG1qWh9IxVk8pxu7DSl0BHTelqL?=
- =?us-ascii?Q?Q7Y8PnDJT1+MQHxzhPz8D247kl7zWgYv3NdncdodgN8LGyii3DfcA5Zu8Kns?=
- =?us-ascii?Q?KPR4SPHsI/oRhkCGTVrvKs5tJ10FGMP6jS9fix0iNC1hvMvTT5VGM8oEVbTO?=
- =?us-ascii?Q?JD+LPVI3+zkUwJCy+s7AwVqnX4NeZceYP1RDiG2WTM1AfkZnEadOLYARm6gW?=
- =?us-ascii?Q?uE5SqrJN0Rk5/womDki9HsY38c6ruhmTA4BNP6/ZeFeBmOQPRIqy85bSGauW?=
- =?us-ascii?Q?i+n+qiuRQAYfYP6JDAUcfCHiD5y+IoOMmbWJyZG4TqrhbHGTBnanwNL/YF7T?=
- =?us-ascii?Q?gar/5n2HSahsoLdC5PiTPCPXigjF9aiWwPvPoSpUpQJ4C5/p3TUCxqW2VYN+?=
- =?us-ascii?Q?ioKFWt44CFAYAVWcgsy5NKdTW5w2r1ojvQ/AZHixUKzfAkcy0mfZyR1Scpw4?=
- =?us-ascii?Q?/AA68WC7NiCE9a/QOY8Rers90I8RcNMBFKi6qfyiCLoQ+ayjlbkEMR8gMcRW?=
- =?us-ascii?Q?OWWAMWDDG1KFVHlpLOjiEczN/flTFDTIOLXUwFOgVyQZAGBcZvM2cGLcvAr2?=
- =?us-ascii?Q?kEKT4sAuEk+6CN+HeTVc49AlSd01f/lHU17wCsBZ9X/daoNhkpKCmvWExDOx?=
- =?us-ascii?Q?twcHbEiQn76p7VLhCXFitcaBFfvnsR8GKQ3cME6Rc7EgTy2BPaSl7EbyeAno?=
- =?us-ascii?Q?lUf/jO/h8CQBNMFt9UkscD8TjYyTL4mxGuaYBTKyXy6ppjROgej74lU542oc?=
- =?us-ascii?Q?ODxMYnT36PmoOVv4qZWfmD5SD/2hwfHDdlmoB82qzLzgGVxowgIhwROh6+Ya?=
- =?us-ascii?Q?cn3HEu4iupkw6Fo8hdhplGZEDKEuNjMdYkkuNqlsZHbnHFrtg4xiLO/E/RwE?=
- =?us-ascii?Q?Gx5D1kESIy/62u+c9+wP4pChoto4Ji1fHvmgRDMm?=
+ =?us-ascii?Q?XafIgBsoUTgLhKhgIQuf/SsfWCZTPQlWqeleGlSh5fYkP6LLB1Ys2yrGC1wX?=
+ =?us-ascii?Q?L8lbI42Uv8nGdHE/jdvVzLBkXd69iV1euYfYUQ5N2AdnQ+HbKv8e0rcjYAZR?=
+ =?us-ascii?Q?lGNY+2deL0R/tC3vaLLPnL5Di1gloKIlU7W84ZE1AHdW75T8Fd6ryPoT2lrD?=
+ =?us-ascii?Q?uD1O6zTrJQbz/Kohm1ZMSvFn4L7uHC3jP4Es+Z4jeQCxYiUUBq5HlRAFckzz?=
+ =?us-ascii?Q?zWGssmwBvQsrc65bylh3Ix1JToRDZkx/NXiSodBYFj2UthD795XsDe9U0Sdu?=
+ =?us-ascii?Q?SeR5rQjnoMyRCpTwbZweHM4lhY8plR7kqHZIg6fVubnsNK2LFRbdt1Hns/H0?=
+ =?us-ascii?Q?t8MCLRbOvzEjlyRYTPVTbiy1nie/bjjST40N1TaUdVsCwMzJ9ow6Gi/rntJQ?=
+ =?us-ascii?Q?udo6QLHSMbRydILAM4rsWQQZWV3jauhqUxCxWg+15rrG7zdVs64m89XUT1Yx?=
+ =?us-ascii?Q?oCQOGIiCOiGtNxehpDuwSXtUo/wR2N5e40JXPweOmHXuMhHA9UPFBKWdReqv?=
+ =?us-ascii?Q?NUCFbBbEh5wxWYMfEouWf9NhFQsM8hvG329uYKluc+YJ0BnV1kj+CgHYFCTI?=
+ =?us-ascii?Q?4KK6GVwTrsDEZJNLwEE8TXgGoXqQXpsP7lLKTzASRc99J8Q06jmvej1C19BN?=
+ =?us-ascii?Q?uFAeXvMZzWzDdc+7dn+j0ospMTFjzFyCYE9gnbrFTcgWZU2xOp7gOEF76Mw1?=
+ =?us-ascii?Q?HYM2fhsP3BSyBVNXQl5zY90MM/6Y+E8mMlRdjIrz43sDUXjpNlZrMKp5Y+Mi?=
+ =?us-ascii?Q?ssvrlD2NDmYerFRqKy9aXcAw4vzHIJ/e7V2y/33DD/6Pr15fodvR23vihbMn?=
+ =?us-ascii?Q?qAzTYeRYDgBo/9NtrIzDVpjYuhfOIDB2x2VJX7O4ZIktlMjeUeO81dd8TgZk?=
+ =?us-ascii?Q?OCrhWImNAbzQTdtWoxIpxgx/Ng4d85yM45OBuSgRuzo2BZTEo5kBgHdqbZ5I?=
+ =?us-ascii?Q?cxHph9MbJwMWrBFeKdpg1RwrfI/OIBmSHpTMkNNxtjBJ0vfKjfOQh7JCUH/r?=
+ =?us-ascii?Q?Afn2nusPwP/+A2e/6iyVGR+1cEzvyG8Bq70E2ubS6j/kc8nI1iEHaHt3K1In?=
+ =?us-ascii?Q?6zeMtav7Gc/IsDcQ1Zxh2gYaZO1CZz0J8H6QM8o+E30elgNfEpJR6U0/BWA7?=
+ =?us-ascii?Q?EoZz0yVKVLZhY6hTE3OzJtQHOjfMyfNsTE6fZiYLN/TtvZ0vwmzdD+wOi0sO?=
+ =?us-ascii?Q?0ujIh34S+47LTZsZP50f5iYaF+Xtc0NrQBVpw4wK6uyuvQM76QSPaoRU44It?=
+ =?us-ascii?Q?WoTEsygk8lF5oxlfq9ScDf+DPDbFwClJ3czZNZh/z3yqo5EQ+UhN2aj4Sh33?=
+ =?us-ascii?Q?Nk46q+0Trma/0clzMkzU7AJzg79G1a4pZDYBdx8trnuJUJ+OGGMS6AgSQOxu?=
+ =?us-ascii?Q?wOP6fMI+weflH41SsVQtdV8BgpDroz6RKrFIeutYlMnAPPRkRzwkVide5bGL?=
+ =?us-ascii?Q?6jUOkT8KrR7iO6NALDBDpuerYFdDOgoeqA1q+pOmpCGA4NzmFNijjMQbWQaV?=
+ =?us-ascii?Q?yauf0s/2X0+tRb7Q0WyjvyPmWpKbil9iwryufP39Hds261XH3oPTLq89fckf?=
+ =?us-ascii?Q?QZWkXkv+1svMHc+yGM+1LNCzo5iwlwznIt6JpsL1?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -165,47 +167,136 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB0943.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47ea12ec-9a2b-4353-79dd-08ddadb4148c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 15:31:50.6857
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR21MB3102.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d5c5b2e-c4d2-4767-7a29-08ddadb7495b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 15:54:47.7426
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: koTI6+N1i+luIHW5LVXdS0fESPKA9uDhYHAoyCDN/bvg9htwGw1kBO1qO3ntQTcSBHG7Wt1saXB+MjwwXoO18w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4412
+X-MS-Exchange-CrossTenant-userprincipalname: y83DuE1drWfoA8FATK+4CmBe4cDK6LvXkiIgriISBJ5m+Phy7oxaHo9cGoOB0VDTk0SP3mL5NsvnOcx9hGabCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3428
 
-
-
-> -----Original Message-----
-> From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Sent: Tuesday, June 17, 2025 7:34 AM
-> To: Dexuan Cui <decui@microsoft.com>; Wei Liu <wei.liu@kernel.org>;
-> Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>=
-;
-> Andrew Lunn <andrew+netdev@lunn.ch>; David S. Miller
-> <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub Kicinski
-> <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Konstantin Taranov
-> <kotaranov@microsoft.com>; Souradeep Chakrabarti
-> <schakrabarti@linux.microsoft.com>; Erni Sri Satya Vennela
-> <ernis@linux.microsoft.com>; Long Li <longli@microsoft.com>; Dipayaan Roy
-> <dipayanroy@linux.microsoft.com>; Shiraz Saleem
-> <shirazsaleem@microsoft.com>
-> Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>;
-> netdev@vger.kernel.org; linux-hyperv@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Paul Rosswurm <paulros@microsoft.com>; Shradha
-> Gupta <shradhagupta@microsoft.com>
-> Subject: [PATCH net-next] net: mana: Set tx_packets to post gso processin=
-g
-> packet count
+> Subject: [PATCH net-next v3 3/4] net: mana: Add speed support in
+> mana_get_link_ksettings
 >=20
-> Allow tx_packets and tx_bytes counter in the driver to represent
-> the packets transmitted post GSO processing.
+> Allow mana ethtool get_link_ksettings operation to report the maximum spe=
+ed
+> supported by the SKU in mbps.
 >=20
-> Currently they are populated as bigger pre-GSO packets and bytes
+> The driver retrieves this information by issuing a HWC command to the har=
+dware
+> via mana_query_link_cfg(), which retrieves the SKU's maximum supported sp=
+eed.
 >=20
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> These APIs when invoked on hardware that are older/do not support these A=
+PIs,
+> the speed would be reported as UNKNOWN.
+>=20
+> Before:
+> $ethtool enP30832s1
+> > Settings for enP30832s1:
+>         Supported ports: [  ]
+>         Supported link modes:   Not reported
+>         Supported pause frame use: No
+>         Supports auto-negotiation: No
+>         Supported FEC modes: Not reported
+>         Advertised link modes:  Not reported
+>         Advertised pause frame use: No
+>         Advertised auto-negotiation: No
+>         Advertised FEC modes: Not reported
+>         Speed: Unknown!
+>         Duplex: Full
+>         Auto-negotiation: off
+>         Port: Other
+>         PHYAD: 0
+>         Transceiver: internal
+>         Link detected: yes
+>=20
+> After:
+> $ethtool enP30832s1
+> > Settings for enP30832s1:
+>         Supported ports: [  ]
+>         Supported link modes:   Not reported
+>         Supported pause frame use: No
+>         Supports auto-negotiation: No
+>         Supported FEC modes: Not reported
+>         Advertised link modes:  Not reported
+>         Advertised pause frame use: No
+>         Advertised auto-negotiation: No
+>         Advertised FEC modes: Not reported
+>         Speed: 16000Mb/s
+>         Duplex: Full
+>         Auto-negotiation: off
+>         Port: Other
+>         PHYAD: 0
+>         Transceiver: internal
+>         Link detected: yes
+>=20
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+
+> ---
+> Changes in v3:
+> * Rebase to latest net-next branch.
+> Changes in v2:
+> * No change.
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c      | 1 +
+>  drivers/net/ethernet/microsoft/mana/mana_ethtool.c | 6 ++++++
+>  include/net/mana/mana.h                            | 2 ++
+>  3 files changed, 9 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 547dff450b6d..d7079e05dfb8 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1272,6 +1272,7 @@ int mana_query_link_cfg(struct mana_port_context
+> *apc)
+>  		return err;
+>  	}
+>  	apc->speed =3D resp.link_speed_mbps;
+> +	apc->max_speed =3D resp.qos_speed_mbps;
+>  	return 0;
+>  }
+>=20
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> index 4fb3a04994a2..a1afa75a9463 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> @@ -495,6 +495,12 @@ static int mana_set_ringparam(struct net_device *nde=
+v,
+> static int mana_get_link_ksettings(struct net_device *ndev,
+>  				   struct ethtool_link_ksettings *cmd)  {
+> +	struct mana_port_context *apc =3D netdev_priv(ndev);
+> +	int err;
+> +
+> +	err =3D mana_query_link_cfg(apc);
+> +	cmd->base.speed =3D (err) ? SPEED_UNKNOWN : apc->max_speed;
+> +
+>  	cmd->base.duplex =3D DUPLEX_FULL;
+>  	cmd->base.port =3D PORT_OTHER;
+>=20
+> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h index
+> 038b18340e51..e1030a7d2daa 100644
+> --- a/include/net/mana/mana.h
+> +++ b/include/net/mana/mana.h
+> @@ -533,6 +533,8 @@ struct mana_port_context {
+>  	u16 port_idx;
+>  	/* Currently configured speed (mbps) */
+>  	u32 speed;
+> +	/* Maximum speed supported by the SKU (mbps) */
+> +	u32 max_speed;
+>=20
+>  	bool port_is_up;
+>  	bool port_st_save; /* Saved port state */
+> --
+> 2.34.1
 
 
