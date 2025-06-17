@@ -1,114 +1,165 @@
-Return-Path: <linux-hyperv+bounces-5938-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5939-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 704D5ADDE61
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Jun 2025 00:00:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19315ADDF95
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Jun 2025 01:22:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA4E83BA511
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jun 2025 21:59:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CFBE189D188
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jun 2025 23:22:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9907829293F;
-	Tue, 17 Jun 2025 22:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CEB2980B0;
+	Tue, 17 Jun 2025 23:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9lbGFqH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJJMEIcd"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638173594C;
-	Tue, 17 Jun 2025 22:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C9D1F5847;
+	Tue, 17 Jun 2025 23:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750197610; cv=none; b=Xgj9gWOMsxy0ijvs3VzTvT3E+rMFAkualJCYn6DtsR11qKhdKxhMuQoFEtuF6539aCiBgcbTmT7z+GFwKSfeCYBpthqy6knRSZJgJhKp6MlmocqaJ6MH0CWvUpeBjxxspj0yqSAiI+eN0p4c02ToIkTIjivRZEbajGyOXYuyKBk=
+	t=1750202555; cv=none; b=taTbaZNZW9eo0ymlFJW8f9DavnL5YWJp333FAMqzI7gNs13JJfybTOQKFh1h8fKJRysCku5P1CCoGd5FNrnMjONFROZdZ/sth8tJVBKbwKhPNtGa5bCGKrWdOb06I29shhA7No9YzXsaKCfneoZP8Uxh929ekQ1dSMqenpCaggw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750197610; c=relaxed/simple;
-	bh=w85DzPEHKnEH32aJad7kpo9/EdvqI8PTVlSwnc+CrQs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uPT4A5tQfZTG3cdPX+kGViSl0ylZkoBqinUNjzeHKRKsZq2hIK7PTskMgjqinW0o6AfD1F4oG6lgtGDq2tt+uznBGxgcqKOJKjmL/ru1JH+cPPECR5H/JMMbYKuBLwtKc+BL+Eil+Km/EPLWAhVRWdxL3wLv2ZPtWbOPjTp3/m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9lbGFqH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED36CC4CEE3;
-	Tue, 17 Jun 2025 22:00:09 +0000 (UTC)
+	s=arc-20240116; t=1750202555; c=relaxed/simple;
+	bh=u1htMHCfOn54kD/o5h2nrr3o2cCWVjR8jS9t5mNwAAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lpm3saFSITDavIsI93fAwP/oVx98UhBCeXVl3MjeZvnKQgE+eBKBAmEVL3sk9epEOtcCAougAMjoszRee/zQ9mRA1EiRIqdla5ZYOzE2prMZCu2Bb0f+1MLsza0uFQKo5ITD+7XW128IbHTMAre1gsuyueqJmh/2zVAhK7HjNLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJJMEIcd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514D9C4CEE3;
+	Tue, 17 Jun 2025 23:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750197610;
-	bh=w85DzPEHKnEH32aJad7kpo9/EdvqI8PTVlSwnc+CrQs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=P9lbGFqHPkdvRR0T4aHKak6RRg6FwdYV4a7essTNdtxm8GYS2NwIDEzfXBn3SvoIl
-	 GXRkXgPHG1gs7KyJQ9FkR4/ExK2Po4UEHM9igSC/rFKVWPFgBZsXhXn4SbMzV1LJzU
-	 O40aTsLYE2vi6W/7BkfXpp+4Ooyzzav4510VEfwHh028qKqnVBv8EOFTaNt/aEIWgI
-	 E82DZLsO0ndttEow8G9iCS9+5mAivSGfU9eWCCQ4a/jAN6Zm+ouW7DeQWCPCLWyGXC
-	 paCqNxBFHz8yQd6Er+iNj35SOcofofofCBSq6loQGI7YprZK9p5uOi1SwetqYtbltZ
-	 dxwGQucw7Hm7Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE4F38111DD;
-	Tue, 17 Jun 2025 22:00:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750202554;
+	bh=u1htMHCfOn54kD/o5h2nrr3o2cCWVjR8jS9t5mNwAAo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CJJMEIcdDL3U6KeionggSaibPhm8G//lLOHIh/M0Sv3ETnJx3ZonmS2DBE4kHPEiB
+	 G+qDd5cANB8mxW16MzxHEUPSeXVm3jMXARu8P165BaWknXoG0jcqDfbtkkxlepxqJB
+	 rkakRvjbQ4hNzWqYApa0KEdRAPLYCJ1vU3e/PEeO4Jv/DBGEW+FR6Y9UBfWhyL3Kaj
+	 OjDt4bLRw059fA+iLK/WGmSiNIKhVGyuC9nOe1LlttWN3VBwEtvw2UId0UoYsHPUaU
+	 dZ6KVmI5xSUwU4MeCfgb//aydRZHZzb0PmlsDK7q4MAxVKO+PbNE9DH/FkR147Y1E+
+	 ceTnoMgYOBAgA==
+Date: Tue, 17 Jun 2025 18:22:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Wei Huang <wei.huang2@amd.com>,
+	linux-pci@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V4 11/14] PCI/MSI: Provide a sane mechanism for TPH
+Message-ID: <20250617232232.GA1175597@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175019763850.3710346.12665177654858419970.git-patchwork-notify@kernel.org>
-Date: Tue, 17 Jun 2025 22:00:38 +0000
-References: 
- <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: 
- <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, nipun.gupta@amd.com, yury.norov@gmail.com,
- jgg@ziepe.ca, Jonathan.Cameron@huwei.com, anna-maria@linutronix.de,
- kevin.tian@intel.com, longli@microsoft.com, tglx@linutronix.de,
- bhelgaas@google.com, robh@kernel.org, manivannan.sadhasivam@linaro.org,
- kw@linux.com, lpieralisi@kernel.org, decui@microsoft.com, wei.liu@kernel.org,
- haiyangz@microsoft.com, kys@microsoft.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- kotaranov@microsoft.com, horms@kernel.org, leon@kernel.org,
- mlevitsk@redhat.com, ernis@linux.microsoft.com, peterz@infradead.org,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org, paulros@microsoft.com,
- shradhagupta@microsoft.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319105506.683663807@linutronix.de>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Shradha Gupta <shradhagupta@linux.microsoft.com>:
-
-On Wed, 11 Jun 2025 07:09:44 -0700 you wrote:
-> In this patchset we want to enable the MANA driver to be able to
-> allocate MSI-X vectors in PCI dynamically.
+On Wed, Mar 19, 2025 at 11:56:57AM +0100, Thomas Gleixner wrote:
+> The PCI/TPH driver fiddles with the MSI-X control word of an active
+> interrupt completely unserialized against concurrent operations issued
+> from the interrupt core. It also brings the PCI/MSI-X internal cached
+> control word out of sync.
 > 
-> The first patch exports pci_msix_prepare_desc() in PCI to be able to
-> correctly prepare descriptors for dynamically added MSI-X vectors.
+> Provide a function, which has the required serialization and keeps the
+> control word cache in sync.
 > 
-> The second patch adds the support of dynamic vector allocation in
-> pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-> flag and using the pci_msix_prepare_desc() exported in first patch.
+> Unfortunately this requires to look up and lock the interrupt descriptor,
+> which should be only done in the interrupt core code. But confining this
+> particular oddity in the PCI/MSI core is the lesser of all evil. A
+> interrupt core implementation would require a larger pile of infrastructure
+> and indirections for dubious value.
 > 
-> [...]
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Wei Huang <wei.huang2@amd.com>
+> Cc: linux-pci@vger.kernel.org
+> 
+> 
+> 
+> ---
+>  drivers/pci/msi/msi.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h     |    9 +++++++++
+>  2 files changed, 56 insertions(+)
+> 
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -910,6 +910,53 @@ void pci_free_msi_irqs(struct pci_dev *d
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_PCIE_TPH
+> +/**
+> + * pci_msix_write_tph_tag - Update the TPH tag for a given MSI-X vector
+> + * @pdev:	The PCIe device to update
+> + * @index:	The MSI-X index to update
+> + * @tag:	The tag to write
+> + *
+> + * Returns: 0 on success, error code on failure
+> + */
+> +int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
+> +{
+> +	struct msi_desc *msi_desc;
+> +	struct irq_desc *irq_desc;
+> +	unsigned int virq;
+> +
+> +	if (!pdev->msix_enabled)
+> +		return -ENXIO;
+> +
+> +	guard(msi_descs_lock)(&pdev->dev);
+> +	virq = msi_get_virq(&pdev->dev, index);
+> +	if (!virq)
+> +		return -ENXIO;
+> +	/*
+> +	 * This is a horrible hack, but short of implementing a PCI
+> +	 * specific interrupt chip callback and a huge pile of
+> +	 * infrastructure, this is the minor nuissance. It provides the
+> +	 * protection against concurrent operations on this entry and keeps
+> +	 * the control word cache in sync.
+> +	 */
+> +	irq_desc = irq_to_desc(virq);
+> +	if (!irq_desc)
+> +		return -ENXIO;
+> +
+> +	guard(raw_spinlock_irq)(&irq_desc->lock);
+> +	msi_desc = irq_data_get_msi_desc(&irq_desc->irq_data);
+> +	if (!msi_desc || msi_desc->pci.msi_attrib.is_virtual)
+> +		return -ENXIO;
+> +
+> +	msi_desc->pci.msix_ctrl &= ~PCI_MSIX_ENTRY_CTRL_ST;
+> +	msi_desc->pci.msix_ctrl |= FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
+> +	pci_msix_write_vector_ctrl(msi_desc, msi_desc->pci.msix_ctrl);
+> +	/* Flush the write */
+> +	readl(pci_msix_desc_addr(msi_desc));
+> +	return 0;
+> +}
 
-Here is the summary with links:
-  - [v6,1/5] PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
-    https://git.kernel.org/netdev/net-next/c/5da8a8b8090b
-  - [v6,2/5] PCI: hv: Allow dynamic MSI-X vector allocation
-    https://git.kernel.org/netdev/net-next/c/ad518f2557b9
-  - [v6,3/5] net: mana: explain irq_setup() algorithm
-    https://git.kernel.org/netdev/net-next/c/4607617af1b4
-  - [v6,4/5] net: mana: Allow irq_setup() to skip cpus for affinity
-    https://git.kernel.org/netdev/net-next/c/845c62c543d6
-  - [v6,5/5] net: mana: Allocate MSI-X vectors dynamically
-    https://git.kernel.org/netdev/net-next/c/755391121038
+Looks like this change might add this warning, which I don't claim to
+understand:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+  $ make C=2 drivers/pci/msi/msi.o
+  drivers/pci/msi/msi.c:928:5: warning: context imbalance in 'pci_msix_write_tph_tag' - wrong count at exit
 
-
+This appeared in v6.16-rc1 as d5124a9957b2 ("PCI/MSI: Provide a sane
+mechanism for TPH")
 
