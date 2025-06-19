@@ -1,107 +1,101 @@
-Return-Path: <linux-hyperv+bounces-5963-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5964-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05907AE074E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Jun 2025 15:32:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE2B6AE0780
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Jun 2025 15:37:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36E214A4058
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Jun 2025 13:31:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43BB7188347E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Jun 2025 13:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE7D270EDD;
-	Thu, 19 Jun 2025 13:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E67525A32C;
+	Thu, 19 Jun 2025 13:36:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tgp6q+17"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kn0RJble"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E7426E701;
-	Thu, 19 Jun 2025 13:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D166F2AF07;
+	Thu, 19 Jun 2025 13:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750339787; cv=none; b=QhaT8tox+GPzZ8JynUqY9jLVBHIqEfkZ2yZjapTr5HV1T2RHx5swkiR1lfpu6UZPwG4ttDJwHwB8UWVnreLHL3ITyOu0/0LGeQmU7htDJ32XK4ArctD6i6YerLt6CnF9F2oBpSHynvg7mIjwFOCm4h7bQNLJwo3PdkrYNjsem8I=
+	t=1750340203; cv=none; b=OU8bBejxEpOqqF7OX8jWvsVFWJBFBYSCMlSTPoHtNBTVc/3EjuUMS85y4/zTD09cPG/L8yh9ecAQ6sqzPJlBETY8ipuvKtnNgn1k0gn8nd3ShGmwqmwQJrDdxyf0gqnB7Qh7acS0xKQKHqt7saUJNFEz50jhYmVM6LSvMERo2xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750339787; c=relaxed/simple;
-	bh=FaMfLH+zASWj6RQ2hfI5lxo04Guv62Z/Oj3reFGID6c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=bcqxkTLA/liQRXQIhGiOyiwIdUu+AzZtt9vSgSVi1/BcSJTkc/l2TjMBjLMRFgtrmEnptmgBjVqNsUbHhYulDTX/9RRkxEJ5sdeCzyXWVgJQS2F+QtvmvjJnOPCgVRtxiWQ9fz0OfZGj9yTT7CVmjehGLazrV4giY6dIei17POw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tgp6q+17; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED8FC4CEEA;
-	Thu, 19 Jun 2025 13:29:46 +0000 (UTC)
+	s=arc-20240116; t=1750340203; c=relaxed/simple;
+	bh=i1H5EU2QfSJgEPMhXbCA744BQEMY5sB9PjVmugZBvxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGiN4h+De7ztHscxiS+a2pLO84Ii6NxyuwTZQwwZvlRRZNbNodw3DmoZtXUC/ugHaegIk+iQFxQjG/qMLsHc58d8oR+S4BAC3xX9Tbms5qKOeK7/jxmNIpi/0ETHqshEPwcJ4pfoXdVRyDIo+g+tWLt2yWRVCTH0Ef+r4fqt1CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kn0RJble; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 402C2C4CEEA;
+	Thu, 19 Jun 2025 13:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750339786;
-	bh=FaMfLH+zASWj6RQ2hfI5lxo04Guv62Z/Oj3reFGID6c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Tgp6q+17JO7gmCqulFeQTWGjy53/mM83Op7i2WiL38PoMcFsaxlK91mZmWEpFKhpH
-	 Rqc6AvNyRD4l7uhZOmFG8BVaO+lo5HnKxOHDAwGYBK1aLJ7QZTSOqfCFJ2LEQvrWf4
-	 fD0G1iSEi1e1deqHQpcdqhFQAiFOZN3xkB722n4qkz5pGP9gb56hnxYqQDGzSDsH58
-	 SjlOonL0RJ2x0WI08hNbGBUJZZy+NDf0zMtw00+YhH3cMSxquhhjh45tZk3eTXAcVw
-	 ko/G2M6KaznyZ4IgJ8hY/BryS7eO/UJLtwlnO49XPRPllxvKt9lMpwVs5b8DHwqmAa
-	 nvMte+Ea2CE5g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAC943806649;
-	Thu, 19 Jun 2025 13:30:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1750340203;
+	bh=i1H5EU2QfSJgEPMhXbCA744BQEMY5sB9PjVmugZBvxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kn0RJbleSIGEFtAZ62vfWjYvGwPEU4GnzYYzZvVPx9AHK26rImHo3WCEiEcsD3CLg
+	 IjGPdvDRctBJJJMb0cyhkLeqcCfWkBTmvKUqWVrHdC8dA0sovwscwVhZwwn29PI0jA
+	 jd9PeR3JMxgf9KSCLbmZjQDovVnlTwyFvbRsKkKVw7CuaRcIxsqemDbN0s4MxCdwt3
+	 yYCqSBGEU0kfs9kH97YQ8SLfhuJlUaTDNUpBTxfB6Z398wX1ZNzvLUsDZJ9i5A7ASz
+	 v+1iDKGAlK5D0VZgCaSZ4YgPog4AsRa7/jJH3/z1VsEjNMqA1ZLAeAC7/hl71MvEtz
+	 Dk+T/lQfpiL3g==
+Date: Thu, 19 Jun 2025 14:36:38 +0100
+From: Simon Horman <horms@kernel.org>
+To: longli@microsoft.com
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [Patch net-next v3] net: mana: Record doorbell physical address
+ in PF mode
+Message-ID: <20250619133638.GR1699@horms.kernel.org>
+References: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 0/4] Support bandwidth clamping in mana using
- net
- shapers
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175033981475.865029.2634804125287393920.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Jun 2025 13:30:14 +0000
-References: <1750144656-2021-1-git-send-email-ernis@linux.microsoft.com>
-In-Reply-To: <1750144656-2021-1-git-send-email-ernis@linux.microsoft.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
- shirazsaleem@microsoft.com, leon@kernel.org,
- shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
- gerhard@engleder-embedded.com, rosenp@gmail.com, sdf@fomichev.me,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1750210606-12167-1-git-send-email-longli@linuxonhyperv.com>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Tue, 17 Jun 2025 00:17:32 -0700 you wrote:
-> This patchset introduces hardware-backed bandwidth rate limiting
-> for MANA NICs via the net_shaper_ops interface, enabling efficient and
-> fine-grained traffic shaping directly on the device.
+On Tue, Jun 17, 2025 at 06:36:46PM -0700, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Previously, MANA lacked a mechanism for user-configurable bandwidth
-> control. With this addition, users can now configure shaping parameters,
-> allowing better traffic management and performance isolation.
+> MANA supports RDMA in PF mode. The driver should record the doorbell
+> physical address when in PF mode.
 > 
-> [...]
+> The doorbell physical address is used by the RDMA driver to map
+> doorbell pages of the device to user-mode applications through RDMA
+> verbs interface. In the past, they have been mapped to user-mode while
+> the device is in VF mode. With the support for PF mode implemented,
+> also expose those pages in PF mode.
+> 
+> Support for PF mode is implemented in
+> 290e5d3c49f6 ("net: mana: Add support for Multi Vports on Bare metal")
+> 
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+> Changes
+> v2: add more details in commit message on how the doorbell physical address is used
+> v3: add the early commit detail where the support for PF mode is implemented
 
-Here is the summary with links:
-  - [net-next,v3,1/4] net: mana: Fix potential deadlocks in mana napi ops
-    https://git.kernel.org/netdev/net-next/c/d5c8f0e4e0cb
-  - [net-next,v3,2/4] net: mana: Add support for net_shaper_ops
-    https://git.kernel.org/netdev/net-next/c/75cabb46935b
-  - [net-next,v3,3/4] net: mana: Add speed support in mana_get_link_ksettings
-    https://git.kernel.org/netdev/net-next/c/a6d5edf11e0c
-  - [net-next,v3,4/4] net: mana: Handle unsupported HWC commands
-    https://git.kernel.org/netdev/net-next/c/ca8ac489ca33
+Thanks for the updates.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I agree that this revision address Jakub's feedback on v2.
+Which in turn addressed his feedback on v1.
 
+Reviewed-by: Simon Horman <horms@kernel.org>
 
 
