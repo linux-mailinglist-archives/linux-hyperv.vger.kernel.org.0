@@ -1,101 +1,106 @@
-Return-Path: <linux-hyperv+bounces-5966-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5967-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA024AE0FD6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 00:59:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0107AE0FDD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 01:07:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37B72189469E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Jun 2025 23:00:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 809733AF481
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Jun 2025 23:06:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED75A28C2B2;
-	Thu, 19 Jun 2025 22:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B5C28C01B;
+	Thu, 19 Jun 2025 23:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnGFEyFk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mK31NJUj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE907229B23;
-	Thu, 19 Jun 2025 22:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 625E930E826;
+	Thu, 19 Jun 2025 23:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750373979; cv=none; b=bJI86tn61++PZ9mm6GHjt0l3ld6FxWlkpA4ui1cWoObRJVk9UKm0KUYj3JQZowcT3W8UsCN0Mka3Au/GcDDbOrgkaqA8c1hsfoBWKstvOyROb1AJ9o70Y+0kHJQ8E9kr1jOXYNWwbzPpc6BamrR1r43yH1I16tQBuRIgQJGxL0o=
+	t=1750374430; cv=none; b=fbE4q17FzT6cXGxq/2Ve5Q7ZwjnGhWhEPChcvgQyPdLmHX5hOyOGnlCkk5ZqUUQgUDxi7J8/dZN+lTpok8BVbnB0ODYRypBuM7TXaQzSJb5ATkzv4099/lBjev76lFtXI+Duxl+IoitV/ri4KRKJHsqgZt+Jf2uSzI2SQj0pfq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750373979; c=relaxed/simple;
-	bh=oFs8W69mkMcE3jsONVpj/UL2MWIy+951BHWY6ac5wh4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FcfPaK+pbWH3OgjDNENr+rIxHfgysqL1WC85WJM5d1bRHEFfTqBznOndcuzjqNEAHGN73GUJwAImIla/WvgdifIVn3+DzUbvmMmhOCd9jd1ViMlWXURglairoIuaAp2xR2MQ8csRyj4zF9TceQdkF/DRrNHrgKgNOm912X/q0fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnGFEyFk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3797CC4CEEA;
-	Thu, 19 Jun 2025 22:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750373978;
-	bh=oFs8W69mkMcE3jsONVpj/UL2MWIy+951BHWY6ac5wh4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KnGFEyFk5qE287+Q7JLkttMqxxMV5xHRLgw8Da5HR9fVRUwfWaA5h3tOVlTPmXvhS
-	 bTSulvvdfYnOde/FSX3vip85LWVjZxmBdUnmg7s3l3MnVbDm13yf2fU7mJ7CO6lUZT
-	 toKW1Tw2Wj/Xbfmt5r4Z5iGKFPwPl1Qs4wufpH4csW8iTx7TzGHXZooNgcGHuU1wmM
-	 Wxr7sqnASeIHg+6/Zz+baryFiBLNkzoA4tK1t8fdajRM3FqJwPpKUGpn1XpPJVBvLU
-	 UmYAIxnhSXhPDc7kQaYOmGCakl2nq2A4UgBrXhUzA2sIXxSnUAk928JlvLmCcEVx9v
-	 w0BMzjbfZukVQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D2E38111DD;
-	Thu, 19 Jun 2025 23:00:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1750374430; c=relaxed/simple;
+	bh=QPqzwv4JWMdU8uDAlqgptS1LxGBAo41OkMEdAOJNHrs=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=L9HQUn97BUKKzMSXJpQed2jKIYq8T4oMiZIsWdBA0uxdIWbGTiH+XHiSHtEfm3D0aXbpPpQ+WcQtlX79PQYQnOGi0aj6l+arYLM141QQf5NUcj4CGTl3UONReoEdCXepTT3McwRclfJxvE8A8m4qBlpUxBT1UGs8mrajt2UrvJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mK31NJUj; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1158)
+	id 389E1201C74B; Thu, 19 Jun 2025 16:07:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 389E1201C74B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750374423;
+	bh=kQyY1hUIoytHrsY/xErxdgPnnrCXYiOJrPfRqSzXzus=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mK31NJUjvDH+s+aFFe8jxn9B8DeEREluh0emVnueM7cErquOo2LKurjGHuRrN0V7l
+	 zBFnzTl7z7B/OjPPvjbDicsz+pG2XHFrVOsif9q3cluoD5MLRrOLpf1JE+M5Aw5PtF
+	 P2dN9ABPjSHRSf5nYAYizd8irSJBc/Mpss+ULKfE=
+From: Hardik Garg <hargar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ssengar@linux.microsoft.com,
+	hargar@microsoft.com,
+	apais@microsoft.com,
+	Hardik Garg <hargar@linux.microsoft.com>
+Subject: [PATCH v4 0/2] vmbus: Add DeviceTree support for message connection-id
+Date: Thu, 19 Jun 2025 16:06:33 -0700
+Message-Id: <1750374395-14615-1-git-send-email-hargar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: mana: Set tx_packets to post gso processing
- packet count
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175037400625.1013059.17103601464401559949.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Jun 2025 23:00:06 +0000
-References: 
- <1750160021-24589-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: 
- <1750160021-24589-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: decui@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
- kys@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- kotaranov@microsoft.com, schakrabarti@linux.microsoft.com,
- ernis@linux.microsoft.com, longli@microsoft.com,
- dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
- netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, paulros@microsoft.com,
- shradhagupta@microsoft.com
 
-Hello:
+This patch series adds support for configuring the VMBus message connection-id
+through DeviceTree. The connection-id determines which hypervisor communication
+channel the guest should use to talk to the VMBus host.
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+Changes in v4:
+- Split the patch into two separate patches:
+  * DeviceTree bindings documentation
+  * Implementation changes
+- Fix warnings reported by checkpatch
 
-On Tue, 17 Jun 2025 04:33:41 -0700 you wrote:
-> Allow tx_packets and tx_bytes counter in the driver to represent
-> the packets transmitted post GSO processing.
-> 
-> Currently they are populated as bigger pre-GSO packets and bytes
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> 
-> [...]
+Changes in v3:
+- https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com/
 
-Here is the summary with links:
-  - [net-next] net: mana: Set tx_packets to post gso processing packet count
-    https://git.kernel.org/netdev/net-next/c/7399ef984022
+Changes in v2:
+- https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com/
 
-You are awesome, thank you!
+Changes in v1:
+- https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com/
+
+The series consists of two patches:
+1. dt-bindings: microsoft: Add vmbus message-connection-id property
+2. vmbus: retrieve connection-id from DeviceTree
+
+Testing:
+- Tested on Microsoft Hyper-V
+- Verified with and without the DeviceTree property
+- Confirmed proper fallback to default values
+- Validated binding documentation with dt_binding_check
+
+Hardik Garg (2):
+  dt-bindings: microsoft: Add vmbus message-connection-id property
+  vmbus: retrieve connection-id from DeviceTree
+
+ Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml |  9 +++++++++
+ drivers/hv/connection.c                                    |  6 ++++--
+ drivers/hv/vmbus_drv.c                                    | 13 +++++++++++++
+ 3 files changed, 26 insertions(+), 2 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+2.40.4
 
