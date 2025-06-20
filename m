@@ -1,137 +1,137 @@
-Return-Path: <linux-hyperv+bounces-5975-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5976-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD511AE110B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 04:18:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C9E0AE1123
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 04:36:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31B1319E2502
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 02:19:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 568F33A23E1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 02:36:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 145373987D;
-	Fri, 20 Jun 2025 02:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C74161AED5C;
+	Fri, 20 Jun 2025 02:36:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lJGzpQQO"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="H8y0kd/i"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02olkn2047.outbound.protection.outlook.com [40.92.15.47])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2106.outbound.protection.outlook.com [40.92.23.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5790128FD;
-	Fri, 20 Jun 2025 02:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.15.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25511A8419;
+	Fri, 20 Jun 2025 02:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.106
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750385921; cv=fail; b=oCSbR+iisuTWNKYc6LENHUBTNbfXms5U1SaDcKrrTO2ZM/I9LxCaZRsf5s82XNrHa4zmYHWNKpRlaSetlSl59Bqwe+mMVdvacWJr5jIKfk1S7D8N/9oIUrbMBJfC6fN3XXN/FNKPnZhE+gcZT8AFYfWw7rP5EDF2s9hzoF+8OEI=
+	t=1750387004; cv=fail; b=Hs3eJ/Eu9zuWlCMsIhbcoZlTkUVM5N1J0N71q7o8DVh0ywY0ESpugknuMxA7eVo5RUVSH1prxhc2REIZuaQQUhSVLVCPMKD7uX2PDlNQ7S0zYoOaGQsUObaU7/kZ/K8AFf9NuFTKv9Nuzp45msrCbXpl2d1vZPSIxZjyJaHMG6o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750385921; c=relaxed/simple;
-	bh=2eSJoMnCvu0uhlkhDiVpVc7XnrWR62iIjoXumfJdMw8=;
+	s=arc-20240116; t=1750387004; c=relaxed/simple;
+	bh=Z9e+BREy2PxGJv4ZFlCQo5CExzXEfu9uzXiL67R8nSY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Qs0Z1mR+cQ2+2f5EKHmPBJzOU5PYsPvE9y69lAMZKXjCtwKB03tSLUqFpc/4INzbeZXQRuLtkkhCQoVhJZEDqlwo6LcMkH4r8lz5j4BZEtYUH+pLc/OpZLqlO2cmIs9UQYpGrgGColgZtTQQIGGBq1JGjYxvRoWr787p+TkBOac=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lJGzpQQO; arc=fail smtp.client-ip=40.92.15.47
+	 Content-Type:MIME-Version; b=tlTpdnz0fifNC2iE5IyBVtBfFKyrg3uxGOgiz5JLj6yPGMZr7M+34z/EayUkGRrRYlqQFsoBPdj2Sz4r2W7HNLHlJ5uM9v9sBt/23+VjmTvisdxCncHVXz0GosRNkpk0wjC1slO7my4mmaI18juNqTt9mPiOil57wQyhoclXU+Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=H8y0kd/i; arc=fail smtp.client-ip=40.92.23.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a7Pspg1IXrfNIUSAcH7X6BLw11F3TPho30Yz92/btCk5RPlTc2fThEkpKdt9AxudNP7DuQuZkprFoItW1B0RvyQao164kTrFtLq9vR3THw4bqxSXqFzxTmW6v2GJSC+FRyIDSyFvSEXp18XOZdLL4J1jE4eYKgRS0Neki5mcu8uVJfXPNXcmRtFjaVvHv5flOZieTVYsEsfv2F+7zKZQF3dNCzQtj/xcfUz9HBZFBUujBnveeu+mDG/fotXMJPob8lbE1vL94RqXCoQLyybymt49pw7SvLfx8myrD6sjUCAhG6xo2dUIR177KEU3Jnf2p/f7MZTYEx0KbS5SNqZ/nw==
+ b=sRa1Y/y9jzFXeCCpT8UUM7rmZUPHaTY6ytKr3A09POsARs9WwRt51mgjE8AasT5I9QpfIIlDzXqfcixgLVTtbfCw4J67J9arrw5mivEhhURe56J67PeZEY24i5k4n4GQ/rso37aV+mWt1f0x+XkX22XeyCME6543mS2PWbx3QINEJ5KPWGc4BVnOA64jrRoy0VeZjJ/fjbhT1m+HFA4eZ0e5T8kfcfIcwoM0mcBYya/ZIi2XrWGyT6pSw7oEyBvc74kc+CtqMaeLsFU/2dsSd3n7e7jMPD9EUHVx6iiYVxaG3KHxH4yCaVsf+i8Oi3bqQc5QGXFIU7jeXOSm5N2FBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PQjrOBLRIt4Cj/NzCcA/LvhVxWJcaT0MjgS2k/7iCCc=;
- b=YwHvaqtpLgeNQwyzYju+S3LXu5j9PVF6qM1m2Cgw36bnGmNQvESuSl6rDUsG14e0CUtYS57yWqs9En/SikSePxz0G4sYfZUNecnR7TMxOF5J3pFNe0jvpzF/GkN9o9IHDu4Cjfz76Oqc+V6jMoG3fukLv0fMBZdjZEk2eWi2yxAjs++45KNAxa30RWLVcT8nvM8qLFXAeoQKtDMjVyv3e+Vdc51I3GbTMLE0g/4+Ozj5uEepD2E8CyupVuN4CMHfgt0RewEkSKkESpWCVtaZBD3D2N8krHUBj/8IASKHkbtyMapehcMO/4EX6DL71xVgCvi6GLfWi38MXP1BjcIojw==
+ bh=KCXeDUH95sRQZJOHcprUKblfdx/ko0IMvb5iIxOV1G4=;
+ b=Qjqt5htszhu9yvv4d1UH5hhHMiUT5pwuEAVo8DzxOxCiC/4p060VRTs5g9aqCmnqsS8m3UKvVR2EsqHpDB6l3QSoOqQyubHbnBDvRSWcjgC2yuF+Az+ZE+rrobjhlF7J3+sQ7N4iY2MLq8JjdQHB7W5z8zTwRXhN5K/r5+SAFRyW2ycFCLmQMF5iTBOKQjzTkfgVRyHw7hFUYC1/LHBfMdu1nfv9ktCw1MfaRGeCwaboskM9LMy1xtUjQKLBp/t3J6cVhgiIdV3pPE89e9QWMJPF9IeT0Bxkb50u7YK+KLmB3rPe7AK1Ugr29TqeiX3Elwnlmlo9kw4hPuJQBL45ow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PQjrOBLRIt4Cj/NzCcA/LvhVxWJcaT0MjgS2k/7iCCc=;
- b=lJGzpQQOh/MCkEAwNFTVf3Jb6XlmPllbJt/UsbWjkAH3wkDJCEIf0UoGSSw00zIdJvRFW1QuG0pThZGshgeSTHxs0wBM544feFy5csmzwbXRTslfV/gr7Q8Ea5ALw6J5N0nxIm8ZFX2bsvsCD7xLnJJu3N7OGFucRNQ45NMJOtM4ZvrWTP8eZHnL1FizKcXTv88aGDwBeDeIKf0p5oYD72HWPp1tLE9GJLPFB0kko0ozX1GzSrJOnI7a5bxvQmYZA2O/bMIh6wMsLEMO41cI/4ce4gxnwtBvDIogqvNIBXEgug+hGoWQU+r6MY5K5aBuuYD7WrSZcslc7q6ec3ukzA==
+ bh=KCXeDUH95sRQZJOHcprUKblfdx/ko0IMvb5iIxOV1G4=;
+ b=H8y0kd/i2fALpmgeHxVo/wAGkorBRWjE4XNYgX8aQ1XewzIQQ6qSjQYis8gBkHTjRUMeHp156p6Fa6JTzDjwl3k8K8E8fVQDhF3TQR0IwOqsUNyduhBQBmyxcLdyGEKa2JhAQiBnhGzUdsxuo5S6CTup2nHFr5pTiTS3J3vAfORLf+6pFljzJF7AOJ77mfSRQvlrVYrt7Wzv8pGuyn/KSXMRtXb3ZM6vTnf6/m/y3iQo5o7dY3tbtNsR4r/LMcj0+8+9w1lJVFqZ1daHzW42QiqaPWM2s/9BPewgLNaTOcspO5Ooei7VsDbwcEVZNyvOdnty4MtGhPIQ4rZEgywRyA==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by BN0PR02MB8206.namprd02.prod.outlook.com (2603:10b6:408:151::16) with
+ by BY5PR02MB6802.namprd02.prod.outlook.com (2603:10b6:a03:207::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
- 2025 02:18:36 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Fri, 20 Jun
+ 2025 02:36:39 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
- 02:18:36 +0000
+ 02:36:39 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Tianyu Lan <ltykernel@gmail.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "Neeraj.Upadhyay@amd.com"
-	<Neeraj.Upadhyay@amd.com>
-CC: Tianyu Lan <tiala@microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC Patch v2 4/4] x86/Hyper-V: Allow Hyper-V to inject Hyper-V
- vectors
-Thread-Topic: [RFC Patch v2 4/4] x86/Hyper-V: Allow Hyper-V to inject Hyper-V
- vectors
-Thread-Index: AQHb3FO6yJsKf14SXEiGwa3e+GKl57QKsxDg
-Date: Fri, 20 Jun 2025 02:18:36 +0000
+To: Hardik Garg <hargar@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"hargar@microsoft.com" <hargar@microsoft.com>, "apais@microsoft.com"
+	<apais@microsoft.com>
+Subject: RE: [PATCH v4 2/2] vmbus: retrieve connection-id from DeviceTree
+Thread-Topic: [PATCH v4 2/2] vmbus: retrieve connection-id from DeviceTree
+Thread-Index: AQHb4W76TCYPtIrHMUi6VpAB7R0jC7QLUMVA
+Date: Fri, 20 Jun 2025 02:36:39 +0000
 Message-ID:
- <SN6PR02MB41573966773A82329B36E879D47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250613110829.122371-1-ltykernel@gmail.com>
- <20250613110829.122371-5-ltykernel@gmail.com>
-In-Reply-To: <20250613110829.122371-5-ltykernel@gmail.com>
+ <SN6PR02MB4157F2C0674B85C7206E6047D47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1750374395-14615-1-git-send-email-hargar@linux.microsoft.com>
+ <1750374395-14615-3-git-send-email-hargar@linux.microsoft.com>
+In-Reply-To: <1750374395-14615-3-git-send-email-hargar@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BN0PR02MB8206:EE_
-x-ms-office365-filtering-correlation-id: c4c45a1e-5e80-4a15-a668-08ddafa0c37f
-x-ms-exchange-slblob-mailprops:
- qdrM8TqeFBvg+tg/MNoCQ4s7gWjgMwzwclk15dKnb4H6eImdj4UkGY5TYBLC6cH31Uy47scHBxDdYVR76BjQb+srBZlIJuXL78S1IP5MFMJz2emX19PJ37ArfMnhKofA1RrHVuYDih7E1+A9JKlZQyVJ9eGtpvxSf75W6NYq27/FygGlePeeSJXS8ARmFa9hO+3z/mNau5U3miiH+7CL1/RYkqXqEdk921GIUvLUm0HHSh7fZYu/Wm9WbvM5+byCToL89Wk/VGp32wU0+A/2Iwnn2o8wyaAllRmVBqsxsnlPn09Ywx6VSYUB/qaW4cW/pcBN8E6M6Fci9o7prMqVohB0BoOabpDGgljoW9COWDc2O0QCJfAO3jX5qlJ7iSqOzdH7Eht4tnqp+aGBo7oxdz8yj+AJwr+d4Pj9iMX0Cw2GGUAfFhzRCmjFXif5NbahtmUhpAGie2SCkE5+gsbV/TEGo2yhesa8EkGXh1l0Fwn42Q+FVkr2cNXzpFwHbhiPRBRuN3U6FYxtSFJN0fMVfNqwcWejEaesGi8x09NDH7R3uTFcIiCEFafDs+E+2HOtO3hcHgYnn9511NbV664Lm8y/lEwt3rfhKidT/BH6wA1WKmbXrwLNrKSGGWOb3FCFlR6tszj185Qy6YD+l0w/YQmEmONs9/GEcPR/gDXOPpEbNP3bN87WasYyx938djYnHVKFxUkhkxdBMdHSK0FZBnOVA43CwA0rOSqwpz5QbSxfr8TKOhBvEhFnuFQveaBq9UXiQJcgZrCGwcEyn/Yefks5ahXXN/Yq
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BY5PR02MB6802:EE_
+x-ms-office365-filtering-correlation-id: cf17c686-cbfd-42af-812d-08ddafa34921
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799009|15080799009|461199028|19110799006|8062599006|41001999006|102099032|3412199025|40105399003|440099028;
+ BCL:0;ARA:14566002|461199028|41001999006|19110799006|15080799009|8062599006|8060799009|102099032|1602099012|440099028|52005399003|40105399003|3412199025|4302099013|10035399007;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?gBVFDmnM20MErNUnhN1BTqOaAq26nVS4W8laUDdaMcC1o58AbCBXliaZR9/j?=
- =?us-ascii?Q?u5JnwzsFiD7O+OLugJ7t5L9lysCI7iA8aAy1kTsddcVZFu80KNVT13JvGNYl?=
- =?us-ascii?Q?6ZSrZHVXDDuHvIcb4yXSJSVdQdG+TBJ7hpPfk0ATMHVxb0RhnTtY8JPBY8+R?=
- =?us-ascii?Q?P6lvEEqBK74NCycPRPDQ4zsLMDShjz1zqd80PBUjkaJFueHbOXoT8w6ciB3J?=
- =?us-ascii?Q?QFpUtAi7ymsn3DCMymUVqDVTM9gVqnIFHTCaBOXfjoOkVa42N9y234ua8p++?=
- =?us-ascii?Q?tGAk+cXvn9LxP2QfzEFlI5s9E6ytEMP7yk8y2GASze8lhU6Dj+wr2i6dVXXw?=
- =?us-ascii?Q?MD2AjJH0bp0jeH/qUKtBROJhhBDhCMbCEu62c1F/33eOar8ZCly0G+hrOSOq?=
- =?us-ascii?Q?7ilhlMue11PVLVUcGcaGcLLxhZh1RLxL1YFlB0i+iAGc/ngNh2Mg0Y6dCcU2?=
- =?us-ascii?Q?F/+oowwmKvW3/qwLZ6/kesRu7Ww+dPzhkpOlU/VFWTGmhphSa/YHo7yF5Hpz?=
- =?us-ascii?Q?xp9EXKlPzhjIa4SJfINBOLtCImBpWck5LjinvAZCuz6h6D2VkmPUuGoq7PD2?=
- =?us-ascii?Q?rYNNWtGAV2MOmGMELWVWUTyc1tYh8LeJocTiGqfxWeW5NOjLETSMJYAPJcnQ?=
- =?us-ascii?Q?dfm1LxAs/K8kwBGAulDgN+pRGLa4ZgPkonKrLmUIJhmmaHW3D6YVlDerL+6q?=
- =?us-ascii?Q?QcqrGVKPBlgpmCr/O1xZaXoccyAlbYSZZKWHQATeof6sX1C39TiH35rKYKzR?=
- =?us-ascii?Q?sboTP2HW19mJGmo9TFPpiktMdCWxRgrB648Q/br7Jke3cDxEzCzT2Fl0xqxP?=
- =?us-ascii?Q?gqUagyqDwEnsie2lkMw593c9A4OEbTDbOkLlOVyheEAuVTjJS/C3T9BVOJJ7?=
- =?us-ascii?Q?gzufzoWsT0e5G99sicOt61bPmof6awWKnAJ4SZNjPAOlGAQRg6eBG8TBYyya?=
- =?us-ascii?Q?6gB/BxDTv2BlUkdlDGsWuoKMKOwKotpxAsuyHIVhfiQ/h9KayvntOWwEwGgN?=
- =?us-ascii?Q?VLd1RHlpmaZWzo4tcUMFnF2WpJZFkTBMLSPknRjpoD8y3L1vPHCPqLFdI5Lm?=
- =?us-ascii?Q?A8IxvHb45Y8UWaJp8TabUop46JImO7XKTuVDAXKy7jDQy9EQFgnrRv+be8hx?=
- =?us-ascii?Q?Ahp/68vW4Myo2jm0WdnTDLwIO3u9knqAyQ=3D=3D?=
+ =?us-ascii?Q?CgX5xAWfpwTZJZpRb1bQsRcluj2JIaQqpWfgFceCe8GZ5NuvvnC6o6xWuDW6?=
+ =?us-ascii?Q?QfOA/ksaxIab9RH0toIZn+7T0t2FgLP++A7GazwYCFxehYT92pEFiK7Bu6XS?=
+ =?us-ascii?Q?SoarxsO5ewgthwXc1ulU2NfEgprs66paR0F63lKxz/rSL+I6VvB6HE6E8vAe?=
+ =?us-ascii?Q?6YseWR4H/55KiJn2o8L32HmDIO6gBei8Y9oRrkZwA/IZyDQHS1GCMunELB/A?=
+ =?us-ascii?Q?Ezt0GtTD0OlnNpqyPImslkgJfj119iXD2sP+0CmqIymmKaP3VKq4PcNTvhHl?=
+ =?us-ascii?Q?qf7xCBBpkHwyxtOVVRCcIlnFfm5VnADyX+MFp6uMj1oDAAOmrAEVgrKlLaxP?=
+ =?us-ascii?Q?34zDgnyHKhDnHbt6CDLGOvGftDyXItMNwvF/pksBGH0CJcD9nz0bGv/CzPrw?=
+ =?us-ascii?Q?afGTJ1x56RBx6JAQwu2AEIbLDf3O8xgaKZACARSKgYnbpITYtqONh6Q1tURy?=
+ =?us-ascii?Q?CIuZGqNHmAshxDsA//VM2ELxZpyDrlWQAgf8A7B/oXv5C8zVc5A3akq3RWlZ?=
+ =?us-ascii?Q?pMzD8moFkntSOJgwaf6UAO9Dssbt7XC7klV+7uCcyBDJqfalouJlwBX7a917?=
+ =?us-ascii?Q?E9ZszP1eq+GqMjEsaBT6qzFYtEjxd4Ufhu/yNVWgZfbMHFFuoeHgRT3J4X+3?=
+ =?us-ascii?Q?+5UNj+LNJ5R+I6y9BxsOJikSjaAc2ypqqVdMTV5h/BD1BF56A3ckZNLQgZhr?=
+ =?us-ascii?Q?dH7o5pE2srOxEXYcszT22pYOTreggezRYjDHcAgxcjOXQeP7OJeFZi6nucuB?=
+ =?us-ascii?Q?rb7avwshnAcFbemQkVBZA9bVG708U9y2YcCvV3SNMqumVa1sAaeM8Z80Yqos?=
+ =?us-ascii?Q?FxMB2yDq7ls3Z/acTZFHcaSGdW2XtBY1M08kZsVW9mESlh2m1z1U800ZidA1?=
+ =?us-ascii?Q?2YFVVqh+gPd1ergMxfvAJKIg4S6vw8hDMVQdZ6qkhgt1NTzcONHJpUddbiOB?=
+ =?us-ascii?Q?bYplevpjbgzXrX5AKJ5juTEfI1AojjKjt0QKeyJSXBPfL/jAY7aE7uicvyBl?=
+ =?us-ascii?Q?Lgziqh8t4GzXYliddlH3TDXOWRHAIiKerDjqNeOd8mnISrQoKXygMxDzHjpZ?=
+ =?us-ascii?Q?cx/lZx1QRu6bYVO4QQsb3S/0qp2fFU6Mv8nl75Np6vF5W8UkrznzOGHpLfDI?=
+ =?us-ascii?Q?OypYVWOjFygm8vfFo1ieflx1iwoIgttlhwZEH7saOHOme4GIaCQppXD53peA?=
+ =?us-ascii?Q?TPD2o2g+to5CpiP49ajy3H68spE2hh3Fwmmgak7oXWXwWv7QECKsFpVPnwU8?=
+ =?us-ascii?Q?O6IUAzbcfYSqSgppqCV7mi1cdEa5V56nAp0FpvKsvJXUtitvtdKJRZpgjgDm?=
+ =?us-ascii?Q?EQU=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Cqgl7eo5DD5mhoEaof7/Mw9PBtpapacQ0DLpNkY44t/mnZUUK+5XbAV7FnIx?=
- =?us-ascii?Q?6AsLXwNY6JTbRwmQci4VW9jhg7AH9cHpbVGoXsjq+iu2jjkRv5k6uY2bsuV/?=
- =?us-ascii?Q?5VEJNyK+n1imS5amVUq+bhwqnz+S4WTAzV4fGiHjYvh1VMYk0oWbwqQaTI/e?=
- =?us-ascii?Q?15ROKeb8IIBRB1UPL68OGLhCdK9z+GVXuNMegha+ir3WenDNgFqbNIp8oPrh?=
- =?us-ascii?Q?lrSYINm44Ogv4swckA82fWrzydL+K8y0W+x6TA5cKtRVTwdme5pTdYZDDFrZ?=
- =?us-ascii?Q?4M79KNYYkqehFnP5JmPCYAsByZrUF5eIvxX8FLRKXJuUzk9uHBUtmy6CiZgG?=
- =?us-ascii?Q?TuTDrW14ofVUB9pwFVo9D7hvSR1sCPEmJLpdwWRCoJtK1qKQhQajMPL1gPk8?=
- =?us-ascii?Q?DAQG4MO6GaTwpnCyzUeBGfzlY+oywgbrmuA82x4RSzaFm/epjNkkPY99ks4H?=
- =?us-ascii?Q?9mLakH0UTTOMLK79/IAVRppWute1GQwy8K9+7KLmgatEiK3UqUIeEvf0gM1v?=
- =?us-ascii?Q?+sgc44bx7bT4KrYTECMbI/77sRvQuT6nYFPUVHrOUgI89DG8qJz0vRXMx5Wt?=
- =?us-ascii?Q?WaOdv4EdFmPlcmMyRzjQbZL9gtjjXfYHcT59EaIkh+m3jlNJsAXUS9Qo7cFN?=
- =?us-ascii?Q?yc3TEy4F32VQ7SDLqeVQbuD18S5vKUAfr+FC/iaNH8QItML83IWXI6cVr6w7?=
- =?us-ascii?Q?abUOw02yWSWdS0gv6KG7D1VZ55u/Cx0fnxTQysXrxBh1WGpq7eaV0yZfMhkA?=
- =?us-ascii?Q?Uzn8GytJ6CDTYDQkpujS2VUbL8YXRznzWZRm8stbYxyvV5oIbjEBp63jT+Bo?=
- =?us-ascii?Q?oVps+pN2VaKwlnm+Meqh/ziGfepibaqkuU5GoA9PTQdXN77IhTBVYSaTR9HX?=
- =?us-ascii?Q?bPcA9LIDFPTFIN2YIcLS5eVwIGpHPak4GIyC+mAVxsHEe/Km0CBIC6D6N7Oj?=
- =?us-ascii?Q?lqbr6A8/ffjz7PA+wwDTM3rG2akMNApzLNSZralGAA1DcCsIZqI2tvmtiJhL?=
- =?us-ascii?Q?IFXErg58bIvFzApyFX2pNPPhFrBP6HVr22hYublhqOaHfZg3OXON1nE/Vqi7?=
- =?us-ascii?Q?9i+WDOiSxqnJLpzp6SVTxNKbOOIRS4gUqFcT9SSyKguz0Ia7dh6tnRLI+mgg?=
- =?us-ascii?Q?BWUEh08mcQCVYn+oy8FV0VA8RRojlxXYPBXFammkFCxiL4Ny3iiEsaEW/4Rq?=
- =?us-ascii?Q?ixFbhi7qQ9ao7uTlMvWEKOcM6EyZPBzbsZMKFUIuPPLGQctDVE5HBG6IEyA?=
+ =?us-ascii?Q?+OwUlZnJb9y+fBfiU6COdzJpiwDGw3QD9+t8eSfOZZNXbk7G5XUGWebNwV5/?=
+ =?us-ascii?Q?89q5iQOu1clmckKjOJzuQYBYvn34XnSldCZ9u0zGeJqxwI1hsQFg2Slv1NBw?=
+ =?us-ascii?Q?4ZKxwZ4vKOC5Z9FsCPDCHWXqKMh/TGDOAq5oUxxkgqVe5kUjccNuRQhKsjuB?=
+ =?us-ascii?Q?amu/P41OmXW1YCXw+4Dz4VTw8CXKtIo5e8fXc0AqPaK3Qm6WgLtiCZLUDaB1?=
+ =?us-ascii?Q?4j6li+5C3jZna+4eVQalF6dAtqgBR9a15F6YCgZi1mSZJggi037zUbbeTxoy?=
+ =?us-ascii?Q?XZER4DvXwXNd8oGfI9QMaeE5cvf9fRmw7JfiqUZVaU764WQ3mxa/DLSMPANC?=
+ =?us-ascii?Q?i6AvH4+pKCZW+QPaPzO3rm6euVW7Eoe2z785yIYI4zBmkH47+GtKNq76X6g7?=
+ =?us-ascii?Q?G2WQ6ccAr5ORbLCmvgsCuQyV1On8c4ce6avOAmJ43gath5o4yTJYkGAM3QsS?=
+ =?us-ascii?Q?7iCMKGHfnE36D+ot3FT/p1qq1X4BqNGz3TE1rPMOgXCSsU2U9I8ldEnQ7eDZ?=
+ =?us-ascii?Q?XugyoCN9DnTKYPzmn07MwALdPsAXP4EJi5goCzxkrOn0GMQ1Nr/oUj5pSzG7?=
+ =?us-ascii?Q?eoVFGxHBQnfTJ0EmkzW5PrfWeXNviga/kSoEoaaZqHXLpJDwOjdUv3RN5Z3Q?=
+ =?us-ascii?Q?s08bZlnjGzifdmXyNGyfOssKwSWu2HxfYK++e2hOaF6spctYQDc//z/nmNMm?=
+ =?us-ascii?Q?57+IcMeLp5pCsG6eT3uFCqfVbz7gNfO6hNLE2iEv+bZ1lgABG9Hxc1masDNQ?=
+ =?us-ascii?Q?MspOSKX4yH5ai774L32IsWWxF2vpg5MfWo/14paissQAQKT+FQ5mQhjXMT7Q?=
+ =?us-ascii?Q?Rekz8H21p6kiCf+7tnRVBitH+cbQT/XkJWng/8f/6B3RxlOb43eux2rWcV/h?=
+ =?us-ascii?Q?mhFeHQATWbsrqQf2QjzJpVsy4Kaove0W6Y+7qy8AbT3ICzHFhKnJ345JNQCC?=
+ =?us-ascii?Q?SHs9XJXLbAsIdMD3VTtLrM/gWEv9H9WADNI9dGSMXJS/SMgPYah1gsDtHB9t?=
+ =?us-ascii?Q?sjhiXXIWtyhMNpMt9lcy7JcSeXR4FNjNK/ZU81t7AJ+KX6KI+MLtY3JrRrNp?=
+ =?us-ascii?Q?e1Y48Z7q9JrUQB6cVYIVkUOWqF3Rc7xKUFyJd9AV3T3DvaJXCxFV3hF2CecB?=
+ =?us-ascii?Q?g+1F7RdTmZpSEgNNlQqbLPZCnh4HLEnF19V0OKsOFfRWkNqQ7RLYvhunVxyh?=
+ =?us-ascii?Q?fdclFruzgsWymqdQf1TjisixodIxpQoHktchaDLtJzhmhS0/4pMQYI2FLoY?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -145,51 +145,120 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4c45a1e-5e80-4a15-a668-08ddafa0c37f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 02:18:36.5642
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf17c686-cbfd-42af-812d-08ddafa34921
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 02:36:39.7916
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8206
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6802
 
-From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, June 13, 2025 4:08 AM
+From: Hardik Garg <hargar@linux.microsoft.com> Sent: Thursday, June 19, 202=
+5 4:07 PM
 >=20
-> From: Tianyu Lan <tiala@microsoft.com>
 
-Suggested patch Subject line:
+For the patch "Subject:" line, prefer prefix "Drivers: hv: vmbus:" to be co=
+nsistent
+historical precedent. We haven't always been consistent with that precedent=
+,
+but I try to call it out when I have the opportunity. :-)  If you look at t=
+he commit
+log for drivers/hv, you'll see that prefix fairly often, though sometimes
+shortened to just "Drivers: hv:" when the change is more generically for
+Hyper-V and not specifically VMBus.
 
-x86/hyperv: Allow Hyper-V to inject STIMER0 interrupts
+> The connection-id determines which hypervisor communication channel the
+> guest should use to talk to the VMBus host. This patch adds support to
+> read this value from the DeviceTree where it exists as a property under
+> the vmbus node with the compatible ID "microsoft,message-connection-id".
 
+Avoid wording like "this patch" in commit messages. Commit messages should
+be in imperative mood.  So something like:
+
+The connection-id determines which hypervisor communication channel the
+guest should use to talk to the VMBus host. Add steps to read this value fr=
+om
+the DeviceTree where it exists as a property under the vmbus node with the
+compatible ID "microsoft,message-connection-id".
+
+> The property name follows the format <vendor>,<field> where
+> "vendor": "microsoft" and "field": "message-connection-id"
 >=20
-> When Secure AVIC is enabled, call Secure AVIC
-> function to allow Hyper-V to inject STIMER0 interrupt.
+> Reading from DeviceTree allows platforms to specify their preferred
+> communication channel, making it more flexible. If the property is
+> not found in the DeviceTree, use the default connection ID
+> (VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
+> based on protocol version).
 >=20
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
 > ---
->  arch/x86/hyperv/hv_init.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> v3: https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linu=
+x.microsoft.com/
+> v2: https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linu=
+x.microsoft.com/
+> v1: https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linu=
+x.microsoft.com/
+> ---
+>  drivers/hv/connection.c |  6 ++++--
+>  drivers/hv/vmbus_drv.c  | 13 +++++++++++++
+>  2 files changed, 17 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 3d1d3547095a..3b99fffb9ffd 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -132,6 +132,10 @@ static int hv_cpu_init(unsigned int cpu)
->  		wrmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index be490c598785..15d2b652783d 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -99,11 +99,13 @@ int vmbus_negotiate_version(struct vmbus_channel_msgi=
+nfo *msginfo, u32 version)
+>  	if (version >=3D VERSION_WIN10_V5) {
+>  		msg->msg_sint =3D VMBUS_MESSAGE_SINT;
+>  		msg->msg_vtl =3D ms_hyperv.vtl;
+> -		vmbus_connection.msg_conn_id =3D VMBUS_MESSAGE_CONNECTION_ID_4;
+>  	} else {
+>  		msg->interrupt_page =3D virt_to_phys(vmbus_connection.int_page);
+> -		vmbus_connection.msg_conn_id =3D VMBUS_MESSAGE_CONNECTION_ID;
 >  	}
+> +	/* Set default connection ID if not provided via DeviceTree */
+> +	if (!vmbus_connection.msg_conn_id)
+> +		vmbus_connection.msg_conn_id =3D (version >=3D VERSION_WIN10_V5) ?
+> +			VMBUS_MESSAGE_CONNECTION_ID_4 : VMBUS_MESSAGE_CONNECTION_ID;
 >=20
-> +	/* Allow Hyper-V stimer vector to be injected from Hypervisor. */
-> +	if (ms_hyperv.misc_features & HV_STIMER_DIRECT_MODE_AVAILABLE)
-> +		apic_update_vector(cpu, HYPERV_STIMER0_VECTOR, true);
+>  	/*
+>  	 * shared_gpa_boundary is zero in non-SNP VMs, so it's safe to always
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index c236081d0a87..b78d5499e4bc 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -2541,10 +2541,23 @@ static int vmbus_device_add(struct platform_devic=
+e *pdev)
+>  	struct of_range range;
+>  	struct of_range_parser parser;
+>  	struct device_node *np =3D pdev->dev.of_node;
+> +	unsigned int conn_id;
+>  	int ret;
+>=20
+>  	vmbus_root_device =3D &pdev->dev;
+>=20
+> +	/*
+> +	 * Read connection ID from DeviceTree. The property name follows the
+> +	 * format <vendor>,<field> where:
+> +	 * - vendor: "microsoft"
+> +	 * - field: "message-connection-id"
+> +	 */
+> +	ret =3D of_property_read_u32(np, "microsoft,message-connection-id", &co=
+nn_id);
+> +	if (!ret) {
+> +		pr_info("VMBus message connection ID: %u\n", conn_id);
+> +	    vmbus_connection.msg_conn_id =3D conn_id;
+
+Indentation problem here. Should be a full tab, not 4 spaces.
+
+> +	}
 > +
-
-Should hv_cpu_die() disable the vector so that there is symmetry?
-
->  	return hyperv_init_ghcb();
->  }
->=20
+>  	ret =3D of_range_parser_init(&parser, np);
+>  	if (ret)
+>  		return ret;
 > --
-> 2.25.1
+> 2.40.4
 >=20
 
 
