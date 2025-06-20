@@ -1,176 +1,139 @@
-Return-Path: <linux-hyperv+bounces-5980-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5981-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01FC6AE1898
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 12:09:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94F15AE1E0E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 17:06:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AD7C189761C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 10:09:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FFB41675CB
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 15:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9758A1FBEB9;
-	Fri, 20 Jun 2025 10:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1858A2951CD;
+	Fri, 20 Jun 2025 15:06:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Mq+Xn2KL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpbWGLV6"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A8A9101EE
-	for <linux-hyperv@vger.kernel.org>; Fri, 20 Jun 2025 10:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E23030E85E;
+	Fri, 20 Jun 2025 15:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750414161; cv=none; b=Rpd9HZDR5CADKviSvJzyZ0nBQfviZDZFcpXQCYha6vDZOBJChYLVgqSqUAMnLJTSVVESYWB3Xbjcd+mXZBXEtxJ9uGjDZESceTj3JboxRPvM9J4bNfq3eYNCi1mUOb/mbV7MmQfv77989egnV8Kchw59aZB1oFXxdC1M2xTWcJs=
+	t=1750431968; cv=none; b=nlSBwIPeGuLsnTBsac/ICQwNS7P6zQpH6jJh50lB6Zq72YWGTcMnoDZsptDO+1yfrpc/beqKPNiT/TXC2mOzKTavIdiEa6GBkXtuwgFXg2jnIT6Ryx+qqKgE52W6mET2RTs9Fi8oZHC2bE+FtZxUaTWnX78yX/MhNrngc79HyEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750414161; c=relaxed/simple;
-	bh=lT7ArWGhij9qZ7Hpmf7mQ9kHl3sdlAJy7xlbGSqvXVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BsKakdNT4Si6cVxfg/0dArg1y5mSjWTxw5+6H2ARDa/mqHaROjmVD4hoyRTzHWkbeAYOe9b3TeT9YegbviWk5tsUxnxjglXccnoaZMvn0nS2MVY24DnSDgyZV27lHtv5aBNU+BWBI1V8o5UYyXLkYL6bdG3Y56+AVvAoyU7T4GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Mq+Xn2KL; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.202.98] (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8BB2C2115189;
-	Fri, 20 Jun 2025 03:09:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8BB2C2115189
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750414158;
-	bh=/B7fiyGBUN2QC3rsm7BpjXHUwN6PlzG5rHTjpmw9rPU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Mq+Xn2KLr29F/aXsvNC43uIzdflp/39fnGBh0//3Xkg48xt4/9O7caT3408PLO3hS
-	 0eWKVXSDkTQ8zr5+WUUTFRjWO51LAvItBSQIroY8yquwzz5wVRxCB792OgyOqpSwV/
-	 8BOmEb+zC7ZGYxt1u4MdTi7mjcG8rElor7gNthrw=
-Message-ID: <ab06bb44-a718-411b-bf9c-e7af3a2d8de5@linux.microsoft.com>
-Date: Fri, 20 Jun 2025 15:39:14 +0530
+	s=arc-20240116; t=1750431968; c=relaxed/simple;
+	bh=ksFoRy/K+QsZuP+UMssBVlk6SssmE35N4Xgff7AljiI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mb+Ca80S1Ypon649xPRHoJGenJDHSFvhFLgYWyCX0PjVKXJZC75zE5myEDGb595oila+YVysjv1OqJTfFVt9gORFHeyFhkPZi/VHcgcSNPzeiHpKS9F7PoEfXkAion7zZ2jq42I3prADToo15YJcx2bWwa8FaUNRVKCXGEX5j5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpbWGLV6; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b31f22d706aso729127a12.0;
+        Fri, 20 Jun 2025 08:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750431965; x=1751036765; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FpAdBIqUH78Z3by75NaLpSLv18gjCC1aaRhrF+ZhAN8=;
+        b=KpbWGLV6wxjXuKgGo83HpxXZsFIZddJtObNUKj2aGxsqGYjqpp0bxQbDm9MTn0/vYN
+         1EEYI8zvJMD2/WCO8qS0mKW39VMcJyYeXf0s1rrs7l8sS4aekAfYpk9mtW+WBy3ZiCWP
+         VajyY4HHotEacJsu8wi0ajL4SaijaySgIKRT3bEzX7LBhZA1Is6r3ySABIhxVUXppatj
+         0gOouHp7YFq7a9JAbeNedTX+FumAG66vSkf9kq8+A9pg0rOMqfHKcfQpbI0uZI1RPjmu
+         3h6raVSsF28gP+tpoHkaurce9xfO/16cSkYuLpKa/CdQjkgnCvk1Bqs3lxBaNIRocI7+
+         kGXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750431965; x=1751036765;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FpAdBIqUH78Z3by75NaLpSLv18gjCC1aaRhrF+ZhAN8=;
+        b=nfjM9xx8W+/K1bAWWiklwyhtz7DZCMLdosYWgC03b4hj8Wn66zoELiVOZenHxzCk0R
+         mOQwqjTUn6ulOqm2nj/gAHAclcmPvWwgfZyKW4JE7b28iURTnND4Pfe1ZCu7vyc3tCYq
+         ayYQL1jFC3ZMwb8cPQIbt4gZxdyojMDdhp/iG0wJh/SV895AQXqJFZ0H1Gz+VoZQW0M+
+         Wxqsz6BrvoycJBUIEUssjR5zlrppqOr48/YWu2ErvYV7HXBc1nIO5d1vkb0mvOJAuzF8
+         I18IsZLTFXtSd1qQVV4jYuud1Cba2Z4K65Pa6y3JXXIDIjkMXLxFLvuH7n1thyxIUeh6
+         AagA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsu0wqrbEAg5MFabqDRy1shDDEmpymJEN2cL+MtWmHpi8UAimoeY0LDaQ5oimVJVhtFjXjF8MsXrdXST0h@vger.kernel.org, AJvYcCVKdDZwKKVOxz29BqzZtI3BuUgVw5y1E4HHmrtXQ1dFjK/3cxc3OgD4BAqloBgHv5oD/ZoKboqEBgy30Q0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeNEjJKyAndgiXxd+/rZ1EO8QxTCzK45BYqBaSR68rQrQ1uif2
+	4qieE0jLTaFH1EjgwPvPnakhVGQTGpYQoHe6Rj9/1DWvbjh29BD3u93oTsSnm2oFb+4qk07cBzP
+	/BEzGp/HNjQKxK9PqurzGzg6yZsJtsSg=
+X-Gm-Gg: ASbGncsJbVjWmMrNAIydF2DjLUsBoIdXQqwTm7x7169Fp/jnAAlrIi692sG0x6DzjZ5
+	60kshfg7oLnZxFP6q/DiOk1nOYyE/IV5+tcG8iU5eIcoaOMltCVNWWCp22dLt/rth9dk+cBbT0+
+	qlvpv7pkprAsDwsVNDpZochAdHWt5wu3YRlU0pvu285gYMcMJTkqM=
+X-Google-Smtp-Source: AGHT+IFs1wDL+Fq34XOMDcxJYXK2p83tODMKFqB5EPpzMmEwzoywgbh28enfu/rjuNlD9SkE6FZWERHQsPwWGgXgmr4=
+X-Received: by 2002:a17:90b:538d:b0:313:283e:e87c with SMTP id
+ 98e67ed59e1d1-3159d6347famr5079508a91.3.1750431964650; Fri, 20 Jun 2025
+ 08:06:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] tools/hv: Fix incorrect file path conversion in
- fcopy on Linux
-To: yasuenag@gmail.com
-Cc: eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, linux-hyperv@vger.kernel.org,
- ssengar@linux.microsoft.com
-References: <20250613104648.1212-1-yasuenag@gmail.com>
- <20250613104648.1212-2-yasuenag@gmail.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <20250613104648.1212-2-yasuenag@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250613110829.122371-1-ltykernel@gmail.com> <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Fri, 20 Jun 2025 23:05:28 +0800
+X-Gm-Features: Ac12FXzP9tlv4Hr8yWE5eMb2orG3vvSitxGnMHugM7FMpfdlgMpzp9R-ZhuwjoA
+Message-ID: <CAMvTesAscN2MyqJXpcbwcXWC-6-en6U_c03M+2=zcMF0bLv4iw@mail.gmail.com>
+Subject: Re: [RFC Patch v2 0/4] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "kvijayab@amd.com" <kvijayab@amd.com>, 
+	"Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, Tianyu Lan <tiala@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 20, 2025 at 10:17=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
+om> wrote:
+>
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, June 13, 2025 4:08 A=
+M
+> >
+> > Secure AVIC is a new hardware feature in the AMD64
+> > architecture to allow SEV-SNP guests to prevent the
+> > hypervisor from generating unexpected interrupts to
+> > a vCPU or otherwise violate architectural assumptions
+> > around APIC behavior.
+> >
+> > Each vCPU has a guest-allocated APIC backing page of
+> > size 4K, which maintains APIC state for that vCPU.
+> > APIC backing page's ALLOWED_IRR field indicates the
+> > interrupt vectors which the guest allows the hypervisor
+> > to send.
+> >
+> > This patchset is to enable the feature for Hyper-V
+> > platform. Patch "Expose x2apic_savic_update_vector()"
+> > is to expose new fucntion and device driver and arch
+> > code may update AVIC backing page ALLOWED_IRR field to
+> > allow Hyper-V inject associated vector.
+>
+> The last sentence above seems to be leftover from v1 of the
+> patch set and is no longer accurate. Please update.
 
+Thank you very much, Michael!  Will update.
+>
+> Additional observation:  These patches depend on
+> CC_ATTR_SNP_SECURE_AVIC, which is not set when operating
+> in VTOM mode (i.e., a paravisor is present). So evidently Linux
+> on Hyper-V must handle the Secure AVIC only when Linux is
+> running as the paravisor in VTL2 (CONFIG_HYPERV_VTL_MODE=3Dy),
+> or when running as an SEV-SNP guest with no paravisor. Is
+> that correct?
 
-On 6/13/2025 4:16 PM, yasuenag@gmail.com wrote:
-> From: Yasumasa Suenaga <yasuenag@gmail.com>
-> 
-> The hv_fcopy_uio_daemon fails to correctly handle file copy requests
-> from Windows hosts (e.g. via Copy-VMFile) due to wchar_t size
-> differences between Windows and Linux. On Linux, wchar_t is 32 bit,
-> whereas Windows uses 16 bit wide characters.
-> 
-> Currently, the code casts __u16 arrays directly to wchar_t* and
-> uses wcstombs(), which leads to corrupted file paths or even crashes.
-> 
-> This patch changes:
+This patchset enables Secure AVIC function for enlightened SEV-SNP guest
+which uses c-bit to encrypt/decrypt guest memory.
 
-Please use imperative mood to write commit msg. Avoid using "This patch 
-does xyz".
-
-> - Treats file name and path as __u16 arrays, not wchar_t*.
-> - Allocates fixed-size buffers (W_MAX_PATH) for converted strings
->    instead of using malloc.
-> - Adds a check for target path length to prevent snprintf() buffer
->    overflow.
-> 
-> This change ensures file transfers from host to Linux guest succeed
-> with correctly decoded file names and paths.
-
-Ditto.
-
-Sample commit msg:
-The hv_fcopy_uio_daemon fails to correctly handle file copy requests
-from Windows hosts (e.g. via Copy-VMFile) due to wchar_t size
-differences between Windows and Linux. On Linux, wchar_t is 32 bit,
-whereas Windows uses 16 bit wide characters.
-Fix this by ensuring that file transfers from host to Linux guest 
-succeed with correctly decoded file names and paths.
-
-Regards,
-Naman
-
-> 
-> Signed-off-by: Yasumasa Suenaga <yasuenag@gmail.com>
-> ---
->   tools/hv/hv_fcopy_uio_daemon.c | 37 +++++++++++++---------------------
->   1 file changed, 14 insertions(+), 23 deletions(-)
-> 
-> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
-> index 0198321d1..4b09ed6b6 100644
-> --- a/tools/hv/hv_fcopy_uio_daemon.c
-> +++ b/tools/hv/hv_fcopy_uio_daemon.c
-> @@ -62,8 +62,11 @@ static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
->   
->   	filesize = 0;
->   	p = path_name;
-> -	snprintf(target_fname, sizeof(target_fname), "%s/%s",
-> -		 path_name, file_name);
-> +	if (snprintf(target_fname, sizeof(target_fname), "%s/%s",
-> +		     path_name, file_name) >= sizeof(target_fname)) {
-> +		syslog(LOG_ERR, "target file name is too long: %s/%s", path_name, file_name);
-> +		goto done;
-> +	}
->   
->   	/*
->   	 * Check to see if the path is already in place; if not,
-> @@ -270,7 +273,7 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
->   {
->   	size_t len = 0;
->   
-> -	while (len < dest_size) {
-> +	while (len < dest_size && *src) {
->   		if (src[len] < 0x80)
->   			dest[len++] = (char)(*src++);
->   		else
-> @@ -282,27 +285,15 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
->   
->   static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
->   {
-> -	setlocale(LC_ALL, "en_US.utf8");
-> -	size_t file_size, path_size;
-> -	char *file_name, *path_name;
-> -	char *in_file_name = (char *)smsg_in->file_name;
-> -	char *in_path_name = (char *)smsg_in->path_name;
-> -
-> -	file_size = wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) + 1;
-> -	path_size = wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) + 1;
-> -
-> -	file_name = (char *)malloc(file_size * sizeof(char));
-> -	path_name = (char *)malloc(path_size * sizeof(char));
-> -
-> -	if (!file_name || !path_name) {
-> -		free(file_name);
-> -		free(path_name);
-> -		syslog(LOG_ERR, "Can't allocate memory for file name and/or path name");
-> -		return HV_E_FAIL;
-> -	}
-> +	/*
-> +	 * file_name and path_name should have same length with appropriate
-> +	 * member of hv_start_fcopy.
-> +	 */
-> +	char file_name[W_MAX_PATH], path_name[W_MAX_PATH];
->   
-> -	wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
-> -	wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
-> +	setlocale(LC_ALL, "en_US.utf8");
-> +	wcstoutf8(file_name, smsg_in->file_name, W_MAX_PATH - 1);
-> +	wcstoutf8(path_name, smsg_in->path_name, W_MAX_PATH - 1);
->   
->   	return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
->   }
-
+--=20
+Thanks
+Tianyu Lan
 
