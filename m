@@ -1,111 +1,176 @@
-Return-Path: <linux-hyperv+bounces-5979-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5980-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37F65AE14CA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 09:22:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01FC6AE1898
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 12:09:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C30013AF9A8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 07:21:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AD7C189761C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 10:09:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF13C22759C;
-	Fri, 20 Jun 2025 07:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9758A1FBEB9;
+	Fri, 20 Jun 2025 10:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJ64G+TC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Mq+Xn2KL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8311E30E85C;
-	Fri, 20 Jun 2025 07:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A8A9101EE
+	for <linux-hyperv@vger.kernel.org>; Fri, 20 Jun 2025 10:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750404127; cv=none; b=F4YYVLMg63UK3FUQ+oWAtYHzI5VFZ8cdgwQD4xiRNbF0XDiZJ6LAvscDrtjLG2enp1UPlrmgeWzh9GWPxunNzy0OwwAfiT3wYbVfMYDX6ss0vPGM4X9Gqhr1e3o1wD1OCjIbCAgNKSdwrmpa2UA47qImeiPBujvcMM2L7Q6zyR0=
+	t=1750414161; cv=none; b=Rpd9HZDR5CADKviSvJzyZ0nBQfviZDZFcpXQCYha6vDZOBJChYLVgqSqUAMnLJTSVVESYWB3Xbjcd+mXZBXEtxJ9uGjDZESceTj3JboxRPvM9J4bNfq3eYNCi1mUOb/mbV7MmQfv77989egnV8Kchw59aZB1oFXxdC1M2xTWcJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750404127; c=relaxed/simple;
-	bh=5RPAq0Ia69osMsa70Jk9HSRpAEfxlhKNmA/7/I1S0Pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWKINuZsAQSQIsork/H9m6ccqM4a0xm9GEQJckl2XhZF4hIwXUT1iy9NB8cylgOFGx9YYs0SBI+W4Rfv7x/kDZxdRA6lhghrZr2huLoMLyXhWboQ4piTFApOnBaVTG3XsCmQjWpGN6jon5GqgIlvkfrPQHrwhSYFWQx4r1TQe34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJ64G+TC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2B8C4CEE3;
-	Fri, 20 Jun 2025 07:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750404127;
-	bh=5RPAq0Ia69osMsa70Jk9HSRpAEfxlhKNmA/7/I1S0Pg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GJ64G+TCI+QHThsiEaKisdrrzaIC8mNN1kXyFDKDkncbuhxRq5Jm1pqRsZQ+gesuD
-	 9rqDmkugl+vIlP9OHgU5OX1HJ3ChyVcFItvHK0oxzmExEPoantG6iLimuoFzU/JxjW
-	 EaztZ0R2uER86C2sg8/0S8nJofVYVCqafVXfs2ICIoJx97J6dlV2Z/2cbyMBTn/hq6
-	 FqsYjieUkBLpW+OvINs2MEujQoiVo+ZMvwVQjLyC1W/1jdu+Y/DfcWS+gC/bywAmWY
-	 s9/gMB+LFpa1x/A8APjO/JQFjZIzlb3KYiQJoK0ns5mudxJ2bZZTwMU8D1LJ9Z/oBK
-	 aNIwO2rJkH2xA==
-Date: Fri, 20 Jun 2025 09:22:04 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ssengar@linux.microsoft.com, hargar@microsoft.com, apais@microsoft.com
-Subject: Re: [PATCH v4 2/2] vmbus: retrieve connection-id from DeviceTree
-Message-ID: <20250620-miniature-wisteria-moose-8d8cf8@kuoka>
-References: <1750374395-14615-1-git-send-email-hargar@linux.microsoft.com>
- <1750374395-14615-3-git-send-email-hargar@linux.microsoft.com>
+	s=arc-20240116; t=1750414161; c=relaxed/simple;
+	bh=lT7ArWGhij9qZ7Hpmf7mQ9kHl3sdlAJy7xlbGSqvXVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BsKakdNT4Si6cVxfg/0dArg1y5mSjWTxw5+6H2ARDa/mqHaROjmVD4hoyRTzHWkbeAYOe9b3TeT9YegbviWk5tsUxnxjglXccnoaZMvn0nS2MVY24DnSDgyZV27lHtv5aBNU+BWBI1V8o5UYyXLkYL6bdG3Y56+AVvAoyU7T4GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Mq+Xn2KL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.202.98] (unknown [4.194.122.162])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8BB2C2115189;
+	Fri, 20 Jun 2025 03:09:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8BB2C2115189
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750414158;
+	bh=/B7fiyGBUN2QC3rsm7BpjXHUwN6PlzG5rHTjpmw9rPU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Mq+Xn2KLr29F/aXsvNC43uIzdflp/39fnGBh0//3Xkg48xt4/9O7caT3408PLO3hS
+	 0eWKVXSDkTQ8zr5+WUUTFRjWO51LAvItBSQIroY8yquwzz5wVRxCB792OgyOqpSwV/
+	 8BOmEb+zC7ZGYxt1u4MdTi7mjcG8rElor7gNthrw=
+Message-ID: <ab06bb44-a718-411b-bf9c-e7af3a2d8de5@linux.microsoft.com>
+Date: Fri, 20 Jun 2025 15:39:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1750374395-14615-3-git-send-email-hargar@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/1] tools/hv: Fix incorrect file path conversion in
+ fcopy on Linux
+To: yasuenag@gmail.com
+Cc: eahariha@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, linux-hyperv@vger.kernel.org,
+ ssengar@linux.microsoft.com
+References: <20250613104648.1212-1-yasuenag@gmail.com>
+ <20250613104648.1212-2-yasuenag@gmail.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20250613104648.1212-2-yasuenag@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 04:06:35PM GMT, Hardik Garg wrote:
-> The connection-id determines which hypervisor communication channel the
-> guest should use to talk to the VMBus host. This patch adds support to
-> read this value from the DeviceTree where it exists as a property under
-> the vmbus node with the compatible ID "microsoft,message-connection-id".
-> The property name follows the format <vendor>,<field> where
-> "vendor": "microsoft" and "field": "message-connection-id"
+
+
+On 6/13/2025 4:16 PM, yasuenag@gmail.com wrote:
+> From: Yasumasa Suenaga <yasuenag@gmail.com>
 > 
-> Reading from DeviceTree allows platforms to specify their preferred
-> communication channel, making it more flexible. If the property is
-> not found in the DeviceTree, use the default connection ID
-> (VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
-> based on protocol version).
+> The hv_fcopy_uio_daemon fails to correctly handle file copy requests
+> from Windows hosts (e.g. via Copy-VMFile) due to wchar_t size
+> differences between Windows and Linux. On Linux, wchar_t is 32 bit,
+> whereas Windows uses 16 bit wide characters.
 > 
-> Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
+> Currently, the code casts __u16 arrays directly to wchar_t* and
+> uses wcstombs(), which leads to corrupted file paths or even crashes.
+> 
+> This patch changes:
+
+Please use imperative mood to write commit msg. Avoid using "This patch 
+does xyz".
+
+> - Treats file name and path as __u16 arrays, not wchar_t*.
+> - Allocates fixed-size buffers (W_MAX_PATH) for converted strings
+>    instead of using malloc.
+> - Adds a check for target path length to prevent snprintf() buffer
+>    overflow.
+> 
+> This change ensures file transfers from host to Linux guest succeed
+> with correctly decoded file names and paths.
+
+Ditto.
+
+Sample commit msg:
+The hv_fcopy_uio_daemon fails to correctly handle file copy requests
+from Windows hosts (e.g. via Copy-VMFile) due to wchar_t size
+differences between Windows and Linux. On Linux, wchar_t is 32 bit,
+whereas Windows uses 16 bit wide characters.
+Fix this by ensuring that file transfers from host to Linux guest 
+succeed with correctly decoded file names and paths.
+
+Regards,
+Naman
+
+> 
+> Signed-off-by: Yasumasa Suenaga <yasuenag@gmail.com>
 > ---
-> v3: https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com
-> v2: https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft.com
-> v1: https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com
-> ---
->  drivers/hv/connection.c |  6 ++++--
->  drivers/hv/vmbus_drv.c  | 13 +++++++++++++
->  2 files changed, 17 insertions(+), 2 deletions(-)
+>   tools/hv/hv_fcopy_uio_daemon.c | 37 +++++++++++++---------------------
+>   1 file changed, 14 insertions(+), 23 deletions(-)
 > 
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index be490c598785..15d2b652783d 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -99,11 +99,13 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
->  	if (version >= VERSION_WIN10_V5) {
->  		msg->msg_sint = VMBUS_MESSAGE_SINT;
->  		msg->msg_vtl = ms_hyperv.vtl;
-> -		vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID_4;
->  	} else {
->  		msg->interrupt_page = virt_to_phys(vmbus_connection.int_page);
-> -		vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID;
->  	}
-> +	/* Set default connection ID if not provided via DeviceTree */
-> +	if (!vmbus_connection.msg_conn_id)
-
-Your binding said connection ID 0 is a valid one, so this is wrong. Or
-binding is wrong.
-
-Best regards,
-Krzysztof
+> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
+> index 0198321d1..4b09ed6b6 100644
+> --- a/tools/hv/hv_fcopy_uio_daemon.c
+> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+> @@ -62,8 +62,11 @@ static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 flags)
+>   
+>   	filesize = 0;
+>   	p = path_name;
+> -	snprintf(target_fname, sizeof(target_fname), "%s/%s",
+> -		 path_name, file_name);
+> +	if (snprintf(target_fname, sizeof(target_fname), "%s/%s",
+> +		     path_name, file_name) >= sizeof(target_fname)) {
+> +		syslog(LOG_ERR, "target file name is too long: %s/%s", path_name, file_name);
+> +		goto done;
+> +	}
+>   
+>   	/*
+>   	 * Check to see if the path is already in place; if not,
+> @@ -270,7 +273,7 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
+>   {
+>   	size_t len = 0;
+>   
+> -	while (len < dest_size) {
+> +	while (len < dest_size && *src) {
+>   		if (src[len] < 0x80)
+>   			dest[len++] = (char)(*src++);
+>   		else
+> @@ -282,27 +285,15 @@ static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
+>   
+>   static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
+>   {
+> -	setlocale(LC_ALL, "en_US.utf8");
+> -	size_t file_size, path_size;
+> -	char *file_name, *path_name;
+> -	char *in_file_name = (char *)smsg_in->file_name;
+> -	char *in_path_name = (char *)smsg_in->path_name;
+> -
+> -	file_size = wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) + 1;
+> -	path_size = wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) + 1;
+> -
+> -	file_name = (char *)malloc(file_size * sizeof(char));
+> -	path_name = (char *)malloc(path_size * sizeof(char));
+> -
+> -	if (!file_name || !path_name) {
+> -		free(file_name);
+> -		free(path_name);
+> -		syslog(LOG_ERR, "Can't allocate memory for file name and/or path name");
+> -		return HV_E_FAIL;
+> -	}
+> +	/*
+> +	 * file_name and path_name should have same length with appropriate
+> +	 * member of hv_start_fcopy.
+> +	 */
+> +	char file_name[W_MAX_PATH], path_name[W_MAX_PATH];
+>   
+> -	wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
+> -	wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
+> +	setlocale(LC_ALL, "en_US.utf8");
+> +	wcstoutf8(file_name, smsg_in->file_name, W_MAX_PATH - 1);
+> +	wcstoutf8(path_name, smsg_in->path_name, W_MAX_PATH - 1);
+>   
+>   	return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
+>   }
 
 
