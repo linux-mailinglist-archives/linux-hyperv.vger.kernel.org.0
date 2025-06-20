@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-5971-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5972-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51ADEAE1101
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 04:17:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EEFCAE1102
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 04:17:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF36F4A1F07
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 02:17:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 002874A1F48
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 02:17:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80316137C37;
-	Fri, 20 Jun 2025 02:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 914093987D;
+	Fri, 20 Jun 2025 02:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="frZOFPFD"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="aYhi5stQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02olkn2045.outbound.protection.outlook.com [40.92.44.45])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02olkn2056.outbound.protection.outlook.com [40.92.43.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E4C3987D;
-	Fri, 20 Jun 2025 02:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.44.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D5F82899;
+	Fri, 20 Jun 2025 02:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.43.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750385829; cv=fail; b=ObHMLI5rz688W8RzEilKy+VfiRdJ+tPTsPO98HkSerBg+mev7F/TFJo6TP7OVTrW048CHUQo9eChb0KQSLhpoGTiS/9P0JN0aspf7Q0at7gLUiXR7CGg4SolJ5Iq3U0B0fmP+WE1fCF+nTXkjNdJlrXNQP6pAPUDc70THIKIKkE=
+	t=1750385842; cv=fail; b=UGbiU7i9TJ+7TUE/nI9EpBlXE+6ldyNZ2ou7FGtSmFFMIR0QDV6Bm2+Q7m9zyNDtUW4Qv6xZNzg3dIp0H5utx4lodcZqOmh7oI0KhaLrH61f6nkpf+PFVRUw3JUEJAW/Lp3p6jyRJyz+WDFWgjemn5ikfApzvvkpHxuq4bZ4cy0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750385829; c=relaxed/simple;
-	bh=gRSNku5fNTChuXYHYLly/fLffDW0eDTHYD03YRSbeME=;
+	s=arc-20240116; t=1750385842; c=relaxed/simple;
+	bh=KDL5y/RV2EEFMZJsmPTuBFMcNewN7fkI4WLqG6TG0YY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XmsVBbxbgXKcnHd4h2tos8qM72wLqiik7hKzounfZM2v2RA7oUWWl7+uFrt/bQzuLDPRpfF0SytS6wYzAljLtYb9ZnhE68b9YVti+PPSmHJ0NXJsTHJfikMZXo1DUI4FRJXkQjPgheGKbvBIceARa3VcAC7DLQaOG6Z6u0+1+Es=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=frZOFPFD; arc=fail smtp.client-ip=40.92.44.45
+	 Content-Type:MIME-Version; b=fk7nqKd1risNNk7OWvMuo4PR0OuQgdh9CSpqz/PpfQ84EL0N/o3G2JiKngeA5ukmHAoUp2vT3Goi2DX7VwiKf+yuh23W/gg9A/dW8FxdXcbDdtSkyVslzzZpCFkeHKXH4kkZHtXAzrOGqy1Y5HaT19HuwReaXdxAAENYU8soKBA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=aYhi5stQ; arc=fail smtp.client-ip=40.92.43.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sdTNmykBle4syDrflo37KHlxn4hoyr1bbhUdL1A66H2ePXik7pEEuhqI37SET6bU7GMVrHx62tLOPa7Zg+y4vrj/gDmASGUtwCuDWjt8hbCYWb2AV8IKuk9RCio55VKUvkOeDhG+2sTZuNS8mkrcR+Jb4bkOYEIIeFKl6+29KqVFhMIaLLeP2J11VviufXzR/eOwy5cDxxQ/02l0zfga4vJhZ2smuQbfn62Jyzd14xcf7N6I/WLpGmDH8g/uVNhmAEpeTWOSm3EKVOou3nMDicBsDnPd5W0C3bp64QwvKw7kHFZo9pJei04r9ZakgQP/HYtRTXPpMbfI0mudD3/GZg==
+ b=AiJOi0cXapn2r7j8wA7i8X6krpuj0KZxn7iJ+8xjIhmIRbtfope9vrh8cx64jbfZaV9fu52tKIELgPIgopp6YaAvSgEnDBGTBm793AFze80xs/4XsY6NHEC08C27A4kWdvZBAi1KqGPiwxotKDUwnoRKG5UfOX9nlpECSXj4vq7KsPfWp2qw4wq7ltT/1QvPRQUrudagi0iRzyZsoiQYmthl6agQbL2j5jvS8Z/Tc5T0EBVqAXarR99GuVGZG83ihjvj/pAHFG9+PHkgE2y+lgY8UvF2nQ5KLZ3X4LunKNxvRTuGS+K864S54BpzWdklW471q8Gc7v3JjK+vKcLg7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PwxSqo3/02vWfiniOUL3q9BOR2aE7zeIdzvKQz6BDig=;
- b=op8nY2C0w9EwhB+kIaci7L1iJnH38Wq1IJIla8mLwEMxJzc+tNntIbFb1hFXna7HmDF3gmYBAF/0SVw8UmNbL3K8Q+yjZ79Bka79tyrMsKjUT3uf6xms3RLKJsUGZmdZJoPVbiLr/wr3kwyKzNiZFI0dAfCbCsu+TlVnFrLNHNMpK0CcLC0Na0J2Bpdm10NdqfaQkDz1BML5C4Gk1laGVJE8jy/3vMjgx6CxZ35ekIuLiXECmdXv9YYKYsSN+vMHYdC9dGvlVWpdVaQ/rv9zm1uKM9l0DYLos2SxaawVYx8gIVkzUsh2sqLbPy0856OwnWGH7LS7RO+tRjQ56J9J4g==
+ bh=MCroOACUMS3VRU3F1R+mylQ3gCzk2FfBTkqxsOdEaSY=;
+ b=HEps95PHEyp+7WoOJCJupMyTExtgvkCn2SfvGBjrx860siebW1I5ZPOpTeajn4QNq984eL9AtuyISIr6vWy09VdlgzCJKaNDpHnh43zMf8VFRrYYranfnlXBwZgeEWi2n1Hv+oqwf9tCJrMMMf3MpQN/4+TA4Qg0AHIkl115un5X436eu3HG+kaPZ1XJllrOWdXsq6tGlQf+q+AWoXyOa55umG4BFLSSwB9u7GVuMYwzBPXsfLS8VXXutzn+S2PIPs24Kjn8v0FHip50A+dt5eSLF7HtLLzyHqIoSfH46mokfzwnUYFJmafytxQh/F7kXyhVI1qgscj6B201N8mXRA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PwxSqo3/02vWfiniOUL3q9BOR2aE7zeIdzvKQz6BDig=;
- b=frZOFPFDPeG4Vy6yD8f6tMmRXkNyH8C6v1xb8hJpPJCGM+E57Z5I0SyLXT2YhTlqAf8ojv7CR/Jg+O1mDt03/AJorhXAJC3lnbQ9N3WA8+p2sHZrCKfJkZnF6a4FOo63hLpilaNjMmOXRxadGmgrKPu293XBb6HCip/0qQcczckcqCHEltJuvH7SAfP3Shc1NB8ceRmhhMTfslwf9PxVXVLP45NBTxPYBWqhr5fHBFUoKsWDLYt0xIhDYM7ZWM5GyBxuxWsxZZG9e12ygYZhGxMkrCAalZuekvw9pdjnym65j4S7h0UnmJ7Fd9nqWmvkTjbfvRmkkUXaIMlGjF3O1A==
+ bh=MCroOACUMS3VRU3F1R+mylQ3gCzk2FfBTkqxsOdEaSY=;
+ b=aYhi5stQs1h+9PVdRTFfpvXKa0wtmA4DUtlRqBDIVK2xsioJsA2PK7AWTgEg7SefGOZ8h3D/hdE2xHLDQshX152ywkQQUrNr53XKklZOac6wCVIwv7EuPdKoHgB8gNF7jr7yM9GEmPuWqQSFcKRPf1yzpxJ3XBjZ6cVNvtrJVMxbv4Z9KQ6+B4K6oFHiwrKCNU75F+E7KUxzi+ysy7/hu3HaozuJ2w/9oA+yluyMKh7lbCNlihbrTPrwziNlOikkvLT14VziZ+iJxXyOTzHM201F6RI8+/ePm+Uuf270E81VoAg9glxrDHd2Q00QA/9MR7Wx1O2ptqHl7fh5mkgjmw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by BN0PR02MB8206.namprd02.prod.outlook.com (2603:10b6:408:151::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
- 2025 02:17:04 +0000
+ 2025 02:17:16 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.027; Fri, 20 Jun 2025
- 02:17:04 +0000
+ 02:17:16 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Tianyu Lan <ltykernel@gmail.com>, "kys@microsoft.com" <kys@microsoft.com>,
 	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
@@ -66,73 +66,72 @@ To: Tianyu Lan <ltykernel@gmail.com>, "kys@microsoft.com" <kys@microsoft.com>,
 CC: Tianyu Lan <tiala@microsoft.com>, "linux-hyperv@vger.kernel.org"
 	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC Patch v2 0/4] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V
- platform
-Thread-Topic: [RFC Patch v2 0/4] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V
- platform
-Thread-Index: AQHb3FOZXzx769qxrkKUE85JMWIMbLQLVoWw
-Date: Fri, 20 Jun 2025 02:17:04 +0000
+Subject: RE: [RFC Patch v2 1/4] x86/Hyper-V: Not use hv apic driver when
+ Secure AVIC is available
+Thread-Topic: [RFC Patch v2 1/4] x86/Hyper-V: Not use hv apic driver when
+ Secure AVIC is available
+Thread-Index: AQHb3FOZsi65UseFT0OTgXavwRWB57QKmp9Q
+Date: Fri, 20 Jun 2025 02:17:16 +0000
 Message-ID:
- <SN6PR02MB41579BCC56F6C966E3E2499CD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157A9D9DB6C11AFF0F9C1CDD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20250613110829.122371-1-ltykernel@gmail.com>
-In-Reply-To: <20250613110829.122371-1-ltykernel@gmail.com>
+ <20250613110829.122371-2-ltykernel@gmail.com>
+In-Reply-To: <20250613110829.122371-2-ltykernel@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BN0PR02MB8206:EE_
-x-ms-office365-filtering-correlation-id: bf62d66b-a916-450d-48a3-08ddafa08cae
+x-ms-office365-filtering-correlation-id: bb56d11d-9cea-4de6-d35f-08ddafa093ac
 x-ms-exchange-slblob-mailprops:
- RlF2DIMZ1qWGA1cFVzfxq/3fypSHC+ht87gEiqwpp2GtuhOv400acT0M6zbN45do3/Eks0Bd8uYJOTN5kC8XhemlFvgiknTiw14PuUmhBrvBbaHdOip0i4fv3CrRMWnjCKHNeaf+Fk3jI6HO3F9MsXjwcJKp1U/xaKZVwCtfzqHIoeR5kFUIBuTutZazep1Jg91IRl0JVKscTTzIcBWDakAIFq1v3UBROGgzBLwexAq0WDf+iII5aZMJKmPAT74/lCfRgFl7sx7lI0tpcd/BXoVupJb9XTuA4LNp9qaABHsT3hv1FxQyz3llqZtINB3I8jJiWk6DInzsS0WVtwu+AA4C0L9KtGAYH7ndbPcSqnmES/auCDOPK+QeC+bZsxWMuf65l3+R91Syd3UwqKnahz5zGxBxwhla58XaHIA8hMzRQxFwlKRfJcqgSUL1YzgyT81FwEOaDwPGXswWZhhNu1aDK3ktUH6K20iqmQzeI27I9XoNbjkx4/VPznR1Z0daSnjesHT8WI26Gz31YjC0vM52nukmCyIURjDLxcGPh78BcU2M1ZlA31LZQrcLJA2uSdIOmqZ6CjKB0DFVhGnnilOq7da09PYFJ1wiPGZsArKSvR7fIPCRO68wvbp6l/4j1Q00WHTRmjWxU92dfQ/v1E5uptNX6nM56Zxqo4iVwt3KoLvA+W9ce4J6D/9J96sA1CT0C4OOO3evlCyJki+ApdINzGAAhSeYcctqSy/NiUIE7jdngE9dgwi6RKNquWxkmZzxskkf9xdsZkb7PjGGpjBSOFwh9YHOAljG6iUpfX0RI/FpzdhlqixfiRczeVJibHn5kkAFIOOE+VUAEkY69kHUA3ZwDfrR
+ qdrM8TqeFBvg+tg/MNoCQ4s7gWjgMwzwpophbDS3Xzf6i9an5rZMhSMZZhCXzS8rvEWMLK6iQyqrHJg3s7VnQDnlqpDbzgbnfsqDVweI0vatkyEPQxF/eXSnXgFogQ4CGq3Wy+WBrSCbjv5DNnS67hxCZ1LTmUMVt2Zl1ONP3QYqwqyYrTgOd5e3/eLCupWA7sm7SStV2pKbPWXlhGzYvbQhgReWTdm90bowZ/hU+BzE2btOK3pD39k1fy5oIOJo7WHbw4GMXWDdvwWsU1sCaBORXk32vbGvZXu4HSuxneuRZXc88ycikWkZ+G2zjN0Yb9Tj0QOiTfswMgVC3WfRL/n2LaQTx/rRN4AEoM7dqrEv0soikCDYDuCHsEnsOG5nvkSwRlpcnRLDGajvAdDfDFCsME832X915kMagUI0v8acfsPkRdpUG6rBHeFjSM/5aw5kk5cUgajSSCKaDmJEsLRJsCEq5ghPT1fSUJRYExAYkrtAdBdsJkAk+U/UMFjkkza9bKjYlktJRAEi6KxNjHYay7VUk5yV49aD9q3jL93rvJZyfMzFIMhkUEhG2l9eejwLsVDVL8AHtZGkwbfeVliGwiRv+diP54uAOLywVi7unbwI2ockg94o7iknrDazFsuaPy/1AhKZHgpZ8LEGUw/CXExLNgKfsC8iyAY9pvGmK4AXezYFAbSnWidx9ibin6q3IvStuymAduUw9Bs9LYlQ4JqTVTkMgEcGaw00v2VAweemLvmiiqmYR3RSZz7TqcBxn7PkCLbi6pyXN2QiKN4x+GaBnZVe
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799009|15080799009|461199028|19110799006|8062599006|1602099012|102099032|3412199025|51005399003|4302099013|40105399003|440099028|10035399007;
+ BCL:0;ARA:14566002|8060799009|15080799009|461199028|19110799006|8062599006|41001999006|102099032|3412199025|40105399003|440099028;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?RszRLJiSAOO4L8Dbw0VYlvKnxCePbDJ82DTBKiCROGqT8gz2hK4LpoKZeoee?=
- =?us-ascii?Q?EzJUdTkRg9Kstqli2eST0VC4y2p0b5CCHSI8Dh3BvByOF7vvEKC6MYjYVbdt?=
- =?us-ascii?Q?zHvNH3W8dhMPIkyu9rkIgHbww4s4O2UMIkApbpArSuTI2WhSEJ5P5XmUuBP6?=
- =?us-ascii?Q?sctiToQ0Ftot6ID5I+ZKBvFPedZggNSkgO6gb2kAiHel8hvsvMSfVwjRUOCR?=
- =?us-ascii?Q?onhTQOPJUyKtjnAFNelMzsC/AtqdR3KQ9TLvmpBbOypcuEm7zxxop64l+R8T?=
- =?us-ascii?Q?0rAQeOqsHogRaws6VKAxhplo6y4kC7Ri3DgZ6ByM58R5ubQI7m4+FzlLcUOC?=
- =?us-ascii?Q?CHw5aSzzepPvr2LcThJ1ge7dkYxa6e8nhRej8rGkgxoGy4P7GlosnOQQfM6n?=
- =?us-ascii?Q?exHz4V7KZM6V9cm9nUCi4YsOAeiCbSCeEOEmIJnrZORDaPLtae3RgGSBdXei?=
- =?us-ascii?Q?/M4yARQam+v38LtZTpFlW/ji64JIwQ0L9bu595mYxOiggd7wkvlefBtNim5r?=
- =?us-ascii?Q?7rKWwOBHbsdknIEZASmpjmmMGE0ZNAB6CWcz3HZ82oC3SjhLPIoDzW9U+iyC?=
- =?us-ascii?Q?HCVSc4VmlS1A82Ly+wLR17ixNXxOF8nOEY2SVfbwbmtD1StzSsRzdfOeQJIF?=
- =?us-ascii?Q?sFm1W78SAsnqfj2DRtyfZLIBKRcxDudErb0rnxd2QhB8y9nSK8tjeGu5CDHA?=
- =?us-ascii?Q?O/fpWi7aoYkZyh9yjpahrYwRZDYhjP6CAFYdJDRbqUQqjLbtvzhZHno9lkeh?=
- =?us-ascii?Q?73mc+oBWiMbe/iTQEcuGGu4XUitoZovLQJUEFFeVeoVYXYk620cPFANYxBVd?=
- =?us-ascii?Q?5TWc3n5ZnDWQFR/SYoP8LMgc7G2i+mwh31e/wUScmI08OzZsK5EQ68JajCpd?=
- =?us-ascii?Q?s6HpwF2FlSHYSge6PGrumx9ooJItcIN36U3keq+czVGN+ZfA6t1MkbQ1On75?=
- =?us-ascii?Q?snwq2J2O7p/Y7haHc65B6T2yWgktgGoJdw+CVShdNtc6qBMkBxS4WHQzr6RG?=
- =?us-ascii?Q?MpwfsWlo8lgVZamSVCLtONq1y5p7NbV7OLDhHYMWECeLpOlVN3MUW3QBo6Zk?=
- =?us-ascii?Q?cN/js114chN6Ak5JnZBYGdihHrbW1K0cT3MwBVz2AGPpjy8SlUOsLtiILaTh?=
- =?us-ascii?Q?l2pGi0f5aozlOhI33LJogCul6bIg6+2h2Qhg32djq/pnGaqrVEA/m1n2YQGP?=
- =?us-ascii?Q?V4Xtn6T695CG42epsmfYtvcAQ1bxJ/KHBhK3cJqcqSrB3AbdipeDjjoyDAd2?=
- =?us-ascii?Q?f01o4XGmw4p1bUVNSxb6?=
+ =?us-ascii?Q?ID8Lm9eXqwTkZl8QSmT3jmjXbDDVKOPMd4ZdhkOZf4Lex5ITlK4tmQTtYGhm?=
+ =?us-ascii?Q?D06bDL/oVyQkN5xPcZ71oAObjO1kFEmZr4M+XUszXUhgO3mZlvVn+JalCcN+?=
+ =?us-ascii?Q?6okNsZNWbUL7Y16Z/Qsj3MLax1COhkEyWHpzQhbRGHBzkvuMyYkpnPj9L4MJ?=
+ =?us-ascii?Q?N8JlWj5v5fB2pWLIok7EDz/N0BlS9SfWelcmp6K//cecso9S7Fq1bn24jNQZ?=
+ =?us-ascii?Q?XxgRzcufRDGRgbhHxhcNOU1lbdaMteTtzA1Ay78Srm9oc332Jm6NBhENCCUF?=
+ =?us-ascii?Q?gRIjK0P77SPyuqmeWx72FxohhbIaSkGjjK2Ow1owLuM08e6CqTUD1FzXvXYz?=
+ =?us-ascii?Q?w9IuSTQrSXqMvPdUXwLPdDafVgQNYJm3DYO3XjZKY/sP6KVfrrqYXQkRBXSq?=
+ =?us-ascii?Q?OjRmY8y2r2NCOYe0czezgMpjgALbcxlS+MILaAOtIiF3e1ZjZnaWDUtscFQS?=
+ =?us-ascii?Q?PQeQzbvOYJXDIhb+AnjzPDCSQZhXY5fasxYX8ie5jPeDLELfzveMx9+glkah?=
+ =?us-ascii?Q?q1iwPtJLXKl505sMXiJEJQQymDCRWqScfxtnHfYzilsuImuU2+z67eJqfmBq?=
+ =?us-ascii?Q?d8KlHa54Rrr0g4kW4tnAVw59WTyf1Zy/CaTaWJ0WBDOt6zYA/E3PliUtXxv9?=
+ =?us-ascii?Q?Mz+hclVnrBuLPmomnv2dXqzlxNOLyHv9vZ2ITJERbW1lC4MV3L7zoBSfEfAY?=
+ =?us-ascii?Q?HZtMlYmFHZdz491aqhtSEZ3tFBjsR47tWdH5aF2nTzZzfcnWq7v9i0b8eVnU?=
+ =?us-ascii?Q?+rth9bIOW3al5cxofMV3fs23i520pBsUx+rXGSgSpFeBPudEiOqPsnSGkdZj?=
+ =?us-ascii?Q?TNGmKFCf1lJlaH+m7q45KXVxUGyaR73SssnD39Grc8mTRUFWkiZn1liFH64y?=
+ =?us-ascii?Q?k5mCs8uYNtkz4Fm0BM2wpv8fN70lVAPz6VGc9U50e/KDm9CZ0ifxqH2VPmSz?=
+ =?us-ascii?Q?DXK0sFR8AnjYPEa8qK/1R2zcsIcYStyvDXglCpSJAp6CQHwB7KdyCqUvNU7w?=
+ =?us-ascii?Q?taZKQKc5GjG/XObb4ELkYjnqg0w6fvh5Ez74CCeq+7w5Yr5Jgvd2S9Fxc4uC?=
+ =?us-ascii?Q?pqZiXwzJruQjINM9CGUqTimj6VYG/fg+TAJzmXoNVG8CGnsuhwbk/QY9yppV?=
+ =?us-ascii?Q?oCtTN9ReAnOCERj0CXmMD74lu2V6XVznOA=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?l4jTIVreUKwbwjTbR6pep0huK6MtsT7YTZpf8Il1XbmzUnfVuUytyCIo8CP9?=
- =?us-ascii?Q?s1qyr30hW1ztkNeFOqhwVSFD2RFZGJW1erGGkHAnyqpuZeHNKVMioBY7/03L?=
- =?us-ascii?Q?4vsaFek3VHP3xpTN/FzMuhE2JQc2ZkAh5az7dcoGlpTR1kIgFMr8dsmaMdT4?=
- =?us-ascii?Q?iSBoa2i3MSPadCIvzfCc7ALHLAkFcpLqjUyl57rn4dzbE7moXdTqPb9v4FkL?=
- =?us-ascii?Q?tJHdzh4b7VycAm21Wk9A1st5e+HzB3SuM987YmhBI5pPeTCVjh+CsyEunUfg?=
- =?us-ascii?Q?kyQsBovR7PrSazab2/lMjCsX+NGX9IiSYk6AB0FJREFHxgxfAI/l2kmNRKlO?=
- =?us-ascii?Q?rOVWi6Y02TnhmscREhMg/6U1vAGj9sOkYO+82xmm2qilM4qxDY8iBYAkWSiX?=
- =?us-ascii?Q?s1+wZSAuTUBdYcVowRgoTC4L7xBrPVDOufZ+EZVHNIt22b1qGzSMrV2XYUp6?=
- =?us-ascii?Q?qc2nntOMl0UPz+bnAhMDZ3K7Ab8iI6GnRnez8pCwVzZLSR8kvGqD8HQORlpU?=
- =?us-ascii?Q?ekX8NFFXdsa4yiqZoVcMscIEXIsWY6qSFhD3+bPeEOtMjcV0Lf1HUInSkNR2?=
- =?us-ascii?Q?wdQi8bl3m7enObn5YK7HKjuzmd7B3wv8fszoF+be5CjwM17F/VqCD+bYoiOr?=
- =?us-ascii?Q?CQEniT54Ub2TYUfbrqdhRkOcCoBXy7vrnvXQrwMV748ZdBlrNMqdtDp1vrHY?=
- =?us-ascii?Q?7Z2pLAX9Mei25lb/7zcYt6PeDpdk7mZO4XkfSA7DJcqfu8HYYFoGn8rwLe7O?=
- =?us-ascii?Q?fM8kRNxhtvMPbw48KFoP7ZRcAw7bP4+e2ZQXqXnP7CF0GNQITRAyFU+pWB9q?=
- =?us-ascii?Q?0qPSTKIlPvreZZK+Ll0n0JcoIOC6KN8ZpXUSUmbI8ecahSrXDF8vmbJagUp7?=
- =?us-ascii?Q?3+7mK4/SrUlqVhF/roFJ4NHhTIQY8hLYAwOdlR2kFQU2rLJy5GBugNeUXNe4?=
- =?us-ascii?Q?fu6ml9ZT7cRo07MiKFTvQiADKGeztcVWsVfpXDPBU7Q+w/6kH3Wh8FDe+hp4?=
- =?us-ascii?Q?lAnKwsQay39kRibhl3TesE82jnTu+X36ik+4V2VBUBTPsIXPTcX6qYlsbBbA?=
- =?us-ascii?Q?cvNz6fenrVPW1DLAeuWc8g8wNoxPTAmST4feNd1WQ+E9SEyePO2P/X9VuDND?=
- =?us-ascii?Q?qs1JCq4nLENmnBmghOQUwg+NIkftGAE2TwKPdZJAG0RMmgQcZfREIaymK7VJ?=
- =?us-ascii?Q?oRrB3M3uJzfQoNb1BOX7SDaxbcQGkDxNHQddFM/EGK9t/Ncl8W074eC70OU?=
+ =?us-ascii?Q?SL1HvGOrxXTw82E6WSk28Hn/jC3IcqVRoXvs0BlEEqdlm72554WmCxxfdPca?=
+ =?us-ascii?Q?rUzA1rv9nYlPxKoLLBim1OfcwpyXczM92EvM6hzMBWXQo0OlBRQRCeuR/Nyp?=
+ =?us-ascii?Q?WfDcvQHWZX+2M/GRfiw6Cbr/ZaFOInWQA67d0DTaDjsW6hD2YNwb1fPpTLz/?=
+ =?us-ascii?Q?H0kDKWb8pFFghIWuzv/lP5oKs0AperleOV2VDC6bt8F7Rn7XodNB2AuhFrr7?=
+ =?us-ascii?Q?aTgSdGLnhKVIlfyUq3VMTLEQ7uoznzSa7hcmuBVC7Qxs9u5+KoYkuz2aAAfF?=
+ =?us-ascii?Q?oEUh/hpGElQJJ2XSCqUnlftdd31p2d9jWoepwhjuf27TX0DO/NFKGkceLGrg?=
+ =?us-ascii?Q?hOej7KE2Tj1K5KMqg3CaxBj3ip4gOgs7EgxCbM/A5oq5SD2p8Za5CEd8d/y6?=
+ =?us-ascii?Q?PQ2z+zSqadwfNra3zlCMjtnmnieJtoNh9Aj/yiTgLk8AgSIQg9l4PivEVHot?=
+ =?us-ascii?Q?6mkfNF4+A81D6q+/78dSQBNu26rc4yVjs783rksPXCRhkVQ159YirDbboWkT?=
+ =?us-ascii?Q?SwD90jz/nYrkhz3hs/gDFuY7aSggXacTHWu/Tbu2q8nPnpWmfiFuAqkTliyi?=
+ =?us-ascii?Q?qMmmotrzz8o2hNQYsWplgrl8G4EXCaxf0WJiu0uUOZ7SOIs4GFUJd+0B+CqM?=
+ =?us-ascii?Q?7nhp2/pYfYNSr/Qe45G7ivJUFDJKQZtUiP919va58R6lkJ/pCq+iYJ2JKwnm?=
+ =?us-ascii?Q?G4AOSCweVeKX183jUK+FeOf0ZjUTACydtujCMNM8vaTA6XB/RpV3iUe5c9Ty?=
+ =?us-ascii?Q?MIcXbPzc21yGJyPKMZ0mNUJxykN/sP4XrSv/HAwgvmzPkhQVqpb6O205cN97?=
+ =?us-ascii?Q?Rlhf0Lgil4ImPym+E1zXBzhzSOD4i6Ocqa3fHEpiFw4LU4Q1BlJ87yFvvLWj?=
+ =?us-ascii?Q?R25fp/TzPjRnWibwKJV0bGZgPhcltAXdIaFxc6EfWVw5toYwCuK2ZyQADXKM?=
+ =?us-ascii?Q?oX07QoEHbQ4gKkTr5/JglaTDfHadRfmxczuAH47ewzfBGLzfnsYygTNOwJfo?=
+ =?us-ascii?Q?MB+wxdxSKwat3FLVPqLYgKuZf77dd/WuhQj2Nkmqe9XWLCNZoyPFoIQqHXpT?=
+ =?us-ascii?Q?3CL8sjgllJn6YzW3dr2G/PG/J0pgNQ46+O+W7mS0nURsRLBZXAeNTWcpLLdM?=
+ =?us-ascii?Q?VY3SoVJhNcxyOtrH2uYbLO8GFhrG1Zya4P0ef2Bb8W4W341C0oZ0G0UeXHXq?=
+ =?us-ascii?Q?FJCzhEY+qZ32WiSnWYYlO6Yavkau0HEGYau91n2tiOQs0Q7oaGapLz12QXQ?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -146,8 +145,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf62d66b-a916-450d-48a3-08ddafa08cae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 02:17:04.6017
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb56d11d-9cea-4de6-d35f-08ddafa093ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2025 02:17:16.3467
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -156,58 +155,46 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8206
 
 From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, June 13, 2025 4:08 AM
 >=20
-> Secure AVIC is a new hardware feature in the AMD64
-> architecture to allow SEV-SNP guests to prevent the
-> hypervisor from generating unexpected interrupts to
-> a vCPU or otherwise violate architectural assumptions
-> around APIC behavior.
->=20
-> Each vCPU has a guest-allocated APIC backing page of
-> size 4K, which maintains APIC state for that vCPU.
-> APIC backing page's ALLOWED_IRR field indicates the
-> interrupt vectors which the guest allows the hypervisor
-> to send.
->=20
-> This patchset is to enable the feature for Hyper-V
-> platform. Patch "Expose x2apic_savic_update_vector()"
-> is to expose new fucntion and device driver and arch
-> code may update AVIC backing page ALLOWED_IRR field to
-> allow Hyper-V inject associated vector.
+> From: Tianyu Lan <tiala@microsoft.com>
 
-The last sentence above seems to be leftover from v1 of the
-patch set and is no longer accurate. Please update.
+The for the patch Subject line, use "x86/hyperv:" as the prefix. Also,
+I would suggest better wording. So:
 
-Additional observation:  These patches depend on=20
-CC_ATTR_SNP_SECURE_AVIC, which is not set when operating
-in VTOM mode (i.e., a paravisor is present). So evidently Linux
-on Hyper-V must handle the Secure AVIC only when Linux is=20
-running as the paravisor in VTL2 (CONFIG_HYPERV_VTL_MODE=3Dy),
-or when running as an SEV-SNP guest with no paravisor. Is
-that correct?
+x86/hyperv: Don't use the Hyper-V APIC driver when Secure AVIC is available
 
 >=20
-> This patchset is based on the AMD patchset "AMD: Add
-> Secure AVIC Guest Support" https://lkml.org/lkml/2025/6/10/1579
+> When Secure AVIC is available, AMD x2apic Secure
+> AVIC driver should be selected and return directly
+> in the hv_apic_init().
+
+Better wording:
+
+When Secure AVIC is available, the AMD x2apic Secure
+AVIC driver will be selected. In that case, have hv_apic_init()
+return immediately without doing anything.
+
 >=20
-> Change since v1:
->        - Remove the check of Secure AVIC when set APIC backing page
->        - Use apic_update_vector() instead of exposing new interface
->        from Secure AVIC driver to update APIC backing page and allow
->        associated interrupt to be injected by hypervisor.
+> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_apic.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> Tianyu Lan (4):
->   x86/Hyper-V: Not use hv apic driver when Secure AVIC is available
->   drivers/hv: Allow vmbus message synic interrupt injected from Hyper-V
->   x86/Hyper-V: Not use auto-eoi when Secure AVIC is available
->   x86/Hyper-V: Allow Hyper-V to inject Hyper-V vectors
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index bfde0a3498b9..1c48396e5389 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -293,6 +293,9 @@ static void hv_send_ipi_self(int vector)
 >=20
->  arch/x86/hyperv/hv_apic.c      | 3 +++
->  arch/x86/hyperv/hv_init.c      | 4 ++++
->  arch/x86/kernel/cpu/mshyperv.c | 2 ++
->  drivers/hv/hv.c                | 2 ++
->  4 files changed, 11 insertions(+)
->=20
+>  void __init hv_apic_init(void)
+>  {
+> +       if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
+> +               return;
+> +
+>  	if (ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) {
+>  		pr_info("Hyper-V: Using IPI hypercalls\n");
+>  		/*
 > --
 > 2.25.1
+>=20
 
 
