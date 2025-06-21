@@ -1,142 +1,142 @@
-Return-Path: <linux-hyperv+bounces-5986-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5987-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F804AE2774
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Jun 2025 07:10:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4656FAE2ADC
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Jun 2025 19:54:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 199BB1893A1F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Jun 2025 05:10:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2121175864
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Jun 2025 17:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F26818C011;
-	Sat, 21 Jun 2025 05:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057761FF7D7;
+	Sat, 21 Jun 2025 17:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="HcE0Fw19";
-	dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="4a1W7ppP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oTGAGpLD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ED230E859
-	for <linux-hyperv@vger.kernel.org>; Sat, 21 Jun 2025 05:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750482608; cv=pass; b=CE/3Wmky47tmeyeXXpeAPuRAosn7X2qVFvTAO0fOuor4qwAx2s+iO2odbSej2wrOfAKGeqI8nL5cby4ucIMfnFaSpcksvaZyAC9+mfTT7x6Au454fqiyKlSX7XdxQHJkt1Ug2H47J3FvIJLM5rstPub0r6IEQmu/8Lm5+2jj+/4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750482608; c=relaxed/simple;
-	bh=iMqNL1VIUaSK86OgEd5xDEZHthKVSNZHR/m6jeh5h+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KzCqm+TJ9ygKCNBawN7sYaZCz0QZOIhCQo42Qtj8IQBWTUAYrDF3c3OKpWaCjxSwENERZjpGMoOLXD0s0De8L/eEhFFXtDKRYN0Spnc/aGFoWu3bstKsS+TqSzxfc5dJkEMxjDRTUqDTmgWsveYqfmZVfLljCXBoK0xSw4wwczw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de; spf=pass smtp.mailfrom=aepfle.de; dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=HcE0Fw19; dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=4a1W7ppP; arc=pass smtp.client-ip=85.215.255.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aepfle.de
-ARC-Seal: i=1; a=rsa-sha256; t=1750482413; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=FeP891ecfVMoep83nvM7XwrKKGVl774iqnMAStywkPB/hdmpV3fZ1JhekEPI3sFWV5
-    /udEbadNUUuQ+Dj0FI9dNELVpwpR+cInjYL0AvyHb29X8cmvrEg97WbfXzkVp3EHSD/2
-    Fzdr+CbXVD4QAhsqdai7drQIPwouNfOv/ZLd1cqev4LIgJa6m9+R1weUNsqSFrK/w8cW
-    ns6OBJJ8nVV9Cj4v+aaHicYjBaekpIRVMKLb4CrvOcGoUGavKaDxpw4gNzpGc7n7kN6B
-    Qn9VZBpt5e1X+If/G2MwU1J5sJBnfzoSEsS4+nP9SspLKl3X48quADuo3Bq0Mg5HH5fW
-    0ZmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1750482413;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=XKQ8QekkF50ykdMbE6HrvtN56IRZUBm69FQzBFO9hME=;
-    b=hl1M4M79F8qNt2lh9Ta4PSDI5MsOwHpKB/V3g4SQ8+zz/PFmRmzPKRG67STUfxMrqo
-    DPD9KNvltSrkY5ih01LlX6v2nBGIpKH9V2jUXBcl6LoTuMJww5ffitXSpnGooz0lnL5y
-    ssyezfchtnCS6UfjvY+7x/fcacmLYSEdc64niyNed4AMuDw/ToVVR410twH3oJOUxqjB
-    RJ1bscWx3LVmCNZqxmGxQvPjd1gnpJ7Wjx0iDqWi+FMuV9epktJr0fwcpSHBUHEL74av
-    /sAT+fDvO/FvpTRSIuhxGCrVDu3pU43NS4W0/zoDFa33BCwA3AZjyJAg7Aiworu1qfAO
-    9t4Q==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750482413;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=XKQ8QekkF50ykdMbE6HrvtN56IRZUBm69FQzBFO9hME=;
-    b=HcE0Fw194VINTnY1PQwew7fwREiKZ/qebRnuCvo4Rw/OUyU5gtR3vs8mZdyVcbBUp5
-    x53v47rJejLHPWGEntn+lpmxYWtj6BMYzrWpv72Mnhsqr+FINWSejwJKALmu4Hg3Fq6V
-    D4S2d0oITQGqj1NIOJaragKN6D+FHWc022Vfyg1pR7lBS7SIEfv8Rw/yx07jR4M+P32m
-    P92i/NLUO9LWVwfWPkIG7Epmw0oxlJkScI6chbPcFCj4wlmOKnw3Okp4lQpm6KNHJ6xj
-    +ZQyZMhQjE4P372s6eU9P9P2zbOUTq4asHbOC1ERhMuWXJJx4tPGDat2ZIlOgtrRhlGd
-    xKIw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750482413;
-    s=strato-dkim-0003; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=XKQ8QekkF50ykdMbE6HrvtN56IRZUBm69FQzBFO9hME=;
-    b=4a1W7ppP1OBGPo54zAY/2X0ITyDTZHm8wKqn7LWnd9g6t1vTRf1x2pczja4Q4SbdjZ
-    xdl4oqjJgGzYUMjoNTBg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OmD4uXd0fmzGoJ8rBK6cWAVfDMmnI2IZ8kj8s0jE6n+P5L1"
-Received: from sender
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id D1c4dd15L56r1kC
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sat, 21 Jun 2025 07:06:53 +0200 (CEST)
-Date: Sat, 21 Jun 2025 07:06:44 +0200
-From: Olaf Hering <olaf@aepfle.de>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Long Li <longli@microsoft.com>, Michael Kelley
- <mhklinux@outlook.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH] tools/hv: fcopy: Fix irregularities with size of ring
- buffer
-Message-ID: <20250621070644.3b4185b6.olaf@aepfle.de>
-In-Reply-To: <20250620070618.3097-1-namjain@linux.microsoft.com>
-References: <20250620070618.3097-1-namjain@linux.microsoft.com>
-X-Mailer: Claws Mail (olh) 20250514T101025.84a10d9e hat ein Softwareproblem, kann man nichts machen.
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5273514658D
+	for <linux-hyperv@vger.kernel.org>; Sat, 21 Jun 2025 17:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750528456; cv=none; b=liqqAUrctIQbl2cxWR+BpuWA2dQVm20nPrTVpi37tleN5fTX7TZsITtZMpdd9mx8o6Y7w8KXzudmhRGsdiVriuJwCflQFGbK+VyubX4hSVsdYeiu3rgSdp1/XJqiWL0kzG5Sk8k+b0SlIJcE3LQOLdce3CrvE3gafLUJtVnY+Ig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750528456; c=relaxed/simple;
+	bh=Ldlw17Fl9X3GiAOyT3C1WBJIGIViA9cER697c5qGFtc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EUeMN07mKESvWUJsAuyeQJVdzRRg/K/KNNg5FQUg8KeasywF+3JhhpRgED1O6dOTjTsJuY941t1TGrCIfyGpT0kO1HO5BAsSmgrVTk2G7bHZ7LkXrTfDSmMIXlM7O+wEzpkkQ18STHSrtMwANNINSVOCQr6QhewKB9TESKVtTp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oTGAGpLD; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55LAMvfj015399;
+	Sat, 21 Jun 2025 17:54:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=ngRFg3EGU9z1exVz
+	2eKvATN5wpQJpW9rJ2yLhwDpYws=; b=oTGAGpLD0mX+H3aNNTqjD1yhcoi9mc/T
+	jsAtZ3yNHulB+VX9cc2rctr6Qc0uyKoCRiHhwm5PVC/CgEp+6dsQkKsU++Ap6ziC
+	OQgonf7KeCTht5auHQVRAPZpQxjnL7xh65xwh/3Y3RpEdve4whr4XaBAvNIVD4LA
+	KGvv9aNwVxHVB0FSKHRzoURsv8fRtiMLLQ8WmqWs4saQtl8iF/SumMfUZOcfq9LB
+	a/YIon0RAiO91Axkj8xzGUe7CiUpSsS8+3M4RKJg/uroK4QYyyh6G7YgZsQRlV3N
+	0X/dPvkrsS2FCfxDaCC6lNQFXqzZgM8gxadm7w0qszhmoH7agABzQA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds87rawt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 21 Jun 2025 17:54:04 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55LEQ25o025307;
+	Sat, 21 Jun 2025 17:54:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47dk67vqc8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 21 Jun 2025 17:54:03 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55LHs2VE021872;
+	Sat, 21 Jun 2025 17:54:02 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47dk67vqbw-1;
+	Sat, 21 Jun 2025 17:54:02 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: linux-hyperv@vger.kernel.org, kys@microsoft.com, decui@microsoft.com,
+        shacharr@microsoft.com, haiyangz@microsoft.com,
+        shradhagupta@linux.microsoft.com, shirazsaleem@microsoft.com,
+        kotaranov@microsoft.com
+Cc: alok.a.tiwari@oracle.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com
+Subject: [QUERY] net: mana: use of sizeof(header) vs sizeof(*header)
+Date: Sat, 21 Jun 2025 10:53:21 -0700
+Message-ID: <20250621175332.4078284-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2JU9w6Agp2zSvh9H.WYfJgB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-21_05,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 adultscore=0 phishscore=0 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506210112
+X-Authority-Analysis: v=2.4 cv=a8gw9VSF c=1 sm=1 tr=0 ts=6856f1bc cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=MD1BpOzwV9kDkxy97YIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIxMDExMyBTYWx0ZWRfXxIqcwhbBiox+ 4yfKlInzROObb3U/PWwqvNphAM983QzfyU9dDUzd5KkDcDpKZTrXpDWwJCienZ42yfXUELsC81Q AIjzxboX4moL6A0jCy+f6ymZA9q/QXIolCemktCL1m0KLICUi04Edv/36BA95x8b4SfLrnEr1ie
+ gIl/2bVR8rTcTa39bh5hhx4ujGvDjCmLIKDcYyaSzfmqZWBbOuwMvXdQZvWCgw1EI+SJLL24rdm D5FP/VP3MSDr/5aZmXiL+nLKLv2RKUejVT0AWMf/Y5zX4H+a+Oj778MF+00fvtXFkvm6iq0Krjw 9F8capaWauaE9tI6LpvgqO6sCL2uIyLuKgAdSxaBaIfU7nJ4LjuBeFN8fdwRMi7mrQPmnJIYsxQ
+ HcEBx0wSlez6TMoTtCqYN7dSnvVjY2J8HboLzzJKdflKzp4TOmHOSes/wCRba6WE//ADnzpc
+X-Proofpoint-GUID: 09nilAMCWqbskTXn60sjpYUItx0CKG7j
+X-Proofpoint-ORIG-GUID: 09nilAMCWqbskTXn60sjpYUItx0CKG7j
 
---Sig_/2JU9w6Agp2zSvh9H.WYfJgB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+mana_gd_write_client_oob() in gdma_main.c, I see that the original code
+used: -> ptr = wqe_ptr + sizeof(header);
 
-Fri, 20 Jun 2025 12:36:18 +0530 Naman Jain <namjain@linux.microsoft.com>:
+However, since header is a pointer to struct gdma_wqe, would not this
+expression evaluate to the size of the pointer itself (typically 8 bytes
+on 64-bit systems)
+rather than the actual size of the structure?
 
-> +	desc =3D (unsigned char *)malloc(ring_size * sizeof(unsigned char));
+Should it be the correct expression -> ptr = wqe_ptr + sizeof(*header);
+to accurately skip over the size of the structure that header points to?
 
-Is this cast required?
+Even though sizeof(header) and sizeof(*header) may both return 8 in this
+case by coincidence.
+but that seems unintentional or potentially misleading. Apologies if I
+misunderstood that context.
 
+Thanks,
+Alok
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Olaf
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c60..df4ee8c23bcbb 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1086,7 +1086,7 @@ static u32 mana_gd_write_client_oob(const struct gdma_wqe_request *wqe_req,
+ 	 * to one Basic Unit (i.e. 32 bytes), so the pointer can't go beyond
+ 	 * the queue memory buffer boundary.
+ 	 */
+-	ptr = wqe_ptr + sizeof(header);
++	ptr = wqe_ptr + sizeof(*header);
+ 
+ 	if (wqe_req->inline_oob_data && wqe_req->inline_oob_size > 0) {
+ 		memcpy(ptr, wqe_req->inline_oob_data, wqe_req->inline_oob_size);
+@@ -1096,7 +1096,7 @@ static u32 mana_gd_write_client_oob(const struct gdma_wqe_request *wqe_req,
+ 			       client_oob_size - wqe_req->inline_oob_size);
+ 	}
+ 
+-	return sizeof(header) + client_oob_size;
++	return sizeof(*header) + client_oob_size;
+ }
+ 
+ static void mana_gd_write_sgl(struct gdma_queue *wq, u8 *wqe_ptr,
+-- 
+2.46.0
 
---Sig_/2JU9w6Agp2zSvh9H.WYfJgB
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmhWPeQACgkQ86SN7mm1
-DoAKPA//YglZSVJQcglECyjxM6msqOal51UqqolOBBDC03W3KYxQ/nEdfKfXmLYv
-9TZovN3EZvhozhj7r/7AnJ9dR84nkp+OuZzZxbKv5lXfbnDyL6sAjrHS/GBmm/wP
-ki2IT9jcoqg4o9BKyvCoe/8ZYMS4eT0VfbxUOFLl3IGsArB1AhzUZH4G+ltEbXNS
-VhC2DNldTjOd/unDxJMFXTtJpI6+HtXTe7UZtHSPE3/RcPe1A+aQC+dvn3yZG/6Y
-NP7YqY4U+fWvCPFN0ZByKRte+W72a8b11rUJFhfGF+uF/Pm0mzN5YoI8Z4GBnEU5
-bjKnUdL59vCuDPtLW1frGjj6SuMJx/+AxawYHPAMqlJxdRnKOoS6jQe3YUsQ6Brd
-X+BHbD4aw+a2DFR7yv7pzfFm9AjyWuGFGXUOmShj+zB+cIYw55slPA6BjYEut6qI
-hms/SFw4cSMhMLW+Cvbmh941HsgZdbuMIKW75Ygeb1a8U590BE6ftHKUU14YwEU5
-pBvN6+q5MzdzM71IvWecHPchx6fDQJRPmvdQbiGP2wGx4SCh1r2MfUAyXlrGnn99
-zUDVIuoktk4UBSjEI7DRxb9QMYxGxK5f2S6vOT1ZhSPuw1nFKlwOhszgrkv3OHLn
-h3sCC2X8eXQirgtOr94q3NLEaoyye4CttWypDZ0EXSLJV/u0YKE=
-=oNRO
------END PGP SIGNATURE-----
-
---Sig_/2JU9w6Agp2zSvh9H.WYfJgB--
 
