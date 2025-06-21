@@ -1,181 +1,142 @@
-Return-Path: <linux-hyperv+bounces-5985-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5986-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A40A5AE1FFC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 18:19:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F804AE2774
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Jun 2025 07:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B5243BC311
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jun 2025 16:19:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 199BB1893A1F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Jun 2025 05:10:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFD2A28937B;
-	Fri, 20 Jun 2025 16:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F26818C011;
+	Sat, 21 Jun 2025 05:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fVSZ0plV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PhmuZmuQ"
+	dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="HcE0Fw19";
+	dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="4a1W7ppP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8F91DD543;
-	Fri, 20 Jun 2025 16:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750436369; cv=none; b=Jf+jslGdONFv5RgwoTAiJG5YV0kwC+YRwjf/GDWftQTT/7XF1V8pnETPg3YW3dKr86MzX+pJvYuAulFLNGIptAfY2KJA0nAvO//qQBKGj1sfu/d4Jp4aYI5YNHY6u9kxjoAXNJFqhZZZep7tOZ1+VhlmZ02q55+5lkli7B+xd3E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750436369; c=relaxed/simple;
-	bh=vv/we4/ivW8qVlc9KYQ3SUnskmMUwhAqc+b3MJmmAI0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ccv5vlTB01Pn+Q+pNisSj0bkHqq2V13nnq5kmnD+T37Dis8RWT5MIhlDJFPZoPBZMiny17EAWX1Y5kHmJGOflD4sFkFG6w5LN/RXL4J0/wU76/FBSyi2eql0WFlfZ1CwUsK4pUWDPWBiGmEUWW/LP0ZCJ2vNMN9XTacb/mWf5zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fVSZ0plV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PhmuZmuQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750436365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vyI1F9ZHY5E4K/TqpP6N0NgPyquJa39Qr071ynaG014=;
-	b=fVSZ0plVYhp6KwBYpmltfkSxuNsNAC/7XfZShU69Cx0/8hFmuPw0eSH+Nv9WnM/23Ocjem
-	zIzX6xLJ3SmpgUl8dHsH60vTgmOX/s1XIxN2K00/JWg12h41baUgo9scAOfzGov7X6tw++
-	UThw1WbFXpflUv/HaDUSOQUxlDrxlUNYfWbbJhkMqa2e7AzYsRxv9spTmH44ZGYAVLLESf
-	hED98byL/mOH+Y7OH5oywasR7kOg2FHnFgpdaKJEPJN05IeErqtTiyTEHvws4+6BtPeizF
-	nB+qGcccE9bDamx0L+mVy+WppwgPi52/1R4wcXKnjszqujq37+vlqBNOsns79w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750436365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vyI1F9ZHY5E4K/TqpP6N0NgPyquJa39Qr071ynaG014=;
-	b=PhmuZmuQfJdPqbEkPXi+gvYMeuWTjpSprGjAU1gvLagNyhdjlNiTFYgUXvA2f35kGWg5v3
-	nz1mSbILfIRi+rDA==
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>, Michael Kelley
- <mhklinux@outlook.com>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
- <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
- <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 3/4] x86: hyperv: Expose hv_map_msi_interrupt function
-In-Reply-To: <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
-References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-4-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157639630F8AD2D8FD8F52FD475A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
-Date: Fri, 20 Jun 2025 18:19:24 +0200
-Message-ID: <878qlmqtbn.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ED230E859
+	for <linux-hyperv@vger.kernel.org>; Sat, 21 Jun 2025 05:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750482608; cv=pass; b=CE/3Wmky47tmeyeXXpeAPuRAosn7X2qVFvTAO0fOuor4qwAx2s+iO2odbSej2wrOfAKGeqI8nL5cby4ucIMfnFaSpcksvaZyAC9+mfTT7x6Au454fqiyKlSX7XdxQHJkt1Ug2H47J3FvIJLM5rstPub0r6IEQmu/8Lm5+2jj+/4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750482608; c=relaxed/simple;
+	bh=iMqNL1VIUaSK86OgEd5xDEZHthKVSNZHR/m6jeh5h+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KzCqm+TJ9ygKCNBawN7sYaZCz0QZOIhCQo42Qtj8IQBWTUAYrDF3c3OKpWaCjxSwENERZjpGMoOLXD0s0De8L/eEhFFXtDKRYN0Spnc/aGFoWu3bstKsS+TqSzxfc5dJkEMxjDRTUqDTmgWsveYqfmZVfLljCXBoK0xSw4wwczw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de; spf=pass smtp.mailfrom=aepfle.de; dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=HcE0Fw19; dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=4a1W7ppP; arc=pass smtp.client-ip=85.215.255.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aepfle.de
+ARC-Seal: i=1; a=rsa-sha256; t=1750482413; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=FeP891ecfVMoep83nvM7XwrKKGVl774iqnMAStywkPB/hdmpV3fZ1JhekEPI3sFWV5
+    /udEbadNUUuQ+Dj0FI9dNELVpwpR+cInjYL0AvyHb29X8cmvrEg97WbfXzkVp3EHSD/2
+    Fzdr+CbXVD4QAhsqdai7drQIPwouNfOv/ZLd1cqev4LIgJa6m9+R1weUNsqSFrK/w8cW
+    ns6OBJJ8nVV9Cj4v+aaHicYjBaekpIRVMKLb4CrvOcGoUGavKaDxpw4gNzpGc7n7kN6B
+    Qn9VZBpt5e1X+If/G2MwU1J5sJBnfzoSEsS4+nP9SspLKl3X48quADuo3Bq0Mg5HH5fW
+    0ZmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1750482413;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=XKQ8QekkF50ykdMbE6HrvtN56IRZUBm69FQzBFO9hME=;
+    b=hl1M4M79F8qNt2lh9Ta4PSDI5MsOwHpKB/V3g4SQ8+zz/PFmRmzPKRG67STUfxMrqo
+    DPD9KNvltSrkY5ih01LlX6v2nBGIpKH9V2jUXBcl6LoTuMJww5ffitXSpnGooz0lnL5y
+    ssyezfchtnCS6UfjvY+7x/fcacmLYSEdc64niyNed4AMuDw/ToVVR410twH3oJOUxqjB
+    RJ1bscWx3LVmCNZqxmGxQvPjd1gnpJ7Wjx0iDqWi+FMuV9epktJr0fwcpSHBUHEL74av
+    /sAT+fDvO/FvpTRSIuhxGCrVDu3pU43NS4W0/zoDFa33BCwA3AZjyJAg7Aiworu1qfAO
+    9t4Q==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750482413;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=XKQ8QekkF50ykdMbE6HrvtN56IRZUBm69FQzBFO9hME=;
+    b=HcE0Fw194VINTnY1PQwew7fwREiKZ/qebRnuCvo4Rw/OUyU5gtR3vs8mZdyVcbBUp5
+    x53v47rJejLHPWGEntn+lpmxYWtj6BMYzrWpv72Mnhsqr+FINWSejwJKALmu4Hg3Fq6V
+    D4S2d0oITQGqj1NIOJaragKN6D+FHWc022Vfyg1pR7lBS7SIEfv8Rw/yx07jR4M+P32m
+    P92i/NLUO9LWVwfWPkIG7Epmw0oxlJkScI6chbPcFCj4wlmOKnw3Okp4lQpm6KNHJ6xj
+    +ZQyZMhQjE4P372s6eU9P9P2zbOUTq4asHbOC1ERhMuWXJJx4tPGDat2ZIlOgtrRhlGd
+    xKIw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750482413;
+    s=strato-dkim-0003; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=XKQ8QekkF50ykdMbE6HrvtN56IRZUBm69FQzBFO9hME=;
+    b=4a1W7ppP1OBGPo54zAY/2X0ITyDTZHm8wKqn7LWnd9g6t1vTRf1x2pczja4Q4SbdjZ
+    xdl4oqjJgGzYUMjoNTBg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OmD4uXd0fmzGoJ8rBK6cWAVfDMmnI2IZ8kj8s0jE6n+P5L1"
+Received: from sender
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id D1c4dd15L56r1kC
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sat, 21 Jun 2025 07:06:53 +0200 (CEST)
+Date: Sat, 21 Jun 2025 07:06:44 +0200
+From: Olaf Hering <olaf@aepfle.de>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li <longli@microsoft.com>, Michael Kelley
+ <mhklinux@outlook.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] tools/hv: fcopy: Fix irregularities with size of ring
+ buffer
+Message-ID: <20250621070644.3b4185b6.olaf@aepfle.de>
+In-Reply-To: <20250620070618.3097-1-namjain@linux.microsoft.com>
+References: <20250620070618.3097-1-namjain@linux.microsoft.com>
+X-Mailer: Claws Mail (olh) 20250514T101025.84a10d9e hat ein Softwareproblem, kann man nichts machen.
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/2JU9w6Agp2zSvh9H.WYfJgB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18 2025 at 14:08, Nuno Das Neves wrote:
-> On 6/11/2025 4:07 PM, Michael Kelley wrote:
->> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
->>> +/**
->>> + * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
->>> + * @data:      Describes the IRQ
->>> + * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
->>> + *
->>> + * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hypercall.
->>> + */
->>> +int hv_map_msi_interrupt(struct irq_data *data,
->>> +			 struct hv_interrupt_entry *out_entry)
->>>  {
->>> -	union hv_device_id device_id = hv_build_pci_dev_id(dev);
->>> +	struct msi_desc *msidesc;
->>> +	struct pci_dev *dev;
->>> +	union hv_device_id device_id;
->>> +	struct hv_interrupt_entry dummy;
->>> +	struct irq_cfg *cfg = irqd_cfg(data);
->>> +	const cpumask_t *affinity;
->>> +	int cpu;
->>> +	u64 res;
+--Sig_/2JU9w6Agp2zSvh9H.WYfJgB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+Fri, 20 Jun 2025 12:36:18 +0530 Naman Jain <namjain@linux.microsoft.com>:
 
->>>
->>> -	return hv_map_interrupt(device_id, false, cpu, vector, entry);
->>> +	msidesc = irq_data_get_msi_desc(data);
->>> +	dev = msi_desc_to_pci_dev(msidesc);
->>> +	device_id = hv_build_pci_dev_id(dev);
->>> +	affinity = irq_data_get_effective_affinity_mask(data);
->>> +	cpu = cpumask_first_and(affinity, cpu_online_mask);
->> 
->> Is the cpus_read_lock held at this point? I'm not sure what the
->> overall calling sequence looks like. If it is not held, the CPU that
->> is selected could go offline before hv_map_interrupt() is called.
->> This computation of the target CPU is the same as in the code
->> before this patch, but that existing code looks like it has the
->> same problem.
->> 
->
-> Thanks for pointing it out - It *looks* like the read lock is not held
-> everywhere this could be called, so it could indeed be a problem.
->
-> I've been thinking about different ways around this but I lack the
-> knowledge to have an informed opinion about it:
->
-> - We could take the cpu read lock in this function, would that work?
+> +	desc =3D (unsigned char *)malloc(ring_size * sizeof(unsigned char));
 
-Obviously not.
+Is this cast required?
 
-> - I'm not actually sure why the code is getting the first cpu off the effective
->   affinity mask in the first place. It is possible to get the apic id (and hence
->   the cpu) already associated with the irq, as per e.g. x86_vector_msi_compose_msg()
->   Maybe we could get the cpu that way, assuming that doesn't have a
->   similar issue.
 
-There is no reason to fiddle in the underlying low level data. The
-effective affinity mask is there for a reason.
+Olaf
 
-> - We could just let this race happen, maybe the outcome isn't too catastrophic?
+--Sig_/2JU9w6Agp2zSvh9H.WYfJgB
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
 
-Let's terminate guesswork mode and look at the facts.
+-----BEGIN PGP SIGNATURE-----
 
-The point is that hv_map_msi_interrupt() is called from:
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmhWPeQACgkQ86SN7mm1
+DoAKPA//YglZSVJQcglECyjxM6msqOal51UqqolOBBDC03W3KYxQ/nEdfKfXmLYv
+9TZovN3EZvhozhj7r/7AnJ9dR84nkp+OuZzZxbKv5lXfbnDyL6sAjrHS/GBmm/wP
+ki2IT9jcoqg4o9BKyvCoe/8ZYMS4eT0VfbxUOFLl3IGsArB1AhzUZH4G+ltEbXNS
+VhC2DNldTjOd/unDxJMFXTtJpI6+HtXTe7UZtHSPE3/RcPe1A+aQC+dvn3yZG/6Y
+NP7YqY4U+fWvCPFN0ZByKRte+W72a8b11rUJFhfGF+uF/Pm0mzN5YoI8Z4GBnEU5
+bjKnUdL59vCuDPtLW1frGjj6SuMJx/+AxawYHPAMqlJxdRnKOoS6jQe3YUsQ6Brd
+X+BHbD4aw+a2DFR7yv7pzfFm9AjyWuGFGXUOmShj+zB+cIYw55slPA6BjYEut6qI
+hms/SFw4cSMhMLW+Cvbmh941HsgZdbuMIKW75Ygeb1a8U590BE6ftHKUU14YwEU5
+pBvN6+q5MzdzM71IvWecHPchx6fDQJRPmvdQbiGP2wGx4SCh1r2MfUAyXlrGnn99
+zUDVIuoktk4UBSjEI7DRxb9QMYxGxK5f2S6vOT1ZhSPuw1nFKlwOhszgrkv3OHLn
+h3sCC2X8eXQirgtOr94q3NLEaoyye4CttWypDZ0EXSLJV/u0YKE=
+=oNRO
+-----END PGP SIGNATURE-----
 
-    1) hv_irq_compose_msi_msg()
-
-    2) hv_arch_irq_unmask() (in patch 4/4)
-
-Both functions are interrupt chip callbacks and invoked with the
-interrupt descriptor lock held.
-
-At the point where they are called, the effective affinity mask is valid
-and immutable. Nothing can modify it as any modification requires the
-interrupt descriptor lock to be held. This applies to the CPU hotplug
-machinery too. So this AND cpu_online_mask is a complete pointless
-voodoo exercise.
-
-Just use:
-
-     cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
-
-and be done with it.
-
-Please fix that first with a seperate patch before moving this code
-around.
-
-Thanks,
-
-        tglx
+--Sig_/2JU9w6Agp2zSvh9H.WYfJgB--
 
