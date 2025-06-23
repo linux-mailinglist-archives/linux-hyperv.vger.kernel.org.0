@@ -1,189 +1,188 @@
-Return-Path: <linux-hyperv+bounces-5992-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5993-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0E88AE4B8E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jun 2025 19:02:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6AE9AE55D4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Jun 2025 00:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DDC5189C978
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jun 2025 17:02:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE5201891484
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jun 2025 22:14:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED9411B4242;
-	Mon, 23 Jun 2025 17:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8666A223DFF;
+	Mon, 23 Jun 2025 22:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aF3DSI6H"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NbJTXA3R"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7C5288527
-	for <linux-hyperv@vger.kernel.org>; Mon, 23 Jun 2025 17:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E295E229B36;
+	Mon, 23 Jun 2025 22:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750698145; cv=none; b=tTgDYFnuusdJ8G4ya0Eq9LAMYjOYSxnXEMDf0wxJRwwAxBlX/HlGncfasNvElb6sKfYWnsF6I6X0WIAJ10iKNzAYL+4nsOTCOkFlZHhk3I3d2RLeJmK3eBc0Sb9/pmK1jzvuwPiDQG30boF4JeRUN8caAzH+r1+dfhgLLaQ3S0I=
+	t=1750716832; cv=none; b=TfaTiGZZ+Hufd7loUNzuUvt1IQd/UQVHifWOOl+3X/SDwu940lsrMek+9EwJEH9WsjwI1Y8cEg9JgqngFOJYWIdTXxA72A8YSH1jyC5SxfbymaQoh94ADNlXWwfwT29E9DTz6AxIY0IboHnINFYR5pY0pf09EwyOF3Fn0dm9h1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750698145; c=relaxed/simple;
-	bh=taqM6M2yCTAkigZXwCzc8+OLPoroFfNThxW7WCtpr+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqhvjRr/eD0mjlWd45QnO8epuZ+UKl+4Usu/2NOVwxkGfSLhUbpOBzVJV7RVzpF0BdNItpTyE1XuSCElQQAhkG1XsoW+z0bZTHjsy6BSvMH/qcyjKvRydDJg/xrbZLHRJQJfQc4VYu3RGaOYeje8JaOhpysMBhbXwVnl7IWptJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aF3DSI6H; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750698134;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jq5JtTNSTi3UbB2t2zf1v906mYuPWMRbjCVCINzsyvo=;
-	b=aF3DSI6HviKXvbf7GNBunf5xAOoMf2TfEoEgwRdslYzDLaNpeUtKp7qyUKPr0aKaTzrtvH
-	bZvY34L6eQM7tpgzOYbTK+IyQfhnY8/yZRE0TNrsGWZzHYmw1S9nh8O0M3c8fycPuga7lT
-	LAMEvqUdWx9w+7l9ZAuq8AIY4L+EDJg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-nwJpS23tOqe_aiAjUxdgNA-1; Mon, 23 Jun 2025 13:02:01 -0400
-X-MC-Unique: nwJpS23tOqe_aiAjUxdgNA-1
-X-Mimecast-MFC-AGG-ID: nwJpS23tOqe_aiAjUxdgNA_1750698115
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a6df0c67a6so1103757f8f.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 23 Jun 2025 10:01:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750698115; x=1751302915;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jq5JtTNSTi3UbB2t2zf1v906mYuPWMRbjCVCINzsyvo=;
-        b=xEAkMNZljgEAnLYksTHFJ30Ji6ERCpv6r6kMIgfJhXUNxM5lTyw19z3wx8T3r+m15m
-         omnLUREOGUe2TnsrA2AOv+bMr9z00UKsYP5oG0f3ywVROXdPLdZzoquvFu6HfluQHUWE
-         AgMCRQUR9XLCfQanmpf8YHewrETz658nRYG1DAPiwpDsl5xjHGAxv/7Ac7TGTXlpbsT/
-         9DPkvG9wtvE1UxObCGUS8vqFTH57bZMbzhDc43ttI7n1mDmuxvmQWIyoW5iRy2fUo/Ac
-         80ILGRNMz/pZnPaF2uZnnvNEmoVQC+s+yxZBt/n1RnieiVLtmBb2FQBNmC9Sc1p8GZh4
-         3TJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIr3WqThks7WVfPTQCyfitMGkbfCDqWhHEoed/epR1rSwKQ51ZO7guTy6A348IWFoncXDHRGT0bgMORHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMmmcgFzq8EN10QRnrVFX3PRiOn8z5ImgQpl0FEvGfHl4YIfQb
-	5VK/Ak3hqgL8W4toSOjrfbUM36QisVwZTLoNR4980epSZZW9C3GVGEftcZSxxnR5DOMuESqlrcd
-	vbxFnfqjTKCyVYF5w89epDK82XsLFuhJczoSMCieHHbGVwOyWldY/vyc/GHCPNKmXbw==
-X-Gm-Gg: ASbGncupJwzWYljTnmF4HcIUSkYk8p19yXDHWcW8IrlyiAVaIzMs6tsKcmd/+UD8CdZ
-	Rf809pty+FJqgL4IHAP4H7iTu+teUdUC8WlN4XTLnqwxOj3kRpBuDJ/YNGQRxSctnbRkZzpGRif
-	J9YWgem0msBxv/MNsWaIri65lzj+1/TgMGGI2Yu+8gFYN312tfXtZ6h0SV2hJcARmUMHtBHYrg/
-	Ny/syuiw18nsz8ly5eK+qh1B4j9DOVH10CZzTNKK1JIAqbZVesDyPRcqF4ZjoZCYZlm4g80DF+s
-	klOh13GWbt78Zu33zHVT+VueH3g=
-X-Received: by 2002:a05:6000:288d:b0:3a5:8905:2dd9 with SMTP id ffacd0b85a97d-3a6d1331316mr11150045f8f.51.1750698114867;
-        Mon, 23 Jun 2025 10:01:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFgLc1G5fHA+5OCdohy+RX20t3SZJ3zi/U76KcD2RoeCTL1jtFDfjcLkndhINDFJCXPqEyFPQ==
-X-Received: by 2002:a05:6000:288d:b0:3a5:8905:2dd9 with SMTP id ffacd0b85a97d-3a6d1331316mr11149981f8f.51.1750698114073;
-        Mon, 23 Jun 2025 10:01:54 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.144.60])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f10411sm9667235f8f.1.2025.06.23.10.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 10:01:53 -0700 (PDT)
-Date: Mon, 23 Jun 2025 19:01:44 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: davem@davemloft.net, decui@microsoft.com, fupan.lfp@antgroup.com, 
-	haiyangz@microsoft.com, jasowang@redhat.com, kvm@vger.kernel.org, kys@microsoft.com, 
-	leonardi@redhat.com, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mst@redhat.com, netdev@vger.kernel.org, niuxuewei.nxw@antgroup.com, 
-	pabeni@redhat.com, stefanha@redhat.com, virtualization@lists.linux.dev, 
-	wei.liu@kernel.org, xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH net-next v3 1/3] vsock: Add support for SIOCINQ ioctl
-Message-ID: <opt6smgzc7evwrme7mulwyqute6enx2hq2vjfjksroz2gzzeir@sy6be73mwnsu>
-References: <y465uw5phymt3gbgdxsxlopeyhcbbherjri6b6etl64qhsc4ud@vc2c45mo5zxw>
- <20250622135910.1555285-1-niuxuewei.nxw@antgroup.com>
+	s=arc-20240116; t=1750716832; c=relaxed/simple;
+	bh=etRSzZQnMXpDuTCY9ObthUug/ZVfc4u8OuvIYfqZ71U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rDoM5u9F4lhUBnwBTkc6gVIKZCAFuv0DEqj/K39SBLXsFS2IuRZKBNroRs7Y3wUctkXWBm0bHEBYt2yA+bvkM4ar/QZeeBegnEbHR3VJifk4ly3DJDkTg8nwJgdgfeTTaFuh4bzD79QKVAOAnrdbjS7JMNXSs8Y2P/Y5a1Rv/LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NbJTXA3R; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.65.65] (unknown [20.236.10.129])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DBBC221176FF;
+	Mon, 23 Jun 2025 15:13:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DBBC221176FF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750716830;
+	bh=XPia+1CcqBgVn33Hj6F4kqNv7l24dCxS+Yv6QZNGLm4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NbJTXA3RXODzPM4Hr5Q9ZS027bM41HA/NexgNb4a5EVCEHOSqKVmciHeQVaJekq/z
+	 y793YF1Ytd9PyQRrFb4kYDq4eVlYKb2qDonmVmKdVee3ONBgWDs0378KVZC1jyvJ6I
+	 eF6WR6UoA3QSK4ZaIRw1YNjFzwV5rgeukGLatvrk=
+Message-ID: <64adb508-8843-4eae-87fb-47797bf32b19@linux.microsoft.com>
+Date: Mon, 23 Jun 2025 15:13:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250622135910.1555285-1-niuxuewei.nxw@antgroup.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] x86: hyperv: Expose hv_map_msi_interrupt function
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-4-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157639630F8AD2D8FD8F52FD475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <8f96db3f-fc3b-44b6-ab28-26bca6e2615b@linux.microsoft.com>
+ <878qlmqtbn.ffs@tglx>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <878qlmqtbn.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 22, 2025 at 09:59:10PM +0800, Xuewei Niu wrote:
->> ACCin hyper-v maintainers and list since I have a question about hyperv
->> transport.
+On 6/20/2025 9:19 AM, Thomas Gleixner wrote:
+> On Wed, Jun 18 2025 at 14:08, Nuno Das Neves wrote:
+>> On 6/11/2025 4:07 PM, Michael Kelley wrote:
+>>> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
+>>>> +/**
+>>>> + * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
+>>>> + * @data:      Describes the IRQ
+>>>> + * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
+>>>> + *
+>>>> + * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hypercall.
+>>>> + */
+>>>> +int hv_map_msi_interrupt(struct irq_data *data,
+>>>> +			 struct hv_interrupt_entry *out_entry)
+>>>>  {
+>>>> -	union hv_device_id device_id = hv_build_pci_dev_id(dev);
+>>>> +	struct msi_desc *msidesc;
+>>>> +	struct pci_dev *dev;
+>>>> +	union hv_device_id device_id;
+>>>> +	struct hv_interrupt_entry dummy;
+>>>> +	struct irq_cfg *cfg = irqd_cfg(data);
+>>>> +	const cpumask_t *affinity;
+>>>> +	int cpu;
+>>>> +	u64 res;
+> 
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+> 
+>>>>
+>>>> -	return hv_map_interrupt(device_id, false, cpu, vector, entry);
+>>>> +	msidesc = irq_data_get_msi_desc(data);
+>>>> +	dev = msi_desc_to_pci_dev(msidesc);
+>>>> +	device_id = hv_build_pci_dev_id(dev);
+>>>> +	affinity = irq_data_get_effective_affinity_mask(data);
+>>>> +	cpu = cpumask_first_and(affinity, cpu_online_mask);
+>>>
+>>> Is the cpus_read_lock held at this point? I'm not sure what the
+>>> overall calling sequence looks like. If it is not held, the CPU that
+>>> is selected could go offline before hv_map_interrupt() is called.
+>>> This computation of the target CPU is the same as in the code
+>>> before this patch, but that existing code looks like it has the
+>>> same problem.
+>>>
 >>
->> On Tue, Jun 17, 2025 at 12:53:44PM +0800, Xuewei Niu wrote:
->> >Add support for SIOCINQ ioctl, indicating the length of bytes unread in the
->> >socket. The value is obtained from `vsock_stream_has_data()`.
->> >
->> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->> >---
->> > net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
->> > 1 file changed, 22 insertions(+)
->> >
->> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> >index 2e7a3034e965..bae6b89bb5fb 100644
->> >--- a/net/vmw_vsock/af_vsock.c
->> >+++ b/net/vmw_vsock/af_vsock.c
->> >@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
->> > 	vsk = vsock_sk(sk);
->> >
->> > 	switch (cmd) {
->> >+	case SIOCINQ: {
->> >+		ssize_t n_bytes;
->> >+
->> >+		if (!vsk->transport) {
->> >+			ret = -EOPNOTSUPP;
->> >+			break;
->> >+		}
->> >+
->> >+		if (sock_type_connectible(sk->sk_type) &&
->> >+		    sk->sk_state == TCP_LISTEN) {
->> >+			ret = -EINVAL;
->> >+			break;
->> >+		}
->> >+
->> >+		n_bytes = vsock_stream_has_data(vsk);
+>> Thanks for pointing it out - It *looks* like the read lock is not held
+>> everywhere this could be called, so it could indeed be a problem.
 >>
->> Now looks better to me, I just checked transports: vmci and virtio/vhost
->> returns what we want, but for hyperv we have:
+>> I've been thinking about different ways around this but I lack the
+>> knowledge to have an informed opinion about it:
 >>
->> 	static s64 hvs_stream_has_data(struct vsock_sock *vsk)
->> 	{
->> 		struct hvsock *hvs = vsk->trans;
->> 		s64 ret;
->>
->> 		if (hvs->recv_data_len > 0)
->> 			return 1;
->>
->> @Hyper-v maintainers: do you know why we don't return `recv_data_len`?
->> Do you think we can do that to support this new feature?
->
->Hi Hyper-v maintainers, could you please take a look at this?
->
->Hi Stefano, if no response, can I fix this issue in the next version?
+>> - We could take the cpu read lock in this function, would that work?
+> 
+> Obviously not.
+> 
+>> - I'm not actually sure why the code is getting the first cpu off the effective
+>>   affinity mask in the first place. It is possible to get the apic id (and hence
+>>   the cpu) already associated with the irq, as per e.g. x86_vector_msi_compose_msg()
+>>   Maybe we could get the cpu that way, assuming that doesn't have a
+>>   similar issue.
+> 
+> There is no reason to fiddle in the underlying low level data. The
+> effective affinity mask is there for a reason.
+> 
+>> - We could just let this race happen, maybe the outcome isn't too catastrophic?
+> 
+> Let's terminate guesswork mode and look at the facts.
+> 
+> The point is that hv_map_msi_interrupt() is called from:
+> 
+>     1) hv_irq_compose_msi_msg()
+> 
+>     2) hv_arch_irq_unmask() (in patch 4/4)
+> 
+> Both functions are interrupt chip callbacks and invoked with the
+> interrupt descriptor lock held.
+> 
+> At the point where they are called, the effective affinity mask is valid
+> and immutable. Nothing can modify it as any modification requires the
+> interrupt descriptor lock to be held. This applies to the CPU hotplug
+> machinery too. So this AND cpu_online_mask is a complete pointless
+> voodoo exercise.
+> 
 
-Yep, but let's wait a little bit more.
+Thanks for explaining.
 
-In that case, please do it in a separate patch (same series is fine) 
-that we can easily revert/fix if they will find issues later.
+> Just use:
+> 
+>      cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
+> 
+> and be done with it.
+> 
+> Please fix that first with a seperate patch before moving this code
+> around.
 
-Thanks,
-Stefano
+Will do!
 
->
->Thanks,
->Xuewei
->
->> Thanks,
->> Stefano
->>
->> >+		if (n_bytes < 0) {
->> >+			ret = n_bytes;
->> >+			break;
->> >+		}
->> >+		ret = put_user(n_bytes, arg);
->> >+		break;
->> >+	}
->> > 	case SIOCOUTQ: {
->> > 		ssize_t n_bytes;
->> >
->> >--
->> >2.34.1
->> >
->
+Nuno
+
+> 
+> Thanks,
+> 
+>         tglx
 
 
