@@ -1,185 +1,246 @@
-Return-Path: <linux-hyperv+bounces-5988-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5989-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E938AE303F
-	for <lists+linux-hyperv@lfdr.de>; Sun, 22 Jun 2025 15:59:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5ACD1AE3464
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jun 2025 06:51:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C50D0170079
-	for <lists+linux-hyperv@lfdr.de>; Sun, 22 Jun 2025 13:59:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06BFC188C93C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jun 2025 04:52:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2951E5713;
-	Sun, 22 Jun 2025 13:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60C641A00F0;
+	Mon, 23 Jun 2025 04:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mG26n6uD"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RyFMQ1au"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04B81DE2BC;
-	Sun, 22 Jun 2025 13:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A88F32581;
+	Mon, 23 Jun 2025 04:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750600766; cv=none; b=DssIO4111wjY18gMm1tTC+bnXb188hbDgqsm4Cj4ZKw9RV2YfiuCHH+ZDfEC7bKUiFqRuJlfov9vUBnHB160HwQ1oR1H/htHlt3me8ok3ItowIKj5ckcIah+k7kgRuBpBsrpWTjAl61Ky0f7aCDNrQyiiWIm6EcUYxrp2nRMyZc=
+	t=1750654303; cv=none; b=L5it2SXWjsxwuXwO5zsq/qx0P7zh79DqFv5YT4wRX/vi/xh17icgI8+gtQ+ZHkWOnr1kQwcZDQ+cyZMXl6b3t8gfMs8bzQ7tv8J9CA6qbpYjGUN6N/sidCa0sr1sAYCRcUpvqf++htOxkLa+M890fIMpyZsk2um4fwvaEWdbqMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750600766; c=relaxed/simple;
-	bh=UxKMEiEskUPW9t0F65Rgb1ZCmJRY9zGpr+eirXMl1cs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GHznBIa02laRc0fsgcpRLH+QGt2z99XQxkBU8UwfLRjP9vU0YzEX8Kl9MqYmsqBxs0SmZlJN8jFszKvP/JXsHe6GqE5AvsaWJ+Upu8VLexgaOa3d2aauQe4aoW+R8lMr1geAWylV3y29g0BfJDkhEfedjlhb0rWrpgSIkXtrDO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mG26n6uD; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-748e378ba4fso4175278b3a.1;
-        Sun, 22 Jun 2025 06:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750600763; x=1751205563; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9CctixpwR27qpFLNeLtbKOjrAbCl9MvTJF19ZD0qLuo=;
-        b=mG26n6uDIefgFhQCzqHwSJIPHG03MFnHtZO+RBXvxzeBC/TO6SPt5fbvk+dbHScFcA
-         +LNyK9eQDd+ukqnbDQxh/Pb/kTSg353ZhIi51kMmxpOMiuKjgepppOmpR6sllU8mcN04
-         wG6/ceJa6FPtTKpodcLRiQ7vGJDiS1OAzgSbufrgJOCg4k37I98yf8PJFUxDf2xLVGFr
-         hecgFVfmj68tQttkGMQ6AvSsAEYe4ngg2+P6sfgjaG0rkcwutBVDfgNI4gujP5+az0gT
-         VZYFtwIbhlBxrnYH/qEFxmWFGWHppD0wtc/0wAawxgKhd3VBQJOKSvV75p2Y3u3Tf6x1
-         E+8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750600763; x=1751205563;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9CctixpwR27qpFLNeLtbKOjrAbCl9MvTJF19ZD0qLuo=;
-        b=wUq3LEBBNFDjzU+UbWWyl+YjbQm6O7qrLMjYH0SlBWY8humalGCiyS6x6IwFoH9T+4
-         fix1b6VtqQnEidcnGroRVfSiAfsF7rr19oyv0tYhbmbIcm2Cnvcxt2EPbs5OKq7fa3/Q
-         xLtLEMlHnpISC7OwtYjanQ/ERaGTCVcAf4huxAI8E7s/u5ILzyOf0+W5xdC7TRjB3XIV
-         0jh5ZyIUujCv1rxrvKIAwfQ8UQo7IA/EC4y4ELcmrPo2SKWHDTP416GH1biw3RC8q2sx
-         LjSCgDmKglcb7g5xkdhvGLyiNSfP1VXl24+Ebfq/zHfbmo5rQr6T3qD/7RPzTJpSlvga
-         9r8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUXr1IsVonBto5mvpifAA3l/vmNJfEd4qZV1awkpGSN0KXoQb57bQSglPI13nGRow63Bvc=@vger.kernel.org, AJvYcCUqEcLCf2Pnvz+XHz6X79JLbATnuICDbLf2/EukmMEDPyC8dZRKyGPOslX1pDm0a3FeKoDSVzXFOxmji1Fv@vger.kernel.org, AJvYcCV8jmILucFSJwfChJsFs12vqK9BG0mV16Skd3g4f9QbeQcRU6SfUXPJJOUy66Ttg5Rbt8aWrdrQE5dm83kn@vger.kernel.org, AJvYcCX+7aSFhA9IfqHp6PCLqayjsdtpHvnLzMQOr5nrVuiSDaVUs31c91gUqabadzLndQwISbVXvL23@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy73Tqz8VG8W8vQG1LW+pt3glE2n86eG4wZBIC8aRo41nIoyYeZ
-	iP+va2WUWuSJneagi7dHpF5/VGE+iotWufO3flpesU1CJ1R0GykUE9NP
-X-Gm-Gg: ASbGncs4tyH6G08+hxOCShtBpV4aklg5jUYi0TNXlFqIoBH2VEW8iXE/P6HAcDqZnct
-	fYneWeSunWF9avYVvafNqwMubJJNSi7mNfBfULkOgAkWTdcaIxO3UbBCmesGrAm6C6IvxSnTW6w
-	rK5JKbC5NLgj3uFRUp3hvI3ACDoLT6/ChZWms9NP4x9i/z2PM689YAL1uf2SUnwTeTjoAqaXh3r
-	JCXw6i1rX+P1WmTs4AGTTUOrUa4jQkbfU6FQopZo4XBVjMtSMmim8DBJemiFrUrgizuvzsV9euR
-	axmk7y4CAsZ114Naf/XH74ocBqWYhLHfICEauaBqfVX5dcwsxGrmRWB8Rdfv/HpRHnRcPIUij16
-	vAFWSLEVM
-X-Google-Smtp-Source: AGHT+IGGPVZOhGf33+4x/8I48rOosb9DE+Jlj5P0FJFQOP/wdva4gvlvzXjTkAkxs7+rDh5CXvmoLQ==
-X-Received: by 2002:a05:6a20:9187:b0:21f:5598:4c2c with SMTP id adf61e73a8af0-22026d8d928mr13077235637.13.1750600762962;
-        Sun, 22 Jun 2025 06:59:22 -0700 (PDT)
-Received: from devant.antgroup-inc.local ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a46b497sm6004931b3a.6.2025.06.22.06.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jun 2025 06:59:22 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-To: sgarzare@redhat.com
-Cc: davem@davemloft.net,
-	decui@microsoft.com,
-	fupan.lfp@antgroup.com,
-	haiyangz@microsoft.com,
-	jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	kys@microsoft.com,
-	leonardi@redhat.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	netdev@vger.kernel.org,
-	niuxuewei.nxw@antgroup.com,
-	niuxuewei97@gmail.com,
-	pabeni@redhat.com,
-	stefanha@redhat.com,
-	virtualization@lists.linux.dev,
-	wei.liu@kernel.org,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH net-next v3 1/3] vsock: Add support for SIOCINQ ioctl
-Date: Sun, 22 Jun 2025 21:59:10 +0800
-Message-Id: <20250622135910.1555285-1-niuxuewei.nxw@antgroup.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <y465uw5phymt3gbgdxsxlopeyhcbbherjri6b6etl64qhsc4ud@vc2c45mo5zxw>
-References: <y465uw5phymt3gbgdxsxlopeyhcbbherjri6b6etl64qhsc4ud@vc2c45mo5zxw>
+	s=arc-20240116; t=1750654303; c=relaxed/simple;
+	bh=UBExyjH7aS5T3zWk6+Xz4bHJcVuQVr0GYaR5ydUXHJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ahFWTsXMOh6tuUqWkIkznXaNHZUVo4b3RBMq8UzO6qo496J9fA/ASuODTtAdblCMu3CG94ZU8Ck5weS7JZqv+DTC2j4KOtRdvC0vrEmoyunzLlSj7MvZ22YgPFqCFvQX/uB7J6DM9KOp3MyOJ9ezs0yCsggMZIzh16mTMQ8osXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RyFMQ1au; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.95.67.184] (unknown [167.220.238.152])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 364052115800;
+	Sun, 22 Jun 2025 21:51:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 364052115800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750654295;
+	bh=NWYMyCpVO5cJwW1IpTuR2mZID1lZOhFA7i+jl1U5KRE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RyFMQ1auY5iSbCkbHizNN3MmHgYaeZAXiyS+/5YlhF7fqdyFvF1kuNLhe5xhfziC6
+	 s0LxYtSDF2bRxVIQlprPurPRLRKHZbvqqWBbo1zwWI8gfRNdFdOKnxpsWB4DGAxedc
+	 mlQagpENnxhMQmbkbyQRigzepxsZHd5pdZmxfbsQ=
+Message-ID: <2e0f1538-bae5-4a58-92fd-1c534fc8c7df@linux.microsoft.com>
+Date: Mon, 23 Jun 2025 10:21:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/hv: fcopy: Fix irregularities with size of ring
+ buffer
+To: Michael Kelley <mhklinux@outlook.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250620070618.3097-1-namjain@linux.microsoft.com>
+ <SN6PR02MB41574C54FFDE0D3F3B7A5649D47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41574C54FFDE0D3F3B7A5649D47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> ACCin hyper-v maintainers and list since I have a question about hyperv 
-> transport.
-> 
-> On Tue, Jun 17, 2025 at 12:53:44PM +0800, Xuewei Niu wrote:
-> >Add support for SIOCINQ ioctl, indicating the length of bytes unread in the
-> >socket. The value is obtained from `vsock_stream_has_data()`.
-> >
-> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-> >---
-> > net/vmw_vsock/af_vsock.c | 22 ++++++++++++++++++++++
-> > 1 file changed, 22 insertions(+)
-> >
-> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> >index 2e7a3034e965..bae6b89bb5fb 100644
-> >--- a/net/vmw_vsock/af_vsock.c
-> >+++ b/net/vmw_vsock/af_vsock.c
-> >@@ -1389,6 +1389,28 @@ static int vsock_do_ioctl(struct socket *sock, unsigned int cmd,
-> > 	vsk = vsock_sk(sk);
-> >
-> > 	switch (cmd) {
-> >+	case SIOCINQ: {
-> >+		ssize_t n_bytes;
-> >+
-> >+		if (!vsk->transport) {
-> >+			ret = -EOPNOTSUPP;
-> >+			break;
-> >+		}
-> >+
-> >+		if (sock_type_connectible(sk->sk_type) &&
-> >+		    sk->sk_state == TCP_LISTEN) {
-> >+			ret = -EINVAL;
-> >+			break;
-> >+		}
-> >+
-> >+		n_bytes = vsock_stream_has_data(vsk);
-> 
-> Now looks better to me, I just checked transports: vmci and virtio/vhost 
-> returns what we want, but for hyperv we have:
-> 
-> 	static s64 hvs_stream_has_data(struct vsock_sock *vsk)
-> 	{
-> 		struct hvsock *hvs = vsk->trans;
-> 		s64 ret;
-> 
-> 		if (hvs->recv_data_len > 0)
-> 			return 1;
-> 
-> @Hyper-v maintainers: do you know why we don't return `recv_data_len`?
-> Do you think we can do that to support this new feature?
 
-Hi Hyper-v maintainers, could you please take a look at this?
 
-Hi Stefano, if no response, can I fix this issue in the next version?
-
-Thanks,
-Xuewei
- 
-> Thanks,
-> Stefano
+On 6/20/2025 9:35 PM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Friday, June 20, 2025 12:06 AM
+>>
+>> Size of ring buffer, as defined in uio_hv_generic driver, is no longer
+>> fixed to 16 KB. This creates a problem in fcopy, since this size was
+>> hardcoded. With the change in place to make ring sysfs node actually
+>> reflect the size of underlying ring buffer, it is safe to get the size
+>> of ring sysfs file and use it for ring buffer size in fcopy daemon.
+>> Fix the issue of disparity in ring buffer size, by making it dynamic
+>> in fcopy uio daemon.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 0315fef2aff9 ("uio_hv_generic: Align ring size to system page")
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   tools/hv/hv_fcopy_uio_daemon.c | 65 ++++++++++++++++++++++++++++++----
+>>   1 file changed, 58 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
+>> index 0198321d14a2..da2b27d6af0e 100644
+>> --- a/tools/hv/hv_fcopy_uio_daemon.c
+>> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+>> @@ -36,6 +36,7 @@
+>>   #define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+>>
+>>   #define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
+>> +#define FCOPY_CHANNELS_PATH	"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels"
+>>
+>>   #define FCOPY_VER_COUNT		1
+>>   static const int fcopy_versions[] = {
+>> @@ -47,9 +48,51 @@ static const int fw_versions[] = {
+>>   	UTIL_FW_VERSION
+>>   };
+>>
+>> -#define HV_RING_SIZE		0x4000 /* 16KB ring buffer size */
+>> +#define HV_RING_SIZE_DEFAULT	0x4000 /* 16KB ring buffer size default */
+>>
+>> -static unsigned char desc[HV_RING_SIZE];
+>> +static uint32_t get_ring_buffer_size(void)
+>> +{
+>> +	char ring_path[PATH_MAX];
+>> +	DIR *dir;
+>> +	struct dirent *entry;
+>> +	struct stat st;
+>> +	uint32_t ring_size = 0;
+>> +
+>> +	/* Find the channel directory */
+>> +	dir = opendir(FCOPY_CHANNELS_PATH);
+>> +	if (!dir) {
+>> +		syslog(LOG_ERR, "Failed to open channels directory, using default ring size");
 > 
-> >+		if (n_bytes < 0) {
-> >+			ret = n_bytes;
-> >+			break;
-> >+		}
-> >+		ret = put_user(n_bytes, arg);
-> >+		break;
-> >+	}
-> > 	case SIOCOUTQ: {
-> > 		ssize_t n_bytes;
-> >
-> >-- 
-> >2.34.1
-> >
+> This is where the previous long discussion about racing with user space
+> comes into play. While highly unlikely, it's possible that the "opendir" could fail
+> because of racing with the kernel thread that creates the "channels" directory.
+> The right thing to do would be to sleep for some period of time, then try
+> again. Sleeping for 1 second would be a very generous -- could also go with
+> something like 100 milliseconds.
+
+Makes sense, will add that logic.
+
+> 
+>> +		return HV_RING_SIZE_DEFAULT;
+>> +	}
+>> +
+>> +	while ((entry = readdir(dir)) != NULL) {
+>> +		if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 &&
+>> +		    strcmp(entry->d_name, "..") != 0) {
+>> +			snprintf(ring_path, sizeof(ring_path), "%s/%s/ring",
+>> +				 FCOPY_CHANNELS_PATH, entry->d_name);
+>> +
+>> +			if (stat(ring_path, &st) == 0) {
+>> +				/* stat returns size of Tx, Rx rings combined, so take half of it */
+>> +				ring_size = (uint32_t)st.st_size / 2;
+>> +				syslog(LOG_INFO, "Ring buffer size from %s: %u bytes",
+>> +				       ring_path, ring_size);
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+> 
+> The same race problem could happen with this loop. The "channels" directory
+> might have been created, but the entry for the numbered channel might not.
+> The loop could exit having found only "." and "..". Again, if no numbered
+> channel is found, sleep for a short period of time and try again.
+
+Will cover this too.
+
+> 
+>> +
+>> +	closedir(dir);
+>> +
+>> +	if (!ring_size) {
+>> +		ring_size = HV_RING_SIZE_DEFAULT;
+>> +		syslog(LOG_ERR, "Could not determine ring size, using default: %u bytes",
+>> +		       HV_RING_SIZE_DEFAULT);
+>> +	}
+>> +
+>> +	return ring_size;
+>> +}
+>> +
+>> +static unsigned char *desc;
+>>
+>>   static int target_fd;
+>>   static char target_fname[PATH_MAX];
+>> @@ -406,7 +449,8 @@ int main(int argc, char *argv[])
+>>   	int daemonize = 1, long_index = 0, opt, ret = -EINVAL;
+>>   	struct vmbus_br txbr, rxbr;
+>>   	void *ring;
+>> -	uint32_t len = HV_RING_SIZE;
+>> +	uint32_t ring_size = get_ring_buffer_size();
+> 
+> Getting the ring buffer size before even the command line options
+> are parsed could produce unexpected results. For example, if someone
+> just wanted to see the usage (the -h option), they might get
+> an error about not being able to get the ring size. I'd suggest doing
+> this later, after the /dev/uio<N> entry is successfully opened.
+
+Thanks for pointing this out, I'll take care of it in next version.
+
+Regards,
+Naman
+
+> 
+>> +	uint32_t len = ring_size;
+>>   	char uio_name[NAME_MAX] = {0};
+>>   	char uio_dev_path[PATH_MAX] = {0};
+>>
+>> @@ -416,6 +460,13 @@ int main(int argc, char *argv[])
+>>   		{0,		0,		   0,  0   }
+>>   	};
+>>
+>> +	desc = (unsigned char *)malloc(ring_size * sizeof(unsigned char));
+>> +	if (!desc) {
+>> +		syslog(LOG_ERR, "malloc failed for desc buffer");
+>> +		ret = -ENOMEM;
+>> +		goto exit;
+>> +	}
+>> +
+>>   	while ((opt = getopt_long(argc, argv, "hn", long_options,
+>>   				  &long_index)) != -1) {
+>>   		switch (opt) {
+>> @@ -448,14 +499,14 @@ int main(int argc, char *argv[])
+>>   		goto exit;
+>>   	}
+>>
+>> -	ring = vmbus_uio_map(&fcopy_fd, HV_RING_SIZE);
+>> +	ring = vmbus_uio_map(&fcopy_fd, ring_size);
+>>   	if (!ring) {
+>>   		ret = errno;
+>>   		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(ret));
+>>   		goto close;
+>>   	}
+>> -	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
+>> -	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
+>> +	vmbus_br_setup(&txbr, ring, ring_size);
+>> +	vmbus_br_setup(&rxbr, (char *)ring + ring_size, ring_size);
+>>
+>>   	rxbr.vbr->imask = 0;
+>>
+>> @@ -472,7 +523,7 @@ int main(int argc, char *argv[])
+>>   			goto close;
+>>   		}
+>>
+>> -		len = HV_RING_SIZE;
+>> +		len = ring_size;
+>>   		ret = rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
+>>   		if (unlikely(ret <= 0)) {
+>>   			/* This indicates a failure to communicate (or worse) */
+>>
+>> base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+>> --
+>> 2.34.1
+
+
 
