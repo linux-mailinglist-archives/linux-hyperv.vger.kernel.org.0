@@ -1,92 +1,137 @@
-Return-Path: <linux-hyperv+bounces-5994-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-5995-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3FDCAE61B5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Jun 2025 12:02:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A006DAE6FDF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Jun 2025 21:42:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E5DD7A5955
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Jun 2025 10:01:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 351581892ED9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Jun 2025 19:42:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEE62561B9;
-	Tue, 24 Jun 2025 10:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC6F92E92CC;
+	Tue, 24 Jun 2025 19:41:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIIcWVgx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DfQy3sbI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8773D3B8;
-	Tue, 24 Jun 2025 10:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128D12E92CD
+	for <linux-hyperv@vger.kernel.org>; Tue, 24 Jun 2025 19:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750759356; cv=none; b=Ad4wtbEP1cssxVgN0vzo/RPH5FMEQFIFmuatn8/TJV3yEprE4PaECDusiCXV6fpDAQRgurUDTYsMPdXJbazVzmIQltpaYtOk7VdkU+Dv8B5dDgjx6TeeZmlIlFiTxvtIMCIpd0bbTKH3qmDpoblzR3+FPsgrH57SWwcttd3TxwA=
+	t=1750794087; cv=none; b=tJia0UndBaoL5ccx/PAH06q0uHGsQ0xQ/GiY+A+a0DyKSa8VDa6LM5kAvYLMo99YihR7mRYJ6Vd+cP7uf2cVVgugUr90Ne5imbBNUourf7krUa2V17A4DNVaGtS8wA5LGUZ6f/y7woGKXWqgRKWSibZsEm3I3gmvSZ8vRPV5Hsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750759356; c=relaxed/simple;
-	bh=DvcAykCpBFaTzbO/UWWTGagnoDVBmQsRyB0QxIqtATQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KwKrTOM1/uWGPxTMpF86gXh1UI/qfbzIUa/2sHlnBSe05gbvjAwxGjiIttxtoRqfGFs2GKoGvPCSNhMWNSX/ccgUdsIzfdP6ks0Z66HdaotU2zqpSvuOFPs5vAAS/1sKMcT/t6N8dVRQwW5fP/3sJ3F275JbntaM/AgCmMDhcYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIIcWVgx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCA4C4CEE3;
-	Tue, 24 Jun 2025 10:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750759354;
-	bh=DvcAykCpBFaTzbO/UWWTGagnoDVBmQsRyB0QxIqtATQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jIIcWVgxhZ9QEdneshjXQUmmNoHJkp+XD/zn8WD1u0KuOhg1mK0jWIQVw2bOufaNi
-	 IO3YUWS69Sk3dJtUYuq6+OFbU7gcXLauliq5yWkGASppjD7HUwgqkhCBUJQTDVwUmA
-	 K+ngas9rDDrMyKAqPFx9iNAApE9dz2+ITPdMXMOzuaL3u85QHe7CCV9yRQvZPR2KuS
-	 B8pYTHXO91bSVSzyAqc96VLh4WpErQ42Gsv4EDIImSpFFHAegnT4nt+Cl4Vdp+KxgB
-	 8QVDCIK5+mzY/huFLFKOzM/DquMwJMtko7atpewUzLQ3O1cQTnOki8L7TC2f/Wgp/F
-	 spdD5qF51tCEQ==
-Date: Tue, 24 Jun 2025 11:02:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	shradhagupta@linux.microsoft.com, longli@microsoft.com,
-	kotaranov@microsoft.com, lorenzo@kernel.org,
-	shirazsaleem@microsoft.com, schakrabarti@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mana: Fix build errors when
- CONFIG_NET_SHAPER is disabled
-Message-ID: <20250624100228.GC8266@horms.kernel.org>
-References: <1750677241-1504-1-git-send-email-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1750794087; c=relaxed/simple;
+	bh=vQBizulpamY6aAnwr2Udqj2t0ugWwP7/x4nvzsw17Cw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sDOGbKd8/GXa/UEpIbTkSVwDr9OGevgF3eXCNmZfVc8Z5sDTN0e1pqX2bG5DTEwcNb+bPJHyocjdMDSunvJXZI7tDwwQVgRBg2acl1elxNMdtuAgIZCzn/2pTeAcy229cEPx/PYas0mpVaJBExzLP4a7y+c/WkUtc2w6EVaMRko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DfQy3sbI; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747ddba7c90so4681467b3a.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 24 Jun 2025 12:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750794085; x=1751398885; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FUFFiUTwDIQTjkS/XGuKJUupkz/Ptibx0+U0nupMqZk=;
+        b=DfQy3sbI6surt6H1SiPASeAhF6wBz+7Yz5Vh0wvIT3fRHtNYQa4rfMCbGj36KjszqO
+         vPQjaFFCWPnzFAEq4rhYe8rrDechfSxv15JJyjU2JcxS0Tl+CCqv2IL58yAdL9p9rKyl
+         /ZN5PATkU85eE2Zz1zAf7/EhVVFq1fHSRL6WpDwxaK8Jz5VZZIn3l2YxqTLhbD8E51oZ
+         UQmitQgleaang4jLvJ46swu5+90fi6/n9ZqvOTjQ+fg0FS7p7heTz2k+SO4syv7eI47K
+         0iD5e3jZLfcNFCvt2XFEiBY/1+8q0fyTBQG6An3H3Cfifu8bIjaGnZZhbzBYE/dz9etO
+         YUMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750794085; x=1751398885;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FUFFiUTwDIQTjkS/XGuKJUupkz/Ptibx0+U0nupMqZk=;
+        b=iulrVps9ju+DChj6bM/waSGplmtoVfFkpzz9bRgm9HL1i/xGUS0E5ft5GSmi0fO5Ge
+         MYTiW7TE0+HA5wX0+kj37hxfHmOohVUa4m4Om6GpmfPDI35Q+NNawzfltJFgCK4ApLJ/
+         Tbp48m+IXekbZaJLvl+5sYEK0cuOqivUAoI++vUsvyRMwb7FUsGn156XmatEN3ylzVRO
+         TwkNizVO/SJSnNHlKcYsaPc5fZkFvCS3fwc0bPoamZr0HX3WuZVOWBM6HSIst4VFQv/j
+         NVsVByLV5sbtOnLls8o52pu4tHNbliyxQ2NpkabezSuAKEPT10DQTnNL5Jma1gwEiLiW
+         tF1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWg1+hfLPmYpH28YjNjlCs0LIIhRS5/Vxsa5Enjkn7RIPmDnbowNjqQ6H1KG0+7owQ2IKOiN7NZsmfc54Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX+wTC1xYpaBHJz4NpJmV8r8tYYy/kHcpLZ9q9V1qxCIk/cbgo
+	6xF7sq5Mt7g5Pr+Hsdn9MT7X1ZdfbJi10O/p+n0jf7fBJL2j9De1zc24+PMSt7XDFCUlPqI44WG
+	KWXxBSQ==
+X-Google-Smtp-Source: AGHT+IHYexPIgCTXbHegrNWRwV9PAsICfBY+CW50dlQj/EuWE5JzEYSKqjcY5P3xX5xOKDb9+UElHwxg8eM=
+X-Received: from pfrb8.prod.google.com ([2002:aa7:8ec8:0:b0:746:32ae:99d5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:170d:b0:748:1bac:ad5f
+ with SMTP id d2e1a72fcca58-74ad455d619mr461113b3a.12.1750794085384; Tue, 24
+ Jun 2025 12:41:25 -0700 (PDT)
+Date: Tue, 24 Jun 2025 12:38:26 -0700
+In-Reply-To: <20250522235223.3178519-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1750677241-1504-1-git-send-email-ernis@linux.microsoft.com>
+Mime-Version: 1.0
+References: <20250522235223.3178519-1-seanjc@google.com>
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <175079267460.517177.7949210108988821172.b4-ty@google.com>
+Subject: Re: [PATCH v3 00/13] KVM: Make irqfd registration globally unique
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Shuah Khan <shuah@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Jun 23, 2025 at 04:14:01AM -0700, Erni Sri Satya Vennela wrote:
-> Fix build errors when CONFIG_NET_SHAPER is disabled, including:
+On Thu, 22 May 2025 16:52:10 -0700, Sean Christopherson wrote:
+> Non-KVM folks,
 > 
-> drivers/net/ethernet/microsoft/mana/mana_en.c:804:10: error:
-> 'const struct net_device_ops' has no member named 'net_shaper_ops'
+> I am hoping to route this through the KVM tree (6.17 or later), as the non-KVM
+> changes should be glorified nops.  Please holler if you object to that idea.
 > 
->      804 |         .net_shaper_ops         = &mana_shaper_ops,
+> Hyper-V folks in particular, let me know if you want a stable topic branch/tag,
+> e.g. on the off chance you want to make similar changes to the Hyper-V code,
+> and I'll make sure that happens.
 > 
-> drivers/net/ethernet/microsoft/mana/mana_en.c:804:35: error:
-> initialization of 'int (*)(struct net_device *, struct neigh_parms *)'
-> from incompatible pointer type 'const struct net_shaper_ops *'
-> [-Werror=incompatible-pointer-types]
-> 
->      804 |         .net_shaper_ops         = &mana_shaper_ops,
-> 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Fixes: 75cabb46935b ("net: mana: Add support for net_shaper_ops")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506230625.bfUlqb8o-lkp@intel.com/
+> [...]
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Applied to kvm-x86 irqs, thanks!
 
+[01/13] KVM: Use a local struct to do the initial vfs_poll() on an irqfd
+        https://github.com/kvm-x86/linux/commit/283ed5001d68
+[02/13] KVM: Acquire SCRU lock outside of irqfds.lock during assignment
+        https://github.com/kvm-x86/linux/commit/140768a7bf03
+[03/13] KVM: Initialize irqfd waitqueue callback when adding to the queue
+        https://github.com/kvm-x86/linux/commit/b5c543518ae9
+[04/13] KVM: Add irqfd to KVM's list via the vfs_poll() callback
+        https://github.com/kvm-x86/linux/commit/5f8ca05ea991
+[05/13] KVM: Add irqfd to eventfd's waitqueue while holding irqfds.lock
+        https://github.com/kvm-x86/linux/commit/86e00cd162a7
+[06/13] sched/wait: Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority()
+        https://github.com/kvm-x86/linux/commit/867347bb21e1
+[07/13] xen: privcmd: Don't mark eventfd waiter as EXCLUSIVE
+        https://github.com/kvm-x86/linux/commit/a52664134a24
+[08/13] sched/wait: Add a waitqueue helper for fully exclusive priority waiters
+        https://github.com/kvm-x86/linux/commit/0d09582b3a60
+[09/13] KVM: Disallow binding multiple irqfds to an eventfd with a priority waiter
+        https://github.com/kvm-x86/linux/commit/2cdd64cbf990
+[10/13] KVM: Drop sanity check that per-VM list of irqfds is unique
+        https://github.com/kvm-x86/linux/commit/b599d44a71f1
+[11/13] KVM: selftests: Assert that eventfd() succeeds in Xen shinfo test
+        https://github.com/kvm-x86/linux/commit/033b76bc7f06
+[12/13] KVM: selftests: Add utilities to create eventfds and do KVM_IRQFD
+        https://github.com/kvm-x86/linux/commit/74e5e3fb0dd7
+[13/13] KVM: selftests: Add a KVM_IRQFD test to verify uniqueness requirements
+        https://github.com/kvm-x86/linux/commit/7e9b231c402a
+
+--
+https://github.com/kvm-x86/kvm-unit-tests/tree/next
 
