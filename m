@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-6015-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6016-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C6E8AEA16A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 16:55:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC60DAEA17F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 16:57:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB92D176980
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 14:51:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7E6D6A674B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 14:51:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13A822EF673;
-	Thu, 26 Jun 2025 14:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC982EF9D5;
+	Thu, 26 Jun 2025 14:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OoYu8rv3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qNEyVvI5"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MBG2XPkq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ywRcYRgi"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1F12EBDC5;
-	Thu, 26 Jun 2025 14:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B512EF660;
+	Thu, 26 Jun 2025 14:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949329; cv=none; b=NVkfSdOxpr6w7tH6mf20YPDQSlLMT15LIK4plYAkhpeAc1svEcP/n8xtyZOafiMYFDLOTrke6zpNFsDiZqEVR2RrMJXuWo54Ry5zSUM8y7/p/OgQArCDCyTbSkvio7LyKykGIo3oyO81MmbPPZymyTRtCdPqW2EevcHFkGVqPJY=
+	t=1750949330; cv=none; b=X/irWxVsJslxSYHILQTYTLrsAq8rEqd7nMYI5rwyF3TJG5sjHh/2AcrtoGRZSzB00XJIMaZqgTwFg6cqMiP/N7+LtCTCsfj94XL+vhxNQ9zisPMAYZd/52MTu5t0SvLsyzI0aKxc/YSrQzkSlSl+fvUAmL+vPGaZAFDRAFg8w7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949329; c=relaxed/simple;
-	bh=okE/Fz1McZVtRORK5MwPhing6ZYz2Iy4bP3rNzOs+yM=;
+	s=arc-20240116; t=1750949330; c=relaxed/simple;
+	bh=MeYTNl0+MUh2L9V4JTiTVQHUB12AJPKagM6B0Zbhac0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Dcfp90Y5dYcy1WAoDTL9BUAvHEQT7aHGrNWH+UPuCGbACuORsSzOK8tnypDV0kRdeNJqAptDyRYmibpR3aHzlJvr/mE6ois2vNFvHFBs2KzXji1aCwoLv0UrDLPhq1g5Z4MtqEUjijkS+GT4rItQmVrVnaA4U7dp1bZw4BwTKK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OoYu8rv3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qNEyVvI5; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=WtLbGAAE3aZuIIWXZdIl8Qi9xzrpmjsPx4f/ZEWmvr7UgigPE+RkOHNbE9XWEFXzF3y4SXvgrqsdEuMoA59mTmp+LeI11XjfrSTxdKK1jiFAdNERqx0ZD5p9iQoyfFivKDZMfQ9mdz97NQ26OQPruMVmleCgoe7RI8RzhcUFhZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MBG2XPkq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ywRcYRgi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750949326;
+	s=2020; t=1750949327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lX+GL/mG9RSpXIbAIV8/nBgAmDvnZs8ggahXv/ElRgQ=;
-	b=OoYu8rv3JfM135IJX00YiZmy+0T1/QCYkjEqLxh4mhHsarXg6mIPDN1V/OQHzMcKpB+259
-	x6q5xQN7Xw5q0zQx9vPXpsc5QBAFBpyFSOxqsPROsHUb+tbE9I8AT/uN3DVQreli3DR1vm
-	WuMAlP6l4gf7c5nibi01KTyw7uJLo701yqQq2uODvmMRFE4bHQdfXDlYs1ppAlBe0T7BlV
-	aysnK516amS8t5ysVUH78LghGHDVptfGYHX487F41N8Giece8B2Xd5TqNwROXFQlISRy3U
-	ujJEwPk0GudVi40OwWjp5qlvt4Qn68SpbkREKsAqyJWJNjYy2ZTRTSKNnSGAWw==
+	bh=0YvHDwNtH7JCA3yTrFzmAWls6d21ROaLNNWeeQE+7RU=;
+	b=MBG2XPkqXhhV2bLEtvA59slqHsgL7Z6rDDVkc2MF41m6pMdBsalBsUVGypGVk6xk0oeHKE
+	/UlgPT+GhSsHHaPCLSnDknWCIwbYyhh0D/e1TNgXuYj9gG+0RddQiPTLg158aREKPzD9ag
+	+Qh8B8eqiWYkaASefNKq5P3fIcu/CgNoy787GdV8ED3KxVMSd4DplKL7kTzL3TDciQ96bD
+	mo4VCR/IwN8gePoeCi9P34lMKwB6EN1MHDyz4lUqzGFVjBJSiKUgKCeOOzxOPBRZNfSbuG
+	ylBTTDuKMse1QgFOYm+3IKrLZWZf3IZqo1YEREKnI9DnLhf6doM9oIQFSPaCaw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750949326;
+	s=2020e; t=1750949327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lX+GL/mG9RSpXIbAIV8/nBgAmDvnZs8ggahXv/ElRgQ=;
-	b=qNEyVvI5FJd2MbE/+B7tQBrMp8qdz/32D0lZZbva4a0DiqZ6geSfBbVB3Tek06KFTV8G1o
-	omudrJp7AAjPUwDQ==
+	bh=0YvHDwNtH7JCA3yTrFzmAWls6d21ROaLNNWeeQE+7RU=;
+	b=ywRcYRgi4BovomyW3re9LbWaX7/U7UaVTaE37xI22kuAvFl70TGmO4KI3Xcfns1A6RMaJX
+	7yCNwbjRBJSEP+CQ==
 To: Marc Zyngier <maz@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -93,12 +93,10 @@ To: Marc Zyngier <maz@kernel.org>,
 	linux-rpi-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	linux-renesas-soc@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 09/16] PCI: rcar-host: Switch to msi_create_parent_irq_domain()
-Date: Thu, 26 Jun 2025 16:47:59 +0200
-Message-Id: <ab4005db0a829549be1f348f6c27be50a2118b5e.1750858083.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH 10/16] PCI: xilinx-xdma: Switch to msi_create_parent_irq_domain()
+Date: Thu, 26 Jun 2025 16:48:00 +0200
+Message-Id: <b4620dc1808f217a69d0ae50700ffa12ffd657eb.1750858083.git.namcao@linutronix.de>
 In-Reply-To: <cover.1750858083.git.namcao@linutronix.de>
 References: <cover.1750858083.git.namcao@linutronix.de>
 Precedence: bulk
@@ -114,140 +112,123 @@ msi_create_parent_irq_domain().
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org
+Cc: Michal Simek <michal.simek@amd.com>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/pci/controller/Kconfig          |  1 +
- drivers/pci/controller/pcie-rcar-host.c | 69 +++++++++----------------
- 2 files changed, 26 insertions(+), 44 deletions(-)
+ drivers/pci/controller/Kconfig              |  1 +
+ drivers/pci/controller/pcie-xilinx-dma-pl.c | 48 +++++++++------------
+ 2 files changed, 22 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 65289a171333c..8b9492e9ae693 100644
+index 8b9492e9ae693..c9b6180239732 100644
 --- a/drivers/pci/controller/Kconfig
 +++ b/drivers/pci/controller/Kconfig
-@@ -243,6 +243,7 @@ config PCIE_RCAR_HOST
- 	bool "Renesas R-Car PCIe controller (host mode)"
- 	depends on ARCH_RENESAS || COMPILE_TEST
+@@ -331,6 +331,7 @@ config PCIE_XILINX_DMA_PL
+ 	depends on ARCH_ZYNQMP || COMPILE_TEST
  	depends on PCI_MSI
+ 	select PCI_HOST_COMMON
 +	select IRQ_MSI_LIB
  	help
- 	  Say Y here if you want PCIe controller support on R-Car SoCs in host
- 	  mode.
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controll=
-er/pcie-rcar-host.c
-index c32b803a47c7c..ad2bda635d47f 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -17,6 +17,7 @@
- #include <linux/delay.h>
+ 	  Say 'Y' here if you want kernel support for the Xilinx PL DMA
+ 	  PCIe host bridge. The controller is a Soft IP which can act as
+diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/cont=
+roller/pcie-xilinx-dma-pl.c
+index dc9690a535e16..fbc379fd118b4 100644
+--- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
++++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+@@ -7,6 +7,7 @@
+ #include <linux/bitfield.h>
  #include <linux/interrupt.h>
  #include <linux/irq.h>
 +#include <linux/irqchip/irq-msi-lib.h>
  #include <linux/irqdomain.h>
  #include <linux/kernel.h>
- #include <linux/init.h>
-@@ -597,30 +598,6 @@ static irqreturn_t rcar_pcie_msi_irq(int irq, void *da=
-ta)
+ #include <linux/module.h>
+@@ -90,7 +91,6 @@ struct xilinx_pl_dma_variant {
+ };
+=20
+ struct xilinx_msi {
+-	struct irq_domain	*msi_domain;
+ 	unsigned long		*bitmap;
+ 	struct irq_domain	*dev_domain;
+ 	struct mutex		lock;		/* Protect bitmap variable */
+@@ -373,20 +373,20 @@ static irqreturn_t xilinx_pl_dma_pcie_intr_handler(in=
+t irq, void *dev_id)
  	return IRQ_HANDLED;
  }
 =20
--static void rcar_msi_top_irq_ack(struct irq_data *d)
--{
--	irq_chip_ack_parent(d);
--}
--
--static void rcar_msi_top_irq_mask(struct irq_data *d)
--{
--	pci_msi_mask_irq(d);
--	irq_chip_mask_parent(d);
--}
--
--static void rcar_msi_top_irq_unmask(struct irq_data *d)
--{
--	pci_msi_unmask_irq(d);
--	irq_chip_unmask_parent(d);
--}
--
--static struct irq_chip rcar_msi_top_chip =3D {
--	.name		=3D "PCIe MSI",
--	.irq_ack	=3D rcar_msi_top_irq_ack,
--	.irq_mask	=3D rcar_msi_top_irq_mask,
--	.irq_unmask	=3D rcar_msi_top_irq_unmask,
+-static struct irq_chip xilinx_msi_irq_chip =3D {
+-	.name =3D "pl_dma:PCIe MSI",
+-	.irq_enable =3D pci_msi_unmask_irq,
+-	.irq_disable =3D pci_msi_mask_irq,
+-	.irq_mask =3D pci_msi_mask_irq,
+-	.irq_unmask =3D pci_msi_unmask_irq,
 -};
--
- static void rcar_msi_irq_ack(struct irq_data *d)
- {
- 	struct rcar_msi *msi =3D irq_data_get_irq_chip_data(d);
-@@ -718,30 +695,37 @@ static const struct irq_domain_ops rcar_msi_domain_op=
-s =3D {
- 	.free	=3D rcar_msi_domain_free,
- };
++#define XILINX_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS	| \
++				   MSI_FLAG_USE_DEF_CHIP_OPS	| \
++				   MSI_FLAG_NO_AFFINITY)
 =20
--static struct msi_domain_info rcar_msi_info =3D {
--	.flags	=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_MULTI_PCI_MSI,
--	.chip	=3D &rcar_msi_top_chip,
-+#define RCAR_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS	| \
-+				 MSI_FLAG_USE_DEF_CHIP_OPS	| \
-+				 MSI_FLAG_PCI_MSI_MASK_PARENT	| \
-+				 MSI_FLAG_NO_AFFINITY)
-+
-+#define RCAR_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK	| \
-+				  MSI_FLAG_MULTI_PCI_MSI)
-+
-+static const struct msi_parent_ops rcar_msi_parent_ops =3D {
-+	.required_flags		=3D RCAR_MSI_FLAGS_REQUIRED,
-+	.supported_flags	=3D RCAR_MSI_FLAGS_SUPPORTED,
+-static struct msi_domain_info xilinx_msi_domain_info =3D {
+-	.flags =3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		 MSI_FLAG_NO_AFFINITY | MSI_FLAG_MULTI_PCI_MSI,
+-	.chip =3D &xilinx_msi_irq_chip,
+-};
++#define XILINX_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK	| \
++				    MSI_FLAG_MULTI_PCI_MSI)
+=20
++static const struct msi_parent_ops xilinx_msi_parent_ops =3D {
++	.required_flags		=3D XILINX_MSI_FLAGS_REQUIRED,
++	.supported_flags	=3D XILINX_MSI_FLAGS_SUPPORTED,
 +	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
-+	.chip_flags		=3D MSI_CHIP_FLAG_SET_ACK,
-+	.prefix			=3D "RCAR-",
++	.prefix			=3D "pl_dma-",
 +	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
- };
-=20
- static int rcar_allocate_domains(struct rcar_msi *msi)
++};
+ static void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *=
+msg)
  {
- 	struct rcar_pcie *pcie =3D &msi_to_host(msi)->pcie;
- 	struct fwnode_handle *fwnode =3D dev_fwnode(pcie->dev);
--	struct irq_domain *parent;
--
--	parent =3D irq_domain_create_linear(fwnode, INT_PCI_MSI_NR,
--					  &rcar_msi_domain_ops, msi);
--	if (!parent) {
--		dev_err(pcie->dev, "failed to create IRQ domain\n");
--		return -ENOMEM;
--	}
--	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
--
--	msi->domain =3D pci_msi_create_irq_domain(fwnode, &rcar_msi_info, parent);
-+	struct irq_domain_info info =3D {
-+		.fwnode		=3D fwnode,
-+		.ops		=3D &rcar_msi_domain_ops,
-+		.host_data	=3D msi,
-+		.size		=3D INT_PCI_MSI_NR,
-+	};
-+
-+	msi->domain =3D msi_create_parent_irq_domain(&info, &rcar_msi_parent_ops);
- 	if (!msi->domain) {
--		dev_err(pcie->dev, "failed to create MSI domain\n");
--		irq_domain_remove(parent);
-+		dev_err(pcie->dev, "failed to create IRQ domain\n");
- 		return -ENOMEM;
+ 	struct pl_dma_pcie *pcie =3D irq_data_get_irq_chip_data(data);
+@@ -458,11 +458,6 @@ static void xilinx_pl_dma_pcie_free_irq_domains(struct=
+ pl_dma_pcie *port)
+ 		irq_domain_remove(msi->dev_domain);
+ 		msi->dev_domain =3D NULL;
  	}
-=20
-@@ -750,10 +734,7 @@ static int rcar_allocate_domains(struct rcar_msi *msi)
-=20
- static void rcar_free_domains(struct rcar_msi *msi)
- {
--	struct irq_domain *parent =3D msi->domain->parent;
 -
- 	irq_domain_remove(msi->domain);
--	irq_domain_remove(parent);
+-	if (msi->msi_domain) {
+-		irq_domain_remove(msi->msi_domain);
+-		msi->msi_domain =3D NULL;
+-	}
  }
 =20
- static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+ static int xilinx_pl_dma_pcie_init_msi_irq_domain(struct pl_dma_pcie *port)
+@@ -471,18 +466,17 @@ static int xilinx_pl_dma_pcie_init_msi_irq_domain(str=
+uct pl_dma_pcie *port)
+ 	struct xilinx_msi *msi =3D &port->msi;
+ 	int size =3D BITS_TO_LONGS(XILINX_NUM_MSI_IRQS) * sizeof(long);
+ 	struct fwnode_handle *fwnode =3D of_fwnode_handle(port->dev->of_node);
+-
+-	msi->dev_domain =3D irq_domain_create_linear(NULL, XILINX_NUM_MSI_IRQS,
+-						   &dev_msi_domain_ops, port);
++	struct irq_domain_info info =3D {
++		.fwnode		=3D fwnode,
++		.ops		=3D &dev_msi_domain_ops,
++		.host_data	=3D port,
++		.size		=3D XILINX_NUM_MSI_IRQS,
++	};
++
++	msi->dev_domain  =3D msi_create_parent_irq_domain(&info, &xilinx_msi_pare=
+nt_ops);
+ 	if (!msi->dev_domain)
+ 		goto out;
+=20
+-	msi->msi_domain =3D pci_msi_create_irq_domain(fwnode,
+-						    &xilinx_msi_domain_info,
+-						    msi->dev_domain);
+-	if (!msi->msi_domain)
+-		goto out;
+-
+ 	mutex_init(&msi->lock);
+ 	msi->bitmap =3D kzalloc(size, GFP_KERNEL);
+ 	if (!msi->bitmap)
 --=20
 2.39.5
 
