@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-6008-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6007-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40BFAAEA138
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 16:50:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 365F1AEA166
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 16:54:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D7D17AE129
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 14:48:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1DF83A5DE5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 14:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 546A52EBDED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401C52EB5C0;
 	Thu, 26 Jun 2025 14:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gnteCw5z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D0ZICz2j"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ohoigcr0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nkf0SgAB"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701002EACE3;
-	Thu, 26 Jun 2025 14:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700882E975D;
+	Thu, 26 Jun 2025 14:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949321; cv=none; b=spKqk+q2nb9/3epqaTAYJZlHT02Wk5OD66OTB39F04ERfGbsRIyLUXvlk6QQKXn+s/FVtAjYB3HybpomNsGo9r4KkkSNmgyZeLEJ7ouCX/BtYDUZshmbOZrQ8g/pT6IoyBwdWRtT6hpmvvzrvrUfk3VOYgQDhkbpRUXf6Xn8phM=
+	t=1750949321; cv=none; b=qiqVDSy1jEYHx83WMBDibUCgsTxcjPByj5Fn6DFh5jwmtLNirJGeWAysbKMQ/l+MPBpffyBXF2UQ12k+kdm2cCcQm6CiRFyOZSFPHva00oREKh+zy3JHginFpbBMqqUWz0ZYaC7gjcspuDTspGTuURDoCYnzr8G05mS0bSUtBiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750949321; c=relaxed/simple;
-	bh=wdxA05uMnJ5Nx9bpFKxpSs1sNQro9QbVkbkJcxFogLk=;
+	bh=FbcDaMkikWnEBmRtCQsmflmkQmw0WVr+FimUSTUWA4U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CXNDG/NQL9MbQVzI3Nk4Y6guychlWrYvffgbESIKP/1TN90zIq8OQvNHXO0F/zx5o4je6BzD/Tg2bsRzKpLF6chHbuM1S7OKaYqwb3j8yRE/+eMwYNE8rVClDgM260axCdKkmbsxcDZ6IHHd9H7XAXuUs3J0Pw2J2nX8PFDfH+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gnteCw5z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D0ZICz2j; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=SGbwd6Ugrtw68lwitsaSnX/q5PV3qJ0sufWcfJLIXqfbkM6x83JTmSXcqzPQtLKXnyYQwsAVBs6YJkD7lk9oaY3h3Q2P9Cd9vUYekpwwyXc4lbB9huKw8B7NaxPb1g0l84K7XYEd5Oq7SBMBjO31JnDfudbWowtAc90OePZmrS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ohoigcr0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nkf0SgAB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750949316;
+	s=2020; t=1750949317;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TkdF6/WXSmyR6CP6BJIFb/N9JSNeGtF+c34gsRTZKi8=;
-	b=gnteCw5zFdeHMYffbKs77Zh69GwMGsOSTdZ3KTKu9bnHHvg+UI8TTjsm1bM0viMJiDShza
-	aHSj4YaO1m6v4p7i1grgwE7fBRLx4CCeQzmf6kbNyandbo4Zpgr9w3CjbswZG7THLUxxMU
-	tHn47VGd8jdzENxHRsPOTUapQa1MzSs2OhJ/iX+WNW0T/hIzVFzypEYSMn3KyF4s4d2J2J
-	9dzWuvnTDAxDp1AeJ0V8EdSG9guGrdSmpWYPNv+A7ZGvsMwlbntqFf4aYaYXiM1SpODFCB
-	yTAYrXae2mcm/lgTtdI/H+hpVSPFsMfE8s8QwVjy+2Kc6uAwGToVodrJOPTXWQ==
+	bh=ditblTcZWn/hLq3noPG8h3VqVahq3cequ10qfherkGM=;
+	b=Ohoigcr0rb5pIx6qw0y2lxsaVeMYasJkG7wk+QvCsLxMRJfBAaWb3cAZ/7c8tDoK4SDkDS
+	8Je0WQcU77U+hwqrifMlEDpY9a2GOk/k9tlq8SImqU0h7Ml3Q3NKmW8M43v+X2X9NT1TL8
+	d9EyC+Knu01unLHE0weQED2TeRC/ayeUHFVbq3z4EcjwmRcfKzcVT4RpsjoYOtf/R0VKmC
+	Z2J2gwNf8f+nQpJkB1Zuj3kD6lasz12E7h+krIiHy9+ixJPWuJZwZywEteMCfkXBuWaMxR
+	iYTmiGtGDAVHiflhzfyD4/olxsD9Qw6OhfCgtZjagG570GLFnicUpokwd8+LSA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750949316;
+	s=2020e; t=1750949317;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TkdF6/WXSmyR6CP6BJIFb/N9JSNeGtF+c34gsRTZKi8=;
-	b=D0ZICz2jEObaXwCZyRm2f01Xzfxg6p3k/Gbe8jfG6SpDkTSuNsxPtcOUYG5dc4prMVSEf6
-	Qh6SMuDMEIiXt6Dw==
+	bh=ditblTcZWn/hLq3noPG8h3VqVahq3cequ10qfherkGM=;
+	b=nkf0SgABGViiBC0OgUJ6GiesPE6qRlOssUq/2xMsJRb5rWHbuFX2bGmaEXOFg0zU4ifu1j
+	tvPVEy1w3HxMyeBA==
 To: Marc Zyngier <maz@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -93,11 +93,10 @@ To: Marc Zyngier <maz@kernel.org>,
 	linux-rpi-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	linux-renesas-soc@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Jingoo Han <jingoohan1@gmail.com>
-Subject: [PATCH 01/16] PCI: dwc: Switch to msi_create_parent_irq_domain()
-Date: Thu, 26 Jun 2025 16:47:51 +0200
-Message-Id: <04d4a96046490e50139826c16423954e033cdf89.1750858083.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH 02/16] PCI: mobiveil: Switch to msi_create_parent_irq_domain()
+Date: Thu, 26 Jun 2025 16:47:52 +0200
+Message-Id: <af46c15c47a7716f7e0c50d0f7391509c95b49c2.1750858083.git.namcao@linutronix.de>
 In-Reply-To: <cover.1750858083.git.namcao@linutronix.de>
 References: <cover.1750858083.git.namcao@linutronix.de>
 Precedence: bulk
@@ -113,146 +112,115 @@ msi_create_parent_irq_domain().
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
- drivers/pci/controller/dwc/Kconfig            |  1 +
- .../pci/controller/dwc/pcie-designware-host.c | 68 +++++++------------
- drivers/pci/controller/dwc/pcie-designware.h  |  1 -
- 3 files changed, 25 insertions(+), 45 deletions(-)
+ drivers/pci/controller/mobiveil/Kconfig       |  1 +
+ .../controller/mobiveil/pcie-mobiveil-host.c  | 42 ++++++++++---------
+ .../pci/controller/mobiveil/pcie-mobiveil.h   |  1 -
+ 3 files changed, 23 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dw=
-c/Kconfig
-index bb95877b2c6c4..8a63e9bc0c039 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -19,6 +19,7 @@ config PCIE_DW_DEBUGFS
- config PCIE_DW_HOST
+diff --git a/drivers/pci/controller/mobiveil/Kconfig b/drivers/pci/controll=
+er/mobiveil/Kconfig
+index 58ce034f701ab..c50c4625937f8 100644
+--- a/drivers/pci/controller/mobiveil/Kconfig
++++ b/drivers/pci/controller/mobiveil/Kconfig
+@@ -9,6 +9,7 @@ config PCIE_MOBIVEIL
+ config PCIE_MOBIVEIL_HOST
  	bool
- 	select PCIE_DW
+ 	depends on PCI_MSI
 +	select IRQ_MSI_LIB
+ 	select PCIE_MOBIVEIL
 =20
- config PCIE_DW_EP
- 	bool
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
-i/controller/dwc/pcie-designware-host.c
-index 906277f9ffaf7..a953e07a68aff 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -10,6 +10,7 @@
-=20
- #include <linux/iopoll.h>
- #include <linux/irqchip/chained_irq.h>
+ config PCIE_LAYERSCAPE_GEN4
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers=
+/pci/controller/mobiveil/pcie-mobiveil-host.c
+index cd44ddb698ea2..d17e887b6b61d 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+@@ -12,6 +12,7 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
 +#include <linux/irqchip/irq-msi-lib.h>
+ #include <linux/irqchip/chained_irq.h>
  #include <linux/irqdomain.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
-@@ -23,35 +24,21 @@
- static struct pci_ops dw_pcie_ops;
- static struct pci_ops dw_child_pcie_ops;
+ #include <linux/kernel.h>
+@@ -353,16 +354,19 @@ static const struct irq_domain_ops intx_domain_ops =
+=3D {
+ 	.map =3D mobiveil_pcie_intx_map,
+ };
 =20
--static void dw_msi_ack_irq(struct irq_data *d)
--{
--	irq_chip_ack_parent(d);
--}
--
--static void dw_msi_mask_irq(struct irq_data *d)
--{
--	pci_msi_mask_irq(d);
--	irq_chip_mask_parent(d);
--}
--
--static void dw_msi_unmask_irq(struct irq_data *d)
--{
--	pci_msi_unmask_irq(d);
--	irq_chip_unmask_parent(d);
--}
--
--static struct irq_chip dw_pcie_msi_irq_chip =3D {
--	.name =3D "PCI-MSI",
--	.irq_ack =3D dw_msi_ack_irq,
--	.irq_mask =3D dw_msi_mask_irq,
--	.irq_unmask =3D dw_msi_unmask_irq,
+-static struct irq_chip mobiveil_msi_irq_chip =3D {
+-	.name =3D "Mobiveil PCIe MSI",
+-	.irq_mask =3D pci_msi_mask_irq,
+-	.irq_unmask =3D pci_msi_unmask_irq,
 -};
--
--static struct msi_domain_info dw_pcie_msi_domain_info =3D {
--	.flags	=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX |
--		  MSI_FLAG_MULTI_PCI_MSI,
--	.chip	=3D &dw_pcie_msi_irq_chip,
-+#define DW_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS		| \
-+				    MSI_FLAG_USE_DEF_CHIP_OPS		| \
-+				    MSI_FLAG_NO_AFFINITY		| \
-+				    MSI_FLAG_PCI_MSI_MASK_PARENT)
-+#define DW_PCIE_MSI_FLAGS_SUPPORTED (MSI_FLAG_MULTI_PCI_MSI		| \
-+				     MSI_FLAG_PCI_MSIX			| \
-+				     MSI_GENERIC_FLAGS_MASK)
++#define MOBIVEIL_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS		| \
++				     MSI_FLAG_USE_DEF_CHIP_OPS		| \
++				     MSI_FLAG_NO_AFFINITY)
 +
-+static const struct msi_parent_ops dw_pcie_msi_parent_ops =3D {
-+	.required_flags		=3D DW_PCIE_MSI_FLAGS_REQUIRED,
-+	.supported_flags	=3D DW_PCIE_MSI_FLAGS_SUPPORTED,
++#define MOBIVEIL_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK		| \
++				      MSI_FLAG_PCI_MSIX)
+=20
+-static struct msi_domain_info mobiveil_msi_domain_info =3D {
+-	.flags	=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX,
+-	.chip	=3D &mobiveil_msi_irq_chip,
++static const struct msi_parent_ops mobiveil_msi_parent_ops =3D {
++	.required_flags		=3D MOBIVEIL_MSI_FLAGS_REQUIRED,
++	.supported_flags	=3D MOBIVEIL_MSI_FLAGS_SUPPORTED,
 +	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
-+	.chip_flags		=3D MSI_CHIP_FLAG_SET_ACK,
-+	.prefix			=3D "DW-",
++	.prefix			=3D "Mobiveil-",
 +	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
  };
 =20
- /* MSI int handler */
-@@ -228,25 +215,19 @@ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
- 	struct fwnode_handle *fwnode =3D of_fwnode_handle(pci->dev->of_node);
--
--	pp->irq_domain =3D irq_domain_create_linear(fwnode, pp->num_vectors,
--					       &dw_pcie_msi_domain_ops, pp);
+ static void mobiveil_compose_msi_msg(struct irq_data *data, struct msi_msg=
+ *msg)
+@@ -439,19 +443,17 @@ static int mobiveil_allocate_msi_domains(struct mobiv=
+eil_pcie *pcie)
+ 	struct mobiveil_msi *msi =3D &pcie->rp.msi;
+=20
+ 	mutex_init(&msi->lock);
+-	msi->dev_domain =3D irq_domain_create_linear(NULL, msi->num_of_vectors,
+-						   &msi_domain_ops, pcie);
+-	if (!msi->dev_domain) {
+-		dev_err(dev, "failed to create IRQ domain\n");
+-		return -ENOMEM;
+-	}
+=20
+-	msi->msi_domain =3D pci_msi_create_irq_domain(fwnode,
+-						    &mobiveil_msi_domain_info,
+-						    msi->dev_domain);
+-	if (!msi->msi_domain) {
 +	struct irq_domain_info info =3D {
 +		.fwnode		=3D fwnode,
-+		.ops		=3D &dw_pcie_msi_domain_ops,
-+		.size		=3D pp->num_vectors,
-+		.host_data	=3D pp,
++		.ops		=3D &msi_domain_ops,
++		.host_data	=3D pcie,
++		.size		=3D msi->num_of_vectors,
 +	};
 +
-+	pp->irq_domain =3D msi_create_parent_irq_domain(&info, &dw_pcie_msi_paren=
-t_ops);
- 	if (!pp->irq_domain) {
- 		dev_err(pci->dev, "Failed to create IRQ domain\n");
++	msi->dev_domain =3D msi_create_parent_irq_domain(&info, &mobiveil_msi_par=
+ent_ops);
++	if (!msi->dev_domain) {
+ 		dev_err(dev, "failed to create MSI domain\n");
+-		irq_domain_remove(msi->dev_domain);
  		return -ENOMEM;
  	}
 =20
--	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
--
--	pp->msi_domain =3D pci_msi_create_irq_domain(fwnode,
--						   &dw_pcie_msi_domain_info,
--						   pp->irq_domain);
--	if (!pp->msi_domain) {
--		dev_err(pci->dev, "Failed to create MSI domain\n");
--		irq_domain_remove(pp->irq_domain);
--		return -ENOMEM;
--	}
--
- 	return 0;
- }
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/=
+controller/mobiveil/pcie-mobiveil.h
+index 662f17f9bf65c..7246de6a71768 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+@@ -135,7 +135,6 @@
 =20
-@@ -260,7 +241,6 @@ static void dw_pcie_free_msi(struct dw_pcie_rp *pp)
- 							 NULL, NULL);
- 	}
-=20
--	irq_domain_remove(pp->msi_domain);
- 	irq_domain_remove(pp->irq_domain);
- }
-=20
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/con=
-troller/dwc/pcie-designware.h
-index ce9e18554e426..d9daee4ce220d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -417,7 +417,6 @@ struct dw_pcie_rp {
- 	const struct dw_pcie_host_ops *ops;
- 	int			msi_irq[MAX_MSI_CTRLS];
- 	struct irq_domain	*irq_domain;
--	struct irq_domain	*msi_domain;
- 	dma_addr_t		msi_data;
- 	struct irq_chip		*msi_irq_chip;
- 	u32			num_vectors;
+ struct mobiveil_msi {			/* MSI information */
+ 	struct mutex lock;		/* protect bitmap variable */
+-	struct irq_domain *msi_domain;
+ 	struct irq_domain *dev_domain;
+ 	phys_addr_t msi_pages_phys;
+ 	int num_of_vectors;
 --=20
 2.39.5
 
