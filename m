@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-6011-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6012-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB4EAEA17C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 16:56:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E15EEAEA177
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 16:55:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B58211C471D2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 14:50:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 817685A6EF5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Jun 2025 14:50:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB88E2EE5F4;
-	Thu, 26 Jun 2025 14:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41EF2EE965;
+	Thu, 26 Jun 2025 14:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zluBDTwt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L3ryjEzH"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nAcwHyaS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jTJGcSNK"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1290F2ED86E;
-	Thu, 26 Jun 2025 14:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1B2EE280;
+	Thu, 26 Jun 2025 14:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949324; cv=none; b=b+bg7hlbv0TXDJQEEeCS5DREWFmVlf7H2Tnte+hZXGnX1adNGxScDeaAUF9STitezpd3/sa4uvP6IjJMW7DTfmj76moP0Y3AfmQTW63zjW8VZC7wV47L9U09fiVJPJqOf+1Al9dd9vxWd/AlJ39f4w9ZTBmzre4oCVZdrz/mx3c=
+	t=1750949325; cv=none; b=SBki/5HfoRM7me9G1lrJr0612h3Mj244/MFXSxhBYGKHNcVSlYvb6fGTEsotNXYs9F9sjcfS/y8dvE4P2deM0bRnkEUMTs6lPDunWy2GJ2A9hcKpaMUSybZTrhGwUmPWz7uy5Dtc3snxwwHJro9yQFnb6qviiaTcY+CR/w1CGn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949324; c=relaxed/simple;
-	bh=RWUyPX3F3ajc1vsMHL7zg/KVMPz+KqvzvnXFly3v7LQ=;
+	s=arc-20240116; t=1750949325; c=relaxed/simple;
+	bh=S6GLCN/3IjZwj/UzWJRZug0f+xbVl11IJhy15Cnm8Sg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R967ynafKBJD9Bp6sXlypL3ohFzIzb9mRp/fOkuG5yDWxU10Gi9wn27jtRdFCJ9ouI+PSwsoKF78hku07GbzDlQaLB8lB9VQlfsqWAaYuoA0XRvncWXY+iviNqKvxMhRY6moHpgmj6omFu6pl/fNaSMSSON+VvVq3eOc/sfoiKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zluBDTwt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L3ryjEzH; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QEoeLXDrVTBwcw9XUwfBJRe+t9AVkdnSFPFhDv3abog2j3ZdTQBc70z5GKmjD3D00bsR6lq13D/NJO6Tr6C+c3ylGX3CcAdQG6qvMSVZ7HpGffZsJrjOephJlwyzxqEi7YQAZ3HhA3RgnoTzkm3+1WKYo8zFfzVSxaCTB8lZL0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nAcwHyaS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jTJGcSNK; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750949321;
+	s=2020; t=1750949322;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1q3Tm321i/YiQ6se2Mpi9k0xPo754ttwZNnI+BcgDcU=;
-	b=zluBDTwt6+ishYDs9SSlZmcV9dCi6hA+fJ6WbNYmZiyxKbwjSaC9FqfUZ/NRDAq1qDUkLn
-	UFKANEGPSr9E1lmOw70PXwdygjH4HnUBedZvByy25wneU2EJ7lU4samk0+M6aEADJ4mgCp
-	0N0n2FF+ChUmszWYne6X9Ipp3eoAqOWOc0vO9sQjSiRMgVXgNc3RIAZpKnsGUeKQ/gPQ8j
-	t5KxBjz1+n5AfPFJW4i6/88giRqx6l5+15ivX9cNcC2aozvdJA62zB3B/ujo90qoD0vr3U
-	HtznROdQqzIGUSwJbdihXm1KcF+FvJVGh0Q7OMseF4tMg6cTi4NoQhgAi7XNfA==
+	bh=C1HFdhwqd5DC6x8p3yCFzDP+yibNrfGuiCrnn0yz6t0=;
+	b=nAcwHyaSN7nhBtD3lVXi6SlAK9Z0rKWn5zhGfVT6S7Fh3m9j14eeUWihriCspaY4jFk61c
+	kn2ZAhYqva6qMParMQynIJrLB2fkyzHpeXgrxriK8hgkbK85MyZluRYhI35cnh8jrdwKVc
+	qKBzPkZTPzC+/hylZc6YzsCqO/3QzRfrotYTHjFvN/wkt0LyLIlwu9fBn+kkk/M670es88
+	z/ioGfJnxur6VKZie0ILYugjqvJwWjho3FvrVQl7eIR7m72HpnC8L7mjToCscML0VrfezZ
+	7EnDbFFvMCw44S649jKQzgxjvpQ0j0dJ934nzEUrCeA0BH41DCPMl859e+wwaw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750949321;
+	s=2020e; t=1750949322;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1q3Tm321i/YiQ6se2Mpi9k0xPo754ttwZNnI+BcgDcU=;
-	b=L3ryjEzHx3mCEBxmCpqToPKKpKrsbQ/NsR3iVqmuT/tsDIbKaDlWvRfjmaMLKpMKBv8sLt
-	014YiGk1eHrZSHDg==
+	bh=C1HFdhwqd5DC6x8p3yCFzDP+yibNrfGuiCrnn0yz6t0=;
+	b=jTJGcSNKw/2f2IkZrgSgkpUrKrbs8MVtkmvUc2qvgUskXQRgX2dhgD0FYSNtv0hr+TOjO+
+	PkkQUPYCny+aD2Ag==
 To: Marc Zyngier <maz@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -94,9 +94,9 @@ To: Marc Zyngier <maz@kernel.org>,
 	linux-mediatek@lists.infradead.org,
 	linux-renesas-soc@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 05/16] PCI: brcmstb: Switch to msi_create_parent_irq_domain()
-Date: Thu, 26 Jun 2025 16:47:55 +0200
-Message-Id: <fa72703e06c2ee2c7554082c7152913eb0dd294f.1750858083.git.namcao@linutronix.de>
+Subject: [PATCH 06/16] PCI: iproc: Switch to msi_create_parent_irq_domain()
+Date: Thu, 26 Jun 2025 16:47:56 +0200
+Message-Id: <53946d74caf1fd134a1820eac82c3cf64d48779f.1750858083.git.namcao@linutronix.de>
 In-Reply-To: <cover.1750858083.git.namcao@linutronix.de>
 References: <cover.1750858083.git.namcao@linutronix.de>
 Precedence: bulk
@@ -112,120 +112,125 @@ msi_create_parent_irq_domain().
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
 Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom=
 .com>
-Cc: Jim Quinlan <jim2101024@gmail.com>
-Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
-Cc: linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/pci/controller/Kconfig        |  1 +
- drivers/pci/controller/pcie-brcmstb.c | 44 +++++++++++++--------------
- 2 files changed, 23 insertions(+), 22 deletions(-)
+ drivers/pci/controller/Kconfig          |  1 +
+ drivers/pci/controller/pcie-iproc-msi.c | 45 ++++++++++++-------------
+ 2 files changed, 22 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 012c18c67d9c6..0f6cec244d4fa 100644
+index 0f6cec244d4fa..375a019f35bd9 100644
 --- a/drivers/pci/controller/Kconfig
 +++ b/drivers/pci/controller/Kconfig
-@@ -64,6 +64,7 @@ config PCIE_BRCMSTB
- 		   BMIPS_GENERIC || COMPILE_TEST
- 	depends on OF
+@@ -101,6 +101,7 @@ config PCIE_IPROC_MSI
+ 	bool "Broadcom iProc PCIe MSI support"
+ 	depends on PCIE_IPROC_PLATFORM || PCIE_IPROC_BCMA
  	depends on PCI_MSI
 +	select IRQ_MSI_LIB
- 	default ARCH_BRCMSTB || BMIPS_GENERIC
+ 	default ARCH_BCM_IPROC
  	help
- 	  Say Y here to enable PCIe host controller support for
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller=
-/pcie-brcmstb.c
-index 744df5bd39aea..8ea75aa13130e 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -12,6 +12,7 @@
- #include <linux/iopoll.h>
- #include <linux/ioport.h>
+ 	  Say Y here if you want to enable MSI support for Broadcom's iProc
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controll=
+er/pcie-iproc-msi.c
+index d2cb4c4f821af..d0c7f004217fb 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -5,6 +5,7 @@
+=20
+ #include <linux/interrupt.h>
  #include <linux/irqchip/chained_irq.h>
 +#include <linux/irqchip/irq-msi-lib.h>
  #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-@@ -269,7 +270,6 @@ struct brcm_msi {
- 	struct device		*dev;
- 	void __iomem		*base;
- 	struct device_node	*np;
--	struct irq_domain	*msi_domain;
- 	struct irq_domain	*inner_domain;
- 	struct mutex		lock; /* guards the alloc/free operations */
- 	u64			target_addr;
-@@ -469,17 +469,20 @@ static void brcm_pcie_set_outbound_win(struct brcm_pc=
-ie *pcie,
- 	writel(tmp, pcie->base + PCIE_MEM_WIN0_LIMIT_HI(win));
+ #include <linux/msi.h>
+ #include <linux/of_irq.h>
+@@ -101,7 +102,6 @@ struct iproc_msi {
+ 	struct mutex bitmap_lock;
+ 	unsigned int nr_msi_vecs;
+ 	struct irq_domain *inner_domain;
+-	struct irq_domain *msi_domain;
+ 	unsigned int nr_eq_region;
+ 	unsigned int nr_msi_region;
+ 	void *eq_cpu;
+@@ -165,16 +165,18 @@ static inline unsigned int iproc_msi_eq_offset(struct=
+ iproc_msi *msi, u32 eq)
+ 		return eq * EQ_LEN * sizeof(u32);
  }
 =20
--static struct irq_chip brcm_msi_irq_chip =3D {
--	.name            =3D "BRCM STB PCIe MSI",
--	.irq_ack         =3D irq_chip_ack_parent,
--	.irq_mask        =3D pci_msi_mask_irq,
--	.irq_unmask      =3D pci_msi_unmask_irq,
--};
-+#define BRCM_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS	| \
-+				 MSI_FLAG_USE_DEF_CHIP_OPS	| \
-+				 MSI_FLAG_NO_AFFINITY)
+-static struct irq_chip iproc_msi_irq_chip =3D {
+-	.name =3D "iProc-MSI",
++#define IPROC_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS	| \
++				  MSI_FLAG_USE_DEF_CHIP_OPS)
++#define IPROC_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK	| \
++				   MSI_FLAG_PCI_MSIX)
 +
-+#define BRCM_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK	| \
-+				  MSI_FLAG_MULTI_PCI_MSI)
-=20
--static struct msi_domain_info brcm_msi_domain_info =3D {
--	.flags	=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_MULTI_PCI_MSI,
--	.chip	=3D &brcm_msi_irq_chip,
-+static const struct msi_parent_ops brcm_msi_parent_ops =3D {
-+	.required_flags		=3D BRCM_MSI_FLAGS_REQUIRED,
-+	.supported_flags	=3D BRCM_MSI_FLAGS_SUPPORTED,
++static struct msi_parent_ops iproc_msi_parent_ops =3D {
++	.required_flags		=3D IPROC_MSI_FLAGS_REQUIRED,
++	.supported_flags	=3D IPROC_MSI_FLAGS_SUPPORTED,
 +	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
-+	.chip_flags		=3D MSI_CHIP_FLAG_SET_ACK,
-+	.prefix			=3D "BRCM-",
++	.prefix			=3D "iProc-",
 +	.init_dev_msi_info	=3D msi_lib_init_dev_msi_info,
  };
-=20
- static void brcm_pcie_msi_isr(struct irq_desc *desc)
-@@ -588,18 +591,16 @@ static int brcm_allocate_domains(struct brcm_msi *msi)
- 	struct fwnode_handle *fwnode =3D of_fwnode_handle(msi->np);
- 	struct device *dev =3D msi->dev;
-=20
--	msi->inner_domain =3D irq_domain_create_linear(NULL, msi->nr, &msi_domain=
-_ops, msi);
--	if (!msi->inner_domain) {
--		dev_err(dev, "failed to create IRQ domain\n");
--		return -ENOMEM;
--	}
+-
+-static struct msi_domain_info iproc_msi_domain_info =3D {
+-	.flags =3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		MSI_FLAG_PCI_MSIX,
+-	.chip =3D &iproc_msi_irq_chip,
+-};
+-
+ /*
+  * In iProc PCIe core, each MSI group is serviced by a GIC interrupt and a
+  * dedicated event queue.  Each MSI group can support up to 64 MSI vectors.
+@@ -446,27 +448,22 @@ static void iproc_msi_disable(struct iproc_msi *msi)
+ static int iproc_msi_alloc_domains(struct device_node *node,
+ 				   struct iproc_msi *msi)
+ {
+-	msi->inner_domain =3D irq_domain_create_linear(NULL, msi->nr_msi_vecs,
+-						     &msi_domain_ops, msi);
 +	struct irq_domain_info info =3D {
-+		.fwnode		=3D fwnode,
++		.fwnode		=3D of_fwnode_handle(node),
 +		.ops		=3D &msi_domain_ops,
 +		.host_data	=3D msi,
-+		.size		=3D msi->nr,
++		.size		=3D msi->nr_msi_vecs,
 +	};
++
++	msi->inner_domain =3D msi_create_parent_irq_domain(&info, &iproc_msi_pare=
+nt_ops);
+ 	if (!msi->inner_domain)
+ 		return -ENOMEM;
 =20
--	msi->msi_domain =3D pci_msi_create_irq_domain(fwnode,
--						    &brcm_msi_domain_info,
+-	msi->msi_domain =3D pci_msi_create_irq_domain(of_fwnode_handle(node),
+-						    &iproc_msi_domain_info,
 -						    msi->inner_domain);
 -	if (!msi->msi_domain) {
-+	msi->inner_domain =3D msi_create_parent_irq_domain(&info, &brcm_msi_paren=
-t_ops);
-+	if (!msi->inner_domain) {
- 		dev_err(dev, "failed to create MSI domain\n");
 -		irq_domain_remove(msi->inner_domain);
- 		return -ENOMEM;
- 	}
-=20
-@@ -608,7 +609,6 @@ static int brcm_allocate_domains(struct brcm_msi *msi)
-=20
- static void brcm_free_domains(struct brcm_msi *msi)
- {
--	irq_domain_remove(msi->msi_domain);
- 	irq_domain_remove(msi->inner_domain);
+-		return -ENOMEM;
+-	}
+-
+ 	return 0;
  }
 =20
+ static void iproc_msi_free_domains(struct iproc_msi *msi)
+ {
+-	if (msi->msi_domain)
+-		irq_domain_remove(msi->msi_domain);
+-
+ 	if (msi->inner_domain)
+ 		irq_domain_remove(msi->inner_domain);
+ }
+@@ -542,7 +539,7 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct devi=
+ce_node *node)
+ 	msi->nr_cpus =3D num_possible_cpus();
+=20
+ 	if (msi->nr_cpus =3D=3D 1)
+-		iproc_msi_domain_info.flags |=3D  MSI_FLAG_MULTI_PCI_MSI;
++		iproc_msi_parent_ops.supported_flags |=3D MSI_FLAG_MULTI_PCI_MSI;
+=20
+ 	msi->nr_irqs =3D of_irq_count(node);
+ 	if (!msi->nr_irqs) {
 --=20
 2.39.5
 
