@@ -1,227 +1,164 @@
-Return-Path: <linux-hyperv+bounces-6054-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6055-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64981AEE71A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jun 2025 21:02:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB91BAEE75D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jun 2025 21:18:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEDDB177E17
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jun 2025 19:02:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C055173F5A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jun 2025 19:18:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E831E1A3D;
-	Mon, 30 Jun 2025 19:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535702E7188;
+	Mon, 30 Jun 2025 19:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzSm/Ibw"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RdvyOrlX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C865B43151;
-	Mon, 30 Jun 2025 19:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E801FF1B5
+	for <linux-hyperv@vger.kernel.org>; Mon, 30 Jun 2025 19:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751310132; cv=none; b=W5IC9LX1F2IXI5+9SnvZ+gEHS3MBnWUZ1CQu3lbLSGqeso4OB007U0V64ilMvu39/s+zYWRb8pswgny9jFhiPe2i689POGxpFvq4hLN0JYwACgL4OZiKodlpesoXVszB+GNOdH8fbUMHoj+fV8Fy5lSbbqMp6u1IU3kqns2Tpok=
+	t=1751311055; cv=none; b=vAxdi1Z0+QSLexdUuzjqgYA+iJitrZxKCOpl8jdXXPaJKvy9K3pr+GxtdMVhdVIKQODP2uH25Rrt5KG7p6grxND9FPNXIvRcp1fnXbq2/i+UVi5K3i4WdY7Pl91SIeHqDL6lNcCQajGrOOXYOn5ZiqFy7yz2jVOLyOUoetNuLiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751310132; c=relaxed/simple;
-	bh=DdHZAQF33pLN1I2cF0iHqvYvM8clVhjNG6ouagfGknM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EesfPmVvLRXXU3DPIQIykoH1/kbbr8qpRBlasXTG5Y4eB+lqzGlcLEgau84US8jq6ntNyeAp1FqwpRirA63bozqWZeB4YuEkrXFv1A42lIrRS13LfVOB7+HPcG7PKqDNRyqy56U6WOLeKSSVigDg+buOtFyzkg7ssWvXx9o3qI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzSm/Ibw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92263C4CEEB;
-	Mon, 30 Jun 2025 19:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751310132;
-	bh=DdHZAQF33pLN1I2cF0iHqvYvM8clVhjNG6ouagfGknM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gzSm/Ibw7//EfhK/ofC/U2l4KLOfd7YKKB1g67zSNdYpfeilLRmiW37BD5NCQiFll
-	 Q6WXmVVpHKhhT6JHlzfb7oqtcHiKfsxTxsyyBmIJ8pUySFdRtGZ3AR3WkvsKyKobr4
-	 e0Fmf07nIRe+Usi8WLt2CkupNaF48r/PJJBwcr8PG1Xkh1zWKKlgPAH9lgtgMpf6Fw
-	 8dFVcytj4pAZEkt6WexGqgVyEvfrDKcSy+0t01Du/v5BVV/KRujgmdN0eUfqgA8CDU
-	 8GKhbMB5dmDhX6KVNu3qIbdy8byNHacvzF4FaOkd0nYe2108v0SBiWxIlJ21T8Jtsd
-	 cR4Fvq8Rtsm4A==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60eefb805a4so506452eaf.2;
-        Mon, 30 Jun 2025 12:02:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUlhXDhYk+64RLUHkRdoVmgxpepvzpx0tf//i4wNyzSYUy0SwgFogLI5rk+M70Kq8jrL0K619Vl/SIttg==@vger.kernel.org, AJvYcCUtHrHj/bi7EEWj6YHZRWgBd1gc8xWVYPZWgBXG3Ttb5hfdB2hKEtKjfbZHueoMfBSVSYos2QIcjU7xAxB6@vger.kernel.org, AJvYcCUyYwhkvXSkA6/zDaH4wCwgMyaci6cjVv3/KsL6vpOg+QjHMywsquhCOi28yfiFnTYr1cGAar7H2Hh3HfwW@vger.kernel.org, AJvYcCWNbaMOFtxJEOF61ekukGO6xhqq4J/zQVbMxS0yH/Ghzicb6GuEf2yr/VQqVUwydskWKhLFjpIaH14A@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLKiGo19tn/IwY9gS4CE1vsSn4LbJxXFQ44JG7d4O6N3d8sYUL
-	qmAaon0v/33lxeaO2W5Def2ibKdcunuTlRzA8enj45YjgDhXbwYH15tMj057wR8gV3KwuJ+YuB2
-	nV8EiqAMEGKGRycTqkUL1vad3cfxGXAs=
-X-Google-Smtp-Source: AGHT+IFm2vHgb+BKZqHK5J/LOVulMiaZwngKIVHYspoXk0NcIChmSW6R/HuiJFUCHaquIAYnbbZGw+bmqzhkdJ2yxBQ=
-X-Received: by 2002:a05:6820:270d:b0:611:4701:bcd2 with SMTP id
- 006d021491bc7-611b9116603mr9956287eaf.6.1751310131833; Mon, 30 Jun 2025
- 12:02:11 -0700 (PDT)
+	s=arc-20240116; t=1751311055; c=relaxed/simple;
+	bh=lgRqjNK57P/pT7MRMMd5GG7KE5rQwAii6UcuUqlhc6M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=h+BOl6jGPAfjGoUxs2AGcZ05LWYK4NB3A4rvJHSNvXAjP/VGbN1EUWdaaRsLVYdP3xOVk0bFbQItQTH2sA3UMzB39Pc5aQw0JiDZ/5V02oUgqKfdfjFF677QYREeXFOExDcyG3ea65KBz3F+wlo84E5A9hiTvRexq68j+gFBfIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RdvyOrlX; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747c2cc3419so4679009b3a.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 30 Jun 2025 12:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751311052; x=1751915852; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=/icnc7Os7AoQTpBWqs6e62GRa9dnHnzsYDszjaelMPM=;
+        b=RdvyOrlXurTea1bFF1NhgDMrt69061KzK7Suc0NT6baFI2TfZzp7XE+1AyIOjkEwdu
+         BgNx7hB/Wt5/YjvAYBNVjJ1Ph/t99wTELFFjch+lJ+cCte/tuVJFcvgrUD7zStSLJMrn
+         IQo5yTu/vtB9j4PgeghVYTXEDbpQJCrUaxoBI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751311052; x=1751915852;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/icnc7Os7AoQTpBWqs6e62GRa9dnHnzsYDszjaelMPM=;
+        b=gph5XNTT+7BXDr0PZoLYN9WM94h87I617jxYPRAkG2pKReT8Kuync0s3qLkOK9rerf
+         Gsh+3G3IbjLRZY2tRi5KOWqQgalAelDKB+enSasiWktSHYCl+6AdJuukInWxaAHBeQFN
+         FhAQ2aXQsMCqlxXaKtwzV8ElI8ccQpIsF+Hb07Y6kf0ebx1YiRr9jt9h+lwwePZc5/Nj
+         QNFSvW0NvPoog1vsSS8M2SahTVASAl6Tc60SCmwzI0HeJwdChQl4/g0KHx1Nw9uA45Q4
+         CI88z+XpUqHuK6tLeEDYgf7wrS3mWpq14EwNDzYBwuT6gYx6oU6ZFk75WSod5qvGHuQD
+         ipQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdEkRjv1X3jo08gcbOV/1fCa+nIBFDNlEH7bSFt6qjLPmZk85k+M2GlQGOl1UxfBaa2g3RfSoqOVwIWXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOe3ATHhSmUlmWx47a+1v1ETPLZoyG8Wx9losBW/sdb31XBnRA
+	dkvK33j10fJn76jIqzevJpIW5HIDA4CMwgL5GbVhUJUCeL0Dypv+uRokDN8QQcLWSg==
+X-Gm-Gg: ASbGnctL2XecgZKgCTPdffr6BilSdwHby6KIGIsMpDbDhp2QFn3LCk/NSruGIndovui
+	Fsf3L19iekVa+Wpl/ZJ1Wx4Hbs02o5FMbRzNerwIkqo/R+QHrQ1iQBfUcCZ5/R83cw/ljjDnhAI
+	8DIA58lEI8AICMJ31d+rJy2Rvlf96mgLuVsIKMg5KHvjVyuY73CZYNaSUHkDCqILFink50KaJrr
+	6h2eySA5NqEmT6J6L2BLhx2nn2MVKq0Aqd6xMH06r3BDFYfGqgoIQECihwncWb3gorqsFzs0FOE
+	p1BeDDMG9spONWvIoRRjhOi8J/jp/sxZusqj7oZnd7QLKRKlDlflZmpEKu65BFFktJ3qymSzH/s
+	lR1ObEPuV77T6iW5ZSpbPR6F7Aw==
+X-Google-Smtp-Source: AGHT+IEki0KdQAjRMkHvaX3/gkmEnLE6D4qqKuPqbMXVfDYcUkTnDLdWtpcfzqFXZLm1SNTNGyqJEw==
+X-Received: by 2002:a05:6a00:845:b0:749:540:ca72 with SMTP id d2e1a72fcca58-74af6f5b39amr21961216b3a.24.1751311051789;
+        Mon, 30 Jun 2025 12:17:31 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541e8fasm9787662b3a.67.2025.06.30.12.17.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 12:17:31 -0700 (PDT)
+Message-ID: <d90c0d21-9544-44f7-b987-8d7b7c71f135@broadcom.com>
+Date: Mon, 30 Jun 2025 12:17:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com> <20250627-rneri-wakeup-mailbox-v5-3-df547b1d196e@linux.intel.com>
-In-Reply-To: <20250627-rneri-wakeup-mailbox-v5-3-df547b1d196e@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 30 Jun 2025 21:02:00 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h_oifyhJq4WiOzS0fcexrjeChJhVyAthfQCX=6v_GumA@mail.gmail.com>
-X-Gm-Features: Ac12FXyksNrv9JxF_gBnNjGxzTfNZOeM3Kqt38U6mwLvamITRF0pZ-6QBWI-N0s
-Message-ID: <CAJZ5v0h_oifyhJq4WiOzS0fcexrjeChJhVyAthfQCX=6v_GumA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/10] dt-bindings: reserved-memory: Wakeup Mailbox for
- Intel processors
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Saurabh Sengar <ssengar@linux.microsoft.com>, 
-	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ricardo Neri <ricardo.neri@intel.com>, Yunhong Jiang <yunhong.jiang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/16] PCI: iproc: Switch to
+ msi_create_parent_irq_domain()
+To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+ Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>,
+ Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>,
+ Marek Vasut <marek.vasut+renesas@gmail.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>,
+ Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <53946d74caf1fd134a1820eac82c3cf64d48779f.1750858083.git.namcao@linutronix.de>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <53946d74caf1fd134a1820eac82c3cf64d48779f.1750858083.git.namcao@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 5:35=E2=80=AFAM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> Add DeviceTree bindings to enumerate the wakeup mailbox used in platform
-> firmware for Intel processors.
->
-> x86 platforms commonly boot secondary CPUs using an INIT assert, de-asser=
-t
-> followed by Start-Up IPI messages. The wakeup mailbox can be used when th=
-is
-> mechanism is unavailable.
->
-> The wakeup mailbox offers more control to the operating system to boot
-> secondary CPUs than a spin-table. It allows the reuse of same wakeup vect=
-or
-> for all CPUs while maintaining control over which CPUs to boot and when.
-> While it is possible to achieve the same level of control using a spin-
-> table, it would require to specify a separate `cpu-release-addr` for each
-> secondary CPU.
->
-> The operation and structure of the mailbox is described in the
-> Multiprocessor Wakeup Structure defined in the ACPI specification. Note
-> that this structure does not specify how to publish the mailbox to the
-> operating system (ACPI-based platform firmware uses a separate table). No
-> ACPI table is needed in DeviceTree-based firmware to enumerate the mailbo=
-x.
->
-> Add a `compatible` property that the operating system can use to discover
-> the mailbox. Nodes wanting to refer to the reserved memory usually define=
- a
-> `memory-region` property. /cpus/cpu* nodes would want to refer to the
-> mailbox, but they do not have such property defined in the DeviceTree
-> specification. Moreover, it would imply that there is a memory region per
-> CPU.
->
-> Co-developed-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+On 6/26/25 07:47, Nam Cao wrote:
+> Move away from the legacy MSI domain setup, switch to use
+> msi_create_parent_irq_domain().
+> 
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-LGTM from the ACPI specification cross-referencing perspective, so
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
-> Changes since v4:
->  - Specified the version and section of the ACPI spec in which the
->    wakeup mailbox is defined. (Rafael)
->  - Fixed a warning from yamllint about line lengths of URLs.
->
-> Changes since v3:
->  - Removed redefinitions of the mailbox and instead referred to ACPI
->    specification as per discussion on LKML.
->  - Clarified that DeviceTree-based firmware do not require the use of
->    ACPI tables to enumerate the mailbox. (Rob)
->  - Described the need of using a `compatible` property.
->  - Dropped the `alignment` property. (Krzysztof, Rafael)
->  - Used a real address for the mailbox node. (Krzysztof)
->
-> Changes since v2:
->  - Implemented the mailbox as a reserved-memory node. Add to it a
->    `compatible` property. (Krzysztof)
->  - Explained the relationship between the mailbox and the `enable-mehod`
->    property of the CPU nodes.
->  - Expanded the documentation of the binding.
->
-> Changes since v1:
->  - Added more details to the description of the binding.
->  - Added requirement a new requirement for cpu@N nodes to add an
->    `enable-method`.
-> ---
->  .../reserved-memory/intel,wakeup-mailbox.yaml      | 50 ++++++++++++++++=
-++++++
->  1 file changed, 50 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/reserved-memory/intel,wake=
-up-mailbox.yaml b/Documentation/devicetree/bindings/reserved-memory/intel,w=
-akeup-mailbox.yaml
-> new file mode 100644
-> index 000000000000..a80d3bac44c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mail=
-box.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/reserved-memory/intel,wakeup-mailbox.=
-yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Wakeup Mailbox for Intel processors
-> +
-> +description: |
-> +  The Wakeup Mailbox provides a mechanism for the operating system to wa=
-ke up
-> +  secondary CPUs on Intel processors. It is an alternative to the INIT-!=
-INIT-
-> +  SIPI sequence used on most x86 systems.
-> +
-> +  The structure and operation of the mailbox is described in the Multipr=
-ocessor
-> +  Wakeup Structure of the ACPI specification version 6.6 section 5.2.12.=
-19 [1].
-> +
-> +  The implementation of the mailbox in platform firmware is described in=
- the
-> +  Intel TDX Virtual Firmware Design Guide section 4.3.5 [2].
-> +
-> +  1: https://uefi.org/specs/ACPI/6.6/05_ACPI_Software_Programming_Model.=
-html#multiprocessor-wakeup-structure
-> +  2: https://www.intel.com/content/www/us/en/content-details/733585/inte=
-l-tdx-virtual-firmware-design-guide.html
-> +
-> +
-> +maintainers:
-> +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: reserved-memory.yaml
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,wakeup-mailbox
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    reserved-memory {
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <1>;
-> +
-> +        wakeup-mailbox@ffff0000 {
-> +            compatible =3D "intel,wakeup-mailbox";
-> +            reg =3D <0x0 0xffff0000 0x1000>;
-> +        };
-> +    };
->
-> --
-> 2.43.0
->
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
